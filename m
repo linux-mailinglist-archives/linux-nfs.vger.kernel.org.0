@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-1616-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1617-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A3DE843DC8
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 12:08:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93B25843DD0
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 12:09:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2668A29124E
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 11:08:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 865A31C2A4CD
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 11:09:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B49396E2B2;
-	Wed, 31 Jan 2024 11:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E06069E07;
+	Wed, 31 Jan 2024 11:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt+2YdVR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGe9zThi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB4E6E2A2
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Jan 2024 11:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B3269DFF;
+	Wed, 31 Jan 2024 11:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699184; cv=none; b=ubetw8vbBmt1WQLk8TMBwEQEy8i48RAkZhgXCaXfnrSOC1zOhdpmuH6FZEnwjB/z0Vk0wRq6r2ilKV24Cm8Jw28ORDonJof0qYQpWhj2CmmllEUSkUOoWYZ0fsVN6EsDBTTVXKv1lD/ROsS4AoAIR0aANxaWGZOT43IVlbVBwKg=
+	t=1706699318; cv=none; b=G8AwrkRHzKPL454+sCI+oNssZqE50G/juf5dyQUex+cjCrcrCA8naBZfWR7CMUkJabRGaYCPMzsz5XWzPrxkyBgBdeQK69tG2XhZ3lndIW2oIIKdduPXRwVYglfXSh8VgHYx8sXBj0ObHQLwZoNovEbs5s2vFCrBVOTJpFMBTQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699184; c=relaxed/simple;
-	bh=a8416zxSAbmF9g3G5mNQhWJ12WCOhSajpgm9yoWzKR8=;
+	s=arc-20240116; t=1706699318; c=relaxed/simple;
+	bh=Gold7GtLqPuzqY3qnZxYl7OxsYdNVCC5h60sEpU6TnI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NDK6TfTeuz1Qsz0rooQdkiC5aPAMKwzAxeq+C+IerAUdWKXJzeFi/DqapkPt1ScCfNYo78rnmLLwwWuN3mhSX7GHi25oG2AD7yfxZRvIrJxMKmcXNR1PS2h8gBL3ZrzFThtBgk968w6tkbXzmQx7Fp54ei4hwZsE7Acc160Pnvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt+2YdVR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BF5C43390;
-	Wed, 31 Jan 2024 11:06:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AB3QWZISpMfHB8uzBf7Cxn2oo1dioTRHoUDJ55Px7LL/fwhsXTVWABnyH5DqIvgFzFHjPvx7/XGh0em7MlF0Ns822i8Mabl3N16zpPUKgTYHsNwQH34TZmXxgX3i5omSkEnFhlx8kvq3qX7BhT+lQZjJV7Rw6i9WCe4OfANYhBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGe9zThi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34142C433F1;
+	Wed, 31 Jan 2024 11:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706699184;
-	bh=a8416zxSAbmF9g3G5mNQhWJ12WCOhSajpgm9yoWzKR8=;
+	s=k20201202; t=1706699317;
+	bh=Gold7GtLqPuzqY3qnZxYl7OxsYdNVCC5h60sEpU6TnI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Rt+2YdVR5LU4lex1KnHMt2T5ISNUgCJcOfmEeR1SUV4ufVmJeKglODpO3G9wFXlKn
-	 E1MG7wLT9lshPbzyq2oDlVgzXh44LJE040unEXAUqwzKkbqQd9Xr0/XBIkcut2WHrf
-	 BixizItMwX5nZYsXENOBX/0yHrLZoBRObGyhXoGY8K/vbytQVlZtatDKZdUmQ0Qwyd
-	 MYAbP5NFeqczlKgals0fi56YRJhPLCpuPETYvkfwgdlm/Z0LFMjXVzCpvLCpycs+lM
-	 +xYGQ9uKMsmCDeT9z43LsCjfjeogSx3Zh9/757LnJRwNVhiWQ6tn+y+Jc8yq6P7AWx
-	 l+9T/GK9Ru8TQ==
-Message-ID: <8ef9e759db3908f79ac0faee72c3361dbdbcdf7e.camel@kernel.org>
-Subject: Re: [PATCH v3] nfs: fix regression in handling of fsc= option in
- NFSv4
+	b=SGe9zThiwIgPCOwIUrAF0q0ObfBV+l/QcArV1RXor0ZdEaIRpoyB0TzgDUE9p288m
+	 bq13zXaWIPs/sW8lBwrJ/XpVQd4vrmAgRGVjPxcy4iLdsCXGhfHK7GilWo9P54peeL
+	 dMdBxp/afjEYJroPm5PWR8DfRWEzsmt+v0837B7N8CCCL2zkjhODGG3sqYSjMnsflf
+	 STvbbbnpm+uI2kCY65/xgVmgVE5wGo+AQ33rf+WR8mxakh6aNnXL8rzAnrK+yW48Xt
+	 t+16OXmYnvx4ZViDfYAykfE+tNlxSHahdxfbCtpa4LA2SNv8umhLNiHfyWgp7QX3cS
+	 3TlLWXS0ta52g==
+Message-ID: <859f66e1fa4de08662a3ff6ef399803516780fbb.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Simplify the allocation of slab caches in
+ nfsd_file_cache_init
 From: Jeff Layton <jlayton@kernel.org>
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>, Trond Myklebust
-	 <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>, David
-	Howells <dhowells@redhat.com>
-Date: Wed, 31 Jan 2024 06:06:22 -0500
-In-Reply-To: <20240131094917.850-1-chenhx.fnst@fujitsu.com>
-References: <20240131094917.850-1-chenhx.fnst@fujitsu.com>
+To: Kunwu Chan <chentao@kylinos.cn>, chuck.lever@oracle.com, neilb@suse.de, 
+	kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 31 Jan 2024 06:08:36 -0500
+In-Reply-To: <20240131065653.133965-1-chentao@kylinos.cn>
+References: <20240131065653.133965-1-chentao@kylinos.cn>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -71,76 +70,39 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-01-31 at 17:49 +0800, Chen Hanxiao wrote:
-> Setting the uniquifier for fscache via the fsc=3D mount
-> option is currently broken in NFSv4.
+On Wed, 2024-01-31 at 14:56 +0800, Kunwu Chan wrote:
+> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+> to simplify the creation of SLAB caches.
 >=20
-> Fix this by passing fscache_uniq to root_fc if possible.
->=20
-> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 > ---
-> v3:
->     properly set param_fsc.size
-> v2:
->     use kmemdup_nul instead of snprintf
+>  fs/nfsd/filecache.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >=20
->  fs/nfs/nfs4super.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-> index d09bcfd7db89..8da5a9c000f4 100644
-> --- a/fs/nfs/nfs4super.c
-> +++ b/fs/nfs/nfs4super.c
-> @@ -145,6 +145,7 @@ static int do_nfs4_mount(struct nfs_server *server,
->  			 const char *export_path)
->  {
->  	struct nfs_fs_context *root_ctx;
-> +	struct nfs_fs_context *ctx;
->  	struct fs_context *root_fc;
->  	struct vfsmount *root_mnt;
->  	struct dentry *dentry;
-> @@ -157,6 +158,12 @@ static int do_nfs4_mount(struct nfs_server *server,
->  		.dirfd	=3D -1,
->  	};
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 8d9f7b07e35b..f3a642fd0eca 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -722,15 +722,13 @@ nfsd_file_cache_init(void)
+>  		return ret;
 > =20
-> +	struct fs_parameter param_fsc =3D {
-> +		.key	=3D "fsc",
-> +		.type	=3D fs_value_is_string,
-> +		.dirfd	=3D -1,
-> +	};
-> +
->  	if (IS_ERR(server))
->  		return PTR_ERR(server);
+>  	ret =3D -ENOMEM;
+> -	nfsd_file_slab =3D kmem_cache_create("nfsd_file",
+> -				sizeof(struct nfsd_file), 0, 0, NULL);
+> +	nfsd_file_slab =3D KMEM_CACHE(nfsd_file, 0);
+>  	if (!nfsd_file_slab) {
+>  		pr_err("nfsd: unable to create nfsd_file_slab\n");
+>  		goto out_err;
+>  	}
 > =20
-> @@ -168,9 +175,26 @@ static int do_nfs4_mount(struct nfs_server *server,
->  	kfree(root_fc->source);
->  	root_fc->source =3D NULL;
-> =20
-> +	ctx =3D nfs_fc2context(fc);
->  	root_ctx =3D nfs_fc2context(root_fc);
->  	root_ctx->internal =3D true;
->  	root_ctx->server =3D server;
-> +
-> +	if (ctx->fscache_uniq) {
-> +		len =3D strlen(ctx->fscache_uniq);
-> +		param_fsc.size =3D len;
-> +		param_fsc.string =3D kmemdup_nul(ctx->fscache_uniq, len, GFP_KERNEL);
-> +		if (param_fsc.string =3D=3D NULL) {
-> +			put_fs_context(root_fc);
-> +			return -ENOMEM;
-> +		}
-> +		ret =3D vfs_parse_fs_param(root_fc, &param_fsc);
-> +		kfree(param_fsc.string);
-> +		if (ret < 0) {
-> +			put_fs_context(root_fc);
-> +			return ret;
-> +		}
-> +	}
->  	/* We leave export_path unset as it's not used to find the root. */
-> =20
->  	len =3D strlen(hostname) + 5;
+> -	nfsd_file_mark_slab =3D kmem_cache_create("nfsd_file_mark",
+> -					sizeof(struct nfsd_file_mark), 0, 0, NULL);
+> +	nfsd_file_mark_slab =3D KMEM_CACHE(nfsd_file_mark, 0);
+>  	if (!nfsd_file_mark_slab) {
+>  		pr_err("nfsd: unable to create nfsd_file_mark_slab\n");
+>  		goto out_err;
 
-Looks good:
+Sure, I guess:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Jeff Layton <jlayton@kernel.org>
 
