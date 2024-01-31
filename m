@@ -1,121 +1,244 @@
-Return-Path: <linux-nfs+bounces-1636-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1637-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF528844905
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 21:38:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D7F5844BB8
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Feb 2024 00:02:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74EF528C144
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 20:38:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E76E71F220CC
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 23:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC011BC49;
-	Wed, 31 Jan 2024 20:38:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 229353A264;
+	Wed, 31 Jan 2024 23:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoqcgdSP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhirEnt1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B6424A18
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Jan 2024 20:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14FB39ACA;
+	Wed, 31 Jan 2024 23:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706733526; cv=none; b=YA9uyrQSpyz8kP95VG4UhiUKMEBtne2MbPinM8xuq9/F7YLYzgXXjHkmHi6l+PjUIK2novzZpkAu/40dkwWWmz/XMdGyIHNje5xhmMraO8mXxl6p99Z2A30rC3Fr4n9Gve3ZISsE1jCWucCo5fZVFH4QlRjDYnFmALgxaX73NAE=
+	t=1706742137; cv=none; b=Hhi3wtisvX4PFmePI93TNrZOnqik8663/+3uGwpnAX/3MDR5+jz/xLOsZhlgrwA4L60qdSVwmmdq3PuoLruQQGFo8Af4p+u2zOCkn7dlbgr6lkKQWFbXUqyiKVzKsrYHpgYUa6BzC60CHr9m+qZYKoEQP5GzLE24sWsOs8WH89c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706733526; c=relaxed/simple;
-	bh=tg27zAtyXt7rLrfIcrUi9Whhdczi0Nui8BLGcgeRvbc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9eMmfYGA1g2GmziflhVGc+ya7Apa78GAz8+grDcWv+/57w1fwvLyD0wuDPXBmy9OKabZH/mq5cvy7FnT77fBpEaqJGwJ7mZzlBJb+rVLacw1qtOAzuP7CcIJUHyswJ4OrI8mWjjr2PXGf1NbXnPipAc5w/wqIXfD2jLjLp2F+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UoqcgdSP; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51124e08565so271009e87.3
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Jan 2024 12:38:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706733522; x=1707338322; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4skPJA2vJ56LGwhJco2Cysnat/idw91vbpowRvolhjg=;
-        b=UoqcgdSPsTorX9Xv3sBd7Gw5jZWytP9Yj5s5x1FK7UdNpisuaNpXDwXJROktMDZ4PH
-         svXMBhfbadBKq+DWKZZ4w5RQdDEspGSxMJp6ZJZqGOd9H+jh2fWp3z5w3QhQIBzotOfm
-         3k1SQ2wXqsja9V413V+KBtqeSAxN90zcwPJNEX26NoJ9l0NTDPmKNdPJZsqVr12LDpWH
-         WflgADxuMWCmuOkOS3b7Ffaocg8WLS48xTpZSOi6k0dWSgvm7+vGlPNV4Xsm/tGseLQM
-         CU7YBpzP8DwnY4tvom219ApdOdPCyyzoW0V/ECGFkDRL2cGbaql3SgVa0Dee0s0PG9Z8
-         +pLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706733522; x=1707338322;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4skPJA2vJ56LGwhJco2Cysnat/idw91vbpowRvolhjg=;
-        b=meHFQoz91R9Itag0V94sB+5p0t0UwmVzGXXv6VI2c0bMcg+G0W4sI13sOt35REJLHF
-         sWKCP4phcK/ta2VIeBgrVern62YFuEW6tOohHWl0YlINLnfOKDhosRztH3AL/NxT4zLt
-         9Kn5OYYJ2d+giDFttJy4SSS1c693oXng+8Pd3TluBQ936aUX6FhFZESwfu0mlMLIc+xp
-         4FoUcUES/Zg/SunNnGtDz4iGxTR3DZE2J7CZBGDTppyTiUhEz8bWUPQyG/OmVvKyVNcK
-         3gwU9/shLhFxjnq0VZJCjeOCkV/BYg8OR0Eyuq285MaUURXT1MJXbCSCTl3hQxC0FNqu
-         om0A==
-X-Gm-Message-State: AOJu0YzhuPok60If54HU0oTPjN41nbKoDry7lN1eiTJU6VRzFsT83TxM
-	fG35Svw9drELa4D8FlV8o6aC0M2rQ6KGspHXQMIAzyS1HwZcwH6arrsfrJPvdAhcRkYsmgz59bW
-	WQbJkQVGSABVNInyaOgbavuZ22O0=
-X-Google-Smtp-Source: AGHT+IFbYTVDT+mczKy3WH4NDLBWxYHgJvdDgDLHPsah3qXFzgFVE1rFTwVr9QmEEDpXDmd7I2QsDlQlEWZ1GyD1rG0=
-X-Received: by 2002:ac2:4578:0:b0:511:e82:1c52 with SMTP id
- k24-20020ac24578000000b005110e821c52mr418563lfm.65.1706733522316; Wed, 31 Jan
- 2024 12:38:42 -0800 (PST)
+	s=arc-20240116; t=1706742137; c=relaxed/simple;
+	bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pKt7SoQv5cZno2fXZZyaIHzng+PvdkKGRltYFWsrHziqUcXhz/pJUFNPwQNvwFlDwGebcj/ylbeTaj+oLlbEbVjxOBZpWV9Pbg5IWcIf0MgWS/47uP6fpG80llU+yhYdmwumKJN1hU+H9lI5drTUcHmgXB0pywpCzGfDhcxCrm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhirEnt1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922D9C433F1;
+	Wed, 31 Jan 2024 23:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706742136;
+	bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YhirEnt1Zyoo4luUVzDdhSoDLVYvWigAqZF0B6hVmStfBkJ81ZoY39zwG3iBO9dS3
+	 UYBF0Q8RcOdj4DLYqYcLH9+HwFhRPqM8sr4l+4Il/5FK5xaENi8BPZzoQ3LTc/ySys
+	 Y4fu6SPpYhOe8o4BbIfWndzP03DZi1TDZo3BkgcEoqnW1M841wkkTaIjktr55VVGnH
+	 6j46ERLyOG+jxpZy48Kyyx/spWmdM5QedwoaChlR9qlOraUOKjp69/lHRqhu5ydVI0
+	 RQ37ndFqeTkfovRnE0B+DYp/FMolc046xp3Tq9jE5seO5eqxXw2ryDiMg2kMBQ0z8c
+	 dIzjdHR4VqszA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 00/47] filelock: split file leases out of struct
+ file_lock
+Date: Wed, 31 Jan 2024 18:01:41 -0500
+Message-Id: <20240131-flsplit-v3-0-c6129007ee8d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAAvCNcBMY1mrgEgy4APSiFXDP5u=64YXNjiHHjh8RscPsB3row@mail.gmail.com>
- <b25436fa457256f0f409fbc33f60c13e8ab6af12.camel@kernel.org> <CALXu0Uc3t6NgvG_FJRvnTYoXKVi2whOWfysApt5Gj4RhAPn0oQ@mail.gmail.com>
-In-Reply-To: <CALXu0Uc3t6NgvG_FJRvnTYoXKVi2whOWfysApt5Gj4RhAPn0oQ@mail.gmail.com>
-From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Wed, 31 Jan 2024 21:38:15 +0100
-Message-ID: <CAAvCNcBqo55j8W5Pqe0+-AmaqbLoiQtNDKU4C9T0Y7T6aAsC1g@mail.gmail.com>
-Subject: Re: Implement NFSv4 TLS support with /usr/bin/openssl s_client?
-To: Cedric Blancher <cedric.blancher@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, 
-	Benjamin Coddington <bcodding@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFbRumUC/2WMQQ6CMBBFr2JmbU07lIKuvIdxQekAEwmQljQaw
+ t0tbNS4fD//vQUCeaYAl8MCniIHHocE2fEAdVcNLQl2iQElaqmUEU0fpp5nYZ3VpkTtrCkhvSd
+ PDT/30u2euOMwj/61h6Pa1v9GVEKK+uxko7NCVrm7PsgP1J9G38IWifglYv4RMYmFLvMM0Rqsi
+ x9xXdc3cRWMZtgAAAA=
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, v9fs@lists.linux.dev, 
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
+ gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
+ ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6354; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlutFn5pVegv7wNPnRDWvz5ftMiiWf6qEKdb/80
+ QHt3K4JatCJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbrRZwAKCRAADmhBGVaC
+ FaDtD/45qGT25WHA6zNfMY4o5AjgAKZZlcUtRncdLVT81F2yreqMOIaNjye9MC055FEkD5eD/yn
+ 5qGUPayFTJnbXrWOJ6qCHgdWPvOC+N0uF/REAlEvKvDfNrVSZcytjZJjZ7EiN+Wo3hJ0YVgaR85
+ yObKm+iEt+pVQGn7ZjEpowyjMZHFB0rg992VC3+gMVpVg3f+2Brk6AvoUkVt37xDoykVj+XWyU2
+ A9uEpvwZArHybQTiLDX6sAHTAwFII4CZ3SdtcW3If/O8fbZfrj7wUxLx8W6me8AbdJhZ9+Ftq1b
+ V4WznhWm6dPkSSM5+85TLMhwZZ7UHdFau30VG+1Hng4D1KKqIZeFRvG0LYHXI+BXIpysYSf975R
+ X6URKIL/rU4sXiADc3XwbFr1uB/rK8vMsqMtFzjeikeUUJwUMtPtH4kboUFPoYpLCJNIWCFW5St
+ aMvmAS6pP0qiBuiD1Ys9qPFFJ6+7bVEp52AbjgfGNcr4DrXOSbIgZgFNLvhfmnBlVl3fVINHljH
+ dyaKRXELg73UFp9S2NpQg86UFtLiNfn/eJcFPCdiQrpTYlU3QP1glBfaInAaqLEUK16Kqjoy3SO
+ vPsEegggG3uCfKeIk0PPW4Cyv6BILX88fkRb9jRlEW8PriwPL7iQSJz/2pydIb6xuEYI3qqvdQ2
+ EUZuYzpqa6UbpxQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-?
+I'm not sure this is much prettier than the last, but contracting
+"fl_core" to "c", as Neil suggested is a bit easier on the eyes.
 
-On Fri, 26 Jan 2024 at 08:23, Cedric Blancher <cedric.blancher@gmail.com> wrote:
->
-> On Thu, 25 Jan 2024 at 21:44, Jeff Layton <jlayton@kernel.org> wrote:
-> >
-> > On Thu, 2024-01-25 at 03:21 +0100, Dan Shelton wrote:
-> > > Hello!
-> > >
-> > > Is it possible for a NFSv4 client to implement TLS support via
-> > > /usr/bin/openssl s_client?
-> > >
-> > > /usr/bin/openssl s_client would do the connection, and a normal
-> > > libtirpc client would connect to the other side of s_client.
-> > >
-> > > Does that work?
-> > >
-> > > Dan
-> >
-> > Doubtful. RPC over TLS requires some cleartext setup before TLS is
-> > negotiated. At one time Ben Coddington had a proxy based on nginx that
-> > could handle the TLS negotiation, but I think that might have been based
-> > on an earlier draft of the spec. It would probably need some work to be
-> > brought up to the state of the RFC.
->
-> What about libtirpc-based apps? Is anyone going to add TLS support to libtirpc?
->
-> Ced
-> --
-> Cedric Blancher <cedric.blancher@gmail.com>
-> [https://plus.google.com/u/0/+CedricBlancher/]
-> Institute Pasteur
+I also added a few small helpers and converted several users over to
+them. That reduces the size of the per-fs conversion patches later in
+the series. I played with some others too, but they were too awkward
+or not frequently used enough to make it worthwhile.
 
+Many thanks to Chuck and Neil for the earlier R-b's and comments. I've
+dropped those for now since this set is a bit different from the last.
 
+I'd like to get this into linux-next soon and we can see about merging
+it for v6.9, unless anyone has major objections.
 
+Thanks!
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- Rename "flc_core" fields in file_lock and file_lease to "c"
+- new helpers: locks_wake_up, for_each_file_lock, and lock_is_{unlock,read,write}
+- Link to v2: https://lore.kernel.org/r/20240125-flsplit-v2-0-7485322b62c7@kernel.org
+
+Changes in v2:
+- renamed file_lock_core fields to have "flc_" prefix
+- used macros to more easily do the change piecemeal
+- broke up patches into per-subsystem ones
+- Link to v1: https://lore.kernel.org/r/20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org
+
+---
+Jeff Layton (47):
+      filelock: fl_pid field should be signed int
+      filelock: rename some fields in tracepoints
+      filelock: rename fl_pid variable in lock_get_status
+      filelock: add some new helper functions
+      9p: rename fl_type variable in v9fs_file_do_lock
+      afs: convert to using new filelock helpers
+      ceph: convert to using new filelock helpers
+      dlm: convert to using new filelock helpers
+      gfs2: convert to using new filelock helpers
+      lockd: convert to using new filelock helpers
+      nfs: convert to using new filelock helpers
+      nfsd: convert to using new filelock helpers
+      ocfs2: convert to using new filelock helpers
+      smb/client: convert to using new filelock helpers
+      smb/server: convert to using new filelock helpers
+      filelock: drop the IS_* macros
+      filelock: split common fields into struct file_lock_core
+      filelock: have fs/locks.c deal with file_lock_core directly
+      filelock: convert more internal functions to use file_lock_core
+      filelock: make posix_same_owner take file_lock_core pointers
+      filelock: convert posix_owner_key to take file_lock_core arg
+      filelock: make locks_{insert,delete}_global_locks take file_lock_core arg
+      filelock: convert locks_{insert,delete}_global_blocked
+      filelock: make __locks_delete_block and __locks_wake_up_blocks take file_lock_core
+      filelock: convert __locks_insert_block, conflict and deadlock checks to use file_lock_core
+      filelock: convert fl_blocker to file_lock_core
+      filelock: clean up locks_delete_block internals
+      filelock: reorganize locks_delete_block and __locks_insert_block
+      filelock: make assign_type helper take a file_lock_core pointer
+      filelock: convert locks_wake_up_blocks to take a file_lock_core pointer
+      filelock: convert locks_insert_lock_ctx and locks_delete_lock_ctx
+      filelock: convert locks_translate_pid to take file_lock_core
+      filelock: convert seqfile handling to use file_lock_core
+      9p: adapt to breakup of struct file_lock
+      afs: adapt to breakup of struct file_lock
+      ceph: adapt to breakup of struct file_lock
+      dlm: adapt to breakup of struct file_lock
+      gfs2: adapt to breakup of struct file_lock
+      fuse: adapt to breakup of struct file_lock
+      lockd: adapt to breakup of struct file_lock
+      nfs: adapt to breakup of struct file_lock
+      nfsd: adapt to breakup of struct file_lock
+      ocfs2: adapt to breakup of struct file_lock
+      smb/client: adapt to breakup of struct file_lock
+      smb/server: adapt to breakup of struct file_lock
+      filelock: remove temporary compatibility macros
+      filelock: split leases out of struct file_lock
+
+ fs/9p/vfs_file.c                |  40 +-
+ fs/afs/flock.c                  |  60 +--
+ fs/ceph/locks.c                 |  74 ++--
+ fs/dlm/plock.c                  |  44 +--
+ fs/fuse/file.c                  |  14 +-
+ fs/gfs2/file.c                  |  16 +-
+ fs/libfs.c                      |   2 +-
+ fs/lockd/clnt4xdr.c             |  14 +-
+ fs/lockd/clntlock.c             |   2 +-
+ fs/lockd/clntproc.c             |  65 +--
+ fs/lockd/clntxdr.c              |  14 +-
+ fs/lockd/svc4proc.c             |  10 +-
+ fs/lockd/svclock.c              |  64 +--
+ fs/lockd/svcproc.c              |  10 +-
+ fs/lockd/svcsubs.c              |  24 +-
+ fs/lockd/xdr.c                  |  14 +-
+ fs/lockd/xdr4.c                 |  14 +-
+ fs/locks.c                      | 851 ++++++++++++++++++++++------------------
+ fs/nfs/delegation.c             |   4 +-
+ fs/nfs/file.c                   |  22 +-
+ fs/nfs/nfs3proc.c               |   2 +-
+ fs/nfs/nfs4_fs.h                |   2 +-
+ fs/nfs/nfs4file.c               |   2 +-
+ fs/nfs/nfs4proc.c               |  39 +-
+ fs/nfs/nfs4state.c              |  22 +-
+ fs/nfs/nfs4trace.h              |   4 +-
+ fs/nfs/nfs4xdr.c                |   8 +-
+ fs/nfs/write.c                  |   8 +-
+ fs/nfsd/filecache.c             |   4 +-
+ fs/nfsd/nfs4callback.c          |   2 +-
+ fs/nfsd/nfs4layouts.c           |  34 +-
+ fs/nfsd/nfs4state.c             | 120 +++---
+ fs/ocfs2/locks.c                |  12 +-
+ fs/ocfs2/stack_user.c           |   2 +-
+ fs/open.c                       |   2 +-
+ fs/posix_acl.c                  |   4 +-
+ fs/smb/client/cifsfs.c          |   2 +-
+ fs/smb/client/cifssmb.c         |   8 +-
+ fs/smb/client/file.c            |  78 ++--
+ fs/smb/client/smb2file.c        |   2 +-
+ fs/smb/server/smb2pdu.c         |  44 +--
+ fs/smb/server/vfs.c             |  14 +-
+ include/linux/filelock.h        | 103 +++--
+ include/linux/fs.h              |   5 +-
+ include/linux/lockd/lockd.h     |   8 +-
+ include/linux/lockd/xdr.h       |   2 +-
+ include/trace/events/afs.h      |   4 +-
+ include/trace/events/filelock.h | 102 ++---
+ 48 files changed, 1064 insertions(+), 933 deletions(-)
+---
+base-commit: e96efe9f69ebb12b38c722c159413fd6850b782c
+change-id: 20240116-flsplit-bdb46824db68
+
+Best regards,
 -- 
-Dan Shelton - Cluster Specialist Win/Lin/Bsd
+Jeff Layton <jlayton@kernel.org>
+
 
