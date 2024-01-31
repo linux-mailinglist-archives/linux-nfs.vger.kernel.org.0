@@ -1,207 +1,219 @@
-Return-Path: <linux-nfs+bounces-1630-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1631-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2DE0844321
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 16:34:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B25B8443C4
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 17:10:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 593F31F2B069
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 15:34:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EC7C1C25C40
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jan 2024 16:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C349512837F;
-	Wed, 31 Jan 2024 15:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D1484A3B;
+	Wed, 31 Jan 2024 16:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l8viqEb1";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="uR3aE5kj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQZjHeFG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF25112A164;
-	Wed, 31 Jan 2024 15:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706715223; cv=fail; b=mecB7b3IMN2Czi+idN6HXIMUxFhdxPjQzZGXggiU7d8v1HyzF7cC4RUbMUXXSLmLAwRtuclt4iIMxlQwOdRVN34fPyQLjxT8S5H3oAvjm676U333wcn/i154LrM1PxYPIq+fU6XmlV5MBIAowHA6OEoY6SDH43NNEvXaUI9zMZ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706715223; c=relaxed/simple;
-	bh=Zyofv6JXUv5rsGW+5PYtSinT62Yiq/oQFVYjP9RX8GE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=poqmq/17TlafI610fw2a2WwPBSyuL710iWJ8fGl2qppZJBbAKqpznXfyZtAkCpyBnKNTUqY0fQP3XJfk3Zqjf82BGw/0JAWzlb+6hj7K7IrH+uRacuz7BpFEsBmNCQPZTfcCTDJPney4ecokWdM43atpY+5ZmZT+EjLhgqi0Tcg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=l8viqEb1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=uR3aE5kj; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VEx2QW009196;
-	Wed, 31 Jan 2024 15:33:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=h2jjD6w65+MXWw+EKhgVgXj/tgUdrAT/jjobQPAy2oY=;
- b=l8viqEb1nm427qsBjkLuyjFSXkpUPjHUVVxNfdAMYjTgUgCaEYkxvPtT+sOm5aPjG6+5
- wOYXmfgkRnVUapgXTEeRuYKsPtsgMGoM5BQennLlStYe2RdIQHpLI9FiFHMCDFvjyYk8
- xLSm0f143eTKesV+iAPoopJ1Zwdo//Mt6tUj/sNjh0W7BKBhMRD+307kq20UTJM7hamT
- 0FSMDlRtIPjWTbQKHgmM37iFjZ09qs+ddjU7BXRNq+vLOXYnrDeyGGUl/XBOrze7mgmp
- fQv/LP7arKX6VQ9Wu2hqwprk70AiaZGQEJWlJcrBWDYBfhh4wQe00QG3OH41kiHx/Z4x zw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvrm424hs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 15:33:27 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40VFWELn036070;
-	Wed, 31 Jan 2024 15:33:27 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9ffkw5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 15:33:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rjdq7D7yzZnC4KgrEcoth0QpE6q1QN1ar3mR1SvWev1kM1Klz8dnnT4CdLsRsg2vQaXDB+nb7pEPv/iiFWaUD4JxBffo/tz3dYSbTt3n1Z4BBCmSLqQuW5lAYcJOLKdkdzet3MWdeJiqf8Bs1eey2InELa6nhFVENh5HTO/UrccPgMcDyjK8aBeOD/T/rt0Tr4zP0tdeHaKh8JoA26iC1nWYBjSYMs+97AoZExeWYk5PbOF6WC5jmFjZU0LZE0kctVTrEMOtFIGGHq5YcrTvjDBY1IgENF1HpTG/lHGKhVyyscUACWBRCH+JiIpc4OvH3bD2yhbdpqYOTuQ6V6NG7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h2jjD6w65+MXWw+EKhgVgXj/tgUdrAT/jjobQPAy2oY=;
- b=L2Z0VZ+92bGgzUjTMTqP5R40DmOj/9jvY8qe5B+zmIXdv3jV9MqJRHukw+pD1EV691YXSFgUpIeeQ9ViDfs+2aWyofl/s5LOako79skjX+HYkum4DRu8Wi5AfG59SvBQwxHk7ZRVmdxB2bdDosczoEkwRbQvjnPhM5f2xxJNQE2KgC9CU/aW38so0VMYZrl+O8TAnU10QsewNPmPl8bMp9BqJfs0MrECae7Dv2TFel/XJEaZ1m5opRcrhOg3AwZ1fYHwJFKXpbluwvfaJ5twrtfqF/jOmiFXfYVyW6hrm8bdiEY9/Aer2H+JtsRSZ0+gOMXSHYjPIIEeMaqJonhfmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h2jjD6w65+MXWw+EKhgVgXj/tgUdrAT/jjobQPAy2oY=;
- b=uR3aE5kj7tidxyTAKzPfYva9okDLqgJyHUGXM9Wilo/rgmzLRmAoNS2lddQFgXK8UfQjE01XIelAAOjfOkSSjDtG22v+h3IXi+lshwqUKLqq9csayeA7c50VWLjTTY4zCkqAS6+VJtGNeisXILjutemgbSaxBiLcxjcbFL5cLCs=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CO6PR10MB5540.namprd10.prod.outlook.com (2603:10b6:303:137::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.35; Wed, 31 Jan
- 2024 15:33:17 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed:9f6b:7944:a2fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed:9f6b:7944:a2fa%7]) with mapi id 15.20.7249.025; Wed, 31 Jan 2024
- 15:33:17 +0000
-Date: Wed, 31 Jan 2024 10:33:14 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Kunwu Chan <chentao@kylinos.cn>
-Cc: jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
-        tom@talpey.com, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Simplify the allocation of slab caches in
- nfsd_file_cache_init
-Message-ID: <ZbpoOtZlxt7gWEyI@tissot.1015granger.net>
-References: <20240131065653.133965-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131065653.133965-1-chentao@kylinos.cn>
-X-ClientProxiedBy: CH2PR17CA0019.namprd17.prod.outlook.com
- (2603:10b6:610:53::29) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8145612A169
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Jan 2024 16:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706717416; cv=none; b=IUj6onOq+9mhjxi4pMZEBfmdB8PFzCWNIcL39mS0S/5c+hPZmRBkqyW0AS8nWPFrTEj01hk2Ux/UUdqddW9p+PL7PhTQ2EtnTzkNW8M3TkXbXejgpj/NxmoNQl5SL8wDvj8OaTHz5QC648yyMw4W3zmUThcNMzP23rQAfH9QR5E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706717416; c=relaxed/simple;
+	bh=KIwu6QR8r5b8azkpBjVzwHeOJhLwEzV3M5sqyYZeugI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l2qHENpgek6XHaOcczOxXVd8eULlZ3IdDEu3tcnPsDMYpxxx2OiWsAyC5JVIXX7EOnhfn4JqlPmuORgGD4NW2uYOjrhPcIEVB3IyXZH/kJuosvXqU01Qaa/649/B9bQdXrwFwKHynRy2eWZryHdW3Sn6VeuISyCcQdgGMKTdcEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQZjHeFG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706717413;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Lt3sHrhpNk4V3mKbYLYm+tjlUNv9hVfDfiEkd/fQy0w=;
+	b=PQZjHeFGLLuL/5MFj18ON1pKZpM5i47F1vD2QXw+mI0wDz6aKkz5SAIIPSuRYzJuoE7GZy
+	F5bhg9e4r2KqC4nUGtStG7Ygj08o2JQdC4OxmDVdE8fTuSl0NPn1mrIvjNNd7BAibszaiq
+	Fwr663B9Lik8n5s0aF6aHXfYmX30x/k=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-519-R1GsC0IPMiuIwTcM94QHZg-1; Wed,
+ 31 Jan 2024 11:10:08 -0500
+X-MC-Unique: R1GsC0IPMiuIwTcM94QHZg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35E733C29A71;
+	Wed, 31 Jan 2024 16:10:08 +0000 (UTC)
+Received: from dwysocha.rdu.csb (unknown [10.22.9.52])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BD6A63C2E;
+	Wed, 31 Jan 2024 16:10:07 +0000 (UTC)
+From: Dave Wysochanski <dwysocha@redhat.com>
+To: Anna Schumaker <anna.schumaker@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	linux-cachefs@redhat.com
+Subject: [PATCH v2] NFS: Fix nfs_netfs_issue_read() xarray locking for writeback interrupt
+Date: Wed, 31 Jan 2024 11:10:06 -0500
+Message-Id: <20240131161006.1475094-1-dwysocha@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CO6PR10MB5540:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41cd954e-6928-4b63-7211-08dc2271f238
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	H0ViKrpW+rJfEI2Pu8cvWtHbSs2W7lUYrFYmGnVwBXTbdnHcOD2wf0zzUul1tr+FLmQcieKGbfWIC9HCXaRfi/y1wx0h98opFL1LJupnzVtG75M9SFzEtEY3v1t5jd6xTiyj6OvTAa87LrbHPWZfdtRcvZpx+nUet8bKIefiuk04LS2OKIhMJmvB2HP9VN6obBPl0PFUHytDJ9nrdqwGzr9bjR2z+yYQxRfvN9Cn3O0lBLvODAiVU1+PO00m4Ffn1SK2JtmEeIipT3V39qMDQtkB8baDyUqzxz8ThBrXqeHy9G7tH3hG2i2Hr6N7TYTYvELLGEVLLRY+ZR2cyk8ZXfArkjG5K2OjU27P+JHerV5Uk6U0DgmqHxBuBONBzKJSkJ50BE8CTyMr1AjDfMFrXgJ3idmQKDBH07aFviQVT8SIWp99hIzN/fKWTulnDwN5NbdCzBqpAWqVYJIO2h0W4A/CbqKS2rOASxIV9yqifL0AZJ+y+I3rLLn90+DIoXP5kUxWmmruqeYNJYIrFVmQqgx/aeIw/uVUbbLpqq+UUiLMW3DGnOeJqrQaJnZoOPMO
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(136003)(366004)(346002)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(6486002)(478600001)(9686003)(6512007)(6506007)(86362001)(6666004)(83380400001)(26005)(66476007)(66556008)(66946007)(6916009)(38100700002)(44832011)(2906002)(8676002)(8936002)(5660300002)(316002)(4326008)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?USQWjHmgXA5OmjK2IX03Z26UmPfy2gUFQUyjp1/a3m8ZGNLxrrBSO35tn3P2?=
- =?us-ascii?Q?SKXExm8tCJH2eaB5tgz0YhVQuKlNvRz8rpkaXiKEdHtnxt6Ync/IsbVfCVbX?=
- =?us-ascii?Q?Bh9Oe4iz+kDy3uiWJHA4xsmMcksnpNxt64PzqPLKPpgBtL3OLsgexIEAboul?=
- =?us-ascii?Q?dUx30M5WOCKSc0RZLU7de78OuKQ+Ve/xG98Wtwhd616gpTjgwj3cEOMEIkaR?=
- =?us-ascii?Q?hOyuuRDn2dugKn8wsfkM/9kk0F0ZkcH2wVL46uYgaushAajoDQSxfmcHNu0F?=
- =?us-ascii?Q?Z9QlR/S9mBnYeyDm3CS0FBVNagOd3kVgsMfA9xvhA09ntGZsmIqEbxizNhW7?=
- =?us-ascii?Q?FUvBv09OwHedOhrhy+i7PHJ0hhmTSKF+S9ZtLKBbSgboVA050a9R5/95SMwV?=
- =?us-ascii?Q?/ZybOEq+P4vH0nFU0+riomer0Loc2rNaczI7BW/K5rXOkWCfsBnQsk3HJevQ?=
- =?us-ascii?Q?EDijuEmld8tO0VYs+IvizI+LXjR6TvIOzOSYMzml5nFJQ6r7Bn/+/lTcTscn?=
- =?us-ascii?Q?gAtynj16X0oku9VzVBFM8VnHt9Uz3uqyaA+B7cpwplZ4ufo7RaHb/JP+Xvtd?=
- =?us-ascii?Q?rPdqNUIejVep+VyNKTPnJVjuhOVQ+ZlqTIyl6xoNAPcTnjoXvSRVtcJuUo/J?=
- =?us-ascii?Q?lrZWg9T7HBIMvIQmV8gDRN2CzMYcqDR4beC1TW22D6i9qCFRPlN2VoeJxTO1?=
- =?us-ascii?Q?lH8xXrBvPEDKp4Pe/dLC5p0IsiWe+mT2NUQMdCQQge4sSU6787sqglWianJL?=
- =?us-ascii?Q?13j+hkNGO0bKLPN2aUGGFmbGPpGd2uSj3JQJLh+ODj+1GKyzJsAy8auakr1y?=
- =?us-ascii?Q?LAYWtMCMXqQBnvDqE+kSTNeZWKS9jCfhq5eerjTxIMlkefKvDPWd2L0IZhcP?=
- =?us-ascii?Q?/cOX+vt61uUKaQBfnsba4ihlKyD9JNjjb7Od+vMA3jkWgPFZuDaRSyCMmoki?=
- =?us-ascii?Q?7ENCH3KI61p2L3rzP5vfjsyUo8HfeOPTDf6xWxiehaFwQ9hIL0hkNaRNvcei?=
- =?us-ascii?Q?hd4LPIyH9iEYx5R1UUuB5Pc/2NJuEcHqzZ8gGcFQRy6l1C9aRf5qeW0VmsLh?=
- =?us-ascii?Q?91vn+LFiTju2rsuPk1940mc0Df4qrx6g7JQ4Usf+Tzedx/Rxe/yaZgb2Mog7?=
- =?us-ascii?Q?oUlG9tQk5+SuQvcIEAyI877sFzbwB+BIEfF0TCBc5yypnLnuK6MYYi2rqQKe?=
- =?us-ascii?Q?Wx5h/pzjfNJ3s7Q6RXGnWnPYbqKBlV3ML9sr1LhFC/J/sxnOGqUPQFnLYuEp?=
- =?us-ascii?Q?FPsM1yBmwd85F7MtELO2fd1MlgSJ0XyJrhWV2nOA4JlFuO/JqUCvilNd+AjP?=
- =?us-ascii?Q?at44fRL+Ze2uWA50arhXnZvAL28ArmbhhxFF1TlGWTLvDHk2VVpPajc06pT+?=
- =?us-ascii?Q?ysnbnWn8jc4f4LEoJX9XmLzifksUNcYruA5w2RNDBnpqwGU47085PYMTkd1Y?=
- =?us-ascii?Q?smfbnjOQTghlTYHNjBP+7PHD197cC0MerIzNgCIajDCPs+vGn5jVbxf8DSLZ?=
- =?us-ascii?Q?jAHltR7AbQ7syMLsVYzFYeHVYoGDNpCdSrZ5kH4okaPE6OV+RYKBHBKmB7LJ?=
- =?us-ascii?Q?jpbCMbiJRtVMslBPBwBRGiSvmFG3zDkxcSRrnZ7qTI1B3yPG7rRIHryG4k2X?=
- =?us-ascii?Q?Ww=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	0ZcsNZ/tgt3h8+RK1B1MuH19RkcbXSaxDATLujPgdAz8s3qQf61Lnb5gBoWIQt6MgdOgFf1xKFn8uULYzQrr5bjSPqSFXaQCL16/8GX5px9cyTr7yt9LZitU3jdXZ3aJNhbvZpaYceeos85k/Als+rSuDm5WQ6G8ukGJNY+Y4ESE/6jxQAVnHLsb2/5fUszMR3AsFYpbgEO+ognZ4Qx2i3Iwvt4mPc/21d/gVUW/iTi9aJUeGdzrLJPWBLCcC8oM3RLdi0jnb8MaGgIIQ7GFtdxjBar4ssK5CGD2yDchjizHJzjAPAgj4T3dJ10VEHDYoG53NGUYevERTT+cszmUbyatjmDoeWn3XuSFdlv9gKpqLzr6maYph7LzlSKmTelSZHXgMj5hYkVXjUfctl0wUPQeZUYRUM2SVB4wqIa82qpbpqzZg8JGJkDMNhUllX6dZFQk/2RIbuzP+N21+7fRHFjvsS0QAlSo7dmbI+X43YyVgh3bCYNwUBhBs9GDSbm1XMM2/z9NL4Lq19DZOKKh5bRi9qFrJq7u3o212KwlVG9Uq3/kGLR92AK3qkjluT2YCu1rS+GgQMf/9tCAsor9/1ddtzVho5wvWxGENjW8Qyw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41cd954e-6928-4b63-7211-08dc2271f238
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 15:33:17.1652
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GwBIhGGVNq+4gze4lyAkNd1HbTRRpBTyv1XZm3nDyWyQMb19lcWwp4AyWzLUl9572ANdUEMv7e7wERiTs3kn3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5540
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_08,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- spamscore=0 mlxlogscore=939 adultscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401310120
-X-Proofpoint-GUID: kJ8Rbr5519SIEOcEWeiJ4ZoBQhILpCfQ
-X-Proofpoint-ORIG-GUID: kJ8Rbr5519SIEOcEWeiJ4ZoBQhILpCfQ
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Wed, Jan 31, 2024 at 02:56:53PM +0800, Kunwu Chan wrote:
-> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-> to simplify the creation of SLAB caches.
-> 
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-> ---
->  fs/nfsd/filecache.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 8d9f7b07e35b..f3a642fd0eca 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -722,15 +722,13 @@ nfsd_file_cache_init(void)
->  		return ret;
->  
->  	ret = -ENOMEM;
-> -	nfsd_file_slab = kmem_cache_create("nfsd_file",
-> -				sizeof(struct nfsd_file), 0, 0, NULL);
-> +	nfsd_file_slab = KMEM_CACHE(nfsd_file, 0);
->  	if (!nfsd_file_slab) {
->  		pr_err("nfsd: unable to create nfsd_file_slab\n");
->  		goto out_err;
->  	}
->  
-> -	nfsd_file_mark_slab = kmem_cache_create("nfsd_file_mark",
-> -					sizeof(struct nfsd_file_mark), 0, 0, NULL);
-> +	nfsd_file_mark_slab = KMEM_CACHE(nfsd_file_mark, 0);
->  	if (!nfsd_file_mark_slab) {
->  		pr_err("nfsd: unable to create nfsd_file_mark_slab\n");
->  		goto out_err;
-> -- 
-> 2.39.2
+The loop inside nfs_netfs_issue_read() currently does not disable
+interrupts while iterating through pages in the xarray to submit
+for NFS read.  This is not safe though since after taking xa_lock,
+another page in the mapping could be processed for writeback inside
+an interrupt, and deadlock can occur.  The fix is simple and clean
+if we use xa_for_each_range(), which handles the iteration with RCU
+while reducing code complexity.
 
-Applied to nfsd-next (for v6.9).
+The problem is easily reproduced with the following test:
+ mount -o vers=3,fsc 127.0.0.1:/export /mnt/nfs
+ dd if=/dev/zero of=/mnt/nfs/file1.bin bs=4096 count=1
+ echo 3 > /proc/sys/vm/drop_caches
+ dd if=/mnt/nfs/file1.bin of=/dev/null
+ umount /mnt/nfs
 
+On the console with a lockdep-enabled kernel a message similar to
+the following will be seen:
 
+ ================================
+ WARNING: inconsistent lock state
+ 6.7.0-lockdbg+ #10 Not tainted
+ --------------------------------
+ inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
+ test5/1708 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ ffff888127baa598 (&xa->xa_lock#4){+.?.}-{3:3}, at:
+nfs_netfs_issue_read+0x1b2/0x4b0 [nfs]
+ {IN-SOFTIRQ-W} state was registered at:
+   lock_acquire+0x144/0x380
+   _raw_spin_lock_irqsave+0x4e/0xa0
+   __folio_end_writeback+0x17e/0x5c0
+   folio_end_writeback+0x93/0x1b0
+   iomap_finish_ioend+0xeb/0x6a0
+   blk_update_request+0x204/0x7f0
+   blk_mq_end_request+0x30/0x1c0
+   blk_complete_reqs+0x7e/0xa0
+   __do_softirq+0x113/0x544
+   __irq_exit_rcu+0xfe/0x120
+   irq_exit_rcu+0xe/0x20
+   sysvec_call_function_single+0x6f/0x90
+   asm_sysvec_call_function_single+0x1a/0x20
+   pv_native_safe_halt+0xf/0x20
+   default_idle+0x9/0x20
+   default_idle_call+0x67/0xa0
+   do_idle+0x2b5/0x300
+   cpu_startup_entry+0x34/0x40
+   start_secondary+0x19d/0x1c0
+   secondary_startup_64_no_verify+0x18f/0x19b
+ irq event stamp: 176891
+ hardirqs last  enabled at (176891): [<ffffffffa67a0be4>]
+_raw_spin_unlock_irqrestore+0x44/0x60
+ hardirqs last disabled at (176890): [<ffffffffa67a0899>]
+_raw_spin_lock_irqsave+0x79/0xa0
+ softirqs last  enabled at (176646): [<ffffffffa515d91e>]
+__irq_exit_rcu+0xfe/0x120
+ softirqs last disabled at (176633): [<ffffffffa515d91e>]
+__irq_exit_rcu+0xfe/0x120
+
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&xa->xa_lock#4);
+   <Interrupt>
+     lock(&xa->xa_lock#4);
+
+  *** DEADLOCK ***
+
+ 2 locks held by test5/1708:
+  #0: ffff888127baa498 (&sb->s_type->i_mutex_key#22){++++}-{4:4}, at:
+      nfs_start_io_read+0x28/0x90 [nfs]
+  #1: ffff888127baa650 (mapping.invalidate_lock#3){.+.+}-{4:4}, at:
+      page_cache_ra_unbounded+0xa4/0x280
+
+ stack backtrace:
+ CPU: 6 PID: 1708 Comm: test5 Kdump: loaded Not tainted 6.7.0-lockdbg+
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
+04/01/2014
+ Call Trace:
+  dump_stack_lvl+0x5b/0x90
+  mark_lock+0xb3f/0xd20
+  __lock_acquire+0x77b/0x3360
+  _raw_spin_lock+0x34/0x80
+  nfs_netfs_issue_read+0x1b2/0x4b0 [nfs]
+  netfs_begin_read+0x77f/0x980 [netfs]
+  nfs_netfs_readahead+0x45/0x60 [nfs]
+  nfs_readahead+0x323/0x5a0 [nfs]
+  read_pages+0xf3/0x5c0
+  page_cache_ra_unbounded+0x1c8/0x280
+  filemap_get_pages+0x38c/0xae0
+  filemap_read+0x206/0x5e0
+  nfs_file_read+0xb7/0x140 [nfs]
+  vfs_read+0x2a9/0x460
+  ksys_read+0xb7/0x140
+
+Fixes: 000dbe0bec05 ("NFS: Convert buffered read paths to use netfs when
+fscache is enabled")
+Suggested-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+---
+ fs/nfs/fscache.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index b05717fe0d4e..60a3c28784e0 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -307,11 +307,11 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
+ 	struct inode *inode = sreq->rreq->inode;
+ 	struct nfs_open_context *ctx = sreq->rreq->netfs_priv;
+ 	struct page *page;
++	unsigned long idx;
+ 	int err;
+ 	pgoff_t start = (sreq->start + sreq->transferred) >> PAGE_SHIFT;
+ 	pgoff_t last = ((sreq->start + sreq->len -
+ 			 sreq->transferred - 1) >> PAGE_SHIFT);
+-	XA_STATE(xas, &sreq->rreq->mapping->i_pages, start);
+ 
+ 	nfs_pageio_init_read(&pgio, inode, false,
+ 			     &nfs_async_read_completion_ops);
+@@ -322,19 +322,14 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
+ 
+ 	pgio.pg_netfs = netfs; /* used in completion */
+ 
+-	xas_lock(&xas);
+-	xas_for_each(&xas, page, last) {
++	xa_for_each_range(&sreq->rreq->mapping->i_pages, idx, page, start, last) {
+ 		/* nfs_read_add_folio() may schedule() due to pNFS layout and other RPCs  */
+-		xas_pause(&xas);
+-		xas_unlock(&xas);
+ 		err = nfs_read_add_folio(&pgio, ctx, page_folio(page));
+ 		if (err < 0) {
+ 			netfs->error = err;
+ 			goto out;
+ 		}
+-		xas_lock(&xas);
+ 	}
+-	xas_unlock(&xas);
+ out:
+ 	nfs_pageio_complete_read(&pgio);
+ 	nfs_netfs_put(netfs);
 -- 
-Chuck Lever
+2.39.3
+
 
