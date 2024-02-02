@@ -1,146 +1,192 @@
-Return-Path: <linux-nfs+bounces-1717-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1718-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CD47847573
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Feb 2024 17:56:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21B8B8475EF
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Feb 2024 18:16:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1847128E945
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Feb 2024 16:56:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 883231F2625D
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Feb 2024 17:16:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976041487D0;
-	Fri,  2 Feb 2024 16:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B1545BF3;
+	Fri,  2 Feb 2024 17:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVDp0+P9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K91e06HE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06AD14A087
-	for <linux-nfs@vger.kernel.org>; Fri,  2 Feb 2024 16:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033C35B66F
+	for <linux-nfs@vger.kernel.org>; Fri,  2 Feb 2024 17:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706892998; cv=none; b=qc5DXhO3lVVS5A+MT8lvL8pZK9bBdcz2GGmHY8i8/mMudA2PgQg5Vef98bZYevjrmzChVFvzKTVMViXAqB+UdkayF3NlFO7lq9q6meHGXuH8VKw20uVRqH9XGbzRqvXCc4KoW2HIaQNZGUsOXkW5BL4CAy10vIqVoM7yvFDNrEc=
+	t=1706894208; cv=none; b=VmrDy82Iah6fDtZEyIyXNHc5hCa7mD3GmhsV7t8ICR+G33chhHNn8sgRSWAYDAstDkrFt6MHlhT3gYh5g7mK4xjXIZgH90SttfkQE/+U7Eoxfk0DqjHMKd0axz+3NahnOUsuKmf0l2Fh+ZUkSFYI52mXVgRPVwmDQGTtRH88PzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706892998; c=relaxed/simple;
-	bh=qAy7oy/rBtfH0kIaSVLKtqNpx65vjTZQ4/wydRBryao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CfT5Knxk7RB4HZMCngHei83t0hXx4ZTlLbe03Nlp1MBRnP64mF6BebCMI6soY4fDew9wAAx3rv9nis7JjRxAUc6/Mc9zRLhnmaWgyGa7qJ+9xhR89YICiYnd2oYeiqy+P6Zhb9JB27D5r0h3WL3fTN2vXGdZ0NRuVzX685s8rIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AVDp0+P9; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1706894208; c=relaxed/simple;
+	bh=8i9nMk7RtT97GNhIzUlZZIirEi//LV79dIrK54Wrm0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1R9CeC+Vy3gyGO7QLD4MuGMNAKcPOnm5vVE8T8fwgVKzxW7Vn+JNNsOwQJTuSmArE9KH986KVdkleYR7DpQxGCfAqfmr7GpS+OF0vt4BYHWcN3Nd8LOZxrVGdbo7SD8vMzmh6cnHRubQkILFxBgPad3Owr8apWJrGUBZLT0GR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K91e06HE; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706892995;
+	s=mimecast20190719; t=1706894205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j+jkz0nzktSIYMtPuf/VgPym7a8PKkPvDVbCO1I6Ot0=;
-	b=AVDp0+P98KD/wGkI9njYgeMKHvOZ98/9j0Y4WSkLwJnKUIT3EKO4o8jgXxHrUTFM9s315j
-	RE210DSlPISE76GJmw75EcH6izg3fgka045OJDd9XLxmKLVICOhCiegje9roKA+EAPdL6r
-	tsnJMjeWEp3LBiKaUp1cNSjhGD9nwe4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-4ff1_x12NqWdFP5Q4hRgGQ-1; Fri,
- 02 Feb 2024 11:56:32 -0500
-X-MC-Unique: 4ff1_x12NqWdFP5Q4hRgGQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E586D3C025D0;
-	Fri,  2 Feb 2024 16:56:31 +0000 (UTC)
-Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 17A2A1121306;
-	Fri,  2 Feb 2024 16:56:30 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc: trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] NFSv4.1: add tracepoint to trunked nfs4_exchange_id
- calls
-Date: Fri, 02 Feb 2024 11:56:29 -0500
-Message-ID: <A60265EE-8564-4772-A035-916F88C82107@redhat.com>
-In-Reply-To: <CAN-5tyHjkWsJPteVvLh83X3YTsvvS8vDfHBny-LMaAVbx0ww1g@mail.gmail.com>
-References: <20240126190333.13528-1-olga.kornievskaia@gmail.com>
- <1DBC4AE1-E253-454F-9E7E-12DFBA14EBA6@redhat.com>
- <CAN-5tyGDQaaud7emd-Sgx_0E31bLx0k6EgrONSp0SbfoMTwY9A@mail.gmail.com>
- <D23CBB93-3883-4E41-A1E5-848BCB2D477E@redhat.com>
- <CAN-5tyHjkWsJPteVvLh83X3YTsvvS8vDfHBny-LMaAVbx0ww1g@mail.gmail.com>
+	bh=gGHvZm2pNMYsuKTK+gFhJ3VJB7gJXTCggUVWpF15icg=;
+	b=K91e06HETwysIjHnSMKbAG5lkOY8k9zhTXBsQveX4RprxGuL420gflHABEwPVNc93iJgDM
+	oMNmMnKmxYKVVAaErNryPxiGEyvp6kziIhBXhh3vggJuM3f+qMigMgW9mhomMeGLHHQbv6
+	KyNqxF0vQPmlzpt2l8z8gUslrN/foY0=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-336-y26sexXZMNCJbl3oEcgYNA-1; Fri, 02 Feb 2024 12:16:42 -0500
+X-MC-Unique: y26sexXZMNCJbl3oEcgYNA-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7816e45f957so284779385a.1
+        for <linux-nfs@vger.kernel.org>; Fri, 02 Feb 2024 09:16:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706894202; x=1707499002;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gGHvZm2pNMYsuKTK+gFhJ3VJB7gJXTCggUVWpF15icg=;
+        b=wWGLdv8o/u4Hz1+1Xni4sRBkm/wgo6lnzlCqpfgj+AQr6afN7ZKKJh4Wca0RxIJB5N
+         hr1xr7iejkSw0DlON9A59ucDec0gDJTdPrwedHMX6DQLfuMbdkZqY2C5Y9ELojldyDvk
+         ZN0ueyOn0qDoCkeu37yWZ6KPR+Ln6zjODLgOuN7AVvcueDq/c8kRKskijojH+v/ri0Q1
+         HhMIjfZnBStxSZCMeOFbc3oHAuvjLmDbUK/ai621ICwgjrJGWQvonkuhFVJcTip+nI/q
+         whGHeAP38awhwECNjnb261CUAfwD/Y9Zuv1vZN9SFz8w8QGpUnJ/qFK+gzeDCvzbijMt
+         gU7Q==
+X-Gm-Message-State: AOJu0YwhZdtDg7XlaLprBrJFYuNWGQIL2bs6ZqSRLKhjz9ng9NmVVbgM
+	nulw6k+b+Ew9shUfhf44oTM76Q9RXfpHLENkTlL8qqWrqjJ+pM/sMn4oAhh1YNGhE5wK7ANaRYa
+	pmixEwhpLHW08HTgiUrsqKUqnEATm2MRx1Z1UEy321CXFKwKK9HK6VFhdNQ==
+X-Received: by 2002:a05:620a:a55:b0:785:457e:e57e with SMTP id j21-20020a05620a0a5500b00785457ee57emr2550708qka.17.1706894201806;
+        Fri, 02 Feb 2024 09:16:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHc4Ushq1JgWV5BxoKJeNiUA7ZkzpIwnbZuPgQ2Qur/pvN6STYwi0pWbvGwv9vkISPGdtaw7A==
+X-Received: by 2002:a05:620a:a55:b0:785:457e:e57e with SMTP id j21-20020a05620a0a5500b00785457ee57emr2550691qka.17.1706894201495;
+        Fri, 02 Feb 2024 09:16:41 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWwWTCdNlVIKgFGqnZQcS7K5weUl5wZ49JcAg2LrzDx6xoz6dzwbVYnytEHAOUYEp7Wtg+f+uW6OyshEIOlLKv5acpPxIpt+iNBR8NcOuQW2p/iR3yu/Sa6Av2Ear7C9x/7aODyqo/JdMBYMUgNkiZbfkZPAgMkoMpOZG5qEFvMLeKymDpVlmbIul5d6byCb7pyazX3hzMTLstj4bEK8TthUGEFBHao5RJDOWwsJ0Bp7VXNU0Nrals=
+Received: from localhost (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05620a454f00b00784087c7f21sm823269qkp.84.2024.02.02.09.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 09:16:41 -0800 (PST)
+Date: Fri, 2 Feb 2024 18:08:38 +0100
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	"olga.kornievskaia" <olga.kornievskaia@gmail.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Should we establish a new nfsdctl userland program?
+Message-ID: <Zb0hlnQmgVikeNpi@lore-rh-laptop>
+References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Y4fqAr61eeYDETl5"
+Content-Disposition: inline
+In-Reply-To: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
 
-On 2 Feb 2024, at 11:47, Olga Kornievskaia wrote:
 
-> On Fri, Feb 2, 2024 at 10:36 AM Benjamin Coddington <bcodding@redhat.com>
-> wrote:
->
->> On 2 Feb 2024, at 9:42, Olga Kornievskaia wrote:
->>
->>> On Fri, Feb 2, 2024 at 8:01 AM Benjamin Coddington <bcodding@redhat.com>
->> wrote:
->>>>
->>>> On 26 Jan 2024, at 14:03, Olga Kornievskaia wrote:
->>>>
->>>>> From: Olga Kornievskaia <kolga@netapp.com>
->>>>>
->>>>> Add a tracepoint to track when the client sends EXCHANGE_ID to test
->>>>> a new transport for session trunking.
->>>>>
->>>>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
->>>>> ---
->>>>>  fs/nfs/nfs4proc.c  |  3 +++
->>>>>  fs/nfs/nfs4trace.h | 30 ++++++++++++++++++++++++++++++
->>>>>  2 files changed, 33 insertions(+)
->>>>>
->>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>>>> index 23819a756508..cdda7971c945 100644
->>>>> --- a/fs/nfs/nfs4proc.c
->>>>> +++ b/fs/nfs/nfs4proc.c
->>>>> @@ -8974,6 +8974,9 @@ void nfs4_test_session_trunk(struct rpc_clnt
->> *clnt, struct rpc_xprt *xprt,
->>>>>               status = nfs4_detect_session_trunking(adata->clp,
->>>>>                               task->tk_msg.rpc_resp, xprt);
->>>>>
->>>>> +     trace_nfs4_trunked_exchange_id(adata->clp,
->>>>> +                     xprt->address_strings[RPC_DISPLAY_ADDR], status);
->>>>> +
->>>>
->>>> Any worry about the ambiguity of whether "status" comes from tk_status
->> or
->>>> from nfs4_detect_session_trunking() here?  The latter can return -EINVAL
->>>> which isn't in show_nfs4_status().
->>>
->>> Good catch, I didn't realize there wasn't an EINVAL mapping. I was
->>> focusing on capturing the fact that exchangeid was happening and ip
->>> info of the trunking connection that I didn't pay attention to the
->>> status. I'll send a v2 with EINVAL added to show_nfs4_status.
->>
->> If you're only interested in tk_status, you could just move the tracepoint.
->> That would resolve the conditional branch that changes the source of
->> "status".
->>
->
-> We are not interested in tk_status that can be gotten from the
-> nfs4_xdr_status tracepoint. We are interested in the results of the
-> trunking decision.
+--Y4fqAr61eeYDETl5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gotcha, ok, I understand now.  Tucking into the conditional or moving it into
-nfs4_detect_session_trunking() would make that clearer, but no big objection
-from me.
+> The existing rpc.nfsd program was designed during a different time, when
+> we just didn't require that much control over how it behaved. It's
+> klunky to work with.
+>=20
+> In a response to Chuck's recent RFC patch to add knob to disable
+> READ_PLUS calls, I mentioned that it might be a good time to make a
+> clean break from the past and start a new program for controlling nfsd.
+>=20
+> Here's what I'm thinking:
+>=20
+> Let's build a swiss-army-knife kind of interface like git or virsh:
+>=20
+> # nfsdctl=A0stats			<--- fetch the new stats that got merged
+> # nfsdctl add_listener		<--- add a new listen socket, by address or hostn=
+ame
+> # nfsdctl set v3 on		<--- enable NFSv3
+> # nfsdctl set splice_read off	<--- disable splice reads (per Chuck's rece=
+nt patch)
+> # nfsdctl set threads 128	<--- spin up the threads
+>=20
+> We could start with just the bare minimum for now (the stats interface),
+> and then expand on it. Once we're at feature parity with rpc.nfsd, we'd
+> want to have systemd preferentially use nfsdctl instead of rpc.nfsd to
+> start and stop the server. systemd will also need to fall back to using
+> rpc.nfsd if nfsdctl or the netlink program isn't present.
+>=20
+> Note that I think this program will have to be a compiled binary vs. a
+> python script or the like, given that it'll be involved in system
+> startup.
+>=20
+> It turns out that Lorenzo already has a C program that has a lot of the
+> plumbing we'd need:
+>=20
+>     https://github.com/LorenzoBianconi/nfsd-netlink
 
-If the task returns an error, this tracepoint will still be called with
-tk_status instead of any result from the trunking decision.
+This is something I developed just for testing the new interface but I agre=
+e we
+could start from it.
 
-Ben
+Regarding the kernel part I addressed the comments I received upstream on v=
+6 and
+pushed the code here [0].
+How do you guys prefer to proceed? Is the better to post v7 upstream and co=
+ntinue
+the discussion in order to have something usable to develop the user-space =
+part or
+do you prefer to have something for the user-space first?
+I do not have a strong opinion on it.
+
+Regards,
+Lorenzo
+
+[0] https://github.com/LorenzoBianconi/nfsd-next/tree/nfsd-next-netlink-new=
+-cmds-public-v7
+
+>=20
+> I think it might be good to clean up the interface a bit, build a
+> manpage and merge that into nfs-utils.
+>=20
+> Questions:
+>=20
+> 1/ one big binary, or smaller nfsdctl-* programs (like git uses)?
+>=20
+> 2/ should it automagically read in nfs.conf? (I tend to think it should,
+> but we might want an option to disable that)
+>=20
+> 3/ should "set threads" activate the server, or just set a count, and
+> then we do a separate activation step to start it? If we want that, then
+> we may want to twiddle the proposed netlink interface a bit.
+>=20
+> I'm sure other questions will arise as we embark on this too.
+>=20
+> Thoughts? Anyone have objections to this idea?
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+
+--Y4fqAr61eeYDETl5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZb0hkwAKCRA6cBh0uS2t
+rM+3AP4v3+P/FFC/bLjALNfUYitWBR12o0xfPHLw1+JXzqw3vgEAl36TAQSI1HpS
+KKFMk1xIAE3pUhFwL1CcgU1Dhl5y4AM=
+=sCuO
+-----END PGP SIGNATURE-----
+
+--Y4fqAr61eeYDETl5--
 
 
