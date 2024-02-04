@@ -1,110 +1,111 @@
-Return-Path: <linux-nfs+bounces-1748-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1749-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46454848AE2
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 04:28:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FC47848CB4
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 11:19:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 031F3289902
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 03:28:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22EC41F222EE
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 10:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5EC6119;
-	Sun,  4 Feb 2024 03:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8841B5B1;
+	Sun,  4 Feb 2024 10:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Hdmx1DT8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B60A4430;
-	Sun,  4 Feb 2024 03:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34061B59E
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Feb 2024 10:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707017313; cv=none; b=eSrDfc7Ba+2iWVmZPrJA6oFXGsLPwid8Ph+tbUPyQvAw7RGWZRjGN+nR0v+zPlLdySRkp7AWYeks3OV+ceH3SKRnP7S2RpLBa7YfKCqg6k+rAtGStS5Y/lH8votTJ7jdlruuB6P6Qc/DQpqnvY7gQInodg9gba2KBghbZCLXnUk=
+	t=1707041936; cv=none; b=GlperLWU/DVIFButis6Q9SGqvy12DK+QFBg0iFi2SKm1deDRhrS8ISVTnlVUQ0dVYvsPw375JQSRxQsBGGRe33vTBNum70dcppirnhTYamz1In3MEVZ/LS2cq/Nbpa5Pfq5S11/ieS5dYm2XTflcDyMLBhJJACXPlvmXlCzuosI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707017313; c=relaxed/simple;
-	bh=KUScJl7sbfdEzdna4/ZchgG/zaSIl2kgyy9+ZMbNI70=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YEhghlV9lmMh07L7142pufvSHCl1zWymroiuaVPh+zX2oFuHJoE4JfLU4QFFVKGP9bTek01JBGIdm+S78Zjrz4TPwykl+yXgYRy6UGSqwchtPVkY2SWMmP+OORUKyMXByt0dpTf/5kU6lm/6igAclAVXFqLunyA48XWOW+7A1yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0b6d2740fc424cae8b63c4694ef53a39-20240204
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:a4bed280-eab9-4c5b-bbbe-6af01d97ed3b,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.35,REQID:a4bed280-eab9-4c5b-bbbe-6af01d97ed3b,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:5d391d7,CLOUDID:4a219783-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240204112826L6KNZ1FE,BulkQuantity:0,Recheck:0,SF:44|66|38|24|17|19|1
-	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 0b6d2740fc424cae8b63c4694ef53a39-20240204
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 155993714; Sun, 04 Feb 2024 11:28:24 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id E2E14E000EBC;
-	Sun,  4 Feb 2024 11:28:23 +0800 (CST)
-X-ns-mid: postfix-65BF0457-718252327
-Received: from kernel.. (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 31077E000EBC;
-	Sun,  4 Feb 2024 11:28:23 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH v2] nfsd: Simplify the allocation of slab caches in nfsd_drc_slab_create
-Date: Sun,  4 Feb 2024 11:28:21 +0800
-Message-Id: <20240204032821.349524-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707041936; c=relaxed/simple;
+	bh=M7dVKWP99ML9aDIZGZM11bwkNwEk3zUQqJrCAiW48FM=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=NkDT3VZsECzDwWOf8DN3tM0/DWaRt7Uwf9IwsFUqqf4RefcGiV4qcI65znk0pHiBblt0nM3FhgnkaT7A0HzkfX/sYql36JwWTilB8lwsnRQH7KZw5scPMXAka1yoOTln/h/5rYfvVp3CnYsP9L0MuDcF9lBFoUOsadONLC7RtNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Hdmx1DT8; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1707041934; x=1738577934;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M7dVKWP99ML9aDIZGZM11bwkNwEk3zUQqJrCAiW48FM=;
+  b=Hdmx1DT8kTsw3jG+lscINADP4OfbneCZ5lq5sOQdb9DzzN3x09AGJLEo
+   qzIjZD3wtM3mrE6DylRQZY+0hgbM1IbiGNzwh6C1oDV1QpjOGHypLFTy+
+   InqzH3tBUFJwo31K6pueUobWcKoFBJa11j+FLm6hFmEWx7fgT0H8rnJkw
+   dLQWtVVAMX3QKKFIKHjzY51EZblZ3U0GgzBXdSaRslOB8az6tqThcRASY
+   5VwwJJaMr1+qlpDmc7/sZehNKawQosvTnr9mUDQ5kPu1fe2U4HmoMDebR
+   ANGziLfmxTO72D2JVoWMouJy1YNUyht+Wft30Qed13z+rAK9c/rtxUpnf
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="127712782"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701097200"; 
+   d="scan'208";a="127712782"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2024 19:18:46 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 39FA3DCD4B
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Feb 2024 19:18:43 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 770E71A88A
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Feb 2024 19:18:42 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id ED68E20095248
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Feb 2024 19:18:41 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 6D4531A006A
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Feb 2024 18:18:41 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH]  nfs(5): Document the max value "timeo=" mount option
+Date: Sun,  4 Feb 2024 18:18:21 +0800
+Message-Id: <20240204101821.958-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28166.003
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28166.003
+X-TMASE-Result: 10--2.131800-10.000000
+X-TMASE-MatchedRID: 9IrrHbNZyfrR6RKL7TRTbhF4zyLyne+ATJDl9FKHbrlnyL8x0tKlOz7h
+	mFGKpcOtBdv5H2ulen22Rnvq1hC7tzf6ZkIPCe1yngIgpj8eDcBpkajQR5gb3savT21DsLD/UEh
+	Wy9W70AEnRE+fI6etkg6/Ta4+dUqRBvoK/s9Eau8yWOvO/P0s4bgyz0QbCaR8f0NUgPV8mQAvp/
+	xKj6NWillxHuVVuIXW+s9EMao2KS/YQGi8nLnGEZNXzfSpGjR+khLM4dgqCq4lnZEk2zZ/XGKsY
+	c7AKUEYGQnVWQzQGmI=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-to simplify the creation of SLAB caches.
-And change cache name from 'nfsd_drc' to 'nfsd_cacherep'.
-
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 ---
-Changes in v2:
-    - Update commit msg only.
----
- fs/nfsd/nfscache.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ utils/mount/nfs.man | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 5c1a4a0aa605..64ce0cc22197 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -166,8 +166,7 @@ nfsd_reply_cache_free(struct nfsd_drc_bucket *b, stru=
-ct nfsd_cacherep *rp,
-=20
- int nfsd_drc_slab_create(void)
- {
--	drc_slab =3D kmem_cache_create("nfsd_drc",
--				sizeof(struct nfsd_cacherep), 0, 0, NULL);
-+	drc_slab =3D KMEM_CACHE(nfsd_cacherep, 0);
- 	return drc_slab ? 0: -ENOMEM;
- }
-=20
---=20
-2.39.2
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index 7103d28e..233a7177 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -186,6 +186,10 @@ infrequently used request types are retried after 1.1 seconds.
+ After each retransmission, the NFS client doubles the timeout for
+ that request,
+ up to a maximum timeout length of 60 seconds.
++.IP
++Any timeo value greater than default value will be set to the default value.
++For TCP and RDMA, default value is 600 (60 seconds).
++For UDP, default value is 60 (6 seconds).
+ .TP 1.5i
+ .BI retrans= n
+ The number of times the NFS client retries a request before
+-- 
+2.31.1
 
 
