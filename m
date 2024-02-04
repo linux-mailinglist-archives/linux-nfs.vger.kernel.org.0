@@ -1,207 +1,126 @@
-Return-Path: <linux-nfs+bounces-1731-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1732-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F6B847FFE
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Feb 2024 04:55:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E79F2848A61
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 03:14:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E232CB2704E
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Feb 2024 03:55:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4D701C21BF8
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 02:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D59F9D7;
-	Sat,  3 Feb 2024 03:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB64FEDE;
+	Sun,  4 Feb 2024 02:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qdg9HZQZ"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="gY2nsqug"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02539F9D3
-	for <linux-nfs@vger.kernel.org>; Sat,  3 Feb 2024 03:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB3B10E9;
+	Sun,  4 Feb 2024 02:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706932542; cv=none; b=kR0TTMUM2m1VTieRq8eNxPERmFgU3nXiE84a8W0FB3bPJYPhQZLaKczUM122taXyQe56ak39CLU4V5YGc7NV3J8Q8iG6bFRuRN7WguIe4sdbNOKaIEiLDZ/mWJPBppbJUSimKje+BtMUKgx5rN1PQ3MJ3GjmPUAeUpl2d6sgTlM=
+	t=1707012882; cv=none; b=pJoM1gPcN8cgvvzcrtvu8gKPcUHf6XPZwEHejHBj4vVhvN5mSxfsDa3zoSnp1ad9A3LQ0Ju+799yS91ByTeAD90GaDvjnGHADHZCI7BWoKKi6IbRl/6rI3wH0BMEBoVlJZ6BKbEC2odKKK5xAd9xY7k6S+iO5AG/Ubc3zs5FKcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706932542; c=relaxed/simple;
-	bh=+BzHT9Xa8lU9EtTa+N2lmYYStyOSf50CXp8eQ9DSyIY=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6aVOjpRMYa5kSHWkzPs4ttD5Nyq72bqwLHJqrg/Q5J0RA8wVkPBKp+MYEmFEoJU6X0N9G/thnMybkrfEp38/TXbWzTAPCqYgCwBe7pSyZXVdSbwQFKtuRrmExacgvjzlIvq4wOxRgivR/B+oXzRsKycX6dWeiL4gOcMhUkzoB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qdg9HZQZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FADC433C7;
-	Sat,  3 Feb 2024 03:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706932541;
-	bh=+BzHT9Xa8lU9EtTa+N2lmYYStyOSf50CXp8eQ9DSyIY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Qdg9HZQZfm2fiRzhDVaBJSvwGr1zg/mRrl/JbCtPJq/UpG4EQPStTBoEnsCqk0lqN
-	 L7RnP4+WxSk+g69gsjVMMcD+m8NqI+cTB+jcTAsw9h914oFAbmCqiSBp5olOH9p6vc
-	 VEp3/b+tCLq8aw9QvvjZHa5nWWplCTmlkLb76AWXmSFJPQ+OCFaQ2YGhcceW+kId3h
-	 1rzlYn/4Pd7Ix5GgESbJNTGp89lJIxrv7wE7GKOPuPdbHGNP2Jrf7UBJOtQe7ClbJH
-	 zJqb33itsTwAiTr6+kEQz10NXNcqcd7fH8j7JgeUq21AxP82v5P27HMsHosIW3nCkK
-	 wYYYrZK1m+OCw==
-Subject: [PATCH v2 4/4] nfsd: fix RELEASE_LOCKOWNER
-From: Chuck Lever <cel@kernel.org>
-To: neilb@suse.de
-Cc: linux-nfs@vger.kernel.org
-Date: Fri, 02 Feb 2024 22:55:40 -0500
-Message-ID: 
- <170693254045.20619.15736596036181088844.stgit@klimt.1015granger.net>
-In-Reply-To: 
- <170693220850.20619.2532987152854323295.stgit@klimt.1015granger.net>
-References: 
- <170693220850.20619.2532987152854323295.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
+	s=arc-20240116; t=1707012882; c=relaxed/simple;
+	bh=iw2JbmP3n4xThPeqMrHzCJB0Mvrs4t2jpGYi+wwN+WU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MULp5ma9UId3+J6aq9H2mhuISdFei9xDR8AtyQWqCQMn7kgaXopkeLcib3f2U/pwCcboOMT+Fk1i+ECwAiGcrLMWKaSoqh+epXK3i8cWygk09DoneXKfI0A6YzQjpjIkLnEBH6G2Ux73hWYIrdpDhBYqXxeUq7C4MEiMhFOWgdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=gY2nsqug; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ZuR11fBjLGQWXEZ1T0kl/SRe7MKQ+YGDCG8pAWsXzfw=; b=gY2nsqug5SELFzl+lMzL51GyNX
+	CKCAQzK7tt8Z3+31QSKXylEuMKQZBOhYIAY9afAwnrNXEZefdhyrFAh8YcfQmMayiSKIRBlDjL55v
+	xCUQCjLoEC+K552+nMqZwnuGPLufR0mEZdrOhsv6fI05+aYlncxBFYJvsObOR82PBTEKQC/ihp3O2
+	8cEE5yCXkB9MYNvTRP/GSLbuRHN6ew5t2q2j6QeEOrZ0TsorjHYLF5Snkt+uFITta4oTdSfEAvo1Z
+	kmmIMlB7Al17Rnis5j9qs85bBKC4XJ+SJFSze1pRd3a9idtph/UMSkEDLCYJVguhRSQgMR66VtlHG
+	iER0Iy5w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rWS1k-004r7D-1R;
+	Sun, 04 Feb 2024 02:14:36 +0000
+Date: Sun, 4 Feb 2024 02:14:36 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>, linux-ext4@vger.kernel.org,
+	linux-nfs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+	linux-cifs@vger.kernel.org
+Subject: [PATCHES] RCU pathwalk race fixes
+Message-ID: <20240204021436.GH2087318@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-From: NeilBrown <neilb@suse.de>
+	We still have some races in filesystem methods when exposed
+to RCU pathwalk.  The series below is a result of code audit (the
+second round of it) and it should deal with most of that stuff.
+Exceptions: ntfs3 ->d_hash()/->d_compare() and ceph_d_revalidate().
+Up to maintainers (a note for NTFS folks - when documentation says
+that a method may not block, it *does* imply that blocking allocations
+are to be avoided.  Really).
 
-[ Upstream commit edcf9725150e42beeca42d085149f4c88fa97afd ]
+	Branch is 6.8-rc1-based; it lives in
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes.pathwalk-rcu
 
-The test on so_count in nfsd4_release_lockowner() is nonsense and
-harmful.  Revert to using check_for_locks(), changing that to not sleep.
+Individual patches are in followups; ditto for code audit notes.  Beginning
+of the latter should probably be converted into docs; if anyone is willing
+to help with such conversion, please say so - I'll be glad to answer any
+questions, etc.
 
-First: harmful.
-As is documented in the kdoc comment for nfsd4_release_lockowner(), the
-test on so_count can transiently return a false positive resulting in a
-return of NFS4ERR_LOCKS_HELD when in fact no locks are held.  This is
-clearly a protocol violation and with the Linux NFS client it can cause
-incorrect behaviour.
+If somebody wants to grab bits and pieces of that series into individual
+filesystem git trees, please say so.  Same for any problems spotted in
+the patches, obviously.  If nothing shows up, that goes into #fixes and
+into mainline.
 
-If RELEASE_LOCKOWNER is sent while some other thread is still
-processing a LOCK request which failed because, at the time that request
-was received, the given owner held a conflicting lock, then the nfsd
-thread processing that LOCK request can hold a reference (conflock) to
-the lock owner that causes nfsd4_release_lockowner() to return an
-incorrect error.
+Shortlog:
+      fs/super.c: don't drop ->s_user_ns until we free struct super_block itself
+      rcu pathwalk: prevent bogus hard errors from may_lookup()
+      affs: free affs_sb_info with kfree_rcu()
+      exfat: move freeing sbi, upcase table and dropping nls into rcu-delayed helper
+      hfsplus: switch to rcu-delayed unloading of nls and freeing ->s_fs_info
+      afs: fix __afs_break_callback() / afs_drop_open_mmap() race
+      nfs: make nfs_set_verifier() safe for use in RCU pathwalk
+      nfs: fix UAF on pathwalk running into umount
+      procfs: move dropping pde and pid from ->evict_inode() to ->free_inode()
+      procfs: make freeing proc_fs_info rcu-delayed
+      fuse: fix UAF in rcu pathwalks
+      cifs_get_link(): bail out in unsafe case
+      ext4_get_link(): fix breakage in RCU mode
 
-The Linux NFS client ignores that NFS4ERR_LOCKS_HELD error because it
-never sends NFS4_RELEASE_LOCKOWNER without first releasing any locks, so
-it knows that the error is impossible.  It assumes the lock owner was in
-fact released so it feels free to use the same lock owner identifier in
-some later locking request.
-
-When it does reuse a lock owner identifier for which a previous RELEASE
-failed, it will naturally use a lock_seqid of zero.  However the server,
-which didn't release the lock owner, will expect a larger lock_seqid and
-so will respond with NFS4ERR_BAD_SEQID.
-
-So clearly it is harmful to allow a false positive, which testing
-so_count allows.
-
-The test is nonsense because ... well... it doesn't mean anything.
-
-so_count is the sum of three different counts.
-1/ the set of states listed on so_stateids
-2/ the set of active vfs locks owned by any of those states
-3/ various transient counts such as for conflicting locks.
-
-When it is tested against '2' it is clear that one of these is the
-transient reference obtained by find_lockowner_str_locked().  It is not
-clear what the other one is expected to be.
-
-In practice, the count is often 2 because there is precisely one state
-on so_stateids.  If there were more, this would fail.
-
-In my testing I see two circumstances when RELEASE_LOCKOWNER is called.
-In one case, CLOSE is called before RELEASE_LOCKOWNER.  That results in
-all the lock states being removed, and so the lockowner being discarded
-(it is removed when there are no more references which usually happens
-when the lock state is discarded).  When nfsd4_release_lockowner() finds
-that the lock owner doesn't exist, it returns success.
-
-The other case shows an so_count of '2' and precisely one state listed
-in so_stateid.  It appears that the Linux client uses a separate lock
-owner for each file resulting in one lock state per lock owner, so this
-test on '2' is safe.  For another client it might not be safe.
-
-So this patch changes check_for_locks() to use the (newish)
-find_any_file_locked() so that it doesn't take a reference on the
-nfs4_file and so never calls nfsd_file_put(), and so never sleeps.  With
-this check is it safe to restore the use of check_for_locks() rather
-than testing so_count against the mysterious '2'.
-
-Fixes: ce3c4ad7f4ce ("NFSD: Fix possible sleep during nfsd4_release_lockowner()")
-Signed-off-by: NeilBrown <neilb@suse.de>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Cc: stable@vger.kernel.org # v6.2+
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4state.c |   26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0475b483c421..34707c99ec88 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7276,14 +7276,16 @@ check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner)
- {
- 	struct file_lock *fl;
- 	int status = false;
--	struct nfsd_file *nf = find_any_file(fp);
-+	struct nfsd_file *nf;
- 	struct inode *inode;
- 	struct file_lock_context *flctx;
- 
-+	spin_lock(&fp->fi_lock);
-+	nf = find_any_file_locked(fp);
- 	if (!nf) {
- 		/* Any valid lock stateid should have some sort of access */
- 		WARN_ON_ONCE(1);
--		return status;
-+		goto out;
- 	}
- 
- 	inode = locks_inode(nf->nf_file);
-@@ -7299,7 +7301,8 @@ check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner)
- 		}
- 		spin_unlock(&flctx->flc_lock);
- 	}
--	nfsd_file_put(nf);
-+out:
-+	spin_unlock(&fp->fi_lock);
- 	return status;
- }
- 
-@@ -7309,10 +7312,8 @@ check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner)
-  * @cstate: NFSv4 COMPOUND state
-  * @u: RELEASE_LOCKOWNER arguments
-  *
-- * The lockowner's so_count is bumped when a lock record is added
-- * or when copying a conflicting lock. The latter case is brief,
-- * but can lead to fleeting false positives when looking for
-- * locks-in-use.
-+ * Check if theree are any locks still held and if not - free the lockowner
-+ * and any lock state that is owned.
-  *
-  * Return values:
-  *   %nfs_ok: lockowner released or not found
-@@ -7348,10 +7349,13 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp,
- 		spin_unlock(&clp->cl_lock);
- 		return nfs_ok;
- 	}
--	if (atomic_read(&lo->lo_owner.so_count) != 2) {
--		spin_unlock(&clp->cl_lock);
--		nfs4_put_stateowner(&lo->lo_owner);
--		return nfserr_locks_held;
-+
-+	list_for_each_entry(stp, &lo->lo_owner.so_stateids, st_perstateowner) {
-+		if (check_for_locks(stp->st_stid.sc_file, lo)) {
-+			spin_unlock(&clp->cl_lock);
-+			nfs4_put_stateowner(&lo->lo_owner);
-+			return nfserr_locks_held;
-+		}
- 	}
- 	unhash_lockowner_locked(lo);
- 	while (!list_empty(&lo->lo_owner.so_stateids)) {
-
-
+Diffstat:
+ fs/affs/affs.h            |  1 +
+ fs/affs/super.c           |  2 +-
+ fs/afs/file.c             |  8 ++++++--
+ fs/exfat/exfat_fs.h       |  1 +
+ fs/exfat/nls.c            | 14 ++++----------
+ fs/exfat/super.c          | 20 +++++++++++---------
+ fs/ext4/symlink.c         |  8 +++++---
+ fs/fuse/cuse.c            |  3 +--
+ fs/fuse/fuse_i.h          |  1 +
+ fs/fuse/inode.c           | 15 +++++++++++----
+ fs/hfsplus/hfsplus_fs.h   |  1 +
+ fs/hfsplus/super.c        | 12 +++++++++---
+ fs/namei.c                |  6 +++++-
+ fs/nfs/client.c           | 13 ++++++++++---
+ fs/nfs/dir.c              |  4 ++--
+ fs/proc/base.c            |  2 --
+ fs/proc/inode.c           | 19 ++++++++-----------
+ fs/proc/root.c            |  2 +-
+ fs/smb/client/cifsfs.c    |  3 +++
+ fs/super.c                | 13 ++++---------
+ include/linux/nfs_fs_sb.h |  2 ++
+ include/linux/proc_fs.h   |  1 +
+ 22 files changed, 88 insertions(+), 63 deletions(-)
 
