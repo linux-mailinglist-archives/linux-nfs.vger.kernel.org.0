@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-1757-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1758-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8EBA849184
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:17:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 863CE849186
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:17:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5763E1F21D1C
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 23:17:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8B491C21247
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 23:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F2871854;
-	Sun,  4 Feb 2024 23:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB7528F72;
+	Sun,  4 Feb 2024 23:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6wD4lS3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3ZRPlOD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C19D26B;
-	Sun,  4 Feb 2024 23:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A413BC8CE;
+	Sun,  4 Feb 2024 23:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707088631; cv=none; b=Pd5F0HKvZCPr4rjB33joimsTQ/IufFaNohuUV+qoxvkBALl4Jj9KViCtqW0fdCTIUi+bnO/5AwTS3DWQTx9xYrsch8Hp33jXrVMa+qdx0AlCitBgR0Il40K9uiij89x5OfupMwhLhyuY+e0bU1AH7/a1Gnt2L+93/8PGS2NOQhc=
+	t=1707088637; cv=none; b=GxkAKrn3B9EN9D3bB7+qBpmVD4CrPh6/ufOFws0waf8LivIshStWfrME/6v1P/J5q0hw9FExHxiGS25xSmzbFJHq19+Is1I8lZ2muWWQ/chqT+VxNexMG2LfJfRyQpSn/m3Bohz1MwoN1o81gKzaml6Pk+B3VC/kBNjfipURDII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707088631; c=relaxed/simple;
-	bh=Q8M+ZV8AwjWJN106yxlomJOUg4m9WT4jLLZhalyAC+0=;
+	s=arc-20240116; t=1707088637; c=relaxed/simple;
+	bh=AxYa8OHD5oTe38D0Fdj6WOQrLqgmLObq7aN1YDqlrJ0=;
 	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qS3fo8VkAfzTmuVewQRxNM5ttm0vu2IL2XeXZVWh8n6s/ZaBUhrZTpHmRaf2gaczcIGLltj321TQssm+KxMqL1AWBif7D63CePKFvPY/dVccW3heFDWRmtgQc1q3VzEiIfe6nqD0+8p8KBg5Zq04TAPGj4bXsRHteBTSSgeT76U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6wD4lS3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E6FC433C7;
-	Sun,  4 Feb 2024 23:17:10 +0000 (UTC)
+	 MIME-Version:Content-Type; b=p698ngxlxzyFt/Apht89NdMz9GMPH36EEf4ledyGNwBe5g0zEcMItmFt1ZtMHgsnihIBJjsu2tjQzUnqVBOgphjD8QR2tEeJ0wjSstYwzyMqOPkiQMkhsv6af+hVHUvu8NBI0eKaETZRQa+CdfiK0lE3CWEYR0pY/BWOlfJIU2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3ZRPlOD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA73DC433F1;
+	Sun,  4 Feb 2024 23:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707088630;
-	bh=Q8M+ZV8AwjWJN106yxlomJOUg4m9WT4jLLZhalyAC+0=;
+	s=k20201202; t=1707088637;
+	bh=AxYa8OHD5oTe38D0Fdj6WOQrLqgmLObq7aN1YDqlrJ0=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=g6wD4lS3OawgAmTkiVVgqp3YK9EZ7F9uFjWslDLr+F0qWeAdSaCex55PTBEzIlhj6
-	 pYUAWpsMYDHZDx2nATKIb0NwlQg5LBjZDFZBrGk5jAGH1krKaAiLFfTKTTGjzVXxiC
-	 zZcg48CxitlgnzpstxhAbCvKds+0TQ2bQY5VKuJbE30hjTpmcy476n10pH8xQCuyxK
-	 AxYzkyxF5Oa5PF6Gdp0PY31OQIksMKpjQ4X/PKcgi7Msg78O5VBepFwrTaCKBrHnOw
-	 aSXbyFeAMOaUrmUXtZgXukqgahRjLdxLJAzaChVAc4HSdSM2EjA/rofe+gHFTXCE5m
-	 SSTrLIxI8kmSQ==
-Subject: [PATCH v2 06/12] svcrdma: Prevent a UAF in svc_rdma_send()
+	b=t3ZRPlODTXsGMSiWB+An5bh0qOU2tvsBnmzYhorAY7pFj8ZkeBVxPfIvRHdODg0NO
+	 aJyun45+cZ/LBjaWOw8jgYYOCa3QoX0Txd/qupOOSWUR7S3N1U5Ur06J7lqiU4t8g+
+	 zqLXiMd7B4xWt4vZletyPnb4fI77wb+i1U5AUFLnXPR7ghSMgqbtQJnidI5lN36pNu
+	 ZBwurP2bvI3S/jLHm51lpgjEtbl4hkeaAkEzdhP5nPbZ7aWNDNOJyJUmU1qCI0slu2
+	 Y2UvKN3b4S9LZW8ZQxqbXzVC0KUDL08GT8vQSqc9tcC1FAYnDza7/Tb/WTHeZoot43
+	 MwrvPBd0UY/5g==
+Subject: [PATCH v2 07/12] svcrdma: Fix retry loop in svc_rdma_send()
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date: Sun, 04 Feb 2024 18:17:09 -0500
+Date: Sun, 04 Feb 2024 18:17:15 -0500
 Message-ID: 
- <170708862961.28128.4635466330893173032.stgit@bazille.1015granger.net>
+ <170708863598.28128.10828477777645028041.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170708844422.28128.2979813721958631192.stgit@bazille.1015granger.net>
 References: 
@@ -63,64 +63,75 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-In some error flow cases, svc_rdma_wc_send() releases @ctxt. Copy
-the sc_cid field in @ctxt to a stack variable in order to guarantee
-that the value is available after the ib_post_send() call.
-
-In case the new comment looks a little strange, this will be done
-with at least one more field in a subsequent patch.
+Don't call ib_post_send() at all if the transport is already
+shutting down.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index f1f5c7b58fce..b6fc9299b472 100644
+index b6fc9299b472..0ee9185f5f3f 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -316,12 +316,17 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
-  * @rdma: transport on which to post the WR
-  * @ctxt: send ctxt with a Send WR ready to post
+@@ -320,8 +320,9 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
+  * that these values remain available after the ib_post_send() call.
+  * In some error flow cases, svc_rdma_wc_send() releases @ctxt.
   *
-+ * Copy fields in @ctxt to stack variables in order to guarantee
-+ * that these values remain available after the ib_post_send() call.
-+ * In some error flow cases, svc_rdma_wc_send() releases @ctxt.
-+ *
-  * Returns zero if the Send WR was posted successfully. Otherwise, a
-  * negative errno is returned.
+- * Returns zero if the Send WR was posted successfully. Otherwise, a
+- * negative errno is returned.
++ * Return values:
++ *   %0: @ctxt's WR chain was posted successfully
++ *   %-ENOTCONN: The connection was lost
   */
  int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
  {
- 	struct ib_send_wr *wr = &ctxt->sc_send_wr;
-+	struct rpc_rdma_cid cid = ctxt->sc_cid;
- 	int ret;
+@@ -338,30 +339,35 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ 				      DMA_TO_DEVICE);
  
- 	might_sleep();
-@@ -337,12 +342,12 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ 	/* If the SQ is full, wait until an SQ entry is available */
+-	while (1) {
++	while (!test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags)) {
  		if ((atomic_dec_return(&rdma->sc_sq_avail) < 0)) {
  			svc_rdma_wake_send_waiters(rdma, 1);
++
++			/* When the transport is torn down, assume
++			 * ib_drain_sq() will trigger enough Send
++			 * completions to wake us. The XPT_CLOSE test
++			 * above should then cause the while loop to
++			 * exit.
++			 */
  			percpu_counter_inc(&svcrdma_stat_sq_starve);
--			trace_svcrdma_sq_full(rdma, &ctxt->sc_cid);
-+			trace_svcrdma_sq_full(rdma, &cid);
+ 			trace_svcrdma_sq_full(rdma, &cid);
  			wait_event(rdma->sc_send_wait,
  				   atomic_read(&rdma->sc_sq_avail) > 0);
- 			if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
- 				return -ENOTCONN;
--			trace_svcrdma_sq_retry(rdma, &ctxt->sc_cid);
-+			trace_svcrdma_sq_retry(rdma, &cid);
+-			if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
+-				return -ENOTCONN;
+ 			trace_svcrdma_sq_retry(rdma, &cid);
  			continue;
  		}
  
-@@ -353,7 +358,7 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ 		trace_svcrdma_post_send(ctxt);
+ 		ret = ib_post_send(rdma->sc_qp, wr, NULL);
+-		if (ret)
++		if (ret) {
++			trace_svcrdma_sq_post_err(rdma, &cid, ret);
++			svc_xprt_deferred_close(&rdma->sc_xprt);
++			svc_rdma_wake_send_waiters(rdma, 1);
+ 			break;
++		}
  		return 0;
  	}
+-
+-	trace_svcrdma_sq_post_err(rdma, &cid, ret);
+-	svc_xprt_deferred_close(&rdma->sc_xprt);
+-	svc_rdma_wake_send_waiters(rdma, 1);
+-	return ret;
++	return -ENOTCONN;
+ }
  
--	trace_svcrdma_sq_post_err(rdma, &ctxt->sc_cid, ret);
-+	trace_svcrdma_sq_post_err(rdma, &cid, ret);
- 	svc_xprt_deferred_close(&rdma->sc_xprt);
- 	svc_rdma_wake_send_waiters(rdma, 1);
- 	return ret;
+ /**
 
 
 
