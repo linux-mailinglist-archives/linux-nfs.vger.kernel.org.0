@@ -1,50 +1,55 @@
-Return-Path: <linux-nfs+bounces-1751-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1752-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA60E849175
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:16:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B767F849177
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:16:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07DB01C2098A
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 23:16:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AC4F28280F
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 23:16:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 651D51854;
-	Sun,  4 Feb 2024 23:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95781854;
+	Sun,  4 Feb 2024 23:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sw/7+YxC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6OtCpCs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6FABE49;
-	Sun,  4 Feb 2024 23:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA7ABA33;
+	Sun,  4 Feb 2024 23:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707088593; cv=none; b=KUKLc47ME6IgIDRGAGYSWpO5RGAjS9E/0Zv6ThS5jzkJztZ+zOPsK6o8bYpSLUF3J+twCjwH3CImPFlevXl93V2G1mI1kcD65hsux5k59KgUgHqVe+hKAVcdDlDZWk+nmZhjdyYaNlJNQA0inrQKZz8iRxmC2ZemUFR8G60LGzY=
+	t=1707088599; cv=none; b=lq+CJMMuae9OfvKjKOsNQA8WUFoTMGUWahwrBRqrSrioPIIBT4Zi3jdvj54XIAM60isZd76wkTQ3HgspuJ6AzyORNWzlG/mmaGsppsCWsmJxT8PhIpdbPvVITGrV9OsCouVSZ60n1A+PbhBMeKIii5PkXAtsFLqTKxkdJSHpn1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707088593; c=relaxed/simple;
-	bh=J0iCyXIUEO1xG/A9Vw8lE1Zj/zs71qQuhF9NxJexeJo=;
-	h=Subject:From:To:Date:Message-ID:MIME-Version:Content-Type; b=lum8BXQtz3ffFTBCTFd0esaodjGTkm2Qanjalw4wCDdUEbeJIcXURms5yEiK4U7XNAvL3a7TaEVunmRlaig9IBLWkVjJxf4JW5cJYBEEkvcqWIUFsSVrrjdd8lx3QclHcSVj3C2sUV02t3OWJxuMQkN1HfdRgqQUrg5O4gCCwEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sw/7+YxC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C9A3C433F1;
-	Sun,  4 Feb 2024 23:16:32 +0000 (UTC)
+	s=arc-20240116; t=1707088599; c=relaxed/simple;
+	bh=05MA2D7vfCBiHZrUjlGcpBFOLywfR7Q9Kfb3fvxMbMQ=;
+	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XhRBgQxduGpl3gEptbWEgkNsGdxBhWnUPBbPZjdxP6jLZSVcsmNPK2P6OdmApxv1Da/RchzUKwitrsrqZWUzL/hnNVdrw+di0aZ3fDbcBKudH78/FAAj1RltikaHoO5i+5KfS7OGgd3SgeiSzm5cse519RdNn7IB2zRE5TlqFXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6OtCpCs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C962DC433C7;
+	Sun,  4 Feb 2024 23:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707088592;
-	bh=J0iCyXIUEO1xG/A9Vw8lE1Zj/zs71qQuhF9NxJexeJo=;
-	h=Subject:From:To:Date:From;
-	b=Sw/7+YxCtgu8zlKDIq3gQyy77A5PQluDAmpuhhLWTBQP4acROS3h3Vivi4PJ7mYvU
-	 xgBRHxAWW3I6nDYxZsxcfYN2nCuBiduwVBkBMMZtg7gpLQpyKcugTfs4UdEQhWfA2z
-	 g4HVc/gasknV7y/GxnOp/4r3DwLZ9JvVb2sT0DUxbRR99BLb6AP2p36Eewyl80cp35
-	 VGNcyncqs7ZFWaZBqiCiaEE4gnqr8yB0p59MtU2voUON/qrpw/3y26SufxuW4RuW8M
-	 +ikujxrO0nTlFpWzzhNt0Jib+Z8r5POTR2sPaWjjpegUHRFAe5stVmQrw8NFrNmX0N
-	 q75SzroaDaKuA==
-Subject: [PATCH v2 00/12] NFSD RDMA transport improvements
+	s=k20201202; t=1707088599;
+	bh=05MA2D7vfCBiHZrUjlGcpBFOLywfR7Q9Kfb3fvxMbMQ=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=K6OtCpCsFaPsqALCkMJSC7o8M++/WAEER1Q7LwVDrNaPDuj+W8zNHblUUYngekJGC
+	 S+hUg5yHl6NHims6fjYLMk5l5KCKD5qOSeiEJPqdPeIcLwUegQqOkqtGomHtE0T6wU
+	 NcKznmhU7i5FbF74Xhu0HsiuTWbbgBWSkcbnZWLvl7RnexkAk9VgoQP+7lJmqSrNh5
+	 IAh/q8IMmuk6TT/XtD8Te+HRkp6POavfVQotJ+WW77sOOwFHKCw48hHf29vhaWOsPM
+	 vzxKMq6nrIWiN+Pfnw9TIRSCOlYK3sOOmuUUospTQrT8b6VkMry57nE1EqZTQWVmQc
+	 a+6WMlZ+XL1vw==
+Subject: [PATCH v2 01/12] svcrdma: Reserve an extra WQE for ib_drain_rq()
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date: Sun, 04 Feb 2024 18:16:31 -0500
+Date: Sun, 04 Feb 2024 18:16:37 -0500
 Message-ID: 
+ <170708859782.28128.17719864297677716598.stgit@bazille.1015granger.net>
+In-Reply-To: 
+ <170708844422.28128.2979813721958631192.stgit@bazille.1015granger.net>
+References: 
  <170708844422.28128.2979813721958631192.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
 Precedence: bulk
@@ -56,45 +61,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-These were left over from the last series (for 6.8).
+From: Chuck Lever <chuck.lever@oracle.com>
 
-The idea here is to post all work needed for sending one Reply with
-just a single ib_post_send() -- the Send WR and all Write WRs are
-chained together.
+Do as other ULPs already do: ensure there is an extra Receive WQE
+reserved for the tear-down drain WR. I haven't heard reports of
+problems but it can't hurt.
 
-The purpose of that is to reduce the number of doorbells and
-completions per RPC, which will hopefully improve transport
-scalability per NIC.
+Note that rq_depth is used to compute the Send Queue depth as well,
+so this fix should affect both the SQ and RQ.
 
-Changes since v1:
-- CQ overrun crashes have been addressed
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chuck Lever (12):
-      svcrdma: Reserve an extra WQE for ib_drain_rq()
-      svcrdma: Report CQ depths in debugging output
-      svcrdma: Update max_send_sges after QP is created
-      svcrdma: Increase the per-transport rw_ctx count
-      svcrdma: Fix SQ wake-ups
-      svcrdma: Prevent a UAF in svc_rdma_send()
-      svcrdma: Fix retry loop in svc_rdma_send()
-      svcrdma: Post Send WR chain
-      svcrdma: Move write_info for Reply chunks into struct svc_rdma_send_ctxt
-      svcrdma: Post the Reply chunk and Send WR together
-      svcrdma: Post WRs for Write chunks in svc_rdma_sendto()
-      svcrdma: Add Write chunk WRs to the RPC's Send WR chain
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 4f27325ace4a..4a038c7e86f9 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -415,7 +415,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	if (newxprt->sc_max_send_sges > dev->attrs.max_send_sge)
+ 		newxprt->sc_max_send_sges = dev->attrs.max_send_sge;
+ 	rq_depth = newxprt->sc_max_requests + newxprt->sc_max_bc_requests +
+-		   newxprt->sc_recv_batch;
++		   newxprt->sc_recv_batch + 1 /* drain */;
+ 	if (rq_depth > dev->attrs.max_qp_wr) {
+ 		rq_depth = dev->attrs.max_qp_wr;
+ 		newxprt->sc_recv_batch = 1;
 
-
- include/linux/sunrpc/svc_rdma.h            |  55 ++++-
- include/trace/events/rpcrdma.h             |   4 +
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   2 +-
- net/sunrpc/xprtrdma/svc_rdma_rw.c          | 245 ++++++++++++++-------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 151 ++++++++-----
- net/sunrpc/xprtrdma/svc_rdma_transport.c   |  15 +-
- 6 files changed, 320 insertions(+), 152 deletions(-)
-
---
-Chuck Lever
 
 
