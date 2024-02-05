@@ -1,306 +1,243 @@
-Return-Path: <linux-nfs+bounces-1763-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1764-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA82B849190
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:17:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F33C849217
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 01:56:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 202AA2827DB
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Feb 2024 23:17:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D1951C2146D
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 00:56:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8331D3D72;
-	Sun,  4 Feb 2024 23:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 688908F47;
+	Mon,  5 Feb 2024 00:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVKgYlfO"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0DyG/GPp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5kdVo748";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yGb5kFvd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZerP7Vjd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A66ABE58;
-	Sun,  4 Feb 2024 23:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CF68F40
+	for <linux-nfs@vger.kernel.org>; Mon,  5 Feb 2024 00:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707088669; cv=none; b=DmMrlRtTvCz4TNRJI4jS3U/1eLr4ETBBpJaXflImJPSRk9TvP74eUXIwrluhjbI6RjY/zuJDI34ndZwk7h4v5oRoG3C/GDTRs9egh/eev4D1wN1N3+fncRD7PZJWo/G6OViT870yl+/Uo6G5lk6vVWFpokEPzZ6808xAuen9YSo=
+	t=1707094601; cv=none; b=QqSLfTXXCst63IsiwQQPzjoN6CFIS7rQdGZ+B6V+xyKzcWu1SeHtAPQt4kdzJwi7c+LbJda5yH4Y57GVg47hTtKAEhD6DgK8SDKbM93JvJaoRLaimAtPT1bhfxdb381LtCromUB5EPZxxW5FzIVHAGnKUgGK2otEhbNKzVTuN8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707088669; c=relaxed/simple;
-	bh=fp9acj4ZEwK1Xq922shpXg6CpeNaFsC5ZBGJptxgrSI=;
-	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ar+LmMblstz94SilbJxPXRiSWppdx/8+2Tlk6nvkdti/3Y+cm72zZpuaQe8h8Hsy1kXtKr9vqlQsSN3qhaeqmX9s4XuLhPLF/872Z0pLWuxtRScFg73NhejeBLB/OMebkLd6YpvdRj3mApFiOEBjFjzgtdSRuNIqMVWbqr/K+B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVKgYlfO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA1FC433C7;
-	Sun,  4 Feb 2024 23:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707088668;
-	bh=fp9acj4ZEwK1Xq922shpXg6CpeNaFsC5ZBGJptxgrSI=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=kVKgYlfOH3H8pGy/JciO7mEDiyvFgvBtogZFKPayJXY6S5JOQoG1XaGzTLcx5NbYt
-	 QStZ8RzKP/6Bb3pzDLABD1IKfJU7W2n/ScuX7Wa8l0CWKOjTBc0RRYEqrd+zHOHgPt
-	 m1c3y+ggNWw/cFujx+kAcsDTaMIWhFbadD09BAmZXAy6Z8aqOv5oJnY6UpkHpNzWro
-	 7p9O7wBuoR2lAN3lOdVtS0pvPpPdT+yqpN81oLiavlC/uFudoBSXROW8nFkwO8zYOG
-	 YB0EaIyijK6eGxV8w6AL+ekzx5FLejLmIiBGRoG/4/2WnANgLji/DkCYEZ+5nnKV8B
-	 JIr0fBUXGC9cw==
-Subject: [PATCH v2 12/12] svcrdma: Add Write chunk WRs to the RPC's Send WR
- chain
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date: Sun, 04 Feb 2024 18:17:47 -0500
-Message-ID: 
- <170708866774.28128.5360136470502302905.stgit@bazille.1015granger.net>
-In-Reply-To: 
- <170708844422.28128.2979813721958631192.stgit@bazille.1015granger.net>
-References: 
- <170708844422.28128.2979813721958631192.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
+	s=arc-20240116; t=1707094601; c=relaxed/simple;
+	bh=81SArmqbjUSW6oEYEdcYL9TeUSzQy5SQ1KtYakK9/Jw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=I5cOuXrwVj8Y7uSALzRCbw2NDcvRXwiMJNNP5cRBpQwdO9o46io7O+GV4rarU6OOuQ5TAYYG18xTPl2+Lx+FyZ3Dfa3Hc6xh6NQ4lIsJV+GoMgSmzoEPK6klgf3XGchkWFrj9+SyLj+zgaT6csoYx1lRq7jf4fR7ogDuMY8GNko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0DyG/GPp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5kdVo748; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yGb5kFvd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZerP7Vjd; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D74EA1F845;
+	Mon,  5 Feb 2024 00:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707094597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIj8RZksKgbSeX8P8eS+qiAgf3wlE+kTx8RenTX9UCU=;
+	b=0DyG/GPprqRqn5IhJBe2QX2l8m2mKLxq5zSt+OEKGCt8u+0fMrEBFXhmKxQ6fljXaj1ZHb
+	kNpiJf3+QDZvxTcIyopY/WZPKVXBl36m8Rrdvts14pq/RFEi689aB+u7KxeKBs/SNYzR+N
+	0Em71umhdzTCWgIipETHUupgo50WE6E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707094597;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIj8RZksKgbSeX8P8eS+qiAgf3wlE+kTx8RenTX9UCU=;
+	b=5kdVo748QaXQZiz4qww/Px+kE8zCUg0Q1LgcsirrenjZi7yO2uJnwlgt+82GKtghGXxieh
+	VIvk47kLL+4LRlAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707094596; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIj8RZksKgbSeX8P8eS+qiAgf3wlE+kTx8RenTX9UCU=;
+	b=yGb5kFvd+oZGRo+5SwO8IPktrIybY73Gbj1xsN0KuSJNpArlFwjwkKYik5vOTeZAqFYWCB
+	uyTkm71QZvuGPM8XuUBtGCSZBxaO5zad57UeOi01c5p28x6P19/n+RhfO5e7huOccwCHdn
+	AroHRf1VOQJhDMQkUG8eaCqBIVKZurw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707094596;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIj8RZksKgbSeX8P8eS+qiAgf3wlE+kTx8RenTX9UCU=;
+	b=ZerP7Vjd3Qr7ZKjWhhJPlk2i1SCWrXyzj5dgfASr5OElNGwX4WbHe2dWdDynM0PGWYHvKr
+	eYEdQeYFnT7FSYCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE98F132DD;
+	Mon,  5 Feb 2024 00:56:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3OuCKEMywGWjNQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 05 Feb 2024 00:56:35 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever III" <chuck.lever@oracle.com>
+Cc: "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: deadlock in RELEASE_LOCKOWNER path
+In-reply-to: <4270586C-9776-4DBF-BFB6-A36B79B1AFEA@oracle.com>
+References: <4270586C-9776-4DBF-BFB6-A36B79B1AFEA@oracle.com>
+Date: Mon, 05 Feb 2024 11:56:32 +1100
+Message-id: <170709459274.13976.2354054478600894934@noble.neil.brown.name>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yGb5kFvd;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZerP7Vjd
+X-Spamd-Result: default: False [-5.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 RCPT_COUNT_TWO(0.00)[2];
+	 TO_DN_ALL(0.00)[];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D74EA1F845
+X-Spam-Level: 
+X-Spam-Score: -5.31
+X-Spam-Flag: NO
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 05 Feb 2024, Chuck Lever III wrote:
+> Hi Neil-
+>=20
+> I'm testing v6.8-rc3 + nfsd-next. This series includes:
+>=20
+>    nfsd: fix RELEASE_LOCKOWNER
+>=20
+> and
+>=20
+>    nfsd: don't call locks_release_private() twice concurrently
+>=20
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> WARNING: possible circular locking dependency detected
+> 6.8.0-rc3-00052-gc20ad5c2d60c #1 Not tainted
+> ------------------------------------------------------
+> nfsd/1218 is trying to acquire lock:
+> ffff88814d754198 (&ctx->flc_lock){+.+.}-{2:2}, at: check_for_locks+0xf6/0x1=
+d0 [nfsd]
+>=20
+> but task is already holding lock:
+> ffff8881210e61f0 (&fp->fi_lock){+.+.}-{2:2}, at: check_for_locks+0x2d/0x1d0=
+ [nfsd]
+>=20
+> which lock already depends on the new lock.
 
-Chain RDMA Writes that convey Write chunks onto the local Send
-chain. This means all WRs for an RPC Reply are now posted with a
-single ib_post_send() call, and there is a single Send completion
-when all of these are done. That reduces both the per-transport
-doorbell rate and completion rate.
+I should have found this when I was checking on flc_lock...  sorry.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_rdma.h       |   13 ++++-
- net/sunrpc/xprtrdma/svc_rdma_rw.c     |   86 +++++++++++++++++++++++++--------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |    5 ++
- 3 files changed, 78 insertions(+), 26 deletions(-)
+I think this could actually deadlock if a lease was being broken on a
+file at the same time that some interesting file locking was happening
+...  though that might not actually be possible as conflicting locks and
+delegations rarely mix.  Still - we should fix it.
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index d33bab33099a..24cd199dd6f3 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -210,6 +210,7 @@ struct svc_rdma_recv_ctxt {
-  */
- struct svc_rdma_write_info {
- 	struct svcxprt_rdma	*wi_rdma;
-+	struct list_head	wi_list;
- 
- 	const struct svc_rdma_chunk	*wi_chunk;
- 
-@@ -238,7 +239,10 @@ struct svc_rdma_send_ctxt {
- 	struct ib_cqe		sc_cqe;
- 	struct xdr_buf		sc_hdrbuf;
- 	struct xdr_stream	sc_stream;
-+
-+	struct list_head	sc_write_info_list;
- 	struct svc_rdma_write_info sc_reply_info;
-+
- 	void			*sc_xprt_buf;
- 	int			sc_page_count;
- 	int			sc_cur_sge_no;
-@@ -270,11 +274,14 @@ extern void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
- extern void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- 				struct svc_rdma_chunk_ctxt *cc,
- 				enum dma_data_direction dir);
-+extern void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
-+					 struct svc_rdma_send_ctxt *ctxt);
- extern void svc_rdma_reply_chunk_release(struct svcxprt_rdma *rdma,
- 					 struct svc_rdma_send_ctxt *ctxt);
--extern int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
--				    const struct svc_rdma_recv_ctxt *rctxt,
--				    const struct xdr_buf *xdr);
-+extern int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
-+				       const struct svc_rdma_pcl *write_pcl,
-+				       struct svc_rdma_send_ctxt *sctxt,
-+				       const struct xdr_buf *xdr);
- extern int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
- 					const struct svc_rdma_pcl *write_pcl,
- 					const struct svc_rdma_pcl *reply_pcl,
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 40797114d50a..f2a100c4c81f 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -230,6 +230,28 @@ static void svc_rdma_write_info_free(struct svc_rdma_write_info *info)
- 	queue_work(svcrdma_wq, &info->wi_work);
+One approach would be to split flc_lock into two locks, one for leases
+and one for posix+flock locks.  That would avoid this conflict, but
+isn't particularly elegant.
+
+I'm not at all certain that nfsd_break_deleg_cb() needs to take fi_lock.
+In earlier code it needed to walk ->fi_delegations and that would need
+the lock - but that was removed in v4.17-rc1~110^2~22.
+
+The only remaining possible need for fi_lock is fi_had_conflict.
+nfsd_break_deleg_cb() take the lock when setting the flag, and
+nfsd_set_delegation() takes the lock when testing the flag.  I cannot
+see why the strong exclusion is needed.
+
+We test fi_had_conflict early in nfsd_set_delegation as an optimisation,
+and that makes sense.
+Test it again after calling vfs_setlease() to get the lease makes sense
+in case there was some other grant/revoke before the early test and the
+vfs_setlease().  But once vfs_setlease has succeed and we confirmed no
+conflict yet, I cannot see why we would abort the least.  If a revoke
+came in while nfsd_set_deletation() is running the result doesn't need
+to be different to if a revoke comes in just aster nfsd_set_delegation()
+completes....  Does it?
+
+So I think we can drop the lock frome break_deleg_cb() and make the
+importance of fi_had_conflict explicit by moving the test out of the
+lock.
+e.g.
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 12534e12dbb3..8b112673d389 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5154,10 +5154,8 @@ nfsd_break_deleg_cb(struct file_lock *fl)
+ 	 */
+ 	fl->fl_break_time =3D 0;
+=20
+-	spin_lock(&fp->fi_lock);
+ 	fp->fi_had_conflict =3D true;
+ 	nfsd_break_one_deleg(dp);
+-	spin_unlock(&fp->fi_lock);
+ 	return false;
  }
- 
-+/**
-+ * svc_rdma_write_chunk_release - Release Write chunk I/O resources
-+ * @rdma: controlling transport
-+ * @ctxt: Send context that is being released
-+ */
-+void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
-+				  struct svc_rdma_send_ctxt *ctxt)
-+{
-+	struct svc_rdma_write_info *info;
-+	struct svc_rdma_chunk_ctxt *cc;
+=20
+@@ -5771,13 +5769,14 @@ nfs4_set_delegation(struct nfsd4_open *open, struct n=
+fs4_ol_stateid *stp,
+ 	if (status)
+ 		goto out_unlock;
+=20
++	status =3D -EAGAIN;
++	if (fp->fi_had_conflict)
++		goto out_unlock;
 +
-+	while (!list_empty(&ctxt->sc_write_info_list)) {
-+		info = list_first_entry(&ctxt->sc_write_info_list,
-+					struct svc_rdma_write_info, wi_list);
-+		list_del(&info->wi_list);
-+
-+		cc = &info->wi_cc;
-+		svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
-+		svc_rdma_write_info_free(info);
-+	}
-+}
-+
- /**
-  * svc_rdma_reply_chunk_release - Release Reply chunk I/O resources
-  * @rdma: controlling transport
-@@ -286,13 +308,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
- 	struct ib_cqe *cqe = wc->wr_cqe;
- 	struct svc_rdma_chunk_ctxt *cc =
- 			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
--	struct svc_rdma_write_info *info =
--			container_of(cc, struct svc_rdma_write_info, wi_cc);
- 
- 	switch (wc->status) {
- 	case IB_WC_SUCCESS:
- 		trace_svcrdma_wc_write(&cc->cc_cid);
--		break;
-+		return;
- 	case IB_WC_WR_FLUSH_ERR:
- 		trace_svcrdma_wc_write_flush(wc, &cc->cc_cid);
- 		break;
-@@ -300,12 +320,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
- 		trace_svcrdma_wc_write_err(wc, &cc->cc_cid);
- 	}
- 
--	svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
--
--	if (unlikely(wc->status != IB_WC_SUCCESS))
--		svc_xprt_deferred_close(&rdma->sc_xprt);
--
--	svc_rdma_write_info_free(info);
-+	/* The RDMA Write has flushed, so the client won't get
-+	 * some of the outgoing RPC message. Signal the loss
-+	 * to the client by closing the connection.
-+	 */
-+	svc_xprt_deferred_close(&rdma->sc_xprt);
- }
- 
- /**
-@@ -601,13 +620,19 @@ static int svc_rdma_xb_write(const struct xdr_buf *xdr, void *data)
- 	return xdr->len;
- }
- 
--static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
--				     const struct svc_rdma_chunk *chunk,
--				     const struct xdr_buf *xdr)
-+/* Link Write WRs for @chunk onto @sctxt's WR chain.
-+ */
-+static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
-+					struct svc_rdma_send_ctxt *sctxt,
-+					const struct svc_rdma_chunk *chunk,
-+					const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_write_info *info;
- 	struct svc_rdma_chunk_ctxt *cc;
-+	struct ib_send_wr *first_wr;
- 	struct xdr_buf payload;
-+	struct list_head *pos;
-+	struct ib_cqe *cqe;
- 	int ret;
- 
- 	if (xdr_buf_subsegment(xdr, &payload, chunk->ch_position,
-@@ -623,10 +648,25 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
- 	if (ret != payload.len)
- 		goto out_err;
- 
--	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
--	ret = svc_rdma_post_chunk_ctxt(rdma, cc);
--	if (ret < 0)
-+	ret = -EINVAL;
-+	if (unlikely(cc->cc_sqecount > rdma->sc_sq_depth))
- 		goto out_err;
-+
-+	first_wr = sctxt->sc_wr_chain;
-+	cqe = &cc->cc_cqe;
-+	list_for_each(pos, &cc->cc_rwctxts) {
-+		struct svc_rdma_rw_ctxt *rwc;
-+
-+		rwc = list_entry(pos, struct svc_rdma_rw_ctxt, rw_list);
-+		first_wr = rdma_rw_ctx_wrs(&rwc->rw_ctx, rdma->sc_qp,
-+					   rdma->sc_port_num, cqe, first_wr);
-+		cqe = NULL;
-+	}
-+	sctxt->sc_wr_chain = first_wr;
-+	sctxt->sc_sqecount += cc->cc_sqecount;
-+	list_add(&info->wi_list, &sctxt->sc_write_info_list);
-+
-+	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
- 	return 0;
- 
- out_err:
-@@ -635,25 +675,27 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
- }
- 
- /**
-- * svc_rdma_send_write_list - Send all chunks on the Write list
-+ * svc_rdma_prepare_write_list - Construct WR chain for sending Write list
-  * @rdma: controlling RDMA transport
-- * @rctxt: Write list provisioned by the client
-+ * @write_pcl: Write list provisioned by the client
-+ * @sctxt: Send WR resources
-  * @xdr: xdr_buf containing an RPC Reply message
-  *
-  * Returns zero on success, or a negative errno if one or more
-  * Write chunks could not be sent.
-  */
--int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
--			     const struct svc_rdma_recv_ctxt *rctxt,
--			     const struct xdr_buf *xdr)
-+int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
-+				const struct svc_rdma_pcl *write_pcl,
-+				struct svc_rdma_send_ctxt *sctxt,
-+				const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_chunk *chunk;
- 	int ret;
- 
--	pcl_for_each_chunk(chunk, &rctxt->rc_write_pcl) {
-+	pcl_for_each_chunk(chunk, write_pcl) {
- 		if (!chunk->ch_payload_length)
- 			break;
--		ret = svc_rdma_send_write_chunk(rdma, chunk, xdr);
-+		ret = svc_rdma_prepare_write_chunk(rdma, sctxt, chunk, xdr);
- 		if (ret < 0)
- 			return ret;
- 	}
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index bb5436b719e0..dfca39abd16c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -142,6 +142,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
- 	ctxt->sc_send_wr.send_flags = IB_SEND_SIGNALED;
- 	ctxt->sc_cqe.done = svc_rdma_wc_send;
-+	INIT_LIST_HEAD(&ctxt->sc_write_info_list);
- 	ctxt->sc_xprt_buf = buffer;
- 	xdr_buf_init(&ctxt->sc_hdrbuf, ctxt->sc_xprt_buf,
- 		     rdma->sc_max_req_size);
-@@ -227,6 +228,7 @@ static void svc_rdma_send_ctxt_release(struct svcxprt_rdma *rdma,
- 	struct ib_device *device = rdma->sc_cm_id->device;
- 	unsigned int i;
- 
-+	svc_rdma_write_chunk_release(rdma, ctxt);
- 	svc_rdma_reply_chunk_release(rdma, ctxt);
- 
- 	if (ctxt->sc_page_count)
-@@ -1013,7 +1015,8 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 	if (!p)
- 		goto put_ctxt;
- 
--	ret = svc_rdma_send_write_list(rdma, rctxt, &rqstp->rq_res);
-+	ret = svc_rdma_prepare_write_list(rdma, &rctxt->rc_write_pcl, sctxt,
-+					  &rqstp->rq_res);
- 	if (ret < 0)
- 		goto put_ctxt;
- 
+ 	spin_lock(&state_lock);
+ 	spin_lock(&clp->cl_lock);
+ 	spin_lock(&fp->fi_lock);
+-	if (fp->fi_had_conflict)
+-		status =3D -EAGAIN;
+-	else
+-		status =3D hash_delegation_locked(dp, fp);
++	status =3D hash_delegation_locked(dp, fp);
+ 	spin_unlock(&fp->fi_lock);
+ 	spin_unlock(&clp->cl_lock);
+ 	spin_unlock(&state_lock);
 
 
+fi_had_conflict is set under flc_lock, and vfs_setlease() will take
+flc_lock, so while the set and test may appear lockless, they aren't.
+
+I'll do some basic testing and send a proper patch for your
+consideration.
+
+Thanks
+NeilBrown
 
