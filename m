@@ -1,76 +1,57 @@
-Return-Path: <linux-nfs+bounces-1773-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1774-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 275608499F1
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 13:20:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62248849A09
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 13:24:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8FD91F287DB
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 12:20:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB01EB20A83
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 12:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8CF51BC4E;
-	Mon,  5 Feb 2024 12:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B11EB19475;
+	Mon,  5 Feb 2024 12:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NI3CgvHq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Enx0eywT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0871BC3A;
-	Mon,  5 Feb 2024 12:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829661B976;
+	Mon,  5 Feb 2024 12:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707135609; cv=none; b=M32jxlRBK1Bi6wxXjgj0BBINnZRF+0XWhCWaPp07HLb/BetPSDkJOdLJmkcIX7VlL4f220jhISRmeH8R/FLdg6b9419pi7nlunMMpombtN0j2qbXUEK/d0e3+/yX0lKqLBXB5cyDoR5flBKYLy7aNXijhr7YuKqVUjboV68h8mM=
+	t=1707135882; cv=none; b=n9sI5CY8KvzbawRwVgB14PlcZqbzYmdHBQd37PhGNBX2FId0zhF1DLcl+UhLvNDCdNLSkbV8JM+dELaFCEmWVIEdiWzTydoSWkwbBITCxnYitL7++IJ+8z7HvoRw+6RCONYYSBl95N6aSCrszd7KqFEpGV65/+eHRWFbBfDcbKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707135609; c=relaxed/simple;
-	bh=7//g9J4D+ZXpm9UU4QExrEcw6hVi83+PWFQfkzUzwQg=;
+	s=arc-20240116; t=1707135882; c=relaxed/simple;
+	bh=DYSz3/AmfUCUNrCIHwggkc9ZvrhbsImaXeH24bFVUgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=umu2cF5gD4dIt1c6IXxfxrL2lFRXkhDJf4rB+/onymC6e20b4ahpfIMNUpr5g3Q7WkAYNyTFtOQYuUMfUE6BOjITaSf91ZfIMovJJEPpDwdp8fYIgFPylIW4u3e6r3G0mXkaWakEFpuxdOtDDSZgz/E0iM0JaKHoCQ6AGdDhn/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NI3CgvHq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DC7C433F1;
-	Mon,  5 Feb 2024 12:19:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hi53tIxZtt4hlEbvzlr4WHMZ6aiRxcL8BY3Ur4XprqwpOlexc1o0ZPl5dmRyB1XMABGak+o6VGXlUFtoRs3Rt710jgq0dnoJUv8ydNLypvog7jWgIHRG1SVTyOBui25AgD+oAQWOAclMdi9M3o+tW9jUo6setaynn/OmY4xfi8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Enx0eywT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1F8C433C7;
+	Mon,  5 Feb 2024 12:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707135609;
-	bh=7//g9J4D+ZXpm9UU4QExrEcw6hVi83+PWFQfkzUzwQg=;
+	s=k20201202; t=1707135882;
+	bh=DYSz3/AmfUCUNrCIHwggkc9ZvrhbsImaXeH24bFVUgc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NI3CgvHqbCduKOUG55PcantMhEuO6cn+Q82WktDz/McB8+xXuzAr9oWfxBNRDlJIq
-	 EUGGrhAl14I7YROetxKLGMcqGt8Ru+AmVB9bfDoQy4MxBuJTscGI6an5jXX1a1UxlY
-	 iH0tINjNfz+a+kl3LaOWdJAlnwQq7npi5RyjBS1soNm/JRgw9c+6hBFsGgc/vYpFgs
-	 dev0mLv7LL+uzC+/lrHORqWInlmNXxUEGlfF+z82l0aWpZ8rLwcWppSKbu1HoVVCxo
-	 MqPT8nFMBRA5HdSKbdJcN8lFf+Y1tStm+kUjtpb43bBeSysyW23YnK908iHBQqL4uI
-	 oEI2OhqzX3GkA==
-Date: Mon, 5 Feb 2024 13:19:57 +0100
+	b=Enx0eywTr3URLdjIomMnSkIsxboOeHJqEuDNXIBir2bSTQq6hu6xAqW0WB5GoUHsL
+	 +hql6+cdsqmc5jTgHTiVxCX2XYmX9JkLkNpFdSsken6BbU3R5Mnaa7EvrpAdS2ZJY1
+	 ZgEB6zVM2wSe6V6ZjiEItiJYdghMgtr4SYY665I9rpycCNMimmVhLqCeACFRKdwc1W
+	 DLADeSwaLPkYpsZRT/OuQvH7KcbCJ+WmX8fH7dRLwNlOgfcN6FNvHarxoBa9l5pYCl
+	 qMjHFQ58PObJu2FULsU2slA3aPi05hHCnajeusNXVD795rBljciXbqS7VxIG+836F4
+	 lmHtHb7kRFf9g==
+Date: Mon, 5 Feb 2024 13:24:37 +0100
 From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
-	ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org
-Subject: Re: [PATCH v3 04/47] filelock: add some new helper functions
-Message-ID: <20240205-fragil-begraben-4b78fd1b5981@brauner>
-References: <20240131-flsplit-v3-0-c6129007ee8d@kernel.org>
- <20240131-flsplit-v3-4-c6129007ee8d@kernel.org>
- <20240205-wegschauen-unappetitlich-2b0926023605@brauner>
- <de77ec5ade7fac7e72445cb2d10d95efe8bf9c92.camel@kernel.org>
- <20240205-laufen-hosen-38578e076df5@brauner>
- <f7ec5cfe94ff1472e309e8c4d92f24f2fc6cd618.camel@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, linux-cifs@vger.kernel.org
+Subject: Re: [PATCH 01/13] fs/super.c: don't drop ->s_user_ns until we free
+ struct super_block itself
+Message-ID: <20240205-ursprung-sonnig-70018d629239@brauner>
+References: <20240204021436.GH2087318@ZenIV>
+ <20240204021739.1157830-1-viro@zeniv.linux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -79,65 +60,22 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f7ec5cfe94ff1472e309e8c4d92f24f2fc6cd618.camel@kernel.org>
+In-Reply-To: <20240204021739.1157830-1-viro@zeniv.linux.org.uk>
 
-On Mon, Feb 05, 2024 at 07:06:00AM -0500, Jeff Layton wrote:
-> On Mon, 2024-02-05 at 12:57 +0100, Christian Brauner wrote:
-> > On Mon, Feb 05, 2024 at 06:55:44AM -0500, Jeff Layton wrote:
-> > > On Mon, 2024-02-05 at 12:36 +0100, Christian Brauner wrote:
-> > > > > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> > > > > index 085ff6ba0653..a814664b1053 100644
-> > > > > --- a/include/linux/filelock.h
-> > > > > +++ b/include/linux/filelock.h
-> > > > > @@ -147,6 +147,29 @@ int fcntl_setlk64(unsigned int, struct file *, unsigned int,
-> > > > >  int fcntl_setlease(unsigned int fd, struct file *filp, int arg);
-> > > > >  int fcntl_getlease(struct file *filp);
-> > > > >  
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > +static inline bool lock_is_unlock(struct file_lock *fl)
-> > > > > +{
-> > > > > +	return fl->fl_type == F_UNLCK;
-> > > > > +}
-> > > > > +
-> > > > > +static inline bool lock_is_read(struct file_lock *fl)
-> > > > > +{
-> > > > > +	return fl->fl_type == F_RDLCK;
-> > > > > +}
-> > > > > +
-> > > > > +static inline bool lock_is_write(struct file_lock *fl)
-> > > > > +{
-> > > > > +	return fl->fl_type == F_WRLCK;
-> > > > > +}
-> > > > > +
-> > > > > +static inline void locks_wake_up(struct file_lock *fl)
-> > > > > +{
-> > > > > +	wake_up(&fl->fl_wait);
-> > > > > +}
-> > > > > +
-> > > > > +/* for walking lists of file_locks linked by fl_list */
-> > > > > +#define for_each_file_lock(_fl, _head)	list_for_each_entry(_fl, _head, fl_list)
-> > > > > +
-> > > > 
-> > > > This causes a build warning for fs/ceph/ and fs/afs when
-> > > > !CONFIG_FILE_LOCKING. I'm about to fold the following diff into this
-> > > > patch. The diff looks a bit wonky but essentially I've moved
-> > > > lock_is_unlock(), lock_is_{read,write}(), locks_wake_up() and
-> > > > for_each_file_lock() out of the ifdef CONFIG_FILE_LOCKING:
-> > > > 
-> > > 
-> > > I sent a patch for this problem yesterday. Did you not get it?
-> > 
-> > Whoops, probably missed it on the trip back from fosdem.
-> > I'll double check now.
+On Sun, Feb 04, 2024 at 02:17:27AM +0000, Al Viro wrote:
+> Avoids fun races in RCU pathwalk...  Same goes for freeing LSM shite
+> hanging off super_block's arse.
 > 
-> No worries. If you choose to go with your version, you can add:
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
 
-No, I took yours. :)
+Hah, I once had the same patch for the userns bit because I was
+wondering about that,
+
+Reviewed-by: Christian Brauner <brauner@kernel.org>
+
+(Independent of whether or not this is pretty the s_user_ns should
+probably be a separate type so it can't be confused with other
+namespaces when checking permissions. Maybe I should respin my series
+for that if I find the time.)
 
