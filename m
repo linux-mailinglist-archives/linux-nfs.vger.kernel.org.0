@@ -1,192 +1,222 @@
-Return-Path: <linux-nfs+bounces-1791-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1792-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44FA3849F5D
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 17:17:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD95F849FBE
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 17:46:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAAA128323A
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 16:17:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58DA81F22561
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Feb 2024 16:46:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D32939ADE;
-	Mon,  5 Feb 2024 16:17:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B988D3CF58;
+	Mon,  5 Feb 2024 16:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="YyTctKY1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7WLNGl7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2112.outbound.protection.outlook.com [40.107.244.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5528D32C96
-	for <linux-nfs@vger.kernel.org>; Mon,  5 Feb 2024 16:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707149863; cv=fail; b=h+EZ4vntEQLEi+gePaYheW9UQ1rDpeftmReR8Gl5NIB1zf1F7bq2pPdMzWhnLt9E8L9VvCa55aXdKvPUtScxAfjsKzQMDRuDyXhOTcx0O2noFH46b3M+UiMOhD2swb1MQsewuuTA8aaNR2i5reJP7oZqH30g1glqE/KEJ0x29NU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707149863; c=relaxed/simple;
-	bh=vovQsLhwu00JyUFl1bO7FT/17v2cVnJywdAiYzV5M8M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Sfxf/ocoLB6hFIy/YL1kZ5G8kAa3WIqzV2G/TlArpaRFkIdcusx6UNoTUlvFvfW0BrWRJcc8NK4CMfBkh1x7ND3UHC1jDt5OyJlLXYxTWJGttVYUETeMMKzK7tF/RUQbHCDS8NwvZVmvj8z1vP7doWsBxqeYgjR6Ng529vAJNLc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=YyTctKY1; arc=fail smtp.client-ip=40.107.244.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mAlIEA6p/B/agV4DpriZqFpIwK8zB64L5Y4Z6QDly7U7L5tnqs9IjXVYBcqspJ9HvBf+gTV00l+pehQtfGEEmw5cTI+j/yza3nGdwc4/eJm2HHjsXpVwqcPJMoInP/XrKjGCNeR+XMHLCBxzwZfqsbAspsseg6YLIlCq16OIWGFw7X5gNmnL5l2OPxo7EH/kdUduI6s1Yp8E+BnSOWsa6w15BcgX1u+CTyY1YQu3Zt6pPt29DbsWj1Bst4iNZ4ddLY66zicL7fJVDJbwavscFa+WbmGkEsNxGRK1CFZa4c7pXJ0gBkIhk4pMMfzzw1KL/hZCoalMH3Y9YEnL/lV4TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vovQsLhwu00JyUFl1bO7FT/17v2cVnJywdAiYzV5M8M=;
- b=f99Y/HotCzqZh2IewYmAusz+KfxeMDxFD6Wc9WhkDPmDbMbFUfW5GoeuTky09s1zB5/gMJR5oMhBpzm9jQjwfFf/5v3lBYV7hyD/y1B/8og5at6SSIOEW/x7zuw/meNeY2m/0EP3Yrca7XgVTjRg/UttiYdw1lFsKSLF/jPM1ywpMp449oRdFOXHKrf8ssSPrisPZc3ijNR59gLN2F2eklRDyipS/OLD7gOH/2L72r81bQe8viTNMaUtMGZ0xgjZmWNDLIRxOgWd5m0aTx/DvIWa/+iHYEsZb/KxpuCK0cGuUn/LrBOuViQl/x92XJhAL5QQ+uaYuLpr3+P39DBn4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vovQsLhwu00JyUFl1bO7FT/17v2cVnJywdAiYzV5M8M=;
- b=YyTctKY1rQXal9UIM38FFT2MXA1+iRzoo86zEtXaRs1xZjZaRIz2Zengo7iwWpY3WVQa8JoSV/mQtrJ0vVvqkADKdNZnrIrY062gHJa/2sYveH8B3S/V83iN7hJvKXOqJ/nEh5w3N5Zb9j8MEAhwaw32J6Qbg22xmyRtzUX1JAI=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BLAPR13MB4642.namprd13.prod.outlook.com (2603:10b6:208:30d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Mon, 5 Feb
- 2024 16:17:38 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5003:a508:6b4:4e8a]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5003:a508:6b4:4e8a%5]) with mapi id 15.20.7249.035; Mon, 5 Feb 2024
- 16:17:38 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "martin.l.wege@gmail.com" <martin.l.wege@gmail.com>,
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC: "cedric.blancher@gmail.com" <cedric.blancher@gmail.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"bcodding@redhat.com" <bcodding@redhat.com>
-Subject: Re: NFSv4 referrals - custom (non-2049) port numbers in fs_locations?
-Thread-Topic: NFSv4 referrals - custom (non-2049) port numbers in
- fs_locations?
-Thread-Index:
- AQHaDKLAcIkwF+UzB02k43ifG3R86rBlifCAgA2y6wCABUQoAIAAbyaAgAA1EgCAeNw+AIAKcP6AgAAR7AA=
-Date: Mon, 5 Feb 2024 16:17:37 +0000
-Message-ID: <c28a3c78daa1845b8a852d910e0ea6c6bf4d63b4.camel@hammerspace.com>
-References:
- <CANH4o6Md0+56y0ZYtNj1ViF2WGYqusCmjOB6mLeu+nOtC5DPTw@mail.gmail.com>
-	 <DD47B60A-E188-49BC-9254-6C032BA9776E@redhat.com>
-	 <CANH4o6NzV2_u-G0dA=hPSTvOTKe+RMy357CFRk7fw-VRNc4=Og@mail.gmail.com>
-	 <5ED71FE7-B933-44AC-A180-C19EC426CBF8@oracle.com>
-	 <CALXu0UeZgnWbMScdW+69a_jvRxM2Aou0fPvt0PG6eBR3wHt++Q@mail.gmail.com>
-	 <8FCF1BB3-ECC1-4EBF-B4B4-BE6F94B3D4F5@oracle.com>
-	 <CANH4o6P2S1mOXAbQb9d4OgtkvUTVPwdyb8M0nn71rygURGSkxQ@mail.gmail.com>
-	 <93DA527F-E5D7-49A4-89E6-811CE045DDD3@oracle.com>
-In-Reply-To: <93DA527F-E5D7-49A4-89E6-811CE045DDD3@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BLAPR13MB4642:EE_
-x-ms-office365-filtering-correlation-id: 9c4092e2-677b-439a-2b83-08dc2665f861
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- GeJczKXU1a2ELoD/Ebp8ParUk0CZo7AV7aEn9OvvXaV3QvC3gqnwinek3GETDTBxPA+AAGr8V5Pancui7Hj8lnUZbiimyBUaLUNv1ht4EKzl58sO4k8iVex4JvVXebHBDjhhO4EvoBKRtfRznRJOB1qOK8d+G4gPOTYZ+/W7qGsnO4Sd2f3HruOKYgiVY51qVUTKDbc0Ii/cxwhbD8/ZcuDkgXX1q9DFgmXugf+hvrsiJELhSBfAzMYQKFxiughKk7C6cI+0xq+NyUSwt8tHrlBTlE5T5KzdNxI1xgLNjwRMZQ+FySrhimGb3EJqEEEcOsHElrHo2QNeotq21HxnbmqPXR2MAtLW3hY4HxWV3mxf3S+clkrbRxYCQB8LBtILabNRuxgkY8Zq+EzVeSbC/MJ9Y/ij99v+6pwkqUhBQczWCI21XGmLFhm3XKhfSuSsWATUCwDXpmGqRACO2rGvO9rX/wd/ozjRf0AM5WE84ryBtS8v95CCUUXPpWzqHuOGTpkWHyktaqdPTOY/B1ELkd6FmBHvGqyPxgZc9/jvvqaH/rVdkcUnV0blJTMnK8Yth0ux+5ZGdy2F5WJh0moUE2cfCN1dj/sMSM/O5cpx6se6zMjiDq/rEwatXZzsZsZ8
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39830400003)(396003)(376002)(136003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(41300700001)(4326008)(36756003)(66476007)(66556008)(64756008)(66446008)(66946007)(54906003)(110136005)(76116006)(478600001)(6486002)(6512007)(6506007)(71200400001)(38070700009)(122000001)(8676002)(316002)(8936002)(38100700002)(26005)(83380400001)(2616005)(86362001)(5660300002)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?enl0NHJZWE56aTFvRGV6cVREOHAwanhmVUdsd01nZE5YKzZSb1Jzell6UlYr?=
- =?utf-8?B?b2N1N3huNVFPVnZsYzFJWG9qV2hnRzFaZTRxbVVzN0ZrZXZLeHlaTzdzQ044?=
- =?utf-8?B?RnpJTVJmOXVVekhEaXl5eUw5UzNCZ1F6Z1ZhM1BZV0R1dGM3K2VYMm1mRGh2?=
- =?utf-8?B?T3I4UjlMQW8rNlhrUGVZUU5VMHppZkp0YllmUHhDVEVRSnNZN053MlNNYUhh?=
- =?utf-8?B?c2RGekVSYlNyQ3lGK1k1NUV6bUh2cFNtSVN2SWpvZER2ODR4YnQ1RTVpYnFU?=
- =?utf-8?B?aTlvU1E1N1dycFJQVFhOemNucmFscFdmcmhRUElDZDlvK0RnUkJXekExeGpO?=
- =?utf-8?B?bGNOUmNkdTl0MDdCQWNTckZTT2FhUWVnSy85Y2U5LzJxU2gwZVlITW45Ym9h?=
- =?utf-8?B?dzRKckJwT25ndGhYZXhqL28vVVZYUVFGNGVHZ3J4WXVaeUlsTS9PV3BBR29Q?=
- =?utf-8?B?SUxvazVvYURoTW5FUW5hMDlVZlZibmpEakRzRVJaZVM5RHdFb0JyME1FWHZ0?=
- =?utf-8?B?TEQwU01NcVBkZEV0SWh1YmtqemhFcjhJYUJpUm9MS3pIQlpmOVNGbG51SjBC?=
- =?utf-8?B?dXJqUWhUenRXUnNFK0NXZmZVMFJvSVpmd3hZUVhQWDFkYmFBYktIUzhyRHRy?=
- =?utf-8?B?Y2grSFZWS1h4UFFzTEtZTkJHT0pYaU0rbWYrY0xSY2ZaWFBQdkhsR3Rnd0Nw?=
- =?utf-8?B?NC9sc2ljNlJBSy9iNndYVWlwTnZMREhoUmVGZTkveFVxMnpxRGRKc3o3WmRI?=
- =?utf-8?B?UzhQSnFvN1haVWk1eGpnZjBORnozdTA5NFlwK2x4cG9wNFFaZnlvdWtodWpZ?=
- =?utf-8?B?c0NVai9PRWUzT2JmVWV3WEVJR1pHdUhlWTAwZ0pIWkw0TVR5ZElwYSs4cTVT?=
- =?utf-8?B?TlRWNEtiamRzcVloYk83d000M3hKVEdBQWc5UzZvS1hOMFQ4empaS3RCeUhW?=
- =?utf-8?B?YXpNT0pja1gwdWswcVRXT0tlamNHdVhHQ04yajVPUmc2bU10ZHlVMldnQ0Q0?=
- =?utf-8?B?OWhodEtzRElwSUtkS0hGMzZYNVBWL0lqdzB4UGZxbzR2d0pmdVZsMWNad1B4?=
- =?utf-8?B?eDhmWTNXTWdQaVFuQjV0OVZndU9GdlpCdVg5WGNtdFl0WFZzNFRvVFVCRi9y?=
- =?utf-8?B?YTYvaEFLNzVjWXRURGpmcEJjdHI4a2lMMHRvLzFrZ2Y0VUxCVnFaUUs3amZW?=
- =?utf-8?B?UUhPR2pmM0lCcEF1VWRYaEthZHFnK0UwTkxOUDVwVGdpME5MQVdWd29OOHIz?=
- =?utf-8?B?ZFN1elRob3F2RzNiSkQ3NmNTbXVMR3VJZmVOOFJCZkxSZlhONjdyWGUrNHIx?=
- =?utf-8?B?REFWZ3hHSnRxSVd2TDczN0tuVFdmODVzRHdLVHBEdHBKWHhWVlJWeW1wU2k0?=
- =?utf-8?B?VVQ2K0pKNEphWVQ3dnl6MU1tZzZkNXpyRXczbXNuUFpxeFBIbXl1aVhqNTRn?=
- =?utf-8?B?Q0k1dmdHM1RBNTg5UGMvRERETS85YjRzdDl2dTFCYmt1YlhCb0lheEtsT2M3?=
- =?utf-8?B?OXRTTVVEbTR6bjR1dkRDNjN2Rk5icnUwQ2ZERjhYdDY1QXI0bGg5bDVBa1cw?=
- =?utf-8?B?S1d1RjY1SzYyZExGOHIvQjFCbWpKWm5ONUdiVmxqSDQ0ZXVWVHpUME93ZzRU?=
- =?utf-8?B?TGsrY0NGTkNjS1ZEWjZ2UnNtV1lqNWU5TUxIandST3pMdVFzWm10TTJSamRG?=
- =?utf-8?B?b0dIZHhTTndqOHZZSEdORUk1aEF5akhFUjExRk93K3ZNK1YxR0k3MGxBMXJC?=
- =?utf-8?B?OHlwcFBaSzFoTmQrT0VvdGg2T08wTUlhd0M3VjhXQ3NlT3RxMzhqNlF3dnJ1?=
- =?utf-8?B?QVpOamFKK0NVODR6SW1kNkxEN2U5SWhvbkNhWUpvYzVMYitxN1U4QXdrYWtr?=
- =?utf-8?B?UXlTRkhIUkYwZGNWMitqS3pDbFVmOEh1VmVZZ3ZpY3g1eFdmTXJDVzZyeGsv?=
- =?utf-8?B?azlzVUNRcmhnVk8xS09MQ3VIVm41VzJacGI0V1Iydk0xNExYd29hTDZ0WUFp?=
- =?utf-8?B?WWZKNkE5b3JsSVJFbStCbitjM0JKZU15U3lkdVhEeDdQU3FmWHNHaHozZEtS?=
- =?utf-8?B?UDlFTFAvYzF5UDZSM2lpQWw1V0VZVGc5WFNuTXBLZnhEOFpZa29JZ3FGT1NX?=
- =?utf-8?B?aXpoTWh6WGNPU1UvU2FBaytKU0FQRGJwVE5VM0RMWnFma2txOCs0eEhoaG13?=
- =?utf-8?B?REE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BBF15B0A54833843B1926B0752AAA39F@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44703CF65
+	for <linux-nfs@vger.kernel.org>; Mon,  5 Feb 2024 16:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707151575; cv=none; b=pYd/HD+c1qUe6aVKGz7jjYW57zda67zmvCeg5g0U0YobvfaP2vJsjyK1XHAUQDSP/8bQ8WHpqDzgmfsSl7W314LvVCZexTR854xxUAwJLyWwrYROOffEE9tuRRYkiL8J4Uat1Dmut2RBvlVU4sENiW618HspEQ4t+KoZcGckx+c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707151575; c=relaxed/simple;
+	bh=5zZ6DiAA6VzdztMdUtGUEADKWFK0bVeSRSjQ7dsC5D0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dXCC8flGyMwQ7tm9ijEAT/ksBtRHTdx9puC96WL8l2UmNlak3lGVsGiphiArJEiaPEt9dKEeDijB4oqFcpVhSSbOvt4m9hDW+fTOb2VSnRB/OUraEjz6eT/+yMFMkVB/uQV6WE2ePq37H4B7NaXqgNP9J/3Dkpu0tAl1D5ahDCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O7WLNGl7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707151572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1B76+a887AJ9ybDmOzO/zZgFM1hBidtLb9z3CpvpCtE=;
+	b=O7WLNGl7x5byWD1t4e5UlKUHgd64TfTmScMPlfh00jP3ylN6H3s6zHzbv2IuNgg8LiWfhh
+	8R6i1P09wbasOe0h1hMmXdMnj1AV63WurGvjMbza7UjpdaPuU5aPSQZkooGkWz39lWSjtF
+	Or0yb/7VT5Q/6UOi937NW0UtLOrC8uE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-176-vRgoctMbP-S1necBILeMWw-1; Mon, 05 Feb 2024 11:46:11 -0500
+X-MC-Unique: vRgoctMbP-S1necBILeMWw-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33b250a4bd7so1335664f8f.3
+        for <linux-nfs@vger.kernel.org>; Mon, 05 Feb 2024 08:46:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707151570; x=1707756370;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1B76+a887AJ9ybDmOzO/zZgFM1hBidtLb9z3CpvpCtE=;
+        b=KSAQGDF/pjrVXt/nY0uS9LcKpfVpO29CMl8VDNj+mw2/SIp9Ohc827E2+Wly9symkZ
+         cW8shquKVlDgv5PD3AmXBPTGp3Y6ZXEs21G+QlPVwt+4YU9NA4DSoRa5r5SGAnxM1Vjp
+         zlS0xCMi34g3XiXd/PD8CwSCf0iOekMfsJIoEo4iqQedejM/uvslYfFZEjX/qL3/v/qY
+         fe9rND0l7J4qU5tJe0aBNZnvYku6iWlaSGvZb8I5yWeFkaEfIHpAOiE0xJb71yfF20e3
+         EJps6uYmhvpJiGl19gXMbY4rkYI2uJYHby7iOC/5eJYTmxl7qd07go7AB0fYpC3wg/Gr
+         RELA==
+X-Gm-Message-State: AOJu0YzjSYWwdDF4Q5sonTE7o6vPcA6DFNcExRAjn0vWQQTPURSUbvXO
+	vQ3tD85W3Kv4qX6GaeFpjSp9Exf4x9sUyNlM1U7Az4wsr+PWBxN0PwiJoQllwasOwIoLilzF2F7
+	80sSQOc0MgqJy1m2vw46CF6Qdonh0xWyCCypPtlpEUQiGZu+/jDg9VyH7nw==
+X-Received: by 2002:a05:6000:142:b0:33a:f855:d5b with SMTP id r2-20020a056000014200b0033af8550d5bmr76164wrx.11.1707151570066;
+        Mon, 05 Feb 2024 08:46:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE0zIRSdC+3NFlQ3p/g9FrgIX0bj/Swhae6oo+ysGrEJbRMZsQb1HzoIk1CiPtQfHwmP6iJBQ==
+X-Received: by 2002:a05:6000:142:b0:33a:f855:d5b with SMTP id r2-20020a056000014200b0033af8550d5bmr76142wrx.11.1707151569542;
+        Mon, 05 Feb 2024 08:46:09 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVARBqN+8ik/a71M/fr5kKUwQ2NQpW7KFkv7Z2P5GMgAiupXMRbvrQObe/fMlC5bskdsVxgQuZX5BR5HVP2kaiQXNxzsAGWplYAV85K+l/rPDoLNynHE4fhUFpYgmw2cXQuk9frUwUwS5Hi93B3lO9HwUspSXg/cZ1zBfZXy2ZxP4+oQ81U4Nl6B6xRldw71CMkUJk3OC6TQXTfWpmM3d/vlDshkNR2dBYh1bwHEGLWl9T4hacwia4=
+Received: from localhost (net-93-71-3-198.cust.vodafonedsl.it. [93.71.3.198])
+        by smtp.gmail.com with ESMTPSA id j3-20020a5d4523000000b0033b17880eacsm13188wra.56.2024.02.05.08.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 08:46:08 -0800 (PST)
+Date: Mon, 5 Feb 2024 17:46:07 +0100
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	"olga.kornievskaia" <olga.kornievskaia@gmail.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Should we establish a new nfsdctl userland program?
+Message-ID: <ZcEQzyrZpyrMJGKg@lore-desk>
+References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
+ <Zb0hlnQmgVikeNpi@lore-rh-laptop>
+ <e706a77b4ddbceeb8b0ebac4dcbca03f8196e8a5.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c4092e2-677b-439a-2b83-08dc2665f861
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2024 16:17:38.0072
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ldGEY50nzmAAlgzpltkYN/pKOh42fTab4dvc6AAIERDnOfcRHfIUs+xUADl4h548Y5V1UdeZuUhdfkQmpKOUBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR13MB4642
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="41hxKUPJ+PtSz3ku"
+Content-Disposition: inline
+In-Reply-To: <e706a77b4ddbceeb8b0ebac4dcbca03f8196e8a5.camel@kernel.org>
 
-T24gTW9uLCAyMDI0LTAyLTA1IGF0IDE1OjEzICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IA0KPiANCj4gQSBETlMgbGFiZWwgaXMganVzdCBhIGhvc3RuYW1lIChmdWxseS1xdWFsaWZp
-ZWQgb3Igbm90KS4gSXQNCj4gbmV2ZXIgaW5jbHVkZXMgYSBwb3J0IG51bWJlci4NCj4gDQo+IEFj
-Y29yZGluZyB0byBSRkMgODg4MSwgZnNfbG9jYXRpb240J3Mgc2VydmVyIGZpZWxkIGNhbiBjb250
-YWluOg0KPiANCj4gwqAtIEEgRE5TIGxhYmVsIChubyBwb3J0IG51bWJlcjsgMjA0OSBpcyBhc3N1
-bWVkKQ0KPiANCj4gwqAtIEFuIElQIHByZXNlbnRhdGlvbiBhZGRyZXNzIChubyBwb3J0IG51bWJl
-cjsgMjA0OSBpcyBhc3N1bWVkKQ0KPiANCj4gwqAtIGEgdW5pdmVyc2FsIGFkZHJlc3MNCj4gDQo+
-IEEgdW5pdmVyc2FsIGFkZHJlc3MgaXMgYW4gSVAgYWRkcmVzcyBwbHVzIGEgcG9ydCBudW1iZXIu
-IFRoZXJlZm9yZQ0KPiBhIHVuaXZlcnNhbCBhZGRyZXNzIGlzIHRoZSBvbmx5IHdheSBhbiBhbHRl
-cm5hdGUgcG9ydCBjYW4gYmUNCj4gY29tbXVuaWNhdGVkIGluIGFuIE5GU3Y0IHJlZmVycmFsLg0K
-DQpUaGF0J3Mgbm90IHN0cmljdGx5IHRydWUuIFJGQzg4ODEgaGFzIGxpdHRsZSB0byBzYXkgYWJv
-dXQgaG93IHlvdSBhcmUNCnRvIGdvIGFib3V0IHVzaW5nIHRoZSBETlMgaG9zdG5hbWUgcHJvdmlk
-ZWQgYnkgZnNfbG9jYXRpb25zNC4gVGhlcmUgaXMNCmp1c3Qgc29tZSBub24tbm9ybWF0aXZlIGFu
-ZCB2YWd1ZSBsYW5ndWFnZSBhYm91dCB1c2luZyBETlMgdG8gbG9vayB1cA0KdGhlIGFkZHJlc3Nl
-cy4NCg0KVGhlIHVzZSBvZiBETlMgc2VydmljZSByZWNvcmRzIGRvIGFsbG93IHlvdSB0byBsb29r
-IHVwIHRoZSBmdWxsIElQDQphZGRyZXNzIGFuZCBwb3J0IG51bWJlciAoaS5lLiB0aGUgZXF1aXZh
-bGVudCBvZiBhIHVuaXZlcnNhbCBhZGRyZXNzKQ0KZ2l2ZW4gYSBmdWxseSBxdWFsaWZpZWQgaG9z
-dG5hbWUgYW5kIGEgc2VydmljZS4gV2hpbGUgd2UgZG8gbm90IHVzZSB0aGUNCmhvc3RuYW1lIHRo
-YXQgd2F5IGluIHRoZSBMaW51eCBORlMgY2xpZW50IHRvZGF5LCBJIHNlZSBub3RoaW5nIGluIHRo
-ZQ0Kc3BlYyB0aGF0IHdvdWxkIGFwcGVhciB0byBkaXNhbGxvdyBpdCBhdCBzb21lIGZ1dHVyZSB0
-aW1lLg0KDQo+IFRoZSBSRkMgaXMgb25seSBhYm91dCB3aXJlIHByb3RvY29sLiBJdCBzYXlzIG5v
-dGhpbmcgYWJvdXQgdGhlDQo+IHNlcnZlcidzIGFkbWluaXN0cmF0aXZlIGludGVyZmFjZXM7IHRo
-b3NlIGFyZSBhbHdheXMgdXAgdG8gdGhlDQo+IHdoaW0gb2Ygc2VydmVyIGRldmVsb3BlcnMuDQo+
-IA0KPiBJbiBORlNEJ3MgY2FzZSwgcmVmZXI9IGNhbiBzcGVjaWZ5IGEgRE5TIGxhYmVsIChubyBw
-b3J0KSwgYW4gSVB2NA0KPiBvciBJUHY2IGFkZHJlc3MgKG5vIHBvcnQpLCBvciBhbiBJUHY0IHVu
-aXZlcnNhbCBhZGRyZXNzLiBUaGlzDQo+IGlzIGJlY2F1c2Ugb2YgdGhlIHB1bmN0dWF0aW9uIGlu
-dm9sdmVkIHdpdGggc2VwYXJhdGluZyB0aGUgbGlzdA0KPiBvZiBleHBvcnQgb3B0aW9ucywgYW5k
-IHRoZSBwdW5jdHVhdGlvbiB1c2VkIGludGVybmFsbHkgaW4gRE5TDQo+IGxhYmVscyBhbmQgSVAg
-YWRkcmVzc2VzLg0KPiANCj4gVG8gYWRkIHN1cHBvcnQgZm9yIG90aGVyIGNvbWJpbmF0aW9ucyB3
-b3VsZCByZXF1aXJlIGNvZGUgY2hhbmdlcy4NCg0KQWdyZWVkLCBhbmQgdGhlcmUgd291bGQgYWxz
-byBiZSB0aGUgbWFqb3IgaXNzdWUgb2YgdHJ5aW5nIHRvIGVuc3VyZQ0KYmFja3dhcmQgY29tcGF0
-aWJpbGl0eSBpZiB5b3Ugd2VyZSB0byByZWx5IG9uIGNsaWVudCBiZWhhdmlvdXIgdGhhdA0KZGlm
-ZmVycyBmcm9tIHRvZGF5Lg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVu
-dCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNv
-bQ0KDQoNCg==
+
+--41hxKUPJ+PtSz3ku
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> On Fri, 2024-02-02 at 18:08 +0100, Lorenzo Bianconi wrote:
+> > > The existing rpc.nfsd program was designed during a different time, w=
+hen
+> > > we just didn't require that much control over how it behaved. It's
+> > > klunky to work with.
+> > >=20
+> > > In a response to Chuck's recent RFC patch to add knob to disable
+> > > READ_PLUS calls, I mentioned that it might be a good time to make a
+> > > clean break from the past and start a new program for controlling nfs=
+d.
+> > >=20
+> > > Here's what I'm thinking:
+> > >=20
+> > > Let's build a swiss-army-knife kind of interface like git or virsh:
+> > >=20
+> > > # nfsdctl=A0stats			<--- fetch the new stats that got merged
+> > > # nfsdctl add_listener		<--- add a new listen socket, by address or h=
+ostname
+> > > # nfsdctl set v3 on		<--- enable NFSv3
+> > > # nfsdctl set splice_read off	<--- disable splice reads (per Chuck's =
+recent patch)
+> > > # nfsdctl set threads 128	<--- spin up the threads
+> > >=20
+> > > We could start with just the bare minimum for now (the stats interfac=
+e),
+> > > and then expand on it. Once we're at feature parity with rpc.nfsd, we=
+'d
+> > > want to have systemd preferentially use nfsdctl instead of rpc.nfsd to
+> > > start and stop the server. systemd will also need to fall back to usi=
+ng
+> > > rpc.nfsd if nfsdctl or the netlink program isn't present.
+> > >=20
+> > > Note that I think this program will have to be a compiled binary vs. a
+> > > python script or the like, given that it'll be involved in system
+> > > startup.
+> > >=20
+> > > It turns out that Lorenzo already has a C program that has a lot of t=
+he
+> > > plumbing we'd need:
+> > >=20
+> > > =A0=A0=A0=A0https://github.com/LorenzoBianconi/nfsd-netlink
+> >=20
+> > This is something I developed just for testing the new interface but I =
+agree we
+> > could start from it.
+> >=20
+> > Regarding the kernel part I addressed the comments I received upstream =
+on v6 and
+> > pushed the code here [0].
+> > How do you guys prefer to proceed? Is the better to post v7 upstream an=
+d continue
+> > the discussion in order to have something usable to develop the user-sp=
+ace part or
+> > do you prefer to have something for the user-space first?
+> > I do not have a strong opinion on it.
+> >=20
+> > Regards,
+> > Lorenzo
+> >=20
+> > [0] https://github.com/LorenzoBianconi/nfsd-next/tree/nfsd-next-netlink=
+-new-cmds-public-v7
+> >=20
+> >=20
+>=20
+> My advice?
+>=20
+> Step back and spend some time working on the userland bits before
+> posting another revision. Experience has shown that you never realize
+> what sort of warts an interface like this has until you have to work
+> with it.
+>=20
+> You may find that you want to tweak it some once you do, and it's much
+> easier to do that before we merge anything. This will be part of the
+> kernel ABI, so once it's in a shipping kernel, we're sort of stuck with
+> it.
+>=20
+> Having a userland program ready to go will allow us to do things like
+> set up the systemd service for this too, which is primarily how this new
+> program will be called.
+
+I agree on it. In order to proceed I guess we should define a list of
+requirements/expected behaviour on this new user-space tool used to
+configure nfsd. I am not so familiar with the user-space requirements
+for nfsd so I am just copying what you suggested, something like:
+
+$ nfsdctl=A0stats                                                 <--- fetc=
+h the new stats that got merged
+$ nfsdctl xprt add proto <udp|tcp> host <host> [port <port>]    <--- add a =
+new listen socket, by address or hostname
+$ nfsdctl proto v3.0 v4.0 v4.1                                  <--- enable=
+ NFSv3 and v4.1
+$ nfsdctl set threads 128                                       <--- spin u=
+p the threads
+
+Can we start from [0] to develop them?
+
+Regards,
+Lorenzo
+
+[0] https://github.com/LorenzoBianconi/nfsd-netlink
+
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+
+--41hxKUPJ+PtSz3ku
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZcEQzgAKCRA6cBh0uS2t
+rMzaAP9l/bpJg/6gB+MNuLKKcUo69a1XDPGkA58cOl73C4UccQD+KtqT87L+S1ey
+s5iI5MvECARMKsyIS8BeD+yoNMkM3gY=
+=50pK
+-----END PGP SIGNATURE-----
+
+--41hxKUPJ+PtSz3ku--
+
 
