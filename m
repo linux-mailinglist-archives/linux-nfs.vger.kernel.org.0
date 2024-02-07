@@ -1,198 +1,162 @@
-Return-Path: <linux-nfs+bounces-1819-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1820-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E96984CD91
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Feb 2024 16:02:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50D4B84CDD4
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Feb 2024 16:18:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BF5A292EF4
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Feb 2024 15:02:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04C921F24486
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Feb 2024 15:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25567E77B;
-	Wed,  7 Feb 2024 15:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBAF57F7D0;
+	Wed,  7 Feb 2024 15:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="HwUy4TiM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPUs+Uzn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2098.outbound.protection.outlook.com [40.107.243.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E21B1D548
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Feb 2024 15:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707318164; cv=fail; b=GUs9fY+qohicqBa8FlrAHEM01YJ/B7mkLsBC/m3fcxKAXjxkDWIkYyIqohFPWQ926/ngqfT9PizjdqzU73EC2mDc8G1v7/Yh2OtFLl+qntr8YiN6al33kRlXV97hICKtOtAQ6FuY1+gtIIseOGuZ9NXOHISjRiqGyFFxFwJjSHc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707318164; c=relaxed/simple;
-	bh=DGhq78KQFS/ivPQjIl2y5zyuQkKUFByRmhG8LMnTqVc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gdJ66ThHbnvCX4dYvKiLXaqezaRAB8lQhsn5VKQVSFHK60+i4cqbnWUnFljF3vt3XoFU2aKRIEUeg/cUd/M+6vrc4q/uyylwM543BKWHK/SdwXt/vQhJQAGTGLrps6dZoF82WfHIxeF0thuYl7Kq2VjaqkQ9ps4o6psyyvw7S5Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=HwUy4TiM; arc=fail smtp.client-ip=40.107.243.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EyCogC9o4l9BO7Fziq0Q9/24sqbp8EPnX/Y99xKEcVh3vr/Ds7IgmYEi6U0xRhI+LsAPJAl4Gk+F7gwIdybdJtgCjMY+8qpaO+36reYnRlw6Rw1BAslmQW/bdsf5aape53bwH0p/uUQhtOBOyNPOweoaYu1IjRhrcSafbDoQmUg/TAAkYkHfVBmgT0gVEWXKZTqZYWOJxT9kdzSZ+/03UtMJw62ianCg7g+RMjGxlhtGC8cKJ65RzyOeAIIPOTLeh0A4u8qA9mpzX0/a5IkiaswEiHuszk+U7sEF4cMTILAJCoqZoIWPFJOuqHxQJHhhNXgjK0gKsRx1K8Dpkucfag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DGhq78KQFS/ivPQjIl2y5zyuQkKUFByRmhG8LMnTqVc=;
- b=Xz1+ZSJOnA8EScElacOfkI4Qe1CZwrrYyTUbe9q+7/ZhBmJXd8zXzOXRsDLxXiDO/Ag9iNhcEbVa2i4feMT+AaX+OaD3VNbTQDUBfvUQD1gwWPZALiV1twAL4BM0wxrnUb3tnxVX+SJnZ6v4KfAzsMQ3RrayHYfO20D9pXLlnbopH+9+CFz8VTVGVqd/om1vUfaeq+5qmYuzwmFJV3sRtYjG2vq/nbQLrYvTlyxEHdCT4IJTRdQe3LQAPsLekWFwJtGlBmiESezE/Qat//kPGw6TgrxCk9tvzLxWXNWVSf9lje3GG72K0mP17NAZj0cBoZFHyNfTrvGG7CE5/8z0Jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DGhq78KQFS/ivPQjIl2y5zyuQkKUFByRmhG8LMnTqVc=;
- b=HwUy4TiMTEUxu+2XLOacBmRqQ3uei7Ojv7brGU3FLlhz7dzHlAJYjr6efGG9XkrEC3BoefSZweuvcYx4CmCYQlKvMkdp1InmF74+IDGbJBWiKmyA6/V8CJ1SidsSLwocx0kQc92P/LKVxmNBHVHSmpLuthSCQ30Ivj4usfQgJPg=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MN2PR13MB3776.namprd13.prod.outlook.com (2603:10b6:208:1e7::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Wed, 7 Feb
- 2024 15:02:40 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5003:a508:6b4:4e8a]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5003:a508:6b4:4e8a%5]) with mapi id 15.20.7249.037; Wed, 7 Feb 2024
- 15:02:40 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"jlayton@kernel.org" <jlayton@kernel.org>
-CC: "rick.macklem@gmail.com" <rick.macklem@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C537FBB2
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Feb 2024 15:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707319120; cv=none; b=SHla7XIjvZ/rzv/xGUTdfsl3IQ2J6Z3dw/qT1ZfPIu2zAUseuSHGAsM4SzXxQfG9FbWdvtdlEtNybyNmvQYGJs4xTSLLJLVWZ4JOsZzNnmwAt6aiFQFmnLVeO+olQ3TBnct7/kpRaUhpNBnaw1S3ANQ2c/ksVcsA+lcTkM8XA9g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707319120; c=relaxed/simple;
+	bh=l9l1x5kQvs+SeyGCUtUYv6htnPDfLkzB8MGMa8sZNSk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=L9qahSgp4WuPdEyI304UHyUQeJ6SvoHInteOJGfO19m7A9IpYdstIDKeVk4RFPncGzHEOnPdqP0FrO2XFhIPRjMPDYTWSeXhHM82P14cv89UmJRtPVyOvTGyUU7dnYp2lxNLmf/Pwt1bpT7Ei/Bb9dYkOyUcQr/ZAl+n9lR+JbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPUs+Uzn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583FEC433C7;
+	Wed,  7 Feb 2024 15:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707319119;
+	bh=l9l1x5kQvs+SeyGCUtUYv6htnPDfLkzB8MGMa8sZNSk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XPUs+UznaHBDnKs2gKy63AzMBilGSna/9OK2bNlGTnKKCwu2gmnVTZevJcazAvxeN
+	 oAF+s/wwlamndek15gBZ937vrNZESX7HrwDQadMfVxsxKtenBtze5KiD0WYni5v8FX
+	 JTrc3tmmD+R7xWL8QRoCt58RNsHH5AIGM1o/DR366svn1ryUAb/TbZoyLRj5TMCudW
+	 EP1Uexy0eKgneRybCw/w5NusP93kQs1Nn2pB1P0ytsoccKs1zxH0PSt12dYaB9tPvz
+	 h4lSmit/qMgbJ8cZGPasNoHYsnZJhQV94iQoh29WrtfEUpitIpaMFPOPhbvcN5hWiR
+	 2FSIwSF2Y0o3A==
+Message-ID: <4c1d081964fe26a3a71a8b44637746ccae23df05.camel@kernel.org>
 Subject: Re: when should the client request a directory delegation?
-Thread-Topic: when should the client request a directory delegation?
-Thread-Index: AQHaWcppe3dWAatSzkyuu9kjNEc7UrD+7lAAgAAJqACAAAHUAA==
-Date: Wed, 7 Feb 2024 15:02:39 +0000
-Message-ID: <c6a10b1b0c7bcb3af364c1c07840f4e67279982a.camel@hammerspace.com>
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@hammerspace.com>, "linux-nfs@vger.kernel.org"
+	 <linux-nfs@vger.kernel.org>
+Cc: "rick.macklem@gmail.com" <rick.macklem@gmail.com>
+Date: Wed, 07 Feb 2024 10:18:38 -0500
+In-Reply-To: <1fac8e86eae132499cc1bffe139ba397293bea9f.camel@hammerspace.com>
 References: <57b9f5e0c3ec7bc09044b016a3822d0700760c55.camel@kernel.org>
 	 <71e5d519411330ee608415fa629322fc84de8139.camel@hammerspace.com>
-	 <67cd74bcebdbbfcd0cd46702e3c5c971f743dfba.camel@kernel.org>
-In-Reply-To: <67cd74bcebdbbfcd0cd46702e3c5c971f743dfba.camel@kernel.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MN2PR13MB3776:EE_
-x-ms-office365-filtering-correlation-id: 929e1b9d-1b00-4f7e-7226-08dc27edd430
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- enVF+nxTcLdpoIm37KxajAWuKogGqrpeF1niQSkDG61doU6xULhl151DpuJwysupqUktiPFShXnqkfBgaOxU0F8DAjc3RYaP02QKjrDMx9ZG93gDgg2AFRqyqupiI3aIbwuhQDHS47DD0XF3a+l1KpRl2qzXmGiG/aDsoxv3aAksw2Zkl9Q8AIeP9Y1qc1gPZ9MxB4cSlefAV+18lyyEhX+v8w7laOowXLvQwSH8GMiKSciOtHSvNy5RN/fdQXvOM23LSM0qUI5D+Nhqpn24kvOmtcVZ71eqGp6MGgTHv1956xbZlGGQinmcK588vsP4vhhjWi9P6pcssCHs3MEJ+Ct3rOg47wT6w6CGOU/lQfg7FAhICBHfjpUnQ6iY7d2byI6KxFtG389H+/ZxKvOK/1cJzJFmlXrzb6WtYYtE/p4cYZG86kFqd+MClo80HrSrHATaKW9lYclzDM1tCtVxE62bNSLNOoP7RskfQD51G+Y91WRlOw/5dZP4emfcLEcMcgEOoZXMgzW8kYOQzaNu6x8a+a7D8YLxRP128yJOARxwo8H0YI3907NDckQAIyP8nsUYfBPq87iMqm1s0UyaFP1PrUstYUoP7MgGqsdqsAS1ltM4qevXcKBVF+BFfC/t
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(346002)(39840400004)(396003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(76116006)(41300700001)(86362001)(8936002)(8676002)(4326008)(6512007)(6506007)(36756003)(478600001)(6486002)(71200400001)(2616005)(5660300002)(38070700009)(110136005)(66946007)(66476007)(64756008)(66556008)(66446008)(316002)(2906002)(83380400001)(122000001)(38100700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?T3BDeTJjV1dlYmVlN3dSSW90Ky8yNi9pNE5CcmVQWmNPZ2RFalA5bFFRN3BX?=
- =?utf-8?B?L0RQQ0x0QlhveVhUQkV3S0ttZEVMTmRvNUlETXh0UytXQW9leXFKYnFZZndR?=
- =?utf-8?B?Nk9TNUd4QklJSEVYNFdoTVRpWlZXcWVaRzRyRlFYRHpaZWlWKzhNTE53OWQ3?=
- =?utf-8?B?R3BxaFdSaytJdWpUWXMrNkFIL1BIZzI5OTlyYXl2MEV5aUhZRExFSExsRm9N?=
- =?utf-8?B?dStQOGpGb0dqY095Njd5cHhGRHl4OHFRbGltenhFakxuR3ZkUm9idjJaOUlR?=
- =?utf-8?B?WGtSUjFXdlo4SnpBb1BzUHJNVVZFY3h5ZGdkck92Z29DdFd3SnIzTnByTTlD?=
- =?utf-8?B?RlF3ZG1RM0pjSXNzMXpWME5saittYmdobUlSK1YzSkxRejdxdzBTZ0N2U0hN?=
- =?utf-8?B?M2s2MWlVZnR4ZmZhUytTMGMwWkdRc0huWFFQWlBqN2VjUzNhSXorU2dFYWZE?=
- =?utf-8?B?WGM2b1F2UG9IaUFDRWVQR1pJdmhRbUV4WEw2M1BKcS9PdUdwenkzQ3VFcGRB?=
- =?utf-8?B?WVdOVW4zc2N6RVJ6Q2FXODU4Q2lBei8xamFsZmFJS3JoajZXUFQxYWpHdXBY?=
- =?utf-8?B?YXpNanlOZGxsc1lzbXlPalJzSjFoYkVrWWpHenUyL3FNWUFEMHN4T0pIQW5x?=
- =?utf-8?B?Y0VxRmpMV1d5UCtGODkzMnloUm85QitUNGhRdWVFM2tvd3hxZkdUaFZpUUVj?=
- =?utf-8?B?V1R1Q2g2VFpkZ3g1SjdQMHpUZWEyd3QzcUVadHZnS1BRdnJSWklCVldxdkdV?=
- =?utf-8?B?dUxFeHlzMnU1WHFmSGFIYkg5UzdvclRKU2w1YkJ5YTZxZFVJcEcwcE4vS1hI?=
- =?utf-8?B?a1RLcTBPVWlYUmNYTlAvRzZPaXRRWGtpc2hiekEyNmtjTzAwYU5yS0RZYTI5?=
- =?utf-8?B?dWZ1Rk80RWtHT0VhUVVRYmxaeEdnbVYzbldpUkN0Vldhc3VvdXZ5dFd5M1Nm?=
- =?utf-8?B?Z0IraXBtdlNqcENxcFVyQ2tvQXpsdEszdEJ3alpISlFncjUrcXVKY050eThx?=
- =?utf-8?B?QzJoVkcvMHlCY2RWeGhLcDdhUjRwTzlFTnFOQ0RKZi92blVhcjhZZmNIR1I0?=
- =?utf-8?B?K3ZVNVRRbHl6anpUMCtkaUdQOVg5ZDgzTzlva2hTdFhYaG1BMEh5a0ZXQkRp?=
- =?utf-8?B?Y3lzSzQ0STNYZFN2eGwxUWNkeElvVWwxNkpWaXk4QVArSC95c3FpK3YxeUJM?=
- =?utf-8?B?Y1VjNHFaVENoY09RSzllb3BIeWVQM1JoMHdTUnNWWjgzRFhJNllrT3dDNEFR?=
- =?utf-8?B?bE9qMk51YzlsTHc0TW5KQTlwQ2U3RjdHRWh2d3FYaHBDVWU0SHhIa1dpdnYv?=
- =?utf-8?B?cUNicnRFSHBSOXZPQytvY3ZCYnRMU0gveFlNNUhqVlFVRnZFbCt4N1E0U0xr?=
- =?utf-8?B?MFk2MzRpOFVpY0J5eFZhdXVzSkpONXZpYlo1SExUNUQvRFZCZko0MnpFQ3RT?=
- =?utf-8?B?RGF3ZTA0ZDJZSUE5c3FSM3gxalF0NzF2VHprSjZqdDl5Zk44WTlyWFZQbjVP?=
- =?utf-8?B?ekw2U1NLS0RHOVJsTnFGaHFIRGIxNEhha1hVSHkvSVBkS1NnMlc0aEcwWEtO?=
- =?utf-8?B?Q1E4VW00NzVlbysxenlZbGhHTCsrT0RQNzkwMDNVQjlHTkt6Q0tVdlBGM254?=
- =?utf-8?B?VUpVckdFTGpGV0hlV1B4R2dmNjJtL2dQMGZMN2czcDZvRURhNi9BdWxEWXBh?=
- =?utf-8?B?RkY2eVpFemNUb0lLMVdnZ01uWVZ4NDBVSURrNHB1MVBrVGZGSkpabDRHc1hp?=
- =?utf-8?B?N2xQcm1jaUtrVHJVbmc2UmliaVdZVUM4aGM3WUtGQWRYM3hZVi81Wlo4SEY2?=
- =?utf-8?B?Rm9sb3NDa2c2alg3YmpadmxpcXFkeGZyU2cvVjNiUk56VnYwQnFOOEcrRWc4?=
- =?utf-8?B?QTdPRFVpMGpEYno0aCtEWFNORHUvOVFQb2dKOWZVbEROeU9kTGhtZTZLaVlh?=
- =?utf-8?B?eXpJRzNyYytJeDlKbWtGQXdDZzM2bEExYUpTZ1czKy9WNitUQmgybG41R1R5?=
- =?utf-8?B?ZHVGVTBIeXRjYjhTRkRZTjQ1Y1pTUkZMeDE3blRycno4eUlKTDBWdk1uWVI1?=
- =?utf-8?B?OWpOQzV5NC9tTFpHaWJxc2lZLzVyN3g4U1EzamdNc3BldDRPVDl5c2JRQWpl?=
- =?utf-8?B?UFg1Vm9BaC9rVHJxTThyUjBoeUdrWndTc2JyRDYwUkd4OGZZTXBtZEhncGFR?=
- =?utf-8?B?SE5oVklSKzJnamlsRWkvZ1RWd21yUFRYRE1zckJNOGpNMmlpRlhMODVZZUZi?=
- =?utf-8?B?VzlnMklyNnR2UzFYaXlqcVRqZ1R3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <78B515063FE88C47B0D983632C67B793@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	 <1fac8e86eae132499cc1bffe139ba397293bea9f.camel@hammerspace.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 929e1b9d-1b00-4f7e-7226-08dc27edd430
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2024 15:02:39.9976
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: icV05ajspWv85q7rkbIJbmyfSXTwiihYARuxiC3eSo2CVNTC6GX81BdamI1S67ymL8OkbafNLcZX2qdTYVwfhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3776
 
-T24gV2VkLCAyMDI0LTAyLTA3IGF0IDA5OjU2IC0wNTAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
-T24gV2VkLCAyMDI0LTAyLTA3IGF0IDE0OjIxICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
-DQo+ID4gT24gV2VkLCAyMDI0LTAyLTA3IGF0IDA4OjM0IC0wNTAwLCBKZWZmIExheXRvbiB3cm90
-ZToNCj4gPiA+IEkndmUgc3RhcnRlZCB3b3JrIG9uIGEgcGF0Y2hzZXQgdG8gYWRkIHN1cHBvcnQg
-Zm9yIGRpcmVjdG9yeQ0KPiA+ID4gZGVsZWdhdGlvbnMNCj4gPiA+IHRvIHRoZSBMaW51eCBrZXJu
-ZWwgY2xpZW50IGFuZCBzZXJ2ZXIuIEl0J3Mgc3RpbGwgdG9vIHJvdWdoIHRvDQo+ID4gPiBwb3N0
-DQo+ID4gPiBhdA0KPiA+ID4gdGhpcyBwb2ludCwgYW5kIGZvciBub3csIEknbSBqdXN0IGNvYmJs
-aW5nIGluIGEgaW9jdGwgdG8gZHJpdmUNCj4gPiA+IGl0Lg0KPiA+ID4gDQo+ID4gPiBBcyBJIHN0
-YXJ0ZWQgd29ya2luZyBvbiBzb21lIG9mIHRoZSBjbGllbnQgYml0cywgaG93ZXZlciwgSQ0KPiA+
-ID4gcmVhbGl6ZWQNCj4gPiA+IHRoYXQgSSBkb24ndCByZWFsbHkgaGF2ZSBhIGNsZWFyIHBpY3R1
-cmUgYXMgdG8gd2hlbiB0aGUgY2xpZW50DQo+ID4gPiBzaG91bGQNCj4gPiA+IHJlcXVlc3QgYSBk
-ZWxlZ2F0aW9uIG9uIGEgZGlyZWN0b3J5LiBJdCBzZWVtcyBsaWtlIHRoZXJlIGFyZSBhDQo+ID4g
-PiBsb3Qgb2YNCj4gPiA+IHRoaW5ncyB3ZSBjb3VsZCBkbzoNCj4gPiA+IA0KPiA+ID4gT25lIGlk
-ZWE6IHJlcXVlc3Qgb25lIG9uIGFuIGluaXRpYWwgZGlyZWN0b3J5IHJlYWRkaXIuIFNvIG1heWJl
-DQo+ID4gPiB3aGVuDQo+ID4gPiB0aGUNCj4gPiA+IG9mZnNldCBpcyAwIGFuZCB3ZSBkb24ndCBo
-YXZlIGEgZGlyIGRlbGVnYXRpb24gYWxyZWFkeSwgZG86DQo+ID4gPiANCj4gPiA+IAlQVVRGSDpH
-RVRfRElSX0RFTEVHQVRJT046UkVBRERJUg0KPiA+ID4gDQo+ID4gPiBPciwgbWF5YmUganVzdCBk
-byBpdCBvbiBhbnkgcmVhZGRpciB3aGVuIHdlIGhhdmVuJ3QgcmVxdWVzdGVkIG9uZQ0KPiA+ID4g
-aW4NCj4gPiA+IGENCj4gPiA+IGxpdHRsZSB3aGlsZT8NCj4gPiA+IA0KPiA+ID4gV2UgY291bGQg
-YWxzbyBkbyBvbmUgb24gZXZlcnkgbG9va3VwLCB3aGVuIHdlIGV4cGVjdCB0aGF0IHRoZQ0KPiA+
-ID4gcmVzdWx0DQo+ID4gPiB3aWxsIGJlIGEgZGlyZWN0b3J5LiBJJ20gbm90IHN1cmUgaWYgTE9P
-S1VQX0RJUkVDVE9SWSB3b3VsZCBiZSBhDQo+ID4gPiBzdWZmaWNpZW50IGluZGljYXRvciBvciBp
-ZiB3ZSdkIG5lZWQgdGhlIHZmcyB0byBpbmRpY2F0ZSB0aGF0DQo+ID4gPiB3aXRoIGENCj4gPiA+
-IG5ldw0KPiA+ID4gZmxhZy4NCj4gPiA+IA0KPiA+ID4gV291bGQgd2UgYWxzbyB3YW50IHRvIHJl
-cXVlc3Qgb25lIGFmdGVyIGEgbWtkaXI/DQo+ID4gPiANCj4gPiA+IAlQVVRGSDpDUkVBVEU6R0VU
-X0RJUl9ERUxFR0FUSU9OOkdFVEZIOkdFVF9ESVJfREVMRUdBVElPTg0KPiA+ID4gOi4uLg0KPiA+
-ID4gDQo+ID4gPiBBc3N1bWluZyB3ZSBjYW4gZ2V0IHRoaXMgYWxsIHdvcmtpbmcsIHdoYXQgc2hv
-dWxkIGRyaXZlIHRoZQ0KPiA+ID4gY2xpZW50IHRvDQo+ID4gPiBpc3N1ZXMgR0VUX0RJUl9ERUxF
-R0FUSU9OIG9wcz8NCj4gPiANCj4gPiBBcyBmYXIgYXMgSSdtIGNvbmNlcm5lZCwgdGhlIG1haW4g
-Y2FzZSB0byBiZSBtYWRlIGZvciBkaXJlY3RvcnkNCj4gPiBkZWxlZ2F0aW9ucyBpbiB0aGUgY2xp
-ZW50IGlzIGZvciByZWR1Y2luZyB0aGUgbnVtYmVyIG9mDQo+ID4gcmV2YWxpZGF0aW9ucw0KPiA+
-IG9uIHNhaWQgZGlyZWN0b3J5LCBwYXJ0aWN1bGFybHkgZHVyaW5nIHBhdGggbG9va3Vwcy4NCj4g
-PiBpLmUuIHRoZSBnb2FsIGlzIHRvIGVsaW1pbmF0ZSB0aGUgbmVlZCB0byBjb25zdGFudGx5IHBv
-bGwgdGhlDQo+ID4gZGlyZWN0b3J5DQo+ID4gY2hhbmdlIGF0dHJpYnV0ZSwgYW5kIHRvIGVsaW1p
-bmF0ZSB0aGUgbmVlZCB0byBjb25zdGFudGx5DQo+ID4gcmV2YWxpZGF0ZQ0KPiA+IHRoZSBkZW50
-cmllcyAoYW5kIG5lZ2F0aXZlIGRlbnRyaWVzISkgY29udGFpbmVkIGluIHRoZSBkaXJlY3RvcnkN
-Cj4gPiBhZnRlcg0KPiA+IGEgY2hhbmdlLg0KPiA+IA0KPiA+IFBlcmhhcHMgdGhhdCBtZWFucyB3
-ZSBzaG91bGQgZm9jdXMgb24gYWRkaW5nIGEgcmVxdWVzdCBmb3IgYQ0KPiA+IGRpcmVjdG9yeQ0K
-PiA+IGRlbGVnYXRpb24gdG8gdGhlIGZ1bmN0aW9uIG5mc19sb29rdXBfcmV2YWxpZGF0ZSgpIHNp
-bmNlIHRoYXQgd291bGQNCj4gPiBzZWVtIHRvIGluZGljYXRlIHRoYXQgd2UncmUgZ29pbmcgdGhy
-b3VnaCB0aGUgc2FtZSBkaXJlY3RvcnkNCj4gPiBtdWx0aXBsZQ0KPiA+IHRpbWVzPyBUaGUgb3Ro
-ZXIgY2FsbCBzaXRlIHRvIGNvbnNpZGVyIHdvdWxkIGJlDQo+ID4gbmZzX2NoZWNrX3ZlcmlmaWVy
-KCkuDQo+ID4gDQo+IA0KPiBTb3VuZHMgZ29vZC4gSSdtIG5vdCBuZWFybHkgYXQgdGhlIHBvaW50
-IHdoZXJlIEknbSBtb2RpZnlpbmcgY2xpZW50DQo+IGJlaGF2aW9yIHlldCwgYnV0IEknbGwgcGxh
-biB0byB0cnkgd2lyaW5nIGl0IHVwIGluIHRoZSByZXZhbGlkYXRlDQo+IGNvZGVwYXRocyBmaXJz
-dC4NCg0KVW5kZXJzdG9vZCwgYnV0IHlvdSBhcHBlYXJlZCB0byBiZSBhc2tpbmcgd2hpY2ggQ09N
-UE9VTkRzIHRvIG1vZGlmeS4gSQ0KdGhpbmsgYSBkaXNjdXNzaW9uIGFyb3VuZCB0aGUgZ29hbHMg
-b2YgaW50cm9kdWNpbmcgZGlyZWN0b3J5DQpkZWxlZ2F0aW9ucyBuZWVkcyB0byBpbmZvcm0gdGhh
-dCBjaG9pY2UuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50
-YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Wed, 2024-02-07 at 14:56 +0000, Trond Myklebust wrote:
+> On Wed, 2024-02-07 at 14:21 +0000, Trond Myklebust wrote:
+> > On Wed, 2024-02-07 at 08:34 -0500, Jeff Layton wrote:
+> > > I've started work on a patchset to add support for directory
+> > > delegations
+> > > to the Linux kernel client and server. It's still too rough to post
+> > > at
+> > > this point, and for now, I'm just cobbling in a ioctl to drive it.
+> > >=20
+> > > As I started working on some of the client bits, however, I
+> > > realized
+> > > that I don't really have a clear picture as to when the client
+> > > should
+> > > request a delegation on a directory. It seems like there are a lot
+> > > of
+> > > things we could do:
+> > >=20
+> > > One idea: request one on an initial directory readdir. So maybe
+> > > when
+> > > the
+> > > offset is 0 and we don't have a dir delegation already, do:
+> > >=20
+> > > 	PUTFH:GET_DIR_DELEGATION:READDIR
+> > >=20
+> > > Or, maybe just do it on any readdir when we haven't requested one
+> > > in
+> > > a
+> > > little while?
+> > >=20
+> > > We could also do one on every lookup, when we expect that the
+> > > result
+> > > will be a directory. I'm not sure if LOOKUP_DIRECTORY would be a
+> > > sufficient indicator or if we'd need the vfs to indicate that with
+> > > a
+> > > new
+> > > flag.
+> > >=20
+> > > Would we also want to request one after a mkdir?
+> > >=20
+> > > 	PUTFH:CREATE:GET_DIR_DELEGATION:GETFH:GET_DIR_DELEGATION:.
+> > > ..
+> > >=20
+> > > Assuming we can get this all working, what should drive the client
+> > > to
+> > > issues GET_DIR_DELEGATION ops?
+> >=20
+> > As far as I'm concerned, the main case to be made for directory
+> > delegations in the client is for reducing the number of revalidations
+> > on said directory, particularly during path lookups.
+> > i.e. the goal is to eliminate the need to constantly poll the
+> > directory
+> > change attribute, and to eliminate the need to constantly revalidate
+> > the dentries (and negative dentries!) contained in the directory
+> > after
+> > a change.
+> >=20
+> > Perhaps that means we should focus on adding a request for a
+> > directory
+> > delegation to the function nfs_lookup_revalidate() since that would
+> > seem to indicate that we're going through the same directory multiple
+> > times? The other call site to consider would be nfs_check_verifier().
+>=20
+> Note: if you disagree with the above argument, and think that improving
+> that caching READDIR of results is more important, then consider the
+> whole discussion we had in the thread started by Tigran here:
+> https://lore.kernel.org/all/CAGue13pe_ZH_Eto-jL3mLjTNGFK26izTarnZdjs3eL82=
+A2Z37w@mail.gmail.com/
+>=20
+
+I think you're correct about the main use-case. I certainly don't plan
+to try for readdir caching in the initial stages (there's enough to do
+just to get to a minimum-viable feature).  Long term though, it might be
+possible to do something:
+
+The ceph protocol has had directory caps for a long time. The client can
+mark directories as "complete" when it has every dentry in the
+directory, and also as "ordered" when they are correctly ordered in the
+dcache.
+
+So if it has the right caps, "complete" allows them to satisfy any
+lookup in the dir w/o going to the MDS, and "ordered" allows them to
+satisfy readdir using dcache_readdir() (also w/o going to the MDS).
+
+It may be possible for us to leverage dir delegations to do something
+like that in NFS too.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
