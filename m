@@ -1,168 +1,233 @@
-Return-Path: <linux-nfs+bounces-1859-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1860-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF5FF84E323
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 15:28:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C979F84E36C
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 15:44:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A27FD291F84
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 14:28:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EBE0284BDE
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 14:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18AB679924;
-	Thu,  8 Feb 2024 14:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6DA6EB4B;
+	Thu,  8 Feb 2024 14:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cz02k/Xz"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EZCEjFcD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NyW/zj9u";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EZCEjFcD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NyW/zj9u"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7281F78B5E
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 14:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB50569300
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 14:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707402511; cv=none; b=lp8KcCNyjH/aqNhSZAx8NIEhUWz4905PEkAb9QjO4bMPdvXABT9HDKqoClng8lgHycVq9g/gIBZ2HrCvij5VYQZ1I+deAU4HIQ+OH2xLpMRgAssZQrex8Ab8fbMccZ8IfowmGEgbDMi1TvFPmFvVdTUXx93GzHDoSvdiwTlzP60=
+	t=1707403492; cv=none; b=SlPz8u/FgU4B3LOX8wx/sbxPA8PAj2yX4XCAnXf+Zqv7EWq5TtrMnAUYu3zSzmwjiZ0xg8ib3pIH9yT3KtszM1A+6i6vZLPVmFL7sTE9x0Pw+pOu8QXEZ3Bi/tOEhxj0IDonOAKq8MHiERaiypPR1kzXjtzsKLeucHxcew3M3WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707402511; c=relaxed/simple;
-	bh=xPJxCtMIHPqfKZM5PHFmK17d0/dTW8HPx+GKoJoBaWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kvBBMt8sdNDZg6sRkJUSBZRT0zUhMBTgOAYyGUEwDrlI2gIe0R60l/XWZ97E0TGUaRyZKeoVRN532dpiQJjVmUjVGOfA2wggeVWDpAigow7gIwSMdPnquXH/1cZheJojJKhkcbEMywHyPUbjupJtHj94TfXDEypYJFv/k7TgqwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cz02k/Xz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707402508;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1707403492; c=relaxed/simple;
+	bh=39y3pCGzNwUzYEocTlBp8R6qOdz2CaqjGRUkB/QmnQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLtDjt3JPo19zOCjY6ALcXgszzNF0nqxDKFnUNV/ApLyrjkOReqm/MHroYJhyQRoyQy8g8jX1rkt0UmGAXLhvbVr8ADjLZ5icT9vzbSR94gkOZOLeDwTvGUKMdKRJBor1Xcm0z+xV6r6PwQd1ePuGY3P92OUwL7YDk7sn7o9Tcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EZCEjFcD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NyW/zj9u; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EZCEjFcD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NyW/zj9u; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 920E221F95;
+	Thu,  8 Feb 2024 14:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707403488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=74WiF3KyvUKOTQcEC2aP6vHhzzlhPjVl2ZNugP1o30c=;
-	b=cz02k/Xz1RY7t6l8zAwz+aocGQnG5IC43oE09PTWN6hLo21jm27ELKh/UYSAuWLqn3NuDX
-	f1ErVlR2V3gfwN11S1AAxsgafJxn/H1noMubXbKaXh0kMZOsoU13T/1XF6F78N/EMIlROk
-	aXu1YuEWmcfKAsdPiqd8jq5jw+buN+A=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-QXrjZw8DNvS7fpnaQ3TA_Q-1; Thu, 08 Feb 2024 09:28:26 -0500
-X-MC-Unique: QXrjZw8DNvS7fpnaQ3TA_Q-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5d8c924c8bbso1950750a12.3
-        for <linux-nfs@vger.kernel.org>; Thu, 08 Feb 2024 06:28:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707402505; x=1708007305;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=74WiF3KyvUKOTQcEC2aP6vHhzzlhPjVl2ZNugP1o30c=;
-        b=Z8THhTkE4RxsoVqI9dww3pAe6vUZXlo1RmOIlsAfooZEmZcSHbRew8uVjamZSGz0rs
-         1ousuze4tzu4QRrhuh7fGwlo39vTVYwF7jt6OGpj9Lk/gzAhCIVG8U6HqHhFvo/ovfPP
-         iwJaDMDrWt7oC/KFDuYwGDWvH006hxTrCdAJQs0zMAwqgekyoPKQoqzBDJ9+bsP23i7r
-         XOBOKbe/9ujFELKO6Xm4h9a6eLwJZqKvmAei7bAWMJT3Qq9+Wk27xRqIomsKZfZTrXzS
-         mNGPQwZgvb0rLFY+dk3wUKZwOUd6vAYvGraeOfSokg6szmn6+4MRbwnFURDrhOG3lDa8
-         jL3g==
-X-Gm-Message-State: AOJu0YyRGgcq3rhJPQC6rhzDr9Qnife5X99nzye/VqFKqJftFluW7GHJ
-	2q8Q4VVXND+C5tj27qfkHQlBA2hqMsBHNAaRSEdr4NKgPXFguydyPOXq96PO+B6fGWLwTC7M63x
-	spagC5rZLdoiRYjhqJtagkYqJucrUf70eEresdgnodcy1mS3wvDR1U3xlA5cDcS8xrmhHznRUJB
-	ISb63oG/IHx9hEF8QiLjS3EPOkl9ojr9x5
-X-Received: by 2002:a05:6a21:625:b0:19e:aaba:a6a5 with SMTP id ll37-20020a056a21062500b0019eaabaa6a5mr3069362pzb.40.1707402504963;
-        Thu, 08 Feb 2024 06:28:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGF2LGd/KxdCok0kT6RXYLD9byfDnzFAZn3yokoQhEBDz3MkBqU1AXNrEP/sKdKrm7sB8NR/C68BAnornfLA2Q=
-X-Received: by 2002:a05:6a21:625:b0:19e:aaba:a6a5 with SMTP id
- ll37-20020a056a21062500b0019eaabaa6a5mr3069343pzb.40.1707402504572; Thu, 08
- Feb 2024 06:28:24 -0800 (PST)
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MeYjsOIuyZWJkypaa+8/BznO8amu9nLucH32jby0UQU=;
+	b=EZCEjFcD9Tt7D5uUn+ESmPOx0kLcxPDC1deSleqS9j+tIXrPDQZtTwRDTFOlg8qniNEgK+
+	Bk5iWds1/Abe2esHEX1YEqoxwf1KKdVlJobhwHGRrPrym9K7OjPRKyyJUGT09oZTkv7TKE
+	2NNOyCEc2sJwb/iM7Ahqiv5G6nqqTxM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707403488;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MeYjsOIuyZWJkypaa+8/BznO8amu9nLucH32jby0UQU=;
+	b=NyW/zj9uIYuCOBfzZEnbOWOsAFTXQFxAYiFJ8W5yBF4AolxwsWSDEU4+yRsxkO5TT5f9JJ
+	GZYxlS1+TyzVnoDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707403488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MeYjsOIuyZWJkypaa+8/BznO8amu9nLucH32jby0UQU=;
+	b=EZCEjFcD9Tt7D5uUn+ESmPOx0kLcxPDC1deSleqS9j+tIXrPDQZtTwRDTFOlg8qniNEgK+
+	Bk5iWds1/Abe2esHEX1YEqoxwf1KKdVlJobhwHGRrPrym9K7OjPRKyyJUGT09oZTkv7TKE
+	2NNOyCEc2sJwb/iM7Ahqiv5G6nqqTxM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707403488;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MeYjsOIuyZWJkypaa+8/BznO8amu9nLucH32jby0UQU=;
+	b=NyW/zj9uIYuCOBfzZEnbOWOsAFTXQFxAYiFJ8W5yBF4AolxwsWSDEU4+yRsxkO5TT5f9JJ
+	GZYxlS1+TyzVnoDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1F3BF1326D;
+	Thu,  8 Feb 2024 14:44:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id v3UXBODoxGWTagAAD6G6ig
+	(envelope-from <mdoucha@suse.cz>); Thu, 08 Feb 2024 14:44:48 +0000
+Message-ID: <1ad65f0c-430c-4805-83eb-81198303a888@suse.cz>
+Date: Thu, 8 Feb 2024 15:44:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFqZXNu2V-zV2UHk5006mw8mjURdFmD-74edBeo-7ZX5LJNXag@mail.gmail.com>
- <41edca542d56692f4097f54b49a5543a81dea8ae.camel@kernel.org> <CAFqZXNv0e9JTd6EtB4F50WkZzNjY7--Rv6U1185dw0gS_UYf9A@mail.gmail.com>
-In-Reply-To: <CAFqZXNv0e9JTd6EtB4F50WkZzNjY7--Rv6U1185dw0gS_UYf9A@mail.gmail.com>
-From: Ondrej Mosnacek <omosnace@redhat.com>
-Date: Thu, 8 Feb 2024 15:28:13 +0100
-Message-ID: <CAFqZXNs7wG7dwSV=h_1DWBjW5QDCHcK=XPFUoNOR6hbsbAgZ_A@mail.gmail.com>
-Subject: Re: Calls to vfs_setlease() from NFSD code cause unnecessary
- CAP_LEASE security checks
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, 
-	Linux FS Devel <linux-fsdevel@vger.kernel.org>, 
-	Linux Security Module list <linux-security-module@vger.kernel.org>, 
-	SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] nfsstat01.sh: Run on all NFS versions, TCP and UDP
+To: Petr Vorel <pvorel@suse.cz>, ltp@lists.linux.it
+Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+ Steve Dickson <steved@redhat.com>, Chuck Lever <chuck.lever@oracle.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+ Cyril Hrubis <chrubis@suse.cz>
+References: <20240131151446.936281-1-pvorel@suse.cz>
+ <20240131151446.936281-5-pvorel@suse.cz>
+Content-Language: en-US
+From: Martin Doucha <mdoucha@suse.cz>
+Autocrypt: addr=mdoucha@suse.cz; keydata=
+ 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
+In-Reply-To: <20240131151446.936281-5-pvorel@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=EZCEjFcD;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="NyW/zj9u"
+X-Spamd-Result: default: False [-0.30 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[31.13%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 MX_GOOD(-0.01)[];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -0.30
+X-Rspamd-Queue-Id: 920E221F95
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-On Fri, Feb 2, 2024 at 5:31=E2=80=AFPM Ondrej Mosnacek <omosnace@redhat.com=
-> wrote:
->
-> On Fri, Feb 2, 2024 at 5:08=E2=80=AFPM Jeff Layton <jlayton@kernel.org> w=
-rote:
-> >
-> > On Fri, 2024-02-02 at 16:31 +0100, Ondrej Mosnacek wrote:
-> > > Hello,
-> > >
-> > > In [1] a user reports seeing SELinux denials from NFSD when it writes
-> > > into /proc/fs/nfsd/threads with the following kernel backtrace:
-> > >  =3D> trace_event_raw_event_selinux_audited
-> > >  =3D> avc_audit_post_callback
-> > >  =3D> common_lsm_audit
-> > >  =3D> slow_avc_audit
-> > >  =3D> cred_has_capability.isra.0
-> > >  =3D> security_capable
-> > >  =3D> capable
-> > >  =3D> generic_setlease
-> > >  =3D> destroy_unhashed_deleg
-> > >  =3D> __destroy_client
-> > >  =3D> nfs4_state_shutdown_net
-> > >  =3D> nfsd_shutdown_net
-> > >  =3D> nfsd_last_thread
-> > >  =3D> nfsd_svc
-> > >  =3D> write_threads
-> > >  =3D> nfsctl_transaction_write
-> > >  =3D> vfs_write
-> > >  =3D> ksys_write
-> > >  =3D> do_syscall_64
-> > >  =3D> entry_SYSCALL_64_after_hwframe
-> > >
-> > > It seems to me that the security checks in generic_setlease() should
-> > > be skipped (at least) when called through this codepath, since the
-> > > userspace process merely writes into /proc/fs/nfsd/threads and it's
-> > > just the kernel's internal code that releases the lease as a side
-> > > effect. For example, for vfs_write() there is kernel_write(), which
-> > > provides a no-security-check equivalent. Should there be something
-> > > similar for vfs_setlease() that could be utilized for this purpose?
-> > >
-> > > [1] https://bugzilla.redhat.com/show_bug.cgi?id=3D2248830
-> > >
-> >
-> > Thanks for the bug report!
-> >
-> > Am I correct that we only want to do this check when someone from
-> > userland tries to set a lease via fcntl? The rest of the callers are al=
-l
-> > in-kernel callers and I don't think we need to check for any of them. I=
-t
-> > may be simpler to just push this check into the appropriate callers of
-> > generic_setlease instead.
-> >
-> > Hmm now that I look too...it looks like we aren't checking CAP_LEASE on
-> > filesystems that have their own ->setlease operation. I'll have a look
-> > at that soon too.
->
-> I did briefly check this while analyzing the issue and all of the
-> setlease fops implementations seemed to be either simple_nosetlease()
-> or some wrappers around generic_setlease(), which should both be OK.
-> But it can't hurt to double-check :)
+Hi,
+for the whole patchset:
 
-To close the loop here - there is now a fix from Jeff in linux-next:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-?id=3D7b8001013d720c232ad9ae7aae0ef0e7c281c6d4
+Reviewed-by: Martin Doucha <mdoucha@suse.cz>
 
-Thank you, Jeff, for taking care of it!
+On 31. 01. 24 16:14, Petr Vorel wrote:
+> Due fix in previous version we can run nfsstat01.sh on all NFS versions
+> (added NFSv4, NFSv4.1, NFSv4.2) and on TCP and UDP.
+> 
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+>   runtest/net.nfs | 11 ++++++++++-
+>   1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/runtest/net.nfs b/runtest/net.nfs
+> index 463c95c37..9c1c5c63e 100644
+> --- a/runtest/net.nfs
+> +++ b/runtest/net.nfs
+> @@ -94,7 +94,16 @@ nfslock01_v40_ip6t nfslock01.sh -6 -v 4 -t tcp
+>   nfslock01_v41_ip6t nfslock01.sh -6 -v 4.1 -t tcp
+>   nfslock01_v42_ip6t nfslock01.sh -6 -v 4.2 -t tcp
+>   
+> -nfsstat01_v30 nfsstat01.sh -v 3
+> +nfsstat01_v30_ip4u nfsstat01.sh -v 3 -t udp
+> +nfsstat01_v30_ip4t nfsstat01.sh -v 3 -t tcp
+> +nfsstat01_v40_ip4t nfsstat01.sh -v 4 -t tcp
+> +nfsstat01_v41_ip4t nfsstat01.sh -v 4.1 -t tcp
+> +nfsstat01_v42_ip4t nfsstat01.sh -v 4.2 -t tcp
+> +nfsstat01_v30_ip6u nfsstat01.sh -6 -v 3 -t udp
+> +nfsstat01_v30_ip6t nfsstat01.sh -6 -v 3 -t tcp
+> +nfsstat01_v40_ip6t nfsstat01.sh -6 -v 4 -t tcp
+> +nfsstat01_v41_ip6t nfsstat01.sh -6 -v 4.1 -t tcp
+> +nfsstat01_v42_ip6t nfsstat01.sh -6 -v 4.2 -t tcp
+>   
+>   fsx_v30_ip4u fsx.sh -v 3 -t udp
+>   fsx_v30_ip4t fsx.sh -v 3 -t tcp
 
---=20
-Ondrej Mosnacek
-Senior Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
+-- 
+Martin Doucha   mdoucha@suse.cz
+SW Quality Engineer
+SUSE LINUX, s.r.o.
+CORSO IIa
+Krizikova 148/34
+186 00 Prague 8
+Czech Republic
 
 
