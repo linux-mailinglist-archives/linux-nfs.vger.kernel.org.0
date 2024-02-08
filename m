@@ -1,76 +1,75 @@
-Return-Path: <linux-nfs+bounces-1840-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1841-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6FC284D88A
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 04:21:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C267B84D893
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 04:21:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DBD01F21A77
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 03:21:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FAA4281A36
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 03:21:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D133E1DDD5;
-	Thu,  8 Feb 2024 03:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3900736126;
+	Thu,  8 Feb 2024 03:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="CckRshft"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Xr1Hy5o/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811042D044
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 03:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF305224EF
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 03:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707362327; cv=none; b=k1AZGI+hNkfcuJpP30cySZpqpnZTff/o1EEk70OpzLX/R/555dSMtUS7lMYtkojQVSzEUGHqdVXTlc46Bn0FVF1+HdZvydga6EPYlpQHmBtSpwGoWjodD/57btKcCzdy3UEKhU4OwAQM6QZaFLxr1+DzdP99InXapRE8cnlSL4s=
+	t=1707362328; cv=none; b=a8SZKmUpPHNFpVIYV9XQpVQmdMfNbVuFmnpIuzUdqbWp9s4Zn6wjLWoDnEJuHFwCfyVuinbD0kcc+I8UbcMg8o9khOvAwv7cqdGugfjPUJWl1n3gPffFHMIDuZZe9kDV2w2H5O/tTInOPrqYEvzNOvXQSGebQiIZsanzZDPK53g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707362327; c=relaxed/simple;
-	bh=qUZDZYdcOVyNAYycr8p0bXQZRB4zjl1lrkTSLJknVNw=;
+	s=arc-20240116; t=1707362328; c=relaxed/simple;
+	bh=QBP1d2INSJJ5CT9OSZezCK5o0sFnfjm4zPqF0UwXyPQ=;
 	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
-	 From:To:Cc:Subject:References:In-Reply-To; b=qfMF2t4op0Sm8K7TRbH+PikiYG1tQNma1kB4Zm0BKq79lUQI2nSHuAjtNDXwMrMkeIOmaywF5Yh1gzeDqZCwpJmDStd9+IcnL4jtYIXLsCm6GvQ2vXWSHBPsnvlPABEgayFbnfxAWXlGS+gpW3X5Ei36U1eJD0zmniR+vT7mRak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=CckRshft; arc=none smtp.client-ip=209.85.219.46
+	 From:To:Cc:Subject:References:In-Reply-To; b=XJqEklaVg888VX4jMvjmhJ2CWMHlWAKs9HM8T1EfA2X00TB5YclLgY4BgbP0b9bZweNrkqvqubQJomVK6NFGFCGIXi0x/x+tyFWXCXRMzbVLZFd6HIn7a2DYo7qJ8hSwt20j3Et5XMTCZgwDKSazJpzfE9qJLcXEYFb8HPr39+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Xr1Hy5o/; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-686b389b5d6so5607026d6.0
-        for <linux-nfs@vger.kernel.org>; Wed, 07 Feb 2024 19:18:43 -0800 (PST)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-68c53ed6c56so6197556d6.3
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Feb 2024 19:18:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1707362322; x=1707967122; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1707362323; x=1707967123; darn=vger.kernel.org;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :content-disposition:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=8ZeuYHwDTViLa8vRHQu+TwTZjS19Db+fh3Y1+BuGrUE=;
-        b=CckRshftgxsuiAC+M2ek53zQ9OTCYQyT9deqh8QOSMRm0aTQa2ViPunx0zwxPcw9UJ
-         hh6AUvcfNmi+4m9yj7S/Eh2VlJ6TTO1qy3aIsyNlYBaUrErqI71wWHoUfh62CzNbBS/6
-         GIfcaMn3wWQEvCcd3TTqTNQsk2v8Xw/utSVSYldzisksu0qpH7PTbEOwOkAyRHJ70hdc
-         xdCN3uZcX5Tu+Obu3uCGf5XTk94T6+YWeY1bjLVU8BQtwOBRSmjr2Jv+0w6ThF9hk3yB
-         yXGZIz9ORP+DbewZuNlg9Y0HaJ23p//PeQmQSc5AOui+dp9e1/5Z0Rae/hT7G8PDHgnT
-         mQXw==
+        bh=9NeCOLMO8D+Li8NPC6OAfEyheiTPtPHuLj+MlZ5sS28=;
+        b=Xr1Hy5o/HWC5bodVXx128sJc7lJpmuUvLstqpCCc+A9jOJCeYy/r6/a4f9Fkp31rzH
+         n4S9rSMiXj+ZlXLK2SN3H+EBhOfaW+229RbOIztedCYqFn4bj8J8QJDneJWFepgupMJs
+         Xa1qJLUMvLP9tt03iRMZwsY3ZVyO7bI22FeluRcl2A1wPPiM+EdKzWsTjFv0BCF+udgC
+         45tzIA2EuAWm5kR0ZwreDnNCPZnKMd0oElMv+1dmGPqrvZ14mLSIQH7dTBU9gnXZw9UC
+         Cy/IndDxARtBfnZGG2eviAQl0mClYl/7kFCquHl24BKqmWXC4gfoGOR6fEoIF11ufTyF
+         Uw3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707362322; x=1707967122;
+        d=1e100.net; s=20230601; t=1707362323; x=1707967123;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :content-disposition:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZeuYHwDTViLa8vRHQu+TwTZjS19Db+fh3Y1+BuGrUE=;
-        b=wVzynINev22MBmUii/RxR5uVzOT2Go6b6JcruCwy6GwnZd3aJLiRvAa7sE48TVU8ek
-         9ZK+cXC/n+ePo1ww6j3r53JSpexuCW0zteWhFGVQsOZUf64vAajY+H3ZRyHtxTIcOgG5
-         v9nzLjWBkxxadYB1FJNUoOYZqCdKqpR0T4zMWPlavs8xnUHNYbvKrJsrlIE9TPeHrhmO
-         gOOpu5dsWM25kWbf2aehiyjSfEBCcSzUrcBfhkHXeMqGnZTUGiKoLPciawjVH3582u/D
-         IusSCRwZduWFKlDXqZrFAqR1xkEhuouPuMp1MgJHW4jjQwoXTCWoXqeIkxX3kZv9ttg0
-         nftw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNmPrsEvgK2FW7n8/lzvl9KGCLCfALaKRsTGN5TD1G2v1UCAvb8P+gali2gn6+HAaBAow7lEjEnYQjToCkpcj1caEYpIp86P7M
-X-Gm-Message-State: AOJu0Yy4GWhbzQN7YTfyrwLNmMp+Dj3LPduc/hMwIhm9U1bg6h3TYz2N
-	Yc9HuODv19hT7H50uSl8j7jkNHKVe/gQbna4Ydta/rqHrc02PBx/tdWhGW7zWA==
-X-Google-Smtp-Source: AGHT+IG/vE6Y3quAxigmo06IFrijykZF+p8TmHij4Lfj9qURwEQgMHkq95MWxa6e33AEBQA2JmKJmA==
-X-Received: by 2002:a0c:f5c9:0:b0:68c:68bd:b724 with SMTP id q9-20020a0cf5c9000000b0068c68bdb724mr5886949qvm.4.1707362322287;
-        Wed, 07 Feb 2024 19:18:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU2IFuzewHpOKoXct9biVe9fWJEFffQvwxzMpaN1wh+C/EnyyepGQBPLjp45QoGsjpyirjMktBsMFeDf6NW6o9Pr2idgN9X96q6u6e3DM3H5me7IwzUq/ipNM/QwS1aSWYi3g/t12cwEC0Q8qzY89IYK3dLa1jrEwjM7OMfXILsgci41LWkT5ZRQU6wdshoksbhiTaqQ7IW/mdsqx/kTXRVwVEQX/19e/T5wYZSCezGU0M6gL+Hhfa4fsHAHdGDpLOjkPeKkM52pcIz9pbSMhnyPgDvWKrb4YcWQGI+4twYhExFQZWCQjMp+lc0qpZ2LYsP5RkFaLP1z1MR+h0nb+Lg4T8QJRrLVv0RRJobApHCn6qRe3FNzXgM2gU1GtbvVU2eCX79XY/83uEQR1JHgHaUurCCPRscWlwzpQmfNjGdfj6Y9F4eGNU9fjGGnxjuBMRBcqqQqKmOyK2B55Z63c2brzpgOijagpTSP+QKIBbN/f6XmGA7t8ZQHLlUXni5XzgZu2FQIgcU53BrtwmKXuegw3dlFQ4Sswt9NFQ5xASS56zyD68ZrXmUbUFaNi4Gd7jAafkUD3JRXPmh6yRBbV8BWmeV3brLN2jf845BXl8GvX8mUowsiLKf8MXwp1Lot36skDUC94fjl1g00hjQfJOoLp3mhSJkAlPbQzBRRdoFuIogtk/PpHsx0vOsHD8AjJ1K2CJZDj+jq9ad+KrZL7TqzIJXL9XB1QCuBnKAjaaW4/+qn5WKLhALEs2kuyhYJzVfTwdlYE+btVT7Wn+fdc5wE2L7KtWaS+skXLtfT13HOd+Iih+aNYi5OwgGZMuFmzoMSIUDcXgMPKFbwqkG9ThgcSTO3eVaH/zLJiNsMD2rZJzo0ok4yTMoSL/gtKrfOI7xQJ+nolZAQ1W3wUnX5wnkDh0fEJi1yrkCExvuvQ9HddPpUDnMbUfXnihNzhQciGYsH8
- EculpBbu/6nEY=
+        bh=9NeCOLMO8D+Li8NPC6OAfEyheiTPtPHuLj+MlZ5sS28=;
+        b=IaabGCveJiAInkZQJhoUgxcyOqVk2wt8PmHGOvJ/lXvgCXT5K5Mek/bQdK2cZA2vqw
+         RdeqAZmjQCa90Jf/9wP/8LeXPJgYeM3epOpxH9dKoYLEb17qnMj4aN6PS73nrZqaI+a7
+         m+cL4+zIseZ7BLrbL+ZqRhrYr0IgiD5w5wzwj0+UN52t+k4Z57xZaBml36PTdmBvzXxN
+         AU9yHJSd5/2Nfj3mtg2x71DCjVAEiWf1e1fB9vtAv0OpUA2EpjNlv9LSYLe7u4tDpGEp
+         kNHh41fVc5FiXH/b1WTbgyeT5KwF+EaSwLacRVA12q5F8lEJs/j/WcXgJ7MoG1mTgPdL
+         XY6g==
+X-Gm-Message-State: AOJu0YyFKeeAGF+24jHHHEgX/eIyEALiLuhbCExzu5stjmjBwqNDTVqR
+	BTSsq+NUZCMz5dQS6nTBUxlGtcRwrdq/EM1jDYycBrAgLo+T0Uyy+hWrqHYH5w==
+X-Google-Smtp-Source: AGHT+IFW55PcPigyWcFJg+e8rzV3gyC2TliXUMzhBbz5g4ss6B2Yc5DWLZgXrjPgR99INOvaHAZX9Q==
+X-Received: by 2002:a0c:8f1a:0:b0:68c:71d7:293b with SMTP id z26-20020a0c8f1a000000b0068c71d7293bmr5353842qvd.44.1707362323236;
+        Wed, 07 Feb 2024 19:18:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYEqcz9JrBKdJctK6bEEzohG6WCY21Aj9JvhoHplqCM0z8a347REEjaeIk+wf8KfGiYxa6ouB7q8hYdpGF0E5jQtdD2aGGcnfBMu5uh0vhGOEZyYYuo5pbhbK6GcWClz2Qj9WFfcMC12XIoBFsGZL1xi3RNwiuQYkoCm7wI3mv6wV6yxmh0VK65WQEZXYFc6louGJ+I8KBeW7NQ+YWEoL8f5I5rg9UPEmkIHYtGqIRD1SqnZQW52jqmaAkm6VCjLpLSwdKEfvnhLTc1cUlUaL33HEeTK5CKd+0KfB55w7vOWLKL0mLINlCZqO+eC6MMwWmYVY65qJob0mCqALqwjjsSUJIIOKhvUTuIhspJ6LdbTkQhij+e6SiQKKYKv9CZ3sstnyHaMnVJqPFmU/UKda5HiYZ4VWm7A7V+hwwyFE03T58PFBVGkxrSIqIfUVVgVUGFMuVhorkUWL3NPEj0RWLDh7pR48MyZEeGwSEBuxt+e8m2iYHug3olk7ntinGmUoBDkSeOplCIgNNxNgGfqp3xXe0dV3BGX0XsH2A+p5DeqMLCxKo62JgZPLOOaH8ie26mnsu0E3CUZToHDMiH6khoau1QaM9BPcH9GOz8BMFFoBwB1g5xbtMhPWd9mf8F8E6QBYx9uTQzls7gic4tsp5bB9ScFw1AwLgohfQtER9gHqon/xCc5juRj8vbB4IHH5w58XgU0qGXocVblrNzc+gfnT5SMZJ8zg8actKuyQzIrcd8nK3yenkgcM0tNxONvXT4+fmQByf83Ecab9vHG9OJMh0ilXRsPOkbBryt6bJnLnShJpqbY8umfrrR5BbcGWyjGon0ukcaW6i+CSV+NTctQSJX30vGiPFq8Q3xyD3dHH4szAKAJOQp5GRlh/O5EFiCeKPZ/U88SheqaLSIrQAh1An9+5HMjE9CbtYbIMrjWZZyZwoDLIwDSkldf9T00uHx9
+ 0yUyhnwvtY39M=
 Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id nh10-20020a056214390a00b0068c4d8a9dcasm1171654qvb.140.2024.02.07.19.18.41
+        by smtp.gmail.com with ESMTPSA id pz3-20020ad45503000000b0068cb4ed4840sm1179193qvb.62.2024.02.07.19.18.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 19:18:41 -0800 (PST)
-Date: Wed, 07 Feb 2024 22:18:41 -0500
-Message-ID: <512191c5fea825fa2020600807a6816f@paul-moore.com>
+        Wed, 07 Feb 2024 19:18:42 -0800 (PST)
+Date: Wed, 07 Feb 2024 22:18:42 -0500
+Message-ID: <a2ad49e279b2904385064e4d0f65f0ab@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -83,21 +82,20 @@ Content-Transfer-Encoding: 8bit
 From: Paul Moore <paul@paul-moore.com>
 To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v9 10/25] security: Introduce inode_post_setattr hook
-References: <20240115181809.885385-11-roberto.sassu@huaweicloud.com>
-In-Reply-To: <20240115181809.885385-11-roberto.sassu@huaweicloud.com>
+Subject: Re: [PATCH v9 11/25] security: Introduce inode_post_removexattr hook
+References: <20240115181809.885385-12-roberto.sassu@huaweicloud.com>
+In-Reply-To: <20240115181809.885385-12-roberto.sassu@huaweicloud.com>
 
 On Jan 15, 2024 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
 > 
 > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-> the inode_post_setattr hook.
+> the inode_post_removexattr hook.
 > 
-> At inode_setattr hook, EVM verifies the file's existing HMAC value. At
-> inode_post_setattr, EVM re-calculates the file's HMAC based on the modified
-> file attributes and other file metadata.
+> At inode_removexattr hook, EVM verifies the file's existing HMAC value. At
+> inode_post_removexattr, EVM re-calculates the file's HMAC with the passed
+> xattr removed and other file metadata.
 > 
-> Other LSMs could similarly take some action after successful file attribute
-> change.
+> Other LSMs could similarly take some action after successful xattr removal.
 > 
 > The new hook cannot return an error and cannot cause the operation to be
 > reverted.
@@ -105,13 +103,13 @@ On Jan 15, 2024 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
 > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+> Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
 > ---
->  fs/attr.c                     |  1 +
+>  fs/xattr.c                    |  9 +++++----
 >  include/linux/lsm_hook_defs.h |  2 ++
->  include/linux/security.h      |  7 +++++++
->  security/security.c           | 16 ++++++++++++++++
->  4 files changed, 26 insertions(+)
+>  include/linux/security.h      |  5 +++++
+>  security/security.c           | 14 ++++++++++++++
+>  4 files changed, 26 insertions(+), 4 deletions(-)
 
 Acked-by: Paul Moore <paul@paul-moore.com>
 
