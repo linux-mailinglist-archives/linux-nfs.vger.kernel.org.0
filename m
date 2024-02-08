@@ -1,166 +1,133 @@
-Return-Path: <linux-nfs+bounces-1855-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1856-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECA3184DAFB
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 09:06:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6202F84DB02
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 09:08:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 478B4B22869
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 08:06:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 94E331C2140B
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Feb 2024 08:08:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5BE69E1E;
-	Thu,  8 Feb 2024 08:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA5C69E11;
+	Thu,  8 Feb 2024 08:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="PyuayM+S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1700569E00;
-	Thu,  8 Feb 2024 08:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C242269E00
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 08:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707379582; cv=none; b=cjYZLj4kTYs4VdNSoShp7XqcaKzv0uX7qIhNPixldXSvlHZtJF7SI3nnPM7UOjXALHwCucZtFLOCOM63uWwXiZ2WNgMn0FIMRXbk4oL8exKB3lKbk2k81gEUrGXI/FEQdiOgwCZYFJHDGeOYYRRXdNLl0yc1cHY9HNl7O+l9W1g=
+	t=1707379684; cv=none; b=drH2HKxEYRPaU1SN1jcbIWnqM4gDMIKo4ceumZVYwhQ2KpYjOkg6Pm/YSw4PyTDCiVYCzhU/dIdYRcooy9X2pk3p7w1pDuu31faQSvCkO0M6Td61Vspmm81AN9wbA3Fj44u3XGFEGNiS1QlMcrz4gFla89S23yn4KDFV1vS8svw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707379582; c=relaxed/simple;
-	bh=/zEYUb4yL29+qOwYug6IGb0qmLwNiMesnkRiO3l7WEE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qzpLo+dt2SJzSDf5lkyUu+2LfuulHqzH8Vq7eDBHH6NjDuap0SLXVbzLeKfDETWstDkwhx5JGoRJ0xSj5rQBbaDHFfO9IF4KzgtkRYEHvGjh583SvU+pkeHdMWZQd24DInM/KGwlyawv6h6OZTLabzQtcNJf7k4yArC9+tavq0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TVq144pfPzB0Mbw;
-	Thu,  8 Feb 2024 15:51:04 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id D29E2140595;
-	Thu,  8 Feb 2024 16:06:13 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwAXEBlli8RlWRYaAg--.2529S2;
-	Thu, 08 Feb 2024 09:06:13 +0100 (CET)
-Message-ID: <dd8a979df500489c0d8595f9a3f89c801ce6f1c2.camel@huaweicloud.com>
-Subject: Re: [PATCH v9 0/25] security: Move IMA and EVM to the LSM
- infrastructure
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk, 
- brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
- neilb@suse.de,  kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
- jmorris@namei.org,  serge@hallyn.com, zohar@linux.ibm.com,
- dmitry.kasatkin@gmail.com,  eric.snowberg@oracle.com, dhowells@redhat.com,
- jarkko@kernel.org,  stephen.smalley.work@gmail.com, eparis@parisplace.org,
- casey@schaufler-ca.com,  shuah@kernel.org, mic@digikod.net
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu
-	 <roberto.sassu@huawei.com>
-Date: Thu, 08 Feb 2024 09:05:54 +0100
-In-Reply-To: <d54ca249c3071522218c7ba7b4984bab@paul-moore.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
-	 <d54ca249c3071522218c7ba7b4984bab@paul-moore.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707379684; c=relaxed/simple;
+	bh=/frmN4xSAtoDDq5whXSXb+13huxkdAcEp/JVT4vh1xU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S7vqrYZIBEqJnOx+vU5NJGCnWmiVmY2B/mxcz9MzTLIyKz3L0yj1Rmr+Sdj0g/auhEzHbOcQwzaKE55oZdk2r8Ph1bqh+Ow/u9AAzQ0ncf0tJ9/TALx/MBprpCc8IwzI8mfu3xmBTYEAVc+eLhHA0w5CRqHujR7oNW51VtO2RFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=PyuayM+S; arc=none smtp.client-ip=139.138.36.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1707379681; x=1738915681;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/frmN4xSAtoDDq5whXSXb+13huxkdAcEp/JVT4vh1xU=;
+  b=PyuayM+Syb/BLcqWH3ISzuFIz90yx+4OYsyyk6V8O16ruruLRBkICLYx
+   4Awr5CfBFqnANWLQNqmQt+0ginGfltwmScuD7YdyaGBx3MbGNxYgg2G8Q
+   rCYTlIJKVSxgB3GnDt/VzVl+sdvNlHEWP2a4tMLmuI7lVbf6LJ6Jwka0t
+   PL0p79k3SuFPLc0o/B/ARcEfDNm2y7BIy1BVQ4r5uDJLOkQNCrdaMDWgq
+   Niy0uz5sO45SL4uQkvh7/qCXq1WKnyGgJdNr250Ei0yASpbHVIKe2gd+u
+   ZpfRmFi1Wmg43Q1vYDpWyzl9cc1oK9yTvTbDJx+lzhpskwbHHbMSXXaPY
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="137247375"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701097200"; 
+   d="scan'208";a="137247375"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 17:06:48 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 8A54CCA0A9
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 17:06:46 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id B2B1A1C504A
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 17:06:45 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 09C0A200989CA
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Feb 2024 17:06:45 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 2FDC81A006B;
+	Thu,  8 Feb 2024 16:06:44 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: clean up comments over nfs4_client definition
+Date: Thu,  8 Feb 2024 16:06:26 +0800
+Message-Id: <20240208080627.1014-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwAXEBlli8RlWRYaAg--.2529S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw17AFy8Jry7Kr13Cw1DGFg_yoW5ZrWrpF
-	Z5tayfCF4qqF1I93s7Ar47WrW0kw4kKFyUJFy5Xryvy3Z8GryxJrZ7KFWUZFWDWr4rXayI
-	qw17Kr9xZ3WkZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5opbgADst
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28178.003
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28178.003
+X-TMASE-Result: 10--2.271500-10.000000
+X-TMASE-MatchedRID: PrWv+NeUIb4P4o3VqtN0lsYv//yaWh0DMVx/3ZYby7/AuQ0xDMaXkH4q
+	tYI9sRE/L2EYbInFI5uzqC3huvC/UfNyBdcHnpoYlTsGW3DmpUvYUDvAr2Y/13y/Hx1AgJrrpIy
+	5bqa+5U7i8zVgXoAltuJ5hXsnxp7jC24oEZ6SpSmcfuxsiY4QFEdZOLImRiBiZ+s/gjLehTQiuW
+	9/4ZHihg3lz1Mh/KEmB3qI/idIOUi7AO6qVyRrVJ+jS8uzkp8SM3oysPucAGD5/2VwMgPB8JsNE
+	GpLafrrLM/nEDLP056e+TDiyH/49wxfkLAfkNNSaAZk0sEcY14=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Wed, 2024-02-07 at 22:18 -0500, Paul Moore wrote:
-> On Jan 15, 2024 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
-> >=20
-> > IMA and EVM are not effectively LSMs, especially due to the fact that i=
-n
-> > the past they could not provide a security blob while there is another =
-LSM
-> > active.
-> >=20
-> > That changed in the recent years, the LSM stacking feature now makes it
-> > possible to stack together multiple LSMs, and allows them to provide a
-> > security blob for most kernel objects. While the LSM stacking feature h=
-as
-> > some limitations being worked out, it is already suitable to make IMA a=
-nd
-> > EVM as LSMs.
-> >=20
-> > The main purpose of this patch set is to remove IMA and EVM function ca=
-lls,
-> > hardcoded in the LSM infrastructure and other places in the kernel, and=
- to
-> > register them as LSM hook implementations, so that those functions are
-> > called by the LSM infrastructure like other regular LSMs.
->=20
-> Thanks Roberto, this is looking good.  I appreciate all the work you've
-> put into making this happen; when I first mentioned this idea I figured
-> it would be something that would happen much farther into the future, I
-> wasn't expecting to see you pick this up and put in the work to make it
-> happen - thank you.
+nfsd fault injection has been deprecated since
+commit 9d60d93198c6 ("Deprecate nfsd fault injection")
+and removed by
+commit e56dc9e2949e ("nfsd: remove fault injection code")
 
-Thanks! I also appreciate a lot your guidance and suggestions.
+So remove the outdated parts about fault injection.
 
-> I had some pretty minor comments but I think the only thing I saw that
-> I think needs a change/addition is a comment in the Makefile regarding
-> the IMA/EVM ordering; take a look and let me know what you think.
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+---
+ fs/nfsd/state.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Oh, I remember well, it is there but difficult to spot...
-
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -18,5 +18,6 @@ integrity-$(CONFIG_LOAD_IPL_KEYS) +=3D platform_certs/loa=
-d_ipl_s390.o
- integrity-$(CONFIG_LOAD_PPC_KEYS) +=3D platform_certs/efi_parser.o \
-                                      platform_certs/load_powerpc.o \
-                                      platform_certs/keyring_handler.o
-+# The relative order of the 'ima' and 'evm' LSMs depends on the order belo=
-w.
- obj-$(CONFIG_IMA)			+=3D ima/
- obj-$(CONFIG_EVM)			+=3D evm/
-
-> There are also a few patches in the patchset that don't have an
-> ACK/review tag from Mimi, although now that you are co-maininting IMA/EVM
-> with Mimi I don't know if that matters.  If the two of you can let me
-> know how you want me to handle LSM patches that are IMA/EVM related I
-> would appreciate it (two ACKs, one or other, something else?).
-
-Ok, we will come back to you about this.
-
-> Once you add a Makefile commane and we sort out the IMA/EVM approval
-> process I think we're good to get this into linux-next.  A while back
-> Mimi and I had a chat offline and if I recall everything correctly she
-> preferred that I take this patchset via the LSM tree.  I don't have a
-> problem with that, and to be honest I would probably prefer
-> that too, but I wanted to check with everyone that is still the case.
-> Just in case, I've added my ACKs/reviews to this patchset in case this
-> needs to be merged via the integrity tree.
-
-Ok, given that there is the comment in the Makefile, the last thing to
-do from your side is to remove the vague comment in the file_release
-patch.
-
-Other than that, I think Mimi wanted to give a last look. If that is
-ok, then the patches should be ready for your repo and linux-next.
-
-Thanks
-
-Roberto
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 41bdc913fa71..2231d9da9bfe 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -317,8 +317,8 @@ enum {
+  * 0. If they are not renewed within a lease period, they become eligible for
+  * destruction by the laundromat.
+  *
+- * These objects can also be destroyed prematurely by the fault injection code,
+- * or if the client sends certain forms of SETCLIENTID or EXCHANGE_ID updates.
++ * These objects can also be destroyed prematurely if the client sends certain
++ * forms of SETCLIENTID or EXCHANGE_ID updates.
+  * Care is taken *not* to do this however when the objects have an elevated
+  * refcount.
+  *
+@@ -326,7 +326,7 @@ enum {
+  *
+  * o Each nfs4_clients is also hashed by name (the opaque quantity initially
+  *   sent by the client to identify itself).
+- * 	  
++ *
+  * o cl_perclient list is used to ensure no dangling stateowner references
+  *   when we expire the nfs4_client
+  */
+-- 
+2.43.0
 
 
