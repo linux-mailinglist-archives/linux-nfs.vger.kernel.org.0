@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-1889-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5360484F7ED
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 15:52:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E244684F89E
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 16:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 086BF287005
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 14:52:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA0BD280CB9
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 15:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADA4D6A320;
-	Fri,  9 Feb 2024 14:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE1269E07;
+	Fri,  9 Feb 2024 15:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z53/p4Gi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4R7Dsyk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C806DD1F
-	for <linux-nfs@vger.kernel.org>; Fri,  9 Feb 2024 14:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BBF6DD18
+	for <linux-nfs@vger.kernel.org>; Fri,  9 Feb 2024 15:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707490325; cv=none; b=INRdNt4ZJcnBZwOxkI7uoo0ndrShG7uqTF67VSYuBPHHd8GtJyD5qi0GtukCskhhP7X4Q3FgPT6oAYTCS0yLH8i3uhGXpg2G+gP4kQ5kaVXE05obf1EfnEkTDgJTwFxt+62b5qhNpVJoUrTiawoK6mb5QPF+KESaW+hkJSUfDp4=
+	t=1707492729; cv=none; b=iVU8z3x1zVgmoIjb1hka2MiJ3FmtZ8Qa1+uYqTHqeu0LS5NY9jCYEQY9hCaYUH4b45FNjM+b+6Eo5q2BPUASdVkw47iCPlthq7JsgbvbgDbNt7BwpAa3XRWIeBMVp6dK3tvOPOqVcXFrmPa6XgxYuOPkhnzO+rVu6RHeiQcpYUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707490325; c=relaxed/simple;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	s=arc-20240116; t=1707492729; c=relaxed/simple;
+	bh=PkV7IsPSypQAL2/igvFWMDa2fLoaXHa01IYPHe/sL68=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mYiXaYc8FWB2X7CXwkZB4dVkreU38bq/rz4dy1P3ICJSDjfHnHUpgtco30IXmu2Ms0TbRUXyKv2dY6uwbGTo0BCPp7p78m6yktDuiOn3RUXM0XwEJHZZSyNnXBXlhxGaTBqrASK7/h0dMvcLDr7TfTn+APBbjFLZM0WWQdQifjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z53/p4Gi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83503C433C7;
-	Fri,  9 Feb 2024 14:52:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=aKdWFGWkAxA6lw21Zm1kgORnj+OCS4pgAzAdIS82PPOU+z5sMUVq3W5umcyrDoc6WN7Y54xl0X3mrAaLuBRNh3Oyh27/UvKSbe5i5L9mMO+cBFezak8IMrrxqGcpzXIQ0ZNcRqL7Fsr6AlQ3pUXW3m+w5isfdWtQoNfQ9wSIkhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4R7Dsyk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6713DC433F1;
+	Fri,  9 Feb 2024 15:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707490324;
-	bh=frcCV1k9oG9oKj3dpUqdJg1PxRT2RSN/XKdLCPjaYaY=;
+	s=k20201202; t=1707492728;
+	bh=PkV7IsPSypQAL2/igvFWMDa2fLoaXHa01IYPHe/sL68=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Z53/p4GipuUYWbCgnCJoRJmBQhmxclv72k7gyRxHqkie6rEeVdliqIJ1wSuX+rFde
-	 04E3rINyrYwAGS4vRNtQ8tNGwaIVZsP8r/n+mJshoU5dBmnm9bIIIUQizzP4T8g6h6
-	 7eIanoAPsRASQvetIBdvdxSLGKTFMGWxcpuVop8CMq/JcZ52LIgsu8khswmm/aox1K
-	 wc18+1loc8MCOAFydT+tiSYoNJ1mLXB2q+tmWlx7CcZ6F/Wac54QtE+hw4CgoFWH0o
-	 X/a6PuDUtUrpJuvl66u9ZKBFalFOsVxm1m4X0RapbDe6JpQ6uBksPNtLvCaj2nWdAJ
-	 o44uz0oVG5tUw==
-Message-ID: <1f61a2a4021423c05ad7cffe7b19e4a37bb93488.camel@kernel.org>
+	b=b4R7DsykNTmbCGiqTtI+takdNLx1cZ3Ts6fAVpWd/OE2+c/fR+4yakP20Z7X/egH+
+	 N99BPYYSfm8y2YLV6J/CPG9ZwFlXq1qE9HR+17qnKlxkQMKrfENiwZIU98GSZA2kDl
+	 wVbqQ5NSqSJCH/Q76T/G7C+7uF5gqF1Voq2CcM+56Ou3QHXX/SMu+LiattfUPGoloZ
+	 SpSjiYGHgsa34mrqN9c9ru2FZXyoMgRipLq2zUECbLMrmvtbLgAcN+sPtw0e5R+HAW
+	 IfnxytisP53MHknkyUdpH6t+eVoYf45fl8WmjLLm97Bxcv4vPhkrvqMe4gvGpVXReX
+	 2LUx/oASTgYyg==
+Message-ID: <14e1e8c8613c74d07cb0cefbcebbf79a3a57311e.camel@kernel.org>
 Subject: Re: Public NFSv4 handle?
 From: Jeff Layton <jlayton@kernel.org>
 To: Tom Talpey <tom@talpey.com>, Dan Shelton <dan.f.shelton@gmail.com>, 
 	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date: Fri, 09 Feb 2024 09:52:03 -0500
+Date: Fri, 09 Feb 2024 10:32:07 -0500
 In-Reply-To: <b14648b0-a2f7-451a-a56b-6bb626c4ffa8@talpey.com>
 References: 
 	<CAAvCNcBvWjt13mBGoNZf-BGwn18_R6KAeMmA7NZOTifORLEANg@mail.gmail.com>
@@ -61,8 +61,8 @@ Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
 	BOTtmOdz4ZN2tdvNgozzuxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9JDfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRDCHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1gYy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVVAaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJOaEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhpf8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+mQZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65ke5Ag0ETpXRPAEQAJkVmzCmF+IEenf9a2nZRXMluJohnfl2wCMmw5qNzyk0f+mYuTwTCpw7BE2H0yXk4ZfAuA+xdj14K0A1Dj52j/fKRuDqoNAhQe0b6ipo85Sz98G+XnmQOMeFVp5G1Z7r/QP/nus3mXvtFsu9lLSjMA0cam2NLDt7vx3l9kUYlQBhyIE7/DkKg+3fdqRg7qJoMHNcODtQY+n3hMyaVpplJ/l0DdQDbRSZi5AzDM3DWZEShhuP6/E2LN4O3xWnZukEiz688d1ppl7vBZO9wBql6Ft9Og74diZrTN6lXGGjEWRvO55h6ijMsLCLNDRAVehPhZvSlPldtUuvhZLAjdWpwmzbRIwgoQcO51aWeKthpcpj8feDdKdlVjvJO9fgFD5kqZ
 	QiErRVPpB7VzA/pYV5Mdy7GMbPjmO0IpoL0tVZ8JvUzUZXB3ErS/dJflvboAAQeLpLCkQjqZiQ/DCmgJCrBJst9Xc7YsKKS379Tc3GU33HNSpaOxs2NwfzoesyjKU+P35czvXWTtj7KVVSj3SgzzFk+gLx8y2Nvt9iESdZ1Ustv8tipDsGcvIZ43MQwqU9YbLg8k4V9ch+Mo8SE+C0jyZYDCE2ZGf3OztvtSYMsTnF6/luzVyej1AFVYjKHORzNoTwdHUeC+9/07GO0bMYTPXYvJ/vxBFm3oniXyhgb5FtABEBAAGJAh8EGAECAAkFAk6V0TwCGwwACgkQAA5oQRlWghXhZRAAyycZ2DDyXh2bMYvI8uHgCbeXfL3QCvcw2XoZTH2l2umPiTzrCsDJhgwZfG9BDyOHaYhPasd5qgrUBtjjUiNKjVM+Cx1DnieR0dZWafnqGv682avPblfi70XXr2juRE/fSZoZkyZhm+nsLuIcXTnzY4D572JGrpRMTpNpGmitBdh1l/9O7Fb64uLOtA5Qj5jcHHOjL0DZpjmFWYKlSAHmURHrE8M0qRryQXvlhoQxlJR4nvQrjOPMsqWD5F9mcRyowOzr8amasLv43w92rD2nHoBK6rbFE/qC7AAjABEsZq8+TQmueN0maIXUQu7TBzejsEbV0i29z+kkrjU2NmK5pcxgAtehVxpZJ14LqmN6E0suTtzjNT1eMoqOPrMSx+6vOCIuvJ/MVYnQgHhjtPPnU86mebTY5Loy9YfJAC2EVpxtcCbx2KiwErTndEyWL+GL53LuScUD7tW8vYbGIp4RlnUgPLbqpgssq2gwYO9m75FGuKuB2+2bCGajqalid5nzeq9v7cYLLRgArJfOIBWZrHy2m0C+pFu9DSuV6SNr2dvMQUv1V58h0FaSOxHVQnJdnoHn13g/CKKvyg2EMrMt/EfcXgvDwQbnG9we4xJiWOIOcsvrWcB6C6lWBDA+In7w7SXnnok
 	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -71,5 +71,30 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
+On Thu, 2024-02-08 at 21:37 -0500, Tom Talpey wrote:
+> On 2/8/2024 7:19 PM, Dan Shelton wrote:
+> > ?
+> >=20
+> > On Thu, 25 Jan 2024 at 02:48, Dan Shelton <dan.f.shelton@gmail.com> wro=
+te:
+> > >=20
+> > > Hello!
+> > >=20
+> > > Do the Linux NFSv4 server and client support the NFS public handle?
+>=20
+> Are you referring the the old WebNFS stuff? That was a v2/v3 thing,
+> and, I believe, only ever supported by Solaris.
+>=20
 
+One more try! I think my MUA was having issues this morning.
+
+NFSv4.1 supports the PUTPUBFH op:
+
+https://www.rfc-editor.org/rfc/rfc8881.html#name-operation-23-putpubfh-set-=
+p
+
+...but this op is only for backward compatibility. The Linux server
+returns the rootfh (as it SHOULD).
+--=20
+Jeff Layton <jlayton@kernel.org>
 
