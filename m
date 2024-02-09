@@ -1,187 +1,121 @@
-Return-Path: <linux-nfs+bounces-1871-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1872-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B6284F19F
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 09:50:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B65FF84F27A
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 10:45:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D04DB20C80
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 08:50:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6A431C21E7F
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Feb 2024 09:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C05C664A4;
-	Fri,  9 Feb 2024 08:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A8067A18;
+	Fri,  9 Feb 2024 09:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y06A0fHP";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yF2eCexm";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y06A0fHP";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yF2eCexm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gV5hsKuy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF2526AD3
-	for <linux-nfs@vger.kernel.org>; Fri,  9 Feb 2024 08:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5661D664A3;
+	Fri,  9 Feb 2024 09:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707468604; cv=none; b=Q+rvxwXoWtYH2aAXeuAR/lRgr3UGD73YW1n+k3p0oOEb8Ds7q8D7oJZ6W/XEQE10HwiXwC2UG/+xB3ZF4ye2l3v0kFWiaT2PuidYVij5BRWdZK2co13Lr6uyUbBx7vhNrtJCdK/VhgOuzUYUNR1Sc/Vmu6aEQI6jyiRCv0Te+bc=
+	t=1707471945; cv=none; b=pS5Mvjvmw42xxt76g31zwX9gFTw1lscqNe0sXV0+06U7an3rvG1rrRW7ABxeBQ9Mn39s6SKtf3rVZ3E4TRdQRjO+V0A/XdsI9eMGm3mAvm/1uiFoYV9GnYdIrngPSnH0aBo2063+4GU5D7lgFay1vhPWS4kZmP6VmmChF2q/48E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707468604; c=relaxed/simple;
-	bh=MgcWVTSTcxNxmF9lmd7c7ICXzxQTYdolG5bb5sgOOUY=;
+	s=arc-20240116; t=1707471945; c=relaxed/simple;
+	bh=XTXqRfUyPr9yWhoo/YdxJVLsEINDyd7wbqRVK/40Huo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyHhbnjETinnxgbK2TsdcjarSx4O/A3y07j00lt8sRQy73HaOD3kP1ieqgMlTNm1z1p9miNVTanLq381huj6enoZkd1O9KUHoWi5CTWBPbPqG9HBEv0tawawiU4uy/H+Ii7YssoMshiOcIsqe77oD4b7Y2mKmTEjTsGlUVn6qVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y06A0fHP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yF2eCexm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y06A0fHP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yF2eCexm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 340A41F7F2;
-	Fri,  9 Feb 2024 08:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707468600;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hrkT5D7RKxo1Y3Adx3pYafrSETejcNP6cyJZdXLHFb4=;
-	b=Y06A0fHPnaCvJaWPPaGazoLBHWhxUVqN4bHvjeh0uqFAGVvm0hVl5SH1+CjRgM1IVtS9gh
-	H+K+UXK7xJhWfB9pcBSyJkleTcJuc0ljQpM93Ihdz6OExfiNHeYhb5gpWGtEzHmBjVZswi
-	ZYZ6/3HMUAVyOlbAQ3xxnYSyP1aPH5g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707468600;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hrkT5D7RKxo1Y3Adx3pYafrSETejcNP6cyJZdXLHFb4=;
-	b=yF2eCexmDt0J6+z/ffMihJNpAR+BrF40nS3Ig61utzJLIyC2yHiLEmWzYniJiuYx4cSQ/q
-	sJdS2IbUHBTxY9BA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707468600;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hrkT5D7RKxo1Y3Adx3pYafrSETejcNP6cyJZdXLHFb4=;
-	b=Y06A0fHPnaCvJaWPPaGazoLBHWhxUVqN4bHvjeh0uqFAGVvm0hVl5SH1+CjRgM1IVtS9gh
-	H+K+UXK7xJhWfB9pcBSyJkleTcJuc0ljQpM93Ihdz6OExfiNHeYhb5gpWGtEzHmBjVZswi
-	ZYZ6/3HMUAVyOlbAQ3xxnYSyP1aPH5g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707468600;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hrkT5D7RKxo1Y3Adx3pYafrSETejcNP6cyJZdXLHFb4=;
-	b=yF2eCexmDt0J6+z/ffMihJNpAR+BrF40nS3Ig61utzJLIyC2yHiLEmWzYniJiuYx4cSQ/q
-	sJdS2IbUHBTxY9BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 993C01326D;
-	Fri,  9 Feb 2024 08:49:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zZdKIjfnxWUBBgAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Fri, 09 Feb 2024 08:49:59 +0000
-Date: Fri, 9 Feb 2024 09:49:53 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: Martin Doucha <mdoucha@suse.cz>
-Cc: ltp@lists.linux.it, NeilBrown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>, Steve Dickson <steved@redhat.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-	Cyril Hrubis <chrubis@suse.cz>
-Subject: Re: [PATCH 4/4] nfsstat01.sh: Run on all NFS versions, TCP and UDP
-Message-ID: <20240209084953.GA246045@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240131151446.936281-1-pvorel@suse.cz>
- <20240131151446.936281-5-pvorel@suse.cz>
- <1ad65f0c-430c-4805-83eb-81198303a888@suse.cz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=M2t1mSVwSmdoKyzvwIT3dqgLAJ9TNILgFCzEIwYtib8i/z/hpjAVK/nY1TaEUdt327CMlTJfnwodVct1K974ICNcQLm+nZXSlBftt32GVDc5AOL6uuBrTrHYEaFzoJWxLP0FPR93Xi7kB3n1jacTcxrvRvRIgp/TY3TjDOSTR/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gV5hsKuy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B33C433F1;
+	Fri,  9 Feb 2024 09:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707471944;
+	bh=XTXqRfUyPr9yWhoo/YdxJVLsEINDyd7wbqRVK/40Huo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gV5hsKuy6kT4l1bW8GZQNbBAOcQ5vrq9TCkNC4UkHaVG8K5YdmTb7Rljqylfgd5b+
+	 2s9p+kfOyecmgRJzJG7s/swPntcVrYHyLfgg9BacyhQ5j85Tbc/Srp5jtabGK3h/jv
+	 di2qzjjAy1T5Yy5qimr+TqM+cee7u3/ZVQz46v9ijl/vslb531JM+z/Q6PE1iNRF2D
+	 a13Rt/M+jVUdTAdXGsZTaFn8piYBphLPWfDe53a+UOTDl2CJlzrvKDBinuwO9V9MTc
+	 JG22L/hmv3iJll4DQE3t+L9z9dt0K0IQnQB9gqAFiprn4ZZxO3fVQcPH+FiWTW/IvQ
+	 pFSSNKDpbPo0g==
+Date: Fri, 9 Feb 2024 10:45:35 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: viro@zeniv.linux.org.uk, chuck.lever@oracle.com, jlayton@kernel.org, 
+	neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
+	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org, 
+	stephen.smalley.work@gmail.com, eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org, 
+	mic@digikod.net, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v9 21/25] ima: Move IMA-Appraisal to LSM infrastructure
+Message-ID: <20240209-chancenreich-albatros-4dad750ab5f8@brauner>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+ <20240115181809.885385-22-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1ad65f0c-430c-4805-83eb-81198303a888@suse.cz>
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Y06A0fHP;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=yF2eCexm
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.71 / 50.00];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 ARC_NA(0.00)[];
-	 DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[25.14%]
-X-Spam-Score: -0.71
-X-Rspamd-Queue-Id: 340A41F7F2
-X-Spam-Flag: NO
+In-Reply-To: <20240115181809.885385-22-roberto.sassu@huaweicloud.com>
 
-Hi Martin,
+On Mon, Jan 15, 2024 at 07:18:05PM +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> A few additional IMA hooks are needed to reset the cached appraisal
+> status, causing the file's integrity to be re-evaluated on next access.
+> Register these IMA-appraisal only functions separately from the rest of IMA
+> functions, as appraisal is a separate feature not necessarily enabled in
+> the kernel configuration.
+> 
+> Reuse the same approach as for other IMA functions, move hardcoded calls
+> from various places in the kernel to the LSM infrastructure. Declare the
+> functions as static and register them as hook implementations in
+> init_ima_appraise_lsm(), called by init_ima_lsm().
+> 
+> Also move the inline function ima_inode_remove_acl() from the public ima.h
+> header to ima_appraise.c.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  fs/attr.c                             |  2 -
+>  include/linux/ima.h                   | 55 ---------------------------
+>  security/integrity/ima/ima.h          |  5 +++
+>  security/integrity/ima/ima_appraise.c | 38 +++++++++++++-----
+>  security/integrity/ima/ima_main.c     |  1 +
+>  security/security.c                   | 13 -------
+>  6 files changed, 35 insertions(+), 79 deletions(-)
+> 
+> diff --git a/fs/attr.c b/fs/attr.c
+> index 221d2bb0a906..38841f3ebbcb 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/filelock.h>
+>  #include <linux/security.h>
+>  #include <linux/evm.h>
+> -#include <linux/ima.h>
+>  
+>  #include "internal.h"
+>  
+> @@ -503,7 +502,6 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	if (!error) {
+>  		fsnotify_change(dentry, ia_valid);
+>  		security_inode_post_setattr(idmap, dentry, ia_valid);
+> -		ima_inode_post_setattr(idmap, dentry, ia_valid);
+>  		evm_inode_post_setattr(idmap, dentry, ia_valid);
+>  	}
 
-> Hi,
-> for the whole patchset:
-
-> Reviewed-by: Martin Doucha <mdoucha@suse.cz>
-
-Thanks for your review, merged!
-
-Kind regards,
-Petr
-
-> On 31. 01. 24 16:14, Petr Vorel wrote:
-> > Due fix in previous version we can run nfsstat01.sh on all NFS versions
-> > (added NFSv4, NFSv4.1, NFSv4.2) and on TCP and UDP.
-
-> > Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> > ---
-> >   runtest/net.nfs | 11 ++++++++++-
-> >   1 file changed, 10 insertions(+), 1 deletion(-)
-
-> > diff --git a/runtest/net.nfs b/runtest/net.nfs
-> > index 463c95c37..9c1c5c63e 100644
-> > --- a/runtest/net.nfs
-> > +++ b/runtest/net.nfs
-> > @@ -94,7 +94,16 @@ nfslock01_v40_ip6t nfslock01.sh -6 -v 4 -t tcp
-> >   nfslock01_v41_ip6t nfslock01.sh -6 -v 4.1 -t tcp
-> >   nfslock01_v42_ip6t nfslock01.sh -6 -v 4.2 -t tcp
-> > -nfsstat01_v30 nfsstat01.sh -v 3
-> > +nfsstat01_v30_ip4u nfsstat01.sh -v 3 -t udp
-> > +nfsstat01_v30_ip4t nfsstat01.sh -v 3 -t tcp
-> > +nfsstat01_v40_ip4t nfsstat01.sh -v 4 -t tcp
-> > +nfsstat01_v41_ip4t nfsstat01.sh -v 4.1 -t tcp
-> > +nfsstat01_v42_ip4t nfsstat01.sh -v 4.2 -t tcp
-> > +nfsstat01_v30_ip6u nfsstat01.sh -6 -v 3 -t udp
-> > +nfsstat01_v30_ip6t nfsstat01.sh -6 -v 3 -t tcp
-> > +nfsstat01_v40_ip6t nfsstat01.sh -6 -v 4 -t tcp
-> > +nfsstat01_v41_ip6t nfsstat01.sh -6 -v 4.1 -t tcp
-> > +nfsstat01_v42_ip6t nfsstat01.sh -6 -v 4.2 -t tcp
-> >   fsx_v30_ip4u fsx.sh -v 3 -t udp
-> >   fsx_v30_ip4t fsx.sh -v 3 -t tcp
+Acked-by: Christian Brauner <brauner@kernel.org>
 
