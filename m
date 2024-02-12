@@ -1,206 +1,215 @@
-Return-Path: <linux-nfs+bounces-1892-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1893-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4EC3850C8A
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 02:13:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6BBE851B2E
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 18:22:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEB62B21658
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 01:13:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A7F91F22896
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 17:22:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA1315A5;
-	Mon, 12 Feb 2024 01:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 206553D994;
+	Mon, 12 Feb 2024 17:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mu+KjeBJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gcvWfH4r";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mu+KjeBJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gcvWfH4r"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mEkS2fjk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A10DECC
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Feb 2024 01:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B9D3D56D;
+	Mon, 12 Feb 2024 17:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707700385; cv=none; b=UDNiv4Td2E/k1+akZ14SWupLpPSAw/NW6Am1amxssBrawneHquK78mr+lF3/wku9e9HxwPwRYYk6NP+Tx00lPorVdRne6uMUMR9N62x/N+V1tNlkfsoLLGg/XZAA45Qcewf9irQYV/zYPO2+CVv50fIRePmTnXRo2tFb1ONBdLk=
+	t=1707758536; cv=none; b=Qdg1k4vxgY5775S5wpv+wEaumYV0+p2a7IOkb+TpbNHFTz7ihuEA+nG2h5lbsXRHOeqXU+X5b5vU/6wp1twsBa/r2TnJBIg9WC3Gx9IUowCdmgMvvs29VHFtcdSw0UiPjP8MYDMFO6CxeuPyvcA4yxwr1bdP+B2PzRxpEKaf0uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707700385; c=relaxed/simple;
-	bh=ZEZBWwMRaYq6Z78GbyRl3htOyFwmMwArWyV8Gn5OgRc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=oupQH7t2GcGIOEoU6+vlDPGw2PtKFIZhe1FgqoP+PUT3Q9MdK+6U3lNzQEYapB4vpodN3E7c/YTy0SQ5gF9buzpskXfiwKY/lck5aNPCP7mWCmFEvsGUcEV+ps2Lg84ChRKiWbzF3QHNebA7WepQyui1H76dmx6pF6O3vjNBwXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mu+KjeBJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gcvWfH4r; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mu+KjeBJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gcvWfH4r; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5FBE51F365;
-	Mon, 12 Feb 2024 01:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707700381; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d5cfLta4eQBO1dS0Dr1xlfRufZJ+gfoHvSLBTMleI7o=;
-	b=mu+KjeBJxaRQ9J4P5IilxtdUa8ybpV9jv8WrEt6580Ecc4ALW2jvqlEc87Q+u87Pb/NXcS
-	qHK3sMakbsYeCXXG1aWbGHNAxfkZUJFJ35lpQkl02Li7s7bPvic9attWwJbkuzryUzbL5m
-	Q85JliNCyJ94vcrjpZ4BkqY8vu4IH3Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707700381;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d5cfLta4eQBO1dS0Dr1xlfRufZJ+gfoHvSLBTMleI7o=;
-	b=gcvWfH4r1zsfbSaKJ0dkLIqMCcbn68VVMdhftEKXAFOBK04T9i+qSO4I5bXR5ekpKRV3wK
-	i0UW/zOnpi7ZpuCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707700381; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d5cfLta4eQBO1dS0Dr1xlfRufZJ+gfoHvSLBTMleI7o=;
-	b=mu+KjeBJxaRQ9J4P5IilxtdUa8ybpV9jv8WrEt6580Ecc4ALW2jvqlEc87Q+u87Pb/NXcS
-	qHK3sMakbsYeCXXG1aWbGHNAxfkZUJFJ35lpQkl02Li7s7bPvic9attWwJbkuzryUzbL5m
-	Q85JliNCyJ94vcrjpZ4BkqY8vu4IH3Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707700381;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d5cfLta4eQBO1dS0Dr1xlfRufZJ+gfoHvSLBTMleI7o=;
-	b=gcvWfH4r1zsfbSaKJ0dkLIqMCcbn68VVMdhftEKXAFOBK04T9i+qSO4I5bXR5ekpKRV3wK
-	i0UW/zOnpi7ZpuCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2BDE613985;
-	Mon, 12 Feb 2024 01:12:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RpxQNJtwyWW1EQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 12 Feb 2024 01:12:59 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1707758536; c=relaxed/simple;
+	bh=k7LXORf4EzSDIl/lyRla5O6ZlfVqO/jSxTnInSO0e4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n1KdXEWgfFkzybIufuppHMA/nG0kiaifsSFRtN6/zLyIaGl9eWLLep/4usxh/bY/F/lvhdx0l2urku8T6VKgOHHg1coNtqWIm01yI2MAAbAzOaon67X7QMidtbgyPTZAnlzT666nN3rZgLNzwPmX0uy4+bLK/Xyhi8KG9dPi0IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mEkS2fjk; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CHG4Ql028987;
+	Mon, 12 Feb 2024 17:21:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=eSdxrm/EgFSXFEX8alLuk+gV1hUzMo+xxS4g34enfxY=;
+ b=mEkS2fjkqCOA6jxngNacB0yRwYRFZw19r0UErGQ4dopxmxCcn/5Ki42z00v8FWhpTp4u
+ DqR0yyaFG5S/C/4YmUKDL3cyCaZ58LgAZn2RUWqQHeq/zK62s8/0o+x0MClB9xL3EBjZ
+ cYX9xBnulkGQ1gOCbWl+VEq5gkHUPSuP/LvzkqfPphKRYweXkWpzem8v673ujELdJZL9
+ wHpsw/YHl7O1KNvcaYihQjBc3/v4PNgu+eFhqrgAsmSvuzdq+Yel5lIN3BOLpWsr2ebv
+ fF83v4LZtJb7S/5feV9Nu9sgZSv5mHeO+AAJcKSTrHWDqXLeuty/DbOcEJ2qo3DC6I2H bA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qcggh27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 17:21:33 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CHIXJw008039;
+	Mon, 12 Feb 2024 17:21:32 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qcggh0f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 17:21:32 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CH2LbW016517;
+	Mon, 12 Feb 2024 17:21:30 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mym9t4n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 17:21:30 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CHLSFF16515820
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 Feb 2024 17:21:30 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2779258060;
+	Mon, 12 Feb 2024 17:21:28 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE8FF58043;
+	Mon, 12 Feb 2024 17:21:24 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 Feb 2024 17:21:24 +0000 (GMT)
+Message-ID: <8d89f67b-fa66-492d-8339-baa586d0ca93@linux.ibm.com>
+Date: Mon, 12 Feb 2024 12:21:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: Infinite loop in pnfs_update_layout()
-Date: Mon, 12 Feb 2024 12:12:57 +1100
-Message-id: <170770037721.13976.15585299201457800900@noble.neil.brown.name>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mu+KjeBJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gcvWfH4r
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.01 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[37.16%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -5.01
-X-Rspamd-Queue-Id: 5FBE51F365
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 13/25] security: Introduce file_release hook
+Content-Language: en-US
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+ <20240115181809.885385-14-roberto.sassu@huaweicloud.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240115181809.885385-14-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uOXCzbmK3_nwpGIe6hrW3GVsbsUdt_V_
+X-Proofpoint-ORIG-GUID: o5EoBELV83dp3OQdJea5KQ3RJesNYIc2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-12_14,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 suspectscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402120132
 
 
-hi,
- I have evidence from a customer of an infinite loop in
- pnfs_update_layout().  This has only happened once and I suspect it is
- unlikely to recur often.  We don't have a lot of tracing data, but I
- think we have enough...
- The evidence I do have is repeated "BUG: workqueue lockup" errors
- with sufficiently many samples that I can determine the code path of
- the loop (see below), and a message:
 
-  NFSv4: state recovery failed for open file SVC_rapid7_dc33/.bash_history, e=
-rror =3D -116
+On 1/15/24 13:17, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> the file_release hook.
+> 
+> IMA calculates at file close the new digest of the file content and writes
+> it to security.ima, so that appraisal at next file access succeeds.
+> 
+> An LSM could implement an exclusive access scheme for files, only allowing
+> access to files that have no references.
+> 
+> The new hook cannot return an error and cannot cause the operation to be
+> reverted.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
- The loop involves the "lookup_again" label and the "goto" on line 2112.
- This is the code where NFS_LAYOUT_INVALID_STID was found to be true and
- nfs4_select_rw_stateid() returned non-zero.
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 
- I deduce that ctx->state is not a valid open stateid.  This leads to
- nfs4_select_rw_stateid() returned -EIO and
- nfs4_schedule_stateid_recovery() doing nothing.  This "doing nothing"
- is the only explanation I can find for the
- nfs4_client_recover_expired_lease() call at the top of the loop not
- waiting at all (if it did wait, we wouldn't get a workqueue lockup).
-
- The state being invalid also perfectly matches the "state recovery
- failed" error.
-
- So it seems likely that we should test
-    nfs4_valid_open_stateid(ctx->state)
- somewhere in the loop, and return either NULL or and error.  I'm not
- certain what is best.
- My inclination is
-
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 0c0fed1ecd0b..e702ac518205 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2002,6 +2002,12 @@ pnfs_update_layout(struct inode *ino,
- 	lseg =3D ERR_PTR(nfs4_client_recover_expired_lease(clp));
- 	if (IS_ERR(lseg))
- 		goto out;
-+	if (!nfs4_valid_open_stateid(ctx->state)) {
-+		lseq =3D ERR_PTR(-EIO);
-+		trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
-+					 PNFS_UPDATE_LAYOUT_INVALID_OPEN);
-+		goto out;
-+	}
- 	first =3D false;
- 	spin_lock(&ino->i_lock);
- 	lo =3D pnfs_find_alloc_layout(ino, ctx, gfp_flags);
-
-
-Does that seem reasonable?
-Another possibility would be to check the status from
-nfs4_select_rw_stateid() and "goto out_unlock" if it is EIO.
-
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 0c0fed1ecd0b..7cc90ee86882 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2106,6 +2106,8 @@ pnfs_update_layout(struct inode *ino,
- 			trace_pnfs_update_layout(ino, pos, count,
- 					iomode, lo, lseg,
- 					PNFS_UPDATE_LAYOUT_INVALID_OPEN);
-+			if (status =3D=3D -EIO)
-+				goto out_unlock;
- 			nfs4_schedule_stateid_recovery(server, ctx->state);
- 			pnfs_clear_first_layoutget(lo);
- 			pnfs_put_layout_hdr(lo);
-
-
-Thoughts?
-
-Thanks,
-NeilBrown
+> ---
+>   fs/file_table.c               |  1 +
+>   include/linux/lsm_hook_defs.h |  1 +
+>   include/linux/security.h      |  4 ++++
+>   security/security.c           | 11 +++++++++++
+>   4 files changed, 17 insertions(+)
+> 
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index de4a2915bfd4..c72dc75f2bd3 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -385,6 +385,7 @@ static void __fput(struct file *file)
+>   	eventpoll_release(file);
+>   	locks_remove_file(file);
+>   
+> +	security_file_release(file);
+>   	ima_file_free(file);
+>   	if (unlikely(file->f_flags & FASYNC)) {
+>   		if (file->f_op->fasync)
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index c3fecc7dcb0b..229f84ce12ae 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -173,6 +173,7 @@ LSM_HOOK(int, 0, kernfs_init_security, struct kernfs_node *kn_dir,
+>   	 struct kernfs_node *kn)
+>   LSM_HOOK(int, 0, file_permission, struct file *file, int mask)
+>   LSM_HOOK(int, 0, file_alloc_security, struct file *file)
+> +LSM_HOOK(void, LSM_RET_VOID, file_release, struct file *file)
+>   LSM_HOOK(void, LSM_RET_VOID, file_free_security, struct file *file)
+>   LSM_HOOK(int, 0, file_ioctl, struct file *file, unsigned int cmd,
+>   	 unsigned long arg)
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 97f2212c13b6..2997348afcb7 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -395,6 +395,7 @@ int security_kernfs_init_security(struct kernfs_node *kn_dir,
+>   				  struct kernfs_node *kn);
+>   int security_file_permission(struct file *file, int mask);
+>   int security_file_alloc(struct file *file);
+> +void security_file_release(struct file *file);
+>   void security_file_free(struct file *file);
+>   int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+>   int security_file_ioctl_compat(struct file *file, unsigned int cmd,
+> @@ -1008,6 +1009,9 @@ static inline int security_file_alloc(struct file *file)
+>   	return 0;
+>   }
+>   
+> +static inline void security_file_release(struct file *file)
+> +{ }
+> +
+>   static inline void security_file_free(struct file *file)
+>   { }
+>   
+> diff --git a/security/security.c b/security/security.c
+> index f3d92bffd02f..7d10724872f8 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2724,6 +2724,17 @@ int security_file_alloc(struct file *file)
+>   	return rc;
+>   }
+>   
+> +/**
+> + * security_file_release() - Perform actions before releasing the file ref
+> + * @file: the file
+> + *
+> + * Perform actions before releasing the last reference to a file.
+> + */
+> +void security_file_release(struct file *file)
+> +{
+> +	call_void_hook(file_release, file);
+> +}
+> +
+>   /**
+>    * security_file_free() - Free a file's LSM blob
+>    * @file: the file
 
