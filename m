@@ -1,121 +1,158 @@
-Return-Path: <linux-nfs+bounces-1905-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1906-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76F6D851F66
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 22:18:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D14DE852BC6
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 09:58:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34639283092
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Feb 2024 21:18:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3A051C23131
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 08:58:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135944DA13;
-	Mon, 12 Feb 2024 21:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="aXaB4ioj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A13224CF;
+	Tue, 13 Feb 2024 08:57:37 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460FE4DA03
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Feb 2024 21:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C36A22611;
+	Tue, 13 Feb 2024 08:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707772633; cv=none; b=KaeTyQ9mfZFo6Rj6twbceZDl3CyjFS9sb5UDUBeskFvAgHnO3PxUPGxCD+MTG5zXWawS5w0J1Fwt33UxR8CrfBFC6OmmkpE9b98zL49UbwI2W/mMLlopBjIoDStzqQr2Qq/nD8UN4UjXlUAd5poxnaBbByaD4OSS+1ImDXHC0ZE=
+	t=1707814657; cv=none; b=Jh/bHSlhgFaivI7wPGYfZIPelqBR+yulIuFKiMecYhaAImGuJbcbbXsHDZcnLk2/t6lvR96vH1TvvctK3v20k6TAAAaIAFvs+18gVzWdc6iHk82hiH4fUgM9gdbH65YV8EIAarIWibAwlsAv5cvfSXUi6qirWXcCouPYp0qwdvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707772633; c=relaxed/simple;
-	bh=sKyYv3h5LS/Xc+JkhqC/7H32Ejapjycaf0b1D5xsxdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kxp71QszmfWYlGneJMsc4cJBEeYdiWIveRswJvETjIUUm45T2ER9sy7xA2r6wv1+BYgsDQefCow7P2ABaDRvh2GcH3AmDygHq6ltEMzK3RWgRYxGaC6zzMDFSyjogkXIQ7iEVuZYCUtOa6oYkYIQR8M3naDrVKp8xNdANeunPsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=aXaB4ioj; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbed179f0faso3281746276.1
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Feb 2024 13:17:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1707772630; x=1708377430; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZsnFwrkSPFxLZoShd+G+bJFEOcLvvtQSuD3i6JLjUWA=;
-        b=aXaB4iojMUi4axEelhZ0stCsfoeKjXkqyvnfbZrFMOcXTy3lf8VtkFY2Ko0RCxA8hK
-         gUOqXp9eCWzlicRERGuZaZIrFN3wWQn1ZdWqtOkFPlaofdV/+HODU8yTjxURHdlFqtLv
-         ZLO7i2Hdcr3WEQAjn7Qo3jo6Dh1fnT7Ju+gGTnMTUEW1Lq3b+GAmGjkBLvTcyNsb7IvX
-         C9X4aDlG/kdcKibBXcjX14+uys8CEASKUh7LIF5o1Eddxy2q+ucLTtVrCoHVOmmNl6pL
-         wO0CWg7c5gxyx8NczGZwqKRgGSDYgUCPFjEjc2NIjT43UEFxYtnTeKv4KEY/kly5y2Il
-         CPqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707772630; x=1708377430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZsnFwrkSPFxLZoShd+G+bJFEOcLvvtQSuD3i6JLjUWA=;
-        b=EEpKCgU+dLA2BaFO2yrhGPh0Xn0ithlDOgkrROOwElFFC5HKyQlN9VhPMA7y+LvhU/
-         3xCOBspfgLxrEk//08al2Uubcv/6W0cxqJBZn6WwZ35xI0UzAK5mdBv1GPLH/X8RQwEN
-         Yi+Kxn1EFus9gAlqjIogs6nPdXpyeU1/6y2orO9WrRBLhAYBP5Jm/13Ha7wRTr7itQyK
-         b7e25axLlJqOkgCzWhT/CHhZ4Hpb4VCIzWONlRFaMWQP1CjuSUjYYLE6e+2Tz0K2XHjU
-         aZwm3mXc8UScwRA8sDPO7uuqbwCwntVcmx9z4Tc7u2IGIUcLRMMlOUwu/ojC1Ki3Y6Gl
-         7elQ==
-X-Gm-Message-State: AOJu0Ywa4QABJKPhBlIm9rQDo2FKWrUdTurcWj+jRLh32v9FU1KAWMl1
-	H7gqYRP3zPXKv/sny11hujNLIfol2EnYCpmSWW7dM0m8NJm0zQox6E67h3sp6wm7zbRoIwAAIiF
-	0qyRKwsAwXkvCN6irXJEVkjH0LgLxtbXqERUK
-X-Google-Smtp-Source: AGHT+IEOi98MZdQxOtaW3bif3LCitIRo8nxqZzxmxH4vbtrZo7RwV5CIap8rAl9zZwh9y87ZH2fwVGa5f+4Y+dV/RGg=
-X-Received: by 2002:a81:4e10:0:b0:604:541d:9d54 with SMTP id
- c16-20020a814e10000000b00604541d9d54mr598093ywb.21.1707772629971; Mon, 12 Feb
- 2024 13:17:09 -0800 (PST)
+	s=arc-20240116; t=1707814657; c=relaxed/simple;
+	bh=0FHVuXSnOE5TFanr4pfTOtnrDKxeRonirC9x/EUdZ3I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MrigbQprRU1wL8QBd+VQc/0B6pNkylymZahq70ChfryBMyZ5T9mwG/yEvlJVSM5Z/rpMjFj99+XnBpAZHajZGxl0j7BcbtjjCXEQb2humF0XMJkqzfVBj2DwauckyNWdi9aRqrM8FboX0egA17dsRrG5I7qHVVpjbEzkBFQUjag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TYvvq0G2Dz9v7VH;
+	Tue, 13 Feb 2024 16:42:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 1A6BC1405A1;
+	Tue, 13 Feb 2024 16:57:24 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwDHsibjLstlJFJmAg--.44640S2;
+	Tue, 13 Feb 2024 09:57:23 +0100 (CET)
+Message-ID: <b95967cd1aa2a4e751a8be3d23f72b7e1db0e4b6.camel@huaweicloud.com>
+Subject: Re: [PATCH v9 19/25] integrity: Move
+ integrity_kernel_module_request() to IMA
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Stefan Berger <stefanb@linux.ibm.com>, Paul Moore <paul@paul-moore.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
+	jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
+	tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
+	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, 
+	jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, 
+	casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu
+	 <roberto.sassu@huawei.com>
+Date: Tue, 13 Feb 2024 09:57:03 +0100
+In-Reply-To: <7940b9d0-3133-4b08-b397-ad9ee34e3b34@linux.ibm.com>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+	 <20240115181809.885385-20-roberto.sassu@huaweicloud.com>
+	 <fd6ddc3d-e5d3-4b9c-b00b-ac2b1f22d653@linux.ibm.com>
+	 <CAHC9VhTY=X7z5SRQZzFe25FGB2E3FBBkuZ_YYA1+ETyr7pv=tA@mail.gmail.com>
+	 <7940b9d0-3133-4b08-b397-ad9ee34e3b34@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-13-roberto.sassu@huaweicloud.com> <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
-In-Reply-To: <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 12 Feb 2024 16:16:59 -0500
-Message-ID: <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com>
-Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
-	kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org, 
-	serge@hallyn.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
-	dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com, 
-	eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org, 
-	mic@digikod.net, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:GxC2BwDHsibjLstlJFJmAg--.44640S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur4xJFy3Kr4UWrWDCF1fXrb_yoW5Gr18pF
+	WrKanYyFWDXrn5Cay8Xw17WrWSgayxCrZxGrn5GrWfWrsY9rnFvF42yF4UuFZakrn7Jr1j
+	9397Jw1Ivr98Z37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOlksDUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAMBF1jj5ZOIgABsA
 
-On Mon, Feb 12, 2024 at 4:06=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com> wr=
-ote:
->
-> Hi Roberto,
->
->
-> > diff --git a/security/security.c b/security/security.c
-> > index d9d2636104db..f3d92bffd02f 100644
-> > --- a/security/security.c
-> > +++ b/security/security.c
-> > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file)
-> >       return fsnotify_perm(file, MAY_OPEN);  <=3D=3D=3D  Conflict
->
-> Replace with "return fsnotify_open_perm(file);"
->
-> >  }
-> >
->
-> The patch set doesn't apply cleaning to 6.8-rcX without this change.  Unl=
-ess
-> there are other issues, I can make the change.
+On Mon, 2024-02-12 at 15:28 -0500, Stefan Berger wrote:
+>=20
+> On 2/12/24 12:56, Paul Moore wrote:
+> > On Mon, Feb 12, 2024 at 12:48=E2=80=AFPM Stefan Berger <stefanb@linux.i=
+bm.com> wrote:
+> > > On 1/15/24 13:18, Roberto Sassu wrote:
+> >=20
+> > ...
+> >=20
+> > > > +/**
+> > > > + * ima_kernel_module_request - Prevent crypto-pkcs1pad(rsa,*) requ=
+ests
+> > > > + * @kmod_name: kernel module name
+> > > > + *
+> > > > + * We have situation, when public_key_verify_signature() in case o=
+f RSA > + * algorithm use alg_name to store internal information in order t=
+o
+> > > > + * construct an algorithm on the fly, but crypto_larval_lookup() w=
+ill try
+> > > > + * to use alg_name in order to load kernel module with same name.
+> > > > + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel mo=
+dules,
+> > > > + * we are safe to fail such module request from crypto_larval_look=
+up().
+> > > > + *
+> > > > + * In this way we prevent modprobe execution during digsig verific=
+ation
+> > > > + * and avoid possible deadlock if modprobe and/or it's dependencie=
+s
+> > > > + * also signed with digsig.
+> > >=20
+> > > This text needs to some reformulation at some point..
+> >=20
+> > There is no time like the present.  If you have a suggestion I would
+> > love to hear it and I'm sure Roberto would too.
+> >=20
+>=20
+> My interpretation of the issue after possibly lossy decoding of the=20
+> above sentences:
+>=20
+> Avoid a deadlock by rejecting a virtual kernel module with the name=20
+> "crypto-pkcs1pad(rsa,*)". This module may be requested by=20
+> crypto_larval_lookup() while trying to verify an RSA signature in=20
+> public_key_verify_signature(). Since the loading of the RSA module may=
+=20
+> itself cause the request for an RSA signature verification it will=20
+> otherwise lead to a deadlock.
 
-I take it this means you want to pull this via the IMA/EVM tree?
+I can be even more precise I guess (I actually reproduced it).
 
---=20
-paul-moore.com
+Avoid a verification loop where verifying the signature of the modprobe
+binary requires executing modprobe itself. Since the modprobe iint-
+>mutex is already held when the signature verification is performed, a
+deadlock occurs as soon as modprobe is executed within the critical
+region, since the same lock cannot be taken again.
+
+This happens when public_key_verify_signature(), in case of RSA
+algorithm, use alg_name to store internal information in order to
+construct an algorithm on the fly, but crypto_larval_lookup() will try
+to use alg_name in order to load a kernel module with same name.
+
+Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
+we are safe to fail such module request from crypto_larval_lookup(),
+and avoid the verification loop.
+
+Roberto
+
 
