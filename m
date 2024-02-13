@@ -1,136 +1,127 @@
-Return-Path: <linux-nfs+bounces-1908-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1909-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191298534B8
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 16:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B6F2853550
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 16:54:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA7FA283081
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 15:34:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31D152871CC
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Feb 2024 15:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A84A55EE7A;
-	Tue, 13 Feb 2024 15:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B384F5F476;
+	Tue, 13 Feb 2024 15:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="FaJ+SJ2r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLxpT3TS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6E55EE6C
-	for <linux-nfs@vger.kernel.org>; Tue, 13 Feb 2024 15:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF515F47E
+	for <linux-nfs@vger.kernel.org>; Tue, 13 Feb 2024 15:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838437; cv=none; b=qPhEN+KGczPXfWfzL85LbYqeh9lS8/rLxZo+eyaroG0B/bfFVjsLMp20A7eQBXT1e10iOYag3EG1yRTzHXiQoPcqU9gXSRkDmjqcri0O0mJE2kpJkdByhJx/asiMVtDXqkYHZjtdsnnZT0SMEWiGpqkEIm60eCbu4UPgFiv96Ow=
+	t=1707839645; cv=none; b=K13Wy4Vde2z7yfqcaYp1oyawDjRBVqW3+Qltoke6/A6hmilSDYuxl3pNE6J1onhGvwyEIkjwEYx47Ge3lYn6OC8EEVcItTzby5e1ueZiwnZd3/9A/Ta5jneYP0ywI0sY+EZOS/MXXrtEEJhMAJ7xTl/hOADkUBwz1MOoe8uGCcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838437; c=relaxed/simple;
-	bh=1wgOC11E4WsIHJN8sQAbPNgNjm1Tj7LN4SZFvsn5QAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TcHR0oFFFFtBWdZa9kpX2VQ7sdrV2c3UZbt369DMLYvN4WQbRj6Fpo0+CywuQ/sTjAgttwK56EeK7zIisUXCfV+ORCUYnp9sy6QSeniRaXiQJM6tG3ue2iJtN/4ivimSJCTSHiY7ceZSEqjlwe3kTcb7JavxqZZFLJDDCMsTqNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=FaJ+SJ2r; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc745927098so3747868276.3
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Feb 2024 07:33:54 -0800 (PST)
+	s=arc-20240116; t=1707839645; c=relaxed/simple;
+	bh=zHWTerVtXU1xxlBt4RjXa5Z6O/KgDFZ7zU8ynNJSA/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SqDhjPsqx7ihjhikwF71XrobjQjqSCH281MyHi6MOmAj++kImS1eP7LJSpdeXuqzx8oQoGOfqdZ7TqNvy8qPfxJVABpeLljAYKlKeIMIWshulsXBgcqKYvxEx44iKv2jTBJrvFOkq/RYf7vdehOTDS14SGIiwGXEUCWq06Cd8M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bLxpT3TS; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7bbdd28a52aso86333039f.1
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Feb 2024 07:54:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1707838434; x=1708443234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WqydKoyTOasPxiPJoWDY9vsZCIGGHm243lsYdLUdgFs=;
-        b=FaJ+SJ2rWv9CKMitnT5LLuR41tbjkrm+BMWVk5oD+ec/erdSd9QVZ2je05QqdnMRWk
-         Im9W0wj5gHWVvnF2/3Oma13A1S5T+br7kgBW/UFFPMaSUFiGbNlBIxfTdJlmxdh52UUf
-         /hruPYfY4OxF4TPP7Huzhtzpuxl4e9co9fH1yQajmkbDGsktPzyqUXWSQG7yj+xzUOXR
-         voiLBL6f/Vkb5iHgvEQ86RFnJNBzxZ6hNVQWFUZGuVN94AHcc/dueNO1wElhkCRbEHLA
-         0GmF5ZbfUFqLBPr1WQ5pEI+kFOBsp/k3RBLKJjlSVHcE8WVQtkGPF+1j2LqDeLfvBj0q
-         +DSw==
+        d=gmail.com; s=20230601; t=1707839643; x=1708444443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RWI6CKyMf9El/Hc045l4dVuESq8EIu5ROi2zq9euO4I=;
+        b=bLxpT3TSJwExvvEPKmigB8U9gmIQ5FvQF0oVExhPSRdT4QrJLLpqmA/33/PKBlWYCf
+         OfF37kBcSfS+el2e1aH+26xyVrIlRJ1cMuDLqn56D91l8db074BeqBKg2Chv5gxg+SiO
+         v3R/nUpIalwKEWOpdJEypXTcCCU396ZSAyGeU61vOS7e0XaPABAuylcm1zZB//UQ1PKA
+         uTFqwDCypfeDyPOBSmiywQHkKgQ3w/wzAZDDJA2szq/408kB94xxCRfG/L1hC6jkUPXU
+         K/CYk/+/4ITrAP/pn5yhxpdd8ZGFcn3fnOHaXDqPFV3eB0aDBuW2J0EYUo7EdvUrLYaU
+         aaTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707838434; x=1708443234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WqydKoyTOasPxiPJoWDY9vsZCIGGHm243lsYdLUdgFs=;
-        b=hMHwodlh0p+OUyBGrHcHzM/JCdD9todby8E85hQROlnyaQjomImQSNX72X9gPUfjff
-         uIZSCrWbHCSOJsx3qjMR1W2I3LoaLKCOpOFY+vSdUgeOn9hG6w+ANqHC94rmM77eIx2I
-         xlWNUOQw2pzvdrHViPRLboO7HUF5kpY7dl2QLpHTHHbxnyq94We6KmlR+oObieUfUL3o
-         sR3JlGKyQblDGHV4Dh3s8L1CnGp8zf8JzQXvfiUfQt3S27xA/7Dc2Hp53GwJAIMctRxV
-         PN+UDcBn/pSsFgMVdGSaugcOXlkwNrmJ0BKAdKfHiNErLoXLxb9djHxVS2o0TR3OKuRg
-         NhmA==
-X-Gm-Message-State: AOJu0YxtTD+R2LKvHRty1N60kEsJtHktQ9hd8RYCa9yOMmAoBXpC3QhR
-	AfNJnwIrJohbwMkDu8ZFrfsKZmOKKuBMsMxyLz/hIhpo6eziro+R5rtxWslZ0wF0gYMSxX7OQFU
-	i2iodOOxpZ9lAv3pfLvV87H3iE1qC63KBuW1Z
-X-Google-Smtp-Source: AGHT+IHnyTIkOdFHIvfDQnb3DdpYo/kENKzsoxJTQjNhdWhD9FR1CMXLFwKe75ZdrflWgWwKWc2sbhF4w4SE8MNPLwk=
-X-Received: by 2002:a05:6902:569:b0:dc6:bbeb:d889 with SMTP id
- a9-20020a056902056900b00dc6bbebd889mr7861710ybt.52.1707838433767; Tue, 13 Feb
- 2024 07:33:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707839643; x=1708444443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RWI6CKyMf9El/Hc045l4dVuESq8EIu5ROi2zq9euO4I=;
+        b=gYt7QjoPYPiDdW4axifMfX14Gu1Ed4It6lYR7yNLt6YvbhF5sZPoGC6qpTQqMrkd5E
+         RG/3hRAnBhRkPwca/cFUqmQBUVAGgN1jtMQI5D4Jj+2QEj4lvt1FF/fZmi+7/9p5erh/
+         EeHtRSARYzgV0lMt28qsYSTbeYTx9+Cd0CA5j+SSalQDxXtYmCgg/M8PLEA2xTln46Y6
+         0mcl7nHcjywCp2mdFW2WfCR7ROdsvlKMhd5IqREq3eZNur82ZYAAAwL7h14faubN16uS
+         hW6jurUrRT1+czAJrdKDWXs9/0K0cYWHjrG3JXvWo1qbepTioR+PSAsvmr1htDR0CK5E
+         HAVA==
+X-Gm-Message-State: AOJu0YwYRoLHzVhdNdlRf2eGk9uk3RMpcPOfloaD7IZ1fRR6AWQZUKAc
+	me57FCWsc0PN5dZ1MBvSqKIrpPqmmm2KeUU3GYmLQ5kKvNINQgLd
+X-Google-Smtp-Source: AGHT+IHmQrm9FZ2N6K2YE8MqoSKONQILs6kQlgkM9ce/W0vPCahgexCNtCJLKG9gmJmcn+tqO1Jvlg==
+X-Received: by 2002:a05:6e02:1c0d:b0:363:b624:6304 with SMTP id l13-20020a056e021c0d00b00363b6246304mr85066ilh.0.1707839643459;
+        Tue, 13 Feb 2024 07:54:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUjKsRKpONUFAL1VYtHX4wIKQuIaUfDa0StDprxbZ6TVZj6q1ipZb0QJg726NA0sOr5KN13P3Jl++zokFgcttwWRnrN0wMZa/l0
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:89b4:c4e3:15d1:bb91])
+        by smtp.gmail.com with ESMTPSA id h8-20020a0566380f0800b004712f04ce5asm1935438jas.100.2024.02.13.07.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 07:54:02 -0800 (PST)
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To: trond.myklebust@hammerspace.com,
+	anna.schumaker@netapp.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4.1/pnfs: fix NFS with TLS in pnfs
+Date: Tue, 13 Feb 2024 10:54:01 -0500
+Message-Id: <20240213155401.47400-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-13-roberto.sassu@huaweicloud.com> <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
- <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com> <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
-In-Reply-To: <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 13 Feb 2024 10:33:42 -0500
-Message-ID: <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com>
-Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, 
-	Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org, serge@hallyn.com, 
-	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, 
-	jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, 
-	casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 13, 2024 at 7:59=E2=80=AFAM Roberto Sassu
-<roberto.sassu@huaweicloud.com> wrote:
-> On Mon, 2024-02-12 at 16:16 -0500, Paul Moore wrote:
-> > On Mon, Feb 12, 2024 at 4:06=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com=
-> wrote:
-> > >
-> > > Hi Roberto,
-> > >
-> > >
-> > > > diff --git a/security/security.c b/security/security.c
-> > > > index d9d2636104db..f3d92bffd02f 100644
-> > > > --- a/security/security.c
-> > > > +++ b/security/security.c
-> > > > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file)
-> > > >       return fsnotify_perm(file, MAY_OPEN);  <=3D=3D=3D  Conflict
-> > >
-> > > Replace with "return fsnotify_open_perm(file);"
-> > >
-> > > >  }
-> > > >
-> > >
-> > > The patch set doesn't apply cleaning to 6.8-rcX without this change. =
- Unless
-> > > there are other issues, I can make the change.
-> >
-> > I take it this means you want to pull this via the IMA/EVM tree?
->
-> Not sure about that, but I have enough changes to do to make a v10.
+From: Olga Kornievskaia <kolga@netapp.com>
 
-Sorry, I should have been more clear, the point I was trying to
-resolve was who was going to take this patchset (eventually).  There
-are other patches destined for the LSM tree that touch the LSM hooks
-in a way which will cause conflicts with this patchset, and if
-you/Mimi are going to take this via the IMA/EVM tree - which is fine
-with me - I need to take that into account when merging things in the
-LSM tree during this cycle.  It's not a big deal either way, it would
-just be nice to get an answer on that within the next week.
+Currently, even though xprtsec=tls is specified and used for operations
+to MDS, any operations that go to DS travel over unencrypted connection.
 
---=20
-paul-moore.com
+IN GETDEVINCEINFO, we get an entry for the DS which carries a protocol
+type (which is TCP), then nfs4_set_ds_client() gets called with TCP
+instead of TCP with TLS.
+
+Fixes: c8407f2e560c ("NFS: Add an "xprtsec=" NFS mount option")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/pnfs_nfs.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index afd23910f3bf..7989f7a0f5d5 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -938,7 +938,8 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.data = &xprtdata,
+ 			};
+ 
+-			if (da->da_transport != clp->cl_proto)
++			if (da->da_transport != clp->cl_proto &&
++					clp->cl_proto != XPRT_TRANSPORT_TCP_TLS)
+ 				continue;
+ 			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
+ 				continue;
+@@ -953,6 +954,10 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 			if (xprtdata.cred)
+ 				put_cred(xprtdata.cred);
+ 		} else {
++			if (da->da_transport == XPRT_TRANSPORT_TCP &&
++				mds_srv->nfs_client->cl_proto ==
++					XPRT_TRANSPORT_TCP_TLS)
++				da->da_transport = XPRT_TRANSPORT_TCP_TLS;
+ 			clp = nfs4_set_ds_client(mds_srv,
+ 						&da->da_addr,
+ 						da->da_addrlen,
+-- 
+2.39.1
+
 
