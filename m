@@ -1,123 +1,171 @@
-Return-Path: <linux-nfs+bounces-1928-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1929-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED656855461
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 21:52:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C3D28554A5
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 22:22:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CEB41C21126
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 20:52:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA2971F21FA3
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 21:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B8F555C1A;
-	Wed, 14 Feb 2024 20:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E231B7E2;
+	Wed, 14 Feb 2024 21:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXR2VcrB"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="bPl+nWhq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62211B7E2
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 20:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D81E13EFEB
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 21:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707943941; cv=none; b=ACWYo6XOp9m7bwrL6lvGJePpKA8/PtgRW8RmKi0DAIoJCCIDDc86P1lsgkNDo6ow14U++M0qxj+5vLwoAKsnW/qxvx5UL0B1zZ+IMIaSoZ6jZts6ld42mgVXeu3F+jtKlLqIo40WbSlkGn17LvHD0D4/FBavkarUeXhA7c5StEU=
+	t=1707945720; cv=none; b=b1Oac70j8Vuno1IqLLTUi2pz1f4kTZjvt3TROOCiscda6uPZI3LQLL8etEbEyNmtAHI4AeYvsqBwphRPj9LpJFI8vOG0o9p8/WTXwx8Q1JHbLN010xGuSbDhcQ+r5YYnAwXvnY+9U26sibTWQRbup7SMcwubTBSRoIgsGEXsetA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707943941; c=relaxed/simple;
-	bh=zOnPkG2V7ubTgxXtSbNtAiA/CdkPHSMD/TG9V7uKFtE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PJ6EHUWg8jgS3b9rmOOZ1mykjWgZlT93YzHtCzlrGvXidlqBDcjjNlkqpquPwuwLUwDPUeuLF/VNl/UGFRnd0x9XRjSNH5ZwK/+ger8dbpYH1dssXFEdbJXd28OHYlFGCKCWovXsECkQV65TOk4dZ86BZb5cXUUUzn2KusKxW/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXR2VcrB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707943938;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OTvpwwiaQwSfAM+MBqWSP4VQ8j+FeFYsVeKBy2DiNuQ=;
-	b=TXR2VcrByZydtqCpWix0PLax9RobSuu2km/LeUC984ZX+5dj5hzMBZRrdkbmEClpyg7VrS
-	ipH59pRgvyxD9mFiV4hzWrypMbC1TZ5JcUnok9QeB03RH70Pk+ZOU6PR/W8iRJ0Dl+lPpM
-	hTFFVutJ/9YeeXStgz7LTUmYmE17ViU=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-TnWU65BIMeOmaDnKIT7mDg-1; Wed, 14 Feb 2024 15:52:16 -0500
-X-MC-Unique: TnWU65BIMeOmaDnKIT7mDg-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-78313358d3bso7677885a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 12:52:16 -0800 (PST)
+	s=arc-20240116; t=1707945720; c=relaxed/simple;
+	bh=b0xMIcRt9SLSL0Q4PzKXSxEAiCcZcUoeIRlPO4qsUAY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WHlcViCOHP9qnCrOaziEo9sdKsyFV3MUcaC10tZ3ZclF5HGy0SqUVh4bdAvYi3eOYxOxDYfavpmrFb/XK3Jg1ZgfFJsLp1rJaqnmvni2MKuSykm+EOVXrodKaM6+ifvavD2R7M++NqmmLYWiidYvhkZihlzsILIWoeuRQ73PeOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=bPl+nWhq; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-607815b5772so2406737b3.0
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 13:21:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1707945716; x=1708550516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ludDExKUqMptEvphl/NE5ulFWudwk9xh8twHjzhcpOg=;
+        b=bPl+nWhq6aBeZ7cbSJ46V+E5Gzs5+Wt/QU83LXFm47Uest2ir9SF6GisGm3KrjiFRw
+         D/VxIEHk0xY7G+MC6kz3Zq2Ffx4j2naZg03wkFHINrhZIvIAud2kHg2CKffL+Jnzr6uo
+         Vsnc9KxYhGX1ThowbdztncNBEkBoVQmIR4Eix3MJ/GteXiiIhYohtfRC81+ITlAuNFUv
+         VaiOE2AYJ8gmwvtgctO9+OhI2e17f3H39B+IVWSGeLDDdOY63tFQ0gZlA7lvg4E+HOA7
+         N41/f0I/9sQkEquBGt7IAQ+ubz2r3MNGY4xg2usprjiJZlfWc4EyxeFhR9tMpzcTCiOu
+         O2QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707943936; x=1708548736;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OTvpwwiaQwSfAM+MBqWSP4VQ8j+FeFYsVeKBy2DiNuQ=;
-        b=GPiBMi49wWOJgXyry8XQcJl46T0p5MXNezTWRPXCL2yVMZKsKMooSfVZDFihLtdfVN
-         L46Mj/VeANDIbPQxIzFxaHVQoDdnizS8N5+AMCr2GcSEIrW3nTuOXhZ7tlPZP/oBxDTg
-         TXpAKbqbIXVsTpwU9frRiGhvwEiK9cX+cx4M8DWa9FM5q1s0/za68nsTb9P0DOxS0Zdu
-         WnEANmLsd6uBIuXeTsY0yp+drQ/A6dd9ODToYjd32kycbWM6DpMIxgLvL/q4imfJ01gC
-         sAK3DLary6oL6P8LdlaO9chXSbvrSY+Gu9qXIEA4hEiSeEURh5l2OzqAGgGN+QVc0Eow
-         7Oaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXq+Qe+qJ+FWv5AeDZgvDKEmN2z+FlBgTg+CcKhC5GnPUGCGYcbs+zC1K1H3cyOl62koWU7p96uywH51PmTl+R35ry478ap4JNX
-X-Gm-Message-State: AOJu0YwsAxm3kFt2FYnJGU39ky0GWhsS0f1oS64+3Db8bPaF52zHjiB4
-	yxEUJiB3XSyzNCfDGuzF0GRa9iCJQgCjNB0QqTdVWVRtpCRkhjjlYIsstWY+IGMeqoUOHpF1gY+
-	Catu3fwg8SdWGdx6+8VIaHTI8ngfAUnow9A0ZQyf3h4PYCsBi2QdvuBPY2k1DKFpwWg==
-X-Received: by 2002:a05:620a:2702:b0:787:273b:810a with SMTP id b2-20020a05620a270200b00787273b810amr3938718qkp.2.1707943936124;
-        Wed, 14 Feb 2024 12:52:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuna/2Xa9bteg+cxlSCWz0k0iUr3fnqX1eiZOuAzVcaqyXaJIulMCV20FLfM/XmKoQuII+lw==
-X-Received: by 2002:a05:620a:2702:b0:787:273b:810a with SMTP id b2-20020a05620a270200b00787273b810amr3938707qkp.2.1707943935908;
-        Wed, 14 Feb 2024 12:52:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVAXgAWO3jKrJxTMX3JiL9Bpxxe2EcKLL5m7IHv1y6Fg7kHfasQ0sDgFAh5xlNIw7I9aPtd99DJpuJgz9SOWrysiVe1Jh110ZkW
-Received: from [172.31.1.12] ([70.105.242.203])
-        by smtp.gmail.com with ESMTPSA id da52-20020a05620a363400b007853f736893sm4093837qkb.5.2024.02.14.12.52.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 12:52:15 -0800 (PST)
-Message-ID: <dcfc5ad2-e994-412b-83b4-dc52fa690479@redhat.com>
-Date: Wed, 14 Feb 2024 15:52:15 -0500
+        d=1e100.net; s=20230601; t=1707945716; x=1708550516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ludDExKUqMptEvphl/NE5ulFWudwk9xh8twHjzhcpOg=;
+        b=fQf+vYeWVqo9HRXBZ/3avTG8Ja4Ugq0NrvmXCe5/rglsjJRqQY/JkoWzAVOF1yD8FS
+         nLPJYjn6WH29YrSgW7c351Fb41Sx6ChXiQNUS0vHb42uFf820otrcEKW4qPpgIOq3gxk
+         +BM7U13hyD/uB/s9Q4cJNIVd0SQtfZZCe4VN2T643V3t9wl4HJHZWBfDFRdR8pMnxBzN
+         g4CTV1U5OwqvUMM7prDXuFIEeihpTFbZb1nHglBlHLqYHV56AVAQkMp7xyoV0/daAZzr
+         dLUgsqxgDAxJUouP5c5tmURtvqIIwAiymPFm4Hi3wV5Gri8YZO2j37ZbVmDizPJPbQ88
+         h8aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+AsqYy+OStPSOeTnjacFr0HQc1zZxLu1+ZMfWAsUlQqpgkbdMKpz8ZNkXvocZ/rLtBfk4M49NirGI9rGVsUZs7InJCtTA/cz/
+X-Gm-Message-State: AOJu0YxYJWKltI622dMh95IePxLbieSvcVUOe6BuWpHiFIiQpO+G5mqK
+	GOt9SOprmgDRsmdSBI3gkaGZbYtI3K38CheustcFNOMaBe7S8TjUHSasLsAzBmJQtRHfw7z71k9
+	DewAMBxDilXpBbmh0KDmZOoovsK0m0k+mi3Px
+X-Google-Smtp-Source: AGHT+IGpDAmB1ikTVU1E5KjthEFFmc/sTniREdzcyKzjsKUMtOXwCK5kuZpdwNzeTiBcIUEmSY5KYid4S5OCYvYRXxc=
+X-Received: by 2002:a0d:d7c4:0:b0:607:75e7:a66a with SMTP id
+ z187-20020a0dd7c4000000b0060775e7a66amr2644503ywd.22.1707945716175; Wed, 14
+ Feb 2024 13:21:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfs(5): Document the max value "timeo=" mount option
-Content-Language: en-US
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>, linux-nfs@vger.kernel.org
-References: <20240204101821.958-1-chenhx.fnst@fujitsu.com>
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20240204101821.958-1-chenhx.fnst@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+ <20240115181809.885385-13-roberto.sassu@huaweicloud.com> <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
+ <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com>
+ <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
+ <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com> <63afc94126521629bb7656b6e6783d6614ee898a.camel@linux.ibm.com>
+In-Reply-To: <63afc94126521629bb7656b6e6783d6614ee898a.camel@linux.ibm.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 14 Feb 2024 16:21:45 -0500
+Message-ID: <CAHC9VhQGiSq2LTm7TBvCwDB_NcMe_JjORLbuHVfC4UpJQi_N4g@mail.gmail.com>
+Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
+	kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org, 
+	serge@hallyn.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
+	dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com, 
+	eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org, 
+	mic@digikod.net, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 14, 2024 at 3:07=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com> wr=
+ote:
+> On Tue, 2024-02-13 at 10:33 -0500, Paul Moore wrote:
+> > On Tue, Feb 13, 2024 at 7:59=E2=80=AFAM Roberto Sassu
+> > <roberto.sassu@huaweicloud.com> wrote:
+> > > On Mon, 2024-02-12 at 16:16 -0500, Paul Moore wrote:
+> > > > On Mon, Feb 12, 2024 at 4:06=E2=80=AFPM Mimi Zohar <zohar@linux.ibm=
+.com> wrote:
+> > > > > Hi Roberto,
+> > > > >
+> > > > >
+> > > > > > diff --git a/security/security.c b/security/security.c
+> > > > > > index d9d2636104db..f3d92bffd02f 100644
+> > > > > > --- a/security/security.c
+> > > > > > +++ b/security/security.c
+> > > > > > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file=
+)
+> > > > > >       return fsnotify_perm(file, MAY_OPEN);  <=3D=3D=3D  Confli=
+ct
+> > > > >
+> > > > > Replace with "return fsnotify_open_perm(file);"
+> > > > >
+> > > > > >  }
+> > > > > >
+> > > > >
+> > > > > The patch set doesn't apply cleaning to 6.8-rcX without this
+> > > > > change.  Unless
+> > > > > there are other issues, I can make the change.
+> > > >
+> > > > I take it this means you want to pull this via the IMA/EVM tree?
+> > >
+> > > Not sure about that, but I have enough changes to do to make a v10.
+>
+> @Roberto:  please add my "Reviewed-by" to the remaining patches.
+>
+> >
+> > Sorry, I should have been more clear, the point I was trying to
+> > resolve was who was going to take this patchset (eventually).  There
+> > are other patches destined for the LSM tree that touch the LSM hooks
+> > in a way which will cause conflicts with this patchset, and if
+> > you/Mimi are going to take this via the IMA/EVM tree - which is fine
+> > with me - I need to take that into account when merging things in the
+> > LSM tree during this cycle.  It's not a big deal either way, it would
+> > just be nice to get an answer on that within the next week.
+>
+> Similarly there are other changes for IMA and EVM.  If you're willing to =
+create
+> a topic branch for just the v10 patch set that can be merged into your tr=
+ee and
+> into my tree, I'm fine with your upstreaming v10. (I'll wait to send my p=
+ull
+> request after yours.)  Roberto will add my Ack's to the integrity, IMA, a=
+nd EVM
+> related patches.  However if you're not willing to create a topic branch,=
+ I'll
+> upstream the v10 patch set.
 
+I'm not a big fan of sharing topic branches across different subsystem
+trees, I'd much rather just agree that one tree or another takes the
+patchset and the others plan accordingly.  Based on our previous
+discussions I was under the impression that you wanted me to merge
+this patchset into lsm/dev, but it looks like that is no longer the
+case - which is okay by me.
 
-On 2/4/24 5:18 AM, Chen Hanxiao wrote:
-> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Committed!
+Assuming Roberto gets a v10 out soon, do you expect to merge the v10
+patchset and send it up during the upcoming merge window (for v6.9),
+or are you expecting to wait until after the upcoming merge window
+closes and target v6.10?  Once again, either is fine, I'm just trying
+to coordinate this with other patches.
 
-steved.
-
-> ---
->   utils/mount/nfs.man | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> index 7103d28e..233a7177 100644
-> --- a/utils/mount/nfs.man
-> +++ b/utils/mount/nfs.man
-> @@ -186,6 +186,10 @@ infrequently used request types are retried after 1.1 seconds.
->   After each retransmission, the NFS client doubles the timeout for
->   that request,
->   up to a maximum timeout length of 60 seconds.
-> +.IP
-> +Any timeo value greater than default value will be set to the default value.
-> +For TCP and RDMA, default value is 600 (60 seconds).
-> +For UDP, default value is 60 (6 seconds).
->   .TP 1.5i
->   .BI retrans= n
->   The number of times the NFS client retries a request before
-
+--=20
+paul-moore.com
 
