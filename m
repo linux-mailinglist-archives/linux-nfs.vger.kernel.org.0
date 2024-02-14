@@ -1,177 +1,141 @@
-Return-Path: <linux-nfs+bounces-1926-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1927-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7913B8553A8
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 21:08:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62DED85545F
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 21:52:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FE51290B2B
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 20:08:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56A001C25FC8
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 20:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3163E13DBA1;
-	Wed, 14 Feb 2024 20:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 325AC12882A;
+	Wed, 14 Feb 2024 20:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XO4ti+F8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jr/NGEcx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4692613A888;
-	Wed, 14 Feb 2024 20:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0E455C1A
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 20:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707941289; cv=none; b=lK7rO3tuBI7LPpW2KD9dewlV0nI2AnsXyvixk5penrGsX/RpBYFAc4bu79UkwW+5PRZFrze/YmyO5bnWQnPYE3CtsBdsCOrGn10ktliBz2LNvHHo58Ouk3idDKxQtMTm9AAq504tF03BB/W7CbJ/Q+yz9ZJDIDbkuzkEbNc5Oo4=
+	t=1707943905; cv=none; b=BEu5ZzDJFqI/bXTvRHDU4IxLjzT4Dyc/o/xZ3Qw69SpcGTJ/8HrRuxyEZwZBI3zoUTf865PmSrJpfcRSHs+owRvw/wBWs3FvTygBMn7LpAFpd4pbgdvKbBPtjvdOD+LCG1GL14yvUzESRd3sDs1vJtFg057dm0czBjtrzIhj244=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707941289; c=relaxed/simple;
-	bh=0c27WM48Hr69yQ4BRbSljfY+8max5aVHrUQMsvmvoT0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=rGXh9vzZ+mmwWZGkm30yg52gEsaQcN2MOdm5gRYvMIdxaKslP0BZQw507K2stJttasCJvxsGAQrGRECj1RgUwRfX+49JAoELWj51pe4/JuYCYQGglmNn9WTR/jZHmIoVCzd9zTBbuep2lySmnAl+6/sf281G10LWA2luIhM2VLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XO4ti+F8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41EJvFTF004798;
-	Wed, 14 Feb 2024 20:07:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=mXHxoZ42mf/ESBqj6s5bnVAfG0vN7uRQxTDbGz8SwAo=;
- b=XO4ti+F8dvznCzwOMommY2wHzUPRF12PQUnYJO8wcMld4+xLiaDZrncmLdNb92rQ7TNe
- RQ+9rYnPchBKUFw5S9Fl7I38jgR7LO6LKwUUOB0dExBhkPLH6UbwCM16YyMy4XS2iK2r
- +0gh0WxTiNUirdOxbsuLbSFMGF0eadMRe4+BzFbNOEyWOpeZYWi0E0go6AeH/J1ElsT2
- sExdubjt5KshLHd61G8KyAJvOgkxAqxFZJV+1qsKFpJwgPGTcHLj9XBxFxl787CNPkXw
- AuT6Oi0YJiz5OVwSzTfJppPGbBIYD6oTQ2vUShlvwWT49EtCY3XXiM+cGR1oI6+ZznNS ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w944jranh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 20:07:32 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41EJvn2l007248;
-	Wed, 14 Feb 2024 20:07:32 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w944jramk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 20:07:31 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41EIYP1m004329;
-	Wed, 14 Feb 2024 20:07:30 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6kv0gd5r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 20:07:30 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41EK7RHI19005960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Feb 2024 20:07:29 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8504C5805A;
-	Wed, 14 Feb 2024 20:07:27 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EF2835805E;
-	Wed, 14 Feb 2024 20:07:25 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.101.207])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 Feb 2024 20:07:25 +0000 (GMT)
-Message-ID: <63afc94126521629bb7656b6e6783d6614ee898a.camel@linux.ibm.com>
-Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Paul Moore <paul@paul-moore.com>,
-        Roberto Sassu
-	 <roberto.sassu@huaweicloud.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com,
-        jlayton@kernel.org, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org,
-        serge@hallyn.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org,
-        mic@digikod.net, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Roberto Sassu
- <roberto.sassu@huawei.com>,
-        Stefan Berger <stefanb@linux.ibm.com>
-Date: Wed, 14 Feb 2024 15:07:25 -0500
-In-Reply-To: <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
-	 <20240115181809.885385-13-roberto.sassu@huaweicloud.com>
-	 <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
-	 <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com>
-	 <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
-	 <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+	s=arc-20240116; t=1707943905; c=relaxed/simple;
+	bh=8wHQxf2/giaej5NEXQ3/BYOnLCF3oOvSfr3c5ghf2kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RkqPrYwMxIanAEWhIo5sjRm6kUNjID2+2UPXJOTd10jOwbVp32P4gUjep+7bCF1SlzBLW/bSA03/UzSlZoqKHN916b1qvanS9Aa1dJ0oOCloFTr32OdvopVX8OwawmrPmqHVQUabwEopQDfLr0x0cbA1K5ouKzVM7BlWfDl38T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jr/NGEcx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707943902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35ZMXeTIQeylZcW1wM9+9plqACKjwEbwbzGYTEq1zVs=;
+	b=Jr/NGEcx/49mxQxTBr8ipp0SvTq/dWFOnd9InV8LlIW/cbg2ksui7InQsXiyulj6T//gR7
+	MfXIRhqS2aeR1kgodTStpYV9dGbvdhuZKB4vKcmli1G6I0ta9U/dzcqj4VmPIJwAB1ikA0
+	ODnlM0lt7nRr9mLaSQzGqRsALhR8MCc=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-564-Mn54ywyCMACW4_iYXS2FOg-1; Wed, 14 Feb 2024 15:51:40 -0500
+X-MC-Unique: Mn54ywyCMACW4_iYXS2FOg-1
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-607aa761658so139127b3.1
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 12:51:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707943900; x=1708548700;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=35ZMXeTIQeylZcW1wM9+9plqACKjwEbwbzGYTEq1zVs=;
+        b=YdxL5ycPGvg2yEuo0geHmZFl0LvPMH2iG/0PgVOU7o9lrPDShfvtcN0Ch+TvvsASek
+         t2+9BNxEkVfhtgoTjyv/t+38Si4OrTLN3xL0DoMsyAjSxLv7ds+z7BcUQSeaQWl8qA6V
+         WGbDs3L/Lv4qIeDbCcYVOCyMQdAlsxOiFXP12yOSwjFHUDQ43ixiyh4T4TmTnK++ecm/
+         rJ1MWonZy+rmXmCTqNQ0X/o+MEQKJKl09jfGsLUr5FP2G8Jg8+0reWXDKqMCyB1IpnHt
+         QQsPv0+wp7yIL9eN1PrAIqutek7/JdKlSTJr7SEedvJPZlHxNpssSkemYXHgQvLgWWYC
+         2bkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4ANvMkHxF3vVP3KwsV5peAYbK6nCtGUsNomEcZfJPNaEgXH/5lOzcsmV1xmyjQJahpDGVKSTXT7inMaFrdDQ8Fzadpr6cUHVG
+X-Gm-Message-State: AOJu0YwK9bbnwsi3yZ66ru7G1tAuKTeKRubUCmnYChm8FmFc3OWAgLPK
+	WBB3dNHfxgCwKwZ+5mEmTZBb6QY5n5FUjkoX9tF8s9ENkc3Z/YW6fvA+ZpXzqvkP0oY9WjGsVoi
+	Zx/FICbBGoiYR0ceXQQEY1NfYNPfMvCUZyKrH6X5QoytYg9KP04GM1k4HKw==
+X-Received: by 2002:a25:ab31:0:b0:dcc:8617:d6da with SMTP id u46-20020a25ab31000000b00dcc8617d6damr2941262ybi.4.1707943900104;
+        Wed, 14 Feb 2024 12:51:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE33aVn++VZCa65/kbV2WqDWu9lrQZeQ6WWZDhfXjCM4yLWB08I81y5HymwUVZ9wXzqXMQA5g==
+X-Received: by 2002:a25:ab31:0:b0:dcc:8617:d6da with SMTP id u46-20020a25ab31000000b00dcc8617d6damr2941243ybi.4.1707943899732;
+        Wed, 14 Feb 2024 12:51:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXKLqxXbrNxmfdTCGNcR28q1ofBLyfwROKdzjjO82sKcACjYVCYyyIOKyX0xMHIegqaFuW9rLSLTx3t2UGTbGne1p585GrzSjxJ
+Received: from [172.31.1.12] ([70.105.242.203])
+        by smtp.gmail.com with ESMTPSA id da52-20020a05620a363400b007853f736893sm4093837qkb.5.2024.02.14.12.51.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 12:51:39 -0800 (PST)
+Message-ID: <a5b00b22-c10d-4dec-9cca-cba03d0e8250@redhat.com>
+Date: Wed, 14 Feb 2024 15:51:38 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs(5): Document the max value "timeo=" mount option
+Content-Language: en-US
+To: "Hanxiao Chen (Fujitsu)" <chenhx.fnst@fujitsu.com>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20240204101821.958-1-chenhx.fnst@fujitsu.com>
+ <TYWPR01MB12085FB8AC5E6702F0BD22992E6452@TYWPR01MB12085.jpnprd01.prod.outlook.com>
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <TYWPR01MB12085FB8AC5E6702F0BD22992E6452@TYWPR01MB12085.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3pmfVPR_ZkYzTv8MNJbgBILvsfAhufy_
-X-Proofpoint-GUID: pUskxnPY1Bl82nL8IEpe0UmPvkoY0NWY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-14_12,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 suspectscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402140157
 
-On Tue, 2024-02-13 at 10:33 -0500, Paul Moore wrote:
-> On Tue, Feb 13, 2024 at 7:59 AM Roberto Sassu
-> <roberto.sassu@huaweicloud.com> wrote:
-> > On Mon, 2024-02-12 at 16:16 -0500, Paul Moore wrote:
-> > > On Mon, Feb 12, 2024 at 4:06 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > > > Hi Roberto,
-> > > > 
-> > > > 
-> > > > > diff --git a/security/security.c b/security/security.c
-> > > > > index d9d2636104db..f3d92bffd02f 100644
-> > > > > --- a/security/security.c
-> > > > > +++ b/security/security.c
-> > > > > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file)
-> > > > >       return fsnotify_perm(file, MAY_OPEN);  <===  Conflict
-> > > > 
-> > > > Replace with "return fsnotify_open_perm(file);"
-> > > > 
-> > > > >  }
-> > > > > 
-> > > > 
-> > > > The patch set doesn't apply cleaning to 6.8-rcX without this
-> > > > change.  Unless
-> > > > there are other issues, I can make the change.
-> > > 
-> > > I take it this means you want to pull this via the IMA/EVM tree?
-> > 
-> > Not sure about that, but I have enough changes to do to make a v10.
 
-@Roberto:  please add my "Reviewed-by" to the remaining patches.
+
+On 2/7/24 7:30 AM, Hanxiao Chen (Fujitsu) wrote:
+> 
+> 
+>> -----邮件原件-----
+>> 发件人: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+>> 发送时间: 2024年2月4日 18:18
+>> 收件人: linux-nfs@vger.kernel.org
+>> 主题: [PATCH] nfs(5): Document the max value "timeo=" mount option
+>>
+>> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+>> ---
+>>   utils/mount/nfs.man | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+>> index 7103d28e..233a7177 100644
+>> --- a/utils/mount/nfs.man
+>> +++ b/utils/mount/nfs.man
+>> @@ -186,6 +186,10 @@ infrequently used request types are retried after 1.1
+>> seconds.
+>>   After each retransmission, the NFS client doubles the timeout for
+>>   that request,
+>>   up to a maximum timeout length of 60 seconds.
+>> +.IP
+>> +Any timeo value greater than default value will be set to the default value.
+>> +For TCP and RDMA, default value is 600 (60 seconds).
+>> +For UDP, default value is 60 (6 seconds).
+>>   .TP 1.5i
+>>   .BI retrans= n
+>>   The number of times the NFS client retries a request before
+>> --
+> 
+> Ping?
+Thanks for the ping... the darn day job got in the way... again!! :-)
+
+steved.
 
 > 
-> Sorry, I should have been more clear, the point I was trying to
-> resolve was who was going to take this patchset (eventually).  There
-> are other patches destined for the LSM tree that touch the LSM hooks
-> in a way which will cause conflicts with this patchset, and if
-> you/Mimi are going to take this via the IMA/EVM tree - which is fine
-> with me - I need to take that into account when merging things in the
-> LSM tree during this cycle.  It's not a big deal either way, it would
-> just be nice to get an answer on that within the next week.
-
-Similarly there are other changes for IMA and EVM.  If you're willing to create
-a topic branch for just the v10 patch set that can be merged into your tree and
-into my tree, I'm fine with your upstreaming v10. (I'll wait to send my pull
-request after yours.)  Roberto will add my Ack's to the integrity, IMA, and EVM
-related patches.  However if you're not willing to create a topic branch, I'll
-upstream the v10 patch set.
-
-thanks,
-
-Mimi
+> Regards,
+> - Chen
+> 
 
 
