@@ -1,81 +1,80 @@
-Return-Path: <linux-nfs+bounces-1971-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1972-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA7C8856E36
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 281F8856E35
 	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 21:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C79FB26FAB
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D37162888F4
 	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 20:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D560213AA29;
-	Thu, 15 Feb 2024 19:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F1E13A892;
+	Thu, 15 Feb 2024 19:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="FmIraQSP"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="glyN6dzT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127ED13A892
-	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 19:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376C913AA26
+	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 19:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708027065; cv=none; b=PWXNgJVTagtVF15frDCcsPqZbNCnIuzs5tSfKkUI82PkKbbKqblzHv4EBfAVIUlFk1N3wfzauyqRPJBBXginRXpS6Z6YgW+bsM33+HiyJo2TjojvXav/b7JAdCD63ZQTY0ObF9Udexz63M/vOj28nq2h8tfkNLL61GxUheDw5D4=
+	t=1708027067; cv=none; b=bEq1M6oVPwkOr+zczexN8714j7qsG16x84QFiCvSslEXVHDsGm1+KoErCDo3EqfSC7Senqdzotb3SGw9KlDHKaVqxLAqgVXtV31bJZuAAcxB4RihUypN+56RvZZpC23ui7hfdlO0IIfQEcxdrIJRRmccK7AXYMBZAhDS/ShZRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708027065; c=relaxed/simple;
-	bh=/BG2joKruibPBzczgBI4YKClFnmxq9ARTjeFZrlK4p4=;
+	s=arc-20240116; t=1708027067; c=relaxed/simple;
+	bh=u1dHi6mNixi1zGBfCROOYSu8eSvq8Cesu/3w1LhDWZk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pv35rOrf7ascX13XMj4GtYbmYxq4eTrl003vMxxjibqBbN9/b+Kdy9pKwK+LvEvAUhU+tNh8966GdCNLWPDKScVflX9s7OvvUGILAXjKDCBpdzo9BsWlzEcm9abTpVdhXshpMo541XhOtkj1dp0MEvNRDhwfsSXXh0Qg+ehphXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=FmIraQSP; arc=none smtp.client-ip=209.85.219.176
+	 MIME-Version; b=qReOwbRR7NcF57a3BduAkyzBP5aoN6AYo/6QEi+t4UXbPVf6jfR/ayFskIURpwhoWRjswm8uV/sUe/9pSK4zDM1NqecxawBZEy0u66uEXjU9Vq3y36ovA5fgfaxWJ+fmmMMmszD6rsD2L/Hhydam4JBJoeE6UgsQm36RsGwtMBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=glyN6dzT; arc=none smtp.client-ip=209.85.219.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so1310367276.2
-        for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 11:57:43 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso1283964276.2
+        for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 11:57:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1708027063; x=1708631863; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1708027064; x=1708631864; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xtC6yc5Kmgw9GmQ2/1irwG8BWnRopJmQdaxwEYN2g+w=;
-        b=FmIraQSPP9bHanIQAO3IJM9C8ulg3ZeC0hrWM453nQBbiQDf6JA5BEYSmcVnVZwF4e
-         4uwG5L3uMBg7Y6sQsy2Wq5qOYfMA13/4GMXUtQ23cOSL4Av0SES81sl7+z/XTkdlsvuD
-         OVnXx4PEkocJKSL7Gr8wIA0t96ZLHPMDMzT4xhzuMUra7FQhoki4IbTsAdQWSMC0iFmK
-         r0P89lt77EcOPbYxzQH4h8q73bTcYFtEKN3gDP2QVSIzHjxdHWECYphyMqwyLarsFAVm
-         PsH/m31vOthw+LS1why69Tq1oq7WtNXZsM0swdR41vvSxwacz6Jdq0W9FlIes0nBD+yR
-         D+8A==
+        bh=9Yo0e/Lck+pvwePZ6CWknvlExNBTLSvDrEZMiXn1aeM=;
+        b=glyN6dzT94/qBaWVgpCJzi4yKMXZaOZAb5T4Du2yywGOxJ3V/KSGxzyMQPPm5KT/Te
+         L9BRBhoRbEJMtEg3vumhL3yaW7OXpE9sWuBRT90AVBbSJTM+vpxXjyFZZwtp7W1Npzn9
+         BOjqVAzA3HjFg00chOLkv8kj0ogPiOEYyOSB8V5f5Uy36z+8UkzJZEHDd7uR794COE/h
+         aUSHtGYCu7/HHAD+NN2DfZzvVoX7MygpGBBuwdPsrfYg7QQ16QRdToCk/89cKiz9bwll
+         2z5V4joN/99a8TeUxKEQoPsxbBt/VnB8I30BxMfTg93NpK6hawhoQlZ7L1fDE9/+RqSk
+         Z0lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708027063; x=1708631863;
+        d=1e100.net; s=20230601; t=1708027064; x=1708631864;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xtC6yc5Kmgw9GmQ2/1irwG8BWnRopJmQdaxwEYN2g+w=;
-        b=GWCwPkG4Yo2p8PF26N//gM41SWZQB2ZDX2CY8ilnReZr5T09rE5D90z6vYF+Y1qhzu
-         b4pSb2oswONvGmN41N6mUJwmaHdrM+vgmYCJzG3oCvMYcWdS83NU2eXgvIOwkjB6VKdY
-         BkUlIBb3fqgz3T1bWDsChlXrFBDiR9Cyh9NGCEGAfAa0VwAOyYW7k6zRSpjE3iCsMck1
-         xBh+6J2MxtL4WGvM+cJOZIW/ukTG67nbv2cmG/P9cs0vYIqSnljza6f704LrYcfAiyae
-         5bVczm5ag73g1oR6uBqBRQG6u7TC7whf2roPdedtFCcjbsBYfb2MWn8io4wmD13r/X67
-         YcOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6qeXr40nH8Y928DvnkYz1burtSWqcHlBHWuEcDDmz5/mBvccoBrLchy2mz7NHmS/Ltqbhyh0+lfVWhvG5EfQcq6ECD4CRGeJC
-X-Gm-Message-State: AOJu0YyFPwNdRLbZOz65kTNhu4JRNpeSr+qz9Qba431Val8JqYFzm8XD
-	T85VEuqSyHN4N7Cn0oPDczzxvR4niEaq4xLECba19y0Q41ZRGdm8MoyWbU4hwK42h3MqB8njmq0
-	3
-X-Google-Smtp-Source: AGHT+IFBNyJeejZh5kRYYjLYNtRvwdXIo+Z/aatlYNHYwaWYqzL3qbbi15q4EU0u6mutdL0bBdhOiA==
-X-Received: by 2002:a25:ce92:0:b0:dcc:323e:e1a4 with SMTP id x140-20020a25ce92000000b00dcc323ee1a4mr3054080ybe.6.1708027063079;
-        Thu, 15 Feb 2024 11:57:43 -0800 (PST)
+        bh=9Yo0e/Lck+pvwePZ6CWknvlExNBTLSvDrEZMiXn1aeM=;
+        b=GeFF/kdFeJqRLWdBqlXU+H3BkUFkRfpwDlb5TiwD1jrbdkCZYBWUcEs4Gcktyws0WO
+         /Penyd7tIlUpIjbHz+jqK+6E5XoDZK9hpqLr4RzAkrPBWr3tAb1bHkUSGeiBQwwP4fHX
+         mipLVjkT98k6cKs9+24jXXrHQy/fZR60bS67OhA1JJcM3tB22xAIffkbN/CYibD+WF2w
+         NtKfK3ekeFvOUH6QvyNTH+GiunUNqzrZLW1P7q7FbP5iPe6ZU7s9mnGflxF/Zu9lSZcc
+         yJIKEodh5Q/0LJ9V+3vGsvwleq9kpQOH9CB9MxMQA6S71w0N2JbTovBhyufZcuuG6n9B
+         cqlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYyVBqqU0/BMjZ536uRHvGdSlrTEEzpqK2Sd7nOQQkaTmnY1Er6WYYRjddBBjdfUfD7nKoBSJI2qu3TYkYrTz7Oq0kxDWixza8
+X-Gm-Message-State: AOJu0YwwSO8r7+JLuskHsTy7ZKIBiC1bU2psLn6b6pzjJleAmXO1uHVN
+	BkYqaLoFzRKkzb5BkzVAApeEKri16WBsQIGOAyXwJc8kcDJy/37Z62BYe8CUAAg=
+X-Google-Smtp-Source: AGHT+IGPIxn78YhbzvKca1sMjn6QO+usa+wNQs+ZF0mV5Ud5yGJ9CG6YbPUBjgVNcPPkWGvCrcJ5xQ==
+X-Received: by 2002:a81:ac1c:0:b0:607:f09d:b2af with SMTP id k28-20020a81ac1c000000b00607f09db2afmr746818ywh.1.1708027064134;
+        Thu, 15 Feb 2024 11:57:44 -0800 (PST)
 Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id x83-20020a253156000000b00dc727104273sm18887ybx.34.2024.02.15.11.57.42
+        by smtp.gmail.com with ESMTPSA id gz7-20020a05690c470700b00607b3038a7dsm21954ywb.9.2024.02.15.11.57.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 11:57:42 -0800 (PST)
+        Thu, 15 Feb 2024 11:57:43 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: trond.myklebust@hammerspace.com,
 	anna@kernel.org,
 	linux-nfs@vger.kernel.org,
 	kernel-team@fb.com
-Subject: [PATCH v5 1/3] sunrpc: add a struct rpc_stats arg to rpc_create_args
-Date: Thu, 15 Feb 2024 14:57:30 -0500
-Message-ID: <bbeafb16b3822975e63c751280630d1f8c12b63e.1708026931.git.josef@toxicpanda.com>
+Subject: [PATCH v5 2/3] nfs: expose /proc/net/sunrpc/nfs in net namespaces
+Date: Thu, 15 Feb 2024 14:57:31 -0500
+Message-ID: <ad5c97b53255a08cf443bb34460847e92cfe6410.1708026931.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1708026931.git.josef@toxicpanda.com>
 References: <cover.1708026931.git.josef@toxicpanda.com>
@@ -87,65 +86,62 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We want to be able to have our rpc stats handled in a per network
-namespace manner, so add an option to rpc_create_args to specify a
-different rpc_stats struct instead of using the one on the rpc_program.
+We're using nfs mounts inside of containers in production and noticed
+that the nfs stats are not exposed in /proc.  This is a problem for us
+as we use these stats for monitoring, and have to do this awkward bind
+mount from the main host into the container in order to get to these
+states.
+
+Add the rpc_proc_register call to the pernet operations entry and exit
+points so these stats can be exposed inside of network namespaces.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- include/linux/sunrpc/clnt.h | 1 +
- net/sunrpc/clnt.c           | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/inode.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 5e9d1469c6fa..5321585c778f 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -139,6 +139,7 @@ struct rpc_create_args {
- 	const char		*servername;
- 	const char		*nodename;
- 	const struct rpc_program *program;
-+	struct rpc_stat		*stats;
- 	u32			prognumber;	/* overrides program->number */
- 	u32			version;
- 	rpc_authflavor_t	authflavor;
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index cda0935a68c9..28f3749f6dc6 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -405,7 +405,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
- 	clnt->cl_maxproc  = version->nrprocs;
- 	clnt->cl_prog     = args->prognumber ? : program->number;
- 	clnt->cl_vers     = version->number;
--	clnt->cl_stats    = program->stats;
-+	clnt->cl_stats    = args->stats ? : program->stats;
- 	clnt->cl_metrics  = rpc_alloc_iostats(clnt);
- 	rpc_init_pipe_dir_head(&clnt->cl_pipedir_objects);
- 	err = -ENOMEM;
-@@ -691,6 +691,7 @@ struct rpc_clnt *rpc_clone_client(struct rpc_clnt *clnt)
- 		.version	= clnt->cl_vers,
- 		.authflavor	= clnt->cl_auth->au_flavor,
- 		.cred		= clnt->cl_cred,
-+		.stats		= clnt->cl_stats,
- 	};
- 	return __rpc_clone_client(&args, clnt);
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index ebb8d60e1152..e11e9c34aa56 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -2427,11 +2427,13 @@ EXPORT_SYMBOL_GPL(nfs_net_id);
+ static int nfs_net_init(struct net *net)
+ {
+ 	nfs_clients_init(net);
++	rpc_proc_register(net, &nfs_rpcstat);
+ 	return nfs_fs_proc_net_init(net);
  }
-@@ -713,6 +714,7 @@ rpc_clone_client_set_auth(struct rpc_clnt *clnt, rpc_authflavor_t flavor)
- 		.version	= clnt->cl_vers,
- 		.authflavor	= flavor,
- 		.cred		= clnt->cl_cred,
-+		.stats		= clnt->cl_stats,
- 	};
- 	return __rpc_clone_client(&args, clnt);
+ 
+ static void nfs_net_exit(struct net *net)
+ {
++	rpc_proc_unregister(net, "nfs");
+ 	nfs_fs_proc_net_exit(net);
+ 	nfs_clients_exit(net);
  }
-@@ -1068,6 +1070,7 @@ struct rpc_clnt *rpc_bind_new_program(struct rpc_clnt *old,
- 		.version	= vers,
- 		.authflavor	= old->cl_auth->au_flavor,
- 		.cred		= old->cl_cred,
-+		.stats		= old->cl_stats,
- 	};
- 	struct rpc_clnt *clnt;
- 	int err;
+@@ -2486,15 +2488,12 @@ static int __init init_nfs_fs(void)
+ 	if (err)
+ 		goto out1;
+ 
+-	rpc_proc_register(&init_net, &nfs_rpcstat);
+-
+ 	err = register_nfs_fs();
+ 	if (err)
+ 		goto out0;
+ 
+ 	return 0;
+ out0:
+-	rpc_proc_unregister(&init_net, "nfs");
+ 	nfs_destroy_directcache();
+ out1:
+ 	nfs_destroy_writepagecache();
+@@ -2524,7 +2523,6 @@ static void __exit exit_nfs_fs(void)
+ 	nfs_destroy_inodecache();
+ 	nfs_destroy_nfspagecache();
+ 	unregister_pernet_subsys(&nfs_net_ops);
+-	rpc_proc_unregister(&init_net, "nfs");
+ 	unregister_nfs_fs();
+ 	nfs_fs_proc_exit();
+ 	nfsiod_stop();
 -- 
 2.43.0
 
