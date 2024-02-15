@@ -1,163 +1,108 @@
-Return-Path: <linux-nfs+bounces-1964-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1965-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E70A856B58
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 18:41:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DAB5856CA1
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 19:31:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE029B2424B
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 17:41:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A07CF1C2178D
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 18:31:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0BF13667A;
-	Thu, 15 Feb 2024 17:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405211386B5;
+	Thu, 15 Feb 2024 18:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="iHqrQlrB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="onG3NOh6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mta-101a.earthlink-vadesecure.net (mta-101b.earthlink-vadesecure.net [51.81.61.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D497136995
-	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 17:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9178D137C2E
+	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 18:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708018886; cv=none; b=LtayPfJpe2ti60VvqITUwziDnas2SFV97bedVHx3CGOJhwf9yRT+23X2CC3kiQDHvFZ/0OAFXiVDsttWNomqf5HZuV2TF30VIej7i1mS8YHfDI48gzemhSCgXXJedw8zfQ2olEyDxUCLr2VyIbncC7tJnv2Q6sqS4snp/ofhl2k=
+	t=1708021621; cv=none; b=kP1CfiXom1+o9e9p4ugE4sH4tztni8FIwIMBgWeLwXYY5cmq3i382SRU/CLEvWVpa32+ng+1iHVrhj9AL41Yf5mOmzvmcSpZhLkb/VmYtG5+p3TYl37+MWKSNoznzg7rcB2hSfcUID2ky9K3gjlE7RNZUYlnUH+d/KJqEizAufA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708018886; c=relaxed/simple;
-	bh=3BglWeHrci/yxhZAoLxt57yBSoavWshFZO5bwD/tLLU=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ok3Ud2YlkX0En3vEEeZszGq+IKgVnMSMo2EHWyOmvKe6VDCwUP8lI3H8agZBVo/MhozprsilDEMsEBXJsTj2BW+4WvOuv3g+u4ZtTwEqb6z5xUknOFmVbC/3FTh9WbvxS4CbnWKJmksEQq2473GxcSQvbvjdQ0xlaCDYl4UFV/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com; spf=pass smtp.mailfrom=mindspring.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=iHqrQlrB; arc=none smtp.client-ip=51.81.61.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mindspring.com
-DKIM-Signature: v=1; a=rsa-sha256; bh=3BglWeHrci/yxhZAoLxt57yBSoavWshFZO5bwD
- /tLLU=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
- list-owner:list-archive; q=dns/txt; s=dk12062016; t=1708017956;
- x=1708622756; b=iHqrQlrBp6C0EMrX82EIXeqZV7aglGFkvNdNddC0INwjvyN2Swikucj
- tZEOuENFDQCo9l/2+ZeXfWbNnH7Bap6PVgqV3aKtx/Le4sxRMiflLzkOwZZRAV1I0pU1M9X
- L0RwC2505N1ofUsgF5B8QegjTxWkaX0aWN7HpyPpr2Asg3l8jJsQLkwqmzLT8jq4gj2a2Ot
- 1JAEkK85bDwuBkXHeOpUspYLt/0SO7UJQYQgw8AFaLTL9V2hWS+Cx0koqKTv+OQPguI4f0m
- gr8DwrAP98RUeqXJHjAlz1CDQM6QM0sWqc1AgdW+tBsrx1+J2bvs3TPgDiAkVohZjATI8pX
- l5A==
-Authentication-Results: earthlink-vadesecure.net;
- auth=pass smtp.auth=ffilzlnx@mindspring.com smtp.mailfrom=ffilzlnx@mindspring.com;
-Received: from FRANKSTHINKPAD ([174.174.49.201])
- by vsel1nmtao01p.internal.vadesecure.com with ngmta
- id 8aa18a2e-17b419481230242b; Thu, 15 Feb 2024 17:25:56 +0000
-From: "Frank Filz" <ffilzlnx@mindspring.com>
-To: "'Cedric Blancher'" <cedric.blancher@gmail.com>,
-	"'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc: <jlayton@kernel.org>,
-	<dan.f.shelton@gmail.com>,
-	<tom@talpey.com>,
-	<linux-nfs@vger.kernel.org>
-References: <CAAvCNcBvWjt13mBGoNZf-BGwn18_R6KAeMmA7NZOTifORLEANg@mail.gmail.com> <CAAvCNcAkZFkLU-XtmJy30AT7ad_MvSzZTMEk86PiZXLdcMg4fA@mail.gmail.com> <b14648b0-a2f7-451a-a56b-6bb626c4ffa8@talpey.com> <14e1e8c8613c74d07cb0cefbcebbf79a3a57311e.camel@kernel.org> <CAAvCNcAsow-QTPYLm0fUNX3K5X4Aci=aFi+hi4a0S8k19oa-KA@mail.gmail.com> <3fa863dc2c1ec75416704a9cdaa17bf1a2e447e4.camel@hammerspace.com> <CALXu0UfuKEa8u-dz9aG8K--ULBe2yaZoYbEoR3Tyr2NG6a1_Rw@mail.gmail.com>
-In-Reply-To: <CALXu0UfuKEa8u-dz9aG8K--ULBe2yaZoYbEoR3Tyr2NG6a1_Rw@mail.gmail.com>
-Subject: RE: Public NFSv4 handle?
-Date: Thu, 15 Feb 2024 09:25:56 -0800
-Message-ID: <013f01da6034$0995a960$1cc0fc20$@mindspring.com>
+	s=arc-20240116; t=1708021621; c=relaxed/simple;
+	bh=MYhf8wtMq3YH82p7q43f/uLRtI85EGqVEG6ctB0MOb0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=dklWtGFAnL/Aw6vTJOTndDsRsdM3X7PGaJFm0xT3SYaRHKT+tdQn4p3pD5HdZUeVhpJcP5aqf8eO2kaKvBugYecr8oj9pJ777oJ/goUpL2CFIkvjvs/mBsDx2JfgjCYM2DNUb6iFKOID6mvUY0uA1lFv3Ug7Q8VYHp2FFIzeNRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=onG3NOh6; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FFT5aT022525;
+	Thu, 15 Feb 2024 18:26:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-11-20;
+ bh=UKm2LowyGYy9j5QN9sQ1X82XaTtMQz+/jLESJC1XIJg=;
+ b=onG3NOh6HYTgmHFMRaDnOlCxC01QT0tBw0dMNjmkiQh4rHMTleAueFhgKb8VFbdG19XX
+ JoBZf1zR6NBoND/Ykb9+S9CR9vopcov8YD9zmQ5zEsnmUTr/AnGdBHHCSH4MHM1q3ECf
+ 16C4CFVPJ9+ARqBEccXMXk0fnBhd1eggzlnSjUq6ah9Mr2i44MhXyvNuTQFLTz45JRH+
+ joMS7hpxBYwCnHvvwvW8w5UR/BiVWv/WiMu30ci+K/RSeItEpA+zCDSjgc2emyAxSlmP
+ HzytPm0d/EfXC7hPSDTKHUmW+Jz3COzvwJV8QjtYhWSuAe7D6z64ilHGWKwIrPXeX4Cq XA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w92db2y67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 18:26:55 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41FHmdcl000793;
+	Thu, 15 Feb 2024 18:26:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5ykay7hf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 18:26:55 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41FIQsmQ032173;
+	Thu, 15 Feb 2024 18:26:54 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3w5ykay7gf-1;
+	Thu, 15 Feb 2024 18:26:54 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: PATCH [v2 0/2] NFSD: use CB_GETATTR to handle GETATTR conflict with write delegation
+Date: Thu, 15 Feb 2024 10:26:42 -0800
+Message-Id: <1708021604-28321-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_17,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402150149
+X-Proofpoint-GUID: GXa0yIll79Cpg2GqJYOlZtCrtuyF0s64
+X-Proofpoint-ORIG-GUID: GXa0yIll79Cpg2GqJYOlZtCrtuyF0s64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQFFDhjPWnhj6LNoGjIaUcmmZbCZKQG7Czk6Ak0SvGUA9wP+KgJURJGOAXdWb5IBde+k47HkPvcQ
 
-> From: Cedric Blancher [mailto:cedric.blancher@gmail.com]
-> On Tue, 13 Feb 2024 at 21:59, Trond Myklebust =
-<trondmy@hammerspace.com>
-> wrote:
-> >
-> > On Tue, 2024-02-13 at 21:28 +0100, Dan Shelton wrote:
-> > > [You don't often get email from dan.f.shelton@gmail.com. Learn why
-> > > this is important at https://aka.ms/LearnAboutSenderIdentification =
-]
-> > >
-> > > On Fri, 9 Feb 2024 at 16:32, Jeff Layton <jlayton@kernel.org> =
-wrote:
-> > > >
-> > > > On Thu, 2024-02-08 at 21:37 -0500, Tom Talpey wrote:
-> > > > > On 2/8/2024 7:19 PM, Dan Shelton wrote:
-> > > > > > ?
-> > > > > >
-> > > > > > On Thu, 25 Jan 2024 at 02:48, Dan Shelton
-> > > > > > <dan.f.shelton@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Hello!
-> > > > > > >
-> > > > > > > Do the Linux NFSv4 server and client support the NFS =
-public
-> > > > > > > handle?
-> > > > >
-> > > > > Are you referring the the old WebNFS stuff? That was a v2/v3
-> > > > > thing, and, I believe, only ever supported by Solaris.
-> > > > >
-> > > >
-> > > > One more try! I think my MUA was having issues this morning.
-> > > >
-> > > > NFSv4.1 supports the PUTPUBFH op:
-> > > >
-> > > > =
-https://www.rfc-editor.org/rfc/rfc8881.html#name-operation-23-putp
-> > > > ubfh-set-p
-> > > >
-> > > > ...but this op is only for backward compatibility. The Linux
-> > > > server returns the rootfh (as it SHOULD).
-> > >
-> > > No, I do not consider this "backward compatibility". The "public"
-> > > option is also intended for public servers, like package mirrors
-> > > (e.g.
-> > > Debian), to have a better solution than http or ftp.
-> > >
-> >
-> > PUTPUBFH offers no extra security features over PUTROOTFH. It is
-> > literally just a way to offer a second point of entry into the same
-> > exported filesystem.
+Currently GETATTR conflict with a write delegation is handled by
+recalling the delegation before replying to the GETATTR.
 
-Do any clients even provide a mechanism to mount using PUTPUBFH?
+This patch series add supports for CB_GETATTR callback to get the latest
+change_info and size information of the file from the client that holds
+the delegation to reply to the GETATTR from the second client.
 
-> Right. It doesn't expose your "private" filesystem hierarchy.
+NOTE: this patch series is mostly the same as the previous patches which
+were backed out when un unrelated problem of NFSD server hang on reboot
+was reported.
 
-There are ways to avoid exposing the private filesystem hierarchy. I =
-have used bind mounts in the past and some servers may allow specifying =
-the pseudo path for exports to hide the filesystem hierarchy.
+The only difference is the wait_on_bit() in nfsd4_deleg_getattr_conflict was
+replaced with wait_on_bit_timeout() with 30ms timeout to avoid a potential
+DOS attack by exhausting NFSD kernel threads with GETATTR conflicts.
 
-> > A more modern approach would be to create 2 containers on the same
-> > host: one that shares the full namespace to be exported, and one =
-that
-> > shares only the bits of the namespace that are considered "public".
-> > That approach requires no extra patches or customisation to existing
-> > kernels.
->=20
-> Oh for god's sake. Please don't call "containers" a "modern approach".
-> It's just a sad waste of resources, aside from the other shitload of =
-problems they
-> cause.
-> Also in real life, we frog-eating backwards savages here in Europe do =
-not have
-> so many public IPv4 addresses available to put everything into =
-containers, and
-> changing everything to IPv6-only networks will take another 2 or 3 =
-decades
-> here.
+v2:
+  . update comments in nfsd4_deleg_getattr_conflict
 
-There are ways to do it without containers, though a container gives an =
-additional level of security.
-
-> Cedric Blancher <cedric.blancher@gmail.com>
-> [https://plus.google.com/u/0/+CedricBlancher/]
-> Institute Pasteur
-
-Frank Filz
-
-
+ fs/nfsd/nfs4callback.c |  97 +++++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfs4state.c    | 119 ++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4xdr.c      |  10 +++-
+ fs/nfsd/nfsd.h         |   1 +
+ fs/nfsd/state.h        |  24 ++++++++-
+ fs/nfsd/xdr4cb.h       |  18 +++++++
+ 6 files changed, 255 insertions(+), 14 deletions(-)
 
