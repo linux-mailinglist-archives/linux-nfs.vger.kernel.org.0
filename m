@@ -1,264 +1,203 @@
-Return-Path: <linux-nfs+bounces-1930-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1931-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69AD385563C
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 23:41:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99764855C40
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 09:20:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CEAEB25A4D
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Feb 2024 22:41:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEBDB1C20A46
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 08:20:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FA71864C;
-	Wed, 14 Feb 2024 22:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD03168D2;
+	Thu, 15 Feb 2024 08:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+GHMRk1"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZiFcak6n"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8387718639
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Feb 2024 22:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE2417984;
+	Thu, 15 Feb 2024 08:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707950465; cv=none; b=BRihIrIQFNz2TrLDeCTc4cM3UtnZ3SpklQ/ZP3+mLZqJZONCkidACGN7e9DbKYCKbawLSmbJRqY4U+qjJ+SnrpEEpeRFCJ+wnU5/MqKfvFxIBZF78M9DEtry2daLmKoWdTkqdae2im+oiFEfUCoAZTqkv8fXuvyBlXJPTqbsoPc=
+	t=1707985125; cv=none; b=CvXEr9K1rU3pF4Q+pPyhnmOW7ypQrWXBGkg0r4/m83VKtkJK4r13WTCv5zCAf0D+DGC3uUJJd84DyJ2gaZ6Do4ysrqd97R9wON/j7wmyhr658xGCT8gw8fUJ2U3uxdY4/TdoTsq5iOCBu8/8j1YvY2yDQO80Q+HUQ4cHnV3ofsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707950465; c=relaxed/simple;
-	bh=IetT4/8w46vJjJ+DywERYRy2ve9pBVvesOxMOrvzKpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hOVAqUR6a70xyU/xvTkPqq/h1cUdruCCTOyVh8Lxq8gR9h4JmJbopsBxrx2ptiTr1h0T31pKSHiBIsD2987b+LcwOdbavYsVFVjPV1IBcCQCRlylGjRfi4tdp7bljsbicqcTJQA7H5jA3YAaYr9L94sXzr+mjAqWliMtOGVz7tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+GHMRk1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5909C433C7;
-	Wed, 14 Feb 2024 22:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707950465;
-	bh=IetT4/8w46vJjJ+DywERYRy2ve9pBVvesOxMOrvzKpM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l+GHMRk16BtonGlx7I4LDRS/uJQGScayoLwoNNkgJz8xnFySV8HZhynlBIDkffSWt
-	 aJ3Oc/6z0m5UQSGTr/FcxZ56v0ajlteV3VxT74yhiuchk7O53Wvex2NcvMLso6U5vz
-	 RQEA33U2zfQqmoS2x9kCaWNs+RPk0e13xwJTGGEhxDOADljhcFBuwA+AFgJEayRitp
-	 i7t2gBssCop0zPqy2x6UbHzrxb3axxPiNu2m/CywyASz1dkGBm+6uUnLryUaSSpW0K
-	 G7+jJ8UFjaHFI+J5VN2i3kS47tjE2+eKWxtd+4KRI9PAfwS86HLSr5jb1mUZArF9MF
-	 7ieXh/Fm2AYow==
-From: trondmy@kernel.org
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: Fix NFSv3 atomicity bugs in nfsd_setattr()
-Date: Wed, 14 Feb 2024 17:35:01 -0500
-Message-ID: <20240214223501.205822-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1707985125; c=relaxed/simple;
+	bh=tQiuOODpfiSZqbi1fSHEb7a5d1KdNB1lrpcclcbPW5o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Mime-Version; b=gfSyCp9rQH1XZhtAh4cd8uginJshUZ57gYAIByEOgLmS2XnX+sjxDv+IvoeoIAZJLyGccbMSVpZGEMhrcoZgJzWBCTXz7HzdQ48C96PBGS0Ab2gtVls2F51sftj+3EtfkLtsXaUeDVlwmwaqieJFiwhEpMoGVFuUcn97LpTz1eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZiFcak6n; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41F8BcoY032007;
+	Thu, 15 Feb 2024 08:18:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=xQpf4U6thY0RmYjLTmzPv/P+MlK6sZqho4klRx7+4kg=;
+ b=ZiFcak6n4DVmF+NJkPnhQWWDMSj50pD72AfSoDtFmIEGzwGGSJciJIeUNtZXbr3I5epn
+ i+G+F5ozsRoZE12hA8rz2FndgygnuVElri6hT1lZ9yfqBElugOTWbDHRHLD/oB2cR/OZ
+ FSq2KhqKU9c93+tSH2do2g+Ro3074iav/VYcQC2bk8bzepP7OkPXeaNywF69JQ5OoEH/
+ EQDhBdPUfL7wCSjsXFenIAXe85A2BN3d252Ze259y0tgfuP4bu0YdENz5GfVl65yqQNT
+ zI0N7COFL41YtOH3gEgrcxSvMSGv4FpBAeDGU0WCPs0jXpA6lX72KpUaLuwzQCPtCCnB tA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9dnd216y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 08:18:09 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41F8ADxQ028970;
+	Thu, 15 Feb 2024 08:18:08 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9dnd215u-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 08:18:08 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41F7FPjv004339;
+	Thu, 15 Feb 2024 08:16:22 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6kv0kmte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 08:16:22 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41F8GJnj13173444
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 08:16:22 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BE6CB58059;
+	Thu, 15 Feb 2024 08:16:19 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4853558057;
+	Thu, 15 Feb 2024 08:16:18 +0000 (GMT)
+Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.77.242])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 Feb 2024 08:16:18 +0000 (GMT)
+Message-ID: <6ffcd054ff81d64b92b52baf097ed21f8ea4d870.camel@linux.ibm.com>
+Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        jmorris@namei.org, serge@hallyn.com, dmitry.kasatkin@gmail.com,
+        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+Date: Thu, 15 Feb 2024 03:16:17 -0500
+In-Reply-To: <CAHC9VhQGiSq2LTm7TBvCwDB_NcMe_JjORLbuHVfC4UpJQi_N4g@mail.gmail.com>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+	 <20240115181809.885385-13-roberto.sassu@huaweicloud.com>
+	 <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
+	 <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com>
+	 <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
+	 <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com>
+	 <63afc94126521629bb7656b6e6783d6614ee898a.camel@linux.ibm.com>
+	 <CAHC9VhQGiSq2LTm7TBvCwDB_NcMe_JjORLbuHVfC4UpJQi_N4g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JPiXEt9OIAZjMDJms0hUwl0uAwRfnvqC
+X-Proofpoint-GUID: tM-IWJ0kHfrSVh4SVeDZK-a2LckzZzzM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_08,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402150064
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, 2024-02-14 at 16:21 -0500, Paul Moore wrote:
+> On Wed, Feb 14, 2024 at 3:07 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > On Tue, 2024-02-13 at 10:33 -0500, Paul Moore wrote:
+> > > On Tue, Feb 13, 2024 at 7:59 AM Roberto Sassu
+> > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > On Mon, 2024-02-12 at 16:16 -0500, Paul Moore wrote:
+> > > > > On Mon, Feb 12, 2024 at 4:06 PM Mimi Zohar <zohar@linux.ibm.com>
+> > > > > wrote:
+> > > > > > Hi Roberto,
+> > > > > > 
+> > > > > > 
+> > > > > > > diff --git a/security/security.c b/security/security.c
+> > > > > > > index d9d2636104db..f3d92bffd02f 100644
+> > > > > > > --- a/security/security.c
+> > > > > > > +++ b/security/security.c
+> > > > > > > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file)
+> > > > > > >       return fsnotify_perm(file, MAY_OPEN);  <===  Conflict
+> > > > > > 
+> > > > > > Replace with "return fsnotify_open_perm(file);"
+> > > > > > 
+> > > > > > >  }
+> > > > > > > 
+> > > > > > 
+> > > > > > The patch set doesn't apply cleaning to 6.8-rcX without this
+> > > > > > change.  Unless
+> > > > > > there are other issues, I can make the change.
+> > > > > 
+> > > > > I take it this means you want to pull this via the IMA/EVM tree?
+> > > > 
+> > > > Not sure about that, but I have enough changes to do to make a v10.
+> > 
+> > @Roberto:  please add my "Reviewed-by" to the remaining patches.
+> > 
+> > > Sorry, I should have been more clear, the point I was trying to
+> > > resolve was who was going to take this patchset (eventually).  There
+> > > are other patches destined for the LSM tree that touch the LSM hooks
+> > > in a way which will cause conflicts with this patchset, and if
+> > > you/Mimi are going to take this via the IMA/EVM tree - which is fine
+> > > with me - I need to take that into account when merging things in the
+> > > LSM tree during this cycle.  It's not a big deal either way, it would
+> > > just be nice to get an answer on that within the next week.
+> > 
+> > Similarly there are other changes for IMA and EVM.  If you're willing to
+> > create
+> > a topic branch for just the v10 patch set that can be merged into your tree
+> > and
+> > into my tree, I'm fine with your upstreaming v10. (I'll wait to send my pull
+> > request after yours.)  Roberto will add my Ack's to the integrity, IMA, and
+> > EVM
+> > related patches.  However if you're not willing to create a topic branch,
+> > I'll
+> > upstream the v10 patch set.
+> 
+> I'm not a big fan of sharing topic branches across different subsystem
+> trees, I'd much rather just agree that one tree or another takes the
+> patchset and the others plan accordingly.
 
-The main point of the guarded SETATTR is to prevent races with other
-WRITE and SETATTR calls. That requires that the check of the guard time
-against the inode ctime be done after taking the inode lock.
+Just curious why not?
 
-Furthermore, we need to take into account the 32-bit nature of
-timestamps in NFSv3, and the possibility that files may change at a
-faster rate than once a second.
+> Based on our previous
+> discussions I was under the impression that you wanted me to merge
+> this patchset into lsm/dev, but it looks like that is no longer the
+> case - which is okay by me.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfsd/nfs3proc.c  |  6 ++++--
- fs/nfsd/nfs3xdr.c   |  5 +----
- fs/nfsd/nfs4proc.c  |  3 +--
- fs/nfsd/nfs4state.c |  2 +-
- fs/nfsd/nfsproc.c   |  6 +++---
- fs/nfsd/vfs.c       | 20 +++++++++++++-------
- fs/nfsd/vfs.h       |  2 +-
- fs/nfsd/xdr3.h      |  2 +-
- 8 files changed, 25 insertions(+), 21 deletions(-)
+Paul, I don't recall saying that.  Please go ahead and upstream it.  Roberto can
+add my acks accordingly.
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index b78eceebd945..dfcc957e460d 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -71,13 +71,15 @@ nfsd3_proc_setattr(struct svc_rqst *rqstp)
- 	struct nfsd_attrs attrs = {
- 		.na_iattr	= &argp->attrs,
- 	};
-+	const struct timespec64 *guardtime = NULL;
- 
- 	dprintk("nfsd: SETATTR(3)  %s\n",
- 				SVCFH_fmt(&argp->fh));
- 
- 	fh_copy(&resp->fh, &argp->fh);
--	resp->status = nfsd_setattr(rqstp, &resp->fh, &attrs,
--				    argp->check_guard, argp->guardtime);
-+	if (argp->check_guard)
-+		guardtime = &argp->guardtime;
-+	resp->status = nfsd_setattr(rqstp, &resp->fh, &attrs, guardtime);
- 	return rpc_success;
- }
- 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index f32128955ec8..a7a07470c1f8 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -295,17 +295,14 @@ svcxdr_decode_sattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- static bool
- svcxdr_decode_sattrguard3(struct xdr_stream *xdr, struct nfsd3_sattrargs *args)
- {
--	__be32 *p;
- 	u32 check;
- 
- 	if (xdr_stream_decode_bool(xdr, &check) < 0)
- 		return false;
- 	if (check) {
--		p = xdr_inline_decode(xdr, XDR_UNIT * 2);
--		if (!p)
-+		if (!svcxdr_decode_nfstime3(xdr, &args->guardtime))
- 			return false;
- 		args->check_guard = 1;
--		args->guardtime = be32_to_cpup(p);
- 	} else
- 		args->check_guard = 0;
- 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 14712fa08f76..0294f5cce5dd 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1168,8 +1168,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 
- 	if (status)
- 		goto out;
--	status = nfsd_setattr(rqstp, &cstate->current_fh, &attrs,
--				0, (time64_t)0);
-+	status = nfsd_setattr(rqstp, &cstate->current_fh, &attrs, NULL);
- 	if (!status)
- 		status = nfserrno(attrs.na_labelerr);
- 	if (!status)
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2fa54cfd4882..538edd85b51e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5191,7 +5191,7 @@ nfsd4_truncate(struct svc_rqst *rqstp, struct svc_fh *fh,
- 		return 0;
- 	if (!(open->op_share_access & NFS4_SHARE_ACCESS_WRITE))
- 		return nfserr_inval;
--	return nfsd_setattr(rqstp, fh, &attrs, 0, (time64_t)0);
-+	return nfsd_setattr(rqstp, fh, &attrs, NULL);
- }
- 
- static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index a7315928a760..36370b957b63 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -103,7 +103,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
- 		}
- 	}
- 
--	resp->status = nfsd_setattr(rqstp, fhp, &attrs, 0, (time64_t)0);
-+	resp->status = nfsd_setattr(rqstp, fhp, &attrs, NULL);
- 	if (resp->status != nfs_ok)
- 		goto out;
- 
-@@ -390,8 +390,8 @@ nfsd_proc_create(struct svc_rqst *rqstp)
- 		 */
- 		attr->ia_valid &= ATTR_SIZE;
- 		if (attr->ia_valid)
--			resp->status = nfsd_setattr(rqstp, newfhp, &attrs, 0,
--						    (time64_t)0);
-+			resp->status = nfsd_setattr(rqstp, newfhp, &attrs,
-+						    NULL);
- 	}
- 
- out_unlock:
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 6e7e37192461..cc17eb8633ea 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -476,7 +476,6 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
-  * @rqstp: controlling RPC transaction
-  * @fhp: filehandle of target
-  * @attr: attributes to set
-- * @check_guard: set to 1 if guardtime is a valid timestamp
-  * @guardtime: do not act if ctime.tv_sec does not match this timestamp
-  *
-  * This call may adjust the contents of @attr (in particular, this
-@@ -488,8 +487,7 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
-  */
- __be32
- nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
--	     struct nfsd_attrs *attr,
--	     int check_guard, time64_t guardtime)
-+	     struct nfsd_attrs *attr, const struct timespec64 *guardtime)
- {
- 	struct dentry	*dentry;
- 	struct inode	*inode;
-@@ -538,9 +536,6 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	nfsd_sanitize_attrs(inode, iap);
- 
--	if (check_guard && guardtime != inode_get_ctime_sec(inode))
--		return nfserr_notsync;
--
- 	/*
- 	 * The size case is special, it changes the file in addition to the
- 	 * attributes, and file systems don't expect it to be mixed with
-@@ -555,6 +550,17 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	}
- 
- 	inode_lock(inode);
-+	if (guardtime) {
-+		struct timespec64 ctime = inode_get_ctime(inode);
-+		if ((u32)guardtime->tv_sec != (u32)ctime.tv_sec ||
-+		    guardtime->tv_nsec != ctime.tv_nsec) {
-+			inode_unlock(inode);
-+			if (size_change)
-+				put_write_access(inode);
-+			return nfserr_notsync;
-+		}
-+	}
-+
- 	for (retries = 1;;) {
- 		struct iattr attrs;
- 
-@@ -1404,7 +1410,7 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	 * if the attributes have not changed.
- 	 */
- 	if (iap->ia_valid)
--		status = nfsd_setattr(rqstp, resfhp, attrs, 0, (time64_t)0);
-+		status = nfsd_setattr(rqstp, resfhp, attrs, NULL);
- 	else
- 		status = nfserrno(commit_metadata(resfhp));
- 
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 702fbc4483bf..7d77303ef5f7 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -69,7 +69,7 @@ __be32		 nfsd_lookup_dentry(struct svc_rqst *, struct svc_fh *,
- 				const char *, unsigned int,
- 				struct svc_export **, struct dentry **);
- __be32		nfsd_setattr(struct svc_rqst *, struct svc_fh *,
--				struct nfsd_attrs *, int, time64_t);
-+			     struct nfsd_attrs *, const struct timespec64 *);
- int nfsd_mountpoint(struct dentry *, struct svc_export *);
- #ifdef CONFIG_NFSD_V4
- __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index 03fe4e21306c..522067b7fd75 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -14,7 +14,7 @@ struct nfsd3_sattrargs {
- 	struct svc_fh		fh;
- 	struct iattr		attrs;
- 	int			check_guard;
--	time64_t		guardtime;
-+	struct timespec64	guardtime;
- };
- 
- struct nfsd3_diropargs {
--- 
-2.43.0
+Mimi
+
+> Assuming Roberto gets a v10 out soon, do you expect to merge the v10
+> patchset and send it up during the upcoming merge window (for v6.9),
+> or are you expecting to wait until after the upcoming merge window
+> closes and target v6.10?  Once again, either is fine, I'm just trying
+> to coordinate this with other patches.
+
+
 
 
