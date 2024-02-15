@@ -1,69 +1,69 @@
-Return-Path: <linux-nfs+bounces-1966-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1967-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF02C856CA2
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 19:31:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D606F856CA7
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 19:31:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50F0E1F2389F
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 18:31:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74D1FB2222F
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 18:31:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9901A1386B1;
-	Thu, 15 Feb 2024 18:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670BC1386B3;
+	Thu, 15 Feb 2024 18:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U8UuDisP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="frNnFSZe"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2A81386B3
-	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 18:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665E21386B8
+	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 18:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708021622; cv=none; b=XhM6UT3fv9rkf6HMYDS/IbxiXf4/dYr6sfgfWtZnY5A9A+6rX00b7rYDsR4K9FZx3l2G5UlbBJyZv51QsO3vuLs/EgfuCc90xd94QRiGp5SEIO8QEiG/EgWcxAejoJQZFZ0YohmOAZF9s7HP9DMnSpu5Tpw5NS3XNerD+I2Ligw=
+	t=1708021623; cv=none; b=Wa97G8I+wY46wLLlkt+EZ1UT8z2U8cY7Yw8gfG0Q39XszV+5p8l5jIKZ2k+IG/3r6oPlRKK1c96oMVjJtxjBQ20G3/bRk/RAFBM+N6hBeqL+HkYnCgpMUujjcZrfRxPQfIwtQLGAciskxyTsaCVhBTQ0JHTm0+t7y9FTOndGBGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708021622; c=relaxed/simple;
-	bh=FwzDvPpwG+WFyMwoPd3gHGL+n2i+3oZ7VGv8P8OmoTw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=V6XVbEQDpNjKhzL+16q/7SUjREs6ltI4bT10gTWNuVvuhInUBOYe0F0CgYLgPrUA3zOZfmgoUntHpgI+nuWFwp90sliCmAvOUvPnRuz0CgcIanVWrFk6tNRU7kyXB3euXjsi6T5FEjg0wVxrMxPMcJxauqIptbw7XSQHQpGjS0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=U8UuDisP; arc=none smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1708021623; c=relaxed/simple;
+	bh=dZNJnYbp/dwwXznXNtSh9imIbTObrZ3akm2Zc+q2WN0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=lCX8dg/l1XlcrdeFKjTZL96FtnRIqrG04wnPFgNHI3EWBktnsoEsPxiya/GP3oout5IFHjhm++2SeViAP+RbQMsFcKSSfSL80Y0Q6CByEuLGWF2qJWdpZFNS95f2QllYZAVvcJp8a/O5v3mhmfp3yn+4KNr+rRgqANPStudRSsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=frNnFSZe; arc=none smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FFSsSU030976;
-	Thu, 15 Feb 2024 18:26:56 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FFStk1031013;
+	Thu, 15 Feb 2024 18:26:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-11-20;
- bh=0nCMHz7XwHwnmrgpBfK0G7lnjKDLoGRcdV1ke//auXg=;
- b=U8UuDisPTM3Jq0I1cxHeZm+xhuTNxDpm7I5s7ySIWtq38jYd/0TGWsKgjk0chK7JXDhl
- YPpmIdtcc4b1YAruTngOAVo5P6gfsmpLwE29EhTaYnxw9cUsDV46bJgYf+SuhzxYrJOq
- kcbwfwVGcyH2SXq+1JHx0DIZM7HtMEPGHM06vXSWJiuHs0L7PNnKjN4lCY7ZL5WygnIk
- PrUhymr1Cx62iiZyvPaat8N6Ij1AyJmXEMhRhQ/i40ag0iCUJbmWCkpvaPgPo+k+2W6j
- 6DpT2PwlOxaXU7U/CCXiW8+s9343vFljVq/s81x0fiWH9J0zE1PvAHHJeirivJcECwax 7A== 
+ bh=zzAhjvOMtpL/2Qk0+LYKvVdLolbEduXOMHfQjbBaGuQ=;
+ b=frNnFSZe43u2sxsFO9w0MMnAn4t4ZpafaaA06vcob8WabVeuFcvISQQnbFIAnlMhzydH
+ go0cU+Ol87RVhptfKQ+sk+hZFuyGwZt69mckK2evXasDk179vvsEJ10BKwXfzDbh1M3z
+ 8s4P6jXgKHq/mDTaEUXoR+dq7bxqaWmNEtVvYh3Z1Ttf726kAns5nFtuI1C8LY9xI3aN
+ yh6Nad/PfO2cCc4LTZw3VY+du7l7x6poNGfVk0hUUEyhqfBFbQYYqx8Rf6m+hSDMUEIK
+ cLtpNA9CC8Ml4piJ9bvrXnkkXJwEpC6NI6my+39cgBAwbpmifIGpSYv1ezWZpyP6odqI dg== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w9301jwwf-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w9301jwwg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 18:26:57 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41FI8qam000682;
+	Thu, 15 Feb 2024 18:26:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5ykay7k8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 15 Feb 2024 18:26:56 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41FI2mfm000755;
-	Thu, 15 Feb 2024 18:26:55 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5ykay7j9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 18:26:55 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41FIQsmS032173;
-	Thu, 15 Feb 2024 18:26:55 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41FIQsmU032173;
+	Thu, 15 Feb 2024 18:26:56 GMT
 Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3w5ykay7gf-2;
-	Thu, 15 Feb 2024 18:26:55 +0000
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3w5ykay7gf-3;
+	Thu, 15 Feb 2024 18:26:56 +0000
 From: Dai Ngo <dai.ngo@oracle.com>
 To: chuck.lever@oracle.com, jlayton@kernel.org
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/2] NFSD: add supports for CB_GETATTR callback
-Date: Thu, 15 Feb 2024 10:26:43 -0800
-Message-Id: <1708021604-28321-2-git-send-email-dai.ngo@oracle.com>
+Subject: [PATCH v2 2/2] NFSD: handle GETATTR conflict with write delegation
+Date: Thu, 15 Feb 2024 10:26:44 -0800
+Message-Id: <1708021604-28321-3-git-send-email-dai.ngo@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1708021604-28321-1-git-send-email-dai.ngo@oracle.com>
 References: <1708021604-28321-1-git-send-email-dai.ngo@oracle.com>
@@ -74,228 +74,311 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 p
  bulkscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
  definitions=main-2402150149
-X-Proofpoint-GUID: bfeHj3kb7sRWIS8S3cJIcrrwYYx9_e4w
-X-Proofpoint-ORIG-GUID: bfeHj3kb7sRWIS8S3cJIcrrwYYx9_e4w
+X-Proofpoint-GUID: Nah-1hjWnoCyvBtiyr-oyyW30RHlF4Iq
+X-Proofpoint-ORIG-GUID: Nah-1hjWnoCyvBtiyr-oyyW30RHlF4Iq
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 
-Includes:
-   . CB_GETATTR proc for nfs4_cb_procedures[]
-   . XDR encoding and decoding function for CB_GETATTR request/reply
-   . add nfs4_cb_fattr to nfs4_delegation for sending CB_GETATTR
-     and store file attributes from client's reply.
+If the GETATTR request on a file that has write delegation in effect
+and the request attributes include the change info and size attribute
+then the request is handled as below:
+
+Server sends CB_GETATTR to client to get the latest change info and file
+size. If these values are the same as the server's cached values then
+the GETATTR proceeds as normal.
+
+If either the change info or file size is different from the server's
+cached values, or the file was already marked as modified, then:
+
+    . update time_modify and time_metadata into file's metadata
+      with current time
+
+    . encode GETATTR as normal except the file size is encoded with
+      the value returned from CB_GETATTR
+
+    . mark the file as modified
+
+If the CB_GETATTR fails for any reasons, the delegation is recalled
+and NFS4ERR_DELAY is returned for the GETATTR.
 
 Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
- fs/nfsd/nfs4callback.c | 97 +++++++++++++++++++++++++++++++++++++++++-
- fs/nfsd/state.h        | 14 ++++++
- fs/nfsd/xdr4cb.h       | 18 ++++++++
- 3 files changed, 128 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 116 ++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4xdr.c   |  10 +++-
+ fs/nfsd/nfsd.h      |   1 +
+ fs/nfsd/state.h     |  10 +++-
+ 4 files changed, 124 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 926c29879c6a..30aa241038eb 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -85,7 +85,21 @@ static void encode_uint32(struct xdr_stream *xdr, u32 n)
- static void encode_bitmap4(struct xdr_stream *xdr, const __u32 *bitmap,
- 			   size_t len)
- {
--	WARN_ON_ONCE(xdr_stream_encode_uint32_array(xdr, bitmap, len) < 0);
-+	xdr_stream_encode_uint32_array(xdr, bitmap, len);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 2fa54cfd4882..a1ce38f9b936 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -127,6 +127,7 @@ static void free_session(struct nfsd4_session *);
+ 
+ static const struct nfsd4_callback_ops nfsd4_cb_recall_ops;
+ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
++static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops;
+ 
+ static struct workqueue_struct *laundry_wq;
+ 
+@@ -1189,6 +1190,10 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
+ 	dp->dl_recalled = false;
+ 	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
+ 		      &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
++	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
++			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
++	dp->dl_cb_fattr.ncf_file_modified = false;
++	dp->dl_cb_fattr.ncf_cb_bmap[0] = FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE;
+ 	get_nfs4_file(fp);
+ 	dp->dl_stid.sc_file = fp;
+ 	return dp;
+@@ -2896,11 +2901,59 @@ nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
+ 	spin_unlock(&nn->client_lock);
+ }
+ 
++static int
++nfsd4_cb_getattr_done(struct nfsd4_callback *cb, struct rpc_task *task)
++{
++	struct nfs4_cb_fattr *ncf =
++			container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
++
++	ncf->ncf_cb_status = task->tk_status;
++	switch (task->tk_status) {
++	case -NFS4ERR_DELAY:
++		rpc_delay(task, 2 * HZ);
++		return 0;
++	default:
++		return 1;
++	}
 +}
 +
-+static int decode_cb_fattr4(struct xdr_stream *xdr, uint32_t *bitmap,
-+				struct nfs4_cb_fattr *fattr)
-+{
-+	fattr->ncf_cb_change = 0;
-+	fattr->ncf_cb_fsize = 0;
-+	if (bitmap[0] & FATTR4_WORD0_CHANGE)
-+		if (xdr_stream_decode_u64(xdr, &fattr->ncf_cb_change) < 0)
-+			return -NFSERR_BAD_XDR;
-+	if (bitmap[0] & FATTR4_WORD0_SIZE)
-+		if (xdr_stream_decode_u64(xdr, &fattr->ncf_cb_fsize) < 0)
-+			return -NFSERR_BAD_XDR;
-+	return 0;
- }
- 
- static void encode_nfs_cb_opnum4(struct xdr_stream *xdr, enum nfs_cb_opnum4 op)
-@@ -333,6 +347,30 @@ encode_cb_recallany4args(struct xdr_stream *xdr,
- 	hdr->nops++;
- }
- 
-+/*
-+ * CB_GETATTR4args
-+ *	struct CB_GETATTR4args {
-+ *	   nfs_fh4 fh;
-+ *	   bitmap4 attr_request;
-+ *	};
-+ *
-+ * The size and change attributes are the only one
-+ * guaranteed to be serviced by the client.
-+ */
 +static void
-+encode_cb_getattr4args(struct xdr_stream *xdr, struct nfs4_cb_compound_hdr *hdr,
-+			struct nfs4_cb_fattr *fattr)
++nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
++{
++	struct nfs4_cb_fattr *ncf =
++			container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
++	struct nfs4_delegation *dp =
++			container_of(ncf, struct nfs4_delegation, dl_cb_fattr);
++
++	nfs4_put_stid(&dp->dl_stid);
++	clear_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags);
++	wake_up_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY);
++}
++
+ static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
+ 	.done		= nfsd4_cb_recall_any_done,
+ 	.release	= nfsd4_cb_recall_any_release,
+ };
+ 
++static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops = {
++	.done		= nfsd4_cb_getattr_done,
++	.release	= nfsd4_cb_getattr_release,
++};
++
++static void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf)
 +{
 +	struct nfs4_delegation *dp =
-+		container_of(fattr, struct nfs4_delegation, dl_cb_fattr);
-+	struct knfsd_fh *fh = &dp->dl_stid.sc_file->fi_fhandle;
++			container_of(ncf, struct nfs4_delegation, dl_cb_fattr);
 +
-+	encode_nfs_cb_opnum4(xdr, OP_CB_GETATTR);
-+	encode_nfs_fh4(xdr, fh);
-+	encode_bitmap4(xdr, fattr->ncf_cb_bmap, ARRAY_SIZE(fattr->ncf_cb_bmap));
-+	hdr->nops++;
++	if (test_and_set_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags))
++		return;
++	/* set to proper status when nfsd4_cb_getattr_done runs */
++	ncf->ncf_cb_status = NFS4ERR_IO;
++
++	refcount_inc(&dp->dl_stid.sc_count);
++	nfsd4_run_cb(&ncf->ncf_getattr);
 +}
 +
- /*
-  * CB_SEQUENCE4args
+ static struct nfs4_client *create_client(struct xdr_netobj name,
+ 		struct svc_rqst *rqstp, nfs4_verifier *verf)
+ {
+@@ -5635,6 +5688,8 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	struct svc_fh *parent = NULL;
+ 	int cb_up;
+ 	int status = 0;
++	struct kstat stat;
++	struct path path;
+ 
+ 	cb_up = nfsd4_cb_channel_good(oo->oo_owner.so_client);
+ 	open->op_recall = false;
+@@ -5672,6 +5727,18 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+ 		open->op_delegate_type = NFS4_OPEN_DELEGATE_WRITE;
+ 		trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
++		path.mnt = currentfh->fh_export->ex_path.mnt;
++		path.dentry = currentfh->fh_dentry;
++		if (vfs_getattr(&path, &stat,
++				(STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
++				AT_STATX_SYNC_AS_STAT)) {
++			nfs4_put_stid(&dp->dl_stid);
++			destroy_delegation(dp);
++			goto out_no_deleg;
++		}
++		dp->dl_cb_fattr.ncf_cur_fsize = stat.size;
++		dp->dl_cb_fattr.ncf_initial_cinfo =
++			nfsd4_change_attribute(&stat, d_inode(currentfh->fh_dentry));
+ 	} else {
+ 		open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
+ 		trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
+@@ -8428,6 +8495,8 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+  * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
+  * @rqstp: RPC transaction context
+  * @inode: file to be checked for a conflict
++ * @modified: return true if file was modified
++ * @size: new size of file if modified is true
   *
-@@ -468,6 +506,26 @@ static void nfs4_xdr_enc_cb_null(struct rpc_rqst *req, struct xdr_stream *xdr,
- 	xdr_reserve_space(xdr, 0);
- }
- 
-+/*
-+ * 20.1.  Operation 3: CB_GETATTR - Get Attributes
-+ */
-+static void nfs4_xdr_enc_cb_getattr(struct rpc_rqst *req,
-+		struct xdr_stream *xdr, const void *data)
-+{
-+	const struct nfsd4_callback *cb = data;
-+	struct nfs4_cb_fattr *ncf =
-+		container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
-+	struct nfs4_cb_compound_hdr hdr = {
-+		.ident = cb->cb_clp->cl_cb_ident,
-+		.minorversion = cb->cb_clp->cl_minorversion,
-+	};
-+
-+	encode_cb_compound4args(xdr, &hdr);
-+	encode_cb_sequence4args(xdr, cb, &hdr);
-+	encode_cb_getattr4args(xdr, &hdr, ncf);
-+	encode_cb_nops(&hdr);
-+}
-+
- /*
-  * 20.2. Operation 4: CB_RECALL - Recall a Delegation
+  * This function is called when there is a conflict between a write
+  * delegation and a change/size GETATTR from another client. The server
+@@ -8436,21 +8505,21 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+  * delegation before replying to the GETATTR. See RFC 8881 section
+  * 18.7.4.
+  *
+- * The current implementation does not support CB_GETATTR yet. However
+- * this can avoid recalling the delegation could be added in follow up
+- * work.
+- *
+  * Returns 0 if there is no conflict; otherwise an nfs_stat
+  * code is returned.
   */
-@@ -523,6 +581,42 @@ static int nfs4_xdr_dec_cb_null(struct rpc_rqst *req, struct xdr_stream *xdr,
- 	return 0;
- }
+ __be32
+-nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
++nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
++				bool *modified, u64 *size)
+ {
+ 	__be32 status;
+ 	struct file_lock_context *ctx;
+ 	struct file_lock *fl;
+ 	struct nfs4_delegation *dp;
++	struct iattr attrs;
++	struct nfs4_cb_fattr *ncf;
  
-+/*
-+ * 20.1.  Operation 3: CB_GETATTR - Get Attributes
-+ */
-+static int nfs4_xdr_dec_cb_getattr(struct rpc_rqst *rqstp,
-+				  struct xdr_stream *xdr,
-+				  void *data)
-+{
-+	struct nfsd4_callback *cb = data;
-+	struct nfs4_cb_compound_hdr hdr;
-+	int status;
-+	u32 bitmap[3] = {0};
-+	u32 attrlen;
-+	struct nfs4_cb_fattr *ncf =
-+		container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
++	*modified = false;
+ 	ctx = locks_inode_context(inode);
+ 	if (!ctx)
+ 		return 0;
+@@ -8475,12 +8544,39 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
+ 				return 0;
+ 			}
+ break_lease:
+-			spin_unlock(&ctx->flc_lock);
+ 			nfsd_stats_wdeleg_getattr_inc();
+-			status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+-			if (status != nfserr_jukebox ||
+-					!nfsd_wait_for_delegreturn(rqstp, inode))
+-				return status;
 +
-+	status = decode_cb_compound4res(xdr, &hdr);
-+	if (unlikely(status))
-+		return status;
-+
-+	status = decode_cb_sequence4res(xdr, cb);
-+	if (unlikely(status || cb->cb_seq_status))
-+		return status;
-+
-+	status = decode_cb_op_status(xdr, OP_CB_GETATTR, &cb->cb_status);
-+	if (status)
-+		return status;
-+	if (xdr_stream_decode_uint32_array(xdr, bitmap, 3) < 0)
-+		return -NFSERR_BAD_XDR;
-+	if (xdr_stream_decode_u32(xdr, &attrlen) < 0)
-+		return -NFSERR_BAD_XDR;
-+	if (attrlen > (sizeof(ncf->ncf_cb_change) + sizeof(ncf->ncf_cb_fsize)))
-+		return -NFSERR_BAD_XDR;
-+	status = decode_cb_fattr4(xdr, bitmap, ncf);
-+	return status;
-+}
-+
++			dp = fl->fl_owner;
++			ncf = &dp->dl_cb_fattr;
++			nfs4_cb_getattr(&dp->dl_cb_fattr);
++			spin_unlock(&ctx->flc_lock);
++			wait_on_bit_timeout(&ncf->ncf_cb_flags, CB_GETATTR_BUSY,
++					TASK_INTERRUPTIBLE, NFSD_CB_GETATTR_TIMEOUT);
++			if (ncf->ncf_cb_status) {
++				/* Recall delegation only if client didn't respond */
++				status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
++				if (status != nfserr_jukebox ||
++						!nfsd_wait_for_delegreturn(rqstp, inode))
++					return status;
++			}
++			if (!ncf->ncf_file_modified &&
++					(ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
++					ncf->ncf_cur_fsize != ncf->ncf_cb_fsize))
++				ncf->ncf_file_modified = true;
++			if (ncf->ncf_file_modified) {
++				/*
++				 * Per section 10.4.3 of RFC 8881, the server would
++				 * not update the file's metadata with the client's
++				 * modified size
++				 */
++				attrs.ia_mtime = attrs.ia_ctime = current_time(inode);
++				attrs.ia_valid = ATTR_MTIME | ATTR_CTIME;
++				setattr_copy(&nop_mnt_idmap, inode, &attrs);
++				mark_inode_dirty(inode);
++				ncf->ncf_cur_fsize = ncf->ncf_cb_fsize;
++				*size = ncf->ncf_cur_fsize;
++				*modified = true;
++			}
+ 			return 0;
+ 		}
+ 		break;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index c719c475a068..7f68277fbfa5 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3507,6 +3507,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		unsigned long	mask[2];
+ 	} u;
+ 	unsigned long bit;
++	bool file_modified = false;
++	u64 size = 0;
+ 
+ 	WARN_ON_ONCE(bmval[1] & NFSD_WRITEONLY_ATTRS_WORD1);
+ 	WARN_ON_ONCE(!nfsd_attrs_supported(minorversion, bmval));
+@@ -3533,7 +3535,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	}
+ 	args.size = 0;
+ 	if (u.attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
+-		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
++		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry),
++					&file_modified, &size);
+ 		if (status)
+ 			goto out;
+ 	}
+@@ -3543,7 +3546,10 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 			  AT_STATX_SYNC_AS_STAT);
+ 	if (err)
+ 		goto out_nfserr;
+-	args.size = args.stat.size;
++	if (file_modified)
++		args.size = size;
++	else
++		args.size = args.stat.size;
+ 
+ 	if (!(args.stat.result_mask & STATX_BTIME))
+ 		/* underlying FS does not offer btime so we can't share it */
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 304e9728b929..908eb7e47842 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -365,6 +365,7 @@ void		nfsd_lockd_shutdown(void);
+ #define	NFSD_CLIENT_MAX_TRIM_PER_RUN	128
+ #define	NFS4_CLIENTS_PER_GB		1024
+ #define NFSD_DELEGRETURN_TIMEOUT	(HZ / 34)	/* 30ms */
++#define	NFSD_CB_GETATTR_TIMEOUT		NFSD_DELEGRETURN_TIMEOUT
+ 
  /*
-  * 20.2. Operation 4: CB_RECALL - Recall a Delegation
-  */
-@@ -831,6 +925,7 @@ static const struct rpc_procinfo nfs4_cb_procedures[] = {
- 	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock),
- 	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
- 	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
-+	PROC(CB_GETATTR,	COMPOUND,	cb_getattr,	cb_getattr),
- };
- 
- static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
+  * The following attributes are currently not supported by the NFSv4 server:
 diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 41bdc913fa71..0bbbe57e027d 100644
+index 0bbbe57e027d..f894ba6c9a69 100644
 --- a/fs/nfsd/state.h
 +++ b/fs/nfsd/state.h
-@@ -117,6 +117,16 @@ struct nfs4_cpntf_state {
- 	time64_t		cpntf_time;	/* last time stateid used */
+@@ -125,8 +125,16 @@ struct nfs4_cb_fattr {
+ 	/* from CB_GETATTR reply */
+ 	u64 ncf_cb_change;
+ 	u64 ncf_cb_fsize;
++
++	unsigned long ncf_cb_flags;
++	bool ncf_file_modified;
++	u64 ncf_initial_cinfo;
++	u64 ncf_cur_fsize;
  };
  
-+struct nfs4_cb_fattr {
-+	struct nfsd4_callback ncf_getattr;
-+	u32 ncf_cb_status;
-+	u32 ncf_cb_bmap[1];
-+
-+	/* from CB_GETATTR reply */
-+	u64 ncf_cb_change;
-+	u64 ncf_cb_fsize;
-+};
++/* bits for ncf_cb_flags */
++#define	CB_GETATTR_BUSY		0
 +
  /*
   * Represents a delegation stateid. The nfs4_client holds references to these
   * and they are put when it is being destroyed or when the delegation is
-@@ -150,6 +160,9 @@ struct nfs4_delegation {
- 	int			dl_retries;
- 	struct nfsd4_callback	dl_recall;
- 	bool			dl_recalled;
-+
-+	/* for CB_GETATTR */
-+	struct nfs4_cb_fattr    dl_cb_fattr;
- };
+@@ -746,5 +754,5 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+ }
  
- #define cb_to_delegation(cb) \
-@@ -640,6 +653,7 @@ enum nfsd4_cb_op {
- 	NFSPROC4_CLNT_CB_SEQUENCE,
- 	NFSPROC4_CLNT_CB_NOTIFY_LOCK,
- 	NFSPROC4_CLNT_CB_RECALL_ANY,
-+	NFSPROC4_CLNT_CB_GETATTR,
- };
- 
- /* Returns true iff a is later than b: */
-diff --git a/fs/nfsd/xdr4cb.h b/fs/nfsd/xdr4cb.h
-index 0d39af1b00a0..e8b00309c449 100644
---- a/fs/nfsd/xdr4cb.h
-+++ b/fs/nfsd/xdr4cb.h
-@@ -54,3 +54,21 @@
- #define NFS4_dec_cb_recall_any_sz	(cb_compound_dec_hdr_sz  +      \
- 					cb_sequence_dec_sz +            \
- 					op_dec_sz)
-+
-+/*
-+ * 1: CB_GETATTR opcode (32-bit)
-+ * N: file_handle
-+ * 1: number of entry in attribute array (32-bit)
-+ * 1: entry 0 in attribute array (32-bit)
-+ */
-+#define NFS4_enc_cb_getattr_sz		(cb_compound_enc_hdr_sz +       \
-+					cb_sequence_enc_sz +            \
-+					1 + enc_nfs4_fh_sz + 1 + 1)
-+/*
-+ * 4: fattr_bitmap_maxsz
-+ * 1: attribute array len
-+ * 2: change attr (64-bit)
-+ * 2: size (64-bit)
-+ */
-+#define NFS4_dec_cb_getattr_sz		(cb_compound_dec_hdr_sz  +      \
-+			cb_sequence_dec_sz + 4 + 1 + 2 + 2 + op_dec_sz)
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+-				struct inode *inode);
++		struct inode *inode, bool *file_modified, u64 *size);
+ #endif   /* NFSD4_STATE_H */
 -- 
 2.39.3
 
