@@ -1,382 +1,284 @@
-Return-Path: <linux-nfs+bounces-1962-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1963-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1C128568BD
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 17:05:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60057856936
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 17:15:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 345FB1F27EDC
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 16:05:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF2641F235A8
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Feb 2024 16:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3B91350E6;
-	Thu, 15 Feb 2024 16:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i/s8rGhD";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="U1aOU6K0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2CA1386D3;
+	Thu, 15 Feb 2024 16:10:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999031350E3
-	for <linux-nfs@vger.kernel.org>; Thu, 15 Feb 2024 16:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708012995; cv=fail; b=AZWCtJKjnhtIpHpPhtGBaWGbwgk+vqNWNx9flwTdg/Q6gyE4ClFvzQlesX7NwojDuY+fwPe7FbpCVo5Wa32ta/IQ+snKANxoZGKrZ4eygiGiZLbJW9kJcnB9eZUf8V9+etyVP9OvpqGh8H3W+Gopin1D8xySHrus2mT/69DKNIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708012995; c=relaxed/simple;
-	bh=aQsJ1xKzqXNRv1EnZEQ7JiuRUDMEBBth71joKf8BWo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XZaawbZILgzZPfScaNY6JTIXs73GZv/KxFD4ySNETPpy7g46mY/VBNXz4ixTQsIPv5RWgmAMBkKREFJsmP/JY8ROr9utG2Io6acBZM5yPKtPD5xtVbz1beiDbwyyxdePjCTefOjwPVO5LBRxL4nwX8nUvpcEAxclK0mUuvSAnVA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=i/s8rGhD; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=U1aOU6K0; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FFT4Zg022498;
-	Thu, 15 Feb 2024 16:03:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=4iO4ung/3WIvGVBBMfHYlpHpUnfm6QqsC/kyvcdcTXw=;
- b=i/s8rGhDmN9096bB7jpXbKdkCN9NqUoUBK68kspnUuLo23up6Ethe+GZ0duu99kJ8v9E
- 2/f2eEvBbu0BKhHbheBwbxKsouVf1WcQe5ZOJ/r4ljn04cGf0CxRbgTjT/m5MgD8qYak
- 5rw6CoeBs9F2joNHRTunSAwRDwhJIRirc+YdVInari0SH6yK/p8U4v8DtPDzQ5eDPpMu
- g/H2UKGqtLtQ/om9DIh3PRct91G8PDn8nUlxR7ksVM6E0/TXS2AwhrkdoB1WR35pgK6m
- njcLQMlY0/ykYOlAlBKhjtB7fVTYTAKKAZEjsiR+jRU79TZ7vg0mRoCt5hbLxG3GMKC3 +Q== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w92db2kdq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 16:03:00 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41FEgOCf031478;
-	Thu, 15 Feb 2024 16:03:00 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5ykaq43r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 16:03:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mnj76Y5kD0XXB+cAYwSB4yeOeDatqPgm08b13fhy7P2VBcnP+9YGICm0LBQtbgdMg7N13h95Pw2z4o3DV9FPUtRKdJxado8VQBgIv126EWa8UDxccIqAxe14I5sk5CUzqNs4AY0pP3vLyYgFx6e3UIS5AiQm6u4yJvc2WbObahwQRCBYtjs8c/Flr7eKKXN76gcHVhzcbFZRqCdw1juxyPPcBTUYAEjecOZQpSpaGJ6dIs7AnJxE4/a3ZA/hLI0YK44GrY933riro84UDqpe0rCby8xQMYQpF9KSaIBBvt8CdUeo1KJq2S+x1Yo182lJSp3ZjKksIacVys+BwQNfSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4iO4ung/3WIvGVBBMfHYlpHpUnfm6QqsC/kyvcdcTXw=;
- b=ii3n16u74aBhUSt0+G3hyLakmgolcYf5+t7tfXF0qCLPxbrP6rGCFZ/FfXkqNrYsDBORFwaKPBeroP+vZeENQZo8JRnqBvm1lHGZtUbJQRaj+ik8wvxYiMCsQ3ljN8kbUV4hPSmtSsTPD9dCnfUe9FLXxhmEyPZnFlqWXL4mJ9nPeIHNxpEu4dXWNu08RRtI4yPD129xIb7S1HxvJcWx+FoqRGZWVUW+9t8eD3dRAY1TIcuwcmvBy9MIJn3Rg7JF7Q+XtWC5RuoYI2ObMSpLvX15r+MD7Guw1eLDjoGFwu5p8Sm7a3goXFOZ5wxR87c+KEqBKLMny+2G5OQ5167Byw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4iO4ung/3WIvGVBBMfHYlpHpUnfm6QqsC/kyvcdcTXw=;
- b=U1aOU6K0JnMJN6PknPk0kEtb73x2lBKB6iyApvK6CDPFHwz97LxgPHnXV6D1Fl4KiCLYF0l7URGNvxewd1Rn0lOnZbNCCdFihW578K4DxzsZGrzJwNJBlLpTDKt2wuWfwEgDsmAEM3QgUKWblWVe//cp2JkVlnJRAlhlIi1y6c8=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH7PR10MB6459.namprd10.prod.outlook.com (2603:10b6:510:1ee::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.38; Thu, 15 Feb
- 2024 16:02:58 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7292.029; Thu, 15 Feb 2024
- 16:02:57 +0000
-Date: Thu, 15 Feb 2024 11:02:54 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: "trondmy@kernel.org" <trondmy@kernel.org>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Fix NFSv3 atomicity bugs in nfsd_setattr()
-Message-ID: <Zc41ru02fZ7SSPNU@tissot.1015granger.net>
-References: <20240214223501.205822-1-trondmy@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214223501.205822-1-trondmy@kernel.org>
-X-ClientProxiedBy: CH0PR03CA0233.namprd03.prod.outlook.com
- (2603:10b6:610:e7::28) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C63612BF03;
+	Thu, 15 Feb 2024 16:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708013402; cv=none; b=eLwqsw6/Pv9qTDEaNz9naSBRbff4mNWBxc+xyLr7Z0tprpHvP0JTqQJy928CpEpQE+OfQa09nsNn63FLQemAuQgSM4W6N9kt5XDugKmQqK0LNRA5HQCX0jwYhFHw1I+4MtWyX54nzAdxndeI3Xew8qp3qJeCsC4ASDAR33/Fllw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708013402; c=relaxed/simple;
+	bh=pyvdhz1r+1+9rk40dW1W5zr/3iw6uq3t0sJFZ+8ErU4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FpAyjXkEW16bjb4kTO6FXEoOQRqaHpYWf7YwaxcPBWBX0We3UsXEeVkOlmrRRHDN6oEt5g+XlSpvY/ejEKDGPflYoFhf55uMXdfF4giCkRctPE6BL1fzIN1XoxiJLByAhU0Nn2GU1hQsqX14TOHZxEdDPvvNh1dNiHrHerqkxMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TbKKD1yqNz9xw3n;
+	Thu, 15 Feb 2024 23:50:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id D156E140A92;
+	Fri, 16 Feb 2024 00:09:40 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwD37xg0N85lztGQAg--.15724S2;
+	Thu, 15 Feb 2024 17:09:40 +0100 (CET)
+Message-ID: <09d6fa08e2d62720759f57237043a2dd9b5208ca.camel@huaweicloud.com>
+Subject: Re: [PATCH v10 19/25] integrity: Move
+ integrity_kernel_module_request() to IMA
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+ chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+ kolga@netapp.com,  Dai.Ngo@oracle.com, tom@talpey.com, paul@paul-moore.com,
+ jmorris@namei.org,  serge@hallyn.com, zohar@linux.ibm.com,
+ dmitry.kasatkin@gmail.com,  eric.snowberg@oracle.com, dhowells@redhat.com,
+ jarkko@kernel.org,  stephen.smalley.work@gmail.com, omosnace@redhat.com,
+ casey@schaufler-ca.com,  shuah@kernel.org, mic@digikod.net
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu
+	 <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
+Date: Thu, 15 Feb 2024 17:09:20 +0100
+In-Reply-To: <20240215103113.2369171-20-roberto.sassu@huaweicloud.com>
+References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
+	 <20240215103113.2369171-20-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6459:EE_
-X-MS-Office365-Filtering-Correlation-Id: a202af45-32a4-4b3e-c4b9-08dc2e3f9391
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	BDiGy8TmDCDVVKynCRPsoH8dWzGBgYgfBaFL87/e8Xu+Z7p/mFJHcGxYH99XIhwqaa+Lfry4E4dKVWQzve/hLwaWsD6Zrkw4GvSHBZMDmHgDvx5/+RQ7iH2KKIcfkDohg2m7TEq2e7slx7nmEi/QeFijAiBwKaKwkK/sjgbUGEebcl+JDZcZwLgGJzLLgr3rkGWgHfXJZ49qpD4j+vWlU71ZH8Rg8OX8v0NclgIkHdaXwHl7W1UWAGCUW157gIY24fSw4GNXy0gcSZO7LVuTGIdb0hrEhDWD7mkR9iAiflPm44pBURUmcfYx1O5iRwvvrmB0pI8QEqiaVU62rW+XHu5ohHlaHIwf2GqjRlzmeFy69rBR1b/7ChBs1hAD+DUG2PlDiYW4WXUtAp8M6o85kdvaelWZ+3vR/Ek8hPHDFbZlEHlyrVeF3UlIVMBGS0h6F3p1jzAbBJ2Pql29kzVEL53KBraEt+tYuhry1cBnJD2LLx98MXTpE6Yw2k7cHl2hQm67PemaXkf24xu0mOWpKBeu8QzbIz0C/MC056YNe1GeXzYhRaS9pd8LcRQesq9k
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(366004)(396003)(136003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(5660300002)(6506007)(8936002)(86362001)(6916009)(6486002)(478600001)(6666004)(8676002)(2906002)(44832011)(26005)(38100700002)(83380400001)(6512007)(9686003)(66476007)(316002)(4326008)(66556008)(66946007)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?oEenL/jboGbVZviFqOuy9zcDkMt6ulDNejlYQtLTgvZovje1Nv50Soq+AM1O?=
- =?us-ascii?Q?Se81s7KNzOv99B8J9CFHRJBM3WnLnUY3GUIb22qWkhkedxVyOWc1U/nWWPCR?=
- =?us-ascii?Q?H1KppiQRpEZD/MPLtIixfKmMnvnla4WxtlaRSU/JINoSiBOYvZYDOS0pp7zg?=
- =?us-ascii?Q?OeVixcSMwO6RGhsknwKxqSGp1Dnv06Hf+W+ePgpzC/8dlzonB7P8DBF/1Ssn?=
- =?us-ascii?Q?549ovfANDCdlj1fs9O1bmZ3MGRMwRpYOi+PIpcc/jmvTkqSWICD4dpSP9S6m?=
- =?us-ascii?Q?TUB/rjhwNv+G/HMm0o+pAgeWd12CDanvqjhFbdO/nKy0Zt8PntCaTGAOJsqZ?=
- =?us-ascii?Q?I8wCS2uelt2NPz0UEKV9JPKF/gwWUdbGCXB38Q4/D9SI/xnUh0L1pc6deakK?=
- =?us-ascii?Q?RL+8fhzf4H0br6tJ+PWOqHHmlmoi4tAnFG42YHoACnIIWBbAuKzRXCgZmv0F?=
- =?us-ascii?Q?5nrERO3FH/+SytF14zoa35n1BLQ5YKsr4uKX7TjoclvDcBEJ47dGGJfTsou1?=
- =?us-ascii?Q?8ppREGL1ke6+fQo5B5M+lfxqwVApEAThtJcUYFG55vWNk02x+mIpY+5xYoVs?=
- =?us-ascii?Q?6ZwhXm5VfZ2p13CkRo8Cd5CFK+coHGSVX5KZ454/JJpeeRqs0MhvwN2nMvdK?=
- =?us-ascii?Q?I6DS9gVTRvYac9hRwCgENb5MKzQP1g1hD86EdEuJDDeKEyERLsNKzvcquYxT?=
- =?us-ascii?Q?L8w1uQwabnMPJwDv1YbV3HEn7DOnDWG8+wAdQlufM1U4aiK2P238hrAHu5AQ?=
- =?us-ascii?Q?PVoj5TVNFrxdY+V0OCmNpcALei3WbI+fdF+P+fYLpMDRzz1N1J7vSBKf7OJO?=
- =?us-ascii?Q?vzXg3a9M+0KdTmZ42fGXPDky9TM1mtgKt3xHlh4Jw9X4ASVrD5GD+bcFEWvx?=
- =?us-ascii?Q?s5I92ScI36rGwj3SbqgOCqPcRZszx6ADob3ml09bp/gAYOVgoD+aBURn1XXX?=
- =?us-ascii?Q?iE/8/q3/Ukwy4DQkDsO5Vdt3sTbp9xATE5ZaGixuF8IuEJUlOE6bhSGLbSJ2?=
- =?us-ascii?Q?Hd5BtyGICbjDwiz28oBdAjZzXhxKt1XdXCo3Mli/fIReQ9h1vjOW0eEyApQ8?=
- =?us-ascii?Q?3Qai5ZTEJ5uJLmZleHeImI3yCmQMU+yWguJWA42XOu1SSWIPzBj14+S400Qm?=
- =?us-ascii?Q?Yts3hvucCrdwBMoglo3Qp2It1Kcrfqs2WuZsgKl9Os249U22GKTeek/bkPfY?=
- =?us-ascii?Q?hkUJieFN100h7sIOrU8Iz1lAdwxf0hiGXyTZsSE6WnSVciW8viG/POyERsYt?=
- =?us-ascii?Q?4/YhLB2G2Wv7TVBLEmIkDuO9ds38mWRbhZBc6GDmrn5FTOuuHmrIzaZkY1sD?=
- =?us-ascii?Q?xaZITGDMRS3UegqQMZjrL3yYpqhmOe5yaCd/DnObll0k67ZnTgAg6uOh+q+I?=
- =?us-ascii?Q?c89DNURhSuop9MYvcL3GKvlbl1CFy4Pz3gFHVIDIAHYf90Nb+Jt/02Z4cOF+?=
- =?us-ascii?Q?nvJiYCH2m/ivYM0wJ8+Tq524QeuQyCupAsopzIL9Ka/ri0O0kZQTJ4ShLMpi?=
- =?us-ascii?Q?fOpPHocua6MNkSkbI4eXKxdw8F0U8ttE27emlTKawjHrzlaF8KmTM6k7mfVd?=
- =?us-ascii?Q?LGQADiEHbx7tFtSyHadE1gxfVvWkqkjwluBdL7r5lF7sJy96JyTVVNY3ObYJ?=
- =?us-ascii?Q?pg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	ch431kak9mK5j8mMPpTyZ/NflkaTyHogTQgljxIqcBWL8whyuiMEh/77tPij9ksaMdxYFj+vTylvlE3jUvfNf0UOjD8quP6jNhBO+9Fiu8OILu0410ERyYpyLl342SJMfsCkEfEYhYV4MZDVo/Y/jUYMLwh8YEvux6/pzC8MgSldgCB6ePZ4mKIYyLGVL7yYcSmVAW8DEI12BwWogf5Dx7f73IEi5ei5Fl1PmAv2P/YxyrHxHu9ahvjRlyru6QuXcxRIHSda2LjXhH61sFRFT9esyOtN/pdamyw7e43qziPq9I5x+FXY8gwQRzloPzVH6+rfvZ4gxQzQf02IvWi1AxcLWWc95PdLqGz5LYIT9I+m5N0masS7GElEdnH002HMOiDa3Papav1bPSGsdec9MnOjnVhTGA/r5qtsrY8I4P/I/8TA7qDaiQOM920bgW3Al3sSHxN6DnDJYvMHVdilslCgS51dPRPHrdfSqNycyx4iUvnY9evkjlzjWFFfK46QukDnB7gZ+bqDmc6VUbZO97AtrgY9fwFFkolBrlTTNT2dm7HD/xzP3jQEdDiaXlqaE4ZXMxzgkQ38SXne6OVOQmJWmQjQXAwqd1qrqwQN+Nw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a202af45-32a4-4b3e-c4b9-08dc2e3f9391
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 16:02:57.4638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NhdHHUQvbPfIqFMB2oqY1yfp7rzumqHsS877a4MpFudVryUxcgFPBdHAT9TYIV49b+zvQR0Fk/RR9mEJ6gwGBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6459
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_14,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=812 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402150128
-X-Proofpoint-GUID: VBbEBAQ3cQLxQOYlOZzDrXxK_SlasVi0
-X-Proofpoint-ORIG-GUID: VBbEBAQ3cQLxQOYlOZzDrXxK_SlasVi0
+X-CM-TRANSID:LxC2BwD37xg0N85lztGQAg--.15724S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WrWDCr1DAw4fZry5Jr1rXrb_yoWxCw47pa
+	yDKFZ8AryxAr9rCaykJF13uFWFg3yfGrW7WwsxGr1fGFsI9r4qvr47XF13XryfurWrJr1F
+	grs2qr1akw1Dt37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
+	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
+	aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7IU1c4S7UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5ZjCwABsG
 
-On Wed, Feb 14, 2024 at 05:35:01PM -0500, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> The main point of the guarded SETATTR is to prevent races with other
-> WRITE and SETATTR calls. That requires that the check of the guard time
-> against the inode ctime be done after taking the inode lock.
-> 
-> Furthermore, we need to take into account the 32-bit nature of
-> timestamps in NFSv3, and the possibility that files may change at a
-> faster rate than once a second.
-> 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Thu, 2024-02-15 at 11:31 +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>=20
+> In preparation for removing the 'integrity' LSM, move
+> integrity_kernel_module_request() to IMA, and rename it to
+> ima_kernel_module_request(). Rewrite the function documentation, to expla=
+in
+> better what the problem is.
+>=20
+> Compile it conditionally if CONFIG_INTEGRITY_ASYMMETRIC_KEYS is enabled,
+> and call it from security.c (removed afterwards with the move of IMA to t=
+he
+> LSM infrastructure).
+>=20
+> Adding this hook cannot be avoided, since IMA has no control on the flags
+> passed to crypto_alloc_sig() in public_key_verify_signature(), and thus
+> cannot pass CRYPTO_NOLOAD, which solved the problem for EVM hashing with
+> commit e2861fa71641 ("evm: Don't deadlock if a crypto algorithm is
+> unavailable").
+>=20
+> EVM alone does not need to implement this hook, first because there is no
+> mutex to deadlock, and second because even if it had it, there should be =
+a
+> recursive call. However, since verification from EVM can be initiated onl=
+y
+> by setting inode metadata, deadlock would occur if modprobe would do the
+> same while loading a kernel module (which is unlikely).
+>=20
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Acked-by: Mimi Zohar <zohar@linux.ibm.com>
 
-LGTM! Applied to nfsd-next.
+I hope the change of the ima_kernel_module_request() documentation is
+fine for everyone.
 
-I'm open to suggestion for Fixes: / Cc: stable tags, but for now 
-I'm leaving those off.
+If not, let me know.
 
+Thanks
+
+Roberto
 
 > ---
->  fs/nfsd/nfs3proc.c  |  6 ++++--
->  fs/nfsd/nfs3xdr.c   |  5 +----
->  fs/nfsd/nfs4proc.c  |  3 +--
->  fs/nfsd/nfs4state.c |  2 +-
->  fs/nfsd/nfsproc.c   |  6 +++---
->  fs/nfsd/vfs.c       | 20 +++++++++++++-------
->  fs/nfsd/vfs.h       |  2 +-
->  fs/nfsd/xdr3.h      |  2 +-
->  8 files changed, 25 insertions(+), 21 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index b78eceebd945..dfcc957e460d 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -71,13 +71,15 @@ nfsd3_proc_setattr(struct svc_rqst *rqstp)
->  	struct nfsd_attrs attrs = {
->  		.na_iattr	= &argp->attrs,
->  	};
-> +	const struct timespec64 *guardtime = NULL;
->  
->  	dprintk("nfsd: SETATTR(3)  %s\n",
->  				SVCFH_fmt(&argp->fh));
->  
->  	fh_copy(&resp->fh, &argp->fh);
-> -	resp->status = nfsd_setattr(rqstp, &resp->fh, &attrs,
-> -				    argp->check_guard, argp->guardtime);
-> +	if (argp->check_guard)
-> +		guardtime = &argp->guardtime;
-> +	resp->status = nfsd_setattr(rqstp, &resp->fh, &attrs, guardtime);
->  	return rpc_success;
+>  include/linux/ima.h                    | 10 ++++++++
+>  include/linux/integrity.h              | 13 ----------
+>  security/integrity/digsig_asymmetric.c | 23 ------------------
+>  security/integrity/ima/ima_main.c      | 33 ++++++++++++++++++++++++++
+>  security/security.c                    |  2 +-
+>  5 files changed, 44 insertions(+), 37 deletions(-)
+>=20
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 31ef6c3c3207..0f9af283cbc8 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -256,4 +256,14 @@ static inline bool ima_appraise_signature(enum kerne=
+l_read_file_id func)
+>  	return false;
 >  }
->  
-> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-> index f32128955ec8..a7a07470c1f8 100644
-> --- a/fs/nfsd/nfs3xdr.c
-> +++ b/fs/nfsd/nfs3xdr.c
-> @@ -295,17 +295,14 @@ svcxdr_decode_sattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  static bool
->  svcxdr_decode_sattrguard3(struct xdr_stream *xdr, struct nfsd3_sattrargs *args)
->  {
-> -	__be32 *p;
->  	u32 check;
->  
->  	if (xdr_stream_decode_bool(xdr, &check) < 0)
->  		return false;
->  	if (check) {
-> -		p = xdr_inline_decode(xdr, XDR_UNIT * 2);
-> -		if (!p)
-> +		if (!svcxdr_decode_nfstime3(xdr, &args->guardtime))
->  			return false;
->  		args->check_guard = 1;
-> -		args->guardtime = be32_to_cpup(p);
->  	} else
->  		args->check_guard = 0;
->  
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 14712fa08f76..0294f5cce5dd 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1168,8 +1168,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  
->  	if (status)
->  		goto out;
-> -	status = nfsd_setattr(rqstp, &cstate->current_fh, &attrs,
-> -				0, (time64_t)0);
-> +	status = nfsd_setattr(rqstp, &cstate->current_fh, &attrs, NULL);
->  	if (!status)
->  		status = nfserrno(attrs.na_labelerr);
->  	if (!status)
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 2fa54cfd4882..538edd85b51e 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5191,7 +5191,7 @@ nfsd4_truncate(struct svc_rqst *rqstp, struct svc_fh *fh,
->  		return 0;
->  	if (!(open->op_share_access & NFS4_SHARE_ACCESS_WRITE))
->  		return nfserr_inval;
-> -	return nfsd_setattr(rqstp, fh, &attrs, 0, (time64_t)0);
-> +	return nfsd_setattr(rqstp, fh, &attrs, NULL);
->  }
->  
->  static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
-> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-> index a7315928a760..36370b957b63 100644
-> --- a/fs/nfsd/nfsproc.c
-> +++ b/fs/nfsd/nfsproc.c
-> @@ -103,7 +103,7 @@ nfsd_proc_setattr(struct svc_rqst *rqstp)
->  		}
->  	}
->  
-> -	resp->status = nfsd_setattr(rqstp, fhp, &attrs, 0, (time64_t)0);
-> +	resp->status = nfsd_setattr(rqstp, fhp, &attrs, NULL);
->  	if (resp->status != nfs_ok)
->  		goto out;
->  
-> @@ -390,8 +390,8 @@ nfsd_proc_create(struct svc_rqst *rqstp)
->  		 */
->  		attr->ia_valid &= ATTR_SIZE;
->  		if (attr->ia_valid)
-> -			resp->status = nfsd_setattr(rqstp, newfhp, &attrs, 0,
-> -						    (time64_t)0);
-> +			resp->status = nfsd_setattr(rqstp, newfhp, &attrs,
-> +						    NULL);
->  	}
->  
->  out_unlock:
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 6e7e37192461..cc17eb8633ea 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -476,7 +476,6 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
->   * @rqstp: controlling RPC transaction
->   * @fhp: filehandle of target
->   * @attr: attributes to set
-> - * @check_guard: set to 1 if guardtime is a valid timestamp
->   * @guardtime: do not act if ctime.tv_sec does not match this timestamp
->   *
->   * This call may adjust the contents of @attr (in particular, this
-> @@ -488,8 +487,7 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
->   */
->  __be32
->  nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> -	     struct nfsd_attrs *attr,
-> -	     int check_guard, time64_t guardtime)
-> +	     struct nfsd_attrs *attr, const struct timespec64 *guardtime)
->  {
->  	struct dentry	*dentry;
->  	struct inode	*inode;
-> @@ -538,9 +536,6 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  
->  	nfsd_sanitize_attrs(inode, iap);
->  
-> -	if (check_guard && guardtime != inode_get_ctime_sec(inode))
-> -		return nfserr_notsync;
-> -
->  	/*
->  	 * The size case is special, it changes the file in addition to the
->  	 * attributes, and file systems don't expect it to be mixed with
-> @@ -555,6 +550,17 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  	}
->  
->  	inode_lock(inode);
-> +	if (guardtime) {
-> +		struct timespec64 ctime = inode_get_ctime(inode);
-> +		if ((u32)guardtime->tv_sec != (u32)ctime.tv_sec ||
-> +		    guardtime->tv_nsec != ctime.tv_nsec) {
-> +			inode_unlock(inode);
-> +			if (size_change)
-> +				put_write_access(inode);
-> +			return nfserr_notsync;
-> +		}
-> +	}
+>  #endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 > +
->  	for (retries = 1;;) {
->  		struct iattr attrs;
->  
-> @@ -1404,7 +1410,7 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  	 * if the attributes have not changed.
->  	 */
->  	if (iap->ia_valid)
-> -		status = nfsd_setattr(rqstp, resfhp, attrs, 0, (time64_t)0);
-> +		status = nfsd_setattr(rqstp, resfhp, attrs, NULL);
->  	else
->  		status = nfserrno(commit_metadata(resfhp));
->  
-> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> index 702fbc4483bf..7d77303ef5f7 100644
-> --- a/fs/nfsd/vfs.h
-> +++ b/fs/nfsd/vfs.h
-> @@ -69,7 +69,7 @@ __be32		 nfsd_lookup_dentry(struct svc_rqst *, struct svc_fh *,
->  				const char *, unsigned int,
->  				struct svc_export **, struct dentry **);
->  __be32		nfsd_setattr(struct svc_rqst *, struct svc_fh *,
-> -				struct nfsd_attrs *, int, time64_t);
-> +			     struct nfsd_attrs *, const struct timespec64 *);
->  int nfsd_mountpoint(struct dentry *, struct svc_export *);
->  #ifdef CONFIG_NFSD_V4
->  __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
-> diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-> index 03fe4e21306c..522067b7fd75 100644
-> --- a/fs/nfsd/xdr3.h
-> +++ b/fs/nfsd/xdr3.h
-> @@ -14,7 +14,7 @@ struct nfsd3_sattrargs {
->  	struct svc_fh		fh;
->  	struct iattr		attrs;
->  	int			check_guard;
-> -	time64_t		guardtime;
-> +	struct timespec64	guardtime;
->  };
->  
->  struct nfsd3_diropargs {
-> -- 
-> 2.43.0
-> 
+> +#if defined(CONFIG_IMA) && defined(CONFIG_INTEGRITY_ASYMMETRIC_KEYS)
+> +extern int ima_kernel_module_request(char *kmod_name);
+> +#else
+> +static inline int ima_kernel_module_request(char *kmod_name)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif
+>  #endif /* _LINUX_IMA_H */
+> diff --git a/include/linux/integrity.h b/include/linux/integrity.h
+> index 2ea0f2f65ab6..ef0f63ef5ebc 100644
+> --- a/include/linux/integrity.h
+> +++ b/include/linux/integrity.h
+> @@ -42,17 +42,4 @@ static inline void integrity_load_keys(void)
+>  }
+>  #endif /* CONFIG_INTEGRITY */
+> =20
+> -#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+> -
+> -extern int integrity_kernel_module_request(char *kmod_name);
+> -
+> -#else
+> -
+> -static inline int integrity_kernel_module_request(char *kmod_name)
+> -{
+> -	return 0;
+> -}
+> -
+> -#endif /* CONFIG_INTEGRITY_ASYMMETRIC_KEYS */
+> -
+>  #endif /* _LINUX_INTEGRITY_H */
+> diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/=
+digsig_asymmetric.c
+> index 895f4b9ce8c6..de603cf42ac7 100644
+> --- a/security/integrity/digsig_asymmetric.c
+> +++ b/security/integrity/digsig_asymmetric.c
+> @@ -132,26 +132,3 @@ int asymmetric_verify(struct key *keyring, const cha=
+r *sig,
+>  	pr_debug("%s() =3D %d\n", __func__, ret);
+>  	return ret;
+>  }
+> -
+> -/**
+> - * integrity_kernel_module_request - prevent crypto-pkcs1pad(rsa,*) requ=
+ests
+> - * @kmod_name: kernel module name
+> - *
+> - * We have situation, when public_key_verify_signature() in case of RSA
+> - * algorithm use alg_name to store internal information in order to
+> - * construct an algorithm on the fly, but crypto_larval_lookup() will tr=
+y
+> - * to use alg_name in order to load kernel module with same name.
+> - * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
+> - * we are safe to fail such module request from crypto_larval_lookup().
+> - *
+> - * In this way we prevent modprobe execution during digsig verification
+> - * and avoid possible deadlock if modprobe and/or it's dependencies
+> - * also signed with digsig.
+> - */
+> -int integrity_kernel_module_request(char *kmod_name)
+> -{
+> -	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0)
+> -		return -EINVAL;
+> -
+> -	return 0;
+> -}
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/i=
+ma_main.c
+> index 02021ee467d3..3891b83efdb3 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -1091,6 +1091,39 @@ int ima_measure_critical_data(const char *event_la=
+bel,
+>  }
+>  EXPORT_SYMBOL_GPL(ima_measure_critical_data);
+> =20
+> +#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+> +
+> +/**
+> + * ima_kernel_module_request - Prevent crypto-pkcs1pad(rsa,*) requests
+> + * @kmod_name: kernel module name
+> + *
+> + * Avoid a verification loop where verifying the signature of the modpro=
+be
+> + * binary requires executing modprobe itself. Since the modprobe iint->m=
+utex
+> + * is already held when the signature verification is performed, a deadl=
+ock
+> + * occurs as soon as modprobe is executed within the critical region, si=
+nce
+> + * the same lock cannot be taken again.
+> + *
+> + * This happens when public_key_verify_signature(), in case of RSA algor=
+ithm,
+> + * use alg_name to store internal information in order to construct an
+> + * algorithm on the fly, but crypto_larval_lookup() will try to use alg_=
+name
+> + * in order to load a kernel module with same name.
+> + *
+> + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
+> + * we are safe to fail such module request from crypto_larval_lookup(), =
+and
+> + * avoid the verification loop.
+> + *
+> + * Return: Zero if it is safe to load the kernel module, -EINVAL otherwi=
+se.
+> + */
+> +int ima_kernel_module_request(char *kmod_name)
+> +{
+> +	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +#endif /* CONFIG_INTEGRITY_ASYMMETRIC_KEYS */
+> +
+>  static int __init init_ima(void)
+>  {
+>  	int error;
+> diff --git a/security/security.c b/security/security.c
+> index f8d9ebeb4c31..48dc3db4c834 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -3250,7 +3250,7 @@ int security_kernel_module_request(char *kmod_name)
+>  	ret =3D call_int_hook(kernel_module_request, 0, kmod_name);
+>  	if (ret)
+>  		return ret;
+> -	return integrity_kernel_module_request(kmod_name);
+> +	return ima_kernel_module_request(kmod_name);
+>  }
+> =20
+>  /**
 
--- 
-Chuck Lever
 
