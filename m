@@ -1,167 +1,107 @@
-Return-Path: <linux-nfs+bounces-1998-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1999-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D5FC858A2C
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Feb 2024 00:32:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71C5F858A34
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Feb 2024 00:35:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7A73281A9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Feb 2024 23:32:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3C041C2241B
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Feb 2024 23:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA7439856;
-	Fri, 16 Feb 2024 23:32:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599001487EB;
+	Fri, 16 Feb 2024 23:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5ijPr7e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JttP4LrS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB06D145B03
-	for <linux-nfs@vger.kernel.org>; Fri, 16 Feb 2024 23:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858B41487C1
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Feb 2024 23:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708126330; cv=none; b=p+TS85j/nIl/JyLN3G6OMFc56AvWNkCHjt3Zd0bXii78a8zKr5NErEup2MQw1OVRfi7eYQzxD14zsewfnaYurLOFjS2xoXQioLQpjL0XnSbQIkL3wWD8Krks8amTsUdA8KVEdWAe7sN11ryciugepkFX7xXtgMRAYrX0bNB4hEo=
+	t=1708126518; cv=none; b=DCZHJoovydt9tsgXOny+CcFRW7VpizZDBwbYvHtmiSVQBPTk+SCTKev+TVJlegVarv5NgX/NEQpGceY/VMY2h8ehuGR59YN3LxXfdoOj18JKlLxN/vn2dZ2FiDvzzdLX8EmR4ATOB+10WdxzdhGJvUBpSRq8yZtSjyBtrhQcK20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708126330; c=relaxed/simple;
-	bh=NY3RSrFdFhicF4SqNJEaMozGki6IXOsCI2HF75U7N7g=;
+	s=arc-20240116; t=1708126518; c=relaxed/simple;
+	bh=Q80t2f6dO0gvZe7kuwhc5q7XogpcfQu0PLHcawxPOSE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=cbZuPb6/45RWHop0ftgpl2dE/F84R3JRdeae/UoMFC77raeh4hFe+40aQk3o2LLG5+qkr/VCDLjwveiRFidNONCVbCw/1DbADVOknoVlb/VEVFke/CnxnfkayqPk4YaXzC21hS8Ov0gi7127vRNrY3QgrsL3nOiFD8Hf0UmjjKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N5ijPr7e; arc=none smtp.client-ip=209.85.167.53
+	 To:Content-Type; b=QuST6ue2OHz0u5oH+NCGZDFrwYXVXy9CMFc2KcT8iPQrN366kpgu54tFoWAL/cb6dFa1CwIIJO+41BcCPO75do/+n3PwlIEBS/2IdjwACrZoaMQYF+1ecSCtMga7V7VVBDQ8uX/MQlfrsE1+JRZvQvRrgb1iCbyENk63Vu5Zww4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JttP4LrS; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5128812662eso1796064e87.0
-        for <linux-nfs@vger.kernel.org>; Fri, 16 Feb 2024 15:32:08 -0800 (PST)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d0b4ea773eso32938951fa.0
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Feb 2024 15:35:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708126326; x=1708731126; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zuQGv5Kx8+c1tLkFDnCI5GJ3nxpgHG7os/BwP5Rsvf8=;
-        b=N5ijPr7eagDdxfRKVEUn/X2rQegXih8HioQHV6Q05KmmCM4TmzZM2YikmOS0mFPKoL
-         jMfHSE+gV6KzRSkVEwz/SKRm2YAvgPD2NE90VeCvkQCWUXIY046GNW71nc6JDUPtsB4g
-         yF93i6oepZczJ/2oEBN8tVqCBgoqjply0p5gCDrIJPNrARgYK6EK6xcYvHgMa9XqR5lL
-         K82/gm7LgP1lFP4MKXyt6FYxHojm8oNcrOf5s/OhlDYSOOrUdRO8/C3PgeityCWPfqI6
-         /yZIdGWfC41DlncyTMzw0JY0o1kSya5BsU/95krsiDTYEuaDr1IgHz6okEs8mHbWFLDe
-         2NHA==
+        d=gmail.com; s=20230601; t=1708126514; x=1708731314; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TOKqGvfNDEUgHwRRt7cj847D86IPrEFE5b3kARdxa/8=;
+        b=JttP4LrSCjDys7nPn4goW+SuJZtyZPAK7BwL9UPPnlWijX4Meig0QuW1bSrgqhzVD/
+         1GyBy4eTArdHhWIPYp+HSHjLznj73n+aI2EmYpTVHGXR3l9vihCkjtEkak/ZrCMEywzJ
+         ifZJiomszOIYrvyDTDCXbUGKcrL5tIiwV2nw/zCV7J3otH6mivzD0GUZOEb/XjVtltqo
+         zvperM6X3XeOHlJYvlh4BsnGyuftFpHdUhGX/eQ/6NIGk4DZpL3CSk/9FTT1ZTAEpH/l
+         CdfMpHnhRDz8JEcrM4JXtFrLdB2lY2P+6hh5mgoF2QJmcZPL1LaYUqvMgKDWLRxDh0Ch
+         gjOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708126326; x=1708731126;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zuQGv5Kx8+c1tLkFDnCI5GJ3nxpgHG7os/BwP5Rsvf8=;
-        b=a3LzNLXmZPHnDtYqUaVVjfmpsfBTQWjkNWZO2K2Ngyxnww2J3Bo3iVDXxKOf2Ri85N
-         P9/C7jGP1dvag5fE/yW3889Gep///6MxNwrKeg3fEemyN172v9EBRV6GVS9ULgXchf2D
-         2LiHI5IeF/RXaWuhtQtrl3ls8jlRy47Cg6HnB9hD4tlqI6aJh+si7NO43oDp+3RO1+F2
-         FBGQeKvNegTKLMEwZeJP6MbpTo63CI7v9xH0Fcx0JoE3HsEVf8FUVoInbZcrQLdF+FTf
-         5uybMCiw10BFvmD2I0aiVFHQ1rxdb1Ft37KQRDVr1W8l0Jsc/LoPcb9CjuD9pNYbZRHU
-         jz7w==
-X-Gm-Message-State: AOJu0YwAGEfCBEj1MSjT4FryDVEwi32RibkpgkZmpNN1aCWDTo/vSMRk
-	U2/oCmghDdybdTSrg6QErzUST50lewO7USWKZcBz3fmOy0KEX9EK81I452NPcbjQaUsat654w7I
-	MHI96669PHeNo2jKM5mlyHJWVlzbFUjbCqGc=
-X-Google-Smtp-Source: AGHT+IGHOTH+k26JuKPdqdH7KNKEnN5VvJkaL7dRvwoHJXoBF8q5glkBxC4LoXS2nGgJeltEhMav00gXOW3eUivu10w=
-X-Received: by 2002:ac2:4a68:0:b0:512:a37a:bde2 with SMTP id
- q8-20020ac24a68000000b00512a37abde2mr322236lfp.67.1708126326025; Fri, 16 Feb
- 2024 15:32:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708126514; x=1708731314;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TOKqGvfNDEUgHwRRt7cj847D86IPrEFE5b3kARdxa/8=;
+        b=qYrjhzGdwFFTIMTnNRJK7Qtf09JhsTvZhxftDk5X/2fMgJx8flbar922KNcvBs4MzR
+         hPwS6WjefHejfiHfmz9jJMXQS9cklKCP+4/iMrsnHPM/wZBDreD/7RV49osn94MF+GYa
+         +XwOwHWY3NfPlWcjdIe7k5g9nmQJboVEtOHN8aK98tCCosTEEOwuRHBgh7FL5pJglzyZ
+         58qif5N7cDbBajMN4ILG30SLro6epDNPhrxStwMj020EIEfm5lq0Reqi0Nr68/ZkF068
+         Bl/YJUSUAlf0wqgRnGWWqLEX6mq/6EUhY8PCdB05AVqEiGnnrr3ZstdLtq6JcG8RTB9R
+         3Bsg==
+X-Gm-Message-State: AOJu0YzHCRgSmNeIQ9K9PjXJQHssHJD7gUFQU5QWgPs8FZpXzdhbT0uH
+	fwbtoMpEAE8Wu0FI2xZfOQg/7lrdAyXF/2E93O3eMcZuamd707FKPiS8Pml+oCJvGwNT3/EBkGQ
+	jTvS81Cp0wopozfkmV0k/QVD0mKiobh26lNw=
+X-Google-Smtp-Source: AGHT+IE+KdlsxUV/7PmmKmsxfGI1fjkExl57dGpXwqHggakYUbwIMLhvC2QKXJ5uMntMgasr2l6uKMfI+RKi9sLXWAU=
+X-Received: by 2002:a05:6512:513:b0:511:6952:70c0 with SMTP id
+ o19-20020a056512051300b00511695270c0mr4134614lfb.5.1708126513940; Fri, 16 Feb
+ 2024 15:35:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PH0PR14MB5493F59229B802B871407F9CAA442@PH0PR14MB5493.namprd14.prod.outlook.com>
- <1AF9A62E-55BE-4A08-95D6-26784218C940@oracle.com> <PH0PR14MB5493D4DF2877FDD93BB49AF4AA442@PH0PR14MB5493.namprd14.prod.outlook.com>
- <A14BC53D-18C7-43CB-B64E-3B215EB12D04@oracle.com>
-In-Reply-To: <A14BC53D-18C7-43CB-B64E-3B215EB12D04@oracle.com>
+References: <1708034722-15329-1-git-send-email-dai.ngo@oracle.com>
+In-Reply-To: <1708034722-15329-1-git-send-email-dai.ngo@oracle.com>
 From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Sat, 17 Feb 2024 00:31:34 +0100
-Message-ID: <CAAvCNcCo1phpMqLsVz_GtrKrVb4Pgv_UfTXtokvqpSLFjVJKoA@mail.gmail.com>
-Subject: Re: apparent scaling problem with delegations
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date: Sat, 17 Feb 2024 00:34:45 +0100
+Message-ID: <CAAvCNcDDb4L2tcbBCcufFg=TLeFSrui4MHFuEeNUA+1VZyXLxQ@mail.gmail.com>
+Subject: Re: PATCH [v3 0/2] NFSD: use CB_GETATTR to handle GETATTR conflict
+ with write delegation
+To: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 8 Feb 2024 at 23:06, Chuck Lever III <chuck.lever@oracle.com> wrote=
-:
+On Thu, 15 Feb 2024 at 23:11, Dai Ngo <dai.ngo@oracle.com> wrote:
 >
+> Currently GETATTR conflict with a write delegation is handled by
+> recalling the delegation before replying to the GETATTR.
 >
+> This patch series add supports for CB_GETATTR callback to get the latest
+> change_info and size information of the file from the client that holds
+> the delegation to reply to the GETATTR from the second client.
 >
-> > On Feb 8, 2024, at 4:45=E2=80=AFPM, Charles Hedrick <hedrick@rutgers.ed=
-u> wrote:
-> >
-> >> From: Chuck Lever III <chuck.lever@oracle.com>
-> >>> On Feb 8, 2024, at 3:26=E2=80=AFPM, Charles Hedrick <hedrick@rutgers.=
-edu> wrote:
-> >>>
-> >>> We just turned delegations on for two big NFS servers. One characteri=
-stic
-> >>> of our site is that we have lots of small files and lots of files ope=
-n.
-> >>>
-> >>> On one server, CPU in system state went to 30%, and NFS performance g=
-round
-> >>> to a halt. When I disabled delegations it came back. The other server=
- was
-> >>> showing high CPU on nfsd, but not enough to disable the server, so I =
-looked
-> >>> around. The server where delegations are still on is spending most of=
- its time
-> >>> in nfsd_file_lru_cb. That's not the case with the server where we've =
-disabled
-> >>> delegations. Here's a typical perf top
-> >>>
-> >>> Overhead  Shared Object                                 Symbol
-> >>>    44.87%  [kernel]                                      [k] __list_l=
-ru_walk_one
-> >>>    13.18%  [kernel]                                      [k] native_q=
-ueued_spin_lock_slowpath.part.0
-> >>>     7.24%  [kernel]                                      [k] nfsd_fil=
-e_lru_cb
-> >>>     2.61%  [kernel]                                      [k] sha1_tra=
-nsform
-> >>>     0.99%  [kernel]                                      [k] __crypto=
-_alg_lookup
-> >>>     0.95%  [kernel]                                      [k] _raw_spi=
-n_lock
-> >>>     0.89%  [kernel]                                      [k] memcpy_e=
-rms
-> >>>     0.77%  [kernel]                                      [k] mutex_lo=
-ck
-> >>>     0.65%  [kernel]                                      [k] svc_tcp_=
-recvfrom
-> >>>
-> >>> I looked at the code. I'm not clear whether there's a problem with GC=
-'ing the
-> >>> entries, or it's just being called too often (maybe a table is too sm=
-all?)
-> >>>
-> >>> When I disabled delegations, it immediately stopped spending all that=
- time
-> >>> in nfsd_file_lru_cb. The number of delegations starting going down sl=
-owly.
-> >>> I suspect our system needs a lot more delegations than the maximum ta=
-ble
-> >>> size, and it's thrashing. The sizes were about 40,000 and
-> >>> 60,000 on the two machines.  Systems are 384 G and 768 G, respectivel=
-y.
-> >>> The maximum number of delegations is smaller than I would have expect=
-ed
-> >>> based on comments in the code.
-> >
-> >> When reporting such problems, please include the kernel version
-> >> on your NFS servers. Some late 5.x kernels have known problems
-> >> with the NFSD file cache.
-> >
-> > My apologies.Ubuntu 5.15.0-91-generic , which is 5.15.131.
+> NOTE: this patch series is mostly the same as the previous patches which
+> were backed out when un unrelated problem of NFSD server hang on reboot
+> was reported.
 >
-> That kernel is likely to have file cache issues with symptoms
-> very much as you described above. The issues are thought to
-> be addressed by kernel release v6.2.
+> The only difference is the wait_on_bit() in nfsd4_deleg_getattr_conflict was
+> replaced with wait_on_bit_timeout() with 30ms timeout to avoid a potential
+> DOS attack by exhausting NFSD kernel threads with GETATTR conflicts.
 
-Is there a way to turn the file cache off for nfsd?
+I have a concern about this static and very tiny timeout.
+What will happen if the ICMPv6 latency is well over 30ms, like 660ms
+(average 250mbit/s satellite latency)?
+
+Would that not ruin delegations?
 
 Dan
---=20
+-- 
 Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
