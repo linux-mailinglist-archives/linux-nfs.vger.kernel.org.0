@@ -1,57 +1,63 @@
-Return-Path: <linux-nfs+bounces-2014-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2015-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83C74859732
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Feb 2024 14:55:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF18D859760
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Feb 2024 15:21:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AD1C281EE7
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Feb 2024 13:55:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C0A4281898
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Feb 2024 14:21:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004A26BB58;
-	Sun, 18 Feb 2024 13:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99FB66BB58;
+	Sun, 18 Feb 2024 14:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njHwxD8I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7qKdBXc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF13C6BFA2
-	for <linux-nfs@vger.kernel.org>; Sun, 18 Feb 2024 13:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2491E867
+	for <linux-nfs@vger.kernel.org>; Sun, 18 Feb 2024 14:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708264498; cv=none; b=WjDPvUUFneJq57bc8YNYENmrEHMBWZ8k7/SeckOL5PTPmVE+VS587OuB/wwgcBubFPRJC+u8CWLtNRqB+7jOY6j6vWwc2YFlQxvCrCT4dF9wOa6aJE/kTOROiHWUsCOHcnPlRfT7dG35l4xZEfqYyKMrUFa18CJYA8Sp+4eSpyY=
+	t=1708266095; cv=none; b=B2qIk124TBoXaKLpI+jDbDRmgQcbsGXKDNDdfbBAXEqDby0zAgMr6yKwcS8i7FDmrEvadhrfx5yOMtSB1zqB7tNuvrLzd6Y7cOHc6D8/foiEBLg76bKWtESeCtkNsWMs/xPN2l8KUwzC2eVcAHTyxJsQliOU23nby9DPFHg1mw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708264498; c=relaxed/simple;
-	bh=zyBrPzpkahuAWuhQWM75q9w2x3G8sRUUXT3dURazlN4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=etXCIdgVibm1XfGhh9jC05Cp2IH8Ep2yxx04NXUUFF9XF+27jMbQRcHOtmgsedqQkmEd2InW89/e7wKQ5wtM2ymtmwMVxkaGDXHAfYX6gbAaWs7puCa52JJi1eDOJMPrWHxXnOEQOli/2kdLZOhrpFtLg0i/KjLNi7vKB15rUsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njHwxD8I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25120C433F1;
-	Sun, 18 Feb 2024 13:54:58 +0000 (UTC)
+	s=arc-20240116; t=1708266095; c=relaxed/simple;
+	bh=jukRl0eEaMIWy9rjka3Tia89L3JiwirBIALKFV2eQyM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FwhSosY26sN9AWb4+8nU3XpuuHBYlp2DSiJxFj2pVuWk/XTUtMUQMD9zj1HqBzlJnIAfrD3PgIWd0e7yv2QAa7d2Q5QrUYLxXrD2wp6GRU/VkosoILPRxkqSq+J2c5bq7E3dOb63tIj79IPAUr7PSBJcENdeCcqOzAgdVU8rhgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7qKdBXc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCB7C433C7;
+	Sun, 18 Feb 2024 14:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708264498;
-	bh=zyBrPzpkahuAWuhQWM75q9w2x3G8sRUUXT3dURazlN4=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=njHwxD8IBr0JrwaolTJF6jsSjHe9XK1H6af98IIIUT6HJvw6pYQl99h5JfpkNtKmU
-	 wV77WSX5BUmQ8tfKxBWODav5oXSP+MTtMAN6h+WGS7nHkS5j9npRYSD/PncAxWoix7
-	 8Fan9cUS38Ba75fs7FFmLzzoxdveTWbwfE/xShkf3pnCOW7pEXhuA6xHzVvbHZqRwE
-	 GfOLvtYc+DqHw1JmxBW+YL3X0P9WbQwdIz0ZM262WSRC37fl8b7THK6Crq9kx6pRJP
-	 vRRHKajJE0p2mpNcXoMD3ekEBOPDq0uXaSlihaBne2aA/400nQn3phFxqe4WmerdlF
-	 iQy6knfXGx98w==
-Message-ID: <2e4760a87e1fc6906562442c27933e830635a929.camel@kernel.org>
-Subject: Re: SELinux-Support in Linux NFSv4.1 impl?
+	s=k20201202; t=1708266094;
+	bh=jukRl0eEaMIWy9rjka3Tia89L3JiwirBIALKFV2eQyM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=M7qKdBXcKisbaKJd+WWFMas07FLMQlc3nXDbN3LHVqBvPeT2M55IpM5jz5UcLvzlk
+	 2NWUBQ4VM6YyqbBb8A5xcigFRYlFou3Zt8A3pJST027EaV4N+Ellc4kgvYO6QSGcJx
+	 Rpk4eK+HNMwRkvax5Ge1z5Ieo95Cz4bWKjeQz1OygEuvTvm8hliZeI1aDousxcDhhG
+	 wRbGf5i7DrkUN2Sj7fhxmrrolGRoPE3DM6vD0NVTCF9gGrowbJvmZ14TbiyibEbC0O
+	 W6KfxSo6o93QI/kXI5q5G5v4JiQlsGcheo3YySR69lLpZn+FPctTkoJCfaTefZqxGM
+	 2mO3YRRonXJuA==
+Message-ID: <cb5a828000e6c7a2510a3642e322185a099b3665.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] nfsd: Fix a regression in nfsd_setattr()
 From: Jeff Layton <jlayton@kernel.org>
-To: Martin Wege <martin.l.wege@gmail.com>, Linux NFS Mailing List
-	 <linux-nfs@vger.kernel.org>
-Date: Sun, 18 Feb 2024 08:54:56 -0500
-In-Reply-To: <CANH4o6O-Gcjc3eqiTd-KysZx-bpbzoh=CMTNixJ26cZQuRd=UQ@mail.gmail.com>
-References: 
-	<CANH4o6P-jze6MB8yh3sWxhyHJWdj+JHK3vw58cYwQ0a7eVe_Vg@mail.gmail.com>
-	 <c397fb11a172be26111e1ad5cb17a92bceb065d3.camel@kernel.org>
-	 <CANH4o6O-Gcjc3eqiTd-KysZx-bpbzoh=CMTNixJ26cZQuRd=UQ@mail.gmail.com>
+To: Trond Myklebust <trondmy@hammerspace.com>, "chuck.lever@oracle.com"
+	 <chuck.lever@oracle.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Date: Sun, 18 Feb 2024 09:21:33 -0500
+In-Reply-To: <7b51a5725d82ac9ec8f62bd664004d29a121ba43.camel@hammerspace.com>
+References: <20240216012451.22725-1-trondmy@kernel.org>
+	 <20240216012451.22725-2-trondmy@kernel.org>
+	 <Zc9kQ1Autf6xdcii@tissot.1015granger.net>
+	 <ac1166ca466c343f18df45094c0130947bd21f5c.camel@hammerspace.com>
+	 <CFBE3BDF-E347-4273-8C7F-A57E0D353457@oracle.com>
+	 <756FABF8-FA78-4D16-A4B8-B47C4745868E@oracle.com>
+	 <5c35277cd061e16a914b94e070ea6d95a75c1342.camel@hammerspace.com>
+	 <ZdDnZmQ5_rAUm6fl@manet.1015granger.net>
+	 <7b51a5725d82ac9ec8f62bd664004d29a121ba43.camel@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -71,32 +77,138 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2024-02-17 at 14:37 +0100, Martin Wege wrote:
-> On Wed, Feb 14, 2024 at 12:28=E2=80=AFPM Jeff Layton <jlayton@kernel.org>=
- wrote:
+On Sat, 2024-02-17 at 18:16 +0000, Trond Myklebust wrote:
+> On Sat, 2024-02-17 at 12:05 -0500, Chuck Lever wrote:
+> > On Fri, Feb 16, 2024 at 06:57:16PM +0000, Trond Myklebust wrote:
+> > > On Fri, 2024-02-16 at 18:25 +0000, Chuck Lever III wrote:
+> > > >=20
+> > > >=20
+> > > > > On Feb 16, 2024, at 1:19=E2=80=AFPM, Chuck Lever III
+> > > > > <chuck.lever@oracle.com> wrote:
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > > On Feb 16, 2024, at 1:18=E2=80=AFPM, Trond Myklebust
+> > > > > > <trondmy@hammerspace.com> wrote:
+> > > > > >=20
+> > > > > > On Fri, 2024-02-16 at 08:33 -0500, Chuck Lever wrote:
+> > > > > > > On Thu, Feb 15, 2024 at 08:24:50PM -0500,
+> > > > > > > trondmy@kernel.org=C2=A0wrote:
+> > > > > > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > > > > >=20
+> > > > > > > > Commit bb4d53d66e4b broke the NFSv3 pre/post op
+> > > > > > > > attributes
+> > > > > > > > behaviour
+> > > > > > > > when doing a SETATTR rpc call by stripping out the calls
+> > > > > > > > to
+> > > > > > > > fh_fill_pre_attrs() and fh_fill_post_attrs().
+> > > > > > >=20
+> > > > > > > Can you give more detail about what broke?
+> > > > > >=20
+> > > > > > Without the calls to fh_fill_pre_attrs() and
+> > > > > > fh_fill_post_attrs(), we
+> > > > > > don't store any pre/post op attributes and we can't return
+> > > > > > any
+> > > > > > such
+> > > > > > attributes to the NFSv3 client.
+> > > > >=20
+> > > > > I get that. Why does that matter?
+> > > >=20
+> > > > Or, to be a little less terse... clients rely on the pre/post
+> > > > op attributes around a SETATTR, I guess, but I don't see why.
+> > > > I'm missing some context.
+> > >=20
+> > > =C2=A0=C2=A0 1. SETATTR is not atomic, and is not implemented as bein=
+g atomic
+> > > in
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Linux. It is perfectly possible for, s=
+ay, the file to get
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 truncated, but for the other attribute=
+ changes to get dropped
+> > > on
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the floor. NFSv4 communicates that inf=
+ormation via the
+> > > bitmap.
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NFSv3 does it using the pre/post attri=
+butes.
+> > > =C2=A0=C2=A0 2. When doing a guarded SETATTR, if the server returns
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NFS3ERR_NOT_SYNC, the client may want =
+to update its cached
+> > > ctime
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and resend.
 > >=20
-> > On Wed, 2024-02-14 at 10:46 +0100, Martin Wege wrote:
-> > > Hello,
-> > >=20
-> > > Does the Linux implementation server&client for NFSv4.1 support SELin=
-ux?
-> > >=20
-> > >=20
+> > All granted, but I'm still not clear. Let me ask this a different
+> > way.
 > >=20
-> > Labeled NFS is a NFSv4.2 feature. The Linux client and server do suppor=
-t
+> > As far as I can tell, it's always been optional for an NFSv3 server
+> > to include pre- and post-op attributes in wcc_data. Both the
+> > pre_op_attr and post_op_attr XDR types start with an
+> > "attribute_follows" discriminator. Therefore clients cannot rely on
+> > receiving those attributes.
+> >=20
+> > The patch description says that "Commit bb4d53d66e4b broke the NFSv3
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ^^^^^
+> > pre/post op attributes ...". And I think you also used the word
+> > "nasty" in an earlier email. So what is broken if the server /never/
+> > returns those attributes? What are the application-visible effects
+> > of the server behavior change in bb4d53d66e4b ?
+> >=20
+> > I don't have a problem reverting that part of bb4d53d66e4b, but
+> > "broke" is doing some heavy lifting here. I want to understand why
+> > we need to revert. Because it seems to me the server's current NFSv3
+> > SETATTR implementation is spec-compliant. As far as I can tell,
+> > bb4d53d66e4b might result in a little more network traffic in some
+> > cases, but it won't impact interoperability or outcome.
+> >=20
 >=20
-> Is there documentation on how to set this up? Will this work if the
-> root fs ('/') is NFSv4.2?
+> As I said above, you broke the NFSv3 client's ability to determine
+> whether or not the SETATTR was a failure, success or a partial success.
+> That's not heavy lifting, it is a fact.
+>=20
+> The function nfsd_setattr() uses two different calls to notify_change()
+> in order to perform its function. Either one of them can return an
+> error. Either one of them can fail, and the way that the client finds
+> out whether or not the operation was a partial success is by examining
+> the pre/post op attributes (NFSv3) or the returned bitmap (NFSv4).
+>=20
+> The patch does not try to fix NFSv4, since AFAICS, that code has always
+> been broken.
 >=20
 
-There isn't much to set up. If you mount using NFSv4.2, the client and
-server should negotiate using SELinux (assuming both are SELinux
-enabled) and the SELinux contexts should (mostly) be projected across
-the wire.
+Ugh, yeah we can definitely do a better job there.
 
-I've not tested it with nfsroot support, but I don't see why it wouldn't
-work.
---=20
-Jeff Layton <jlayton@kernel.org>
+> However, the NFSv3 code was not broken prior to bb4d53d66e4b. It was
+> correctly returning pre/post op attributes that reflected the
+> success/failure of the setattr operation. That is therefore a
+> regression.
+> Furthermore, it is a totally unnecessary regression. The whole point of
+> SETATTR is to change the value of the attributes of the exact same file
+> for which the pre/post op attributes are being retrieved. There is no
+> extra disk access required to retrieve those attributes, nor should
+> there be any other overhead other than copying them into the buffer.
+>=20
+> > Do you mean that you want to restore the previous, more optimized,
+> > server behavior to return pre- and post-op attributes when they are
+> > available? And if so, what is the application-visible benefit?
+>=20
+> Application correctness: the ability to see that your file got
+> truncated despite the RPC call returning an error.
+>=20
+
+So for instance: a v3 client sends a SETATTR with a size and mode change
+in the same op. The size change works, but the mode change doesn't for
+some reason.
+
+The server returns an error, as expected, but without the pre/post op
+attrs, the v3 client could just assume that _nothing_ worked and not
+notice the size change. Alternately, I guess the client could invalidate
+the attrcache after any SETATTR error, but that's sub-optimal.
+
+The fix looks reasonable to me:
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
