@@ -1,117 +1,139 @@
-Return-Path: <linux-nfs+bounces-2040-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2041-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A290B85CC5D
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Feb 2024 00:58:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E1585D266
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Feb 2024 09:20:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57F381F2235F
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Feb 2024 23:58:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F855284AE4
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Feb 2024 08:20:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2695154C0A;
-	Tue, 20 Feb 2024 23:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C873BB34;
+	Wed, 21 Feb 2024 08:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JJRxEGQi"
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="Yg7xS3CF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C940F154448
-	for <linux-nfs@vger.kernel.org>; Tue, 20 Feb 2024 23:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401E13BB21
+	for <linux-nfs@vger.kernel.org>; Wed, 21 Feb 2024 08:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708473525; cv=none; b=NTpnYZftCnylgL58uKxNFen/ENwmrQE6UTfmNlUnubN7LbuIS1J/xvXdXvetCwomiLC+QVyDhvt8EmhFIS84NRKmU9Mcf5+VdkiNzqZKxTZnAv/tJQ+97ViHtlHDYovVPJNgOuXlduXYN7KVHxdYIPC9U4cpvntWUkEKM+FBWN4=
+	t=1708503620; cv=none; b=TUGFi0FYkk4Ci+8S0Af4awsTbU0JgntGhLTWQMSIZkTSQOR0tnV8oZILDFbLKzCEJVGjlkXSmFfD2CZogz+Ya76bzfpvJHKiJeVqfSLvTRp6Fu4/2b5t+rLInPALWt96Y9ZRmQEGHN1k94f43gOyU8H6FdeImstHI0we98dmzVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708473525; c=relaxed/simple;
-	bh=UalBFzrGK+FKFTA9BMghsr7+F+E3eQWfBzVmy+hnpSc=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=S6EHYr2TfLfvkkoOI3L/63IPvOIFGTEMfj4WIXt+wD6D/gk+M/6idH7TSJUdxJ2NVT8i3jdfAgQW9eds3/HfzBNmavdRoFTxWzoczMMd1S6eaenqqX7KZBq/x2swS5e037iGj08zw83ezae+NFbjCZ3pF3RxTO48RIzIfFRMdyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JJRxEGQi; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41KKXcJ0004113;
-	Tue, 20 Feb 2024 23:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2023-11-20;
- bh=T41Oac/KGK8ZKJOojQooTZD6x28YT0A5J215wt955hY=;
- b=JJRxEGQis479sidJFXjZxifp7ML8I6N9uQNFmCaik2R7VWuc58mr8+qcAAPhjWVJ/8rz
- O+kZAZ7qY7EMEHwvOmQXaa/FgrOyLr4kmPqKTOwY1Je3aBNELT0fEOkA6bTGz6SOst6I
- vhAJJLq7L7RiQOnL2lz+ZQzW0CjyGNTNkKjGCWFM+48xkzvpuqD5PtWXtJBrNgP59Zr5
- P6C7g/WYReU6I5E+L6uUBkd/gXbU/OkjaVKu5FVLt4Lx14WshDEooTwcOc5brfMn7Gxf
- f5BCN3Clz94ykK54KRlSsms9MlwTylAV7hVbL2YPlcPr7TVd731s7VUNrQwcPeQjXSV/ Vw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wakqc8cws-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Feb 2024 23:58:40 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41KMPfXs006745;
-	Tue, 20 Feb 2024 23:58:39 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wak88c8jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Feb 2024 23:58:39 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41KNwcEm019304;
-	Tue, 20 Feb 2024 23:58:38 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wak88c8j6-1;
-	Tue, 20 Feb 2024 23:58:38 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSD: send OP_CB_RECALL_ANY to clients when number of delegations reaches its limit
-Date: Tue, 20 Feb 2024 15:58:28 -0800
-Message-Id: <1708473508-19620-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402200172
-X-Proofpoint-GUID: PYVlQY7g0zL5Gh9Vgh3coH3N0wUneWeb
-X-Proofpoint-ORIG-GUID: PYVlQY7g0zL5Gh9Vgh3coH3N0wUneWeb
+	s=arc-20240116; t=1708503620; c=relaxed/simple;
+	bh=Um5+f0FrZXtSaIH4pDGP51HZ/k5cYcZctwOZ85WPZXI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hKrMGVxinJLeA67UJq54c9ef+px2qkMfp+hZdrnuxbfAAhTlCWfFZZmAEfe3KAS1dakGfxQqvfjhT08YfnM6/aw0eAJ61S7+ODGTmfqZSdUzvBVXbrE+UzsHIpg7+dzOwpoutT7E9ArS9qHP26DZQgHHGcrmcHcwXmBQKYANm0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=Yg7xS3CF; arc=none smtp.client-ip=209.85.208.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+Received: by mail-lj1-f194.google.com with SMTP id 38308e7fff4ca-2d0a4e1789cso3424871fa.3
+        for <linux-nfs@vger.kernel.org>; Wed, 21 Feb 2024 00:20:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1708503616; x=1709108416; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MysAWxNbCc//vI31BIPucjF70SlQY+heO/NoaZw6Ql0=;
+        b=Yg7xS3CFYTRmwGdoznfV03gBYlzWeVYBuJDYIY9p++62+//JEA/piPCIEZc1ywA/5L
+         QTBELrLGL/kmhsGf+l3s1vjd/WIsswkDl/MO2Oyq/moNjsDK7kfptQBV8LLbaxZ03wrT
+         vRldgqVmkP98M9MSr1gy2/z4A/pSxJ0gKfqerV93pAxhY0ssd/eT4mLXTr1cUwk6+r+T
+         AR+cng8Os3grgQjVy8mnXz3i+vD+d36KPQBrnNgJRwbidqCOIhMkkQvLzz4JMCBX1rjj
+         UWUoMj6xXjMXCQzheqzxs6J4l+hFEENDssvngNU17ksbHgkVfKdTLabhvkLa8GwrmRYH
+         fo3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708503616; x=1709108416;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MysAWxNbCc//vI31BIPucjF70SlQY+heO/NoaZw6Ql0=;
+        b=Vhz4rN7abKc674QBsWFR8LsK8poGMs0iah80pg91Vao4qNDEsSSM1tRrAbaG5be3Kx
+         T6spNzzmdiHe8V6NT7O6gt/wIJAAQrQKLoRBeoJ6lbaOBtf56z9EATkYUgls1Vv2Zw+A
+         NAy2EfaawrpoeKtuPZTHZIv6gfss7jCqrB2r/qDGKFe1zeB8e+JwkrPG/Ia/mEsb3NcX
+         Y+D+8Jh4fAe0ZpBNqUt37SpkBmUY4XpJmEHwupv4Luf1KSRTTvwxq8+iv3Ngk0ZCePgw
+         CixeJnHpfrzGKW0Anbrhm8MKeJ+pqE/3FVS8F0Zxj6aDkRn7sT4U6s6bnAyp+YgJ289+
+         MTbg==
+X-Gm-Message-State: AOJu0YzIwutzKRWVFg6UR6zyVd4316/7ld0O+y4/TAi4/ujr4UvORGmO
+	ANxfnZb0qTvEG5Jvo5zJ7eSaL4abNYq3wa/hUvNZf6k5OyzzpQ+pyt6FdHD3V9/g6jQHiB9L+T8
+	XDgFsHd9HGObjeehcWeBQvaNpTvJAqzj+2JZSqA==
+X-Google-Smtp-Source: AGHT+IG8BAQ2Gu7OHNA4ftEbbbJU0FZLf8ClOhtXCEcoK/cXoZTQ08otPgZ5OHMjQYFAHngVnpgUaRS9PGRBqGW2S08=
+X-Received: by 2002:a2e:9790:0:b0:2d2:3db6:b168 with SMTP id
+ y16-20020a2e9790000000b002d23db6b168mr4391133lji.14.1708503615614; Wed, 21
+ Feb 2024 00:20:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Zhitao Li <zhitao.li@smartx.com>
+Date: Wed, 21 Feb 2024 16:20:02 +0800
+Message-ID: <CAPKjjnrYvzH8hEk9boaBt-fETX3VD2cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com>
+Subject: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ping Huang <huangping@smartx.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The NFS server should ask clients to voluntarily return unused
-delegations when the number of granted delegations reaches the
-max_delegations. This is so that the server can continue to
-hand out delegations for new requests.
+Hi, everyone,
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 3 +++
- 1 file changed, 3 insertions(+)
+- Facts:
+I have a remote NFS export and I mount the same export on two
+different directories in my OS with the same options. There is an
+inflight IO under one mounted directory. And then I unmount another
+mounted directory with force. The inflight IO ends up with "Unknown
+error 512", which is ERESTARTSYS.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index fdc95bfbfbb6..a0bd6f6b994d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -130,6 +130,7 @@ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
- static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops;
- 
- static struct workqueue_struct *laundry_wq;
-+static void deleg_reaper(struct nfsd_net *nn);
- 
- int nfsd4_create_laundry_wq(void)
- {
-@@ -6550,6 +6551,8 @@ nfs4_laundromat(struct nfsd_net *nn)
- 	/* service the server-to-server copy delayed unmount list */
- 	nfsd4_ssc_expire_umount(nn);
- #endif
-+	if (atomic_long_read(&num_delegations) >= max_delegations)
-+		deleg_reaper(nn);
- out:
- 	return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
- }
--- 
-2.39.3
+OS: Linux kernel v6.7.0
+NFS mount options: vers=4.1
 
+
+- My speculation:
+When the same export is mounted on different directories with the same
+options, superblock and sunrpc_client will be shared. Unmount with
+force will kill all rpc_tasks with ERESTARTSYS in rpc_killall_tasks().
+However, no signal gets involved in this case. So ERESTARTSYS is not
+handled before entering user mode.
+
+I think there are two unexpected points here:
+1. The inflight IO should not fail when I unmount another directory,
+though the two directories share the same export.
+2. "ERESTARTSYS" should not be seen in user space. EIO may be better.
+
+
+- Reproduction:
+1. Prepare some NFS export, nfsd or nfs-ganesha. For example, the
+export is "ip:/export_path".
+2. On the latest stable mainstream Linux kernel v6.7.0, mount the
+export into two different directories with the same options:
+      mount -t nfs -o vers=4.1 ip:/export_path  /mnt/test1
+      mount -t nfs -o vers=4.1 ip:/export_path  /mnt/test2
+3. Start an inflight IO in "/mnt/test1":
+      dd if=/dev/urandom of=/mnt/test1/1G bs=1M count=1024 oflag=direct
+4. Umount "/mnt/test2" with force when IO in step 3 is going:
+      umount -f /mnt/test2
+5. The "dd" is expected to fail with following information:
+       # dd if=/dev/urandom of=/mnt/test1/1G bs=1M count=1024 oflag=direct
+       dd: error writing '/mnt/test1/1G': Unknown error 512
+       214+0 records in
+       213+0 records out
+       223346688 bytes (223 MB, 213 MiB) copied, 7.87017 s, 28.4 MB/s.
+
+
+- Helpful links
+1. v6.7.0 rpc_killall_tasks():
+https://elixir.bootlin.com/linux/v6.7/source/net/sunrpc/clnt.c#L869
+2. COMMIT "SUNRPC: Fix up task signalling v5.2-rc1" changes the error
+code of rpc_tasks in rpc_killall_tasks() from EIO to ERESTARTSYS. The
+link is https://github.com/torvalds/linux/commit/ae67bd3821bb0a54d97e7883d211196637d487a9?diff=split&w=0
+
+
+Looking forward to your early reply :)
+
+Best regards,
+Zhitao Li, in SmartX.
 
