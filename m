@@ -1,103 +1,187 @@
-Return-Path: <linux-nfs+bounces-2071-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2072-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F02C862566
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Feb 2024 14:54:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF976862DD3
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 00:02:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E18F9282F13
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Feb 2024 13:54:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10F221C20D07
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Feb 2024 23:02:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD3C4C63F;
-	Sat, 24 Feb 2024 13:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 343651B95A;
+	Sun, 25 Feb 2024 23:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c4wEiAfu"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MEDnbkuB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TvrihKyd";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MEDnbkuB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TvrihKyd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3398943178
-	for <linux-nfs@vger.kernel.org>; Sat, 24 Feb 2024 13:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094B21B94E
+	for <linux-nfs@vger.kernel.org>; Sun, 25 Feb 2024 23:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708782722; cv=none; b=FWhkE4tXsSoGJN0GQN0QRRlNWWyV1v3jyPtYvjMdK2uZ/FlfGfegZJQk44RJizcXVX+uxp4OBwsaLYJHR7xuWBt9pRsiJlYeP+sv7xO25gSC7J08K+z8uba2v3dule5XllDiJ/xbPoC/szgUfcAE96MChpbgyn/jfFTOJ5MDkcc=
+	t=1708902150; cv=none; b=tr6/WWyjAs83jn0FSQa7vOfaDr4BzRU3zMIxtX+9GlvC2OcyTnfyDG54Ay7J/qIjsZ2be37wioAjGQxbtNtNiG6GKxhbYTW3rHyWAO2GR1TQHjHm5sU8yJAYNuI2wVahPma1stADxHT7/aQ6Yq5m1epPTHw5s5Vhim1jsG5PMF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708782722; c=relaxed/simple;
-	bh=RAwLP4FL7g3YG90XVDrkOyp/C+5D0yHVeVpnj4F3HQM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pigsSeVd1A/cwjdv4C89L2YirtUwPWcG0nST3ZR6g3BbW3jwRJsMewRwVXH4mYlJVOQ3eypATOE+w6Lx5ftlA4/5sn9ArYyPGwoKNMileIKTniNQdrIefMKPjUp5EoHCadRWaojQ1YQrgiRxq5LCaFIw58vJOe4EEctN+NDk6RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c4wEiAfu; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708782717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Nhld/q3SVJCpH9JDcDmQlpv68zE8XG9Vxq5MWHA58E0=;
-	b=c4wEiAfuICV4Ka7yndl74dHwvO52WstZyEmaGai/CFGu8iC8PxlSUwq8Le+tmi08MSVfc1
-	ql11aP8R3IhUZaYdevWSbV8b4f13M8gtAXz4KjpIOf8BMOmwr5mcKGxEdoTPVn+0KS7GOv
-	XmKw7zrNub/1CXwxqJudUaybpNSWMZc=
-From: chengming.zhou@linux.dev
-To: trond.myklebust@hammerspace.com,
-	anna@kernel.org,
-	chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com
-Cc: Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	Xiongwei.Song@windriver.com,
-	chengming.zhou@linux.dev,
-	Chengming Zhou <zhouchengming@bytedance.com>
-Subject: [PATCH] sunrpc: remove SLAB_MEM_SPREAD flag usage
-Date: Sat, 24 Feb 2024 13:51:49 +0000
-Message-Id: <20240224135149.830234-1-chengming.zhou@linux.dev>
+	s=arc-20240116; t=1708902150; c=relaxed/simple;
+	bh=fgQ2jmkvMhib7I66PxHKAP7gHZKkcHZwVCXlboAZwe8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Dx032QCloXjmNB0Q8LiwRWQ4K1DMXnByBoXvgFW9zIoBNJz2tfV4Tu0Q9IcyG8HzumsLEPOtLVeyZpATtOYpXC2m5H0Kg1faCCHNCJ7KVZODzv2G3HNa1VRr8B9MhEdM+sBYLU9edcpKKjhpIA1is/lsYsZYqT2thgO5gwA/iQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MEDnbkuB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TvrihKyd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MEDnbkuB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TvrihKyd; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 21F9122495;
+	Sun, 25 Feb 2024 23:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708902146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D0shubPgbAe05eyAKysJzhQjdYs8pRtNjHCVsCDs7Ak=;
+	b=MEDnbkuBalFsqG+5XSLymYgpS2b1PTgEWWNZL9DY16jWei512CbTAH+8zeOSRGD30F4ptt
+	gPcqoNi/JKQEadZwIvdv3OBesR/R5fpeUk1jHbYY9dACIfUYzs68QJ0SicZybusJS7FZNq
+	n/OeyuTNUqkBzZHN5OZvGAH3xKTfC5Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708902146;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D0shubPgbAe05eyAKysJzhQjdYs8pRtNjHCVsCDs7Ak=;
+	b=TvrihKyd9GR2pcNUljuxgOrtCu0ZeHHEydnIwyOkmb1UKattV+jYSjyZ7AHI4IQ6t5rig7
+	U1agGeqx1Jdb30DA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708902146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D0shubPgbAe05eyAKysJzhQjdYs8pRtNjHCVsCDs7Ak=;
+	b=MEDnbkuBalFsqG+5XSLymYgpS2b1PTgEWWNZL9DY16jWei512CbTAH+8zeOSRGD30F4ptt
+	gPcqoNi/JKQEadZwIvdv3OBesR/R5fpeUk1jHbYY9dACIfUYzs68QJ0SicZybusJS7FZNq
+	n/OeyuTNUqkBzZHN5OZvGAH3xKTfC5Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708902146;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D0shubPgbAe05eyAKysJzhQjdYs8pRtNjHCVsCDs7Ak=;
+	b=TvrihKyd9GR2pcNUljuxgOrtCu0ZeHHEydnIwyOkmb1UKattV+jYSjyZ7AHI4IQ6t5rig7
+	U1agGeqx1Jdb30DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3EF5413A5B;
+	Sun, 25 Feb 2024 23:02:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PS2nNP/G22WGHAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Sun, 25 Feb 2024 23:02:23 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: "NeilBrown" <neilb@suse.de>
+To: "Jacek Tomaka" <Jacek.Tomaka@poczta.fm>
+Cc: trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+ linux-nfs@vger.kernel.org
+Subject: Re: NFS data corruption on congested network
+In-reply-to: <ujvntmhlfharduyanjob@tgqn>
+References: <ujvntmhlfharduyanjob@tgqn>
+Date: Mon, 26 Feb 2024 10:02:20 +1100
+Message-id: <170890214013.24797.3257981274610636720@noble.neil.brown.name>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-3.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 FREEMAIL_ENVRCPT(0.00)[poczta.fm];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FREEMAIL_TO(0.00)[poczta.fm];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.10
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
+On Fri, 23 Feb 2024, Jacek Tomaka wrote:
+> Hello,
+> I ran into an issue where the NFS file ends up being corrupted on disk. We =
+started noticing it on certain, quite old hardware after upgrading OS from Ce=
+ntos 6 to Rocky 9.2. We do see it on Rocky 9.3 but not on 9.1.
+>=20
+> After some investigation we have reasons to believe that the change was int=
+roduced by the following commit:=20
+> https://github.com/torvalds/linux/commit/6df25e58532be7a4cd6fb15bcd85805947=
+402d91
 
-The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-its usage so we can delete it from slab. No functional change.
+Thanks for the report.
+Can you try a change to your kernel?
 
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- net/sunrpc/rpc_pipe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index bb79d3a886ae..08a787147bd2 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -668,8 +668,10 @@ static int nfs_writepage_locked(struct folio *folio,
+ 	int err;
+=20
+ 	if (wbc->sync_mode =3D=3D WB_SYNC_NONE &&
+-	    NFS_SERVER(inode)->write_congested)
++	    NFS_SERVER(inode)->write_congested) {
++		folio_redirty_for_writepage(wbc, folio);
+ 		return AOP_WRITEPAGE_ACTIVATE;
++	}
+=20
+ 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+ 	nfs_pageio_init_write(&pgio, inode, 0, false,
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index dcc2b4f49e77..910a5d850d04 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -1490,7 +1490,7 @@ int register_rpc_pipefs(void)
- 	rpc_inode_cachep = kmem_cache_create("rpc_inode_cache",
- 				sizeof(struct rpc_inode),
- 				0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
--						SLAB_MEM_SPREAD|SLAB_ACCOUNT),
-+						SLAB_ACCOUNT),
- 				init_once);
- 	if (!rpc_inode_cachep)
- 		return -ENOMEM;
--- 
-2.40.1
+
+though if your kernel is older than 6.3, that will be
+         redirty_for_writepage(wbc, page);
+
+Thanks,
+NeilBrown
+
+
+>=20
+> We write a number of files on a single thread. Each file is up to 4GB. Befo=
+re closing we call fdatasync. Sometimes the file ends up being corrupted. The=
+ corruptions is in a form of a number ( more than 3k pages in one case) of ze=
+ro filled pages.
+> When this happens the file cannot be deleted from the client machine which =
+created the file, even when the process which wrote the file completed succes=
+sfully.
+>=20
+> The machines have about 128GB of memory, i think and probably network that =
+leaves to be desired.
+>=20
+> My reproducer is currently tied up to our internal software, but i suspect =
+setting the write_congested flag randomly should allow to reproduce the issue.
+>=20
+> Regards.
+> Jacek Tomaka
+>=20
 
 
