@@ -1,199 +1,106 @@
-Return-Path: <linux-nfs+bounces-2082-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2083-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A59A986670E
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 00:57:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77056866953
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 05:24:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FFBEB2119E
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Feb 2024 23:57:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17B0FB221CA
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 04:24:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FCBA1B96E;
-	Sun, 25 Feb 2024 23:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4D61B810;
+	Mon, 26 Feb 2024 04:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1w0TkBSn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mWVJ/QZj";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1w0TkBSn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mWVJ/QZj"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MYV/7Uc6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5D21BC53
-	for <linux-nfs@vger.kernel.org>; Sun, 25 Feb 2024 23:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7951C1B7FB
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Feb 2024 04:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708905434; cv=none; b=jfk0EUU8JIz+yFsUByMBIw3EGgxgUc82uHGNX0nKBWFAX8blMnmPaAhftZtBFcbIwRNhFyVJehIbG34hFzOqzDsorrRiRf33vPXVGgc1FZ7NEyhF/Q1yfYQiPoQ0qwKV4kumwmXVHnAg7prTIi5dd/y8d6DnvWogwLQtGzpZAI0=
+	t=1708921449; cv=none; b=sqSSJaXxgVn0/6iyC7VWIea1lm/Rf+Zwp2bYU9weElktTMlsTGj8ZvD6qAgtbK3Me6HSujojqmMYao1DN2pWRPNJcSgU0O4jqpBITPqJKSlkyDZ0U3F87bQCVYtAi5tnPgVhxmNd+vFewkOawwbMbACNpovdm+ue2A3DqOxRoI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708905434; c=relaxed/simple;
-	bh=PBoK0ictngehnCw+nI2XNGAUlUnWVC5aX6T5lmr/4uc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u3sJPa9XKGyTFUcX+pb2e3VB9QnlGn2vErwLCJ7CzuYWxOr6oX6PZQCxtqa2jjvfCn8KPMeVV+GRozGSEJmnNgfczI5d/iBUuB+HkftTuvn7hd9k3xyai/kODVfQWUq6D6BeQYiDnohFR3J5q7lMfTEbebBG4yh4xbJp1Q5yiFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1w0TkBSn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mWVJ/QZj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1w0TkBSn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mWVJ/QZj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E7C2224A6;
-	Sun, 25 Feb 2024 23:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708905431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
+	s=arc-20240116; t=1708921449; c=relaxed/simple;
+	bh=jP2Ym/M+PdBLVrz55q8zbolMHuXaATFfBtA5RROiS1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I6gi7khUTC/5BApGzzLYGMLoT2eEAeeOeCZXgxk+EOrOJtK4URvYuJVFFNElYbjCDO1HVXjeq76mhsk/PoHxeEo6kVQ64DAnKe/U0p9mO4RmfIpyMR3qIFbQNAcVH441yLZnAMPgrUjpxRP6zMmTIdiHbdr/Iicq6qgCsa5rWOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MYV/7Uc6; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <382360c0-a120-46fc-bc59-c3c090994b83@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708921445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PQk+j2UTs1NqVIXymPFcFYSoNQ3WPS/GzE2zlPXW7Nc=;
-	b=1w0TkBSnT/2Lk3AHrMxBaPWXNUe/RE4G6syJdalvrnn42pimWF8fYLMGw0K7jNN1rlfnr5
-	Rxrufu8KH24Di3mgrdUjxtQAqmZqC7sHzZaXmYgdEEoOAqYLlLwKVBh6sJk/i2cM5/hVA3
-	sK0lKpWr9CHFApdHTqPmBKbvgZCGsLM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708905431;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQk+j2UTs1NqVIXymPFcFYSoNQ3WPS/GzE2zlPXW7Nc=;
-	b=mWVJ/QZjxwN/r5UuuyStzOCvoxZ/MKoNJ3GixMzIKS6gk6yl4Rk1sdiIiLInqXpifOxX8X
-	qq+V5Y8i8un1beBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708905431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQk+j2UTs1NqVIXymPFcFYSoNQ3WPS/GzE2zlPXW7Nc=;
-	b=1w0TkBSnT/2Lk3AHrMxBaPWXNUe/RE4G6syJdalvrnn42pimWF8fYLMGw0K7jNN1rlfnr5
-	Rxrufu8KH24Di3mgrdUjxtQAqmZqC7sHzZaXmYgdEEoOAqYLlLwKVBh6sJk/i2cM5/hVA3
-	sK0lKpWr9CHFApdHTqPmBKbvgZCGsLM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708905431;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQk+j2UTs1NqVIXymPFcFYSoNQ3WPS/GzE2zlPXW7Nc=;
-	b=mWVJ/QZjxwN/r5UuuyStzOCvoxZ/MKoNJ3GixMzIKS6gk6yl4Rk1sdiIiLInqXpifOxX8X
-	qq+V5Y8i8un1beBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8F4413432;
-	Sun, 25 Feb 2024 23:57:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QAhSE9XT22XMJgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 25 Feb 2024 23:57:09 +0000
-From: NeilBrown <neilb@suse.de>
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org,
-	Petr Vorel <pvorel@suse.cz>
-Subject: [PATCH 4/4] rpcinfo: try connecting using abstract address.
-Date: Mon, 26 Feb 2024 10:53:56 +1100
-Message-ID: <20240225235628.12473-5-neilb@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240225235628.12473-1-neilb@suse.de>
-References: <20240225235628.12473-1-neilb@suse.de>
+	bh=gzrMk8FgJa5LDzJik8D276TdB01ODO8SlJG3MdCuN2A=;
+	b=MYV/7Uc6JQzreEl1TddFIIj2+1eDzFegXu3wZfaKIAqGyhNQ1s+ljn1xFtLwRQg1sKn6fm
+	idxCm/d4CNvlmmp4RhKqh9o/p1p2rFFkiSLfRW40pzNsIkMIv2o7WdJqDjKxsKlZe4Hmfd
+	fahyE4kVgkxO7twEnf0AMd7ef5MNTsY=
+Date: Mon, 26 Feb 2024 12:23:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: ***
-X-Spam-Score: 3.70
-X-Spamd-Result: default: False [3.70 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_DN_SOME(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[24.90%]
-X-Spam-Flag: NO
+Subject: Re: [PATCH] sunrpc: remove SLAB_MEM_SPREAD flag usage
+Content-Language: en-US
+To: trond.myklebust@hammerspace.com, anna@kernel.org, chuck.lever@oracle.com,
+ jlayton@kernel.org, neilb@suse.de, kolga@netapp.com
+Cc: Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, vbabka@suse.cz, roman.gushchin@linux.dev,
+ Xiongwei.Song@windriver.com
+References: <20240224135149.830234-1-chengming.zhou@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20240224135149.830234-1-chengming.zhou@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-rpcinfo doesn't use library calls to set up the address for rpcbind.  So
-to get to it try the new abstract address, we need to explicitly
-teach it how.
+On 2024/2/24 21:51, chengming.zhou@linux.dev wrote:
+> From: Chengming Zhou <zhouchengming@bytedance.com>
+> 
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- src/rpcinfo.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+Update changelog to make it clearer:
 
-diff --git a/src/rpcinfo.c b/src/rpcinfo.c
-index 0e14f78ad2de..4464cbc0941b 100644
---- a/src/rpcinfo.c
-+++ b/src/rpcinfo.c
-@@ -311,6 +311,13 @@ main (int argc, char **argv)
-   return (0);
- }
- 
-+/* Evaluate to actual length of the `sockaddr_un' structure, whether
-+ * abstract or not.
-+ */
-+#include <stddef.h>
-+#define SUN_LEN_A(ptr) (offsetof(struct sockaddr_un, sun_path)	\
-+			+ 1 + strlen((ptr)->sun_path + 1))
-+
- static CLIENT *
- local_rpcb (rpcprog_t prog, rpcvers_t vers)
- {
-@@ -334,6 +341,7 @@ local_rpcb (rpcprog_t prog, rpcvers_t vers)
-   endnetconfig(localhandle);
-   return clnt;
- #else
-+  CLIENT *clnt;
-   struct netbuf nbuf;
-   struct sockaddr_un sun;
-   int sock;
-@@ -344,12 +352,26 @@ local_rpcb (rpcprog_t prog, rpcvers_t vers)
-     return NULL;
- 
-   sun.sun_family = AF_LOCAL;
-+
-+#ifdef _PATH_RPCBINDSOCK_ABSTRACT
-+  memcpy(sun.sun_path, _PATH_RPCBINDSOCK_ABSTRACT,
-+         sizeof(_PATH_RPCBINDSOCK_ABSTRACT));
-+  nbuf.len = SUN_LEN_A (&sun);
-+  nbuf.maxlen = sizeof (struct sockaddr_un);
-+  nbuf.buf = &sun;
-+
-+  clnt = clnt_vc_create (sock, &nbuf, prog, vers, 0, 0);
-+  if (clnt)
-+    return clnt;
-+#endif
-+
-   strcpy (sun.sun_path, _PATH_RPCBINDSOCK);
-   nbuf.len = SUN_LEN (&sun);
-   nbuf.maxlen = sizeof (struct sockaddr_un);
-   nbuf.buf = &sun;
- 
--  return clnt_vc_create (sock, &nbuf, prog, vers, 0, 0);
-+  clnt = clnt_vc_create (sock, &nbuf, prog, vers, 0, 0);
-+  return clnt;
- #endif
- }
- 
--- 
-2.43.0
+The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
+removed as of v6.8-rc1, so it became a dead flag since the commit
+16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"). And the
+series[1] went on to mark it obsolete to avoid confusion for users.
+Here we can just remove all its users, which has no functional change.
 
+[1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
+
+Thanks!
+
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+>  net/sunrpc/rpc_pipe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+> index dcc2b4f49e77..910a5d850d04 100644
+> --- a/net/sunrpc/rpc_pipe.c
+> +++ b/net/sunrpc/rpc_pipe.c
+> @@ -1490,7 +1490,7 @@ int register_rpc_pipefs(void)
+>  	rpc_inode_cachep = kmem_cache_create("rpc_inode_cache",
+>  				sizeof(struct rpc_inode),
+>  				0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
+> -						SLAB_MEM_SPREAD|SLAB_ACCOUNT),
+> +						SLAB_ACCOUNT),
+>  				init_once);
+>  	if (!rpc_inode_cachep)
+>  		return -ENOMEM;
 
