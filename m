@@ -1,141 +1,125 @@
-Return-Path: <linux-nfs+bounces-2085-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2086-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 793C2866AA9
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 08:30:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19904866E15
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 10:19:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 194691F212EB
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 07:30:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9084285E1C
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Feb 2024 09:19:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BC31BF28;
-	Mon, 26 Feb 2024 07:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A95253393;
+	Mon, 26 Feb 2024 08:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwsyrG/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9RcqYty"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9DF1BF20
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Feb 2024 07:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5321353392
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Feb 2024 08:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708932603; cv=none; b=oj/8WxN/JMHmoePrtFBjCkS26bxXMf/EVkuWuojI6LtnRok1JTCmgWf5iCNo1Y894xDfvHGQYVt/9iygnDV1oAJMEwrr7SBT7hRaMQzYTnwcDu2O89vDT7PSh/m7fWEt2u7OorP6Mr7C3PiBQi4jxEymyhoKahmRhalEPOFb8ns=
+	t=1708936781; cv=none; b=N+cUIZHOckuQDZoqnhbjMr6NfIO2MxqqU1o0DKuDdVwnagqZZlx6jgt3DczRDOoRWRjvjWz0wu8IPf0Fg96V2WNxIpW+iHtWyrIWD8rwU3cR47MSd+4gyKZLEzYeXEtf4fRV5ENLx/VtUPr7uBQrLkmyz9hoQsGX8ySbhZRJUTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708932603; c=relaxed/simple;
-	bh=HsIrv8ezPBDGARg525yyVzXpeh1s8i6oxjE8WSvKIDg=;
+	s=arc-20240116; t=1708936781; c=relaxed/simple;
+	bh=9MzM/EfUjg6Q2/7K2j8SB8iHqM0nd1jWYatIjQwvVXU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=sgIbwXY0QAkRQJ6TJTAgOpIz/0eqmYpTvy+hL90VR+oSXLfj0m9YZXw2JLmlzM9tN9SQBQ6aaYOz6NGs7ZAe/EduSVd5I3IAHzSNMqX6pDaXyqqz5WHvfG6YF0tugoy7kEKSH23dR0809nL6ZOIX3x3tP9HhuDXti1Gu12ry07U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwsyrG/s; arc=none smtp.client-ip=209.85.167.171
+	 To:Content-Type; b=C2Wt4dZedFkt/GOsxDVoCutdjoh0gjuRB7hjauRpGngwx2GwxtlEd1WXyLye1ZBp2y0F2En+fKzOz5TS1Vu9VRXNBmdx9r2uLsOLK/mx4DWCT3vEVaDcLbASUI/EjiPUUtvbLFa9Y9GsGv4w6PrjNKemdr2Aa59bxo6Zxx0NIXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c9RcqYty; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c199237eaeso1232708b6e.0
-        for <linux-nfs@vger.kernel.org>; Sun, 25 Feb 2024 23:30:02 -0800 (PST)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so3987897a12.0
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Feb 2024 00:39:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708932601; x=1709537401; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HsIrv8ezPBDGARg525yyVzXpeh1s8i6oxjE8WSvKIDg=;
-        b=iwsyrG/sWa7FD4WlT3q988oQQyRPUhE31KER4IVYQvOA6zKBIBdn0WLfPyjLbZG604
-         Se5B62frAQCJC7eshxUSAR9yeCfQH3tszJvzRrkoxliNaiNChQRrneAymVTWKbwK8+IH
-         RqX/x2PPpZNmWHBNALadDPMwyMjxbGyZg4VXN56NSGxomhjl0esR5usM83sUrgyrtr23
-         wvtMHCVRZCzQO59ZrWLzCfBdhHLhyKhfIT+syvE+YcFKYFjK5r6e4+QosK9RJywKRrZS
-         eblkqv89M3PYqINKn2DcaAP4YxM6uLJ9iyvjZuTuugpYFevrzgqApScx4EnqR9jF0JaU
-         zs1A==
+        d=gmail.com; s=20230601; t=1708936777; x=1709541577; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FJkjXTBzXY+2D9xPxXL1fp+CqJ2v05a2sL5VHAnqrUM=;
+        b=c9RcqYtynRgdn+MZr/4Qw7UwS5ut1SLNpeecWmGUbSyp75a/BdXetbisV9FT72KmfC
+         MS1dXYrG3q1fu+efGNHmsu1Vq/axNZt2yjZADic22opNzOv5XcyjoALc/Wqpicre5lLn
+         7mSKjesxk947f/OeJ5F3m7JWc7ZEnV5FJoPPdo+c+X/9rYQrjgGe1GCz2O6J3PEiEDn0
+         gA2NdZedL4bfpDuvhp1ONPxHiFhgKw0RNjSfg4L1lAKPS+eKu0TQKVnznM8lhMvwXwfx
+         PQezmye7YrUJHdtJXszj4ha3AoMlhYns+Dgc0KmQ16TgSSg42uBTUvt8QqqjVH4uT6hu
+         QIrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708932601; x=1709537401;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HsIrv8ezPBDGARg525yyVzXpeh1s8i6oxjE8WSvKIDg=;
-        b=RYDvNYLr6BgEv9jw0gyD9lyoJ4tNHIWVK6TGCn0ZVA2jA213kioLN4Ccs3+U9kKfan
-         /XwV7cVDTy3J9TxWmi3ReN5tH7baSbNfbQVm3HuPcHSAbUON92IaTXqVsVgO4UkCaBRL
-         sQNMDEvGugxb1ZGla3TlmgndZZrP8PnnOQiDohXpDZ5SE6DNhH3wEQ/YhKNiMU0sXuhg
-         i0rA/jmMwCcbIacaTzd5txtxY01hJq4e/WvJKys5hiWB3LOBakq5yaKARrScEnkhFaV6
-         d28AVTNjMwpYQhN8jek6KR4ONYHXMYTR8lB4hQkQFvMN1ibJuOP8TRarc9hNiVorow5b
-         Lcqw==
-X-Gm-Message-State: AOJu0Yw6fq2YijtBJ7yTfJ2sTr2X23q1l0NguCUjNHnB8J7TONkbQiTy
-	ZD8hTLb1HhF/Xh+FnFgLohBiwqYjm1pTNwOn+thYxg7v0Zp7rrINk3znXghK15pt90Uv4ZLFkvM
-	wFaYOGm5xnHo+iiVYelcSAIE/MnWLwcd1
-X-Google-Smtp-Source: AGHT+IFSbf17h9gSTqTilGoR/p3nuhbKzDYoPFsSowzS91xrjxOTYQ/sxAIK3vSmrRb7+6U6wMI5VOPpMTtUsUdKhBg=
-X-Received: by 2002:a05:6871:79a2:b0:21e:a8ff:1d2e with SMTP id
- pb34-20020a05687179a200b0021ea8ff1d2emr7818969oac.34.1708932601378; Sun, 25
- Feb 2024 23:30:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708936777; x=1709541577;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FJkjXTBzXY+2D9xPxXL1fp+CqJ2v05a2sL5VHAnqrUM=;
+        b=nb/A4KpEWrhxPjxwewumRa6XjNmTdyyU6wbfGZC4zcuAtsYq+58OqqHinG9ept57IH
+         yIkdty/qxkLGre1W/a06WLR3mDduQjGyBQq+OHW4PX0ikO1ItICCQPy13Xo5FiCJYSmZ
+         Ro4KCXS6kOM+qC1jnEzYR/3d5gCO50B+U0zMBepp5hW2+0lqxwy7WvN9YfHbChT1Sb2R
+         7dWHAndyMDF/QOno12K2KoGF7ecBTWecVtUakZ7hSp2QyAcCUlS9ODotP7aPK/yxfBPI
+         dgAvWzhVBOg/0FfIm0QLI+PDgVtWFJ2vpGRspiKnuoa+fmjWcF5betZish4NffsSwQhq
+         8HMw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QoHg5xD7ssKDZXaxM/RZTuXeZMgAJRRvc1x4pbuTn4gb/i0F3BB4ibLajLFW8UojrCf/J5cKMTKwqsGxqij5FkAEY54dAetJ
+X-Gm-Message-State: AOJu0YwzhwNZSBddQiwbZH7WMF0JGJT0sF5BE55WD2l0OGJt698b8hMM
+	CSV9UQqo8rGibmuyOr3ShdvbjMmTZhWes9vNzRuIMB9skwmP487RVjWKv2Zc79n9D842GHiGVY2
+	YT8yEOpcZENKP5UbPq/Sfzf3kbtc=
+X-Google-Smtp-Source: AGHT+IH1DCvXN8DfZCfrhZRBZHdPB/nPtU2ilNdh8acIw2z90Wq7I37fMc26Gv0YgDszc4w9cYBd3w1RnAFwu2xcfTI=
+X-Received: by 2002:a05:6402:e9a:b0:565:af1d:7416 with SMTP id
+ h26-20020a0564020e9a00b00565af1d7416mr3415808eda.5.1708936777279; Mon, 26 Feb
+ 2024 00:39:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANH4o6P-jze6MB8yh3sWxhyHJWdj+JHK3vw58cYwQ0a7eVe_Vg@mail.gmail.com>
- <c397fb11a172be26111e1ad5cb17a92bceb065d3.camel@kernel.org>
- <CANH4o6O-Gcjc3eqiTd-KysZx-bpbzoh=CMTNixJ26cZQuRd=UQ@mail.gmail.com>
- <2e4760a87e1fc6906562442c27933e830635a929.camel@kernel.org>
- <CAENext6Zuv0pLgzp_vcBqdKmrH6Bg5GDV_hnUNOeFK2juoiJnw@mail.gmail.com> <7e499dd1deafcf043229973968920947453d4eba.camel@kernel.org>
-In-Reply-To: <7e499dd1deafcf043229973968920947453d4eba.camel@kernel.org>
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Mon, 26 Feb 2024 08:30:00 +0100
-Message-ID: <CANH4o6OmdiGDUjQd25Mza_bZX6zq5Vw85cD9X4RexWSQqxY4NQ@mail.gmail.com>
-Subject: Re: SELinux-Support in Linux NFSv4.1 impl?
-To: linux-nfs <linux-nfs@vger.kernel.org>
+References: <ujvntmhlfharduyanjob@tgqn> <170890214013.24797.3257981274610636720@noble.neil.brown.name>
+ <170890314859.24797.16728369357798855399@noble.neil.brown.name>
+In-Reply-To: <170890314859.24797.16728369357798855399@noble.neil.brown.name>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Mon, 26 Feb 2024 09:39:00 +0100
+Message-ID: <CALXu0UddUL-inP3LO_LEVPbAqQuWNkwYDDcD05DCfJZDiiOd7A@mail.gmail.com>
+Subject: Re: NFS data corruption on congested network
+To: NeilBrown <neilb@suse.de>, Jacek Tomaka <jacek.tomaka@poczta.fm>, 
+	trond.myklebust@hammerspace.com, anna.schumaker@netapp.com, 
+	linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 18, 2024 at 3:35=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
-ote:
+On Mon, 26 Feb 2024 at 00:19, NeilBrown <neilb@suse.de> wrote:
 >
-> On Sun, 2024-02-18 at 16:16 +0200, Guy Keren wrote:
-> > On Sun, Feb 18, 2024 at 3:55=E2=80=AFPM Jeff Layton <jlayton@kernel.org=
-> wrote:
+> On Mon, 26 Feb 2024, NeilBrown wrote:
+> > On Fri, 23 Feb 2024, Jacek Tomaka wrote:
+> > > Hello,
+> > > I ran into an issue where the NFS file ends up being corrupted on disk. We started noticing it on certain, quite old hardware after upgrading OS from Centos 6 to Rocky 9.2. We do see it on Rocky 9.3 but not on 9.1.
 > > >
-> > > On Sat, 2024-02-17 at 14:37 +0100, Martin Wege wrote:
-> > > > On Wed, Feb 14, 2024 at 12:28=E2=80=AFPM Jeff Layton <jlayton@kerne=
-l.org> wrote:
-> > > > >
-> > > > > On Wed, 2024-02-14 at 10:46 +0100, Martin Wege wrote:
-> > > > > > Hello,
-> > > > > >
-> > > > > > Does the Linux implementation server&client for NFSv4.1 support=
- SELinux?
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > Labeled NFS is a NFSv4.2 feature. The Linux client and server do =
-support
-> > > >
-> > > > Is there documentation on how to set this up? Will this work if the
-> > > > root fs ('/') is NFSv4.2?
-> > > >
-> > >
-> > > There isn't much to set up. If you mount using NFSv4.2, the client an=
-d
-> > > server should negotiate using SELinux (assuming both are SELinux
-> > > enabled) and the SELinux contexts should (mostly) be projected across
-> > > the wire.
+> > > After some investigation we have reasons to believe that the change was introduced by the following commit:
+> > > https://github.com/torvalds/linux/commit/6df25e58532be7a4cd6fb15bcd85805947402d91
 > >
-> > Jeff - as far as i know, while it is possible for the client to
-> > get/set the secure labels of files on the server - there is no way for
-> > the client to tell the server which user is performing the specific
-> > access operation - so the 'FULL MODE' of nfs4.2 security labels cannot
-> > work - only the 'Limited Server Mode' mode (i.e. only the client
-> > verifies the security labels - the server does not). please correct me
-> > if i'm wrong.
+> > Thanks for the report.
+> > Can you try a change to your kernel?
 > >
+> > diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> > index bb79d3a886ae..08a787147bd2 100644
+> > --- a/fs/nfs/write.c
+> > +++ b/fs/nfs/write.c
+> > @@ -668,8 +668,10 @@ static int nfs_writepage_locked(struct folio *folio,
+> >       int err;
 > >
+> >       if (wbc->sync_mode == WB_SYNC_NONE &&
+> > -         NFS_SERVER(inode)->write_congested)
+> > +         NFS_SERVER(inode)->write_congested) {
+> > +             folio_redirty_for_writepage(wbc, folio);
+> >               return AOP_WRITEPAGE_ACTIVATE;
+> > +     }
+> >
+> >       nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+> >       nfs_pageio_init_write(&pgio, inode, 0, false,
 >
-> (re-cc'ing the mailing list...)
->
-> That is correct. I'm not aware of anyone having implented "Full mode" as
-> of yet anywhere.
->
-> The Linux server is a "dumb" labeled NFS server that just projects the
-> contexts to the clients and doesn't try to do any enforcement.
+> Actually this is only needed before linux 6.8 as only nfs_writepage()
+> can call nfs_writepage_locked() with sync_mode of WB_SYNC_NONE.
+> So v5.18 through v6.7 might need fixing.
 
-Is this documented somehere? "NFSv4.2 SELinux HOWTO" maybe?
+Please do not forget the Linux 6.6-stable branch!!
 
-Thanks,
-Martin
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
