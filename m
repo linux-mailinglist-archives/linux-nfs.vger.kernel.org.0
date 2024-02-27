@@ -1,88 +1,93 @@
-Return-Path: <linux-nfs+bounces-2100-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2101-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD0B86A3A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 00:30:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2E6486A40C
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 00:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAF901C25266
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Feb 2024 23:30:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E60981C23131
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Feb 2024 23:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE0A58231;
-	Tue, 27 Feb 2024 23:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1D25821B;
+	Tue, 27 Feb 2024 23:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c/LVuXnd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xJUfV6NS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wPnjUElR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sa75unVR"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oM8Pu7vk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sYgXqFn9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oM8Pu7vk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sYgXqFn9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC8558200;
-	Tue, 27 Feb 2024 23:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451A258124;
+	Tue, 27 Feb 2024 23:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076359; cv=none; b=fvdnOg+gt2ZNfxoW7wXwCt0UM4tlgPDHE44K5huSFuRqez341Oymb1bVN5wZZxXuPLIUo+3v7j3AxmKei4C3bkZB+FG63C7TNQ3xzqjNQAhm7oS8r8UGcXOeYy3BJYdUVR+RSOOvyzSVmBbuU4LWjkO6CAN51HtCJ1AaSKk14P0=
+	t=1709078159; cv=none; b=hLXwEQxnbF7Kqpnn593NJYGkqSdlx0HmpD+dIqSCCP4xfc4sMTsihkxAedN1trVJWsmfNPSuRfyyfffzpWiZDS/RoCzyR/hYOXT238mHdS4GVJ7qmjF79e6YPILNOutX48tfP7Y35euwgklItJdr2DxTn/ep6f8+U7qGOBOF48k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076359; c=relaxed/simple;
-	bh=AEf1gpZiNu/8Da6o7+1FPM6KvYB5XGpOqOLGqNoPh8I=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=U93IrjwHznztmu+7LTTWdQbIGT2UrEDU1eE2WchCISHdhb3ZT6FJwPyBNUfPpFdQJMB0BB2ACDF337ed+D2C/cWy51LyKGDEHW8qcYmjE3+leu2RWPmcr8FZShFL6ymP6wNS2jxKdrN3f7ntrQG7TJgKuPLsmnDLFTLHeyF9RIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=c/LVuXnd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xJUfV6NS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wPnjUElR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sa75unVR; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1709078159; c=relaxed/simple;
+	bh=pjID9jOH1YDmOs7zFevAPpOPMlUU8CvAoKKqvz9850M=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=jZSVq2g/ZD/SmFxhusKYOZMCTLRq6sDWZy4Fs/KmTzohoEhDV85/fn5M7J7EMqGMO+F0nkbG7Yly5BYJ4Hvsl46nNzIhDTs2ml7xyhdhn2XSC6czdjbO1L5AbvumPVfMW8Dq82AXuKFSoTyYKvtxnmW53qco+oWweWfKoC8DNvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oM8Pu7vk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sYgXqFn9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oM8Pu7vk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sYgXqFn9; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D10021F453;
-	Tue, 27 Feb 2024 23:25:55 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 624C62281D;
+	Tue, 27 Feb 2024 23:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709076356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1709078155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aUo1Lmwh7qTNT/9WsS+S6D9aEegzP0TKGCitjsP75Us=;
-	b=c/LVuXndvRCb92BV/Lmy9AwuIvZDKANUSpZo4Vi9Sknb17cnLdEQ7UCA0HpY1OPemSud1S
-	XpZKe4d+mmNFlMzKGWBKQ0MQOgb37U2nowyVIx/eQ/aMoe54H9Y8V1nA2nS/qBTmqEgJat
-	4hFBaGbWqEppXOKiD/eR+YMFxuf/tPI=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oo7lOyfhfo/jOi++S8K/sO8jKuWpQF2djN8rS+ChceY=;
+	b=oM8Pu7vk5u+K0Cd/cUVeYjlE7Jb/F1ure9DkXUTGc8ZozTSOdU3zgBAS+ByH9MekVXSB+v
+	UHUWT6FZlPo2iu33SaitpD6YO16A5/ZYTvC3Ra/cR+o47dgbLiP809ECNL9VUyYmF6I4E0
+	fosqzpDqsj//v5jK9cw4YB14c29Lq3w=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709076356;
+	s=susede2_ed25519; t=1709078155;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aUo1Lmwh7qTNT/9WsS+S6D9aEegzP0TKGCitjsP75Us=;
-	b=xJUfV6NScYcptXCEMAazlof+mLjYP/tdbzvYKBgsBWW0CI1Ds8Ycev/hsP6Bf6mHoY1ocI
-	gdVtyo8zOqM4JpBg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oo7lOyfhfo/jOi++S8K/sO8jKuWpQF2djN8rS+ChceY=;
+	b=sYgXqFn9XF/OhKwI9zHc8QtgUSrihhB0Ll9ek6JQTFSajtYOD3zwT9qpj8lfVhzI0R67ox
+	N6M9C2H5OUMtPhDw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709076355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1709078155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aUo1Lmwh7qTNT/9WsS+S6D9aEegzP0TKGCitjsP75Us=;
-	b=wPnjUElRjRSZeZHdCnszerg5CepUFZX9PcP4nDVvfnXYyxMjK3hllAWBBCqQEZCKsLuteL
-	nXUzK6a9pwrapiVJmKnQXudJyfOKx+qQQZn/Nlws0tItjCllFOTIOYUAz0oNL7W7dfWrm8
-	cW3yxHSGEQRMT4XGjHZRnAJTOpoWwAQ=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oo7lOyfhfo/jOi++S8K/sO8jKuWpQF2djN8rS+ChceY=;
+	b=oM8Pu7vk5u+K0Cd/cUVeYjlE7Jb/F1ure9DkXUTGc8ZozTSOdU3zgBAS+ByH9MekVXSB+v
+	UHUWT6FZlPo2iu33SaitpD6YO16A5/ZYTvC3Ra/cR+o47dgbLiP809ECNL9VUyYmF6I4E0
+	fosqzpDqsj//v5jK9cw4YB14c29Lq3w=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709076355;
+	s=susede2_ed25519; t=1709078155;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aUo1Lmwh7qTNT/9WsS+S6D9aEegzP0TKGCitjsP75Us=;
-	b=sa75unVRQrmEo/y6ooENv+u4KFrjev4nMTfeclIXUElj23+rCTc7bJ8Vcf/bn3gTPED2JB
-	wniVOFvuKDtCeMDA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oo7lOyfhfo/jOi++S8K/sO8jKuWpQF2djN8rS+ChceY=;
+	b=sYgXqFn9XF/OhKwI9zHc8QtgUSrihhB0Ll9ek6JQTFSajtYOD3zwT9qpj8lfVhzI0R67ox
+	N6M9C2H5OUMtPhDw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92D7A13ABA;
-	Tue, 27 Feb 2024 23:25:53 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E2E861386D;
+	Tue, 27 Feb 2024 23:55:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 18t0DYFv3mW0NAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 27 Feb 2024 23:25:53 +0000
+	id aHtbIYZ23mWhOgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 27 Feb 2024 23:55:50 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -90,78 +95,177 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: stable@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,  Jacek Tomaka <Jacek.Tomaka@poczta.fm>
-Subject: [PATCH stable 6.1] NFS: Fix data corruption caused by congestion.
-Date: Wed, 28 Feb 2024 10:25:49 +1100
-Message-id: <170907634991.24797.14120500624611379941@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=wPnjUElR;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sa75unVR
-X-Spamd-Result: default: False [-4.12 / 50.00];
+To: "Zhitao Li" <zhitao.li@smartx.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@hammerspace.com>,
+ "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+ "tom@talpey.com" <tom@talpey.com>, "anna@kernel.org" <anna@kernel.org>,
+ "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
+ "kolga@netapp.com" <kolga@netapp.com>,
+ "huangping@smartx.com" <huangping@smartx.com>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+In-reply-to:
+ <CAPKjjnrir1C8YYhhW10Nj6bAOTiz_YwWUOynEwXbjetMAuA1UA@mail.gmail.com>
+References:
+ <CAPKjjnrYvzH8hEk9boaBt-fETX3VD2cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com>,
+ <77a58302766cb6c8fac45682ede63569df80cd5d.camel@hammerspace.com>,
+ <1179779e2f74e3e5cb2be30cf89e6362aaab706d.camel@kernel.org>,
+ <CAPKjjnrir1C8YYhhW10Nj6bAOTiz_YwWUOynEwXbjetMAuA1UA@mail.gmail.com>
+Date: Wed, 28 Feb 2024 10:55:43 +1100
+Message-id: <170907814318.24797.17138350642031030344@noble.neil.brown.name>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=oM8Pu7vk;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sYgXqFn9
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
 	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
 	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[poczta.fm];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
-	 RCPT_COUNT_FIVE(0.00)[5];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	 DKIM_TRACE(0.00)[suse.de:+];
 	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[vger.kernel.org,poczta.fm];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
 	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.31)[75.34%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: D10021F453
-X-Spam-Level: 
-X-Spam-Score: -4.12
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 624C62281D
 X-Spam-Flag: NO
 
+On Fri, 23 Feb 2024, Zhitao Li wrote:
+> Thanks for Jeff's reply.
+>=20
+> I did see  ERESTARTSYS in userland. As described in the above
+> "Reproduction" chapter, "dd" fails with "dd: error writing
+> '/mnt/test1/1G': Unknown error 512".
+>=20
+> After strace "dd", it turns out that syscall WRITE fails with:
+> write(1, "4\303\31\211\316\237\333\r-\275g\370\233\374X\277\374Tb\202\24\36=
+5\220\320\16\27o3\331q\344\364"...,
+> 1048576) =3D ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+>=20
+> In fact, other syscalls related to file systems can also fail with
+> ERESTARTSYS in our cases, for example: mount, open, read, write and so
+> on.
+>=20
+> Maybe the reason is that on forced unmount, rpc_killall_tasks() in
+> net/sunrpc/clnt.c will set all inflight IO with ERESTARTSYS, while no
+> signal gets involved. So ERESTARTSYS is not handled before entering
+> userspace.
+>=20
+> Best regards,
+> Zhitao Li at SmartX.
+>=20
+> On Thu, Feb 22, 2024 at 7:05=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+> >
+> > On Wed, 2024-02-21 at 13:48 +0000, Trond Myklebust wrote:
+> > > On Wed, 2024-02-21 at 16:20 +0800, Zhitao Li wrote:
+> > > > [You don't often get email from zhitao.li@smartx.com. Learn why this
+> > > > is important at https://aka.ms/LearnAboutSenderIdentification ]
+> > > >
+> > > > Hi, everyone,
+> > > >
+> > > > - Facts:
+> > > > I have a remote NFS export and I mount the same export on two
+> > > > different directories in my OS with the same options. There is an
+> > > > inflight IO under one mounted directory. And then I unmount another
+> > > > mounted directory with force. The inflight IO ends up with "Unknown
+> > > > error 512", which is ERESTARTSYS.
+> > > >
+> > >
+> > > All of the above is well known. That's because forced umount affects
+> > > the entire filesystem. Why are you using it here in the first place? It
+> > > is not intended for casual use.
+> > >
+> >
+> > While I agree Trond's above statement, the kernel is not supposed to
+> > leak error codes that high into userland. Are you seeing ERESTARTSYS
+> > being returned to system calls? If so, which ones?
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+>=20
 
-when AOP_WRITEPAGE_ACTIVATE is returned (as NFS does when it detects
-congestion) it is important that the page is redirtied.
-nfs_writepage_locked() doesn't do this, so files can become corrupted as
-writes can be lost.
+I think this bug was introduced by=20
+Commit ae67bd3821bb ("SUNRPC: Fix up task signalling")
+in Linux v5.2.
 
-Note that this is not needed in v6.8 as AOP_WRITEPAGE_ACTIVATE cannot be
-returned.  It is needed for kernels v5.18..v6.7.  From 6.3 onward the patch
-is different as it needs to mention "folio", not "page".
+Prior to that commit, rpc_killall_tasks set the error to -EIO.
+After that commit it calls rpc_signal_task which always uses
+-ERESTARTSYS.
 
-Reported-and-tested-by: Jacek Tomaka <Jacek.Tomaka@poczta.fm>
-Fixes: 6df25e58532b ("nfs: remove reliance on bdi congestion")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfs/write.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This might be an appropriate fix.  Can you please test and confirm?
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index f41d24b54fd1..6a0606668417 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -667,8 +667,10 @@ static int nfs_writepage_locked(struct page *page,
- 	int err;
- 
- 	if (wbc->sync_mode == WB_SYNC_NONE &&
--	    NFS_SERVER(inode)->write_congested)
-+	    NFS_SERVER(inode)->write_congested) {
-+		redirty_page_for_writepage(wbc, page);
- 		return AOP_WRITEPAGE_ACTIVATE;
-+	}
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
- 	nfs_pageio_init_write(&pgio, inode, 0,
--- 
-2.43.0
-
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index 2d61987b3545..ed3a116efd5d 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -222,7 +222,7 @@ void		rpc_put_task(struct rpc_task *);
+ void		rpc_put_task_async(struct rpc_task *);
+ bool		rpc_task_set_rpc_status(struct rpc_task *task, int rpc_status);
+ void		rpc_task_try_cancel(struct rpc_task *task, int error);
+-void		rpc_signal_task(struct rpc_task *);
++void		rpc_signal_task(struct rpc_task *, int);
+ void		rpc_exit_task(struct rpc_task *);
+ void		rpc_exit(struct rpc_task *, int);
+ void		rpc_release_calldata(const struct rpc_call_ops *, void *);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index cda0935a68c9..cdbdfae13030 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -895,7 +895,7 @@ void rpc_killall_tasks(struct rpc_clnt *clnt)
+ 	trace_rpc_clnt_killall(clnt);
+ 	spin_lock(&clnt->cl_lock);
+ 	list_for_each_entry(rovr, &clnt->cl_tasks, tk_task)
+-		rpc_signal_task(rovr);
++		rpc_signal_task(rovr, -EIO);
+ 	spin_unlock(&clnt->cl_lock);
+ }
+ EXPORT_SYMBOL_GPL(rpc_killall_tasks);
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 6debf4fd42d4..e88621881036 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -852,14 +852,14 @@ void rpc_exit_task(struct rpc_task *task)
+ 	}
+ }
+=20
+-void rpc_signal_task(struct rpc_task *task)
++void rpc_signal_task(struct rpc_task *task, int sig)
+ {
+ 	struct rpc_wait_queue *queue;
+=20
+ 	if (!RPC_IS_ACTIVATED(task))
+ 		return;
+=20
+-	if (!rpc_task_set_rpc_status(task, -ERESTARTSYS))
++	if (!rpc_task_set_rpc_status(task, sig))
+ 		return;
+ 	trace_rpc_task_signalled(task, task->tk_action);
+ 	set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
+@@ -992,7 +992,7 @@ static void __rpc_execute(struct rpc_task *task)
+ 			 * clean up after sleeping on some queue, we don't
+ 			 * break the loop here, but go around once more.
+ 			 */
+-			rpc_signal_task(task);
++			rpc_signal_task(task, -ERESTARTSYS);
+ 		}
+ 		trace_rpc_task_sync_wake(task, task->tk_action);
+ 	}
 
