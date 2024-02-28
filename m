@@ -1,114 +1,97 @@
-Return-Path: <linux-nfs+bounces-2107-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2108-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E71386ABEC
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 11:11:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3C1C86B2B3
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 16:06:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0E661C24411
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 10:11:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8128CB25EB2
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 15:06:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781E437171;
-	Wed, 28 Feb 2024 10:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C68F15B983;
+	Wed, 28 Feb 2024 15:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="WFs4QqHL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHIyM4IK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463CC3715E
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 10:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C697215B964;
+	Wed, 28 Feb 2024 15:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709115083; cv=none; b=OJgYTj6Usd4OgDH77aJFt1WiOQOscXGN1O+Pz8plX1e0fdnvJo8Zy0xjAlbJ7ZI+2eXPLs4p9CBXYC9Zfye2g+EoowaLYBt+p9yi4WqyVfixMuX+XzcNkgplpZZuSBXqiFmzC/GdyPWeFJPYtNgUxWSHw4uD0aviozADA91Lj7Q=
+	t=1709132810; cv=none; b=tMTrs1Us9Mj2uGK/fzavAv3ouUqYjpKF6Yxwg2FQ1maARxs+qDQW5Ny3Loq3fdNQxEaZYZ0rcFYYpr0K+9/mWPoLe4K9mQZJvxg9APrTPxM6lQgdfBgRO1SLpgIpu4RksSFq7cqIBN2NHamZrl+79hSNVrogD+eLSn3BTp5EBNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709115083; c=relaxed/simple;
-	bh=mVKgmCUHe0c0160A4ShHbZlLQFhwEJi0mA8mdQxXDRM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dgEjj7s+O/JRVNQkxQFYFJJsMeSqSPsbs5zqrqBp37jUFcDufcdjgsDdiFmsOdMBS0tFDSJNJpQk8qVgrIm0T90CCf7mW3SIHd7U9tqhiuZ6f4yamhXHkPonBIBKll3R+qMAMWR4x14D3Mguc+u+lrxOxfp81TNTJ8kb949Af54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=WFs4QqHL; arc=none smtp.client-ip=207.54.90.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709115081; x=1740651081;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mVKgmCUHe0c0160A4ShHbZlLQFhwEJi0mA8mdQxXDRM=;
-  b=WFs4QqHL8eL38OZ3FPdGnX+n03JLohQuizzdZ8bnEPfOFFptENS4//pD
-   zo7mw+HjCAATTK+u8LKe2Zh1FZiqBqmxt5qcLeHWHBH/Bedyh/ZFeHriD
-   zzExdrGTvQcza2iqckN20xPQlA5ImcubeTTG0FtMWKONGfMmadkyiA1np
-   PlnfhdIPWOLbXZivQVuKPw8gQ3fZnRqufC6wOgCgruQkyYajGpXcdes19
-   e/7QZevP/U5VoAYT/8lVxXIqpTIN0EpwzTOKu2GE3RTrUVct9S+lgvZJl
-   cmmB2acRvQuu+Fetpd7H/Xa/Jb28W36dBHrp7Jva3KBd6CVS61N8uXTEx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="130059992"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705330800"; 
-   d="scan'208";a="130059992"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 19:10:10 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 89D9CD4807
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 19:10:07 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id B91C9D41C8
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 19:10:06 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 4BF5F2008FF86
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 19:10:06 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id B57ED1A006A;
-	Wed, 28 Feb 2024 18:10:05 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] exports(5): update version information of "refer=" option
-Date: Wed, 28 Feb 2024 18:09:57 +0800
-Message-Id: <20240228100957.659-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+	s=arc-20240116; t=1709132810; c=relaxed/simple;
+	bh=WsjvWNf6Aq0b7i4/xtCSY0NyA+Bs7a056XDGZGm0Rmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KK5eApQIDod+DXozW4LsW8yBh13pb0JQbZ9XnrcYeGD5LBXwpUliT7CoYvn1x613glFayvrPRPc80SocEQUgaqxNHYRbW8JVmZpta6R+vd10oZ9tNXPPpqAIIKu+0V8wKbRvu+nKDILLdDV03ITBrx7JhuX5Z0DM+jIwxEAmVQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHIyM4IK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D030C433F1;
+	Wed, 28 Feb 2024 15:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709132810;
+	bh=WsjvWNf6Aq0b7i4/xtCSY0NyA+Bs7a056XDGZGm0Rmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aHIyM4IKyUSEW3Bk0kaQm5X1CrllkjOhHypt6SLXkkElA42eZJzDAjYLJ8H19uk8N
+	 hXrbNtDmm/VwNO/O73Jkumq24Ei95LTQnMjTLoOYGrQZn4ip9SdIguYG45CfuSO5tj
+	 iC5rkeb4rk0HCZxJltZPWcsZ5N89InhdbLWsRseabfb3k5bpMuWbJOoahhKnp2z8+n
+	 55aP3bcXILsX/LvrjdnCm7PYNf/AJU/ZvuPMQpexXwyLsA2uIqDtZCYq4h83oZ2HbP
+	 kpLC/4xO51GxltZAzE0SQx6BR5kMP3QpR9DWF4ESSy1VJY+5uzgSV/D3Adc6D5LVMS
+	 0SgAL3eoY/69Q==
+Date: Wed, 28 Feb 2024 15:06:46 +0000
+From: Simon Horman <horms@kernel.org>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+	kolga@netapp.com, linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+	Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [PATCH v3] sunrpc: remove SLAB_MEM_SPREAD flag usage
+Message-ID: <20240228150646.GJ292522@kernel.org>
+References: <20240227171353.GE277116@kernel.org>
+ <20240228031234.3512969-1-chengming.zhou@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28218.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28218.006
-X-TMASE-Result: 10--4.693000-10.000000
-X-TMASE-MatchedRID: /2NGPvLZz+NHRwCgLVR8bTllFsU0CXSPrthpnZXZolCAI7Mvq/sL5yvG
-	qScnsLroIvrftAIhWmLy9zcRSkKatcc6R/b4owP8WTWEh5N2a9GRiObUuJBGYT19y/o3/Xfgo8W
-	MkQWv6iUoTQl7wNH8Pg1fA1QHegDv3QfwsVk0UbvqwGfCk7KUsy28tscA3ij+oTSMBvnf8wDf1s
-	uzMdCGLYDLKb3crQxym9CiiGhD3DWYwLHMn0XdcBN0rqZByWUp+6jQAmIMdcBg8P2QJ9Oa1iHJp
-	2UYVccqxOB8J0pRLhyJxKSZiwBX6QtRTXOqKmFVftwZ3X11IV0=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228031234.3512969-1-chengming.zhou@linux.dev>
 
-"refer=" is a NFSv4-specific option (as per RFC 7530 section 8.4.3).
-Other client version will ignore this option.
+On Wed, Feb 28, 2024 at 03:12:34AM +0000, Chengming Zhou wrote:
+> From: Chengming Zhou <zhouchengming@bytedance.com>
+> 
+> The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
+> removed as of v6.8-rc1, so it became a dead flag since the commit
+> 16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"). And the
+> series[1] went on to mark it obsolete to avoid confusion for users.
+> Here we can just remove all its users, which has no functional change.
+> 
+> [1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+> v3:
+>  - Improve the indentation, per Simon Horman.
+> 
+> v2:
+>  - Update the patch description and include the related link to
+>    make it clearer that SLAB_MEM_SPREAD flag is now a no-op.
 
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
----
- utils/exportfs/exports.man | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for the updates.
 
-diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
-index 58537a22..c14769e5 100644
---- a/utils/exportfs/exports.man
-+++ b/utils/exportfs/exports.man
-@@ -445,6 +445,9 @@ the given list an alternative location for the filesystem.
- filesystem is not required; so, for example,
- .IR "mount --bind" " /path /path"
- is sufficient.)
-+
-+This option affects only NFSv4 clients. Other clients will ignore
-+all "refer=" parts.
- .TP
- .IR replicas= path@host[+host][:path@host[+host]]
- If the client asks for alternative locations for the export point, it
--- 
-2.43.0
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+In future please consider the following:
+
+1. Don't post new revisions of a series more than once every 24h
+2. Do post new revisions as new email threads
+
+Link: https://docs.kernel.org/process/maintainer-netdev.html
+
+
 
 
