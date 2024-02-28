@@ -1,34 +1,34 @@
-Return-Path: <linux-nfs+bounces-2119-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2118-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5723586BAAE
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 23:23:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C03086BAAD
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 23:23:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA0C628793D
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 22:23:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBC70287989
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Feb 2024 22:23:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 579C73FBBE;
-	Wed, 28 Feb 2024 22:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E111361DC;
+	Wed, 28 Feb 2024 22:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNqaD2al"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i268dFL9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699D770053
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 22:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794ED3FBBE
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 22:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709158980; cv=none; b=DD2Kskk1BhCbtqO4onYQWcaBOhTxMEtRl5bi2mZI5F99rPP7AU5tC1UE0lh9AweT+svNxas9ss2MEi84/SPSNRlTCfODmO36pIJJkSTDougFj+VMM27RjGU3+ofDZIlk9yGcSZivPak4nAy6rA4iNXYKKJJ3/CYJlTaI6XdbNEw=
+	t=1709158979; cv=none; b=sLHgfr/3fY9+gimnYFGx82C0i/5evxzX76RZkk/cQxVSkIsHV9ipZmkfERIzJltuBC/rtc3/D36q/YWXp2gKzbpTLhPFwXRihfNhoVxJ4tXYLb3p0EwDjRFHav1I0Dj70YrtrJWM2p4Cn7fKf+V9u/qvF1aKP4nYIXhfmpobuuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709158980; c=relaxed/simple;
-	bh=xcfYMhL3HrPBFBmXOoDs4s4rHyc7bNsNbf34jRFrOZA=;
+	s=arc-20240116; t=1709158979; c=relaxed/simple;
+	bh=gQPbN78l0G5UhYzzNio6aDA8pJOtwD2QcGS5oS4sQV0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hN8VggDEg964llXHCQMQYFDIg1gcGpOFm0FNyU+mY+YRRPK8wN1GxQJL/IgkqnZzV5e3lQGyYSbGuBccxF0JyUMhnDZJbs6tbHd+ukF6C/qyw8vppgfNIhjVuE4HXC/NuPMP3KWHD0T88BVfs/lDgbNmw13cg3uwN/hP2G19rN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNqaD2al; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=gGUXZfmhFu+VqFZ9CgsttViRvczcE6CQ+jYv1upE0kwB9R0gofZV3ucPidwTXtRrK/YdAvvyAsIMhRUMu8iVxonKcIPOU/Y0grOE1GZBxuE5Q4Uvg3SmCfMfMVSz6QfaEkLu9349hig7zpkjJV96GlShzeHoxiGqlYti3RGjJPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i268dFL9; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -37,33 +37,33 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qK0MeIr5iNqk8ekjY6e0xViiVTgGY/BMdK1aVscoTrc=;
-	b=PNqaD2alojnSfhBGr1Wi3hpCK5kJDmq404QashCC+YZ+3EHGwmQzoF7Z/dL/1uyRrw54b2
-	WP2YwPo1wTB1brXkOgOpcMeGpyxW6Iap90XHsFyIFvnLqB6BAGn6StmbdoRNcry0w55lEL
-	7R+N8LMvrbsVeVgWWGBqJctRkwHCewM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-454-sFa-M3XJON-ehRjazhvveg-1; Wed, 28 Feb 2024 17:22:54 -0500
-X-MC-Unique: sFa-M3XJON-ehRjazhvveg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	bh=88zbIXTngUBi8lmvyV3GlfyN3qReZppAhoBY6z+1TI4=;
+	b=i268dFL9JTcrU4HyEwofdrihfA9I+jtGNOTwXKvDP1y2D0NiW1nKPX4eVugA6i4UFWOktn
+	iuOh1sy3Ve2N8YBxir1D8aRd8UhtEoyrNpxPMB2J6J/cEyJsnWWw84f45IBtMz2hnO5gW3
+	RAGOMxazniuw9C1+qZkNmRsFFUC4aoM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-mMbkOgkRNuuiyV1hPD_YTw-1; Wed,
+ 28 Feb 2024 17:22:54 -0500
+X-MC-Unique: mMbkOgkRNuuiyV1hPD_YTw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7381E83B825
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7AAE93C108C4
 	for <linux-nfs@vger.kernel.org>; Wed, 28 Feb 2024 22:22:54 +0000 (UTC)
 Received: from aion.redhat.com (unknown [10.22.16.176])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EC381121312;
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6736AF63F1;
 	Wed, 28 Feb 2024 22:22:54 +0000 (UTC)
 Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 03DC812BBBB;
+	by aion.redhat.com (Postfix) with ESMTP id 0FE8512BBBC;
 	Wed, 28 Feb 2024 17:22:54 -0500 (EST)
 From: Scott Mayhew <smayhew@redhat.com>
 To: steved@redhat.com
 Cc: linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH 1/2] gssd: add support for an "allowed-enctypes" option in nfs.conf
-Date: Wed, 28 Feb 2024 17:22:52 -0500
-Message-ID: <20240228222253.1080880-2-smayhew@redhat.com>
+Subject: [nfs-utils PATCH 2/2] gssd: add a "backoff" feature to limit_krb5_enctypes()
+Date: Wed, 28 Feb 2024 17:22:53 -0500
+Message-ID: <20240228222253.1080880-3-smayhew@redhat.com>
 In-Reply-To: <20240228222253.1080880-1-smayhew@redhat.com>
 References: <20240228222253.1080880-1-smayhew@redhat.com>
 Precedence: bulk
@@ -73,259 +73,150 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Newer kernels have support for newer krb5 encryption types, AES with
-SHA2 and Camellia.  An NFS client with an "old" kernel can talk to
-and NFS server with a "new" kernel and it just works.   An NFS client
-with a "new" kernel can talk to an NFS server with an "old" kernel, but
-that requires some additional configuration (particularly if the NFS
-server does have support for the newer encryption types in its userspace
-krb5 libraries) that may be unclear and/or burdensome to the admin.
+If the NFS server reset the connection when we tried to create a GSS
+context with it, then there's a good chance that we used an encryption
+type that it didn't support.
 
-1) If the NFS server has support for the newer encryption types in the
-   userspace krb5 libraries, but not in the kernel's RPCSEC_GSS code,
-   then its possible that it also already has "nfs" keys using those
-   newer encryption types in its keytab.  In that case, it's necessary
-   to regenerate the "nfs" keys without the newer encryption types.
-   The reason this is necessary is because if the NFS client requests
-   an "nfs" service ticket from the KDC, and the list of enctypes in
-   in that TGS-REQ contains a newer encryption type, and the KDC had
-   previously generated a key for the NFS server using the newer
-   encryption type, then the resulting service ticket in the TGS-REP
-   will be using the newer encryption type and the NFS server will not
-   be able to decrypt it.
-
-2) It is necessary to either modify the permitted_enctypes field of the
-   krb5.conf or create a custom crypto-policy module (if the
-   crypto-policies package is being used) on the NFS *client* so that it
-   does not include the newer encryption types.  The reason this is
-   necessary is because it affects the list of encryption types that
-   will be present in the RPCSEC_GSS_INIT request that the NFS client
-   sends to the NFS server.  The kernel on the NFS server cannot not
-   process the request on its own; it has to upcall to gssproxy to do
-   that... and again if the userspace krb5 libraries on the NFS server
-   have support for the newer encryption types, then it will select one
-   of those and the kernel will not be able to import the context when
-   it gets the downcall.  Also note that modifying the permitted_enctypes
-   field and/or crypto policy has the side effect of impacting everything
-   krb5 related, not just just NFS.
-
-So add support for an "allowed-enctypes" field in nfs.conf.  This allows
-the admin to restrict gssd to using a subset of the encryption types
-that are supported by the kernel and krb5 libraries.  This will remove
-the need for steps 1 & 2 above, and will only affect NFS rather than
-krb5 as a whole.
-
-For example, for a "new" NFS client talking to an "old" NFS server, the
-admin will probably want this in the client's nfs.conf:
-
-allowed-enctypes=aes256-cts-hmac-sha1-96,aes128-cts-hmac-sha1-96
+Add a one time backoff/retry mechanism, where we adjust the list of
+encryption types that we set via gss_set_allowable_enctypes().  We can
+do this easily because the list of encryption types should be ordered
+from highest preference to lowest.  We just need to find the first entry
+that's not one of the newer encryption types, and then use that as the
+start of the list.
 
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- nfs.conf               |  1 +
- utils/gssd/gssd.c      |  6 +++
- utils/gssd/gssd.man    |  9 ++++
- utils/gssd/krb5_util.c | 95 +++++++++++++++++++++++++++++++++++++++---
- utils/gssd/krb5_util.h |  1 +
- 5 files changed, 106 insertions(+), 6 deletions(-)
+ utils/gssd/gssd_proc.c | 15 +++++++++++++--
+ utils/gssd/krb5_util.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ utils/gssd/krb5_util.h |  2 +-
+ 3 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/nfs.conf b/nfs.conf
-index 323f072b..23b5f7d4 100644
---- a/nfs.conf
-+++ b/nfs.conf
-@@ -23,6 +23,7 @@
- # use-gss-proxy=0
- # avoid-dns=1
- # limit-to-legacy-enctypes=0
-+# allowed-enctypes=aes256-cts-hmac-sha384-192,aes128-cts-hmac-sha256-128,camellia256-cts-cmac,camellia128-cts-cmac,aes256-cts-hmac-sha1-96,aes128-cts-hmac-sha1-96
- # context-timeout=0
- # rpc-timeout=5
- # keytab-file=/etc/krb5.keytab
-diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
-index ca9b3267..10c731ab 100644
---- a/utils/gssd/gssd.c
-+++ b/utils/gssd/gssd.c
-@@ -1232,6 +1232,12 @@ main(int argc, char *argv[])
- 
- 	daemon_init(fg);
- 
-+#ifdef HAVE_SET_ALLOWABLE_ENCTYPES
-+	rc = get_allowed_enctypes();
-+	if (rc)
-+		exit(EXIT_FAILURE);
+diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
+index 7629de0b..0da54598 100644
+--- a/utils/gssd/gssd_proc.c
++++ b/utils/gssd/gssd_proc.c
+@@ -337,6 +337,10 @@ create_auth_rpc_client(struct clnt_info *clp,
+ 	rpc_gss_options_req_t	req;
+ 	rpc_gss_options_ret_t	ret;
+ 	char			mechanism[] = "kerberos_v5";
 +#endif
-+
- 	if (gssd_check_mechs() != 0)
- 		errx(1, "Problem with gssapi library");
++#ifdef HAVE_SET_ALLOWABLE_ENCTYPES
++	bool			backoff = false;
++	struct rpc_err		err;
+ #endif
+ 	pthread_t tid = pthread_self();
  
-diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
-index 2a5384d3..c735eff6 100644
---- a/utils/gssd/gssd.man
-+++ b/utils/gssd/gssd.man
-@@ -346,6 +346,15 @@ flag.
- Equivalent to
- .BR -l .
- .TP
-+.B allowed-enctypes
-+Allows you to restrict
-+.B rpc.gssd
-+to using a subset of the encryption types permitted by the kernel and the krb5
-+libraries.  This is useful if you need to interoperate with an NFS server that
-+does not have support for the newer SHA2 and Camellia encryption types, for
-+example.  This configuration file option does not have an equivalent
-+command-line option.
-+.TP
- .B context-timeout
- Equivalent to
- .BR -t .
+@@ -354,14 +358,14 @@ create_auth_rpc_client(struct clnt_info *clp,
+ 		goto out_fail;
+ 	}
+ 
+-
+ 	if (authtype == AUTHTYPE_KRB5) {
+ #ifdef HAVE_SET_ALLOWABLE_ENCTYPES
++again:
+ 		/*
+ 		 * Do this before creating rpc connection since we won't need
+ 		 * rpc connection if it fails!
+ 		 */
+-		if (limit_krb5_enctypes(&sec)) {
++		if (limit_krb5_enctypes(&sec, backoff)) {
+ 			printerr(1, "WARNING: Failed while limiting krb5 "
+ 				    "encryption types for user with uid %d\n",
+ 				 uid);
+@@ -445,6 +449,13 @@ create_auth_rpc_client(struct clnt_info *clp,
+ 					goto success;
+ 			}
+ 		}
++#endif
++#ifdef HAVE_SET_ALLOWABLE_ENCTYPES
++		clnt_geterr(rpc_clnt, &err);
++		if (err.re_errno == ECONNRESET && !backoff) {
++			backoff = true;
++			goto again;
++		}
+ #endif
+ 		/* Our caller should print appropriate message */
+ 		printerr(2, "WARNING: Failed to create krb5 context for "
 diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index 6f66ef4f..57b3cf8a 100644
+index 57b3cf8a..5502e74e 100644
 --- a/utils/gssd/krb5_util.c
 +++ b/utils/gssd/krb5_util.c
-@@ -129,6 +129,7 @@
- #include "err_util.h"
- #include "gss_util.h"
- #include "krb5_util.h"
-+#include "conffile.h"
+@@ -1675,7 +1675,7 @@ out:
+  */
  
- /*
-  * List of principals from our keytab that we
-@@ -155,6 +156,8 @@ static pthread_mutex_t ple_lock = PTHREAD_MUTEX_INITIALIZER;
- 
- #ifdef HAVE_SET_ALLOWABLE_ENCTYPES
- int limit_to_legacy_enctypes = 0;
-+krb5_enctype *allowed_enctypes = NULL;
-+int num_allowed_enctypes = 0;
- #endif
- 
- /*==========================*/
-@@ -1596,6 +1599,68 @@ out_cred:
- }
- 
- #ifdef HAVE_SET_ALLOWABLE_ENCTYPES
-+int
-+get_allowed_enctypes(void)
-+{
-+	struct conf_list *allowed_etypes = NULL;
-+	struct conf_list_node *node;
-+	char *buf = NULL, *old = NULL;
-+	int len, ret = 0;
-+
-+	allowed_etypes = conf_get_list("gssd", "allowed-enctypes");
-+	if (allowed_etypes) {
-+		TAILQ_FOREACH(node, &(allowed_etypes->fields), link) {
-+			allowed_enctypes = realloc(allowed_enctypes,
-+						   (num_allowed_enctypes + 1) *
-+						   sizeof(*allowed_enctypes));
-+			if (allowed_enctypes == NULL) {
-+				ret = ENOMEM;
-+				goto out_err;
-+			}
-+			ret = krb5_string_to_enctype(node->field,
-+						     &allowed_enctypes[num_allowed_enctypes]);
-+			if (ret) {
-+				printerr(0, "%s: invalid enctype %s",
-+					 __func__, node->field);
-+				goto out_err;
-+			}
-+			if (get_verbosity() > 1) {
-+				if (buf == NULL) {
-+					len = asprintf(&buf, "%s(%d)", node->field,
-+						       allowed_enctypes[num_allowed_enctypes]);
-+					if (len < 0) {
-+						ret = ENOMEM;
-+						goto out_err;
-+					}
-+				} else {
-+					old = buf;
-+					len = asprintf(&buf, "%s,%s(%d)", old, node->field,
-+						       allowed_enctypes[num_allowed_enctypes]);
-+					if (len < 0) {
-+						ret = ENOMEM;
-+						goto out_err;
-+					}
-+					free(old);
-+					old = NULL;
-+				}
-+			}
-+			num_allowed_enctypes++;
-+		}
-+		printerr(2, "%s: allowed_enctypes = %s", __func__, buf);
-+	}
-+	goto out;
-+out_err:
-+	num_allowed_enctypes = 0;
-+	free(allowed_enctypes);
-+out:
-+	free(buf);
-+	if (old != buf)
-+		free(old);
-+	if (allowed_etypes)
-+		conf_free_list(allowed_etypes);
-+	return ret;
-+}
-+
- /*
-  * this routine obtains a credentials handle via gss_acquire_cred()
-  * then calls gss_krb5_set_allowable_enctypes() to limit the encryption
-@@ -1619,6 +1684,10 @@ limit_krb5_enctypes(struct rpc_gss_sec *sec)
- 	int num_enctypes = sizeof(enctypes) / sizeof(enctypes[0]);
- 	extern int num_krb5_enctypes;
- 	extern krb5_enctype *krb5_enctypes;
-+	extern int num_allowed_enctypes;
-+	extern krb5_enctype *allowed_enctypes;
-+	int num_set_enctypes;
-+	krb5_enctype *set_enctypes;
+ int
+-limit_krb5_enctypes(struct rpc_gss_sec *sec)
++limit_krb5_enctypes(struct rpc_gss_sec *sec, bool backoff)
+ {
+ 	u_int maj_stat, min_stat;
+ 	krb5_enctype enctypes[] = { ENCTYPE_DES_CBC_CRC,
+@@ -1689,6 +1689,17 @@ limit_krb5_enctypes(struct rpc_gss_sec *sec)
+ 	int num_set_enctypes;
+ 	krb5_enctype *set_enctypes;
  	int err = -1;
++	int i, j;
++	bool done = false;
++
++	if (backoff && sec->cred != GSS_C_NO_CREDENTIAL) {
++		printerr(2, "%s: backoff: releasing old cred\n", __func__);
++		maj_stat = gss_release_cred(&min_stat, &sec->cred);
++		if (maj_stat != GSS_S_COMPLETE) {
++			printerr(2, "%s: gss_release_cred() failed\n", __func__);
++			return -1;
++		}
++	}
  
  	if (sec->cred == GSS_C_NO_CREDENTIAL) {
-@@ -1631,12 +1700,26 @@ limit_krb5_enctypes(struct rpc_gss_sec *sec)
- 	 * If we failed for any reason to produce global
- 	 * list of supported enctypes, use local default here.
- 	 */
--	if (krb5_enctypes == NULL || limit_to_legacy_enctypes)
--		maj_stat = gss_set_allowable_enctypes(&min_stat, sec->cred,
--					&krb5oid, num_enctypes, enctypes);
--	else
--		maj_stat = gss_set_allowable_enctypes(&min_stat, sec->cred,
--					&krb5oid, num_krb5_enctypes, krb5_enctypes);
-+	if (krb5_enctypes == NULL || limit_to_legacy_enctypes ||
-+			allowed_enctypes) {
-+		if (allowed_enctypes) {
-+			printerr(2, "%s: using allowed enctypes from config\n",
-+				 __func__);
-+			num_set_enctypes = num_allowed_enctypes;
-+			set_enctypes = allowed_enctypes;
-+		} else {
-+			printerr(2, "%s: using legacy enctypes\n", __func__);
-+			num_set_enctypes = num_enctypes;
-+			set_enctypes = enctypes;
+ 		err = gssd_acquire_krb5_cred(&sec->cred);
+@@ -1718,6 +1729,33 @@ limit_krb5_enctypes(struct rpc_gss_sec *sec)
+ 		set_enctypes = krb5_enctypes;
+ 	}
+ 
++	if (backoff) {
++		j = num_set_enctypes;
++		for (i = 0; i < j && !done; i++) {
++			switch (*set_enctypes) {
++			case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
++			case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
++			case ENCTYPE_CAMELLIA128_CTS_CMAC:
++			case ENCTYPE_CAMELLIA256_CTS_CMAC:
++				printerr(2, "%s: backoff: removing enctype %d\n",
++					 __func__, *set_enctypes);
++				set_enctypes++;
++				num_set_enctypes--;
++				break;
++			default:
++				done = true;
++				break;
++			}
 +		}
-+	} else {
-+		printerr(2, "%s: using enctypes from the kernel\n", __func__);
-+		num_set_enctypes = num_krb5_enctypes;
-+		set_enctypes = krb5_enctypes;
++		printerr(2, "%s: backoff: %d remaining enctypes\n",
++			 __func__, num_set_enctypes);
++		if (!num_set_enctypes) {
++			printerr(0, "%s: no remaining enctypes after backoff\n",
++				 __func__);
++			return -1;
++		}
 +	}
 +
-+	maj_stat = gss_set_allowable_enctypes(&min_stat, sec->cred,
-+				&krb5oid, num_set_enctypes, set_enctypes);
+ 	maj_stat = gss_set_allowable_enctypes(&min_stat, sec->cred,
+ 				&krb5oid, num_set_enctypes, set_enctypes);
  
- 	if (maj_stat != GSS_S_COMPLETE) {
- 		pgsserr("gss_set_allowable_enctypes",
 diff --git a/utils/gssd/krb5_util.h b/utils/gssd/krb5_util.h
-index 7ef87018..40ad3233 100644
+index 40ad3233..0be0c500 100644
 --- a/utils/gssd/krb5_util.h
 +++ b/utils/gssd/krb5_util.h
-@@ -27,6 +27,7 @@ int gssd_k5_remove_bad_service_cred(char *srvname);
+@@ -26,7 +26,7 @@ int gssd_k5_remove_bad_service_cred(char *srvname);
+ 
  #ifdef HAVE_SET_ALLOWABLE_ENCTYPES
  extern int limit_to_legacy_enctypes;
- int limit_krb5_enctypes(struct rpc_gss_sec *sec);
-+int get_allowed_enctypes(void);
+-int limit_krb5_enctypes(struct rpc_gss_sec *sec);
++int limit_krb5_enctypes(struct rpc_gss_sec *sec, bool backoff);
+ int get_allowed_enctypes(void);
  #endif
  
- /*
 -- 
 2.43.0
 
