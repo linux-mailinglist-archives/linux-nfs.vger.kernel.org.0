@@ -1,126 +1,116 @@
-Return-Path: <linux-nfs+bounces-2134-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2135-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B507686D95F
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 03:06:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15FD486DF95
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 11:47:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AFB01F243AF
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 02:06:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 480821C20A82
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 10:47:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 576AD39AE8;
-	Fri,  1 Mar 2024 02:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DA76AF86;
+	Fri,  1 Mar 2024 10:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="qanMwY/F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F0A39ACE;
-	Fri,  1 Mar 2024 02:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031566AF85
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Mar 2024 10:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709258789; cv=none; b=ITS57n3gdkR5MClQV0ybJKMQ0EZiMsPHnw7ydnVGSfOCXMGqTt48WD5sxKRm5SJQANrjdFY77BAi5nS+WRASGTjVR/nkz58NnOAfbdEShDpDD+igkU8PZ9rqnZlCOlTTjABtv0WwVuqxbut0jlvR/5Om2ZrfnaSPzmiZKIpy3FI=
+	t=1709290040; cv=none; b=RsKMVKxw0vIL4xIUBAdjsT4H8hMLUcW4TgMShYBka4U+c17vv1BRbT8eOCeK1Zv9Q9FOhcG2OlmzLCtwAOldAM4ize5WD8hNUDNtT0NnYinO66NU/P3YvuV5RnNqtLsbpHo91aLWhqomIKUj1jYCv4QRlR6cJUZb9BJ3DXBHqKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709258789; c=relaxed/simple;
-	bh=fJAAOCcqK3dYdJ3pSM8aaqXhrQJt3qoqEqGB4cghUIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ni4G7gS0MZIw/mSC/6kl91/ZrA91lIsjc5kRE75Tdsn1ApL38Frj8T+1/+12L3A1OfDd/C5rgfw4pJS/exkYmvlO66D6dfkZhTPNBrmZLwGiLMa3VS1dhDKmsaGHEVFNFonpzC95tl7tNXZhoNNcIOEeYtF4rStn/WchJZ3ronY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c989d866796349e792069577c80d5396-20240301
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:e3765211-90fa-4aee-99e5-92fc7f0ccea8,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.37,REQID:e3765211-90fa-4aee-99e5-92fc7f0ccea8,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:6bdbe08f-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:2402292140264UI5XS11,BulkQuantity:5,Recheck:0,SF:44|64|66|38|24|17|1
-	9|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,B
-	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: c989d866796349e792069577c80d5396-20240301
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 561634308; Fri, 01 Mar 2024 10:06:19 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 5A3E2E000EBC;
-	Fri,  1 Mar 2024 10:06:19 +0800 (CST)
-X-ns-mid: postfix-65E1381B-294018254
-Received: from [172.20.15.254] (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 01990E000EBC;
-	Fri,  1 Mar 2024 10:06:18 +0800 (CST)
-Message-ID: <b5be1cba-42b2-4474-a607-771331dbc9c8@kylinos.cn>
-Date: Fri, 1 Mar 2024 10:06:17 +0800
+	s=arc-20240116; t=1709290040; c=relaxed/simple;
+	bh=lgjH0vybG+2dZIZTV+Z00tWWhM6L4Mi0RmCLNXz/+cM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fHUEwJrVXUaSn45XduViLG5Tv9y0c4DSGaBMzVYxUxhoPLzKUf/oUNT/uDkuJtLmcocnVLZjPlM+6PnMZnJBtZMuQrjj3muF2D1DqBYZ0AUU/1qE0X/tfn4an76tRa3lRKU8Lqud6AahtetjThGq4DSEbmAuE0mzdgEAU/UbB+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=qanMwY/F; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5131316693cso2448929e87.0
+        for <linux-nfs@vger.kernel.org>; Fri, 01 Mar 2024 02:47:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1709290035; x=1709894835; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CfJ2KS24rEdBsZqlOQ6DJ4IFgaHHDDyOXYJoRN5bBg0=;
+        b=qanMwY/FEgZMGnWJ9OvXD4z3CwZV3lhopEKTMFy/e9AEIg3s5Qgl+NKItAH2tS2Hc9
+         yl99fL+/tWHcyHmxOl+f35s3WkS1jWoaO/s3uK+Hh2PNeud1WEN9QHZmBcD01+hBjJxT
+         X3EvhnW2g9KF0ae5f82WcB7plZGUoKT3G4u9FF0dptEnI+vx1tqgbVFzkVekk9VDp4n1
+         7lfdBPmUQbg/DYdMxgTinz4ufoKd8RUu+pykO/LupKlloIEO8vswTK/pjTDpI/a4KvHS
+         +jdciElMDTKHVKoPbQo7zjR3CaLSikoSVyZxIgnRzFtuKlDllyWKCPWtrBgbunMwWVTa
+         fK3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709290035; x=1709894835;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CfJ2KS24rEdBsZqlOQ6DJ4IFgaHHDDyOXYJoRN5bBg0=;
+        b=AUMyLs3U3nNs5jDXcKVTtKkB+fd+lG8+HhDKLSvIYgHpswo2DSLo5B4ABOpA7+Jr/p
+         iUqVdWoAhAv1vdUIr5nyPyC1v9SwqKLE2GZoXPLhjLdIaK5vUnRA0X1CEm6FhG0XeB+M
+         8i004Ts9yBMQiZriLDAfSVZbso5cdf+FKsMrfvkrDqXsNvgmkYhseTIdAuYRhbIAv4PC
+         Q9y0eA36fLBL5fjvz9zHjPbGq4seslq6jgJWdvgfNaOBOtqmAQrQBtjR1SPlBM6nq3ee
+         yfMr6dQA+C4fEukJkZcR2GvUXH5FdeIsQzSIMhLukMsre+u8AXGAGomwcJknkLSDCuY0
+         ifHw==
+X-Gm-Message-State: AOJu0YxEq1DklPgw056XR0KeyYt+tDrsPDidpXWgR/0C3Op7W3StG3oD
+	M6mJL2xIAj1KKcGtgAi5koVUNmJdtZdXMNIVzehTqF4gm8G7PJTzE70SBReFc9xVrYIWQfZnD0o
+	O2yE/cyYauR9dNJu2cnuO6AxhveUI8kmtgkvZx5673gj0REQgTVSXBDdI8rI=
+X-Google-Smtp-Source: AGHT+IEGwBC4rQTlZpTS8BUCycJ+ZxSl03QAMaxR8Hb8fLGMAks1M0ONW9UGU7JGCSOtM6+K1ijU2uaSw9N87cenrwI=
+X-Received: by 2002:a19:ca43:0:b0:512:dc21:d89c with SMTP id
+ h3-20020a19ca43000000b00512dc21d89cmr810971lfj.38.1709290034642; Fri, 01 Mar
+ 2024 02:47:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfs: use KMEM_CACHE() to create nfs_commit_data cache
-Content-Language: en-US
-To: Trond Myklebust <trondmy@hammerspace.com>,
- "anna@kernel.org" <anna@kernel.org>,
- "kunwu.chan@linux.dev" <kunwu.chan@linux.dev>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240229094112.1154644-1-kunwu.chan@linux.dev>
- <6a1136c39cc9d8e4ae4800ad81e8e72f3b8b4516.camel@hammerspace.com>
-From: Kunwu Chan <chentao@kylinos.cn>
-In-Reply-To: <6a1136c39cc9d8e4ae4800ad81e8e72f3b8b4516.camel@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+From: Zhitao Li <zhitao.li@smartx.com>
+Date: Fri, 1 Mar 2024 18:47:01 +0800
+Message-ID: <CAPKjjnqJZnZb3ja_HgzF7Qzxppnt5E5bsLgL5JzRjw0uDvvVTw@mail.gmail.com>
+Subject: Problem: nfstest_cache acdirmin_data/acdirmax_data failures [nfstest] [NFS]
+To: mora@netapp.com
+Cc: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for the reply.
+Hi, mora,
 
-On 2024/2/29 21:40, Trond Myklebust wrote:
-> On Thu, 2024-02-29 at 17:41 +0800, kunwu.chan@linux.dev wrote:
->> From: Kunwu Chan <chentao@kylinos.cn>
->>
->> Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
->> the creation of SLAB caches when the default values are used.
->>
->> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
->> ---
->>  =C2=A0fs/nfs/write.c | 5 +----
->>  =C2=A01 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
->> index bb79d3a886ae..6a75772d447f 100644
->> --- a/fs/nfs/write.c
->> +++ b/fs/nfs/write.c
->> @@ -2148,10 +2148,7 @@ int __init nfs_init_writepagecache(void)
->>  =C2=A0	if (nfs_wdata_mempool =3D=3D NULL)
->>  =C2=A0		goto out_destroy_write_cache;
->>  =20
->> -	nfs_cdata_cachep =3D kmem_cache_create("nfs_commit_data",
->> -					=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(struct
->> nfs_commit_data),
->> -					=C2=A0=C2=A0=C2=A0=C2=A0 0, SLAB_HWCACHE_ALIGN,
->> -					=C2=A0=C2=A0=C2=A0=C2=A0 NULL);
->> +	nfs_cdata_cachep =3D KMEM_CACHE(nfs_commit_data,
->> SLAB_HWCACHE_ALIGN);
->>  =C2=A0	if (nfs_cdata_cachep =3D=3D NULL)
->>  =C2=A0		goto out_destroy_write_mempool;
->=20
-> If this were being done as part of an actual functional code change,
-> then I'd be OK with it, but otherwise it is just unnecessary churn that
-> gets in the way of back porting any future fixes.
-It's just my personal opinion, I meant to do some cleanup. It's not=20
-entirely necessary either, as everyone prefers a different style of=20
-code. It doesn't matter.
->=20
->=20
---=20
-Thanks,
-   Kunwu
+I'm using NFSTest, which helps us a lot.
 
+I met with failures when running nfstest_cache in cases
+"acdirmin_data" and "acdirmax_data". The error message is as follows:
+ FAIL: Directory listing should have not changed at t=0
+ FAIL: Directory listing should have not changed just before acdirmin
+ PASS: Directory listing should have changed just after acdirmin
+
+My environment is as follows:
+1. Linux kernel for NFS client: v6.7.0
+2. NFSTest version: 3.2
+3. Test command: nfstest_cache --client xxx --server xxx --export /ns1
+--nfsversion=3 -m /mnt/test --datadir=data --runtest=acdirmin_data
+
+
+Both above cases have the same pattern:
+1. Client 1: List some directory.
+2. Client 2: add new dentry by mkdir() to the directory
+3. Client 1: List the directory.
+
+The cases expect that Client 1 will use directory dentries cache in
+Step 1, and will not see the new dentry created by Step 2.  After some
+time, client 1 will sync with the NFS server, and see the new dentry.
+
+However, in my environment, client 1 can see the new dentry at once
+after client 2 mkdir().  It seems that  the NFS client can check if
+the directory has changed and get the latest entries.
+
+
+Could you give me some help?  BTW, is there any instructions I can
+follow to make some contributions?
+
+Looking forward to your early reply.
+
+Best regards,
+Zhitao Li.
 
