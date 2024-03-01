@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-2136-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2137-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35FD886E160
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 13:54:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 021AC86E193
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 14:09:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C91961F22FCF
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 12:54:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23DF41C21FB9
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Mar 2024 13:09:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F09840860;
-	Fri,  1 Mar 2024 12:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135386A028;
+	Fri,  1 Mar 2024 13:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksEeA/7J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoXHIxd/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B4E40859
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Mar 2024 12:54:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BAA5F483
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Mar 2024 13:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709297682; cv=none; b=itI45iNDOY+sc0h2j9KcAM+gtwHnau5xpP/AOxIWtPy1Fl7//fXHj0KQ7tsX0BYP09Jw9SYV4mBGH9OAddkVeocQr3l/pt6oVc/ARHR3LkJWwb6gVuio4JQql+ddjncu+izcy2po66SZ/60Cn5KDjl0+BJWC5AgA0DnYw5q7UPE=
+	t=1709298560; cv=none; b=JE9btx6c7UWl7cHckgYfKeGGzoz4gLXJr5ufovBaQzDodyL8c8qgJXSKO7A544AAb5GChCjC6Cxa4vLp/edC+jTbNGSHfnkIYIkwJaV7un7Wqo3KRbsHBzFdhY1owzCQ1k0l4zYR4Zfzas2apCgimUbHjIyieOEpzzp9G5bGL2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709297682; c=relaxed/simple;
-	bh=I5P0qJpydLRf+aB9dKTVTFyZxHjxdoxKxWHm8M7VwB4=;
+	s=arc-20240116; t=1709298560; c=relaxed/simple;
+	bh=GIuJC9HzBERIb/zQ4IThJHhWUFXU48q78UwJiHO8SmI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GKjTJEXFGLczkMM/KPrYHiJwOkc2IDE4CNqaXyvCB/E4IYpPM90++xcLl77QvKNpOLsPd2l4Zsonqm+Cux2AyvE6N+rg9mV96FlQR343HstIYYMV6FRI4nsJRA3tblGy3l/F0GXTRbEwwWEbTWxBBn6xD3eJvUf2M3s0HTPD5WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksEeA/7J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360A3C433C7;
-	Fri,  1 Mar 2024 12:54:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=oo9RrJV1Vk9tfrYpQ1VZgogCHNzeqYleP6hOD+i5MPOMgNmuF6BbNauF4zU7nP1BBLT69mXxl7r60jabDPvNICa91iTMFvwAEpBEd6/MIR/MlD3VtKHZcRGRxkJCkmuCWhuNL2qSwojVT853cFSBucqVXLD9JXJMbsxoxl3j9nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoXHIxd/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EA4C433F1;
+	Fri,  1 Mar 2024 13:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709297681;
-	bh=I5P0qJpydLRf+aB9dKTVTFyZxHjxdoxKxWHm8M7VwB4=;
+	s=k20201202; t=1709298559;
+	bh=GIuJC9HzBERIb/zQ4IThJHhWUFXU48q78UwJiHO8SmI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ksEeA/7JSybOfHZcHp/eU9M3cdWt8BfqxzM5RRtd8OeuQtHvbykTls5aSXc/5XLTh
-	 jeRTdgaNbiYQHbhQu477C7WgLr960vfPkOnUzVwQN7z6b69mCpxn4px3ZDbPIJxF5t
-	 ZBkarKHgbpWaDuCso8UCRra32JOqojOv7Yvl2HMIuTgSoGGu7uuvodwh5HFDzk1xGp
-	 gbUfPjeg7IdJdOPw3N6ezYTg8oROj250gy3c8JMK6s7PznkEQ9clhEzla36QA0/8MZ
-	 7Em2baeRXZvFWz/8vdjd9Edf2evU7kP/lUM/CYRm1Wm2C9P2TOup6NVPlLhPqqFTWP
-	 sQ+S/llC4zEyw==
-Message-ID: <b2f720cb8993fbf0072a3d02434214c5f3b613fa.camel@kernel.org>
-Subject: Re: [PATCH 1/3] nfsd: move nfsd4_cstate_assign_replay() earlier in
- open handling.
+	b=FoXHIxd/WpJETahQPrpB+7Xffyl0Ya+jIbgmJoBAnk4sMY704awm1BVPqqbDJM6dQ
+	 AnAmBaERWX6OLa447R+uoAXeejwpoOgNEx3qvaQKqYfq3JjwVYGliuFw/O+ca06C1Y
+	 Pnpi17IKalRd4HgweTyP+eUJrTsiJRZwFlEpzKGO7f10d/+Q1hSsQul8MXumW3HmnJ
+	 2ziGOPy6iOPQRYJITMTnf93yi45r2i1NnZG2nl3eht8qUzSummq1XdcVEglEo3L9Jg
+	 hISy+XRECyQxMHdosDI1+GCna44SvsOALc8DkMRRgeVPjQTNyn9MnPOKSLvJKidKNp
+	 hLVQSVbVSt69g==
+Message-ID: <0554a33c0f3e15c24dc6dbe41287febac394dec0.camel@kernel.org>
+Subject: Re: [PATCH 2/3] nfsd: replace rp_mutex to avoid deadlock in
+ move_to_close_lru()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
 	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Fri, 01 Mar 2024 07:54:39 -0500
-In-Reply-To: <20240301000950.2306-2-neilb@suse.de>
+Date: Fri, 01 Mar 2024 08:09:17 -0500
+In-Reply-To: <20240301000950.2306-3-neilb@suse.de>
 References: <20240301000950.2306-1-neilb@suse.de>
-	 <20240301000950.2306-2-neilb@suse.de>
+	 <20240301000950.2306-3-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -72,71 +72,186 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Fri, 2024-03-01 at 11:07 +1100, NeilBrown wrote:
-> Rather than taking the rp_mutex in nfsd4_cleanup_open_state() (which
-> seems counter-intuitive), take it and assign rp_owner as soon as
-> possible.
+> move_to_close_lru() waits for sc_count to become zero while holding
+> rp_mutex.  This can deadlock if another thread holds a reference and is
+> waiting for rp_mutex.
 >=20
-> This will support a future change when nfsd4_cstate_assign_replay() might
-> fail.
+> By the time we get to move_to_close_lru() the openowner is unhashed and
+> cannot be found any more.  So code waiting for the mutex can safely
+> retry the lookup if move_to_close_lru() has started.
+>=20
+> So change rp_mutex to an atomic_t with three states:
+>=20
+>  RP_UNLOCK   - state is still hashed, not locked for reply
+>  RP_LOCKED   - state is still hashed, is locked for reply
+>  RP_UNHASHED - state is now hashed, no code can get a lock.
+>=20
+
+"is now unhashed", I think...
+
+> Use wait_ver_event() to wait for either a lock, or for the owner to be
+> unhashed.  In the latter case, retry the lookup.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
+>  fs/nfsd/nfs4state.c | 46 ++++++++++++++++++++++++++++++++++++---------
+>  fs/nfsd/state.h     |  2 +-
+>  2 files changed, 38 insertions(+), 10 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7d6c657e0409..e625f738f7b0 100644
+> index e625f738f7b0..5dab316932d3 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -5066,15 +5066,15 @@ nfsd4_process_open1(struct nfsd4_compound_state *=
-cstate,
+> @@ -4442,21 +4442,32 @@ nfsd4_init_leases_net(struct nfsd_net *nn)
+>  	atomic_set(&nn->nfsd_courtesy_clients, 0);
+>  }
+> =20
+> +enum rp_lock {
+> +	RP_UNLOCKED,
+> +	RP_LOCKED,
+> +	RP_UNHASHED,
+> +};
+> +
+>  static void init_nfs4_replay(struct nfs4_replay *rp)
+>  {
+>  	rp->rp_status =3D nfserr_serverfault;
+>  	rp->rp_buflen =3D 0;
+>  	rp->rp_buf =3D rp->rp_ibuf;
+> -	mutex_init(&rp->rp_mutex);
+> +	atomic_set(&rp->rp_locked, RP_UNLOCKED);
+>  }
+> =20
+> -static void nfsd4_cstate_assign_replay(struct nfsd4_compound_state *csta=
+te,
+> -		struct nfs4_stateowner *so)
+> +static int nfsd4_cstate_assign_replay(struct nfsd4_compound_state *cstat=
+e,
+> +				      struct nfs4_stateowner *so)
+>  {
+>  	if (!nfsd4_has_session(cstate)) {
+> -		mutex_lock(&so->so_replay.rp_mutex);
+> +		wait_var_event(&so->so_replay.rp_locked,
+> +			       atomic_cmpxchg(&so->so_replay.rp_locked,
+> +					      RP_UNLOCKED, RP_LOCKED) !=3D RP_LOCKED);
+> +		if (atomic_read(&so->so_replay.rp_locked) =3D=3D RP_UNHASHED)
+> +			return -EAGAIN;
+>  		cstate->replay_owner =3D nfs4_get_stateowner(so);
+>  	}
+> +	return 0;
+>  }
+> =20
+>  void nfsd4_cstate_clear_replay(struct nfsd4_compound_state *cstate)
+> @@ -4465,7 +4476,8 @@ void nfsd4_cstate_clear_replay(struct nfsd4_compoun=
+d_state *cstate)
+> =20
+>  	if (so !=3D NULL) {
+>  		cstate->replay_owner =3D NULL;
+> -		mutex_unlock(&so->so_replay.rp_mutex);
+> +		atomic_set(&so->so_replay.rp_locked, RP_UNLOCKED);
+> +		wake_up_var(&so->so_replay.rp_locked);
+>  		nfs4_put_stateowner(so);
+>  	}
+>  }
+> @@ -4691,7 +4703,11 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struc=
+t net *net)
+>  	 * Wait for the refcount to drop to 2. Since it has been unhashed,
+>  	 * there should be no danger of the refcount going back up again at
+>  	 * this point.
+> +	 * Some threads with a reference might be waiting for rp_locked,
+> +	 * so tell them to stop waiting.
+>  	 */
+> +	atomic_set(&oo->oo_owner.so_replay.rp_locked, RP_UNHASHED);
+> +	wake_up_var(&oo->oo_owner.so_replay.rp_locked);
+>  	wait_event(close_wq, refcount_read(&s->st_stid.sc_count) =3D=3D 2);
+> =20
+>  	release_all_access(s);
+> @@ -5064,6 +5080,7 @@ nfsd4_process_open1(struct nfsd4_compound_state *cs=
+tate,
+>  	clp =3D cstate->clp;
+> =20
 >  	strhashval =3D ownerstr_hashval(&open->op_owner);
+> +retry:
 >  	oo =3D find_openstateowner_str(strhashval, open, clp);
 >  	open->op_openowner =3D oo;
-> -	if (!oo) {
-> +	if (!oo)
->  		goto new_owner;
-> -	}
->  	if (!(oo->oo_flags & NFS4_OO_CONFIRMED)) {
->  		/* Replace unconfirmed owners without checking for replay. */
->  		release_openowner(oo);
+>  	if (!oo)
+> @@ -5074,17 +5091,24 @@ nfsd4_process_open1(struct nfsd4_compound_state *=
+cstate,
 >  		open->op_openowner =3D NULL;
 >  		goto new_owner;
 >  	}
-> +	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> -	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> +	if (nfsd4_cstate_assign_replay(cstate, &oo->oo_owner) =3D=3D -EAGAIN) {
+> +		nfs4_put_stateowner(&oo->oo_owner);
+> +		goto retry;
+> +	}
 >  	status =3D nfsd4_check_seqid(cstate, &oo->oo_owner, open->op_seqid);
 >  	if (status)
 >  		return status;
-> @@ -5084,6 +5084,7 @@ nfsd4_process_open1(struct nfsd4_compound_state *cs=
-tate,
+>  	goto alloc_stateid;
+>  new_owner:
+>  	oo =3D alloc_init_open_stateowner(strhashval, open, cstate);
+> +	open->op_openowner =3D oo;
 >  	if (oo =3D=3D NULL)
 >  		return nfserr_jukebox;
->  	open->op_openowner =3D oo;
-> +	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> -	open->op_openowner =3D oo;
+> -	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> +	if (nfsd4_cstate_assign_replay(cstate, &oo->oo_owner) =3D=3D -EAGAIN) {
+> +		WARN_ON(1);
+
+I don't think you want to WARN here. It seems quite possible for the
+client to send simultaneous opens for different files with the same
+stateowner.
+
+
+
+> +		nfs4_put_stateowner(&oo->oo_owner);
+> +		goto new_owner;
+
+Is "goto new_owner" correct here? We likely raced with another RPC that
+was using the same owner, so ours probably got inserted and the other
+nfsd thread raced in and got the lock before we could. Retrying the
+lookup seems more correct in this situation?
+
+That said, it might be best to just call nfsd4_cstate_assign_replay
+before hashing the new owner. If you lose the insertion race at that
+point, you can just clear it and try to assign the one that won.
+
+> +	}
 >  alloc_stateid:
 >  	open->op_stp =3D nfs4_alloc_open_stateid(clp);
 >  	if (!open->op_stp)
-> @@ -5835,12 +5836,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct=
- svc_fh *current_fh, struct nf
->  void nfsd4_cleanup_open_state(struct nfsd4_compound_state *cstate,
->  			      struct nfsd4_open *open)
->  {
-> -	if (open->op_openowner) {
-> -		struct nfs4_stateowner *so =3D &open->op_openowner->oo_owner;
-> -
-> -		nfsd4_cstate_assign_replay(cstate, so);
-> -		nfs4_put_stateowner(so);
-> -	}
-> +	if (cstate->replay_owner)
-> +		nfs4_put_stateowner(cstate->replay_owner);
-
-The above delta doesn't look right. The replay_owner won't be set on
-v4.1+ mounts, but op_openowner will still hold a valid reference that
-will now leak.
-
->  	if (open->op_file)
->  		kmem_cache_free(file_slab, open->op_file);
->  	if (open->op_stp)
+> @@ -6841,11 +6865,15 @@ nfs4_preprocess_seqid_op(struct nfsd4_compound_st=
+ate *cstate, u32 seqid,
+>  	trace_nfsd_preprocess(seqid, stateid);
+> =20
+>  	*stpp =3D NULL;
+> +retry:
+>  	status =3D nfsd4_lookup_stateid(cstate, stateid, typemask, &s, nn);
+>  	if (status)
+>  		return status;
+>  	stp =3D openlockstateid(s);
+> -	nfsd4_cstate_assign_replay(cstate, stp->st_stateowner);
+> +	if (nfsd4_cstate_assign_replay(cstate, stp->st_stateowner) =3D=3D -EAGA=
+IN) {
+> +		nfs4_put_stateowner(stp->st_stateowner);
+> +		goto retry;
+> +	}
+> =20
+>  	status =3D nfs4_seqid_op_checks(cstate, stateid, seqid, stp);
+>  	if (!status)
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 41bdc913fa71..6a3becd86112 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -446,7 +446,7 @@ struct nfs4_replay {
+>  	unsigned int		rp_buflen;
+>  	char			*rp_buf;
+>  	struct knfsd_fh		rp_openfh;
+> -	struct mutex		rp_mutex;
+> +	atomic_t		rp_locked;
+>  	char			rp_ibuf[NFSD4_REPLAY_ISIZE];
+>  };
+> =20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
