@@ -1,147 +1,122 @@
-Return-Path: <linux-nfs+bounces-2170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8EED87044F
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 15:37:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EBF0587078D
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 17:51:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BE3AB26165
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 14:37:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58E32B25944
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 16:51:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379162575B;
-	Mon,  4 Mar 2024 14:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2EC5CDDD;
+	Mon,  4 Mar 2024 16:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Prx35QaI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bezIgHC2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916C83CF68;
-	Mon,  4 Mar 2024 14:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415915BAFA
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 16:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709563020; cv=none; b=TQ2h56SvD/Ku+Bpxnc3X2MKPmgAjoEXJPyZL6Fh+rusd/PeFtGvCC4ZPwoWEXZlxjzv6DUbdUoDRNh7fYGQ26ZS5T50bEVfBblaQw7Qevqrq0+CAZB65VWnl8FA7poiHuFNWlhRkI4h4EefbUxOT77EUX4+QFghLgOlPK1hGEM8=
+	t=1709571083; cv=none; b=e4Icv35b86Bp+q57CjSnF+bA2VZAT+DziseWtbwi0X7k+1x3LjbSeFajTsIQR3p4tl4vZpZmvvWqvFREW+47a8gCj1Nx37q3kfzbaa7B3Rr0nlMxUZtKyIquKwDU/EGJd0Wqr5zkftIGVmT2VwvgCfRrpAVevKEZfz7JW8t+7gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709563020; c=relaxed/simple;
-	bh=7Q8u//I0NChFb/SG3nPqpu2hUZlVNJ0AXcNfX8C2AG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hDlJH8Wmfp7lDJsoJzjDI32dxZ0lrjrlBDSNOLYWqEdQyb7sR5MwCxcYTzlem/qIfu3lcq8Tv8+aKWFmdHjHSivlYtNcFnT4eOvWLAUXnU1PQvchPz4UjGIlPjzFQg0i5Mcu4No7TG+KegjPHIUWKNkh8PEaoHaG5FjxQ2C7aG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Prx35QaI; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-42e8758fd52so34266951cf.1;
-        Mon, 04 Mar 2024 06:36:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709563017; x=1710167817; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ueg1LzXX/gmckj0YGtUgOHDVn1Q5Y8WQ6pvHjt3CJBY=;
-        b=Prx35QaIQB1wnZH/u+yaDhzUv3T+PMePLJatRTyQuy/7fIGvZgTd4NDYTwq0GfUjgp
-         wKmWpb+1L0MkHGvBdgUox13Q3LvEkIMhenxPva8HqY6Q6OWM0eT6jZOZ3vJv0NKVwm7u
-         DcnGjE2sc0Iiz9e/1nAu+B+rgY0hqmUkSNtNMe/tisECw90KqyJvlGA6mJdzdbeUeAEX
-         Wp88abgbC/5eINlom2F/wQjNTKF5HqDIszetg7lOb90kzuI5JvEWmGtrD45FFHhW6dvt
-         jd0ciKtXTWnOBt1SMOm8jjTvgH1fdptNAoz+P2D+i/B6ShC7bEMl+Aft6CbodbHMXLUo
-         oV9w==
+	s=arc-20240116; t=1709571083; c=relaxed/simple;
+	bh=K0/sCPkroJJFUs6+em+SR3CTnjuz37K2qtCwvl54JRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JkUmqMntl+lVPP3z/Z4rIxksZBvd/RXHvmOky8k+q5URqSwt4MA6Yhp+8GL8g35WlZowjOE/qth6PEPWV4WXGtrF+tS3Ywwa8AIjJktCzUmpIEPq9sD3NRZ3Cfe6T0vVwN3F2Cpk8kvj2oq1PMFrTHYysJFP+qO1lmt04COili0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bezIgHC2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709571081;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zW+DW+eXj2ZOUenUXkguceoutSIVgqfCaRHH4SRgQ48=;
+	b=bezIgHC2DQZIHx0Ej+O2R0iFGK1pTRL6iHwkA3MjNgZCzNzTyW2BeKnAMo/koPaSt2dEvW
+	FDFpTySi2QhskxMzn934HctmZpoY7uN81IeDw8xFe9jtT7R933uEbbKey9j4hR/PiOYpFl
+	mD4R0oyyEQ2Fv2JGGOpLEaftUChtfN0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-18-g3RBlbD-OveO95T6kWKniA-1; Mon, 04 Mar 2024 11:51:19 -0500
+X-MC-Unique: g3RBlbD-OveO95T6kWKniA-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-68fba33cae0so6641646d6.1
+        for <linux-nfs@vger.kernel.org>; Mon, 04 Mar 2024 08:51:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709563017; x=1710167817;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ueg1LzXX/gmckj0YGtUgOHDVn1Q5Y8WQ6pvHjt3CJBY=;
-        b=YmEJiSEizrJgG/EsFYTFPEFtzoYIRxei3b+5dHZZTyW9vWTDPIhS7jUV/ZUOSAZpjT
-         BtKOWXjWUbWJK32TbfPck+DvKAR31AbY/2ksqigfxes3xPLTo5wqFOM7rGn8BpoBobXK
-         5QB5grCb3DDW5MqszOlHX+ueaihnTkvu8FHYssLRB8hewdHv+TPEu6i9lOUvfqVYe+vr
-         VtY4CEnArlT5IDEeU4p6kFGEz3k6dj826Epvk6OHn9n8pWuRvVG+93EAZPEHMn/VYmRe
-         Lr07tzIU+nfPVxPjFGEoUT7dlkLYifCt+GJL34F9nDJOVBR0z8WZWQKFavrzniCsHbcj
-         s4CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtwi1tZu/f69wfqcCMEt542e97TzLOYfPudA2kvtjxQ9F+UnEef8EpSm7owTT8p2mJBUWs6+yWOPuDHB88mW9jxeY6jOC/2/ScqIX/ZQSKUMPSF7uwj9veixL6uCXLtxUntzG7BS/ZD6z3ZSFW6Srdo2GW0srLKvN4SAsGSltyhaoXjR+sgNb6/4ZzydD6EyeP8cxEWFauttemq261Y/Fw
-X-Gm-Message-State: AOJu0Yyd4kCb7fs3nKoG026reYWPDbcNaqxc4/ztgmAQ8j1gncIFl0HP
-	Zbgz2LV71DMVU6BDclohx3N5BrnQNW0bAzV86cLZFFy8O5ipy+T3qBqFmQ1hVbmBCzJbdhHjgRN
-	Sl1UGpyeE6zqFC4NOyI+AgBJNMBZypf3ihWg=
-X-Google-Smtp-Source: AGHT+IHz5+H37MGVV7IGn2MGmA63Pt/2gNaEx+CQKMOYep0lh2b/cdqPyygE9RKmyqzM791YiilhqAporHp9m7ClBYg=
-X-Received: by 2002:ac8:5e46:0:b0:42e:f4aa:e737 with SMTP id
- i6-20020ac85e46000000b0042ef4aae737mr2336629qtx.50.1709563017482; Mon, 04 Mar
- 2024 06:36:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709571077; x=1710175877;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zW+DW+eXj2ZOUenUXkguceoutSIVgqfCaRHH4SRgQ48=;
+        b=EmU0sTEdhHyTpm+hnGGVz78eAf+rErMbhoxQQyyNiQ/L+6lu4DFzxFT53mBquSie+2
+         BrCIa2FI+KJIuuVBQmaahgkn7eyuVW0YclzJ2I8EWGUKV2Lj9sX/PVWMVfMWLn46PlHd
+         Y4qosRVcrns8juTzFzZTxl0TM0z3keGAwrEHwV3Jz67/RZQfqIpDhYiY7DrTUMyfpZMi
+         szgcMuYJ63YXFPGW8RjWqVjOpp6A1AJ8rRdN0lrqtFXbxRz+HEJ9rjqOmkhqa91G7g4e
+         axPACduYsyGoIF4y6wcWKcByig58M1uFDASsaampofdaXcw3/cqVs/jDw2UYgs4ifN3y
+         IJHQ==
+X-Gm-Message-State: AOJu0Yz3cW9cpwBv0Zam5H5G9kKuSsxNjShDvSwpnMNDFY0P39allCoY
+	6c0RIFsywYncZtO5k34sXbHg6Ti8uNsXNrDNszx8QwsfJx6Pt5NQfnEqbvANk96RPpyg3UeG5hf
+	fYSNCSa+HthkDAA3kICjd+3v6AjgJj3CgcKQH+OygsVneQdpUdlvM70Oj9+LiwBeaEw==
+X-Received: by 2002:a05:6214:3012:b0:68f:6000:6ac5 with SMTP id ke18-20020a056214301200b0068f60006ac5mr11120739qvb.4.1709571077704;
+        Mon, 04 Mar 2024 08:51:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7WRtqee84bZYEqJ4WD6TsVcj4VjGx4f2nropu1FRbSyFlaXViTpEKaE3c+5+9SLhiSt6fRA==
+X-Received: by 2002:a05:6214:3012:b0:68f:6000:6ac5 with SMTP id ke18-20020a056214301200b0068f60006ac5mr11120720qvb.4.1709571077412;
+        Mon, 04 Mar 2024 08:51:17 -0800 (PST)
+Received: from [172.31.1.12] ([70.109.163.43])
+        by smtp.gmail.com with ESMTPSA id jh19-20020a0562141fd300b0068fef023e6esm5279442qvb.88.2024.03.04.08.51.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 08:51:16 -0800 (PST)
+Message-ID: <b4b4d325-f15f-4fb3-a52c-c3f39d56018a@redhat.com>
+Date: Mon, 4 Mar 2024 11:51:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240204021436.GH2087318@ZenIV> <20240204021739.1157830-1-viro@zeniv.linux.org.uk>
- <20240204021739.1157830-11-viro@zeniv.linux.org.uk> <20240205-gesponnen-mahnmal-ad1aef11676a@brauner>
- <CAJfpegtJtrCTeRCT3w3qCLWsoDopePwUXmL5O9JtJfSJg17LNg@mail.gmail.com>
-In-Reply-To: <CAJfpegtJtrCTeRCT3w3qCLWsoDopePwUXmL5O9JtJfSJg17LNg@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 4 Mar 2024 16:36:46 +0200
-Message-ID: <CAOQ4uxhBwmZ1LDcWD6jdaheUkDQAQUTeSNNMygRAg3v_0H5sDQ@mail.gmail.com>
-Subject: Re: [PATCH 11/13] fuse: fix UAF in rcu pathwalks
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4 rpcbind] Supprt abstract addresses and disable
+ broadcast
+Content-Language: en-US
+To: NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Petr Vorel <pvorel@suse.cz>
+References: <20240225235628.12473-1-neilb@suse.de>
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20240225235628.12473-1-neilb@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 5, 2024 at 3:52=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> w=
-rote:
->
-> On Mon, 5 Feb 2024 at 13:31, Christian Brauner <brauner@kernel.org> wrote=
-:
-> >
-> > On Sun, Feb 04, 2024 at 02:17:37AM +0000, Al Viro wrote:
-> > > ->permission(), ->get_link() and ->inode_get_acl() might dereference
-> > > ->s_fs_info (and, in case of ->permission(), ->s_fs_info->fc->user_ns
-> > > as well) when called from rcu pathwalk.
-> > >
-> > > Freeing ->s_fs_info->fc is rcu-delayed; we need to make freeing ->s_f=
-s_info
-> > > and dropping ->user_ns rcu-delayed too.
-> > >
-> > > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> > > ---
-> >
-> > Reviewed-by: Christian Brauner <brauner@kernel.org>
->
-> Acked-by: Miklos Szeredi <mszeredi@redhat.com>
->
+Hey Neil,
 
-Miklos,
+My apologies on addressing this...
+Too much PTO :-)
 
-FYI, this is now merged and conflicts with:
+On 2/25/24 6:53 PM, NeilBrown wrote:
+> The first two patches here I wrote some years ago but never posted - sorry.
+> The third and fourth allow rpcbind to work with an abstract AF_UNIX
+> address as preferentially used by recent kernels.
+> 
+> NeilBrown
+> 
+> 
+>   [PATCH 1/4] manpage: describe use of extra port for broadcast rpc
+>   [PATCH 2/4] rpcbind: allow broadcast RPC to be disabled.
+You realize that the broadcast code is configured out by default
+./configure  --help | grep rmt
+   --enable-rmtcalls       Enables Remote Calls [default=no]
 
-dc076c73b9f9 ("fuse: implement ioctls to manage backing files")
+So do we want to introduce a flag and man page section
+for something that is off by default?
 
-from fuse/for-next:
+steved.
+>   [PATCH 3/4] Listen on an AF_UNIX abstract address if supported.
+>   [PATCH 4/4] rpcinfo: try connecting using abstract address.
+> 
 
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@@ -1373,7 -1398,9 +1405,13 @@@ EXPORT_SYMBOL_GPL(fuse_send_init)
-  void fuse_free_conn(struct fuse_conn *fc)
-  {
-        WARN_ON(!list_empty(&fc->devices));
-++<<<<<<< HEAD
- +      kfree(fc);
-++=3D=3D=3D=3D=3D=3D=3D
-+       if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-+               fuse_backing_files_free(fc);
-+       kfree_rcu(fc, rcu);
-++>>>>>>> fuse/for-next
-  }
-  EXPORT_SYMBOL_GPL(fuse_free_conn);
-
-Note that fuse_backing_files_free() calls
-fuse_backing_id_free() =3D> fuse_backing_free() =3D> kfree_rcu()
-
-Should we move fuse_backing_files_free() into
-fuse_conn_put() above fuse_dax_conn_free()?
-
-That will avoid the merge conflict and still be correct. no?
-
-Thanks,
-Amir.
 
