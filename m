@@ -1,162 +1,107 @@
-Return-Path: <linux-nfs+bounces-2174-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5E9A8709AA
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 19:34:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5ECD8709C7
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 19:42:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0DDADB242F7
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 18:32:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7A541C20B3B
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 18:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB0077F36;
-	Mon,  4 Mar 2024 18:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DYn8h5C0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aG0bftVs";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u6F1IAeW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="997aizf6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A3662143;
+	Mon,  4 Mar 2024 18:42:33 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0C777F37
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 18:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC051E484
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 18:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709577145; cv=none; b=D4rsVhtBP29a2SOnT6UvVlRiUOEKxrGGyoi3aCKSk/bNFvVT19J3N0wLdE22OhaqmRGky06bZyZukXJwrkbZZspBljSfmIhQZrkzECAIWRgAWAQFSY/rs0L5iUl657lW1b0QZDSWE0sWd88aKEklnKpffH2rIQT1Fo0SmdJkpS4=
+	t=1709577753; cv=none; b=Mr86w99TN/eZ00dMTjuXshliXVjJYGqAkDMD6FNm8WeLieGUthlKE+yFA+URj7SFZnQhnjsjkAj7SjK/a0Bh73hvcoPyyz6XYsedc+mcjfsvgoC/lMlYYm7OzMI1+9esknyvWOoTav9mEqP2gXIhQ4I84H5rEVag2IlUfv8X4Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709577145; c=relaxed/simple;
-	bh=tgOY+bn+x7KxfTVV8uYwyQPZ3rzXO7UzIIIXl1G4aLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eK+RTSLgwPDJz0Ql8LplTE/TLe6aeAOqxjoUhFQ3a45LQ0Ak10CD7q40Q+EQxik0bIYJ3MbuGO5j9EV1rqIIhPoZ2Ad2Ixlf6h1UAIXz9F0N1t15oB/bqxc2zYwufqtuu4p22duZA08bRayUUYiLAaAm4aIo3zVXKigwAXNXp3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DYn8h5C0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aG0bftVs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u6F1IAeW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=997aizf6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C7C2120110;
-	Mon,  4 Mar 2024 18:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709577141;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iv9TCc16rODUJh3PflFxggzIUHK2iTc7xjjVKCztZ4s=;
-	b=DYn8h5C0ZB3bggS1DzEPhoTULkTayAKWRXIegZy+gvXXo0Scc8oI/UPZI4QR9rV0xPjAUT
-	ltlb1Bqb9fwzGNiSHd6KYQfDQ6G9DqeHqXsYJ7MSEbgfNbNFZvVeFlmWXZ3ZNuIAmnDFUN
-	fvngl1UkrGL6zekpsdmyBLbuWzaoamM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709577141;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iv9TCc16rODUJh3PflFxggzIUHK2iTc7xjjVKCztZ4s=;
-	b=aG0bftVsTI7WTggB+TkkuyjlC/mcgv95j0cGQrCdM+L+57El2QheTOQxIMI5jT7GLLHvlf
-	1yJGCrTwDtp6R3CQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709577139;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iv9TCc16rODUJh3PflFxggzIUHK2iTc7xjjVKCztZ4s=;
-	b=u6F1IAeWauclbBvHwm7JsbTp4BcyherszVOWWyUFtI3CsUla8FH7D4NeRjbKgwykDLNq8P
-	hCmxYvjhOiJRESCP30uApf5/VyKik/TGUwkSN9pXp2wqgWetWdNge9/SMkZDsE/9wdtvpS
-	Bwm5VxSWGkvg89DdYD6MbehqjalWqO0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709577139;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iv9TCc16rODUJh3PflFxggzIUHK2iTc7xjjVKCztZ4s=;
-	b=997aizf6gYKpZuaQ//LSIynnRqMfZccPP8Ou3Fzjb57yqTIioDBQZ6mZTTkxbm8UWd6fJM
-	LqA/VqaPZcmRI/AA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A2B93139C6;
-	Mon,  4 Mar 2024 18:32:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id d2y/JbMT5mUHHgAAn2gu4w
-	(envelope-from <pvorel@suse.cz>); Mon, 04 Mar 2024 18:32:19 +0000
-Date: Mon, 4 Mar 2024 19:32:17 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: NeilBrown <neilb@suse.de>
-Cc: Steve Dickson <steved@redhat.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] rpcbind: allow broadcast RPC to be disabled.
-Message-ID: <20240304183217.GB3408054@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240225235628.12473-1-neilb@suse.de>
- <20240225235628.12473-3-neilb@suse.de>
+	s=arc-20240116; t=1709577753; c=relaxed/simple;
+	bh=uviLCn9kAIAya+fglTcNqj7qhTPSYyhmrpjFl0/x3vs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=LDdM36bngPIEt72d6RFV2NRJ9MY8fm59KkG5QQjZv0WCRdXZtaFe9h68KC2nnmrWGPcvbeUFOI6z6oyzpxQ37vGvXy1wpPSChKPD9/rRMgY6eG72VlTORrBuIvaYsHd8IFTICqQbN6irp56UptKpzZQN2M9o+WfVC1oAs0YFmcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c85c926387so24238339f.0
+        for <linux-nfs@vger.kernel.org>; Mon, 04 Mar 2024 10:42:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709577751; x=1710182551;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HT/pP+T0NP6QlMe2SlXXHHjCe0FpP0SxLxRy1EOnNgQ=;
+        b=mjM+bI1a6thAzbqDz0IrcionU3/zoCLvz3J5ljA1/ZpFIPUfp1oCZoZUFPmQGITdh3
+         HM/zEBXmt2ssU+4OydGN1MlZlvqddMpi7UiXS6W7Ss8BeOHZutpet639U0Z+cf2ryxQd
+         8qVKDCWFg5CrwTWkR1ORVy22RNLCYBEB9Krg1C/s3g51hq5YvKoJQOa5q0MmMQWs3jw0
+         gjdVpnBV2/AOgRVVQFl5Q3xublrKq7qSX13T9v/m2xACZfi2IOwGwgi2923oE3VCZrvL
+         tWJbnqkuiyf7IvZIxZfgiIQ2RArdLZm98ltO2D4xGRQxi/xjM8twKqewTVweUuzFBkgF
+         yKrw==
+X-Gm-Message-State: AOJu0YyZwPJPZM8xNRHf++CaA+2hv2klLGxPr+BYdbrCcs0249+NZ9cQ
+	dI2F8EYrHUbOrzFfB3FHH1ZB5LTnOex87wNV2jaPdoyWYqDAQ8ABr59mA3tvH72r2eug3e5HwaT
+	P0AyYNaAwpz33m04y3iYxUhcmsCPVZhOw
+X-Google-Smtp-Source: AGHT+IG1vVWvmUhDHDPq1yHMgrQBi33QriX64BktUaeOYEEE7ypU13ro1SS8r9fHI46iDOQ58ymTQSfwOH0f4BQGV+Q=
+X-Received: by 2002:a05:6e02:1527:b0:365:b00e:c3cc with SMTP id
+ i7-20020a056e02152700b00365b00ec3ccmr333926ilu.2.1709577750964; Mon, 04 Mar
+ 2024 10:42:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240225235628.12473-3-neilb@suse.de>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.73
-X-Spamd-Result: default: False [-0.73 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.23)[72.38%]
-X-Spam-Flag: NO
+References: <20240225235628.12473-1-neilb@suse.de> <20240225235628.12473-3-neilb@suse.de>
+ <20240304183217.GB3408054@pevik>
+In-Reply-To: <20240304183217.GB3408054@pevik>
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Mon, 4 Mar 2024 19:42:03 +0100
+Message-ID: <CAKAoaQ=z6HMJKL+CMLbum31owuJ6Gp0oLdpPiFub52gD4zNzKw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] rpcbind: allow broadcast RPC to be disabled.
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Neil,
+On Mon, Mar 4, 2024 at 7:32=E2=80=AFPM Petr Vorel <pvorel@suse.cz> wrote:
+> > From: NeilBrown <neilb@suse.com>
+> > Support for broadcast RPC involves binding a second privileged
+> > port.  It is possible that rpcbind might choose a port that some
+> > other service will need, and that can cause problems.
+>
+> > Having this port open increases the attack surface of rpcbind.  RPC
+> > replies can be sent to it by any host, and they will only be rejected
+> > once they have been parsed enough to determine that the xid doesn't
+> > match.
+>
+> > Boardcast is not widely used.  It is not used at all for NFS.  For NIS
+> > (previously yellow pages) it can be used to find a local NIS server,
+> > though this can also be statically configured.
+>
+> > In cases where broadcast-RPC is not needed, it is best to disable the
+> > port.  This patch adds a new "-b" option to disable broadcast RPC.
+>
+> If this feature is wanted, I would suggest "-B". "-b" is used in ping for
+> broadcast, therefore this option looks like *enabling* broadcast instead =
+of
+> disabling.
 
-> From: NeilBrown <neilb@suse.com>
+I agree with Petr...
+... could you please add the comment about NIS/YP in the manpage too ?
+And what about NIS+ ?
 
-> Support for broadcast RPC involves binding a second privileged
-> port.  It is possible that rpcbind might choose a port that some
-> other service will need, and that can cause problems.
+----
 
-> Having this port open increases the attack surface of rpcbind.  RPC
-> replies can be sent to it by any host, and they will only be rejected
-> once they have been parsed enough to determine that the xid doesn't
-> match.
-
-> Boardcast is not widely used.  It is not used at all for NFS.  For NIS
-> (previously yellow pages) it can be used to find a local NIS server,
-> though this can also be statically configured.
-
-> In cases where broadcast-RPC is not needed, it is best to disable the
-> port.  This patch adds a new "-b" option to disable broadcast RPC.
-
-If this feature is wanted, I would suggest "-B". "-b" is used in ping for
-broadcast, therefore this option looks like *enabling* broadcast instead of
-disabling.
-
-Otherwise LGTM.
-
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-Kind regards,
-Petr
+Bye,
+Roland
+--=20
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /=3D=3D\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
 
