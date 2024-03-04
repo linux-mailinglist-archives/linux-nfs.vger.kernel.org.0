@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-2159-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2160-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E70FC8701BB
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 13:42:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E9FD8701CB
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 13:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 977FF1F26597
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 12:42:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D95B71F20F95
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 12:46:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE882BCFF;
-	Mon,  4 Mar 2024 12:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5813D0DD;
+	Mon,  4 Mar 2024 12:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSDXrJcD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRHP5PY0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459491E506
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 12:42:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB71F3D0D9
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 12:46:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709556164; cv=none; b=VSCuSpY3GvvcV+DH2mBWZXiZuNQ3jC2+zvqMNz70ppELUGHvkTjL3rdryI7VYWGfinY2D6kQAJJ1xCNFtXtUuxoLbGRYABDcwwTZNKcnb/mON0YCapS8n7HAINDFsVjENNnpzViuwYEI2Wf+f/JASgfqVTd2+nBu1kus/6wyvCo=
+	t=1709556386; cv=none; b=bWJ0lH63O82ecH5OtHwxeu+HvrcrHQEcV3qhuVpGVZwGEzHKVK8Ll887SvE5deExs6nI6QK+tzZPi73qAb0CwhMIzqUUHON2rmeeCcsjxYJljOQ2zHaBC78E5ZEhS1AXnlpkZdqAoDQrAa5AjXXWajrcaNpXzNszPSYZntqPabE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709556164; c=relaxed/simple;
-	bh=nbJ3GQRd9g0K8UnnCzmiRxQrAu8sB4Zjyjcm47Zf4/U=;
+	s=arc-20240116; t=1709556386; c=relaxed/simple;
+	bh=kGZASoSj+faW+Z8vyIKJkFCiyJOmCG2+VGRqMB0AJK0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bqsqDvWoM4uR57PXMFD4kzXkgRBId8nKesSd2f0HJgMgY93Xwz/CkmcJ1TkpNyE8QvvbYIrCavQj21iN6/kAinEfBXRczUJex8SzULhF5SgiGcNLl+8d9yyBkl5NPhoSvGqioziZMxEw0slbEtwKBkqQKe9p9UpACkwn1o7yR4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSDXrJcD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F6CC433C7;
-	Mon,  4 Mar 2024 12:42:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=sWOoSD2E9CFe/Ei28ud0ltnaD/USZ/6tO3QTMF/AcHATaqR7dqTe0JBSk6SXNWBa65VzztRJIQbtx5uK8eQSg1Elfb5r4yKpVUQgvHZ27UojHpjzoT65RLvPPeHO1u8jCensbdXmuEIKU7evTfgH1q59x90hakipxuTamT7eGdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRHP5PY0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C496FC433F1;
+	Mon,  4 Mar 2024 12:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709556163;
-	bh=nbJ3GQRd9g0K8UnnCzmiRxQrAu8sB4Zjyjcm47Zf4/U=;
+	s=k20201202; t=1709556385;
+	bh=kGZASoSj+faW+Z8vyIKJkFCiyJOmCG2+VGRqMB0AJK0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oSDXrJcDg8m9B4jj0N7znbgyjrHoX/s0bx4Xv6ZpT97aDHPX67G+pV2J1/qBSBDc4
-	 IGa70+dSFYjSHahrMS6xcWY0z8D8vwBWGeSxOOL2EG+NP8ihNPrO4mUrzj/UKcsa9n
-	 Ac2K4yzEGRiv7kgIAzhwJtF92RJ8jCrUnjaHC1ikDuUxlB8cBupuCHmMYaFlOhYJjB
-	 ktp4twZXfCKB1p5jvhxR48mD6M3Uc2YXGafyyrDk/hhdXpiYU/aK4Gpw6cJHg0izsf
-	 HBWkTZnTyILIB8O/0ewzhcUSz3iYabhzrbTOTdErr6EjbuKxGkgaKJT/CRDs9FRHWG
-	 smkm9GVLQ4xXw==
-Message-ID: <01b207fe543eda9375396deb0d5c44f9ea9ef5e1.camel@kernel.org>
-Subject: Re: [PATCH 1/4] nfsd: move nfsd4_cstate_assign_replay() earlier in
- open handling.
+	b=kRHP5PY09uWchAKKyPZiZN1NUNOj8t43NZ7M6UOkJiVyoHwnBFHDXCeBOuXegMHS+
+	 CiUPCpSEN4hpvDN49M17zB/29j0UHqqCvll+D+wA2W6nuG3YXpvGAt6ilrLonDayOw
+	 8nFtpBTOH3AcDx2T8mfmEI0s1IEVTmRfiV9m1jPvbbb+3bxSLK824oYFU6LUJR5BsV
+	 byDC7SkamKiGRH7ne5Yt8qU4O+hU/Ooyn+xCYe948YwmKN3fsTMhq08mZ3Zrf4wHUb
+	 WO85GMZfUtcHoeYje81Oo5lP7ubHD5LgwcbPvaY3QUNRPyQfkdRzFKsU74j7S4RPUN
+	 TU6UKuFqx8HSw==
+Message-ID: <5de242d62709e11a18406981b189c0476b5da5ca.camel@kernel.org>
+Subject: Re: [PATCH 2/4] nfsd: perform all find_openstateowner_str calls in
+ the one place.
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
 	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Mon, 04 Mar 2024 07:42:41 -0500
-In-Reply-To: <20240304044304.3657-2-neilb@suse.de>
+Date: Mon, 04 Mar 2024 07:46:23 -0500
+In-Reply-To: <20240304044304.3657-3-neilb@suse.de>
 References: <20240304044304.3657-1-neilb@suse.de>
-	 <20240304044304.3657-2-neilb@suse.de>
+	 <20240304044304.3657-3-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -72,68 +72,175 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2024-03-04 at 15:40 +1100, NeilBrown wrote:
-> Rather than taking the rp_mutex in nfsd4_cleanup_open_state() (which
-> seems counter-intuitive), take it and assign rp_owner as soon as
-> possible.
+> Currently find_openstateowner_str looks are done both in
+> nfsd4_process_open1() and alloc_init_open_stateowner() - the latter
+> possibly being a surprise based on its name.
 >=20
-> This will support a future change when nfsd4_cstate_assign_replay() might
-> fail.
+> It would be easier to follow, and more conformant to common patterns, if
+> the lookup was all in the one place.
+>=20
+> So replace alloc_init_open_stateowner() with
+> find_or_alloc_open_stateowner() and use the latter in
+> nfsd4_process_open1() without any calls to find_openstateowner_str().
+>=20
+> This means all finds are find_openstateowner_str_locked() and
+> find_openstateowner_str() is no longer needed.  So discard
+> find_openstateowner_str() and rename find_openstateowner_str_locked() to
+> find_openstateowner_str().
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
+>  fs/nfsd/nfs4state.c | 93 +++++++++++++++++++--------------------------
+>  1 file changed, 40 insertions(+), 53 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7d6c657e0409..2f1e465628b1 100644
+> index 2f1e465628b1..690d0e697320 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -5066,15 +5066,15 @@ nfsd4_process_open1(struct nfsd4_compound_state *=
+> @@ -539,7 +539,7 @@ same_owner_str(struct nfs4_stateowner *sop, struct xd=
+r_netobj *owner)
+>  }
+> =20
+>  static struct nfs4_openowner *
+> -find_openstateowner_str_locked(unsigned int hashval, struct nfsd4_open *=
+open,
+> +find_openstateowner_str(unsigned int hashval, struct nfsd4_open *open,
+>  			struct nfs4_client *clp)
+>  {
+>  	struct nfs4_stateowner *so;
+> @@ -556,18 +556,6 @@ find_openstateowner_str_locked(unsigned int hashval,=
+ struct nfsd4_open *open,
+>  	return NULL;
+>  }
+> =20
+> -static struct nfs4_openowner *
+> -find_openstateowner_str(unsigned int hashval, struct nfsd4_open *open,
+> -			struct nfs4_client *clp)
+> -{
+> -	struct nfs4_openowner *oo;
+> -
+> -	spin_lock(&clp->cl_lock);
+> -	oo =3D find_openstateowner_str_locked(hashval, open, clp);
+> -	spin_unlock(&clp->cl_lock);
+> -	return oo;
+> -}
+> -
+>  static inline u32
+>  opaque_hashval(const void *ptr, int nbytes)
+>  {
+> @@ -4588,34 +4576,46 @@ nfsd4_find_and_lock_existing_open(struct nfs4_fil=
+e *fp, struct nfsd4_open *open)
+>  }
+> =20
+>  static struct nfs4_openowner *
+> -alloc_init_open_stateowner(unsigned int strhashval, struct nfsd4_open *o=
+pen,
+> -			   struct nfsd4_compound_state *cstate)
+> +find_or_alloc_open_stateowner(unsigned int strhashval, struct nfsd4_open=
+ *open,
+> +			      struct nfsd4_compound_state *cstate)
+>  {
+>  	struct nfs4_client *clp =3D cstate->clp;
+> -	struct nfs4_openowner *oo, *ret;
+> +	struct nfs4_openowner *oo, *new =3D NULL;
+> =20
+> -	oo =3D alloc_stateowner(openowner_slab, &open->op_owner, clp);
+> -	if (!oo)
+> -		return NULL;
+> -	oo->oo_owner.so_ops =3D &openowner_ops;
+> -	oo->oo_owner.so_is_open_owner =3D 1;
+> -	oo->oo_owner.so_seqid =3D open->op_seqid;
+> -	oo->oo_flags =3D 0;
+> -	if (nfsd4_has_session(cstate))
+> -		oo->oo_flags |=3D NFS4_OO_CONFIRMED;
+> -	oo->oo_time =3D 0;
+> -	oo->oo_last_closed_stid =3D NULL;
+> -	INIT_LIST_HEAD(&oo->oo_close_lru);
+> -	spin_lock(&clp->cl_lock);
+> -	ret =3D find_openstateowner_str_locked(strhashval, open, clp);
+> -	if (ret =3D=3D NULL) {
+> -		hash_openowner(oo, clp, strhashval);
+> -		ret =3D oo;
+> -	} else
+> -		nfs4_free_stateowner(&oo->oo_owner);
+> +	while (1) {
+> +		spin_lock(&clp->cl_lock);
+> +		oo =3D find_openstateowner_str(strhashval, open, clp);
+> +		if (oo && !(oo->oo_flags & NFS4_OO_CONFIRMED)) {
+> +			/* Replace unconfirmed owners without checking for replay. */
+> +			release_openowner(oo);
+> +			oo =3D NULL;
+> +		}
+> +		if (oo) {
+> +			spin_unlock(&clp->cl_lock);
+> +			if (new)
+> +				nfs4_free_stateowner(&new->oo_owner);
+> +			return oo;
+> +		}
+> +		if (new) {
+> +			hash_openowner(new, clp, strhashval);
+> +			spin_unlock(&clp->cl_lock);
+> +			return new;
+> +		}
+> +		spin_unlock(&clp->cl_lock);
+> =20
+> -	spin_unlock(&clp->cl_lock);
+> -	return ret;
+> +		new =3D alloc_stateowner(openowner_slab, &open->op_owner, clp);
+> +		if (!new)
+> +			return NULL;
+> +		new->oo_owner.so_ops =3D &openowner_ops;
+> +		new->oo_owner.so_is_open_owner =3D 1;
+> +		new->oo_owner.so_seqid =3D open->op_seqid;
+> +		new->oo_flags =3D 0;
+> +		if (nfsd4_has_session(cstate))
+> +			new->oo_flags |=3D NFS4_OO_CONFIRMED;
+> +		new->oo_time =3D 0;
+> +		new->oo_last_closed_stid =3D NULL;
+> +		INIT_LIST_HEAD(&new->oo_close_lru);
+> +	}
+
+The while (1) makes the control flow a little weird here, but the logic
+seems correct.
+
+>  }
+> =20
+>  static struct nfs4_ol_stateid *
+> @@ -5064,28 +5064,15 @@ nfsd4_process_open1(struct nfsd4_compound_state *=
 cstate,
+>  	clp =3D cstate->clp;
+> =20
 >  	strhashval =3D ownerstr_hashval(&open->op_owner);
->  	oo =3D find_openstateowner_str(strhashval, open, clp);
+> -	oo =3D find_openstateowner_str(strhashval, open, clp);
+> +	oo =3D find_or_alloc_open_stateowner(strhashval, open, cstate);
 >  	open->op_openowner =3D oo;
-> -	if (!oo) {
-> +	if (!oo)
->  		goto new_owner;
+>  	if (!oo)
+> -		goto new_owner;
+> -	if (!(oo->oo_flags & NFS4_OO_CONFIRMED)) {
+> -		/* Replace unconfirmed owners without checking for replay. */
+> -		release_openowner(oo);
+> -		open->op_openowner =3D NULL;
+> -		goto new_owner;
 > -	}
->  	if (!(oo->oo_flags & NFS4_OO_CONFIRMED)) {
->  		/* Replace unconfirmed owners without checking for replay. */
->  		release_openowner(oo);
->  		open->op_openowner =3D NULL;
->  		goto new_owner;
->  	}
-> +	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> +		return nfserr_jukebox;
+>  	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
 >  	status =3D nfsd4_check_seqid(cstate, &oo->oo_owner, open->op_seqid);
 >  	if (status)
 >  		return status;
-> @@ -5084,6 +5084,7 @@ nfsd4_process_open1(struct nfsd4_compound_state *cs=
-tate,
->  	if (oo =3D=3D NULL)
->  		return nfserr_jukebox;
->  	open->op_openowner =3D oo;
-> +	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
->  alloc_stateid:
+> -	goto alloc_stateid;
+> -new_owner:
+> -	oo =3D alloc_init_open_stateowner(strhashval, open, cstate);
+> -	if (oo =3D=3D NULL)
+> -		return nfserr_jukebox;
+> -	open->op_openowner =3D oo;
+> -	nfsd4_cstate_assign_replay(cstate, &oo->oo_owner);
+> -alloc_stateid:
+> +
 >  	open->op_stp =3D nfs4_alloc_open_stateid(clp);
 >  	if (!open->op_stp)
-> @@ -5835,12 +5836,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct=
- svc_fh *current_fh, struct nf
->  void nfsd4_cleanup_open_state(struct nfsd4_compound_state *cstate,
->  			      struct nfsd4_open *open)
->  {
-> -	if (open->op_openowner) {
-> -		struct nfs4_stateowner *so =3D &open->op_openowner->oo_owner;
-> -
-> -		nfsd4_cstate_assign_replay(cstate, so);
-> -		nfs4_put_stateowner(so);
-> -	}
-> +	if (open->op_openowner)
-> +		nfs4_put_stateowner(&open->op_openowner->oo_owner);
->  	if (open->op_file)
->  		kmem_cache_free(file_slab, open->op_file);
->  	if (open->op_stp)
+>  		return nfserr_jukebox;
 
-Much better!
+Nice cleanup overall:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
