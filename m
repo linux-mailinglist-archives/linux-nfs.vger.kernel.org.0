@@ -1,55 +1,56 @@
-Return-Path: <linux-nfs+bounces-2165-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2166-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D6648702C0
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 14:31:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD70A8702D6
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 14:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB0BB1F22A17
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 13:30:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8343828A7ED
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Mar 2024 13:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA673DB91;
-	Mon,  4 Mar 2024 13:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A993DB9B;
+	Mon,  4 Mar 2024 13:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ap25I0oA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q6A1GT2M"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A56E3D982
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 13:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738B73DB9A
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Mar 2024 13:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709559056; cv=none; b=HtV7bUFshvCENFmg+nUXjKtzUPKJhpX6EUErGz7Elrtp/YbM/PyRUtbyZMOdUXO709vLylyMBMuZUkbwwucSlq75NaZN9YreKzvFv8ZQZ433vREvGiMlMpzEYP8dgdhyPHuT3c2v+JI3TlaqhoRL6YogL/d7tREObhw3/g6Hgcs=
+	t=1709559340; cv=none; b=ZOpMERj/XDRqSt27EufZ2E9Tevhht7Su9NV15ZRHhV+S/lq5vxCAHAZfgVzHrNr5MFWDIICJICKzSMAvINoCzCJESz1UxfHR8ZMoRP4ZzIid5J7UcgU8aIR05Dm2X6zmqe2e+Bi45kv0nbqKQZlrSGregGLHqqwIQ3qW2JYrUeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709559056; c=relaxed/simple;
-	bh=tiWV7Ame2Dlbvz8on9as3pFb0cxkEt6Y0ueljNj49+M=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ixsp4GJqKuT5cE43/j5ijfLiLTLvEPY7xmd7cZr14q2XQYzRspcaqij3lzZZl0LGNRs2J7LGY14qEnC7vnpC1GJiGp3tvJEXsiT1SOG6Uf0AbrW8boQbNiMbNKJGxwiSY6vbHlDEmSM92YEF7L/nV2XapAH6Al4S1saZbbbGUbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ap25I0oA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69307C43390;
-	Mon,  4 Mar 2024 13:30:55 +0000 (UTC)
+	s=arc-20240116; t=1709559340; c=relaxed/simple;
+	bh=vGMOA4athdT2Fcv4prWw9EPjvYdFEaYpw4WiFPZ5WgQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HcHiQ21K9oihF1icZ6V6+22TwB3Av4peaVg9HDDODyDjxStbgkXee7IemwEFokwECSue256KlXpIIlE8EhE8KcXBKywWyViEU6IRNatCW2Rq8H1HW0jE3pV+lhouV5BTU2Im9u6MbUHXvEkCLvELhm3FwE2l1waprZCwXhA44QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q6A1GT2M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACABC433C7;
+	Mon,  4 Mar 2024 13:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709559055;
-	bh=tiWV7Ame2Dlbvz8on9as3pFb0cxkEt6Y0ueljNj49+M=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Ap25I0oAymtW8qeOqJ2YiIonOe2+HbN0jT913hZXdT4tNI8NGm9ZtGP2p0C7wSbHw
-	 cOGAg+hjKRHR18HVRcBzbdWREBnrEoFomY7O3RwT/O/b9DCcjLK1+v3U3xtcMl+qyS
-	 9khotpfl1AyU7G927pJia3VRUK0zUltQbJOhhvpiWw4eokmKNmnBRtLb+8T217w8Ye
-	 PuPiNt9Ix7H3La0GuMHu2jD/gpGARVE/2RKfyUvWy899pl3rgUvLTyUPCXZTmYrBgd
-	 cj56+/MlXN7TZvBddwM18t4bjuh6Lqgie+KwufijwMWuY1hPRh68RmgzI/l72gmLXi
-	 G1rdhYSBSMi8Q==
-Message-ID: <194ad428dedc88a5b76e14e31667244d7f99a915.camel@kernel.org>
-Subject: Re: [PATCH 2/2] nfs: fix UAF in direct writes
+	s=k20201202; t=1709559340;
+	bh=vGMOA4athdT2Fcv4prWw9EPjvYdFEaYpw4WiFPZ5WgQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=q6A1GT2Mej/0XOl1YNiMQoCDaactDh+KoUnyBXrXsvsuxIflolxMZ+mzec2Bu/coT
+	 Now/OVdtUS1xQxc8655pYIuagq0hGTMv7gu6cXUiaQtH/JaHwRi2LJ5k9drScWmp6u
+	 LSIM2DexIs1dlZLI0jRCuh4xZkHabBxHY3IdAIvf45EZT1RlJxWU+8vuoBShXOrYmQ
+	 bFZaaMMtpHzSxP4k8IFfU251ISpgMY3Wj/d3FgZpT6yA7uvBC763aExgtTNlRF8CkT
+	 C2WK5xrRD6/+dUGIIfdg/5YqZwdYHVIPsYAQ3sTqv62UeFSTewP0WoCnb3eTxbwN03
+	 41bPhFHUnivtQ==
+Message-ID: <da3f4c708ee61daeb3f7a579eb29b0bf007d0bc3.camel@kernel.org>
+Subject: Re: [PATCH] NFS: Restore -EIO as error to return when "umount -f"
+ aborts request.
 From: Jeff Layton <jlayton@kernel.org>
-To: Josef Bacik <josef@toxicpanda.com>, trond.myklebust@hammerspace.com, 
-	anna@kernel.org, linux-nfs@vger.kernel.org
-Date: Mon, 04 Mar 2024 08:30:54 -0500
-In-Reply-To: <d4a26214294fb967a6d828b8d750215f7a6e4897.1709311699.git.josef@toxicpanda.com>
-References: <cover.1709311699.git.josef@toxicpanda.com>
-	 <d4a26214294fb967a6d828b8d750215f7a6e4897.1709311699.git.josef@toxicpanda.com>
+To: NeilBrown <neilb@suse.de>, Trond Myklebust
+ <trond.myklebust@hammerspace.com>,  Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Zhitao Li <zhitao.li@smartx.com>
+Date: Mon, 04 Mar 2024 08:35:38 -0500
+In-Reply-To: <170909199843.24797.6320949640369986924@noble.neil.brown.name>
+References: <170909199843.24797.6320949640369986924@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -69,134 +70,86 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-03-01 at 11:49 -0500, Josef Bacik wrote:
-> In production we have been hitting the following warning consistently
+On Wed, 2024-02-28 at 14:46 +1100, NeilBrown wrote:
+> When "umount -f" is used to abort all outstanding requests on an NFS
+> mount, some pending systemcalls can be expected to return an error.
+> Currently this error is ERESTARTSYS which should never be exposed to
+> applications (it should only be returned due to a signal).
 >=20
-> ------------[ cut here ]------------
-> refcount_t: underflow; use-after-free.
-> WARNING: CPU: 17 PID: 1800359 at lib/refcount.c:28 refcount_warn_saturate=
-+0x9c/0xe0
-> Workqueue: nfsiod nfs_direct_write_schedule_work [nfs]
-> RIP: 0010:refcount_warn_saturate+0x9c/0xe0
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  ? __warn+0x9f/0x130
->  ? refcount_warn_saturate+0x9c/0xe0
->  ? report_bug+0xcc/0x150
->  ? handle_bug+0x3d/0x70
->  ? exc_invalid_op+0x16/0x40
->  ? asm_exc_invalid_op+0x16/0x20
->  ? refcount_warn_saturate+0x9c/0xe0
->  nfs_direct_write_schedule_work+0x237/0x250 [nfs]
->  process_one_work+0x12f/0x4a0
->  worker_thread+0x14e/0x3b0
->  ? ZSTD_getCParams_internal+0x220/0x220
->  kthread+0xdc/0x120
->  ? __btf_name_valid+0xa0/0xa0
->  ret_from_fork+0x1f/0x30
+> Prior to Linux v5.2 EIO would be returned in these cases, which it is
+> more likely that applications will handle.
 >=20
-> This is because we're completing the nfs_direct_request twice in a row.
+> This patch restores that behaviour so EIO is returned.
 >=20
-> The source of this is when we have our commit requests to submit, we
-> process them and send them off, and then in the completion path for the
-> commit requests we have
->=20
-> if (nfs_commit_end(cinfo.mds))
-> 	nfs_direct_write_complete(dreq);
->=20
-> However since we're submitting asynchronous requests we sometimes have
-> one that completes before we submit the next one, so we end up calling
-> complete on the nfs_direct_request twice.
->=20
-> The only other place we use nfs_generic_commit_list() is in
-> __nfs_commit_inode, which wraps this call in a
->=20
-> nfs_commit_begin();
-> nfs_commit_end();
->=20
-> Which is a common pattern for this style of completion handling, one
-> that is also repeated in the direct code with get_dreq()/put_dreq()
-> calls around where we process events as well as in the completion paths.
->=20
-> Fix this by using the same pattern for the commit requests.
->=20
-> Before with my 200 node rocksdb stress running this warning would pop
-> every 10ish minutes.  With my patch the stress test has been running for
-> several hours without popping.
->=20
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Reported-and-tested-by: Zhitao Li <zhitao.li@smartx.com>
+> Closes: https://lore.kernel.org/linux-nfs/CAPKjjnrYvzH8hEk9boaBt-fETX3VD2=
+cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com/
+> Fixes: ae67bd3821bb ("SUNRPC: Fix up task signalling")
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfs/direct.c        | 11 +++++++++--
->  fs/nfs/write.c         |  2 +-
->  include/linux/nfs_fs.h |  1 +
->  3 files changed, 11 insertions(+), 3 deletions(-)
+>  include/linux/sunrpc/sched.h | 2 +-
+>  net/sunrpc/clnt.c            | 2 +-
+>  net/sunrpc/sched.c           | 6 +++---
+>  3 files changed, 5 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-> index befcc167e25f..6b8798d01e3a 100644
-> --- a/fs/nfs/direct.c
-> +++ b/fs/nfs/direct.c
-> @@ -672,10 +672,17 @@ static void nfs_direct_commit_schedule(struct nfs_d=
-irect_req *dreq)
->  	LIST_HEAD(mds_list);
-> =20
->  	nfs_init_cinfo_from_dreq(&cinfo, dreq);
-> +	nfs_commit_begin(cinfo.mds);
->  	nfs_scan_commit(dreq->inode, &mds_list, &cinfo);
->  	res =3D nfs_generic_commit_list(dreq->inode, &mds_list, 0, &cinfo);
-> -	if (res < 0) /* res =3D=3D -ENOMEM */
-> -		nfs_direct_write_reschedule(dreq);
-> +	if (res < 0) { /* res =3D=3D -ENOMEM */
-> +		spin_lock(&dreq->lock);
-> +		if (dreq->flags =3D=3D 0)
-> +			dreq->flags =3D NFS_ODIRECT_RESCHED_WRITES;
-> +		spin_unlock(&dreq->lock);
-> +	}
-> +	if (nfs_commit_end(cinfo.mds))
-> +		nfs_direct_write_complete(dreq);
-
-
-Before, it was calling nfs_direct_write_reschedule directly, but with
-the above change it's now just setting NFS_ODIRECT_RESCHED_WRITES and
-then queueing the completion workqueue job if it's the last reference
-(which should then go and reschedule the job, I think).
-
-That may be a reasonable change to make, but I think it merits some
-justification and mention in the changelog. Was that change necessary
-for some reason? If so, why?
-
-
+> diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+> index 2d61987b3545..ed3a116efd5d 100644
+> --- a/include/linux/sunrpc/sched.h
+> +++ b/include/linux/sunrpc/sched.h
+> @@ -222,7 +222,7 @@ void		rpc_put_task(struct rpc_task *);
+>  void		rpc_put_task_async(struct rpc_task *);
+>  bool		rpc_task_set_rpc_status(struct rpc_task *task, int rpc_status);
+>  void		rpc_task_try_cancel(struct rpc_task *task, int error);
+> -void		rpc_signal_task(struct rpc_task *);
+> +void		rpc_signal_task(struct rpc_task *, int);
+>  void		rpc_exit_task(struct rpc_task *);
+>  void		rpc_exit(struct rpc_task *, int);
+>  void		rpc_release_calldata(const struct rpc_call_ops *, void *);
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index cda0935a68c9..cdbdfae13030 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -895,7 +895,7 @@ void rpc_killall_tasks(struct rpc_clnt *clnt)
+>  	trace_rpc_clnt_killall(clnt);
+>  	spin_lock(&clnt->cl_lock);
+>  	list_for_each_entry(rovr, &clnt->cl_tasks, tk_task)
+> -		rpc_signal_task(rovr);
+> +		rpc_signal_task(rovr, -EIO);
+>  	spin_unlock(&clnt->cl_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(rpc_killall_tasks);
+> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+> index 6debf4fd42d4..e4f36fe16808 100644
+> --- a/net/sunrpc/sched.c
+> +++ b/net/sunrpc/sched.c
+> @@ -852,14 +852,14 @@ void rpc_exit_task(struct rpc_task *task)
+>  	}
 >  }
 > =20
->  static void nfs_direct_write_clear_reqs(struct nfs_direct_req *dreq)
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index bb79d3a886ae..5d9dc6c05325 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -1650,7 +1650,7 @@ static int wait_on_commit(struct nfs_mds_commit_inf=
-o *cinfo)
->  				       !atomic_read(&cinfo->rpcs_out));
->  }
-> =20
-> -static void nfs_commit_begin(struct nfs_mds_commit_info *cinfo)
-> +void nfs_commit_begin(struct nfs_mds_commit_info *cinfo)
+> -void rpc_signal_task(struct rpc_task *task)
+> +void rpc_signal_task(struct rpc_task *task, int err)
 >  {
->  	atomic_inc(&cinfo->rpcs_out);
->  }
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index f5ce7b101146..d59116ac8209 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -611,6 +611,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct f=
-olio *folio);
->  extern int  nfs_commit_inode(struct inode *, int);
->  extern struct nfs_commit_data *nfs_commitdata_alloc(void);
->  extern void nfs_commit_free(struct nfs_commit_data *data);
-> +void nfs_commit_begin(struct nfs_mds_commit_info *cinfo);
->  bool nfs_commit_end(struct nfs_mds_commit_info *cinfo);
+>  	struct rpc_wait_queue *queue;
 > =20
->  static inline bool nfs_have_writebacks(const struct inode *inode)
+>  	if (!RPC_IS_ACTIVATED(task))
+>  		return;
+> =20
+> -	if (!rpc_task_set_rpc_status(task, -ERESTARTSYS))
+> +	if (!rpc_task_set_rpc_status(task, err))
+>  		return;
+>  	trace_rpc_task_signalled(task, task->tk_action);
+>  	set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
+> @@ -992,7 +992,7 @@ static void __rpc_execute(struct rpc_task *task)
+>  			 * clean up after sleeping on some queue, we don't
+>  			 * break the loop here, but go around once more.
+>  			 */
+> -			rpc_signal_task(task);
+> +			rpc_signal_task(task, -ERESTARTSYS);
+>  		}
+>  		trace_rpc_task_sync_wake(task, task->tk_action);
+>  	}
 
---=20
-Jeff Layton <jlayton@kernel.org>
+This seems like the right thing to do.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
