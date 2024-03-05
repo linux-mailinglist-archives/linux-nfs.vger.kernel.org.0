@@ -1,97 +1,101 @@
-Return-Path: <linux-nfs+bounces-2205-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2206-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E35E08715BC
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 07:15:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B08C387188E
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 09:49:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 214471C209F9
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 06:15:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC9191C20EAF
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 08:49:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B34146521;
-	Tue,  5 Mar 2024 06:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF1C4CB58;
+	Tue,  5 Mar 2024 08:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="QBOeYQWj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksqgpo7V"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBF9FC1C;
-	Tue,  5 Mar 2024 06:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E9A2745C
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Mar 2024 08:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709619331; cv=none; b=WvpmEPTA17UwbU+Y2OXSQnfjrAQ3uod8buOkqJ/V07qgLCdRJ87mEXVqkbuBqOF79utd75gjsPEg1ocvGKSTuByEMBsga1vMbIjoML978YsEtwYHDcUIMFOuQxFLbmci3/06U9VHhwBinM/2kU+NDhYgzzDplLrE7cgWpErS+QE=
+	t=1709628588; cv=none; b=OJ7IpCmpMXtZhUuOenvYmNFdynla4BHDXA0Vc9FwDGqRMx1w5fyGu2W9RI/B0WxBFDIkg6QDWrM4FKWm7oByYwS8s6P9JKUvRSIPCkwSIi3aO22/yPDdCHRgkkrJ2dZOlmSfgm690Af80FUnZGzFvfjZ/UTWLm25lPyb0ILGnxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709619331; c=relaxed/simple;
-	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=eZVnPMNZIHHK4+XKEXiPz2i3joHpkb69Vxk3nUOU6pAE+3tyaigjqd7Rxpsk5ag+YNCRqIgw19Mtuh4lIyrY/pcCrJL4Wmb3HtapBe2SuDbMpwgA3yiJGjuJ5f4Qn2CawC++8kzkcveMwEXCEcIAJkMdhCTG+BYoma2Q9k4nNx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=QBOeYQWj; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1709618979;
-	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=QBOeYQWjPjcVLq2dQ5HyXh22PMZs7KuESHcPaGtHEHmWgwM115uQLZdf4M0c48GBi
-	 ovEehHg1WSiwOjpDCXFmFJy7F+yOQpUPAthHdGOkOmNbbHebQ2hTKr7MIMjXZJQWnT
-	 lBL4chzEwOh1OHe4bq0TvoSNd+lkl725lOsu4NkM=
+	s=arc-20240116; t=1709628588; c=relaxed/simple;
+	bh=U/ZL9lynBEk1Mv7Pi3slpWsW7n10cu4KwVND4lGhLhA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=ZbvZccL/RyxgHweWbQ9L39tJcecTiakfC6cYbSb6x+mRYT70skfMn7wVUDUcMJoD1fN6VtgEkjN5kYKD2Fgbe3i3VL0Dt++3tmvgLMjt1TJkU0adCYcI4pcS272dpnDUpkFcWMRxw06+SaHW5qqal9ZXU8TNoXPSyqaIvDzLuBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ksqgpo7V; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so7890875a12.0
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Mar 2024 00:49:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709628585; x=1710233385; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AftuuQaDTKEqmo9pc4NdWlgn8uQRfxWITGOTQAHvk6U=;
+        b=ksqgpo7VA9oWPSjfPoOjRlyk0FG6p+zqTGYe0fSldwDM+oYCPCvTn34/u+pRzB972L
+         9QQHquz4b+uNq5/bw5Bmkg4sj6jRgAglP74trBH/vZAhaT/9dLnZzoHCkqH8AJr1QdV4
+         lCY+F7ZGxEiaekQGvPMxbb+1xAYsBp8htAsakVmHnDnJCpcDfzPjZ7SZN5azTk8g15TC
+         BUXXTX7hs74DUmiVA/zLJirlpivK5vwhgoPYqtoNGPHVznBhFKbUz7Qo35990NKes0mD
+         nwtWuuD0Lq4zSoiNAZWQwhbcXKYreypnQNO5Z3Mon7F4LnK+D+Xf42DsB6kN/tVrgNZC
+         jGtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709628585; x=1710233385;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AftuuQaDTKEqmo9pc4NdWlgn8uQRfxWITGOTQAHvk6U=;
+        b=u7Bjaay6ioZ/F9EsbRnBygJcCmkKF5hDR/6rbYjfvKwHkco8QlQq+/HVLWv7xjt3Wu
+         pM7tIpzGuuzzo2EyMxv/fG89fvuz3ed5JbgXvfiOxx3HuqOw54Tn2xZ3/3p2DxeKKUh4
+         Z9FnWMdlPqATVg52egBpTBteiXnpRYqpzKHGYW+2PwqYaev2MI00eSl3kzAzSkVeh/H/
+         ObMa5kLxot7vDZWUexYACgIuw0YiLJHXcjaf8AYWq5dDJdQyQsO7EztXAEerZWnNbnXd
+         zg+h+BS1aPqw/vQbq5QVPrJ4tSb3TkFc/xYwixcOtJzcAjHHJCGz/y28hY3fjj+SnQA5
+         EGkA==
+X-Gm-Message-State: AOJu0YxMNWjdY5yfIsDRqwrv3pkS/bvXmrkJncdgesg1tV5iI7hwpp/F
+	73Qj4/si1VQQBkYtwuZLGByLwHmNce9/wGKrYa+wJdxOUjc4/Isu9h3wKMb1XpvAUPz3tgNQ4KK
+	wGzcPONMhHvqF/W16S5PEsNHHwIAEeUei
+X-Google-Smtp-Source: AGHT+IHh6Uc138BctGoi9vEU+pOkboc2Q08L7b+9YtI93gZMksOJgviKBw+1Bnw8yQiyvwlfP9AjWQ1dBTffKB/Mda0=
+X-Received: by 2002:a05:6402:3584:b0:566:f66d:bd38 with SMTP id
+ y4-20020a056402358400b00566f66dbd38mr7088866edc.25.1709628584858; Tue, 05 Mar
+ 2024 00:49:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: nfs4_schedule_state_manager stuck in tight loop
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <ZdisssP88_9o0BXn@manet.1015granger.net>
-Date: Tue, 5 Mar 2024 07:09:19 +0100
-Cc: linux-nfs@vger.kernel.org,
- jlayton@kernel.org,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- trondmy@hammerspace.com,
- anna@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
-References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
- <ZdisssP88_9o0BXn@manet.1015granger.net>
-To: Chuck Lever <chuck.lever@oracle.com>
+MIME-Version: 1.0
+References: <1709504582-8311-1-git-send-email-dai.ngo@oracle.com>
+In-Reply-To: <1709504582-8311-1-git-send-email-dai.ngo@oracle.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Tue, 5 Mar 2024 09:49:08 +0100
+Message-ID: <CALXu0UeJ-s4hOmjOa=SndBx15a1VmEXmGcdhhbouMrSPTMni9A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] NFSD: send OP_CB_RECALL_ANY to clients when number
+ of delegations reaches its limit
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Sun, 3 Mar 2024 at 23:23, Dai Ngo <dai.ngo@oracle.com> wrote:
+>
+> The NFS server should ask clients to voluntarily return unused
+> delegations when the number of granted delegations reaches the
+> max_delegations. This is so that the server can continue to
+> grant delegations for new requests.
 
-not sure whether I may have missed a response that didn=E2=80=99t make =
-it back to me or any of the lists.
+What is this limit max_delegations? Where is it set, and where can an
+admin alter it at runtime?
 
-Just in case, because the CC didn=E2=80=99t include the original =
-addendum I made to my report:
+Are you aware that for example the msnfs41client Windows NFSv4.1
+driver easily uses a few hundred delegations, as required by the
+highly multithreaded nature (i.e. every Win32 syscall is async) of the
+Windows kernel?
 
-Addendum:
-
-I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t =
-find anything that I could relate to this aside from *maybe* =
-dfda2a5eb66a685aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of =
-subdirectories) which mentions NFS but doesn=E2=80=99t describe the =
-potential impact.
-
-We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 =
-months there might be the chance of another lockup in the near future ;)
-
-If anyone has ideas on how to debug/approach a reproducer I=E2=80=99d be =
-more than happy to help and try to provide more data.
-
-Cheers,
-Christian
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
