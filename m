@@ -1,120 +1,101 @@
-Return-Path: <linux-nfs+bounces-2207-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2208-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE945871E1D
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 12:39:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 559AA871F6D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 13:43:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76DBC287D0F
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 11:39:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83AA31C20D1D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Mar 2024 12:43:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B2B56B8C;
-	Tue,  5 Mar 2024 11:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8913F58222;
+	Tue,  5 Mar 2024 12:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KB5GHbRQ"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="dKC+KEve"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36F658138
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Mar 2024 11:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90E68563A
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Mar 2024 12:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709638774; cv=none; b=HFy9DdF7lqECJe3TrVwKk0de0pQYxOqgR/Vam/knFacOnn2y4c0/IGahxldzd7jDrsavhGTEp0+0qX0eFb9XJ8TrcOURqR5be+Hp0dNrI3UmAEsrK63ftz+jPQQLQCFfldnpfiZF//KNkm0mgEmsUTb8/N9CxteO5kFHBpHABGY=
+	t=1709642626; cv=none; b=Hnc2J+W0o0Zxp5f+RPHFx+IiPnTBIqrn4z3PfcPOCv/keEJMxSzZarinjF+v9AK8rOrza5SQ6hBpWkZXoQX5IeK/Z4QbH8tf0pv3J9ZhLFbW6EGWMAJ2TLEBpcEaUg8CiA6KKWD1vRsl5Wzp45X8T9iaxJLgWInGTHVEVKF3Sgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709638774; c=relaxed/simple;
-	bh=yGIHvaUSGtSh8SOfvZ4m5hJZFHMxJezWum2+AMtKBHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rvZWHP8sYxiP3k/PiL7DnBzztbnq6CosIGoRTYOeM04v2sX3KSJf6aWBiOx9IffGjsyScYJ9yeus54NyNnH+cObCLHb0vPfm8CWXPphf6e4BjAIG00xIhR6uYK82TnRED8CKjf943ONQnhBpd0IWHpfoZ+PZV7HF1Ib1oiQ/JOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KB5GHbRQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709638771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yGIHvaUSGtSh8SOfvZ4m5hJZFHMxJezWum2+AMtKBHs=;
-	b=KB5GHbRQLO8ir4CeTCWjB42/PT4gKE8FCQyFMm72rY1am5ch5mcqoPlt9z/60FMRlFFggf
-	kEwNLvVvcMAwvAE+iOVujE5BiZChTxUoGpySvgtgrHMmYF9S3UVi118SAWj7Ywo4hVWQBk
-	yNPWHA74UzYtQvCdib/KPTamQRfMKqA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-527-J3WurOEcM4WfOcjwZVGixw-1; Tue, 05 Mar 2024 06:39:28 -0500
-X-MC-Unique: J3WurOEcM4WfOcjwZVGixw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD8D6800264;
-	Tue,  5 Mar 2024 11:39:27 +0000 (UTC)
-Received: from [100.115.132.116] (ovpn-0-8.rdu2.redhat.com [10.22.0.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 75904404392A;
-	Tue,  5 Mar 2024 11:39:26 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- jlayton@kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- trondmy@hammerspace.com, anna@kernel.org
-Subject: Re: nfs4_schedule_state_manager stuck in tight loop
-Date: Tue, 05 Mar 2024 06:39:25 -0500
-Message-ID: <9FB1C80C-CF8A-4650-8918-475A19F353EB@redhat.com>
-In-Reply-To: <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
-References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
- <ZdisssP88_9o0BXn@manet.1015granger.net>
- <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
+	s=arc-20240116; t=1709642626; c=relaxed/simple;
+	bh=hqXu4Imvd+YZYd3LEDpX+ZnPOXEZjX0E+C7N/22uaKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YKmpfLfUzdUhJDMkmN2FuS6/ucTDcWjkIy5xZRoEGVxdz3kN5ad4AFRutdCweYG5blMe1es7QXLU7evo6n7AouyT3bj9NUMQ/OCt82NDMnm4Nd/5lxAK1Ec7IZ61DpxWNMLo4Y/udmGeQekfNV/jYED4OlwTT5mW8ZoLxQh7Yu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=dKC+KEve; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51320ca689aso6769731e87.2
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Mar 2024 04:43:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1709642623; x=1710247423; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqXu4Imvd+YZYd3LEDpX+ZnPOXEZjX0E+C7N/22uaKY=;
+        b=dKC+KEveoMrJox2JYoN1rvvJPEQQ5mCmK3iLWi4q4dPWC+fFRrXaIlNn1m/iKZ10cP
+         nZeuPDRqkY+/3JruQ5n7cNfVoY9390s/JhFXC1tW0Qhc1LLfB2JFqWhBMHgPOxs48N93
+         WQ+YO514bBN++CfZKG7X0nrtv1qxDtPJMscfE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709642623; x=1710247423;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hqXu4Imvd+YZYd3LEDpX+ZnPOXEZjX0E+C7N/22uaKY=;
+        b=gCGGdJs8FJ0Ye4MK0YLieneBsUTUOpsVEM8LITtKo0DqN0O45nHw8OJhXvd3TRvWxk
+         m3pVcmdoOCOD2T9LGQxvhkYII3oXACQCz53eA/CI8XMQaq3ZipRaRQboF/I9KWRCPbIF
+         rWd5DCJSExwphvctt225XxsaP1FV0eLhCSnHjZYkhhBwo68WA0RTSTJSrl/qRURGHjiu
+         gIXqUuEqBdgfXTJhTBGjh4c4lNctsqGOeK+uY/exHzkpoEwKV0EbOkRiODJfteDIpNkM
+         WhLIJdBWvLDayn1s3H0kw8GJGiv5JiJnDa+Uo3WxnBQy4XrGhzaxJsC1WCz/MkOU13ka
+         Ygnw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7xbC+g3CN8ePsWKQjxOKQUvt6XsnOtcwpnH1wftw3tIpceFZwLz7/1Z8VYO/PjhIJ2J9ATB2xrG7aBEcVMPbgVr0o/m7kWWYy
+X-Gm-Message-State: AOJu0YwCuArIlllFor6spFXZugTc9ygT607u4UyDz0GYkC4gLAol1zAw
+	/p2HNPkBvxRQaKUsVN+EqTLl7tAX0Co96HcXroDDgIngl1JsjNR1jQz/NGUq6whlRFJFzMtdieo
+	9aQgYsfvGV9R5Qm26b+mQBgynM5dyB3TZqODP8Q==
+X-Google-Smtp-Source: AGHT+IFDaUTfRvZDVguiUspJ8bW9xNWfKoMVLiqWzzQ2oinl9J77SQ70Ly+nbCnni8ZMPAqYVspxryxBQbzNkvrnVDU=
+X-Received: by 2002:ac2:5e7c:0:b0:512:f5af:3bdf with SMTP id
+ a28-20020ac25e7c000000b00512f5af3bdfmr1088535lfr.68.1709642622758; Tue, 05
+ Mar 2024 04:43:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20240204021436.GH2087318@ZenIV> <20240204021739.1157830-1-viro@zeniv.linux.org.uk>
+ <20240204021739.1157830-11-viro@zeniv.linux.org.uk> <20240205-gesponnen-mahnmal-ad1aef11676a@brauner>
+ <CAJfpegtJtrCTeRCT3w3qCLWsoDopePwUXmL5O9JtJfSJg17LNg@mail.gmail.com> <CAOQ4uxhBwmZ1LDcWD6jdaheUkDQAQUTeSNNMygRAg3v_0H5sDQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhBwmZ1LDcWD6jdaheUkDQAQUTeSNNMygRAg3v_0H5sDQ@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 5 Mar 2024 13:43:31 +0100
+Message-ID: <CAJfpegtQ5+3Fn8gk_4o3uW6SEotZqy6pPxG3kRh8z-pfiF48ow@mail.gmail.com>
+Subject: Re: [PATCH 11/13] fuse: fix UAF in rcu pathwalks
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	linux-fsdevel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5 Mar 2024, at 1:09, Christian Theune wrote:
+On Mon, 4 Mar 2024 at 15:36, Amir Goldstein <amir73il@gmail.com> wrote:
 
-> Hi,
+> Note that fuse_backing_files_free() calls
+> fuse_backing_id_free() => fuse_backing_free() => kfree_rcu()
 >
-> not sure whether I may have missed a response that didn=E2=80=99t make =
-it back to me or any of the lists.
+> Should we move fuse_backing_files_free() into
+> fuse_conn_put() above fuse_dax_conn_free()?
 >
-> Just in case, because the CC didn=E2=80=99t include the original addend=
-um I made to my report:
->
-> Addendum:
->
-> I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t fi=
-nd anything that I could relate to this aside from *maybe* dfda2a5eb66a68=
-5aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of subdirectories) =
-which mentions NFS but doesn=E2=80=99t describe the potential impact.
->
-> We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 m=
-onths there might be the chance of another lockup in the near future ;)
->
-> If anyone has ideas on how to debug/approach a reproducer I=E2=80=99d b=
-e more than happy to help and try to provide more data.
->
-> Cheers,
-> Christian
+> That will avoid the merge conflict and still be correct. no?
 
-When the problem occurs, use the
+Looks like a good cleanup.
 
-nfs4:nfs4_state_mgr
-nfs4:nfs4_state_mgr_failed
+Force-pushed to fuse.git#for-next.
 
-tracepoints to see what the state manager might be doing.
-
-Also a network capture might show what the state manager thread is up to =
-if
-it is sending operations.
-
-Ben
-
+Thanks,
+Miklos
 
