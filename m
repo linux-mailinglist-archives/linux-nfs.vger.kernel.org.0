@@ -1,70 +1,66 @@
-Return-Path: <linux-nfs+bounces-2219-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2220-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCEF6873467
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Mar 2024 11:37:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E0B8733EF
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Mar 2024 11:21:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B752B2E5B2
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Mar 2024 10:20:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DD631F2759D
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Mar 2024 10:21:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 895F95FB84;
-	Wed,  6 Mar 2024 10:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDAF5FB83;
+	Wed,  6 Mar 2024 10:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elNUmwcn"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="im4VRYw1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77E5F875;
-	Wed,  6 Mar 2024 10:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30DE5BAFD
+	for <linux-nfs@vger.kernel.org>; Wed,  6 Mar 2024 10:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709720324; cv=none; b=od4B1baj50CsgXFV2ZliBs8jo5JOMwSqHn55hgujvsVo96FhV1lic0CESc5XMEmsTSQ51Sg3p5bRF0BAvXUxcMJyvBZbrNj40i8aH3HX1If75up+NqF6KVjNPDU0M36+Kyrv6fgu9pPmST8ij7/9pbBfTun+2qFkTcf0P++Rfe8=
+	t=1709720511; cv=none; b=pITBS9ghXA0U1elikDy4c7wEwSryBG2bltM3/4fj49ebUJY0118/0o2J2HK1/lBsEcUdQsSWCFcgaQl2MzcClhJW5w2k4jYK5HQe5XpTVcv76nEsMz/PhHP+Z4qMWNbZQazasIGICzIw+DOC6gCCOWEP3Jt1PsdvNvLoCN4IiOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709720324; c=relaxed/simple;
-	bh=MiV92D8QQ10iCFVjAYyqrMSdVcuAQDEXW8pDK0EnXn4=;
+	s=arc-20240116; t=1709720511; c=relaxed/simple;
+	bh=islZpyKykR9dbsXwEOJijkuEqDtFWjDv6ZULlFXB7QI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FWqqTC6/Ov+vvSO2JkwE3BViOFqt+hL1iQeNcL/mpygAWjD5T0KSFNTdhvNYmjZcoKpVqIS+kTLwa/6D7JUMtAAcQhmrBi3RiU7c0hoXwEG+ZJB/ivsHvZgxdEbBTDElVR1atLFOLnO60s8dlrZ+pDHYi4togMahkZkZHYXpyxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=elNUmwcn; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-788412a4b78so12105585a.1;
-        Wed, 06 Mar 2024 02:18:42 -0800 (PST)
+	 To:Cc:Content-Type; b=g+riqjA4k6lexVausa2Ukb8gnwFZ2KwGYDyCFrMVo5P/JuYbLGl4OqGlwL7UYZkwHi1wsqYXvSfcRdvkzHBlhIvFPE4HGr+EFPlUz/Abr6QVww2bzNsFY1tj7p93q/hAsIFPApdXZ7U3VkBFmccDgatnLkucD6P2P7tMDFH1FmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=im4VRYw1; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso120377366b.1
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Mar 2024 02:21:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709720321; x=1710325121; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IydbtLNEns7eyBLFSHBBwsU4SBsF7XwijLy2alncJ1Q=;
-        b=elNUmwcnYWoTzgCxP4NqMZEXsuZtlAF93OD+xH6bA8ywGRw0Cj0DF/rEdHYdK2m9Q2
-         uLvbokCVzrxXvcP26qd055ln6IxtTMT2AzUfzugVTViNduJdhPP0d48DevzRn/4VSyVq
-         P+7ayBADYqe8ULg350TIA3+qL5Z+u4n6tBrthB4i7UrpvvbFL2o1M4QuAopeq5me1M17
-         jdlLhHNId3Vsrczb2t+2dFhb7Z3mjSepN05p/ORqjjcLIfhm7ReHnxddDIvfi82xes/X
-         DuLISaOnmuJqaL6Tgx9SZwjCjOoQpzw6AIn/zxUNqulY+8dwr85mMHydOV9S3zwhn6vq
-         /6Fw==
+        d=szeredi.hu; s=google; t=1709720508; x=1710325308; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=islZpyKykR9dbsXwEOJijkuEqDtFWjDv6ZULlFXB7QI=;
+        b=im4VRYw1MPoISNm0Ckq24et4DqwCzZbCy8miBxT8XvvjMlTL9filJZMf6yEiG63aM0
+         8uL21LRRe0I6TDfZkFs7BjVZZepVfSOHHTmWRhY9fI8a/FFYrF5r+7Qw5MLw0t0CVPgx
+         sgHUkJ+2RRRxc/Ho556q0yMV23QSIkn6qm1J4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709720321; x=1710325121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IydbtLNEns7eyBLFSHBBwsU4SBsF7XwijLy2alncJ1Q=;
-        b=galU5v1l8FqRyn6aS2C0AYAvMnTI5sjasxqRgAsR4gT6lQpDRIRG283y60THnLnWbm
-         23pMMCYy9Bj6aJkRdGNLvxaYclUgzxMfZpGqRqtvPNDshWqaxRTwRC2fraipJ2+dvm+U
-         NuT82lAznfFFBAFq6UtisOydlU7Lgq45bwosyFtfBqH/QwPTRb+qVUGHFU+xo536Ow6N
-         TTjQb5bsAZkOugzn2WBAKVNM9y1tiCqLCLVwkvGj4TuF42FBiBS/OZOa1z6k/gqQjyo5
-         Hh1G16GxfpV5XERd2qMYm+H4Zy1wJFFJHmn0oresr//KmzhUGyNMksw5fxpFhpaIolKO
-         zdTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXTZp/G23BYfE200ObVuaDPhwommA/UZOzWey4ofLWqVB3463loRyQILllP2XLtqrg+n9tPrDiwk+qlg5EKFcrDFKQfVe7CaL2+526SZEvniCSZNYsAYD+lACv+8yy4ghLLsQsdRnYMhDFGcoiz/sOvfxj2RrBC26uDt5CqTvogcFl7O4x8B5zljK2yNI4jR1VsTl6HoM8Kw+l0TvLA8f1
-X-Gm-Message-State: AOJu0YxmfSQnZb9vdHW6E0fVqHeoBdT9+sgwsVMBiuAag6xD5fHD7K1A
-	hcMgZeUx79gL8pZoduWVt+Bfgtu7pdOWIzPxQG5PsZ9XHNI6TKTLnL2aAj11u778ofVTIQYWwD2
-	BRO/2Fj0AaN3ben1UQRl7ViNpW0U=
-X-Google-Smtp-Source: AGHT+IHW6oZqvty15XrJ2DNJ5oMpfau2ujxE87nPT87XVsw4x/NwTWBqmm8aG2hKskrpAVNPp0ONKFA97bj38GJtmgk=
-X-Received: by 2002:a05:622a:1045:b0:42e:e19a:cb5a with SMTP id
- f5-20020a05622a104500b0042ee19acb5amr4914503qte.47.1709720321541; Wed, 06 Mar
- 2024 02:18:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709720508; x=1710325308;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=islZpyKykR9dbsXwEOJijkuEqDtFWjDv6ZULlFXB7QI=;
+        b=g04eFEuaNw8sYZJnhkcdqSOQ3ICxdSHbgl6oChXFoHVc3mpAVQd68TUTE4LgV6G94b
+         pIKdvFhT72KjfUufWdtLyNB0bt2s5RHRQSETDBmJzdLmahAvS1JwH9ouQU5cypUrfBSb
+         ay3NWwW1FKhBQX/HDqIjyD8VuFnNSEyyBT/hSP0jsv3iKrv/G7xVRpKlSe0bD7vM9/aw
+         pofKe+gbKBqytFw1QZ7OVWhe13DKYrc2H3N1sHFPzGAp7BqhnyFJv2SDmsYtPsL7lHFx
+         DBivTwOoMTd6rzXK0fuad5ChyrwA3yHP4nyF7Up0Kk9pCY+6ZSgkyYn24xGIueDFcsae
+         9j7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWPe3qzW85Vx85mPAKGOLxE70H5mj3IFPmICS2e2yaNuCObRSuCUon2yMFHG2R+d8N8rzTyT1YGsrmyCRfOHEbpd/a/LJwhwOJ7
+X-Gm-Message-State: AOJu0YxwbH5mxJHbwaivFH3LbL67ILyxuW8wZfilKVLoAAGtv7OGp+HY
+	1ddVhA4fiJM8KHPJB0U+qu1SOK3s3dJ8MmFwU6AFoPJKjZzLUHkzTBubl+ulto+G0lZSRnopiv8
+	QOn4h3RYwXWmGwUrT8+we/v5FQya8JsdBdWrBLg==
+X-Google-Smtp-Source: AGHT+IFMx3l0hAdHQXbl39ioAGrKSQLW1v5lUEssZi0FdL3yGMLYZSjp6aM2eVuXdZXGTZOl1O5Fgiy0ny7XY06f99Q=
+X-Received: by 2002:a17:906:35ca:b0:a45:29f3:6cc8 with SMTP id
+ p10-20020a17090635ca00b00a4529f36cc8mr5960498ejb.8.1709720508210; Wed, 06 Mar
+ 2024 02:21:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -74,62 +70,27 @@ MIME-Version: 1.0
 References: <20240204021436.GH2087318@ZenIV> <20240204021739.1157830-1-viro@zeniv.linux.org.uk>
  <20240204021739.1157830-11-viro@zeniv.linux.org.uk> <20240205-gesponnen-mahnmal-ad1aef11676a@brauner>
  <CAJfpegtJtrCTeRCT3w3qCLWsoDopePwUXmL5O9JtJfSJg17LNg@mail.gmail.com>
- <CAOQ4uxhBwmZ1LDcWD6jdaheUkDQAQUTeSNNMygRAg3v_0H5sDQ@mail.gmail.com> <CAJfpegtQ5+3Fn8gk_4o3uW6SEotZqy6pPxG3kRh8z-pfiF48ow@mail.gmail.com>
-In-Reply-To: <CAJfpegtQ5+3Fn8gk_4o3uW6SEotZqy6pPxG3kRh8z-pfiF48ow@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 6 Mar 2024 12:18:30 +0200
-Message-ID: <CAOQ4uxgi8sL3Dxznrq2tM76yMz_wTxh2PLzMd_Y-8ahWAhz=JQ@mail.gmail.com>
+ <CAOQ4uxhBwmZ1LDcWD6jdaheUkDQAQUTeSNNMygRAg3v_0H5sDQ@mail.gmail.com>
+ <CAJfpegtQ5+3Fn8gk_4o3uW6SEotZqy6pPxG3kRh8z-pfiF48ow@mail.gmail.com> <CAOQ4uxgi8sL3Dxznrq2tM76yMz_wTxh2PLzMd_Y-8ahWAhz=JQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxgi8sL3Dxznrq2tM76yMz_wTxh2PLzMd_Y-8ahWAhz=JQ@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 6 Mar 2024 11:21:37 +0100
+Message-ID: <CAJfpegvdt_FDpsgJ5hb8r48r-NoxUn38p=-EoFoV5un7Hm4hpg@mail.gmail.com>
 Subject: Re: [PATCH 11/13] fuse: fix UAF in rcu pathwalks
-To: Miklos Szeredi <miklos@szeredi.hu>
+To: Amir Goldstein <amir73il@gmail.com>
 Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
 	linux-fsdevel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
 	linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	linux-cifs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 5, 2024 at 2:43=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> w=
-rote:
->
-> On Mon, 4 Mar 2024 at 15:36, Amir Goldstein <amir73il@gmail.com> wrote:
->
-> > Note that fuse_backing_files_free() calls
-> > fuse_backing_id_free() =3D> fuse_backing_free() =3D> kfree_rcu()
-> >
-> > Should we move fuse_backing_files_free() into
-> > fuse_conn_put() above fuse_dax_conn_free()?
-> >
-> > That will avoid the merge conflict and still be correct. no?
->
-> Looks like a good cleanup.
->
-> Force-pushed to fuse.git#for-next.
->
+On Wed, 6 Mar 2024 at 11:18, Amir Goldstein <amir73il@gmail.com> wrote:
 
-FYI, the version that you pushed will generate a minor conflict with
+> If you move fuse_backing_files_free() to the start of the function,
+> I think merge conflict will be avoided:
 
-                }
--               fc->release(fc);
-+               call_rcu(&fc->rcu, delayed_release);
-        }
- }
- EXPORT_SYMBOL_GPL(fuse_conn_put);
-
-If you move fuse_backing_files_free() to the start of the function,
-I think merge conflict will be avoided:
-
- void fuse_conn_put(struct fuse_conn *fc)
- {
-        if (refcount_dec_and_test(&fc->count)) {
-                struct fuse_iqueue *fiq =3D &fc->iq;
-                struct fuse_sync_bucket *bucket;
-
-+               if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-+                       fuse_backing_files_free(fc);
-                if (IS_ENABLED(CONFIG_FUSE_DAX))
-                        fuse_dax_conn_free(fc);
-
+Yeah, but I don't think it's worth messing with this just to avoid a conflict.
 
 Thanks,
-Amir.
+Miklos
 
