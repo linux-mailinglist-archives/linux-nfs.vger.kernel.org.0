@@ -1,198 +1,101 @@
-Return-Path: <linux-nfs+bounces-2227-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2228-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 565A4874EF9
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 13:26:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CB60874F0C
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 13:29:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A8D6BB234D1
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 12:26:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9E721F2474D
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 12:29:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F6E12A154;
-	Thu,  7 Mar 2024 12:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA23612AAE1;
+	Thu,  7 Mar 2024 12:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dzYjVHHz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bsQVyYHi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SHbLip5L";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fNHQXagz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NU3mCUso"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25D85295;
-	Thu,  7 Mar 2024 12:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A31912BE96
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Mar 2024 12:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709814404; cv=none; b=qPVfFg8ZGgwNElD+e4eCXzcfyIetAZIwBFMNXI8UjcszQm8/M22lMecfFLadyQjPig7EE9++VcveXqTz7Sstri5eCIw9HYrtCOUKc5jNp8NJ25k6nvSVusdaOSquB2agfOjZcCp0szWiJizMWCGLP6+3rWwe3LEDJMvdG64BTNg=
+	t=1709814576; cv=none; b=jLygWheb3UWE9yyZ/Nhw2tj4dlskMzsM4bIBrd3wGLirKFipgJNGLgGxIRnnpPy0mxTU36ye+/p1BLrmeJne/Ht1zgcdSuqDpIW5e2+Wxsz319OA7MlfzqGTvhz6lr9DVgRZCk5Ck9iwQ898hq15bH8ee9MlgymHHSbGh94E0nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709814404; c=relaxed/simple;
-	bh=BhNGlpsq99Ce0tfJp3Cxo3xzk/R9OIoRQOCGH3lcS1w=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=li3rB6q1viD4GnsfW2tiruTomFhJw2clvPetFd22bzwpDlqXrk/05bpuexCU7lo6wgqep+Y2sDHqYvN/6Ad4jh3e8cHNTsc4LGlXU6j4U9FCPfW1XWwWXDk/svEmF6raLT4YSJ0eO1j4iWYGVRmM0qQ4vOBPTvIT+EL2lwAnisY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dzYjVHHz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bsQVyYHi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SHbLip5L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fNHQXagz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 522328CADD;
-	Thu,  7 Mar 2024 11:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709811709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8lgx+StLjDkO3YYKmbxg12umPyztFQfIPqwIN0q1WYE=;
-	b=dzYjVHHzpSliGzafLPA+2yuxMihPcaZAioLEBF6Pvoch87/HcgfPUENd7EFr3Q53vHXMzk
-	00pNRJL0U2ysQI0RKyJbr4RtnFN9CutpOZ6k+VmzWpHnyS1OFOOnfcvm8QJ6V8cr9x4VGz
-	1C971132FEUmc2WYDqIzbXPqYUv0QqU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709811709;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8lgx+StLjDkO3YYKmbxg12umPyztFQfIPqwIN0q1WYE=;
-	b=bsQVyYHiGTeNoAFpbRpWqbBIOcuQWR6Pe8akhIXCfhyiDm2EXxA7Y1biY7xXcE9koHuxAB
-	gidzHjjWnNNBlBBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709811708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8lgx+StLjDkO3YYKmbxg12umPyztFQfIPqwIN0q1WYE=;
-	b=SHbLip5L3jZPWQgehFa2E/fq2LpQ3Uyqp79MY7n+VGICliELG+p37goMKihjD8PXOJ9WTv
-	Ls+dpSO1+5wnbptaY7SRxq/dcjSDj7v9yHxjgB4GRa3ui1TvtTVRvrdgrBFydt9fuBnKvB
-	i5DBTRSodNY3h3e8UZuW+tVFlSnhtq4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709811708;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8lgx+StLjDkO3YYKmbxg12umPyztFQfIPqwIN0q1WYE=;
-	b=fNHQXagzFnMUvpgKPNM/s0ExGGb1Xj/+yIfvFiQdmn775K3XvMTEU4qDv3pIhYYJZKleJH
-	6bUeiDrJWPfsNgAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AC2CD12FC5;
-	Thu,  7 Mar 2024 11:41:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KZ/aE/mn6WVUOwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 07 Mar 2024 11:41:45 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1709814576; c=relaxed/simple;
+	bh=xK6rx+f5R3L9fX6srOBUDmIHKeJPIuL44E14gdn71kI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=g4wj6mUrvr/Yqn5spc+yx8b/katupibHxan9kvhEWFYLWC+z/CtPhF7239FJv+BenMKQSdx4Ual3EpJw2USkZMZEpZtxBOG8r3TxtWfmI/ovuQ87eaJqhwSzHX9kHXIkGqYzG6N8G/vP6Fs7vahJhzACdXrtvgmWwFwiLOtitc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NU3mCUso; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E98FC433C7;
+	Thu,  7 Mar 2024 12:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709814576;
+	bh=xK6rx+f5R3L9fX6srOBUDmIHKeJPIuL44E14gdn71kI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NU3mCUsoQYzPAO7ccTAPbZ7a/vpH2ZuWUp5eeh+vpQOUJ6DCyW+WfCCkF8HEzJtyv
+	 kNGYT/kDfliXHrrWoMgv8wOpx61vVFmJnbhUQIcIEKRnatvPkOsfhzJDbUD/IXGarN
+	 LQplUXlXTcWv9AtWGnTdBirNLegShE36QMyKISUUflbr5sjWm6ehbx1GPvmriavf2r
+	 WO6klFYttnf7GfykCG2xfR/I+zIHjB2rbStaY757uNicQH1bwsdeqt0ilR23oSoGNi
+	 IrzkhSPdqwWGMJdesJWLu+3AE11UcXbWHydOCN0RriOidOtMJSvtpPIpGu35iWwQ2r
+	 S4KlbnU9yDCJw==
+Message-ID: <286ecab7990b36447fbbca37d211b390130c3adb.camel@kernel.org>
+Subject: Re: [PATCH] NFS: remove sync_mode test from nfs_writepage_locked()
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neilb@suse.de>, Trond Myklebust
+ <trond.myklebust@hammerspace.com>,  Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 07 Mar 2024 12:29:34 +0000
+In-Reply-To: <170907510763.24797.12414304736328194537@noble.neil.brown.name>
+References: <170907510763.24797.12414304736328194537@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
+	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
+	3bri75n1TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y+jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5dHxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBMBAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4hN9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPepnaQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQRERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8EewP8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0XzhaKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyA
+	nLqRgDgR+wTQT6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7hdMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjruymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItuAXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfDFOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbosZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDvqrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51asjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qGIcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbLUO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0
+	b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSUapy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5ddhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7eflPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7BAKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuac
+	BOTtmOdz4ZN2tdvNgozzuxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9JDfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRDCHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1gYy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVVAaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJOaEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhpf8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+mQZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65ke5Ag0ETpXRPAEQAJkVmzCmF+IEenf9a2nZRXMluJohnfl2wCMmw5qNzyk0f+mYuTwTCpw7BE2H0yXk4ZfAuA+xdj14K0A1Dj52j/fKRuDqoNAhQe0b6ipo85Sz98G+XnmQOMeFVp5G1Z7r/QP/nus3mXvtFsu9lLSjMA0cam2NLDt7vx3l9kUYlQBhyIE7/DkKg+3fdqRg7qJoMHNcODtQY+n3hMyaVpplJ/l0DdQDbRSZi5AzDM3DWZEShhuP6/E2LN4O3xWnZukEiz688d1ppl7vBZO9wBql6Ft9Og74diZrTN6lXGGjEWRvO55h6ijMsLCLNDRAVehPhZvSlPldtUuvhZLAjdWpwmzbRIwgoQcO51aWeKthpcpj8feDdKdlVjvJO9fgFD5kqZ
+	QiErRVPpB7VzA/pYV5Mdy7GMbPjmO0IpoL0tVZ8JvUzUZXB3ErS/dJflvboAAQeLpLCkQjqZiQ/DCmgJCrBJst9Xc7YsKKS379Tc3GU33HNSpaOxs2NwfzoesyjKU+P35czvXWTtj7KVVSj3SgzzFk+gLx8y2Nvt9iESdZ1Ustv8tipDsGcvIZ43MQwqU9YbLg8k4V9ch+Mo8SE+C0jyZYDCE2ZGf3OztvtSYMsTnF6/luzVyej1AFVYjKHORzNoTwdHUeC+9/07GO0bMYTPXYvJ/vxBFm3oniXyhgb5FtABEBAAGJAh8EGAECAAkFAk6V0TwCGwwACgkQAA5oQRlWghXhZRAAyycZ2DDyXh2bMYvI8uHgCbeXfL3QCvcw2XoZTH2l2umPiTzrCsDJhgwZfG9BDyOHaYhPasd5qgrUBtjjUiNKjVM+Cx1DnieR0dZWafnqGv682avPblfi70XXr2juRE/fSZoZkyZhm+nsLuIcXTnzY4D572JGrpRMTpNpGmitBdh1l/9O7Fb64uLOtA5Qj5jcHHOjL0DZpjmFWYKlSAHmURHrE8M0qRryQXvlhoQxlJR4nvQrjOPMsqWD5F9mcRyowOzr8amasLv43w92rD2nHoBK6rbFE/qC7AAjABEsZq8+TQmueN0maIXUQu7TBzejsEbV0i29z+kkrjU2NmK5pcxgAtehVxpZJ14LqmN6E0suTtzjNT1eMoqOPrMSx+6vOCIuvJ/MVYnQgHhjtPPnU86mebTY5Loy9YfJAC2EVpxtcCbx2KiwErTndEyWL+GL53LuScUD7tW8vYbGIp4RlnUgPLbqpgssq2gwYO9m75FGuKuB2+2bCGajqalid5nzeq9v7cYLLRgArJfOIBWZrHy2m0C+pFu9DSuV6SNr2dvMQUv1V58h0FaSOxHVQnJdnoHn13g/CKKvyg2EMrMt/EfcXgvDwQbnG9we4xJiWOIOcsvrWcB6C6lWBDA+In7w7SXnnok
+	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: stable@vger.kernel.org,
- "Trond Myklebust" <trond.myklebust@hammerspace.com>,
- "Anna Schumaker" <anna@kernel.org>, linux-nfs@vger.kernel.org,
- "Dan Aloni" <dan.aloni@vastdata.com>
-Subject:
- Re: [PATCH stable 6.6 and 6.7] NFS: Fix data corruption caused by congestion.
-In-reply-to: <cfec488eccfc3469d18dd94b05a00919cc152113.camel@kernel.org>
-References: <170907621128.24797.4390391329078744015@noble.neil.brown.name>,
- <cfec488eccfc3469d18dd94b05a00919cc152113.camel@kernel.org>
-Date: Thu, 07 Mar 2024 22:41:41 +1100
-Message-id: <170981170160.13576.347273159851012933@noble.neil.brown.name>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[22.96%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[poczta.fm:email,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
 
-On Thu, 07 Mar 2024, Jeff Layton wrote:
-> On Wed, 2024-02-28 at 10:23 +1100, NeilBrown wrote:
-> > when AOP_WRITEPAGE_ACTIVATE is returned (as NFS does when it detects
-> > congestion) it is important that the folio is redirtied.
-> > nfs_writepage_locked() doesn't do this, so files can become corrupted as
-> > writes can be lost.
-> > 
-> > Note that this is not needed in v6.8 as AOP_WRITEPAGE_ACTIVATE cannot be
-> > returned.  It is needed for kernels v5.18..v6.7.  Prior to 6.3 the patch
-> > is different as it needs to mention "page", not "folio".
-> > 
-> 
-> Neil, I have a question about the above statement. In Linus's tree as of
-> this morning (v6.8-rc7-ish), it does this in nfs_writepages_locked:
-> 
->         if (wbc->sync_mode == WB_SYNC_NONE &&
->             NFS_SERVER(inode)->write_congested)           
->                 return AOP_WRITEPAGE_ACTIVATE;
-> 
-> The only caller of nfs_writepages_locked, and I don't see where it
-> redirties the page. Why don't we need this in v6.8?
+On Wed, 2024-02-28 at 10:05 +1100, NeilBrown wrote:
+> nfs_writepage_locked() is only called from nfs_wb_folio() (since Commit
+> 12fc0a963128 ("nfs: Remove writepage")) so ->sync_mode is always
+> WB_SYNC_ALL.
+>=20
+> This means the test for WB_SYNC_NONE is dead code and can be removed.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfs/write.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index bb79d3a886ae..58adbb7709ba 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -667,10 +667,6 @@ static int nfs_writepage_locked(struct folio *folio,
+>  	struct inode *inode =3D folio_file_mapping(folio)->host;
+>  	int err;
+> =20
+> -	if (wbc->sync_mode =3D=3D WB_SYNC_NONE &&
+> -	    NFS_SERVER(inode)->write_congested)
+> -		return AOP_WRITEPAGE_ACTIVATE;
+> -
+>  	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+>  	nfs_pageio_init_write(&pgio, inode, 0, false,
+>  			      &nfs_async_write_completion_ops);
 
-You are right - it doesn't redirty anything.  But there is no bug
-here....
-I didn't see it at first either, but the only caller of
-nfs_writepage_locked() is nfs_wb_folio() (as you say) and that always
-passes a wbc with .sync_mode = WB_SYNC_ALL.  So sync_mode is never
-WB_SYNC_NODE and the code snippet you included above is dead code.  I've
-already posted a patch to Trond and Anna to remove that code.
-
-Thanks for the review!
-
-NeilBrown
-
-> 
-> 
-> > Reported-and-tested-by: Jacek Tomaka <Jacek.Tomaka@poczta.fm>
-> > Fixes: 6df25e58532b ("nfs: remove reliance on bdi congestion")
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfs/write.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> > index b664caea8b4e..9e345d3c305a 100644
-> > --- a/fs/nfs/write.c
-> > +++ b/fs/nfs/write.c
-> > @@ -668,8 +668,10 @@ static int nfs_writepage_locked(struct folio *folio,
-> >  	int err;
-> >  
-> >  	if (wbc->sync_mode == WB_SYNC_NONE &&
-> > -	    NFS_SERVER(inode)->write_congested)
-> > +	    NFS_SERVER(inode)->write_congested) {
-> > +		folio_redirty_for_writepage(wbc, folio);
-> >  		return AOP_WRITEPAGE_ACTIVATE;
-> > +	}
-> >  
-> >  	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
-> >  	nfs_pageio_init_write(&pgio, inode, 0, false,
-> 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
