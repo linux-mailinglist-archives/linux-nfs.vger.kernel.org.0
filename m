@@ -1,162 +1,178 @@
-Return-Path: <linux-nfs+bounces-2230-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2231-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17A96874FF7
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 14:29:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E6D48750D5
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 14:50:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93FACB2135F
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 13:29:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45C3B28A48F
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Mar 2024 13:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44C312C7F3;
-	Thu,  7 Mar 2024 13:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B8412CDBE;
+	Thu,  7 Mar 2024 13:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qPJOhH8P"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="kUQxHFDI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B6912BEAC
-	for <linux-nfs@vger.kernel.org>; Thu,  7 Mar 2024 13:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5294412AAFD
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Mar 2024 13:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818191; cv=none; b=skdR6atxpmhNh3CqurFJyXPHeCz6CP0tEmxOp3Wj/qyLSqDTtiLOVgRvDE/wjiiNvLNJan40LSqyXPHLWwEqFnWjcox9AlnhPBzpdvPK/S46xwoaRuX/N5g9GpmOrWZ9Ly4EEObK7l4fX6bYumq/z9RqlNm968SQzmyNGBrxq/Y=
+	t=1709819288; cv=none; b=g2YOkMpYjkxXQZczdJJcsIg9MBRXYqDVQL6pRE4vbSg18gQNUIZf3zJtbwnuRm9g0wWcY9k3vSuq4Q37MuiIgnayqBSw3t4C6zb+NFQkG5237bh8jdZlCl8vR5vufXWFj5/3hLt2223GTrPCrp3tczlCPtI/C1DGx1zCQdWVOwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818191; c=relaxed/simple;
-	bh=Qlq77w1vqKMgkuH0NuDUUuVFkR/X/oelXEYowoNpeGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lwWv0qRH2CSiFTz4Lm9GmojgyCJ5uJ9FQGFDaupYNOZOtH1NXT7nZ4Yw/zRUJBXezY+L9Hy2aoMetZJGC++4wXqX+Npw+WA6r7qw3gHGpwfXQjgNT4cIr9Fo5VPhN2al6VlHLeuq77qo2SkM85t0h3hUHom5mjoUuvggSpnkP5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qPJOhH8P; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-413131d40f4so2356675e9.3
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Mar 2024 05:29:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709818188; x=1710422988; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IzQeaYr/ZJlq8eCil7ImZ0X3HFXIyKHZYOmUiMSv8/0=;
-        b=qPJOhH8P60QmQqiIFkhS+Xn3QM+Tyy0UAjJ1WhczF8uvVeX8bSIKZsGnHBSbHkHC9d
-         5jcVwvafpxe3G8kWgq4xdJE9b+gUDaNXy5gDsxDTnGEruqMHLt3sMATYyc4p5QE5qGY0
-         EpzsdQvVGb4Q7VeZPH+YtOA+cCn6oFe2AZyolDwie+BG1K3KPk26PMXRkcKPRyhmcunm
-         iiBx30lRfmJtXD0WVmAmOmfE31eiVWECZuheSixq2+xMX7WryMw3kw0Y5lwhH6r/eF6u
-         yUDz+Ggkrna20Xk9H5kY/VZ+p/KGG2i8S6Y68PYWpr7hzasPlFc8mp5MvopOynNpSjBD
-         ZCeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709818188; x=1710422988;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IzQeaYr/ZJlq8eCil7ImZ0X3HFXIyKHZYOmUiMSv8/0=;
-        b=Ya+jJG8hlTphPiP4iPmP6cgUIpWWJV9WLFivpkIFZWYRP96v6ClpBiJw52FGfMLSPR
-         NLzCIqD8bwl5Cuwf1A8cCBCpSX1BWtW6MKqO9X7nXiar4w9s2stjgGyKjapUYMcGXuuJ
-         AtWH3Vc3dre9oIF88C1lRkelp0VsdqIQU2+lfr17BF5+57RYfUhcdBbRaL3L7W8pgla1
-         +oQjng5S5CgmgS/Y8d6qI+OXBCS1xaP2mr7XSRXFkOCYwXvDzU6qcVccGijXwUSLMtjl
-         zPwXpQhAJrONXDAs6b5L/5jKHbGmEeavkKb1mEhJ8Yez3P0hCIszhBzWHiS/l1rR7hIP
-         MQCA==
-X-Gm-Message-State: AOJu0Ywpd/HdG26s4nnCaZONtDqfgQXUCxCR+qkDXnnX4fEXkW86N2ng
-	NFb1Tlv4lbXJBEqxSBPBUojxSb6U0BJFxXmnwF9XOh4GWlcmyaSZfksSI6qIJ1GUv06T98nuS08
-	X
-X-Google-Smtp-Source: AGHT+IGQRttMYJ2BOxP9aa/C7Bu7q969LPTtkHQCQkHjwh4C3mj77X9MTifhQyjWsJYi+ZhEhJesPg==
-X-Received: by 2002:a05:600c:3586:b0:412:ee8b:dead with SMTP id p6-20020a05600c358600b00412ee8bdeadmr5581114wmq.34.1709818188044;
-        Thu, 07 Mar 2024 05:29:48 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 11-20020a05600c020b00b00412d68dbf75sm2650169wmi.35.2024.03.07.05.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 05:29:47 -0800 (PST)
-Date: Thu, 7 Mar 2024 16:29:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: neilb@suse.de
-Cc: linux-nfs@vger.kernel.org
-Subject: [bug report] nfsd: perform all find_openstateowner_str calls in the
- one place.
-Message-ID: <44e5a5f5-f8df-45bd-be1f-7d67cfb011de@moroto.mountain>
+	s=arc-20240116; t=1709819288; c=relaxed/simple;
+	bh=vqidyJ974PD8NUygnZb3BcLqM+hLo/Pkpkn/fNRc5Fc=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=QJbaJDSFGAkrxKOgcurn2bw0JGF2sMNc7yS8pyHgnhVU8y3RSbe1LEU1yhVODjHTNt4Y5A8h3YFv23vwpxRwaHS/8GuqT8nWTRAtMFgetcM4S6+OmegdBHGFgur62/vIu2b26BmaNjZJJieaqAFp5QpB+44jkZ6OwQlRkrnZboA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=kUQxHFDI; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id 25090608F4
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Mar 2024 14:39:30 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 25090608F4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1709818770; bh=YGl0pyZrSuXSE/Yu0rx35vaoANzLmGb397QuS+yCdkE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=kUQxHFDIW3LmWzl1YykcsffAGJgk37fO7+aJbHlf4CwQfiD8KsXCD72XAgpwGuSJ0
+	 sDgLGCz84Jn9dQetqozgq25zhRvAJcoAjl1Jv51lM1X8MmeGfgTf5msJvQo1gapwy1
+	 TX5of/i5FwT7IO85x1jGxhmu5xNrHRDa41wHt0VU=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
+	by smtp-buf-2.desy.de (Postfix) with ESMTP id 1A07B120040;
+	Thu,  7 Mar 2024 14:39:30 +0100 (CET)
+Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [IPv6:2001:638:d:c302:acdc:1979:2:e7])
+	by smtp-m-2.desy.de (Postfix) with ESMTP id 11BDA120043;
+	Thu,  7 Mar 2024 14:39:30 +0100 (CET)
+Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
+	by b1722.mx.srv.dfn.de (Postfix) with ESMTP id 708BB220039;
+	Thu,  7 Mar 2024 14:39:29 +0100 (CET)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-3.desy.de (Postfix) with ESMTP id 5A92080746;
+	Thu,  7 Mar 2024 14:39:29 +0100 (CET)
+Date: Thu, 7 Mar 2024 14:39:25 +0100 (CET)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Martin Wege <martin.l.wege@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <1001845535.26063.1709818765823.JavaMail.zimbra@desy.de>
+In-Reply-To: <CANH4o6OxmxNXNhbZ6THwPVAtfkbkdYyQUMRGCX_=Ssb1gTUXJg@mail.gmail.com>
+References: <CANH4o6OxmxNXNhbZ6THwPVAtfkbkdYyQUMRGCX_=Ssb1gTUXJg@mail.gmail.com>
+Subject: Re: export(5) all_squash, only new files squashed, or all uid/gids?
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_26134_666539453.1709818769214"
+X-Mailer: Zimbra 9.0.0_GA_4597 (ZimbraWebClient - FF123 (Linux)/9.0.0_GA_4583)
+Thread-Topic: export(5) all_squash, only new files squashed, or all uid/gids?
+Thread-Index: eQMPdBI9K03ttHFWWODk42rKp22DLg==
 
-Hello NeilBrown,
+------=_Part_26134_666539453.1709818769214
+Date: Thu, 7 Mar 2024 14:39:25 +0100 (CET)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Martin Wege <martin.l.wege@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <1001845535.26063.1709818765823.JavaMail.zimbra@desy.de>
+In-Reply-To: <CANH4o6OxmxNXNhbZ6THwPVAtfkbkdYyQUMRGCX_=Ssb1gTUXJg@mail.gmail.com>
+References: <CANH4o6OxmxNXNhbZ6THwPVAtfkbkdYyQUMRGCX_=Ssb1gTUXJg@mail.gmail.com>
+Subject: Re: export(5) all_squash, only new files squashed, or all uid/gids?
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_4597 (ZimbraWebClient - FF123 (Linux)/9.0.0_GA_4583)
+Thread-Topic: export(5) all_squash, only new files squashed, or all uid/gids?
+Thread-Index: eQMPdBI9K03ttHFWWODk42rKp22DLg==
 
-Commit 11c3d0a15bbc ("nfsd: perform all find_openstateowner_str calls
-in the one place.") from Mar 5, 2024 (linux-next), leads to the
-following Smatch static checker warning:
+Hi Martin,
 
-	fs/nfsd/nfs4state.c:1674 release_openowner()
-	warn: sleeping in atomic context
+The option all_squash does not affect files or directories.
+It replaces RPC request credentials sent by nfs client with
+user nobody:nobody. The newly created files will be owned by
+nobody:nobody, if parent directory permission
+(and export rules) allow to do so.
 
-fs/nfsd/nfs4state.c
-    1657 static void release_openowner(struct nfs4_openowner *oo)
-    1658 {
-    1659         struct nfs4_ol_stateid *stp;
-    1660         struct nfs4_client *clp = oo->oo_owner.so_client;
-    1661         struct list_head reaplist;
-    1662 
-    1663         INIT_LIST_HEAD(&reaplist);
-    1664 
-    1665         spin_lock(&clp->cl_lock);
-    1666         unhash_openowner_locked(oo);
-    1667         while (!list_empty(&oo->oo_owner.so_stateids)) {
-    1668                 stp = list_first_entry(&oo->oo_owner.so_stateids,
-    1669                                 struct nfs4_ol_stateid, st_perstateowner);
-    1670                 if (unhash_open_stateid(stp, &reaplist))
-    1671                         put_ol_stateid_locked(stp, &reaplist);
-    1672         }
-    1673         spin_unlock(&clp->cl_lock);
---> 1674         free_ol_stateid_reaplist(&reaplist);
-                 ^^^^^^^^^^^^^^^^^^^^^^^^
-This is a might sleep function.
-
-    1675         release_last_closed_stateid(oo);
-    1676         nfs4_put_stateowner(&oo->oo_owner);
-    1677 }
-
-The caller is find_or_alloc_open_stateowner()
-
-fs/nfsd/nfs4state.c
-  4863  find_or_alloc_open_stateowner(unsigned int strhashval, struct nfsd4_open *open,
-  4864                                struct nfsd4_compound_state *cstate)
-  4865  {
-  4866          struct nfs4_client *clp = cstate->clp;
-  4867          struct nfs4_openowner *oo, *new = NULL;
-  4868  
-  4869          while (1) {
-  4870                  spin_lock(&clp->cl_lock);
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^
-Huh...  This looks like the same lock that we take in
-release_openowner().  Why do I not see a static checker warning for
-double lock?
-
-
-  4871                  oo = find_openstateowner_str(strhashval, open, clp);
-  4872                  if (oo && !(oo->oo_flags & NFS4_OO_CONFIRMED)) {
-  4873                          /* Replace unconfirmed owners without checking for replay. */
-  4874                          release_openowner(oo);
-                                ^^^^^^^^^^^^^^^^^^^^^^
-Here
-
-  4875                          oo = NULL;
-  4876                  }
-  4877                  if (oo) {
-  4878                          spin_unlock(&clp->cl_lock);
-  4879                          if (new)
-  4880                                  nfs4_free_stateowner(&new->oo_owner);
-  4881                          return oo;
-  4882                  }
-  4883                  if (new) {
-  4884                          hash_openowner(new, clp, strhashval);
-  4885                          spin_unlock(&clp->cl_lock);
-  4886                          return new;
-  4887                  }
-  4888                  spin_unlock(&clp->cl_lock);
+Best regards,
+   Tigran.
 
 
 
-regards,
-dan carpenter
+----- Original Message -----
+> From: "Martin Wege" <martin.l.wege@gmail.com>
+> To: "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+> Sent: Sunday, 3 March, 2024 14:31:37
+> Subject: export(5) all_squash, only new files squashed, or all uid/gids?
+
+> Hello,
+> 
+> How does the export(5) option all_squash export option work? Does it
+> only squash the uid/gid of new files to nobody/nogroup, or will it
+> turn the uid/gids of all existing files in the exported tree to
+> nobody/nogroup?
+> 
+> Thanks,
+> Martin
+
+------=_Part_26134_666539453.1709818769214
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQWCKDCq74or/A6r3iyeFcUzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yMzExMjkxMTUwMjRaFw0yNDEyMjgxMTUwMjRaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANIlFsEQpmV0zy2TtESnOX3d0a17dmceoaYpX2Sn9gwd
+obCTBa2Ud/YsGJOuGMb/v1kO/4RyvlXTJFAI4Ui8GJf68MpkMHosIVzisWSPfsBnfWPxgwDTITuS
+dwdviezHtvw8HM/Ksv1vjBODQcPgxBJCL/HUswzXEJEetYnnMwzBzLPHyTIuCmlJWRuTtFxNKeTN
+yeMzCfm/lsoHI7cch6N+/cFzYGBl9fAKA67iLjlw+2p4IxsycFPi0PGpIxnb6N9vnTmpO9yybaoQ
+KuQppnfm9cF8m6AaNoE16JqRcdxgpNbtfZTencbHnwlKukpBLGrlZcFdo/BPzjN0uBHK/W9YPMv1
+MOtPaZF0rcjf2FiYUASRUNemOxCu2hkkUvN7UzPuFPszTt4Z4GF/7T76xh7jFQZnBVT8duwbvRDF
+q/7rwHN7ZkSpXvIamqojIseNiBTOwC+0L3SaGQYN60JkQx+d+XoMFcFsm6mnyykwv5l2s3rXgQ7G
+f73YgNG14esVa82Pbb6Rk43cUcay3DpWAlz7U/bODzePJ1pQcgpHuLJ78u2Sv2n5+YQg9huoGm6N
+7eKfucPubjFE4Lpqp9O/I8IJBTwK0KNHSDOB0SFn3vaC6bt/kLGgbpsWW0yv+PzZyqmvYFZXTjlT
+tgv3q86kM1sWSgCd/tuxuwWDkv2RHfbvAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFAKakYwt5EgoalXKWoNDPhs+2W3/MA0GCSqGSIb3DQEB
+DAUAA4ICAQBlAH4oPlVJWw5MWlmenHfZE/N2Ep7tU89SXGQaIZoADcgr0Uzm1+wNIs7Qon9CovjH
+dZ+7zAF1/gDdfYXy+odOMq1xjSeSwHcjuUarzndM1S0uV9DIr4SCRyXf+JP5aaOwVDpoV7JWlp+U
+ptDsBqjEpB+nV2M9LlgRLBp4cdxKu6n/fjJkChR9hd+lDo9bGnR9Uj3KpYWq8GHpoNumUUjSz9A+
+qPTYh4cAqRP12nk5Gqjs+ZnsG4j3EM/QFHQbQUtim0jQAA8TJ6whO7gpLKBuYfqXOdwgHT7Lgsw6
+KMjhJSZs37WCOjj0mwmSzVAlX7FMmDimZt/lI7kpDfUtYHK+F8c11FxH2yZbrhjaa2rB3qXv4hIB
+hrhbt/TNTra8D9C8s3CzxU1FvpREW2VuULyEf36g7ZDcUGom3md/kJFKWqj92KET7JcMp4K79aW/
+s65vvcxXDJX6hWiBDkGBFX5Vqy4ni39zo6X9edqRxkJQIN7d4xFhihUvcUo4oLSeybfYNr+RY+tC
+/s2PvoUHBsXqfrR5gjo7wz+CBh2O9JSA0g1OvGOpCdTw/EZ00gs4sOTU9heD3x5PzP0DJI+0DM/u
+NUH0v918lSJP8zE1N4PjNO1FeqA0l95tQe231ZOZSbd+3EfDjWmvWnPneL2xo+MSXqBDSW4Ua88m
+2C2tFcwvOwAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQWCKD
+Cq74or/A6r3iyeFcUzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNDAzMDcxMzM5MjlaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEINnsyjMC9VJPTz3A3iG6xZkw/8AZ
+prZLR84prk1F7uvZMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAAzQQo4dbvAXBGN9N/RQDLnrfuz5E8UPjuTNfGZI
+WSMKqhIu3yS0aqJNNVeIGYGZEgl464YVmPxgUJiv2N2GEU1mKbBgmW05Ao2EhN+SuL3QdsWhf7fR
+VvD39xsY4fi6BVB4MUo4p4y0Sbt95pqIUzzgeqNDDWlPBQjqDxSDNOIbCCYQS/kaSXmx6R+w3Zuv
+NFDonHIJaoYH29b2ut90m0h0Y7SOZb5uDdBOkaPbFWk48euyS3/f+RFzKuHXsdp2yMHZCJDHxEs+
+O/9Uxr2t0WjQurVc6M0GN34U9aHV3gUL/ysqSe9Ne0juIf88dN1rULkGXjgqmSGW1fH22GAIGZSz
+ybngcpf/oReHo7rTm7isc12kfUguwqB3qdVj/c602XdWmC0eqC/C0bqTHDjdd8EHkhmJRBELkemN
+3edwhrmMhDGZZumQarHUi9sML9GTnvfw6BQm+hXH48Yj22FEgLiM8hGS5jC5L0QJxnGVi6OemPQ2
+UzSBZ0C4z+jEhk0nu1Dl+F2URlTTKO69tSTPC+oIP1/8RCWzaUXb40pslgWbQJjj9rrgria4fQQw
+ygIHaBa0J2B32AdE8u6TEHUAOlCHUALu18Nzqj6eHwA+dXhDY8YwZFC7KmI5D8G/P64MBCs0DULu
+Bxi6twXk7u9LdSXI2WRYyy6MEgcLagslEslkAAAAAAAA
+------=_Part_26134_666539453.1709818769214--
 
