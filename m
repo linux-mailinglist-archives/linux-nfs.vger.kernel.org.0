@@ -1,90 +1,100 @@
-Return-Path: <linux-nfs+bounces-2239-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2240-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD2CF875C34
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Mar 2024 03:03:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 311E2875EB5
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Mar 2024 08:41:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24871B21265
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Mar 2024 02:03:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4EDE1F236D3
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Mar 2024 07:41:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A4722638;
-	Fri,  8 Mar 2024 02:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47DCF4EB43;
+	Fri,  8 Mar 2024 07:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6dAnG5b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIaoYzZq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F60963C1
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Mar 2024 02:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAD42C1A0
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Mar 2024 07:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709863403; cv=none; b=l2LoBoQs/MQDkH4SkKWPzFnzix5gcbiJw1b865XCv3od0vq+U683af2W+ACAP4TXuKvwVyjoST+cGVQeDbWse2LJs1XGqKPYlgVDbWgnLxDcxzlBpl+k4kgUdYwomrV/kTi0Rk1gcq6W8D8UcV4Vz9CaJLSaJRCJFy0rOFLodcA=
+	t=1709883696; cv=none; b=DV0PJ2y9mUgqOUJFMCmQ3WguQ8TG304RtvGcTdX6RUCoZ4h+0TwlJQV2qTNBuNB0VHvkWc5RO+i7RnEAx6OZRgudOAU9BtIB68ZiaKwKwEXoHyWE4aYydmpJAbulIWGbV7dfaxrUxWmsNd4uj7l6swbuHsajAurnUFf1oXgIkBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709863403; c=relaxed/simple;
-	bh=2CIQDglniWXQzl2elcQq5O4pNCWFbdrNEouTgMA8Kf8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=XcrLUwFhUzTzR4LiSaLQhBNKOTuccle78PF5d97PYR/ConcUKKqaAhu9FefdKwEQVn13NitWmc21mxSe5pbfDi7xQZ3M9DLTXkpF5ivCk9eNFT6bmyyzjJJ6xOQ7AEumCbTqZYSd8UyCZ8J4vemxd1tTOGdnxaeAxhaGYtGnzHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h6dAnG5b; arc=none smtp.client-ip=209.85.208.171
+	s=arc-20240116; t=1709883696; c=relaxed/simple;
+	bh=ReiTsPORY8KNb5l4znBcNuNed3hZlhXs9hhiGMS+dsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=tWjCoodfclQNYcjiRIpVeUQ2yi79BKxkJTa0TkR7lCMwfFkJB2DIw+in8ZiEPQ/Vf8KDbya4NsGfK3sbbUgYIhzBXWt0cch37MOqkjH8h5QH+QrMhjVKruWEJdPPJLBNo5v5+UrPjdHAoGuUAxuaVyF9bPmHTFbjzSKcPLaqsLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIaoYzZq; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d220e39907so22157391fa.1
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Mar 2024 18:03:21 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-563d32ee33aso1998114a12.2
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Mar 2024 23:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709863400; x=1710468200; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=38rM7KdqBKjm9hyyA7LQfni4ynFU45Q7NaUG16scUF0=;
-        b=h6dAnG5bY+OijjQg7quLmdF1xkaaY1u7mOIrWcbyMeBBVnP13cBZVSoOGYVzSWf729
-         oqUOVujqEA4Z34AuIRMxjJ4aCrw16gLD837iIjdp5nC+BJM1cpr4JrC1LwevhTWq2S1G
-         3XKf16G6LbnN45xv9kI5y7SsP5b/Gt82qP2N1ra01o6hJF8ufSg9CJF7XMHyRBK9z/SI
-         B+1D6k8vHK1h7hUfpSRmzkBBK1ZZBSFz8SrFqgnCCU5YcW1OxySFZUNKwGtBUHXSIsXE
-         IGrdnmLlEDwau8Yz7DFB/6M9VG5qDdeQojbdGUO5/BSriPFDid3Q9etuifr9agRlYWLT
-         z77g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709863400; x=1710468200;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+        d=gmail.com; s=20230601; t=1709883692; x=1710488492; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=38rM7KdqBKjm9hyyA7LQfni4ynFU45Q7NaUG16scUF0=;
-        b=DjozdJz2MRLKH+n4MDWNNNDAPNW1TaTpwIc4+yqjQZvkCgds+1UxPl6xW+kcVsEQrW
-         5ukWBuBjP6Wl0R4qham/i3/qLgSKZNns5hELCcI0tml1YMQCrdU+bZ0k5enQ2kXGofyG
-         NtCAT6jDwab4nPjcIf48C/YjLZFZfMSSJP8nqmpmJkNG1WkMy9NctpLt0+8vylxFpyAm
-         5lO9Ku2B5KSt8zfwWELTvX6iqqphd/vpgGtgE9EyXffIEUxkym8b6npW9Sg5mSQaQFuS
-         Cem3mC+cItzhj0jb6r4IkTw82e2DpqmJHG1onDdgu4dG1KsiTHNBjtps+OL301M1R951
-         lsSQ==
-X-Gm-Message-State: AOJu0Yy5pGLapwQyaN/kz9mIs0GNepveHcumOYWZHkVgzLgkF7QkRDQ7
-	dVHq/VM/ga3Se2/5dOJys07mpuyNjpx2VN3KmoqM13yCPzfWJoTqWww9yzXDxF9IY9jOOAMME1o
-	6F+t26PtZlWe3YJG6FjFU3FLgGsBD2zs+aRQ=
-X-Google-Smtp-Source: AGHT+IFjv5qnc/rl4Pb0himIL5xy99Ktr4ETJ7zB7gF57trbml2Wyt/PYl82NcHvsQZXOlGPkO47RU3+6JYh3n3Vx1s=
-X-Received: by 2002:a2e:3613:0:b0:2d4:e03:b52c with SMTP id
- d19-20020a2e3613000000b002d40e03b52cmr2219210lja.50.1709863399752; Thu, 07
- Mar 2024 18:03:19 -0800 (PST)
+        bh=qJHC+C6OpORgzMEfxDfo+Evt+CYYBIEXeRxhcS1XM40=;
+        b=aIaoYzZqEGFvUZTritZqdpPtIYIbz7MdFSoRI1u87Lg57HISFhn45lg+DeHWXCfKKa
+         UOCGfWVhQUWeaLY3X3HWvy3m5mhB14fmjzz0yPKFzxPRzytK8W8bwmNlgaPA3BzNogGt
+         xofmQ3wDTQO2bqcb079nYD5n4YPr/izP5u4J37u1IxkvzfoTHKkVWjCOrPH31flngyFy
+         GcQWdXjtQWz2ZCAiW0UdbtHDsndIiFslgeSgguGYSQlXaej4Y7bplJYjoJ44RdfgAd91
+         BYkpq47rhx1t0z445J+krNBkhLM5irjlaOZjiYc1MULg5quOdU6dErBbNTUQw7KV2GJ8
+         BGHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709883692; x=1710488492;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qJHC+C6OpORgzMEfxDfo+Evt+CYYBIEXeRxhcS1XM40=;
+        b=Oj8akdyA9DaKjpLE95LYoBWppFunemxSN1ghWO6U02l/Agf4myZOdZlT7EN1yTj5N7
+         9e9xlCJvvHC3c2wuQPhDTGbMZLe+SwZ2v/exNIn0gVv/4njP4+Oi4J5c238/sYao9Kme
+         panEiUn2o6XJLaVFx2jhjC/xgQtDjLJl1eTuufjFuIm7w5gUzlkRmsapB1T300Yc/ZSa
+         5te4wW9n39EtLbXs0e8Gfzv8asV6Lok30BB8XPbZxUGGBCzkLOkM6JsDGcrsoyDZ5KYP
+         LQnujZM2Ot2DPuuWUC6xyhPPH9bVay6WQbbj14dSZBcXHR7uPm2TJAXEDuH+fthKFaqM
+         tH9Q==
+X-Gm-Message-State: AOJu0YxVpo0h2gKH0ZS7YFnWkWcS6hTtsXBKJz0u+6ZEcmTkXBEyLKD1
+	NM1Y6tOK3k9pVn75x/AbCAKVoP3Xo+LWVEbozVM96n2niMjxk6udaUvRQQjPORp/8kGAid/GWdp
+	pUUJmjRvdlt07WYoNsOiOBi5WSUpdwhzh
+X-Google-Smtp-Source: AGHT+IHUpCJWfih/kzvFdlcEyRybtU6aJTp2EoPwvuCmeAYG2R5ppZ3dZSEaxLU1CVBLPA7gedsPwJEBgtmh0d2oHyA=
+X-Received: by 2002:a50:85ca:0:b0:567:de59:e93e with SMTP id
+ q10-20020a5085ca000000b00567de59e93emr1193594edh.25.1709883692552; Thu, 07
+ Mar 2024 23:41:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Fri, 8 Mar 2024 03:02:53 +0100
-Message-ID: <CAAvCNcBbaj8CPoH+xYWtebscJEJ=YeByGpnwYJOaXqr1xk+B2A@mail.gmail.com>
-Subject: Running nfsd as SCHED_FIXED, SCHED_RR?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20240307213913.2511954-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20240307213913.2511954-1-trond.myklebust@hammerspace.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Fri, 8 Mar 2024 08:40:00 +0100
+Message-ID: <CALXu0Ufw4JW3bi4tapC5xuDwLi7NQA+LV0eBTpaKga8xf+bNYw@mail.gmail.com>
+Subject: Re: [PATCH] nfsd: allow more than 64 backlogged connections
+To: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hello!
+On Thu, 7 Mar 2024 at 22:57, <trondmy@gmail.com> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> When creating a listener socket to be handed to /proc/fs/nfsd/portlist,
+> we currently limit the number of backlogged connections to 64. Since
+> that value was chosen in 2006, the scale at which data centres operate
+> has changed significantly. Given a modern server with many thousands of
+> clients, a limit of 64 connections can create bottlenecks, particularly
+> at at boot time.
+> By converting to using an argument of -1, we allow the backlog to be set
+> by the default value in /proc/sys/net/core/somaxconn.
 
-As part of an experiment to reduce NFSv4 server latency we want to run
-nfsd with SCHED_FIXED and SCHED_RR. While Debian has a "nice" value in
-/etc/default/nfs-kernel-server, there are no controls for the
-scheduler class or IO scheduler class
+Could you please port this to the Linux 6.6 LTS branch too?
 
-Is it actually possible to put all nfsd threads into the SCHED_FIXED
-or SCHED_RR scheduler classes? Can I use ionice for nfsd?
-
-Dan
+Ced
 -- 
-Dan Shelton - Cluster Specialist Win/Lin/Bsd
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
