@@ -1,248 +1,217 @@
-Return-Path: <linux-nfs+bounces-2260-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2261-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1208877F0E
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 12:34:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04B4C878151
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 15:08:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DCE41F21B1A
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 11:34:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49FB287535
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 14:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7963BBC6;
-	Mon, 11 Mar 2024 11:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91BF3FB3E;
+	Mon, 11 Mar 2024 14:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SY30QhLT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pksjw3dY";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cvuIoiSq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661F43BBD6
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 11:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710156865; cv=none; b=c4B5xn+2GSp69y8hW4kfK/1ac8kx4CnZPv/TTCuIpfr/lPMIH2sRydGuxpMI9nneUPsbYRv6p+8hIeRcb8vJ2GM3o0JREgr5aw2nzMHOCC2Xl8nvmSMdAtkxPQgrawcd43zGfROOiBoVpQOqBk/W7YenOzvam9b4cusWKTYyiz0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710156865; c=relaxed/simple;
-	bh=tY0I6i4MsVFQ4yGR9F5tE2g2HSV1BB23yg6+OSa+TWw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k5RlqkV2XRRk/1AcyADiVoS3Lmh55wta8AhmJ98WsjckjeJjvffWPs/mMaC7Mxe4cGr5cgloaSFl8GnYIYW6CGGtMyA7WqDqSx7GLuvpvV7FuNvA5wUR7Qrvn13nSEACTcE/V8R2yc0m9tQoP/0kpw5uvtgL9zMNiwcw8sQelOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SY30QhLT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1D8C433F1;
-	Mon, 11 Mar 2024 11:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710156863;
-	bh=tY0I6i4MsVFQ4yGR9F5tE2g2HSV1BB23yg6+OSa+TWw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SY30QhLTjugrwotowR4hMHudGA7aEnaqVRHuMIRYnSvvbGw/JE3iWz/iJlS06g0p7
-	 mvEH0OHUXWzCZKi1RTG52pVbTloSHar8+GwnZvbVC/yUkytqUKaYQR9HIwL0kczxJw
-	 K/aMBYYOI2c67pcvCqxq9E+SVMMlRDas8T/qqOlfWa6xtZNIqddTmttCgr3TnrsT8p
-	 gEEt4x50CQY5maTwoTMXDgjJaUQioEoiYrFV5i8l+lrHDdyCmSWh5dm5AyoO9c213T
-	 /MxetIhP8l9kRdLpm8I2djft+UjgKjaWprDfFKGprt2IrbZDW11ivV8BxoMufTuGHt
-	 zGthMEl3DBkRg==
-Message-ID: <b1b3e12dc335dcadbf038e87a33529e0fe711230.camel@kernel.org>
-Subject: Re: [PATCH 1/4  v3] nfsd: perform all find_openstateowner_str calls
- in the one place.
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Mon, 11 Mar 2024 07:34:22 -0400
-In-Reply-To: <171010907730.13576.5751778995820664441@noble.neil.brown.name>
-References: <171010907730.13576.5751778995820664441@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABE33E46D
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710166113; cv=fail; b=uLCZzF3yKugYkqc5PszR/j+3Hid6xGr/9HzpYT+gWZtBPbxaY+jrbvRqFVZ0ZHdF8/PrB9UrtaRRiEQBnoAVSBILFR6kiYBMmydPRn7oPLlhYobVlWCev9DHY6LhtBltuzFwQC0KNLRkSM3Wx+GIFTVM7cqa61VNFyGdq6U+Jt8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710166113; c=relaxed/simple;
+	bh=J7JCIbCdSHt7bHDQUclC9m2o2MKGqGIXCXvUW0V1h/g=;
+	h=Date:From:To:Subject:Message-ID:Content-Type:Content-Disposition:
+	 MIME-Version; b=hvHbP3pfkaYjkOlCcqIVL44T3yIj2u3YO4UZ/37P27WeyJn6qeHV9xJHsdy+ms/+xeI8QhQSjGayec8WWj2e1I4GKPRiwgxB+KeWOHD1eNsZj6m0Qk8Hylw6fJDsCId+t6Ty9quDb4TYhaP04pgAtOLrPatDp+i7dapAXo1iboo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Pksjw3dY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cvuIoiSq; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BB4bO9027890
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : content-type : mime-version; s=corp-2023-11-20;
+ bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
+ b=Pksjw3dYiHnEyL4c8FWxKXRAgMTQ4ir7WYLbsw904pXHT2/74NuYTobY1Qod9mdRr2fa
+ Rkla1hb6fhE+o6g3UrM10RUURYnQwZSmFIfbTkasJwCXNHGcShBF8MHgSNGc9FqaI19m
+ ws9HL6CXwHZrXTsuIo4j5pC7R5LcFIlAuQVvAN4ANBsNzvS5G3zs2CLAIZLeu9+Ird+G
+ wQCdKZZhFGWJXWLUhHOgf5bEwF0fDy65J9sGQ6/9qvnekrBQmIKmsL8SyuGtm2gEbPUf
+ v24qPvwm3J3p+TvtkIP2/M9Niwn3v8tV7YORGP3tAI4BTbJhgu9kPnfFgdu1WDb+3S/g rw== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wrec2bbys-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:30 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42BDE9ZH004792
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:29 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre75w3w1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F0PQNSR0XwFUy+79IpRleaXAtq59M9sjM7dazhB78GJmo0ahuf9waD38qJzik9pbS+kqHebHqZN8WDWinGgd7wRzdtP8yjs42KnG+0cnPlAh96p1MmIGsDskqYwVh6YhhrBGeoPKPu1FpVIwaKA+T0OLyLVjnP7/4mfSd+uGeDRHJvXF1RwSdCbrrS9ztK6gKxTfOYEPUdTqco9qoBvOldIyamqO4HahigEOU5Gvdhzcy2d4mU76CJXkV5m9Z2R+8/ArE0zdyNm2m7284/HANggTqkhT1vdlG3jMi+Lu4rJe0fKdEgtndRdmGJNcZNmX3bSj4uBe0xcl7oJIUrgMyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
+ b=OvUZ9EiU8eoNf2c/EoXaIHSdjp5DaaDvnUqWysC6i4GYSuCaDwCK+ujSyePATwCqfS67f9jDqEkB5kO+gniazl+KcYkJUdQ/z7k0KmrVKzU/oHSgHO5m7hZ6ht3X8YVTCV7wsOSFGIGneljnOHxAVgi7iny7n0CJVPl+O7g6Q7bY5Z00LNZACwH8Sq3Xx4sph+W8MTrZwegNUbfpyPzGZlIqt9JXA/znMGj4vYC8IsNN99/R46AGEt3EKHFTKV0H8ZHtgu4JZGqT4w19nZqJRY1a/zbCVqqE8jW9IPrnxra938mUYMOO4iyJGqWhomxpsnoWizV0OM15PAWzambDwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
+ b=cvuIoiSqkDSHC/GPTG8thfHd7Y8pVZ2maUVEdcGU4gLfQ6eqOiT090br0zdYIOxUSt3CycoYmGH2U0wDSy19J3rmOiUULa8VXAErmYUjIqMhBVBLOAHw+Jrluqxnw3LpsBzkPGx0PQHaiqu5sh2HJQaPUh3Fr3oOWRrSfjtrIwc=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CY8PR10MB6681.namprd10.prod.outlook.com (2603:10b6:930:90::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Mon, 11 Mar
+ 2024 14:08:12 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7362.035; Mon, 11 Mar 2024
+ 14:08:12 +0000
+Date: Mon, 11 Mar 2024 10:08:09 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: linux-nfs@vger.kernel.org
+Subject: long-term stable backports of NFSD patches
+Message-ID: <Ze8QSYe_en73ycFY@manet.1015granger.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: CH0PR03CA0440.namprd03.prod.outlook.com
+ (2603:10b6:610:10e::29) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CY8PR10MB6681:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36fdea99-987d-4bcc-b580-08dc41d4afdb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	yBB4N9oQG8uBz8FaD/QBgV7LmsWvilO03WFmKOmuebthpmo9bNxv8vIb4rcVumibt/gfpW7/wA+Zv9lX71+Jx12zq29hRWKAOPsSfBfibtKXTzgTLfPGXyUWw9k59hI0slIGauXr91XVyEL9Rk36sMEyWIjKWP406/7mwiK5PmhSCpUXNDzVVpcYVyPwJwNRwzyN3sX6Wp2MRjts0ybmfeobaegtUqYW9zwhh7BxM4Yb3SxwcOCuhfNbNjMspyENzEdAGhfEtCdrp1xJkUiKNQtQDGnHJrdiXgCoCoT3LWiNs5yA3SCs1PFXtArQqu0YrW3L/pLnh4WdxkKROUuAVh5qfuvz6Ulw95wmv593S9fwl9nvBfbBZ8pW2uiqBGlgb4ySf6aaJMNiRrkAFOS6v2hsnUK19Vsruez6itAkFrU7CHqjfZmgxxFw0IROaL01rmEhfNKc9eAMTE7LAaliawMNOHwd5feShSQONAxbeiXt3MVi+K+FeppxkVkUYL0K0TzPbrm6nnATOs7FyKjAEf5ye9nJElXoGOnh2y9CWLHE3f6TvoKMpGHZqQ3N/ctOvU0ZVnyH3wd1QRdfxRFxc7dcilWo7HVyoO5WzMl1/jY=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?kiLHCPk3PvKy2BfyOQUIVAAs1muIYkOqNlysIGqjv7/mrks03hTHXwJsNt/I?=
+ =?us-ascii?Q?zwFY4vQScw9sXsd11VcT+/TEs0QTRg8WjUC5eYtoTdRdQiVZBdwibYyCwxVD?=
+ =?us-ascii?Q?xPirXRsGWmfLonAH85A1zgQoN48+388pcPwP3+5r96TRte6aFOCDbZjhjeg1?=
+ =?us-ascii?Q?IAtrhJO1QXLBn1ZQ72Iu7xFUi9GJnpC3YpPlK8ouJ9BiaCbkLeERCGZlh2Ur?=
+ =?us-ascii?Q?CYqkdOBOKeSczAteQs+AqUxGII5Ns3uPNBeh3Odg4c5oEUuv6LhnQsUOVngW?=
+ =?us-ascii?Q?m1DnOBu8WJecA0MyOJPAl3tAH4Zc+wdrZzJRZVZtPBvGmUYRv96LlLAkk8pv?=
+ =?us-ascii?Q?+CU7iLzwJUj3imP5lGwY7rFjrP9G9bI0xzdbb97xhirWBTD/yBnsZzs1U91e?=
+ =?us-ascii?Q?lz4LqzAu4JW759sbXmJvpQqdtk0p0oGCJspssyUr9TrDIf1gqVeualVxn+wq?=
+ =?us-ascii?Q?HHgcxfYuCn0UoXkPU4dZES+7Aeve7L76rZMhSpCex6q5SrDKcE4M2OlRu0KB?=
+ =?us-ascii?Q?ZDo9gRD0q1CxRxJAokhtT7uKefr3kS31m2meTbsQJCFXuEThLy1kZtuCQMBB?=
+ =?us-ascii?Q?eqCU+SK8zpp2tAv6esSXFPI9i/x5847IjflUtuaOv8+8zBVsE413BO4AWlmY?=
+ =?us-ascii?Q?HtJYT1oVSsViIGaAWkh429z2Jlcc9RKOFzuW0hIOH19Oag5tsApAbcYgnm4Y?=
+ =?us-ascii?Q?vJE3cD7X26nfEyXXXdSqVreol0bly9Kfqej12LQYbD0s+TgaKKsraEoSv3t3?=
+ =?us-ascii?Q?es8ozq7NVCB/gU0LIIjO+jUaQ2vgVDEPdfNTMzV2J/Dc8bUpKllAww99ZvdX?=
+ =?us-ascii?Q?fjA2uE2WZR1CYsGCHOw1ABOYNIzdHUTGX+ctOHkXo/xI1PFzURaBVuRxhaXb?=
+ =?us-ascii?Q?o/JL0ni3D2N5eBZdi6uErQ7X9AILnoYaGJyD28ooEH2o2LdWnzKM+vipuoST?=
+ =?us-ascii?Q?SySwZ4yLmvIJTMl4bbSaBlQbDjDrPXhJXYrMnBsrdQneEcBbNOtKDyqu12CT?=
+ =?us-ascii?Q?J/BI+5a7iieo35ZwmrNXjzVX/sjY7e84fK/ufO70kebYTAIaJWMjkTLkHNYI?=
+ =?us-ascii?Q?uc7t8a2mHIzKWjCeUq/PP7bhT+1/rdGjTkeo2Xen7RwkhF8CtGjtMR6dwdcL?=
+ =?us-ascii?Q?3vUgWLWPynyTD7P+GV080RS2WIwFwa89pOaHMUPUJEov/wwY2TcsYa+L+HLo?=
+ =?us-ascii?Q?XBwZVNd2ZRm7t9upRT9EGlR6MtlfAJ87Eh6bEhFtqcGjwzwTw/l929eOWNUg?=
+ =?us-ascii?Q?kXsB3CYonWujdxa18RAPf3a5Is+XMhFgBvx1CM+m3etAIK9xXFRPFRJkcf82?=
+ =?us-ascii?Q?sFmJyJa9U7Y17u934VdTG0Lzn8miudLiMYYRg6c9287l41ZHlkkTnOFs8TOx?=
+ =?us-ascii?Q?8Yl4PCWR5VIsn9pHm6emk4LDBE+K5beXM9U5TinhDMKVnTLVFLI9J3xRUFRI?=
+ =?us-ascii?Q?U6jYgRv+ueI58BRtOhxzt1RTT0n8MoKFny1x8wYBbpk5ztRPk0mYHuIgYHpk?=
+ =?us-ascii?Q?T0F4V9OIlD1hovroNo4t+PNF4FWMvtx3hje1shWNdZa9/KSR47qrxJZm4f0H?=
+ =?us-ascii?Q?tc7qoAeCAfbj/W+dRs2eUY+DGO+S/8PG+NjRSgB09shQi3pul+hxHKZVkD8+?=
+ =?us-ascii?Q?2w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	c5ugh0aLIvnsWkClZxBtR9uQRn7obkZ5OQH4aNY/R5tIu0HyRqHE/r2SsAItYhbsOey1OzBdMg/X2QVZgKESyuXUM/nusi5uwU2bLTIu9YvBOPYY+iQzFoeWHKd2OqQGYl8msjDN/ybeD7pEiHppr8LVrxpg8LOAYcYBHTuDWfJmPo4V5k+Icpioxatz7XD4koyUBXljJsdOtht/nzjk6L/qB132lva973lZZV8Sm/YYUTCmLIt1RYBF92WsHdoyfNJWYjZNg/4f86EoQaGM4X8GvT73ClcPlrXg1En5SQUhJ4NtfhV9+9f4Z6lRJcLDPLM8gvTMJvAbu4eddX5B10VvXhS3m09y7p2kQOSFohDg5jqJIOfC0miUwM7++AoVUU6b6fUtDrrc2K+wolSCmupbgNQUtnAGE4zkB5wUk7A6E6buBFQGdiC4xE5hxr2GYYAraoi6WNGEUUj1ylidjzZsKUh0H+7LcFiZ6xi2k57XI7+PV/ODZ4GH0CgRRFILSM5q65sYrlR97Zk8joLgWjMaXFXwLwhl3s5xq/uXpIStK3FfqczNGD6wZRRPVGMsVK0y6MzE+5NsEXoYShNuVfDfjm/WqIof6W7FIU25tRY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36fdea99-987d-4bcc-b580-08dc41d4afdb
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 14:08:11.9932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s6xhgCGicjYmltBjktJxtJIJ0EUq73fOLtF9rqM/Zu7QVi9P12ap5BN88gVauW7QUfy0M4i/VjNV9e+eM+OxsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6681
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=861 phishscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403110107
+X-Proofpoint-ORIG-GUID: s9VaQzFwenOcWoeS7tWp8s1SsuDJcqi1
+X-Proofpoint-GUID: s9VaQzFwenOcWoeS7tWp8s1SsuDJcqi1
 
-On Mon, 2024-03-11 at 09:17 +1100, NeilBrown wrote:
-> Currently find_openstateowner_str lookups are done both in
-> nfsd4_process_open1() and alloc_init_open_stateowner() - the latter
-> possibly being a surprise based on its name.
->=20
-> It would be easier to follow, and more conformant to common patterns, if
-> the lookup was all in the one place.
->=20
-> So replace alloc_init_open_stateowner() with
-> find_or_alloc_open_stateowner() and use the latter in
-> nfsd4_process_open1() without any calls to find_openstateowner_str().
->=20
-> This means all finds are find_openstateowner_str_locked() and
-> find_openstateowner_str() is no longer needed.  So discard
-> find_openstateowner_str() and rename find_openstateowner_str_locked() to
-> find_openstateowner_str().
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->=20
-> The previous version of this patch could deadlock on ->cl_lcok as it
-> called release_openowner() while holding that lock.
-> This version doesn't.
->=20
-> Subsequent patch in the original series should be unchanged.  If needed
-> I can resent them all after -rc1 is out.
->=20
->  fs/nfsd/nfs4state.c | 93 +++++++++++++++++++--------------------------
->  1 file changed, 40 insertions(+), 53 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index ee9aa4843443..3e144b1a1386 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -541,7 +541,7 @@ same_owner_str(struct nfs4_stateowner *sop, struct xd=
-r_netobj *owner)
->  }
-> =20
->  static struct nfs4_openowner *
-> -find_openstateowner_str_locked(unsigned int hashval, struct nfsd4_open *=
-open,
-> +find_openstateowner_str(unsigned int hashval, struct nfsd4_open *open,
->  			struct nfs4_client *clp)
->  {
->  	struct nfs4_stateowner *so;
-> @@ -558,18 +558,6 @@ find_openstateowner_str_locked(unsigned int hashval,=
- struct nfsd4_open *open,
->  	return NULL;
->  }
-> =20
-> -static struct nfs4_openowner *
-> -find_openstateowner_str(unsigned int hashval, struct nfsd4_open *open,
-> -			struct nfs4_client *clp)
-> -{
-> -	struct nfs4_openowner *oo;
-> -
-> -	spin_lock(&clp->cl_lock);
-> -	oo =3D find_openstateowner_str_locked(hashval, open, clp);
-> -	spin_unlock(&clp->cl_lock);
-> -	return oo;
-> -}
-> -
->  static inline u32
->  opaque_hashval(const void *ptr, int nbytes)
->  {
-> @@ -4855,34 +4843,46 @@ nfsd4_find_and_lock_existing_open(struct nfs4_fil=
-e *fp, struct nfsd4_open *open)
->  }
-> =20
->  static struct nfs4_openowner *
-> -alloc_init_open_stateowner(unsigned int strhashval, struct nfsd4_open *o=
-pen,
-> -			   struct nfsd4_compound_state *cstate)
-> +find_or_alloc_open_stateowner(unsigned int strhashval, struct nfsd4_open=
- *open,
-> +			      struct nfsd4_compound_state *cstate)
->  {
->  	struct nfs4_client *clp =3D cstate->clp;
-> -	struct nfs4_openowner *oo, *ret;
-> +	struct nfs4_openowner *oo, *new =3D NULL;
-> =20
-> -	oo =3D alloc_stateowner(openowner_slab, &open->op_owner, clp);
-> -	if (!oo)
-> -		return NULL;
-> -	oo->oo_owner.so_ops =3D &openowner_ops;
-> -	oo->oo_owner.so_is_open_owner =3D 1;
-> -	oo->oo_owner.so_seqid =3D open->op_seqid;
-> -	oo->oo_flags =3D 0;
-> -	if (nfsd4_has_session(cstate))
-> -		oo->oo_flags |=3D NFS4_OO_CONFIRMED;
-> -	oo->oo_time =3D 0;
-> -	oo->oo_last_closed_stid =3D NULL;
-> -	INIT_LIST_HEAD(&oo->oo_close_lru);
-> +retry:
->  	spin_lock(&clp->cl_lock);
-> -	ret =3D find_openstateowner_str_locked(strhashval, open, clp);
-> -	if (ret =3D=3D NULL) {
-> -		hash_openowner(oo, clp, strhashval);
-> -		ret =3D oo;
-> -	} else
-> -		nfs4_free_stateowner(&oo->oo_owner);
-> -
-> +	oo =3D find_openstateowner_str(strhashval, open, clp);
-> +	if (!oo && new) {
-> +		hash_openowner(new, clp, strhashval);
-> +		spin_unlock(&clp->cl_lock);
-> +		return new;
-> +	}
->  	spin_unlock(&clp->cl_lock);
-> -	return ret;
-> +
-> +	if (oo && !(oo->oo_flags & NFS4_OO_CONFIRMED)) {
-> +		/* Replace unconfirmed owners without checking for replay. */
-> +		release_openowner(oo);
-> +		oo =3D NULL;
-> +	}
-> +	if (oo) {
-> +		if (new)
-> +			nfs4_free_stateowner(&new->oo_owner);
-> +		return oo;
-> +	}
-> +
-> +	new =3D alloc_stateowner(openowner_slab, &open->op_owner, clp);
-> +	if (!new)
-> +		return NULL;
-> +	new->oo_owner.so_ops =3D &openowner_ops;
-> +	new->oo_owner.so_is_open_owner =3D 1;
-> +	new->oo_owner.so_seqid =3D open->op_seqid;
-> +	new->oo_flags =3D 0;
-> +	if (nfsd4_has_session(cstate))
-> +		new->oo_flags |=3D NFS4_OO_CONFIRMED;
-> +	new->oo_time =3D 0;
-> +	new->oo_last_closed_stid =3D NULL;
-> +	INIT_LIST_HEAD(&new->oo_close_lru);
-> +	goto retry;
->  }
-> =20
->  static struct nfs4_ol_stateid *
-> @@ -5331,27 +5331,14 @@ nfsd4_process_open1(struct nfsd4_compound_state *=
-cstate,
->  	clp =3D cstate->clp;
-> =20
->  	strhashval =3D ownerstr_hashval(&open->op_owner);
-> -	oo =3D find_openstateowner_str(strhashval, open, clp);
-> +	oo =3D find_or_alloc_open_stateowner(strhashval, open, cstate);
->  	open->op_openowner =3D oo;
-> -	if (!oo) {
-> -		goto new_owner;
-> -	}
-> -	if (!(oo->oo_flags & NFS4_OO_CONFIRMED)) {
-> -		/* Replace unconfirmed owners without checking for replay. */
-> -		release_openowner(oo);
-> -		open->op_openowner =3D NULL;
-> -		goto new_owner;
-> -	}
-> +	if (!oo)
-> +		return nfserr_jukebox;
->  	status =3D nfsd4_check_seqid(cstate, &oo->oo_owner, open->op_seqid);
->  	if (status)
->  		return status;
-> -	goto alloc_stateid;
-> -new_owner:
-> -	oo =3D alloc_init_open_stateowner(strhashval, open, cstate);
-> -	if (oo =3D=3D NULL)
-> -		return nfserr_jukebox;
-> -	open->op_openowner =3D oo;
-> -alloc_stateid:
-> +
->  	open->op_stp =3D nfs4_alloc_open_stateid(clp);
->  	if (!open->op_stp)
->  		return nfserr_jukebox;
+It's apparent that a number of distributions and their customers
+remain on long-term stable kernels. We are aware of the scalability
+problems and other bugs in NFSD in kernels between v5.4 and v6.1.
 
-Bonus: this makes the spinlocking in nfsd4_process_open1 simpler too.
+To address the filecache and other scalability problems in those
+kernels, I'm preparing backported patches of NFSD fixes for several
+popular LTS kernels. The backported commits are destined for the
+official LTS kernel branches so that distributions can easily
+integrate them into their products.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Once this effort is complete, Greg and Sasha will continue to be
+responsible for backporting NFSD-related fixes from upstream into
+the LTS kernels.
+
+Here's a status update.
+
+---
+
+I've pushed the NFSD backports to branches in this repo:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+
+If you are able, I encourage you to pull these, review them or try
+them out, and report any issues or successes. I'm currently using
+the NFS workflows in kdevops as the testing platform, but am
+planning to include other tests.
+
+
+LTS v6.1.y
+
+Patches that bring NFSD in linux-6.1.y up to v6.1.16 have been
+merged into v6.1.81. I've identified a few additional filecache
+related fixes that I will forward to Greg and Sasha soon.
+
+
+LTS v5.15.y
+
+I have updated this branch to include commits from v6.2.16 through
+v5.16, all applied to v5.15.151. Testing has stopped while I work
+on the v6.9 merge window.
+
+You can find these patches in the "nfsd-5.15.y" branch in the above
+repo.
+
+
+LTS v5.10.y
+
+I have updated this branch to include commits from v6.2.16 through
+v5.11, all applied to v5.10.212. Testing has stopped while I work
+on the v6.9 merge window.
+
+You can find these patches in the "nfsd-5.10.y" branch in the above
+repo.
+
+-- 
+Chuck Lever
 
