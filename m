@@ -1,217 +1,169 @@
-Return-Path: <linux-nfs+bounces-2261-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2262-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04B4C878151
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 15:08:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D2F58782C6
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 16:08:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49FB287535
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 14:08:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B09B81C20FB2
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Mar 2024 15:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91BF3FB3E;
-	Mon, 11 Mar 2024 14:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6529940877;
+	Mon, 11 Mar 2024 15:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pksjw3dY";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cvuIoiSq"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="HO+FMwk/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABE33E46D
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710166113; cv=fail; b=uLCZzF3yKugYkqc5PszR/j+3Hid6xGr/9HzpYT+gWZtBPbxaY+jrbvRqFVZ0ZHdF8/PrB9UrtaRRiEQBnoAVSBILFR6kiYBMmydPRn7oPLlhYobVlWCev9DHY6LhtBltuzFwQC0KNLRkSM3Wx+GIFTVM7cqa61VNFyGdq6U+Jt8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710166113; c=relaxed/simple;
-	bh=J7JCIbCdSHt7bHDQUclC9m2o2MKGqGIXCXvUW0V1h/g=;
-	h=Date:From:To:Subject:Message-ID:Content-Type:Content-Disposition:
-	 MIME-Version; b=hvHbP3pfkaYjkOlCcqIVL44T3yIj2u3YO4UZ/37P27WeyJn6qeHV9xJHsdy+ms/+xeI8QhQSjGayec8WWj2e1I4GKPRiwgxB+KeWOHD1eNsZj6m0Qk8Hylw6fJDsCId+t6Ty9quDb4TYhaP04pgAtOLrPatDp+i7dapAXo1iboo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Pksjw3dY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cvuIoiSq; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BB4bO9027890
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : content-type : mime-version; s=corp-2023-11-20;
- bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
- b=Pksjw3dYiHnEyL4c8FWxKXRAgMTQ4ir7WYLbsw904pXHT2/74NuYTobY1Qod9mdRr2fa
- Rkla1hb6fhE+o6g3UrM10RUURYnQwZSmFIfbTkasJwCXNHGcShBF8MHgSNGc9FqaI19m
- ws9HL6CXwHZrXTsuIo4j5pC7R5LcFIlAuQVvAN4ANBsNzvS5G3zs2CLAIZLeu9+Ird+G
- wQCdKZZhFGWJXWLUhHOgf5bEwF0fDy65J9sGQ6/9qvnekrBQmIKmsL8SyuGtm2gEbPUf
- v24qPvwm3J3p+TvtkIP2/M9Niwn3v8tV7YORGP3tAI4BTbJhgu9kPnfFgdu1WDb+3S/g rw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wrec2bbys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:30 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42BDE9ZH004792
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:29 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre75w3w1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 14:08:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F0PQNSR0XwFUy+79IpRleaXAtq59M9sjM7dazhB78GJmo0ahuf9waD38qJzik9pbS+kqHebHqZN8WDWinGgd7wRzdtP8yjs42KnG+0cnPlAh96p1MmIGsDskqYwVh6YhhrBGeoPKPu1FpVIwaKA+T0OLyLVjnP7/4mfSd+uGeDRHJvXF1RwSdCbrrS9ztK6gKxTfOYEPUdTqco9qoBvOldIyamqO4HahigEOU5Gvdhzcy2d4mU76CJXkV5m9Z2R+8/ArE0zdyNm2m7284/HANggTqkhT1vdlG3jMi+Lu4rJe0fKdEgtndRdmGJNcZNmX3bSj4uBe0xcl7oJIUrgMyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
- b=OvUZ9EiU8eoNf2c/EoXaIHSdjp5DaaDvnUqWysC6i4GYSuCaDwCK+ujSyePATwCqfS67f9jDqEkB5kO+gniazl+KcYkJUdQ/z7k0KmrVKzU/oHSgHO5m7hZ6ht3X8YVTCV7wsOSFGIGneljnOHxAVgi7iny7n0CJVPl+O7g6Q7bY5Z00LNZACwH8Sq3Xx4sph+W8MTrZwegNUbfpyPzGZlIqt9JXA/znMGj4vYC8IsNN99/R46AGEt3EKHFTKV0H8ZHtgu4JZGqT4w19nZqJRY1a/zbCVqqE8jW9IPrnxra938mUYMOO4iyJGqWhomxpsnoWizV0OM15PAWzambDwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090A941C79
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 15:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710169732; cv=none; b=u4RgUrH0r7sc1eQndz46WeRQGnzRrQ7XI/cjo3Vop4Mlglrnz3jhVJJ5ChCuxm0WCNcXSU6KlyLxLlweP8Kx6JIpSkwj2xVqw0dDcizMjp9XMVKsi/PzCkoF/vBFtwUxF2DudA1sqOlZDgqsBYwKs7nc/ht6mq1Y76xpwrk5Guw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710169732; c=relaxed/simple;
+	bh=nNOsfPkPzH+Ooip8aR01XZxj6ksmkuSMivWiEmnx1gY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=nPWePOnKVRvkLspMkPRr8mel1Kwm+tak29UGMSpAk9dOEotxAHuW6WwQLK5jvUfdOmXZJ27zLKtbvdmGLCUUeDnd8pALb/yjtdeTuo8Jf3h9AEsFwLconw64K2/W2O7lLb/gXz+jl17Ly8sJzuILG6cTqxhKDFx8b3kR3Uqnv7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=HO+FMwk/; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-609f060cbafso47436427b3.0
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Mar 2024 08:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ex/HyNLdFoMZtnekoHMarEjxpCvraB1awN1rDrKuvM=;
- b=cvuIoiSqkDSHC/GPTG8thfHd7Y8pVZ2maUVEdcGU4gLfQ6eqOiT090br0zdYIOxUSt3CycoYmGH2U0wDSy19J3rmOiUULa8VXAErmYUjIqMhBVBLOAHw+Jrluqxnw3LpsBzkPGx0PQHaiqu5sh2HJQaPUh3Fr3oOWRrSfjtrIwc=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY8PR10MB6681.namprd10.prod.outlook.com (2603:10b6:930:90::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Mon, 11 Mar
- 2024 14:08:12 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7362.035; Mon, 11 Mar 2024
- 14:08:12 +0000
-Date: Mon, 11 Mar 2024 10:08:09 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: linux-nfs@vger.kernel.org
-Subject: long-term stable backports of NFSD patches
-Message-ID: <Ze8QSYe_en73ycFY@manet.1015granger.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ClientProxiedBy: CH0PR03CA0440.namprd03.prod.outlook.com
- (2603:10b6:610:10e::29) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1710169729; x=1710774529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+znQQkwuIWlYT1mQyI/D8NgH0k3sIDAT2CT2uUHvBI=;
+        b=HO+FMwk/CFDOQWOJoDzgBMQxPCsM1HNtEZQZEugHq6uOIxD2WfrEsBgU3EGyqW0Z+9
+         BkIxkv52zQuJ63Rsl4wNjlOUtsi7loVah63vebjupNHoP+qQXhZvu3oVdkJgXL9Eowq/
+         8nbzWwxiA/p2rrHm0EcII4COyJ0FTGECquS7d5tPfssKtYIOO3AoxpvqGxMg/ExyAfz2
+         SfIg1rNkzUBaRtNtYBjBkh2X88zV7bVVoxSNQcGHehJhNoBkZDkrwV1NAkm2BAIoL+fy
+         pZlkADQ+7vdXEzrO/WoItYIVMOELnD0Hi8I5tx4Le7iK7tZqsJF/lMVTJJy8/5AiBMjn
+         BRcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710169729; x=1710774529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+znQQkwuIWlYT1mQyI/D8NgH0k3sIDAT2CT2uUHvBI=;
+        b=Fzdc19I9sgKEPh46lxSktsabCggkjNpaYUqrk3TI8gksaQkmz/1PV9LyPNtvoUF+37
+         bW4Ai4bg50xwGZtU0wMdOIwf1pJEMF7LXENS7D2vVLBcSQr6P0kZcYJnyBjsbyX+d5dc
+         KCK6fgA8vsZ4OtC4wwxmB6PybvR0Ly9qCSHaMd1SGT6pa7HucL9dnXt1fyJ3HedlUHtP
+         izvHPOQZ73vshPVS9Je4X/UET2W4y2nm9uzOHP33Kmn9h0Foa0/KSaz8ksrAnA/wbEu5
+         k35d7kDqv8ymS3kAi9bNMN12dK41N4hjfjXpweVPAgrhbJf9iF6JlSs58XyJzOQx3m8g
+         wcow==
+X-Forwarded-Encrypted: i=1; AJvYcCWm5dmXlEOPPNPKw0FLcgHBnjyC0qTXKs4c7mweStDU4fYbt0qsu38mWm6SoBTv7HtzZJXzFQyOEuvDckC+6VexXEOC9fQIEBit
+X-Gm-Message-State: AOJu0Yy5oaIA3p69wRxV8mkx20PvAIcRR4IMHIq5ik1XZp+q+zCorxHX
+	JkmP7/TxELXLO3+8J2+nEX3cAtGEQ+ZWvfAUrvR6cKJekZRHBJH3TCdKlIEQ+QhvFuyeIvaQFik
+	N
+X-Google-Smtp-Source: AGHT+IF+dy78xXcruGQYy2RgPAhZXfNtPzqIbsBF1PMSZO2YLYySibkwJ78zPvfp6AivXiDT94zn+Q==
+X-Received: by 2002:a0d:d7d4:0:b0:60a:2ac2:104f with SMTP id z203-20020a0dd7d4000000b0060a2ac2104fmr3924654ywd.26.1710169728849;
+        Mon, 11 Mar 2024 08:08:48 -0700 (PDT)
+Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id a195-20020a0dd8cc000000b0060a54499339sm12784ywe.31.2024.03.11.08.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 08:08:48 -0700 (PDT)
+From: Josef Bacik <josef@toxicpanda.com>
+To: trond.myklebust@hammerspace.com,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: fix panic when nfs4_ff_layout_prepare_ds() fails
+Date: Mon, 11 Mar 2024 11:08:05 -0400
+Message-ID: <d9dd921c94d063d5cb17ca2f5489e47b63cd765d.1710169680.git.josef@toxicpanda.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CY8PR10MB6681:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36fdea99-987d-4bcc-b580-08dc41d4afdb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	yBB4N9oQG8uBz8FaD/QBgV7LmsWvilO03WFmKOmuebthpmo9bNxv8vIb4rcVumibt/gfpW7/wA+Zv9lX71+Jx12zq29hRWKAOPsSfBfibtKXTzgTLfPGXyUWw9k59hI0slIGauXr91XVyEL9Rk36sMEyWIjKWP406/7mwiK5PmhSCpUXNDzVVpcYVyPwJwNRwzyN3sX6Wp2MRjts0ybmfeobaegtUqYW9zwhh7BxM4Yb3SxwcOCuhfNbNjMspyENzEdAGhfEtCdrp1xJkUiKNQtQDGnHJrdiXgCoCoT3LWiNs5yA3SCs1PFXtArQqu0YrW3L/pLnh4WdxkKROUuAVh5qfuvz6Ulw95wmv593S9fwl9nvBfbBZ8pW2uiqBGlgb4ySf6aaJMNiRrkAFOS6v2hsnUK19Vsruez6itAkFrU7CHqjfZmgxxFw0IROaL01rmEhfNKc9eAMTE7LAaliawMNOHwd5feShSQONAxbeiXt3MVi+K+FeppxkVkUYL0K0TzPbrm6nnATOs7FyKjAEf5ye9nJElXoGOnh2y9CWLHE3f6TvoKMpGHZqQ3N/ctOvU0ZVnyH3wd1QRdfxRFxc7dcilWo7HVyoO5WzMl1/jY=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?kiLHCPk3PvKy2BfyOQUIVAAs1muIYkOqNlysIGqjv7/mrks03hTHXwJsNt/I?=
- =?us-ascii?Q?zwFY4vQScw9sXsd11VcT+/TEs0QTRg8WjUC5eYtoTdRdQiVZBdwibYyCwxVD?=
- =?us-ascii?Q?xPirXRsGWmfLonAH85A1zgQoN48+388pcPwP3+5r96TRte6aFOCDbZjhjeg1?=
- =?us-ascii?Q?IAtrhJO1QXLBn1ZQ72Iu7xFUi9GJnpC3YpPlK8ouJ9BiaCbkLeERCGZlh2Ur?=
- =?us-ascii?Q?CYqkdOBOKeSczAteQs+AqUxGII5Ns3uPNBeh3Odg4c5oEUuv6LhnQsUOVngW?=
- =?us-ascii?Q?m1DnOBu8WJecA0MyOJPAl3tAH4Zc+wdrZzJRZVZtPBvGmUYRv96LlLAkk8pv?=
- =?us-ascii?Q?+CU7iLzwJUj3imP5lGwY7rFjrP9G9bI0xzdbb97xhirWBTD/yBnsZzs1U91e?=
- =?us-ascii?Q?lz4LqzAu4JW759sbXmJvpQqdtk0p0oGCJspssyUr9TrDIf1gqVeualVxn+wq?=
- =?us-ascii?Q?HHgcxfYuCn0UoXkPU4dZES+7Aeve7L76rZMhSpCex6q5SrDKcE4M2OlRu0KB?=
- =?us-ascii?Q?ZDo9gRD0q1CxRxJAokhtT7uKefr3kS31m2meTbsQJCFXuEThLy1kZtuCQMBB?=
- =?us-ascii?Q?eqCU+SK8zpp2tAv6esSXFPI9i/x5847IjflUtuaOv8+8zBVsE413BO4AWlmY?=
- =?us-ascii?Q?HtJYT1oVSsViIGaAWkh429z2Jlcc9RKOFzuW0hIOH19Oag5tsApAbcYgnm4Y?=
- =?us-ascii?Q?vJE3cD7X26nfEyXXXdSqVreol0bly9Kfqej12LQYbD0s+TgaKKsraEoSv3t3?=
- =?us-ascii?Q?es8ozq7NVCB/gU0LIIjO+jUaQ2vgVDEPdfNTMzV2J/Dc8bUpKllAww99ZvdX?=
- =?us-ascii?Q?fjA2uE2WZR1CYsGCHOw1ABOYNIzdHUTGX+ctOHkXo/xI1PFzURaBVuRxhaXb?=
- =?us-ascii?Q?o/JL0ni3D2N5eBZdi6uErQ7X9AILnoYaGJyD28ooEH2o2LdWnzKM+vipuoST?=
- =?us-ascii?Q?SySwZ4yLmvIJTMl4bbSaBlQbDjDrPXhJXYrMnBsrdQneEcBbNOtKDyqu12CT?=
- =?us-ascii?Q?J/BI+5a7iieo35ZwmrNXjzVX/sjY7e84fK/ufO70kebYTAIaJWMjkTLkHNYI?=
- =?us-ascii?Q?uc7t8a2mHIzKWjCeUq/PP7bhT+1/rdGjTkeo2Xen7RwkhF8CtGjtMR6dwdcL?=
- =?us-ascii?Q?3vUgWLWPynyTD7P+GV080RS2WIwFwa89pOaHMUPUJEov/wwY2TcsYa+L+HLo?=
- =?us-ascii?Q?XBwZVNd2ZRm7t9upRT9EGlR6MtlfAJ87Eh6bEhFtqcGjwzwTw/l929eOWNUg?=
- =?us-ascii?Q?kXsB3CYonWujdxa18RAPf3a5Is+XMhFgBvx1CM+m3etAIK9xXFRPFRJkcf82?=
- =?us-ascii?Q?sFmJyJa9U7Y17u934VdTG0Lzn8miudLiMYYRg6c9287l41ZHlkkTnOFs8TOx?=
- =?us-ascii?Q?8Yl4PCWR5VIsn9pHm6emk4LDBE+K5beXM9U5TinhDMKVnTLVFLI9J3xRUFRI?=
- =?us-ascii?Q?U6jYgRv+ueI58BRtOhxzt1RTT0n8MoKFny1x8wYBbpk5ztRPk0mYHuIgYHpk?=
- =?us-ascii?Q?T0F4V9OIlD1hovroNo4t+PNF4FWMvtx3hje1shWNdZa9/KSR47qrxJZm4f0H?=
- =?us-ascii?Q?tc7qoAeCAfbj/W+dRs2eUY+DGO+S/8PG+NjRSgB09shQi3pul+hxHKZVkD8+?=
- =?us-ascii?Q?2w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	c5ugh0aLIvnsWkClZxBtR9uQRn7obkZ5OQH4aNY/R5tIu0HyRqHE/r2SsAItYhbsOey1OzBdMg/X2QVZgKESyuXUM/nusi5uwU2bLTIu9YvBOPYY+iQzFoeWHKd2OqQGYl8msjDN/ybeD7pEiHppr8LVrxpg8LOAYcYBHTuDWfJmPo4V5k+Icpioxatz7XD4koyUBXljJsdOtht/nzjk6L/qB132lva973lZZV8Sm/YYUTCmLIt1RYBF92WsHdoyfNJWYjZNg/4f86EoQaGM4X8GvT73ClcPlrXg1En5SQUhJ4NtfhV9+9f4Z6lRJcLDPLM8gvTMJvAbu4eddX5B10VvXhS3m09y7p2kQOSFohDg5jqJIOfC0miUwM7++AoVUU6b6fUtDrrc2K+wolSCmupbgNQUtnAGE4zkB5wUk7A6E6buBFQGdiC4xE5hxr2GYYAraoi6WNGEUUj1ylidjzZsKUh0H+7LcFiZ6xi2k57XI7+PV/ODZ4GH0CgRRFILSM5q65sYrlR97Zk8joLgWjMaXFXwLwhl3s5xq/uXpIStK3FfqczNGD6wZRRPVGMsVK0y6MzE+5NsEXoYShNuVfDfjm/WqIof6W7FIU25tRY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36fdea99-987d-4bcc-b580-08dc41d4afdb
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 14:08:11.9932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s6xhgCGicjYmltBjktJxtJIJ0EUq73fOLtF9rqM/Zu7QVi9P12ap5BN88gVauW7QUfy0M4i/VjNV9e+eM+OxsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6681
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=861 phishscore=0
- spamscore=0 suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403110107
-X-Proofpoint-ORIG-GUID: s9VaQzFwenOcWoeS7tWp8s1SsuDJcqi1
-X-Proofpoint-GUID: s9VaQzFwenOcWoeS7tWp8s1SsuDJcqi1
+Content-Transfer-Encoding: 8bit
 
-It's apparent that a number of distributions and their customers
-remain on long-term stable kernels. We are aware of the scalability
-problems and other bugs in NFSD in kernels between v5.4 and v6.1.
+We've been seeing the following panic in production
 
-To address the filecache and other scalability problems in those
-kernels, I'm preparing backported patches of NFSD fixes for several
-popular LTS kernels. The backported commits are destined for the
-official LTS kernel branches so that distributions can easily
-integrate them into their products.
+BUG: kernel NULL pointer dereference, address: 0000000000000065
+PGD 2f485f067 P4D 2f485f067 PUD 2cc5d8067 PMD 0
+RIP: 0010:ff_layout_cancel_io+0x3a/0x90 [nfs_layout_flexfiles]
+Call Trace:
+ <TASK>
+ ? __die+0x78/0xc0
+ ? page_fault_oops+0x286/0x380
+ ? __rpc_execute+0x2c3/0x470 [sunrpc]
+ ? rpc_new_task+0x42/0x1c0 [sunrpc]
+ ? exc_page_fault+0x5d/0x110
+ ? asm_exc_page_fault+0x22/0x30
+ ? ff_layout_free_layoutreturn+0x110/0x110 [nfs_layout_flexfiles]
+ ? ff_layout_cancel_io+0x3a/0x90 [nfs_layout_flexfiles]
+ ? ff_layout_cancel_io+0x6f/0x90 [nfs_layout_flexfiles]
+ pnfs_mark_matching_lsegs_return+0x1b0/0x360 [nfsv4]
+ pnfs_error_mark_layout_for_return+0x9e/0x110 [nfsv4]
+ ? ff_layout_send_layouterror+0x50/0x160 [nfs_layout_flexfiles]
+ nfs4_ff_layout_prepare_ds+0x11f/0x290 [nfs_layout_flexfiles]
+ ff_layout_pg_init_write+0xf0/0x1f0 [nfs_layout_flexfiles]
+ __nfs_pageio_add_request+0x154/0x6c0 [nfs]
+ nfs_pageio_add_request+0x26b/0x380 [nfs]
+ nfs_do_writepage+0x111/0x1e0 [nfs]
+ nfs_writepages_callback+0xf/0x30 [nfs]
+ write_cache_pages+0x17f/0x380
+ ? nfs_pageio_init_write+0x50/0x50 [nfs]
+ ? nfs_writepages+0x6d/0x210 [nfs]
+ ? nfs_writepages+0x6d/0x210 [nfs]
+ nfs_writepages+0x125/0x210 [nfs]
+ do_writepages+0x67/0x220
+ ? generic_perform_write+0x14b/0x210
+ filemap_fdatawrite_wbc+0x5b/0x80
+ file_write_and_wait_range+0x6d/0xc0
+ nfs_file_fsync+0x81/0x170 [nfs]
+ ? nfs_file_mmap+0x60/0x60 [nfs]
+ __x64_sys_fsync+0x53/0x90
+ do_syscall_64+0x3d/0x90
+ entry_SYSCALL_64_after_hwframe+0x46/0xb0
 
-Once this effort is complete, Greg and Sasha will continue to be
-responsible for backporting NFSD-related fixes from upstream into
-the LTS kernels.
+Inspecting the core with drgn I was able to pull this
 
-Here's a status update.
+>>> prog.crashed_thread().stack_trace()[0]['idx']
+(u32)1
+>>> prog.crashed_thread().stack_trace()[0]
+>>> prog.crashed_thread().stack_trace()[0]['idx']
+(u32)1
+>>>
+prog.crashed_thread().stack_trace()[0]['flseg'].mirror_array[1].mirror_ds
+(struct nfs4_ff_layout_ds *)0xffffffffffffffed
 
+This is clear from the stack trace, we call nfs4_ff_layout_prepare_ds()
+which could error out initializing the mirror_ds, and then we go to
+clean it all up and our check is only for if (!mirror->mirror_ds).  This
+is inconsistent with the rest of the users of mirror_ds, which have
+
+  if (IS_ERR_OR_NULL(mirror_ds))
+
+to keep from tripping over this exact scenario.  Fix this up in
+ff_layout_cancel_io() to make sure we don't panic when we get an error.
+I also spot checked all the other instances of checking mirror_ds and we
+appear to be doing the correct checks everywhere, only unconditionally
+dereferencing mirror_ds when we know it would be valid.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've pushed the NFSD backports to branches in this repo:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-
-If you are able, I encourage you to pull these, review them or try
-them out, and report any issues or successes. I'm currently using
-the NFS workflows in kdevops as the testing platform, but am
-planning to include other tests.
-
-
-LTS v6.1.y
-
-Patches that bring NFSD in linux-6.1.y up to v6.1.16 have been
-merged into v6.1.81. I've identified a few additional filecache
-related fixes that I will forward to Greg and Sasha soon.
-
-
-LTS v5.15.y
-
-I have updated this branch to include commits from v6.2.16 through
-v5.16, all applied to v5.15.151. Testing has stopped while I work
-on the v6.9 merge window.
-
-You can find these patches in the "nfsd-5.15.y" branch in the above
-repo.
-
-
-LTS v5.10.y
-
-I have updated this branch to include commits from v6.2.16 through
-v5.11, all applied to v5.10.212. Testing has stopped while I work
-on the v6.9 merge window.
-
-You can find these patches in the "nfsd-5.10.y" branch in the above
-repo.
-
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index ef817a0475ff..3e724cb7ef01 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -2016,7 +2016,7 @@ static void ff_layout_cancel_io(struct pnfs_layout_segment *lseg)
+ 	for (idx = 0; idx < flseg->mirror_array_cnt; idx++) {
+ 		mirror = flseg->mirror_array[idx];
+ 		mirror_ds = mirror->mirror_ds;
+-		if (!mirror_ds)
++		if (IS_ERR_OR_NULL(mirror_ds))
+ 			continue;
+ 		ds = mirror->mirror_ds->ds;
+ 		if (!ds)
 -- 
-Chuck Lever
+2.43.0
+
 
