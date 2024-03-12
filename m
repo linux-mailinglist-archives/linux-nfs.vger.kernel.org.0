@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-2267-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2268-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 118808792E6
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Mar 2024 12:23:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EEC0879326
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Mar 2024 12:37:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 350871C21629
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Mar 2024 11:23:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C7651F21A5A
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Mar 2024 11:37:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E731179DDB;
-	Tue, 12 Mar 2024 11:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BBC69D0A;
+	Tue, 12 Mar 2024 11:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQQtTRv4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4KTKI4j"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C177179B77
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Mar 2024 11:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13E756471
+	for <linux-nfs@vger.kernel.org>; Tue, 12 Mar 2024 11:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710242559; cv=none; b=f/PLYTGjYKlXHynhtFbZzG1WPIpCDAlP7J4fIBcQqKG6R70PEuke5mH1x9jr+yM9a6Mx4PvvbvSujb/h48hWa7snBx+330EoMYApuBm2PDYhKmq9BoYvuBynStJOZepxsjWZUyy52Sb6DjAr2F2sFNcLPgjPIa17hYifRsdTYUY=
+	t=1710243470; cv=none; b=Lshys2ao5a4xEUWC3PvUww0shPx0nrCJLdgXS0+Z1qskAMv5I/+EHPcOeUVuUck1XB9UuTzU19hxQf9TFd72VAwAAivPDUrdMMfMViWnU00Et9yB0uve/gz0rBangeAX5ncIS9IkE01/MWvGuRpIFAQGki52SBydfe2PsM+xYSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710242559; c=relaxed/simple;
-	bh=vFCSmgHelTcjcgR+uOeupzYna8EcKjSNMBCa2Qdo4P0=;
+	s=arc-20240116; t=1710243470; c=relaxed/simple;
+	bh=k39b6KQW1GR4rkR5xaf8xH7X6iw+EDlrKWTK1P/LldA=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bgh7A0aw8UV/kh+i9cYalyAJlJFe1deqeM3nCT0XDJcXjOjUg7wO6h22OEP8FBZjqSHZQC52gd9spLtSCUCuj7egmrvZouCgnvbAmLc+FBtzX9GhiTqMGtKbAkEP+cgdkAgqz7BUD7ZBGjmFPr5AqZy853dpFqMG1uoR/YSu7tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQQtTRv4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15367C43390;
-	Tue, 12 Mar 2024 11:22:39 +0000 (UTC)
+	 Content-Type:MIME-Version; b=scwcqr95p/kHQnXKbDFlOu2puKYfqbwKq3GZotIP5RDhwCUtg1oUNoN7rOqoLXdWAWbfG8GjZM3QWkjZs/1WNf6f8zoNpTD6iXKinf78fx0Nye1XlXlCC2H4y5TfhlX4zOuxC5Qucn/UJmGcuXJJ9SENCS2L0ebzAVkAcV+zu4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4KTKI4j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BF2C43394;
+	Tue, 12 Mar 2024 11:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710242559;
-	bh=vFCSmgHelTcjcgR+uOeupzYna8EcKjSNMBCa2Qdo4P0=;
+	s=k20201202; t=1710243470;
+	bh=k39b6KQW1GR4rkR5xaf8xH7X6iw+EDlrKWTK1P/LldA=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=sQQtTRv40iJv1vK/VcdfCQoGmdhDq+JXudIaLWcWFFHZaEf7xT6wPu4WLB9bv/NjA
-	 UQ0LP5cpkMLSMxkMRiUk7ujB8y0DoRtCIN+CqykABSffKV51FKCx5OZGA+t2Ar6sOr
-	 pImC1Zyloh+d/ElgVgPVLLYVKIHmhLEwOnpn94Mkfs3A25/bW1pY3DR/hfmFg1LbNl
-	 YNh9eY5aAxqvJffDb4TjUE2jZoE6KnbtDkhLHz5tjZwBmwZhICbFw9qH0UGsrDl/qY
-	 PMtgPWXQxocZZRy1E3kti40WhwQAgCdEjpwgsigwIfx6byUiSePw30o+CFMji0QhMv
-	 SZBnjybtbyQQw==
-Message-ID: <75a8d4ca3617818c2b520de6d4f1abdb2a9545a9.camel@kernel.org>
+	b=Y4KTKI4jKr+EmlIUxMqpUgsuaJkD+KnUiDPh+tfkVj//ECryFTWcNM6T5hAG/qd44
+	 zeUmo11beJg4IJYXi5EYG+JMZxZcB+mfP73xIcsCXH+Y9uaHv+jtxXdEILL3+cIxAj
+	 BGhoE+urt5evG2CqLN99FXyWF83W6JhHS6DG+Vm6MQVonIv28tq6jNCqI2ViI0gDiQ
+	 bAHEhPclGMdG+7FVjzNX1qUMGhQ9BrZb+QNto7g9E2IwRXJJaNiZQaelE/cebYGvSx
+	 PTYxSzuPJ1mPkwT8fvpLsw3I/yvUSZSJXlRrwbjBw/zuMMwPkT20p6PGlAavoI520w
+	 Zd/Y9BjX2Rs4w==
+Message-ID: <aeb9e7b96161ac247c247b90c143935e80c7faf8.camel@kernel.org>
 Subject: Re: nfsd hangs and nfsd_break_deleg_cb+0x170/0x190 warning
 From: Jeff Layton <jlayton@kernel.org>
 To: Rik Theys <Rik.Theys@esat.kuleuven.be>, Linux Nfs
 	 <linux-nfs@vger.kernel.org>
-Date: Tue, 12 Mar 2024 07:22:37 -0400
+Date: Tue, 12 Mar 2024 07:37:48 -0400
 In-Reply-To: <55366184-94bb-4054-8025-1125db3788ff@esat.kuleuven.be>
 References: <55366184-94bb-4054-8025-1125db3788ff@esat.kuleuven.be>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
@@ -174,134 +174,15 @@ state:D stack:0 =A0=A0=A0=A0pid:8866 =A0ppid:2 =A0=A0=A0=A0=A0flags:0x00004=
 > =A0[Mon Mar 11 14:10:08 2024] =A0ret_from_fork+0x29/0x50=20
 > =A0[Mon Mar 11 14:10:08 2024] =A0</TASK>
 > =A0
-> =A0
 >=20
 >=20
->=20
->=20
->=20
->=20
->=20
-> Hi,
-> =A0
->=20
->=20
->=20
->=20
->=20
->=20
->=20
-> Since a few weeks our Rocky Linux 9 NFS server has periodically logged hu=
-ng nfsd tasks. The initial effect was that some clients could no longer acc=
-ess the NFS server. This got worse and worse (probably as more nfsd threads=
- got blocked) and we had to restart the server. Restarting the server also =
-failed as the NFS server service could no longer be stopped.
-> =A0
->=20
->=20
->=20
->=20
->=20
->=20
->=20
-> The initial kernel we noticed this behavior on was kernel-5.14.0-362.18.1=
-.el9_3.x86_64. Since then we've installed kernel-5.14.0-419.el9.x86_64 from=
- CentOS Stream 9. The same issue happened again on this newer kernel versio=
-n:
-> =A0
->=20
->=20
->=20
->=20
->=20
->=20
->=20
-> [Mon Mar 11 14:10:08 2024] =A0=A0=A0=A0=A0=A0Not tainted 5.14.0-419.el9.x=
-86_64 #1=20
-> =A0[Mon Mar 11 14:10:08 2024] "echo 0 > /proc/sys/kernel/hung_task_timeou=
-t_secs" disables this message.=20
-> =A0[Mon Mar 11 14:10:08 2024] task:nfsd =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-state:D stack:0 =A0=A0=A0=A0pid:8865 =A0ppid:2 =A0=A0=A0=A0=A0flags:0x00004=
-000=20
-> =A0[Mon Mar 11 14:10:08 2024] Call Trace:=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0<TASK>=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__schedule+0x21b/0x550=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0schedule+0x2d/0x70=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0schedule_timeout+0x11f/0x160=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? select_idle_sibling+0x28/0x430=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? wake_affine+0x62/0x1f0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__wait_for_common+0x90/0x1d0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_schedule_timeout+0x10/0x10=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__flush_workqueue+0x13a/0x3f0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd4_shutdown_callback+0x49/0x120 [nfsd=
-]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? nfsd4_cld_remove+0x54/0x1d0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? nfsd4_return_all_client_layouts+0xc4/0=
-xf0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? nfsd4_shutdown_copy+0x68/0xc0 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__destroy_client+0x1f3/0x290 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd4_exchange_id+0x75f/0x770 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? nfsd4_decode_opaque+0x3a/0x90 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd4_proc_compound+0x44b/0x700 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd_dispatch+0x94/0x1c0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0svc_process_common+0x2ec/0x660 [sunrpc]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_nfsd+0x10/0x10 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0svc_process+0x12d/0x170 [sunrpc]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd+0x84/0xb0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0kthread+0xdd/0x100=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_kthread+0x10/0x10=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0ret_from_fork+0x29/0x50=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0</TASK>=20
-> =A0[Mon Mar 11 14:10:08 2024] INFO: task nfsd:8866 blocked for more than =
-122 seconds.=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0=A0=A0=A0=A0=A0Not tainted 5.14.0-419.el=
-9.x86_64 #1=20
-> =A0[Mon Mar 11 14:10:08 2024] "echo 0 > /proc/sys/kernel/hung_task_timeou=
-t_secs" disables this message.=20
-> =A0[Mon Mar 11 14:10:08 2024] task:nfsd =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-state:D stack:0 =A0=A0=A0=A0pid:8866 =A0ppid:2 =A0=A0=A0=A0=A0flags:0x00004=
-000=20
-> =A0[Mon Mar 11 14:10:08 2024] Call Trace:=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0<TASK>=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__schedule+0x21b/0x550=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0schedule+0x2d/0x70=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0schedule_timeout+0x11f/0x160=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? select_idle_sibling+0x28/0x430=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? tcp_recvmsg+0x196/0x210=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? wake_affine+0x62/0x1f0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__wait_for_common+0x90/0x1d0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_schedule_timeout+0x10/0x10=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0__flush_workqueue+0x13a/0x3f0=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd4_destroy_session+0x1a4/0x240 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd4_proc_compound+0x44b/0x700 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd_dispatch+0x94/0x1c0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0svc_process_common+0x2ec/0x660 [sunrpc]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]=
-=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_nfsd+0x10/0x10 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0svc_process+0x12d/0x170 [sunrpc]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0nfsd+0x84/0xb0 [nfsd]=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0kthread+0xdd/0x100=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0? __pfx_kthread+0x10/0x10=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0ret_from_fork+0x29/0x50=20
-> =A0[Mon Mar 11 14:10:08 2024] =A0</TASK>
->=20
-
-The above threads are trying to flush the workqueue, so that probably
-means that they are stuck waiting on a workqueue job to finish.
 >=20
 > =A0The above is repeated a few times, and then this warning is also logge=
 d:
 > =A0
+>=20
+>=20
+>=20
 > [Mon Mar 11 14:12:04 2024] ------------[ cut here ]------------=20
 > =A0[Mon Mar 11 14:12:04 2024] WARNING: CPU: 39 PID: 8844 at fs/nfsd/nfs4s=
 tate.c:4919 nfsd_break_deleg_cb+0x170/0x190 [nfsd]=20
@@ -402,42 +283,52 @@ fsd]=20
 > =A0[Mon Mar 11 14:12:05 2024] =A0ret_from_fork+0x29/0x50=20
 > =A0[Mon Mar 11 14:12:05 2024] =A0</TASK>=20
 > =A0[Mon Mar 11 14:12:05 2024] ---[ end trace 7a039e17443dc651 ]---
-
-This is probably this WARN in nfsd_break_one_deleg:
-
-        WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall));                  =20
-
-It means that a delegation break callback to the client couldn't be
-queued to the workqueue, and so it didn't run.
-
->=20
-> Could this be the same issue as described here:https://lore.kernel.org/li=
-nux-nfs/af0ec881-5ebf-4feb-98ae-3ed2a77f86f1@oracle.com/ ?
 > =A0
 
-Yes, most likely the same problem.
+[Mon Mar 11 14:29:16 2024] task:kworker/u96:3   state:D stack:0     pid:245=
+1130 ppid:2      flags:0x00004000
+[Mon Mar 11 14:29:16 2024] Workqueue: nfsd4_callbacks nfsd4_run_cb_work [nf=
+sd]
+[Mon Mar 11 14:29:16 2024] Call Trace:
+[Mon Mar 11 14:29:16 2024]  <TASK>
+[Mon Mar 11 14:29:16 2024]  __schedule+0x21b/0x550
+[Mon Mar 11 14:29:16 2024]  schedule+0x2d/0x70
+[Mon Mar 11 14:29:16 2024]  schedule_timeout+0x88/0x160
+[Mon Mar 11 14:29:16 2024]  ? __pfx_process_timeout+0x10/0x10
+[Mon Mar 11 14:29:16 2024]  rpc_shutdown_client+0xb3/0x150 [sunrpc]
+[Mon Mar 11 14:29:16 2024]  ? __pfx_autoremove_wake_function+0x10/0x10
+[Mon Mar 11 14:29:16 2024]  nfsd4_process_cb_update+0x3e/0x260 [nfsd]
+[Mon Mar 11 14:29:16 2024]  ? sched_clock+0xc/0x30
+[Mon Mar 11 14:29:16 2024]  ? raw_spin_rq_lock_nested+0x19/0x80
+[Mon Mar 11 14:29:16 2024]  ? newidle_balance+0x26e/0x400
+[Mon Mar 11 14:29:16 2024]  ? pick_next_task_fair+0x41/0x500
+[Mon Mar 11 14:29:16 2024]  ? put_prev_task_fair+0x1e/0x40
+[Mon Mar 11 14:29:16 2024]  ? pick_next_task+0x861/0x950
+[Mon Mar 11 14:29:16 2024]  ? __update_idle_core+0x23/0xc0
+[Mon Mar 11 14:29:16 2024]  ? __switch_to_asm+0x3a/0x80
+[Mon Mar 11 14:29:16 2024]  ? finish_task_switch.isra.0+0x8c/0x2a0
+[Mon Mar 11 14:29:16 2024]  nfsd4_run_cb_work+0x9f/0x150 [nfsd]
+[Mon Mar 11 14:29:16 2024]  process_one_work+0x1e2/0x3b0
+[Mon Mar 11 14:29:16 2024]  worker_thread+0x50/0x3a0
+[Mon Mar 11 14:29:16 2024]  ? __pfx_worker_thread+0x10/0x10
+[Mon Mar 11 14:29:16 2024]  kthread+0xdd/0x100
+[Mon Mar 11 14:29:16 2024]  ? __pfx_kthread+0x10/0x10
+[Mon Mar 11 14:29:16 2024]  ret_from_fork+0x29/0x50
+[Mon Mar 11 14:29:16 2024]  </TASK>   =A0
 
+The above is the main task that I see in the cb workqueue. It's trying to c=
+all rpc_shutdown_client, which is waiting for this:
 
-> As described in that thread, I've tried to obtain the requested informati=
-on.
-> =A0
->=20
+                wait_event_timeout(destroy_wait,
+                        list_empty(&clnt->cl_tasks), 1*HZ);
 
-> Is it possible this is the issue that was fixed by the patches described =
-here? https://lore.kernel.org/linux-nfs/2024022054-cause-suffering-eae8@gre=
-gkh/
->=20
+...so basically waiting for the cl_tasks list to go empty. It repeatedly
+does a rpc_killall_tasks though, so possibly trying to kill this task?
 
-Doubtful. Those are targeted toward a different set of issues.
+    18423 2281      0 0x18 0x0     1354 nfsd4_cb_ops [nfsd] nfs4_cbv1 CB_RE=
+CALL_ANY a:call_start [sunrpc] q:delayq
 
-If you're willing, I do have some patches queued up for CentOS here that
-fix some backchannel problems that could be related. I'm mainly waiting
-on Chuck to send these to Linus and then we'll likely merge them into
-CentOS soon afterward:
-
-https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_=
-requests/3689
-
+Callbacks are soft RPC tasks though, so they should be easily killable.
 --=20
-Jeff Layton <jlayton@poochiereds.net>
+Jeff Layton <jlayton@kernel.org>
 
