@@ -1,217 +1,254 @@
-Return-Path: <linux-nfs+bounces-2304-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2305-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0CD987CE77
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 15:04:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99FE187CEE9
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 15:31:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E12A71C21BB0
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 14:04:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9F691C225A0
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 14:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C01364C2;
-	Fri, 15 Mar 2024 14:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7093FB32;
+	Fri, 15 Mar 2024 14:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="JZOaXdoN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l+kDmqa4";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Zy2jOjp1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08309376FB
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Mar 2024 14:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710511432; cv=none; b=fVg+n3b5xGST748QjnCrCjxJZpv+rOkw4iQShfClwnFmX2VAn0gXEPPM2slw3WPJJtxGqgs07c4XVMbeiezQg9iVfcrSBDhStV4YE5yxnilcZbeb8QFcAUlT/oOOvuAYvzMBi/8sQsnhL5ebBg5HMuZqNEJWpzFZrI1GnQJeDj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710511432; c=relaxed/simple;
-	bh=11sn4pcGeCov9RGyHti5joDCW5zU4TpguLfb4BlQMYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQvObXtCORaJibXXCWQBkEoyTV25fZVDybCEz6yWkDre02eGZ1Y+HFMQ4s3ZDDpRhR0SHTTt1s87ih/Bz+Lk5xi7rY0H08Zqcxs2GdnjDYmjRNyV9I5KZmky8XYymgKvtIkCw+QOHi+OuWNao2BpuZj2b+2ZOVWWMInjnCqyL/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=JZOaXdoN; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a1d1a28da2so934362eaf.1
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Mar 2024 07:03:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77463F9E9;
+	Fri, 15 Mar 2024 14:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710512999; cv=fail; b=dEilvTmZt0qx3dyGFuGtiPOsNUL09n6UxNIy6yBqotJ1RTivFfS5kRe8SKkqgj9OrYYqe2oj6cVPX0Flu3NbsXxMjgD9orxcNDKD+aYhb5+dAh1BRICZGlnuWnXWAJb5KfbMN0QA2mVeS1LVRNWlSq4z5LGjze2ygQbot60/Hy8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710512999; c=relaxed/simple;
+	bh=WLsiKgN72sP96JDFfj3nA20RDl6pRN/Z2QOzyK/EIcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=M+YrMnXarueC2jDZy2yEnGNv8shR+68YylFL2nluyna8JtP3V2LhXvjfsy3QGrvp3jNXxn1v0jvtcReZa+UwrblWluMXRdCPxheaoA8kc7G1S8RtT0ntdSUBbwZK+Gm5rUCwNQvuPdzjgNFC00a90gdoampSeaB0yp90dARTJzI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=l+kDmqa4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Zy2jOjp1; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42FC9XmH026327;
+	Fri, 15 Mar 2024 14:29:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
+ b=l+kDmqa4ojkXa8nI4NOZAxP2PjywaeuCD9yFQJpah07Wcs4vYosi6XnKIE3hYw/UDjI/
+ wrxb1asyXO9P+xCNE7VzLHCyUFuyPnMcHMLi/djXvszLw41xS1GSVlRP3M/UwEM3zou5
+ j/7OM8xZQ1E1nr0qf8t8ZYihbkLOYq6wZWkM5bXs9yjyJ+nOReBOPo8q4q0nrJJ25/us
+ ixDvDhTnL6YdG2+8UlFw9gAxQ0etT0M2XoeZ0LD9sgVSRitPBEXpGgQ2pOqw2/RvbQkr
+ AK+TPamf05FNT2DP1FERK6AV3949DBUF9YsVMgCCuWCfSo00JKlvDbwKzqlL9uclGaNh 2g== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wv0adasw7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Mar 2024 14:29:53 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42FDTi6D019743;
+	Fri, 15 Mar 2024 14:29:52 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre7bx7kt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Mar 2024 14:29:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IwEoJppIQsysFcNtDJbn92VL1TzSOo9eD6rLcZTjxQPSSqGznUKxc73g54R7zW6Ba/UtCNthafGlcA3k5Uf2uKGuEdH+qS/KCE99ayFd4wGs3pV0lycppsFHsEPL5M434IlhbSNHGXE04qcttcl4Zc4psd0AvgZaSLDWBZTaPQRplzj0vRIER/jw38+R9kKPupGzmFYvS6slnfMBCUZftLQGeHhNAatq5wRoYjx6feY5IIrayKy5n19POHHnEa0Pf/q9UWf8kJycYOqKN5A0xUU8hLgF1yZakaoNwGmPz5ebwJVOrAKINpxo1p84zZsTH7ON5/ZbVNJlCcg1jAh0CA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
+ b=Desf2MTHZK87CEXQ68y8jIq5HPV76jJZ0Q0vOIGsGBUp4ibAAOrXD5yWgTgtwMON//oU94As+2Nsl978e8iWiKI2XH+2BwROqbw0xfdW6etiJGBPNZOa0MdPSP9Q/Lwq/pNPEuHCAEpC5P3IksR7SF4e1fOgexAL2W8XI/rlLkZa/9ew7T0w6egKA/x40w6b5KY8j3Al2vDnYCAMkndTXrgx8Ga0Lhmz9Gb8sRJjLDFriNHhvSEeT13JANQSdjUyY7zPdaJcBujX/iQXwqAt/aiUewQxrCjLrrA+zSeh8vKwOOYpQt3UkHzpcV0lgIB5HkQ2AdhIMfrxk6WqlDYZpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1710511430; x=1711116230; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lQE0gLheV26fDZRW+ULF2uka/2mtd0etjxYtrrMo3Nc=;
-        b=JZOaXdoNFsJl0oPiM4exthxypWMAdjCvToH+E/YaSHhykcAeW+2aPxBFb7QTGexPQY
-         i5DZJDH3CglXrdx/B7t3OHZv8G1TECo/uqoMeyls+yZkvgFauM3BLMTM8awFmpFe13/A
-         P13EzPXewENbHpoYD7SG5lvwVH1qS7stFcOku8BUgblETAspb39xgJnJGyyIgIBDhu0n
-         RcQeu+hdM81vo4ydSw5wergn41oYWTw0G8+eBJ3weC/7ZRlL1tukKG1YcnXRf6DVhXnx
-         HbnOHmRn/ahCaXfJbeYpDnA6pQWcs6C9pqXQZPLXdVZn4Kih6/MrWL46tOMhL1W96kaQ
-         uRtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710511430; x=1711116230;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lQE0gLheV26fDZRW+ULF2uka/2mtd0etjxYtrrMo3Nc=;
-        b=f3J/HpvYFa2iHCxSLKf5XOFMiSZYDXEkxrLyhcjDS9ZWG+l1+U43+lS+hAvu0uOh2G
-         CbUpRpklGMGF+LZ5Fii0LjewlL+hzzDeN0VsyBj10Lbkt5zg2FyXex+r3uzWpL6S3rvG
-         vZzCyGSl7XDBkr+x/ILA6Ay4yHvGTAbisgqmZw2Y2qpt7Aqsks99y9SUUBALHMmOyy5o
-         HWQXC9vP/0pCX5qDcF7Z2L2AWldPjQSKS0x14csnqF8sKqf6i8PCaI9ohMTVfQFe/QV3
-         v9/aJEa8Z/tjsirA77/IbIsinvvlh3GIuBrdb87GTlpNMF45KhcKI/LE3sJAW5e/IpIV
-         Q5UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtzGXyUDLeniNnbLiuO9mUS47UHB2BSu0GCQqQU+jjoc0t8XysoEXVc7ZBtGES1RgO2vjd/4k96HmTxPhMlRN8j1EjXg8c2boY
-X-Gm-Message-State: AOJu0Yxo+gCt6sTg16eGkyG+6cTAptSWw8NMUbjjhlALy/6CZsOO9ERK
-	ECnasu3O8JwevPpbG0VtLwm9TYejBUxr8DBW2sgbsUFs4aIQS4vIFqbxhOsioUU=
-X-Google-Smtp-Source: AGHT+IH66gHftpBJPsxY492mb5N2jZn3ANtPkGcILSKG9Sao7Vk3Twcq7bQp3tqgSwpxM0Ke7KjL2g==
-X-Received: by 2002:a05:6358:2619:b0:17b:80e2:a105 with SMTP id l25-20020a056358261900b0017b80e2a105mr2268392rwc.24.1710511429866;
-        Fri, 15 Mar 2024 07:03:49 -0700 (PDT)
-Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id u36-20020a81b624000000b0060cca9c7d36sm691188ywh.31.2024.03.15.07.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 07:03:49 -0700 (PDT)
-Date: Fri, 15 Mar 2024 10:03:48 -0400
-From: Josef Bacik <josef@toxicpanda.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: kuba@kernel.org, netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [BUG] Panic in ipv6 on old NFS sockets from destroyed network
- namespace
-Message-ID: <20240315140348.GA2872887@perftesting>
-References: <20240314210740.GA2823176@perftesting>
- <CANn89i+Bid4YkwFEmxSvF22Gk0jY+hH7P=mjEKR=LBPc+vG_PA@mail.gmail.com>
- <CANn89iJKfxnzWzoN=KkFERjRUYpyKHO4KLJytMBS69tnRWY9Jw@mail.gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
+ b=Zy2jOjp1WiBjU48FcrbJd4uy6iAT/1qFS2OSLq4AJ3I0EoQCwPqtRY788hWcJIxyTErF4EZnSprXwejsgKuGvU2dkqXNo+XKTsiZ7nG+cG0gbAuGHbffWR4+7LacdjvHg/B/qhTHvAcbs8xW4kCsgfIN9PtwOzDI6ShgJNj1lRg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by IA1PR10MB6097.namprd10.prod.outlook.com (2603:10b6:208:3ae::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19; Fri, 15 Mar
+ 2024 14:29:50 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7386.017; Fri, 15 Mar 2024
+ 14:29:50 +0000
+Date: Fri, 15 Mar 2024 10:29:47 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Muhammad Asim Zahid <muhammad.zahid@nokia.com>
+Cc: "J. Bruce Fields" <bfields@fieldses.org>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Make NFS client_id increment atomic to avoid race
+ condition
+Message-ID: <ZfRbWx8L9WJGKa_k@manet.1015granger.net>
+References: <20240315124053.24116-1-muhammad.zahid@nokia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240315124053.24116-1-muhammad.zahid@nokia.com>
+X-ClientProxiedBy: CH2PR02CA0024.namprd02.prod.outlook.com
+ (2603:10b6:610:4e::34) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iJKfxnzWzoN=KkFERjRUYpyKHO4KLJytMBS69tnRWY9Jw@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA1PR10MB6097:EE_
+X-MS-Office365-Filtering-Correlation-Id: f59a08b9-e47c-481e-a770-08dc44fc5f68
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	rmRFPCmQzYWwBISDkjmmC3G5tg3s1t7WkWOuqmv0bUgrLqdsjLHpS5OtDOdbCuP40gMeAxzhQrcbXsQ4PcXf85jYKyMFILhxBVf8hiHfD5gQkpAFsPlow5xBT4v2iQw07nUUBeT3fPZoQYnVuWys4YuQK6pj3FgvI+0ORf5ZgDvA/Trgbug8hZprjkEZ8oo+FFbMT53ALBREJbmztlBOvi3u8mUfea06ZsChw4ZaU0oVcZPbAF5Rlxwx8aBH/viQmZ+x1GHBohEWjjdjRKjJx78013PiYFb81QbHq4PPz9e9+yyFEokzbbmm+cduE001iqJVuMPSxQ2uCFotEDeR4UJhVXeSO3PU6oQnpQ1mJYuT7ZozwH4YCkelKNNOVJyu7sPuiF52fjvRVm9fLs9myOev5Aoj/DeiTR7Ofw9BzzJBpWY2hshkhDUkcEU6cZ7wFawAoTvGgJnF3I7Bso4rcN2YDVHcmLBYiSPI10TG7O4d9zvAXQtUvUZQlqvbTTFg+FW3OyK6vrXeqeabGTfC7mp9hDC/NoItOdWov1C9KVHz1Gz32NoYExoLZPK8ECXPvSQEIf1yBI1pIPsiNN1kGo0SfhqkbZbIQzCIjqiGFqg=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?bV0YODpRHrJwXilhWIYNXXiQ4qtE8ps4IJ9V3dbekd0v5vmipsN9cMPxpJGr?=
+ =?us-ascii?Q?EQXcbogMq9RDutyajWum0N3v+K907u7T7rF1HRki5gpY/+VKH2BOWIhitZaW?=
+ =?us-ascii?Q?rkW4YaPv4eH9thzWjPJlL6w8WUc8h7VSeQMiqCCz68OUerhcJg2izWiA61sY?=
+ =?us-ascii?Q?0/yNfDjFzXJBS02Ens3EJJM5OFAYSYhtwX9UCTNMmw25Vci0o4rwpyfM0l6I?=
+ =?us-ascii?Q?Miei6e09aXBQygkMYPuE32eUYnWeBRWD5Gb+80d9k88+ODKpX0RFuGszfh42?=
+ =?us-ascii?Q?0nEiSUJD15MVoDHOa8cD2AJnBBLU4yyCHIe+OCmo0q9edfBaprSVjY7ATU8m?=
+ =?us-ascii?Q?NLLaVbQmucvmGtNiC1kLTWSgJnBxHpumQ/5tUK4z7YyGveUqjxCH5RJYUWUg?=
+ =?us-ascii?Q?JR8EXESASFhwa7Q98oxUlbCTu1k2cSaYAEp3tPvFPUUCnbKtqv7SONyl9eT5?=
+ =?us-ascii?Q?r6Q5WXBwTkToycoyWA8LodziOle+n+Y4coD4pNlrAEN0bjjC191Ne+RfmJRE?=
+ =?us-ascii?Q?E0aAf22vwj2mKuSk+VuoWcJ+b2Xy+nCceb+1yVNXAaGD7JA7bBGD+afG+p0C?=
+ =?us-ascii?Q?6ImYVc8RapUfrCse3SkIA65uHSrjh3FAynkGirQzrB6uf3x6WAxWrVJ+e7x1?=
+ =?us-ascii?Q?TYV3pOIhJ/2sBYUmXOBDoXSTJy6J4AVtTbGLnzHRpaM51J3My5QnDIyTWWOh?=
+ =?us-ascii?Q?uD4ZQovP+txkGSpjqz3rqFj5WKLsdy+Kn3LZKk2GA9ltrO/dnEveNbC8Ab13?=
+ =?us-ascii?Q?Z2lGDPrBC2uuqtWDomBAeOd/WmJkE5LCYAjXt9RsFkLUizVCGPkDI8X+PlGe?=
+ =?us-ascii?Q?tVgIWBjFUF7US0JfxXNCoK7kkhbNiypJcDVWw+1Et3zZAhB02G6k0B+X5Tqp?=
+ =?us-ascii?Q?embZGEqMSs3fMTjd9NLcOPr4XQbXFlG12vPyX+Y+TIyMo6Y+tQDyXWUZX9Qe?=
+ =?us-ascii?Q?8n+KulOkAuBHmutwc6E5z/VmOhCQk1DxpL4wChjcwItEqXQ/bTHLTZ3jtJvb?=
+ =?us-ascii?Q?cQ31Usn83M0rql3zKVC8w03E5R6OeDfMIFGOuKlW6FtHdKx3wOoVLew9o9E7?=
+ =?us-ascii?Q?keQ+gKmkgMrz4/hlvXOgQOZ21/d3aMjABv1Mt/tauoMbW6kVckd6eKL6KVBy?=
+ =?us-ascii?Q?h4NT3JmbKA987cYFtpG7V91qzuNCv++uc8ImJW5+KCgfj+Pj78YW6yW7krLD?=
+ =?us-ascii?Q?URjR50jdfUGJp/KV70GBhlPRR27BOaNwY14XOnFziBGgxbUSpuXuBe8oavcW?=
+ =?us-ascii?Q?LCRIIVW5euw2Mwx/58zIcy4dpQVSpLIfe6Y24R487N+JWYJ8z2YvVCcjyUVL?=
+ =?us-ascii?Q?DPF1+15psSLYVytOj1uhIVqsaLoVVFaqpvCD91TlY2mYHG+cLMSXkWWKW+zV?=
+ =?us-ascii?Q?MCsMalRGinEOB0GRDDAqWlv6cAITwGhkP1JDlDmCk61D1LfOsfKnpgpGJi/K?=
+ =?us-ascii?Q?Q0A6rKXw1PIgGzUzkQGd0jBYL0JMVgmG08OCbcZQtRxiQVviutrsyP5udKBt?=
+ =?us-ascii?Q?kSNUlT85B8fhCdBMHr+Vj7/0igpo1ll5qDz0aBf6nTOdnxn0XBbvFDjgasCk?=
+ =?us-ascii?Q?3aSfkL0mmtPUtTDUXvCMYl5Zdbav2OkGHWmBulcsn3c3hFv6nJnxjj17Qr+Y?=
+ =?us-ascii?Q?Bw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	XLcOgzi1fgaEezlN1r18I7oqXjndlH18Eocysn1X6dScTJRlkNTP0kaSYhscX04klrlNyiJmR4C92x3+O3BWww81Ob9rxVEV6a24MphhDl0MozD9z8eb4y+UkUoHL6P+1X9gmJAwYttdlMs1nyBS8paX6vvh9pPmdN6+M+G2nfeVXbT68ll2FsBSHEEZ+JVQNd/SD+1q/MdbqHjxBmB2Pb1gC0Sxxb5rEv5/DE+w+WI1I/Q4bT4eThwM7eeeas/Dsfqbm0aJDhHFYnQ/4YAprrgeqAljw65Dh2Ax1Myed5ECQ+sbxwjVzgJW7vOvnn1Oe9NW5c7emu0dv5HmKPAUOz3OVu4ErXxo+l8s6NpJssBwPeV0krnV1A3fd61vlwwoWkOotO+XuEWTuaXViJJE3xcs6PiJBuShulzgH54GNLTmlksqkp/h2xcaCq342oIURahhUZ6qhmhp8STy8sOBKk5/Y81qb6+IpgHhJ2xPk5HAQS+bjsx8paFbLpQiSeaM7+3YR8xJ/1SWTU+zN5xseSvZWCekx6rLmmH9bM+N+5C8Tr9cQZkbaXcNSsu612CCs1Mrxtblb+tXlQk6VUIV87i0GFnqhVtARbb0I2dR+tI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f59a08b9-e47c-481e-a770-08dc44fc5f68
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 14:29:50.3597
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tg6etQBLaCllO3C3X/eriHIiDgn+mjCQiEAPriqZJXJFzNUNsroCAgiQV+HnFrWnb8djiPdL5vpLicEtLoHl3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6097
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-15_02,2024-03-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403150117
+X-Proofpoint-ORIG-GUID: 08T1DevPXfVGwpl6aw4OiuwDvzTqiXGf
+X-Proofpoint-GUID: 08T1DevPXfVGwpl6aw4OiuwDvzTqiXGf
 
-On Thu, Mar 14, 2024 at 11:10:45PM +0100, Eric Dumazet wrote:
-> On Thu, Mar 14, 2024 at 10:47 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Thu, Mar 14, 2024 at 10:07 PM Josef Bacik <josef@toxicpanda.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > We've been hitting the following panic in production, and I've root caused
-> > > what's happening, but I'm at a loss on how to fix it.
-> > >
-> > > The panic we're seeing is this
-> > >
-> > >     BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > >     RIP: 0010:ip6_pol_route+0x59/0x7a0
-> > >     Call Trace:
-> > >      <IRQ>
-> > >      ? __die+0x78/0xc0
-> > >      ? page_fault_oops+0x286/0x380
-> > >      ? fib6_table_lookup+0x95/0xf40
-> > >      ? exc_page_fault+0x5d/0x110
-> > >      ? asm_exc_page_fault+0x22/0x30
-> > >      ? ip6_pol_route+0x59/0x7a0
-> > >      ? unlink_anon_vmas+0x370/0x370
-> > >      fib6_rule_lookup+0x56/0x1b0
-> > >      ? update_blocked_averages+0x2c6/0x6a0
-> > >      ip6_route_output_flags+0xd2/0x130
-> > >      ip6_dst_lookup_tail+0x3b/0x220
-> > >      ip6_dst_lookup_flow+0x2c/0x80
-> > >      inet6_sk_rebuild_header+0x14c/0x1e0
-> > >      ? tcp_release_cb+0x150/0x150
-> > >      __tcp_retransmit_skb+0x68/0x6b0
-> > >      ? tcp_current_mss+0xca/0x150
-> > >      ? tcp_release_cb+0x150/0x150
-> > >      tcp_send_loss_probe+0x8e/0x220
-> > >      tcp_write_timer+0xbe/0x2d0
-> > >      run_timer_softirq+0x272/0x840
-> > >      ? hrtimer_interrupt+0x2c9/0x5f0
-> > >      ? sched_clock_cpu+0xc/0x170
-> > >      irq_exit_rcu+0x171/0x330
-> > >      sysvec_apic_timer_interrupt+0x6d/0x80
-> > >      </IRQ>
-> > >      <TASK>
-> > >      asm_sysvec_apic_timer_interrupt+0x16/0x20
-> > >     RIP: 0010:cpuidle_enter_state+0xe7/0x243
-> > >
-> > > Inspecting the vmcore with drgn you can see why this is a NULL pointer deref
-> > >
-> > >       >>> prog.crashed_thread().stack_trace()[0]
-> > >       #0 at 0xffffffff810bfa89 (ip6_pol_route+0x59/0x796) in ip6_pol_route at net/ipv6/route.c:2212:40
-> > >
-> > >       2212        if (net->ipv6.devconf_all->forwarding == 0)
-> > >       2213              strict |= RT6_LOOKUP_F_REACHABLE;
-> > >
-> > >       >>> prog.crashed_thread().stack_trace()[0]['net'].ipv6.devconf_all
-> > >       (struct ipv6_devconf *)0x0
-> > >
-> > > Looking at the socket you can see that it's been closed
-> > >
-> > >       >>> decode_enum_type_flags(prog.crashed_thread().stack_trace()[11]['sk'].__sk_common.skc_flags, prog.type('enum sock_flags'))
-> > >       'SOCK_DEAD|SOCK_KEEPOPEN|SOCK_ZAPPED|SOCK_USE_WRITE_QUEUE'
-> > >       >>> decode_enum_type_flags(1 << prog.crashed_thread().stack_trace()[11]['sk'].__sk_common.skc_state.value_(), prog["TCPF_CLOSE"].type_, bit_numbers=False)
-> > >       'TCPF_FIN_WAIT1'
-> > >
-> > > The way this reproduces is with our NFS setup.  We have an NFS mount inside of a
-> > > container, which has it's own network namespace.  We setup the mount inside of
-> > > this network namespace.
-> > >
-> > > On container shutdown sometimes we trigger this panic, it's pretty reliably
-> > > reproduced, with a stress tier of 200 machines I can usually trigger it on ~10
-> > > machines by stopping the jobs.
-> > >
-> > > My initial thought was that NFS wasn't properly shutting down the sockets, but
-> > > this doesn't appear to be the case.  The sock is always marked with SOCK_DEAD.
-> > > My second thought was that we had some pending timers when we call
-> > > kernel_sock_shutdown(), so I added tcp_clear_xmit_timers(sk); to tcp_shutdown()
-> > > to make sure the timers were cleared.  This didn't fix the issue.
-> > >
-> > > I added some debugging to the socket and flagged the socket when NFS called
-> > > kernel_sock_shutdown() and then had a WARN_ON(sock_flag(sk,
-> > > JOSEFS_SPECIAL_FLAG)) where we arm the timer, and that trips constantly.  So
-> > > we're definitely arming the sock after NFS has shutdown the socket.
-> > >
-> > > This is where we leave my ability to figure out what's going on and how to fix
-> > > it.  What seems to be happening is this
-> > >
-> > > 1. NFS calls kernel_sock_shutdown() when we unmount.
-> > > 2. We get an ACK on the socket and the timer gets armed.
-> > > 3. We shutdown the container and tear down the network namespace.
-> > > 4. The timer fires and we try to send the loss probe and we panic because the
-> > >    network namespace teardown removes the devconf as part of its teardown.
-> > >
-> > > It appears to me that sock's will just hang around forever past the end of an
-> > > application being done with it, tho I'm not sure if I'm correct in this.  If
-> > > that's the case then I don't know the correct way to handle this, other than
-> > > adding an extra case for the timer to simply not run when SOCK_DEAD is set.  But
-> > > this seems to be done on purpose, so seems like that's a bad fix.
-> > >
-> > > Let me know if you have debug patches or other information you'd like from a
-> > > vmcore, I have plenty.  Like I said I can reproduce reliably, it does take a few
-> > > hours to deploy a test kernel, but I can have a turn around of about a day for
-> > > debug patches.  Thanks,
-> > >
-> > > Josef
-> >
-> >   If NFS is using kernel sockets, it is NFS responsibility to remove
-> > all of them when the netns is destroyed.
-> >
-> > Also look at recent relevant  patches
-> >
-> > 2a750d6a5b365265dbda33330a6188547ddb5c24 rds: tcp: Fix use-after-free
-> > of net in reqsk_timer_handler().
-> > 1c4e97dd2d3c9a3e84f7e26346aa39bc426d3249 tcp: Fix NEW_SYN_RECV
-> > handling in inet_twsk_purge()
+On Fri, Mar 15, 2024 at 01:39:57PM +0100, Muhammad Asim Zahid wrote:
+> The following log messages show conflict in clientid
+>        [err] kernel: [   16.228090] NFS: Server fct reports our clientid is in use
+>        [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
+>        [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
 > 
-> Another relevant patch was
-> 
-> commit 3a58f13a881ed351198ffab4cf9953cf19d2ab3a
-> Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Date:   Mon May 2 10:40:18 2022 +0900
-> 
->     net: rds: acquire refcount on TCP sockets
+> The increment to client_verifier counter and client_id counter is
+> set to atomic so as to avoid race condition which causes the
+> aforementioned error.
 
-Thanks for the quick reply Eric!  I'll get something like this done and tested
-for NFS.
+These client messages are in response to NFS4ERR_CLID_INUSE. This
+condition is not because the server did not increment the client ID.
+It's because there actually is another client (possibly more than
+one) using the same clientid string and authentication principal.
 
-Josef
+Refer to:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/filesystems/nfs/client-identifier.rst
+
+
+> Change-Id: Ic0fa8c14a8bba043ae8882f6750f512bb5f3aac1
+> ---
+>  fs/nfsd/netns.h     | 4 ++--
+>  fs/nfsd/nfs4state.c | 4 ++--
+>  fs/nfsd/nfsctl.c    | 6 +++---
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 935c1028c217..67b5aa1516e2 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -119,8 +119,8 @@ struct nfsd_net {
+>  	unsigned int max_connections;
+>  
+>  	u32 clientid_base;
+> -	u32 clientid_counter;
+> -	u32 clverifier_counter;
+> +	atomic_t clientid_counter;
+> +	atomic_t clverifier_counter;
+>  
+>  	struct svc_serv *nfsd_serv;
+>  
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 9b660491f393..d67a6a593f59 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2321,14 +2321,14 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
+>  	 * __force to keep sparse happy
+>  	 */
+>  	verf[0] = (__force __be32)(u32)ktime_get_real_seconds();
+> -	verf[1] = (__force __be32)nn->clverifier_counter++;
+> +	verf[1] = (__force __be32)atomic_inc_return(&(nn->clverifier_counter));
+>  	memcpy(clp->cl_confirm.data, verf, sizeof(clp->cl_confirm.data));
+>  }
+>  
+>  static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
+>  {
+>  	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
+> -	clp->cl_clientid.cl_id = nn->clientid_counter++;
+> +	clp->cl_clientid.cl_id = atomic_inc_return(&(nn->clientid_counter));
+>  	gen_confirm(clp, nn);
+>  }
+>  
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index cb73c1292562..a9ef86ee7250 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1481,10 +1481,10 @@ static __net_init int nfsd_init_net(struct net *net)
+>  	nn->nfsd4_grace = 90;
+>  	nn->somebody_reclaimed = false;
+>  	nn->track_reclaim_completes = false;
+> -	nn->clverifier_counter = prandom_u32();
+> +	atomic_set(&(nn->clverifier_counter), prandom_u32());
+>  	nn->clientid_base = prandom_u32();
+> -	nn->clientid_counter = nn->clientid_base + 1;
+> -	nn->s2s_cp_cl_id = nn->clientid_counter++;
+> +	atomic_set(&(nn->clientid_counter), nn->clientid_base + 1);
+> +	nn->s2s_cp_cl_id = atomic_inc_return(&(nn->clientid_counter));
+>  
+>  	atomic_set(&nn->ntf_refcnt, 0);
+>  	init_waitqueue_head(&nn->ntf_wq);
+> -- 
+> 2.42.0
+> 
+
+-- 
+Chuck Lever
 
