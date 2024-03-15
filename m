@@ -1,381 +1,248 @@
-Return-Path: <linux-nfs+bounces-2348-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2349-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5917187D624
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 22:29:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E89487D738
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 00:11:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B68D12825CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 21:29:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69127284D9B
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 23:11:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA79C54903;
-	Fri, 15 Mar 2024 21:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC9E5A0F2;
+	Fri, 15 Mar 2024 23:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c93+0HMi"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Z8niBzB6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from rcdn-iport-7.cisco.com (rcdn-iport-7.cisco.com [173.37.86.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A38548F4;
-	Fri, 15 Mar 2024 21:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710538182; cv=none; b=TClVImMF3ZDvaiL8ZN08lD8gJAVyYSnOQ5ZCvG6pHFV7UbOcHfgcZsDePvRocgeI48jpoHYcMXg98qCCTR8SPoYdMAPkYHU57ZOlKNrIPJrbwWixz1/5n+ey+Pe8QWmcTHBYgUyuUbseg6Ap+L+XlMdc8OcgiMIEDTcvaCMc/0U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710538182; c=relaxed/simple;
-	bh=HbuzOzQe+WdlqjwLri/zzPxm288j3VnRwgNIUgN+o6Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Icp+3lQeo2D+FDQTRMHSMzl9ZOExBJQLqUkDxUkqW44OlHkFGsSzBW1LnvZJzenWe/ozNSH0YQv7mE++LAeQ6cNVHucwiES5SNlVXQ7nijM9RgK9DjD++bTeJevRANvO5dCD+nP+KPuqaK51XCc9MR1Nldwji0ySsfftcbiBkSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c93+0HMi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0553FC433F1;
-	Fri, 15 Mar 2024 21:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710538181;
-	bh=HbuzOzQe+WdlqjwLri/zzPxm288j3VnRwgNIUgN+o6Y=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=c93+0HMikje5OmH0+CfM4x+kpEZDsQOxkdjOW//t8I5wCGk32b1GzqRD2JqAHCtqw
-	 7LlSo9csYcXV+g08cRMR20muP5tG93zng5+din0upf5tUeBJzirQzcuqyoXVOf8tqg
-	 c2v0zzXWn7nDf+6kovBuLlBB8nEjgPyhpAjbbNCR589zDDsuSAg1ZasqqSci7gyqLK
-	 hLy22jEo8eZDq4podSmiaERobcWyYBfgipUFKULCF15sOdZMbBJQtMfNEkI2Xqvwqe
-	 qcBjb5oVIHLm2cRDEdw0jb/niv0tj2vRwciYsnfVLCKaxWwmnZSnL4rpSh9TjKJDNR
-	 vytAf6jrx31Yg==
-Message-ID: <4c5c4f4df54f860aee9ba0ef18af815599d8642d.camel@kernel.org>
-Subject: Re: [PATCH RFC 21/24] nfs: add a GDD_GETATTR rpc operation
-From: Jeff Layton <jlayton@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever
- <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, Trond
- Myklebust <trond.myklebust@hammerspace.com>, Steve French
- <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom
- Talpey <tom@talpey.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, David Howells
- <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, Neil Brown
- <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein
- <amir73il@gmail.com>, Namjae Jeon <linkinjeon@kernel.org>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, netfs@lists.linux.dev,
- ecryptfs@vger.kernel.org,  linux-unionfs@vger.kernel.org,
- netdev@vger.kernel.org
-Date: Fri, 15 Mar 2024 17:29:37 -0400
-In-Reply-To: <CAFX2Jfk_np=agEWY0aPkosssBkfx9S+ur-L1=91psn-hdgK+RA@mail.gmail.com>
-References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
-	 <20240315-dir-deleg-v1-21-a1d6209a3654@kernel.org>
-	 <CAFX2Jfk_np=agEWY0aPkosssBkfx9S+ur-L1=91psn-hdgK+RA@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="UTF-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF645A0E8;
+	Fri, 15 Mar 2024 23:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=173.37.86.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710544240; cv=fail; b=W+BkchC/xjW9JJvT4k3eN1DBRQWkSAQSDIBdsV26R3NF/Oikaulj+9fDyebbBSeRFgLjzxQ1fU8qWy1s1hGQydpJVyiUiuAOSj+1EFaw/xOlCu2We5XMmt2o67gXvE4nUjjVsTo0f1gC0KLk1xu5XoIDONh7n8rc0poPf882uIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710544240; c=relaxed/simple;
+	bh=ZAndzCLUTgBe41rhHShEPD6+ODi3t/TMbt/4ZbvN1NQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G3m1cLVCkLuw6DFLEsimdfZs8cqyWLrVjlMl9esmFr1nske66Xjcemrv+MtxO+uZIuv8lN68AT+8/BZyNCdz4xjyEp045DvJxVL4xsR1Ix1fDjOpESCvh0rKON2iuND/VCALp1hCxIoJyqgUxBApdKw3Nq9EJuoPnKpURLCdXuc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=Z8niBzB6; arc=fail smtp.client-ip=173.37.86.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=1552; q=dns/txt; s=iport;
+  t=1710544237; x=1711753837;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZAndzCLUTgBe41rhHShEPD6+ODi3t/TMbt/4ZbvN1NQ=;
+  b=Z8niBzB6yaIIHvRPfV/JaawH5aQqRAMBdGs2PA4jR55fva6Vh1RR6w6b
+   O7gujV0zmFTuTPxY/0pzD5UN1iqQuIzKsIMpgIiz4ZeEsG0xmEULhEAWn
+   25EUmDTqkNFQVGarPSyYkvtvHqUNGanhy5DPThfWLMYTT6reEQnhiFAk9
+   8=;
+X-CSE-ConnectionGUID: LzdA3W3GReOF7jP9vTGrVw==
+X-CSE-MsgGUID: Vl4vznVqTIORuB+vEzpfsw==
+X-IPAS-Result: =?us-ascii?q?A0ATAACM1PRlmJNdJa1aHQEBAQEJARIBBQUBQCWBFggBC?=
+ =?us-ascii?q?wGBZlJ6AoEXiGgDhE5fiE4dA4V6jGeLJoF+DwEBAQ0BATsJBAEBhQYCiAECJ?=
+ =?us-ascii?q?jQJDgECBAEBAQEDAgMBAQEBAQEBAQYBAQUBAQECAQcFFAEBAQEBAQEBHhkFD?=
+ =?us-ascii?q?hAnhWwNhk8BAQEDEig/EAIBCA4KHhAQISUCBA4OGYJeAYJfAwEQp0ABgUACi?=
+ =?us-ascii?q?ih4gTSBAYIWBbMBGIEwAYglAYoxJxuBSUSBFYMqPoJhBIE1ERiGQwSFToNtk?=
+ =?us-ascii?q?kmHbFR/HAOBBQRaDRsQHjcREBMNAwhuHQIxOgMFAwQyChIMCx8FEkIDQwZJC?=
+ =?us-ascii?q?wMCGgUDAwSBLgUNGgIQGgYMJgMDEkkCEBQDGx0DAwYDCjEwgRYMUANkHzIJP?=
+ =?us-ascii?q?A8MGgIvDSQjAixKChACFgMdGjARCQsmAyoGNgISDAYGBl0gFgkEJQMIBANSA?=
+ =?us-ascii?q?yByEQMEGgQLBzo+ggKBPQQTR4FEhTiCJYJFDIM2KoFOKYERgR0DRB1AA3g9N?=
+ =?us-ascii?q?RQbBiIBoz4BhBNHCQFiE2cPAg0tkxSyFwqEEpM8jkuqG4NShzKNW6hTAgQCB?=
+ =?us-ascii?q?AUCDgEBBoFkOoFbcBWDIwhJGQ+OOYh1imWBMwIHCwEBAwmIboF6AQE?=
+IronPort-PHdr: A9a23:44yz3xfWicsNd6OG88uZTeGUlGM/eYqcDmcuAtIPkblCdOGk55v9e
+ RCZ7vR2h1iPVoLeuLpIiOvT5rjpQndIoY2Av3YLbIFWWlcbhN8XkQ0tDI/NCUDyIPPwKS1vN
+ M9DT1RiuXq8NBsdA97wMmXbuWb69jsOAlP6PAtxKP7yH9vehsK22uSt8rXYYh5Dg3y2ZrYhZ
+ BmzpB/a49EfmpAqar5k0BbLr3BUM+hX3jZuIlSe3l7ws8yx55VktS9Xvpoc
+IronPort-Data: A9a23:4ZaMb6guPATeHFs3GoWGk66WX161ehAKZh0ujC45NGQN5FlHY01je
+ htvCGuFbPmLZjOmLY8jb9uy9h9Q6pDUx4M2SFc6rCxmQitjpJueD7x1DKtf0wB+jyHnZBg6h
+ ynLQoCYdKjYdleF+1H1dOCn9CEgvU2xbuKUIPbePSxsThNTRi4kiBZy88Y0mYcAbeKRW2thg
+ vus5ZWAULOZ82QsaD5MsPve8EgHUMna4Vv0gHRvPZing3eG/5UlJMp3Db28KXL+Xr5VEoaSL
+ woU5Ojklo9x105F5uKNyt4XQGVTKlLhFVTmZk5tZkSXqkMqShrefUoMHKF0hU9/011llj3qo
+ TlHncTYpQwBZsUglAmBOvVVO3kWAEFIxFPICVytveXI8BbpSXbL7apsNBAoAaICxPkiVAmi9
+ dRAQNwMRgqIi+Tzy7WhR6w134IoLdLgO8UUvXQIITPxVKl9B8ucBfSRo4YEg1/chegWdRraT
+ 8YQbztiaAvJSxZOIVwQTpk5mY9Eg1GlK2cA+QjE9fdfD2778ggtzqrrDsPpW/uwWO8WgGuKv
+ mzd4DGsav0dHIfCkWXeqC3EavX0tSf6Xp8CUbu27dZ0j1CJgG8eEhsbUR28u/bRolWzX9NZN
+ lw85CUjt+4x+VatQ927WAe3yENopTYGUNZWVuY98gzIk/OS6AeCDW9CRTlEADA7iCMobRg42
+ nbSoIjGPzFInuKXcSODypiOkyznbED5MlQ+TSMDSAIE5fzqr4cykg/DQ75f/Eid0ISd9dbYn
+ WrikcQuu4j/m/LnwElSwLwqqyinqp6MRQkv60COBySu7xhyY8iuYInABbnnARRoctjxorqp5
+ SRsdy2iAAYmVszleMulG7tlIV1Rz6zZWAAweHY2d3Xbyxyj+mS4Yadb6yxkKUFiP64sIGCwO
+ BKJ5l8OusYMZRNGiJObharsW6zGKoC9RLzYugz8M7Kin7AoLVDXonsyDaJu9zC3wCDAbp3Ty
+ b/ALJ7zVixFYUiW5DG3XOwamaQ63TwzwHibRJbwiXyaPUm2OhaopUM+GALWNIgRtfrcyC2Mq
+ oo3H5XRkX13DrahChQ7BKZOdzjm21BhW8CvwyGWH8beSjdb9JYJV6WNnepwItI490mX/8+Rl
+ kyAtoZj4AOXrVXMKB6BbTZob7aHYHq1hShT0fAEVbpw50UeXA==
+IronPort-HdrOrdr: A9a23:H+JGW69FUR18Uh0lWbduk+Gkdr1zdoMgy1knxilNoENuA6+lfp
+ GV/MjziyWUtN9IYgBfpTnhAsW9qXO1z+8S3WGIVY3SEjUOy1HYXb2KirGSggEIeheOudK1up
+ 0QCZSWZOeAaWSSyPyKnzVQcOxQgOVvkprY+Ns2pk0FJWoFGsMQijuRSDzrbnGeLzM2fKbRYa
+ Dsnfav0ADQAUj/AP7LYUXtdtKz1OHjpdbNWzJDLRgh7wWFkDOv75DHMzXw5H0jegIK640PtU
+ zenSLExojLiZyGIxnnuFP73tBzop/M29FDDMuDhow+MTP3kDulY4xnRvmroC01iPvH0idprP
+ D85zMbe+hj4XLYeW+45TH33RP77Too43j+jXeFnHrYp9DjTj5SMbsFuWsZSGqc16MThqA77E
+ t55RPBi3ORN2KZoM3J3amOa/itrDvunZNtq59Is5UVa/pvVFYYl/1swKoSKuZCIMo/g7pXTN
+ WHy6rnlatrWELfYHbDsmZ1xtuwGnw1AxedW0AH/teYyj5MgRlCvgElLeEk7z89HagGOtJ5zv
+ WBNr4tmKBFT8cQY644DOAdQdGvAmiIRR7XKmqdLVnuCalCYhv22tLKyaRw4PvvdI0DzZM0lp
+ iEWFREtXQqc0arDcGVxpVE/h3EXW34VzXwzcNV4YR/p9THNffWGDzGTEprn9qrov0ZDMGeU/
+ GvOIhOC/umNmfqEZYh5Xy2Z3CTEwhpbCQ4gKdNZ7vVmLO/FmTDjJ2uTMru
+X-Talos-CUID: 9a23:WYp9pW42xVt6ZYECvdss0FwYM5saKVLnwVD+fE2AWHhVZ6erVgrF
+X-Talos-MUID: 9a23:QFgNMgQpmThA8iWPRXTSgG18JsFW+piPL3oQu9YYltucOzdvbmI=
+X-IronPort-Anti-Spam-Filtered: true
+Received: from rcdn-core-11.cisco.com ([173.37.93.147])
+  by rcdn-iport-7.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 23:09:27 +0000
+Received: from rcdn-opgw-4.cisco.com (rcdn-opgw-4.cisco.com [72.163.7.165])
+	by rcdn-core-11.cisco.com (8.15.2/8.15.2) with ESMTPS id 42FN9RC2022571
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Mar 2024 23:09:27 GMT
+X-CSE-ConnectionGUID: DPqlFYVQTMCsvh2b/R7fkw==
+X-CSE-MsgGUID: 8bfaeGirSxWIjURtn3G82Q==
+Authentication-Results: rcdn-opgw-4.cisco.com; dkim=pass (signature verified) header.i=@cisco.com; spf=Pass smtp.mailfrom=danielwa@cisco.com; dmarc=pass (p=reject dis=none) d=cisco.com
+X-IronPort-AV: E=Sophos;i="6.07,129,1708387200"; 
+   d="scan'208";a="30832999"
+Received: from mail-bn8nam12lp2169.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.169])
+  by rcdn-opgw-4.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 23:09:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WHqVnPFRKxZUBkb4N0aJv42UhxF/RK5A4McNbNfrTqRBNPMwux81BpNcEtr3+DNCgR4pvM/aHZVLhkr5vnlgEK+nsL9I+qMU42MHaUJC4d6lyb3vI+bAovsJLr7EBQDhS5v1BccEjNVEwucxiyuOJxK/14LaKVfqCAbOpwLTEFGWZ2cmKKQs9AGvMliegv8MOwbq0ZCbGPXI4ZXCaEvPuOX18i9W54cp1LEjkMWNMWFoj4XGaCKOxdG1SetPdsPO5pJcHmY5NY2Kmx2c3Q8I+bADlyya7R1UUwsjIIoUWohkdDd8NKd9stbrPei/J6TMvkS08xnHpmb2OA2NMcrg+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZAndzCLUTgBe41rhHShEPD6+ODi3t/TMbt/4ZbvN1NQ=;
+ b=HrWCN1/fCXGjVl3c3AR5C0/Xqm8S4rY/XS4cpmLpIyDHe831GaN5zuX7tDkEiOysXxdEjByU+zgOAcg9/3YDDNEGtIQWEoyzJs6a63jcf29lnsK38fiNxb06tVLFpzQhu20FV2k7sMLqtLjRjSRuSo1/02sgc0k1YZYJ4eBTtip6pxj5lDx7RWwJ4/aswUM+1/TLIhHhd5FJMp4yd0Wy7WPsD4CQdF6D7lVHpIM7tduKfdi4NzZ9VCpZrhAn0d5GfmPu/Ps7VtP6jlBkbFL3RPZVO4VyGPRZcJtqxfhbzTgDLH+pnjCvfGRlx9H/QyTVO+PMSdha0Fr/rreKX/k4yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+Received: from SJ0PR11MB5790.namprd11.prod.outlook.com (2603:10b6:a03:422::15)
+ by CY5PR11MB6212.namprd11.prod.outlook.com (2603:10b6:930:24::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Fri, 15 Mar
+ 2024 23:09:25 +0000
+Received: from SJ0PR11MB5790.namprd11.prod.outlook.com
+ ([fe80::22f4:4617:117:7a44]) by SJ0PR11MB5790.namprd11.prod.outlook.com
+ ([fe80::22f4:4617:117:7a44%6]) with mapi id 15.20.7386.015; Fri, 15 Mar 2024
+ 23:09:25 +0000
+From: "Daniel Walker (danielwa)" <danielwa@cisco.com>
+To: Jeff Layton <jlayton@kernel.org>
+CC: "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: nfs client uses different MAC policy or model
+Thread-Topic: nfs client uses different MAC policy or model
+Thread-Index: AQHadmpPdLuamV23IU6d6aCv68CZjQ==
+Date: Fri, 15 Mar 2024 23:09:25 +0000
+Message-ID: <ZfTVJZtXghoii8DG@goliath>
+References: <ZfONIThp2RIfmu1O@goliath>
+ <d4861b0541bac2670e39dc340f110bf72558b703.camel@kernel.org>
+In-Reply-To: <d4861b0541bac2670e39dc340f110bf72558b703.camel@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB5790:EE_|CY5PR11MB6212:EE_
+x-ms-office365-filtering-correlation-id: 93fd8c30-768f-4e2c-ad67-08dc4544f550
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ VBETpk87b4WEq57FsEDkuO4th+kZEmOF9IqkCIBmU3RwaMdH36K8/2XocrBgmumK6W7LZm4HCWhBxWChHqdqqp6gZJD9P53RjsjmYujGlMIjo2IScBISArtf7fvyG+wN5fCbPWZhB8o82r8FcAufnwryJ+aTQNannoIdnKym/zeWeLhRGnHR9XORrIEXbng1ZiQGGXfd6o93FJ0w2qjZ0IMFD+p4Gl+IKD/NVhREhuZKSgRtrdmc3D1lIk53lJpEbBliC66pFDGGsf/iC9+M57QYB/lRFqgFvGjZ3hpYH4aJXHGIyCYrL3TC2zc4d3oengQfBQR7M7iijs7V2Mq3qW9O6scstJGDxKY2WVIPX3W2QEpzlb+XhTJGFK91vAv6/cXJBu9Bq+5pHLQs4tqLog+ICQ6XTsuOjZ171OJ0muhOg7zlv3Z/avBuzLvJKshoiFDNBXcp7ByihwvbbyN282dtr2RYkt8HFN8u7zT8TWrILJpNz0NkbTVp0p8QcFgKr5lnBsFXaITrnMmFxOkvJObZFF96HfI4hIL4Q2jurt6NmVHOWWxvMcKqueLRrPR4zUjlRQDMZfmIp9B/L3hRpqjW6NsjXY1gcjUgKQwFZe6SecNMm5SqVQiAYdipv1b2ROGBxBuWx5+0MR8Qp48wO4b2fPaUtPXF5Sq8/cMPOm8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5790.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VFntfaJboY1hLM3e2ZlQolj7Ise8SEPrUR5rMqhJZstgG3RxB5ayas5c573G?=
+ =?us-ascii?Q?jUoZbliYvz5E7gBghhxqguQWjx4tp4TbO3gZqN3Ie3BAyORE71XnmR6tLbrf?=
+ =?us-ascii?Q?BuxJo4juwkp4bL/r06I9XkKVaWs6Pf5TojJZ9+MsEQHeV0u5gsA4A+064nz1?=
+ =?us-ascii?Q?kyJztv4C7ZiU4pZSoNF5NdSE7tNWu6e0oS3v0hLebaE+CiYBiEb42GcEMnQZ?=
+ =?us-ascii?Q?EbxBPDxkCdY+yiQ3LrYWwpVx3DcFyF8phSlOaRywdUbY/HMXa+olu7PlBIr/?=
+ =?us-ascii?Q?b2LYlwqaAXlLrqTFWGQdms/D6ezAZef9lV2B8RkES9F638zBahkMouCPKTu8?=
+ =?us-ascii?Q?TxzdGoRUxJgEWZUDAP2yopwT98NeJEgKY4dhS/YRvQ1JPfxVRoDHoUL39SD5?=
+ =?us-ascii?Q?KQ/ZSzKs6pAdI1eV9QKTAP+XE7likVl9rxccRn98l2vaPiF7r7Jb+6r8KmSG?=
+ =?us-ascii?Q?g7dOnHx/nzYHmJer7qQ1bFv6ZyJ8+FXVlVjVCRcCVNhtkMkI3MoPaV5/dBbu?=
+ =?us-ascii?Q?qo94RMwHdoIZmFAmisDn3VsAYkxnWcBdZF00a027O7fT+s5cqDCim5fvS4Mr?=
+ =?us-ascii?Q?3wfUOoIvuscU3hs24JETb1KR9uN28FZNdGaAtdtuCUl3of2d4Dcz/E+aQNFN?=
+ =?us-ascii?Q?JxP2CPxJm2ueYEJJ7jeT01/B4G/y2qTL1yx+mdL0+8iX7MO8iDyrPVT/4Ev3?=
+ =?us-ascii?Q?oKOzT08bVesk1p7HasI0ZAQA+rxW4v7T3V/MjfbdPzWiDmVg4CX6EsCYO+R2?=
+ =?us-ascii?Q?NOEst2yTmUTdNCfAF7OdI6mFElbV3Ri9/66PoM/GfM/lw1rYsZHXJNP6Qmve?=
+ =?us-ascii?Q?fao7uP9JcY6knu2n6SlHftY8/uBDSwTyQzCmKSJ7hY/WkNVZ6JJKDx5gzjzo?=
+ =?us-ascii?Q?389Itk0iKrTVCxeSf72cr+l/cYdj7AeZTg7CNkWaZGHugnjeP4lqLPhaVSs2?=
+ =?us-ascii?Q?c4zfbZfoX0uL8LgnFxO0ellRGlrNx21QIYtO7obDYv7yKIhLT8QIRmcsXkFB?=
+ =?us-ascii?Q?CeytHDI73EAwHZ9Dbn26lCFpTBeY6l5GPelymq9WcipPOexknvabDeOOMyiY?=
+ =?us-ascii?Q?ROVS7JOwsd5UHcwunVjCZ2tp1X1ERYwo6ygUiHJ/GaglH+kKIt2K2FWKlPu9?=
+ =?us-ascii?Q?6mu463PP+iC0ZGq7tQ5OK8ijZmIVitMIJEunjjHOE1mhcTXCmsQ3Hls/qBvx?=
+ =?us-ascii?Q?lCcsvJeghjiIXTVWPu/f0//ezzw+upi3eAr/6O/623g8vbVS1GcqbApkJ5xm?=
+ =?us-ascii?Q?gOaMUIGQFt+Yv/QtpTAtC7SNAUNHeWMv0gRq+z41rgAf02VLW1GcvNU6xGvY?=
+ =?us-ascii?Q?RDT1JKHbrtZ5Dov9KVAazJOYwLW4z/Q0QoSGSxi7IiXj9/TXtICY8pcDYxv3?=
+ =?us-ascii?Q?MP9UgtK1L/YsxMRIxUELliS6PATX4NtbxhC1bFKQdbcko8SKwzEjLGb54/Rk?=
+ =?us-ascii?Q?QqG01QHRIVwMLQilgjjf5/snTwOHTT8ztyzjz1jbezNgsdNW7Tgw91sEWfW+?=
+ =?us-ascii?Q?mcudsrOHo3w+QePzKoPv7jOYtNcCeJk/A6pk7VZA9glDfHW8VXyo1hHtVoIL?=
+ =?us-ascii?Q?P4kFzqKyi5qMybXVjQW4DpNXGMlaV67KBHi0tdoT?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <301942C07F635047B837E61F87356199@namprd11.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: cisco.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5790.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93fd8c30-768f-4e2c-ad67-08dc4544f550
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 23:09:25.4995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t50h+kHqog3tQl+13TXSCtF8ywR2mFP/TCft/j06S02P5+e3gaJi0nd0AdqtP1U6fwiiwFQooJzCef4ekVpNTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6212
+X-Outbound-SMTP-Client: 72.163.7.165, rcdn-opgw-4.cisco.com
+X-Outbound-Node: rcdn-core-11.cisco.com
 
-On Fri, 2024-03-15 at 16:50 -0400, Anna Schumaker wrote:
-> Hi Jeff,
+On Fri, Mar 15, 2024 at 11:47:27AM -0400, Jeff Layton wrote:
+> On Thu, 2024-03-14 at 23:49 +0000, Daniel Walker (danielwa) wrote:
+> > Hi,
+> >=20
+> > It seems there is/was a problem using NFS security labels where the ser=
+ver and client use
+> > different MAC policy or model.=20
+> >=20
+> > I was reading this page,
+> >=20
+> > http://www.selinuxproject.org/page/Labeled_NFS/TODO#Label_Translation_F=
+ramework
+> >
+> > It seems like this problem was known in 2009 when this page was written=
+. Is
+> > there a way to accomplish having extended attributes shared over NFS to=
+ a client
+> > with different selinux policies ?
+> >=20
 >=20
-> On Fri, Mar 15, 2024 at 12:54=E2=80=AFPM Jeff Layton <jlayton@kernel.org>=
- wrote:
-> >=20
-> > Add a new compound that does a GET_DIR_DELEGATION just before doing a
-> > GETATTR on an inode. Add a delegation stateid and a nf_status code to
-> > struct nfs4_getattr_res to store the result.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/nfs/nfs4xdr.c        | 136 ++++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  include/linux/nfs4.h    |   1 +
-> >  include/linux/nfs_xdr.h |   2 +
-> >  3 files changed, 139 insertions(+)
-> >=20
-> > diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> > index 1416099dfcd1..c28025018bda 100644
-> > --- a/fs/nfs/nfs4xdr.c
-> > +++ b/fs/nfs/nfs4xdr.c
-> > @@ -391,6 +391,22 @@ static int decode_layoutget(struct xdr_stream *xdr=
-, struct rpc_rqst *req,
-> >                                 XDR_QUADLEN(NFS4_MAX_SESSIONID_LEN) + 5=
-)
-> >  #define encode_reclaim_complete_maxsz  (op_encode_hdr_maxsz + 4)
-> >  #define decode_reclaim_complete_maxsz  (op_decode_hdr_maxsz + 4)
-> > +#define encode_get_dir_delegation_maxsz (op_encode_hdr_maxsz +        =
-                 \
-> > +                                        4 /* gdda_signal_deleg_avail *=
-/ +              \
-> > +                                        8 /* gdda_notification_types *=
-/ +              \
-> > +                                        nfstime4_maxsz  /* gdda_child_=
-attr_delay */ +  \
-> > +                                        nfstime4_maxsz  /* gdda_dir_at=
-tr_delay */ +    \
-> > +                                        nfs4_fattr_bitmap_maxsz /* gdd=
-a_child_attributes */ + \
-> > +                                        nfs4_fattr_bitmap_maxsz /* gdd=
-a_dir_attributes */)
-> > +
-> > +#define decode_get_dir_delegation_maxsz (op_encode_hdr_maxsz +        =
-                 \
-> > +                                        4 /* gddrnf_status */ +       =
-                 \
-> > +                                        encode_verifier_maxsz /* gddr_=
-cookieverf */ +  \
-> > +                                        encode_stateid_maxsz /* gddr_s=
-tateid */ +      \
-> > +                                        8 /* gddr_notification */ +   =
-                 \
-> > +                                        nfs4_fattr_bitmap_maxsz /* gdd=
-r_child_attributes */ + \
-> > +                                        nfs4_fattr_bitmap_maxsz /* gdd=
-r_dir_attributes */)
-> > +
-> >  #define encode_getdeviceinfo_maxsz (op_encode_hdr_maxsz + \
-> >                                 XDR_QUADLEN(NFS4_DEVICEID4_SIZE) + \
-> >                                 1 /* layout type */ + \
-> > @@ -636,6 +652,18 @@ static int decode_layoutget(struct xdr_stream *xdr=
-, struct rpc_rqst *req,
-> >                                 decode_putfh_maxsz + \
-> >                                 decode_getattr_maxsz + \
-> >                                 decode_renew_maxsz)
-> > +#define NFS4_enc_gdd_getattr_sz        (compound_encode_hdr_maxsz + \
-> > +                               encode_sequence_maxsz + \
-> > +                               encode_putfh_maxsz + \
-> > +                               encode_get_dir_delegation_maxsz + \
-> > +                               encode_getattr_maxsz + \
-> > +                               encode_renew_maxsz)
-> > +#define NFS4_dec_gdd_getattr_sz        (compound_decode_hdr_maxsz + \
-> > +                               decode_sequence_maxsz + \
-> > +                               decode_putfh_maxsz + \
-> > +                               decode_get_dir_delegation_maxsz + \
-> > +                               decode_getattr_maxsz + \
-> > +                               decode_renew_maxsz)
-> >  #define NFS4_enc_lookup_sz     (compound_encode_hdr_maxsz + \
-> >                                 encode_sequence_maxsz + \
-> >                                 encode_putfh_maxsz + \
-> > @@ -1981,6 +2009,30 @@ static void encode_sequence(struct xdr_stream *x=
-dr,
-> >  }
-> >=20
-> >  #ifdef CONFIG_NFS_V4_1
-> > +static void
-> > +encode_get_dir_delegation(struct xdr_stream *xdr, struct compound_hdr =
-*hdr)
-> > +{
-> > +       __be32 *p;
-> > +       struct timespec64 ts =3D {};
-> > +       u32 zerobm[1] =3D {};
-> > +
-> > +       encode_op_hdr(xdr, OP_GET_DIR_DELEGATION, decode_get_dir_delega=
-tion_maxsz, hdr);
-> > +
-> > +       /* We can't handle CB_RECALLABLE_OBJ_AVAIL yet */
-> > +       xdr_stream_encode_bool(xdr, false);
-> > +
-> > +       /* for now, we request no notification types */
-> > +       xdr_encode_bitmap4(xdr, zerobm, ARRAY_SIZE(zerobm));
-> > +
-> > +       /* Request no attribute updates */
-> > +       p =3D reserve_space(xdr, 12 + 12);
-> > +       p =3D xdr_encode_nfstime4(p, &ts);
-> > +       xdr_encode_nfstime4(p, &ts);
-> > +
-> > +       xdr_encode_bitmap4(xdr, zerobm, ARRAY_SIZE(zerobm));
-> > +       xdr_encode_bitmap4(xdr, zerobm, ARRAY_SIZE(zerobm));
-> > +}
-> > +
-> >  static void
-> >  encode_getdeviceinfo(struct xdr_stream *xdr,
-> >                      const struct nfs4_getdeviceinfo_args *args,
-> > @@ -2334,6 +2386,25 @@ static void nfs4_xdr_enc_getattr(struct rpc_rqst=
- *req, struct xdr_stream *xdr,
-> >         encode_nops(&hdr);
-> >  }
-> >=20
-> > +/*
-> > + * Encode GDD_GETATTR request
-> > + */
-> > +static void nfs4_xdr_enc_gdd_getattr(struct rpc_rqst *req, struct xdr_=
-stream *xdr,
-> > +                                    const void *data)
-> > +{
-> > +       const struct nfs4_getattr_arg *args =3D data;
-> > +       struct compound_hdr hdr =3D {
-> > +               .minorversion =3D nfs4_xdr_minorversion(&args->seq_args=
-),
-> > +       };
-> > +
-> > +       encode_compound_hdr(xdr, req, &hdr);
-> > +       encode_sequence(xdr, &args->seq_args, &hdr);
-> > +       encode_putfh(xdr, args->fh, &hdr);
-> > +       encode_get_dir_delegation(xdr, &hdr);
-> > +       encode_getfattr(xdr, args->bitmask, &hdr);
-> > +       encode_nops(&hdr);
-> > +}
-> > +
+> Currently Linux NFS client and server only support limited server mode,
+> where the server presents the contexts as they are and the client
+> enforces its own policy locally. There's no requirement that the server
+> enforce the same policy (or even enforce a security policy at all), all
+> it's doing is storing and presenting the security label.
 >=20
-> This function should be under a "#ifdef CONFIG_NFS_V4_1" to avoid the
-> following compiler error:
->=20
-> fs/nfs/nfs4xdr.c:2403:2: error: call to undeclared function
-> 'encode_get_dir_delegation'; ISO C99 and later do not support implicit
-> function declarations [-Wimplicit-function-declaration]
->  2403 |         encode_get_dir_delegation(xdr, &hdr);
->       |         ^
+> So what you're saying should "work" today.
 >=20
 
-Thanks Anna! I'll fix up both problems before the next iteration.
+My situation is more constrained than this. The server would also have an s=
+elinux
+policy which is active and in use. Server selinux usage is out the users
+control.
 
->=20
-> >  /*
-> >   * Encode a CLOSE request
-> >   */
-> > @@ -5919,6 +5990,43 @@ static int decode_layout_stateid(struct xdr_stre=
-am *xdr, nfs4_stateid *stateid)
-> >         return decode_stateid(xdr, stateid);
-> >  }
-> >=20
-> > +static int decode_get_dir_delegation(struct xdr_stream *xdr,
-> > +                                    struct nfs4_getattr_res *res)
-> > +{
-> > +       nfs4_verifier   cookieverf;
-> > +       int             status;
-> > +       u32             bm[1];
-> > +
-> > +       status =3D decode_op_hdr(xdr, OP_GET_DIR_DELEGATION);
-> > +       if (status)
-> > +               return status;
-> > +
-> > +       if (xdr_stream_decode_u32(xdr, &res->nf_status))
-> > +               return -EIO;
-> > +
-> > +       if (res->nf_status =3D=3D GDD4_UNAVAIL)
-> > +               return xdr_inline_decode(xdr, 4) ? 0 : -EIO;
-> > +
-> > +       status =3D decode_verifier(xdr, &cookieverf);
-> > +       if (status)
-> > +               return status;
-> > +
-> > +       status =3D decode_delegation_stateid(xdr, &res->deleg);
-> > +       if (status)
-> > +               return status;
-> > +
-> > +       status =3D decode_bitmap4(xdr, bm, ARRAY_SIZE(bm));
-> > +       if (status < 0)
-> > +               return status;
-> > +       status =3D decode_bitmap4(xdr, bm, ARRAY_SIZE(bm));
-> > +       if (status < 0)
-> > +               return status;
-> > +       status =3D decode_bitmap4(xdr, bm, ARRAY_SIZE(bm));
-> > +       if (status < 0)
-> > +               return status;
-> > +       return 0;
-> > +}
-> > +
-> >  static int decode_getdeviceinfo(struct xdr_stream *xdr,
-> >                                 struct nfs4_getdeviceinfo_res *res)
-> >  {
-> > @@ -6455,6 +6563,33 @@ static int nfs4_xdr_dec_getattr(struct rpc_rqst =
-*rqstp, struct xdr_stream *xdr,
-> >         return status;
-> >  }
-> >=20
-> > +/*
-> > + * Decode GDD_GETATTR response
-> > + */
-> > +static int nfs4_xdr_dec_gdd_getattr(struct rpc_rqst *rqstp, struct xdr=
-_stream *xdr,
-> > +                                   void *data)
-> > +{
-> > +       struct nfs4_getattr_res *res =3D data;
-> > +       struct compound_hdr hdr;
-> > +       int status;
-> > +
-> > +       status =3D decode_compound_hdr(xdr, &hdr);
-> > +       if (status)
-> > +               goto out;
-> > +       status =3D decode_sequence(xdr, &res->seq_res, rqstp);
-> > +       if (status)
-> > +               goto out;
-> > +       status =3D decode_putfh(xdr);
-> > +       if (status)
-> > +               goto out;
-> > +       status =3D decode_get_dir_delegation(xdr, res);
-> > +       if (status)
-> > +               goto out;
-> > +       status =3D decode_getfattr(xdr, res->fattr, res->server);
-> > +out:
-> > +       return status;
-> > +}
-> > +
->=20
-> This needs to be under the same #ifdef, too.
->=20
-> Thanks,
->  Anna
->=20
-> >  /*
-> >   * Encode an SETACL request
-> >   */
-> > @@ -7704,6 +7839,7 @@ const struct rpc_procinfo nfs4_procedures[] =3D {
-> >         PROC41(BIND_CONN_TO_SESSION,
-> >                         enc_bind_conn_to_session, dec_bind_conn_to_sess=
-ion),
-> >         PROC41(DESTROY_CLIENTID,enc_destroy_clientid,   dec_destroy_cli=
-entid),
-> > +       PROC41(GDD_GETATTR,     enc_gdd_getattr,        dec_gdd_getattr=
-),
-> >         PROC42(SEEK,            enc_seek,               dec_seek),
-> >         PROC42(ALLOCATE,        enc_allocate,           dec_allocate),
-> >         PROC42(DEALLOCATE,      enc_deallocate,         dec_deallocate)=
-,
-> > diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-> > index 11ad088b411d..86cbfd50ecd1 100644
-> > --- a/include/linux/nfs4.h
-> > +++ b/include/linux/nfs4.h
-> > @@ -681,6 +681,7 @@ enum {
-> >         NFSPROC4_CLNT_LISTXATTRS,
-> >         NFSPROC4_CLNT_REMOVEXATTR,
-> >         NFSPROC4_CLNT_READ_PLUS,
-> > +       NFSPROC4_CLNT_GDD_GETATTR,
-> >  };
-> >=20
-> >  /* nfs41 types */
-> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> > index d09b9773b20c..85ee37ccc25e 100644
-> > --- a/include/linux/nfs_xdr.h
-> > +++ b/include/linux/nfs_xdr.h
-> > @@ -1072,6 +1072,8 @@ struct nfs4_getattr_res {
-> >         struct nfs4_sequence_res        seq_res;
-> >         const struct nfs_server *       server;
-> >         struct nfs_fattr *              fattr;
-> > +       nfs4_stateid                    deleg;
-> > +       u32                             nf_status;
-> >  };
-> >=20
-> >  struct nfs4_link_arg {
-> >=20
-> > --
-> > 2.44.0
-> >=20
+This could plausibly come up where you have an nfsroot or nfs pivot root
+environment with selinux is active and the server also has a different or
+conflicting selinux policy active.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+I was looking for a way to translate between the two selinux policies which=
+ is
+how I found the link I provided.
+
+Daniel=
 
