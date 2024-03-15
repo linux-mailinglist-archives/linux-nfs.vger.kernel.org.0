@@ -1,185 +1,145 @@
-Return-Path: <linux-nfs+bounces-2299-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2300-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D977387CD5C
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 13:44:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3B7087CDD1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 14:11:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1B4DB224E9
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 12:44:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 802991F214EA
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 13:11:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C443241E0;
-	Fri, 15 Mar 2024 12:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8632E636;
+	Fri, 15 Mar 2024 13:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="NQZY06AJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JOrOyOBW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2077.outbound.protection.outlook.com [40.107.20.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA21AAD2;
-	Fri, 15 Mar 2024 12:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710506676; cv=fail; b=sZrVGimDPO0x6lEZqIhOYUO0vy1QEZroEJXkjpgrdERfPvUv1kVFfsVkYnD6nIdGGJOvQ7eabCdg0q4HzGiwJh8HA69nLkC5YIXHF92TWe0s15uQhTpJsQNqFIZTz0rSfXJJNzh551S94g2bo6QyjcwlTwUPJlTj9Da3sYIzQpo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710506676; c=relaxed/simple;
-	bh=TjT8KbgqRvYGh5bnxW85QV3w6qQ2JI/x3JerBKJTR1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F9Sb6dN2sRADxLd4CTA6MbWMxZlJXIGXhzxmBFMhTglr992J8pGy1LCUtB6OwpXqx/ya3s+Kt9TtzAkyZnZbQwaIF2Ykk17qUvUVhoYLjswURTus57NNtYUZ2vLDTBvvtIN4MzlneXWYQyeoUcfY84Q3LMfcM46VONQnArfJD9E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=NQZY06AJ; arc=fail smtp.client-ip=40.107.20.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZHrxnfvENOC3QrsAAqV0RpyMssIsOjrr2XhjHUQUmmy3lyb4kxy7zOc7wegWNXM23w8F1KXJgDvjtaARVqQe7+eaIrHS4s+ChCHrEWfMaZ28gxZsmdKoCN4s5FN1rv8HD0DWP0uCNYxM6kP8HdTm4LCHdL8PTi/DKsi2a3+dn4BplbB3gXBInCO1ZeIYuIOfjDk25ZE497qBx97bZbFTolGaXY8TTt+wk2wgvOCXeoVRkJnm1SAF5D0jPo2zZqAzAapoP4DP8RPLHC8yvzWFlhyw/9IoEswpmbb9yMOpE4OzdKdK1f62KVrm9uvvRtzRDIuJFYIc21wMil2qxNrYmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xJK99GI76PSJQltt+MdyP1ibHwBbBTDvR90arVlxkXY=;
- b=H5itA2XnhiQteMr7U+6BRZzZvrJcowd5l3QSOXvhkMLa1vxOJIEqJdXlhR/pCNuR4XIxviO+rMsGeKX2xy9ZlmL3M9R2f4MtziaurYfH9o0Z095L/HnrZ8bgO2Jv7BdTlvt3B5LJTTO4Kh64fCP2vHstyOT5Wasj5bxiDYuOARYgCsWrx1MXXvbA4eCrgpPebF4QBdShe/ejVnb2w8heoLP+YRMGwPvrBhKLv/ngms9lCmDbTSU026u8HUgtJnmiQqwu/gPlswvLqmM+V6JsrKCsOoOL1okV4Vsmr5R5zUt1nSuzuAHa8y3YhLqfG/WKdK8XphmySdbm832CwO+EZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 131.228.2.29) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nokia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nokia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xJK99GI76PSJQltt+MdyP1ibHwBbBTDvR90arVlxkXY=;
- b=NQZY06AJTP8dok0tiO1uBKJ4jzh6I8qH7t4goulsQCVnIxTPsshHCQ0ecVMPALquClWN0x+8Ue2ugD+nBrASZoxQX77BwlqEhbZz6apXJpCBz7Uv8x8dYDNP/8tx5grx6r5vCqvyKh6uk4qs5149j6CKsjgGw0APO1QfTg8kXpp3IGKSlC7PwgPuvcZOIuoHeBSHR9mpZ/qvuo3N13KLX3wK04dCABViFK9FHoHVXr4tfY6Gtu3OV6zFAyUQRNNFgSKfUUpU8uVFj6jRDjn1I8KPI+IxRZa2zrY0sxfAaMI7JDfo/oOiOzSkGM3iYGMVwtlMgNE85GiqLT7up8pYdg==
-Received: from DU7P195CA0019.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::32)
- by PAXPR07MB8014.eurprd07.prod.outlook.com (2603:10a6:102:13c::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
- 2024 12:44:31 +0000
-Received: from DU2PEPF00028D0A.eurprd03.prod.outlook.com
- (2603:10a6:10:54d:cafe::1a) by DU7P195CA0019.outlook.office365.com
- (2603:10a6:10:54d::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.22 via Frontend
- Transport; Fri, 15 Mar 2024 12:44:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.29)
- smtp.mailfrom=nokia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nokia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nokia.com designates
- 131.228.2.29 as permitted sender) receiver=protection.outlook.com;
- client-ip=131.228.2.29; helo=fihe3nok0735.emea.nsn-net.net; pr=C
-Received: from fihe3nok0735.emea.nsn-net.net (131.228.2.29) by
- DU2PEPF00028D0A.mail.protection.outlook.com (10.167.242.170) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7386.12 via Frontend Transport; Fri, 15 Mar 2024 12:44:30 +0000
-Received: from ulegcparamis.emea.nsn-net.net (ulegcparamis.emea.nsn-net.net [10.151.74.146])
-	by fihe3nok0735.emea.nsn-net.net (GMO) with ESMTP id 42FCiOdq013909;
-	Fri, 15 Mar 2024 12:44:28 GMT
-From: Muhammad Asim Zahid <muhammad.zahid@nokia.com>
-To: "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Muhammad Asim Zahid <muhammad.zahid@nokia.com>
-Subject: [PATCH] nfsd: Make NFS client_id increment atomic to avoid race condition
-Date: Fri, 15 Mar 2024 13:39:57 +0100
-Message-ID: <20240315124053.24116-1-muhammad.zahid@nokia.com>
-X-Mailer: git-send-email 2.41.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3409B2E62D
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Mar 2024 13:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710508292; cv=none; b=A9JHH/E2MtL/fnpsErqzYNOv8e37p8NgkR6btZI7U0tFFd3jS/rBPYGVR6O3gQaRsZDSUC/2TLhGB/zq8c5qFD5HHhgOoVNpu0NBlB/MQBn1SzGtXKXUEispDf3BL/8mBq6o4GwUvV/KEx+UNb7t81Lp2wBiegzlJcLnaq5CGlc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710508292; c=relaxed/simple;
+	bh=kOYuYrODL1GXO0ovwsvGmmvaeKec+kFZz5thzbSeu8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PGzRCOY+XQ3c4EQ3g4V6nVjyegkaoc89o2tCWexObBsZpLJUMbb9zpCEbsDA8bHG8tOeuE12DTDKZMnUN+4DVIszHnHCY+wQONgXDqSQ/5SvlTAFG6VDwNwF/ADWdlZNxTk45QO5LVTjrbNGCaiXzwbezLn44GrijHRuPY5JwKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JOrOyOBW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710508289;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eEG5tzwwmmlmljsn9YxmchudSfQWz7skLUcfz+CLUDY=;
+	b=JOrOyOBW6Nx1SNyhBUjv71vxbZGp6Wnoi7laYi3GGUBiewOK7GK3NuZvkPKcVDHGZlaQfc
+	IPiKS0kTPeJK7eLatiqScQNFw1kei7R7i5oJRb1Mlp2c6H8GW/4/FvD3daBl045NwPvULu
+	XmUUHmggPnLgl8M2KAwjvBPiwgKs0lE=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-580-BocG5Xx2O2OZi0j9a8WzhQ-1; Fri, 15 Mar 2024 09:11:27 -0400
+X-MC-Unique: BocG5Xx2O2OZi0j9a8WzhQ-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6912513fc7bso11185776d6.1
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Mar 2024 06:11:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710508286; x=1711113086;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEG5tzwwmmlmljsn9YxmchudSfQWz7skLUcfz+CLUDY=;
+        b=dNUf4UjP1y0flBCoPn2j65ZBKWnZns6FdjdJpXu48zSwIriKUAF8jP4pbEenawqHiY
+         LDDRAn9k0SPLNtvuVk011+ojE4h9eWjO6SrZe3CXbKC4gmjLbILWb2MdxRnRx5Wn+d4a
+         FovjcdFnc+qSZec1noCPFlwurUp2rhPxq4FzVtINfVgnTUVXxZSjUXNA+061w2Fws9iw
+         tIT+qUWgnD7Jug2HqLfQ97QfhJfEIJ+mvBavD4xBpsVV3IGPqiErp4+cHm1Bgdb8Q5zN
+         FTuasM8FwPhUTRYU1FAwAmkWH3rzaEB56BxFiv2RFXZVLj7WmhFNVkyiYQAyfgi73d9K
+         R8tw==
+X-Gm-Message-State: AOJu0YwIVz1/E1WtchJkPyCFE0BbEAt9lPzBXsbGso3bRIdqt2860yDe
+	JdzaVQNbtZO42nJEGVJugagGk4A3BW3dmcLOnQ0ZHZKgUEK4o/U/0jk3F1/NYw2wusSwWIUUM69
+	+qr5F3RB23Q7eQJtdeBKTqiMtVDdGDm5KPmSP2824/zBMjiWypPB3SPmanfuQPybn3g==
+X-Received: by 2002:a05:6214:459e:b0:68f:1c80:d78e with SMTP id op30-20020a056214459e00b0068f1c80d78emr5111902qvb.0.1710508286409;
+        Fri, 15 Mar 2024 06:11:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEIRw1Pok3crahOPNj2HoTvYhJyfp18MklCxqRlE+nSsW0EbA6s8uVgi/s70KpnONL/Hok4rQ==
+X-Received: by 2002:a05:6214:459e:b0:68f:1c80:d78e with SMTP id op30-20020a056214459e00b0068f1c80d78emr5111875qvb.0.1710508286076;
+        Fri, 15 Mar 2024 06:11:26 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.251.209])
+        by smtp.gmail.com with ESMTPSA id gy10-20020a056214242a00b0068f6e1c3582sm1939942qvb.146.2024.03.15.06.11.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Mar 2024 06:11:25 -0700 (PDT)
+Message-ID: <8f246658-2131-48b0-90fe-404cb8f8097b@redhat.com>
+Date: Fri, 15 Mar 2024 09:11:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF00028D0A:EE_|PAXPR07MB8014:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 408c1711-303f-49da-7a36-08dc44eda8db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MQoDjimKMID1cU2608Cowj4SuBbuKSgCeV9Jd4HOVWbcXR11ocfDyjrvdmPdfGtF2Y60amX+gnVujWVKD+R1OpBv+kdJczlVDRDdoKyRcFWRLc77Ux89h5TjAV472PHkqD3d5kU1v81vMycrVUJnTjpyWCQyGee5sO0kEPdlwRdTO8AKk/244JyCzET5EvdTiAsB0qYYjejY7JmArslxeqNDzmPhvxSG/hdZPE1OQvtv76VyjQD80W+EaCqBqtRBXd/QmlaIMyqjsDUoLZ5Q2GSf8jIqh3JyxDR840GWzv3edURlG7Om0OllV1LdhBTF5JWr4U4TNVFuBxpwq4XavVAis8AYOdvPAYwpCPxAouy4vY9n+LT2N/wKejVf0BQSsjEWxvqDRMXV7UnIWpoRZBZ9AVYCnmYCN5S9SXesG/zeXRwukMzoi8QxVO7iC7fd+h2TaJ0Ri1IcTFyAd0x/6fRTL6bphLlmgL5lFmkboF5oeD5UDnj8HrdhF2Kjy6m0jFGfbpG++JRcmQsptNufaul1Ew5k+jEzNNOHK6IfLF2SRxjsyFzJyDXvHfum0HLWfp2a0KnCAzEMPoyteGhTcAEjaDpJdJzVFWG8DmuCYx7ufLvBABHRGU3O3YSMUu5cRi8fK+rvHMksuZgBJEZrvUKKps9k7eZHtSzjmqFwe6/bJv8Haw3v4gYYbBmYKKxCVDg+Ab5gtKnJla16hKXsxfFTOUeg7jam8CxvExgkVKUw8EuDExxwXyTZ+4NVI/oV
-X-Forefront-Antispam-Report:
-	CIP:131.228.2.29;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0735.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 12:44:30.9099
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 408c1711-303f-49da-7a36-08dc44eda8db
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.29];Helo=[fihe3nok0735.emea.nsn-net.net]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D0A.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR07MB8014
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH nfs-utils] start-statd: use flock -x instead of -e for
+ busybox compatibility
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>, NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, kernel@pengutronix.de
+References: <20240228185644.2743036-1-a.fatoum@pengutronix.de>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20240228185644.2743036-1-a.fatoum@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following log messages show conflict in clientid
-       [err] kernel: [   16.228090] NFS: Server fct reports our clientid is in use
-       [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
-       [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
 
-The increment to client_verifier counter and client_id counter is
-set to atomic so as to avoid race condition which causes the
-aforementioned error.
 
-Change-Id: Ic0fa8c14a8bba043ae8882f6750f512bb5f3aac1
----
- fs/nfsd/netns.h     | 4 ++--
- fs/nfsd/nfs4state.c | 4 ++--
- fs/nfsd/nfsctl.c    | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+On 2/28/24 1:56 PM, Ahmad Fatoum wrote:
+> busybox flock(1) only supports -x and not -e. util-linux flock(1)
+> treats both -e and -x the same, documents them both in its man page,
+> but lists only -x in its help output.
+> 
+> Referring to util-linux git, it seems both options were added between
+> util-linux-2.13-pre1 and util-linux-2.13-pre2 back in 2006, so there
+> should be no harm in switching over to flock -x to avoid confusing
+> error output when attempting to mount a NFS on a busybox system:
+> 
+>    $ mount -t nfs 192.168.2.13:/home/afa/nfsroot/imx8mn-evk /mnt
+>    flock: invalid option -- 'e'
+>    BusyBox v1.36.0 () multi-call binary.
+> 
+>    Usage: flock [-sxun] FD | { FILE [-c] PROG ARGS }
+> 
+>    [Un]lock file descriptor, or lock FILE, run PROG
+> 
+>            -s      Shared lock
+>            -x      Exclusive lock (default)
+>            -u      Unlock FD
+>            -n      Fail rather than wait
+> 
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Committed... (tag  nfs-utils-2-7-1-rc5)
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 935c1028c217..67b5aa1516e2 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -119,8 +119,8 @@ struct nfsd_net {
- 	unsigned int max_connections;
- 
- 	u32 clientid_base;
--	u32 clientid_counter;
--	u32 clverifier_counter;
-+	atomic_t clientid_counter;
-+	atomic_t clverifier_counter;
- 
- 	struct svc_serv *nfsd_serv;
- 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9b660491f393..d67a6a593f59 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2321,14 +2321,14 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
- 	 * __force to keep sparse happy
- 	 */
- 	verf[0] = (__force __be32)(u32)ktime_get_real_seconds();
--	verf[1] = (__force __be32)nn->clverifier_counter++;
-+	verf[1] = (__force __be32)atomic_inc_return(&(nn->clverifier_counter));
- 	memcpy(clp->cl_confirm.data, verf, sizeof(clp->cl_confirm.data));
- }
- 
- static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
- {
- 	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
--	clp->cl_clientid.cl_id = nn->clientid_counter++;
-+	clp->cl_clientid.cl_id = atomic_inc_return(&(nn->clientid_counter));
- 	gen_confirm(clp, nn);
- }
- 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index cb73c1292562..a9ef86ee7250 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1481,10 +1481,10 @@ static __net_init int nfsd_init_net(struct net *net)
- 	nn->nfsd4_grace = 90;
- 	nn->somebody_reclaimed = false;
- 	nn->track_reclaim_completes = false;
--	nn->clverifier_counter = prandom_u32();
-+	atomic_set(&(nn->clverifier_counter), prandom_u32());
- 	nn->clientid_base = prandom_u32();
--	nn->clientid_counter = nn->clientid_base + 1;
--	nn->s2s_cp_cl_id = nn->clientid_counter++;
-+	atomic_set(&(nn->clientid_counter), nn->clientid_base + 1);
-+	nn->s2s_cp_cl_id = atomic_inc_return(&(nn->clientid_counter));
- 
- 	atomic_set(&nn->ntf_refcnt, 0);
- 	init_waitqueue_head(&nn->ntf_wq);
--- 
-2.42.0
+I like that fact the lock is explicitly
+set... takes out the guess work.
+
+steved.
+> ---
+>   utils/statd/start-statd | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/utils/statd/start-statd b/utils/statd/start-statd
+> index b11a7d91a7f6..67a2f4ad8e0e 100755
+> --- a/utils/statd/start-statd
+> +++ b/utils/statd/start-statd
+> @@ -8,7 +8,7 @@ PATH="/sbin:/usr/sbin:/bin:/usr/bin"
+>   
+>   # Use flock to serialize the running of this script
+>   exec 9> /run/rpc.statd.lock
+> -flock -e 9
+> +flock -x 9
+>   
+>   if [ -s /run/rpc.statd.pid ] &&
+>          [ "1$(cat /run/rpc.statd.pid)" -gt 1 ] &&
 
 
