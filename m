@@ -1,254 +1,220 @@
-Return-Path: <linux-nfs+bounces-2305-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2306-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99FE187CEE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 15:31:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6892C87CF9B
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 15:58:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9F691C225A0
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 14:31:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8930C1C2258F
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Mar 2024 14:58:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7093FB32;
-	Fri, 15 Mar 2024 14:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7411C3C464;
+	Fri, 15 Mar 2024 14:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l+kDmqa4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Zy2jOjp1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G2Tv4oet"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77463F9E9;
-	Fri, 15 Mar 2024 14:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710512999; cv=fail; b=dEilvTmZt0qx3dyGFuGtiPOsNUL09n6UxNIy6yBqotJ1RTivFfS5kRe8SKkqgj9OrYYqe2oj6cVPX0Flu3NbsXxMjgD9orxcNDKD+aYhb5+dAh1BRICZGlnuWnXWAJb5KfbMN0QA2mVeS1LVRNWlSq4z5LGjze2ygQbot60/Hy8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710512999; c=relaxed/simple;
-	bh=WLsiKgN72sP96JDFfj3nA20RDl6pRN/Z2QOzyK/EIcE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=M+YrMnXarueC2jDZy2yEnGNv8shR+68YylFL2nluyna8JtP3V2LhXvjfsy3QGrvp3jNXxn1v0jvtcReZa+UwrblWluMXRdCPxheaoA8kc7G1S8RtT0ntdSUBbwZK+Gm5rUCwNQvuPdzjgNFC00a90gdoampSeaB0yp90dARTJzI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=l+kDmqa4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Zy2jOjp1; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42FC9XmH026327;
-	Fri, 15 Mar 2024 14:29:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
- b=l+kDmqa4ojkXa8nI4NOZAxP2PjywaeuCD9yFQJpah07Wcs4vYosi6XnKIE3hYw/UDjI/
- wrxb1asyXO9P+xCNE7VzLHCyUFuyPnMcHMLi/djXvszLw41xS1GSVlRP3M/UwEM3zou5
- j/7OM8xZQ1E1nr0qf8t8ZYihbkLOYq6wZWkM5bXs9yjyJ+nOReBOPo8q4q0nrJJ25/us
- ixDvDhTnL6YdG2+8UlFw9gAxQ0etT0M2XoeZ0LD9sgVSRitPBEXpGgQ2pOqw2/RvbQkr
- AK+TPamf05FNT2DP1FERK6AV3949DBUF9YsVMgCCuWCfSo00JKlvDbwKzqlL9uclGaNh 2g== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wv0adasw7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Mar 2024 14:29:53 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42FDTi6D019743;
-	Fri, 15 Mar 2024 14:29:52 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre7bx7kt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Mar 2024 14:29:52 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IwEoJppIQsysFcNtDJbn92VL1TzSOo9eD6rLcZTjxQPSSqGznUKxc73g54R7zW6Ba/UtCNthafGlcA3k5Uf2uKGuEdH+qS/KCE99ayFd4wGs3pV0lycppsFHsEPL5M434IlhbSNHGXE04qcttcl4Zc4psd0AvgZaSLDWBZTaPQRplzj0vRIER/jw38+R9kKPupGzmFYvS6slnfMBCUZftLQGeHhNAatq5wRoYjx6feY5IIrayKy5n19POHHnEa0Pf/q9UWf8kJycYOqKN5A0xUU8hLgF1yZakaoNwGmPz5ebwJVOrAKINpxo1p84zZsTH7ON5/ZbVNJlCcg1jAh0CA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
- b=Desf2MTHZK87CEXQ68y8jIq5HPV76jJZ0Q0vOIGsGBUp4ibAAOrXD5yWgTgtwMON//oU94As+2Nsl978e8iWiKI2XH+2BwROqbw0xfdW6etiJGBPNZOa0MdPSP9Q/Lwq/pNPEuHCAEpC5P3IksR7SF4e1fOgexAL2W8XI/rlLkZa/9ew7T0w6egKA/x40w6b5KY8j3Al2vDnYCAMkndTXrgx8Ga0Lhmz9Gb8sRJjLDFriNHhvSEeT13JANQSdjUyY7zPdaJcBujX/iQXwqAt/aiUewQxrCjLrrA+zSeh8vKwOOYpQt3UkHzpcV0lgIB5HkQ2AdhIMfrxk6WqlDYZpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VoCfZRJC6MGQmdS3JwAFaQy676yulTzmCjt/6fwzqMY=;
- b=Zy2jOjp1WiBjU48FcrbJd4uy6iAT/1qFS2OSLq4AJ3I0EoQCwPqtRY788hWcJIxyTErF4EZnSprXwejsgKuGvU2dkqXNo+XKTsiZ7nG+cG0gbAuGHbffWR4+7LacdjvHg/B/qhTHvAcbs8xW4kCsgfIN9PtwOzDI6ShgJNj1lRg=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by IA1PR10MB6097.namprd10.prod.outlook.com (2603:10b6:208:3ae::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19; Fri, 15 Mar
- 2024 14:29:50 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7386.017; Fri, 15 Mar 2024
- 14:29:50 +0000
-Date: Fri, 15 Mar 2024 10:29:47 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Muhammad Asim Zahid <muhammad.zahid@nokia.com>
-Cc: "J. Bruce Fields" <bfields@fieldses.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Make NFS client_id increment atomic to avoid race
- condition
-Message-ID: <ZfRbWx8L9WJGKa_k@manet.1015granger.net>
-References: <20240315124053.24116-1-muhammad.zahid@nokia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315124053.24116-1-muhammad.zahid@nokia.com>
-X-ClientProxiedBy: CH2PR02CA0024.namprd02.prod.outlook.com
- (2603:10b6:610:4e::34) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ACB18EA8;
+	Fri, 15 Mar 2024 14:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710514725; cv=none; b=rgcvH+phdQupfxIAKNfIgZEVHfc+63ITbRNWTlDrW/h5XfPwbdGHfL++T2HGxf0cD3P9fqAAYNi4J+EZbmFR7ovV3TNdl/ZhdyruPBP2HrHdukINBDDDJetG5XcYNQIgdchMFDu2b5K3tGJGsloVd+y5Z2CtlzxG6Z9Hp/Hvfdk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710514725; c=relaxed/simple;
+	bh=QkAlNJ9V9qppiro/zSbEdW694RBnZkoeHZrahCOadSs=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=BRh1Vfp16onm/9TCZHDqNmwVEhfnt9VjudysgjwtNsCDRxMG9yI1nUMwPGN8pMc+K645N1c+4/dusrbtuZlGheZUg7RZgvwD0DVkM6oqi3IlvcXnM3LtnOFsXqjgvEEP2XnqdDcVncaQsFAaYQtr0GZU5WDuU9rNL4cD6+Zw2CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=G2Tv4oet; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240315145834euoutp0208e17bee17510a43114d2abc73c66d9e~8_BH9XOku2978829788euoutp02f;
+	Fri, 15 Mar 2024 14:58:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240315145834euoutp0208e17bee17510a43114d2abc73c66d9e~8_BH9XOku2978829788euoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1710514714;
+	bh=QkAlNJ9V9qppiro/zSbEdW694RBnZkoeHZrahCOadSs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=G2Tv4oet03CghGKOrgieijfEl82FvjQVZBL+NfoG15HFyo9VIUHcvPRvsG82TfUwJ
+	 dX7pxAXAb9YPyNG2TKDc8iEY570oeA5ZpY68L1+/6ZETCD+YW+AwjxiTIrcFxIsFOl
+	 Mk2mYfgH8Xod4xWY0H6rRKtWJgy98o37Oog1PoZk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240315145834eucas1p263d507b6e6b1b2347755a3b8a3d110c2~8_BHm31sC0659706597eucas1p2F;
+	Fri, 15 Mar 2024 14:58:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 62.5F.09539.A1264F56; Fri, 15
+	Mar 2024 14:58:34 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240315145833eucas1p213fce847384eb45d99b496e63aeef842~8_BHARDUI1048010480eucas1p2_;
+	Fri, 15 Mar 2024 14:58:33 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240315145833eusmtrp1d4283c4c3365474281127eb3980b7d32~8_BG_cMhB2583725837eusmtrp1-;
+	Fri, 15 Mar 2024 14:58:33 +0000 (GMT)
+X-AuditID: cbfec7f2-515ff70000002543-32-65f4621a921a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id B2.BC.09146.91264F56; Fri, 15
+	Mar 2024 14:58:33 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240315145833eusmtip25fac59b9345218f02603c4bc99e60c97~8_BGowIxW0792607926eusmtip2S;
+	Fri, 15 Mar 2024 14:58:33 +0000 (GMT)
+Received: from localhost (106.210.248.173) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Fri, 15 Mar 2024 14:58:32 +0000
+Date: Fri, 15 Mar 2024 15:58:30 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>, Miquel Raynal
+	<miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, "Steffen
+ Klassert" <steffen.klassert@secunet.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, Matthieu Baerts <matttbe@kernel.org>, "Mat
+ Martineau" <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, "Ralf
+ Baechle" <ralf@linux-mips.org>, Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>, David Howells
+	<dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, "Marcelo
+ Ricardo Leitner" <marcelo.leitner@gmail.com>, Xin Long
+	<lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher
+	<jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu
+	<tonylu@linux.alibaba.com>, "Wen Gu" <guwen@linux.alibaba.com>, Trond
+	Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
+	<anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>, Jeff Layton
+	<jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+	<kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+	<tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, Ying Xue
+	<ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, Pablo Neira Ayuso
+	<pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>, Florian
+	Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>, Nikolay
+	Aleksandrov <razor@blackwall.org>, Simon Horman <horms@verge.net.au>, Julian
+	Anastasov <ja@ssi.bg>, Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain
+	<mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dccp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
+	<mptcp@lists.linux.dev>, <linux-hams@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+	<linux-afs@lists.infradead.org>, <linux-sctp@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+	<tipc-discussion@lists.sourceforge.net>, <linux-x25@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+	<bridge@lists.linux.dev>, <lvs-devel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] sysctl: Remove sentinel elements from networking
+Message-ID: <20240315145830.e3sl57eytsosngeb@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA1PR10MB6097:EE_
-X-MS-Office365-Filtering-Correlation-Id: f59a08b9-e47c-481e-a770-08dc44fc5f68
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	rmRFPCmQzYWwBISDkjmmC3G5tg3s1t7WkWOuqmv0bUgrLqdsjLHpS5OtDOdbCuP40gMeAxzhQrcbXsQ4PcXf85jYKyMFILhxBVf8hiHfD5gQkpAFsPlow5xBT4v2iQw07nUUBeT3fPZoQYnVuWys4YuQK6pj3FgvI+0ORf5ZgDvA/Trgbug8hZprjkEZ8oo+FFbMT53ALBREJbmztlBOvi3u8mUfea06ZsChw4ZaU0oVcZPbAF5Rlxwx8aBH/viQmZ+x1GHBohEWjjdjRKjJx78013PiYFb81QbHq4PPz9e9+yyFEokzbbmm+cduE001iqJVuMPSxQ2uCFotEDeR4UJhVXeSO3PU6oQnpQ1mJYuT7ZozwH4YCkelKNNOVJyu7sPuiF52fjvRVm9fLs9myOev5Aoj/DeiTR7Ofw9BzzJBpWY2hshkhDUkcEU6cZ7wFawAoTvGgJnF3I7Bso4rcN2YDVHcmLBYiSPI10TG7O4d9zvAXQtUvUZQlqvbTTFg+FW3OyK6vrXeqeabGTfC7mp9hDC/NoItOdWov1C9KVHz1Gz32NoYExoLZPK8ECXPvSQEIf1yBI1pIPsiNN1kGo0SfhqkbZbIQzCIjqiGFqg=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?bV0YODpRHrJwXilhWIYNXXiQ4qtE8ps4IJ9V3dbekd0v5vmipsN9cMPxpJGr?=
- =?us-ascii?Q?EQXcbogMq9RDutyajWum0N3v+K907u7T7rF1HRki5gpY/+VKH2BOWIhitZaW?=
- =?us-ascii?Q?rkW4YaPv4eH9thzWjPJlL6w8WUc8h7VSeQMiqCCz68OUerhcJg2izWiA61sY?=
- =?us-ascii?Q?0/yNfDjFzXJBS02Ens3EJJM5OFAYSYhtwX9UCTNMmw25Vci0o4rwpyfM0l6I?=
- =?us-ascii?Q?Miei6e09aXBQygkMYPuE32eUYnWeBRWD5Gb+80d9k88+ODKpX0RFuGszfh42?=
- =?us-ascii?Q?0nEiSUJD15MVoDHOa8cD2AJnBBLU4yyCHIe+OCmo0q9edfBaprSVjY7ATU8m?=
- =?us-ascii?Q?NLLaVbQmucvmGtNiC1kLTWSgJnBxHpumQ/5tUK4z7YyGveUqjxCH5RJYUWUg?=
- =?us-ascii?Q?JR8EXESASFhwa7Q98oxUlbCTu1k2cSaYAEp3tPvFPUUCnbKtqv7SONyl9eT5?=
- =?us-ascii?Q?r6Q5WXBwTkToycoyWA8LodziOle+n+Y4coD4pNlrAEN0bjjC191Ne+RfmJRE?=
- =?us-ascii?Q?E0aAf22vwj2mKuSk+VuoWcJ+b2Xy+nCceb+1yVNXAaGD7JA7bBGD+afG+p0C?=
- =?us-ascii?Q?6ImYVc8RapUfrCse3SkIA65uHSrjh3FAynkGirQzrB6uf3x6WAxWrVJ+e7x1?=
- =?us-ascii?Q?TYV3pOIhJ/2sBYUmXOBDoXSTJy6J4AVtTbGLnzHRpaM51J3My5QnDIyTWWOh?=
- =?us-ascii?Q?uD4ZQovP+txkGSpjqz3rqFj5WKLsdy+Kn3LZKk2GA9ltrO/dnEveNbC8Ab13?=
- =?us-ascii?Q?Z2lGDPrBC2uuqtWDomBAeOd/WmJkE5LCYAjXt9RsFkLUizVCGPkDI8X+PlGe?=
- =?us-ascii?Q?tVgIWBjFUF7US0JfxXNCoK7kkhbNiypJcDVWw+1Et3zZAhB02G6k0B+X5Tqp?=
- =?us-ascii?Q?embZGEqMSs3fMTjd9NLcOPr4XQbXFlG12vPyX+Y+TIyMo6Y+tQDyXWUZX9Qe?=
- =?us-ascii?Q?8n+KulOkAuBHmutwc6E5z/VmOhCQk1DxpL4wChjcwItEqXQ/bTHLTZ3jtJvb?=
- =?us-ascii?Q?cQ31Usn83M0rql3zKVC8w03E5R6OeDfMIFGOuKlW6FtHdKx3wOoVLew9o9E7?=
- =?us-ascii?Q?keQ+gKmkgMrz4/hlvXOgQOZ21/d3aMjABv1Mt/tauoMbW6kVckd6eKL6KVBy?=
- =?us-ascii?Q?h4NT3JmbKA987cYFtpG7V91qzuNCv++uc8ImJW5+KCgfj+Pj78YW6yW7krLD?=
- =?us-ascii?Q?URjR50jdfUGJp/KV70GBhlPRR27BOaNwY14XOnFziBGgxbUSpuXuBe8oavcW?=
- =?us-ascii?Q?LCRIIVW5euw2Mwx/58zIcy4dpQVSpLIfe6Y24R487N+JWYJ8z2YvVCcjyUVL?=
- =?us-ascii?Q?DPF1+15psSLYVytOj1uhIVqsaLoVVFaqpvCD91TlY2mYHG+cLMSXkWWKW+zV?=
- =?us-ascii?Q?MCsMalRGinEOB0GRDDAqWlv6cAITwGhkP1JDlDmCk61D1LfOsfKnpgpGJi/K?=
- =?us-ascii?Q?Q0A6rKXw1PIgGzUzkQGd0jBYL0JMVgmG08OCbcZQtRxiQVviutrsyP5udKBt?=
- =?us-ascii?Q?kSNUlT85B8fhCdBMHr+Vj7/0igpo1ll5qDz0aBf6nTOdnxn0XBbvFDjgasCk?=
- =?us-ascii?Q?3aSfkL0mmtPUtTDUXvCMYl5Zdbav2OkGHWmBulcsn3c3hFv6nJnxjj17Qr+Y?=
- =?us-ascii?Q?Bw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	XLcOgzi1fgaEezlN1r18I7oqXjndlH18Eocysn1X6dScTJRlkNTP0kaSYhscX04klrlNyiJmR4C92x3+O3BWww81Ob9rxVEV6a24MphhDl0MozD9z8eb4y+UkUoHL6P+1X9gmJAwYttdlMs1nyBS8paX6vvh9pPmdN6+M+G2nfeVXbT68ll2FsBSHEEZ+JVQNd/SD+1q/MdbqHjxBmB2Pb1gC0Sxxb5rEv5/DE+w+WI1I/Q4bT4eThwM7eeeas/Dsfqbm0aJDhHFYnQ/4YAprrgeqAljw65Dh2Ax1Myed5ECQ+sbxwjVzgJW7vOvnn1Oe9NW5c7emu0dv5HmKPAUOz3OVu4ErXxo+l8s6NpJssBwPeV0krnV1A3fd61vlwwoWkOotO+XuEWTuaXViJJE3xcs6PiJBuShulzgH54GNLTmlksqkp/h2xcaCq342oIURahhUZ6qhmhp8STy8sOBKk5/Y81qb6+IpgHhJ2xPk5HAQS+bjsx8paFbLpQiSeaM7+3YR8xJ/1SWTU+zN5xseSvZWCekx6rLmmH9bM+N+5C8Tr9cQZkbaXcNSsu612CCs1Mrxtblb+tXlQk6VUIV87i0GFnqhVtARbb0I2dR+tI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f59a08b9-e47c-481e-a770-08dc44fc5f68
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 14:29:50.3597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tg6etQBLaCllO3C3X/eriHIiDgn+mjCQiEAPriqZJXJFzNUNsroCAgiQV+HnFrWnb8djiPdL5vpLicEtLoHl3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6097
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-15_02,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- bulkscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403150117
-X-Proofpoint-ORIG-GUID: 08T1DevPXfVGwpl6aw4OiuwDvzTqiXGf
-X-Proofpoint-GUID: 08T1DevPXfVGwpl6aw4OiuwDvzTqiXGf
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="onm3lc3zkynvura4"
+Content-Disposition: inline
+In-Reply-To: <20240314154248.155d96a4@kernel.org>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTfVBUZRTGe+/XLuA610XhDcwSgSE1Ck09fmBSUbeZmpTKcWq01riCCOjs
+	QlqMhoAu7opsMEUiCoryLSCsu6wCyyCisAQoauQsEAuEISLyIQICsV4cnem/33me87zznD9e
+	MSn9Rewk3hkaxstDZcEujC2lqx5teMtp+xD/TrWKgcrIVdBeqqIhMuYwAYcMUxTo0tUETLV0
+	EzBhUJIw2N5NQ+qZYgZSGmIomPhTzUDTyU4C+qLGKci/dIiArmqLCHRxuQhyo8wU6LtHGFD3
+	zIfoi8MIOuMtNNzK6GdgNCNHBG3DFgpGj9nBcVU0AXXqEChp6aSgUXeMBk2tF9zRtxDQdCmF
+	gcYKEw3/VMZRoDkdTUJX2n0azIkZFFSUpSKwFDwkIDp1gITowQ4SxrKu0VAfN0VCcn4OCc2a
+	LgRXlOU01BVEieDxqesklKVGUlCd5gCa/FoKHpt6EST13ibhZqkr1A5NEVBfPEjDYIoHJGZp
+	Cbh85IkItA1BUDtWS0DHSDcDU83vwcE6nWiDD3fXMkxyffU1iDuVF8GdiLxBcWOjizlt9l8E
+	p67qITlDcouI01W4cWlF4dzTygsirijnCMNdzT5PcIb21ZzmTAXiis/+vHHh17br/PngnT/w
+	8rfXf2cb2PFb0B69ZJ/+zjAZicx2KmQjxuy7OGXsJrKylM1CWHlsmm2neQjhkjuDImEYRPhJ
+	Xir1PFGgN9KCkYmwOcr0YqtmZHwmfxHhk6UnGGuEYt1wlVr5jBl2KW7oNZNWnsu64pji45Q1
+	QLLXpfipcpS2GvbsJzinoGvaEIsl7AZ8pmGrVZawc3DN8c5nNUh2H76elUBYV0jWGWdOiq2y
+	DeuF9UkdpNB0ER5OeMQIvB/Xau8SAv8xC/dVuQj8IW4tUM5cZo97rmlFAs/HpsSjz6phNhFh
+	42S/SBhyEc44ODzz0locc6tzJuGDRyz1jLUQZmfj5gdzhJ6zcYIuiRRkCY49LBW23XFuay+l
+	QYuSX7os+aXLkl9cJshLcdrlAeZ/8hKccfo+KbA3zs9/SKUhUQ5y5MMVIQG8wiuU3+upkIUo
+	wkMDPL/fHVKEpn+qafLaQAk62fPIsxIRYlSJXKfDlsLcRuREhe4O5V3mSg4sfMRLJf6yH3/i
+	5bu/lYcH84pK5CymXBwlbv6v81I2QBbG7+L5Pbz8uUuIbZwiCY/R5VrvV20vvPLF765VfY5G
+	JutXS+Z2P/mQIcCkjgr76k33BdnEra4VqfZfGjtKgnTpBuf0RCm9nJuQObLJxTFbBoyb/MK5
+	He3G97VNu25/tODzbZMyh+7YVt3mFtXHTSY3Ol5VXn109TJfDds+79PY9XV22yqilPqVtI/m
+	wKTveY95BtIvre1G9Gf96uA1Rvc5sRExCsk5Tp6+Kvvq+AdTbaqbCfjfwHubrhSeDYswP4hD
+	Ra+Jt3bcSxxY672hcMJ3zUPub5clzfGxbxw9VXGo1+ebQim3ZSSwxr3cqWrd7L0bz93bPMt/
+	hyzunOZ+0rK2B3n0yvay/Q4rxv3N9avFy33sXChFoMxrMSlXyP4Di5z3OyQFAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTZxiH/c45Pa2XZmeU6bG6RDuYhmm1CPJ2Q4VM3XHZzJiJMTNGOz0r
+	OtqyXnTOzHETJhUsNhkBERC1AjoqLReroqRT1IqgUxlTGNLSEpHAEFAolw6oy0z235PfLV++
+	5OXhARe4Qt5upZZVK2VxInIGcWf85l9L5349wC5vuywEe0IEtF9J50BCSioGh2w+AqpO6THw
+	tXZiMGZLw6G/vZMDBUVWEvIaUwgY+0NPwoMTHRj0JI0QUHbpEAbuOicXqjLOITiX1EJAdecr
+	EvRd8yG5chBBx1EnBx6a/iZh2FTKhbZBJwHDmTMhJz0Zg3q9Ai62dhBwryqTAwaHBJqqWzF4
+	cCmPhHu1dzjgsWcQYDiZjIO78DkHWowmAmprChA4zb0YJBe8wCG534WDt/gmBxoyfDjklpXi
+	0GxwI/gt7SoH6s1JXHiZfwuHmoIEAuoKZ4OhzEHAyzvdCLK7H+Hw+5UgcAz4MGiw9nOgP28x
+	GIsrMLh8eIgLFY17wOF1YOB61UmCr3kNJNZXcaOimcfOQZzpabiNmPzzB5jjCfcJxjscwlSU
+	/Ikx+utdOGPLbeUyVbXBTKFFx4zay7mMpfQwydwo+RVjbO1SxlBUixjr6Z++WPiVOFKt0mnZ
+	BbEqjXaVaKsEQsUSKYhDw6RiyYqIbR+GhouWrY7cxcbt3suql63eIY496e7G4iv53xsfNuAJ
+	6PHMdDSdR1NhtLn6GicdzeAFUGcQ3Wsp4fiN+XT5wKPXLKBHm9JJf6gP0X2exNeNSkT/Ut42
+	lSKoYPq6Po2cZJJaQjd2t+CTHEgF0SnWHGKygFO3AuikorYpQ0BtoEvN7gmDx+NTUXRR4zb/
+	6A1Ej92yTY3yqbfp2zkdxCTj1F46c8AzlcepefTZcd6kPJ2S0NXZLtz/0vfowWN9pJ9/pPvH
+	PMiABLlvLOW+sZT735JfDqGbx59h/5M/oE0nn+N+XkWXlfUShYhbigJZnUYhV2gkYo1ModEp
+	5eKdKoUFTZxLVd2w9SLK7+oT2xHGQ3YUNNF0Xjh3DwkJpUrJigL5Bxf2sQH8XbL9P7Bq1Xa1
+	Lo7V2FH4xC9m4cJ3dqombk+p3S5ZuTxcErZSujxcunKFaA5/Q/zPsgBKLtOy37JsPKv+t4fx
+	pgsTMN3nnatEVv3GxIUPIuLyhmaHf5S7c9aWtft164zbhLOr4Um/iXc39eLwyPqz8/e8+hSP
+	NX4mtQW6qz01BwTyefsq2qcpVOKN9zcFyzN9YcINR7SVT2JuOt2K3hiyIvjMoHrt5vr3ZZuO
+	FC/xJZrKj+V1nWZjI87TcsGXxTrH5ewaQcEzeZbFK46qY08Y142hFTvmLJrxbNrTa963XKci
+	XUZXci05eiW6Ibrrquab7I+PtjszxvgxA0vnise1axK3Nm052BOWk53uZt5d01xuXhz2yQgz
+	EhgS+ij0Oxupbx2dtcw8tO9Gqq1t/wKLxjLPl695EbRpkTfr6fG7PM9mSjd+VURoYmWSEFyt
+	kf0DO6fsqMMEAAA=
+X-CMS-MailID: 20240315145833eucas1p213fce847384eb45d99b496e63aeef842
+X-Msg-Generator: CA
+X-RootMTR: 20240314224256eucas1p292b70c755674fe9311d190a8b50e1ce1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240314224256eucas1p292b70c755674fe9311d190a8b50e1ce1
+References: <20240314-jag-sysctl_remset_net-v1-0-aa26b44d29d9@samsung.com>
+	<CGME20240314224256eucas1p292b70c755674fe9311d190a8b50e1ce1@eucas1p2.samsung.com>
+	<20240314154248.155d96a4@kernel.org>
 
-On Fri, Mar 15, 2024 at 01:39:57PM +0100, Muhammad Asim Zahid wrote:
-> The following log messages show conflict in clientid
->        [err] kernel: [   16.228090] NFS: Server fct reports our clientid is in use
->        [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
->        [warning] kernel: [   16.228102] NFS: state manager: lease expired failed on NFSv4 server fct with error 1
-> 
-> The increment to client_verifier counter and client_id counter is
-> set to atomic so as to avoid race condition which causes the
-> aforementioned error.
+--onm3lc3zkynvura4
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-These client messages are in response to NFS4ERR_CLID_INUSE. This
-condition is not because the server did not increment the client ID.
-It's because there actually is another client (possibly more than
-one) using the same clientid string and authentication principal.
+On Thu, Mar 14, 2024 at 03:42:48PM -0700, Jakub Kicinski wrote:
+> On Thu, 14 Mar 2024 20:20:40 +0100 Joel Granados via B4 Relay wrote:
+> > These commits remove the sentinel element (last empty element) from the
+> > sysctl arrays of all the files under the "net/" directory that register
+> > a sysctl array. The merging of the preparation patches [4] to mainline
+> > allows us to just remove sentinel elements without changing behavior.
+> > This is safe because the sysctl registration code (register_sysctl() and
+> > friends) use the array size in addition to checking for a sentinel [1].
+>=20
+> Thanks, but please resend after the merge window, we don't apply
+> code to -next until -rc1 is cut.
+of course. I'll resend after -rc1 hits kernel.org.
 
-Refer to:
+Best
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/filesystems/nfs/client-identifier.rst
+--=20
 
+Joel Granados
 
-> Change-Id: Ic0fa8c14a8bba043ae8882f6750f512bb5f3aac1
-> ---
->  fs/nfsd/netns.h     | 4 ++--
->  fs/nfsd/nfs4state.c | 4 ++--
->  fs/nfsd/nfsctl.c    | 6 +++---
->  3 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 935c1028c217..67b5aa1516e2 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -119,8 +119,8 @@ struct nfsd_net {
->  	unsigned int max_connections;
->  
->  	u32 clientid_base;
-> -	u32 clientid_counter;
-> -	u32 clverifier_counter;
-> +	atomic_t clientid_counter;
-> +	atomic_t clverifier_counter;
->  
->  	struct svc_serv *nfsd_serv;
->  
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 9b660491f393..d67a6a593f59 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2321,14 +2321,14 @@ static void gen_confirm(struct nfs4_client *clp, struct nfsd_net *nn)
->  	 * __force to keep sparse happy
->  	 */
->  	verf[0] = (__force __be32)(u32)ktime_get_real_seconds();
-> -	verf[1] = (__force __be32)nn->clverifier_counter++;
-> +	verf[1] = (__force __be32)atomic_inc_return(&(nn->clverifier_counter));
->  	memcpy(clp->cl_confirm.data, verf, sizeof(clp->cl_confirm.data));
->  }
->  
->  static void gen_clid(struct nfs4_client *clp, struct nfsd_net *nn)
->  {
->  	clp->cl_clientid.cl_boot = (u32)nn->boot_time;
-> -	clp->cl_clientid.cl_id = nn->clientid_counter++;
-> +	clp->cl_clientid.cl_id = atomic_inc_return(&(nn->clientid_counter));
->  	gen_confirm(clp, nn);
->  }
->  
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index cb73c1292562..a9ef86ee7250 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1481,10 +1481,10 @@ static __net_init int nfsd_init_net(struct net *net)
->  	nn->nfsd4_grace = 90;
->  	nn->somebody_reclaimed = false;
->  	nn->track_reclaim_completes = false;
-> -	nn->clverifier_counter = prandom_u32();
-> +	atomic_set(&(nn->clverifier_counter), prandom_u32());
->  	nn->clientid_base = prandom_u32();
-> -	nn->clientid_counter = nn->clientid_base + 1;
-> -	nn->s2s_cp_cl_id = nn->clientid_counter++;
-> +	atomic_set(&(nn->clientid_counter), nn->clientid_base + 1);
-> +	nn->s2s_cp_cl_id = atomic_inc_return(&(nn->clientid_counter));
->  
->  	atomic_set(&nn->ntf_refcnt, 0);
->  	init_waitqueue_head(&nn->ntf_wq);
-> -- 
-> 2.42.0
-> 
+--onm3lc3zkynvura4
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Chuck Lever
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmX0YhUACgkQupfNUreW
+QU8cEAv+M1Ewqt08SIopWKdreIIqD2kzMZ3Ql+7uN752tp2sVtVbFjjrO8sKICiz
+g6Oiqw0mocBQd7wjnGLc5+VxeYK+5VG4geP6jecNsNgGRdSaXdEqSzqf60Ri+nq5
+etfLQbWjO306ZcZGEitSwDxTJhoG00IwTZdu1zXhsypcNAW46xVEnSuT1tdx3wB9
+7CoVy5hYg+KrYrLGfAPbG2g9iOOTG4jNFL3SjiiqNb/1qhknf4D0CL8f0v/5yYM8
+J0ple4a3xlyODh5hiN7PBuOveQd7hLZMeK3/WhByQn9QSe3sc5J7Ue5I40jtQ+1p
+14ahVOh5+Dh9bxxKdVzjnx2FXbG7MF6ZdOw9LarYon3W2xx++UfLA9SF4X9f+Z+C
+WwPzCt7Yk/WmShpqM1KCOVAUwcNtdF2Jttyk2vKqWDB//02sqhtO+ndueWvLNgti
+3H427shFf9/ctykv2dQmthRviho30MSC9eB3BcjmUL8SE5G6WwMb/csBkkV+DG3d
+0widvqRM
+=vtM5
+-----END PGP SIGNATURE-----
+
+--onm3lc3zkynvura4--
 
