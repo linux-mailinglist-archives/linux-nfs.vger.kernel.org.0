@@ -1,240 +1,79 @@
-Return-Path: <linux-nfs+bounces-2354-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2355-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD41787DB36
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 19:17:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D094687DB42
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 19:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6787E1F216C8
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 18:17:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF4A11C211CD
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 18:51:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81441BF3B;
-	Sat, 16 Mar 2024 18:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05E5F610C;
+	Sat, 16 Mar 2024 18:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="ZR9Qby75"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meNYMILc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2093.outbound.protection.outlook.com [40.107.93.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A571B960;
-	Sat, 16 Mar 2024 18:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.93
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710613057; cv=fail; b=HyrMRoXNSG5O3pj3aSoM0vQ38gmC7sxd5wVbMcmNFKhOqZ/sNH8umFLzwHVmpc35bJDWton7di0VCkhwQXhy5cnR/KN7XSp7GBg9+BfBb7MKbB1o+vMkq8upBOd7z1SB8aco9Lncho2ZbAV3sis+3dCYByMd8RLqMy3e/kn4vGo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710613057; c=relaxed/simple;
-	bh=eBhZ9LPrSevZxWKr+OXxglHJxt1hV4MNGIdL27HX8PA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QYP5ETZwjHts1PPkZvTfYxO97j3FFu5zMcjGg67x34g2DlTQ/34A6MuX/mBdPSs7sWpBUTJKMjNots+XTOmHiE8SyTjOiR4nUTk9wkgUpanK4wyi308PP9PNjDV9L+LfbEzZz/mX7Gi0MIbRUY+lmHwbUHFKDDAQZYe3wze/LRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=ZR9Qby75; arc=fail smtp.client-ip=40.107.93.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lbns0Jh/Uahi2EdExZxkiKac38baKU1SKe3qp1qeJhRaNB1/KM457Sk+tDsoqi5cWSLKgty2NKikKLDsmKYd4apDIKMbUcScyi9Juo2xrFPYJ9gcHFpufr2kkvRKMMAO64r0fhnnWjqrm1r3n3B/4lUGwOBgJpXlXodZUCUznEjM34JfGNpe7OIRI12eiupSUPY/ZIai/1qkk1zvMUQMkKPPyOTxuXcw6wulPk9OCyEP9Z4JmduKmGgN6Na0ZiDZ34eCqKxIrpF+Vy1Aa/0ZADcuwYdUre4FrqMoiDpaPMkLDx++iJgehbTfSOySYab94u9PblK9Q2HMgMRVJ27vaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eBhZ9LPrSevZxWKr+OXxglHJxt1hV4MNGIdL27HX8PA=;
- b=JnxKqogbJ09UKgT4+2RoGyuVjvWV6jkerPypxYN6C/Zc+ASHmIkRDHAFNVwrXmarjc62TVPWI03jx/kdKww0tO37elSTes9yQnwtaYm5fkR1JBwocRuTr/09CkRB3G+eXnh+G1xRa7yLn6KFq6Z2XuYE/GYPO3fnw+dbOdQk4C6hSCDqg+enxfeuSXZHdXf+2cz83nZj2NP9gg8xg4CoGF8h+j5e63ES6ajL/7djXkAB6HLuVevbIS/NMAYs3jS2WPxbpwqM7CYIMQE+uTdDd19FOtHAFEUDc35HvoHdTNJttxJJSsZcBrG1f8NsKWRJwX+E7Oc3WK2HO1GsMNJ29A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eBhZ9LPrSevZxWKr+OXxglHJxt1hV4MNGIdL27HX8PA=;
- b=ZR9Qby75bRFcid3WyKuSlcMa9jMHuzmrI5RVoH1ZKdFjCEonXUdr/gEyRakdLEDlgDO0geTE/QiT6oaGePh3c1wVdlgej6r8ooLGKRYFBVDUBI+lyC+876Q5POOOLHs0Ucb1RbEcwvhJu/PMSlODs+OVSo/NBaUYZO97IygXePw=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM6PR13MB3628.namprd13.prod.outlook.com (2603:10b6:5:24a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.23; Sat, 16 Mar
- 2024 18:17:31 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5bb5:501a:fb40:5057]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::5bb5:501a:fb40:5057%6]) with mapi id 15.20.7386.017; Sat, 16 Mar 2024
- 18:17:31 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS client updates for Linux 6.9
-Thread-Topic: [GIT PULL] Please pull NFS client updates for Linux 6.9
-Thread-Index: AQHad8412mv6M19QJ0SK1Xesj3WXjg==
-Date: Sat, 16 Mar 2024 18:17:31 +0000
-Message-ID: <4623cb545316bfdb45b8d294861ad7eb508ec1b8.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|DM6PR13MB3628:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Qbc+kBm3SEir9uiIly3bh2AucLh/f9VUWEElOGdv6AgLNnRmaquzRGx4RSUsWo2k6eb4M6dOwVeXH0b9o3i473SE8Kk+/b7+mD7f8DOHy5d2/Q14MAAbASu/8ni9vPEFeA9YGcNf5tQgaSElNtyvRRe2kd+jGd9EEQRyk/3WTLcUJwiSXd5mFsIokkgKDLIwK1sO3FMFEMWpQjZ6YrdsEeXiesjYSjVUbhpqpnaGyJ61IrYWDcZAnrl+CqvpZ9E3uFiEDhDyBjHC/4GinBbXIW5MKQPJhfhH4/EoSt7Igh5JXGb6nGTTxVB4gtt0ZyF/MN9DToaNrrM95T5sxp923MlJSQDgJoi7Ap3QC3HPN3UQWt6meYmC9ZpfsrKldPZTqEwqB1qg7HGg3XB9Hx0aQzxLh9Y2EtgIDHF6CBj4GMlZzQBMUbvAbDC+PklJElOf+PPoHS1RiM8DyPFZ1mOWXwmeEJ5nECMCBOvq4eUyf3dvIQkZ71o/kzAA6LB1FB7lC0yRiuc1UadTjI7vxpXNvSqz1s7unR8RhVp4qKYBU3OD419yyHAfwrDAcSp5ltnL+VpKdrvVn1iLYIS/zt4cw/0FZULrdxFUlPSp/axCrvaZ+rZGHgWZVd4Lzg/C7X6glRTdQ3Fcn/Q4RxaIhXCBViz1qJyjG2amxPRGZkdf56w=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?aEJWa0tJR3BoMUV6V3FXcm93ZU4yT2ZDWnJ0aC9Fd3JuSDRYMC9DL0FYYWsy?=
- =?utf-8?B?WlpKT2pGSTJkeWo1UFlHcXk3UFc0TlM4VTFzV2thay9oVnFDYUxXMzZYQmlI?=
- =?utf-8?B?QW5UWWpzakpiVG9JUXZMNjlVcE5TSkJGeFIvWld3cFY4ZHA1ZE9lUjg5NFdl?=
- =?utf-8?B?KzNQTVo3ZU9yeDJNSXE3MnMrRTM0dGtZck1JZzNOMEZiaUFMbWhQeWdnS3hj?=
- =?utf-8?B?UkZ3RmIrK2gwOFlycHNFNjBDcEFha3NSbGg2eXZDVlU1UnlOVzE0bVJ4UjdR?=
- =?utf-8?B?MXU5bm1QSU9jU3RyTU9ncncydERwSTZHaGdZOWJPWGNzQXV5VXcwNGZJTTky?=
- =?utf-8?B?dmE4WjJLRkhjQ2pFaTMyRU14TEZEa3Y0dUQ0b1krMEtHMDlGMlNUMVVsdkx5?=
- =?utf-8?B?cGl5WmI3ZkMyMnNPeUlDZVhReGJoZXdHRjJ6MklGbDdPMG9GMXEwOGc5MFQv?=
- =?utf-8?B?UmVoclkzREJWMmtwaExrOXhGQmR1N3R1K0pzc1Y5UG5YQnphV3hUajIyQWJS?=
- =?utf-8?B?cXBXa0NKZUNRZDNzZGh4bVlJS3VocHJCVTljeTQ0VnBFSTUxa2dPRy9qRGhh?=
- =?utf-8?B?d1BrRjc4andNcFkvTC9XU09LK1dvZUZUbmc5V2xKUVk0Y2xEa1VMVzUwZXAr?=
- =?utf-8?B?dksyMlNMYkxXUEY4MnFvL0hDTWhKWUt3YitHMGJjSVlDTk1LWHVYSmkzK25v?=
- =?utf-8?B?MnYwaCtqMTd5YlFtb2dkRG1nMFJBSTZoZm1Ka1NKd0pQbmpEMXVMblpWc0tu?=
- =?utf-8?B?b0NHaDNDQ011b3B6RDFwUWFOZ29UUVZ5S3pDM0FZWWpTVklFTWFwTGFWL3hz?=
- =?utf-8?B?TTI5SDZxdXhaaVRPeWRwcXR0Z2Z6M3FTMmZ4R0Y2N3Y4eDdTUUJZejNOUi9o?=
- =?utf-8?B?akQvUVZ3ZVNBUm5MSUxHYkQ2MnBRbjBSUWgwLzJ5a0srM2JibkRxYkczT1VF?=
- =?utf-8?B?SnoyTWl6WFQ3ZTBFL0lPcGUxeWlEM0JtRmFUZDVLUWhXdkMzaDVzcW0rbzNP?=
- =?utf-8?B?U2FWOEF6L2tFQnhXWGZwemRPdEpBNW9pbzg5NlBtRUpSL0p3dXBCZkEvdnAw?=
- =?utf-8?B?VC9uWVc3RkdjK1REZWczMXBEeTlDNSt0RFJyY2pVb3pDR09sL2hSN3pRWktP?=
- =?utf-8?B?TUs1dFRFa2UxYzAvRGZ0Qlpmd2FPUEtRZE9pL20ydDM2cEl0VVN4dXkyRC9B?=
- =?utf-8?B?Y0hlb1hvQzVLTU12VWNST2JMUXhVNVpLZElORlVVQVZkWXB4ZVlEYjhLTVlo?=
- =?utf-8?B?WUo1N3F6TXppdkNPMmhwSzh6clFxZHBPV3E4dHhDenAzZFpFR3p5N2JJeDlw?=
- =?utf-8?B?L20ycmlTd0VNWTdmTkZiSnBXYURBdTdXNTk4QlpIUk4zSTFSU09wYXhRdXVz?=
- =?utf-8?B?TWlmbGNjNHJqaHlXbVZzYUVWS081S3NKTjQraGpldWN3S1YxN3IxM2VhUUk4?=
- =?utf-8?B?eDlMaDBUM0lNeXJ2VWRKWHhmbVJEdGg3cXpNb0g2VGk2eVZRUFB0ZTZRZnVD?=
- =?utf-8?B?UVhnQjQyVStjd1IrSVVHVnBYRUFRRVlHK1hXOC8yN0hzb3Q2eGJsaFF0d09R?=
- =?utf-8?B?RVdqYkowUG41TUJXc0NDK0R3Z0RhODdVZkd6TDlEOHd0ZUY4bnliVDliMEdy?=
- =?utf-8?B?MURWNlEzUHhpRWhVL3ptVEtvY3JVb1NNVkNXYi9hRWxub1hRZW9ISkhPZVBX?=
- =?utf-8?B?QVRINTVsT3FqQ1pQeEQzZmRlUW1qOWxOZ2t2WDVUU1NhTk1qZnB6OTRtZHI5?=
- =?utf-8?B?WVNvbm5ONkZOOTdOaHFNRDJFSTRiQVFFZVN6dlpqYzVGdTN5TXBGZGFrRk5W?=
- =?utf-8?B?SmlDYU1oZ2sxQ0U1YVE2K25jTmNhNXRZRm5UcHEvcE9pS2Jpb0JHT3c1VXZT?=
- =?utf-8?B?YytxWUpnUUVWWk5vZzhsSVNFbkhRWnFpZU9YQkk4ejNLaXQvYm44WmNuVmVr?=
- =?utf-8?B?eWtkU05maUd3RVFSRjIrcG83Zjc2eThzK0FkeHNlTTY1WUJrekJoVElaSCtP?=
- =?utf-8?B?ay9hNjZ5bnBLMFpvUHBCRDRxaTRmYkVhM04waHRjL0F4MDR4OER3S3cwa1du?=
- =?utf-8?B?REtsWmlFY1VsN1pzankvYnEzYmx0V095V1Z2bG1Ga3dITll5K1JsTjhLNll3?=
- =?utf-8?B?cVZxUGwzSHpZUHcrczBKWGlJSmlIb1RGNmxwMHRjdzl1SE9DSDlNY1FoZFdn?=
- =?utf-8?B?dVU1am04YWd4SmhkSTZUcVJrNUhTRWtFRnBpWTVXcnlDY21JK0hBWEFxb1pl?=
- =?utf-8?B?RElKVE1SbVI1VTNCcVg1bWVWYUJnPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <09FBF69B39021D45BB53BC03782546D1@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21634C9A;
+	Sat, 16 Mar 2024 18:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710615057; cv=none; b=nkHmJ7Z6oQU9ab8/nj22ondcqGe6/Jeq+NaxY+RqqNBZqXmXhVtQfX9P864BWNC1Q7QxWGSGoM4BewhGo8y9Z1Z9HcAUMTFZYNmoIM9gSXG52kpjhtcm6e1YMlm93D4DzWn89NsGL2cCGqnl0FGkfSJzBHAq40YWZUr8KEJG1kQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710615057; c=relaxed/simple;
+	bh=83py2/xNNq7D0IX8F4E2R1O+OXAt5TZio6y2c1uomO4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EFn4rYA5ZRUGA88WrvVmSKIzDO1SC/vYt/R5Aw8T+mJ6/oQisT4BGe7RoOhgckC2k1Dt57v8FrkRGMWXuvbLx30ewbq3KKI/yfrl+rjyBRHRL16nUtRBQ+M3PNGux3M25qIZjJfiDfIKI2XJ0grPMm0k9DQKFY7a6RRpRujRgQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meNYMILc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5D74C433C7;
+	Sat, 16 Mar 2024 18:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710615057;
+	bh=83py2/xNNq7D0IX8F4E2R1O+OXAt5TZio6y2c1uomO4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=meNYMILcnk6xRBMP6D0YUIDv3KgBx/W/nrdkgfnl1iRHfh4TCouSdruyAXQYSz5dP
+	 My7sn0lOIvf1WE5cZhkhnVgd3MZwPCUZkl7Y6s7udosrLaDCqiVULc++m2oJQ+ddJy
+	 +W6OVoSXHoeAb5GjKWCQxLUkbfwtspKjB0+RW043vtGBItBIc8kszQbUfpwEulxwql
+	 SKfhqbEN3v6fSwtcIIVPT1kaIyKctLgOYxQpoGCGAOx0WPrZYSzcaUqvkEnTWHW2gI
+	 3OdfFdaUyxdIEr1rN5nOczJa8OycDpN93BKW+s1V+c0Sap5PPi6CUfkAByHYBb3oIn
+	 08P0+kf25sQUg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AC466D95053;
+	Sat, 16 Mar 2024 18:50:57 +0000 (UTC)
+Subject: Re: [GIT PULL] Please pull NFS client updates for Linux 6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <4623cb545316bfdb45b8d294861ad7eb508ec1b8.camel@hammerspace.com>
+References: <4623cb545316bfdb45b8d294861ad7eb508ec1b8.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <4623cb545316bfdb45b8d294861ad7eb508ec1b8.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.9-1
+X-PR-Tracked-Commit-Id: 719fcafe07c12646691bd62d7f8d94d657fa0766
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c1f10ac840caced7a9f717d4170dcc14b3fac076
+Message-Id: <171061505769.24411.4773695359951231947.pr-tracker-bot@kernel.org>
+Date: Sat, 16 Mar 2024 18:50:57 +0000
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e163ff8-a1e2-499a-6300-08dc45e55851
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2024 18:17:31.0693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w35pANKL5PHRCCjeCi86jOtckPJKexJYdQZEjVwPTxheJcoiQICXkWZ4zQK/OJXinsdZ+V5AimYjgZBiuszrSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB3628
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgZDIwNmE3NmQ3
-ZDI3MjZmM2IwOTYwMzdmMjA3OWNlMGJkM2JhMzI5YjoNCg0KICBMaW51eCA2LjgtcmM2ICgyMDI0
-LTAyLTI1IDE1OjQ2OjA2IC0wODAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
-bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTYuOS0xDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
-cyB1cCB0byA3MTlmY2FmZTA3YzEyNjQ2NjkxYmQ2MmQ3ZjhkOTRkNjU3ZmEwNzY2Og0KDQogIG5m
-czogZml4IHBhbmljIHdoZW4gbmZzNF9mZl9sYXlvdXRfcHJlcGFyZV9kcygpIGZhaWxzICgyMDI0
-LTAzLTE2IDEyOjQxOjQ1IC0wNDAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpORlMgY2xpZW50IHVwZGF0ZXMgZm9y
-IExpbnV4IDYuOQ0KDQpIaWdobGlnaHRzIGluY2x1ZGU6DQoNCkJ1Z2ZpeGVzOg0KIC0gRml4IGZv
-ciBhbiBPb3BzIGluIHRoZSBORlN2NC4yIGxpc3R4YXR0ciBoYW5kbGVyDQogLSBDb3JyZWN0IGFu
-IGluY29ycmVjdCBidWZmZXIgc2l6ZSBpbiBsaXN0eGF0dHINCiAtIEZpeCBmb3IgYW4gT29wcyBp
-biB0aGUgcE5GUyBmbGV4ZmlsZXMgbGF5b3V0DQogLSBGaXggYSByZWZjb3VudCBsZWFrIGluIE5G
-UyBPX0RJUkVDVCB3cml0ZXMNCiAtIEZpeCBtaXNzaW5nIGxvY2tpbmcgaW4gTkZTIE9fRElSRUNU
-DQogLSBBdm9pZCBhbiBpbmZpbml0ZSBsb29wIGluIHBuZnNfdXBkYXRlX2xheW91dA0KIC0gRml4
-IGFuIG92ZXJmbG93IGluIHRoZSBSUEMgd2FpdHF1ZXVlIHF1ZXVlIGxlbmd0aCBjb3VudGVyDQog
-LSBFbnN1cmUgdGhhdCBwTkZTIEkvTyBpcyBhbHNvIHByb3RlY3RlZCBieSBUTFMgd2hlbiB4cHJ0
-c2VjDQogICBpcyBzcGVjaWZpZWQgYnkgdGhlIG1vdW50IG9wdGlvbnMNCiAtIEZpeCBhIGxlYWtl
-ZCBmb2xpbyBsb2NrIGluIHRoZSBuZXRmcyByZWFkIGNvZGUNCiAtIEZpeCBhIHBvdGVudGlhbCBk
-ZWFkbG9jayBpbiBmc2NhY2hlDQogLSBBbGxvdyBzZXR0aW5nIHRoZSBmc2NhY2hlIHVuaXF1aWZp
-ZXIgaW4gTkZTdjQNCiAtIEZpeCBhbiBvZmYgYnkgb25lIGluIHJvb3RfbmZzX2NhdCgpDQogLSBG
-aXggYW5vdGhlciBvZmYgYnkgb25lIGluIHJwY19zb2NrYWRkcjJ1YWRkcigpDQogLSBuZnM0X2Rv
-X29wZW4oKSBjYW4gaW5jb3JyZWN0bHkgdHJpZ2dlciBzdGF0ZSByZWNvdmVyeS4NCiAtIFZhcmlv
-dXMgZml4ZXMgZm9yIGNvbm5lY3Rpb24gc2h1dGRvd24NCg0KRmVhdHVyZXMgYW5kIGNsZWFudXBz
-Og0KIC0gRW5zdXJlIHRoYXQgY29udGFpbmVycyBvbmx5IHNlZSB0aGVpciBvd24gUlBDIGFuZCBO
-RlMgc3RhdHMNCiAtIEVuYWJsZSBuY29ubmVjdCBmb3IgUkRNQQ0KIC0gUmVtb3ZlIGRlYWQgY29k
-ZSBmcm9tIG5mc193cml0ZXBhZ2VfbG9ja2VkKCkNCiAtIFZhcmlvdXMgdHJhY2Vwb2ludCBhZGRp
-dGlvbnMgdG8gdHJhY2sgRVhDSEFOR0VfSUQsIEdFVERFVklDRUlORk8sIGFuZA0KICAgbW91bnQg
-b3B0aW9ucy4NCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KQmVuamFtaW4gQ29kZGluZ3RvbiAoMSk6DQogICAgICBORlM6
-IFJlYWQgdW5sb2NrIGZvbGlvIG9uIG5mc19wYWdlX2NyZWF0ZV9mcm9tX2ZvbGlvKCkgZXJyb3IN
-Cg0KQ2hlbiBIYW54aWFvICgzKToNCiAgICAgIE5GUzogRGlzcGxheSB0aGUgImZzYz0iIG1vdW50
-IG9wdGlvbiBpZiBpdCBpcyBzZXQNCiAgICAgIG5mczogZml4IHJlZ3Jlc3Npb24gaW4gaGFuZGxp
-bmcgb2YgZnNjPSBvcHRpb24gaW4gTkZTdjQNCiAgICAgIE5GUzogdHJhY2UgdGhlIHVuaXF1aWZp
-ZXIgb2YgZnNjYWNoZQ0KDQpDaHJpc3RvcGhlIEpBSUxMRVQgKDIpOg0KICAgICAgbmV0OiBzdW5y
-cGM6IEZpeCBhbiBvZmYgYnkgb25lIGluIHJwY19zb2NrYWRkcjJ1YWRkcigpDQogICAgICBORlM6
-IEZpeCBhbiBvZmYgYnkgb25lIGluIHJvb3RfbmZzX2NhdCgpDQoNCkRhaSBOZ28gKDEpOg0KICAg
-ICAgU1VOUlBDOiBpbmNyZWFzZSBzaXplIG9mIHJwY193YWl0X3F1ZXVlLnFsZW4gZnJvbSB1bnNp
-Z25lZCBzaG9ydCB0byB1bnNpZ25lZCBpbnQNCg0KRGF2ZSBXeXNvY2hhbnNraSAoMSk6DQogICAg
-ICBORlM6IEZpeCBuZnNfbmV0ZnNfaXNzdWVfcmVhZCgpIHhhcnJheSBsb2NraW5nIGZvciB3cml0
-ZWJhY2sgaW50ZXJydXB0DQoNCkplZmYgTGF5dG9uICgxKToNCiAgICAgIG5mczogcmVtb3ZlIHVu
-dXNlZCBORlNfQ0FMTCBtYWNybw0KDQpKb3JnZSBNb3JhICgyKToNCiAgICAgIE5GU3Y0LjI6IGZp
-eCBuZnM0X2xpc3R4YXR0ciBrZXJuZWwgQlVHIGF0IG1tL3VzZXJjb3B5LmM6MTAyDQogICAgICBO
-RlN2NC4yOiBmaXggbGlzdHhhdHRyIG1heGltdW0gWERSIGJ1ZmZlciBzaXplDQoNCkpvc2VmIEJh
-Y2lrICg2KToNCiAgICAgIHN1bnJwYzogYWRkIGEgc3RydWN0IHJwY19zdGF0cyBhcmcgdG8gcnBj
-X2NyZWF0ZV9hcmdzDQogICAgICBuZnM6IGV4cG9zZSAvcHJvYy9uZXQvc3VucnBjL25mcyBpbiBu
-ZXQgbmFtZXNwYWNlcw0KICAgICAgbmZzOiBtYWtlIHRoZSBycGNfc3RhdCBwZXIgbmV0IG5hbWVz
-cGFjZQ0KICAgICAgbmZzOiBwcm9wZXJseSBwcm90ZWN0IG5mc19kaXJlY3RfcmVxIGZpZWxkcw0K
-ICAgICAgbmZzOiBmaXggVUFGIGluIGRpcmVjdCB3cml0ZXMNCiAgICAgIG5mczogZml4IHBhbmlj
-IHdoZW4gbmZzNF9mZl9sYXlvdXRfcHJlcGFyZV9kcygpIGZhaWxzDQoNCk5laWxCcm93biAoMik6
-DQogICAgICBORlM6IHJlbW92ZSBzeW5jX21vZGUgdGVzdCBmcm9tIG5mc193cml0ZXBhZ2VfbG9j
-a2VkKCkNCiAgICAgIE5GUzogYXZvaWQgaW5maW5pdGUgbG9vcCBpbiBwbmZzX3VwZGF0ZV9sYXlv
-dXQuDQoNCk9sZ2EgS29ybmlldnNrYWlhICg0KToNCiAgICAgIFNVTlJQQzogYWRkIHhycHQgaWQg
-dG8gcnBjX3N0YXRzX2xhdGVuY3kgdHJhY2Vwb2ludA0KICAgICAgcG5mcy9maWxlbGF5b3V0OiBh
-ZGQgdHJhY2Vwb2ludCB0byBnZXRkZXZpY2VpbmZvDQogICAgICBORlN2NC4xOiBhZGQgdHJhY2Vw
-b2ludCB0byB0cnVua2VkIG5mczRfZXhjaGFuZ2VfaWQgY2FsbHMNCiAgICAgIE5GU3Y0LjEvcG5m
-czogZml4IE5GUyB3aXRoIFRMUyBpbiBwbmZzDQoNClRyb25kIE15a2xlYnVzdCAoNik6DQogICAg
-ICBTVU5SUEM6IERvbid0IHJldHJ5IHVzaW5nIHRoZSBzYW1lIHNvdXJjZSBwb3J0IGlmIGNvbm5l
-Y3Rpb24gZmFpbGVkDQogICAgICBTVU5SUEM6IERvbid0IHRyeSB0byBzZW5kIHdoZW4gdGhlIGNv
-bm5lY3Rpb24gaXMgc2h1dHRpbmcgZG93bg0KICAgICAgU1VOUlBDOiBBZGQgYSB0cmFuc3BvcnQg
-Y2FsbGJhY2sgdG8gaGFuZGxlIGRlcXVldWluZyBvZiBhbiBSUEMgcmVxdWVzdA0KICAgICAgTkZT
-djQ6IG5mczRfZG9fb3BlbigpIGlzIGluY29ycmVjdGx5IHRyaWdnZXJpbmcgc3RhdGUgcmVjb3Zl
-cnkNCiAgICAgIE5GUzogZW5hYmxlIG5jb25uZWN0IGZvciBSRE1BDQogICAgICBORlM6IHJlbW92
-ZSB1bnVzZWQgdmFyaWFibGUgbmZzX3JwY3N0YXQNCg0KIGZzL25mcy9jbGllbnQuYyAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDkgKysrLS0tDQogZnMvbmZzL2RlbGVnYXRpb24uYyAgICAgICAg
-ICAgICAgICAgICAgfCAgNCAtLS0NCiBmcy9uZnMvZGlyZWN0LmMgICAgICAgICAgICAgICAgICAg
-ICAgICB8IDE4ICsrKysrKysrKy0tDQogZnMvbmZzL2ZpbGVsYXlvdXQvZmlsZWxheW91dGRldi5j
-ICAgICAgfCAgMiArKw0KIGZzL25mcy9mbGV4ZmlsZWxheW91dC9mbGV4ZmlsZWxheW91dC5jIHwg
-IDIgKy0NCiBmcy9uZnMvZnNfY29udGV4dC5jICAgICAgICAgICAgICAgICAgICB8ICAxICsNCiBm
-cy9uZnMvZnNjYWNoZS5jICAgICAgICAgICAgICAgICAgICAgICB8ICA5ICsrLS0tLQ0KIGZzL25m
-cy9pbm9kZS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDggKystLS0NCiBmcy9uZnMvaW50
-ZXJuYWwuaCAgICAgICAgICAgICAgICAgICAgICB8ICAyIC0tDQogZnMvbmZzL25ldG5zLmggICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMiArKw0KIGZzL25mcy9uZnMzY2xpZW50LmMgICAgICAg
-ICAgICAgICAgICAgIHwgIDEgKw0KIGZzL25mcy9uZnM0Mi5oICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgIDcgKystLQ0KIGZzL25mcy9uZnM0X2ZzLmggICAgICAgICAgICAgICAgICAgICAgIHwg
-IDEgLQ0KIGZzL25mcy9uZnM0Y2xpZW50LmMgICAgICAgICAgICAgICAgICAgIHwgIDIgKysNCiBm
-cy9uZnMvbmZzNHByb2MuYyAgICAgICAgICAgICAgICAgICAgICB8IDI5ICsrKysrKysrKy0tLS0t
-LS0tDQogZnMvbmZzL25mczRzdGF0ZS5jICAgICAgICAgICAgICAgICAgICAgfCAxMiArKysrLS0t
-DQogZnMvbmZzL25mczRzdXBlci5jICAgICAgICAgICAgICAgICAgICAgfCAyNCArKysrKysrKysr
-KysrKw0KIGZzL25mcy9uZnM0dHJhY2UuYyAgICAgICAgICAgICAgICAgICAgIHwgIDIgKysNCiBm
-cy9uZnMvbmZzNHRyYWNlLmggICAgICAgICAgICAgICAgICAgICB8IDU4ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysNCiBmcy9uZnMvbmZzcm9vdC5jICAgICAgICAgICAgICAgICAg
-ICAgICB8ICA0ICstLQ0KIGZzL25mcy9wbmZzLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-IDggKysrKysNCiBmcy9uZnMvcG5mc19uZnMuYyAgICAgICAgICAgICAgICAgICAgICB8IDQ0ICsr
-KysrKysrKysrKysrKysrKysrKysrKystDQogZnMvbmZzL3JlYWQuYyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgMiArKw0KIGZzL25mcy9zdXBlci5jICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgMTAgKysrKystDQogZnMvbmZzL3dyaXRlLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
-NiArLS0tDQogaW5jbHVkZS9saW51eC9uZnNfZnMuaCAgICAgICAgICAgICAgICAgfCAgMSArDQog
-aW5jbHVkZS9saW51eC9uZnNfeGRyLmggICAgICAgICAgICAgICAgfCAgNyAtLS0tDQogaW5jbHVk
-ZS9saW51eC9zdW5ycGMvY2xudC5oICAgICAgICAgICAgfCAgMSArDQogaW5jbHVkZS9saW51eC9z
-dW5ycGMvc2NoZWQuaCAgICAgICAgICAgfCAgMiArLQ0KIGluY2x1ZGUvbGludXgvc3VucnBjL3hw
-cnQuaCAgICAgICAgICAgIHwgIDEgKw0KIGluY2x1ZGUvdHJhY2UvZXZlbnRzL3N1bnJwYy5oICAg
-ICAgICAgIHwgIDggKysrLS0NCiBpbmNsdWRlL3RyYWNlL21pc2MvbmZzLmggICAgICAgICAgICAg
-ICB8ICAxICsNCiBuZXQvc3VucnBjL2FkZHIuYyAgICAgICAgICAgICAgICAgICAgICB8ICA0ICst
-LQ0KIG5ldC9zdW5ycGMvY2xudC5jICAgICAgICAgICAgICAgICAgICAgIHwgIDUgKystDQogbmV0
-L3N1bnJwYy94cHJ0LmMgICAgICAgICAgICAgICAgICAgICAgfCAgOSArKysrKysNCiBuZXQvc3Vu
-cnBjL3hwcnRzb2NrLmMgICAgICAgICAgICAgICAgICB8IDIzICsrKysrKysrKysrKystDQogMzYg
-ZmlsZXMgY2hhbmdlZCwgMjU4IGluc2VydGlvbnMoKyksIDcxIGRlbGV0aW9ucygtKQ0KDQotLSAN
-ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
-ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+The pull request you sent on Sat, 16 Mar 2024 18:17:31 +0000:
+
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.9-1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c1f10ac840caced7a9f717d4170dcc14b3fac076
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
