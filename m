@@ -1,395 +1,208 @@
-Return-Path: <linux-nfs+bounces-2350-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2351-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9893C87D809
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 03:53:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EE6187DA08
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 12:55:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 109F61F215F4
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 02:53:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 102D81F21A91
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Mar 2024 11:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C3954C61;
-	Sat, 16 Mar 2024 02:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OS38TBQX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B36E18AEA;
+	Sat, 16 Mar 2024 11:55:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB0D28F5
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Mar 2024 02:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC4B1865C
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Mar 2024 11:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710557576; cv=none; b=gy28tOu4+74VSIKeKXuOhNE0Evj3DIYS7FwlAMc9hZNsL/qoLeFrBc65THwqaNh2GyIWenqf3PmZH6ZhtBMXfzI/ZvNsTKih8eyfvqZ+tTvCKYI8SbmLneLuDedlmcX8EwwYynM9+SyF4oXuayNVJmPVGD75OTr/VkHdNvSGNgw=
+	t=1710590140; cv=none; b=M0XyIFaIjS4qdnGrCLjFwItLehkzxPpvqcJdBTdyVmmTmOvgZiCRfkdqZM/PeSyG/GJmwSeACD70IvpZNmNz4fvVc18zdMF1LcS+wLOh3JZJGCI+mwXQWmDbOijIuuKYWpUkBYGQKrbNy7XdVNViTyQKvoNMxjafiKW20zMziQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710557576; c=relaxed/simple;
-	bh=ONoYL4XYOrO/6V38FWRzOpd8quw8P9OYCw818URL5SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g03Q3KkahoP8M51VG/bK5wOdz1Bfef8AthiUcL/97jQQzBsi9e8rPqLOaBja82KLzrslM3NqlF50nwfY5rgUGCl5JOOBJGhQzM74p490AoRC1NDMYtvTfekP204qEBZbUY+xVomO+AVK8YbLC3k1/HIGmcbA8Ekbx1QTD72kZXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OS38TBQX; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso2061126a12.1
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Mar 2024 19:52:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710557573; x=1711162373; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
-        b=OS38TBQXdJvmCPcBqtVgseCBD92KPMKjZB5CNB1A04ssBRuxFtzhRPn1GciuiaZp/t
-         ZH5bJFCL/HpWMw666xaF9ceynO1+jhCFyauCWBZUGDOD1jkHbl+xoO/jG6Zp360GwjSj
-         i66QeBxSRG87tkQkjPc2WA1M6sUtCwvS7DgrAnPORxwYyGeQf+wuJHESEF51ACE4d88K
-         v4nAXQtE+CrgRNknVt8a/+cuKu8aypzYeDig59JPHUtRYsAH3lqkfrJopeugL+PkOFJP
-         r/+/nAs2w8rmwShkaEIQMuFTq7jUIHueDrkctHW9aB3EK7WEeQJ4EnyrT3UmzNQXv8kk
-         1a+A==
+	s=arc-20240116; t=1710590140; c=relaxed/simple;
+	bh=rqSu78Y3ywhM0qsLdaKjW2sW/Uz9jB/PjhOtEZuLhQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=gWVrGupUJdJUkud99+Au1l7HxCUz6dXQYLM7eWtq6vHK9t2mOxh57OkDum7wCE+3KYjmsAS76oFwcy4bqbsyeR7SWe2y4btj3z/WzOKXkNz04tX+4RYWry/HkEurdqF8JTL/XhxmxDV6ETL+dRS9BYEW4ky8pmCHFEtLHj8LGnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7cc05ce3c70so15300739f.0
+        for <linux-nfs@vger.kernel.org>; Sat, 16 Mar 2024 04:55:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710557573; x=1711162373;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
-        b=QW5tK9nf/Hn5Lk1VfhxrOEo9YEZhZO5D/RaxWCxe3GleKyEPWn2uPGVRYZI+i1rv5p
-         kCDzTbs5MTsHaenk9uvp1G1nJNcn6Z3XAiv3+NvE/2FgdL53P1/iL5f8YTGOTlp4vWT8
-         Zwd9iXHKBNeb0gIjbSr9Pk1wk0uGtBxyjk4gCrojW/YKW5D6i8LmVzz1wKyEcRAYgLWh
-         E4PB759ZzHyo+eLLEnkQB0i7159aAKwrBEXL5QC1H2fhhPfvucrOdbcrG+qzq3cTsiSZ
-         DtGvGbalVfW9nhu2OX5YQZE5SrYQn845gz+9IRGfp9thNgWqtaO5rPPLNHWUvgcesnK/
-         yRMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYl1/KJWfY/8h7cBhcX8EfKR6KiCE4y6dDI8j0/dCdhzEbZVOE0eqwT95wEwkFxCF2q3YmiRmJac8k2uVhgqziZC8BZF689BP/
-X-Gm-Message-State: AOJu0Yw4R2gI9vdsUmT+TTLBk60tEaloYz6qdJmXipblWc7C4679p/wp
-	4I20i0IOCtdBqKd9C6HTRVS4WMuWdyXWQq6ks2GKWenLKQyUpAUr14krtp98qKU=
-X-Google-Smtp-Source: AGHT+IF+mhHYlAObRzpfXYn3IGnPDczeVjZaH7QVUqvtIq9UdyOULCBCqzY79zAwu/GemLxZ182Fng==
-X-Received: by 2002:a17:903:2446:b0:1dd:9cb3:8f96 with SMTP id l6-20020a170903244600b001dd9cb38f96mr6055795pls.42.1710557572964;
-        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
-        by smtp.gmail.com with ESMTPSA id f5-20020a170902684500b001dddbb58d5esm4736209pln.109.2024.03.15.19.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rlKAC-002Wnj-2F;
-	Sat, 16 Mar 2024 13:52:48 +1100
-Date: Sat, 16 Mar 2024 13:52:48 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>, Simon Horman <horms@verge.net.au>,
-	Julian Anastasov <ja@ssi.bg>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Balbir Singh <bsingharora@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Alexander Popov <alex.popov@linux.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
-	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, linux-fsdevel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kexec@lists.infradead.org,
-	bridge@lists.linux.dev, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 11/11] sysctl: treewide: constify the ctl_table argument
- of handlers
-Message-ID: <ZfUJgML8tk6RWqOC@dread.disaster.area>
-References: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
- <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
+        d=1e100.net; s=20230601; t=1710590137; x=1711194937;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ooseJT0vdQWO/ouJv+060mxM3R75Wk1bCtUeeLJukYY=;
+        b=ali29AeuQsVEF137Q3lT84LJeQY+OeG6xbFnjWTGjAZSPllkgitxL11D8xFVPW3rjY
+         7Xy78q+kpA38Tr5ZmZAknCWFpp4TzlP5nHcN/6WjMoDruo0gKfXpN//op2ZUnUfaC4RR
+         SzxVh14O6OcwBwTkY61ITcPxrqpsOQJMymzTTNAUGQ8Qckq8FDpoaP+49VjZsu4Jk7k3
+         StSzif5IBm+9n0LscFj/jEPIR9prENGd75jt6xyIG9M+DyQvAzsj5mjO0XwbnmN6XbKT
+         /umsnTCaNugGtW0pFixqiRO8qZJdzXoeC3oVKhN5IqiXS5CKfPPc5BYnpWsRJC/dtT2c
+         TYRA==
+X-Gm-Message-State: AOJu0YxqwWzAerKWmbnE5PrFeGnAkaCAF5VrNVJEcidsOUiLIXWAa3KJ
+	93qgST12fzBmmgYw5YaOKTUf6Wz4dcmpXrbtQkJSH7LWj7heGNz52COwijhE4eb2wnabP5o7dKx
+	BDJv2Xz0CIijQgUFSgQrQ97ab0QJjz4Y2rZg=
+X-Google-Smtp-Source: AGHT+IEdJVerhSe2RPFtQAVNHoUpEPwJ6p16TOottQ6vrD/3w7a3EyZl/ncNWzUodfaHXMzGqeCCFFJkl6nINfOa9cA=
+X-Received: by 2002:a5d:9583:0:b0:7c8:dd80:9f87 with SMTP id
+ a3-20020a5d9583000000b007c8dd809f87mr6775593ioo.1.1710590136954; Sat, 16 Mar
+ 2024 04:55:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
+References: <CAAvCNcDtTNDRvUVjUy4BE7eBCgmkb6hfkq3P0jaGDC=OXg0=6g@mail.gmail.com>
+ <CAKAoaQmmEv+HRjmBMrSMGZn9RQr8C=2W4yeX4vNnohXFJPCV5A@mail.gmail.com>
+ <65a29ca8.6b0a0220.ad415.d6d8.GMR@mx.google.com> <CAKAoaQkZ+b7NfrVi=gu1vCJBvv10=k85bG_kZV9G3jE45OOquw@mail.gmail.com>
+ <0cd8fbfc707f86784dc7d88653b05cd355f89aad.camel@kernel.org>
+ <24ACA376-5239-4941-BE53-70BF5E5E4683@oracle.com> <CAKAoaQny6G=JcKpJTYeLmNBEMgNkkc--T0Uvs1YbEX+JUD-PoA@mail.gmail.com>
+ <CANH4o6NcMbcNKxARcqhthXWkKk6_r31iKGjnS-RhFBB_AJFaJg@mail.gmail.com> <470318C6-3252-445F-94F3-DDB7727F84C7@oracle.com>
+In-Reply-To: <470318C6-3252-445F-94F3-DDB7727F84C7@oracle.com>
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Sat, 16 Mar 2024 12:55:10 +0100
+Message-ID: <CAKAoaQ=6nGHD0uA+9EaQQPWBk8dvq0XVUPPgPAhbh=XPk+ecSg@mail.gmail.com>
+Subject: |ca_maxoperations| - tuneable ? / was: Re: RFE: Linux nfsd's
+ |ca_maxoperations| should be at *least* |64| ... / was: Re: kernel.org list
+ issues... / was: Fwd: Turn NFSD_MAX_* into tuneables ? / was: Re: Increasing
+ NFSD_MAX_OPS_PER_COMPOUND to 96
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 15, 2024 at 09:48:09PM +0100, Thomas Weißschuh wrote:
-> Adapt the proc_hander function signature to make it clear that handlers
-> are not supposed to modify their ctl_table argument.
-> 
-> This is a prerequisite to moving the static ctl_table structs into
-> .rodata.
-> By migrating all handlers at once a lengthy transition can be avoided.
-> 
-> The patch was mostly generated by coccinelle with the following script:
-> 
->     @@
->     identifier func, ctl, write, buffer, lenp, ppos;
->     @@
-> 
->     int func(
->     - struct ctl_table *ctl,
->     + const struct ctl_table *ctl,
->       int write, void *buffer, size_t *lenp, loff_t *ppos)
->     { ... }
+On Thu, Jan 18, 2024 at 3:52=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
+> > On Jan 18, 2024, at 4:44=E2=80=AFAM, Martin Wege <martin.l.wege@gmail.c=
+om> wrote:
+> > On Thu, Jan 18, 2024 at 2:57=E2=80=AFAM Roland Mainz <roland.mainz@nrub=
+sig.org> wrote:
+> >> On Sat, Jan 13, 2024 at 5:10=E2=80=AFPM Chuck Lever III <chuck.lever@o=
+racle.com> wrote:
+> >>>> On Jan 13, 2024, at 10:09=E2=80=AFAM, Jeff Layton <jlayton@kernel.or=
+g> wrote:
+> >>>> On Sat, 2024-01-13 at 15:47 +0100, Roland Mainz wrote:
+> >>>>> On Sat, Jan 13, 2024 at 1:19=E2=80=AFAM Dan Shelton <dan.f.shelton@=
+gmail.com> wrote:
+[snip]
+> >> That assumes that no process does random access into deep subdirs. In
+> >> that case the performance is absolutely terrible, unless you devote
+> >> lots of memory to a giant cache (which is not feasible due to cache
+> >> expiration limits, unless someone (please!) finally implements
+> >> directory delegations).
+>
+> Do you mean not feasible for your client? Lookup caches
+> have been part of operating systems for decades. Solaris,
+> FreeBSD, and Linux all have one. Does the Windows kernel
+> have one that mfs-nfs41-client can use?
 
-Which seems to have screwed up the formatting of the XFS code...
+The ms-nfs41-client has its own cache.
+Technically Windows has another, but that is in the kernel and
+difficult to connect to the NFS client daemon without performance
+issues.
 
-> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
-> index a191f6560f98..a3ca192eca79 100644
-> --- a/fs/xfs/xfs_sysctl.c
-> +++ b/fs/xfs/xfs_sysctl.c
-> @@ -10,12 +10,11 @@ static struct ctl_table_header *xfs_table_header;
->  
->  #ifdef CONFIG_PROC_FS
->  STATIC int
-> -xfs_stats_clear_proc_handler(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_stats_clear_proc_handler(const struct ctl_table *ctl,
-> +			     int			write,
-> +			     void			*buffer,
-> +			     size_t			*lenp,
-> +			     loff_t			*ppos)
+[snip]
+> Sending a full path in a single COMPOUND is one way to
+> handle path resolution, but it has so many limitations
+> that it's really not the mechanism of choice.
 
-... because this doesn't match any format I've ever seen in the
-kernel. The diff for this change shold be just:
+Which limitations ?
 
-@@ -10,7 +10,7 @@ static struct ctl_table_header *xfs_table_header;
- #ifdef CONFIG_PROC_FS
- STATIC int
- xfs_stats_clear_proc_handler(
--	struct ctl_table	*ctl,
-+	const struct ctl_table	*ctl,
- 	int			write,
- 	void			*buffer,
- 	size_t			*lenp,
+The reason why I am looking to stuff more info into a request:
+- VPN has very high latency, so splitting requests hurts performance *BADLY=
+*.
+I've been slapped about path/dir lookup performance now many times,
+and while there is more than one issue (Cygwin looks for "file" and
+"file.lnk"&co for each file + our readdir implementation needs lots of
+work) the biggest issue that we split requests up because they usually
+do not fit.
+- Windows API is async+multithreaded, which results in that requests
+do not always come in the logical/expected/useful order, which leads
+to cache issues.
+Seriously this issue is so bad that it is worth a research paper
+- Real-world paths on Windows are LONG with many subdirs, even worse
+when projects and organisations change, shift, reorganise, move,
+merge, split, get outsourced etc. over *DECADES*. Plus non-IT-users
+have zero awareness about "path limits", and sometimes dump whole
+sentences into directory names (e.g. "customer XYZ. can be ignored he
+terminated the business relationship on 26 May 2001. please do not
+delete dir" <----- xxx@@!!!! ).
+That issue haunts us in other ways too, e.g.  in the ms-nfs41-client
+project I had to extend the maximum supported path length multiple
+times to support this craziness, right now we support 4096 byte paths
+([1]), with the longest known path being 1772, and others reported
+even more.
+And this is not a specific issue to my current employer, I've seen
+this in customer installations when I was at SUN (including long
+debates about Solaris's 1024 byte limit) and RedHat too.
 
->  {
->  	int		ret, *valp = ctl->data;
->  
-> @@ -30,12 +29,11 @@ xfs_stats_clear_proc_handler(
->  }
->  
->  STATIC int
-> -xfs_panic_mask_proc_handler(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_panic_mask_proc_handler(const struct ctl_table *ctl,
-> +			    int			write,
-> +			    void			*buffer,
-> +			    size_t			*lenp,
-> +			    loff_t			*ppos)
->  {
->  	int		ret, *valp = ctl->data;
->  
-> @@ -51,12 +49,11 @@ xfs_panic_mask_proc_handler(
->  #endif /* CONFIG_PROC_FS */
->  
->  STATIC int
-> -xfs_deprecated_dointvec_minmax(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_deprecated_dointvec_minmax(const struct ctl_table *ctl,
-> +			       int			write,
-> +			       void			*buffer,
-> +			       size_t			*lenp,
-> +			       loff_t			*ppos)
->  {
->  	if (write) {
->  		printk_ratelimited(KERN_WARNING
+[1]=3DWindows opened the next can of pandora with removing the MAXPATH
+limit a while ago, e.g. see
+https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-li=
+mitation?tabs=3Dregistry
+- and even before that there was the "\\?\" prefix.
 
-And these need fixing as well.
+[snip]
+> > ca_maxoperations:
+> >     The maximum number of operations the replier will accept
+> >     in a COMPOUND or CB_COMPOUND. For the backchannel, the
+> >     server MUST NOT change the value the client offers. For
+> >     the fore channel, the server MAY change the requested
+> >     value. After the session is created, if a requester sends
+> >     a COMPOUND or CB_COMPOUND with more operations than
+> >     ca_maxoperations, the replier MUST return
+> >     NFS4ERR_TOO_MANY_OPS.
+>
+> The BCP 14 "MAY" here means that servers can return the same
+> value, but clients have to expect that a server might return
+> something different.
+>
+> Further, the spec does not permit an NFS server to respond to
+> a COMPOUND with more than the client's ca_maxoperations in
+> any way other than to return NFS4ERR_TOO_MANY_OPS. So it
+> cannot return a larger ca_maxoperations than the client sent.
+>
+> NFSD returns the minimum of the client's max-ops and its own
+> NFSD_MAX_OPS_PER_COMPOUND value, which is 50. Thus NFSD will
+> return the same value as the client, unless the client asks
+> for more than 50.
 
-A further quick glance at the patch reveals that there are other
-similar screwed up conversions as well.
+I finally (yay - Saturday) had a look at this issue and
+collected&&processed statistics.
+With a Linux 6.6.20-rt25 kernel nfsd I get this in the ms-nfs41-client:
+---- snip ----
+1010: requested: req.csa_fore_chan_attrs.(ca_maxoperations=3D16384,
+ca_maxrequests=3D128)
+1010: response:  session->fore_chan_attrs->(ca_maxoperations=3D50,
+ca_maxrequests=3D66)
+---- snip ----
 
-> diff --git a/kernel/delayacct.c b/kernel/delayacct.c
-> index 6f0c358e73d8..513791ef573d 100644
-> --- a/kernel/delayacct.c
-> +++ b/kernel/delayacct.c
-> @@ -44,8 +44,9 @@ void delayacct_init(void)
->  }
->  
->  #ifdef CONFIG_PROC_SYSCTL
-> -static int sysctl_delayacct(struct ctl_table *table, int write, void *buffer,
-> -		     size_t *lenp, loff_t *ppos)
-> +static int sysctl_delayacct(const struct ctl_table *table, int write,
-> +			    void *buffer,
-> +			    size_t *lenp, loff_t *ppos)
->  {
->  	int state = delayacct_on;
->  	struct ctl_table t;
+So - if I understand it correctly - the negotiation works correctly,
+and we get |ca_maxoperations=3D50| and |ca_maxrequests=3D66|.
 
-Like this.
+But... this value is too small, at least for what we do on Windows.
+I've collected samples (84 machines, a wide range of users, MS Office,
+ERP, CAD, etc.) and 71% of all server lookup calls had to be split
+(Linux 6.6 LTS kernel nfsd) for |ca_maxoperations=3D=3D50|, 39% for
+|ca_maxoperations=3D=3D64| and <1% for |ca_maxoperations=3D=3D80|.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 724e6d7e128f..e2955e0d9f44 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -450,7 +450,8 @@ static void update_perf_cpu_limits(void)
->  
->  static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc);
->  
-> -int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
-> +int perf_event_max_sample_rate_handler(const struct ctl_table *table,
-> +				       int write,
->  				       void *buffer, size_t *lenp, loff_t *ppos)
->  {
->  	int ret;
+Question is... should the values for |ca_*| be a tuneable, or just
+increase the limit to |80| ([1]) ?
 
-And this.
+[1]=3DI can provide the patch, with sufficient curses about Windows
+*USERS* included...
 
-> @@ -474,8 +475,10 @@ int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
->  
->  int sysctl_perf_cpu_time_max_percent __read_mostly = DEFAULT_CPU_TIME_MAX_PERCENT;
->  
-> -int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
-> -		void *buffer, size_t *lenp, loff_t *ppos)
-> +int perf_cpu_time_max_percent_handler(const struct ctl_table *table,
-> +				      int write,
-> +				      void *buffer, size_t *lenp,
-> +				      loff_t *ppos)
->  {
->  	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
->  
+----
 
-And this.
-
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index b2fc2727d654..003f0f5cb111 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -239,9 +239,10 @@ static long hung_timeout_jiffies(unsigned long last_checked,
->  /*
->   * Process updating of timeout sysctl
->   */
-> -static int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
-> -				  void *buffer,
-> -				  size_t *lenp, loff_t *ppos)
-> +static int proc_dohung_task_timeout_secs(const struct ctl_table *table,
-> +					 int write,
-> +					 void *buffer,
-> +					 size_t *lenp, loff_t *ppos)
->  {
->  	int ret;
->  
-
-And this.
-
-> diff --git a/kernel/latencytop.c b/kernel/latencytop.c
-> index 781249098cb6..0a5c22b19821 100644
-> --- a/kernel/latencytop.c
-> +++ b/kernel/latencytop.c
-> @@ -65,8 +65,9 @@ static struct latency_record latency_record[MAXLR];
->  int latencytop_enabled;
->  
->  #ifdef CONFIG_SYSCTL
-> -static int sysctl_latencytop(struct ctl_table *table, int write, void *buffer,
-> -		size_t *lenp, loff_t *ppos)
-> +static int sysctl_latencytop(const struct ctl_table *table, int write,
-> +			     void *buffer,
-> +			     size_t *lenp, loff_t *ppos)
->  {
->  	int err;
->  
-
-And this.
-
-I could go on, but there are so many examples of this in the patch
-that I think that it needs to be toosed away and regenerated in a
-way that doesn't trash the existing function parameter formatting.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Bye,
+Roland
+--=20
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /=3D=3D\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
 
