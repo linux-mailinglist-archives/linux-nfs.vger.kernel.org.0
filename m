@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-2358-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2359-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A6B87DD25
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Mar 2024 13:23:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAF0F87DD59
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Mar 2024 15:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55B071C20977
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Mar 2024 12:23:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4162F1F2130F
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Mar 2024 14:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18BBB1AACA;
-	Sun, 17 Mar 2024 12:23:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C12A1BF27;
+	Sun, 17 Mar 2024 14:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKGCsfNk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiwVdLwS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2245171A4;
-	Sun, 17 Mar 2024 12:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D27EACE;
+	Sun, 17 Mar 2024 14:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710678214; cv=none; b=oiJjuVCqK6vLgbpvGU7f1tgCWYV5BYNyX6AB2g/qNWifdRv5CjlK9O+hXwEBVpulG2XgO/BODAnM3TvB4imeCrYn7a5BYvTqm42x0Zg0L1MSNTQtxfU8eyVnFxi9pNQVNBquIB0V4xe1Z3/jLh55bs9oVqXnLizm5MoMda5BqrI=
+	t=1710684596; cv=none; b=WaDzPXlLPhB9A5ceAvDwq2OoUZSnJfGShKc7NV3EDJFMY2scyZt5SPn4lWRxXsyHgfCh7NhENc1Vw4iBTdkCpkggnBXyC5csAHD9AOz3cBWUUXBmmySCwfFPhQ605lbdDgs4uUCMUooMcUtecGz47Mpgo4qPWYTG5slMrMHRvh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710678214; c=relaxed/simple;
-	bh=kQewqu6iG9J2y5Wp1ysLtNG+hWKnjSG/TzVqzEwgwSo=;
+	s=arc-20240116; t=1710684596; c=relaxed/simple;
+	bh=C4/yE5hSEwaXi8fufqNM6fnBjCsKGZ2m27Hv8EB5fFc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qTftjCWRKeyrXPEgZ46MvPD7cyamlXFqqymh172Odgh6fhjMKLY+PMdulTz1EF1KBCZMgjnA9ZflbpurdV7BL92RChBvuQ93Ela+HSVCxA9hQN/0h0rP0lZDmCzL7qn2gyYMpIXQARSu5yplTCXBGvnpdSJ6tmTCMqqoIknOJf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKGCsfNk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30684C433F1;
-	Sun, 17 Mar 2024 12:23:30 +0000 (UTC)
+	 Content-Type:MIME-Version; b=KXdsvjQyMNKTAnEERV/66x7N11hfuWtnbgv2XeiHquL9GBNLB/lm166InuvScNdvD4YXNHkpj6lSg/0zPk8e1qxFonE4BwN8SzilxG2JT3Ci+lf5hRbD4W3GxMpHDlGszwM9jf80vchmdCHKlD67iUC9fK8h/JJKvhi5T8sFZQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiwVdLwS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEFBC433C7;
+	Sun, 17 Mar 2024 14:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710678213;
-	bh=kQewqu6iG9J2y5Wp1ysLtNG+hWKnjSG/TzVqzEwgwSo=;
+	s=k20201202; t=1710684596;
+	bh=C4/yE5hSEwaXi8fufqNM6fnBjCsKGZ2m27Hv8EB5fFc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WKGCsfNkH/MX3rNLNC54auff9seq0lFjNgtNP0XH2pBo7hW6TUnmCNEWSYw5z+XEt
-	 G4aj53JMd9C11Vw2WPHxvMDdz8KQo/N+KyuwA4Az13VSj47TIJMJ/TUnbipGMzUcxQ
-	 hC8UDEq+FdsJdoXeSQoWAKkVWtRHrcnPs0bB5Ze/XFqK82aMqGI9SEnpvQ5H/hBoyw
-	 knDWpdaTmMxUf+RXa4iHhpBsmsgyR5OR/smMffB6VN0v1NTaddlhcJUQ6OGzCZQw3a
-	 pgsqjDRWDUz3EX+FWOyhk4IBILjECWSHdIWZalZcAXHAFYN65ss6tHeVM08Fn5AeZq
-	 ba/WAfQTspvCg==
-Message-ID: <9c8bc740300964ffbd15a9b2ee39a0af26c6c7e5.camel@kernel.org>
-Subject: Re: [PATCH RFC 06/24] vfs: break parent dir delegations in
- open(..., O_CREAT) codepath
+	b=RiwVdLwSXxVjjgX3YtAoeHLPB1vYSwnHb7nsb6LMDDox0u+lB/8P/Ls0foQymWP+K
+	 BTICR589TZr7zYfQz52hqIsa4jsA6cTw0EKPprIvREkP2EibCSKj3lFU5xqNpCEx1n
+	 RHx7uewEbJHAUZpLWG6kjgon/hnt5dvfcJLXAFbzxk6FDoPQB80FUbJhBPHBZhqCYP
+	 1BlkNzomn7o3JKxAx37V+of+V21rsqI1Ubkr7Z0LC9lgZerxwmOfuiXt0NcGnJZEJ5
+	 uH/KomwlaZ8b4M3S2DI/qDMebTBpkW4NQuvkWFdN7DS0q5TL4YL3FmWTnLzP53XPE5
+	 agy42+AswuUlQ==
+Message-ID: <a635d0fc7d43bc10ed486efcae627f278e0df328.camel@kernel.org>
+Subject: Re: [PATCH RFC 03/24] vfs: add try_break_deleg calls for parents to
+ vfs_{link,rename,unlink}
 From: Jeff Layton <jlayton@kernel.org>
 To: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
@@ -65,11 +65,11 @@ Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
  linux-cifs@vger.kernel.org,  samba-technical@lists.samba.org,
  netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
  linux-unionfs@vger.kernel.org, netdev@vger.kernel.org
-Date: Sun, 17 Mar 2024 08:23:28 -0400
-In-Reply-To: <20240317001942.GJ538574@ZenIV>
+Date: Sun, 17 Mar 2024 10:09:51 -0400
+In-Reply-To: <20240316235717.GI538574@ZenIV>
 References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
-	 <20240315-dir-deleg-v1-6-a1d6209a3654@kernel.org>
-	 <20240317001942.GJ538574@ZenIV>
+	 <20240315-dir-deleg-v1-3-a1d6209a3654@kernel.org>
+	 <20240316235717.GI538574@ZenIV>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -89,61 +89,47 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2024-03-17 at 00:19 +0000, Al Viro wrote:
-> On Fri, Mar 15, 2024 at 12:52:57PM -0400, Jeff Layton wrote:
-> > In order to add directory delegation support, we need to break
-> > delegations on the parent whenever there is going to be a change in the
-> > directory.
-> >=20
-> > Add a delegated_inode parameter to lookup_open and have it break the
-> > delegation. Then, open_last_lookups can wait for the delegation break
-> > and retry the call to lookup_open once it's done.
+On Sat, 2024-03-16 at 23:57 +0000, Al Viro wrote:
+> On Fri, Mar 15, 2024 at 12:52:54PM -0400, Jeff Layton wrote:
+> > @@ -4603,9 +4606,12 @@ int vfs_link(struct dentry *old_dentry, struct m=
+nt_idmap *idmap,
+> >  	else if (max_links && inode->i_nlink >=3D max_links)
+> >  		error =3D -EMLINK;
+> >  	else {
+> > -		error =3D try_break_deleg(inode, delegated_inode);
+> > -		if (!error)
+> > -			error =3D dir->i_op->link(old_dentry, dir, new_dentry);
+> > +		error =3D try_break_deleg(dir, delegated_inode);
+> > +		if (!error) {
+> > +			error =3D try_break_deleg(inode, delegated_inode);
+> > +			if (!error)
+> > +				error =3D dir->i_op->link(old_dentry, dir, new_dentry);
+> > +		}
 >=20
-> > @@ -3490,6 +3490,11 @@ static struct dentry *lookup_open(struct nameida=
-ta *nd, struct file *file,
+> A minor nit: that might be easier to follow as
+> 		error =3D try_break_deleg(dir, delegated_inode);
+> 		if (!error)
+> 			error =3D try_break_deleg(inode, delegated_inode);
+> 		if (!error)
+> 			error =3D dir->i_op->link(old_dentry, dir, new_dentry);
 >=20
-> Wait a sec - are you going to do anything to the atomic_open side of thin=
-gs?
->=20
->=20
+> and let the compiler deal with optimizing it - any C compiler is going to=
+ be
+> able to figure out that one out.  vfs_link() is a mix of those styles any=
+way -
+> we have
+>         if (!error && (inode->i_state & I_LINKABLE)) {
+>                 spin_lock(&inode->i_lock);
+>                 inode->i_state &=3D ~I_LINKABLE;
+>                 spin_unlock(&inode->i_lock);
+>         }
+> immediately afterwards; might as well make that consistent, especially si=
+nce
+> you are getting more shallow nesting that way.
 
-Hmm good point. I was thinking that all of the filesystems that had
-atomic_open didn't support leases. I'm wrong though -- there are some
-that currently do:
+Sounds good. Fixed in my tree.
 
-9p: It's a network filesystem, and I don't think it has any sort of
-asynchronous notification or delegation-like object, does it? It might
-be best though to just make it call simple_nosetlease.
-
-fuse: fuse allows leases today. I doubt we can get away with turning
-that off now. There probably ought to be a way for the userland driver
-to opt-in or out of allowing built-in lease support maybe a flag or
-something?
-
-ntfs3: IDGI. Why does ntfs3 (which is a local filesystem, unless I'm
-mistaken) have an atomic_open? Shouldn't lookup+open be fine, like with
-most local filesystems?
-
-vboxsf: Probably the same situation as 9p. Can we just disable leases?
-
-I'll spin up a patchset soon to add proper setlease handlers to all of
-the above. Then we can then guard against allowing generic_setlease on
-filesystems by default on filesystems with an atomic_open handler.
-
-Another (maybe better) idea might be to require filesystems to specify a
-setlease handler if they want them enabled. We could just set the
-existing local filesystems to generic_setlease. That would make lease
-support a strictly opt-in thing, which is probably the best idea for
-avoiding surprises with them.
-
-> =20
-> >  	/* Negative dentry, just create the file */
-> >  	if (!dentry->d_inode && (open_flag & O_CREAT)) {
-> > +		/* but break the directory lease first! */
-> > +		error =3D try_break_deleg(dir_inode, delegated_inode);
-> > +		if (error)
-> > +			goto out_dput;
-
+Thanks for the review so far!
 --=20
 Jeff Layton <jlayton@kernel.org>
 
