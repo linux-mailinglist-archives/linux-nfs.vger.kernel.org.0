@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-2366-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2367-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E56087E73A
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Mar 2024 11:24:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E17AB87E818
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Mar 2024 12:08:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 598152831A2
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Mar 2024 10:24:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98539283C41
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Mar 2024 11:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B04CD2E859;
-	Mon, 18 Mar 2024 10:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C2F236AF8;
+	Mon, 18 Mar 2024 11:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK5ovN+F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxdhKG/C"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5C42E83C;
-	Mon, 18 Mar 2024 10:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3124364D6;
+	Mon, 18 Mar 2024 11:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710757288; cv=none; b=Z19cZ0DKJW8AOrYcYw+k3erGHW822g4/yrQdZcZVKnabg+A26ytgk8zPXGc5zyqIt0sD/bK+yuLu8hEsTdj1hL8B9Lv2VeBfeDa0aLS2ja1iaCJ9+V4/up8CrdJholMO1u+zW/8i9XfkBN3725Aqp1NuJRz1QDzmrdYWai/LMwY=
+	t=1710760033; cv=none; b=n3nx7uzjHZt4FBmXfCh8nLio5XOgPIZmxoTdYryOa5U0qva/3WSCppLXxu4eIGwUPu3JPBRlD9eh7JZnXZG851acfQOFJ7x7+mZh/yPOaoLvIdb8QJWeLZyNgKwZvSmFptlQKw4M7zDABSk8xQmkPh6sXHMrQA7sNWTkCEN1xyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710757288; c=relaxed/simple;
-	bh=quW6wJJbe+qS/wQlU5osutwle06DhV07t75zMADz2nY=;
+	s=arc-20240116; t=1710760033; c=relaxed/simple;
+	bh=6qPQr5BehNc/ICqIC3PCIAiNdkcFX+UvDJ8LDqMO3BY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fC+OuK3QPHfGrbWHNEZgcyXXpbvSkRbS0Pyl+FeUUH0JE5yfKl3dYhR9wCejjKs/4nVugBsg+74ajJ/ROUKG3b//DapK77lIHSEn+/06EBdAqjU2JLVLcI1u0ElE9gjX5YrgHvGNFiBhhkxSdIpyJ8RuyKp10U9CwqjnleqPduM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK5ovN+F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0EEC43390;
-	Mon, 18 Mar 2024 10:21:24 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BK1bLSvCRj0s9q/EQ9GJcLR/R2A/hp30/CmhlL/EAiMoinw/S3vEPaMjwBWL+0zv+iMM9k+T/niSI1HWh0yiC7OWJTrGwrUVbgKzBmloDLLulvvzPHVxgDxSquOGNniFiv12d+mYbnLCrIrh8n7OLTEFqDECNVhszch+N9ZBOjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxdhKG/C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35221C43390;
+	Mon, 18 Mar 2024 11:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710757287;
-	bh=quW6wJJbe+qS/wQlU5osutwle06DhV07t75zMADz2nY=;
+	s=k20201202; t=1710760033;
+	bh=6qPQr5BehNc/ICqIC3PCIAiNdkcFX+UvDJ8LDqMO3BY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YK5ovN+FEClGv4tZVLB9DIL2QSeIWReKsonx1fgj+f4dU7i17OmFyOiqiXhaajmp9
-	 f+3nhTc/Ogywln+LTf+nAwZpMgVeWxM0E1+Mw13XTh2FsqztWNjYqJ64W2XsjNv5mB
-	 KlG4RdSlhDNHlzvBs0CaQvO/DqGua/MbXeckZDymFFry2tl8Iw+wGxKyPLNzmlEKCK
-	 HQlzp1u5Uh87cIYNIEQp6RXGr5KMIzcYMr1bRs4LGiVFyPQ3KfeoIuc08hdX3kdywl
-	 ROfhhJ+9p2rYBwrzgX9C/PrAk8FYmb89IwvjcC9c3ern8tatYORcqR9C0MgNoh7kWr
-	 vgVqe9WPGAb/w==
-Message-ID: <a66aeebab32520ea1f2ad6eced6bb8b5956ffbf2.camel@kernel.org>
-Subject: Re: [PATCH RFC 06/24] vfs: break parent dir delegations in
- open(..., O_CREAT) codepath
+	b=BxdhKG/C/wXOoASFsJFVF68HuRWx1y6JBbwFqitH4++kowFq9b5ugPI+zE+5lhd+/
+	 6tgcoI/lQQYijdbCumIsVI/OHDeLtpRUOhXOK7GfYj/QlnqXDcrey1EEsxCOt+Wdsl
+	 DU5tt9303GIN1I2cmxFpOAZAYHI7bW7zYrUN+Xjl46xIf8vJ/pm03rzMv8R9GBRSKT
+	 twLMCdYNcfbKGOpKmn5O1wmBONghgnnyDRjyrbjNiB20LxfTy3Tg7Ahg7CSX1a/2iL
+	 zeeD9xK1ThRLdubf2Dt9Ik3EZfqigRmzm6Q2aYUTq7iOSYYStS3NppUB91Tsvvakrw
+	 FWvD9RtCSzi4Q==
+Message-ID: <2a29648675b743befe59fc13c5ed1440d5cbe9ee.camel@kernel.org>
+Subject: Re: [PATCH RFC 02/24] filelock: add a lm_set_conflict lease_manager
+ callback
 From: Jeff Layton <jlayton@kernel.org>
-To: Stefan Metzmacher <metze@samba.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, Alexander Aring
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Alexander Aring
  <alex.aring@gmail.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
  Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, Paulo
  Alcantara <pc@manguebit.com>, Ronnie Sahlberg <ronniesahlberg@gmail.com>,
@@ -60,17 +60,16 @@ To: Stefan Metzmacher <metze@samba.org>, Alexander Viro
  <linkinjeon@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>,
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet
  <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, netfs@lists.linux.dev,
- ecryptfs@vger.kernel.org,  linux-unionfs@vger.kernel.org,
- netdev@vger.kernel.org
-Date: Mon, 18 Mar 2024 06:21:23 -0400
-In-Reply-To: <0583f4be-4c34-44de-99f2-891d673b53a9@samba.org>
+ <pabeni@redhat.com>,  linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org,  samba-technical@lists.samba.org,
+ netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
+ linux-unionfs@vger.kernel.org, netdev@vger.kernel.org
+Date: Mon, 18 Mar 2024 07:07:08 -0400
+In-Reply-To: <ZfcDHPq68nZBaY5D@manet.1015granger.net>
 References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
-	 <20240315-dir-deleg-v1-6-a1d6209a3654@kernel.org>
-	 <0583f4be-4c34-44de-99f2-891d673b53a9@samba.org>
+	 <20240315-dir-deleg-v1-2-a1d6209a3654@kernel.org>
+	 <ZfcDHPq68nZBaY5D@manet.1015granger.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -90,60 +89,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-03-18 at 09:25 +0100, Stefan Metzmacher wrote:
-> Hi Jeff,
->=20
-> > In order to add directory delegation support, we need to break
-> > delegations on the parent whenever there is going to be a change in the
-> > directory.
+On Sun, 2024-03-17 at 10:56 -0400, Chuck Lever wrote:
+> On Fri, Mar 15, 2024 at 12:52:53PM -0400, Jeff Layton wrote:
+> > The NFSv4.1 protocol adds support for directory delegations, but it
+> > specifies that if you already have a delegation and try to request a ne=
+w
+> > one on the same filehandle, the server must reply that the delegation i=
+s
+> > unavailable.
 > >=20
-> > Add a delegated_inode parameter to lookup_open and have it break the
-> > delegation. Then, open_last_lookups can wait for the delegation break
-> > and retry the call to lookup_open once it's done.
+> > Add a new lease_manager callback to allow the lease manager (nfsd in
+> > this case) to impose extra checks when performing a setlease.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >   fs/namei.c | 22 ++++++++++++++++++----
-> >   1 file changed, 18 insertions(+), 4 deletions(-)
+> >  fs/locks.c               |  5 +++++
+> >  include/linux/filelock.h | 10 ++++++++++
+> >  2 files changed, 15 insertions(+)
 > >=20
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index f00d8d708001..88598a62ec64 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -3404,7 +3404,7 @@ static struct dentry *atomic_open(struct nameidat=
-a *nd, struct dentry *dentry,
-> >    */
-> >   static struct dentry *lookup_open(struct nameidata *nd, struct file *=
-file,
-> >   				  const struct open_flags *op,
-> > -				  bool got_write)
-> > +				  bool got_write, struct inode **delegated_inode)
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index cb4b35d26162..415cca8e9565 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -1822,6 +1822,11 @@ generic_add_lease(struct file *filp, int arg, st=
+ruct file_lease **flp, void **pr
+> >  			continue;
+> >  		}
+> > =20
+> > +		/* Allow the lease manager to veto the setlease */
+> > +		if (lease->fl_lmops->lm_set_conflict &&
+> > +		    lease->fl_lmops->lm_set_conflict(lease, fl))
+> > +			goto out;
+> > +
+> >  		/*
+> >  		 * No exclusive leases if someone else has a lease on
+> >  		 * this file:
+> > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> > index daee999d05f3..c5fc768087df 100644
+> > --- a/include/linux/filelock.h
+> > +++ b/include/linux/filelock.h
+> > @@ -49,6 +49,16 @@ struct lease_manager_operations {
+> >  	int (*lm_change)(struct file_lease *, int, struct list_head *);
+> >  	void (*lm_setup)(struct file_lease *, void **);
+> >  	bool (*lm_breaker_owns_lease)(struct file_lease *);
+> > +
+> > +	/**
+> > +	 * lm_set_conflict - extra conditions for setlease
+> > +	 * @new: new file_lease being set
+> > +	 * @old: old (extant) file_lease
+> > +	 *
+> > +	 * This allows the lease manager to add extra conditions when
+> > +	 * setting a lease.
 >=20
-> Does NFS has a concept of lease keys and parent lease keys?
+> To make it clear which return value causes add_lease() to abort, I'd
+> rather see API contract-style descriptions of the meaning of the
+> return values instead of this design note. Something like:
 >=20
-> In SMB it's possible that the client passes a lease key (16 client chosen=
- bytes) to a directory open,
-> when asking for a directory lease.
+>  * Return values:
+>  *   %true: @new and @old conflict
+>  *   %false: No conflict detected
 >=20
-> Then operations on files within that directory, take that lease key from =
-the directory as
-> 'parent lease keys' in addition to a unique lease key for the file.
->=20
-> That way a client can avoid breaking its own directory leases when creati=
-ng/move/delete... files
-> in the directory.
 >=20
 
-No, it's a bit different with NFSv4 directory delegations. A delegation
-is given vs a filehandle (which is analogous to an inode), and it gets a
-stateid, which just uniquely identifies it. There is no real association
-with the parent.
+Thanks. I added this to the patch in my tree.
 
-When you request the dir delegation, you can request to be notified when
-something changes instead of the server recalling it. The server may or
-may not grant that request. Notifications are not implemented in this
-patchset as of yet. I'm focusing on getting the recall handling right
-first, and then I'll plan to add that in a later phase.
+> > +	 */
+> > +	bool (*lm_set_conflict)(struct file_lease *new, struct file_lease *ol=
+d);
+> >  };
+> > =20
+> >  struct lock_manager {
+> >=20
+> > --=20
+> > 2.44.0
+> >=20
+>=20
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
