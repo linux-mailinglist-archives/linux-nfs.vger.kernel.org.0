@@ -1,272 +1,189 @@
-Return-Path: <linux-nfs+bounces-2385-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2386-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA4287F68E
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Mar 2024 06:12:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9121887F745
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Mar 2024 07:27:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3053E281AF2
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Mar 2024 05:12:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B43B41C20F65
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Mar 2024 06:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A3F40853;
-	Tue, 19 Mar 2024 05:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215B74594E;
+	Tue, 19 Mar 2024 06:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WUPjGV+d";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WH/UwhdG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iOCN3knu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YJw2p8gg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRUj/oRf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457F40840
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Mar 2024 05:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479BC5B1E3
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Mar 2024 06:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710825159; cv=none; b=NHgMiZq6M6xCCJV7kandIPA+SYkd/iebQuhleUJON/yyaYQw5wlhQ0H0rFxs6Buv338NlJwDs8qruNbKqpPXmznCnc79MvLBsb83hTuLqJ5bi3bwYigQ8mzEVw/YJ8zqr+643fEfOz8649tVdqOPC2RDBV/JANN9RRyHJ5kwjfE=
+	t=1710829623; cv=none; b=RGS/Cwda4iSZLMGXhYbVjxUtZ/iRPoB8JuDxBEdMvUd30+2XAajpzjUHebUc9kNjZXozfBArOrRhilnvsanEkAUDDhrv/aznHgS1+XEyK3Nb4aJuf2FALG9EBmoZuKfL0tpnDfbNRzFi1EByMiZrDEoxTpOxjJrZauLgb8fZPeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710825159; c=relaxed/simple;
-	bh=9N+O9zkq5bYhnqzNw5Mr8Q5WrtysrSaSo3Fk+EoE1K8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=S4mN0N5hZ3LTadV69yl4tmaWk9gVs3RDDald+bdXC7YEjo3D1rmYss1zrSCPPGkMP+cPe9v2vBoootOobA0X+lKWb1RBunESITi7lwRXJVdVAajRJcNYG4F2ax2p5ef/4Ms6+jwMYtqTdtMHthZRMXggxZ5LgaPDoE4vZy9Jcjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WUPjGV+d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WH/UwhdG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iOCN3knu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YJw2p8gg; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E7B525D0C3;
-	Tue, 19 Mar 2024 05:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710825155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk291jOQDFbqqfgUOsmV5g5fxvTG/tmIiJZssWkcN8k=;
-	b=WUPjGV+dPIiujYn/NiEeJ5KoFTrm8sZONh/LzRVaCega7Wbro0NjgOOSHYn2ZrgoRItQHD
-	3fwVlgUV4wGWBhNpILaTuYRaQ5bEcp2HfoVVGSEI1YxQSp2rIkmpqCw1eKrOlRJ61Sy0UR
-	0Jy9rCpjNc+03X92oI1ETmi+vzqCpGk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710825155;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk291jOQDFbqqfgUOsmV5g5fxvTG/tmIiJZssWkcN8k=;
-	b=WH/UwhdGa4h74QQG7rWX4Y45w2GQenQUjYJ19rrKUNPyjralJetf5WApu8C2dUXweuJfv/
-	Ql5fRSnDz10A/iCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710825154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk291jOQDFbqqfgUOsmV5g5fxvTG/tmIiJZssWkcN8k=;
-	b=iOCN3knuEjBj3/XLSpnTSaW2pr1O2J22UV3JB+T748gB+Fxrall3GvyqPuCsG6IEnsmBnW
-	3WMn3kJhifCN+asL/zInlszSTKryHxUOZWYglFjcwBdWEpg5YCvxFi+XqAzJPDQ/ADnVCy
-	a1gkstVGC7wjDPJrYznDKG7kL6QWDpE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710825154;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk291jOQDFbqqfgUOsmV5g5fxvTG/tmIiJZssWkcN8k=;
-	b=YJw2p8ggfcUQNTJtVFw8zFqKPhHWsXnhU/IKAJG8l88YnfaB4wBQl+xIR/l6FdkW+Zlvmq
-	mKYsza77UKrlj1AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 64609136A5;
-	Tue, 19 Mar 2024 05:12:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id g6oQAsEe+WU7QgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 19 Mar 2024 05:12:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1710829623; c=relaxed/simple;
+	bh=WSaf+h/t2R+7t74nTu6Zi9aKf3ti8jGhnNq/LRYRUIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=mO7e5ejp2XTqib+0lgxEFfOs6QvN440ebyUJWA4wbuhe8EeOvzIrsLGNSTEYaJ6Z1ZNBwyzKn0ea+edENnIXkNzvAz3MeffdlcThe6tuLzMshR9em7CzjnWJFZjodJbZPltCmawiIIdNEMf2MqGivJF7bKnUPsyrA/2XNbrR2NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZRUj/oRf; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56b8e4f38a2so858652a12.3
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Mar 2024 23:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710829619; x=1711434419; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WSaf+h/t2R+7t74nTu6Zi9aKf3ti8jGhnNq/LRYRUIg=;
+        b=ZRUj/oRfw+wXVn4qxAuArH9Gl6g1VX/DKU6ipix8m+TE6zbs3wv4lXVNb3B0YseQ8O
+         sXXsDLJxYdl5B/DkAsyXW+zr078gRsiriTaA/UyMEaEwnag4HUQ81GgmKPNhy4Aa0oPM
+         JMiyJ/gXm4kLd1MhZMr1m12SfBiGv+6mM12iOaPVpkWDPxfsI+V8Xq5SfAmnyELVNmkq
+         sbHtN2oajUOhThvbm5bgvjzYW+FbMnEI2vwIw8rLCI5qbuKvRt961hShAR+Y9/BRWwWT
+         BgF7IU5RUkQ3qY5oQm+kcNEg/6xu8+N9kn07oe0BzGoq3n4RhRETiUVdSLOTH1fvk1xz
+         s7QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710829619; x=1711434419;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WSaf+h/t2R+7t74nTu6Zi9aKf3ti8jGhnNq/LRYRUIg=;
+        b=DHQCor5fvOarBan1/eLBqJrLNsS1IJtMQhBTcJJnAX6hH+VEn7l96WndEWXvRxLNRp
+         YARSNuv7Md//qrSkWLTMIDLNXVc8pp/tBMsJlXhUrjQDMf+BjzVBJMAYORk+nIkdpxJG
+         kBd8UM2baOCNtw9BsqVczrhyj5g2dz9fASGnE9EoWPLIzHnXSgqCCjy020agbpp0T+aR
+         7JV6Wwd59hz4Qb7p2w8ZVlwC2aSL2zw5qG9GzkWKSuSxpe41x/Ydav2xmY0yONfsppRZ
+         n+SBKFsy76bNI6piFY4u9f54IwzLH3JBroNoaUKPHG4YR0ynJch4MAJ8lQYiwpzl28aE
+         D2qA==
+X-Gm-Message-State: AOJu0YwdoRrAbQeBX+PjWwnyGN2hLm+bpgnu7n+SBei0t7lPnr/ACQ4t
+	ooX2xf3/5YtebP0A6WsOzhnaCwUruiFW3ivbk175WN1xZ5k3JAlVbXolUk2voX71c0ayZkV9+ce
+	yL3qhxQjJZJ+EUHtWOZA0ItXEjo4rVQDWrG8=
+X-Google-Smtp-Source: AGHT+IFVFKRSBmEM676b7mReuXs7pkVXvHX4pbPrxLz9IUJSmvZ3akA7rceT1CtTp+eYIas3g5SO5BIvBadFPUnkdrA=
+X-Received: by 2002:a05:6402:e9d:b0:565:7b61:4c82 with SMTP id
+ h29-20020a0564020e9d00b005657b614c82mr9591405eda.5.1710829618677; Mon, 18 Mar
+ 2024 23:26:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Trond Myklebust" <trondmy@hammerspace.com>
-Cc: "anna@kernel.org" <anna@kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject:
- Re: Question about possible use-after-free in nfs_direct_write_reschedule()
-In-reply-to: <02300d56202423fc7277b0ee923b40f00d4903db.camel@hammerspace.com>
-References: <171080858885.13576.7878757943353384571@noble.neil.brown.name>,
- <02300d56202423fc7277b0ee923b40f00d4903db.camel@hammerspace.com>
-Date: Tue, 19 Mar 2024 16:12:29 +1100
-Message-id: <171082514968.13576.13734805489700296059@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+References: <CAAvCNcDtTNDRvUVjUy4BE7eBCgmkb6hfkq3P0jaGDC=OXg0=6g@mail.gmail.com>
+ <CAKAoaQmmEv+HRjmBMrSMGZn9RQr8C=2W4yeX4vNnohXFJPCV5A@mail.gmail.com>
+ <65a29ca8.6b0a0220.ad415.d6d8.GMR@mx.google.com> <CAKAoaQkZ+b7NfrVi=gu1vCJBvv10=k85bG_kZV9G3jE45OOquw@mail.gmail.com>
+ <0cd8fbfc707f86784dc7d88653b05cd355f89aad.camel@kernel.org>
+ <24ACA376-5239-4941-BE53-70BF5E5E4683@oracle.com> <CAKAoaQny6G=JcKpJTYeLmNBEMgNkkc--T0Uvs1YbEX+JUD-PoA@mail.gmail.com>
+ <CANH4o6NcMbcNKxARcqhthXWkKk6_r31iKGjnS-RhFBB_AJFaJg@mail.gmail.com>
+ <470318C6-3252-445F-94F3-DDB7727F84C7@oracle.com> <CAKAoaQ=6nGHD0uA+9EaQQPWBk8dvq0XVUPPgPAhbh=XPk+ecSg@mail.gmail.com>
+ <76D8D54D-AE71-4D4C-AD61-2D2232FB1ECB@oracle.com>
+In-Reply-To: <76D8D54D-AE71-4D4C-AD61-2D2232FB1ECB@oracle.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Tue, 19 Mar 2024 07:25:00 +0100
+Message-ID: <CALXu0UeFBmX0y3dJH-nbdm7eQeOCMFNp7GDzthstLW0iFd6cUw@mail.gmail.com>
+Subject: Re: |ca_maxoperations| - tuneable ? / was: Re: RFE: Linux nfsd's
+ |ca_maxoperations| should be at *least* |64| ... / was: Re: kernel.org list
+ issues... / was: Fwd: Turn NFSD_MAX_* into tuneables ? / was: Re: Increasing
+ NFSD_MAX_OPS_PER_COMPOUND to 96
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 Mar 2024, Trond Myklebust wrote:
-> On Tue, 2024-03-19 at 11:36 +1100, NeilBrown wrote:
-> > 
-> > I've been reviewing some nfs/direct.c patches for possible backport
-> > to
-> > one of our older enterprise kernels and I've found something that
-> > looks
-> > wrong.
-> > 
-> > It isn't clear to me how to exercise the code so I haven't be able to
-> > trigger a problem.  I'm hoping that someone could either explain when
-> > this code runs, or confirm if the code is correct or not.
-> > 
-> > Commit 954998b60caa ("NFS: Fix error handling for O_DIRECT write
-> > scheduling")
-> > 
-> > adds an extra call to nfs_release_request() but I cannot find any
-> > place
-> > that an extra reference is taken.
-> > 
-> > The code currently reads:
-> > 
-> > 	while (!list_empty(&reqs)) {
-> > 		req = nfs_list_entry(reqs.next);
-> > 		nfs_list_remove_request(req);
-> > 		nfs_unlock_and_release_request(req);
-> > 		if (desc.pg_error == -EAGAIN) {
-> > 			nfs_mark_request_commit(req, NULL, &cinfo,
-> > 0);
-> > 		} else {
-> > 			spin_lock(&dreq->lock);
-> > 			nfs_direct_truncate_request(dreq, req);
-> > 			spin_unlock(&dreq->lock);
-> > 			nfs_release_request(req);
-> > 		}
-> > 	}
-> > 
-> > after the nfs_unlock_and_release_request() call I would expect that
-> > the
-> > request could be freed, so that nfs_mark_request_commit() or the
-> > nfs_release_request() could cause a problem.
-> > 
-> > Superficially it looks like the call should be simply
-> > nfs_unlock_request().  This would follow the
-> > list_remove;unlock;mark_commit pattern also found in
-> > nfs_direct_write_reschedule_io().
-> > 
-> > Do we need:
-> > --- a/fs/nfs/direct.c
-> > +++ b/fs/nfs/direct.c
-> > @@ -581,7 +581,7 @@ static void nfs_direct_write_reschedule(struct
-> > nfs_direct_req *dreq)
-> >  	while (!list_empty(&reqs)) {
-> >  		req = nfs_list_entry(reqs.next);
-> >  		nfs_list_remove_request(req);
-> > -		nfs_unlock_and_release_request(req);
-> > +		nfs_unlock_request(req);
-> >  		if (desc.pg_error == -EAGAIN) {
-> >  			nfs_mark_request_commit(req, NULL, &cinfo,
-> > 0);
-> >  		} else {
-> 
-> See the full code that was changed:
->  
-> -       list_for_each_entry_safe(req, tmp, &reqs, wb_list) {
-> +       while (!list_empty(&reqs)) {
-> +               req = nfs_list_entry(reqs.next);
->                 /* Bump the transmission count */
->                 req->wb_nio++;
->                 if (!nfs_pageio_add_request(&desc, req)) {
-> -                       nfs_list_move_request(req, &failed);
->                         spin_lock(&cinfo.inode->i_lock);
-> -                       dreq->flags = 0;
-> -                       if (desc.pg_error < 0)
-> +                       if (dreq->error < 0) {
-> +                               desc.pg_error = dreq->error;
-> +                       } else if (desc.pg_error != -EAGAIN) {
-> +                               dreq->flags = 0;
-> +                               if (!desc.pg_error)
-> +                                       desc.pg_error = -EIO;
->                                 dreq->error = desc.pg_error;
-> -                       else
-> -                               dreq->error = -EIO;
-> +                       } else
-> +                               dreq->flags =
-> NFS_ODIRECT_RESCHED_WRITES;
->                         spin_unlock(&cinfo.inode->i_lock);
-> +                       break;
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Prior to this patch, we did not break out of the loop until the entire
-> "reqs" list hand been handled.
-> 
->                 }
->                 nfs_release_request(req);
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Prior to this patch, every request on the "reqs" list was released,
-> whether or not they were being moved to the "failed" list.
->         }
->         nfs_pageio_complete(&desc);
->  
-> -       while (!list_empty(&failed)) {
-> -               req = nfs_list_entry(failed.next);
-> +       while (!list_empty(&reqs)) {
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Prior to this patch, every request that was being handled here had
-> already seen a call to nfs_release_request() because we had already
-> gone through the entire list of "reqs".
-> With this patch applied, we're now handling all the requests that are
-> left on "reqs", and that have not been released.
+On Sat, 16 Mar 2024 at 17:35, Chuck Lever III <chuck.lever@oracle.com> wrot=
+e:
+>
+>
+>
+> > On Mar 16, 2024, at 7:55=E2=80=AFAM, Roland Mainz <roland.mainz@nrubsig=
+.org> wrote:
+> >
+> > On Thu, Jan 18, 2024 at 3:52=E2=80=AFPM Chuck Lever III <chuck.lever@or=
+acle.com> wrote:
+> >>> On Jan 18, 2024, at 4:44=E2=80=AFAM, Martin Wege <martin.l.wege@gmail=
+.com> wrote:
+> >>> On Thu, Jan 18, 2024 at 2:57=E2=80=AFAM Roland Mainz <roland.mainz@nr=
+ubsig.org> wrote:
+> >>>> On Sat, Jan 13, 2024 at 5:10=E2=80=AFPM Chuck Lever III <chuck.lever=
+@oracle.com> wrote:
+> >>>>>> On Jan 13, 2024, at 10:09=E2=80=AFAM, Jeff Layton <jlayton@kernel.=
+org> wrote:
+> >>>>>> On Sat, 2024-01-13 at 15:47 +0100, Roland Mainz wrote:
+> >>>>>>> On Sat, Jan 13, 2024 at 1:19=E2=80=AFAM Dan Shelton <dan.f.shelto=
+n@gmail.com> wrote:
+> > [snip]
+> >>>> That assumes that no process does random access into deep subdirs. I=
+n
+> >>>> that case the performance is absolutely terrible, unless you devote
+> >>>> lots of memory to a giant cache (which is not feasible due to cache
+> >>>> expiration limits, unless someone (please!) finally implements
+> >>>> directory delegations).
+> >>
+> >> Do you mean not feasible for your client? Lookup caches
+> >> have been part of operating systems for decades. Solaris,
+> >> FreeBSD, and Linux all have one. Does the Windows kernel
+> >> have one that mfs-nfs41-client can use?
+> >
+> > The ms-nfs41-client has its own cache.
+> > Technically Windows has another, but that is in the kernel and
+> > difficult to connect to the NFS client daemon without performance
+> > issues.
+> >
+> > [snip]
+> >> Sending a full path in a single COMPOUND is one way to
+> >> handle path resolution, but it has so many limitations
+> >> that it's really not the mechanism of choice.
+>
+> Yes, COMPOUND was added to NFSv4 as a possible
+> way to manage network latency, but in hindsight
+> I think the NFS community now recognizes that
+> there are more effective strategies to deal with
+> network latency than creating more and more
+> complicated COMPOUND operations. Client-side
+> caching, for instance, is a much better choice.
 
-Ahhh - I get it now - thanks a lot for the explanation.
+I have a severe hiccup now after reading THAT comment. Every
+generation of IT engineers makes the same damn mistakes, and it takes
+them ~10 years to realise their mistakes.
 
-NeilBrown
+So here is the comment - before my first coffee - from someone with a
+grey beard, who is old enough to deal with Mintel, the first UNIX and
+the first RFS, NFS, AFS, DFS:
+Mistake 1: Caching will solve it all. DFS (the follow up to AFS) tried
+that to an absurd extent, and failed badly, too complex, too buggy and
+too cpu and memory intensive. Granted the bugs were fixed over time,
+but by then the reputation was ruined.
+Mistake 2: Caching is always possible. Mounting /var/mail with
+actimeo=3D0 is the classical example, HPC another popular one.
+Mistake 3: The cache memory is unlimited. We had that one with
+Solaris's builtin name cache, and then ZFS. Memory is limited, and
+just making the caches 2x, 8x, 32x times bigger doesn't give you any
+benefits, because cache expiration/timeout. Of course you can try to
+keep the cache "hot", or try delegations, or move data ownership to
+another server closer to the client. See DFS above. Did not work.
+Google also "law of diminishing returns"
+Mistake 4: The network has unlimited bandwidth, so we can keep the
+local cache updated/hot, or abuse it otherwise. Unlike our dreams in
+the 1990 that we will have 100GB/s Infiniband networks in our laptops
+by 2020, the real word laptop in 2024 maxes out at 1000baseT, and most
+rural offices still have 100baseT
+Mistake 5: The main memory is unlimited. That ignores the fact that
+SUN promised us that NFSv4 will not require more memory than NFSv3.
+NFSv4 still has to serve the embedded/IoT use case, either for data,
+or for diskless boot from NFS(v4). Those machines cannot waste 512MB
+on your dream cache with their 8MB main memory, which is also not
+going to work because of "Mistake 3". The law of diminishing returns
+sends you your greetings.
 
+So complex COMPOUND operations are not that bad, but they are also not
+the perfect solution for everything. Likewise, giant client-side
+caches are not the perfect solution for everything, neither are they
+feasible in all scenarios. Oh delete the "all" and replace with
+"most".
 
-> 
-> +               req = nfs_list_entry(reqs.next);
->                 nfs_list_remove_request(req);
->                 nfs_unlock_and_release_request(req);
-> +               if (desc.pg_error == -EAGAIN)
-> +                       nfs_mark_request_commit(req, NULL, &cinfo, 0);
-> +               else
-> +                       nfs_release_request(req);
->         }
->  
-> 
-> > 
-> > ??
-> > 
-> > Thanks,
-> > NeilBrown
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
-> 
-
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
