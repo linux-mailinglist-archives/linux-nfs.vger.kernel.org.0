@@ -1,133 +1,242 @@
-Return-Path: <linux-nfs+bounces-2413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A84C881277
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 14:43:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 330E98812FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 15:10:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0506928469B
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 13:43:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC2152867B9
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 14:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C726F41C84;
-	Wed, 20 Mar 2024 13:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187463D54C;
+	Wed, 20 Mar 2024 14:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eU92nmlr"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="bDttjbg8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2AB4120C;
-	Wed, 20 Mar 2024 13:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F3A3A267
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Mar 2024 14:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710942174; cv=none; b=tcxmIDcXfT9lxEHd+fM0+nnPF/GYwKcFEZtsmwkuV57oXo0AY5kH8Ym7NDIsBwplADx2O5c3m+9wmQANeAkaJ1V89ifSzmrcMDiUo5TDNnThs8r7+0mi5KB6SMhXWyD8blWOSyRbp+VMKW4TNQJlays/QWIjzD6e5m6sF1hrHEc=
+	t=1710943815; cv=none; b=eDUNA+AaHH6hyI/pv2IN7IFsU+PgRqx881bYMmUt1Om3UAwcw6iwwalrXhsQXGC/6WfwHuBzgWc88EDE6O8wZgmc2CqSYkSJfOqAeSPQv4w+Nr1Zq2WsfKTVa+vpNVMJMX2T4xcA+sdlZuGsesk5jF48TX8qIaXcn4ejSHMnZC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710942174; c=relaxed/simple;
-	bh=SL7EEqxB06odAsm7W+93qYmrjXMwy6G5bg6bHVOjX4k=;
+	s=arc-20240116; t=1710943815; c=relaxed/simple;
+	bh=3ou5oUCQ86hqBqM0oL6+1qxMCbrCMDn4y0Od3IVxbF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HV4sUEGpstgXm77j0VrOYuXSqAtbZSVKNvqw9zhcO5UDbzrqh7/gCFmEYKUeYBOEptzDyo7PxF2zxdZrVeXvtHrmioeoYg8lN0CaxiNVyU4m5LKf83pSssnrPFvXPZBSMLf1NVyX7Xw1TbDCbQEfQ0aMDor+YmUlnLXZeMqyb0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eU92nmlr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 068A1C433F1;
-	Wed, 20 Mar 2024 13:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710942173;
-	bh=SL7EEqxB06odAsm7W+93qYmrjXMwy6G5bg6bHVOjX4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eU92nmlr0GgktT6+bpsfmN+xC5VvXw5CpLfwFEwtc5AI+tOUb/Y+LyFVBQymaGUgi
-	 WN36NQnrdDRFhd+zvg2dD0Qb/O4nVB7z5uUfzFipL+xdE3OskfqvKoynC0DSJBj+L2
-	 L24/fz+d5jFyMZLE8D2/DqorwLJk7xpQ08sbWY9Y8ZaWe8h3vzfC9c6laNosm0/aqO
-	 Esqxqf++mSLwyiOf/PgEk6IABgu37OL3s1Qj96/v/8dSImS8H9L6uozkCOpY2Txz7h
-	 dvvaiYvSchaZv5AIf3Opfz24chH4J04CfvAcABhqejZ9pyKlfmtt1lsllgMDBILzKm
-	 VBFifxxs//eyA==
-Date: Wed, 20 Mar 2024 14:42:41 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, David Howells <dhowells@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	netfs@lists.linux.dev, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH RFC 08/24] vfs: make vfs_mknod break delegations on
- parent directory
-Message-ID: <20240320-jaguar-bildband-699e7ef5dc64@brauner>
-References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
- <20240315-dir-deleg-v1-8-a1d6209a3654@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/2UThJywq8WuwTZPu3Nz7mnP8x5tY1dvVtcGxqTqXgSIyFs7eXnqT+N4KhMM/ip36h6rHLwu/b0Uu1gSCizFeI9JIybwAeAM1ViqkK5miAtERweCyhXXChVy8CWVtxqvTqzrx4lQ9+aTiw0vg7r5cx3ap+vQ1T78g4phfsGQhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=bDttjbg8; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-430c4e67d40so23833971cf.3
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Mar 2024 07:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1710943811; x=1711548611; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+TBwiaClEnyRyOmF0p2cnVM2eYlHll3J9TyTRhX/lf0=;
+        b=bDttjbg8o0QcbSc7SHaAn98ILtqIjl+IKIyQiN0y9zTZmg3Y9h8tODq4VIeIfR/T9j
+         tWE7d5OwLxuUSJAGVuvLdktMvgPq2OoXGIg/2yoXLTqQt8O9gjV0IcbvT6WTOFLZ6LQK
+         rtCcIcDWA6zu9T/UwmP1v+oKL+yAqoymMs8grxwz8Wsh9s+2+A4g9G+AkUu6sQT/iVDW
+         NdxWS5AG/CpD8/KI0Pc8L8V7zSVvj1y+eoIjqnGHM++yawYV4dvcrPVkDhGgydVE6MFl
+         3ag1E9J0y45BlCW4ksNfVZgcufH1AvHYIxDH+SjoNQT9mo7jND4wBVQiZyB5E8s+HlR3
+         Pxsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710943811; x=1711548611;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+TBwiaClEnyRyOmF0p2cnVM2eYlHll3J9TyTRhX/lf0=;
+        b=a/0+gALCbVVWJIm3Co6aWGpDyKk2VUg/PvGmSlfGTOCOcDZ7tZjmFkqESQ8kvhW35L
+         peupyNmFha2x4eNOcduToZAsWPe0xps06vInhhNfejPriPq0vPkMu4oOT/DruZaes6wS
+         GXjSK84AgtiTpxOHyEaG3i0rqsNRqBtnRMB+PPaFsfJwTUhC9M5ZcMpv6MoqCY22SQmn
+         MfcptfmDHpU001wxmw4cB2OMN8e1oelxixing8ngYu2VuqLruaI5bFyQ0cVJHUkLL1lA
+         Uurm9CXr1fR4nx3YHUybOmup+tWignkQ8CCmxpSS975cFw9sj+qEWCfUVosIz1WSngNA
+         ZYuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZmx/bO1H/4DMPBvnV9BTwUsUfa9CB77UdtM0WQGQbvps4wNPbA8TA/Ye/H2vmHuqzGaATPnEzAhWphGyaSPhDwiDxzlow3D18
+X-Gm-Message-State: AOJu0YwKxFhiUiTxv8JhyrzmA+Ip0hPayeUADaEfEMUnqfRQEtoWqOaH
+	wsdo227/oagk0LtTcFENE2FLVLFqmmtU90cXGB8kSVfUdP0Sltda7aR1wm3IxbY=
+X-Google-Smtp-Source: AGHT+IFiGXDjcDIioggROyIlwfHotNbK4zIwxjqLjA/U8eB8yMyqIIWAwasOY2TZblXp+6aDXk19fQ==
+X-Received: by 2002:a05:622a:86:b0:430:d18c:2f22 with SMTP id o6-20020a05622a008600b00430d18c2f22mr8694867qtw.64.1710943811293;
+        Wed, 20 Mar 2024 07:10:11 -0700 (PDT)
+Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id o23-20020ac872d7000000b00430a67b3437sm6944557qtp.17.2024.03.20.07.10.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 07:10:10 -0700 (PDT)
+Date: Wed, 20 Mar 2024 10:10:10 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "anna@kernel.org" <anna@kernel.org>,
+	"kernel-team@fb.com" <kernel-team@fb.com>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>
+Subject: Re: [PATCH][RESEND] sunrpc: hold a ref on netns for tcp sockets
+Message-ID: <20240320141010.GA3014929@perftesting>
+References: <512efbd56ad3679068759586c6fa9b681aec14f0.1710877783.git.josef@toxicpanda.com>
+ <caa3af93b31b554f0c1e643320041835f0bfe044.camel@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240315-dir-deleg-v1-8-a1d6209a3654@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <caa3af93b31b554f0c1e643320041835f0bfe044.camel@hammerspace.com>
 
->  int vfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
-> -              umode_t, dev_t);
-> +              umode_t, dev_t, struct inode **);
-
-So we will have at least the following helpers with an additional
-delegated inode argument.
-
-vfs_unlink()
-vfs_link()
-notify_change()
-vfs_create()
-vfs_mknod()
-vfs_mkdir()
-vfs_rmdir()
-
-From looking at callers all these helpers will be called with non-NULL
-delegated inode argument in vfs only. Unless it is generally conceivable
-that other callers will want to pass a non-NULL inode argument over time
-it might make more sense to add vfs_<operation>_delegated() or
-__vfs_<operation>() and make vfs_mknod() and friends exported wrappers
-around it.
-
-I mean it's a matter of preference ultimately but this seems cleaner to
-me. So at least for the new ones we should consider it. Would also make
-the patch smaller.
-
->  int vfs_symlink(struct mnt_idmap *, struct inode *,
->  		struct dentry *, const char *);
->  int vfs_link(struct dentry *, struct mnt_idmap *, struct inode *,
-> @@ -1879,7 +1879,7 @@ static inline int vfs_whiteout(struct mnt_idmap *idmap,
->  			       struct inode *dir, struct dentry *dentry)
->  {
->  	return vfs_mknod(idmap, dir, dentry, S_IFCHR | WHITEOUT_MODE,
-> -			 WHITEOUT_DEV);
-> +			 WHITEOUT_DEV, NULL);
->  }
->  
->  struct file *kernel_tmpfile_open(struct mnt_idmap *idmap,
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 0748e7ea5210..34fbcc90c984 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -1227,7 +1227,7 @@ static int unix_bind_bsd(struct sock *sk, struct sockaddr_un *sunaddr,
->  	idmap = mnt_idmap(parent.mnt);
->  	err = security_path_mknod(&parent, dentry, mode, 0);
->  	if (!err)
-> -		err = vfs_mknod(idmap, d_inode(parent.dentry), dentry, mode, 0);
-> +		err = vfs_mknod(idmap, d_inode(parent.dentry), dentry, mode, 0, NULL);
->  	if (err)
->  		goto out_path;
->  	err = mutex_lock_interruptible(&u->bindlock);
+On Tue, Mar 19, 2024 at 09:59:48PM +0000, Trond Myklebust wrote:
+> On Tue, 2024-03-19 at 16:07 -0400, Josef Bacik wrote:
+> > We've been seeing variations of the following panic in production
+> > 
+> >   BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >   RIP: 0010:ip6_pol_route+0x59/0x7a0
+> >   Call Trace:
+> >    <IRQ>
+> >    ? __die+0x78/0xc0
+> >    ? page_fault_oops+0x286/0x380
+> >    ? fib6_table_lookup+0x95/0xf40
+> >    ? exc_page_fault+0x5d/0x110
+> >    ? asm_exc_page_fault+0x22/0x30
+> >    ? ip6_pol_route+0x59/0x7a0
+> >    ? unlink_anon_vmas+0x370/0x370
+> >    fib6_rule_lookup+0x56/0x1b0
+> >    ? update_blocked_averages+0x2c6/0x6a0
+> >    ip6_route_output_flags+0xd2/0x130
+> >    ip6_dst_lookup_tail+0x3b/0x220
+> >    ip6_dst_lookup_flow+0x2c/0x80
+> >    inet6_sk_rebuild_header+0x14c/0x1e0
+> >    ? tcp_release_cb+0x150/0x150
+> >    __tcp_retransmit_skb+0x68/0x6b0
+> >    ? tcp_current_mss+0xca/0x150
+> >    ? tcp_release_cb+0x150/0x150
+> >    tcp_send_loss_probe+0x8e/0x220
+> >    tcp_write_timer+0xbe/0x2d0
+> >    run_timer_softirq+0x272/0x840
+> >    ? hrtimer_interrupt+0x2c9/0x5f0
+> >    ? sched_clock_cpu+0xc/0x170
+> >    irq_exit_rcu+0x171/0x330
+> >    sysvec_apic_timer_interrupt+0x6d/0x80
+> >    </IRQ>
+> >    <TASK>
+> >    asm_sysvec_apic_timer_interrupt+0x16/0x20
+> >   RIP: 0010:cpuidle_enter_state+0xe7/0x243
+> > 
+> > Inspecting the vmcore with drgn you can see why this is a NULL
+> > pointer deref
+> > 
+> >     >>> prog.crashed_thread().stack_trace()[0]
+> >     #0 at 0xffffffff810bfa89 (ip6_pol_route+0x59/0x796) in
+> > ip6_pol_route at net/ipv6/route.c:2212:40
+> > 
+> >     2212        if (net->ipv6.devconf_all->forwarding == 0)
+> >     2213              strict |= RT6_LOOKUP_F_REACHABLE;
+> > 
+> >     >>>
+> > prog.crashed_thread().stack_trace()[0]['net'].ipv6.devconf_all
+> >     (struct ipv6_devconf *)0x0
+> > 
+> > Looking at the socket you can see that it's been closed
+> > 
+> >     >>>
+> > decode_enum_type_flags(prog.crashed_thread().stack_trace()[11]['sk'].
+> > __sk_common.skc_flags, prog.type('enum sock_flags'))
+> >     'SOCK_DEAD|SOCK_KEEPOPEN|SOCK_ZAPPED|SOCK_USE_WRITE_QUEUE'
+> >     >>> decode_enum_type_flags(1 <<
+> > prog.crashed_thread().stack_trace()[11]['sk'].__sk_common.skc_state.v
+> > alue_(), prog["TCPF_CLOSE"].type_, bit_numbers=False)
+> >     'TCPF_FIN_WAIT1'
+> > 
+> > This occurs in our container setup where we have an NFS mount that
+> > belongs to the containers network namespace.  On container shutdown
+> > our
+> > netns goes away, which sets net->ipv6.defconf_all = NULL, and then we
+> > panic.  In the kernel we're responsible for destroying our sockets
+> > when
+> > the network namespace exits, or holding a reference on the network
+> > namespace for our sockets so this doesn't happen.
+> > 
+> > Even once we shutdown the socket we can still have TCP timers that
+> > fire
+> > in the background, hence this panic.  SUNRPC shuts down the socket
+> > and
+> > throws away all knowledge of it, but it's still doing things in the
+> > background.
+> > 
+> > Fix this by grabbing a reference on the network namespace for any tcp
+> > sockets we open.  With this patch I'm able to cycle my 500 node
+> > stress
+> > tier over and over again without panicing, whereas previously I was
+> > losing 10-20 nodes every shutdown cycle.
+> > 
+> > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> > ---
+> > Apologies, I just grepped for SUNRPC in MAINTAINERS and didn't
+> > realize there was
+> > a division of the client and server side of SUNRPC.
+> > 
+> >  net/sunrpc/xprtsock.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> > index bb81050c870e..f02387751a94 100644
+> > --- a/net/sunrpc/xprtsock.c
+> > +++ b/net/sunrpc/xprtsock.c
+> > @@ -2333,6 +2333,7 @@ static int xs_tcp_finish_connecting(struct
+> > rpc_xprt *xprt, struct socket *sock)
+> >  
+> >  	if (!transport->inet) {
+> >  		struct sock *sk = sock->sk;
+> > +		struct net *net = sock_net(sk);
+> >  
+> >  		/* Avoid temporary address, they are bad for long-
+> > lived
+> >  		 * connections such as NFS mounts.
+> > @@ -2350,7 +2351,26 @@ static int xs_tcp_finish_connecting(struct
+> > rpc_xprt *xprt, struct socket *sock)
+> >  		tcp_sock_set_nodelay(sk);
+> >  
+> >  		lock_sock(sk);
+> > +		/*
+> > +		 * Because timers can fire after the fact we need to
+> > hold a
+> > +		 * reference on the netns for this socket.
+> > +		 */
+> > +		if (!sk->sk_net_refcnt) {
+> > +			if (!maybe_get_net(net)) {
+> > +			       release_sock(sk);
+> > +			       return -ENOTCONN;
+> > +		       }
+> > +		       /*
+> > +			* For kernel sockets we have a tracker put
+> > in place for
+> > +			* the tracing, we need to free this to
+> > maintaine
+> > +			* consistent tracking info.
+> > +			*/
+> > +		       __netns_tracker_free(net, &sk->ns_tracker,
+> > false);
+> >  
+> > +		       sk->sk_net_refcnt = 1;
+> > +		       netns_tracker_alloc(net, &sk->ns_tracker,
+> > GFP_KERNEL);
+> > +		       sock_inuse_add(net, 1);
+> > +		}
+> >  		xs_save_old_callbacks(transport, sk);
+> >  
+> >  		sk->sk_user_data = xprt;
 > 
-> -- 
-> 2.44.0
-> 
+> Hmm... Doesn't this end up being more or less equivalent to calling
+> __sock_create() with the kernel flag being set to 0?
+
+AFAICT yes, but there are a lot of other things that happen with kern being set
+to 1, so I think this is a safer bet, and is analagous to this other fix
+3a58f13a881e ("net: rds: acquire refcount on TCP sockets").  Thanks,
+
+Josef
 
