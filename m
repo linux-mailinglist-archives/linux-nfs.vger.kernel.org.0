@@ -1,1035 +1,155 @@
-Return-Path: <linux-nfs+bounces-2421-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2422-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0B03881808
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 20:41:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49E2988186D
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 21:12:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62384283306
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 19:41:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 560DD1C23585
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 20:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CE285655;
-	Wed, 20 Mar 2024 19:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC6C8594B;
+	Wed, 20 Mar 2024 20:12:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="kGD7Mw9o";
-	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="yY6NQRaj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugwBxS45"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from icts-p-cavuit-3.kulnet.kuleuven.be (icts-p-cavuit-3.kulnet.kuleuven.be [134.58.240.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616F585644
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Mar 2024 19:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8180185940;
+	Wed, 20 Mar 2024 20:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710963672; cv=none; b=EMdIVX0BclxYYgUjN76Y0DR5bPn2GKHKRRB8Ozpdt6uw1SdLvxxTqM7KZSxXJauSwIxxdXbz8ky4gOl4fZ4bxGqv9je/TxkE/SkKnD1g9++JT1s+wEzgKUJRTQZt6j8vFscNPNdalu0HiHGnRi/SD35nEuL3b2HxWyi35DzCwTk=
+	t=1710965554; cv=none; b=UpQTW8DjNG5HBb1zh6Qd5XUUw/lmxGUWCH7LwWo6pzdZ9OCpJqfawQcYDonJW1NCxfFgkq3JeliBKOzAUROLGZb86dU5pZp4KFXKsGXB0QJQgdmpSbKXFnM//eJyVuodS6ok5ORbAzggodRkrp4puS9rrvF1L+/1dpjgacWG+Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710963672; c=relaxed/simple;
-	bh=w/XMJoznjSIDazHFtt2m8p2TX6b0rQnMQZK7SIaYTs8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=iqBfZ2wrrek3rO0QNw5r8s1QlMWNZB8qWNNn1MKruqF/9la1rblmZLwemXdtiswTmmlrwbT/vs7dG8kuY0ipBVvudkGVLaxchwU2o2HFvl6aMdHP0/9Fwwxej7BsR7UwhjZmPtr3Zohj8wprH6Luw6gbpb3Sgc4KiXD4CZgmvXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=kGD7Mw9o; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=yY6NQRaj; arc=none smtp.client-ip=134.58.240.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
-X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
-X-KULeuven-Scanned: Found to be clean
-X-KULeuven-ID: 888B4201AF.A8FCE
-X-KULeuven-Information: Katholieke Universiteit Leuven
-Received: from icts-p-ceifnet-smtps-0.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:139:242:ac11:8])
-	by icts-p-cavuit-3.kulnet.kuleuven.be (Postfix) with ESMTP id 888B4201AF;
-	Wed, 20 Mar 2024 20:41:04 +0100 (CET)
-BCmilterd-Mark-Subject: no
-BCmilterd-Errors: 
-BCmilterd-Report: SA-HVU#EXTORTION_39_BITCOINADDRESS#2.00,SA-HVU#DKIM_VALID#0.00,SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#OURIPS#-35.00
-X-CAV-Cluster: smtps
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
-	s=kuleuven-cav-1; t=1710963663;
-	bh=zmsWyIw35vsbrf+pARCaDlYy8FImJ1PrJRMSK5mLHoM=;
-	h=Date:From:Subject:To:References:In-Reply-To;
-	b=kGD7Mw9o2tH+wJMQBrFOYx0qqRZzesBsG2vbYRm+Td1UkjzICpqTwkgelsCLTkOaD
-	 IY8kpEM1bG+JQW1orNPfWMWblurBLBz8W99ww0dyKxbCXyvVSeYUsWoUIyPzFBScDU
-	 AfbdI375NGHfnhE3H8q04eEqEkOY9QebofTVtFhE+b0p1JRBVvT5VJJzNtYAYjZFb9
-	 bzHChLvBihK8fpxy2EaY0oILGJGBcyZF3xVIHu+YYYcXYERjJZRu6KdKfYctV9HM/2
-	 VmjlX7Jvc3WWLxqvAMci0jDXzPwdyFhsTaDEfcqskcz6eywN1ilOxWhmee3APOYhry
-	 y9qKjBmQa2RNQ==
-Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by icts-p-ceifnet-smtps-0.kuleuven.be (Postfix) with ESMTPS id BDACED4F44704;
-	Wed, 20 Mar 2024 20:41:03 +0100 (CET)
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
-	s=esat20220324; t=1710963663;
-	bh=zmsWyIw35vsbrf+pARCaDlYy8FImJ1PrJRMSK5mLHoM=;
-	h=Date:From:Subject:To:References:In-Reply-To:From;
-	b=yY6NQRajoztuguWlHEBqJAnL9wYNOf0ogcAK9TfuqSAAf71DjtO2+Ujqs+ec+ybM6
-	 6kV24JRvCS8U4UJqutHAX7yVCRIndgceaDxaHC/1x2waiRfidpwH2vA442mpY4i9v4
-	 GzMNJR2o7w6RZV4UGD3qYII8jU+W//am6rrmwx+jMZk2Z/4GYteyXImdVtq8ZjkxIC
-	 8op/Cu+4Nk+CAbxGozH3JZ+ue12GQ2aVhTETrKsFzsYBc4TMkNu/FNxZxGW3o7ObsB
-	 xiiNysHUoIUkZGq6h4cXb77UozM1/+MTsQ/swbGSvo2U0uuZm7pZvKsqYuyG+keyEJ
-	 ss0H55ZtpvkgA==
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-Received: from [192.168.1.178] (d54C12615.access.telenet.be [84.193.38.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (3072 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id 9816E6000E;
-	Wed, 20 Mar 2024 20:41:03 +0100 (CET)
-Message-ID: <cc8ad258-dbf3-4efe-b719-4576ffb5f4b0@esat.kuleuven.be>
-Date: Wed, 20 Mar 2024 20:41:03 +0100
+	s=arc-20240116; t=1710965554; c=relaxed/simple;
+	bh=picUtc9j30ONjruWmUIIt1zS4ebWfPWBN1xsnqXmIvA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kPhLVlWV5WoRmcFTx6ksTmF30BhZNrxsbFVk95M6HuxpoA2I6dh2DXrChH8cipIsh6uYN/8woCVUKeRS7TIgVUiQtsyHIJ5Gf1gU24GtD/oiwsLYCkPPOlqAiyrm3bgUn6kIG3558KkGQNwdv+7WGAI6NzDOTtcQIy8ByK68o24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugwBxS45; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26399C433C7;
+	Wed, 20 Mar 2024 20:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710965554;
+	bh=picUtc9j30ONjruWmUIIt1zS4ebWfPWBN1xsnqXmIvA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ugwBxS45FwHEXuDQ6LhILv39BzzuJrH9e3Oq6ZmvS54hO/mWuT84LeFJ1Pb6GPJ0T
+	 2Zb8F1pNZmg0qeccpMgJWPdaSuj+7YozZpXrjfqmpyAdxGzlkTdd9D2T+5KcKaYEBU
+	 xzuvaOghYy/kxdKUrsFN7ewlPmK/vi6UR1dbue7f8W+Ay4rlcUgqgK/Rhv01yP3SXB
+	 qPqBeK99Z/DGomwAjkubf8EscVVAjtzVahDYR0VXbsasumvLhf9xn01kNdPxP9lwo5
+	 z2q2av9JKA9VWEb0GzBcDBn4UC2OsRQ6ZHjvxFl0e6bV+gyEUc5YoVQKzVGf2lIMUa
+	 WOTaB2feA5pbg==
+Message-ID: <ca81387b31025198808df6c55f411b00d74cb047.camel@kernel.org>
+Subject: Re: [PATCH RFC 08/24] vfs: make vfs_mknod break delegations on
+ parent directory
+From: Jeff Layton <jlayton@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Chuck
+ Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
+ <anna@kernel.org>, Steve French <sfrench@samba.org>, Paulo Alcantara
+ <pc@manguebit.com>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam
+ Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, David Howells <dhowells@redhat.com>, Tyler Hicks
+ <code@tyhicks.com>,  Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Miklos Szeredi
+ <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Namjae Jeon
+ <linkinjeon@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org,  samba-technical@lists.samba.org,
+ netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
+ linux-unionfs@vger.kernel.org, netdev@vger.kernel.org
+Date: Wed, 20 Mar 2024 16:12:29 -0400
+In-Reply-To: <20240320-jaguar-bildband-699e7ef5dc64@brauner>
+References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
+	 <20240315-dir-deleg-v1-8-a1d6209a3654@kernel.org>
+	 <20240320-jaguar-bildband-699e7ef5dc64@brauner>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-X-Kuleuven: This mail passed the K.U.Leuven mailcluster
-From: Rik Theys <Rik.Theys@esat.kuleuven.be>
-Subject: Re: nfsd hangs and nfsd_break_deleg_cb+0x170/0x190 warning
-To: Dai Ngo <dai.ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Linux Nfs <linux-nfs@vger.kernel.org>
-References: <66c98f4c-5e52-4fa3-8a2c-9379cfec2a9a@esat.kuleuven.be>
- <44c2101e756f7c3b876fb9c58da3ebd089dc14d5.camel@kernel.org>
- <e3ba6e04-ea06-4035-8546-639f11d6b79c@esat.kuleuven.be>
- <41325088-aa6d-4dcf-b105-8994350168c3@esat.kuleuven.be>
- <7d244882d769e377b06f39234bd5ee7dddb72a55.camel@kernel.org>
- <c7dbc796-7e7d-4041-ac71-eea02a701b12@esat.kuleuven.be>
- <50dd9475-b485-4b9b-bcbd-5f7dfabfbac5@oracle.com>
- <d90551d6-a48f-4c25-a2f0-8dbd2b5e5830@esat.kuleuven.be>
- <819fec01-6689-4949-b996-6e36b0b0fb4e@oracle.com>
-Content-Language: en-US
-In-Reply-To: <819fec01-6689-4949-b996-6e36b0b0fb4e@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi,
+On Wed, 2024-03-20 at 14:42 +0100, Christian Brauner wrote:
+> > =A0int vfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
+> > -              umode_t, dev_t);
+> > +              umode_t, dev_t, struct inode **);
+>=20
+> So we will have at least the following helpers with an additional
+> delegated inode argument.
+>=20
+> vfs_unlink()
+> vfs_link()
+> notify_change()
+> vfs_create()
+> vfs_mknod()
+> vfs_mkdir()
+> vfs_rmdir()
+>=20
+> From looking at callers all these helpers will be called with non-NULL
+> delegated inode argument in vfs only. Unless it is generally conceivable
+> that other callers will want to pass a non-NULL inode argument over time
+> it might make more sense to add vfs_<operation>_delegated() or
+> __vfs_<operation>() and make vfs_mknod() and friends exported wrappers
+> around it.
+>=20
+> I mean it's a matter of preference ultimately but this seems cleaner to
+> me. So at least for the new ones we should consider it. Would also make
+> the patch smaller.
+>=20
 
-On 3/19/24 22:42, Dai Ngo wrote:
->
-> On 3/19/24 12:41 PM, Rik Theys wrote:
->> Hi,
->>
->> On 3/19/24 18:09, Dai Ngo wrote:
->>>
->>> On 3/19/24 12:58 AM, Rik Theys wrote:
->>>> Hi,
->>>>
->>>> On 3/18/24 22:54, Jeff Layton wrote:
->>>>> On Mon, 2024-03-18 at 22:15 +0100, Rik Theys wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 3/18/24 21:21, Rik Theys wrote:
->>>>>>> Hi Jeff,
->>>>>>>
->>>>>>> On 3/12/24 13:47, Jeff Layton wrote:
->>>>>>>> On Tue, 2024-03-12 at 13:24 +0100, Rik Theys wrote:
->>>>>>>>> Hi Jeff,
->>>>>>>>>
->>>>>>>>> On 3/12/24 12:22, Jeff Layton wrote:
->>>>>>>>>> On Mon, 2024-03-11 at 19:43 +0100, Rik Theys wrote:
->>>>>>>>>>> Since a few weeks our Rocky Linux 9 NFS server has periodically
->>>>>>>>>>> logged hung nfsd tasks. The initial effect was that some 
->>>>>>>>>>> clients
->>>>>>>>>>> could no longer access the NFS server. This got worse and worse
->>>>>>>>>>> (probably as more nfsd threads got blocked) and we had to 
->>>>>>>>>>> restart
->>>>>>>>>>> the server. Restarting the server also failed as the NFS server
->>>>>>>>>>> service could no longer be stopped.
->>>>>>>>>>>
->>>>>>>>>>> The initial kernel we noticed this behavior on was
->>>>>>>>>>> kernel-5.14.0-362.18.1.el9_3.x86_64. Since then we've installed
->>>>>>>>>>> kernel-5.14.0-419.el9.x86_64 from CentOS Stream 9. The same 
->>>>>>>>>>> issue
->>>>>>>>>>> happened again on this newer kernel version:
->>>>>>>> 419 is fairly up to date with nfsd changes. There are some 
->>>>>>>> known bugs
->>>>>>>> around callbacks, and there is a draft MR in flight to fix it.
->>>>>>>>
->>>>>>>> What kernel were you on prior to 5.14.0-362.18.1.el9_3.x86_64 ? 
->>>>>>>> If we
->>>>>>>> can bracket the changes around a particular version, then that 
->>>>>>>> might
->>>>>>>> help identify the problem.
->>>>>>>>
->>>>>>>>>>> [Mon Mar 11 14:10:08 2024]       Not tainted 
->>>>>>>>>>> 5.14.0-419.el9.x86_64 #1
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] "echo 0 >
->>>>>>>>>>> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]task:nfsd            state:D 
->>>>>>>>>>> stack:0
->>>>>>>>>>>      pid:8865  ppid:2      flags:0x00004000
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] Call Trace:
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  <TASK>
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __schedule+0x21b/0x550
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  schedule+0x2d/0x70
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  schedule_timeout+0x11f/0x160
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> select_idle_sibling+0x28/0x430
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? wake_affine+0x62/0x1f0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __wait_for_common+0x90/0x1d0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> __pfx_schedule_timeout+0x10/0x10
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __flush_workqueue+0x13a/0x3f0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] 
->>>>>>>>>>>  nfsd4_shutdown_callback+0x49/0x120
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> nfsd4_cld_remove+0x54/0x1d0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ?
->>>>>>>>>>> nfsd4_return_all_client_layouts+0xc4/0xf0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> nfsd4_shutdown_copy+0x68/0xc0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __destroy_client+0x1f3/0x290 
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] 
->>>>>>>>>>>  nfsd4_exchange_id+0x75f/0x770 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> nfsd4_decode_opaque+0x3a/0x90 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] 
->>>>>>>>>>>  nfsd4_proc_compound+0x44b/0x700 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  nfsd_dispatch+0x94/0x1c0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  svc_process_common+0x2ec/0x660
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  svc_process+0x12d/0x170 
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  nfsd+0x84/0xb0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  kthread+0xdd/0x100
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? __pfx_kthread+0x10/0x10
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ret_from_fork+0x29/0x50
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  </TASK>
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] INFO: task nfsd:8866 blocked for
->>>>>>>>>>> more than 122 seconds.
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]       Not tainted
->>>>>>>>>>> 5.14.0-419.el9.x86_64 #1
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] "echo 0 >
->>>>>>>>>>> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]task:nfsd            state:D 
->>>>>>>>>>> stack:0
->>>>>>>>>>>      pid:8866  ppid:2      flags:0x00004000
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] Call Trace:
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  <TASK>
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __schedule+0x21b/0x550
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  schedule+0x2d/0x70
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  schedule_timeout+0x11f/0x160
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> select_idle_sibling+0x28/0x430
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? tcp_recvmsg+0x196/0x210
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? wake_affine+0x62/0x1f0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __wait_for_common+0x90/0x1d0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> __pfx_schedule_timeout+0x10/0x10
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  __flush_workqueue+0x13a/0x3f0
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] 
->>>>>>>>>>>  nfsd4_destroy_session+0x1a4/0x240
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024] 
->>>>>>>>>>>  nfsd4_proc_compound+0x44b/0x700 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  nfsd_dispatch+0x94/0x1c0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  svc_process_common+0x2ec/0x660
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? 
->>>>>>>>>>> __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  svc_process+0x12d/0x170 
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  nfsd+0x84/0xb0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  kthread+0xdd/0x100
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ? __pfx_kthread+0x10/0x10
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  ret_from_fork+0x29/0x50
->>>>>>>>>>>     [Mon Mar 11 14:10:08 2024]  </TASK>
->>>>>>>>>>>
->>>>>>>>>> The above threads are trying to flush the workqueue, so that 
->>>>>>>>>> probably
->>>>>>>>>> means that they are stuck waiting on a workqueue job to finish.
->>>>>>>>>>>     The above is repeated a few times, and then this warning is
->>>>>>>>>>> also logged:
->>>>>>>>>>>     [Mon Mar 11 14:12:04 2024] ------------[ cut here 
->>>>>>>>>>> ]------------
->>>>>>>>>>>     [Mon Mar 11 14:12:04 2024] WARNING: CPU: 39 PID: 8844 at
->>>>>>>>>>> fs/nfsd/nfs4state.c:4919 nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] Modules linked in: nfsv4
->>>>>>>>>>> dns_resolver nfs fscache netfs rpcsec_gss_krb5 rpcrdma rdma_cm
->>>>>>>>>>> iw_cm ib_cm ib_core binfmt_misc bonding tls rfkill 
->>>>>>>>>>> nft_counter nft_ct
->>>>>>>>>>>     nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nft_reject_inet
->>>>>>>>>>> nf_reject_ipv4 nf_reject_ipv6 nft_reject nf_tables nfnetlink 
->>>>>>>>>>> vfat
->>>>>>>>>>> fat dm_thin_pool dm_persistent_data dm_bio_prison dm_bufio l
->>>>>>>>>>>     ibcrc32c dm_service_time dm_multipath intel_rapl_msr
->>>>>>>>>>> intel_rapl_common intel_uncore_frequency
->>>>>>>>>>> intel_uncore_frequency_common isst_if_common skx_edac nfit
->>>>>>>>>>> libnvdimm ipmi_ssif x86_pkg_temp
->>>>>>>>>>>     _thermal intel_powerclamp coretemp kvm_intel kvm irqbypass
->>>>>>>>>>> dcdbas rapl intel_cstate mgag200 i2c_algo_bit drm_shmem_helper
->>>>>>>>>>> dell_smbios drm_kms_helper dell_wmi_descriptor wmi_bmof intel_u
->>>>>>>>>>>     ncore syscopyarea pcspkr sysfillrect mei_me sysimgblt 
->>>>>>>>>>> acpi_ipmi
->>>>>>>>>>> mei fb_sys_fops i2c_i801 ipmi_si intel_pch_thermal lpc_ich
->>>>>>>>>>> ipmi_devintf i2c_smbus ipmi_msghandler joydev acpi_power_meter
->>>>>>>>>>>     nfsd auth_rpcgss nfs_acl drm lockd grace fuse sunrpc ext4
->>>>>>>>>>> mbcache jbd2 sd_mod sg lpfc
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  nvmet_fc nvmet nvme_fc 
->>>>>>>>>>> nvme_fabrics
->>>>>>>>>>> crct10dif_pclmul ahci libahci crc32_pclmul nvme_core 
->>>>>>>>>>> crc32c_intel
->>>>>>>>>>> ixgbe megaraid_sas libata nvme_common ghash_clmulni_int
->>>>>>>>>>>     el t10_pi wdat_wdt scsi_transport_fc mdio wmi dca dm_mirror
->>>>>>>>>>> dm_region_hash dm_log dm_mod
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] CPU: 39 PID: 8844 Comm: nfsd Not
->>>>>>>>>>> tainted 5.14.0-419.el9.x86_64 #1
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] Hardware name: Dell Inc. 
->>>>>>>>>>> PowerEdge
->>>>>>>>>>> R740/00WGD1, BIOS 2.20.1 09/13/2023
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] RIP:
->>>>>>>>>>> 0010:nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] Code: a6 95 c5 f3 e9 ff fe ff 
->>>>>>>>>>> ff 48
->>>>>>>>>>> 89 df be 01 00 00 00 e8 34 b5 13 f4 48 8d bb 98 00 00 00 e8 
->>>>>>>>>>> c8 f9
->>>>>>>>>>> 00 00 84 c0 0f 85 2e ff ff ff <0f> 0b e9 27 ff ff ff be
->>>>>>>>>>>     02 00 00 00 48 89 df e8 0c b5 13 f4 e9 01
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] RSP: 0018:ffff9929e0bb7b80 
->>>>>>>>>>> EFLAGS:
->>>>>>>>>>> 00010246
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] RAX: 0000000000000000 RBX:
->>>>>>>>>>> ffff8ada51930900 RCX: 0000000000000024
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] RDX: ffff8ada519309c8 RSI:
->>>>>>>>>>> ffff8ad582933c00 RDI: 0000000000002000
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] RBP: ffff8ad46bf21574 R08:
->>>>>>>>>>> ffff9929e0bb7b48 R09: 0000000000000000
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] R10: ffff8aec859a2948 R11:
->>>>>>>>>>> 0000000000000000 R12: ffff8ad6f497c360
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] R13: ffff8ad46bf21560 R14:
->>>>>>>>>>> ffff8ae5942e0b10 R15: ffff8ad6f497c360
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] FS:  0000000000000000(0000)
->>>>>>>>>>> GS:ffff8b031fcc0000(0000) knlGS:0000000000000000
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] CS:  0010 DS: 0000 ES: 0000 CR0:
->>>>>>>>>>> 0000000080050033
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] CR2: 00007fafe2060744 CR3:
->>>>>>>>>>> 00000018e58de006 CR4: 00000000007706e0
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] DR0: 0000000000000000 DR1:
->>>>>>>>>>> 0000000000000000 DR2: 0000000000000000
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] DR3: 0000000000000000 DR6:
->>>>>>>>>>> 00000000fffe0ff0 DR7: 0000000000000400
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] PKRU: 55555554
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] Call Trace:
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  <TASK>
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> show_trace_log_lvl+0x1c4/0x2df
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> show_trace_log_lvl+0x1c4/0x2df
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? __break_lease+0x16f/0x5f0
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> nfsd_break_deleg_cb+0x170/0x190
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? __warn+0x81/0x110
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> nfsd_break_deleg_cb+0x170/0x190
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? report_bug+0x10a/0x140
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? handle_bug+0x3c/0x70
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? exc_invalid_op+0x14/0x70
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? asm_exc_invalid_op+0x16/0x20
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> nfsd_break_deleg_cb+0x170/0x190
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  __break_lease+0x16f/0x5f0
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ?
->>>>>>>>>>> nfsd_file_lookup_locked+0x117/0x160 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? list_lru_del+0x101/0x150
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] 
->>>>>>>>>>>  nfsd_file_do_acquire+0x790/0x830
->>>>>>>>>>> [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] 
->>>>>>>>>>>  nfs4_get_vfs_file+0x315/0x3a0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] 
->>>>>>>>>>>  nfsd4_process_open2+0x430/0xa30 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? fh_verify+0x297/0x2f0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  nfsd4_open+0x3ce/0x4b0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] 
->>>>>>>>>>>  nfsd4_proc_compound+0x44b/0x700 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  nfsd_dispatch+0x94/0x1c0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  svc_process_common+0x2ec/0x660
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? 
->>>>>>>>>>> __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  svc_process+0x12d/0x170 
->>>>>>>>>>> [sunrpc]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  nfsd+0x84/0xb0 [nfsd]
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  kthread+0xdd/0x100
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ? __pfx_kthread+0x10/0x10
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  ret_from_fork+0x29/0x50
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024]  </TASK>
->>>>>>>>>>>     [Mon Mar 11 14:12:05 2024] ---[ end trace 
->>>>>>>>>>> 7a039e17443dc651 ]---
->>>>>>>>>> This is probably this WARN in nfsd_break_one_deleg:
->>>>>>>>>>
->>>>>>>>>> WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall));
->>>>>>>>>>
->>>>>>>>>> It means that a delegation break callback to the client 
->>>>>>>>>> couldn't be
->>>>>>>>>> queued to the workqueue, and so it didn't run.
->>>>>>>>>>
->>>>>>>>>>> Could this be the same issue as described
->>>>>>>>>>> here:https://urldefense.com/v3/__https://lore.kernel.org/linux-nfs/af0ec881-5ebf-4feb-98ae-3ed2a77f86f1@oracle.com/__;!!ACWV5N9M2RV99hQ!LV3yWeoSOhNAkRHkxFCH2tlm0iNFVD78mxnSLyP6lrX7yBVeA2TOJ4nv6oZsqLwP4kW56CMpDWhkjjwSkdBV9En7$ 
->>>>>>>>>>> ?
->>>>>>>>>> Yes, most likely the same problem.
->>>>>>>>> If I read that thread correctly, this issue was introduced 
->>>>>>>>> between
->>>>>>>>> 6.1.63 and 6.6.3? Is it possible the EL9 5.14.0-362.18.1.el9_3
->>>>>>>>> backported these changes, or were we hitting some other bug 
->>>>>>>>> with that
->>>>>>>>> version? It seems the 6.1.x kernel is not affected? If so, that
->>>>>>>>> would be
->>>>>>>>> the recommended kernel to run?
->>>>>>>> Anything is possible. We have to identify the problem first.
->>>>>>>>>>> As described in that thread, I've tried to obtain the requested
->>>>>>>>>>> information.
->>>>>>>>>>>
->>>>>>>>>>> Is it possible this is the issue that was fixed by the patches
->>>>>>>>>>> described
->>>>>>>>>>> here?https://urldefense.com/v3/__https://lore.kernel.org/linux-nfs/2024022054-cause-suffering-eae8@gregkh/__;!!ACWV5N9M2RV99hQ!LV3yWeoSOhNAkRHkxFCH2tlm0iNFVD78mxnSLyP6lrX7yBVeA2TOJ4nv6oZsqLwP4kW56CMpDWhkjjwSkedtUP09$ 
->>>>>>>>>>>
->>>>>>>>>> Doubtful. Those are targeted toward a different set of issues.
->>>>>>>>>>
->>>>>>>>>> If you're willing, I do have some patches queued up for 
->>>>>>>>>> CentOS here
->>>>>>>>>> that
->>>>>>>>>> fix some backchannel problems that could be related. I'm mainly
->>>>>>>>>> waiting
->>>>>>>>>> on Chuck to send these to Linus and then we'll likely merge 
->>>>>>>>>> them into
->>>>>>>>>> CentOS soon afterward:
->>>>>>>>>>
->>>>>>>>>> https://urldefense.com/v3/__https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3689__;!!ACWV5N9M2RV99hQ!LV3yWeoSOhNAkRHkxFCH2tlm0iNFVD78mxnSLyP6lrX7yBVeA2TOJ4nv6oZsqLwP4kW56CMpDWhkjjwSkdvDn8y7$ 
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>> If you can send me a patch file, I can rebuild the C9S kernel 
->>>>>>>>> with that
->>>>>>>>> patch and run it. It can take a while for the bug to trigger as I
->>>>>>>>> believe it seems to be very workload dependent (we were 
->>>>>>>>> running very
->>>>>>>>> stable for months and now hit this bug every other week).
->>>>>>>>>
->>>>>>>>>
->>>>>>>> It's probably simpler to just pull down the build artifacts for 
->>>>>>>> that MR.
->>>>>>>> You have to drill down through the CI for it, but they are here:
->>>>>>>>
->>>>>>>> https://urldefense.com/v3/__https://s3.amazonaws.com/arr-cki-prod-trusted-artifacts/index.html?prefix=trusted-artifacts*1194300175*publish_x86_64*6278921877*artifacts*__;Ly8vLy8!!ACWV5N9M2RV99hQ!LV3yWeoSOhNAkRHkxFCH2tlm0iNFVD78mxnSLyP6lrX7yBVeA2TOJ4nv6oZsqLwP4kW56CMpDWhkjjwSkaP5eW8V$ 
->>>>>>>>
->>>>>>>>
->>>>>>>> There's even a repo file you can install on the box to pull 
->>>>>>>> them down.
->>>>>>> We installed this kernel on the server 3 days ago. Today, a user
->>>>>>> informed us that their screen was black after logging in. 
->>>>>>> Similar to
->>>>>>> other occurrences of this issue, the mount command on the client 
->>>>>>> was
->>>>>>> hung. But in contrast to the other times, there were no messages in
->>>>>>> the logs kernel logs on the server. Even restarting the client does
->>>>>>> not resolve the issue.
->>>>>
->>>>> Ok, so you rebooted the client and it's still unable to mount? That
->>>>> sounds like a server problem if so.
->>>>>
->>>>> Are both client and server running the same kernel?
->>>> No, the server runs 5.14.0-427.3689_1194299994.el9 and the client 
->>>> 5.14.0-362.18.1.el9_3.
->>>>>
->>>>>>> Something still seems to be wrong on the server though. When I 
->>>>>>> look at
->>>>>>> the directories under /proc/fs/nfsd/clients, there's still a 
->>>>>>> directory
->>>>>>> for the specific client, even though it's no longer running:
->>>>>>>
->>>>>>> # cat 155/info
->>>>>>> clientid: 0xc8edb7f65f4a9ad
->>>>>>> address: "10.87.31.152:819"
->>>>>>> status: confirmed
->>>>>>> seconds from last renew: 33163
->>>>>>> name: "Linux NFSv4.2 bersalis.esat.kuleuven.be"
->>>>>>> minor version: 2
->>>>>>> Implementation domain: "kernel.org"
->>>>>>> Implementation name: "Linux 5.14.0-362.18.1.el9_3.0.1.x86_64 #1 SMP
->>>>>>> PREEMPT_DYNAMIC Sun Feb 11 13:49:23 UTC 2024 x86_64"
->>>>>>> Implementation time: [0, 0]
->>>>>>> callback state: DOWN
->>>>>>> callback address: 10.87.31.152:0
->>>>>>>
->>>>> If you just shut down the client, the server won't immediately 
->>>>> purge its
->>>>> record. In fact, assuming you're running the same kernel on the 
->>>>> server,
->>>>> it won't purge the client record until there is a conflicting request
->>>>> for its state.
->>>> Is there a way to force such a conflicting request (to get the 
->>>> client record to purge)?
->>>
->>> Try:
->>>
->>> # echo "expire" > /proc/fs/nfsd/clients/155/ctl
->>
->> I've tried that. The command hangs and can not be interrupted with 
->> ctrl-c.
->> I've now also noticed in the dmesg output that the kernel issued the 
->> following WARNING a few hours ago. It wasn't directly triggered by 
->> the echo command above, but seems to have been triggered a few hours 
->> ago (probably when another client started to have the same problem as 
->> more clients are experiencing issues now).
->
-> I think this warning message is harmless. However it indicates potential
-> problem with the workqueue which might be related to memory shortage.
->
-> What the output of 'cat /proc/meminfo' looks like?
+Good suggestion. I just respun along those lines and it's a lot cleaner.
+I'm still testing it but here is the new diffstat. It's a little larger
+actually, but it keeps the changes more confined to namei.c:
 
-I doubt the current values are useful, but they are:
+jlayton@tleilax:~/git/linux$ git diff master --stat
+ fs/locks.c                |  12 +++-
+ fs/namei.c                | 227 ++++++++++++++++++++++++++++++++++++++++++=
+++++--------------------
+ fs/nfs/delegation.c       |   5 ++
+ fs/nfs/dir.c              |  20 ++++++
+ fs/nfs/internal.h         |   2 +-
+ fs/nfs/nfs4file.c         |   2 +
+ fs/nfs/nfs4proc.c         |  62 +++++++++++++++++-
+ fs/nfs/nfs4trace.h        | 104 ++++++++++++++++++++++++++++++
+ fs/nfs/nfs4xdr.c          | 136 +++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfstrace.h         |   8 ++-
+ fs/nfsd/filecache.c       |  37 +++++++++--
+ fs/nfsd/filecache.h       |   2 +
+ fs/nfsd/nfs4proc.c        |  48 ++++++++++++++
+ fs/nfsd/nfs4state.c       | 113 ++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfs4xdr.c         |  91 ++++++++++++++++++++++++++-
+ fs/nfsd/state.h           |   5 ++
+ fs/nfsd/vfs.c             |   5 +-
+ fs/nfsd/vfs.h             |   2 +-
+ fs/nfsd/xdr4.h            |  19 ++++++
+ fs/smb/client/cifsfs.c    |   3 +
+ include/linux/filelock.h  |  14 +++++
+ include/linux/nfs4.h      |   7 +++
+ include/linux/nfs_fs.h    |   1 +
+ include/linux/nfs_fs_sb.h |   1 +
+ include/linux/nfs_xdr.h   |   2 +
+ 25 files changed, 838 insertions(+), 90 deletions(-)
 
-MemTotal:       196110860 kB
-MemFree:        29357112 kB
-MemAvailable:   179529420 kB
-Buffers:        11996096 kB
-Cached:         130589396 kB
-SwapCached:           52 kB
-Active:          1136988 kB
-Inactive:       144192468 kB
-Active(anon):     698564 kB
-Inactive(anon):  2657256 kB
-Active(file):     438424 kB
-Inactive(file): 141535212 kB
-Unevictable:       72140 kB
-Mlocked:           69068 kB
-SwapTotal:      67108860 kB
-SwapFree:       67106276 kB
-Zswap:                 0 kB
-Zswapped:              0 kB
-Dirty:             80812 kB
-Writeback:             0 kB
-AnonPages:       2806592 kB
-Mapped:           322700 kB
-Shmem:            599308 kB
-KReclaimable:   16977000 kB
-Slab:           18898736 kB
-SReclaimable:   16977000 kB
-SUnreclaim:      1921736 kB
-KernelStack:       18128 kB
-PageTables:        31716 kB
-SecPageTables:         0 kB
-NFS_Unstable:          0 kB
-Bounce:                0 kB
-WritebackTmp:          0 kB
-CommitLimit:    165164288 kB
-Committed_AS:    5223940 kB
-VmallocTotal:   34359738367 kB
-VmallocUsed:      300064 kB
-VmallocChunk:          0 kB
-Percpu:            45888 kB
-HardwareCorrupted:     0 kB
-AnonHugePages:   2451456 kB
-ShmemHugePages:        0 kB
-ShmemPmdMapped:        0 kB
-FileHugePages:         0 kB
-FilePmdMapped:         0 kB
-CmaTotal:              0 kB
-CmaFree:               0 kB
-Unaccepted:            0 kB
-HugePages_Total:       0
-HugePages_Free:        0
-HugePages_Rsvd:        0
-HugePages_Surp:        0
-Hugepagesize:       2048 kB
-Hugetlb:               0 kB
-DirectMap4k:     1303552 kB
-DirectMap2M:    28715008 kB
-DirectMap1G:    171966464 kB
-
-
->
-> Did you try 'echo 3 > /proc/sys/vm/drop_caches'?
-
-Yes, I tried that when the first client hit the issue, but it didn't 
-result in any unlocking of the client.
-
-
->
->>
->> [Tue Mar 19 14:53:44 2024] ------------[ cut here ]------------
->> [Tue Mar 19 14:53:44 2024] WARNING: CPU: 44 PID: 5843 at 
->> fs/nfsd/nfs4state.c:4920 nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->> [Tue Mar 19 14:53:44 2024] Modules linked in: nf_conntrack_netlink 
->> nfsv4 dns_resolver nfs fscache netfs binfmt_misc xsk_diag 
->> rpcsec_gss_krb5 rpcrdma rdma_cm iw_cm ib_cm ib_core bonding tls 
->> rfkill nft_counter nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 
->> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nf_tables 
->> nfnetlink vfat fat dm_thin_pool dm_persistent_data dm_bio_prison 
->> dm_bufio libcrc32c dm_service_time dm_multipath intel_rapl_msr 
->> intel_rapl_common intel_uncore_frequency 
->> intel_uncore_frequency_common isst_if_common skx_edac nfit libnvdimm 
->> x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm dcdbas 
->> irqbypass ipmi_ssif rapl intel_cstate mgag200 i2c_algo_bit 
->> drm_shmem_helper drm_kms_helper dell_smbios syscopyarea intel_uncore 
->> sysfillrect wmi_bmof dell_wmi_descriptor pcspkr sysimgblt fb_sys_fops 
->> mei_me i2c_i801 mei intel_pch_thermal acpi_ipmi i2c_smbus lpc_ich 
->> ipmi_si ipmi_devintf ipmi_msghandler joydev acpi_power_meter nfsd 
->> nfs_acl lockd auth_rpcgss grace drm fuse sunrpc ext4
->> [Tue Mar 19 14:53:44 2024]  mbcache jbd2 sd_mod sg lpfc nvmet_fc 
->> nvmet nvme_fc nvme_fabrics crct10dif_pclmul crc32_pclmul nvme_core 
->> ixgbe crc32c_intel ahci libahci nvme_common megaraid_sas t10_pi 
->> ghash_clmulni_intel wdat_wdt libata scsi_transport_fc mdio dca wmi 
->> dm_mirror dm_region_hash dm_log dm_mod
->> [Tue Mar 19 14:53:44 2024] CPU: 44 PID: 5843 Comm: nfsd Not tainted 
->> 5.14.0-427.3689_1194299994.el9.x86_64 #1
->> [Tue Mar 19 14:53:44 2024] Hardware name: Dell Inc. PowerEdge 
->> R740/00WGD1, BIOS 2.20.1 09/13/2023
->> [Tue Mar 19 14:53:44 2024] RIP: 0010:nfsd_break_deleg_cb+0x170/0x190 
->> [nfsd]
->> [Tue Mar 19 14:53:44 2024] Code: 76 76 cd de e9 ff fe ff ff 48 89 df 
->> be 01 00 00 00 e8 34 a1 1b df 48 8d bb 98 00 00 00 e8 a8 fe 00 00 84 
->> c0 0f 85 2e ff ff ff <0f> 0b e9 27 ff ff ff be 02 00 00 00 48 89 df 
->> e8 0c a1 1b df e9 01
->> [Tue Mar 19 14:53:44 2024] RSP: 0018:ffffb2878f2cfc38 EFLAGS: 00010246
->> [Tue Mar 19 14:53:44 2024] RAX: 0000000000000000 RBX: 
->> ffff88d5171067b8 RCX: 0000000000000000
->> [Tue Mar 19 14:53:44 2024] RDX: ffff88d517106880 RSI: 
->> ffff88bdceec8600 RDI: 0000000000002000
->> [Tue Mar 19 14:53:44 2024] RBP: ffff88d68a38a284 R08: 
->> ffffb2878f2cfc00 R09: 0000000000000000
->> [Tue Mar 19 14:53:44 2024] R10: ffff88bf57dd7878 R11: 
->> 0000000000000000 R12: ffff88d5b79c4798
->> [Tue Mar 19 14:53:44 2024] R13: ffff88d68a38a270 R14: 
->> ffff88cab06ad0c8 R15: ffff88d5b79c4798
->> [Tue Mar 19 14:53:44 2024] FS:  0000000000000000(0000) 
->> GS:ffff88d4a1180000(0000) knlGS:0000000000000000
->> [Tue Mar 19 14:53:44 2024] CS:  0010 DS: 0000 ES: 0000 CR0: 
->> 0000000080050033
->> [Tue Mar 19 14:53:44 2024] CR2: 00007fe46ef90000 CR3: 
->> 000000019d010004 CR4: 00000000007706e0
->> [Tue Mar 19 14:53:44 2024] DR0: 0000000000000000 DR1: 
->> 0000000000000000 DR2: 0000000000000000
->> [Tue Mar 19 14:53:44 2024] DR3: 0000000000000000 DR6: 
->> 00000000fffe0ff0 DR7: 0000000000000400
->> [Tue Mar 19 14:53:44 2024] PKRU: 55555554
->> [Tue Mar 19 14:53:44 2024] Call Trace:
->> [Tue Mar 19 14:53:44 2024]  <TASK>
->> [Tue Mar 19 14:53:44 2024]  ? show_trace_log_lvl+0x1c4/0x2df
->> [Tue Mar 19 14:53:44 2024]  ? show_trace_log_lvl+0x1c4/0x2df
->> [Tue Mar 19 14:53:44 2024]  ? __break_lease+0x16f/0x5f0
->> [Tue Mar 19 14:53:44 2024]  ? nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  ? __warn+0x81/0x110
->> [Tue Mar 19 14:53:44 2024]  ? nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  ? report_bug+0x10a/0x140
->> [Tue Mar 19 14:53:44 2024]  ? handle_bug+0x3c/0x70
->> [Tue Mar 19 14:53:44 2024]  ? exc_invalid_op+0x14/0x70
->> [Tue Mar 19 14:53:44 2024]  ? asm_exc_invalid_op+0x16/0x20
->> [Tue Mar 19 14:53:44 2024]  ? nfsd_break_deleg_cb+0x170/0x190 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  ? nfsd_break_deleg_cb+0x96/0x190 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  __break_lease+0x16f/0x5f0
->> [Tue Mar 19 14:53:44 2024]  nfs4_get_vfs_file+0x164/0x3a0 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  nfsd4_process_open2+0x430/0xa30 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  ? fh_verify+0x297/0x2f0 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  nfsd4_open+0x3ce/0x4b0 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  nfsd4_proc_compound+0x44b/0x700 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  nfsd_dispatch+0x94/0x1c0 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  svc_process_common+0x2ec/0x660 [sunrpc]
->> [Tue Mar 19 14:53:44 2024]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  svc_process+0x12d/0x170 [sunrpc]
->> [Tue Mar 19 14:53:44 2024]  nfsd+0x84/0xb0 [nfsd]
->> [Tue Mar 19 14:53:44 2024]  kthread+0xdd/0x100
->> [Tue Mar 19 14:53:44 2024]  ? __pfx_kthread+0x10/0x10
->> [Tue Mar 19 14:53:44 2024]  ret_from_fork+0x29/0x50
->> [Tue Mar 19 14:53:44 2024]  </TASK>
->> [Tue Mar 19 14:53:44 2024] ---[ end trace ed0b2b3f135c637d ]---
->>
->> It again seems to have been triggered in nfsd_break_deleg_cb?
->>
->> I also had the following perf command running a tmux on the server:
->>
->> perf trace -e nfsd:nfsd_cb_recall_any
->>
->> This has spewed a lot of messages. I'm including a short list here:
->>
->> ...
->>
->> 33464866.721 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688785, bmval0: 1, addr: 0x7f331bb116c8)
->> 33464866.724 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688827, bmval0: 1, addr: 0x7f331bb11738)
->> 33464866.729 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688767, bmval0: 1, addr: 0x7f331bb117a8)
->> 33464866.732 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210718132, bmval0: 1, addr: 0x7f331bb11818)
->> 33464866.737 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688952, bmval0: 1, addr: 0x7f331bb11888)
->> 33464866.741 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210702355, bmval0: 1, addr: 0x7f331bb118f8)
->> 33868414.001 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688751, bmval0: 1, addr: 0x7f331be68620)
->> 33868414.014 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210718536, bmval0: 1, addr: 0x7f331be68690)
->> 33868414.018 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210719074, bmval0: 1, addr: 0x7f331be68700)
->> 33868414.022 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688916, bmval0: 1, addr: 0x7f331be68770)
->> 33868414.026 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688941, bmval0: 1, addr: 0x7f331be687e0)
->> ...
->>
->> 33868414.924 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688744, bmval0: 1, addr: 0x7f331be6d7f0)
->> 33868414.929 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210717223, bmval0: 1, addr: 0x7f331be6d860)
->> 33868414.934 kthreadd/1597068 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210716137, bmval0: 1, addr: 0x7f331be6d8d0)
->> 34021240.903 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688941, bmval0: 1, addr: 0x7f331c207de8)
->> 34021240.917 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210718750, bmval0: 1, addr: 0x7f331c207e58)
->> 34021240.922 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688955, bmval0: 1, addr: 0x7f331c207ec8)
->> 34021240.925 kworker/u98:5/1591466 nfsd:nfsd_cb_recall_any(cl_boot: 
->> 1710533037, cl_id: 210688975, bmval0: 1, addr: 0x7f331c207f38)
->> ...
->>
->> I assume the cl_id is the client id? How can I map this to a client 
->> from /proc/fs/nfsd/clients?
->
-> The hex value of 'clientid' printed from /proc/fs/nfsd/clients/XX/info
-> is a 64-bit value composed of:
->
-> typedef struct {
->         u32             cl_boot;
->         u32             cl_id;
-> } clientid_t
->
-> For example:
->
-> clientid: 0xc8edb7f65f4a9ad
->
-> cl_boot:  65f4a9add (1710533037)
-> cl_id:      c8edb7f (21068895)
->
-> This should match a trace event with:
->
-> nfsd:nfsd_cb_recall_any(cl_boot: 1710533037, cl_id: 21068895, bmval0: 
-> XX, addr: 0xYYYYY)
->
->>
->> If I understand it correctly, the recall_any should be called when 
->> either the system starts to experience memory pressure,
->
-> yes.
-It seems odd that the system gets in such a state that has such high 
-memory pressure. It doesn't run much else than NFS and Samba.
->
->> or it reaches the delegation limits?
->
-> No, this feature was added to nfsd very recently. I don't think your 
-> kernel has it.
->
->> I doubt the system is actually running out of memory here as there 
->> are no other indications.
->> Shouldn't I get those "page allocation failure" messages if it does? 
->> How can I check the number of delegations/leases currently issued,
->> what the current maximum is and how to increase it?
->
-> Max delegations is 4 per 1MB of available memory. There is no
-> admin tool to adjust this value.
-/proc/locks currently has about 130k DELEG lines, so that should be a 
-lot lower than the limit on a 192G ram server.
->
-> I do not recommend running a production system with delegation
-> disabled. But for this specific issue, it might help to temporarily
-> disable delegation to isolate problem areas.
-
-
-I'm going to reboot the system with the 6.1.82 kernel (kernel-lt from 
-elrepo). Maybe it has less new modern developments that may have 
-introduced this.
-
-I've been able to reproduce the situation on an additional client now 
-that the issue happens on the server:
-
- 1. Log in on a client and mount the NFS share.
- 2. Open a file from the NFS share in vim so the client gets a read
-    delegation from the server
- 3. Verify on the server in /proc/fs/nfsd/clients/*/states that the
-    client has a delegation for the file
- 4. Forcefully reboot the client by running 'echo b > /proc/sysrq-trigger'
- 5. Watch the /proc/fs/nfsd/clients/*/info file on the server.
-
-The "seconds from last renew" will go up and at some point the callback 
-state changes to "FAULT". Even when the lease delegation time (90s by 
-default?) is over, the
-
-seconds from last renew keeps increasing. At some point the callback 
-state changes to "DOWN". When the client is up again and remounts the 
-share, the mount hangs on the client
-
-and on the server I notice there's a second directory for this client in 
-the clients directory, even though the clientid is the same. The 
-callback state for this new client is "UNKNOWN" and the callback address 
-is "(einval)".
-
-This is on a client running Fedora 39 with the 6.7.9 kernel.
-
-
-I don't know yet if the same procedure can be used to trigger the 
-behavior after the server is rebooted. I'm going to try to reproduce 
-this on another system first.
-
-I would expect the delegations to expire automatically after 90s, but 
-they remain in the states file of the "DOWN" client.
-
-Regards,
-
-Rik
-
->
-> -Dai
->
->>
->> Regarding the recall any call: from what I've read on kernelnewbies, 
->> this feature was introduced in the 6.2 kernel? When I look at the 
->> tree for 6.1.x, it was backported in 6.1.81? Is there a way to 
->> disable this support somehow?
->>
->> Regards,
->>
->> Rik
->>
->>
->>>
->>> -Dai
->>>
->>>>>
->>>>>
->>>>>> The nfsdclnts command for this client shows the following 
->>>>>> delegations:
->>>>>>
->>>>>> # nfsdclnts -f 155/states -t all
->>>>>> Inode number | Type   | Access | Deny | ip address | Filename
->>>>>> 169346743    | open   | r-     | --   | 10.87.31.152:819 |
->>>>>> disconnected dentry
->>>>>> 169346743    | deleg  | r      |      | 10.87.31.152:819 |
->>>>>> disconnected dentry
->>>>>> 169346746    | open   | r-     | --   | 10.87.31.152:819 |
->>>>>> disconnected dentry
->>>>>> 169346746    | deleg  | r      |      | 10.87.31.152:819 |
->>>>>> disconnected dentry
->>>>>>
->>>>>> I see a lot of recent patches regarding directory delegations. Could
->>>>>> this be related to this?
->>>>>>
->>>>>> Will a 5.14.0-362.18.1.el9_3.0.1 kernel try to use a directory 
->>>>>> delegation?
->>>>>>
->>>>>>
->>>>> No. Directory delegations are a new feature that's still under
->>>>> development. They use some of the same machinery as file delegations,
->>>>> but they wouldn't be a factor here.
->>>>>
->>>>>>> The system seems to have identified that the client is no longer
->>>>>>> reachable, but the client entry does not go away. When a mount was
->>>>>>> hanging on the client, there would be two directories in clients 
->>>>>>> for
->>>>>>> the same client. Killing the mount command clears up the second 
->>>>>>> entry.
->>>>>>>
->>>>>>> Even after running conntrack -D on the server to remove the tcp
->>>>>>> connection from the conntrack table, the entry doesn't go away 
->>>>>>> and the
->>>>>>> client still can not mount anything from the server.
->>>>>>>
->>>>>>> A tcpdump on the client while a mount was running logged the 
->>>>>>> following
->>>>>>> messages over and over again:
->>>>>>>
->>>>>>> request:
->>>>>>>
->>>>>>> Frame 1: 378 bytes on wire (3024 bits), 378 bytes captured (3024 
->>>>>>> bits)
->>>>>>> Ethernet II, Src: HP_19:7d:4b (e0:73:e7:19:7d:4b), Dst:
->>>>>>> ArubaaHe_f9:8e:00 (88:3a:30:f9:8e:00)
->>>>>>> Internet Protocol Version 4, Src: 10.87.31.152, Dst: 10.86.18.14
->>>>>>> Transmission Control Protocol, Src Port: 932, Dst Port: 2049, 
->>>>>>> Seq: 1,
->>>>>>> Ack: 1, Len: 312
->>>>>>> Remote Procedure Call, Type:Call XID:0x1d3220c4
->>>>>>> Network File System
->>>>>>>      [Program Version: 4]
->>>>>>>      [V4 Procedure: COMPOUND (1)]
->>>>>>>      GSS Data, Ops(1): CREATE_SESSION
->>>>>>>          Length: 152
->>>>>>>          GSS Sequence Number: 76
->>>>>>>          Tag: <EMPTY>
->>>>>>>          minorversion: 2
->>>>>>>          Operations (count: 1): CREATE_SESSION
->>>>>>>          [Main Opcode: CREATE_SESSION (43)]
->>>>>>>      GSS Checksum:
->>>>>>> 00000028040404ffffffffff000000002c19055f1f8d442d594c13849628affc2797cbb2… 
->>>>>>>
->>>>>>>          GSS Token Length: 40
->>>>>>>          GSS-API Generic Security Service Application Program 
->>>>>>> Interface
->>>>>>>              krb5_blob:
->>>>>>> 040404ffffffffff000000002c19055f1f8d442d594c13849628affc2797cbb23fa080b0… 
->>>>>>>
->>>>>>>
->>>>>>> response:
->>>>>>>
->>>>>>> Frame 2: 206 bytes on wire (1648 bits), 206 bytes captured (1648 
->>>>>>> bits)
->>>>>>> Ethernet II, Src: ArubaaHe_f9:8e:00 (88:3a:30:f9:8e:00), Dst:
->>>>>>> HP_19:7d:4b (e0:73:e7:19:7d:4b)
->>>>>>> Internet Protocol Version 4, Src: 10.86.18.14, Dst: 10.87.31.152
->>>>>>> Transmission Control Protocol, Src Port: 2049, Dst Port: 932, 
->>>>>>> Seq: 1,
->>>>>>> Ack: 313, Len: 140
->>>>>>> Remote Procedure Call, Type:Reply XID:0x1d3220c4
->>>>>>> Network File System
->>>>>>>      [Program Version: 4]
->>>>>>>      [V4 Procedure: COMPOUND (1)]
->>>>>>>      GSS Data, Ops(1): CREATE_SESSION(NFS4ERR_DELAY)
->>>>>>>          Length: 24
->>>>>>>          GSS Sequence Number: 76
->>>>>>>          Status: NFS4ERR_DELAY (10008)
->>>>>>>          Tag: <EMPTY>
->>>>>>>          Operations (count: 1)
->>>>>>>          [Main Opcode: CREATE_SESSION (43)]
->>>>>>>      GSS Checksum:
->>>>>>> 00000028040405ffffffffff000000000aa742d0798deaad1a8aa2d7c3a91bf4f6274222… 
->>>>>>>
->>>>>>>          GSS Token Length: 40
->>>>>>>          GSS-API Generic Security Service Application Program 
->>>>>>> Interface
->>>>>>>              krb5_blob:
->>>>>>> 040405ffffffffff000000000aa742d0798deaad1a8aa2d7c3a91bf4f627422226d74923… 
->>>>>>>
->>>>>>>
->>>>>>> I was hoping that giving the client a different IP address would
->>>>>>> resolve the issue for this client, but it didn't. Even though the
->>>>>>> client had a new IP address (hostname was kept the same), it 
->>>>>>> failed to
->>>>>>> mount anything from the server.
->>>>>>>
->>>>> Changing the IP address won't help. The client is probably using the
->>>>> same long-form client id as before, so the server still identifies 
->>>>> the
->>>>> client even with the address change.
->>>> How is the client id determined? Will changing the hostname of the 
->>>> client trigger a change of the client id?
->>>>>
->>>>> Unfortunately, the cause of an NFS4ERR_DELAY error is tough to guess.
->>>>> The client is expected to back off and retry, so if the server keeps
->>>>> returning that repeatedly, then a hung mount command is expected.
->>>>>
->>>>> The question is why the server would keep returning DELAY. A lot of
->>>>> different problems ranging from memory allocation issues to protocol
->>>>> problems can result in that error. You may want to check the NFS 
->>>>> server
->>>>> and see if anything was logged there.
->>>> There are no messages in the system logs that indicate any sort of 
->>>> memory issue. We also increased the min_kbytes_free sysctl to 2G on 
->>>> the server before we restarted it with the newer kernel.
->>>>>
->>>>> This is on a CREATE_SESSION call, so I wonder if the record held 
->>>>> by the
->>>>> (courteous) server is somehow blocking the attempt to reestablish the
->>>>> session?
->>>>>
->>>>> Do you have a way to reproduce this? Since this is a centos 
->>>>> kernel, you
->>>>> could follow the page here to open a bug:
->>>>
->>>> Unfortunately we haven't found a reliable way to reproduce it. But 
->>>> we do seem to trigger it more and more lately.
->>>>
->>>> Regards,
->>>>
->>>> Rik
->>>>
->>>>>
->>>>> https://urldefense.com/v3/__https://wiki.centos.org/ReportBugs.html__;!!ACWV5N9M2RV99hQ!LV3yWeoSOhNAkRHkxFCH2tlm0iNFVD78mxnSLyP6lrX7yBVeA2TOJ4nv6oZsqLwP4kW56CMpDWhkjjwSkWIqsboq$ 
->>>>>
->>>>>
->>>>>>> I created another dump of the workqueues and worker pools on the 
->>>>>>> server:
->>>>>>>
->>>>>>> [Mon Mar 18 14:59:33 2024] Showing busy workqueues and worker 
->>>>>>> pools:
->>>>>>> [Mon Mar 18 14:59:33 2024] workqueue events: flags=0x0
->>>>>>> [Mon Mar 18 14:59:33 2024]   pwq 54: cpus=27 node=1 flags=0x0 
->>>>>>> nice=0
->>>>>>> active=1/256 refcnt=2
->>>>>>> [Mon Mar 18 14:59:33 2024]     pending: drm_fb_helper_damage_work
->>>>>>> [drm_kms_helper]
->>>>>>> [Mon Mar 18 14:59:33 2024] workqueue events_power_efficient: 
->>>>>>> flags=0x80
->>>>>>> [Mon Mar 18 14:59:33 2024]   pwq 54: cpus=27 node=1 flags=0x0 
->>>>>>> nice=0
->>>>>>> active=1/256 refcnt=2
->>>>>>> [Mon Mar 18 14:59:33 2024]     pending: fb_flashcursor
->>>>>>> [Mon Mar 18 14:59:33 2024] workqueue mm_percpu_wq: flags=0x8
->>>>>>> [Mon Mar 18 14:59:33 2024]   pwq 54: cpus=27 node=1 flags=0x0 
->>>>>>> nice=0
->>>>>>> active=1/256 refcnt=3
->>>>>>> [Mon Mar 18 14:59:33 2024]     pending: lru_add_drain_per_cpu 
->>>>>>> BAR(362)
->>>>>>> [Mon Mar 18 14:59:33 2024] workqueue kblockd: flags=0x18
->>>>>>> [Mon Mar 18 14:59:33 2024]   pwq 55: cpus=27 node=1 flags=0x0 
->>>>>>> nice=-20
->>>>>>> active=1/256 refcnt=2
->>>>>>> [Mon Mar 18 14:59:33 2024]     pending: blk_mq_timeout_work
->>>>>>>
->>>>>>>
->>>>>>> In contrast to last time, it doesn't show anything regarding nfs 
->>>>>>> this
->>>>>>> time.
->>>>>>>
->>>>>>> I also tried the suggestion from Dai Ngo (echo 3 >
->>>>>>> /proc/sys/vm/drop_caches), but that didn't seem to make any 
->>>>>>> difference.
->>>>>>>
->>>>>>> We haven't restarted the server yet as it seems the impact seems to
->>>>>>> affect fewer clients that before. Is there anything we can run 
->>>>>>> on the
->>>>>>> server to further debug this?
->>>>>>>
->>>>>>> In the past, the issue seemed to deteriorate rapidly and 
->>>>>>> resulted in
->>>>>>> issues for almost all clients after about 20 minutes. This time the
->>>>>>> impact seems to be less, but it's not gone.
->>>>>>>
->>>>>>> How can we force the NFS server to forget about a specific 
->>>>>>> client? I
->>>>>>> haven't tried to restart the nfs service yet as I'm afraid it will
->>>>>>> fail to stop as before.
->>>>>>>
->>>>> Not with that kernel. There are some new administrative interfaces 
->>>>> that
->>>>> might allow that in the future, but they were just merged upstream 
->>>>> and
->>>>> aren't in that kernel.
->>>>>
->>>>> -- 
->>>>> Jeff Layton <jlayton@kernel.org>
->>>>
--- 
-Rik Theys
-System Engineer
-KU Leuven - Dept. Elektrotechniek (ESAT)
-Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
-+32(0)16/32.11.07
-----------------------------------------------------------------
-<<Any errors in spelling, tact or fact are transmission errors>>
-
+--=20
+Jeff Layton <jlayton@kernel.org>
 
