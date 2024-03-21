@@ -1,140 +1,209 @@
-Return-Path: <linux-nfs+bounces-2431-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2432-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A895885B2C
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 15:51:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F9EC885B82
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 16:15:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E92C6B20CAA
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 14:51:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 802C01F23CF0
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 15:15:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B8B784FA0;
-	Thu, 21 Mar 2024 14:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1F286246;
+	Thu, 21 Mar 2024 15:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxgwhGo+"
+	dkim=pass (2048-bit key) header.d=pks.im header.i=@pks.im header.b="Usy3omwe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gV9qOhru"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707485651
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 14:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA758615A;
+	Thu, 21 Mar 2024 15:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032687; cv=none; b=tI73Qioi/HucAWinMwq56AwAtQirpykv7td5jv8fkYyKTPRkJxXI9bMkSCRMgD7jBBuGF9T+SMF2LaVRUO3Ht6oJ6A9Wsp997AhX/+mL2wvlcMiohuLw2HuyCbe857+o1yQkAfD2lnzh4uIItny43lIBW9ECdV1WSsNq44pO2R8=
+	t=1711034106; cv=none; b=HfgAWdxvNsaXQiJaPXVTXwTfEM++71j8YILjSCMz+Nxd0SVYHNAyqxBhYMFFKKaSYhq2GS+LLv6Z3f3llQDwwtuVoinc7MRG3gQG3Fo6LqsxbU90mJFa7VmOZRaCyJxVuzFEcqzA1FDpWmYb6hUieseiltWym3I8cQZPeYQI4Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032687; c=relaxed/simple;
-	bh=sE6svCUa6H+Vlkf0fUjti5LICUPd44RRToJGWT/QujE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hmi9VL8LAiqxs3WFF8lNZWgjB6sfs6LiTgvCuIrH30YT06pHPhctrTaUTRFhyUaEu3eXKAW77uYClui51VW/kHXcGuzYCNIw7TuShGcqzB9X7t+M+RU0H23MT5J0WXnEjYDa9ugQ9nKJZmDKr10oLm/LC7cr83d+hH7WEB86yi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CxgwhGo+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711032684;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=8/6lv/G8psIdjORamk6a0rITn42DzjGhrlhjnhf7BkU=;
-	b=CxgwhGo+7v7H4sVVBoNwt9D2VuWHBkl70MSL6akox7NqteN9LvUyHqIVspHkoIgP4fFkgi
-	IiJN1Qesn8sGgt+hTXspK0hBpT8Z7USmwM1JaOftdk0ppVIRFogico0COZO0JvMfO89l05
-	sxmtBcluEJry2OakMQqf5//ouuEC5Rc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-262-HN-Zy8jJP3CGoc5y9Cjm2A-1; Thu, 21 Mar 2024 10:51:21 -0400
-X-MC-Unique: HN-Zy8jJP3CGoc5y9Cjm2A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C62068007B0;
-	Thu, 21 Mar 2024 14:51:20 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.32.11])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B69BF2022C1D;
-	Thu, 21 Mar 2024 14:51:20 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 3D4E612E0FB; Thu, 21 Mar 2024 10:51:16 -0400 (EDT)
-Date: Thu, 21 Mar 2024 10:51:16 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: chuck.lever@oracle.com
-Cc: npache@redhat.com, linux-nfs@vger.kernel.org
-Subject: Problem with the RFC 8009 encryption test
-Message-ID: <ZfxJZFwXqqurfet0@aion>
+	s=arc-20240116; t=1711034106; c=relaxed/simple;
+	bh=HwQQAkWF1fEVKxXYZtxg9fMrlewIJz+4/+Eu0OgdNrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSDgEfkAB+XEuj/5k8ISxQkjJUiSBjq0UEWT55yVitFfCVyTsgacjI+Zv1v91HU3iKApIcv1+oSTOVqnIfgg1yZsjCw3LfRcagX2mZjzQca2OPNXbmOatE9X9FvzeV0xN5tNcDdHRtQQLBuTfH0L+lhuriAXJEvJstVdccYjuvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pks.im; spf=pass smtp.mailfrom=pks.im; dkim=pass (2048-bit key) header.d=pks.im header.i=@pks.im header.b=Usy3omwe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gV9qOhru; arc=none smtp.client-ip=64.147.123.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pks.im
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pks.im
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfhigh.west.internal (Postfix) with ESMTP id D285A1800078;
+	Thu, 21 Mar 2024 11:15:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 21 Mar 2024 11:15:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pks.im; h=cc:cc
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1711034102; x=1711120502; bh=kf0HUsBgvp
+	WfadjJ/OkckWAxIEk8wbSjhZKHKHyrFg4=; b=Usy3omwe39opaA93Hv33gKy319
+	qIvRfvB5bRINUxDSMcy+9fbMu+dByUwSkIhUrUI7pqgaW6zvy4Om+9QOgT+keo2o
+	0d4ySfLW+TbG9cgM5sFjd1GWfcMdMvdWWlD+FE0rR8b2bVXB/+sEceHCU8f575Wr
+	nLIZQjC0ZZ7Cnd7NZJuRP4GlcSPkJJtjvbMAU1kSbacK9ruodXsKxVssNAIIhvie
+	JZLECKKAqN+sQjUnybkAUY8YfmbI1uM7jcJIWZgaHcJ4SWGLCimiUFtN7JUxymK0
+	1bdQV9SM9GHaJp2KKl8fZ8yK+l2w9eSh5v3omnzET6Dn6+NVXaNh6hPxDZeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711034102; x=1711120502; bh=kf0HUsBgvpWfadjJ/OkckWAxIEk8
+	wbSjhZKHKHyrFg4=; b=gV9qOhrubvK4PoWYs7mmkEVTMMjXDayHPnXhnyb78N2F
+	k022+MW384rwIN8J2B2WUcifau5zC8wjQNWt+zooBNZrQ6PF53tm9yDkjNaLvtng
+	P2liihng1WHbq70OuBvJWuns1A4C10TD3HM5j1NVaMqHc8PL+2mybiALCAPysZ2u
+	5wcaacOhkzjnm7yWJLCKM3GUJj1mxvnBHoFMqz71qRfMgF2vf3/4imhQyNh6rSyw
+	VDHuOHXeXT/Ujir3m/JeEEhOlQFf9sp74Xq8UTyeGPD+Si/S8s7OkqFOUlGBf++1
+	OzkfSb89Ayu7DDpvtW6A60ygQwHw/w4ssT6QNVdWPA==
+X-ME-Sender: <xms:9k78ZVsc26zDupzdAhZnO69-laW1pbpuc-yl79fSiU6hvXw_zvMDmw>
+    <xme:9k78ZefwnspkpS2K9qrCeCeGlST-FPGgzhAFWRwdo4acMFR5l8KyHhORlWBYjRzUo
+    2USdbVZkYl6r9NVig>
+X-ME-Received: <xmr:9k78ZYx0cHAZE_wENPK15PVLSX1_u49av7HPk3MVDSx8QiZY9ZdmnT7JJioWrdp4_h_FaUd0IINgIOpQxcVyZNDcIBknlul02bLiIRX6QDyvLQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleejgdduvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpeffhffvvefukfhfgggtuggj
+    sehgtderredttddvnecuhfhrohhmpefrrghtrhhitghkucfuthgvihhnhhgrrhguthcuoe
+    hpshesphhkshdrihhmqeenucggtffrrghtthgvrhhnpeehlefhvdevleeitddtjeetheei
+    uedtkeduveeludffffffffdvhfetgeeuffelfeenucffohhmrghinhepshhouhhrtggvfh
+    horhhgvgdrnhgvthenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehpshesphhkshdrihhm
+X-ME-Proxy: <xmx:9k78ZcPTigYf4xlHDApZOaCdgXCf2XVPcGSx0-Fl1i28SK-HpMig5A>
+    <xmx:9k78ZV8gZRHb3ZujEl84zrJ_NFSGIuNLRvuNp1L_rlrHqfdlJu-jdg>
+    <xmx:9k78ZcW-nv2hnHcJTR9M8-rhOr21NUqxuTSbLDhrSjfs_mRe8OvNbw>
+    <xmx:9k78ZWfJNcLMFTWY7dhSxKpFs_WQDCYXjnYw_awZVjPLBbpT-0p9yw>
+    <xmx:9k78ZYlp4AA9hZSk7r9Di-vXZlVp47zO4HQm0Z51YXpR5nUJ48EkI9yveuY>
+Feedback-ID: i197146af:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 21 Mar 2024 11:15:01 -0400 (EDT)
+Received: 
+	by vm-mail (OpenSMTPD) with ESMTPSA id ab3dd12c (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 21 Mar 2024 15:14:54 +0000 (UTC)
+Date: Thu, 21 Mar 2024 16:14:56 +0100
+From: Patrick Steinhardt <ps@pks.im>
+To: Jeff King <peff@peff.net>
+Cc: Chuck Lever <chuck.lever@oracle.com>, git@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: t0032 fails on NFS mounts
+Message-ID: <ZfxO8ApCDUbBHJyc@tanuki>
+References: <ZfBwZTL9zqDsac5m@manet.1015granger.net>
+ <20240313072052.GC125150@coredump.intra.peff.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="I/xz9JawEjrSgC+S"
+Content-Disposition: inline
+In-Reply-To: <20240313072052.GC125150@coredump.intra.peff.net>
+
+
+--I/xz9JawEjrSgC+S
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Transfer-Encoding: quoted-printable
 
-Hi Chuck,
+On Wed, Mar 13, 2024 at 03:20:52AM -0400, Jeff King wrote:
+> +cc Patrick for reftable
+>=20
+> On Tue, Mar 12, 2024 at 11:10:29AM -0400, Chuck Lever wrote:
+>=20
+> > Unit test t0032 fails when run on an NFS mount:
+> >=20
+> > [vagrant@cel t]$ ./t0032-reftable-unittest.sh=20
+> > not ok 1 - unittests
+> > #=09
+> > #		TMPDIR=3D$(pwd) && export TMPDIR &&
+> > #		test-tool reftable
+> > #=09
+> > # failed 1 among 1 test(s)
+> > 1..1
+>=20
+> The output for this test script is particularly unhelpful because it's
+> not using our test harness at all, but just running a bunch of internal
+> tests using a single program.
+>=20
+> Running with "-v" should give more details about what's failing.
+>=20
+> I set up a basic loopback server like:
+>=20
+>   mkdir /mnt/{server,client}
+>   exportfs -o rw,sync 127.0.0.1:/mnt/server
+>   mount -t nfs 127.0.0.1:/mnt/server /mnt/client
+>=20
+> and then ran:
+>=20
+>   ./t0032-reftable-unittest.sh --root=3D/mnt/client -v
+>=20
+> Looks like it fails at:
+>=20
+>   running test_reftable_stack_compaction_concurrent_clean
+>   reftable/stack_test.c: 1063: failed assertion count_dir_entries(dir) =
+=3D=3D 2
+>   Aborted
+>=20
+> > v2.43.2 seems to work OK.
+>=20
+> For me, too. Bisecting shows the problem appearing in 4f36b8597c
+> (reftable/stack: fix race in up-to-date check, 2024-01-18).
 
-When testing a fix for the problem that Nico reported [1], I found some
-oddness with the RFC 8009 encryption test.  Sometimes it would pass,
-sometimes it would fail, and other times it would oops.  I bisected it to:
+I think this is actually benign. I set a breakpoint in the respective
+test right before double-checking our conditions, and curiously I got
+back the following list of files:
 
-561141dd4943 SUNRPC: Use a static buffer for the checksum initialization vector
+    ./stack_test-1027.QJBpnd
+    ./stack_test-1027.QJBpnd/0x000000000001-0x000000000003-dad7ac80.ref
+    ./stack_test-1027.QJBpnd/.nfs000000000001729f00001e11
+    ./stack_test-1027.QJBpnd/tables.list
 
-If I build a kernel with CONFIG_DEBUG_SG=y, I get the following oops
+Notice the ".nfs*" thing? This is a temporary file managed by the NFS
+client that maintains delete-on-close behaviour because we have unlinked
+the file while it was still open [1]. But of course we count that file
+when executing `count_dir_entries()`, and thus we arrive at an
+unexpected number of files.
 
-[   40.417220] ------------[ cut here ]------------
-[   40.421884] kernel BUG at include/linux/scatterlist.h:187!
-[   40.424490] invalid opcode: 0000 [#1] PREEMPT SMP PTI
-[   40.427511] CPU: 4 PID: 3688 Comm: kunit_try_catch Kdump: loaded Tainted: G                 N 6.8.0+ #13
-[   40.430025] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39 04/01/2014
-[   40.432291] RIP: 0010:sg_init_one+0x85/0xa0
-[   40.433238] Code: 51 5b 37 01 83 e1 03 f6 c3 03 75 20 a8 01 75 1e 48 09 cb 41 89 54 24 08 49 89 1c 24 41 89 6c 24 0c 5b 5d 41 5c c3 cc cc cc cc <0f> 0b 0f 0b 0f 0b 48 8b 05 3e 26 9f 01 eb b2 66 66 2e 0f 1f 84 00
-[   40.437191] RSP: 0018:ffffab2ac2d87cf0 EFLAGS: 00010246
-[   40.438129] RAX: 0000000000000000 RBX: ffffffffc0ce8740 RCX: 0000000000000000
-[   40.439359] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040ce8740
-[   40.440566] RBP: 0000000000000010 R08: 258143ae43c375cb R09: 0000000000000000
-[   40.441741] R10: ffffab2ac2d87d20 R11: 7e6f455c48ff50b7 R12: ffffab2ac2d87d20
-[   40.442920] R13: ffff90de0a3e1400 R14: 0000000000000020 R15: 0000000000000010
-[   40.444142] FS:  0000000000000000(0000) GS:ffff90df77c00000(0000) knlGS:0000000000000000
-[   40.445498] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   40.446485] CR2: 00007f64586dc998 CR3: 000000023f220003 CR4: 0000000000770ef0
-[   40.447743] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   40.448962] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   40.450196] PKRU: 55555554
-[   40.450700] Call Trace:
-[   40.451155]  <TASK>
-[   40.451544]  ? die+0x36/0x90
-[   40.452090]  ? do_trap+0xdd/0x100
-[   40.452690]  ? sg_init_one+0x85/0xa0
-[   40.453361]  ? do_error_trap+0x6a/0x90
-[   40.454029]  ? sg_init_one+0x85/0xa0
-[   40.454671]  ? exc_invalid_op+0x50/0x70
-[   40.455358]  ? sg_init_one+0x85/0xa0
-[   40.456009]  ? asm_exc_invalid_op+0x1a/0x20
-[   40.456776]  ? sg_init_one+0x85/0xa0
-[   40.457408]  krb5_etm_checksum+0x114/0x1d0 [rpcsec_gss_krb5]
-[   40.458372]  rfc8009_encrypt_case+0x397/0x8f0 [gss_krb5_test]
-[   40.459360]  ? __schedule+0x3e8/0x1520
-[   40.460027]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10 [kunit]
-[   40.461180]  ? kunit_try_run_case+0x93/0x190 [kunit]
-[   40.462043]  kunit_try_run_case+0x93/0x190 [kunit]
-[   40.462881]  kunit_generic_run_threadfn_adapter+0x17/0x30 [kunit]
-[   40.463929]  kthread+0xcf/0x100
-[   40.464498]  ? __pfx_kthread+0x10/0x10
-[   40.465165]  ret_from_fork+0x31/0x50
-[   40.465810]  ? __pfx_kthread+0x10/0x10
-[   40.466477]  ret_from_fork_asm+0x1a/0x30
-[   40.467173]  </TASK>
-[   40.467593] Modules linked in: camellia_generic camellia_aesni_avx2 camellia_aesni_avx_x86_64 camellia_x86_64 gss_krb5_test rpcsec_gss_krb5 auth_rpcgss kunit nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill nf_tables sunrpc intel_rapl_msr intel_rapl_common intel_uncore_frequency_common isst_if_common kvm_intel kvm iTCO_wdt intel_pmc_bxt iTCO_vendor_support i2c_i801 rapl i2c_smbus lpc_ich virtio_balloon joydev loop fuse nfnetlink zram xfs crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 sha1_ssse3 virtio_blk virtio_net net_failover virtio_console failover serio_raw qemu_fw_cfg
-[   40.478684] ---[ end trace 0000000000000000 ]---
+I will send a patch to fix the test.
 
-Looking through the git history of the auth_gss code, there are various
-places where static buffers were replaced by dynamically allocated ones
-because they're being used with scatterlists. 
+> PS That test seems to run ~20x slower on NFS versus directly on ext4.
+>    I'd expect a little overhead, but that's quite a bit.
 
-I think this patch should be reverted.
+I'm not all that surprised here given that the reftable library is quite
+prone to stat(3P)ing the "tables.list" file, and potentially re-reading
+it. I kind of suspect that this is what's going on. An alternative
+explanation might be that mmap'ing over NFS is really slow.
 
--Scott
+Anyway, I will have a deeper look at this and see where we spend all the
+time.
 
-[1] https://groups.google.com/g/kunit-dev/c/QDK1PgWJEdQ
+Patrick
 
+[1]: https://nfs.sourceforge.net/#faq_d2
+
+--I/xz9JawEjrSgC+S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF9hrgiFbCdvenl/rVbJhu7ckPpQFAmX8Tu8ACgkQVbJhu7ck
+PpQEKA//dsf+RIUY7SkHxNbzDNgL1mrIxEi2KQx7BykCpQXhB2/SAirKdYwqexsF
+xKN7k69cXPoufCg2W8zxpAZSLWPdXKf1/zcI90fjYuQ4B6G+5j1jLNKm0gVBgJN/
+yM4hoZmz8D9ecfLAspwcbEObJqYOMwHSaus6tYWKDNIAjpflhmYb48RK7wp8awCm
+7AfSDPBZQRlRsJubWwu5rMGPg1Ea+i/HNZpTsODVpXIPpvKZthAozqPqy3hCb4oh
+eOWTNZfQk+4yENS9czYWjaT2SO2RVmheEXZx8QR2igP9QOzApp3O6pSGutbUhqWI
+dJmVLOYRIWiunZW8ew/6P/nRYb4qMykCblEegBP1jc0axWGMrcUxPznHbHlAElMN
+SxpMwtOnLWAEjuLHEJIdlLJUo9u5haKDCsrDipVZ96tQCuDBaCR8PypDyIvgfgiL
+EBBkmh4vulUrNkzC044fF+sSu8YYEjNpVWP0Z31RkH1DL+O/BJ41sa9lziAODCAr
+0S/GVMJYf+cYq67QytWq10Btlb0ZJgwpA64UfrTn7kTnOiEqolWe5hF01v+njGzQ
+2Jw3dEGFoN94SCUHXiEXaH9GYyMYAmMieZcri/FyFZ6SlPMGe05DS4pruBJGSxfX
+l5RwZicNpV3IsFAowcZ6lFlJee06WneoGOnCAPMVQbQ8fd7275E=
+=Acwc
+-----END PGP SIGNATURE-----
+
+--I/xz9JawEjrSgC+S--
 
