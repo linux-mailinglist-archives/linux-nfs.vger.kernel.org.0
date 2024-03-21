@@ -1,103 +1,135 @@
-Return-Path: <linux-nfs+bounces-2426-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2427-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DF228818F2
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 22:11:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73FE881C78
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 07:28:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18C2F284D45
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Mar 2024 21:11:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E6D81F21912
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 06:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59AB08595A;
-	Wed, 20 Mar 2024 21:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842223A1D3;
+	Thu, 21 Mar 2024 06:28:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHuL8Cvl"
+	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="IuiTJ/JW";
+	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="LrJHjjzm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from icts-p-cavuit-1.kulnet.kuleuven.be (icts-p-cavuit-1.kulnet.kuleuven.be [134.58.240.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368304F8B2
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Mar 2024 21:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B65B31A8F
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 06:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710969083; cv=none; b=Q4AXMR3DcBTxlKjINZRVJD6kTZMlLyVOiVfSUYPbQOk/rue62HomCdgGA7Yxky4w67RrB48tWg6ztr13jXddf0p3Tst9/jWHu6MjqJXHH9z0zvO2+6Sak3WytDbQdTmtHzjlPt+6QgqdcDuo8nnpc8oA9qSiHf5hzTVVPIDKnEQ=
+	t=1711002530; cv=none; b=oq4YQ3ZihsqmKqt4L+SkzmKdoI34PYkiQPDomQ1Juu07WzZUJpDC5Bm0RrFu2tDF/VXrwO17xbxg9vSKmWXlAYEBCNCSzl5LksR/jFOpJEWJ6Ai9bKz7JFWusUmlSyr+CISzXYz0X3VxzmbdRYSxydXupJ1kblmZ1kDpYTAPe8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710969083; c=relaxed/simple;
-	bh=5VXi73pty05gRBDvbtPuotRxMtU15c0kqRV4paZvgNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cy6RAMdcvcQA+YjCLG2VpGaI9llr2iZsC8Dw4BZNmE9IqLTtpln4LfXOpcyqpu1y8txdmj7uKE/idOSnbqhnt1llTGm+tVG0RBm3J2sMtQMaiAILuMT1L1rouPN8omc5nVqw47qlfZ/pLDQ6AkuwTHRXfF/SV/FpsiE6pHtXf7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHuL8Cvl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75EBC433F1;
-	Wed, 20 Mar 2024 21:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710969083;
-	bh=5VXi73pty05gRBDvbtPuotRxMtU15c0kqRV4paZvgNs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NHuL8Cvl+5GAlZ7KbleIxLkhG/5QoNjJMxbLyLB+dQYPb+eZPg6aUEFwsLUBT2SIk
-	 q0pLcbdeh+AhHHr7SmrsLQcssUfptXvS6CT4zIQ4q2if6tAAleh/ZO+6Zbi8289uMt
-	 p5tif3UIvk2eEEqLtpdSG00C0apL+dMSr0s73ruQb3yBvbM/44J7tVnU/lTn3n8jjB
-	 d3CGHujCltKj2MrKDB3YG7jA3ux/NDJCtSmRyNxMcNvIcIHAgHPDy7lVCXECKGdFNG
-	 JWnJBZSu+D8ja2X4WS08W7h0kiY76535DxN8+vg/Q+VjOuBk7s3XiVd0gNW0Kic9E3
-	 HCc+OLCt/Jbgw==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH v1 2/2] pNFS/filelayout: Specify the layout segment range in LAYOUTGET
-Date: Wed, 20 Mar 2024 17:11:20 -0400
-Message-ID: <20240320211120.228954-3-anna@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240320211120.228954-1-anna@kernel.org>
-References: <20240320211120.228954-1-anna@kernel.org>
+	s=arc-20240116; t=1711002530; c=relaxed/simple;
+	bh=1mNhcLB9US68B1LfYFq79dyJQBoRyrxR4LLp0AQbVw4=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=XrcdrN6ytT6N7qA5tS8TguCVAS1PUezum4sgPz7zpo+fdHi0PgmERUVfGBApTpuaWZK5wzqDejdebzFAGGm5egGJYmSnTtVSFSCRLGajwm8VavOfFOAnv8dJAztQaIexGygneI6GN3FY5uo+qUE/G1x2igDlWL6CW08PoUc36EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=IuiTJ/JW; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=LrJHjjzm; arc=none smtp.client-ip=134.58.240.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
+X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
+X-KULeuven-Scanned: Found to be clean
+X-KULeuven-ID: EF76320194.A2723
+X-KULeuven-Information: Katholieke Universiteit Leuven
+Received: from icts-p-ceifnet-smtps-1.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:133:242:ac11:1c])
+	by icts-p-cavuit-1.kulnet.kuleuven.be (Postfix) with ESMTP id EF76320194
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 07:28:34 +0100 (CET)
+BCmilterd-Mark-Subject: no
+BCmilterd-Errors: 
+BCmilterd-Report: SA-HVU#DKIM_VALID#0.00,SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#OURIPS#-35.00
+X-CAV-Cluster: smtps
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
+	s=kuleuven-cav-1; t=1711002514;
+	bh=tn1ICEOJPQPPHTwrNUxKTyFBE8W8z31X4dF9l5Ibkqs=;
+	h=Date:To:From:Subject;
+	b=IuiTJ/JWY0QFeeDmTugyhD6ac9gjUETDllp5SqP8dn4MMYWQmQju1om7le1NzPMAg
+	 ZVWMxU2so/CGnuWeH+vQ8nkZe662c0oco4xN2Kvxgt6vQn4zVOi1kj5ixTQEy2mQlq
+	 zlrlAOCn3P7ZtIh629oLq1JK4Bis3exbs+1cGWRn1nIHUTiyw2rQvn2hfeHrxF+Aml
+	 94+LvbbiFMM5VyWvA/OM2X6rj7Gl3KJkd/5fi6fKo+EfQqabDsCG2N8Lobe7LDx8BL
+	 kw0AlF35Kqso0TR7iw8E7gnBA80NEeaUOFjWCw9gNxG4ec/jU0S0I2c5rBuwflbp16
+	 Yq4MIXOexW7mw==
+Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by icts-p-ceifnet-smtps-1.kuleuven.be (Postfix) with ESMTPS id CC9D1D4F496FC
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 07:28:34 +0100 (CET)
+X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
+	s=esat20220324; t=1711002514;
+	bh=tn1ICEOJPQPPHTwrNUxKTyFBE8W8z31X4dF9l5Ibkqs=;
+	h=Date:To:From:Subject:From;
+	b=LrJHjjzmwjB4L9jvHITF4CfuG98J5JM9vFl/07JhH+jNkBQg3mIc/i347bhE4ImC/
+	 eaHA1fd/CYfjil17URA2S+Xp2WTQE0qZvVi7yVJlc4EISp9ttKdURrrbBAOBos8ham
+	 Whgjt/Go0nLiqcNSyYRmt8Ot+es8wALwBibm/KjQiiUe2TudQBkX6lMyuiJ7YqCCEt
+	 TZu6rXxxPSrO/ylM9aiKk8rfET1hEzQbRBJK+oImqO1HzMsfj9vrdfuWR6gwCXjFa9
+	 OSawl6dBs8Mud1pbZ0HWR4uS67XJwKOLwWHBhztOFaPnF9wO7RF2HzXWlIxuIlyDBa
+	 R+ueupeYL/XZQ==
+Received: from [192.168.1.178] (d54c12615.access.telenet.be [84.193.38.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (3072 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id AD0E26000E
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 07:28:34 +0100 (CET)
+Message-ID: <ff131330-9f1c-493c-bfe2-8732a2730bf9@esat.kuleuven.be>
+Date: Thu, 21 Mar 2024 07:28:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux Nfs <linux-nfs@vger.kernel.org>
+X-Kuleuven: This mail passed the K.U.Leuven mailcluster
+From: Rik Theys <Rik.Theys@esat.kuleuven.be>
+Subject: RPCSEC_GSS_KRB5_ENCTYPES backported to some older long-term kernels,
+ but not 6.1?
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Hi,
 
-Move from only requesting full file layout segments to requesting layout
-segments that match our I/O size. This means the server is still free to
-return a full file layout if it wants, but partial layouts will no
-longer cause an error.
+When booting the 6.1.82 kernel on an EL9 system, the gssproxy daemon 
+started to consume a lot of cpu, and clients using krb5 NFS could no 
+longer connect. When comparing the kernel config between these two 
+kernels, it seemed like the following config items were not set in the 
+6.1 kernel:
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/filelayout/filelayout.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1=y
+CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_CAMELLIA=y
+CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA2=y
 
-diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
-index 3fb18b16a5b4..cc2ed4b5a4fd 100644
---- a/fs/nfs/filelayout/filelayout.c
-+++ b/fs/nfs/filelayout/filelayout.c
-@@ -871,8 +871,8 @@ filelayout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
- 						      nfs_req_openctx(req),
--						      0,
--						      NFS4_MAX_UINT64,
-+						      req_offset(req),
-+						      req->wb_bytes,
- 						      IOMODE_READ,
- 						      false,
- 						      GFP_KERNEL);
-@@ -895,8 +895,8 @@ filelayout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
- 						      nfs_req_openctx(req),
--						      0,
--						      NFS4_MAX_UINT64,
-+						      req_offset(req),
-+						      req->wb_bytes,
- 						      IOMODE_RW,
- 						      false,
- 						      GFP_NOFS);
+I'm not 100% sure, but I assume this is why the clients can no longer 
+connect.
+
+Looking at the net/sunrpc/Kconfig file, these entries don't exist yet in 
+the 6.1 series, but according to 
+https://www.kernelconfig.io/config_rpcsec_gss_krb5_enctypes_aes_sha2?q=&kernelversion=4.19.310&arch=x86 
+they do exist in some older long-term kernels?
+
+Looking at CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA2, it seems it exists 
+for 4.19.310, 5.4.272, 5.15.152, but not for 5.10.213 or 6.1.82.
+
+I assume it was backported to some older kernels, but not 6.1? Would it 
+be possible to backport these config items to the 6.1 series?
+
+Regards,
+
+Rik
+
 -- 
-2.44.0
+Rik Theys
+System Engineer
+KU Leuven - Dept. Elektrotechniek (ESAT)
+Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
++32(0)16/32.11.07
+----------------------------------------------------------------
+<<Any errors in spelling, tact or fact are transmission errors>>
 
 
