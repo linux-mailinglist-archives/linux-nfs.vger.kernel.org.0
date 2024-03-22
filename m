@@ -1,128 +1,87 @@
-Return-Path: <linux-nfs+bounces-2443-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2444-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A05EC886A7B
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 11:36:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B7BD886B1A
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 12:12:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34B131F23D8F
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 10:36:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF73FB20EEB
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 11:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A896335B5;
-	Fri, 22 Mar 2024 10:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="rxIRZCP9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F21D93E479;
+	Fri, 22 Mar 2024 11:12:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0010A20B27
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 10:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429052C18D
+	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 11:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711103800; cv=none; b=Ig0VN3rT//rlRePHCbj65uAsYiC8/iVE8RX5EFS5QnTyYzE+kwJZ/GxEI2ojihmwIewSqgYuLIHOTNuPi4yMyye+zOdKOyBP5svqWgFdWT7sITFJIwl1QbepXTKkvrcnefwnj/yKI/aNZkFkZeiuSpbncRyApDB3CsIlJk+dt6E=
+	t=1711105932; cv=none; b=G6PzIf8m1u+EJZs6jmQVzeZUd1Z1Rm9fsI8MxT1WwUSQMlpK6K5+X78iFxsLuNvmuCsIx3r+putYXiBtcj/NzfdO2tNChi4a/WZC9ENfYbzavijZUotKBGaSWPB30uD9cptDn3M7s8Hxc2Qg1Q1no5UOUyjiVypXRI2ilNpSDVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711103800; c=relaxed/simple;
-	bh=H/2jvz3tr3kv/UISS3Rir6reSq2vhNGrC594o3o9w2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jP3IobyahmCHMkq804YNAl4G1R1wAItmCQMAgcg14z3G3gDfLR+8g39CJUqKT6U3yTvhfAFjkFkVSU34GoUNjT4oPzKdd+ADc4Rx9zgNU0G0q+xEWvAxnVUgfOcirwfbFsOUXVNSAkO6Z1W55xSKjLusbZg4pjPzIteaTq2pt/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=rxIRZCP9; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1711103797; x=1742639797;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=H/2jvz3tr3kv/UISS3Rir6reSq2vhNGrC594o3o9w2s=;
-  b=rxIRZCP9b0hr97eDtaMyjH9AA+Qwhyn/4LUyTNSNLriED3Dt89HNjjjL
-   D6DeJ5zOMxNdXsc28mdboLso6hTM9xay/ug+INeXl1yPVK2To012WamDS
-   7PNjlX3IZS+i8WInw/8KX3PSR/zVZg/GWtICT2H0SrDcetYsZlKlLHDdw
-   sghHaxRdSgEqwojlgHC2B1dTXU3toMMs4eOK/gWDTtxIMJtf04bZEt9KJ
-   CMaxtfcwvFTxMahxUk+eGmaoB93kk0YQj8XziSz1doAGaxzZK9FbPitGR
-   hEBky7sUCIL0+EiftVpaFHAaryCCz6jnryiuJkeP4ymoJUtDSeaYloa3k
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="141487997"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708354800"; 
-   d="scan'208";a="141487997"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 19:36:28 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 14FD3EB469
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 19:36:26 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 4605ECDA72
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 19:36:25 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id B07AF228831
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 19:36:24 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 2C6BF1A006B;
-	Fri, 22 Mar 2024 18:36:24 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH] mount: reject "namlen=" option for a NFSv4 mount
-Date: Fri, 22 Mar 2024 18:36:18 +0800
-Message-Id: <20240322103618.1270-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+	s=arc-20240116; t=1711105932; c=relaxed/simple;
+	bh=RgBbbNkbozIabxUf1MlfWYF5e6rPzi/qZZ+CpipG9Sc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=IrLanwJV+GJFrl/Rugcx6SlewjkirtMhyPNZpwbgaA+a4zN2Axr+i2CH/U+sbhW0aCrSUoAXYzovPu9GzVAyAay2w35ikxibY+IbJfy+iqw/p1lj7kT6OQbmoiC/lGznnxuoH+BojG6gXsXB1IxxRn6HaGcsA3iteixcg0bnUII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7cc0e0dba0fso90813139f.3
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 04:12:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711105930; x=1711710730;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RUiz6c2TOvIW6KjtWKbc5iglnP1LjFnxas45yidAGU8=;
+        b=PT+hXIuL73/HX2y3fH3evrP5NhZB93wwo2eRzvb2o4S1RJGc0hBZ6J85weWYLmr/k6
+         IJ3Xqs+xpKYxqsE3oa0pRyhOZZjq9F3OFxNZNq/psys+N8nLsy8syBkM6Arr+SJ+497y
+         rgI3JMU5O1btWpwMMicBGCCpkFJjQ+rUzbcRZBzKljRf1+fBPK9Qon2zFNwHvPIQ3QRI
+         i4ZX9wAHzThzXsqhY7tLNy9p9vAUw6eb9Jk0jqkc8NsaAoJf9mgEixuzRYhjzPli6jeA
+         HhPacz8SUuI3ELF0YO7jQJK7zikUe1wC84gjxALwlwt32dvCuABBTD2NGCMi/k4AfE1/
+         SHaQ==
+X-Gm-Message-State: AOJu0YyJCZQxL4375JTQv6V0gbRaE7bdsp/VBQaOfwfr06Jk0RMqC5DE
+	CHCj2j1rs7Mg3o7mD93XgpbLMIF3c/Pk87IkAOBYsMI9ZYSwqiH6rTzJBnQmIDHKcitw/tlCz1W
+	+CCJ/Dr+h33xry1ghO5dTryXpUVpVgiQ3PY0=
+X-Google-Smtp-Source: AGHT+IGpoZrBDvi6QyXGC5QTYlDrw8llVT66uc093h0+iGxEeik9uamUa5yN7StX3nAJmfzFOPZy/vzRJjrDLXBPFRw=
+X-Received: by 2002:a5d:9c59:0:b0:7cf:267b:fc22 with SMTP id
+ 25-20020a5d9c59000000b007cf267bfc22mr2331296iof.15.1711105930083; Fri, 22 Mar
+ 2024 04:12:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28266.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28266.006
-X-TMASE-Result: 10--2.044700-10.000000
-X-TMASE-MatchedRID: m5YRaeAMZa5OBjuTIREKLfCCu8kVj0TRrzD8YrC59vxXGTbsQqHbkr8F
-	Hrw7frluf146W0iUu2vcy8zPIAV4G8witucT3dE7XYWcmn4D4qsL//VMxXlyExwSIQKeKdA3o8W
-	MkQWv6iV3LAytsQR4e1cppCzPq+1UxlblqLlYqXJM4QHSCYeOXpj4c856vzcE7Kr1dy/tKglo1u
-	e5wEYpm/waiH8R8cAA3uGaND9++Qir6p4V70zuH3F/cojPjwNM8YChsASDjqwRZbRsQk5MBUB1Q
-	Pq9bxnWZkAxAwjIrrMHz/H0kiLyEqGAtHMDjkk9
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Fri, 22 Mar 2024 12:11:44 +0100
+Message-ID: <CAKAoaQng8vUV2uHNwNxhcL-d17ULPqO0iCSUmVKHunfSaHLMTg@mail.gmail.com>
+Subject: "svc_tcp_read_marker nfsd RPC fragment too large" with Linux 6.6 LTS
+ nfsd ...
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-namlen is not a valid option for NFSv4.
-Currently, we could pass a namlen=xxx in a NFSv4 mount,
-the mount command succeed and namlen is ignored silently
+Hi!
 
-# mount -o vers=4,namlen=100 192.168.122.19:/nfsroot /mnt/ -vvv
-mount.nfs: timeout set for Fri Mar 22 14:22:18 2024
-mount.nfs: trying text-based options 'namlen=100,vers=4.2,
-	   addr=192.168.122.19,clientaddr=192.168.122.15'
+----
 
-This patch reject "namlen=" option in a NFSv4 mount.
+After updating my Debian 11 and RHEL 9 installations with Linux kernel
+6.6.20-rt25 I start getting the following error messages
+"svc_tcp_read_marker nfsd RPC fragment too large".
+Client side is Linux NFSv4.2 client (Debian&&RHEL, both default kernel
+and Linux 6.6.20-rt25)+ms-nfs41-client HEAD.
 
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
----
- utils/mount/stropts.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Is this a know issue, and is there a patch for it ?
 
-diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-index dbdd11e7..028ff6a6 100644
---- a/utils/mount/stropts.c
-+++ b/utils/mount/stropts.c
-@@ -780,6 +780,15 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
- 		goto out_fail;
- 	}
- 
-+	if (po_contains(options, "namlen")) {
-+		if (verbose) {
-+			printf(_("%s: Unsupported nfs4 mount option(s) passed '%s'\n"),
-+				progname, *mi->extra_opts);
-+		}
-+		errno = EINVAL;
-+		goto out_fail;
-+	}
-+
- 	if (mi->version.v_mode != V_SPECIFIC) {
- 		char *fmt;
- 		switch (mi->version.minor) {
+----
+
+Bye,
+Roland
 -- 
-2.39.1
-
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /==\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
 
