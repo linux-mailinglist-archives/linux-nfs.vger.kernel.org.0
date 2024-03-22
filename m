@@ -1,139 +1,79 @@
-Return-Path: <linux-nfs+bounces-2440-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2441-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 356808863F0
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 00:22:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB68A886535
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 03:38:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E65A9282F1F
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Mar 2024 23:22:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 507BA1F23FA0
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Mar 2024 02:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F222E125BF;
-	Thu, 21 Mar 2024 23:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C92E1A38C5;
+	Fri, 22 Mar 2024 02:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YEl+ORWz"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ELhrDAFM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62918F9CE
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 23:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44F8387
+	for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 02:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711063355; cv=none; b=BObTZvbSasjq6dvVv20vonjqnmP+/6vXaT9Ga4XgqoDh4cv0vptj8N9acp3FNK/ZvGQTpYPiiL8ppS4pWgTTeLkP4a4ny6UCFw2eN0wvTIFnFfpWp1+NFZPwu6zFlNUnaGi7ar7Ou1Qq7UTW+RnuaSOEJe2xQSDsAW7wnqnUI4U=
+	t=1711075083; cv=none; b=rW1EnNa7PTTunUxV78biAkxJf1Wvpu0v1ZA7OlVNGHOhfaRomr7JF/HWQaqxtRuUbzxVmc/S1WJBqxR1bc5jJV1c2rLcyPaj7Nh+fOprC5ORMyTkb5QhxEY7RzEzLuZKuI/rXj7KtTWXP++dzJ8DEEwvEYWuKYB54GxbrWfNnuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711063355; c=relaxed/simple;
-	bh=rSrXLjvJXNAdP5+OtiGktg2WPKzse2Fa6QzLzKtcACs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LTLYELojfbyyU9Q7t1xbw5VREMAyoNnNCoRbpDwLumNiU+y3cunj39sR76A8jrk5UNrXRcUNpm7ZNJUQcoB4cWpxtCIpCDeWq2rhIhcxfskUFg8J3V5vgZcR5tHSP8PXeGbQsZK4qucniK6GolMVMPg8+t+nM+BwVIJGvaY370o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YEl+ORWz; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-428405a0205so64681cf.1
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Mar 2024 16:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711063353; x=1711668153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gvnQYmZPFjlDoRMaEUvTiEfQCkCBQChb8ZlZ8MBm2m8=;
-        b=YEl+ORWziohgs9BuXdxuA8g7I7t/SFVLWxpiKwJIFen5wca068+LS+4a3g8JMcR/sB
-         lFJf0TR6bPDsSg7Rhga46EQivRO0FX045ELXvALqpK7VuJKIl7kzzEJsHsW+iC/rumr5
-         OMTtNcFoENhgvKj2QF776bi5GCEgvAqp8ZHhuGlbo0x9Kj3i+6H1okg+O0rPpaj19W4H
-         6riruwE5L4Y4IvBBrVQyuDD3uG7Z/F+X8phYNbqEn8cjkwkesnISPgAQENHn8nIRL3lH
-         mQhKWcLPKaIMWsb4VdLzFrNbGAr7ENM0Ir47xTOihXD/5Gybw8nW9vPtAmKeU8CgeSzb
-         iydA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711063353; x=1711668153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gvnQYmZPFjlDoRMaEUvTiEfQCkCBQChb8ZlZ8MBm2m8=;
-        b=KnmDHlPfgwrAFuUH2i3mnb4gdyn2YvimiLsEZlcyA5X2jvmrAJLAfRF156BiiMX3YK
-         uB4620ALk+TTLbkVmYDyxdBPTEoDuvOr7S3W/kvwoGd4D7gbBpfCxgHRYLxNecabRZPV
-         qksIwPAptVvRfImbmXcYuf9qIpzwiLq1eMFLS1FYHEumbdA0RzNRzDkR81AFJF3rxdF0
-         auByBV2U/oNPT9WKmCH0XkYnqEJuVmeA1vpLfl+Gax2Cozm5vmeb5kiy94zpHKVL+Uzr
-         F3fDr41eEAG2iA1xNLFK3qw+xUdI1Lcx3NQ3GgiipP+QN3HDVcb2q+Q67/GLU1E/m9Hb
-         pwRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXinveHkbQdBSyFBIdDwoC04HN8XuDs4ulCmqTeGfomLBdITz23nnERFirMhNu3VvlsiuPFMyQO7V89GrQlPyHrKhpCk6C3LDxW
-X-Gm-Message-State: AOJu0YxdERw9jbluXQkHStYrJLq+5mFrLryzVfsr0qawpfGcN0scMnOh
-	5b3UidLk3EzKeqGFvLfJDVpw1Qwl7LQlGkz4r1vhCG7KMqp+akJUcSpqdT3nGwcs42SZO5uqIUP
-	GPcv2W0wXupDAIjIOwdNgsIDvaWm27Cy2dAOS
-X-Google-Smtp-Source: AGHT+IEGX2YvDAlwHw5zhD02VOBMuH0DnYvAIKGloKCdFuiQUNwMPYvJRQMJKpA8tlS+sgFGVQRJjr/2DPuwM0HkCx0=
-X-Received: by 2002:a05:622a:102:b0:431:20e1:a28 with SMTP id
- u2-20020a05622a010200b0043120e10a28mr424974qtw.22.1711063353166; Thu, 21 Mar
- 2024 16:22:33 -0700 (PDT)
+	s=arc-20240116; t=1711075083; c=relaxed/simple;
+	bh=0iPnfcSlC30Z/CszmZOSzCzy+hktL+N9CiLZOxmd2tI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qbz6xKyUbjfFQEtzGSU5no6wKChE6oda5QKMZVeZwj/ARwt+TRshS6MWJ32gZDimtgk0or9s94ETp531jmr/952MlgijlFVOtWQ4tJ2uemDS/SeyIVJW4WZTP3umKKrskPbyxfigTlDTcHYWPyA4E28B8qgT80EmuO0BaQf5gRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ELhrDAFM; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CFpVKJVJRfjSWuMbue/EbEUElZ2dHk7l7G3ViVHfJPk=; b=ELhrDAFMoI2V+AwWxX1YPjUgfl
+	YULDcLi12H4VO4+DBR07cg9+ytkUKHZ56JRrnMG6HMNL9jg3FzXpplvZp8ZuUZKO/U6ARZR+B0Ans
+	YKsYinPt6W2a4jQHKolrErcnRcP/YZ9JWI8CWkcfuQM64fCuWc2iHNQBrGAB4cCxMJmOVkZH1o4Yv
+	p44fi1+G2BW09bRthhGj8Zjm0YNkOMAqHX9FMxtBAPA2J/W0bIqyfO69wQPjSYsY+hg8/AVcSIv50
+	Z6drcgLgX9ewXWciuWAdGS/A6/gkCrm6ApCUHuD+9kkAaokamhZ+GLJeUcgLCkF5SElDKiJshuizD
+	MeBlXCsg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rnUn5-00EDmH-1U;
+	Fri, 22 Mar 2024 02:37:55 +0000
+Date: Fri, 22 Mar 2024 02:37:55 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jan Kara <jack@suse.cz>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Christian Brauner <brauner@kernel.org>, linux-nfs@vger.kernel.org,
+	Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH] nfsd: Fix error cleanup path in nfsd_rename()
+Message-ID: <20240322023755.GL538574@ZenIV>
+References: <20240318163209.26493-1-jack@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAA1CXcBqcyXma1kGwvfAQ5T24dmuH_Or9RPrVqxDoVq=N4Se3w@mail.gmail.com>
- <20240321143200.1854489-1-smayhew@redhat.com>
-In-Reply-To: <20240321143200.1854489-1-smayhew@redhat.com>
-From: Rae Moar <rmoar@google.com>
-Date: Thu, 21 Mar 2024 19:22:20 -0400
-Message-ID: <CA+GJov6XaVHsBD8NjMAUP476uxeup=Gv_2tc2ajUEkcFRZO+ng@mail.gmail.com>
-Subject: Re: [PATCH] kunit: bail out early in __kunit_test_suites_init() if
- there are no suites to test
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: brendanhiggins@google.com, davidgow@google.com, npache@redhat.com, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318163209.26493-1-jack@suse.cz>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Mar 21, 2024 at 10:32=E2=80=AFAM Scott Mayhew <smayhew@redhat.com> =
-wrote:
->
-> Commit c72a870926c2 added a mutex to prevent kunit tests from running
-> concurrently.  Unfortunately that mutex gets locked during module load
-> regardless of whether the module actually has any kunit tests.  This
-> causes a problem for kunit tests that might need to load other kernel
-> modules (e.g. gss_krb5_test loading the camellia module).
->
-> So check to see if there are actually any tests to run before locking
-> the kunit_run_lock mutex.
->
-> Fixes: c72a870926c2 ("kunit: add ability to run tests after boot using de=
-bugfs")
-> Reported-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+On Mon, Mar 18, 2024 at 05:32:09PM +0100, Jan Kara wrote:
+> Commit a8b0026847b8 ("rename(): avoid a deadlock in the case of parents
+> having no common ancestor") added an error bail out path. However this
+> path does not drop the remount protection that has been acquired. Fix
+> the cleanup path to properly drop the remount protection.
+> 
+> Fixes: a8b0026847b8 ("rename(): avoid a deadlock in the case of parents having no common ancestor")
+> Signed-off-by: Jan Kara <jack@suse.cz>
 
-Hi!
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
 
-Sorry about this bug. Thanks for the patch! We should definitely add this c=
-heck.
-
-Reviewed-by: Rae Moar <rmoar@google.com>
-
-Thanks!
-
--Rae
-
-> ---
->  lib/kunit/test.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 1d1475578515..b8514dbb337c 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -712,6 +712,9 @@ int __kunit_test_suites_init(struct kunit_suite * con=
-st * const suites, int num_
->  {
->         unsigned int i;
->
-> +       if (num_suites =3D=3D 0)
-> +               return 0;
-> +
->         if (!kunit_enabled() && num_suites > 0) {
->                 pr_info("kunit: disabled\n");
->                 return 0;
-> --
-> 2.43.0
->
+Sorry, my fault.
 
