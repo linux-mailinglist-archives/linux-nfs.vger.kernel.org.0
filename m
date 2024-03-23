@@ -1,213 +1,355 @@
-Return-Path: <linux-nfs+bounces-2448-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2449-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 349CD88771E
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Mar 2024 06:25:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AF718878D1
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Mar 2024 14:26:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3FC8283CF1
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Mar 2024 05:25:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F24E5282455
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Mar 2024 13:26:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63FF146A2;
-	Sat, 23 Mar 2024 05:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048FC282FB;
+	Sat, 23 Mar 2024 13:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agFz0i/P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxnyygNc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9202E4683
-	for <linux-nfs@vger.kernel.org>; Sat, 23 Mar 2024 05:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB419CA6F;
+	Sat, 23 Mar 2024 13:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711171515; cv=none; b=IETijDHHEL8N4M91MoVkMtH3P+tAOIWlGzf4YQxAtsoYe+3iBbQkq7TiHnS9PpewIO7m0xX5lzvhJnNSHFGu99BXfb/35DA9wSCkt3WhODDHbzGE+ZtjZ4ablL7eF8x1pbEIsD3DwDNBl8Apvh4oF34uHBCvCtj3JgyFTSy7opY=
+	t=1711200371; cv=none; b=TuHw1nVn5873IvaM05zFlwhKHL1JobpMR43EQi9w1JUzcSvFGrE8gBEOXQdpS1zRkDqUicE8YBTgJy140+NH5kliPMRKUqRb4Vr9aPpwQzhzdWImBahNXOAhk9FNQ29fN5XT9f3u0s7+woSu4L/Sbm7pZpPZSLsJYL7JOl/6rTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711171515; c=relaxed/simple;
-	bh=kY+6y1ow7mqkFowZOQHLHF9Kbx5EAcrLrRAXceacESc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nQG5P8vXn1CbLSz4MSuiMm+04pIjOPuYesbM3uaqa0MIHG3aMwbh57aX17GnJ+qmzjy4rgHb9z7RlR2Gt3PbNDq4wVfvVmaJk66fbMMrVfmRwH0qXSPg64NtWp+R5uYYkkGdh7gj3f3wfm3g+RboioFI7cZqXB4ayJ0+tCVqGJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=agFz0i/P; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56beb6e68aeso2547a12.1
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Mar 2024 22:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711171512; x=1711776312; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XWwusHc4g5K0vlYfrxCxhqyKdqyqPaae+x/aLX4gMjY=;
-        b=agFz0i/P2d3vh7e06l/f5ZigqjtA4Db/AD8RL1L+2ybheuvAvGX2+98iJrn5JBOZgC
-         ew5cO4uNPFBzgI+thqK98Z4lv72+LFIboaZq7oa5BXtgtFUB0XXQdWY0emBfeARY/Dyu
-         /vvhURj8Wpfrf9W9Pozsrbv0LPS2DVkCfNHHzEu+9sQsbeRPVx3pYOQo4cwSbIvnuIgi
-         Yf1E4Whu9xZVKC72VbqllzMsRrjNO277HlYjiy2nzLKdcB/oHt4RvtMMyklHa07D3iU2
-         Az/RPqRwnn+HTcAqdkEMVSlv5MR5YzAGrecFbDlo9u9qBpBPj/AK2AeXAFWuIW5XjqjX
-         bNoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711171512; x=1711776312;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XWwusHc4g5K0vlYfrxCxhqyKdqyqPaae+x/aLX4gMjY=;
-        b=RVr3cqnJYWn1pUde37isoU8mqDvTriOUm0/fz5L/QE0X5ISSg8XkmGJOHbg0IFCSX2
-         i69SUTswslOtPAumrOQgRNm8nJSMMiMfoJ+SUeIPvUi6HWYNP0dhyYdR2GdQqzZEtQhg
-         7tzIaNP3IbnTe59SXvH9rK8g7gscedPIZ8Ydm9t4Nav86ODlFR/2PZXSwgbEjol027XZ
-         xMcNr2OwWY4/6cMPAcAtepSwKSbeMt+GU5vgYR9PExB7+e9aQQQd0uhcvLeC0yVeVjG/
-         pnFciiRYFL/cO3HksiJQR83obfNtdTYRNso+sWbwDv1981bd9uPwEQ9e5HfVCuUxmYaT
-         UI9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUUet58/1bENuXxi+AIXbTHBGxb91H0vDL1AmfXB/tgpLjltxB3V22KhcJmJR+pzSvVjFXX69OaaMA4C4sLG8e6CdO25rt5QORV
-X-Gm-Message-State: AOJu0YwamKzn1hBKSeUxlnXBnhLLNM+sFv2er6g6NS8MntawC5YRyTum
-	C1HwIEm8a4n5lxeu+Ijrj175TCcJPaXTYQLQqF+q19qeiSnH0O86F1n10eeYfSSfVlN4uAaMz2f
-	cLxWn55afdJcPKwg7oYU/q1YzIeqVSUP1xMFT
-X-Google-Smtp-Source: AGHT+IFl1L5BjiFh8QUkB8MwquRDhvH1hPnYrMfRfn1Rn3l45FM1iX2TyI5SLvvoArrxKZ64cGEFI4GBa9BUYovD2W4=
-X-Received: by 2002:aa7:c842:0:b0:568:ce1e:94e5 with SMTP id
- g2-20020aa7c842000000b00568ce1e94e5mr491838edt.5.1711171511708; Fri, 22 Mar
- 2024 22:25:11 -0700 (PDT)
+	s=arc-20240116; t=1711200371; c=relaxed/simple;
+	bh=ofTSoDtrxZISRXGkFAOEOhhLeS+oijtwq6/TO6rcW6c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q31o3G3uQ0TSB76I48b8Fl+RRm5K24rE9YF8rKSkU8nwrJ6rE/+A6yPoh/LbIoecVefhKQpHgjPOSvKLFEHqju2HNaPcjA0ix00e5H3nKCabSo6vAZNwm2t/0r/tIZghu9adFb5eRRDAxrGKSNmUwbyRCYizFs/HedGFyIx/9s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxnyygNc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D907BC433F1;
+	Sat, 23 Mar 2024 13:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711200370;
+	bh=ofTSoDtrxZISRXGkFAOEOhhLeS+oijtwq6/TO6rcW6c=;
+	h=From:Date:Subject:To:Cc:From;
+	b=uxnyygNc72qqDv1lmuZDp68s529vKM1HgFsyL0SDfxLrFjMvHcLV2ymexxmDkK0eA
+	 qvTmGlF6ly4PR+1hWbnE0s3OrjUBUNZqR76FColi3ih6EWAbreoPEsNekptRS46pFZ
+	 ToQekbOCPg+PXs5EaKA0q5dtdEHLiQV6aclLrWo13IFUleZ2Tx7Nzzl3DeGcgqFwma
+	 yFdkEfCuLC+Uc9AUNw9rfGeulgvlWSVcVMHlgiyzzooJOvhsgHg8cGi6Td4n+I1hBR
+	 nRS1bpsQeiph1ARSe6nUJXzVNgprCXJXXR8fx/gzRLZO/jQoVmPVEuDtuEdXganDfY
+	 CgmVQ1z4Vs0Cg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Sat, 23 Mar 2024 09:25:54 -0400
+Subject: [PATCH v2] nfsd: trivial GET_DIR_DELEGATION support
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAA1CXcBqcyXma1kGwvfAQ5T24dmuH_Or9RPrVqxDoVq=N4Se3w@mail.gmail.com>
- <20240321143200.1854489-1-smayhew@redhat.com>
-In-Reply-To: <20240321143200.1854489-1-smayhew@redhat.com>
-From: David Gow <davidgow@google.com>
-Date: Sat, 23 Mar 2024 13:24:58 +0800
-Message-ID: <CABVgOSmDJpU7km5em_WbY1A04f+AF74a8_4GccjrJk1nW+1Fww@mail.gmail.com>
-Subject: Re: [PATCH] kunit: bail out early in __kunit_test_suites_init() if
- there are no suites to test
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: brendanhiggins@google.com, rmoar@google.com, npache@redhat.com, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-nfs@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000021f49a06144d2a72"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240323-nfs-gdd-trivial-v2-1-8549a4008daa@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGHY/mUC/3WNwQqDMBBEf0X23C1JjKI99T+KBzWrLpVYNhJaJ
+ P/e1HuZ0xuYNwcEEqYAt+IAociBN5/BXAoYl97PhOwyg1HGqlI36KeAs3O4C0fuV9TtUI99XZW
+ N1ZBXL6GJ36fx0WVeOOybfM6DqH/tf1fUmFM1rbFDS0q5+5PE03rdZIYupfQFLxWlSK8AAAA=
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8964; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ofTSoDtrxZISRXGkFAOEOhhLeS+oijtwq6/TO6rcW6c=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBl/thu78xCRl8OJ6jg1lGJD97j/zt7WlaZfyAJ/
+ KEg9vyudRuJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZf7YbgAKCRAADmhBGVaC
+ FR/sD/462Lje2tQU0PRUoHgiKLApUDzbThFe51FUeL8Nzc7viIcnpDntmqUqy9KZKoHpuHR/NkN
+ ukOUnqE6/EahH7ohYggTbqzrcoyOyT/S+NP/8kEMq7il9V3czq5W/vOUVFa0+ncqMfJbXUMlWBK
+ UHhUoSBQ0g0D2IXXhmTK5fx/qRtRaf0BWVkQWWx3/m1uGDNef+fxDGOCDDGZzXtYBqnzTtNkBRe
+ MjWVb8c0h8iQwlE+2oZbpYysqj43KC0PFvNN7CX3zeA2Llv1GfJt1wkqF9gYJ71ejjnka6+h7NE
+ rcjrKV9+fIVTnkGwfF4bkcJttlPLFRNMwQ7O78Tm83lyPySxjL9i8wz6BA3HxgVdFXZQYB8iYQM
+ Gbl8ElPLrAiZPFyM+mS8E7IrDRoK5Ilu/asKW0nl44TWXdNrj3AGqD0h1SjU/UirSDE8af+3Lhm
+ fdpjuCQ5QTUttbE3rW9/aqOWwiXksJ2mVK5ULBfsn/BDn2JLd8giok1geAlsrliD97+5pctk6pC
+ 1UDByUmQBeZe9m+qYF6kk4asTvmOsNUoJzVKt1nZzN3zQhcFrhUkP8TYoKPDgobkK20lm0+kAyA
+ t1altabuYDGA5wDOb2b7MXa3kp/bzLitlmrBGrbNZa3u5nFIGusVQ8tk1Y9R+4HAFgxynZqXIaa
+ gIi3aIphHlsfAtA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
---00000000000021f49a06144d2a72
-Content-Type: text/plain; charset="UTF-8"
+This adds basic infrastructure for handing GET_DIR_DELEGATION calls from
+clients, including the decoders and encoders. For now, it always just
+returns NFS4_OK + GDD4_UNAVAIL.
 
-On Thu, 21 Mar 2024 at 22:32, Scott Mayhew <smayhew@redhat.com> wrote:
->
-> Commit c72a870926c2 added a mutex to prevent kunit tests from running
-> concurrently.  Unfortunately that mutex gets locked during module load
-> regardless of whether the module actually has any kunit tests.  This
-> causes a problem for kunit tests that might need to load other kernel
-> modules (e.g. gss_krb5_test loading the camellia module).
->
-> So check to see if there are actually any tests to run before locking
-> the kunit_run_lock mutex.
->
-> Fixes: c72a870926c2 ("kunit: add ability to run tests after boot using debugfs")
-> Reported-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Please consider this for v6.10. Eventually clients may start sending
+this operation, and it's better if we can return GDD4_UNAVAIL instead of
+having to abort the whole compound.
+---
+Changes in v2:
+- move nfsd4_encode_dir_delegation outside of CONFIG_NFS4_PNFS block
+- add comment to clarify the deviation from RFC8881
+---
+ fs/nfsd/nfs4proc.c   | 41 +++++++++++++++++++++++
+ fs/nfsd/nfs4xdr.c    | 91 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/xdr4.h       | 19 +++++++++++
+ include/linux/nfs4.h |  6 ++++
+ 4 files changed, 155 insertions(+), 2 deletions(-)
 
-Thanks, this works well here, and is a good idea anyway.
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 2927b1263f08..a581f58938e2 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2154,6 +2154,29 @@ nfsd4_verify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	return status == nfserr_same ? nfs_ok : status;
+ }
+ 
++static __be32
++nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
++			 struct nfsd4_compound_state *cstate,
++			 union nfsd4_op_u *u)
++{
++	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
++
++	/*
++	 * RFC 8881, section 18.39.3 says:
++	 *
++	 * "The server may refuse to grant the delegation. In that case, the
++	 *  server will return NFS4ERR_DIRDELEG_UNAVAIL."
++	 *
++	 * This is sub-optimal, since it means that the server would need to
++	 * abort compound processing just because the delegation wasn't
++	 * available. RFC8881bis should change this to allow the server to
++	 * optionally return NFS4_OK with a non-fatal status of GDD4_UNAVAIL
++	 * in this situation.
++	 */
++	gdd->gddrnf_status = GDD4_UNAVAIL;
++	return nfs_ok;
++}
++
+ #ifdef CONFIG_NFSD_PNFS
+ static const struct nfsd4_layout_ops *
+ nfsd4_layout_verify(struct svc_export *exp, unsigned int layout_type)
+@@ -3082,6 +3105,18 @@ static u32 nfsd4_copy_notify_rsize(const struct svc_rqst *rqstp,
+ 		* sizeof(__be32);
+ }
+ 
++static u32 nfsd4_get_dir_delegation_rsize(const struct svc_rqst *rqstp,
++					  const struct nfsd4_op *op)
++{
++	return (op_encode_hdr_size +
++		1 /* gddr_status */ +
++		op_encode_verifier_maxsz +
++		op_encode_stateid_maxsz +
++		2 /* gddr_notification */ +
++		2 /* gddr_child_attributes */ +
++		2 /* gddr_dir_attributes */);
++}
++
+ #ifdef CONFIG_NFSD_PNFS
+ static u32 nfsd4_getdeviceinfo_rsize(const struct svc_rqst *rqstp,
+ 				     const struct nfsd4_op *op)
+@@ -3470,6 +3505,12 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+ 		.op_get_currentstateid = nfsd4_get_freestateid,
+ 		.op_rsize_bop = nfsd4_only_status_rsize,
+ 	},
++	[OP_GET_DIR_DELEGATION] = {
++		.op_func = nfsd4_get_dir_delegation,
++		.op_flags = OP_MODIFIES_SOMETHING,
++		.op_name = "OP_GET_DIR_DELEGATION",
++		.op_rsize_bop = nfsd4_get_dir_delegation_rsize,
++	},
+ #ifdef CONFIG_NFSD_PNFS
+ 	[OP_GETDEVICEINFO] = {
+ 		.op_func = nfsd4_getdeviceinfo,
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index fac938f563ad..4848ebf3e14e 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -1732,6 +1732,40 @@ nfsd4_decode_free_stateid(struct nfsd4_compoundargs *argp,
+ 	return nfsd4_decode_stateid4(argp, &free_stateid->fr_stateid);
+ }
+ 
++static __be32
++nfsd4_decode_get_dir_delegation(struct nfsd4_compoundargs *argp,
++		union nfsd4_op_u *u)
++{
++	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
++	__be32 status;
++
++	memset(gdd, 0, sizeof(*gdd));
++
++	if (xdr_stream_decode_bool(argp->xdr, &gdd->gdda_signal_deleg_avail) < 0)
++		return nfserr_bad_xdr;
++
++	status = nfsd4_decode_bitmap4(argp, gdd->gdda_notification_types,
++				      ARRAY_SIZE(gdd->gdda_notification_types));
++	if (status)
++		return status;
++
++	status = nfsd4_decode_nfstime4(argp, &gdd->gdda_child_attr_delay);
++	if (status)
++		return status;
++
++	status = nfsd4_decode_nfstime4(argp, &gdd->gdda_dir_attr_delay);
++	if (status)
++		return status;
++
++	status = nfsd4_decode_bitmap4(argp, gdd->gdda_child_attributes,
++					ARRAY_SIZE(gdd->gdda_child_attributes));
++	if (status)
++		return status;
++
++	return nfsd4_decode_bitmap4(argp, gdd->gdda_dir_attributes,
++					ARRAY_SIZE(gdd->gdda_dir_attributes));
++}
++
+ #ifdef CONFIG_NFSD_PNFS
+ static __be32
+ nfsd4_decode_getdeviceinfo(struct nfsd4_compoundargs *argp,
+@@ -2370,7 +2404,7 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
+ 	[OP_CREATE_SESSION]	= nfsd4_decode_create_session,
+ 	[OP_DESTROY_SESSION]	= nfsd4_decode_destroy_session,
+ 	[OP_FREE_STATEID]	= nfsd4_decode_free_stateid,
+-	[OP_GET_DIR_DELEGATION]	= nfsd4_decode_notsupp,
++	[OP_GET_DIR_DELEGATION]	= nfsd4_decode_get_dir_delegation,
+ #ifdef CONFIG_NFSD_PNFS
+ 	[OP_GETDEVICEINFO]	= nfsd4_decode_getdeviceinfo,
+ 	[OP_GETDEVICELIST]	= nfsd4_decode_notsupp,
+@@ -4964,6 +4998,59 @@ nfsd4_encode_test_stateid(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	return nfs_ok;
+ }
+ 
++static __be32
++nfsd4_encode_get_dir_delegation(struct nfsd4_compoundres *resp, __be32 nfserr,
++				union nfsd4_op_u *u)
++{
++	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
++	struct xdr_stream *xdr = resp->xdr;
++	__be32 status = nfserr_resource;
++
++	switch(gdd->gddrnf_status) {
++	case GDD4_OK:
++		if (xdr_stream_encode_u32(xdr, GDD4_OK) != XDR_UNIT)
++			break;
++
++		status = nfsd4_encode_verifier4(xdr, &gdd->gddr_cookieverf);
++		if (status)
++			break;
++
++		status = nfsd4_encode_stateid4(xdr, &gdd->gddr_stateid);
++		if (status)
++			break;
++
++		status = nfsd4_encode_bitmap4(xdr, gdd->gddr_notification[0], 0, 0);
++		if (status)
++			break;
++
++		status = nfsd4_encode_bitmap4(xdr, gdd->gddr_child_attributes[0],
++						   gdd->gddr_child_attributes[1],
++						   gdd->gddr_child_attributes[2]);
++		if (status)
++			break;
++
++		status = nfsd4_encode_bitmap4(xdr, gdd->gddr_dir_attributes[0],
++						   gdd->gddr_dir_attributes[1],
++						   gdd->gddr_dir_attributes[2]);
++		break;
++	default:
++		/*
++		 * If we don't recognize the gddrnf_status value, just treat it
++		 * like unavail + no notification, but print a warning too.
++		 */
++		pr_warn("nfsd: bad gddrnf_status (%u)\n", gdd->gddrnf_status);
++		gdd->gddrnf_will_signal_deleg_avail = 0;
++		fallthrough;
++	case GDD4_UNAVAIL:
++		if (xdr_stream_encode_u32(xdr, GDD4_UNAVAIL) != XDR_UNIT)
++			break;
++
++		status = nfsd4_encode_bool(xdr, gdd->gddrnf_will_signal_deleg_avail);
++		break;
++	}
++	return status;
++}
++
+ #ifdef CONFIG_NFSD_PNFS
+ static __be32
+ nfsd4_encode_device_addr4(struct xdr_stream *xdr,
+@@ -5580,7 +5667,7 @@ static const nfsd4_enc nfsd4_enc_ops[] = {
+ 	[OP_CREATE_SESSION]	= nfsd4_encode_create_session,
+ 	[OP_DESTROY_SESSION]	= nfsd4_encode_noop,
+ 	[OP_FREE_STATEID]	= nfsd4_encode_noop,
+-	[OP_GET_DIR_DELEGATION]	= nfsd4_encode_noop,
++	[OP_GET_DIR_DELEGATION]	= nfsd4_encode_get_dir_delegation,
+ #ifdef CONFIG_NFSD_PNFS
+ 	[OP_GETDEVICEINFO]	= nfsd4_encode_getdeviceinfo,
+ 	[OP_GETDEVICELIST]	= nfsd4_encode_noop,
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 415516c1b27e..446e72b0385e 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -518,6 +518,24 @@ struct nfsd4_free_stateid {
+ 	stateid_t	fr_stateid;         /* request */
+ };
+ 
++struct nfsd4_get_dir_delegation {
++	/* request */
++	u32			gdda_signal_deleg_avail;
++	u32			gdda_notification_types[1];
++	struct timespec64	gdda_child_attr_delay;
++	struct timespec64	gdda_dir_attr_delay;
++	u32			gdda_child_attributes[3];
++	u32			gdda_dir_attributes[3];
++	/* response */
++	u32			gddrnf_status;
++	nfs4_verifier		gddr_cookieverf;
++	stateid_t		gddr_stateid;
++	u32			gddr_notification[1];
++	u32			gddr_child_attributes[3];
++	u32			gddr_dir_attributes[3];
++	bool			gddrnf_will_signal_deleg_avail;
++};
++
+ /* also used for NVERIFY */
+ struct nfsd4_verify {
+ 	u32		ve_bmval[3];        /* request */
+@@ -797,6 +815,7 @@ struct nfsd4_op {
+ 		struct nfsd4_reclaim_complete	reclaim_complete;
+ 		struct nfsd4_test_stateid	test_stateid;
+ 		struct nfsd4_free_stateid	free_stateid;
++		struct nfsd4_get_dir_delegation	get_dir_delegation;
+ 		struct nfsd4_getdeviceinfo	getdeviceinfo;
+ 		struct nfsd4_layoutget		layoutget;
+ 		struct nfsd4_layoutcommit	layoutcommit;
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index ef8d2d618d5b..0d896ce296ce 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -701,6 +701,12 @@ enum state_protect_how4 {
+ 	SP4_SSV		= 2
+ };
+ 
++/* GET_DIR_DELEGATION non-fatal status codes */
++enum gddrnf4_status {
++	GDD4_OK		= 0,
++	GDD4_UNAVAIL	= 1
++};
++
+ enum pnfs_layouttype {
+ 	LAYOUT_NFSV4_1_FILES  = 1,
+ 	LAYOUT_OSD2_OBJECTS = 2,
 
-Reviewed-by: David Gow <davidgow@google.com>
+---
+base-commit: 0a7b0acecea273c8816f4f5b0e189989470404cf
+change-id: 20240318-nfs-gdd-trivial-19b6ca653841
 
-Cheers,
--- David
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
->  lib/kunit/test.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 1d1475578515..b8514dbb337c 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -712,6 +712,9 @@ int __kunit_test_suites_init(struct kunit_suite * const * const suites, int num_
->  {
->         unsigned int i;
->
-> +       if (num_suites == 0)
-> +               return 0;
-> +
->         if (!kunit_enabled() && num_suites > 0) {
->                 pr_info("kunit: disabled\n");
->                 return 0;
-> --
-> 2.43.0
->
-
---00000000000021f49a06144d2a72
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
-mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
-wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
-5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
-ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIFwa5VuHaGMKqh3bMk2XHqLqSZgRKDH31/GvWtaMVQ3MMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMyMzA1MjUxMlowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAj4CCg
-EJ8DE7Vt+E3qOJBc4BOoVsByb5X3ehXlWmqAk8WMImK/CNXw+LlPYwnqZ5LIp8OrjaLUHMY1Gkma
-9RrjvjEFPCjt6mxF+7ZEe1Vx3Z9UlsCKC/Z05D4TPbXaY7nDqcAyUrk/ys03gRfGHzPRgXJgk8Na
-hq+QqVVCfRwQ3mgKA/XjJxhaz9gQDUaBFAFywTKW48dsIAuvveItorD2/dF+W+0T9cOHTkiuj9Qj
-3xC1cjVpxH52Ox4fmF9CJRXUYlzxYacgu4SniY+bCjvM3vq4rLSO9FPg2+G76TWNlUgeYhBL6tsZ
-hEKMGOhQlQ1st3bfSqYRi9gi5p8N3RQz
---00000000000021f49a06144d2a72--
 
