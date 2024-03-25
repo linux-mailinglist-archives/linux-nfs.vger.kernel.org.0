@@ -1,72 +1,102 @@
-Return-Path: <linux-nfs+bounces-2470-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2471-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 439E488B156
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Mar 2024 21:28:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A8EF88B19F
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Mar 2024 21:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BDE5303348
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Mar 2024 20:28:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDA291F32F8A
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Mar 2024 20:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DD934AEF9;
-	Mon, 25 Mar 2024 20:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6251BF31;
+	Mon, 25 Mar 2024 20:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b="m28Sj9V7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FakJGVqj";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RgPITRBB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA07487AE;
-	Mon, 25 Mar 2024 20:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711398413; cv=none; b=RPc7chL5A/rXnZi7hM/qwERnJMmbkn5YDR2UR4iMG6tTw9vbwNSgabFNx7qzoKxfsUilE/5GGhwbnSZV89pkkGARaP8KPO3BA/J9acbjA9z2sbQ0EnCwccXtOhJN9GAzgVqiwfqoWCzgZcsJPQ30tk9vHlq1vZnD7eUgn5p4MGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711398413; c=relaxed/simple;
-	bh=sirxy7fEgeaEeO6FTxMzd8nAXM+znP7Hzj8NSE0pTnk=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=A/zkKZdy7miNgdL+8xMr8Ki+qyN0dJnTmODld1OJ3bivH5gqtTxuFgm3oGlaeMJ3VEJUkyVg+ka/D7Cr38EZKDiOgosGufxqa9Kay1xobUxD1goduJPIPjaZlogzPDEEyQgZfrU6iih5/xlhOwqbjrS6jAtHYqELzaRBFRdp+4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b=m28Sj9V7; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711398394; x=1712003194; i=scpcom@gmx.de;
-	bh=TFWhVf6FAP0u+nZm5RqM5xg+6k2IVEXLXNjFBZXAJTg=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=m28Sj9V7bEpljZpCRxs45km+eFyhrs21Dw7c4d0opxxMRdcz4T4h1iRDDUlFBzZU
-	 RUFqUjJzWK3opSi9ZywTFw9dkm68jBFL6Or3SR4pT9zyyPL3uTEuUqtRzXeyX1jGk
-	 p+33yUUMbygHss7qsvTcLwqg0s0qrTMLkx/gHoMNoTd89IoH+vd/Bi2BOLvwyAmOh
-	 BBKkaHeu7GjRSC+GFb0Znm2roccDpzwcrxozOW34TbmfoTwOR0CjbttXfZetz25bM
-	 VIfRdWDHuN5fhkKE8lg8jG1fvUtiXdTyJAAIef2vL3jeXYAZ7M7rwKHkr5pyBa0em
-	 vofyXctujx24Vv8FLg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.236.12.4] ([10.236.12.4]) by msvc-mesg-gmx001 (via HTTP);
- Mon, 25 Mar 2024 21:26:34 +0100
-Precedence: bulk
-X-Mailing-List: linux-nfs@vger.kernel.org
-List-Id: <linux-nfs.vger.kernel.org>
-List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <trinity-77720d9d-4d5b-48c6-8b1f-0b7205ea3c2b-1711398394712@msvc-mesg-gmx021>
-From: Jan Schunk <scpcom@gmx.de>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Aw: Re: [External] : nfsd: memory leak when client does many file
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FC9339AC;
+	Mon, 25 Mar 2024 20:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711399010; cv=fail; b=cUkuSRdXDkq4zo8gU3gQkBsJk55RR7mfG3uxXNQAyF6Bbgvozj/aOqeA+l4JGE+lzOxe82zVc2/Bjj8cI31r7Y9mlOBZIbkWB+OtfBD69cr5B6bkbpowXWUKmkw0YYl83YIyvoBIo8rMOeco1rncdvjbFbms3ULSwAq+N98deQw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711399010; c=relaxed/simple;
+	bh=ZmxK+gg5mMo3gxhh0BwkiuUBxk9QI2wItguSdSIVRKo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ug//9vHP0B9TvkP8/tHzpzIJPBpMhRNRZYAu8U2qQWgJokxDrkKMyQgSxAVS1hwIUL7UokOtrH9yMjEbFB4lml1rfJ/8aTdwlpA7oze+IRULZv5ynuicTzRDmrYEAyblS53fCUbgo6miN6Zmz8ViC8OVPPDp40Ky0RUS8cE1D2w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FakJGVqj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RgPITRBB; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PKYLF9030060;
+	Mon, 25 Mar 2024 20:36:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=ZmxK+gg5mMo3gxhh0BwkiuUBxk9QI2wItguSdSIVRKo=;
+ b=FakJGVqjc8TvkAPblv1gABGbvWz4bZGmJ9KHUqPYmeZefd2n3W70dItGmd+OQBEWql/U
+ +1t78h+Jd4CnPMU+G3e5F+vl+uskscFvwn2w6g9nXl+noH+UwyJlqngBqDqy5JEDnFnO
+ e7bvaipYltPThEg7dy8pH+tR7PRsku9vJtxTN6y/iReMPKjWTKxUEuxjqcCxIs7Yop9j
+ QTAJ3DSqh519YIliKwQi+3zEpWE6ZwZVuqA6M0BWEfIzSclVmoOsXZ+K2NwDZ/U2Al9w
+ 48nCzXgcCIlztHp2y4a8PsxzuLAsTjMYx6houKEKd/hmLWNsJ3My71GQbnnsyiWx2YY+ 5g== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x1pybkk6d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 20:36:37 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42PJMJ3I010557;
+	Mon, 25 Mar 2024 20:36:36 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh66m99-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 20:36:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qfhg0TV06qn99M1hXw6IWceyy11tkORBHpf+ldskRzujaYL2VSh/3q/bvubZQA2t0wLCwDGhFSbdYoXWWdXpv+47pxmRVzoDXdsaJRKGX+hlLHJfUI39/JQICsW3a2Sz3PUPvMcIgLf0niHDW9t2aZonR/n8xwj9O9w9EeGxwvZi46Dq+ulgyxtjnGvXoQOqdcJ9Nq0z6g70g+zJtp+SptGIz6Vdv4gFXVzNS1FR+QnlVRkKRYOUBUtaLmwgiCJOyTd3WygkZCdiR0tn++/Vm2uo6QaeQRE/0zPRzZGEd/dxpwvycbk7jl4Uoz49ZCPAV0Fqr3ey8i47T6gJsQKCoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZmxK+gg5mMo3gxhh0BwkiuUBxk9QI2wItguSdSIVRKo=;
+ b=igGMC6zvjaC+o9ZljTh7LW8q6vddfLtrMnVK/Zq6642+UeXuPl542qheBiSR9br64Um/zA01Wu7/y8tyijKSSIfbkC64o+YOybCDCeoO7XpArgH0Ntpqew6ungn4SvjjA9lG5+l+KlriaJE9+Bvv7Gomu8xlCku4Rnzl7E/NcVTM972tEn2kppR8CE7MC2BeKI8tQhEc8bFti9NvcOCVZ/CWFi85zQpHWpsbsWeAKXF1lhnO5QYtXpllXMlddAopAXYwMy8MGIB+A0zkGYzIXCcOJh8CD6LNJdBvUdkZt69n4jyuJo1aa4tPis+13TL9omjPOGvpF68BqMUqjCwm3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZmxK+gg5mMo3gxhh0BwkiuUBxk9QI2wItguSdSIVRKo=;
+ b=RgPITRBBpct8M6m6tF5o1+aDwBErFoU0mqnLzyn0Rs0qgikU9N2HFtedGQG0rYLAcAu+WsfABNvCgPguxx6ZOH2tJ2ysKZFSmFU3N+Ud32JtFM2PRTPWszzcVcXBSK4pt11uA6GXC9gUcCaTZzjSqjxKiMjsP6uNQjd7voHM2jY=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH0PR10MB5627.namprd10.prod.outlook.com (2603:10b6:510:fa::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Mon, 25 Mar
+ 2024 20:36:34 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7409.031; Mon, 25 Mar 2024
+ 20:36:34 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Jan Schunk <scpcom@gmx.de>
+CC: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga
+ Kornievskaia <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>,
+        Tom Talpey
+	<tom@talpey.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [External] : nfsd: memory leak when client does many file
  operations
-Content-Type: text/plain; charset=UTF-8
-Importance: normal
-Sensitivity: Normal
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 Mar 2024 21:26:34 +0100
-In-Reply-To: <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
-References: <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mesg-gmx120>
+Thread-Topic: [External] : nfsd: memory leak when client does many file
+ operations
+Thread-Index: AQHafvQgFHRWnP2bS0KTIVIRm3T7ww==
+Date: Mon, 25 Mar 2024 20:36:34 +0000
+Message-ID: <51CAACAB-B6CC-4139-A350-25CF067364D3@oracle.com>
+References: 
+ <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mesg-gmx120>
  <E3109CAA-8261-4F66-9D1B-3546E8B797DF@oracle.com>
  <trinity-bfafb9db-d64f-4cad-8cb1-40dac0a2c600-1711313314331@msvc-mesg-gmx105>
  <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
@@ -74,106 +104,114 @@ References: <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mes
  <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
  <trinity-ad0037c0-1060-4541-a8ca-15f826a5b5a2-1711396545958@msvc-mesg-gmx024>
  <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
-X-Priority: 3
-X-Provags-ID: V03:K1:ZFw7evkSY6o6F1YQ1W5m+DbHIfZY4qKTfHzoAohk5C8L6s9QBbeYDbswgf+ea4NuJ+gSv
- QSYKvq+1Rc25VhTi6ToUuiyOXiiyjZwHGGyHiIiAYnpTGpcYH7wYqMnqgl714kRyA2CvJTtC+Hz0
- WcwvetN7SwmszmDnlaOk/5UUgE4K/jswrHlTI0AiQiVbeWJVfEj+CkoceK9q3kGEIWdlcTXE5xWm
- 5p4CKpfcGAARRDsG6gKOIWhuluvJlxxHbqv4jLCi8UHY2ctR57fhPW/cJfKhh/0gi7a3CxMyeqTd
- QM=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UsaWHKC/ZJI=;xg6p6NfN7pMdG8ExPZVQTWnGdDX
- skcEndFmF3hhdOkXiE/DrFI/ZoSeM5G4TO8G0o/TBw/M+byIa6HQJDL4efSglPX3JAOLY2Jrg
- rVIyvXnkcjIOmNdA/T9LShOvs1TassDavG8yYMZgYZoiwo6govVu7VpPvixMY7Sc4W+8fPaP0
- Wc5aIZVRH4EuVDVzjWjeua6QzSIQkF+aU0vYbNbgvdnHtcgsAKriOka+DKQ9jtSDTvScReIBB
- O8UM2/OIrT+ILwZU+j0bk6nOtgPCltEyFMYbzugcnJ8PrBsMN0qGliri8nRROM2Dx3O60GsQI
- bgdeOoMcueJ+JK+akzTJ9gRyHvORX4RS4TcWHvUrhu8ErI6+1Rhc9PFu9TdPmIlYGs0nN/nU3
- ssYvUGLUxKXUjbv7UP1uwxi4ij99aSzAzHDlgQam65yfRoQzwjYuYePO0CgfEgDXHog5MmGWh
- PfOYo7+md8IPi7CiStOmZpGywRLQrUwZKJphTXu3s6mfnl1Xn5KTBDVsenLD1FFHHz1kWRXig
- IJ4EYutg3kSpT5KftvaOtmwrKt89gvog4RJoyUQKaq8AEuknE/A84A7FP+jJ0u7KeSqEN04E7
- ehidLwjuDbKKqv0cQ3ZEsK+nEgatwnHigYfguwHv42T0lUs/xAVT5l/sqYeOwy7eMSHu5C25E
- 9zb5tlWKfI3apmyZ125GgqtJ7i1PXq37YVFj+tId++tqWFcs0Pe8ssCYx9/Vuf8=
+ <trinity-77720d9d-4d5b-48c6-8b1f-0b7205ea3c2b-1711398394712@msvc-mesg-gmx021>
+In-Reply-To: 
+ <trinity-77720d9d-4d5b-48c6-8b1f-0b7205ea3c2b-1711398394712@msvc-mesg-gmx021>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.400.31)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB5627:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ aAUeEAfBohK6Gg9fYR5WaTx/7BaOpSv4BRX33YNsemqxTatFCozzgYQdo/UdjwCDUdHs4nNyLXL3A9B3jfeMr/+IYU7J4wZONLUNNsYRWXzfvH+TT0K9/pZTe2T32HNIdTU5u+fv4TmRiWl7nrcd1C4IQYFkz2ygNvk99yN5IH/kOcvD4SmIeNiEtw4WKZqSAQSiiRYoLw6roIADH8NALyLDBoLaLqztibGYV3W5lJrh4eN4Ufqwf59NvPLqiRFpK7hJltHjmhKOQygwYhXfhEg7kOJfWTna98SSLE2EcqM/FF5nt+DNNB/3TFR/EToAKEjZZB8OwCb0Rdr2MWiUiqq00p2Y16gzpa1lqRxNGlTNOnbGYNuOXAnv24glLenRJM7rFGSyXMC+5OqfcEdhCJEwo0Ov47+0y/UqmIP4UXh+3TQuSygvky1qfq8oqn2uQlCcxDwEnR9NBt9flOgJimUlBUxKLf9vU7VoHiuCbyzpwWQBzEp3PzhJOHR9exIuqV5L1WXLU7DXZ8McRlOp081Dk7HPeKVF3cBvRQOveB0L4SzRV4y+1Xl0wutTPmoa7jAnwUjNammNPLxEe0T17rYs0bbeizcUQCHZMyNLQGbBMHorTMrMVcRliAThUPJ7nrKisGyg2FptUCJHxzrcqP4+UuJ23G84HDYKhuAF2hY=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?OW91SVlxcHhubjFqZ2NJczRmdFptTjZ6ek5HVDhRdElIMHlITTN6b3JiRjkv?=
+ =?utf-8?B?cWJobmtxUjA1WFVKKys5SXF6dkZlRDVNdXlWaGV3NldxdDI5MmtqWE1WbVJa?=
+ =?utf-8?B?TTZxVlF2YzB0dGJyZHZlQW4yQ2JQSDZGcGJJWHNGMzNGMVZNT0daMk0wZHNF?=
+ =?utf-8?B?ZEszTjJaRjlydW5jbmJ6Q1BLOEtSZm11ZmtXMFZSVC9wcVc2K1M5UURtZjlr?=
+ =?utf-8?B?eTFDZW5rVkI3VXo0Q3c1VUZlcjdzNDBERDNJQkRFaW9pbFJGKytMa0t3SUZ1?=
+ =?utf-8?B?ckNEUGlSZXZZRDBpS0lsanhSVVV1K2EydXlOeWlPYkNPZWY5bFJrSVhlTDNB?=
+ =?utf-8?B?OWV3bVUvaDVkUGhMWGRQN2d4cWFBbUlhd0VNaExzYzVEVE1kc0t0VWMwOWxY?=
+ =?utf-8?B?K2dvWmxFeStVc3pvK2U5RkhnQ2x6S2tCSmIrZ3pFYlZidzc5VkhIMGd2LzVZ?=
+ =?utf-8?B?MG13YzhMblhkdTFuQ3BsTDJoY3JCSDJnQlNVZE1vZnBvQTNvLy9UcysvM2dX?=
+ =?utf-8?B?U0JWb3I5WUVHSURnb2Z3NkZ5STV3N0JiNkhkSFJIdk9OSkFKekdJNEJzSElz?=
+ =?utf-8?B?dnZNdlZxL29JUnFMRHB2MFpDL2hWMFo5Q2psckJhSUQ4d3daOWNudVp1Mms3?=
+ =?utf-8?B?VndxTVY1M2U3WjNuNkhpcHJNV2VUcDBmTHR2NzdSVjB5M2MvYUFnZjcxTUFZ?=
+ =?utf-8?B?UUtWV3JjQTZJdE5CazhCUVB2U3c3am1kdHJ1V09FTVJJc1UwenJ2SGZQVjVT?=
+ =?utf-8?B?TlRqSDV4Ym5Da3Q2ZDFnQ1orYko4MmZjNkYrT3JiMDUzaGc5VVphQWpLbitW?=
+ =?utf-8?B?WEpGUkhLWUplTFNTWnUwVDh1a1ZkY0ozNDlqalZPTVg1Wlg4U05Mdm5RSHFT?=
+ =?utf-8?B?OFhWN2VTY1ZHS2FpZXJDNFo2bXdKYTNVdkVlWVhDKzhabm1kUUswN0pTcXRN?=
+ =?utf-8?B?LzVOVjl2R3hUT1dTL3puQ3YvU0VEQ2VYWnAvMS9JWTRUbDlzVXB5c2d6S1ht?=
+ =?utf-8?B?QmI4ajNZNzNYd2lOVjB6dEErVEFqTHdDYko3cjhrcUdGdWRna2VPcGNoMXNX?=
+ =?utf-8?B?OEZQNGJEYmg1TjBmM2ZYYVUvQ0FFTFpyQnZhSjd3Z1FFSFBCRFRNOExKcnB2?=
+ =?utf-8?B?T3k0K0R5Z2dKVGU5WjZndi8zYWs1MUZydHlwdGlSRUV5bmNOWjJvc1Fidkl4?=
+ =?utf-8?B?U0ZaaU1VdDlYd1MweEJDUUZmNTBpWGdCNzRPU2hNTC9sVlpOYnkyTC92MTYw?=
+ =?utf-8?B?aDh2TDYwUDRQUDV5MDdnR1czakVnVHprTmpFZUNnRGZmdytoaHBYV1RyWFdJ?=
+ =?utf-8?B?RHBPMTF2YzBWWWJSaXJlVTEwS00rZWNSVkc5VHhZU0RTMi9hTFppN2pNVFM3?=
+ =?utf-8?B?bDdCbTE1MnZiUy9VQlVoZzlDaXFJK0Flc2h2VFdGM09sVHRjcWwzaEw4REU5?=
+ =?utf-8?B?T2FJWTU3QnJWN21vSjEwTEZaSTAxaWg2YVhDMUIxbkRBRVdsNVRZQzh1WW90?=
+ =?utf-8?B?M0R0ZCtlWG5vRVlBdDhsdWZER2pSYWpPVVRrN2Myb3JhVkhuUm5MRkFwU3hw?=
+ =?utf-8?B?aGhtQjFmZkxUN0RhYkxqY3NBRE1Hc09ZVzIvZVVRTFNJaW9TVE9VcHJqVTZl?=
+ =?utf-8?B?cFpVb3V6SnFUKzMwMjdGNW5GTEdBb3Bxa25Fd0R3L203bElPdkpuNUFsdFl3?=
+ =?utf-8?B?QldRUjY1dUE3U05TRnFnQ3pFUjc3alYzbUJ5YTNDMG5oME1NY2UrRHVIRFF2?=
+ =?utf-8?B?WTRqTW8xclpIUjhqSVFrMlJFY0VXRXhIVklTbVo1MUxnZWtXSWdmSGhJNm9w?=
+ =?utf-8?B?Rkc1Z3hIWExSRmpUc1dyS3MxZXRHK0lnS3pnNmdrZ1p4SnR0LzVBOWF2aTJB?=
+ =?utf-8?B?c2tOMEM1Q1R3dm1BOHB3SHlGR002V2lhNHFEcXN2allld1cxVk9vV0poVUdI?=
+ =?utf-8?B?ZlAvelVlM0FWZHkxZ1J5cFBIOVk2L3lDTlRLa2VoZ3BxLzB4VXpyQWV2cjVM?=
+ =?utf-8?B?a1k4WS9jM05KZkZCenV1ZHJnR2puQ01ZRERqY1l2bk85OUFNWFBoYkVwbFF5?=
+ =?utf-8?B?Mnk5cHVIekNhVHR5ekY2S2Z6V083U0RSMC9iVHpFbHlyNnhON0tBUVg5cGFn?=
+ =?utf-8?B?ZmNnejZ3ZERUdzgyRFlDS25yMXAwbmFnK3VrSVN3SDFSektKR1J4YzlVazlu?=
+ =?utf-8?B?WlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C2F6C4A13CF8D9438CA790869C5062A3@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
+Precedence: bulk
+X-Mailing-List: linux-nfs@vger.kernel.org
+List-Id: <linux-nfs.vger.kernel.org>
+List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	QzkyZEcJEz6JSuyexBHcexqI4iY0gSaTmxlEV3bY2w61h4wP7P/cAJoU1wuqgW0xsshtTJnus2RLXJoZlnQqtb6f07cWIxTBMkocDdKvbBKh0jjYE5UnVNBH6QlnM4xtExbp0OtCqF/PWsqvIFBdKKsvR4cD4T031TUFaCXPkg7f/u2wR6kbmAouC8YCjfi1AZTBaGQLay+c32f44AibnCmCPGbNiWWXY8SAKNnG7LAtyus3PaBKcAV5uS8fXcNmBSR1ABI+x9YZW2NtFGXampHrt0X4fBHKQ4p5xcw7OTz4BD5Y6DydZdhKGkozr6XnBquGlgdFGghScS1rMqYaJunFGphjLdabjh6AaggRt/8A2VpoAD2XYPIBc1VZLI75MiQh2STKsim0lyRcdOgFhBq5NNn30hGmKRHgfOV+6sY0MLaPmcSYe21uB+f+hHBkQQTyfOM4fKQcOPhMDxoMOcC1jmm3QbIoZix2bqIA7bs8fdFMYluzHIQlvDcojTUGmV0pISFbVTvQNuXgQJFtFHPXYJSgOkDfujOT59aoQhZnz8HRc4jZQMmTjjEyLx3dG5MO0vo8+cEDTMizAdHfJDgU8o2K4qKx8UQAO0/4tVc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f8c3cd0-b43a-4cc4-58e0-08dc4d0b4333
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 20:36:34.6660
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XZ/z0KUVqwNE6qR70dVO8ob3aaf5v9zn/z+lkrRIR8oFv39mX2pTmmalGwK8VqXCDEDVGyUH69F0ZyLCrf/WGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5627
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_19,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250126
+X-Proofpoint-GUID: GDJGaRmDUW5XLS-NgXeAR0V2VQKpOozF
+X-Proofpoint-ORIG-GUID: GDJGaRmDUW5XLS-NgXeAR0V2VQKpOozF
 
-I am building my own kernels, but I never tried kmemleak, is this just a Kc=
-onfig option?
-What do you mean with "bisect between v6=2E3 and v6=2E4"?
-Everything including v6=2E4 is OK, the problem starts at v6=2E5=2E
-
-I also looked at some code already but there are huge changes to mm that h=
-appened in v6=2E5 and v6=2E6 so for me it is heavy to compare it with older=
- versions to find one or more commits that may cause the issue=2E
-
-Btw=2E thanks for guiding me so far=2E
-
-> Gesendet: Montag, den 25=2E03=2E2024 um 21:11 Uhr
-> Von: "Chuck Lever III" <chuck=2Elever@oracle=2Ecom>
-> An: "Jan Schunk" <scpcom@gmx=2Ede>
-> Cc: "Jeff Layton" <jlayton@kernel=2Eorg>, "Neil Brown" <neilb@suse=2Ede>=
-, "Olga Kornievskaia" <kolga@netapp=2Ecom>, "Dai Ngo" <dai=2Engo@oracle=2Ec=
-om>, "Tom Talpey" <tom@talpey=2Ecom>, "Linux NFS Mailing List" <linux-nfs@v=
-ger=2Ekernel=2Eorg>, "linux-kernel@vger=2Ekernel=2Eorg" <linux-kernel@vger=
-=2Ekernel=2Eorg>
-> Betreff: Re: [External] : nfsd: memory leak when client does many file o=
-perations
->=20
->=20
->=20
-> > On Mar 25, 2024, at 3:55=E2=80=AFPM, Jan Schunk <scpcom@gmx=2Ede> wrot=
-e:
-> >=20
-> > The VM is now running 20 hours with 512MB RAM, no desktop, without the=
- "noatime" mount option and without the "async" export option=2E
-> >=20
-> > Currently there is no issue, but the memory usage is still contantly g=
-rowing=2E It may just take longer before something happens=2E
-> >=20
-> > top - 00:49:49 up 3 min,  1 user,  load average: 0,21, 0,19, 0,09
-> > Tasks: 111 total,   1 running, 110 sleeping,   0 stopped,   0 zombie
-> > %CPU(s):  0,2 us,  0,3 sy,  0,0 ni, 99,5 id,  0,0 wa,  0,0 hi,  0,0 si=
-,  0,0 st=20
-> > MiB Spch:    467,0 total,    302,3 free,     89,3 used,     88,1 buff/=
-cache    =20
-> > MiB Swap:    975,0 total,    975,0 free,      0,0 used=2E    377,7 ava=
-il Spch
-> >=20
-> > top - 15:05:39 up 14:19,  1 user,  load average: 1,87, 1,72, 1,65
-> > Tasks: 104 total,   1 running, 103 sleeping,   0 stopped,   0 zombie
-> > %CPU(s):  0,2 us,  4,9 sy,  0,0 ni, 53,3 id, 39,0 wa,  0,0 hi,  2,6 si=
-,  0,0 st=20
-> > MiB Spch:    467,0 total,     21,2 free,    147,1 used,    310,9 buff/=
-cache    =20
-> > MiB Swap:    975,0 total,    952,9 free,     22,1 used=2E    319,9 ava=
-il Spch
-> >=20
-> > top - 20:48:16 up 20:01,  1 user,  load average: 5,02, 2,72, 2,08
-> > Tasks: 104 total,   5 running,  99 sleeping,   0 stopped,   0 zombie
-> > %CPU(s):  0,2 us, 46,4 sy,  0,0 ni, 11,9 id,  2,3 wa,  0,0 hi, 39,2 si=
-,  0,0 st=20
-> > MiB Spch:    467,0 total,     16,9 free,    190,8 used,    271,6 buff/=
-cache    =20
-> > MiB Swap:    975,0 total,    952,9 free,     22,1 used=2E    276,2 ava=
-il Spch
->=20
-> I don't see anything in your original memory dump that
-> might account for this=2E But I'm at a loss because I'm
-> a kernel developer, not a support guy -- I don't have
-> any tools or expertise that can troubleshoot a system
-> without rebuilding a kernel with instrumentation=2E My
-> first instinct is to tell you to bisect between v6=2E3
-> and v6=2E4, or at least enable kmemleak, but I'm guessing
-> you don't build your own kernels=2E
->=20
-> My only recourse at this point would be to try to
-> reproduce it myself, but unfortunately I've just
-> upgraded my whole lab to Fedora 39, and there's a grub
-> bug that prevents booting any custom-built kernel
-> on my hardware=2E
->=20
-> So I'm stuck until I can nail that down=2E Anyone else
-> care to help out?
->=20
->=20
-> --
-> Chuck Lever
->=20
->
+DQoNCj4gT24gTWFyIDI1LCAyMDI0LCBhdCA0OjI24oCvUE0sIEphbiBTY2h1bmsgPHNjcGNvbUBn
+bXguZGU+IHdyb3RlOg0KPiANCj4gSSBhbSBidWlsZGluZyBteSBvd24ga2VybmVscywgYnV0IEkg
+bmV2ZXIgdHJpZWQga21lbWxlYWssIGlzIHRoaXMganVzdCBhIEtjb25maWcgb3B0aW9uPw0KDQog
+IExvY2F0aW9uOg0KICAgIC0+IEtlcm5lbCBoYWNraW5nDQogICAgICAtPiBNZW1vcnkgRGVidWdn
+aW5nDQooMSkgICAgIC0+IEtlcm5lbCBtZW1vcnkgbGVhayBkZXRlY3RvciAoREVCVUdfS01FTUxF
+QUsgWz1uXSkNCg0KDQo+IFdoYXQgZG8geW91IG1lYW4gd2l0aCAiYmlzZWN0IGJldHdlZW4gdjYu
+MyBhbmQgdjYuNCI/DQoNCkFmdGVyIHlvdSAiZ2l0IGNsb25lIiB0aGUga2VybmVsIHNvdXJjZToN
+Cg0KJCBnaXQgYmlzZWN0IHN0YXJ0IHY2LjQgdjYuMw0KDQpCdWlsZCB0aGUga2VybmVsIGFuZCB0
+ZXN0LiBJZiB0aGUgdGVzdCBmYWlsczoNCg0KJCBjZCA8eW91ciBrZXJuZWwgc291cmNlIHRyZWU+
+OyBnaXQgYmlzZWN0IGJhZA0KDQpJZiB0aGUgdGVzdCBzdWNjZWVkczoNCg0KJCBjZCA8eW91ciBr
+ZXJuZWwgc291cmNlIHRyZWU+OyBnaXQgYmlzZWN0IGdvb2QNCg0KUmVidWlsZCBhbmQgdHJ5IGFn
+YWluIHVudGlsIGl0IGxhbmRzIG9uIHRoZSBmaXJzdCBicm9rZW4gY29tbWl0Lg0KDQoNCj4gRXZl
+cnl0aGluZyBpbmNsdWRpbmcgdjYuNCBpcyBPSywgdGhlIHByb2JsZW0gc3RhcnRzIGF0IHY2LjUu
+DQoNCkkgbWlzcmVtZW1iZXJlZC4gVXNlICIkIGdpdCBiaXNlY3Qgc3RhcnQgdjYuNSB2Ni40IiB0
+aGVuLg0KDQoNCj4gSSBhbHNvIGxvb2tlZCBhdCBzb21lIGNvZGUgYWxyZWFkeSBidXQgdGhlcmUg
+YXJlIGh1Z2UgY2hhbmdlcyB0byBtbSB0aGF0IGhhcHBlbmVkIGluIHY2LjUgYW5kIHY2LjYgc28g
+Zm9yIG1lIGl0IGlzIGhlYXZ5IHRvIGNvbXBhcmUgaXQgd2l0aCBvbGRlciB2ZXJzaW9ucyB0byBm
+aW5kIG9uZSBvciBtb3JlIGNvbW1pdHMgdGhhdCBtYXkgY2F1c2UgdGhlIGlzc3VlLg0KDQpCaXNl
+Y3Rpb24gaXMgYSBtZWNoYW5pY2FsIHRlc3QtYmFzZWQgcHJvY2Vzcy4gWW91IGRvbid0IG5lZWQN
+CnRvIGxvb2sgYXQgY29kZSB1bnRpbCB5b3UndmUgcmVhY2hlZCB0aGUgZmlyc3QgYmFkIGNvbW1p
+dC4NCg0KLS0NCkNodWNrIExldmVyDQoNCg0K
 
