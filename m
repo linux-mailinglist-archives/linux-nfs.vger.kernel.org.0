@@ -1,155 +1,140 @@
-Return-Path: <linux-nfs+bounces-2481-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2482-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C74D88CA88
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Mar 2024 18:15:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A15CA88CBCC
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Mar 2024 19:14:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAD1B323125
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Mar 2024 17:15:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CB1D3406A4
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Mar 2024 18:14:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AF51C693;
-	Tue, 26 Mar 2024 17:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124EB8527A;
+	Tue, 26 Mar 2024 18:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVxdGoXF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QRgf3m02"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8552E1B28D
-	for <linux-nfs@vger.kernel.org>; Tue, 26 Mar 2024 17:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652F54EB22
+	for <linux-nfs@vger.kernel.org>; Tue, 26 Mar 2024 18:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473351; cv=none; b=gcB+y1NdGa4aC519K9eiJMemnh0khnjhY7EockIiTgIhL0YCNDzXd/ztmezsda8SyNetOqQnxyKkQ6RUMSYHhp48rMNYb6C872TmNfGpJn+mtdOGx0Nk1kTwi3H6OzU5oviVz236300ngXQ8ok60mMEJsYXvhucVQMjt0AkoEbk=
+	t=1711476804; cv=none; b=QFgVVt+lz8l5k62CN75U+InuLtvMKXxlpgGBa+o+mkTIAtog3a+xfwNeNK7+Pr5x82aUQbh+sh19WDJ5oqUs6pJGgM2SoB6PLff3zN2EPMMOCsNG5LH65wczr5Q4IRjssOHy+Onh+SenkdgDnEw9RPUsBiTsB+VqQoHP40bK4K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473351; c=relaxed/simple;
-	bh=LoladC18vN7o4gjKcyxmmepIsMgeUKlzNuRv3Hg00LQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XSr1xA4P1WbN/gqLv7azaEQflACsSpteGA+wMzXynd9u7iArLMmAX9Lt6GXpAb6x++ygmV1fYGjrF5vlqlfShMmBJy7LNxsGner9jJpPEYiL4Bom1QwSUr2D8pVDWGD/8mRhzFFo1cJCizHc0KcWA+JxOFZVsg6lEjWQL1b3+Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HVxdGoXF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711473348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=83HZCuvdetNwVOhsg4UWAZu5Vujs+vemNZ3aPKHm26A=;
-	b=HVxdGoXFJI6uCOnaQ3kPmHSCJ6DIXNxBNHKfulIb5jxGUySJXf2kLGLN/zCLCmH35QzLG+
-	f/d0cYCOXaBx7s5EyPZ2sL2e+Qef6zZFFcc8Jt90ewXwD+HsTWeBCePyPnLUqVhIpWDV96
-	1YLY1Zvtb1BvlYDWgr1QCsZ5q7MVl2g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-220-MsRG69mVNE-g4GYGImo1dg-1; Tue, 26 Mar 2024 13:15:43 -0400
-X-MC-Unique: MsRG69mVNE-g4GYGImo1dg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CCF5C101A586;
-	Tue, 26 Mar 2024 17:15:42 +0000 (UTC)
-Received: from [100.115.132.116] (unknown [10.22.50.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B6FB202451F;
-	Tue, 26 Mar 2024 17:15:41 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jan Schunk <scpcom@gmx.de>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [External] : nfsd: memory leak when client does many file
- operations
-Date: Tue, 26 Mar 2024 13:15:36 -0400
-Message-ID: <13E7E8AF-46DF-45BF-96BB-0C820B9FA23A@redhat.com>
-In-Reply-To: <1AE35F72-77CF-4F5A-9B65-72AB6A53A621@redhat.com>
-References: <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mesg-gmx120>
- <E3109CAA-8261-4F66-9D1B-3546E8B797DF@oracle.com>
- <trinity-bfafb9db-d64f-4cad-8cb1-40dac0a2c600-1711313314331@msvc-mesg-gmx105>
- <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
- <trinity-66047013-4d84-4eef-b5d3-d710fe6be805-1711316386382@msvc-mesg-gmx005>
- <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
- <trinity-ad0037c0-1060-4541-a8ca-15f826a5b5a2-1711396545958@msvc-mesg-gmx024>
- <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
- <F594EBB2-5F92-40A9-86FB-CFD58E9CE516@redhat.com>
- <trinity-0ed602bd-15d4-4110-b3f4-668c2051904a-1711472684521@msvc-mesg-gmx122>
- <1AE35F72-77CF-4F5A-9B65-72AB6A53A621@redhat.com>
+	s=arc-20240116; t=1711476804; c=relaxed/simple;
+	bh=aLAxn/2iDIfZCjbIuZtldw8HHTb05p+XXbOeInd03x4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=iETzVf2+sdv5w4kcV7GXam5Hb5bnmbGt9LBkMDeHh68XxhVswXft9g4cn/JY/KaruKCG74VQmEIj+qCV9mG77EO+++ONcFa0gtRr1F2Or9udGjsY+JhDsrk8zR7x2UxKXkB45wrqL+ASXgXgbFsu94OKWnwYANgDDuOFZhqfvt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QRgf3m02; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42QI4v7E031787;
+	Tue, 26 Mar 2024 18:13:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-11-20;
+ bh=3ROY4h6iaoGfytuAcICw3lGww2z9IKp2x4u7Aoipny8=;
+ b=QRgf3m02G9p0iQuVqntZ4DbafLKJSskjxQC8R+O3dN7drQ6qQPUbtTPX8yAYxC5XItky
+ doxJ6tK9LmbjuUbdPWOCTy0Lr3BP3jBakO2Y6BByyMQi/qbDVdDYKTi/9Ji/n7x7b0tx
+ ULObFjnRWpUYv/pyOP1KVwWUtbub9+z2uLTAz9o+dzGCd/ZePT+VIy1ybT/bSivudyN6
+ 0miZkSJr8AXcZuwLGuW5QTc5rnVJQAGz9WGtzKE4sAdOkUW+6N3K7hBdq3e2SY0DjMYG
+ eyhyBIxWU3gmB+jwuEtVsMDNhdKVQsB0HHy574hpQcMr0VJ/qjQJ/IEB/J5a4Fy3BFx7 zw== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x1np2ds4v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Mar 2024 18:13:16 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42QHp6hx013925;
+	Tue, 26 Mar 2024 18:13:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh7mhpy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Mar 2024 18:13:15 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42QIAQk6037540;
+	Tue, 26 Mar 2024 18:13:15 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3x1nh7mhph-1;
+	Tue, 26 Mar 2024 18:13:15 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSD: cancel CB_RECAL call when nfs4_client is about to be destroyed
+Date: Tue, 26 Mar 2024 11:12:58 -0700
+Message-Id: <1711476778-26181-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_07,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403260130
+X-Proofpoint-GUID: srTBocsz5sZuceXGMSWQ2nWgoBRuCPqS
+X-Proofpoint-ORIG-GUID: srTBocsz5sZuceXGMSWQ2nWgoBRuCPqS
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On 26 Mar 2024, at 13:13, Benjamin Coddington wrote:
+Currently when a nfs4_client is destroyed we wait for the cb_recall
+callback to complete before proceed. This adds unnecessary delay to the
+__destroy_client call if there is problem communicating with the client.
 
-> On 26 Mar 2024, at 13:04, Jan Schunk wrote:
->
->> Before I start doing this on my own build I tried it with unmodified l=
-inux-image-6.6.13+bpo-amd64 from Debian 12.
->> I installed systemtap, linux-headers-6.6.13+bpo-amd64 and linux-image-=
-6.6.13+bpo-amd64-dbg and tried to run stap:
->>
->> user@deb:~$ sudo stap -v --all-modules kmem_alloc.stp nfsd_file
->> WARNING: Kernel function symbol table missing [man warning::symbols]
->> Pass 1: parsed user script and 484 library scripts using 110120virt/96=
-896res/7168shr/89800data kb, in 1360usr/1080sys/4963real ms.
->> WARNING: cannot find module kernel debuginfo: No DWARF information fou=
-nd [man warning::debuginfo]
->> semantic error: resolution failed in DWARF builder
->>
->> semantic error: while resolving probe point: identifier 'kernel' at km=
-em_alloc.stp:5:7
->>         source: probe kernel.function("kmem_cache_alloc") {
->>                       ^
->>
->> semantic error: no match
->>
->> Pass 2: analyzed script: 1 probe, 5 functions, 1 embed, 3 globals usin=
-g 112132virt/100352res/8704shr/91792data kb, in 30usr/30sys/167real ms.
->> Pass 2: analysis failed.  [man error::pass2]
->> Tip: /usr/share/doc/systemtap/README.Debian should help you get starte=
-d.
->> user@deb:~$
->>
->> user@deb:~$ grep -E 'CONFIG_DEBUG_INFO|CONFIG_KPROBES|CONFIG_DEBUG_FS|=
-CONFIG_RELAY' /boot/config-6.6.13+bpo-amd64
->> CONFIG_RELAY=3Dy
->> CONFIG_KPROBES=3Dy
->> CONFIG_KPROBES_ON_FTRACE=3Dy
->> CONFIG_DEBUG_INFO=3Dy
->> # CONFIG_DEBUG_INFO_NONE is not set
->> CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=3Dy
->> # CONFIG_DEBUG_INFO_DWARF4 is not set
->> # CONFIG_DEBUG_INFO_DWARF5 is not set
->> # CONFIG_DEBUG_INFO_REDUCED is not set
->> CONFIG_DEBUG_INFO_COMPRESSED_NONE=3Dy
->> # CONFIG_DEBUG_INFO_COMPRESSED_ZLIB is not set
->> # CONFIG_DEBUG_INFO_SPLIT is not set
->> CONFIG_DEBUG_INFO_BTF=3Dy
->> CONFIG_DEBUG_INFO_BTF_MODULES=3Dy
->> CONFIG_DEBUG_FS=3Dy
->> CONFIG_DEBUG_FS_ALLOW_ALL=3Dy
->> # CONFIG_DEBUG_FS_DISALLOW_MOUNT is not set
->> # CONFIG_DEBUG_FS_ALLOW_NONE is not set
->> user@deb:~$
->>
->> Do I need to enable other options?
->
-> You should just need DEBUG_INFO.. maybe stap can't find it?  You can tr=
-y to add: -r /path/to/the/kernel/build
+This patch addresses this issue by cancelling the CB_RECALL call from
+the workqueue when the nfs4_client is about to be destroyed.
 
-oh, nevermind - you're using a packaged kernel.  I'm no familiar with the=
- packaged requirements for systemtap on debian.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/nfsd/nfs4callback.c | 6 ++++++
+ fs/nfsd/nfs4state.c    | 2 ++
+ fs/nfsd/state.h        | 2 ++
+ 3 files changed, 10 insertions(+)
 
-Ben
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index e5b50c96be6a..da9211f6fbbb 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1578,3 +1578,9 @@ void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp)
+ 		nfsd41_cb_inflight_end(clp);
+ 	}
+ }
++
++void nfsd4_cb_recall_cancel(struct nfs4_client *clp, struct nfs4_delegation *dp)
++{
++	if (cancel_delayed_work(&dp->dl_recall.cb_work))
++		nfsd41_cb_inflight_end(clp);
++}
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 0e1db57c9a19..f889e3addd71 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2378,6 +2378,8 @@ __destroy_client(struct nfs4_client *clp)
+ 	while (!list_empty(&reaplist)) {
+ 		dp = list_entry(reaplist.next, struct nfs4_delegation, dl_recall_lru);
+ 		list_del_init(&dp->dl_recall_lru);
++		if (dp->dl_recalled)
++			nfsd4_cb_recall_cancel(clp, dp);
+ 		destroy_unhashed_deleg(dp);
+ 	}
+ 	while (!list_empty(&clp->cl_revoked)) {
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 259b4af7d226..8b29bd3bbf1d 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -736,6 +736,8 @@ extern void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+ 		const struct nfsd4_callback_ops *ops, enum nfsd4_cb_op op);
+ extern bool nfsd4_run_cb(struct nfsd4_callback *cb);
+ extern void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp);
++extern void nfsd4_cb_recall_cancel(struct nfs4_client *clp,
++		struct nfs4_delegation *dp);
+ extern int nfsd4_create_callback_queue(void);
+ extern void nfsd4_destroy_callback_queue(void);
+ extern void nfsd4_shutdown_callback(struct nfs4_client *);
+-- 
+2.39.3
 
 
