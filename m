@@ -1,56 +1,57 @@
-Return-Path: <linux-nfs+bounces-2490-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2491-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0250688DB8E
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 11:50:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF36688DC13
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 12:08:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A82792980F4
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 10:50:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E22221C21FE5
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 11:08:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 685E64F618;
-	Wed, 27 Mar 2024 10:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5D63A1DF;
+	Wed, 27 Mar 2024 11:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="piPp1u1W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lwd5gl+f"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422124F1F6
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 10:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5223610A
+	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 11:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711536640; cv=none; b=IGLLlAhxD/mCI+kKGbQO8l9FYQp74ZgQ6/lZ3GBC2VSuuK+NpS1Lztc0IqLW9DGIXnBJRsjur3sJwH0sln9NPyCV/jOIKLyO5hbYOgwCLUEZbnQDxMHlgbQ3YpB/Ob9/0OBPaHMWnUMfEcK/Mlh/S2EMT/Iw5TRboOIi6u/F2hY=
+	t=1711537682; cv=none; b=ovtMRgqbSKnnyDAt3H1h/cmVtSrb+c6iBjTVQ9RKCklpDExNmD1SKIYN+jmBw5SthZw7VFPrZrTdj5plNV9KX3Lxn8+Dl47Z1BYt5r2eIC3RsCuy0bO55bmDMTyFWwS1EIDn/Tx1UX/urrLuh1S0YRnZHWo6d/i9bY2EBqiH/IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711536640; c=relaxed/simple;
-	bh=+wkrM0nSaPgpAZAq8OSHYfHpRkZQQBHXzbk/1O0XDSg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oC0xfIICSmi5GdC14O0rPCpXzr9FzUG8Hy/Q+iM0vWIamQfStgVrqI8i/wqABy8IgtlQcZ7ON/6SzXOOLkQ5shEqYGGF88qDh5a6uPNcfJtXDYw64yHyt+65Et0M7NAuu0kT/nDY6Mz3WD9QBZvuHn+SkcnwLJrAXDejzd2a1u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=piPp1u1W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F49FC433F1;
-	Wed, 27 Mar 2024 10:50:38 +0000 (UTC)
+	s=arc-20240116; t=1711537682; c=relaxed/simple;
+	bh=UvahTjj0F9WM0RsBYZFc3WQGM4pEWgbtP93KHWEy0WQ=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gDEDBrHeTOmV6AHKGKnhBbHcHEmC0r3ro1wL+h0A1g13+dghgp06cnjFu9CJ8o8ii+DyxEI4MLHrb1heFo9uNs2dNYirMAdG1Xo5KvC20hydE1ysv8WQWtg50dFKPFos8963UO64w1TsC/0l6xP2JUWnN+uvgJiIJRjkhsN5Qis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lwd5gl+f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC416C433C7;
+	Wed, 27 Mar 2024 11:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711536639;
-	bh=+wkrM0nSaPgpAZAq8OSHYfHpRkZQQBHXzbk/1O0XDSg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=piPp1u1WlAyv+QGhPFusx1zQ3B3IsP/sp/K5y1ySVztsw0NRlemNOr5Th0mu20AUU
-	 CSORGL5+6o8Xf5swqBCIq9HSEul750PCHErGMLfvqkQk4f9dRGRa/v1amChCqDFbdO
-	 Wz1gDICYajxE+pZkbxFEsm3QhK2AbUE1hwmGEme5x8Z8KmHKNf0S+6pntc67pYT9Vl
-	 sv062fFxNYXYizz/rA4suPBmznvRlNQAVemUWglOUerZC3tmDegCUwaRyDtRgZ+C6/
-	 MqoNB18xeAKzIvmhfdvS3j0arIoZKhwf9fcNarCApeitYMWkzxm1CYPgUhJO+rBsmx
-	 6twKaJaKjr8Gg==
-Message-ID: <009e4477af2b6359c7e9bb549f0982a667c6ffa1.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: nfsctl: remove read permission of filehandle
+	s=k20201202; t=1711537681;
+	bh=UvahTjj0F9WM0RsBYZFc3WQGM4pEWgbtP93KHWEy0WQ=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=Lwd5gl+fCuC/zrdVPqfBx7Zdc1WI0FjRtHBQeeFzCIFPqc2fyaDo6x3cg32r6vnad
+	 uTQvEetpXnvWkRbtUOTCokFt6jLpfQl/HGFKbRB84L+eoD6yAofh5P+ZNWHLR0BJtc
+	 hIDLTAfbUwa1aNQ2PdxffXbxTs7+oh1ROZMI1WVaxOqPy4vKAQEzlaZz2TqE1O8Dw2
+	 +GogBFWGrxuQqj5XGCtrHj/JhTjIFrWx5Gd+BWo6tQDMMi4GPr56x9jrWTc+3dd05G
+	 t7Xf1+K+ozgO42RQbDE9G9cbsCWR3KzqZnd816UoHR0UAQEQuqwUAmQozHg8JdAdUZ
+	 Hg9qBT+xJ4BIA==
+Message-ID: <474380e6098676a95f38dbaffcaeb633fe602167.camel@kernel.org>
+Subject: Re: WARN_ONCE from nfsd_break_one_deleg
 From: Jeff Layton <jlayton@kernel.org>
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Cc: Dai.Ngo@oracle.com, chuck.lever@oracle.com, kolga@netapp.com, 
-	linux-nfs@vger.kernel.org, neilb@suse.de, tom@talpey.com
-Date: Wed, 27 Mar 2024 06:50:37 -0400
-In-Reply-To: <20240327064000.1363-1-chenhx.fnst@fujitsu.com>
-References: <21f3580de20445ddd9bdae6eecc316a58b6df97d.camel@kernel.org>
-	 <20240327064000.1363-1-chenhx.fnst@fujitsu.com>
+To: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, 
+ Donald Buczek <buczek@molgen.mpg.de>, linux-nfs@vger.kernel.org,
+ it+linux@molgen.mpg.de
+Date: Wed, 27 Mar 2024 07:07:59 -0400
+In-Reply-To: <530ec24d-c22d-4fea-a9f7-7a462ab1af9d@oracle.com>
+References: <5b63ad24-1967-4e0c-b52b-f3a853b613ff@molgen.mpg.de>
+	 <39c143cd-c84b-47b8-945f-bd0bbe8babfc@oracle.com>
+	 <530ec24d-c22d-4fea-a9f7-7a462ab1af9d@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -70,176 +71,178 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-03-27 at 14:40 +0800, Chen Hanxiao wrote:
-> Hi, Jeff
+On Tue, 2024-03-26 at 18:59 -0700, Dai Ngo wrote:
+> On 3/26/24 9:42 AM, Chuck Lever wrote:
+> >=20
+> > On 3/26/24 11:04 AM, Donald Buczek wrote:
+> > > Hi,
+> > >=20
+> > > we just got this on a nfs file server on 6.6.12 :
+> > >=20
+> > > [2719554.674554] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000432042d3 xid c369f54d
+> > > [2719555.391416] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 0000000017cc0507 xid d6018727
+> > > [2719555.742118] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 000000008f2509ff xid 83d0248e
+> > > [2719555.742566] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000637a135a xid 7064546d
+> > > [2719555.742803] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 0000000044ea3c51 xid a184bbe5
+> > > [2719555.742836] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000b6992e65 xid ed3fe82e
+> > > [2719555.785358] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 0000000044ea3c51 xid a384bbe5
+> > > [2719588.733414] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 000000008f2509ff xid 89d0248e
+> > > [2719592.067221] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000b6992e65 xid f33fe82e
+> > > [2719807.431344] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000fd87f88f xid 28b51379
+> > > [2719838.510792] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000432042d3 xid fa69f54d
+> > > [2719852.493779] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 00000000ac1e99fe xid a16378bb
+> > > [2719852.494853] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 0000000017cc0507 xid 0f028727
+> > > [2719852.515457] receive_cb_reply: Got unrecognized reply: calldir=
+=20
+> > > 0x1 xpt_bc_xprt 0000000017cc0507 xid 10028727
+> >=20
+> > These clients are sending NFSv4 callback replies that the server does=
+=20
+> > not have a waiting XID for. It's a sign of a significant communication=
+=20
+> > mix-up between the server and client.
+> >=20
+> > It would help us to get some details about your clients, the NFS=20
+> > version in use, and how long you've been using this kernel. Also, a=20
+> > raw packet capture might shed a little more light on the issue.
 >=20
-> I wrote a POC patch, use name_to_handle_at to get nfs root filehandle
-> instead of /proc/fs/nfsd/filehandle.
->=20
-> I did some simple tests and it works.
->=20
-> Pls check the POC patch below:
-> ---
->  support/export/cache.c | 95 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 93 insertions(+), 2 deletions(-)
+> This warning has has no effect on the server operation and was remove.
+> See commit 05a4b58301c3.
 >=20
 
-Very cool!
+Yes. It usually just means the job is already scheduled or is running,
+which is harmless. That said, that can be indicative of the workqueue
+job being stuck.
 
-I do think this is the basic direction we want to go with revising how
-mountd gets its filehandles.=20
+Typically, backchannel jobs should run quickly, but lease breaks can
+come in quick succession too, so this warning never meant much.
 
+>=20
+> >=20
+> > > [2719917.753429] ------------[ cut here ]------------
+> > > [2719917.758951] WARNING: CPU: 1 PID: 1448 at=20
+> > > fs/nfsd/nfs4state.c:4939 nfsd_break_deleg_cb+0x115/0x190 [nfsd]
+> > > [2719917.769208] Modules linked in: af_packet xt_nat xt_tcpudp=20
+> > > iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4=20
+> > > rpcsec_gss_krb5 nfsv4 nfs i915 iosf_mbi drm_buddy drm_display_helper=
+=20
+> > > ttm intel_gtt video 8021q garp stp mrp llc input_leds=20
+> > > x86_pkg_temp_thermal led_class hid_generic usbhid coretemp kvm_intel=
+=20
+> > > kvm irqbypass tg3 libphy smartpqi mgag200 i2c_algo_bit efi_pstore=20
+> > > iTCO_wdt i40e crc32c_intel wmi_bmof pstore iTCO_vendor_support wmi=
+=20
+> > > ipmi_si nfsd auth_rpcgss oid_registry nfs_acl lockd grace sunrpc=20
+> > > efivarfs ip_tables x_tables ipv6 autofs4
+> > > [2719917.818740] CPU: 1 PID: 1448 Comm: nfsd Not tainted=20
+> > > 6.6.12.mx64.461 #1
+> > > [2719917.825777] Hardware name: Dell Inc. PowerEdge T440/021KCD, BIOS=
+=20
+> > > 2.12.2 07/09/2021
+> > > [2719917.833781] RIP: 0010:nfsd_break_deleg_cb+0x115/0x190 [nfsd]
+> > > [2719917.839911] Code: 00 00 00 e8 3d ae e8 e0 e9 5f ff ff ff 48 89=
+=20
+> > > df be 01 00 00 00 e8 8b 1f 3d e1 48 8d bb 98 00 00 00 e8 ef 10 01 00=
+=20
+> > > 84 c0 75 8a <0f> 0b eb 86 65 8b 05 0c 66 e0 5f 89 c0 48 0f a3 05 d6=
+=20
+> > > 1a 75 e2 0f
+> > > [2719917.859303] RSP: 0018:ffffc9000bae7b70 EFLAGS: 00010246
+> > > [2719917.864962] RAX: 0000000000000000 RBX: ffff8881e2fd6000 RCX:=20
+> > > 0000000000000024
+> > > [2719917.872520] RDX: ffff8881e2fd60c8 RSI: ffff889086d5de00 RDI:=20
+> > > 0000000000000200
+> > > [2719917.880050] RBP: ffff889301aa812c R08: 0000000000033580 R09:=20
+> > > 0000000000000000
+> > > [2719917.887575] R10: ffff889ef63b20d8 R11: 0000000000000000 R12:=20
+> > > ffff888104cfb290
+> > > [2719917.895095] R13: ffff889301aa8118 R14: ffff88989c8ace00 R15:=20
+> > > ffff888104cfb290
+> > > [2719917.902625] FS:=A0 0000000000000000(0000)=20
+> > > GS:ffff88a03fc00000(0000) knlGS:0000000000000000
+> > > [2719917.911094] CS:=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [2719917.917236] CR2: 00007fb8a1cfc418 CR3: 000000000262c006 CR4:=20
+> > > 00000000007706e0
+> > > [2719917.924760] DR0: 0000000000000000 DR1: 0000000000000000 DR2:=20
+> > > 0000000000000000
+> > > [2719917.932285] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:=20
+> > > 0000000000000400
+> > > [2719917.939833] PKRU: 55555554
+> > > [2719917.942971] Call Trace:
+> > > [2719917.945834]=A0 <TASK>
+> > > [2719917.948344]=A0 ? __warn+0x81/0x140
+> > > [2719917.951983]=A0 ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
+> > > [2719917.957470]=A0 ? report_bug+0x171/0x1a0
+> > > [2719917.961562]=A0 ? handle_bug+0x3c/0x70
+> > > [2719917.965459]=A0 ? exc_invalid_op+0x17/0x70
+> > > [2719917.969715]=A0 ? asm_exc_invalid_op+0x1a/0x20
+> > > [2719917.974317]=A0 ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
+> > > [2719917.979820]=A0 __break_lease+0x24b/0x7c0
+> > > [2719917.983991]=A0 ? __pfx_nfsd_acceptable+0x10/0x10 [nfsd]
+> > > [2719917.989495]=A0 nfs4_get_vfs_file+0x195/0x380 [nfsd]
+> > > [2719917.994740]=A0 ? prepare_creds+0x14c/0x240
+> > > [2719917.999164]=A0 nfsd4_process_open2+0x3ed/0x16b0 [nfsd]
+> > > [2719918.004570]=A0 ? nfsd_permission+0x4e/0x100 [nfsd]
+> > > [2719918.009618]=A0 ? fh_verify+0x17b/0x8a0 [nfsd]
+> > > [2719918.014243]=A0 nfsd4_open+0x6ae/0xcd0 [nfsd]
+> > > [2719918.018777]=A0 ? nfsd4_encode_operation+0xa6/0x290 [nfsd]
+> > > [2719918.024524]=A0 nfsd4_proc_compound+0x2f2/0x6a0 [nfsd]
+> > > [2719918.029922]=A0 nfsd_dispatch+0xee/0x220 [nfsd]
+> > > [2719918.034619]=A0 ? __pfx_nfsd+0x10/0x10 [nfsd]
+> > > [2719918.039144]=A0 svc_process_common+0x307/0x730 [sunrpc]
+> > > [2719918.044551]=A0 ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
+> > > [2719918.049883]=A0 ? __pfx_nfsd+0x10/0x10 [nfsd]
+> > > [2719918.054404]=A0 svc_process+0x131/0x180 [sunrpc]
+> > > [2719918.059171]=A0 nfsd+0x84/0xd0 [nfsd]
+> > > [2719918.063012]=A0 kthread+0xe5/0x120
+> > > [2719918.066539]=A0 ? __pfx_kthread+0x10/0x10
+> > > [2719918.070664]=A0 ret_from_fork+0x31/0x50
+> > > [2719918.074611]=A0 ? __pfx_kthread+0x10/0x10
+> > > [2719918.078735]=A0 ret_from_fork_asm+0x1b/0x30
+> > > [2719918.083018]=A0 </TASK>
+> > > [2719918.085563] ---[ end trace 0000000000000000 ]---
+> > >=20
+> > > nfsd_break_deleg_cb+0x115 is the=20
+> > > `WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall))` in=20
+> > > nfsd_break_one_deleg() in our compilation
+> > >=20
+> > > I think that means, that the callback is already scheduled?
+> > >=20
+> > > One nfs client hung trying to mount something from that server.
+> > >=20
+> > > Best
+> > >=20
+> > > =A0=A0 Donald
+> > >=20
+> >=20
+>=20
 
-> diff --git a/support/export/cache.c b/support/export/cache.c
-> index 6c0a44a3..adecac2e 100644
-> --- a/support/export/cache.c
-> +++ b/support/export/cache.c
-> @@ -43,6 +43,25 @@
->  #include "blkid/blkid.h"
->  #endif
-> =20
-> +#define NFS4_FHSIZE           128
-> +
-> +struct knfsd_fh {
-> +	unsigned int	fh_size;	/*
-> +					 * Points to the current size while
-> +					 * building a new file handle.
-> +					 */
-> +	union {
-> +		char			fh_raw[NFS4_FHSIZE];
-> +		struct {
-> +			uint8_t		fh_version;	/* =3D=3D 1 */
-> +			uint8_t		fh_auth_type;	/* deprecated */
-> +			uint8_t		fh_fsid_type;
-> +			uint8_t		fh_fileid_type;
-> +			uint32_t	fh_fsid[]; /* flexible-array member */
-> +		};
-> +	};
-> +};
-> +
-
-This is a large departure from how this has worked in the past. Before
-this, userland could always treat a knfsd_fh as opaque. With this change
-though, knfsd_fh will need to be part of the kernel's ABI, and we'll
-need to be very careful about future changes to the FH format (not that
-we're planning any).
-
-I think we probably ought to start by moving the definitions of knfsd_fh
-and its component parts into a UAPI header that nfs-utils could then
-use. For now, we can add duplicate definitions like above for when the
-case where they aren't defined in UAPI headers.
-
->  enum nfsd_fsid {
->  	FSID_DEV =3D 0,
->  	FSID_NUM,
-
-Side note: I wonder if some of the nfsd_fsid values can (effectively) be
-deprecated these days? I don't think we really use FSID_DEV anymore at
-all, do we?
-
-> @@ -1827,8 +1846,8 @@ int cache_export(nfs_export *exp, char *path)
->   *   read filehandle <&0
->   * } <> /proc/fs/nfsd/filehandle
->   */
-> -struct nfs_fh_len *
-> -cache_get_filehandle(nfs_export *exp, int len, char *p)
-> +static struct nfs_fh_len *
-> +cache_get_filehandle_by_proc(nfs_export *exp, int len, char *p)
->  {
->  	static struct nfs_fh_len fh;
->  	char buf[RPC_CHAN_BUF_SIZE], *bp;
-> @@ -1862,6 +1881,78 @@ cache_get_filehandle(nfs_export *exp, int len, cha=
-r *p)
->  	return &fh;
->  }
-> =20
-> +static struct nfs_fh_len *
-> +cache_get_filehandle_by_name(nfs_export *exp, char *name)
-> +{
-> +	static struct nfs_fh_len fh;
-> +	struct {
-> +		struct file_handle fh;
-> +		unsigned char handle[128];
-> +	} file_fh;
-> +	char buf[RPC_CHAN_BUF_SIZE] =3D {0};
-> +	char *mesg =3D buf;
-> +	int len, mnt_id;
-> +	unsigned int e_fsid;
-> +	struct knfsd_fh kfh;
-> +	char u[16];
-> +
-> +	memset(fh.fh_handle, 0, sizeof(fh.fh_handle));
-> +=09
-> +	file_fh.fh.handle_bytes =3D 128;
-> +	if (name_to_handle_at(AT_FDCWD, name, &file_fh.fh, &mnt_id, 0) < 0)
-> +		return NULL;
-> +
-> +	memset(fh.fh_handle, 0, sizeof(fh.fh_handle));
-> +	memset(&kfh, 0, sizeof(struct knfsd_fh));
-> +	kfh.fh_version =3D 1;
-> +	kfh.fh_auth_type =3D 0;
-> +	e_fsid =3D exp->m_export.e_fsid;
-> +
-> +	if (e_fsid > 0) {
-> +		len =3D 12;
-> +		fh.fh_size =3D 8;
-> +		kfh.fh_size =3D 12;
-> +		kfh.fh_fsid_type =3D 1;
-> +		kfh.fh_fsid[0] =3D e_fsid;
-> +	} else {
-> +		len =3D file_fh.fh.handle_bytes + 8;
-> +		fh.fh_size =3D file_fh.fh.handle_bytes;
-> +		kfh.fh_size =3D file_fh.fh.handle_bytes + sizeof(kfh.fh_size);
-> +		kfh.fh_fsid_type =3D FSID_UUID16_INUM;
-
-Note that we will need to deal with NFSv2 here too. It has 32-byte
-filehandles, and so we likely can't use FSID_UUID16_INUM for those.
-
-> +		if (file_fh.fh.handle_bytes <=3D 12) {
-> +			kfh.fh_fsid[0] =3D *(uint32_t *)file_fh.fh.f_handle;
-> +			kfh.fh_fsid[1] =3D 0;
-> +		} else {
-> +			kfh.fh_fsid[0] =3D *(uint32_t *)file_fh.fh.f_handle;
-> +			kfh.fh_fsid[1] =3D *((uint32_t *)file_fh.fh.f_handle + 1);
-> +		}
-> +	}
-> +	kfh.fh_fileid_type =3D 0; // FILEID_ROOT
-> +
-> +	qword_addhex(&mesg, &len, kfh.fh_raw, kfh.fh_size);
-> +	mesg =3D buf;
-> +	len =3D qword_get(&mesg, (char *)fh.fh_handle, NFS3_FHSIZE);
-
-We may need to pass to this function what version of NFS MNT request was
-sent so that we know what sort of FH is needed here.
-
-> +	if (e_fsid =3D=3D 0) {
-> +		len =3D 16;
-> +		uuid_by_path(name, 0, 16, u);
-> +		memcpy((char *)fh.fh_handle+12, u, 16);
-> +		fh.fh_size +=3D 16;
-> +	}
-> +=09
-> +	return &fh;
-> +}
-> +
-> +struct nfs_fh_len *
-> +cache_get_filehandle(nfs_export *exp, int len, char *p)
-> +{
-> +	struct nfs_fh_len *fh;
-> +	fh =3D cache_get_filehandle_by_name(exp, p);
-> +	if (!fh)
-> +		fh =3D cache_get_filehandle_by_proc(exp, len, p);
-> +
-> +	return fh;
-> +}
-> +
->  /* Wait for all worker child processes to exit and reap them */
->  void
->  cache_wait_for_workers(char *prog)
-
-This looks like a great start -- nice work! There are a number of more
-obscure corner-cases that we'll need to deal with, but this does look
-like a promising direction.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
