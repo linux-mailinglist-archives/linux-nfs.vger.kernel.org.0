@@ -1,255 +1,208 @@
-Return-Path: <linux-nfs+bounces-2494-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2495-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47FC588E4A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 15:09:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35F2388E796
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 15:59:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3067E1C298B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 14:09:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 644C2303237
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 14:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B446212EBCC;
-	Wed, 27 Mar 2024 12:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1753F5A113;
+	Wed, 27 Mar 2024 14:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VIoBdalQ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZzT9UGtu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23AC1EB5C
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 12:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542705; cv=none; b=t7geXDSlPD4U9cgb/g1al0lNgSQVx40bzEf3IQpbyXGAIWVxl6vcuo+51/qYN9kukWF75/dE7Egg7JPXVv66+/e+YMq7X+iku5veidnkWo3DYB5ti/TlKapNoExOqpfOttGDykMcUcW8oKS4U4mncZlcna9TM9X7GBe1WZ5icUM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542705; c=relaxed/simple;
-	bh=rwH99eAEbl+gYIZN/fYMvcbp9zh3iVh9Bovbd+ffoE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a/2s1xTrCUMWEPlXBze8/26snI8eCNKwi5azMrwF94RHlmyJfzKX+vqETI2jmsX9oithMhpLrT66dP+p0MsE8MT0+XamyHo7+7Y1jkTTJdztJD+BOWq48ABFpyqeXGGTJbW/9DvsZV6h+cSwOZkZiIssgt9Jyvm/qAglFPwRN7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.31.7] (theinternet.molgen.mpg.de [141.14.31.7])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: buczek)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6B3F161E5FE36;
-	Wed, 27 Mar 2024 13:31:24 +0100 (CET)
-Message-ID: <c45674af-b8e3-4e5a-b577-9628ebb7db29@molgen.mpg.de>
-Date: Wed, 27 Mar 2024 13:31:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C46132471;
+	Wed, 27 Mar 2024 14:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711548691; cv=fail; b=Sy6Dv6MFnPbNiQNGH5XkWr10Irf9xUsW87gKZVSEFXA8s6NnsFLaIJ7V42zc+BQ1SKxefcWsgGJJ5eIm9SWjnJZrmFhdyeUEdCjso+Rz78xB7egbsPWZntkYkb0Bjag8C6DRs+BUfI0cM2jnW970DXjwmIDBi7jTmHNR6LeofzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711548691; c=relaxed/simple;
+	bh=x/XvQBhCyZZGVWn2uQ0/Jgtn8hU3KgxdxcQlaeaqcaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=R6vMF7MFvl31fgedaXAkjk2P+3bw0vwTWAL0B6mqlPysKpcm6pi+KytQVlBR99aXhabY47Zm4NeMvvf2gf73mSA6xgJOiyGY3nD9227dKBywzgxI096w3/FiXVlrXRxQ8DKJUBjDwAUguBuhPhRJF2HWcqJkbcSMDMgYq/wRQKI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VIoBdalQ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZzT9UGtu; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42RDht58004244;
+	Wed, 27 Mar 2024 14:11:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
+ b=VIoBdalQTNlf2kchnzBBK5wQqvF1xYzJbYIyAFu3HOSGTWjnjnPjE4nTcSqfgJDleN9w
+ 6OUmk3/XIESLLfb44irfruKPWd04+7NEkjaVV//TOh6F9qHqNdXjz6iqjz+Q6ax1Fc27
+ 4KPEwQYjuXvYL3MTeA5kVknkwq8J9boire6h6l/cFxqWPp0ZsJqled65GCsKlDZES0jY
+ fXUjC7UmfuGRxTl4CvBWdXcgNElz5oOEngtW8nHUUfcwEWK6XMaqfch+bIqoNBfLQx9e
+ UdYW0eStQhprutDygljKYKGoK4/7iIbBUzWLLHzGExLKnDpkhtRJhxx9GSh5IDBs7ei3 Zw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x4cxy0wgs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Mar 2024 14:11:00 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42RE5M3o012873;
+	Wed, 27 Mar 2024 14:10:59 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh8hdm7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Mar 2024 14:10:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DcFd6mdGh4c8EMRvZPmfFB/8R6pi+faVhKf0bAGHe8Zd6zCs0dKfkOhooEtBEZ2EDP4rlSbBL5cEcNYyPIVxDzmirgj8Y87TuGqwTeAS+9K7iR3rUKt8ztd6EJpzVQEb8gY1n9PGHovdOxB8ZP/CY2Lcx8N/foz7gMt4OrHs1RxjPsTPRrRdrXAzWhSY1FvNqoxyouTmSvT6ngANlglPo03t5lDuOXEAEMm9V4Jpm8U7y4LQQ84dwYyZ43YFfGYPB0/++sAG4MFfMx7o4qRaWpF6HJu5rhQBD6TNwdSwY++eeicDkbuecKwQMyAASILTC+7pvEuItTO3GGc4njQ3YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
+ b=jgqMiBbhgr0nUXO7Bi6Ev6h6Dld5Uq7Ta0hd0S4jx+6oRX4/FOCfUsIfeQZMzdYCqNGGIjbKjifeSMgkhK+nIuGD2OpT/baee4oHpJHoSoqeCRSY28OZkGl2oVKJah3bPRYkQ0HBF6CsF45I/YuqDX/6x1AppnlEzIzSXxSUBxUlUVlaiuAiwwW1+8Gn9/OOKzBMqBP00WOpY7tV73VEXHstz99PKJ7245N3Uo4/UXCxazdhnezufX4qCRvnmFWvY2D37vs208E0cCF1RLWjNikTzTlAu0kVWiOt2M7DU6hQcQ4oc63Jo0UZuW+w8S6KubPd4XktvvbbIwuGJHuk6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
+ b=ZzT9UGtu7Q/z8XADChq9eXA1zR6FK9KNt64JHnOvwbKigZTVfIV3e0g5783bkU/LPcTkTCz3sbJAthBOls++aG7j+aTxic3CCbf5IWObURPOLi+FB+Ln6yTsYTJd4luuDPAe7bLKXQejFBlhFGA2jhGy7S5Grg06dKNmLZ/BFtc=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH2PR10MB4230.namprd10.prod.outlook.com (2603:10b6:610:a5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
+ 2024 14:10:57 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
+ 14:10:57 +0000
+Date: Wed, 27 Mar 2024 10:10:53 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Aleksandr Aprelkov <aaprelkov@usergate.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: Re: [PATCH] sunrpc: removed redundant procp check
+Message-ID: <ZgQo7TcAxYrBXQXj@tissot.1015granger.net>
+References: <20240327071044.365284-1-aaprelkov@usergate.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327071044.365284-1-aaprelkov@usergate.com>
+X-ClientProxiedBy: CH0PR04CA0060.namprd04.prod.outlook.com
+ (2603:10b6:610:77::35) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: WARN_ONCE from nfsd_break_one_deleg
-To: Jeff Layton <jlayton@kernel.org>, Dai Ngo <dai.ngo@oracle.com>,
- Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- it+linux@molgen.mpg.de
-References: <5b63ad24-1967-4e0c-b52b-f3a853b613ff@molgen.mpg.de>
- <39c143cd-c84b-47b8-945f-bd0bbe8babfc@oracle.com>
- <530ec24d-c22d-4fea-a9f7-7a462ab1af9d@oracle.com>
- <474380e6098676a95f38dbaffcaeb633fe602167.camel@kernel.org>
-Content-Language: en-US
-From: Donald Buczek <buczek@molgen.mpg.de>
-In-Reply-To: <474380e6098676a95f38dbaffcaeb633fe602167.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH2PR10MB4230:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e53c5ad-1964-47bb-756a-08dc4e67b8cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	+r1kMigkEXUHXhX8pwbEPUOy81x2dwaXAQpRnfxdfpLELePgknRAE9hkO4MVLMsP7g5LpwBPggSQ92bA6O0+3oAkqNqjMVsBh3qpKY0XyFqcbUTeCRoXKpBAdAxB1qoyHzVq+TEuXrjCKwCKOmg040LlHCxzmMyySgNyuqWhNenP6UhsKc+cnqWf3ggpbWiwD00qE/2yHRGHjCNZOXxeYmr5f88jndqcaiWYEDWYJ/hNKdc4WHgjUJTyUEcCjOUEbG1Wq09DuBvniDwknPcSLqvgGp2pZx/RbkJrl6rSYVQDuk+VpboMR6iYS5npvX2P9JHzp1fUjeUgPJ+Whoc8OBNCdzXpvOc2EQweqJtKo8ATBb8cOHjU//qUmQSbf0V3+bnDkWgyFhHOcr09HV4/kgdrWS7Y8OJblWG6TQQHqjmyfwakcFMRsuYEIZ/FOhHQarF0OYJ+nxAylJGw+IBDcJJuKT1lX4KCqC8FJLD867ffutHtVdmxGltRdpoaipXmMsjsMw4J9hF34DBgCp6FlyJZsvM+beDIAY0J7MX0ubT3X8ZAClWC3k3/bbjSzHzfWCAameFXVhhvzajzx1VXm800ODfpH1P7HQ/bzIU0Ae4wB6226a9oosH0T0Jx0PcY6/RorVhXfTAoxsVjfpzuX4V3puthrQ6m3ZF1lzrC0w8=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?E6lBmlZIlyMzeq8/35N+j7DPFScSmO2Q/4qd/TruOliIO1B5ATsJaqn6ZCMD?=
+ =?us-ascii?Q?Rs5Oftcd+Gc9N9IDlVjCRiKToiUcmncJvRvVg2KByo/P+z5rsERhngbQPDbj?=
+ =?us-ascii?Q?ZL/9luXPiO9vdcZU2yeCifcA/Rps46J0SwHbrOTzMQYrnzVDpOko4dtzVla9?=
+ =?us-ascii?Q?FZTx/NsB/jkgsjUGzCU++N/90+RZXfjjG9TwY7nvfszwXf8NrTJjvHhmDaKw?=
+ =?us-ascii?Q?xaJyfKuRl5H9arUAKHQY/Ep3pNBzrHaz6LgsrXUV/nGX8b8OEIDbmgScVV48?=
+ =?us-ascii?Q?UPWFJfJeIf70yYgwiYpBrFvnKCUQUg0MLy+D1ISX5n4IMV0EWMMcJg0WR/Oe?=
+ =?us-ascii?Q?yiNmpY7jD2xJ0HfWI7wbueRzvLlAdsbffJ60oBkkfqpu3PTMX61Ne5PydYLK?=
+ =?us-ascii?Q?LPIhWQpiFuO1nfw1h1molhFQk1yKPsTAw6QxwhfVcGzDSCL4GITqfLFq1jI+?=
+ =?us-ascii?Q?QBveHAC3MgztROkTiyRCVOXnKjg/IpFJDmJhhHQl/hNHwETunLo9FQZX0+r0?=
+ =?us-ascii?Q?3JU91VraUPnm3IX3zLIX+oEoMYoxWPSahU/d+rJ2uZkr8pwgr5yc7wUpKOiI?=
+ =?us-ascii?Q?79xQIq6V6NZhh/hKfVtMhRoseNwHm/0b7dxVxrR3Y8nrfcoYpl4p2LJ3TG14?=
+ =?us-ascii?Q?Cl61owAGWJPI3Bkdbc3k3fbJepSUcLG4DUIA3X1RJHe2DJxRKUEngTKF2psf?=
+ =?us-ascii?Q?D3Mrj30ZLYgn1Yk40wJ9IFAWSnjckAOQuBL6HvaWeFYAqz1qqN22MIQVGxEu?=
+ =?us-ascii?Q?b2eAk05ag0UPYBy5Nv2d+DcxzywanP1ucB/aZn/B4XAB7u6WJTPXC8fODHWx?=
+ =?us-ascii?Q?cvQOrZ0Dg8QDZDGhRAOioozyNbtEyV3knYvI+6uwiaD/GA4+o8YfejjFHRHM?=
+ =?us-ascii?Q?Ur2lM+vYD/PSp5qZkusEkQ40wpA0oGP30xg4csILAUqGgw5Vb/yATy5ImtAB?=
+ =?us-ascii?Q?xYXDWstsiL8yu3vqr8Mh7Rz8i3SfFpJ1Lx6lb8pSy30cUxcs7JcGUSZ0VLGP?=
+ =?us-ascii?Q?o/LfgvYfSkbTG7Mn80u1jNpato7Mq70jYyL8JheoGYfivbFIdmo/93JyMF7t?=
+ =?us-ascii?Q?/4v2aF+RnKezD92HLes9QCpeG2+hcqTw7Vvm5gW4ih1KMWesbLDxLPHN46bF?=
+ =?us-ascii?Q?v/qs6ymvQqGJAkAIc3YU+yLWKR2ljyzol6TxjaP5H3Y6ZfYlAuivdK6i7lSv?=
+ =?us-ascii?Q?IhDWK1PAWzop4oLiX6qZw4biR0J+ctppm2sNYmhskC4bjmJ+91otDQeWO9tL?=
+ =?us-ascii?Q?ufFJChNKNfR2gy3CNWk53iJQip2CumcPGie+iznHBaL8jFwpCFQGjAW5DHuB?=
+ =?us-ascii?Q?z2bdSpk8AIxEOTp43hDnbHJWQSOifUpmT/UviKib19K9w+sVD3c520mLEzDf?=
+ =?us-ascii?Q?rs2hrL5v5VccdRfgKywaLLOXOc6m6xz1wgG4zmYvYcb82kjewuRtlIi+cVdS?=
+ =?us-ascii?Q?TR37XyXWZefJh1EcK6M7i0t2kgGpTMYnD5P+Qz9E5R5orvB0VgSqK3/vz/ic?=
+ =?us-ascii?Q?3TAzAWuFD2feD2vJSJs2W5JwJ9CpP1qxbHy8ZdsHWlvngayfI32VDJ9yGvOt?=
+ =?us-ascii?Q?6bxTwehR7vb6ImZoWi4oT4gbsMlSFZVN2hdSvsD6wH+WaiLJRhFgfL/myDls?=
+ =?us-ascii?Q?iQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	OSxd4sRcS5TfJE8uLd08/XGMthst6AkDXFSs0KRv7z+Y9PVyh2+f/rdhFiX4NAP36pxI+6AefjxZ7cTqlnOIw1WWz1GeS4+i1mI6y8Qaw95dJi8Cva+oH417mVeBYdbGFtuirMQVwc+V8lwO6VeSKOI6AtliDPQI/VWhLWfDAhBHJHFGhceTMrgb4Ep3hUrMTHWTVusPvlyKLVYoqRgO8wo1/xQW6O3uTW4oMGuJd1gXdBoqQguu8s4mzz9WWX43xfPXyYtG2gNomG3B0MSVed0MQRQLwiZe476nTnTQ+NFUSiIlfPm9i/uKxh/0bxkKj3W3wy69myNM3EGdYNFWVGG7SQM+fekZtlVPZg6vT4/18cLWD9Evsf/UfFo0mo2NpzzLA7yRa53ksUADvaXb1PGCrHVdCYOuoiuk2qAWTL+gRcaXaFtxKIzknK2mO/uiA7+oenpDDIKmbozLJj7BnFfp5PIzq/wzHw0cIgwMuCNleJbxZ4r+DHGmUByYb+BaV6KiL+UpHTswzffvRUfs3kT+jgcscY8+4NST7NqYEf7DVMVoUPc1LqE3Dk+RnHc8u0ad90cIqgpdmdQ3fxr7jWHiSS57hbtk+mTuZgMRg6c=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e53c5ad-1964-47bb-756a-08dc4e67b8cc
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 14:10:57.0624
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E87eN5Be4LR0L0xi/Wn3HsSN0kziJPQtv0po46qWzfA5EJBohHa/qcllCYk03pqAOANwB5HC2/I7mVkw8bJVJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4230
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_11,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=952
+ suspectscore=0 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403270096
+X-Proofpoint-ORIG-GUID: VnWtpafmeiU_RyZF6ICjE__Gw9TQ7Yw6
+X-Proofpoint-GUID: VnWtpafmeiU_RyZF6ICjE__Gw9TQ7Yw6
 
-On 3/27/24 12:07, Jeff Layton wrote:
-> On Tue, 2024-03-26 at 18:59 -0700, Dai Ngo wrote:
->> On 3/26/24 9:42 AM, Chuck Lever wrote:
->>>
->>> On 3/26/24 11:04 AM, Donald Buczek wrote:
->>>> Hi,
->>>>
->>>> we just got this on a nfs file server on 6.6.12 :
->>>>
->>>> [2719554.674554] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000432042d3 xid c369f54d
->>>> [2719555.391416] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid d6018727
->>>> [2719555.742118] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 000000008f2509ff xid 83d0248e
->>>> [2719555.742566] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000637a135a xid 7064546d
->>>> [2719555.742803] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 0000000044ea3c51 xid a184bbe5
->>>> [2719555.742836] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000b6992e65 xid ed3fe82e
->>>> [2719555.785358] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 0000000044ea3c51 xid a384bbe5
->>>> [2719588.733414] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 000000008f2509ff xid 89d0248e
->>>> [2719592.067221] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000b6992e65 xid f33fe82e
->>>> [2719807.431344] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000fd87f88f xid 28b51379
->>>> [2719838.510792] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000432042d3 xid fa69f54d
->>>> [2719852.493779] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 00000000ac1e99fe xid a16378bb
->>>> [2719852.494853] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid 0f028727
->>>> [2719852.515457] receive_cb_reply: Got unrecognized reply: calldir 
->>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid 10028727
->>>
->>> These clients are sending NFSv4 callback replies that the server does 
->>> not have a waiting XID for. It's a sign of a significant communication 
->>> mix-up between the server and client.
->>>
->>> It would help us to get some details about your clients, the NFS 
->>> version in use, and how long you've been using this kernel. Also, a 
->>> raw packet capture might shed a little more light on the issue.
-
-This specific file server has been running 6.6 for about a month. It has been running 5.15 for over a year before.
-All nfs clients are on 5.15 or 6.6.
-
-Sorry for not providing enough information. The problem had strong user impact so we needed to resolve the situation quickly by rebooting the server to a 5.15 kernel. This in fact unblocked the hanging mounts on a client.
-
-A user later reported, that he might have overloaded the file server from parallel writing jobs.
-
->> This warning has has no effect on the server operation and was remove.
->> See commit 05a4b58301c3.
-
-Ok.
-
-> Yes. It usually just means the job is already scheduled or is running,
-> which is harmless. That said, that can be indicative of the workqueue
-> job being stuck.
+On Wed, Mar 27, 2024 at 02:10:44PM +0700, Aleksandr Aprelkov wrote:
+> since vs_proc pointer is dereferenced before getting it's address there's
+> no need to check for NULL.
 > 
-> Typically, backchannel jobs should run quickly, but lease breaks can
-> come in quick succession too, so this warning never meant much.
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Fixes: 8e5b67731d08 ("SUNRPC: Add a callback to initialise server requests")
+> Signed-off-by: Aleksandr Aprelkov <aaprelkov@usergate.com>
 
-Before we rebooted, I was able to run a script which takes some system data, including the stack traces of all tasks.
+Applied to nfsd-next. Thanks!
 
-http://owww.molgen.mpg.de/~buczek/2024-03-26_sauterelles
 
-Is the blocker 
-
-1 D root        11     2  0  80   0 -     0 rpc_sh Feb23 ?        00:00:18  \_ [kworker/u32:0+nfsd4_callbacks]
-
-?
-
-# cat /proc/11/task/11/stack
-
-[<0>] rpc_shutdown_client+0xff/0x160 [sunrpc]
-[<0>] nfsd4_process_cb_update+0x4c/0x280 [nfsd]
-[<0>] nfsd4_run_cb_work+0xa3/0x160 [nfsd]
-[<0>] process_one_work+0x13f/0x300
-[<0>] worker_thread+0x2f5/0x410
-[<0>] kthread+0xe5/0x120
-[<0>] ret_from_fork+0x31/0x50
-[<0>] ret_from_fork_asm+0x1b/0x30
-
-rpc_shutdown_client+0xff is behind 'call schedule_timeout' in the expansion of `wait_event_timeout(destroy_wait, list_empty(&clnt->cl_tasks), 1*HZ);`.
-
-So it is waiting for the second to pass, possibly in a loop waiting for list_empty(&clnt->cl_tasks).
-
-I don't know if any guesses could be made out of this, though.
-
-Thanks
-
-  Donald
-
->>>> [2719917.753429] ------------[ cut here ]------------
->>>> [2719917.758951] WARNING: CPU: 1 PID: 1448 at 
->>>> fs/nfsd/nfs4state.c:4939 nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>> [2719917.769208] Modules linked in: af_packet xt_nat xt_tcpudp 
->>>> iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 
->>>> rpcsec_gss_krb5 nfsv4 nfs i915 iosf_mbi drm_buddy drm_display_helper 
->>>> ttm intel_gtt video 8021q garp stp mrp llc input_leds 
->>>> x86_pkg_temp_thermal led_class hid_generic usbhid coretemp kvm_intel 
->>>> kvm irqbypass tg3 libphy smartpqi mgag200 i2c_algo_bit efi_pstore 
->>>> iTCO_wdt i40e crc32c_intel wmi_bmof pstore iTCO_vendor_support wmi 
->>>> ipmi_si nfsd auth_rpcgss oid_registry nfs_acl lockd grace sunrpc 
->>>> efivarfs ip_tables x_tables ipv6 autofs4
->>>> [2719917.818740] CPU: 1 PID: 1448 Comm: nfsd Not tainted 
->>>> 6.6.12.mx64.461 #1
->>>> [2719917.825777] Hardware name: Dell Inc. PowerEdge T440/021KCD, BIOS 
->>>> 2.12.2 07/09/2021
->>>> [2719917.833781] RIP: 0010:nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>> [2719917.839911] Code: 00 00 00 e8 3d ae e8 e0 e9 5f ff ff ff 48 89 
->>>> df be 01 00 00 00 e8 8b 1f 3d e1 48 8d bb 98 00 00 00 e8 ef 10 01 00 
->>>> 84 c0 75 8a <0f> 0b eb 86 65 8b 05 0c 66 e0 5f 89 c0 48 0f a3 05 d6 
->>>> 1a 75 e2 0f
->>>> [2719917.859303] RSP: 0018:ffffc9000bae7b70 EFLAGS: 00010246
->>>> [2719917.864962] RAX: 0000000000000000 RBX: ffff8881e2fd6000 RCX: 
->>>> 0000000000000024
->>>> [2719917.872520] RDX: ffff8881e2fd60c8 RSI: ffff889086d5de00 RDI: 
->>>> 0000000000000200
->>>> [2719917.880050] RBP: ffff889301aa812c R08: 0000000000033580 R09: 
->>>> 0000000000000000
->>>> [2719917.887575] R10: ffff889ef63b20d8 R11: 0000000000000000 R12: 
->>>> ffff888104cfb290
->>>> [2719917.895095] R13: ffff889301aa8118 R14: ffff88989c8ace00 R15: 
->>>> ffff888104cfb290
->>>> [2719917.902625] FS:  0000000000000000(0000) 
->>>> GS:ffff88a03fc00000(0000) knlGS:0000000000000000
->>>> [2719917.911094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [2719917.917236] CR2: 00007fb8a1cfc418 CR3: 000000000262c006 CR4: 
->>>> 00000000007706e0
->>>> [2719917.924760] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
->>>> 0000000000000000
->>>> [2719917.932285] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
->>>> 0000000000000400
->>>> [2719917.939833] PKRU: 55555554
->>>> [2719917.942971] Call Trace:
->>>> [2719917.945834]  <TASK>
->>>> [2719917.948344]  ? __warn+0x81/0x140
->>>> [2719917.951983]  ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>> [2719917.957470]  ? report_bug+0x171/0x1a0
->>>> [2719917.961562]  ? handle_bug+0x3c/0x70
->>>> [2719917.965459]  ? exc_invalid_op+0x17/0x70
->>>> [2719917.969715]  ? asm_exc_invalid_op+0x1a/0x20
->>>> [2719917.974317]  ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>> [2719917.979820]  __break_lease+0x24b/0x7c0
->>>> [2719917.983991]  ? __pfx_nfsd_acceptable+0x10/0x10 [nfsd]
->>>> [2719917.989495]  nfs4_get_vfs_file+0x195/0x380 [nfsd]
->>>> [2719917.994740]  ? prepare_creds+0x14c/0x240
->>>> [2719917.999164]  nfsd4_process_open2+0x3ed/0x16b0 [nfsd]
->>>> [2719918.004570]  ? nfsd_permission+0x4e/0x100 [nfsd]
->>>> [2719918.009618]  ? fh_verify+0x17b/0x8a0 [nfsd]
->>>> [2719918.014243]  nfsd4_open+0x6ae/0xcd0 [nfsd]
->>>> [2719918.018777]  ? nfsd4_encode_operation+0xa6/0x290 [nfsd]
->>>> [2719918.024524]  nfsd4_proc_compound+0x2f2/0x6a0 [nfsd]
->>>> [2719918.029922]  nfsd_dispatch+0xee/0x220 [nfsd]
->>>> [2719918.034619]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>> [2719918.039144]  svc_process_common+0x307/0x730 [sunrpc]
->>>> [2719918.044551]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->>>> [2719918.049883]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>> [2719918.054404]  svc_process+0x131/0x180 [sunrpc]
->>>> [2719918.059171]  nfsd+0x84/0xd0 [nfsd]
->>>> [2719918.063012]  kthread+0xe5/0x120
->>>> [2719918.066539]  ? __pfx_kthread+0x10/0x10
->>>> [2719918.070664]  ret_from_fork+0x31/0x50
->>>> [2719918.074611]  ? __pfx_kthread+0x10/0x10
->>>> [2719918.078735]  ret_from_fork_asm+0x1b/0x30
->>>> [2719918.083018]  </TASK>
->>>> [2719918.085563] ---[ end trace 0000000000000000 ]---
->>>>
->>>> nfsd_break_deleg_cb+0x115 is the 
->>>> `WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall))` in 
->>>> nfsd_break_one_deleg() in our compilation
->>>>
->>>> I think that means, that the callback is already scheduled?
->>>>
->>>> One nfs client hung trying to mount something from that server.
->>>>
->>>> Best
->>>>
->>>>    Donald
->>>>
->>>
->>
+> ---
+>  net/sunrpc/svc.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index b33e429336fb..2b4b1276d4e8 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1265,8 +1265,6 @@ svc_generic_init_request(struct svc_rqst *rqstp,
+>  	if (rqstp->rq_proc >= versp->vs_nproc)
+>  		goto err_bad_proc;
+>  	rqstp->rq_procinfo = procp = &versp->vs_proc[rqstp->rq_proc];
+> -	if (!procp)
+> -		goto err_bad_proc;
+>  
+>  	/* Initialize storage for argp and resp */
+>  	memset(rqstp->rq_argp, 0, procp->pc_argzero);
+> -- 
+> 2.34.1
 > 
 
 -- 
-Donald Buczek
-buczek@molgen.mpg.de
-Tel: +49 30 8413 1433
-
+Chuck Lever
 
