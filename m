@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-2492-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2493-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CC9188E30B
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 14:40:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CE8888E46D
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 15:02:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48368297673
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 13:40:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8ECB21C20D56
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 14:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B22A17A930;
-	Wed, 27 Mar 2024 12:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBEA1B251F;
+	Wed, 27 Mar 2024 12:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyf4vdzm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1GJ4eu9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C7717A92C;
-	Wed, 27 Mar 2024 12:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511FD1B251B;
+	Wed, 27 Mar 2024 12:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542253; cv=none; b=ROVOngXjJdTNPFI4wJK7Bz1OPWaMk44plpdHh6LZg1gyvwkpqloMF6T64dWBHdkWyCSRKjbsD/7pb2B2vwMvgs8yZ1EhDfvNDefGQc1bivHsdI8eTvLM1uDO0bpOZEv6F34Xf8NIaTQwKzmUMFEuyDIL17QInly17MxD9haKGm8=
+	t=1711542480; cv=none; b=TShlxkpwtdlj497BoSs9mR8inAa0st3lNg2m2Y+SICybGWr9Pakh4FKWT/+5H2S/DPeIhQmm+Kx/0DSOjfaoT8Gb6Eon3ylBF36P/j8AJW4SO+rvDdVOVFHBErBlQihO97ITWzInItdkzjnNUvWp79k0hJnYbYXQcpzekCbXPSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542253; c=relaxed/simple;
-	bh=zMW9hCD84j0PFOETQT30po9fz4tQTpyv4UDC4EL/t1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=azs/QQmWVkCr/08lwkT05YDaQ7/Lmz5kzFZKCCDEK3d9YU7dfjAU38mVqrBD73QJykarT8xj96Ym67p9yscD/NtnvQRgE/zu+blpALxs/+w0YVK39zZITkLSCoEIckJfE4TjiYfxspgprp1eK+OqGQv5+IM9VgSN8/lpj3ApCeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyf4vdzm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35853C433C7;
-	Wed, 27 Mar 2024 12:24:12 +0000 (UTC)
+	s=arc-20240116; t=1711542480; c=relaxed/simple;
+	bh=HUcsWSpf/xLT+7CgewDsql3u5zsmcfHjjRl7AnCuMOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BcqB0ubxuwwZztBYCSoa1nOszynbjzwGnhO4MzlGK8tpUO/YoOVV0uB7DwMr2SmrANmjSnLbRqWkRmAZZbh7AhJUeaLT2LN9T8rJdPA9p06zA2C2ZXx8fqj43m1yZp8nTnHaI3TW+JslMkSm0ojf+WfSebY3sT/LfB7G6RJkXvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1GJ4eu9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87918C433F1;
+	Wed, 27 Mar 2024 12:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542252;
-	bh=zMW9hCD84j0PFOETQT30po9fz4tQTpyv4UDC4EL/t1c=;
+	s=k20201202; t=1711542480;
+	bh=HUcsWSpf/xLT+7CgewDsql3u5zsmcfHjjRl7AnCuMOA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=lyf4vdzmry05fRiKuZh4iT+BOxA/XE5ifdcI8UqdPERKKYgvkInlruTOt+2Bru5JQ
-	 dB/Qk9yrBC3Or+vsIuAX2IUtm/WCRATfUOW5rhABeTjGft3Sb9IGTatEEVoQMabjtF
-	 jf4qS9uhMb8GtvS8cdgCZg7zt7w2JMnEIKPPkabExiR6vZ3OMdhhJqZzrtbBgmLHT/
-	 jiFjDigO5WRagDV6RALSo++zGo1nxa23Nh2v++OZTdDHSAPzwwnd96lGI0Cky+pY0P
-	 zpA8qRECRUJtDwCeomh2rbquApEQClSy+kTRw5kC3O8huRHtFubkQkjkZinChNh8kS
-	 c6cEUI5KhOHDQ==
+	b=R1GJ4eu9qfJiwEF//j4S6QYjps0v3TR+YRrFMUQ73Qjn2fbz8WqXsZlUC4HgWZLVi
+	 ZEsT+T1ASKhkJq1fiqzTbsaTiD6+uBae58cOE5ppqhPFqB70acNlqvy+HKCTDkHh+d
+	 LZErubwieTUyn7eag9GJGiTnk4FICH+qlhSNlKdmMQ0bBQJo4M1e+VSJg/197w7FoC
+	 Xu+LLHbd96ydTehbe8Frnt96Ul52TfCG3nurTBI2oE0K5WnSHkJs8ZD3tj36ZlT4BZ
+	 N2GKPiB41L+sfjCGpN3r7zzSyZ6UoYVQ/J93ELeifpOjPsUxoFFEc0BaBza612Q1dl
+	 Q0TulcVg+qvXA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	josef@toxicpanda.com
 Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "nfs: fix UAF in direct writes" failed to apply to 5.4-stable tree
-Date: Wed, 27 Mar 2024 08:24:10 -0400
-Message-ID: <20240327122411.2839189-1-sashal@kernel.org>
+Subject: FAILED: Patch "nfs: fix UAF in direct writes" failed to apply to 4.19-stable tree
+Date: Wed, 27 Mar 2024 08:27:58 -0400
+Message-ID: <20240327122758.2842369-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -60,7 +60,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.4-stable tree.
+The patch below does not apply to the 4.19-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
