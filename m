@@ -1,159 +1,111 @@
-Return-Path: <linux-nfs+bounces-2500-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2501-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0770988EC6F
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 18:20:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 190BC88ED28
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 18:52:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 394331C3176A
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 17:20:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46BF91C2875B
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 17:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C6114D709;
-	Wed, 27 Mar 2024 17:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10BA153BC9;
+	Wed, 27 Mar 2024 17:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4s8yCtY"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HDfwRf3f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AEE14E2C1
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 17:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6CC153835;
+	Wed, 27 Mar 2024 17:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711560014; cv=none; b=teWVq8VbkA2FItbilGcuK7aEeqNNWSe29/RnO2qi+bh7fjJoxY2i545gSGNgrNcoxp6oXy7xXUJHS/IGfA+Hxm33Bq7efMsDmBfSATDjUWQi3/ZgCzUt8FJ9bzc2GIcigbLtyBsTaG2bE6b/v1uOh3mREjT+tkahdebiBwveqFQ=
+	t=1711561619; cv=none; b=fcIVv9som0VasUTHzjYoHyABLWKqOlbDQ5/mGu5EuHXdTWXOE9gsj2mKlMgISy4FFfam60mP5Qt/l1CXT82D/rCs6P0Nh6qZPny8ngr/o+9QH72c/He4aqxV2fNKGHIntmXy49lYGRLsjMTbnBMOys4uTwi9p13JsTFrXDMSvgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711560014; c=relaxed/simple;
-	bh=45vtvw+fq+fj3ZEXawkKtAn2mcTFbd0QASGwbLIgoME=;
-	h=Subject:From:To:Date:Message-ID:MIME-Version:Content-Type; b=PuI5itXBEnXI/jfbXAVJuR5q8VdpDBzCnpp0v9B/9JXV/vTAIa9llMzH8GF3AA/up4QDGLzY/1KfNN+Xf1AjuzY+S3b2b5glCTI3LwoPJQfakaV+5p4gmNAb+bQZsRRTJDhTPC8/2m5x1pRSJYfKUI01q7EBfxgSSYXssUpixzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4s8yCtY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06DFC43601
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 17:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711560014;
-	bh=45vtvw+fq+fj3ZEXawkKtAn2mcTFbd0QASGwbLIgoME=;
-	h=Subject:From:To:Date:From;
-	b=R4s8yCtY7wzUkJsNxlyMiFtdA2F2+1HYUOkMUbry06wa65VQRm02dHO6BIn4mpIGg
-	 XG+c8/CT5MmLnJpyXZlNoKgDy9FSYPvOU71hw6FNtoYGdUmmWPssWJC07LBh71yoUY
-	 qXhbBGwgpTuDBRINOa67KQnMx9dR4IYwyPO8lvJ8gYgWyWZI30aycgKd4CZInhK51y
-	 1HxJvxfnJwrnvM0uKovVZB/+3J3WJeQ854O2S3RSzMenJa+c3+ETLTNm2FfpOCKAn0
-	 Kxi+4rYYHHaH84sGIrAQRlggPUDOoZJbT0l+3KHt5DjYiLxrbtkIOH7GzbJvSHCi55
-	 HMNUAye7cUm+Q==
-Subject: [PATCH] NFSD: CREATE_SESSION must never cache NFS4ERR_DELAY replies
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org
-Date: Wed, 27 Mar 2024 13:20:12 -0400
-Message-ID: 
- <171156001280.1469.15703028652039429964.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
+	s=arc-20240116; t=1711561619; c=relaxed/simple;
+	bh=uB7kpus4vivNVZYNNT9/+H7DMP6DSIa06ehGi6L+8KQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXyzba1tB1xYP1jQDtHkqi3qAIDYzLwFYQdxW2jAOG4yWIDu7xyMLXVzaFLnxwRFCJreBBQvuCGLk9Lex37VJ8mJ/aCg6Mz3tkjNqaznlr+uboEfHZTcNSIEDpOknXp7QbQYVD7ehg4qRIK9FYA+ztfslFt0X9Ww06VpKluiIY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HDfwRf3f; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=7rtlcMvAOZqMG91SbLLXeao498bSKZqxUrAUPkW+pUQ=; b=HDfwRf3f9ZX9fBrm5LQIxQEnEx
+	zRji8K6f9jOwKJMzW0ps8UWVTIQ+DpE6EenLKh7kpWOjyp1cwkxzOxyFit8ikVRetjY0m6pdQbBmo
+	cgRxegFCABQRAW0DoxZGjzAkXHWyQ8Qmyj6CVD1YFeBKrD5iLZk6kTMWAayIaAP9Lzo6/VDogbCIw
+	I4hGSVwSGmsWotZ1Zr4n+AFwFE4oQRDQGICi9aX+P7JaGn85ZYew742acjLnQAuTdTVaOz8/p8DI2
+	T+g+iD9V0hpVxiLJQNRFLTuRuHOzcCeZdKqbtUWm1QZEg6DXI3wqVnfZvFZ0K8MIQUyAAVjHTnfgm
+	veRKIGKQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rpXMS-00000004NZT-3R3f;
+	Wed, 27 Mar 2024 17:46:52 +0000
+Date: Wed, 27 Mar 2024 17:46:52 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "hch@lst.de" <hch@lst.de>, "miklos@szeredi.hu" <miklos@szeredi.hu>,
+	"dhowells@redhat.com" <dhowells@redhat.com>,
+	"ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"v9fs@lists.linux.dev" <v9fs@lists.linux.dev>,
+	"netfs@lists.linux.dev" <netfs@lists.linux.dev>,
+	"jlayton@kernel.org" <jlayton@kernel.org>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devel@lists.orangefs.org" <devel@lists.orangefs.org>,
+	"linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>
+Subject: Re: [RFC PATCH] mm, netfs: Provide a means of invalidation without
+ using launder_folio
+Message-ID: <ZgRbjAn-d3_SAaQJ@casper.infradead.org>
+References: <2318298.1711551844@warthog.procyon.org.uk>
+ <37514eae34c02cefb11fc4c6d3f4ae2296fb6ab5.camel@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <37514eae34c02cefb11fc4c6d3f4ae2296fb6ab5.camel@hammerspace.com>
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, Mar 27, 2024 at 03:56:50PM +0000, Trond Myklebust wrote:
+> On Wed, 2024-03-27 at 15:04 +0000, David Howells wrote:
+> > Implement a replacement for launder_folio[1].  The key feature of
+> > invalidate_inode_pages2() is that it locks each folio individually,
+> > unmaps
+> > it to prevent mmap'd accesses interfering and calls the -
+> > >launder_folio()
+> > address_space op to flush it.  This has problems: firstly, each folio
+> > is
+> > written individually as one or more small writes; secondly, adjacent
+> > folios
+> > cannot be added so easily into the laundry; thirdly, it's yet another
+> > op to
+> > implement.
+> 
+> This is hardly a drop-in replacement for launder_page. The whole point
+> of using invalidate_inode_pages2() was that it only requires taking the
+> page locks, allowing us to use it in contexts such as
+> nfs_release_file().
+> 
+> The above use of truncate_inode_pages_range() will require any caller
+> to grab several locks in order to prevent data loss through races with
+> write system calls.
 
-There are one or two cases where CREATE_SESSION returns
-NFS4ERR_DELAY in order to force the client to wait a bit and try
-CREATE_SESSION again. However, after commit e4469c6cc69b ("NFSD: Fix
-the NFSv4.1 CREATE_SESSION operation"), NFSD caches that response in
-the CREATE_SESSION slot. Thus, when the client resends the
-CREATE_SESSION, the server always returns the cached NFS4ERR_DELAY
-response rather than actually executing the request and properly
-recording its outcome. This blocks the client from making further
-progress.
-
-RFC 8881 Section 15.1.1.3 says:
-> If NFS4ERR_DELAY is returned on an operation other than SEQUENCE
-> that validly appears as the first operation of a request ... [t]he
-> request can be retried in full without modification. In this case
-> as well, the replier MUST avoid returning a response containing
-> NFS4ERR_DELAY as the response to an initial operation of a request
-> solely on the basis of its presence in the reply cache.
-
-Neither the original NFSD code nor the discussion in section 18.36.4
-refer explicitly to this important requirement, so I missed it.
-
-Note also that not only must the server not cache NFS4ERR_DELAY, but
-it has to not advance the CREATE_SESSION slot sequence number so
-that it can properly recognize and accept the client's retry.
-
-Reported-by: Dai Ngo <dai.ngo@oracle.com>
-Fixes: e4469c6cc69b ("NFSD: Fix the NFSv4.1 CREATE_SESSION operation")
-Tested-by: Dai Ngo <dai.ngo@oracle.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4state.c |   36 +++++++++++++++++++++++++-----------
- 1 file changed, 25 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ee9aa4843443..5fcd93f7cb8c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3831,15 +3831,20 @@ nfsd4_create_session(struct svc_rqst *rqstp,
- 	else
- 		cs_slot = &unconf->cl_cs_slot;
- 	status = check_slot_seqid(cr_ses->seqid, cs_slot->sl_seqid, 0);
--	if (status) {
--		if (status == nfserr_replay_cache) {
--			status = nfsd4_replay_create_session(cr_ses, cs_slot);
--			goto out_free_conn;
--		}
-+	switch (status) {
-+	case nfs_ok:
-+		cs_slot->sl_seqid++;
-+		cr_ses->seqid = cs_slot->sl_seqid;
-+		break;
-+	case nfserr_replay_cache:
-+		status = nfsd4_replay_create_session(cr_ses, cs_slot);
-+		fallthrough;
-+	case nfserr_jukebox:
-+		/* The server MUST NOT cache NFS4ERR_DELAY */
-+		goto out_free_conn;
-+	default:
- 		goto out_cache_error;
- 	}
--	cs_slot->sl_seqid++;
--	cr_ses->seqid = cs_slot->sl_seqid;
- 
- 	/* RFC 8881 Section 18.36.4 Phase 3: Client ID confirmation. */
- 	if (conf) {
-@@ -3859,10 +3864,8 @@ nfsd4_create_session(struct svc_rqst *rqstp,
- 		old = find_confirmed_client_by_name(&unconf->cl_name, nn);
- 		if (old) {
- 			status = mark_client_expired_locked(old);
--			if (status) {
--				old = NULL;
--				goto out_cache_error;
--			}
-+			if (status)
-+				goto out_expired_error;
- 			trace_nfsd_clid_replaced(&old->cl_clientid);
- 		}
- 		move_to_confirmed(unconf);
-@@ -3894,6 +3897,17 @@ nfsd4_create_session(struct svc_rqst *rqstp,
- 		expire_client(old);
- 	return status;
- 
-+out_expired_error:
-+	old = NULL;
-+	/*
-+	 * Revert the slot seq_nr change so the server will process
-+	 * the client's resend instead of returning a cached response.
-+	 */
-+	if (status == nfserr_jukebox) {
-+		cs_slot->sl_seqid--;
-+		cr_ses->seqid = cs_slot->sl_seqid;
-+		goto out_free_conn;
-+	}
- out_cache_error:
- 	nfsd4_cache_create_session(cr_ses, cs_slot, status);
- out_free_conn:
-
-
+I don't understand why you need launder_folio now
+that you have a page_mkwrite implementation (your commit
+e3db7691e9f3dff3289f64e3d98583e28afe03db used this as justification).
+Other filesystems (except the network filesystems that copied the NFS
+implementation) don't implement launder_folio.
 
