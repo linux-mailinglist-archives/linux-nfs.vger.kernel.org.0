@@ -1,327 +1,194 @@
-Return-Path: <linux-nfs+bounces-2504-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2505-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 065D888EFFB
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 21:16:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCAAA88F019
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 21:28:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 385B7B2614E
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 20:16:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E3AB29A90A
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 20:28:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 276CB2E405;
-	Wed, 27 Mar 2024 20:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0439F14F9FD;
+	Wed, 27 Mar 2024 20:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="AHutjdpN";
-	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="g2psxYnz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iEKCntZP";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UKrQywkv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from icts-p-cavspool-1.kulnet.kuleuven.be (icts-p-cavspool-1.kulnet.kuleuven.be [134.58.240.194])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DBC14F102
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 20:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711570584; cv=none; b=BtoNr24kTD7QDYJTfXqOtScW63Fba72Oxm/YWzgam8vek37E2JoW+a0YrcYWMJFnhgP5Gtos67cPO6Cd2+Vs9EfsNmkGULAvzLCkzskHGCDNZLICD82XI3dQNKZJedOmjnYoWW4s0LlCeh/5V1q1kEmslzQiwJQD0kVLHwYlaLk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711570584; c=relaxed/simple;
-	bh=g34LIAQgstx5P0b+BuOdhWo7yVkmi0dTPim4iQzhGhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RSZMNpL52cIT/8tbyGFX1LEcdVRoNRBFBnmewyTfzfsld1B0BaIZ4qHMkV2AsavWEhb4x+S/ssLeSheFBtOhONFGHD+EVhN4kfJ+5tMcJt/SB3z2uGRVTlc4jpj+Ty2+KSxBzMLA5OszHNCqhGQApgwq9UUqVuOAqZc2LIAppRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=AHutjdpN; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=g2psxYnz; arc=none smtp.client-ip=134.58.240.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
-Received: from icts-p-cavuit-2.kulnet.kuleuven.be (icts-p-cavuit-2.kulnet.kuleuven.be [IPv6:2a02:2c40:0:c0::25:131])
-	by icts-p-cavspool-1.kulnet.kuleuven.be (Postfix) with ESMTP id 93119372B
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 21:09:48 +0100 (CET)
-X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
-X-KULeuven-Scanned: Found to be clean
-X-KULeuven-ID: 3C6AC20164.A8782
-X-KULeuven-Information: Katholieke Universiteit Leuven
-Received: from icts-p-ceifnet-smtps-0.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:142:242:ac11:59])
-	by icts-p-cavuit-2.kulnet.kuleuven.be (Postfix) with ESMTP id 3C6AC20164;
-	Wed, 27 Mar 2024 21:09:40 +0100 (CET)
-BCmilterd-Mark-Subject: no
-BCmilterd-Errors: 
-BCmilterd-Report: SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#DKIM_VALID#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#OURIPS#-35.00
-X-CAV-Cluster: smtps
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
-	s=kuleuven-cav-1; t=1711570179;
-	bh=F0UEQBhHNcLrsjnH+PCR2kTIb1Fefm7mqRTZuYd+fNk=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=AHutjdpNZ550X7eMYG50LIZim4tn3S2JHIqtkXCfbxvECaEnODmCvr1lzocycZzdE
-	 1I9i/xIJF9J246UMshyonEz5/Y0zL7J0h21vFzMhLZVldJEhy3O0Cq6onOSX0emPme
-	 7TLhdr62Xb6HaNUfajT04T+CD57SB1zqPtGwI2oxrlE8hntYD7olPDAGh8bKHTSqig
-	 OEkDheEWK3Th7AAtqQrRmWPZ0fVW/HSmndvr4KSy4R+/dr5uBkXfCoXrevaK4wAjYv
-	 RCtFeDkEK26AzqqANYPWP3HFKbUcZb6z6bv557IVQXC93vvgYi5oD6wmy45teR+7RY
-	 SScLnZmXQHgPQ==
-Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by icts-p-ceifnet-smtps-0.kuleuven.be (Postfix) with ESMTPS id DE46ED4F4C68D;
-	Wed, 27 Mar 2024 21:09:39 +0100 (CET)
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
-	s=esat20220324; t=1711570179;
-	bh=F0UEQBhHNcLrsjnH+PCR2kTIb1Fefm7mqRTZuYd+fNk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=g2psxYnzXHyx9Iy0+Ls+f4vjiKcR5ngDKVcezrF008NEA1EVdl85Rt4EZwk7nwLF1
-	 vjUUCuFVekwU6UawuPBpN1TbjULqoNV9HIStHNTLrTYL0AjxhakhJ1SuDtzvKw5PwH
-	 X0CM9YztyTvyDbIR/gSCi444thL3VrT5FuDYhuh0TWZcANs5H2IIM32VsohrupfraJ
-	 +VEQkfwF3YNX6vIUusfgAQlYD9jCEApL2La9pirmo1P4is9XqPJYl1TaTW8Bx6lBC7
-	 0KJi4PJGhxjAq/IKYyKU8VBbaxg5pVveyXlCDg7681ZEBMab+QZC77vh02tB8opSkA
-	 HOx7JmGfnbvOg==
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-Received: from [192.168.1.178] (d54c12615.access.telenet.be [84.193.38.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (3072 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id B72D96000E;
-	Wed, 27 Mar 2024 21:09:39 +0100 (CET)
-Message-ID: <863281de-5c42-493f-8168-fd6eb556d125@esat.kuleuven.be>
-Date: Wed, 27 Mar 2024 21:09:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0321514F5
+	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 20:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711571320; cv=fail; b=DCeNeznrXUhBZZXQ79d2EkVUaLb1OimsoiXKBH4pn+8wtZbIuBIBkg0YKGEHNcXm3Bw+09oR/DZGpM9TwQXxGC9JPQKhWnigp3PhEJkiWQ1MHEoTCYq3QuIuoWnzNFaWbE2AJzGLx04j5DnNIonze9oDpvMzMkpIjP4os9u8+9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711571320; c=relaxed/simple;
+	bh=uunIMJqRvk3TZ56kZ5DocFtONcXaW+rsVBH4t2Sm1P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=W0z3fOY005+tchT9/NHaWHKw+b1+MhWjo2gjG4SLC67GUpsPqpRap2kdGVJzLqvR3rukP54o9cD9xFW9hy690SEDiKuOYv1BxGeLE0PHlRrO0FsNjLCHX20jjO79SMTDF5cTFYCXcYtORReqMqgbpnvw+kC4ZAof8ImoNUPm4dg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iEKCntZP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UKrQywkv; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42RJudRW017291;
+	Wed, 27 Mar 2024 20:28:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=OATERXpF2I0dCjxV6LeCImi+cak2RD/21TU4wdTggcU=;
+ b=iEKCntZPNIFdK54OnRyp86lZaLHsNc6SsJsDUx1mPXtL1bFnNeVh31j14+awT7ewP954
+ jYh4BHwLMEGz2jKBM4HrAlCWzhGqQO+jkBQxwFs9dFfykiaFebL2GVPrZPXaDAdLe1qb
+ UaF14NVll6itMv2ZlujIKT2uD+dtAz9We+ZBnpp1RJSw3AEOcx/SjSe7ojS1ZGPpPS6j
+ 1hWU9WNsHFsrW1Nub9IyMPO2075jr8JbjzqYhDyfzTg50H9vQnU3NvobICzd3WjoJBm5
+ E3fH9eVxSVy1ouaqXql/sAhulAF7dDegYd38yoSw/PMz3NpEo0VNldJD4mYegWMlAhEF jQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x1pybr9g2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Mar 2024 20:28:35 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42RIiVJ8018137;
+	Wed, 27 Mar 2024 20:28:35 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh99xsb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Mar 2024 20:28:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b3fdNn+HC9MRS4Em/nsdkJUogl4JrNiciUtdD3eFaNGCcMsPNVp1VNgjoS1NVTIhDmHFX9ElbmxzRYIX0hpLG2hnJapKSDBkjFIwnM9OwB+m5NZLw/7aMHd5qMhjjwr8QUCEnJ0/HPPi1Fu52FzffVg727MZ6e/J0XCvNIvlj30iF0W+futfKUKMVxZUfM5b8gBUF8zvoWobl8qqKXl3rfMPx2ecPkbF+udijzDTqD9g/CI6pcxTXjDpwzJf4pYpsabxMPTdUlT4de+fGXLqT7uA5jIw6rYoBhcDaObEBgMgBHB53B32bOTOMak77bbL/5m5h+pwiB3dBFBnWTonNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OATERXpF2I0dCjxV6LeCImi+cak2RD/21TU4wdTggcU=;
+ b=HfIyWmYGTMa3V0oO2ayBnCn5ajWAE2BFfh7nelddsnWST/YeqwZvwALwOZspZG08I+PNjq1heLJRsUt2gsufC4X02Vxca3AltQWNzwfWchxoeCJqi9pv6gih4Y/E4+GG09RKZSLqylsubCOPRi28DdwQmLggvve1QQHd/QZ1RzHj+6HQJzJC3CxoH+vo9nueeBM1URqOJmYaoBVoUm5+X6lIHrdYB/lZpIIQUJA7pbkZ8djVU3pv1naHOwQk1lJdRdc2tkdofK0EJcU2GXB8d68KBbks8qkZQF0wA2BbkcW88uBfHVkgu5m5pWDmdUiMNBgRlYqHH00rrtmf3FXUcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OATERXpF2I0dCjxV6LeCImi+cak2RD/21TU4wdTggcU=;
+ b=UKrQywkvkhJrxqixfa8VHPIvXbip4KLC0lGJtGKhmkJr0QJaGAdxCOd7OG6acMq+e1kPGbl8RIZ5wBo29MzlDWcevhKcKTUBSj6YgntN5tVXBmTwZh+rjjoBdRzn+uSlVjALJ9aUfdY0TFemGoQ8LzUrrr4b2Yj4i7o5UhVjU9c=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by LV8PR10MB7871.namprd10.prod.outlook.com (2603:10b6:408:1ed::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
+ 2024 20:28:33 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
+ 20:28:33 +0000
+Date: Wed, 27 Mar 2024 16:28:30 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Roland Mainz <roland.mainz@nrubsig.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: "svc_tcp_read_marker nfsd RPC fragment too large" with Linux 6.6
+ LTS nfsd ...
+Message-ID: <ZgSBbtjBwd5nOXSu@tissot.1015granger.net>
+References: <CAKAoaQng8vUV2uHNwNxhcL-d17ULPqO0iCSUmVKHunfSaHLMTg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKAoaQng8vUV2uHNwNxhcL-d17ULPqO0iCSUmVKHunfSaHLMTg@mail.gmail.com>
+X-ClientProxiedBy: CH0PR03CA0247.namprd03.prod.outlook.com
+ (2603:10b6:610:e5::12) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: WARN_ONCE from nfsd_break_one_deleg
-To: Donald Buczek <buczek@molgen.mpg.de>, Jeff Layton <jlayton@kernel.org>,
- Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>,
- linux-nfs@vger.kernel.org, it+linux@molgen.mpg.de
-References: <5b63ad24-1967-4e0c-b52b-f3a853b613ff@molgen.mpg.de>
- <39c143cd-c84b-47b8-945f-bd0bbe8babfc@oracle.com>
- <530ec24d-c22d-4fea-a9f7-7a462ab1af9d@oracle.com>
- <474380e6098676a95f38dbaffcaeb633fe602167.camel@kernel.org>
- <c45674af-b8e3-4e5a-b577-9628ebb7db29@molgen.mpg.de>
-Content-Language: en-US
-X-Kuleuven: This mail passed the K.U.Leuven mailcluster
-From: Rik Theys <Rik.Theys@esat.kuleuven.be>
-In-Reply-To: <c45674af-b8e3-4e5a-b577-9628ebb7db29@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|LV8PR10MB7871:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e95f18a-e3b7-41e7-4a71-08dc4e9c78eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Mx1RS0UCX4jTbo6AlzGVYoj2039wk5OQ5hP1ibPgH8vqg10EBgkhZa3FPaMTk5e+rllYGYM+WKkJLOHW9bD4MwneShoMEsQ4tkCkQJyEmxBH53IKBEEM8AMEE5kcohTFZkZ2yJRgdnboUSrvXnJY+CFR9HfzLSCO5CT74x4h/Crio63lSIHiaaxcCX9syDuPbmONtNMsgVLhFP5lmS1w25iegvSjTBo8dpSYINIbINB51hdP71F156EzfpeiotFoXe/Do+pgY0VajjAjbi1lXJ/CGJf8aIhdHD9z91/Lm5A2JqJT+pRlS9uLeSjfHfVunmeM19xFoQQ7ggnWhh9qvkPHBMxT7+7EGxCsrm8x9vhVf+lpYvci8STasUr5Hwhx4e9swszOtoXERMYl4CqK4TbIwNzdRQaEmjVtt2zqwmpkFr8fu9VfkI7ufs9sM10R0eCTGP9DbZre8rYLnJqB45hz5orJ1ToCgp3PKVnGeH3vb6hrxwWtwwUFR0q6QUE5XgV2XoEw2dhwIcb7qg9YutQ+OQlZJkQMdsYBVtssTM4Kqw3xGMsRGH4pp65PrZ1uAZghUpCAiV8Rrgh5t2dEm8YqYwNVCohOvTE+QTK9GaPGnBkFAbqJrrwj+d2sz4m3lI53wYDVMxKY3LHUOJ2ydb20QwVwQn51JYyQZnjoBHQ=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?kvi7jtWHD1r9y3FQFpF6FB3K3vfDvB+f0bi+v6eMRwfTWEoFw14b6VhRnyWG?=
+ =?us-ascii?Q?s+Kj4QGY9PKtQBNE4HZ8fbbCbzxxNScw4O0YWvu9FfTJGR5or7/EROqBaX4S?=
+ =?us-ascii?Q?c/Lma1zehza1dXqq6oFfk73qlx0d0byStEnzy7NunKqSc+EFCS4q32lFU5kz?=
+ =?us-ascii?Q?QjTkx1sd76WyrzCiFgYIVyCacWlr3TShK8nZwY+O7zqHq2dNC989oLD5QNmw?=
+ =?us-ascii?Q?WnN7ETvGHH/5Y7kQXXmW8z+HpZ0VEEZ8FUP0gMq7Xru3MZpNmxlRC8RhCBcH?=
+ =?us-ascii?Q?8bZm5bdCN5yKkXsJeOMQ5Fe2PdKI0zXz0KC6TPMvSYkIgnR/yrOIYEkXJ0xM?=
+ =?us-ascii?Q?JSVkhVfEQlFR1a8MgObhxNce2qRNuLM6+yN0k6v/w6bGpX3iicpoH/X4JCnF?=
+ =?us-ascii?Q?IvjKLHDpmkpwS/+qi11EnVY+4u2kIrtfI1opBcrujRQxUAqp0u3gUkcQP+Vz?=
+ =?us-ascii?Q?KfREUSugmHx7Yj3xUfkMbBlRh123hzyLWacBUKS39/tibdDi4O9vAPDieA8r?=
+ =?us-ascii?Q?17jicWlE0Mm7NbtycuC5+vPOIM+E6thbmtCDvPpXEyxOL2ARrYysZxWHlD2B?=
+ =?us-ascii?Q?vAV24TwhS0fAJK1puCFp2zZHIVz0KtZ5uat7qNtIRIvDLvGS55ItZkb0siEn?=
+ =?us-ascii?Q?DmMl7mV9D7QJc7g+LtjGFOYuGlVVZ6auV6KpH+wVxHIn6Cc6x3E6KyqUd8VA?=
+ =?us-ascii?Q?OU0ZU7nrIPmccRmJ06C7fjyO1Gjlu2RYm6m1a+8OaIl608qCFEhnQJ5LqZ9N?=
+ =?us-ascii?Q?rr4ECnoLQNzCLvK+xv0/mkad8479rR8STB37PhwPZiXg5YmRpCIxxmvGYEBb?=
+ =?us-ascii?Q?/gHbfswhdOJaPZt9f6FITfshsRWkuyhpIS+U1ZPnt0bfyUCNb1nx/BPhWZuW?=
+ =?us-ascii?Q?K5xb+ruUFjTuKODNZkS4wHsYyYk+G7zlwJTJ+FxmDxrP3hz/7jvVSf3LUhHS?=
+ =?us-ascii?Q?BLKLelwuSjwWC4/+ht8MIigATWBg9zovE56+ruyFpKlkMtmA4sRrMliYTVeN?=
+ =?us-ascii?Q?vMEt8R+MQ56kxKGbGOEzFJwPz3hFrPOAfSz1OMuytMsUMl7J/XBGopYqm94K?=
+ =?us-ascii?Q?r2UrFwDik4VIAJNBuYrUlf4+1Fr5QWCj4E6m3MtJG2dPyzwJ+QxPrC9oNowM?=
+ =?us-ascii?Q?d01sSV3ByeoVy8upZO24YjEP0mwD/toQ7zNZ0U4Amtv9w9jxxi6nwjvP83/4?=
+ =?us-ascii?Q?U69XtL1yGTUYE7WaLakeQED00hYSLz0vzm/Kz4PtDNcaFgmsm9pxeB74km4Q?=
+ =?us-ascii?Q?GBdSwRlVqkNtvMfXiBc4RJfyXhm8QKH+EeGqnfbeMfVjhbwitTC7TN9y0rsJ?=
+ =?us-ascii?Q?apN7rJIbLy8TjvuHXV/WlRbr/+r8nYBTGvm060M2Fd+rxaTV4ifGUGTCbQHz?=
+ =?us-ascii?Q?Aud6jl5m5tX6EY1Z7UCN59Tx+qeUn9LRL/HO3RLAafiBL+liX0tQezTqS9tB?=
+ =?us-ascii?Q?skRsSAavg1oSaA6l9gvAD7CnhmTmiDYIZwKPrxuFAhYQRMEodRXBI0+5+Q9G?=
+ =?us-ascii?Q?KZVsdYdRJ/hAKUIx8TjqeYsBRr+6RDaxaHQ/o74xhlazRDpE+hkMIfg3knqL?=
+ =?us-ascii?Q?dVa13Omoba7uwGra1eL4nr34sfdz/OO5HYtwMbNuitYbTBTGUhJr0/df2bRs?=
+ =?us-ascii?Q?5w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	vXDUc+KJjI2pnmlubhp6e1IpFbIIoyUmdj5BPcuaONCquEjiOUp7+Ld9szrzI7lgHNndTLYM8cNFQyjLRtZQlpnVExJoJV6ToAWJZ63y7vTKKluZegLftII11WOBmghhB3E2sXirPkmE3jq/D7XJkcD7s23HZ17cW3sKRWt9re4H/EegueX6bau078EtqSWh1uPfOHKopcAgZYTZdde6Bj6tUJxmCELL5dBIb4b8ajZmPreEczV9IfRVJ9Zhpyige/DvWR2sDH6XANZZOUUdDpPia0DGdn4avT8GATmF00WaEpaJM+g2nHIU+QfQHxwncQWeHobPvVLMBvx3Z3cACJTPIDUqDAxnV/hPxYbOrfAn1aYBC9X8zjt6uBByH34MLJk6jIsApWDqLLofuNpsyaHFvpI9c5JTQQMgkt2eT6G1jUOCVxUOw+YHDORIVR2oP0ypi0mCxpu2RxnSdp+MO7SVAMq0gz+zO2euoOmL5Xp0il1xY6AyxBUk2Oz47Bz0BzZ2etThhfc5ExpZY/dAiSoYPO8kynNPTLX2MjWethKWlpajDn4RnqIuKegACbjxiIPvHKkuFvOuL0WPZ1UTznqeW4SrhiPzZgVmzLwqvTM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e95f18a-e3b7-41e7-4a71-08dc4e9c78eb
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 20:28:33.1131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z5yE3g+jCt3QqimejQXs0+H6rLaU/DfjWZcvUoxax75MiTjjGwDNa6wZQ3/hXgagY3rEpWeF9Fi5nYTX9Z9C0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR10MB7871
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_18,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403270144
+X-Proofpoint-GUID: Gmppmu2YlRFPqfXVuM4ornTBsfg2ef_H
+X-Proofpoint-ORIG-GUID: Gmppmu2YlRFPqfXVuM4ornTBsfg2ef_H
 
-Hi,
+On Fri, Mar 22, 2024 at 12:11:44PM +0100, Roland Mainz wrote:
+> Hi!
+> 
+> ----
+> 
+> After updating my Debian 11 and RHEL 9 installations with Linux kernel
+> 6.6.20-rt25 I start getting the following error messages
+> "svc_tcp_read_marker nfsd RPC fragment too large".
+> Client side is Linux NFSv4.2 client (Debian&&RHEL, both default kernel
+> and Linux 6.6.20-rt25)+ms-nfs41-client HEAD.
+> 
+> Is this a know issue, and is there a patch for it ?
 
-On 3/27/24 13:31, Donald Buczek wrote:
-> On 3/27/24 12:07, Jeff Layton wrote:
->> On Tue, 2024-03-26 at 18:59 -0700, Dai Ngo wrote:
->>> On 3/26/24 9:42 AM, Chuck Lever wrote:
->>>> On 3/26/24 11:04 AM, Donald Buczek wrote:
->>>>> Hi,
->>>>>
->>>>> we just got this on a nfs file server on 6.6.12 :
->>>>>
->>>>> [2719554.674554] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000432042d3 xid c369f54d
->>>>> [2719555.391416] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid d6018727
->>>>> [2719555.742118] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 000000008f2509ff xid 83d0248e
->>>>> [2719555.742566] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000637a135a xid 7064546d
->>>>> [2719555.742803] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 0000000044ea3c51 xid a184bbe5
->>>>> [2719555.742836] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000b6992e65 xid ed3fe82e
->>>>> [2719555.785358] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 0000000044ea3c51 xid a384bbe5
->>>>> [2719588.733414] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 000000008f2509ff xid 89d0248e
->>>>> [2719592.067221] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000b6992e65 xid f33fe82e
->>>>> [2719807.431344] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000fd87f88f xid 28b51379
->>>>> [2719838.510792] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000432042d3 xid fa69f54d
->>>>> [2719852.493779] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 00000000ac1e99fe xid a16378bb
->>>>> [2719852.494853] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid 0f028727
->>>>> [2719852.515457] receive_cb_reply: Got unrecognized reply: calldir
->>>>> 0x1 xpt_bc_xprt 0000000017cc0507 xid 10028727
->>>> These clients are sending NFSv4 callback replies that the server does
->>>> not have a waiting XID for. It's a sign of a significant communication
->>>> mix-up between the server and client.
->>>>
->>>> It would help us to get some details about your clients, the NFS
->>>> version in use, and how long you've been using this kernel. Also, a
->>>> raw packet capture might shed a little more light on the issue.
+The "fragment too large" message means the incoming RPC frame has
+the high-order bit set in its TCP record marker. It could mean:
 
-I believe this might be the same issue we're experiencing and was also 
-discussed on the linux-nfs mailing list:
+1. The client is trying to send an RPC message that is split over
+   multiple RPC fragments. The Linux in-kernel RPC server does not
+   support that.
 
-https://lore.kernel.org/linux-nfs/10d43fc9-fe74-451d-9bd6-51f9f2de837b@esat.kuleuven.be/T/#t
+2. The TCP byte stream has gotten out of sync with the RPC
+   framing. That's a sign of a bug or misconfiguration somewhere,
+   though not necessarily on the NFS server.
 
-> This specific file server has been running 6.6 for about a month. It has been running 5.15 for over a year before.
-> All nfs clients are on 5.15 or 6.6.
->
-> Sorry for not providing enough information. The problem had strong user impact so we needed to resolve the situation quickly by rebooting the server to a 5.15 kernel. This in fact unblocked the hanging mounts on a client.
->
-> A user later reported, that he might have overloaded the file server from parallel writing jobs.
+Wireshark can help you sort it out.
 
-Looking at our traffic statistics, this is also the case in situation. 
-When we experienced the issues, the server was processing a lot more 
-concurrent writes than read operations. But that situation was already 
-present for hours (and sometimes days) before we triggered the issue. In 
-our case the high write load was mostly caused by HPC jobs rewriting the 
-same checkpoint files over and over.
-
-We also noticed that once the situation happened, clients could no 
-longer mount the server after a reboot. Looking at recent messages in 
-this list, this could be fixed by the patch discussed in 
-https://lore.kernel.org/linux-nfs/171156001280.1469.15703028652039429964.stgit@klimt.1015granger.net/T/#u 
-?
-
-Regards,
-
-Rik
-
->
->>> This warning has has no effect on the server operation and was remove.
->>> See commit 05a4b58301c3.
-> Ok.
->
->> Yes. It usually just means the job is already scheduled or is running,
->> which is harmless. That said, that can be indicative of the workqueue
->> job being stuck.
->>
->> Typically, backchannel jobs should run quickly, but lease breaks can
->> come in quick succession too, so this warning never meant much.
-> Before we rebooted, I was able to run a script which takes some system data, including the stack traces of all tasks.
->
-> http://owww.molgen.mpg.de/~buczek/2024-03-26_sauterelles
->
-> Is the blocker
->
-> 1 D root        11     2  0  80   0 -     0 rpc_sh Feb23 ?        00:00:18  \_ [kworker/u32:0+nfsd4_callbacks]
->
-> ?
->
-> # cat /proc/11/task/11/stack
->
-> [<0>] rpc_shutdown_client+0xff/0x160 [sunrpc]
-> [<0>] nfsd4_process_cb_update+0x4c/0x280 [nfsd]
-> [<0>] nfsd4_run_cb_work+0xa3/0x160 [nfsd]
-> [<0>] process_one_work+0x13f/0x300
-> [<0>] worker_thread+0x2f5/0x410
-> [<0>] kthread+0xe5/0x120
-> [<0>] ret_from_fork+0x31/0x50
-> [<0>] ret_from_fork_asm+0x1b/0x30
->
-> rpc_shutdown_client+0xff is behind 'call schedule_timeout' in the expansion of `wait_event_timeout(destroy_wait, list_empty(&clnt->cl_tasks), 1*HZ);`.
->
-> So it is waiting for the second to pass, possibly in a loop waiting for list_empty(&clnt->cl_tasks).
->
-> I don't know if any guesses could be made out of this, though.
->
-> Thanks
->
->    Donald
->
->>>>> [2719917.753429] ------------[ cut here ]------------
->>>>> [2719917.758951] WARNING: CPU: 1 PID: 1448 at
->>>>> fs/nfsd/nfs4state.c:4939 nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>>> [2719917.769208] Modules linked in: af_packet xt_nat xt_tcpudp
->>>>> iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
->>>>> rpcsec_gss_krb5 nfsv4 nfs i915 iosf_mbi drm_buddy drm_display_helper
->>>>> ttm intel_gtt video 8021q garp stp mrp llc input_leds
->>>>> x86_pkg_temp_thermal led_class hid_generic usbhid coretemp kvm_intel
->>>>> kvm irqbypass tg3 libphy smartpqi mgag200 i2c_algo_bit efi_pstore
->>>>> iTCO_wdt i40e crc32c_intel wmi_bmof pstore iTCO_vendor_support wmi
->>>>> ipmi_si nfsd auth_rpcgss oid_registry nfs_acl lockd grace sunrpc
->>>>> efivarfs ip_tables x_tables ipv6 autofs4
->>>>> [2719917.818740] CPU: 1 PID: 1448 Comm: nfsd Not tainted
->>>>> 6.6.12.mx64.461 #1
->>>>> [2719917.825777] Hardware name: Dell Inc. PowerEdge T440/021KCD, BIOS
->>>>> 2.12.2 07/09/2021
->>>>> [2719917.833781] RIP: 0010:nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>>> [2719917.839911] Code: 00 00 00 e8 3d ae e8 e0 e9 5f ff ff ff 48 89
->>>>> df be 01 00 00 00 e8 8b 1f 3d e1 48 8d bb 98 00 00 00 e8 ef 10 01 00
->>>>> 84 c0 75 8a <0f> 0b eb 86 65 8b 05 0c 66 e0 5f 89 c0 48 0f a3 05 d6
->>>>> 1a 75 e2 0f
->>>>> [2719917.859303] RSP: 0018:ffffc9000bae7b70 EFLAGS: 00010246
->>>>> [2719917.864962] RAX: 0000000000000000 RBX: ffff8881e2fd6000 RCX:
->>>>> 0000000000000024
->>>>> [2719917.872520] RDX: ffff8881e2fd60c8 RSI: ffff889086d5de00 RDI:
->>>>> 0000000000000200
->>>>> [2719917.880050] RBP: ffff889301aa812c R08: 0000000000033580 R09:
->>>>> 0000000000000000
->>>>> [2719917.887575] R10: ffff889ef63b20d8 R11: 0000000000000000 R12:
->>>>> ffff888104cfb290
->>>>> [2719917.895095] R13: ffff889301aa8118 R14: ffff88989c8ace00 R15:
->>>>> ffff888104cfb290
->>>>> [2719917.902625] FS:  0000000000000000(0000)
->>>>> GS:ffff88a03fc00000(0000) knlGS:0000000000000000
->>>>> [2719917.911094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>> [2719917.917236] CR2: 00007fb8a1cfc418 CR3: 000000000262c006 CR4:
->>>>> 00000000007706e0
->>>>> [2719917.924760] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
->>>>> 0000000000000000
->>>>> [2719917.932285] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
->>>>> 0000000000000400
->>>>> [2719917.939833] PKRU: 55555554
->>>>> [2719917.942971] Call Trace:
->>>>> [2719917.945834]  <TASK>
->>>>> [2719917.948344]  ? __warn+0x81/0x140
->>>>> [2719917.951983]  ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>>> [2719917.957470]  ? report_bug+0x171/0x1a0
->>>>> [2719917.961562]  ? handle_bug+0x3c/0x70
->>>>> [2719917.965459]  ? exc_invalid_op+0x17/0x70
->>>>> [2719917.969715]  ? asm_exc_invalid_op+0x1a/0x20
->>>>> [2719917.974317]  ? nfsd_break_deleg_cb+0x115/0x190 [nfsd]
->>>>> [2719917.979820]  __break_lease+0x24b/0x7c0
->>>>> [2719917.983991]  ? __pfx_nfsd_acceptable+0x10/0x10 [nfsd]
->>>>> [2719917.989495]  nfs4_get_vfs_file+0x195/0x380 [nfsd]
->>>>> [2719917.994740]  ? prepare_creds+0x14c/0x240
->>>>> [2719917.999164]  nfsd4_process_open2+0x3ed/0x16b0 [nfsd]
->>>>> [2719918.004570]  ? nfsd_permission+0x4e/0x100 [nfsd]
->>>>> [2719918.009618]  ? fh_verify+0x17b/0x8a0 [nfsd]
->>>>> [2719918.014243]  nfsd4_open+0x6ae/0xcd0 [nfsd]
->>>>> [2719918.018777]  ? nfsd4_encode_operation+0xa6/0x290 [nfsd]
->>>>> [2719918.024524]  nfsd4_proc_compound+0x2f2/0x6a0 [nfsd]
->>>>> [2719918.029922]  nfsd_dispatch+0xee/0x220 [nfsd]
->>>>> [2719918.034619]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>>> [2719918.039144]  svc_process_common+0x307/0x730 [sunrpc]
->>>>> [2719918.044551]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->>>>> [2719918.049883]  ? __pfx_nfsd+0x10/0x10 [nfsd]
->>>>> [2719918.054404]  svc_process+0x131/0x180 [sunrpc]
->>>>> [2719918.059171]  nfsd+0x84/0xd0 [nfsd]
->>>>> [2719918.063012]  kthread+0xe5/0x120
->>>>> [2719918.066539]  ? __pfx_kthread+0x10/0x10
->>>>> [2719918.070664]  ret_from_fork+0x31/0x50
->>>>> [2719918.074611]  ? __pfx_kthread+0x10/0x10
->>>>> [2719918.078735]  ret_from_fork_asm+0x1b/0x30
->>>>> [2719918.083018]  </TASK>
->>>>> [2719918.085563] ---[ end trace 0000000000000000 ]---
->>>>>
->>>>> nfsd_break_deleg_cb+0x115 is the
->>>>> `WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall))` in
->>>>> nfsd_break_one_deleg() in our compilation
->>>>>
->>>>> I think that means, that the callback is already scheduled?
->>>>>
->>>>> One nfs client hung trying to mount something from that server.
->>>>>
->>>>> Best
->>>>>
->>>>>     Donald
->>>>>
 -- 
-Rik Theys
-System Engineer
-KU Leuven - Dept. Elektrotechniek (ESAT)
-Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
-+32(0)16/32.11.07
-----------------------------------------------------------------
-<<Any errors in spelling, tact or fact are transmission errors>>
-
+Chuck Lever
 
