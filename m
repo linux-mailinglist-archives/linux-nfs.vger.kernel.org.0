@@ -1,77 +1,87 @@
-Return-Path: <linux-nfs+bounces-2517-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2518-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D7288904C4
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 17:17:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92ECB890541
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 17:34:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC14029833F
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 16:17:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B69361C2FA56
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 16:34:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC19912EBED;
-	Thu, 28 Mar 2024 16:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 675243BB25;
+	Thu, 28 Mar 2024 16:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="MR0XMUre"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iV7WMMps"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC97912EBD6
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 16:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6684212B89
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 16:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711642643; cv=none; b=M6vcxvouIVEyf5oZaTwgZEXw/ApV8AHKf4pzc8iAx8K6R4WyDF5GiKtNyI8/qCRoq7dAsbJOiTacOexr4Cp+Fn/xRaC993EPDYh3HDC8Arn3KLfrAoJHwa3P6f5FiuKB2m8AqO+NO2AXW3z2NgFBrQ3UjsQw89dzPfhw6xqKuCw=
+	t=1711643683; cv=none; b=K/a/qRS2ggdun0An8MxXioqKdsdHL2tJWxiwNoogk1jI+KKuTG89UfdJwoY4Xxw79X/oFb1CiZdUXq/SJEWZ+4EfK9LAnGV6yR5rvMZMIppGk/P6E6duwkfKhUssDRbdCR51K6dSWMBQe7Lf+vcY1ZGXrhSM69TQWeZsKW1SgTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711642643; c=relaxed/simple;
-	bh=jkGW/15tS33hOhb5npPS+j971L13CjSKAZsa3HYuPXM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SUZjKA4OpZ1knjZLDnc3Z1tZHkM55wd5t8QbN9m2svRkIDL53yChSaeEE9phi721oSNByzKnp65QrVa6W5kSKvJlhH1yw5Hj3WLrhCbdxmq5X87Y9dWEvNkm1cATb3PRGrr8cC43O3/sGHrz7O2vqMqpb1KUMOV/Hj4kr1CGqC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=MR0XMUre; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1711642640; x=1743178640;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jkGW/15tS33hOhb5npPS+j971L13CjSKAZsa3HYuPXM=;
-  b=MR0XMUretuauQzV0I+cQF0KfWS6htL9M3bg6y3VW6xnEknq0lfswFKuY
-   XiT3cT7NbgvxSZmDI8tehMU6A+RQZVaDf3QfuNnfuA6Ze91FGSn0EnTF6
-   TvBcJfOEWt7VD/jdinhEbu2bE5iHH4Tzb1HOtC3HZpJiZ8gyPd36fnwEW
-   ibMjtAdotHWNl5IfYqO4PesuYq6oBysY1nxg+BPKUB9xt7709RSub5REp
-   Qo1cOI1+9xOLMutUO93lBG5iMVtawVCl9qSuafs/IA526pTiL8ALREvXt
-   X8TXpSnQ2waHGnL+QQGlo2QBkTmYd2gAZjQOAV4JbZaVs9HIefNejN21q
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="142111997"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708354800"; 
-   d="scan'208";a="142111997"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 01:17:11 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 6C833C6806
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Mar 2024 01:17:09 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 97CE8D561A
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Mar 2024 01:17:08 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 1C40320098E20
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Mar 2024 01:17:08 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 1EC7B1A006C;
-	Fri, 29 Mar 2024 00:17:07 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
+	s=arc-20240116; t=1711643683; c=relaxed/simple;
+	bh=FxowD6lDojXc8FSJtt52Ai9DVogDp93KiS0BtjsLW1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBHX+e2/rfeptGUXCDaRlF6tm/IyuwU31++A3J/Gwfeg7EU1qtTmpfr/3kCZ2mjpzvBMUO6It8WTNqXjRGxRXrNKpCiql3XPLdzdOG1WCiuyRe8cheOVS4jwOPuW5JrV4QGioILDmFcFdiKAgNqeIVO0yhrZl0LOMdVsDYB0D9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iV7WMMps; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711643679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ffhOAbislEtDui9sz/UMzHfpFDxhB+Cw1cNj4X99Z0A=;
+	b=iV7WMMpshcKzMlSPsuEjVxcVvXBFDI7LKV1O19Z2GoHa9hW8CSxYrJ53fusdjsToCwctsP
+	25MZ/6fWtBEWswPg76sr3EvjaFqpwC+6SENhVVKa9KBBCqxQPoU/T8lmazoBegX3lZ53p4
+	ZZYG+o8RdafLmoxFQhfjvWaHgGjjRkg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-2dgsIfgmMnmMsc1zau3KSw-1; Thu, 28 Mar 2024 12:34:36 -0400
+X-MC-Unique: 2dgsIfgmMnmMsc1zau3KSw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1B630800262;
+	Thu, 28 Mar 2024 16:34:35 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D4330492BC6;
+	Thu, 28 Mar 2024 16:34:31 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
 	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2] NFSD: trace export root filehandle event
-Date: Fri, 29 Mar 2024 00:16:54 +0800
-Message-Id: <20240328161654.1432-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/26] netfs, afs, 9p, cifs: Rework netfs to use ->writepages() to copy to cache
+Date: Thu, 28 Mar 2024 16:33:52 +0000
+Message-ID: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -79,105 +89,176 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28280.000
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28280.000
-X-TMASE-Result: 10--2.210900-10.000000
-X-TMASE-MatchedRID: hWRIiYV8xz8p3puUGg7rnBIRh9wkXSlFCZa9cSpBObnAuQ0xDMaXkH4q
-	tYI9sRE/4K9FmervsqVeww0n8USeIRzIu43df0mMQuFiD+xrWCxYL/tox9XQkUPRcdZ0KZk8ZYj
-	faKkAhGDi8zVgXoAltsIJ+4gwXrEtJ0RPnyOnrZJIPLhojlvhsy+sq1/5FvBlHCOACUaSygaMAU
-	9xte8a5fWRD6p/GdzaBDvqOZso5fuI93uu7D0aWicys52uVWnUkdfkAYWIS1PAYLx7rnbR8rDQ8
-	m3TqgloelpCXnG+JjvDGBZ1G8r1Sf2D6gx/0ozp
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Add a tracepoint for obtaining root filehandle event
+Hi Christian, Willy,
 
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
----
-v2:
-	remove dentry address record
-	add netns inum entry
-	trace ex_flags
+The primary purpose of these patches is to rework the netfslib writeback
+implementation such that pages read from the cache are written to the cache
+through ->writepages(), thereby allowing the fscache page flag to be
+retired.
 
- fs/nfsd/export.c |  4 +---
- fs/nfsd/trace.h  | 41 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 3 deletions(-)
+The reworking also:
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 7b641095a665..63acd1564eab 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1027,15 +1027,13 @@ exp_rootfh(struct net *net, struct auth_domain *clp, char *name,
- 	}
- 	inode = d_inode(path.dentry);
- 
--	dprintk("nfsd: exp_rootfh(%s [%p] %s:%s/%ld)\n",
--		 name, path.dentry, clp->name,
--		 inode->i_sb->s_id, inode->i_ino);
- 	exp = exp_parent(cd, clp, &path);
- 	if (IS_ERR(exp)) {
- 		err = PTR_ERR(exp);
- 		goto out;
- 	}
- 
-+	trace_nfsd_exp_rootfh(net, name, clp->name, inode, exp);
- 	/*
- 	 * fh must be initialized before calling fh_compose
- 	 */
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 1cd2076210b1..adac651e398d 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -396,6 +396,47 @@ TRACE_EVENT(nfsd_export_update,
- 	)
- );
- 
-+TRACE_EVENT(nfsd_exp_rootfh,
-+	TP_PROTO(
-+		const struct net *net,
-+		const char *name,
-+		const char *clp_name,
-+		const struct inode *inode,
-+		const struct svc_export *exp
-+		),
-+	TP_ARGS(net, name, clp_name, inode, exp),
-+	TP_STRUCT__entry(
-+		__string(name, name)
-+		__field(unsigned int, netns_ino)
-+		__string(clp_name, clp_name)
-+		__string(s_id, inode->i_sb->s_id)
-+		__field(unsigned long, i_ino)
-+		__array(unsigned char, uuid, EX_UUID_LEN)
-+		__field(int, ex_flags)
-+		__field(const void *, ex_uuid)
-+	),
-+	TP_fast_assign(
-+		__assign_str(name, name);
-+		__entry->netns_ino = net->ns.inum;
-+		__assign_str(clp_name, clp_name);
-+		__assign_str(s_id, inode->i_sb->s_id);
-+		__entry->i_ino = inode->i_ino;
-+		__entry->ex_flags = exp->ex_flags;
-+		__entry->ex_uuid = exp->ex_uuid;
-+		if (exp->ex_uuid)
-+			memcpy(__entry->uuid, exp->ex_uuid, EX_UUID_LEN);
-+	),
-+	TP_printk(
-+		"path=%s domain=%s sid=%s/inode=%ld ex_flags=%d ex_uuid=%s",
-+		__get_str(name),
-+		__get_str(clp_name),
-+		__get_str(s_id),
-+		__entry->i_ino,
-+		__entry->ex_flags,
-+		__entry->ex_uuid ? __print_hex_str(__entry->uuid, EX_UUID_LEN) : "NULL"
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(nfsd_io_class,
- 	TP_PROTO(struct svc_rqst *rqstp,
- 		 struct svc_fh	*fhp,
--- 
-2.39.1
+ (1) builds on top of the new writeback_iter() infrastructure;
+
+ (2) makes it possible to use vectored write RPCs as discontiguous streams
+     of pages can be accommodated;
+
+ (3) makes it easier to do simultaneous content crypto and stream division.
+
+ (4) provides support for retrying writes and re-dividing a stream;
+
+ (5) replaces the ->launder_folio() op, so that ->writepages() is used
+     instead;
+
+ (6) uses mempools to allocate the netfs_io_request and netfs_io_subrequest
+     structs to avoid allocation failure in the writeback path.
+
+Some code that uses the fscache page flag is retained for compatibility
+purposes with nfs and ceph.  The code is switched to using the synonymous
+private_2 label instead and marked with deprecation comments.  I have a
+separate set of patches that convert cifs to use this code.
+
+-~-
+
+In this new implementation, writeback_iter() is used to pump folios,
+progressively creating two parallel, but separate streams.  Either or both
+streams can contain gaps, and the subrequests in each stream can be of
+variable size, don't need to align with each other and don't need to align
+with the folios.  (Note that more streams can be added if we have multiple
+servers to duplicate data to).
+
+Indeed, subrequests can cross folio boundaries, may cover several folios or
+a folio may be spanned by multiple subrequests, e.g.:
+
+         +---+---+-----+-----+---+----------+
+Folios:  |   |   |     |     |   |          |
+         +---+---+-----+-----+---+----------+
+
+           +------+------+     +----+----+
+Upload:    |      |      |.....|    |    |
+           +------+------+     +----+----+
+
+         +------+------+------+------+------+
+Cache:   |      |      |      |      |      |
+         +------+------+------+------+------+
+
+Data that got read from the server that needs copying to the cache is
+stored in folios that are marked dirty and have folio->private set to a
+special value.
+
+The progressive subrequest construction permits the algorithm to be
+preparing both the next upload to the server and the next write to the
+cache whilst the previous ones are already in progress.  Throttling can be
+applied to control the rate of production of subrequests - and, in any
+case, we probably want to write them to the server in ascending order,
+particularly if the file will be extended.
+
+Content crypto can also be prepared at the same time as the subrequests and
+run asynchronously, with the prepped requests being stalled until the
+crypto catches up with them.  This might also be useful for transport
+crypto, but that happens at a lower layer, so probably would be harder to
+pull off.
+
+The algorithm is split into three parts:
+
+ (1) The issuer.  This walks through the data, packaging it up, encrypting
+     it and creating subrequests.  The part of this that generates
+     subrequests only deals with file positions and spans and so is usable
+     for DIO/unbuffered writes as well as buffered writes.
+
+ (2) The collector.  This asynchronously collects completed subrequests,
+     unlocks folios, frees crypto buffers and performs any retries.  This
+     runs in a work queue so that the issuer can return to the caller for
+     writeback (so that the VM can have its kswapd thread back) or async
+     writes.
+
+     Collection is slightly complex as the collector has to work out where
+     discontiguities happen in the folio list so that it doesn't try and
+     collect folios that weren't included in the write out.
+
+ (3) The retryer.  This pauses the issuer, waits for all outstanding
+     subrequests to complete and then goes through the failed subrequests
+     to reissue them.  This may involve reprepping them (with cifs, the
+     credits must be renegotiated and a subrequest may need splitting), and
+     doing RMW for content crypto if there's a conflicting change on the
+     server.
+
+David
+
+David Howells (26):
+  cifs: Fix duplicate fscache cookie warnings
+  9p: Clean up some kdoc and unused var warnings.
+  netfs: Update i_blocks when write committed to pagecache
+  netfs: Replace PG_fscache by setting folio->private and marking dirty
+  mm: Remove the PG_fscache alias for PG_private_2
+  netfs: Remove deprecated use of PG_private_2 as a second writeback
+    flag
+  netfs: Make netfs_io_request::subreq_counter an atomic_t
+  netfs: Use subreq_counter to allocate subreq debug_index values
+  mm: Provide a means of invalidation without using launder_folio
+  cifs: Use alternative invalidation to using launder_folio
+  9p: Use alternative invalidation to using launder_folio
+  afs: Use alternative invalidation to using launder_folio
+  netfs: Remove ->launder_folio() support
+  netfs: Use mempools for allocating requests and subrequests
+  mm: Export writeback_iter()
+  netfs: Switch to using unsigned long long rather than loff_t
+  netfs: Fix writethrough-mode error handling
+  netfs: Add some write-side stats and clean up some stat names
+  netfs: New writeback implementation
+  netfs, afs: Implement helpers for new write code
+  netfs, 9p: Implement helpers for new write code
+  netfs, cachefiles: Implement helpers for new write code
+  netfs: Cut over to using new writeback code
+  netfs: Remove the old writeback code
+  netfs: Miscellaneous tidy ups
+  netfs, afs: Use writeback retry to deal with alternate keys
+
+ fs/9p/vfs_addr.c             |  60 +--
+ fs/9p/vfs_inode_dotl.c       |   4 -
+ fs/afs/file.c                |   8 +-
+ fs/afs/internal.h            |   6 +-
+ fs/afs/validation.c          |   4 +-
+ fs/afs/write.c               | 187 ++++----
+ fs/cachefiles/io.c           |  75 +++-
+ fs/ceph/addr.c               |  24 +-
+ fs/ceph/inode.c              |   2 +
+ fs/netfs/Makefile            |   3 +-
+ fs/netfs/buffered_read.c     |  40 +-
+ fs/netfs/buffered_write.c    | 832 ++++-------------------------------
+ fs/netfs/direct_write.c      |  30 +-
+ fs/netfs/fscache_io.c        |  14 +-
+ fs/netfs/internal.h          |  55 ++-
+ fs/netfs/io.c                | 155 +------
+ fs/netfs/main.c              |  55 ++-
+ fs/netfs/misc.c              |  10 +-
+ fs/netfs/objects.c           |  81 +++-
+ fs/netfs/output.c            | 478 --------------------
+ fs/netfs/stats.c             |  17 +-
+ fs/netfs/write_collect.c     | 813 ++++++++++++++++++++++++++++++++++
+ fs/netfs/write_issue.c       | 673 ++++++++++++++++++++++++++++
+ fs/nfs/file.c                |   8 +-
+ fs/nfs/fscache.h             |   6 +-
+ fs/nfs/write.c               |   4 +-
+ fs/smb/client/cifsfs.h       |   1 -
+ fs/smb/client/file.c         | 136 +-----
+ fs/smb/client/fscache.c      |  16 +-
+ fs/smb/client/inode.c        |  27 +-
+ include/linux/fscache.h      |  22 +-
+ include/linux/netfs.h        | 196 +++++----
+ include/linux/pagemap.h      |   1 +
+ include/net/9p/client.h      |   2 +
+ include/trace/events/netfs.h | 249 ++++++++++-
+ mm/filemap.c                 |  52 ++-
+ mm/page-writeback.c          |   1 +
+ net/9p/Kconfig               |   1 +
+ net/9p/client.c              |  49 +++
+ net/9p/trans_fd.c            |   1 -
+ 40 files changed, 2492 insertions(+), 1906 deletions(-)
+ delete mode 100644 fs/netfs/output.c
+ create mode 100644 fs/netfs/write_collect.c
+ create mode 100644 fs/netfs/write_issue.c
 
 
