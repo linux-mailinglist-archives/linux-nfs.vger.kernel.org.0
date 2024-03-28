@@ -1,399 +1,196 @@
-Return-Path: <linux-nfs+bounces-2549-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2550-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFF14890C10
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 21:55:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CB72890CDF
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 23:03:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86C1F2A7959
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 20:55:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3ABA1F25C4F
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 22:03:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB3113A403;
-	Thu, 28 Mar 2024 20:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6478513B5A3;
+	Thu, 28 Mar 2024 22:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFw63mUb"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b="YY59Dbqw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A698C13A3E9
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 20:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F5F1E52A;
+	Thu, 28 Mar 2024 22:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711659334; cv=none; b=SCjxrqlYSwzLVgz6xG+9zys3lnlNtO0GGlHRev7HAXOJHm/M25uSxj/Znkov/S/B4WLhEorPkF6a7xH3cJqc9lBDRbCbyGPJeELEDYMH3wwQhcwQgOsBYFJfvnqS189ZyOpo5dnVO0xu1CD/WyoV2UPwxiZJKkIITN4HRViulO8=
+	t=1711663428; cv=none; b=S1aHz6ruxpwn8AZ7kAaN3RYMYbf6aDFgKqnM0HpCkHZno2wkEjVKQyus0uM2q8tKQSqlXoVCvrph/fqmCv2PEhO07SzM1kN5Ht8EeFMLvM9+fhmA9poW/A3f+BhEgoFAdUM3s77eP6oKKHUqPYSCtiETqb+/Qigtj7MC7APSgq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711659334; c=relaxed/simple;
-	bh=evHxNFhnrjqpetgo+C692k86dqxlcL+fI34Fx/eOI08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=sPkCsIbFNaMhKy1ZkbML54bQWropUhdkXQH2K7uFO4t9gXiH5EJrZ9AHWFgBdNVmhno2lGJEbV1RetJjb4koH2JSvDKbPzWEWmXvK89Tpgiwi7aPz/8GD3K9It9EPfjIk0SJJGNPiCmQKy58fnEvCUw0futcjoW3JFCIzMzQ/kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFw63mUb; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56c12c73ed8so1799144a12.2
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 13:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711659331; x=1712264131; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mIM6hVcE9mpHZn5BqhgbP6p5qjW9b3WN2dTikhW9jaY=;
-        b=eFw63mUbIo2qtjYVa8TXyjlRWlJin0Ghe8uuxexRkgYQB1TNhIubEDToVBYrfSInEw
-         to/eh5Er4MU2IY+SXIL0FmtBuVmifja/H8NhNccoEaKdR1F6+3RTzb9eNF++CthiiL+6
-         slUe+jEXqwKRu+Pg1wynhrMbL5JinEYAO6k1J8fr2TWXgma7HfZA1AEKiCIZTnYes6eP
-         KQ503Qy5yvE0ZLWadT4XzAQjC8vQWYqxgqligXeCBtx1zq3aqxW8GOiPxxqGIx1GKijH
-         SdQgqbyPdMlhIrCfCq2HvQmrj/cjJqJmRddao1NoixsT6dtGDOfYzaHR1wz0na04j0H0
-         WpnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711659331; x=1712264131;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mIM6hVcE9mpHZn5BqhgbP6p5qjW9b3WN2dTikhW9jaY=;
-        b=k++hHAIszaxmRh6oGQ8eNGFyKNp4+p4CEaims+eYeSmPTFVKtUT35sLVn4k+Sx+dwD
-         qCrM8vfNfzGUWQBKedZmpJjQQPQx1Gx873ClOflLUbgBZpH0BTzbumXs+I6Yvp0gAIcB
-         aWFwCGxc4eBwuYjCzB9mlNTlRxGaB75RUhMjkW589kOJTmisisr5URxnOk+lbVVIKA2A
-         4bkNMN2mi9tTqGnK9HH9x79xwsr3PpQKW66g9JeD9hmmr1aJIx59qTz6HMb3PLMfhPrl
-         pbe/uMjW4WSX0Be4n6I2xvaxVZy+vA8eSfePXwKDbq6v6xhpnyvki0iUcOJw8wUcWQJp
-         ZoPQ==
-X-Gm-Message-State: AOJu0YwQmOJMqhc91zcEZc1V+Rx9JeDJ+AhdcbnO9k2tHogVVnNtG3LN
-	AfSos8b4vsepj4EuxQafAbr6l6sd1KBWlTQIRbb86YRoY6ytrVoPb5iXJuPV1xCas5R9GJxPKAs
-	j7d8snl6hl/8HFQpOGzWannT+R8PdyHep3VI=
-X-Google-Smtp-Source: AGHT+IEUnWrcl0JjE6rdeKWMohaXxGPrbBCFOuKFaGX4vutP6dTeOkmB/UOl7hu5vgLc1lWdeynJ3TBA4AwtDHEWhMs=
-X-Received: by 2002:a17:906:361b:b0:a47:145c:e777 with SMTP id
- q27-20020a170906361b00b00a47145ce777mr280292ejb.28.1711659330543; Thu, 28 Mar
- 2024 13:55:30 -0700 (PDT)
+	s=arc-20240116; t=1711663428; c=relaxed/simple;
+	bh=CS0ppGqFbnvglwBMLnip/ZMRB4UW8W2v79NabglHjCg=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=kPQ6eFD2Fvif0ewgDILqbz/E/X+WsiWEY3M3gN7NvffpuUoCHZW4XcpNgLtK2d5A7S/9qnMKN+W5bn4Pn+yaCin6tkDuVYkj4GTuvKJ2TODeziROO3fLWIN+N7PpnQEMMA2VMDV7YlP1dJ//3dKLzaxh4+GtPyEOts/k8jmtMdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b=YY59Dbqw; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711663408; x=1712268208; i=scpcom@gmx.de;
+	bh=k1Iva3U7pQT0dUGtSl5fVKHTOtnqF1C4hLtMB3Cs370=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=YY59DbqwSVQhu0fKt/SzX6lla7D3OcofdfNWIOGxqRBkGFCLgABzM+qn+s1DtEZS
+	 ZekXRH8wJzgVQRHkzFz0TuJwylLFQXd4ePleVpyr0wPbBMA1ilC+7nlXkpwOEE1mH
+	 IlSfhEiqEKOdSesah5bB5qYoM+nh1DKWTV5IKyyU31xztgeYisJoyHV7md++oAr9k
+	 S5fWaxgHo3awTZ+m/Xn3XrFsFz0Dfl67joIxGPSr9qEMpF2+2nIh6GwXpS0xnn9a/
+	 fx8fOyuRA7rruh5LuqlYAM3Nf/WX/cEPgh0S1gz1iiE2exSfPEjlF9D9Wg5Kz4nwt
+	 KidnEtHjlaoPY4QOhw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.236.10.6] ([10.236.10.6]) by msvc-mesg-gmx001 (via HTTP);
+ Thu, 28 Mar 2024 23:03:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQnRP9O8_1H90rd4yxtXVtYaEKJB6p3L++V5V14G+S5abw@mail.gmail.com>
-In-Reply-To: <CAKAoaQnRP9O8_1H90rd4yxtXVtYaEKJB6p3L++V5V14G+S5abw@mail.gmail.com>
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Thu, 28 Mar 2024 21:55:18 +0100
-Message-ID: <CANH4o6Oz3Tk5QLfFmABGia1VjvOexOPPFDp5aYLA6-=N0TtK=g@mail.gmail.com>
-Subject: Fwd: [Ms-nfs41-client-devel] ANN: NFSv4.1 filesystem client Windows
- driver binaries for Windows 10/11 for testing, 2024-03-28 ...
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <trinity-db344068-bb4b-4d0b-9772-ff701a2c70dd-1711663407957@msvc-mesg-gmx026>
+From: Jan Schunk <scpcom@gmx.de>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Aw: Re: [External] : nfsd: memory leak when client does many file
+ operations
+Content-Type: text/plain; charset=UTF-8
+Importance: normal
+Sensitivity: Normal
 Content-Transfer-Encoding: quoted-printable
+Date: Thu, 28 Mar 2024 23:03:28 +0100
+In-Reply-To: <51CAACAB-B6CC-4139-A350-25CF067364D3@oracle.com>
+References: <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mesg-gmx120>
+ <E3109CAA-8261-4F66-9D1B-3546E8B797DF@oracle.com>
+ <trinity-bfafb9db-d64f-4cad-8cb1-40dac0a2c600-1711313314331@msvc-mesg-gmx105>
+ <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
+ <trinity-66047013-4d84-4eef-b5d3-d710fe6be805-1711316386382@msvc-mesg-gmx005>
+ <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
+ <trinity-ad0037c0-1060-4541-a8ca-15f826a5b5a2-1711396545958@msvc-mesg-gmx024>
+ <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
+ <trinity-77720d9d-4d5b-48c6-8b1f-0b7205ea3c2b-1711398394712@msvc-mesg-gmx021>
+ <51CAACAB-B6CC-4139-A350-25CF067364D3@oracle.com>
+X-Priority: 3
+X-Provags-ID: V03:K1:aya7AI2eeD8zsCSVeocOOkx7Fl5xZwQSuC0fMfTcMLXuX42EBnA7IsxPZ3jzxqGGfDuXK
+ +gCv5qyxwY2tE/1EBGUW4daC4d6g7QsZXkAcjO8WGOl+5GPcaY0MNjzz7ZTxmNPA8/uc0e1P8wX0
+ JnjA2Ih0zQo59aDqTN+MLcSpB94nGwBSOhcX/ymAt3Pd726XmlaSfEoHpLWmwpbiQMWFrur7h4Kw
+ flP/0RQLF76vrNh/jJnfWYw3RkmT20MXuY4NX9GSvSb56X61+0CfsBZUBaypaBJT5/TH6c36rJ9d
+ KY=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uMl+1g9NXAI=;HWc+QwHnNviUpAPUakv/EEgMy7O
+ h1MM2EU0xq8bmffM5wmnQK/li+VhROyCMf9ElPcI1+S8Hl3J65k4wgL4YYLKv7YAfJQ+YzSAC
+ SB7fYr7i9qJl3sLxbiRKMrbGKZ1UiSuTfFNl3Kyq0HlahpLl2rQ+dcT3LHIVpW0X73P1tEI/B
+ Huy0CPceSpw6HCn4oldBtNLUF6JVrjwng1+2Lzp7x8ChU3bexbjEkfTeoahZ3v0UaqkaikDx3
+ BWEaud5KdQcpBFYsXPQZe6zMRHok94fABfnka5AZTpjOLbAm4ZU8tjrwl7PSWf1OQCyCPTyw3
+ u7GQahvd9AkqkztR0+7qq/JjMVASUihQW2b4ryVDb//9IlecO7YqF2gROvfv0UzPMaykHTjGT
+ Xcp//eshFABAlFJa37pGDWzwtzNEfJSXNU48rWUh9JlBXxrLGM22IRpvovdb5M+Toodd8BO2C
+ pEPcOPs/s5qkbr+He5S3W1rskz86YQDEYCc3uz56vtwhqF6CkEPpxNPPg34KRUqDezkUba2k4
+ vvWX0fiM4j5xTW8XluLmWxQ5P5K/gCL9+VQTc/B2dvTHdsAnDR/ywDh2B1jbCrecyBjG+Fqwt
+ mmLgdqyHZUcpvLS3FRkgsGqGpvtue4vMvFuVd7lkZ//JJgWvPMndUQS9SprObaXwh/xAJ7Bla
+ bjq2L8GgK2oa0uOtSzfBkl8JpP39//YN+4R5NlTSKrkdoXHTQudcMq6AWsEiMA0=
 
-Hello,
+Inside the VM I was not able to reproduce the issue on v6=2E5=2Ex so I keep=
+ concentrating on v6=2E6=2Ex=2E
 
-Please test the binaries. The client is for Windows 10/11, but
-compatibility feedback for Linux 6.6 stable and 6.8 would be great.
+Current status:
 
-Thanks,
-Martin
+$ git bisect start v6=2E6 v6=2E5
+Bisecting: 7882 revisions left to test after this (roughly 13 steps)
+[a1c19328a160c80251868dbd80066dce23d07995] Merge tag 'soc-arm-6=2E6' of gi=
+t://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/soc/soc
 
----------- Forwarded message ---------
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Thu, Mar 28, 2024 at 1:20=E2=80=AFPM
-Subject: [Ms-nfs41-client-devel] ANN: NFSv4.1 filesystem client
-Windows driver binaries for Windows 10/11 for testing, 2024-03-28 ...
-To: <ms-nfs41-client-devel@lists.sourceforge.net>
-
-
-Hi!
-
-----
-
-I've created a set of test binaries for the NFSv4.1 filesystem client
-driver for Windows 10/11, based on
-https://github.com/kofemann/ms-nfs41-client (commit id
-#4c9528a5e9094cd80906c0e8af9785e1748b0a25, git bundle in tarball), for
-testing and feedback (download URL in "Download" section below).
-
-Please send comments, bugs, test reports, complaints etc. to the
-MailMan mailing list at
-https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-deve=
-l
-
-# 1. What is this ?
-NFSv4.1 client and filesystem driver for Windows 10/11
-
-# 2. Features:
-- Full NFSv4.1 protocol support
-- idmapper (mapping usernames and uid/gid values between server and
-    client)
-- Support for custom ports (NFSv4 defaults to TCP port 2049, this
-    client can use different ports per mount)
-- Support for nfs://-URL
-    * Why ? nfs://-URLs are crossplatform, portable and Character-Encoding
-      independent descriptions of NFSv4 server resources (exports).
-    - including custom ports and raw IPv6 addresses
-    - nfs://-URL conversion utility (/usr/bin/nfsurlconv) to convert
-        URLs, including non-ASCII/Unicode characters in mount path
-- Support ssh forwarding, e.g. mounting NFSv4 filesystems via ssh
-    tunnel
-- Support for long paths (up to 4096 bytes), no Windows MAXPATH limit
-- Unicode support
-- UNC paths
-    - IPv6 support in UNC paths
-    - /sbin/nfs_mount prints UNC paths in Win32+Cygwin formats
-    - Cygwin bash+ksh93 support UNC paths, e.g.
-      cd //derfwnb4966@2049/nfs4/bigdisk/mysqldb4/
-- IPv6 support
-    - IPv6 address within '[', ']'
-      (will be converted to *.ipv6-literal.net)
-- Windows ACLs
-    - Win32 C:\Windows\system32\icacls.exe
-    - Cygwin /usr/bin/setfacl+/usr/bin/getfacl
-    - Windows Explorer ACL dialog
-- SFU/Cygwin support, including:
-    - uid/gid
-    - Cygwin symlinks
-- Software compatibility:
-    - Any NFSv4.1 server (Linux, Solaris, Illumos, FreeBSD, nfs4j,
-        ...)
-    - All tools from Cygwin/MinGW
-    - Visual Studio
-    - VMware Workstation (can use VMs hosted on NFSv4.1 filesystem)
-
-# 3. Requirements:
-- Windows 10 or Windows 11
-- Cygwin 3.5.1 (or 3.6.x-devel)
-    - Packages (required):
-        cygwin
-        cygwin-devel
-        cygrunsrv
-        cygutils
-        cygutils-extra
-        bash
-        bzip2
-        coreutils
-        getent
-        gdb
-        grep
-        hostname
-        less
-        libiconv
-        libiconv2
-        pax
-        pbzip2
-        procps-ng
-        sed
-        tar
-        time
-        util-linux
-        wget
-    - Packages (recommended):
-        libnfs (for /usr/bin/nfs-ls)
-        make
-        git
-        dos2unix
-
-# 4. Download:
-$ mkdir -p ~/download
-$ cd ~/download
-$ wget 'http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/t=
-esting/msnfs41client_cygwin_binaries_20240328_12h28m_git4c9528a.tar.bz2'
-$ openssl sha256
-"msnfs41client_cygwin_binaries_20240328_12h28m_git4c9528a.tar.bz2"
-SHA2-256(msnfs41client_cygwin_binaries_20240328_12h28m_git4c9528a.tar.bz2)=
-=3D
-ff683f954109f344403ce7f54830c36827984a1fc999460aa7054a97ca6ad473
-
-# 5. Installation (as "Administrator"):
-$ (cd / && tar -xf
-~/download/msnfs41client_cygwin_binaries_20240328_12h28m_git4c9528a.tar.bz2
-)
-$ /sbin/msnfs41client install
-<REBOOT>
-
-# 6. Deinstallation:
-$ (set -o xtrace ; cd / && tar -tf
-~/download/msnfs41client_cygwin_binaries_20240328_12h28m_git4c9528a.tar.bz2
-| while read i ; do [[ -f "$i" ]] && rm "$i" ; done)
-<REBOOT>
-
-# 7. Usage:
-# Run the NFSv4 client daemon:
-# - run this preferably as "Administrator", but this is not a requirement
-# - requires separate terminal
-$ /sbin/msnfs41client run_daemon
-
-# Mount a filesystem and use it
-$ /sbin/nfs_mount -o rw N 10.49.20.110:/net_tmpfs2
-Successfully mounted '10.49.20.110@2049' to drive 'N:'
-$ cd /cygdrive/n/
-$ ls -la
-total 4
-drwxrwxrwt 5 Unix_User+0      Unix_Group+0      100 Dec  7 14:17 .
-dr-xr-xr-x 1 roland_mainz     Kein                0 Dec 14 13:48 ..
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  80 Dec 12 16:24 10492030
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec 13 17:58 directory_=
-t
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec  7 11:01 test2
-
-# Unmount filesystem:
-$ cd ~ && /sbin/nfs_mount -d N:
-# OR
-$ cd ~
-$ net use N: /delete
-
-# List mounted NFSv4.1 filesystems:
-$ /sbin/nfs_mount
-
-# 8. Notes:
-- Idmapping (including uid/gid mapping) between NFSv4 client and
-  NFSv4 server works via /lib/msnfs41client/cygwin_idmapper.ksh,
-  which either uses builtin static data, or /usr/bin/getent passwd
-  and /usr/bin/getent group.
-  As getent uses the configured name services it should work with
-  LDAP too.
-  This is still work-in-progress, with the goal that both NFSv4
-  client and server can use different uid/gid numeric values for
-  client and server side.
-- UNC paths are supported, after successful mounting /sbin/nfs_mount
-  will list the paths in Cygwin UNC format.
-- SIDs work, users with valid Windows accounts (see Cygwin idmapping
-  above get their SIDs, unknown users with valid uid/gid values get
-  Unix_User+id/Unix_Group+id SIDs, and all others are mapped
-  to nobody/nogroup SIDs.
-- Workflow for nfs://-URLs:
-  - Create nfs://-URLs with nfsurlconv, read $ nfsurlconv --man # for usage
-  - pass URL to nfs_mount.exe like this:
-    $ nfs_mount -o sec=3Dsys,rw 'L' nfs://derfwnb4966_ipv4//bigdisk #
-- Cygwin symlinks are supported, but might require
-  $ fsutil behavior set SymlinkEvaluation L2L:1 R2R:1 L2R:1 R2L:1 #.
-  This includes symlinks to UNC paths, e.g. as Admin
-  $ cmd /c 'mklink /d c:\home\rmainz
-\\derfwpc5131_ipv6@2049\nfs4\export\home2\rmainz' #
-  and then $ cd /cygdrive/c/home/rmainz/ # should work
-- performance: All binaries are build without any optimisation, so
-  the filesystem is much slower than it could be.
-- bad performance due to Windows Defender AntiVirus:
-  Option 1:
-  # disable Windows defender realtime monitoring
-  # (requires Admin shell)
-  powershell -Command 'Set-MpPreference -DisableRealtimeMonitoring 1'
-  Option 2:
-  Add "nfsd.exe", "nfsd_debug.exe", "ksh93.exe", "bash.exe",
-  "git.exe" and other offending commands to the process name
-  whitelist.
-- performance: Use vmxnet3 in VMware to improve performance
-- ACLs are supported via the normal Windows ACL tools, but on
-  Linux require the nfs4_getfacl/nfs4_setfacl utilities to see the
-  data.
-  * Example 1 (assuming that Windows, Linux NFSv4 client and NFSv4
-  server have a user "siegfried_wulsch"):
-  - On Windows on a NFSv4 filesystem:
-  $ icacls myhorribledata.txt /grant "siegfried_wulsch:WD" #
-  - On Linux NFSv4 clients you will then see this:
-  ---- snip ----
-  $ nfs4_getfacl myhorribledata.txt
-  A::OWNER@:rwatTcCy
-  A::siegfried_wulsch@global.loc:rwatcy
-  A::GROUP@:rtcy
-  A::EVERYONE@:rtcy
-  ---- snip ----
-  * Example 2 (assuming that Windows, Linux NFSv4 client and NFSv4
-  server have a group "cygwingrp2"):
-  - On Windows on a NFSv4 filesystem:
-  $ icacls myhorribledata.txt /grant "cygwingrp2:(WDAC)" /t /c #
-  - On Linux NFSv4 clients you will then see this:
-  ---- snip ----
-  $ nfs4_getfacl myhorribledata.txt
-  A::OWNER@:rwatTcCy
-  A::GROUP@:rtcy
-  A:g:cygwingrp2@global.loc:rtcy
-  A::EVERYONE@:rtcy
-  ---- snip ----
-- nfs_mount.exe vs. reserved ports:
-  By default the NFSv4 server on Solaris, Illumos, Linux
-  etc. only accepts connections if the NFSv4 client uses a
-  "privileged (TCP) port", i.e. using a TCP port number < 1024.
-  If nfsd.exe/nfsd_debug.exe is started without the Windows priviledge
-  to use reserved ports, then a mount attempt can fail.
-  This can be worked around on the NFSv4 server side - on Linux using
-  the "insecure" export option in  /etc/exports and on Solaris/Illumos
-  using export option "resvport" (see nfs(5)).
-
-# 9. Known issues:
-- The kernel driver ("nfs41_driver.sys") does not yet have a
-  cryptographic signature for SecureBoot - which means it will only
-  work if SecureBoot is turned off (otherwise
-  $ /sbin/msnfs41client install # will FAIL!)
-- If nfsd_debug.exe crashes or gets killed, the only safe way
-  to run it again requires a reboot
-- LDAP support does not work yet
-- Attribute caching is too aggressive
-- Caching in the kernel does not always work. For example
-  $ tail -f ... # does not not see new data.
-  Workaround: Use GNU tail'S $ tail --follow=3Dname ... #
-  Working theory is that this is related to FCB caching, see
-  |FCB_STATE_FILESIZECACHEING_ENABLED|, as the nfs41_driver.sys
-  kernel module does not see the |stat()| syscalls. But $ tail -f ... #
-  always works for a momemnt if something else opens the same file.
-- Unmounting and then mounting the same filesystem causes issues
-  as the name cache in nfsd*.exe is not flushed on umount, including
-  leftover delegations.
-- krb5p security with AES keys do not work against the linux server,
-  as it does not support gss krb5 v2 tokens with rotated data.
-- When recovering opens and locks outside of the server's grace
-  period, client does not check whether the file has been modified
-  by another client.
-- If nfsd.exe is restarted while a drive is mapped, that drive needs
-  to be remounted before further use.
-- Does not allow renaming a file on top of an existing open file.
-  Connectathon's special test op_ren has been commented out.
-- Extended attributes are supported with some limitations:
-  a) the server must support NFS Named Attributes,
-  b) the order of listings cannot be guaranteed by NFS, and
-  c) the EaSize field cannot be reported for directory queries of
-  FileBothDirInformation, FileFullDirInfo, or FileIdFullDirInfo.
-
-# 10. Notes for troubleshooting && finding bugs/debugging:
-- nfsd_debug.exe has the -d option to set a level for debug
-  output.
-  Edit /sbin/msnfs41client to set the "-d" option.
-- The "msnfs41client" script has the option "watch_kernel_debuglog"
-  to get the debug output of the kernel module.
-  Run as Admin: $ /sbin/msnfs41client watch_kernel_debuglog #
-  Currently requires DebugView
-  (https://learn.microsoft.com/en-gb/sysinternals/downloads/debugview)
-  to be installed.
-- Watching network traffic:
-  WireShark has a command line tool called "tshark", which can be used
-  to see NFSv4 traffic. As NFSv4 uses RPC you have to filter for RPC,
-  and the RPC filter automatically identifies NFSv4 traffic on it's RPC
-  id.
-  Example for Windows:
-  (for NFSv4 default TCP port "2049", replace "2049" with the
-  desired port if you use a custom port ; use "ipconfig" to find the
-  correct interface name, in this case "Ethernet0"):
-  ---- snip ----
-  $ nfsv4port=3D2049 ; /cygdrive/c/Program\ Files/Wireshark/tshark \
-    -f "port $nfsv4port" -d "tcp.port=3D=3D${nfsv4port},rpc" -i Ethernet0
-  ---- snip ----
-  If you are running inside a VMware VM on a Linux host it
-  might require $ chmod a+rw /dev/vmnet0 # on VMware host, so that
-  the VM can use "Promiscuous Mode".
-
-# 11. Source code:
-- Source code can be obtained from https://github.com/kofemann/ms-nfs41-cli=
-ent
-- Build instructions can be found at
-  https://github.com/kofemann/ms-nfs41-client/tree/master/cygwin
-
-----
-
-Bye,
-Roland
 --
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /=3D=3D\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
+$ git bisect good
+Bisecting: 3935 revisions left to test after this (roughly 12 steps)
+[e4f1b8202fb59c56a3de7642d50326923670513f] Merge tag 'for_linus' of git://=
+git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mst/vhost
 
+--
+$ git bisect bad
+Bisecting: 2014 revisions left to test after this (roughly 11 steps)
+[e0152e7481c6c63764d6ea8ee41af5cf9dfac5e9] Merge tag 'riscv-for-linus-6=2E=
+6-mw1' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/riscv/linux
 
-_______________________________________________
-Ms-nfs41-client-devel mailing list
-Ms-nfs41-client-devel@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
+--
+$ git bisect bad
+Bisecting: 975 revisions left to test after this (roughly 10 steps)
+[4a3b1007eeb26b2bb7ae4d734cc8577463325165] Merge tag 'pinctrl-v6=2E6-1' of=
+ git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+
+--
+$ git bisect good
+Bisecting: 476 revisions left to test after this (roughly 9 steps)
+[4debf77169ee459c46ec70e13dc503bc25efd7d2] Merge tag 'for-linus-iommufd' o=
+f git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/jgg/iommufd
+
+--
+$ git bisect good
+Bisecting: 237 revisions left to test after this (roughly 8 steps)
+[e7e9423db459423d3dcb367217553ad9ededadc9] Merge tag 'v6=2E6-vfs=2Esuper=
+=2Efixes=2E2' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/vfs/vfs
+
+> Gesendet: Montag, den 25=2E03=2E2024 um 21:36 Uhr
+> Von: "Chuck Lever III" <chuck=2Elever@oracle=2Ecom>
+> An: "Jan Schunk" <scpcom@gmx=2Ede>
+> Cc: "Jeff Layton" <jlayton@kernel=2Eorg>, "Neil Brown" <neilb@suse=2Ede>=
+, "Olga Kornievskaia" <kolga@netapp=2Ecom>, "Dai Ngo" <dai=2Engo@oracle=2Ec=
+om>, "Tom Talpey" <tom@talpey=2Ecom>, "Linux NFS Mailing List" <linux-nfs@v=
+ger=2Ekernel=2Eorg>, "linux-kernel@vger=2Ekernel=2Eorg" <linux-kernel@vger=
+=2Ekernel=2Eorg>
+> Betreff: Re: [External] : nfsd: memory leak when client does many file o=
+perations
+>=20
+>=20
+>=20
+> > On Mar 25, 2024, at 4:26=E2=80=AFPM, Jan Schunk <scpcom@gmx=2Ede> wrot=
+e:
+> >=20
+> > I am building my own kernels, but I never tried kmemleak, is this just=
+ a Kconfig option?
+>=20
+>   Location:
+>     -> Kernel hacking
+>       -> Memory Debugging
+> (1)     -> Kernel memory leak detector (DEBUG_KMEMLEAK [=3Dn])
+>=20
+>=20
+> > What do you mean with "bisect between v6=2E3 and v6=2E4"?
+>=20
+> After you "git clone" the kernel source:
+>=20
+> $ git bisect start v6=2E4 v6=2E3
+>=20
+> Build the kernel and test=2E If the test fails:
+>=20
+> $ cd <your kernel source tree>; git bisect bad
+>=20
+> If the test succeeds:
+>=20
+> $ cd <your kernel source tree>; git bisect good
+>=20
+> Rebuild and try again until it lands on the first broken commit=2E
+>=20
+>=20
+> > Everything including v6=2E4 is OK, the problem starts at v6=2E5=2E
+>=20
+> I misremembered=2E Use "$ git bisect start v6=2E5 v6=2E4" then=2E
+>=20
+>=20
+> > I also looked at some code already but there are huge changes to mm th=
+at happened in v6=2E5 and v6=2E6 so for me it is heavy to compare it with o=
+lder versions to find one or more commits that may cause the issue=2E
+>=20
+> Bisection is a mechanical test-based process=2E You don't need
+> to look at code until you've reached the first bad commit=2E
+>=20
+> --
+> Chuck Lever
+>=20
+>
 
