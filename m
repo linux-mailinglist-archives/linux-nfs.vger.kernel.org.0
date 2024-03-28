@@ -1,439 +1,336 @@
-Return-Path: <linux-nfs+bounces-2544-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E5CD890621
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 17:48:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C396890813
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 19:15:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 313E21C260A5
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 16:48:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 939401F2209D
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 18:15:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5656913F426;
-	Thu, 28 Mar 2024 16:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC2652F62;
+	Thu, 28 Mar 2024 18:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0bZP8uK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UMej1rDW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ha6u+6nU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7A413EFF6
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 16:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643955; cv=none; b=Q2/CaOmllgTzrzjmO9ZA5dIEtfnfGPpEZxT1y4ik3qAdkG7fjV+jH0YO9hYcQRuJ88g4NB5cx0I5/zhAW5QQk3eG36vPfV+oR8pqn0daoGEG2t2suONK6iZyguduzOiznbmH8eKqKJhonsZIeDrz6yq/tCjOjFLR3/EsWpNm3A0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643955; c=relaxed/simple;
-	bh=/05oRYXuuD62BOWpkiLmjztCrdnWPcumQgd+9QYa1e4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mhsnx9ONosz05L1FFTJ9Vs4mf0RrfCec7IHsGutTmFPnc48fapUdL9oznvCz8L7IbHfMJRQ3f0/rjxERP/mqgcs5u6sFfaYKKyd3HuwZxUQToLoLwIWAmMb0etRhk+/E1+Ke4r8IKULBFJAKEZxqb/AO7xu/0nYWCfxSRGKxZjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P0bZP8uK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=clNmVAkUKGd8Z01ZlWkYBIz9mR2bmkgLzFIGVS5d4sY=;
-	b=P0bZP8uKTkT+7RRDrbOLvUlSmtPPsC+uEmZ9h6/472MemOVef0+My/uf09Rllx2BN/kVHY
-	QxHQ/zwLh/Cd2hGPuy7iooSqbOntXdvmMmulwKDzHL0Se7jhp/SHAe7kk/XQRGXPl8d0RK
-	BgTe2saWeuMh43WBmZpgjnAG96sHYsk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-ZlAnjQNcP7WbHuSb6f6JGQ-1; Thu, 28 Mar 2024 12:39:09 -0400
-X-MC-Unique: ZlAnjQNcP7WbHuSb6f6JGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A36488007A2;
-	Thu, 28 Mar 2024 16:39:07 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 98F80C423E0;
-	Thu, 28 Mar 2024 16:39:04 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 26/26] netfs, afs: Use writeback retry to deal with alternate keys
-Date: Thu, 28 Mar 2024 16:34:18 +0000
-Message-ID: <20240328163424.2781320-27-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC951879
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 18:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711649700; cv=fail; b=qyOjvxCNk53z3U+buFb/1XECjnxF++9zTHEQzqGVThwoW29KG9XDrCIgPttNRpoP1lJVGir8oT31lsBZldbP3kKAeeqQVoARs2wEY4p1BguvHqTVikDC5aNP7A61k4DersrKmx12UEjjs/7g+HAdySinMiAwklOEcK2oVSHpulc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711649700; c=relaxed/simple;
+	bh=bQ0ec7wcopZ3zkK/fop55ttuGjyDAxaJ9oQBSqbsinM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YSzEFjnwzTK2dqVUXcG0Vh09bcFweMCZPEB1ZAf6dY9rO4Vp7Vq+/PRIn/eJNgPxsdHbOjfOYRNjFmIwevlFxoic9nEjpwIqDxlPY5zW0MayDaPIgQA3f69SB3lPA9sXPEYxdjyMJ+a1DzqBdaNUxJGrSN27k0MYzxA+gisuTOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UMej1rDW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ha6u+6nU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42SHx2Uf017084;
+	Thu, 28 Mar 2024 18:14:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=ZiLCiF3UhGIdg7E9e+/qE9ujWlL1HniqMwHBgXg8t08=;
+ b=UMej1rDWwIKk268V/K7hNVTlVI/3bXIGyGrrlPp2RmCzXASiHRUwGh4hlcLDMhRNK6QC
+ OdclhBI8XC2Od0NONmONFtxEZDewE+zjpcrKwlewC4k3amXl2LH7CCVhbuh7dhlaOc96
+ wrXwXMhx3gmgkzi4P0ibV/lJjEPiZMqp3SnfNJDGRNCfWmI1RFvFufO3IpPO656MZ4ls
+ IXHfzM1WsR6TZcgVFBN+1O7yD52kRhfkmdONIC7+EDYWr0GUskHxXfw/uSwsDHTsxK/H
+ W0j4FItvHaCxSXR1gJnvLqtcR2Du6i9Sp5IiOIIkCbP5n5Rk4snV+5CNOBjk8f3VS30Q Qw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x1pybt7nb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 18:14:48 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42SI0HII013274;
+	Thu, 28 Mar 2024 18:14:48 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nhaa3sd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 18:14:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jPdxLmLYYT7KDbEuWuFyrDMQ62kvfUnmwk+1TkdOGkSLVGrHVNwShsM6QAArdDVsLWogYrbVcoxuyhaqwpr9BZG15eF0CgMZrypJhv9F1742rYSh+XV/o9tEJRa1+BgNhTLyiCHPVo6dDvlm2NUgVw67kNQNIAdYIgmxD6fiuR2I8KDJFQCjLsZ+li1iiCuUgpdNT+H6/HgGg9pIpG+jFqgy7nQb9h9yHAbzh0bAOqAdS0aPwtgpQcif5BXJFHK9CDfNau+zpaY34g19kSF/gQ5e/lrjOO/4pBktPXZm5jvg7JkN6vcoYAWYu4rDetxlLVPPA1Mwfn8SmnE9heUDyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZiLCiF3UhGIdg7E9e+/qE9ujWlL1HniqMwHBgXg8t08=;
+ b=E7V1CWyiMV1TNFS+Lo50tXSHFqP7x8n18TtVY4gWosIfvDREtOsEDb0asO/F2DobLAnax8Vdx9JltB7HGJIwM8Au3BtiHDsY7dpN2gaOZlMwWFquMupzkt0Yd9bgWb4QO0ANvK6vYA/VqkKm32f8Xkz3Lq0szxALqsb5FUcqN7weFWz3H8LvZ3DCwhcJiSnqkekOehOexvjec0V/etTh0LuRxwBPaNcp5kuXKioaQ7Zpc+ENjSVfNzsrT3Y6yDmlQUCzPkxrqrpU1124TRbt7JAyWdD3Rl+Ok68a8gPJmoV7w7eB7PKc5ovfu911DTPGimExc3mfOv47MiT70+HIRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZiLCiF3UhGIdg7E9e+/qE9ujWlL1HniqMwHBgXg8t08=;
+ b=ha6u+6nU7/tZS+nceyCYz6jCQxgWGNbmr7bGmQ5TLphcU9VQORsj7ahuo1cGyt+cjpMbbo8lVREDy5/mElH1BSJc6jjMiCTZ27WiRD5xubRGQN1+uOTaNNDI7mi9LzVa39HBPtqEcWPgJLloTGYaQd5D8vl2h/mbnLK5Bcl5hAU=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by SJ0PR10MB5766.namprd10.prod.outlook.com (2603:10b6:a03:3ee::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Thu, 28 Mar
+ 2024 18:14:45 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::b7ab:75e7:2cf9:efc3]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::b7ab:75e7:2cf9:efc3%3]) with mapi id 15.20.7409.038; Thu, 28 Mar 2024
+ 18:14:45 +0000
+Message-ID: <88fac8af-c194-452b-94eb-7658b9056246@oracle.com>
+Date: Thu, 28 Mar 2024 11:14:43 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] NFSD: cancel CB_RECALL_ANY call when nfs4_client is
+ about to be destroyed
+Content-Language: en-US
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: jlayton@kernel.org, linux-nfs@vger.kernel.org
+References: <1711476809-26248-1-git-send-email-dai.ngo@oracle.com>
+ <ZgMToHNkkGEHNb/y@tissot.1015granger.net>
+ <69914825-e9d5-4859-a5a8-60d17e8e8bf6@oracle.com>
+ <ZgV5zwR0q/vjBAtI@tissot.1015granger.net>
+From: Dai Ngo <dai.ngo@oracle.com>
+In-Reply-To: <ZgV5zwR0q/vjBAtI@tissot.1015granger.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR01CA0031.prod.exchangelabs.com (2603:10b6:a02:80::44)
+ To BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|SJ0PR10MB5766:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b337a49-e4f0-449a-4b0f-08dc4f52f270
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	p5KZ0xUPQv+Ef4reX4l51C4Cjlox41p12vRWFQLhIPuqUUZLeo1g4Q0wRLHWaHKhJ6cPDMoDAX/kymBgoyBG3Ie2fNl43AE8TE6kwX9U9yulP2kGbHpbBeC6QLm6ZhVQb6iA0UuDE0Uz3Df3pkWgUQjwp0M75ngv/dGTE2LAUIPtuba4O+dknybM0nRxm1Y6AJcwwFQmANOqshyQQTY2HS34FPhNUuG4lBDZR42DEi5eTvu74w93zqIIWWycgA+HdOmBDs6Y98gi31mGm3vsj3iMUBIfbsyZeP4fCEmi4EHITDT6llXp2RQkV1rrVOcRM9IKWznd/jSKnEo2n6G8UMiI5WRsCg92VYap5zzekI0BEeyO5yrph8JNcXKSWut3mVQN7KfRk1ht+RtTLq7uLNjmnoIBtaQiZyuu733FRqupcaLcm6YGPKLTjjXiGbZLeq3KqnjZCGE0ceuIXmZfPxbrcsUdWsLoB0L9/XrQ97x8PBzcwes/HS0FdaULA1LyT3M3jd9nCKWhzG6ca6dFpb3HPAlsjwJe9odw4vuk6lQCDIerd4e5Bp5eKibSHL324xm62JEIW+M7lS6Zhr8P4MIdYd+/FgtrxIxJF3y/6E5lAOMxGnOZMrbFUlHSwwkITPwTj+2G/NEn9j4m6BAUCmqq7Zlb5yNu8HPzqm075cg=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?dnpkaFJLL2JCZzhuNHFNc0s2ZXBXUnBkL3hRempHUXhUSHVxb0FQbEU3aHl0?=
+ =?utf-8?B?T1BkL1B6S1p1bk5kN2ZKVkxLbyt1RU0vbEcwcTNaZmJ2MVF0Szc5UGQyY1A1?=
+ =?utf-8?B?SklRM1c2NGRrSTh4L1JiZWhBbTVqTUhhRExQT093dXo3OTFDQ25mcW9OQlh3?=
+ =?utf-8?B?L0xMMW1BcmdPeVZtZHU4SGErK0Y4R2dTQ09aRmpETXJiVHRneHNZSmRZV0Er?=
+ =?utf-8?B?QTFmakhKYXU5d3BMcndYdjVNd3JxK3hER3QwQURvUWVWNVppK3BxYzIrTXN2?=
+ =?utf-8?B?Z2p3MmJsaXlpeERGczhEUDBwQ0lrZjg5K1RiK1p1VGNvTE1vTFErSTJvN1FX?=
+ =?utf-8?B?K28xdVhxazM0VVYzbURJYW02SlhSRTg0ajJ6eGFjUXBlVmpWU3JVTHoxV3NX?=
+ =?utf-8?B?TGtuT0hoWmdVUmJXVk1ZNW11OHFrQU1XUDVZaGtrSjBrU3NxaktoalpTU2NQ?=
+ =?utf-8?B?MnBCak1PaUJveFE5YXFwclF6dStJZStEaXZwMW1URFNOMWVKMmZ4bjdFSmMv?=
+ =?utf-8?B?d2FTTFNxd2pTTytzM2dLc0JzVXVXM25ncHZlUElpNnk5cmZoRERndjNrSERm?=
+ =?utf-8?B?KzFoNW5zSk9seE5KRWVUcU5BNEl1VUNrT0dERkhMRmRRVTBDckpEOEM1U1c1?=
+ =?utf-8?B?eW1aRGVaNXdxT3JTdGRtRHZzajB5M0U4TlZXeCtBdE4zbm4vZmY3TGtrYmhp?=
+ =?utf-8?B?SDMyRWxFaThqL2FZUWJSZjVicHd3TUpSdTNLWjNlajF5ek1hL3BVdFF3MHpD?=
+ =?utf-8?B?VlJEQnFWU1JSQUQ1UzN3dUwrMURiVUtwRUNyZkhIM2lCQURYb2l6WjVTVDV3?=
+ =?utf-8?B?dmg3OG5FWFFxRTdMbEZLMjFZTDZwS1VrQXpQYVpFbU43OUV2Q3piSm5GcUJE?=
+ =?utf-8?B?MUtBTDRlSWJBQkNFb0xTSUphdFZ2bGwrd0l1MEg4T2lhdUF5Y2xYdWV6Y2lZ?=
+ =?utf-8?B?WE9zV0hPTGswdFJRVWhyVVpHOGttOUROaGtGSUg5SWNYUDdRZldBTEQ0eEZa?=
+ =?utf-8?B?N3lqYXZ5WENWTWszVVdiamFsN1JhWjdsL09wN2pkU3RWYmFYLzFHOE1PajR1?=
+ =?utf-8?B?QnVQRElMVUJaT1dVMC80RndNSlFLVDZIM0dzVDQ4bEhrVXJjNVk5TXpjSFNi?=
+ =?utf-8?B?YkdvOTBPaFgvSlR5YStuTkRvcS9QcHFWdEhNZ2JPVFh2Y0xiYVl1czRZOXg5?=
+ =?utf-8?B?S2I0M3dia1kzZzZkQmtYcW90RE51MEUwMHlFNUR2eUZPb2Z6QUJSbHZ1SVZR?=
+ =?utf-8?B?VU5HdytkVUs2eWJ0MEpUYlNLTzVBdW1ObDY2OE9mS010SXMzMjlvemRBYkdh?=
+ =?utf-8?B?V0tRdUhwK2NySUtTMkxBQjJWTkpWOTVhQUZpdFpkdGhPQWExNyt4Umh1V1FI?=
+ =?utf-8?B?MFVrdDRPMThFcWRrTDExTFpyUEFrQlQ5dXM4Z1FrTEwxcytkTTNLV3p1Ymti?=
+ =?utf-8?B?NVpyTGRETVBjOW1Yd0tMT3RVcjFDZkJqMERWR2tFcXhDNG0vRW9MY0lROVIy?=
+ =?utf-8?B?U0lLWW1CUzRtc3ZQWTZEdVBCaHZRRVdMTE9xTS9pZWNsTGZabXBwM2F3L0M3?=
+ =?utf-8?B?UWFBOGVDYURLOFhkbHpmRU90aWo3VWtmbkFhWklqUjlCM2g3WW1XcndIMHAv?=
+ =?utf-8?B?SnNKbG9rZWNSZWFScnlaVXd0ZkdJakJENHJOdlErQ3c4T09IMy9MRTNZdjBI?=
+ =?utf-8?B?Z1pmYjN5Ti9UWkQzMHJwa1VqTmIyUW84Z2JEUzRPSjZXODh3Nm5pNHdwREFn?=
+ =?utf-8?B?UWtOSGFRUFluSkN3b2ZNTUVDNElGZ3huY1V0YzNQZzhLZVRZY1g1V1NtQVFT?=
+ =?utf-8?B?c0ZJVWpJdE5KeWpYREFISGFKL0lDYlpHWGpTQmlPNVhRU3h0N2paWEh0aFMr?=
+ =?utf-8?B?cnhmSElxRzYxNWJPODNoL3R5aG1CclZ4L0JWTTV2eTF5WExaR3R1bkphQXdt?=
+ =?utf-8?B?U202d0ZqakZVZzNLMGVzcmhOakVpeUZva09xQTBzMXBvWmlLeVpQMlFETXQv?=
+ =?utf-8?B?YWI3NUc3c1l1bXp6UFNXa3pwYXlGK2hhL2N4dysvVHVKbDBVVFlvaGRkZjR6?=
+ =?utf-8?B?cUo3blozK2hBNitwRGpwbkxRMnBaMlRlMUFDU1d6SGd6WVh2dGtpU291OEtG?=
+ =?utf-8?Q?oeIbKDtzlXXQgy3B8yn1I3Dpf?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	lUMBLJy7oAevEGwrLrF5O3aya73+N5US0SZF3Q8L5JQSznAb66I+I7hy4a8Ct34gWp36UKEyc46Go+66kNUdRShdkaMKjvxFjc9mrh6OvqF4be5t1tuRyuWGFtjFfesZAAsuyJSzSQ9uzfs+Ed9B07Zj5M8VJ16lTxp7XQ5s0p1n/WQ+2CMNfmX6V5YIvJRadznIcMbNFOPmnqUHvch2nf/909sDpC9X9I7kJ+dj7rSqaNOT6PJjxJoWNZzXUfFnMcC7+dmss/gjPQIHrWz5+zYVYYvNWAgZhvTmMr7xfmZkHDSZ3pG0odhr6Enr/30uyd1/9OKfV9IJ9fR76K9TkQ/BLUkM4r0NVPJlSuQkirzeLaTHChGfRHVqWxRHL4CS8nL8aMzmoKlaJf2dI/Q5YklHF55yQpwzxMDXUiDkPq3CDkvZ+duIZ1oN8djB8x5B2Z/77SllTwVpvehBtBWTGvF9Ek6Ymh4J17ScWjPKSUuTN337+njvViYY3mnk72Ca4QpvwFatutRiS9AEtc54ZePTXfqfl9mb9HIV8kXyv9p0pbn64qZq30Hf8TUPiJD4UwmR3FRAYpWR0UHwwwvI/i7JFb+5RL/U3K8/UFdkrnQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b337a49-e4f0-449a-4b0f-08dc4f52f270
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 18:14:45.4252
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CznZoJySQWqin4zBtCyil5F27LKfUDgYu3EUOcbbOcYQhNQutuqU7AqYAcTor5gCVCKaQ/zj1KCL0CH5CMJVEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5766
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403280127
+X-Proofpoint-GUID: H9MMsVbuaYMCbp4jAY_U1Y-vJxhaAe5G
+X-Proofpoint-ORIG-GUID: H9MMsVbuaYMCbp4jAY_U1Y-vJxhaAe5G
 
-Use a hook in the new writeback code's retry algorithm to rotate the keys
-once all the outstanding subreqs have failed rather than doing it
-separately on each subreq.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/afs/file.c            |   1 +
- fs/afs/internal.h        |   1 +
- fs/afs/write.c           | 175 +++++++++++++++++++--------------------
- fs/netfs/write_collect.c |   9 +-
- include/linux/netfs.h    |   2 +
- 5 files changed, 96 insertions(+), 92 deletions(-)
+On 3/28/24 7:08 AM, Chuck Lever wrote:
+> On Wed, Mar 27, 2024 at 06:09:28PM -0700, Dai Ngo wrote:
+>> On 3/26/24 11:27 AM, Chuck Lever wrote:
+>>> On Tue, Mar 26, 2024 at 11:13:29AM -0700, Dai Ngo wrote:
+>>>> Currently when a nfs4_client is destroyed we wait for the cb_recall_any
+>>>> callback to complete before proceed. This adds unnecessary delay to the
+>>>> __destroy_client call if there is problem communicating with the client.
+>>> By "unnecessary delay" do you mean only the seven-second RPC
+>>> retransmit timeout, or is there something else?
+>> when the client network interface is down, the RPC task takes ~9s to
+>> send the callback, waits for the reply and gets ETIMEDOUT. This process
+>> repeats in a loop with the same RPC task before being stopped by
+>> rpc_shutdown_client after client lease expires.
+> I'll have to review this code again, but rpc_shutdown_client
+> should cause these RPCs to terminate immediately and safely. Can't
+> we use that?
 
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 8f983e3ecae7..c3f0c45ae9a9 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -368,6 +368,7 @@ static int afs_check_write_begin(struct file *file, loff_t pos, unsigned len,
- static void afs_free_request(struct netfs_io_request *rreq)
- {
- 	key_put(rreq->netfs_priv);
-+	afs_put_wb_key(rreq->netfs_priv2);
- }
- 
- static void afs_update_i_size(struct inode *inode, loff_t new_i_size)
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 887245f9336d..6e1d3c4daf72 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1601,6 +1601,7 @@ extern int afs_check_volume_status(struct afs_volume *, struct afs_operation *);
- void afs_prepare_write(struct netfs_io_subrequest *subreq);
- void afs_issue_write(struct netfs_io_subrequest *subreq);
- void afs_begin_writeback(struct netfs_io_request *wreq);
-+void afs_retry_request(struct netfs_io_request *wreq, struct netfs_io_stream *stream);
- extern int afs_writepages(struct address_space *, struct writeback_control *);
- extern int afs_fsync(struct file *, loff_t, loff_t, int);
- extern vm_fault_t afs_page_mkwrite(struct vm_fault *vmf);
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 6ef7d4cbc008..838db2e94388 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -29,43 +29,39 @@ static void afs_pages_written_back(struct afs_vnode *vnode, loff_t start, unsign
- 
- /*
-  * Find a key to use for the writeback.  We cached the keys used to author the
-- * writes on the vnode.  *_wbk will contain the last writeback key used or NULL
-- * and we need to start from there if it's set.
-+ * writes on the vnode.  wreq->netfs_priv2 will contain the last writeback key
-+ * record used or NULL and we need to start from there if it's set.
-+ * wreq->netfs_priv will be set to the key itself or NULL.
-  */
--static int afs_get_writeback_key(struct afs_vnode *vnode,
--				 struct afs_wb_key **_wbk)
-+static void afs_get_writeback_key(struct netfs_io_request *wreq)
- {
--	struct afs_wb_key *wbk = NULL;
--	struct list_head *p;
--	int ret = -ENOKEY, ret2;
-+	struct afs_wb_key *wbk, *old = wreq->netfs_priv2;
-+	struct afs_vnode *vnode = AFS_FS_I(wreq->inode);
-+
-+	key_put(wreq->netfs_priv);
-+	wreq->netfs_priv = NULL;
-+	wreq->netfs_priv2 = NULL;
- 
- 	spin_lock(&vnode->wb_lock);
--	if (*_wbk)
--		p = (*_wbk)->vnode_link.next;
-+	if (old)
-+		wbk = list_next_entry(old, vnode_link);
- 	else
--		p = vnode->wb_keys.next;
-+		wbk = list_first_entry(&vnode->wb_keys, struct afs_wb_key, vnode_link);
- 
--	while (p != &vnode->wb_keys) {
--		wbk = list_entry(p, struct afs_wb_key, vnode_link);
-+	list_for_each_entry_from(wbk, &vnode->wb_keys, vnode_link) {
- 		_debug("wbk %u", key_serial(wbk->key));
--		ret2 = key_validate(wbk->key);
--		if (ret2 == 0) {
-+		if (key_validate(wbk->key) == 0) {
- 			refcount_inc(&wbk->usage);
-+			wreq->netfs_priv = key_get(wbk->key);
-+			wreq->netfs_priv2 = wbk;
- 			_debug("USE WB KEY %u", key_serial(wbk->key));
- 			break;
- 		}
--
--		wbk = NULL;
--		if (ret == -ENOKEY)
--			ret = ret2;
--		p = p->next;
- 	}
- 
- 	spin_unlock(&vnode->wb_lock);
--	if (*_wbk)
--		afs_put_wb_key(*_wbk);
--	*_wbk = wbk;
--	return 0;
-+
-+	afs_put_wb_key(old);
- }
- 
- static void afs_store_data_success(struct afs_operation *op)
-@@ -88,72 +84,83 @@ static const struct afs_operation_ops afs_store_data_operation = {
- };
- 
- /*
-- * write to a file
-+ * Prepare a subrequest to write to the server.  This sets the max_len
-+ * parameter.
-  */
--static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t pos)
-+void afs_prepare_write(struct netfs_io_subrequest *subreq)
-+{
-+	//if (test_bit(NETFS_SREQ_RETRYING, &subreq->flags))
-+	//	subreq->max_len = 512 * 1024;
-+	//else
-+	subreq->max_len = 256 * 1024 * 1024;
-+}
-+
-+/*
-+ * Issue a subrequest to write to the server.
-+ */
-+void afs_issue_write(struct netfs_io_subrequest *subreq)
- {
-+	struct netfs_io_request *wreq = subreq->rreq;
- 	struct afs_operation *op;
--	struct afs_wb_key *wbk = NULL;
--	loff_t size = iov_iter_count(iter);
-+	struct afs_vnode *vnode = AFS_FS_I(wreq->inode);
-+	unsigned long long pos = subreq->start + subreq->transferred;
-+	size_t len = subreq->len - subreq->transferred;
- 	int ret = -ENOKEY;
- 
--	_enter("%s{%llx:%llu.%u},%llx,%llx",
-+	_enter("R=%x[%x],%s{%llx:%llu.%u},%llx,%zx",
-+	       wreq->debug_id, subreq->debug_index,
- 	       vnode->volume->name,
- 	       vnode->fid.vid,
- 	       vnode->fid.vnode,
- 	       vnode->fid.unique,
--	       size, pos);
-+	       pos, len);
- 
--	ret = afs_get_writeback_key(vnode, &wbk);
--	if (ret) {
--		_leave(" = %d [no keys]", ret);
--		return ret;
--	}
-+#if 0 // Error injection
-+	if (subreq->debug_index == 3)
-+		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
- 
--	op = afs_alloc_operation(wbk->key, vnode->volume);
--	if (IS_ERR(op)) {
--		afs_put_wb_key(wbk);
--		return -ENOMEM;
-+	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
-+		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
-+		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
- 	}
-+#endif
-+
-+	op = afs_alloc_operation(wreq->netfs_priv, vnode->volume);
-+	if (IS_ERR(op))
-+		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
- 
- 	afs_op_set_vnode(op, 0, vnode);
--	op->file[0].dv_delta = 1;
-+	op->file[0].dv_delta	= 1;
- 	op->file[0].modification = true;
--	op->store.pos = pos;
--	op->store.size = size;
--	op->flags |= AFS_OPERATION_UNINTR;
--	op->ops = &afs_store_data_operation;
-+	op->store.pos		= pos;
-+	op->store.size		= len,
-+	op->flags		|= AFS_OPERATION_UNINTR;
-+	op->ops			= &afs_store_data_operation;
- 
--try_next_key:
- 	afs_begin_vnode_operation(op);
- 
--	op->store.write_iter = iter;
--	op->store.i_size = max(pos + size, vnode->netfs.remote_i_size);
--	op->mtime = inode_get_mtime(&vnode->netfs.inode);
-+	op->store.write_iter	= &subreq->io_iter;
-+	op->store.i_size	= umax(pos + len, vnode->netfs.remote_i_size);
-+	op->mtime		= inode_get_mtime(&vnode->netfs.inode);
- 
- 	afs_wait_for_operation(op);
--
--	switch (afs_op_error(op)) {
-+	ret = afs_put_operation(op);
-+	switch (ret) {
- 	case -EACCES:
- 	case -EPERM:
- 	case -ENOKEY:
- 	case -EKEYEXPIRED:
- 	case -EKEYREJECTED:
- 	case -EKEYREVOKED:
--		_debug("next");
--
--		ret = afs_get_writeback_key(vnode, &wbk);
--		if (ret == 0) {
--			key_put(op->key);
--			op->key = key_get(wbk->key);
--			goto try_next_key;
--		}
-+		/* If there are more keys we can try, use the retry algorithm
-+		 * to rotate the keys.
-+		 */
-+		if (wreq->netfs_priv2)
-+			set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
- 		break;
- 	}
- 
--	afs_put_wb_key(wbk);
--	_leave(" = %d", afs_op_error(op));
--	return afs_put_operation(op);
-+	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
- }
- 
- /*
-@@ -162,44 +169,32 @@ static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t
-  */
- void afs_begin_writeback(struct netfs_io_request *wreq)
- {
-+	afs_get_writeback_key(wreq);
- 	wreq->io_streams[0].avail = true;
- }
- 
- /*
-- * Prepare a subrequest to write to the server.  This sets the max_len
-- * parameter.
-- */
--void afs_prepare_write(struct netfs_io_subrequest *subreq)
--{
--	//if (test_bit(NETFS_SREQ_RETRYING, &subreq->flags))
--	//	subreq->max_len = 512 * 1024;
--	//else
--	subreq->max_len = 256 * 1024 * 1024;
--}
--
--/*
-- * Issue a subrequest to write to the server.
-+ * Prepare to retry the writes in request.  Use this to try rotating the
-+ * available writeback keys.
-  */
--void afs_issue_write(struct netfs_io_subrequest *subreq)
-+void afs_retry_request(struct netfs_io_request *wreq, struct netfs_io_stream *stream)
- {
--	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
--	ssize_t ret;
--
--	_enter("%x[%x],%zx",
--	       subreq->rreq->debug_id, subreq->debug_index, subreq->io_iter.count);
--
--#if 0 // Error injection
--	if (subreq->debug_index == 3)
--		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
-+	struct netfs_io_subrequest *subreq =
-+		list_first_entry(&stream->subrequests,
-+				 struct netfs_io_subrequest, rreq_link);
- 
--	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
--		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
--		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
-+	switch (subreq->error) {
-+	case -EACCES:
-+	case -EPERM:
-+	case -ENOKEY:
-+	case -EKEYEXPIRED:
-+	case -EKEYREJECTED:
-+	case -EKEYREVOKED:
-+		afs_get_writeback_key(wreq);
-+		if (!wreq->netfs_priv)
-+			stream->failed = true;
-+		break;
- 	}
--#endif
--
--	ret = afs_store_data(vnode, &subreq->io_iter, subreq->start);
--	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
- }
- 
- /*
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index bea939ab0830..7ff15e2d7270 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -168,6 +168,13 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 
- 	_enter("R=%x[%x:]", wreq->debug_id, stream->stream_nr);
- 
-+	if (list_empty(&stream->subrequests))
-+		return;
-+
-+	if (stream->source == NETFS_UPLOAD_TO_SERVER &&
-+	    wreq->netfs_ops->retry_request)
-+		wreq->netfs_ops->retry_request(wreq, stream);
-+
- 	if (unlikely(stream->failed))
- 		return;
- 
-@@ -187,8 +194,6 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 		return;
- 	}
- 
--	if (list_empty(&stream->subrequests))
--		return;
- 	next = stream->subrequests.next;
- 
- 	do {
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index c2ba364041b0..298552f5122c 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -235,6 +235,7 @@ struct netfs_io_request {
- 	struct iov_iter		iter;		/* Unencrypted-side iterator */
- 	struct iov_iter		io_iter;	/* I/O (Encrypted-side) iterator */
- 	void			*netfs_priv;	/* Private data for the netfs */
-+	void			*netfs_priv2;	/* Private data for the netfs */
- 	struct bio_vec		*direct_bv;	/* DIO buffer list (when handling iovec-iter) */
- 	unsigned int		direct_bv_count; /* Number of elements in direct_bv[] */
- 	unsigned int		debug_id;
-@@ -306,6 +307,7 @@ struct netfs_request_ops {
- 	void (*begin_writeback)(struct netfs_io_request *wreq);
- 	void (*prepare_write)(struct netfs_io_subrequest *subreq);
- 	void (*issue_write)(struct netfs_io_subrequest *subreq);
-+	void (*retry_request)(struct netfs_io_request *wreq, struct netfs_io_stream *stream);
- 	void (*invalidate_cache)(struct netfs_io_request *wreq);
- };
- 
+rpc_shutdown_client works, it terminated the RPC call to stop the loop.
 
+>
+>
+>> It takes a total of about 1m20s before the CB_RECALL is terminated.
+>> For CB_RECALL_ANY and CB_OFFLOAD, this process gets in to a infinite
+>> loop since there is no delegation conflict and the client is allowed
+>> to stay in courtesy state.
+>>
+>> The loop happens because in nfsd4_cb_sequence_done if cb_seq_status
+>> is 1 (an RPC Reply was never received) it calls nfsd4_mark_cb_fault
+>> to set the NFSD4_CB_FAULT bit. It then sets cb_need_restart to true.
+>> When nfsd4_cb_release is called, it checks cb_need_restart bit and
+>> re-queues the work again.
+> Something in the sequence_done path should check if the server is
+> tearing down this callback connection. If it doesn't, that is a bug
+> IMO.
+
+I will check to see if TCP eventually closes the connection and
+notifies the RPC layer. From network traces, I see TCP stopped
+retrying after about 7 minutes. But even 7 minutes it's a long
+time we should not be hanging around waiting for it.
+
+>
+> Btw, have you checked NFSv4.0 behavior?
+
+Not yet.
+
+>
+>
+>>> I can see that a server shutdown might want to cancel these, but why
+>>> is this a problem when destroying an nfs4_client?
+>> Destroying an nfs4_client is called when the export is unmounted.
+> Ah, agreed. Thanks for reminding me.
+>
+>
+>> Cancelling these calls just make the process a bit quicker when there
+>> is problem with the client connection, or preventing the unmount to
+>> hang if there is problem at the workqueue and a callback work is
+>> pending there.
+>>
+>> For CB_RECALL, even if we wait for the call to complete the client
+>> won't be able to return any delegations since the nfs4_client is
+>> already been destroyed. It just serves as a notice to the client that
+>> there is a delegation conflict so it can take appropriate actions.
+>>
+>>>> This patch addresses this issue by cancelling the CB_RECALL_ANY call from
+>>>> the workqueue when the nfs4_client is about to be destroyed.
+>>> Does CB_OFFLOAD need similar treatment?
+>> Probably. The copy is already done anyway, this is just a notification.
+> It would be a nicer design if all outstanding callback RPCs could
+> be handled with one mechanism instead of building a separate
+> shutdown method for each operation type.
+
+cb_recall ties to the individual delegation and cb_recall_any ties
+to the nfs4_client. We can check the delegation and the client to
+see if there are pending callbacks. Currently cb_offload is stand-alone
+and not tied to anything, kzalloc the callback on the fly and send
+it out so there is no way to find out if there is pending callback.
+
+-Dai
+
+>
+>
+>> -Dai
+>>
+>>>
+>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>>>> ---
+>>>>    fs/nfsd/nfs4callback.c | 10 ++++++++++
+>>>>    fs/nfsd/nfs4state.c    | 10 +++++++++-
+>>>>    fs/nfsd/state.h        |  1 +
+>>>>    3 files changed, 20 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+>>>> index 87c9547989f6..e5b50c96be6a 100644
+>>>> --- a/fs/nfsd/nfs4callback.c
+>>>> +++ b/fs/nfsd/nfs4callback.c
+>>>> @@ -1568,3 +1568,13 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
+>>>>    		nfsd41_cb_inflight_end(clp);
+>>>>    	return queued;
+>>>>    }
+>>>> +
+>>>> +void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp)
+>>>> +{
+>>>> +	if (test_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags) &&
+>>>> +			cancel_delayed_work(&clp->cl_ra->ra_cb.cb_work)) {
+>>>> +		clear_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags);
+>>>> +		atomic_add_unless(&clp->cl_rpc_users, -1, 0);
+>>>> +		nfsd41_cb_inflight_end(clp);
+>>>> +	}
+>>>> +}
+>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>> index 1a93c7fcf76c..0e1db57c9a19 100644
+>>>> --- a/fs/nfsd/nfs4state.c
+>>>> +++ b/fs/nfsd/nfs4state.c
+>>>> @@ -2402,6 +2402,7 @@ __destroy_client(struct nfs4_client *clp)
+>>>>    	}
+>>>>    	nfsd4_return_all_client_layouts(clp);
+>>>>    	nfsd4_shutdown_copy(clp);
+>>>> +	nfsd41_cb_recall_any_cancel(clp);
+>>>>    	nfsd4_shutdown_callback(clp);
+>>>>    	if (clp->cl_cb_conn.cb_xprt)
+>>>>    		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+>>>> @@ -2980,6 +2981,12 @@ static void force_expire_client(struct nfs4_client *clp)
+>>>>    	clp->cl_time = 0;
+>>>>    	spin_unlock(&nn->client_lock);
+>>>> +	/*
+>>>> +	 * no need to send and wait for CB_RECALL_ANY
+>>>> +	 * when client is about to be destroyed
+>>>> +	 */
+>>>> +	nfsd41_cb_recall_any_cancel(clp);
+>>>> +
+>>>>    	wait_event(expiry_wq, atomic_read(&clp->cl_rpc_users) == 0);
+>>>>    	spin_lock(&nn->client_lock);
+>>>>    	already_expired = list_empty(&clp->cl_lru);
+>>>> @@ -6617,7 +6624,8 @@ deleg_reaper(struct nfsd_net *nn)
+>>>>    		clp->cl_ra->ra_bmval[0] = BIT(RCA4_TYPE_MASK_RDATA_DLG) |
+>>>>    						BIT(RCA4_TYPE_MASK_WDATA_DLG);
+>>>>    		trace_nfsd_cb_recall_any(clp->cl_ra);
+>>>> -		nfsd4_run_cb(&clp->cl_ra->ra_cb);
+>>>> +		if (!nfsd4_run_cb(&clp->cl_ra->ra_cb))
+>>>> +			clear_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags);
+>>>>    	}
+>>>>    }
+>>>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>>>> index 01c6f3445646..259b4af7d226 100644
+>>>> --- a/fs/nfsd/state.h
+>>>> +++ b/fs/nfsd/state.h
+>>>> @@ -735,6 +735,7 @@ extern void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *
+>>>>    extern void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+>>>>    		const struct nfsd4_callback_ops *ops, enum nfsd4_cb_op op);
+>>>>    extern bool nfsd4_run_cb(struct nfsd4_callback *cb);
+>>>> +extern void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp);
+>>>>    extern int nfsd4_create_callback_queue(void);
+>>>>    extern void nfsd4_destroy_callback_queue(void);
+>>>>    extern void nfsd4_shutdown_callback(struct nfs4_client *);
+>>>> -- 
+>>>> 2.39.3
+>>>>
 
