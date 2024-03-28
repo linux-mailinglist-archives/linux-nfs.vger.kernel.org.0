@@ -1,177 +1,301 @@
-Return-Path: <linux-nfs+bounces-2507-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2508-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1737388F0E6
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 22:27:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D030188F451
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 02:09:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83BAD1F28263
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Mar 2024 21:27:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 350BC1F23AC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Mar 2024 01:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1C91514E3;
-	Wed, 27 Mar 2024 21:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657DDBE58;
+	Thu, 28 Mar 2024 01:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YYLepP/q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oKf2fUq7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="LF+awRdf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5843C15380A
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Mar 2024 21:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711574847; cv=none; b=NST2t+q5V14wBqShH81XChfiHSPqvCtYcTORTuwD+S6GC3F/ZfICb2nkUn3O7fvrMNSnJ6hcTrluC4YDOul2KkJiNaZL1dj1VrVv7OdzILh6Obd3az6i187Ivo4HkqJH5JYek7hIVqOkf1+ExNHTADG2VR1p46Ro2WFV7kTm3IM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711574847; c=relaxed/simple;
-	bh=C/j887tj4udL31AqIBUo1u2n1jRjMfXxwuefa6/BV/Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nnqPghzm5VuFCCqrehkCUPzRnJ0mqaz2bv56rteCa/ydB0UFbuJFhFO0uDs0tzFqYnbrjWOtp4onc8NRaTC+AIR0tSz/Rb6W9iVUD1/qpITxomKvKSnPQ+AflgA1yDTd8nRciU0dHkRkIIuuSThMcQkpVp49C1yW6xM9yhxSFd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=YYLepP/q; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974D78465
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Mar 2024 01:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711588179; cv=fail; b=fZlbLnquvsEPzeWWH5VpeO9H0U7hVuOZhMqPs1YuFQALyLauGCfOjBboKfdNqveFJsqQOrjLmeDQBW2LCiIVOfHfgIGcFAXlN8R9zBibVAM0lWY57pme04jSxihCmYO8QP2ssl7RXZPtauZJ2Och+cP7C6//x3DWJeXDcCFgK2o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711588179; c=relaxed/simple;
+	bh=0YhfAhtIOuJPwR/i/BSBGJigQ+xtmbjSqwFkS7/LUgM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=X7/2uvgZgFKM9oiEJVdKwiZ1R3uGa34+5qa01nr71iZ0Fo3jhmgaI7NoxbEYYQ51Ld7ZrKODrDetk0aKRbmDTSJKeMSmHgnTDmbj1YzM6FDcPJK4MjL3Ij1YdQDZC2c8EM/r1MznuO2CcxHSrETdhn0Pj6iq5uUlxUoOf9guAUk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oKf2fUq7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=LF+awRdf; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42RJudlP017291;
+	Thu, 28 Mar 2024 01:09:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=4oQ+IgbM3U2TACPoMzey8bFiRiViBvBOl2SMQ++5frg=;
+ b=oKf2fUq7m0cKiMT+wx96otRaoTzbGsctn6KIml5Z5L6lRRTSW/3hBekO/LQB/HVy91Yi
+ f1bB7q2cFyiM8+Xo1siLiMtFmrIhWdOYii7cgilM0pC+kUKA+YuEemTRkjzYMXD4joc4
+ /iEAFAOdaz8u29EUbPaWgUQwBmZWkmA5eBsxjQhnzsPiC2XGF1YUBcvZMezxYNZxkW7b
+ dJytAnMr5t4DH+OOpp/hg1H3BA44rbys8uKgd7qJE4zh0DD042kSUxrfNsVsaYxRjene
+ 7BsCywTod0kSlk899yN8Pa8IM1uECue5nyEpAbkxfUkR6HLHjQhnfoOcd9XwAzwwEjjT zg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x1pybrkvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 01:09:34 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42S0bmho008879;
+	Thu, 28 Mar 2024 01:09:33 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2041.outbound.protection.outlook.com [104.47.74.41])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh9n2vg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 01:09:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LRXXiXRzXmYiqEMeEbkh6bzrojdoPFFVYzTmt/sOj3/Z0OuL+tbO1FUZK0WWSEO8VfqBtNeyQzl6/eRKfNJszjDR72lceTC0KHRw5MPRgJ5My4yNT8rzZbuXvHdYMIESHHWnXxjt5oADnnBH6aYo9TAXkTo9nSklqGcmTebfNTBBbZWfXMeBKMeF2lNAo6pKAXWZVZDdtCjyNbwyojnFgzE92hYGWiNtkJF714YOrp+Km2HXAOytUdM5uPnFIeBUDv7n9C+nsI0AKKiKSgveQJUukePd3RSMu/8HwjjAeJdJcRbcyZNca7N0CKXcrY2JG1ACZbt9sh0tG8jQhyakyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4oQ+IgbM3U2TACPoMzey8bFiRiViBvBOl2SMQ++5frg=;
+ b=QuwBUdL6nL45dBxxWtJXv+hPXx1oAJ70VAZ2TQmE8OORuGxvf+EJUva+8XeIiYQjrE3T00I+vP152NdykqQNbovsMWFChZvJwHFRt9cYezp7dPMcXaNNnW8aAWRy2PfHC4Bv2Azdl3wXK57zpqa3fcZwyjAheR4PB0kF2e5W+yycAFiEqVvzxgByQXpFl0+M5EAGwkyA8R+eCOoYYx12hsDgUzbyDbuS0tTM6fz1DsWYSwLHg+Q9dJhcKW67bn8RIzZYKJqzmMNPbkeKC4c4KPNm58t/HhkL3a3yGfcpBPdK040YxnHVryHtvwmRktHA9XA1Tx6BVRDpES4nUundXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1711574845; x=1743110845;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yB5eVj7R3bMwQK8+bTiRV53GmBh4sRlY3VaCYfMCADw=;
-  b=YYLepP/qPZfTtWJKlGEQpGkrxjfOFIjWiHQfrLnEsXV9Ds3s8pZ5C7X1
-   +SWjM1hWqds5wSno5XAsZ16gk2GB+Vib/MgZkbtPuUeqEQOfZ3bMFG0h2
-   hgYiGHRQoppuL3+rtIgA/kEaOZiulJAwejJoiwXK3lSv5Vkmg9oE0yJNa
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.07,160,1708387200"; 
-   d="scan'208";a="714304046"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 21:27:20 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:55894]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.20.22:2525] with esmtp (Farcaster)
- id 7e1fe94b-f74a-48cc-b546-2d73f361e499; Wed, 27 Mar 2024 21:27:20 +0000 (UTC)
-X-Farcaster-Flow-ID: 7e1fe94b-f74a-48cc-b546-2d73f361e499
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 27 Mar 2024 21:27:19 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.100.29) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
- Wed, 27 Mar 2024 21:27:17 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
-	<anna@kernel.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
-	<kuni1840@gmail.com>, <linux-nfs@vger.kernel.org>, syzkaller
-	<syzkaller@googlegroups.com>
-Subject: [PATCH v1] nfs: Handle error of rpc_proc_register() in nfs_net_init().
-Date: Wed, 27 Mar 2024 14:27:06 -0700
-Message-ID: <20240327212706.27691-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4oQ+IgbM3U2TACPoMzey8bFiRiViBvBOl2SMQ++5frg=;
+ b=LF+awRdfji47KgNricv10DPhSF3YgzmWrZEc47TAANBTyrRut7Vb5BI9zLDIzkdjnYt9o/eToVVhdwgotzhgV/SmCziyccEYGBdvKhgMkjYXW8YI1y7vTqcpQHk9SXOtipcADddh10+6gCQxVg/i5Cdlgtaj62Xe9sDsV++T06k=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by CO1PR10MB4450.namprd10.prod.outlook.com (2603:10b6:303:93::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Thu, 28 Mar
+ 2024 01:09:31 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::b7ab:75e7:2cf9:efc3]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::b7ab:75e7:2cf9:efc3%3]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 01:09:31 +0000
+Message-ID: <69914825-e9d5-4859-a5a8-60d17e8e8bf6@oracle.com>
+Date: Wed, 27 Mar 2024 18:09:28 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] NFSD: cancel CB_RECALL_ANY call when nfs4_client is
+ about to be destroyed
+Content-Language: en-US
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: jlayton@kernel.org, linux-nfs@vger.kernel.org
+References: <1711476809-26248-1-git-send-email-dai.ngo@oracle.com>
+ <ZgMToHNkkGEHNb/y@tissot.1015granger.net>
+From: Dai Ngo <dai.ngo@oracle.com>
+In-Reply-To: <ZgMToHNkkGEHNb/y@tissot.1015granger.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH3PEPF000040B0.namprd05.prod.outlook.com
+ (2603:10b6:518:1::5c) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWA004.ant.amazon.com (10.13.139.91) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|CO1PR10MB4450:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03878f45-324a-4682-bbbe-08dc4ec3b928
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	5xEgu6d4NLK1qXMy/plkLRyRjnlKtpopboOrvpf1G0VtJRIdWW9sDFe4j0BCPSA4eCk7kvSKEUC4jq+eYfICLm18dVPr/z1a2CAjjlnLh7Ir3jZHN3I03jzYnD7e+QJXyJP2mLlPexWPcROx0i6F8VpkNNPQ/dHUNwcN+QhfE9G/TqWi8cSRplVK5AGAsjL8JpL8tzW4MX/qK/CQn431043JibmHqQQkOGJwUFU7Y0Ay3WE06vcmVwLTqmn3oem+rrsaivIeAfOPxbTPgPq4i3o1BGe89i1E+BxHUP80IhGLYPn7jIj/HtLpndRKZG0+Qj0hMQAZIgb8yGU2UqeYOZ/ssJThgMMF+b+wEN5/eUguS7soPQ6RNV9fnfT6vZKWHhHZo7E+Z1r1Wltl3QwbmRvqQmfJqCH1ja0yXHKHYnhjeWVHeKkN/Y3rENSxEPU5Zfmde8KwHxVT4QWaba2W5IJzxX+wd/QjkG97OUaLb4prbwUFi4xt7/qZbV//8VPCuztursivQo3dr0cJEWfCbLer67qugrzXbcO51yQTpTTxfGCuOQ9TpFEus9VgK3zVzCKGGj2EjOlC3qiZLM2heuYYsfvg8NfMcVcVdo0ziKIZ7Ea86JqThyZXq/cqqA6JMOltVxVbyfOj7uyBMkK4pSqjDtRUCUM9N16HtLPOUPk=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?bXk2cGhFOXZLem5HV00wYXF0ME9kVi9SbFdiWDFrRmwzcWorbGdYam5iY1cy?=
+ =?utf-8?B?OEh5ZGN6SDFTemZra08yaWlJWThvVnJlcklyQWpwWTNPVnh0aTdzQlBYQWRB?=
+ =?utf-8?B?UnpHeis5Ylo0YURQbndVUFhTZHdzZk8zYVBOczRwRjQzakdwZkJ0a3pBSW8x?=
+ =?utf-8?B?RjNqdnBGZnFBc29UaUkwTUJCbDlPcHhtQ2M4YUZWcHVNWWRQWUt5aWJDRjMy?=
+ =?utf-8?B?TmJCQXFHMUMzenRtaDQ1ZmtxdUhvU1BZRnZDUGRDVkdycTdoY0cvdCszRVFW?=
+ =?utf-8?B?OXoyNkdRMzhMcy83TkU0cGVKVmZibytqaWMxOTF1S01SSHozbmZhNFV4d3Rz?=
+ =?utf-8?B?RnN2TUxRRTRqM3d0TlM0S3RNSGNjUkRyUzl4RXNTNmxZU0tyTTVCMVRPNDdy?=
+ =?utf-8?B?Zjhqb2ZqMTVjM1I1dmQ3ajRXYXBpWTNGNXU4QkZseGlpcVBITnpVZ0kvVU5C?=
+ =?utf-8?B?Q2h3VTNsOGhhbEdSVUdsLysyMzRxUDAyaWRPR2VWZ3B6NkhVYjFsMnVNZ3BB?=
+ =?utf-8?B?dlEwdE1EVktVNTVPOEVISUNCOE9nd3VBVnVRWmhwQm5qMVlCejdjZHNlQXh1?=
+ =?utf-8?B?Z3BhMktURmk3R0lsRjZBRUd2ZVRBY0gxU1AzTk5sR05yRkkxVkJIVkdoeTdV?=
+ =?utf-8?B?dXBvL3ZlOUl3OFBFbU13SnpyZkdoUVBsU1lyUkVtM2tsUUNPK2ZCc2hUTU5H?=
+ =?utf-8?B?a293MnNUdGZXUUF0VURvV1NBTC83dk9RS20wOEF5ODRiZGk4UU9LWDdOSUh1?=
+ =?utf-8?B?VWF4bzFnSUlON2gvcjh2Zi9SMWM0ZngzcUVGVnljS1hYek81NURkTDFkbzJU?=
+ =?utf-8?B?c3FBZVkrZUl6YThmWEwyNjJoQ3hjdjM1WGFHWDlrd29PcDYrdjlnNVl2bEo3?=
+ =?utf-8?B?MnRreUM0VGlTdFROT2VCVlc4bGJZVWV1ajFlQytZei9mbUhGT1o4MG43SCtG?=
+ =?utf-8?B?SHBwUzA5clZIRnpnZ2czS0xGdXhoMnQ3VmxHZTRFMVk2bm1lNGZzSzlxS2hm?=
+ =?utf-8?B?SDFadks0KzZNbUZpL1FCZThWbDE3MHdtOFZCbnBHcUF5cWxDQWp2bU8zMnFT?=
+ =?utf-8?B?NUFDWFVpeVI2emlnL0ovQWhWclV1YnZBNGNMRGN5dDVWZFRCSEgyL1lIRzBT?=
+ =?utf-8?B?R1ZqM2JqU2VlTlBrQmdKRlliNjdGNXJXL2hTdDMwWVJiMHc5aS9lSk1Da1Y1?=
+ =?utf-8?B?TEJmWHIxTURHNi8zd3Bvcm1tampuTjBxemtVcHVzMGJNS2lndW9aL09LcHp3?=
+ =?utf-8?B?WHUrblZieTV1UGJKL2pzVm8vc0E5U2VlZ1BJaS85UGZNMXJQcFNxamxqYnZo?=
+ =?utf-8?B?d2RDYzErWkkwSVdSRS9MSWVWODNOajF5NTBBZjBLNWRITXl4aW9obEYxZnBK?=
+ =?utf-8?B?dEpkSDhDUk5uWnVHekFETEJoKzZRVGIzbm5oOFYzUCs3SzZmVUNhRUdHclBZ?=
+ =?utf-8?B?UmZVYUg1VGM2V215YU1NajVHT3RZU1V4THhTWlRWckdvRXNwVG9WdCtGdHhl?=
+ =?utf-8?B?anhIbTVmOWVnRzlNOXAybEhTbzliRzh0NnZwQ0F3VlMzRnR2WGxFUWlReTh2?=
+ =?utf-8?B?bVR2ZmYwRTBLY0hraldKUFRlSTk0b0pBMHY4L0NSdGxLZHQ2SENEL0syWXVZ?=
+ =?utf-8?B?dEVsVmZ6dHg5bXhFY2h0VVd3NnljWnlOUTE3aVprdEw4Q1FRWG01LzI5dXdC?=
+ =?utf-8?B?Sjh2UTZtZzZYWXhZQlVSNW9JZyt2NlRBVFJoZzRGZFRZaE9VZjFOZ05IY3hK?=
+ =?utf-8?B?SUFFUzJUeFNpS2RZYW1IbVR6TS9KWGM4Qkl4QnRmcDlLaVBnb2lEVjFXczA2?=
+ =?utf-8?B?Mml5NDJQbGM1VE95RXcwRDlKSWtHUFZ0MTZKenlDNnphZ3JjNkhEc3J2U0R0?=
+ =?utf-8?B?RXRtMmxJSDJ6QnJ0elpKdGpRc21PVVZUakdZWUFvd3hBaktJV3RGK2lXcWNr?=
+ =?utf-8?B?VUZiVHkyU0RGVDV2SWFFZmtWMzlLZ1dmeFowdThVWUVFRVRWUDIvUWpPRzZR?=
+ =?utf-8?B?bUVYQW8zR2xDTXljRzlJdzloT3FTcWx2MTMxaTJuZVl1RGlsNEJYSGk4Mjk4?=
+ =?utf-8?B?MzkxVUtGaWQvOUZ2bDhDdTB0THdYMFdjVjFkRGJrSG9QSHdScnU5UDlWb3Fu?=
+ =?utf-8?Q?RonQG6pLDJq+Ehe72Te+0Yl2f?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	vRR6UenPdRqaKqOnRAmeKUeXhmRq0tVUjf91sAuJ/2uS36zql4Vo5r87b9I4R0xmReWWC7WNQDuCYIfOcntC0j7fpYZoHMoMKjaHSG0CfkdLvP2QntkOAsJOn9Xe/+mnQrPi+LzqjhxSVN1vm3MCfOQK0X0tI8GxeSGK3t/NDd+pOl5cnVtL4vH0RR9xb02neVkhuZDw+eMOiUPd3UUzVTQSpti9rNxYoFfY/2UBiKDX2oe8kicYJMc3ZAk1d5lE6DfOtRuTDDXhmh5lTZF4dsWQPI/+D87AKkIPr+IoDax0ohgLe1w+Rbh4K9fKbwuhwBTVhctYnNQ10Ow8wm2LpFGU1BEFLyfOK0PWD2wbbLLb2rCikPIEl3wA30bpN+X1lMxK7eaiJn1hJkkpRGDZ1QO5uelazH8VgkhAUhUjvMNFXElv9qfK1lwk5T9QznN1iWbnUOLbOfs0l8VYqPSINxkcCMbwlGfdB6TVHyv7CmapRmODO14evAFRmHw8OaraymTLHLD41MXg7DWSBXVzYRk4MhGyp2vsgjCQh5Yd1xfKQnc6Cz+A8JJU2NHymZFGAttBSQsta+vj72ebas4BuCCO+4TO4D31MA1AIIwVTYw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03878f45-324a-4682-bbbe-08dc4ec3b928
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 01:09:31.3282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qIa/er8ETVtYN4X8fzJexiy62gZnCo+QC2osvLqNoDmOAP9FbINNKuwaln/1A5eBxw0EEODbiS27dWKcoiM8+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4450
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_20,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403280003
+X-Proofpoint-GUID: hQeE3HckhaMd9_pT4mw65QVu9hhAh7nT
+X-Proofpoint-ORIG-GUID: hQeE3HckhaMd9_pT4mw65QVu9hhAh7nT
 
-syzkaller reported a warning [0] triggered while destroying immature
-netns.
 
-rpc_proc_register() was called in init_nfs_fs(), but its error
-has been ignored since at least the initial commit 1da177e4c3f4
-("Linux-2.6.12-rc2").
+On 3/26/24 11:27 AM, Chuck Lever wrote:
+> On Tue, Mar 26, 2024 at 11:13:29AM -0700, Dai Ngo wrote:
+>> Currently when a nfs4_client is destroyed we wait for the cb_recall_any
+>> callback to complete before proceed. This adds unnecessary delay to the
+>> __destroy_client call if there is problem communicating with the client.
+> By "unnecessary delay" do you mean only the seven-second RPC
+> retransmit timeout, or is there something else?
 
-Recently, commit d47151b79e32 ("nfs: expose /proc/net/sunrpc/nfs
-in net namespaces") converted the procfs to per-netns and made
-the problem more visible.
+when the client network interface is down, the RPC task takes ~9s to
+send the callback, waits for the reply and gets ETIMEDOUT. This process
+repeats in a loop with the same RPC task before being stopped by
+rpc_shutdown_client after client lease expires.
 
-Even when rpc_proc_register() fails, nfs_net_init() could succeed,
-and thus nfs_net_exit() will be called while destroying the netns.
+It takes a total of about 1m20s before the CB_RECALL is terminated.
+For CB_RECALL_ANY and CB_OFFLOAD, this process gets in to a infinite
+loop since there is no delegation conflict and the client is allowed
+to stay in courtesy state.
 
-Then, remove_proc_entry() will be called for non-existing proc
-directory and trigger the warning below.
+The loop happens because in nfsd4_cb_sequence_done if cb_seq_status
+is 1 (an RPC Reply was never received) it calls nfsd4_mark_cb_fault
+to set the NFSD4_CB_FAULT bit. It then sets cb_need_restart to true.
+When nfsd4_cb_release is called, it checks cb_need_restart bit and
+re-queues the work again.
 
-Let's handle the error of rpc_proc_register() properly in nfs_net_init().
+> I can see that a server shutdown might want to cancel these, but why
+> is this a problem when destroying an nfs4_client?
 
-[0]:
-name 'nfs'
-WARNING: CPU: 1 PID: 1710 at fs/proc/generic.c:711 remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711
-Modules linked in:
-CPU: 1 PID: 1710 Comm: syz-executor.2 Not tainted 6.8.0-12822-gcd51db110a7e #12
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-RIP: 0010:remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711
-Code: 41 5d 41 5e c3 e8 85 09 b5 ff 48 c7 c7 88 58 64 86 e8 09 0e 71 02 e8 74 09 b5 ff 4c 89 e6 48 c7 c7 de 1b 80 84 e8 c5 ad 97 ff <0f> 0b eb b1 e8 5c 09 b5 ff 48 c7 c7 88 58 64 86 e8 e0 0d 71 02 eb
-RSP: 0018:ffffc9000c6d7ce0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8880422b8b00 RCX: ffffffff8110503c
-RDX: ffff888030652f00 RSI: ffffffff81105045 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: ffffffff81bb62cb R12: ffffffff84807ffc
-R13: ffff88804ad6fcc0 R14: ffffffff84807ffc R15: ffffffff85741ff8
-FS:  00007f30cfba8640(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ff51afe8000 CR3: 000000005a60a005 CR4: 0000000000770ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- <TASK>
- rpc_proc_unregister+0x64/0x70 net/sunrpc/stats.c:310
- nfs_net_exit+0x1c/0x30 fs/nfs/inode.c:2438
- ops_exit_list+0x62/0xb0 net/core/net_namespace.c:170
- setup_net+0x46c/0x660 net/core/net_namespace.c:372
- copy_net_ns+0x244/0x590 net/core/net_namespace.c:505
- create_new_namespaces+0x2ed/0x770 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xae/0x160 kernel/nsproxy.c:228
- ksys_unshare+0x342/0x760 kernel/fork.c:3322
- __do_sys_unshare kernel/fork.c:3393 [inline]
- __se_sys_unshare kernel/fork.c:3391 [inline]
- __x64_sys_unshare+0x1f/0x30 kernel/fork.c:3391
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x4f/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f30d0febe5d
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 9f 1b 00 f7 d8 64 89 01 48
-RSP: 002b:00007f30cfba7cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 00000000004bbf80 RCX: 00007f30d0febe5d
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000006c020600
-RBP: 00000000004bbf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-R13: 000000000000000b R14: 00007f30d104c530 R15: 0000000000000000
- </TASK>
+Destroying an nfs4_client is called when the export is unmounted.
+Cancelling these calls just make the process a bit quicker when there
+is problem with the client connection, or preventing the unmount to
+hang if there is problem at the workqueue and a callback work is
+pending there.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
- fs/nfs/inode.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+For CB_RECALL, even if we wait for the call to complete the client
+won't be able to return any delegations since the nfs4_client is
+already been destroyed. It just serves as a notice to the client that
+there is a delegation conflict so it can take appropriate actions.
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index c709c296ea9a..dd224ba196ef 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2427,9 +2427,16 @@ EXPORT_SYMBOL_GPL(nfs_net_id);
- static int nfs_net_init(struct net *net)
- {
- 	struct nfs_net *nn = net_generic(net, nfs_net_id);
-+	int err;
- 
- 	nfs_clients_init(net);
--	rpc_proc_register(net, &nn->rpcstats);
-+
-+	err = rpc_proc_register(net, &nn->rpcstats);
-+	if (err) {
-+		nfs_clients_exit(net);
-+		return err;
-+	}
-+
- 	return nfs_fs_proc_net_init(net);
- }
- 
--- 
-2.30.2
+>> This patch addresses this issue by cancelling the CB_RECALL_ANY call from
+>> the workqueue when the nfs4_client is about to be destroyed.
+> Does CB_OFFLOAD need similar treatment?
 
+Probably. The copy is already done anyway, this is just a notification.
+
+-Dai
+
+>
+>
+>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>> ---
+>>   fs/nfsd/nfs4callback.c | 10 ++++++++++
+>>   fs/nfsd/nfs4state.c    | 10 +++++++++-
+>>   fs/nfsd/state.h        |  1 +
+>>   3 files changed, 20 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+>> index 87c9547989f6..e5b50c96be6a 100644
+>> --- a/fs/nfsd/nfs4callback.c
+>> +++ b/fs/nfsd/nfs4callback.c
+>> @@ -1568,3 +1568,13 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
+>>   		nfsd41_cb_inflight_end(clp);
+>>   	return queued;
+>>   }
+>> +
+>> +void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp)
+>> +{
+>> +	if (test_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags) &&
+>> +			cancel_delayed_work(&clp->cl_ra->ra_cb.cb_work)) {
+>> +		clear_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags);
+>> +		atomic_add_unless(&clp->cl_rpc_users, -1, 0);
+>> +		nfsd41_cb_inflight_end(clp);
+>> +	}
+>> +}
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index 1a93c7fcf76c..0e1db57c9a19 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -2402,6 +2402,7 @@ __destroy_client(struct nfs4_client *clp)
+>>   	}
+>>   	nfsd4_return_all_client_layouts(clp);
+>>   	nfsd4_shutdown_copy(clp);
+>> +	nfsd41_cb_recall_any_cancel(clp);
+>>   	nfsd4_shutdown_callback(clp);
+>>   	if (clp->cl_cb_conn.cb_xprt)
+>>   		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+>> @@ -2980,6 +2981,12 @@ static void force_expire_client(struct nfs4_client *clp)
+>>   	clp->cl_time = 0;
+>>   	spin_unlock(&nn->client_lock);
+>>   
+>> +	/*
+>> +	 * no need to send and wait for CB_RECALL_ANY
+>> +	 * when client is about to be destroyed
+>> +	 */
+>> +	nfsd41_cb_recall_any_cancel(clp);
+>> +
+>>   	wait_event(expiry_wq, atomic_read(&clp->cl_rpc_users) == 0);
+>>   	spin_lock(&nn->client_lock);
+>>   	already_expired = list_empty(&clp->cl_lru);
+>> @@ -6617,7 +6624,8 @@ deleg_reaper(struct nfsd_net *nn)
+>>   		clp->cl_ra->ra_bmval[0] = BIT(RCA4_TYPE_MASK_RDATA_DLG) |
+>>   						BIT(RCA4_TYPE_MASK_WDATA_DLG);
+>>   		trace_nfsd_cb_recall_any(clp->cl_ra);
+>> -		nfsd4_run_cb(&clp->cl_ra->ra_cb);
+>> +		if (!nfsd4_run_cb(&clp->cl_ra->ra_cb))
+>> +			clear_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags);
+>>   	}
+>>   }
+>>   
+>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>> index 01c6f3445646..259b4af7d226 100644
+>> --- a/fs/nfsd/state.h
+>> +++ b/fs/nfsd/state.h
+>> @@ -735,6 +735,7 @@ extern void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *
+>>   extern void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+>>   		const struct nfsd4_callback_ops *ops, enum nfsd4_cb_op op);
+>>   extern bool nfsd4_run_cb(struct nfsd4_callback *cb);
+>> +extern void nfsd41_cb_recall_any_cancel(struct nfs4_client *clp);
+>>   extern int nfsd4_create_callback_queue(void);
+>>   extern void nfsd4_destroy_callback_queue(void);
+>>   extern void nfsd4_shutdown_callback(struct nfs4_client *);
+>> -- 
+>> 2.39.3
+>>
 
