@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-2561-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2560-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8DDC891F00
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Mar 2024 15:56:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 537E1891FAE
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Mar 2024 16:09:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 826EF28DB28
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Mar 2024 14:56:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB74EB28CBE
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Mar 2024 14:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F02541BE62F;
-	Fri, 29 Mar 2024 12:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8DD01B7E73;
+	Fri, 29 Mar 2024 12:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMgoKSAe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glPlO2rn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B601BE62E;
-	Fri, 29 Mar 2024 12:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6141B7E6E;
+	Fri, 29 Mar 2024 12:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716680; cv=none; b=lg8DRvuiQBKPT6WD9HmrQ/QwpA8G+31VtttQrQ1+mHBzsVy1EQQKvOgsAhYur2/CYFYo8YRlgD7hHXXsVyd8Gd9nDpMIKmZZZ0aKC10tJDGlvnkTmGgpNPnL8Qft7Qh+fAVFXd/Dl4PhFUz2a05auIO9QRXi08lein8i1gXpJio=
+	t=1711716635; cv=none; b=RCqV0zNfVp9b4XAe0mDIeY5plwLFGHt+L8Cl4p677YnGHQ2yZKEOF41tpShBEIoM0misGju5yYNIuX0lX+vK8umBzw8MhewkETylFkLXfzmRgkimrjbecUaz1tlpFgXqYFAnmPxzIdyuBD3jXSjODr4Gmqz/uBqmMp3lCk6wdUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716680; c=relaxed/simple;
-	bh=89DVC1TNx4YYw4n/u2khFqCOeFDZNMylMEZNDf18SDs=;
+	s=arc-20240116; t=1711716635; c=relaxed/simple;
+	bh=xs7/v+Mzn5X7V0ApC3oJ6aQLmUE0xXQdx/iuOdrouHQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bHI83nWwAXnsk2alPQuDZxOhIoll3ae/rRCFtwlItAcL8/FXjOzrAsMeLAa1hKGt9VrXCUl5QhIqZyizyR4jSGoi+jr8kDyUfCGU0Kbig8wIkk7WKmSkJQXavdr5u4ngOnukM+/pAYNjAbW3Ro4Ri1hn92bv2D2/kZmgaEfIRwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMgoKSAe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E7AC433F1;
-	Fri, 29 Mar 2024 12:51:19 +0000 (UTC)
+	 MIME-Version; b=p9dAx9sSIa6FRc3L1vX6+rZFZcKdKGpA7lA67ot+RCxpV5gqxwVpcZQ4KOvQIs/L4Gjim3hbZoBq6R91j+RVqUwWIwgCCB+J3fwcZDyNCoNJtG7frsEkeJwZPw05BroTmEgd2w+lNxElmBEDypIByAdiASXR0o14J3l6bklgWeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glPlO2rn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A289C43390;
+	Fri, 29 Mar 2024 12:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716680;
-	bh=89DVC1TNx4YYw4n/u2khFqCOeFDZNMylMEZNDf18SDs=;
+	s=k20201202; t=1711716635;
+	bh=xs7/v+Mzn5X7V0ApC3oJ6aQLmUE0xXQdx/iuOdrouHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KMgoKSAe+dWCVtu+D0ENuONdhKtJuoTSrCrfAC1Nl2zMWvAzjXTZGw3JKPeLIhdql
-	 PEWMwyVhQawW2O8glMxmriKFXyABfa8O0+gWa5lHx9uZxmDVh73JaUmxTGw7HYRpYY
-	 93mRgW4950VHtAbYLAh3bAWOMhA0PXZCgMwJYqJEDjkzrSXoCQjxFbboFarf0hL36A
-	 NHIVjLZ0sT8cuYOvcLSPV1X719PFr8dHVJS/UBGVyqF+H8CXToc16Wp86QRSa4TRvK
-	 Z6lP6XjtLZyIATDXsqzupebhn9kX/f6pnxp7Q+ADAeRDHql2wak7jN37wS4v4zJUhy
-	 pEsFWqvthTKtw==
+	b=glPlO2rnPGGhDrRhuBEWZXQRETpQAZrpoAZAXzP4zgXH4UfkXNhpYH/Nf/xgApkY5
+	 eZwi69s5kq9/Z6wTHyLG6Yoeb9DSm6cMLHVBfaRlXa3/HIntgfVwstETrKwd5GPv2t
+	 HIhmw88ME0aXs3CWDLE7vp1cmVe2QwEYZQRcIV1utBuW2kc65qO7ldaspz2wRqWiKF
+	 rT7jiY1paihfe0yW/qB8ryQC/IgQ8lIVNatl1m6Qqz8njKJqCKouIx8EiXPxmgnQNE
+	 trvaa1AIkeflcLPY/ePzwewnuczfxx1kdl5/UJKncnOCHHGiwVYe89QPcg0dtkNnM9
+	 mJDMPEF6gwCnQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -48,15 +48,15 @@ Cc: Dai Ngo <dai.ngo@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>,
-	anna@kernel.org,
 	chuck.lever@oracle.com,
+	anna@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/19] SUNRPC: increase size of rpc_wait_queue.qlen from unsigned short to unsigned int
-Date: Fri, 29 Mar 2024 08:50:42 -0400
-Message-ID: <20240329125100.3094358-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 13/23] SUNRPC: increase size of rpc_wait_queue.qlen from unsigned short to unsigned int
+Date: Fri, 29 Mar 2024 08:49:46 -0400
+Message-ID: <20240329125009.3093845-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329125100.3094358-1-sashal@kernel.org>
-References: <20240329125100.3094358-1-sashal@kernel.org>
+In-Reply-To: <20240329125009.3093845-1-sashal@kernel.org>
+References: <20240329125009.3093845-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.311
+X-stable-base: Linux 5.4.273
 Content-Transfer-Encoding: 8bit
 
 From: Dai Ngo <dai.ngo@oracle.com>
@@ -134,10 +134,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-index 96837ae07822b..ca0a568fd8244 100644
+index 5c37fabdec103..61de83be9cc27 100644
 --- a/include/linux/sunrpc/sched.h
 +++ b/include/linux/sunrpc/sched.h
-@@ -190,7 +190,7 @@ struct rpc_wait_queue {
+@@ -196,7 +196,7 @@ struct rpc_wait_queue {
  	unsigned char		maxpriority;		/* maximum priority (0 if queue is not a priority queue) */
  	unsigned char		priority;		/* current priority */
  	unsigned char		nr;			/* # tasks remaining for cookie */
