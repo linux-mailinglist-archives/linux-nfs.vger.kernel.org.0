@@ -1,278 +1,250 @@
-Return-Path: <linux-nfs+bounces-2584-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2585-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F4478941D4
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Apr 2024 18:46:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9317A894461
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Apr 2024 19:35:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA61BB22290
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Apr 2024 16:46:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6D421C21394
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Apr 2024 17:35:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB608F5C;
-	Mon,  1 Apr 2024 16:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD5B4CE04;
+	Mon,  1 Apr 2024 17:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hZHWaz0Y";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="DZr2lkrF"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b="dzMlTCzL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBDB481B7
-	for <linux-nfs@vger.kernel.org>; Mon,  1 Apr 2024 16:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711989996; cv=fail; b=qlWt1+L0la9KYl8i9oUC3DnqkBGQONsBEQak6iVYkQjarf81fWTrxbtafwfCS6IjYMKDheNbzLtkTZGhI+4/uN2EtObtPtkt94I5RNlNrWjlGu5VSlx7SFywd58aNxzv2D/rOQ1RT6r89WcronBhBS7myA8RTahitWCd1cbR7lk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711989996; c=relaxed/simple;
-	bh=rKqyOVt4nvbt2TgQmxUnB6bT0Ttgo+jk2+XMKbCrOSo=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=piKDHwXbawLUudnVscJC9qvPJmoLd0JeES4BMSm62Nmfh9/TsbHdfbIjmm+vsE0R84pOAk8TCHH/IfHxM0VZqoN2pCrPrkdwfN6Bes6fle7ektQR3UD1OR+nse4mohVFtAhHzoSK6Yb6QQ2CQpACjuV4xZ31gON1Pm/HURLEawQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hZHWaz0Y; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=DZr2lkrF; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4318iBFM027618;
-	Mon, 1 Apr 2024 16:46:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : from : to : cc : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=XOXwM8F3Ek22dE5uGi17gnXgR6RU8SCiE/uDiOq/zr8=;
- b=hZHWaz0Ysiil0ZpTWdbXQUWBO2ZSQL/Vmr5B3bnKJyRSXo52qgKUSRqD/bo6k2pXp+4q
- 9BQEpmEvcHZYzL/TKc0fKIAJGHs7q2G7GkYs5nV0L1lA7xraNq1MCW7YPUDlLKJsg096
- aaaxKZauHXKn7dvSVk6//cbvo/GYhK2gTZOekpOHzp5a6fWsqxrAxXlpi7OmVnmRVant
- awnKgD1m4qk5N497Dcq13Dn7W22YRq0ssPII8L9dOfGToKEzaNzFnHsLfd2HJ8HJ9bNf
- 9iPIoXqea5059FbbKbwGW5wcMOkU0JWZ+aNdygA0cdvFVGoeAnA0MiQ/Kow7Dcsx974U jA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x6abuaraw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 01 Apr 2024 16:46:30 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 431FThY4021362;
-	Mon, 1 Apr 2024 16:46:29 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2041.outbound.protection.outlook.com [104.47.74.41])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x6965uytt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 01 Apr 2024 16:46:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QbRDS1WfNyHefJqr7lpdEuQQKHQnyfU+UpDGfn+3ETGeqyQCqTsGndx+YkYLXZ2mcNy0mcSfuVCObhByY0Ph786D+O8Gp5hIeIqx8wXCqecVqZ57VPeDLAhr6i2O8Vr0aqmmXI/btHOEy2yj+u012L//TnbhfFNmFB8/lr9IVK+ORixZNQM/XQuo8BRXwu9wJQvSy2SBSFvqGsIvut2x8EbOwHJlfdLwZ7SSHTMH+LDufYjjkt3J7R8S69jPvhuYp3eLXxSfEHBtttj95TGgQ89HoXl1iLPXWFN8Vv1LxMZUlJXTMQMgJEwqcUSjfIgXRX7MfpaQuaamz+9Uh8qJPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XOXwM8F3Ek22dE5uGi17gnXgR6RU8SCiE/uDiOq/zr8=;
- b=fRovyklF7Gr+YbfPnCDTLjJAf5kYiwYKqQ3LPCKCz3deOvAfQNmKwgpG6AlGyZ6h/W0SndxfS7XsJ2gcpMYLwVkBiZ5ExFz4BjBvVrxRijAgy9XlZs0HldZkycN052G9RGsWclhed1bLVM6KW3QYgSaIGkKtO3ZY8YLnonhKPuZ4JYuBrtnab9YhmJKBlmnkI0q0+DbbhqZgkNXwN6gDtT5cXadXMSC+usVc0vxrGSdUPoo9PA5OEbRqmZtKUGfFvhAhshESOXxNU+xs5kpKwQoLmEvxyC/6jmXwOFjQXPZJ/+TZG1y3gKti5EpFirCyHBWa/vRS8wIXNGRd4P/NFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XOXwM8F3Ek22dE5uGi17gnXgR6RU8SCiE/uDiOq/zr8=;
- b=DZr2lkrF9xb1dzs3Ib2oKO6qR5C5kX1GABhG4eU5d9IoC8dfxzSgxMVtzscj6/7U3KmONqHaCtalmNzw/utTf/e1FFhEZC8skqib3EHUWMxs841o6xtTovAc5YFvJA8rrLrxnwglfPEkhoHkenVaM8PZqreTwrJX+br1nuRazaQ=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by DM6PR10MB4331.namprd10.prod.outlook.com (2603:10b6:5:222::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
- 2024 16:46:28 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::b7ab:75e7:2cf9:efc3]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::b7ab:75e7:2cf9:efc3%3]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
- 16:46:28 +0000
-Message-ID: <a30b343f-b6cf-4566-9565-28a5fd5ca851@oracle.com>
-Date: Mon, 1 Apr 2024 09:46:25 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] NFSD: cancel CB_RECALL_ANY call when nfs4_client is
- about to be destroyed
-From: Dai Ngo <dai.ngo@oracle.com>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-References: <ZgV5zwR0q/vjBAtI@tissot.1015granger.net>
- <88fac8af-c194-452b-94eb-7658b9056246@oracle.com>
- <c97be8b9-c0ba-4f2d-9340-78368008ba4b@oracle.com>
- <ZgbWevtNp8Vust4A@tissot.1015granger.net>
- <97387ec5-bcb4-4c5e-81af-a0038f7fc311@oracle.com>
- <ZgdR48dhdSoUj+VM@tissot.1015granger.net>
- <09da882f-4bad-4398-a2d0-ef8daefce374@oracle.com>
- <ZghZzfIi5RkWDh9K@tissot.1015granger.net>
- <84d6311e-a0a3-4fc6-a87e-e09857c765b3@oracle.com>
- <039c7e38b70287541849ab03d92818740fdf5d43.camel@kernel.org>
- <Zgq365RJ9M5qsgWY@tissot.1015granger.net>
- <5108ca5a-b626-4ae9-a809-ae3fffb50cab@oracle.com>
-Content-Language: en-US
-In-Reply-To: <5108ca5a-b626-4ae9-a809-ae3fffb50cab@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL0PR1501CA0036.namprd15.prod.outlook.com
- (2603:10b6:207:17::49) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1562F481C6;
+	Mon,  1 Apr 2024 17:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711992925; cv=none; b=WxnwWIKiSnQqWDj0ISNIeqoglnB3ZBPCzVa4onoqaLhG04PbdIAvCg1PZRrRnXXizTzeUV8+LSBalTIi/7BK2jsMUnufR9BudwZ/K+shG1ALXdhdZZkHsw5DebDkvQ4XaKrVrfLS628MFDG1KZzzJ059ClkD3i759bjSwS1t4HA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711992925; c=relaxed/simple;
+	bh=/gd/IDUDM2QAMzVDFtOTXs1+3awZOO9qC8xtxmt8JT4=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=bkzSINljY0CwRL+rhvjblSAUkluEEy/huLTZZ5cCSUoruAUkS0FJLsQ08l4MOi1JAmdGn2DQrQinKodyiiEUoJ+1gCk1Pf0kfMuise6PSapjBfjhwMZgmvc12mOomXdeAxf0sODYROTDrIFhjfhkVjI/ryUVmjZcDQKR8CXa8i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b=dzMlTCzL; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711992900; x=1712597700; i=scpcom@gmx.de;
+	bh=BRM8MxPwi3d472uvoCEaL5F5lAKEmhzYRMik63wqMOs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=dzMlTCzLTT0ANeL1LRK0AVcjw2p5TlJLSNJvGwP7aBaf5uzJr9y5jCjDtXsB7NTB
+	 HIcgApvedObbm8j8Zq+sNAl6GG/anB41bFuEQCcPzwH0i/RMUEKadFUCL7hRVHMWZ
+	 qXhzRBjxu35C+SJIVj3CmgtQTPCXyZTusz7GkBYM9yyok3nP91CkPLuwxqneVmYA0
+	 gdzrD+Jrnq9/eUHufzLJVd19ymAK8fY8MKeG7TcYm2FWM+acp5/nNolvcnvzo4DPs
+	 9SFEfJeQZitwq3voTEtqFv2MZK05QPsjntVywwDrzqZKlyilyY9E65WpTg4CilE/l
+	 gEm5GmTe9S5q7vA6bg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.236.10.6] ([10.236.10.6]) by msvc-mesg-gmx024 (via HTTP);
+ Mon, 1 Apr 2024 19:35:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|DM6PR10MB4331:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	hw5Txc8bsr0crgbKdFzyoDWb8eblw9REMfWChrslyy0+N+ejVhSdl20Mwln10JJaK9+jWN0oin5D4osJdUwqPywDN9VPZhqvKqx6vDC9C5WLruF7aGYFuJpfgjMpg28Un9Y7wCSvd3vyaw1fluhVCsEylG46bKkgeSnV7unSMzZ8hqAdMwfIfpCB9B3Yg9HObJrpojRbzPNA2i3T0JIxEZ+Jc89H4tMnAWdy+ylqpsgLRE/BVNw3zyOsixRBMAYoYxYLNF4wBhgdmtu3b4aQuhmD3IwFn/vWQJwgui06w0QxtX9md0JfDOgsUXgpranqxYMVgR0u34KV2qLXEIov6f8Y17ZKptoFgpSxiCH20AGOW3o6rZxDYjCQOlXi/wjuW51LDZqtZXuVPXC//Pw2oYIyHEQclt03rI4Hz7z7w+tprr07i6bNB2gylN45DN4TcHEjnJwf2j/cdikTE89QWwdHLXkhcWP4Xmij70wBDH3xNTBhsOxGGOENqYiJ7BaSnULI8OGxGQ6uHquVPt6CVX4taireQHifCE1B34H2va7fJuCIAij87I/b7eYTLo1FqC0uGgx7p7Vl9f9XVbm3kUTj1FthN9C3sJIiuhTvm50C2bY5sWe40AjRb3PYXNTm8hOiT2yu4nrQJExqKWPILO7X1QKc62EiKbrUoemKd4A=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?RGx1UXJQbkExYWo5N3A2Y2lvWXlNRnZRMTVGcjN2Ujg5WTI1UUgyRnhwUUtQ?=
- =?utf-8?B?Q2JCbkk2VUF1SDlzTjNRVVVNbGdFZTJFbEl0T1l1OW9EYnFQQm9YaE5TSTJr?=
- =?utf-8?B?VE1OR2xabGkyTDlzTk5FYS8xVmVlTXEyUGUwMmZCYkd6clJwRDRONk5SMVRz?=
- =?utf-8?B?c1djbnZNdTBMRy9uYXpRUVVmVWdQeXZ5WVZ3d2EvWVI5RWxZdFJ2MGduMGNv?=
- =?utf-8?B?clAxeXhiNEFWamZlT3FPRkRmY25jMjlYTUtMbGNKYjM5WWZ1eWhidHpDaGlr?=
- =?utf-8?B?Z1J2WFNXWlNzT3MxS3hQdkdwZnFjMFlueGg0aG56RU1RemxzamtxM1lweXYr?=
- =?utf-8?B?NzZudHZjaHArRFUzS1EwYmJjNUkvei9ScUdKeldLeHZQcm90Zi9JakdhVlh1?=
- =?utf-8?B?eXcxVXJ3aWxlRGk1T05VQ3N3RGtHQ3dXRURaTUZVTHFjNlhjdENZY1RMQk1u?=
- =?utf-8?B?UGt4cmRYQkJpKzc0dW5tdmVUYzZSLzVtdVg2Y0xLTnVYMnYwby9xZGdreGtL?=
- =?utf-8?B?eEV0dkVUK1QyVXFlMkdsL1ZxYmQrY0IzdUJHaGk1a0xnNUdncVpncUx5RFAw?=
- =?utf-8?B?UExhNU5sWU1rZkFTZjE2RDlHRE9FVGJjWHFJWXllYkdDNEdCYXFoUk1VOG9w?=
- =?utf-8?B?R2FrTm5wUDU2dGR3bDV3K3kwMUM5bjNabVdieVhsOUtKOHd5d0UxUTJVOXA1?=
- =?utf-8?B?RWdPSFgvRmlmY3dDRGJlSS9RVTl4VFFDdDM5V2ZlYVVycE8zWXdwdk4wZG4x?=
- =?utf-8?B?MHdFSlVyOTRiWGg0WGRxRHZ2UEVOUU5Nb2lzc3l1MjQ5Vzc1QVd1VzNMQmo5?=
- =?utf-8?B?MmtDY0RVNjRycHQwTTIwOVRzSERWRkJPUHllN1dhZlE0c24waG1JUlhVV2dp?=
- =?utf-8?B?OU16Q2JqU0h5dXoxWmlwN2w4UXkrdGlLMGVYMkNkTWlianlDZGt5SVkzcmM1?=
- =?utf-8?B?SG4wUXVTWW5Fb3VsTHpJN0pDV2lDNHF4b0tnV3M2RXNubXRFazk0NWhDK0Vh?=
- =?utf-8?B?b20vM0NGYnNBSEc0c1Q4T3RBeFpoK0JBalpzenVLejNYcDJibXFENWs2YUR6?=
- =?utf-8?B?Z1U4RUVjQmFHaDJnNFNZUCtMSzNCajZtSGhDY3cwR0FjREVpN0Y4YXJWUkEz?=
- =?utf-8?B?d2RGOEtzckJZN3RMVW9DR3RNZFo5RW54YkkwdTh0dVRVSTJGbTRnRWdCdE9j?=
- =?utf-8?B?b1pGdndJOUFuVnVTN005ZG1FcGZ0bGhXRlNETGY3MUZERE1lekZ0NS8zYXBY?=
- =?utf-8?B?SVN5MVd3azl1YVdzNUtrd2hvUTQ3TlBBeEpFWm1MVTR2QUFUOGVGRS9NQW43?=
- =?utf-8?B?dGpGaXpydC95aVJZOGhIWlBVSEFFVE0rUDcrMVVwcFNPYTQ2M3o2N05MQTZW?=
- =?utf-8?B?cWxWRWxPWUdpVkpYNVFhbXlmZkhLUzFDSXRSSGhtTEVUMlpTZmNmYWM5UU1l?=
- =?utf-8?B?bjRnaEVzVUJhMjRKZnRoQWc0Y0FOdkgrTmVvV0l1aG1seVJRVU9xR1JGbFI3?=
- =?utf-8?B?MTEwTkd5TVhJbU84aWJnc3B1eGtoTUpBZGdlNUFSODJRU2FVaUM2VEtCS2tB?=
- =?utf-8?B?dUJaanpLaVNERmdIcGRRT05KNWNuSkV2cmpJVUM3cGdEUjMzWDBKd1NNWWJZ?=
- =?utf-8?B?RzVEd3VOelM3WExWV2xQVDFGaVE2MmFiQ3ZIV1ZnM21ISDVEa253K2NyYmo2?=
- =?utf-8?B?UVNVN0U3UW43Q3B3ejVCL0xnRWc0OG5udzQ0TDUrQlNxU3psQ0cyWDlOWGJn?=
- =?utf-8?B?TUNRSi8rWjU0RjhhK1piS0FibVdnL0ZiUmlMSk1oK2txZEw3ZWtFbUhzK1Rm?=
- =?utf-8?B?bmtWNTRhZW15RTU1OHFWRk9VZmx1K0JPNldBa0ZackRBWFEzZytVV3dBWkVV?=
- =?utf-8?B?TjgvV2Mvb0RPOXpmUUw4dEh4MjZwWlFSczc5WVhXTWlSQWlVZFJhNFRpeVRR?=
- =?utf-8?B?R3JxQkFSdUVPWVc0YmdnN2xxRHRiZExLL2dCWGhFaWFZaTlDOHRWb1gwRkFq?=
- =?utf-8?B?UDlaejNHbEdEbkU3emtlUVY2R24ram9yNmxUQ3lKa1NSc0VxQ2N2Q09kaWNY?=
- =?utf-8?B?V0VnaVFlSDhpNTJBVkdOODhNQXJXZmQzMVFaU0JkZExuWnVUVFRmVXFORExq?=
- =?utf-8?Q?68Q+dwXTK8Cg6h+AyPOA+hX1l?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	hwHChkJkYIlpGbqTpYZk4CV8u0jxI3aynuBclxnQ5bCldLJzw39mxuwQ2xJI2mgHVcIfeLIJ+gctS/MO31fH+QuyJ00uQ7sTmOEf0t6bIVBocdNIzfEOieeKQKK1XHKhd3WDMySmgRiCL2vCMl7/jlBcRZyP45yVyesLN0OdNvCB4lapnD05cy/fJRbJdQrDlZ1aVaumzyuvraQpb4ecRjiwkwPNOKxC0yVRklDdUl0lU+8oeEKgqAGJdQVKOY5Qv6e3hspk6cDiGFSJTP3Ddf6Q4iXPyuMs7a8U0lJoQwxj/MjtF3U8wfNXpWdylL+f8+HFMbDXT/i8tnqkUYFhH2DEzPoRCqippXaucGW4lnZGltx5zByDHdmkyh4kcstw+fISBWJU4ybIc9/oiLAPXL2y0cnp5wyvRHdYsmBvilToER0uOhRZ5fhytGaPhRSebhdSrJQlboYm4UeLpBDO+98Mp1M0HhQB8b1TTfTWDh/8WK1ho6dF3SM3wHKuqymJICdC5DLVtbz5Oc3Tv1Zaouwc0JiAfIxiV7Y9jZj+IaNUkmmnK84upc0AjOLY7WU+kmhEz+CsjnsQGw5kjkJvnkYI0CJEr7A0b3Jj2UYeEM8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b5b3986-f840-4d7b-3f79-08dc526b469e
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 16:46:28.1375
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nabfecNBovsyRfJBxyqbl4kb9f1ItHFkxcb3PFqM7sqRrLhrNmlel/52fPeWbODiMFqi7F4H4COxm9Mf+h0aqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4331
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_11,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404010117
-X-Proofpoint-ORIG-GUID: 586Uy0ISs8TXH8X4Y195621hGu8oqOBJ
-X-Proofpoint-GUID: 586Uy0ISs8TXH8X4Y195621hGu8oqOBJ
+Message-ID: <trinity-00b2c0aa-3284-4d74-8184-71b5374bd8d7-1711992900521@msvc-mesg-gmx021>
+From: Jan Schunk <scpcom@gmx.de>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Benjamin Coddington <bcodding@redhat.com>, Jeff Layton
+ <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David
+ Howells <dhowells@redhat.com>, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Subject: Aw: Re: [External] : nfsd: memory leak when client does many file
+ operations
+Content-Type: text/plain; charset=UTF-8
+Importance: normal
+Sensitivity: Normal
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 1 Apr 2024 19:35:00 +0200
+In-Reply-To: <308BAEFD-8CAE-4496-8146-8C05DD78FB37@oracle.com>
+References: <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
+ <trinity-66047013-4d84-4eef-b5d3-d710fe6be805-1711316386382@msvc-mesg-gmx005>
+ <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
+ <trinity-ad0037c0-1060-4541-a8ca-15f826a5b5a2-1711396545958@msvc-mesg-gmx024>
+ <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
+ <trinity-77720d9d-4d5b-48c6-8b1f-0b7205ea3c2b-1711398394712@msvc-mesg-gmx021>
+ <51CAACAB-B6CC-4139-A350-25CF067364D3@oracle.com>
+ <trinity-db344068-bb4b-4d0b-9772-ff701a2c70dd-1711663407957@msvc-mesg-gmx026>
+ <C14AC427-BD99-4A87-A311-F6FB87FFC134@oracle.com>
+ <trinity-157de7e0-d394-47fa-bb44-2621045a5b6e-1711812369391@msvc-mesg-gmx004>
+ <Zgg9OzeFZUTc4hck@tissot.1015granger.net>
+ <308BAEFD-8CAE-4496-8146-8C05DD78FB37@oracle.com>
+X-Priority: 3
+X-Provags-ID: V03:K1:8Qgcbc8YOU6Quga0KAVBADM5hF+gS5qYQPqH/liqGeWndvoiMC+1r5eXGQrvfunnNiLhQ
+ +3n42PaHD2+YPfQLXLD4zIkU7TPZCDnCdyG3n1swmuxB72gSacaKUpyfU2p1pziYhPiTZ8mxVn2v
+ 5xlli/GWlifkrZ5/oWQ+GdyXJDMZRgV83QRiXmQk5wQAFDXqva3LsPVNGdmm+YYKV+NlZbBNR+dl
+ z6amjIhyk0pFPnhNCP50PB13/HccFmalhcSWW0ZWb7Wncy1vcWv+FSfD4WhzzEZdwxkdrv9X+t54
+ uc=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3toanD41SXU=;+9v1Zos/3j5NP5dHyFvayW1QJ+k
+ sHMpCIi/6Tb/yiz8eI+1Vj6jzTi2vM8YKQ9bSyuBI2sWsF8Xb9TnBYc4CsAKxS5Q4rG2AMkSh
+ faPWC5fleA+aVMcGAXtBjcAIRs/VbE7KsFXCkYdzlHA5d+IWamnrb0zTNNHE50n3RepAEAULY
+ wZ6+WKjS/f2Pw/X9E4VaGkcCTYCylr0K1d80cHu8l1QCWxYFiRCUx3JMju7gqx8XnvfwinLko
+ Zy2Ia96WsGIniIiyLCgEMAoEF6RZ0Amrbha2I8BuxRvbk4dU5z7kHpvy5xl5gPBH5P8DB1S19
+ yDigwj+Sn/c4zYWZPY54yvYXlzbqUnnS/ed+zxO18rduSpCUansEsaFdqHI7n4jtJo9qtaMAF
+ HePyQkSTsr5NMb7a3a/Beop5B7hv2VerWqUxd4WyVkEPEXK0NhqItGt8ruGA7Ngd9PZtVh+Wg
+ qsHVfdkFznB/OUbLjfmToJehylAYb4hHvsj9/xnMKDGAf0lF4+lnKEx0ezY4TWuprG5VeGq9l
+ bVZDlASo/8p4D4Rlz3/n+fl7Gr54sjNBt5fYsaBjlm97e8TIH+R8PVE7oBYJ4hzN4unYEn6EZ
+ 9RwDnFhPMfbzi1MriLheLHE8nQvaaQ80jZA0WJaX5zWEg2uo4h+E22lA/RBnLrqouDcVXNjpf
+ zsTMNfEQAAyipcVnme5TZU0dMaE69SNpx77zgzn4SiWYSnhG75A3WwZBQwO/rZg=
 
+Hi,
+the bug report is now here:
+https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D218671
 
-On 4/1/24 9:00 AM, Dai Ngo wrote:
->
-> On 4/1/24 6:34 AM, Chuck Lever wrote:
->> On Mon, Apr 01, 2024 at 08:49:49AM -0400, Jeff Layton wrote:
->>> On Sat, 2024-03-30 at 16:30 -0700, Dai Ngo wrote:
->>>> On 3/30/24 11:28 AM, Chuck Lever wrote:
->>>>> On Sat, Mar 30, 2024 at 10:46:08AM -0700, Dai Ngo wrote:
->>>>>> On 3/29/24 4:42 PM, Chuck Lever wrote:
->>>>>>> On Fri, Mar 29, 2024 at 10:57:22AM -0700, Dai Ngo wrote:
->>>>>>>> On 3/29/24 7:55 AM, Chuck Lever wrote:
->>>>>>> It could be straightforward, however, to move the callback_wq into
->>>>>>> struct nfs4_client so that each client can have its own workqueue.
->>>>>>> Then we can take some time and design something less brittle and
->>>>>>> more scalable (and maybe come up with some test infrastructure so
->>>>>>> this stuff doesn't break as often).
->>>>>> IMHO I don't see why the callback workqueue has to be different
->>>>>> from the laundry_wq or nfsd_filecache_wq used by nfsd.
->>>>> You mean, you don't see why callback_wq has to be ordered, while
->>>>> the others are not so constrained? Quite possibly it does not have
->>>>> to be ordered.
->>>> Yes, I looked at the all the nfsd4_callback_ops on nfsd and they
->>>> seems to take into account of concurrency and use locks appropriately.
->>>> For each type of work I don't see why one work has to wait for
->>>> the previous work to complete before proceed.
->>>>
->>>>> But we might have lost the bit of history that explains why, so
->>>>> let's be cautious about making broad changes here until we have a
->>>>> good operational understanding of the code and some robust test
->>>>> cases to check any changes we make.
->>>> Understand, you make the call.
->>> commit 88382036674770173128417e4c09e9e549f82d54
->>> Author: J. Bruce Fields <bfields@fieldses.org>
->>> Date:   Mon Nov 14 11:13:43 2016 -0500
->>>
->>>      nfsd: update workqueue creation
->>>           No real change in functionality, but the old interface 
->>> seems to be
->>>      deprecated.
->>>           We don't actually care about ordering necessarily, but we 
->>> do depend on
->>>      running at most one work item at a time: nfsd4_process_cb_update()
->>>      assumes that no other thread is running it, and that no new 
->>> callbacks
->>>      are starting while it's running.
->>>           Reviewed-by: Jeff Layton <jlayton@redhat.com>
->>>      Signed-off-by: J. Bruce Fields <bfields@redhat.com>
->>>
->>>
->>> ...so it may be as simple as just fixing up nfsd4_process_cb_update().
->>> Allowing parallel recalls would certainly be a good thing.
->
-> Thank you Jeff for pointing this out.
->
->> Thanks for the research. I was about to do the same.
->>
->> I think we do allow parallel recalls -- IIUC, callback_wq
->> single-threads only the dispatch of RPC calls, not their
->> processing. Note the use of rpc_call_async().
->>
->> So nfsd4_process_cb_update() is protecting modifications of
->> cl_cb_client and the backchannel transport. We might wrap that in
->> a mutex, for example. But I don't see strong evidence (yet) that
->> this design is a bottleneck when it is working properly.
->>
->> However, if for some reason, a work item sleeps, that would
->> block forward progress of the work queue, and would be Bad (tm).
->>
->>
->>> That said, a workqueue per client would be a great place to start. I
->>> don't see any reason to serialize callbacks to different clients.
->> I volunteer to take care of that for v6.10.
+PS: I can also confirm, if you use the latest v6=2E6=2E22 and only revert =
+e18e157bb5c8 nfsd works without any issue=2E
 
-Since you're going to make callback workqueue per client, do we still need
-a fix in nfsd to shut down the callback when a client is about to enter
-courtesy state and there is pending RPC calls.
-
-With callback workqueue per client, it fixes the problem of all callbacks
-hang when a job get stuck in the workqueue. The fix in nfsd prevents a
-stuck job to loop until the client reconnects which might be a very long
-time or never if that client is no longer used.
-
--Dai
-
->
-> Thank you Chuck!
->
-> -Dai
->
->>
->>
+> Gesendet: Montag, den 01=2E04=2E2024 um 16:08 Uhr
+> Von: "Chuck Lever III" <chuck=2Elever@oracle=2Ecom>
+> An: "Jan Schunk" <scpcom@gmx=2Ede>
+> Cc: "Benjamin Coddington" <bcodding@redhat=2Ecom>, "Jeff Layton" <jlayto=
+n@kernel=2Eorg>, "Neil Brown" <neilb@suse=2Ede>, "Olga Kornievskaia" <kolga=
+@netapp=2Ecom>, "Dai Ngo" <dai=2Engo@oracle=2Ecom>, "Tom Talpey" <tom@talpe=
+y=2Ecom>, "Linux NFS Mailing List" <linux-nfs@vger=2Ekernel=2Eorg>, "linux-=
+kernel@vger=2Ekernel=2Eorg" <linux-kernel@vger=2Ekernel=2Eorg>, "David Howe=
+lls" <dhowells@redhat=2Ecom>, "Linux regressions mailing list" <regressions=
+@lists=2Elinux=2Edev>
+> Betreff: Re: [External] : nfsd: memory leak when client does many file o=
+perations
+>=20
+>=20
+>=20
+> > On Mar 30, 2024, at 12:26=E2=80=AFPM, Chuck Lever <chuck=2Elever@oracl=
+e=2Ecom> wrote:
+> >=20
+> > On Sat, Mar 30, 2024 at 04:26:09PM +0100, Jan Schunk wrote:
+> >> Full test result:
+> >>=20
+> >> $ git bisect start v6=2E6 v6=2E5
+> >> Bisecting: 7882 revisions left to test after this (roughly 13 steps)
+> >> [a1c19328a160c80251868dbd80066dce23d07995] Merge tag 'soc-arm-6=2E6' =
+of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/soc/soc
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 3935 revisions left to test after this (roughly 12 steps)
+> >> [e4f1b8202fb59c56a3de7642d50326923670513f] Merge tag 'for_linus' of g=
+it://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mst/vhost
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 2014 revisions left to test after this (roughly 11 steps)
+> >> [e0152e7481c6c63764d6ea8ee41af5cf9dfac5e9] Merge tag 'riscv-for-linus=
+-6=2E6-mw1' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/riscv/linu=
+x
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 975 revisions left to test after this (roughly 10 steps)
+> >> [4a3b1007eeb26b2bb7ae4d734cc8577463325165] Merge tag 'pinctrl-v6=2E6-=
+1' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/linusw/linux-pinctr=
+l
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 476 revisions left to test after this (roughly 9 steps)
+> >> [4debf77169ee459c46ec70e13dc503bc25efd7d2] Merge tag 'for-linus-iommu=
+fd' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/jgg/iommufd
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 237 revisions left to test after this (roughly 8 steps)
+> >> [e7e9423db459423d3dcb367217553ad9ededadc9] Merge tag 'v6=2E6-vfs=2Esu=
+per=2Efixes=2E2' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/vfs/v=
+fs
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 141 revisions left to test after this (roughly 7 steps)
+> >> [8ae5d298ef2005da5454fc1680f983e85d3e1622] Merge tag '6=2E6-rc-ksmbd-=
+fixes-part1' of git://git=2Esamba=2Eorg/ksmbd
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 61 revisions left to test after this (roughly 6 steps)
+> >> [99d99825fc075fd24b60cc9cf0fb1e20b9c16b0f] Merge tag 'nfs-for-6=2E6-1=
+' of git://git=2Elinux-nfs=2Eorg/projects/anna/linux-nfs
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 39 revisions left to test after this (roughly 5 steps)
+> >> [7b719e2bf342a59e88b2b6215b98ca4cf824bc58] SUNRPC: change svc_recv() =
+to return void=2E
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 19 revisions left to test after this (roughly 4 steps)
+> >> [e7421ce71437ec8e4d69cc6bdf35b6853adc5050] NFSD: Rename struct svc_ca=
+cherep
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 9 revisions left to test after this (roughly 3 steps)
+> >> [baabf59c24145612e4a975f459a5024389f13f5d] SUNRPC: Convert svc_udp_se=
+ndto() to use the per-socket bio_vec array
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 4 revisions left to test after this (roughly 2 steps)
+> >> [be2be5f7f4436442d8f6bffbb97a6f438df2896b] lockd: nlm_blocked list ra=
+ce fixes
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 2 revisions left to test after this (roughly 1 step)
+> >> [d424797032c6e24b44037e6c7a2d32fd958300f0] nfsd: inherit required uns=
+et default acls from effective set
+> >> --
+> >> $ git bisect good
+> >> Bisecting: 0 revisions left to test after this (roughly 1 step)
+> >> [e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4] SUNRPC: Send RPC message o=
+n TCP with a single sock_sendmsg() call
+> >> --
+> >> $ git bisect bad
+> >> Bisecting: 0 revisions left to test after this (roughly 0 steps)
+> >> [2eb2b93581813b74c7174961126f6ec38eadb5a7] SUNRPC: Convert svc_tcp_se=
+ndmsg to use bio_vecs directly
+> >> --
+> >> $ git bisect good
+> >> e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4 is the first bad commit
+> >> commit e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4
+> >=20
+> > This is a plausible bisect result for this behavior, so nice work=2E
+> >=20
+> > David (cc'd), can you have a brief look at this? What did we miss?
+> > I'm guessing it's a page reference count issue that might occur
+> > only when the XDR head and tail buffers are in the same page=2E Or
+> > it might occur if two entries in the XDR page array point to the
+> > same page=2E=2E=2E?
+> >=20
+> > /me stabs in the darkness
+> >=20
+> >=20
+> >> I found the memory loss inside /proc/meminfo only on MemAvailable
+> >> MemTotal:         346948 kB
+> >> On a bad test run in looks like this:
+> >> -MemAvailable:     210820 kB
+> >> +MemAvailable:      26608 kB
+> >> On a good test run it looks like this:
+> >> -MemAvailable:     215872 kB
+> >> +MemAvailable:     221128 kB
+>=20
+> Jan, may I ask one more favor? Since this might take a little
+> time to run down, can you open a bug report on
+> bugzilla=2Ekernel=2Eorg <http://bugzilla=2Ekernel=2Eorg/>, and copy in t=
+he symptomology and the
+> bisect results? It will get assigned to Trond, and he can
+> pass it to me=2E
+>=20
+> The problem looks like how we're using a page_frag_cache to
+> handle the record marker buffers, but I'm not sure what the
+> proper solution is yet=2E
+>=20
+> #regzbot ^introduced: e18e157bb5c8
+>=20
+> --
+> Chuck Lever
+>=20
 >
 
