@@ -1,174 +1,115 @@
-Return-Path: <linux-nfs+bounces-2598-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2599-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72FCA895033
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 12:35:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A78FF8950B5
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 12:49:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A43C11C22919
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 10:35:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AF601F24BA2
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 10:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03F9F5F873;
-	Tue,  2 Apr 2024 10:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1634D5FDA7;
+	Tue,  2 Apr 2024 10:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="r2Evgy0j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3pKIoou"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ACD657AD
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 10:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C337B4776F;
+	Tue,  2 Apr 2024 10:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054059; cv=none; b=P37U9K0GF/Sukm6FfnP6U0aKYotTg60p0JNAzETMUAmggda3iYvz0bfQXyaKXJK3fx5AjA7l2yme7fou1Mnbj4f1+Qjj5b6ZqOA9vMYZoQLbTXhwZQJQ8yH/+Asf89lHaLNZ59gpYEQTK6NU6b4nR5I4k82JdB/GfXT1to1NH14=
+	t=1712054938; cv=none; b=eeh0HHKLZZQ17dPoeQpQszzUucChVaAMK4aHUj1WtnlbI/V6n9bxLD5s5bEOS5fCjuXkse7+jW79YbDArYe2xq+hSJFmRiKkQdL4tzWU9cfR8hIr5ib+wcDkmQjWfx9ItRINQ2B+2Io+kGFh/imMa3fdgyXq57xOYffIqQ1kGAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054059; c=relaxed/simple;
-	bh=zhT7ol6vQlFSj8JM5F0Vhpoqv4g+uMUONk4hQwFJGFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cvclqX9uCApq3vy6a5+40cX74NCZToaDA8brYO1M+VNPIpSxJF/A17uu06csZtJXSO9hlmwG8mm4+zlh7obdox6tRqkRzn9OlWt0AwZiZJGN29+NTvSMXcNiUTMEv8snAxUDDP7/QvIuENdvpF+f205AmH1qN0xUsxF+sEiF8V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=r2Evgy0j; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1712054057; x=1743590057;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zhT7ol6vQlFSj8JM5F0Vhpoqv4g+uMUONk4hQwFJGFo=;
-  b=r2Evgy0jYrkkHvGkXPrA2PTyMAM+tNNUQXPkP8UbZZZz8zK2GrtabW/o
-   zyQSJnOVvKwlI+LIraZLVAbWahUKqXD4/KsU98I8mwcX8CTw1ns8uCdCq
-   nbasFoIJ5VwjRm+IGcYiw6y1zzL4/R8qGngSZ0M1IaZCkfkApN2hCYRQm
-   KsqJ48ukQzVH2H+dZ/LeY5FPGkNDhc5/0+k/P7oyAo5v15EXDytBgjNsn
-   WJlmtOOAQqxzkg7JcfiCWnfOk+DDIwLP1DckYK6UEPrKS5l1/gG3cDJLi
-   H1CknS7gs9RHpy7fd58NgaHib3532wBJxweq39OhAyc9cp/oAQ+Sdvd81
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="154356995"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708354800"; 
-   d="scan'208";a="154356995"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 19:34:09 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id A8B65EB427
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 19:34:06 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id DA6FBD52BF
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 19:34:05 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 76B4A2007473F
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 19:34:05 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id D89BB1A000B;
-	Tue,  2 Apr 2024 18:34:04 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: make sure lock/nolock overriding local_lock mount option
-Date: Tue,  2 Apr 2024 18:33:55 +0800
-Message-Id: <20240402103355.256-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+	s=arc-20240116; t=1712054938; c=relaxed/simple;
+	bh=0o849oaUCS/1to/11XOBsrrHkZ6HnWiwjHhXX1XawsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GDwHJ7XqCP8SICjGWIrNkHKwcgYY8likZYkKfgvTtsD6y9dBFOW0/r+ZmavJnj+muzbMcIM32zhkHSsnM8kiy20Yq4v78EncUpGOFz4gUfj4XHqA8nKON5pj+KCdRBlddNKlC1pE9hTmT3NQnArXv4vMNftcjaxHgyIM4r0CdPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3pKIoou; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F0C433C7;
+	Tue,  2 Apr 2024 10:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712054937;
+	bh=0o849oaUCS/1to/11XOBsrrHkZ6HnWiwjHhXX1XawsY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s3pKIoouIXwXD4lmoPfSlZSDJZnmmtOa1RUJNiFaCXHRyfUJWBCybV99rJXm7gV8y
+	 T7Fjk4lyWWWjVz2Gcq+2fNAoTMJnNX/2F2ImxDn9loGZaAaUiIrrOGUofL9i7svfdk
+	 XAdlme0aallBdCc4GUuODtk5GZtLEzaPI3vng58HDE2HBNIlc4c6Bq3f6hazpMeaEx
+	 Xgj2CoKMoSLbndyirg0YejiKL0ZEAGFUReEzmqbp1wYq+3/s1f3ZCIqrcblHvsWe1U
+	 u/Fu8N++N778FF1N0TJzW8msw8oIsVzOMv/4cCc32kKXWGv+qqR4NqN76QQvHhbwO4
+	 xB4Ir5cVjt1jw==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeff Layton <jlayton@kernel.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH 00/26] netfs, afs, 9p, cifs: Rework netfs to use ->writepages() to copy to cache
+Date: Tue,  2 Apr 2024 12:48:39 +0200
+Message-ID: <20240402-angezapft-geltung-eedf20c747b6@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1071; i=brauner@kernel.org; h=from:subject:message-id; bh=0o849oaUCS/1to/11XOBsrrHkZ6HnWiwjHhXX1XawsY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRxP+pcP3O9duihh7ft/O8vis97k3zynpVeQfGsW8E7b q56dXSyVUcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEuNwYGTasXTr9sKjU3hPX Ei5oGyxbtVov5EPVyh7dA8dse88LRt5l+M2u8X9Xtd2ZVVnejNGvL9xPN9z30XT+j+sXvgWrTvz jocYCAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28292.007
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28292.007
-X-TMASE-Result: 10--6.228900-10.000000
-X-TMASE-MatchedRID: qs/7TikDQGZDfKpRuRX+oB1kSRHxj+Z51QQ6Jx/fflY6FHRWx2FGsL8F
-	Hrw7frluf146W0iUu2tU3a+owMO/aoSasxSwyoX84kw0h+3MIJO/XAJUFuWKazKIerHAhfYx/vI
-	5ah38pDW90igsQ32uTT6eOS91uJ8FlwV2iaAfSWcURSScn+QSXt0H8LFZNFG7bkV4e2xSge5/on
-	MEssYEmKTiJD8nLFhUnTo+nT0zsUQPm6771I51gByFdNnda6Rv
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Currently, mount option lock/nolock and local_lock option
-may override NFS_MOUNT_LOCAL_FLOCK NFS_MOUNT_LOCAL_FCNTL flags
-when passing in different order:
+On Thu, 28 Mar 2024 16:33:52 +0000, David Howells wrote:
+> The primary purpose of these patches is to rework the netfslib writeback
+> implementation such that pages read from the cache are written to the cache
+> through ->writepages(), thereby allowing the fscache page flag to be
+> retired.
+> 
+> The reworking also:
+> 
+> [...]
 
-mount -o vers=3,local_lock=all,lock: 
-	local_lock=none
+Pulled from netfs-writeback which contains the minor fixes pointed out.
 
-mount -o vers=3,lock,local_lock=all:
-	local_lock=all
-
-This patch will let lock/nolock override local_lock option
-as nfs(5) suggested.
-
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 ---
- fs/nfs/fs_context.c |  2 ++
- fs/nfs/internal.h   |  7 +++++++
- fs/nfs/super.c      | 10 ++++++++++
- 3 files changed, 19 insertions(+)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index d0a0956f8a13..ec93306b7e79 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -600,9 +600,11 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		break;
- 	case Opt_lock:
- 		if (result.negated) {
-+			ctx->lock_status = NFS_LOCK_NOLOCK;
- 			ctx->flags |= NFS_MOUNT_NONLM;
- 			ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		} else {
-+			ctx->lock_status = NFS_LOCK_LOCK;
- 			ctx->flags &= ~NFS_MOUNT_NONLM;
- 			ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		}
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 06253695fe53..dc0693b3d214 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -112,6 +112,7 @@ struct nfs_fs_context {
- 	unsigned short		protofamily;
- 	unsigned short		mountfamily;
- 	bool			has_sec_mnt_opts;
-+	int			lock_status;
- 
- 	struct {
- 		union {
-@@ -153,6 +154,12 @@ struct nfs_fs_context {
- 	} clone_data;
- };
- 
-+enum nfs_lock_status {
-+	NFS_LOCK_NOT_SET	= 0,
-+	NFS_LOCK_LOCK		= 1,
-+	NFS_LOCK_NOLOCK		= 2,
-+};
-+
- #define nfs_errorf(fc, fmt, ...) ((fc)->log.log ?		\
- 	errorf(fc, fmt, ## __VA_ARGS__) :			\
- 	({ dprintk(fmt "\n", ## __VA_ARGS__); }))
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index dc03f98f7616..cbbd4866b0b7 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -901,6 +901,16 @@ static struct nfs_server *nfs_try_mount_request(struct fs_context *fc)
- 	rpc_authflavor_t authlist[NFS_MAX_SECFLAVORS];
- 	unsigned int authlist_len = ARRAY_SIZE(authlist);
- 
-+	/* make sure 'nolock'/'lock' override the 'local_lock' mount option */
-+	if (ctx->lock_status) {
-+		if (ctx->lock_status == NFS_LOCK_NOLOCK) {
-+			ctx->flags |= NFS_MOUNT_NONLM;
-+			ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
-+		} else {
-+			ctx->flags &= ~NFS_MOUNT_NONLM;
-+			ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
-+		}
-+	}
- 	status = nfs_request_mount(fc, ctx->mntfh, authlist, &authlist_len);
- 	if (status)
- 		return ERR_PTR(status);
--- 
-2.39.1
+Applied to the vfs.netfs branch of the vfs/vfs.git tree.
+Patches in the vfs.netfs branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.netfs
 
