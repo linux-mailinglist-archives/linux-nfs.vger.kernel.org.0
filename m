@@ -1,67 +1,70 @@
-Return-Path: <linux-nfs+bounces-2595-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2596-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFC6C894D93
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 10:33:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72BF4894DDE
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 10:47:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95546282AB5
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 08:33:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26D702839DC
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 08:47:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56823E47E;
-	Tue,  2 Apr 2024 08:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A327847A53;
+	Tue,  2 Apr 2024 08:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzsIc/2t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XNGsU8PH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2410F1E525
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 08:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F8645948
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 08:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712046773; cv=none; b=J6ovH+GoKNmOgpD3u5+nKPmujqsOSDvhqdF0/GKLswLtpCrefv4O/t+v+iqek6CwqXaiZwjvG9+Zm4gwCEvD4mKz/eRGXC4NP8zLWTcZ+s6bxItZ95N9s/f96TNrcl8H/YaXhY4ncIamZb/HzlDJuALU2Q2BUdN19jzWLn3cMV8=
+	t=1712047590; cv=none; b=YKdK8Q7g2PCDWt6W+9GfcugGmSBq/gDXARG0DFs6+RteJ5scV/gSmamE0qugKDkOZEC00bUpUvKyFhtK86CkH83RgwOrCyEtnZGok2MWkIzxhwtxMco0eLJslkQbMnmXByqIDRpk1zxXBistHhDqR+jRFLCCul9th4bhVHZ/T9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712046773; c=relaxed/simple;
-	bh=SbhTatDUNlFMsocczlgnCcBAF0CiyLb5vhHsAQLt2SU=;
+	s=arc-20240116; t=1712047590; c=relaxed/simple;
+	bh=0iCwHoYu3g7mLUt+X6CnAiX5DTbCc5GT+Ny5u3rTSPw=;
 	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=QZ672nOzvPfofvfwNz8G36CKE26OwWru3ksfN0yodbvEAiyT2J69hQauzpSWXQZhAOJxk3GuwrQ497g0GjwJiiHojoQ/45O2zFS0TS6hyFqogrQOCRm6ToLhOdUJPn6aVfgxCtAgBxDHaBH75hrdNbEf59hHikxVGZcLwG+Yruo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FzsIc/2t; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Date:Message-ID; b=Idq1IzEYjdWpVz5b2Nfn+58qu+dFVc8uHjxkY1L8Z8JQqVxYYS4gl/m2Xp99AmiunTz5H3TbtRTgqIK1yXjEvTWMt/hMdAKUFFej5vTtkDnYR26jUDvl3n1QqaCiVCEmZZE+TBpd8T7pT0g7yqxRZl+tjDtO6vmO/tNRufonK7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XNGsU8PH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712046771;
+	s=mimecast20190719; t=1712047587;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y+sMESiDiEk7NQ7Fx8r6KwgieS1M3kfYVE+bjq9Liog=;
-	b=FzsIc/2tj8j5mb1ls42Lh9l6ewaBsQVJFLtRoA0eQzyI580YRtDInN+sRF+pUIu4ljRPH0
-	UxQygn8nMcpiFsk57OlDtlPHPTnkwh4nKffxn5uyas7PM37m7Qs6/ruD6tU1ohhPwFYKa7
-	WD/8iRWjD3KVLKunpXwx4Tto6dDnQvY=
+	bh=/8zVm5/YGf5Pgwy9JsdjJMXQWirBEfx89VnmYMfPJM4=;
+	b=XNGsU8PH9vihpd9vXr2kmi07hroklzXDxvLUCkIgjaB2AAFfh0d3KxqAws8f+YSRDuNd6n
+	0aPLFSMyp20ykRr8GrDq2mdZ4oNEOeIo0C8i1kvYQFmghCp0aSlvckQWLaAy/ZtjOjValQ
+	twbRum+Hhnsuo0OvjeVRiMKNT5oYEOU=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-367-5i1cRV1HP_OxdCzQ3Kdzqw-1; Tue, 02 Apr 2024 04:32:47 -0400
-X-MC-Unique: 5i1cRV1HP_OxdCzQ3Kdzqw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-158-jPb3_1pmPI27HEkPRk0xlA-1; Tue, 02 Apr 2024 04:46:21 -0400
+X-MC-Unique: jPb3_1pmPI27HEkPRk0xlA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F188879844;
-	Tue,  2 Apr 2024 08:32:46 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A144185A784;
+	Tue,  2 Apr 2024 08:46:20 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 66B2CC1576F;
-	Tue,  2 Apr 2024 08:32:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5D5BC1C060A4;
+	Tue,  2 Apr 2024 08:46:16 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
 	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
 	Kingdom.
 	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240401135351.GD26556@kernel.org>
-References: <20240401135351.GD26556@kernel.org> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-27-dhowells@redhat.com>
-To: Simon Horman <horms@kernel.org>
+In-Reply-To: <20240328163424.2781320-20-dhowells@redhat.com>
+References: <20240328163424.2781320-20-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+    Naveen Mamindlapalli <naveenm@marvell.com>,
+    Vadim Fedorenko <vadim.fedorenko@linux.dev>
 Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
     Jeff Layton <jlayton@kernel.org>,
     Gao Xiang <hsiangkao@linux.alibaba.com>,
@@ -78,8 +81,9 @@ Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
     ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
     linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
     linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/26] netfs, afs: Use writeback retry to deal with alternate keys
+    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
+Subject: Re: [PATCH 19/26] netfs: New writeback implementation
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -87,19 +91,31 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3002685.1712046757.1@warthog.procyon.org.uk>
-Date: Tue, 02 Apr 2024 09:32:37 +0100
-Message-ID: <3002686.1712046757@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-ID: <3047563.1712047571.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Apr 2024 09:46:11 +0100
+Message-ID: <3047564.1712047571@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Simon Horman <horms@kernel.org> wrote:
+David Howells <dhowells@redhat.com> wrote:
 
-> > +	op->store.size		= len,
-> 
-> nit: this is probably more intuitively written using len;
+> +struct netfs_io_request *new_netfs_begin_writethrough(struct kiocb *ioc=
+b, size_t len)
+> +{
+> +	struct netfs_io_request *wreq =3D NULL;
+> +	struct netfs_inode *ictx =3D netfs_inode(file_inode(iocb->ki_filp));
+> +
+> +	mutex_lock(&ictx->wb_lock);
+> +
+> +	wreq =3D netfs_create_write_req(iocb->ki_filp->f_mapping, iocb->ki_fil=
+p,
+> +				      iocb->ki_pos, NETFS_WRITETHROUGH);
+> +	if (IS_ERR(wreq))
+> +		mutex_unlock(&ictx->wb_lock);
 
-I'm not sure it makes a difference, but switching 'size' to 'len' in kafs is a
-separate thing that doesn't need to be part of this patchset.
+This needs a "return wreq;" adding and appropriate braces.  Thanks to thos=
+e
+who pointed it out.
 
 David
 
