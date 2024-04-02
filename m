@@ -1,143 +1,243 @@
-Return-Path: <linux-nfs+bounces-2602-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2603-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95652895993
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 18:21:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2097895B2B
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 19:54:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B20D1F2464B
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 16:21:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07BCE1C210FC
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Apr 2024 17:54:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02BC714B08B;
-	Tue,  2 Apr 2024 16:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLzSbLbE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DE2915AABE;
+	Tue,  2 Apr 2024 17:54:27 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603BA14C5A3
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 16:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F63415AAB2
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Apr 2024 17:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712074847; cv=none; b=KUDeOhVbIE/9DjUQ+J6vX2Y4Fd68Dg/AA+o3yMLbzimKGWDMTwRUDdkkknbeX6X7ROhC6hxmK7ayHYlxbb7NXSsGJYcK1Le2V7A8pH18tMmFtiewB+qDJZqf9M9yFYZbm1dRtLJDBLYBTSuPJ52aTHKuunE+idvhBDCTCwG1LG4=
+	t=1712080467; cv=none; b=L4ZzbJpSrnmoIfqmZ4sWT4zuawqUTm/dTTE9P6ME1VBcwFnD4jjEkAqw6QMRXHFM5y81U9mwddkHavSv3/42ON4jWcq0X6Z5lTGy541757qPFa2JmskK+hfh23IbFzh7Q8L88oLME3NeQBfuzey3zWFjsd3sQOijVvVApA3EMlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712074847; c=relaxed/simple;
-	bh=45vXkl/rcYv+94xcyIDIR6W02nIABWxNGfXAOetVs54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HwrqvFudZzEJFJ3kP8D8kW5Y9mOIRaak70t1ZnHpuE0qyaKODnzGa/3jeA9kqVP8UzC05aOYWTOTe3RtCu4WQIttb7YT492aaJsNXzlc0opraR6rWCNefTIf1RVAC9qB7ipgBHVgGOjtrhP2l+1Z7HnWkTsHYzA1+Nbnh4EdMwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bLzSbLbE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712074845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x5Nzy2/q23qrlyr0SuAObpcRnYE3MZof6+YbCc/4IBs=;
-	b=bLzSbLbEJxy5A5zWaiSSQIoA+eeHiDnoDTA/HOSThIWjmHa4cgAxtIhWey8RIcUffg1nZ/
-	C5xgW0AAo2zW6kfStRjjpGJSvwW6HMKRtEdElA0TZ9uzaCKlcnIEljLIOqijuxAP218s6h
-	6YSSjB4LJS3Zn0yuJcHJUME/2FEaFlw=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-6zP_L9HfNCGMfk9TXGY9pQ-1; Tue, 02 Apr 2024 12:20:44 -0400
-X-MC-Unique: 6zP_L9HfNCGMfk9TXGY9pQ-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78d346eeb02so5784885a.1
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Apr 2024 09:20:43 -0700 (PDT)
+	s=arc-20240116; t=1712080467; c=relaxed/simple;
+	bh=BvcGdeJteBOLOX1oOponlp3funCNbMEDcBeIfS00kdM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Kq2EoIMjlW2ElnWVa4E3KvVUnxBKLfn7EjQyHD1BaVC/1dysZBGNXfrED10yyeLD2WiMcsySwEVs4fgl7rpSJZS0HiDu+4egSYLv1nalLCr7LD+jXSiJm7PWE1OaGEsObA3sQ4Z2MY/CzixtWdujUU3QRnf9vkFUzrmFQRwNvzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36995d17aacso31495165ab.1
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Apr 2024 10:54:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712074842; x=1712679642;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5Nzy2/q23qrlyr0SuAObpcRnYE3MZof6+YbCc/4IBs=;
-        b=QI60ZZ2XmhmsFAikPDQYK5dwCDZFCi47SZor1V3DiLXKX+vPkbNTLEWchaHHM6aEee
-         uj/lpRpEWdJtl6mfUojfEobacu+5Xzk381Q6puZVfZClClHXhIdky7nbB8wV9N3VEXAs
-         gL97wGklDho6P0NjQ7YQeFMglP7D7dGrHYt7V1xEQS93egu8wc+y/htG1jNGsJS91OSN
-         VDMP8lTksZHtXjwJBBoOmDTAHEScyFCVcsx4AZKjuWk0Tt+jTcNENa5R5g7ErgzOVal+
-         46RRPBc4fYts3SzaElmdeMw2LfuNJGLNawK+XVw9Del61Uy1PZnQIvkFGB1SxC889D/V
-         fPGw==
-X-Gm-Message-State: AOJu0YyLG+p1E5j7nEm9zfpwRX5SSsVWGY34VI//ZA1Hn1IR0y6ue+Kp
-	NgvwKV1aEx9W22je1Lts/3EQ5PyNFWr4JfH2vxy/Ui8c/hXcaPxi/gX8ZY3rBiaMbg1UYBsh6du
-	CGFUFwSU9MIG8gBiNavb8d4k/+RZgiACSNPI0rceZcllP/8/lpGXQIHD0prdnAOZIcA==
-X-Received: by 2002:a05:620a:1a87:b0:78d:3570:488d with SMTP id bl7-20020a05620a1a8700b0078d3570488dmr393317qkb.3.1712074841755;
-        Tue, 02 Apr 2024 09:20:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWgzjLXvwXF7LMpH/vcYAagL4ifZbwUJIfbEBh200PPCItShAtW+Amj6jK0MeTgt14IyuR1g==
-X-Received: by 2002:a05:620a:1a87:b0:78d:3570:488d with SMTP id bl7-20020a05620a1a8700b0078d3570488dmr393308qkb.3.1712074841469;
-        Tue, 02 Apr 2024 09:20:41 -0700 (PDT)
-Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id q13-20020a05620a0c8d00b00789e800c204sm4415086qki.62.2024.04.02.09.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 09:20:40 -0700 (PDT)
-Message-ID: <ac34a186-68d2-41c6-b350-2f0d425eb156@redhat.com>
-Date: Tue, 2 Apr 2024 12:20:39 -0400
+        d=1e100.net; s=20230601; t=1712080465; x=1712685265;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bqwX2k12K/PELVfeSN5iaYFxTi2XuvDYeBtzhME6iis=;
+        b=Fp8USOTggpXy7PAbTl+IRi3P0e/LRAtXySpGQwscLmy5qWJoBjQjATwnTO1xeo0qPt
+         K5dF0szTkGoPvoYGKzm70BHtWfqVpmvvtJoxf3ByqAgGNJD0d45IFyLSNA9BnTfvJey5
+         uoOew70+1y3JOm6ELZ5HA9a6T/3aJA79DPYCKKf722B2Lx2spw1R/z7JEtmgc0HwNWvw
+         8UcJO3csPGgGASDQ0MyCmQ5hFG5+hf6A7RuHsyU4PyJt16YjfXSSAs2Q8d0hNE9UILR9
+         Bl/ZxHmqd7m2UqFmfoi18NwVAes1W3/oxyt34R1HblFF5uQXM1vq3xAhrkpgtriWn3AE
+         PYKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5mFcpSpwmpwoGvJKWuKkfeDrcvp1s6FaUD802cDmXHi2I2qBBSm1Bf+eo3d6Z5zOdi7bM1YOalXac2056FY6dzNWw9S+Zx0+d
+X-Gm-Message-State: AOJu0YyBMWW6AR/qfI0v3EfpPIg8HXB34+qFMZBfovqgV3tlynanX0YP
+	LRBbmczbAsfJVLceSPB4BNJ+SKKkLwYM09xCR3UL+6Moe5CYBl7ANKW7IR5cMipEIcEEadyaKjr
+	Nng+pVZ9lnNEaPqzWaQoiUUXneBugsEepLw34qqVl/EDdU1odWbASA58=
+X-Google-Smtp-Source: AGHT+IHM31JjmcOZVS1gaDLlBTeVG31c+t5aITaT+lE7n4CNFd+XVQacxDMTDNF8jII5FyZcXfOidezTGLMliCHQ5BLFF+DKruZ/
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH] mount: reject "namlen=" option for a NFSv4
- mount
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Cc: linux-nfs@vger.kernel.org
-References: <20240322103618.1270-1-chenhx.fnst@fujitsu.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20240322103618.1270-1-chenhx.fnst@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:221a:b0:368:79b4:dd11 with SMTP id
+ j26-20020a056e02221a00b0036879b4dd11mr1006424ilf.6.1712080464930; Tue, 02 Apr
+ 2024 10:54:24 -0700 (PDT)
+Date: Tue, 02 Apr 2024 10:54:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f075b9061520cbbe@google.com>
+Subject: [syzbot] [nfs?] KASAN: slab-out-of-bounds Write in do_handle_open
+From: syzbot <syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, chuck.lever@oracle.com, 
+	jack@suse.cz, jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-On 3/22/24 6:36 AM, Chen Hanxiao wrote:
-> namlen is not a valid option for NFSv4.
-> Currently, we could pass a namlen=xxx in a NFSv4 mount,
-> the mount command succeed and namlen is ignored silently
-I'm not sure it makes senses to fail a mount for
-a parameter  that is ignored. Maybe throw a warning
-that the par is being ignored...
+syzbot found the following issue on:
 
-What problem did this patch solve for you?
+HEAD commit:    c0b832517f62 Add linux-next specific files for 20240402
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=148b0003180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afcaf46d374cec8c
+dashboard link: https://syzkaller.appspot.com/bug?extid=4139435cb1b34cf759c2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1547f529180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11e22f0d180000
 
-steved.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0d36ec76edc7/disk-c0b83251.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6f9bb4e37dd0/vmlinux-c0b83251.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2349287b14b7/bzImage-c0b83251.xz
 
-> 
-> # mount -o vers=4,namlen=100 192.168.122.19:/nfsroot /mnt/ -vvv
-> mount.nfs: timeout set for Fri Mar 22 14:22:18 2024
-> mount.nfs: trying text-based options 'namlen=100,vers=4.2,
-> 	   addr=192.168.122.19,clientaddr=192.168.122.15'
-> 
-> This patch reject "namlen=" option in a NFSv4 mount.
-> 
-> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-> ---
->   utils/mount/stropts.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-> index dbdd11e7..028ff6a6 100644
-> --- a/utils/mount/stropts.c
-> +++ b/utils/mount/stropts.c
-> @@ -780,6 +780,15 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
->   		goto out_fail;
->   	}
->   
-> +	if (po_contains(options, "namlen")) {
-> +		if (verbose) {
-> +			printf(_("%s: Unsupported nfs4 mount option(s) passed '%s'\n"),
-> +				progname, *mi->extra_opts);
-> +		}
-> +		errno = EINVAL;
-> +		goto out_fail;
-> +	}
-> +
->   	if (mi->version.v_mode != V_SPECIFIC) {
->   		char *fmt;
->   		switch (mi->version.minor) {
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
 
+==================================================================
+BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+Write of size 36 at addr ffff8880203f2e88 by task syz-executor205/5086
+
+CPU: 1 PID: 5086 Comm: syz-executor205 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+ _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+ copy_from_user include/linux/uaccess.h:183 [inline]
+ handle_to_path fs/fhandle.c:203 [inline]
+ do_handle_open+0x204/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+RIP: 0033:0x7f81f2e5f269
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcde6f13c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000130
+RAX: ffffffffffffffda RBX: 00007ffcde6f15a8 RCX: 00007f81f2e5f269
+RDX: 0000000000000000 RSI: 00000000200091c0 RDI: 00000000ffffffff
+RBP: 00007f81f2ed2610 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffcde6f1598 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+Allocated by task 5086:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ __do_kmalloc_node mm/slub.c:4048 [inline]
+ __kmalloc_noprof+0x200/0x410 mm/slub.c:4061
+ kmalloc_noprof include/linux/slab.h:664 [inline]
+ handle_to_path fs/fhandle.c:195 [inline]
+ do_handle_open+0x162/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+The buggy address belongs to the object at ffff8880203f2e80
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 8 bytes inside of
+ allocated 36-byte region [ffff8880203f2e80, ffff8880203f2ea4)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x203f2
+ksm flags: 0xfff80000000000(node=0|zone=1|lastcpupid=0xfff)
+page_type: 0xffffefff(slab)
+raw: 00fff80000000000 ffff888015041640 ffffea0000869bc0 dead000000000003
+raw: 0000000000000000 0000000080200020 00000001ffffefff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY), pid 4542, tgid -909298647 (udevd), ts 4542, free_ts 33444169271
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1490
+ prep_new_page mm/page_alloc.c:1498 [inline]
+ get_page_from_freelist+0x2e7e/0x2f40 mm/page_alloc.c:3454
+ __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4712
+ __alloc_pages_node_noprof include/linux/gfp.h:244 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:271 [inline]
+ alloc_slab_page+0x5f/0x120 mm/slub.c:2249
+ allocate_slab+0x5a/0x2e0 mm/slub.c:2412
+ new_slab mm/slub.c:2465 [inline]
+ ___slab_alloc+0xea8/0x1430 mm/slub.c:3599
+ __slab_alloc+0x58/0xa0 mm/slub.c:3684
+ __slab_alloc_node mm/slub.c:3737 [inline]
+ slab_alloc_node mm/slub.c:3915 [inline]
+ __do_kmalloc_node mm/slub.c:4047 [inline]
+ __kmalloc_noprof+0x25e/0x410 mm/slub.c:4061
+ kmalloc_noprof include/linux/slab.h:664 [inline]
+ kzalloc_noprof include/linux/slab.h:775 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x2b7/0x740 security/tomoyo/file.c:822
+ security_inode_getattr+0xd8/0x130 security/security.c:2269
+ vfs_getattr+0x45/0x430 fs/stat.c:173
+ vfs_fstat fs/stat.c:198 [inline]
+ vfs_fstatat+0xd6/0x190 fs/stat.c:300
+ __do_sys_newfstatat fs/stat.c:468 [inline]
+ __se_sys_newfstatat fs/stat.c:462 [inline]
+ __x64_sys_newfstatat+0x125/0x1b0 fs/stat.c:462
+ do_syscall_64+0xfb/0x240
+page last free pid 4548 tgid 4548 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1110 [inline]
+ free_unref_page+0xd3c/0xec0 mm/page_alloc.c:2617
+ __slab_free+0x31b/0x3d0 mm/slub.c:4274
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x9e/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3867 [inline]
+ slab_alloc_node mm/slub.c:3927 [inline]
+ __do_kmalloc_node mm/slub.c:4047 [inline]
+ __kmalloc_noprof+0x1a9/0x410 mm/slub.c:4061
+ kmalloc_noprof include/linux/slab.h:664 [inline]
+ tomoyo_realpath_from_path+0xcf/0x5e0 security/tomoyo/realpath.c:251
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path2_perm+0x3eb/0xbb0 security/tomoyo/file.c:923
+ tomoyo_path_rename+0x198/0x1e0 security/tomoyo/tomoyo.c:300
+ security_path_rename+0x179/0x220 security/security.c:1918
+ do_renameat2+0x94a/0x13f0 fs/namei.c:5027
+ __do_sys_rename fs/namei.c:5087 [inline]
+ __se_sys_rename fs/namei.c:5085 [inline]
+ __x64_sys_rename+0x86/0xa0 fs/namei.c:5085
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+Memory state around the buggy address:
+ ffff8880203f2d80: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8880203f2e00: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff8880203f2e80: 00 00 00 00 04 fc fc fc fc fc fc fc fc fc fc fc
+                               ^
+ ffff8880203f2f00: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+ ffff8880203f2f80: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
