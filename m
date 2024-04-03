@@ -1,80 +1,72 @@
-Return-Path: <linux-nfs+bounces-2610-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2611-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FE548964FA
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 08:54:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3964D896545
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 09:02:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB5431F22D04
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 06:54:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A6C31C217A7
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 07:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5324D13B;
-	Wed,  3 Apr 2024 06:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19CDB17C64;
+	Wed,  3 Apr 2024 07:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ww5v858u"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="IyC0Fh1O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071EF1757A;
-	Wed,  3 Apr 2024 06:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4151C17BC2
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 07:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712127264; cv=none; b=olv1vYwV9HItiIAN2bQcgghp3nNfHTs5GtvDOlqX/QN2VveNwCJOXFNR1bDedJUx6VPXvF42WG2cBFKNQ7YIrugpKYWcoPYc2DB4Ry9xu9zKAKvF4y20iwa5ok7zTxtoXgN5hv69wen8RTfzEPNo3fTk/J/aja+/Fy99JHpJxyY=
+	t=1712127766; cv=none; b=qdm00RMyLRYHMI3gxt5uv3EsWdsH/ni1QY7MTr89ae6UqrWhJFMRpN35/3wUTx9psuKekPYxs2ekM9sCqLZ4fKV4KyhC2kFgvgvOjrkzOM8gsTPUx5ABl3/mCyh8bcO+0xrlv4irwAhRmw4eLf9sN8TvVJcyuoy0R7LMdk66cX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712127264; c=relaxed/simple;
-	bh=QbYk7mkbWCkqiAPyu00RQYNoFA+Z6ycbz2v55PnVMiI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=BN0AlH8o/oMPehz4hlJaQsd5QdbzxJbTwMfX29qVwCgwE8lP31yjYoSZnse5TrDWGy0x641C3JdYzF+MKSMpZxJr7WyarkWU9TLuKmewbaWJwioAlCzNU6BywyI6bJCKk26KxyyguiQgsCJJy6Awowc+vVgZBMuAymkqyQTAtck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ww5v858u; arc=none smtp.client-ip=203.205.251.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712127257; bh=wO+LSoJgGLH+WEilHLpBJL664dA/mQelv4HBiD7UnlQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ww5v858uCwq1w5zdK55rhVxHczIbATC9FsYF/tgwRNlrL3vbDkusJHkunKqZUsCbS
-	 Ita/esfj8fQoZTLxVcvIXblHaQsSnZ0F0w+ZDnpVs0FQ4B2wXlipMICPvsXCpGGIRZ
-	 NLM5XmX4n1f5T2e+2FasGXZXHQ/hL+N/aFONa9qY=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id D8D0E6B2; Wed, 03 Apr 2024 14:54:13 +0800
-X-QQ-mid: xmsmtpt1712127253txeonps73
-Message-ID: <tencent_A7845DD769577306D813742365E976E3A205@qq.com>
-X-QQ-XMAILINFO: M0PjjqbLT90w12+nNA4lBxOmIdpSsE/HWlu6fSC76OnRo3mC7x1xVBJ6vgHm5t
-	 LXX3DGeGvGv4D2FwSa6lO3Gpi8YBxx0Lrh0g5rbFivooSczFJHG50VzdqyFq0ibqKaWaa3M2Z0nL
-	 hd21UYuZYqyQ9jxc4I1VVHuj1nM5Y5Ad+whhHfjaLDpUdYwqT9Km2SR5GAdWvF/rgP4YcmtOitjt
-	 5J0DsVi8M/as00lbqj9w+x74Uzk/MwNJEBIpmfmexx10OiI8rQAWRamiJZf1RIeubMtWj2ZiOhn+
-	 bpPF0Qt9UQf2h3C28M34880QFbNR7SbhJIDjUH/TYP5STa6CAo3GNYpMGL08zXI58jwLHVUj7EyM
-	 rua8AsKW05KnEr6b2l6foUGH6KXjN/kjyOZM8jX2SwDAAfR799LZ0r+ONyWTrWICmXECwVgSBMng
-	 gMJWA8fWsMM4cEDm/ClA/8Xl+UszHmF+E3Gr4hIiVCsS6YE309SYmDFPH8V+2fkbaYsQwgVri4ra
-	 Obd1tQotfYLIoCMD/1KFveY2xClwhxi0xyTUmDbucEjx91cgX9WSt+/6qPtUXVBWDLeW0u0fwFiU
-	 EdM6vTPY0HAadz+L9i8cQaAhKcJ0zRx7iayDzVNfbDAEaHJXwZdySPFJnI+fv2fiKqrgE3YBh+xC
-	 ZD8I7lcShnGfhhAj6gGHXGz+GkBn0ywRhO5rdXpxaQ79A++l0Q7O8gODLb/tuwHinZH97x4gZnI1
-	 c4eNL5tPFxSh1uc2to+mEJzqTQxBal2mcktEtyY3kmV9gUtfYyb+TrYfWgxCp0FPZxW7WNHk5eMo
-	 eb3KJJjSpvqjgWkeRxsN3iG7zaC6zkAj09Jtuueje04/9mD/+PhMPUUaM9iNGKe+WHgNJDhuf8mV
-	 n1Cw4oIXcGOSK0ByezdHjlrJlv4ry/5OPMyXXUIzuPWfm3xzDWJw9MhzPVfme9TkB6CPAVdx1v5O
-	 siopw6vqQ=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
-Cc: amir73il@gmail.com,
-	brauner@kernel.org,
-	chuck.lever@oracle.com,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	viro@zeniv.linux.org.uk
-Subject: [PATCH next] fs: fix oob in do_handle_open
-Date: Wed,  3 Apr 2024 14:54:14 +0800
-X-OQ-MSGID: <20240403065413.3307887-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000f075b9061520cbbe@google.com>
-References: <000000000000f075b9061520cbbe@google.com>
+	s=arc-20240116; t=1712127766; c=relaxed/simple;
+	bh=zgi82/H/VSFgxmc1D62JP1I5qxrmSvtHWkHiKV6R1Uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DKZ5J2w/8KOVb9SmfGAGemRlmJ9Pqz3KhGiajkKeRRCmnhs1jScELtOkyZgHF80tNmoiHyYrh+zO3S/wevBOMzh8qKDlmtZnU8cYCS5VMQYJn2IOxr5xq1IGwJPoW5cfWM6HXqHt/7fOZnaht4sAlCjOIGXTa9Hu348EYdIp4K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=IyC0Fh1O; arc=none smtp.client-ip=139.138.37.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1712127763; x=1743663763;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zgi82/H/VSFgxmc1D62JP1I5qxrmSvtHWkHiKV6R1Uc=;
+  b=IyC0Fh1Otgpee6mzmYzySC1HLzepijlp6zxg46V8TrTE13vnHh6qH9CG
+   QBsy+A/2kIh3Q5gAB9gWbEQAECPmNXJu4Mz8eKAoaLrj7jw0gqcxVXAbT
+   4HJHw2qjf+WI1vn3ySu8eFlzN7c6xy+/yS+gGxE/1ZfOu2gHvfgPg8LJV
+   ww5RTDpV69+MMy4FPL0LW4LSPKgCP+GXgGWKCYH4renX+h4/PcrlIPZ6G
+   mIUKuAotXoum7WU6Hl4rarOkqGc36ZPalxTKgdlmBIcM9Y9ab8GGsQbUQ
+   Fudcspdoo88EJTVZ9Fq0RwOeoI81MK942pa68DffkQRTRYGk811PcE6v0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="133776779"
+X-IronPort-AV: E=Sophos;i="6.07,176,1708354800"; 
+   d="scan'208";a="133776779"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 16:02:40 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 4EECAD4803
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 16:02:37 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 8496A1531F0
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 16:02:36 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 0718B20097CC9
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 16:02:36 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 7CF161A0002;
+	Wed,  3 Apr 2024 15:02:35 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH] mount: warning "namlen=" option for a NFSv4 mount
+Date: Wed,  3 Apr 2024 15:02:28 +0800
+Message-Id: <20240403070228.308-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,53 +74,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28294.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28294.005
+X-TMASE-Result: 10--1.690300-10.000000
+X-TMASE-MatchedRID: QAAr3LZ6Q9JOBjuTIREKLfCCu8kVj0TRrzD8YrC59vx/iZ1aNsYG7p7V
+	Ny7+UW/9wVeG+L4n/T9fsF9Eqkj/t+BRuAss+FbmEXjPIvKd74BMkOX0UoduuejzDg3u173a8U7
+	h2c3MXxMbkKUBXyytFS0EwpjgUMbJGAdnzrnkM48URSScn+QSXmVV1G+Ck2l7+gtHj7OwNO2I3a
+	djBtsMrLE0IBlgQeOWq0O9dENK1NgZ/WZut2uqBpCy9Wne07YYEcOiXfAUc89j8tNQdwIkLQIHK
+	h+iCzVM71MnwUfYp4eyKuJKir56uYaT7FRqp0wPAcQrAfBh69vBRLFeH6OJSCTDD+DBjuEw
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-[Syzbot reported]
-BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
-BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
-Write of size 48 at addr ffff88802b8cbc88 by task syz-executor333/5090
+namlen is not a valid option for NFSv4.
+Currently, we could pass a namlen=xxx in a NFSv4 mount,
+the mount command succeed and namlen is ignored silently
 
-CPU: 0 PID: 5090 Comm: syz-executor333 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
- _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
- copy_from_user include/linux/uaccess.h:183 [inline]
- handle_to_path fs/fhandle.c:203 [inline]
- do_handle_open+0x204/0x660 fs/fhandle.c:226
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x72/0x7a
-[Fix] 
-When copying data to f_handle, the length of the copied data should not include
-the length of "struct file_handle".
+# mount -o vers=4,namlen=100 192.168.122.19:/nfsroot /mnt/ -vvv
+mount.nfs: timeout set for Fri Mar 22 14:22:18 2024
+mount.nfs: trying text-based options 'namlen=100,vers=4.2,
+	   addr=192.168.122.19,clientaddr=192.168.122.15'
 
-Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+This patch will remove "namlen=" option in a NFSv4 mount,
+and give a warning message in verbose mode.
+
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 ---
- fs/fhandle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ utils/mount/stropts.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 53ed54711cd2..8a7f86c2139a 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
- 	*handle = f_handle;
- 	if (copy_from_user(&handle->f_handle,
- 			   &ufh->f_handle,
--			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
-+			   f_handle.handle_bytes)) {
- 		retval = -EFAULT;
- 		goto out_handle;
+diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+index dbdd11e7..a92c4200 100644
+--- a/utils/mount/stropts.c
++++ b/utils/mount/stropts.c
+@@ -780,6 +780,14 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
+ 		goto out_fail;
  	}
+ 
++	if (po_contains(options, "namlen")) {
++		po_remove_all(options, "namlen");
++		if (verbose) {
++			printf(_("%s: Ignore unsupported nfs4 mount option 'namlen' in '%s'\n"),
++				progname, *mi->extra_opts);
++		}
++	}
++
+ 	if (mi->version.v_mode != V_SPECIFIC) {
+ 		char *fmt;
+ 		switch (mi->version.minor) {
 -- 
-2.43.0
+2.39.1
 
 
