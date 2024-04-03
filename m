@@ -1,109 +1,134 @@
-Return-Path: <linux-nfs+bounces-2609-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2610-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AEB5896400
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 07:30:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FE548964FA
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 08:54:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EFB7284BA2
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 05:30:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB5431F22D04
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 06:54:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7161946435;
-	Wed,  3 Apr 2024 05:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5324D13B;
+	Wed,  3 Apr 2024 06:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a72jZTAw"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ww5v858u"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15946425
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 05:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071EF1757A;
+	Wed,  3 Apr 2024 06:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712122217; cv=none; b=ra8lhJiszfFlFndC89ridLcbMqTPe2TpmXS8E71mHGqOblYmENiSUqnP4M0ZV6bGRGLoQBEdfcKfDEBc6UmaV3e+kqrW578Icrp8fcHG1J94y+VIjP8eqKsUxG8d/VgcbovRKACHu+BbV4MUHVUoAJqZv5rGDjC2cgSq77PhJKM=
+	t=1712127264; cv=none; b=olv1vYwV9HItiIAN2bQcgghp3nNfHTs5GtvDOlqX/QN2VveNwCJOXFNR1bDedJUx6VPXvF42WG2cBFKNQ7YIrugpKYWcoPYc2DB4Ry9xu9zKAKvF4y20iwa5ok7zTxtoXgN5hv69wen8RTfzEPNo3fTk/J/aja+/Fy99JHpJxyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712122217; c=relaxed/simple;
-	bh=yHyVNMxsKAp75gfI9VYRPpTStwqbrbOdktJDkj1lu70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Rhl5IHRClCnjpoRrMOGhA+i+EGtTgFyauREKUN7I1Fh2QJjM9YIIAeSN3aRzmKPITL468DbqNaHyyhM6OFhSO6OcHAZHxTZ+9clNAamYEouqESfPOJmuhh+TOqqpIrNiWeaNFPzvHnFq3TH1PBdodXUlv9td7qlw4UAJwZBYYAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a72jZTAw; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56c583f5381so877319a12.1
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Apr 2024 22:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712122214; x=1712727014; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hkez5Yg+zYroB7JVTi/Ayf/Z3EZLR2gXl0JVx5G2w4k=;
-        b=a72jZTAw8YOJspdZ4899grZF5C0RS7NgIZd2flogOnIjk1veeXRuLJobt8Du0c/AhP
-         xdsknedaldoQAxqwpK/GSyzLiHPJsQxoSpYs9//Z1iln/X3SN8ToXWhmpDTesioaR/qg
-         3ZCCZyGllPqJZT50NtmdYCYg/I+bgy0/+vuBQlQ0dDZi89RWV8NcqqzSR6kEulhOcbQp
-         C6xafy3FIoXK0Ofk3WNk7twKxbX5A/kDxQZJWvxqUFXPGJBtXX1gIDibgB/PeA7vo3B2
-         htXS/otrPOYwfm6oEEAghuDbffyls8NuBUOAvbi6blmfiWQTaetHFiIxgbc4dMz3lCz6
-         /sRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712122214; x=1712727014;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkez5Yg+zYroB7JVTi/Ayf/Z3EZLR2gXl0JVx5G2w4k=;
-        b=GRxH/QK8vLA+ROc2mgymZjMpeKkhHtwIhfHZAOejwybitCAVH0TURWCUvEW3B2HB4c
-         kFLx0GzCDM+kKsMByEBabyzzi8nPXpGTFKPZNV7ShFPucBu0Y48IQQUv6SfGmHuM20ks
-         xPG4PQnpdArZ6MFdMUA8u5xrqQpfK8NKdjO89+jkK8LsWV5jgCKi1qEoAZJgLGhJR/kt
-         xeJY4XsmBtb4rx1u2J071sP8ngm94+IatFGVSBADH/S8xMh+TT0RsxZ2DDdXneoBCD0u
-         R7enUyp+mp7OnFREeHNLVw7kVy28iWNAOc/6V1/Ul4hqier64WNuvvrdMza2lygk//eQ
-         7RpQ==
-X-Gm-Message-State: AOJu0YyGTpqr3Bzte0LGvHjPkFJVDu8RZvsWKM6f9ryYbfc2Qf8cOTpA
-	mO73aIDNP3U6i8/B2IprIIgo4e8tieUEofp1Y/O2O+4JIu86pwf52/s+8t07t3QCcbr5BBBBfKE
-	E6ziQZo/5B+qvy8y2WYwAb18YSrNWsrDV
-X-Google-Smtp-Source: AGHT+IE1CJg3GmAyeEIn4zS/PW5VUwlGIqT+VRAF2d70Z+xyP/oDqfRcl9A2i5I8p0JKjyYuKtN2KfKqhZa0rf0Djg0=
-X-Received: by 2002:a50:9554:0:b0:56d:e74a:2730 with SMTP id
- v20-20020a509554000000b0056de74a2730mr1367257eda.0.1712122213719; Tue, 02 Apr
- 2024 22:30:13 -0700 (PDT)
+	s=arc-20240116; t=1712127264; c=relaxed/simple;
+	bh=QbYk7mkbWCkqiAPyu00RQYNoFA+Z6ycbz2v55PnVMiI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=BN0AlH8o/oMPehz4hlJaQsd5QdbzxJbTwMfX29qVwCgwE8lP31yjYoSZnse5TrDWGy0x641C3JdYzF+MKSMpZxJr7WyarkWU9TLuKmewbaWJwioAlCzNU6BywyI6bJCKk26KxyyguiQgsCJJy6Awowc+vVgZBMuAymkqyQTAtck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ww5v858u; arc=none smtp.client-ip=203.205.251.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712127257; bh=wO+LSoJgGLH+WEilHLpBJL664dA/mQelv4HBiD7UnlQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ww5v858uCwq1w5zdK55rhVxHczIbATC9FsYF/tgwRNlrL3vbDkusJHkunKqZUsCbS
+	 Ita/esfj8fQoZTLxVcvIXblHaQsSnZ0F0w+ZDnpVs0FQ4B2wXlipMICPvsXCpGGIRZ
+	 NLM5XmX4n1f5T2e+2FasGXZXHQ/hL+N/aFONa9qY=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id D8D0E6B2; Wed, 03 Apr 2024 14:54:13 +0800
+X-QQ-mid: xmsmtpt1712127253txeonps73
+Message-ID: <tencent_A7845DD769577306D813742365E976E3A205@qq.com>
+X-QQ-XMAILINFO: M0PjjqbLT90w12+nNA4lBxOmIdpSsE/HWlu6fSC76OnRo3mC7x1xVBJ6vgHm5t
+	 LXX3DGeGvGv4D2FwSa6lO3Gpi8YBxx0Lrh0g5rbFivooSczFJHG50VzdqyFq0ibqKaWaa3M2Z0nL
+	 hd21UYuZYqyQ9jxc4I1VVHuj1nM5Y5Ad+whhHfjaLDpUdYwqT9Km2SR5GAdWvF/rgP4YcmtOitjt
+	 5J0DsVi8M/as00lbqj9w+x74Uzk/MwNJEBIpmfmexx10OiI8rQAWRamiJZf1RIeubMtWj2ZiOhn+
+	 bpPF0Qt9UQf2h3C28M34880QFbNR7SbhJIDjUH/TYP5STa6CAo3GNYpMGL08zXI58jwLHVUj7EyM
+	 rua8AsKW05KnEr6b2l6foUGH6KXjN/kjyOZM8jX2SwDAAfR799LZ0r+ONyWTrWICmXECwVgSBMng
+	 gMJWA8fWsMM4cEDm/ClA/8Xl+UszHmF+E3Gr4hIiVCsS6YE309SYmDFPH8V+2fkbaYsQwgVri4ra
+	 Obd1tQotfYLIoCMD/1KFveY2xClwhxi0xyTUmDbucEjx91cgX9WSt+/6qPtUXVBWDLeW0u0fwFiU
+	 EdM6vTPY0HAadz+L9i8cQaAhKcJ0zRx7iayDzVNfbDAEaHJXwZdySPFJnI+fv2fiKqrgE3YBh+xC
+	 ZD8I7lcShnGfhhAj6gGHXGz+GkBn0ywRhO5rdXpxaQ79A++l0Q7O8gODLb/tuwHinZH97x4gZnI1
+	 c4eNL5tPFxSh1uc2to+mEJzqTQxBal2mcktEtyY3kmV9gUtfYyb+TrYfWgxCp0FPZxW7WNHk5eMo
+	 eb3KJJjSpvqjgWkeRxsN3iG7zaC6zkAj09Jtuueje04/9mD/+PhMPUUaM9iNGKe+WHgNJDhuf8mV
+	 n1Cw4oIXcGOSK0ByezdHjlrJlv4ry/5OPMyXXUIzuPWfm3xzDWJw9MhzPVfme9TkB6CPAVdx1v5O
+	 siopw6vqQ=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
+Cc: amir73il@gmail.com,
+	brauner@kernel.org,
+	chuck.lever@oracle.com,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	viro@zeniv.linux.org.uk
+Subject: [PATCH next] fs: fix oob in do_handle_open
+Date: Wed,  3 Apr 2024 14:54:14 +0800
+X-OQ-MSGID: <20240403065413.3307887-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000f075b9061520cbbe@google.com>
+References: <000000000000f075b9061520cbbe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171208672277.1654.1052289246945629541.stgit@klimt.1015granger.net>
-In-Reply-To: <171208672277.1654.1052289246945629541.stgit@klimt.1015granger.net>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 3 Apr 2024 07:29:00 +0200
-Message-ID: <CALXu0Uet83m1hX05vt9qYO+xmDoPfNYZ+r09y9FJS4H=ahyjwg@mail.gmail.com>
-Subject: Re: [PATCH RFC] SUNRPC: Fix a slow server-side memory leak with RPC-over-TCP
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2 Apr 2024 at 21:38, Chuck Lever <cel@kernel.org> wrote:
->
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Jan Schunk reports that his small NFS servers suffer from memory
-> exhaustion after just a few days. A bisect shows that commit
-> e18e157bb5c8 ("SUNRPC: Send RPC message on TCP with a single
-> sock_sendmsg() call") is the first bad commit.
->
-> That commit assumed that sock_sendmsg() releases all the pages in
-> the underlying bio_vec array, but the reality is that it doesn't.
-> svc_xprt_release() releases the rqst's response pages, but the
-> record marker page fragment isn't one of those, so it was never
-> released.
->
-> This is a narrow fix that can be applied to stable kernels. A
-> more extensive fix is in the works.
->
-> Reported-by: Jan Schunk <scpcom@gmx.de>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218671
-> Fixes: e18e157bb5c8 ("SUNRPC: Send RPC message on TCP with a single sock_sendmsg() call")
+[Syzbot reported]
+BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+Write of size 48 at addr ffff88802b8cbc88 by task syz-executor333/5090
 
-Is this bug present in 6.6 LTS?
+CPU: 0 PID: 5090 Comm: syz-executor333 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+ _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+ copy_from_user include/linux/uaccess.h:183 [inline]
+ handle_to_path fs/fhandle.c:203 [inline]
+ do_handle_open+0x204/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+[Fix] 
+When copying data to f_handle, the length of the copied data should not include
+the length of "struct file_handle".
 
-Ced
+Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/fhandle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 53ed54711cd2..8a7f86c2139a 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+ 	*handle = f_handle;
+ 	if (copy_from_user(&handle->f_handle,
+ 			   &ufh->f_handle,
+-			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
++			   f_handle.handle_bytes)) {
+ 		retval = -EFAULT;
+ 		goto out_handle;
+ 	}
 -- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+2.43.0
+
 
