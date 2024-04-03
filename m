@@ -1,116 +1,193 @@
-Return-Path: <linux-nfs+bounces-2622-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2623-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 041DB896D57
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 12:55:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E3FE896D94
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 13:03:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2B8528FE3A
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 10:55:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42E75293428
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 11:03:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B8414199C;
-	Wed,  3 Apr 2024 10:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F7213A3EB;
+	Wed,  3 Apr 2024 11:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PP++8r8Z"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rm/vG5mK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="W6zFCVQ0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3868414198A
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 10:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE1A139588;
+	Wed,  3 Apr 2024 11:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141715; cv=none; b=adAF2TIA4rsOcBcJHoGU9f+zUSqccZemcqFstwVmpOgVoqk8NXB+41mZtyVxmaz4ZA4HRlqJ7QRV05NvKc0TKcNP3MZnUNenlUjpQtbhj/TDQqayFBhy9Qvlauy1BYTCHpSNW6+Vi3Znjg9Zz4cR9VggnCruoLxtms8/gsK8GmU=
+	t=1712142201; cv=none; b=KdmwNVp0w372cZqsnYwRlZS4ubqCAHSG/VC+RWFNVw199JN+50SDbPochQqwWkzwglvc78EaF8nzZHcvDkdl5WlW+yyFU4nmAdamW1pfeGExCxinK6Ij2q6J/5xSVC0O0viU5U5sEg1ggNBC3ouqIIufiB7+wiC6wRxWfwqGr0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141715; c=relaxed/simple;
-	bh=ACQpn9vs7GeKGUhlQvB3CXp7C7P0aciqvgBCFb4+LHI=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=NYlCMD60sKHAWp1Hk4FuNAyUJMaPNNn4MsYusUc+D4QYBBFi7g7za0bvMLb7qQbT9TQWeFmyHuYfK5D0Sc+5OmlxnaKMe1TXtspsPIVMmEvbwKCPzff5y93xCDKql/ZRsCYt1xaxVB1EgyQtZsv6K1hob4pfhFumnjT7VhDnug4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PP++8r8Z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712141713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JOHdI5+Rm0qGsBNAwcaXDe1QoVGd2FuT8Hymhfhq4nw=;
-	b=PP++8r8ZmpRyUlrcj2v3Wy11ek17NGtA+K5ivLqU+r7mCAyiGGdL9ovrhnzUGnsOgpN/by
-	tGxQf+ed0Eakzgrh/H+ELH5TXS2meOZ3DwyB/a6U/Ksu22jy5QXkU6TyPEVxmupwCPG+FZ
-	d7NK68gXhDAH8q+E7KPj4qOlSrJfh7s=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-XFTgKXIOOraQHI6hCfH_XA-1; Wed, 03 Apr 2024 06:55:10 -0400
-X-MC-Unique: XFTgKXIOOraQHI6hCfH_XA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	s=arc-20240116; t=1712142201; c=relaxed/simple;
+	bh=uMKHnDXTEm+EOZrtndTxFv/QNJgNWVRCusPPKwTHd64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VOOgX68OfiWrOQrgTfufgKh83QW7DMqcA0PWst45Uyx93Oaw65TqEoQ8YRSXnUtSP+teXoL+48TbXeyT20FZzYlV7K8mm5oO4s1KJeQYBlTfqRMsvviOoXva03Oc+ZASlxo9oT7aqI43eW9mOwVhmHuisM7B3pzPCth9KvF8jsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rm/vG5mK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=W6zFCVQ0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0A868007BB;
-	Wed,  3 Apr 2024 10:55:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 97C6CC1576F;
-	Wed,  3 Apr 2024 10:55:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240403101422.GA7285@lst.de>
-References: <20240403101422.GA7285@lst.de> <20240403085918.GA1178@lst.de> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-16-dhowells@redhat.com> <3235934.1712139047@warthog.procyon.org.uk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Jeff Layton <jlayton@kernel.org>,
-    Gao Xiang <hsiangkao@linux.alibaba.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Matthew Wilcox <willy@infradead.org>,
-    Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
-    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/26] mm: Export writeback_iter()
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BC81035270;
+	Wed,  3 Apr 2024 11:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712142196; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pcQEkiDoZSJwCrXrqPil+MhwkFDK8GbPO7YjAbOieLo=;
+	b=rm/vG5mKI5motS3wQle0dgofSHgXQain5VpuEGueEfffm/xtxpALt17FuuFyyMRw1NQPBs
+	84tWRZmmB1D/N4ikPyWKQTBhSmvdizwz58GYEjAyl4Y+3tPjGZvjAj9W5QWacOUUVC/GOD
+	nrIJkqvL0yYoHBsOeR4Wzgtz/sT/8rE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712142196;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pcQEkiDoZSJwCrXrqPil+MhwkFDK8GbPO7YjAbOieLo=;
+	b=W6zFCVQ0QbqGZG82yh1ffhmB4224NDIE5PVvCEN6M6Q9+8oz1SnJEVwvqSIqcSEdVON0lp
+	1KVpt2Cy/S3nDlDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id AC29013357;
+	Wed,  3 Apr 2024 11:03:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id EiH8KXQ3DWaIGgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Wed, 03 Apr 2024 11:03:16 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6839EA0814; Wed,  3 Apr 2024 13:03:16 +0200 (CEST)
+Date: Wed, 3 Apr 2024 13:03:16 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	syzbot <syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com>,
+	Edward Adam Davis <eadavis@qq.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	oe-lkp@lists.linux.dev, lkp@intel.com,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, amir73il@gmail.com,
+	chuck.lever@oracle.com, jlayton@kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [linux-next:master] [fs]  1b43c46297: kernel_BUG_at_mm/usercopy.c
+Message-ID: <20240403110316.qtmypq2rtpueloga@quack3>
+References: <202404031550.f3de0571-lkp@intel.com>
+ <000000000000f075b9061520cbbe@google.com>
+ <tencent_A7845DD769577306D813742365E976E3A205@qq.com>
+ <20240403-mundgerecht-klopapier-e921ceb787ca@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3300437.1712141700.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Apr 2024 11:55:00 +0100
-Message-ID: <3300438.1712141700@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403-mundgerecht-klopapier-e921ceb787ca@brauner>
+X-Rspamd-Queue-Id: BC81035270
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.19)[-0.975];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TAGGED_RCPT(0.00)[4139435cb1b34cf759c2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	R_DKIM_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,syzkaller.appspotmail.com,qq.com,kernel.org,lists.linux.dev,kvack.org,suse.cz,vger.kernel.org,gmail.com,oracle.com,googlegroups.com,zeniv.linux.org.uk];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:rdns,imap2.dmz-prg2.suse.org:helo,suse.com:email]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Score: -1.30
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-Christoph Hellwig <hch@lst.de> wrote:
+On Wed 03-04-24 10:46:19, Christian Brauner wrote:
+> On Wed, Apr 03, 2024 at 02:54:14PM +0800, Edward Adam Davis wrote:
+> > [Syzbot reported]
+> > BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+> > BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+> > Write of size 48 at addr ffff88802b8cbc88 by task syz-executor333/5090
+> > 
+> > CPU: 0 PID: 5090 Comm: syz-executor333 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+> > Call Trace:
+> >  <TASK>
+> >  __dump_stack lib/dump_stack.c:88 [inline]
+> >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+> >  print_address_description mm/kasan/report.c:377 [inline]
+> >  print_report+0x169/0x550 mm/kasan/report.c:488
+> >  kasan_report+0x143/0x180 mm/kasan/report.c:601
+> >  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+> >  instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
+> >  _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
+> >  copy_from_user include/linux/uaccess.h:183 [inline]
+> >  handle_to_path fs/fhandle.c:203 [inline]
+> >  do_handle_open+0x204/0x660 fs/fhandle.c:226
+> >  do_syscall_64+0xfb/0x240
+> >  entry_SYSCALL_64_after_hwframe+0x72/0x7a
+> > [Fix] 
+> > When copying data to f_handle, the length of the copied data should not include
+> > the length of "struct file_handle".
+> > 
+> > Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
+> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> > ---
+> >  fs/fhandle.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/fhandle.c b/fs/fhandle.c
+> > index 53ed54711cd2..8a7f86c2139a 100644
+> > --- a/fs/fhandle.c
+> > +++ b/fs/fhandle.c
+> > @@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+> >  	*handle = f_handle;
+> >  	if (copy_from_user(&handle->f_handle,
+> >  			   &ufh->f_handle,
+> > -			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
+> > +			   f_handle.handle_bytes)) {
+> 
+> Groan, of course. What a silly mistake. Thanks for the fix.
+> I'll fold this into:
+> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
+> because this hasn't hit mainline yet and it doesn't make sense to keep
+> that bug around.
+> 
+> Sorry, that'll mean we drop your patch but I'll give you credit in the
+> commit log of the original patch.
 
-> On Wed, Apr 03, 2024 at 11:10:47AM +0100, David Howells wrote:
-> > That depends.  You put a comment on write_cache_pages() saying that pe=
-ople
-> > should use writeback_iter() instead.  w_c_p() is not marked GPL.  Is i=
-t your
-> > intention to get rid of it?
-> =
+Indeed, I should have caught this during review. Sorry for that and thanks
+for fixing this up quickly.
 
-> Yes.  If you think you're not a derivate work of Linux you have no
-> business using either one.
-
-So why are we bothering with EXPORT_SYMBOL at all?  Why don't you just sen=
-d a
-patch replace all of them with EXPORT_SYMBOL_GPL()?
-
-David
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
