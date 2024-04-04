@@ -1,159 +1,103 @@
-Return-Path: <linux-nfs+bounces-2633-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2634-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D95A2897B75
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 00:11:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48AD7898281
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 09:52:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9371528B0CE
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Apr 2024 22:11:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCEBDB233B4
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 07:52:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AE04138494;
-	Wed,  3 Apr 2024 22:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619145A110;
+	Thu,  4 Apr 2024 07:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="d2Imvi/b"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8zHQR8J"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD89156987
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Apr 2024 22:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D375E5B208
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Apr 2024 07:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712182303; cv=none; b=ksv9m8sidTKkdlyuZ3RL+edEBc/CVS7DTkq2cpbcHzRYKaXddDRQFPmZRSsxZMPn5PP3Qi/7DhxLig0LnHOYF23SV5HembnJuZGVSpkJNoP8mMhl6TTjOMvT/M4HKTzU+10bEcbAtdKrEovIW8OX/2t3y4uCMJ9O7XKeA1IimG8=
+	t=1712217129; cv=none; b=CWFTE1C0f2LAjOQyFLca46WPrV/ttidIGtTD+BFu5rGEK/H2JOBdFRE39S+AS4Ve010Wvnp63lVYgwREpR+GWthGDUE8AB0adE9DzyKfycWFWD+sWo0LaAa7yX7vCCva44EVKm4rThkXi6iNMUCut9JJosvOJewUSbg5CbJdMkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712182303; c=relaxed/simple;
-	bh=WIB6N0+ro9wwJRgZrFb3cmseapPM8ZIsPFiWTTuerxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bNll+uwI3LRi9MTZ+63l0tsBtxhAKwlBdDOn/cjLUqoQN4aW0ApKhQYoMc9D8ISlm3gxb1haqAKOK6ESOog1DUZbxTjXt/awWh7+nSdQQgft+UBa78ZYUC7hOk6/dCpC2dXS4JEyr84+8Zc9Zbp03BP8nFR66n44dKkh8aFl8dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=d2Imvi/b; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id rsjvr9SOus4yTs8pRrNKrB; Wed, 03 Apr 2024 22:11:33 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id s8pQrPpNLEKyls8pQrvWPA; Wed, 03 Apr 2024 22:11:33 +0000
-X-Authority-Analysis: v=2.4 cv=Bombw5X5 c=1 sm=1 tr=0 ts=660dd415
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4VnFru8p6tJF5H7f7NqpSA==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=drOt6m5kAAAA:8 a=yPCof4ZbAAAA:8 a=pGLkceISAAAA:8
- a=jdHS4qDDNQt1OS4QkXsA:9 a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22
- a=AjGcO6oz07-iQ99wixmX:22 a=RMMjzBEyIzXRtoq5n5K6:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WWVro7cWydSO/uOEVxaGOi3jrLoa0beeMTA3tm6Z6pg=; b=d2Imvi/bmi7TayGjpxTc9DFtEN
-	EafRKSpi8ipQCngDq1nOFjts1a3KKiKH1BAwLu9Hdb7Xlq3u4BEM3qdlOnljHFhWwU1p/VhHsGg87
-	K4hOpZ3FIfZTzWVdD9L8L0NAbTgQwhXVXvmM1hurvUXClBUXWgO76YcM5v+tGooBKgIg1UE+l8Ykr
-	10bO0N/eYyvjAfhJqxM+XBuoUsFTvEB5j030dv35MkP7oS5Hm8F50DiuDhQd3uD6giaHCMtehHCN7
-	BIs+qFl5Yx9HJbr29WpIdlE1e7NWmFrtcQ5b3A3QGg+pyf9vxlEV+pKBLqJm9lmrTE8tziaYnhg6A
-	JFvYB/FA==;
-Received: from [187.184.159.122] (port=22874 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rs8pP-002b0h-2c;
-	Wed, 03 Apr 2024 17:11:31 -0500
-Message-ID: <01167882-2e6c-4504-8c9e-825ecd268411@embeddedor.com>
-Date: Wed, 3 Apr 2024 16:11:22 -0600
+	s=arc-20240116; t=1712217129; c=relaxed/simple;
+	bh=xuyJ4Vq6zUtNBwqm/4jt8kNEn56EDs4LkP7OBIGqEmE=;
+	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
+	 Date:Message-ID; b=uRinTMYZk3XzGsj64ORei3Xkz7ilfRlc2HtclGa5HKvymZqa5oMw+U4ZHbgGsBMc+T2wVSJ1jLUUtYEV1sfUimvuPkaNcyJcnIy32xu0uinzu0katbUDRRAYno+1VG9hmZouDc5Agmz5N9YUvhn6KL4O5nuTjPqNGdEufiq7JrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M8zHQR8J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712217127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C9vFcjZDN/Fxaa0QMjaZwgnMDGjE5U9a9cC8FQf1Wik=;
+	b=M8zHQR8JbNA08ddSuEOy1A5jTP2se3bW2RRVTwNd8JpmQBoygLCW6xDPyw+mXHF2T/da/f
+	8sdS0qH5Uj3t0dsYBd7ViHQJTe5Sx0kYAnVz4DnImDg91dSKfYHPODwKHxE+aPwKVKpvrd
+	8oOTiv585pziah28yOYOGyvvyh0hKCo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-4vRV2FK2MnqAak7lNxvr5w-1; Thu,
+ 04 Apr 2024 03:52:01 -0400
+X-MC-Unique: 4vRV2FK2MnqAak7lNxvr5w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8E333806736;
+	Thu,  4 Apr 2024 07:52:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 739012166B33;
+	Thu,  4 Apr 2024 07:51:56 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-22-dhowells@redhat.com>
+References: <20240328163424.2781320-22-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Jeff Layton <jlayton@kernel.org>,
+    Gao Xiang <hsiangkao@linux.alibaba.com>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Matthew Wilcox <willy@infradead.org>,
+    Steve French <smfrench@gmail.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
+    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
+Subject: Re: [PATCH 21/26] netfs, 9p: Implement helpers for new write code
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: Set file_handle::handle_bytes before referencing
- file_handle::f_handle
-To: Kees Cook <keescook@chromium.org>, Christian Brauner <brauner@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240403215358.work.365-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240403215358.work.365-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.159.122
-X-Source-L: No
-X-Exim-ID: 1rs8pP-002b0h-2c
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [187.184.159.122]:22874
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDTQdipf18cQHs43XsswBhylC1/xNK8OGTtS+IfflXxyouxxd53U3MCDmLD3TC4GmbjkPBl0QXtagyAk8RUJVagPMjuJ47joij6p1H6+Tkxya283Lxni
- TBU5CvIGK1dvcjyYVpUP92ncmjARvxzq6VvgROA+GsstKfiaC/a0pMcvseMkUYnhNRqxxqJjGr/O8e4PIckZqZ8Yqw7cfQAdvOU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3655510.1712217111.1@warthog.procyon.org.uk>
+Date: Thu, 04 Apr 2024 08:51:51 +0100
+Message-ID: <3655511.1712217111@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
+David Howells <dhowells@redhat.com> wrote:
 
+> +	size_t len = subreq->len - subreq->transferred;
 
-On 03/04/24 15:54, Kees Cook wrote:
-> With adding __counted_by(handle_bytes) to struct file_handle, we need
-> to explicitly set it in the one place it wasn't yet happening prior to
-> accessing the flex array "f_handle".
+This actually needs to be 'int len' because of the varargs packet formatter.
 
-Yes, which (access to `f_handle`) happens here:
+David
 
-  48         retval = exportfs_encode_fh(path->dentry,
-  49                                     (struct fid *)handle->f_handle,
-  50                                     &handle_dwords, fh_flags);
-
-> 
-> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks for catching this!
---
-Gustavo
-
-> ---
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> ---
->   fs/fhandle.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 53ed54711cd2..08ec2340dd22 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -40,6 +40,7 @@ static long do_sys_name_to_handle(const struct path *path,
->   			 GFP_KERNEL);
->   	if (!handle)
->   		return -ENOMEM;
-> +	handle->handle_bytes = f_handle.handle_bytes;
->   
->   	/* convert handle size to multiple of sizeof(u32) */
->   	handle_dwords = f_handle.handle_bytes >> 2;
 
