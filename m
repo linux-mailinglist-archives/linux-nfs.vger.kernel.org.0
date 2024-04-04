@@ -1,64 +1,75 @@
-Return-Path: <linux-nfs+bounces-2644-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2645-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A1F899062
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 23:30:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F4E389909C
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 23:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D66211C22A70
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 21:30:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D87551F237C1
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 21:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B4713BAD6;
-	Thu,  4 Apr 2024 21:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E1B13BC04;
+	Thu,  4 Apr 2024 21:49:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d1g8oWeT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpqDLYde"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EC813BACF;
-	Thu,  4 Apr 2024 21:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1413BC3B
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Apr 2024 21:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712266165; cv=none; b=B9uwEs7oU4nGLGx+6/JrdS/s+og0nPtC15ZFquFGz7/SIZiv3QB74TXFdguVsz67pCg36SKXzX21EKPHqEEmFJPigp/np0wqxO6om0D5+FfSkqF95w0CvVJkvsXvbPvhNyUB0UXqnWdiP1PmQtt9Ko9JU3Ox1WCqqG8uIt9dQK4=
+	t=1712267357; cv=none; b=gEcjgpYwmaIZbiEPxeBv3gb/ZvHWTN9W25mIYTAERmh1Ydz34G5uTt5b0/2xlsqssm/iqrkjw/NQXnln9R9LOlmPy4sEnSf2zY3+LK1sSE+Xbwse2lps29NdWy+WKuDAphlSN44PTvQsl9C6t02suIk3T4qZOuK9rMFt9Reta/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712266165; c=relaxed/simple;
-	bh=Utj8g5kSIY2oZzcEMi6QXW1D/5gc1CLBmlqTBBy6/AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUlgkdjk/HlF00OSdbkpWs3XMJxNbiAFUWUv2D8E+Q6zKljZNBcRpaXfv9UXckj2USTSNtmNeA0BMnDivzGXhypZUXFhf2rcxJGcjozU8wv0kAJ6vkEIP5txtc1s2JT67+upBK/d4l2SHUJ45BVacJVuIlNxV/UE3C4PLxXKy6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d1g8oWeT; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Zyi7AEcYnfqB6wuIN5C5labJ5TkiPsioxAOKz/6Fbqs=; b=d1g8oWeT9rYHBlZuF9xsTFDFHG
-	4lSJo/KGw64j3qekI4UzOPIXJ1k3xqp49kuQDsjI3KWu1PeNyrvAx32gduojBtJnubIYbpR8ATH9/
-	iHi0XgwD4MRWgBREvdk6kwWIJMIJufuG2rvsYSbhZahYCtFlqfUHZoB/9OG3i+HKLm5pf24AQ/JN2
-	9SFsSEsuALRsGWBL8WIAgLr6AWItvY3OcojGDkbhHZsDqZ1XuYyScYDs1+aUQs9aWl8qV9+jLJ+tV
-	tJCk+/43dla/bl5lv45MJp+W8A/geOJcFQ8gjN3XZ0JwVqHcOjoTgz3o0Y9HJuAjDwX2Jd5ldJTru
-	2h94r9pw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsUe5-00000008veN-2BP2;
-	Thu, 04 Apr 2024 21:29:17 +0000
-Date: Thu, 4 Apr 2024 22:29:17 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fs: Set file_handle::handle_bytes before referencing
- file_handle::f_handle
-Message-ID: <Zg8brYRFHlS1qaJC@casper.infradead.org>
-References: <20240404211212.it.297-kees@kernel.org>
+	s=arc-20240116; t=1712267357; c=relaxed/simple;
+	bh=GRpTUpsyGxW4b9O1KoWGVOmQnT1hSNfuqHfunyl0YJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ro3nVOTveXf/CBFM4CAZUACBp4wmMHcdQu5mKf+NFcRDO37sZUFDz14lswUPLtXJEqJvoHmjmRzgfSJFqW5JCDg+Th5pWOssiRIGQHr7A5xv1QLQiptsNDrrJJDkdhCuDrgk0Xpfz8TmVwGZeLPhM9JxXilYXRWGMEhJA+PgKfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YpqDLYde; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712267354; x=1743803354;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=GRpTUpsyGxW4b9O1KoWGVOmQnT1hSNfuqHfunyl0YJY=;
+  b=YpqDLYdexFybIDA9UE7QxoUmSYAvtGffm+SobesMb63Us4h8DmE8R1x3
+   mijNcyOwE9aoqfk1wKIopFEXfqlL+eQKA/jRTCio8oyDC3Y492w3tJ8E2
+   F10G5nxVplOT5FmgJgB9ChPDfXf2WVlFciWCoeqJARBgoyKSOPOzEMdcy
+   tx8tIgKPUZZjLUSHQiWLQGS59qMS0S9Q6IoMtDbsk2oVLohKx05iMomuB
+   5UV6YswY43YFKBf4WAXdj88Iob7B+XYT2Q6njI2+RYzP4Cyk28mvaS8vJ
+   PhRjgjRQGowg1wdq+gVcN28S9vN9b5vhsJqsCGeS7nF+gK0QNIL5rBluN
+   Q==;
+X-CSE-ConnectionGUID: acFn7qDIT3uXzfXofROzcw==
+X-CSE-MsgGUID: CKwf1I3uQIK/EmsCDd4SMg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7446132"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="7446132"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 14:49:13 -0700
+X-CSE-ConnectionGUID: b0+HsFKFRYGjnKNXGej5ug==
+X-CSE-MsgGUID: Ezj6bbA4R1u6tjuYqB+F+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="18979743"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Apr 2024 14:49:12 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rsUxK-0001YA-0c;
+	Thu, 04 Apr 2024 21:49:10 +0000
+Date: Fri, 5 Apr 2024 05:48:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+	Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [trondmy-nfs:testing 31/31] fs/nfs/inode.c:2434:13: warning:
+ assignment to 'int' from 'struct proc_dir_entry *' makes integer from
+ pointer without a cast
+Message-ID: <202404050536.TP9zhcZf-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,80 +78,48 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240404211212.it.297-kees@kernel.org>
 
-On Thu, Apr 04, 2024 at 02:12:15PM -0700, Kees Cook wrote:
-> Since __counted_by(handle_bytes) was added to struct file_handle, we need
-> to explicitly set it in the one place it wasn't yet happening prior to
-> accessing the flex array "f_handle". For robustness also check for a
-> negative value for handle_bytes, which is possible for an "int", but
-> nothing appears to set.
+tree:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git testing
+head:   f290a586e31f8965387dde660729c716a3af9b6c
+commit: f290a586e31f8965387dde660729c716a3af9b6c [31/31] nfs: Handle error of rpc_proc_register() in nfs_net_init().
+config: arc-defconfig (https://download.01.org/0day-ci/archive/20240405/202404050536.TP9zhcZf-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240405/202404050536.TP9zhcZf-lkp@intel.com/reproduce)
 
-Why not change handle_bytes from an int to a u32?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404050536.TP9zhcZf-lkp@intel.com/
 
-Also, what a grotty function.
+All warnings (new ones prefixed by >>):
 
-        handle_dwords = f_handle.handle_bytes >> 2;
-...
-        handle_bytes = handle_dwords * sizeof(u32);
+   fs/nfs/inode.c: In function 'nfs_net_init':
+>> fs/nfs/inode.c:2434:13: warning: assignment to 'int' from 'struct proc_dir_entry *' makes integer from pointer without a cast [-Wint-conversion]
+    2434 |         err = rpc_proc_register(net, &nn->rpcstats);
+         |             ^
 
-> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
->  v2: more bounds checking, add comments, dropped reviews since logic changed
->  v1: https://lore.kernel.org/all/20240403215358.work.365-kees@kernel.org/
-> ---
->  fs/fhandle.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 8a7f86c2139a..854f866eaad2 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -40,6 +40,11 @@ static long do_sys_name_to_handle(const struct path *path,
->  			 GFP_KERNEL);
->  	if (!handle)
->  		return -ENOMEM;
-> +	/*
-> +	 * Since handle->f_handle is about to be written, make sure the
-> +	 * associated __counted_by(handle_bytes) variable is correct.
-> +	 */
-> +	handle->handle_bytes = f_handle.handle_bytes;
->  
->  	/* convert handle size to multiple of sizeof(u32) */
->  	handle_dwords = f_handle.handle_bytes >> 2;
-> @@ -51,8 +56,8 @@ static long do_sys_name_to_handle(const struct path *path,
->  	handle->handle_type = retval;
->  	/* convert handle size to bytes */
->  	handle_bytes = handle_dwords * sizeof(u32);
-> -	handle->handle_bytes = handle_bytes;
-> -	if ((handle->handle_bytes > f_handle.handle_bytes) ||
-> +	/* check if handle_bytes would have exceeded the allocation */
-> +	if ((handle_bytes < 0) || (handle_bytes > f_handle.handle_bytes) ||
->  	    (retval == FILEID_INVALID) || (retval < 0)) {
->  		/* As per old exportfs_encode_fh documentation
->  		 * we could return ENOSPC to indicate overflow
-> @@ -68,6 +73,8 @@ static long do_sys_name_to_handle(const struct path *path,
->  		handle_bytes = 0;
->  	} else
->  		retval = 0;
-> +	/* the "valid" number of bytes may fewer than originally allocated */
-> +	handle->handle_bytes = handle_bytes;
->  	/* copy the mount id */
->  	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
->  	    copy_to_user(ufh, handle,
-> -- 
-> 2.34.1
-> 
-> 
+
+vim +2434 fs/nfs/inode.c
+
+  2426	
+  2427	static int nfs_net_init(struct net *net)
+  2428	{
+  2429		struct nfs_net *nn = net_generic(net, nfs_net_id);
+  2430		int err;
+  2431	
+  2432		nfs_clients_init(net);
+  2433	
+> 2434		err = rpc_proc_register(net, &nn->rpcstats);
+  2435		if (err) {
+  2436			nfs_clients_exit(net);
+  2437			return err;
+  2438		}
+  2439	
+  2440		return nfs_fs_proc_net_init(net);
+  2441	}
+  2442	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
