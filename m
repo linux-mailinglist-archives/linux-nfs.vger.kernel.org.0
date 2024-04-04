@@ -1,176 +1,199 @@
-Return-Path: <linux-nfs+bounces-2648-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2649-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F029589910C
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 00:12:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1379C899122
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 00:18:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 758661F23434
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 22:12:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F67E1C217C0
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Apr 2024 22:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25FBD1C6AF;
-	Thu,  4 Apr 2024 22:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ABA313C662;
+	Thu,  4 Apr 2024 22:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="i9G8DmAk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNpgHmou"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBB913C3EB
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Apr 2024 22:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F0A13C3F6
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Apr 2024 22:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712268741; cv=none; b=r7s8DfKV7lUi3HMPx4eyy1Y1g18E/grcQtZbmQpGzH/WfXHDDdnQzSbnCwXbpAgJXerLFtL0vaigANgbk/syPOVmm8gx6WvvGUeYgj9sSsCc39Lpq3RJ+QnBJX6e1lZk4fQxBRIWEOzEjd7qPkR3LzbX+ew6hTUzz83f+icxJUA=
+	t=1712269081; cv=none; b=j52a+oLttvDuRZ28lY5YHN8lvWwr9R7xa9c9bDKGvecCdmlTkZM6FIp9LY6p0SMbP056WAvG7rGel0ouhnpiNGDGfvd3YgiU8URmNDZZdxZ+ABR+REhPW5j35eBxI9UfRC2qmEeOY/Ot6toltWdqjAurtHy3MHU5a6OsivfsoHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712268741; c=relaxed/simple;
-	bh=xsg1yFMhLhr5wmAEO6OIjh6odh9pI4LGlzaG+KYySMw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pvnx3nkmhuOQJle8MTFK5hJq21RpAsINRkChWw8sj5n4W5b3y0kSy38E8Kjr42xdjP+928e0dwFOJfHLf3qFTRi0i53w9TnhRhLv/zWds9rEKNsncTnxkMLqx/2+MSoeDoCcGjRu/rTTIfRF4kmT+2GkcjS8geP/w9XI0ziF8RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=i9G8DmAk; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1712269081; c=relaxed/simple;
+	bh=RZPrq+xVDjiyzuvgmiC5bztMCL91wQIMW6JQhQhfvYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YcEP+wzhB4yXYyEqPlV1ANgUiiDh38SHo85u7QcMqypdtokubuzrGo3JIsSOpzPICzu7cvf35etIMjSjICbp7l9u5ssg2yaaHYgUIKdKFayrh4q3xtxx0NxWAVYb/UM5DU8NMw4trI96EaasFzvYsJmWsW8eT2AJOqfncUe96Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iNpgHmou; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4162ad6453aso8119585e9.0
+        for <linux-nfs@vger.kernel.org>; Thu, 04 Apr 2024 15:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1712268740; x=1743804740;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5916R9lOk7at4pM0N08iIAWWWL4u1gcyvoakxBnZ/Zg=;
-  b=i9G8DmAkicsKh6RMD+uZ7C2ke0KZn+XhZBUCEKRfchNmi/fTwTeHPrjE
-   dp0wWCSEDLKll3aV3TfBq/O/5w84S9pA3+v2Dsh5bfWy7HYvaiGD9Cs0L
-   P5PvhXBzpxkr9zUU3gz/xlMYGpVHab5qVCNRMGiYQ9c2R3oIQCEqGHLRs
-   k=;
-X-IronPort-AV: E=Sophos;i="6.07,180,1708387200"; 
-   d="scan'208";a="409260335"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 22:12:15 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:41870]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.106:2525] with esmtp (Farcaster)
- id 9f8f4437-b655-497a-9e1b-dd0798713a2f; Thu, 4 Apr 2024 22:12:13 +0000 (UTC)
-X-Farcaster-Flow-ID: 9f8f4437-b655-497a-9e1b-dd0798713a2f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 4 Apr 2024 22:12:12 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.100.6) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
- Thu, 4 Apr 2024 22:12:10 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
-	<anna@kernel.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
-	<kuni1840@gmail.com>, <linux-nfs@vger.kernel.org>, syzkaller
-	<syzkaller@googlegroups.com>
-Subject: [PATCH v2] nfs: Handle error of rpc_proc_register() in nfs_net_init().
-Date: Thu, 4 Apr 2024 15:12:00 -0700
-Message-ID: <20240404221200.52876-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
+        d=google.com; s=20230601; t=1712269077; x=1712873877; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eIW+Z3FuH4Tlrbj9QrjroPzWQnEb4hQ4AxEw1tDZfk4=;
+        b=iNpgHmouikM3eS2bzDsViRnQPf4IYT0AntRq/pLUycBts1tEtNDBhLAHPWLbGGQuwD
+         QJtB2nqOmcrDZKQqkypAxU9t8BXasLVzM76U6doxh0UD6M0mrI/XgijigKuOcMI2NCIb
+         whmis5i9jCy0XZKIvDNYWGW+znPQeHBEMsfX8rggozuXIuCHf0B+o1YIbhjdkYuLbC6k
+         nmWR9tyq0QFPwh7UUDhI4p73EwefaEhKQVvrdC/li4M77bvJ/3+wYenQP3FJrzs+WVyB
+         h/Tam1ckIRELByLvoQC8mEYZ6O8sMXwbWpK4qyuHRrWaDSukD/B1KlHnI6ojMiGvDvbK
+         uIeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712269077; x=1712873877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eIW+Z3FuH4Tlrbj9QrjroPzWQnEb4hQ4AxEw1tDZfk4=;
+        b=wWhGs9dgBetKyrzigM4Eh2yZJLuBT8PVICmD6Cv7qDxn3ATplhzdND0hoitjD6X8lx
+         lEMYNp4I1algF6pOkfLXUGKWnqP8HIx3ND3emuygt3TPPNkwVUmUImeEtRSj/KhvZUtS
+         iKgwDJhQJ6ty1kRavLV7tyOowx6u3dI+5HB5lmLhOT7YUaYi04jA+KrgLgyp6aeHNDVm
+         YXes+k5WZqAv0FIYc9GSvA0kpS8K615Rx4Mg0IMUdZ9rQsLKyryFrld6PLzN5XwvMTgo
+         hXDNxX30SuMsaA0iTFxKsBUfF5NyEvZUa+OlukJ/B0AhGBOQFZEUMGH0l8fGm/Jua2Cu
+         Xtig==
+X-Forwarded-Encrypted: i=1; AJvYcCWOaZhPMAQo7e8fSHYDTFUfxI7GqMt360z7EashNR9rTRwZhkMJuL6vGAPCNSVWw3xAKhJdc1phic4H3M9MLiar6/U6ZBdqpvuw
+X-Gm-Message-State: AOJu0Yyc7HycolAbK2nufKzmbNtppveknyrIWIFvMlx3nq7MFrv52bGv
+	Fmd9YOaeHinDJj/9ftnLsck0a/6z467v6mIVrvuFfNVAEacqN8D4++7ubwMmu3GrjfwJ4efz1WK
+	S3DKBrG8ZH7Q1Grc+p4ptUoCNsPl5QpCi4FBu
+X-Google-Smtp-Source: AGHT+IEoGycg7Q6yz1U10yVcrqSmmGhsvl59dTKCzdbY+AGkKJwTyJBRF58S2bqCqewHCyhhbzL+kREAY0nZt0Z/KC8=
+X-Received: by 2002:a5d:56cd:0:b0:343:a117:7d2 with SMTP id
+ m13-20020a5d56cd000000b00343a11707d2mr434133wrw.71.1712269077043; Thu, 04 Apr
+ 2024 15:17:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWC001.ant.amazon.com (10.13.139.223) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20240404165404.3805498-1-surenb@google.com> <Zg7dmp5VJkm1nLRM@casper.infradead.org>
+ <CAJuCfpHbTCwDERz+Hh+aLZzNdtSFKA+Q7sW-xzvmFmtyHCqROg@mail.gmail.com>
+In-Reply-To: <CAJuCfpHbTCwDERz+Hh+aLZzNdtSFKA+Q7sW-xzvmFmtyHCqROg@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 4 Apr 2024 15:17:43 -0700
+Message-ID: <CAJuCfpHy5Xo76S7h9rEuA3cQ1pVqurL=wmtQ2cx9-xN1aa_C_A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm: change inlined allocation helpers to account at
+ the call site
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, joro@8bytes.org, will@kernel.org, 
+	trond.myklebust@hammerspace.com, anna@kernel.org, arnd@arndb.de, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, jikos@kernel.org, 
+	benjamin.tissoires@redhat.com, tytso@mit.edu, jack@suse.com, 
+	dennis@kernel.org, tj@kernel.org, cl@linux.com, jakub@cloudflare.com, 
+	penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, 
+	vbabka@suse.cz, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-ext4@vger.kernel.org, linux-mm@kvack.org, 
+	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kent.overstreet@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzkaller reported a warning [0] triggered while destroying immature
-netns.
+On Thu, Apr 4, 2024 at 10:08=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Thu, Apr 4, 2024 at 10:04=E2=80=AFAM Matthew Wilcox <willy@infradead.o=
+rg> wrote:
+> >
+> > On Thu, Apr 04, 2024 at 09:54:04AM -0700, Suren Baghdasaryan wrote:
+> > > +++ b/include/linux/dma-fence-chain.h
+> > > @@ -86,10 +86,7 @@ dma_fence_chain_contained(struct dma_fence *fence)
+> > >   *
+> > >   * Returns a new struct dma_fence_chain object or NULL on failure.
+> > >   */
+> > > -static inline struct dma_fence_chain *dma_fence_chain_alloc(void)
+> > > -{
+> > > -     return kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL);
+> > > -};
+> > > +#define dma_fence_chain_alloc()      kmalloc(sizeof(struct dma_fence=
+_chain), GFP_KERNEL)
+> >
+> > You've removed some typesafety here.  Before, if I wrote:
+> >
+> >         struct page *page =3D dma_fence_chain_alloc();
+> >
+> > the compiler would warn me that I've done something stupid.  Now it
+> > can't tell.  Suggest perhaps:
+> >
+> > #define dma_fence_chain_alloc()                                        =
+   \
+> >         (struct dma_fence_chain *)kmalloc(sizeof(struct dma_fence_chain=
+), \
+> >                                                 GFP_KERNEL)
+> >
+> > but maybe there's a better way of doing that.  There are a few other
+> > occurrences of the same problem in this monster patch.
+>
+> Got your point.
 
-rpc_proc_register() was called in init_nfs_fs(), but its error
-has been ignored since at least the initial commit 1da177e4c3f4
-("Linux-2.6.12-rc2").
+Ironically, checkpatch generates warnings for these type casts:
 
-Recently, commit d47151b79e32 ("nfs: expose /proc/net/sunrpc/nfs
-in net namespaces") converted the procfs to per-netns and made
-the problem more visible.
+WARNING: unnecessary cast may hide bugs, see
+http://c-faq.com/malloc/mallocnocast.html
+#425: FILE: include/linux/dma-fence-chain.h:90:
++ ((struct dma_fence_chain *)kmalloc(sizeof(struct dma_fence_chain),
+GFP_KERNEL))
 
-Even when rpc_proc_register() fails, nfs_net_init() could succeed,
-and thus nfs_net_exit() will be called while destroying the netns.
+I guess I can safely ignore them in this case (since we cast to the
+expected type)?
 
-Then, remove_proc_entry() will be called for non-existing proc
-directory and trigger the warning below.
-
-Let's handle the error of rpc_proc_register() properly in nfs_net_init().
-
-[0]:
-name 'nfs'
-WARNING: CPU: 1 PID: 1710 at fs/proc/generic.c:711 remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711
-Modules linked in:
-CPU: 1 PID: 1710 Comm: syz-executor.2 Not tainted 6.8.0-12822-gcd51db110a7e #12
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-RIP: 0010:remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711
-Code: 41 5d 41 5e c3 e8 85 09 b5 ff 48 c7 c7 88 58 64 86 e8 09 0e 71 02 e8 74 09 b5 ff 4c 89 e6 48 c7 c7 de 1b 80 84 e8 c5 ad 97 ff <0f> 0b eb b1 e8 5c 09 b5 ff 48 c7 c7 88 58 64 86 e8 e0 0d 71 02 eb
-RSP: 0018:ffffc9000c6d7ce0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8880422b8b00 RCX: ffffffff8110503c
-RDX: ffff888030652f00 RSI: ffffffff81105045 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: ffffffff81bb62cb R12: ffffffff84807ffc
-R13: ffff88804ad6fcc0 R14: ffffffff84807ffc R15: ffffffff85741ff8
-FS:  00007f30cfba8640(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ff51afe8000 CR3: 000000005a60a005 CR4: 0000000000770ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- <TASK>
- rpc_proc_unregister+0x64/0x70 net/sunrpc/stats.c:310
- nfs_net_exit+0x1c/0x30 fs/nfs/inode.c:2438
- ops_exit_list+0x62/0xb0 net/core/net_namespace.c:170
- setup_net+0x46c/0x660 net/core/net_namespace.c:372
- copy_net_ns+0x244/0x590 net/core/net_namespace.c:505
- create_new_namespaces+0x2ed/0x770 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xae/0x160 kernel/nsproxy.c:228
- ksys_unshare+0x342/0x760 kernel/fork.c:3322
- __do_sys_unshare kernel/fork.c:3393 [inline]
- __se_sys_unshare kernel/fork.c:3391 [inline]
- __x64_sys_unshare+0x1f/0x30 kernel/fork.c:3391
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x4f/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f30d0febe5d
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 9f 1b 00 f7 d8 64 89 01 48
-RSP: 002b:00007f30cfba7cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 00000000004bbf80 RCX: 00007f30d0febe5d
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000006c020600
-RBP: 00000000004bbf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-R13: 000000000000000b R14: 00007f30d104c530 R15: 0000000000000000
- </TASK>
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
-v2: Fix build error spotted by kernel-test-robot
-v1: https://lore.kernel.org/linux-nfs/20240327212706.27691-1-kuniyu@amazon.com/
----
- fs/nfs/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index c709c296ea9a..acef52ecb1bb 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2429,7 +2429,12 @@ static int nfs_net_init(struct net *net)
- 	struct nfs_net *nn = net_generic(net, nfs_net_id);
- 
- 	nfs_clients_init(net);
--	rpc_proc_register(net, &nn->rpcstats);
-+
-+	if (!rpc_proc_register(net, &nn->rpcstats)) {
-+		nfs_clients_exit(net);
-+		return -ENOMEM;
-+	}
-+
- 	return nfs_fs_proc_net_init(net);
- }
- 
--- 
-2.30.2
-
+>
+> >
+> > > +++ b/include/linux/hid_bpf.h
+> > > @@ -149,10 +149,7 @@ static inline int hid_bpf_connect_device(struct =
+hid_device *hdev) { return 0; }
+> > >  static inline void hid_bpf_disconnect_device(struct hid_device *hdev=
+) {}
+> > >  static inline void hid_bpf_destroy_device(struct hid_device *hid) {}
+> > >  static inline void hid_bpf_device_init(struct hid_device *hid) {}
+> > > -static inline u8 *call_hid_bpf_rdesc_fixup(struct hid_device *hdev, =
+u8 *rdesc, unsigned int *size)
+> > > -{
+> > > -     return kmemdup(rdesc, *size, GFP_KERNEL);
+> > > -}
+> > > +#define call_hid_bpf_rdesc_fixup(_hdev, _rdesc, _size) kmemdup(_rdes=
+c, *(_size), GFP_KERNEL)
+> >
+> > here
+> >
+> > > -static inline handle_t *jbd2_alloc_handle(gfp_t gfp_flags)
+> > > -{
+> > > -     return kmem_cache_zalloc(jbd2_handle_cache, gfp_flags);
+> > > -}
+> > > +#define jbd2_alloc_handle(_gfp_flags)        kmem_cache_zalloc(jbd2_=
+handle_cache, _gfp_flags)
+> >
+> > here
+> >
+> > > +++ b/include/linux/skmsg.h
+> > > @@ -410,11 +410,8 @@ void sk_psock_stop_verdict(struct sock *sk, stru=
+ct sk_psock *psock);
+> > >  int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
+> > >                        struct sk_msg *msg);
+> > >
+> > > -static inline struct sk_psock_link *sk_psock_init_link(void)
+> > > -{
+> > > -     return kzalloc(sizeof(struct sk_psock_link),
+> > > -                    GFP_ATOMIC | __GFP_NOWARN);
+> > > -}
+> > > +#define sk_psock_init_link() \
+> > > +             kzalloc(sizeof(struct sk_psock_link), GFP_ATOMIC | __GF=
+P_NOWARN)
+> >
+> > here
+> >
+> > ... I kind of gave up at this point.  You'll want to audit for yourself
+> > anyway ;-)
+>
+> Yes, I'll go over it and will make the required changes. Thanks for
+> looking into it!
+> Suren.
 
