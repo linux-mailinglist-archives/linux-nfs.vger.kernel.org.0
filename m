@@ -1,68 +1,91 @@
-Return-Path: <linux-nfs+bounces-2684-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2685-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDD6689A4AD
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 21:08:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CED989A580
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 22:12:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 930B42820E0
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 19:08:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 013F91F2324B
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 20:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE45172BBB;
-	Fri,  5 Apr 2024 19:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC4D174EC5;
+	Fri,  5 Apr 2024 20:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oui7mLSr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PunGqEXj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D3F172BB3;
-	Fri,  5 Apr 2024 19:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13983172BCE
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Apr 2024 20:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712344125; cv=none; b=UlQpa5GxhqF8yfGvgU0muVmohxMsosJduO9n2erpbac1RkxopnFHPIT6ML8m7GYHOXs+N5k26LfdDA1QrWEmtgKqzS6Tc0QX7Jv/7QJeCzL5yhwgqVkORCZ3/DR4tM77J/81xY7G4OtXctLfPcgibuS+cR5paLdVmTgEtl8t3t0=
+	t=1712347913; cv=none; b=R7oS1/RkeTdtYhNDWLsfIGEta1BogIfKbhyQdjHjBoCly1PuTTyavNw9YXDgQW/KYJARw2/qbB8NaHd8P1K7SFtouwzTmBTpQW7pR00Nh38cyt5oRK8GmBp646/OAeJF4X23KfWqyrEeZRrQ+fIbxFLwVpzGBQs5J6vhL04I/78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712344125; c=relaxed/simple;
-	bh=laVEdmCP7XZgqMZ/q4DNr2uOITGzjkWJUo1XdR2vryU=;
+	s=arc-20240116; t=1712347913; c=relaxed/simple;
+	bh=+WOGzChq2Kxqaxaf0+jxeK0j7+8EmTC2PshNHOBZahY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NlsvyWo71b2lbWt8EpNXzJW0ssCHVYbY9CTipLTtlHmxEv1mZpNnj+yiEnI9ejdBxeXogTKs+4HzGLwj1r9Ttu7cPLFEE35onSCkuh0FLZv3FU6Q6pbyWX68Xf6/a4f5rrVD7HyZ0UXcM/VzhTwEfeQ6A+Ih8AcqSHG6f4WcqLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oui7mLSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022AAC433C7;
-	Fri,  5 Apr 2024 19:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712344124;
-	bh=laVEdmCP7XZgqMZ/q4DNr2uOITGzjkWJUo1XdR2vryU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Oui7mLSrIto4sjwATqhZ71T0WSlQk6mB4d2TRFXLR8FBRiL1/upSQrQpnVIesQnjZ
-	 7ljmc1b+kvjtnpQHU8n+nGRt3lhams9zZDEb/VQ52vZU79AqElKyhsHCgQ3hHmZ+Rp
-	 9YZzPdOHZE2eG2VsJOkvUv8y1sdNmngQeE4Bo23IMQTGzWGaRlHroRFZEXYHU9GumQ
-	 SPpmHbsZxuz6jcKIP+P9zor3PhUHHoDIdhW34SnuqSFJkMSdfWn2prDhhNxSEfpwGk
-	 sPZD/WoTWXMo6qNwBPRAPDkFM0lEvPzE4aPc6a9VBgYH4mu28OPRkgCb+PdrC0aCuX
-	 N/084awUJKa1A==
-Message-ID: <93bc191abd148cbc64d2a5a6d7fd2752b21e0512.camel@kernel.org>
-Subject: Re: [PATCH 2/3] nfsd: new tracepoint for check_slot_seqid
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
+	 Content-Type:MIME-Version; b=ov8yyQXTFf8OOgwG8zmSpRj2ZQIb2EPK0n73JqmjjF3ijdPhxWFZH0sYPxCAjbpV+sjmJ3FdSyZJxPDwGCpTDBBQgMJzeEaDn8UiU8137JTu367NIQzGaHrzpSF2VKBX6TQ3wkEgWscP1TzvTJkGet3Srei/0VZOij/loHQZOMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PunGqEXj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712347910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAgOnBaLMvzVz7iNRcvA3GgHfkxFPcBiz3Kz5lopPUc=;
+	b=PunGqEXjBEKv5JUqqIbjl9C/8MnA1VyFgP3250h0T/J45qm6+t5jdHAG4qH7LYkp6BCm1P
+	o8GQb3MgvSMZC6XAY+iFmvxgpMS9D3rOxjC2An1aMiksiunw/J1dfOnJm6ndmBXmqJW04Y
+	Qs8uHSMgArs4vMcorDm/bXl0+EdAPwg=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-589-OzAYvLE5O7K9RFz9zpwRIg-1; Fri, 05 Apr 2024 16:11:48 -0400
+X-MC-Unique: OzAYvLE5O7K9RFz9zpwRIg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a45acc7f191so167343666b.0
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Apr 2024 13:11:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712347907; x=1712952707;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SAgOnBaLMvzVz7iNRcvA3GgHfkxFPcBiz3Kz5lopPUc=;
+        b=kZ+Kx/e7PxGhEwQXoDtocPMs0dg+c9q7WBRmws1P68aY8ivkDqvRt59bfkgbf8r2IF
+         5/y4s2L6j+QS558R8+/xFR0kgFgL9C2oVipTZv4a6vame9jKI5kuwDYk8XzRo0A6m732
+         Ma61HMRaWVCSBeV2loiylLd+30eR11WZzQPprSdOZV76bhesnOwAwzmnH8HSm5Q39cTa
+         M0unXRR1ePHx68wdi/P96skYP5qyI823t/XAy3PCfJ0fvBE29UXv1tH3NbLQYxiAY4nb
+         A47AifbcGhgqbXZmDlPSOzSMevSAu7Hh/FRlXnv+FwVMbgQKuSGGiOO2o3bzFkf1/iM6
+         3lRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSlZDRepn1acQp+VDNh2Ri77XYITqwLG9FxAXlsfi/adIyQLeDEnEXwyUL8Oosele0+ENEXDymAFEsVSj15uW3iLw5UH4pGs0j
+X-Gm-Message-State: AOJu0YzEaWKeSWJ52ncXmwpaDjuHOimMkH9214nQLRle8fQ/YPevghVf
+	2qJY/PLn+ekg0ZGfBFg/8gCKXg50mwmagu4Fwl4SC/8sVAy1bVh9uXmOLuSbwRA9nmuUQF8G4fG
+	MLKfbxxdy+8QXTarsDKkrumS3xIUJUmf/gHJasikGSwe+CrDw21X5LjDAHQ==
+X-Received: by 2002:a17:906:3b4d:b0:a4e:24af:d8a4 with SMTP id h13-20020a1709063b4d00b00a4e24afd8a4mr1738766ejf.28.1712347907199;
+        Fri, 05 Apr 2024 13:11:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHnvO/Os4SHQi+5vTGAC2ejxy/i2mN/3FawVVfJbvGqJnm12XmhZQ2H0tRZQbWRHhCxo/1UBQ==
+X-Received: by 2002:a17:906:3b4d:b0:a4e:24af:d8a4 with SMTP id h13-20020a1709063b4d00b00a4e24afd8a4mr1738765ejf.28.1712347906828;
+        Fri, 05 Apr 2024 13:11:46 -0700 (PDT)
+Received: from [192.168.1.121] (cst2-173-128.cust.vodafone.cz. [31.30.173.128])
+        by smtp.gmail.com with ESMTPSA id va12-20020a17090711cc00b00a4eeb5ff4ddsm1179370ejb.152.2024.04.05.13.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 13:11:46 -0700 (PDT)
+Message-ID: <2ebbe58df9575136583f65cd19d133bdb61d5c20.camel@redhat.com>
+Subject: Re: [PATCH v2] nfsd: hold a lighter-weight client reference over
+ CB_RECALL_ANY
+From: vbenes@redhat.com
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
 Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
  Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
  linux-nfs@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 05 Apr 2024 15:08:42 -0400
-In-Reply-To: <ZhBLBEIgKxChNBAY@tissot.1015granger.net>
-References: <20240405-nfsd-fixes-v1-0-e017bfe9a783@kernel.org>
-	 <20240405-nfsd-fixes-v1-2-e017bfe9a783@kernel.org>
-	 <ZhBLBEIgKxChNBAY@tissot.1015granger.net>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
+Date: Fri, 05 Apr 2024 22:11:45 +0200
+In-Reply-To: <ZhA93BQSxkJqmqaw@tissot.1015granger.net>
+References: <20240405-rhel-31513-v2-1-b0f6c10be929@kernel.org>
+	 <ZhA93BQSxkJqmqaw@tissot.1015granger.net>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
@@ -72,152 +95,103 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-04-05 at 15:03 -0400, Chuck Lever wrote:
-> On Fri, Apr 05, 2024 at 02:40:50PM -0400, Jeff Layton wrote:
-> > Replace a dprintk in check_slot_seqid with a new tracepoint.  Add a
-> > nfs4_client argument to check_slot_seqid so that we can pass the
-> > appropriate info to the tracepoint.
+On Fri, 2024-04-05 at 14:07 -0400, Chuck Lever wrote:
+> On Fri, Apr 05, 2024 at 01:56:18PM -0400, Jeff Layton wrote:
+> > Currently the CB_RECALL_ANY job takes a cl_rpc_users reference to
+> > the
+> > client. While a callback job is technically an RPC that counter is
+> > really more for client-driven RPCs, and this has the effect of
+> > preventing the client from being unhashed until the callback
+> > completes.
 > >=20
-> > Signed-off-by: Jeffrey Layton <jlayton@redhat.com>
+> > If nfsd decides to send a CB_RECALL_ANY just as the client reboots,
+> > we
+> > can end up in a situation where the callback can't complete on the
+> > (now
+> > dead) callback channel, but the new client can't connect because
+> > the old
+> > client can't be unhashed. This usually manifests as a NFS4ERR_DELAY
+> > return on the CREATE_SESSION operation.
+> >=20
+> > The job is only holding a reference to the client so it can clear a
+> > flag
+> > in the after the RPC completes. Fix this by having CB_RECALL_ANY
+> > instead
+> > hold a reference to the cl_nfsdfs.cl_ref. Typically we only take
+> > that
+> > sort of reference when dealing with the nfsdfs info files, but it
+> > should
+> > work appropriately here to ensure that the nfs4_client doesn't
+> > disappear.
+> >=20
+> > Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low
+> > memory condition")
+> > Reported-by: Vladimir Benes <vbenes@redhat.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>=20
+> Applied to nfsd-fixes while waiting for review and testing. Thanks!
+>=20
+>=20
 > > ---
-> >  fs/nfsd/nfs4state.c | 12 ++++++------
-> >  fs/nfsd/trace.h     | 34 ++++++++++++++++++++++++++++++++++
-> >  2 files changed, 40 insertions(+), 6 deletions(-)
+> > Changes in v2:
+> > - Clean up the changelog
+> > - Add Fixes: tag
+> > - Use kref_get instead of kref_get_unless_zero
+> > ---
+> > =C2=A0fs/nfsd/nfs4state.c | 7 ++-----
+> > =C2=A01 file changed, 2 insertions(+), 5 deletions(-)
 > >=20
 > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 3cef81e196c6..5891bc3e2b0b 100644
+> > index 5fcd93f7cb8c..3cef81e196c6 100644
 > > --- a/fs/nfsd/nfs4state.c
 > > +++ b/fs/nfsd/nfs4state.c
-> > @@ -3642,10 +3642,9 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct=
- nfsd4_compound_state *cstate,
-> >  }
-> > =20
-> >  static __be32
-> > -check_slot_seqid(u32 seqid, u32 slot_seqid, int slot_inuse)
-> > +check_slot_seqid(struct nfs4_client *clp, u32 seqid, u32 slot_seqid, b=
-ool slot_inuse)
-> >  {
-> > -	dprintk("%s enter. seqid %d slot_seqid %d\n", __func__, seqid,
-> > -		slot_seqid);
-> > +	trace_check_slot_seqid(clp, seqid, slot_seqid, slot_inuse);
->=20
-> Getting rid of the dprintk: +1
->=20
-> Tracing slot seqid checks: +1
->=20
-> But I'd like something a little different for the tracepoint
-> itself. I can make these changes if you like to just hand this off.
->=20
-> Let's make this trace point into three separate trace events, one
-> at the nfsd4_sequence check_slot_seqid() call site, and two in
-> nfsd4_create_session(), like below.
->=20
-> Two reasons for this change:
->=20
-> 1. Separate tracepoints in nfsd4_create_session will show whether
->    the client is confirmed or not
->=20
-> 2. The tracepoint in nfsd4_sequence will normally be noisy, so
->    having a separate tracepoint for that case makes it easy to
->    disable that one while leaving the create_session tracepoints
->    enabled.
->=20
-> And, bonus: you won't have to change the synopsis of
-> check_slot_seqid().
->=20
->=20
-> >  	/* The slot is in use, and no response has been sent. */
-> >  	if (slot_inuse) {
-> > @@ -3827,7 +3826,8 @@ nfsd4_create_session(struct svc_rqst *rqstp,
-> >  		cs_slot =3D &conf->cl_cs_slot;
-> 		trace_nfsd_slot_seqid_confirmed
-> >  	else
-> >  		cs_slot =3D &unconf->cl_cs_slot;
-> 		trace_nfsd_slot_seqid_unconfirmed
-> > -	status =3D check_slot_seqid(cr_ses->seqid, cs_slot->sl_seqid, 0);
-> > +	status =3D check_slot_seqid(conf ? conf : unconf, cr_ses->seqid,
-> > +				  cs_slot->sl_seqid, false);
-> >  	switch (status) {
-> >  	case nfs_ok:
-> >  		cs_slot->sl_seqid++;
-> > @@ -4221,8 +4221,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfs=
-d4_compound_state *cstate,
-> >  	 * sr_highest_slotid and the sr_target_slot id to maxslots */
-> >  	seq->maxslots =3D session->se_fchannel.maxreqs;
-> > =20
-> 	trace_nfsd_slot_seqid_sequence
-> > -	status =3D check_slot_seqid(seq->seqid, slot->sl_seqid,
-> > -					slot->sl_flags & NFSD4_SLOT_INUSE);
-> > +	status =3D check_slot_seqid(clp, seq->seqid, slot->sl_seqid,
-> > +				  slot->sl_flags & NFSD4_SLOT_INUSE);
-> >  	if (status =3D=3D nfserr_replay_cache) {
-> >  		status =3D nfserr_seq_misordered;
-> >  		if (!(slot->sl_flags & NFSD4_SLOT_INITIALIZED))
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > index 7f1a6d568bdb..ec00ca7ecfc8 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -1542,6 +1542,40 @@ TRACE_EVENT(nfsd_cb_seq_status,
-> >  	)
-> >  );
-> > =20
-> > +TRACE_EVENT(check_slot_seqid,
->=20
-> Nit: NFSD tracepoint names should start with "nfsd_".
->=20
->=20
-> > +	TP_PROTO(
-> > +		const struct nfs4_client *clp,
-> > +		u32 seqid,
-> > +		u32 slot_seqid,
-> > +		bool inuse
-> > +	),
-> > +	TP_ARGS(clp, seqid, slot_seqid, inuse),
-> > +	TP_STRUCT__entry(
-> > +		__field(u32, seqid)
-> > +		__field(u32, slot_seqid)
-> > +		__field(u32, cl_boot)
-> > +		__field(u32, cl_id)
-> > +		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
-> > +		__field(bool, conf)
-> > +		__field(bool, inuse)
-> > +	),
-> > +	TP_fast_assign(
-> > +		__entry->cl_boot =3D clp->cl_clientid.cl_boot;
-> > +		__entry->cl_id =3D clp->cl_clientid.cl_id;
-> > +		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
-> > +				  clp->cl_cb_conn.cb_addrlen);
-> > +		__entry->seqid =3D seqid;
-> > +		__entry->slot_seqid =3D slot_seqid;
-> > +		__entry->conf =3D test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags);
-> > +		__entry->inuse =3D inuse;
-> > +	),
-> > +	TP_printk("addr=3D%pISpc %s client %08x:%08x seqid=3D%u slot_seqid=3D=
-%u inuse=3D%d",
-> > +		__get_sockaddr(addr), __entry->conf ? "conf" : "unconf",
-> > +		__entry->cl_boot, __entry->cl_id,
-> > +		__entry->seqid, __entry->slot_seqid, __entry->inuse
->=20
-> Nit: How about: __entry->in_use ? "(in use)" : "(not in use)"
->=20
-> Since TP_printk is for human readers.
->=20
->=20
-> > +	)
-> > +);
-> > +
-> >  TRACE_EVENT(nfsd_cb_free_slot,
-> >  	TP_PROTO(
-> >  		const struct rpc_task *task,
+> > @@ -3042,12 +3042,9 @@ static void
+> > =C2=A0nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
+> > =C2=A0{
+> > =C2=A0	struct nfs4_client *clp =3D cb->cb_clp;
+> > -	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> > =C2=A0
+> > -	spin_lock(&nn->client_lock);
+> > =C2=A0	clear_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp->cl_flags);
+> > -	put_client_renew_locked(clp);
+> > -	spin_unlock(&nn->client_lock);
+> > +	drop_client(clp);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int
+> > @@ -6616,7 +6613,7 @@ deleg_reaper(struct nfsd_net *nn)
+> > =C2=A0		list_add(&clp->cl_ra_cblist, &cblist);
+> > =C2=A0
+> > =C2=A0		/* release in nfsd4_cb_recall_any_release */
+> > -		atomic_inc(&clp->cl_rpc_users);
+> > +		kref_get(&clp->cl_nfsdfs.cl_ref);
+> > =C2=A0		set_bit(NFSD4_CLIENT_CB_RECALL_ANY, &clp-
+> > >cl_flags);
+> > =C2=A0		clp->cl_ra_time =3D ktime_get_boottime_seconds();
+> > =C2=A0	}
 > >=20
+> > ---
+> > base-commit: 05258a0a69b3c5d2c003f818702c0a52b6fea861
+> > change-id: 20240405-rhel-31513-028ab6f14252
+> >=20
+> > Best regards,
 > > --=20
-> > 2.44.0
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
 > >=20
 >=20
+Hi,=20
+I've just finished the testing of the new patch on the same HW
+configuration and the dracut test suite is stable again.
 
-Sure, those all sound like fine changes. If you're fine making them,
-thats good with me too. I mostly posted these since I used these to help
-track down the CB_RECALL_ANY issue.
---=20
-Jeff Layton <jlayton@kernel.org>
+Thank you for your patches!
+Vladimir Benes
+
+Tested-by: Vladimir Benes <vbenes@redhat.com>
+
+
+
+
+
+
 
