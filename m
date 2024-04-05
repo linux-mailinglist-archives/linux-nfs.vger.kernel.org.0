@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-2679-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2680-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5194389A44B
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 20:41:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 900F589A44D
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 20:41:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E50461F25AA7
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 18:41:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 443D31F25ABE
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Apr 2024 18:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0FF17278A;
-	Fri,  5 Apr 2024 18:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A54917279A;
+	Fri,  5 Apr 2024 18:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDkz3uD7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pb4Uix5Y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800AD1EB36;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420E7172797;
 	Fri,  5 Apr 2024 18:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712342461; cv=none; b=rzlTjbE6ngYHOIwtKOXs5XSoIb6htbU+6HwoarslkBExjCCG0Z0ZLssqw5qR1+63ch32Mz/kgaSmpZ09LatEyJd7FmjJotf1sABWJcxr4uFCA7r5xWKRIbXcjQkGqcGpFkQuK5WJI0okRrWuLm/GpQxOfy2JUnB0JczmDlF8GAc=
+	t=1712342462; cv=none; b=YEJOFJMlJ31GK6ex9NwAynR/HexvBh41OG83m4o1v/eXjMknIHcHrM8M2l1rryV+7flELEh4SoiGhYBVBIpJqwO0vRpap9kbdrGUPxsaGqDE/pXZQIlw2JTxx61hIfWT+KUnkb33HvN+vHn/Mn2L0Sc4Wq5xayfgMeEl9o1SeWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712342461; c=relaxed/simple;
-	bh=57nNe2p7gcYuo/Kij2flNVNM8RMZMqbqX1psYkWJMAA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jWKpnRKs884Ul6UDYOYL4KfLGmtfKlKIZtuABmGZxsG0czUaOBA9rJyx6x0XS/6gHGGVFZybW2q8j8J5pWepqrtgswoHo/Far+6YhLzbbHxOaoE8fCo0PL3onSqD2jXf1zctVGybsg5cAgB3IDjfm8pxhQpgQA1hUr8dGAHOFdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDkz3uD7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E8CC433F1;
-	Fri,  5 Apr 2024 18:41:00 +0000 (UTC)
+	s=arc-20240116; t=1712342462; c=relaxed/simple;
+	bh=HF5bdhmfNax8fSTda8C+ZW8NUjHRSdiQ478T8ES3kGo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uDUuPS3WjvENvWaR/XaqgXfrFuvcfRIdt2hYa5xz3WIT5bjyQYxNmvrXk+1onx58aDFP/D2z9JaSPnx4Cdfz705Ahx9utB/KVUTP4NQMj3opIIHlZu6kt6O2hPFo32+aqYx3ibkB9MgUHHz/qeu8tuVe2MtchLSmr7q1XyCwoY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pb4Uix5Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E270C433C7;
+	Fri,  5 Apr 2024 18:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712342460;
-	bh=57nNe2p7gcYuo/Kij2flNVNM8RMZMqbqX1psYkWJMAA=;
-	h=From:Subject:Date:To:Cc:From;
-	b=SDkz3uD7u9rieDKAskvbViO3sDGxC/zfe/cVXKRwTiiu9dvLkiUBaIFDn7d+7tinv
-	 tCkFRR+zffKvvYXDxw+VaQe03/kY9gD5QmXryVVlKTfQ7cmZpW0y5TADGv1bnPgeel
-	 1SMD3y47EPPeAiHd4lIHtV7yMq2oun51iZn964r7T6gl1efTLEYWo+afBEU3dEYC1S
-	 L6ZY0fFwgeR56FpRT/1+5/q40heXCKJ60RMnbEnooc8G5A9td8paHK1eYCimR57S86
-	 JhOT7+zXbDY1j75LWReYLER6wgqZIgxUCdkMFQBFBs0Q5eDBaSsCtJOW3GvomuPOSX
-	 cd1eIyXteWPJQ==
+	s=k20201202; t=1712342461;
+	bh=HF5bdhmfNax8fSTda8C+ZW8NUjHRSdiQ478T8ES3kGo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=pb4Uix5Y5Zg55BEe3Mw+PcKtJOYs7lfOlp7CKr9KNTnDdh/yvpZXMNB2rj7Q6YBIu
+	 H7oDRGEfBiKjoIb2KJjanBUUE+DqXro9C+5rHaOAa1uOiejEiCBd2VlonFPMBh0rbY
+	 zpNp6tPvomHZ5zBQX1uPO0ipi32OUf1X+EiwQhKrSiHaAr/pFHkXXi9mDtlQ9e0qiX
+	 tLBy4Mse9b4joKZn2NBI0H89yCW0JCbBjERepEfaO2ZE221TaIdI10+WK8kF5xveiO
+	 CNnm/QD8Sww6/e9xpHjlxq5HVxP2mW7jM7dBhQNVAcxxTDE3/DvoEWzApaPFr/Pr+c
+	 dAdS1ZabTmuvQ==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 0/3] nfsd: tracepoint cleanups and additions
-Date: Fri, 05 Apr 2024 14:40:48 -0400
-Message-Id: <20240405-nfsd-fixes-v1-0-e017bfe9a783@kernel.org>
+Date: Fri, 05 Apr 2024 14:40:49 -0400
+Subject: [PATCH 1/3] nfsd: drop extraneous newline from nfsd tracepoints
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,53 +52,72 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALBFEGYC/x2LQQqAIBAAvyJ7bsFEL30lOpiutRcLFyIQ/97Sc
- ZiZDkKNSWAxHRo9LHxVhXkykM5YD0LOyuCs89bbgLVIxsIvCcacfHA+ktsL6HA3+oX26zbGBwE
- Z+OlcAAAA
+Message-Id: <20240405-nfsd-fixes-v1-1-e017bfe9a783@kernel.org>
+References: <20240405-nfsd-fixes-v1-0-e017bfe9a783@kernel.org>
+In-Reply-To: <20240405-nfsd-fixes-v1-0-e017bfe9a783@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>, Jeff Layton <jlayton@kernel.org>
+ Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=808; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=57nNe2p7gcYuo/Kij2flNVNM8RMZMqbqX1psYkWJMAA=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmEEW2Sf5Klhcwetw9holfYAYSSrTeS1isrWdwo
- tk+W31ijWmJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZhBFtgAKCRAADmhBGVaC
- FUCXEACIeg/crLsQQAP3CGuJddlHjgXtB3BSqUvz8EBJSQGju1dj5R1B0yc8bN/jOjDXZJKNJ5h
- ztl00FvivG3ZE0/Fq9phUawd+pN5xl6fx0FeYz15nqbVEqrSjO+wFlxuvqqlzlGvPUmWsastH3M
- maKKFkFjUGitm2HZmLLknl1e6q75BZVBCVQMEoptwD/X+AmIWI4vy+TkAlAsuxa2qGC8ofGrJGd
- XRTsDRDirLLRanS5TUZYvXAW48OZw7lAQTdW2OwVncx+WEl0o7uiVbVMbGpy5+aJ6IfSTZE/U82
- jPemJMUhy99Pu5laNMtkv1tchBP79SHzokxCDN0NwPjoO7/1c6pkbemXNBrFljDX0TQKjoGa7PJ
- 6pnCH9sOK5ulE/gMXCxfnvlO1BgiY0gUH/sV8cO1dKoCA4oPLapOt+ud6LKBkHd394GSPcG6fVB
- razVUgbBoedEHM9jvJNEcMUHIjWHoWUB/Po6aKWRW8sgeBlN76PLDMXMxI1Nc75lDcaLFv9VPUi
- v1a7jgnsz9Y1mWSiVYs9vvggtxsxf/8etJSetmljZeUPfcKQkZ4D//4j4hKRrvcwWfcaGn3tfaw
- b3bvtjq0vElzmg0kHW8Shdal+E6eUbJTBsaG9tM/QREF+xHs2Y0tC31KvZPAT5tdvGGg++XZxiA
- SWALZyXiPzNpxCQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1351; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=HF5bdhmfNax8fSTda8C+ZW8NUjHRSdiQ478T8ES3kGo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmEEW7Leu3f4qXrkadpej2z8m7xpWp8OFoetsdY
+ qYaPwuu+YyJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZhBFuwAKCRAADmhBGVaC
+ FaRXD/4yfcIphXyP9uyfMr5iMUh6n5GUSqwMP4uOB7GYGDxK8eoGVqzY8kTFhi/mL4QuogG4lRN
+ TD1YvlTFVL6grj/bYfUNsL6+4sMSr9vAD/qsnXBgaCaCq86qr4KSpqPeH+61vDBZU647dRCOQ4G
+ LkejjX2BeE9SxhP4q9MNYkR9lBTIB2DQJ6coalsK2gg4EWCXOeVJK7+S7yvr65C+iY9Ckhxc/U8
+ PiLrPDwmT46DL0CmVD8kX+20bwLRITQzKsa05lnVwaBkiJxua5VLrzjmeF4hIZBtNuMNM2dZdR3
+ ZFWfDLtTlEjfn7tiktPANfgQiQGLj2AoK5yL3KYLwgLhGHZHsRVAmRtkXTXAhPf6sp+FWpJb1cK
+ /LybaHRpG5JBcyGajmXu/yrdcvKLkx7Mw2JoZ5oEpAsSCxI0dp+d7gA2N3sdFRAbjOhngnUP99c
+ ja6mZ/FFQAlbwGdAMDR04xhzAzahOOcpgLZiR73ewELQ/TdcW+QPyX2R2PLTbPlMMUpVIt0ZEQE
+ 0ufe0cULL+hHOzIQ7PPB4f7/JLlF8FHfebb5M8Bgw6FmL3zsHlwHdu70PajiSRbj4VVudTmoZDJ
+ BctKPM48Ba59ELkiLJ90kpVldLHQqOUUxqPjCKbMLWVCURfNY/h4wKoKDPaJp7IACya6ce1v0Dz
+ zEfyMOA9nbC+QZw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-First a patch to remove a few newlines from existing tracepoint string
-formats, and then a couple of new tracepoints to instrument some of the
-activity around CREATE_SESSION and client expiry. Probably reasonable
-for v6.10.
+We never want a newline in tracepoint output.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (3):
-      nfsd: drop extraneous newline from nfsd tracepoints
-      nfsd: new tracepoint for check_slot_seqid
-      nfsd: add tracepoint in mark_client_expired_locked
+ fs/nfsd/trace.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- fs/nfsd/nfs4state.c | 18 +++++++++------
- fs/nfsd/trace.h     | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 72 insertions(+), 10 deletions(-)
----
-base-commit: 10396f4df8b75ff6ab0aa2cd74296565466f2c8d
-change-id: 20240405-nfsd-fixes-adc4524ae2bf
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index e545e92c4408..7f1a6d568bdb 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -1534,7 +1534,7 @@ TRACE_EVENT(nfsd_cb_seq_status,
+ 		__entry->seq_status = cb->cb_seq_status;
+ 	),
+ 	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
+-		" sessionid=%08x:%08x:%08x:%08x tk_status=%d seq_status=%d\n",
++		" sessionid=%08x:%08x:%08x:%08x tk_status=%d seq_status=%d",
+ 		__entry->task_id, __entry->client_id,
+ 		__entry->cl_boot, __entry->cl_id,
+ 		__entry->seqno, __entry->reserved,
+@@ -1573,7 +1573,7 @@ TRACE_EVENT(nfsd_cb_free_slot,
+ 		__entry->slot_seqno = session->se_cb_seq_nr;
+ 	),
+ 	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
+-		" sessionid=%08x:%08x:%08x:%08x new slot seqno=%u\n",
++		" sessionid=%08x:%08x:%08x:%08x new slot seqno=%u",
+ 		__entry->task_id, __entry->client_id,
+ 		__entry->cl_boot, __entry->cl_id,
+ 		__entry->seqno, __entry->reserved,
+@@ -1978,7 +1978,7 @@ TRACE_EVENT(nfsd_ctl_time,
+ 		__entry->time = time;
+ 		__assign_str_len(name, name, namelen);
+ 	),
+-	TP_printk("file=%s time=%d\n",
++	TP_printk("file=%s time=%d",
+ 		__get_str(name), __entry->time
+ 	)
+ );
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.44.0
 
 
