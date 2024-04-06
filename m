@@ -1,140 +1,116 @@
-Return-Path: <linux-nfs+bounces-2687-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2688-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01BAD89A909
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Apr 2024 07:20:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D2889A93C
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Apr 2024 08:07:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 337221C211B8
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Apr 2024 05:20:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80E10283619
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Apr 2024 06:07:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59171210E6;
-	Sat,  6 Apr 2024 05:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A8019479;
+	Sat,  6 Apr 2024 06:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYazYNyp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLLyMXCT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EB218E02;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E301F200DE;
+	Sat,  6 Apr 2024 06:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712380829; cv=none; b=YzbEaLpkY1uVjsGwaQO1u+GcmshnUnFAxY+GcJB8z7/W6G5GIZGCcfBcDEjXLvGBv0crdz8VkQIxs2kmrhvOykKr6zmbeQjKDQT+1V+GgFc8+UV9n4BO280BecUa/nF1cCe8vrCw/5HIHacvrFdeEATQ6v+RiMCvinEcdNzAKq8=
+	t=1712383660; cv=none; b=nbBa6yKavEfVXWppgN5BfiocQjR//64qNyDmX2/BZg3W2+A6FX/SZPYvbwvqras5k+VFx5ZrWw9yNBI2gWvyRbgOeQXzQcxGrbKszfwyI90cEzjpMStme9tPR0vQlplxGdlloIXdhEtWu+6Ph5qAZO4PGXPLKtJIKfgbagc5g9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712380829; c=relaxed/simple;
-	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CZ8xfNFOwOwbOw+X7MQ2mypw2+89BHGbOVaiv57GMPQkzoP+kTI3Of0iGuMzFOUzREJ/5HG1uwWjOnb/738qFydKIOLZPWRcq+fRpVC2c83ScQZah+i6XKs06F3D3U/JknTPeBdxqgBUOHgAXMUknabfbbQJoG8FBKB5p8UrXSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYazYNyp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C5A9C433C7;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712380828;
-	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HYazYNypOS+iPe/PmwIZVgrP0OAjOmuWcCZaXmQBd5/DF3DU2Cm7HK1KTLKVM8W2j
-	 EfdrhznuDsHvbEh7NeV1r2EDMVkxTqo+hmKt5MdFIcqj68UTB4u7gvHG6geAe3ArfV
-	 cYxb7yc2nqhO3pPj8ToTFIgL78NntzPlzi3tNk1u8F7N5z7SqSGJ1Z/QhHbUaQaR1j
-	 GTv/7bDPNNXqFXoXNMGCl3bjIAtmML/lX++bgYkRjXumLNf6dEzpQPrpxdPeyVgSKh
-	 czfxRuHIWxcuBJ6wGSXEzVfHmRCYmRJdToESEDFulu3u4HF5IZUSSU3tkxxLhyQRAI
-	 TbkNIwkM8MMRA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 19C9BD84BAC;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1712383660; c=relaxed/simple;
+	bh=scfaY4WnteGM3U7rpqzfa55QBhmXa1xDwuDdv9hVIN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dseR1Tn2V1VrncuFoBV4YYzm7JxoO+rCepbRaelVGVfIal3SRB9v0+5LsAjn78i+3VwqTtVbmd6d3/vkOmBp/Tjbm1SlbOV8fD0LnJkZ72xqzytve3PWngOFKpWS2zYC5v4k7uK1dzaRvZ7lAtEyjyw7THS53c3pqzElLXOFsWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLLyMXCT; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a465ddc2c09so186096866b.2;
+        Fri, 05 Apr 2024 23:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712383657; x=1712988457; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=luuXkiPLqjOUYuai7b32l2277foMuYxG6POiRKCtamo=;
+        b=QLLyMXCTUebSzOHQ4cVqar/FHfZw4CRvx7MXQWB5/bRQ7rSj7Q4ysWHKj1Mdd3sdWw
+         25aOnYp9UxI5L5WLac3lEBKazPTsAgnOE++u9G4NnCGZW9eFqpG3vntszkHFagsl9ZBn
+         fIMNRi0kvoz09UkItZ2qhhgiTbEgYN//zUTv0kljPget6I9ZeD0DDMGpIh1KBJ9zxupg
+         r452NVEV+dKOWTmEF7PgvOByN2NYH8Cqbga1PWyyxXQnIS3N87TunuqIuN0yZmo4UYxn
+         q4c9lnFBDEC+CdPYy2q2dRmNyXAuQjw+0Zvs7z2VmUpDrRr3WyhLqmj30bnE285YsaeW
+         xhtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712383657; x=1712988457;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=luuXkiPLqjOUYuai7b32l2277foMuYxG6POiRKCtamo=;
+        b=JcDFIZ6R6vvA5+a/tkzz1Opk7/nY56+8rdKWSN5K3Sgo5I1gInFhL7XEGkegsTYtrI
+         LCRo3qpeUYt34TKfQSdsqLj3uA1vUnPi7AZHJUIAhdhfFHrMbEAQAodQ5dQ+6xWZzDMT
+         /M6gGvxkwVPAVSv9AWltpol4J913Txtl/N/WIDULGixeK2mv84KtR+NVrnOvVhuMBk/G
+         tleR9o+yEFUQigA2NFJO4VJvoZxzZfH2tKHJdgeJeykLWoE0PcB8728Cv76y0zxH26C6
+         hFOvCIad50UaljtyGr3kaWo/aYXGMUl0ODD6L+aHyHxit3uP9aLy9a8t2oirfNNdhUDX
+         I8tQ==
+X-Gm-Message-State: AOJu0Yy0eFWeIPY0YW0bTNqBrlCPBKNWHeCi0QiQl9uC2z0SHVmLgmCi
+	uLosIoG00bDgogbybN/4txZJJCvuh0kXdpo3O4cU+IZkdI9tGW4qccZj09TGPKGQRZ3nL1FDoFj
+	U6WQqBoTVNfhuHlD5al9LUFvgof1QjokE
+X-Google-Smtp-Source: AGHT+IGFt5FWWSkkvWHZKKfisY6TmiuHUtulWN3a5fqlVWFBiiBm62nRL5sLQSIdr1YFo55tWOq8KdaC2zpRv2uWWIQ=
+X-Received: by 2002:a50:d69b:0:b0:56e:10d3:85e3 with SMTP id
+ r27-20020a50d69b000000b0056e10d385e3mr3130509edi.13.1712383656780; Fri, 05
+ Apr 2024 23:07:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/34] address all -Wunused-const warnings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171238082809.31617.17365732495689756509.git-patchwork-notify@kernel.org>
-Date: Sat, 06 Apr 2024 05:20:28 +0000
-References: <20240403080702.3509288-1-arnd@kernel.org>
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, mpe@ellerman.id.au,
- christophe.leroy@csgroup.eu, dlemoal@kernel.org, jikos@kernel.org,
- gregkh@linuxfoundation.org, minyard@acm.org, peterhuewe@gmx.de,
- jarkko@kernel.org, kristo@kernel.org, sboyd@kernel.org, abbotti@mev.co.uk,
- hsweeten@visionengravers.com, srinivas.pandruvada@linux.intel.com,
- lenb@kernel.org, rafael@kernel.org, john.allen@amd.com,
- herbert@gondor.apana.org.au, vkoul@kernel.org, ardb@kernel.org,
- andersson@kernel.org, mdf@kernel.org, liviu.dudau@arm.com,
- benjamin.tissoires@redhat.com, andi.shyti@kernel.org,
- michael.hennerich@analog.com, peda@axentia.se, lars@metafoo.de,
- jic23@kernel.org, dmitry.torokhov@gmail.com, markuss.broks@gmail.com,
- alexandre.torgue@foss.st.com, lee@kernel.org, kuba@kernel.org,
- Shyam-sundar.S-k@amd.com, iyappan@os.amperecomputing.com,
- yisen.zhuang@huawei.com, stf_xl@wp.pl, kvalo@kernel.org, sre@kernel.org,
- tony@atomide.com, broonie@kernel.org, alexandre.belloni@bootlin.com,
- chenxiang66@hisilicon.com, martin.petersen@oracle.com,
- neil.armstrong@linaro.org, heiko@sntech.de, krzysztof.kozlowski@linaro.org,
- hvaibhav.linux@gmail.com, elder@kernel.org, jirislaby@kernel.org,
- ychuang3@nuvoton.com, deller@gmx.de, hch@lst.de, robin.murphy@arm.com,
- rostedt@goodmis.org, mhiramat@kernel.org, akpm@linux-foundation.org,
- keescook@chromium.org, trond.myklebust@hammerspace.com, anna@kernel.org,
- masahiroy@kernel.org, nathan@kernel.org, tiwai@suse.com,
- linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org,
- openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-fpga@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-fbdev@vger.kernel.org, iommu@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-kbuild@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org
+References: <20240405-rhel-31513-v2-1-b0f6c10be929@kernel.org> <ZhA93BQSxkJqmqaw@tissot.1015granger.net>
+In-Reply-To: <ZhA93BQSxkJqmqaw@tissot.1015granger.net>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Sat, 6 Apr 2024 08:07:00 +0200
+Message-ID: <CALXu0UdPhS1KOZcwS3bXe0E_E9-XQ5W-y57DOibjc7FrXgxv7g@mail.gmail.com>
+Subject: Re: [PATCH v2] nfsd: hold a lighter-weight client reference over CB_RECALL_ANY
+To: linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+On Fri, 5 Apr 2024 at 20:07, Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> On Fri, Apr 05, 2024 at 01:56:18PM -0400, Jeff Layton wrote:
+> > Currently the CB_RECALL_ANY job takes a cl_rpc_users reference to the
+> > client. While a callback job is technically an RPC that counter is
+> > really more for client-driven RPCs, and this has the effect of
+> > preventing the client from being unhashed until the callback completes.
+> >
+> > If nfsd decides to send a CB_RECALL_ANY just as the client reboots, we
+> > can end up in a situation where the callback can't complete on the (now
+> > dead) callback channel, but the new client can't connect because the old
+> > client can't be unhashed. This usually manifests as a NFS4ERR_DELAY
+> > return on the CREATE_SESSION operation.
+> >
+> > The job is only holding a reference to the client so it can clear a flag
+> > in the after the RPC completes. Fix this by having CB_RECALL_ANY instead
+> > hold a reference to the cl_nfsdfs.cl_ref. Typically we only take that
+> > sort of reference when dealing with the nfsdfs info files, but it should
+> > work appropriately here to ensure that the nfs4_client doesn't
+> > disappear.
+> >
+> > Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low memory condition")
+> > Reported-by: Vladimir Benes <vbenes@redhat.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>
+> Applied to nfsd-fixes while waiting for review and testing. Thanks!
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Please add this to the 6.6 LTS brach, too
 
-On Wed,  3 Apr 2024 10:06:18 +0200 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Compilers traditionally warn for unused 'static' variables, but not
-> if they are constant. The reason here is a custom for C++ programmers
-> to define named constants as 'static const' variables in header files
-> instead of using macros or enums.
-> 
-> [...]
-
-Here is the summary with links:
-  - [05/34] 3c515: remove unused 'mtu' variable
-    https://git.kernel.org/netdev/net-next/c/17b35355c2c6
-  - [19/34] sunrpc: suppress warnings for unused procfs functions
-    (no matching commit)
-  - [26/34] isdn: kcapi: don't build unused procfs code
-    https://git.kernel.org/netdev/net-next/c/91188544af06
-  - [28/34] net: xgbe: remove extraneous #ifdef checks
-    https://git.kernel.org/netdev/net-next/c/0ef416e045ad
-  - [33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
-    (no matching commit)
-
-You are awesome, thank you!
+Ced
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
