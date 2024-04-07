@@ -1,153 +1,169 @@
-Return-Path: <linux-nfs+bounces-2699-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2700-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8371389B249
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Apr 2024 15:43:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47A2C89B28F
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Apr 2024 16:45:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBC1BB20DD1
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Apr 2024 13:43:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1CFB281FA7
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Apr 2024 14:45:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 150CF381D1;
-	Sun,  7 Apr 2024 13:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8612428377;
+	Sun,  7 Apr 2024 14:45:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b="FWQKdn97"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c6DDPpMH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2126.outbound.protection.outlook.com [40.107.223.126])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BE83771E
-	for <linux-nfs@vger.kernel.org>; Sun,  7 Apr 2024 13:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712496337; cv=fail; b=Se6hhuDAmO/AeNwZVw8ACgZseXrZfOLys/AOEaAz+VCemH7BBTH/ELDpe+YcplFRB3cTcWTa1N7NA+L/RmxQI3SFWDeBVAn4wVdkk3k7Z6ENLiZamtabVhXFJfRlJQYVVVRWIMkuVnJMN7AgIURBdP4iTc3/yGO3pPIMNNXAu+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712496337; c=relaxed/simple;
-	bh=GomWBosHBvC3VHH4ytKCuFQ2nW1TOWAVI2pULfniXEQ=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OrACc5QduPWsKyzXKmY5lcn3l11lx2oeTDuH/g2CtgjkEwj9OpR1o7pXa0gy267vpA5bG/WA8PHKxbLX2zCV7rDApsUufCjUCJNu0Jf6+SkRJBPZMLvGKqu/IR9FA+V+Vyu/PDsPcXmw2Qs3XVSySxPOcRnXOSPJSxUCVAIQaL4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu; spf=none smtp.mailfrom=rutgers.edu; dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b=FWQKdn97; arc=fail smtp.client-ip=40.107.223.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rutgers.edu
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TLcmOE5ZkzyFGmAPM1wFHUJFgMj/yTmUtcwXKYSr6bntn/ywt0uV4YlIC4T73ICPr+F+ShP/HFMaLfcdATVKV2wXRm07l7gTbUNC5w6995wzi7BIh+ukGqHlorVO4QquSEbOaeyZw2t0Yk/hlX6WvCbTW4QL+A2EdCIQOI3isgD/r2707pObOo+qE4jGtgedlRqktLsgKZn3FjMoHr3JFcSGxvCjHx9wQnae30P2dujZTqpCNywQ7vRLGENJiaYw59aEfptllsLh9ZGZ7L470kJx6eSYxQB1Uuuwz+JJR2JQyPYibNwgpI5OohuoApbm6BJYfB5IO+P9Ma45v6uICA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GomWBosHBvC3VHH4ytKCuFQ2nW1TOWAVI2pULfniXEQ=;
- b=PPkTAKgRomV/Ck14prNrGrjiC1tUAHaLbOs6Sa9YRxulUdu2sM+/iAvnVkLbmwiw6fnmpGPjeAGnnzSwRIhvZsZKsbPn1QWuNNmbXZj6jK2w0GkCQ1hn3TTTMybD+kzKHf4qjcoEJ3sorDFjw29XR+RMn8qHcK4FkS/PpIb5Uo+Okewf6xutV1r6viFq0d7hl+1DzdQdsRqlaWh5gDWvswIi4fc5n/cKDtQcoSpiAT3wZNYy5buq/7gilmEUNsjB/A5fWuFMwgabaLl/aocUpWUP4jrRqxLtro7pkV2YOE/vv1IS0sOmnQznERVXVgxOz9upOb3cYJXQ0yiAG2/fzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
- dkim=pass header.d=rutgers.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GomWBosHBvC3VHH4ytKCuFQ2nW1TOWAVI2pULfniXEQ=;
- b=FWQKdn97jKEuCuq9b+o7ImutUtg4XpzmjRO6d0M46rCiHruJUaquhgIye4IbU0Vx4rhBuESjBf6sHXsg0e5K6FM41Q+aA0dHzRUMP9HRZ/QVE3/cgWJaXqq3aOgyE5xDmf5WDfypprjvlVEIfZRIb5+/honvcOWxa2s8g3BOLD0FVwYq8lH1pR1dTnfAmFrJho7i5hCphSqDEL0tZJPBEsKGQKh1SE27wgw3RWVnnrF7kYyFyKPlzO8nrKzhWhXeNtu5ii49lglGEl4daTF/v1rcmFPEAwW1IO42FT33y9J2hX5m8GZGXc5irZ5ykVJgLbVsoEFxSTfzAz4kzRWnmQ==
-Received: from PH0PR14MB5493.namprd14.prod.outlook.com (2603:10b6:510:12a::11)
- by SA1PR14MB5476.namprd14.prod.outlook.com (2603:10b6:806:23d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sun, 7 Apr
- 2024 13:25:33 +0000
-Received: from PH0PR14MB5493.namprd14.prod.outlook.com
- ([fe80::ae8e:c5ab:50fb:ed4b]) by PH0PR14MB5493.namprd14.prod.outlook.com
- ([fe80::ae8e:c5ab:50fb:ed4b%3]) with mapi id 15.20.7409.042; Sun, 7 Apr 2024
- 13:25:33 +0000
-From: Charles Hedrick <hedrick@rutgers.edu>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: optimization for nfsd_set_fh_dentry
-Thread-Topic: optimization for nfsd_set_fh_dentry
-Thread-Index: AQHaiOz0yLe16yGdgkeM/Wdo4AR5CA==
-Date: Sun, 7 Apr 2024 13:25:33 +0000
-Message-ID:
- <PH0PR14MB549329F998F7DB972744F45FAA012@PH0PR14MB5493.namprd14.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR14MB5493:EE_|SA1PR14MB5476:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- JBURbRCLUZAyumqrTiMl+yLmLYegwm5Oh2Q9xOtD9H3oatNazEmU/5MlElEtXXrZbK2fCGCLD/kq4kbem+GVFW73ytnOxGhD5CIGJUZ8byRbHSip8GxuiI4x5Rrfy4E6NvaDOpHhnDscln5tea0xWKXwATo/QhRKu7MScUJnYEjbsQWVs/cP2knXmSgEmKqLi+XrqKr8b70EiqwwIELACw9Oi+ij5cAnovu1lIpQ8eMPURPJEP9uJYui4qRgBDZfL4HWKr2RB5lGk9PqhzCk5tvgAAv/0zNExAYUu6YsyG3Z0wW5c6RcvpkiAALABi9ps09DjKxCZBwzQrpp+YyHdX0EewTzB8s+nMAIRHew5Dp/DSTjKRPhv9tcSn5SINTPiC7xsI6odKPGuwf18yb7RyeEOBgaw+kcVOfzg6cxKxTP1VO0doaUjxGXd0uzueFW8bgdC6//VVV7nPiU8i46aZNju/IX1AjPWfXZkj8oSaJu+gDpZ4Cf9p+RD1KZU17kLB2cmbqmE0t11XAjBFv0J84NJ2haxk3RxExVEttaiQPXI4gcoqgJkX6eyPPcJ5oychmwc7U6Hdy2UyFx0Xy5+76fzwt1ushrdytml09ZpHjEHUYnHNU8DhTe+ERdC5cTMXBK7zXVtO5Ur+khZ00FtQ==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB5493.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?gC067X/5cTwzNEDwvITtfjVca870Sl++xxU6qbQaeOoYaruAbm/6FO8k98?=
- =?iso-8859-1?Q?IYVYHrhSBSgwXx5YnVOfoj9JZ4ahNPPdHR0MjboeJAvIv2iXlChHXWDkF/?=
- =?iso-8859-1?Q?SmKoJt148Y4YzST56SlPRBdfx/MhczpLVaRbylj839kQFTC1Eci6B0Er0v?=
- =?iso-8859-1?Q?hKGAMh/6H5f9i7aVYxX6mHcV/s8CHeYw90SiL42JXfNHz5RClvf+t1Ugvf?=
- =?iso-8859-1?Q?7yY3rKfYmrasaPqsXYfIebvDS7VABGAvE2HhcKkYHMRCXzqvoasOCF4m0L?=
- =?iso-8859-1?Q?mGEu/FaOjwGT0JSS7Rt9ECCc+wB63piPzBwasMP3Sff+TpPv01q6tWFqsN?=
- =?iso-8859-1?Q?zFiP3NIB2ETrMbNr4aQtANXHa/2frO39dUCITaJIaR0pdGFkfrE6F6iSo+?=
- =?iso-8859-1?Q?VpGM/zK6yq5+ZY3/l4Ai2TENzSMWVKbAiKJASLeQaLdvKz0KKF/0mreMDu?=
- =?iso-8859-1?Q?IhXpBrAjm2jII3n0vYZKNBEcVEiFY4wZWRVqNU+7uF9cQ7y1E/lxF66tFr?=
- =?iso-8859-1?Q?y2UTrbjtwDHyTDCTyPk140kGQnA4TBtAgR/DSydlFp5QCVRxMEsOuCPRpp?=
- =?iso-8859-1?Q?RhY8AoWIKK3g2ThgaZ0kf+VA2nINJMvVEvOAtCF4EcPrNuvCpVT64xvrS1?=
- =?iso-8859-1?Q?bjb31jgfTc+oLBS+UKYZzhFASU/iZkQ6Esjl1PsqMqAXYryUuYKqKSi1ON?=
- =?iso-8859-1?Q?9emZmljA/Ks4mV7Rb7E1Jvuw5/qYx/4L3Q1ZsadxYQXT7kdcvBrEd6rDin?=
- =?iso-8859-1?Q?LC9kLnEhkN8ugP3x+4Xi3WWuyIKO3fCeUwOoMO0Vvp5djJl32FHCI9E5Rf?=
- =?iso-8859-1?Q?ZsXqpyhAOdFMT+8SaIaOYlio8mjMTw2qYQNwamiC+fKxBMFeCh8xdnpdMN?=
- =?iso-8859-1?Q?Yy+q4UqmhlJZevv8jQ/74w4heMD5PRmEFWov85nb66JIjUE87JVhu+snVd?=
- =?iso-8859-1?Q?ylpZJMjwA9/Be1OrFToiZ1MsRjjbL0hQ0Bgc/7kSPVkhThjCzObAkWKu5y?=
- =?iso-8859-1?Q?JbTdT/iQPvrytCYw3UjdIOd3DFfiDvkpvXnz1rYVO5ZH/cJodsxoX5Zl1p?=
- =?iso-8859-1?Q?C1gVa9WMLlQWvdAMcMT6ohsqe9e3CTSFEVqdk5zV2bfDOais6R0DssSCv/?=
- =?iso-8859-1?Q?RWHDkhUsuWmbwIdIjqhmw1EvSp85lsVcpXarFQ9H5B3rpDsjN3W+KYykgM?=
- =?iso-8859-1?Q?E7C9mPQgWURPCBkrIbsEB1LVSZ9BXvLgb5nwMrilaWE3ZHUOdYuUmE3Btl?=
- =?iso-8859-1?Q?CtWDmxEQpPMyHWJWFJSZh8hVT0HJEbxQpvPTL9IYZJg7NZyPdMreriF0RI?=
- =?iso-8859-1?Q?2MYorNFWjinD5SDx/h0l1gOX3jxFCD1yz/y0lG9oMlkKa7hLPAVep5Nb+I?=
- =?iso-8859-1?Q?QWm3tREJfNIXCcAm1NWcUBskSqWtkJIV6Y16TcIDqiIXk/czYf5BCagl6d?=
- =?iso-8859-1?Q?gqZIwCiTvZLZcD03S52HefcXfqlpFvJJiLWIcC9Uhn51jAkQTFOta3etEU?=
- =?iso-8859-1?Q?PUjdhrJi8sHgPMgCs5Bi6Mw/uM0So+sRZaDRk3hMi36JFgbLc/9QXiTKVR?=
- =?iso-8859-1?Q?c/cuklQ7HhYGP5TxnFwfXfkIE+MP3B2pYCU8UveuYpQatmOoocVHO90zin?=
- =?iso-8859-1?Q?pCEAgJafNHJmVlNZETIi8H5/CqDvPcmwBc?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754F8241E7
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Apr 2024 14:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712501144; cv=none; b=aDIWs+qCjQpqLxaMeZmT5fDuLv3ci+iWIgNbVl/vaCHIgiPdMl4BpwHKbqANn+3TqbhKXOGCqpSSsvGby6UTQJ2G4BUc2kX6G9xCG246IcOBLwi/clhoYlcFLIzFJZra4VjGDIVRcl8ovlBSMBQuYM4XKb5RcSbRA1khfnB8A4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712501144; c=relaxed/simple;
+	bh=6Fsr/5417AAMj9ngeiSZnpiyEw2iuG+5u/aSlTygRnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DjXrewPTpo3Ghk1Aw+PrTbr6UWcTHrc2YqQBjemF+kdnMx0TOHIygnjEVY48vk/Xx741+SOmqRpFhbjQvNyVcBZcH87HMa/5GueiNV+AordKFz9/7eRPUMQwj9oKswIT1g4kW33Obc4DFOsObclWiINXOw5ZkbJNMi6uXkx2Xlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c6DDPpMH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712501140;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9iQy2cEfM4bfTgM810kU3gtpYpYGnS80hJ02ta1UI5M=;
+	b=c6DDPpMHM6sq4/fzke2BXM3gLQt1N1okQVgRdS+sVNuBHL5tkPLElRdlDlpQVLo2ljn2AB
+	V0k44uiPDBFv7T0S009zmm9WTUbRiUXBWRWh7w/NMG2d8RwKNMGx/N5D03M8exyrWL8sP/
+	V1XuOIxupbPHaXQuh/mGy6CPfBCu5Jk=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-102-aLakB_XiO-e-TXgQnk70yw-1; Sun, 07 Apr 2024 10:45:37 -0400
+X-MC-Unique: aLakB_XiO-e-TXgQnk70yw-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-432c8284601so11857531cf.1
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Apr 2024 07:45:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712501136; x=1713105936;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9iQy2cEfM4bfTgM810kU3gtpYpYGnS80hJ02ta1UI5M=;
+        b=a7yk4cDA8/NPFMW1HYsihYdZn4Ns67AlAaNARIn2iLV1yV1amGR8iQ1EaMdKwn4u+l
+         RfDPS017aZ7kwxMK8KBmMmzwLZgXFyo5ICCGUkVCx7fC/u6EsvKxa6i7QxGzlhBPGYKv
+         2DKlqFlShQXHqDGZa2QTJDDy+lrTc9phYjeatfUwHKzEWiwRj/RpY3ZIVciYp+UG+sP2
+         4R05thkkMIqgdcNhYGhASZ3VeSV7IZBWph16Z2mmhwHpRAQOLHkx4lr5xJbdlxhyDt6x
+         A1eXchyJ1Ewqi5CX9pH2YUwf1j2ylI6KixKa4Aq7qT5nYr/fO9GjYskDYuSTuo1dzvEu
+         1isA==
+X-Gm-Message-State: AOJu0YxvnwaOOKjCDYVxxpWhODMCmq79r2EJNiyUSwvGcVp1m57ZY1mz
+	CJBGNGPxjZTZYit6jscr++12DWyh2Ft6MmbH4jEvzDcOrJZsiDD2wPIRlhyYRyn8JRDiRrNhEKA
+	onIvNPv/RXqp9ykphBfLObHx3WQXNc0MW1HqhaHNWlhD1sk5vMJFcJ11TCfx5nHeifQ==
+X-Received: by 2002:a05:620a:4093:b0:78d:641d:3db2 with SMTP id f19-20020a05620a409300b0078d641d3db2mr1285945qko.2.1712501135749;
+        Sun, 07 Apr 2024 07:45:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF26AHP7wJKBgTDOQu4JCPcyeFTza4Gco9wzSTOJJbE0Q5usTb5szVt+6oTIwx4KX8uflar7g==
+X-Received: by 2002:a05:620a:4093:b0:78d:641d:3db2 with SMTP id f19-20020a05620a409300b0078d641d3db2mr1285915qko.2.1712501135248;
+        Sun, 07 Apr 2024 07:45:35 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.134.36])
+        by smtp.gmail.com with ESMTPSA id j7-20020a05620a146700b00789f5cf990bsm2311262qkl.36.2024.04.07.07.45.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 07:45:34 -0700 (PDT)
+Message-ID: <50d1fcab-ba94-405e-896a-5bbae128998b@redhat.com>
+Date: Sun, 7 Apr 2024 10:45:33 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: rutgers.edu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB5493.namprd14.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 539b5b27-4bbb-4ba3-05e3-08dc570633e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2024 13:25:33.1873
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b92d2b23-4d35-4470-93ff-69aca6632ffe
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R85maRgKigBeWdHlivpU5pEqRSSWz+fgElAV3mzx7Mj80kVilV9OaHkFwEaPUTr1YgpkV7vtlhQdJzlS1YfP+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR14MB5476
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfs-utils' .service files not usable with nfsv4-server.service
+To: Matt Turner <mattst88@gmail.com>
+Cc: linux-nfs@vger.kernel.org
+References: <CAEdQ38GJgxponxNxkcv+t8mhwRPzOjan58MTBgOL8p9tY=rvTw@mail.gmail.com>
+ <79c69668-4f8e-448e-9f50-6977cda662fc@redhat.com>
+ <CAEdQ38FOP0_g0FK5DYz954OwfJjLUf2pjQL1CX=VNC60kd8HEw@mail.gmail.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <CAEdQ38FOP0_g0FK5DYz954OwfJjLUf2pjQL1CX=VNC60kd8HEw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-nfsd_set_fh_dentry is used in setfh and a number of other places. It calls =
-exportfs_decode_fh_raw with an argument nfsd_acceptable.=0A=
-=0A=
-That is a test that always returns 1 if NFSEXP_NOSUBTREECHECK is set.=0A=
-=0A=
-However there is an optimization in exportfs_decode_fh_raw that skips a lot=
- of file system stuff if NULL is passed as the test. A test that always ret=
-urns 1 still triggers all the file system stuff, even though it's not neede=
-d. =0A=
-=0A=
-nfsd_set_fh_dentry should pass NULL to exportfs_decode_fh_raw if NFSEXP_NOS=
-UBTREECHECK is set.=0A=
-=0A=
-I discovered this while looking into a performance problem caused by a path=
-ological client that was sending 40,000 RPCs/sec, almost all get =0A=
-GETATTR or ACCESS. It was causing the nfsd's to be stuck at 100% CPU by loc=
-ks in file system code invoked by this unnecessary code.=0A=
-=0A=
-(We fixed the client by mounting with NFS3 rather than NFS4. This suggests =
-an issue with the NFS 4 client side. Unfortunately I don't have enough info=
-rmation to make a useful report.)=0A=
-=0A=
-=0A=
-=0A=
+
+
+On 4/6/24 6:26 PM, Matt Turner wrote:
+> On Sat, Apr 6, 2024 at 4:37 PM Steve Dickson <steved@redhat.com> wrote:
+>>
+>> Hello,
+>>
+>> On 4/5/24 10:29 AM, Matt Turner wrote:
+>>> Downstream bug: https://bugs.gentoo.org/928526
+>>>
+>>> In Gentoo we allow disabling NFSv3 support, which entails nothing more
+>>> than not installing `nfs-server.service`. This has uncovered an issue
+>>> that many .service files reference `nfs-server.service` explicitly,
+>>> making them unusable with `nfsv4-server.service`.
+>> Very interesting... not supporting v3... Just curious as to why?
+> 
+> I don't think there's a particularly compelling reason. I guess it
+> lets you avoid a dependency on rpcbind.
+And the other baggage  that comes with v3... but
+I think it will be difficult to deprecate it.
+
+But it might be fun trying :-)
+
+> 
+>>>> server ~ # grep nfs-server.service $(qlist nfs-utils | grep service)
+>>>> /usr/lib/systemd/system/rpc-statd-notify.service:After=nfs-server.service
+>>>> /usr/lib/systemd/system/nfs-mountd.service:BindsTo=nfs-server.service
+>>>> /usr/lib/systemd/system/rpc-svcgssd.service:PartOf=nfs-server.service
+>>>> /usr/lib/systemd/system/fsidd.service:Before=nfs-mountd.service nfs-server.service
+>>>> /usr/lib/systemd/system/fsidd.service:RequiredBy=nfs-mountd.service nfs-server.service
+>>>> /usr/lib/systemd/system/nfs-idmapd.service:BindsTo=nfs-server.service
+>>>
+>>> The only service file that depends on nfsv4-server is nfsv4-exportd:
+>>>
+>>>> server ~ # grep nfsv4-server.service $(qlist nfs-utils | grep service)
+>>>> /usr/lib/systemd/system/nfsv4-exportd.service:BindsTo=nfsv4-server.service
+>>>
+>>> How should `nfsv4-server.service` be used?
+>> The idea was to make nfs-utils have a smaller footprint for containers.
+>> No rpcbind, lockd, statd etc.. exportd is to replace mountd
+>> and only accept v4 mounts.
+> 
+> Seems like we would just need to modify the build system to not
+> install `nfs-server.service` and other NFSv3-only service files and
+> modify the remaining service files to reference nfsv4-server.service
+> instead?
+Or we break up nfs-utils into 5 packages... nfs-common, which would
+be used by nfsv3-client, nfsv3-sever, nfsv4-client and nfsv4-server.
+
+Not clear other distros would be happy with that.
+
+> 
+>> Unfortunately the idea of having a nfsv4 only server
+>> did not go over well with upstream.
+> 
+> Which upstream do you mean? nfs-utils, Linux kernel?
+The NFS server maintainers... they didn't push back hard
+but the didn't it was necessary.
+
+> 
+>> But, I will be more than willing to work with you to make it work.
+> 
+> Thanks!
+> 
+We have a virtual Bakeathon [1] coming at the end of the month
+Maybe this would be a topic for Talks at 2pm [2].
+
+steved.
+
+[1] http://www.nfsv4bat.org/Events/2023/Oct/BAT/index.html
+[2] 
+https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1920779269
+
 
