@@ -1,273 +1,141 @@
-Return-Path: <linux-nfs+bounces-2711-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2712-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 699FB89B86D
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 09:31:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B13689BA51
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 10:31:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED1AE283467
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 07:31:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAB5BB21D3F
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 08:31:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C8C250EC;
-	Mon,  8 Apr 2024 07:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R4igch+N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF94A39AC7;
+	Mon,  8 Apr 2024 08:31:24 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EAE2576E;
-	Mon,  8 Apr 2024 07:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B2A34CDE
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 08:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712561502; cv=none; b=Gu4p7a/1YW86BExy7b6+HbQc+5V00Zm9ptdqlDl65yoyfbn3zFN/IAYUVA8vUsyHm38ufM9gJa2SC5FO9wITwVuX8dRQTY/V2IYjMyUALeiALIFFbMsHaY8RDarszHbSh8KCELisc4WIqtJ9nBmlmoWdQnSSsU3m+lF5pTNm+nU=
+	t=1712565084; cv=none; b=Zlg4lBBc7dgmmj38cMlsZgtvzqT2RweHcXbzzHvK0H3+ansRLdjU0tpTic3iisuoOSgOuul7uLZel7nwzYslGkHVEjow65P3z02Tdf1gGOHxf/pmLJD640dGVK5YbjxAifoxopYAs91jIIZGQUmHecA50HrIl3/QvcV4t8ncwWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712561502; c=relaxed/simple;
-	bh=lmsBm5nTnffgSx2fS/ryKsYEj/upOdvS9elDu44URUg=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=UtEMZdJ1z/lvf1NtUxBWEaKTxHfr5IFqPc3yHLUkwz4jj+tDm4OAZ1ZWUieTEvSoLLLojpTUHnIT0STMhEu7QXOY2+CELlwMf3uOo2oWIqn/UHQS+FfNw2yitburOkUXqJdDow0Box0OSiCUqhmXRn4/76YVekkTsNQqvWg2TfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=R4igch+N; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240408072050euoutp02410e3d635aa40075dd940878b76f66a4~EPQUwTE-M0578505785euoutp02B;
-	Mon,  8 Apr 2024 07:20:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240408072050euoutp02410e3d635aa40075dd940878b76f66a4~EPQUwTE-M0578505785euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712560850;
-	bh=dic+LWsSv8Akr20ymbAxctCZm+7tnRnSHjjKdWufs+M=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=R4igch+NX9vZcyEjz9xuRWmkA2q91FagNMFNpqwDiitOV/D+OsI7RYwSyzHBsmqyX
-	 ZbUGCEyohbKzcPinP/cCJzFkJJPMzO2eVGE/eOVVrc004e5YNvgIGJZePbaWm9q22j
-	 YVQMOM9+DH6PHsDVg1joqLelPhU4kImKEQjIhdvY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240408072050eucas1p1a8c0beb906ba7d9b12d86046bb4fa42d~EPQUi2_Q42048920489eucas1p1M;
-	Mon,  8 Apr 2024 07:20:50 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id CB.3B.09624.2DA93166; Mon,  8
-	Apr 2024 08:20:50 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240408072049eucas1p2bc84263f53c4eb375742a6739a2f8fbd~EPQTyuEjs2668926689eucas1p2J;
-	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240408072049eusmtrp113df4514d474d7cbd59d368c0190ea5e~EPQTvd1e20866108661eusmtrp1J;
-	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-fe-66139ad20952
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.02.09010.1DA93166; Mon,  8
-	Apr 2024 08:20:49 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240408072049eusmtip1eaef4a235fff5b1d93272c279edd8416~EPQTa7RNP0059900599eusmtip13;
-	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
-Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Mon, 8 Apr 2024 08:20:48 +0100
-Date: Mon, 8 Apr 2024 09:20:43 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>,
-	<alibuda@linux.alibaba.com>, <allison.henderson@oracle.com>,
-	<anna@kernel.org>, <bridge@lists.linux.dev>, <chuck.lever@oracle.com>,
-	<coreteam@netfilter.org>, <courmisch@gmail.com>, <davem@davemloft.net>,
-	<dccp@vger.kernel.org>, <devnull+j.granados.samsung.com@kernel.org>,
-	<dhowells@redhat.com>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<fw@strlen.de>, <geliang@kernel.org>, <guwen@linux.alibaba.com>,
-	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
-	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
-	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
-	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
-	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
-	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
-	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
-	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
-	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
-	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
-	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
-	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
-	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
-	<ying.xue@windriver.com>
-Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240408072043.j5p3dcyalm5yrozo@joelS2.panther.com>
+	s=arc-20240116; t=1712565084; c=relaxed/simple;
+	bh=cGaM4ocapeoZbCgp17qum1GDq8465V9dqZbuMY8HVL4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ph92oopCUrwUOr4hJiiWzP28MgxSXncaQAF3mr1/ltLEbGiLFpBPtolc35PnLZry6DvknUzbV/DW7YgllqyIz2799dZHh6PbKUzC9PE75ZtHGirru7kVicnTaOSql46ThpbgEVfLF61E9xA0TH/VB97Vxr0XhmsqfD0Vd4+iLHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d5dbc0e4b3so124718239f.1
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Apr 2024 01:31:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712565082; x=1713169882;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UDk6EV9RQ3C/hMHWveNrOdMW8xuEVmJIEBJEd1bIoI8=;
+        b=EXBtzBScnfvgRqDK1vWx4n5VSo4w8ufTztc4OloD0JLN1oCTdCOPjYCVe94OLuFkTW
+         sZ1Vt0qRhoGSgfllcQx31j5n5zsKwcdX3EADWWayI0q2i5q6cf83/xGv9LXtwqPKjCbv
+         Ki5nSZGV9XbMt1WXXPu6hGMNPP+cpOFpq9Y6ZV1KdADb/CJ8eWlhWpOlHfjtcb3pG/zT
+         kZSce9EVag1+efRaF1PR1CLiYZZGlH1Z95e0NtvFGblbJVbX9swrElGvywGb5L5RFubK
+         fqT9WLqkU6QY+2WxHjCFU+3Hxz5+cteO5ATWRNuquommxljtSH6fCb4Ys72EkhqwaRqK
+         4puQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXo5wNvYT/+6G9MRQAm1SXppvwlzXxMu4aGJT7GxQ7GnPmmcFqOUcqaS6eosJoXCi8VoP+cDHc7L7QKxV759UV6fuEi8IsiHqIM
+X-Gm-Message-State: AOJu0YynlRybK6nPL4zzPMYSj6OSr+nQbMuTfLFImHI+RRQTrnjUwHCi
+	TiVFRaUjwKnWD+q7DPB6LkpifSx8YpH+0ncgWbokA65TzLEa5Zc8mjJ3r/LHWiJfeKuW7n2QrGW
+	hGphMV/U5k3ZZptkmBvWF8TNxi91KphURBHFd3Rj5Ek5GNdIbqi8V1m8=
+X-Google-Smtp-Source: AGHT+IFFG5jq75OHTmF+2BNAceR1vkrV7VxGrB+qu/ANAaQ/sBVIjhmet7IssP9ucPu28Yj4qFoVhthofIGW8/+RiCx4NhA+aV6q
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="a36pnpbxxry3pzoc"
-Content-Disposition: inline
-In-Reply-To: <20240405222658.3615-1-kuniyu@amazon.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTeUxUVxTGc982M1TwAUZulCpSpBUVi9X2VK1So/aVNpFg26RNrJ3CA5HN
-	zIhLGxvKqmyOLIJTEMRkGAcc6YDoqMAULchABAVZJoAwDJIiLmVHWQo8jSb973e+73z3nvPH
-	EZN2aeIl4sDQQ7wsVBrszFhRpVUT9WvvK+39P0xvXgSVEZ9A9814GiKiYwmI0c9QUHohgYCZ
-	jj4CpvRxJAx199GQk1fMQFZ9NAVTLQkMNGZbCHga+ZIC7fUYAnqrzCIoTSpAUBDZTsHVvjEG
-	EvodIerKCALLKTMNTarnDEyoNCJ4OGKmYCL5HTgbH0VAXUIIXOuwUNBQmkyDKvESAwqjBzRf
-	7SCg8XoWAw2GWhoeVSZRoDgfRUJv7mMa2lNVFBjKchCYLz8jICpnkISooR4SXqirabibNEOC
-	UqshoVXRi+BWXDkNdZcjRTB67g4JZTkRFFTlLgaF1kjBaO0AgoyBByTcv+kCxuEZAu4WD9Ew
-	lPUBpKpLCLhxclwEJfUHwPjCSEDPWB8DM63bPLdz6oZ4mjOZR0ju6d0axJ0r/JX7I+Iexb2Y
-	cONKLrYRXMLtfpLTKztEXKlhJZerC+cmK/8UcTrNSYb7++IlgtN3f8op8gzI2/kHqy1+fHDg
-	YV62butPVvsHux6IDg46Hs3R/RiBTA7xSCLG7AasnX5OzbEdq0ZYkxEYj6xmeRjhtKk2RiiG
-	EM6/pBC9TujTz9CCkY/wqDrlTZdpYooSCh3CDbpJei5CsS64JUUzzwy7BtcPtJNzvIhdhU9o
-	E+efItlia5yRcRrNGfasPx7v7J1na9YT95ieEQLb4pqzlvlpSfYo1k1OzfaIZ3kpzp8Wz8kS
-	9mM8Vq0lhVFX4JELnZTAx7GxxETM/YXZBwuwuaARCcYOfK+ujxHYHvdXl7za0xHXpiZSQiAV
-	4Yrp5yKhKEBY9fsIIXRtxtFNlleJz3FF3tj8RJi1wa1PbIVBbXBKaQYpyNb4RKyd0O2KCzoH
-	KAV6T/nWasq3VlO+WU2Q3XFrehrzP3k1Vp1/TAr8GdZqn1G5SKRBDny4PCSAl3uE8kfc5dIQ
-	eXhogLtvWIgOzR5r7XT14DWU3f+veyUixKgSucyGzUUFDWgJFRoWyjsvst6z0dbfztpPeuwX
-	Xha2TxYezMsr0VIx5exgvdJvOW/HBkgP8UE8f5CXvXYJsWRJBOG9Xd8jfjjsPtTlF9P87rJy
-	+wX3DdmrmsW7vyxav0nF9rTGpGxw+Wjr09kb3Ha5sJz18qlZX9Z27Ksz/6zLDAyjG31vbvzW
-	a2DNE0nQkdbvJY9O7ewW5e8sDHIqMuzd1/V+tCu1OCt9f4LPvd1qvUe8W7bGxslk41vmWFgz
-	8bXGx8lZ3jm+MO5MUnnqbabpeFrXptEQ29+W29MHv9nlMHZ4MsD4yJjputdjpPt07MKWYnPQ
-	ahfvXVnLMo8Frc08fGXS1Fa2uMkpZWfFHYlPnjrFMu6yqSVqbJdX+7hFnNxhsfs51vPAns0v
-	e1c0lQR/d6P8Vt/aHONf0i9cYTjWNSY8c4tBku7vTMn3Sz3cSJlc+h9Ib7zGJwUAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTf1DTZRzHe76/NrXZBMzvoXW6w/JX0wHDD56KaZ7fugzT6xdewcIvw4JN
-	NuDMrJCBwPDHwstwiBuQEzadMWEyE+WwmPwQUFTQGxhjQCExdU5FBQJXl3f993ren/f7/Tz3
-	3H24uJ+FE8jdKktmFTJJgoCaTDSO2jvfuKz1j1tiuiCA2rSl0H1WTUJaxm4MMm1jBFhLcjEY
-	6+zHYMSWhYOnu58EXfEpCg63ZBAw0p5LQVuhC4Oh9CcEmM9kYtBb5+SAda8JgSndQcDp/ocU
-	5A7MAlWlF4Frv5OEq4Y7FAwbjBy45XUSMLxvChxSqzBoyk2Eqk4XAa3WfSQY9pygQNMgguun
-	OzFoO3OYgtaaRhL6avcSoClS4dCrv02C44CBgJpqHQLnSTcGKt09HFSeHhwel9pJaN47hoPW
-	bMShQ9OL4ELWORKaTqZz4MGRizhU69IIqNO/DBpzAwEPGgcR/Dh4DYcrZ4Og4f4YBs2nPCR4
-	Ds+DA6UVGPyS84gDFS1fQMPjBgx6HvZTMNYRsWo1U9qqJpmbTi/ODDXXI+bI8a+ZgrTLBPN4
-	eAFTUXYDY3J/HcAZm7aTw1hr5jJ6SwrztLacw1iMORTzW9kJjLF1hzOa4hq0QRAlXK6QpySz
-	s+PlyuQVgs0iCBaKwkEYHBouFIUs/XRZsFiweOXyLWzC1lRWsXhljDC+QW8jtt2ZtV2nuYvS
-	UMcMNZrEpfmhtO2Hg6QaTeb68Y8i+syAB/MNZtHl96+RPvann15XUz7TXURXlbQQvoMF0b8b
-	rZwJF8EPotvzjM8SFH8R3TLowCc4gD+fzjbveXYFzi/n0cNZR5+Z/Plx9KOuXjTBPP4quuem
-	G/O11iDacKX0n8E0uv6Qi5hgnJ9K5/+UN97KHeeZ9LFR7oQ8iR9GP7Sbcd9T59Deki7Cx9/Q
-	npE+pEH+2ueatM81af9r8smLaFulg/qfvJA2FN3GfbyCNpvdhB5xjCiATVEmShOVwUKlJFGZ
-	IpMKY+WJFjS+MNa64YoqVDZwV1iLMC6qRUHjSefPplYUSMjkMlYQwNsknhbnx9si+WoHq5BH
-	K1ISWGUtEo9/4/d44PRY+fj2yZKjRWFLxKLQsPAl4vCwEMEM3tvbsiV+fKkkmf2SZbexin9z
-	GHdSYBoWw8Pr1hJ5a485/0iMUL7zpuDgfpejMTLakL1aPzd/Tk/mPGPSdx9y+0JGNiUnfa7K
-	KLAf2fwo8rWkDRZ3Zt96R39qPqv66PyFmwWKre/9qR6tbPKavu2q9uzMckvx1IzdDyJdhwrX
-	TJfuZI4e1zVpn+66vSWnyrs+iHo/JNISXtpiLyE+kX/QvmlZ/kslEoN0f8y614uag2c66lVD
-	67dbrxa8EDafU51eP7/Rf05pHLrhLpReWjiC7O53u7ra1OL2qRt3DRtUo2UbI6QmeXxEcTn/
-	xZzzfQFRutmxUz97NfatHQP7yCmF93qj3Odu5f315IBr0Z2P7byLpkunX5Gvo9YqoioFhDJe
-	IlqAK5SSvwH5lVNtxQQAAA==
-X-CMS-MailID: 20240408072049eucas1p2bc84263f53c4eb375742a6739a2f8fbd
-X-Msg-Generator: CA
-X-RootMTR: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
-References: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
-	<CGME20240405222730eucas1p16a0790be308342130a19a5b489ffae1e@eucas1p1.samsung.com>
-	<20240405222658.3615-1-kuniyu@amazon.com>
+X-Received: by 2002:a05:6638:2612:b0:47f:2af:7c32 with SMTP id
+ m18-20020a056638261200b0047f02af7c32mr187870jat.3.1712565082512; Mon, 08 Apr
+ 2024 01:31:22 -0700 (PDT)
+Date: Mon, 08 Apr 2024 01:31:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000065ed60061591a173@google.com>
+Subject: [syzbot] [nfs?] KFENCE: memory corruption in do_handle_open
+From: syzbot <syzbot+454fe737909d37a0e5fe@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, chuck.lever@oracle.com, 
+	jack@suse.cz, jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
---a36pnpbxxry3pzoc
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On Fri, Apr 05, 2024 at 03:26:58PM -0700, Kuniyuki Iwashima wrote:
-> From: Joel Granados <j.granados@samsung.com>
-> Date: Fri, 5 Apr 2024 09:15:31 +0200
-> > On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
-> > > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kern=
-el.org>
-> > > Date: Thu, 28 Mar 2024 16:40:05 +0100
-> > > > This commit comes at the tail end of a greater effort to remove the
-> > > > empty elements at the end of the ctl_table arrays (sentinels) which=
- will
-> > > > reduce the overall build time size of the kernel and run time memory
-> > > > bloat by ~64 bytes per sentinel (further information Link :
-> > > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.o=
-rg/)
-> > > >=20
-> > > > When we remove the sentinel from ax25_param_table a buffer overflow
-> > > > shows its ugly head. The sentinel's data element used to be changed=
- when
-> > > > CONFIG_AX25_DAMA_SLAVE was not defined.
-> > >=20
-> > > I think it's better to define the relation explicitly between the
-> > > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
-> > >=20
-> > >   BUILD_BUG_ON(AX25_MAX_VALUES !=3D ARRAY_SIZE(ax25_param_table));
-> > >=20
-> > > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
-> > > as done for other enum.
-> >=20
-> > When I remove AX25_VALUES_DS_TIMEOUT from the un-guarded build it
-> > complains in net/ax25/ax25_ds_timer.c (ax25_ds_set_timer). Here is the
-> > report https://lore.kernel.org/oe-kbuild-all/202404040301.qzKmVQGB-lkp@=
-intel.com/.
-> >=20
-> > How best to address this? Should we just guard the whole function and do
-> > nothing when not set? like this:
->=20
-> It seems fine to me.
->=20
-> ax25_ds_timeout() checks !ax25_dev->dama.slave_timeout, but it's
-> initialised by kzalloc() during dev setup, so it will be a noop.
-thx. I'll solve it like this then
+syzbot found the following issue on:
 
->=20
->=20
-> >=20
-> > ```
-> > void ax25_ds_set_timer(ax25_dev *ax25_dev)
-> > {
-> > #ifdef COFNIG_AX25_DAMA_SLAVE
-> >         if (ax25_dev =3D=3D NULL)        =B7=B7=B7/* paranoia */
-> >                 return;
-> >=20
-> >         ax25_dev->dama.slave_timeout =3D
-> >                 msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOU=
-T]) / 10;
-> >         mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-> > #else
-> >         return;
-> > #endif
-> > }
-> >=20
-> > ```
-> >=20
-> > I'm not too familiar with this, so pointing me to the "correct" way to
-> > handle this would be helpfull.
->=20
-> Also, you will need to guard another use of AX25_VALUES_DS_TIMEOUT in
-> ax25_dev_device_up().
-Yes. I had noticed this already. This was a trivial one though, so I did
-not ask about it.
+HEAD commit:    727900b675b7 Add linux-next specific files for 20240403
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bf53c5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afcaf46d374cec8c
+dashboard link: https://syzkaller.appspot.com/bug?extid=454fe737909d37a0e5fe
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Thx.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Best
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f8fb4daa7a83/disk-727900b6.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d2a6994aee53/vmlinux-727900b6.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6759e5411c39/bzImage-727900b6.xz
 
---=20
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+454fe737909d37a0e5fe@syzkaller.appspotmail.com
 
-Joel Granados
+==================================================================
+BUG: KFENCE: memory corruption in handle_to_path fs/fhandle.c:213 [inline]
+BUG: KFENCE: memory corruption in do_handle_open+0x4be/0x660 fs/fhandle.c:226
 
---a36pnpbxxry3pzoc
-Content-Type: application/pgp-signature; name="signature.asc"
+Corrupted memory at 0xffff88823bdccff8 [ 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 ] (in kfence-#229):
+ handle_to_path fs/fhandle.c:213 [inline]
+ do_handle_open+0x4be/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
 
------BEGIN PGP SIGNATURE-----
+kfence-#229: 0xffff88823bdccfe0-0xffff88823bdccff7, size=24, cache=kmalloc-32
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYTmsoACgkQupfNUreW
-QU9ICwv6A6h0aHFqNdUCkstNuQDQL6/IKZsdnmejFWMbFZKYFjyGWo1/Qa5SnEmf
-5aN4REQAWpaHGznkRrbgZHVET5CqmXOIbIvP/+AZsENF0RfL0CZW6hcEjRMUF6tb
-jpJ8KT/wl2xmmvfCcZkV3rymYiOxwtp2lMdUM7Zx5QZ33CaStmeKvfoA8ngQX3Ri
-u2fO/A856mzsUuUvYqJsCRqNfe9LQZQ7uFEY+0f31BpCagdivfXyFpvFk7Ol0tvB
-k7DExa1ndy/G92OzYPEOsTdzRv9xlujgnBVHIapZ2Le6aZ1YGplwI3X+m1n7kNjV
-X10vWmuQOZ81xz2n3ZjdCPmu6VfWkwyBfkaVJ/ehqjYkfQ8+s80iSRxU/g6EV2oX
-fsfSUYyolzz1Vp8nllQRiWuygSAIeaLlpXl+vwa7rQKSdLYXsoC8YqM/gEBUThe3
-X/KQMPBl7qYM2CqAkoar8omqvkBratmAJwScZQEqZxGmosEn4KWDWc4de3toUFCR
-JsRQKj4e
-=iYz3
------END PGP SIGNATURE-----
+allocated by task 5382 on cpu 1 at 75.554801s:
+ kmalloc_noprof include/linux/slab.h:664 [inline]
+ handle_to_path fs/fhandle.c:195 [inline]
+ do_handle_open+0x162/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
 
---a36pnpbxxry3pzoc--
+freed by task 5382 on cpu 1 at 75.554827s:
+ handle_to_path fs/fhandle.c:213 [inline]
+ do_handle_open+0x4be/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+CPU: 1 PID: 5382 Comm: syz-executor.0 Not tainted 6.9.0-rc2-next-20240403-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
