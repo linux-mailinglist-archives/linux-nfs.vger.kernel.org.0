@@ -1,325 +1,273 @@
-Return-Path: <linux-nfs+bounces-2710-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2711-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1008789B5DA
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 04:14:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 699FB89B86D
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 09:31:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 864631F213CC
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 02:14:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED1AE283467
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 07:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996291366;
-	Mon,  8 Apr 2024 02:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C8C250EC;
+	Mon,  8 Apr 2024 07:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1F+bgRvI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kM+aAb9M";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1F+bgRvI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kM+aAb9M"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R4igch+N"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D3C63A
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 02:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EAE2576E;
+	Mon,  8 Apr 2024 07:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712542467; cv=none; b=aPN2GgIPEhtoEctowBZne9kwQX+wfw3t2LDxL7FiQZud6U0NlTl/GH0YeX09M/lYjWujcYzYdi/Os0REngqMKUH80lLtD90GR+2kQKjd+RPFBc6S0Ottt1ZTHY/kJYm5iSw83edX6TjEM5JYUsETr3bMEsdegD8IWyu+jtv46WI=
+	t=1712561502; cv=none; b=Gu4p7a/1YW86BExy7b6+HbQc+5V00Zm9ptdqlDl65yoyfbn3zFN/IAYUVA8vUsyHm38ufM9gJa2SC5FO9wITwVuX8dRQTY/V2IYjMyUALeiALIFFbMsHaY8RDarszHbSh8KCELisc4WIqtJ9nBmlmoWdQnSSsU3m+lF5pTNm+nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712542467; c=relaxed/simple;
-	bh=ZngJMLydGsyb1xXRL6WFPeZ46G1XaSPmGKurIwyi+Lw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=PZPOgqLULYtaiWpLpI2l3stKTd7+HexTDz4y83xcDukWUyb2gsbQGSbtd7ICR5VY6ezlBv6/1mB0V7ul23cYdJw7KuZczbUKqz3+77FhuajLEUu6kiDAcCb4HE9pmanY/JWWcxFcMVwx4p2ZO0TLmfD+lp4UhMbGLI//0j3nsSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1F+bgRvI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kM+aAb9M; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1F+bgRvI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kM+aAb9M; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 05309218A4;
-	Mon,  8 Apr 2024 02:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712542464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fz4QYuyTp1Zee/EOyo+1Pv6e/e5hQ3SrAm75J97+1Es=;
-	b=1F+bgRvIWQoxqrKX9SsiKboc7YNpZCJz5dGhUCOv1MQm2qeJ9zEVaCxIa1JLblU+hgySyz
-	7TUqTgq+xxNiy2GcW76oRvJ1CN1bu0lRmEXv2P7PQLg2/DF5NWJmG6pjwq5ZKN+bWo3ZA3
-	ck4oUmKY7lIOzQ9LHfVI3mlfG1ZuuVM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712542464;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fz4QYuyTp1Zee/EOyo+1Pv6e/e5hQ3SrAm75J97+1Es=;
-	b=kM+aAb9M0hncIgQHf4j0lewaXkNP8evH18SBRYvLixobpq/Gs8OnXoyTKQ8YE4PzovHNlP
-	2ADq3lO9ddmrNEDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712542464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fz4QYuyTp1Zee/EOyo+1Pv6e/e5hQ3SrAm75J97+1Es=;
-	b=1F+bgRvIWQoxqrKX9SsiKboc7YNpZCJz5dGhUCOv1MQm2qeJ9zEVaCxIa1JLblU+hgySyz
-	7TUqTgq+xxNiy2GcW76oRvJ1CN1bu0lRmEXv2P7PQLg2/DF5NWJmG6pjwq5ZKN+bWo3ZA3
-	ck4oUmKY7lIOzQ9LHfVI3mlfG1ZuuVM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712542464;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fz4QYuyTp1Zee/EOyo+1Pv6e/e5hQ3SrAm75J97+1Es=;
-	b=kM+aAb9M0hncIgQHf4j0lewaXkNP8evH18SBRYvLixobpq/Gs8OnXoyTKQ8YE4PzovHNlP
-	2ADq3lO9ddmrNEDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 76BB313796;
-	Mon,  8 Apr 2024 02:14:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6j5dBv5SE2ZkEgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 08 Apr 2024 02:14:22 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1712561502; c=relaxed/simple;
+	bh=lmsBm5nTnffgSx2fS/ryKsYEj/upOdvS9elDu44URUg=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=UtEMZdJ1z/lvf1NtUxBWEaKTxHfr5IFqPc3yHLUkwz4jj+tDm4OAZ1ZWUieTEvSoLLLojpTUHnIT0STMhEu7QXOY2+CELlwMf3uOo2oWIqn/UHQS+FfNw2yitburOkUXqJdDow0Box0OSiCUqhmXRn4/76YVekkTsNQqvWg2TfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=R4igch+N; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240408072050euoutp02410e3d635aa40075dd940878b76f66a4~EPQUwTE-M0578505785euoutp02B;
+	Mon,  8 Apr 2024 07:20:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240408072050euoutp02410e3d635aa40075dd940878b76f66a4~EPQUwTE-M0578505785euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1712560850;
+	bh=dic+LWsSv8Akr20ymbAxctCZm+7tnRnSHjjKdWufs+M=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=R4igch+NX9vZcyEjz9xuRWmkA2q91FagNMFNpqwDiitOV/D+OsI7RYwSyzHBsmqyX
+	 ZbUGCEyohbKzcPinP/cCJzFkJJPMzO2eVGE/eOVVrc004e5YNvgIGJZePbaWm9q22j
+	 YVQMOM9+DH6PHsDVg1joqLelPhU4kImKEQjIhdvY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240408072050eucas1p1a8c0beb906ba7d9b12d86046bb4fa42d~EPQUi2_Q42048920489eucas1p1M;
+	Mon,  8 Apr 2024 07:20:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id CB.3B.09624.2DA93166; Mon,  8
+	Apr 2024 08:20:50 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240408072049eucas1p2bc84263f53c4eb375742a6739a2f8fbd~EPQTyuEjs2668926689eucas1p2J;
+	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240408072049eusmtrp113df4514d474d7cbd59d368c0190ea5e~EPQTvd1e20866108661eusmtrp1J;
+	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-fe-66139ad20952
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.02.09010.1DA93166; Mon,  8
+	Apr 2024 08:20:49 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240408072049eusmtip1eaef4a235fff5b1d93272c279edd8416~EPQTa7RNP0059900599eusmtip13;
+	Mon,  8 Apr 2024 07:20:49 +0000 (GMT)
+Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Mon, 8 Apr 2024 08:20:48 +0100
+Date: Mon, 8 Apr 2024 09:20:43 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>,
+	<alibuda@linux.alibaba.com>, <allison.henderson@oracle.com>,
+	<anna@kernel.org>, <bridge@lists.linux.dev>, <chuck.lever@oracle.com>,
+	<coreteam@netfilter.org>, <courmisch@gmail.com>, <davem@davemloft.net>,
+	<dccp@vger.kernel.org>, <devnull+j.granados.samsung.com@kernel.org>,
+	<dhowells@redhat.com>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<fw@strlen.de>, <geliang@kernel.org>, <guwen@linux.alibaba.com>,
+	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
+	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
+	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
+	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
+	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
+	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
+	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
+	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
+	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
+	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
+	<neilb@suse.de>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
+	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
+	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
+	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
+	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
+	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
+	<ying.xue@windriver.com>
+Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <20240408072043.j5p3dcyalm5yrozo@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Trond Myklebust" <trond.myklebust@hammerspace.com>,
- "Anna Schumaker" <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject:
- Re: [PATCH] NFS: add atomic_open for NFSv3 to handle O_TRUNC correctly.
-In-reply-to: <171134496555.13576.1334297096866165638@noble.neil.brown.name>
-References: <171134496555.13576.1334297096866165638@noble.neil.brown.name>
-Date: Mon, 08 Apr 2024 12:14:14 +1000
-Message-id: <171254245463.17212.13457550623404727123@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.983];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="a36pnpbxxry3pzoc"
+Content-Disposition: inline
+In-Reply-To: <20240405222658.3615-1-kuniyu@amazon.com>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTeUxUVxTGc982M1TwAUZulCpSpBUVi9X2VK1So/aVNpFg26RNrJ3CA5HN
+	zIhLGxvKqmyOLIJTEMRkGAcc6YDoqMAULchABAVZJoAwDJIiLmVHWQo8jSb973e+73z3nvPH
+	EZN2aeIl4sDQQ7wsVBrszFhRpVUT9WvvK+39P0xvXgSVEZ9A9814GiKiYwmI0c9QUHohgYCZ
+	jj4CpvRxJAx199GQk1fMQFZ9NAVTLQkMNGZbCHga+ZIC7fUYAnqrzCIoTSpAUBDZTsHVvjEG
+	EvodIerKCALLKTMNTarnDEyoNCJ4OGKmYCL5HTgbH0VAXUIIXOuwUNBQmkyDKvESAwqjBzRf
+	7SCg8XoWAw2GWhoeVSZRoDgfRUJv7mMa2lNVFBjKchCYLz8jICpnkISooR4SXqirabibNEOC
+	UqshoVXRi+BWXDkNdZcjRTB67g4JZTkRFFTlLgaF1kjBaO0AgoyBByTcv+kCxuEZAu4WD9Ew
+	lPUBpKpLCLhxclwEJfUHwPjCSEDPWB8DM63bPLdz6oZ4mjOZR0ju6d0axJ0r/JX7I+Iexb2Y
+	cONKLrYRXMLtfpLTKztEXKlhJZerC+cmK/8UcTrNSYb7++IlgtN3f8op8gzI2/kHqy1+fHDg
+	YV62butPVvsHux6IDg46Hs3R/RiBTA7xSCLG7AasnX5OzbEdq0ZYkxEYj6xmeRjhtKk2RiiG
+	EM6/pBC9TujTz9CCkY/wqDrlTZdpYooSCh3CDbpJei5CsS64JUUzzwy7BtcPtJNzvIhdhU9o
+	E+efItlia5yRcRrNGfasPx7v7J1na9YT95ieEQLb4pqzlvlpSfYo1k1OzfaIZ3kpzp8Wz8kS
+	9mM8Vq0lhVFX4JELnZTAx7GxxETM/YXZBwuwuaARCcYOfK+ujxHYHvdXl7za0xHXpiZSQiAV
+	4Yrp5yKhKEBY9fsIIXRtxtFNlleJz3FF3tj8RJi1wa1PbIVBbXBKaQYpyNb4RKyd0O2KCzoH
+	KAV6T/nWasq3VlO+WU2Q3XFrehrzP3k1Vp1/TAr8GdZqn1G5SKRBDny4PCSAl3uE8kfc5dIQ
+	eXhogLtvWIgOzR5r7XT14DWU3f+veyUixKgSucyGzUUFDWgJFRoWyjsvst6z0dbfztpPeuwX
+	Xha2TxYezMsr0VIx5exgvdJvOW/HBkgP8UE8f5CXvXYJsWRJBOG9Xd8jfjjsPtTlF9P87rJy
+	+wX3DdmrmsW7vyxav0nF9rTGpGxw+Wjr09kb3Ha5sJz18qlZX9Z27Ksz/6zLDAyjG31vbvzW
+	a2DNE0nQkdbvJY9O7ewW5e8sDHIqMuzd1/V+tCu1OCt9f4LPvd1qvUe8W7bGxslk41vmWFgz
+	8bXGx8lZ3jm+MO5MUnnqbabpeFrXptEQ29+W29MHv9nlMHZ4MsD4yJjputdjpPt07MKWYnPQ
+	ahfvXVnLMo8Frc08fGXS1Fa2uMkpZWfFHYlPnjrFMu6yqSVqbJdX+7hFnNxhsfs51vPAns0v
+	e1c0lQR/d6P8Vt/aHONf0i9cYTjWNSY8c4tBku7vTMn3Sz3cSJlc+h9Ib7zGJwUAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTf1DTZRzHe76/NrXZBMzvoXW6w/JX0wHDD56KaZ7fugzT6xdewcIvw4JN
+	NuDMrJCBwPDHwstwiBuQEzadMWEyE+WwmPwQUFTQGxhjQCExdU5FBQJXl3f993ren/f7/Tz3
+	3H24uJ+FE8jdKktmFTJJgoCaTDSO2jvfuKz1j1tiuiCA2rSl0H1WTUJaxm4MMm1jBFhLcjEY
+	6+zHYMSWhYOnu58EXfEpCg63ZBAw0p5LQVuhC4Oh9CcEmM9kYtBb5+SAda8JgSndQcDp/ocU
+	5A7MAlWlF4Frv5OEq4Y7FAwbjBy45XUSMLxvChxSqzBoyk2Eqk4XAa3WfSQY9pygQNMgguun
+	OzFoO3OYgtaaRhL6avcSoClS4dCrv02C44CBgJpqHQLnSTcGKt09HFSeHhwel9pJaN47hoPW
+	bMShQ9OL4ELWORKaTqZz4MGRizhU69IIqNO/DBpzAwEPGgcR/Dh4DYcrZ4Og4f4YBs2nPCR4
+	Ds+DA6UVGPyS84gDFS1fQMPjBgx6HvZTMNYRsWo1U9qqJpmbTi/ODDXXI+bI8a+ZgrTLBPN4
+	eAFTUXYDY3J/HcAZm7aTw1hr5jJ6SwrztLacw1iMORTzW9kJjLF1hzOa4hq0QRAlXK6QpySz
+	s+PlyuQVgs0iCBaKwkEYHBouFIUs/XRZsFiweOXyLWzC1lRWsXhljDC+QW8jtt2ZtV2nuYvS
+	UMcMNZrEpfmhtO2Hg6QaTeb68Y8i+syAB/MNZtHl96+RPvann15XUz7TXURXlbQQvoMF0b8b
+	rZwJF8EPotvzjM8SFH8R3TLowCc4gD+fzjbveXYFzi/n0cNZR5+Z/Plx9KOuXjTBPP4quuem
+	G/O11iDacKX0n8E0uv6Qi5hgnJ9K5/+UN97KHeeZ9LFR7oQ8iR9GP7Sbcd9T59Deki7Cx9/Q
+	npE+pEH+2ueatM81af9r8smLaFulg/qfvJA2FN3GfbyCNpvdhB5xjCiATVEmShOVwUKlJFGZ
+	IpMKY+WJFjS+MNa64YoqVDZwV1iLMC6qRUHjSefPplYUSMjkMlYQwNsknhbnx9si+WoHq5BH
+	K1ISWGUtEo9/4/d44PRY+fj2yZKjRWFLxKLQsPAl4vCwEMEM3tvbsiV+fKkkmf2SZbexin9z
+	GHdSYBoWw8Pr1hJ5a485/0iMUL7zpuDgfpejMTLakL1aPzd/Tk/mPGPSdx9y+0JGNiUnfa7K
+	KLAf2fwo8rWkDRZ3Zt96R39qPqv66PyFmwWKre/9qR6tbPKavu2q9uzMckvx1IzdDyJdhwrX
+	TJfuZI4e1zVpn+66vSWnyrs+iHo/JNISXtpiLyE+kX/QvmlZ/kslEoN0f8y614uag2c66lVD
+	67dbrxa8EDafU51eP7/Rf05pHLrhLpReWjiC7O53u7ra1OL2qRt3DRtUo2UbI6QmeXxEcTn/
+	xZzzfQFRutmxUz97NfatHQP7yCmF93qj3Odu5f315IBr0Z2P7byLpkunX5Gvo9YqoioFhDJe
+	IlqAK5SSvwH5lVNtxQQAAA==
+X-CMS-MailID: 20240408072049eucas1p2bc84263f53c4eb375742a6739a2f8fbd
+X-Msg-Generator: CA
+X-RootMTR: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
+References: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
+	<CGME20240405222730eucas1p16a0790be308342130a19a5b489ffae1e@eucas1p1.samsung.com>
+	<20240405222658.3615-1-kuniyu@amazon.com>
 
+--a36pnpbxxry3pzoc
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
- any thoughts about this patch and/or the problem it addresses?
+On Fri, Apr 05, 2024 at 03:26:58PM -0700, Kuniyuki Iwashima wrote:
+> From: Joel Granados <j.granados@samsung.com>
+> Date: Fri, 5 Apr 2024 09:15:31 +0200
+> > On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
+> > > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kern=
+el.org>
+> > > Date: Thu, 28 Mar 2024 16:40:05 +0100
+> > > > This commit comes at the tail end of a greater effort to remove the
+> > > > empty elements at the end of the ctl_table arrays (sentinels) which=
+ will
+> > > > reduce the overall build time size of the kernel and run time memory
+> > > > bloat by ~64 bytes per sentinel (further information Link :
+> > > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.o=
+rg/)
+> > > >=20
+> > > > When we remove the sentinel from ax25_param_table a buffer overflow
+> > > > shows its ugly head. The sentinel's data element used to be changed=
+ when
+> > > > CONFIG_AX25_DAMA_SLAVE was not defined.
+> > >=20
+> > > I think it's better to define the relation explicitly between the
+> > > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
+> > >=20
+> > >   BUILD_BUG_ON(AX25_MAX_VALUES !=3D ARRAY_SIZE(ax25_param_table));
+> > >=20
+> > > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
+> > > as done for other enum.
+> >=20
+> > When I remove AX25_VALUES_DS_TIMEOUT from the un-guarded build it
+> > complains in net/ax25/ax25_ds_timer.c (ax25_ds_set_timer). Here is the
+> > report https://lore.kernel.org/oe-kbuild-all/202404040301.qzKmVQGB-lkp@=
+intel.com/.
+> >=20
+> > How best to address this? Should we just guard the whole function and do
+> > nothing when not set? like this:
+>=20
+> It seems fine to me.
+>=20
+> ax25_ds_timeout() checks !ax25_dev->dama.slave_timeout, but it's
+> initialised by kzalloc() during dev setup, so it will be a noop.
+thx. I'll solve it like this then
 
-Thanks,
-NeilBrown
+>=20
+>=20
+> >=20
+> > ```
+> > void ax25_ds_set_timer(ax25_dev *ax25_dev)
+> > {
+> > #ifdef COFNIG_AX25_DAMA_SLAVE
+> >         if (ax25_dev =3D=3D NULL)        =B7=B7=B7/* paranoia */
+> >                 return;
+> >=20
+> >         ax25_dev->dama.slave_timeout =3D
+> >                 msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOU=
+T]) / 10;
+> >         mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
+> > #else
+> >         return;
+> > #endif
+> > }
+> >=20
+> > ```
+> >=20
+> > I'm not too familiar with this, so pointing me to the "correct" way to
+> > handle this would be helpfull.
+>=20
+> Also, you will need to guard another use of AX25_VALUES_DS_TIMEOUT in
+> ax25_dev_device_up().
+Yes. I had noticed this already. This was a trivial one though, so I did
+not ask about it.
 
-On Mon, 25 Mar 2024, NeilBrown wrote:
-> With two clients, each with NFSv3 mounts of the same directory, the sequenc=
-e:
->=20
->    client1            client2
->   ls -l afile
->                       echo hello there > afile
->   echo HELLO > afile
->   cat afile
->=20
-> will show
->    HELLO
->    there
->=20
-> because the O_TRUNC requested in the final 'echo' doesn't take effect.
-> This is because the "Negative dentry, just create a file" section in
-> lookup_open() assumes that the file *does* get created since the dentry
-> was negative, so it sets FMODE_CREATED, and this causes do_open() to
-> clear O_TRUNC and so the file doesn't get truncated.
->=20
-> Even mounting with -o lookupcache=3Dnone does not help as
-> nfs_neg_need_reval() always returns false if LOOKUP_CREATE is set.
->=20
-> This patch fixes the problem by providing an atomic_open inode operation
-> for NFSv3 (and v2).  The code is largely the code from the branch in
-> lookup_open() when atomic_open is not provided.  The significant change
-> is that the O_TRUNC flag is passed a new nfs_do_create() which add
-> 'trunc' handling to nfs_create().
->=20
-> With this change we also optimise away an unnecessary LOOKUP before the
-> file is created.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfs/dir.c           | 54 +++++++++++++++++++++++++++++++++++++++---
->  fs/nfs/nfs3proc.c      |  1 +
->  fs/nfs/proc.c          |  1 +
->  include/linux/nfs_fs.h |  3 +++
->  4 files changed, 56 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index ac505671efbd..342930996226 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -56,6 +56,8 @@ static int nfs_readdir(struct file *, struct dir_context =
-*);
->  static int nfs_fsync_dir(struct file *, loff_t, loff_t, int);
->  static loff_t nfs_llseek_dir(struct file *, loff_t, int);
->  static void nfs_readdir_clear_array(struct folio *);
-> +static int nfs_do_create(struct inode *dir, struct dentry *dentry,
-> +			 umode_t mode, int open_flags);
-> =20
->  const struct file_operations nfs_dir_operations =3D {
->  	.llseek		=3D nfs_llseek_dir,
-> @@ -2243,6 +2245,41 @@ static int nfs4_lookup_revalidate(struct dentry *den=
-try, unsigned int flags)
-> =20
->  #endif /* CONFIG_NFSV4 */
-> =20
-> +int nfs_atomic_open_v23(struct inode *dir, struct dentry *dentry,
-> +			struct file *file, unsigned int open_flags,
-> +			umode_t mode)
-> +{
-> +
-> +	/* Same as look+open from lookup_open(), but with different O_TRUNC
-> +	 * handling.
-> +	 */
-> +	int error =3D 0;
-> +
-> +	if (open_flags & O_CREAT) {
-> +		file->f_mode |=3D FMODE_CREATED;
-> +		error =3D nfs_do_create(dir, dentry, mode, open_flags);
-> +		if (error)
-> +			return error;
-> +		return finish_open(file, dentry, NULL);
-> +	} else if (d_in_lookup(dentry)) {
-> +		/* The only flags nfs_lookup considers are
-> +		 * LOOKUP_EXCL and LOOKUP_RENAME_TARGET, and
-> +		 * we want those to be zero so the lookup isn't skipped.
-> +		 */
-> +		struct dentry *res =3D nfs_lookup(dir, dentry, 0);
-> +
-> +		d_lookup_done(dentry);
-> +		if (unlikely(res)) {
-> +			if (IS_ERR(res))
-> +				return PTR_ERR(res);
-> +			return finish_no_open(file, res);
-> +		}
-> +	}
-> +	return finish_no_open(file, NULL);
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(nfs_atomic_open_v23);
-> +
->  struct dentry *
->  nfs_add_or_obtain(struct dentry *dentry, struct nfs_fh *fhandle,
->  				struct nfs_fattr *fattr)
-> @@ -2303,18 +2340,23 @@ EXPORT_SYMBOL_GPL(nfs_instantiate);
->   * that the operation succeeded on the server, but an error in the
->   * reply path made it appear to have failed.
->   */
-> -int nfs_create(struct mnt_idmap *idmap, struct inode *dir,
-> -	       struct dentry *dentry, umode_t mode, bool excl)
-> +static int nfs_do_create(struct inode *dir, struct dentry *dentry,
-> +			 umode_t mode, int open_flags)
->  {
->  	struct iattr attr;
-> -	int open_flags =3D excl ? O_CREAT | O_EXCL : O_CREAT;
->  	int error;
-> =20
-> +	open_flags |=3D O_CREAT;
-> +
->  	dfprintk(VFS, "NFS: create(%s/%lu), %pd\n",
->  			dir->i_sb->s_id, dir->i_ino, dentry);
-> =20
->  	attr.ia_mode =3D mode;
->  	attr.ia_valid =3D ATTR_MODE;
-> +	if (open_flags & O_TRUNC) {
-> +		attr.ia_size =3D 0;
-> +		attr.ia_valid |=3D ATTR_SIZE;
-> +	}
-> =20
->  	trace_nfs_create_enter(dir, dentry, open_flags);
->  	error =3D NFS_PROTO(dir)->create(dir, dentry, &attr, open_flags);
-> @@ -2326,6 +2368,12 @@ int nfs_create(struct mnt_idmap *idmap, struct inode=
- *dir,
->  	d_drop(dentry);
->  	return error;
->  }
-> +
-> +int nfs_create(struct mnt_idmap *idmap, struct inode *dir,
-> +	       struct dentry *dentry, umode_t mode, bool excl)
-> +{
-> +	return nfs_do_create(dir, dentry, mode, excl ? O_EXCL : 0);
-> +}
->  EXPORT_SYMBOL_GPL(nfs_create);
-> =20
->  /*
-> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-> index cbbe3f0193b8..74bda639a7cf 100644
-> --- a/fs/nfs/nfs3proc.c
-> +++ b/fs/nfs/nfs3proc.c
-> @@ -986,6 +986,7 @@ static int nfs3_have_delegation(struct inode *inode, fm=
-ode_t flags)
-> =20
->  static const struct inode_operations nfs3_dir_inode_operations =3D {
->  	.create		=3D nfs_create,
-> +	.atomic_open	=3D nfs_atomic_open_v23,
->  	.lookup		=3D nfs_lookup,
->  	.link		=3D nfs_link,
->  	.unlink		=3D nfs_unlink,
-> diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-> index ad3a321ae997..d105e5b2659d 100644
-> --- a/fs/nfs/proc.c
-> +++ b/fs/nfs/proc.c
-> @@ -695,6 +695,7 @@ static int nfs_have_delegation(struct inode *inode, fmo=
-de_t flags)
->  static const struct inode_operations nfs_dir_inode_operations =3D {
->  	.create		=3D nfs_create,
->  	.lookup		=3D nfs_lookup,
-> +	.atomic_open	=3D nfs_atomic_open_v23,
->  	.link		=3D nfs_link,
->  	.unlink		=3D nfs_unlink,
->  	.symlink	=3D nfs_symlink,
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index d59116ac8209..039898d70954 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -561,6 +561,9 @@ extern int nfs_may_open(struct inode *inode, const stru=
-ct cred *cred, int openfl
->  extern void nfs_access_zap_cache(struct inode *inode);
->  extern int nfs_access_get_cached(struct inode *inode, const struct cred *c=
-red,
->  				 u32 *mask, bool may_block);
-> +extern int nfs_atomic_open_v23(struct inode *dir, struct dentry *dentry,
-> +			       struct file *file, unsigned int open_flags,
-> +			       umode_t mode);
-> =20
->  /*
->   * linux/fs/nfs/symlink.c
-> --=20
-> 2.44.0
->=20
->=20
->=20
+Thx.
 
+Best
+
+--=20
+
+Joel Granados
+
+--a36pnpbxxry3pzoc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYTmsoACgkQupfNUreW
+QU9ICwv6A6h0aHFqNdUCkstNuQDQL6/IKZsdnmejFWMbFZKYFjyGWo1/Qa5SnEmf
+5aN4REQAWpaHGznkRrbgZHVET5CqmXOIbIvP/+AZsENF0RfL0CZW6hcEjRMUF6tb
+jpJ8KT/wl2xmmvfCcZkV3rymYiOxwtp2lMdUM7Zx5QZ33CaStmeKvfoA8ngQX3Ri
+u2fO/A856mzsUuUvYqJsCRqNfe9LQZQ7uFEY+0f31BpCagdivfXyFpvFk7Ol0tvB
+k7DExa1ndy/G92OzYPEOsTdzRv9xlujgnBVHIapZ2Le6aZ1YGplwI3X+m1n7kNjV
+X10vWmuQOZ81xz2n3ZjdCPmu6VfWkwyBfkaVJ/ehqjYkfQ8+s80iSRxU/g6EV2oX
+fsfSUYyolzz1Vp8nllQRiWuygSAIeaLlpXl+vwa7rQKSdLYXsoC8YqM/gEBUThe3
+X/KQMPBl7qYM2CqAkoar8omqvkBratmAJwScZQEqZxGmosEn4KWDWc4de3toUFCR
+JsRQKj4e
+=iYz3
+-----END PGP SIGNATURE-----
+
+--a36pnpbxxry3pzoc--
 
