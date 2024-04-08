@@ -1,156 +1,184 @@
-Return-Path: <linux-nfs+bounces-2720-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2721-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 551BB89C8FC
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 17:55:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B42089CEEB
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 01:22:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E53411F22925
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 15:55:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 619831C2398F
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 23:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66358144D1C;
-	Mon,  8 Apr 2024 15:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95DCC376E4;
+	Mon,  8 Apr 2024 23:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIeF1ebO"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gh4MLppf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5a2ZI9u9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gh4MLppf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5a2ZI9u9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980C71448DC
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 15:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977DE1DA5E
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 23:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712591614; cv=none; b=T8iZQIizeHe3PRA9wXLyoNiKbrHa0gsIi/JSEFFfFVd9SUdee7MSOQqghGrbmKTfFsLN8C7S/t1Yk93HLOfZ2PFCJTzc+98T7ZEmfMqSZrdCrUpIdUeKfIgFullwRqy3WDgAggNfcEmDnJGBgaxWzfY+NjRKQTbeVd8YItTIoy4=
+	t=1712618527; cv=none; b=DSxAvHO/CHrsCvZl3BU/C5E1BAWnlXjvsKuxLT8vMUzw4Fhuzjs3PwjIUyTn9u5HRRYuCjJ46oCBjqS1LA1tqc/YObP0HKXwXQPW2sH8iokW3P0qEXwpnGv1A34YwlnPjSNz0UjrvZy190qGOWlQPDFgFwFmsiSxrSm0itT5lII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712591614; c=relaxed/simple;
-	bh=c7hBMA4mXgWP8KpfW/frrWt9OAipSAHQsJKBjgulmnE=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=rqRRpZyNxsKWWfcRh9oXcs0Wx/NW2XSDNuyypuCDsmiaF+Kd5odbE1xTZ43q8xieORSzo8Aa/GvvuyOHp8Co16rmsxGnq/tHexAeZ7LNJwUEuVtCthJ4aa59d2oJI4v0HV2b0f7Ck+lPrzWDPYG5wb4nLgndg+dNQ6qx9RDoR84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dIeF1ebO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712591611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1712618527; c=relaxed/simple;
+	bh=V2BLnGDG+VEZzilg7sbkbebzvS5Q184WyPDWroq1Af8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=cz/vqPghUWeUKBpidBZpe98wkqM3UuE5mfJ+BxPMF7+IXMJw/0WTO13Oh0zL+TDwwlUyLdzvjtx45HuwfMx9RfLI/+1f8yAnra5WCo7bO4PTVSNiTwaEgnof1BFTjnB64eRUKCsZqjz9tdVx0tidkDO+5X0jhXfC+BMPxL2pyeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gh4MLppf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5a2ZI9u9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gh4MLppf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5a2ZI9u9; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9A79920630;
+	Mon,  8 Apr 2024 23:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712618523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CFuGX1yyoTN69ecCATsVj4UhORzkDiRUWoktVVAJ3+Q=;
-	b=dIeF1ebOegZWiRj/ljFY2YixheQ4VmISq9HTLX90TmNq+gmo2ikIrzQD974z21YnE6oCJk
-	XrepgMB6oAgHcMqGP2XPukcNfESDrrw1v3w0MrQnizCpPotRELZK5OOUMDqUTJhxWkSJdr
-	voGeBYJxsuHLjOzHSEFKQ3awKNV0bhw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-137-HJAhESVFMaKi_61YaghcgA-1; Mon, 08 Apr 2024 11:53:27 -0400
-X-MC-Unique: HJAhESVFMaKi_61YaghcgA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	bh=sCgKxYDV1WGtJX7A7AeKfiscYrpJ7Qn53HFIRBePbOM=;
+	b=gh4MLppfkLuWSR4Omi0/PRXq62/U9JWHsDsTa07iF1LbcDdt/WOK5b3zuZoIfJdJcINW9c
+	T4KxAxbel6N9sSXDtEo/fGqI1j9CYHG3F0MXv4b3KySU9YnLkz2kYTfIOoYUNWdKr1NYSc
+	KEV/Pvsth9rFCikTXNoy1bkYFDXiSeo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712618523;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCgKxYDV1WGtJX7A7AeKfiscYrpJ7Qn53HFIRBePbOM=;
+	b=5a2ZI9u9OLgkQmTmYCrRVemgWQrUEjRgswUfITiUMhFGQ/XgztiiwjARmVrhbZlb0RWXcj
+	qK6oNZyr13s08iDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gh4MLppf;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5a2ZI9u9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712618523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCgKxYDV1WGtJX7A7AeKfiscYrpJ7Qn53HFIRBePbOM=;
+	b=gh4MLppfkLuWSR4Omi0/PRXq62/U9JWHsDsTa07iF1LbcDdt/WOK5b3zuZoIfJdJcINW9c
+	T4KxAxbel6N9sSXDtEo/fGqI1j9CYHG3F0MXv4b3KySU9YnLkz2kYTfIOoYUNWdKr1NYSc
+	KEV/Pvsth9rFCikTXNoy1bkYFDXiSeo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712618523;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCgKxYDV1WGtJX7A7AeKfiscYrpJ7Qn53HFIRBePbOM=;
+	b=5a2ZI9u9OLgkQmTmYCrRVemgWQrUEjRgswUfITiUMhFGQ/XgztiiwjARmVrhbZlb0RWXcj
+	qK6oNZyr13s08iDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EEA2C90ACC7;
-	Mon,  8 Apr 2024 15:53:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 084C62033AC1;
-	Mon,  8 Apr 2024 15:53:21 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-24-dhowells@redhat.com>
-References: <20240328163424.2781320-24-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-    Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Gao Xiang <hsiangkao@linux.alibaba.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
-    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-    Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH 23/26] netfs: Cut over to using new writeback code
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8374B13675;
+	Mon,  8 Apr 2024 23:22:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xpU0CRh8FGagTQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 08 Apr 2024 23:22:00 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <877901.1712591597.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Apr 2024 16:53:17 +0100
-Message-ID: <877902.1712591597@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+From: "NeilBrown" <neilb@suse.de>
+To: "Chen Hanxiao" <chenhx.fnst@fujitsu.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSD: remove redundant dprintk in exp_rootfh
+In-reply-to: <20240408150636.417-1-chenhx.fnst@fujitsu.com>
+References: <20240408150636.417-1-chenhx.fnst@fujitsu.com>
+Date: Tue, 09 Apr 2024 09:21:54 +1000
+Message-id: <171261851499.17212.4957589707094499321@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.39 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	BAYES_HAM(-0.88)[85.81%];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,fujitsu.com:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 9A79920630
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.39
 
-David Howells <dhowells@redhat.com> wrote:
+On Tue, 09 Apr 2024, Chen Hanxiao wrote:
+> trace_nfsd_ctl_filehandle in write_filehandle has
+> some similar infos.
 
-> +		/* Wait for writeback to complete.  The writeback engine owns
-> +		 * the info in folio->private and may change it until it
-> +		 * removes the WB mark.
-> +		 */
-> +		if (folio_wait_writeback_killable(folio)) {
-> +			ret =3D written ? -EINTR : -ERESTARTSYS;
-> +			goto error_folio_unlock;
-> +		}
-> +
+Not all that similar.  The dprintk you are removing includes the inode
+number and sb->s_id which the trace point don't include.
 
-It turns out that this really kills performance with fio with as many jobs=
- as
-cpus.  It's taking up to around 8x longer to complete a pwrite() on averag=
-e
-and perf shows a 30% of the CPU cycles are being spent in contention on th=
-e
-i_rwsem.
+Why do you think that information isn't needed?
 
-The reason this was added here is that writeback cannot take the folio loc=
-k in
-order to clean up folio->private without risking deadlock vs the truncatio=
-n
-routines (IIRC).
+NeilBrown
 
-I can mitigate this by skipping the wait if folio->private is not set and =
-if
-we're not going to attach anything there (see attached).  Note that if
-writeout is ongoing and there is nothing attached to ->private, then we sh=
-ould
-not be engaging write-streaming mode and attaching a new netfs_folio (and =
-if
-we did, we'd flush the page and wait for it anyway).
 
-The other possibility is if we have a writeback group to set.  This only
-applies to ceph for the moment and is something that will need dealing wit=
-h
-if/when ceph is made to use this code.
 
-David
----
-
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 1eff9413eb1b..279b296f8014 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -255,7 +255,8 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct=
- iov_iter *iter,
- 		 * the info in folio->private and may change it until it
- 		 * removes the WB mark.
- 		 */
--		if (folio_wait_writeback_killable(folio)) {
-+		if (folio_get_private(folio) &&
-+		    folio_wait_writeback_killable(folio)) {
- 			ret =3D written ? -EINTR : -ERESTARTSYS;
- 			goto error_folio_unlock;
- 		}
+>=20
+> write_filehandle is the only caller of exp_rootfh,
+> so just remove the dprintk parts.
+>=20
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> ---
+>  fs/nfsd/export.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>=20
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index 7b641095a665..e7acd820758d 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -1027,9 +1027,6 @@ exp_rootfh(struct net *net, struct auth_domain *clp, =
+char *name,
+>  	}
+>  	inode =3D d_inode(path.dentry);
+> =20
+> -	dprintk("nfsd: exp_rootfh(%s [%p] %s:%s/%ld)\n",
+> -		 name, path.dentry, clp->name,
+> -		 inode->i_sb->s_id, inode->i_ino);
+>  	exp =3D exp_parent(cd, clp, &path);
+>  	if (IS_ERR(exp)) {
+>  		err =3D PTR_ERR(exp);
+> --=20
+> 2.39.1
+>=20
+>=20
+>=20
 
 
