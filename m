@@ -1,131 +1,211 @@
-Return-Path: <linux-nfs+bounces-2714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79BCB89BCF6
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 12:24:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B28BA89BDAF
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 13:01:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BC371C216EB
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 10:24:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8B63B20E03
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Apr 2024 11:01:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4729653E0A;
-	Mon,  8 Apr 2024 10:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDCA764CD1;
+	Mon,  8 Apr 2024 11:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b75lG6Rc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YW3VY5wV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71E53E02
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 10:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126D164CCC
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Apr 2024 11:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712571868; cv=none; b=VlsU+iCWjhpFZu7wDdyM/V1+yVzoPFzUtJCzeBqxXxQGNubRgVGX+uB9N05Da+tknVEDasP51ffzQTL70ojRIq3sZSsPjWXQrxpyC9TzjuZcILdxnsGLmO5ajM+6HvChd7cxCKG655Ebxg9jJwMiTYgzqIhVUko14f/AKA596EU=
+	t=1712574086; cv=none; b=eFNNJs8eKlYxvUHRj6+/9nPKO6FG4P2j40/5jxEldjONgjxtbf7sMIIZkSVdlzPk2yAxfSEODBOrJWs/CO6+k1V6mL8Go/IatebxcIImwD/0Gr8+S+Mnj2iYMqDSrCmvTfn5G/qq9AiUYd4CIJNKRpQ/UjOJ7JlyozT9oDLoT/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712571868; c=relaxed/simple;
-	bh=EE634LcnONZJVa+zF86GlMNIzDKLdmGhRpdPVa/GkMY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LHhkZgfLouCA7E7EwCcCkTN+81WDvqEH+kFAt7x/FnSfhb/TT0lF2dWqRR6ydSCi1FEzsSN5wxIk5odkzdEWTYk4yZzO3B6tv56Z23kvFw2UvPT0SOsH+1mywrIrC7dLBiWuIhJd0xcjTnt26MSWkCdDMfU7Pm1J4Vv9PTT7D7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b75lG6Rc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC5CC433C7;
-	Mon,  8 Apr 2024 10:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712571867;
-	bh=EE634LcnONZJVa+zF86GlMNIzDKLdmGhRpdPVa/GkMY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=b75lG6RcEPcYRd/GQcQ6TtjjqcgKTD3r4s+MGcPfCeTeco/Gwh8P+1Ecd3mfHwf+J
-	 l53Ttz9R3C4r5G/aLwXzY1HdcYqrYOmKLRQgDbxM1LBBCICy4K5iDyVDSG5fEhWPSY
-	 tFQn+rpTsoiIUpjYE3qIzeTxF5RCwcieG4pUsiMb42Ix1Mr63IC4mIyLJSHgUWdo7j
-	 nZVbi+fgVPCDm7s2StpPHFiAcr1Fj4kqV86XN5M24/ty8vS7+BYehpfe2Uu06jjc9N
-	 5h5l81g6LWABVq6fwlHk5ONjtm0dJnY9nN75Bv6ufw2grrajCuRMdQ0YMbkjxE/4oy
-	 DJOOWzSsKd6jA==
-Message-ID: <d4c47d1813fec0c1ab6bba539d3c3f7f39daab7c.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: optimise recalculate_deny_mode() for a common case
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>, Olga
- Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 08 Apr 2024 06:24:25 -0400
-In-Reply-To: <171253979210.17212.5851835299179227478@noble.neil.brown.name>
-References: <171253979210.17212.5851835299179227478@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1712574086; c=relaxed/simple;
+	bh=JVCMk/bmIc935azmpezucoQcAp5jW7JznaogXkQTQOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OjKPBcYc2DqDHImu3y7d7+ZpJuIA16EIhpKMKcOumSL9zMqpES0IPkaZABtuPJFXHWBPq1ubwt+z/ykTPCbJ40+ll1Rpk1xtK1RKinIvVw2dPboqPmRLq2zwfY2eoRXiOUfxJHIlahuV3U7pniU/wE9WFC4yZVqJ5JPcfHsO+1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YW3VY5wV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712574083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hyyySz7D6fkVaZFIKq8B/4VeoXWIW0Nfu7L/uI7UTPI=;
+	b=YW3VY5wVXQQX0urf6vrRvzdG8rAVL0ie6C3vQatpopmzaIDkls2QMi7+wM0g4ddfsV0hQl
+	UNRYBXNfxZbr4/UfOJNEsncASwd9rEAE3wfD+RtJb/q/WGii5Iuat07XIZu6gYwWhCjBQo
+	2gLats44CTdeMWCCnp80t5xjqmUoTtc=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-642-RK_AbwWLOQmsmWmeICIBZA-1; Mon, 08 Apr 2024 07:01:21 -0400
+X-MC-Unique: RK_AbwWLOQmsmWmeICIBZA-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2a52e0e73eeso234655a91.1
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Apr 2024 04:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712574080; x=1713178880;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hyyySz7D6fkVaZFIKq8B/4VeoXWIW0Nfu7L/uI7UTPI=;
+        b=D1Q6oqw+DKBRgz76VfCi1zZsmDPLBtvtEf1ekMPAKjwoPR1ENKqHOud7inA1Pr6j6/
+         9jPsL5Wosci4BMn1Tc1ey7Bc2IOrVL0nXdxM/I+c41GUKUL2NKlb0By5WqjqwmjiBSyE
+         FxoNAoGTntA7ehNzFoON1H9Pc8VRP7/IOMzK7pX3mksIrHFuDSMdBcoDOhHirH0Kyqnl
+         fWXBPKnb+skZ+UbrDiwfmwbNM+zRtyLuRUQNCGjDzNAOGnWikT52LoZikMGf/Vj1kqxg
+         oJEh7XuO8Nh0scPy2z++6TL7XGwSBxkh2SvLjDgwtpx0qxFLuP2TaBLfBin3TyvqFmpq
+         3z7Q==
+X-Gm-Message-State: AOJu0YzCIv6awtGj7K1rTL5t0ETPk/8P2s99Q3QCTeQLlLq5LHMlm0W3
+	/ebIxCc39xy5OJlqaDtfmUkOl+SsGp1eL9BlylfVTqXyoSGa07JB7d9sz0NLY7TtXx2gWUb1RhE
+	Je9jYWV8J/EAlM5Q4Giz9djlojZ13ebCE6mM9pdNUm0nirv0pOV37GFDPxA==
+X-Received: by 2002:a17:90a:7d0e:b0:2a4:9464:d2ac with SMTP id g14-20020a17090a7d0e00b002a49464d2acmr6345894pjl.2.1712574080511;
+        Mon, 08 Apr 2024 04:01:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZCYLTLteZxn9N7v3aqmnudnS6vlseiZC4M0KmmhYmkYg8bEuZ9QUT7BSr6P64F7tF7G9ZUg==
+X-Received: by 2002:a17:90a:7d0e:b0:2a4:9464:d2ac with SMTP id g14-20020a17090a7d0e00b002a49464d2acmr6345876pjl.2.1712574080108;
+        Mon, 08 Apr 2024 04:01:20 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.134.36])
+        by smtp.gmail.com with ESMTPSA id c24-20020a17090abf1800b002a2884e9f44sm6187260pjs.14.2024.04.08.04.01.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 04:01:19 -0700 (PDT)
+Message-ID: <6dbecf8d-1074-48bb-8395-e4edf2c53109@redhat.com>
+Date: Mon, 8 Apr 2024 07:01:13 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfs-utils' .service files not usable with nfsv4-server.service
+To: Ian Kent <raven@themaw.net>, Chuck Lever III <chuck.lever@oracle.com>,
+ Matt Turner <mattst88@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CAEdQ38GJgxponxNxkcv+t8mhwRPzOjan58MTBgOL8p9tY=rvTw@mail.gmail.com>
+ <79c69668-4f8e-448e-9f50-6977cda662fc@redhat.com>
+ <CAEdQ38FOP0_g0FK5DYz954OwfJjLUf2pjQL1CX=VNC60kd8HEw@mail.gmail.com>
+ <50d1fcab-ba94-405e-896a-5bbae128998b@redhat.com>
+ <3138D81C-EAD9-41CD-A32D-DEA4AA002CEE@oracle.com>
+ <1a5a0fcd-0514-42ae-8d22-2d534327447f@themaw.net>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <1a5a0fcd-0514-42ae-8d22-2d534327447f@themaw.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-04-08 at 11:29 +1000, NeilBrown wrote:
-> recalculate_deny_mode() takes time that is linear in the number of
-> stateids active on the file.
->=20
-> When called from
->   release_openowner -> free_ol_stateid_reaplist ->nfs4_free_ol_stateid
->   -> release_all_access
->=20
-> the number of times it is called is linear in the number of stateids.
-> The net result is that time taken by release_openowner is quadratic in
-> the number of stateids.
->=20
-> When the nfsd server is shut down while there are many active stateids
-> this can result in a soft lockup. ("CPU stuck for 302s" seen in one case)=
-.
->=20
-> In many cases all the states have the same deny modes and there is no
-> need to examine the entire list in recalculate_deny_mode().  In
-> particular, recalculate_deny_mode() will only reduce the deny mode,
-> never increase it.  So if some prefix of the list causes the original
-> deny mode to be required, there is no need to examine the remainder of
-> the list.
->=20
-> So we can improve recalculate_deny_mode() to usually run in constant
-> time, so release_openowner will typically be only linear in the number
-> of states.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4state.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 1824a30e7dd4..a46f5230bc9b 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1409,11 +1409,16 @@ static void
->  recalculate_deny_mode(struct nfs4_file *fp)
->  {
->  	struct nfs4_ol_stateid *stp;
-> +	u32 old_deny;
-> =20
->  	spin_lock(&fp->fi_lock);
-> +	old_deny =3D fp->fi_share_deny;
->  	fp->fi_share_deny =3D 0;
-> -	list_for_each_entry(stp, &fp->fi_stateids, st_perfile)
-> +	list_for_each_entry(stp, &fp->fi_stateids, st_perfile) {
->  		fp->fi_share_deny |=3D bmap_to_share_mode(stp->st_deny_bmap);
-> +		if (fp->fi_share_deny =3D=3D old_deny)
-> +			break;
-> +	}
->  	spin_unlock(&fp->fi_lock);
->  }
-> =20
+Hey Ian!
 
-Clever!
+Good to hear from you!!
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+On 4/7/24 7:57 PM, Ian Kent wrote:
+> On 8/4/24 00:29, Chuck Lever III wrote:
+>>> On Apr 7, 2024, at 10:45 AM, Steve Dickson <steved@redhat.com> wrote:
+>>>
+>>> On 4/6/24 6:26 PM, Matt Turner wrote:
+>>>> On Sat, Apr 6, 2024 at 4:37 PM Steve Dickson <steved@redhat.com> wrote:
+>>>>> Unfortunately the idea of having a nfsv4 only server
+>>>>> did not go over well with upstream.
+>>>> Which upstream do you mean? nfs-utils, Linux kernel?
+>>> The NFS server maintainers... they didn't push back hard
+>>> but the didn't it was necessary.
+>> I'm sympathetic to some folks wanting a narrower footprint,
+>> but I think we'd like to have support for all versions
+>> packaged and available for an NFS server administrator,
+>> right out of the shrink-wrap. Currently, most installations
+>> want to deploy v3 and v4, so we should cater to the common
+>> case.
+> 
+> I have to say I agree with Chuck.
+Yes... I definitely see Chuck's point.
+
+> 
+> 
+> Over the years I have had to deal with the consequences of dropping support
+> 
+> for NFS versions. So far that has been at the distribution level but if it
+> 
+> had been at the upstream level I would have had a much harder time of it.
+> 
+> 
+> am-utils for example, yes it's maybe not a good case because it lacks 
+> upstream
+> 
+> support nowadays, but I still work on it. It uses an NFS client 
+> implementation
+> 
+> to provide automount support and NFS v2 was ideal for the localhost 
+> server but
+> 
+> v2 support was removed from distro kernel builds and I had to implement 
+> an NFS
+> 
+> v3 server for this which was very much overkill.
+My apologies... That was me. Removing v2 cut down
+the testing matrix two-fold. v3 was there to replace
+v2... I just did the obvious.
+
+> 
+> 
+> Now there's talk of dropping v3 support which will spell the end of 
+> am-utils,
+> 
+> unnecessarily IMHO.
+Yes... I was poking the bear when I said "deprecate" v3. Knowing
+full well it would go over like a lead balloon :-)
+
+But coming up with a way of separating the protocols
+so only one can be used (client or server) in VMs or
+containers is a bad idea?
+
+> 
+> 
+> I can understand the urge to drop v2 but there are still many v3 users 
+> so I wonder
+> 
+> about the wisdom of even thinking about dropping v3 support and multiple 
+> packages,
+> 
+> IMHO, will introduce an unnecessary downstream overhead. It's hard 
+> enough to keep
+> 
+> up with the workload as it is.
+> 
+> 
+> I also gat that mostly what I'm saying has happened at distro level but 
+> please don't
+> 
+> go down this path upstream too.
+You are right... this is distro level conversation but
+upstream should be involved... IMHO.
+
+steved.
+
+> 
+> 
+> Ian
+> 
+>>
+>> As I recall, the NFSv4-only mechanism proposed at the time
+>> was pretty clunky. If you have alternative ideas, I'm happy
+>> to consider them. But let's recognize that an NFSv4-only
+>> deployment is the special case here, and not make life more
+>> difficult for everyone else, especially folks who might
+>> start with an NFSv4-only deployment and need to add NFSv3
+>> later, for whatever crazy reason.
+>>
+>> The nfs-server unit should be made to do the right thing
+>> no matter what is installed on the system and no matter what
+>> is in /etc/nfs.conf. I don't see why screwing with the
+>> distro packaging is needed?
+>>
+>> -- 
+>> Chuck Lever
+>>
+>>
+> 
+
 
