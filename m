@@ -1,161 +1,277 @@
-Return-Path: <linux-nfs+bounces-2733-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2734-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFCC089DE11
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 17:10:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A8A689E170
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 19:20:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 603FB1F2AEF6
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 15:10:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 482201C209CD
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 17:20:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5B012FF80;
-	Tue,  9 Apr 2024 15:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E67155755;
+	Tue,  9 Apr 2024 17:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Orqin6a1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CU1G2vTv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C5D13AA45
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Apr 2024 15:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FE7153582
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Apr 2024 17:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675087; cv=none; b=m2Q+IQpvsr194tNpPcQDtYGIUoEv08HEaAZkFQ0YS+Fpbch+viTxlomFcH/s/kCefAOibyLZK1RKYcs6bLisWBjsUXwfyB8vAgGlf/nOuDJH5Uni0aJmT2NBC3EfgA6NUZqMNf3I1C2xyUuF2x1d1Po0N8707XrbC3Yp+P/IG7Q=
+	t=1712683225; cv=none; b=Qo4B24v1ZT64p+BLyBp+Gwsu594P+j+YK5fjTq12B3LjJjDEyagql5SvIFE2WxCus65LJCwz/WnxlHXapooZPWRiivpILHXQlBYTC5QRaOld4Lk91VpOlfvkoldv9aXaZbBQiWZr7lbCYr1LHv0nUijirzOBtk62OYQN9TP34bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675087; c=relaxed/simple;
-	bh=IgSWaltl2r18/a5Lkw2jaYq65Cde60fIBWmAgRiy11s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p+WzTo3wQaIslDSrbhp8NM1L8/phqa/TdP2CVAW7yRINq8Q18HkX3s4GwhBNW3hw5CKYyQi3b/vjXCM9fasLv1QWx/9/5eW/hAr9yU2sMzt60n3ZUTU+jlCl91GkBSrgPI7caJCwLanXdUZLNyE4oHi6nQ638LmTIqyYaCmdtkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Orqin6a1; arc=none smtp.client-ip=68.232.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1712675084; x=1744211084;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IgSWaltl2r18/a5Lkw2jaYq65Cde60fIBWmAgRiy11s=;
-  b=Orqin6a1jf02NvtqCDN6SLXGZUcoN8IEK1ylW9uUbDjnmfO4SKwLV6DG
-   nlHW03XWXTZMSfYsgaoD8Xmr2zmjSS7J8BWRDs+oQUQkywqflRKfrZe09
-   NFxm93mvOGfFboKM0WwmRgxH8pZkkO8nHYbpc67Mty9aD6+IVAJg0ugFJ
-   jUGPXXgvePcKeLrAaAI/ybHgBuMMKN5oOhzsngvj5qAMIhmaIckuZ66Ol
-   xEbCGhyMPr9vfboYq+J5Qt1/lGbgXsBPaZzped78a2Kuuv/2uzwVdb3Ug
-   8TloDIMXLEjaE9u8K84UYGtZ7WY7UVxu4I/zBd1zGO/vO2CkGZq3JRixe
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="155334004"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708354800"; 
-   d="scan'208";a="155334004"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 00:04:36 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 39B1DEB4DE
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Apr 2024 00:04:34 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 6DDBA31AE4
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Apr 2024 00:04:33 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 035871EB429
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Apr 2024 00:04:33 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 54C671A0002;
-	Tue,  9 Apr 2024 23:04:32 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2] NFSv4: add tracepoint to referral events
-Date: Tue,  9 Apr 2024 23:04:27 +0800
-Message-Id: <20240409150427.463-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+	s=arc-20240116; t=1712683225; c=relaxed/simple;
+	bh=XWlhy8RgDEgzAP6fnoqFyKPgZ4TlNWZG9SzCGGrvMpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d6xx1hFj8nNhvjd5DREpBTBMIO88zWH/P+2iOvfW4zWVTn7U45mLjgR2ZGLEWWVGQ9A1cgfDD2xIGOUJ15VPQGscpYDITvK7IHvs8oYz4dDz2vU5t/GhUXX9sJ/hc6Sax6Xz4G87xQzwT1HOYVTG2tC4E8oVxWzqDg54JEQGaDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CU1G2vTv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712683222;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DyulDX8B+7wqe2y8jwpBMqQnsDSbah2LbCKEmdCDEzs=;
+	b=CU1G2vTvoQpPb1uw+ezyArbopTpfWilAiUirzUa/J2XY+eJjaNwTPnAhpxnLOJua8zCqC2
+	2lMQDod7eXdcWRxIZyNITBkNQra1bPka3i6K8FIdjVPtV4/3dn6kJRU/JFm2o++iAlLZa4
+	EidA8NTArSrPwpKemMUMzbXe56Nj+C8=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639-FJFZq2QGOGWbPpnsPKpnlw-1; Tue, 09 Apr 2024 13:20:20 -0400
+X-MC-Unique: FJFZq2QGOGWbPpnsPKpnlw-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-78d670996e4so27349185a.1
+        for <linux-nfs@vger.kernel.org>; Tue, 09 Apr 2024 10:20:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712683220; x=1713288020;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DyulDX8B+7wqe2y8jwpBMqQnsDSbah2LbCKEmdCDEzs=;
+        b=IhCzZeUOrIcoV/cWiY+c0o+UiS+ulPM43UOKtsauwrS2mXa7FW0PFuvKV4frlhVHZY
+         XI2nwYcCQawlWU6jg0sqEP9IRg+O4z3vVRUnXyNBeCP+jhzPEtWqwv397cpc8ea3kh/h
+         5sbXyIfA1o6zbiMBka6HcOVu79z5zFgaHKWMUPqghIRJXUzejEaoD/0UYxaTpyDDIf25
+         FGjQnvfyr3CwZEFyruJ4YzswttX+IjHwPDibz1y0/591Flj5Rje+UM+k/o8HidaecG2M
+         EEwRPRmSkeSCVXwSDhdPcowSxXvd08i7K1Hj5JJAFoW3mJHY6W5o6UezSZnZ6dWSvqc5
+         41og==
+X-Gm-Message-State: AOJu0YxehUf7iDZ8A9K3REawIVWPmFYK4vgXUoxS256wl8a0cvrCHDoh
+	/h8mZNpw1yjRbrYcV3kGg0Dt+ZkWPAYiprVqhv3AlJU4Bx2GoDIvLi+AJ9OBHAdF7hYYtnOuweD
+	nxdgJujF3MG9bNoRWPWXtTy2XP6qPXD+5tB88XITOnfNnk83GPPOMuC3ezQ==
+X-Received: by 2002:a05:620a:7181:b0:78d:7727:123b with SMTP id vm1-20020a05620a718100b0078d7727123bmr230979qkn.4.1712683220461;
+        Tue, 09 Apr 2024 10:20:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4HAQ2fAUffybR467xfp4qHSYAR7urASj0NcaUTwE7mNvSLGmNk9jYowamHL4WSwWfKa1DmQ==
+X-Received: by 2002:a05:620a:7181:b0:78d:7727:123b with SMTP id vm1-20020a05620a718100b0078d7727123bmr230962qkn.4.1712683220157;
+        Tue, 09 Apr 2024 10:20:20 -0700 (PDT)
+Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t30-20020a05620a035e00b0078d74f1d3c8sm373683qkm.110.2024.04.09.10.20.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 10:20:19 -0700 (PDT)
+Message-ID: <8f363925-e72b-4484-9a94-aed044bb1967@redhat.com>
+Date: Tue, 9 Apr 2024 13:20:18 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfs-utils' .service files not usable with nfsv4-server.service
+To: Ian Kent <raven@themaw.net>, Chuck Lever III <chuck.lever@oracle.com>,
+ Matt Turner <mattst88@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CAEdQ38GJgxponxNxkcv+t8mhwRPzOjan58MTBgOL8p9tY=rvTw@mail.gmail.com>
+ <79c69668-4f8e-448e-9f50-6977cda662fc@redhat.com>
+ <CAEdQ38FOP0_g0FK5DYz954OwfJjLUf2pjQL1CX=VNC60kd8HEw@mail.gmail.com>
+ <50d1fcab-ba94-405e-896a-5bbae128998b@redhat.com>
+ <3138D81C-EAD9-41CD-A32D-DEA4AA002CEE@oracle.com>
+ <1a5a0fcd-0514-42ae-8d22-2d534327447f@themaw.net>
+ <6dbecf8d-1074-48bb-8395-e4edf2c53109@redhat.com>
+ <b881f549-6b50-4ab3-9df3-bebdaa326a70@themaw.net>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <b881f549-6b50-4ab3-9df3-bebdaa326a70@themaw.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28308.000
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28308.000
-X-TMASE-Result: 10-2.564800-10.000000
-X-TMASE-MatchedRID: a4Q7dosAlP7/R1NSMc2qCR1kSRHxj+Z5TfK5j0EZbytWV9kWJGISDugo
-	SvaKsl/kIvrftAIhWmLy9zcRSkKatYrOQQ708E7z0wmR34xRQc8JHI5dPooIdZsoi2XrUn/Jn6K
-	dMrRsL14qtq5d3cxkNaHyYZQs3SFqRiOEZqLwepvyiipPbUQwzzaR1mrkCr5l4sqGrcM5uA0toC
-	Wfz7hxHL3BGRiTEl9VHLH1RtzG1aN2G8uYdF1HEFg5TGo5k/wfFcUQf3Yp/ridO0/GUi4gFb0fO
-	PzpgdcEKeJ/HkAZ8Is=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Trace new locations when hitting a referral.
 
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
----
-v2:
-	fix a fat-finger typo
 
- fs/nfs/nfs4namespace.c |  3 +++
- fs/nfs/nfs4trace.h     | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+On 4/9/24 1:53 AM, Ian Kent wrote:
+> On 8/4/24 19:01, Steve Dickson wrote:
+>> Hey Ian!
+>>
+>> Good to hear from you!!
+>>
+>> On 4/7/24 7:57 PM, Ian Kent wrote:
+>>> On 8/4/24 00:29, Chuck Lever III wrote:
+>>>>> On Apr 7, 2024, at 10:45 AM, Steve Dickson <steved@redhat.com> wrote:
+>>>>>
+>>>>> On 4/6/24 6:26 PM, Matt Turner wrote:
+>>>>>> On Sat, Apr 6, 2024 at 4:37 PM Steve Dickson <steved@redhat.com> 
+>>>>>> wrote:
+>>>>>>> Unfortunately the idea of having a nfsv4 only server
+>>>>>>> did not go over well with upstream.
+>>>>>> Which upstream do you mean? nfs-utils, Linux kernel?
+>>>>> The NFS server maintainers... they didn't push back hard
+>>>>> but the didn't it was necessary.
+>>>> I'm sympathetic to some folks wanting a narrower footprint,
+>>>> but I think we'd like to have support for all versions
+>>>> packaged and available for an NFS server administrator,
+>>>> right out of the shrink-wrap. Currently, most installations
+>>>> want to deploy v3 and v4, so we should cater to the common
+>>>> case.
+>>>
+>>> I have to say I agree with Chuck.
+>> Yes... I definitely see Chuck's point.
+>>
+>>>
+>>>
+>>> Over the years I have had to deal with the consequences of dropping 
+>>> support
+>>>
+>>> for NFS versions. So far that has been at the distribution level but 
+>>> if it
+>>>
+>>> had been at the upstream level I would have had a much harder time of 
+>>> it.
+>>>
+>>>
+>>> am-utils for example, yes it's maybe not a good case because it lacks 
+>>> upstream
+>>>
+>>> support nowadays, but I still work on it. It uses an NFS client 
+>>> implementation
+>>>
+>>> to provide automount support and NFS v2 was ideal for the localhost 
+>>> server but
+>>>
+>>> v2 support was removed from distro kernel builds and I had to 
+>>> implement an NFS
+>>>
+>>> v3 server for this which was very much overkill.
+>> My apologies... That was me. Removing v2 cut down
+>> the testing matrix two-fold. v3 was there to replace
+>> v2... I just did the obvious.
+> 
+> Hehe, Yeah, I know.
+> 
+> 
+> But this seemed like a good opportunity to let you know these changes 
+> can be rather
+> 
+> inconvienient for some so that you have all the information when making 
+> changes at
+> 
+> a later time.
+Point taken....
 
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index 9a98595bb160..fca9fb801bc2 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -24,6 +24,7 @@
- #include "nfs4_fs.h"
- #include "nfs.h"
- #include "dns_resolve.h"
-+#include "nfs4trace.h"
- 
- #define NFSDBG_FACILITY		NFSDBG_VFS
- 
-@@ -351,6 +352,8 @@ static int try_location(struct fs_context *fc,
- 		p += ctx->nfs_server.export_path_len;
- 		*p = 0;
- 
-+		trace_nfs4_referral_location(ctx->nfs_server.hostname,
-+			ctx->nfs_server.export_path);
- 		ret = nfs4_get_referral_tree(fc);
- 		if (ret == 0)
- 			return 0;
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 10985a4b8259..d9e3e6560cb9 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -2604,6 +2604,31 @@ DEFINE_NFS4_XATTR_EVENT(nfs4_setxattr);
- DEFINE_NFS4_XATTR_EVENT(nfs4_removexattr);
- 
- DEFINE_NFS4_INODE_EVENT(nfs4_listxattr);
-+
-+TRACE_EVENT(nfs4_referral_location,
-+		TP_PROTO(
-+			const char *hostname,
-+			const char *path
-+		),
-+
-+		TP_ARGS(hostname, path),
-+
-+		TP_STRUCT__entry(
-+			__string(referral_hostname, hostname)
-+			__string(referral_path, path)
-+		),
-+
-+		TP_fast_assign(
-+			__assign_str(referral_hostname, hostname);
-+			__assign_str(referral_path, path);
-+		),
-+
-+		TP_printk(
-+			"referral_host=%s referral_path=%s",
-+			__get_str(referral_hostname),
-+			__get_str(referral_path)
-+		)
-+);
- #endif /* CONFIG_NFS_V4_2 */
- 
- #endif /* CONFIG_NFS_V4_1 */
--- 
-2.39.1
+> 
+> 
+> Even removing UDP support from the Fedora kernel config caused a problem 
+> for me.
+> 
+> 
+> Again, am-utils, it had a bug with it's background processing that was 
+> causing slow mounts
+> 
+> that, ASAICS, could only be fixed by using UDP (which is sensible for a 
+> service running or
+> 
+> localhost) or re-writting the entire application to use threads, a good 
+> idea but way too much
+> 
+> work.
+> 
+> 
+> OTOH we always knew the amd application would die in time to come so it 
+> isn't such a big
+> 
+> deal I suppose.
+Again it was a testing matrix thing... Plus TCP handled network
+congestion much better than NFS ever could
+
+> 
+> 
+>>
+>>>
+>>>
+>>> Now there's talk of dropping v3 support which will spell the end of 
+>>> am-utils,
+>>>
+>>> unnecessarily IMHO.
+>> Yes... I was poking the bear when I said "deprecate" v3. Knowing
+>> full well it would go over like a lead balloon :-)
+>>
+>> But coming up with a way of separating the protocols
+>> so only one can be used (client or server) in VMs or
+>> containers is a bad idea?
+> 
+> Yes, that's a bit harder and I think will require a division of the 
+> packages ...
+Right...
+
+steved.
+> 
+> 
+>>
+>>>
+>>>
+>>> I can understand the urge to drop v2 but there are still many v3 
+>>> users so I wonder
+>>>
+>>> about the wisdom of even thinking about dropping v3 support and 
+>>> multiple packages,
+>>>
+>>> IMHO, will introduce an unnecessary downstream overhead. It's hard 
+>>> enough to keep
+>>>
+>>> up with the workload as it is.
+>>>
+>>>
+>>> I also gat that mostly what I'm saying has happened at distro level 
+>>> but please don't
+>>>
+>>> go down this path upstream too.
+>> You are right... this is distro level conversation but
+>> upstream should be involved... IMHO.
+> 
+> Indeed, yes.
+> 
+> 
+> Ian
+> 
+>>
+>> steved.
+>>
+>>>
+>>>
+>>> Ian
+>>>
+>>>>
+>>>> As I recall, the NFSv4-only mechanism proposed at the time
+>>>> was pretty clunky. If you have alternative ideas, I'm happy
+>>>> to consider them. But let's recognize that an NFSv4-only
+>>>> deployment is the special case here, and not make life more
+>>>> difficult for everyone else, especially folks who might
+>>>> start with an NFSv4-only deployment and need to add NFSv3
+>>>> later, for whatever crazy reason.
+>>>>
+>>>> The nfs-server unit should be made to do the right thing
+>>>> no matter what is installed on the system and no matter what
+>>>> is in /etc/nfs.conf. I don't see why screwing with the
+>>>> distro packaging is needed?
+>>>>
+>>>> -- 
+>>>> Chuck Lever
+>>>>
+>>>>
+>>>
+>>
+> 
 
 
