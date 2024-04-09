@@ -1,292 +1,314 @@
-Return-Path: <linux-nfs+bounces-2727-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2728-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D756089D0A4
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 05:06:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DE3E89D210
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 07:53:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E9891F22B09
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 03:06:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93A461F22EBF
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Apr 2024 05:53:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 027BA54794;
-	Tue,  9 Apr 2024 03:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F270A657D4;
+	Tue,  9 Apr 2024 05:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vACUQuSu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p/PFA4fq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vVGbOFPN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WXBJh5f9"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="POB3HJkS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wDkukRnp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0260554756
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Apr 2024 03:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7346354FAF
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Apr 2024 05:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712631981; cv=none; b=osrHohoImhXK/hgseXCHBtEDOVIQtU68sJgbBY9TL0CFZ3n8TUP+NoRa52W7YJCtmJAramr9zWNiYfhRI3JYlmmqNSsDFMWDGv0ql2dzv6rxdOdTsbu/EyiuETFZ5zmzOOWyVqHlEmW1k0EqvO2SFJMFlcxI/F6/YK2egdepT74=
+	t=1712642002; cv=none; b=h/hAZoKgT6rUXZElCMKUCLkP5HglewG7ONhzBF3bIUpeZcIeWsfX6YSmZ6+6EeHedVT7FIIksdGYLwKotAzxBt+0B2O08orO4Et4WMpfn9cfxI1NxGFdoh9chsLa0PZ9e9vGM2HiPWE9b15xikIBLcZ6S0RNP+WCyLeiZbPZKVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712631981; c=relaxed/simple;
-	bh=pvRrVUklp5f5mTIEVOMoFNq60pFAMtVbBcnTRunQD6Y=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=fTFNHtTJDFlexYuDfJepr7gZGNRwNmz53B45LChZAxe3kHxsRGAH3FSnyjEX7TSssaZIwsvH6acOpjZH/pb5dcLkSvyRlOW0GrI0xfIwVVrz9frcVhC/vvmSuP5JVCVbY/+izU0X7FcXFEV7Rq6Ubb3jBDT8fzCNBasEz1VV8ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vACUQuSu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p/PFA4fq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vVGbOFPN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WXBJh5f9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CBD7733767;
-	Tue,  9 Apr 2024 03:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712631972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=itAR3SdmWKOZD6ctqNrtQKq2nghkVrAaQJnukF4w1oU=;
-	b=vACUQuSuaV67VkbOGEn8ohmZDXjoVw587VLmMURoFqOdlcJoAN6KekUoYmLZA3EoOjAAdV
-	jb/i5zF04I1JZkPb7TYOF+Wm+z61ZTOZEBcvpQ1Ul64iarTV9njh6aEDkVWlfNdkH1MCeK
-	WPoyBkG53buqpVVgDW1XvfW4E99IohA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712631972;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=itAR3SdmWKOZD6ctqNrtQKq2nghkVrAaQJnukF4w1oU=;
-	b=p/PFA4fqWitEGgZmoWoqWXn8Lsv+n/mpCuin8UHKCV3YeAcdgaNHd4kJn/ovulafYy7upf
-	Eww8c/oHWsP6D0Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vVGbOFPN;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WXBJh5f9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712631971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=itAR3SdmWKOZD6ctqNrtQKq2nghkVrAaQJnukF4w1oU=;
-	b=vVGbOFPNcw2VfPiUAVZ/Aqoe+WL7LIqR7NnFQR2gepJAOIQxBuIeSXiF5Bn+XFhuvtHFiZ
-	fIJ6kuPWoeaQom3RYrBLn+dxym6fIcWEwvr+xhNj2DLCOxpJrzlvWuadMONa+cTA7lMOEq
-	DjSDx1eIl7JI3e6GHxGqMaZgDBY9nTA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712631971;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=itAR3SdmWKOZD6ctqNrtQKq2nghkVrAaQJnukF4w1oU=;
-	b=WXBJh5f9QILYiarQHN9qHeJDN26RGdW8scM48GXUprANwF3vA+9IBwMgL3PJ5UFIi3lImF
-	kTiad4UCADXHtxCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CBA5E13675;
-	Tue,  9 Apr 2024 03:06:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dvqPG6CwFGZhAQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 09 Apr 2024 03:06:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1712642002; c=relaxed/simple;
+	bh=TbbjGo/MgpHHvYX2GvznjVtqtAM8ngSW5j5il8q4Kjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rHkI47ILg3ok2WzGRWfwK5qPlxRENhOQLj4zNIpIW8eHzfIJsAypf3LVCHq4kUgGPgl/RWQ6im2/53RSRN2lpyuVRfO3ysfQy1k4o12hCsqmYmr6IxkXMiPB09+OhKd76r3V7Dh/BR+UXehDx7SZ0LB3K52+JA/NTQL2n5yESZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=none smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=POB3HJkS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wDkukRnp; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=themaw.net
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 5A23E138025E;
+	Tue,  9 Apr 2024 01:53:19 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Tue, 09 Apr 2024 01:53:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1712641999;
+	 x=1712728399; bh=/qcVVpLBvI24Lzj7cBXq2r+TvOqg8xlwa7YH/PC/uvU=; b=
+	POB3HJkSdsljzUtpecO3KXT7YTpx8lwH1rNOn23KpfcJDWtmrSA3iE+IK3KTYT4g
+	AvimaObVsRxtMl5kfgqQIMQGO4j/+UbweJHJyEjGv+tqVQfJptXhVXDTxNC8BN7J
+	PYdTHr9yV9EE2gguoWq9+Q1WeZPbCUd0gqrXK1aa9/HG2iht1l3g93scg6CkAsCE
+	KsuAruawd1qpcvvLaYAlvqwdPVgUBf2sr9J6WwElSjYaM2I9W40e6XodRZa90CU3
+	ciIm75ASrAVzH/omLlyYdH+J6kRdrIEiauge5Qr+1RgjfOx85YqlP36n8Sy+3C/O
+	DH+RQEJBya0IgBGA2ByCog==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712641999; x=
+	1712728399; bh=/qcVVpLBvI24Lzj7cBXq2r+TvOqg8xlwa7YH/PC/uvU=; b=w
+	DkukRnpgY6lN0uQnkrVG3kLHXDmhpNHyCp8AmsuloexkG9WwryK+7W1AP0XbjYzL
+	l1KhLdcPJZeMxJqUhzWzqL4nLbG45dngGxaEEmVJ0oYRuA4Xez/G3uQYONGxiCA9
+	eE2QuIgEr78Qmb0uaz9/LRu8Q4qt4XCizHiAx1bRgVQyEgzYtDb+KCH4kBVMW/TH
+	lV2UCbfuREt9iHcM0vKAecY8uuD/K5BKjr71SBbptR4Ie1QeZBVIGaRcJ6Xfpdca
+	sHOouA3Ltl/nd7wYLWO8xgMyOCXKxZwQnrPkAGY0HoLWg8yCALeX68wcsrXrybCh
+	gHw5eG4GfXPePNSSPrWiw==
+X-ME-Sender: <xms:z9cUZnhcH0Aa-3Rp9-9jUJ9HtAw84pCcabscd0ueZ-gK7zMTT19V7Q>
+    <xme:z9cUZkBLBBHc0R1mtngoucuv08x6KVlRUQ0l6_FNMGGsPj43EzIDyl98Cw87iq1Wp
+    948F_NXwzA3>
+X-ME-Received: <xmr:z9cUZnHiz_BWMqVsb-iVCY27rASocWTycBOnykjjwkVRHgp5RKR2c-Jr4VINjm5jgw1qCwc3-JFfwdB8bPiqXk6sNcnLeZSMIzA-bB-QBySnbcXeqfHhvvgp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegkedgjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefkrghn
+    ucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnh
+    eptddugfehtddugfefgfdtjeeguddttdevfeehtedvfeeufefggffgvdeileetffegnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnh
+    esthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:z9cUZkRcBFFfFHlS5TSP_z1mjND6hZuaAfTqdD74dySnlcTPfKby3A>
+    <xmx:z9cUZkwltKwMq8Q9oFcfqTJ3XgIUnjInCxzmyr_5YWA-dXspU4JBDg>
+    <xmx:z9cUZq7FLC0PxqJ4PPCjWVXyV1-DyW2urvdjrfsiLhKoV3OB6wmBZQ>
+    <xmx:z9cUZpwQsAgU8wWY_2LE9wFmagpdhG3UvTiRtZA7cWGBoQ-8WvtV6Q>
+    <xmx:z9cUZg_zWithioHbKBZzqbYIEYVpW-d6ps8gFT3os5MnlPE6pL_4tP6o>
+Feedback-ID: i31e841b0:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Apr 2024 01:53:17 -0400 (EDT)
+Message-ID: <b881f549-6b50-4ab3-9df3-bebdaa326a70@themaw.net>
+Date: Tue, 9 Apr 2024 13:53:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Chen Hanxiao" <chenhx.fnst@fujitsu.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <kolga@netapp.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSD: remove redundant dprintk in exp_rootfh
-In-reply-to: <ZhSjEGEMyVuyApha@tissot.1015granger.net>
-References: <>, <ZhSjEGEMyVuyApha@tissot.1015granger.net>
-Date: Tue, 09 Apr 2024 13:06:00 +1000
-Message-id: <171263196068.17212.17916891599918470772@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: CBD7733767
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfs-utils' .service files not usable with nfsv4-server.service
+To: Steve Dickson <steved@redhat.com>,
+ Chuck Lever III <chuck.lever@oracle.com>, Matt Turner <mattst88@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CAEdQ38GJgxponxNxkcv+t8mhwRPzOjan58MTBgOL8p9tY=rvTw@mail.gmail.com>
+ <79c69668-4f8e-448e-9f50-6977cda662fc@redhat.com>
+ <CAEdQ38FOP0_g0FK5DYz954OwfJjLUf2pjQL1CX=VNC60kd8HEw@mail.gmail.com>
+ <50d1fcab-ba94-405e-896a-5bbae128998b@redhat.com>
+ <3138D81C-EAD9-41CD-A32D-DEA4AA002CEE@oracle.com>
+ <1a5a0fcd-0514-42ae-8d22-2d534327447f@themaw.net>
+ <6dbecf8d-1074-48bb-8395-e4edf2c53109@redhat.com>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+Autocrypt: addr=raven@themaw.net;
+ keydata= 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
+In-Reply-To: <6dbecf8d-1074-48bb-8395-e4edf2c53109@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 09 Apr 2024, Chuck Lever wrote:
-> On Tue, Apr 09, 2024 at 11:12:12AM +1000, NeilBrown wrote:
-> > On Tue, 09 Apr 2024, Chuck Lever wrote:
-> > > On Tue, Apr 09, 2024 at 09:21:54AM +1000, NeilBrown wrote:
-> > > > On Tue, 09 Apr 2024, Chen Hanxiao wrote:
-> > > > > trace_nfsd_ctl_filehandle in write_filehandle has
-> > > > > some similar infos.
-> > > > 
-> > > > Not all that similar.  The dprintk you are removing includes the inode
-> > > > number and sb->s_id which the trace point don't include.
-> > > > 
-> > > > Why do you think that information isn't needed?
-> > > 
-> > > I asked him to remove that dprintk.
-> > > 
-> > > Can you say why you think that information is useful to provide
-> > > via a dprintk? It doesn't seem useful to system administrators,
-> > > IMO.
-> > 
-> > I'm not saying it is useful, but I don't think the onus is on me.
-> 
-> No the onus isn't on you. I'm merely asking for feedback (and I
-> explain why below).
-> 
-> 
-> > When removing tracing information, the commit message should at least
-> > acknowledge what is being removed and make some attempt to justify it.
-> > In this case the commit message claimed that nothing was being removed,
-> > which is clearly false.  Maybe just the commit message needs to be
-> > fixed.
-> 
-> Agreed, the patch description could have more detail and a proper
-> justification.
-> 
-> 
-> > I don't think these tracepoints are just for system administrators.
-> > They are also for tech support when they are trying to remotely diagnose
-> > a customer problem.  It is really hard to know what will actually be
-> > useful.  Many times I have found that the particular information that I
-> > want isn't available in any tracing.  I expect this is inevitable.  We
-> > cannot trace EVERYTHING so there will always be gaps.
-> 
-> When there is no in-code tracepoint available, the usual course of
-> action these days is to wheel out BPF, systemtap, or drgn. Distro
-> support engineers know how to do that. Server administrators might
-> not be so well trained, so I consider dprintk() of primary
-> importance to them.
+On 8/4/24 19:01, Steve Dickson wrote:
+> Hey Ian!
+>
+> Good to hear from you!!
+>
+> On 4/7/24 7:57 PM, Ian Kent wrote:
+>> On 8/4/24 00:29, Chuck Lever III wrote:
+>>>> On Apr 7, 2024, at 10:45 AM, Steve Dickson <steved@redhat.com> wrote:
+>>>>
+>>>> On 4/6/24 6:26 PM, Matt Turner wrote:
+>>>>> On Sat, Apr 6, 2024 at 4:37 PM Steve Dickson <steved@redhat.com> 
+>>>>> wrote:
+>>>>>> Unfortunately the idea of having a nfsv4 only server
+>>>>>> did not go over well with upstream.
+>>>>> Which upstream do you mean? nfs-utils, Linux kernel?
+>>>> The NFS server maintainers... they didn't push back hard
+>>>> but the didn't it was necessary.
+>>> I'm sympathetic to some folks wanting a narrower footprint,
+>>> but I think we'd like to have support for all versions
+>>> packaged and available for an NFS server administrator,
+>>> right out of the shrink-wrap. Currently, most installations
+>>> want to deploy v3 and v4, so we should cater to the common
+>>> case.
+>>
+>> I have to say I agree with Chuck.
+> Yes... I definitely see Chuck's point.
+>
+>>
+>>
+>> Over the years I have had to deal with the consequences of dropping 
+>> support
+>>
+>> for NFS versions. So far that has been at the distribution level but 
+>> if it
+>>
+>> had been at the upstream level I would have had a much harder time of 
+>> it.
+>>
+>>
+>> am-utils for example, yes it's maybe not a good case because it lacks 
+>> upstream
+>>
+>> support nowadays, but I still work on it. It uses an NFS client 
+>> implementation
+>>
+>> to provide automount support and NFS v2 was ideal for the localhost 
+>> server but
+>>
+>> v2 support was removed from distro kernel builds and I had to 
+>> implement an NFS
+>>
+>> v3 server for this which was very much overkill.
+> My apologies... That was me. Removing v2 cut down
+> the testing matrix two-fold. v3 was there to replace
+> v2... I just did the obvious.
 
-Point for clarification: do you see tracepoints and dprintk as having
-different audiences, or do you see them as serving the same purpose with
-dprintk being a legacy implementation which is slowly being transitioned
-to tracepoints?  I had assumed the latter but your language above makes
-me wonder.
-
-Certainly systemtap and other are invaluable and should be understood by
-support engineers, but its a whole lot easier (and quicker) if the
-useful information is easily available.  Our first-level support can
-easily ask for a rpcdebug or trace-cmd trace and if we can get all the
-useful information from there, that is a big win.
-(It'll be nice when we can stop using rpcdebug and only ask for
-trace-cmd output).
-
-> 
-> Here the dprintk() is reporting information that seems useful only
-> to kernel developers. That's a code smell IMO. And the guidance in
-> these cases, historically, has been to remove such observability
-> either before a patch is merged, or after the fact, as we're doing
-> here.
-
-Interesting...  I had always assumed that dprintk/trace was largely
-useless without some understanding of the inner workings of the kernel. 
-I certainly need to dig around before I can work out how to interpret
-the trace information.  So I think of all of it as "useful only to
-kernel developers" ... or potential developers.
-
-> 
-> 
-> > But removing some information that was previously generated seems
-> > like a regression that should at least be justified.
-> > In the case of write_filehandle() we are now tracing the request, but
-> > not the result.  Is this generally sensible?
-> 
-> Let's instead look at the specific situation. The purpose of the
-> nfsd_ctl_* tracepoints is to record in the trace log when 
-> configuration changes are made, in order to juxtapose those with
-> other server operation.
-
-configuration changes?  write_filehandle is used by mountd to get a
-filehandle to return to a v3 MOUNT request.  I guess that is a config
-change on the client, but not on the server.
-
-> 
-> So, here, it's quite sensible. We want to observe the information
-> that was passed from user space, and the starting timestamp.
-> 
-> 
-> > Would it not make sense to
-> > trace both after the core of the function (exp_rootfh) has completed?
-> 
-> In some cases there are already tracepoints that would report or
-> infer the new state, so reporting a result would be redundant in
-> those cases.
-
-Well there was already a dprintk, but that is being removed...  I don't
-know what other tracepoint might already provide this info.  Maybe I'm
-confused about your meaning.
-
-> 
-> 
-> > At lease the knfsd_fh_hash() of the generated filehandle could be
-> > reported.
-> 
-> Chen's original patch replaced the dprintk with a tracepoint. So I
-> asked, a week or so ago, for exactly this kind of feedback. There
-> have been no responses until now. Therefore it seemed logical to
-> assume no-one had a use for this info.
-
-Sorry - I don't pay as close attention to nfs traffic as I might like.
-(In this case I was on leave a week ago...)
-
-> 
-> The folks whom this information would serve have been silent to date
-> with any specific suggestions, and usually we hear from someone
-> quickly when removing observability that is depended upon.
-> 
-> We could record the FH hash, but what would it be used for? User
-> space requested the FH, which can be reported by the requesting
-> program.
-
-What is the FH hash ever used for?  Presumably for tracking a particular
-object through multiple tracepoints.  Maybe we need to see when the dir
-that the client mounted gets accessed later?
-
-> 
-> I'm not hearing a convincing specific justification for maintaining
-> observability here.... but we have a few more weeks before making a
-> more permanent decision.
-> 
-
-I'm not seeing a significant cost in maintaining observability.  But I
-don't know that I care quite enough to write a patch.  So I'll leave it
-up to you.
-
-Thanks,
-NeilBrown
+Hehe, Yeah, I know.
 
 
-> 
-> -- 
-> Chuck Lever
-> 
+But this seemed like a good opportunity to let you know these changes 
+can be rather
 
+inconvienient for some so that you have all the information when making 
+changes at
+
+a later time.
+
+
+Even removing UDP support from the Fedora kernel config caused a problem 
+for me.
+
+
+Again, am-utils, it had a bug with it's background processing that was 
+causing slow mounts
+
+that, ASAICS, could only be fixed by using UDP (which is sensible for a 
+service running or
+
+localhost) or re-writting the entire application to use threads, a good 
+idea but way too much
+
+work.
+
+
+OTOH we always knew the amd application would die in time to come so it 
+isn't such a big
+
+deal I suppose.
+
+
+>
+>>
+>>
+>> Now there's talk of dropping v3 support which will spell the end of 
+>> am-utils,
+>>
+>> unnecessarily IMHO.
+> Yes... I was poking the bear when I said "deprecate" v3. Knowing
+> full well it would go over like a lead balloon :-)
+>
+> But coming up with a way of separating the protocols
+> so only one can be used (client or server) in VMs or
+> containers is a bad idea?
+
+Yes, that's a bit harder and I think will require a division of the 
+packages ...
+
+
+>
+>>
+>>
+>> I can understand the urge to drop v2 but there are still many v3 
+>> users so I wonder
+>>
+>> about the wisdom of even thinking about dropping v3 support and 
+>> multiple packages,
+>>
+>> IMHO, will introduce an unnecessary downstream overhead. It's hard 
+>> enough to keep
+>>
+>> up with the workload as it is.
+>>
+>>
+>> I also gat that mostly what I'm saying has happened at distro level 
+>> but please don't
+>>
+>> go down this path upstream too.
+> You are right... this is distro level conversation but
+> upstream should be involved... IMHO.
+
+Indeed, yes.
+
+
+Ian
+
+>
+> steved.
+>
+>>
+>>
+>> Ian
+>>
+>>>
+>>> As I recall, the NFSv4-only mechanism proposed at the time
+>>> was pretty clunky. If you have alternative ideas, I'm happy
+>>> to consider them. But let's recognize that an NFSv4-only
+>>> deployment is the special case here, and not make life more
+>>> difficult for everyone else, especially folks who might
+>>> start with an NFSv4-only deployment and need to add NFSv3
+>>> later, for whatever crazy reason.
+>>>
+>>> The nfs-server unit should be made to do the right thing
+>>> no matter what is installed on the system and no matter what
+>>> is in /etc/nfs.conf. I don't see why screwing with the
+>>> distro packaging is needed?
+>>>
+>>> -- 
+>>> Chuck Lever
+>>>
+>>>
+>>
+>
 
