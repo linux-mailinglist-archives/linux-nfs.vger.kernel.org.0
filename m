@@ -1,136 +1,139 @@
-Return-Path: <linux-nfs+bounces-2739-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2740-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46EBB89ECFE
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Apr 2024 10:02:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63B9C89FA78
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Apr 2024 16:50:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7893D1C210BB
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Apr 2024 08:02:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18EAA288675
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Apr 2024 14:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A5713D607;
-	Wed, 10 Apr 2024 08:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498B115EFBD;
+	Wed, 10 Apr 2024 14:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="dcvrfBEg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C136613D505;
-	Wed, 10 Apr 2024 08:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D79B15ADB0
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Apr 2024 14:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736157; cv=none; b=nj/+XoOjnt/sStNX6gfPlRLy8FTwBCskCz30eSIsVqUodK36V209VjYYOJi5V2aZ6Zj9dQtWPi+X3Ja6/aJDWJWci3Id2lZkkUrr0XpNx1CbblCfphl+dhgBfkzTZ3lfCQOr3hTTA9hf372bgjVMkEX/rizVMYq3g1EvhPUutvY=
+	t=1712759991; cv=none; b=s2cWtikt3je9d6KTBFPK0b+JbsfWgBudE6tKJeyFfkM4k3soGMTHeVCiqwg7zajb1vwJD1FeKSObbUWctjLsevl75tMTKLn+NulRxOQTSg2TR38Z4ZV3M0UI9I5x2rC6CPctGnK7Mts8fFmDhCnW85Vb0Sogtzzv1g9DLbzaIEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736157; c=relaxed/simple;
-	bh=KElYbch9PwjyMMyu6DqQ19Q1q06S1GdiKB4kYIvJsOA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bBAtC04DaDVwHEUOOiFSRuslrl4QmXJkNwIxlynnpCJTLQoVrWUVTlO89Clpnhd/aF12w6oTjHuxnvrJymhY+Q8tm+0OxOvE8XUv/x2Dczi3ELoLd/y8qIsK+MyeonrFwSjZ3eR5Bs0oaVVpccWwZSXhKQxXPM80iFWgxUzQYEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDFDC43390;
-	Wed, 10 Apr 2024 08:02:36 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 324081063262; Wed, 10 Apr 2024 10:02:32 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Damien Le Moal <dlemoal@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Corey Minyard <minyard@acm.org>, Peter Huewe <peterhuewe@gmx.de>, 
- Jarkko Sakkinen <jarkko@kernel.org>, Tero Kristo <kristo@kernel.org>, 
- Stephen Boyd <sboyd@kernel.org>, Ian Abbott <abbotti@mev.co.uk>, 
- H Hartley Sweeten <hsweeten@visionengravers.com>, 
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
- Vinod Koul <vkoul@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, Moritz Fischer <mdf@kernel.org>, 
- Liviu Dudau <liviu.dudau@arm.com>, 
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- Andi Shyti <andi.shyti@kernel.org>, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Markuss Broks <markuss.broks@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Lee Jones <lee@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Iyappan Subramanian <iyappan@os.amperecomputing.com>, 
- Yisen Zhuang <yisen.zhuang@huawei.com>, Stanislaw Gruszka <stf_xl@wp.pl>, 
- Kalle Valo <kvalo@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Xiang Chen <chenxiang66@hisilicon.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Vaibhav Hiremath <hvaibhav.linux@gmail.com>, Alex Elder <elder@kernel.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Jacky Huang <ychuang3@nuvoton.com>, 
- Helge Deller <deller@gmx.de>, Christoph Hellwig <hch@lst.de>, 
- Robin Murphy <robin.murphy@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Kees Cook <keescook@chromium.org>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
- linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org, 
- openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-fpga@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org, 
- linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev, 
- linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-fbdev@vger.kernel.org, iommu@lists.linux.dev, 
- linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
- linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, alsa-devel@alsa-project.org, 
- linux-sound@vger.kernel.org
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
-Subject: Re: (subset) [PATCH 00/34] address all -Wunused-const warnings
-Message-Id: <171273615213.1094883.18382201508159771859.b4-ty@collabora.com>
-Date: Wed, 10 Apr 2024 10:02:32 +0200
+	s=arc-20240116; t=1712759991; c=relaxed/simple;
+	bh=tBcXuYggu7BnBoxGeaYw5QHlFZIBnNzLsLf9jFcYv5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwwYJ99fjkhEO8wwMbjbUVuu0YFS9ZuLMuUerSbDrx7mxoHtJHo+kExf2zka3jKaGZ5Wug7KSbjsPFiL/jDYED1bkgYwlVNMpJkHJeCWWT0d7oOHYr/YJ9lOU59SD8JZtyjVjpGKC4P6hg50CIBE2CwEv+3+/PXU9gTdXyrPBco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=dcvrfBEg; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4167fce0a41so17601465e9.0
+        for <linux-nfs@vger.kernel.org>; Wed, 10 Apr 2024 07:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1712759988; x=1713364788; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LMaOWhDW2JoqZtQfl6kBOhmssDpeUgIMrsUqhwgNXvo=;
+        b=dcvrfBEgZQEn1IsUW9EVDQWpAbaBO/b+OEgvmXeKoP/4vrHmLJf5q/j4WWUw6aOojN
+         xoKAZddcPf/Lm9JmpguL6AhKA7xUwXj8meyxGyA+1KukHkV/Y31N0Vdv2exuiSM83ioL
+         GdyjNJXj3s1tiRXvAJwuU/8qcS1GclAhpSY+JrGNPF5iQ4jmc8Vvne59ftQgHi2NAulZ
+         icVnf90xkYNhkfRl+cLR/mufNXs9PGLXyUog66Rc+NtMOpMPCkAH5eX1STqCiaGkraYQ
+         CXqS4cPKhZ/cywhi3WmpkOLwZH4MaxJIFO8A26+yDe7Z3B71qX4i0SmvJSgWHrL7XbCD
+         ZcMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712759988; x=1713364788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LMaOWhDW2JoqZtQfl6kBOhmssDpeUgIMrsUqhwgNXvo=;
+        b=HiDq9hMqI+/ps1esboL1VRdlvKmyMKa9APbKqfsGKmTWit1CDcKvTcSS5/R8otCKYp
+         2R3YhvAH3IThOH0C2SZDVXWHvIu/9+L5PRa62/n8o1PFMJC6vFDbKM2XXFL0RoVJBIxW
+         tiG5TgPXb1C8dG8vAJekkKfy+5PtNEdh4IDZ/fENEezJ8zD77x43Vhkc1mNzP/0Vr74S
+         le5JNNFU3G7qtV7BeWEd52EfG0MbTf3PHaN3BPTyeIY/Y3AMYGTciomfohf6K8DZS3jY
+         igL7AenxAooSn0FrDA3p45am4lsSapObUQsq9yWYRgsZQlWIVDP0/085AJNKZkU7zCb/
+         Gagw==
+X-Gm-Message-State: AOJu0YxoBhZdccfu2dV8lfmH4hUggbwETVLbRqzlcRzZNkmwkeMjNWNT
+	XSvH3VZsYLDwux1zcfa+lXsMA0dqrYkRpP1ktPQj4euHEV52bpxg3dhsfc3uv/g=
+X-Google-Smtp-Source: AGHT+IFQaD/Hbwsz9UwnHeKI7w7ehdLnwl0SezaAP++P+2sNQUnMqQAUnTvc+jHw0NKirbT6SkxDkA==
+X-Received: by 2002:a05:600c:524e:b0:416:8091:ba4 with SMTP id fc14-20020a05600c524e00b0041680910ba4mr2712037wmb.6.1712759987663;
+        Wed, 10 Apr 2024 07:39:47 -0700 (PDT)
+Received: from gmail.com ([176.230.79.119])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05600c19cf00b004168efc77d1sm2463764wmq.39.2024.04.10.07.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 07:39:47 -0700 (PDT)
+Date: Wed, 10 Apr 2024 17:39:44 +0300
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: mount options not propagating to NFSACL and NSM RPC clients
+Message-ID: <20240410143944.srhfeq6owfvdxcci@gmail.com>
+References: <20231105154857.ryakhmgaptq3hb6b@gmail.com>
+ <80B8993C-645D-4748-93B3-88415E165B87@redhat.com>
+ <20231129132034.lz3hag5xy2oaojwq@gmail.com>
+ <8FDECCA5-80E0-4CB4-B790-4039102916F0@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8FDECCA5-80E0-4CB4-B790-4039102916F0@redhat.com>
 
-
-On Wed, 03 Apr 2024 10:06:18 +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 2023-11-30 09:30:52, Benjamin Coddington wrote:
+> > Actually my concern is the NFSACL prog. With `cl_softrtrt == 1` and
+> > `to_initval == to_maxval`, does it mean retires will not happen
+> > regardless of `to_retries` and `to_increment`?
 > 
-> Compilers traditionally warn for unused 'static' variables, but not
-> if they are constant. The reason here is a custom for C++ programmers
-> to define named constants as 'static const' variables in header files
-> instead of using macros or enums.
+> Possibly?  I'm not exactly certain of what should happen in that case.
 > 
-> [...]
+> > I encountered a situation where the NFSACL program did not retry but
+> > could have had, whereas NFS3 did successfully. Not sure regarding NSM,
+> > but it seems to me that it would make sense at least for NFSACL to
+> > behave the same as NFS3.
+> 
+> I agree, but I could be missing something -- maybe its a bug.  There's the
+> sunrpc:rpc_timeout_status tracepoint that might be helpful.  If you turn
+> that up can you see rpc_check_timeout() getting called from
+> call_transmit_status()?
 
-Applied, thanks!
+Sorry, took awhile to get a test working while busy on other stuff.
 
-[09/34] power: rt9455: hide unused rt9455_boost_voltage_values
-        commit: 452d8950db3e839aba1bb13bc5378f4bac11fa04
+So it looks really like a bug, here are the details.
 
-Best regards,
+Server: nfsd with extra fault injection code that calls `svc_drop()` only once
+on a single NFS GETACL request.
+Client: Linux v6.8, NFS mount with `soft,timeo=50,retrans=16,vers=3`.
+
+I trace client execution with the following:
+
+    sudo perf trace -e sunrpc:rpc_task_timeout -e sunrpc:xprt_retransmit
+
+A simple `ls -l` gets stuck and shows an IO failure:
+
+    [root@client export]# ls -l
+    ls: file: Input/output error
+    total 0
+    -rw-r--r-- 1 root root 0 Apr 10 10:02 file
+
+I get a single event out of the tracing above:
+
+```
+kthreadd/7926 sunrpc:rpc_task_timeout(task_id: 203, client_id: 6, xprt_id: 3, action: 0xffffffffc0accc60, runstate: 22, flags: 35456)
+```
+
+So looks like the request is not being retransmitted. Just to be sure,
+if I cause the nfsd to drop the regular NFS3 prog I/Os like ACCESS and
+LOOKUP, I only get the expected 5 seconds delay following a successful
+retry.
+
+Seems we only have an issue with the NFS3ACL prog.
+
 -- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
-
+Dan Aloni
 
