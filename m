@@ -1,130 +1,188 @@
-Return-Path: <linux-nfs+bounces-2766-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2767-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 671688A1F08
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Apr 2024 21:01:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 112A38A1EA6
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Apr 2024 20:41:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A027CB2D0F1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Apr 2024 18:22:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33C4E1C24637
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Apr 2024 18:41:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE14984A55;
-	Thu, 11 Apr 2024 17:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 151D753E36;
+	Thu, 11 Apr 2024 18:20:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTvKQQua"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZAtJrBJ7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A249C84A46;
-	Thu, 11 Apr 2024 17:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC3053E2D
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Apr 2024 18:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712857013; cv=none; b=I1fg1cofrgzEKKd91ZRUNDc7BylCGCjyUQDPbqX3zogjVH4mEZ/L32xhPkxWBcGOkntTAI2VGoV10MU6FYlMnudobt7omfYeivoA7T0TNZsHl/caItgFLNFLkvOxMdEA6xPFumRR0wAajFhSM24lSZmAu1PLI2ehOqp8OtJqChM=
+	t=1712859650; cv=none; b=UNg/TxvSkDWrPG3k50ODgCb82Byq0a5DOw0SDtMtGftw5NmJTI+nIRTwmZiLv2Dv8IYPO/HcIamiTwskYU9qDxXA8X8d4QyrwlsAqVodcS4RNDkdUyLKGDbAvZ4XM6dSd11TP67VDQOdBi5/tx0EN/PPcRM9QrcgHOlWbYwsmuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712857013; c=relaxed/simple;
-	bh=KL2aZdqOHzHd0ch9c2oe7ecmzT85juFF9X1az6DA8ao=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dvvVLQJtnZmKkCp1qDWnwcOdm3jJ8wNaK5ocqDt1e5y7krtbUeVFcrEzaXjl46sybNH8wrdTiH5r4wJpIj3EqriTQIyX1NMdO7YuPXZG0wEmySdIkS+Kh9u9OGoJoy1vj4aD0NUcvSOSnwSxzVnmo3ZRt+E0bMBZMNYyUhwglbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTvKQQua; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F22C072AA;
-	Thu, 11 Apr 2024 17:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712857013;
-	bh=KL2aZdqOHzHd0ch9c2oe7ecmzT85juFF9X1az6DA8ao=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GTvKQQuazvATC2lUJMfYTp5KoRWCYi13NVi+SXrqp4yQ/t7gsYhGUZoU0WLyw90MD
-	 UN1M1rF/9iP43n6LYCADo0SqjMZljQzTrhiXrLoGc+PUSyQRUzrk0dJjaQo7Zd761p
-	 z/t8eqkhRzRXRFpcg/uVmR2r0BlUCOBGwIhKbousO+cslOPFc1TsjgSEf4LdoMNnF9
-	 vKP8WNI0D6TECm6vuD8lOe3m1rAxKHZ5wu7B6vk4CaNQwIZsA/70Vb19Ggu2U+Tf6a
-	 OQRHVMMNvUasbrqLieE2SRfvSVcvjUbrUG00tXr9l6z/tlmpeNtm025DEDGqIiIndO
-	 rdVQb2VfIMUVQ==
-Message-ID: <64ffbebcd20f5d4aca8f02e4162f0fb6cfd757fb.camel@kernel.org>
-Subject: Re: [PATCH v7 0/5] convert write_threads, write_version and
- write_ports to netlink commands
-From: Jeff Layton <jlayton@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
-Cc: lorenzo.bianconi@redhat.com, chuck.lever@oracle.com, neilb@suse.de, 
-	netdev@vger.kernel.org, kuba@kernel.org
-Date: Thu, 11 Apr 2024 13:36:51 -0400
-In-Reply-To: <cover.1712853393.git.lorenzo@kernel.org>
-References: <cover.1712853393.git.lorenzo@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1712859650; c=relaxed/simple;
+	bh=fWPcdrVuruTE7BJmuZZeKdfX4Wem7YZa3XVObcOI1+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQpjb5La7h7sC1Ca9q1eU+SbYVNvVeIbB6WE2d84vZJRNiJbt5XvhN34Go4Z2kiA8aiMlwpHXh++lEjqufdrNul7y7NhQX8/ZhYKJDrhHpTJXvzhK7s6hCViuUqwX4iluU8OIcg//0SgRlJHY7Gfm+5VHsMihn9lg2KK9+VCuLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZAtJrBJ7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712859647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mVRGbK8WGUx9STMEDci0xeHmXB4wKU5q7KxMHo5tRAo=;
+	b=ZAtJrBJ7/EJU9C7lHxa56hXsv5m/VGhgZ1aGZUzy0NiXuqudtTZqpBXsbw/CoGN0mHsBnn
+	9pw/MGgIKebZ3KGVHBzFKQVYJ4b46ffiXhVLAJ/aQt8TVas4oHsMFzBwzJd98D8/AfNpe8
+	teKME9oQiSbwb0+zjHMxhAYjr+0jucc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-hr91uJW9OWmEvZSQncOy0w-1; Thu,
+ 11 Apr 2024 14:20:45 -0400
+X-MC-Unique: hr91uJW9OWmEvZSQncOy0w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 353DE293248B;
+	Thu, 11 Apr 2024 18:20:45 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-15.rdu2.redhat.com [10.22.0.15])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 85BFB10E47;
+	Thu, 11 Apr 2024 18:20:44 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Dan Aloni <dan.aloni@vastdata.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: mount options not propagating to NFSACL and NSM RPC clients
+Date: Thu, 11 Apr 2024 14:20:43 -0400
+Message-ID: <34B155CC-6E09-4C53-9CC0-3B9F0D2C97B9@redhat.com>
+In-Reply-To: <20240411163628.jtnhu3pxgcskvel6@gmail.com>
+References: <20231105154857.ryakhmgaptq3hb6b@gmail.com>
+ <80B8993C-645D-4748-93B3-88415E165B87@redhat.com>
+ <20231129132034.lz3hag5xy2oaojwq@gmail.com>
+ <8FDECCA5-80E0-4CB4-B790-4039102916F0@redhat.com>
+ <20240410143944.srhfeq6owfvdxcci@gmail.com>
+ <5D6491EA-53CF-488C-B1D6-A77A8CDFFDC8@redhat.com>
+ <20240411163628.jtnhu3pxgcskvel6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Thu, 2024-04-11 at 18:47 +0200, Lorenzo Bianconi wrote:
-> Introduce write_threads, write_version and write_ports netlink
-> commands similar to the ones available through the procfs.
->=20
-> Changes since v6:
-> - add the capability to pass sockaddr from userspace through listener-set
->   command
-> - rebase on top of nfsd-next
-> Changes since v5:
-> - for write_ports and write_version commands, userspace is expected to pr=
-ovide
->   a NFS listeners/supported versions list it want to enable (all the othe=
-r
->   ports/versions will be disabled).
-> - fix comments
-> - rebase on top of nfsd-next
-> Changes since v4:
-> - rebase on top of nfsd-next tree
-> Changes since v3:
-> - drop write_maxconn and write_maxblksize for the moment
-> - add write_version and write_ports commands
-> Changes since v2:
-> - use u32 to store nthreads in nfsd_nl_threads_set_doit
-> - rename server-attr in control-plane in nfsd.yaml specs
-> Changes since v1:
-> - remove write_v4_end_grace command
-> - add write_maxblksize and write_maxconn netlink commands
->=20
-> This patch can be tested with user-space tool reported below:
-> https://github.com/LorenzoBianconi/nfsdctl
->=20
+On 11 Apr 2024, at 12:36, Dan Aloni wrote:
 
-I'm reworking the interface on that tool and adding it to nfs-utils as
-well. Patches will be coming soon.
+> On 2024-04-11 11:20:14, Benjamin Coddington wrote:
+>>> So looks like the request is not being retransmitted. Just to be sure=
+,
+>>> if I cause the nfsd to drop the regular NFS3 prog I/Os like ACCESS an=
+d
+>>> LOOKUP, I only get the expected 5 seconds delay following a successfu=
+l
+>>> retry.
+>>>
+>>> Seems we only have an issue with the NFS3ACL prog.
+>>
+>> It looks like the client_acl program gets created with
+>> rpc_bind_new_program() which doesn't setup the timeouts/retry strategy=
+, and
+>> there's nothing after the setup to do it either.
+>>
+>> I think the problem has existed since 331702337f2b2..  I think this sh=
+ould
+>> fix it up, would you like to test it?
+>
+> Please allow me to propose a different change, which I already tested.
+>
+> Looks to me that the 2012 change that I mentioned below is actually whe=
+n
+> the problem started happening, when the `kmemdup` call was removed, so
+> since then we are simply just missing a field copy, and we are taking
+> the timeout from transport-based default timeout globals instead.
+>
+> Also, I have a hunch that we need to do something different, because of=
 
-> Jeff Layton (1):
->   SUNRPC: add a new svc_find_listener helper
->=20
-> Lorenzo Bianconi (4):
->   NFSD: convert write_threads to netlink command
->   NFSD: add write_version to netlink command
->   SUNRPC: introduce svc_xprt_create_from_sa utility routine
->   NFSD: add listener-{set,get} netlink command
->=20
->  Documentation/netlink/specs/nfsd.yaml |  94 ++++++
->  fs/nfsd/netlink.c                     |  63 ++++
->  fs/nfsd/netlink.h                     |  10 +
->  fs/nfsd/netns.h                       |   1 +
->  fs/nfsd/nfsctl.c                      | 433 ++++++++++++++++++++++++++
->  fs/nfsd/nfssvc.c                      |   3 +-
->  include/linux/sunrpc/svc_xprt.h       |   5 +
->  include/uapi/linux/nfsd_netlink.h     |  44 +++
->  net/sunrpc/svc_xprt.c                 | 167 ++++++----
->  9 files changed, 760 insertions(+), 60 deletions(-)
->=20
+> the following code in `rpc_new_client`:
+>
+>     clnt->cl_rtt =3D &clnt->cl_rtt_default;
+>     rpc_init_rtt(&clnt->cl_rtt_default, clnt->cl_timeout->to_initval);
+>
+> Only setting `clnt->cl_timeout` _after_ client clone does not seem to b=
+e
+> right if there are `cl_rtt_default` calculations that depend on it. So
+> may as well need to call `rpc_init_rtt` too.
+>
+> --
+>
+> From 55737f82a9bb3e490836d10491995c8082ebcf11 Mon Sep 17 00:00:00 2001
+> From: Dan Aloni <dan.aloni@vastdata.com>
+> Date: Thu, 11 Apr 2024 18:30:56 +0300
+> Subject: [PATCH] sunrpc: fix NFSACL RPC retry on soft mount
+>
+> It used to be quite awhile ago since 1b63a75180c6 ('SUNRPC: Refactor
+> rpc_clone_client()'), in 2012, that `cl_timeout` was copied in so that
+> all mount parameters propagate to NFSACL clients. However since that
+> change, if mount options as follows are given:
+>
+>     soft,timeo=3D50,retrans=3D16,vers=3D3
+>
+> The resultant NFSACL client receives:
+>
+>     cl_softrtry: 1
+>     cl_timeout: to_initval=3D60000, to_maxval=3D60000, to_increment=3D0=
+, to_retries=3D2, to_exponential=3D0
+>
+> These values lead to NFSACL operations not being retried under the
+> condition of transient network outages with soft mount. Instead, getacl=
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> call fails after 60 seconds with EIO.
+>
+> The simple fix is to copy `cl_timeout` and make sure `cl_rtt_default`
+> is initialized from it.
+
+Ah, good catch, and I think this means that the normal IO client
+(server->client) hasn't been properly setting up its RTT estimator as wel=
+l?
+
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Benjamin Coddington <bcodding@redhat.com>
+> Link: https://lore.kernel.org/all/20231105154857.ryakhmgaptq3hb6b@gmail=
+=2Ecom/T/
+> Fixes: 1b63a75180c6 ('SUNRPC: Refactor rpc_clone_client()')
+> Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+> ---
+>  net/sunrpc/clnt.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index cda0935a68c9..75faf1f05a14 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -669,6 +669,9 @@ static struct rpc_clnt *__rpc_clone_client(struct r=
+pc_create_args *args,
+>  	new->cl_chatty =3D clnt->cl_chatty;
+>  	new->cl_principal =3D clnt->cl_principal;
+>  	new->cl_max_connect =3D clnt->cl_max_connect;
+> +	new->cl_timeout =3D clnt->cl_timeout;
+> +	rpc_init_rtt(&clnt->cl_rtt_default, clnt->cl_timeout->to_initval);
+> +
+
+So we'll end up doing rpc_init_rtt twice, first in rpc_new_client then he=
+re.
+Maybe we should be passing cl_timeout on .timeout from the parent in the
+rpc_clone_client()'s rpc_create_args?
+
+=2E. anyway - I'll stop "helping", you've clearly got this in hand.  :)
+
+Ben
+
 
