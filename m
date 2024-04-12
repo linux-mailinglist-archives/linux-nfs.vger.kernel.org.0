@@ -1,189 +1,213 @@
-Return-Path: <linux-nfs+bounces-2777-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2778-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A7A68A2CDC
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 12:50:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51E0F8A2DB9
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 13:43:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FE772864F3
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 10:50:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0D351F23C4B
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 11:43:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B021642075;
-	Fri, 12 Apr 2024 10:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808FD54FAC;
+	Fri, 12 Apr 2024 11:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AF/lgYOV"
+	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="N9vZQjHY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2325380F;
-	Fri, 12 Apr 2024 10:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB032E3E9
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Apr 2024 11:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712919021; cv=none; b=QzpCaqCYYuBvXPiTjs9xE2WscXUsCC7CMvSTkNW/k5MAW7p0Ih0tGqj1YfVGlTRnyL4Q+lzeR0ET6agh5WvMu2oMO5Vbnz1gfITs7phCbbUNtMEyvzYJjVr/ma4oANEPm5J36vdRvjk7KVuVV3Q/55l8NA2gDv7zsUvWaOwQkKE=
+	t=1712922225; cv=none; b=NSdrbeQq1nVLTc2VJHDq9nWWULOLLJjqgfyxuDNwET/IAx1WrE58sBUOCjfyE1dPHr+3g9Ympf1tUzxW1lV0S8sBz7karLpBjeef2MS3lxt9OTf98C9SoDC71c5HEHyyoVqEPQE8Qcs9ijjQ2A1xC1sfEO5F5Ua7ptrm3AVHhl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712919021; c=relaxed/simple;
-	bh=nG5//PQX8Ccmwb0z7Xegu0yxztKcLOij0AQ5eVxEn7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jv1kcHlXEfILQtwzkb3TLpRrYBkldZ5z8akAjkZSqgVjhhpXu2qobK6l9Mm4lAwJg22KzqZXmzG6DuXyjp++Jct4in04HRjFI0zKx3orFY/OQMLwDHC6xNa1QsS7C++4f+4QCsRuYpg3EbtgXoB18GicEjlsUSxq5ssWpmXNvkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AF/lgYOV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9BCC113CC;
-	Fri, 12 Apr 2024 10:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712919019;
-	bh=nG5//PQX8Ccmwb0z7Xegu0yxztKcLOij0AQ5eVxEn7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AF/lgYOVzLA2DdxByiw3bw5EhMxO8ClOxYUHnYbqXlIOcZfGYhQbNLceCJ3fftICV
-	 YEJY6iXokw8pixsDdTperQoJkfeWsob6gmC1f4hHGqwjykQepVCGuMtVv2/yXa0Sap
-	 CXkHmGt13PUO5tx5W5drE2fZUZwta4Snc3Ctz9yc=
-Date: Fri, 12 Apr 2024 12:50:16 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
-	Calum Mackay <calum.mackay@oracle.com>,
-	Chuck Lever III <chuck.lever@oracle.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Darren Kenny <darren.kenny@oracle.com>,
-	Ramanan Govindarajan <ramanan.govindarajan@oracle.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
-Message-ID: <2024041257-repulsive-balancing-a685@gregkh>
-References: <20240411095407.982258070@linuxfoundation.org>
- <2c2362c7-ace7-4a79-861e-fa435e46ac85@oracle.com>
+	s=arc-20240116; t=1712922225; c=relaxed/simple;
+	bh=ijWklAAayKtVtnnKeJniYXpxK7ndCcTQOD3nmwTwn3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pOJ5S5HO39XKJA2mCsSFi6nSMwvlNOsfywl15gvVvtMMAzLXwfyuwuXtjbw4JHt3nFUH2Ks4cn1xdoQp74PWdw7bk0VGTUPZ5iz5enfqy2A9FcqWGU7+KjyGYU97/GebchJK8lVBaN+BbYLkZblKLWUe51JHg3WchHM0AZIj2iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=N9vZQjHY; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dneg.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcbcea9c261so877075276.3
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Apr 2024 04:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1712922222; x=1713527022; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ijWklAAayKtVtnnKeJniYXpxK7ndCcTQOD3nmwTwn3c=;
+        b=N9vZQjHY1aeEdARbb80IIeTf0JA3HvgW8/5gW+jgZNTUmnK+kIVlxSOVbdV2Nrj/WY
+         9sD7x7KzJzh53OYDONzMWG60Y8rq7JptI43MJ4DRnM1qkuIbUCqmUG1fgxnsJjjSqUXL
+         0pmIoRGtGL/ktdhbib5ACa8tHPA7PNl1asZUMolGyGT2kD5Leq1Do8nkJoFQl/FmeiBt
+         IbrimX0e9b37k2j2wkYDd3YEVEQoZx0GokQDentgeN3oFtuuON2HYEyWRat1NA/g9uop
+         MpljKBs5bWwUIX/VXJ4BKMAS3O6n3QSRNRx4CymlitvKaeQ1Tzz5+87CpMEFHHU/kt7H
+         8IEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712922222; x=1713527022;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ijWklAAayKtVtnnKeJniYXpxK7ndCcTQOD3nmwTwn3c=;
+        b=IG08jONwm+RfwTDvNBO/NupUfxnXPnEG35okv35WGoWFlIt2ZtQpCR7gMncjOaC6qx
+         lzksjMcN0fNPe7vu5laYrJxzJ19VXEbbePTtq3QmNNkf/3i8n4wNxQaozJ/oM+wdc9Ik
+         RdS9zyEsIEjdR4zCYRGqHANg0KzeJ1DIXAdFo+fY6XjdPAy3Ud4sB8HV63UUJkTlnRj0
+         qZldcU3r37Pd/QJO93ULcU4edgHkgYEUWCJ4IMDC5ELMmoAwh48gZF5KSX8PFRtuQMbF
+         Bax9s3vjXW6SaxS6z3GJyEZfFmi8XyGAQza7r8soTMiBXhq2ARhSdjVrYEEW6K4YisdM
+         /mHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcvU178wQXiMQFIdTmMdLGdi16PVDYnzKg1et1Gi7wfDT6X4vGZWyOID/YZUxaOuA5mRFizahqbeJyaKuZWeop7vdZ7UVirMZ5
+X-Gm-Message-State: AOJu0YwtxKfEXIILLzTBcW0SyA3m83Gg+sBDCFbOZy/K/85eJn6FkrGj
+	ng1o+hzbG86fbYNM7QyWp2HXUfOXZwiIQ2A/ZiTofQkZKDAmLCQhS1D5gECdcjHw4E5G+tjm7jb
+	IO1S0tSEPEa8H9kjEXz/g3r2rTyI9NjIeaDkmq153zjm0wO3YLeE=
+X-Google-Smtp-Source: AGHT+IFLKb2fMon+WxuRZ7JyPeZ/xO/cjWCqkGjMLUzhPAcL8CsNdGXI8VKfKEqWCTnerd27J9UbPxI8OFpmg1cf4yg=
+X-Received: by 2002:a25:ad08:0:b0:dcb:e432:cb06 with SMTP id
+ y8-20020a25ad08000000b00dcbe432cb06mr2684367ybi.29.1712922221999; Fri, 12 Apr
+ 2024 04:43:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c2362c7-ace7-4a79-861e-fa435e46ac85@oracle.com>
+References: <CAPt2mGOnsA9pcmZQkr2q40d7A+NLj7=xr+dzFh7XwJPdGYW6Hw@mail.gmail.com>
+ <a4abb5fcf94d706cc3f47d6b629763d5b1831c21.camel@hammerspace.com>
+ <CAPt2mGMOSHssr_J6bcf8A8dnU_oHNf_UuHZsDk1WxVi=TUheWA@mail.gmail.com>
+ <561ef18af88ecda0f7b8abf55c1dfb2b66cf5dea.camel@hammerspace.com>
+ <CAPt2mGNm11o3-b+W66eUUj=bvW-XV9wuiU+_uG+zigFPTQ6TwA@mail.gmail.com>
+ <CAPt2mGNYaeMxx4UCEKkaFjxk3K7hAhv8A9ARuPwhLx2yoOBv7Q@mail.gmail.com>
+ <17e2bf4c718a7cfdc34131978ad03656d0622de5.camel@hammerspace.com>
+ <CAPt2mGM-kc1UShzuuUZeeh4sJDbT==sVh+uv-HK7K9EoZoHvnA@mail.gmail.com> <7e593bfb376eabb1968244d6014e223945e71990.camel@kernel.org>
+In-Reply-To: <7e593bfb376eabb1968244d6014e223945e71990.camel@kernel.org>
+From: Daire Byrne <daire@dneg.com>
+Date: Fri, 12 Apr 2024 12:43:05 +0100
+Message-ID: <CAPt2mGOK-rURRe1i7HJsEHkJDFKRrZexw4jS=FyAPyyuJq9Uwg@mail.gmail.com>
+Subject: Re: directory caching & negative file lookups?
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 12, 2024 at 03:55:34PM +0530, Harshit Mogalapalli wrote:
-> Hi Greg,
-> 
-> 
-> On 11/04/24 15:27, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.15.155 release.
-> > There are 57 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> I have noticed a regression in lts test case with nfsv4 and this was
-> overlooked in the previous cycle(5.15.154). So the regression is from
-> 153-->154 update. And I think that is due to nfs backports we had in
-> 5.15.154.
-> 
-> # ./runltp -d /tmpdir -s fcntl17
-> 
-> <<<test_start>>>
-> tag=fcntl17 stime=1712915065
-> cmdline="fcntl17"
-> contacts=""
-> analysis=exit
-> <<<test_output>>>
-> fcntl17     0  TINFO  :  Enter preparation phase
-> fcntl17     0  TINFO  :  Exit preparation phase
-> fcntl17     0  TINFO  :  Enter block 1
-> fcntl17     0  TINFO  :  child 1 starting
-> fcntl17     0  TINFO  :  child 1 pid 22904 locked
-> fcntl17     0  TINFO  :  child 2 starting
-> fcntl17     0  TINFO  :  child 2 pid 22905 locked
-> fcntl17     0  TINFO  :  child 3 starting
-> fcntl17     0  TINFO  :  child 3 pid 22906 locked
-> fcntl17     0  TINFO  :  child 2 resuming
-> fcntl17     0  TINFO  :  child 3 resuming
-> fcntl17     0  TINFO  :  child 1 resuming
-> fcntl17     0  TINFO  :  child 3 lockw err 35
-> fcntl17     0  TINFO  :  child 3 exiting
-> fcntl17     0  TINFO  :  child 1 unlocked
-> fcntl17     0  TINFO  :  child 1 exiting
-> fcntl17     1  TFAIL  :  fcntl17.c:429: Alarm expired, deadlock not detected
-> fcntl17     0  TWARN  :  fcntl17.c:430: You may need to kill child processes
-> by hand
-> fcntl17     2  TPASS  :  Block 1 PASSED
-> fcntl17     0  TINFO  :  Exit block 1
-> fcntl17     0  TWARN  :  tst_tmpdir.c:342: tst_rmdir:
-> rmobj(/tmpdir/ltp-jRFBtBQhhx/LTP_fcnp7lqPn) failed:
-> unlink(/tmpdir/ltp-jRFBtBQhhx/LTP_fcnp7lqPn) failed; errno=2: ENOENT
-> <<<execution_status>>>
-> initiation_status="ok"
-> duration=10 termination_type=exited termination_id=5 corefile=no
-> cutime=0 cstime=0
-> <<<test_end>>>
-> <<<test_start>>>
-> tag=fcntl17_64 stime=1712915075
-> cmdline="fcntl17_64"
-> contacts=""
-> analysis=exit
-> <<<test_output>>>
-> incrementing stop
-> fcntl17     0  TINFO  :  Enter preparation phase
-> fcntl17     0  TINFO  :  Exit preparation phase
-> fcntl17     0  TINFO  :  Enter block 1
-> fcntl17     0  TINFO  :  child 1 starting
-> fcntl17     0  TINFO  :  child 1 pid 22909 locked
-> fcntl17     0  TINFO  :  child 2 starting
-> fcntl17     0  TINFO  :  child 2 pid 22910 locked
-> fcntl17     0  TINFO  :  child 3 starting
-> fcntl17     0  TINFO  :  child 3 pid 22911 locked
-> fcntl17     0  TINFO  :  child 2 resuming
-> fcntl17     0  TINFO  :  child 3 resuming
-> fcntl17     0  TINFO  :  child 1 resuming
-> fcntl17     0  TINFO  :  child 3 lockw err 35
-> fcntl17     0  TINFO  :  child 3 exiting
-> fcntl17     0  TINFO  :  child 1 unlocked
-> fcntl17     0  TINFO  :  child 1 exiting
-> fcntl17     1  TFAIL  :  fcntl17.c:429: Alarm expired, deadlock not detected
-> fcntl17     0  TWARN  :  fcntl17.c:430: You may need to kill child processes
-> by hand
-> fcntl17     2  TPASS  :  Block 1 PASSED
-> fcntl17     0  TINFO  :  Exit block 1
-> fcntl17     0  TWARN  :  tst_tmpdir.c:342: tst_rmdir:
-> rmobj(/tmpdir/ltp-jRFBtBQhhx/LTP_fcn9Xy4hM) failed:
-> unlink(/tmpdir/ltp-jRFBtBQhhx/LTP_fcn9Xy4hM) failed; errno=2: ENOENT
-> <<<execution_status>>>
-> initiation_status="ok"
-> duration=10 termination_type=exited termination_id=5 corefile=no
-> cutime=0 cstime=0
-> <<<test_end>>>
-> INFO: ltp-pan reported some tests FAIL
-> LTP Version: 20240129-167-gb592cdd0d
-> 
-> 
-> Steps used after installing latest ltp:
-> 
-> $ mkdir /tmpdir
-> $ yum install nfs-utils  -y
-> $ echo "/media *(rw,no_root_squash,sync)" >/etc/exports
-> $ systemctl start nfs-server.service
-> $ mount -o rw,nfsvers=3 127.0.0.1:/media /tmpdir
-> $ cd /opt/ltp
-> $ ./runltp -d /tmpdir -s fcntl17
-> 
-> 
-> 
-> This does not happen in 5.15.153 tag.
-> 
-> Adding nfs people to the CC list
+On Fri, 12 Apr 2024 at 11:21, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Fri, 2024-04-12 at 10:11 +0100, Daire Byrne wrote:
+> > Thanks for the clarity Trond - I promise not to forget this time and
+> > ask the same question again in 2 years!
+> >
+> > It just keeps coming up here at DNEG due to accessing software over
+> > NFS and crazy PYTHONPATH usage by some of our developers. In some
+> > cases, there are 57,000 negative lookups but only 5000 positive
+> > lookups (and opens)!
+> >
+> > Getting devs to optimise their code is my cross to bear I guess.
+> >
+> > But this is also a well known and common problem for large batch farms
+> > and there are some novel workarounds out there:
+> >
+> > https://guix.gnu.org/en/blog/2021/taming-the-stat-storm-with-a-loader-cache
+> > https://computing.llnl.gov/projects/spindle
+> > https://cernvm.cern.ch/fs/
+> >
+> > Coupled with our propensity for high latency (~100ms) NFS via
+> > re-export servers (for "cloud rendering"), these inefficient path
+> > lookups quickly become a killer - the application takes longer to
+> > lookup non-existent files and open files, than it does to execute to
+> > completion. We use aggressive caching (actimeo=3600,nocto,vers=3) and
+> > "preload" metadata ops (ls -l, open) on a regular basis to try and
+> > keep things in (re-export) client cache which certainly helps. It's
+> > hard to keep known (expensive) metadata worksets in memory.
+> >
+> > I've also been looking at using an overlay and hand crafting whiteout
+> > files in the upper layers to essentially block known negative lookups
+> > from hitting the lower NFS share - again, only useful and correct for
+> > read-only software shares.
+> >
+> > I wonder if Jeff Layton's directory delegations will help for
+> > (read-only) metadata heavy lookups over the WAN?
+> >
+>
+> Probably not. In order to optimize away lookups of negative dentries
+> that aren't in cache, you need to know all of the positive dentries in
+> the directory. As Trond pointed out earlier in the discussion, NFS
+> doesn't have a concept of directory "completeness", so we can't
+> reasonably do this.
+>
+> FWIW, CephFS does have such a concept and can satisfy readdir requests
+> and negative lookups out of the cache when it has complete directory
+> info.
 
-Any way you can run 'git bisect' to find the offending change?  There's
-a lot to dig through :(
+Out of interest, do directory delegations help with positive lookups
+or repeat opens? They may be less numerous in our badly behaved
+workloads, but they are still nice to optimise for latency.
 
-thanks,
+Can you disable "cto" for example if you have a directory delegation
+and repeatedly open the same file for reading without a network hop?
 
-greg k-h
+I also noticed that "nocto" can completely stop any subsequent network
+hops for opens (with a long actimeo) for NFSv3, but on NFSv4 it only
+cuts a single GETATTR before still doing an OPEN DH over the network
+each time.
+
+I'm probably wandering off into "disconnected clients" and AFS style
+territory now...
+
+Daire
+
+
+> > On Fri, 5 Apr 2024 at 16:03, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Fri, 2024-04-05 at 15:47 +0100, Daire Byrne wrote:
+> > > > Apologies for dragging up an old thread, but I've had to tackle
+> > > > wayward negative lookup storms again and I have obviously half
+> > > > forgotten what I learned in this thread last time (even after
+> > > > re-reading it!).
+> > > >
+> > > > Can I just ask if I understand correctly and that there was an
+> > > > intention a long time ago to be able to serve negative dentries from
+> > > > a
+> > > > "complete" READDIRPLUS result?
+> > > >
+> > > > https://www.cs.helsinki.fi/linux/linux-kernel/2002-30/0108.html
+> > > >
+> > > > So if we did a readdirplus on a directory then immediately fired
+> > > > random non existent lookups at the directory, it could be served from
+> > > > the readdirplus result? i.e. not in readdir result, then return
+> > > > ENOENT
+> > > > without needing to ask server?
+> > > >
+> > > > But that is not the case today because you can't track the
+> > > > "completeness" of a READDIRPLUS result for a directory over time (in
+> > > > page cache)? Or is it all due to needing to deal with case
+> > > > insensitive
+> > > > filesystems (which I would think effects positive lookups too)?
+> > > >
+> > > > I did try to decipher the v6.6 fs/nfs/dir.c READDIR bits but I
+> > > > quickly
+> > > > got lost...
+> > > >
+> > > > Cheers,
+> > > >
+> > > > Daire
+> > >
+> > > If the question is whether the client trusts that a READDIR call to the
+> > > server returns all the names that can be successfully looked up, then
+> > > the answer is "no".
+> > > It's not even a question of case sensitivity. There are plenty of
+> > > servers out there that will allow you to look up names that won't ever
+> > > appear in the results of a READDIR (or READDIRPLUS) call. Having a
+> > > hidden ".snapshot" directory is, for instance, a popular way to present
+> > > snapshots.
+> > >
+> > > So no, we're not ever going to implement any negative dentry cache
+> > > scheme that relies on READDIR/READDIRPLUS.
+> > > --
+> > > Trond Myklebust
+> > > Linux NFS client maintainer, Hammerspace
+> > > trond.myklebust@hammerspace.com
+> > >
+> > >
+> >
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
 
