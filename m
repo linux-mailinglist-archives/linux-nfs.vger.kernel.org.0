@@ -1,317 +1,425 @@
-Return-Path: <linux-nfs+bounces-2775-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2776-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE4A18A2C47
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 12:26:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98E628A2C5E
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 12:33:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B2ED1F21EE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 10:26:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2513D1F22C53
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Apr 2024 10:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1652453373;
-	Fri, 12 Apr 2024 10:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912BD26AF9;
+	Fri, 12 Apr 2024 10:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CCOl4BeI";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RDw3Nx8+"
+	dkim=pass (1024-bit key) header.d=caoua.org header.i=@caoua.org header.b="SsfH1PjC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from vm1.arverb.com (vm1.arverb.com [185.82.219.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7374CB2B;
-	Fri, 12 Apr 2024 10:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712917580; cv=fail; b=pD2cQPCRtyAFBnXLEmEHHlC4VtheAOjhDzS51S6iuIOHUzYN2PHpTubzoaFHaMuEVNRvFxh3QPrslgl44pSFFtOJkJrFbjnTPugJUQX+CyewDyqxSz5NK0D7FvNq+w0s+JdLTIIXY6mzCPdGY9BR/pppKgBeaOT9azJJwv0uM4k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712917580; c=relaxed/simple;
-	bh=sa46Gd3b8aVl9Jee0u8+fE/z4hhFaHLaFgt5VUXKxHw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BESqYmvEadGAxN9vW6KpzK5v4wtjgbjd5GjFiWYFxcWZgml71C7VcC1E6PGfEGc+chKkjSXYeP6DLD0zUHSGwu+dHojEdE/Iw9CczWKQXXo7yW3eHI0/XHGmbSdK3BwTBqAWHwbVY5t6L0vJYDq8UPkNKKlw6pUClqln/SpML7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CCOl4BeI; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RDw3Nx8+; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43C9447A015314;
-	Fri, 12 Apr 2024 10:25:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=zYvuyuE58REjWHdx3rA/xJTuODq8D6ChHcPgfWmwqLY=;
- b=CCOl4BeINidKUmIhv7ZSOhNowkOKtb7/ELAtn/HA5qnSDhnLgznTLfz8wyQRbuqUBIHS
- fiyeXnJf4cQSRlyx5BK+M7utM4SwvmE0ClG/gGCd31ru6vxEOWYzXBnlg/5vi6xOuzvV
- S9l/tZEnjPPRNeVnylrakVTlEt8JJUisi0ptjVwJz7fM7hzVXBed38k0Tg688RHBJ7s2
- PDsbGv2G02noGgt/t8K6Km7XP7Qa+N8NlObkgvO9BefRWJG6NBZQqmhRlbLAVzRONRe8
- HoNjSR6Ile9K8BRCyZv6KFkobUHrYe/G7RUlJxxjVXhU1eM21l89SJeHkKwH5FyfCxqm rA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xavtfbcug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Apr 2024 10:25:49 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43C9ImCv007835;
-	Fri, 12 Apr 2024 10:25:48 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xavuasydm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Apr 2024 10:25:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jNl+pFFojyNpBCnwcp/jSeEaXRdhfb+GGnlFT3DIFDkiB+W1B5EAOcNPFl52znyuKGKOGgXXHqx+2nJdvgdojUnw1wLXAf1TlNUUhs96Sw+44dwhza1Z7FtgzBmtA/R4Ir0FIDkr+dJYaQGxbUi0e7BSuvcM9LofTwFOFowXSbFyOZxuJSMo/yKVBkIhoYh+g2Yr8D6cWuljTYrmBgwrkpP8CxJ0gr7RJPuH8mMP8FlKZuhZ6rNvyhKr66loxViq9gqPpFWJDJBgdoCfHFvFqDD/s+IJ1TFwJ85GmcCk+OzXKmWLC/r82bB0+S6wdAcSIXGwHyIK+Ozwrji9nxTJAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zYvuyuE58REjWHdx3rA/xJTuODq8D6ChHcPgfWmwqLY=;
- b=SiZ1WpUerljK6pJWEn4i1JST759ns4W8asbceKL2UsNBZy+M7r6VtCOR7e8pkA8HVCWw+wrNcP9IZAHU9DFQqBx/1phfODfdZDSZ6Uz6fjrjrIUiYOjs9NEWMlLpSJR+E93izE3Jtxzeu/C9lz7KUakyaKdq1Z5GHbtvPN1Tn0piHhZFLEQ4yOSEKvJenWQOPQYaJR2oHv/fd3F5Kf7/YzVYaPa2niMe2vnHZvoFWI/3bEuVougCth2XDn72KgrB4kTQGXVuslo2MXqu+85ToHLAxvJNY0TFcxlLajdwZEiX/NP0VHuSTTiKSmE2LjhPGK4tIJFCt/S82VfrcT34EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zYvuyuE58REjWHdx3rA/xJTuODq8D6ChHcPgfWmwqLY=;
- b=RDw3Nx8+LZwbjtHr0JS/iPnZ6JUwhIIh2+/gYDn1ms5GjsmAnPiDzYQF2W0zffqZRVuecE6IvvY4j2ZUQUhT0IsPPRe1x/n23pcTtWVYgQ20nG9Aw43Som4LT/LzbrhWV3Ct4brIJpY3pg6PDKI5gUNDywG/xcyJet3pcaIMSt8=
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com (2603:10b6:510:1c1::7)
- by PH0PR10MB4485.namprd10.prod.outlook.com (2603:10b6:510:41::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Fri, 12 Apr
- 2024 10:25:46 +0000
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::f5ee:d47b:69b8:2e89]) by PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::f5ee:d47b:69b8:2e89%3]) with mapi id 15.20.7409.042; Fri, 12 Apr 2024
- 10:25:46 +0000
-Message-ID: <2c2362c7-ace7-4a79-861e-fa435e46ac85@oracle.com>
-Date: Fri, 12 Apr 2024 15:55:34 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
-        rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
-        broonie@kernel.org, Calum Mackay <calum.mackay@oracle.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Darren Kenny <darren.kenny@oracle.com>,
-        Ramanan Govindarajan <ramanan.govindarajan@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20240411095407.982258070@linuxfoundation.org>
-Content-Language: en-US
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20240411095407.982258070@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR03CA0004.apcprd03.prod.outlook.com
- (2603:1096:404:14::16) To PH8PR10MB6290.namprd10.prod.outlook.com
- (2603:10b6:510:1c1::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7D940BF2
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Apr 2024 10:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.82.219.62
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712918023; cv=none; b=e7FRJA3tfqOrOt7bj4pAJRjegt6dRWHtoA0J4MAVtZQZx07vWVOL2pUEUI4burA3YkEIkQhBpGv3ZDcOpnrN+/Wn/UxdwreppAF7vRBmEACdLyaTcK6Rc9JVOJx8C7fgzoBrv7nDcWGIr64/VSnXOu965Ue7CLpPp4oeTwSyW04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712918023; c=relaxed/simple;
+	bh=CnU8JGY4RQUZGKwyVyCsZJdiBXgPSbGYhVnru2PYpKM=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ujjobA6rUTpW8H8kv/pdVow/3zYotMzGob8vRAr//Sg6zJk/9FK8tpueoJcQVLn9A102DPqqiwX3hpXEUn+6TS8M2NUuOrYlMkmk8AjL02iyyR9mR3XJY4RyySTpgPjzt33we5YO1VT5rrJDL7uQPkB8x8f4FsbwV1W16CPV7vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=caoua.org; spf=pass smtp.mailfrom=caoua.org; dkim=pass (1024-bit key) header.d=caoua.org header.i=@caoua.org header.b=SsfH1PjC; arc=none smtp.client-ip=185.82.219.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=caoua.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=caoua.org
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=CnU8JGY4RQUZ
+	GKwyVyCsZJdiBXgPSbGYhVnru2PYpKM=; h=subject:to:from:date; d=caoua.org;
+	b=SsfH1PjCxpnTAds6MMyg41cCj060AbFG2sk7rr3D0As+N3IoysxQ6lCV5XQ2H5k+JGv1
+	G4NWN5LHigia9ASnkNzgh++rhhq75rkxaZjv5Aju7mB1x6tGbE+tPOsYe0kyaTFAGfp0YD
+	l8AQUXztwqp04AWyma4l3szfgSkoOK79A=
+Received: from localhost (vm1.arverb.com [local])
+	by vm1.arverb.com (OpenSMTPD) with ESMTPA id c2004026
+	for <linux-nfs@vger.kernel.org>;
+	Fri, 12 Apr 2024 12:26:57 +0200 (CEST)
+Date: Fri, 12 Apr 2024 12:26:57 +0200
+From: Alexandre Ratchov <alex@caoua.org>
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH] mount: If a reserved ports is used, do so for the pings as
+ well
+Message-ID: <ZhkMcZDhJhsVjo52@vm1.arverb.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6290:EE_|PH0PR10MB4485:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ad67f6a-286e-459d-652b-08dc5adaea55
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	iPQtvqK4jXek82je2K4Rhm0/vTjmX+or0ozzWn9MMALrnYGdKuiinSLzHYZBwKAlClDP2Ufd0mzycL5I7lx9HgDMESTyxJWaksMhIC9q8J1PqW06lgzBPdlmmQJqmD6voySwbyaG4gE8lQO6pat/OtKEZJGZTjjU3D4HWQYTyE6NMShVkFvLvi+e2HqJPko6yDx1Gw1Msg21M8vzTNYDm/70mxMm2qyylcOVK/QJy3ohBADXpM6TzB4D1l892yPUnCvZ0BxzJhM2ZBIgC5cuEfZlj+MOHf3d8/47Tb3VQGdIn4eYlYVTA04HiWBwssG1DhmDFn6vgHpBPCJySSnFIocMExSk7t45ORk8CYMnyb8VqzHrR/S3GHStSMdeU10qvejAT9SiOzs5CjbEc8edJB1DUo0jzuOvRg5TeUlIHT8Yt0peuI/7/2JIe41tPXPc1uSIm7ipmJ6DyJEPgO0CFE9/ASQb/B4aE4ow7bAcey0eRGyBN6YT55jQsVH9i60nkq48C/VkO0MuYHzaafw9p4S7xX7CjKnlpnJsBTtUTzJwJUourveEajugojKuXZy/afGDcBeLasHUKwpugQWTIgqSzYy42A+V2DQrOZxvqIOKD+t3rWnKhRww+rlJyoyFNqgt/tWWRxSnnfTlQBa57DKLnDCGvtBYfjL3uE9afFA=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?Ny9XcUlGRjk1dVBnRkVRbjRtY0Rubm54VUdWdk5kcXhYbkw3QW1XeDBlQm5R?=
- =?utf-8?B?Z0tsT2krLzBoMGFMYTAzVXkxTTJSclFIbktjQlRYUitZN1dLMldWVlhndEZF?=
- =?utf-8?B?ck1GOHlsKzBYRmFnWWRHN2VpODJEUlVpNGkyUE5SNUZCdndXdUdLdzVrZ3BI?=
- =?utf-8?B?cWhKMGRLWjRhU0lCV3Zha3FYdTQ3a1Y2YnVIckRNU3JGNFN0aVpob1VFU2cy?=
- =?utf-8?B?enNkT3ZoZnhPVlBObFovVXhrREdYbkEzS0FDUlZYUFFpS28rNjdLWndHNlFQ?=
- =?utf-8?B?Z3JMYTJ1aHluK0dLQ0tuUWN6YVloa0ptZXgzWGFXODFRVFcyck56NTNNS2ZT?=
- =?utf-8?B?eVNVcnlxYjR1djZFcmVBZWRERFZvOFlnb0M3MUFybTduRVZoWWdnZ2Jxa3Rh?=
- =?utf-8?B?TXFvblp1UEVEWFFEaHZ1QmJIU3RFMjNUazduU1FSYjVJY1NDYzdiMktQMTkr?=
- =?utf-8?B?TlRhWWdTUzJQbTJiMERIeE0rbXhpVit1dzVXYTRJcFNWa0VleXo1OUFEcHJW?=
- =?utf-8?B?clRjdXJlaVFYRU02NFArL0FpQUNJbDYvU0VpTWJmNTA3VVNkZ0E1S0x5Mzlr?=
- =?utf-8?B?V2JENjJibzFxc3dZLytCY3p2ZUZJK28xZWJMN29maE5Vcm1LY1graklGVnkv?=
- =?utf-8?B?dlNzRWswaHR2Y0tuNEJEQ3ZJeEpubG5EL21FUHRSR3ZoeGNIZ0o0TTNPNGNZ?=
- =?utf-8?B?UlArdXNhOWRaV21GeEUwcWNlSWtxa2o4TUloUlhBQmhmbnpkVWhadVpwek80?=
- =?utf-8?B?a0psdWRIMmNBWHNxbnNxMGVIc1h5VEJya2tVWnpFRHlvYWgwR0NxdDZiNC8r?=
- =?utf-8?B?ZnlXMitRY3JjdHY2TGpQVXdUa0xYSVJUcE1YNGo4cnlFYTY5MVdZaVk0aXRN?=
- =?utf-8?B?MVBaMk1vdm5GMFZ6YXFOa3BQMGlNMDM4VmI4c3ZVc3BJV3NvT2h2eDQyN0ln?=
- =?utf-8?B?eUt4M3RJcC9kbHhxMGtjdEVuYkE0a0FFbS9mMXJKMzMvWTJRa3hxNEw1Ym5x?=
- =?utf-8?B?bWJ2WkY2VU5BbGhXNUtPaEJqRThZSTR1RlhENzVGMU1GMHVwdjB2UjU2UUVF?=
- =?utf-8?B?dE5OMUNCSjhJRGYrUlowTERDNzBId2dmNW51UFRVdUNsc3pmaFFiRmJ1UGg1?=
- =?utf-8?B?bGxEK0VDb2t0NnkwVVBKdGwzWHNibzdtcmVKV1FMQ0c1QjEvVlhBbmRaeXJm?=
- =?utf-8?B?RXJuNGhXM3dOVEJ1MWFndHVsc3FwdFU4UGtvREhMZEJjNXRwV0MrdHV6MWRK?=
- =?utf-8?B?NUNHZVdMMHZXWDZqWXNxZ1RUbUhyRFVQWG90ZWZPa0lrMzhKa0FnRVU5OFox?=
- =?utf-8?B?ZHM5OWZrdmVFK2lkdWRyOVYzdnZkQXMzUVRBa2xtVHF1bHd4bEtHb09wZDVG?=
- =?utf-8?B?KzN0L3dXeExuOEhkYXdLMU5rLy9qZitrTVhLSmhVNGJGM3ZpQ3dnbk9VK3pT?=
- =?utf-8?B?c2FybXpRSEhaMHBMMmZuZkxnYjIyNXJKWENvb0dUL1RYNW1LWmVZL1hTUkNR?=
- =?utf-8?B?Y2Vvbzl6Y1NlNlkrMHBzaENCRGNuWVZ2WWRHcUZiaUhkcnVhRzZPdHVGVjU1?=
- =?utf-8?B?dkhKL0x0REdialFXR2RrSWo3aUNkNTRSNEI2WlpMV1ZDLzF6MUFuSHFRMjF5?=
- =?utf-8?B?T3NRTUF4Z05YOUVtUU1TNmVOaTdJd2ZvOXNhU2VEbldTb25LS05qZ2VLVFYr?=
- =?utf-8?B?UmRZNGpIdTFpejg2RGVjNGZxRW44WDNoeHE3YWxEUlJjY0xFRnJnR0VHeDNQ?=
- =?utf-8?B?bVZtRXY4bGo2ekxqeXJmUUdod1JlQWZ3WVdkZ2Znd3dKcWZOMFVsWk1PU3Bq?=
- =?utf-8?B?c1VMUVFEVG9SYi9pbzdRMXlUTDh0bUZiNjU3VEVhdURXMFFYenU4ZG8ydVF5?=
- =?utf-8?B?SFJtQVNMbVJJMEpwaW1MbWowSVBVNXRWSEd0aDRuZFc4RGZtTHN3MWw3aDF3?=
- =?utf-8?B?NWlhcFB1VUVRWDErQW93dWJ3VGM1LzI4OW1BcjBCL3l1cFR1K0RFRFdLbG1q?=
- =?utf-8?B?YzYrbXQwUDRZYjExcy84eFk5WGI5THVrQllKT0JOVUl2Sk1nK3Y0d3FrZnk3?=
- =?utf-8?B?RW5GbFdvV0U0MG5SM2dGditWS29UVk52cmNSSGEzeEEycFpydFUzMHlNMXkx?=
- =?utf-8?B?R091ckphYVVSdTJ6cnNic1JQRDkrTzIvdlNWUkhQWWVzWEZFMVB5OEd0dXVN?=
- =?utf-8?Q?awr3Ol3ti4YrDV88XXkmFtY=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	t97wf0OARh3h9+28ZaWLqn7N80P24le3x8xn/LcauOndENIL5YwVx0ui98NCuSnlbQgBcU0sdkp0Sv8UmJThOUHxQLXxEMf1CEhhCxXg7hiblRFlG5n8eiT3WupvycUL7pM2TGzn955l7Lm6QFgEmXKq88sN6SHtYfCRtaes7Cd5B9e5rHCHSPETXF8/h0gMpXtPC8VFa1FDimB9LnIThTiPttQUM83Ex4UoctP91sZVN9hxI5UggRIX36VZw5+GAWH0mjhrfQyxbu67ISkRNeF64pgVXaGt9HrBqoCC9T6Z8G3h205uc0ALU1RF2Kjx9fX+ZWVvzxq9BClkkqgfVg8L4SxXDFqGY82M0nkR2Kh9ndl/CivR6G0wMFNO5RMsyiZcW2m2HGI70/PpPp2aNWRU8f46nMI0KFpIYg5v+O+vhyf/IRu3vB905Phbd1wGPsetFOUJh87Z6gYjtELuyesbGiAICLX3UqITgpBJUBwZeGhkBYjKUIUaRYhfmIOz9xIG5LH1ij0R1zpdYfHc2LCIAEbjaEPs4eEved9dcH6Fo/63E1GyjEAR4AtgzZnW/3RA04Yxruzqh5RopkKProxuPfu7Wkkztc3bDM5ra8M=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad67f6a-286e-459d-652b-08dc5adaea55
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6290.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 10:25:46.2779
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QyADGPcVP7/6V0A4AoSi2HRiPe19RgqxTOF12yNoa9Hr6/Fh3aQkIA2++KwDV/j/nyOCw7liSh0pDfdyUUOlXtkfS52jQBnijAGmO6kq2tNvoQ03elY+ucRa4l1A84Ri
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4485
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_06,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 adultscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404120075
-X-Proofpoint-GUID: ZLkZf84YQVQSrp2XJEp9JnnoNjfxwnoj
-X-Proofpoint-ORIG-GUID: ZLkZf84YQVQSrp2XJEp9JnnoNjfxwnoj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Greg,
+Hi,
 
+mount.nfs always uses a high port to probe the server's ports (regardless of
+the "-o resvport" option).  Certain NFS servers (ex.  OpenBSD -current) will
+drop the connection, the probe will fail, and mount.nfs will exit before any
+attempt to mount the file-system.  If mount.nfs doesn't ping the server from
+a high port, mounting the file system will just work.
 
-On 11/04/24 15:27, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.155 release.
-> There are 57 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
-> 
+Note that the same will happen if the server is behind a firewall that
+blocks connections to the NFS service that originates from a high port.
 
-I have noticed a regression in lts test case with nfsv4 and this was 
-overlooked in the previous cycle(5.15.154). So the regression is from 
-153-->154 update. And I think that is due to nfs backports we had in 
-5.15.154.
+---
+ support/include/nfsrpc.h |  3 ++-
+ support/nfs/getport.c    | 10 +++++++---
+ utils/mount/network.c    | 36 ++++++++++++++++++++----------------
+ utils/mount/network.h    |  4 ++--
+ utils/mount/nfsmount.c   | 16 +++++++++++-----
+ utils/mount/stropts.c    | 24 +++++++++++++++++++++---
+ 6 files changed, 63 insertions(+), 30 deletions(-)
 
-# ./runltp -d /tmpdir -s fcntl17
-
-<<<test_start>>>
-tag=fcntl17 stime=1712915065
-cmdline="fcntl17"
-contacts=""
-analysis=exit
-<<<test_output>>>
-fcntl17     0  TINFO  :  Enter preparation phase
-fcntl17     0  TINFO  :  Exit preparation phase
-fcntl17     0  TINFO  :  Enter block 1
-fcntl17     0  TINFO  :  child 1 starting
-fcntl17     0  TINFO  :  child 1 pid 22904 locked
-fcntl17     0  TINFO  :  child 2 starting
-fcntl17     0  TINFO  :  child 2 pid 22905 locked
-fcntl17     0  TINFO  :  child 3 starting
-fcntl17     0  TINFO  :  child 3 pid 22906 locked
-fcntl17     0  TINFO  :  child 2 resuming
-fcntl17     0  TINFO  :  child 3 resuming
-fcntl17     0  TINFO  :  child 1 resuming
-fcntl17     0  TINFO  :  child 3 lockw err 35
-fcntl17     0  TINFO  :  child 3 exiting
-fcntl17     0  TINFO  :  child 1 unlocked
-fcntl17     0  TINFO  :  child 1 exiting
-fcntl17     1  TFAIL  :  fcntl17.c:429: Alarm expired, deadlock not detected
-fcntl17     0  TWARN  :  fcntl17.c:430: You may need to kill child 
-processes by hand
-fcntl17     2  TPASS  :  Block 1 PASSED
-fcntl17     0  TINFO  :  Exit block 1
-fcntl17     0  TWARN  :  tst_tmpdir.c:342: tst_rmdir: 
-rmobj(/tmpdir/ltp-jRFBtBQhhx/LTP_fcnp7lqPn) failed: 
-unlink(/tmpdir/ltp-jRFBtBQhhx/LTP_fcnp7lqPn) failed; errno=2: ENOENT
-<<<execution_status>>>
-initiation_status="ok"
-duration=10 termination_type=exited termination_id=5 corefile=no
-cutime=0 cstime=0
-<<<test_end>>>
-<<<test_start>>>
-tag=fcntl17_64 stime=1712915075
-cmdline="fcntl17_64"
-contacts=""
-analysis=exit
-<<<test_output>>>
-incrementing stop
-fcntl17     0  TINFO  :  Enter preparation phase
-fcntl17     0  TINFO  :  Exit preparation phase
-fcntl17     0  TINFO  :  Enter block 1
-fcntl17     0  TINFO  :  child 1 starting
-fcntl17     0  TINFO  :  child 1 pid 22909 locked
-fcntl17     0  TINFO  :  child 2 starting
-fcntl17     0  TINFO  :  child 2 pid 22910 locked
-fcntl17     0  TINFO  :  child 3 starting
-fcntl17     0  TINFO  :  child 3 pid 22911 locked
-fcntl17     0  TINFO  :  child 2 resuming
-fcntl17     0  TINFO  :  child 3 resuming
-fcntl17     0  TINFO  :  child 1 resuming
-fcntl17     0  TINFO  :  child 3 lockw err 35
-fcntl17     0  TINFO  :  child 3 exiting
-fcntl17     0  TINFO  :  child 1 unlocked
-fcntl17     0  TINFO  :  child 1 exiting
-fcntl17     1  TFAIL  :  fcntl17.c:429: Alarm expired, deadlock not detected
-fcntl17     0  TWARN  :  fcntl17.c:430: You may need to kill child 
-processes by hand
-fcntl17     2  TPASS  :  Block 1 PASSED
-fcntl17     0  TINFO  :  Exit block 1
-fcntl17     0  TWARN  :  tst_tmpdir.c:342: tst_rmdir: 
-rmobj(/tmpdir/ltp-jRFBtBQhhx/LTP_fcn9Xy4hM) failed: 
-unlink(/tmpdir/ltp-jRFBtBQhhx/LTP_fcn9Xy4hM) failed; errno=2: ENOENT
-<<<execution_status>>>
-initiation_status="ok"
-duration=10 termination_type=exited termination_id=5 corefile=no
-cutime=0 cstime=0
-<<<test_end>>>
-INFO: ltp-pan reported some tests FAIL
-LTP Version: 20240129-167-gb592cdd0d
-
-
-Steps used after installing latest ltp:
-
-$ mkdir /tmpdir
-$ yum install nfs-utils  -y
-$ echo "/media *(rw,no_root_squash,sync)" >/etc/exports
-$ systemctl start nfs-server.service
-$ mount -o rw,nfsvers=3 127.0.0.1:/media /tmpdir
-$ cd /opt/ltp
-$ ./runltp -d /tmpdir -s fcntl17
-
-
-
-This does not happen in 5.15.153 tag.
-
-Adding nfs people to the CC list
-
-
-
-Thanks,
-Harshit
-
-
-
-
-
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.155-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+diff --git a/support/include/nfsrpc.h b/support/include/nfsrpc.h
+index fbbdb6a9..9106c195 100644
+--- a/support/include/nfsrpc.h
++++ b/support/include/nfsrpc.h
+@@ -170,7 +170,8 @@ extern int		nfs_rpc_ping(const struct sockaddr *sap,
+ 				const rpcprog_t program,
+ 				const rpcvers_t version,
+ 				const unsigned short protocol,
+-				const struct timeval *timeout);
++				const struct timeval *timeout,
++				const int resvport);
+ 
+ /* create AUTH_SYS handle with no supplemental groups */
+ extern AUTH *			 nfs_authsys_create(void);
+diff --git a/support/nfs/getport.c b/support/nfs/getport.c
+index 813f7bf9..ff7e9991 100644
+--- a/support/nfs/getport.c
++++ b/support/nfs/getport.c
+@@ -730,7 +730,8 @@ static unsigned short nfs_gp_getport(CLIENT *client,
+  */
+ int nfs_rpc_ping(const struct sockaddr *sap, const socklen_t salen,
+ 		 const rpcprog_t program, const rpcvers_t version,
+-		 const unsigned short protocol, const struct timeval *timeout)
++		 const unsigned short protocol, const struct timeval *timeout,
++		 const int resvport)
+ {
+ 	union nfs_sockaddr address;
+ 	struct sockaddr *saddr = &address.sa;
+@@ -744,8 +745,11 @@ int nfs_rpc_ping(const struct sockaddr *sap, const socklen_t salen,
+ 	nfs_clear_rpc_createerr();
+ 
+ 	memcpy(saddr, sap, (size_t)salen);
+-	client = nfs_get_rpcclient(saddr, salen, protocol,
+-						program, version, &tout);
++	client = resvport ?
++		 nfs_get_priv_rpcclient(saddr, salen, protocol,
++					program, version, &tout) :
++		 nfs_get_rpcclient(saddr, salen, protocol,
++				   program, version, &tout);
+ 	if (client != NULL) {
+ 		result = nfs_gp_ping(client, tout);
+ 		nfs_gp_map_tcp_errorcodes(protocol);
+diff --git a/utils/mount/network.c b/utils/mount/network.c
+index 01ead49f..d9221567 100644
+--- a/utils/mount/network.c
++++ b/utils/mount/network.c
+@@ -525,7 +525,7 @@ static void nfs_pp_debug2(const char *str)
+  */
+ static int nfs_probe_port(const struct sockaddr *sap, const socklen_t salen,
+ 			  struct pmap *pmap, const unsigned long *versions,
+-			  const unsigned int *protos)
++			  const unsigned int *protos, const int resvp)
+ {
+ 	union nfs_sockaddr address;
+ 	struct sockaddr *saddr = &address.sa;
+@@ -550,7 +550,7 @@ static int nfs_probe_port(const struct sockaddr *sap, const socklen_t salen,
+ 				nfs_pp_debug(saddr, salen, prog, *p_vers,
+ 						*p_prot, p_port);
+ 				if (nfs_rpc_ping(saddr, salen, prog,
+-							*p_vers, *p_prot, NULL))
++						 *p_vers, *p_prot, NULL, resvp))
+ 					goto out_ok;
+ 			} else
+ 				rpc_createerr.cf_stat = RPC_PROGNOTREGISTERED;
+@@ -603,7 +603,7 @@ out_ok:
+  * returned; rpccreateerr.cf_stat is set to reflect the nature of the error.
+  */
+ static int nfs_probe_nfsport(const struct sockaddr *sap, const socklen_t salen,
+-			     struct pmap *pmap, int checkv4)
++			     struct pmap *pmap, int checkv4, int resvp)
+ {
+ 	if (pmap->pm_vers && pmap->pm_prot && pmap->pm_port)
+ 		return 1;
+@@ -617,13 +617,13 @@ static int nfs_probe_nfsport(const struct sockaddr *sap, const socklen_t salen,
+ 		memcpy(&save_sa, sap, salen);
+ 
+ 		ret = nfs_probe_port(sap, salen, pmap,
+-				     probe_nfs3_only, probe_proto);
++				     probe_nfs3_only, probe_proto, resvp);
+ 		if (!ret || !checkv4 || probe_proto != probe_tcp_first)
+ 			return ret;
+ 
+ 		nfs_set_port((struct sockaddr *)&save_sa, NFS_PORT);
+ 		ret =  nfs_rpc_ping((struct sockaddr *)&save_sa, salen, 
+-			NFS_PROGRAM, 4, IPPROTO_TCP, NULL);
++				    NFS_PROGRAM, 4, IPPROTO_TCP, NULL, resvp);
+ 		if (ret) {
+ 			rpc_createerr.cf_stat = RPC_FAILED;
+ 			rpc_createerr.cf_error.re_errno = EAGAIN;
+@@ -632,7 +632,7 @@ static int nfs_probe_nfsport(const struct sockaddr *sap, const socklen_t salen,
+ 		return 1;
+ 	} else
+ 		return nfs_probe_port(sap, salen, pmap,
+-					probe_nfs2_only, probe_udp_only);
++				      probe_nfs2_only, probe_udp_only, resvp);
+ }
+ 
+ /*
+@@ -649,17 +649,17 @@ static int nfs_probe_nfsport(const struct sockaddr *sap, const socklen_t salen,
+  * returned; rpccreateerr.cf_stat is set to reflect the nature of the error.
+  */
+ static int nfs_probe_mntport(const struct sockaddr *sap, const socklen_t salen,
+-				struct pmap *pmap)
++			     struct pmap *pmap)
+ {
+ 	if (pmap->pm_vers && pmap->pm_prot && pmap->pm_port)
+ 		return 1;
+ 
+ 	if (nfs_mount_data_version >= 4)
+ 		return nfs_probe_port(sap, salen, pmap,
+-					probe_mnt3_only, probe_udp_first);
++				      probe_mnt3_only, probe_udp_first, 0);
+ 	else
+ 		return nfs_probe_port(sap, salen, pmap,
+-					probe_mnt1_first, probe_udp_only);
++				      probe_mnt1_first, probe_udp_only, 0);
+ }
+ 
+ /*
+@@ -676,9 +676,10 @@ static int nfs_probe_version_fixed(const struct sockaddr *mnt_saddr,
+ 			struct pmap *mnt_pmap,
+ 			const struct sockaddr *nfs_saddr,
+ 			const socklen_t nfs_salen,
+-			struct pmap *nfs_pmap)
++			struct pmap *nfs_pmap,
++			const int resvp)
+ {
+-	if (!nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, 0))
++	if (!nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, 0, resvp))
+ 		return 0;
+ 	return nfs_probe_mntport(mnt_saddr, mnt_salen, mnt_pmap);
+ }
+@@ -706,7 +707,8 @@ int nfs_probe_bothports(const struct sockaddr *mnt_saddr,
+ 			const struct sockaddr *nfs_saddr,
+ 			const socklen_t nfs_salen,
+ 			struct pmap *nfs_pmap,
+-			int checkv4)
++			int checkv4,
++			int resvp)
+ {
+ 	struct pmap save_nfs, save_mnt;
+ 	const unsigned long *probe_vers;
+@@ -718,7 +720,8 @@ int nfs_probe_bothports(const struct sockaddr *mnt_saddr,
+ 
+ 	if (nfs_pmap->pm_vers)
+ 		return nfs_probe_version_fixed(mnt_saddr, mnt_salen, mnt_pmap,
+-					       nfs_saddr, nfs_salen, nfs_pmap);
++					       nfs_saddr, nfs_salen, nfs_pmap,
++					       resvp);
+ 
+ 	memcpy(&save_nfs, nfs_pmap, sizeof(save_nfs));
+ 	memcpy(&save_mnt, mnt_pmap, sizeof(save_mnt));
+@@ -727,7 +730,8 @@ int nfs_probe_bothports(const struct sockaddr *mnt_saddr,
+ 
+ 	for (; *probe_vers; probe_vers++) {
+ 		nfs_pmap->pm_vers = mntvers_to_nfs(*probe_vers);
+-		if (nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, checkv4) != 0) {
++		if (nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, checkv4,
++				      resvp) != 0) {
+ 			mnt_pmap->pm_vers = *probe_vers;
+ 			if (nfs_probe_mntport(mnt_saddr, mnt_salen, mnt_pmap) != 0)
+ 				return 1;
+@@ -759,7 +763,7 @@ int nfs_probe_bothports(const struct sockaddr *mnt_saddr,
+  * Otherwise zero is returned; rpccreateerr.cf_stat is set to reflect
+  * the nature of the error.
+  */
+-int probe_bothports(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server)
++int probe_bothports(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server, int resvp)
+ {
+ 	struct sockaddr *mnt_addr = SAFE_SOCKADDR(&mnt_server->saddr);
+ 	struct sockaddr *nfs_addr = SAFE_SOCKADDR(&nfs_server->saddr);
+@@ -767,7 +771,7 @@ int probe_bothports(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server)
+ 	return nfs_probe_bothports(mnt_addr, sizeof(mnt_server->saddr),
+ 					&mnt_server->pmap,
+ 					nfs_addr, sizeof(nfs_server->saddr),
+-					&nfs_server->pmap, 0);
++					&nfs_server->pmap, 0, resvp);
+ }
+ 
+ /**
+diff --git a/utils/mount/network.h b/utils/mount/network.h
+index 0fc98acd..8bcc7ace 100644
+--- a/utils/mount/network.h
++++ b/utils/mount/network.h
+@@ -39,10 +39,10 @@ typedef struct {
+ static const struct timeval TIMEOUT = { 20, 0 };
+ static const struct timeval RETRY_TIMEOUT = { 3, 0 };
+ 
+-int probe_bothports(clnt_addr_t *, clnt_addr_t *);
++int probe_bothports(clnt_addr_t *, clnt_addr_t *, int);
+ int nfs_probe_bothports(const struct sockaddr *, const socklen_t,
+ 			struct pmap *, const struct sockaddr *,
+-			const socklen_t, struct pmap *, int);
++			const socklen_t, struct pmap *, int, int);
+ int nfs_gethostbyname(const char *, struct sockaddr_in *);
+ int nfs_lookup(const char *hostname, const sa_family_t family,
+ 		struct sockaddr *sap, socklen_t *salen);
+diff --git a/utils/mount/nfsmount.c b/utils/mount/nfsmount.c
+index 3d95da94..a792c6e7 100644
+--- a/utils/mount/nfsmount.c
++++ b/utils/mount/nfsmount.c
+@@ -123,13 +123,13 @@ nfs2_mount(CLIENT *clnt, mnt2arg_t *mnt2arg, mnt2res_t *mnt2res)
+ 
+ static int
+ nfs_call_mount(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server,
+-	       mntarg_t *mntarg, mntres_t *mntres)
++	       mntarg_t *mntarg, mntres_t *mntres, int resvp)
+ {
+ 	CLIENT *clnt;
+ 	enum clnt_stat stat;
+ 	int msock;
+ 
+-	if (!probe_bothports(mnt_server, nfs_server))
++	if (!probe_bothports(mnt_server, nfs_server, resvp))
+ 		goto out_bad;
+ 
+ 	clnt = mnt_openclnt(mnt_server, &msock);
+@@ -164,7 +164,8 @@ nfs_call_mount(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server,
+ static int
+ parse_options(char *old_opts, struct nfs_mount_data *data,
+ 	      int *bg, int *retry, clnt_addr_t *mnt_server,
+-	      clnt_addr_t *nfs_server, char *new_opts, const int opt_size)
++	      clnt_addr_t *nfs_server, char *new_opts, const int opt_size,
++	      int *resvp)
+ {
+ 	struct sockaddr_in *mnt_saddr = &mnt_server->saddr;
+ 	struct pmap *mnt_pmap = &mnt_server->pmap;
+@@ -177,6 +178,7 @@ parse_options(char *old_opts, struct nfs_mount_data *data,
+ 
+ 	data->flags = 0;
+ 	*bg = 0;
++	*resvp = 1;
+ 
+ 	len = strlen(new_opts);
+ 	tmp_opts = xstrdup(old_opts);
+@@ -365,6 +367,8 @@ parse_options(char *old_opts, struct nfs_mount_data *data,
+ 				data->flags &= ~NFS_MOUNT_NOAC;
+ 				if (!val)
+ 					data->flags |= NFS_MOUNT_NOAC;
++			} else if (!strcmp(opt, "resvport")) {
++				*resvp = val;
+ #if NFS_MOUNT_VERSION >= 2
+ 			} else if (!strcmp(opt, "tcp")) {
+ 				data->flags &= ~NFS_MOUNT_TCP;
+@@ -498,6 +502,7 @@ nfsmount(const char *spec, const char *node, int flags,
+ 	static struct nfs_mount_data data;
+ 	int val;
+ 	static int doonce = 0;
++	int resvp;
+ 
+ 	clnt_addr_t mnt_server = { 
+ 		.hostname = &mounthost 
+@@ -582,7 +587,7 @@ nfsmount(const char *spec, const char *node, int flags,
+ 	/* parse options */
+ 	new_opts[0] = 0;
+ 	if (!parse_options(old_opts, &data, &bg, &retry, &mnt_server, &nfs_server,
+-			   new_opts, sizeof(new_opts)))
++			   new_opts, sizeof(new_opts), &resvp))
+ 		goto fail;
+ 	if (!nfsmnt_check_compat(nfs_pmap, mnt_pmap))
+ 		goto fail;
+@@ -620,6 +625,7 @@ nfsmount(const char *spec, const char *node, int flags,
+ #if NFS_MOUNT_VERSION >= 5
+ 	printf(_(", sec = %u"), data.pseudoflavor);
+ 	printf(_(", readdirplus = %d"), (data.flags & NFS_MOUNT_NORDIRPLUS) != 0);
++	printf(_(", resvp = %u"), resvp);
+ #endif
+ 	printf("\n");
+ #endif
+@@ -670,7 +676,7 @@ nfsmount(const char *spec, const char *node, int flags,
+ 				sleep(30);
+ 
+ 			stat = nfs_call_mount(&mnt_server, &nfs_server,
+-					      &dirname, &mntres);
++					      &dirname, &mntres, resvp);
+ 			if (stat)
+ 				break;
+ 			memcpy(nfs_pmap, &save_nfs, sizeof(*nfs_pmap));
+diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+index a92c4200..85b8ca5a 100644
+--- a/utils/mount/stropts.c
++++ b/utils/mount/stropts.c
+@@ -337,6 +337,20 @@ static int nfs_verify_lock_option(struct mount_options *options)
+ 	return 1;
+ }
+ 
++static const char *nfs_resvport_opttbl[] = {
++	"noresvport",
++	"resvport",
++	NULL,
++};
++
++/*
++ * Returns true unless "noresvport" is set
++ */
++static int nfs_resvport_option(struct mount_options *options)
++{
++	return po_rightmost(options, nfs_resvport_opttbl) != 0;
++}
++
+ static int nfs_insert_sloppy_option(struct mount_options *options)
+ {
+ 	if (linux_version_code() < MAKE_VERSION(2, 6, 27))
+@@ -550,7 +564,7 @@ static int nfs_construct_new_options(struct mount_options *options,
+  * FALSE is returned if some failure occurred.
+  */
+ static int
+-nfs_rewrite_pmap_mount_options(struct mount_options *options, int checkv4)
++nfs_rewrite_pmap_mount_options(struct mount_options *options, int checkv4, int resvp)
+ {
+ 	union nfs_sockaddr nfs_address;
+ 	struct sockaddr *nfs_saddr = &nfs_address.sa;
+@@ -604,7 +618,8 @@ nfs_rewrite_pmap_mount_options(struct mount_options *options, int checkv4)
+ 	 * negotiate.  Bail now if we can't contact it.
+ 	 */
+ 	if (!nfs_probe_bothports(mnt_saddr, mnt_salen, &mnt_pmap,
+-				 nfs_saddr, nfs_salen, &nfs_pmap, checkv4)) {
++				 nfs_saddr, nfs_salen, &nfs_pmap,
++				 checkv4, resvp)) {
+ 		errno = ESPIPE;
+ 		if (rpc_createerr.cf_stat == RPC_PROGNOTREGISTERED)
+ 			errno = EOPNOTSUPP;
+@@ -670,6 +685,7 @@ static int nfs_do_mount_v3v2(struct nfsmount_info *mi,
+ {
+ 	struct mount_options *options = po_dup(mi->options);
+ 	int result = 0;
++	int resvp;
+ 
+ 	if (!options) {
+ 		errno = ENOMEM;
+@@ -704,11 +720,13 @@ static int nfs_do_mount_v3v2(struct nfsmount_info *mi,
+ 		goto out_fail;
+ 	}
+ 
++	resvp = nfs_resvport_option(options);
++
+ 	if (verbose)
+ 		printf(_("%s: trying text-based options '%s'\n"),
+ 			progname, *mi->extra_opts);
+ 
+-	if (!nfs_rewrite_pmap_mount_options(options, checkv4))
++	if (!nfs_rewrite_pmap_mount_options(options, checkv4, resvp))
+ 		goto out_fail;
+ 
+ 	result = nfs_sys_mount(mi, options);
+-- 
+2.44.0
 
