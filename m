@@ -1,123 +1,130 @@
-Return-Path: <linux-nfs+bounces-2796-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2797-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7E498A4090
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Apr 2024 08:13:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 871578A4458
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Apr 2024 19:11:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E9C4281CED
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Apr 2024 06:13:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FE051C20EF6
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Apr 2024 17:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954681C687;
-	Sun, 14 Apr 2024 06:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CCsIvchc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188F11353F4;
+	Sun, 14 Apr 2024 17:11:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B9B1799D;
-	Sun, 14 Apr 2024 06:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8C3134CE8;
+	Sun, 14 Apr 2024 17:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713075221; cv=none; b=m9Rh/cwOh4Dg+LRMDPf92tknExMww6RMu12gsU31dHeo2wBgGjC6PDXiGV1bwmoza3NlPCaAk/9BsUJv7ycMMHHs9NwQ+zZq96FRnCk7EQFC8arlir7R8qCGcyUoasFDFKHK283gsoN7LCqC0++CfFeRU8ClmERwuo7UXza/9KQ=
+	t=1713114674; cv=none; b=YjJqb5NIIjeYv5E4HrsXMb9W5pQQ/q3qMu7MYDTGNiBANaOZ6UO92PCmv85+U9oy+GeWR0EyxzMy0u7meRkPDqK3Z2ZjhzhRj3MoHofNJ5gG2YTMTOviVQ2ScQQLOWEmGusuccpbAHRpYw2mVKKK3OJeO7A+D/dB6CP+pkJSF3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713075221; c=relaxed/simple;
-	bh=a/UKSDLT2RB4LLEbvIebaNm82geJbaWNHm2MRarQ+Cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IDIJ9nlK3dH0N1VuQPYbWA/nqWXvNLDq/0SK2K3+p4ucMk1scgrO06Y8Fhq2ztjFP0uHRVsximpcw8sH24lU9tTPpEGm9bu0SFxl4e8SaN/7W/RQyl/blzMVFvDPEOQjMxXqx9sCBSI1ZLpgVD8w9xjf82NL6P50DDZSwich2SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CCsIvchc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366CCC072AA;
-	Sun, 14 Apr 2024 06:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713075220;
-	bh=a/UKSDLT2RB4LLEbvIebaNm82geJbaWNHm2MRarQ+Cg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CCsIvchccziDtRuYg+jt7ur0f12+B8TRORh546ABw8naHDV7Wj2hT4e0/w29T+WO+
-	 GYYOM0WN6jfCNES09XbvxtFum081za5gfLFVphj4pEJ7dN3JHcX5A5md4L/YunAMZ0
-	 GB+w39gjhTPRliv+ZNC1RoggBAt4m5tx7WQV0fCU=
-Date: Sun, 14 Apr 2024 08:13:32 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	linux-stable <stable@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"patches@kernelci.org" <patches@kernelci.org>,
-	"lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-	"pavel@denx.de" <pavel@denx.de>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-	"f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-	"sudipm.mukherjee@gmail.com" <sudipm.mukherjee@gmail.com>,
-	"srw@sladewatkins.net" <srw@sladewatkins.net>,
-	"rwarsow@gmx.de" <rwarsow@gmx.de>,
-	"conor@kernel.org" <conor@kernel.org>,
-	"allen.lkml@gmail.com" <allen.lkml@gmail.com>,
-	"broonie@kernel.org" <broonie@kernel.org>,
-	Calum Mackay <calum.mackay@oracle.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Darren Kenny <darren.kenny@oracle.com>,
-	Ramanan Govindarajan <ramanan.govindarajan@oracle.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
-Message-ID: <2024041402-impeach-charting-60f5@gregkh>
-References: <20240411095407.982258070@linuxfoundation.org>
- <2c2362c7-ace7-4a79-861e-fa435e46ac85@oracle.com>
- <27E1E4C4-86C3-4D78-AF85-50C1612675E0@oracle.com>
- <21c9bcf9-2d44-4ab2-b05c-a1712ac1a434@oracle.com>
- <ZhmYS9ntNbDZvkKE@tissot.1015granger.net>
- <11019956-95c4-4c35-b690-b8515b439eb2@oracle.com>
- <ZhqrH0II0ZJj0dzW@tissot.1015granger.net>
+	s=arc-20240116; t=1713114674; c=relaxed/simple;
+	bh=wpe8KlwzaSSM+u2lvF16DyF5qHpDrPDvVSCVM3ngkNQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qqpCE7G9sxwBQup+0lZ6y3tCXvJ2helv3Ju61c4cJLFXwhXq4gIeKZWImGtNuSTvIZ5ofeewkT8SUjLmzyTVetd5WvnVBKUiHvSeUS64z+cD773Fiq5qjpa7S91XpAj95zfn32OK1vYe/RaRis0EEYlzoaOzWt9eBArvvWzBOQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from dslb-188-097-210-242.188.097.pools.vodafone-ip.de ([188.97.210.242] helo=martin-debian-3.kaiser.cx)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <martin@kaiser.cx>)
+	id 1rw3Dj-003uVz-0Q;
+	Sun, 14 Apr 2024 19:00:47 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Anna Schumaker <Anna.Schumaker@Netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	David Howells <dhowells@redhat.com>
+Cc: NeilBrown <neilb@suse.de>,
+	Jeff Layton <jlayton@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v3] nfs: keep server info for remounts
+Date: Sun, 14 Apr 2024 19:01:09 +0200
+Message-Id: <20240414170109.137696-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhqrH0II0ZJj0dzW@tissot.1015granger.net>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 13, 2024 at 11:56:15AM -0400, Chuck Lever wrote:
-> On Sat, Apr 13, 2024 at 03:04:19AM +0530, Harshit Mogalapalli wrote:
-> > Hi Chuck and Greg,
-> > 
-> > On 13/04/24 01:53, Chuck Lever wrote:
-> > > On Sat, Apr 13, 2024 at 01:41:52AM +0530, Harshit Mogalapalli wrote:
-> > > > # first bad commit: [2267b2e84593bd3d61a1188e68fba06307fa9dab] lockd:
-> > > > introduce safe async lock op
-> > > > 
-> > > > 
-> > > > Hope the above might help.
-> > > 
-> > > Nice work. Thanks!
-> > > 
-> > > 
-> > > > I didnot test the revert of culprit commit on top of 5.15.154 yet.
-> > > 
-> > > Please try reverting that one -- it's very close to the top so one
-> > > or two others might need to be pulled off as well.
-> > > 
-> > 
-> > I have reverted the bad commit: 2267b2e84593 ("lockd: introduce safe async
-> > lock op") and the test passes.
-> > 
-> > Note: Its reverts cleanly on 5.15.154
-> 
-> Harshit also informs me that "lockd: introduce safe async lock op"
-> is not applied to v6.1, so it's not likely necessary to include here
-> and can be safely reverted from v5.15.y.
+With newer kernels that use fs_context for nfs mounts, remounts fail with
+-EINVAL.
 
-Chuck, can you send a series of reverts for what needs to be done here
-as these were your original backports?
+$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
+$ mount -t nfs -o remount /mnt/test/
+mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
 
-thanks,
+For remounts, the nfs server address and port are populated by
+nfs_init_fs_context and later overwritten with 0x00 bytes by
+nfs23_parse_monolithic. The remount then fails as the server address is
+invalid.
 
-greg k-h
+Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
+we're doing a remount.
+
+Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ v3:
+ - rebased against linux-next from 12th April 2024
+
+ v2:
+ - rebased against linux-next from 26th February 2024
+
+Dear all,
+I'm resending this patch again. The problem that I'm trying to fix is still
+present in linux-next. Thanks in advance for any reviews and comments.
+
+I guess that we're taking this path for remounts
+
+do_remount
+    fs_context_for_reconfigure
+        alloc_fs_context
+            init_fs_context == nfs_init_fs_context
+               fc->root is set for remounts
+               ctx->nfs_server is populated
+    parse_monolithic_mount_data
+        nfs_fs_context_parse_monolithic
+            nfs23_parse_monolithic
+               ctx->nfs_server is overwritten with data from mount request
+
+An alternative to checking for !is_remount_fc(fc) would be to check
+if (ctx->nfs_server.addrlen == 0)
+
+fs/nfs/fs_context.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index d0a0956f8a13..cac1157be2c2 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+ 		ctx->acdirmax	= data->acdirmax;
+ 		ctx->need_mount	= false;
+ 
+-		memcpy(sap, &data->addr, sizeof(data->addr));
+-		ctx->nfs_server.addrlen = sizeof(data->addr);
+-		ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		if (!is_remount_fc(fc)) {
++			memcpy(sap, &data->addr, sizeof(data->addr));
++			ctx->nfs_server.addrlen = sizeof(data->addr);
++			ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		}
++
+ 		if (sap->ss_family != AF_INET ||
+ 		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
+-- 
+2.39.2
+
 
