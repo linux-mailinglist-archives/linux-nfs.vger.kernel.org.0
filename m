@@ -1,58 +1,68 @@
-Return-Path: <linux-nfs+bounces-2801-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2802-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F08AD8A4D7E
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 13:18:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8066F8A4DA3
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 13:25:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB359282B61
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 11:18:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4E08B240B4
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 11:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0FCB5D74E;
-	Mon, 15 Apr 2024 11:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51F65FBA3;
+	Mon, 15 Apr 2024 11:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7sJObNh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpMOULT/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B0C5CDE4;
-	Mon, 15 Apr 2024 11:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CAA5DF05;
+	Mon, 15 Apr 2024 11:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713179881; cv=none; b=ClCaoCu7k2LKOvZYkHoM0TXPE2kIsny+WIUJkXfjP0NpGeRWYzMMUT1+hlbc0eiroS2U33BLRxlBIflvxpeGmSeR00ZeabfN0kQtFsRjkwZJB4CurBu/hoL2RCPKVuUhjyQTX+2Pj1C9i8DewcHmEkRaGvzK1MTvDLTeCKoCfHw=
+	t=1713180333; cv=none; b=Iv3t+XRA3wrTbWy1dOJGEgxJSIZXzRM3E0HdNr0PE2vNSLxaPd7WC6tz8jWuBcoK5Qo0hDeYIjGErXBTZOk7/UtGAco74/Ou+JzzcujkvHMBDl067nDIYxT/Ls2avKAWj+4o0o69yaylXNBGsUQqhmlJ8dBi0pDjHdf82R57+98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713179881; c=relaxed/simple;
-	bh=xbwPOsnGsoYyx6s7tsEA96ZtYV1KAPcyDt1mPviubCA=;
+	s=arc-20240116; t=1713180333; c=relaxed/simple;
+	bh=FtNmlcR5RtTte2uzIYZUjvHh2y9nr+AuBWLBdYeMuwE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qUJEzRCxGsk2j22aB5fchOLlylermIxXxUcbFEg3EmyDWDnUBM8C/fFsE6vLyJLXXV1gGLIHxrl7oei/PEvsrHvMXyhgDvBJA73Hf2Ru6ZNj5JkI4zLxGaBVlBK3/sW4rUolNVZtxIX1Jj5sWL/2RzI280LLip2JVrqrp2GcAqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7sJObNh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779FEC113CC;
-	Mon, 15 Apr 2024 11:18:00 +0000 (UTC)
+	 Content-Type:MIME-Version; b=otsBEOQwOFQ4OT31DJ4n5WAwqWAU8naewwGrZgRsi3uJs+pPCsdB8KIVKs3BOh22hMaIDp4+8iKF+uLeq7oIuufxXpQ601BxgNnJgGPYLmQBMyJpL6RjKfv3Mzl5CqcdydMjOTRLeD4/JS00iNvPDbK1k5YL0G00kh4yoew6zfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpMOULT/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D430AC113CC;
+	Mon, 15 Apr 2024 11:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713179881;
-	bh=xbwPOsnGsoYyx6s7tsEA96ZtYV1KAPcyDt1mPviubCA=;
+	s=k20201202; t=1713180333;
+	bh=FtNmlcR5RtTte2uzIYZUjvHh2y9nr+AuBWLBdYeMuwE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=b7sJObNhuPlwC7E9tsbcn6kFdb0aLm9fqi/0kVvxXbor/tAcypSh4mf3WkFajHTam
-	 EDS9kiYEOmKmXKGtn7tM8Vu7g4QjPUyV9EIyUUSc45AqiFamwltfUxG1LeUGw4//OW
-	 LFh3um2P9io5qsxrqaezixcspe91ICGGNcWMf61mdOIbMZCgN030D6tExEq5IvLl1W
-	 GNc+ru1M5+JTkiHvGlBgp3Z41Le/eVlypph53hUW+w5yBiZoi8Xe5z3gusmnAVdJ5j
-	 299O10/JsUv9Ltc0PCGfpmi7caSm8rRX97ZhQ0SVfKyuwsiZvj1kUMWJmf4acygee9
-	 fO7SMSW3mfL9Q==
-Message-ID: <d12c4998028014829713093ceccdbb521e34f05c.camel@kernel.org>
-Subject: Re: [PATCH v3] nfs: keep server info for remounts
+	b=HpMOULT/93CCL3rnf54afrqg7qTTiVw/3MFIPIJQNnZE1Gb7Nk3LC3aVd2UqDQcBO
+	 0Uuv5KPQ8ledMobX6tyyTLZregZtv+AWyhzHmybAoDCt/4/apq1C78izvGyaCKsTYv
+	 YdliFyz2ztUW8UMw4DLf9ugt4bR2ALkZ4dUv0GlNKqPppat2zwv9mQgTWjV0oLgUo4
+	 101zfE5DCRBhaNiFE6JV2l67tyhdO6Xay3L/voRwDPdAxVwBAj+5ZWx8L5tS+PhKuy
+	 ATaQBB2AZSGY93HzFUXhq3G/JcI/y85yQ0M0NIoYgs35UQZwhbOfxBhLUcm1edMmCX
+	 A7avYWtR1g0TQ==
+Message-ID: <39de1e2ac2ae6a535e23faccd304d7c5459054a2.camel@kernel.org>
+Subject: Re: [PATCH 01/26] cifs: Fix duplicate fscache cookie warnings
 From: Jeff Layton <jlayton@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>, Anna Schumaker
- <Anna.Schumaker@Netapp.com>,  Trond Myklebust
- <trond.myklebust@hammerspace.com>, David Howells <dhowells@redhat.com>
-Cc: NeilBrown <neilb@suse.de>, Josef Bacik <josef@toxicpanda.com>, Chuck
- Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Mon, 15 Apr 2024 07:17:59 -0400
-In-Reply-To: <20240414170109.137696-1-martin@kaiser.cx>
-References: <20240414170109.137696-1-martin@kaiser.cx>
+To: David Howells <dhowells@redhat.com>, Christian Brauner
+	 <christian@brauner.io>, Gao Xiang <hsiangkao@linux.alibaba.com>, Dominique
+	Martinet <asmadeus@codewreck.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>,
+  Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara
+ <pc@manguebit.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey
+ <tom@talpey.com>, Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov
+ <idryomov@gmail.com>, netfs@lists.linux.dev,  linux-cachefs@redhat.com,
+ linux-afs@lists.infradead.org,  linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org,  ceph-devel@vger.kernel.org,
+ v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org, 
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, Shyam
+ Prasad N <nspmangalore@gmail.com>, Rohith Surabattula
+ <rohiths.msft@gmail.com>
+Date: Mon, 15 Apr 2024 07:25:29 -0400
+In-Reply-To: <20240328163424.2781320-2-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
+	 <20240328163424.2781320-2-dhowells@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -72,79 +82,99 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2024-04-14 at 19:01 +0200, Martin Kaiser wrote:
-> With newer kernels that use fs_context for nfs mounts, remounts fail with
-> -EINVAL.
+On Thu, 2024-03-28 at 16:33 +0000, David Howells wrote:
+> fscache emits a lot of duplicate cookie warnings with cifs because the
+> index key for the fscache cookies does not include everything that the
+> cifs_find_inode() function does.  The latter is used with iget5_locked() =
+to
+> distinguish between inodes in the local inode cache.
 >=20
-> $ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
-> $ mount -t nfs -o remount /mnt/test/
-> mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
+> Fix this by adding the creation time and file type to the fscache cookie
+> key.
 >=20
-> For remounts, the nfs server address and port are populated by
-> nfs_init_fs_context and later overwritten with 0x00 bytes by
-> nfs23_parse_monolithic. The remount then fails as the server address is
-> invalid.
+> Additionally, add a couple of comments to note that if one is changed the
+> other must be also.
 >=20
-> Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
-> we're doing a remount.
->=20
-> Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steve French <sfrench@samba.org>
+> cc: Shyam Prasad N <nspmangalore@gmail.com>
+> cc: Rohith Surabattula <rohiths.msft@gmail.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
 > ---
->  v3:
->  - rebased against linux-next from 12th April 2024
+>  fs/smb/client/fscache.c | 16 +++++++++++++++-
+>  fs/smb/client/inode.c   |  2 ++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
 >=20
->  v2:
->  - rebased against linux-next from 26th February 2024
->=20
-> Dear all,
-> I'm resending this patch again. The problem that I'm trying to fix is sti=
-ll
-> present in linux-next. Thanks in advance for any reviews and comments.
->=20
-> I guess that we're taking this path for remounts
->=20
-> do_remount
->     fs_context_for_reconfigure
->         alloc_fs_context
->             init_fs_context =3D=3D nfs_init_fs_context
->                fc->root is set for remounts
->                ctx->nfs_server is populated
->     parse_monolithic_mount_data
->         nfs_fs_context_parse_monolithic
->             nfs23_parse_monolithic
->                ctx->nfs_server is overwritten with data from mount reques=
-t
->=20
-> An alternative to checking for !is_remount_fc(fc) would be to check
-> if (ctx->nfs_server.addrlen =3D=3D 0)
->=20
-> fs/nfs/fs_context.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index d0a0956f8a13..cac1157be2c2 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_contex=
-t *fc,
->  		ctx->acdirmax	=3D data->acdirmax;
->  		ctx->need_mount	=3D false;
+> diff --git a/fs/smb/client/fscache.c b/fs/smb/client/fscache.c
+> index c4a3cb736881..340efce8f052 100644
+> --- a/fs/smb/client/fscache.c
+> +++ b/fs/smb/client/fscache.c
+> @@ -12,6 +12,16 @@
+>  #include "cifs_fs_sb.h"
+>  #include "cifsproto.h"
 > =20
-> -		memcpy(sap, &data->addr, sizeof(data->addr));
-> -		ctx->nfs_server.addrlen =3D sizeof(data->addr);
-> -		ctx->nfs_server.port =3D ntohs(data->addr.sin_port);
-> +		if (!is_remount_fc(fc)) {
-> +			memcpy(sap, &data->addr, sizeof(data->addr));
-> +			ctx->nfs_server.addrlen =3D sizeof(data->addr);
-> +			ctx->nfs_server.port =3D ntohs(data->addr.sin_port);
-> +		}
+> +/*
+> + * Key for fscache inode.  [!] Contents must match comparisons in cifs_f=
+ind_inode().
+> + */
+> +struct cifs_fscache_inode_key {
 > +
->  		if (sap->ss_family !=3D AF_INET ||
->  		    !nfs_verify_server_address(sap))
->  			goto out_no_address;
+> +	__le64  uniqueid;	/* server inode number */
+> +	__le64  createtime;	/* creation time on server */
+> +	u8	type;		/* S_IFMT file type */
+> +} __packed;
+> +
 
-Doesn't nfs4_parse_monolithic need the same fix?=20
---=20
-Jeff Layton <jlayton@kernel.org>
+Interesting. So the uniqueid of the inode is not unique within the fs?
+Or are the clients are mounting shares that span multiple filesystems?
+Or, are we looking at a situation where the uniqueid is being quickly
+reused for new inodes after the original inode is unlinked?
+
+Should we be mixing in a fsid (or whatever the windows equivalent is)?
+
+>  static void cifs_fscache_fill_volume_coherency(
+>  	struct cifs_tcon *tcon,
+>  	struct cifs_fscache_volume_coherency_data *cd)
+> @@ -97,15 +107,19 @@ void cifs_fscache_release_super_cookie(struct cifs_t=
+con *tcon)
+>  void cifs_fscache_get_inode_cookie(struct inode *inode)
+>  {
+>  	struct cifs_fscache_inode_coherency_data cd;
+> +	struct cifs_fscache_inode_key key;
+>  	struct cifsInodeInfo *cifsi =3D CIFS_I(inode);
+>  	struct cifs_sb_info *cifs_sb =3D CIFS_SB(inode->i_sb);
+>  	struct cifs_tcon *tcon =3D cifs_sb_master_tcon(cifs_sb);
+> =20
+> +	key.uniqueid	=3D cpu_to_le64(cifsi->uniqueid);
+> +	key.createtime	=3D cpu_to_le64(cifsi->createtime);
+> +	key.type	=3D (inode->i_mode & S_IFMT) >> 12;
+>  	cifs_fscache_fill_coherency(&cifsi->netfs.inode, &cd);
+> =20
+>  	cifsi->netfs.cache =3D
+>  		fscache_acquire_cookie(tcon->fscache, 0,
+> -				       &cifsi->uniqueid, sizeof(cifsi->uniqueid),
+> +				       &key, sizeof(key),
+>  				       &cd, sizeof(cd),
+>  				       i_size_read(&cifsi->netfs.inode));
+>  	if (cifsi->netfs.cache)
+> diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
+> index d28ab0af6049..91b07ef9e25c 100644
+> --- a/fs/smb/client/inode.c
+> +++ b/fs/smb/client/inode.c
+> @@ -1351,6 +1351,8 @@ cifs_find_inode(struct inode *inode, void *opaque)
+>  {
+>  	struct cifs_fattr *fattr =3D opaque;
+> =20
+> +	/* [!] The compared values must be the same in struct cifs_fscache_inod=
+e_key. */
+> +
+>  	/* don't match inode with different uniqueid */
+>  	if (CIFS_I(inode)->uniqueid !=3D fattr->cf_uniqueid)
+>  		return 0;
+>=20
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
