@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-2824-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2825-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 566828A5B8B
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 21:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB3358A5B8E
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 21:51:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87A391C20F1E
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 19:51:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB5E61C21EC9
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 19:51:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6B415B98A;
-	Mon, 15 Apr 2024 19:45:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F3115CD44;
+	Mon, 15 Apr 2024 19:45:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQa5E2Lj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uL1Qbw7D"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238B315B987;
-	Mon, 15 Apr 2024 19:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A16156997;
+	Mon, 15 Apr 2024 19:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713210322; cv=none; b=fRA6aBgeJmeC5oYdSB3nWwWTbcAJXBzbjt4/IB1RQqqIJLaIYptvym5hZAoIkDIDqTV/NSDcosc+FdRFe3DrLLMd5y/tpeW8E/mF2wta1rDuZCu5KrTqi32BYTjNDk37xhy+z+yfY1j7PSD5qXCQ/MaWLohR6QZl0+Gw9Hqj2ew=
+	t=1713210326; cv=none; b=H5PXCkLj+KsmVrBATsPBJpMB0AuINZJku8FPHUaZnvK5waUV6LuXkav5+CTrBhzqYpviF5OeGhxycTRv+IOS3XH4Yk6ecUItPqcWnHDYtJdWLth+KHDGdXqA2FXY2Y/8cZy9uBxXtnLXbS6CIVLT31/YB5UPIgGHvBph4IK08FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713210322; c=relaxed/simple;
-	bh=/DTZXF8udDvRjKg2a8s3S2ZTaSHcPM7bxXD0dLq6SFs=;
+	s=arc-20240116; t=1713210326; c=relaxed/simple;
+	bh=u1MIVeEB9jfAKl7VCceRlD6fHf4D2LjW0+JisF5Qw84=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqdwwgmQbS0y46E6kUiYFQQmu04LUfd+KAK4jgE06PTge436aGgldZof7BMHmugRTEZWJ/JMpZdJN50RMWuNidYlO/MuftcKbPXQRNP9p9kO2yj3c+4GqMGrDwTYS1e+ZPVNLa93yh9wntu5ftWjF/Kph3l0ZJeb4Rl2y7qDLWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQa5E2Lj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDCEC113CC;
-	Mon, 15 Apr 2024 19:45:21 +0000 (UTC)
+	 MIME-Version; b=F66ieZmnDgic+dia3BOaKpQUFVhDkot4znxIgNm0tBu/CMcixI2xuIaTu0JP/us80glBdf3dyw6xI7LLEamv1YM6KpOuKAhU9/z5OB9DtXRMbUMnd6OCa2R3oFDBmIxlldeUYZqbUJlmm+cc4Fp8mFeBmjKGiuseQPmt2u7ACAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uL1Qbw7D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498B4C113CC;
+	Mon, 15 Apr 2024 19:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713210321;
-	bh=/DTZXF8udDvRjKg2a8s3S2ZTaSHcPM7bxXD0dLq6SFs=;
+	s=k20201202; t=1713210325;
+	bh=u1MIVeEB9jfAKl7VCceRlD6fHf4D2LjW0+JisF5Qw84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FQa5E2Lji6HHbdrBWGvxWqSI6Wo0gr+xZj6HSI/7SK5t1PI7JFXLji1VGtnqbsioC
-	 wMZxFnq970z1qRjQKRqMofTJ0LNePcY+xJBhYScLBN7MBJq6yLPgjVbKGJCGIg+8zu
-	 p5wtlg103x6NAx3e87Fx8Lhs+WkVzFVjKG8hqA7zo2z3D9CKf3dw5za55h1W6nhc1d
-	 zg+OM4p+asEvf5jur0/D4hwfa21Em0pNGzeH5173KstWrRYiEpW1mUt1Iew+2MKVkS
-	 u8Edi/Oxlf+SFlicjzPlNztMnJP3Yro75Wyaf9UstN8MCtp8F4mW2vkdzs4H/01AoQ
-	 epmEKr+jkVUhw==
+	b=uL1Qbw7D1Ia+IrOBHTci395fidsVWuJjfGeonpHEzyZ3NRvrMEjcArQ+Zcmt8Mndj
+	 dnOUpe1dGyejwQNj5FkJ/9HXWovplf8YNvrqvLNLpurnHOA9THB6vChlY8+58tiT7D
+	 FPcTDbFIF7q86zljCqIXy8qF73S7Z9beeldMo8IG8jDfwIRAq5GYWMDnXS7yYe81X1
+	 LDsrIRuMKxzmOi4M/7jS+CAGNCP7aBTuQz18u+7cCaD5K8cve4xSVbkVgdIxYRG81S
+	 JtXrarU1mVpJCjfcRuvJVq8efITN4x+0HCiQxDIPoTrB4+6xYSqdwseqcyiVndf2cR
+	 LUJAQR61G5MDg==
 From: Lorenzo Bianconi <lorenzo@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: lorenzo.bianconi@redhat.com,
@@ -49,9 +49,9 @@ Cc: lorenzo.bianconi@redhat.com,
 	netdev@vger.kernel.org,
 	kuba@kernel.org,
 	jlayton@kernel.org
-Subject: [PATCH v8 4/6] SUNRPC: introduce svc_xprt_create_from_sa utility routine
-Date: Mon, 15 Apr 2024 21:44:37 +0200
-Message-ID: <cda16835fc28aed2f69e84beebe98c19292a0800.1713209938.git.lorenzo@kernel.org>
+Subject: [PATCH v8 5/6] SUNRPC: add a new svc_find_listener helper
+Date: Mon, 15 Apr 2024 21:44:38 +0200
+Message-ID: <00d60d4fb200e4d9762a03d0b561a61e92c7b071.1713209938.git.lorenzo@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1713209938.git.lorenzo@kernel.org>
 References: <cover.1713209938.git.lorenzo@kernel.org>
@@ -63,213 +63,77 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add svc_xprt_create_from_sa utility routine and refactor
-svc_xprt_create() codebase in order to introduce the capability to
-create a svc port from socket address.
+From: Jeff Layton <jlayton@kernel.org>
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Tested-by: Jeff Layton <jlayton@kernel.org>
+svc_find_listener will return the transport instance pointer for the
+endpoint accepting connections/peer traffic from the specified transport
+class, and matching sockaddr.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
- include/linux/sunrpc/svc_xprt.h |   3 +
- net/sunrpc/svc_xprt.c           | 133 ++++++++++++++++++--------------
- 2 files changed, 78 insertions(+), 58 deletions(-)
+ include/linux/sunrpc/svc_xprt.h |  2 ++
+ net/sunrpc/svc_xprt.c           | 34 +++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
 diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index 8e20cd60e2e7..0d9b10dbe07d 100644
+index 0d9b10dbe07d..0981e35a9fed 100644
 --- a/include/linux/sunrpc/svc_xprt.h
 +++ b/include/linux/sunrpc/svc_xprt.h
-@@ -135,6 +135,9 @@ int	svc_reg_xprt_class(struct svc_xprt_class *);
- void	svc_unreg_xprt_class(struct svc_xprt_class *);
- void	svc_xprt_init(struct net *, struct svc_xprt_class *, struct svc_xprt *,
- 		      struct svc_serv *);
-+int	svc_xprt_create_from_sa(struct svc_serv *serv, const char *xprt_name,
-+				struct net *net, struct sockaddr *sap,
-+				int flags, const struct cred *cred);
- int	svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 			struct net *net, const int family,
- 			const unsigned short port, int flags,
+@@ -150,6 +150,8 @@ void	svc_xprt_copy_addrs(struct svc_rqst *rqstp, struct svc_xprt *xprt);
+ void	svc_xprt_close(struct svc_xprt *xprt);
+ int	svc_port_is_privileged(struct sockaddr *sin);
+ int	svc_print_xprts(char *buf, int maxlen);
++struct svc_xprt *svc_find_listener(struct svc_serv *serv, const char *xcl_name,
++				   struct net *net, const struct sockaddr *sa);
+ struct	svc_xprt *svc_find_xprt(struct svc_serv *serv, const char *xcl_name,
+ 			struct net *net, const sa_family_t af,
+ 			const unsigned short port);
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index b4a85a227bd7..463fe544ae28 100644
+index 463fe544ae28..34a3626c56b1 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -211,51 +211,6 @@ void svc_xprt_init(struct net *net, struct svc_xprt_class *xcl,
- }
- EXPORT_SYMBOL_GPL(svc_xprt_init);
- 
--static struct svc_xprt *__svc_xpo_create(struct svc_xprt_class *xcl,
--					 struct svc_serv *serv,
--					 struct net *net,
--					 const int family,
--					 const unsigned short port,
--					 int flags)
--{
--	struct sockaddr_in sin = {
--		.sin_family		= AF_INET,
--		.sin_addr.s_addr	= htonl(INADDR_ANY),
--		.sin_port		= htons(port),
--	};
--#if IS_ENABLED(CONFIG_IPV6)
--	struct sockaddr_in6 sin6 = {
--		.sin6_family		= AF_INET6,
--		.sin6_addr		= IN6ADDR_ANY_INIT,
--		.sin6_port		= htons(port),
--	};
--#endif
--	struct svc_xprt *xprt;
--	struct sockaddr *sap;
--	size_t len;
--
--	switch (family) {
--	case PF_INET:
--		sap = (struct sockaddr *)&sin;
--		len = sizeof(sin);
--		break;
--#if IS_ENABLED(CONFIG_IPV6)
--	case PF_INET6:
--		sap = (struct sockaddr *)&sin6;
--		len = sizeof(sin6);
--		break;
--#endif
--	default:
--		return ERR_PTR(-EAFNOSUPPORT);
--	}
--
--	xprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
--	if (IS_ERR(xprt))
--		trace_svc_xprt_create_err(serv->sv_program->pg_name,
--					  xcl->xcl_name, sap, len, xprt);
--	return xprt;
--}
--
- /**
-  * svc_xprt_received - start next receiver thread
-  * @xprt: controlling transport
-@@ -294,9 +249,8 @@ void svc_add_new_perm_xprt(struct svc_serv *serv, struct svc_xprt *new)
- }
- 
- static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
--			    struct net *net, const int family,
--			    const unsigned short port, int flags,
--			    const struct cred *cred)
-+			    struct net *net, struct sockaddr *sap,
-+			    size_t len, int flags, const struct cred *cred)
- {
- 	struct svc_xprt_class *xcl;
- 
-@@ -312,8 +266,11 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 			goto err;
- 
- 		spin_unlock(&svc_xprt_class_lock);
--		newxprt = __svc_xpo_create(xcl, serv, net, family, port, flags);
-+		newxprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
- 		if (IS_ERR(newxprt)) {
-+			trace_svc_xprt_create_err(serv->sv_program->pg_name,
-+						  xcl->xcl_name, sap, len,
-+						  newxprt);
- 			module_put(xcl->xcl_owner);
- 			return PTR_ERR(newxprt);
- 		}
-@@ -329,6 +286,48 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 	return -EPROTONOSUPPORT;
+@@ -1276,6 +1276,40 @@ static struct svc_deferred_req *svc_deferred_dequeue(struct svc_xprt *xprt)
+ 	return dr;
  }
  
 +/**
-+ * svc_xprt_create_from_sa - Add a new listener to @serv from socket address
-+ * @serv: target RPC service
-+ * @xprt_name: transport class name
-+ * @net: network namespace
-+ * @sap: socket address pointer
-+ * @flags: SVC_SOCK flags
-+ * @cred: credential to bind to this transport
++ * svc_find_listener - find an RPC transport instance
++ * @serv: pointer to svc_serv to search
++ * @xcl_name: C string containing transport's class name
++ * @net: owner net pointer
++ * @sa: sockaddr containing address
 + *
-+ * Return local xprt port on success or %-EPROTONOSUPPORT on failure
++ * Return the transport instance pointer for the endpoint accepting
++ * connections/peer traffic from the specified transport class,
++ * and matching sockaddr.
 + */
-+int svc_xprt_create_from_sa(struct svc_serv *serv, const char *xprt_name,
-+			    struct net *net, struct sockaddr *sap,
-+			    int flags, const struct cred *cred)
++struct svc_xprt *svc_find_listener(struct svc_serv *serv, const char *xcl_name,
++				   struct net *net, const struct sockaddr *sa)
 +{
-+	size_t len;
-+	int err;
++	struct svc_xprt *xprt;
++	struct svc_xprt *found = NULL;
 +
-+	switch (sap->sa_family) {
-+	case AF_INET:
-+		len = sizeof(struct sockaddr_in);
++	spin_lock_bh(&serv->sv_lock);
++	list_for_each_entry(xprt, &serv->sv_permsocks, xpt_list) {
++		if (xprt->xpt_net != net)
++			continue;
++		if (strcmp(xprt->xpt_class->xcl_name, xcl_name))
++			continue;
++		if (!rpc_cmp_addr_port(sa, (struct sockaddr *)&xprt->xpt_local))
++			continue;
++		found = xprt;
++		svc_xprt_get(xprt);
 +		break;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case AF_INET6:
-+		len = sizeof(struct sockaddr_in6);
-+		break;
-+#endif
-+	default:
-+		return -EAFNOSUPPORT;
 +	}
-+
-+	err = _svc_xprt_create(serv, xprt_name, net, sap, len, flags, cred);
-+	if (err == -EPROTONOSUPPORT) {
-+		request_module("svc%s", xprt_name);
-+		err = _svc_xprt_create(serv, xprt_name, net, sap, len, flags,
-+				       cred);
-+	}
-+
-+	return err;
++	spin_unlock_bh(&serv->sv_lock);
++	return found;
 +}
-+EXPORT_SYMBOL_GPL(svc_xprt_create_from_sa);
++EXPORT_SYMBOL_GPL(svc_find_listener);
 +
  /**
-  * svc_xprt_create - Add a new listener to @serv
-  * @serv: target RPC service
-@@ -339,23 +338,41 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
-  * @flags: SVC_SOCK flags
-  * @cred: credential to bind to this transport
-  *
-- * Return values:
-- *   %0: New listener added successfully
-- *   %-EPROTONOSUPPORT: Requested transport type not supported
-+ * Return local xprt port on success or %-EPROTONOSUPPORT on failure
-  */
- int svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 		    struct net *net, const int family,
- 		    const unsigned short port, int flags,
- 		    const struct cred *cred)
- {
--	int err;
-+	struct sockaddr_in sin = {
-+		.sin_family		= AF_INET,
-+		.sin_addr.s_addr	= htonl(INADDR_ANY),
-+		.sin_port		= htons(port),
-+	};
-+#if IS_ENABLED(CONFIG_IPV6)
-+	struct sockaddr_in6 sin6 = {
-+		.sin6_family		= AF_INET6,
-+		.sin6_addr		= IN6ADDR_ANY_INIT,
-+		.sin6_port		= htons(port),
-+	};
-+#endif
-+	struct sockaddr *sap;
- 
--	err = _svc_xprt_create(serv, xprt_name, net, family, port, flags, cred);
--	if (err == -EPROTONOSUPPORT) {
--		request_module("svc%s", xprt_name);
--		err = _svc_xprt_create(serv, xprt_name, net, family, port, flags, cred);
-+	switch (family) {
-+	case PF_INET:
-+		sap = (struct sockaddr *)&sin;
-+		break;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case PF_INET6:
-+		sap = (struct sockaddr *)&sin6;
-+		break;
-+#endif
-+	default:
-+		return -EAFNOSUPPORT;
- 	}
--	return err;
-+
-+	return svc_xprt_create_from_sa(serv, xprt_name, net, sap, flags, cred);
- }
- EXPORT_SYMBOL_GPL(svc_xprt_create);
- 
+  * svc_find_xprt - find an RPC transport instance
+  * @serv: pointer to svc_serv to search
 -- 
 2.44.0
 
