@@ -1,637 +1,234 @@
-Return-Path: <linux-nfs+bounces-2810-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2811-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A47808A516C
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 15:32:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C11248A51B3
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 15:40:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57427B21C02
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 13:32:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4BF71C2284C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Apr 2024 13:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6348812882E;
-	Mon, 15 Apr 2024 13:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1342680C03;
+	Mon, 15 Apr 2024 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ebRD5sPa";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bCzsnOSP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1731292D0;
-	Mon, 15 Apr 2024 13:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713187335; cv=none; b=mO6UNihKTwuQwV2bdSheQwcut5ykO6oAZQP256iCbhdZ/kXYLqBU27+nkVomH/bcgfuWDWG1dmt5gl8J48MVgDEHB7PpVg59iBhGTuzUHrNjwEZP83DJRkHe4Fa0Z2og/95K6MN4BpwZpS+t5o1UDOah5eXl783wfRJhY/BquJY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713187335; c=relaxed/simple;
-	bh=eqDEoVnxo3pfFcUCOdV+c9xX/tMqDpLoJ4qkomslvwk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rqzp3b0+rfmrf6J/O5r23S/eeJpTKu3ADkuWSKUej/nIo1Zt6tpcM1lQThm3ZntfX3n30TIR/BwO5gBFsw2i2YTmEKoCFP1WHra8OMDspUXQ67sdkQdf5/BgURSXa9C1Fy5ff92CauyOEbIeGOHot+dkIF1FD6qWqMRsofG+cA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VJ76n6zTZz2CcKP;
-	Mon, 15 Apr 2024 21:19:13 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6021B140410;
-	Mon, 15 Apr 2024 21:22:10 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 15 Apr 2024 21:22:09 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Jeroen de Borst <jeroendb@google.com>, Praveen
- Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>,
-	Eric Dumazet <edumazet@google.com>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, Sunil
- Goutham <sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>, hariprasad <hkelam@marvell.com>,
-	Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, Mark Lee
-	<Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg
-	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, "Michael S. Tsirkin"
-	<mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Alexander Duyck
-	<alexander.duyck@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
-	<song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
-	<kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, David Howells
-	<dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Chuck Lever
-	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
-	<trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-nvme@lists.infradead.org>,
-	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <bpf@vger.kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>
-Subject: [PATCH net-next v2 07/15] mm: page_frag: add '_va' suffix to page_frag API
-Date: Mon, 15 Apr 2024 21:19:32 +0800
-Message-ID: <20240415131941.51153-8-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240415131941.51153-1-linyunsheng@huawei.com>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7217F78C81;
+	Mon, 15 Apr 2024 13:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713187946; cv=fail; b=lul8LA0ktm2lmP45Y7mhwuInKjPwgWlsVDZJbjpFkjuSnuz5Vwve+EEOaY5Z3BzFURGCG2rlJBovym17OPfyCSK2KbtvGWYok9sx4PuOOanvAuZWLhinugN67HmWI/dUuvnjTLUdHCTaVVl6GxUOaeyppwTXC6M3NiY6V91ONqI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713187946; c=relaxed/simple;
+	bh=k+Dm/KaM2dkKRoLGbm1Q/CWoSS8M1oH3c2nuOIyX4ec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MAg6AScvuapkZbrrpJyl0O1PLSc4Z//AUx7ZuOV4m8EzrHqzZuEKXHwoDdJG3zBFicoIJVCUNKPsNARInFnRwe1bDUo88o3yxuKVKlTuwnTbYr0MD5q2i1GqCjSaibZZIrQ5LJ2K95SGwKs+LH3jHV80MhKT5pQJFyxWErxYIqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ebRD5sPa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bCzsnOSP; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43FDI8tI002503;
+	Mon, 15 Apr 2024 13:31:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=sdrmXWJG2nBlg7RKpEKJZDBOPmmy3E0yQDuudDCwXTE=;
+ b=ebRD5sPa6zPIshqFhbj1iy3vJHJZZ7spT5s7dRw9GZYf3tNg645/uwzinHbIJhgpYAbQ
+ 2oZcCZnBj0IVDQo7HXHDXJSKbg9nqp0/a6DaoUwhWQAXeyVAaCFHVUMmgUukqMGGF/a4
+ Iw6iscy+opthTF+R+LyiNUGf0v22F7/BA9mdSwPAUUdTInhwaauHKabBGnBom2IZC7Wv
+ jqLL9+H8KOWpw6GKE6qTeOe1ldi9z3hMIAsGKcQuAPrudycR7G91oftZk1CJ9tBEfZdh
+ zOF7HyfXs/TG6TQU/FXyXq48CkUMgBXmzaX2edGBpS02/Wac4kOcDKpiPPaa40ZXH3Cv iw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfgn2jqnb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Apr 2024 13:31:43 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43FCjqod021631;
+	Mon, 15 Apr 2024 13:31:42 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xfggc1pfq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Apr 2024 13:31:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pf3Q4nOGkUbGequ96QToBl0/72iVpK+a4QE8DD5sLdrWg2t5AQjcxTpOuQJMKCLDe49KxsyfD2hdZmarc1+Aq4cOOuVhp7f3g+5q4m7/wBVlua63WyDT77NC/2kYUZxZKuGIjTOXExZ7a4/KjAE4ja5XqUB5ArnYBiopCYMiE1+dDws7gFBRDm81Si8Cn8hOw3LrqGYwypsi75w1eEuDzKpZPyDt++2N6IVgXGJn1Ea9um1uhVEGW4EPNzNh7SYHvOa/Ec90PI45PjBHnnjV8jh4ynfehmJYyW9hgahuqDlgjDojBReO6sY3iV8eeaMP7ULxbepvCNNTfbj2tf1qJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sdrmXWJG2nBlg7RKpEKJZDBOPmmy3E0yQDuudDCwXTE=;
+ b=Jia6Rk8WvyXFXcSk+6ZWNIhQtkFBoPDEhrWLA+Go0WGQGXzx1quhntVoKLxEa06Wm/tifnA3Xp1etvG9zjsuDO11HBvBdBDBNGYsqCyNNC8sDhzMh1uthnpXaLLHKl3KqUkKLlVqkS/l7veH7i/EtxMIlMOzYX+nhj0W7oVfkWF9sodQyjQJfGeA2qvZgoGHziDMhqSc1LxZR3RZFRbmfPoKBNJ+BGE5N0g/Y+0JbXrieMSg6Yd+JjTROsp/7GZqXF5KGktKfQAHaRLLUmRYMSf6qhRoW7pS01hs2Am8vXq6+LL8zE/AJs8FNMTFU7qENpmqSzVjGKdSEvHRGvZ/sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sdrmXWJG2nBlg7RKpEKJZDBOPmmy3E0yQDuudDCwXTE=;
+ b=bCzsnOSPtdKy97Wj3f0cJfljXZ+aY0/AsReGn8Vml5wrCMS+8H9AmU5WVtVOfSDVap1NK9PI+5sKY0qoYNrPeJi1DJ8q9MoDcHxnz2MWrRcmFKxaKaSSt4j4f4d9R9aoib3drnCG20aHICnoyPGo9x3NYGhGMywSVgVkmKocp40=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH7PR10MB6602.namprd10.prod.outlook.com (2603:10b6:510:206::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
+ 2024 13:31:39 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.7452.049; Mon, 15 Apr 2024
+ 13:31:39 +0000
+Date: Mon, 15 Apr 2024 09:31:35 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        linux-stable <stable@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "pavel@denx.de" <pavel@denx.de>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sudipm.mukherjee@gmail.com" <sudipm.mukherjee@gmail.com>,
+        "srw@sladewatkins.net" <srw@sladewatkins.net>,
+        "rwarsow@gmx.de" <rwarsow@gmx.de>,
+        "conor@kernel.org" <conor@kernel.org>,
+        "allen.lkml@gmail.com" <allen.lkml@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Calum Mackay <calum.mackay@oracle.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Darren Kenny <darren.kenny@oracle.com>,
+        Ramanan Govindarajan <ramanan.govindarajan@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
+Message-ID: <Zh0sN5aAH+OFsvjz@tissot.1015granger.net>
+References: <20240411095407.982258070@linuxfoundation.org>
+ <2c2362c7-ace7-4a79-861e-fa435e46ac85@oracle.com>
+ <27E1E4C4-86C3-4D78-AF85-50C1612675E0@oracle.com>
+ <21c9bcf9-2d44-4ab2-b05c-a1712ac1a434@oracle.com>
+ <ZhmYS9ntNbDZvkKE@tissot.1015granger.net>
+ <11019956-95c4-4c35-b690-b8515b439eb2@oracle.com>
+ <ZhqrH0II0ZJj0dzW@tissot.1015granger.net>
+ <2024041402-impeach-charting-60f5@gregkh>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024041402-impeach-charting-60f5@gregkh>
+X-ClientProxiedBy: CH0PR13CA0033.namprd13.prod.outlook.com
+ (2603:10b6:610:b2::8) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6602:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12b5de57-ddd7-40a8-ce37-08dc5d50614d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	XHzt/Xctz3dOQn76rbpBzsF01QG1X3LXRtj+4hFAv3pF+td4IgaiOlIAEcIA7ySSXmP4l9G2cA/IWAZkVuev4O1BiLu/qmw85hlmJmwGxOau5nkPkFm6kROcp4RSTlE3GSlUzyG46wnGagrjb8vULqHGWP4ZQh7f+Hxw80GlnxdzY/2+YHcmJCA2gFbyHR7KwttV65NY3kfMlcwrBFwGBKq2AhpkGEKEp29PpyXS+P6Cz3yG8HFxC6JYS40utVFoMWKAVM5Bcf7JJcTrTmb4Xc1JDzjwN9lVYHN4xQkJ6VRw/PtDSy2BbSO/7BlTW7kdCIFJ9TRucYgNVmmEKH4TDU6tU/jUn4KEf5kOui7fJzKF5n9UOL1KFpSdkc2mlbAvENWi3QSvmiXZMr2I+tza1IXagoClYSZY3nVdF4AbUNhAtD0DnofHcLdiZIyh7XWY3gfUtTuIXszOdzFpYlgRfwVUch3eQbh0lWo3nKb/pYKt5Jx1BaNOdhJ7eWv87Kx7zhgu1ZB9yLLl4vTi8lVY9wn2/7jLv7RkSA7bndP/vpUFiFuwPXI4lO6hh0+/695hBaQnQ3WOITSdmuyawaEH9VRv9IwkEiJMl/KKdRrh5B8AugWZUI8Aw1q3vVMdZe42UOqcDqLQWCcXAsnfrNhsSa0ILNWa4WKONtHV3Td69m8=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?lhkz+COdbL5c80LjLg/UQgxENE2EoNynmPPp06q3sNebTnTx3cKM7smEm8AV?=
+ =?us-ascii?Q?TzlbgztycrEG3yu4dH465HfmEv1hq2GeBz6LcwYukLq/qdxw6k++zyCSooFK?=
+ =?us-ascii?Q?iBr3jaelIaY8t+Qexf1y/tC30Oz49N148/hGc4F+YpIq6pDseGt66i4Q1b/r?=
+ =?us-ascii?Q?CXpRI8/+GIlfGTpo+ObhQ6RI79fmGlSt8qOtml3T9YtxK7ZjFCvFffohBetv?=
+ =?us-ascii?Q?smvlw93l+8rs0J9nGt5pb0rPK+Av5R1SKfuU9LwYpZxoXO1TJVcGOcL3jj1/?=
+ =?us-ascii?Q?YK3GAJg/yvLdS8GrjpW3eJOhD8peKHHo6T5ykjRf5gBtp58mzWtsTE+VBX1R?=
+ =?us-ascii?Q?TRorujTQlMhSFfngXJ2NHTF27nNhfhYB/olt8zSbuBRnvDi/kao5SYZaC39k?=
+ =?us-ascii?Q?vyN6GhIFr8iYnfmvKghYMJBnINwhZru4PqWvRFRFTWwhGGA6zqvhV1smvFfO?=
+ =?us-ascii?Q?BzULDSLxTLqyQCcyEfR1trGVUppuR45hneK0cT48BCcl/4I1Ucp5Urj/LMxA?=
+ =?us-ascii?Q?VGXEEp7HmHj6aDKqvl/UTijC+SEfPaLbfsR3+Fi1A3EK++YWrLQIQ1WyNesu?=
+ =?us-ascii?Q?549XCIGhENPCtUnHMvdqXbOhH2zE0+zYeoiCz0BZw5JBvWyV+C7GFu2istCG?=
+ =?us-ascii?Q?7fEpfqpkX0/XhYZ4KFMe4klWzZcQTHcsZ5mTfuijXbHcxtWBX0rocLTAOIVd?=
+ =?us-ascii?Q?EV91h/4Sa/+v0KyaU9buduPAeHguxKeJ8WBYxRda06S1JjU+piBS/xLAlAhG?=
+ =?us-ascii?Q?M4HfcOlN5VZB9Ne53P5EwBvBCno3/wAx8kUHpfirCxPObZGTddEWWJaj+2hc?=
+ =?us-ascii?Q?2varItAQiiPZybpm2mtrm4CDPYYiaJV2wuJm1Seg8+66TxvzYKomO3S3dtTf?=
+ =?us-ascii?Q?j4xkmae/Zb6LvU7syMrqAe2dE8wCL7ITPOQonetYB+dg05dcXF9b/ErBMjW7?=
+ =?us-ascii?Q?cpVvn+IyfrW9ic5k9ZjMjyBN01MT+325m4WQ4D+Q0pl85Il4xW1E+UDPNli4?=
+ =?us-ascii?Q?K570PxExF8slyyI00PNBDxx3fw6wmVseLCtSzwkmgKNvnPf3o+ypKttNYoo2?=
+ =?us-ascii?Q?lx+6hX1zUuuq2Xc+mhaTMaq3oYYDQCbsfSAyZkvF0PWk1xkWqCvsk0vaVfat?=
+ =?us-ascii?Q?ZjQzvUGEDM7wvzJAvnDqZLdWhtDgMPeSP392ZlKAfigK5S9fOpMXhMdxWfkd?=
+ =?us-ascii?Q?tSz2/Nz7JJiyI40Fk3gosPNNCOATnQWdpKriJeSBwzFHDHBlTUUdiXvAgMzB?=
+ =?us-ascii?Q?iKvd6aGQrdwlmE4kd7F8Wspjw6mKkWCutuB+knhp9noBYNgJZy2LIXDMS4K+?=
+ =?us-ascii?Q?+XrsXAQ6m0gaLnxSIuJMDIvxa2Fo3bP9xQCaPlwXFUxNm1EyjbFJr+nZorYW?=
+ =?us-ascii?Q?HOz9PXpLe6TX8gE23/vtn+k3XlhGFolwZg2L/uNkITP5ICOwKKPTqkvhi5jW?=
+ =?us-ascii?Q?XjjLRxlV/1GwR+yuryOcZEPkhslOjcWZA9Q8CTLAMS4gg3NGspyP586RyZlS?=
+ =?us-ascii?Q?xFhihZy0h7hUAqggaJGlTWtrGQtHuSt9MAzFNJ8rP7bgpG1wLbOxxSq38Yp2?=
+ =?us-ascii?Q?wsZMXvsV4t0Sas2Hg8NaO4hnnvK57kG+iyZpRWQDvVJN5mL6AODqZSavFGNW?=
+ =?us-ascii?Q?YA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	6rRNmnR6LND4GtifKdCr9AZ9zhZR57U4OShmkg0qWpkBZtRsn/jrlaj3+GLcJbBDxEVuCrhIHWVekm844RR+qXLk6jAVCekgOJ7UxfGuAjX9capdBn2qeR7c3lx0wtgLWebluOfe81930I/uN1ZULQ1+opEHBfpGdQ8gAx/29MW2H5Opndr12w0b9c+6/CXTdHtmtQFrOGCEtB3uiQr7k8R5bBjN959DEhlLzU/Z5stw8t98CSmG9Pp3pV+dhgTb9+ZmtWG/32YRlyv4M+kzfTVZu2hLWG+YlfiJpj5LazfN6HcC+Xzis6du/LlRfY91xHEHuHrxk9v56qc+ei7k9z8dn8ifF96NBdYqrCtN420QIm9EyZUTG2N9WK1ZYlcuvWgp/GbUWvfxm2h80f5BJbk0UiMrL4tGFMmRNsX34PodLTWgHbSbUy3phuKAMvPJq9NiJPCxh5oBsSbaUvV4iSMtEwEvAeODiu2VT4jZ2Y5LuV/1eTlR3Nagij7NZ3ryK5r+ALGIlVyBgQjbmz+vs1tfl29zvz4bOyUkLIGPEnYRP2ecWruvSPpP6SKi1KPtWvOhR1GJH6SVmkY2sfvQ9cTowcTn+bnCfKXntZ4QmiA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b5de57-ddd7-40a8-ce37-08dc5d50614d
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 13:31:39.2805
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F1doP3dblQQmqgGMO1xtTtJSXnFhidfVyf0EI6QFIHz1KXOmA5PqEW68VVYNYb44U+Opf+J8ZTSrF576W+B/DQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6602
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404150088
+X-Proofpoint-ORIG-GUID: 3dbQdtU2Xq-tDhsVDC0FiRT6vJoI2MqV
+X-Proofpoint-GUID: 3dbQdtU2Xq-tDhsVDC0FiRT6vJoI2MqV
 
-Currently most of the API for page_frag API is returning
-'virtual address' as output or expecting 'virtual address'
-as input, in order to differentiate the API handling between
-'virtual address' and 'struct page', add '_va' suffix to the
-corresponding API mirroring the page_pool_alloc_va() API of
-the page_pool.
+On Sun, Apr 14, 2024 at 08:13:32AM +0200, Greg Kroah-Hartman wrote:
+> On Sat, Apr 13, 2024 at 11:56:15AM -0400, Chuck Lever wrote:
+> > On Sat, Apr 13, 2024 at 03:04:19AM +0530, Harshit Mogalapalli wrote:
+> > > Hi Chuck and Greg,
+> > > 
+> > > On 13/04/24 01:53, Chuck Lever wrote:
+> > > > On Sat, Apr 13, 2024 at 01:41:52AM +0530, Harshit Mogalapalli wrote:
+> > > > > # first bad commit: [2267b2e84593bd3d61a1188e68fba06307fa9dab] lockd:
+> > > > > introduce safe async lock op
+> > > > > 
+> > > > > 
+> > > > > Hope the above might help.
+> > > > 
+> > > > Nice work. Thanks!
+> > > > 
+> > > > 
+> > > > > I didnot test the revert of culprit commit on top of 5.15.154 yet.
+> > > > 
+> > > > Please try reverting that one -- it's very close to the top so one
+> > > > or two others might need to be pulled off as well.
+> > > > 
+> > > 
+> > > I have reverted the bad commit: 2267b2e84593 ("lockd: introduce safe async
+> > > lock op") and the test passes.
+> > > 
+> > > Note: Its reverts cleanly on 5.15.154
+> > 
+> > Harshit also informs me that "lockd: introduce safe async lock op"
+> > is not applied to v6.1, so it's not likely necessary to include here
+> > and can be safely reverted from v5.15.y.
+> 
+> Chuck, can you send a series of reverts for what needs to be done here
+> as these were your original backports?
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
- drivers/net/ethernet/google/gve/gve_rx.c      |  4 ++--
- drivers/net/ethernet/intel/ice/ice_txrx.c     |  2 +-
- drivers/net/ethernet/intel/ice/ice_txrx.h     |  2 +-
- drivers/net/ethernet/intel/ice/ice_txrx_lib.c |  2 +-
- .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |  4 ++--
- .../marvell/octeontx2/nic/otx2_common.c       |  2 +-
- drivers/net/ethernet/mediatek/mtk_wed_wo.c    |  4 ++--
- drivers/nvme/host/tcp.c                       |  8 +++----
- drivers/nvme/target/tcp.c                     | 22 ++++++++---------
- drivers/vhost/net.c                           |  6 ++---
- include/linux/page_frag_cache.h               | 24 ++++++++++---------
- include/linux/skbuff.h                        |  2 +-
- kernel/bpf/cpumap.c                           |  2 +-
- mm/page_frag_cache.c                          | 10 ++++----
- mm/page_frag_test.c                           |  6 ++---
- net/core/skbuff.c                             | 15 ++++++------
- net/core/xdp.c                                |  2 +-
- net/rxrpc/txbuf.c                             | 15 ++++++------
- net/sunrpc/svcsock.c                          |  6 ++---
- 19 files changed, 71 insertions(+), 67 deletions(-)
+Testing now, I'll send the patch in a day or two.
 
-diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
-index cd727e55ae0f..820874c1c570 100644
---- a/drivers/net/ethernet/google/gve/gve_rx.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx.c
-@@ -687,7 +687,7 @@ static int gve_xdp_redirect(struct net_device *dev, struct gve_rx_ring *rx,
- 
- 	total_len = headroom + SKB_DATA_ALIGN(len) +
- 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
--	frame = page_frag_alloc(&rx->page_cache, total_len, GFP_ATOMIC);
-+	frame = page_frag_alloc_va(&rx->page_cache, total_len, GFP_ATOMIC);
- 	if (!frame) {
- 		u64_stats_update_begin(&rx->statss);
- 		rx->xdp_alloc_fails++;
-@@ -700,7 +700,7 @@ static int gve_xdp_redirect(struct net_device *dev, struct gve_rx_ring *rx,
- 
- 	err = xdp_do_redirect(dev, &new, xdp_prog);
- 	if (err)
--		page_frag_free(frame);
-+		page_frag_free_va(frame);
- 
- 	return err;
- }
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.c b/drivers/net/ethernet/intel/ice/ice_txrx.c
-index 8bb743f78fcb..399b317c509d 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.c
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
-@@ -126,7 +126,7 @@ ice_unmap_and_free_tx_buf(struct ice_tx_ring *ring, struct ice_tx_buf *tx_buf)
- 		dev_kfree_skb_any(tx_buf->skb);
- 		break;
- 	case ICE_TX_BUF_XDP_TX:
--		page_frag_free(tx_buf->raw_buf);
-+		page_frag_free_va(tx_buf->raw_buf);
- 		break;
- 	case ICE_TX_BUF_XDP_XMIT:
- 		xdp_return_frame(tx_buf->xdpf);
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.h b/drivers/net/ethernet/intel/ice/ice_txrx.h
-index feba314a3fe4..6379f57d8228 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.h
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.h
-@@ -148,7 +148,7 @@ static inline int ice_skb_pad(void)
-  * @ICE_TX_BUF_DUMMY: dummy Flow Director packet, unmap and kfree()
-  * @ICE_TX_BUF_FRAG: mapped skb OR &xdp_buff frag, only unmap DMA
-  * @ICE_TX_BUF_SKB: &sk_buff, unmap and consume_skb(), update stats
-- * @ICE_TX_BUF_XDP_TX: &xdp_buff, unmap and page_frag_free(), stats
-+ * @ICE_TX_BUF_XDP_TX: &xdp_buff, unmap and page_frag_free_va(), stats
-  * @ICE_TX_BUF_XDP_XMIT: &xdp_frame, unmap and xdp_return_frame(), stats
-  * @ICE_TX_BUF_XSK_TX: &xdp_buff on XSk queue, xsk_buff_free(), stats
-  */
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
-index df072ce767b1..c34cc02ad578 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
-@@ -288,7 +288,7 @@ ice_clean_xdp_tx_buf(struct device *dev, struct ice_tx_buf *tx_buf,
- 
- 	switch (tx_buf->type) {
- 	case ICE_TX_BUF_XDP_TX:
--		page_frag_free(tx_buf->raw_buf);
-+		page_frag_free_va(tx_buf->raw_buf);
- 		break;
- 	case ICE_TX_BUF_XDP_XMIT:
- 		xdp_return_frame_bulk(tx_buf->xdpf, bq);
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index 3161a13079fe..c35b8f675b48 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -303,7 +303,7 @@ static bool ixgbevf_clean_tx_irq(struct ixgbevf_q_vector *q_vector,
- 
- 		/* free the skb */
- 		if (ring_is_xdp(tx_ring))
--			page_frag_free(tx_buffer->data);
-+			page_frag_free_va(tx_buffer->data);
- 		else
- 			napi_consume_skb(tx_buffer->skb, napi_budget);
- 
-@@ -2413,7 +2413,7 @@ static void ixgbevf_clean_tx_ring(struct ixgbevf_ring *tx_ring)
- 
- 		/* Free all the Tx ring sk_buffs */
- 		if (ring_is_xdp(tx_ring))
--			page_frag_free(tx_buffer->data);
-+			page_frag_free_va(tx_buffer->data);
- 		else
- 			dev_kfree_skb_any(tx_buffer->skb);
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-index a85ac039d779..8eb5820b8a70 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-@@ -553,7 +553,7 @@ static int __otx2_alloc_rbuf(struct otx2_nic *pfvf, struct otx2_pool *pool,
- 	*dma = dma_map_single_attrs(pfvf->dev, buf, pool->rbsize,
- 				    DMA_FROM_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
- 	if (unlikely(dma_mapping_error(pfvf->dev, *dma))) {
--		page_frag_free(buf);
-+		page_frag_free_va(buf);
- 		return -ENOMEM;
- 	}
- 
-diff --git a/drivers/net/ethernet/mediatek/mtk_wed_wo.c b/drivers/net/ethernet/mediatek/mtk_wed_wo.c
-index 7063c78bd35f..c4228719f8a4 100644
---- a/drivers/net/ethernet/mediatek/mtk_wed_wo.c
-+++ b/drivers/net/ethernet/mediatek/mtk_wed_wo.c
-@@ -142,8 +142,8 @@ mtk_wed_wo_queue_refill(struct mtk_wed_wo *wo, struct mtk_wed_wo_queue *q,
- 		dma_addr_t addr;
- 		void *buf;
- 
--		buf = page_frag_alloc(&q->cache, q->buf_size,
--				      GFP_ATOMIC | GFP_DMA32);
-+		buf = page_frag_alloc_va(&q->cache, q->buf_size,
-+					 GFP_ATOMIC | GFP_DMA32);
- 		if (!buf)
- 			break;
- 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index fdbcdcedcee9..79eddd74bfbb 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -500,7 +500,7 @@ static void nvme_tcp_exit_request(struct blk_mq_tag_set *set,
- {
- 	struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq);
- 
--	page_frag_free(req->pdu);
-+	page_frag_free_va(req->pdu);
- }
- 
- static int nvme_tcp_init_request(struct blk_mq_tag_set *set,
-@@ -514,7 +514,7 @@ static int nvme_tcp_init_request(struct blk_mq_tag_set *set,
- 	struct nvme_tcp_queue *queue = &ctrl->queues[queue_idx];
- 	u8 hdgst = nvme_tcp_hdgst_len(queue);
- 
--	req->pdu = page_frag_alloc(&queue->pf_cache,
-+	req->pdu = page_frag_alloc_va(&queue->pf_cache,
- 		sizeof(struct nvme_tcp_cmd_pdu) + hdgst,
- 		GFP_KERNEL | __GFP_ZERO);
- 	if (!req->pdu)
-@@ -1331,7 +1331,7 @@ static void nvme_tcp_free_async_req(struct nvme_tcp_ctrl *ctrl)
- {
- 	struct nvme_tcp_request *async = &ctrl->async_req;
- 
--	page_frag_free(async->pdu);
-+	page_frag_free_va(async->pdu);
- }
- 
- static int nvme_tcp_alloc_async_req(struct nvme_tcp_ctrl *ctrl)
-@@ -1340,7 +1340,7 @@ static int nvme_tcp_alloc_async_req(struct nvme_tcp_ctrl *ctrl)
- 	struct nvme_tcp_request *async = &ctrl->async_req;
- 	u8 hdgst = nvme_tcp_hdgst_len(queue);
- 
--	async->pdu = page_frag_alloc(&queue->pf_cache,
-+	async->pdu = page_frag_alloc_va(&queue->pf_cache,
- 		sizeof(struct nvme_tcp_cmd_pdu) + hdgst,
- 		GFP_KERNEL | __GFP_ZERO);
- 	if (!async->pdu)
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index a5422e2c979a..ea356ce22672 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -1462,24 +1462,24 @@ static int nvmet_tcp_alloc_cmd(struct nvmet_tcp_queue *queue,
- 	c->queue = queue;
- 	c->req.port = queue->port->nport;
- 
--	c->cmd_pdu = page_frag_alloc(&queue->pf_cache,
-+	c->cmd_pdu = page_frag_alloc_va(&queue->pf_cache,
- 			sizeof(*c->cmd_pdu) + hdgst, GFP_KERNEL | __GFP_ZERO);
- 	if (!c->cmd_pdu)
- 		return -ENOMEM;
- 	c->req.cmd = &c->cmd_pdu->cmd;
- 
--	c->rsp_pdu = page_frag_alloc(&queue->pf_cache,
-+	c->rsp_pdu = page_frag_alloc_va(&queue->pf_cache,
- 			sizeof(*c->rsp_pdu) + hdgst, GFP_KERNEL | __GFP_ZERO);
- 	if (!c->rsp_pdu)
- 		goto out_free_cmd;
- 	c->req.cqe = &c->rsp_pdu->cqe;
- 
--	c->data_pdu = page_frag_alloc(&queue->pf_cache,
-+	c->data_pdu = page_frag_alloc_va(&queue->pf_cache,
- 			sizeof(*c->data_pdu) + hdgst, GFP_KERNEL | __GFP_ZERO);
- 	if (!c->data_pdu)
- 		goto out_free_rsp;
- 
--	c->r2t_pdu = page_frag_alloc(&queue->pf_cache,
-+	c->r2t_pdu = page_frag_alloc_va(&queue->pf_cache,
- 			sizeof(*c->r2t_pdu) + hdgst, GFP_KERNEL | __GFP_ZERO);
- 	if (!c->r2t_pdu)
- 		goto out_free_data;
-@@ -1494,20 +1494,20 @@ static int nvmet_tcp_alloc_cmd(struct nvmet_tcp_queue *queue,
- 
- 	return 0;
- out_free_data:
--	page_frag_free(c->data_pdu);
-+	page_frag_free_va(c->data_pdu);
- out_free_rsp:
--	page_frag_free(c->rsp_pdu);
-+	page_frag_free_va(c->rsp_pdu);
- out_free_cmd:
--	page_frag_free(c->cmd_pdu);
-+	page_frag_free_va(c->cmd_pdu);
- 	return -ENOMEM;
- }
- 
- static void nvmet_tcp_free_cmd(struct nvmet_tcp_cmd *c)
- {
--	page_frag_free(c->r2t_pdu);
--	page_frag_free(c->data_pdu);
--	page_frag_free(c->rsp_pdu);
--	page_frag_free(c->cmd_pdu);
-+	page_frag_free_va(c->r2t_pdu);
-+	page_frag_free_va(c->data_pdu);
-+	page_frag_free_va(c->rsp_pdu);
-+	page_frag_free_va(c->cmd_pdu);
- }
- 
- static int nvmet_tcp_alloc_cmds(struct nvmet_tcp_queue *queue)
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index c64ded183f8d..96d5ca299552 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -682,8 +682,8 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 		return -ENOSPC;
- 
- 	buflen += SKB_DATA_ALIGN(len + pad);
--	buf = page_frag_alloc_align(&net->pf_cache, buflen, GFP_KERNEL,
--				    SMP_CACHE_BYTES);
-+	buf = page_frag_alloc_va_align(&net->pf_cache, buflen, GFP_KERNEL,
-+				       SMP_CACHE_BYTES);
- 	if (unlikely(!buf))
- 		return -ENOMEM;
- 
-@@ -730,7 +730,7 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 	return 0;
- 
- err:
--	page_frag_free(buf);
-+	page_frag_free_va(buf);
- 	return ret;
- }
- 
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index cc0ede0912f3..9d5d86b2d3ab 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -25,27 +25,29 @@ struct page_frag_cache {
- 
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
--void *page_frag_alloc(struct page_frag_cache *nc, unsigned int fragsz,
--		      gfp_t gfp_mask);
-+void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
-+			 gfp_t gfp_mask);
- 
--static inline void *__page_frag_alloc_align(struct page_frag_cache *nc,
--					    unsigned int fragsz, gfp_t gfp_mask,
--					    unsigned int align)
-+static inline void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
-+					       unsigned int fragsz,
-+					       gfp_t gfp_mask,
-+					       unsigned int align)
- {
- 	nc->offset = ALIGN(nc->offset, align);
- 
--	return page_frag_alloc(nc, fragsz, gfp_mask);
-+	return page_frag_alloc_va(nc, fragsz, gfp_mask);
- }
- 
--static inline void *page_frag_alloc_align(struct page_frag_cache *nc,
--					  unsigned int fragsz, gfp_t gfp_mask,
--					  unsigned int align)
-+static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
-+					     unsigned int fragsz,
-+					     gfp_t gfp_mask,
-+					     unsigned int align)
- {
- 	WARN_ON_ONCE(!is_power_of_2(align));
- 
--	return __page_frag_alloc_align(nc, fragsz, gfp_mask, align);
-+	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, align);
- }
- 
--void page_frag_free(void *addr);
-+void page_frag_free_va(void *addr);
- 
- #endif
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 43c704589deb..cc80600dcedf 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3343,7 +3343,7 @@ static inline struct sk_buff *netdev_alloc_skb_ip_align(struct net_device *dev,
- 
- static inline void skb_free_frag(void *addr)
- {
--	page_frag_free(addr);
-+	page_frag_free_va(addr);
- }
- 
- void *__napi_alloc_frag_align(unsigned int fragsz, unsigned int align);
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index a8e34416e960..3a6a237e7dd3 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -322,7 +322,7 @@ static int cpu_map_kthread_run(void *data)
- 
- 			/* Bring struct page memory area to curr CPU. Read by
- 			 * build_skb_around via page_is_pfmemalloc(), and when
--			 * freed written by page_frag_free call.
-+			 * freed written by page_frag_free_va call.
- 			 */
- 			prefetchw(page);
- 		}
-diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-index b4408187e1ab..50511d8522d0 100644
---- a/mm/page_frag_cache.c
-+++ b/mm/page_frag_cache.c
-@@ -61,8 +61,8 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
- }
- EXPORT_SYMBOL(__page_frag_cache_drain);
- 
--void *page_frag_alloc(struct page_frag_cache *nc, unsigned int fragsz,
--		      gfp_t gfp_mask)
-+void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
-+			 gfp_t gfp_mask)
- {
- 	unsigned int size, offset;
- 	struct page *page;
-@@ -128,16 +128,16 @@ void *page_frag_alloc(struct page_frag_cache *nc, unsigned int fragsz,
- 
- 	return nc->va + offset;
- }
--EXPORT_SYMBOL(page_frag_alloc);
-+EXPORT_SYMBOL(page_frag_alloc_va);
- 
- /*
-  * Frees a page fragment allocated out of either a compound or order 0 page.
-  */
--void page_frag_free(void *addr)
-+void page_frag_free_va(void *addr)
- {
- 	struct page *page = virt_to_head_page(addr);
- 
- 	if (unlikely(put_page_testzero(page)))
- 		free_unref_page(page, compound_order(page));
- }
--EXPORT_SYMBOL(page_frag_free);
-+EXPORT_SYMBOL(page_frag_free_va);
-diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
-index ebfd1c3dae8f..cab05b8a2e77 100644
---- a/mm/page_frag_test.c
-+++ b/mm/page_frag_test.c
-@@ -260,7 +260,7 @@ static int page_frag_pop_thread(void *arg)
- 
- 		if (obj) {
- 			nr--;
--			page_frag_free(obj);
-+			page_frag_free_va(obj);
- 		} else {
- 			cond_resched();
- 		}
-@@ -289,13 +289,13 @@ static int page_frag_push_thread(void *arg)
- 		int ret;
- 
- 		size = clamp(size, 4U, 4096U);
--		va = page_frag_alloc(&test_frag, size, GFP_KERNEL);
-+		va = page_frag_alloc_va(&test_frag, size, GFP_KERNEL);
- 		if (!va)
- 			continue;
- 
- 		ret = objpool_push(va, pool);
- 		if (ret) {
--			page_frag_free(va);
-+			page_frag_free_va(va);
- 			cond_resched();
- 		} else {
- 			nr--;
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 676e2d857f02..139a193853cc 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -312,7 +312,7 @@ void *__napi_alloc_frag_align(unsigned int fragsz, unsigned int align)
- 
- 	fragsz = SKB_DATA_ALIGN(fragsz);
- 
--	return __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC, align);
-+	return __page_frag_alloc_va_align(&nc->page, fragsz, GFP_ATOMIC, align);
- }
- EXPORT_SYMBOL(__napi_alloc_frag_align);
- 
-@@ -324,14 +324,15 @@ void *__netdev_alloc_frag_align(unsigned int fragsz, unsigned int align)
- 	if (in_hardirq() || irqs_disabled()) {
- 		struct page_frag_cache *nc = this_cpu_ptr(&netdev_alloc_cache);
- 
--		data = __page_frag_alloc_align(nc, fragsz, GFP_ATOMIC, align);
-+		data = __page_frag_alloc_va_align(nc, fragsz, GFP_ATOMIC,
-+						  align);
- 	} else {
- 		struct napi_alloc_cache *nc;
- 
- 		local_bh_disable();
- 		nc = this_cpu_ptr(&napi_alloc_cache);
--		data = __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
--					       align);
-+		data = __page_frag_alloc_va_align(&nc->page, fragsz, GFP_ATOMIC,
-+						  align);
- 		local_bh_enable();
- 	}
- 	return data;
-@@ -741,12 +742,12 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
--		data = page_frag_alloc(nc, len, gfp_mask);
-+		data = page_frag_alloc_va(nc, len, gfp_mask);
- 		pfmemalloc = nc->pfmemalloc;
- 	} else {
- 		local_bh_disable();
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
--		data = page_frag_alloc(nc, len, gfp_mask);
-+		data = page_frag_alloc_va(nc, len, gfp_mask);
- 		pfmemalloc = nc->pfmemalloc;
- 		local_bh_enable();
- 	}
-@@ -834,7 +835,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 	} else {
- 		len = SKB_HEAD_ALIGN(len);
- 
--		data = page_frag_alloc(&nc->page, len, gfp_mask);
-+		data = page_frag_alloc_va(&nc->page, len, gfp_mask);
- 		pfmemalloc = nc->page.pfmemalloc;
- 	}
- 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 41693154e426..245a2d011aeb 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -391,7 +391,7 @@ void __xdp_return(void *data, struct xdp_mem_info *mem, bool napi_direct,
- 		page_pool_put_full_page(page->pp, page, napi_direct);
- 		break;
- 	case MEM_TYPE_PAGE_SHARED:
--		page_frag_free(data);
-+		page_frag_free_va(data);
- 		break;
- 	case MEM_TYPE_PAGE_ORDER0:
- 		page = virt_to_page(data); /* Assumes order0 page*/
-diff --git a/net/rxrpc/txbuf.c b/net/rxrpc/txbuf.c
-index eb640875bf07..f2fa98360789 100644
---- a/net/rxrpc/txbuf.c
-+++ b/net/rxrpc/txbuf.c
-@@ -34,8 +34,8 @@ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_t data_
- 
- 	data_align = max_t(size_t, data_align, L1_CACHE_BYTES);
- 	mutex_lock(&call->conn->tx_data_alloc_lock);
--	buf = page_frag_alloc_align(&call->conn->tx_data_alloc, total, gfp,
--				    data_align);
-+	buf = page_frag_alloc_va_align(&call->conn->tx_data_alloc, total, gfp,
-+				       data_align);
- 	mutex_unlock(&call->conn->tx_data_alloc_lock);
- 	if (!buf) {
- 		kfree(txb);
-@@ -97,17 +97,18 @@ struct rxrpc_txbuf *rxrpc_alloc_ack_txbuf(struct rxrpc_call *call, size_t sack_s
- 	if (!txb)
- 		return NULL;
- 
--	buf = page_frag_alloc(&call->local->tx_alloc,
--			      sizeof(*whdr) + sizeof(*ack) + 1 + 3 + sizeof(*trailer), gfp);
-+	buf = page_frag_alloc_va(&call->local->tx_alloc,
-+				 sizeof(*whdr) + sizeof(*ack) + 1 + 3 + sizeof(*trailer), gfp);
- 	if (!buf) {
- 		kfree(txb);
- 		return NULL;
- 	}
- 
- 	if (sack_size) {
--		buf2 = page_frag_alloc(&call->local->tx_alloc, sack_size, gfp);
-+		buf2 = page_frag_alloc_va(&call->local->tx_alloc, sack_size,
-+					  gfp);
- 		if (!buf2) {
--			page_frag_free(buf);
-+			page_frag_free_va(buf);
- 			kfree(txb);
- 			return NULL;
- 		}
-@@ -181,7 +182,7 @@ static void rxrpc_free_txbuf(struct rxrpc_txbuf *txb)
- 			  rxrpc_txbuf_free);
- 	for (i = 0; i < txb->nr_kvec; i++)
- 		if (txb->kvec[i].iov_base)
--			page_frag_free(txb->kvec[i].iov_base);
-+			page_frag_free_va(txb->kvec[i].iov_base);
- 	kfree(txb);
- 	atomic_dec(&rxrpc_nr_txbuf);
- }
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 6b3f01beb294..42d20412c1c3 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1222,8 +1222,8 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
- 	/* The stream record marker is copied into a temporary page
- 	 * fragment buffer so that it can be included in rq_bvec.
- 	 */
--	buf = page_frag_alloc(&svsk->sk_frag_cache, sizeof(marker),
--			      GFP_KERNEL);
-+	buf = page_frag_alloc_va(&svsk->sk_frag_cache, sizeof(marker),
-+				 GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 	memcpy(buf, &marker, sizeof(marker));
-@@ -1235,7 +1235,7 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
- 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
- 		      1 + count, sizeof(marker) + rqstp->rq_res.len);
- 	ret = sock_sendmsg(svsk->sk_sock, &msg);
--	page_frag_free(buf);
-+	page_frag_free_va(buf);
- 	if (ret < 0)
- 		return ret;
- 	*sentp += ret;
+
 -- 
-2.33.0
-
+Chuck Lever
 
