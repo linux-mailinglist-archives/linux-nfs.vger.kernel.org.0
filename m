@@ -1,88 +1,93 @@
-Return-Path: <linux-nfs+bounces-2851-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2852-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 647508A76B8
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 23:36:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D24B98A76FF
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 23:48:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BD55282757
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 21:36:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88F0C281296
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 21:48:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC1913C3EB;
-	Tue, 16 Apr 2024 21:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8D54317C;
+	Tue, 16 Apr 2024 21:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QfIES6f+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZmzTcCLn";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Uds6SZAR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iKpbVdt7"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZHGMOyK4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nGPWrpST";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZHGMOyK4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nGPWrpST"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD4413C3E9
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Apr 2024 21:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF9F1E4BE;
+	Tue, 16 Apr 2024 21:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713302594; cv=none; b=Vfc9NbCpZd0u2KZftle6G/8ao/AtGdaLlUki3pjsWC34NQmwh9p3Z7Cu02pI5F3XrIup7jPc9ZzHI4dE2RJTQLEJSIUTUvajen676A+SM01SEv6w3xodsgmiSnfW/qwGEpApONl+6qmFJD38FrJTwvQA5+DRxUzWmHJwPq8zJsA=
+	t=1713304114; cv=none; b=Zqe1G+S28icdlZiKR7DGtYFJL5mspiqEEbctxUI5RieFLfFRgctEGdmRauvuCIZoRYkbGMEept2wa78j7pRgJY6dGoYsrIM8yzXwvIWwuc+b/xwmzbLUUqY89o3YCrz9Uc1OElBs6Iw9Xp4GD9oSQh+nyOwjehr+g+YbD+b3SZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713302594; c=relaxed/simple;
-	bh=rZPHfJgrjLIJ4yhbMgRshV8OEN+exo48ANU0s0EaCao=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=Vl/axpK8H4gFnWJNFZnJSKKTsXSOauWbgCOj2IA8WjXPjMkgAnl+BhaFcpblsMre6B2fPLvuUKjlyI1Cf0yotKrQ0x5gv0djE88Lkr8++y+n3Ed1hGxJ+cBGqrf3I0XanHMuZHTZwlS/4wVb8l8fSJSlUvSt9wTei+xFnzxSx2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QfIES6f+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZmzTcCLn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Uds6SZAR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iKpbVdt7; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1713304114; c=relaxed/simple;
+	bh=E8XWyYQ5OJ9m5PQoWqO0WEcSLDCSv2Og5HEFnmzdEic=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=MM2wfE7JihtdZMgL+MTHfU/boQRskGlRxgrL1UeicPrryMqMduN8m7RiB8NFCU3/YCqP77xjJPEu6ioMJGlR9x5TntrO5xO7hmwisiFcqx/keTAqvSoADmwpzCv9L7H9WkDcUd3pk+HpBuWM54QKk8SZN5itwwQmd1W+56NqD0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZHGMOyK4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nGPWrpST; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZHGMOyK4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nGPWrpST; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C16022674;
-	Tue, 16 Apr 2024 21:23:09 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 61D0621D16;
+	Tue, 16 Apr 2024 21:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713302590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1713304109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UjX9jqSjUpaT6VB3qdSHfJ1xGSwj2SXxE51SZadxHJ0=;
-	b=QfIES6f+Ivmw9p8CdGK62syOhD+Vcx1HXpG0qbcfVXsK9jMceI/uYFboVnYc1aKECYFqJB
-	sMkoEoYAMdovs8082nPvpyixuGJeHd9Cw5sI14bx2JYR5cL9HdW1ygZsN+lRf2uINZoLE6
-	xb+OruICTF8pt6lrAQQMJvliC25BdNc=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cwj62KidfxtGKT26ihBR0jPmIczFvkPH2wvRP4OmE9w=;
+	b=ZHGMOyK4N8RyZHDGOedrLtpOrbNoQmceS4L8XfjHLxIpZQlbKLFKEl2aW1zWVc6S5S48gN
+	7BIo+tN4FPUOGeSOYPl88ajDrrgJSucaOCZdg7nD/Fd2ERSPV2gQVm8UvhK/jy/HuDubmR
+	24H9Tidgs9yMnSU7hScvYVknp6j9aPM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713302590;
+	s=susede2_ed25519; t=1713304109;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UjX9jqSjUpaT6VB3qdSHfJ1xGSwj2SXxE51SZadxHJ0=;
-	b=ZmzTcCLnIJXF15pBZfiG/bB41KOn5MdkUJpF9VCY0muAyPYFXVtwrKQy6s1yWQ1dxQLIq9
-	ccm6KPLeCAVEzFCw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cwj62KidfxtGKT26ihBR0jPmIczFvkPH2wvRP4OmE9w=;
+	b=nGPWrpSTh/coknyo5aroerX6mxaOcCO2AgSBSgEZitrXEGijskIUtLvoWGAUHFLIubKkNV
+	CoReksRLh4ObhIDg==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713302589; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1713304109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UjX9jqSjUpaT6VB3qdSHfJ1xGSwj2SXxE51SZadxHJ0=;
-	b=Uds6SZARdNPqt1Z67SRF9OK1C7yd8bYG2dPfSqI5EyCs4upRwvz/VabRauj0I6y6ShdrEX
-	hRj/OxBsjmNeA/rVLz3UOlhGkU2Cq760aEhnngSG3QFw/Z+qSE/u/EeLmhQUVee1O5ihVc
-	3zm8gOxSbxUFlPwocJ9GNZAXgp+f/GA=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cwj62KidfxtGKT26ihBR0jPmIczFvkPH2wvRP4OmE9w=;
+	b=ZHGMOyK4N8RyZHDGOedrLtpOrbNoQmceS4L8XfjHLxIpZQlbKLFKEl2aW1zWVc6S5S48gN
+	7BIo+tN4FPUOGeSOYPl88ajDrrgJSucaOCZdg7nD/Fd2ERSPV2gQVm8UvhK/jy/HuDubmR
+	24H9Tidgs9yMnSU7hScvYVknp6j9aPM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713302589;
+	s=susede2_ed25519; t=1713304109;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UjX9jqSjUpaT6VB3qdSHfJ1xGSwj2SXxE51SZadxHJ0=;
-	b=iKpbVdt7qQAYraCoo15lWfvDfewc6rAO3R/CeHkIYr3kmmawfjhK1b7wc4vVw60hWSoVdH
-	hx5B8z3pfyQO2tDw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cwj62KidfxtGKT26ihBR0jPmIczFvkPH2wvRP4OmE9w=;
+	b=nGPWrpSTh/coknyo5aroerX6mxaOcCO2AgSBSgEZitrXEGijskIUtLvoWGAUHFLIubKkNV
+	CoReksRLh4ObhIDg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9BA2F13432;
-	Tue, 16 Apr 2024 21:23:06 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0FBB113432;
+	Tue, 16 Apr 2024 21:48:25 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XkeCDzrsHmafeQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 16 Apr 2024 21:23:06 +0000
+	id jfc5KSnyHmbvAQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 16 Apr 2024 21:48:25 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -92,92 +97,509 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Petr Vorel <pvorel@suse.cz>
-Subject: [PATCH] nfsd: don't create nfsv4recoverydir in nfsdfs when not used.
-Date: Wed, 17 Apr 2024 07:23:02 +1000
-Message-id: <171330258224.17212.9790424282163530018@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Lorenzo Bianconi" <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+ lorenzo.bianconi@redhat.com, chuck.lever@oracle.com, netdev@vger.kernel.org,
+ kuba@kernel.org
+Subject: Re: [PATCH v8 3/6] NFSD: add write_version to netlink command
+In-reply-to: <4a77c2b164781c6df14e001573bd5631319a9043.camel@kernel.org>
+References: <>, <4a77c2b164781c6df14e001573bd5631319a9043.camel@kernel.org>
+Date: Wed, 17 Apr 2024 07:48:22 +1000
+Message-id: <171330410225.17212.2547625907525888196@noble.neil.brown.name>
 X-Spam-Level: 
 X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-0.997];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
+
+On Tue, 16 Apr 2024, Jeff Layton wrote:
+> On Tue, 2024-04-16 at 13:16 +1000, NeilBrown wrote:
+> > On Tue, 16 Apr 2024, Lorenzo Bianconi wrote:
+> > > Introduce write_version netlink command through a "declarative" interfa=
+ce.
+> > > This patch introduces a change in behavior since for version-set usersp=
+ace
+> > > is expected to provide a NFS major/minor version list it wants to enable
+> > > while all the other ones will be disabled. (procfs write_version
+> > > command implements imperative interface where the admin writes +3/-3 to
+> > > enable/disable a single version.
+> >=20
+> > It seems a little weird to me that the interface always disables all
+> > version, but then also allows individual versions to be disabled.
+> >=20
+> > Would it be reasonable to simply ignore the "enabled" flag when setting
+> > version, and just enable all versions listed??
+> >
+> > Or maybe only enable those with the flag, and don't disable those
+> > without the flag?
+> >
+> > Those don't necessarily seem much better - but the current behaviour
+> > still seems odd.
+> >=20
+>=20
+> I think it makes sense.
+>=20
+> We disable all versions, and enable any that have the "enabled" flag set
+> in the call from userland. Userland technically needn't send down the
+> versions that are disabled in the call, but the current userland program
+> does.
+>=20
+> I worry about imperative interfaces that might only say -- "enable v4.1,
+> but disable v3" and leave the others in their current state. That
+> requires that both the kernel and userland keep state about what
+> versions are currently enabled and disabled, and it's possible to get
+> that wrong.
+
+I understand and support your aversion for imperative interfaces.
+But this interface, as currently implemented, looks somewhat imperative.
+The message sent to the kernel could enable some interfaces and then
+disable them.  I know that isn't the intent, but it is what the code
+supports.  Hence "weird".
+
+We could add code to make that sort of thing impossible, but there isn't
+much point.  Better to make it syntactically impossible.
+
+Realistically there will never be NFSv4.3 as there is no need - new
+features can be added incrementally.  So we could just pass an array of
+5 active flags: 2,3,4.0,4.1,4.2.  I suspect you wouldn't like that and
+I'm not sure that I do either.  A "read" would return the same array
+with 3 possible states: unavailable, disabled, enabled.  (Maybe the
+array could be variable length so 5.0 could be added one day...).
+
+I haven't managed to come up with anything *better* than the current
+proposal and I don't want to stand in its way, but I wanted to highlight
+that it looks weird - as much imperative as declarative - in case
+someone else might be able to come up with a better alternative.
+
+Thanks,
+NeilBrown
 
 
-When CONFIG_NFSD_LEGACY_CLIENT_TRACKING is not set, the virtual file
-  /proc/fs/nfsd/nfsv4recoverydir
-is created but responds EINVAL to any access.
-This is not useful, is somewhat surprising, and it causes ltp to
-complain.
-
-The only known user of this file is in nfs-utils, which handles
-non-existence and read-failure equally well.  So there is nothing to
-gain from leaving the file present but inaccessible.
-
-So this patch removes the file when its content is not available - i.e.
-when that config option is not selected.
-
-Also remove the #ifdef which hides some of the enum values when
-CONFIG_NFSD_V$ not selection.  simple_fill_super() quietly ignores array
-entries that are not present, so having slots in the array that don't
-get used is perfectly acceptable.  So there is no value in this #ifdef.
-
-Reported-by: Petr Vorel <pvorel@suse.cz>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Fixes: 74fd48739d04 ("nfsd: new Kconfig option for legacy client tracking")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfsctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 93c87587e646..340c5d61f199 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -48,12 +48,10 @@ enum {
- 	NFSD_MaxBlkSize,
- 	NFSD_MaxConnections,
- 	NFSD_Filecache,
--#ifdef CONFIG_NFSD_V4
- 	NFSD_Leasetime,
- 	NFSD_Gracetime,
- 	NFSD_RecoveryDir,
- 	NFSD_V4EndGrace,
--#endif
- 	NFSD_MaxReserved
- };
-=20
-@@ -1360,7 +1358,9 @@ static int nfsd_fill_super(struct super_block *sb, stru=
-ct fs_context *fc)
- #ifdef CONFIG_NFSD_V4
- 		[NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops, S_IWUSR|S_IRUSR},
- 		[NFSD_Gracetime] =3D {"nfsv4gracetime", &transaction_ops, S_IWUSR|S_IRUSR},
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- 		[NFSD_RecoveryDir] =3D {"nfsv4recoverydir", &transaction_ops, S_IWUSR|S_IR=
-USR},
-+#endif
- 		[NFSD_V4EndGrace] =3D {"v4_end_grace", &transaction_ops, S_IWUSR|S_IRUGO},
- #endif
- 		/* last one */ {""}
---=20
-2.44.0
+>=20
+> My thinking was that by using a declarative interface like this, we
+> eliminate ambiguity in how these interfaces are supposed to work. The
+> client sends down an entire version map in one fell swoop, and we know
+> exactly what the result should look like.
+>=20
+> Note that you can enable or disable just a single version with the
+> userland tool, but this way all of that complexity stays in userland.
+>=20
+> > Also for getting the version, the doc says:
+> >=20
+> >      doc: get nfs enabled versions
+> >=20
+> > which I don't think it quite right.  The code reports all supported
+> > versions, and indicates which of those are enabled.  So maybe:
+> >=20
+> >      doc: get enabled status for all supported versions
+> >=20
+> >
+> > I think that fact that it actually lists all supported versions is
+> > useful and worth making explicit.
+> >=20
+> >=20
+>=20
+> Agreed. We should make that change before merging anything.
+>=20
+> > >=20
+> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > > Tested-by: Jeff Layton <jlayton@kernel.org>
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > ---
+> > >  Documentation/netlink/specs/nfsd.yaml |  37 +++++++
+> > >  fs/nfsd/netlink.c                     |  24 +++++
+> > >  fs/nfsd/netlink.h                     |   5 +
+> > >  fs/nfsd/netns.h                       |   1 +
+> > >  fs/nfsd/nfsctl.c                      | 150 ++++++++++++++++++++++++++
+> > >  fs/nfsd/nfssvc.c                      |   3 +-
+> > >  include/uapi/linux/nfsd_netlink.h     |  18 ++++
+> > >  7 files changed, 236 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netl=
+ink/specs/nfsd.yaml
+> > > index cbe6c5fd6c4d..0396e8b3ea1f 100644
+> > > --- a/Documentation/netlink/specs/nfsd.yaml
+> > > +++ b/Documentation/netlink/specs/nfsd.yaml
+> > > @@ -74,6 +74,26 @@ attribute-sets:
+> > >        -
+> > >          name: leasetime
+> > >          type: u32
+> > > +  -
+> > > +    name: version
+> > > +    attributes:
+> > > +      -
+> > > +        name: major
+> > > +        type: u32
+> > > +      -
+> > > +        name: minor
+> > > +        type: u32
+> > > +      -
+> > > +        name: enabled
+> > > +        type: flag
+> > > +  -
+> > > +    name: server-proto
+> > > +    attributes:
+> > > +      -
+> > > +        name: version
+> > > +        type: nest
+> > > +        nested-attributes: version
+> > > +        multi-attr: true
+> > > =20
+> > >  operations:
+> > >    list:
+> > > @@ -120,3 +140,20 @@ operations:
+> > >              - threads
+> > >              - gracetime
+> > >              - leasetime
+> > > +    -
+> > > +      name: version-set
+> > > +      doc: set nfs enabled versions
+> > > +      attribute-set: server-proto
+> > > +      flags: [ admin-perm ]
+> > > +      do:
+> > > +        request:
+> > > +          attributes:
+> > > +            - version
+> > > +    -
+> > > +      name: version-get
+> > > +      doc: get nfs enabled versions
+> > > +      attribute-set: server-proto
+> > > +      do:
+> > > +        reply:
+> > > +          attributes:
+> > > +            - version
+> > > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+> > > index 20a646af0324..bf5df9597288 100644
+> > > --- a/fs/nfsd/netlink.c
+> > > +++ b/fs/nfsd/netlink.c
+> > > @@ -10,6 +10,13 @@
+> > > =20
+> > >  #include <uapi/linux/nfsd_netlink.h>
+> > > =20
+> > > +/* Common nested types */
+> > > +const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED =
++ 1] =3D {
+> > > +	[NFSD_A_VERSION_MAJOR] =3D { .type =3D NLA_U32, },
+> > > +	[NFSD_A_VERSION_MINOR] =3D { .type =3D NLA_U32, },
+> > > +	[NFSD_A_VERSION_ENABLED] =3D { .type =3D NLA_FLAG, },
+> > > +};
+> > > +
+> > >  /* NFSD_CMD_THREADS_SET - do */
+> > >  static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_SERVE=
+R_WORKER_LEASETIME + 1] =3D {
+> > >  	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
+> > > @@ -17,6 +24,11 @@ static const struct nla_policy nfsd_threads_set_nl_p=
+olicy[NFSD_A_SERVER_WORKER_L
+> > >  	[NFSD_A_SERVER_WORKER_LEASETIME] =3D { .type =3D NLA_U32, },
+> > >  };
+> > > =20
+> > > +/* NFSD_CMD_VERSION_SET - do */
+> > > +static const struct nla_policy nfsd_version_set_nl_policy[NFSD_A_SERVE=
+R_PROTO_VERSION + 1] =3D {
+> > > +	[NFSD_A_SERVER_PROTO_VERSION] =3D NLA_POLICY_NESTED(nfsd_version_nl_p=
+olicy),
+> > > +};
+> > > +
+> > >  /* Ops table for nfsd */
+> > >  static const struct genl_split_ops nfsd_nl_ops[] =3D {
+> > >  	{
+> > > @@ -38,6 +50,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D=
+ {
+> > >  		.doit	=3D nfsd_nl_threads_get_doit,
+> > >  		.flags	=3D GENL_CMD_CAP_DO,
+> > >  	},
+> > > +	{
+> > > +		.cmd		=3D NFSD_CMD_VERSION_SET,
+> > > +		.doit		=3D nfsd_nl_version_set_doit,
+> > > +		.policy		=3D nfsd_version_set_nl_policy,
+> > > +		.maxattr	=3D NFSD_A_SERVER_PROTO_VERSION,
+> > > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+> > > +	},
+> > > +	{
+> > > +		.cmd	=3D NFSD_CMD_VERSION_GET,
+> > > +		.doit	=3D nfsd_nl_version_get_doit,
+> > > +		.flags	=3D GENL_CMD_CAP_DO,
+> > > +	},
+> > >  };
+> > > =20
+> > >  struct genl_family nfsd_nl_family __ro_after_init =3D {
+> > > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+> > > index 4137fac477e4..c7c0da275481 100644
+> > > --- a/fs/nfsd/netlink.h
+> > > +++ b/fs/nfsd/netlink.h
+> > > @@ -11,6 +11,9 @@
+> > > =20
+> > >  #include <uapi/linux/nfsd_netlink.h>
+> > > =20
+> > > +/* Common nested types */
+> > > +extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_E=
+NABLED + 1];
+> > > +
+> > >  int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
+> > >  int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
+> > > =20
+> > > @@ -18,6 +21,8 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+> > >  				  struct netlink_callback *cb);
+> > >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > >  int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > > +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > > =20
+> > >  extern struct genl_family nfsd_nl_family;
+> > > =20
+> > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> > > index d4be519b5734..14ec15656320 100644
+> > > --- a/fs/nfsd/netns.h
+> > > +++ b/fs/nfsd/netns.h
+> > > @@ -218,6 +218,7 @@ struct nfsd_net {
+> > >  /* Simple check to find out if a given net was properly initialized */
+> > >  #define nfsd_netns_ready(nn) ((nn)->sessionid_hashtbl)
+> > > =20
+> > > +extern bool nfsd_support_version(int vers);
+> > >  extern void nfsd_netns_free_versions(struct nfsd_net *nn);
+> > > =20
+> > >  extern unsigned int nfsd_net_id;
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index 38a5df03981b..2c8929ef79e9 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+> > > @@ -1757,6 +1757,156 @@ int nfsd_nl_threads_get_doit(struct sk_buff *sk=
+b, struct genl_info *info)
+> > >  	return err;
+> > >  }
+> > > =20
+> > > +/**
+> > > + * nfsd_nl_version_set_doit - set the nfs enabled versions
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *in=
+fo)
+> > > +{
+> > > +	const struct nlattr *attr;
+> > > +	struct nfsd_net *nn;
+> > > +	int i, rem;
+> > > +
+> > > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_PROTO_VERSION))
+> > > +		return -EINVAL;
+> > > +
+> > > +	mutex_lock(&nfsd_mutex);
+> > > +
+> > > +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> > > +	if (nn->nfsd_serv) {
+> > > +		mutex_unlock(&nfsd_mutex);
+> > > +		return -EBUSY;
+> > > +	}
+> > > +
+> > > +	/* clear current supported versions. */
+> > > +	nfsd_vers(nn, 2, NFSD_CLEAR);
+> > > +	nfsd_vers(nn, 3, NFSD_CLEAR);
+> > > +	for (i =3D 0; i <=3D NFSD_SUPPORTED_MINOR_VERSION; i++)
+> > > +		nfsd_minorversion(nn, i, NFSD_CLEAR);
+> > > +
+> > > +	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> > > +		struct nlattr *tb[NFSD_A_VERSION_MAX + 1];
+> > > +		u32 major, minor =3D 0;
+> > > +		bool enabled;
+> > > +
+> > > +		if (nla_type(attr) !=3D NFSD_A_SERVER_PROTO_VERSION)
+> > > +			continue;
+> > > +
+> > > +		if (nla_parse_nested(tb, NFSD_A_VERSION_MAX, attr,
+> > > +				     nfsd_version_nl_policy, info->extack) < 0)
+> > > +			continue;
+> > > +
+> > > +		if (!tb[NFSD_A_VERSION_MAJOR])
+> > > +			continue;
+> > > +
+> > > +		major =3D nla_get_u32(tb[NFSD_A_VERSION_MAJOR]);
+> > > +		if (tb[NFSD_A_VERSION_MINOR])
+> > > +			minor =3D nla_get_u32(tb[NFSD_A_VERSION_MINOR]);
+> > > +
+> > > +		enabled =3D nla_get_flag(tb[NFSD_A_VERSION_ENABLED]);
+> > > +
+> > > +		switch (major) {
+> > > +		case 4:
+> > > +			nfsd_minorversion(nn, minor, enabled ? NFSD_SET : NFSD_CLEAR);
+> > > +			break;
+> > > +		case 3:
+> > > +		case 2:
+> > > +			if (!minor)
+> > > +				nfsd_vers(nn, major, enabled ? NFSD_SET : NFSD_CLEAR);
+> > > +			break;
+> > > +		default:
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	mutex_unlock(&nfsd_mutex);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_version_get_doit - get the nfs enabled versions
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *in=
+fo)
+> > > +{
+> > > +	struct nfsd_net *nn;
+> > > +	int i, err;
+> > > +	void *hdr;
+> > > +
+> > > +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
+> > > +	if (!skb)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	hdr =3D genlmsg_iput(skb, info);
+> > > +	if (!hdr) {
+> > > +		err =3D -EMSGSIZE;
+> > > +		goto err_free_msg;
+> > > +	}
+> > > +
+> > > +	mutex_lock(&nfsd_mutex);
+> > > +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> > > +
+> > > +	for (i =3D 2; i <=3D 4; i++) {
+> > > +		int j;
+> > > +
+> > > +		for (j =3D 0; j <=3D NFSD_SUPPORTED_MINOR_VERSION; j++) {
+> > > +			struct nlattr *attr;
+> > > +
+> > > +			/* Don't record any versions the kernel doesn't have
+> > > +			 * compiled in
+> > > +			 */
+> > > +			if (!nfsd_support_version(i))
+> > > +				continue;
+> > > +
+> > > +			/* NFSv{2,3} does not support minor numbers */
+> > > +			if (i < 4 && j)
+> > > +				continue;
+> > > +
+> > > +			attr =3D nla_nest_start(skb,
+> > > +					      NFSD_A_SERVER_PROTO_VERSION);
+> > > +			if (!attr) {
+> > > +				err =3D -EINVAL;
+> > > +				goto err_nfsd_unlock;
+> > > +			}
+> > > +
+> > > +			if (nla_put_u32(skb, NFSD_A_VERSION_MAJOR, i) ||
+> > > +			    nla_put_u32(skb, NFSD_A_VERSION_MINOR, j)) {
+> > > +				err =3D -EINVAL;
+> > > +				goto err_nfsd_unlock;
+> > > +			}
+> > > +
+> > > +			/* Set the enabled flag if the version is enabled */
+> > > +			if (nfsd_vers(nn, i, NFSD_TEST) &&
+> > > +			    (i < 4 || nfsd_minorversion(nn, j, NFSD_TEST)) &&
+> > > +			    nla_put_flag(skb, NFSD_A_VERSION_ENABLED)) {
+> > > +				err =3D -EINVAL;
+> > > +				goto err_nfsd_unlock;
+> > > +			}
+> > > +
+> > > +			nla_nest_end(skb, attr);
+> > > +		}
+> > > +	}
+> > > +
+> > > +	mutex_unlock(&nfsd_mutex);
+> > > +	genlmsg_end(skb, hdr);
+> > > +
+> > > +	return genlmsg_reply(skb, info);
+> > > +
+> > > +err_nfsd_unlock:
+> > > +	mutex_unlock(&nfsd_mutex);
+> > > +err_free_msg:
+> > > +	nlmsg_free(skb);
+> > > +
+> > > +	return err;
+> > > +}
+> > > +
+> > >  /**
+> > >   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+> > >   * @net: a freshly-created network namespace
+> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > index ca193f7ff0e1..4fc91f50138a 100644
+> > > --- a/fs/nfsd/nfssvc.c
+> > > +++ b/fs/nfsd/nfssvc.c
+> > > @@ -133,8 +133,7 @@ struct svc_program		nfsd_program =3D {
+> > >  	.pg_rpcbind_set		=3D nfsd_rpcbind_set,
+> > >  };
+> > > =20
+> > > -static bool
+> > > -nfsd_support_version(int vers)
+> > > +bool nfsd_support_version(int vers)
+> > >  {
+> > >  	if (vers >=3D NFSD_MINVERS && vers < NFSD_NRVERS)
+> > >  		return nfsd_version[vers] !=3D NULL;
+> > > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfs=
+d_netlink.h
+> > > index ccc78a5ee650..8a0a2b344923 100644
+> > > --- a/include/uapi/linux/nfsd_netlink.h
+> > > +++ b/include/uapi/linux/nfsd_netlink.h
+> > > @@ -38,10 +38,28 @@ enum {
+> > >  	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
+> > >  };
+> > > =20
+> > > +enum {
+> > > +	NFSD_A_VERSION_MAJOR =3D 1,
+> > > +	NFSD_A_VERSION_MINOR,
+> > > +	NFSD_A_VERSION_ENABLED,
+> > > +
+> > > +	__NFSD_A_VERSION_MAX,
+> > > +	NFSD_A_VERSION_MAX =3D (__NFSD_A_VERSION_MAX - 1)
+> > > +};
+> > > +
+> > > +enum {
+> > > +	NFSD_A_SERVER_PROTO_VERSION =3D 1,
+> > > +
+> > > +	__NFSD_A_SERVER_PROTO_MAX,
+> > > +	NFSD_A_SERVER_PROTO_MAX =3D (__NFSD_A_SERVER_PROTO_MAX - 1)
+> > > +};
+> > > +
+> > >  enum {
+> > >  	NFSD_CMD_RPC_STATUS_GET =3D 1,
+> > >  	NFSD_CMD_THREADS_SET,
+> > >  	NFSD_CMD_THREADS_GET,
+> > > +	NFSD_CMD_VERSION_SET,
+> > > +	NFSD_CMD_VERSION_GET,
+> > > =20
+> > >  	__NFSD_CMD_MAX,
+> > >  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
+> > > --=20
+> > > 2.44.0
+> > >=20
+> > >=20
+> >=20
+>=20
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
 
 
