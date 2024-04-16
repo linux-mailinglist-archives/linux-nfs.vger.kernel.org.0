@@ -1,549 +1,203 @@
-Return-Path: <linux-nfs+bounces-2834-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2835-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE8E48A615F
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 05:16:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D854F8A65E6
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 10:18:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85E18282E56
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 03:16:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 076C91C20922
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 08:18:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482A0171D8;
-	Tue, 16 Apr 2024 03:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5388154C11;
+	Tue, 16 Apr 2024 08:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YXs8/IDw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3cAUSUXY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YXs8/IDw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3cAUSUXY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TByiiSen"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A769210FF;
-	Tue, 16 Apr 2024 03:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC075210EC
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Apr 2024 08:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713237407; cv=none; b=WRJC6edSBIAtHpSIJYxbGCAazRLpzwSEZ3e3P3FKyIR5CH4eBeCh2+uV2qEKCtTIahYAP22FWhLUsLxAVvUtEoWKScUR3TFb7bsaMI196zhRZYeeKdMkvvOE6bmuL/1UoIixJrtY3/xOEpqU+Ok3yZ20m+zfKC8oiK5RiYOPb7E=
+	t=1713255531; cv=none; b=nE+vh9FiB161yS1LXIwqb7ZItlROzmdZzczxDf/GZyB4Ia6nYPYN07cuKIJl3bmy7/A59ivC7OkD1UWHlJk0zmQ81NhcxXYCioGOJl7CMtZBzo3q8G7dgy74/6CTpOVnNS3W9kO8Hc6t7BRCqLzXW1MhX4cFNt5nFKzKD5WEa5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713237407; c=relaxed/simple;
-	bh=/auyovir5ZGpY9sSEgAdCiJLYoAKsSpC63k1nJaFHLE=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=WuhpYZIFZ5ar52zaQg1SGGMZm5lgrETsewhz63mc0hK6sTHC3NaLPKsbm2fUkagMn2vFU4ZCiTkPdplTLNpQ9zLX+RluNCakQ2sJ3+7p1UAmDyKBuOh4lUipRZVo8lX9FiDR9zYqTN+UPOW/SpXsFi7+Nm+6+Rwgw1o2cE+CDaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YXs8/IDw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3cAUSUXY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YXs8/IDw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3cAUSUXY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 05CDB5D68D;
-	Tue, 16 Apr 2024 03:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713237403; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1713255531; c=relaxed/simple;
+	bh=WSUcYTGfMiJPS6dBoWIy1OiuZHDqhA72PAGbwoqjEHc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ulfMsffRzZm5aaM1ZerzIG2TXlgJlI865j8r2Ub+pzyN9JZDulq2YJd4qfAzyYg1pTJROhfR1J+iYEhrhSFOGPsMbP/z/aVObpjG2FuN+nKnfUfpzK8jphU8NDzb4zZ6Zs1Y4H/xErnyBKse5irN7EYFax2UYbPGkkTmBhCq1Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TByiiSen; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713255529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K3IwY1+lgMoO1UyxVvfhOW8lPkLDwNY/MY3v1OPHK8k=;
-	b=YXs8/IDwhzDUf0moUGuLqezfaNOEdjrVh8BkwAnw1eSMcxxyEq7cbk029YJfJnsSrbA1ke
-	HrDHR2QPWbtFlBSFnoJfspWXHY3CN2cn+6fX5NwtC5SvTk+nTCRvK6pzg/dTyoINKb2lOA
-	+9+SVfHEjXkLg4lEYR575Iz007KwgJA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713237403;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K3IwY1+lgMoO1UyxVvfhOW8lPkLDwNY/MY3v1OPHK8k=;
-	b=3cAUSUXY466gQHm3pA2qQRORklb38NBrRF4oq4n7A3xfAY/57Es6fXUuscSsNs6NLOgH9K
-	U9yZMvGD+xmgyBAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="YXs8/IDw";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=3cAUSUXY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713237403; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K3IwY1+lgMoO1UyxVvfhOW8lPkLDwNY/MY3v1OPHK8k=;
-	b=YXs8/IDwhzDUf0moUGuLqezfaNOEdjrVh8BkwAnw1eSMcxxyEq7cbk029YJfJnsSrbA1ke
-	HrDHR2QPWbtFlBSFnoJfspWXHY3CN2cn+6fX5NwtC5SvTk+nTCRvK6pzg/dTyoINKb2lOA
-	+9+SVfHEjXkLg4lEYR575Iz007KwgJA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713237403;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K3IwY1+lgMoO1UyxVvfhOW8lPkLDwNY/MY3v1OPHK8k=;
-	b=3cAUSUXY466gQHm3pA2qQRORklb38NBrRF4oq4n7A3xfAY/57Es6fXUuscSsNs6NLOgH9K
-	U9yZMvGD+xmgyBAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A7378138A7;
-	Tue, 16 Apr 2024 03:16:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0ttMEpftHWa6CwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 16 Apr 2024 03:16:39 +0000
-Content-Type: text/plain; charset="utf-8"
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sx9FIAo9TZjFdKuhika+AQetmZMIT9vu9nUh+3JKCOQ=;
+	b=TByiiSen8u4aSXJIcOd8ZEvHzJ1U8Izegjbg0vUe7+kU55q01CaBCCds/86hosbbmARQWZ
+	uFNPqUQIlAVqsVjxpRhoiT4PZyXfUqjAGHzVy2nIkE/wnPu51iHD057H8lfoyAwzq0zZbV
+	S/LoLmJ64E/oz1JfvlTyAQPDixFuCRQ=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-471--7ynMxyqNlebDOkoCoTIng-1; Tue, 16 Apr 2024 04:18:47 -0400
+X-MC-Unique: -7ynMxyqNlebDOkoCoTIng-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a51a65f488cso86112266b.1
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Apr 2024 01:18:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713255526; x=1713860326;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sx9FIAo9TZjFdKuhika+AQetmZMIT9vu9nUh+3JKCOQ=;
+        b=U09UurbED+wuKeWOCshaA/iDmnCB0X8Nc9YWq3PRgsiTg9HaPM5koeYFFJKaVrD5hz
+         nW8mE3rgyE++967mnpsMgJy4nOzEjJSR5dKxkGqQJKDaQD8Ty96pNFFZnXGS3cJhKF2d
+         xPT6EVWtgMEqxd+Kcd4h7mcPYg+kWCv+hecapELBX6T7uc71RZpFNZbLIAcpnvCwKRPG
+         c0LguuWMMqDWPluJghLK3e/hYgZQ3W8oJ07Rt/B/BjQb15j3nGPR9NCKiOdRwEwbEQXx
+         RqJMguFLf3lNlmG9tZ7F37IlK10tos+3m/+ZZfvQifXMg8g0dDhMKex+SOB9KlHURuKA
+         DtTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXcd96/GQpXGUe/vIUex2D15cBHMohj43HPo6d7K0eABpDfdiIjhsE8RuVoCdouDRZvuxbLvSNrqA4Tkl9NTF7k4PqB+VZM1tW
+X-Gm-Message-State: AOJu0YyTsis0uo1gQ6eq4Xo8sd7wQaNjpydXNKCPtG5mflt9nofJTPhr
+	NiAX87hRaJ6Ko+iqaj3dmq9077tEzJEyP0lvhwAUy2FZuKX8RgO2ZsDdhgfBIi5YLDpcoooXSi+
+	gwr2S1nkNX6JerTlnjKjLx5qkwuPSAewz24OK/wx81NDFoWEPhpzJkBHNXw==
+X-Received: by 2002:a17:906:4ecf:b0:a52:6535:d078 with SMTP id i15-20020a1709064ecf00b00a526535d078mr3213739ejv.7.1713255526630;
+        Tue, 16 Apr 2024 01:18:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeWubKk9sfU5n4Eg4r0fgR17oDosoRykSHGnpq+PCrNmzGMeRZ2HKjVJzu/+KOc5EhcE24Ng==
+X-Received: by 2002:a17:906:4ecf:b0:a52:6535:d078 with SMTP id i15-20020a1709064ecf00b00a526535d078mr3213728ejv.7.1713255526227;
+        Tue, 16 Apr 2024 01:18:46 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-231-31.dyn.eolo.it. [146.241.231.31])
+        by smtp.gmail.com with ESMTPSA id gf14-20020a170906e20e00b00a51e6222200sm6539922ejb.156.2024.04.16.01.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 01:18:45 -0700 (PDT)
+Message-ID: <be056435353af60a564f457c79dacc16c6ea920e.camel@redhat.com>
+Subject: Re: [PATCH v3 1/4] networking: Remove the now superfluous sentinel
+ elements from ctl_table array
+From: Paolo Abeni <pabeni@redhat.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	devnull+j.granados.samsung.com@kernel.org
+Cc: Dai.Ngo@oracle.com, alex.aring@gmail.com, alibuda@linux.alibaba.com, 
+ allison.henderson@oracle.com, anna@kernel.org, bridge@lists.linux.dev, 
+ chuck.lever@oracle.com, coreteam@netfilter.org, courmisch@gmail.com, 
+ davem@davemloft.net, dccp@vger.kernel.org, dhowells@redhat.com,
+ dsahern@kernel.org,  edumazet@google.com, fw@strlen.de, geliang@kernel.org,
+ guwen@linux.alibaba.com,  herbert@gondor.apana.org.au, horms@verge.net.au,
+ j.granados@samsung.com, ja@ssi.bg,  jaka@linux.ibm.com, jlayton@kernel.org,
+ jmaloy@redhat.com, jreuter@yaina.de,  kadlec@netfilter.org,
+ keescook@chromium.org, kolga@netapp.com, kuba@kernel.org, 
+ linux-afs@lists.infradead.org, linux-hams@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-sctp@vger.kernel.org, linux-wpan@vger.kernel.org, 
+ linux-x25@vger.kernel.org, lucien.xin@gmail.com, lvs-devel@vger.kernel.org,
+  marc.dionne@auristor.com, marcelo.leitner@gmail.com, martineau@kernel.org,
+  matttbe@kernel.org, mcgrof@kernel.org, miquel.raynal@bootlin.com, 
+ mptcp@lists.linux.dev, ms@dev.tdt.de, neilb@suse.de,
+ netdev@vger.kernel.org,  netfilter-devel@vger.kernel.org,
+ pablo@netfilter.org, ralf@linux-mips.org,  razor@blackwall.org,
+ rds-devel@oss.oracle.com, roopa@nvidia.com,  stefan@datenfreihafen.org,
+ steffen.klassert@secunet.com,  tipc-discussion@lists.sourceforge.net,
+ tom@talpey.com, tonylu@linux.alibaba.com,  trond.myklebust@hammerspace.com,
+ wenjia@linux.ibm.com, ying.xue@windriver.com
+Date: Tue, 16 Apr 2024 10:18:42 +0200
+In-Reply-To: <20240415231210.22785-1-kuniyu@amazon.com>
+References: <20240412-jag-sysctl_remset_net-v3-1-11187d13c211@samsung.com>
+	 <20240415231210.22785-1-kuniyu@amazon.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Lorenzo Bianconi" <lorenzo@kernel.org>
-Cc: linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
- chuck.lever@oracle.com, netdev@vger.kernel.org, kuba@kernel.org,
- jlayton@kernel.org
-Subject: Re: [PATCH v8 3/6] NFSD: add write_version to netlink command
-In-reply-to:
- <1036367642228283184f85715edc0e3227a8e3ae.1713209938.git.lorenzo@kernel.org>
-References: <cover.1713209938.git.lorenzo@kernel.org>,
- <1036367642228283184f85715edc0e3227a8e3ae.1713209938.git.lorenzo@kernel.org>
-Date: Tue, 16 Apr 2024 13:16:26 +1000
-Message-id: <171323738652.17212.6092555402353724533@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 05CDB5D68D
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
 
-On Tue, 16 Apr 2024, Lorenzo Bianconi wrote:
-> Introduce write_version netlink command through a "declarative" interface.
-> This patch introduces a change in behavior since for version-set userspace
-> is expected to provide a NFS major/minor version list it wants to enable
-> while all the other ones will be disabled. (procfs write_version
-> command implements imperative interface where the admin writes +3/-3 to
-> enable/disable a single version.
+On Mon, 2024-04-15 at 16:12 -0700, Kuniyuki Iwashima wrote:
+> From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.o=
+rg>
+> Date: Fri, 12 Apr 2024 16:48:29 +0200
+> > From: Joel Granados <j.granados@samsung.com>
+> >=20
+> > This commit comes at the tail end of a greater effort to remove the
+> > empty elements at the end of the ctl_table arrays (sentinels) which
+> > will reduce the overall build time size of the kernel and run time
+> > memory bloat by ~64 bytes per sentinel (further information Link :
+> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> >=20
+> > * Remove sentinel element from ctl_table structs.
+> > * Remove extra element in ctl_table arrays declarations
+> > * Remove instances where an array element is zeroed out to make it look
+> >   like a sentinel. This is not longer needed and is safe after commit
+> >   c899710fe7f9 ("networking: Update to register_net_sysctl_sz") added
+> >   the array size to the ctl_table registration
+> > * Replace the for loop stop condition that tests for procname =3D=3D NU=
+LL with
+> >   one that depends on array size
+> > * Removed the "-1" that adjusted for having an extra empty element when
+> >   looping over ctl_table arrays
+> > * Removing the unprivileged user check in ipv6_route_sysctl_init is
+> >   safe as it is replaced by calling ipv6_route_sysctl_table_size;
+> >   introduced in commit c899710fe7f9 ("networking: Update to
+> >   register_net_sysctl_sz")
+> > * Replace empty array registration with the register_net_sysctl_sz call=
+.
+> >=20
+> > Signed-off-by: Joel Granados <j.granados@samsung.com>
+> > ---
+> >  net/core/neighbour.c                | 5 +----
+> >  net/core/sysctl_net_core.c          | 9 ++++-----
+> >  net/dccp/sysctl.c                   | 2 --
+> >  net/ieee802154/6lowpan/reassembly.c | 6 +-----
+> >  net/ipv4/devinet.c                  | 5 ++---
+> >  net/ipv4/ip_fragment.c              | 2 --
+> >  net/ipv4/route.c                    | 8 ++------
+> >  net/ipv4/sysctl_net_ipv4.c          | 7 +++----
+> >  net/ipv4/xfrm4_policy.c             | 1 -
+> >  net/ipv6/addrconf.c                 | 5 +----
+> >  net/ipv6/icmp.c                     | 1 -
+> >  net/ipv6/reassembly.c               | 2 --
+> >  net/ipv6/route.c                    | 5 -----
+> >  net/ipv6/sysctl_net_ipv6.c          | 4 +---
+> >  net/ipv6/xfrm6_policy.c             | 1 -
+> >  net/llc/sysctl_net_llc.c            | 8 ++------
+> >  net/mpls/af_mpls.c                  | 3 +--
+> >  net/mptcp/ctrl.c                    | 1 -
+> >  net/netrom/sysctl_net_netrom.c      | 1 -
+> >  net/phonet/sysctl.c                 | 1 -
+> >  net/rds/ib_sysctl.c                 | 1 -
+> >  net/rds/sysctl.c                    | 1 -
+> >  net/rds/tcp.c                       | 1 -
+> >  net/rose/sysctl_net_rose.c          | 1 -
+> >  net/rxrpc/sysctl.c                  | 1 -
+> >  net/sctp/sysctl.c                   | 6 +-----
+> >  net/smc/smc_sysctl.c                | 1 -
+> >  net/sunrpc/sysctl.c                 | 1 -
+> >  net/sunrpc/xprtrdma/svc_rdma.c      | 1 -
+> >  net/sunrpc/xprtrdma/transport.c     | 1 -
+> >  net/sunrpc/xprtsock.c               | 1 -
+> >  net/tipc/sysctl.c                   | 1 -
+> >  net/unix/sysctl_net_unix.c          | 1 -
+> >  net/x25/sysctl_net_x25.c            | 1 -
+> >  net/xfrm/xfrm_sysctl.c              | 5 +----
+> >  35 files changed, 20 insertions(+), 81 deletions(-)
+>=20
+> You may want to split patch based on subsystem or the type of changes
+> to make review easier.
 
-It seems a little weird to me that the interface always disables all
-version, but then also allows individual versions to be disabled.
-
-Would it be reasonable to simply ignore the "enabled" flag when setting
-version, and just enable all versions listed??
-
-Or maybe only enable those with the flag, and don't disable those
-without the flag?
-
-Those don't necessarily seem much better - but the current behaviour
-still seems odd.
-
-Also for getting the version, the doc says:
-
-     doc: get nfs enabled versions
-
-which I don't think it quite right.  The code reports all supported
-versions, and indicates which of those are enabled.  So maybe:
-
-     doc: get enabled status for all supported versions
-
-I think that fact that it actually lists all supported versions is
-useful and worth making explicit.
+I agree with Kuniyuki. I think the x25 chunks can me moved in the last
+patch, and at least sunrpc and rds could go in separate patches,
+possibly even xfrm and smc.
 
 Thanks,
-NeilBrown
 
-
->=20
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Tested-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  Documentation/netlink/specs/nfsd.yaml |  37 +++++++
->  fs/nfsd/netlink.c                     |  24 +++++
->  fs/nfsd/netlink.h                     |   5 +
->  fs/nfsd/netns.h                       |   1 +
->  fs/nfsd/nfsctl.c                      | 150 ++++++++++++++++++++++++++
->  fs/nfsd/nfssvc.c                      |   3 +-
->  include/uapi/linux/nfsd_netlink.h     |  18 ++++
->  7 files changed, 236 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/=
-specs/nfsd.yaml
-> index cbe6c5fd6c4d..0396e8b3ea1f 100644
-> --- a/Documentation/netlink/specs/nfsd.yaml
-> +++ b/Documentation/netlink/specs/nfsd.yaml
-> @@ -74,6 +74,26 @@ attribute-sets:
->        -
->          name: leasetime
->          type: u32
-> +  -
-> +    name: version
-> +    attributes:
-> +      -
-> +        name: major
-> +        type: u32
-> +      -
-> +        name: minor
-> +        type: u32
-> +      -
-> +        name: enabled
-> +        type: flag
-> +  -
-> +    name: server-proto
-> +    attributes:
-> +      -
-> +        name: version
-> +        type: nest
-> +        nested-attributes: version
-> +        multi-attr: true
-> =20
->  operations:
->    list:
-> @@ -120,3 +140,20 @@ operations:
->              - threads
->              - gracetime
->              - leasetime
-> +    -
-> +      name: version-set
-> +      doc: set nfs enabled versions
-> +      attribute-set: server-proto
-> +      flags: [ admin-perm ]
-> +      do:
-> +        request:
-> +          attributes:
-> +            - version
-> +    -
-> +      name: version-get
-> +      doc: get nfs enabled versions
-> +      attribute-set: server-proto
-> +      do:
-> +        reply:
-> +          attributes:
-> +            - version
-> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> index 20a646af0324..bf5df9597288 100644
-> --- a/fs/nfsd/netlink.c
-> +++ b/fs/nfsd/netlink.c
-> @@ -10,6 +10,13 @@
-> =20
->  #include <uapi/linux/nfsd_netlink.h>
-> =20
-> +/* Common nested types */
-> +const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1]=
- =3D {
-> +	[NFSD_A_VERSION_MAJOR] =3D { .type =3D NLA_U32, },
-> +	[NFSD_A_VERSION_MINOR] =3D { .type =3D NLA_U32, },
-> +	[NFSD_A_VERSION_ENABLED] =3D { .type =3D NLA_FLAG, },
-> +};
-> +
->  /* NFSD_CMD_THREADS_SET - do */
->  static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_SERVER_WO=
-RKER_LEASETIME + 1] =3D {
->  	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
-> @@ -17,6 +24,11 @@ static const struct nla_policy nfsd_threads_set_nl_polic=
-y[NFSD_A_SERVER_WORKER_L
->  	[NFSD_A_SERVER_WORKER_LEASETIME] =3D { .type =3D NLA_U32, },
->  };
-> =20
-> +/* NFSD_CMD_VERSION_SET - do */
-> +static const struct nla_policy nfsd_version_set_nl_policy[NFSD_A_SERVER_PR=
-OTO_VERSION + 1] =3D {
-> +	[NFSD_A_SERVER_PROTO_VERSION] =3D NLA_POLICY_NESTED(nfsd_version_nl_polic=
-y),
-> +};
-> +
->  /* Ops table for nfsd */
->  static const struct genl_split_ops nfsd_nl_ops[] =3D {
->  	{
-> @@ -38,6 +50,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D {
->  		.doit	=3D nfsd_nl_threads_get_doit,
->  		.flags	=3D GENL_CMD_CAP_DO,
->  	},
-> +	{
-> +		.cmd		=3D NFSD_CMD_VERSION_SET,
-> +		.doit		=3D nfsd_nl_version_set_doit,
-> +		.policy		=3D nfsd_version_set_nl_policy,
-> +		.maxattr	=3D NFSD_A_SERVER_PROTO_VERSION,
-> +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> +	},
-> +	{
-> +		.cmd	=3D NFSD_CMD_VERSION_GET,
-> +		.doit	=3D nfsd_nl_version_get_doit,
-> +		.flags	=3D GENL_CMD_CAP_DO,
-> +	},
->  };
-> =20
->  struct genl_family nfsd_nl_family __ro_after_init =3D {
-> diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> index 4137fac477e4..c7c0da275481 100644
-> --- a/fs/nfsd/netlink.h
-> +++ b/fs/nfsd/netlink.h
-> @@ -11,6 +11,9 @@
-> =20
->  #include <uapi/linux/nfsd_netlink.h>
-> =20
-> +/* Common nested types */
-> +extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABL=
-ED + 1];
-> +
->  int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
->  int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
-> =20
-> @@ -18,6 +21,8 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
->  				  struct netlink_callback *cb);
->  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info);
->  int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info);
-> +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info);
-> +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info);
-> =20
->  extern struct genl_family nfsd_nl_family;
-> =20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index d4be519b5734..14ec15656320 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -218,6 +218,7 @@ struct nfsd_net {
->  /* Simple check to find out if a given net was properly initialized */
->  #define nfsd_netns_ready(nn) ((nn)->sessionid_hashtbl)
-> =20
-> +extern bool nfsd_support_version(int vers);
->  extern void nfsd_netns_free_versions(struct nfsd_net *nn);
-> =20
->  extern unsigned int nfsd_net_id;
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 38a5df03981b..2c8929ef79e9 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1757,6 +1757,156 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, s=
-truct genl_info *info)
->  	return err;
->  }
-> =20
-> +/**
-> + * nfsd_nl_version_set_doit - set the nfs enabled versions
-> + * @skb: reply buffer
-> + * @info: netlink metadata and command arguments
-> + *
-> + * Return 0 on success or a negative errno.
-> + */
-> +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info)
-> +{
-> +	const struct nlattr *attr;
-> +	struct nfsd_net *nn;
-> +	int i, rem;
-> +
-> +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_PROTO_VERSION))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +
-> +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> +	if (nn->nfsd_serv) {
-> +		mutex_unlock(&nfsd_mutex);
-> +		return -EBUSY;
-> +	}
-> +
-> +	/* clear current supported versions. */
-> +	nfsd_vers(nn, 2, NFSD_CLEAR);
-> +	nfsd_vers(nn, 3, NFSD_CLEAR);
-> +	for (i =3D 0; i <=3D NFSD_SUPPORTED_MINOR_VERSION; i++)
-> +		nfsd_minorversion(nn, i, NFSD_CLEAR);
-> +
-> +	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
-> +		struct nlattr *tb[NFSD_A_VERSION_MAX + 1];
-> +		u32 major, minor =3D 0;
-> +		bool enabled;
-> +
-> +		if (nla_type(attr) !=3D NFSD_A_SERVER_PROTO_VERSION)
-> +			continue;
-> +
-> +		if (nla_parse_nested(tb, NFSD_A_VERSION_MAX, attr,
-> +				     nfsd_version_nl_policy, info->extack) < 0)
-> +			continue;
-> +
-> +		if (!tb[NFSD_A_VERSION_MAJOR])
-> +			continue;
-> +
-> +		major =3D nla_get_u32(tb[NFSD_A_VERSION_MAJOR]);
-> +		if (tb[NFSD_A_VERSION_MINOR])
-> +			minor =3D nla_get_u32(tb[NFSD_A_VERSION_MINOR]);
-> +
-> +		enabled =3D nla_get_flag(tb[NFSD_A_VERSION_ENABLED]);
-> +
-> +		switch (major) {
-> +		case 4:
-> +			nfsd_minorversion(nn, minor, enabled ? NFSD_SET : NFSD_CLEAR);
-> +			break;
-> +		case 3:
-> +		case 2:
-> +			if (!minor)
-> +				nfsd_vers(nn, major, enabled ? NFSD_SET : NFSD_CLEAR);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&nfsd_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * nfsd_nl_version_get_doit - get the nfs enabled versions
-> + * @skb: reply buffer
-> + * @info: netlink metadata and command arguments
-> + *
-> + * Return 0 on success or a negative errno.
-> + */
-> +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info)
-> +{
-> +	struct nfsd_net *nn;
-> +	int i, err;
-> +	void *hdr;
-> +
-> +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> +	if (!skb)
-> +		return -ENOMEM;
-> +
-> +	hdr =3D genlmsg_iput(skb, info);
-> +	if (!hdr) {
-> +		err =3D -EMSGSIZE;
-> +		goto err_free_msg;
-> +	}
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> +
-> +	for (i =3D 2; i <=3D 4; i++) {
-> +		int j;
-> +
-> +		for (j =3D 0; j <=3D NFSD_SUPPORTED_MINOR_VERSION; j++) {
-> +			struct nlattr *attr;
-> +
-> +			/* Don't record any versions the kernel doesn't have
-> +			 * compiled in
-> +			 */
-> +			if (!nfsd_support_version(i))
-> +				continue;
-> +
-> +			/* NFSv{2,3} does not support minor numbers */
-> +			if (i < 4 && j)
-> +				continue;
-> +
-> +			attr =3D nla_nest_start(skb,
-> +					      NFSD_A_SERVER_PROTO_VERSION);
-> +			if (!attr) {
-> +				err =3D -EINVAL;
-> +				goto err_nfsd_unlock;
-> +			}
-> +
-> +			if (nla_put_u32(skb, NFSD_A_VERSION_MAJOR, i) ||
-> +			    nla_put_u32(skb, NFSD_A_VERSION_MINOR, j)) {
-> +				err =3D -EINVAL;
-> +				goto err_nfsd_unlock;
-> +			}
-> +
-> +			/* Set the enabled flag if the version is enabled */
-> +			if (nfsd_vers(nn, i, NFSD_TEST) &&
-> +			    (i < 4 || nfsd_minorversion(nn, j, NFSD_TEST)) &&
-> +			    nla_put_flag(skb, NFSD_A_VERSION_ENABLED)) {
-> +				err =3D -EINVAL;
-> +				goto err_nfsd_unlock;
-> +			}
-> +
-> +			nla_nest_end(skb, attr);
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&nfsd_mutex);
-> +	genlmsg_end(skb, hdr);
-> +
-> +	return genlmsg_reply(skb, info);
-> +
-> +err_nfsd_unlock:
-> +	mutex_unlock(&nfsd_mutex);
-> +err_free_msg:
-> +	nlmsg_free(skb);
-> +
-> +	return err;
-> +}
-> +
->  /**
->   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
->   * @net: a freshly-created network namespace
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index ca193f7ff0e1..4fc91f50138a 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -133,8 +133,7 @@ struct svc_program		nfsd_program =3D {
->  	.pg_rpcbind_set		=3D nfsd_rpcbind_set,
->  };
-> =20
-> -static bool
-> -nfsd_support_version(int vers)
-> +bool nfsd_support_version(int vers)
->  {
->  	if (vers >=3D NFSD_MINVERS && vers < NFSD_NRVERS)
->  		return nfsd_version[vers] !=3D NULL;
-> diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_ne=
-tlink.h
-> index ccc78a5ee650..8a0a2b344923 100644
-> --- a/include/uapi/linux/nfsd_netlink.h
-> +++ b/include/uapi/linux/nfsd_netlink.h
-> @@ -38,10 +38,28 @@ enum {
->  	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
->  };
-> =20
-> +enum {
-> +	NFSD_A_VERSION_MAJOR =3D 1,
-> +	NFSD_A_VERSION_MINOR,
-> +	NFSD_A_VERSION_ENABLED,
-> +
-> +	__NFSD_A_VERSION_MAX,
-> +	NFSD_A_VERSION_MAX =3D (__NFSD_A_VERSION_MAX - 1)
-> +};
-> +
-> +enum {
-> +	NFSD_A_SERVER_PROTO_VERSION =3D 1,
-> +
-> +	__NFSD_A_SERVER_PROTO_MAX,
-> +	NFSD_A_SERVER_PROTO_MAX =3D (__NFSD_A_SERVER_PROTO_MAX - 1)
-> +};
-> +
->  enum {
->  	NFSD_CMD_RPC_STATUS_GET =3D 1,
->  	NFSD_CMD_THREADS_SET,
->  	NFSD_CMD_THREADS_GET,
-> +	NFSD_CMD_VERSION_SET,
-> +	NFSD_CMD_VERSION_GET,
-> =20
->  	__NFSD_CMD_MAX,
->  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
-> --=20
-> 2.44.0
->=20
->=20
+Paolo
 
 
