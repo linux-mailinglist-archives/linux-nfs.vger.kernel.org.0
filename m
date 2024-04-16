@@ -1,138 +1,138 @@
-Return-Path: <linux-nfs+bounces-2840-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2842-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 893228A70F0
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 18:12:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AE118A71A8
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 18:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38AAD2855A3
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 16:12:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2282D1F21E62
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 16:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B33131756;
-	Tue, 16 Apr 2024 16:12:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A347764E;
+	Tue, 16 Apr 2024 16:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNYd/+WM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJNQ351f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C6B131726;
-	Tue, 16 Apr 2024 16:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC4237165
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Apr 2024 16:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283938; cv=none; b=UV1qUmnZ4BkxM8W9OlcTxkV+WRELxfWf3m6KM8f0EATt10F7uAPVK3X5HpUP0sBXLBGRIrmSngqWrDhOsvY3T4IUCSngPShP5D6dPhcdyAb+JfhFa3S2wN2MKiN9n3qGHnvMZhjC5ZGk/53OUWpJEFJ0NyFwuJz/Qf7GJPsIj3k=
+	t=1713286151; cv=none; b=KK94H7F/Jp15kVJ/lqiT605RpZr4YokjaExkOqqoGWVZTKZTq6YgP4idw8EDL9Dh6wakujNefyjVjrwY6aBDwKlbsgLuo9Uzl7WHnDs8gMUpMXzL54r22uKzxxPU9T0Nn8UaZ9l0DcJ8bitZV1v2QaClQF6igyHlxN2KkZq+rKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283938; c=relaxed/simple;
-	bh=EKrDgIJgNXo/R8quzpUy0yW7erzp8PxvHvcTe/50ujU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=q7UxvlvWIMrRYgIqavvjuZXm4TWeJvaYaQKqnjkrro0MXCmAbgj+dBsv/sJfDssMNJhQLfk5Jg9l6fc14Hk5uVvMC/Xf6WARZ9oBWxrfhgs6cAOyhbJMjm9hZP9qmRTd6Phch63S5xwkhyk7rtP/wgzMYWGqJqNa7y7sGo+14hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNYd/+WM; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e5715a9ebdso36956275ad.2;
-        Tue, 16 Apr 2024 09:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713283935; x=1713888735; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EKrDgIJgNXo/R8quzpUy0yW7erzp8PxvHvcTe/50ujU=;
-        b=PNYd/+WMCJkxq3lys23g1hgaUEyZDH1rNd3cGHTeIZzcTbiGxR4EJSJfGjllMpxSRE
-         zVGBGd5oBS2dqmpSQXwo9F5Jd0Uc6F4W0NHSefezL2ECSOf0Ol9weMtdjPRDiNxQ8Veh
-         Otl5fuAjZMdnHg8Xryp27Np2YneqRbR4up7gua7mzTdj6YEEBSE3njQfHDHaZA5WfbPU
-         hJk6I7oY1eYDa8eJIdBhQJH02XnfXL6L6yt8cGeR5cp5POgzfyrt8VCgB0DV0IHLshmO
-         +Cy1H8oHpuS/p7BI12gVvm3quEpQLICCIUrgUjtUh9jdY+zA+nB5VEsEZhInhr4zx1bL
-         wfUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713283935; x=1713888735;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EKrDgIJgNXo/R8quzpUy0yW7erzp8PxvHvcTe/50ujU=;
-        b=uIhZvmNcPkotHAjbcXNcvgaGy9oZV/gOuvauDmOAkT4wf5M3ANTTEabBcVqZMGghwa
-         f7Zb4d9GRAZOkrhSjMT7AHbbsYWmP9dT6EZbSzPfi96/Lz7BTV7egzW0vX1MX+fmquRR
-         rnCYyKKYFrK/Ei3r1zfT6Fmzx5pZfCCpxVqnuC23Aiq0G/Eer+zHcNSYhfY37IixN96Q
-         VUFJuKijSmsBK0SOCSj3pKVohMAUf5iCnd/y1P9bbIxY7bUA/2jUglcA8rlBgvcd0NrC
-         bxpIyUrAotBypc0OGDIKH9nSTS8I8AIzkxZU/arxOWxiOMp9F7krPJdxvRb849xj/wkz
-         WxwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS0MgTdoo7wFMTLSulSEvz+2b7OO/s6+WmAyns19h5rAmY/ze0RUpCsuu6PmdQgy+K9TKk5Z89wqfaXUV1RiUgrMEBS32EopEE79EK07YJqNBMguwwapqcpH6UrfR79mNhYs08tcWb+fGBRmBCVbrJMibsLExNth2xNi865QDetTSXhSQQ5lcgPeU1yLQckkNK
-X-Gm-Message-State: AOJu0YzWpY1EXhk3exoVoit84aRuoDx8ttU6/o+KVRDblvcLjVSUwj/s
-	8cGcGaBsXKVhs4Y0PoAdSDp+ndNr69++X0C0/owHehkAqwTKIyrf
-X-Google-Smtp-Source: AGHT+IEaBhKQrtE4y17EN+JRfoZ0nAtlgq9TOIgtvD46kDZyqFoPetYC3y2iMwccARAF9quBrezxcQ==
-X-Received: by 2002:a17:903:595:b0:1e3:e4ff:7054 with SMTP id jv21-20020a170903059500b001e3e4ff7054mr10328895plb.38.1713283934861;
-        Tue, 16 Apr 2024 09:12:14 -0700 (PDT)
-Received: from ?IPv6:2605:59c8:43f:400:82ee:73ff:fe41:9a02? ([2605:59c8:43f:400:82ee:73ff:fe41:9a02])
-        by smtp.googlemail.com with ESMTPSA id lf16-20020a170902fb5000b001e5119c1923sm10005822plb.71.2024.04.16.09.12.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 09:12:14 -0700 (PDT)
-Message-ID: <18ca19fa64267b84bee10473a81cbc63f53104a0.camel@gmail.com>
-Subject: Re: [PATCH net-next v2 07/15] mm: page_frag: add '_va' suffix to
- page_frag API
-From: Alexander H Duyck <alexander.duyck@gmail.com>
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
- kuba@kernel.org,  pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
- Shailend Chand <shailend@google.com>, Eric Dumazet <edumazet@google.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>,  Sunil Goutham <sgoutham@marvell.com>, Geetha
- sowjanya <gakula@marvell.com>, Subbaraya Sundeep <sbhatta@marvell.com>,
- hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, Sean Wang
- <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo
- Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith
- Busch <kbusch@kernel.org>,  Jens Axboe <axboe@kernel.dk>, Christoph Hellwig
- <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,  Chaitanya Kulkarni
- <kch@nvidia.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
- <jasowang@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  David Howells
- <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Chuck Lever
- <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
- <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
- intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org, 
- kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
- bpf@vger.kernel.org, linux-afs@lists.infradead.org,
- linux-nfs@vger.kernel.org
-Date: Tue, 16 Apr 2024 09:12:01 -0700
-In-Reply-To: <20240415131941.51153-8-linyunsheng@huawei.com>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
-	 <20240415131941.51153-8-linyunsheng@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1713286151; c=relaxed/simple;
+	bh=3ikzOLqxVRX+e/If3yYRg2xaPJ1mZjhrLzvHMW3/1SE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y2Ph2QAZOiAgC/dt1i1XyhnOerZpHBIIEDRDh2cRwkbwQxKwPbXIZ2siAaat5Mcxg518C/9JbIVwirFeptw+GZBFBp7Sxck3agDHi3cPPMZ6DhuZCBm6JIlTuBItinE2dbwnxy+Qz+t4xMIjpRbmT0wqzKfjJgdCabHUzUatM34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJNQ351f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE10BC113CE;
+	Tue, 16 Apr 2024 16:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713286151;
+	bh=3ikzOLqxVRX+e/If3yYRg2xaPJ1mZjhrLzvHMW3/1SE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tJNQ351fspSvhHMBDD20f6ze3Wzm84rwXOMj5N0bXJF8GLC7oZbyFBCHO+NtgclEA
+	 nsIOI54J9tZWx6d71hii3j6fi9tsnmcMxWPRd33fVvrFFpTblCGL4CCP+ALUSvMfuU
+	 TrbZrRTXEgex41EzSnl7pwExl064a2eqqjmYbxzoxzmR2k8Hm+SWW5W8+5s8hIyQ5c
+	 qCe0Lnu2yR3UwclJiblUG9gBIAppj9d1tvdRjpqqEmBMbrFAJR/6LGo3k7Z0Xub3SD
+	 xBlQiepKqWxX9XJ3xzIYgf3OAwKN0gMay3jtl1Hkn477A5UanXloIMLsnfR5BJwpjw
+	 ECO33Qcjm9EFg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH nfs-utils v2 0/4] nfsdctl: new nfs-utils tool for managing
+ the kernel NFS server
+Date: Tue, 16 Apr 2024 12:48:46 -0400
+Message-Id: <20240416-nfsdctl-v2-0-9a4367b710d2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO6rHmYC/2WNQQrDIBBFrxJmXYuxUkJXvUfJItExGSpaHCstw
+ btX3Hb5+I/3D2BMhAy34YCEhZhiaKBOA5h9CRsKso1BSaWlHpUIjq3JXrhlWu2kL9I4C81+JXT
+ 06aUHNEm8M3mGuU07cY7p2z/K2IW/XBmFFOjs1RpcjZH6/sQU0J9j2mCutf4Aq+s/fKoAAAA=
+To: Steve Dickson <steved@redhat.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Neil Brown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2254; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=3ikzOLqxVRX+e/If3yYRg2xaPJ1mZjhrLzvHMW3/1SE=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmHqwAvE943b1vojb5w6mQuvVygwBDmBXpBXicu
+ gFS28RX3XKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZh6sAAAKCRAADmhBGVaC
+ Fa39D/9S0HPjeG26kWLLGDfVnwV5LRjBTFKON98zxllQlgTx0kkY657JGqPFk36pN9yqc3aBM6I
+ eXfF602k+JiLqdUuyQ7R7/RBhTdCRIy4ExEBpxEWtT6yvHGrdgWG5D+8OrBx24mS8YJdWX/UJ8+
+ 2DS1qfQzalSzLjMUkzS+4NfQ13P/hNuDxegvSUAiT04qQvn36J3okhofni8AMlPiEvlZFC+A0TQ
+ oIEqf0Z8p85FAEbIzSPFgY+i8o/5Qa/nwRogSio0saMdtoPYRUN8LF8JFMSIG1xJHD9la4JU6ZS
+ DqnYptdJDWE4+w8PiTxNiNvwD8Sr6FzUc0xrx+1yjlRleIODpJSNFrtLP1lBaxWftt4uwtniXyO
+ vDnsWhwrXG+HH3DXkDdbOmaSMlFxswSjLlXWpaMTEJ20zprlhsApPggdb3PN+vtgvmd5WpDHNhD
+ G279Ddc51YNtGYxC07EhB0TOk5/3LodaygD5VSR1foiu0PJgfGAExTpC0oywrXFlKtSFzlH5n4p
+ hCDputSlpIiFIX3ybA2KE5E7NiRz4DkipRpDVIx9PdHtGidqP3qono/lpG0XrFTVO4j00cSBANq
+ tymQuXdYYGFDx5woyjmFXvf4aanlpfPsJ6I7bFcPFBDbScuD/Sjrj3RbUxR/cMpL0N9hZ5kgh8+
+ EGubFWxbJ0E7Geg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Mon, 2024-04-15 at 21:19 +0800, Yunsheng Lin wrote:
-> Currently most of the API for page_frag API is returning
-> 'virtual address' as output or expecting 'virtual address'
-> as input, in order to differentiate the API handling between
-> 'virtual address' and 'struct page', add '_va' suffix to the
-> corresponding API mirroring the page_pool_alloc_va() API of
-> the page_pool.
->=20
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Lorenzo posted an updated version of his netlink interface patches
+yesterday [1]. This is an update to adapt to those changes, and to bring
+the tool closer to feature completion for release.
 
-This patch is a total waste of time. By that logic we should be
-renaming __get_free_pages since it essentially does the same thing.
+This series first adds Lorenzo's original userland nfsdctl tool to the
+nfs-utils tree, and then converts it to a subcommand-based interface, in
+the spirit of tools like nmcli or virsh.
 
-This just seems like more code changes for the sake of adding code
-changes rather than fixing anything. In my opinion it should be dropped
-from the set.
+This version should be at feature parity with rpc.nfsd. This posting
+also includes a manpage and an update to the nfs-server.service to
+start using the new interface when possible.
+
+I've also included a patch that adds the manpage source. It's much nicer
+to edit that and regenerate it if we have to update it later. We can
+drop that patch if you just want to keep the result though.
+
+Assuming we're good with the new kernel interfaces, this should be
+pretty close to ready for merge.
+
+[1]: https://lore.kernel.org/linux-nfs/cover.1712853393.git.lorenzo@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- Adapt to latest kernel netlink interface changes (in particular, send
+  the leastime and gracetime when they are set in the config).
+- More help text for different subcommands
+- New nfsdctl(8) manpage
+- Patch to make systemd preferentially use nfsdctl instead of rpc.nfsd
+- Link to v1: https://lore.kernel.org/r/20240412-nfsdctl-v1-0-efd6dcebcc04@kernel.org
+
+---
+Jeff Layton (3):
+      nfsdctl: convert it to a command-line based interface
+      nfsdctl: asciidoc source for the manpage
+      systemd: use nfsdctl to start and stop the nfs server
+
+Lorenzo Bianconi (1):
+      nfsdctl: add the nfsdctl utility to nfs-utils
+
+ configure.ac               |   13 +
+ systemd/nfs-server.service |    4 +-
+ utils/Makefile.am          |    4 +
+ utils/nfsdctl/Makefile.am  |   13 +
+ utils/nfsdctl/nfsdctl.8    |  274 +++++++++
+ utils/nfsdctl/nfsdctl.adoc |  140 +++++
+ utils/nfsdctl/nfsdctl.c    | 1401 ++++++++++++++++++++++++++++++++++++++++++++
+ utils/nfsdctl/nfsdctl.h    |  186 ++++++
+ 8 files changed, 2033 insertions(+), 2 deletions(-)
+---
+base-commit: 117102ee541f38fd7d9274feb8b5586f88d4f655
+change-id: 20240412-nfsdctl-fa8bd8430cfd
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
