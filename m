@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-2855-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2856-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D72008A77CE
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 00:33:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8312D8A77DA
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 00:39:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 052AB1C20A0E
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 22:33:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3912C284896
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Apr 2024 22:39:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481372943C;
-	Tue, 16 Apr 2024 22:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0346EB5A;
+	Tue, 16 Apr 2024 22:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNHI6Ra3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="td3Y2W8+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141411E511;
-	Tue, 16 Apr 2024 22:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4150A39FCF;
+	Tue, 16 Apr 2024 22:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713306805; cv=none; b=UnXTYnHSiVrvlzJob9krQgA5Uk7Gc/hdBH2caaxqE5c/qnoIOFysLAfxJFPlDgpW+fHFmsKNmNtzEu4UuYo+hHn8hF7TK77obWpSz6jV06ydkUWa9WkVTfpR1M0BDn266RZ8BzRXEleJ68sir5nBINA3GJ9w7aAAjqOweSNScqs=
+	t=1713307174; cv=none; b=nENcofsuZHOUQCfToDIOb1U1d7tJgsuXt4230G02ibNIbkawVIES1X4egsZuaHvcb7VL0VpzFV3aUbSS4Mzlc623neY+ifidTaGFhuijDpA3upavYbgS/I4mFfEZWv5g3dTh8W/3oajZglP+sN+kEimNqGxilE7Ac2mqjNww3aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713306805; c=relaxed/simple;
-	bh=wHRs9H/kautYRHiOBHvVqxSV+yA9kc7J0FWK+kfzsbE=;
+	s=arc-20240116; t=1713307174; c=relaxed/simple;
+	bh=cSDNeE+rnIgaMoSDdoXZwnmxQv3AmAOOoPwIHtoUQQw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DQ1O838yADJ0C+Zt/7iOYU469CYZf/2Tj1DxNWw1CnNj1hzuTzl0Kb6eQi1ijqpHbsk9e12cyKflWPQkKvqoe7IGLeJ6vV0BjKr5mtuK9G97cklzwPpHQQoi9k3DjMx3GvVLOZU8Nf24MadkucxzxMgz0tRdNuiNzjf8hHo0RPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNHI6Ra3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B6CC113CE;
-	Tue, 16 Apr 2024 22:33:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=s381h8DBJwmo78ht+Z/XwGgLaZz/NYP8+LrcMB02d2/+Z7spVvE1rnmFhzFkmrEuEVBQforgQvRaxu71snmAAJ6F/qTHKGj7xgBcEaWFiGO7qW0hdDbwUFIqXN7eyn9kACaEjmTw8TLL9Y1EKD8BAN3cseg02pITo0jtTHfEc8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=td3Y2W8+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F078AC3277B;
+	Tue, 16 Apr 2024 22:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713306803;
-	bh=wHRs9H/kautYRHiOBHvVqxSV+yA9kc7J0FWK+kfzsbE=;
+	s=k20201202; t=1713307173;
+	bh=cSDNeE+rnIgaMoSDdoXZwnmxQv3AmAOOoPwIHtoUQQw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FNHI6Ra3zwaHsZbCiUTkCvtTlAnDFT/uKOHzxpZGeFNiGNhS26tzi2HGsJy/710nz
-	 EOCYR0/0l8TNYoqsUnF4ByxF/9MuCEOQTWCOUpy59euwdNoi8bZ2qi+QafZET10DdT
-	 nko3E/RWkz7w8/ar7aMlCwApFTK85MviIg7c8dh0FvV4hQei+RhR3OkMdPm6PWu++Z
-	 4VdZ6pldi8PzMHjEnBvPTjmuwNIJjWvQaRZzB+FlG0hhvQP1Y4Cbf+VDAkwOZkhoAl
-	 fpB7P4jnqqkyXhhZxgF6MNCeU89zXrzQvxAlpxrwNn8/KOCQQUJ3wRmeoH9O6yPopQ
-	 9zjAPzlRw7MUw==
-Message-ID: <5b0ca756d84dd72a3eccb05290a3986d9786f1a8.camel@kernel.org>
-Subject: Re: [PATCH v8 3/6] NFSD: add write_version to netlink command
+	b=td3Y2W8+T15SagaksmSKW1I3efQ8szgwqFBD9yHJlMXRjDl1g02ZU6FcCDaelUjRQ
+	 c7S14W2MyoOso1TrFEYlkmH09UpbVP9R4fuMfOt2zxg6dJc3jyshH7GSzIVYWJpvlk
+	 knRu6hqHd0gFRoHccKUItOIBBTGgwD0OSSlWtWpvu0/9L68/ls6e52kx9pwnXPX0XR
+	 6ng2S+KoJjR1XOiMepTvlqRIU49Mwi1lADtIvrZwJEz0U+C04d7pjfZNA+HL6nTsen
+	 x3UaNc81sBjQefScdhb7+wj5tBRC1PExFXkT24yFiWUbx8MmyXtIqSUgzksAqzFY5n
+	 rNNt8PSpTvrBQ==
+Message-ID: <4571e67647036cbd5833637aca07b6c4cc0e5e67.camel@kernel.org>
+Subject: Re: [PATCH v8 2/6] NFSD: convert write_threads to netlink command
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org, 
- lorenzo.bianconi@redhat.com, chuck.lever@oracle.com,
- netdev@vger.kernel.org,  kuba@kernel.org
-Date: Tue, 16 Apr 2024 18:33:21 -0400
-In-Reply-To: <171330410225.17212.2547625907525888196@noble.neil.brown.name>
-References: <>, <4a77c2b164781c6df14e001573bd5631319a9043.camel@kernel.org>
-	 <171330410225.17212.2547625907525888196@noble.neil.brown.name>
+To: NeilBrown <neilb@suse.de>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com, 
+	chuck.lever@oracle.com, netdev@vger.kernel.org, kuba@kernel.org
+Date: Tue, 16 Apr 2024 18:39:31 -0400
+In-Reply-To: <171330451967.17212.2388131327788656190@noble.neil.brown.name>
+References: <cover.1713209938.git.lorenzo@kernel.org>
+	, <4ff777ebb8652e31709bd91c3af50693edf86a26.1713209938.git.lorenzo@kernel.org>
+	 <171330451967.17212.2388131327788656190@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -71,507 +71,288 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-04-17 at 07:48 +1000, NeilBrown wrote:
-> On Tue, 16 Apr 2024, Jeff Layton wrote:
-> > On Tue, 2024-04-16 at 13:16 +1000, NeilBrown wrote:
-> > > On Tue, 16 Apr 2024, Lorenzo Bianconi wrote:
-> > > > Introduce write_version netlink command through a "declarative" int=
-erface.
-> > > > This patch introduces a change in behavior since for version-set us=
-erspace
-> > > > is expected to provide a NFS major/minor version list it wants to e=
-nable
-> > > > while all the other ones will be disabled. (procfs write_version
-> > > > command implements imperative interface where the admin writes +3/-=
-3 to
-> > > > enable/disable a single version.
-> > >=20
-> > > It seems a little weird to me that the interface always disables all
-> > > version, but then also allows individual versions to be disabled.
-> > >=20
-> > > Would it be reasonable to simply ignore the "enabled" flag when setti=
-ng
-> > > version, and just enable all versions listed??
-> > >=20
-> > > Or maybe only enable those with the flag, and don't disable those
-> > > without the flag?
-> > >=20
-> > > Those don't necessarily seem much better - but the current behaviour
-> > > still seems odd.
-> > >=20
-> >=20
-> > I think it makes sense.
-> >=20
-> > We disable all versions, and enable any that have the "enabled" flag se=
-t
-> > in the call from userland. Userland technically needn't send down the
-> > versions that are disabled in the call, but the current userland progra=
-m
-> > does.
-> >=20
-> > I worry about imperative interfaces that might only say -- "enable v4.1=
-,
-> > but disable v3" and leave the others in their current state. That
-> > requires that both the kernel and userland keep state about what
-> > versions are currently enabled and disabled, and it's possible to get
-> > that wrong.
+On Wed, 2024-04-17 at 07:55 +1000, NeilBrown wrote:
+> On Tue, 16 Apr 2024, Lorenzo Bianconi wrote:
+> > Introduce write_threads netlink command similar to the one available
+> > through the procfs.
 >=20
-> I understand and support your aversion for imperative interfaces.
-> But this interface, as currently implemented, looks somewhat imperative.
-> The message sent to the kernel could enable some interfaces and then
-> disable them.  I know that isn't the intent, but it is what the code
-> supports.  Hence "weird".
+> I think this should support write_pool_threads too.
+> i.e.  the number of threads should be an array.  If it is a singleton,
+> the it does write_threads.   If larger it does write_pool_threads.
+> I don't think we want to add a separate command later for pool_threads.
 >=20
-> We could add code to make that sort of thing impossible, but there isn't
-> much point.  Better to make it syntactically impossible.
->=20
-> Realistically there will never be NFSv4.3 as there is no need - new
-> features can be added incrementally.=A0
+> NeilBrown
 >=20
 
-There is no need _so_far_. Who knows what the future will bring? Maybe
-we'll need v4.3 in order to add some needed feature?
+That is a very good point. We'll take a closer look at the current
+pool_threads interface and see how we can extend this one to cover that
+use case. Making it an array sounds reasonable at first blush.
 
->  So we could just pass an array of
-> 5 active flags: 2,3,4.0,4.1,4.2.  I suspect you wouldn't like that and
-> I'm not sure that I do either.  A "read" would return the same array
-> with 3 possible states: unavailable, disabled, enabled.  (Maybe the
-> array could be variable length so 5.0 could be added one day...).
 >=20
-
-A set of flags is basically what this interface is. They just happen to
-also be labeled with the major and minorversion. I think that's a good
-thing.
-
->
-> I haven't managed to come up with anything *better* than the current
-> proposal and I don't want to stand in its way, but I wanted to highlight
-> that it looks weird - as much imperative as declarative - in case
-> someone else might be able to come up with a better alternative.
->=20
-
-The intention was to create a symmetrical interface. We have 2
-operations: a "get" that asks "what versions are currently supported and
-are they enabled?", and a "set" that says "here is the new state of
-version enablement".
-
-The userland tool always sends down a complete set of versions. The
-kernel is (currently) more forgiving, and treats omitted versions as
-being disabled. The kernel could require that every supported version be
-represented in the "set" operation, if that's more desirable.
-
 > >=20
-> > My thinking was that by using a declarative interface like this, we
-> > eliminate ambiguity in how these interfaces are supposed to work. The
-> > client sends down an entire version map in one fell swoop, and we know
-> > exactly what the result should look like.
+> > Tested-by: Jeff Layton <jlayton@kernel.org>
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Co-developed-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  Documentation/netlink/specs/nfsd.yaml |  33 ++++++++
+> >  fs/nfsd/netlink.c                     |  19 +++++
+> >  fs/nfsd/netlink.h                     |   2 +
+> >  fs/nfsd/nfsctl.c                      | 104 ++++++++++++++++++++++++++
+> >  include/uapi/linux/nfsd_netlink.h     |  11 +++
+> >  5 files changed, 169 insertions(+)
 > >=20
-> > Note that you can enable or disable just a single version with the
-> > userland tool, but this way all of that complexity stays in userland.
-> >=20
-> > > Also for getting the version, the doc says:
-> > >=20
-> > >      doc: get nfs enabled versions
-> > >=20
-> > > which I don't think it quite right.  The code reports all supported
-> > > versions, and indicates which of those are enabled.  So maybe:
-> > >=20
-> > >      doc: get enabled status for all supported versions
-> > >=20
-> > >=20
-> > > I think that fact that it actually lists all supported versions is
-> > > useful and worth making explicit.
-> > >=20
-> > >=20
-> >=20
-> > Agreed. We should make that change before merging anything.
-> >=20
-> > > >=20
-> > > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > > > Tested-by: Jeff Layton <jlayton@kernel.org>
-> > > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > > ---
-> > > >  Documentation/netlink/specs/nfsd.yaml |  37 +++++++
-> > > >  fs/nfsd/netlink.c                     |  24 +++++
-> > > >  fs/nfsd/netlink.h                     |   5 +
-> > > >  fs/nfsd/netns.h                       |   1 +
-> > > >  fs/nfsd/nfsctl.c                      | 150 ++++++++++++++++++++++=
-++++
-> > > >  fs/nfsd/nfssvc.c                      |   3 +-
-> > > >  include/uapi/linux/nfsd_netlink.h     |  18 ++++
-> > > >  7 files changed, 236 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/=
-netlink/specs/nfsd.yaml
-> > > > index cbe6c5fd6c4d..0396e8b3ea1f 100644
-> > > > --- a/Documentation/netlink/specs/nfsd.yaml
-> > > > +++ b/Documentation/netlink/specs/nfsd.yaml
-> > > > @@ -74,6 +74,26 @@ attribute-sets:
-> > > >        -
-> > > >          name: leasetime
-> > > >          type: u32
-> > > > +  -
-> > > > +    name: version
-> > > > +    attributes:
-> > > > +      -
-> > > > +        name: major
-> > > > +        type: u32
-> > > > +      -
-> > > > +        name: minor
-> > > > +        type: u32
-> > > > +      -
-> > > > +        name: enabled
-> > > > +        type: flag
-> > > > +  -
-> > > > +    name: server-proto
-> > > > +    attributes:
-> > > > +      -
-> > > > +        name: version
-> > > > +        type: nest
-> > > > +        nested-attributes: version
-> > > > +        multi-attr: true
-> > > > =20
-> > > >  operations:
-> > > >    list:
-> > > > @@ -120,3 +140,20 @@ operations:
-> > > >              - threads
-> > > >              - gracetime
-> > > >              - leasetime
-> > > > +    -
-> > > > +      name: version-set
-> > > > +      doc: set nfs enabled versions
-> > > > +      attribute-set: server-proto
-> > > > +      flags: [ admin-perm ]
-> > > > +      do:
-> > > > +        request:
-> > > > +          attributes:
-> > > > +            - version
-> > > > +    -
-> > > > +      name: version-get
-> > > > +      doc: get nfs enabled versions
-> > > > +      attribute-set: server-proto
-> > > > +      do:
-> > > > +        reply:
-> > > > +          attributes:
-> > > > +            - version
-> > > > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> > > > index 20a646af0324..bf5df9597288 100644
-> > > > --- a/fs/nfsd/netlink.c
-> > > > +++ b/fs/nfsd/netlink.c
-> > > > @@ -10,6 +10,13 @@
-> > > > =20
-> > > >  #include <uapi/linux/nfsd_netlink.h>
-> > > > =20
-> > > > +/* Common nested types */
-> > > > +const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENAB=
-LED + 1] =3D {
-> > > > +	[NFSD_A_VERSION_MAJOR] =3D { .type =3D NLA_U32, },
-> > > > +	[NFSD_A_VERSION_MINOR] =3D { .type =3D NLA_U32, },
-> > > > +	[NFSD_A_VERSION_ENABLED] =3D { .type =3D NLA_FLAG, },
-> > > > +};
-> > > > +
-> > > >  /* NFSD_CMD_THREADS_SET - do */
-> > > >  static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_S=
-ERVER_WORKER_LEASETIME + 1] =3D {
-> > > >  	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
-> > > > @@ -17,6 +24,11 @@ static const struct nla_policy nfsd_threads_set_=
-nl_policy[NFSD_A_SERVER_WORKER_L
-> > > >  	[NFSD_A_SERVER_WORKER_LEASETIME] =3D { .type =3D NLA_U32, },
-> > > >  };
-> > > > =20
-> > > > +/* NFSD_CMD_VERSION_SET - do */
-> > > > +static const struct nla_policy nfsd_version_set_nl_policy[NFSD_A_S=
-ERVER_PROTO_VERSION + 1] =3D {
-> > > > +	[NFSD_A_SERVER_PROTO_VERSION] =3D NLA_POLICY_NESTED(nfsd_version_=
-nl_policy),
-> > > > +};
-> > > > +
-> > > >  /* Ops table for nfsd */
-> > > >  static const struct genl_split_ops nfsd_nl_ops[] =3D {
-> > > >  	{
-> > > > @@ -38,6 +50,18 @@ static const struct genl_split_ops nfsd_nl_ops[]=
- =3D {
-> > > >  		.doit	=3D nfsd_nl_threads_get_doit,
-> > > >  		.flags	=3D GENL_CMD_CAP_DO,
-> > > >  	},
-> > > > +	{
-> > > > +		.cmd		=3D NFSD_CMD_VERSION_SET,
-> > > > +		.doit		=3D nfsd_nl_version_set_doit,
-> > > > +		.policy		=3D nfsd_version_set_nl_policy,
-> > > > +		.maxattr	=3D NFSD_A_SERVER_PROTO_VERSION,
-> > > > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> > > > +	},
-> > > > +	{
-> > > > +		.cmd	=3D NFSD_CMD_VERSION_GET,
-> > > > +		.doit	=3D nfsd_nl_version_get_doit,
-> > > > +		.flags	=3D GENL_CMD_CAP_DO,
-> > > > +	},
-> > > >  };
-> > > > =20
-> > > >  struct genl_family nfsd_nl_family __ro_after_init =3D {
-> > > > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> > > > index 4137fac477e4..c7c0da275481 100644
-> > > > --- a/fs/nfsd/netlink.h
-> > > > +++ b/fs/nfsd/netlink.h
-> > > > @@ -11,6 +11,9 @@
-> > > > =20
-> > > >  #include <uapi/linux/nfsd_netlink.h>
-> > > > =20
-> > > > +/* Common nested types */
-> > > > +extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSI=
-ON_ENABLED + 1];
-> > > > +
-> > > >  int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
-> > > >  int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
-> > > > =20
-> > > > @@ -18,6 +21,8 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff =
-*skb,
-> > > >  				  struct netlink_callback *cb);
-> > > >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > >  int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > > +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > > =20
-> > > >  extern struct genl_family nfsd_nl_family;
-> > > > =20
-> > > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > > > index d4be519b5734..14ec15656320 100644
-> > > > --- a/fs/nfsd/netns.h
-> > > > +++ b/fs/nfsd/netns.h
-> > > > @@ -218,6 +218,7 @@ struct nfsd_net {
-> > > >  /* Simple check to find out if a given net was properly initialize=
-d */
-> > > >  #define nfsd_netns_ready(nn) ((nn)->sessionid_hashtbl)
-> > > > =20
-> > > > +extern bool nfsd_support_version(int vers);
-> > > >  extern void nfsd_netns_free_versions(struct nfsd_net *nn);
-> > > > =20
-> > > >  extern unsigned int nfsd_net_id;
-> > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > > index 38a5df03981b..2c8929ef79e9 100644
-> > > > --- a/fs/nfsd/nfsctl.c
-> > > > +++ b/fs/nfsd/nfsctl.c
-> > > > @@ -1757,6 +1757,156 @@ int nfsd_nl_threads_get_doit(struct sk_buff=
- *skb, struct genl_info *info)
-> > > >  	return err;
-> > > >  }
-> > > > =20
-> > > > +/**
-> > > > + * nfsd_nl_version_set_doit - set the nfs enabled versions
-> > > > + * @skb: reply buffer
-> > > > + * @info: netlink metadata and command arguments
-> > > > + *
-> > > > + * Return 0 on success or a negative errno.
-> > > > + */
-> > > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info=
- *info)
-> > > > +{
-> > > > +	const struct nlattr *attr;
-> > > > +	struct nfsd_net *nn;
-> > > > +	int i, rem;
-> > > > +
-> > > > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_PROTO_VERSION))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	mutex_lock(&nfsd_mutex);
-> > > > +
-> > > > +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> > > > +	if (nn->nfsd_serv) {
-> > > > +		mutex_unlock(&nfsd_mutex);
-> > > > +		return -EBUSY;
-> > > > +	}
-> > > > +
-> > > > +	/* clear current supported versions. */
-> > > > +	nfsd_vers(nn, 2, NFSD_CLEAR);
-> > > > +	nfsd_vers(nn, 3, NFSD_CLEAR);
-> > > > +	for (i =3D 0; i <=3D NFSD_SUPPORTED_MINOR_VERSION; i++)
-> > > > +		nfsd_minorversion(nn, i, NFSD_CLEAR);
-> > > > +
-> > > > +	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
-> > > > +		struct nlattr *tb[NFSD_A_VERSION_MAX + 1];
-> > > > +		u32 major, minor =3D 0;
-> > > > +		bool enabled;
-> > > > +
-> > > > +		if (nla_type(attr) !=3D NFSD_A_SERVER_PROTO_VERSION)
-> > > > +			continue;
-> > > > +
-> > > > +		if (nla_parse_nested(tb, NFSD_A_VERSION_MAX, attr,
-> > > > +				     nfsd_version_nl_policy, info->extack) < 0)
-> > > > +			continue;
-> > > > +
-> > > > +		if (!tb[NFSD_A_VERSION_MAJOR])
-> > > > +			continue;
-> > > > +
-> > > > +		major =3D nla_get_u32(tb[NFSD_A_VERSION_MAJOR]);
-> > > > +		if (tb[NFSD_A_VERSION_MINOR])
-> > > > +			minor =3D nla_get_u32(tb[NFSD_A_VERSION_MINOR]);
-> > > > +
-> > > > +		enabled =3D nla_get_flag(tb[NFSD_A_VERSION_ENABLED]);
-> > > > +
-> > > > +		switch (major) {
-> > > > +		case 4:
-> > > > +			nfsd_minorversion(nn, minor, enabled ? NFSD_SET : NFSD_CLEAR);
-> > > > +			break;
-> > > > +		case 3:
-> > > > +		case 2:
-> > > > +			if (!minor)
-> > > > +				nfsd_vers(nn, major, enabled ? NFSD_SET : NFSD_CLEAR);
-> > > > +			break;
-> > > > +		default:
-> > > > +			break;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	mutex_unlock(&nfsd_mutex);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * nfsd_nl_version_get_doit - get the nfs enabled versions
-> > > > + * @skb: reply buffer
-> > > > + * @info: netlink metadata and command arguments
-> > > > + *
-> > > > + * Return 0 on success or a negative errno.
-> > > > + */
-> > > > +int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info=
- *info)
-> > > > +{
-> > > > +	struct nfsd_net *nn;
-> > > > +	int i, err;
-> > > > +	void *hdr;
-> > > > +
-> > > > +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> > > > +	if (!skb)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	hdr =3D genlmsg_iput(skb, info);
-> > > > +	if (!hdr) {
-> > > > +		err =3D -EMSGSIZE;
-> > > > +		goto err_free_msg;
-> > > > +	}
-> > > > +
-> > > > +	mutex_lock(&nfsd_mutex);
-> > > > +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> > > > +
-> > > > +	for (i =3D 2; i <=3D 4; i++) {
-> > > > +		int j;
-> > > > +
-> > > > +		for (j =3D 0; j <=3D NFSD_SUPPORTED_MINOR_VERSION; j++) {
-> > > > +			struct nlattr *attr;
-> > > > +
-> > > > +			/* Don't record any versions the kernel doesn't have
-> > > > +			 * compiled in
-> > > > +			 */
-> > > > +			if (!nfsd_support_version(i))
-> > > > +				continue;
-> > > > +
-> > > > +			/* NFSv{2,3} does not support minor numbers */
-> > > > +			if (i < 4 && j)
-> > > > +				continue;
-> > > > +
-> > > > +			attr =3D nla_nest_start(skb,
-> > > > +					      NFSD_A_SERVER_PROTO_VERSION);
-> > > > +			if (!attr) {
-> > > > +				err =3D -EINVAL;
-> > > > +				goto err_nfsd_unlock;
-> > > > +			}
-> > > > +
-> > > > +			if (nla_put_u32(skb, NFSD_A_VERSION_MAJOR, i) ||
-> > > > +			    nla_put_u32(skb, NFSD_A_VERSION_MINOR, j)) {
-> > > > +				err =3D -EINVAL;
-> > > > +				goto err_nfsd_unlock;
-> > > > +			}
-> > > > +
-> > > > +			/* Set the enabled flag if the version is enabled */
-> > > > +			if (nfsd_vers(nn, i, NFSD_TEST) &&
-> > > > +			    (i < 4 || nfsd_minorversion(nn, j, NFSD_TEST)) &&
-> > > > +			    nla_put_flag(skb, NFSD_A_VERSION_ENABLED)) {
-> > > > +				err =3D -EINVAL;
-> > > > +				goto err_nfsd_unlock;
-> > > > +			}
-> > > > +
-> > > > +			nla_nest_end(skb, attr);
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	mutex_unlock(&nfsd_mutex);
-> > > > +	genlmsg_end(skb, hdr);
-> > > > +
-> > > > +	return genlmsg_reply(skb, info);
-> > > > +
-> > > > +err_nfsd_unlock:
-> > > > +	mutex_unlock(&nfsd_mutex);
-> > > > +err_free_msg:
-> > > > +	nlmsg_free(skb);
-> > > > +
-> > > > +	return err;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * nfsd_net_init - Prepare the nfsd_net portion of a new net names=
-pace
-> > > >   * @net: a freshly-created network namespace
-> > > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > > index ca193f7ff0e1..4fc91f50138a 100644
-> > > > --- a/fs/nfsd/nfssvc.c
-> > > > +++ b/fs/nfsd/nfssvc.c
-> > > > @@ -133,8 +133,7 @@ struct svc_program		nfsd_program =3D {
-> > > >  	.pg_rpcbind_set		=3D nfsd_rpcbind_set,
-> > > >  };
-> > > > =20
-> > > > -static bool
-> > > > -nfsd_support_version(int vers)
-> > > > +bool nfsd_support_version(int vers)
-> > > >  {
-> > > >  	if (vers >=3D NFSD_MINVERS && vers < NFSD_NRVERS)
-> > > >  		return nfsd_version[vers] !=3D NULL;
-> > > > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux=
-/nfsd_netlink.h
-> > > > index ccc78a5ee650..8a0a2b344923 100644
-> > > > --- a/include/uapi/linux/nfsd_netlink.h
-> > > > +++ b/include/uapi/linux/nfsd_netlink.h
-> > > > @@ -38,10 +38,28 @@ enum {
-> > > >  	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
-> > > >  };
-> > > > =20
-> > > > +enum {
-> > > > +	NFSD_A_VERSION_MAJOR =3D 1,
-> > > > +	NFSD_A_VERSION_MINOR,
-> > > > +	NFSD_A_VERSION_ENABLED,
-> > > > +
-> > > > +	__NFSD_A_VERSION_MAX,
-> > > > +	NFSD_A_VERSION_MAX =3D (__NFSD_A_VERSION_MAX - 1)
-> > > > +};
-> > > > +
-> > > > +enum {
-> > > > +	NFSD_A_SERVER_PROTO_VERSION =3D 1,
-> > > > +
-> > > > +	__NFSD_A_SERVER_PROTO_MAX,
-> > > > +	NFSD_A_SERVER_PROTO_MAX =3D (__NFSD_A_SERVER_PROTO_MAX - 1)
-> > > > +};
-> > > > +
-> > > >  enum {
-> > > >  	NFSD_CMD_RPC_STATUS_GET =3D 1,
-> > > >  	NFSD_CMD_THREADS_SET,
-> > > >  	NFSD_CMD_THREADS_GET,
-> > > > +	NFSD_CMD_VERSION_SET,
-> > > > +	NFSD_CMD_VERSION_GET,
-> > > > =20
-> > > >  	__NFSD_CMD_MAX,
-> > > >  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
-> > > > --=20
-> > > > 2.44.0
-> > > >=20
-> > > >=20
-> > >=20
-> >=20
+> > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netl=
+ink/specs/nfsd.yaml
+> > index 05acc73e2e33..cbe6c5fd6c4d 100644
+> > --- a/Documentation/netlink/specs/nfsd.yaml
+> > +++ b/Documentation/netlink/specs/nfsd.yaml
+> > @@ -62,6 +62,18 @@ attribute-sets:
+> >          name: compound-ops
+> >          type: u32
+> >          multi-attr: true
+> > +  -
+> > +    name: server-worker
+> > +    attributes:
+> > +      -
+> > +        name: threads
+> > +        type: u32
+> > +      -
+> > +        name: gracetime
+> > +        type: u32
+> > +      -
+> > +        name: leasetime
+> > +        type: u32
+> > =20
+> >  operations:
+> >    list:
+> > @@ -87,3 +99,24 @@ operations:
+> >              - sport
+> >              - dport
+> >              - compound-ops
+> > +    -
+> > +      name: threads-set
+> > +      doc: set the number of running threads
+> > +      attribute-set: server-worker
+> > +      flags: [ admin-perm ]
+> > +      do:
+> > +        request:
+> > +          attributes:
+> > +            - threads
+> > +            - gracetime
+> > +            - leasetime
+> > +    -
+> > +      name: threads-get
+> > +      doc: get the number of running threads
+> > +      attribute-set: server-worker
+> > +      do:
+> > +        reply:
+> > +          attributes:
+> > +            - threads
+> > +            - gracetime
+> > +            - leasetime
+> > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+> > index 0e1d635ec5f9..20a646af0324 100644
+> > --- a/fs/nfsd/netlink.c
+> > +++ b/fs/nfsd/netlink.c
+> > @@ -10,6 +10,13 @@
+> > =20
+> >  #include <uapi/linux/nfsd_netlink.h>
+> > =20
+> > +/* NFSD_CMD_THREADS_SET - do */
+> > +static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_SERVE=
+R_WORKER_LEASETIME + 1] =3D {
+> > +	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
+> > +	[NFSD_A_SERVER_WORKER_GRACETIME] =3D { .type =3D NLA_U32, },
+> > +	[NFSD_A_SERVER_WORKER_LEASETIME] =3D { .type =3D NLA_U32, },
+> > +};
+> > +
+> >  /* Ops table for nfsd */
+> >  static const struct genl_split_ops nfsd_nl_ops[] =3D {
+> >  	{
+> > @@ -19,6 +26,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D=
+ {
+> >  		.done	=3D nfsd_nl_rpc_status_get_done,
+> >  		.flags	=3D GENL_CMD_CAP_DUMP,
+> >  	},
+> > +	{
+> > +		.cmd		=3D NFSD_CMD_THREADS_SET,
+> > +		.doit		=3D nfsd_nl_threads_set_doit,
+> > +		.policy		=3D nfsd_threads_set_nl_policy,
+> > +		.maxattr	=3D NFSD_A_SERVER_WORKER_LEASETIME,
+> > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+> > +	},
+> > +	{
+> > +		.cmd	=3D NFSD_CMD_THREADS_GET,
+> > +		.doit	=3D nfsd_nl_threads_get_doit,
+> > +		.flags	=3D GENL_CMD_CAP_DO,
+> > +	},
+> >  };
+> > =20
+> >  struct genl_family nfsd_nl_family __ro_after_init =3D {
+> > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+> > index d83dd6bdee92..4137fac477e4 100644
+> > --- a/fs/nfsd/netlink.h
+> > +++ b/fs/nfsd/netlink.h
+> > @@ -16,6 +16,8 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callba=
+ck *cb);
+> > =20
+> >  int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+> >  				  struct netlink_callback *cb);
+> > +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > +int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *in=
+fo);
+> > =20
+> >  extern struct genl_family nfsd_nl_family;
+> > =20
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index f2e442d7fe16..38a5df03981b 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -1653,6 +1653,110 @@ int nfsd_nl_rpc_status_get_done(struct netlink_=
+callback *cb)
+> >  	return 0;
+> >  }
+> > =20
+> > +/**
+> > + * nfsd_nl_threads_set_doit - set the number of running threads
+> > + * @skb: reply buffer
+> > + * @info: netlink metadata and command arguments
+> > + *
+> > + * Return 0 on success or a negative errno.
+> > + */
+> > +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *in=
+fo)
+> > +{
+> > +	struct net *net =3D genl_info_net(info);
+> > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > +	int ret =3D -EBUSY;
+> > +	u32 nthreads;
+> > +
+> > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_WORKER_THREADS))
+> > +		return -EINVAL;
+> > +
+> > +	nthreads =3D nla_get_u32(info->attrs[NFSD_A_SERVER_WORKER_THREADS]);
+> > +
+> > +	mutex_lock(&nfsd_mutex);
+> > +	if (info->attrs[NFSD_A_SERVER_WORKER_GRACETIME] ||
+> > +	    info->attrs[NFSD_A_SERVER_WORKER_LEASETIME]) {
+> > +		const struct nlattr *attr;
+> > +
+> > +		if (nn->nfsd_serv && nn->nfsd_serv->sv_nrthreads)
+> > +			goto out_unlock;
+> > +
+> > +		ret =3D -EINVAL;
+> > +		attr =3D info->attrs[NFSD_A_SERVER_WORKER_GRACETIME];
+> > +		if (attr) {
+> > +			u32 gracetime =3D nla_get_u32(attr);
+> > +
+> > +			if (gracetime < 10 || gracetime > 3600)
+> > +				goto out_unlock;
+> > +
+> > +			nn->nfsd4_grace =3D gracetime;
+> > +		}
+> > +
+> > +		attr =3D info->attrs[NFSD_A_SERVER_WORKER_LEASETIME];
+> > +		if (attr) {
+> > +			u32 leasetime =3D nla_get_u32(attr);
+> > +
+> > +			if (leasetime < 10 || leasetime > 3600)
+> > +				goto out_unlock;
+> > +
+> > +			nn->nfsd4_lease =3D leasetime;
+> > +		}
+> > +	}
+> > +
+> > +	ret =3D nfsd_svc(nthreads, net, get_current_cred());
+> > +out_unlock:
+> > +	mutex_unlock(&nfsd_mutex);
+> > +
+> > +	return ret =3D=3D nthreads ? 0 : ret;
+> > +}
+> > +
+> > +/**
+> > + * nfsd_nl_threads_get_doit - get the number of running threads
+> > + * @skb: reply buffer
+> > + * @info: netlink metadata and command arguments
+> > + *
+> > + * Return 0 on success or a negative errno.
+> > + */
+> > +int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *in=
+fo)
+> > +{
+> > +	struct net *net =3D genl_info_net(info);
+> > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > +	void *hdr;
+> > +	int err;
+> > +
+> > +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
+> > +	if (!skb)
+> > +		return -ENOMEM;
+> > +
+> > +	hdr =3D genlmsg_iput(skb, info);
+> > +	if (!hdr) {
+> > +		err =3D -EMSGSIZE;
+> > +		goto err_free_msg;
+> > +	}
+> > +
+> > +	mutex_lock(&nfsd_mutex);
+> > +	err =3D nla_put_u32(skb, NFSD_A_SERVER_WORKER_GRACETIME,
+> > +			  nn->nfsd4_grace) ||
+> > +	      nla_put_u32(skb, NFSD_A_SERVER_WORKER_LEASETIME,
+> > +			  nn->nfsd4_lease) ||
+> > +	      nla_put_u32(skb, NFSD_A_SERVER_WORKER_THREADS,
+> > +			  nn->nfsd_serv ? nn->nfsd_serv->sv_nrthreads : 0);
+> > +	mutex_unlock(&nfsd_mutex);
+> > +
+> > +	if (err) {
+> > +		err =3D -EINVAL;
+> > +		goto err_free_msg;
+> > +	}
+> > +
+> > +	genlmsg_end(skb, hdr);
+> > +
+> > +	return genlmsg_reply(skb, info);
+> > +
+> > +err_free_msg:
+> > +	nlmsg_free(skb);
+> > +
+> > +	return err;
+> > +}
+> > +
+> >  /**
+> >   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+> >   * @net: a freshly-created network namespace
+> > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfs=
+d_netlink.h
+> > index 3cd044edee5d..ccc78a5ee650 100644
+> > --- a/include/uapi/linux/nfsd_netlink.h
+> > +++ b/include/uapi/linux/nfsd_netlink.h
+> > @@ -29,8 +29,19 @@ enum {
+> >  	NFSD_A_RPC_STATUS_MAX =3D (__NFSD_A_RPC_STATUS_MAX - 1)
+> >  };
+> > =20
+> > +enum {
+> > +	NFSD_A_SERVER_WORKER_THREADS =3D 1,
+> > +	NFSD_A_SERVER_WORKER_GRACETIME,
+> > +	NFSD_A_SERVER_WORKER_LEASETIME,
+> > +
+> > +	__NFSD_A_SERVER_WORKER_MAX,
+> > +	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
+> > +};
+> > +
+> >  enum {
+> >  	NFSD_CMD_RPC_STATUS_GET =3D 1,
+> > +	NFSD_CMD_THREADS_SET,
+> > +	NFSD_CMD_THREADS_GET,
+> > =20
+> >  	__NFSD_CMD_MAX,
+> >  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
 > > --=20
-> > Jeff Layton <jlayton@kernel.org>
+> > 2.44.0
+> >=20
 > >=20
 >=20
 
