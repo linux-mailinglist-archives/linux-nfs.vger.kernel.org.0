@@ -1,151 +1,82 @@
-Return-Path: <linux-nfs+bounces-2866-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2867-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D33578A7C12
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 08:06:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA80B8A7E39
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 10:28:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F507285152
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 06:06:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBAC31C21476
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 08:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A812535D1;
-	Wed, 17 Apr 2024 06:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="l3E42JSS";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="m9ylETVd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="l3E42JSS";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="m9ylETVd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1894E7E763;
+	Wed, 17 Apr 2024 08:28:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8A0535D0
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Apr 2024 06:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 7CEA371745;
+	Wed, 17 Apr 2024 08:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713333968; cv=none; b=BpZzxgvq/ODw3rvjO4whw2sq12Vdm0hPLb1kRo8zq7UxqnPAKJZXzA1Ho6NcjTFuQMqFhPB+05tr9qsOhUEMA33t9IXroyvr4mtGrbQE9arK6IEs/6Q4qYoOfFeXz6ibqd/wcTX5xbMtJ+t26oP+QyR1N3KVQBvXAH+A4mvGIpQ=
+	t=1713342526; cv=none; b=SHGavc3skHPn5jli5hQgD300Gy3b5bHbFC/AvgWtSr+JctZ8CoTM3bT8eZbXGS99f2fnPfDzSjYImV6PLvimWbeC/G15qk7exakMWZGSjjY9IoDowawUXbUYMUbY1gWqc/9dpHGLWCy0fNsfNkg8vMHv9y2ltDjvSOehqngh2Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713333968; c=relaxed/simple;
-	bh=KROTX0Q16Ahgzd3HZibmbSBYFeGfzQrWOq5vZhC2HJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6zQa3TwnDk1LeOUOUdZC2r+u6FmVLOUKWJwckWsIkWt36WRMnJiRnysralmwQoDVU8rNMotPN/iBmdzlAZ+NPTYiUTcOOp+ZLBEvK5P5HgOrPp9SW2nUh2lM9oEIjExKyU8NmAiyIyPuYv1U4EVBd3kXY4QtUg3EjRo8u0iNYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=l3E42JSS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=m9ylETVd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=l3E42JSS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=m9ylETVd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 685543384B;
-	Wed, 17 Apr 2024 06:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713333964;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KROTX0Q16Ahgzd3HZibmbSBYFeGfzQrWOq5vZhC2HJk=;
-	b=l3E42JSSeH+vNRR92/D428+i3wC/bEC8CV9Z0Q9hrBYLIZeEMD3EJGceQsY3thyj7iP9/a
-	ml7s3CIzEbdnQPGx0k0VzKGCYRKpT6/IY2rSLDjgpBxPgvepYZjlNfgdBdK0vx4E5aOrrl
-	MrjgTbAd7YxsWIj6vjbEbUJHQy38i+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713333964;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KROTX0Q16Ahgzd3HZibmbSBYFeGfzQrWOq5vZhC2HJk=;
-	b=m9ylETVd2AxC+2raBK/wM/J9KC7jW0urIbx3VgAtC+UoKmgLmensB0sLWErJf6c9ffiIRX
-	dgTm+ojduT4rBOBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=l3E42JSS;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=m9ylETVd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713333964;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KROTX0Q16Ahgzd3HZibmbSBYFeGfzQrWOq5vZhC2HJk=;
-	b=l3E42JSSeH+vNRR92/D428+i3wC/bEC8CV9Z0Q9hrBYLIZeEMD3EJGceQsY3thyj7iP9/a
-	ml7s3CIzEbdnQPGx0k0VzKGCYRKpT6/IY2rSLDjgpBxPgvepYZjlNfgdBdK0vx4E5aOrrl
-	MrjgTbAd7YxsWIj6vjbEbUJHQy38i+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713333964;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KROTX0Q16Ahgzd3HZibmbSBYFeGfzQrWOq5vZhC2HJk=;
-	b=m9ylETVd2AxC+2raBK/wM/J9KC7jW0urIbx3VgAtC+UoKmgLmensB0sLWErJf6c9ffiIRX
-	dgTm+ojduT4rBOBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA64B1384C;
-	Wed, 17 Apr 2024 06:06:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LkJ+N8tmH2a5EAAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 17 Apr 2024 06:06:03 +0000
-Date: Wed, 17 Apr 2024 08:06:02 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: ltp@lists.linux.it
-Cc: NeilBrown <neilb@suse.de>, Cyril Hrubis <chrubis@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] proc01: Whitelist /proc/fs/nfsd/nfsv4recoverydir
-Message-ID: <20240417060602.GB681570@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240415172133.553441-1-pvorel@suse.cz>
+	s=arc-20240116; t=1713342526; c=relaxed/simple;
+	bh=iXTes1T3zb5s+wDOvBmCsD1VNFBqg7mCpl3R6vpiuIY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ktiOAv1rMxsftEpoPCKrNnwXlRl4GXN1RTulFhuDqBDvPh9zWAITGBPXWF0YiY9PDDFHKC7bzXQVUS6ua5uoexUQfwU7qaooKCcYXEU830sQfS5p8gAtVkMxHcyi8A2CZAViqrnZUq9CB3ceg/NG9rBBpP02/Vm4lftwVQdy1j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [219.141.250.2])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id E528B606187A1;
+	Wed, 17 Apr 2024 16:28:28 +0800 (CST)
+X-MD-Sfrom: kunyu@nfschina.com
+X-MD-SrcIP: 219.141.250.2
+From: Li kunyu <kunyu@nfschina.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li kunyu <kunyu@nfschina.com>
+Subject: [PATCH] =?UTF-8?q?lockd:=20host:=20Remove=20unnecessary=20stateme?= =?UTF-8?q?nts=EF=BC=87host=20=3D=20NULL;=EF=BC=87?=
+Date: Wed, 17 Apr 2024 16:28:07 +0800
+Message-Id: <20240417082807.14178-1-kunyu@nfschina.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415172133.553441-1-pvorel@suse.cz>
-X-Spam-Flag: NO
-X-Spam-Score: -3.71
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 685543384B
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.71 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	REPLYTO_EQ_FROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.cz:+]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+In 'nlm_alloc_host', the host has already been assigned a value of NULL
+when defined, so 'host=NULL;' Can be deleted.
 
-> /proc/fs/nfsd/nfsv4recoverydir started from kernel 6.8 report EINVAL.
+Signed-off-by: Li kunyu <kunyu@nfschina.com>
+---
+ fs/lockd/host.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Because Neil sent fix, I withdraw this patch.
-
-Kind regards,
-Petr
-
-[1] https://lore.kernel.org/linux-nfs/171330258224.17212.9790424282163530018@noble.neil.brown.name/
+diff --git a/fs/lockd/host.c b/fs/lockd/host.c
+index 127a728fcbc81..c115168017845 100644
+--- a/fs/lockd/host.c
++++ b/fs/lockd/host.c
+@@ -117,7 +117,6 @@ static struct nlm_host *nlm_alloc_host(struct nlm_lookup_host_info *ni,
+ 	if (nsm != NULL)
+ 		refcount_inc(&nsm->sm_count);
+ 	else {
+-		host = NULL;
+ 		nsm = nsm_get_handle(ni->net, ni->sap, ni->salen,
+ 					ni->hostname, ni->hostname_len);
+ 		if (unlikely(nsm == NULL)) {
+-- 
+2.18.2
 
 
