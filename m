@@ -1,197 +1,244 @@
-Return-Path: <linux-nfs+bounces-2883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C00678A88DA
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 18:29:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 416B78A8B20
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 20:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E31C81C203D6
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 16:29:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F15D42874A1
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 18:30:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1AFF148836;
-	Wed, 17 Apr 2024 16:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECCD8821;
+	Wed, 17 Apr 2024 18:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Md57YA7r";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="czsw24hF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bV0+jZl2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CDE147C7B;
-	Wed, 17 Apr 2024 16:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713371373; cv=fail; b=CZBMBcg7PRVZ+teyMrko6/KsDaMcFglSzrdyqVDhGbAYhlvZIY8ahPBGbxSPsCl3dRZrZdtvTqHUMGyZ73G8/Jc8azuSHErGWVcVqAgVV3z1VUH7hTZU3PxjlPtPjohVrRisQh0JTpuaFL+JQCTXEGgKXZHR8RBXXXPZ4vHhOQA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713371373; c=relaxed/simple;
-	bh=4ayvM8+eNXbODP7SZdb1xU5l1lGrK+iRRysB5V8yR9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OYePqo37PwXo7HvjXuoxcCm5qwJNKxzjDzUw49++OAxaujOyW0EwijCESI/kANFAOKg+3UVo1Cx4jeoK0S+K2v2CJihdIqWHISSrWRuOT3sEMxFEEc391Osz3LuqAL9P18AwG/ym2Hh6zRhqem5hjUOVZ2DTEbZfzqKgZwhSedQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Md57YA7r; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=czsw24hF; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HFO3Wc005253;
-	Wed, 17 Apr 2024 16:29:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=Qw9HKtA6lyB5qAynSsxHQMHsPcC6JEl+dRpclskUZtA=;
- b=Md57YA7rDW+KOdKjzXRol42seWzTDkHo1yu/KMXWb3L/2GysPQ+p1OR7azAzV9mloTQh
- 8om5bAbuGBY/JDQy3W6epbz4wBtpPidx4VxGJ9JNnEuPSgK5hVANI1trBqXLM9XRmbMl
- zxDJu5pC/3Yz3wu9fB29go/PJoRvN2A85BzBRwGXPPNoNOQl5HEMYO9BD/2VSXglcKKS
- q/ktxJgfLvi8Nq0Ut36Gdrk0Uhm9Vu3IEuKZzzEAiRS5hPkGzXVlxD5NMRti8OHOrNPT
- 7mpebfewfdDsYKi1n2/EdPHTGPCOloW469OdHLt0vGbZXclr3gazSzC8IyJ2DRVAlujr Ng== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfhnuge1m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 16:29:09 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43HFUg0o004428;
-	Wed, 17 Apr 2024 16:28:59 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xfggfbxg5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 16:28:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=odFE0UhxV1pXuRrqhEgwJUi4WT/++L9ethNSEvjW3zOd3zYJzg4STf4+p8qXzccis9OKSkpwq8IfkxIAYh2ZRRUbDHVmdf570+HAjXhJj7xfwrfazvvWnxn9BUB60CfRVcCl9LoF4kN2tPNuhpY3nYXjjv6Zl1WLeru8wtMaPxl8Hv4IXn9XoQFAocwNNeVCCZFb3FTiLiq+kzq0JuuD/o30vXV5bivCezphAngIJCVL/+qkv6Vegc/yeq8qyt4Ap3BdC2uPPlaCdix6TeNWmG52XW3hjTrNI6itY0NvDp19V9ZXlttrytxiGbTgyrOzFG3IAPFyHoJBz3Ji4c1dlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qw9HKtA6lyB5qAynSsxHQMHsPcC6JEl+dRpclskUZtA=;
- b=BS3yVhkOKErEOdmrsSLWk5QK+MmiqtJFWxwfZeva6HvstMpcdJtYtPBAwsl/cWeajA/4tIIISF4HTj+TLftVmbdQ4ugEiCfj/39m1X6og49386jy4fTijehSHGtMtxcxd9T4WBDKocvN683NTuBmSybHK79BB+20TqMRKewl1DvG+QZgwYCKuiz/YgPsPUD9iA7Cn9QSQEM4zKWy4ToI+DRTKV68R1+blEW4PmKFUzdGTrfNOhxmCv1vtUPq8YK9bk/pmbX5znc66tl0hVvnwfxWC0OIiTyYqvCnNz6gejdwhEpqkFzZojkCU2V1wot7K9XOmn737c4D7fcghXPQKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qw9HKtA6lyB5qAynSsxHQMHsPcC6JEl+dRpclskUZtA=;
- b=czsw24hFrvIF5EDZt2oqOqfi+IDrm+6YlIukaRf48UfghKxazPv9Q1tHnYNskDOitOj1Cq7L6zx/H3X0ouzNn59nzgV8REbIzAkc0z5ac1jGzUrJKFGRPXbB6CuIqH2GrNT7YAYSgmekX672Fi8ZC/xX7OQkX59RwMYGkpPM8Js=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH7PR10MB6084.namprd10.prod.outlook.com (2603:10b6:510:1f8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Wed, 17 Apr
- 2024 16:28:58 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
- 16:28:57 +0000
-Date: Wed, 17 Apr 2024 12:28:54 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Li kunyu <kunyu@nfschina.com>
-Cc: jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
-        tom@talpey.com, trond.myklebust@hammerspace.com, anna@kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lockd: host: =?utf-8?Q?Remove_?=
- =?utf-8?Q?unnecessary_statements=EF=BC=87host_=3D_NULL=3B=EF=BC=87?=
-Message-ID: <Zh/4xozLPreN7ELW@tissot.1015granger.net>
-References: <20240417082807.14178-1-kunyu@nfschina.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417082807.14178-1-kunyu@nfschina.com>
-X-ClientProxiedBy: CH5PR04CA0007.namprd04.prod.outlook.com
- (2603:10b6:610:1f4::7) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCCC1CD38
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Apr 2024 18:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713378631; cv=none; b=LK54sNtnkOWlq4/Q8o4ziakczm46LxugRf7KcBtlqyfkud8uDPaIk/ZdEGibwQCx6wqnmuplbI3fieuzdAf4XgPAULxbPgiQt9NYD+kF9ARFDyObFPfsrs+9pVom35S+4Ed53BKVilpeXOETwbniRjmVavONSlmQqZnzFYBdzUg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713378631; c=relaxed/simple;
+	bh=uo9RxHiecfvswW097Fp061G0TgFrS/stB+OYR3FrxTw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bxlG8KNeLoekiP2Qt3vxuLkqsoYHCb/QIWoDSJGe0ROwpOIuMJPSBT7gqLgwAoZ+78K7dE6l8bLNXFSxrKg7csgK8y0sYUsgqIWxuSm36Hvy4fNFWhl/Ow1LzEp0Yx/1LoO+xDtgIhzQX0GOqrrC2HSh8+8ee8tU/SxUqcerB5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bV0+jZl2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713378628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8imcLssB4c2a6Zu087kXR2qSlHZKETA1tZPm//Rx0qE=;
+	b=bV0+jZl2EgjV6b4iT0fD22jsHFBHgEazMRk65jUebmEGkb0J39g+msDwW4B7zXHXhbRQdg
+	tzU3iXsFk4L4dATmpP7bMMhADvvrDT4yXRLUBThoYgwZCR6WRveo/AF6ymRCtZo1vURBVx
+	m6j8JpHNQ6MEQpEcxL8P4bgmYBOqnv0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-400-VH7ZkDlENMWZ_W9IZYl_qA-1; Wed, 17 Apr 2024 14:30:25 -0400
+X-MC-Unique: VH7ZkDlENMWZ_W9IZYl_qA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 74417104B507;
+	Wed, 17 Apr 2024 18:30:25 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-6.rdu2.redhat.com [10.22.0.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CD217C2595D;
+	Wed, 17 Apr 2024 18:30:24 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>
+Subject: Re: [bug report] NFSv4: Fix free of uninitialized nfs4_label on
+ referral lookup.
+Date: Wed, 17 Apr 2024 14:30:23 -0400
+Message-ID: <749EE32A-D89E-4F3A-884C-54A788B9D1C2@redhat.com>
+In-Reply-To: <ae7bbc2e-49c6-46df-8876-06b11dd551e5@moroto.mountain>
+References: <ae03a217-e643-4127-bb4a-4993ad6a9d00@moroto.mountain>
+ <13EE0F08-5567-48B8-A7C2-88A086FBDA89@redhat.com>
+ <7c4df27b-9698-4d49-a35f-9395b75348d3@moroto.mountain>
+ <F0002E44-B2E9-4DE3-BF3B-771F814A8EE1@redhat.com>
+ <ae7bbc2e-49c6-46df-8876-06b11dd551e5@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6084:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3ce4c11-42f2-4c45-5a93-08dc5efb7af0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	uShayjaRLjnJYQM2nzY4vffnvHKhTzttHft09oyoSNvXkqxsMO/aSE+DPEL4VZ5xDs4xIgbXXzEvxzrkfb9xC4tdnj1OtIz5Iqv7eNFlbHq/aEtGu4zN6rBFdp62eIsuM2/liPNmnweFfu0zUVJJdCQw0aGJCAJUwy2Wf9UGLsqyBMfTxpySEob3pcILvI3OBrCUHT2+vGXJMmNtvwPO4UPT2//h9RF2zQTzA+IOEDn4RdZHhpq9elEkXFh5HegXvqvudlR3Pl1gdOJLHcWsjLLHwDa+zmSJ/tB78DpPxvYd3b1CsehSZAFvVYW4//taxoAC/7LR03OweVYOuH9LHdljY1vHVPIdr5ydRyUxEHb6sMePis3yJyuOBB9nc3c8mbt1AqCPKgp2n/c7fKmdvjFyZ+/0yPVJ1yh0rcbfUBBPis7iR+vqC5dC1yZjvT5MLvwz12nXjYKcxI3RakfU1Qa1bqI5T8s7tVLQrQqOKyyEfgrIFz924n/b3GciZ8cubSxmsRU5Tlru4GrWKrMUp4PAtrP5x7JBcA3UoI2UrY26mbk3NlwF+DTT9RQSN0x5tK0AfP7HxSZdPrCeJWFMUPlaqNUx/mR7+JcE4aNM8twfTdXcAbAZCIFZZFyQ0b0bnDmDQf3R0QYB3ReS8bCB3oi2u34ZUj6TgZ8q4HlZzxY=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?Ih/ftXuc3xHsGrtIKZmvLYglJgTawOBgPaMR7jwgDHRyYOETIm/M1NKBT/mQ?=
- =?us-ascii?Q?C8LCPQmXEZEw4RvZyl8sGrdDI9lVMrPQFHYsUywSUeKo8eiqdxQfbwbcH7yA?=
- =?us-ascii?Q?mk/7Wno7Aq/dEDkKaOO2lM8rkv8jjf1/BybQJY5I8P+ukYad4EPhilVUSreY?=
- =?us-ascii?Q?+fuAFuA4zysecxgHqEWhuUwBJhL0cluNiSjd6hySZOHhFZlgWmC6TasxAWbd?=
- =?us-ascii?Q?/T2YjazapH7PnErpHmhNpAxLdpG3rmeS7pyqlGnzQED5mit0nTA6OMOknQmB?=
- =?us-ascii?Q?6bP9FIgk5qtj2FvvY2sykU5iYPhe55A19vaMABoUCloorucrq2LfV+Vl9Gcb?=
- =?us-ascii?Q?3974URPYrP+jVjEKuzejvp3hD3ZiSXa2PFwjvU1RrZBeBzl6IxtsLbPFuApI?=
- =?us-ascii?Q?bA8DeHK9aopMhNCJaQwe9H1Ljkx31lGkHGYQpewHdHZZjUpFVl1ODisHe8oN?=
- =?us-ascii?Q?tzBHnlf94YtfERVQckyaNP9kL2k8ZBmqNZL00ja206EIJq1DgUeDKdbvbTTu?=
- =?us-ascii?Q?UPFyRF+h8cLRN386aJg1C+hxkOysm6hoHZZbQ0gK9lTmm5PtZN2eDDZyWJls?=
- =?us-ascii?Q?OSSYF9wy7rVkb5XbtFIHHasHKpC68VCOzhqavt5NtfP4MP/5ZMWGWzvDimJF?=
- =?us-ascii?Q?YkrglmpKm+KvtY7P2J013MpQtp0xy+MtqJQIQXGQmwNvP3xjnXrqTO4FOQsj?=
- =?us-ascii?Q?mkeBYHtHbxvpSc6orRo4y/XqG4LEGkeyh+kzepXbF02SpqHNvUGdvqRIWpND?=
- =?us-ascii?Q?aZ/c95y/Tv4te0n+xnfHEAPr1AOYPGEXbjviJEotdkEs6DNmuM66h94LaaA3?=
- =?us-ascii?Q?8s212Czp7slvVI+DWQ84JIHfNO6M+c/3TWHxusS4nsRytkIm++i8J7HgLnKu?=
- =?us-ascii?Q?t4NeLPNbQy3lPtbVpXiv1eeH1iXO+bfQEe3OKXD0aLGHbrbL0qT82TrID5cn?=
- =?us-ascii?Q?d1XJtsV538sO+/J8fP2pSniWfHK4y9nWkymWFS8TWnvwC+AIyfGqkOVdMGWi?=
- =?us-ascii?Q?3HYGzs0aYYFBxaApcLY0Z7u4RU2NJZRUqT4oOMN9tRQjzF5hdFP+YhpZGmr6?=
- =?us-ascii?Q?Bgyvh2aK3gpADQw7S+NXVGNK/i/o/aWAlDQ02l+7uv9JC2eZfn3Zngkw1vhj?=
- =?us-ascii?Q?ANF/oDFSx3htK/Q8Pgo+9lb8S7VOqTdrPkQj877Zt1NVKjgzO94Xciayr4vz?=
- =?us-ascii?Q?sTmzkgkgo4LwD5UVC+n4rkoSA5EPDBlWDaEdDmPDRQ81PBavNSwnGz7X7R4n?=
- =?us-ascii?Q?K1L1Zg6sM2Fgh61J8WgODUS7m+4qnkP17C2SxCa3P4o7GQIoaLmq7QKzK8Pt?=
- =?us-ascii?Q?d6qPByxo6ljDQwGnFtNZqXJA7VTb89GS86Lr07jOO1nEFGLLxwxkTHyxops3?=
- =?us-ascii?Q?kdelfB67Kx+VTvwkEbWnMO+FmXXFalmHNjYy5gbdqYQGz+poQmKUoOCsrAja?=
- =?us-ascii?Q?bLVIjLDeMxrOBiP9L5JXc77g72buSnPvaaauSEOkHY/oGFrYSxMrVvDBZDG9?=
- =?us-ascii?Q?6AKMgZsu2Jd9PYGdKgJG0QPXz9FuymswBEbg8AuGeyT8vwTE1iqCEtnjTUNu?=
- =?us-ascii?Q?dc11Gu6U9sd/shp62wJCyhakl1UFshgYHrEJ1c1J+VjTWv2+hZFguTDCMHQj?=
- =?us-ascii?Q?Lg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	IFM+1YdhgIj62dHGz9RGl5oFsKGI8diJVfyHlCWXwScfLKMR8nvPShpPkayp/kh5obErzYBYFDfey+egtbcVT8Mjevgp1zgs9cDn72SbXjyNAURig5y0GRnJ3UM19QA1ApE8b5/RugInCc97iqd+y+rvh20kZIXr/207wYKxz4mG/awHIYglWx5gv5I6ScLht7Hmn7TW5s1hJiKpCSYiF5xHXXCslyK8IaLBkSrvDHJmj9IUow8r8WZGZiRWQbvjqLVhu7OXhYT2Hrxe4ABpNX/fjnr6IZ9mAogOCKdBHIErwUHZ65hcJpG4hAa33wx1SfhqgMglrI2HimgNoAhDIPhGkFgMDgdMT1POv9Fv0gfbqJtqtixOBU6lIZZxv/jjiL5KbRmf12JtSUtzQIwFyOcoUKG3oARsFJuKJs/qOBLvEP+6ZnagD1ytdzQNeccL7JO5dlHnrKpehHGa17Y9ONNKGj32rTK1wHqyiffNrEgGBz+uNtb4bvAC+i7k6y1ybj/SrarQbAEOcTsUBxguwcBmX6MqBPqyrMNYl87bFCLXR317lSxgkP9w9atyCYRqrqRwFkdAyfS23KzVbOfvrWlOfTr+KGPLFGLy2vmKPIU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3ce4c11-42f2-4c45-5a93-08dc5efb7af0
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 16:28:57.3763
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lZEyYzmP7R8/gYtIIzeS9h4QtLfmp0F2DvBT5lGYnSrMsRoCuJ/ma4ZNjQ44jpdwz4EPOQp+eFV4vUz8WxgjcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6084
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_14,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404170115
-X-Proofpoint-GUID: beqoRiv5IGDVoAffT8u-_TBspYEbp6P9
-X-Proofpoint-ORIG-GUID: beqoRiv5IGDVoAffT8u-_TBspYEbp6P9
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Wed, Apr 17, 2024 at 04:28:07PM +0800, Li kunyu wrote:
-> In 'nlm_alloc_host', the host has already been assigned a value of NULL
-> when defined, so 'host=NULL;' Can be deleted.
-> 
-> Signed-off-by: Li kunyu <kunyu@nfschina.com>
-> ---
->  fs/lockd/host.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/lockd/host.c b/fs/lockd/host.c
-> index 127a728fcbc81..c115168017845 100644
-> --- a/fs/lockd/host.c
-> +++ b/fs/lockd/host.c
-> @@ -117,7 +117,6 @@ static struct nlm_host *nlm_alloc_host(struct nlm_lookup_host_info *ni,
->  	if (nsm != NULL)
->  		refcount_inc(&nsm->sm_count);
->  	else {
-> -		host = NULL;
->  		nsm = nsm_get_handle(ni->net, ni->sap, ni->salen,
->  					ni->hostname, ni->hostname_len);
->  		if (unlikely(nsm == NULL)) {
-> -- 
-> 2.18.2
-> 
+On 17 Apr 2024, at 11:08, Dan Carpenter wrote:
 
-Thanks for the clean up! Applied to nfsd-next (for v6.10).
+> On Wed, Apr 17, 2024 at 09:51:48AM -0400, Benjamin Coddington wrote:
+>> On 17 Apr 2024, at 8:40, Dan Carpenter wrote:
+>>
+>>> On Wed, Apr 17, 2024 at 08:00:04AM -0400, Benjamin Coddington wrote:
+>>>> On 15 Apr 2024, at 4:08, Dan Carpenter wrote:
+>>>>
+>>>>> [ Why is Smatch only complaining now, 2 years later??? It is a myst=
+ery.
+>>>>>   -dan ]
+>>>>>
+>>>>> Hello Benjamin Coddington,
+>>>>
+>>>> Hi Dan!
+>>>>
+>>>>> Commit c3ed222745d9 ("NFSv4: Fix free of uninitialized nfs4_label o=
+n
+>>>>> referral lookup.") from May 14, 2022 (linux-next), leads to the
+>>>>> following Smatch static checker warning:
+>>>>>
+>>>>> 	fs/nfs/nfs4state.c:2138 nfs4_try_migration()
+>>>>> 	warn: missing error code here? 'nfs_alloc_fattr()' failed. 'result=
+' =3D '0'
+>>>>>
+>>>>> fs/nfs/nfs4state.c
+>>>>>     2115 static int nfs4_try_migration(struct nfs_server *server, c=
+onst struct cred *cred)
+>>>>>     2116 {
+>>>>>     2117         struct nfs_client *clp =3D server->nfs_client;
+>>>>>     2118         struct nfs4_fs_locations *locations =3D NULL;
+>>>>>     2119         struct inode *inode;
+>>>>>     2120         struct page *page;
+>>>>>     2121         int status, result;
+>>>>>     2122
+>>>>>     2123         dprintk("--> %s: FSID %llx:%llx on \"%s\"\n", __fu=
+nc__,
+>>>>>     2124                         (unsigned long long)server->fsid.m=
+ajor,
+>>>>>     2125                         (unsigned long long)server->fsid.m=
+inor,
+>>>>>     2126                         clp->cl_hostname);
+>>>>>     2127
+>>>>>     2128         result =3D 0;
+>>>>>                  ^^^^^^^^^^^
+>>>>>
+>>>>>     2129         page =3D alloc_page(GFP_KERNEL);
+>>>>>     2130         locations =3D kmalloc(sizeof(struct nfs4_fs_locati=
+ons), GFP_KERNEL);
+>>>>>     2131         if (page =3D=3D NULL || locations =3D=3D NULL) {
+>>>>>     2132                 dprintk("<-- %s: no memory\n", __func__);
+>>>>>     2133                 goto out;
+>>>>>                          ^^^^^^^^
+>>>>> Success.
+>>>>>
+>>>>>     2134         }
+>>>>>     2135         locations->fattr =3D nfs_alloc_fattr();
+>>>>>     2136         if (locations->fattr =3D=3D NULL) {
+>>>>>     2137                 dprintk("<-- %s: no memory\n", __func__);
+>>>>> --> 2138                 goto out;
+>>>>>                          ^^^^^^^^^
+>>>>> Here too.
+>>>>
+>>>> My patch was following the precedent set by c9fdeb280b8cc.  I believ=
+e the
+>>>> idea is that the function can fail without an error and the client w=
+ill
+>>>> retry the next time the server says -NFS4ERR_MOVED.
+>>>>
+>>>> Is there a way to appease smatch here?  I don't have a lot of smatch=
 
--- 
-Chuck Lever
+>>>> smarts.
+>>>
+>>> Generally, I tell people to just ignore it.  Anyone with questions ca=
+n
+>>> look up this email thread.
+>>>
+>>> But if you really wanted to silence it, Smatch counts it as intention=
+al
+>>> if the "result =3D 0;" is within five lines of the goto out.
+>>
+>> Good to know!  In this case, I think the maintainers would show annoya=
+nce
+>> with that sort of patch.  A comment here about the successful return c=
+ode on
+>> an allocation failure would have avoided this, and I probably should h=
+ave
+>> recognized this patch might create an issue and inserted one.  Thanks =
+for
+>> the report.
+>
+> To me ignoring it is fine or adding a comment is even better, but I als=
+o
+> think adding a bunch of "ret =3D 0;" assignments should not be as
+> controversial as people make it out to be.
+>
+> It's just a style debate, right?  The compiler knows that ret is alread=
+y
+> zero and it's going to optimize them away.  So it doesn't affect the
+> compiled code.
+>
+> You could add a comment /* ret is zero intentionally */ or you could
+> just add a "ret =3D 0;".  Neither affects the compile code.  But to me,=
+ I
+> would prefer the code, because when I see the comment, then I
+> immediately start scrolling back to see if ret is really zero.  I like
+> when the code looks deliberate.  When you see a "ret =3D 0;" there isn'=
+t
+> any question about the author's intent.
+>
+> But again, I don't feel strongly about this.
+
+I think we could refactor to try the allocation into a local variable, th=
+at
+should make smatch happier.  Something like:
+
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 662e86ea3a2d..5b452411e8fd 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2116,6 +2116,7 @@ static int nfs4_try_migration(struct nfs_server *se=
+rver, const struct cred *cred
+ {
+        struct nfs_client *clp =3D server->nfs_client;
+        struct nfs4_fs_locations *locations =3D NULL;
++       struct nfs_fattr *fattr;
+        struct inode *inode;
+        struct page *page;
+        int status, result;
+@@ -2125,19 +2126,16 @@ static int nfs4_try_migration(struct nfs_server *=
+server, const struct cred *cred
+                        (unsigned long long)server->fsid.minor,
+                        clp->cl_hostname);
+
+-       result =3D 0;
+        page =3D alloc_page(GFP_KERNEL);
+        locations =3D kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNE=
+L);
+-       if (page =3D=3D NULL || locations =3D=3D NULL) {
+-               dprintk("<-- %s: no memory\n", __func__);
+-               goto out;
+-       }
+-       locations->fattr =3D nfs_alloc_fattr();
+-       if (locations->fattr =3D=3D NULL) {
++       fattr =3D nfs_alloc_fattr();
++       if (page =3D=3D NULL || locations =3D=3D NULL || fattr =3D=3D NUL=
+L) {
+                dprintk("<-- %s: no memory\n", __func__);
++               result =3D 0;
+                goto out;
+        }
+
++       locations->fattr =3D fattr;
+        inode =3D d_inode(server->super->s_root);
+        result =3D nfs4_proc_get_locations(server, NFS_FH(inode), locatio=
+ns,
+                                         page, cred);
+
+I don't have a great way to test this code, though.  Seems mechanically
+sane.
+
+Ben
+
 
