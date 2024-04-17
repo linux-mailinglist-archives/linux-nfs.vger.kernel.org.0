@@ -1,181 +1,152 @@
-Return-Path: <linux-nfs+bounces-2880-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2881-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA0DC8A8711
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 17:08:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0DC98A8877
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 18:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60F22282121
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 15:08:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DB5A1F22607
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Apr 2024 16:10:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9AD146A73;
-	Wed, 17 Apr 2024 15:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6CA148FFE;
+	Wed, 17 Apr 2024 16:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXqg2PJ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxnuBve+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F02B13959C
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Apr 2024 15:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2249E148FEA;
+	Wed, 17 Apr 2024 16:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366530; cv=none; b=GmCoDJsaLLdjK8CvV5+uTdMXVLwYyK8bgG1LBND4RC8OdJ3oTtA2UzScsr6NBkw6Z6PfPWpY1IJaaikuerU2RdIF3k+niYahmDIrjZ6K3EO5L0xhYJig9QP7W8jnDlMLSZS8dHYMkrABH3Xy/jQfkubV6bmsUtm6cUWjxxgmmaY=
+	t=1713370184; cv=none; b=i9tDLQIqkmLCulcxFh8FGF7Ga/SjU8Fm9wRtLjLBWzFYB622Uvj5F+g5OUG6wJSWH6qtU2b3Y9CkFaUF27IahrIW4k6RgDreqvbaSX/BeaZ3BIbp29E9uPA+cB2Xv86m7MrTQu6n3eOmXj/JabGZC9PXHWKsgLJe2bsrcNH1YHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366530; c=relaxed/simple;
-	bh=RQeHqheZvT65k4jqcZVmdjfXbwxwuYmOto5IrYzm8d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VxVAl4yJ5VTNiDK8lNsPfPqVY2NiYhBOMWLOQZoZO0MQJeOKovjLntXGRt3SgupQq+rT9RiWuv5jojmyuq8jYjpjXwlipC7p+vCPTpN3cNJMiOtAwSZBHGwGWyhW+LkTkGInXJk1IHNt72+J3nbFX7S7nz0eebq7uX7mlnlql0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BXqg2PJ7; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a526a200879so482432566b.1
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Apr 2024 08:08:48 -0700 (PDT)
+	s=arc-20240116; t=1713370184; c=relaxed/simple;
+	bh=pMXBuRSYRvxJ/Pm5/D0Ih9VGkrkcDFfmsJy8ADz5Yxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l/1f1JRwkjgevD0IG2ZYOr6sRdU/t4HW+Z6x7ihy77WZvDEqRedL4V8MP90W+Vuw7zeZs0ecFLguLauEu4/YOJkHbuPglWGn7yp+2OHsHEDLySHsDpI75Ay6vQbv7NI98FN4LIXnw4WNPKuwMSk6x+1l2ofIZrrvZ4w3oPw79e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DxnuBve+; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ecf1bb7f38so5305241b3a.0;
+        Wed, 17 Apr 2024 09:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713366526; x=1713971326; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u5+OKrUCM+OoRfNzn77TNMdHzGIbRv0gT+t84eLkWMg=;
-        b=BXqg2PJ7Al9ApefiBM6cApCUbxOFqpI1Bu6EknP1ScgkQzC9E+yeZgE5Zf4CRG41kN
-         hnDd1muEnngYzZCG+8NYhhvl1YFFVoxyuZyHkSK2vw3hAOxdy9MIZTFyXnjvHhAAgoDd
-         8RaQomOXAVxWa6INflb3NTkBi/4Za91bOX2KH5I8M1dl2neIvENxzFhDJ4WrTXOSeQip
-         CYtTTxZ3mKVUjgZ1Eg7q82EV6Xc9gES+rmC2/Q3VlzKB3yda2jSCtZPoO/gBJUuVG+GP
-         Q9OpZffpkAP/P5u/+pOAwQ1R6uU49zwp3pkMJ8Px/rWIYYB8gwY1E6dYYIfOYpeiAPKd
-         4DyA==
+        d=gmail.com; s=20230601; t=1713370182; x=1713974982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BixicrujN2w/NN7W8Yk1bOtYDD16jf87ysiCrI+mjZw=;
+        b=DxnuBve+OgB7iTJSOkoYbkli5a7MkAcAS8KAGlIBhAYS/qasj9afZQqCR/uejQNtQU
+         BFuUzTR6YDIun78IZCZ8Wls9hDW3CaoPdzB0qvc6dy1vRmgd4mhKDftzHbh8V/bW9w3u
+         e46dEVZjkcJD7kTfi4VipDT8VWpU3FUiz4Ro5fhFcON1PN4zdWfIFe9IN/jkLSjzEGmN
+         fZR7Q1zye9yASeq/oWLgKJgoy2km03ZJlK37dxNeACeWVcNI8/dmuujSCaiMvYXeMjAJ
+         OYlHVwd2lLxsFFfXeeVDkk0YAlwxDV4K5/rTZeVJKyoN5cIfXdx7ePPKlwBffLrM3hQz
+         lecA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713366526; x=1713971326;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5+OKrUCM+OoRfNzn77TNMdHzGIbRv0gT+t84eLkWMg=;
-        b=NNZ0HtXRX6bRq+V/F4ZDiowegNl1VaJvm/q5Z0JqSKM+TRARbWB/mdYN8jXrCjMBYD
-         8eyEDh91GS7EAW3JzpJ4g3wGDIQKIr0KIKrxTsnzTyAkpx5RyAwSEXxWE3Nr0ngtsjLM
-         ulHBYZpHtCdRH4vz0P8dZ+Ph2RHnr213worGUfxVDcpUQTE1aFpOoxXHi766UWWS6+MP
-         jzXz8MQFixtWJow281zj53/K5IYFzGt3532WxNZg+rK32f2ED/pK/NWRijdQwimF6VNJ
-         zVr1Jc6kYUCha7sDs3nxhdNzgrlSr0qDmh27DId9QNEJRiau2XzQ6zC+jmbbMTO+Z5Gr
-         6WlA==
-X-Gm-Message-State: AOJu0YzfxGxp++MPxm3tGvUYkfSkFFwXodNBs3zue00wBwr6xZQqGHjU
-	RdkXJ1g9XfG+h+TJN+hpRKisCSudzSCrZB3c6NnGoGg9mkJDqf7TBws0fyhBVrU=
-X-Google-Smtp-Source: AGHT+IFeVub/2gl4V6r16nq/tmiMnc2J+n8PSywNPnbdZHPjdueaExwTWMFPae1aDIUUFj72HjtdSA==
-X-Received: by 2002:a17:907:7895:b0:a55:3707:781d with SMTP id ku21-20020a170907789500b00a553707781dmr4007271ejc.73.1713366526286;
-        Wed, 17 Apr 2024 08:08:46 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id g4-20020a1709063b0400b00a51bbee7e55sm8143738ejf.53.2024.04.17.08.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 08:08:45 -0700 (PDT)
-Date: Wed, 17 Apr 2024 18:08:41 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>
-Subject: Re: [bug report] NFSv4: Fix free of uninitialized nfs4_label on
- referral lookup.
-Message-ID: <ae7bbc2e-49c6-46df-8876-06b11dd551e5@moroto.mountain>
-References: <ae03a217-e643-4127-bb4a-4993ad6a9d00@moroto.mountain>
- <13EE0F08-5567-48B8-A7C2-88A086FBDA89@redhat.com>
- <7c4df27b-9698-4d49-a35f-9395b75348d3@moroto.mountain>
- <F0002E44-B2E9-4DE3-BF3B-771F814A8EE1@redhat.com>
+        d=1e100.net; s=20230601; t=1713370182; x=1713974982;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BixicrujN2w/NN7W8Yk1bOtYDD16jf87ysiCrI+mjZw=;
+        b=LR4JRQOxnqnOXvr0oMYQz3Lyy5gU/wKqpH8g9ux4t1QH4sRGnyOwc/s+jKxwFI+Jrd
+         dwo7PqcQDsIetlnj5GSSoxVehh0oHAGn3XpT0y0LAOsCZT2K6oOkqzVLsxEMaFOMJgHj
+         zs25IxHiw2ZDWsmH6YilyLP2lyfAHYTujyKBy1lorhnKyJEf+1wK+eakjqZ6XelCy1to
+         HXCAxzEa3f+SfOpnYwYPo+NHnExi7clQbyrjooIGrUXRK+q0qmqxY34RkI4EZj97/p3W
+         5ZOPtpkHp8jzJ8A5NGg4nTekk+T4JMG9C3PrQ3Uqt7Eu/YwzlefUvlyUL8n6kc0ahue/
+         vpbw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6a4LCmttOa9B5v4Vza1gk95AkXZvRB2MGeGCy5Gm/P7dx8ex1FfC+LKA7w0Ha5hNiyIquYlhzEr4IrJmnfhP4vsbOd/HkwVEPrYZSlhNYc56BXUNIUJXUyYl2p+LR8yubqFdgr3Hmqxng3M6yD/ix7Ip3IL+E14ibgR2JcF6+cTs+rO37oQ==
+X-Gm-Message-State: AOJu0YzkpWdWRTDnFY/X81rJW3PZ2E+QdJgHnZXl+m+xGMQbfWGExaP3
+	vrWQqvsGwmOszMTC/bzT3s1tQUD0bB/EWixOgoMh/28NBg78rT1o
+X-Google-Smtp-Source: AGHT+IHADX305+lhsZl65TBVJfwFNnUajwhJ6mgc1Rrgzv/e0DGcheSabgx4i4+AnxNft/shYQftQw==
+X-Received: by 2002:a05:6a20:dd88:b0:1a5:6a85:8ce9 with SMTP id kw8-20020a056a20dd8800b001a56a858ce9mr71965pzb.12.1713370182271;
+        Wed, 17 Apr 2024 09:09:42 -0700 (PDT)
+Received: from KASONG-MB2.tencent.com ([115.171.40.106])
+        by smtp.gmail.com with ESMTPSA id h189-20020a6383c6000000b005f75cf4db92sm5708366pge.82.2024.04.17.09.09.37
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 17 Apr 2024 09:09:41 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Neil Brown <neilb@suse.de>,
+	Minchan Kim <minchan@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 1/8] NFS: remove nfs_page_lengthg and usage of page_index
+Date: Thu, 18 Apr 2024 00:08:35 +0800
+Message-ID: <20240417160842.76665-2-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240417160842.76665-1-ryncsn@gmail.com>
+References: <20240417160842.76665-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <F0002E44-B2E9-4DE3-BF3B-771F814A8EE1@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 09:51:48AM -0400, Benjamin Coddington wrote:
-> On 17 Apr 2024, at 8:40, Dan Carpenter wrote:
-> 
-> > On Wed, Apr 17, 2024 at 08:00:04AM -0400, Benjamin Coddington wrote:
-> >> On 15 Apr 2024, at 4:08, Dan Carpenter wrote:
-> >>
-> >>> [ Why is Smatch only complaining now, 2 years later??? It is a mystery.
-> >>>   -dan ]
-> >>>
-> >>> Hello Benjamin Coddington,
-> >>
-> >> Hi Dan!
-> >>
-> >>> Commit c3ed222745d9 ("NFSv4: Fix free of uninitialized nfs4_label on
-> >>> referral lookup.") from May 14, 2022 (linux-next), leads to the
-> >>> following Smatch static checker warning:
-> >>>
-> >>> 	fs/nfs/nfs4state.c:2138 nfs4_try_migration()
-> >>> 	warn: missing error code here? 'nfs_alloc_fattr()' failed. 'result' = '0'
-> >>>
-> >>> fs/nfs/nfs4state.c
-> >>>     2115 static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred)
-> >>>     2116 {
-> >>>     2117         struct nfs_client *clp = server->nfs_client;
-> >>>     2118         struct nfs4_fs_locations *locations = NULL;
-> >>>     2119         struct inode *inode;
-> >>>     2120         struct page *page;
-> >>>     2121         int status, result;
-> >>>     2122
-> >>>     2123         dprintk("--> %s: FSID %llx:%llx on \"%s\"\n", __func__,
-> >>>     2124                         (unsigned long long)server->fsid.major,
-> >>>     2125                         (unsigned long long)server->fsid.minor,
-> >>>     2126                         clp->cl_hostname);
-> >>>     2127
-> >>>     2128         result = 0;
-> >>>                  ^^^^^^^^^^^
-> >>>
-> >>>     2129         page = alloc_page(GFP_KERNEL);
-> >>>     2130         locations = kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNEL);
-> >>>     2131         if (page == NULL || locations == NULL) {
-> >>>     2132                 dprintk("<-- %s: no memory\n", __func__);
-> >>>     2133                 goto out;
-> >>>                          ^^^^^^^^
-> >>> Success.
-> >>>
-> >>>     2134         }
-> >>>     2135         locations->fattr = nfs_alloc_fattr();
-> >>>     2136         if (locations->fattr == NULL) {
-> >>>     2137                 dprintk("<-- %s: no memory\n", __func__);
-> >>> --> 2138                 goto out;
-> >>>                          ^^^^^^^^^
-> >>> Here too.
-> >>
-> >> My patch was following the precedent set by c9fdeb280b8cc.  I believe the
-> >> idea is that the function can fail without an error and the client will
-> >> retry the next time the server says -NFS4ERR_MOVED.
-> >>
-> >> Is there a way to appease smatch here?  I don't have a lot of smatch
-> >> smarts.
-> >
-> > Generally, I tell people to just ignore it.  Anyone with questions can
-> > look up this email thread.
-> >
-> > But if you really wanted to silence it, Smatch counts it as intentional
-> > if the "result = 0;" is within five lines of the goto out.
-> 
-> Good to know!  In this case, I think the maintainers would show annoyance
-> with that sort of patch.  A comment here about the successful return code on
-> an allocation failure would have avoided this, and I probably should have
-> recognized this patch might create an issue and inserted one.  Thanks for
-> the report.
+From: Kairui Song <kasong@tencent.com>
 
-To me ignoring it is fine or adding a comment is even better, but I also
-think adding a bunch of "ret = 0;" assignments should not be as
-controversial as people make it out to be.
+This function is no longer used after
+commit 4fa7a717b432 ("NFS: Fix up nfs_vm_page_mkwrite() for folios"),
+all users have been converted to use folio instead, just delete it to
+remove usage of page_index.
 
-It's just a style debate, right?  The compiler knows that ret is already
-zero and it's going to optimize them away.  So it doesn't affect the
-compiled code.
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+---
+ fs/nfs/internal.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-You could add a comment /* ret is zero intentionally */ or you could
-just add a "ret = 0;".  Neither affects the compile code.  But to me, I
-would prefer the code, because when I see the comment, then I
-immediately start scrolling back to see if ret is really zero.  I like
-when the code looks deliberate.  When you see a "ret = 0;" there isn't
-any question about the author's intent.
-
-But again, I don't feel strongly about this.
-
-regards,
-dan carpenter
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 06253695fe53..deac98dce6ac 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -790,25 +790,6 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
+ 	}
+ }
+ 
+-/*
+- * Determine the number of bytes of data the page contains
+- */
+-static inline
+-unsigned int nfs_page_length(struct page *page)
+-{
+-	loff_t i_size = i_size_read(page_file_mapping(page)->host);
+-
+-	if (i_size > 0) {
+-		pgoff_t index = page_index(page);
+-		pgoff_t end_index = (i_size - 1) >> PAGE_SHIFT;
+-		if (index < end_index)
+-			return PAGE_SIZE;
+-		if (index == end_index)
+-			return ((i_size - 1) & ~PAGE_MASK) + 1;
+-	}
+-	return 0;
+-}
+-
+ /*
+  * Determine the number of bytes of data the page contains
+  */
+-- 
+2.44.0
 
 
