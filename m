@@ -1,128 +1,145 @@
-Return-Path: <linux-nfs+bounces-2892-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2893-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82D0E8AA5F7
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 01:39:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B3038AAE38
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 14:13:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40278285B12
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Apr 2024 23:39:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 552242828A3
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 12:13:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3041F6A025;
-	Thu, 18 Apr 2024 23:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2C8684E1A;
+	Fri, 19 Apr 2024 12:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="Y5KCgxxV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QTajDd6d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B7C54907
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Apr 2024 23:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713483552; cv=none; b=EJ38mSiN+Q4rVdwx386eGAn/A554RiwyXugS8NqBxhF6iKIJLUpgrrmHpurWQ7rmomvXpKScd1CaKUPvoV5Ur0gvCmW71v+ydA21z+mEuUJoU7DamEMWf2DGG7/TDHK12fBtKc3m478xeGtdCPvbHPwEWF30i4tX5i2SS00oCnc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713483552; c=relaxed/simple;
-	bh=PNDHf/Dx3byc5ncHAW+Oq1n3hZaH/igRKzPg457xoSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NI/J1IlDWH4GewK5KaSAgXxg3TnoA30wsc1Xixd4JUc0VC+bYEfNovdxvP7LxIqcEyzbWmgFvINHhxwMiiagTFgfNmq+HsEC3r0LbCYX1Mw7oZYvSOz14PbcByt5ptyqOuBS4xl1O1DsZjJkn0/81lg7WXg8FmqtDwqrLrqAoZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=Y5KCgxxV; arc=none smtp.client-ip=67.231.154.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail2.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 8DE1480006C;
-	Thu, 18 Apr 2024 23:39:07 +0000 (UTC)
-Received: from carkeek.candelatech.com (unknown [50.251.239.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id DAF2313C2B0;
-	Thu, 18 Apr 2024 16:39:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com DAF2313C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1713483546;
-	bh=PNDHf/Dx3byc5ncHAW+Oq1n3hZaH/igRKzPg457xoSM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Y5KCgxxVH0CRWrU/Lwg0MKZCacGD0Zrw3F0uVrs2lLaol13Z9ncxDpihb01X2lBTm
-	 tIRIm2WjSqXoNzzmR/34xFx/e0Qlv7ypFTOPAZEZ5ClZTzsyAfvbqv+PoQ+DC8e6jU
-	 SfaHQcz9KB9nKQg5fMtuhWaSDRw4U9bodX+OxpHk=
-From: Rory Little <rory@candelatech.com>
-To: linux-nfs@vger.kernel.org
-Cc: jlayton@kernel.org,
-	Rory Little <rory@candelatech.com>
-Subject: [PATCH] sunrpc: Only defer bind to ephemeral ports if a srcaddr has not been set
-Date: Thu, 18 Apr 2024 16:38:28 -0700
-Message-Id: <20240418233828.1799437-1-rory@candelatech.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F17284A5A
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Apr 2024 12:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713528802; cv=none; b=N9BexzHnvs9SR5+aHoPYZ3a1EgnrdKhxWrLBhE5MY8Ef2Ix87l0exNWfQV0U2GceUI5FT/bReeRQIbDZ8QIU8jP4K4N0B5TJwnFMaxq0ZnTYKMi45frP/zcsBub+8blHgfcXugN/lOqwGA+Uvfyk295DzeLOSmSUp5Gm0T6a6NM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713528802; c=relaxed/simple;
+	bh=ZkfHhQtbOBCN949qaHnxZV06TGy1iTo2Uy1a24KYWEg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=eEhol2ZK6QsWwJkzCPqjUaLRd4CsU0kaDPMLSAk7C5hq3zTkeJo6uT8UmBuQ5c+je7QG2fJ2u1yfHbHbFviB98ZzJOApIsY+1t3jnsanaSZaMztb1naKznX7wxHtzA6lNRi/BEwHj+G7PmNHf5AZqf1VGEIcsSzoMBS3UWrd1ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QTajDd6d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713528800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V8U/IuTUZBJuKu9EBQz1vuf2NBIsZQ08vL2DJgYtL2I=;
+	b=QTajDd6dVW7NYNlCWGI9kNT1BfanDfWqtILURALtwjCxyHeMmeLy+pd6Fi5V8gUSzfkSxD
+	JKcpiIqTiKBSREUqmMaWA7HkjzSa3Y3tWhvinmiiiGNmYfr9jrYZrLgbGhZpeWEqRwatRv
+	naIQIS5pkjQS7rmoRbn4Ci6dWgutvFc=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-206-lJnflK6VPAqaL2EkNuREGw-1; Fri, 19 Apr 2024 08:13:19 -0400
+X-MC-Unique: lJnflK6VPAqaL2EkNuREGw-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78f008cb479so8370185a.3
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Apr 2024 05:13:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713528796; x=1714133596;
+        h=content-transfer-encoding:content-language:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=V8U/IuTUZBJuKu9EBQz1vuf2NBIsZQ08vL2DJgYtL2I=;
+        b=Ivd6Dv3kwYT8Q3kVnd6a7WbPrTeiIgWjSPj71NsMWAncpJpZguX29QTVFBqP4z9AHH
+         OhlWTXIw747Me7k88D+qjvS9cDounCF3ac9iaXZeBhGe3zAAdZ5LBx3H7GRaiwXTsjeH
+         L+0OWGYqapvb7o9TqbkMTKD7cMdj6uKCdsFg7njmjLxsD09n+mKSbgVWwbbjXvMXQXhN
+         SYVQnCBParOYHLpD+WoOHXwP1NmM0cxT/WLamItQMWdmB4TCoDQmCEZkOraWsjvasiFC
+         WPgelnWixx1P9HOQwSvN71JxtPfNaFBc1p4UcDXrirUwtpTa9B1gC+O8dUPNabqL/4dV
+         S/EA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYpUjsq6Ify4aCus4mKlHWcj+c1L4DkahILyZTbeufJUputuOH/r0/haphhcpBL05IUL3jNFKftPEw7dpzB52aXU54QEIPEao3
+X-Gm-Message-State: AOJu0YzlU4raq0m/Ye7W1p9nRgM256JP1b+hiLtwkd7FdGHTF+nH7sQE
+	qrDA7P7jikuWy1SjW6AxKg7tucJNqBnq7HbMK4JVyoWRyDdQKCzKAJH91DmZesej/TNye0rYU5E
+	h3dffrrAgDDhn5/30D+kVGdE7MoodPPVPNQ05tWBJX8LpXqxpN2LnLK3j/w==
+X-Received: by 2002:a05:620a:7183:b0:78f:199c:ece8 with SMTP id vm3-20020a05620a718300b0078f199cece8mr1499177qkn.5.1713528796403;
+        Fri, 19 Apr 2024 05:13:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTvUkNL4QZ4Il5TaqT49iZIp29XKaHMpdENY6eMpgJWQ+8+3Y6Xo/1qNlzcqUc/3VR9X2c2w==
+X-Received: by 2002:a05:620a:7183:b0:78f:199c:ece8 with SMTP id vm3-20020a05620a718300b0078f199cece8mr1499161qkn.5.1713528796052;
+        Fri, 19 Apr 2024 05:13:16 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.130.167])
+        by smtp.gmail.com with ESMTPSA id y8-20020a05620a44c800b0078d54a6bb76sm1524346qkp.117.2024.04.19.05.13.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 05:13:15 -0700 (PDT)
+Message-ID: <4b0adcfb-7cd9-4ebf-bc17-cee2b66e51a8@redhat.com>
+Date: Fri, 19 Apr 2024 08:13:14 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MDID: 1713483548-0eafaXn1PSse
-X-MDID-O:
- us5;at1;1713483548;0eafaXn1PSse;<rory@candelatech.com>;4386b9add147bdd7cd0f741f08a4a119
+User-Agent: Mozilla Thunderbird
+From: Steve Dickson <steved@redhat.com>
+Subject: Spring 2024 NFS bake-a-thon (reminder)
+To: nfsv4@ietf.org, linux-nfs@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The previous binding behavior ignores the possible need to bind to a
-local ip address as well as a port in the event that an ephemeral port
-is requested. In this event, the binding would be done at connect time,
-where all information about desired source addresses is inaccessible.
+Hello,
 
-Instead, we need to consider the case where a source address is given,
-in which case the sockaddr will be given an address of 0.0.0.0 or ::0.
-We can use these values as a second condition when choosing to defer
-the socket binding.
+Just wanted send a quick reminder, that the Spring
+bake-a-thon is starting next Monday.
 
-Signed-off-by: Rory Little <rory@candelatech.com>
----
- net/sunrpc/xprtsock.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+The network is the same, tailscale VPN.
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index bb9b747d58a1..0139db7424aa 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1736,6 +1736,23 @@ static void xs_set_port(struct rpc_xprt *xprt, unsigned short port)
- 	xs_update_peer_port(xprt);
- }
- 
-+static bool xs_is_anyaddr(const struct sockaddr *sap)
-+{
-+	switch (sap->sa_family) {
-+	case AF_LOCAL:
-+		return true;
-+	case AF_INET:
-+		return ((struct sockaddr_in *)sap)->sin_addr.s_addr == htonl(INADDR_ANY);
-+	case AF_INET6:
-+		return !memcmp(&((struct sockaddr_in6 *)sap)->sin6_addr, &in6addr_any,
-+			       sizeof(struct in6_addr));
-+	default:
-+		dprintk("RPC:       %s: Bad address family %d\n", __func__, sap->sa_family);
-+	}
-+
-+	return false;
-+}
-+
- static void xs_reset_srcport(struct sock_xprt *transport)
- {
- 	transport->srcport = 0;
-@@ -1818,8 +1835,11 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- 	 * transport->xprt.resvport == 1) xs_get_srcport above will
- 	 * ensure that port is non-zero and we will bind as needed.
- 	 */
--	if (port <= 0)
-+	if (port <= 0 && xs_is_anyaddr((struct sockaddr *)&transport->srcaddr)) {
-+		dprintk("RPC:       %s: Deferring bind to invalid or ephemeral port: %d\n",
-+			__func__, port);
- 		return port;
-+	}
- 
- 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
- 	do {
--- 
-2.34.1
+The registration section is on nfsv4bat.org [1]
+It basically says the following:
+
+To gain access to the network please register
+at the Spring Registration Doc [2].
+
+Here are the steps to access the network.
+
+	* Download the tailscale bits
+		* https://tailscale.com/download
+	* Register with the BAT server
+	    tailscale up --login-server https://headscale.nfsv4.dev
+
+	* The registration will give an authentication link
+	* Use that link to
+		* Create an account on the BAT server
+		* Authenticate your machine[s]
+		
+Once the tailscale interface is up, DNS will be able to find other machines
+	* The command 'tailscale status' will show those machines
+	
+Once the network is up and running... and it is very easy to
+get connected.
+
+Server registration is at [3]
+
+Client test results are at [4]
+
+Our informal Talks @2 (EST) are at [5]
+
+The network is up and running!
+
+steved.
+
+[1]  http://nfsv4bat.org/Events/2024/Apr/BAT/index.html
+
+[2] 
+https://docs.google.com/spreadsheets/d/197w3Estxhwg9emT0mjR2bB6MajMI2HPe6ro7CYI3xAw/edit#gid=0
+
+[3] 
+https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=0
+
+[4] 
+https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1710898184
+
+[5] 
+https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1920779269
 
 
