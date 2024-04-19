@@ -1,145 +1,121 @@
-Return-Path: <linux-nfs+bounces-2893-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2894-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B3038AAE38
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 14:13:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 027D38AAEBC
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 14:42:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 552242828A3
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 12:13:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6143DB21E3F
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Apr 2024 12:42:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2C8684E1A;
-	Fri, 19 Apr 2024 12:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A051EB45;
+	Fri, 19 Apr 2024 12:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QTajDd6d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1X4vRoS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F17284A5A
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Apr 2024 12:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F92BE66
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Apr 2024 12:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713528802; cv=none; b=N9BexzHnvs9SR5+aHoPYZ3a1EgnrdKhxWrLBhE5MY8Ef2Ix87l0exNWfQV0U2GceUI5FT/bReeRQIbDZ8QIU8jP4K4N0B5TJwnFMaxq0ZnTYKMi45frP/zcsBub+8blHgfcXugN/lOqwGA+Uvfyk295DzeLOSmSUp5Gm0T6a6NM=
+	t=1713530566; cv=none; b=iwTpznPf/tSSgyG9PosKBMeZeek1buNZOy2qglRV/I/L+fW2pwVh9Z42xnqHneVZ1xVTKpI3J6/knRJlPoCIEKhWjof9tqrMXYsmG4zW0rszEC9L3Gb5tuoyAAdCNzBOfvpOsHrxAKiWlF5S0+UTLQN+i0EFFwQFG16qnhIZUIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713528802; c=relaxed/simple;
-	bh=ZkfHhQtbOBCN949qaHnxZV06TGy1iTo2Uy1a24KYWEg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=eEhol2ZK6QsWwJkzCPqjUaLRd4CsU0kaDPMLSAk7C5hq3zTkeJo6uT8UmBuQ5c+je7QG2fJ2u1yfHbHbFviB98ZzJOApIsY+1t3jnsanaSZaMztb1naKznX7wxHtzA6lNRi/BEwHj+G7PmNHf5AZqf1VGEIcsSzoMBS3UWrd1ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QTajDd6d; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1713530566; c=relaxed/simple;
+	bh=XdyT0PlB+jG+Mpf/fZ7yygYfun2PeHFv1GoK7IDDbjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XJoAKh2hki1IQ8BZ0W4jxs/HwFXjRjJ8OtVEENtVzWsG2mrp/Ch2p5IF4AtXeTWEhifK91jZs8JsOB5jYalBFxgUMy02Gt0pgE3LempL+w5IxEqdYzQCOWF9YjbG8eZyZ1ygZRw9nG+jF3Wc3LA/jhuPJHqtkFfNxjnZqkmBcHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g1X4vRoS; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713528800;
+	s=mimecast20190719; t=1713530563;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=V8U/IuTUZBJuKu9EBQz1vuf2NBIsZQ08vL2DJgYtL2I=;
-	b=QTajDd6dVW7NYNlCWGI9kNT1BfanDfWqtILURALtwjCxyHeMmeLy+pd6Fi5V8gUSzfkSxD
-	JKcpiIqTiKBSREUqmMaWA7HkjzSa3Y3tWhvinmiiiGNmYfr9jrYZrLgbGhZpeWEqRwatRv
-	naIQIS5pkjQS7rmoRbn4Ci6dWgutvFc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-lJnflK6VPAqaL2EkNuREGw-1; Fri, 19 Apr 2024 08:13:19 -0400
-X-MC-Unique: lJnflK6VPAqaL2EkNuREGw-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78f008cb479so8370185a.3
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Apr 2024 05:13:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713528796; x=1714133596;
-        h=content-transfer-encoding:content-language:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V8U/IuTUZBJuKu9EBQz1vuf2NBIsZQ08vL2DJgYtL2I=;
-        b=Ivd6Dv3kwYT8Q3kVnd6a7WbPrTeiIgWjSPj71NsMWAncpJpZguX29QTVFBqP4z9AHH
-         OhlWTXIw747Me7k88D+qjvS9cDounCF3ac9iaXZeBhGe3zAAdZ5LBx3H7GRaiwXTsjeH
-         L+0OWGYqapvb7o9TqbkMTKD7cMdj6uKCdsFg7njmjLxsD09n+mKSbgVWwbbjXvMXQXhN
-         SYVQnCBParOYHLpD+WoOHXwP1NmM0cxT/WLamItQMWdmB4TCoDQmCEZkOraWsjvasiFC
-         WPgelnWixx1P9HOQwSvN71JxtPfNaFBc1p4UcDXrirUwtpTa9B1gC+O8dUPNabqL/4dV
-         S/EA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYpUjsq6Ify4aCus4mKlHWcj+c1L4DkahILyZTbeufJUputuOH/r0/haphhcpBL05IUL3jNFKftPEw7dpzB52aXU54QEIPEao3
-X-Gm-Message-State: AOJu0YzlU4raq0m/Ye7W1p9nRgM256JP1b+hiLtwkd7FdGHTF+nH7sQE
-	qrDA7P7jikuWy1SjW6AxKg7tucJNqBnq7HbMK4JVyoWRyDdQKCzKAJH91DmZesej/TNye0rYU5E
-	h3dffrrAgDDhn5/30D+kVGdE7MoodPPVPNQ05tWBJX8LpXqxpN2LnLK3j/w==
-X-Received: by 2002:a05:620a:7183:b0:78f:199c:ece8 with SMTP id vm3-20020a05620a718300b0078f199cece8mr1499177qkn.5.1713528796403;
-        Fri, 19 Apr 2024 05:13:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGTvUkNL4QZ4Il5TaqT49iZIp29XKaHMpdENY6eMpgJWQ+8+3Y6Xo/1qNlzcqUc/3VR9X2c2w==
-X-Received: by 2002:a05:620a:7183:b0:78f:199c:ece8 with SMTP id vm3-20020a05620a718300b0078f199cece8mr1499161qkn.5.1713528796052;
-        Fri, 19 Apr 2024 05:13:16 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.130.167])
-        by smtp.gmail.com with ESMTPSA id y8-20020a05620a44c800b0078d54a6bb76sm1524346qkp.117.2024.04.19.05.13.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Apr 2024 05:13:15 -0700 (PDT)
-Message-ID: <4b0adcfb-7cd9-4ebf-bc17-cee2b66e51a8@redhat.com>
-Date: Fri, 19 Apr 2024 08:13:14 -0400
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XdyT0PlB+jG+Mpf/fZ7yygYfun2PeHFv1GoK7IDDbjE=;
+	b=g1X4vRoSuoFpCbvgIUoQGgnHKIoo/EchsJwnHhZw5RkDcZW2E+l9vQxLWsTOTrmGzRYXXd
+	KbLKS8Hi0KCEis3p1x+MU/LNUPPsauUKo3gENgevVMqwXNpTHapr9DWOQNueJuMM64S6LW
+	5R6oZgFLvZ8LaLWX2+e6SM5fHicBmhA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-lQgz5HcyMYyOHmd0kQKfuw-1; Fri,
+ 19 Apr 2024 08:42:41 -0400
+X-MC-Unique: lQgz5HcyMYyOHmd0kQKfuw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5FF733C3D0DD;
+	Fri, 19 Apr 2024 12:42:41 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-6.rdu2.redhat.com [10.22.0.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9515A20296D2;
+	Fri, 19 Apr 2024 12:42:40 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc: trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] SUNRPC: fix handling expired GSS context
+Date: Fri, 19 Apr 2024 08:42:39 -0400
+Message-ID: <B4EFE333-F2BD-4D44-9AB7-C659BE32BA59@redhat.com>
+In-Reply-To: <20240418141104.95269-1-olga.kornievskaia@gmail.com>
+References: <20240418141104.95269-1-olga.kornievskaia@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Steve Dickson <steved@redhat.com>
-Subject: Spring 2024 NFS bake-a-thon (reminder)
-To: nfsv4@ietf.org, linux-nfs@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hello,
+On 18 Apr 2024, at 10:11, Olga Kornievskaia wrote:
 
-Just wanted send a quick reminder, that the Spring
-bake-a-thon is starting next Monday.
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> In the case where we have received a successful reply to an RPC request,
+> but while processing the reply the client in rpc_decode_header() finds
+> an expired context, the code ends up propagating the error to the caller
+> instead of getting a new context and retrying the request.
+>
+> To give more details, in rpc_decode_header() we call rpcauth_checkverf()
+> will call into the gss and internally will at some point call
+> gss_validate() which has a check if the current’s context lifetime
+> expired, and it would fail. The reason for the failure gets ‘scrubbed’
+> and translated to EACCES so when we get back to rpc_decode_header() we
+> just go to “out_verifier” which for that error would get converted to
+> “out_garbage” (ie it’s treated as garballed reply) and the next
+> action is call_encode. Which (1) doesn’t reencode or re-send (not to
+> mention no upcall happens because context expires as that reason just
+> not known) and it again fails in the same decoding process. After
+> re-trying it 3 times the error is propagated back to the caller
+> (ie nfs4_write_done_cb() in the case a failing write).
+>
+> To fix this, instead we need to look to the case where the server
+> decides that context has expired and replies with an RPC auth error.
+> In that case, the rpc_decode_header() goes to "out_msg_denied" in that
+> we return EKEYREJECTED which in call_decode() is sent to “call_reserve”
+> which triggers an upcalls and a re-try of the operation.
+>
+> The proposed fix is in case of a failed rpc_decode_header() to check
+> if credentials were set to be invalid and use that as a proxy for
+> deciding that context has expired and then treat is same way as
+> receiving an auth error.
+>
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+>
+> --- This looks like a day-0 problem and should probably be back
+> ported to earlier kernels.
 
-The network is the same, tailscale VPN.
+Looks good to me.
 
-The registration section is on nfsv4bat.org [1]
-It basically says the following:
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-To gain access to the network please register
-at the Spring Registration Doc [2].
-
-Here are the steps to access the network.
-
-	* Download the tailscale bits
-		* https://tailscale.com/download
-	* Register with the BAT server
-	    tailscale up --login-server https://headscale.nfsv4.dev
-
-	* The registration will give an authentication link
-	* Use that link to
-		* Create an account on the BAT server
-		* Authenticate your machine[s]
-		
-Once the tailscale interface is up, DNS will be able to find other machines
-	* The command 'tailscale status' will show those machines
-	
-Once the network is up and running... and it is very easy to
-get connected.
-
-Server registration is at [3]
-
-Client test results are at [4]
-
-Our informal Talks @2 (EST) are at [5]
-
-The network is up and running!
-
-steved.
-
-[1]  http://nfsv4bat.org/Events/2024/Apr/BAT/index.html
-
-[2] 
-https://docs.google.com/spreadsheets/d/197w3Estxhwg9emT0mjR2bB6MajMI2HPe6ro7CYI3xAw/edit#gid=0
-
-[3] 
-https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=0
-
-[4] 
-https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1710898184
-
-[5] 
-https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1920779269
+Ben
 
 
