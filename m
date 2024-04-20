@@ -1,105 +1,312 @@
-Return-Path: <linux-nfs+bounces-2900-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2901-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D08C68ABB3D
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Apr 2024 13:06:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5CB8ABC29
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Apr 2024 17:18:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3594BB20ED0
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Apr 2024 11:06:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30B0C1F212E4
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Apr 2024 15:18:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3702940C;
-	Sat, 20 Apr 2024 11:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8820926291;
+	Sat, 20 Apr 2024 15:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ho0bE5RG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNsTAu/Z"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AB617BCB;
-	Sat, 20 Apr 2024 11:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A65E17552;
+	Sat, 20 Apr 2024 15:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713611177; cv=none; b=DGD7nUeWco29/5yb7iBLu5fU+lb2aA/8KOk9O78R19ISPzypDqXL0rjTfJ01B5hYvtOOZKgjCy9kSoXlDoUb9ui/jyHP7Rcv9yviT2FLQURx3FHKgEEBkMOd5OHomjOgDMo8TUDQWxcHiaufxWS1uRwh4tWs2XyNvHWmWm6J48s=
+	t=1713626323; cv=none; b=NJzl0RsESbYKaaMIbBCuWXhnjjx9e67k5zAw9+Pka8XfUE7c/L41VC/NtxRfxw/VnNOLOWFEQ8fO4PeiqgebzMxyzDsEVbzzZU5ANxAojc6r591m+n0/7tTDm1Ireoyr8bACf5is6GHZ/LdZpHa6+ckbo6nM4fpIFDm8Y5SOYIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713611177; c=relaxed/simple;
-	bh=IV/elp4h8gGVmqVkkVPPCvcXeDa7CybkocvyD6VyK9I=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fQlz1bIYaX+39qPASwYzZiBl5r2eIVccTFC3GdJRRLgurg1knVOoZIi6S8iUZSPxppNU3xrp1/16H0UMic3777j7lQUKEhUvgjsqik2Q4O5/IagEiDaNIL+KmQNMu5V5i7QRZBZUuflKy7/t+1YK6krt3MYzW/XPT6QoAL/jeiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ho0bE5RG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D2A5C072AA;
-	Sat, 20 Apr 2024 11:06:15 +0000 (UTC)
+	s=arc-20240116; t=1713626323; c=relaxed/simple;
+	bh=xPDpV0hJKhQqWHl5SPwdFGEjfiLi4Md8/X1oaCOjla8=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=k/2d0o75J4oA4fMGCDuwh+Ux7FLqdwqGtjxEm4LybiWfaFLXXVstDLkSM411lXmzLBuP2U4Si9W3l+8C3N6RIUv3Kad6ZiGOyCleIOUMLh4L+tg3Mlgb4CmZ6pQmZX4tWVg998v3fN0q4CfHop/M4oyCLd/f/yIo4PaIMriklDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNsTAu/Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF82C072AA;
+	Sat, 20 Apr 2024 15:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713611176;
-	bh=IV/elp4h8gGVmqVkkVPPCvcXeDa7CybkocvyD6VyK9I=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Ho0bE5RGBHsS+7XxbzZBCs2I2HONxuCPrLERjU3jD3G+Kigaxj6y1zsbZlDhYvUC0
-	 d2U3PZVoufucQs8Qp8F1FnsaJi13Ai0me/hf/VtndK0jFPDaSVXJJ2Nevs8u7uUM2i
-	 aP7Kj1UzsBPwsLdqO5aqBifgcH3ry9o2yGFT/p7oWZt6fG8ZaD0QUYl3QJo9rB7210
-	 Z3z6mE6buy3kcBjY/NnOqPMh/Crz/hQhtTDs2owyfEx/9HY+cPzt1u/N+IEdynybRx
-	 FSALqp3Y62euR1ani/2q7Y1bVXAH4Ve1LrvNekE5wgIptFn7y9PL2o1G17y7j2c9Qj
-	 E1v8TJnPvGE+A==
-Message-ID: <90351a7840bfe0f1e5acc74664e8f94bef095ac0.camel@kernel.org>
-Subject: Re: [PATCH] xprtsock: Fix a loop in xs_tcp_setup_socket()
-From: Jeff Layton <jlayton@kernel.org>
-To: Lex Siegel <usiegl00@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Date: Sat, 20 Apr 2024 07:06:13 -0400
-In-Reply-To: <20240420104801.94701-1-usiegl00@gmail.com>
-References: <20240420104801.94701-1-usiegl00@gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=k20201202; t=1713626323;
+	bh=xPDpV0hJKhQqWHl5SPwdFGEjfiLi4Md8/X1oaCOjla8=;
+	h=Subject:From:To:Cc:Date:From;
+	b=fNsTAu/ZxO5i02nOuC7qMxg+Br2z4hmTGf6tMNu53eKDWL4sPF8pttieCdDAKHxki
+	 gln56fBuzD4aIqNvZxoVLUZGEBLK8E7aNKhXBGVYBRvUlPtJ6y6mcVB2FXXnd/xd28
+	 gvfl4xp1Iz9wsl5AMp49WfwJ7KIRn7Fh1Ty+IydAv5iwHoPJEYlV5VHVwvMkyt/Imo
+	 KdFMoJ1bu4+ujj36yP7ljzz973VD/UsJ/nTwnYOtjnbKVh7GKIEZsAYBSVVaGwwHJn
+	 v5wwqHT7D+jUsP1cNbLf+pFH1nWeywXQLu63FKLErSsVmKA2Se/aH9C0Dq2yd211e1
+	 4MvlGXW4GKlmg==
+Subject: [PATCH] Revert "svcrdma: Add Write chunk WRs to the RPC's Send WR
+ chain"
+From: Chuck Lever <cel@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Date: Sat, 20 Apr 2024 11:18:41 -0400
+Message-ID: 
+ <171362632165.3080.2245136667286784440.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sat, 2024-04-20 at 19:48 +0900, Lex Siegel wrote:
-> When using a bpf on kernel_connect(), the call can return -EPERM.
-> This causes xs_tcp_setup_socket() to loop forever, filling up the
-> syslog and causing the kernel to freeze up.
->=20
-> Signed-off-by: Lex Siegel <usiegl00@gmail.com>
-> ---
->  net/sunrpc/xprtsock.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index bb9b747d58a1..47b254806a08 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -2446,6 +2446,8 @@ static void xs_tcp_setup_socket(struct work_struct =
-*work)
->  		/* Happens, for instance, if the user specified a link
->  		 * local IPv6 address without a scope-id.
->  		 */
-> +	case -EPERM:
-> +		/* Happens, for instance, if a bpf is preventing the connect */
->  	case -ECONNREFUSED:
->  	case -ECONNRESET:
->  	case -ENETDOWN:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Yeah, I think we'd consider -EPERM a permanent error.
+Performance regression reported with NFS/RDMA using Omnipath.
+Tracing on the server reports:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+  nfsd-7771  [060]  1758.891809: svcrdma_sq_post_err:
+	cq.id=205 cid=226 sc_sq_avail=13643/851 status=-12
+
+sq_post_err reports ENOMEM, and the rdma->sc_sq_avail (13643) is
+larger than rdma->sc_sq_depth (851). The number of available Send
+Queue entries is always supposed to be smaller than the Send Queue
+depth. That seems like a Send Queue accounting bug in svcrdma.
+
+As it's getting to be late in the 6.9-rc cycle, revert this commit.
+It can be revisited in a subsequent kernel release.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218743
+Fixes: e084ee673c77 ("svcrdma: Add Write chunk WRs to the RPC's Send WR chain")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/linux/sunrpc/svc_rdma.h       |   13 +----
+ net/sunrpc/xprtrdma/svc_rdma_rw.c     |   86 ++++++++-------------------------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |    5 --
+ 3 files changed, 26 insertions(+), 78 deletions(-)
+
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index 24cd199dd6f3..d33bab33099a 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -210,7 +210,6 @@ struct svc_rdma_recv_ctxt {
+  */
+ struct svc_rdma_write_info {
+ 	struct svcxprt_rdma	*wi_rdma;
+-	struct list_head	wi_list;
+ 
+ 	const struct svc_rdma_chunk	*wi_chunk;
+ 
+@@ -239,10 +238,7 @@ struct svc_rdma_send_ctxt {
+ 	struct ib_cqe		sc_cqe;
+ 	struct xdr_buf		sc_hdrbuf;
+ 	struct xdr_stream	sc_stream;
+-
+-	struct list_head	sc_write_info_list;
+ 	struct svc_rdma_write_info sc_reply_info;
+-
+ 	void			*sc_xprt_buf;
+ 	int			sc_page_count;
+ 	int			sc_cur_sge_no;
+@@ -274,14 +270,11 @@ extern void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
+ extern void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
+ 				struct svc_rdma_chunk_ctxt *cc,
+ 				enum dma_data_direction dir);
+-extern void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
+-					 struct svc_rdma_send_ctxt *ctxt);
+ extern void svc_rdma_reply_chunk_release(struct svcxprt_rdma *rdma,
+ 					 struct svc_rdma_send_ctxt *ctxt);
+-extern int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
+-				       const struct svc_rdma_pcl *write_pcl,
+-				       struct svc_rdma_send_ctxt *sctxt,
+-				       const struct xdr_buf *xdr);
++extern int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
++				    const struct svc_rdma_recv_ctxt *rctxt,
++				    const struct xdr_buf *xdr);
+ extern int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
+ 					const struct svc_rdma_pcl *write_pcl,
+ 					const struct svc_rdma_pcl *reply_pcl,
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index f2a100c4c81f..40797114d50a 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -230,28 +230,6 @@ static void svc_rdma_write_info_free(struct svc_rdma_write_info *info)
+ 	queue_work(svcrdma_wq, &info->wi_work);
+ }
+ 
+-/**
+- * svc_rdma_write_chunk_release - Release Write chunk I/O resources
+- * @rdma: controlling transport
+- * @ctxt: Send context that is being released
+- */
+-void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
+-				  struct svc_rdma_send_ctxt *ctxt)
+-{
+-	struct svc_rdma_write_info *info;
+-	struct svc_rdma_chunk_ctxt *cc;
+-
+-	while (!list_empty(&ctxt->sc_write_info_list)) {
+-		info = list_first_entry(&ctxt->sc_write_info_list,
+-					struct svc_rdma_write_info, wi_list);
+-		list_del(&info->wi_list);
+-
+-		cc = &info->wi_cc;
+-		svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
+-		svc_rdma_write_info_free(info);
+-	}
+-}
+-
+ /**
+  * svc_rdma_reply_chunk_release - Release Reply chunk I/O resources
+  * @rdma: controlling transport
+@@ -308,11 +286,13 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	struct ib_cqe *cqe = wc->wr_cqe;
+ 	struct svc_rdma_chunk_ctxt *cc =
+ 			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
++	struct svc_rdma_write_info *info =
++			container_of(cc, struct svc_rdma_write_info, wi_cc);
+ 
+ 	switch (wc->status) {
+ 	case IB_WC_SUCCESS:
+ 		trace_svcrdma_wc_write(&cc->cc_cid);
+-		return;
++		break;
+ 	case IB_WC_WR_FLUSH_ERR:
+ 		trace_svcrdma_wc_write_flush(wc, &cc->cc_cid);
+ 		break;
+@@ -320,11 +300,12 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
+ 		trace_svcrdma_wc_write_err(wc, &cc->cc_cid);
+ 	}
+ 
+-	/* The RDMA Write has flushed, so the client won't get
+-	 * some of the outgoing RPC message. Signal the loss
+-	 * to the client by closing the connection.
+-	 */
+-	svc_xprt_deferred_close(&rdma->sc_xprt);
++	svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
++
++	if (unlikely(wc->status != IB_WC_SUCCESS))
++		svc_xprt_deferred_close(&rdma->sc_xprt);
++
++	svc_rdma_write_info_free(info);
+ }
+ 
+ /**
+@@ -620,19 +601,13 @@ static int svc_rdma_xb_write(const struct xdr_buf *xdr, void *data)
+ 	return xdr->len;
+ }
+ 
+-/* Link Write WRs for @chunk onto @sctxt's WR chain.
+- */
+-static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
+-					struct svc_rdma_send_ctxt *sctxt,
+-					const struct svc_rdma_chunk *chunk,
+-					const struct xdr_buf *xdr)
++static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
++				     const struct svc_rdma_chunk *chunk,
++				     const struct xdr_buf *xdr)
+ {
+ 	struct svc_rdma_write_info *info;
+ 	struct svc_rdma_chunk_ctxt *cc;
+-	struct ib_send_wr *first_wr;
+ 	struct xdr_buf payload;
+-	struct list_head *pos;
+-	struct ib_cqe *cqe;
+ 	int ret;
+ 
+ 	if (xdr_buf_subsegment(xdr, &payload, chunk->ch_position,
+@@ -648,25 +623,10 @@ static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
+ 	if (ret != payload.len)
+ 		goto out_err;
+ 
+-	ret = -EINVAL;
+-	if (unlikely(cc->cc_sqecount > rdma->sc_sq_depth))
+-		goto out_err;
+-
+-	first_wr = sctxt->sc_wr_chain;
+-	cqe = &cc->cc_cqe;
+-	list_for_each(pos, &cc->cc_rwctxts) {
+-		struct svc_rdma_rw_ctxt *rwc;
+-
+-		rwc = list_entry(pos, struct svc_rdma_rw_ctxt, rw_list);
+-		first_wr = rdma_rw_ctx_wrs(&rwc->rw_ctx, rdma->sc_qp,
+-					   rdma->sc_port_num, cqe, first_wr);
+-		cqe = NULL;
+-	}
+-	sctxt->sc_wr_chain = first_wr;
+-	sctxt->sc_sqecount += cc->cc_sqecount;
+-	list_add(&info->wi_list, &sctxt->sc_write_info_list);
+-
+ 	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
++	ret = svc_rdma_post_chunk_ctxt(rdma, cc);
++	if (ret < 0)
++		goto out_err;
+ 	return 0;
+ 
+ out_err:
+@@ -675,27 +635,25 @@ static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
+ }
+ 
+ /**
+- * svc_rdma_prepare_write_list - Construct WR chain for sending Write list
++ * svc_rdma_send_write_list - Send all chunks on the Write list
+  * @rdma: controlling RDMA transport
+- * @write_pcl: Write list provisioned by the client
+- * @sctxt: Send WR resources
++ * @rctxt: Write list provisioned by the client
+  * @xdr: xdr_buf containing an RPC Reply message
+  *
+  * Returns zero on success, or a negative errno if one or more
+  * Write chunks could not be sent.
+  */
+-int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
+-				const struct svc_rdma_pcl *write_pcl,
+-				struct svc_rdma_send_ctxt *sctxt,
+-				const struct xdr_buf *xdr)
++int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
++			     const struct svc_rdma_recv_ctxt *rctxt,
++			     const struct xdr_buf *xdr)
+ {
+ 	struct svc_rdma_chunk *chunk;
+ 	int ret;
+ 
+-	pcl_for_each_chunk(chunk, write_pcl) {
++	pcl_for_each_chunk(chunk, &rctxt->rc_write_pcl) {
+ 		if (!chunk->ch_payload_length)
+ 			break;
+-		ret = svc_rdma_prepare_write_chunk(rdma, sctxt, chunk, xdr);
++		ret = svc_rdma_send_write_chunk(rdma, chunk, xdr);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index dfca39abd16c..bb5436b719e0 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -142,7 +142,6 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
+ 	ctxt->sc_send_wr.send_flags = IB_SEND_SIGNALED;
+ 	ctxt->sc_cqe.done = svc_rdma_wc_send;
+-	INIT_LIST_HEAD(&ctxt->sc_write_info_list);
+ 	ctxt->sc_xprt_buf = buffer;
+ 	xdr_buf_init(&ctxt->sc_hdrbuf, ctxt->sc_xprt_buf,
+ 		     rdma->sc_max_req_size);
+@@ -228,7 +227,6 @@ static void svc_rdma_send_ctxt_release(struct svcxprt_rdma *rdma,
+ 	struct ib_device *device = rdma->sc_cm_id->device;
+ 	unsigned int i;
+ 
+-	svc_rdma_write_chunk_release(rdma, ctxt);
+ 	svc_rdma_reply_chunk_release(rdma, ctxt);
+ 
+ 	if (ctxt->sc_page_count)
+@@ -1015,8 +1013,7 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+ 	if (!p)
+ 		goto put_ctxt;
+ 
+-	ret = svc_rdma_prepare_write_list(rdma, &rctxt->rc_write_pcl, sctxt,
+-					  &rqstp->rq_res);
++	ret = svc_rdma_send_write_list(rdma, rctxt, &rqstp->rq_res);
+ 	if (ret < 0)
+ 		goto put_ctxt;
+ 
+
+
 
