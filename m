@@ -1,594 +1,220 @@
-Return-Path: <linux-nfs+bounces-2906-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2907-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 274C08AC143
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Apr 2024 23:38:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 241FB8AC19E
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Apr 2024 00:15:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 886F4B209DE
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Apr 2024 21:38:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6B19280DBE
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Apr 2024 22:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A0B10A1F;
-	Sun, 21 Apr 2024 21:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B639B41C72;
+	Sun, 21 Apr 2024 22:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eiewl+dk"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="JTZISqw4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2097.outbound.protection.outlook.com [40.107.237.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B486D2FF
-	for <linux-nfs@vger.kernel.org>; Sun, 21 Apr 2024 21:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713735520; cv=none; b=tiCGxfEaF+53GUrrlB9bnSPbOcGl+yVXqPeOkpUJ/9xgBzWEmH820u7DhJEWD7l3mp61LW7f5qDvvxjt6B8rPzv0F0KmHPmUjeMS/6sZuTL5DYxElM40lmTN1Xc7fqwxDtRVhieSm/E5tTzgeB5b+bdq7cdNh7ZyTDy456SSQPY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713735520; c=relaxed/simple;
-	bh=XfCasWoF1s4eMhrqsL9G41wlGkdT3Ud+//10DqsoUJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VAFNfGJ06uHmpUHatkCONkl0AJY0dhiHvIgl/anbcv5qElydL1S3bbzP5eUryc/DyhQ28sbqXw+yAKx3FOSxf6NngTkXAiIccOw1xUP8tgnXcRw/e6oldZkQO1UsDZh356+a85hvBvTjOPjzPSBSMfdmoIaomolENEkz5lqMBk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eiewl+dk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713735517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7A9JN/2DwCkPhcHNKyvDuCsDSUfj8cJ6FfPSNOSMBM0=;
-	b=Eiewl+dkyuBRRM6ZFOvhX5dY4sMBztDNmjszg0z6Geudx6cCerOB0b6FkTMQFWZa20iJRA
-	RJMTWZ5/T+EkWOFMM0PcQwuQAM2PP34gthhca5mp3MftEmG1my1adYzg6qvWWzNxfgFpp6
-	Vb3kMsYieswEj2kpx2piJGlYTBuf+Gs=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-5MWQZkwAOoiEnFJ6AAEV9A-1; Sun, 21 Apr 2024 17:38:35 -0400
-X-MC-Unique: 5MWQZkwAOoiEnFJ6AAEV9A-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4379bbdc9b4so17560811cf.2
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Apr 2024 14:38:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713735514; x=1714340314;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7A9JN/2DwCkPhcHNKyvDuCsDSUfj8cJ6FfPSNOSMBM0=;
-        b=n6Bnh7t9FlDVeKukv8gqRKn2CYjVNBPojjFX0ubCwmcAasf2CeleOUC/yqQQ9Bc/3U
-         cPoenCyrQX8DJScWAx9OJeV61B44E/9ViF7jRF2gULRymBfhKYGy2B3hMzI+xb+SZjAR
-         yq7scptZdpmCHAVI30RyxPoekCftgTCzWTlCWOExWMd9QV8R1pH45bf9kFrRyn3pb8tM
-         M8yMMNKdzZae7C8obiObzg1UukSbdE1vAsdhwtiQ8ADZ9JaiyIw4a260DP02YqZEDnOx
-         d9Bdl65O0YmIWDxs95Jynj7w5yP5qVYbPGMnfkROTuh96ATTa/viwV/ntzcc5HPwK+p4
-         OTrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPb9ZpCKMBO50HWqSt4j97+7JVxZxS1YA87zPtoU/BtjExCG0IgjVkKSj7ObR1WppVZTvZJEtY14GTtTVa+nRmh/AFcNkJLQHR
-X-Gm-Message-State: AOJu0YykKdPO1Fp2UWdah/0IEgAhOMIMaO74NxPLkyv0g/aeg32Z+GwE
-	tIi1exQANtOMJyhr1Oi+Wl+uP0A3f+TeG+2fFZZfn/3gmh9Hx+YkLIf3DPdGBo0JPrGeCN9ogwQ
-	T2ZdsBs+Xc1WTG0y/pu8flYU25wd1IMg+SVh6apc/AA5i2CaaGGMLYqZJqgRBpsDNxg==
-X-Received: by 2002:a05:620a:4621:b0:78e:e779:56b8 with SMTP id br33-20020a05620a462100b0078ee77956b8mr10976914qkb.6.1713735514126;
-        Sun, 21 Apr 2024 14:38:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCDE2qDOir7KKEuyQT/oTmSEEI30dk9evHMNJHJPiroo0+iEwwnFY6maBdjO9FbP1IDRCRWA==
-X-Received: by 2002:a05:620a:4621:b0:78e:e779:56b8 with SMTP id br33-20020a05620a462100b0078ee77956b8mr10976903qkb.6.1713735513719;
-        Sun, 21 Apr 2024 14:38:33 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.153.17])
-        by smtp.gmail.com with ESMTPSA id p23-20020a05620a113700b0079072d96baasm533911qkk.100.2024.04.21.14.38.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Apr 2024 14:38:32 -0700 (PDT)
-Message-ID: <32779e7d-1f5d-449d-890f-6d26f0d6cf4a@redhat.com>
-Date: Sun, 21 Apr 2024 17:38:31 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272EDD2FF
+	for <linux-nfs@vger.kernel.org>; Sun, 21 Apr 2024 22:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713737705; cv=fail; b=YIkwljct7a7VPOADBXeBt/pILEpeFs6+66AZqh9dWBs+kYYPI/sisw7N+FLcSHxMMhYn4UyxZlv0DvuvQvUNYMc1A3IEqpw0AGm5t4EHFKj4cNtcGWb9MUXnS3ogjr2Cer8WfZtdHLT/qr8yMOhfYWTY6n+ak5VT/+8O2xUtYCs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713737705; c=relaxed/simple;
+	bh=RFRtrROi6H7hxk3SsFXoS6qkuq1Y5xyeiIUp+8xnMCE=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QQ46fd/eXah6NNAFirGi90ripzzgGDFlE4qb571ezs5OFUlbHj0xzjCLjis5uVdofBQ2xg/OsBN8ymT/vQ5gt35Dzw/XveZLi7Lu2xyTZLIvaBSc2yU4r7b7haD77EoEDJRZnnNeT/+VeTeHHgw5P5+MQxnYCIvD1UwfRov9PWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=JTZISqw4; arc=fail smtp.client-ip=40.107.237.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DdF+UXG5dEAJ1DGFLMRviqpO7qvNhbrKD2jqw4A88aFiOOQ0XRSe1FbTJInMeI1vytP2wl5DRqIacHZgDMI0VSGYtwH7kfJuWlQ6i646HH4sabAry87KoDwIsmXWpn3o/V/nk1QRLefWIM4ke5KtxK23YSZdcyUEjkCHZCTs8X9qjjk7+Xh28O/yRg6i3xGi0jZGtyBXI7ncFA310nrXtBIHNRPJ7KmZHU6PW0Ppwk77pyYKoJ2kZsy3mxw/rmTzDMEp/BGahFrVXdDUr+JnapWBzNBov+YqJatq7Qn958tYnu9ke8WYTnxIpXLoR5/CIWhXKBV+/5xWalSJiTUlUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RFRtrROi6H7hxk3SsFXoS6qkuq1Y5xyeiIUp+8xnMCE=;
+ b=jr7kerwbNRVP4Z0uFmY+umKTmb3MCqO4spM0f0hHSldSojTb6U8dodQYUOoinnt4qKHeSQ0YwAc1M4G9N0U/6DNK4kfAfLwm75YxmjCGWe2fw7E2dPTKiARaejn/hNYRKLBxsjIW1eaBBwrBI/9y8dCVPTpoHlbAVlNoQdhMbk6cs73P637gqVLUzNRm55gN7YI/jtAr0aXS5nikFflOTwb20/Zo0eGyexyf/o1ZwigR02/Qa9QxORRNC6JEFEr8zXI1a4sW0nZAysRQAmH9S+wc5wivqEFE8nTv/dWYap2L/xBFR2M+BIa9huIhqH04l4B59L7+5M1/F43U0uf10A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RFRtrROi6H7hxk3SsFXoS6qkuq1Y5xyeiIUp+8xnMCE=;
+ b=JTZISqw4s02VEAc3ePWR7THirQKagGaD7Ix0zq2b4X8fe8S1QI8vpyzgVkXeZHionqeBSyTTClwK/ZiBOFhKdqUCT+oF9q/oFTkYtlKXIw2IgGECsyEL0ge1mhViaCi2andbaQTU/tLmOCa4k6mr8DT2m2NcAZX0/XTHvWduCrE=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by IA2PR13MB6587.namprd13.prod.outlook.com (2603:10b6:208:4ab::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Sun, 21 Apr
+ 2024 22:14:58 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::5bb5:501a:fb40:5057]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::5bb5:501a:fb40:5057%6]) with mapi id 15.20.7472.044; Sun, 21 Apr 2024
+ 22:14:58 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"steved@redhat.com" <steved@redhat.com>, "alex@caoua.org" <alex@caoua.org>
+Subject: Re: [PATCH] mount: If a reserved ports is used, do so for the pings
+ as well
+Thread-Topic: [PATCH] mount: If a reserved ports is used, do so for the pings
+ as well
+Thread-Index: AQHajMTp6pVGPQKHO06pIbu2/6XZArFynxwAgABTMYCAAFyrgIAACiwA
+Date: Sun, 21 Apr 2024 22:14:58 +0000
+Message-ID: <ae1d55fc8e6951832548323228fc2b9a0eb5dfe4.camel@hammerspace.com>
+References: <ZhkMcZDhJhsVjo52@vm1.arverb.com>
+	 <42faba18-0042-407e-9957-497806cfeed1@redhat.com>
+	 <838909fda3f022bdf1ae3775ae0c0395e6102f85.camel@hammerspace.com>
+	 <32779e7d-1f5d-449d-890f-6d26f0d6cf4a@redhat.com>
+In-Reply-To: <32779e7d-1f5d-449d-890f-6d26f0d6cf4a@redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|IA2PR13MB6587:EE_
+x-ms-office365-filtering-correlation-id: bce13a0a-25ee-471a-1e41-08dc62507b31
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?NE5FL3o5S3p1KzJyei9WK2Z5ZElEV09yWktPb1dEVkhaeC9IMzE0NGdGUUYy?=
+ =?utf-8?B?RXZCbFFSN0FYVS8vVVkzbWI0R1JvYThKSmJsSU55WVF6Mi9QK3BJWXhndUUw?=
+ =?utf-8?B?dm9SNGpCWlg1OEhxMDF4MFdOb0QvSE9BTEd3Nk5idzRVa2NNWlZrL0FSVW00?=
+ =?utf-8?B?WTluZThtUWgvSS9IQ2RUN2F5SU1xejBWVlU2WHRjUXR2Zjl6VGUzQzdTWDk3?=
+ =?utf-8?B?RFllekRGNktudnRtTFUvbmp4UWJVYzRoU1Z1Mnh1U1RuQlladUJqZ1J0eUIw?=
+ =?utf-8?B?aE1FaHp6bzlMcjdidndQY2NITllzaUlqUlFEZWhnTkw5dTVkWXdNNzlNeVlF?=
+ =?utf-8?B?N0xYbWRxNFQweFZJc3d6emNqV3pueXJvOU1ueUlMMk96dHV5ZnVtZW1XaGZ5?=
+ =?utf-8?B?czh5ZlA4K1J3dStWTS9kSStmN1VHdDRSKzNwSEV5RFBmeTQ1aDJacTVxSHlj?=
+ =?utf-8?B?UVNobmJNY1QrS0lMaU9sUEI1RE9jdXBRalJrdFpIbTVvRUQxN1htSitGdUxS?=
+ =?utf-8?B?MytScXQyblp2a0lGSHhlanFLUy90dTN2Ly94eGY1RjlhbXdqMC96SFRybmph?=
+ =?utf-8?B?b1ZGSHFVSmRGNUtiZmxlc3JWaGFaYVB3N1ZRODRkd1ZDYjlXaFhURFNCR0VU?=
+ =?utf-8?B?STFUbkhDQ2p5aENLWWtySzkzbVFCRG9tL2drTHF0dHRPRjRoSm5NV2NlUytp?=
+ =?utf-8?B?blRxKy9rK245c3NjQzhjTndTaDZYZVVLYkJDaFVBZERqcVJ2aGZxUXBZalN4?=
+ =?utf-8?B?YURCcUY0d0VwZVVta2E4L2VoUFF5VVpqbVFRSzU3VzJwY2Z1TmxVRkVxVW4z?=
+ =?utf-8?B?U1BpQko1M01YL1pJc1ZJbkE1dTlic2Nqdk5ETkNVb2JlMU1ES2Z0SVFOY3Fl?=
+ =?utf-8?B?aTJnNXdVaDNsdFhvNmJudG1DTWRqUEQ3cGhyTWx6RzlRVS9UaG1QYnZkM3Yv?=
+ =?utf-8?B?a2srdElZVndlelpSQUtoVWxIRWk5WUI0YlpQVXdRNS9heWFjcGs1MFpEVVhI?=
+ =?utf-8?B?YTRhZFZFSE5LUzBtYklKWVpuU0J0aGdnRlBFUzNUTHE1bENCbGN0WDZtSVEx?=
+ =?utf-8?B?Z1VXT1l4WFBja1krWlczSDhQc1g0RmVpZ3pmUmo2a0JkQ0tSOG5OTVlvWkZ0?=
+ =?utf-8?B?TkZ0REFsUElIbDUrNkxPbHJOM2dlczJCL21Cd0N6ajdzaEdJZkNEcVVoVC9B?=
+ =?utf-8?B?ZnNST240NGxMWXU0YjZOaEs3dnZwVWdia0Z5SDNBTTdRbnE5elM4QmlVOElI?=
+ =?utf-8?B?aHZGanVqekE0N2lPT3hta2NLeXhPRHVpbFJ4cnlBTUFjN3FKT0E5STUxZk1s?=
+ =?utf-8?B?ZCsvWlRFN0tnOTlhSmZPUHdrSU5la2RZT1Ruek4rOC9OU0VOdW1LZ2hTTkpk?=
+ =?utf-8?B?Q0xSWjlIMHpTeXpjMnk0czFYMEk3b01qTU11a3lHWXFWbDRhdTJITmdIK3ZC?=
+ =?utf-8?B?UVJZVVBPZ3o0RlZYeTlYVHcwRWtmdlRJVjhlRm52K1Z4azloMTVUcXNidTNQ?=
+ =?utf-8?B?YnJvalRBR1NkNGwrUWRiUm5TZDZXcExuRE53V25SYm9WRUR1QUtyQWZPdHJz?=
+ =?utf-8?B?OUdNMmFsNTQrZ3JhUFVOenhNMTVlR3VpdDZQbDdDcis2ejgwMUt1cDc3c1VZ?=
+ =?utf-8?B?WlFHamM4M0t1N01yZ2hDd3prdzZSeWJGTHlGTys3Y2UybGowK0VaMHlkWjBa?=
+ =?utf-8?B?UU5meWhmZG5KUVNhd3l4YWZIUXdNeFhZbFhXQlpQSW9HMVZCczdSeDVTaWRz?=
+ =?utf-8?B?a0V0UWMwVENKbkdINUdPaHppQU5WRVV1NWJWR2h6ZHJrSlIwN25vMEFubUlm?=
+ =?utf-8?B?TmNWbUNQb3RLUmJJTzkvdz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cDVCY3c1aWhjaEJXZjJBR2lVMDdBbkJMdTZjQU4yanI5eWFQaHFJYk91RmFl?=
+ =?utf-8?B?UXRsWGdXTG96cGdSODRsWFFTWVhXQkkyc1ZjTE5SdkFDUWJGd3VTVzA0U25T?=
+ =?utf-8?B?QnVwWGZja3c3c3c1WFg2dHp4RkZzajdiSVd2SjAxZnFQb202eERwQzFjSlpE?=
+ =?utf-8?B?bm93SFkxUjAwQ3RYeWZGSlB4S1RNUDJVZUpvN1RJUjhEUXBxS0FwV0hCZExN?=
+ =?utf-8?B?d3Q4c2pDWDRDcVZ5MCtSSVZSTlZjMzdlVjh4QjNsS0lNd29ZQ0l4RGtZZVlP?=
+ =?utf-8?B?L2dzM0lkbUl0QU8zMm94dTBLTTlTTG9OeW5Ma3hOYk4zS09UTWFtNkFqcU9J?=
+ =?utf-8?B?Z1puNmNCUS94ci82c0x2cnhZNjdDOTR1UFY3MHpSbVdhMXhKb0VDdlBLaUIy?=
+ =?utf-8?B?TUpkeEtKTk5ENDlSOFIyUmt0bGZra3JFSHJUZjhma3hCczRsTHppQmxEVGZh?=
+ =?utf-8?B?dTBITlFWTkhDSnNMMDZYN3ZpQjJ1S3NrN2VvUGI5TzNlckFSUXpNOGpReUdl?=
+ =?utf-8?B?WlZhRE5NcU5WcDNGUVNiU21WL2ZhSWxsSGFBTzh6d3I2Q0xXWUZuQU81ZERO?=
+ =?utf-8?B?UGxFdEZCTEtIRkhVbWY5azFBc1l4SUNrd0FRNTJIN2pnSjlkVi9qTkFqamgw?=
+ =?utf-8?B?UHp5NlAzc2MxdENsVDRjci9ydWdaa05zbnFzdUFrbnVIM3p3eWtLUngzZERk?=
+ =?utf-8?B?QzU2UmtKUnpmWk1SMEN0bmhibU1wT1krMGZrZXlSMWdtdzJrYWRPZHNLUTIy?=
+ =?utf-8?B?SFZhRHgzemVLZzdHYkxpQzdzVUI5RlhOQ2kwb2RzT3RNY25rNzlLbm84UGlI?=
+ =?utf-8?B?WEQwM0VUR3A5SDNtbzZnRzRWYzRKd1daVGRZU1RLdkRsS2VSOGFnT2pZSzhK?=
+ =?utf-8?B?cXBPcUhJSDlxOVZVY2FZSEpDWnBBWlE4dHFQZkwrS0d5TGFtRVpKVEhqMHYv?=
+ =?utf-8?B?MHdVdlJTdkh3QUl2RzRpZkExVytOVVA0VmFGcVZSdDRIUDh1ZXc4UXY4Wit0?=
+ =?utf-8?B?QndNdHJtaDhFVGJYcHRUWHZsV0xybExIR2s1TDBNMkRkK2QxNVFLS2ZsdTBM?=
+ =?utf-8?B?bW1oNVI2UG5XZFhZUXNQc0FqWjJrMVZpT0E3ZlV4ajJEV1N5S3BQazlXOUlp?=
+ =?utf-8?B?aTRTSng5K1BlZ1B6cXpIRi9Bb2F3NDlxR3lxT05nZlQzN0dLOFkyZjQzL3hs?=
+ =?utf-8?B?eFJxTlR2SXA5dGZUUlJTQzdDU3VQcW5CeEJqUVRhQVc3TlJaczN4S0NsL1Fl?=
+ =?utf-8?B?S01EaUdkMXdYaFdmMkFVRTNXZ3dqTzQ4ZHlidVJBMTI1MEFTR3FtOTU4Y2hB?=
+ =?utf-8?B?K0ZCWjgwMjhJRzl5bE9GSmJxWjVPNW9zY0NnandTMHdVUWsvamR2NWJHK1BJ?=
+ =?utf-8?B?SUZUSk1kcEtDb2ROTEFKWDM1VDFnSWFXQS9taFkzaE53YktVUWFGYmxmUWpl?=
+ =?utf-8?B?QzFEeGg1bXdoSEpMeWdLeVZVa2VCWnIyWDk0cXVPcVppVVFlcXVnZ1pUMWZa?=
+ =?utf-8?B?bldlRG55azFHdllDVzk3QzRwSWdQZDFPb21Sb2JFMWV5eU9uV2NVOTRhWUxx?=
+ =?utf-8?B?ZkNyUVk2c2JwUEJsWEVLbHhwQURnQVBuTG5HbVNQSmp6dHo3dFcyY2pueG9H?=
+ =?utf-8?B?cUxYV1VtV2JjMUdJdktBbUhHQVBsZzRxYzc4RkpFYzhRbXVUQW5QRkhyZlNH?=
+ =?utf-8?B?MnU3N3k5dnBRRnZrN3RiUGVvaGRaaGhsRkhIcUNaOXNyeTI3dkVtSm9SZjRS?=
+ =?utf-8?B?Yy9qZmkyOVhtbFpzdVMxQy91RjhoTi9DL0w4L3lTZnhQeWVrQjNGeHR6djJm?=
+ =?utf-8?B?U3ZUOW11UU14RXZVR1lIZmlWUi9IR1RzZ0ZvTElKV1RQY1RYaVhrVWJvSmVt?=
+ =?utf-8?B?WXZPN1R6dlhybWhxZmttWXlkb0ZTKzRRK0dYMG14L1kvRkp4Q3A4Y2I0TXpT?=
+ =?utf-8?B?WVFBUkdRd3J3bUFxRS9CNTE4STZtS2JhQlhabWNodUt5Qk1aM3ArWVN6Z0JW?=
+ =?utf-8?B?aEFsTXF3aFJ5RDF5bThRYmxmNzFua0xpcFRUSXZHWG5qOGRVL1ZLdkM2blp3?=
+ =?utf-8?B?OXNSQzZ3SUFWL2hzOTdrbXlxZ2Jla3hkeGhKWVhoNWZ3YVFnT2g3dFI5RS96?=
+ =?utf-8?B?amJlU0pHWjJLV01wNEYrZmtPSUJUZ0dPREFzZ0E2bzBHZHV5cHVoSDlGSUp2?=
+ =?utf-8?B?d1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <080F4532ADE888498219244DA84DD0FD@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mount: If a reserved ports is used, do so for the pings
- as well
-To: Trond Myklebust <trondmy@hammerspace.com>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "alex@caoua.org" <alex@caoua.org>
-References: <ZhkMcZDhJhsVjo52@vm1.arverb.com>
- <42faba18-0042-407e-9957-497806cfeed1@redhat.com>
- <838909fda3f022bdf1ae3775ae0c0395e6102f85.camel@hammerspace.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <838909fda3f022bdf1ae3775ae0c0395e6102f85.camel@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bce13a0a-25ee-471a-1e41-08dc62507b31
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2024 22:14:58.2944
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 96etsiu8k4ZQ4yRROmY69Q469iqO4N6rRxIwc1R47chMtjmpb/HRlyL7nihPMGueMSdqy/qiSVnDunPB+aualQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA2PR13MB6587
 
-
-
-On 4/21/24 12:06 PM, Trond Myklebust wrote:
-> On Sun, 2024-04-21 at 07:09 -0400, Steve Dickson wrote:
->>
->>
->> On 4/12/24 6:26 AM, Alexandre Ratchov wrote:
->>> Hi,
->>>
->>> mount.nfs always uses a high port to probe the server's ports
->>> (regardless of
->>> the "-o resvport" option).  Certain NFS servers (ex.  OpenBSD -
->>> current) will
->>> drop the connection, the probe will fail, and mount.nfs will exit
->>> before any
->>> attempt to mount the file-system.  If mount.nfs doesn't ping the
->>> server from
->>> a high port, mounting the file system will just work.
->>>
->>> Note that the same will happen if the server is behind a firewall
->>> that
->>> blocks connections to the NFS service that originates from a high
->>> port.
->> Committed... (tag: nfs-utils-2-7-1-rc7)
->>
->> I just hope we don't run out of privilege ports during
->> a mount storm (aka when a server reboots).
-> 
-> Agreed, and that is why this change was entirely the wrong thing to do.
-Well the patch was sitting around for a while without any objection
-so I figured I would go with it since it would make mounts
-work on other OSs
-
-> 
-> The point of the ping is to allow for fast failover in the case where
-> the portmap/rpcbind server returns incorrect or stale information.
-> 
-> If there are servers out there that deliberately break the convention
-> for NULL ping, as described in RFC5531, then we might allow optional
-> use of the privileged port for those servers, but please don't force
-> this on everyone else.
-The patch is on the top of stack... easy revert-able... Is that what
-you are suggesting?
-
-steved.
-
-> 
-> 
->>
->> steved.
->>
->>>
->>> ---
->>>    support/include/nfsrpc.h |  3 ++-
->>>    support/nfs/getport.c    | 10 +++++++---
->>>    utils/mount/network.c    | 36 ++++++++++++++++++++---------------
->>> -
->>>    utils/mount/network.h    |  4 ++--
->>>    utils/mount/nfsmount.c   | 16 +++++++++++-----
->>>    utils/mount/stropts.c    | 24 +++++++++++++++++++++---
->>>    6 files changed, 63 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/support/include/nfsrpc.h b/support/include/nfsrpc.h
->>> index fbbdb6a9..9106c195 100644
->>> --- a/support/include/nfsrpc.h
->>> +++ b/support/include/nfsrpc.h
->>> @@ -170,7 +170,8 @@ extern int		nfs_rpc_ping(const struct
->>> sockaddr *sap,
->>>    				const rpcprog_t program,
->>>    				const rpcvers_t version,
->>>    				const unsigned short protocol,
->>> -				const struct timeval *timeout);
->>> +				const struct timeval *timeout,
->>> +				const int resvport);
->>>    
->>>    /* create AUTH_SYS handle with no supplemental groups */
->>>    extern AUTH *			 nfs_authsys_create(void);
->>> diff --git a/support/nfs/getport.c b/support/nfs/getport.c
->>> index 813f7bf9..ff7e9991 100644
->>> --- a/support/nfs/getport.c
->>> +++ b/support/nfs/getport.c
->>> @@ -730,7 +730,8 @@ static unsigned short nfs_gp_getport(CLIENT
->>> *client,
->>>     */
->>>    int nfs_rpc_ping(const struct sockaddr *sap, const socklen_t
->>> salen,
->>>    		 const rpcprog_t program, const rpcvers_t version,
->>> -		 const unsigned short protocol, const struct
->>> timeval *timeout)
->>> +		 const unsigned short protocol, const struct
->>> timeval *timeout,
->>> +		 const int resvport)
->>>    {
->>>    	union nfs_sockaddr address;
->>>    	struct sockaddr *saddr = &address.sa;
->>> @@ -744,8 +745,11 @@ int nfs_rpc_ping(const struct sockaddr *sap,
->>> const socklen_t salen,
->>>    	nfs_clear_rpc_createerr();
->>>    
->>>    	memcpy(saddr, sap, (size_t)salen);
->>> -	client = nfs_get_rpcclient(saddr, salen, protocol,
->>> -						program, version,
->>> &tout);
->>> +	client = resvport ?
->>> +		 nfs_get_priv_rpcclient(saddr, salen, protocol,
->>> +					program, version, &tout) :
->>> +		 nfs_get_rpcclient(saddr, salen, protocol,
->>> +				   program, version, &tout);
->>>    	if (client != NULL) {
->>>    		result = nfs_gp_ping(client, tout);
->>>    		nfs_gp_map_tcp_errorcodes(protocol);
->>> diff --git a/utils/mount/network.c b/utils/mount/network.c
->>> index 01ead49f..d9221567 100644
->>> --- a/utils/mount/network.c
->>> +++ b/utils/mount/network.c
->>> @@ -525,7 +525,7 @@ static void nfs_pp_debug2(const char *str)
->>>     */
->>>    static int nfs_probe_port(const struct sockaddr *sap, const
->>> socklen_t salen,
->>>    			  struct pmap *pmap, const unsigned long
->>> *versions,
->>> -			  const unsigned int *protos)
->>> +			  const unsigned int *protos, const int
->>> resvp)
->>>    {
->>>    	union nfs_sockaddr address;
->>>    	struct sockaddr *saddr = &address.sa;
->>> @@ -550,7 +550,7 @@ static int nfs_probe_port(const struct sockaddr
->>> *sap, const socklen_t salen,
->>>    				nfs_pp_debug(saddr, salen, prog,
->>> *p_vers,
->>>    						*p_prot, p_port);
->>>    				if (nfs_rpc_ping(saddr, salen,
->>> prog,
->>> -							*p_vers,
->>> *p_prot, NULL))
->>> +						 *p_vers, *p_prot,
->>> NULL, resvp))
->>>    					goto out_ok;
->>>    			} else
->>>    				rpc_createerr.cf_stat =
->>> RPC_PROGNOTREGISTERED;
->>> @@ -603,7 +603,7 @@ out_ok:
->>>     * returned; rpccreateerr.cf_stat is set to reflect the nature of
->>> the error.
->>>     */
->>>    static int nfs_probe_nfsport(const struct sockaddr *sap, const
->>> socklen_t salen,
->>> -			     struct pmap *pmap, int checkv4)
->>> +			     struct pmap *pmap, int checkv4, int
->>> resvp)
->>>    {
->>>    	if (pmap->pm_vers && pmap->pm_prot && pmap->pm_port)
->>>    		return 1;
->>> @@ -617,13 +617,13 @@ static int nfs_probe_nfsport(const struct
->>> sockaddr *sap, const socklen_t salen,
->>>    		memcpy(&save_sa, sap, salen);
->>>    
->>>    		ret = nfs_probe_port(sap, salen, pmap,
->>> -				     probe_nfs3_only,
->>> probe_proto);
->>> +				     probe_nfs3_only, probe_proto,
->>> resvp);
->>>    		if (!ret || !checkv4 || probe_proto !=
->>> probe_tcp_first)
->>>    			return ret;
->>>    
->>>    		nfs_set_port((struct sockaddr *)&save_sa,
->>> NFS_PORT);
->>>    		ret =  nfs_rpc_ping((struct sockaddr *)&save_sa,
->>> salen,
->>> -			NFS_PROGRAM, 4, IPPROTO_TCP, NULL);
->>> +				    NFS_PROGRAM, 4, IPPROTO_TCP,
->>> NULL, resvp);
->>>    		if (ret) {
->>>    			rpc_createerr.cf_stat = RPC_FAILED;
->>>    			rpc_createerr.cf_error.re_errno = EAGAIN;
->>> @@ -632,7 +632,7 @@ static int nfs_probe_nfsport(const struct
->>> sockaddr *sap, const socklen_t salen,
->>>    		return 1;
->>>    	} else
->>>    		return nfs_probe_port(sap, salen, pmap,
->>> -					probe_nfs2_only,
->>> probe_udp_only);
->>> +				      probe_nfs2_only,
->>> probe_udp_only, resvp);
->>>    }
->>>    
->>>    /*
->>> @@ -649,17 +649,17 @@ static int nfs_probe_nfsport(const struct
->>> sockaddr *sap, const socklen_t salen,
->>>     * returned; rpccreateerr.cf_stat is set to reflect the nature of
->>> the error.
->>>     */
->>>    static int nfs_probe_mntport(const struct sockaddr *sap, const
->>> socklen_t salen,
->>> -				struct pmap *pmap)
->>> +			     struct pmap *pmap)
->>>    {
->>>    	if (pmap->pm_vers && pmap->pm_prot && pmap->pm_port)
->>>    		return 1;
->>>    
->>>    	if (nfs_mount_data_version >= 4)
->>>    		return nfs_probe_port(sap, salen, pmap,
->>> -					probe_mnt3_only,
->>> probe_udp_first);
->>> +				      probe_mnt3_only,
->>> probe_udp_first, 0);
->>>    	else
->>>    		return nfs_probe_port(sap, salen, pmap,
->>> -					probe_mnt1_first,
->>> probe_udp_only);
->>> +				      probe_mnt1_first,
->>> probe_udp_only, 0);
->>>    }
->>>    
->>>    /*
->>> @@ -676,9 +676,10 @@ static int nfs_probe_version_fixed(const
->>> struct sockaddr *mnt_saddr,
->>>    			struct pmap *mnt_pmap,
->>>    			const struct sockaddr *nfs_saddr,
->>>    			const socklen_t nfs_salen,
->>> -			struct pmap *nfs_pmap)
->>> +			struct pmap *nfs_pmap,
->>> +			const int resvp)
->>>    {
->>> -	if (!nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, 0))
->>> +	if (!nfs_probe_nfsport(nfs_saddr, nfs_salen, nfs_pmap, 0,
->>> resvp))
->>>    		return 0;
->>>    	return nfs_probe_mntport(mnt_saddr, mnt_salen, mnt_pmap);
->>>    }
->>> @@ -706,7 +707,8 @@ int nfs_probe_bothports(const struct sockaddr
->>> *mnt_saddr,
->>>    			const struct sockaddr *nfs_saddr,
->>>    			const socklen_t nfs_salen,
->>>    			struct pmap *nfs_pmap,
->>> -			int checkv4)
->>> +			int checkv4,
->>> +			int resvp)
->>>    {
->>>    	struct pmap save_nfs, save_mnt;
->>>    	const unsigned long *probe_vers;
->>> @@ -718,7 +720,8 @@ int nfs_probe_bothports(const struct sockaddr
->>> *mnt_saddr,
->>>    
->>>    	if (nfs_pmap->pm_vers)
->>>    		return nfs_probe_version_fixed(mnt_saddr,
->>> mnt_salen, mnt_pmap,
->>> -					       nfs_saddr,
->>> nfs_salen, nfs_pmap);
->>> +					       nfs_saddr,
->>> nfs_salen, nfs_pmap,
->>> +					       resvp);
->>>    
->>>    	memcpy(&save_nfs, nfs_pmap, sizeof(save_nfs));
->>>    	memcpy(&save_mnt, mnt_pmap, sizeof(save_mnt));
->>> @@ -727,7 +730,8 @@ int nfs_probe_bothports(const struct sockaddr
->>> *mnt_saddr,
->>>    
->>>    	for (; *probe_vers; probe_vers++) {
->>>    		nfs_pmap->pm_vers = mntvers_to_nfs(*probe_vers);
->>> -		if (nfs_probe_nfsport(nfs_saddr, nfs_salen,
->>> nfs_pmap, checkv4) != 0) {
->>> +		if (nfs_probe_nfsport(nfs_saddr, nfs_salen,
->>> nfs_pmap, checkv4,
->>> +				      resvp) != 0) {
->>>    			mnt_pmap->pm_vers = *probe_vers;
->>>    			if (nfs_probe_mntport(mnt_saddr,
->>> mnt_salen, mnt_pmap) != 0)
->>>    				return 1;
->>> @@ -759,7 +763,7 @@ int nfs_probe_bothports(const struct sockaddr
->>> *mnt_saddr,
->>>     * Otherwise zero is returned; rpccreateerr.cf_stat is set to
->>> reflect
->>>     * the nature of the error.
->>>     */
->>> -int probe_bothports(clnt_addr_t *mnt_server, clnt_addr_t
->>> *nfs_server)
->>> +int probe_bothports(clnt_addr_t *mnt_server, clnt_addr_t
->>> *nfs_server, int resvp)
->>>    {
->>>    	struct sockaddr *mnt_addr = SAFE_SOCKADDR(&mnt_server-
->>>> saddr);
->>>    	struct sockaddr *nfs_addr = SAFE_SOCKADDR(&nfs_server-
->>>> saddr);
->>> @@ -767,7 +771,7 @@ int probe_bothports(clnt_addr_t *mnt_server,
->>> clnt_addr_t *nfs_server)
->>>    	return nfs_probe_bothports(mnt_addr, sizeof(mnt_server-
->>>> saddr),
->>>    					&mnt_server->pmap,
->>>    					nfs_addr,
->>> sizeof(nfs_server->saddr),
->>> -					&nfs_server->pmap, 0);
->>> +					&nfs_server->pmap, 0,
->>> resvp);
->>>    }
->>>    
->>>    /**
->>> diff --git a/utils/mount/network.h b/utils/mount/network.h
->>> index 0fc98acd..8bcc7ace 100644
->>> --- a/utils/mount/network.h
->>> +++ b/utils/mount/network.h
->>> @@ -39,10 +39,10 @@ typedef struct {
->>>    static const struct timeval TIMEOUT = { 20, 0 };
->>>    static const struct timeval RETRY_TIMEOUT = { 3, 0 };
->>>    
->>> -int probe_bothports(clnt_addr_t *, clnt_addr_t *);
->>> +int probe_bothports(clnt_addr_t *, clnt_addr_t *, int);
->>>    int nfs_probe_bothports(const struct sockaddr *, const socklen_t,
->>>    			struct pmap *, const struct sockaddr *,
->>> -			const socklen_t, struct pmap *, int);
->>> +			const socklen_t, struct pmap *, int, int);
->>>    int nfs_gethostbyname(const char *, struct sockaddr_in *);
->>>    int nfs_lookup(const char *hostname, const sa_family_t family,
->>>    		struct sockaddr *sap, socklen_t *salen);
->>> diff --git a/utils/mount/nfsmount.c b/utils/mount/nfsmount.c
->>> index 3d95da94..a792c6e7 100644
->>> --- a/utils/mount/nfsmount.c
->>> +++ b/utils/mount/nfsmount.c
->>> @@ -123,13 +123,13 @@ nfs2_mount(CLIENT *clnt, mnt2arg_t *mnt2arg,
->>> mnt2res_t *mnt2res)
->>>    
->>>    static int
->>>    nfs_call_mount(clnt_addr_t *mnt_server, clnt_addr_t *nfs_server,
->>> -	       mntarg_t *mntarg, mntres_t *mntres)
->>> +	       mntarg_t *mntarg, mntres_t *mntres, int resvp)
->>>    {
->>>    	CLIENT *clnt;
->>>    	enum clnt_stat stat;
->>>    	int msock;
->>>    
->>> -	if (!probe_bothports(mnt_server, nfs_server))
->>> +	if (!probe_bothports(mnt_server, nfs_server, resvp))
->>>    		goto out_bad;
->>>    
->>>    	clnt = mnt_openclnt(mnt_server, &msock);
->>> @@ -164,7 +164,8 @@ nfs_call_mount(clnt_addr_t *mnt_server,
->>> clnt_addr_t *nfs_server,
->>>    static int
->>>    parse_options(char *old_opts, struct nfs_mount_data *data,
->>>    	      int *bg, int *retry, clnt_addr_t *mnt_server,
->>> -	      clnt_addr_t *nfs_server, char *new_opts, const int
->>> opt_size)
->>> +	      clnt_addr_t *nfs_server, char *new_opts, const int
->>> opt_size,
->>> +	      int *resvp)
->>>    {
->>>    	struct sockaddr_in *mnt_saddr = &mnt_server->saddr;
->>>    	struct pmap *mnt_pmap = &mnt_server->pmap;
->>> @@ -177,6 +178,7 @@ parse_options(char *old_opts, struct
->>> nfs_mount_data *data,
->>>    
->>>    	data->flags = 0;
->>>    	*bg = 0;
->>> +	*resvp = 1;
->>>    
->>>    	len = strlen(new_opts);
->>>    	tmp_opts = xstrdup(old_opts);
->>> @@ -365,6 +367,8 @@ parse_options(char *old_opts, struct
->>> nfs_mount_data *data,
->>>    				data->flags &= ~NFS_MOUNT_NOAC;
->>>    				if (!val)
->>>    					data->flags |=
->>> NFS_MOUNT_NOAC;
->>> +			} else if (!strcmp(opt, "resvport")) {
->>> +				*resvp = val;
->>>    #if NFS_MOUNT_VERSION >= 2
->>>    			} else if (!strcmp(opt, "tcp")) {
->>>    				data->flags &= ~NFS_MOUNT_TCP;
->>> @@ -498,6 +502,7 @@ nfsmount(const char *spec, const char *node,
->>> int flags,
->>>    	static struct nfs_mount_data data;
->>>    	int val;
->>>    	static int doonce = 0;
->>> +	int resvp;
->>>    
->>>    	clnt_addr_t mnt_server = {
->>>    		.hostname = &mounthost
->>> @@ -582,7 +587,7 @@ nfsmount(const char *spec, const char *node,
->>> int flags,
->>>    	/* parse options */
->>>    	new_opts[0] = 0;
->>>    	if (!parse_options(old_opts, &data, &bg, &retry,
->>> &mnt_server, &nfs_server,
->>> -			   new_opts, sizeof(new_opts)))
->>> +			   new_opts, sizeof(new_opts), &resvp))
->>>    		goto fail;
->>>    	if (!nfsmnt_check_compat(nfs_pmap, mnt_pmap))
->>>    		goto fail;
->>> @@ -620,6 +625,7 @@ nfsmount(const char *spec, const char *node,
->>> int flags,
->>>    #if NFS_MOUNT_VERSION >= 5
->>>    	printf(_(", sec = %u"), data.pseudoflavor);
->>>    	printf(_(", readdirplus = %d"), (data.flags &
->>> NFS_MOUNT_NORDIRPLUS) != 0);
->>> +	printf(_(", resvp = %u"), resvp);
->>>    #endif
->>>    	printf("\n");
->>>    #endif
->>> @@ -670,7 +676,7 @@ nfsmount(const char *spec, const char *node,
->>> int flags,
->>>    				sleep(30);
->>>    
->>>    			stat = nfs_call_mount(&mnt_server,
->>> &nfs_server,
->>> -					      &dirname, &mntres);
->>> +					      &dirname, &mntres,
->>> resvp);
->>>    			if (stat)
->>>    				break;
->>>    			memcpy(nfs_pmap, &save_nfs,
->>> sizeof(*nfs_pmap));
->>> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
->>> index a92c4200..85b8ca5a 100644
->>> --- a/utils/mount/stropts.c
->>> +++ b/utils/mount/stropts.c
->>> @@ -337,6 +337,20 @@ static int nfs_verify_lock_option(struct
->>> mount_options *options)
->>>    	return 1;
->>>    }
->>>    
->>> +static const char *nfs_resvport_opttbl[] = {
->>> +	"noresvport",
->>> +	"resvport",
->>> +	NULL,
->>> +};
->>> +
->>> +/*
->>> + * Returns true unless "noresvport" is set
->>> + */
->>> +static int nfs_resvport_option(struct mount_options *options)
->>> +{
->>> +	return po_rightmost(options, nfs_resvport_opttbl) != 0;
->>> +}
->>> +
->>>    static int nfs_insert_sloppy_option(struct mount_options
->>> *options)
->>>    {
->>>    	if (linux_version_code() < MAKE_VERSION(2, 6, 27))
->>> @@ -550,7 +564,7 @@ static int nfs_construct_new_options(struct
->>> mount_options *options,
->>>     * FALSE is returned if some failure occurred.
->>>     */
->>>    static int
->>> -nfs_rewrite_pmap_mount_options(struct mount_options *options, int
->>> checkv4)
->>> +nfs_rewrite_pmap_mount_options(struct mount_options *options, int
->>> checkv4, int resvp)
->>>    {
->>>    	union nfs_sockaddr nfs_address;
->>>    	struct sockaddr *nfs_saddr = &nfs_address.sa;
->>> @@ -604,7 +618,8 @@ nfs_rewrite_pmap_mount_options(struct
->>> mount_options *options, int checkv4)
->>>    	 * negotiate.  Bail now if we can't contact it.
->>>    	 */
->>>    	if (!nfs_probe_bothports(mnt_saddr, mnt_salen, &mnt_pmap,
->>> -				 nfs_saddr, nfs_salen, &nfs_pmap,
->>> checkv4)) {
->>> +				 nfs_saddr, nfs_salen, &nfs_pmap,
->>> +				 checkv4, resvp)) {
->>>    		errno = ESPIPE;
->>>    		if (rpc_createerr.cf_stat ==
->>> RPC_PROGNOTREGISTERED)
->>>    			errno = EOPNOTSUPP;
->>> @@ -670,6 +685,7 @@ static int nfs_do_mount_v3v2(struct
->>> nfsmount_info *mi,
->>>    {
->>>    	struct mount_options *options = po_dup(mi->options);
->>>    	int result = 0;
->>> +	int resvp;
->>>    
->>>    	if (!options) {
->>>    		errno = ENOMEM;
->>> @@ -704,11 +720,13 @@ static int nfs_do_mount_v3v2(struct
->>> nfsmount_info *mi,
->>>    		goto out_fail;
->>>    	}
->>>    
->>> +	resvp = nfs_resvport_option(options);
->>> +
->>>    	if (verbose)
->>>    		printf(_("%s: trying text-based options '%s'\n"),
->>>    			progname, *mi->extra_opts);
->>>    
->>> -	if (!nfs_rewrite_pmap_mount_options(options, checkv4))
->>> +	if (!nfs_rewrite_pmap_mount_options(options, checkv4,
->>> resvp))
->>>    		goto out_fail;
->>>    
->>>    	result = nfs_sys_mount(mi, options);
->>
->>
-> 
-
+T24gU3VuLCAyMDI0LTA0LTIxIGF0IDE3OjM4IC0wNDAwLCBTdGV2ZSBEaWNrc29uIHdyb3RlOg0K
+PiANCj4gDQo+IE9uIDQvMjEvMjQgMTI6MDYgUE0sIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4g
+PiBPbiBTdW4sIDIwMjQtMDQtMjEgYXQgMDc6MDkgLTA0MDAsIFN0ZXZlIERpY2tzb24gd3JvdGU6
+DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gT24gNC8xMi8yNCA2OjI2IEFNLCBBbGV4YW5kcmUgUmF0
+Y2hvdiB3cm90ZToNCj4gPiA+ID4gSGksDQo+ID4gPiA+IA0KPiA+ID4gPiBtb3VudC5uZnMgYWx3
+YXlzIHVzZXMgYSBoaWdoIHBvcnQgdG8gcHJvYmUgdGhlIHNlcnZlcidzIHBvcnRzDQo+ID4gPiA+
+IChyZWdhcmRsZXNzIG9mDQo+ID4gPiA+IHRoZSAiLW8gcmVzdnBvcnQiIG9wdGlvbikuwqAgQ2Vy
+dGFpbiBORlMgc2VydmVycyAoZXguwqAgT3BlbkJTRCAtDQo+ID4gPiA+IGN1cnJlbnQpIHdpbGwN
+Cj4gPiA+ID4gZHJvcCB0aGUgY29ubmVjdGlvbiwgdGhlIHByb2JlIHdpbGwgZmFpbCwgYW5kIG1v
+dW50Lm5mcyB3aWxsDQo+ID4gPiA+IGV4aXQNCj4gPiA+ID4gYmVmb3JlIGFueQ0KPiA+ID4gPiBh
+dHRlbXB0IHRvIG1vdW50IHRoZSBmaWxlLXN5c3RlbS7CoCBJZiBtb3VudC5uZnMgZG9lc24ndCBw
+aW5nDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBzZXJ2ZXIgZnJvbQ0KPiA+ID4gPiBhIGhpZ2ggcG9y
+dCwgbW91bnRpbmcgdGhlIGZpbGUgc3lzdGVtIHdpbGwganVzdCB3b3JrLg0KPiA+ID4gPiANCj4g
+PiA+ID4gTm90ZSB0aGF0IHRoZSBzYW1lIHdpbGwgaGFwcGVuIGlmIHRoZSBzZXJ2ZXIgaXMgYmVo
+aW5kIGENCj4gPiA+ID4gZmlyZXdhbGwNCj4gPiA+ID4gdGhhdA0KPiA+ID4gPiBibG9ja3MgY29u
+bmVjdGlvbnMgdG8gdGhlIE5GUyBzZXJ2aWNlIHRoYXQgb3JpZ2luYXRlcyBmcm9tIGENCj4gPiA+
+ID4gaGlnaA0KPiA+ID4gPiBwb3J0Lg0KPiA+ID4gQ29tbWl0dGVkLi4uICh0YWc6IG5mcy11dGls
+cy0yLTctMS1yYzcpDQo+ID4gPiANCj4gPiA+IEkganVzdCBob3BlIHdlIGRvbid0IHJ1biBvdXQg
+b2YgcHJpdmlsZWdlIHBvcnRzIGR1cmluZw0KPiA+ID4gYSBtb3VudCBzdG9ybSAoYWthIHdoZW4g
+YSBzZXJ2ZXIgcmVib290cykuDQo+ID4gDQo+ID4gQWdyZWVkLCBhbmQgdGhhdCBpcyB3aHkgdGhp
+cyBjaGFuZ2Ugd2FzIGVudGlyZWx5IHRoZSB3cm9uZyB0aGluZyB0bw0KPiA+IGRvLg0KPiBXZWxs
+IHRoZSBwYXRjaCB3YXMgc2l0dGluZyBhcm91bmQgZm9yIGEgd2hpbGUgd2l0aG91dCBhbnkgb2Jq
+ZWN0aW9uDQo+IHNvIEkgZmlndXJlZCBJIHdvdWxkIGdvIHdpdGggaXQgc2luY2UgaXQgd291bGQg
+bWFrZSBtb3VudHMNCj4gd29yayBvbiBvdGhlciBPU3MNCj4gDQo+ID4gDQo+ID4gVGhlIHBvaW50
+IG9mIHRoZSBwaW5nIGlzIHRvIGFsbG93IGZvciBmYXN0IGZhaWxvdmVyIGluIHRoZSBjYXNlDQo+
+ID4gd2hlcmUNCj4gPiB0aGUgcG9ydG1hcC9ycGNiaW5kIHNlcnZlciByZXR1cm5zIGluY29ycmVj
+dCBvciBzdGFsZSBpbmZvcm1hdGlvbi4NCj4gPiANCj4gPiBJZiB0aGVyZSBhcmUgc2VydmVycyBv
+dXQgdGhlcmUgdGhhdCBkZWxpYmVyYXRlbHkgYnJlYWsgdGhlDQo+ID4gY29udmVudGlvbg0KPiA+
+IGZvciBOVUxMIHBpbmcsIGFzIGRlc2NyaWJlZCBpbiBSRkM1NTMxLCB0aGVuIHdlIG1pZ2h0IGFs
+bG93DQo+ID4gb3B0aW9uYWwNCj4gPiB1c2Ugb2YgdGhlIHByaXZpbGVnZWQgcG9ydCBmb3IgdGhv
+c2Ugc2VydmVycywgYnV0IHBsZWFzZSBkb24ndA0KPiA+IGZvcmNlDQo+ID4gdGhpcyBvbiBldmVy
+eW9uZSBlbHNlLg0KPiBUaGUgcGF0Y2ggaXMgb24gdGhlIHRvcCBvZiBzdGFjay4uLiBlYXN5IHJl
+dmVydC1hYmxlLi4uIElzIHRoYXQgd2hhdA0KPiB5b3UgYXJlIHN1Z2dlc3Rpbmc/DQoNClRoYXQg
+aXMgbXkgc3VnZ2VzdGlvbiBmb3Igbm93LCB5ZXMuDQoNCkkgZG9uJ3QgaGF2ZSBhbnkgb2JqZWN0
+aW9uIHRvIGEgcGF0Y2ggdGhhdCBhZGRzIG9wdC1pbiBmdW5jdGlvbmFsaXR5DQplaXRoZXIgdG8g
+dHVybiBvZmYgdGhlIE5VTEwgcGluZywgb3IgdG8gZm9yY2UgdGhhdCBwaW5nIHRvIHVzZSBhDQpw
+cml2aWxlZ2VkIHBvcnQuIEhvd2V2ZXIgd2Ugc2hvdWxkIG5vdCBjaGFuZ2UgdGhlIGRlZmF1bHQg
+YmVoYXZpb3VyIHRvDQpjYXVzZSB0aGUgZXhpc3RpbmcgcGF1Y2l0eSBvZiBwcml2aWxlZ2VkIHBv
+cnRzIHRvIGJlIGV2ZW4gbW9yZSBvZiBhDQpwcm9ibGVtLg0KDQotLSANClRyb25kIE15a2xlYnVz
+dA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVi
+dXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
 
