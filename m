@@ -1,197 +1,126 @@
-Return-Path: <linux-nfs+bounces-2957-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2958-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 653FD8AEA4C
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 17:13:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A52B8AEAF3
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 17:24:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E225B21DD2
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 15:13:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D80CA1F239A3
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 15:24:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8C4136E1A;
-	Tue, 23 Apr 2024 15:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31BB913BC20;
+	Tue, 23 Apr 2024 15:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FXEXcuBf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y0vk1CpN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FXEXcuBf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y0vk1CpN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CAqqrjwr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E565820E
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Apr 2024 15:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EA3101D5
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Apr 2024 15:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885181; cv=none; b=V5JgkTu6UFKw8Up3dlb01EA6zSDzXA2gnlIziBzYEKDJFTj/dv3W4f8oflzr6neocD5jpCJidsO03XZ2p2abqQBKfD0ROQTRyanGsAbHHOky50rctIVlqobL+zP7vn3aqni/cPzQRsTggXCa6OZ9aAuMaY6uwBycff5FK1Tzge0=
+	t=1713885852; cv=none; b=fqz01K7lfFH0CS0I5YHuyT6SBDh82VIIog6Yh48iy71ol1f/DWZkP7BhwX+DPzhhwaBNaVGUV/jL7sNK7ljt+87jhqz0gfx+AvMPd26CL9B5A41grj720QK9fKLWKj5Z7m+fLrI/41nL7r2GQaFbcSi0fF5L6pcF2Cd/JBheSEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885181; c=relaxed/simple;
-	bh=Cz2IeJ4Kk2fbrQISNBs+lm9xIppMttlQETaDBdNphgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unIouGDkCh6LtnFqjX1uKkfmFd2t39g62CMXXRERnHyy3Udf2kIC5WgAH/4ly5IvqOCTxyrUyH6LeGOAq32HrLC+mXEkDD33HvatBvCvCS70cT3AI/0bHC5xGdk7Yr+djHHe9sg7w7c1as9hpasgIM9hjL0sq1TLufhGIuhKSOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FXEXcuBf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y0vk1CpN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FXEXcuBf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y0vk1CpN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3534E60113;
-	Tue, 23 Apr 2024 15:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713885178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1713885852; c=relaxed/simple;
+	bh=/8ESvb95h//sd0V4pE0ryTnsImWf1WzS7ZbyZKqypbw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=GYkZvLwgctNL84BmKLhZObJgf1mDGphgIuVVIYMx01GI+hle7EfTlkuvpWYfguvjxfExTeLXU6rmRTqe9W8cv8EDoXEqEPgq45ImtQxysnq1LujtYOpNMQ1lvT6KRBoA5SiI+y7bfqAXYXTMBwz6fnLPjGlKVN6WERUYv/g8YVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CAqqrjwr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713885849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L1BlJPSt8WmNeTZtsOenhD9yPqe1gxalC0MBO4mz6TQ=;
-	b=FXEXcuBf/5LLnIRmE2vX2Ju43bUMgj4IIrjvz1bNX3RAkh5DTM7KsXt1QmrRIwnpbdr2ml
-	34vGT5eXXPKn7SxG0N7MRZKjQjGSA9BAsw4PTdG3o7vxI6BqvT/FUXGf0SiPo7l674UIQl
-	7LgVN+dnIB7Fx3R8A9JZwtLNGAYGKww=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713885178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1BlJPSt8WmNeTZtsOenhD9yPqe1gxalC0MBO4mz6TQ=;
-	b=Y0vk1CpNrmskyuLeXDc0rrJpqBaYCOBa2WaSSBpvI8akEssVvYogPwLbjb9UGzz8e0d6D7
-	bBe6MECA5Y4lE1DA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713885178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1BlJPSt8WmNeTZtsOenhD9yPqe1gxalC0MBO4mz6TQ=;
-	b=FXEXcuBf/5LLnIRmE2vX2Ju43bUMgj4IIrjvz1bNX3RAkh5DTM7KsXt1QmrRIwnpbdr2ml
-	34vGT5eXXPKn7SxG0N7MRZKjQjGSA9BAsw4PTdG3o7vxI6BqvT/FUXGf0SiPo7l674UIQl
-	7LgVN+dnIB7Fx3R8A9JZwtLNGAYGKww=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713885178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1BlJPSt8WmNeTZtsOenhD9yPqe1gxalC0MBO4mz6TQ=;
-	b=Y0vk1CpNrmskyuLeXDc0rrJpqBaYCOBa2WaSSBpvI8akEssVvYogPwLbjb9UGzz8e0d6D7
-	bBe6MECA5Y4lE1DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1150313894;
-	Tue, 23 Apr 2024 15:12:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SReYA/rPJ2b+CwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Tue, 23 Apr 2024 15:12:58 +0000
-Date: Tue, 23 Apr 2024 17:12:56 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: don't fail OP_SETCLIENTID when there are lots of
- clients.
-Message-ID: <20240423151256.GA203608@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <171375175915.7600.6526208866216039031@noble.neil.brown.name>
- <ZiZnbV+htcvGuGQl@tissot.1015granger.net>
+	bh=a2WEjxmocXX1KZ3zmIcakq4+Ou/8Gurk2HE7lGNvkio=;
+	b=CAqqrjwrUWVJAk8PoCa8WDdwjC8ERjynBgqqdE/9Gi4Q9VGMVZPu4JXtnsorBpMtk0UXIH
+	LZ9mGHGDa4mnv/sYHMjzVcE54C1tOXydDOYir5lccJH9ysQtgKZEVWBjf7u9foD+X1jtvi
+	aETa1pSBxVrbRQVLrOld79Z5KNMyQdE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-683-hV_a4Vt9PxuHU0IKFLRNJw-1; Tue, 23 Apr 2024 11:24:08 -0400
+X-MC-Unique: hV_a4Vt9PxuHU0IKFLRNJw-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-436e2928e01so5214531cf.0
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Apr 2024 08:24:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713885842; x=1714490642;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a2WEjxmocXX1KZ3zmIcakq4+Ou/8Gurk2HE7lGNvkio=;
+        b=nzLXMTNtKJpS+daH+MmvdUgXm1JaT7QhhNEwSjwRbEZ4rmUmhGYMDBWzELfhh1Pvi4
+         wAEe0fI2Lw/SmLzU7YhHbIb2pOdYDqw/IryQl7/+edFSWpWbDV+Qx6zY8jJOH8UXI2DV
+         jImTYp0SgIXvPgRrPz2mfBNaqsRV+B6dfxai5suP63lWKST3jCcNh1pxx/jnojZ7QWEa
+         g0rPp7N6eBHnDer/uL19eK2QCT3GwfE4+lXwjJULnYe30hlrXkWuDWUIZByh56XKx+rE
+         KLgpyCU+B75yl7FezEcDERVQs0BYs07RnQkcJ50Vo9jgSx8rTZv/eJJd6Aq05hutiO4t
+         96Hg==
+X-Gm-Message-State: AOJu0YyILTVtvnVZ7VJ2shIARWixHptVJ00yLGEx3JMAAqmRkO9gBjRM
+	5sssGeDGZOcBzWG5tBB/JVAvZMdvhFDjwrULEa0kRnqStLJVllccTjgmYRFDZbIXdAwCA5wl8p+
+	C3cZiK+7lizvPgZ9rhwPlCso2aZbBtR1C3phPj0S1dlgTUryAarFzH5AZSyo0/OGBrCy7RXm/l7
+	Qg8zt8m5qmYi2MvQazteL6s/gsYToqd2dypnNCMl0=
+X-Received: by 2002:ac8:688c:0:b0:437:ca6d:13f1 with SMTP id m12-20020ac8688c000000b00437ca6d13f1mr11604651qtq.2.1713885842410;
+        Tue, 23 Apr 2024 08:24:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEEd0d98uvoXdQbpJkJ5o9WvxpMAlkOCZZGwXcqwT2PHljChQYugARfVysUY0Bi6sKmJ+t+CQ==
+X-Received: by 2002:ac8:688c:0:b0:437:ca6d:13f1 with SMTP id m12-20020ac8688c000000b00437ca6d13f1mr11604622qtq.2.1713885841856;
+        Tue, 23 Apr 2024 08:24:01 -0700 (PDT)
+Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id j23-20020ac84417000000b004343d021503sm5218679qtn.67.2024.04.23.08.24.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 08:24:01 -0700 (PDT)
+Message-ID: <fcee8bd6-f9b3-4ad3-9d03-6e59fc24dc17@redhat.com>
+Date: Tue, 23 Apr 2024 11:23:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiZnbV+htcvGuGQl@tissot.1015granger.net>
-X-Spam-Flag: NO
-X-Spam-Score: -3.50
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.de:email];
-	REPLYTO_EQ_FROM(0.00)[]
+User-Agent: Mozilla Thunderbird
+Subject: Update: Bakeathon: Talks at 2 (EST)
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <88cf691a-0f47-405e-acc8-91b3a05e8940@redhat.com>
+Content-Language: en-US
+In-Reply-To: <88cf691a-0f47-405e-acc8-91b3a05e8940@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> On Mon, Apr 22, 2024 at 12:09:19PM +1000, NeilBrown wrote:
-> > The calculation of how many clients the nfs server can manage is only an
-> > heuristic.  Triggering the laundromat to clean up old clients when we
-> > have more than the heuristic limit is valid, but refusing to create new
-> > clients is not.  Client creation should only fail if there really isn't
-> > enough memory available.
+Updated meeting link
+   https://meet.google.com/bxz-fzzs-bme
 
-> > This is not known to have caused a problem is production use, but
-> > testing of lots of clients reports an error and it is not clear that
-> > this error is justified.
+See you at 2pm EST
 
-> It is justified, see 4271c2c08875 ("NFSD: limit the number of v4
-> clients to 1024 per 1GB of system memory"). In cases like these,
-> the recourse is to add more memory to the test system.
-
-FYI the system is using 1468 MB + 2048 MB swap
-
-$ free -m
-               total        used        free      shared  buff/cache   available
-Mem:            1468         347         589           4         686        1121
-Swap:           2048           0        2048
-
-Indeed increasing the memory to 3430 MB makes test happy. It's of course up to
-you to see whether this is just unrealistic / artificial problem which does not
-influence users and thus is v2 Neil sent is not worth of merging.
-
-Kind regards,
-Petr
-
-> However, that commit claims that the client is told to retry; I
-> don't expect client creation to fail outright. Can you describe the
-> failure mode you see?
-
-> Meanwhile, we need to have broader and more regular testing of NFSD
-> on memory-starved systems. That's a long-term project.
+steved.
 
 
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfsd/nfs4state.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
+On 4/23/24 8:16 AM, Steve Dickson wrote:
+> Hello
+> 
+> Today we are starting "talks at 2" [1] during
+> the ongoing Bake-a-thon [2]
+> 
+> The talks are open to everyone via google meet [3]
+> 
+> Today: The future of V3 (no slides... very informal) Just looking for 
+> thoughts
+> 
+> Wed: kdevops BoF: How kdevops is used for testing Linux NFSD, next 
+> steps, open discussion
+> 
+> Thur: nfstest BoF: Q&A, what's in the pipeline, enhancement requests, 
+> open discussion
+> 
+> steved.
+> 
+> [1] 
+> https://docs.google.com/spreadsheets/d/1-wmA_t4fp7X5WvshYPnB-0vHeMpoQMohim2Kb7Gx9z0/edit#gid=1920779269
+> [2] http://www.nfsv4bat.org/Events/2024/Apr/BAT/index.html
+> [3] https://meet.google.com/gyu-kmxt-rke
 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index daf83823ba48..8a40bb6a4a67 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -2223,10 +2223,9 @@ static struct nfs4_client *alloc_client(struct xdr_netobj name,
-> >  	struct nfs4_client *clp;
-> >  	int i;
-
-> > -	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) {
-> > +	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients)
-> >  		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> > -		return NULL;
-> > -	}
-> > +
-> >  	clp = kmem_cache_zalloc(client_slab, GFP_KERNEL);
-> >  	if (clp == NULL)
-> >  		return NULL;
-> > -- 
-> > 2.44.0
 
