@@ -1,107 +1,151 @@
-Return-Path: <linux-nfs+bounces-2963-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2964-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F11B88AF428
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 18:32:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4CAD8AF4E2
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 19:04:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD86328EB5A
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 16:32:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0298F1C22FD5
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Apr 2024 17:04:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800AC13CFBE;
-	Tue, 23 Apr 2024 16:32:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5D613DDC4;
+	Tue, 23 Apr 2024 17:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYIPOgo0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZykjQRt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7B413C3E3
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Apr 2024 16:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C0713D635;
+	Tue, 23 Apr 2024 17:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889923; cv=none; b=lq7kphXMIGUh239tCCckj5Md0Kn6C1ILaKvbrbkeXwvC2LgtjlzXNdr4od/Sjj0jn8ng75E6wnn5ixVKHhi9BNy51aO3LFsetKOx06u18KjVzof7sJJHWiZL8Qs2i33whvddeD/TJ3JwrJeC1iQbUHsgbvDn/RxqFTLYm5M2Q9I=
+	t=1713891838; cv=none; b=ZgdSY2bMJy5Ej6YOPEwMsqR3mZ3DOzMSZlaAhY2nb5pSzx6Bf9CGSjmp05ifo3iD2qeSUVTghvsgckWBawzRoid725HE6fbgj0z95pC8Fe9EKdYvDHY2QMnQrIA8dvTXHrJmN+FNEw9xJIW/qIYBipjxvdglTcwQK9x1ajJ/EDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889923; c=relaxed/simple;
-	bh=9TFJBIp1pcmU93Uwfru2PyRm2ybd79FOSpQ0vTq+ap0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=liXv+fbtEAO7YMOCD0jSo5vTWgRzIWft31ZoA04YpIDcvY4xBkHiet/tbp1NAU+Exlf2gRnCMfbRNQ6oWxmgGLyqhX+ntsrzOz3gRpHs71MqCbUSPd7W6CRk9wBuhagREAhxz4xKvofpRcKWiyFTDf2Eb54mGKdOIielGhc2ru0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYIPOgo0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7682DC2BD11;
-	Tue, 23 Apr 2024 16:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713889923;
-	bh=9TFJBIp1pcmU93Uwfru2PyRm2ybd79FOSpQ0vTq+ap0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XYIPOgo0LjnPWmxgNUokvuvkngW2UtwLcqKYJRd3UjIGDnP59xpCknT6Ng1pv5zQ2
-	 PQDOfE/CxePP3bjYv+jlVMzRZzjKGJ/Z3NEpKGq72E2b8BAHl+EU5f+IeMSFZYKR/s
-	 6AsXK+I7/eMAmbtsVzJlvpAaMfeg88s4/Kf1EL/OYly05kBSszW/jaWHiCxFplKWvL
-	 STRcqUlVtbxpuzDBWcwcilxH3/Z3tgY8IOakcXf/erwHFBWsNptLTrSVFjPZkBmX5h
-	 /+ekO6POd0OThHmFKPDD34nMMwIE+7qyKPpn7uUGq5IVmTFOGPI4Yy0z8FLOu2zFIT
-	 eOZjlac0ceh7A==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 23 Apr 2024 12:31:55 -0400
-Subject: [PATCH nfs-utils v3 3/3] systemd: use nfsdctl to start and stop
- the nfs server
+	s=arc-20240116; t=1713891838; c=relaxed/simple;
+	bh=pMXBuRSYRvxJ/Pm5/D0Ih9VGkrkcDFfmsJy8ADz5Yxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tALBB1kQ3qA6ZHOi/6cPi9ds7dR8pqTYB1gftb2HXxLY2VZ6ykQRN9FugPjVE7F4qC8NHI5nW5nptKV3XgMtlZF95wEoNEFNTr+t5yFK+Dnt7ct5O8xva/1HKmBMDGdWNXDjLn8isz38Wtrjon/B7TUydwLyPjPasJEQkHDq/cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZykjQRt; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2a559928f46so3877789a91.0;
+        Tue, 23 Apr 2024 10:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713891836; x=1714496636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BixicrujN2w/NN7W8Yk1bOtYDD16jf87ysiCrI+mjZw=;
+        b=jZykjQRtlxsp8nD4pOJ5uzQhDja3LTfe9CXKa8lo7w/ZlAUf7TJrOBMK+9wuogOR1B
+         SuyZYseHTkKj6qwJ6auL0Uyz0axVqqpWVwg4LZGNWkhVT/n52E2ux8PBgLlqYpmyBA05
+         Cg8Q6IFDt3xW1hkUDarpp6xystB9/4W9A2OB4sj+mDckPcIX8BqfuEQ2lJ0YODLSrKL0
+         9M+iEvn1TqSD75CgrQC2bHwnQWBI2aB2e5qfgd5Kg/2WErQJfqiWnXUaATIoh6a62P2/
+         q5vWLTHxrrLlhMt/RDrWPjSSk1LvjDCLLWD7my4IhCarwOXpOOvJMDRussGKYQENBm2c
+         oqqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713891836; x=1714496636;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BixicrujN2w/NN7W8Yk1bOtYDD16jf87ysiCrI+mjZw=;
+        b=NFc48+q07nvxQI/nNZxeHmlp4TZUhaDhIyX2tMUDBoPpBoNPeULccPApPYdPPyx/XH
+         DXxnj/+RszA0NjX/CpEhGKfWh0xERdlpt0mAuf4Lh24+GWcSdHTMfYq5Js1IxQTPlyc8
+         3pJDBvwKk5FQ8ZHVAXFKHMHFfBNS3AJdeQpK8TDNfPaa72b6VyarwOq9bGyutlIVphXe
+         Sn4Iw8J6LbFUAULUVCwocp1PX30+bNNKOtZiE21qJiJjhxVk85fa5yWiwBl0ZYYFAzJb
+         EHZgDa1XoHFyKLsf+tiN+Sq4yfkloNvGp6XF0cQDwLgwsmw/Rjn5+3zMONNei7n2QqWx
+         U/bA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWYXrGV6gqEvqvggbN0U+gYOyFCJaYcMf3rfSxjbJcNHF+9ozSYg5PPqtP49BZlB7AT6tgQzk1JpO9o5bMARckq7ZDKt7Cpq0JACD736u6+yHYZq6okokNdBHbWYZiXAQFHVWy7GKDdN2hgYgUBwdriJmy1+qQEmFTEecj6aCg+YhYqlHeHA==
+X-Gm-Message-State: AOJu0YyJBSfaeO7F9e65v0ZNCCBv/vWdYjO9LE1AaiRcpnz+jyja3R/m
+	/LMRvYHbV1+UgG1Wu0slK0EjJP0Er4mt+95061mUyNlmOHpfNEyP
+X-Google-Smtp-Source: AGHT+IEZ4GKNo+ZGTgIioZ6E8Q2/FLCJDMv5q/lYaYPH5b0i9NhmaYmcUV6iKdtOBuu19Rf+VfV0Ww==
+X-Received: by 2002:a17:90b:1205:b0:2ad:c098:ebca with SMTP id gl5-20020a17090b120500b002adc098ebcamr7093107pjb.20.1713891835397;
+        Tue, 23 Apr 2024 10:03:55 -0700 (PDT)
+Received: from KASONG-MB2.tencent.com ([1.203.116.31])
+        by smtp.gmail.com with ESMTPSA id s19-20020a17090a881300b002a5d684a6a7sm9641148pjn.10.2024.04.23.10.03.51
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 23 Apr 2024 10:03:54 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Neil Brown <neilb@suse.de>,
+	Minchan Kim <minchan@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/8] NFS: remove nfs_page_lengthg and usage of page_index
+Date: Wed, 24 Apr 2024 01:03:32 +0800
+Message-ID: <20240423170339.54131-2-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240423170339.54131-1-ryncsn@gmail.com>
+References: <20240423170339.54131-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240423-nfsdctl-v3-3-9e68181c846d@kernel.org>
-References: <20240423-nfsdctl-v3-0-9e68181c846d@kernel.org>
-In-Reply-To: <20240423-nfsdctl-v3-0-9e68181c846d@kernel.org>
-To: Steve Dickson <steved@redhat.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=9TFJBIp1pcmU93Uwfru2PyRm2ybd79FOSpQ0vTq+ap0=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmJ+J/K7ZY904geoTO+eOGp3yEBLMzIuR4w2hAw
- QOqu8rVVwKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZififwAKCRAADmhBGVaC
- FUDiD/0d01SvixTBBczpSADE1OEd1emYxoQYfjdPiGEUere5l5yVy2btITj/5jltCu+ZD3VvA20
- BDduXVfyPHoUoQB4VAjtIO8hT9jtBAhAom/c5SzGphVDToNEkdi+Fo4XloK/lxsRSUVh6+KCcZU
- vzyI+CBOQDNGPx2XxY1XUpSQpyxwkIpXAt9aGHKUFhnyGWDSHAocu4x91pzv6HjwqeQTs83mQKh
- M60ORZXfG/y24PpTYFvFD4WH1cr0O2cwuBuS82hrg5pEi4mE5zRVlW+eIDNn5RcNOJN3xTzFcF8
- UxsO9eFj5aawM2+utF0Xwvz01/KfPNkQoUc+qNZ0vygm5AGHZ6rlwz1+UUzsBAf/n8mtdGU5odH
- bMh67LuR2XyXM5Jrmw9AquAZvs8oVgzViY59wgMGuHI87ygimXahE4Amwmek9epT9P3/GwXvfH4
- D4ogspu235pRQ0B/GSqc0KOsFcMM1Rnwyut1h4TYrR0y3XkXMQdqiBr0Lucf6dDwtO8v+9foe6U
- VO1q1KH/7sVr8x7FfEfMtXwf0cpi0UAg+KzauENg+EANgftlWo4LKxv1StqdUKmsmcRyZkRMHQX
- 2dRnDf0toXyCILOS0MOqvmYQIba10h1GaJb266oHINJM/aLgJrNylCOGhD5L0E4ut30fxc6gzZp
- FNkjDQv/+lrcF+A==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-Attempt to use nfsdctl to start and stop the nfs-server. If that fails
-for any reason, use rpc.nfsd to do it instead.
+From: Kairui Song <kasong@tencent.com>
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+This function is no longer used after
+commit 4fa7a717b432 ("NFS: Fix up nfs_vm_page_mkwrite() for folios"),
+all users have been converted to use folio instead, just delete it to
+remove usage of page_index.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
 ---
- systemd/nfs-server.service | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/internal.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/systemd/nfs-server.service b/systemd/nfs-server.service
-index ac17d5286d3b..8793856aa707 100644
---- a/systemd/nfs-server.service
-+++ b/systemd/nfs-server.service
-@@ -23,8 +23,8 @@ After=rpc-gssd.service gssproxy.service rpc-svcgssd.service
- Type=oneshot
- RemainAfterExit=yes
- ExecStartPre=-/usr/sbin/exportfs -r
--ExecStart=/usr/sbin/rpc.nfsd
--ExecStop=/usr/sbin/rpc.nfsd 0
-+ExecStart=/bin/sh -c '/usr/sbin/nfsdctl autostart || /usr/sbin/rpc.nfsd'
-+ExecStop=/bin/sh -c '/usr/sbin/nfsdctl threads 0 || /usr/sbin/rpc.nfsd 0'
- ExecStopPost=/usr/sbin/exportfs -au
- ExecStopPost=/usr/sbin/exportfs -f
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 06253695fe53..deac98dce6ac 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -790,25 +790,6 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
+ 	}
+ }
  
-
+-/*
+- * Determine the number of bytes of data the page contains
+- */
+-static inline
+-unsigned int nfs_page_length(struct page *page)
+-{
+-	loff_t i_size = i_size_read(page_file_mapping(page)->host);
+-
+-	if (i_size > 0) {
+-		pgoff_t index = page_index(page);
+-		pgoff_t end_index = (i_size - 1) >> PAGE_SHIFT;
+-		if (index < end_index)
+-			return PAGE_SIZE;
+-		if (index == end_index)
+-			return ((i_size - 1) & ~PAGE_MASK) + 1;
+-	}
+-	return 0;
+-}
+-
+ /*
+  * Determine the number of bytes of data the page contains
+  */
 -- 
 2.44.0
 
