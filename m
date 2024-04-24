@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-2971-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2972-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30A938AFD44
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 02:20:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B44BC8AFD45
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 02:20:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 603011C219DD
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 00:20:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2D6CB216BF
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 00:20:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9902D800;
-	Wed, 24 Apr 2024 00:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2D8D7FF;
+	Wed, 24 Apr 2024 00:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAvrWj+d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5HtykLd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7497D7EF
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 00:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7237EF
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 00:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713918003; cv=none; b=reLVL54BrrEXeTcXPgz8IE6WzKCyRU9UteyjfbARS1cSy+tJUQ90Y+rzXmVV3ho0ZwnKUj/9/TYFp0hZjQNnI1DbndEmOzPdLpLg/W/TNoleoU95lpCptFC9NeB5buIg7qkMi/8R43znW23/m5GiaINO46SuqppIPRQez5VPIEo=
+	t=1713918009; cv=none; b=ujylyotdAdUbtbXt2IHEWEQeCt3F8tg7WIze/yMFqO0Xs5zaDgrePB1g28Vhsy2K2n+Qm8VLVnE8cf3725Cy5TUTDKHx7tsgUlCpLUCBiT+d/Cnm6K216LtCsl82ZZSmSRWnvnchAMF4BEAKNralROPhi65+MA8SHl/bxrNx0r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713918003; c=relaxed/simple;
-	bh=KnRYrWXlVBWfQWyKXqm5lpx4+zHTJxEgtvHtVVFYoDU=;
+	s=arc-20240116; t=1713918009; c=relaxed/simple;
+	bh=TNUmONbsXgwdI8lXRxiSNutmUSx36X9bNyjths3t8dI=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rBo8GamGMKrF5L/60ISrt6PHZgRmUgPStY8Qj9FM2XRyy8SgpPA9zXMKRq6g8RTqh44UzkPMVebRNR9BLw9XakieR3aQRFSa4CfAuqrQ/B3YTNg+LXUida54woET63ALe9+jrfluaayAUuEkYbFYhyr8F0+H2Nht7Fi+2okCPgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAvrWj+d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B516FC116B1;
-	Wed, 24 Apr 2024 00:20:02 +0000 (UTC)
+	 MIME-Version:Content-Type; b=LNccl12Py+S9J2vATXZdyaSx+JqilfKOPC6W4v8VOJPHCCgv05oiaDuUGDwh0IxESivXh47cV7qadygChiNAJD3z6TgBc3t0BqMxSc83GzPUnYdoxCpdjFcRVRdbpab0UE5NubHpYL8nmiGUx/uMZQ7Dd1ouOfxl/ObR+Lp657E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5HtykLd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB2DC116B1;
+	Wed, 24 Apr 2024 00:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713918003;
-	bh=KnRYrWXlVBWfQWyKXqm5lpx4+zHTJxEgtvHtVVFYoDU=;
+	s=k20201202; t=1713918009;
+	bh=TNUmONbsXgwdI8lXRxiSNutmUSx36X9bNyjths3t8dI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MAvrWj+d0a5bWmDeQ8fpfvfFKa8m2DehQV+4LfnhLnlFxPy52zdf/YgBF9mZri7Oc
-	 Dp8WxFwRlghkgH122Xlome7aC2rF1MmxGwZ2nG2EjlgvDnx6rHRalV0EmJz2n4JrBi
-	 RdjR+DS01pO+XAkioCDHryPk9bF76alqtFUG97wVvqzXC/yAqpeNWTp6ZXCx1z0TYk
-	 6fZJlf5ZFUuvIn1F1sykv14RCS7GLwZ7v49oD+jd33Kvpm/6lAFMV8twX2cPt9cOgT
-	 IvpgjcEpEPhYt5/yu9uUwpyLHPP9u+kMHjnR3bk+S51mb3spIy8JKA7St/BmibXd2a
-	 9vp+1NZbq9l1Q==
-Subject: [PATCH 1/2] Revert "NFSD: Reschedule CB operations when backchannel
- rpc_clnt is shut down"
+	b=R5HtykLdO/Fypw9MRRZn18Qp1bEPdB8xtZlOpG8T93dkFhUCxG6tFta5g4zvjinwN
+	 RgrifciWrBrsl0/3ggkZpPrEZKicWCU9FplrMYYNnTtPeu7g6UkdwTepOCa7Aebyoj
+	 bZHoV6CrPcl4YDKCbAnh2U8tnW6SyIX7YpXLtxS0PJhpA+o7bWblJVttujs8a5LAlJ
+	 lP1pf3ztJxK+hoRdflemqHMD5/mNVIvFhXtgImRhjidAV8amktOBsStP7HYaRku1+E
+	 WDFuL7wRxzjaEPa5CEYO+kwRj4/nKCpuTl7dAiZGFYMImBZKYGBD75EDsw1td2a/oA
+	 Vn6K7NXmcSNYg==
+Subject: [PATCH 2/2] Revert "NFSD: Convert the callback workqueue to use
+ delayed_work"
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org
-Cc: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 23 Apr 2024 20:20:01 -0400
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 23 Apr 2024 20:20:08 -0400
 Message-ID: 
- <171391800174.101038.3614787261244381619.stgit@klimt.1015granger.net>
+ <171391800819.101038.12426618606693057125.stgit@klimt.1015granger.net>
 In-Reply-To: 
  <171391782806.101038.14694256680827795210.stgit@klimt.1015granger.net>
 References: 
@@ -65,74 +65,60 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The reverted commit attempted to enable NFSD to retransmit pending
-callback operations if an NFS client disconnects, but
-unintentionally introduces a hazardous behavior regression if the
-client becomes permanently unreachable while callback operations are
-still pending.
+This commit was a pre-requisite for commit c1ccfcf1a9bf ("NFSD:
+Reschedule CB operations when backchannel rpc_clnt is shut down"),
+which has already been reverted.
 
-A disconnect can occur due to network partition or if the NFS server
-needs to force the NFS client to retransmit (for example, if a GSS
-window under-run occurs).
-
-Reverting the commit will make NFSD behave the same as it did in
-v6.8 and before. Pending callback operations are permanently lost if
-the client connection is terminated before the client receives them.
-
-For some callback operations, this loss is not harmful.
-
-However, for CB_RECALL, the loss means a delegation might be revoked
-unnecessarily. For CB_OFFLOAD, pending COPY operations will never
-complete unless the NFS client subsequently sends an OFFLOAD_STATUS
-operation, which the Linux NFS client does not currently implement.
-
-These issues still need to be addressed somehow.
-
-Reported-by: Dai Ngo <dai.ngo@oracle.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218735
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4callback.c |   20 ++------------------
- 1 file changed, 2 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs4callback.c |    6 +++---
+ fs/nfsd/state.h        |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index e440f72b9d4e..d153af81f406 100644
+index d153af81f406..6aff46701aa1 100644
 --- a/fs/nfsd/nfs4callback.c
 +++ b/fs/nfsd/nfs4callback.c
-@@ -986,14 +986,6 @@ static bool nfsd4_queue_cb(struct nfsd4_callback *cb)
- 	return queue_delayed_work(callback_wq, &cb->cb_work, 0);
+@@ -983,7 +983,7 @@ static struct workqueue_struct *callback_wq;
+ static bool nfsd4_queue_cb(struct nfsd4_callback *cb)
+ {
+ 	trace_nfsd_cb_queue(cb->cb_clp, cb);
+-	return queue_delayed_work(callback_wq, &cb->cb_work, 0);
++	return queue_work(callback_wq, &cb->cb_work);
  }
  
--static void nfsd4_queue_cb_delayed(struct nfsd4_callback *cb,
--				   unsigned long msecs)
--{
--	trace_nfsd_cb_queue(cb->cb_clp, cb);
--	queue_delayed_work(callback_wq, &cb->cb_work,
--			   msecs_to_jiffies(msecs));
--}
--
  static void nfsd41_cb_inflight_begin(struct nfs4_client *clp)
+@@ -1482,7 +1482,7 @@ static void
+ nfsd4_run_cb_work(struct work_struct *work)
  {
- 	atomic_inc(&clp->cl_cb_inflight);
-@@ -1502,16 +1494,8 @@ nfsd4_run_cb_work(struct work_struct *work)
- 
- 	clnt = clp->cl_cb_client;
- 	if (!clnt) {
--		if (test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags))
--			nfsd41_destroy_cb(cb);
--		else {
--			/*
--			 * XXX: Ideally, we could wait for the client to
--			 *	reconnect, but I haven't figured out how
--			 *	to do that yet.
--			 */
--			nfsd4_queue_cb_delayed(cb, 25);
--		}
-+		/* Callback channel broken, or client killed; give up: */
-+		nfsd41_destroy_cb(cb);
- 		return;
- 	}
- 
+ 	struct nfsd4_callback *cb =
+-		container_of(work, struct nfsd4_callback, cb_work.work);
++		container_of(work, struct nfsd4_callback, cb_work);
+ 	struct nfs4_client *clp = cb->cb_clp;
+ 	struct rpc_clnt *clnt;
+ 	int flags;
+@@ -1528,7 +1528,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+ 	cb->cb_msg.rpc_argp = cb;
+ 	cb->cb_msg.rpc_resp = cb;
+ 	cb->cb_ops = ops;
+-	INIT_DELAYED_WORK(&cb->cb_work, nfsd4_run_cb_work);
++	INIT_WORK(&cb->cb_work, nfsd4_run_cb_work);
+ 	cb->cb_status = 0;
+ 	cb->cb_need_restart = false;
+ 	cb->cb_holds_slot = false;
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 01c6f3445646..2ed0fcf879fd 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -68,7 +68,7 @@ struct nfsd4_callback {
+ 	struct nfs4_client *cb_clp;
+ 	struct rpc_message cb_msg;
+ 	const struct nfsd4_callback_ops *cb_ops;
+-	struct delayed_work cb_work;
++	struct work_struct cb_work;
+ 	int cb_seq_status;
+ 	int cb_status;
+ 	bool cb_need_restart;
 
 
 
