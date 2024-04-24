@@ -1,140 +1,125 @@
-Return-Path: <linux-nfs+bounces-2980-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2981-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE93C8B04B3
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 10:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B438A8B0795
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 12:42:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D31851C222B8
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 08:49:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA2BA1C2302D
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 10:42:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D40158872;
-	Wed, 24 Apr 2024 08:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B8A91428F9;
+	Wed, 24 Apr 2024 10:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2NwAL2I"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Zsw7YpMD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DE3D29E;
-	Wed, 24 Apr 2024 08:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A72F1598EC
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 10:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713948546; cv=none; b=eg9oNKez8vw5UKjMxhmDL1efWhMox1hNlRcOu/m2NZCHm7PHX8tDwnqr0LyRGL4DB1aJkw6uv+XbMWgFb/MIdWAZQ0WF88PQ0NOCZrxexenV/MJBYp4rAOTV9El6yXl0nFkNJrSkPGFKt2VU58il4s5JAFzgGuyGuoNWTxxYvoI=
+	t=1713955357; cv=none; b=hbVze8dsHe4+nre8ClVQPiGaSg8B0oSnaqBjUtXKjQtWpNBOrR9vWiqV3sHhYZsQtszHYA0qD1VwQvg4HgtVa/Yebhz1RmxYdo0t+M4cYNuuoCEuwr+1vuf+wQXAuBoUHxXA2JNQ0cREFoDst21A/fLeiMJXYWsKiO5/mS30js4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713948546; c=relaxed/simple;
-	bh=Xm6NxcEd3ZnINqVPRreRGDQC7HahRju6fclnxD6CacM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hjoBwVNNH2qujTnA+4Kc86f70rgcbFSgqm4PtGKkxQLnEwuENAcPXsXnUYaCS5GyasyapCRNATURy3QjNLYp2NODQNrkx9qt7F6Ymo5f4b+EZWqkoPBgr4crDiUqT9KER9gKgJaqnidFwxmEEYpoRemIQTJ5BmTrchVu0+84ROY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2NwAL2I; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2db6f5977e1so86973121fa.2;
-        Wed, 24 Apr 2024 01:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713948543; x=1714553343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/kFQR8E+rQp7uC9yW6Ow4kuJJBmzBQxe59gx0jzroTg=;
-        b=J2NwAL2IXzafeNEeZfNuHkYmff6fq82dIPFvHh31C19LgwZhSCI1I65otlzlQMhGst
-         uWNTwuN9osJ0lTyr9KpwrUltg510uX7Q4AjORJUCCOfQmUIanBLiWVAijQuHv4KsFZBv
-         VsnSB1ocGPwyOuEo+7TwCFM25y4d9JWM+J7JPbB3TFIkjzU5w+OKNH74lAC+3wIcYU9E
-         0NFsfMRZKUhjLfzAbQ9JRAGzrnQAVNlTvAhGR0cKYmn0iUZpMkTEp1sdDgVVpcOeQ0IS
-         J/hjevR3Y2nu6a+zVqeno72OjEEVjT37RCQvH0RjEGmsmvW5vcejepJf0Vgl6jQAI06M
-         +oqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713948543; x=1714553343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/kFQR8E+rQp7uC9yW6Ow4kuJJBmzBQxe59gx0jzroTg=;
-        b=kh9GM9Bd6Lj5FygFbl4/7nmP6v/sYrUZIty0N0ACgJdO5QdKQup8S10duj/xwwJ9fB
-         /j37u3xHdX+SWDR9qY6KAKYdFXCQHzH2R47A3c6XTmxdTWQ9mCMkf6Ren0mK6EDiH/oC
-         r2PUsaYqqWNVK6lZKfBxc9wMKvWW8U3e72UfhL0KnWgDeXUy+W/FgRUQqMGOONIqFA0L
-         kXbZUL4DaMl9vbafr1Hj8k4jej2/85W2KXnndLs+BxWnlIhZ0XejodzJTTR26R2cRXuU
-         M3yc0WH4/K78p23vRxc0/3e5VvJuclbTfNS85bLBaEE8C5YVEjLXv2LaGFMKQMlCJeF+
-         Jnmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpSAoFsx0M+D/5Gcv1E/NGT54GwqB4/joAxzf3CMbxpvMAxSTwK1Xs0+Z2DckS6ncu/m1KrB2JG52kPS9VM5iOiMO+JGMbq7dHzeCTBWnAeEJs7SP0etVTRylfsDU8u17WUQ6YKNOIxn67jRdNTCebxxCEf0g/LnLnuVFlr52pE/8I4O+N9g==
-X-Gm-Message-State: AOJu0YzyfLy8u/ZZCK5Tu1q6hZTDgqNN52lm3erj2h7ZCS+mIJ/O9FST
-	OP/vTvUfdaClaT1sdpKuoIKvDahJ7BKlMNfq3qhnE+761GXHB7HZu8hcIgf9enbH/n9JfZWDihQ
-	wf4meYSzkZ98iHY22GOVejSgZFv0=
-X-Google-Smtp-Source: AGHT+IHWBLhdfxJmQz/AuelJzR0hT0UyUTcb1wFB00Jyxy3z+kUkHuir+BrO9+R3ccWtp+R2htlrw6iIzlqkMNtzqWs=
-X-Received: by 2002:a05:651c:49d:b0:2d8:3d69:b066 with SMTP id
- s29-20020a05651c049d00b002d83d69b066mr978648ljc.7.1713948543126; Wed, 24 Apr
- 2024 01:49:03 -0700 (PDT)
+	s=arc-20240116; t=1713955357; c=relaxed/simple;
+	bh=E+PxfHVWGnXN3PvLMj2IPQkgGHbi6RwJRPrI2INgD+g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gcCV3dWk+BfVVJpBQbN8Re7QSpdXNb4fCA3sFu7gvD77NWc3qqdTOv2ypO75Zn1/3BjaG9uGYOwe00GuEN0HNnGXoWrQuVil6kkQHj82k6wXA4HZQIFKkarTcX8SeGmJPGEhtlq0utEx3YfZ74JjG1pvEuqZqDDS0SbClvwKL4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Zsw7YpMD; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1713955355; x=1745491355;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=E+PxfHVWGnXN3PvLMj2IPQkgGHbi6RwJRPrI2INgD+g=;
+  b=Zsw7YpMDiwgHe8JbyeRXJka0WZiogO7tonBTlvqCxNshfRFlec9oqKuv
+   py2Bh7yo5eCDaVNnRQPEeqJb5lkSirZSSatibMvgHiQuc/GlMD7AFnA1s
+   vQLYZ/ukk0XDyhaCCWcmiGOWa5CZgPT1zuuGUzX88c3lqMwPVBVT2n7rg
+   Pk80RdNVB7IC/SSbV+ALTeo+idHQ2ponzRYDRHBqy/86aOVf+bZVjF8fI
+   zI6xmVTNOD29T4ieYE1AYtqa2cLzxfLYoy0bpQzw1ChhC+w1vB2wygyBN
+   t6GjyZfSo6v2e4ePtr/xEidWY2TInAhtOnlTSHuYD2MJ6RsIHM57vx7Pk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="135936848"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708354800"; 
+   d="scan'208";a="135936848"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 19:41:24 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 41026E8DAE
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 19:41:21 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 7AB6FBDC8B
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 19:41:20 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 1AC30202CE13B
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Apr 2024 19:41:20 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id EC6F41A000A;
+	Wed, 24 Apr 2024 18:41:18 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: rpc_show_tasks: add an empty list check
+Date: Wed, 24 Apr 2024 18:41:12 +0800
+Message-Id: <20240424104112.1053-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423170339.54131-1-ryncsn@gmail.com> <20240423170339.54131-8-ryncsn@gmail.com>
- <87sezbsdwf.fsf@yhuang6-desk2.ccr.corp.intel.com> <ZiiFHTwgu8FGio1k@casper.infradead.org>
-In-Reply-To: <ZiiFHTwgu8FGio1k@casper.infradead.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 24 Apr 2024 16:48:46 +0800
-Message-ID: <CAMgjq7Cu8q9ed_HY2K_iHwm7gKvYWkadS+Zj-GR1CaVwDMwqNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] mm: drop page_index/page_file_offset and convert
- swap helpers to use folio
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
-	linux-afs@lists.infradead.org, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28340.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28340.006
+X-TMASE-Result: 10-0.263900-10.000000
+X-TMASE-MatchedRID: Dkfyeyxtv0ZSuJfEWZSQfEhwlOfYeSqxTSz0JdEAJbT5OKw7VsktYORg
+	EMvCxuZnIvrftAIhWmLy9zcRSkKatXbph30JxFrnJmbrB1j4Xwp9LQinZ4QefCP/VFuTOXUT3n8
+	eBZjGmUzkwjHXXC/4I8ZW5ai5WKly+s4IRxSS3WIy3ndzvFBLAKCtPMjzuBGdbA6yU3ub6+6DRf
+	Cc+NtErSQ8n/8r1yBTFajIpKPW47CSL1SZY9zFQN0BJZs18LwsEWW0bEJOTAVAdUD6vW8Z1mZAM
+	QMIyK6zB8/x9JIi8hKhgLRzA45JPQ==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Wed, Apr 24, 2024 at 12:06=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
-g> wrote:
->
-> On Wed, Apr 24, 2024 at 10:17:04AM +0800, Huang, Ying wrote:
-> > Kairui Song <ryncsn@gmail.com> writes:
-> > >  static inline loff_t folio_file_pos(struct folio *folio)
-> > >  {
-> > > -   return page_file_offset(&folio->page);
-> > > +   if (unlikely(folio_test_swapcache(folio)))
-> > > +           return __folio_swap_dev_pos(folio);
-> > > +   return ((loff_t)folio->index << PAGE_SHIFT);
-> >
-> > This still looks confusing for me.  The function returns the byte
-> > position of the folio in its file.  But we returns the swap device
-> > position of the folio.
-> >
-> > Tried to search folio_file_pos() usage.  The 2 usage in page_io.c is
-> > swap specific, we can use swap_dev_pos() directly.
-> >
-> > There are also other file system users (NFS and AFS) of
-> > folio_file_pos(), I don't know why they need to work with swap
-> > cache. Cced file system maintainers for help.
->
-> Time for a history lesson!
->
-> In d56b4ddf7781 (2012) we introduced page_file_index() and
-> page_file_mapping() to support swap-over-NFS.  Writes to the swapfile wen=
-t
-> through ->direct_IO but reads went through ->readpage.  So NFS was change=
-d
-> to remove direct references to page->mapping and page->index because
-> those aren't right for anon pages (or shmem pages being swapped out).
->
-> In e1209d3a7a67 (2022), we stopped using ->readpage in favour of using
-> ->swap_rw.  Now we don't need to use page_file_*(); we get the swap_file
-> and ki_pos directly in the swap_iocb.  But there are still relics in NFS
-> that nobody has dared rip out.  And there are all the copy-and-pasted
-> filesystems that use page_file_* because they don't know any better.
->
-> We should delete page_file_*() and folio_file_*().  They shouldn't be
-> needed any more.
+add an empty list check, so we can get rid of some useless
+list iterate or spin locks.
 
-Thanks for the explanation! I'll update the series, and just delete
-paeg_file_offset and folio_file_pos with more auditing, to make the
-code cleaner. Should I add a suggest-by for the removal?
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+---
+ net/sunrpc/clnt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 28f3749f6dc6..749317587bb3 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -3345,8 +3345,13 @@ void rpc_show_tasks(struct net *net)
+ 	int header = 0;
+ 	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
+ 
++	if (list_empty(&sn->all_clients))
++		return;
++
+ 	spin_lock(&sn->rpc_client_lock);
+ 	list_for_each_entry(clnt, &sn->all_clients, cl_clients) {
++		if (list_empty(&clnt->cl_tasks))
++			continue;
+ 		spin_lock(&clnt->cl_lock);
+ 		list_for_each_entry(task, &clnt->cl_tasks, tk_task) {
+ 			if (!header) {
+-- 
+2.39.1
+
 
