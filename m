@@ -1,237 +1,228 @@
-Return-Path: <linux-nfs+bounces-3000-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3001-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2C78B2138
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 14:05:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 835668B217C
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 14:19:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3111B1C22913
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 12:05:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0864F1F2170D
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 12:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671A212F59E;
-	Thu, 25 Apr 2024 12:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091E312AAC5;
+	Thu, 25 Apr 2024 12:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlvwO97+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0wsmt/l"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A6612C555;
-	Thu, 25 Apr 2024 12:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCE212BE89
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Apr 2024 12:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714046620; cv=none; b=fDWwx2j8d0v9c2XLCxStLd7xbvEP+mInyY3y6ZrmliFIrUqOFfchZT3Mnod+weBfc2OEl2fQeHqbA1+kmG7xngcLmNGaFD4WbpqATZTAmTgmu4ThyfeB8y1ut2ix4uQr5+roN+3QQdvGBroUgg3ncwBjOlvSTNdUGBnBrMrKRgo=
+	t=1714047566; cv=none; b=NNCjuDelTtAQT0sNXT7ny3GvU8e2nlTcf1ZSgKh8tIVk3rLnpVaLctdV+J4NNaEQA0aX1+8JJxFVCrT0U33AuWV6N7dgrIA67tProsZ0ObES1sLEuHhy2XTotm2SoKotP9D9fP8OR1krlf3KAWyt6ZNeS1spBfg+nMMA+eo19Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714046620; c=relaxed/simple;
-	bh=GH2bezeza5fhtu1z47o7+tK1nF0tM45eNw6jY53xEPE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oxMoZnyYPcMIOtfzzylGB/K93s5Y3AZ9aFCnOwhW+ya5n5ljDulSMP1tB7DUKOL4x+6gMX7syzvdYsd7uY2GNCJ4GdUY8anlJ1T3z0GmLy95GCyoV7hNPVzGkQHgUNcULtX5ZvX2wXpsKmerQowrJ5CG8EwSdNZVsjpHi8ssdKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlvwO97+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57C80C4AF07;
-	Thu, 25 Apr 2024 12:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714046620;
-	bh=GH2bezeza5fhtu1z47o7+tK1nF0tM45eNw6jY53xEPE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=hlvwO97+skX0DnQ7KmoLQpuPjt5gbTop7ZeYcx75/u+/9Dz09gddrHv517YKzxw7w
-	 Qjy7nqjM8G86/k9CgiST/x5bMoYOIIcwOv30WR2ZV5/GarZzexpzOPDVcEibmCOghx
-	 4hFik8LQp2ncQCjfaztxW2QBBoQ1tJmJeVoXovOuUKUq4y9quxWzEinehnlw2t14+1
-	 fln8Odj11rSU4B4R6moihsXxptrLiHoliaLwWZIIPTW8WKm2wGlV83UhCzWIy74oaO
-	 YIUN3cxvWDIGUHcvrZL5yTE9XiDzORjnedQPSsWYJCP662KTMiXlQMjRtkzIwXld86
-	 Je/gyqEIaFnAg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD62C10F15;
-	Thu, 25 Apr 2024 12:03:40 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 25 Apr 2024 14:03:06 +0200
-Subject: [PATCH v4 8/8] ax.25: x.25: Remove the now superfluous sentinel
- elements from ctl_table array
+	s=arc-20240116; t=1714047566; c=relaxed/simple;
+	bh=ltwivhPTI2+aOsMnH+9wjPtGPPtJ8qJs/+zW4UXRbhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Xn5RtCemSzHxVlzjkg+cIfSjM+4X74H169DbWU7rUqh+zKm5/Iguj2GyLtCg9wRIpWA/QH+cvbo93b3l84Grwz+1xYP7NSNEWXq+3uxIVulI78SEAJ6aHwywFtXfFhs0mejFDhlRJa6kwH/koRXgfs97mnAEjGEcoMEbbUeSW9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0wsmt/l; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5ad7737ae84so497868eaf.2
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Apr 2024 05:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714047564; x=1714652364; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=obdMhYrUMbq19CHKymL34S03U0w37SHCxgJsRpC7HDQ=;
+        b=L0wsmt/ltU+O/6QBEYaoznMhi3VQvoK0diCqkshyeELMtIvdgk2n71qmWYqkzHSCDP
+         cMk5JY4emU42LkASmCJjd4rCOn+ujN3F6VawxaHK9eUfeA29wGHkktEu4tn1Of1XabwN
+         5GJbwDKQSNDOOG/5JxsV38fCqv6/RDYCtmFsotzzKaTcFtxLd5mbYto1dxUyrLOgDJQh
+         BtlXkrM8h05nkmQWXuBsaigkzAbPOVJRvWN9mQbWcFor89zku89AeRMu3eIJ94vgFg75
+         Edbh51dgvEy6hUph+qtL6xKPBkMW6dELTmBOFacCtVrtADjN4kMkyPWlXrcaofExHGRh
+         rXNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714047564; x=1714652364;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=obdMhYrUMbq19CHKymL34S03U0w37SHCxgJsRpC7HDQ=;
+        b=t7OEi/lWHn+jl8mq6hCgnDqSmqYlTmloDzJCtJgg0VzaBi40QLaI8RdgNSuyo5B+qN
+         FrrBh+ezqoUp2Q/9umm8PbtoI/OTfrRL56xl0Fkc3UfGQC4JH9hQLUXKsivKe+Astgax
+         Jw7WKA0Du7lsy07ll1aJfGh9WfaJyOI+L0qgs26cNxamh2iLC2pygipS5Om8wVPzQiKd
+         ehOtC0HbUvigGopwwrUg3gxAW8eeEOA1Npzmq/DudH7n3OoEyR2aepgKJIiyhynbHF+r
+         Y8DIs5Yn/X2MkBPXnM/Jp4/W5vz7NtiBgUbUNWNtQyGP+6xOGzXcHc0OKgDe/yQjfrFh
+         r3lA==
+X-Gm-Message-State: AOJu0Yy5hn1Z8S7bgEZnL6+Y+YcazMY4ksfA0MT/DZmaYJTbHguJbEFw
+	NDS1CE+JJPU4h7HnFZe9PvLm609O2ilJ1iDEpYU65G8SvEtuzMjSKADl6+XbQNf5pne+CqppfMN
+	gSQMwfIoTdYy43Zx+5ADrbcXKNP1oANqN3Y4=
+X-Google-Smtp-Source: AGHT+IFhwwInyxMYAXPFtTSLhDNsznyBWTda+JTE1sEgIurwR6WTt2FCb8pBaithhpArpdW2Cl3AV9OmDSRnQ/rBags=
+X-Received: by 2002:a4a:54c2:0:b0:5aa:6a28:27ea with SMTP id
+ t185-20020a4a54c2000000b005aa6a2827eamr6118091ooa.6.1714047564029; Thu, 25
+ Apr 2024 05:19:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240425-jag-sysctl_remset_net-v4-8-9e82f985777d@samsung.com>
-References: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
-In-Reply-To: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
- Stefan Schmidt <stefan@datenfreihafen.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
- Steffen Klassert <steffen.klassert@secunet.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- Allison Henderson <allison.henderson@oracle.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
- Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
- Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
- Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, 
- Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
- Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
- Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
- Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
- Kees Cook <keescook@chromium.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
- Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3995;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=NZnJW6XWgopf75vh1g8TgFTlOj8qaKFukPEjDf1p53c=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYqRphNUhwxu2kexo/hYhmJ491ahYV7cLFwq
- w7VYyxuqYw7eokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmKkaYAAoJELqXzVK3
- lkFP/g4L/Rw4jFAj8rRf+PUjXY8X6e94Tuaw6P4lDE+mlm7nTxevertGEyJPmkNLQDVRzXXjZ6x
- DIDWA6v0PSTnMQotoOGKoGWYNg5JfbvP4TLw874hFMnI6G9rxnbeOzwh1L7Ks+lwv48hoZ7danV
- hTUguAsJyW5uxY0s53pEEm7tZzUXkO2aHOldg2oqKyXaGeRsmif7sWTkdwww31zTzWRXWJ+dZpG
- nIxdmPJRJOjhU8L7Jw0NppJvjTdKjdCf3BqjlQfbwKqpU+pb6BJSSFJeOzMsAGpMbFOqqYyijt9
- QHjSF8II19VF3jrxsRhb3ZGFHIY0v64VhBPZv3IeFm7cqaV7aSkSazJl8PLjCZCDQ0y24sR0Dpp
- Jl9tM99YG88VpBPncqPYzTrXWVwHs01y9eyV9iyTJozFFLoEAYvGC0Dvl8rnbNpTG5bD+T0eF6Z
- Eh162u2q2KdMYqraFWbaHk5T5OblKsB7S33tJM5YpdSKXmqW0g3RieYS9ac3pL7TWz4rwfyDdY6
- 8Y=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
+References: <662a39f7.BuSJ6zaMPTMaMa7L%james-p@moving-picture.com>
+In-Reply-To: <662a39f7.BuSJ6zaMPTMaMa7L%james-p@moving-picture.com>
+From: James Pearson <jcpearson@gmail.com>
+Date: Thu, 25 Apr 2024 13:19:12 +0100
+Message-ID: <CAK3fRr8N4dNz2+K-BgaZAcswbfXrDem6Z9fRtgTDMJa=Y0R8gA@mail.gmail.com>
+Subject: Changing the precedence order of client exports in /etc/exports
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Joel Granados <j.granados@samsung.com>
+Many years ago, I asked on this list if it was possible to change the
+precedence order of exports listed in /etc/exports where there is more
+than one possible match (see the thread at:
+https://marc.info/?l=linux-nfs&m=130565040627856&w=2) - and answer was
+'No'
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which will
-reduce the overall build time size of the kernel and run time memory
-bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+At that time, I used a simple hack to force the precedence order I
+required (by modifying the 'MCL' enum order in nfs-utils
+support/include/exportfs.h)
 
-Avoid a buffer overflow when traversing the ctl_table by ensuring that
-AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
-done with a BUILD_BUG_ON where ax25_param_table is defined and a
-CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
-in the ax25_dev_device_up and ax25_ds_set_timer functions.
+However, the issue has come up again for me, so I thought I would see
+if I could alter the precedence order by adding an exports 'priority='
+option as suggested later in the above thread
 
-The overflow happened when the sentinel was removed from
-ax25_param_table. The sentinel's data element was changed when
-CONFIG_AX25_DAMA_SLAVE was undefined. This had no adverse effects as it
-still stopped on the sentinel's null procname but needed to be addressed
-once the sentinel was removed.
+I started with the nfs-utils supplied with CentOS 7 (based on 1.3.0) -
+and added logic to lookup_export() to check for client specifications
+with a higher priority - but this didn't work - so looking for other
+places that looped through MCL types, I added similar logic in
+nfsd_fh() - which seems to work as I expected (I'm using NFSv3)
 
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- include/net/ax25.h         | 2 ++
- net/ax25/ax25_dev.c        | 3 +++
- net/ax25/ax25_ds_timer.c   | 4 ++++
- net/ax25/sysctl_net_ax25.c | 3 +--
- net/x25/sysctl_net_x25.c   | 1 -
- 5 files changed, 10 insertions(+), 3 deletions(-)
+However, adding similar logic to the nfs-utils supplied with Rocky 9
+(based on 2.5.4) didn't work ...
 
-diff --git a/include/net/ax25.h b/include/net/ax25.h
-index 0d939e5aee4e..eb9cee8252c8 100644
---- a/include/net/ax25.h
-+++ b/include/net/ax25.h
-@@ -139,7 +139,9 @@ enum {
- 	AX25_VALUES_N2,		/* Default N2 value */
- 	AX25_VALUES_PACLEN,	/* AX.25 MTU */
- 	AX25_VALUES_PROTOCOL,	/* Std AX.25, DAMA Slave, DAMA Master */
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	AX25_VALUES_DS_TIMEOUT,	/* DAMA Slave timeout */
-+#endif
- 	AX25_MAX_VALUES		/* THIS MUST REMAIN THE LAST ENTRY OF THIS LIST */
+But comparing the code in nfsd_fh() in v1.3.0 and nfsd_handle_fh() in
+v2.5.4, nfsd_fh() in v1.3.0 does the following towards the end of the
+function - whereas nfsd_handle_fh() in v2.5.4 doesn't:
+
+        if (cache_export_ent(buf, sizeof(buf), dom, found, found_path) < 0)
+                found = 0;
+
+By adding the above lines at a similar place in nfsd_handle_fh() in
+v2.5.4, seems to 'fix' the issue and all works as I expected
+
+I don't fully understand what is going on under the hood with all
+this, so no idea if what I've done is 'correct', or if there is a
+better way of doing what I'm trying to achieve ?
+
+Below is a patch (made against the latest git nfs-utils) of what I've
+done - could anyone let me know if I'm going along the right lines (or
+not) ?
+
+(I apologize if the formatting of the patch gets mangled by Gmail)
+
+Thanks
+
+James Pearson
+
+diff --git a/support/export/cache.c b/support/export/cache.c
+index 6c0a44a3..e9392d8e 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -54,6 +54,8 @@ enum nfsd_fsid {
+        FSID_UUID16_INUM,
  };
- 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index c5462486dbca..af547e185a94 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -78,7 +78,10 @@ void ax25_dev_device_up(struct net_device *dev)
- 	ax25_dev->values[AX25_VALUES_N2]        = AX25_DEF_N2;
- 	ax25_dev->values[AX25_VALUES_PACLEN]	= AX25_DEF_PACLEN;
- 	ax25_dev->values[AX25_VALUES_PROTOCOL]  = AX25_DEF_PROTOCOL;
+
++static int cache_export_ent(char *buf, int buflen, char *domain,
+struct exportent *exp, char *path);
 +
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	ax25_dev->values[AX25_VALUES_DS_TIMEOUT]= AX25_DEF_DS_TIMEOUT;
-+#endif
- 
- #if defined(CONFIG_AX25_DAMA_SLAVE) || defined(CONFIG_AX25_DAMA_MASTER)
- 	ax25_ds_setup_timer(ax25_dev);
-diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-index c4f8adbf8144..8f385d2a7628 100644
---- a/net/ax25/ax25_ds_timer.c
-+++ b/net/ax25/ax25_ds_timer.c
-@@ -49,12 +49,16 @@ void ax25_ds_del_timer(ax25_dev *ax25_dev)
- 
- void ax25_ds_set_timer(ax25_dev *ax25_dev)
+ #undef is_mountpoint
+ static int is_mountpoint(const char *path)
  {
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	if (ax25_dev == NULL)		/* paranoia */
- 		return;
- 
- 	ax25_dev->dama.slave_timeout =
- 		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
- 	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-+#else
-+	return;
-+#endif
- }
- 
- /*
-diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-index db66e11e7fe8..4e593d36d311 100644
---- a/net/ax25/sysctl_net_ax25.c
-+++ b/net/ax25/sysctl_net_ax25.c
-@@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] = {
- 		.extra2		= &max_ds_timeout
- 	},
- #endif
--
--	{ }	/* that's all, folks! */
+@@ -877,6 +879,14 @@ static int nfsd_handle_fh(int f, char *bp, int blen)
+                                xlog(L_WARNING, "%s and %s have same
+filehandle for %s, using first",
+                                     found_path, path, dom);
+                        } else {
++                               /* same path, see if this one has a
+higher export priority */
++                               if (exp->m_export.e_priority >
+found->e_priority) {
++                                       found = &exp->m_export;
++                                       free(found_path);
++                                       found_path = strdup(path);
++                                       if (found_path == NULL)
++                                               goto out;
++                               }
+                                /* same path, if one is V4ROOT, choose
+the other */
+                                if (found->e_flags & NFSEXP_V4ROOT) {
+                                        found = &exp->m_export;
+@@ -910,6 +920,12 @@ static int nfsd_handle_fh(int f, char *bp, int blen)
+                goto out;
+        }
+
++       /* adding this here - to make sure priority export changes are
++        * picked up (this used to be in 1.X versions ?)
++        */
++       if (cache_export_ent(buf, sizeof(buf), dom, found, found_path) < 0)
++               found = 0;
++
+        bp = buf; blen = sizeof(buf);
+        qword_add(&bp, &blen, dom);
+        qword_addint(&bp, &blen, fsidtype);
+@@ -1178,6 +1194,12 @@ lookup_export(char *dom, char *path, struct addrinfo *ai)
+                                found_type = i;
+                                continue;
+                        }
++                       /* see if this one has a higher export priority */
++                       if (exp->m_export.e_priority >
+found->m_export.e_priority) {
++                               found = exp;
++                               found_type = i;
++                               continue;
++                       }
+                        /* Always prefer non-V4ROOT exports */
+                        if (exp->m_export.e_flags & NFSEXP_V4ROOT)
+                                continue;
+diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+index eff2a486..ab22ecaf 100644
+--- a/support/include/nfslib.h
++++ b/support/include/nfslib.h
+@@ -99,6 +99,7 @@ struct exportent {
+        unsigned int    e_ttl;
+        char *          e_realpath;
+        int             e_reexport;
++       int             e_priority;
  };
- 
- int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-@@ -155,6 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
- 	if (!table)
- 		return -ENOMEM;
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(ax25_param_table) != AX25_MAX_VALUES);
- 	for (k = 0; k < AX25_MAX_VALUES; k++)
- 		table[k].data = &ax25_dev->values[k];
- 
-diff --git a/net/x25/sysctl_net_x25.c b/net/x25/sysctl_net_x25.c
-index e9802afa43d0..643f50874dfe 100644
---- a/net/x25/sysctl_net_x25.c
-+++ b/net/x25/sysctl_net_x25.c
-@@ -71,7 +71,6 @@ static struct ctl_table x25_table[] = {
- 		.mode = 	0644,
- 		.proc_handler = proc_dointvec,
- 	},
--	{ },
- };
- 
- int __init x25_register_sysctl(void)
 
--- 
-2.43.0
+ struct rmtabent {
+diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+index a6816e60..548063b8 100644
+--- a/support/nfs/exports.c
++++ b/support/nfs/exports.c
+@@ -374,6 +374,9 @@ putexportent(struct exportent *ep)
+                                fprintf(fp, "%d,", id[i]);
+        }
+        fprintf(fp, "anonuid=%d,anongid=%d", ep->e_anonuid, ep->e_anongid);
++       if (ep->e_priority) {
++               fprintf(fp, ",priority=%d", ep->e_priority);
++       }
+        secinfo_show(fp, ep);
+        xprtsecinfo_show(fp, ep);
+        fprintf(fp, ")\n");
+@@ -834,6 +837,14 @@ bad_option:
+                                setflags(NFSEXP_FSID, active, ep);
 
-
+                        saw_reexport = 1;
++               } else if (strncmp(opt, "priority=", 9) == 0) {
++                       char *oe;
++                       ep->e_priority = strtol(opt+9, &oe, 10);
++                       if (opt[9]=='\0' || *oe != '\0') {
++                               xlog(L_ERROR, "%s: %d: bad priority \"%s\"\n",
++                                    flname, flline, opt);
++                               goto bad_option;
++                       }
+                } else {
+                        xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
+                                        flname, flline, opt);
 
