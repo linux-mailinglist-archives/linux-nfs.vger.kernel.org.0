@@ -1,96 +1,96 @@
-Return-Path: <linux-nfs+bounces-2985-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-2986-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9BDA8B1743
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 01:38:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF0228B17C7
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 02:08:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D2D71F220A2
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Apr 2024 23:38:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C722CB2492E
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Apr 2024 00:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8738416EC1E;
-	Wed, 24 Apr 2024 23:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD0A80C;
+	Thu, 25 Apr 2024 00:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="A/Y3/0rF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6zWxk48u";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="A/Y3/0rF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6zWxk48u"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QnO5xwDK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PEmKggTo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W1TdPT3e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2md/3vwt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB092901;
-	Wed, 24 Apr 2024 23:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8879E386
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Apr 2024 00:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001877; cv=none; b=RGar4a6mby8wZKYHTUoPMKSjzF3/n2uate0rUy3BhJDwBP2ZX0tBgOl3Yehsy68Fo1JAfWrMKmVcBo7ZgzVBpBKPQ5Hw+m7bBRW8+73yKLn21UON503EGO6Is9eZGyHmcvfyaoNFpcziJjgzZFumWBSwIvNxS/K2mwXQXlX+9jE=
+	t=1714003732; cv=none; b=PNnjKT2iSsvfM3EmE7IXL+uu66Je4tokCNDfNbr9LPhbHihDu1KOz8XJPmyHcC9uqO+jJpZB2hcRhsG8NorKhb1QtD9uUuslulx+tUI1rvtPlWqNY3Xy0GwtxjT059ZLdeIJvMAdO4+AcnSS8XM3DTY2vM0xLRbE+HWwRVmAk4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001877; c=relaxed/simple;
-	bh=dlGWxTgg3NZ6ORKele2Vtua+TT2hu++V257pnckENVI=;
+	s=arc-20240116; t=1714003732; c=relaxed/simple;
+	bh=WDs1Ev6MY5Nf6806qgtcAzaaj1ad7czOxlMtuGwqFN8=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=AfFbo1Ri4JpjYnWAbMbRtsol6RWrvfe/A1asSiEJxnXNBfSLLwbLk3BvX2h46EludYiXL1AVN5Dz358tdEAo8lkPXbrh1teIcrGR2KTQ7pLL1T3ISwijUNcEuYW6+A9lO3BPz5pkec5HjhtmbArR1R1pfJRVxo9SKJQSjY620L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=A/Y3/0rF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6zWxk48u; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=A/Y3/0rF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6zWxk48u; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=o6ZDnk5lySzHSQGNE5WMz6E67IC7vyIFLfTiLj0F7O6b2ajmmgt2VLwYk4DydD6BnWO/PWz1lmj5YsvMGidlUNEfEF4qE4IXmsSAcUesw81E9MfYRK16lfZRa+IcUV+vGD92YXdW0dUqw18U1oF2cPAr0ZBChjYZOPadcyqMjAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QnO5xwDK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PEmKggTo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W1TdPT3e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2md/3vwt; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F389200FE;
-	Wed, 24 Apr 2024 23:37:48 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DE0C822043;
+	Thu, 25 Apr 2024 00:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714001868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1714003723; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JBJMhiXBluHuYzKWwAs9eb5ZP9BHoBEtmUFZU7lGuvI=;
-	b=A/Y3/0rFMyU5p9LO0TfilvELBkb/cPg+gYCGk0iULy/BsEXVW+bNcUYaSJqEhcyR4z0JKG
-	d3ij0fYxTXH7OW6hryypdsPa7FOVDqHh10RQut++rzEf2ahvZTuYoSCbwP/xfc7HPfi8t+
-	smRVD9A8IWECBx00l6ONuvPf+Jz+EKQ=
+	bh=dLZkjiOpcH8V71Dkpmy2fd52pcD3PEtda2HVu0Z8Dxc=;
+	b=QnO5xwDKdS9dLVS0ECBpjMpZDs8pTgaZLAG4ZX5BYkfM+tHXha0q0iMzGrCEsxOTOSdfMJ
+	bOCMCSyYVwpR3Ao7qG4OlOEKsINrWV/Uy74vh8gKaA3y7yzyUPZ2B4esrFyh5ZTQhpVcVJ
+	MuETT0txwBcNB2L8gh1QhOVVdgST0CM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714001868;
+	s=susede2_ed25519; t=1714003723;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JBJMhiXBluHuYzKWwAs9eb5ZP9BHoBEtmUFZU7lGuvI=;
-	b=6zWxk48uVQvfuC++8dufRjBi7ZYKFibKegxDwRHCB4Q0tgHxiM4nV6QlZSx3cGX4t+4sjC
-	RRvVbu4feWt7aFBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="A/Y3/0rF";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6zWxk48u
+	bh=dLZkjiOpcH8V71Dkpmy2fd52pcD3PEtda2HVu0Z8Dxc=;
+	b=PEmKggToPpVVz8aqIKqo/DTZPxjUickxIm04HK0OUhEQL1k40GMhHpAJ4cfs1yrK2U4n/d
+	li23Zo9/8vPQuHBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=W1TdPT3e;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="2md/3vwt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714001868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1714003722; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JBJMhiXBluHuYzKWwAs9eb5ZP9BHoBEtmUFZU7lGuvI=;
-	b=A/Y3/0rFMyU5p9LO0TfilvELBkb/cPg+gYCGk0iULy/BsEXVW+bNcUYaSJqEhcyR4z0JKG
-	d3ij0fYxTXH7OW6hryypdsPa7FOVDqHh10RQut++rzEf2ahvZTuYoSCbwP/xfc7HPfi8t+
-	smRVD9A8IWECBx00l6ONuvPf+Jz+EKQ=
+	bh=dLZkjiOpcH8V71Dkpmy2fd52pcD3PEtda2HVu0Z8Dxc=;
+	b=W1TdPT3e4ziVJfYEJFDqk64spbK2O9bLzYnbtAPz8fCpMDgCBLf+cbhAvvu8/8KSynfHP1
+	4tyTNVq9Wb+t3I3KMtNpv0zPtwXdTM3K8aeOm4bm8M4wereVZHoJ1gsGS5L8RpyE4agaSv
+	gdFVTBjpVTXdvFHiLNM7pPjRXX7T+5g=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714001868;
+	s=susede2_ed25519; t=1714003722;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JBJMhiXBluHuYzKWwAs9eb5ZP9BHoBEtmUFZU7lGuvI=;
-	b=6zWxk48uVQvfuC++8dufRjBi7ZYKFibKegxDwRHCB4Q0tgHxiM4nV6QlZSx3cGX4t+4sjC
-	RRvVbu4feWt7aFBQ==
+	bh=dLZkjiOpcH8V71Dkpmy2fd52pcD3PEtda2HVu0Z8Dxc=;
+	b=2md/3vwttUuZv5bVfRRvhj45CIU2iRtTZLUoP+99ZCCgMc5fxbDnFS2mXVuD4f4PXXhJFn
+	zbDTxPrtOQ3XZzBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C384D13690;
-	Wed, 24 Apr 2024 23:37:44 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3ABD1398B;
+	Thu, 25 Apr 2024 00:08:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aiaRGciXKWawKQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 24 Apr 2024 23:37:44 +0000
+	id fPYsIQefKWYoMgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 25 Apr 2024 00:08:39 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,25 +99,18 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
 To: "Chuck Lever III" <chuck.lever@oracle.com>
-Cc: "Chris Packham" <Chris.Packham@alliedtelesis.co.nz>,
- "Jeff Layton" <jlayton@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
- "netdev" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: kernel BUG at net/sunrpc/svc.c:570 after updating from v5.15.153
- to v5.15.155
-In-reply-to: <5D19EAF8-0F65-4CD6-9378-67234D407B96@oracle.com>
-References: <>, <5D19EAF8-0F65-4CD6-9378-67234D407B96@oracle.com>
-Date: Thu, 25 Apr 2024 09:37:31 +1000
-Message-id: <171400185158.7600.16163546434537681088@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 2F389200FE
+Cc: "Dai Ngo" <dai.ngo@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Tom Talpey" <tom@talpey.com>,
+ "Petr Vorel" <pvorel@suse.cz>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject:
+ Re: [PATCH] nfsd: don't fail OP_SETCLIENTID when there are lots of clients.
+In-reply-to: <62B41B1D-0A9C-44B5-8EC3-962AC862EFB7@oracle.com>
+References: <171382882695.7600.8486072164212452863@noble.neil.brown.name>,
+ <62B41B1D-0A9C-44B5-8EC3-962AC862EFB7@oracle.com>
+Date: Thu, 25 Apr 2024 10:08:35 +1000
+Message-id: <171400371581.7600.11354407820942719081@noble.neil.brown.name>
 X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 X-Spamd-Result: default: False [-4.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
@@ -125,104 +118,132 @@ X-Spamd-Result: default: False [-4.51 / 50.00];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: DE0C822043
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
 
-On Thu, 25 Apr 2024, Chuck Lever III wrote:
->=20
-> > On Apr 24, 2024, at 9:33=E2=80=AFAM, Chuck Lever III <chuck.lever@oracle.=
-com> wrote:
-> >=20
-> >> On Apr 24, 2024, at 3:42=E2=80=AFAM, Chris Packham <Chris.Packham@allied=
-telesis.co.nz> wrote:
-> >>=20
-> >> On 24/04/24 13:38, Chris Packham wrote:
-> >>>=20
-> >>> On 24/04/24 12:54, Chris Packham wrote:
-> >>>> Hi Jeff, Chuck, Greg,
-> >>>>=20
-> >>>> After updating one of our builds along the 5.15.y LTS branch our=20
-> >>>> testing caught a new kernel bug. Output below.
-> >>>>=20
-> >>>> I haven't dug into it yet but wondered if it rang any bells.
-> >>>=20
-> >>> A bit more info. This is happening at "reboot" for us. Our embedded=20
-> >>> devices use a bit of a hacked up reboot process so that they come back =
+On Tue, 23 Apr 2024, Chuck Lever III wrote:
+> 
+> > On Apr 22, 2024, at 7:34 PM, NeilBrown <neilb@suse.de> wrote:
+> > 
+> > ﻿On Mon, 22 Apr 2024, Chuck Lever wrote:
+> >>> On Mon, Apr 22, 2024 at 12:09:19PM +1000, NeilBrown wrote:
+> >>> The calculation of how many clients the nfs server can manage is only an
+> >>> heuristic.  Triggering the laundromat to clean up old clients when we
+> >>> have more than the heuristic limit is valid, but refusing to create new
+> >>> clients is not.  Client creation should only fail if there really isn't
+> >>> enough memory available.
+> >>> 
+> >>> This is not known to have caused a problem is production use, but
+> >>> testing of lots of clients reports an error and it is not clear that
+> >>> this error is justified.
+> >> 
+> >> It is justified, see 4271c2c08875 ("NFSD: limit the number of v4
+> >> clients to 1024 per 1GB of system memory"). In cases like these,
+> >> the recourse is to add more memory to the test system.
+> > 
+> > Does each client really need 1MB?
+> > Obviously we don't want all memory to be used by client state....
+> > 
+> >> 
+> >> However, that commit claims that the client is told to retry; I
+> >> don't expect client creation to fail outright. Can you describe the
+> >> failure mode you see?
+> > 
+> > The failure mode is repeated client retries that never succeed.  I think
+> > an outright failure would be preferable - it would be more clear than
+> > memory must be added.
+> > 
+> > The server has N active clients and M courtesy clients.
+> > Triggering reclaim when N+M exceeds a limit and M>0 makes sense.
+> > A hard failure (NFS4ERR_RESOURCE) when N exceeds a limit makes sense.
+> > A soft failure (NFS4ERR_DELAY) while reclaim is running makes sense.
+> > 
+> > I don't think a retry while N exceeds the limit makes sense.
+> 
+> It’s not optimal, I agree.
+> 
+> NFSD has to limit the total number of active and courtesy
+> clients, because otherwise it would be subject to an easy
+> (d)DoS attack, which Dai demonstrated to me before I
+> accepted his patch. A malicious actor or broken clients
+> can continue to create leases on the server until it stops
+> responding.
+> 
+> I think failing outright would accomplish the mitigation
+> as well as delaying does, but delaying once or twice
+> gives some slack that allows a mount attempt to succeed
+> eventually even when the server temporarily exceeds the
+> maximum client count.
 
-> >>> faster in the case of a failure.
-> >>>=20
-> >>> It doesn't happen with a proper `systemctl reboot` or with a SYSRQ+B
-> >>>=20
-> >>> I can trigger it with `killall -9 nfsd` which I'm not sure is a=20
-> >>> completely legit thing to do to kernel threads but it's probably close =
+I doubt that the set of active clients is so dynamic that it is worth
+waiting in case some client goes away soon.  If we hit the limit then we
+probably already have more clients than we can reasonably handle and it
+is time to indicate failure.
 
-> >>> to what our customized reboot does.
-> >>=20
-> >> I've bisected between v5.15.153 and v5.15.155 and identified commit=20
-> >> dec6b8bcac73 ("nfsd: Simplify code around svc_exit_thread() call in=20
-> >> nfsd()") as the first bad commit. Based on the context that seems to=20
-> >> line up with my reproduction. I'm wondering if perhaps something got=20
-> >> missed out of the stable track? Unfortunately I'm not able to run a more=
-=20
-> >> recent kernel with all of the nfs related setup that is being used on =20
-> >> the system in question.
-> >=20
-> > Thanks for bisecting, that would have been my first suggestion.
-> >=20
-> > The backport included all of the NFSD patches up to v6.2, but
-> > there might be a missing server-side SunRPC patch.
->=20
-> So dec6b8bcac73 ("nfsd: Simplify code around svc_exit_thread()
-> call in  nfsd()") is from v6.6, so it was applied to v5.15.y
-> only to get a subsequent NFSD fix to apply.
->=20
-> The immediately previous upstream commit is missing:
->=20
->   390390240145 ("nfsd: don't allow nfsd threads to be signalled.")
->=20
-> For testing, I've applied this to my nfsd-5.15.y branch here:
->=20
->   https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
->=20
-> However even if that fixes the reported crash, this suggests
-> that after v6.6, nfsd threads are not going to respond to
-> "killall -9 nfsd".
+> 
+> Also IMO there could be a rate-limited pr_warn on the
+> server that fires to indicate when a low-memory situation
+> has been reached.
 
-I think this likely is the problem.  The nfsd threads must be being
-killed by a signal.
-One only other cause for an nfsd thread to exit is if
-svc_set_num_threads() is called, and all places that call that hold a
-ref on the serv structure so the final put won't happen when the thread
-exits.
+Yes, server side warnings would be a good idea.
 
-Before the patch that bisect found, the nfsd thread would exit with
+> 
+> The problem with NFS4ERR_RESOURCE, however, is that
+> NFSv4.1 and newer do not have that status code. All
+> versions of NFS have DELAY/JUKEBOX.
 
- svc_get();
- svc_exit_thread();
- nfsd_put();
+I didn't realise that.  Lots of code in nfs4xdr.c returns
+nfserr_resource.  For v4.1 it appears to get translated to
+nfserr_rep_too_big_too_cache or nfserr_rep_too_big, which might not
+always make sense.
 
-This also holds a ref across the svc_exit_thread(), and ensures the
-final 'put' happens from nfsD_put(), not svc_put() (in
-svc_exit_thread()).
+> 
+> I recognize that you are tweaking only SETCLIENTID here,
+> but I think behavior should be consistent for all minor
+> versions of NFSv4.
 
-Chris: what was the context when the crash happened?  Could the nfsd
-threads have been signalled?  That hasn't been the standard way to stop
-nfsd threads for a long time, so I'm a little surprised that it is
-happening.
+I really want to change EXCHANGEID too.  Maybe we should use
+NFS4ERR_SERVERFAULT.  It seems to be a catch-all for "some fatal error".
+The server has failed to allocate required resources.
 
+
+Thanks,
 NeilBrown
+
+> 
+> 
+> > Do we have a count of active vs courtesy clients?
+> 
+> Dai can correct me if I’m wrong, but I believe NFSD
+> maintains a count of both.
+> 
+> But only the active leases really matter, becase
+> courtesy clients can be dropped as memory becomes tight.
+> Dropping an active lease would be somewhat more
+> catastrophic.
+> 
+> 
+> —
+> Chuck Lever
+
 
