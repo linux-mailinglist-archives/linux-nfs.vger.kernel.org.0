@@ -1,237 +1,118 @@
-Return-Path: <linux-nfs+bounces-3029-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3032-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89BE98B35E8
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Apr 2024 12:48:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 779238B36AB
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Apr 2024 13:43:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40EFE2850A2
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Apr 2024 10:48:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9A0D1C21C51
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Apr 2024 11:43:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F3B146A8C;
-	Fri, 26 Apr 2024 10:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5F4145343;
+	Fri, 26 Apr 2024 11:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiW0Z0cQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GJZoeAvl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84E714535D;
-	Fri, 26 Apr 2024 10:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F803A1B7
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Apr 2024 11:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128431; cv=none; b=o0MkXFj2BIz9qBNB0iVrgOqRRABpBUo539MNig7tk3oB5eZoC3W/J4XAZrrqgDbxWtFHzEvF30oggOhrqyZ4tB0yo4bn3jesRwu1bkwIN4VrsCftdolVcuQ4cpV1HEmbF4ZkrWQ+RIeIYlWI710pnqkZyahR9jm/vcHpGZvDgaU=
+	t=1714131815; cv=none; b=TYHW/AF0gc4mt19A1gjOVvFMbCYoKvLSgek7+gJ1O8sydK9kQSginyc2Svi+hdVK9Gtwj4mJTuSnXwA4UlKJzZBwlF+9f+zSAeEDqkwnEA2FGTwObwOgNt2Weytk2WId07n45rE7TZ/YV4s468xLnF0t1weTIjAvXJbJ7/+nj2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128431; c=relaxed/simple;
-	bh=GH2bezeza5fhtu1z47o7+tK1nF0tM45eNw6jY53xEPE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SiLYBwxYeIlfLNFJYabrANjp7c1AlzgiUFRRBl8MboaUw6K+ZU/rzDLL7teUvJnTz0Kq0jYi75RLHbtIowNQWDxxAl3u/yI0935gNaPq4Glh9fvybYGkTuLZcmlbTrDbF+1KsBPKoQagIh5xdrckoG5Epx4SHTEAHOPqvFVYlMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiW0Z0cQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 880CEC4DDFD;
-	Fri, 26 Apr 2024 10:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714128431;
-	bh=GH2bezeza5fhtu1z47o7+tK1nF0tM45eNw6jY53xEPE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kiW0Z0cQ7WgJZiEdkBZIJwyIs9FJJWesmJJEaKqH3PUZD+r+8eiASo2bq5QA60sYs
-	 fOjDLnkCC3ZMzNkfJvLJyCm7HafCnMGiswi/CvHmRHm1q6DSUzEinXnX+8vZl3Xbjx
-	 g68VikuKB0cl5riAY1SxrxfQSRaXpLWiBNrHsIFQz6AhWLKGHy6dJUfObhqZc1pMta
-	 hCSFc2e9f/PA+KGf79fXLB91SsVLHQrHfApiFpfGnho67Uv0Kl5cIs+xGWg0wnkD4x
-	 h/qb3LpKmoPC8USlaGIJbDPkK9Lc+4PMBnBfJHzudCYhY3uvm3YlM17h9ocXvWXIFf
-	 l7Xh7nkjHQx2Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A85C4345F;
-	Fri, 26 Apr 2024 10:47:11 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Fri, 26 Apr 2024 12:47:00 +0200
-Subject: [PATCH v5 8/8] ax.25: x.25: Remove the now superfluous sentinel
- elements from ctl_table array
+	s=arc-20240116; t=1714131815; c=relaxed/simple;
+	bh=jUxyDem5Qj3LChUa1ZvqwtfbndDhZqPuD+yptfe/+D0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CVQ6VApOA0OOGOXPWrfXDzsjiMQ4piBoTJmXW1K57dD+8Ss1HIYAYYKj1ioaQ4qdmSNOEhlgh55HmQDyJ8dhqQbb9olj43x4zQv07cGHQ6jqVMytN24CS7K8hMbd+zxrzVj5nHwPh9Ke86OHIcjtTPObQwT5VVuWrRpofANDVYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GJZoeAvl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714131812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YVvLB09Cs7IPrmkvMKRrrRshC6c4zW2lowSAmuaLeDw=;
+	b=GJZoeAvlMl9Shfbcm3j9X3abxyirINDT13Ke7D5WGOksSmjiLt8vkc4bfkusTRNV+L0n5H
+	WF/jb8CWv3tz2U4d3toYKjzx7ZRKxiI+1AhEHGkCVFeDS4E3WNnH3YaV2PpaZMICDMtLMt
+	jtElBjzjJYO5FIxc4isVE/u5Yvnrt+M=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-90-a2OZ-sdSN2KhOrTs4JiYSw-1; Fri,
+ 26 Apr 2024 07:43:29 -0400
+X-MC-Unique: a2OZ-sdSN2KhOrTs4JiYSw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF4B92932484;
+	Fri, 26 Apr 2024 11:43:28 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-6.rdu2.redhat.com [10.22.0.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1563E151EF;
+	Fri, 26 Apr 2024 11:43:27 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Subject: Re: [PATCH] NFS: Fix READ_PLUS when server doesn't support
+ OP_READ_PLUS
+Date: Fri, 26 Apr 2024 07:43:26 -0400
+Message-ID: <A9C3D12F-3E5E-4DE5-9A56-ECB7EDDB0AD0@redhat.com>
+In-Reply-To: <20240425202429.439014-1-anna@kernel.org>
+References: <20240425202429.439014-1-anna@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240426-jag-sysctl_remset_net-v5-8-e3b12f6111a6@samsung.com>
-References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
-In-Reply-To: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
- Stefan Schmidt <stefan@datenfreihafen.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
- Steffen Klassert <steffen.klassert@secunet.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- Allison Henderson <allison.henderson@oracle.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
- Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
- Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
- Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, 
- Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
- Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
- Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
- Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
- Kees Cook <keescook@chromium.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
- Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3995;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=NZnJW6XWgopf75vh1g8TgFTlOj8qaKFukPEjDf1p53c=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYrhixeiGtr0+3cn50MVCpNJqH3pUbctq+W8
- IALAHu076ZyXYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmK4YsAAoJELqXzVK3
- lkFP14IL/RB8B5qMj08F0htyG3GLjxNGZowNF7f8ASmAGyCEJBAo1dwvrVPbWphTkoN0F4w8+69
- kGbOBFemyxiSB9/sU6hGmwbqBzLWGWVlGYoBQaFXmaXTshdupdmxkKyJAdWuvAvfxfoY/dy0yjJ
- swhEKwIONZVtmBlqZwBj7b7EILpjwK6jH3O/rEjU67bWlKPlu9GHoWb2N20nuaiReoU8StYBPot
- S6MsfjOAcaVqBGdtGdzGjeDbOrib3lAqRV8+iiXNPTG93cN67pyf5t+Np+t4HzhBHah9u3lF5Bw
- Qz9HZLtHnUuiU5ISlS2GpfSxRefL1afrN40+uIOGY8EjEZxZcYROoQ9u9ikf71rd4IXLXW8bTHN
- QeAj9nLYPFNQHiOSK4R6agj9tuJv+oTmvbBGndR9eq+KmjnatqxsdG7+30uFoHbQO+MVnuWW8bl
- 3pHTcsCdAFrNme6Mqym7SNGMPypA7b2bPTtnlyRxD2i+c7wV2M/IW2O6hZZLs5XxEyFzDq26WE6
- Tw=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-From: Joel Granados <j.granados@samsung.com>
+On 25 Apr 2024, at 16:24, Anna Schumaker wrote:
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which will
-reduce the overall build time size of the kernel and run time memory
-bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>
+> Olga showed me a case where the client was sending multiple READ_PLUS
+> calls to the server in parallel, and the server replied
+> NFS4ERR_OPNOTSUPP to each. The client would fall back to READ for the
+> first reply, but fail to retry the other calls.
+>
+> I fix this by removing the test for NFS_CAP_READ_PLUS in
+> nfs4_read_plus_not_supported(). This allows us to reschedule any
+> READ_PLUS call that has a NFS4ERR_OPNOTSUPP return value, even after the
+> capability has been cleared.
+>
+> Reported-by: Olga Kornievskaia <kolga@netapp.com>
+> Fixes: c567552612ec ("NFS: Add READ_PLUS data segment support")
+> Cc: stable@vger.kernel.org # v5.10+
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Avoid a buffer overflow when traversing the ctl_table by ensuring that
-AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
-done with a BUILD_BUG_ON where ax25_param_table is defined and a
-CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
-in the ax25_dev_device_up and ax25_ds_set_timer functions.
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-The overflow happened when the sentinel was removed from
-ax25_param_table. The sentinel's data element was changed when
-CONFIG_AX25_DAMA_SLAVE was undefined. This had no adverse effects as it
-still stopped on the sentinel's null procname but needed to be addressed
-once the sentinel was removed.
+Ben
 
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- include/net/ax25.h         | 2 ++
- net/ax25/ax25_dev.c        | 3 +++
- net/ax25/ax25_ds_timer.c   | 4 ++++
- net/ax25/sysctl_net_ax25.c | 3 +--
- net/x25/sysctl_net_x25.c   | 1 -
- 5 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/ax25.h b/include/net/ax25.h
-index 0d939e5aee4e..eb9cee8252c8 100644
---- a/include/net/ax25.h
-+++ b/include/net/ax25.h
-@@ -139,7 +139,9 @@ enum {
- 	AX25_VALUES_N2,		/* Default N2 value */
- 	AX25_VALUES_PACLEN,	/* AX.25 MTU */
- 	AX25_VALUES_PROTOCOL,	/* Std AX.25, DAMA Slave, DAMA Master */
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	AX25_VALUES_DS_TIMEOUT,	/* DAMA Slave timeout */
-+#endif
- 	AX25_MAX_VALUES		/* THIS MUST REMAIN THE LAST ENTRY OF THIS LIST */
- };
- 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index c5462486dbca..af547e185a94 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -78,7 +78,10 @@ void ax25_dev_device_up(struct net_device *dev)
- 	ax25_dev->values[AX25_VALUES_N2]        = AX25_DEF_N2;
- 	ax25_dev->values[AX25_VALUES_PACLEN]	= AX25_DEF_PACLEN;
- 	ax25_dev->values[AX25_VALUES_PROTOCOL]  = AX25_DEF_PROTOCOL;
-+
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	ax25_dev->values[AX25_VALUES_DS_TIMEOUT]= AX25_DEF_DS_TIMEOUT;
-+#endif
- 
- #if defined(CONFIG_AX25_DAMA_SLAVE) || defined(CONFIG_AX25_DAMA_MASTER)
- 	ax25_ds_setup_timer(ax25_dev);
-diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-index c4f8adbf8144..8f385d2a7628 100644
---- a/net/ax25/ax25_ds_timer.c
-+++ b/net/ax25/ax25_ds_timer.c
-@@ -49,12 +49,16 @@ void ax25_ds_del_timer(ax25_dev *ax25_dev)
- 
- void ax25_ds_set_timer(ax25_dev *ax25_dev)
- {
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	if (ax25_dev == NULL)		/* paranoia */
- 		return;
- 
- 	ax25_dev->dama.slave_timeout =
- 		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
- 	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-+#else
-+	return;
-+#endif
- }
- 
- /*
-diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-index db66e11e7fe8..4e593d36d311 100644
---- a/net/ax25/sysctl_net_ax25.c
-+++ b/net/ax25/sysctl_net_ax25.c
-@@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] = {
- 		.extra2		= &max_ds_timeout
- 	},
- #endif
--
--	{ }	/* that's all, folks! */
- };
- 
- int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-@@ -155,6 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
- 	if (!table)
- 		return -ENOMEM;
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(ax25_param_table) != AX25_MAX_VALUES);
- 	for (k = 0; k < AX25_MAX_VALUES; k++)
- 		table[k].data = &ax25_dev->values[k];
- 
-diff --git a/net/x25/sysctl_net_x25.c b/net/x25/sysctl_net_x25.c
-index e9802afa43d0..643f50874dfe 100644
---- a/net/x25/sysctl_net_x25.c
-+++ b/net/x25/sysctl_net_x25.c
-@@ -71,7 +71,6 @@ static struct ctl_table x25_table[] = {
- 		.mode = 	0644,
- 		.proc_handler = proc_dointvec,
- 	},
--	{ },
- };
- 
- int __init x25_register_sysctl(void)
-
--- 
-2.43.0
-
+> ---
+>  fs/nfs/nfs4proc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index ea390db94b62..c93c12063b3a 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -5456,7 +5456,7 @@ static bool nfs4_read_plus_not_supported(struct rpc_task *task,
+>  	struct rpc_message *msg = &task->tk_msg;
+>
+>  	if (msg->rpc_proc == &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS] &&
+> -	    server->caps & NFS_CAP_READ_PLUS && task->tk_status == -ENOTSUPP) {
+> +	    task->tk_status == -ENOTSUPP) {
+>  		server->caps &= ~NFS_CAP_READ_PLUS;
+>  		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
+>  		rpc_restart_call_prepare(task);
+> -- 
+> 2.44.0
 
 
