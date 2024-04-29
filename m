@@ -1,184 +1,96 @@
-Return-Path: <linux-nfs+bounces-3053-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E25C8B5BE3
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 16:49:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72AB48B5D8C
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 17:25:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B6EB1F23052
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 14:49:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CAC51B2B824
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 15:21:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FE8A7EEF3;
-	Mon, 29 Apr 2024 14:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31BF981AA1;
+	Mon, 29 Apr 2024 15:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YD6BHOKw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [205.139.111.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDD880039
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Apr 2024 14:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.139.111.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D87580630
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Apr 2024 15:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714402183; cv=none; b=mXrQ24c5KAz1bG3v0XO61A5MIQc/eu+yKhF5wr58cowZZvo/LT90EfLWyLGAFTw62+YmZlUUayld0FqXxxR5P4LBUeDDGBnY4EiTo0s9f7HU5ZPXt1RLipCXicyWeFpBV5Fksu9JsW0JE4//GhA0Ze94cRXRPIokHpzjyzBQ/Z0=
+	t=1714403814; cv=none; b=ZCkgVoCMiMbdI/wKa8RZOvNyTBkgIYGCG+cOQwZi2MNRgenytQlUVH5d/cBLd5xUV+SgMSXLoRuMwB7qJkGzB355HvZIdECgCdpY1v0QCDbSG/+3ID/DRwuItX0LHLqVVrUjQV3b1ZqA+63pMdMjzJJomBq2eIFGOsfgleliQZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714402183; c=relaxed/simple;
-	bh=Pqr7/07Yw2D7SEawMZgXWcnAK3LEd3hoqf3xCtS6wY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=AgRODlqOolZM0Wzos3yBNjR9SyiLPAgEDFzTYb4Ko/JI1vXaKJYEGtMnEVHt8gIz2hysqwK36v2ycY91A3Nq84iAyBIjkyKAoYIDLtinTMiw61KfR2hTJRU+JUYhlSAUQOJauAq+3tV8jOKo/kO6d2ViBezN+G03ELhGOOkNOLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=205.139.111.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-ZwAzUYwrN5SO0iPVZmvC4A-1; Mon, 29 Apr 2024 10:49:29 -0400
-X-MC-Unique: ZwAzUYwrN5SO0iPVZmvC4A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1116780D678;
-	Mon, 29 Apr 2024 14:49:29 +0000 (UTC)
-Received: from hog (unknown [10.39.193.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AD66D2166B32;
-	Mon, 29 Apr 2024 14:49:19 +0000 (UTC)
-Date: Mon, 29 Apr 2024 16:49:18 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
-	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org
-Subject: Re: [PATCH v5 1/8] net: Remove the now superfluous sentinel elements
- from ctl_table array
-Message-ID: <Zi-zbrq43dnlsQBY@hog>
-References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
- <20240426-jag-sysctl_remset_net-v5-1-e3b12f6111a6@samsung.com>
- <CGME20240429085414eucas1p11b3790e4687b8dc8ef02fe0f54bc9c55@eucas1p1.samsung.com>
- <Zi9gG82_OKnLlFI2@hog>
- <20240429123315.og27yehofzz6cui3@joelS2.panther.com>
+	s=arc-20240116; t=1714403814; c=relaxed/simple;
+	bh=u+lcC7GhORAvQHVucnqhZJJoAfU0Selqktx68r53c9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S+Be5vdBPq86RXYZ3ms+dKiKGXOmdFHBtnkny7elG0c0zgf2bVfdpyIvyg79XStiOx6PfqEs1vmbe3+gtu2pqpnO0rDDnT6EftWml7xmsdNvlQ9C/Mg9zsTM5cQU4JY+pOuCCUWPVjvEeralBrOVAKIbaGxp9awhvlt5VnWf/nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YD6BHOKw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3214FC116B1;
+	Mon, 29 Apr 2024 15:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714403813;
+	bh=u+lcC7GhORAvQHVucnqhZJJoAfU0Selqktx68r53c9s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YD6BHOKwfeMRx7Jv0HJo6H1DsYdXqXzL4wlGE6j+Ux7XgIjXJMwKn308mDLYBozxU
+	 seNGmma+wt3dXCb/LQaldw1dEUS11MAjfPxAspZxy7jeCY4pBrstd/sFmqd6FI0OGk
+	 25/cp3/GGTphu66CcQm2Vc4iLwa7IyTn1ZwhYsxpENDAmWhyd96Tf7ePShr2yLEXM7
+	 0eFYHXjauJqHx7lHR6MqDevxRRfS3q1Pj3Maf4IkGvXGIM4FONm4JyLfSvvlkla+qL
+	 kxYN995OKmNf+6g3y1T+d/OtbUvHgFxlOeZf5gTaqCudqq1tqIqiSIVddXjcR1afYa
+	 fcgyeFGcQNyYw==
+From: cel@kernel.org
+To: Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <dai.ngo@oracle.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 0/4] NFSv4.2 OFFLOAD_STATUS for the Linux NFS client
+Date: Mon, 29 Apr 2024 11:16:33 -0400
+Message-ID: <20240429151632.212571-6-cel@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240429123315.og27yehofzz6cui3@joelS2.panther.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: queasysnail.net
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1159; i=chuck.lever@oracle.com; h=from:subject; bh=cNLTxDpwXihmQofUyKkFDjw6W67Su6KwkcOe83NBLSA=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmL7nQiABPucD3sQQOTaXGE5aNPa8EJJ7e1vr/O 6T6kOS8LFeJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZi+50AAKCRAzarMzb2Z/ l9K7EAC3AbWvlBcMo/YaHggxPOVYeDfiBFdFuBicR+/Mir2V0lG+YNAOJMUuplQx7IoJDh0MWKH WtvNscX1f/yogJIx7A5fYhN5rlBUWd50dbK5JBKBYQuqtPy0bbAvYs33lo4R0XJqp51GlpD8vHc HkTOoiIwp64MRqUElTsZaizgtDBKYIuBCAKoT2pq3ZWpcaVUpCJD9QU1KNk4uC2SpQzz+e28DQe 223Ua8HhaPVdGl7pOQJ/OV4z++42rk6G4Q29c4ZsV8NSEeVQbbLKJuCOmQ/F9anAWmCqGjaqBZs +XU5xkWGkjv0byTPUnVvNIzcC+38k5+3TfLqLpQ66DrCtziQ5+915SMpkdMPciem4qkwY7UTDN7 +9q4bXK2y7AizotQrBdrUHatSmkh+LdvZfrwkfSUx6kJ+YNP3Hf8FbOhkgYjW8AebCULxH6NqGv 6ESXSRL6q6lOPZSCOinO4zOo/KJEpd04tsIDM9jyV1/zzAIQKtD1ddXNxYepzApbd5scy70gpfY fbYsZOkt2NfL2YwJaSvkih7lPr0YXi/lN52sKBAtMcPmr0zE1WpwFgvrfVUxP5KXMIxAmLTUTKa sadvPADuPRzBX7hGMwSDSjHS8AYygjY5kOy+xTmlSZV9cM4C2bamXR8O6NpWzgPmv4iqbKZKVbI 3hV0EPGmq8MknUg==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 
-2024-04-29, 14:33:15 +0200, Joel Granados wrote:
-> On Mon, Apr 29, 2024 at 10:53:47AM +0200, Sabrina Dubroca wrote:
-> > 2024-04-26, 12:46:53 +0200, Joel Granados via B4 Relay wrote:
-> > > diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-> > > index 6973dda3abda..a84690b13bb9 100644
-> > > --- a/net/core/sysctl_net_core.c
-> > > +++ b/net/core/sysctl_net_core.c
-> > [...]
-> > > @@ -723,12 +722,11 @@ static __net_init int sysctl_core_net_init(stru=
-ct net *net)
-> > >  =09=09if (tbl =3D=3D NULL)
-> > >  =09=09=09goto err_dup;
-> > > =20
-> > > -=09=09for (tmp =3D tbl; tmp->procname; tmp++)
-> > > -=09=09=09tmp->data +=3D (char *)net - (char *)&init_net;
-> >=20
-> > Some coding style nits in case you re-post:
-> Thx. I will, so please scream if you see more issues.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I've gone through the whole series and didn't see anything more.
+Async COPY operations will wait indefinitely if the CB_OFFLOAD is
+lost. Fix this by using OFFLOAD_STATUS to periodically check the
+progress of the COPY.
 
-> > > +=09=09for (int i =3D 0; i < table_size; ++i)
-> >=20
-> > move the declaration of int i out of the for (), it's almost never
-> > written this way (at least in networking)
-> done
->=20
-> >=20
-> > > +=09=09=09(tbl + i)->data +=3D (char *)net - (char *)&init_net;
-> >=20
-> >                         tbl[i].data =3D ...
-> >=20
-> > is more in line with other similar functions in the rest of net/
-> done
->=20
-> >=20
-> >=20
-> > [...]
-> > > diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
-> > > index 6dab883a08dd..ecc849678e7b 100644
-> > > --- a/net/mpls/af_mpls.c
-> > > +++ b/net/mpls/af_mpls.c
-> > [...]
-> > > @@ -2674,6 +2673,7 @@ static const struct ctl_table mpls_table[] =3D =
-{
-> > > =20
-> > >  static int mpls_net_init(struct net *net)
-> > >  {
-> > > +=09size_t table_size =3D ARRAY_SIZE(mpls_table);
-> >=20
-> > This table still has a {} as its final element. It should be gone too?
-> Now, how did that get away?  I'll run my coccinelle scripts once more to
-> make sure that I don't have more of these hiding in the shadows.
+This is compile-tested only. Looking for review and testing.
 
-I didn't spot any other with a dumb
+IMO the only controversial part is how OFFLOAD_STATUS will handle
+situations where the server is temporarily unreachable. Right now
+I've set RPC_TASK_SOFTCONN so the RPC is dropped immediately, and
+the COPY operation should simply go back to waiting another few
+seconds.
 
-    sed -n '<line>,^};/p' <file>
+Chuck Lever (4):
+  NFS: Implement NFSv4.2's OFFLOAD_STATUS XDR
+  NFS: Refactor trace_nfs4_offload_cancel
+  NFS: Rename struct nfs4_offloadcancel_data
+  NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
 
-(with file/line produced by git grep 'struct ctl_table' -- net)
+ fs/nfs/nfs42proc.c        | 114 +++++++++++++++++++++++++++++++++-----
+ fs/nfs/nfs42xdr.c         | 101 ++++++++++++++++++++++++++++++++-
+ fs/nfs/nfs4trace.h        |  11 +++-
+ fs/nfs/nfs4xdr.c          |   1 +
+ include/linux/nfs4.h      |   1 +
+ include/linux/nfs_fs_sb.h |   1 +
+ include/linux/nfs_xdr.h   |   1 +
+ 7 files changed, 215 insertions(+), 15 deletions(-)
 
 
-Thanks.
-
---=20
-Sabrina
+base-commit: e67572cd2204894179d89bd7b984072f19313b03
+-- 
+2.44.0
 
 
