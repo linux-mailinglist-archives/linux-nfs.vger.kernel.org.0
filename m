@@ -1,358 +1,317 @@
-Return-Path: <linux-nfs+bounces-3063-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3064-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E69E18B5DAA
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 17:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1DD98B5DD0
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 17:35:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D47528A5DB
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 15:29:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9807528254E
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Apr 2024 15:35:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA6B127E2B;
-	Mon, 29 Apr 2024 15:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB5DC74400;
+	Mon, 29 Apr 2024 15:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kq8U/A47"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="b0N3HRqQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9031A127E21;
-	Mon, 29 Apr 2024 15:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23F58120C
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Apr 2024 15:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714404348; cv=none; b=PsdMiG4uzOUB3qladiR423+BdaKKstC44Pa6EieIGXMjXtz3Rq6yjjRR84z2RHwbiBMFmK3qsbq8JrmaaCoVZhSDW+tDSEXn/VrI3rc02efmbDPxDUkyl+v++7A+JarBjVhZrM/9i4dufRqvuxiOQtrMzv4U8VRtbPTyZeX2iHI=
+	t=1714404936; cv=none; b=LkfU6yedr00urxgYd+sy9USoYappTVbHtK+ilkWuky6fhHGCGqFB7GmIjLuRmwRGIgfmpIJJOJX6o4wpFUvTFBMhMOqWbPhS9VklU/DGSg3u5DWKIDeo7ILBCRiwZ4tJeW9I2KRwWvwBXJlJhnU6NXjy6z+dS/7ajdiYnO/tK3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714404348; c=relaxed/simple;
-	bh=CQQfWet9gRYvytRYkhPPwpkxKK1mvYgGDcAwgOS5qq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lkdsNykc4mYT+n0rdCfX47psPaQtUz6gok68tl5xu5FSylT+xEoCl4xEkPGJWU0Z6941jrwy/J6cxg8SNeO/6LoHtUPPFZggo18U6OKburZLRSt4+4Z7N/7XCytaX+zY7Gn4zVSO1IUuKbz4ZCbO7oxAzolX7cXXsipWIORD5io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kq8U/A47; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5738C4AF14;
-	Mon, 29 Apr 2024 15:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714404348;
-	bh=CQQfWet9gRYvytRYkhPPwpkxKK1mvYgGDcAwgOS5qq8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kq8U/A47lB/1NODC/Kh6VcY/ruMTF9Qv7513eb5dGgAr18xX/z2tqkCgOPQXFHhfx
-	 zGTCVFeNlsPhD65M/Vqlml6hR3OGTJJkAct15k9IKgtXX8sU7MmkkuanDflbnt8m+J
-	 hepoEqHOkGkhoA9yELEKxzftSMtLl/TYfWNzS/Tuj4qZwSX1/R0FEJXQYx7aFw1VRn
-	 nDtHh7+d9KRNrnwwkh8VNNfZTuaKw1ipyi5MFXOnd/l5MWVIsE4esP1rstdQXR5+XH
-	 mm2cU8vl4u5v19NxQEG9Lf9lDGDlKgVsveQZHEm6zfufPPPHX1uCQQc3VpYIWOvpsy
-	 XoMX/PokCIYSw==
-From: cel@kernel.org
-To: <linux-nfs@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 4/4] xprtrdma: Move MRs to struct rpcrdma_ep
-Date: Mon, 29 Apr 2024 11:25:42 -0400
-Message-ID: <20240429152537.212958-10-cel@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240429152537.212958-6-cel@kernel.org>
-References: <20240429152537.212958-6-cel@kernel.org>
+	s=arc-20240116; t=1714404936; c=relaxed/simple;
+	bh=WAMbZxqy97dM+rivxawsbxri+vlFZtOongYrrkLT+YM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SBBg/FmotVJUDgY5nyV7ntCJbWXbLA0m+dWkB6wjXyiuxDmz1897Cn7EBlZNhZlaEKam3rTS1h/k8bJZnbQPC/RthgVeN3xgDngYjCtjE1612T8CsT+1SR5Z6vuHrz9MZSF5S/CMyjknjMCtkjCs2lPlb50RFqVlRzUJZhkmeoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=b0N3HRqQ; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2db239711ebso11633641fa.1
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Apr 2024 08:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1714404933; x=1715009733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lt3OlBhtMReJgIXyYLBo2dwTEUtw1j+X3X6ldT4F7AI=;
+        b=b0N3HRqQHQ9k90/fUbmwwguzPL72NLQdwINhxTQoO2dqQkRZ01tqNMqEUt2+gmte9l
+         XZz7Hvj+o5zz8qx9OafvVLKdQXJWmLHkpFzSUfDgpToLYd/74neNE0G/HOMskrZ7m60m
+         tTZ8P02+P7nHrIHkH/ybtFG5O62zelEDx8vdQFs5Cnv9DgFTaiYA/gAFk0C/PfrQG8J9
+         ix5Hl3IuiGbIFDvIYBCzS1C7pukSViSd5k1mtyeE9jJNzRQar3kxm3xAGD+7pMyCUPem
+         mXaoXB4VakOxaOJbX1bTTdUuVbgxlyS0CfSLsBuO9rp3DSauobs4esR6PEDHS0c2pBXt
+         ycjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714404933; x=1715009733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lt3OlBhtMReJgIXyYLBo2dwTEUtw1j+X3X6ldT4F7AI=;
+        b=v/bqYuItkbQNHw02F9yRlDFxY7BVVCj/5SN1vPSHjmh4OqeiDob11y4jffyybUFVdJ
+         11Hsb63vllqMJdi6TnCM6/EgeGfzZIoAjnlgtJm74OXafgukmoadIlYD91L5RyfAj2tv
+         3/wktAw3Rg3ZS+X0oVmZq2nWYRv5u6jgNCJLUTC3PDh96ehCdq2HGX0KKJUfcCee8gXu
+         jJTvff71ewUbXFfhlBhmCiGNH8qgIWakpGnd4yQm8D1ao/Ke2N8uz3CZSVnvbe4aC5rJ
+         BgUgLjQUK11l6VM/ERSsCSVrmWtDepikOfOq156jl6MhUBI+oEF85ML/hQcEv4xrNhjW
+         g8hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVM9Ssw/Iumu6DOwwlNChQEAeeZhNokd7+oMlZWqkVRgjW0pu1zLUekBSpSMNJEeNkicbKEcKRuPu8eT8JUbbZLkAWnJlzm3Tp/
+X-Gm-Message-State: AOJu0YzltfnlGgUT17MCLDU/YNrVqqCazdh7RJ7EEZN0PD66NQiwc6Qj
+	gI/gjF+DKiOD2wN4jYU8OpMV0JL3vz9XhgdiSlaiQvRDzVkHCvbMIhKaBjXl1uyEOm2s/crydpn
+	PXyB2GBlFkNpGRnpkD3nKfjlJFnEQXQ==
+X-Google-Smtp-Source: AGHT+IFprqxU+5VGtxA+r9+8wH6n+agf4UYALvGb01hZZoQGD5vPFfdNTFsMwrazyHs/v70CGXG7bIXD68rKWEYfLp4=
+X-Received: by 2002:a2e:97d4:0:b0:2df:1e3e:27e8 with SMTP id
+ m20-20020a2e97d4000000b002df1e3e27e8mr6102646ljj.0.1714404932291; Mon, 29 Apr
+ 2024 08:35:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9678; i=chuck.lever@oracle.com; h=from:subject; bh=l6rX/ZC8L4NkMCKe75WVMTLvRYW9ylOWHZBIeAcPFs8=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmL7vy2WObc4SeGY0QS08ZGftCF6Z/O1ZwLJPYe 5AUr2Aqi9OJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZi+78gAKCRAzarMzb2Z/ lw3dD/9MwY+wnUScEPuB+AiOwPYc+kKmXYJaiQnYr6eAUy0aSrLTxHUcOxjJDIf5HFoHNHHJR7w Qf+kCvjiTtyU0Escy6w8hC0KtZGciu9XdSVsYkAZxqNbExhjftv5I2Q9b6H1EkG2F0ObUjP2zXv DVneX39ysB/5li9PjCuVUDktvh+wNJzZPaHxYwiR+X4agVsqE4/huj3eu4UpCsbLtEXwTFnkqJ6 y2L4MVdKxfkuyrXCYQJjo7Mtcn9lz4TNGPu7M54oyyTjIndxFHkW9BghrzOtsUWYKs+EzmVWMk0 OSZKsRgtYPNlHe+gK68SYsjXr6Sof3woBo08CgIsv1cb+BnTPSR/osfRIOA4JwXtU5a+S6m2nei gFKfjY8Ljaody4Mwh/VDhhoZ8B4u1MJemrUT1UakxFP5Qb1iTgMTW8rSRmWPwYWGrwvi8qX6tCZ A1nS6AhAbHagz0/LgtgNIAGkI4A3MJSraqS/xDXNbgpZYSESHb6lfBJObz/vmxPPv50DgH/wlex 792ApRdoA5PtowzCD/Rrc178ofadFN2kht0dHYxxqO79NUH4nkA0Lf5xtD8Exn7zjfKgyGGQvQ5 VcKOCG9snPnvvT74+ehOj+QP/59L+78s81rlEcPPeWv7nqfD3cq+wDgbNgQTKeqrh1JUbzKRvWA eLBe0IGnB9AglFQ==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+References: <20240429151632.212571-6-cel@kernel.org> <20240429151632.212571-10-cel@kernel.org>
+In-Reply-To: <20240429151632.212571-10-cel@kernel.org>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Mon, 29 Apr 2024 11:35:20 -0400
+Message-ID: <CAN-5tyH2e7uR_GN3vYp201h2U83gra=U8a+57Ughk1BfpRGZaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/4] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
+To: cel@kernel.org
+Cc: Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, linux-nfs@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, Apr 29, 2024 at 11:22=E2=80=AFAM <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> We've found that there are cases where a transport disconnection
+> results in the loss of callback RPCs. NFS servers typically do not
+> retransmit callback operations after a disconnect.
+>
+> This can be a problem for the Linux NFS client's implementation of
+> asynchronous COPY, which waits indefinitely for a CB_OFFLOAD
+> callback. If a transport disconnect occurs while an async COPY is
+> running, there's a good chance the client will never get the
+> matching CB_OFFLOAD.
+>
+> Fix this by implementing the OFFLOAD_STATUS operation so that the
+> Linux NFS client can probe the NFS server if it doesn't see a
+> CB_OFFLOAD in a reasonable amount of time.
+>
+> This patch implements a simplistic check. As future work, the client
+> might also be able to detect whether there is no forward progress on
+> the request asynchronous COPY operation, and CANCEL it.
 
-MRs are a connection-specific hardware resource, thus they should be
-anchored in the EP and released with the other hardware resources.
+I think this patch series needs a bit more nuances
+(1) if we know that server doesn't support offload_status we might as
+well wait uninterrupted perhaps? but I can see how as you mentioned we
+might want to measure no forward progress and cancel the copy and
+fallback to read/write.
+(2) we can't really go back to the "wait" after failing a
+offload_status as the cb_offload callback might have already arrived
+and I think we need to walk the pending_cb_callbacks to make sure we
+haven't received it before waiting again (otherwise, we'd wait
+forever).
+(3) then also there is the case where we woke up and sent the
+offload_status and got a 'copy finished' reply but we also got the
+cb_callback reply as well and the copy things need to be cleaned up
+now.
 
-Closes: Link: https://bugzilla.kernel.org/show_bug.cgi?id=218704
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/frwr_ops.c  |  7 ++--
- net/sunrpc/xprtrdma/verbs.c     | 70 ++++++++++++++++-----------------
- net/sunrpc/xprtrdma/xprt_rdma.h | 13 +++---
- 3 files changed, 45 insertions(+), 45 deletions(-)
-
-diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 6e508708d06d..7e918753eec4 100644
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -112,15 +112,14 @@ void frwr_reset(struct rpcrdma_req *req)
- 
- /**
-  * frwr_mr_init - Initialize one MR
-- * @r_xprt: controlling transport instance
-+ * @ep: controlling transport instance
-  * @mr: generic MR to prepare for FRWR
-  *
-  * Returns zero if successful. Otherwise a negative errno
-  * is returned.
-  */
--int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
-+int frwr_mr_init(struct rpcrdma_ep *ep, struct rpcrdma_mr *mr)
- {
--	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 	unsigned int depth = ep->re_max_fr_depth;
- 	struct scatterlist *sg;
- 	struct ib_mr *frmr;
-@@ -134,7 +133,7 @@ int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
- 	if (IS_ERR(frmr))
- 		goto out_mr_err;
- 
--	mr->mr_xprt = r_xprt;
-+	mr->mr_ep = ep;
- 	mr->mr_ibmr = frmr;
- 	mr->mr_device = NULL;
- 	INIT_LIST_HEAD(&mr->mr_list);
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index f1e4a28325fa..2578d9e77056 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -71,7 +71,8 @@ static int rpcrdma_reqs_setup(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
--static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
-+static void rpcrdma_mrs_destroy(struct rpcrdma_ep *ep);
-+static void rpcrdma_mr_refresh_worker(struct work_struct *work);
- static void rpcrdma_ep_get(struct rpcrdma_ep *ep);
- static void rpcrdma_ep_put(struct rpcrdma_ep *ep);
- static struct rpcrdma_regbuf *
-@@ -337,6 +338,8 @@ static void rpcrdma_ep_destroy(struct work_struct *work)
- {
- 	struct rpcrdma_ep *ep = container_of(work, struct rpcrdma_ep, re_worker);
- 
-+	rpcrdma_mrs_destroy(ep);
-+
- 	if (ep->re_id->qp) {
- 		rdma_destroy_qp(ep->re_id);
- 		ep->re_id->qp = NULL;
-@@ -393,6 +396,11 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
- 	ep->re_xprt = &r_xprt->rx_xprt;
- 	kref_init(&ep->re_kref);
- 
-+	spin_lock_init(&ep->re_mr_lock);
-+	INIT_WORK(&ep->re_refresh_worker, rpcrdma_mr_refresh_worker);
-+	INIT_LIST_HEAD(&ep->re_mrs);
-+	INIT_LIST_HEAD(&ep->re_all_mrs);
-+
- 	id = rpcrdma_create_id(r_xprt, ep);
- 	if (IS_ERR(id)) {
- 		kfree(ep);
-@@ -575,7 +583,6 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
- 	rpcrdma_xprt_drain(r_xprt);
- 	rpcrdma_reps_unmap(r_xprt);
- 	rpcrdma_reqs_reset(r_xprt);
--	rpcrdma_mrs_destroy(r_xprt);
- 	rpcrdma_sendctxs_destroy(r_xprt);
- 
- 	r_xprt->rx_ep = NULL;
-@@ -749,7 +756,6 @@ static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
- static void
- rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt)
- {
--	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 	struct ib_device *device = ep->re_id->device;
- 	unsigned int count;
-@@ -764,16 +770,16 @@ rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt)
- 		if (!mr)
- 			break;
- 
--		rc = frwr_mr_init(r_xprt, mr);
-+		rc = frwr_mr_init(ep, mr);
- 		if (rc) {
- 			kfree(mr);
- 			break;
- 		}
- 
--		spin_lock(&buf->rb_lock);
--		rpcrdma_mr_push(mr, &buf->rb_mrs);
--		list_add(&mr->mr_all, &buf->rb_all_mrs);
--		spin_unlock(&buf->rb_lock);
-+		spin_lock(&ep->re_mr_lock);
-+		rpcrdma_mr_push(mr, &ep->re_mrs);
-+		list_add(&mr->mr_all, &ep->re_all_mrs);
-+		spin_unlock(&ep->re_mr_lock);
- 	}
- 
- 	r_xprt->rx_stats.mrs_allocated += count;
-@@ -783,10 +789,11 @@ rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt)
- static void
- rpcrdma_mr_refresh_worker(struct work_struct *work)
- {
--	struct rpcrdma_buffer *buf = container_of(work, struct rpcrdma_buffer,
--						  rb_refresh_worker);
--	struct rpcrdma_xprt *r_xprt = container_of(buf, struct rpcrdma_xprt,
--						   rx_buf);
-+	struct rpcrdma_ep *ep = container_of(work, struct rpcrdma_ep,
-+					     re_refresh_worker);
-+	struct rpcrdma_xprt *r_xprt = container_of(ep->re_xprt,
-+						   struct rpcrdma_xprt,
-+						   rx_xprt);
- 
- 	rpcrdma_mrs_create(r_xprt);
- 	xprt_write_space(&r_xprt->rx_xprt);
-@@ -799,7 +806,6 @@ rpcrdma_mr_refresh_worker(struct work_struct *work)
-  */
- void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
- {
--	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 
- 	/* If there is no underlying connection, it's no use
-@@ -807,7 +813,7 @@ void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
- 	 */
- 	if (ep->re_connect_status != 1)
- 		return;
--	queue_work(system_highpri_wq, &buf->rb_refresh_worker);
-+	queue_work(system_highpri_wq, &ep->re_refresh_worker);
- }
- 
- /**
-@@ -1044,9 +1050,6 @@ int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
- 
- 	buf->rb_bc_srv_max_requests = 0;
- 	spin_lock_init(&buf->rb_lock);
--	INIT_LIST_HEAD(&buf->rb_mrs);
--	INIT_LIST_HEAD(&buf->rb_all_mrs);
--	INIT_WORK(&buf->rb_refresh_worker, rpcrdma_mr_refresh_worker);
- 
- 	INIT_LIST_HEAD(&buf->rb_send_bufs);
- 	INIT_LIST_HEAD(&buf->rb_allreqs);
-@@ -1085,11 +1088,11 @@ void rpcrdma_req_destroy(struct rpcrdma_req *req)
- 	list_del(&req->rl_all);
- 
- 	while ((mr = rpcrdma_mr_pop(&req->rl_free_mrs))) {
--		struct rpcrdma_buffer *buf = &mr->mr_xprt->rx_buf;
-+		struct rpcrdma_ep *ep = mr->mr_ep;
- 
--		spin_lock(&buf->rb_lock);
-+		spin_lock(&ep->re_mr_lock);
- 		list_del(&mr->mr_all);
--		spin_unlock(&buf->rb_lock);
-+		spin_unlock(&ep->re_mr_lock);
- 
- 		frwr_mr_release(mr);
- 	}
-@@ -1102,31 +1105,28 @@ void rpcrdma_req_destroy(struct rpcrdma_req *req)
- 
- /**
-  * rpcrdma_mrs_destroy - Release all of a transport's MRs
-- * @r_xprt: controlling transport instance
-+ * @ep: controlling transport instance
-  *
-- * Relies on caller holding the transport send lock to protect
-- * removing mr->mr_list from req->rl_free_mrs safely.
-  */
--static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt)
-+static void rpcrdma_mrs_destroy(struct rpcrdma_ep *ep)
- {
--	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_mr *mr;
- 
--	cancel_work_sync(&buf->rb_refresh_worker);
-+	cancel_work_sync(&ep->re_refresh_worker);
- 
--	spin_lock(&buf->rb_lock);
--	while ((mr = list_first_entry_or_null(&buf->rb_all_mrs,
-+	spin_lock(&ep->re_mr_lock);
-+	while ((mr = list_first_entry_or_null(&ep->re_all_mrs,
- 					      struct rpcrdma_mr,
- 					      mr_all)) != NULL) {
- 		list_del(&mr->mr_list);
- 		list_del(&mr->mr_all);
--		spin_unlock(&buf->rb_lock);
-+		spin_unlock(&ep->re_mr_lock);
- 
- 		frwr_mr_release(mr);
- 
--		spin_lock(&buf->rb_lock);
-+		spin_lock(&ep->re_mr_lock);
- 	}
--	spin_unlock(&buf->rb_lock);
-+	spin_unlock(&ep->re_mr_lock);
- }
- 
- /**
-@@ -1162,12 +1162,12 @@ rpcrdma_buffer_destroy(struct rpcrdma_buffer *buf)
- struct rpcrdma_mr *
- rpcrdma_mr_get(struct rpcrdma_xprt *r_xprt)
- {
--	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-+	struct rpcrdma_ep *ep = r_xprt->rx_ep;
- 	struct rpcrdma_mr *mr;
- 
--	spin_lock(&buf->rb_lock);
--	mr = rpcrdma_mr_pop(&buf->rb_mrs);
--	spin_unlock(&buf->rb_lock);
-+	spin_lock(&ep->re_mr_lock);
-+	mr = rpcrdma_mr_pop(&ep->re_mrs);
-+	spin_unlock(&ep->re_mr_lock);
- 	return mr;
- }
- 
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index 048d2e329384..ce703b6e3b86 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -96,6 +96,11 @@ struct rpcrdma_ep {
- 	unsigned int		re_inline_send;	/* negotiated */
- 	unsigned int		re_inline_recv;	/* negotiated */
- 
-+	spinlock_t		re_mr_lock;
-+	struct list_head	re_mrs;
-+	struct list_head	re_all_mrs;
-+	struct work_struct	re_refresh_worker;
-+
- 	atomic_t		re_completion_ids;
- 
- 	char			re_write_pad[XDR_UNIT];
-@@ -253,7 +258,7 @@ struct rpcrdma_mr {
- 		struct ib_reg_wr	mr_regwr;
- 		struct ib_send_wr	mr_invwr;
- 	};
--	struct rpcrdma_xprt	*mr_xprt;
-+	struct rpcrdma_ep	*mr_ep;
- 	u32			mr_handle;
- 	u32			mr_length;
- 	u64			mr_offset;
-@@ -365,7 +370,6 @@ rpcrdma_mr_pop(struct list_head *list)
- struct rpcrdma_buffer {
- 	spinlock_t		rb_lock;
- 	struct list_head	rb_send_bufs;
--	struct list_head	rb_mrs;
- 
- 	unsigned long		rb_sc_head;
- 	unsigned long		rb_sc_tail;
-@@ -373,7 +377,6 @@ struct rpcrdma_buffer {
- 	struct rpcrdma_sendctx	**rb_sc_ctxs;
- 
- 	struct list_head	rb_allreqs;
--	struct list_head	rb_all_mrs;
- 	struct list_head	rb_all_reps;
- 
- 	struct llist_head	rb_free_reps;
-@@ -383,8 +386,6 @@ struct rpcrdma_buffer {
- 
- 	u32			rb_bc_srv_max_requests;
- 	u32			rb_bc_max_requests;
--
--	struct work_struct	rb_refresh_worker;
- };
- 
- /*
-@@ -533,7 +534,7 @@ rpcrdma_data_dir(bool writing)
-  */
- void frwr_reset(struct rpcrdma_req *req);
- int frwr_query_device(struct rpcrdma_ep *ep, const struct ib_device *device);
--int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr);
-+int frwr_mr_init(struct rpcrdma_ep *ep, struct rpcrdma_mr *mr);
- void frwr_mr_release(struct rpcrdma_mr *mr);
- struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
- 				struct rpcrdma_mr_seg *seg,
--- 
-2.44.0
-
+>
+> Suggested-by: Olga Kornievskaia <kolga@netapp.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218735
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfs/nfs42proc.c        | 100 +++++++++++++++++++++++++++++++++++---
+>  fs/nfs/nfs4trace.h        |   1 +
+>  include/linux/nfs_fs_sb.h |   1 +
+>  3 files changed, 96 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> index 7656d7c103fa..224fb3b8696a 100644
+> --- a/fs/nfs/nfs42proc.c
+> +++ b/fs/nfs/nfs42proc.c
+> @@ -21,6 +21,7 @@
+>
+>  #define NFSDBG_FACILITY NFSDBG_PROC
+>  static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid =
+*std);
+> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
+ateid);
+>
+>  static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *=
+naddr)
+>  {
+> @@ -173,6 +174,9 @@ int nfs42_proc_deallocate(struct file *filep, loff_t =
+offset, loff_t len)
+>         return err;
+>  }
+>
+> +/* Wait this long before checking progress on a COPY operation */
+> +#define NFS42_COPY_TIMEOUT     (7 * HZ)
+> +
+>  static int handle_async_copy(struct nfs42_copy_res *res,
+>                              struct nfs_server *dst_server,
+>                              struct nfs_server *src_server,
+> @@ -222,7 +226,9 @@ static int handle_async_copy(struct nfs42_copy_res *r=
+es,
+>                 spin_unlock(&src_server->nfs_client->cl_lock);
+>         }
+>
+> -       status =3D wait_for_completion_interruptible(&copy->completion);
+> +wait:
+> +       status =3D wait_for_completion_interruptible_timeout(&copy->compl=
+etion,
+> +                                                          NFS42_COPY_TIM=
+EOUT);
+>         spin_lock(&dst_server->nfs_client->cl_lock);
+>         list_del_init(&copy->copies);
+>         spin_unlock(&dst_server->nfs_client->cl_lock);
+> @@ -231,12 +237,20 @@ static int handle_async_copy(struct nfs42_copy_res =
+*res,
+>                 list_del_init(&copy->src_copies);
+>                 spin_unlock(&src_server->nfs_client->cl_lock);
+>         }
+> -       if (status =3D=3D -ERESTARTSYS) {
+> -               goto out_cancel;
+> -       } else if (copy->flags || copy->error =3D=3D NFS4ERR_PARTNER_NO_A=
+UTH) {
+> -               status =3D -EAGAIN;
+> -               *restart =3D true;
+> +       switch (status) {
+> +       case 0:
+> +               status =3D nfs42_proc_offload_status(src, src_stateid);
+> +               if (status && status !=3D -EOPNOTSUPP)
+> +                       goto wait;
+> +               break;
+> +       case -ERESTARTSYS:
+>                 goto out_cancel;
+> +       default:
+> +               if (copy->flags || copy->error =3D=3D NFS4ERR_PARTNER_NO_=
+AUTH) {
+> +                       status =3D -EAGAIN;
+> +                       *restart =3D true;
+> +                       goto out_cancel;
+> +               }
+>         }
+>  out:
+>         res->write_res.count =3D copy->count;
+> @@ -582,6 +596,80 @@ static int nfs42_do_offload_cancel_async(struct file=
+ *dst,
+>         return status;
+>  }
+>
+> +static void nfs42_offload_status_prepare(struct rpc_task *task, void *ca=
+lldata)
+> +{
+> +       struct nfs42_offload_data *data =3D calldata;
+> +
+> +       nfs4_setup_sequence(data->seq_server->nfs_client,
+> +                               &data->args.osa_seq_args,
+> +                               &data->res.osr_seq_res, task);
+> +}
+> +
+> +static void nfs42_offload_status_done(struct rpc_task *task, void *calld=
+ata)
+> +{
+> +       struct nfs42_offload_data *data =3D calldata;
+> +
+> +       trace_nfs4_offload_status(&data->args, task->tk_status);
+> +       nfs41_sequence_done(task, &data->res.osr_seq_res);
+> +       if (task->tk_status &&
+> +               nfs4_async_handle_error(task, data->seq_server, NULL,
+> +                       NULL) =3D=3D -EAGAIN)
+> +               rpc_restart_call_prepare(task);
+> +}
+> +
+> +static const struct rpc_call_ops nfs42_offload_status_ops =3D {
+> +       .rpc_call_prepare =3D nfs42_offload_status_prepare,
+> +       .rpc_call_done =3D nfs42_offload_status_done,
+> +       .rpc_release =3D nfs42_free_offload_data,
+> +};
+> +
+> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
+ateid)
+> +{
+> +       struct nfs_open_context *ctx =3D nfs_file_open_context(file);
+> +       struct nfs_server *server =3D NFS_SERVER(file_inode(file));
+> +       struct nfs42_offload_data *data =3D NULL;
+> +       struct rpc_task *task;
+> +       struct rpc_message msg =3D {
+> +               .rpc_proc       =3D &nfs4_procedures[NFSPROC4_CLNT_OFFLOA=
+D_STATUS],
+> +               .rpc_cred       =3D ctx->cred,
+> +       };
+> +       struct rpc_task_setup task_setup_data =3D {
+> +               .rpc_client     =3D server->client,
+> +               .rpc_message    =3D &msg,
+> +               .callback_ops   =3D &nfs42_offload_status_ops,
+> +               .workqueue      =3D nfsiod_workqueue,
+> +               .flags          =3D RPC_TASK_ASYNC | RPC_TASK_SOFTCONN,
+> +       };
+> +       int status;
+> +
+> +       if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
+> +               return -EOPNOTSUPP;
+> +
+> +       data =3D kzalloc(sizeof(struct nfs42_offload_data), GFP_KERNEL);
+> +       if (data =3D=3D NULL)
+> +               return -ENOMEM;
+> +
+> +       data->seq_server =3D server;
+> +       data->args.osa_src_fh =3D NFS_FH(file_inode(file));
+> +       memcpy(&data->args.osa_stateid, stateid,
+> +               sizeof(data->args.osa_stateid));
+> +       msg.rpc_argp =3D &data->args;
+> +       msg.rpc_resp =3D &data->res;
+> +       task_setup_data.callback_data =3D data;
+> +       nfs4_init_sequence(&data->args.osa_seq_args, &data->res.osr_seq_r=
+es,
+> +                          1, 0);
+> +       task =3D rpc_run_task(&task_setup_data);
+> +       if (IS_ERR(task)) {
+> +               nfs42_free_offload_data(data);
+> +               return PTR_ERR(task);
+> +       }
+> +       status =3D rpc_wait_for_completion_task(task);
+> +       if (status =3D=3D -ENOTSUPP)
+> +               server->caps &=3D ~NFS_CAP_OFFLOAD_STATUS;
+> +       rpc_put_task(task);
+> +       return status;
+> +}
+> +
+>  static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
+>                                    struct nfs42_copy_notify_args *args,
+>                                    struct nfs42_copy_notify_res *res)
+> diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+> index 8f32dbf9c91d..9bcc525c71d1 100644
+> --- a/fs/nfs/nfs4trace.h
+> +++ b/fs/nfs/nfs4trace.h
+> @@ -2564,6 +2564,7 @@ DECLARE_EVENT_CLASS(nfs4_offload_class,
+>                         ), \
+>                         TP_ARGS(args, error))
+>  DEFINE_NFS4_OFFLOAD_EVENT(nfs4_offload_cancel);
+> +DEFINE_NFS4_OFFLOAD_EVENT(nfs4_offload_status);
+>
+>  DECLARE_EVENT_CLASS(nfs4_xattr_event,
+>                 TP_PROTO(
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index 92de074e63b9..0937e73c4767 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -278,6 +278,7 @@ struct nfs_server {
+>  #define NFS_CAP_LGOPEN         (1U << 5)
+>  #define NFS_CAP_CASE_INSENSITIVE       (1U << 6)
+>  #define NFS_CAP_CASE_PRESERVING        (1U << 7)
+> +#define NFS_CAP_OFFLOAD_STATUS (1U << 8)
+>  #define NFS_CAP_POSIX_LOCK     (1U << 14)
+>  #define NFS_CAP_UIDGID_NOMAP   (1U << 15)
+>  #define NFS_CAP_STATEID_NFSV41 (1U << 16)
+> --
+> 2.44.0
+>
+>
 
