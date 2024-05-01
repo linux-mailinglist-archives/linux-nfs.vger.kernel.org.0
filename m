@@ -1,142 +1,152 @@
-Return-Path: <linux-nfs+bounces-3117-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3118-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84C918B8972
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2024 13:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C708B8AFB
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2024 15:16:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DA07285C21
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2024 11:51:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1FED28312C
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 May 2024 13:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24D3B7E777;
-	Wed,  1 May 2024 11:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAM5MxBl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0DC12DDBF;
+	Wed,  1 May 2024 13:16:17 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9250E7FBD3
-	for <linux-nfs@vger.kernel.org>; Wed,  1 May 2024 11:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B27D12DD8E
+	for <linux-nfs@vger.kernel.org>; Wed,  1 May 2024 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714564286; cv=none; b=dr3wD3utb1/PbhbSIs+xQbShyCeLqlGyyWlExvrl4yk6kq40gd8UQwJPXweT3g5Uj+EGVjUFZNGtKtbh+Q638G6FnK2MM6ZVoVuKKPz0U/imRDfGj4AApA9Ky8HSY8Iw99CescWRo3mu2ciFRl9nrxBEgkz5uSXOd15cdIfEGhQ=
+	t=1714569377; cv=none; b=JkQXm3bdBVFEJ6qmSrXCLpj84n1UTun8Ne4ycNMHp+Pz1g9szGwGbBjEnJSRwrs4NE87/q0NRxri3m9o70z3hGUuyES429vBLvij1fmyhvGGynpQc9XolRXWVusRS+xeaZgFP7UixxQYOjmEW+wCTwlVN9cnxISX72jO8ftet2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714564286; c=relaxed/simple;
-	bh=oVTq80pkXwyoy7TcJqALMpS8YpNVIddBTvSgvA6rBi8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=PMhcm87wQX3ktUUyDPzZ0z+LRL76Ua63pmIsjtWwVIlv462QDsWWt6RoWCpL32+cp2nTdWnIdIGsldR98BOd+e3E4djrv/oopzICGbHMjqvLzulniqCz5MqqkGTZzu8cql6vxOIb2NIzNQN0/tveU4S473OT3hrQzrw1j9qFsk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PAM5MxBl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714564283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nnkmVhq2S0BNaQkleOd6XJ3VpQjTfweOjGM/NIr2sKM=;
-	b=PAM5MxBlLuddov9UL5zV2h/d/H6iIyFtSPg9HYn2B6qo7JvsS872ZRWj++6sWiDNNetGpB
-	q30OBxoXpl1F2D5ZlFzW1s6JsJhIKcuNiCsc704pmieDKPVnX8Xyw5TfuSNZiFfAXvH8Gt
-	TK6qoSGNTbnI7J2oFjAopwn04JCVayM=
+	s=arc-20240116; t=1714569377; c=relaxed/simple;
+	bh=E4JD48EzrcbVz6QbQEs6xRmajMOwhFuIhzhkDGkLnNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=arSzXbGG6y+moY66JjQh1IGZE/BPXEfGgJ3eKi6tXVYFmALOnSKM2vscaBvSamosF8jy8Z++BoJWS/JRCf78La2S+AG/BDYCE06/0GRgFC3wA8qP66M+4CzAA/cx1J019/xkVuQl2Vn1q8a04k352f2vSy7VUmGM6gK3Jskn9hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-140-U1b9OOAKMZWq_gl7OFzGfQ-1; Wed, 01 May 2024 07:51:19 -0400
-X-MC-Unique: U1b9OOAKMZWq_gl7OFzGfQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-569-7VD2Mx-0MruFMXPFfcU4hA-1; Wed, 01 May 2024 09:16:06 -0400
+X-MC-Unique: 7VD2Mx-0MruFMXPFfcU4hA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 67ED7812C52;
-	Wed,  1 May 2024 11:51:18 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E08F740C6CC0;
-	Wed,  1 May 2024 11:51:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240430140056.261997-8-dhowells@redhat.com>
-References: <20240430140056.261997-8-dhowells@redhat.com> <20240430140056.261997-1-dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-    Jeff Layton <jlayton@kernel.org>,
-    Gao Xiang <hsiangkao@linux.alibaba.com>,
-    Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-    Matthew Wilcox <willy@infradead.org>,
-    Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
-    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Christoph Hellwig <hch@lst.de>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>, devel@lists.orangefs.org
-Subject: Re: [PATCH v2 07/22] mm: Provide a means of invalidation without using launder_folio
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 085AE81F317;
+	Wed,  1 May 2024 13:16:06 +0000 (UTC)
+Received: from hog (unknown [10.39.193.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0FC61C271A4;
+	Wed,  1 May 2024 13:15:55 +0000 (UTC)
+Date: Wed, 1 May 2024 15:15:54 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: j.granados@samsung.com
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
+	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
+ sentinel elements from ctl_table array
+Message-ID: <ZjJAikcdWzzaIr1s@hog>
+References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
+ <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <438907.1714564273.1@warthog.procyon.org.uk>
+In-Reply-To: <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: queasysnail.net
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 May 2024 12:51:13 +0100
-Message-ID: <438908.1714564273@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-David Howells <dhowells@redhat.com> wrote:
+2024-05-01, 11:29:32 +0200, Joel Granados via B4 Relay wrote:
+> From: Joel Granados <j.granados@samsung.com>
+>=20
+> This commit comes at the tail end of a greater effort to remove the
+> empty elements at the end of the ctl_table arrays (sentinels) which will
+> reduce the overall build time size of the kernel and run time memory
+> bloat by ~64 bytes per sentinel (further information Link :
+> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+>=20
+> Avoid a buffer overflow when traversing the ctl_table by ensuring that
+> AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
+> done with a BUILD_BUG_ON where ax25_param_table is defined and a
+> CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
+> in the ax25_dev_device_up and ax25_ds_set_timer functions.
+                                ^^
+nit:                            not anymore ;)
+(but not worth a repost IMO)
 
-> +			.range_start	=3D first,
-> +			.range_end	=3D last,
-> ...
-> +	truncate_inode_pages_range(mapping, first, last);
 
-These actually take file offsets and not page ranges and so the attached
-change is needed.  Without this, the generic/412 xfstest fails.
+> diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
+> index c4f8adbf8144..c50a58d9e368 100644
+> --- a/net/ax25/ax25_ds_timer.c
+> +++ b/net/ax25/ax25_ds_timer.c
+> @@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
+>  =09ax25_dev->dama.slave_timeout =3D
+>  =09=09msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
+>  =09mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
+> +=09return;
 
-David
----
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 53516305b4b4..3916fc8b10e6 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -4171,15 +4171,15 @@ int filemap_invalidate_inode(struct inode *inode, =
-bool flush,
- 		struct writeback_control wbc =3D {
- 			.sync_mode	=3D WB_SYNC_ALL,
- 			.nr_to_write	=3D LONG_MAX,
--			.range_start	=3D first,
--			.range_end	=3D last,
-+			.range_start	=3D start,
-+			.range_end	=3D end,
- 		};
- =
+nit: return not needed here since we're already at the bottom of the
+function, but probably not worth a repost of the series.
 
- 		filemap_fdatawrite_wbc(mapping, &wbc);
- 	}
- =
+>  }
 
- 	/* Wait for writeback to complete on all folios and discard. */
--	truncate_inode_pages_range(mapping, first, last);
-+	truncate_inode_pages_range(mapping, start, end);
- =
-
- unlock:
- 	filemap_invalidate_unlock(mapping);
+--=20
+Sabrina
 
 
