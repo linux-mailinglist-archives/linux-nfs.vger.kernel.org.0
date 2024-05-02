@@ -1,133 +1,153 @@
-Return-Path: <linux-nfs+bounces-3127-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3128-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12FAA8B9BE9
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2024 15:53:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 354818B9BEA
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2024 15:55:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD2E2283F4F
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2024 13:53:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEC5E2834B6
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 May 2024 13:55:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD01613C678;
-	Thu,  2 May 2024 13:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2951675817;
+	Thu,  2 May 2024 13:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPU9xsSc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzFNJRd+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD9713C66C
-	for <linux-nfs@vger.kernel.org>; Thu,  2 May 2024 13:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DDA219F6
+	for <linux-nfs@vger.kernel.org>; Thu,  2 May 2024 13:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714658018; cv=none; b=TuyVeL4Y6aB6u9jsJIYEx+guQS6DbnPGEPemroGGYOea/MwzHg+mDVXw7/k2/heFMAmNZ69esB/v07ietdEaX5XHTHq3w1VuylxNVrqW818/8o4tOndNUQMbAbqwS3vWJ/Q1HRmwx6gOYX93Q0VLgxOUtRTQ1hHSRZSswyoa3tY=
+	t=1714658138; cv=none; b=oEQ3c9V861nUWXMsPJgksnwVhRxhGeIhPqcm98RLjpipjyB4F/6R6vPadfBMTdrAOUvqIDXfLG12B432YNqNQrj4xYJYUwDFjRDDC5ZwuFiqDRci9DUwsclmE4y0dcSxP1+ZAW49+3aeCWQbmPu1dLpLarC2n3Gm7/aHZ+6/8VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714658018; c=relaxed/simple;
-	bh=Lxn/dVm9433zXEKL4+dlqar5ZsHQoQYwB72gerb+K5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sytcA5uqEnrFGmUOQPjvc3rY7Xck5l8qHsBzkjqVfiNrVFhT1hfLaXccN6l0ItxUJRBDKHYXHf/4+uNjSH3QDJKdhdUdyf5tLOEH9FusgGF70yuY7U6wNh39QsgeRBvyJLC/y4JY9W/xhB8aVcajNDv7i180h+p+iWjhUeaFYrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lPU9xsSc; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1714658138; c=relaxed/simple;
+	bh=/Xtcjl6sSDAnz5G6L22+qOigvO9nYN9RrsY9SrRKQCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSfixSk/Ny5PAT5SBH3XJu7uoO2/tYDfnzsBLaQG/eNDXkXJN9Dee5dmOFdnOvgI4YJC9C46A+pCxDwIDlvA4fDHZrrbgMCdctYh9/83OugREk62/0rHFpa5SiQJB7RofVdhrbUznLfOx1OijeYd9ehi1IWv/MVG0m3vhwkcWm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzFNJRd+; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a595199cb9bso236199666b.3
-        for <linux-nfs@vger.kernel.org>; Thu, 02 May 2024 06:53:36 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a595c61553cso193853566b.1
+        for <linux-nfs@vger.kernel.org>; Thu, 02 May 2024 06:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714658015; x=1715262815; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ZX5R6bgG5aRxC5lW0K3u0aGPrCIK4LqLl3kYW2XesU=;
-        b=lPU9xsScgyvLi0gqRzHHV8rT6/xf6VQan0tHm9HiJfkwQc4D7Nds9kXy8bzu+v/VE+
-         3FONhj19prKSt/Trp1/Lei/nEff7rkDW6529j4H6Rtoh+ul0+F85ps6miUNZa7lXkilQ
-         oNwTOTq3EspnyOSDG1hy9L3otughyT2H6KYzVkX3V+sRPNCLUQQv06LoV90dWM/aAFF3
-         Qlsa6u9RAVmzQJFtrprT8DNcjH3TfK8LnJ5KZxJzwKM1cZ+9t/yEcYjlkMGaH/JWXFrR
-         MZvhVxw3+r4DHlgj0ofr4js/gxHKxEKFKut36Tx3GyX+poHP8U8ivmszs9aA1Iq9p5hx
-         +dlw==
+        d=gmail.com; s=20230601; t=1714658135; x=1715262935; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qST2nI3CEOuYC3mYx1PP+aXfdkjGVEZ3mUlq24ognjA=;
+        b=LzFNJRd+8mwa2CEPaTxs7GiuL5+sJlsEdpK6nLlLExiYRa8phRb3zOPSWK7KsxUO3p
+         +g1v84VBsAUBI4BW6mKHbrO/7eXiCst+VgC4POVypa6s0453GShNxD+B0YZLam0D+aAZ
+         O0T1bZka8TTA6yBAuEAPRSg/t203UNhFntuNO7boBPoD2wdmaDiJAdgtsK/WqtR/3VNB
+         QwW9FqeHXtKDdD9Bd/XUGGMiDMlmI3+/m+q6KvCRbaG85vlkZpOaPUGhPibhgWrAK2fG
+         MgcFR7piI6kick9fs7tDxrI/+Wg8gIbd6TT915aCnvBsp2QxjwUWynsNisqfLFW6A+Lx
+         4o4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714658015; x=1715262815;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZX5R6bgG5aRxC5lW0K3u0aGPrCIK4LqLl3kYW2XesU=;
-        b=qCkK1v8Ivwj6v5xFAzbL9eyeEvjkzCLFmnRpHPe5CvPOSYRo4TVf7NE01mXqN9SzE1
-         H7Tit2T63/tsiLt2IeaArW/xp8lBAnmskGJuMuOpoIOfAxnXPUTxfLIdwGFq5r6XtSDC
-         sXjzhwUmebap1EgyzCP+970k8Qf+jgaINomb/ZuIdvrVbs6MMnXIHN8uIOTFmrOdHuzy
-         iEZs9MD57UmX8YjYBdabksadw5wx/k9+8hNuIvWvBH06yXOkEnvlImNHMnBHQlZoVsIV
-         OUh8FdZvxISALFhx0mm8ORhJzJXnkdx2hiRuXj/UB/4szHMFM4wsajoD/C9ODLzYftka
-         O8bw==
-X-Gm-Message-State: AOJu0YzdOv0g+F762KoY4k40bh/QnOVOWWtypVw3/xZ7U1jjLmc/NnLK
-	yb5TfCoKXTdKcfqUOT0PYLZILv/uL01qiZdLT0553umgOz5ftQ8aYqBLFsZ6
-X-Google-Smtp-Source: AGHT+IGvwBRWysVDsiqZH9rWVyb35uEQ/DnxsA79RD7pglvriyii/ucEngC6AsuK+ppCpnWuUBSAag==
-X-Received: by 2002:a17:906:3388:b0:a59:257d:7aad with SMTP id v8-20020a170906338800b00a59257d7aadmr4034922eja.46.1714658014641;
-        Thu, 02 May 2024 06:53:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714658135; x=1715262935;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qST2nI3CEOuYC3mYx1PP+aXfdkjGVEZ3mUlq24ognjA=;
+        b=t0sslYrpwtRBqATZVxPGOhs/Z9D6AtMhEuhc7dpr/Xf6138aV9vAy6Xe2Ec04I9B5G
+         yI+TDp5qztA6+CMH7ytpRkTtjXZtE2x6jcwBKOHyFMdqfviZEi4Uh+YUXY2VChCYmG5N
+         Or65h9hgw30N9e9+ukwsB7o/QSb5xbUh1ZfzTnQaaugoQikQWD0wLXn7CaLmWP88jwes
+         RDgjP2os8xLP/et2pNo9WLKlbP28sZZeUc6wlXRYyP1QkAjgE+1cfRIeL9IzonGvMwU5
+         p+bgpoocjeu94Xy9HEaDJVJvm2MphyZX325LcGYsUrWS/BTm9shAWrCD7oNsW+ceEpZb
+         hsZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWM/BOzfW/UcvV80LF9u1Rj5mT9qH+oK9jmKi5i5mrx38Mx5P/I0tRKjuIdbvRCSoOH6+jeYb8/IRwbQhEilYETTkQXBq0/nsZt
+X-Gm-Message-State: AOJu0YzHUpG4kNCH1PcbJTerzOa7h9TSAXjzF1Ypu4TQeT1HWtw08GM9
+	Jt0ftiXx/12UPK763Yr+hSCmyuQz9i/lkiDUMgo7fkKYNVIMND9+
+X-Google-Smtp-Source: AGHT+IH8p3rXgb79ZvUdxWnBtyhnqPLZDyiGML5lZ07aeayQmXGnoz7WQTKnHOP4eEiBg3e0oVdk1A==
+X-Received: by 2002:a17:907:1047:b0:a58:c0a1:f22e with SMTP id oy7-20020a170907104700b00a58c0a1f22emr4065461ejb.2.1714658134296;
+        Thu, 02 May 2024 06:55:34 -0700 (PDT)
 Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id o3-20020a1709064f8300b00a58ea7cfeedsm587287eju.62.2024.05.02.06.53.33
+        by smtp.gmail.com with ESMTPSA id k24-20020a17090627d800b00a560ee2db26sm579643ejc.124.2024.05.02.06.55.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 06:53:33 -0700 (PDT)
+        Thu, 02 May 2024 06:55:33 -0700 (PDT)
 Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
 Received: by eldamar.lan (Postfix, from userid 1000)
-	id C397EBE2EE8; Thu, 02 May 2024 15:53:32 +0200 (CEST)
+	id 0842CBE2EE8; Thu, 02 May 2024 15:55:33 +0200 (CEST)
+Date: Thu, 2 May 2024 15:55:32 +0200
 From: Salvatore Bonaccorso <carnil@debian.org>
-To: Steve Dickson <steved@redhat.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Vladimir Petko <vladimir.petko@canonical.com>
-Subject: [PATCH] junction: export-cache: cast to a type with a known size to ensure sprintf works
-Date: Thu,  2 May 2024 15:53:20 +0200
-Message-ID: <20240502135320.3445429-1-carnil@debian.org>
-X-Mailer: git-send-email 2.43.0
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Steve Dickson <steved@redhat.com>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: Fails to build on =?utf-8?Q?arm{el=2Ch?=
+ =?utf-8?Q?f}_with_64bit_time=5Ft=3A_export-cache=2Ec=3A110=3A51=3A_error?=
+ =?utf-8?Q?=3A_format_=E2=80=98%ld=E2=80=99_expects_argument_of_type_?=
+ =?utf-8?B?4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlIOKAmHRp?=
+ =?utf-8?B?bWVfdOKAmSB7YWthIOKAmGxvbmcgbG9uZyBpbnTigJl9?= [-Werror=format=]
+Message-ID: <ZjObVI2tISaGfIcv@eldamar.lan>
+References: <ZhGfUpXclZeoZ_az@eldamar.lan>
+ <A3AAF9FA-95BE-461C-8E7A-C0ED02526519@oracle.com>
+ <ZjMd_DCJrV0tHY1K@eldamar.lan>
+ <ZjONq6cf2MEmVSBK@tissot.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZjONq6cf2MEmVSBK@tissot.1015granger.net>
 
-As reported in Debian, with the 64bit time_t transition for the armel
-and armhf architecture, it was found that nfs-utils fails to compile
-with:
+Hi,
 
-	libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I../../support/include -I/usr/include/tirpc -I/usr/include/libxml2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64 -Wdate-time -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -pipe -Wall -Wextra -Werror=strict-prototypes -Werror=missing-prototypes -Werror=missing-declarations -Werror=format=2 -Werror=undef -Werror=missing-include-dirs -Werror=strict-aliasing=2 -Werror=init-self -Werror=implicit-function-declaration -Werror=return-type -Werror=switch -Werror=overflow -Werror=parentheses -Werror=aggregate-return -Werror=unused-result -fno-strict-aliasing -Werror=format-overflow=2 -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=misleading-indentation -Wno-cast-function-type -g -O2 -Werror=implicit-function-declaration -ffile-prefix-map=/<<PKGBUILDDIR>>=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -c xml.c  -fPIC -DPIC -o .libs/xml.o
-	export-cache.c: In function ‘junction_flush_exports_cache’:
-	export-cache.c:110:51: error: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘time_t’ {aka ‘long long int’} [-Werror=format=]
-	  110 |         snprintf(flushtime, sizeof(flushtime), "%ld\n", now);
-	      |                                                 ~~^     ~~~
-	      |                                                   |     |
-	      |                                                   |     time_t {aka long long int}
-	      |                                                   long int
-	      |                                                 %lld
+On Thu, May 02, 2024 at 08:57:15AM -0400, Chuck Lever wrote:
+> On Thu, May 02, 2024 at 07:00:44AM +0200, Salvatore Bonaccorso wrote:
+> > Hi all,
+> > 
+> > On Sat, Apr 06, 2024 at 07:28:58PM +0000, Chuck Lever III wrote:
+> > > 
+> > > 
+> > > > On Apr 6, 2024, at 3:15 PM, Salvatore Bonaccorso <carnil@debian.org> wrote:
+> > > > 
+> > > > Hi Chuck, hi Steve,
+> > > > 
+> > > > In Debian, as you might have heard there is a 64bit time_t
+> > > > transition[1] ongoing affecting the armel and armhf architectures.
+> > > > While doing so, nfs-utils was found to fail to build for those
+> > > > architectures after the switch, reported in Debian as [2]. Vladimir
+> > > > Petko from Ubuntu has as well filled it in [3].
+> > > > 
+> > > > [1]: https://lists.debian.org/debian-devel-announce/2024/02/msg00005.html
+> > > > [2]: https://bugs.debian.org/1067829
+> > > > [3]: https://bugzilla.kernel.org/show_bug.cgi?id=218540
+> > > > 
+> > > > The report is full-quoted below. 
+> > > > 
+> > > > Vladimir Petko has created a patch in the bugzilla which I'm attaching
+> > > > here as well. If this is not an acceptable format due to missing
+> > > > Signed-off's I'm attaching a variant with a Suggested-by for Vladimir
+> > > > to properly credit the patch origin.
+> > > > 
+> > > > Let me know if that works. I changed it slightly and only casting to
+> > > > long long, and made it almost checkpatch clean.
+> > > 
+> > > I suppose strftime(3) might be nicer, but this works.
+> > > 
+> > > Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> > 
+> > I noticed this is not yet applied to the repository, do you need
+> > anything else from me or did it just felt trouch the cracks or
+> > actually queued?
+> > 
+> > Asking since if you want to have it done differently I will then
+> > follow suit downstream as well in Debian, where we have for now
+> > applied the submitted patch.
+> 
+> Salvatore, can you resend the patch inline (not as an attachment)
+>  To: Steve, Cc: linux-nfs@ ?
 
-time_t is not guaranteed to be 64-bit, so it must be coerced into the expected
-type for printf. Cast it to long long.
+Yes sure, sorry about it. Here it is submitted:
 
-Reported-by: Vladimir Petko <vladimir.petko@canonical.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218540
-Link: https://bugs.debian.org/1067829
-Link: https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2055349
-Fixes: 494d22396d3d ("Add LDAP-free version of libjunction to nfs-utils")
-Suggested-by: Vladimir Petko <vladimir.petko@canonical.com>
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- support/junction/export-cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/linux-nfs/20240502135320.3445429-1-carnil@debian.org/T/#u
 
-diff --git a/support/junction/export-cache.c b/support/junction/export-cache.c
-index 4e578c9b37b1..00187c019d60 100644
---- a/support/junction/export-cache.c
-+++ b/support/junction/export-cache.c
-@@ -107,7 +107,7 @@ junction_flush_exports_cache(void)
- 		xlog(D_GENERAL, "%s: time(3) failed", __func__);
- 		return FEDFS_ERR_SVRFAULT;
- 	}
--	snprintf(flushtime, sizeof(flushtime), "%ld\n", now);
-+	snprintf(flushtime, sizeof(flushtime), "%lld\n", (long long)now);
- 
- 	for (i = 0; junction_proc_files[i] != NULL; i++) {
- 		retval = junction_write_time(junction_proc_files[i], flushtime);
--- 
-2.43.0
-
+Regards,
+Salvatore
 
