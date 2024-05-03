@@ -1,324 +1,405 @@
-Return-Path: <linux-nfs+bounces-3141-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3142-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7401D8BA7D8
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2024 09:32:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8247D8BA958
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2024 11:04:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D785B20D5B
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2024 07:32:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F21F1F22494
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 May 2024 09:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB071474AB;
-	Fri,  3 May 2024 07:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C294114F10C;
+	Fri,  3 May 2024 09:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kt22eiuZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hNizHVdn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE98146D75;
-	Fri,  3 May 2024 07:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0F214F62;
+	Fri,  3 May 2024 09:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721543; cv=none; b=jbtp55EXT70Nsu7Nr15U/IGwVr6cPcktwtyCUCsopzctodCYUdM8nPYjYfiB2f7dJTWXnCEO67HfzcQ4Uah+MVxjoTGP1rJIcwhvKFjbDvLzHW2OnwXXevJ0NxY4fdz+9CwPYhlNOPithTI5U6z2XAmd7UlefanFft7tL/efhHk=
+	t=1714727029; cv=none; b=TDRL4EknNrGXbQ6QjtvmwpCKLyslIu7ZAmooBe+3ewAu4NtSHr2sykMGt9gdhj9zwYRhcfVH0VW5E3hWkfFuU9lP3PpAufU4knwCr451STs+P+h9Uw6FoAzVRUtBhJFEH5JlOB9sGXJqfoUv5Dfn50FH9VfyZILCDIgLKD30yWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721543; c=relaxed/simple;
-	bh=/wcCtlIeTh13HBwXdEzU1rj1/fGksM+XmZoNKBcCYSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JJr0kFY5991dOZXcHWx2CAJv/HoWKravE/UEDyzzcKAYxJb8BHESa/f2rlJOUPugUTa4XZsu73Wh+GQ/ymcZIGpeWzwAtdpGjowdS9HoIsZHDWxIUbeSKZLbpi2qvrSy8JeuZkwAT1WhwtWnj54n5q8db6adKDb8HgJ0vHn+AWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kt22eiuZ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714721541; x=1746257541;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/wcCtlIeTh13HBwXdEzU1rj1/fGksM+XmZoNKBcCYSo=;
-  b=kt22eiuZ6+ds2JBRoQ7mGJopa8AcMpg3jwC5JQmvmhMrZPtI/QGLqbX2
-   faRv49PPggOEPFiKROkOowOc/3Zyol+OXJ3IK2aicy6xLaS3SpUQ0d6+f
-   IY/3pgCeR9RY6heAQ8+4utQXJkqMd8j8aZN+DUs3qxeR2ik9BCtNth4Dw
-   bnMvCR3O2Dgg8pTtJSMmRvPjhk3jw+aAK4LJc7f+mMnCW/03VMjxhDPf+
-   ubv0BTGpyLuqAgGbS2IQJ71Vr4x2XUQ2U0SdEZn87Ez5CjPgQFNVrPx6n
-   lvAOQzG0l7S1+8zQSzuC2i2Sv7AjhFx8hyAZielV1nU+BoOhw/2egKtLQ
-   w==;
-X-CSE-ConnectionGUID: SUDwi7S0QTG55l1pZwJPtw==
-X-CSE-MsgGUID: FbSl0SrfQbqc9piuYv6iXw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10683878"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10683878"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 00:32:21 -0700
-X-CSE-ConnectionGUID: TX93ohRkRRiCu459xhKfhg==
-X-CSE-MsgGUID: 5PVBgaKZT4aJm9cZbdWpyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27353333"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 03 May 2024 00:32:18 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s2nOx-000BQF-3C;
-	Fri, 03 May 2024 07:32:15 +0000
-Date: Fri, 3 May 2024 15:31:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stephen Smalley <stephen.smalley.work@gmail.com>,
-	selinux@vger.kernel.org, linux-nfs@vger.kernel.org,
-	chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de
-Cc: oe-kbuild-all@lists.linux.dev, paul@paul-moore.com, omosnace@redhat.com,
-	linux-security-module@vger.kernel.org,
-	Stephen Smalley <stephen.smalley.work@gmail.com>
-Subject: Re: [PATCH v2] nfsd: set security label during create operations
-Message-ID: <202405031516.kghPPWFt-lkp@intel.com>
-References: <20240502195800.3252-1-stephen.smalley.work@gmail.com>
+	s=arc-20240116; t=1714727029; c=relaxed/simple;
+	bh=H4OwBwwEJLoUrKgErNPAJ4aWKXfqp1/GW2h+1cPY6mY=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=LELIdvB94u4VG7Xl+VUb+dOAlJzdIImPOiWg1ONIISGco6uNrDnbtN5vQuS2LAJ/NRfJUIRebhYvF6BE23O6h6qdT/UUemv/kqLLeDooaSN6kwrjugPZgWSH3yX8qfUt6xL4WSNKVgbgrCFU8Y2NquZSNlxFAkDNfVMKlyJMboY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hNizHVdn; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1714727018;
+	bh=5DfAXm0BybfL0wB90HdoJ2+ecXzl3T3phLFwP9QlX+o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hNizHVdn9K9XbhBNhn1nDSO/5KZUNj2XoxMSsTacSd3jPs0o0drSRiC4H6bkslwSW
+	 B/QSvO9HwlzhFW4zaHFyGSJ5H6nnh83o7MAyLAhqznaRM1mK98m5CnfxgNvbZnC8qx
+	 hsrB//hR8ZhJR5rlu9tY5Zsijl1EM085ggZXO+JQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240503090338eucas1p1622ca105c87c20c6bbe96b62943fe717~L7yNnz7IW1025710257eucas1p1p;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 2A.F6.09624.A68A4366; Fri,  3
+	May 2024 10:03:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0~L7yM6N_nm1858018580eucas1p1z;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240503090337eusmtrp2e33e44757c1c281d7e60e444934cfff9~L7yM4xFdH1141911419eusmtrp2R;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-4f-6634a86abd4b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id DB.59.08810.968A4366; Fri,  3
+	May 2024 10:03:37 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eusmtip245d74ecfb1a665d8dac0f5363231e909~L7yMjDsdX1588515885eusmtip2r;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from localhost (106.210.248.112) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Fri, 3 May 2024 10:03:36 +0100
+Date: Fri, 3 May 2024 11:03:32 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="pu6elde4hy573vso"
 Content-Disposition: inline
-In-Reply-To: <20240502195800.3252-1-stephen.smalley.work@gmail.com>
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VSfUxTVxzNfe/1vVe24mvp5AZkZIiayIcQWbzZKrC4Px4hM5PMLPLHRjOe
+	4KBFW2DqdOJEFHBbBVEpX2UiMnDFFKhURLFjRcABG8SgwzI+SkBwQIsCq8Isj80l++/8fuec
+	e8+5uTQueUh60fuUqZxKKU/2I90Io2WxK+jzqrC9IUNmD3TcohMgR2sbiYyXcjH0wnQKR/UW
+	K0A2yzCF7uUqUFPnUwwZRu4L0M3mdgKV1i4C1HujmETWq8sC1NPSKUB9DXoCjZm/IZDRkUki
+	TfkJHNl0kwI0c2aYRK21vxDoxvNGCjkXxjDknF8SoBNldhz1a2wAWXRrkUbfQaCuOocg0oct
+	yviVYDu+h6zOkMYaqrNJ1mDPo9i6imPseF0hYLsvlgP2fv8gwT5x3sXYnsopknUY3mS/y7VQ
+	H4pi3WTxXPK+dE61JTzOLdFp+53cX/Txwe7BnRmgKzIHCGnIhME7lmtkDnCjJUwVgCPTdwA/
+	zAE4N/ktcKkkjAPAWze/ygH0iuPHOU9ecwXAyXsj+L+a8Uev80Q9gDWjfwhcBMH4w7qJbMyF
+	SSYQdk8NrBikjAz+8MxBuTDOFFCw6HqcC3swcbD+cv7KxSImElr1TQSPxbC9cJRwhcCZg3Bo
+	IZaH3vDKEu1SCJkPYFbFNMEXWw9br5dQPD4KO+ofYq5okJlxg+bZUcAT78MzDXwcyHjAx231
+	q4Z1cNlUtmrIB/D20gzFDzUAVh5/ivGqd2Fm3+iq4z1o7X4A+Bdyh/1PxHwvd5hnvIDzaxE8
+	nSXh1RthjXWK0ID12v80075qpn3VTLtyTiDUNdnJ/60DYGX5JM7j7VCvnyZ0gKoGnlyaWpHA
+	qUOV3BfBarlCnaZMCP4sRWEAL79851KbvRGUPJ4NNgOMBmbg/9I8fK2mB3gRyhQl5ycVBeRv
+	3SsRxcsPHeZUKZ+q0pI5tRl404Sfp2hDvC8nYRLkqVwSx+3nVP+wGC30ysDSCwPswc2nK7SJ
+	u46EjoZI18i6djc81wszz+8oGTq/uaSpb+sBQ4nBMeAYxCxHt/w82WOq0J9rEAu/jL1Iz8dE
+	ptnz9kTQittJBedyNeiyqSV5g8mnWi3rLDwy5/A1/8aG9RbtpDZVuTuXo7F37k6cahf31Ebs
+	ic4wmiOTZLNXLxXj0nZpcdCScxf3SX/42fbyRXHjuvE3os5ub342sM2my/bxpeThu/Heqbe8
+	s5ix0sAHZTXzh4YOX1g4kBdi++kYFYSZQv862TlRUNsijSqNDjhpWBO+rFnruWnbeNzbSoX7
+	xhfuMfiOMLEs97WCr4MiokI+umV8FAPT/0xs809K9SPUifLQzbhKLf8bTKfE620EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsVy+t/xe7qZK0zSDH7sl7VoPLaA1eLzkeNs
+	FtsWdzNZ/N3Zzmyx5dg9Rounxx6xW5zpzrXYffork8Wmx9dYLfbsPcliMW/9T0aLy7vmsFnc
+	W/Of1eLCgdOsFle2rmOxeHaol8Vi2+cWNosJC5uZLZ4ueM1q8aHnEZvFkfVnWSx2/dnBbvH7
+	xzMmi9/f/7FaNM//xGxxY8JTRotjC8QsJqw7xWJxbvNnVgdZj9kNF1k8Ti2S8FiwqdRj06pO
+	No9Nnyaxe2xeUu/xYvNMRo/zMxYyely7cZ/F4+3vE0weF5a9YfP4vEnOo7/7GHsAb5SeTVF+
+	aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexpz+v0wFM8Mr
+	Ph6+xNrAeMahi5GDQ0LARGLtF/EuRi4OIYGljBI3+n6ydDFyAsVlJDZ+ucoKYQtL/LnWxQZR
+	9JFR4tebn8wQzhZGietnD4F1sAioSGx+2ckEYrMJ6Eicf3OHGcQWEbCRWPntMzuIzSwwlV1i
+	9vYEEFtYIEFiy9LJjCA2r4CDxL11u1kghi5glJjevhYqIShxcuYTFpBTmQXKJN7fNoYwpSWW
+	/+MAqeAU8JVoW/Ie6mhliSPb57JD2LUSn/8+Y5zAKDwLyaBZCINmIQyaBXablsSNfy+ZMIS1
+	JZYtfM0MYdtKrFv3nmUBI/sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwHS37djPzTsY5736
+	qHeIkYmD8RCjClDnow2rLzBKseTl56UqifBqTzZOE+JNSaysSi3Kjy8qzUktPsRoCgzDicxS
+	osn5wEScVxJvaGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXANH3uY4E0
+	2xYBo9Mirv0ldwM2JeXqPak55K24q+zrxBohrh2WGfamDnIvAq2vLWOefW1xx/xL/75ENCX9
+	vqot8bXk/BKxn6F9nTImM+a53WtI2Xgg3tez4H/e1kWOlx5e8/WsP/e1yuuIcl/Z/wLbadY8
+	KiufaMxeF5jCvf62Uu03kYK5wRGfjrzc92dKt2DT2pBb3qeD5d7cEz/wpqLi2sLZNb+7lkZM
+	n+Ie5awmssqS9+w9mbNLU2RnBT5VsBSSrBRo3iWV/Wb3rR8mMzi+2SzRU5f6N7MyzCXp4P/d
+	yaIWaeGfHbVicn6JfVP4Uf55nj6jjUNn7tegOU2nuZ60PNqZxc/sn/6VMT1xt32vEktxRqKh
+	FnNRcSIAsZFFMwwEAAA=
+X-CMS-MailID: 20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0
+X-Msg-Generator: CA
+X-RootMTR: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+	<20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 
-Hi Stephen,
+--pu6elde4hy573vso
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build errors:
+Hey Thomas
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.9-rc6 next-20240502]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Here is my feedback for your outstanding constification patches [1] and [2].
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Stephen-Smalley/nfsd-set-security-label-during-create-operations/20240503-040242
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240502195800.3252-1-stephen.smalley.work%40gmail.com
-patch subject: [PATCH v2] nfsd: set security label during create operations
-config: arm64-randconfig-r123-20240503 (https://download.01.org/0day-ci/archive/20240503/202405031516.kghPPWFt-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 37ae4ad0eef338776c7e2cffb3896153d43dcd90)
-reproduce: (https://download.01.org/0day-ci/archive/20240503/202405031516.kghPPWFt-lkp@intel.com/reproduce)
+# You need to split the patch
+The answer that you got from Jakub in the network subsystem is very clear a=
+nd
+baring a change of heart from the network folks, this will go in as but as a
+split patchset. Please split it considering the following:
+1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+   miscellaneous that includes whatever does not fit into the others.
+2. Consider that this might take several releases.
+3. Consider the following sufix for the interim function name "_const". Lik=
+e in
+   kfree_const. Please not "_new".
+4. Please publish the final result somewhere. This is important so someone =
+can
+   take over in case you need to stop.
+5. Consistently mention the motivation in your cover letters. I specify more
+   further down in "#Motivation".
+6. Also mention that this is part of a bigger effort (like you did in your
+   original cover letters). I would include [3,4,5,6]
+7. Include a way to show what made it into .rodata. I specify more further =
+down
+   in "#Show the move".
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405031516.kghPPWFt-lkp@intel.com/
+# Motivation
+As I read it, the motivation for these constification efforts are:
+1. It provides increased safety: Having things in .rodata section reduces t=
+he
+   attack surface. This is especially relevant for structures that have fun=
+ction
+   pointers (like ctl_table); having these in .rodata means that these poin=
+ters
+   always point to the "intended" function and cannot be changed.
+2. Compiler optimizations: This was just a comment in the patchsets that I =
+have
+   mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+   have to do with enhancing locality for the data in .rodata? Do you have =
+other
+   specific optimizations in mind?
+3. Readability: because it is easier to know up-front that data is not supp=
+osed
+   to change or its obvious that a function is re-entrant. Actually a lot o=
+f the
+   readability reasons is about knowing things "up-front".
+As we move forward with the constification in sysctl, please include a more
+detailed motivation in all your cover letters. This helps maintainers (that
+don't have the context) understand what you are trying to do. It does not n=
+eed
+to be my three points, but it should be more than just "put things into
+=2Erodata". Please tell me if I have missed anything in the motivation.
 
-All errors (new ones prefixed by >>):
+# Show the move
+I created [8] because there is no easy way to validate which objects made it
+into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+=2Erodata than I expected (the results are in [9]) Why is that? Is it somet=
+hing
+that has not been posted to the lists yet?=20
 
-   In file included from fs/nfsd/nfsproc.c:10:
-   In file included from fs/nfsd/cache.h:12:
-   In file included from include/linux/sunrpc/svc.h:17:
-   In file included from include/linux/sunrpc/xdr.h:17:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2210:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> fs/nfsd/nfsproc.c:392:24: error: incompatible pointer types passing 'struct iattr *' to parameter of type 'struct nfsd_attrs *' [-Werror,-Wincompatible-pointer-types]
-     392 |                 if (nfsd_attrs_valid(attr))
-         |                                      ^~~~
-   fs/nfsd/vfs.h:63:56: note: passing argument to parameter 'attrs' here
-      63 | static inline bool nfsd_attrs_valid(struct nfsd_attrs *attrs)
-         |                                                        ^
-   5 warnings and 1 error generated.
+Best
 
+[1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb8=
+36e2@weissschuh.net/
+[2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012ab=
+c31311@weissschuh.net
+[3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+    https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@=
+kernel.org
+[4] [PATCH v2 00/19] backlight: Constify lcd_ops
+    https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa8=
+2b07bc6@kernel.org
+[5] [PATCH 1/4] iommu: constify pointer to bus_type
+    https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski=
+@linaro.org
+[6] [PATCH 00/29] const xattr tables
+    https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+[7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@wei=
+ssschuh.net/
 
-vim +392 fs/nfsd/nfsproc.c
+[8]
+    #!/usr/bin/python3
 
-   240	
-   241	/*
-   242	 * CREATE processing is complicated. The keyword here is `overloaded.'
-   243	 * The parent directory is kept locked between the check for existence
-   244	 * and the actual create() call in compliance with VFS protocols.
-   245	 * N.B. After this call _both_ argp->fh and resp->fh need an fh_put
-   246	 */
-   247	static __be32
-   248	nfsd_proc_create(struct svc_rqst *rqstp)
-   249	{
-   250		struct nfsd_createargs *argp = rqstp->rq_argp;
-   251		struct nfsd_diropres *resp = rqstp->rq_resp;
-   252		svc_fh		*dirfhp = &argp->fh;
-   253		svc_fh		*newfhp = &resp->fh;
-   254		struct iattr	*attr = &argp->attrs;
-   255		struct nfsd_attrs attrs = {
-   256			.na_iattr	= attr,
-   257		};
-   258		struct inode	*inode;
-   259		struct dentry	*dchild;
-   260		int		type, mode;
-   261		int		hosterr;
-   262		dev_t		rdev = 0, wanted = new_decode_dev(attr->ia_size);
-   263	
-   264		dprintk("nfsd: CREATE   %s %.*s\n",
-   265			SVCFH_fmt(dirfhp), argp->len, argp->name);
-   266	
-   267		/* First verify the parent file handle */
-   268		resp->status = fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
-   269		if (resp->status != nfs_ok)
-   270			goto done; /* must fh_put dirfhp even on error */
-   271	
-   272		/* Check for NFSD_MAY_WRITE in nfsd_create if necessary */
-   273	
-   274		resp->status = nfserr_exist;
-   275		if (isdotent(argp->name, argp->len))
-   276			goto done;
-   277		hosterr = fh_want_write(dirfhp);
-   278		if (hosterr) {
-   279			resp->status = nfserrno(hosterr);
-   280			goto done;
-   281		}
-   282	
-   283		inode_lock_nested(dirfhp->fh_dentry->d_inode, I_MUTEX_PARENT);
-   284		dchild = lookup_one_len(argp->name, dirfhp->fh_dentry, argp->len);
-   285		if (IS_ERR(dchild)) {
-   286			resp->status = nfserrno(PTR_ERR(dchild));
-   287			goto out_unlock;
-   288		}
-   289		fh_init(newfhp, NFS_FHSIZE);
-   290		resp->status = fh_compose(newfhp, dirfhp->fh_export, dchild, dirfhp);
-   291		if (!resp->status && d_really_is_negative(dchild))
-   292			resp->status = nfserr_noent;
-   293		dput(dchild);
-   294		if (resp->status) {
-   295			if (resp->status != nfserr_noent)
-   296				goto out_unlock;
-   297			/*
-   298			 * If the new file handle wasn't verified, we can't tell
-   299			 * whether the file exists or not. Time to bail ...
-   300			 */
-   301			resp->status = nfserr_acces;
-   302			if (!newfhp->fh_dentry) {
-   303				printk(KERN_WARNING 
-   304					"nfsd_proc_create: file handle not verified\n");
-   305				goto out_unlock;
-   306			}
-   307		}
-   308	
-   309		inode = d_inode(newfhp->fh_dentry);
-   310	
-   311		/* Unfudge the mode bits */
-   312		if (attr->ia_valid & ATTR_MODE) {
-   313			type = attr->ia_mode & S_IFMT;
-   314			mode = attr->ia_mode & ~S_IFMT;
-   315			if (!type) {
-   316				/* no type, so if target exists, assume same as that,
-   317				 * else assume a file */
-   318				if (inode) {
-   319					type = inode->i_mode & S_IFMT;
-   320					switch(type) {
-   321					case S_IFCHR:
-   322					case S_IFBLK:
-   323						/* reserve rdev for later checking */
-   324						rdev = inode->i_rdev;
-   325						attr->ia_valid |= ATTR_SIZE;
-   326	
-   327						fallthrough;
-   328					case S_IFIFO:
-   329						/* this is probably a permission check..
-   330						 * at least IRIX implements perm checking on
-   331						 *   echo thing > device-special-file-or-pipe
-   332						 * by doing a CREATE with type==0
-   333						 */
-   334						resp->status = nfsd_permission(rqstp,
-   335									 newfhp->fh_export,
-   336									 newfhp->fh_dentry,
-   337									 NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
-   338						if (resp->status && resp->status != nfserr_rofs)
-   339							goto out_unlock;
-   340					}
-   341				} else
-   342					type = S_IFREG;
-   343			}
-   344		} else if (inode) {
-   345			type = inode->i_mode & S_IFMT;
-   346			mode = inode->i_mode & ~S_IFMT;
-   347		} else {
-   348			type = S_IFREG;
-   349			mode = 0;	/* ??? */
-   350		}
-   351	
-   352		attr->ia_valid |= ATTR_MODE;
-   353		attr->ia_mode = mode;
-   354	
-   355		/* Special treatment for non-regular files according to the
-   356		 * gospel of sun micro
-   357		 */
-   358		if (type != S_IFREG) {
-   359			if (type != S_IFBLK && type != S_IFCHR) {
-   360				rdev = 0;
-   361			} else if (type == S_IFCHR && !(attr->ia_valid & ATTR_SIZE)) {
-   362				/* If you think you've seen the worst, grok this. */
-   363				type = S_IFIFO;
-   364			} else {
-   365				/* Okay, char or block special */
-   366				if (!rdev)
-   367					rdev = wanted;
-   368			}
-   369	
-   370			/* we've used the SIZE information, so discard it */
-   371			attr->ia_valid &= ~ATTR_SIZE;
-   372	
-   373			/* Make sure the type and device matches */
-   374			resp->status = nfserr_exist;
-   375			if (inode && inode_wrong_type(inode, type))
-   376				goto out_unlock;
-   377		}
-   378	
-   379		resp->status = nfs_ok;
-   380		if (!inode) {
-   381			/* File doesn't exist. Create it and set attrs */
-   382			resp->status = nfsd_create_locked(rqstp, dirfhp, &attrs, type,
-   383							  rdev, newfhp);
-   384		} else if (type == S_IFREG) {
-   385			dprintk("nfsd:   existing %s, valid=%x, size=%ld\n",
-   386				argp->name, attr->ia_valid, (long) attr->ia_size);
-   387			/* File already exists. We ignore all attributes except
-   388			 * size, so that creat() behaves exactly like
-   389			 * open(..., O_CREAT|O_TRUNC|O_WRONLY).
-   390			 */
-   391			attr->ia_valid &= ATTR_SIZE;
- > 392			if (nfsd_attrs_valid(attr))
-   393				resp->status = nfsd_setattr(rqstp, newfhp, &attrs,
-   394							    NULL);
-   395		}
-   396	
-   397	out_unlock:
-   398		inode_unlock(dirfhp->fh_dentry->d_inode);
-   399		fh_drop_write(dirfhp);
-   400	done:
-   401		fh_put(dirfhp);
-   402		if (resp->status != nfs_ok)
-   403			goto out;
-   404		resp->status = fh_getattr(&resp->fh, &resp->stat);
-   405	out:
-   406		return rpc_success;
-   407	}
-   408	
+    import subprocess
+    import re
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+    def exec_cmd( cmd ):
+        try:
+            result =3D subprocess.run(cmd, shell=3DTrue, text=3DTrue, check=
+=3DTrue, capture_output=3DTrue)
+            output_lines =3D result.stdout.splitlines()
+            return output_lines
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+    def remove_tokens_re(lines, regex_patterns, uniq =3D True):
+        filtered_lines =3D []
+        seen_lines =3D set()
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            for regex in regexes:
+                line =3D regex.sub('', line)  # Replace matches with empty =
+string
+
+            if uniq:
+                if line not in seen_lines:
+                    seen_lines.add(line)
+                    filtered_lines.append(line)
+            else:
+                    filtered_lines.append(line)
+
+        return filtered_lines
+
+    def filter_in_lines(lines, regex_patterns):
+        filtered_lines =3D []
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            if any(regex.search(line) for regex in regexes):
+                filtered_lines.append(line)
+
+        return filtered_lines
+
+    cmd =3D "git grep 'static \(const \)\?struct ctl_table '"
+    regex_patterns =3D ['[\}]*;$', ' =3D \{', '\[.*\]', '.*\.(c|h):[ \t]*st=
+atic (const )?struct ctl_table ']
+    ctl_table_structs =3D remove_tokens_re(exec_cmd( cmd ), regex_patterns)
+
+    cmd =3D "readelf -X -Ws build/vmlinux"
+    regex_patterns =3D ['.*OBJECT.*']
+    output_lines =3D filter_in_lines(exec_cmd( cmd ), regex_patterns);
+
+    regex_patterns =3D ['^.*OBJECT', '[ \t]+[A-Z]+[ \t]+[A-Z]+.*\(.*\)[ \t]=
++']
+    obj_elems =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    regex_patterns =3D ['^.*\(', '\)[ ]+.*$']
+    sec_names =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    for i in range(len(sec_names)):
+        obj_name =3D obj_elems[i]
+        if obj_name in ctl_table_structs:
+            print ("section: {}\t\tobj_name : {}". format(sec_names[i], obj=
+_name))
+
+[9]
+    section: .rodata                obj_name : kern_table
+    section: .rodata                obj_name : sysctl_mount_point
+    section: .rodata                obj_name : addrconf_sysctl
+    section: .rodata                obj_name : ax25_param_table
+    section: .rodata                obj_name : mpls_table
+    section: .rodata                obj_name : mpls_dev_table
+    section: .data          obj_name : sld_sysctls
+    section: .data          obj_name : kern_panic_table
+    section: .data          obj_name : kern_exit_table
+    section: .data          obj_name : vm_table
+    section: .data          obj_name : signal_debug_table
+    section: .data          obj_name : usermodehelper_table
+    section: .data          obj_name : kern_reboot_table
+    section: .data          obj_name : user_table
+    section: .bss           obj_name : sched_core_sysctls
+    section: .data          obj_name : sched_fair_sysctls
+    section: .data          obj_name : sched_rt_sysctls
+    section: .data          obj_name : sched_dl_sysctls
+    section: .data          obj_name : printk_sysctls
+    section: .data          obj_name : pid_ns_ctl_table_vm
+    section: .data          obj_name : seccomp_sysctl_table
+    section: .data          obj_name : uts_kern_table
+    section: .data          obj_name : vm_oom_kill_table
+    section: .data          obj_name : vm_page_writeback_sysctls
+    section: .data          obj_name : page_alloc_sysctl_table
+    section: .data          obj_name : hugetlb_table
+    section: .data          obj_name : fs_stat_sysctls
+    section: .data          obj_name : fs_exec_sysctls
+    section: .data          obj_name : fs_pipe_sysctls
+    section: .data          obj_name : namei_sysctls
+    section: .data          obj_name : fs_dcache_sysctls
+    section: .data          obj_name : inodes_sysctls
+    section: .data          obj_name : fs_namespace_sysctls
+    section: .data          obj_name : dnotify_sysctls
+    section: .data          obj_name : inotify_table
+    section: .data          obj_name : epoll_table
+    section: .data          obj_name : aio_sysctls
+    section: .data          obj_name : locks_sysctls
+    section: .data          obj_name : coredump_sysctls
+    section: .data          obj_name : fs_shared_sysctls
+    section: .data          obj_name : fs_dqstats_table
+    section: .data          obj_name : root_table
+    section: .data          obj_name : pty_table
+    section: .data          obj_name : xfs_table
+    section: .data          obj_name : ipc_sysctls
+    section: .data          obj_name : key_sysctls
+    section: .data          obj_name : kernel_io_uring_disabled_table
+    section: .data          obj_name : tty_table
+    section: .data          obj_name : random_table
+    section: .data          obj_name : scsi_table
+    section: .data          obj_name : iwcm_ctl_table
+    section: .data          obj_name : net_core_table
+    section: .data          obj_name : netns_core_table
+    section: .bss           obj_name : nf_log_sysctl_table
+    section: .data          obj_name : nf_log_sysctl_ftable
+    section: .data          obj_name : vs_vars
+    section: .data          obj_name : vs_vars_table
+    section: .data          obj_name : ipv4_route_netns_table
+    section: .data          obj_name : ipv4_route_table
+    section: .data          obj_name : ip4_frags_ns_ctl_table
+    section: .data          obj_name : ip4_frags_ctl_table
+    section: .data          obj_name : ctl_forward_entry
+    section: .data          obj_name : ipv4_table
+    section: .data          obj_name : ipv4_net_table
+    section: .data          obj_name : unix_table
+    section: .data          obj_name : ipv6_route_table_template
+    section: .data          obj_name : ipv6_icmp_table_template
+    section: .data          obj_name : ip6_frags_ns_ctl_table
+    section: .data          obj_name : ip6_frags_ctl_table
+    section: .data          obj_name : ipv6_table_template
+    section: .data          obj_name : ipv6_rotable
+    section: .data          obj_name : sctp_net_table
+    section: .data          obj_name : sctp_table
+    section: .data          obj_name : smc_table
+    section: .data          obj_name : lowpan_frags_ns_ctl_table
+    section: .data          obj_name : lowpan_frags_ctl_table
+
+--
+
+Joel Granados
+
+--pu6elde4hy573vso
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY0qGMACgkQupfNUreW
+QU9meQwAhSiWxhtL9djecqOkREsAyj1iIrA1uEV4NTghMsTyhC1r83HyDUEWGOJo
+fTZ8jrYwxeDy9qnd5vC+hEYgx/tBWXv+79vssjd28m2Mn4DogQlWABKsPJlPw/8R
+IB9dau7hME9YLSiZQaKoL8DuqnQ4jvdN/zvWcuYHl2s/jF+qzsI3DT4Dy98S1Sr8
+63rSYg/sulLme7ov/3gAQ3ceSPYlLRUfYdWLlGkUYT2iIjcBIybKotaKGkERq8xL
+Z2PcPpWj15gYh6Ewd0GL7AMq2M/dSGYYxPIbv0Mnjpe5AV5HzGZ06MUg4Tt11p1z
+5Fchr0Hg24b2UYcx4mjbsDCy/OyF2oA8cjjj79ODXcgpsVxWX8GZdcFh/gNmsPw5
+dKZyo4v1ZSvDmu8uDCcaV92GLelxc2YfGHYEfbE+hhJR0YaAukrL8mfqPJIanYv+
+zzIuChlVlLB5xoY0CT3XgLo8NJrc/ERnY8JibAauNNLQvTjHV/tbd0UknFQQC4XL
+gDaMqz5j
+=1R4C
+-----END PGP SIGNATURE-----
+
+--pu6elde4hy573vso--
 
