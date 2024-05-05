@@ -1,216 +1,183 @@
-Return-Path: <linux-nfs+bounces-3157-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3158-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 940CF8BC049
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 13:39:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 925078BC06A
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 14:49:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43AD02813DC
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 11:39:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4D5B1C20A6F
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 12:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 308171803D;
-	Sun,  5 May 2024 11:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2F5F9F5;
+	Sun,  5 May 2024 12:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=glanzmann.de header.i=@glanzmann.de header.b="XPS/khcK"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="Uh3FW+WB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from infra.glanzmann.de (infra.glanzmann.de [88.198.237.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9807111A8;
-	Sun,  5 May 2024 11:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.198.237.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448A1A21
+	for <linux-nfs@vger.kernel.org>; Sun,  5 May 2024 12:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714909154; cv=none; b=rlDyPDEcjd9kYuWZoUVIj89FLFHlxRv4kJ8tHbflEfLPwP3WRTPUaHCBbW9xYW6yp7w+HsFL5WIzNrIdA8E/hP7nCXyK6NupIKidElKhIDXghZJRQ17GsHK8OBi3Nc669TX71ciQULrehJLfKSYBBc0YGS0ASM/a6yC/zaBhkqY=
+	t=1714913356; cv=none; b=t53Orqiv5g5uWQKzD4duuyfqVHXWkLD6f6YI4O59+a/8Q2+kpv+acqMXnPvcyt4/YHF7j7nP9dKXaVB8IMd3492oyBTtyvE1EidtZ3FNChQhnBaAdMgSpq5q8sEKWszzZ5anRqnshSb3hkBsR+Zzbn7CzvGv1IlX632hsvkchTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714909154; c=relaxed/simple;
-	bh=RTU6cfd46xPlUBW0KfgAdnCj+0ikjRajIHBUcOiRCr8=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NVMwF+11NRTXjhIh1WVcj/ZpdwgoYbjLTeqayEipPYPL1s12KeZR1SkEK6wOMOWH+PYihWrAms0DhGAfsyyBoqbHndupXiXPirg9H0zffAxAwBSv0qvJJ0BcLA0inP48WFUEZ5ph0d1svHjmCOyMACOg0CNGg/6BjYMiOPlqj9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=glanzmann.de; spf=pass smtp.mailfrom=glanzmann.de; dkim=pass (4096-bit key) header.d=glanzmann.de header.i=@glanzmann.de header.b=XPS/khcK; arc=none smtp.client-ip=88.198.237.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=glanzmann.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=glanzmann.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glanzmann.de;
-	s=infra26101010; t=1714908568;
-	bh=aYf2RxSJLLq0un4EWYICHjEP3BhOEWbaehFDxI8ZvOY=;
-	h=Date:From:To:Subject:From;
-	b=XPS/khcK0e6DDP1KMSmDppxPU8ZM/M0lbLnzazsaCzifG39GlLaPfpmebYsnOfjWy
-	 koClpY7q+jT8P3+Oj0U2CIznScVfedZvH3EXcCMqesxnEpoJhBOrf2M6ZbYpJjYQI8
-	 YDoAgaacsHEIj9ikBDizZNmzfJXs7dS061+YaQkXl2o6W+hoNW9AiUqDzpSn5WrcmE
-	 GC/G+J/cIlTtADbrrPBkFQ/0B54HDr23vsl9fw7DTlpEomk70Sd/ObTdEBfIHJszVI
-	 0WIhDd0IuSiCarbpXxs0JgHYINZiSdacFqsxYdzUAZZBuN4yomTmscxo5TTKrosBpG
-	 xUyV+qs959tMMkmzSTz+H53LTelHcN09vnIvXkOo72Ag91EtXdqGgf8cn73f9Hg2AZ
-	 9RYYfBvriEFRwjqYqcJ4Ix+h4gNuhnvEF1py06eaCPp2OqD/+GfbEuv/0rcnvkge4h
-	 hxuawG+B07yE+a0vhAkG5to+wOwI3qeaLulRzMxOtrxDPwurP0VRWzfxxSBB8JmbZt
-	 gFwDHB3/ObYqqWrp0KI9Xepji9nVpwK6tjljIh2Vs2Hvo7mfqOt1Z60jJNoIOgIKbY
-	 +sqFMLpCs55k7nGwzQ5CLpesY+ETwxzSAhyte+Ucbz/QxIN71NuL0iJiXVv6fdx/gp
-	 JfcB4fA1ZDOIjHdoA38+8/MM=
-Received: by infra.glanzmann.de (Postfix, from userid 1000)
-	id 289E07A80089; Sun,  5 May 2024 13:29:28 +0200 (CEST)
-Date: Sun, 5 May 2024 13:29:28 +0200
-From: Thomas Glanzmann <thomas@glanzmann.de>
-To: kvm@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: I/O stalls when merging qcow2 snapshots on nfs
-Message-ID: <ZjdtmFu92mSlaHZ2@glanzmann.de>
+	s=arc-20240116; t=1714913356; c=relaxed/simple;
+	bh=40U5uCr6HFxty6rnp8cn6SOsTTy7HZkcXwiDH7gOqQs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=riN/elL1mu0CQB+eYzClO9G708lL/URc9Ji89Fqx5evSboxG3olmS1J3UNehLs3yDhqaZzb5w9gW6TdfYl0erc8W3UpMMk/nmyOa7d+Ybr6o7HV4yqWCw/40dBThQlbCF2CczDBrejLQwCBM5Nnd+c7cgV9tnacscfJxHqt4WOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=Uh3FW+WB; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ffso5449345e9.1
+        for <linux-nfs@vger.kernel.org>; Sun, 05 May 2024 05:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1714913352; x=1715518152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EdeAMf5sz4+i5RMeVeVaG55G2J6u11a1J/yv9xEhKLc=;
+        b=Uh3FW+WBVdslDKfVhmrMEg1zL9p2c89XYNjVFXbBcM148GFQw5zR1jSoyHM88cnGll
+         7E3xLaW9SsYkOyK5Tta5z7Akw5koBA/XH/TPsfSerseOv4+Xi53PCC0XhbKJLIDzzPBk
+         IzpD4hEVz4QB4Up6vMZckmH9An/2PQ3ZeEXK8x6WRdWe3AGAtUiK2u5iSwuGDPY4qi/w
+         2NorKQTFAKZU8Iosroj/vhO5tFsbyYiXj1uz4z1gfMoGwqg8SNMomlZw1zptM9oDQkj+
+         Pgjtoohyir7GjQyoQH2Q5kTcVgG0FiKYCMSU8Pnl0qvSvbz6n5gfM7J0J55zCz6ZYQts
+         BFJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714913352; x=1715518152;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EdeAMf5sz4+i5RMeVeVaG55G2J6u11a1J/yv9xEhKLc=;
+        b=bwXFvr5XhV95mLyCOUxvR6BzI9l8+ygVtCNwrx5g0fKLgkD9X/Kqnf2MyCO4UgTixg
+         wr8j4ECFQNN58fpbtqno1IfC9TNBkhTyg+r85UYVDNyNXoIIjNKzyoNRDxzS3Fa5pi79
+         NS5PLDBAVQx6EJjCxQQmk89h6nNYvlGwMp05OfVYxM82tdW9DyHWpA9UEcyhhTi2m3jt
+         b1Ex14ZEMUuz+KJSq5CbsfigNmF+5i0mY2eP7jFkwkAwD56HeSDNuP6J5+f89+P9RX7C
+         Ov948xeh479B9vsRxQEBl9O9fSD+i3zHssMs/EI2kplmao74GfIimWn8IRjfi4SvEYK0
+         0gdA==
+X-Gm-Message-State: AOJu0YzdSmoNCLlXq8QXuCHCrSotPAXzWTXWldzCIAefujIc4SB/99Al
+	Tgik+tVuzZKBJhcRuIGHq5Ev8bOB0NA4rPlS58Z4Wzr0Sv5xppMNOuI56p3RdcvkO724usqd0QR
+	M
+X-Google-Smtp-Source: AGHT+IFshZ93QCM7w0Mnhl1enwvJJxVIE0r7X10CqpOEIzNfzxJqbdpTXWmTYaN3dwIySo9ZS+f0Cw==
+X-Received: by 2002:a05:600c:4f87:b0:41b:f30a:4221 with SMTP id n7-20020a05600c4f8700b0041bf30a4221mr9716104wmq.15.1714913352251;
+        Sun, 05 May 2024 05:49:12 -0700 (PDT)
+Received: from jupiter.vstd.int ([176.230.79.220])
+        by smtp.gmail.com with ESMTPSA id bi9-20020a05600c3d8900b00418db9e4228sm12481315wmb.29.2024.05.05.05.49.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 May 2024 05:49:11 -0700 (PDT)
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] rpcrdma: don't decref EP if a ESTABLISHED did not happen
+Date: Sun,  5 May 2024 15:49:10 +0300
+Message-Id: <20240505124910.1877325-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hello,
-I often take snapshots in order to move kvm VMs from one nfs share to
-another while they're running or to take backups. Sometimes I have very
-large VMs (1.1 TB) which take a very long time (40 minutes - 2 hours) to
-backup or move. They also write between 20 - 60 GB of data while being
-backed up or moved. Once the backup or move is done the dirty snapshot
-data needs to be merged to the parent disk. While doing this I often
-experience I/O stalls within the VMs in the range of 1 - 20 seconds.
-Sometimes worse. But I have some very latency sensitive VMs which crash
-or misbehave after 15 seconds I/O stalls. So I would like to know if there
-is some tuening I can do to make these I/O stalls shorter.
+We found a case where `RDMA_CM_EVENT_DEVICE_REMOVAL` causes a refcount
+underflow.
 
-- I already tried to set vm.dirty_expire_centisecs=100 which appears to
-  make it better, but not under 15 seconds. Perfect would be I/O stalls
-  no more than 1 second.
+The specific scenario that caused this to happen is IB device bonding,
+when bringing down one of the ports, or all ports. The situation is not
+just a print - it also causes a non-recoverable state it is not even
+possible to complete the disconnect and shut it down the mount,
+requiring a reboot, suggesting that tear-down is also incomplete in this
+state.
 
-This is how you can reproduce the issue:
+The trivial fix seems to work as such - if we did not receive a
+`RDMA_CM_EVENT_ESTABLISHED`, we should not decref the EP, otherwise
+`rpcrdma_xprt_drain` kills the EP prematurely in from the context of
+`rpcrdma_xprt_disconnect`.
 
-- NFS Server:
-mkdir /ssd
-apt install -y nfs-kernel-server
-echo '/nfs 0.0.0.0/0.0.0.0(rw,no_root_squash,no_subtree_check,sync)' > /etc/exports
-exports -ra
+Fixes: 2acc5cae2923 ('xprtrdma: Prevent dereferencing r_xprt->rx_ep after it is freed')
 
-- NFS Client / KVM Host:
-mount server:/ssd /mnt
-# Put a VM on /mnt and start it.
-# Create a snapshot:
-virsh snapshot-create-as --domain testy guest-state1 --diskspec vda,file=/mnt/overlay.qcow2 --disk-only --atomic --no-metadata -no-metadata
+Example crash:
 
-- In the VM:
+rpcrdma: removing device mlx5_3 for 172.21.208.2:20049
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 60 PID: 19700 at lib/refcount.c:28 refcount_warn_saturate+0xba/0x110
+Modules linked in: mst_pciconf(OE) nfsv3(OE) nfs_acl(OE) rpcsec_gss_krb5(OE) auth_rpcgss(OE) nfsv4(OE) dns_resolver rpcrdma(OE) nfs(OE) lockd(OE) grace compat_nfs_ssc(OE) snd_seq_dummy snd_hrtimer snd_seq snd_timer snd_seq_device snd soundcore uio_pci_generic uio vfio_pci vfio_pci_core vfio_virqfd vfio_iommu_>
+isst_if_mmio mei isst_if_common i2c_smbus intel_pch_thermal intel_vsec ipmi_msghandler acpi_power_meter xfs libcrc32c mlx5_ib(OE) ib_uverbs(OE) ib_core(OE) sd_mod t10_pi sg mgag200 i2c_algo_bit drm_shmem_helper drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ahci libahci drm crct10dif_pclmul mlx>
+CPU: 60 PID: 19700 Comm: kworker/u132:4 Kdump: loaded Tainted: G        W  OE    --------  ---  5.14.0-284.11.1.el9_2.x86_64 #1
+Hardware name: Dell Inc. PowerEdge C6520/0TY3YW, BIOS 1.8.2 09/14/2022
+Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
+RIP: 0010:refcount_warn_saturate+0xba/0x110
+Code: 01 01 e8 27 e1 56 00 0f 0b c3 cc cc cc cc 80 3d b8 29 9b 01 00 75 85 48 c7 c7 38 ec 04 93 c6 05 a8 29 9b 01 01 e8 04 e1 56 00 <0f> 0b c3 cc cc cc cc 80 3d 93 29 9b 01 00 0f 85 5e ff ff ff 48 c7
+RSP: 0018:ff34fa4968cafe10 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ff1210404a15e000 RCX: 0000000000000027
+RDX: ff12103f803998a8 RSI: 0000000000000001 RDI: ff12103f803998a0
+RBP: ff1210404a15e648 R08: 0000000000000000 R09: 00000000ffff7fff
+R10: ff34fa4968cafcb0 R11: ffffffff939e9608 R12: 0000000000000000
+R13: dead000000000122 R14: dead000000000100 R15: ff1210404a15e928
+FS:  0000000000000000(0000) GS:ff12103f80380000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f170f8a5000 CR3: 00000001c3adc002 CR4: 0000000000771ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+<TASK>
+rpcrdma_ep_put+0x42/0x50 [rpcrdma]
+rpcrdma_xprt_disconnect+0x303/0x3b0 [rpcrdma]
+xprt_rdma_connect_worker+0xc8/0xd0 [rpcrdma]
+process_one_work+0x1e5/0x3c0
+? rescuer_thread+0x3a0/0x3a0
+worker_thread+0x50/0x3b0
+? rescuer_thread+0x3a0/0x3a0
+kthread+0xd6/0x100
+? kthread_complete_and_exit+0x20/0x20
+ret_from_fork+0x1f/0x30
+</TASK>
 
-# Write some data (in my case 6 GB of data are writen in 60 seconds due
-# to the nfs client being connected with a 1 Gbit/s link)
-fio --ioengine=libaio --filesize=32G --ramp_time=2s --runtime=1m --numjobs=1 --direct=1 --verify=0 --randrepeat=0 --group_reporting --directory=/mnt --name=write --blocksize=1m --iodepth=1 --readwrite=write --unlink=1
-# Do some synchronous I/O
-while true; do date | tee -a date.log; sync; sleep 1; done
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+---
+ net/sunrpc/xprtrdma/verbs.c     | 5 ++++-
+ net/sunrpc/xprtrdma/xprt_rdma.h | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-- On the NFS Client / KVM host:
-# Merge the snapshot into the parentdisk
-time virsh blockcommit testy vda --active --pivot --delete
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 4f8d7efa469f..19996515da94 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -250,6 +250,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		goto disconnected;
+ 	case RDMA_CM_EVENT_ESTABLISHED:
+ 		rpcrdma_ep_get(ep);
++               ep->re_connect_ref = true;
+ 		ep->re_connect_status = 1;
+ 		rpcrdma_update_cm_private(ep, &event->param.conn);
+ 		trace_xprtrdma_inline_thresh(ep);
+@@ -272,7 +273,9 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		ep->re_connect_status = -ECONNABORTED;
+ disconnected:
+ 		rpcrdma_force_disconnect(ep);
+-		return rpcrdma_ep_put(ep);
++		if (ep->re_connect_ref)
++			return rpcrdma_ep_put(ep);
++		return 0;
+ 	default:
+ 		break;
+ 	}
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index da409450dfc0..1553ef69a844 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -84,6 +84,7 @@ struct rpcrdma_ep {
+ 	unsigned int		re_max_inline_recv;
+ 	int			re_async_rc;
+ 	int			re_connect_status;
++	bool			re_connect_ref;
+ 	atomic_t		re_receiving;
+ 	atomic_t		re_force_disconnect;
+ 	struct ib_qp_init_attr	re_attr;
+-- 
+2.39.3
 
-Successfully pivoted
-
-real    1m4.666s
-user    0m0.017s
-sys     0m0.007s
-
-I exported the nfs share with sync on purpose because I often use drbd
-in sync mode (protocol c) to replicate the data on the nfs server to a
-site which is 200 km away using a 10 Gbit/s link.
-
-The result is:
-(testy) [~] while true; do date | tee -a date.log; sync; sleep 1; done
-Sun May  5 12:53:36 CEST 2024
-Sun May  5 12:53:37 CEST 2024
-Sun May  5 12:53:38 CEST 2024
-Sun May  5 12:53:39 CEST 2024
-Sun May  5 12:53:40 CEST 2024
-Sun May  5 12:53:41 CEST 2024 < here I started virsh blockcommit
-Sun May  5 12:53:45 CEST 2024
-Sun May  5 12:53:50 CEST 2024
-Sun May  5 12:53:59 CEST 2024
-Sun May  5 12:54:04 CEST 2024
-Sun May  5 12:54:22 CEST 2024
-Sun May  5 12:54:23 CEST 2024
-Sun May  5 12:54:27 CEST 2024
-Sun May  5 12:54:32 CEST 2024
-Sun May  5 12:54:40 CEST 2024
-Sun May  5 12:54:42 CEST 2024
-Sun May  5 12:54:45 CEST 2024
-Sun May  5 12:54:46 CEST 2024
-Sun May  5 12:54:47 CEST 2024
-Sun May  5 12:54:48 CEST 2024
-Sun May  5 12:54:49 CEST 2024
-
-This is with 'vm.dirty_expire_centisecs=100' with the default values
-'vm.dirty_expire_centisecs=3000' it is worse.
-
-I/O stalls:
-- 4 seconds
-- 9 seconds
-- 5 seconds
-- 18 seconds
-- 4 seconds
-- 5 seconds
-- 8 seconds
-- 2 seconds
-- 3 seconds
-
-With the default vm.dirty_expire_centisecs=3000 I get something like that:
-
-(testy) [~] while true; do date | tee -a date.log; sync; sleep 1; done
-Sun May  5 11:51:33 CEST 2024
-Sun May  5 11:51:34 CEST 2024
-Sun May  5 11:51:35 CEST 2024
-Sun May  5 11:51:37 CEST 2024
-Sun May  5 11:51:38 CEST 2024
-Sun May  5 11:51:39 CEST 2024
-Sun May  5 11:51:40 CEST 2024 << virsh blockcommit
-Sun May  5 11:51:49 CEST 2024
-Sun May  5 11:52:07 CEST 2024
-Sun May  5 11:52:08 CEST 2024
-Sun May  5 11:52:27 CEST 2024
-Sun May  5 11:52:45 CEST 2024
-Sun May  5 11:52:47 CEST 2024
-Sun May  5 11:52:48 CEST 2024
-Sun May  5 11:52:49 CEST 2024
-
-I/O stalls:
-
-- 9 seconds
-- 18 seconds
-- 19 seconds
-- 18 seconds
-- 1 seconds
-
-I'm open to any suggestions which improve the situation. I often have 10
-Gbit/s network and a lot of dirty buffer cache, but at the same time I
-often replicate synchronously to a second site 200 kms apart which only
-gives me around 100 MB/s write performance.
-
-With vm.dirty_expire_centisecs=10 even worse:
-
-(testy) [~] while true; do date | tee -a date.log; sync; sleep 1; done
-Sun May  5 13:25:31 CEST 2024
-Sun May  5 13:25:32 CEST 2024
-Sun May  5 13:25:33 CEST 2024
-Sun May  5 13:25:34 CEST 2024
-Sun May  5 13:25:35 CEST 2024
-Sun May  5 13:25:36 CEST 2024
-Sun May  5 13:25:37 CEST 2024 < virsh blockcommit
-Sun May  5 13:26:00 CEST 2024
-Sun May  5 13:26:01 CEST 2024
-Sun May  5 13:26:06 CEST 2024
-Sun May  5 13:26:11 CEST 2024
-Sun May  5 13:26:40 CEST 2024
-Sun May  5 13:26:42 CEST 2024
-Sun May  5 13:26:43 CEST 2024
-Sun May  5 13:26:44 CEST 2024
-
-I/O stalls:
-
-- 23 seconds
-- 5 seconds
-- 5 seconds
-- 29 seconds
-- 1 second
-
-Cheers,
-        Thomas
 
