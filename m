@@ -1,148 +1,153 @@
-Return-Path: <linux-nfs+bounces-3176-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3177-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E8518BD3C3
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 19:21:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC20D8BD531
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 21:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE67628540F
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 17:21:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 881FF2830C9
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 19:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C772E15665A;
-	Mon,  6 May 2024 17:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=glanzmann.de header.i=@glanzmann.de header.b="HOLkT+Ax"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEECC4AECA;
+	Mon,  6 May 2024 19:10:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from infra.glanzmann.de (infra.glanzmann.de [88.198.237.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417E415746D;
-	Mon,  6 May 2024 17:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.198.237.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D402F158DC4
+	for <linux-nfs@vger.kernel.org>; Mon,  6 May 2024 19:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715016106; cv=none; b=CyzmsiBFy7ClmKNlrCcBE+MHXSJa5Ur0hOvRhCYIwnIr6f+5nhaU1cXikTCSM+BMAvrXrdHAmFe6Ad22vFxfUnxmB1rBCKRXOqYvK2UePxEEcaD2LTM8N51P5xXLqt3YljOaNHw+wDHfNdzuLDHhsdC0XMyE5TOkPgjLAvVfF08=
+	t=1715022618; cv=none; b=ZdCMtGQ2HFVwJFhuUi4teQCx4u3e70EM8GETFnxbKwHBfudcMRzkdvYLouGPK4wgRSv30zom9/vRwHJFwL6Td24ghrhrUcJqUjgLgbK0uccCEYi1nTF3OUlUgRsH+E4ZC6POzIIqjF5vsWr4CUbvQ+YtKtL5BZf7rwXKXzI4ciM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715016106; c=relaxed/simple;
-	bh=ijBZ+cCjAu+pyVvDBQiDGDE+nLLa2TRIbWOErH78470=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H0FGv9QlBEwNvgh77cgM3f88ntiY+OLBm+gNd9ae6vEXI/c9YfmUw6QE6w3Nf/9rmU0jBx3Xj9bEJAyjbf0Omv4U6ZYpY75s7qehmQzSZis+ROOrcZBc2J1mqgX3DzwEnThCnrY2m+4FP4tJFZIrrWTpFITLTZTY7c9Y5tXRGDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=glanzmann.de; spf=pass smtp.mailfrom=glanzmann.de; dkim=pass (4096-bit key) header.d=glanzmann.de header.i=@glanzmann.de header.b=HOLkT+Ax; arc=none smtp.client-ip=88.198.237.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=glanzmann.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=glanzmann.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glanzmann.de;
-	s=infra26101010; t=1715016092;
-	bh=Id6dU8mifl2aS/FvwZ33rY95kfK1oEaav7fGLDNbayg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HOLkT+AxNH2dlR/8+P3Z1DVKpH4R0xi9+RpxtfHgHdwl8CR8VDvS+CAZ5DuTpdnKd
-	 qkT1F0PIn7gH+7CkEl24YvbItWHnp6F9XYvruSKeLdhCdigmc+0T3ArnXMCQihlhDX
-	 nkaqxrqH0xQaqbZqGlzCcaBO7NVFfWAC3BOlFQoCboZMQ9TP6n5xuPUzFqSSYiF15P
-	 IF+Tg2cNrJfrcOTrBnhVKvV2ZRXDrWcabH5dxGLe9/81pxbTSbvkUkxcw0o0QsRJSS
-	 +hZX4B7sKE+eCntbib2ywWm3+pBQJfZb972Lg2h7PP5CGS1r5L0iQ6cDIIyCsm7i6f
-	 PpgXYWgBv9E12DnQdzpfCHH1RC12mfInqmIFdSDGuLC2ZWoiX1UxmPev5LKc8sF/dG
-	 eHXSDnqzFsom0xtmYTX0vk/I/UP8ecUx7hz8yenaHDu6Mi3eR/TiTxEwTSqzp9ZQx7
-	 yEhk8K1qjNLXnczVT4nM6ZQ3ginjeoQqXsgs4KbgkgZ1+4oSDXrFb9QUsx29ztEw8k
-	 i4eQmDPK2WDxsAKTiB0zGUdqiYNe6nxgdNreMATEYeeHjv2rKHCiOcxmZBwGT8grRW
-	 QgzpvU5oP4A8Nj/qqd6L7HxtdMbuNrUTmYZXC3wdQ9VVJR0FSbZVI1+ENcpz8OWItS
-	 8aWI+AsXI0xo0HBbJU8G72P8=
-Received: by infra.glanzmann.de (Postfix, from userid 1000)
-	id CDAFF7A80089; Mon,  6 May 2024 19:21:32 +0200 (CEST)
-Date: Mon, 6 May 2024 19:21:32 +0200
-From: Thomas Glanzmann <thomas@glanzmann.de>
-To: Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trondmy@hammerspace.com>
-Cc: kvm@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: I/O stalls when merging qcow2 snapshots on nfs
-Message-ID: <ZjkRnJD7wQRnn1Lf@glanzmann.de>
+	s=arc-20240116; t=1715022618; c=relaxed/simple;
+	bh=Gtb9tpN0LIANMRHNsl+r+75Q7C1XbWalX/mvlibW31Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e7eZas1vf9jDqUFeqQnA0/dRkiRR2qzCzJMQrS43Agmqfq1qbFFMEVDWbAi6LC/smEAYBX5JQ69o1mb4jAT8vk/0OvVQXlDkHJIAU6UCK4w+QnhkcCTnfxoMZH3pqpj9balW1+e9o1brHau/SnWMHdTQkcDYTfrXuspxjbRcilU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-34cba0d9a3eso178785f8f.1
+        for <linux-nfs@vger.kernel.org>; Mon, 06 May 2024 12:10:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715022615; x=1715627415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nKhhqmcB6kKZRFj8xgGS8Qgus/pZJx55xM0HlwwgoBs=;
+        b=Z03JiI0xCXl9jxVy4SxZgzgKcHgxR6Wx0w5ZbyRU/gtTPxvg0/XY2lvJoNHeFfrUW7
+         61+n9YZinAOaVu5y3OAEpwyxTIXN/TY7Ty55hRkIF0lab7D90j+BTiPM8r5JMY9WAmIz
+         5HstastVWEKU03nbz9Zy3dYWhaZcbwsEKQZtHGxbli6DMkhlPKtW8XZuaHFoKz1ARnco
+         sxQoGACbjUNHku/ksizUdzKnzH+TY9gwUred2HuafC8WIrP1ZVyUwwwRatsdwxWRw+FB
+         8Oxa0sWPnfKJjs/fy68sL81G0NnfCJlstZKxE635Yh2PhpoLtVDoexsLy3HoOKoZZycS
+         wqVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN4HhbCrqDbgn6hOO3Y0KnSRoSbrQdeP/8tvNjeIqD7hQdyxJT4ZxRO3/JebpObIm5UYw7RCNiPbVp41YQtLVAGw8v0y5XrN3h
+X-Gm-Message-State: AOJu0YxAPZRpNXxokPK7WnkYMublrXSJoGmhB1nbMKmuxP0IXSsAqUMf
+	bA5DON9leMgQl4BdiLljjxPToF+AuDjCqbj18iUemP9pZgMGwOr5QD/klg==
+X-Google-Smtp-Source: AGHT+IG8G9pReHR2KdwgS1Gv6Fb3IQsRSyhFfES86eGBiTS06QMw8AoiQobCddUo8O5zCTbuPvsSUA==
+X-Received: by 2002:a05:600c:1c0f:b0:419:f241:6336 with SMTP id j15-20020a05600c1c0f00b00419f2416336mr7693282wms.1.1715022614931;
+        Mon, 06 May 2024 12:10:14 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
+        by smtp.gmail.com with ESMTPSA id l3-20020a05600c4f0300b0041b43d2d745sm17028868wmq.7.2024.05.06.12.10.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 May 2024 12:10:14 -0700 (PDT)
+Message-ID: <bb1f1604-8b3f-4fc4-ac31-1f365c1fe257@grimberg.me>
+Date: Mon, 6 May 2024 22:10:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74f183ca71fbde90678f138077965ffd19bed91b.camel@hammerspace.com>
- <CC139243-7C48-4416-BE71-3C7B651F00FC@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] rpcrdma: fix handling for RDMA_CM_EVENT_DEVICE_REMOVAL
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Dan Aloni <dan.aloni@vastdata.com>, linux-nfs@vger.kernel.org,
+ Sagi Grimberg <sagi.grimberg@vastdata.com>
+References: <20240506093759.2934591-1-dan.aloni@vastdata.com>
+ <be4563e5-caa6-4085-98a9-a86e24c99186@grimberg.me>
+ <Zjj9iOOJ0px+Lvin@tissot.1015granger.net>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <Zjj9iOOJ0px+Lvin@tissot.1015granger.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Ben and Trond,
 
-> On 5 May 2024, at 7:29, Thomas Glanzmann wrote paraphrased:
 
-> When commiting 20 - 60 GB snapshots on kvm VMs which are stored on NFS I get 20
-> seconds+ I/O stalls.
+On 06/05/2024 18:55, Chuck Lever wrote:
+> On Mon, May 06, 2024 at 06:09:51PM +0300, Sagi Grimberg wrote:
+>> On 06/05/2024 12:37, Dan Aloni wrote:
+>>> Under the scenario of IB device bonding, when bringing down one of the
+>>> ports, or all ports, we saw xprtrdma entering a non-recoverable state
+>>> where it is not even possible to complete the disconnect and shut it
+>>> down the mount, requiring a reboot. Following debug, we saw that
+>>> transport connect never ended after receiving the
+>>> RDMA_CM_EVENT_DEVICE_REMOVAL callback.
+>>>
+>>> The DEVICE_REMOVAL callback is irrespective of whether the CM_ID is
+>>> connected, and ESTABLISHED may not have happened. So need to work with
+>>> each of these states accordingly.
+>>>
+>>> Fixes: 2acc5cae2923 ('xprtrdma: Prevent dereferencing r_xprt->rx_ep after it is freed')
+>> Is this actually the offending commit ?
+>>
+>> commit bebd031866ca ("xprtrdma: Support unplugging an HCA from under an NFS
+>> mount")
+>> is the one assuming DEVICE_REMOVAL triggers a disconnect not accounting that
+>> the
+>> cm_id may not be ESTABLISHED (where we need to wake the connect waiter?
+> I'd be OK with discussing possible culprits in the patch description
+> but leaving off a Fixes: tag for now.
+Agreed.
+>
+> It would be reasonable to demand that the proposed fix be applied
+> to each LTS kernel and tested individually to ensure there are no
+> side-effects or pre-requisites.
+>
+>
+>> Question though, in DEVICE_REMOVAL the device is going away as soon as the
+>> cm handler callback returns. Shouldn't nfs release all the device resources
+>> (related to this
+>> cm_id)? afaict it was changed in:
+>> e28ce90083f0 ("xprtrdma: kmalloc rpcrdma_ep separate from rpcrdma_xprt")
+> In the case where a DEVICE_REMOVAL event fires and a connection
+> hasn't yet been established, my guess is the ep reference count will
+> go to zero when rpcrdma_ep_put() is called.
 
-> When doing backups and migrations with kvm on NFS I get I/O stalls in
-> the guest. How to avoid that?
+Yes, I was actually referring to the case where the connection was 
+established.
+It looks like rpcrdma_force_disconnect -> xprt_force_disconnect 
+schedules async
+work to tear things down no?
 
-* Benjamin Coddington <bcodding@redhat.com> [2024-05-06 13:25]:
-> What NFS version ends up getting mounted here?
+>
+>
+>> The patch itself looks reasonable (although I do think that the rdma stack
+>> expects the
+>> ulp to have the rdma resources released when the callback returns).
+> Thanks for the review! Should we add:
+>
+> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
-NFS 4.2: (below output has already your's and Tronds options added)
+Yes.
 
-172.31.0.1:/nfs on /mnt type nfs4 (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,nconnect=16,timeo=600,retrans=2,sec=sys,clientaddr=172.31.0.6,local_lock=none,write=eager,addr=172.31.0.1)
+>
+>
+>> FWIW in nvme we avoided the problem altogether by registering an ib_client
+>> that is
+>> called on .remove() and its a separate context that doesn't have all the
+>> intricacies with
+>> rdma_cm...
+> I looked at ib_client, years ago, and thought it would be a lot of
+> added complexity. With a code sample (NVMe host) maybe I can put
+> something together.
+>
+>
 
-> You might eliminate some head-of-line blocking issues with the
-> "nconnect=16" mount option to open additional TCP connections.
-
-> My view of what could be happening is that the IO from your guest's process
-> is congesting with the IO from your 'virsh blockcommit' process, and we
-> don't currently have a great way to classify and queue IO from various
-> sources in various ways.
-
-thank you for reminding me of nconnect. I evaluated it with VMware ESX and saw
-no benefit when benchmarking it with a single VM and dismissed it. But of
-course it makes sense when having more than one concurrent I/O stream.
-
-* Trond Myklebust <trondmy@hammerspace.com> [2024-05-06 15:47]:
-> Two suggestions:
->    1. Try mounting the NFS partition on which these VMs reside with the
->       "write=eager" mount option. That ensures that the kernel kicks
->       off the write of the block immediately once QEMU has scheduled it
->       for writeback. Note, however that the kernel does not wait for
->       that write to complete (i.e. these writes are all asynchronous).
->    2. Alternatively, try playing with the 'vm.dirty_ratio' or
->       'vm.dirty_bytes' values in order to trigger writeback at an
->       earlier time. With the default value of vm.dirty_ratio=20, you
->       can end up caching up to 20% of your total memory's worth of
->       dirty data before the VM triggers writeback over that 1Gbit link.
-
-Thank you for the option write=eager. I was not aware of that but I
-often run into problems where a 10 Gbit/s network pipe fills up my
-buffer cache and than tries to destage GB 128 GB * 0.2 - 25.6 GB to the
-disk which can't keep in my case and resulting in long I/O stalls. Usually my
-disks can take between 100 (synchronous replicated drbd link 200km) - 500 MB/s
-(SATA SSDs). I tried to tell kernel to destage faster by
-(vm.dirty_expire_centisecs=100) which improved some workloads but not all.
-
-So, I think I found a solution to my problem by doing the following:
-
-- Increase NFSD threads to 128:
-
-cat > /etc/nfs.conf.d/storage.conf <<'EOF'
-[nfsd]
-threads = 128
-
-[mountd]
-threads = 8
-EOF
-echo 128 > /proc/fs/nfsd/threads
-
-- Mount the nfs volume with -o nconnect=16,write=eager
-
-- Use iothreads and cache=none.
-
-  <iothreads>2</iothreads>
-  <driver name='qemu' type='qcow2' cache='none' discard='unmap' iothread='1'/>
-
-By doing the above I no longer see any I/O stalls longer than one second (in my
-date loop 2 seconds time difference).
-
-Thank you two again for helping me out with this.
-
-Cheers,
-	Thomas
-
-PS: Cache=writethrough and without I/O threads the I/O stalls for the time blockcommit executes.
+The plus is that there is no need to handle the DEVICE_REMOVAL cm event, 
+which is
+always nice...
 
