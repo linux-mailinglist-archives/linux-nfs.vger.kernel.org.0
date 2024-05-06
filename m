@@ -1,149 +1,265 @@
-Return-Path: <linux-nfs+bounces-3163-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3164-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C57F08BC373
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 22:10:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C8D18BC71F
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 07:46:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FB41281291
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 May 2024 20:10:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BE39B20B10
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 05:46:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A991C6DCF5;
-	Sun,  5 May 2024 20:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D89D447F4A;
+	Mon,  6 May 2024 05:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="QfDKhYGf"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BolWuP78";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lLu+0GT0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BolWuP78";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lLu+0GT0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1873C092
-	for <linux-nfs@vger.kernel.org>; Sun,  5 May 2024 20:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31845944;
+	Mon,  6 May 2024 05:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714939842; cv=none; b=rTMpajKHqFuYowh2fgQp2SSBUyiGzl9zgd37yLSo0mi3JpjUolJZQ5yueKWOohD+v0VLu1DWQB3b1oSmTKTvnLMgmOQDkEQMBVU4JsyCcvjFk3H9h+okvJaGVLc7PvPqn6rVdiT8pOLKTc1Ji7mu63Dtv4fq4LEPhNQL3ragZOc=
+	t=1714974409; cv=none; b=I8wfFN8quZY6MYylRVQogxo8hXzWvpcYFCyHl3Da/1p5m4d0MYdhqPPJtuKU3kJvWGOdCMFh6q005HVip13qO26KMHzVz7BfbRnLo+gBOWaZQbJqT0wbVUQbTJUSVDor5awu0TQN3VL8rcGzUoSN4dM4xiNAAyHWcDy86rvmJjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714939842; c=relaxed/simple;
-	bh=aB4XTyEzVT8Qv7ELok6Q+7bDZUtTGhHE97+O12jWW+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D08ol4Sr2MxkmNaqd56ENOaNItFRr0cRRErh7DRng68ZEG0HaHfBSa2A6f2VOg/gsCqxW+c1Yw9nSwU3dfO9i/sGrMByN4j6/N7ZlYHWrdjp5QSJJOrrlZYUSrAaPK8WcdXu89FXQiXGtUilyAkDUFLM5M5G/GuXNN6cjyo0zz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=QfDKhYGf; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2dfb4ea2bbfso14416821fa.2
-        for <linux-nfs@vger.kernel.org>; Sun, 05 May 2024 13:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google; t=1714939839; x=1715544639; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qph189wY9guhOUXHC17BhrNvOdhtjBIEGtXCi4fKZ8Y=;
-        b=QfDKhYGfzt1vMul1yIxnu2P5i3Hk6Ipd3CxWQyhRHh2s4BrZnNLqgudjoGBkQQm4Uc
-         3jaC7exgOjgLk85j0RYw9nNw2Dv+AshbUfX+puvnqNdyeMfd7t6OgQHZS/zoNqxH9XjI
-         kuQHWKuaQcQove0qxGbjsF7uxNS79QRFfNcH96qz1av6UQR00hfEop16xj2jiwcgbitc
-         QmANLvYDij2bZ0UQOu0nzZZoYl93uh5yYfhBbSoImYDev/e/F0SHz3OD36DNLO1ZsGZy
-         5gIa6CQAfmdT8LPCIz4IPy8TkR+GiXOWefgny8jzGT5jQvW2De47xMFQVUJpu2D6TcBI
-         /YiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714939839; x=1715544639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qph189wY9guhOUXHC17BhrNvOdhtjBIEGtXCi4fKZ8Y=;
-        b=uR39bFr+agB+Ys8bwk93NuWBGDS2osTZbAO+vUB5bIl8kPaQc0m7+hL5Ct56tOSrwF
-         HlCDBZr2TqtHafXzp9QA7HJXBzFBwkOLXUS5ubpAWJUSTpUX2FXbXr2giPvdJWiI/o6d
-         LMBTwbBCJjReAtD6WgeTRxBqstMX0ysNdWlBCtlGRKmJGuPapDbavEPEjPmOJZl+NHut
-         IZzm2BXOVMywAQbc3f2ktgvbipcsJxEgn1Zlp3Ngl9fCND6LF7cdYf0ldykDRRWlHVR+
-         3kletKhm8fEoiMKhUoiVVYnlaC4lR9j1ZdqXCK1c7dZs8R2oDGPRLFjPX7EAie0ZFvcu
-         2IwQ==
-X-Gm-Message-State: AOJu0YzOciHJAt6PhBLFlRMAcNl49rbKtwSCVP6WCiTVt/suxbW6pQ/D
-	ZWLTuCvNafEelarTvPEfalBs/6NM44WWxnLRNt3Tst5ZdujsnKTXAlkFLUejdSYQ9C+PmXXlZ53
-	l
-X-Google-Smtp-Source: AGHT+IGIYutSlr1jr9GthVqrMSYbDFatd3VYR8E6FV4NbKtQOCsc5xavh1zxMhszZgr8PGz4FGXZhQ==
-X-Received: by 2002:a2e:7319:0:b0:2dd:372e:959 with SMTP id o25-20020a2e7319000000b002dd372e0959mr6076101ljc.8.1714939838929;
-        Sun, 05 May 2024 13:10:38 -0700 (PDT)
-Received: from gmail.com ([176.230.79.220])
-        by smtp.gmail.com with ESMTPSA id bg4-20020a05600c3c8400b0041bf29ab003sm17536019wmb.30.2024.05.05.13.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 May 2024 13:10:38 -0700 (PDT)
-Date: Sun, 5 May 2024 23:10:35 +0300
-From: Dan Aloni <dan.aloni@vastdata.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH] rpcrdma: don't decref EP if a ESTABLISHED did not happen
-Message-ID: <20240505201035.eya22s7spmejnpdf@gmail.com>
-References: <20240505124910.1877325-1-dan.aloni@vastdata.com>
- <ZjeZQmi7um7LDOd3@tissot.1015granger.net>
- <20240505183628.g2hhzkrtna5asz6b@gmail.com>
- <ZjfXOiQxyGNZpHOj@tissot.1015granger.net>
+	s=arc-20240116; t=1714974409; c=relaxed/simple;
+	bh=aa7G9OraNqIaG4CQVfabrd6LwF/tctqeAh8Wzpizg+Q=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=acbjSmWob6ytOpxK9xjO5H6P+V0azKKPbNqw0NTYh/tbpQm4KUIIpNgxh4yaPSfSyROcCojm/qBaKPQbfrDXoOTtKvqkacky8kldWk7UFBghkRJFQiRi63bPxbROoKNrL5BfXSHjxcYMSuibg96RrmZU9ILTaJXUpMHEq0AHxgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BolWuP78; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lLu+0GT0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BolWuP78; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lLu+0GT0; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 259C85D2C4;
+	Mon,  6 May 2024 05:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714974406; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CvcLGZ4YTWAstQCMQoInkF1Pq1UgMZ85xsTp6fXaZc=;
+	b=BolWuP78hBVM2IA0G6vg6iWNSNJBZCY64x6IU+DvND4W2s+3JiE+F9y2e41jstlLSvTMBE
+	XAA/tCxlEXXYX1vRBICtlhNuBA7nWRzfyGi2xAT+fW38MQGSf8el8H0fQKseDUTBc0AY8b
+	aivFIfQg2yPcQhHuwfqC5JAVuYVd1aM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714974406;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CvcLGZ4YTWAstQCMQoInkF1Pq1UgMZ85xsTp6fXaZc=;
+	b=lLu+0GT0CgFcFoBp+4LYO9xZGPvRbdXFAnMm/gsHZJ+5+5kbckOdnqK1N/7boByK0+ZE9C
+	uXI54qZlDORQKaBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714974406; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CvcLGZ4YTWAstQCMQoInkF1Pq1UgMZ85xsTp6fXaZc=;
+	b=BolWuP78hBVM2IA0G6vg6iWNSNJBZCY64x6IU+DvND4W2s+3JiE+F9y2e41jstlLSvTMBE
+	XAA/tCxlEXXYX1vRBICtlhNuBA7nWRzfyGi2xAT+fW38MQGSf8el8H0fQKseDUTBc0AY8b
+	aivFIfQg2yPcQhHuwfqC5JAVuYVd1aM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714974406;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CvcLGZ4YTWAstQCMQoInkF1Pq1UgMZ85xsTp6fXaZc=;
+	b=lLu+0GT0CgFcFoBp+4LYO9xZGPvRbdXFAnMm/gsHZJ+5+5kbckOdnqK1N/7boByK0+ZE9C
+	uXI54qZlDORQKaBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C65D4134C3;
+	Mon,  6 May 2024 05:46:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id I4BsGsJuOGZpOgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 06 May 2024 05:46:42 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjfXOiQxyGNZpHOj@tissot.1015granger.net>
+From: "NeilBrown" <neilb@suse.de>
+To: "Stephen Smalley" <stephen.smalley.work@gmail.com>
+Cc: selinux@vger.kernel.org, linux-nfs@vger.kernel.org, chuck.lever@oracle.com,
+ jlayton@kernel.org, paul@paul-moore.com, omosnace@redhat.com,
+ linux-security-module@vger.kernel.org,
+ "Stephen Smalley" <stephen.smalley.work@gmail.com>
+Subject: Re: [PATCH v3] nfsd: set security label during create operations
+In-reply-to: <20240503130905.16823-1-stephen.smalley.work@gmail.com>
+References: <20240503130905.16823-1-stephen.smalley.work@gmail.com>
+Date: Mon, 06 May 2024 15:46:34 +1000
+Message-id: <171497439414.9775.6998904788791406674@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,oracle.com,kernel.org,paul-moore.com,redhat.com,gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On 2024-05-05 15:00:10, Chuck Lever wrote:
-> On Sun, May 05, 2024 at 09:36:28PM +0300, Dan Aloni wrote:
-> > On 2024-05-05 10:35:46, Chuck Lever wrote:
-> > [..]
-> > > Second, I wonder if, when bonding interfaces, there's an opportunity
-> > > for the verbs consumer to take an additional transport reference.
-> > > Cc'ing linux-rdma for input on that issue. Can you show a brief
-> > > diagram of when the ep reference count changes when bonding?
-> > 
-> > Not sure we need an additional reference here.
-> 
-> We already have two mechanisms in play:
-> 
-> - the ep reference count
-> - the re_connect_status value
-> 
-> I would prefer not to add a boolean here. Seems like
-> re_connect_status could do that job if we need it to.
+On Fri, 03 May 2024, Stephen Smalley wrote:
+> When security labeling is enabled, the client can pass a file security
+> label as part of a create operation for the new file, similar to mode
+> and other attributes. At present, the security label is received by nfsd
+> and passed down to nfsd_create_setattr(), but nfsd_setattr() is never
+> called and therefore the label is never set on the new file. This bug
+> may have been introduced on or around commit d6a97d3f589a ("NFSD:
+> add security label to struct nfsd_attrs"). Looking at nfsd_setattr()
+> I am uncertain as to whether the same issue presents for
+> file ACLs and therefore requires a similar fix for those.
+>=20
+> An alternative approach would be to introduce a new LSM hook to set the
+> "create SID" of the current task prior to the actual file creation, which
+> would atomically label the new inode at creation time. This would be better
+> for SELinux and a similar approach has been used previously
+> (see security_dentry_create_files_as) but perhaps not usable by other LSMs.
+>=20
+> Reproducer:
+> 1. Install a Linux distro with SELinux - Fedora is easiest
+> 2. git clone https://github.com/SELinuxProject/selinux-testsuite
+> 3. Install the requisite dependencies per selinux-testsuite/README.md
+> 4. Run something like the following script:
+> MOUNT=3D$HOME/selinux-testsuite
+> sudo systemctl start nfs-server
+> sudo exportfs -o rw,no_root_squash,security_label localhost:$MOUNT
+> sudo mkdir -p /mnt/selinux-testsuite
+> sudo mount -t nfs -o vers=3D4.2 localhost:$MOUNT /mnt/selinux-testsuite
+> pushd /mnt/selinux-testsuite/
+> sudo make -C policy load
+> pushd tests/filesystem
+> sudo runcon -t test_filesystem_t ./create_file -f trans_test_file \
+> 	-e test_filesystem_filetranscon_t -v
+> sudo rm -f trans_test_file
+> popd
+> sudo make -C policy unload
+> popd
+> sudo umount /mnt/selinux-testsuite
+> sudo exportfs -u localhost:$MOUNT
+> sudo rmdir /mnt/selinux-testsuite
+> sudo systemctl stop nfs-server
+>=20
+> Expected output:
+> <eliding noise from commands run prior to or after the test itself>
+> Process context:
+> 	unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
+> Created file: trans_test_file
+> File context: unconfined_u:object_r:test_filesystem_filetranscon_t:s0
+> File context is correct
+>=20
+> Actual output:
+> <eliding noise from commands run prior to or after the test itself>
+> Process context:
+> 	unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
+> Created file: trans_test_file
+> File context: system_u:object_r:test_file_t:s0
+> File context error, expected:
+> 	test_filesystem_filetranscon_t
+> got:
+> 	test_file_t
+>=20
+> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
+> v3 removes the erroneous and unnecessary change to NFSv2 and updates the
+> description to note the possible origin of the bug. I did not add a=20
+> Fixes tag however as I have not yet tried confirming that.
 
-That's possible. So before overrides e.g. `ep->re_connect_status =
--ENODEV` we would need to remember whether it was `1` and across the
-call to `rpcrdma_force_disconnect()`, to do the putref() after it.
-Anyway, the patch will be a big larger I guess.
+I think this bug has always been present - since label support was
+added.
+Commit d6a97d3f589a ("NFSD: add security label to struct nfsd_attrs")
+should have fixed it, but was missing the extra test that you provide.
 
->[..]
-> > Testing 6.8.9 with both the patch and `wake_up_all(&ep->re_connect_wait);`
-> > for `RDMA_CM_EVENT_DEVICE_REMOVAL` works for me, showing proper recovery
-> > on bonding, I'll post in a reply.
-> 
-> It looks like you are trying to fix several issues in one patch. So
-> I need you to separate these issues and the fixes, and let's focus
-> on the upstream kernel (v6.9-rc6) because there's nothing I can do
-> about the RHEL9 kernel, which is clearly a different source base
-> than the one I work on.
-> 
-> If we need a "wake_up_all(&ep->re_connect_wait);" during
-> DEVICE_REMOVAL, that should be a separate patch. And you need to
-> figure out if ADDR_CHANGE needs the same treatment: the v2 you just
-> sent changes the behavior of ADDR_CHANGE too but does not mention
-> whether it intended that change.
+So=20
+Fixes: 0c71b7ed5de8 ("nfsd: introduce file_cache_mutex")
+might be appropriate - it fixes the patch, though not a bug introduced
+by the patch.
 
-Was it just the `rpcrdma_ep_put` change in this case? Will feel less
-comfortable changing it without a repro of the `ADDR_CHANGE` case. Going
-to isolate it.
+Thanks for this patch!
+Reviewed-by: NeilBrown <neilb@suse.de>
 
-> Without a reproducer or a detailed explanation of how the ep
-> reference count changes in step with CM events, I can't properly
-> assess your proposed fix.
+NeilBrown
 
-With 6.8 I only see a single `RDMA_CM_EVENT_DEVICE_REMOVAL` event
-arriving, driving a single `rpcrdma_ep_put` call to put the reference
-back at 1, and it waits forever. Getting late here, I'll check on 6.9-rc
-tomorrow.
 
-Maybe for a repro, you can generate a single interface bond? I haven't
-tried, but possibly it would occur on a single one too if the underlying
-port is down.
 
--- 
-Dan Aloni
+>=20
+>  fs/nfsd/vfs.c | 2 +-
+>  fs/nfsd/vfs.h | 8 ++++++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 2e41eb4c3cec..29b1f3613800 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1422,7 +1422,7 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>  	 * Callers expect new file metadata to be committed even
+>  	 * if the attributes have not changed.
+>  	 */
+> -	if (iap->ia_valid)
+> +	if (nfsd_attrs_valid(attrs))
+>  		status =3D nfsd_setattr(rqstp, resfhp, attrs, NULL);
+>  	else
+>  		status =3D nfserrno(commit_metadata(resfhp));
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index c60fdb6200fd..57cd70062048 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -60,6 +60,14 @@ static inline void nfsd_attrs_free(struct nfsd_attrs *at=
+trs)
+>  	posix_acl_release(attrs->na_dpacl);
+>  }
+> =20
+> +static inline bool nfsd_attrs_valid(struct nfsd_attrs *attrs)
+> +{
+> +	struct iattr *iap =3D attrs->na_iattr;
+> +
+> +	return (iap->ia_valid || (attrs->na_seclabel &&
+> +		attrs->na_seclabel->len));
+> +}
+> +
+>  __be32		nfserrno (int errno);
+>  int		nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
+>  		                struct svc_export **expp);
+> --=20
+> 2.40.1
+>=20
+>=20
+
 
