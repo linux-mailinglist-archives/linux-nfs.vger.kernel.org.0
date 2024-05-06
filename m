@@ -1,119 +1,177 @@
-Return-Path: <linux-nfs+bounces-3173-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E40FB8BD2F1
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 18:36:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC9BD8BD2E6
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 18:32:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96DE32831C1
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 16:36:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAB5B1F2152F
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 May 2024 16:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DE69156880;
-	Mon,  6 May 2024 16:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A6315665D;
+	Mon,  6 May 2024 16:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UchdTAYW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bq6JQNYT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB3A156238
-	for <linux-nfs@vger.kernel.org>; Mon,  6 May 2024 16:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65972137744;
+	Mon,  6 May 2024 16:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715013369; cv=none; b=qVyFs1fKtaSKBodWN69LoUbubjueg7/JEuOpd1Wlkaan7jbUk7qo/nXi3Az9WVtekJ9iQFEalpeKvs7WrR/9Tj1rw9bgZMfVPnvVArjRX6/VnDbFQA8avV0XNIQJhZg46lLVDCoeK/yoPmWPd//xexrQVaK+29/36cGhK4ZFlUo=
+	t=1715013099; cv=none; b=QiV0CWDpDrmTuNChQtUSgJmEfnJXp0kdGFxUHU1gloaiSMPGrxP47vvKjnVSQtesSSyxZtADLeS0PQQx/PV8lyz7yp+dXNVWXQM1pUwMOhULvEcwhP+rNqMbZscLYseEUEv+4RW/rKDaciijlLMeX8jI0cdYbSFg3RhzNbB/Olw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715013369; c=relaxed/simple;
-	bh=ErxdyRkAnW+mbi0QdfJgTFuHj4KhdfTdot8dT9rY2LA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cCVPSxYlSBDNrt1kpaxePkEe/FRti44YmqX5Qayl/M10QGdFBBFoyt4ZKdbIdr4dj+kkkI0AsHvFtmMFRgpj87/NmK8ttx24PzLJ3rAIaAfCpSDjNwrI+4dit/iwMr/1D/T20POGKKFPKUKa/JorIb/jSuxfqXm80TsCFOM96N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UchdTAYW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D187DC4AF63;
-	Mon,  6 May 2024 16:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715013369;
-	bh=ErxdyRkAnW+mbi0QdfJgTFuHj4KhdfTdot8dT9rY2LA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UchdTAYWEhFj5Yhm8Yq6+MlGdu9qUChV6f0Qxk9g5j9SSc/PXjGtSFbPlN1cxmA9o
-	 3Zts61b06j4JJac18AEs7CpbCfWdExuVOE//ui2RxviOxokgS0PebAak3xoMZr0Zn9
-	 8mPrU7CskdQzA3wKDs6tGYoA80YtOSMDEFhrzQwJRdNzBCX9qZH4HLKvsgmJIakZjw
-	 j9qJLziYy4GYYQfLx4LVVpWv1ntW5MsRcTWyChk7VCIMFyxCMI0te6o9H2T5zvoey/
-	 wQjfELEdDch/hsbODdjLQzRBPS+tN9JNHjz9U1pX2XEx0D05TEuOURLhANaIQiATb0
-	 q9VRcShpVfe9g==
-From: trondmy@kernel.org
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFS/knfsd: Remove the invalid NFS error 'NFSERR_OPNOTSUPP'
-Date: Mon,  6 May 2024 12:30:05 -0400
-Message-ID: <20240506163005.9990-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240506163005.9990-1-trondmy@kernel.org>
-References: <20240506163005.9990-1-trondmy@kernel.org>
+	s=arc-20240116; t=1715013099; c=relaxed/simple;
+	bh=8dSu5OUf4aL6t7cBki8n9BViUwsxV++G2jh1J3aVvkk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ppvBkJN5NYGyVi++xDQSa95JyMo8b1WYK2GIINQAQlkNNWVSFEOFW+Hav6GPJxSVCWQneL3Hs6ht/7fL8af2j7ln+TG90U1TB5WqNJgKxjt5oHLhBEBlpsM5YIvV6gFX1CyPCn+QS45p07uoSni7fDHXkljH2YvZb0SB30ncqUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bq6JQNYT; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so1171854a12.3;
+        Mon, 06 May 2024 09:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715013098; x=1715617898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ZYzqMI4a34TBdeHoO+OcvRoLuw5bJXTxl6XLoPFdTU=;
+        b=bq6JQNYTVmGHUi7chnvVo/T5C0GWEcNkBWgUrmJyPpP8cP1JwB4ngKPw/CUdTMUVJ2
+         VZ31dIAcBbU/wIOPgM/F3QSPtFfD5fNx0DYiwt7Gnm+G85XjjIuzAS6vWLV43bkX0CB0
+         OOJl0kboEr2bRFmWAZ2EgC6KAr+3NS70A0af5b96fP3eDM6d9tnPTuGUOvXp0gSS5IXM
+         Lqd8H//4NpVKEbS+DqNzIZjwWWr3GUfIRtEkQIM70dd7OOLxogAOvVL2qMcNICumBhGU
+         87Z7ObaSqCCXc5YghUBb/LNoTx/KrVB/JlBpRGWUG49fJaVYk+yfufcXr4ibJZkx8FXw
+         1TWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715013098; x=1715617898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9ZYzqMI4a34TBdeHoO+OcvRoLuw5bJXTxl6XLoPFdTU=;
+        b=grewcvEqhyR1mHX2tqelifMAwp+NL/8KMnY+uG8IMu9vtaYL4hixw0k3fxXrRUdUm4
+         Mf3omVtOc31VCAgfCL8uRm2GqI5BD07WkiH+fT+cgI8u08bvaQgewne0pM+dWCahOlr3
+         5pcBEXHy+2YPMPjDLKBmam5onK/6zgNbhRKSBgtoUk9B1sIdY+Ql3ZPo28umtU5EJiuj
+         kFMo3Xu0VrK+V4dv00ePwse0WAGdOJSiul8l59pbLZOAKioZGhEt5OKwGp+J5+DCaVCF
+         NWMSVWAObSUk4XGUlmADVfw1+WIrVw+eTvZ+Sm8II+a/tePeIu2O0ZOA2OZZZTZoyBQS
+         IITQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0zfYPrQcgNO1rJnKlTFaySspEUa/RlsfEbHO6opgC+Q746FmOK0s8TOung/WF73ex3GUKYr4V0ZSc5DlYlE8NfNmZ+2Yw8ugXSx0Z7rvTUSKFYxY/mimjKQ3aGNZh3TvVPVjrD6q+DvgYt4ilWt6a
+X-Gm-Message-State: AOJu0YxZcT+0GHobZ3+3t1G7D95IeSq8OGcdgaiHmD/zwIsm+9kyEUcP
+	ftjvA6n2UX2PYYE3gmKA+htPXYdac/BAtdkHk0RtLDSJv4DGorASPAptSTIn/Vjw8oKyITOE+HP
+	fSlC94iPA8QKqKikt7QAhF5QMamk=
+X-Google-Smtp-Source: AGHT+IF5fO7Xh9sTtZ3HipswRhggNjgY82it0ZdBxZVyLU8eQ001kl///r/CLlTpVuW4VE8j+8wHYH3nLxjJdrJW//k=
+X-Received: by 2002:a17:90a:8581:b0:2b2:7c42:bf6e with SMTP id
+ m1-20020a17090a858100b002b27c42bf6emr8220162pjn.12.1715013097473; Mon, 06 May
+ 2024 09:31:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240503130905.16823-1-stephen.smalley.work@gmail.com> <171497439414.9775.6998904788791406674@noble.neil.brown.name>
+In-Reply-To: <171497439414.9775.6998904788791406674@noble.neil.brown.name>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Mon, 6 May 2024 12:31:26 -0400
+Message-ID: <CAEjxPJ6W7UGvPUMt82+_tB2MPmcmG7JaUjH6HhgjwTqOzQL_xA@mail.gmail.com>
+Subject: Re: [PATCH v3] nfsd: set security label during create operations
+To: NeilBrown <neilb@suse.de>
+Cc: selinux@vger.kernel.org, linux-nfs@vger.kernel.org, chuck.lever@oracle.com, 
+	jlayton@kernel.org, paul@paul-moore.com, omosnace@redhat.com, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Mon, May 6, 2024 at 1:46=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
+>
+> On Fri, 03 May 2024, Stephen Smalley wrote:
+> > When security labeling is enabled, the client can pass a file security
+> > label as part of a create operation for the new file, similar to mode
+> > and other attributes. At present, the security label is received by nfs=
+d
+> > and passed down to nfsd_create_setattr(), but nfsd_setattr() is never
+> > called and therefore the label is never set on the new file. This bug
+> > may have been introduced on or around commit d6a97d3f589a ("NFSD:
+> > add security label to struct nfsd_attrs"). Looking at nfsd_setattr()
+> > I am uncertain as to whether the same issue presents for
+> > file ACLs and therefore requires a similar fix for those.
+> >
+> > An alternative approach would be to introduce a new LSM hook to set the
+> > "create SID" of the current task prior to the actual file creation, whi=
+ch
+> > would atomically label the new inode at creation time. This would be be=
+tter
+> > for SELinux and a similar approach has been used previously
+> > (see security_dentry_create_files_as) but perhaps not usable by other L=
+SMs.
+> >
+> > Reproducer:
+> > 1. Install a Linux distro with SELinux - Fedora is easiest
+> > 2. git clone https://github.com/SELinuxProject/selinux-testsuite
+> > 3. Install the requisite dependencies per selinux-testsuite/README.md
+> > 4. Run something like the following script:
+> > MOUNT=3D$HOME/selinux-testsuite
+> > sudo systemctl start nfs-server
+> > sudo exportfs -o rw,no_root_squash,security_label localhost:$MOUNT
+> > sudo mkdir -p /mnt/selinux-testsuite
+> > sudo mount -t nfs -o vers=3D4.2 localhost:$MOUNT /mnt/selinux-testsuite
+> > pushd /mnt/selinux-testsuite/
+> > sudo make -C policy load
+> > pushd tests/filesystem
+> > sudo runcon -t test_filesystem_t ./create_file -f trans_test_file \
+> >       -e test_filesystem_filetranscon_t -v
+> > sudo rm -f trans_test_file
+> > popd
+> > sudo make -C policy unload
+> > popd
+> > sudo umount /mnt/selinux-testsuite
+> > sudo exportfs -u localhost:$MOUNT
+> > sudo rmdir /mnt/selinux-testsuite
+> > sudo systemctl stop nfs-server
+> >
+> > Expected output:
+> > <eliding noise from commands run prior to or after the test itself>
+> > Process context:
+> >       unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
+> > Created file: trans_test_file
+> > File context: unconfined_u:object_r:test_filesystem_filetranscon_t:s0
+> > File context is correct
+> >
+> > Actual output:
+> > <eliding noise from commands run prior to or after the test itself>
+> > Process context:
+> >       unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
+> > Created file: trans_test_file
+> > File context: system_u:object_r:test_file_t:s0
+> > File context error, expected:
+> >       test_filesystem_filetranscon_t
+> > got:
+> >       test_file_t
+> >
+> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > ---
+> > v3 removes the erroneous and unnecessary change to NFSv2 and updates th=
+e
+> > description to note the possible origin of the bug. I did not add a
+> > Fixes tag however as I have not yet tried confirming that.
+>
+> I think this bug has always been present - since label support was
+> added.
+> Commit d6a97d3f589a ("NFSD: add security label to struct nfsd_attrs")
+> should have fixed it, but was missing the extra test that you provide.
+>
+> So
+> Fixes: 0c71b7ed5de8 ("nfsd: introduce file_cache_mutex")
+> might be appropriate - it fixes the patch, though not a bug introduced
+> by the patch.
+>
+> Thanks for this patch!
+> Reviewed-by: NeilBrown <neilb@suse.de>
+>
+> NeilBrown
 
-NFSERR_OPNOTSUPP is not described by any RFC, and should not be used.
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfsd/nfsd.h           | 1 -
- include/trace/misc/nfs.h | 2 --
- include/uapi/linux/nfs.h | 1 -
- 3 files changed, 4 deletions(-)
-
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 304e9728b929..d1e4a8f159fd 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -229,7 +229,6 @@ void		nfsd_lockd_shutdown(void);
- #define	nfserr_nospc		cpu_to_be32(NFSERR_NOSPC)
- #define	nfserr_rofs		cpu_to_be32(NFSERR_ROFS)
- #define	nfserr_mlink		cpu_to_be32(NFSERR_MLINK)
--#define	nfserr_opnotsupp	cpu_to_be32(NFSERR_OPNOTSUPP)
- #define	nfserr_nametoolong	cpu_to_be32(NFSERR_NAMETOOLONG)
- #define	nfserr_notempty		cpu_to_be32(NFSERR_NOTEMPTY)
- #define	nfserr_dquot		cpu_to_be32(NFSERR_DQUOT)
-diff --git a/include/trace/misc/nfs.h b/include/trace/misc/nfs.h
-index 5387eb0a6a08..d919e6e2c736 100644
---- a/include/trace/misc/nfs.h
-+++ b/include/trace/misc/nfs.h
-@@ -28,7 +28,6 @@ TRACE_DEFINE_ENUM(NFSERR_FBIG);
- TRACE_DEFINE_ENUM(NFSERR_NOSPC);
- TRACE_DEFINE_ENUM(NFSERR_ROFS);
- TRACE_DEFINE_ENUM(NFSERR_MLINK);
--TRACE_DEFINE_ENUM(NFSERR_OPNOTSUPP);
- TRACE_DEFINE_ENUM(NFSERR_NAMETOOLONG);
- TRACE_DEFINE_ENUM(NFSERR_NOTEMPTY);
- TRACE_DEFINE_ENUM(NFSERR_DQUOT);
-@@ -64,7 +63,6 @@ TRACE_DEFINE_ENUM(NFSERR_JUKEBOX);
- 		{ NFSERR_NOSPC,			"NOSPC" }, \
- 		{ NFSERR_ROFS,			"ROFS" }, \
- 		{ NFSERR_MLINK,			"MLINK" }, \
--		{ NFSERR_OPNOTSUPP,		"OPNOTSUPP" }, \
- 		{ NFSERR_NAMETOOLONG,		"NAMETOOLONG" }, \
- 		{ NFSERR_NOTEMPTY,		"NOTEMPTY" }, \
- 		{ NFSERR_DQUOT,			"DQUOT" }, \
-diff --git a/include/uapi/linux/nfs.h b/include/uapi/linux/nfs.h
-index 946cb62d64b0..f356f2ba3814 100644
---- a/include/uapi/linux/nfs.h
-+++ b/include/uapi/linux/nfs.h
-@@ -61,7 +61,6 @@
- 	NFSERR_NOSPC = 28,		/* v2 v3 v4 */
- 	NFSERR_ROFS = 30,		/* v2 v3 v4 */
- 	NFSERR_MLINK = 31,		/*    v3 v4 */
--	NFSERR_OPNOTSUPP = 45,		/* v2 v3 */
- 	NFSERR_NAMETOOLONG = 63,	/* v2 v3 v4 */
- 	NFSERR_NOTEMPTY = 66,		/* v2 v3 v4 */
- 	NFSERR_DQUOT = 69,		/* v2 v3 v4 */
--- 
-2.45.0
-
+Thanks for confirming. Do we need to also check for the ACL case in
+nfsd_attrs_valid() or is that covered in some other way?
 
