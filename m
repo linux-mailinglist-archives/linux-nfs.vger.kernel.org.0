@@ -1,121 +1,124 @@
-Return-Path: <linux-nfs+bounces-3206-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3207-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F423D8C00CD
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 17:20:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A15DB8C00E6
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 17:26:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84562281839
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 15:20:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D426289415
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 15:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACC6126F0A;
-	Wed,  8 May 2024 15:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D3F128815;
+	Wed,  8 May 2024 15:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9rZ1qBM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQKw3TSq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468B21A2C05;
-	Wed,  8 May 2024 15:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6211272B5
+	for <linux-nfs@vger.kernel.org>; Wed,  8 May 2024 15:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715181609; cv=none; b=dCDHNGyqmQzs1/57LlzHA0GK2DYKqEUtzGN34XL+2ClmAY8ps+pbZcAVQGfPat/FCwYel77n6D5oOCBKi67a7uWHkXmOuhAkcdnN87RPPAOfeddIo37zu+PcXHCJB7fcxfCcx1a2AweMuva1Z0Hrhym0nn7E0c5ifFLeoSu30mE=
+	t=1715181943; cv=none; b=hIZy90dbozsDnB0OM6EKTCGoKukThuvoBhkCRBuLj9DkKsa66bpzEKGZftDrv7P0YKFBDhrJ7ol63cpGiKCWcYSw97HxmesYmM9VIUIGQpJgJL47Oav96z/PNDGEkm8LIkMjNliYfCCTuZ3tMeaYO6JgVpG3+6cWP9wCADEkkK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715181609; c=relaxed/simple;
-	bh=F7/xJtqZj5pHb27cUKilA7HO8qx0Hd9ce0l1SBmQKRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eea/wLZT+y6SwkKKkjvchh+krAF++aIBxjD2Z4VTqh6wI6i29sFm0Kz6r0K+lKGWzsG/9BduHthG7Kduw9m5FTms81TmsTpfwzM9vND1JkcxSxYVEwGnZ82BlwhVY2Dc4Ge/VcW7w8yp6txvjHkJ4kYgOeYRiMMQPqiySFeEE9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9rZ1qBM; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715181607; x=1746717607;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=F7/xJtqZj5pHb27cUKilA7HO8qx0Hd9ce0l1SBmQKRI=;
-  b=K9rZ1qBMIbDSnoZfkx/JsFnmqxaXIQm5gH3TdQhaqhNWm494Co+KPEZr
-   wSnaDFaamtbmY9oBJZya6fK00RgROspDBpIgCW2ehSaTJD0gLLhYDc1Fu
-   FoiLL2XapInY8Ggz82ZiaA5IV2IrL7w0Q5hDJ9ec11YA7mpK4HU0I3azZ
-   W4jWjAzbCBVezVBcR+XMmuebg06MJAAFZgZSnGuTJhFwz8gMKse1PVii/
-   Www/m5/OAMqA+mJd+vMfetlkVzJ2S/8+an0tdpkDqv+JZqjrOK2sSgF08
-   xTBFrnfDHcNxdAWco17KBYFt2RA7a47AJseeNzmANa5X/wigcaJil1I49
-   w==;
-X-CSE-ConnectionGUID: Tv+QKSp1Tt6i0T1NcAvU6w==
-X-CSE-MsgGUID: 7u3Vk7otSP6kQgbYqg5nEg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="11428977"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="11428977"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:19:59 -0700
-X-CSE-ConnectionGUID: hVZnJc5nTd+QSa92kM2png==
-X-CSE-MsgGUID: 8GM+nOUMSu6VdSY8WhUTvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="28850980"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 08 May 2024 08:19:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7C6DD109; Wed, 08 May 2024 18:19:52 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: [PATCH v1 1/1] lockd: Use *-y instead of *-objs in Makefile
-Date: Wed,  8 May 2024 18:19:38 +0300
-Message-ID: <20240508151951.1445074-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1715181943; c=relaxed/simple;
+	bh=GyAsR4zUyrKJUCZvJsaiYdE3wYRduWdkbVyVblodEf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h2FDd5kIZpKQyfuzjDgIZdTsiJcDZAJXaUC8e2pcCn5BrZq8x5EvJFYW+IdL+CnrnTvxgvTGEOVjk+SHmab2DzLac3xfdPWghPMkitWOuIvJLJ+aXTV7rzXVdVlmu17LeXnSBZy/b3/RDUETxE12pyxZS2GfkSI7ndxjYFiTbOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fQKw3TSq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715181940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qt94wEM0yvPBo7AaF3dlWsASKnixoM5XFvhDNyNhYwQ=;
+	b=fQKw3TSqjezafIhQ0eC3qjevow3gMMEZG9SD+tIB62IeVLCubSRJP0t6nrTja5AaMeG3ov
+	A4raazO8j+dhw2XJDtmxSsnwdzb4y7TZHH6fDpyr4+4G4icWFQ5DWTK34g05pZPnKV4YvI
+	OnWCD9EvICEgjvEQfCu3VZS2r349DAo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-6kWYg_9sPdWsj-IwiLFbWA-1; Wed, 08 May 2024 11:25:39 -0400
+X-MC-Unique: 6kWYg_9sPdWsj-IwiLFbWA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9F03C80021D;
+	Wed,  8 May 2024 15:25:38 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-6.rdu2.redhat.com [10.22.0.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D26011C07406;
+	Wed,  8 May 2024 15:25:37 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc: trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] pNFS/filelayout: fixup pNfs allocation modes
+Date: Wed, 08 May 2024 11:25:36 -0400
+Message-ID: <35158E21-2724-4C1A-950F-5A6A616C862A@redhat.com>
+In-Reply-To: <20240507151545.26888-1-olga.kornievskaia@gmail.com>
+References: <20240507151545.26888-1-olga.kornievskaia@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-*-objs suffix is reserved rather for (user-space) host programs while
-usually *-y suffix is used for kernel drivers (although *-objs works
-for that purpose for now).
+On 7 May 2024, at 11:15, Olga Kornievskaia wrote:
 
-Let's correct the old usages of *-objs in Makefiles.
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> Change left over allocation flags.
+>
+> Fixes: a245832aaa99 ("pNFS/files: Ensure pNFS allocation modes are cons=
+istent with nfsiod")
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfs/filelayout/filelayout.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelay=
+out.c
+> index cc2ed4b5a4fd..85d2dc9bc212 100644
+> --- a/fs/nfs/filelayout/filelayout.c
+> +++ b/fs/nfs/filelayout/filelayout.c
+> @@ -875,7 +875,7 @@ filelayout_pg_init_read(struct nfs_pageio_descripto=
+r *pgio,
+>  						      req->wb_bytes,
+>  						      IOMODE_READ,
+>  						      false,
+> -						      GFP_KERNEL);
+> +						      nfs_io_gfp_mask());
+>  		if (IS_ERR(pgio->pg_lseg)) {
+>  			pgio->pg_error =3D PTR_ERR(pgio->pg_lseg);
+>  			pgio->pg_lseg =3D NULL;
+> @@ -899,7 +899,7 @@ filelayout_pg_init_write(struct nfs_pageio_descript=
+or *pgio,
+>  						      req->wb_bytes,
+>  						      IOMODE_RW,
+>  						      false,
+> -						      GFP_NOFS);
+> +						      nfs_io_gfp_mask());
+>  		if (IS_ERR(pgio->pg_lseg)) {
+>  			pgio->pg_error =3D PTR_ERR(pgio->pg_lseg);
+>  			pgio->pg_lseg =3D NULL;
+> -- =
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+> 2.39.1
 
-Note, the original approach is weirdest from the existing.
-Only a few drivers use this (-objs-y) one most likely by mistake.
+Looks fine, but I didn't think you could get here from rpciod/nfsiod
+context.  I might be missing something, how did you get here from there?
 
- fs/lockd/Makefile | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/fs/lockd/Makefile b/fs/lockd/Makefile
-index ac9f9d84510e..fe3e23dd29c3 100644
---- a/fs/lockd/Makefile
-+++ b/fs/lockd/Makefile
-@@ -7,8 +7,7 @@ ccflags-y += -I$(src)			# needed for trace events
- 
- obj-$(CONFIG_LOCKD) += lockd.o
- 
--lockd-objs-y += clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
--	        svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o
--lockd-objs-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o
--lockd-objs-$(CONFIG_PROC_FS) += procfs.o
--lockd-objs		      := $(lockd-objs-y)
-+lockd-y := clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
-+	   svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o
-+lockd-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o
-+lockd-$(CONFIG_PROC_FS) += procfs.o
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Ben
 
 
