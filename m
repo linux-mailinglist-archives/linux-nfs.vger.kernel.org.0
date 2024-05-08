@@ -1,71 +1,71 @@
-Return-Path: <linux-nfs+bounces-3214-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3215-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13B808C0444
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 20:24:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19E388C0478
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 20:33:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD96E285965
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 18:24:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE2781F2061B
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 May 2024 18:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBCAD54FAA;
-	Wed,  8 May 2024 18:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE66A523D;
+	Wed,  8 May 2024 18:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkbu2wWt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PD1liXR8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053212BF28
-	for <linux-nfs@vger.kernel.org>; Wed,  8 May 2024 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D123B646
+	for <linux-nfs@vger.kernel.org>; Wed,  8 May 2024 18:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715192642; cv=none; b=GuAWBUQ1A2Og64W6komJY1+1JO3IWBR005wm4yhe3DWPMZcrvcp3VzUakZjv08yQpBSE3l5a0BTSdmY4CCDQ/5MDEzsEdMBvwBMWEoSrfFojES3wxXIssDaHhO5DLovmw+hcvff+zcRrCAHIuT8wbFQJFJzwppIkfr5qck9xSYo=
+	t=1715193234; cv=none; b=k33LbPI8KEOflYT5Q9MrvS5PiTvpKGkWCQpusDUlB41jrVq55/HykjYB3WcDBWR6f8p0vAU13Lg1KzWq/mj0XH5WpPz5QG8AljjQRza+bJfWpcARHUHL54LnFsmT1vpS1bI5Fyqveox51W/nTOUFNZuX0/+e0A+pYXHJOAWEV88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715192642; c=relaxed/simple;
-	bh=IKBLm8O8d53V/J+TVXYVFPovT9P03ZaeOvIXagq2Ug4=;
+	s=arc-20240116; t=1715193234; c=relaxed/simple;
+	bh=g+HqJ1CUvm4VzzbLp0xkPWXNOPb0l89O8Jev7OdD3Bw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nSe0Bc14NXLA2ZA6qujk9YEbJKyt21AIPEdTf+FR4gwohc0hH7MA45OVNppQvIx1oG5l0ffN7f7723Uqm0PGEL0PKEpdydmkFYn0l0gncsPcw/+TEeNyYMp78Ko7rKDSk4DW9O66YV5SgXOlaHkbNfFvlNJzhdRHkp7e7toXUdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fkbu2wWt; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=X6kGzUe0KU4m3Tzz4/+mau1fiGm1ioo6I1/JYQtd2BNMKrKfNv1e32Prn5F1bwA84Kip1bBYEQ7tfTKcIe8xPlomNMhBdDnGI3IrK9etl8+Sn7Fdo7UThdauhjJYjfpXXBXNJO7u9mCKen+wFyqaEBSjwQ1A+W+IusnfNMhYJx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PD1liXR8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715192639;
+	s=mimecast20190719; t=1715193232;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a1S3R740rKakNjUBqiywEHAg3serFYHJeFyt5wHtOCE=;
-	b=fkbu2wWtjuVG8CbDYJxuUX5LQPGsJLQLY3YvbOOO2L8CjRq5PsB8arKdaIirfU7ZNXR2Zt
-	+sNDeNGUlgeTH9kB9g0zG4DYcAjVJc7zJOrEw+lmTt1bOlWmY0S3oB/dQrPqvaz/QiuZn9
-	qmvvl6+6nv5JAUPcJlDG+YNC7K5whMY=
+	bh=bL0EjI2dQeSOH83oHnaf1GJRQWnFFLnWwURRR5TuDx4=;
+	b=PD1liXR8Yjz1tf9fzv+uXFF+bhJwM1p+pfvZdnaEAkHoHsnOgLYr+Am8K/6Ch1IqjjnSuy
+	sT9HssgI5dgOtd9Bl6I2Jk2AiSrZZvXz2aZ8YCiDgtAAbo2Hgrq2h1aJuT5ONj0xiIsUsQ
+	drbve2F6rFECU2Vnb7UCxzUDqfJ5mUo=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-dXaJTNtgOjatqiZFzJaxsg-1; Wed, 08 May 2024 14:23:56 -0400
-X-MC-Unique: dXaJTNtgOjatqiZFzJaxsg-1
+ us-mta-357-0HIehfqKMwOjNE2z5757Xg-1; Wed, 08 May 2024 14:33:49 -0400
+X-MC-Unique: 0HIehfqKMwOjNE2z5757Xg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 28FC88007BC;
-	Wed,  8 May 2024 18:23:56 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 99290185A78E;
+	Wed,  8 May 2024 18:33:48 +0000 (UTC)
 Received: from [192.168.37.1] (ovpn-0-6.rdu2.redhat.com [10.22.0.6])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 413B51C060AE;
-	Wed,  8 May 2024 18:23:55 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 984741C060AE;
+	Wed,  8 May 2024 18:33:47 +0000 (UTC)
 From: Benjamin Coddington <bcodding@redhat.com>
 To: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 Cc: trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
  linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] pNFS/filelayout: check layout segment range
-Date: Wed, 08 May 2024 14:23:53 -0400
-Message-ID: <33B5E0C2-9B94-4C54-BD6F-475E4AC0EB75@redhat.com>
-In-Reply-To: <CAN-5tyFWrqihMv8UwvAmrcxuFdM6S5qMvnZgWkJqWXm6iFJeVQ@mail.gmail.com>
-References: <20240507195933.45683-1-olga.kornievskaia@gmail.com>
- <9D9DB9E5-E772-462B-BD38-7F703459A0FC@redhat.com>
- <CAN-5tyFWrqihMv8UwvAmrcxuFdM6S5qMvnZgWkJqWXm6iFJeVQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pNFS/filelayout: fixup pNfs allocation modes
+Date: Wed, 08 May 2024 14:33:46 -0400
+Message-ID: <B3A3E63F-E8E4-4B59-B833-7D1BE8938F52@redhat.com>
+In-Reply-To: <CAN-5tyGNaWsfxo0dCGc+hW36Q9jSZXaQZgvHTOw5gGQ_HDxFqw@mail.gmail.com>
+References: <20240507151545.26888-1-olga.kornievskaia@gmail.com>
+ <35158E21-2724-4C1A-950F-5A6A616C862A@redhat.com>
+ <CAN-5tyGNaWsfxo0dCGc+hW36Q9jSZXaQZgvHTOw5gGQ_HDxFqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,65 +73,80 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On 8 May 2024, at 13:52, Olga Kornievskaia wrote:
+On 8 May 2024, at 13:13, Olga Kornievskaia wrote:
 
-> On Wed, May 8, 2024 at 10:50 AM Benjamin Coddington <bcodding@redhat.com> wrote:
+> On Wed, May 8, 2024 at 11:25=E2=80=AFAM Benjamin Coddington <bcodding@r=
+edhat.com> wrote:
 >>
->> On 7 May 2024, at 15:59, Olga Kornievskaia wrote:
+>> On 7 May 2024, at 11:15, Olga Kornievskaia wrote:
 >>
 >>> From: Olga Kornievskaia <kolga@netapp.com>
 >>>
->>> Before doing the IO, check that we have the layout covering the range of
->>> IO.
+>>> Change left over allocation flags.
 >>>
+>>> Fixes: a245832aaa99 ("pNFS/files: Ensure pNFS allocation modes are co=
+nsistent with nfsiod")
 >>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 >>> ---
->>>  fs/nfs/filelayout/filelayout.c | 2 ++
->>>  1 file changed, 2 insertions(+)
+>>>  fs/nfs/filelayout/filelayout.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
 >>>
->>> diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
->>> index 85d2dc9bc212..bf3ba2e98f33 100644
+>>> diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filel=
+ayout.c
+>>> index cc2ed4b5a4fd..85d2dc9bc212 100644
 >>> --- a/fs/nfs/filelayout/filelayout.c
 >>> +++ b/fs/nfs/filelayout/filelayout.c
->>> @@ -868,6 +868,7 @@ filelayout_pg_init_read(struct nfs_pageio_descriptor *pgio,
->>>                       struct nfs_page *req)
->>>  {
->>>       pnfs_generic_pg_check_layout(pgio);
->>> +     pnfs_generic_pg_check_range(pgio, req);
->>>       if (!pgio->pg_lseg) {
->>>               pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
->>>                                                     nfs_req_openctx(req),
->>> @@ -892,6 +893,7 @@ filelayout_pg_init_write(struct nfs_pageio_descriptor *pgio,
->>>                        struct nfs_page *req)
->>>  {
->>>       pnfs_generic_pg_check_layout(pgio);
->>> +     pnfs_generic_pg_check_range(pgio, req);
->>>       if (!pgio->pg_lseg) {
->>>               pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
->>>                                                     nfs_req_openctx(req),
+>>> @@ -875,7 +875,7 @@ filelayout_pg_init_read(struct nfs_pageio_descrip=
+tor *pgio,
+>>>                                                     req->wb_bytes,
+>>>                                                     IOMODE_READ,
+>>>                                                     false,
+>>> -                                                   GFP_KERNEL);
+>>> +                                                   nfs_io_gfp_mask()=
+);
+>>>               if (IS_ERR(pgio->pg_lseg)) {
+>>>                       pgio->pg_error =3D PTR_ERR(pgio->pg_lseg);
+>>>                       pgio->pg_lseg =3D NULL;
+>>> @@ -899,7 +899,7 @@ filelayout_pg_init_write(struct nfs_pageio_descri=
+ptor *pgio,
+>>>                                                     req->wb_bytes,
+>>>                                                     IOMODE_RW,
+>>>                                                     false,
+>>> -                                                   GFP_NOFS);
+>>> +                                                   nfs_io_gfp_mask()=
+);
+>>>               if (IS_ERR(pgio->pg_lseg)) {
+>>>                       pgio->pg_error =3D PTR_ERR(pgio->pg_lseg);
+>>>                       pgio->pg_lseg =3D NULL;
 >>> --
 >>> 2.39.1
 >>
->> Looks right, less duplication to just call pnfs_generic_pg_check_range()
->> from pnfs_generic_pg_check_layout() now.
+>> Looks fine, but I didn't think you could get here from rpciod/nfsiod
+>> context.  I might be missing something, how did you get here from ther=
+e?
 >
-> filelayout.c is not the only caller of pnfs_generic_pg_check_layout().
-> flexfilelayout has a wrapper around those 2 functions and calls that.
-> however, the argument about duplicated code frustrates me because
-> currently the code has 4lines. but if we were to re-write the same
-> with a function, it would be more lines used in total (flexfiles has 8
-> lines for it).
+> I have to admit I don't fully understand (if at all) the implications
+> of having the wrong flags. I also don't follow what you mean by this
+> code not being executed by the rpciod/nfsiod context. This code is
+> done while doing (buffered) IO and performed by the rpciod context?
 
-sorry - not trying to frustrate.  Since everyone is now calling both
-pnfs_generic_pg_check_layout /and/ pnfs_generic_pg_check_range in the same
-place, I thought you could just put
-!pnfs_lseg_request_intersecting(pgio->pg_lseg, req) in the first test within
-pnfs_generic_pg_check_layout(pgio, req), making that function do the work of
-both.  Then you can delete pnfs_generic_pg_check_range entirely for
-everyone.  The name still makes sense.
+I was thrown off by the Fixes: tag. The nfs_io_gfp_mask() doesn't have to=
+ do
+with that context per se, but rather if we're in writeback due to memory
+pressure.  That's what the PF_WQ_WORKER check is for which Trond explains=
+
+this commit 515dcdcd4873.
+
+> In truth I was making it consistent with what flexfiles is doing for
+> their pnfs_update_layout() usage.
+
+Gotcha, makes sense to me now, thanks for helping me.
+
+FWIW:
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
 Ben
 
