@@ -1,103 +1,80 @@
-Return-Path: <linux-nfs+bounces-3224-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3225-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B48568C139C
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 19:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D2C18C1771
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 22:28:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFDC81C20F1A
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 17:15:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 613ED1C21DA8
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 20:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EB8ADF58;
-	Thu,  9 May 2024 17:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BCBF82871;
+	Thu,  9 May 2024 20:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="HIE23ZeU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3eZy0K9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF445C8E2
-	for <linux-nfs@vger.kernel.org>; Thu,  9 May 2024 17:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAACE82876;
+	Thu,  9 May 2024 20:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715274939; cv=none; b=aV1eJVUMj3ODLCoM5TgS82VYpxVdxPufebMwwWxsuU4En27otgGf/T61dCqcjVF5iZ/vLWPEwK9rshW5z/3FNddJDMpK0l7DhiuxaPOo/xTG4/Whl/rIYfPJNsGP/NFfAWnrmAj3W5obuPCxlMxruj4XA5S3uvx1Dlg5fbQQccc=
+	t=1715286208; cv=none; b=bHADHbe6WLtay5NAhJUW6YuH7C65skXEOzh1pdrY0jX7h7OPRCmSLxW2h0flwY5vO8M0FI0YkGHa7sQ7zgur3EzwCVmxOWNXTzTz9LnT9AtSILxskGsRZwNSTKUrgdNtnW8W+9O9zDnrwa64OrzMddSgcmYaYEghhl7pUBbaHoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715274939; c=relaxed/simple;
-	bh=I2b3mZDphqAOw1CzA9XXn8owOPYBXLxuDEHOZbykNDU=;
+	s=arc-20240116; t=1715286208; c=relaxed/simple;
+	bh=rtE9Cf6G7+LfHndtSwMnyj8o++JOJ/aihDJUuBRTqS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdTUbNNMnCfmP6yzKKWaJxHVGl/Zr99KNePqNbrK1bBuvgbn235ZpGSftFMJtcXwAXkwI6p+DqHgxK/VKN+h5LsA0s6kWyLdnNVXpAyMNX1yPfTFJbfdrJu17AN9R6oOtXIhmmC8m9kT/YhKqhG2jyTE6EWP4vm+U/jbslZ62E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=HIE23ZeU; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A4B183FB75
-	for <linux-nfs@vger.kernel.org>; Thu,  9 May 2024 17:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1715274934;
-	bh=R13CNUyH1MbzjMY2CalRPAAS/uvh6wjQHgeABBOaJzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=HIE23ZeUFGpNub4mkJjolnmcnjKRiYIZCcxlle7qzx0QxPHfaQSaalKI6TzYaWHJi
-	 bLy2UvHNP5D7B3R4aW3+t/KG8h59aUSqA4sPFiaH7lvjNC3gzhv51blx0XD+bI0L/A
-	 tX+msuNNXItnYmoBpCRrGkFQJIxCZbw5kQMPRrWJ1OlrwOLptZepvDtHw0T9EPRg9S
-	 qnSS1wBFZB//Cu6J1M6PCBa8OtAz+16pQ5d1G5zF0WmqDHbVBAjniJWshKu6Q8m+ku
-	 6QRzxKzQUTpg3I36rLwEU4KHB2eyEt0YvDTY30FUAp2A7NO+4mOBXSL1NF75qAB+wp
-	 7gCLpXmZF7L7w==
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a59c3cf5f83so72962766b.2
-        for <linux-nfs@vger.kernel.org>; Thu, 09 May 2024 10:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715274931; x=1715879731;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R13CNUyH1MbzjMY2CalRPAAS/uvh6wjQHgeABBOaJzE=;
-        b=r0rKGKrp8pgIi2Y1ZHBETJksq1fJlqYV+oEBooTO4ZabuDvi7QL7PCgn8UYC6aiTqI
-         FzlSPpyNVll/AhxH9qifwd3MtUg44etrD8VcN2IEpy3oZWHGG62D+AdqT2o7I+XhtVM5
-         a85nljuBV8XtN+5FE/lBbiNs8MiIDnWcRRn65Gqa3RBK/JEW//g6FfwIC/ysg88I382P
-         nURAg5d9I7SZY6VCNHzuPEcxE9wfLe6WTuhkrZi9yeVMnyc4D/VO4vw6/KJyQrYSsex+
-         s0JgUxwzPGALVKuAK2NhnDnUYJgZzrwdSjkdXdjS7rvsmwgNdgmclGkJ69bjheOcDYHt
-         OnkA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+Ii5YhWF4w2OD05x6dh6Y+6+iSsp5TVd+798Rps6x8yHiHkvc7ulc3jKNF7FIvKiuE0pKMVvDSIcNWPgf1BHQydywn1/cPfUT
-X-Gm-Message-State: AOJu0Yypt8iYgitW/x+hnj3nkzv+4m9LGhgI8zAg5dSuXO7Z8jrT9jFl
-	IIpHDYEXItn6PgWwMwCxuO/GQp8CtVkPjYwcp+TK55cPq8Qx05VdcOKipKxYzUpyaqede6vT17w
-	rHZKY35WeWUbLu/v9lcvo0tj/SWQsq0UsHTcQsYLBAjsVdMSyHqnjymB7nViPvbxD8xsUdheORA
-	==
-X-Received: by 2002:a17:906:3849:b0:a59:b02a:90dc with SMTP id a640c23a62f3a-a5a2d66ac03mr15005466b.54.1715274930682;
-        Thu, 09 May 2024 10:15:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHRId3ZK7jZnEUqxnKrbYMBDrOXsoSZ6C8TgHiChCG3zHZRXUk/mhnLLXZdmjv+NVtyVoseaw==
-X-Received: by 2002:a17:906:3849:b0:a59:b02a:90dc with SMTP id a640c23a62f3a-a5a2d66ac03mr15001366b.54.1715274929765;
-        Thu, 09 May 2024 10:15:29 -0700 (PDT)
-Received: from localhost (host-82-49-69-7.retail.telecomitalia.it. [82.49.69.7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81bfsm93194566b.129.2024.05.09.10.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 10:15:29 -0700 (PDT)
-Date: Thu, 9 May 2024 19:15:27 +0200
-From: Andrea Righi <andrea.righi@canonical.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
-Message-ID: <Zj0ErxVBE3DYT2Ea@gpd>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-41-dhowells@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1NHlnd7IUAGb6pFaT2p8E5vMwn/v0asPXWDIi7nbw8bzTdedniwD9H1k71zkuWWx+48Zk4pZv+1URKFvkElpKsEjxXlVzbjB7AmqtNtGE61zloLd+ZEQB35z7ERiyEUjWZPi5I+O5KvfO6wtNTPaoX7q1EiHPmIkswAWRognUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3eZy0K9; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715286206; x=1746822206;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rtE9Cf6G7+LfHndtSwMnyj8o++JOJ/aihDJUuBRTqS8=;
+  b=N3eZy0K9/P+zL0hTwWqB6jG5n0uevPoTcyzpumRYinRf1kG+9M/YrV6J
+   VOZswxP1TRbYqVAJ7YlrMIQmwMdHFElhnDjYgCP7HX7B/t1lfYjj4Nx+p
+   Mb/O+fiOyZYVHd+1YU5LIm2yEh0vSLRONwIUcTcNo/myErIC8z6qjPTQU
+   fJgTSq3RovwYdhl+ZDzcIkVBvwyD3OHBSlex49+F6TIcwfIEyWUf5nvmM
+   YJGtVhqNnciR9N5+Y8A/EvAUvrjk6Mra59gOUrCvWBTsWl2HHXkKoGu6c
+   5IvtrzYFIpxfIHLDvykJhIJnp04lQ6PYGG6f5OIynRLG9aKXaaxsapTkm
+   A==;
+X-CSE-ConnectionGUID: Lb1bzANCRyWokt4HILNs1Q==
+X-CSE-MsgGUID: 2E5YprSQR8KSnjfvv0ierQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11364532"
+X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
+   d="scan'208";a="11364532"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 13:23:25 -0700
+X-CSE-ConnectionGUID: 1i+ljtUbQvG1Olqyld1EgA==
+X-CSE-MsgGUID: sB5oPA6UQRCnvoAR7X8dow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
+   d="scan'208";a="29316777"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 09 May 2024 13:23:22 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s5AIR-0005KD-1v;
+	Thu, 09 May 2024 20:23:19 +0000
+Date: Fri, 10 May 2024 04:22:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Carpenter <error27@gmail.com>,
+	Trond Myklebust <Trond.Myklebust@netapp.com>
+Cc: oe-kbuild-all@lists.linux.dev, Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] SUNRPC: prevent integer overflow in XDR_QUADLEN()
+Message-ID: <202405100445.DwegLXyZ-lkp@intel.com>
+References: <bbf929d6-18d2-4b7e-a660-a19460af0a3c@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -106,30 +83,391 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231221132400.1601991-41-dhowells@redhat.com>
+In-Reply-To: <bbf929d6-18d2-4b7e-a660-a19460af0a3c@moroto.mountain>
 
-On Thu, Dec 21, 2023 at 01:23:35PM +0000, David Howells wrote:
-> Use netfslib's read and write iteration helpers, allowing netfslib to take
-> over the management of the page cache for 9p files and to manage local disk
-> caching.  In particular, this eliminates write_begin, write_end, writepage
-> and all mentions of struct page and struct folio from 9p.
-> 
-> Note that netfslib now offers the possibility of write-through caching if
-> that is desirable for 9p: just set the NETFS_ICTX_WRITETHROUGH flag in
-> v9inode->netfs.flags in v9fs_set_netfs_context().
-> 
-> Note also this is untested as I can't get ganesha.nfsd to correctly parse
-> the config to turn on 9p support.
+Hi Dan,
 
-It looks like this patch has introduced a regression with autopkgtest,
-see: https://bugs.launchpad.net/bugs/2056461
+kernel test robot noticed the following build errors:
 
-I haven't looked at the details yet, I just did some bisecting and
-apparently reverting this one seems to fix the problem.
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on linus/master v6.9-rc7 next-20240509]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Let me know if you want me to test something in particular or if you
-already have a potential fix. Otherwise I'll take a look.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/SUNRPC-prevent-integer-overflow-in-XDR_QUADLEN/20240509-185141
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/bbf929d6-18d2-4b7e-a660-a19460af0a3c%40moroto.mountain
+patch subject: [PATCH 1/2] SUNRPC: prevent integer overflow in XDR_QUADLEN()
+config: alpha-defconfig (https://download.01.org/0day-ci/archive/20240510/202405100445.DwegLXyZ-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405100445.DwegLXyZ-lkp@intel.com/reproduce)
 
-Thanks,
--Andrea
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405100445.DwegLXyZ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/sunrpc/clnt.h:22,
+                    from net/sunrpc/auth_unix.c:15:
+>> include/linux/sunrpc/auth.h:33:25: error: initializer element is not constant
+      33 | #define UNX_CALLSLACK   (21 + XDR_QUADLEN(UNX_MAXNODENAME))
+         |                         ^
+   net/sunrpc/auth_unix.c:225:27: note: in expansion of macro 'UNX_CALLSLACK'
+     225 |         .au_cslack      = UNX_CALLSLACK,
+         |                           ^~~~~~~~~~~~~
+   include/linux/sunrpc/auth.h:33:25: note: (near initialization for 'unix_auth.au_cslack')
+      33 | #define UNX_CALLSLACK   (21 + XDR_QUADLEN(UNX_MAXNODENAME))
+         |                         ^
+   net/sunrpc/auth_unix.c:225:27: note: in expansion of macro 'UNX_CALLSLACK'
+     225 |         .au_cslack      = UNX_CALLSLACK,
+         |                           ^~~~~~~~~~~~~
+--
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:996:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+     996 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures3[1].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:996:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+     996 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1006:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1006 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures3[2].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1006:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1006 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1016:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1016 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures3[3].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1016:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1016 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:92:33: error: initializer element is not constant
+      92 | #define RPCB_addr_sz            (1 + XDR_QUADLEN(RPCBIND_MAXUADDRLEN))
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:111:33: note: in expansion of macro 'RPCB_addr_sz'
+     111 | #define RPCB_getaddrres_sz      RPCB_addr_sz
+         |                                 ^~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:1017:35: note: in expansion of macro 'RPCB_getaddrres_sz'
+    1017 |                 .p_replen       = RPCB_getaddrres_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:92:33: note: (near initialization for 'rpcb_procedures3[3].p_replen')
+      92 | #define RPCB_addr_sz            (1 + XDR_QUADLEN(RPCBIND_MAXUADDRLEN))
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:111:33: note: in expansion of macro 'RPCB_addr_sz'
+     111 | #define RPCB_getaddrres_sz      RPCB_addr_sz
+         |                                 ^~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:1017:35: note: in expansion of macro 'RPCB_getaddrres_sz'
+    1017 |                 .p_replen       = RPCB_getaddrres_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1029:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1029 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures4[1].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1029:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1029 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1039:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1039 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures4[2].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1039:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1039 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+>> net/sunrpc/rpcb_clnt.c:100:33: error: initializer element is not constant
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1049:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1049 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:100:33: note: (near initialization for 'rpcb_procedures4[3].p_arglen')
+     100 | #define RPCB_getaddrargs_sz     (RPCB_program_sz + RPCB_version_sz + \
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:1049:35: note: in expansion of macro 'RPCB_getaddrargs_sz'
+    1049 |                 .p_arglen       = RPCB_getaddrargs_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:92:33: error: initializer element is not constant
+      92 | #define RPCB_addr_sz            (1 + XDR_QUADLEN(RPCBIND_MAXUADDRLEN))
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:111:33: note: in expansion of macro 'RPCB_addr_sz'
+     111 | #define RPCB_getaddrres_sz      RPCB_addr_sz
+         |                                 ^~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:1050:35: note: in expansion of macro 'RPCB_getaddrres_sz'
+    1050 |                 .p_replen       = RPCB_getaddrres_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:92:33: note: (near initialization for 'rpcb_procedures4[3].p_replen')
+      92 | #define RPCB_addr_sz            (1 + XDR_QUADLEN(RPCBIND_MAXUADDRLEN))
+         |                                 ^
+   net/sunrpc/rpcb_clnt.c:111:33: note: in expansion of macro 'RPCB_addr_sz'
+     111 | #define RPCB_getaddrres_sz      RPCB_addr_sz
+         |                                 ^~~~~~~~~~~~
+   net/sunrpc/rpcb_clnt.c:1050:35: note: in expansion of macro 'RPCB_getaddrres_sz'
+    1050 |                 .p_replen       = RPCB_getaddrres_sz,
+         |                                   ^~~~~~~~~~~~~~~~~~
+--
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:571:34: note: in expansion of macro 'Ck'
+     571 |                 .pc_xdrressize = Ck+St+2+No+Rg,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[1].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:571:34: note: in expansion of macro 'Ck'
+     571 |                 .pc_xdrressize = Ck+St+2+No+Rg,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:581:34: note: in expansion of macro 'Ck'
+     581 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[2].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:581:34: note: in expansion of macro 'Ck'
+     581 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:591:34: note: in expansion of macro 'Ck'
+     591 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[3].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:591:34: note: in expansion of macro 'Ck'
+     591 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:601:34: note: in expansion of macro 'Ck'
+     601 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[4].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:601:34: note: in expansion of macro 'Ck'
+     601 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:611:34: note: in expansion of macro 'Ck'
+     611 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[5].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:611:34: note: in expansion of macro 'Ck'
+     611 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:761:34: note: in expansion of macro 'Ck'
+     761 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[20].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:761:34: note: in expansion of macro 'Ck'
+     761 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:771:34: note: in expansion of macro 'Ck'
+     771 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[21].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:771:34: note: in expansion of macro 'Ck'
+     771 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+>> fs/lockd/svcproc.c:548:17: error: initializer element is not constant
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:781:34: note: in expansion of macro 'Ck'
+     781 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svcproc.c:548:17: note: (near initialization for 'nlmsvc_procedures[22].pc_xdrressize')
+     548 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svcproc.c:781:34: note: in expansion of macro 'Ck'
+     781 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+--
+>> fs/lockd/mon.c:536:25: error: initializer element is not constant
+     536 | #define SM_mon_sz       (SM_mon_id_sz+SM_priv_sz)
+         |                         ^
+   fs/lockd/mon.c:545:35: note: in expansion of macro 'SM_mon_sz'
+     545 |                 .p_arglen       = SM_mon_sz,
+         |                                   ^~~~~~~~~
+   fs/lockd/mon.c:536:25: note: (near initialization for 'nsm_procedures[2].p_arglen')
+     536 | #define SM_mon_sz       (SM_mon_id_sz+SM_priv_sz)
+         |                         ^
+   fs/lockd/mon.c:545:35: note: in expansion of macro 'SM_mon_sz'
+     545 |                 .p_arglen       = SM_mon_sz,
+         |                                   ^~~~~~~~~
+   fs/lockd/mon.c:534:25: error: initializer element is not constant
+     534 | #define SM_mon_id_sz    (SM_mon_name_sz+SM_my_id_sz)
+         |                         ^
+   fs/lockd/mon.c:554:35: note: in expansion of macro 'SM_mon_id_sz'
+     554 |                 .p_arglen       = SM_mon_id_sz,
+         |                                   ^~~~~~~~~~~~
+   fs/lockd/mon.c:534:25: note: (near initialization for 'nsm_procedures[3].p_arglen')
+     534 | #define SM_mon_id_sz    (SM_mon_name_sz+SM_my_id_sz)
+         |                         ^
+   fs/lockd/mon.c:554:35: note: in expansion of macro 'SM_mon_id_sz'
+     554 |                 .p_arglen       = SM_mon_id_sz,
+         |                                   ^~~~~~~~~~~~
+--
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:537:34: note: in expansion of macro 'Ck'
+     537 |                 .pc_xdrressize = Ck+St+2+No+Rg,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[1].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:537:34: note: in expansion of macro 'Ck'
+     537 |                 .pc_xdrressize = Ck+St+2+No+Rg,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:547:34: note: in expansion of macro 'Ck'
+     547 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[2].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:547:34: note: in expansion of macro 'Ck'
+     547 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:557:34: note: in expansion of macro 'Ck'
+     557 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[3].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:557:34: note: in expansion of macro 'Ck'
+     557 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:567:34: note: in expansion of macro 'Ck'
+     567 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[4].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:567:34: note: in expansion of macro 'Ck'
+     567 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:577:34: note: in expansion of macro 'Ck'
+     577 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[5].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:577:34: note: in expansion of macro 'Ck'
+     577 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:727:34: note: in expansion of macro 'Ck'
+     727 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[20].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:727:34: note: in expansion of macro 'Ck'
+     727 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:737:34: note: in expansion of macro 'Ck'
+     737 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[21].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:737:34: note: in expansion of macro 'Ck'
+     737 |                 .pc_xdrressize = Ck+St+1,
+         |                                  ^~
+>> fs/lockd/svc4proc.c:514:17: error: initializer element is not constant
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:747:34: note: in expansion of macro 'Ck'
+     747 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+   fs/lockd/svc4proc.c:514:17: note: (near initialization for 'nlmsvc_procedures4[22].pc_xdrressize')
+     514 | #define Ck      (1+XDR_QUADLEN(NLM_MAXCOOKIELEN))       /* cookie */
+         |                 ^
+   fs/lockd/svc4proc.c:747:34: note: in expansion of macro 'Ck'
+     747 |                 .pc_xdrressize = Ck+St,
+         |                                  ^~
+..
+
+
+vim +33 include/linux/sunrpc/auth.h
+
+4500632f60fa0d Chuck Lever    2016-03-01  27  
+24a9a9610ce3ba Jeff Layton    2015-08-03  28  /*
+24a9a9610ce3ba Jeff Layton    2015-08-03  29   * Size of the nodename buffer. RFC1831 specifies a hard limit of 255 bytes,
+24a9a9610ce3ba Jeff Layton    2015-08-03  30   * but Linux hostnames are actually limited to __NEW_UTS_LEN bytes.
+24a9a9610ce3ba Jeff Layton    2015-08-03  31   */
+24a9a9610ce3ba Jeff Layton    2015-08-03  32  #define UNX_MAXNODENAME	__NEW_UTS_LEN
+4500632f60fa0d Chuck Lever    2016-03-01 @33  #define UNX_CALLSLACK	(21 + XDR_QUADLEN(UNX_MAXNODENAME))
+5786461bd8ea81 Kinglong Mee   2017-02-07  34  #define UNX_NGROUPS	16
+^1da177e4c3f41 Linus Torvalds 2005-04-16  35  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
