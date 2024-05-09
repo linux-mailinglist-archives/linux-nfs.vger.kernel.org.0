@@ -1,121 +1,137 @@
-Return-Path: <linux-nfs+bounces-3221-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3222-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D26BB8C1057
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 15:26:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD2BC8C1069
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 15:31:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87C4D1F23F6A
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 13:26:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE1E41C2293D
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 May 2024 13:31:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A508F1527B1;
-	Thu,  9 May 2024 13:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 397E715CD75;
+	Thu,  9 May 2024 13:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKHZ1adM"
+	dkim=pass (2048-bit key) header.d=poochiereds-net.20230601.gappssmtp.com header.i=@poochiereds-net.20230601.gappssmtp.com header.b="sarXgmjp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042A815279E
-	for <linux-nfs@vger.kernel.org>; Thu,  9 May 2024 13:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98681158DC5
+	for <linux-nfs@vger.kernel.org>; Thu,  9 May 2024 13:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715261186; cv=none; b=ixY0mMmsz7KngI1Sw86JQTHDsMZvqMN0Q/JGM0TTnoo0FexK7NVBY6kVtLIkYJIgMpyDvjqv4R2SAp2hmGBhxX3yYtHIjuSJiwk9SkShHRE9ehu7vhD0o9jJlvB+y+tvY8liNSQyqww27OF3cLaAfLUm+kNI5RexDzfDiT/4eVI=
+	t=1715261480; cv=none; b=UHlYUOFLaj4xwkhx15fTw7BXbihDRHcEsjB+xhre4tU0R9jU9ECieeHl304YbPwJzJX/1JSKFHW12/0p0d7y1qR96YjsJFNrQ7es8eW2sYSuPHiDlr8VSRuHNSIy6LgktkeOrNME95b4cVbMeZzKLXmYbb7fO/Schw04KAWjNhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715261186; c=relaxed/simple;
-	bh=iPW6d4D3ByZWZoK0AJhXMbS0Dzq9QgTzpENfolzdfZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vmf3dMpCqXx0PndlR18cdrkiraEubBTMeT/yzkuRHxhohLNZ/Nrt9MX9ixz82qOqBsA1GbUwW0vS2N+mrPOx9D6vH4TTr6t/yB2LR7L3Utzhqe9SpUhuRzyuALFhqMcCTw1nZV8v5ldBs3tWWzQtQkpHzk9y0wv7yvxIl4Y7wgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mKHZ1adM; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a599c55055dso231512166b.0
-        for <linux-nfs@vger.kernel.org>; Thu, 09 May 2024 06:26:24 -0700 (PDT)
+	s=arc-20240116; t=1715261480; c=relaxed/simple;
+	bh=Pxq7m8xsVHvJvg/w6k1BjFgru9L7iEbAWEcZhrfwbio=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fqiW7wGhIltESYamQKLOdKUUOQfWWo+CetPg1bNJ50dRfw4/NlgpLq/BNNByq37DCDt7lyUTOdRDcQGg3aVoEh7TfWqpf3bRnooZBXImDVYXpvWAYWm8y5HiC7Vad2Toe53P42Lzsgr2jYg5HXm4pauH47lBNSVrax6zD6zhqXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=poochiereds.net; spf=pass smtp.mailfrom=poochiereds.net; dkim=pass (2048-bit key) header.d=poochiereds-net.20230601.gappssmtp.com header.i=@poochiereds-net.20230601.gappssmtp.com header.b=sarXgmjp; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=poochiereds.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=poochiereds.net
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ecd3867556so7092805ad.0
+        for <linux-nfs@vger.kernel.org>; Thu, 09 May 2024 06:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715261183; x=1715865983; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VoLs6yuqNj5DmFmOIxYRS+0ntQ0Djpfj5wLe15EtH3A=;
-        b=mKHZ1adM9DXDQhPe0iurbu9Tb2qxOyQ1L3mr873oFiHcRXAQJfozw8Bwv+N6noI+4W
-         ORM3wzEnMczByDcD4/yUaKdyoixwjkNMVsMn6S8ge2X5Hn7pjAcT4ni70sHnUJZsNS36
-         xRjJgGqbHTGBVMZV1588godUE6tMHzC1opffUjPwq19MJBYuTLA7ybacy1Dvil95xSEV
-         A/o9MXw/I3Pf7/XiUEAuKM7bh1rQ+XFaYQySYdodZSFwERt9rbO/5QYQTmIplQIffR/I
-         0Na22gLVCOcDIHeyWGD8KsTC12UtbTOHWe8glSKdtw6o3aALZe22IZBz08+xo5GjAyxC
-         oQvA==
+        d=poochiereds-net.20230601.gappssmtp.com; s=20230601; t=1715261474; x=1715866274; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qyy4KfEUed3hd0FHNjpkWXdwLBXzmVHhHgdwLUHAUnw=;
+        b=sarXgmjpuEmdk1VkWJf5a1VBDOEFeySoWQK4BDs2JIEvqTl+za9WP+AKhMjC+UUY64
+         H3DeIDIwlyfsb6hZjVq30IRswg03O6XOgwoNxdVTx/u0qhWKYz6Zf+fLSDpWMkt8wY/B
+         0WyjJAtktSWii7wVzSOC+Nh+V44atPkgseFpM+sKZDaKX1IMiLnSpp9iXQk+q3GsERK0
+         8y5Vztn3RynIg2mszMGw8AGVew412XiA21kwS4DKeIFgUgpWcHNiCt+iUSVEbMvnX8pf
+         nMBt+qbZU03GeokTI7uIs+4VS4PXIungE/0xyXyf7qTCFKyY0c3ujmi1neLBtWzaDkbm
+         FLhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715261183; x=1715865983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VoLs6yuqNj5DmFmOIxYRS+0ntQ0Djpfj5wLe15EtH3A=;
-        b=RFPvfikmhoZbdh4OCcIf6QKSttgpySoKPhH+hDRjc4GoI9BRiSGLVQqTlYh2V3QQKW
-         9ZMbnOW9AZVF55+mOLGMQG4HEtqXx8v19EB5S9IvI6IJQMDLoi5C3QQCphP1BaGQTZ1v
-         7DibEg9lYIks4O1wLrBV7nbgGn2nfPyQvlM2N1IpFfOFytkQQvED9XPlAu3qMWnIRy2N
-         9RKeWZv3yYGT59E79X82J/p8geuDaisbpb7TbhX5xGlowa2jg1PVt/V8wD6NQ4ESbays
-         u/peHGlfvRV2VCuykm+Rzc1Y+eLfSt3Sh4uLLtdvCNGAI6AC5ruYT6pzwpeL56G6d+/d
-         prAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKuNjzqpY19+9VngJICmJsn1Jlt9G6BmZrkhcbIBgUbD9ypiTiF9lMWjwxS0hQUBNiC9cP3tLn8EUWpCvaLsDpES/zupMFDeIW
-X-Gm-Message-State: AOJu0YysnuZEtHgBqeeDkhRpGCDmNvp0Wjo9Ut13yT3abAELwEKv06VV
-	+MwvvoiIw8tqAvMyiV9YPueJyUlzCE/1gudhOpuShttRxc/gb8WMuZIF+l3Fz7c=
-X-Google-Smtp-Source: AGHT+IGlqHqVrN5njgIPk6BsIHG4IojimK3+yANiWis1vE6LoHgDXD7w1YiU4Sh7s4wuvWa8BTszaA==
-X-Received: by 2002:a50:d5da:0:b0:572:952e:7a5e with SMTP id 4fb4d7f45d1cf-5731d9f13abmr3665059a12.24.1715261183287;
-        Thu, 09 May 2024 06:26:23 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2cb02fsm700789a12.78.2024.05.09.06.26.22
+        d=1e100.net; s=20230601; t=1715261474; x=1715866274;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qyy4KfEUed3hd0FHNjpkWXdwLBXzmVHhHgdwLUHAUnw=;
+        b=QRISC+GZGQMKYb8HoFtnpIjXxHg8AisMJL01+WoiZOpOcGLHcPc+DtmZp+j30X7JQP
+         PvZrLjuxzA2VgDZCDEFpHPykyCZp2F0V+xrR7BKuNO3qyVp4wnrfP2xfsNa5En47QMlb
+         NeytuYCBNC0it/aea7yewrbXsxvDt2/Ce6o7q/veI4NN6i00nU3nbblX2Z/yjmYftfzQ
+         RiZ6XaZa0cumJhnDZTCQujs79uRzZNJ4gF8G3jyMPtZgqb2ca4DfIwagJIs1FrhVHPbA
+         AaSwr4iwxqpGlwOZ+cF7EwbDm3lt6ELJS0iajpa91eInb+gvBKxOss3RYSZ/MVqC5Moj
+         1ljA==
+X-Gm-Message-State: AOJu0YxUBz9pRkuebX58Hx2cZ0VR/+cHkOCSzUVP9dt297z8PosL2fht
+	O0EswRs5JrIn0JQwk2feXLKgaSHZ78eTvfVcCQsQ673H7MbRG+9k549Xq9IFGP61nmb/n0zZbaO
+	f
+X-Google-Smtp-Source: AGHT+IFAYyX9jLu9j2N7Sp2dUQRaD/hjoaE+k30TO3xKqlunwNawkjbDodPqzEFsd+lxs2WtwTNi4g==
+X-Received: by 2002:a17:902:6806:b0:1eb:1c47:50d1 with SMTP id d9443c01a7336-1eeb0797845mr52085595ad.69.1715261473699;
+        Thu, 09 May 2024 06:31:13 -0700 (PDT)
+Received: from [10.36.155.63] ([50.175.227.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30fc7sm14052475ad.133.2024.05.09.06.31.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 06:26:23 -0700 (PDT)
-Date: Thu, 9 May 2024 16:26:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 2/2] NFSD: harden svcxdr_dupstr() and svcxdr_tmpalloc()
- against integer overflows
-Message-ID: <70f5c9cf-aa7d-4309-8ed7-48e303ea1be7@moroto.mountain>
-References: <332d1149-988e-4ece-8aef-1e3fb8bf8af4@moroto.mountain>
- <babdb32b-3f3a-4e46-8cbb-26f0ca49cc61@moroto.mountain>
- <ZjzNdLynC7WxwLno@tissot.1015granger.net>
+        Thu, 09 May 2024 06:31:13 -0700 (PDT)
+Message-ID: <17b06a56223ab70ccf79a0e6b79eef54eddc6c2e.camel@poochiereds.net>
+Subject: Re: [PATCH v2] nfsd: allow more than 64 backlogged connections
+From: Jeff Layton <jlayton@poochiereds.net>
+To: trondmy@gmail.com, Steve Dickson <SteveD@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 09 May 2024 06:31:09 -0700
+In-Reply-To: <20240308180223.2965601-1-trond.myklebust@hammerspace.com>
+References: <20240308180223.2965601-1-trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjzNdLynC7WxwLno@tissot.1015granger.net>
 
-On Thu, May 09, 2024 at 09:19:48AM -0400, Chuck Lever wrote:
-> On Thu, May 09, 2024 at 01:48:28PM +0300, Dan Carpenter wrote:
-> > These lengths come from xdr_stream_decode_u32() and so we should be a
-> > bit careful with them.  Use size_add() and struct_size() to avoid
-> > integer overflows.  Saving size_add()/struct_size() results to a u32 is
-> > unsafe because it truncates away the high bits.
-> > 
-> > Also generally storing sizes in longs is safer.  Most systems these days
-> > use 64 bit CPUs.  It's harder for an addition to overflow 64 bits than
-> > it is to overflow 32 bits.  Also functions like vmalloc() can
-> > successfully allocate UINT_MAX bytes, but nothing can allocate ULONG_MAX
-> > bytes.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > I think my patch 1 fixes any real issues.  It's hard to assign a Fixes
-> > tag to this.
-> 
-> I agree that this is a defensive change only. As it is late in the
-> cycle and this doesn't seem urgent, I would prefer to queue this
-> change for v6.11.
-> 
+On Fri, 2024-03-08 at 13:02 -0500, trondmy@gmail.com wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>=20
+> When creating a listener socket to be handed to
+> /proc/fs/nfsd/portlist,
+> we currently limit the number of backlogged connections to 64. Since
+> that value was chosen in 2006, the scale at which data centres
+> operate
+> has changed significantly. Given a modern server with many thousands
+> of
+> clients, a limit of 64 connections can create bottlenecks,
+> particularly
+> at at boot time.
+> Let's use the POSIX-sanctioned maximum value of SOMAXCONN.
+>=20
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+> v2: Use SOMAXCONN instead of a value of -1.
+>=20
+> =C2=A0utils/nfsd/nfssvc.c | 3 ++-
+> =C2=A01 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/utils/nfsd/nfssvc.c b/utils/nfsd/nfssvc.c
+> index 46452d972407..9650cecee986 100644
+> --- a/utils/nfsd/nfssvc.c
+> +++ b/utils/nfsd/nfssvc.c
+> @@ -205,7 +205,8 @@ nfssvc_setfds(const struct addrinfo *hints, const
+> char *node, const char *port)
+> =C2=A0			rc =3D errno;
+> =C2=A0			goto error;
+> =C2=A0		}
+> -		if (addr->ai_protocol =3D=3D IPPROTO_TCP &&
+> listen(sockfd, 64)) {
+> +		if (addr->ai_protocol =3D=3D IPPROTO_TCP &&
+> +		=C2=A0=C2=A0=C2=A0 listen(sockfd, SOMAXCONN)) {
+> =C2=A0			xlog(L_ERROR, "unable to create listening
+> socket: "
+> =C2=A0				"errno %d (%m)", errno);
+> =C2=A0			rc =3D errno;
 
-Sounds good.  I would imagine that eventually it will make its way back
-to the stable kernels but it's not a rush.
+Steve,
 
-regards,
-dan carpenter
+Is there some reason you've not committed this patch? It seems fairly
+straightforward. I think I sent this earlier, but:
 
+Reviewed-by: Jeffrey Layton <jlayton@kernel.org>
+
+--=20
+Jeff Layton <jlayton@poochiereds.net>
 
