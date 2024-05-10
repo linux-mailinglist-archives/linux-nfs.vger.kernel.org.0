@@ -1,79 +1,79 @@
-Return-Path: <linux-nfs+bounces-3233-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3234-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34EF38C2582
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 15:18:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA0368C258C
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 15:18:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B933283DC0
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 13:18:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 545BBB23D99
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 13:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A18128366;
-	Fri, 10 May 2024 13:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D203012C461;
+	Fri, 10 May 2024 13:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MOjE3V0w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5M6RhTo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24166481C0
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 13:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBB612BF21
+	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 13:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715347099; cv=none; b=BLepCioB4ZqV9lOPp19lZ4AAhYr8JudecLjqagaP6In3peR7biFMCyQY9b7mCoNWaYN5Hw4wNOsGZD/xqR8xWU1qbcrPJCKEQihdnqvGfNsT+lXPXR3bFal5WdP0Tu4OcxEOF8rgHT08DcuQQI6RiZazRxdQDCfr7+ag74C7oDA=
+	t=1715347134; cv=none; b=ZByvRZ6e1ZRE2vrIpiKa4FH1dVJlLQ06GfY3RslGEp8NDAPaF8Qj9DOWaWrTpUBgtsvyx5SiTlr9jbUn/+ENQa4rHU5nH2/1ZYjk9Sq/hXJNYFcw3OeXty98Ps20FB6+YSnXMA4qiaqZbS4rk+JwOhy7iyv5/Aw505G3vQrnjG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715347099; c=relaxed/simple;
-	bh=IHn9OrUp6uo+vxeElczlHdFjA4OzCiyjkASWV+VvJmg=;
+	s=arc-20240116; t=1715347134; c=relaxed/simple;
+	bh=ts5uCJziYe7b/uV8ZRAW4LdvW3N0jdGR5KHk7uhkwLY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P5U488TbH3U5yB4E6RH/P5AZ+KiHCIXL1uZgLb0GSxNXpH2sat+BY+oWfDJ2D5zQgJ7HsWsY90DtEL/DnJCzzvF2831IEmd1Uqn0bfzbdBXyRe6aEVilfDJyUZ99GLBQjvcqBxiw4IfK305lfhmRTWUB6Z+lwn4uGlmBrtdq+b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MOjE3V0w; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=m7wfCfoGMebnHvdqTc6YQ6tAM6uYTfnKhdkjBdcSXXPb2ZFMHtgqEJs+/kZMspTcN8x2+1GNjUfm0Q9BMaw2RyL/W2BxgONJqM9QpjzRBAYsZpNEvhbYKWiv1md5d+zVrpjCuE69OCaccOOJyRHnMTwC2SoKlgj3Lse9dWLcoDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N5M6RhTo; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715347097;
+	s=mimecast20190719; t=1715347131;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V55+B+ekqMo0nZJst1vFH7FauIuhxvjGfrHVBhR8AKA=;
-	b=MOjE3V0wQvzjSH3xTJnHgthlosujE5iGYUcyN6o2PNF+m7AIMM80EoIGNRQhodQi/sGYs1
-	tXjpu++eBrxe/3+3vnUdaoVTcaz7Rcr/0c+dEOTyKavin5y4XS5sZWVJBQMSY1Qb5Qs9Z/
-	cPZYK8dfoKWoThUSmgdAs0v0JJFLic0=
+	bh=2m29G2q68q9ZiGugXdxUBikmSBGRhnENZ3CfoC37g/Q=;
+	b=N5M6RhToCaFidLocRU6kRwhpyAjT5IpBxVxuGCE2+o73bj+Bx2oYrctry7QEgek4NuU8cw
+	WaRRGwzOqpvWUglQLFoTbN+430YWX9jo+CZohXtOL3+ytyCQMYhjFG5XJgh5nQ8W+5jG2i
+	B1NY4A+GNroVlFze+d8jSU7Oi5F4DFA=
 Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
  [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319--iEY3WQLMVaAxkXRj798OA-1; Fri, 10 May 2024 09:18:07 -0400
-X-MC-Unique: -iEY3WQLMVaAxkXRj798OA-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2b52fdaf766so714206a91.0
-        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 06:18:07 -0700 (PDT)
+ us-mta-462-2zA5SmRuMVq4KAyPZE_sKg-1; Fri, 10 May 2024 09:18:45 -0400
+X-MC-Unique: 2zA5SmRuMVq4KAyPZE_sKg-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ab48a13643so588915a91.3
+        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 06:18:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715347085; x=1715951885;
+        d=1e100.net; s=20230601; t=1715347124; x=1715951924;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V55+B+ekqMo0nZJst1vFH7FauIuhxvjGfrHVBhR8AKA=;
-        b=iod4vN5E7nweavOIS4x9a0OYILabBywvejSKmh5NtqJc95EVuNr4BstfHHxSrXNYaL
-         4a7m+LvkhaPIh28ZSrKZ7Ne9HnxTgbs8mlkemtklDfJ/jmm8mVZ2Fwd2BFgM1RMy2K86
-         XAlLHwT6xkMMuzuc7tRmAWy38hf0VN/KPS4NO2IRwRnXGwHy2gxvqQgDlPzK2RKUSuuJ
-         w8HUCy+rbBOUJm0f1S4FwAEVOpAX0WDtQDnuoWmvwLrg5qRaMsNRUQOm4eOUNJGQWYbn
-         Cz+0azfnTTRbp9i52OgaMvW8L15ukmwkRdpWlAVMSWbIAEBcDJKL+Rvst4FZDQkODEmu
-         +juQ==
-X-Gm-Message-State: AOJu0Yyocl2+8bcfMX/uj2pg+2fBMiSKcnXreutu5jgkJLPY+H/Rb6U6
-	B7hRuXjsgKeh0aNOC92Ip8Iopk1VncdppTROHOU5XrkwpQnfiegJe7UbEoeofszq92QkEdJc0r2
-	KeEauUVLGrlCJubF/4P2b1N5SBxKoD6S3nGYVaImFWwGoD5vQqRjj6OfBSbs8u4Oc7Q==
-X-Received: by 2002:a17:90a:4497:b0:2af:d64:4887 with SMTP id 98e67ed59e1d1-2b6cd1eef1dmr2361108a91.4.1715347084800;
-        Fri, 10 May 2024 06:18:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHpGz470B2/bYfC6J35zsBXKBo/jQ/Hr2BkJKuetZNlVs1J5kKfLQoUqu5MOjEl9np7iDGkpQ==
-X-Received: by 2002:a17:90a:4497:b0:2af:d64:4887 with SMTP id 98e67ed59e1d1-2b6cd1eef1dmr2361081a91.4.1715347084301;
-        Fri, 10 May 2024 06:18:04 -0700 (PDT)
+        bh=2m29G2q68q9ZiGugXdxUBikmSBGRhnENZ3CfoC37g/Q=;
+        b=lB30wQEmfbZX+LRgeyfdaW3tvZnvDxHhZ7cAE60f2kB+4190HHx3cMVdP031ODxz1w
+         z3XyuxMTulUQ+SRvaP5wMYLC0eKMig0YSrT19wzjAWhitKS/jqtYjcxzMreIGsFO0V+m
+         T53IVZ7kaiVyJr5Cb0hWJ/r0+jPlrcdZ0hEpkUZtQpW3JUOwFfHsI8a3ESf5VDhUUPwG
+         5FcIja71OUA5CtcPhbRRD2WsiygoRVN+YOAHQvpwEbsdAlcwwSoPZM+cUjs/te770own
+         pSD4TsQOQO9RzJS5oVxUJ54CMPQmTIkwk76DemcZTvzlxzZOVKsjHMX6FrbhTx7vVqab
+         ELag==
+X-Gm-Message-State: AOJu0YwkR8Pe5O/jP50QDfAozUYsvn6M+3OSOK0ed5r3aK0ubjDu4wk+
+	Td4LycG4q5I4TLCHFzhUCKX/0MFQxRq2d2u+RucLiIXEA2I9vON+sJbtGiY0/vhGqnnZXnozSBC
+	ZtcFhjI1OjHAXnYbpeIChWQqja2Pt8hOfXoUKg0367lB4MKXGuiOW5vP01g==
+X-Received: by 2002:a17:902:f68b:b0:1e7:b7da:842 with SMTP id d9443c01a7336-1ef43d2a424mr29423775ad.2.1715347124479;
+        Fri, 10 May 2024 06:18:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEih6mEuI43Ibjgo/8xT8lX3qsWqtZyrS3RX6zUYicVxbLkQlUWuDNsfuvGKBk8gdStmG2a7w==
+X-Received: by 2002:a17:902:f68b:b0:1e7:b7da:842 with SMTP id d9443c01a7336-1ef43d2a424mr29423475ad.2.1715347124066;
+        Fri, 10 May 2024 06:18:44 -0700 (PDT)
 Received: from [172.31.1.12] ([70.105.245.214])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b628ea6aadsm5033691a91.50.2024.05.10.06.18.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad5fa2sm31708205ad.66.2024.05.10.06.18.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 06:18:03 -0700 (PDT)
-Message-ID: <39ac3688-e99c-4b80-a94c-c80f9e2dc31b@redhat.com>
-Date: Fri, 10 May 2024 09:18:01 -0400
+        Fri, 10 May 2024 06:18:43 -0700 (PDT)
+Message-ID: <915b48f5-4c78-4ba8-bc99-58b9abf48027@redhat.com>
+Date: Fri, 10 May 2024 09:18:41 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -81,54 +81,65 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] nfsd: allow more than 64 backlogged connections
-To: trondmy@gmail.com
-Cc: linux-nfs@vger.kernel.org
-References: <20240308180223.2965601-1-trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH] junction: export-cache: cast to a type with a known size
+ to ensure sprintf works
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Chuck Lever <chuck.lever@oracle.com>,
+ Vladimir Petko <vladimir.petko@canonical.com>
+References: <20240502135320.3445429-1-carnil@debian.org>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20240308180223.2965601-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20240502135320.3445429-1-carnil@debian.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 3/8/24 1:02 PM, trondmy@gmail.com wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On 5/2/24 9:53 AM, Salvatore Bonaccorso wrote:
+> As reported in Debian, with the 64bit time_t transition for the armel
+> and armhf architecture, it was found that nfs-utils fails to compile
+> with:
 > 
-> When creating a listener socket to be handed to /proc/fs/nfsd/portlist,
-> we currently limit the number of backlogged connections to 64. Since
-> that value was chosen in 2006, the scale at which data centres operate
-> has changed significantly. Given a modern server with many thousands of
-> clients, a limit of 64 connections can create bottlenecks, particularly
-> at at boot time.
-> Let's use the POSIX-sanctioned maximum value of SOMAXCONN.
+> 	libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I../../support/include -I/usr/include/tirpc -I/usr/include/libxml2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64 -Wdate-time -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -pipe -Wall -Wextra -Werror=strict-prototypes -Werror=missing-prototypes -Werror=missing-declarations -Werror=format=2 -Werror=undef -Werror=missing-include-dirs -Werror=strict-aliasing=2 -Werror=init-self -Werror=implicit-function-declaration -Werror=return-type -Werror=switch -Werror=overflow -Werror=parentheses -Werror=aggregate-return -Werror=unused-result -fno-strict-aliasing -Werror=format-overflow=2 -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=misleading-indentation -Wno-cast-function-type -g -O2 -Werror=implicit-function-declaration -ffile-prefix-map=/<<PKGBUILDDIR>>=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -c xml.c  -fPIC -DPIC -o .libs/xml.o
+> 	export-cache.c: In function ‘junction_flush_exports_cache’:
+> 	export-cache.c:110:51: error: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘time_t’ {aka ‘long long int’} [-Werror=format=]
+> 	  110 |         snprintf(flushtime, sizeof(flushtime), "%ld\n", now);
+> 	      |                                                 ~~^     ~~~
+> 	      |                                                   |     |
+> 	      |                                                   |     time_t {aka long long int}
+> 	      |                                                   long int
+> 	      |                                                 %lld
 > 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Committed... Sorry it took so long... The patch was not
-on my radar... Feel free to ping when things linger this long.
+> time_t is not guaranteed to be 64-bit, so it must be coerced into the expected
+> type for printf. Cast it to long long.
+> 
+> Reported-by: Vladimir Petko <vladimir.petko@canonical.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218540
+> Link: https://bugs.debian.org/1067829
+> Link: https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2055349
+> Fixes: 494d22396d3d ("Add LDAP-free version of libjunction to nfs-utils")
+> Suggested-by: Vladimir Petko <vladimir.petko@canonical.com>
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+Committed...
 
 steved.
-
 > ---
-> v2: Use SOMAXCONN instead of a value of -1.
+>   support/junction/export-cache.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   utils/nfsd/nfssvc.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/utils/nfsd/nfssvc.c b/utils/nfsd/nfssvc.c
-> index 46452d972407..9650cecee986 100644
-> --- a/utils/nfsd/nfssvc.c
-> +++ b/utils/nfsd/nfssvc.c
-> @@ -205,7 +205,8 @@ nfssvc_setfds(const struct addrinfo *hints, const char *node, const char *port)
->   			rc = errno;
->   			goto error;
->   		}
-> -		if (addr->ai_protocol == IPPROTO_TCP && listen(sockfd, 64)) {
-> +		if (addr->ai_protocol == IPPROTO_TCP &&
-> +		    listen(sockfd, SOMAXCONN)) {
->   			xlog(L_ERROR, "unable to create listening socket: "
->   				"errno %d (%m)", errno);
->   			rc = errno;
+> diff --git a/support/junction/export-cache.c b/support/junction/export-cache.c
+> index 4e578c9b37b1..00187c019d60 100644
+> --- a/support/junction/export-cache.c
+> +++ b/support/junction/export-cache.c
+> @@ -107,7 +107,7 @@ junction_flush_exports_cache(void)
+>   		xlog(D_GENERAL, "%s: time(3) failed", __func__);
+>   		return FEDFS_ERR_SVRFAULT;
+>   	}
+> -	snprintf(flushtime, sizeof(flushtime), "%ld\n", now);
+> +	snprintf(flushtime, sizeof(flushtime), "%lld\n", (long long)now);
+>   
+>   	for (i = 0; junction_proc_files[i] != NULL; i++) {
+>   		retval = junction_write_time(junction_proc_files[i], flushtime);
 
 
