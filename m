@@ -1,155 +1,105 @@
-Return-Path: <linux-nfs+bounces-3228-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3229-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81A1E8C1DD4
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 07:54:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DAE428C1F5A
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 09:57:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF7B9283251
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 05:54:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94F8C2820B8
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 07:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2900E157A4D;
-	Fri, 10 May 2024 05:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA73215F3F1;
+	Fri, 10 May 2024 07:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lc9/js3I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaHnQzWa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF351527A0
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 05:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7120915F30A
+	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 07:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715320441; cv=none; b=cS/LemGUA+vrbDLkwRlww9bOuwvZiemwtmANjD7PPVSCQcpS2SnGDfUNGom8KVy7Jymp7ocpfcvIdgeIY5ovevIgza/O/UM8dvWbdZtshmjy5ffLclEsJTSjpFGip5JEThhRK8Ou6bRgXk8JWVGwUZZ6Ib/m7cXLg4QE+0vDdS4=
+	t=1715327853; cv=none; b=JoFsHWtcUDM+rHlkCcsUhoa6IFbsHHpu8pr/HHTuxreEOH/blZ/kMItRWEnXSEHBjfOh0UkCA4uaR1p+I4AwbVBYErKuPY7Ou5E+VTW2SvLuasEv8JWkZVfuq016fG251OpMbWJ3YJs1lkfOpd450LJiDFb1ZL+HFqLNP8zW6H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715320441; c=relaxed/simple;
-	bh=4PEitjlgb+KO6v9/1VnUNw8pVTM6GDPJ4mUKQsGr/KM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stZSX9p4Pfby6hN89bDGiXN4foO3F6ehsOxCz8U+GrFl3ukbdMBsjS1nhmlHeMX/M/a8Nd3qfGBHIgSCyZjErY4I8imYKP4z5fhaKcirAAWRdcugXtkew45nmLz6XCDs0WBIxCvMXgBdi4El31v9lnJ/AxjH6RLmoWRFkOe5qMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lc9/js3I; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+	s=arc-20240116; t=1715327853; c=relaxed/simple;
+	bh=0ZBc+Q6dI2nvBKuIrhZxI1E2dONPs+Fjuws1+0I2wc0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=O3k8tXD0orEwTcaliQzCUp7GE/uiIOdC113w4vZj1dHWgbsgJIeAWoGudgtqU50AI5+5OLUIO1IWZ7lBD0+11GCRrWoGGDOzoYmxiGNmiBny/7bqQRaljH28li6elRCpV9+2VkGdvtxpJ6EDS4KzL1uTYMxr3f4JfKeuy7HSzvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iaHnQzWa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715327851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ZBc+Q6dI2nvBKuIrhZxI1E2dONPs+Fjuws1+0I2wc0=;
+	b=iaHnQzWah4p0epxG/dD8ZBwKDSuvMmiKetUAGJnM5iEgirJkLaJgyoSGxAxCtLqE9AYPdG
+	jSWIWCsmKcLoQyXopgEzJmDTj/5Polx8U9zgdMg+Uvga6ewNAHHvmKxBAw7PYu6wtwerku
+	GF0XI37cfcGD8692ILm6XX23oIt3ogU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-377-_VIFnsB-PaqnQWIh6XDzdA-1; Fri,
+ 10 May 2024 03:57:27 -0400
+X-MC-Unique: _VIFnsB-PaqnQWIh6XDzdA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D051C411FA
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 05:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1715320435;
-	bh=pb53mmGBdA39Om/S6gifWUIT/OZjQtmNrFO1eNmJ+LA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=lc9/js3Igi2d+FF9o7mqGr1bWPXeF+NVTbzNHdvfAMidNges6cXEmNKSGevcQ/4pM
-	 IklAiEzrQGPOwgst6GRSlK9ry19SC9rYeJN/hLFjoD5Xd4nJWICTGO3u0uXpGOzvrc
-	 CiO+K2Kgpnew8vRm8YquRNA5tF4QH8uRYrg50eMkCLVLlfXbR2sJFS7CucTmr6PZgH
-	 Q/D7Cg/uALctuoEDkzFMLWJtJKna0FX93CkJSJ/EV2Zt5iSmb9BQDAq04WJrgnSLso
-	 XwrPCnNEJrkahJN7MjZpcI+xtx0TcKWYBCiqdEijFONaeL9h54EcFs58GUpIUW3tYR
-	 83YAaiON74HbQ==
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-572a175621bso1040952a12.3
-        for <linux-nfs@vger.kernel.org>; Thu, 09 May 2024 22:53:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715320435; x=1715925235;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pb53mmGBdA39Om/S6gifWUIT/OZjQtmNrFO1eNmJ+LA=;
-        b=JXsMzvY8ZBhIalqSShB9cLjipQxi4o716dE4v3vCbFUsxBDkBG+DlFaG3Id8sDXTlX
-         wyKON/0K18Gh6Kr26VL3dKvQlFz+TFpqVkytpauNaj308ODdmtL4GyIWmDrFd1KSmNUn
-         F6WvQVS7nwfCx7oSw4eMtNepURUkgyEC+1cVdtXl5KinDGbSLILciMF0WZmlb6CFofZ8
-         7eOUjh9+MlDPk0vloGg6WnqMacX7qtMS3TSkmKtY8ARqUynDoDa/jvSvL9H72y6k0IEs
-         GHAUhmjqoGkW4AKTNQxlFfa7TAn3LoPY3kWM1IfnM4RxL9pPjiwUkB1yXtSDxQgBgmFt
-         bvoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNZv4F/5dkDocFM5oLeE2BBJr5z2iLZqvdsYPn19kiY/fFRQFWpVxR/oaYWAFsERTpL/27Gx+YvC+ItARmhvy9baBVtMjUnH1x
-X-Gm-Message-State: AOJu0YzYi+OlU4z2kDEOST2sG8p9RdLKpsgyGFS9v48jodrnOECFLZl3
-	Etwg/GLa8G33J1CgGZCP5C59ZcXFHa9lpXZ04pX8YVN5JF6mxHaGcDFPU4iC9gXm+8Nv6RKfVO6
-	LlsbSHD/hu8SSRYyTrJJTqONgCdRnSJbcSnRgrk5CFpvPlWBVztw3cKVpJaNv/UR7cQagxdtv/A
-	==
-X-Received: by 2002:a50:bb05:0:b0:572:5f28:1f25 with SMTP id 4fb4d7f45d1cf-5734d5c1692mr1161723a12.7.1715320435058;
-        Thu, 09 May 2024 22:53:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUERLBxoc5gVqjALyHDp2f85+2hPeKHWBMU3eKKrua9AkiVLI6CvgwDj1X1kdppOmcHMa0VA==
-X-Received: by 2002:a50:bb05:0:b0:572:5f28:1f25 with SMTP id 4fb4d7f45d1cf-5734d5c1692mr1161698a12.7.1715320434315;
-        Thu, 09 May 2024 22:53:54 -0700 (PDT)
-Received: from localhost (host-82-49-69-7.retail.telecomitalia.it. [82.49.69.7])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c3229b5sm1436042a12.79.2024.05.09.22.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 22:53:53 -0700 (PDT)
-Date: Fri, 10 May 2024 07:53:52 +0200
-From: Andrea Righi <andrea.righi@canonical.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 73F983C0C892;
+	Fri, 10 May 2024 07:57:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.34])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A1BA11847D6;
+	Fri, 10 May 2024 07:57:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <Zj22cFnMynv_EF8x@gpd>
+References: <Zj22cFnMynv_EF8x@gpd> <Zj0ErxVBE3DYT2Ea@gpd> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-41-dhowells@redhat.com> <1567252.1715290417@warthog.procyon.org.uk>
+To: Andrea Righi <andrea.righi@canonical.com>
+Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
 Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
-Message-ID: <Zj22cFnMynv_EF8x@gpd>
-References: <Zj0ErxVBE3DYT2Ea@gpd>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-41-dhowells@redhat.com>
- <1567252.1715290417@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567252.1715290417@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1578870.1715327842.1@warthog.procyon.org.uk>
+Date: Fri, 10 May 2024 08:57:22 +0100
+Message-ID: <1578871.1715327842@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Thu, May 09, 2024 at 10:33:37PM +0100, David Howells wrote:
-> Andrea Righi <andrea.righi@canonical.com> wrote:
-> 
-> > On Thu, Dec 21, 2023 at 01:23:35PM +0000, David Howells wrote:
-> > > Use netfslib's read and write iteration helpers, allowing netfslib to take
-> > > over the management of the page cache for 9p files and to manage local disk
-> > > caching.  In particular, this eliminates write_begin, write_end, writepage
-> > > and all mentions of struct page and struct folio from 9p.
-> > > 
-> > > Note that netfslib now offers the possibility of write-through caching if
-> > > that is desirable for 9p: just set the NETFS_ICTX_WRITETHROUGH flag in
-> > > v9inode->netfs.flags in v9fs_set_netfs_context().
-> > > 
-> > > Note also this is untested as I can't get ganesha.nfsd to correctly parse
-> > > the config to turn on 9p support.
-> > 
-> > It looks like this patch has introduced a regression with autopkgtest,
-> > see: https://bugs.launchpad.net/bugs/2056461
-> > 
-> > I haven't looked at the details yet, I just did some bisecting and
-> > apparently reverting this one seems to fix the problem.
-> > 
-> > Let me know if you want me to test something in particular or if you
-> > already have a potential fix. Otherwise I'll take a look.
-> 
-> Do you have a reproducer?
-> 
-> I'll be at LSF next week, so if I can't fix it tomorrow, I won't be able to
-> poke at it until after that.
-> 
-> David
+Andrea Righi <andrea.righi@canonical.com> wrote:
 
-The only reproducer that I have at the moment is the autopkgtest command
-mentioned in the bug, that is a bit convoluted, I'll try to see if I can
-better isolate the problem and find a simpler reproducer, but I'll also
-be travelling next week to a Canonical event.
+> The only reproducer that I have at the moment is the autopkgtest command
+> mentioned in the bug, that is a bit convoluted, I'll try to see if I can
+> better isolate the problem and find a simpler reproducer, but I'll also
+> be travelling next week to a Canonical event.
 
-At the moment I'll temporarily revert the commit (that seems to prevent
-the issue from happening) and I'll keep you posted if I find something.
+Note that the netfslib has some tracepoints that might help debug it.
 
-Thanks,
--Andrea
+David
+
 
