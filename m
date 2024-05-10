@@ -1,235 +1,124 @@
-Return-Path: <linux-nfs+bounces-3237-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3238-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B6958C2A53
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 21:07:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D9B08C2B22
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 22:24:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BA70B20D31
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 19:07:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9ECD1B2307D
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 20:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE7E3CF4F;
-	Fri, 10 May 2024 19:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVGp0uJS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B9E4E1CB;
+	Fri, 10 May 2024 20:24:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5095DD2EE
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 19:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A6246444
+	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 20:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715368067; cv=none; b=WhXUGNpbGByUdei2xi36uP845Vctp7lUFCsTMll8/P76NXYqiqpk/jRsgWq4u2tz4ajmpzjUPlhiNzLfmcanRCzJMs7Fy/QEdk6Fg5wbJkHrDihkSAnA4N+ox6etBScS0dBN5xbaKVvduKmSlNTr/wrmo3fc+hpsVvamXTVCCkI=
+	t=1715372679; cv=none; b=EPQIUKklaAja5lUpVnc6oSYh8dBSf5q6aOBkpVYAQxcrbPxRJ4kVuykBmzgcfh1HXwnhQd4D9UtpV2lTzMhBvxEAZa0ScwG6WxjOOX5Wo+vEi/5uw6ogU4I1JjI+X7GZGvWcW4UYzk+eTJWjNgayo/uh0UfwYUszoBe1EHw2ShE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715368067; c=relaxed/simple;
-	bh=Idz9EUcNrTcrA6v684C1hNp0fQs4IBQZ04F0J7jWBY8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NvlDA+0jnzd2+RcJDbse8ZwLu+fQK7f4AND9FQnVSgG67tNXhw1stWZrD1niEyGhfsIEiRy/rLi7YaCEEo/MjwL9DmDtABwkuRsc9oAG80CFrFeMERjqjM+zT1TOXICVMIJjBK8AHKjgclPHoHSI4jrneVH1e/CKIH3RRssV4aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVGp0uJS; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36c2cf463e3so2186935ab.3
-        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 12:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715368065; x=1715972865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ngWqr8yPsOSWM8fdf9DC2QY45XW0u3YC32ZOQwSNZc=;
-        b=bVGp0uJSNl/uy/6YVnQwAElZxJd79IfyxEEE7P7HnzXQIe/vyITUnRNr7HV282gZSm
-         OwN2Rk+yRByU7nTwXJHlOznCEau6o3HOnKyWqpFGZZDUEb9WlFuQZIQ8Jb7QSZfqvvhG
-         Ko5aQs+HAenaZSe7nGqqyyOjz5CForLhULMg0tjN3RJn6wABp4jc8/kIACQXYZhPPY/K
-         w/t/zGD6YqchRm6E9axnRrg6gQHNgfh2xnsDgxK6+x6uFsxsW3GPwzT0UmqomQhGEBZd
-         fY5ZsA9/0WaOtxAo0J5eWiNuC3+ZUOlYkEzUFW361vECNnY9IY71ggIFeD1Ow4QPY/2t
-         Jmkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715368065; x=1715972865;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ngWqr8yPsOSWM8fdf9DC2QY45XW0u3YC32ZOQwSNZc=;
-        b=grXRE6kYKXavZtyA5lthVh8O1iqDqjnMzAzb/CnSA+HjFBrIhSZKLE88bT1wRKMJgJ
-         /BMvfZlY4hcFN79M4/2lq4Tkg2gDft9cWA99ZYtOZKAr5Jrvf+UrtLMZZ2qzhrHiaYLf
-         SRlRCTBCaA0MUkqrgCVTzmsudxYiS8/QzROfBVLGrrfxOq+1BAmHbQyJTfhREBkNaaOp
-         9sbPHwBi21dOrqWhy4qJg8vgUWMKkwgjlhMCKm+4iT0oMR5umUYBgOQY70x5qJvZ+fpg
-         DqCu38kgyKNb027UeuIkbH/ED8F09Z0u6oqme2iDjgNGwMG8z24IwmI0F6j/G7fTgvFm
-         YQAQ==
-X-Gm-Message-State: AOJu0Yx9oB7Z3Dl1cCIf5XpvxihzsbP/lNgRROSDq6qeCho5hhBCGeVp
-	/Yt4HKzJIhqt2H7kZFV+J2KF6me7uAyTp2R9qmjtbSRdWihe1mju
-X-Google-Smtp-Source: AGHT+IEsNvXENQe9Qf9JequohHWqNRneLkGCLcEYw59qtG3pfZizXtxhVxd3N+9sQxp++qQYrFMWrw==
-X-Received: by 2002:a5e:8704:0:b0:7de:e495:42bf with SMTP id ca18e2360f4ac-7e1b51f3e6amr385837339f.1.1715368065352;
-        Fri, 10 May 2024 12:07:45 -0700 (PDT)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:fde6:20d6:f34d:66d3])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489371410c6sm1097008173.64.2024.05.10.12.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 12:07:44 -0700 (PDT)
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To: trond.myklebust@hammerspace.com,
-	anna.schumaker@netapp.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] pNFS: rework pnfs_generic_pg_check_layout to check IO range
-Date: Fri, 10 May 2024 15:07:43 -0400
-Message-Id: <20240510190743.52605-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+	s=arc-20240116; t=1715372679; c=relaxed/simple;
+	bh=miIUfxLkBYEmNK7VewojhYakRHMbh+f3J7sQdE4BABA=;
+	h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=cLRFrAQtSG3hpVhXgasSiDSI14aV8uz6cRS4Cd2hXcn3AqYsNBgWAKap3tysTjI3730bffbWMTKL87i+dKU/70VqdfN6hGsxjsWK6RfHHWT/F0UNmDhmSVpd7dASNoUqPFVr8dZ2PhQZKzq5HKqUt+XUAY0LsaUpz7OZeQsKWeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.74.56) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 10 May
+ 2024 23:24:04 +0300
+To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
+	<anna@kernel.org>, <linux-nfs@vger.kernel.org>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH] nfs: fix undefined behavior in nfs_block_bits()
+Organization: Open Mobile Platform
+Message-ID: <69333a8c-a5a7-5c76-bc39-8835f11b8dcf@omp.ru>
+Date: Fri, 10 May 2024 23:24:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 05/10/2024 20:03:56
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 185163 [May 10 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 19 0.3.19
+ 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.56 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.56 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.56
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/10/2024 20:09:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/10/2024 6:13:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Shifting *signed int* typed constant 1 left by 31 bits causes undefined
+behavior. Specify the correct *unsigned long* type by using 1UL instead.
 
-All callers of pnfs_generic_pg_check_layout() also want to do a call to
-check that the layout's range covers the IO range. Merge the functionality
-of the pnfs_generic_pg_check_range() into that of
-pnfs_generic_pg_check_layout().
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+
 ---
- fs/nfs/filelayout/filelayout.c         |  4 ++--
- fs/nfs/flexfilelayout/flexfilelayout.c | 12 ++---------
- fs/nfs/pnfs.c                          | 29 ++++++++------------------
- fs/nfs/pnfs.h                          |  3 +--
- 4 files changed, 14 insertions(+), 34 deletions(-)
+This patch is against the master branch of Trond Myklebust's linux-nfs.git repo.
 
-diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
-index 85d2dc9bc212..29d84dc66ca3 100644
---- a/fs/nfs/filelayout/filelayout.c
-+++ b/fs/nfs/filelayout/filelayout.c
-@@ -867,7 +867,7 @@ static void
- filelayout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 			struct nfs_page *req)
- {
--	pnfs_generic_pg_check_layout(pgio);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
- 						      nfs_req_openctx(req),
-@@ -891,7 +891,7 @@ static void
- filelayout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 			 struct nfs_page *req)
- {
--	pnfs_generic_pg_check_layout(pgio);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
- 						      nfs_req_openctx(req),
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 3e724cb7ef01..24188af56d5b 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -822,14 +822,6 @@ ff_layout_pg_get_read(struct nfs_pageio_descriptor *pgio,
+fs/nfs/internal.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: linux-nfs/fs/nfs/internal.h
+===================================================================
+--- linux-nfs.orig/fs/nfs/internal.h
++++ linux-nfs/fs/nfs/internal.h
+@@ -710,9 +710,9 @@ unsigned long nfs_block_bits(unsigned lo
+ 	if ((bsize & (bsize - 1)) || nrbitsp) {
+ 		unsigned char	nrbits;
+ 
+-		for (nrbits = 31; nrbits && !(bsize & (1 << nrbits)); nrbits--)
++		for (nrbits = 31; nrbits && !(bsize & (1UL << nrbits)); nrbits--)
+ 			;
+-		bsize = 1 << nrbits;
++		bsize = 1UL << nrbits;
+ 		if (nrbitsp)
+ 			*nrbitsp = nrbits;
  	}
- }
- 
--static void
--ff_layout_pg_check_layout(struct nfs_pageio_descriptor *pgio,
--			  struct nfs_page *req)
--{
--	pnfs_generic_pg_check_layout(pgio);
--	pnfs_generic_pg_check_range(pgio, req);
--}
--
- static void
- ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 			struct nfs_page *req)
-@@ -840,7 +832,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	u32 ds_idx;
- 
- retry:
--	ff_layout_pg_check_layout(pgio, req);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	/* Use full layout for now */
- 	if (!pgio->pg_lseg) {
- 		ff_layout_pg_get_read(pgio, req, false);
-@@ -895,7 +887,7 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	u32 i;
- 
- retry:
--	ff_layout_pg_check_layout(pgio, req);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	if (!pgio->pg_lseg) {
- 		pgio->pg_lseg =
- 			pnfs_update_layout(pgio->pg_inode, nfs_req_openctx(req),
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index a5cc6199127f..b5834728f31b 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2705,38 +2705,28 @@ pnfs_layout_return_unused_byclid(struct nfs_client *clp,
- 			&range);
- }
- 
-+/* Check if we have we have a valid layout but if there isn't an intersection
-+ * between the request and the pgio->pg_lseg, put this pgio->pg_lseg away.
-+ */
- void
--pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio)
-+pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio,
-+			     struct nfs_page *req)
- {
- 	if (pgio->pg_lseg == NULL ||
--	    test_bit(NFS_LSEG_VALID, &pgio->pg_lseg->pls_flags))
-+	    (test_bit(NFS_LSEG_VALID, &pgio->pg_lseg->pls_flags) &&
-+	    pnfs_lseg_request_intersecting(pgio->pg_lseg, req)))
- 		return;
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
- }
- EXPORT_SYMBOL_GPL(pnfs_generic_pg_check_layout);
- 
--/*
-- * Check for any intersection between the request and the pgio->pg_lseg,
-- * and if none, put this pgio->pg_lseg away.
-- */
--void
--pnfs_generic_pg_check_range(struct nfs_pageio_descriptor *pgio, struct nfs_page *req)
--{
--	if (pgio->pg_lseg && !pnfs_lseg_request_intersecting(pgio->pg_lseg, req)) {
--		pnfs_put_lseg(pgio->pg_lseg);
--		pgio->pg_lseg = NULL;
--	}
--}
--EXPORT_SYMBOL_GPL(pnfs_generic_pg_check_range);
--
- void
- pnfs_generic_pg_init_read(struct nfs_pageio_descriptor *pgio, struct nfs_page *req)
- {
- 	u64 rd_size;
- 
--	pnfs_generic_pg_check_layout(pgio);
--	pnfs_generic_pg_check_range(pgio, req);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	if (pgio->pg_lseg == NULL) {
- 		if (pgio->pg_dreq == NULL)
- 			rd_size = i_size_read(pgio->pg_inode) - req_offset(req);
-@@ -2766,8 +2756,7 @@ void
- pnfs_generic_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 			   struct nfs_page *req, u64 wb_size)
- {
--	pnfs_generic_pg_check_layout(pgio);
--	pnfs_generic_pg_check_range(pgio, req);
-+	pnfs_generic_pg_check_layout(pgio, req);
- 	if (pgio->pg_lseg == NULL) {
- 		pgio->pg_lseg =
- 			pnfs_update_layout(pgio->pg_inode, nfs_req_openctx(req),
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index db57a85500ee..fa5beeaaf5da 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -257,8 +257,7 @@ void pnfs_put_lseg(struct pnfs_layout_segment *lseg);
- 
- void set_pnfs_layoutdriver(struct nfs_server *, const struct nfs_fh *, struct nfs_fsinfo *);
- void unset_pnfs_layoutdriver(struct nfs_server *);
--void pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio);
--void pnfs_generic_pg_check_range(struct nfs_pageio_descriptor *pgio, struct nfs_page *req);
-+void pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio, struct nfs_page *req);
- void pnfs_generic_pg_init_read(struct nfs_pageio_descriptor *, struct nfs_page *);
- int pnfs_generic_pg_readpages(struct nfs_pageio_descriptor *desc);
- void pnfs_generic_pg_init_write(struct nfs_pageio_descriptor *pgio,
--- 
-2.39.1
-
 
