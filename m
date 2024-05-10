@@ -1,327 +1,235 @@
-Return-Path: <linux-nfs+bounces-3236-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3237-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67B1D8C2A2E
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 21:02:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6958C2A53
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 21:07:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEC24B25739
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 19:02:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BA70B20D31
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 19:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A810A47A62;
-	Fri, 10 May 2024 19:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE7E3CF4F;
+	Fri, 10 May 2024 19:07:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaqNc7eA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVGp0uJS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0244437A
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 19:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5095DD2EE
+	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 19:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715367745; cv=none; b=CnEDPATyTs0W7ER/Sl4tiSPYIhaYkkFJfpKLckQUodgmqVPbO0XVl+R85mjssOdDZ9uvjiHEh8en2/WIlJMpLLo62Twfl2/e7EGunUKUIijq1WROgk0jlae5Vgu6fTNzL2uONdZohU5ePTM5fmJf9ZDVJpQQHDJe251/mdUVm84=
+	t=1715368067; cv=none; b=WhXUGNpbGByUdei2xi36uP845Vctp7lUFCsTMll8/P76NXYqiqpk/jRsgWq4u2tz4ajmpzjUPlhiNzLfmcanRCzJMs7Fy/QEdk6Fg5wbJkHrDihkSAnA4N+ox6etBScS0dBN5xbaKVvduKmSlNTr/wrmo3fc+hpsVvamXTVCCkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715367745; c=relaxed/simple;
-	bh=gQWgmMtecrJOQwDH/Xe42Oeg5XMfdzFtgoRT54sC4D0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tbYDzku6gsX3sxSzsc6PUqDWAecp7KjegJczVK4Xoz3DYG3dVUWnhqwVFRq6ruNRTDYM13BYAfVy6Bm3H47T+C9AYRCFdLBmJVaseCzZogMNnXS20f8fiS12oLiK0NFTxxhpp4xXaf12uWsVDKnyEZDAh7RC+P17bVZ0In2XOaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iaqNc7eA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715367742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xag+ekhiBkN7jTG9O9LJhKfTa1SQQ77UEORyW5Z2rjY=;
-	b=iaqNc7eAbsZmDOBnDykYFHjbBu87lmhy4jt+hKj1YMLUOve/MQqXJhZCLI9uovU8OekVlm
-	VUG70ol4ZNWXYqZ+3v2SdysHtUDcOQUrY0RAD7MY+pcG2A6o2FgF6VXVEZxTa7Se11JcjX
-	INWyPVdgsNhfLQLIIQ6EX+rZw1N10Mk=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-222-Vch-GPh9OlmaRLMQ6jp19A-1; Fri, 10 May 2024 15:02:19 -0400
-X-MC-Unique: Vch-GPh9OlmaRLMQ6jp19A-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6a0f16e37b3so8756606d6.3
-        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 12:02:19 -0700 (PDT)
+	s=arc-20240116; t=1715368067; c=relaxed/simple;
+	bh=Idz9EUcNrTcrA6v684C1hNp0fQs4IBQZ04F0J7jWBY8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NvlDA+0jnzd2+RcJDbse8ZwLu+fQK7f4AND9FQnVSgG67tNXhw1stWZrD1niEyGhfsIEiRy/rLi7YaCEEo/MjwL9DmDtABwkuRsc9oAG80CFrFeMERjqjM+zT1TOXICVMIJjBK8AHKjgclPHoHSI4jrneVH1e/CKIH3RRssV4aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVGp0uJS; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36c2cf463e3so2186935ab.3
+        for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 12:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715368065; x=1715972865; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ngWqr8yPsOSWM8fdf9DC2QY45XW0u3YC32ZOQwSNZc=;
+        b=bVGp0uJSNl/uy/6YVnQwAElZxJd79IfyxEEE7P7HnzXQIe/vyITUnRNr7HV282gZSm
+         OwN2Rk+yRByU7nTwXJHlOznCEau6o3HOnKyWqpFGZZDUEb9WlFuQZIQ8Jb7QSZfqvvhG
+         Ko5aQs+HAenaZSe7nGqqyyOjz5CForLhULMg0tjN3RJn6wABp4jc8/kIACQXYZhPPY/K
+         w/t/zGD6YqchRm6E9axnRrg6gQHNgfh2xnsDgxK6+x6uFsxsW3GPwzT0UmqomQhGEBZd
+         fY5ZsA9/0WaOtxAo0J5eWiNuC3+ZUOlYkEzUFW361vECNnY9IY71ggIFeD1Ow4QPY/2t
+         Jmkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715367738; x=1715972538;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xag+ekhiBkN7jTG9O9LJhKfTa1SQQ77UEORyW5Z2rjY=;
-        b=QVJhQO6WLvOPwdV7sF+btOcMEtmRQRocb0B/t6UlEKoV7eC/4/2+yq3Heq70w6ixgz
-         jt688Y63vT6AxuQ0KJJMrioN+lTTQvEEgkwHzejfmTCxX/EaQYD1azk4Q0UmccwUM5i0
-         wBbPp5wxbvgp0NptMOHZnXV/GASEbSRJSsmwAua3WttTyH/s7l/cWahvf+/ULA9qzgnE
-         FZbY4vUAbgEwMlu5zs9VAlWJ2JFqrraheuvEZ/lTOcO1y6TIQFAPI3wJD5GIMh9ldhq1
-         pEtp8OUD2DUfjn03d9PcH/I9c8K8D0He66cHp5JHy38tzcnpC3dnO4QEjhEK3KyNNd5e
-         gH2A==
-X-Gm-Message-State: AOJu0Yz76MTST5yvZvg4eOm27clj9wY0tvmv+Vd3zvg+R2+W5JYavU2a
-	5bX3GYXKzV+AMpleUODxf9xs7bZwcAH0W9WlM2J3g7LGw//76o/oPISs/fv9hYJNRblGOZw/Sz5
-	jCoUfE6z6179Vk1a9neXlgqNQi53EWZKs65rQ53RRh5SOw1wYXqIWcrgWx+kBMuuMLg==
-X-Received: by 2002:a05:620a:460c:b0:792:b9d8:23a with SMTP id af79cd13be357-792c7606e14mr383471585a.6.1715367738149;
-        Fri, 10 May 2024 12:02:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnOhzLVsDLOVj6iqDWS9Ypr/xJwVPMk+UTcmKKM6eQ8EL/JyvzU3mLTjoKrI0F7OSakSCSWg==
-X-Received: by 2002:a05:620a:460c:b0:792:b9d8:23a with SMTP id af79cd13be357-792c7606e14mr383468385a.6.1715367737612;
-        Fri, 10 May 2024 12:02:17 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.245.214])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2801casm207218285a.47.2024.05.10.12.02.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 12:02:17 -0700 (PDT)
-Message-ID: <85041331-3fb7-4418-8aa2-2660ed99e85b@redhat.com>
-Date: Fri, 10 May 2024 15:02:15 -0400
+        d=1e100.net; s=20230601; t=1715368065; x=1715972865;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ngWqr8yPsOSWM8fdf9DC2QY45XW0u3YC32ZOQwSNZc=;
+        b=grXRE6kYKXavZtyA5lthVh8O1iqDqjnMzAzb/CnSA+HjFBrIhSZKLE88bT1wRKMJgJ
+         /BMvfZlY4hcFN79M4/2lq4Tkg2gDft9cWA99ZYtOZKAr5Jrvf+UrtLMZZ2qzhrHiaYLf
+         SRlRCTBCaA0MUkqrgCVTzmsudxYiS8/QzROfBVLGrrfxOq+1BAmHbQyJTfhREBkNaaOp
+         9sbPHwBi21dOrqWhy4qJg8vgUWMKkwgjlhMCKm+4iT0oMR5umUYBgOQY70x5qJvZ+fpg
+         DqCu38kgyKNb027UeuIkbH/ED8F09Z0u6oqme2iDjgNGwMG8z24IwmI0F6j/G7fTgvFm
+         YQAQ==
+X-Gm-Message-State: AOJu0Yx9oB7Z3Dl1cCIf5XpvxihzsbP/lNgRROSDq6qeCho5hhBCGeVp
+	/Yt4HKzJIhqt2H7kZFV+J2KF6me7uAyTp2R9qmjtbSRdWihe1mju
+X-Google-Smtp-Source: AGHT+IEsNvXENQe9Qf9JequohHWqNRneLkGCLcEYw59qtG3pfZizXtxhVxd3N+9sQxp++qQYrFMWrw==
+X-Received: by 2002:a5e:8704:0:b0:7de:e495:42bf with SMTP id ca18e2360f4ac-7e1b51f3e6amr385837339f.1.1715368065352;
+        Fri, 10 May 2024 12:07:45 -0700 (PDT)
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:fde6:20d6:f34d:66d3])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489371410c6sm1097008173.64.2024.05.10.12.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 12:07:44 -0700 (PDT)
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To: trond.myklebust@hammerspace.com,
+	anna.schumaker@netapp.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] pNFS: rework pnfs_generic_pg_check_layout to check IO range
+Date: Fri, 10 May 2024 15:07:43 -0400
+Message-Id: <20240510190743.52605-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Changing the precedence order of client exports in /etc/exports
-To: James Pearson <jcpearson@gmail.com>, NeilBrown <neilb@suse.de>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <662a39f7.BuSJ6zaMPTMaMa7L%james-p@moving-picture.com>
- <CAK3fRr8N4dNz2+K-BgaZAcswbfXrDem6Z9fRtgTDMJa=Y0R8gA@mail.gmail.com>
- <171410661177.7600.9594587292479704884@noble.neil.brown.name>
- <CAK3fRr9kngizdGsAU8NpzBjpPSh4k6-23wpwfpZUHJeEoU7yVg@mail.gmail.com>
- <CAK3fRr_V02Gv2Vk4Ba5cyyRhtfwbnPeJ_xRmSrWcanLJRMEvaw@mail.gmail.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <CAK3fRr_V02Gv2Vk4Ba5cyyRhtfwbnPeJ_xRmSrWcanLJRMEvaw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Olga Kornievskaia <kolga@netapp.com>
 
+All callers of pnfs_generic_pg_check_layout() also want to do a call to
+check that the layout's range covers the IO range. Merge the functionality
+of the pnfs_generic_pg_check_range() into that of
+pnfs_generic_pg_check_layout().
 
-On 5/8/24 5:49 AM, James Pearson wrote:
-> On Fri, 26 Apr 2024 at 17:08, James Pearson <jcpearson@gmail.com> wrote:
->>
->> On Fri, 26 Apr 2024 at 05:43, NeilBrown <neilb@suse.de> wrote:
->>>
->>> On Thu, 25 Apr 2024, James Pearson wrote:
->>>> Many years ago, I asked on this list if it was possible to change the
->>>> precedence order of exports listed in /etc/exports where there is more
->>>> than one possible match (see the thread at:
->>>> https://marc.info/?l=linux-nfs&m=130565040627856&w=2) - and answer was
->>>> 'No'
->>>>
->>>> At that time, I used a simple hack to force the precedence order I
->>>> required (by modifying the 'MCL' enum order in nfs-utils
->>>> support/include/exportfs.h)
->>>>
->>>> However, the issue has come up again for me, so I thought I would see
->>>> if I could alter the precedence order by adding an exports 'priority='
->>>> option as suggested later in the above thread
->>>>
->>>> I started with the nfs-utils supplied with CentOS 7 (based on 1.3.0) -
->>>> and added logic to lookup_export() to check for client specifications
->>>> with a higher priority - but this didn't work - so looking for other
->>>> places that looped through MCL types, I added similar logic in
->>>> nfsd_fh() - which seems to work as I expected (I'm using NFSv3)
->>>>
->>>> However, adding similar logic to the nfs-utils supplied with Rocky 9
->>>> (based on 2.5.4) didn't work ...
->>>>
->>>> But comparing the code in nfsd_fh() in v1.3.0 and nfsd_handle_fh() in
->>>> v2.5.4, nfsd_fh() in v1.3.0 does the following towards the end of the
->>>> function - whereas nfsd_handle_fh() in v2.5.4 doesn't:
->>>>
->>>>          if (cache_export_ent(buf, sizeof(buf), dom, found, found_path) < 0)
->>>>                  found = 0;
->>>>
->>>> By adding the above lines at a similar place in nfsd_handle_fh() in
->>>> v2.5.4, seems to 'fix' the issue and all works as I expected
->>>>
->>>> I don't fully understand what is going on under the hood with all
->>>> this, so no idea if what I've done is 'correct', or if there is a
->>>> better way of doing what I'm trying to achieve ?
->>>>
->>>> Below is a patch (made against the latest git nfs-utils) of what I've
->>>> done - could anyone let me know if I'm going along the right lines (or
->>>> not) ?
->>>
->>> The restored cache_export_ent() call has to go.
->>> You need to update init_exportent() to initialise the new field.
->>> You probably need to make some changes to auth_authenticate_newcache().
->>> Probably let the loop run all the way to MCL_MAXTYPES, and do a priority
->>> comparison if you find a new possible match.
->>> export_find() probably need some attention too.
->>>
->>> If you it still doesn't work after addressing those, I'll have a look
->>> and see if I can beat it into shape.
->>
->> Thanks for the pointers - new patch below
->>
->> I don't quite understand what export_find() is actually doing ?
->>
->> As far as I can tell, it is only used by exportfs when an export is
->> given on the command line - and only if that export is of type
->> MCL_FQDN - so I'm not sure it needs any changes to support these
->> priority additions ? (I might be completely wrong here ...)
-> 
-> Does this patch look OK ?
-It needs a "Signed-off-by: Your name <your email>" line
-To do that do a git commit -s in your cloned repos
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/filelayout/filelayout.c         |  4 ++--
+ fs/nfs/flexfilelayout/flexfilelayout.c | 12 ++---------
+ fs/nfs/pnfs.c                          | 29 ++++++++------------------
+ fs/nfs/pnfs.h                          |  3 +--
+ 4 files changed, 14 insertions(+), 34 deletions(-)
 
-Then a "git format-patch" to create the patch
-which will add a "[PATCH]" to the subject line
-with is something I filter on.
-
-> 
-> Does anything need to be added to export_find() ?
-There needs to be an addition to the man
-page explaining the new option and how it should
-be used,
-
-It is a lot of change to critical part of the export
-code... How did you tested it?
-
-steved.
-
-> 
-> Thanks
-> 
-> James Pearson
-> 
->> diff --git a/support/export/auth.c b/support/export/auth.c
->> index 2d7960f1..3d9e07b5 100644
->> --- a/support/export/auth.c
->> +++ b/support/export/auth.c
->> @@ -175,7 +175,7 @@ auth_authenticate_newcache(const struct sockaddr *caller,
->>                             const char *path, struct addrinfo *ai,
->>                             enum auth_error *error)
->>   {
->> -       nfs_export *exp;
->> +       nfs_export *exp, *found;
->>          int i;
->>
->>          free(my_client.m_hostname);
->> @@ -189,6 +189,7 @@ auth_authenticate_newcache(const struct sockaddr *caller,
->>          my_exp.m_client = &my_client;
->>
->>          exp = NULL;
->> +       found = NULL;
->>          for (i = 0; !exp && i < MCL_MAXTYPES; i++)
->>                  for (exp = exportlist[i].p_head; exp; exp = exp->m_next) {
->>                          if (strcmp(path, exp->m_export.e_path))
->> @@ -198,8 +199,11 @@ auth_authenticate_newcache(const struct sockaddr *caller,
->>                          if (exp->m_export.e_flags & NFSEXP_V4ROOT)
->>                                  /* not acceptable for v[23] export */
->>                                  continue;
->> -                       break;
->> +                       /* we have a match - see if it is a higher priority */
->> +                       if (!found || exp->m_export.e_priority >
->> found->m_export.e_priority)
->> +                               found = exp;
->>                  }
->> +       exp = found;
->>          *error = not_exported;
->>          if (!exp)
->>                  return NULL;
->> diff --git a/support/export/cache.c b/support/export/cache.c
->> index 6c0a44a3..dfb0051b 100644
->> --- a/support/export/cache.c
->> +++ b/support/export/cache.c
->> @@ -877,6 +877,14 @@ static int nfsd_handle_fh(int f, char *bp, int blen)
->>                                  xlog(L_WARNING, "%s and %s have same
->> filehandle for %s, using first",
->>                                       found_path, path, dom);
->>                          } else {
->> +                               /* same path, see if this one has a
->> higher export priority */
->> +                               if (exp->m_export.e_priority >
->> found->e_priority) {
->> +                                       found = &exp->m_export;
->> +                                       free(found_path);
->> +                                       found_path = strdup(path);
->> +                                       if (found_path == NULL)
->> +                                               goto out;
->> +                               }
->>                                  /* same path, if one is V4ROOT, choose
->> the other */
->>                                  if (found->e_flags & NFSEXP_V4ROOT) {
->>                                          found = &exp->m_export;
->> @@ -1178,6 +1186,12 @@ lookup_export(char *dom, char *path, struct addrinfo *ai)
->>                                  found_type = i;
->>                                  continue;
->>                          }
->> +                       /* see if this one has a higher export priority */
->> +                       if (exp->m_export.e_priority >
->> found->m_export.e_priority) {
->> +                               found = exp;
->> +                               found_type = i;
->> +                               continue;
->> +                       }
->>                          /* Always prefer non-V4ROOT exports */
->>                          if (exp->m_export.e_flags & NFSEXP_V4ROOT)
->>                                  continue;
->> diff --git a/support/include/nfslib.h b/support/include/nfslib.h
->> index eff2a486..ab22ecaf 100644
->> --- a/support/include/nfslib.h
->> +++ b/support/include/nfslib.h
->> @@ -99,6 +99,7 @@ struct exportent {
->>          unsigned int    e_ttl;
->>          char *          e_realpath;
->>          int             e_reexport;
->> +       int             e_priority;
->>   };
->>
->>   struct rmtabent {
->> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
->> index a6816e60..afc139db 100644
->> --- a/support/nfs/exports.c
->> +++ b/support/nfs/exports.c
->> @@ -106,6 +106,7 @@ static void init_exportent (struct exportent *ee,
->> int fromkernel)
->>          ee->e_uuid = NULL;
->>          ee->e_ttl = default_ttl;
->>          ee->e_reexport = REEXP_NONE;
->> +       ee->e_priority = 0;
->>   }
->>
->>   struct exportent *
->> @@ -374,6 +375,9 @@ putexportent(struct exportent *ep)
->>                                  fprintf(fp, "%d,", id[i]);
->>          }
->>          fprintf(fp, "anonuid=%d,anongid=%d", ep->e_anonuid, ep->e_anongid);
->> +       if (ep->e_priority) {
->> +               fprintf(fp, ",priority=%d", ep->e_priority);
->> +       }
->>          secinfo_show(fp, ep);
->>          xprtsecinfo_show(fp, ep);
->>          fprintf(fp, ")\n");
->> @@ -834,6 +838,14 @@ bad_option:
->>                                  setflags(NFSEXP_FSID, active, ep);
->>
->>                          saw_reexport = 1;
->> +               } else if (strncmp(opt, "priority=", 9) == 0) {
->> +                       char *oe;
->> +                       ep->e_priority = strtol(opt+9, &oe, 10);
->> +                       if (opt[9]=='\0' || *oe != '\0') {
->> +                               xlog(L_ERROR, "%s: %d: bad priority \"%s\"\n",
->> +                                    flname, flline, opt);
->> +                               goto bad_option;
->> +                       }
->>                  } else {
->>                          xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
->>                                          flname, flline, opt);
->> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
->> index b03a047b..5e6a64b6 100644
->> --- a/utils/exportfs/exportfs.c
->> +++ b/utils/exportfs/exportfs.c
->> @@ -753,6 +753,8 @@ dump(int verbose, int export_format)
->>                                  break;
->>   #endif
->>                          }
->> +                       if (ep->e_priority)
->> +                               c = dumpopt(c, "priority=%d", ep->e_priority);
->>                          secinfo_show(stdout, ep);
->>                          xprtsecinfo_show(stdout, ep);
->>                          printf("%c\n", (c != '(')? ')' : ' ');
-> 
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 85d2dc9bc212..29d84dc66ca3 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -867,7 +867,7 @@ static void
+ filelayout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 			struct nfs_page *req)
+ {
+-	pnfs_generic_pg_check_layout(pgio);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	if (!pgio->pg_lseg) {
+ 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
+ 						      nfs_req_openctx(req),
+@@ -891,7 +891,7 @@ static void
+ filelayout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 			 struct nfs_page *req)
+ {
+-	pnfs_generic_pg_check_layout(pgio);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	if (!pgio->pg_lseg) {
+ 		pgio->pg_lseg = fl_pnfs_update_layout(pgio->pg_inode,
+ 						      nfs_req_openctx(req),
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 3e724cb7ef01..24188af56d5b 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -822,14 +822,6 @@ ff_layout_pg_get_read(struct nfs_pageio_descriptor *pgio,
+ 	}
+ }
+ 
+-static void
+-ff_layout_pg_check_layout(struct nfs_pageio_descriptor *pgio,
+-			  struct nfs_page *req)
+-{
+-	pnfs_generic_pg_check_layout(pgio);
+-	pnfs_generic_pg_check_range(pgio, req);
+-}
+-
+ static void
+ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 			struct nfs_page *req)
+@@ -840,7 +832,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 	u32 ds_idx;
+ 
+ retry:
+-	ff_layout_pg_check_layout(pgio, req);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	/* Use full layout for now */
+ 	if (!pgio->pg_lseg) {
+ 		ff_layout_pg_get_read(pgio, req, false);
+@@ -895,7 +887,7 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 	u32 i;
+ 
+ retry:
+-	ff_layout_pg_check_layout(pgio, req);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	if (!pgio->pg_lseg) {
+ 		pgio->pg_lseg =
+ 			pnfs_update_layout(pgio->pg_inode, nfs_req_openctx(req),
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index a5cc6199127f..b5834728f31b 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2705,38 +2705,28 @@ pnfs_layout_return_unused_byclid(struct nfs_client *clp,
+ 			&range);
+ }
+ 
++/* Check if we have we have a valid layout but if there isn't an intersection
++ * between the request and the pgio->pg_lseg, put this pgio->pg_lseg away.
++ */
+ void
+-pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio)
++pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio,
++			     struct nfs_page *req)
+ {
+ 	if (pgio->pg_lseg == NULL ||
+-	    test_bit(NFS_LSEG_VALID, &pgio->pg_lseg->pls_flags))
++	    (test_bit(NFS_LSEG_VALID, &pgio->pg_lseg->pls_flags) &&
++	    pnfs_lseg_request_intersecting(pgio->pg_lseg, req)))
+ 		return;
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
+ }
+ EXPORT_SYMBOL_GPL(pnfs_generic_pg_check_layout);
+ 
+-/*
+- * Check for any intersection between the request and the pgio->pg_lseg,
+- * and if none, put this pgio->pg_lseg away.
+- */
+-void
+-pnfs_generic_pg_check_range(struct nfs_pageio_descriptor *pgio, struct nfs_page *req)
+-{
+-	if (pgio->pg_lseg && !pnfs_lseg_request_intersecting(pgio->pg_lseg, req)) {
+-		pnfs_put_lseg(pgio->pg_lseg);
+-		pgio->pg_lseg = NULL;
+-	}
+-}
+-EXPORT_SYMBOL_GPL(pnfs_generic_pg_check_range);
+-
+ void
+ pnfs_generic_pg_init_read(struct nfs_pageio_descriptor *pgio, struct nfs_page *req)
+ {
+ 	u64 rd_size;
+ 
+-	pnfs_generic_pg_check_layout(pgio);
+-	pnfs_generic_pg_check_range(pgio, req);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	if (pgio->pg_lseg == NULL) {
+ 		if (pgio->pg_dreq == NULL)
+ 			rd_size = i_size_read(pgio->pg_inode) - req_offset(req);
+@@ -2766,8 +2756,7 @@ void
+ pnfs_generic_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 			   struct nfs_page *req, u64 wb_size)
+ {
+-	pnfs_generic_pg_check_layout(pgio);
+-	pnfs_generic_pg_check_range(pgio, req);
++	pnfs_generic_pg_check_layout(pgio, req);
+ 	if (pgio->pg_lseg == NULL) {
+ 		pgio->pg_lseg =
+ 			pnfs_update_layout(pgio->pg_inode, nfs_req_openctx(req),
+diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
+index db57a85500ee..fa5beeaaf5da 100644
+--- a/fs/nfs/pnfs.h
++++ b/fs/nfs/pnfs.h
+@@ -257,8 +257,7 @@ void pnfs_put_lseg(struct pnfs_layout_segment *lseg);
+ 
+ void set_pnfs_layoutdriver(struct nfs_server *, const struct nfs_fh *, struct nfs_fsinfo *);
+ void unset_pnfs_layoutdriver(struct nfs_server *);
+-void pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio);
+-void pnfs_generic_pg_check_range(struct nfs_pageio_descriptor *pgio, struct nfs_page *req);
++void pnfs_generic_pg_check_layout(struct nfs_pageio_descriptor *pgio, struct nfs_page *req);
+ void pnfs_generic_pg_init_read(struct nfs_pageio_descriptor *, struct nfs_page *);
+ int pnfs_generic_pg_readpages(struct nfs_pageio_descriptor *desc);
+ void pnfs_generic_pg_init_write(struct nfs_pageio_descriptor *pgio,
+-- 
+2.39.1
 
 
