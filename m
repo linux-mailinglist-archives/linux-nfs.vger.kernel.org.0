@@ -1,124 +1,115 @@
-Return-Path: <linux-nfs+bounces-3238-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3239-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D9B08C2B22
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 22:24:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C9468C3069
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 May 2024 11:51:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9ECD1B2307D
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 May 2024 20:24:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA10B281F24
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 May 2024 09:51:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B9E4E1CB;
-	Fri, 10 May 2024 20:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4EE953E33;
+	Sat, 11 May 2024 09:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="k56XE3N3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A6246444
-	for <linux-nfs@vger.kernel.org>; Fri, 10 May 2024 20:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4881537F5;
+	Sat, 11 May 2024 09:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715372679; cv=none; b=EPQIUKklaAja5lUpVnc6oSYh8dBSf5q6aOBkpVYAQxcrbPxRJ4kVuykBmzgcfh1HXwnhQd4D9UtpV2lTzMhBvxEAZa0ScwG6WxjOOX5Wo+vEi/5uw6ogU4I1JjI+X7GZGvWcW4UYzk+eTJWjNgayo/uh0UfwYUszoBe1EHw2ShE=
+	t=1715421082; cv=none; b=hLo1qT7TB6M1I8MXvU4U+q0teDCMTaCT99oP1yXheShClDSEGn2rV4ifefhv/3YO/abP38hBCCzsrcUyArpwKnQONTKXI+RKoIC5VnIahkTw2jq+NK27hcZa61JpOAkVP9bVP1kkw5WYYrGcgCI9k/9+0OPBDERqK0u0+BHgsmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715372679; c=relaxed/simple;
-	bh=miIUfxLkBYEmNK7VewojhYakRHMbh+f3J7sQdE4BABA=;
-	h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=cLRFrAQtSG3hpVhXgasSiDSI14aV8uz6cRS4Cd2hXcn3AqYsNBgWAKap3tysTjI3730bffbWMTKL87i+dKU/70VqdfN6hGsxjsWK6RfHHWT/F0UNmDhmSVpd7dASNoUqPFVr8dZ2PhQZKzq5HKqUt+XUAY0LsaUpz7OZeQsKWeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.74.56) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 10 May
- 2024 23:24:04 +0300
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
-	<anna@kernel.org>, <linux-nfs@vger.kernel.org>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH] nfs: fix undefined behavior in nfs_block_bits()
-Organization: Open Mobile Platform
-Message-ID: <69333a8c-a5a7-5c76-bc39-8835f11b8dcf@omp.ru>
-Date: Fri, 10 May 2024 23:24:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1715421082; c=relaxed/simple;
+	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1Emcb0fYYhIyfj4HDg32a0cLUnd3pWmx0p1eqTDOa+K/dtsGx99nPG6i9Fnxbq0yaMHPghGHN9HnmxE2ySH1nZngEn/mRlDZzJNH3K/XDH5c5MvQZU32BFzpay9cqLlH3U8f6hk+0mwpcNA7zgH/xGNpjc1jvhT2QfLm9mOL2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=k56XE3N3; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1715421078;
+	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k56XE3N3d4pgs8RXOwLSnRLB27sLWUfITEgcvrDMjZdmJPa/Ir6S6oi9PpE553jPt
+	 sb7k+FxSLFp8Odclpb2t4vqVdgVnPhAwWUDBH9QwI80jAM7LA7gxjkMhJ80aDoR2yw
+	 DUA3ugAMpnt1Nr9pHpMHzjCRdAMZeTMxIBsCjZb8=
+Date: Sat, 11 May 2024 11:51:18 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <8d1daa64-3746-46a3-b696-127a70cdf7e7@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
+ <202405080959.104A73A914@keescook>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 05/10/2024 20:03:56
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 185163 [May 10 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 19 0.3.19
- 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.56 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.56 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.56
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 05/10/2024 20:09:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 5/10/2024 6:13:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202405080959.104A73A914@keescook>
 
-Shifting *signed int* typed constant 1 left by 31 bits causes undefined
-behavior. Specify the correct *unsigned long* type by using 1UL instead.
+Hi Kees,
 
-Found by Linux Verification Center (linuxtesting.org) with the Svace static
-analysis tool.
+On 2024-05-08 10:11:35+0000, Kees Cook wrote:
+> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> > 
+> > Split this per subsystem, please.
+> 
+> I've done a few painful API transitions before, and I don't think the
+> complexity of these changes needs a per-subsystem constification pass. I
+> think this series is the right approach, but that patch 11 will need
+> coordination with Linus. We regularly do system-wide prototype changes
+> like this right at the end of the merge window before -rc1 comes out.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+That sounds good.
 
----
-This patch is against the master branch of Trond Myklebust's linux-nfs.git repo.
+> The requirements are pretty simple: it needs to be a obvious changes
+> (this certainly is) and as close to 100% mechanical as possible. I think
+> patch 11 easily qualifies. Linus should be able to run the same Coccinelle
+> script and get nearly the same results, etc. And all the other changes
+> need to have landed. This change also has no "silent failure" conditions:
+> anything mismatched will immediately stand out.
 
-fs/nfs/internal.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Unfortunately coccinelle alone is not sufficient, as some helpers with
+different prototypes are called by handlers and themselves are calling
+handler and therefore need to change in the same commit.
+But if I add a diff for those on top of the coccinelle script to the
+changelog it should be obvious.
 
-Index: linux-nfs/fs/nfs/internal.h
-===================================================================
---- linux-nfs.orig/fs/nfs/internal.h
-+++ linux-nfs/fs/nfs/internal.h
-@@ -710,9 +710,9 @@ unsigned long nfs_block_bits(unsigned lo
- 	if ((bsize & (bsize - 1)) || nrbitsp) {
- 		unsigned char	nrbits;
- 
--		for (nrbits = 31; nrbits && !(bsize & (1 << nrbits)); nrbits--)
-+		for (nrbits = 31; nrbits && !(bsize & (1UL << nrbits)); nrbits--)
- 			;
--		bsize = 1 << nrbits;
-+		bsize = 1UL << nrbits;
- 		if (nrbitsp)
- 			*nrbitsp = nrbits;
- 	}
+> So, have patches 1-10 go via their respective subsystems, and once all
+> of those are in Linus's tree, send patch 11 as a stand-alone PR.
+
+Ack, I'll do that with the cover letter information requested by Joel.
+
+> (From patch 11, it looks like the seccomp read/write function changes
+> could be split out? I'll do that now...)
+
+Thanks!
+
+Thomas
 
