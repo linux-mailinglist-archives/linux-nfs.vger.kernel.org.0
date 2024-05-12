@@ -1,186 +1,224 @@
-Return-Path: <linux-nfs+bounces-3240-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3241-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E55108C37D2
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 May 2024 19:52:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 007478C3819
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 May 2024 21:25:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC7201C2088E
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 May 2024 17:52:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D36A1F21FCF
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 May 2024 19:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D8F84B5AE;
-	Sun, 12 May 2024 17:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A7751C43;
+	Sun, 12 May 2024 19:25:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OSlyGTD0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OuZ7VBPm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7716F46BA6
-	for <linux-nfs@vger.kernel.org>; Sun, 12 May 2024 17:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844FA50277;
+	Sun, 12 May 2024 19:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715536328; cv=none; b=JAnsQO9x1T1GAMdGr3rtP/Bpgjsy0aLB+dtKqwiC4YwQGRivzhGuw9R6qQqe0SEMKXYIv6MeCOGGdbjBiu3hvaVfueNvlrMt2nMYwVMrLNgDKX9gKBQIG/4dulpnrlZm9V/llXW5YGbzSITP47ypWmQe3yyNdWrJhQh/QPs1MxU=
+	t=1715541911; cv=none; b=mu1jsMGIlfef03aKJFPX76dLpdXH/7i1owvtaIRyoMyrEFmnxopzDOBbeVSQJAs/NqysPIKDTe1nNgSQJvecy4FgrIV10WAIORYTUpe1/P+hcz7JP+Gm+yt8/6g1z/ekZxYlEV7WkK0exie2qS/4JTi7yZp5RUZY97xX4wJZBrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715536328; c=relaxed/simple;
-	bh=bE0CCVeH5nNdWOoghl2oxlkKIdUC+GGfUa1T1yy0+S0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=loCQlYKvlOtt1+6bTkT1wwtQyVG4kamXrIK8T1LhtheDH2gPIoiWWaVKbGJ8/g1J0O+6aK07VQmZENaMTCFz34yJM1n7yPtmrf3olMBPi4l4G+72ZpGnIQkdi24QVrh0DRNEvl3FX7HquYOZpJ8iAOoyDeS5LTH0E6c4mI7tKnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OSlyGTD0; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715536327; x=1747072327;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bE0CCVeH5nNdWOoghl2oxlkKIdUC+GGfUa1T1yy0+S0=;
-  b=OSlyGTD0ydWvtfrzjDO2fM/ew6O+5dSrkCkBgBEOXZUIiFsfvhhiHzkR
-   Cfo6hW/QFK1Pjr3YnAvhuzDx+wJ8Chh83Ba6hCHdlqxxkeh2j0gG39oOo
-   JEKZRiF8f5+/cyVAqiA/T3BXW24LK7j3sLlgx5O2JHzGuHJf/b/wkipBL
-   yKRjTKr+SPCrca3sK8zI5IYir92jQAcvom6p7Q8jcHIX7fC+0K6DUnaSC
-   gIe/8yXHj+5mSLqRt1m3oEKDChdUAwwse6zO8xxl7Qaq+VOcACK/I4TKK
-   6nUlZf5hW/mRlk0AoYqWVJyCrHd4th7yMyf+YQAhEM67LWkPWwwM01JPm
-   w==;
-X-CSE-ConnectionGUID: 2dNE9srrTmu/HOoZ96mzyA==
-X-CSE-MsgGUID: F14/iIyQQDWlwqAyRsodJw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11687848"
-X-IronPort-AV: E=Sophos;i="6.08,156,1712646000"; 
-   d="scan'208";a="11687848"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 10:52:06 -0700
-X-CSE-ConnectionGUID: vJLdLRUiQ4i0LJQ7rUddeQ==
-X-CSE-MsgGUID: xWb0F1b5TfmeugCaBjaPCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,156,1712646000"; 
-   d="scan'208";a="34799617"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 12 May 2024 10:52:04 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s6DMg-0008nr-0L;
-	Sun, 12 May 2024 17:52:02 +0000
-Date: Mon, 13 May 2024 01:51:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Aloni <dan.aloni@vastdata.com>, chuck.lever@oracle.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] rpcrdma: don't decref EP if a ESTABLISHED did not happen
-Message-ID: <202405130122.S5dgt6et-lkp@intel.com>
-References: <20240505124910.1877325-1-dan.aloni@vastdata.com>
+	s=arc-20240116; t=1715541911; c=relaxed/simple;
+	bh=AhqJjtjzxCOMPbPhOlZJHNiQIPD1qhMc2zICfWrrYgw=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=qx2kapXrD63OSgc5pR8bfXbqXsvzDAZNozQEKQW7obRknRc/yCbz7cXYuRdOTQJxrrdfFL0rqLD+zb3ZEkminzlYvNnnwrxFFbEOif3FmdlaksM4gqKLOrHQGCULdN5PZIfINQ6wqIky17A90LOCxDYKsp4gRiE3ePEB0De7j9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OuZ7VBPm; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240512192459euoutp02821aac07226f8a2db5194d73dcf99b4e~O1ESVsCJR2437724377euoutp02b;
+	Sun, 12 May 2024 19:24:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240512192459euoutp02821aac07226f8a2db5194d73dcf99b4e~O1ESVsCJR2437724377euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1715541899;
+	bh=AhqJjtjzxCOMPbPhOlZJHNiQIPD1qhMc2zICfWrrYgw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=OuZ7VBPmkb7GFFVnzlX4Xu3m7hSAa0rrviG0vbIWnIKgU+TJgw9zH8nxqiur/bL6o
+	 M7OMI4tz1/mWTWbqXXvIrwiyjKVk4zjtChcHQasIaqAhOS2cQTQAMVbVOIHdza6akW
+	 58y0JTV9EOsvNU8hQT438Y8v6wllbKKjS29Q7FR8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240512192458eucas1p2eab8e039a414a72a34a339fbe5ca9e81~O1ER0VNb73073930739eucas1p2D;
+	Sun, 12 May 2024 19:24:58 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id EF.31.09875.A8711466; Sun, 12
+	May 2024 20:24:58 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240512192457eucas1p1c2e524298e130efc58f1e66cc0f38039~O1ERRMgkM1116711167eucas1p1G;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240512192457eusmtrp17aafdb49baa334c3f4286e36fb7018cf~O1ERQYpCs2380323803eusmtrp1O;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-6e-6641178a9d21
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id BF.A2.08810.98711466; Sun, 12
+	May 2024 20:24:57 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240512192457eusmtip1388a0eba49a1f62b378d13466cb997f2~O1EQ_bBsU2825928259eusmtip1W;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+Received: from localhost (106.210.248.15) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Sun, 12 May 2024 20:24:56 +0100
+Date: Sun, 12 May 2024 21:24:51 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Kees Cook <keescook@chromium.org>
+CC: Jakub Kicinski <kuba@kernel.org>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+	<linux@weissschuh.net>, Luis Chamberlain <mcgrof@kernel.org>, Eric Dumazet
+	<edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240512192451.wpswazhpualwvt63@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="3bxd2gyoppot6odw"
 Content-Disposition: inline
-In-Reply-To: <20240505124910.1877325-1-dan.aloni@vastdata.com>
+In-Reply-To: <202405080959.104A73A914@keescook>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WSe0xTVxzHPbe395YmdZeKcAYbC+Ux2BTmHvHsIY/FmJtlf2CMMdsSZ5XL
+	SyistcBcjIUyQV5jQIQiw4IMCCDOUjsGKA6hDKjCEBjbSHXlIeE1nvIo1LXcupnsv8/ve77f
+	c76/5PA4wjHClRclOcNIJeIYEcHHdfr13r0ZLiHhb6xM7EbJejUXLbV3Ekh3NRNDWz+lcZBW
+	bwRoXG8ikSEzFjX3rGCoT5fDRZrRIS5qudWFo9Lr6wA9aCohkLHuKRf13enhooGb9TiaaMvG
+	kW4plUC5ZUoOGldPc9F8lolA7dfv4ahps5FE5rUJDJlXLVykvLLIQcO54wDp1c4ot74bR/cb
+	lrjB7vRlxa843V0OabVGTmtqLhK0ZjGPpBsqztOTDSpA9xaVAXpo+CFOz5p/wei+yhmCXtK4
+	099k6slQwaf8D8KYmKgERhoQeIIfqTIo8PgsmNRVs4orwGWnDODAg9Tb8PbjOSID8HlCqhrA
+	ztRmkh2WAayusAB2WAIw+eoc91nEMJoGbCykqgCsMYj/NRkKjPaEFsC1oRuYzYVT3rBFWbud
+	IKg9sHdmhGNjJ6u+2q/cZg7VR8KR7Agb76JOQO33+dt+ARUMU8bZlwWUI+xSjeGsPwnez6u2
+	3s+zshussvBssgMVAMfGp+xFRVCpzwIsn4Pd2j8wWzdIzfOh6cldkj04CEtqpu2BXXCqU2vX
+	X4I9+Vk4G8gHsNUyT7JDLYCVySsY63ofpg6M2RMhMN3Yz7E1gtROODzryBbdCfN0hXZZANMv
+	CFm3D6w1zuC5wLP4udWKn1ut+L/VWNkPfv2jmfyf/DqsLJvmsHwA1tf/jasBWQNcGLksNoKR
+	vSlhEv1l4liZXBLhfyouVgOsn7/H0rncCKqmFvzbAMYDbcDLGjb9UNsHXHFJnIQROQmCvwgK
+	FwrCxF+eZaRxn0vlMYysDbjxcJGLwDvsFUZIRYjPMKcZJp6RPjvFeA6uCmzHvqiU8FvYd96H
+	g8JPYh+fDD06VXDqiDzYmO3lEV2beExsuSJ8ITrvEwTvlW0dLowMyvnsnO+Fjeabfx6YLOrw
+	6Z289kCj9j7/qET5UbFh3dFXdWe01OP0UEvb/Ldp6BLY/2GIc3nZJc+6rT0p8e+ZWvyOuyx4
+	FokHkjbe2TscTYcOXiTdf08sFGrbl1s7DpW/vPXWJuocTvfFGnHzXGu4n/Pi/oQCv8SHhXfX
+	NmYrWr3cyh0bicEOadSGT96Nx90pHuan8oRWRWipOeNaw4uBC/Rt8ufN9jpw6N011Ygq4eyj
+	/h1bAYM5Ft7u40fmfvvKoTDIL9D4l3azaa4+RzGoffKqCJdFive9xpHKxP8Aj3WNUHcEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsVy+t/xu7qd4o5pBj2L9S0ajy1gtfh85Dib
+	xbbF3UwWf3e2M1tsOXaP0eLpsUfsFme6cy12n/7KZHFhWx+rxabH11gt9uw9yWIxb/1PRovL
+	u+awWdxb85/V4sKB06wWV7auY7F4dqiXxWLb5xY2iwkLm5ktni54zWrxoecRm8WR9WdZLHb9
+	2cFu8fvHMyaL39//sVo0z//EbHFjwlNGi2MLxCwmrDvFYnFu82dWBzmP2Q0XWTxOLZLwWLCp
+	1GPTqk42j02fJrF7bF5S7/Fi80xGj/MzFjJ6XLtxn8Xj7e8TTB4Xlr1h8/i8Sc6jv/sYewBv
+	lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G+SuT
+	WAq6JCq+TbRsYJwp0sXIySEhYCJx5nE7I4gtJLCUUWLtCVOIuIzExi9XWSFsYYk/17rYuhi5
+	gGo+Mko8v3qDCcLZwijR3dzNDFLFIqAqsad5NdgkNgEdifNv7oDFRYDi3y81g9nMAhfYJe70
+	poPYwgIJEluWTgar5xVwkGh6+o4V4oo3jBJrpgRDxAUlTs58wgLRWyYx+9UX9i5GDiBbWmL5
+	Pw6QMKeAvsSTp6+gDlWSaD7Wwwhh10p8/vuMcQKj8Cwkk2YhmTQLYRKEqS6xfp4QiihIsbbE
+	soWvmSFsW4l1696zLGBkX8UoklpanJueW2yoV5yYW1yal66XnJ+7iRGY9rYd+7l5B+O8Vx/1
+	DjEycTAeYlQB6ny0YfUFRimWvPy8VCURXodC+zQh3pTEyqrUovz4otKc1OJDjKbAMJzILCWa
+	nA9MyHkl8YZmBqaGJmaWBqaWZsZK4ryeBR2JQgLpiSWp2ampBalFMH1MHJxSDUwn/0RUVR94
+	fP3czyXKa72Wtdg8WyUpw/jPdFXWjGqVA7+ni7V/3uQ5+96n7aLvdy47sltYLmPi/eVpYmtS
+	En2cZS4VW+8Wvv7b+vcNYRtFrl5tsZ+bJgS9/nY8MchyVwgnc9SMAxfyVz/rerUxunpq2bm0
+	KeINqm/b7ZzUbmTdaZvOJFS4Q810uv492alZjTvNQiW1JT6lXtyQYLcsY8N2BfFgs6q35wTc
+	ZDMncN/se/+wZtcGidvcZo1uiqm29/f+V5d6c3mq39SqXeKtX1/ZRbmcfWd1913vt7Zttfdv
+	LfKcZfPt/lI+91vX9nEzzq250ODdrsWzOy5BKDlYcc5j7p/MNXGrrp7UWiQQEjxfiaU4I9FQ
+	i7moOBEAd9JerBAEAAA=
+X-CMS-MailID: 20240512192457eucas1p1c2e524298e130efc58f1e66cc0f38039
+X-Msg-Generator: CA
+X-RootMTR: 20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+	<20240424201234.3cc2b509@kernel.org>
+	<CGME20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0@eucas1p2.samsung.com>
+	<202405080959.104A73A914@keescook>
 
-Hi Dan,
+--3bxd2gyoppot6odw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build warnings:
+On Wed, May 08, 2024 at 10:11:35AM -0700, Kees Cook wrote:
+> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Wei=DFschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> >=20
+> > Split this per subsystem, please.
+>=20
+Thx for stepping in to move this forward.
 
-[auto build test WARNING on trondmy-nfs/linux-next]
-[also build test WARNING on linus/master v6.9-rc7 next-20240510]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> I've done a few painful API transitions before, and I don't think the
+> complexity of these changes needs a per-subsystem constification pass. I
+> think this series is the right approach, but that patch 11 will need
+> coordination with Linus. We regularly do system-wide prototype changes
+> like this right at the end of the merge window before -rc1 comes out.
+This would be more for 6.11, as I expect the other subsystems to freeze
+for the merge window.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Aloni/rpcrdma-don-t-decref-EP-if-a-ESTABLISHED-did-not-happen/20240505-205016
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20240505124910.1877325-1-dan.aloni%40vastdata.com
-patch subject: [PATCH] rpcrdma: don't decref EP if a ESTABLISHED did not happen
-config: parisc-randconfig-r081-20240512 (https://download.01.org/0day-ci/archive/20240513/202405130122.S5dgt6et-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 13.2.0
+>=20
+> The requirements are pretty simple: it needs to be a obvious changes
+> (this certainly is) and as close to 100% mechanical as possible. I think
+> patch 11 easily qualifies. Linus should be able to run the same Coccinelle
+> script and get nearly the same results, etc. And all the other changes
+The coccinelle script is not enough. But that patch 11 should still be
+trivial enough to go in before -rc1. right?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405130122.S5dgt6et-lkp@intel.com/
+> need to have landed. This change also has no "silent failure" conditions:
+> anything mismatched will immediately stand out.
+>=20
+> So, have patches 1-10 go via their respective subsystems, and once all
+> of those are in Linus's tree, send patch 11 as a stand-alone PR.
+Thomas: I can take the sysctl subsystem related patches ("[PATCH v3
+10/11] sysctl: constify ctl_table arguments of utility function"), while
+you push the others to their respective subsystems (If you have not
+already)
 
-smatch warnings:
-net/sunrpc/xprtrdma/verbs.c:254 rpcrdma_cm_event_handler() warn: inconsistent indenting
+>=20
+> (From patch 11, it looks like the seccomp read/write function changes
+> could be split out? I'll do that now...)
+I saw that that patch has the necessary reviews. Get back to me if you
+need me to take a quick look at it.
 
-vim +254 net/sunrpc/xprtrdma/verbs.c
+--=20
 
-87cfb9a0c85ce4 Chuck Lever         2016-09-15  213  
-ae38288eb73c52 Chuck Lever         2018-10-01  214  /**
-ae38288eb73c52 Chuck Lever         2018-10-01  215   * rpcrdma_cm_event_handler - Handle RDMA CM events
-ae38288eb73c52 Chuck Lever         2018-10-01  216   * @id: rdma_cm_id on which an event has occurred
-ae38288eb73c52 Chuck Lever         2018-10-01  217   * @event: details of the event
-ae38288eb73c52 Chuck Lever         2018-10-01  218   *
-ae38288eb73c52 Chuck Lever         2018-10-01  219   * Called with @id's mutex held. Returns 1 if caller should
-ae38288eb73c52 Chuck Lever         2018-10-01  220   * destroy @id, otherwise 0.
-ae38288eb73c52 Chuck Lever         2018-10-01  221   */
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  222  static int
-ae38288eb73c52 Chuck Lever         2018-10-01  223  rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  224  {
-745b734c9bb805 Chuck Lever         2020-02-21  225  	struct sockaddr *sap = (struct sockaddr *)&id->route.addr.dst_addr;
-e28ce90083f032 Chuck Lever         2020-02-21  226  	struct rpcrdma_ep *ep = id->context;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  227  
-ae38288eb73c52 Chuck Lever         2018-10-01  228  	might_sleep();
-ae38288eb73c52 Chuck Lever         2018-10-01  229  
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  230  	switch (event->event) {
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  231  	case RDMA_CM_EVENT_ADDR_RESOLVED:
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  232  	case RDMA_CM_EVENT_ROUTE_RESOLVED:
-93aa8e0a9de80e Chuck Lever         2020-02-21  233  		ep->re_async_rc = 0;
-93aa8e0a9de80e Chuck Lever         2020-02-21  234  		complete(&ep->re_done);
-316a616e788658 Chuck Lever         2018-10-01  235  		return 0;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  236  	case RDMA_CM_EVENT_ADDR_ERROR:
-93aa8e0a9de80e Chuck Lever         2020-02-21  237  		ep->re_async_rc = -EPROTO;
-93aa8e0a9de80e Chuck Lever         2020-02-21  238  		complete(&ep->re_done);
-316a616e788658 Chuck Lever         2018-10-01  239  		return 0;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  240  	case RDMA_CM_EVENT_ROUTE_ERROR:
-93aa8e0a9de80e Chuck Lever         2020-02-21  241  		ep->re_async_rc = -ENETUNREACH;
-93aa8e0a9de80e Chuck Lever         2020-02-21  242  		complete(&ep->re_done);
-316a616e788658 Chuck Lever         2018-10-01  243  		return 0;
-bebd031866caa4 Chuck Lever         2017-04-11  244  	case RDMA_CM_EVENT_DEVICE_REMOVAL:
-745b734c9bb805 Chuck Lever         2020-02-21  245  		pr_info("rpcrdma: removing device %s for %pISpc\n",
-745b734c9bb805 Chuck Lever         2020-02-21  246  			ep->re_id->device->name, sap);
-df561f6688fef7 Gustavo A. R. Silva 2020-08-23  247  		fallthrough;
-e28ce90083f032 Chuck Lever         2020-02-21  248  	case RDMA_CM_EVENT_ADDR_CHANGE:
-93aa8e0a9de80e Chuck Lever         2020-02-21  249  		ep->re_connect_status = -ENODEV;
-e28ce90083f032 Chuck Lever         2020-02-21  250  		goto disconnected;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  251  	case RDMA_CM_EVENT_ESTABLISHED:
-2acc5cae292355 Chuck Lever         2020-06-15  252  		rpcrdma_ep_get(ep);
-c58f2c9a4198e3 Dan Aloni           2024-05-05  253                 ep->re_connect_ref = true;
-93aa8e0a9de80e Chuck Lever         2020-02-21 @254  		ep->re_connect_status = 1;
-745b734c9bb805 Chuck Lever         2020-02-21  255  		rpcrdma_update_cm_private(ep, &event->param.conn);
-745b734c9bb805 Chuck Lever         2020-02-21  256  		trace_xprtrdma_inline_thresh(ep);
-93aa8e0a9de80e Chuck Lever         2020-02-21  257  		wake_up_all(&ep->re_connect_wait);
-31e62d25b5b815 Chuck Lever         2018-10-01  258  		break;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  259  	case RDMA_CM_EVENT_CONNECT_ERROR:
-93aa8e0a9de80e Chuck Lever         2020-02-21  260  		ep->re_connect_status = -ENOTCONN;
-af667527b0e349 Chuck Lever         2020-06-27  261  		goto wake_connect_worker;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  262  	case RDMA_CM_EVENT_UNREACHABLE:
-93aa8e0a9de80e Chuck Lever         2020-02-21  263  		ep->re_connect_status = -ENETUNREACH;
-af667527b0e349 Chuck Lever         2020-06-27  264  		goto wake_connect_worker;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  265  	case RDMA_CM_EVENT_REJECTED:
-93aa8e0a9de80e Chuck Lever         2020-02-21  266  		ep->re_connect_status = -ECONNREFUSED;
-0a90487bf7182c Chuck Lever         2017-02-08  267  		if (event->status == IB_CM_REJ_STALE_CONN)
-4cf44be6f1e86d Chuck Lever         2020-06-27  268  			ep->re_connect_status = -ENOTCONN;
-af667527b0e349 Chuck Lever         2020-06-27  269  wake_connect_worker:
-af667527b0e349 Chuck Lever         2020-06-27  270  		wake_up_all(&ep->re_connect_wait);
-af667527b0e349 Chuck Lever         2020-06-27  271  		return 0;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  272  	case RDMA_CM_EVENT_DISCONNECTED:
-93aa8e0a9de80e Chuck Lever         2020-02-21  273  		ep->re_connect_status = -ECONNABORTED;
-31e62d25b5b815 Chuck Lever         2018-10-01  274  disconnected:
-c487eb7d8e4157 Chuck Lever         2020-06-15  275  		rpcrdma_force_disconnect(ep);
-c58f2c9a4198e3 Dan Aloni           2024-05-05  276  		if (ep->re_connect_ref)
-2acc5cae292355 Chuck Lever         2020-06-15  277  			return rpcrdma_ep_put(ep);
-c58f2c9a4198e3 Dan Aloni           2024-05-05  278  		return 0;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  279  	default:
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  280  		break;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  281  	}
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  282  
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  283  	return 0;
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  284  }
-c56c65fb67d646 \"Talpey, Thomas\   2007-09-10  285  
+Joel Granados
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--3bxd2gyoppot6odw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmZBF4IACgkQupfNUreW
+QU9xuQv/YFyBb9/xZK9W6ra0XdeKb8z3ZWpkNSHIv3kTsWlpjHIUGjL9mIouwgtX
+ucB2RAOEbwUG/wNKHsedhqti2gFMPnF80bZWiJkwVvBZRx4cuAugLBni1rZLceMm
+OTViVchXY8AlHpbOVVvxbIZDNSK+YVZh+Z4b9dhhmHYbQl/dj9vWFPNSRSH0wQp6
+hi9DrWsZPQ1eidi2uDK7d7VhOARS7U6VB6vL5UV4tjSVLueGaz3lNucP8HMoxa7Q
+jHEXeQelWtXg3jTaoIKF3q6FjulWqte8/D9DaKmbD7WvsHtrVfLeLYITADCwCmul
+yadKXGJy6kxxaEnPBB08M8jVy/o2c+VvWBpgyZlYRwSAShf5cPQOV5uGqBU9cdPf
+sPEZKG+UfmIEAUVTZYPrtvnha1nI4Nz6Ov4OlTz7PLJWAc0aiQKxBZMsnYdz9HMH
+hMZo0JyJNZ0UY4PfA43N223QFB8CD8SeGFCXl2aKBymtgrDOL3PV4IxLh4OsowVy
+pKdwnrKn
+=zOqJ
+-----END PGP SIGNATURE-----
+
+--3bxd2gyoppot6odw--
 
