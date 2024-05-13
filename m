@@ -1,227 +1,411 @@
-Return-Path: <linux-nfs+bounces-3249-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3250-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DA148C41F3
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2024 15:31:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E9DB8C4405
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2024 17:17:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DAEF1F23A41
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2024 13:31:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 815AA1C20987
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 May 2024 15:17:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24711474BB;
-	Mon, 13 May 2024 13:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E3894C84;
+	Mon, 13 May 2024 15:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fXePPVbt";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="L24j5c5n"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/cLTsvd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4C5152DF7
-	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 13:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715607070; cv=fail; b=rVB0Hcj8Gk6Nw/kfjxY3lOH59fe14Kvi/F66qLQ3JJmUDfyg6uEnXk0i6FDewmoKitj7K6Fy+oMEstZV5n58y7IGcdPt59Ft1G2dHaepPy/E/IekXgfFidZOPQZ9og12TCygCVxqZKIXpWACuwViTbJoDbp3bD2W4C4Idf6Di7w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715607070; c=relaxed/simple;
-	bh=xkhpbQCV6//uLyEcPsxAZslZyFnVPAA5f34L0KQgky8=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IfP8hUHaqNfooUYy2AdHe/ebJxNzAm6mcf5BgPR2r+BzcJbrqAQRMtCGyX1ab8aEV04VUPm2B0LD9Hn2tuYkLM4gXBRoPZDKArUpk3kGjXcdvPjvMBMFAIBgUs8/bjbniqoQZSegU0HIRacT6spu+Npz63FfVg0/U1rRY+Yj+SE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fXePPVbt; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=L24j5c5n; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44DD9MMF023357
-	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 13:31:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : content-type : content-id : content-transfer-encoding
- : mime-version; s=corp-2023-11-20;
- bh=xkhpbQCV6//uLyEcPsxAZslZyFnVPAA5f34L0KQgky8=;
- b=fXePPVbtGQ5+a2ytNlX6GeKAGCqkDQK6Mauh06bewqAMlRLMKZwTLBZfB/UzIYINjGXd
- M3Z4h/UO/L6RW0OY5kB+UQnD4nD1ajXJZhw2O+jmFkW8ASRZUcyy152LM/bJAYHquyWe
- 25tSW+4xOHWugL4olsWDUZHB5h67gKqZDrtTK8QMDS0Au633uT5aDNUoDLx+RfW7vasd
- uKdRL8uha+uLOSIQpvlAbMGhv+SldGjKYM9sTyb9OZgVcPMxAQR9U4yYqRMryhvdMHVO
- A1Zq72jyBUhnAE/fLGK6qCjQQCDMz8sD+yBtmbPRaF5Cgc7WwGRzsoYL8f7X4ETJ4l8W pg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3ce28y8h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 13:31:06 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44DDUsLL018059
-	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 13:31:06 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y1y4c2e6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 13:31:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QtCyPfb891EfATZI1/Y7TfLMuemXhqT5FucQV+yUxpOlmo5SmHdSNp2PmEDQtdyo4dREiFena/bLt+Y4wYry9rN+e9CLspzWUTbh0SYXzW4igic+mOrHbNHc1tuUxI1cB6zRktvqJ2EXZXHRy8aXBHrzhn2gqs/gsrxZETU684bZBRZwbW0dWzqkSA59X3lTtGb70KMlim3j0rDTRcbmEaejMZnuENgrYZ2Q/xPVvyv0jTJ4rgxJ358JECpTeKnTCfPZ2OVcnaQoMwuy4DcQQjLP7j14HIKOB4IzPOa71mGC2Dq+6AoudPWbQNK50ECZ8j2QW0c4GD57p08QffdT7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xkhpbQCV6//uLyEcPsxAZslZyFnVPAA5f34L0KQgky8=;
- b=hPZ4xtV3ji4yMeMlC3IPE6ghEfRjK6jkGIZrHXMvxtuaotmy2dA2ERtRM4uxJuS8OCX1EaxA2YiZutH0gMUi/wZJ755ePA7DJcQxxJ0MhsZIJ7J156tvLav0SvQ27j8G0Qhu9w6fB4Fm5B4OWPt+/SRG1kRtKU5s9n7J27VILGeKvzqJ7Ku2OuX/GbM3WApqMIPH8n/71l+NE44NzyFQs8f7V3jM6W+FbSvGM87s5H+a96ZMdppOeu/mRIT92mkehZHMfw2Kj2nS+76MslM3N9/o/7gU2X3u0sitt6HmRnXpgrRBew4DigOruLsuw060nLDQ0k1Kn1woQNm0iYjPtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xkhpbQCV6//uLyEcPsxAZslZyFnVPAA5f34L0KQgky8=;
- b=L24j5c5nG3NeUEtfA8ONEKFErB2zt0urWy5DYYiZKL96o0suQ1p2P1KuFNzYxocuT4ZVH9ekzSAK3EZ+XAlhoOcJuUFyxWACILEyhligxEGsmH43weyy9KaCin8WS/XBQ25xdMUwIApIrS5XJvpcKgske25VmyLrjbN8gNVk8a4=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB7585.namprd10.prod.outlook.com (2603:10b6:806:379::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 13:31:03 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7544.052; Mon, 13 May 2024
- 13:31:03 +0000
-From: Chuck Lever III <chuck.lever@oracle.com>
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: long-term stable backports of NFSD patches
-Thread-Topic: long-term stable backports of NFSD patches
-Thread-Index: AQHapTnNE7LzDVg7pk6Dh4KUO/Emig==
-Date: Mon, 13 May 2024 13:31:03 +0000
-Message-ID: <363B2539-04EE-4839-AE37-90152FF0D081@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3774.500.171.1.1)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA1PR10MB7585:EE_
-x-ms-office365-filtering-correlation-id: d8a2dfa3-e5c1-4849-7c70-08dc7350efd5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|366007|376005|38070700009;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?NSItii8FL8lp/0oL5reRBc7cK9TVkf9m86D02GWqqLtNN4eCDrKk2vX1lObn?=
- =?us-ascii?Q?OdoZUtBOUo+4d20Qc6j/dWZf7W9jvlG5tYLttlraFZ4sFa0voMFGFj71P3ts?=
- =?us-ascii?Q?TSv3eG/IxcJxmPsZZOM3A2gJis2xRP9FBjKMXpBL5l9yQXjgDSI+QAD6fbGV?=
- =?us-ascii?Q?M2hqdGMo+bmyYAmzklHcIa8yeEUt7Iw0tUTm0KdmOt/kNM2sQ0HvpkbGPWIo?=
- =?us-ascii?Q?OSBnw61qimHQHzsq19pgw1FbaidMulNptrCK/UFjCNje4zP94C5ph70YgHyi?=
- =?us-ascii?Q?MnlCqmDr0pqQjOcGCrgwcmPSHLLyNJ87BzD7548QLGUNYun2SK6IJa7uzUYi?=
- =?us-ascii?Q?DAfnDr+rAWjHdiAy3gGXbdOmwD5vQVZg0qj4IbLvZyZs1cOeCg89eerQr7MU?=
- =?us-ascii?Q?OfMPsEzlYMDkssh7J59YkrbXYVxWMYnGRJ7/6QJWLX/RMYvj3XwE0HDtTefT?=
- =?us-ascii?Q?jDoB+gi9QdDT89R+wUonIXuTqKJ9PIneEeja7/R4DShe6Oz7R8q9Qb7htH4x?=
- =?us-ascii?Q?9Zw9ks7PFE1h2/yp7mB7eOkgPXl/r31QR1KpGDXab7sawrnjQXTTkAYrFdvs?=
- =?us-ascii?Q?97lRjjtVvodJWRYFoAxMnPcHOJujhmvwNSKcDKGoMMg+K1mRQc/Jny8cPhuw?=
- =?us-ascii?Q?agd8ukJF4FrS2Sq5yFrJbfbaubEtQHs6BLn/i5+bmsKsFnKBWaA9fkDkZMGm?=
- =?us-ascii?Q?n/wG8kEOf/E9q70U3HmYyvOVzkYXMp8IIPv5QALfKlvnTZA8g3NalxFk0sXu?=
- =?us-ascii?Q?dku2pOc2hBFFnAEhowB3LcC1FeVL8+GatqVP67Pp542YrJVsOxgBHcQnOc4U?=
- =?us-ascii?Q?GWpdIdbHcYtGT2NwcKcUGqsepXhhMNeA+cpnWz3ziJ8AFeeitjZXWkdfiqZe?=
- =?us-ascii?Q?GHHi4aQWYDdVFvN9o5I8y3Fy8c3Wh5BuHmOVLGaXbL02qJtRCbROwknX3XwM?=
- =?us-ascii?Q?LWVNQMrCyDar7GE2zwLXtMicrNGIJmRP0TM3lXZ/1XQPv0CZmWPfECPNq97c?=
- =?us-ascii?Q?EgQHR39nXMfjWWAVbAB5r0PBBv9u4SpvHI27huq3qxIGPHDRcZn1kCOpiS13?=
- =?us-ascii?Q?qcvo1qdzpma21VYYIZE8YX+4Fw+OhLg72nsmSshyXuOjK+bThq8o2hzlidsu?=
- =?us-ascii?Q?bRmBy0LjdeuUuK50diKsD9ssjRp7li3TBm4j18F2Rl4Rtgv/pmfWOM1y1JBw?=
- =?us-ascii?Q?EW+/ciAZ7SUyZZhXRc90rL5IR8l4XSUhLdJU/aoEITyBH66lBWnNekzEx756?=
- =?us-ascii?Q?N9n4jixGK+0E0iugtfD6V+3q+dHdfavKkbjBpD8gRA=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?Co87nt732aJ7AiCufO/FymP5i5+FuiCmfZejI/9yDx7ANc2VqQhgU5tYyJZH?=
- =?us-ascii?Q?VXwE8LLYWdYUETQq4xMOsxtajmZqlur0Bmo7W96LN4AMwwX/oJczPBEML1Xi?=
- =?us-ascii?Q?jVmHCSR56vEq2MswJOj/vaDobKwmPThX8z/byXdpmCxeEI2ODd66ktzXJPkp?=
- =?us-ascii?Q?1s6a5h7cYe0MuDAMMR8dM1S+YRpfwQFjzyoi1EfkPKA6SVBK7afdyFFQ2luL?=
- =?us-ascii?Q?KSTHWF7pdyubC480d20mukjKFx8guBaSdPlTBB5rywP5WSKRla+qydZqUX+N?=
- =?us-ascii?Q?vi/pRqr3fdw+8ojbZBjs0aP1P7GqK+sS1qVFFt35uLJweKyTDUesrJPq3d4j?=
- =?us-ascii?Q?CD8o6IsKiLeW1WKKxzCuEhvdhkJ3gq64PtZd1mBg0BLRBq/xnPtQXpbC60oc?=
- =?us-ascii?Q?znCJ3gJizkjbE2j8JybIjbX2IBYXBOXM8JKQabU6MSz94xkXACfCWFVvkxaA?=
- =?us-ascii?Q?CMH9pu8e1ybZwJ5uuYm9hwBM9GNVc1ATr9u9haLmXxmGZ+Dvgi0qs1GuBh3l?=
- =?us-ascii?Q?eLWAzQ+qN+mXd52o9A2n/omKLf2FOzicEE6qTnau912QhSFwsv0qQmdJcjVb?=
- =?us-ascii?Q?uhryvax7cBFlfp4O1oRox1vFhIfIFESdMt6Q21q73PgNLxSG4vPIFke4ENyR?=
- =?us-ascii?Q?Jl0SuQbzDS0QegUV5Jafv/1l+EhoD8QHQao9E+apqQHonjaUCmsDF9wtlIv/?=
- =?us-ascii?Q?Otz9QeqARs17SwPi+qQ5tcgoqAX24pIC3k1gkHZVk/xhUCk7WP/oWqhlOESa?=
- =?us-ascii?Q?KqhQnN+W4cc07QypxutIQw0kzIr1DIximfg++H/xxigzvyo453D/ukZfUVg+?=
- =?us-ascii?Q?ni7IRIFwhOkD0rdyxn+BChtiRpHUWXDF2kmxGpwwfU5JZx/KVrHljPYUFnwj?=
- =?us-ascii?Q?X32z+rG1zo1X7DTHYdE7CVlmNl+MBAQ16kDEAd9COJ6vgKINFUrGN4pxEWOy?=
- =?us-ascii?Q?s3qQPZg+ckaHDe7WsRT7dAGCzwcbGulL9miAnDlb16PUfJGZX3VIDg9UWgUJ?=
- =?us-ascii?Q?2LN+NZ4wKzchi9nldGnONbjbEzsV+3MNkQIHDgricQxRVmeMXlZmOltmF42b?=
- =?us-ascii?Q?VVDwRVJ73r+PbbRpu32xcjDLmazhc10AigS+eIxcKHS78S41UIjmHOoBX8x4?=
- =?us-ascii?Q?rZsS2MjCWw6avyC8MjrzNwY+CqjdRuzHVUkV8qjgVqps2BsUmZqp9X6nSi60?=
- =?us-ascii?Q?ut7UQdyfGRbjbGIYszolXCbsYwveKFNjvAG7vF1KySXVfL7FewrIftK381a/?=
- =?us-ascii?Q?tPaV/I/uMG7MlmGlhMtiK/ObkZ4JlUfW8Wt/tV+9vrUbis4GLOwJ9ex//qlX?=
- =?us-ascii?Q?l4Vt81lPXkILHm/NOqWQPf4Ffy2e6tzYxJ1ziid8SV9ClLxWu+CsApEGkT/d?=
- =?us-ascii?Q?a98iVDmW3aFzlVxVKpXBCKPQ7QDm3yknMYc4UcEaeR4RsNmAlKAOLEnH50RQ?=
- =?us-ascii?Q?JHYuxghUqLr0rimYTZyipVubUdKE9pk3tQIVUG1xUZBQy47wWTR5z/hmcMDc?=
- =?us-ascii?Q?NYCh+XnmrE7q75Oj1N4QZrj41xaEriV23kQ+elwMfiv6jTIkxc3QtUhpFD06?=
- =?us-ascii?Q?psgdCFTfoME2djGtl2PnVaGdoHtNXbaOy41oLd/NcdJEW1cf1CFUaRFiNwqA?=
- =?us-ascii?Q?Nw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5F59C984CA72424A9E74163E476EE430@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93216AC0
+	for <linux-nfs@vger.kernel.org>; Mon, 13 May 2024 15:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715613466; cv=none; b=ZGiyXCbRrsIQapJ/6jKaTeAJxYGou9OodpcQ7DWvTtO/SISXteRu0FaIPM+ll0QyK+V5I0KLf57x6FsiBnNCTlWggFstnGmDZBQ2oOnV8C9fzUhMY/OXy87LhvD69QiI1A0bbAdfxtJyNzfA3iYHl5RW263PyxWQC2w5GyWk+PE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715613466; c=relaxed/simple;
+	bh=RzGGkG00ZVn/+P8tUKwMnBvs/ytlMn9kwHiGsnUs1Mo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hikNus/FKlIV6kIEgTK89tIaIxD7XPgGihjA4GICKDaAXmXXG4fSEfwgV+6Jdr7pYLmWSkp/NPVTicx1MH0xxQyNDONlBMSw+qUT+5MVTMwTMnkjM8cVoTSNpvQYW1yQZcraWfldFc6NIIXIT46NQbglox1+rgEN34iQ+LO08PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/cLTsvd; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715613464; x=1747149464;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RzGGkG00ZVn/+P8tUKwMnBvs/ytlMn9kwHiGsnUs1Mo=;
+  b=K/cLTsvd+XEJuN+sA3VHdJZPMC5IEtpXMaev37RKm9OYnN+3ejd8Qjcs
+   BPv+cc7t/XP0+mDJUIpbvzYOuwbXCdLedyOn3r5rN//knON19DChCrjhp
+   bmT//4RPJK02tHavPs48x2uRkdu3CdFR/quUgd4/RqpxVGLFuIBqwwxip
+   WMd3bELz90RLA1pq+7UjB7ctRYCjQfVY+jnFGqpZkq4BvFBn5lfe0wWIg
+   buGPqc5Cg7Wt87ysYxKkfHuw/i4bEV2hTqpw6jXcEyAmBRTxYLHAU4gIW
+   dwHF3mcntHIpLfiUL9vndxaK/cHNtjpiWezrAcoCfYrbW1ccqSo5afz8j
+   w==;
+X-CSE-ConnectionGUID: TfkuLpmrROuiFUG2MznlDg==
+X-CSE-MsgGUID: kclBakcJQ/uI8iqF5cMCHQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11499956"
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="11499956"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 08:17:43 -0700
+X-CSE-ConnectionGUID: 2fSb6UYER8KiQbhUtFCG8Q==
+X-CSE-MsgGUID: IeQwQqq3S+KEIOkkju+Emg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="30404049"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 13 May 2024 08:17:40 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s6XQn-000APV-3A;
+	Mon, 13 May 2024 15:17:37 +0000
+Date: Mon, 13 May 2024 23:16:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Olga Kornievskaia <kolga@netapp.com>, Tom Talpey <tom@talpey.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: change nfsd_create_setattr() to call
+ nfsd_setattr() unconditionally
+Message-ID: <202405132241.FduJDwA8-lkp@intel.com>
+References: <171557896893.4857.2572536847924540881@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	SSGaCgn9mvqyQZcBW7/qS9GS8/1fNvuHZNPxvJBFrJIDdmf3iwU5Ycj2294EQiy3+aIePkxOQtn7ks+QGyM0DKYGO4+ghbzPo69sZ8KCHQIO5/nYau+EKZ4EsOABubz+fnnJL5KPbmL4SBlJSEsmB+N+8q7qJhEYpMuaSod6QPzrZUJgiUNTpyFatMyq5il6+9Ru2/TXEseM5IetH2lVT1xOasAAAyg1xgpHt9DOd/qr/9cM2Fd+8RCyVSvMhWgEhdbA5L8FDRgqPhOBonUrArs4PCc46Es2X5EXz7WCX7YfnjpKvk1n3UybmTbYP8Iw4m7UZf3ZotCr7CYUi8XshJrFMuxqsVoMTKrD0QRYzsE0gDHuJ9jtSqf2s6GyGeBDYV9CkHXrHAR2HiBhtv+g8HvjtKgTO33OOaM0nej86d3p7dcdXGc+vuREQGOGnZD81FK2Rky0agjREhEO8Z2pQf71b/AEMoPnfi/xUbw6gwykPGTSgyW4B3nyl/cS+9PS8odA0BKKWrvFGoUjUFpfr5r6bkp8iQ0DzlXjCm73vfiYbrL88PPVb8hyfF0+Ab135cFkKLgo9YuNShnUeDq9RUFd2fO35KLYxizfU9lsz8o=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8a2dfa3-e5c1-4849-7c70-08dc7350efd5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2024 13:31:03.7838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HQxb4R9EnRaPamWxbLd0naNPxzI+PIL7YMdQFVr2HBTe/6x+t56ruz60dBURchGVuViPlKjMcnzn3iXgZFeW2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7585
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_09,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=927
- adultscore=0 mlxscore=0 spamscore=0 suspectscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405130086
-X-Proofpoint-GUID: Ga5_hDVB2K_DTGyWw89SYfb9OW9syVKe
-X-Proofpoint-ORIG-GUID: Ga5_hDVB2K_DTGyWw89SYfb9OW9syVKe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171557896893.4857.2572536847924540881@noble.neil.brown.name>
 
-It's apparent that a number of distributions and their customers
-remain on long-term stable kernels. We are aware of the scalability
-problems and other bugs in NFSD in kernels between v5.4 and v6.1.
+Hi NeilBrown,
 
-To address the filecache and other scalability problems in those
-kernels, I'm preparing backported patches of NFSD fixes for several
-popular LTS kernels. These backports are destined for the official
-LTS kernel branches so that distributions can easily integrate them
-into their products.
+kernel test robot noticed the following build warnings:
 
-Once this effort is complete, Greg and Sasha will continue to be
-responsible for backporting NFSD-related fixes from upstream into
-the LTS kernels.
+[auto build test WARNING on next-20240510]
+[cannot apply to linus/master v6.9 v6.9-rc7 v6.9-rc6 v6.9]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Here's a status update.
+url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfsd-change-nfsd_create_setattr-to-call-nfsd_setattr-unconditionally/20240513-134428
+base:   next-20240510
+patch link:    https://lore.kernel.org/r/171557896893.4857.2572536847924540881%40noble.neil.brown.name
+patch subject: [PATCH] nfsd: change nfsd_create_setattr() to call nfsd_setattr() unconditionally
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240513/202405132241.FduJDwA8-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project b910bebc300dafb30569cecc3017b446ea8eafa0)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240513/202405132241.FduJDwA8-lkp@intel.com/reproduce)
 
----
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405132241.FduJDwA8-lkp@intel.com/
 
-I've pushed the NFSD backports to branches in this repo:
+All warnings (new ones prefixed by >>):
 
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     508 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     520 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     529 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   In file included from fs/nfsd/vfs.c:35:
+   In file included from fs/nfsd/xdr3.h:11:
+   In file included from fs/nfsd/xdr.h:8:
+   In file included from fs/nfsd/nfsd.h:15:
+   In file included from include/linux/nfs.h:11:
+   In file included from include/linux/sunrpc/msg_prot.h:205:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from fs/nfsd/vfs.c:35:
+   In file included from fs/nfsd/xdr3.h:11:
+   In file included from fs/nfsd/xdr.h:8:
+   In file included from fs/nfsd/nfsd.h:15:
+   In file included from include/linux/nfs.h:11:
+   In file included from include/linux/sunrpc/msg_prot.h:205:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from fs/nfsd/vfs.c:35:
+   In file included from fs/nfsd/xdr3.h:11:
+   In file included from fs/nfsd/xdr.h:8:
+   In file included from fs/nfsd/nfsd.h:15:
+   In file included from include/linux/nfs.h:11:
+   In file included from include/linux/sunrpc/msg_prot.h:205:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     693 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     701 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     709 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     718 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     727 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     736 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> fs/nfsd/vfs.c:502:6: warning: variable 'err' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     502 |         if (!(iap->ia_valid ||
+         |             ^~~~~~~~~~~~~~~~~~
+     503 |               (attr->na_seclabel && attr->na_seclabel->len) ||
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     504 |               (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl) ||
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     505 |               (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     506 |                !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))))
+         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfsd/vfs.c:616:9: note: uninitialized use occurs here
+     616 |         return err != 0 ? err : nfserrno(host_err);
+         |                ^~~
+   fs/nfsd/vfs.c:502:2: note: remove the 'if' if its condition is always false
+     502 |         if (!(iap->ia_valid ||
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+     503 |               (attr->na_seclabel && attr->na_seclabel->len) ||
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     504 |               (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl) ||
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     505 |               (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     506 |                !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))))
+         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     507 |                 /* Don't bother with inode_lock() */
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     508 |                 goto out;
+         |                 ~~~~~~~~
+   fs/nfsd/vfs.c:496:13: note: initialize the variable 'err' to silence this warning
+     496 |         __be32          err;
+         |                            ^
+         |                             = 0
+>> fs/nfsd/vfs.c:506:55: warning: variable 'inode' is uninitialized when used here [-Wuninitialized]
+     506 |                !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))))
+         |                                                              ^~~~~
+   include/uapi/linux/stat.h:23:23: note: expanded from macro 'S_ISDIR'
+      23 | #define S_ISDIR(m)      (((m) & S_IFMT) == S_IFDIR)
+         |                            ^
+   fs/nfsd/vfs.c:492:21: note: initialize the variable 'inode' to silence this warning
+     492 |         struct inode    *inode;
+         |                               ^
+         |                                = NULL
+   19 warnings generated.
 
-If you are able, I encourage you to pull these, review them or try
-them out, and report any issues or successes. I'm currently using
-the NFS workflows in kdevops as the testing platform, but am
-planning to include other tests.
 
+vim +502 fs/nfsd/vfs.c
 
-LTS v5.10.y
+   472	
+   473	/**
+   474	 * nfsd_setattr - Set various file attributes.
+   475	 * @rqstp: controlling RPC transaction
+   476	 * @fhp: filehandle of target
+   477	 * @attr: attributes to set
+   478	 * @guardtime: do not act if ctime.tv_sec does not match this timestamp
+   479	 *
+   480	 * This call may adjust the contents of @attr (in particular, this
+   481	 * call may change the bits in the na_iattr.ia_valid field).
+   482	 *
+   483	 * Returns nfs_ok on success, otherwise an NFS status code is
+   484	 * returned. Caller must release @fhp by calling fh_put in either
+   485	 * case.
+   486	 */
+   487	__be32
+   488	nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+   489		     struct nfsd_attrs *attr, const struct timespec64 *guardtime)
+   490	{
+   491		struct dentry	*dentry;
+   492		struct inode	*inode;
+   493		struct iattr	*iap = attr->na_iattr;
+   494		int		accmode = NFSD_MAY_SATTR;
+   495		umode_t		ftype = 0;
+   496		__be32		err;
+   497		int		host_err = 0;
+   498		bool		get_write_count;
+   499		bool		size_change = (iap->ia_valid & ATTR_SIZE);
+   500		int		retries;
+   501	
+ > 502		if (!(iap->ia_valid ||
+   503		      (attr->na_seclabel && attr->na_seclabel->len) ||
+   504		      (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl) ||
+   505		      (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+ > 506		       !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))))
+   507			/* Don't bother with inode_lock() */
+   508			goto out;
+   509	
+   510		if (iap->ia_valid & ATTR_SIZE) {
+   511			accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
+   512			ftype = S_IFREG;
+   513		}
+   514	
+   515		/*
+   516		 * If utimes(2) and friends are called with times not NULL, we should
+   517		 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
+   518		 * will return EACCES, when the caller's effective UID does not match
+   519		 * the owner of the file, and the caller is not privileged. In this
+   520		 * situation, we should return EPERM(notify_change will return this).
+   521		 */
+   522		if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME)) {
+   523			accmode |= NFSD_MAY_OWNER_OVERRIDE;
+   524			if (!(iap->ia_valid & (ATTR_ATIME_SET | ATTR_MTIME_SET)))
+   525				accmode |= NFSD_MAY_WRITE;
+   526		}
+   527	
+   528		/* Callers that do fh_verify should do the fh_want_write: */
+   529		get_write_count = !fhp->fh_dentry;
+   530	
+   531		/* Get inode */
+   532		err = fh_verify(rqstp, fhp, ftype, accmode);
+   533		if (err)
+   534			return err;
+   535		if (get_write_count) {
+   536			host_err = fh_want_write(fhp);
+   537			if (host_err)
+   538				goto out;
+   539		}
+   540	
+   541		dentry = fhp->fh_dentry;
+   542		inode = d_inode(dentry);
+   543	
+   544		nfsd_sanitize_attrs(inode, iap);
+   545	
+   546		/*
+   547		 * The size case is special, it changes the file in addition to the
+   548		 * attributes, and file systems don't expect it to be mixed with
+   549		 * "random" attribute changes.  We thus split out the size change
+   550		 * into a separate call to ->setattr, and do the rest as a separate
+   551		 * setattr call.
+   552		 */
+   553		if (size_change) {
+   554			err = nfsd_get_write_access(rqstp, fhp, iap);
+   555			if (err)
+   556				return err;
+   557		}
+   558	
+   559		inode_lock(inode);
+   560		err = fh_fill_pre_attrs(fhp);
+   561		if (err)
+   562			goto out_unlock;
+   563	
+   564		if (guardtime) {
+   565			struct timespec64 ctime = inode_get_ctime(inode);
+   566			if ((u32)guardtime->tv_sec != (u32)ctime.tv_sec ||
+   567			    guardtime->tv_nsec != ctime.tv_nsec) {
+   568				err = nfserr_notsync;
+   569				goto out_fill_attrs;
+   570			}
+   571		}
+   572	
+   573		for (retries = 1;;) {
+   574			struct iattr attrs;
+   575	
+   576			/*
+   577			 * notify_change() can alter its iattr argument, making
+   578			 * @iap unsuitable for submission multiple times. Make a
+   579			 * copy for every loop iteration.
+   580			 */
+   581			attrs = *iap;
+   582			host_err = __nfsd_setattr(dentry, &attrs);
+   583			if (host_err != -EAGAIN || !retries--)
+   584				break;
+   585			if (!nfsd_wait_for_delegreturn(rqstp, inode))
+   586				break;
+   587		}
+   588		if (attr->na_seclabel && attr->na_seclabel->len)
+   589			attr->na_labelerr = security_inode_setsecctx(dentry,
+   590				attr->na_seclabel->data, attr->na_seclabel->len);
+   591		if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl)
+   592			attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
+   593							dentry, ACL_TYPE_ACCESS,
+   594							attr->na_pacl);
+   595		if (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+   596		    !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))
+   597			attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
+   598							dentry, ACL_TYPE_DEFAULT,
+   599							attr->na_dpacl);
+   600	out_fill_attrs:
+   601		/*
+   602		 * RFC 1813 Section 3.3.2 does not mandate that an NFS server
+   603		 * returns wcc_data for SETATTR. Some client implementations
+   604		 * depend on receiving wcc_data, however, to sort out partial
+   605		 * updates (eg., the client requested that size and mode be
+   606		 * modified, but the server changed only the file mode).
+   607		 */
+   608		fh_fill_post_attrs(fhp);
+   609	out_unlock:
+   610		inode_unlock(inode);
+   611		if (size_change)
+   612			put_write_access(inode);
+   613	out:
+   614		if (!host_err)
+   615			host_err = commit_metadata(fhp);
+   616		return err != 0 ? err : nfserrno(host_err);
+   617	}
+   618	
 
-Testing has found two issues that were both due to patches I
-applied that are not appropriate for this kernel. The patches have
-been removed. You can find this series in the "nfsd-5.10.y" branch
-in the above repo. Testing will continue this week.
-
-
---
-Chuck Lever
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
