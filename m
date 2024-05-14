@@ -1,151 +1,88 @@
-Return-Path: <linux-nfs+bounces-3254-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3256-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D54298C5D05
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2024 23:50:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E0FE8C5D0B
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2024 23:58:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84E7E1F2218B
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2024 21:50:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 780E41C20C3D
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 May 2024 21:58:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA18181BA9;
-	Tue, 14 May 2024 21:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AED181BAE;
+	Tue, 14 May 2024 21:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="YkPnyPJI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Krb9lkCp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760DE180A77
-	for <linux-nfs@vger.kernel.org>; Tue, 14 May 2024 21:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8523C181BA3
+	for <linux-nfs@vger.kernel.org>; Tue, 14 May 2024 21:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715723410; cv=none; b=Bg46lemrxSQhDtNTL4++pY71Le1X4GJGaY66oaE49NrQWMDag05f+h9eFaa1mPT3Hjls8aA9gNpVrYUDATW+rZS5zLbyzZT3sZN5Lac5o5ANB7e753Xfg3FEJpxWHd0uPBped9VGCCqbOj49ygayiKO5PGthjj6jTZQY9XXZdVM=
+	t=1715723882; cv=none; b=VDcdJYmjTh/OcF5lfvRiP3DzPMKL/BbhxA38H/D6SvxCyOiIZb4HXSiikMqnm5RkF1/KYghlrLIYct0+PANr9ln9tdoZhOyKujrQ1dsHW3rbW+yvXDSu+HhgGo0vgPCPdZ0JqQxJ+ngki1z2JmPupUd+wC73qZ8bZclAjkvPJVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715723410; c=relaxed/simple;
-	bh=zh87VwEwup4bdSL8lzYFN/HA0wVw4v2hPUsEJkEziro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ixTJ1gcKDFfwCSUw81v9lfGErBUBahU3EHrZX88MPwm0a7eO3jUbJ5Rh1udRKef7VbYXbs1Sgrv5eQTpXPFzwNJV61fj9M7aboeoyO0ee94EDn1RfZ/G+JX0iOT2MmqUJTELQor+hPv927jEri3IRsOfpK7Z3bbk6Fm4btUzv/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=YkPnyPJI; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+	s=arc-20240116; t=1715723882; c=relaxed/simple;
+	bh=6msAy8CwyV61fp7k0gRI/voIflw12Dpw2HD23Dq0zu8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=sQN+cOsYzTcRSNkjRr6LzWJfGoT9qW60nilrvp22/eUzFNtBWSHCtOVvsbyPoEvt8daPxzJH2w6iXybpEVlQ0Jp4ZNkmoz01SVj6CHkq29+z0xtBUH0YCBwGhWuMGYWAaJ3tC7K6fVhoSy0l03gSbiuu6tJTaRiuyPGI+gKV6Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Krb9lkCp; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5232f0ca07cso304724e87.2
-        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2024 14:50:07 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e564cad1f1so55038091fa.0
+        for <linux-nfs@vger.kernel.org>; Tue, 14 May 2024 14:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1715723405; x=1716328205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zh87VwEwup4bdSL8lzYFN/HA0wVw4v2hPUsEJkEziro=;
-        b=YkPnyPJI1sW0a4WSHGHR77bNiqCTlxj+SNDEve4GAn0NTw4T1pMLMCG2nPXfnPICE/
-         yiuKI8mUxSkTB/YgUIbXveig2N9CLhBtyj4QX8JTBJYkrBS+dEVD2c9rVJnFEdg+pg7V
-         HfvJ3mvgBTndj3BA/6A4UfmiI1zIEj7v6FmjaKDub0vDq9DZz1TWn93NEHje4VtfDWsl
-         r0K2as7D5nrHA4FvcBnoYKVtRPnp9LwECNJl4bb++3uTyUbcBUOUTMFZu93q+jgfq04a
-         td/reRQghKbbLEkBqUtw2Cu0/QsCEsSzHl2z0wUxVZFQcEdRWMkGScXKWSURgQuvUs/O
-         hKyg==
+        d=gmail.com; s=20230601; t=1715723878; x=1716328678; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n8sOFzKThRrQ9Iq3INUvkhuQEyRslaBNqHfiHXphdjc=;
+        b=Krb9lkCpq1wPVo5JGnsgM7J2V9TxUNRUd7+sN5+/mfsPxlVaJGJd1yGVhpp3nLizOf
+         eeR1+6bqTQMniqF5LAyHKoRm+y7cTtqgVJ5B8Azl1d0f5i0zJGGlw5jGm/gUy/JbW21E
+         YymA7s+iMgmDggama+4h+dcvIz98Zvl6sCsFrrz0i3tYr6c77GilVG32omYtVfULguAe
+         n25E7cKzl8+6UmpqD2/g7EdFiIfAHbIBfzDZtMO/4/HxyHfUCbNK3pNM4gbEq9HFquyC
+         bVYmy+j1u5qV1FaQuw8PbolEzkPMXVNIafKdKT9k6UsENWg7vyi8sKoqJjXT6y2DbK7c
+         MzIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715723405; x=1716328205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zh87VwEwup4bdSL8lzYFN/HA0wVw4v2hPUsEJkEziro=;
-        b=HMLD6SY9yFg07F3jumCUVvH240WnVWmF/16auX56q4H1mSavVAkvy5q7y88u5zQA1t
-         spPYBZh3xFc/O3BBABF9zeRzICdqZAIxBaj/fYlAPX9HVKG5ERfmpx9P0Nm7DC5E+dA2
-         lPylG37I4enNMRN1pUVioQzDEayU/9PVvmvovwqMc1ip7EjPc5mw+RxlwvpFhVQ4KzV7
-         mxxaRdkQ6rqVsanZUvxnY5aNvVgdtCFNDxtxLl7fS1bPZQyyblDxh+EKZuCmg6JbmORA
-         pmuRKM4lhkAlQzel6PFvOwPbAuso6zvQJhS196SbIu489ZgVGTBO+SsaBD7jG4A7nr6f
-         Ur9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXrDBFEomTXRsoyFv1LCm3q9GdELiiVzKirz1UpSUR91QHJPhEwqTuHc8dbacl7qHHsDsLYuXWftNtpd4WxMnT6uy17ypEIGRD7
-X-Gm-Message-State: AOJu0YxQKxvKbcYikEoW4T8IZC6Q3EW9HLemwPr1E2eJdHfHDl9guM0a
-	Gpmhqlcb5iw5kRqvsrYJfiMuwQ9e2fnvdA9PYKCESncRBtZz2umI04+RN6lFOT5fCXSBwtzzPuw
-	XIM9goXafh1cds9A+GnDGKEubj+4=
-X-Google-Smtp-Source: AGHT+IH3llqG5FNtuR/8ZvEHzshilx5nCVV54ByaHRmsqPst33djfQEZi9BKSOeRLIZj73mMVZj7pqEZTsODFU0X0wI=
-X-Received: by 2002:a2e:9f4e:0:b0:2e5:6859:1902 with SMTP id
- 38308e7fff4ca-2e56859194bmr77461941fa.0.1715723405416; Tue, 14 May 2024
- 14:50:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715723878; x=1716328678;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n8sOFzKThRrQ9Iq3INUvkhuQEyRslaBNqHfiHXphdjc=;
+        b=BqIjHKGTMsJ1EhR2nuZu7iah/eoniVssKZAaw0Lf1bdZ8sH+oZaLXSmzQPM0bYa+Mn
+         i15Q/tHlkVbyfUTZXo6W+fo1wUYSUDqKNAVDcKXt8SdiRYGPKJH/JmVma751idCCfC93
+         kvh4nfjzTtIfGjY03P+5PaV8f8jNKMl5zxc8ikR1RrHUQAx08DiUcw45b0UiXg+LM3mI
+         j8gbYyL/sK02qvm05dv+aliw/IY5hNyzyfPzLed9jdmYTomeKZ86OUrxgZWPBOUc7TeK
+         0kUyL0Fe/Ljw/OK8/j9SFuCtTFmrBsNvMZnZgKTIeeStnUj5/M/ZR4nwDIUH3e2tRDwG
+         KDgw==
+X-Gm-Message-State: AOJu0Yx0JBP+3aMc/8zND3TiGzyCCwtIlj3SN2oQIiuM/c9/6Qeaxnmn
+	C7eKuGFLm0cFuvl1aC9PcAT5ltnYgS537H5QgvpLLmMw2ZlFx9lLHf5FmzP4348hEB+CMQ97PhB
+	2BqeJC1ZIOQYAlFFhvH+SP2K1IL7VkA==
+X-Google-Smtp-Source: AGHT+IGl77yn46G8qF5EKPT5vRroP8mI09i9Kr2nU67V3zVWe7mD6Av6hfC0YIWUJ8wvRkZ8bd6KLW3TLaKg/Cq6Cp4=
+X-Received: by 2002:a2e:93d7:0:b0:2e1:f38c:bd63 with SMTP id
+ 38308e7fff4ca-2e51fd46252mr88860931fa.15.1715723878352; Tue, 14 May 2024
+ 14:57:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN-5tyFBn3C_CTrsftuYeWJHe7KWxd82YFCyrN9t=az8J4RU0w@mail.gmail.com>
- <2C80B5BC-AAEC-41F8-BEB6-C920F88C89BB@oracle.com> <0b1101daa646$d26a6300$773f2900$@mindspring.com>
-In-Reply-To: <0b1101daa646$d26a6300$773f2900$@mindspring.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 14 May 2024 17:49:53 -0400
-Message-ID: <CAN-5tyGECFmtzFsYNSZicPcH4SMKF0yovk6V20sWJ1LrZKzzyA@mail.gmail.com>
-Subject: Re: sm notify (nlm) question
-To: Frank Filz <ffilzlnx@mindspring.com>
-Cc: Chuck Lever III <chuck.lever@oracle.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Tue, 14 May 2024 23:57:32 +0200
+Message-ID: <CAAvCNcCTWbU-ejURuUC0_xhcoU3GF+2jX28rV4+2cKgfO5Lqxg@mail.gmail.com>
+Subject: RFC2224 support in Linux /sbin/mount.nfs4?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 14, 2024 at 5:36=E2=80=AFPM Frank Filz <ffilzlnx@mindspring.com=
-> wrote:
->
-> > > On May 14, 2024, at 2:56=E2=80=AFPM, Olga Kornievskaia <aglo@umich.ed=
-u> wrote:
-> > >
-> > > Hi folks,
-> > >
-> > > Given that not everything for NFSv3 has a specification, I post a
-> > > question here (as it concerns linux v3 (client) implementation) but I
-> > > ask a generic question with respect to NOTIFY sent by an NFS server.
-> >
-> > There is a standard:
-> >
-> > https://pubs.opengroup.org/onlinepubs/9629799/chap11.htm
-> >
-> >
-> > > A NOTIFY message that is sent by an NFS server upon reboot has a
-> > > monitor name and a state. This "state" is an integer and is modified
-> > > on each server reboot. My question is: what about state value
-> > > uniqueness? Is there somewhere some notion that this value has to be
-> > > unique (as in say a random value).
-> > >
-> > > Here's a problem. Say a client has 2 mounts to ip1 and ip2 (both
-> > > representing the same DNS name) and acquires a lock per mount. Now sa=
-y
-> > > each of those servers reboot. Once up they each send a NOTIFY call an=
-d
-> > > each use a timestamp as basis for their "state" value -- which very
-> > > likely is to produce the same value for 2 servers rebooted at the sam=
-e
-> > > time (or for the linux server that looks like a counter). On the
-> > > client side, once the client processes the 1st NOTIFY call, it update=
-s
-> > > the "state" for the monitor name (ie a client monitors based on a DNS
-> > > name which is the same for ip1 and ip2) and then in the current code,
-> > > because the 2nd NOTIFY has the same "state" value this NOTIFY call
-> > > would be ignored. The linux client would never reclaim the 2nd lock
-> > > (but the application obviously would never know it's missing a lock)
-> > > --- data corruption.
-> > >
-> > > Who is to blame: is the server not allowed to send "non-unique" state
-> > > value? Or is the client at fault here for some reason?
-> >
-> > The state value is supposed to be specific to the monitored host. If th=
-e client is
-> > indeed ignoring the second reboot notification, that's incorrect behavi=
-or, IMO.
->
-> If you are using multiple server IP addresses with the same DNS name, you=
- may want to set:
->
-> sysctl fs.nfs.nsm_use_hostnames=3D0
->
-> The NLM will register with statd using the IP address as name instead of =
-host name. Then your two IP addresses will each have a separate monitor ent=
-ry and state value monitored.
+Hello!
 
-In my setup I already have this set to 0. But I'll look around the
-code to see what it is supposed to do.
+Solaris, Windows and libnfs NFSv4 clients support RFC2224 URLs, which
+provide platform-independent paths where resources can be mounted
+from, i.e. nfs://myhost//dir1/dir2
 
->
-> Frank
->
+Could Linux /sbin/mount.nfs4 support this too, please?
+
+Dan
+-- 
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
