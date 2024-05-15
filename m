@@ -1,176 +1,355 @@
-Return-Path: <linux-nfs+bounces-3262-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3263-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A998C6907
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 16:52:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7D0C8C6994
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 17:23:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7BF51C2192E
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 14:52:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3635B1F2300B
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 15:23:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FA3155730;
-	Wed, 15 May 2024 14:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630FA155A26;
+	Wed, 15 May 2024 15:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZZV665u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI7lhDKU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09CF57CA1;
-	Wed, 15 May 2024 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A46D155A56
+	for <linux-nfs@vger.kernel.org>; Wed, 15 May 2024 15:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715784735; cv=none; b=jLMt2wi+zdKyBgi4AxhygTN2js48GWdle0DpmqQFlaUlCGkhpUIPKwrpBF4XJK7YjuzJr+ifQB+0s6/NnxhJt9SoHqj8tXWD9K/UVJCLT0A9YQIGZ8wfWYlcrn+n/NuNxUcTUhFHuKtOygWS725hyyW+vqUqdAQKIP1YhAotZzY=
+	t=1715786579; cv=none; b=nZ0mncgzLxsLXIcKUSCWvDEbnlVYmUjorbiLRtkjKKoCtMesKU5tqv5r3Fz8bSGeDJZ79wCsH018U2f77G8v7jilhIeHPguNvQx1+cEtc74h3G+EX9CLDtHkoTDwicpLMHQH8ME+gzKpUCTswFxRXjHbrq3j2y6e1DuowQgE9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715784735; c=relaxed/simple;
-	bh=mfIWBKjyaGtpfqqPaQXhJaL2BgJixSHpCSI3TbRvwWI=;
+	s=arc-20240116; t=1715786579; c=relaxed/simple;
+	bh=sUiniwyzhfOA7KUktifrjNk7uCXjLWqJ1Sxso/23CFE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M7YJ+iwphaq7YBo3IOdqUpXVEvbCGywiODP01VOu1zVSZTUCkGPkAKwk6+uIC4gx4n7NOjCjPhYQ1I3XhgetiTvk/ldNiO5APUagl0w6MAv7xTE0KT1iPZYA1hG1YwHzxhk5Q+FdCZ0o6dH5K/CGy2Yw0r9+RaQdRU3zxi8o/Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hZZV665u; arc=none smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=iJqQVf1bGcXtiyqV1s3MqSaNujmpJDLEUipMbnHCAdfSMdQfrsddht9HUoIasghOtKmWtTWlva5fJDprgVoH2dQ2ltFvmtlvs0tnYUZX4gh7Zvqod0dT9+q48Fwg/C2nJ6B4qqlZcco5kz/4y5wbMcNhx5/TLQkcCIhYA6MJado=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mI7lhDKU; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ecd9a81966so55610655ad.0;
-        Wed, 15 May 2024 07:52:13 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-23dd52c6176so4651317fac.1
+        for <linux-nfs@vger.kernel.org>; Wed, 15 May 2024 08:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715784733; x=1716389533; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dyd4g9Mj6udeAMgwbujT15lk0egPi/YMbqByHib0kUE=;
-        b=hZZV665uFO7NGWa8XzZ7KyohlwJnBkLZEn9AYcxgf2Dig8RqjKANpwtkT0nxS/vH15
-         ov+hSoVD3YX5EitLuOJYvhBvh9pwP9Ds4oefJmJwel9bQYStcSqOfBt00EU0qjOrof4L
-         v24MW+Q7zBLvKvYKHRcvaMntW03OzkWJ2pH63B6iqO5aNTmjyP0yBEn6C7SvXe/HC0RO
-         sv0cRIvbbKbqcfX4EAq7ofkfLHf9rXqnWMlAGuVOp4dVib/isJ85/jaex06TApnY20ho
-         WogOPNVbkmkw3r8ST7304lBrRI6y0XLynDpPyhCL3XJuQA3vD9YJbhOvYb6RkZPEw/oO
-         yuWQ==
+        d=gmail.com; s=20230601; t=1715786576; x=1716391376; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nIPk2rNi4JW5E81qOzIuD12myoST5mc7DwwaMTUHdKk=;
+        b=mI7lhDKU6heWH/IHwaxGU2fesbo5eK8TwM1ZmceNtBpYSW9O5xM5gON+HJl33JOX/n
+         AeaZYqAUiKiDIPoRklpO4fJdIpwzKbf9bTlQ0xE7qrtCcAxDk+jRce5b+/FIUU56VbnL
+         N3n8ziQUhu7Thsw0wbucZRe4jJfYQi8h4Ifq6dVadndNo3Brpw+C8TafjQrbDWNUBKOa
+         KHq2RXI0S2d/EaWbQrtTuJqan4B/hR0GzK8QfPrBP7Hclc+G3Ad771JKoJCwSBA/fovV
+         2yzGS9hPFb7yETuwpJT3aJLPgAdldQ7vgOhOMwDv7TMYB1tVyzzid3fieFD3gwY8QBJU
+         TPEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715784733; x=1716389533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dyd4g9Mj6udeAMgwbujT15lk0egPi/YMbqByHib0kUE=;
-        b=j4zd3lmuv9wvaU2vJXe8le/StFvKaTNQO9plHr+Inku+sxzLu+CTuXLYPHhvpUvBVt
-         3kGm3LQTd2kVPgTh0y0URHKH/J/gs9Pqv4bzLiu/aSCVrCly1f1yTEUWsftOTAiQHeBi
-         lpgSc0gBWZdPvWdA/3PQynz37jSSw+iu+Ilf2tFxRfz9gMC8bjc8L3OYf3lK2/KukEop
-         O9KmEEr2wIdRuyYou5BDFxuA7FMvUtHVi0FmvrT6hzIlqROxeevFNLa4XL+zF7zZtMv9
-         cOTsMWzMoF8eu45e9Bh+BnTf1RSk9qMrauWrNIrr9MVxIdej4miTCTxJynR9COqrOq3c
-         knnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrJMij3OtFpBlfedza+IsFjmQrVoYvFWu9EV194uDEc6cHcoouaEAGbAm+2MUL+Bve8rPL3ngvS+OMSEMsb9HEqVieLniZS6RpuG+tW/ABy6dTHoeZ7hXxPXKNJNfxvItUtt9bWO1U37b6X9nscQOT
-X-Gm-Message-State: AOJu0YwMylmvCT/XdTsRqbffuugfm/rZ65pGvVmU8ZAE4NKLEujRlJX7
-	orespycBLzc9l+y//vgv0oo3TibTndcf32culf9ENTF67qxEmM4KtvpyAdmXBxUd8sIsactvwuj
-	Io+XWic6mn9bYX+IukVzpajdxJD4=
-X-Google-Smtp-Source: AGHT+IEBX22RX9w1vE00S9nBou9S9ivxyjpVGwDAKjzpwjQAP1/Pb2AKyIRA1BYuB73/SpuaEfwQls/e50YW11bQYuk=
-X-Received: by 2002:a17:902:d2d0:b0:1e4:59a2:d7c1 with SMTP id
- d9443c01a7336-1eefa58c6ebmr289967395ad.33.1715784733009; Wed, 15 May 2024
- 07:52:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715786576; x=1716391376;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nIPk2rNi4JW5E81qOzIuD12myoST5mc7DwwaMTUHdKk=;
+        b=Z+YdVg6L2o123YNTGM93PpP7zVbcaV9AD2jsyJlJnIYu6NHPX4oK1rnfdrP7PKhZ89
+         lWfGX/mznovTu6HbH8kUtivSYbxnRsSdPN8MJCrrYhp2JzjdDTr5xKqyp1aZ6feN23eF
+         CZ42BMC+03ojWAtvet2cdLwyfImm2fwIjjucTl5Ie1F8eQGuCp58qRebQ77zBo5Vsi2U
+         Nkf1HImJ7D1uU+I00d15P/MJN5sUBYXRoLR8Sdo72YIHiTEhIxGU4gHkeXm3ldAW/CmM
+         n1bsd3mw1G5OSSZZZQ5gQ8XqFvPpN72fmmQJmQfMBb41cEpd9/6IH3vG5JncnNUMI7w7
+         2yhA==
+X-Gm-Message-State: AOJu0YyOs9pBBm0zozf9GZ/SOcrjk1m+tKn5wPF+7UTEhftHxRorpP02
+	0OtyQi0fNRaDACah7akbhL1GAKPzdFdk+mZ3A/gTbhmGw/hZ7gYXaAo3StxsinBbAZjtshm5SLH
+	Iv/t0/9J7WZoUuOlC4lMMd+Op1L4=
+X-Google-Smtp-Source: AGHT+IHItu9oBQpGn7IlFw+MjNBy2bgB/anANH+OAV1Xk3jRs5/tsxPcBx/1CZ48LGgfXEfzVnswiTTchkzxcEh5yhA=
+X-Received: by 2002:a05:6871:711:b0:23c:253c:283c with SMTP id
+ 586e51a60fabf-24171e0f27amr8037969fac.20.1715786576382; Wed, 15 May 2024
+ 08:22:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503130905.16823-1-stephen.smalley.work@gmail.com> <171497439414.9775.6998904788791406674@noble.neil.brown.name>
-In-Reply-To: <171497439414.9775.6998904788791406674@noble.neil.brown.name>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 15 May 2024 10:52:01 -0400
-Message-ID: <CAEjxPJ6DTNY3p9MmdV0K1A7No7joczGTeOe26Q4wr6yujk9zKA@mail.gmail.com>
-Subject: Re: [PATCH v3] nfsd: set security label during create operations
+References: <CAK3fRr9kngizdGsAU8NpzBjpPSh4k6-23wpwfpZUHJeEoU7yVg@mail.gmail.com>
+ <171557233775.4857.16486910988559286216@noble.neil.brown.name>
+In-Reply-To: <171557233775.4857.16486910988559286216@noble.neil.brown.name>
+From: James Pearson <jcpearson@gmail.com>
+Date: Wed, 15 May 2024 16:22:43 +0100
+Message-ID: <CAK3fRr-vzHXwmnyztvAfVN3twO0ruWf5dtY5fPrWvr5qqsXQcg@mail.gmail.com>
+Subject: Re: Changing the precedence order of client exports in /etc/exports
 To: NeilBrown <neilb@suse.de>
-Cc: selinux@vger.kernel.org, linux-nfs@vger.kernel.org, chuck.lever@oracle.com, 
-	jlayton@kernel.org, paul@paul-moore.com, omosnace@redhat.com, 
-	linux-security-module@vger.kernel.org
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 1:46=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
+On Mon, 13 May 2024 at 04:52, NeilBrown <neilb@suse.de> wrote:
 >
-> On Fri, 03 May 2024, Stephen Smalley wrote:
-> > When security labeling is enabled, the client can pass a file security
-> > label as part of a create operation for the new file, similar to mode
-> > and other attributes. At present, the security label is received by nfs=
-d
-> > and passed down to nfsd_create_setattr(), but nfsd_setattr() is never
-> > called and therefore the label is never set on the new file. This bug
-> > may have been introduced on or around commit d6a97d3f589a ("NFSD:
-> > add security label to struct nfsd_attrs"). Looking at nfsd_setattr()
-> > I am uncertain as to whether the same issue presents for
-> > file ACLs and therefore requires a similar fix for those.
+> On Sat, 27 Apr 2024, James Pearson wrote:
+> > On Fri, 26 Apr 2024 at 05:43, NeilBrown <neilb@suse.de> wrote:
+> > >
+> > > On Thu, 25 Apr 2024, James Pearson wrote:
+> > > > Many years ago, I asked on this list if it was possible to change the
+> > > > precedence order of exports listed in /etc/exports where there is more
+> > > > than one possible match (see the thread at:
+> > > > https://marc.info/?l=linux-nfs&m=130565040627856&w=2) - and answer was
+> > > > 'No'
+> > > >
+> > > > At that time, I used a simple hack to force the precedence order I
+> > > > required (by modifying the 'MCL' enum order in nfs-utils
+> > > > support/include/exportfs.h)
+> > > >
+> > > > However, the issue has come up again for me, so I thought I would see
+> > > > if I could alter the precedence order by adding an exports 'priority='
+> > > > option as suggested later in the above thread
+> > > >
+> > > > I started with the nfs-utils supplied with CentOS 7 (based on 1.3.0) -
+> > > > and added logic to lookup_export() to check for client specifications
+> > > > with a higher priority - but this didn't work - so looking for other
+> > > > places that looped through MCL types, I added similar logic in
+> > > > nfsd_fh() - which seems to work as I expected (I'm using NFSv3)
+> > > >
+> > > > However, adding similar logic to the nfs-utils supplied with Rocky 9
+> > > > (based on 2.5.4) didn't work ...
+> > > >
+> > > > But comparing the code in nfsd_fh() in v1.3.0 and nfsd_handle_fh() in
+> > > > v2.5.4, nfsd_fh() in v1.3.0 does the following towards the end of the
+> > > > function - whereas nfsd_handle_fh() in v2.5.4 doesn't:
+> > > >
+> > > >         if (cache_export_ent(buf, sizeof(buf), dom, found, found_path) < 0)
+> > > >                 found = 0;
+> > > >
+> > > > By adding the above lines at a similar place in nfsd_handle_fh() in
+> > > > v2.5.4, seems to 'fix' the issue and all works as I expected
+> > > >
+> > > > I don't fully understand what is going on under the hood with all
+> > > > this, so no idea if what I've done is 'correct', or if there is a
+> > > > better way of doing what I'm trying to achieve ?
+> > > >
+> > > > Below is a patch (made against the latest git nfs-utils) of what I've
+> > > > done - could anyone let me know if I'm going along the right lines (or
+> > > > not) ?
+> > >
+> > > The restored cache_export_ent() call has to go.
+> > > You need to update init_exportent() to initialise the new field.
+> > > You probably need to make some changes to auth_authenticate_newcache().
+> > > Probably let the loop run all the way to MCL_MAXTYPES, and do a priority
+> > > comparison if you find a new possible match.
+> > > export_find() probably need some attention too.
+> > >
+> > > If you it still doesn't work after addressing those, I'll have a look
+> > > and see if I can beat it into shape.
 > >
-> > An alternative approach would be to introduce a new LSM hook to set the
-> > "create SID" of the current task prior to the actual file creation, whi=
-ch
-> > would atomically label the new inode at creation time. This would be be=
-tter
-> > for SELinux and a similar approach has been used previously
-> > (see security_dentry_create_files_as) but perhaps not usable by other L=
-SMs.
+> > Thanks for the pointers - new patch below
 > >
-> > Reproducer:
-> > 1. Install a Linux distro with SELinux - Fedora is easiest
-> > 2. git clone https://github.com/SELinuxProject/selinux-testsuite
-> > 3. Install the requisite dependencies per selinux-testsuite/README.md
-> > 4. Run something like the following script:
-> > MOUNT=3D$HOME/selinux-testsuite
-> > sudo systemctl start nfs-server
-> > sudo exportfs -o rw,no_root_squash,security_label localhost:$MOUNT
-> > sudo mkdir -p /mnt/selinux-testsuite
-> > sudo mount -t nfs -o vers=3D4.2 localhost:$MOUNT /mnt/selinux-testsuite
-> > pushd /mnt/selinux-testsuite/
-> > sudo make -C policy load
-> > pushd tests/filesystem
-> > sudo runcon -t test_filesystem_t ./create_file -f trans_test_file \
-> >       -e test_filesystem_filetranscon_t -v
-> > sudo rm -f trans_test_file
-> > popd
-> > sudo make -C policy unload
-> > popd
-> > sudo umount /mnt/selinux-testsuite
-> > sudo exportfs -u localhost:$MOUNT
-> > sudo rmdir /mnt/selinux-testsuite
-> > sudo systemctl stop nfs-server
+> > I don't quite understand what export_find() is actually doing ?
 > >
-> > Expected output:
-> > <eliding noise from commands run prior to or after the test itself>
-> > Process context:
-> >       unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
-> > Created file: trans_test_file
-> > File context: unconfined_u:object_r:test_filesystem_filetranscon_t:s0
-> > File context is correct
-> >
-> > Actual output:
-> > <eliding noise from commands run prior to or after the test itself>
-> > Process context:
-> >       unconfined_u:unconfined_r:test_filesystem_t:s0-s0:c0.c1023
-> > Created file: trans_test_file
-> > File context: system_u:object_r:test_file_t:s0
-> > File context error, expected:
-> >       test_filesystem_filetranscon_t
-> > got:
-> >       test_file_t
-> >
-> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > ---
-> > v3 removes the erroneous and unnecessary change to NFSv2 and updates th=
-e
-> > description to note the possible origin of the bug. I did not add a
-> > Fixes tag however as I have not yet tried confirming that.
+> > As far as I can tell, it is only used by exportfs when an export is
+> > given on the command line - and only if that export is of type
+> > MCL_FQDN - so I'm not sure it needs any changes to support these
+> > priority additions ? (I might be completely wrong here ...)
 >
-> I think this bug has always been present - since label support was
-> added.
-> Commit d6a97d3f589a ("NFSD: add security label to struct nfsd_attrs")
-> should have fixed it, but was missing the extra test that you provide.
+> Sorry for the delay - been busy with other things.
 >
-> So
-> Fixes: 0c71b7ed5de8 ("nfsd: introduce file_cache_mutex")
-> might be appropriate - it fixes the patch, though not a bug introduced
-> by the patch.
+> If you run
+>    exportfs -o options  host:/path
 >
-> Thanks for this patch!
-> Reviewed-by: NeilBrown <neilb@suse.de>
+> and /path is already exported to host via some netgroup or wildcard or
+> similar, then exportfs will load the options for that other export,
+> add in the "options" specified with -o, and then create a new export for
+> just the host with the combined options.
+>
+> So this should use the same priority ordering as any other code.
+>
+>
+> Is this patch now working for you?  If so: great.  We can talk about man
+> page updates etc.
+> If not, please tell me exactly how you are using it (e.g.  /etc/exports
+> contents) and I'll try to reproduce and see what happens.
 
-FWIW, I finally got around to testing Linux v5.14 and it did pass
-these NFS tests so this was a regression. I haven't been able to
-bisect yet.
+Yes, my patch is working as expected for me - I've been testing by
+doing something like the following:
+
+/path exported read-only to subnet 10.64.0.0/16 and read-write to
+*.web.example.com
+
+As the subnet export is matched before the wildcard match, then any
+client in the 10.64.0.0/16 subnet that also matches the wildcard won't
+get write access
+
+With the patch, I have /etc/exports containing:
+
+/path 10.64.0.0/16(ro) *.web.example.com(rw,priority=100)
+
+and then a client with an IP in the 10.64.0.0/16 subnet and a host
+name in *.web.example.com does get write access (tested by simply
+using touch to create a new file under the mount point on the client -
+using both NFSv3 and NFSv4 mounts)
+
+exportfs -v reports:
+
+/path         10.64.0.0/16(sync,wdelay,hide,no_subtree_check,sec=sys,ro,secure,root_squash,no_all_squash)
+/path         *.web.example.com(sync,wdelay,hide,no_subtree_check,priority=100,sec=sys,rw,secure,root_squash,no_all_squash)
+
+I can do the same with an empty /etc/exports file and explicitly
+setting exports via exportfs (with and without priority settings etc)
+
+As yet, I haven't come across any combinations of using the priority
+option that didn't do as I expected e.g. adding or modifying exports
+from the cmdline with or without exports in /etc/exports
+
+I've also added netgroup and hostname exports to the mix - e.g.
+exporting to a single hostname with no_root_squash in the
+web.example.com domain:
+
+exportfs -o rw,no_root_squash host.web.example.com:/path
+
+In this case, the client doesn't get no_root_squash access to the
+mount point - as its priority (0) is less than the domain match for
+*.web.example.com (priority=100) - re-running the same exportfs with a
+priority higher than 100 and the client gets no_root_squash access
+
+So, I don't think any changes are needed to export_find() ?
+
+If this is OK, I'll submit a patch, including a suitable update to the
+export man page
+
+Thanks
+
+James Pearson
+
+> > diff --git a/support/export/auth.c b/support/export/auth.c
+> > index 2d7960f1..3d9e07b5 100644
+> > --- a/support/export/auth.c
+> > +++ b/support/export/auth.c
+> > @@ -175,7 +175,7 @@ auth_authenticate_newcache(const struct sockaddr *caller,
+> >                            const char *path, struct addrinfo *ai,
+> >                            enum auth_error *error)
+> >  {
+> > -       nfs_export *exp;
+> > +       nfs_export *exp, *found;
+> >         int i;
+> >
+> >         free(my_client.m_hostname);
+> > @@ -189,6 +189,7 @@ auth_authenticate_newcache(const struct sockaddr *caller,
+> >         my_exp.m_client = &my_client;
+> >
+> >         exp = NULL;
+> > +       found = NULL;
+> >         for (i = 0; !exp && i < MCL_MAXTYPES; i++)
+> >                 for (exp = exportlist[i].p_head; exp; exp = exp->m_next) {
+> >                         if (strcmp(path, exp->m_export.e_path))
+> > @@ -198,8 +199,11 @@ auth_authenticate_newcache(const struct sockaddr *caller,
+> >                         if (exp->m_export.e_flags & NFSEXP_V4ROOT)
+> >                                 /* not acceptable for v[23] export */
+> >                                 continue;
+> > -                       break;
+> > +                       /* we have a match - see if it is a higher priority */
+> > +                       if (!found || exp->m_export.e_priority >
+> > found->m_export.e_priority)
+> > +                               found = exp;
+> >                 }
+> > +       exp = found;
+> >         *error = not_exported;
+> >         if (!exp)
+> >                 return NULL;
+> > diff --git a/support/export/cache.c b/support/export/cache.c
+> > index 6c0a44a3..dfb0051b 100644
+> > --- a/support/export/cache.c
+> > +++ b/support/export/cache.c
+> > @@ -877,6 +877,14 @@ static int nfsd_handle_fh(int f, char *bp, int blen)
+> >                                 xlog(L_WARNING, "%s and %s have same
+> > filehandle for %s, using first",
+> >                                      found_path, path, dom);
+> >                         } else {
+> > +                               /* same path, see if this one has a
+> > higher export priority */
+> > +                               if (exp->m_export.e_priority >
+> > found->e_priority) {
+> > +                                       found = &exp->m_export;
+> > +                                       free(found_path);
+> > +                                       found_path = strdup(path);
+> > +                                       if (found_path == NULL)
+> > +                                               goto out;
+> > +                               }
+> >                                 /* same path, if one is V4ROOT, choose
+> > the other */
+> >                                 if (found->e_flags & NFSEXP_V4ROOT) {
+> >                                         found = &exp->m_export;
+> > @@ -1178,6 +1186,12 @@ lookup_export(char *dom, char *path, struct addrinfo *ai)
+> >                                 found_type = i;
+> >                                 continue;
+> >                         }
+> > +                       /* see if this one has a higher export priority */
+> > +                       if (exp->m_export.e_priority >
+> > found->m_export.e_priority) {
+> > +                               found = exp;
+> > +                               found_type = i;
+> > +                               continue;
+> > +                       }
+> >                         /* Always prefer non-V4ROOT exports */
+> >                         if (exp->m_export.e_flags & NFSEXP_V4ROOT)
+> >                                 continue;
+> > diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+> > index eff2a486..ab22ecaf 100644
+> > --- a/support/include/nfslib.h
+> > +++ b/support/include/nfslib.h
+> > @@ -99,6 +99,7 @@ struct exportent {
+> >         unsigned int    e_ttl;
+> >         char *          e_realpath;
+> >         int             e_reexport;
+> > +       int             e_priority;
+> >  };
+> >
+> >  struct rmtabent {
+> > diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> > index a6816e60..afc139db 100644
+> > --- a/support/nfs/exports.c
+> > +++ b/support/nfs/exports.c
+> > @@ -106,6 +106,7 @@ static void init_exportent (struct exportent *ee,
+> > int fromkernel)
+> >         ee->e_uuid = NULL;
+> >         ee->e_ttl = default_ttl;
+> >         ee->e_reexport = REEXP_NONE;
+> > +       ee->e_priority = 0;
+> >  }
+> >
+> >  struct exportent *
+> > @@ -374,6 +375,9 @@ putexportent(struct exportent *ep)
+> >                                 fprintf(fp, "%d,", id[i]);
+> >         }
+> >         fprintf(fp, "anonuid=%d,anongid=%d", ep->e_anonuid, ep->e_anongid);
+> > +       if (ep->e_priority) {
+> > +               fprintf(fp, ",priority=%d", ep->e_priority);
+> > +       }
+> >         secinfo_show(fp, ep);
+> >         xprtsecinfo_show(fp, ep);
+> >         fprintf(fp, ")\n");
+> > @@ -834,6 +838,14 @@ bad_option:
+> >                                 setflags(NFSEXP_FSID, active, ep);
+> >
+> >                         saw_reexport = 1;
+> > +               } else if (strncmp(opt, "priority=", 9) == 0) {
+> > +                       char *oe;
+> > +                       ep->e_priority = strtol(opt+9, &oe, 10);
+> > +                       if (opt[9]=='\0' || *oe != '\0') {
+> > +                               xlog(L_ERROR, "%s: %d: bad priority \"%s\"\n",
+> > +                                    flname, flline, opt);
+> > +                               goto bad_option;
+> > +                       }
+> >                 } else {
+> >                         xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
+> >                                         flname, flline, opt);
+> > diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+> > index b03a047b..5e6a64b6 100644
+> > --- a/utils/exportfs/exportfs.c
+> > +++ b/utils/exportfs/exportfs.c
+> > @@ -753,6 +753,8 @@ dump(int verbose, int export_format)
+> >                                 break;
+> >  #endif
+> >                         }
+> > +                       if (ep->e_priority)
+> > +                               c = dumpopt(c, "priority=%d", ep->e_priority);
+> >                         secinfo_show(stdout, ep);
+> >                         xprtsecinfo_show(stdout, ep);
+> >                         printf("%c\n", (c != '(')? ')' : ' ');
+> >
+>
 
