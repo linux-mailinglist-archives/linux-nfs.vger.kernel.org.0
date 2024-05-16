@@ -1,120 +1,124 @@
-Return-Path: <linux-nfs+bounces-3264-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3265-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 238BE8C6DF0
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 23:46:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F81F8C70C0
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2024 05:50:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5DEEB225DE
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 May 2024 21:46:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D14FC281F5E
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 May 2024 03:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C812615B141;
-	Wed, 15 May 2024 21:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00BCE29A9;
+	Thu, 16 May 2024 03:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A7h+LF3U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpJvPQMM"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42899155A57
-	for <linux-nfs@vger.kernel.org>; Wed, 15 May 2024 21:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB141C14
+	for <linux-nfs@vger.kernel.org>; Thu, 16 May 2024 03:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715809594; cv=none; b=WuXvtLrsT+LWdDLGNlFJDuemr4qyq0Oq6Pc/nRErg3IHN0W46DxJYN6xWJI7ddBquM4wYbKOf2rd6TRppvBAjkIFN9E6k5B1Uocf2UVA/gjPekRUT4QzasOcqnIgJLqUy4eiRaACDKK6s3b01lUxPT9c4aNP4jRX+IuQBCFdoIQ=
+	t=1715831409; cv=none; b=PE6SJC2oPdfHGDK0Pb7X5D2SP8NwREbBP915i069YqOs+qeEagLgzOru8/jSnJPkYdhjQOPrvT441WNc19QHcZsDXyhSuivmRYsC8/gjnU4zyMBbkyKURUYS9A1ZBntamlYob7kMq3Mjcs6Epo5/pPjvXKn/DhGl0EyEqn5nvaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715809594; c=relaxed/simple;
-	bh=Mtxt2rY3/XFM2ji6GZmsvL2Mc1RTPIJMRiTNgCCIukU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Kvc+oLzVt/ZFBqwnz7HNWBjkFNcd2yewwzOf3uF1n7jF8JTpihdzzi1L2OKUaTqLTTAEbU6+0UYpP8+VczeMCtpkPDSIC9x3Aq16HzMxR8AQwN8Z7ovqqKkbSbWdIhDUvEinmTOvjpuvk9G87nqqGqvAAdrCbdKSNd3IhJWQWRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A7h+LF3U; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715831409; c=relaxed/simple;
+	bh=a2/2b6FDEzUw1rOL8SgMqO/AVqOxWxClxPMIAtDtIlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I3EK40yDWMgcc5e021zwoMODP/+foPpo1RwbfH8NHf3idKlpdkz62tAuk9g8EijcAOuOBISYrX2Ao+wpqKq3oZsj0PkRfahfEN47mnha/7RLW+FWI8CsDV3OY/FnB/gcooiVq9PktSelBlFwtSGXtegDuP7hbxsSFVP3RJSZ7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FpJvPQMM; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715809592;
+	s=mimecast20190719; t=1715831406;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mwRNbWW6VaWKaV+sl5tKr/AhW6Op5oAwqY6Mvsd2BQU=;
-	b=A7h+LF3Ui9+SlmjuKu4HGePhiLRJLARs1BTX4E16kR/nkPVqVbmuAguky1U3FuMtLzNQZM
-	+wJAKAPVvuOo0+gqcXC5V7WfU+2/t4dsKyoMuCzsLAZGyGkYc8n1T4k35GPG+FkkbuWrpV
-	+TLbCB6aVsL4PYF6Si6F5+Rwkkz6Yb8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=gl60mrDio8jc8u8u6k+Vmdn2yDp+jFT5KdnmnjyNd0U=;
+	b=FpJvPQMMmeFnwLBeeG2qe43J62x8kx/3mFD4xrYI/ICDYW+tJgj/NnPcylPyEJfFAa4rwg
+	Ze5XdAzniuAb9kSZ/TPNVhtlRy1iz9e4tVoEw+0chexoouJxR/DuD9PapsN2vb6a6+0Yap
+	bc174Aev5NWMehQKj6zgvKfkexSdUwQ=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-vKl5Gm7jMVyleSQ1K545yQ-1; Wed, 15 May 2024 17:46:30 -0400
-X-MC-Unique: vKl5Gm7jMVyleSQ1K545yQ-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6a35d03abb4so1812756d6.0
-        for <linux-nfs@vger.kernel.org>; Wed, 15 May 2024 14:46:30 -0700 (PDT)
+ us-mta-156-Nff5cMaPP0Ki1ugbYtuFmg-1; Wed, 15 May 2024 23:49:59 -0400
+X-MC-Unique: Nff5cMaPP0Ki1ugbYtuFmg-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1ed057cc183so90079525ad.2
+        for <linux-nfs@vger.kernel.org>; Wed, 15 May 2024 20:49:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715809590; x=1716414390;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mwRNbWW6VaWKaV+sl5tKr/AhW6Op5oAwqY6Mvsd2BQU=;
-        b=Ovc1QLobWRUEIzKp+n8R1KtD+IPyz4hTdiXJuws1uTSJjE115MXdhz8ZCgQepquads
-         /s1uPqwzi8n/j8Da4mKa96D3VhGuKSkbWmAeAXO4ieQBQ0ZjUlnY51y/c1YX0gAhF7Q9
-         /PnpqZs5mx25q2wVl2wJDexezZxIe+WYmcabEZseW8hV/iPitxuHpEG5CaS7z5JgQVO7
-         3RwZ0/IDHuiDqbRfDlvbCLBBaG0BJfkIc4fFnGJdNrOIsxDRRkpRytB/MH2vMokhfzpi
-         9CoyuvUBwLX3n9Is8CdkPY8NxwmqRkJ2TAmAUNHGJ+N3H0QCOyCObt3UhV/JZgcUAngu
-         8E0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVp/F3sIzSnQcz2qsadUa2W8Vs2tft6X3mfAJMjNiZl8vSxMZSbllhj4/TUIjIpuIMW0UX//xfGdcVbemlyHrO3vwcsO/EUHDLD
-X-Gm-Message-State: AOJu0YyRjMbSASkRcV4NZ0CIaeQUNTIGhA8i6JVPQo+yIyH10bHjin7w
-	t6+t8ctOkIrEiZszUTTTttqlq2Sdd7uPzofuerb+XjJ1+IyfGmYbI1BWB1rylmsfQa9Pedp41BN
-	iQzlupYJ4C4v3RbXeUPJDkl5l5Vp0QJT8A7jXbgweP5gTG4kpjLSej68BcA==
-X-Received: by 2002:ad4:5fcf:0:b0:699:dfe:6015 with SMTP id 6a1803df08f44-6a168381784mr170934906d6.5.1715809589648;
-        Wed, 15 May 2024 14:46:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFK+WLWnWPui0ae+Rks7mwr4rVCjTQLDWewVFaxG0hulDilufGBB9niivlizLJzatArherp0A==
-X-Received: by 2002:ad4:5fcf:0:b0:699:dfe:6015 with SMTP id 6a1803df08f44-6a168381784mr170934676d6.5.1715809589132;
-        Wed, 15 May 2024 14:46:29 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.245.214])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f194c88sm67890636d6.65.2024.05.15.14.46.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 14:46:28 -0700 (PDT)
-Message-ID: <619bbf23-dbfe-4c26-adb9-1cc89f3f22a2@redhat.com>
-Date: Wed, 15 May 2024 17:46:27 -0400
+        d=1e100.net; s=20230601; t=1715831398; x=1716436198;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gl60mrDio8jc8u8u6k+Vmdn2yDp+jFT5KdnmnjyNd0U=;
+        b=XnOQIA6U2Brx3a7RRWR8jWK1ebmowrUAaSf13uefWUmtBH2bbfG3X88VSxe5rvRwkP
+         9gYK448LZ0Y87TQZXZsvNUcwz2Wzd/FtrV/U4RqlAOcmr3v4vNgt6Kwy7EI6q+B0Gs64
+         NP8zfXf5GpxIbu1+K972Z0VRnnTmJ+Kgy0A7MpyyhPjKzoOGcC1mXr+it8MrbkLag+Pt
+         zIJyTs6CGwylsbw/XTjcjB5QCPXn1rKWcgVoT15Q2DgFyRY+A9EChH4KcEm8qrlix1h1
+         S0WEWRbfNMnNeDOA4BiQ2GLvU8f+sutN/IQ0Ie/qKDHURY/O/56FzbK4dtZMHQSHka7R
+         k27g==
+X-Forwarded-Encrypted: i=1; AJvYcCXcTk7YO9fDKAm3AnoHy7iivmNZv0k6T5DdGQaknbMi2J+r4/LPhPFu3Sr/DqGEqrpRSSlXCftvJl+4HSjfAXsueYSBjhCEIFcE
+X-Gm-Message-State: AOJu0YwNYfs4Xr3NroJpz3Z7VA212qpCezGCGDlmAenmJIWi6W2Hd4W5
+	J64IPB1YllA5HC/pu652nDz182JlR6frrZHnqhPQ6+xec5tTzM4/SRMHBbVZkb+CNKOpWDmY13e
+	iZRRhf33DgzcwZNewAZXl/B4ZqVk2j3nK90aEDC5qlu/VGOZGoKzO6Zreyg==
+X-Received: by 2002:a17:902:e752:b0:1e4:3320:dbed with SMTP id d9443c01a7336-1ef43f51b8bmr226466745ad.52.1715831398324;
+        Wed, 15 May 2024 20:49:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9iw4BDSqSoydaYv4Kek6dvDiorOM6oI3FuTULeGBeSdab4FpOT10JIC7yt7hYHQs66c/+VQ==
+X-Received: by 2002:a17:902:e752:b0:1e4:3320:dbed with SMTP id d9443c01a7336-1ef43f51b8bmr226466605ad.52.1715831397691;
+        Wed, 15 May 2024 20:49:57 -0700 (PDT)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f07dec3fb2sm55858005ad.63.2024.05.15.20.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 20:49:57 -0700 (PDT)
+Date: Thu, 16 May 2024 11:49:53 +0800
+From: Zorro Lang <zlang@redhat.com>
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+Cc: fstests@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH fstests] generic/742: don't run it on NFS
+Message-ID: <20240516034953.7im5grlfdr2xzs7e@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <20240515092133.1219-1-chenhx.fnst@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RFC2224 support in Linux /sbin/mount.nfs4?
-To: Dan Shelton <dan.f.shelton@gmail.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <CAAvCNcCTWbU-ejURuUC0_xhcoU3GF+2jX28rV4+2cKgfO5Lqxg@mail.gmail.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <CAAvCNcCTWbU-ejURuUC0_xhcoU3GF+2jX28rV4+2cKgfO5Lqxg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240515092133.1219-1-chenhx.fnst@fujitsu.com>
 
-Hey!
-
-On 5/14/24 5:57 PM, Dan Shelton wrote:
-> Hello!
+On Wed, May 15, 2024 at 05:21:33PM +0800, Chen Hanxiao wrote:
+> This test requires FIEMAP support.
 > 
-> Solaris, Windows and libnfs NFSv4 clients support RFC2224 URLs, which
-> provide platform-independent paths where resources can be mounted
-> from, i.e. nfs://myhost//dir1/dir2
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> ---
+>  tests/generic/742 | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Could Linux /sbin/mount.nfs4 support this too, please?
-Why? What does it bring to the table that the Linux client
-does already do via v4... with the except, of course, public
-filehandles, which is something I'm pretty sure the Linux
-client will not support.
+> diff --git a/tests/generic/742 b/tests/generic/742
+> index 43ebdbc6..aad57f2d 100755
+> --- a/tests/generic/742
+> +++ b/tests/generic/742
+> @@ -30,6 +30,7 @@ _require_test
+>  _require_test_program "fiemap-fault"
+>  _require_test_program "punch-alternating"
+>  _require_xfs_io_command "fpunch"
+> +_require_xfs_io_command "fiemap"
 
-So again why? WebNFS died with Sun... Plus RFC2224 talks
-about v2 and v3... How does it fit in a V4 world.
+Make sense to me. But according the change, I'd like to change the subject
+from "don't run it on NFS" to "require fiemap support", due to it's not
+only for NFS.
 
-But of course... Patches are welcome.
+Reviewed-by: Zorro Lang <zlang@redhat.com>
 
-steved.
-
+>  
+>  dst=$TEST_DIR/$seq/fiemap-fault
+>  
+> -- 
+> 2.43.0
 > 
-> Dan
+> 
 
 
