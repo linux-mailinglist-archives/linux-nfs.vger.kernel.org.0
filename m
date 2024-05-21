@@ -1,110 +1,116 @@
-Return-Path: <linux-nfs+bounces-3304-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3305-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 342588CAEC0
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 14:58:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8200E8CAED1
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 15:05:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E09771F218CA
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 12:58:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E156283546
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 13:05:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA4E770E2;
-	Tue, 21 May 2024 12:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B58A54277;
+	Tue, 21 May 2024 13:05:10 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FF71E48B
-	for <linux-nfs@vger.kernel.org>; Tue, 21 May 2024 12:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6C6757F7;
+	Tue, 21 May 2024 13:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716296327; cv=none; b=UrDu+R7Ba6DT0vXh9DHuoOHtCEERKBhdkj3E26OinmnIJjL87sQ/Yxg2a30M6G7ENwfLJrSZN9BoApdN2svQN2DgfMV+t94wICymnkakqimn9GUbPWByYoG4kxSYMv5fcw6v5BGalAQl7L61eJc5FlC7vCHWk7tHUOYakIJAevA=
+	t=1716296710; cv=none; b=SkgggFUaJPxxuTNblDdro+LvucehdIRJBznKOFzy7uu08h7VesyrYziTQ8GJE23EFQ38e7mFF5HuhT6J3nxh1s0m3VBlnQmSoghX8YgokIBrfRcMQWnVK6PyCVmnIDboTqA/wUs5tyOQTZ4V38orlW+V/PyFg57kaauxW+ZWmMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716296327; c=relaxed/simple;
-	bh=O3EbuI5x378NaBPU7VSJRQxY4SvMcKAx8CpS5SJ5RTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PMX71gndChswZX8Hzg2NRcfpYx6BIIgjXcHFkm0lK7gn2hJCfR0xGfT9L/UMLXShfSknI8kknxCs+xXh/HCoDQugFONLGPeQHhbnYLvcoYnTSRk73IddTEWFgEpG1rIbJAlpmeCv096x4uWuntWPDxT6url7sO96DUaEnYmNHf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1716296710; c=relaxed/simple;
+	bh=zNxomSvXx/+ib9LtsQN1Jmd2/UscT6DGZpkXXbgDttY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JAqe7wOkbyfW/e2SwjHOOKh9+/F9E8uCFO+kCPFozWNRudHP6A56cTFiOAGktsIklg3mQ5MRVF5MvkrPH17ByVhxAGWMOaLt4uXwFTp5nFSx4HADIEakYcDhR1+TuQ7CB8x5KpqJKjAllvma0l/PrYpokq8rba5oVCIz0mT4AME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-354c84d4604so529184f8f.0
-        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2024 05:58:45 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-354cd8d5f89so129560f8f.0;
+        Tue, 21 May 2024 06:05:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716296324; x=1716901124;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=olHB2X467EZQCAkdKYsZzPMump8xN9lfA38O0J4pCT0=;
-        b=rrF8A7BH4+unJKCBvBiUJiU2eL8B33/pTr2UwlgDoPQQJ/dOI10CT8ABsCC6Ppdl5/
-         yFgzXLtZ6RDmr0PWyIzGM7ROWujPwRTYOsUm0RaykWQrl7dr9HscCbdf5Rm5Hbm4oMgo
-         l8GpFPXZ3camjl5RpByIrJLoyBncekLniYToSQi6xVj348baxGTxYmxxyggY4pxkmIZb
-         ql8l7ptv7aD+KOht8BpI4sPmf9QsR2yQFvdfJlF9TaHYFHZbNHr2BvX554VTzIK+lomq
-         Qg5xncgO8uwqEhIugEzRhInI6XVx/o4N3hqZhA4m5HFpI66So9WjShF7FYS50YUSSYwv
-         Z47A==
-X-Gm-Message-State: AOJu0YzT4p6bciJcP22BOE4CP6mFhpy7Y35F83qMMcg2H1Fgc901CFY0
-	XuxNUUD0/L3okbyJ/1xhTw7zg98dFOlMa3mvOYNHlbM7wVOuSywQVGvOoQ==
-X-Google-Smtp-Source: AGHT+IFC3VcoC7777GOJ+40XzCHcB9DaBMNN5J1bS5SjtFIiWSPTcfTj5gMfbF5ZqXYTCap6x344GQ==
-X-Received: by 2002:a05:600c:3b0a:b0:418:2719:6b14 with SMTP id 5b1f17b1804b1-41feac5a400mr241744395e9.3.1716296323471;
-        Tue, 21 May 2024 05:58:43 -0700 (PDT)
-Received: from vastdata-ubuntu2.vstd.int (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42011bd013asm372743685e9.21.2024.05.21.05.58.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 05:58:43 -0700 (PDT)
-From: Sagi Grimberg <sagi@grimberg.me>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Dan Aloni <dan.aloni@vastdata.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH rfc] nfs: propagate readlink errors in nfs_symlink_filler
-Date: Tue, 21 May 2024 15:58:40 +0300
-Message-Id: <20240521125840.186618-1-sagi@grimberg.me>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1716296707; x=1716901507;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0SoVULRuyToXbSm7nUXxsggMhpk0D4GBRowOzHO6JjQ=;
+        b=UnU+e7Gb4y1AiWKO2bFAxMWONiTuVdM+YsNsCtfsqeD5typ1/4tiHUNB/7osfY6EFh
+         8bbfhKrGeUgi7XXs22mDH+pgZaPOOiL282EbPN8Zz30903HCnLQb6xAwsztEfYM5TD22
+         gsWc28hhxQFkoPfbdnpxqJgizE18ack6AfXzcXV8e3UDnXiEplbU7zWUl0UV2Qmi914b
+         2Wnff7XrSQEkqXaEb/ns4rSmtEPqUKn8ARHZbXziFwRvTLPRvgY65KYIcDVWzqmWtljY
+         SUjl0nhjihNR37hzsPXEeD4dsi4TTd4YeHfVo8egnKp74335WJT8PM/qp8jNmetq4uya
+         dxgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHflqHHni/i4DbgiMcMqkRQ6WRxNv9VYnWyInvR1fOdAkPOi/izQCqqhmLUkoYSTaXwoVRpmtVoQTGfzWbN6eFgEm9bx0A/pDglJ2FeMo59EufJHrDuuBtWCwpZZj0SlwLMaQ3fA==
+X-Gm-Message-State: AOJu0YxqPhem9HlhDqkHRs7lNcXB0Pyko/7S80vBrZKQtuaQZK4e2xLx
+	zCbppOUiLORke8zTGI9XBSMZmmZSJq3vyY3vk92SprcGV6gDmRmMh75UFg==
+X-Google-Smtp-Source: AGHT+IEdobWPhLgggCFjo3QOLm3uPSRaC65WhbBG1MKIJZJsYt6hIsRi8dkvEAaICJcmiW9nQa/nNg==
+X-Received: by 2002:a05:6000:186d:b0:354:d14a:cb60 with SMTP id ffacd0b85a97d-354d14acc23mr1081883f8f.7.1716296707124;
+        Tue, 21 May 2024 06:05:07 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad04dsm31951726f8f.81.2024.05.21.06.05.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 06:05:06 -0700 (PDT)
+Message-ID: <5b0b8ffe-75ad-4026-a0e8-8d74992ab7b6@grimberg.me>
+Date: Tue, 21 May 2024 16:05:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Safe to delete rpcrdma.ko loading start-up code
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <DE53C92C-D16E-4FA7-9C0B-F83F03B1896F@oracle.com>
+ <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
+ <20240521124306.GE20229@nvidia.com>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240521124306.GE20229@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is an inherent race where a symlink file may have been overriden
-(by a different client) between lookup and readlink, resulting in a
-spurious EIO error returned to userspace. Fix this by propagating back
-ESTALE errors such that the vfs will retry the lookup/get_link (similar
-to nfs4_file_open) at least once.
 
-Cc: Dan Aloni <dan.aloni@vastdata.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
----
-Note that with this change the vfs should retry once for
-ESTALE errors. However with an artificial reproducer of high
-frequency symlink overrides, nothing prevents the retry to
-also encounter ESTALE, propagating the error back to userspace.
-The man pages for openat/readlinkat do not list an ESTALE errno.
 
-An alternative attempt (implemented by Dan) was a local retry loop
-in nfs_get_link(), if this is an applicable approach, Dan can
-share his patch instead.
+On 21/05/2024 15:43, Jason Gunthorpe wrote:
+> On Tue, May 21, 2024 at 12:04:02PM +0300, Sagi Grimberg wrote:
+>>
+>> On 20/05/2024 21:05, Chuck Lever III wrote:
+>>> Hi-
+>>>
+>>> I've tested this with two kinds of systems:
+>>>
+>>> 1. A system with no physical RDMA devices and no start-up
+>>>      scripts to load these modules
+>>>
+>>> 2. A system with physical RDMA devices and with the start-up
+>>>      scripts that load xprtrdma/svcrdma
+>>>
+>>> In both cases, after doing an "rmmod rpcrdma", I can mount
+>>> a "proto=rdma" mount or start the NFS server, and the module
+>>> gets reloaded automatically.
+>>>
+>>> I therefore believe it is safe to delete the code in the
+>>> rdma-core start-up scripts that manually load RPC-related
+>>> RDMA support. Either the sunrpc.ko module does this, or NFS
+>>> user space handles it. There's no need for the rdma-core
+>>> scripting.
+>> I didn't know that rdma-core does this... it really shouldn't, the
+>> mount should (and does) handle it.
+> This is new, it didn't used to do this
+>
+>> I also see that srp(t) and iser(t) are loaded too.. IIRC these are
+>> loaded by their userspace counterparts as well (or at least they
+>> should).
+> And AFIAK, these don't have a way to autoload at all. autoload
+> requires the kernel to call request_module..
 
- fs/nfs/symlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
-index 0e27a2e4e68b..13818129d268 100644
---- a/fs/nfs/symlink.c
-+++ b/fs/nfs/symlink.c
-@@ -41,7 +41,7 @@ static int nfs_symlink_filler(struct file *file, struct folio *folio)
- error:
- 	folio_set_error(folio);
- 	folio_unlock(folio);
--	return -EIO;
-+	return error;
- }
- 
- static const char *nfs_get_link(struct dentry *dentry,
--- 
-2.40.1
-
+nvme/nvmet/isert are requested by the kernel. iser is loaded by iscsiadm.
+IIRC srp had a userspace daemon loading it.
 
