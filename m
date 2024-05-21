@@ -1,190 +1,143 @@
-Return-Path: <linux-nfs+bounces-3297-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3298-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C12B98CA783
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 07:04:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B6038CAA02
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 10:32:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8FEC1C21519
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 05:04:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AF359B222D2
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 08:32:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C54224D4;
-	Tue, 21 May 2024 05:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D7D55C33;
+	Tue, 21 May 2024 08:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krQXJ+iv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkIwyEzB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A65B610C;
-	Tue, 21 May 2024 05:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA8454BDB
+	for <linux-nfs@vger.kernel.org>; Tue, 21 May 2024 08:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716267863; cv=none; b=OCtZ46ssT98TfvRzR5Z79l1vmClCiPGL6uc0rDcUa9/251QiyhNtFHvDnfDd4BB4OaGCO4LQwQnHQYnmfqEvtrLRR/YiepS+w44Am+9jTeUrhrocJYmlAFg9SdD2D9Yymw/PSiXEmRXG/Hh5dCm88v9RaXPsCrBjGqocrI1mKvM=
+	t=1716280362; cv=none; b=kYZHw8Qn2J52n74dAI4jOT3P2qRs3TmVyEXVp97jAf5x8iXLMyTyZHvm9scMvLN41DnPK7jf3Jk+mPmELpPulZ5d32iH9gOLl9A4eqQ3Lj0kNqnIiriCYtbCIjSujKFo/DlYMuazQpjxYwjJ7ILGOLat55e5XCBgKtsRPkoqCU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716267863; c=relaxed/simple;
-	bh=97PxihTc9hshgLJfsF3ImXlIAmhViSK96qjnNgOAQgw=;
+	s=arc-20240116; t=1716280362; c=relaxed/simple;
+	bh=eNAfFiBFtvDkIU46Uzq+Jtfa8NT5UkDWFgGFsS51ULo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iIXNRHPc4xtJnfaBUkfreySI/9PntBEmOpUW7C/Fh7P6npY7L9EhuXLVGYRqCpuNZtUBG8TS6JH8Nj6e0rzK7BE43zI6Tm9cEKWxcDwoSYF+3N72ain2kJq0ppd5et4pYJOHGl57OQlf+U0MVDGLJlrzEXkFtrypYNxmfQQJnWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krQXJ+iv; arc=none smtp.client-ip=209.85.128.170
+	 To:Content-Type; b=sWSd0LR98dgdW6uSIx9r4/OJw5ZCIRVby+Y56lRlBsrvBMnuWFB8BP+uKGXse88Azgi5M7WzzvNmm2+gZvDf+SfJ0cfAEov/6zMZOqPre02LXIxNyvA+aWgfU3gxAO+HZNsT9KycX0XMgh6JKsJlufHOyD19uHrUBUc3CPQOwgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HkIwyEzB; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-61b4cbb8834so28487307b3.0;
-        Mon, 20 May 2024 22:04:21 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a59e4136010so861325466b.3
+        for <linux-nfs@vger.kernel.org>; Tue, 21 May 2024 01:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716267861; x=1716872661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1716280359; x=1716885159; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7QDbtlT09zWn+TAG8clpVDLU8Z+ZeH0+DkEI12Wz3R4=;
-        b=krQXJ+ivbSxkKKtshRBNG2kYcMqe368oPriMH/PjXjx1PvXD9JPjW72dETLZXGMKM+
-         S/BicnzamBfHLG4YZe4mgGX6a1QBdYkfvp+TZu+MR8qTJCYkktn7TWkK+Vx//d6S5qEl
-         C8GMAQ7xz+XCjNYidCmPG18decEqjRmNv9vOsSyzGu7VmUMrsN92/64InDaC8MSRxX4A
-         gM2BYKCHhLn8YRfumA7hA+CY2tTFx0jSdNE9t4y9zDHCWNVL9fgzVKNaEIpwJ/6ZausV
-         ASv65/1WApiRPfKIGA2VoGC3OfL5imAI7PtJmLfNVB2Bu31ATe1fkq0P++ZuYUpmNGky
-         zM8Q==
+        bh=042N1pbaJOntOFtHt8GAKbOMbErAhqajmACZ9z3KXC0=;
+        b=HkIwyEzB0HT1RLWev5sKmE4jWG1g20FMXj3COOoGBS0g+bYC8toOi9k59uuD5QySg9
+         HkENQ+NOJddCDY5Qk5rto12rgXUlBi77TjgzNc7a4115WuThPM33h7K6z/MtXtNIJgRh
+         mUxRM8sPRJ2/1jSfcdNsG1eVmDsMHxXH9nF/OR4OP8xtmRY5HDCe+yKbv13/AyRA/vRI
+         zhvqxpa0+Dv/fREOqi2n0J0qAwMVPPZ687WAR4XEeN+jIQTUWw/7hSg8qFv/mzlmvi1+
+         vravJ5EhYiVPNKzcu2gq9c3gFkqB+5/b+wFL3UnWlnma6FxOI1Hcwlni+BcZSGIqS9+W
+         6aRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716267861; x=1716872661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1716280359; x=1716885159;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7QDbtlT09zWn+TAG8clpVDLU8Z+ZeH0+DkEI12Wz3R4=;
-        b=PDJs/UtUEXh7njDtc/b1saaS4IPx2ousnE7rnSVaAPbPHk+O1VH+220xiO+sUX+Wik
-         kwUzqMWKfxg+O+MMkfwkhPVcKA0YEsensMASkDN9UIOCv60xaiLTJpkgfJ6LfWlBmOX2
-         ogJuifbWvcb/Sb6aOqVRDXbCqoY0I4kwSbcco3jb0ChZgVoTz8nQqyU5jnu31c9MCt7Z
-         nvGfCEZonEoXM624aewCcpFzSK8qM4YCZtAHQzTf0mTWN78g5xtp/Bt3bRa6qYdKBy0S
-         NmglV3fznsUX9DG+UglNUYdxp6ejXztSmEvMqfLOfP9EvsWcoSB3oTZoEtEgZILBiQMr
-         EFsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXk66P+F8MRA/NGwdBIDD3S+e1gidef5f40HXqFD3XNPnkb+YDJuciG/NbszQTbzL4U+nVVZvuHOuJQk9odwD+RN0VVnPHkaWu4F4XeTn+pxf1EwJyeFtRzsgHPZOLvjDVMBctnltErmNBkRcZXyuLcx8FN68KE4UnaPOMvvAsDdLfaAEtIng==
-X-Gm-Message-State: AOJu0YwV5Nmx/uTFsSvwgWtnjr8vVwM23LomL+YT2fa00vTH6R0eE6bn
-	aHp47Ws8g/FQG839H9HN6uargb6uXe6b/AxzfOO06Mg+YmkLWsiYRZdRq82df4+AEBi1CoSd/Sq
-	OWFNPz6ZODivg37rMJ+RPBmUNB27/c5lQ
-X-Google-Smtp-Source: AGHT+IHkbaVvQ38fmMR3spKzkIG6N5rKJ/HA3RUD4jPnsho+kRoMUSZXDTU0WasN2QSwtHDmYkonxdTqYqLL94MD8eU=
-X-Received: by 2002:a81:4503:0:b0:61b:bd65:3025 with SMTP id
- 00721157ae682-622b00218bcmr305383337b3.40.1716267860942; Mon, 20 May 2024
- 22:04:20 -0700 (PDT)
+        bh=042N1pbaJOntOFtHt8GAKbOMbErAhqajmACZ9z3KXC0=;
+        b=TRUl+0/CiOltqVQsXxoJqNX78wU4AeBPWcIID1xuHD3AuCOT4+6VqtaKM1eCTC22ME
+         d3JiaHal5asQyDQrzdJDehjGoZIKuPlfgGkKre5EmkzaikwelZk1O9YGHDBJC+iH7IN+
+         l3UhHXa+3IsZF1HCj2pqgVFkW+OGmefcUJzY0vKFsAeg2qq4eRz/9c+zpUis8RpdiRNP
+         C1TvD+6tK0QS5g/YxWXWfqHrt6Gw2Y8sUjwixmHeufZO4icP/suKo/DcxyZYAdEY6lZn
+         wd3O3f7LKdLJz6E8oP0Tli+hj+dUjhGd1EqPECu2mzlIe/rjMB/8f4UOiTAKzOeX4c/g
+         7oHg==
+X-Gm-Message-State: AOJu0YzDYX8mSf34RXZ/4mU7UDlvuI+zLMZ8Fwng2NcE/M2kozdlW312
+	Ngohn6bM7k5yxUMVYjw+M7V92K2j7ON021Ne+OOiNb202LSEWcFJkxgwQh7pdU1cU8Q6pfqo0ET
+	Ewivw0DNTlRX+7t6smJ//5AyeSeHWgQ==
+X-Google-Smtp-Source: AGHT+IH42RsA1cagbb/ONtoylhKGcY51w5YIqzG4yR5cDPflF1eNYMo/k1XD95hLx9ULw9+mdEKXagkba1CruUTinPs=
+X-Received: by 2002:a17:906:eb18:b0:a59:c844:beea with SMTP id
+ a640c23a62f3a-a5a2d676a37mr2011712166b.73.1716280358957; Tue, 21 May 2024
+ 01:32:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
- <f51a4bf68289268206475e3af226994607222be4.camel@kernel.org> <20240520.221843-swanky.buyers.maroon.prison-MAgYEXR0vg7P@cyphar.com>
-In-Reply-To: <20240520.221843-swanky.buyers.maroon.prison-MAgYEXR0vg7P@cyphar.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 21 May 2024 08:04:09 +0300
-Message-ID: <CAOQ4uxiaRGypAB0v49FW8Se+=4e4to1FAg77sxLPCkO55KcuHQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+References: <CANH4o6Md0+56y0ZYtNj1ViF2WGYqusCmjOB6mLeu+nOtC5DPTw@mail.gmail.com>
+ <DD47B60A-E188-49BC-9254-6C032BA9776E@redhat.com> <CANH4o6NzV2_u-G0dA=hPSTvOTKe+RMy357CFRk7fw-VRNc4=Og@mail.gmail.com>
+ <5ED71FE7-B933-44AC-A180-C19EC426CBF8@oracle.com> <CALXu0UeZgnWbMScdW+69a_jvRxM2Aou0fPvt0PG6eBR3wHt++Q@mail.gmail.com>
+ <8FCF1BB3-ECC1-4EBF-B4B4-BE6F94B3D4F5@oracle.com> <CANH4o6P2S1mOXAbQb9d4OgtkvUTVPwdyb8M0nn71rygURGSkxQ@mail.gmail.com>
+ <93DA527F-E5D7-49A4-89E6-811CE045DDD3@oracle.com> <c28a3c78daa1845b8a852d910e0ea6c6bf4d63b4.camel@hammerspace.com>
+ <DA6AB3E6-F720-4679-A36B-01BEB39720BB@oracle.com>
+In-Reply-To: <DA6AB3E6-F720-4679-A36B-01BEB39720BB@oracle.com>
+From: Martin Wege <martin.l.wege@gmail.com>
+Date: Tue, 21 May 2024 10:32:00 +0200
+Message-ID: <CANH4o6NtVdF1p1fkW-uiCkm7RAcwGzhSxt5sFkz45LqbJhZd0Q@mail.gmail.com>
+Subject: Re: NFSv4 referrals - custom (non-2049) port numbers in fs_locations?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 1:28=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> wr=
-ote:
->
-> On 2024-05-20, Jeff Layton <jlayton@kernel.org> wrote:
-> > On Mon, 2024-05-20 at 17:35 -0400, Aleksa Sarai wrote:
-> > > Now that we have stabilised the unique 64-bit mount ID interface in
-> > > statx, we can now provide a race-free way for name_to_handle_at(2) to
-> > > provide a file handle and corresponding mount without needing to worr=
-y
-> > > about racing with /proc/mountinfo parsing.
+Good morning!
 
-Both statx() and name_to_handle_at() support AT_EMPTY_PATH, so
-there is a race-free way to get a file handle and unique mount id
-for statmount().
-
-Why do you mean /proc/mountinfo parsing?
-
-> > >
-> > > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bi=
-t
-> > > that doesn't make sense for name_to_handle_at(2).
-
-Christian is probably regretting merging AT_HANDLE_FID now ;-)
-
-Seriously, I would rearrange the AT_* flags namespace this way to
-explicitly declare the overloaded per-syscall AT_* flags and possibly
-prepare for the upcoming setxattrat(2) syscall [1].
-
-[1] https://lore.kernel.org/linux-fsdevel/20240426162042.191916-1-cgoettsch=
-e@seltendoof.de/
-
-The reason I would avoid overloading the AT_STATX_* flags is that
-they describe a generic behavior that could potentially be relevant to
-other syscalls in the future, e.g.:
-renameat2(..., AT_RENAME_TEMPFILE | AT_FORCE_SYNC);
-
-But then again, I don't understand why you need to extend name_to_handle_at=
-()
-at all for your purpose...
+What is the status here?
 
 Thanks,
-Amir.
+Martin
 
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-[...]
-+
-+#define AT_PRIVATE_FLAGS       0x2ff   /* Per-syscall flags mask.  */
-+
-+/* Common flags for *at() syscalls */
- #define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links.  *=
-/
--#define AT_EACCESS             0x200   /* Test access permitted for
--                                           effective IDs, not real IDs.  *=
-/
--#define AT_REMOVEDIR           0x200   /* Remove directory instead of
--                                           unlinking file.  */
- #define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
- #define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal
-automount traversal */
- #define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname */
-
-+/* Flags for statx(2) */
- #define AT_STATX_SYNC_TYPE     0x6000  /* Type of synchronisation
-required from statx() */
- #define AT_STATX_SYNC_AS_STAT  0x0000  /* - Do whatever stat() does */
- #define AT_STATX_FORCE_SYNC    0x2000  /* - Force the attributes to
-be sync'd with the server */
-[...]
-
- #define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
-
--/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits...=
- */
--#define AT_HANDLE_FID          AT_REMOVEDIR    /* file handle is needed to
-+/* Flags for name_to_handle_at(2) */
-+#define AT_HANDLE_FID          0x200   /* file handle is needed to
-                                        compare object identity and may not
-                                        be usable to open_by_handle_at(2) *=
-/
-+/* Flags for faccessat(2) */
-+#define AT_EACCESS             0x200   /* Test access permitted for
-+                                           effective IDs, not real IDs.  *=
-/
-+/* Flags for unlinkat(2) */
-+#define AT_REMOVEDIR           0x200   /* Remove directory instead of
-+                                           unlinking file.  */
-+
-+/* Flags for renameat2(2) (should match legacy RENAME_* flags) */
-+#define AT_RENAME_NOREPLACE    0x001   /* Don't overwrite target */
-+#define AT_RENAME_EXCHANGE     0x002   /* Exchange source and dest */
-+#define AT_RENAME_WHITEOUT     0x004   /* Whiteout source */
-+#define AT_RENAME_TEMPFILE     0x008   /* Source file is O_TMPFILE */
-+
-+/* Flags for setxattrat(2) (should match legacy XATTR_* flags) */
-+#define AT_XATTR_CREATE                0x001   /* set value, fail if
-attr already exists */
-+#define AT_XATTR_REPLACE       0x002   /* set value, fail if attr
-does not exist */
-+
+On Mon, Feb 5, 2024 at 8:53=E2=80=AFPM Chuck Lever III <chuck.lever@oracle.=
+com> wrote:
+>
+>
+>
+> > On Feb 5, 2024, at 11:17=E2=80=AFAM, Trond Myklebust <trondmy@hammerspa=
+ce.com> wrote:
+> >
+> > On Mon, 2024-02-05 at 15:13 +0000, Chuck Lever III wrote:
+> >>
+> >>
+> >> A DNS label is just a hostname (fully-qualified or not). It
+> >> never includes a port number.
+> >>
+> >> According to RFC 8881, fs_location4's server field can contain:
+> >>
+> >>  - A DNS label (no port number; 2049 is assumed)
+> >>
+> >>  - An IP presentation address (no port number; 2049 is assumed)
+> >>
+> >>  - a universal address
+> >>
+> >> A universal address is an IP address plus a port number. Therefore
+> >> a universal address is the only way an alternate port can be
+> >> communicated in an NFSv4 referral.
+> >
+> > That's not strictly true. RFC8881 has little to say about how you are
+> > to go about using the DNS hostname provided by fs_locations4. There is
+> > just some non-normative and vague language about using DNS to look up
+> > the addresses.
+> >
+> > The use of DNS service records do allow you to look up the full IP
+> > address and port number (i.e. the equivalent of a universal address)
+> > given a fully qualified hostname and a service. While we do not use the
+> > hostname that way in the Linux NFS client today, I see nothing in the
+> > spec that would appear to disallow it at some future time.
+>
+> We absolutely could do that. But first a service name would need to be
+> reserved, yes?
+>
+> https://www.iana.org/assignments/service-names-port-numbers/service-names=
+-port-numbers.xhtml?search=3Ddns
+>
+>
+> --
+> Chuck Lever
+>
+>
 
