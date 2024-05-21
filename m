@@ -1,116 +1,197 @@
-Return-Path: <linux-nfs+bounces-3305-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3306-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8200E8CAED1
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 15:05:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803FC8CAF50
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 15:22:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E156283546
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 13:05:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12E5E1F23419
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 13:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B58A54277;
-	Tue, 21 May 2024 13:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF32371754;
+	Tue, 21 May 2024 13:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwiO+n9Q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6C6757F7;
-	Tue, 21 May 2024 13:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887A66EB5D
+	for <linux-nfs@vger.kernel.org>; Tue, 21 May 2024 13:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716296710; cv=none; b=SkgggFUaJPxxuTNblDdro+LvucehdIRJBznKOFzy7uu08h7VesyrYziTQ8GJE23EFQ38e7mFF5HuhT6J3nxh1s0m3VBlnQmSoghX8YgokIBrfRcMQWnVK6PyCVmnIDboTqA/wUs5tyOQTZ4V38orlW+V/PyFg57kaauxW+ZWmMs=
+	t=1716297768; cv=none; b=L6bhdyyNnOAjDUi3T0dDf3K6L6L7MrZgXIV391oGKCQYcZksyC29+gMeh5eQex5guR5E+/XScLV43KmJFGLzRn7Jg122wz39LXDQDhlIqhJNJrWOwprDrrqjoNOCccdi/mragh2Qf552X49CLQK5GxbiEI5jjKhdZdDLpBaUZZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716296710; c=relaxed/simple;
-	bh=zNxomSvXx/+ib9LtsQN1Jmd2/UscT6DGZpkXXbgDttY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JAqe7wOkbyfW/e2SwjHOOKh9+/F9E8uCFO+kCPFozWNRudHP6A56cTFiOAGktsIklg3mQ5MRVF5MvkrPH17ByVhxAGWMOaLt4uXwFTp5nFSx4HADIEakYcDhR1+TuQ7CB8x5KpqJKjAllvma0l/PrYpokq8rba5oVCIz0mT4AME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-354cd8d5f89so129560f8f.0;
-        Tue, 21 May 2024 06:05:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716296707; x=1716901507;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SoVULRuyToXbSm7nUXxsggMhpk0D4GBRowOzHO6JjQ=;
-        b=UnU+e7Gb4y1AiWKO2bFAxMWONiTuVdM+YsNsCtfsqeD5typ1/4tiHUNB/7osfY6EFh
-         8bbfhKrGeUgi7XXs22mDH+pgZaPOOiL282EbPN8Zz30903HCnLQb6xAwsztEfYM5TD22
-         gsWc28hhxQFkoPfbdnpxqJgizE18ack6AfXzcXV8e3UDnXiEplbU7zWUl0UV2Qmi914b
-         2Wnff7XrSQEkqXaEb/ns4rSmtEPqUKn8ARHZbXziFwRvTLPRvgY65KYIcDVWzqmWtljY
-         SUjl0nhjihNR37hzsPXEeD4dsi4TTd4YeHfVo8egnKp74335WJT8PM/qp8jNmetq4uya
-         dxgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHflqHHni/i4DbgiMcMqkRQ6WRxNv9VYnWyInvR1fOdAkPOi/izQCqqhmLUkoYSTaXwoVRpmtVoQTGfzWbN6eFgEm9bx0A/pDglJ2FeMo59EufJHrDuuBtWCwpZZj0SlwLMaQ3fA==
-X-Gm-Message-State: AOJu0YxqPhem9HlhDqkHRs7lNcXB0Pyko/7S80vBrZKQtuaQZK4e2xLx
-	zCbppOUiLORke8zTGI9XBSMZmmZSJq3vyY3vk92SprcGV6gDmRmMh75UFg==
-X-Google-Smtp-Source: AGHT+IEdobWPhLgggCFjo3QOLm3uPSRaC65WhbBG1MKIJZJsYt6hIsRi8dkvEAaICJcmiW9nQa/nNg==
-X-Received: by 2002:a05:6000:186d:b0:354:d14a:cb60 with SMTP id ffacd0b85a97d-354d14acc23mr1081883f8f.7.1716296707124;
-        Tue, 21 May 2024 06:05:07 -0700 (PDT)
-Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad04dsm31951726f8f.81.2024.05.21.06.05.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 06:05:06 -0700 (PDT)
-Message-ID: <5b0b8ffe-75ad-4026-a0e8-8d74992ab7b6@grimberg.me>
-Date: Tue, 21 May 2024 16:05:05 +0300
+	s=arc-20240116; t=1716297768; c=relaxed/simple;
+	bh=9VL71h3rBLjrwnuT4gIPM1l3C/0OLfzaCYux7ZaO5QA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kmqFmZc5+86PUNK79ui0c4jhQQR/V5bFDr1flBObK5GgT7t0DKt0fMhSyR/WyniyzxhatWnH+re1L7ms5UAUrhQkjrrcWwrSa4sWx7Z7UualS/66bNpBNd21i9lXzJyznp9FVLCkb7goX+HQOWAJED+kSB1TudZc1z6s5m9ja5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwiO+n9Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF79C2BD11;
+	Tue, 21 May 2024 13:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716297767;
+	bh=9VL71h3rBLjrwnuT4gIPM1l3C/0OLfzaCYux7ZaO5QA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RwiO+n9QiEZfPKBM8tfz/Iqw44CSVNGAa4VuM2p0Q+whwittAGPNbqduvG91jiXcd
+	 fiHaVmuTMoqBRJUtuk6lXwvvuOnpZgjDzjCR9FQMq8m82DdUCEFJgskuBA6y7mkTIF
+	 d9TFLoOgB5762k1Cc8e8hxRwBtQAjbP85YikRRJX5p3z5wi9V3MPi5AmDM9Lq4/6xB
+	 nOgWZDpfopdwC/WY2AKdCeqJb4wXPqSfN4unQ7TUJONC9HW3hOfk0U1gidVpayjnpO
+	 KBg36GO26sBJl0Mdh7aaTPubA1ykzh5NkhK2imq85jDwcGYwmiBtQHs31rhrJA2pdZ
+	 QTjgNCOi904Ig==
+Message-ID: <fa1a77fee6403454444fffce839924157778df95.camel@kernel.org>
+Subject: Re: [PATCH rfc] nfs: propagate readlink errors in nfs_symlink_filler
+From: Jeff Layton <jlayton@kernel.org>
+To: Sagi Grimberg <sagi@grimberg.me>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Dan Aloni
+ <dan.aloni@vastdata.com>,  Christoph Hellwig <hch@lst.de>
+Date: Tue, 21 May 2024 09:22:46 -0400
+In-Reply-To: <20240521125840.186618-1-sagi@grimberg.me>
+References: <20240521125840.186618-1-sagi@grimberg.me>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40app1) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Safe to delete rpcrdma.ko loading start-up code
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <DE53C92C-D16E-4FA7-9C0B-F83F03B1896F@oracle.com>
- <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
- <20240521124306.GE20229@nvidia.com>
-Content-Language: he-IL, en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20240521124306.GE20229@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+On Tue, 2024-05-21 at 15:58 +0300, Sagi Grimberg wrote:
+> There is an inherent race where a symlink file may have been overriden
+> (by a different client) between lookup and readlink, resulting in a
+> spurious EIO error returned to userspace. Fix this by propagating back
+> ESTALE errors such that the vfs will retry the lookup/get_link (similar
+> to nfs4_file_open) at least once.
+>=20
+> Cc: Dan Aloni <dan.aloni@vastdata.com>
+> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+> ---
+> Note that with this change the vfs should retry once for
+> ESTALE errors. However with an artificial reproducer of high
+> frequency symlink overrides, nothing prevents the retry to
+> also encounter ESTALE, propagating the error back to userspace.
+> The man pages for openat/readlinkat do not list an ESTALE errno.
+>=20
+> An alternative attempt (implemented by Dan) was a local retry loop
+> in nfs_get_link(), if this is an applicable approach, Dan can
+> share his patch instead.
+>=20
+>  fs/nfs/symlink.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
+> index 0e27a2e4e68b..13818129d268 100644
+> --- a/fs/nfs/symlink.c
+> +++ b/fs/nfs/symlink.c
+> @@ -41,7 +41,7 @@ static int nfs_symlink_filler(struct file *file, struct=
+ folio *folio)
+>  error:
+>  	folio_set_error(folio);
+>  	folio_unlock(folio);
+> -	return -EIO;
+> +	return error;
+>  }
+> =20
+>  static const char *nfs_get_link(struct dentry *dentry,
 
+git blame seems to indicate that we've returned -EIO here since the
+beginning of the git era (and likely long before that). I see no reason
+for us to cloak the real error there though, especially with something
+like an ESTALE error.
 
-On 21/05/2024 15:43, Jason Gunthorpe wrote:
-> On Tue, May 21, 2024 at 12:04:02PM +0300, Sagi Grimberg wrote:
->>
->> On 20/05/2024 21:05, Chuck Lever III wrote:
->>> Hi-
->>>
->>> I've tested this with two kinds of systems:
->>>
->>> 1. A system with no physical RDMA devices and no start-up
->>>      scripts to load these modules
->>>
->>> 2. A system with physical RDMA devices and with the start-up
->>>      scripts that load xprtrdma/svcrdma
->>>
->>> In both cases, after doing an "rmmod rpcrdma", I can mount
->>> a "proto=rdma" mount or start the NFS server, and the module
->>> gets reloaded automatically.
->>>
->>> I therefore believe it is safe to delete the code in the
->>> rdma-core start-up scripts that manually load RPC-related
->>> RDMA support. Either the sunrpc.ko module does this, or NFS
->>> user space handles it. There's no need for the rdma-core
->>> scripting.
->> I didn't know that rdma-core does this... it really shouldn't, the
->> mount should (and does) handle it.
-> This is new, it didn't used to do this
->
->> I also see that srp(t) and iser(t) are loaded too.. IIRC these are
->> loaded by their userspace counterparts as well (or at least they
->> should).
-> And AFIAK, these don't have a way to autoload at all. autoload
-> requires the kernel to call request_module..
+    Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-nvme/nvmet/isert are requested by the kernel. iser is loaded by iscsiadm.
-IIRC srp had a userspace daemon loading it.
+FWIW, I think we shouldn't try to do any retry looping on ESTALE beyond
+what we already do.
+
+Yes, we can sometimes trigger ESTALE errors to bubble up to userland if
+we really thrash the underlying filesystem when testing, but I think
+that's actually desirable:
+
+If you have real workloads across multiple machines that are racing
+with other that tightly, then you should probably be using some sort of
+locking or other synchronization. If it's clever enough that it
+doesn''t need that, then it should be able to deal with the occasional
+ESTALE error by retrying on its own.
+
+Cheers,
+Jeff
 
