@@ -1,226 +1,193 @@
-Return-Path: <linux-nfs+bounces-3302-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3303-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BC1D8CAC61
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 12:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D91B8CAE77
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 14:43:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA3621C2187B
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 10:43:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9865C1C21470
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 May 2024 12:43:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D246CDBF;
-	Tue, 21 May 2024 10:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D7976028;
+	Tue, 21 May 2024 12:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="O/1T7dc6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="H1K5icbY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2078.outbound.protection.outlook.com [40.107.93.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906AE6CDBD;
-	Tue, 21 May 2024 10:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288192; cv=none; b=f/nxNbBPjOWjsfJq+QuTwmLlUSJeVNRPjjcFHUw1FVIUgeCZ2A681/fQmveLVNEnDn5jkxB3t+eB/pbE5wAHWArsCMp6YD0hXjI9ntgBoo9DqprED9z2glUq4GAeCKCSThCMb/6TJb4CjUTAOaktCiUAcvtPTChPqoBtOvkTshg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288192; c=relaxed/simple;
-	bh=9xMriote5JorYDhgNp4LSt+zcJU2s4T6KrDyethtsEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqrSbJYgNjl1quW/vSIyJdFKxfwpuXKX0sqAKSCZOnPp32l0pzy9O/tNXjyPyvDv5+vnmCQLNmvn//xzKeygOwLvDKH2UYZd0H/XpqCK5SomcyDL67A9j5lsUmW+AW9JArH8ngTfLov/1wavYpT697htkGEfjGMVJPo9ZoFpY9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=O/1T7dc6; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Vk9y23BRcz9sdF;
-	Tue, 21 May 2024 12:43:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1716288186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rYTAhwnpE+P1ehtdAEfh1DqiXMQlr6YhhirBwYk8EwA=;
-	b=O/1T7dc6oz0X6pG2RyIbPXrwceAGz5ttLLwg8LkOO0rkKC6QBnHNNXrCD3MimpnWDhWkXp
-	5+7vrAv0wE/Aoajv7wIpZkLMYLsktutqyS2Kykhfj7hfW0syoCKFQ2SRTsGUKAd/p6m1eG
-	ven8AW49zigYWrZbiFB4AygNG1EF8xfUf9qe9pbmS7FXMGqzKOV3CVeAS3GoqFQZ01qijb
-	k4pgq18L1alBz8W4LnQ1XaxgUFNMhrpZg0DsweTbAEOZChpo0heZ0uAWGeC74y4dNcwkAz
-	hqY+hPoTIucALxpvWxyWh2grAlRCplQrU9AchASVY6Wkl+pXp2dDUcDp0rt4MA==
-Date: Tue, 21 May 2024 04:42:46 -0600
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian =?utf-8?B?R8O2dHRzY2hl?= <cgoettsche@seltendoof.de>
-Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
-Message-ID: <20240521.101154-orange.hermits.guilty.barriers-SCEfgdQWePpT@cyphar.com>
-References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
- <f51a4bf68289268206475e3af226994607222be4.camel@kernel.org>
- <20240520.221843-swanky.buyers.maroon.prison-MAgYEXR0vg7P@cyphar.com>
- <CAOQ4uxiaRGypAB0v49FW8Se+=4e4to1FAg77sxLPCkO55KcuHQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C1328E7;
+	Tue, 21 May 2024 12:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716295392; cv=fail; b=Pp+CbzW7/7l/lQHH6xQSq2ajMQj/qAzzrMRGua4yqGgMjUOJuLTDNaMxmZuyHjQVRraTom0ZAJuzXxzU/SKYblZV1ynonLrHn29Gb6araH1URFYzZWvy9BJXmCEXT6IRjil+MsuuPskzPEVJfTQCmCqgLNKR7QVqLCQjfI/y71A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716295392; c=relaxed/simple;
+	bh=YR4doiISX260mWUdfV2X7bard3/pGQXp8zB+HpJXmQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NQtFwLgPzNkj5sOFulS0hanJ04DNI2Z/Me471Hj51D2rNkoqVVzua4LSEha2QlpRxDfQ8XwjNjK3kaUZxKhp9kKaLc/96sAS4M/8lCBWm0EBNUvV/gujkRzcCBJuIOdxm+/+2dX/zsDW2ZXlkF+WxXR2omKlOB/CNv5HWVd6N1U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=H1K5icbY; arc=fail smtp.client-ip=40.107.93.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fWQL2YecG5ChW2MgO++uTVIIy34Tfzw2ZyDr55E1lXqkJ3GhTqJH0c0ZQE2vHeZSYz+FOGz1NFJVHyVPJXyqQUwC+S2k2rbK24clicye3Q2aCvUWJUUb/OdH3jgUFxckLWEqGidTw4fYUNS/7kfLDSWm4L36CHhNrQKtlNB6E/zT3lzggO9HyRsAgznWIx2PqSHY1FoqFmmloLmSf5SoBBVM+4jMu8BgSRzLDwvEee5piFPjWlrvWfgRfb+Se+VBo0C77NyuRWIG7UEIEGlWtQy6K6V+hq+rnQqfFGvTjofOPoqU3u4Tgp0BUJ7Uj4wyY2pxCZnv3IDG90ijn7jy+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V6SRl8gCFte3lI5WOMCNOjXDYWPjR47gEkdlhO9v9cU=;
+ b=aDgmlxHrdyV6w1kFLiZXs1nZDup53XE1S5nU0ugr7xoWUZi7PBucZSrOtREV+jeoidqr4Q1zXv8Nu5UDOlf65xmanLr3ih6vb8yoQmcoz2wQl1+JA7tBhsztK7/HVgw0eQZ7bBhcbqN1ANDIGafOBzM7KNkw41IdENXf8xgme2fTdku81GpR9SCYi2G0wsMEgUUvqKkQtJgU6zPuNXynZwvXorRYIneypyloXBF17B8Tt9ahe0ve2rZLebM96BE/uVHaP1I6C8wStEjyyNlWwrCOT1KLo89TaJCkE0aI7VzzL25P8FWNZEXrp/vlMGh6IGoEKcG2eeG6tsqxza+eLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V6SRl8gCFte3lI5WOMCNOjXDYWPjR47gEkdlhO9v9cU=;
+ b=H1K5icbYmIBMw/alglycm9z5tr1ji8wewr8ee/jLguHGtXnSThbUMmBzOMT2odlRr2xOtXvyI1t1r/QxQEtdK7iJI0It/IOlhl2/1ksjHGZouQKOtgmVq5iJBZzRYyGMji6N+FaZo4hh4LmRMH4Z2kJafpQcQMA53Gu/l0LUXlj+V11KwaPvJQBUohtOmLfQroGsE8koDZvjJv/ph8TrorxhAGA1l7ofX6NAPXdWd9abYUKwzSHrmbJlB2lSkFbEkVcVv40bRjhSNi75jNK0/+XbJLrmz3/+5OWRDAZwxQuNGV6090HahJt7mS7fP8M5h0oqAg0ouJ89R9MW7FI9xA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by DM6PR12MB4234.namprd12.prod.outlook.com (2603:10b6:5:213::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 21 May
+ 2024 12:43:07 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7587.035; Tue, 21 May 2024
+ 12:43:07 +0000
+Date: Tue, 21 May 2024 09:43:06 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: Safe to delete rpcrdma.ko loading start-up code
+Message-ID: <20240521124306.GE20229@nvidia.com>
+References: <DE53C92C-D16E-4FA7-9C0B-F83F03B1896F@oracle.com>
+ <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
+X-ClientProxiedBy: MN2PR20CA0009.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::22) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hpyjshrojjwimm26"
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxiaRGypAB0v49FW8Se+=4e4to1FAg77sxLPCkO55KcuHQ@mail.gmail.com>
-X-Rspamd-Queue-Id: 4Vk9y23BRcz9sdF
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|DM6PR12MB4234:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40358957-89ab-47c2-7186-08dc799390d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tkjuWNRsVIRqWvao7h58v73ZdQjSka2NsEIvp8e54hS/+igKuP9PWSNwdDR0?=
+ =?us-ascii?Q?q75JGVSE2N0DyGXot+GSx1dqgQuYvy3llCnTbyja8jGLMUmAe2yqm7KV220t?=
+ =?us-ascii?Q?ceXZAEv8VvPlqQvptL6kmL0nFGgzpv09FZe2hvnBf640ANzTmfjZvDeUR4dN?=
+ =?us-ascii?Q?HEhUXVdGpzZkjhF6IdqqUjUm91Dc+VbAlcw7Tejv9sY6yBJLhs8tPKFnA0cX?=
+ =?us-ascii?Q?xUutIww1eqxfPYV/eike4iBmlSfj8+8qlAQXRmKRWc5mk0P4T7zFwUA8dK9J?=
+ =?us-ascii?Q?yZ+nynQRkjWh59Yjq0rjTMpN8pJJx0QPO2bbbfYE6Ei5OudIS/zTLgGwcW1P?=
+ =?us-ascii?Q?8JUeEwiwmelWP5Mvkhw6xxMbi7gnZzPgAt0I0hdGfrBWDa4rXZh24BA9yuP6?=
+ =?us-ascii?Q?+JrVWnB60qbC/9LNZ0sDCqFDpM0DEQGOyJhvdCRbXNO2gjPJKo3zxewM4TIf?=
+ =?us-ascii?Q?JeAzmxCwST/CWSgulg7Ghm8xlUF0ZW0mi9YmUe6Dyz0HOYzXQOH5KUnhs7DP?=
+ =?us-ascii?Q?vXPnmCxDvctSunu3jgI/eGmp4KZDIkJhs0uS/thfYB7zRgs2Ais9vzMVgD8R?=
+ =?us-ascii?Q?fIVV/qcTbx4UHvefHNIOIIlZjloBvZpTwhh1vgThBYmmLu3akPj1WQR8Tm+a?=
+ =?us-ascii?Q?WKoApG2fxRBd++H69peoHF5o/8Mj0X4y9YjYsszm5dD3PSMVYF5Huua/Nt5q?=
+ =?us-ascii?Q?LRlmpNKvhK6COX72/CNC9yrS2WFCKCet7wxWWddFGZ34wlsEngDIcOVDQ5au?=
+ =?us-ascii?Q?7oRU5awW/z+O7WJR1+tGm81MWkgqiyiEi4j8Tvea/hQWuilMUzy4L2vDdv0i?=
+ =?us-ascii?Q?h2BhnVfJj1KdKUTlyZeYeBQc+jbkxiznP06QKt0vyd0l7lqcvpYlllFajmwn?=
+ =?us-ascii?Q?/mMyOl+a+SAeBtM3nh03rXwy5masxF6i22nwibMMU+qqt5N/6iJTWrXmGUoc?=
+ =?us-ascii?Q?zskfCkP5BWYFrYDLeop5T7c3iPxGm3Wegi8fmb2BNp/Uj/HwSO76aBW0KhiR?=
+ =?us-ascii?Q?33N1YBicO99VgeEeOhi8wYoAWDQvRLRAW+71Lhlk/60zGAvZ2HFspK/ZItP4?=
+ =?us-ascii?Q?VQUBP6+TykwmXvbmRtWXoDxfzJ0Lvuxi1840Wsri9YC0cd+76HZTGVF2TiR4?=
+ =?us-ascii?Q?caCD3IlgqkojGOPdP6LRq/xiSqAsgu1bbkO92PxGdEsHortmItGuniDo1dCI?=
+ =?us-ascii?Q?1WsCAbZWPvWyivYy+sukAe6LAeERE+L7JGtLxEYJ7SIAJUWVYlbpAowlAzG8?=
+ =?us-ascii?Q?PxI5P5jX8z4IdHayI5rGPLvyiwvexBGOSJgkapUuSQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qWkXBg5P6GCC29YJg5o8xT4medEjkxwmofAH9vZV7CMyEHwy0FZOaiORe4Qp?=
+ =?us-ascii?Q?SrluLkdYx79ks6RNQhhMUJcvBc1QLTdFePMKZDxe8iDF/MtV184lCxjudTxd?=
+ =?us-ascii?Q?me7dpbpQVUnyUDFkVfNP1qZ3Ozm4YeSp1nc+cKYc95EUvSbwDG6AIA1ZGXjs?=
+ =?us-ascii?Q?OvRdb0WYchjlv4EKM7GIw2FPP1FpBR+vkLyZFyyst7TtIUVFQzTqucoWu5xB?=
+ =?us-ascii?Q?FHxfoSRcYqh2Dbu/kbfqPXtxfYAIG9ZgrNUbfMrcmMr35sG0HwNgyBfKLVXb?=
+ =?us-ascii?Q?5ADsZfYkrDvYDAjE81+nd+JH4TYaY/eLkXNm+vDVaz0zP0EByRGMMc8QGtkw?=
+ =?us-ascii?Q?zt5OyGpIwPhiDbCdwAA8QHvH1yShfChWtx3zaaincFkJxQ6jeUsWSyn2hW0M?=
+ =?us-ascii?Q?RVcmsFvLN3D7lR/PGq7YFoRINWy52ojVDwzD8wxsmZoYJcjGZmgVjjdTA6Cg?=
+ =?us-ascii?Q?f9brzseVGampSvnqn2lRp8oIPUaog/JLVYtoI3fbQR0wUka4IIXAp3xUDHK4?=
+ =?us-ascii?Q?Qs6P0JHJtquj3B+t8qKsBSFcIvwUboUJH7O4yPGTMFr+AOoo0xKgULaNcNZA?=
+ =?us-ascii?Q?FWErgHjQx8vru+1ozW+Zxnv1AdouE8/jwKlgMpnPDObHRDL/EeBO+SgpeG9a?=
+ =?us-ascii?Q?RsCjrFUE/VSSGcAQ5qfPop7xSDMn2FTyCE/x36EK77lJDNMrg63nNAl6M9bb?=
+ =?us-ascii?Q?0SE9INl3DkJFv/Z+cWueJ09tVkpAVyHofCuZ9apqonPB79UOg5eKfDHqGppO?=
+ =?us-ascii?Q?HL4Ipf8wAWZbpkqF0GlQ3MrUhWSsluvkduSXe3WVyLyfnkEs12fk8cxtAsGy?=
+ =?us-ascii?Q?9Fp4h8o1MLzurm1b25pTOg6wbb6jcV3dCAM79f4nWEVOPUNtd4A1+zLbDbgG?=
+ =?us-ascii?Q?no4Mi4G2Cw8H4GnIXYyYHV/weusmtLEHfIK/SEEL9TgOQ3EqwPcdWR0wlr/g?=
+ =?us-ascii?Q?vpB2KxU4J+dLTLqzc6KhNpkB1rxAgC0aY/Bi6xfWMoPhoSi3qMX+TOHA9eb1?=
+ =?us-ascii?Q?uyLRllSKHT0HHZzNekVhspQa/EO43NPG/DRJ3onAL1uibeIlM+ykul6N1CKU?=
+ =?us-ascii?Q?El6otATLyY+CxMVtsjvEyZl8Dkce/ImVykxERGmlwBmIC7OAsE/yNtZT35vL?=
+ =?us-ascii?Q?4eNdB3JjTSRGHWt7+XffKGioDtqvMGV+06INJot7MztSmZi/g68LonTor8X2?=
+ =?us-ascii?Q?B2XsL7k/pqxis5OH5pPpmE4veCniAxgmjdhGgGYCr7JRdfRrWh6uWzeh+m0A?=
+ =?us-ascii?Q?FkoSvEUc4ss5LjZUDtPCaaDpw83xiavSuFVay+dDlZz72rYPpiAUqdzNc4MD?=
+ =?us-ascii?Q?+9cWdx2qkGSTWVMRyaqIEW4AWhZT/NVee4JxGai+9OGf5J/yU+9vFRkHpZGA?=
+ =?us-ascii?Q?hye50KztFTB4O+AoU7mc9/1ZI9X8YyV424d4XIrPFSB+G8SLJQn/sEmFDlA7?=
+ =?us-ascii?Q?dg9kpIED/VJFEq7tf72m/sp7LfLNLUWh6KZzkgHxjtOU4QnwV/zGXXRPGNTI?=
+ =?us-ascii?Q?PsffKMx/dsEWJ5H6HMgIVWVG65ygvSSnwqYacl9Jr0gBIs+IfdC1LEUnpMdJ?=
+ =?us-ascii?Q?bFC/NTubOklLnZtC7g8=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40358957-89ab-47c2-7186-08dc799390d6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 12:43:07.8047
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qDQsrwaZBh35wIhv0xpRmjDDf3tin7NMpmWprVuIY5o8y3AllE1cfxykjGktTZ3Z
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4234
 
+On Tue, May 21, 2024 at 12:04:02PM +0300, Sagi Grimberg wrote:
+> 
+> 
+> On 20/05/2024 21:05, Chuck Lever III wrote:
+> > Hi-
+> > 
+> > I've tested this with two kinds of systems:
+> > 
+> > 1. A system with no physical RDMA devices and no start-up
+> >     scripts to load these modules
+> > 
+> > 2. A system with physical RDMA devices and with the start-up
+> >     scripts that load xprtrdma/svcrdma
+> > 
+> > In both cases, after doing an "rmmod rpcrdma", I can mount
+> > a "proto=rdma" mount or start the NFS server, and the module
+> > gets reloaded automatically.
+> > 
+> > I therefore believe it is safe to delete the code in the
+> > rdma-core start-up scripts that manually load RPC-related
+> > RDMA support. Either the sunrpc.ko module does this, or NFS
+> > user space handles it. There's no need for the rdma-core
+> > scripting.
+> 
+> I didn't know that rdma-core does this... it really shouldn't, the
+> mount should (and does) handle it.
 
---hpyjshrojjwimm26
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is new, it didn't used to do this
 
-On 2024-05-21, Amir Goldstein <amir73il@gmail.com> wrote:
-> On Tue, May 21, 2024 at 1:28=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> =
-wrote:
-> >
-> > On 2024-05-20, Jeff Layton <jlayton@kernel.org> wrote:
-> > > On Mon, 2024-05-20 at 17:35 -0400, Aleksa Sarai wrote:
-> > > > Now that we have stabilised the unique 64-bit mount ID interface in
-> > > > statx, we can now provide a race-free way for name_to_handle_at(2) =
-to
-> > > > provide a file handle and corresponding mount without needing to wo=
-rry
-> > > > about racing with /proc/mountinfo parsing.
->=20
-> Both statx() and name_to_handle_at() support AT_EMPTY_PATH, so
-> there is a race-free way to get a file handle and unique mount id
-> for statmount().
+> I also see that srp(t) and iser(t) are loaded too.. IIRC these are
+> loaded by their userspace counterparts as well (or at least they
+> should).
 
-Doing it that way would require doing an open and statx for every path
-you want to get a filehandle for, tripling the number of syscalls you
-need to do. This is related to the syscall overhead issue Lennart talked
-about last week at LSF (though for his usecase we would need to add a
-hashed filehandle in statx).
+And AFIAK, these don't have a way to autoload at all. autoload
+requires the kernel to call request_module..
 
-> Why do you mean /proc/mountinfo parsing?
+ipoib is also a problem, we don't have a way to autoload it either
 
-The man page for name_to_handle_at(2) talks about needing to parse
-/proc/mountinfo as well as the possible races you can hit.
-
-> > > > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* =
-bit
-> > > > that doesn't make sense for name_to_handle_at(2).
->=20
-> Christian is probably regretting merging AT_HANDLE_FID now ;-)
->=20
-> Seriously, I would rearrange the AT_* flags namespace this way to
-> explicitly declare the overloaded per-syscall AT_* flags and possibly
-> prepare for the upcoming setxattrat(2) syscall [1].
-
-I'm not sure that unifying the flag namespace is a good idea -- while it
-would be nicer, burning a flag bit for an extension will be more
-expensive because we would only have 32 bits for every possible
-extension we ever plan to have.
-
-FWIW, I think that statx should've had their own flag namespace like
-move_mount and renameat2.
-
-> [1] https://lore.kernel.org/linux-fsdevel/20240426162042.191916-1-cgoetts=
-che@seltendoof.de/
->=20
-> The reason I would avoid overloading the AT_STATX_* flags is that
-> they describe a generic behavior that could potentially be relevant to
-> other syscalls in the future, e.g.:
-> renameat2(..., AT_RENAME_TEMPFILE | AT_FORCE_SYNC);
-
-Yeah, you might be right that the sync-related flags aren't the right
-ones to overload here.
-
-> But then again, I don't understand why you need to extend name_to_handle_=
-at()
-> at all for your purpose...
->=20
-> Thanks,
-> Amir.
->=20
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> [...]
-> +
-> +#define AT_PRIVATE_FLAGS       0x2ff   /* Per-syscall flags mask.  */
-> +
-> +/* Common flags for *at() syscalls */
->  #define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
- */
-> -#define AT_EACCESS             0x200   /* Test access permitted for
-> -                                           effective IDs, not real IDs. =
- */
-> -#define AT_REMOVEDIR           0x200   /* Remove directory instead of
-> -                                           unlinking file.  */
->  #define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
->  #define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal
-> automount traversal */
->  #define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname =
-*/
->=20
-> +/* Flags for statx(2) */
->  #define AT_STATX_SYNC_TYPE     0x6000  /* Type of synchronisation
-> required from statx() */
->  #define AT_STATX_SYNC_AS_STAT  0x0000  /* - Do whatever stat() does */
->  #define AT_STATX_FORCE_SYNC    0x2000  /* - Force the attributes to
-> be sync'd with the server */
-> [...]
->=20
->  #define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
->=20
-> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
-=2E. */
-> -#define AT_HANDLE_FID          AT_REMOVEDIR    /* file handle is needed =
-to
-> +/* Flags for name_to_handle_at(2) */
-> +#define AT_HANDLE_FID          0x200   /* file handle is needed to
->                                         compare object identity and may n=
-ot
->                                         be usable to open_by_handle_at(2)=
- */
-> +/* Flags for faccessat(2) */
-> +#define AT_EACCESS             0x200   /* Test access permitted for
-> +                                           effective IDs, not real IDs. =
- */
-> +/* Flags for unlinkat(2) */
-> +#define AT_REMOVEDIR           0x200   /* Remove directory instead of
-> +                                           unlinking file.  */
-> +
-> +/* Flags for renameat2(2) (should match legacy RENAME_* flags) */
-> +#define AT_RENAME_NOREPLACE    0x001   /* Don't overwrite target */
-> +#define AT_RENAME_EXCHANGE     0x002   /* Exchange source and dest */
-> +#define AT_RENAME_WHITEOUT     0x004   /* Whiteout source */
-> +#define AT_RENAME_TEMPFILE     0x008   /* Source file is O_TMPFILE */
-> +
-> +/* Flags for setxattrat(2) (should match legacy XATTR_* flags) */
-> +#define AT_XATTR_CREATE                0x001   /* set value, fail if
-> attr already exists */
-> +#define AT_XATTR_REPLACE       0x002   /* set value, fail if attr
-> does not exist */
-> +
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---hpyjshrojjwimm26
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZkx6ogAKCRAol/rSt+lE
-b6pxAQCSPhH8/puRhj9aVC4vEbP75PcnVUIS/FZzITkwj543GwD/U4fAcii58Jr/
-KCEdC2P+hpRduVSHHQqFcndDB2L5ywA=
-=ewlE
------END PGP SIGNATURE-----
-
---hpyjshrojjwimm26--
+Jason
 
