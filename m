@@ -1,155 +1,103 @@
-Return-Path: <linux-nfs+bounces-3331-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3332-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E601D8CBD14
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 10:37:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD52D8CBF7A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 12:50:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BB4928171B
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 08:37:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ECF11F23406
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 10:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CC67D096;
-	Wed, 22 May 2024 08:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="D9k6Nsvl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87FA68002E;
+	Wed, 22 May 2024 10:50:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABC97710B
-	for <linux-nfs@vger.kernel.org>; Wed, 22 May 2024 08:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBB279B9D;
+	Wed, 22 May 2024 10:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716367047; cv=none; b=ZWvaUMgZb+3oghQlIgEZA9evKESCzlVTo+L3EoPAqa52TND5xRm2Y7thA9UdKzBrXy+ovXaMX4fxbhoqg3ZXdcpwEvUT2Fclq8Rw6db317LNdiRr1K/Q75mLOyv1samtHD5iBl+XdzZ/tlo69BLSAS4ZvJ+avV2qxS/5wmF8rBI=
+	t=1716375051; cv=none; b=gJQnQMLgOTeOII8PJ7JPA+CE439fklymDLHbG4B1WvltfJuqi14irR9JFmL1zoh4Y4eZPql4Sk49+DWJn9e83gmCNWPpZUqcT7SHwi/mCNYcTHg36BlChonnGj4OycIjboW+XljzkoUs6lQDR3zImglT2JBBa2rDnctIG4fY7dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716367047; c=relaxed/simple;
-	bh=E/2HdCTFrFOk8y29cKKNTz/NziOYuWFr2yNH19RxudQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=V0/TyXmAKsDoi39mER3Rvvd210SPu1n129G7YZynWW0fTdphZL+Mtngt6mLew3j23fVmt8Ov+uwP/wG1es0nNn32juD+oUG94DUvaHjUqMkGnV4iGu/LO98KFUBM1ixXj5UwgZzsJ6DN55+2VOPESUmlYVaMxW3U4U/xY1cz0Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=D9k6Nsvl; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59cf8140d0so780291066b.3
-        for <linux-nfs@vger.kernel.org>; Wed, 22 May 2024 01:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google; t=1716367044; x=1716971844; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AQTwZL4zzpKjMtTu0GIdfSybSPl2kQ5x4Pn4GT8jPk8=;
-        b=D9k6NsvlphQ/rJRddDxRWxyPFWCmXIbl59Qnsal6C8lu5OeawFB98s0Jb9a3UaWkPs
-         QZELBZa4zPKeOzfyy3eV2MT8pWRDdA+59hbLh02rvuzgWw8TomXRx630plcLYRA9gWxy
-         D5U2SkQ5s8DKOgGBCJ0wVuuaB/sZ/013SGiNs=
+	s=arc-20240116; t=1716375051; c=relaxed/simple;
+	bh=VyBReXjt4mK/tUMAyCCPZcz5+wqr2j9lYzuGW1fGTIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gicwYsIdEtqoALWWaRL0yNq8YkEE6HZdH7vPbA6HuicAXXMtwziPplpT86sO/CjErOY4G/ulz5J1nrLnWRovVcgC5Edz5x9lEtxnYUuk0gHZpfq2tTpVFCXjaGCQ0Mm3XyHdI45q37Zv/140/QICzn1eHDnBvwOTyNMf/EErmKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-354c3b445bbso426748f8f.1;
+        Wed, 22 May 2024 03:50:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716367044; x=1716971844;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AQTwZL4zzpKjMtTu0GIdfSybSPl2kQ5x4Pn4GT8jPk8=;
-        b=k9PvbZlXJnMwb9Ng/9oD0UhMuQ8cZ61MxDhs0jvddR5ME+krWuTWHY0FlRnbucLwe3
-         GIOYeXjwQgqWoGTwT2xgtdIxILGLsve33xtMQGAjO6v+m0qV+Zu1K2wi8i1AiatpJDdA
-         GMrANxvhmP7TJaJoAuDvRP8qNL7/xqrp3B72VeOArDYcCFy1UMfoFoYIFnGRUzP3/aBM
-         UTXC9Z5ldOKweOExwRxItd0TEUXdh12sR76d2zjBqZJjGqJykxy7JgvdIYbjzMy5C3EE
-         khCnZXcH2ECn4eCXwiNrnXq+D7EyZR8es5vVzeFCGZeXKeWnkfrY0sFTMkWfQKGAhXe3
-         rjeg==
-X-Gm-Message-State: AOJu0Ywd+1LNxv4dx14dOlD1fUIohZK7pIvrS4IgTIkUYVaFPsaJVEXM
-	qpLkM5CNT+ew2GQHM8Vs44WurjxNJpm/9DNyqpz1ruG+TdATvcYk6xJqBMMvMIUky89EplXlIDa
-	eScS2WkFyBrQu5yqAtAzYeaYhh9dfg70wUMK7W4Zq3rCCR38=
-X-Google-Smtp-Source: AGHT+IEuCfv6knS7PzRwjS5Davs1hGfqn3THliv1wwkxkWBeR9WFnO8yFZ5NHyojDhyYp6C4Gu3QIXKfadmPXzDvfjM=
-X-Received: by 2002:a17:907:10d1:b0:a59:c52b:9933 with SMTP id
- a640c23a62f3a-a62280b1d35mr86955066b.30.1716367043712; Wed, 22 May 2024
- 01:37:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716375048; x=1716979848;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BnHc3XspGm0v4PnkZaEeuFqvR0cRw7aXohQPjr95aY=;
+        b=J+S0GK87ZRsWvGxuFvZc3ztgNHaPAjSdZ4MoJXvmgJxtKewQhkSH3bx2NHTGnPM3Pw
+         M3FqKUakT7eBkwWFINvuGUrrMY4WeIfFGW9WWAXlrUpAwM9QOcoZLZ9GrZOdEc9W/daX
+         aEIeOb7XCZPIiQ/ZaXFdZRAWHuqW/elT845h0dygUJXOvyHiILlLVQ/cPIHATMw1hlwC
+         IwwGOhNhuG7x1ScteLebeVXDRZbP1hF4+1jdA1glJOahSYAjJ4NBCMV06e1cq6fukirI
+         VBkUvZS+uGn2Y+yLrS3tCYoDAJ63Z52MzDxeV59XK0ELSSXcTlk9L9hAbZ86td6zrvcp
+         +18A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXnWE9PFH7WUcQn876d/AhAk70EyJxaDuR9nqEWTw1CkygBJRl6OsP8SlbggaCvmlhmnx8alLq/8q1Ph9wTMZU52eq1UpRJk3mLPPavplg8MQBD8qQyd+8h7ycHitdcrV1bMN5Hg==
+X-Gm-Message-State: AOJu0YyZ6NH472gN6ReHH6tuHvNPtWQyVzMeJwrgFPPvu+s4jsmdvbXw
+	i8bKcZ4C4D1XGOfd1uSSCxN46I9/0Ihx1yOSguOavj0JcISu5SzD
+X-Google-Smtp-Source: AGHT+IGSF2AVRpH6Y4O/xml9TIH1QyFLkrQi4blx+ftI6lROnk9Fsw05hHINZrkwwdozuInSgu5v2w==
+X-Received: by 2002:a05:600c:3ba8:b0:418:f770:ba0 with SMTP id 5b1f17b1804b1-420fd22a4d5mr12400595e9.0.1716375047841;
+        Wed, 22 May 2024 03:50:47 -0700 (PDT)
+Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42011d91edfsm406112765e9.44.2024.05.22.03.50.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 03:50:47 -0700 (PDT)
+Message-ID: <c1aa177a-3328-4447-af23-246beacf3169@grimberg.me>
+Date: Wed, 22 May 2024 13:50:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Date: Wed, 22 May 2024 10:36:57 +0200
-Message-ID: <CAK8fFZ7rbh5o9XG1D5KAPSRyES-8W8AphxsLJXOWUFZK49i8fA@mail.gmail.com>
-Subject: [regression] nfsstat/nfsd crash system "general protection fault,
- probably for non-canonical address ..." after 6.8.9->6.8.10 update
-To: linux-nfs@vger.kernel.org
-Cc: Igor Raits <igor@gooddata.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Safe to delete rpcrdma.ko loading start-up code
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <DE53C92C-D16E-4FA7-9C0B-F83F03B1896F@oracle.com>
+ <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
+ <20240521124306.GE20229@nvidia.com>
+ <5b0b8ffe-75ad-4026-a0e8-8d74992ab7b6@grimberg.me>
+ <20240521133727.GF20229@nvidia.com>
+ <46c36727-ef93-44ca-9741-df2325d4420c@grimberg.me>
+ <20240521152325.GG20229@nvidia.com>
+ <e558ee64-48fc-48b9-addd-eab7f9f861ad@grimberg.me>
+ <20240521163713.GL20229@nvidia.com>
+ <0f9ddfe5-67ff-470b-8901-d513dceb757e@grimberg.me>
+ <20240521232905.GQ20229@nvidia.com>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240521232905.GQ20229@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-I would like to report some issue causing a "general protection fault"
-crash (constantly) after we updated the kernel from 6.8.9 to 6.8.10.
-This is triggered when monitoring is using nfsstat on a server where
-nfsd is running.
 
-[ 3049.260633] general protection fault, probably for non-canonical
-address 0x66fb103e19e9cc89: 0000 [#1] PREEMPT SMP NOPTI
-[ 3049.261628] CPU: 22 PID: 74991 Comm: nfsstat Tainted: G
-E      6.8.10-1.gdc.el9.x86_64 #1
-[ 3049.262336] Hardware name: RDO OpenStack Compute/RHEL, BIOS
-edk2-20240214-2.el9 02/14/2024
-[ 3049.263003] RIP: 0010:_raw_spin_lock_irqsave+0x19/0x40
-[ 3049.263487] Code: cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-90 0f 1f 44 00 00 41 54 9c 41 5c fa 65 ff 05 a6 92 f5 42 31 c0 ba 01
-00 00 00 <f0> 0f b1 17 75 0a 4c 89 e0 41 5c c3 cc cc cc cc 89 c6 e8 d0
-07 00
-[ 3049.264882] RSP: 0018:ffffb1bca6b9bd00 EFLAGS: 00010046
-[ 3049.265365] RAX: 0000000000000000 RBX: 66fb103e19e9c989 RCX: 0000000000000001
-[ 3049.265953] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 66fb103e19e9cc89
-[ 3049.266542] RBP: ffffffffc15df280 R08: 0000000000000001 R09: ffffa049a1785cb8
-[ 3049.267112] R10: ffffb1bca6b9bd70 R11: ffffa04964e49000 R12: 0000000000000246
-[ 3049.267702] R13: 66fb103e19e9cc89 R14: ffffa048445590a0 R15: 0000000000000001
-[ 3049.268278] FS:  00007fa3ddf03740(0000) GS:ffffa05703d00000(0000)
-knlGS:0000000000000000
-[ 3049.268928] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3049.269443] CR2: 00007fa3dddfca50 CR3: 0000000342d1e004 CR4: 0000000000770ef0
-[ 3049.270025] PKRU: 55555554
-[ 3049.270371] Call Trace:
-[ 3049.270723]  <TASK>
-[ 3049.271035]  ? die_addr+0x33/0x90
-[ 3049.271423]  ? exc_general_protection+0x1ea/0x450
-[ 3049.271879]  ? asm_exc_general_protection+0x22/0x30
-[ 3049.272344]  ? _raw_spin_lock_irqsave+0x19/0x40
-[ 3049.272803]  __percpu_counter_sum+0xd/0x70
-[ 3049.273219]  nfsd_show+0x4f/0x1d0 [nfsd]
-[ 3049.273666]  seq_read_iter+0x11d/0x4d0
-[ 3049.274073]  ? avc_has_perm+0x42/0xc0
-[ 3049.274489]  seq_read+0xfe/0x140
-[ 3049.274866]  proc_reg_read+0x56/0xa0
-[ 3049.275257]  vfs_read+0xa7/0x340
-[ 3049.275647]  ? __do_sys_newfstat+0x57/0x60
-[ 3049.276059]  ksys_read+0x5f/0xe0
-[ 3049.276439]  do_syscall_64+0x5e/0x170
-[ 3049.276836]  entry_SYSCALL_64_after_hwframe+0x78/0x80
-[ 3049.277296] RIP: 0033:0x7fa3ddcfd9b2
-[ 3049.277719] Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea 1d 0c 00 e8 c5
-fd 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75
-10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89
-54 24
-[ 3049.279139] RSP: 002b:00007ffd930672e8 EFLAGS: 00000246 ORIG_RAX:
-0000000000000000
-[ 3049.279788] RAX: ffffffffffffffda RBX: 0000555ded47c2a0 RCX: 00007fa3ddcfd9b2
-[ 3049.280402] RDX: 0000000000000400 RSI: 0000555ded47c480 RDI: 0000000000000003
-[ 3049.281046] RBP: 00007fa3dddf75e0 R08: 0000000000000003 R09: 0000000000000077
-[ 3049.281673] R10: 000000000000005d R11: 0000000000000246 R12: 0000555ded47c2a0
-[ 3049.282307] R13: 0000000000000d68 R14: 00007fa3dddf69e0 R15: 0000000000000d68
-[ 3049.282928]  </TASK>
-[ 3049.283310] Modules linked in: mptcp_diag(E) xsk_diag(E)
-raw_diag(E) unix_diag(E) af_packet_diag(E) netlink_diag(E) udp_diag(E)
-tcp_diag(E) inet_diag(E) tun(E) br_netfilter(E) bridge(E) stp(E)
-llc(E) nfsd(E) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E) sunrpc(E)
-nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) binfmt_misc(E)
-zram(E) tls(E) isofs(E) vfat(E) fat(E) intel_rapl_msr(E)
-intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E) irqbypass(E)
-virtio_net(E) i2c_i801(E) virtio_gpu(E) i2c_smbus(E) net_failover(E)
-virtio_balloon(E) failover(E) virtio_dma_buf(E) fuse(E) ext4(E)
-mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E)
-crct10dif_pclmul(E) crc32_pclmul(Ea) polyval_clmulni(E)
-polyval_generic(E) libata(E) ghash_clmulni_intel(E) sha512_ssse3(E)
-virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E)
-raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E)
-dm_region_hash(E) dm_log(E) dm_mod(E)
-[ 3049.283345] Unloaded tainted modules: edac_mce_amd(E):1 padlock_aes(E)
+On 22/05/2024 2:29, Jason Gunthorpe wrote:
+> On Tue, May 21, 2024 at 11:30:00PM +0300, Sagi Grimberg wrote:
+>
+>> I just don't see why the presence of an rdma device dictates that
+>> all the ulps autoload. Does rxe/siw count as rdma HW?
+> It doesn't do all of them, just the ones the distro decides it wants
+> to do, usually for boot volumes. It is a weird historical thing :|
 
-Any suggestion on how to fix it is appreciated.
+Well, as mentioned, I find it odd. For the same reason why
+all tcp flavors of the ulps discussed in this thread don't autoload if 
+the machine
+has a nic (which means pretty much every machine).
 
-Jaroslav Pulchart
+Having said that, I don't have the same PoV as distro folks...
 
