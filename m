@@ -1,108 +1,148 @@
-Return-Path: <linux-nfs+bounces-3329-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3330-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85E2A8CBC44
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 09:45:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFBF18CBC80
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 09:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B65B21C2135B
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 07:45:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3BFA1C2119B
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 May 2024 07:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACC5770E6;
-	Wed, 22 May 2024 07:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193E47E11E;
+	Wed, 22 May 2024 07:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SglWi2qJ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TAHrfs3Y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D554B58AD0;
-	Wed, 22 May 2024 07:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E37E0FB
+	for <linux-nfs@vger.kernel.org>; Wed, 22 May 2024 07:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716363950; cv=none; b=Kxr3HT/yBsI3Z9hzpsA732ccJlRWGBvBTp7yDBtPM17xrOmszgFfelxRs5OcXW4icqAIaUX3m3paEyoJ0jVGrcDA295cJe7rY207CohB0hTawBCatr4/PJN44tvHXHpS1YcIs+Hnr2a4e66m2LYPLIPC/Y5ZwDZCQvfHNQk6Y7Q=
+	t=1716364655; cv=none; b=lB6YgoGZYcDC5XatGkUk+Az+s5VF009GzEiw73Ojsvvkv4hf2Ddaliq/lUX/X4Uz4pvzshIVIMd99IbZcLCrM6pzQTwjt/QTc+RQHlpT1QOgPRyXSB9a1sZGXnVIZKONujUjseWi6be+rBqRw8DIt+DuXOrqYT2/hqMY+5ys6Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716363950; c=relaxed/simple;
-	bh=Iqr3TUTNHyaZn9ybfzHOiVCGCqojYHa2thw0eGxhUn8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZSIm3lfvmGFcNKkkS8nFoYjHbr2e+CpP2YukxQd/TYEHCwZbY47i70GlZj7QaI7vjMhnT8RZI3bsAuz5oURHt60DPD2wLrpgzxtQC1+332hAUBWEyVtlweJSs2Q5NSgeYlbJUcjWWn1KVClxtXFhCmcuD0OmvX+Q8vcNvA5VkJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SglWi2qJ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4202dd90dcfso4861475e9.0;
-        Wed, 22 May 2024 00:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716363947; x=1716968747; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JSjY0LzqeczP0/PtbwWHsWsWQHqbRXxXXTo7cQU5k6s=;
-        b=SglWi2qJfZ/YEb8qbJtR5yGfL2kaCe82EY9AVgLbswEmf6u0+7LVvDKB/bIoqpy4lG
-         pfSdVqWqwgtU7QxFfm9RhHl4Vb1iIVZcDi4MGzkmYAulcG2w9XBuh+tQ+mirUGKwM3jQ
-         oZeuK3b2GbnEko33ahr+GH8G+dhQkLQsik3zDUr8FeHPOtlsc1pLkT6FN8uXHhWo99cy
-         H8oEqWvN5nAeLtEeo0dtNdXJ6jtFFtG+Tp64hS7xxs23v7lkWJoBeRj7sS7TV9MeQt9F
-         1wUBeRgHHLrBj+K5MxBdrZTBJn5jqm0BSzVHIS72XrkXsGNEybFxVXn44sElvpngxx2k
-         /JmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716363947; x=1716968747;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JSjY0LzqeczP0/PtbwWHsWsWQHqbRXxXXTo7cQU5k6s=;
-        b=CjD7kZOp8D6ddN+k+AHOYARTbbByNCGjLl45ZJWnCeZfL0n9nBd7d/n51sTspsjXzk
-         6ata7ZZsDMRGXBwUCmW1xtJPw/eZdTaOnQtBF70bHrOAZYEOGHCssQ8bF5P+WUxb1W8n
-         Whc74CQOJQpGagZwRcG/4wqJaUrMOgl3SwGMBAejeb0Fqt18XiIjoCAV1XT/ezYVyxwa
-         F3nqsM0Qv+3e6KMpMW2AK75Hkw7Z63gkk1fEiIuYWUDHBXuHGMmYke4noNz5JXTd/Dz9
-         dn7YVUdQI4sGfAWIgpX77XT80wnbFV6N0IQvMQeKlHlLQKjE8CGDYPuYGwgq3QejVex4
-         fzDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWer1JnuFAz29p+Jl29pax0xlpl7f5qlXX3he/S1SRKp4N7uIpBK4T0xfbHSVAbW+WSLbTiSWH7fm4+Hyc0hjok8vWDZOpiENo2w7tlUCCHyfkMDyUdqaYOztO21r3UNXtvmvfhKv3
-X-Gm-Message-State: AOJu0YwuYXQEW9nPRtVu0joPbdGgHUxoYyQKXgbB0+dXM+lKQEZcsbtG
-	8DnA934hCd2pMoWwZDKmopRkzD7NpiYX3IWFjZZ6HujCBZafKAsm
-X-Google-Smtp-Source: AGHT+IExMHTEZt/9I4TO9K/fLc86GF/7l8joCmnEFxBxj6OicukLK+/E733KQodYvXcSDOvAMH5aMA==
-X-Received: by 2002:a05:600c:3645:b0:420:1375:95ae with SMTP id 5b1f17b1804b1-420fd3261abmr8686055e9.24.1716363947019;
-        Wed, 22 May 2024 00:45:47 -0700 (PDT)
-Received: from localhost.localdomain ([195.16.41.104])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41ff7a840d2sm451036835e9.39.2024.05.22.00.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 00:45:46 -0700 (PDT)
-From: Dmitry Mastykin <mastichi@gmail.com>
-To: trond.myklebust@hammerspace.com,
-	anna@kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Dmitry Mastykin <mastichi@gmail.com>
-Subject: [PATCH] NFSv4: Fix memory leak in nfs4_set_security_label
-Date: Wed, 22 May 2024 10:45:24 +0300
-Message-Id: <20240522074524.23046-1-mastichi@gmail.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1716364655; c=relaxed/simple;
+	bh=VENSe/3fAzfnCYpmQ+vOkNLmF9dyos3VXFyL/qFe9Fk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BCRczJzokOckohWrMuDDGan9LQ2fVNPkHcZ3fxo3r8U80FWnO6DOpriWP74uS3fbwJUK0RSXf5/ru+lZTY5KTBeHuFWU1MsGzpvaGEN+ZZjBv5ttBSc/BgmvrLcInhO4cXhMGIDzCaL3iXdSIdK3/HRxJzbisIz51KoHQqA3fI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TAHrfs3Y; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: sagi@grimberg.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716364650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q92zTs2hrsCm+boecXXID3PF9h+RjuwanNGz8edsrSQ=;
+	b=TAHrfs3Y8yNuB1TtftU9qd8NmIrlGqNEHAiz55cvRNh2EB+gXX1SJF73QkCHDLcAa/IxJF
+	dKU4jx2Xn21qPdexOcz22Qk+JtgpD2az77negdmh1Zl3poZG7xHiJC1N0xdL5IsUe8jJmM
+	wtPc8NGA2ADTc4XtB+c+iLPhWV6CcDQ=
+X-Envelope-To: jgg@nvidia.com
+X-Envelope-To: chuck.lever@oracle.com
+X-Envelope-To: linux-nfs@vger.kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+Message-ID: <573f7e57-7599-4540-9dd7-622f7eedde79@linux.dev>
+Date: Wed, 22 May 2024 09:57:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: Safe to delete rpcrdma.ko loading start-up code
+To: Sagi Grimberg <sagi@grimberg.me>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <DE53C92C-D16E-4FA7-9C0B-F83F03B1896F@oracle.com>
+ <8cc80bdb-9f17-4f44-b2e6-54b36ac85b63@grimberg.me>
+ <20240521124306.GE20229@nvidia.com>
+ <5b0b8ffe-75ad-4026-a0e8-8d74992ab7b6@grimberg.me>
+ <20240521133727.GF20229@nvidia.com>
+ <46c36727-ef93-44ca-9741-df2325d4420c@grimberg.me>
+ <20240521152325.GG20229@nvidia.com>
+ <e558ee64-48fc-48b9-addd-eab7f9f861ad@grimberg.me>
+ <20240521163713.GL20229@nvidia.com>
+ <0f9ddfe5-67ff-470b-8901-d513dceb757e@grimberg.me>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <0f9ddfe5-67ff-470b-8901-d513dceb757e@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-We leak nfs_fattr and nfs4_label every time we set a security xattr.
+在 2024/5/21 22:30, Sagi Grimberg 写道:
+> 
+> 
+> On 21/05/2024 19:37, Jason Gunthorpe wrote:
+>> On Tue, May 21, 2024 at 07:10:53PM +0300, Sagi Grimberg wrote:
+>>>
+>>> On 21/05/2024 18:23, Jason Gunthorpe wrote:
+>>>> On Tue, May 21, 2024 at 05:12:23PM +0300, Sagi Grimberg wrote:
+>>>>>>>>> I also see that srp(t) and iser(t) are loaded too.. IIRC these are
+>>>>>>>>> loaded by their userspace counterparts as well (or at least they
+>>>>>>>>> should).
+>>>>>>>> And AFIAK, these don't have a way to autoload at all. autoload
+>>>>>>>> requires the kernel to call request_module..
+>>>>>>> nvme/nvmet/isert are requested by the kernel.
+>>>>>> How? What is the interface to trigger request_module?
+>>>>> On the host, writing to the nvme-fabrics misc device a comma-separated
+>>>>> connection string
+>>>>> contains a transport string, which triggers the corresponding 
+>>>>> module to be
+>>>>> requested.
+>>>> But how did nvme-fabrics even get loaded to write to it's config fs in
+>>>> the first place?
+>>> Something (/etc/modules-load?) loaded it intentionally.
+>>> That something knows about a concrete intention to use nvme though...
+>> This mechanism we are talking about is an add-on to /etc/modules-load
+>> that only executes if rdma HW is present.
+> 
+> Still does not mean you want to use all the ulps though...
+> 
+>>
+>> This is why it is a good place to load nvme-fabrics stuff, if you
+>> don't have rdma HW then you know you don't need it.
+> 
+> Do I want to autoload nvme-fabrics if I have a nvme device? do I want
+> autoload nvme-tcp if I have an ethernet nic? maybe wlan nic is also a
+> sufficient reason?
+> 
+> I just don't see why the presence of an rdma device dictates that all 
+> the ulps
+> autoload. Does rxe/siw count as rdma HW?
 
-Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
----
- fs/nfs/nfs4proc.c | 1 +
- 1 file changed, 1 insertion(+)
+RXE/SIW can be auto loaded with the command "rdma link ...".
+And some kernel modules, for example ib_core.ko, udp_tunnel.ko, 
+ip6_udp_tunnel.ko and ib_uverbs.ko, are also auto-loaded when rxe/siw 
+kernel modules are loaded.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ea390db94b62..d400093a2fff 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6268,6 +6268,7 @@ nfs4_set_security_label(struct inode *inode, const void *buf, size_t buflen)
- 	if (status == 0)
- 		nfs_setsecurity(inode, fattr);
- 
-+	nfs_free_fattr(fattr);
- 	return status;
- }
- #endif	/* CONFIG_NFS_V4_SECURITY_LABEL */
--- 
-2.30.2
+RXE/SIW are emulation RDMA kernel drivers. They are based on NIC HW. 
+Normally all the NICs can support RXE/SIW RDMA drivers because RXE/SIW 
+do not require additional NIC features.
+
+To now almost all the NIC HW can support RXE/SIW, even some virtual NICs 
+can also support RXE/SIW, for example, bonding, TUN and veth.
+
+Zhu Yanjun
+
+> 
+>>
+>> Autoloading is the version where you do 'mount -tnfs -o=rdma' and the
+>> kernel automatically request_module's nfs and then nfs-rdma based only
+>> on the command line options.
+>>
+>> I'm not sure this is even possible with configfs as the directories
+>> you need to write into don't even exist until the module(s) are
+>> loaded, right?
+> 
+> Right. The entry-point of the subsystem needs to be loaded (nvmet is 
+> loaded by nvmetcli),
+> the individual transports/drivers are auto-selected.
 
 
