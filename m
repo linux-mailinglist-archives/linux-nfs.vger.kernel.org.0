@@ -1,219 +1,347 @@
-Return-Path: <linux-nfs+bounces-3351-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3352-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 593138CD226
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 14:18:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A0438CD5E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 16:35:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2BAA1F21E5E
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 12:18:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 195B51F2228B
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 14:35:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3DC1E481;
-	Thu, 23 May 2024 12:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B006714AD1B;
+	Thu, 23 May 2024 14:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXHCBSQl"
+	dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="SSv4V6pl";
+	dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="RcSBMTvk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E77013B7A6
-	for <linux-nfs@vger.kernel.org>; Thu, 23 May 2024 12:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2B11DDC5
+	for <linux-nfs@vger.kernel.org>; Thu, 23 May 2024 14:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.61.102.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716466704; cv=none; b=dN5EHtB1FOQAGMzT1we6XyTHH1yPiTtbTwU8RXX9/Ifk7mXFDIAWfS/8v+SsHGzQWn0V8MzV/WlKo0KiNlXz5CY9YqHph8GtVNitLVQK0EASccLW/nMJqMfOapaMTBahtnCzZa0yMmWtX5STWKyDM9DOVZBMK0MZ8SitGFpnqKA=
+	t=1716474929; cv=none; b=J68+p52Z+FvsuGkn7dr9b/eh3l/E0bKSlQ+Fl7Pm4cHBpeBD16mSt06Mma4ZvHZdv+lrZtJsz+xfAM88U5Q7q1q5llU4pxSdEfP+mCzpHAIN3RWBBqZ6ybGF+waBZeJGdpST5pffWqkedhTd517WZA3fsPaX+MMndkXjhC4KZY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716466704; c=relaxed/simple;
-	bh=Q+6OTM0Y4zLlRDYbEkN4y5toxUnSQC8TL+9LfU8ASqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IM1cTUjjEE8FqClUwp8Q6lR3P6pRN6XB5UGbg4cpyTcnd13pI+PbKYNmiaBwn/B3kjoQ1ZqKkaho92xNRwjJ+m4pLDT85OPkisPTkle1UAatuJTJPG3wG00fa1XkXgr8yF2NzutVKSHC9b0oZKibloCCx9qHRCF3Cx1M2WOp9Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXHCBSQl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716466702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=88tGDa+CIM0/nnfBE4H/4aSEl879vpxwfnvFfB1MYPg=;
-	b=NXHCBSQlxll+7/qv8ccFhBWAAYr2JVGPABx81bFJHAtASkHVQii3l2Fwtc+iSnclTxuPae
-	9OxSmy5wFSUWAqtZF3HjpqVCGDfS/YV4sj1S+rRpwEAVO5KO0dSlMvMedy8uUFumciXn/j
-	Q71m8OX3aBXkN72M8yGcMh5iEpeEX5c=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-225-fZDcmYdcMg28VVvhnG6SLw-1; Thu,
- 23 May 2024 08:18:15 -0400
-X-MC-Unique: fZDcmYdcMg28VVvhnG6SLw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	s=arc-20240116; t=1716474929; c=relaxed/simple;
+	bh=WzKQoljD9V1UMwdfPg5xMu16TuiXQ77aPXL1MRg3kgQ=;
+	h=MIME-Version:Date:From:To:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=gtkJEaRs3IrkR6mOP2ecrE8pzwCR3MvC2X1k8Tdd5eofqVoJHCsXFKMuSFez7ncpCiJO9R3ntba2nSleMd/HggGUawuu/VMutmAV1oEUX2IVWsiOH1DqqkWuO59sZK9f1FxD3pIsa+KTyapCCFUHNlZCpKPbhNEspjlkUz+Z5Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in; spf=pass smtp.mailfrom=kojedz.in; dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=SSv4V6pl; dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=RcSBMTvk; arc=none smtp.client-ip=109.61.102.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kojedz.in
+Received: from webmail.srv.kwebs.cloud (172-16-36-102.prometheus-node-exporter.monitoring.svc.cluster.local [172.16.36.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3763C3801FE1;
-	Thu, 23 May 2024 12:18:15 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.33.56])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E41A2100046D;
-	Thu, 23 May 2024 12:18:14 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 5038414C51C; Thu, 23 May 2024 08:18:14 -0400 (EDT)
-Date: Thu, 23 May 2024 08:18:14 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"neilb@suse.de" <neilb@suse.de>
-Subject: Re: [PATCH] nfs: don't invalidate dentries on transient errors
-Message-ID: <Zk80Bm4nuT7eKdD3@aion>
-References: <20240522221916.447239-1-smayhew@redhat.com>
- <9ecb1225e5746054c27ca9488d34510147e58edd.camel@hammerspace.com>
+	(Authenticated sender: richard@kojedz.in)
+	by mx.kwebs.cloud (Postfix) with ESMTPSA id BACE81E07;
+	Thu, 23 May 2024 14:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
+	t=1716474918; bh=xc93f71SNSu/faLrIL2HkjMV/hdvp2THDszZsuS7tLI=;
+	h=Date:From:To:Subject:In-Reply-To:References;
+	b=SSv4V6plgiL2F9DHMBZZNMwh4JneyKLboWZvpD/V07hYEOULqzIwGlYB6W8cQTprq
+	 wpP4IGpWRYPlLwuAPjU/bfn65XmQHOtGGO9vpDltmr43knOKnWZAbsDEmjAMhvbXUi
+	 hKHY/ZLuEGfmnr933yAl3OVyxcFsHCWnWqGb0bCZXvHcj9YVFZu+uyhEGNwtktMUe0
+	 gWfFWkiqN1I58x0WoQ3J2af/6deq0693OZpz9IwuNvBQxvb+PNx20KfqdZksfWFOob
+	 PVF2cH24jtKzd5y3jXmUcwV/OmsKOiwis0mq0aGqNTO0F0XywcPdeSve6n95P55Qi5
+	 D114FcIpmIq8A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
+	t=1716474918; bh=xc93f71SNSu/faLrIL2HkjMV/hdvp2THDszZsuS7tLI=;
+	h=Date:From:To:Subject:In-Reply-To:References;
+	b=RcSBMTvkkdAQsd5lEeO8iP73wb/hPBhJm8fuWrWbZ0dNH6Li00LiLhDPVy2PS5vD5
+	 8NaAMJe7zhJOXJmZ3mwy1Vvfy4MvneE1J/TSnORiyHa32JnsTNL0yqyo1w1klyDQjm
+	 LNKVO+12Zbm7rc+GLtu2iQcogvv14SEWnYHg63vk59NOmpwOt/wr55J4j/HiQ5e4yD
+	 hzfJ8tG8sT7bXF8d9Nu6OJV2IlN5H4Gt0tY7Lrcy6Oanoqj7W7TWX2bQIt9PH9n5Eh
+	 zYao2ynQVafQXuyd4RUDA8qMqBLwJ9L34SoAWSw7+Yqdfr/kOiFnMqrue6Sl2DzrK1
+	 N/cHl2bYdnoKwf0wXPPl6n+94CMWEe7sWcoSR3yim5H72GSITLcHmvWYQCYRna6LSc
+	 PHXRxmaYACpRyPfVMw6yftn06upxl70kslFz2PYiau92HqMAvMKWtXCJRFaXRCTMzm
+	 CH46yXcCQGn6HN5FE4ETYd7811gltIw6TZqJymJovdmBvXQ+ytM
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <9ecb1225e5746054c27ca9488d34510147e58edd.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Date: Thu, 23 May 2024 16:35:18 +0200
+From: Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>
+To: linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
+Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
+In-Reply-To: <73e081764d06746be27c5f0d2f181938@kojedz.in>
+References: <0473c552b6fd8e96ef2ffbf0435a7552@kojedz.in>
+ <73e081764d06746be27c5f0d2f181938@kojedz.in>
+Message-ID: <162d12087ba8374a57e2263d7ea762b5@kojedz.in>
+X-Sender: richard+debian+bugreport@kojedz.in
+Content-Type: multipart/mixed;
+ boundary="=_5fadaa6cfb7f5c70b7eda0bab46df208"
 
-On Wed, 22 May 2024, Trond Myklebust wrote:
+--=_5fadaa6cfb7f5c70b7eda0bab46df208
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 
-> On Wed, 2024-05-22 at 18:19 -0400, Scott Mayhew wrote:
-> > This is a slight variation on a patch previously proposed by Neil
-> > Brown
-> > that never got merged.
-> >=20
-> > Prior to commit 5ceb9d7fdaaf ("NFS: Refactor
-> > nfs_lookup_revalidate()"),
-> > any error from nfs_lookup_verify_inode() other than -ESTALE would
-> > result
-> > in nfs_lookup_revalidate() returning that error (-ESTALE is mapped to
-> > zero).
-> >=20
-> > Since that commit, all errors result in nfs_lookup_revalidate()
-> > returning zero, resulting in dentries being invalidated where they
-> > previously were not (particularly in the case of -ERESTARTSYS).
-> >=20
-> > Fix it by passing the actual error code to
-> > nfs_lookup_revalidate_done(),
-> > and leaving the decision on whether to=A0 map the error code to zero or
-> > one to nfs_lookup_revalidate_done().
-> >=20
-> > A simple reproducer is to run the following python code in a
-> > subdirectory of an NFS mount (not in the root of the NFS mount):
-> >=20
-> > ---8<---
-> > import os
-> > import multiprocessing
-> > import time
-> >=20
-> > if __name__=3D=3D"__main__":
-> > =A0=A0=A0 multiprocessing.set_start_method("spawn")
-> >=20
-> > =A0=A0=A0 count =3D 0
-> > =A0=A0=A0 while True:
-> > =A0=A0=A0=A0=A0=A0=A0 try:
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 os.getcwd()
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pool =3D multiprocessing.Pool(10)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pool.close()
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pool.terminate()
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 count +=3D 1
-> > =A0=A0=A0=A0=A0=A0=A0 except Exception as e:
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 print(f"Failed after {count} iteratio=
-ns")
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 print(e)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break
-> > ---8<---
-> >=20
-> > Prior to commit 5ceb9d7fdaaf, the above code would run indefinitely.
-> > After commit 5ceb9d7fdaaf, it fails almost immediately with -ENOENT.
-> >=20
-> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > ---
-> > =A0fs/nfs/dir.c | 24 +++++++++++-------------
-> > =A01 file changed, 11 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index ac505671efbd..d9264ed4ac52 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -1635,6 +1635,14 @@ nfs_lookup_revalidate_done(struct inode *dir,
-> > struct dentry *dentry,
-> > =A0		if (inode && IS_ROOT(dentry))
-> > =A0			error =3D 1;
-> > =A0		break;
-> > +	case -ESTALE:
-> > +	case -ENOENT:
-> > +		error =3D 0;
-> > +		break;
-> > +	case -ETIMEDOUT:
-> > +		if (NFS_SERVER(inode)->flags & NFS_MOUNT_SOFTREVAL)
-> > +			error =3D 1;
-> > +		break;
-> > =A0	}
-> > =A0	trace_nfs_lookup_revalidate_exit(dir, dentry, 0, error);
-> > =A0	return error;
-> > @@ -1680,18 +1688,8 @@ static int nfs_lookup_revalidate_dentry(struct
-> > inode *dir,
-> > =A0
-> > =A0	dir_verifier =3D nfs_save_change_attribute(dir);
-> > =A0	ret =3D NFS_PROTO(dir)->lookup(dir, dentry, fhandle, fattr);
-> > -	if (ret < 0) {
-> > -		switch (ret) {
-> > -		case -ESTALE:
-> > -		case -ENOENT:
-> > -			ret =3D 0;
-> > -			break;
-> > -		case -ETIMEDOUT:
-> > -			if (NFS_SERVER(inode)->flags &
-> > NFS_MOUNT_SOFTREVAL)
-> > -				ret =3D 1;
-> > -		}
-> > +	if (ret < 0)
-> > =A0		goto out;
-> > -	}
-> > =A0
-> > =A0	/* Request help from readdirplus */
-> > =A0	nfs_lookup_advise_force_readdirplus(dir, flags);
-> > @@ -1735,7 +1733,7 @@ nfs_do_lookup_revalidate(struct inode *dir,
-> > struct dentry *dentry,
-> > =A0			 unsigned int flags)
-> > =A0{
-> > =A0	struct inode *inode;
-> > -	int error;
-> > +	int error =3D 0;
-> > =A0
-> > =A0	nfs_inc_stats(dir, NFSIOS_DENTRYREVALIDATE);
-> > =A0	inode =3D d_inode(dentry);
-> > @@ -1780,7 +1778,7 @@ nfs_do_lookup_revalidate(struct inode *dir,
-> > struct dentry *dentry,
-> > =A0out_bad:
-> > =A0	if (flags & LOOKUP_RCU)
-> > =A0		return -ECHILD;
-> > -	return nfs_lookup_revalidate_done(dir, dentry, inode, 0);
-> > +	return nfs_lookup_revalidate_done(dir, dentry, inode,
-> > error);
->=20
-> Won't this now cause us to skip the special handling of the root
-> directory in nfs_lookup_revalidate_done() if the call to
-> nfs_lookup_verify_inode() fails with an error?
+Dear devs,
 
-Yes, it will. I'll send a v2 in a bit.
+I am attaching a stripped down version of the little program which 
+triggers the bug very quickly, in a few minutes in my test lab. It 
+turned out that a single NFS mountpoint is enough. Just start the 
+program giving it the NFS mount as first argument. It will chdir there, 
+and do file operations, which will trigger a lockup in a few minutes.
 
--Scott
->=20
-> > =A0}
-> > =A0
-> > =A0static int
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
+Please take a look at it.
 
+Thanks in advance,
+Richard
+
+2024-05-23 14:12 időpontban Richard Kojedzinszky ezt írta:
+> Dear devs,
+> 
+> Now bisecting turned out that 3c59366c207e4c6c6569524af606baf017a55c61 
+> is the bad commit for me. Strangely it only affects my dovecot process 
+> accessing data over NFS.
+> 
+> Can you please confirm that this may be a bad commit?
+> 
+> My earlier attached programs may be used to demonstrate/trigger the 
+> issue. It even could be stripped down to minimal operations to trigger 
+> the bug.
+> 
+> Thanks in advance,
+> Richard
+> 
+> 
+> 2024-05-23 09:10 időpontban Richard Kojedzinszky ezt írta:
+>> Dear NFS developers,
+>> 
+>> I am running multiple PODs on a Kubernetes node, they all mount 
+>> different NFS shares from the same nfs server. I started to notice 
+>> hangups in my dovecot process after I switched to Debian's kernel from 
+>> upstream 5.15. You can find Debian bugreport at 
+>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071501.
+>> 
+>> So, effectively I am running dovecot in Kubernetes, and dovecot's data 
+>> directory is accessed over NFS. Eventually one dovecot process stucks 
+>> in nfs4_lookup_revalidate(). From that point, that process cannot be 
+>> killed, howewer, other processes can access NFS as normal. Also, 
+>> another dovecot process running on the very same node accessing the 
+>> same NFS share works too.
+>> 
+>> Now, I am still in the process of bisecting, howewer, I cannot 
+>> reliably trigger the bug. Originally it took a few days after I've 
+>> noticed a hanging process. Now I am trying to mimic file operations 
+>> what dovecot does in a faster way. Now it seems that it triggers the 
+>> bug in a few hours, howewer, during bisects, I can still make 
+>> mistakes.
+>> 
+>> I've scheduled many of my applications which use NFS shares to the 
+>> same node, to have more NFS load on that node.
+>> 
+>> I am attaching my simple app which triggers the bug in a few hours, at 
+>> least in my lab. I have two dedicated NFS shares for this test case, 
+>> and I am running 3 instances of the applications for both shares. 
+>> Also, I am running other production applications on the same node 
+>> which also use NFS, howewer, I dont experience lockups with them. They 
+>> are librenms, prometheus, and a docker private registry. This way I 
+>> dont know if running the attached app only is enough to trigger the 
+>> bug.
+>> 
+>> Once I have a suspectible commit based on my bisecting process, I will 
+>> report it here.
+>> 
+>> My NFS server is a TrueNAS, based on FreeBSD 13.3.
+>> 
+>> Thanks in advance,
+>> Richard
+
+--=_5fadaa6cfb7f5c70b7eda0bab46df208
+Content-Transfer-Encoding: base64
+Content-Type: application/x-tar;
+ name=ds.tar
+Content-Disposition: attachment;
+ filename=ds.tar;
+ size=10240
+
+ZG92ZWNvdC1zaW11bGF0b3IvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA3NTUAMDAwMTc1
+MQAwMDAxNzUxADAwMDAwMDAwMDAwADE0NjIzNjUxNDQ0ADAxNDExNQAgNQAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABk
+b3ZlY290LXNpbXVsYXRvci9tYWluLmdvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDY0NAAwMDAxNzUx
+ADAwMDE3NTEAMDAwMDAwMDI1NDUAMTQ2MjM2NTE0NDQAMDE1Mzc2ACAwAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHVzdGFyICAAa3JpY2h5AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBh
+Y2thZ2UgbWFpbgoKaW1wb3J0ICgKCSJjb250ZXh0IgoJImxvZyIKCSJuZXQvaHR0cCIKCSJvcyIK
+CSJvcy9zaWduYWwiCgkic3luYyIKCSJzeXNjYWxsIgoKCSJnaXRodWIuY29tL3Byb21ldGhldXMv
+Y2xpZW50X2dvbGFuZy9wcm9tZXRoZXVzIgoJImdpdGh1Yi5jb20vcHJvbWV0aGV1cy9jbGllbnRf
+Z29sYW5nL3Byb21ldGhldXMvcHJvbWh0dHAiCikKCmNvbnN0ICgKCWxvY2tGaWxlICAgID0gIm1h
+aWwubG9jayIKCWxpc3RGaWxlICAgID0gIm1haWwubGlzdCIKCWxpc3RGaWxlTmV3ID0gIm1haWwu
+bGlzdC5uZXciCikKCnZhciAoCgltZXRyaWNzID0gcHJvbWV0aGV1cy5OZXdIaXN0b2dyYW1WZWMo
+cHJvbWV0aGV1cy5IaXN0b2dyYW1PcHRzewoJCVN1YnN5c3RlbTogImRvdmVjb3RzaW0iLAoJCU5h
+bWU6ICAgICAgIm9wZXJhdGlvbnMiLAoJCUhlbHA6ICAgICAgIlNpbXVsYXRlZCBvcGVhdGlvbnMi
+LAoJfSwgW11zdHJpbmd7InBhdGgiLCAiaW5zdCIsICJvcCJ9KQoKCXBtZXRyaWNzIHByb21ldGhl
+dXMuT2JzZXJ2ZXJWZWMKKQoKZnVuYyBtYWluKCkgewoJcHJvbWV0aGV1cy5NdXN0UmVnaXN0ZXIo
+bWV0cmljcykKCglwYXRoIDo9IG9zLkFyZ3NbMV0KCWlmIGVyciA6PSBvcy5DaGRpcihwYXRoKTsg
+ZXJyICE9IG5pbCB7CgkJbG9nLkZhdGFsKGVycikKCX0KCglwbWV0cmljcyA9IG1ldHJpY3MuTXVz
+dEN1cnJ5V2l0aChwcm9tZXRoZXVzLkxhYmVsc3sicGF0aCI6IHBhdGh9KQoKCWN0eCwgY2FuY2Vs
+IDo9IGNvbnRleHQuV2l0aENhbmNlbChjb250ZXh0LkJhY2tncm91bmQoKSkKCWRlZmVyIGNhbmNl
+bCgpCgoJZ28gZnVuYygpIHsKCQlzaWdjaGFuIDo9IG1ha2UoY2hhbiBvcy5TaWduYWwsIDEpCgkJ
+c2lnbmFsLk5vdGlmeShzaWdjaGFuLCBzeXNjYWxsLlNJR0lOVCwgc3lzY2FsbC5TSUdURVJNKQoK
+CQk8LXNpZ2NoYW4KCgkJbG9nLlByaW50KCJFeGl0aW5nIikKCgkJY2FuY2VsKCkKCX0oKQoKCXdn
+IDo9ICZzeW5jLldhaXRHcm91cHt9CgoJbG9nLlByaW50KCJTdGFydGluZyByZWFkZXJzIGFuZCB3
+cml0ZXJzIikKCglmb3IgaSA6PSAwOyBpIDwgNTsgaSsrIHsKCQl3Zy5BZGQoMSkKCQlnbyBmdW5j
+KGluc3RhbmNlIGludCkgewoJCQlkZWZlciB3Zy5Eb25lKCkKCgkJCXcgOj0gJnJlYWRlcnt9CgoJ
+CQl3LnJ1bihjdHgsIGluc3RhbmNlKQoJCX0oaSkKCX0KCglmb3IgaSA6PSAwOyBpIDwgNTsgaSsr
+IHsKCQl3Zy5BZGQoMSkKCQlnbyBmdW5jKGluc3RhbmNlIGludCkgewoJCQlkZWZlciB3Zy5Eb25l
+KCkKCgkJCXcgOj0gJndyaXRlcnt9CgoJCQl3LnJ1bihjdHgsIGluc3RhbmNlKQoJCX0oaSkKCX0K
+CglnbyBodHRwLkxpc3RlbkFuZFNlcnZlKCI6OTA5MCIsIHByb21odHRwLkhhbmRsZXIoKSkKCgl3
+Zy5XYWl0KCkKfQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGRvdmVj
+b3Qtc2ltdWxhdG9yL3JlYWRlci5nbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwNjQ0ADAwMDE3NTEAMDAw
+MTc1MQAwMDAwMDAwMzExMQAxNDYyMzY1MTQzMQAwMTU2NzYAIDAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXN0YXIgIABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGFja2Fn
+ZSBtYWluCgppbXBvcnQgKAoJImJ1ZmlvIgoJImNvbnRleHQiCgkiZm10IgoJImxvZyIKCSJtYXRo
+L3JhbmQiCgkib3MiCgkidGltZSIKKQoKdHlwZSByZWFkZXIgc3RydWN0IHsKCWwgICAgICAgICAg
+ICpsb2NrZmlsZQoJbGFzdE1vZFRpbWUgdGltZS5UaW1lCn0KCmZ1bmMgKHIgKnJlYWRlcikgcnVu
+KGN0eCBjb250ZXh0LkNvbnRleHQsIGluc3RhbmNlIGludCkgewoJbSA6PSBwbWV0cmljcy5XaXRo
+TGFiZWxWYWx1ZXMoZm10LlNwcmludGYoIiVkIiwgaW5zdGFuY2UpLCAicmVhZCIpCgoJci5sID0g
+JmxvY2tmaWxle2ZpbGU6IGxvY2tGaWxlfQoKCXdkIDo9IG1ha2UoY2hhbiBib29sKQoKCWdvIGZ1
+bmMoKSB7CgkJdGltZXIgOj0gdGltZS5OZXdUaW1lcih0aW1lLlNlY29uZCkKCQlkZWZlciB0aW1l
+ci5TdG9wKCkKCgkJZm9yIHsKCQkJc2VsZWN0IHsKCQkJY2FzZSA8LWN0eC5Eb25lKCk6CgkJCQly
+ZXR1cm4KCQkJY2FzZSA8LXRpbWVyLkM6CgkJCQlsb2cuUHJpbnRmKCJyZWFkZXIoJWQpIGhhcyBi
+ZWVuIGJsb2NrZWQgZm9yIGEgc2Vjb25kIiwgaW5zdGFuY2UpCgkJCQlyZXR1cm4KCQkJY2FzZSA8
+LXdkOgoJCQkJaWYgIXRpbWVyLlN0b3AoKSB7CgkJCQkJPC10aW1lci5DCgkJCQl9CgkJCQl0aW1l
+ci5SZXNldCh0aW1lLlNlY29uZCkKCQkJfQoJCX0KCX0oKQoKCWZvciB7CgkJc2VsZWN0IHsKCQlj
+YXNlIDwtY3R4LkRvbmUoKToKCQkJcmV0dXJuCgkJZGVmYXVsdDoKCQl9CgoJCXN0YXJ0IDo9IHRp
+bWUuTm93KCkKCQlpZiBlcnIgOj0gci5kb19yZWFkKCk7IGVyciA9PSBuaWwgewoJCQltLk9ic2Vy
+dmUodGltZS5TaW5jZShzdGFydCkuU2Vjb25kcygpKQoJCX0KCgkJd2QgPC0gdHJ1ZQoJfQp9Cgpm
+dW5jIChyICpyZWFkZXIpIGRvX3JlYWQoKSBlcnJvciB7CglzdGF0LCBlcnIgOj0gb3MuU3RhdChs
+aXN0RmlsZSkKCWlmIGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIKCX0KCgltb2RUaW1lIDo9IHN0
+YXQuTW9kVGltZSgpCglpZiAhbW9kVGltZS5BZnRlcihyLmxhc3RNb2RUaW1lKSB7CgkJcmV0dXJu
+IG5pbAoJfQoKCWlmIGVyciA9IHIubC5Mb2NrKCk7IGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIK
+CX0KCWRlZmVyIHIubC5VbmxvY2soKQoKCXJmaCwgZXJyIDo9IG9zLk9wZW4obGlzdEZpbGUpCglp
+ZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciByZmguQ2xvc2UoKQoKCXdmaCwg
+ZXJyIDo9IG9zLk9wZW5GaWxlKGxpc3RGaWxlTmV3LCBvcy5PX0NSRUFURXxvcy5PX1dST05MWSwg
+MG82MDApCglpZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciB3ZmguQ2xvc2Uo
+KQoKCXJyIDo9IGJ1ZmlvLk5ld1JlYWRlcihyZmgpCgl3ciA6PSBidWZpby5OZXdXcml0ZXIod2Zo
+KQoKCWZvciB7CgkJbGluZSwgXyA6PSByci5SZWFkU3RyaW5nKCdcbicpCgkJaWYgbGluZSA9PSAi
+IiB7CgkJCWJyZWFrCgkJfQoKCQlpZiByYW5kLkludG4oMTApIDwgNCB7IC8vIGtlZXAgZmlsZXMg
+YXQgNDAlIGNoYW5jZQoJCQl3ci5Xcml0ZVN0cmluZyhsaW5lKQoJCX0KCX0KCgl3ci5GbHVzaCgp
+Cgl3ZmguQ2xvc2UoKQoKCW9zLlJlbmFtZShsaXN0RmlsZU5ldywgbGlzdEZpbGUpCgoJcmV0dXJu
+IG5pbAp9CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkb3ZlY290LXNp
+bXVsYXRvci93cml0ZXIuZ28AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDY0NAAwMDAxNzUxADAwMDE3NTEA
+MDAwMDAwMDIyMjQAMTQ2MjM2NTE0MzEAMDE1NzU0ACAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAHVzdGFyICAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBhY2thZ2UgbWFp
+bgoKaW1wb3J0ICgKCSJjb250ZXh0IgoJImZtdCIKCSJsb2ciCgkibWF0aC9yYW5kIgoJIm9zIgoJ
+InRpbWUiCikKCnR5cGUgd3JpdGVyIHN0cnVjdCB7CglsICpsb2NrZmlsZQp9CgpmdW5jICh3ICp3
+cml0ZXIpIHJ1bihjdHggY29udGV4dC5Db250ZXh0LCBpbnN0YW5jZSBpbnQpIHsKCW0gOj0gcG1l
+dHJpY3MuV2l0aExhYmVsVmFsdWVzKGZtdC5TcHJpbnRmKCIlZCIsIGluc3RhbmNlKSwgIndyaXRl
+IikKCgl3LmwgPSAmbG9ja2ZpbGV7ZmlsZTogbG9ja0ZpbGV9CgoJd2QgOj0gbWFrZShjaGFuIGJv
+b2wpCgoJZ28gZnVuYygpIHsKCQl0aW1lciA6PSB0aW1lLk5ld1RpbWVyKHRpbWUuU2Vjb25kKQoJ
+CWRlZmVyIHRpbWVyLlN0b3AoKQoKCQlmb3IgewoJCQlzZWxlY3QgewoJCQljYXNlIDwtY3R4LkRv
+bmUoKToKCQkJCXJldHVybgoJCQljYXNlIDwtdGltZXIuQzoKCQkJCWxvZy5QcmludGYoIndyaXRl
+ciglZCkgaGFzIGJlZW4gYmxvY2tlZCBmb3IgYSBzZWNvbmQiLCBpbnN0YW5jZSkKCQkJCXJldHVy
+bgoJCQljYXNlIDwtd2Q6CgkJCQlpZiAhdGltZXIuU3RvcCgpIHsKCQkJCQk8LXRpbWVyLkMKCQkJ
+CX0KCQkJCXRpbWVyLlJlc2V0KHRpbWUuU2Vjb25kKQoJCQl9CgkJfQoJfSgpCgoJZm9yIHsKCQlz
+ZWxlY3QgewoJCWNhc2UgPC1jdHguRG9uZSgpOgoJCQlyZXR1cm4KCQlkZWZhdWx0OgoJCX0KCgkJ
+c3RhcnQgOj0gdGltZS5Ob3coKQoJCWlmIGVyciA6PSB3LmRvX3dyaXRlKCk7IGVyciA9PSBuaWwg
+ewoJCQltLk9ic2VydmUodGltZS5TaW5jZShzdGFydCkuU2Vjb25kcygpKQoJCX0KCgkJd2QgPC0g
+dHJ1ZQoJfQp9CgpmdW5jICh3ICp3cml0ZXIpIGRvX3dyaXRlKCkgZXJyb3IgewoJaWYgZXJyIDo9
+IHcubC5Mb2NrKCk7IGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIKCX0KCWRlZmVyIHcubC5Vbmxv
+Y2soKQoKCWZoLCBlcnIgOj0gb3MuT3BlbkZpbGUobGlzdEZpbGUsIG9zLk9fQ1JFQVRFfG9zLk9f
+V1JPTkxZfG9zLk9fQVBQRU5ELCAwbzYwMCkKCWlmIGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIK
+CX0KCWRlZmVyIGZoLkNsb3NlKCkKCglsaW5lIDo9IGZtdC5TcHJpbnRmKCJmaWxlLSVkLiVkXG4i
+LCB0aW1lLk5vdygpLk5hbm9zZWNvbmQoKSwgcmFuZC5JbnQoKSkKCWZoLldyaXRlKFtdYnl0ZShs
+aW5lKSkKCglyZXR1cm4gbmlsCn0KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGRvdmVjb3Qtc2ltdWxh
+dG9yL2xvY2tmaWxlLmdvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwNjQ0ADAwMDE3NTEAMDAwMTc1MQAwMDAw
+MDAwMTEzNAAxNDYyMzY1MTQzMQAwMTYyMjcAIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAdXN0YXIgIABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGty
+aWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGFja2FnZSBtYWluCgpp
+bXBvcnQgKAoJIm1hdGgvcmFuZCIKCSJvcyIKCSJ0aW1lIgopCgp0eXBlIGxvY2tmaWxlIHN0cnVj
+dCB7CglmaWxlIHN0cmluZwoJZmggICAqb3MuRmlsZQp9CgpmdW5jIChsICpsb2NrZmlsZSkgTG9j
+aygpIChlcnIgZXJyb3IpIHsKCWkgOj0gMAoKCWZvciB7CgkJaWYgXywgZXJyID0gb3MuU3RhdChs
+LmZpbGUpOyBlcnIgIT0gbmlsICYmIG9zLklzTm90RXhpc3QoZXJyKSB7CgkJCWwuZmgsIGVyciA9
+IG9zLk9wZW5GaWxlKGwuZmlsZSwgb3MuT19DUkVBVEV8b3MuT19SRFdSfG9zLk9fRVhDTCwgMG82
+NDQpCgkJCWlmIGVyciA9PSBuaWwgewoJCQkJcmV0dXJuCgkJCX0KCQl9IGVsc2UgewoJCQllcnIg
+PSBvcy5FcnJFeGlzdAoJCX0KCgkJaSsrCgkJaWYgaSA9PSAxNSB7CgkJCXJldHVybgoJCX0KCgkJ
+dGltZS5TbGVlcCh0aW1lLk1pbGxpc2Vjb25kICogdGltZS5EdXJhdGlvbigoMSArIHJhbmQuSW50
+bigxMCkpKSkKCX0KfQoKZnVuYyAobCAqbG9ja2ZpbGUpIFVubG9jaygpIChlcnIgZXJyb3IpIHsK
+CWlmIGwuZmggPT0gbmlsIHsKCQlyZXR1cm4KCX0KCglsLmZoLkNsb3NlKCkKCglvcy5SZW1vdmUo
+bC5maWxlKQoKCXJldHVybgp9CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+--=_5fadaa6cfb7f5c70b7eda0bab46df208--
 
