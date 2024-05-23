@@ -1,153 +1,184 @@
-Return-Path: <linux-nfs+bounces-3353-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3354-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A028CD7BF
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 17:52:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BFA18CD8C0
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 18:55:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E054B21280
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 15:52:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 428D7281F67
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 16:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02249125C1;
-	Thu, 23 May 2024 15:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808E822334;
+	Thu, 23 May 2024 16:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="fIpnFnY8"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSKBFgEX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mDqPLG81";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSKBFgEX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mDqPLG81"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71391400A;
-	Thu, 23 May 2024 15:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51D1376E6
+	for <linux-nfs@vger.kernel.org>; Thu, 23 May 2024 16:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716479570; cv=none; b=Rqqk/emdFMRxAXdYtAYmzPGsLzySaTkkHqvICr1b4Xiuf0HWKtNDya28GAAcBn+1XNKEmQEk/W81hD7E6bGnFwHSlGT0YQrtxwv6CK8ZLfZNXirnc3ijt8e/dgmSH10t4v42ehVNgPyXe+uIYvlfpuxEo2CloOmTMm5t20kRclc=
+	t=1716483295; cv=none; b=q7KL7D9uEHRUKJl/oX+rPv+lBl+4R2jU2MLngrnAlXahN7RadmtNRArFrbzRT9QSKefDk4vFyOxhriVIVWDvOISVSTZU3IjDcA7ChDx+c6M5WORdQh7+647fnPT2QK5tD6nOtJAaOo8Q11UWvLfhh+GqAbBMF5l5AZJ4ZQoFuZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716479570; c=relaxed/simple;
-	bh=/P2HcR2ooZhn1XjwLLvuzHwEXJ0ilr94g/kPPiR6VCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BR4RrNfwHD2yX5GxVgCcK0IcTQIfsP1ckMh8bJZw6LJUIqySxO1lquyMvIQ5HWuogW0P83EnG5yY+5kUXo40y6RZIKDdFAacPecE6P9NGoCpduxhQ/AJXri4LFleeqtSIhaSU49FwudsEG8ZZY/DFVI8qrBR8ZwkNc86haugZno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=fIpnFnY8; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	s=arc-20240116; t=1716483295; c=relaxed/simple;
+	bh=ohdZHSXOUutxEUre5DFBnnW4dAjvsrpiFgHd2sF+cag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VBTiCgVDne7fGcCoAEszwiMyhXasVlLufyVWZbL9h8mCxY1bIrp9NioxBeVWgrmif0Nu4mG33lIR44aVR5kM08Zq4DJYRWl8J8ySR1LJU0HgDvYslA5sQimtI4TyZGhqQ3OHVgP2sAEax4ltOskJPpIEiFBc3NgnMW6A1UHeF3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NSKBFgEX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mDqPLG81; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NSKBFgEX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mDqPLG81; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VlXkG3h3Rz9t81;
-	Thu, 23 May 2024 17:52:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1716479558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/P2HcR2ooZhn1XjwLLvuzHwEXJ0ilr94g/kPPiR6VCw=;
-	b=fIpnFnY8Of+uaqrowrMZSmQ6SiiP5GBVJw0uDc9zh0GwI+jVUVg+216elRHbMIZ8bkg+uG
-	+xgbm8pWy0l3N5R6WOSnU6wB5yDjTO8bZpZV/yeI0dQmSz2CZPIEv8bOt4AQ/oqd0Q6ef8
-	8LFQoIvc9NCfgBPONaO5XuEzuaeUK8UbdnoLOG0Ek5zTB5+u2yeOxSfRwahnKrJkcTyyLc
-	8fkCb01Q8kV1kGX2bKDDjLGQmeWOo4tX/vmze+ThTQuTdfRk3YpuDwKrvN1XRiVAjxkMoP
-	BtxHPv9Oods4ZcYbcYXbVhmWkuLcvfgf8SWDeK/QQB0ZF/cFBZQ/Qkm6grifvg==
-Date: Thu, 23 May 2024 09:52:20 -0600
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Alexander Aring <alex.aring@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
-Message-ID: <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
-References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
- <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B5381229F5;
+	Thu, 23 May 2024 16:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716483291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=c2PbDfq99BmHxAN8DwvDDwdAWN3IEiVUwBDZUfyriYI=;
+	b=NSKBFgEXUBcvc8Gvnv+r4otaYVCcTSUBdr/4Eukf+mwie00QMEVQJNbYOLTG96Tl8wp8/g
+	YTZ1DtdolDak0ehVPzV3Qg1xtiQRc0hq+Ly0mNs4iARlm8b74XrSz5tt+3VxX/euW2OKqH
+	v/qUxd2mh3fiaHrHQ8AQK0UG9OkiBoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716483291;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=c2PbDfq99BmHxAN8DwvDDwdAWN3IEiVUwBDZUfyriYI=;
+	b=mDqPLG8131ZHXHvOcw4QIEH3IO1ubqB+EeiDlWjmgyxQE3v0q4uPwww8vqrRNetbNf0wFM
+	yjZ8EYShLDfwsxAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716483291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=c2PbDfq99BmHxAN8DwvDDwdAWN3IEiVUwBDZUfyriYI=;
+	b=NSKBFgEXUBcvc8Gvnv+r4otaYVCcTSUBdr/4Eukf+mwie00QMEVQJNbYOLTG96Tl8wp8/g
+	YTZ1DtdolDak0ehVPzV3Qg1xtiQRc0hq+Ly0mNs4iARlm8b74XrSz5tt+3VxX/euW2OKqH
+	v/qUxd2mh3fiaHrHQ8AQK0UG9OkiBoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716483291;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=c2PbDfq99BmHxAN8DwvDDwdAWN3IEiVUwBDZUfyriYI=;
+	b=mDqPLG8131ZHXHvOcw4QIEH3IO1ubqB+EeiDlWjmgyxQE3v0q4uPwww8vqrRNetbNf0wFM
+	yjZ8EYShLDfwsxAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AAD1413A6B;
+	Thu, 23 May 2024 16:54:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g7iuKdt0T2YNewAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 23 May 2024 16:54:51 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5CC75A0770; Thu, 23 May 2024 18:54:36 +0200 (CEST)
+Date: Thu, 23 May 2024 18:54:36 +0200
+From: Jan Kara <jack@suse.cz>
+To: linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>
+Subject: Bad NFS performance for fsync(2)
+Message-ID: <20240523165436.g5xgo7aht7dtmvfb@quack3>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="syu4osmmxwp2aoki"
-Content-Disposition: inline
-In-Reply-To: <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
-X-Rspamd-Queue-Id: 4VlXkG3h3Rz9t81
-
-
---syu4osmmxwp2aoki
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-On 2024-05-21, Christian Brauner <brauner@kernel.org> wrote:
-> On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
-> > Now that we have stabilised the unique 64-bit mount ID interface in
-> > statx, we can now provide a race-free way for name_to_handle_at(2) to
-> > provide a file handle and corresponding mount without needing to worry
-> > about racing with /proc/mountinfo parsing.
-> >=20
-> > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bit
-> > that doesn't make sense for name_to_handle_at(2).
-> >=20
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
->=20
-> So I think overall this is probably fine (famous last words). If it's
-> just about being able to retrieve the new mount id without having to
-> take the hit of another statx system call it's indeed a bit much to
-> add a revised system call for this. Althoug I did say earlier that I
-> wouldn't rule that out.
->=20
-> But if we'd that then it'll be a long discussion on the form of the new
-> system call and the information it exposes.
->=20
-> For example, I lack the grey hair needed to understand why
-> name_to_handle_at() returns a mount id at all. The pitch in commit
-> 990d6c2d7aee ("vfs: Add name to file handle conversion support") is that
-> the (old) mount id can be used to "lookup file system specific
-> information [...] in /proc/<pid>/mountinfo".
+Hello!
 
-The logic was presumably to allow you to know what mount the resolved
-file handle came from. If you use AT_EMPTY_PATH this is not needed
-because you could just fstatfs (and now statx(AT_EMPTY_PATH)), but if
-you just give name_to_handle_at() almost any path, there is no race-free
-way to make sure that you know which filesystem the file handle came
-=66rom.
+I've been debugging NFS performance regression with recent kernels. It
+seems to be at least partially related to the following behavior of NFS
+(which is there for a long time AFAICT). Suppose the following workload:
 
-I don't know if that could lead to security issues (I guess an attacker
-could find a way to try to manipulate the file handle you get back, and
-then try to trick you into operating on the wrong filesystem with
-open_by_handle_at()) but it is definitely something you'd want to avoid.
+fio --direct=0 --ioengine=sync --thread --directory=/test --invalidate=1 \
+  --group_reporting=1 --runtime=100 --fallocate=posix --ramp_time=10 \
+  --name=RandomWrites-async --new_group --rw=randwrite --size=32000m \
+  --numjobs=4 --bs=4k --fsync_on_close=1 --end_fsync=1 \
+  --filename_format='FioWorkloads.$jobnum'
 
-> Granted, that's doable but it'll mean a lot of careful checking to avoid
-> races for mount id recycling because they're not even allocated
-> cyclically. With lots of containers it becomes even more of an issue. So
-> it's doubtful whether exposing the mount id through name_to_handle_at()
-> would be something that we'd still do.
->=20
-> So really, if this is just about a use-case where you want to spare the
-> additional system call for statx() and you need the mnt_id then
-> overloading is probably ok.
->=20
-> But it remains an unpleasant thing to look at.
->=20
+So we do 4k buffered random writes from 4 threads into 4 different files.
+Now the interesting behavior comes on the final fsync(2). What I observe is
+that the NFS server getting a stream of 4-8k writes which have 'stable'
+flag set. What the server does for each such write is that performs the
+write and calls fsync(2). Since by the time fio calls fsync(2) on the NFS
+client there is like 6-8 GB worth of dirty pages to write and the server
+effectively ends up writing each individual 4k page as O_SYNC write, the
+throughput is not great...
 
-Yeah, I agree it's ugly.
+The reason why the client sets 'stable' flag for each page write seems to
+be because nfs_writepages() issues writes with FLUSH_COND_STABLE for
+WB_SYNC_ALL writeback and nfs_pgio_rpcsetup() has this logic:
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+        switch (how & (FLUSH_STABLE | FLUSH_COND_STABLE)) {
+        case 0:
+                break;
+        case FLUSH_COND_STABLE:
+                if (nfs_reqs_to_commit(cinfo))
+                        break;
+                fallthrough;
+        default:
+                hdr->args.stable = NFS_FILE_SYNC;
+        }
 
---syu4osmmxwp2aoki
-Content-Type: application/pgp-signature; name="signature.asc"
+but since this is final fsync(2), there are no more requests to commit so
+we set NFS_FILE_SYNC flag.
 
------BEGIN PGP SIGNATURE-----
+Now I'd think the client is stupid in submitting so many NFS_FILE_SYNC
+writes instead of submitting all as async and then issuing commit (i.e.,
+the switch above in nfs_pgio_rpcsetup() could gain something like:
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZk9mMQAKCRAol/rSt+lE
-bxctAP9Kw9bAXa2/Grr9P3qpouqY7GMqLfiI913pFPu5tLekugEAwV7BrDbtomln
-wVmJGBZXmdwq6mW7zkaCbn0TqhB6ig0=
-=JlY2
------END PGP SIGNATURE-----
+		if (count > <small_magic_number>)
+			break;
 
---syu4osmmxwp2aoki--
+But I'm not 100% sure this is a correct thing to do since I'm not 100% sure
+about the FLUSH_COND_STABLE requirements. On the other hand it could be
+also argued that the NFS server could be more clever and batch the
+fsync(2)s for many sync writes to the same file. But there the heuristic is
+less clear.
+
+So what do people think?
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
