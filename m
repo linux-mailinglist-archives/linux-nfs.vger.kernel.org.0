@@ -1,347 +1,153 @@
-Return-Path: <linux-nfs+bounces-3352-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3353-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A0438CD5E5
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 16:35:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7A028CD7BF
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 17:52:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 195B51F2228B
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 14:35:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E054B21280
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 May 2024 15:52:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B006714AD1B;
-	Thu, 23 May 2024 14:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02249125C1;
+	Thu, 23 May 2024 15:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="SSv4V6pl";
-	dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="RcSBMTvk"
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="fIpnFnY8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2B11DDC5
-	for <linux-nfs@vger.kernel.org>; Thu, 23 May 2024 14:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.61.102.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71391400A;
+	Thu, 23 May 2024 15:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716474929; cv=none; b=J68+p52Z+FvsuGkn7dr9b/eh3l/E0bKSlQ+Fl7Pm4cHBpeBD16mSt06Mma4ZvHZdv+lrZtJsz+xfAM88U5Q7q1q5llU4pxSdEfP+mCzpHAIN3RWBBqZ6ybGF+waBZeJGdpST5pffWqkedhTd517WZA3fsPaX+MMndkXjhC4KZY0=
+	t=1716479570; cv=none; b=Rqqk/emdFMRxAXdYtAYmzPGsLzySaTkkHqvICr1b4Xiuf0HWKtNDya28GAAcBn+1XNKEmQEk/W81hD7E6bGnFwHSlGT0YQrtxwv6CK8ZLfZNXirnc3ijt8e/dgmSH10t4v42ehVNgPyXe+uIYvlfpuxEo2CloOmTMm5t20kRclc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716474929; c=relaxed/simple;
-	bh=WzKQoljD9V1UMwdfPg5xMu16TuiXQ77aPXL1MRg3kgQ=;
-	h=MIME-Version:Date:From:To:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=gtkJEaRs3IrkR6mOP2ecrE8pzwCR3MvC2X1k8Tdd5eofqVoJHCsXFKMuSFez7ncpCiJO9R3ntba2nSleMd/HggGUawuu/VMutmAV1oEUX2IVWsiOH1DqqkWuO59sZK9f1FxD3pIsa+KTyapCCFUHNlZCpKPbhNEspjlkUz+Z5Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in; spf=pass smtp.mailfrom=kojedz.in; dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=SSv4V6pl; dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=RcSBMTvk; arc=none smtp.client-ip=109.61.102.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kojedz.in
-Received: from webmail.srv.kwebs.cloud (172-16-36-102.prometheus-node-exporter.monitoring.svc.cluster.local [172.16.36.102])
+	s=arc-20240116; t=1716479570; c=relaxed/simple;
+	bh=/P2HcR2ooZhn1XjwLLvuzHwEXJ0ilr94g/kPPiR6VCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BR4RrNfwHD2yX5GxVgCcK0IcTQIfsP1ckMh8bJZw6LJUIqySxO1lquyMvIQ5HWuogW0P83EnG5yY+5kUXo40y6RZIKDdFAacPecE6P9NGoCpduxhQ/AJXri4LFleeqtSIhaSU49FwudsEG8ZZY/DFVI8qrBR8ZwkNc86haugZno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=fIpnFnY8; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: richard@kojedz.in)
-	by mx.kwebs.cloud (Postfix) with ESMTPSA id BACE81E07;
-	Thu, 23 May 2024 14:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
-	t=1716474918; bh=xc93f71SNSu/faLrIL2HkjMV/hdvp2THDszZsuS7tLI=;
-	h=Date:From:To:Subject:In-Reply-To:References;
-	b=SSv4V6plgiL2F9DHMBZZNMwh4JneyKLboWZvpD/V07hYEOULqzIwGlYB6W8cQTprq
-	 wpP4IGpWRYPlLwuAPjU/bfn65XmQHOtGGO9vpDltmr43knOKnWZAbsDEmjAMhvbXUi
-	 hKHY/ZLuEGfmnr933yAl3OVyxcFsHCWnWqGb0bCZXvHcj9YVFZu+uyhEGNwtktMUe0
-	 gWfFWkiqN1I58x0WoQ3J2af/6deq0693OZpz9IwuNvBQxvb+PNx20KfqdZksfWFOob
-	 PVF2cH24jtKzd5y3jXmUcwV/OmsKOiwis0mq0aGqNTO0F0XywcPdeSve6n95P55Qi5
-	 D114FcIpmIq8A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
-	t=1716474918; bh=xc93f71SNSu/faLrIL2HkjMV/hdvp2THDszZsuS7tLI=;
-	h=Date:From:To:Subject:In-Reply-To:References;
-	b=RcSBMTvkkdAQsd5lEeO8iP73wb/hPBhJm8fuWrWbZ0dNH6Li00LiLhDPVy2PS5vD5
-	 8NaAMJe7zhJOXJmZ3mwy1Vvfy4MvneE1J/TSnORiyHa32JnsTNL0yqyo1w1klyDQjm
-	 LNKVO+12Zbm7rc+GLtu2iQcogvv14SEWnYHg63vk59NOmpwOt/wr55J4j/HiQ5e4yD
-	 hzfJ8tG8sT7bXF8d9Nu6OJV2IlN5H4Gt0tY7Lrcy6Oanoqj7W7TWX2bQIt9PH9n5Eh
-	 zYao2ynQVafQXuyd4RUDA8qMqBLwJ9L34SoAWSw7+Yqdfr/kOiFnMqrue6Sl2DzrK1
-	 N/cHl2bYdnoKwf0wXPPl6n+94CMWEe7sWcoSR3yim5H72GSITLcHmvWYQCYRna6LSc
-	 PHXRxmaYACpRyPfVMw6yftn06upxl70kslFz2PYiau92HqMAvMKWtXCJRFaXRCTMzm
-	 CH46yXcCQGn6HN5FE4ETYd7811gltIw6TZqJymJovdmBvXQ+ytM
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VlXkG3h3Rz9t81;
+	Thu, 23 May 2024 17:52:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1716479558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/P2HcR2ooZhn1XjwLLvuzHwEXJ0ilr94g/kPPiR6VCw=;
+	b=fIpnFnY8Of+uaqrowrMZSmQ6SiiP5GBVJw0uDc9zh0GwI+jVUVg+216elRHbMIZ8bkg+uG
+	+xgbm8pWy0l3N5R6WOSnU6wB5yDjTO8bZpZV/yeI0dQmSz2CZPIEv8bOt4AQ/oqd0Q6ef8
+	8LFQoIvc9NCfgBPONaO5XuEzuaeUK8UbdnoLOG0Ek5zTB5+u2yeOxSfRwahnKrJkcTyyLc
+	8fkCb01Q8kV1kGX2bKDDjLGQmeWOo4tX/vmze+ThTQuTdfRk3YpuDwKrvN1XRiVAjxkMoP
+	BtxHPv9Oods4ZcYbcYXbVhmWkuLcvfgf8SWDeK/QQB0ZF/cFBZQ/Qkm6grifvg==
+Date: Thu, 23 May 2024 09:52:20 -0600
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Alexander Aring <alex.aring@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
+Message-ID: <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
+References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
+ <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 23 May 2024 16:35:18 +0200
-From: Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>
-To: linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
-Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
-In-Reply-To: <73e081764d06746be27c5f0d2f181938@kojedz.in>
-References: <0473c552b6fd8e96ef2ffbf0435a7552@kojedz.in>
- <73e081764d06746be27c5f0d2f181938@kojedz.in>
-Message-ID: <162d12087ba8374a57e2263d7ea762b5@kojedz.in>
-X-Sender: richard+debian+bugreport@kojedz.in
-Content-Type: multipart/mixed;
- boundary="=_5fadaa6cfb7f5c70b7eda0bab46df208"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="syu4osmmxwp2aoki"
+Content-Disposition: inline
+In-Reply-To: <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
+X-Rspamd-Queue-Id: 4VlXkG3h3Rz9t81
 
---=_5fadaa6cfb7f5c70b7eda0bab46df208
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 
-Dear devs,
+--syu4osmmxwp2aoki
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am attaching a stripped down version of the little program which 
-triggers the bug very quickly, in a few minutes in my test lab. It 
-turned out that a single NFS mountpoint is enough. Just start the 
-program giving it the NFS mount as first argument. It will chdir there, 
-and do file operations, which will trigger a lockup in a few minutes.
+On 2024-05-21, Christian Brauner <brauner@kernel.org> wrote:
+> On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
+> > Now that we have stabilised the unique 64-bit mount ID interface in
+> > statx, we can now provide a race-free way for name_to_handle_at(2) to
+> > provide a file handle and corresponding mount without needing to worry
+> > about racing with /proc/mountinfo parsing.
+> >=20
+> > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bit
+> > that doesn't make sense for name_to_handle_at(2).
+> >=20
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > ---
+>=20
+> So I think overall this is probably fine (famous last words). If it's
+> just about being able to retrieve the new mount id without having to
+> take the hit of another statx system call it's indeed a bit much to
+> add a revised system call for this. Althoug I did say earlier that I
+> wouldn't rule that out.
+>=20
+> But if we'd that then it'll be a long discussion on the form of the new
+> system call and the information it exposes.
+>=20
+> For example, I lack the grey hair needed to understand why
+> name_to_handle_at() returns a mount id at all. The pitch in commit
+> 990d6c2d7aee ("vfs: Add name to file handle conversion support") is that
+> the (old) mount id can be used to "lookup file system specific
+> information [...] in /proc/<pid>/mountinfo".
 
-Please take a look at it.
+The logic was presumably to allow you to know what mount the resolved
+file handle came from. If you use AT_EMPTY_PATH this is not needed
+because you could just fstatfs (and now statx(AT_EMPTY_PATH)), but if
+you just give name_to_handle_at() almost any path, there is no race-free
+way to make sure that you know which filesystem the file handle came
+=66rom.
 
-Thanks in advance,
-Richard
+I don't know if that could lead to security issues (I guess an attacker
+could find a way to try to manipulate the file handle you get back, and
+then try to trick you into operating on the wrong filesystem with
+open_by_handle_at()) but it is definitely something you'd want to avoid.
 
-2024-05-23 14:12 időpontban Richard Kojedzinszky ezt írta:
-> Dear devs,
-> 
-> Now bisecting turned out that 3c59366c207e4c6c6569524af606baf017a55c61 
-> is the bad commit for me. Strangely it only affects my dovecot process 
-> accessing data over NFS.
-> 
-> Can you please confirm that this may be a bad commit?
-> 
-> My earlier attached programs may be used to demonstrate/trigger the 
-> issue. It even could be stripped down to minimal operations to trigger 
-> the bug.
-> 
-> Thanks in advance,
-> Richard
-> 
-> 
-> 2024-05-23 09:10 időpontban Richard Kojedzinszky ezt írta:
->> Dear NFS developers,
->> 
->> I am running multiple PODs on a Kubernetes node, they all mount 
->> different NFS shares from the same nfs server. I started to notice 
->> hangups in my dovecot process after I switched to Debian's kernel from 
->> upstream 5.15. You can find Debian bugreport at 
->> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071501.
->> 
->> So, effectively I am running dovecot in Kubernetes, and dovecot's data 
->> directory is accessed over NFS. Eventually one dovecot process stucks 
->> in nfs4_lookup_revalidate(). From that point, that process cannot be 
->> killed, howewer, other processes can access NFS as normal. Also, 
->> another dovecot process running on the very same node accessing the 
->> same NFS share works too.
->> 
->> Now, I am still in the process of bisecting, howewer, I cannot 
->> reliably trigger the bug. Originally it took a few days after I've 
->> noticed a hanging process. Now I am trying to mimic file operations 
->> what dovecot does in a faster way. Now it seems that it triggers the 
->> bug in a few hours, howewer, during bisects, I can still make 
->> mistakes.
->> 
->> I've scheduled many of my applications which use NFS shares to the 
->> same node, to have more NFS load on that node.
->> 
->> I am attaching my simple app which triggers the bug in a few hours, at 
->> least in my lab. I have two dedicated NFS shares for this test case, 
->> and I am running 3 instances of the applications for both shares. 
->> Also, I am running other production applications on the same node 
->> which also use NFS, howewer, I dont experience lockups with them. They 
->> are librenms, prometheus, and a docker private registry. This way I 
->> dont know if running the attached app only is enough to trigger the 
->> bug.
->> 
->> Once I have a suspectible commit based on my bisecting process, I will 
->> report it here.
->> 
->> My NFS server is a TrueNAS, based on FreeBSD 13.3.
->> 
->> Thanks in advance,
->> Richard
+> Granted, that's doable but it'll mean a lot of careful checking to avoid
+> races for mount id recycling because they're not even allocated
+> cyclically. With lots of containers it becomes even more of an issue. So
+> it's doubtful whether exposing the mount id through name_to_handle_at()
+> would be something that we'd still do.
+>=20
+> So really, if this is just about a use-case where you want to spare the
+> additional system call for statx() and you need the mnt_id then
+> overloading is probably ok.
+>=20
+> But it remains an unpleasant thing to look at.
+>=20
 
---=_5fadaa6cfb7f5c70b7eda0bab46df208
-Content-Transfer-Encoding: base64
-Content-Type: application/x-tar;
- name=ds.tar
-Content-Disposition: attachment;
- filename=ds.tar;
- size=10240
+Yeah, I agree it's ugly.
 
-ZG92ZWNvdC1zaW11bGF0b3IvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA3NTUAMDAwMTc1
-MQAwMDAxNzUxADAwMDAwMDAwMDAwADE0NjIzNjUxNDQ0ADAxNDExNQAgNQAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABk
-b3ZlY290LXNpbXVsYXRvci9tYWluLmdvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDY0NAAwMDAxNzUx
-ADAwMDE3NTEAMDAwMDAwMDI1NDUAMTQ2MjM2NTE0NDQAMDE1Mzc2ACAwAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHVzdGFyICAAa3JpY2h5AAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBh
-Y2thZ2UgbWFpbgoKaW1wb3J0ICgKCSJjb250ZXh0IgoJImxvZyIKCSJuZXQvaHR0cCIKCSJvcyIK
-CSJvcy9zaWduYWwiCgkic3luYyIKCSJzeXNjYWxsIgoKCSJnaXRodWIuY29tL3Byb21ldGhldXMv
-Y2xpZW50X2dvbGFuZy9wcm9tZXRoZXVzIgoJImdpdGh1Yi5jb20vcHJvbWV0aGV1cy9jbGllbnRf
-Z29sYW5nL3Byb21ldGhldXMvcHJvbWh0dHAiCikKCmNvbnN0ICgKCWxvY2tGaWxlICAgID0gIm1h
-aWwubG9jayIKCWxpc3RGaWxlICAgID0gIm1haWwubGlzdCIKCWxpc3RGaWxlTmV3ID0gIm1haWwu
-bGlzdC5uZXciCikKCnZhciAoCgltZXRyaWNzID0gcHJvbWV0aGV1cy5OZXdIaXN0b2dyYW1WZWMo
-cHJvbWV0aGV1cy5IaXN0b2dyYW1PcHRzewoJCVN1YnN5c3RlbTogImRvdmVjb3RzaW0iLAoJCU5h
-bWU6ICAgICAgIm9wZXJhdGlvbnMiLAoJCUhlbHA6ICAgICAgIlNpbXVsYXRlZCBvcGVhdGlvbnMi
-LAoJfSwgW11zdHJpbmd7InBhdGgiLCAiaW5zdCIsICJvcCJ9KQoKCXBtZXRyaWNzIHByb21ldGhl
-dXMuT2JzZXJ2ZXJWZWMKKQoKZnVuYyBtYWluKCkgewoJcHJvbWV0aGV1cy5NdXN0UmVnaXN0ZXIo
-bWV0cmljcykKCglwYXRoIDo9IG9zLkFyZ3NbMV0KCWlmIGVyciA6PSBvcy5DaGRpcihwYXRoKTsg
-ZXJyICE9IG5pbCB7CgkJbG9nLkZhdGFsKGVycikKCX0KCglwbWV0cmljcyA9IG1ldHJpY3MuTXVz
-dEN1cnJ5V2l0aChwcm9tZXRoZXVzLkxhYmVsc3sicGF0aCI6IHBhdGh9KQoKCWN0eCwgY2FuY2Vs
-IDo9IGNvbnRleHQuV2l0aENhbmNlbChjb250ZXh0LkJhY2tncm91bmQoKSkKCWRlZmVyIGNhbmNl
-bCgpCgoJZ28gZnVuYygpIHsKCQlzaWdjaGFuIDo9IG1ha2UoY2hhbiBvcy5TaWduYWwsIDEpCgkJ
-c2lnbmFsLk5vdGlmeShzaWdjaGFuLCBzeXNjYWxsLlNJR0lOVCwgc3lzY2FsbC5TSUdURVJNKQoK
-CQk8LXNpZ2NoYW4KCgkJbG9nLlByaW50KCJFeGl0aW5nIikKCgkJY2FuY2VsKCkKCX0oKQoKCXdn
-IDo9ICZzeW5jLldhaXRHcm91cHt9CgoJbG9nLlByaW50KCJTdGFydGluZyByZWFkZXJzIGFuZCB3
-cml0ZXJzIikKCglmb3IgaSA6PSAwOyBpIDwgNTsgaSsrIHsKCQl3Zy5BZGQoMSkKCQlnbyBmdW5j
-KGluc3RhbmNlIGludCkgewoJCQlkZWZlciB3Zy5Eb25lKCkKCgkJCXcgOj0gJnJlYWRlcnt9CgoJ
-CQl3LnJ1bihjdHgsIGluc3RhbmNlKQoJCX0oaSkKCX0KCglmb3IgaSA6PSAwOyBpIDwgNTsgaSsr
-IHsKCQl3Zy5BZGQoMSkKCQlnbyBmdW5jKGluc3RhbmNlIGludCkgewoJCQlkZWZlciB3Zy5Eb25l
-KCkKCgkJCXcgOj0gJndyaXRlcnt9CgoJCQl3LnJ1bihjdHgsIGluc3RhbmNlKQoJCX0oaSkKCX0K
-CglnbyBodHRwLkxpc3RlbkFuZFNlcnZlKCI6OTA5MCIsIHByb21odHRwLkhhbmRsZXIoKSkKCgl3
-Zy5XYWl0KCkKfQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGRvdmVj
-b3Qtc2ltdWxhdG9yL3JlYWRlci5nbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwNjQ0ADAwMDE3NTEAMDAw
-MTc1MQAwMDAwMDAwMzExMQAxNDYyMzY1MTQzMQAwMTU2NzYAIDAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXN0YXIgIABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGFja2Fn
-ZSBtYWluCgppbXBvcnQgKAoJImJ1ZmlvIgoJImNvbnRleHQiCgkiZm10IgoJImxvZyIKCSJtYXRo
-L3JhbmQiCgkib3MiCgkidGltZSIKKQoKdHlwZSByZWFkZXIgc3RydWN0IHsKCWwgICAgICAgICAg
-ICpsb2NrZmlsZQoJbGFzdE1vZFRpbWUgdGltZS5UaW1lCn0KCmZ1bmMgKHIgKnJlYWRlcikgcnVu
-KGN0eCBjb250ZXh0LkNvbnRleHQsIGluc3RhbmNlIGludCkgewoJbSA6PSBwbWV0cmljcy5XaXRo
-TGFiZWxWYWx1ZXMoZm10LlNwcmludGYoIiVkIiwgaW5zdGFuY2UpLCAicmVhZCIpCgoJci5sID0g
-JmxvY2tmaWxle2ZpbGU6IGxvY2tGaWxlfQoKCXdkIDo9IG1ha2UoY2hhbiBib29sKQoKCWdvIGZ1
-bmMoKSB7CgkJdGltZXIgOj0gdGltZS5OZXdUaW1lcih0aW1lLlNlY29uZCkKCQlkZWZlciB0aW1l
-ci5TdG9wKCkKCgkJZm9yIHsKCQkJc2VsZWN0IHsKCQkJY2FzZSA8LWN0eC5Eb25lKCk6CgkJCQly
-ZXR1cm4KCQkJY2FzZSA8LXRpbWVyLkM6CgkJCQlsb2cuUHJpbnRmKCJyZWFkZXIoJWQpIGhhcyBi
-ZWVuIGJsb2NrZWQgZm9yIGEgc2Vjb25kIiwgaW5zdGFuY2UpCgkJCQlyZXR1cm4KCQkJY2FzZSA8
-LXdkOgoJCQkJaWYgIXRpbWVyLlN0b3AoKSB7CgkJCQkJPC10aW1lci5DCgkJCQl9CgkJCQl0aW1l
-ci5SZXNldCh0aW1lLlNlY29uZCkKCQkJfQoJCX0KCX0oKQoKCWZvciB7CgkJc2VsZWN0IHsKCQlj
-YXNlIDwtY3R4LkRvbmUoKToKCQkJcmV0dXJuCgkJZGVmYXVsdDoKCQl9CgoJCXN0YXJ0IDo9IHRp
-bWUuTm93KCkKCQlpZiBlcnIgOj0gci5kb19yZWFkKCk7IGVyciA9PSBuaWwgewoJCQltLk9ic2Vy
-dmUodGltZS5TaW5jZShzdGFydCkuU2Vjb25kcygpKQoJCX0KCgkJd2QgPC0gdHJ1ZQoJfQp9Cgpm
-dW5jIChyICpyZWFkZXIpIGRvX3JlYWQoKSBlcnJvciB7CglzdGF0LCBlcnIgOj0gb3MuU3RhdChs
-aXN0RmlsZSkKCWlmIGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIKCX0KCgltb2RUaW1lIDo9IHN0
-YXQuTW9kVGltZSgpCglpZiAhbW9kVGltZS5BZnRlcihyLmxhc3RNb2RUaW1lKSB7CgkJcmV0dXJu
-IG5pbAoJfQoKCWlmIGVyciA9IHIubC5Mb2NrKCk7IGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIK
-CX0KCWRlZmVyIHIubC5VbmxvY2soKQoKCXJmaCwgZXJyIDo9IG9zLk9wZW4obGlzdEZpbGUpCglp
-ZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciByZmguQ2xvc2UoKQoKCXdmaCwg
-ZXJyIDo9IG9zLk9wZW5GaWxlKGxpc3RGaWxlTmV3LCBvcy5PX0NSRUFURXxvcy5PX1dST05MWSwg
-MG82MDApCglpZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciB3ZmguQ2xvc2Uo
-KQoKCXJyIDo9IGJ1ZmlvLk5ld1JlYWRlcihyZmgpCgl3ciA6PSBidWZpby5OZXdXcml0ZXIod2Zo
-KQoKCWZvciB7CgkJbGluZSwgXyA6PSByci5SZWFkU3RyaW5nKCdcbicpCgkJaWYgbGluZSA9PSAi
-IiB7CgkJCWJyZWFrCgkJfQoKCQlpZiByYW5kLkludG4oMTApIDwgNCB7IC8vIGtlZXAgZmlsZXMg
-YXQgNDAlIGNoYW5jZQoJCQl3ci5Xcml0ZVN0cmluZyhsaW5lKQoJCX0KCX0KCgl3ci5GbHVzaCgp
-Cgl3ZmguQ2xvc2UoKQoKCW9zLlJlbmFtZShsaXN0RmlsZU5ldywgbGlzdEZpbGUpCgoJcmV0dXJu
-IG5pbAp9CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkb3ZlY290LXNp
-bXVsYXRvci93cml0ZXIuZ28AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDY0NAAwMDAxNzUxADAwMDE3NTEA
-MDAwMDAwMDIyMjQAMTQ2MjM2NTE0MzEAMDE1NzU0ACAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAHVzdGFyICAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBhY2thZ2UgbWFp
-bgoKaW1wb3J0ICgKCSJjb250ZXh0IgoJImZtdCIKCSJsb2ciCgkibWF0aC9yYW5kIgoJIm9zIgoJ
-InRpbWUiCikKCnR5cGUgd3JpdGVyIHN0cnVjdCB7CglsICpsb2NrZmlsZQp9CgpmdW5jICh3ICp3
-cml0ZXIpIHJ1bihjdHggY29udGV4dC5Db250ZXh0LCBpbnN0YW5jZSBpbnQpIHsKCW0gOj0gcG1l
-dHJpY3MuV2l0aExhYmVsVmFsdWVzKGZtdC5TcHJpbnRmKCIlZCIsIGluc3RhbmNlKSwgIndyaXRl
-IikKCgl3LmwgPSAmbG9ja2ZpbGV7ZmlsZTogbG9ja0ZpbGV9CgoJd2QgOj0gbWFrZShjaGFuIGJv
-b2wpCgoJZ28gZnVuYygpIHsKCQl0aW1lciA6PSB0aW1lLk5ld1RpbWVyKHRpbWUuU2Vjb25kKQoJ
-CWRlZmVyIHRpbWVyLlN0b3AoKQoKCQlmb3IgewoJCQlzZWxlY3QgewoJCQljYXNlIDwtY3R4LkRv
-bmUoKToKCQkJCXJldHVybgoJCQljYXNlIDwtdGltZXIuQzoKCQkJCWxvZy5QcmludGYoIndyaXRl
-ciglZCkgaGFzIGJlZW4gYmxvY2tlZCBmb3IgYSBzZWNvbmQiLCBpbnN0YW5jZSkKCQkJCXJldHVy
-bgoJCQljYXNlIDwtd2Q6CgkJCQlpZiAhdGltZXIuU3RvcCgpIHsKCQkJCQk8LXRpbWVyLkMKCQkJ
-CX0KCQkJCXRpbWVyLlJlc2V0KHRpbWUuU2Vjb25kKQoJCQl9CgkJfQoJfSgpCgoJZm9yIHsKCQlz
-ZWxlY3QgewoJCWNhc2UgPC1jdHguRG9uZSgpOgoJCQlyZXR1cm4KCQlkZWZhdWx0OgoJCX0KCgkJ
-c3RhcnQgOj0gdGltZS5Ob3coKQoJCWlmIGVyciA6PSB3LmRvX3dyaXRlKCk7IGVyciA9PSBuaWwg
-ewoJCQltLk9ic2VydmUodGltZS5TaW5jZShzdGFydCkuU2Vjb25kcygpKQoJCX0KCgkJd2QgPC0g
-dHJ1ZQoJfQp9CgpmdW5jICh3ICp3cml0ZXIpIGRvX3dyaXRlKCkgZXJyb3IgewoJaWYgZXJyIDo9
-IHcubC5Mb2NrKCk7IGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIKCX0KCWRlZmVyIHcubC5Vbmxv
-Y2soKQoKCWZoLCBlcnIgOj0gb3MuT3BlbkZpbGUobGlzdEZpbGUsIG9zLk9fQ1JFQVRFfG9zLk9f
-V1JPTkxZfG9zLk9fQVBQRU5ELCAwbzYwMCkKCWlmIGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIK
-CX0KCWRlZmVyIGZoLkNsb3NlKCkKCglsaW5lIDo9IGZtdC5TcHJpbnRmKCJmaWxlLSVkLiVkXG4i
-LCB0aW1lLk5vdygpLk5hbm9zZWNvbmQoKSwgcmFuZC5JbnQoKSkKCWZoLldyaXRlKFtdYnl0ZShs
-aW5lKSkKCglyZXR1cm4gbmlsCn0KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGRvdmVjb3Qtc2ltdWxh
-dG9yL2xvY2tmaWxlLmdvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwNjQ0ADAwMDE3NTEAMDAwMTc1MQAwMDAw
-MDAwMTEzNAAxNDYyMzY1MTQzMQAwMTYyMjcAIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAdXN0YXIgIABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGty
-aWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGFja2FnZSBtYWluCgpp
-bXBvcnQgKAoJIm1hdGgvcmFuZCIKCSJvcyIKCSJ0aW1lIgopCgp0eXBlIGxvY2tmaWxlIHN0cnVj
-dCB7CglmaWxlIHN0cmluZwoJZmggICAqb3MuRmlsZQp9CgpmdW5jIChsICpsb2NrZmlsZSkgTG9j
-aygpIChlcnIgZXJyb3IpIHsKCWkgOj0gMAoKCWZvciB7CgkJaWYgXywgZXJyID0gb3MuU3RhdChs
-LmZpbGUpOyBlcnIgIT0gbmlsICYmIG9zLklzTm90RXhpc3QoZXJyKSB7CgkJCWwuZmgsIGVyciA9
-IG9zLk9wZW5GaWxlKGwuZmlsZSwgb3MuT19DUkVBVEV8b3MuT19SRFdSfG9zLk9fRVhDTCwgMG82
-NDQpCgkJCWlmIGVyciA9PSBuaWwgewoJCQkJcmV0dXJuCgkJCX0KCQl9IGVsc2UgewoJCQllcnIg
-PSBvcy5FcnJFeGlzdAoJCX0KCgkJaSsrCgkJaWYgaSA9PSAxNSB7CgkJCXJldHVybgoJCX0KCgkJ
-dGltZS5TbGVlcCh0aW1lLk1pbGxpc2Vjb25kICogdGltZS5EdXJhdGlvbigoMSArIHJhbmQuSW50
-bigxMCkpKSkKCX0KfQoKZnVuYyAobCAqbG9ja2ZpbGUpIFVubG9jaygpIChlcnIgZXJyb3IpIHsK
-CWlmIGwuZmggPT0gbmlsIHsKCQlyZXR1cm4KCX0KCglsLmZoLkNsb3NlKCkKCglvcy5SZW1vdmUo
-bC5maWxlKQoKCXJldHVybgp9CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
---=_5fadaa6cfb7f5c70b7eda0bab46df208--
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--syu4osmmxwp2aoki
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZk9mMQAKCRAol/rSt+lE
+bxctAP9Kw9bAXa2/Grr9P3qpouqY7GMqLfiI913pFPu5tLekugEAwV7BrDbtomln
+wVmJGBZXmdwq6mW7zkaCbn0TqhB6ig0=
+=JlY2
+-----END PGP SIGNATURE-----
+
+--syu4osmmxwp2aoki--
 
