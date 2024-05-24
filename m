@@ -1,286 +1,161 @@
-Return-Path: <linux-nfs+bounces-3363-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3364-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F26A88CE080
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 06:58:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADBD68CE09A
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 07:29:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C4971F217B6
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 04:58:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63C96282F96
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 05:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3630A39850;
-	Fri, 24 May 2024 04:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE2596E612;
+	Fri, 24 May 2024 05:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfNZZU/r"
+	dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="lmDWMbf+";
+	dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="e7788cxT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9713A27B;
-	Fri, 24 May 2024 04:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C341EEE3
+	for <linux-nfs@vger.kernel.org>; Fri, 24 May 2024 05:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.61.102.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716526714; cv=none; b=snFdQ/GZogDXhG9xCHx5TZgS14osTG1Dk1Bo3qlYERBaTF6xyg2ZIyFz8jc91tzeetKbkJdl7mi+FCfSx4Ai2kDHzG2Ft4L8tV2bsiHOPEdOicD88mj8qMAbLRaNBtLmugiu1TgLTggDiKq/+nC62aXRg9ZCTyHhgzTAn6YWaB8=
+	t=1716528579; cv=none; b=ZmdsvpNKhWtHt2PTxqMZfmizbAf03KN2Z1eoxRlsWu5JGVfxHMGZbTvQtT1J0g6ENTuoZcgE3stidCz9Typ22eF+4gdB84tt0mnotV6e1fonJ/O/QUv600v0a3Te6kQkKhZ5z1ovMaRUFxgGwabJYn8M6C2Dzecq5wxLwdpJ3Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716526714; c=relaxed/simple;
-	bh=XNiUy9rDYeevLGiJZ9A/DHHrIjr9khy247wJmZzY+ds=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rm2U+9+Uq6IqumCkK0I2fDo3pW/zJJyMQ0mcGQXeVtEoVCyLVyQbAyjxsYs2H/4gHZfYCKqrKwzbXcLFQIhghtXvyurMxpdKPioUgQ9Y190CjfXGMyvId8TXLEBJcZBg+5ohtO31ewHcpzUDXfN5VAhvoJku2WcxKmERVllNYxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfNZZU/r; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-794ab20699cso27508685a.2;
-        Thu, 23 May 2024 21:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716526710; x=1717131510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
-        b=bfNZZU/r9RyOPWCWXT8C59J+0vknNpPXG60DaHrOQW4Y+v2TK5gY+xo6ZynezOb8Mf
-         lWpTfFsr+J2t95tcZFNHgefnMhI9EMEJU0OqiOvcWvv1kbOsVGpdaqaPmNSTaHT3FgfL
-         9c3pyO8XuE/PiwwoqkKgMl+yfNKvIeVTtdwXeTi3RV3dG5jbnDjnT3Sbb37j8hs56dgf
-         P4/snWGHOFj61ul7/UDjbqypeS26pj67RvgHm9+YQuKAmH+aC0nPJaIRd+QrXHCdtjFH
-         lHG7Dbu1eto2JxerKNBu4ntrVgnK1vRkWU4wy8G5sXe2qsBc8MNiboxWL3mSeP7y2ulL
-         PqWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716526710; x=1717131510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
-        b=K7sLZRNNSeJEk4UIVYOm91bTPKp8RtEs2eWqjx64QzqMx7Cd0qGaR4SrCxAc1Zqahl
-         jzaPJIqOkN+CMLWh8zflLx3a/zjRbJ+2UKO+PJdnXyElatvyJiKKaenmUMzcUfI7Suv6
-         0jPyAtI7vvKVgJhBMityFs7uhKkP4b0lLXSbHfEt1n80YpveLzfh+L4kIubXOnZ3FR6G
-         OfcN3dqV3q5G7QfySuVulTVZJ1xVdpdUkiF70tvWDyagotD2tM7nH/hhfBTc6htlASb8
-         x9SdGYeoRqE5hkd334qzXlBQW83W77w+aQIGuJR6unaagL1Rm2Ds/ng6YDvLqbdlJAh1
-         a88A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6x3AWYhTwYhqVuOAKaVGdz5wwA+BvQu8W/Mjihf06KHnP+Mx8aZm+5SulHaPCozbkpfdfqaDCBnf2FKtAgag2C8nxLAKRsPEf0wsL7hWHBuXJmeh6RzR7ihWPp8WeDjlpvsftXuuePTPOQe6VQPGIUvGbfYa3DD+opP72mIksRsPMwj1Twin/36NbeFPMV5Ivx3F+NBqyxBvOzYQrgilG3Q==
-X-Gm-Message-State: AOJu0YzBqs2QeK/gyfDpLFb8fKdGpxkX+ze/ECRilvL4gq14xAROrLPG
-	bplaTQraw88b/9mFDPB/88j6nBr7DxdJENBOstP//F1Jh/cQb3pgDgx65jAAg8dP5JsdCgy7s+u
-	6OhXYwgYDqVLbLP8d2HZ7nWlB2e8=
-X-Google-Smtp-Source: AGHT+IHwxoEyC/CgfcoYNTuXoypW6cR/wpwLB7WDQ5aO6pnZBvqbeq9XfR3HiSKH17tsDXpgZ02lfQFnCyS+mBCcaM4=
-X-Received: by 2002:a05:620a:817:b0:794:9a23:4915 with SMTP id
- af79cd13be357-794ab057904mr115843085a.8.1716526710061; Thu, 23 May 2024
- 21:58:30 -0700 (PDT)
+	s=arc-20240116; t=1716528579; c=relaxed/simple;
+	bh=UEbqYjSejbugXogHIMp1tgxhzLaLl+myi4WNYRkACHw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=tkelyIsMK939GwaQz02rBICOI1mRM2Wl/TuB7hXFvVMU9WPefz2LPYJ1gbokPukIhh6H+nNp8w0YXkjkdXEyLhZfJCu5LG/GlnKb3VSJ9ppwKug11J2jH3oCR/cF7kcmXQJDGPTvK7QHpB1lO+Z7TfFfryTDv4I1rtLx41uUBJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in; spf=pass smtp.mailfrom=kojedz.in; dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=lmDWMbf+; dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=e7788cxT; arc=none smtp.client-ip=109.61.102.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kojedz.in
+Received: from webmail.srv.kwebs.cloud (172-16-36-105.prometheus-node-exporter.monitoring.svc.cluster.local [172.16.36.105])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	(Authenticated sender: richard@kojedz.in)
+	by mx.kwebs.cloud (Postfix) with ESMTPSA id 2A3863334;
+	Fri, 24 May 2024 05:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
+	t=1716528572; bh=Ps+ANyr/B7q465UoT9kO3MHg2c/pLzqDVcKQhTfqIQU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=lmDWMbf+3J8BZMHYll+FtDfpmB6qFEO/lyURqU/t6s+6Bxaqs6pI05QR6ZTjd0kvf
+	 PbaGs42vDIR2ikflRwBt0Yj/JTXWrEbVJoZD7FgnaC7ANxQe1POTL5tuy/D6WA08V9
+	 Ao3Na68NVajN2z43Mfn6rF9mHjiX4weAaudE/YCHDxOPdJpPJ0VsuzyFDuLvVdzAC9
+	 y0h4nGQ8opCcXgdqRm8k7VOMjWmsWFAQAmYkO5A3fZilRgGx2R7/qvmPNeI2L2Drsa
+	 ZxckxGDmKx4dszQ4tbPL9iD9ls5BZCz8JX4E0G9fUSJoym9DewDe9B3rnXXUPDa25A
+	 u90bGFkEHGeHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
+	t=1716528572; bh=Ps+ANyr/B7q465UoT9kO3MHg2c/pLzqDVcKQhTfqIQU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=e7788cxThA0gWW2Zl7HhfWE2YK1F/KH0tYTSX6PWTr8a7kK6V49GE2my/pqmuPSl3
+	 xoP0wwpF75iX2rX/hY2/Sq50YQ/yVZpC2LCyrqiEd7l/F1bMCsu+VzDosvmRWShEBa
+	 HdclU6rnCgZYV69ND4KE03OsE2fYj265MIdGxsYc7ZoCWZCpuQk4jsFQyIvpY0/ekT
+	 Ttt6tDquGE8Qw0hY50f+qAUhDesX7PivPOFEzqWZNXwPfnk0ihSJCA/xRk8uYXFCTW
+	 aqZ1nuXNrX1zPTqEUaLtwUJ5ShoSI9q25EXedCZgmVcRS81DuYd/wy51re0eggW2fw
+	 3kbxVRBC84w7kPF0ArGzOzc/VATSZL7Hg08vNvY1nGgs3HWptiP8SfrbC9w/Ch0lz6
+	 FoJqkkc7Tts1saUGL8/Wy2APVqm22MThoLFE3bysXRmDVkRm7VLvJaAXz/FA1bFbfR
+	 gYo9/fac4esA+iOmUbAS9EAmIZC/iy2N7yCBpamePuR8DJysQnH
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
-In-Reply-To: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 24 May 2024 07:58:18 +0300
-Message-ID: <CAOQ4uxhp0_HSre2LLStPVVsEJ3MqYDs1Ak9UAvB=o8Z7sVB=Mg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 May 2024 07:29:31 +0200
+From: Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>
+To: NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
+Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
+In-Reply-To: <171650710476.27191.9102106000258626652@noble.neil.brown.name>
+References: <>, <162d12087ba8374a57e2263d7ea762b5@kojedz.in>
+ <171650710476.27191.9102106000258626652@noble.neil.brown.name>
+Message-ID: <bc1e45465347162c0a386cff40ec0cf7@kojedz.in>
+X-Sender: richard+debian+bugreport@kojedz.in
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 23, 2024 at 11:57=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
-rote:
->
-> Now that we provide a unique 64-bit mount ID interface in statx, we can
-> now provide a race-free way for name_to_handle_at(2) to provide a file
-> handle and corresponding mount without needing to worry about racing
-> with /proc/mountinfo parsing.
->
-> While this is not necessary if you are using AT_EMPTY_PATH and don't
-> care about an extra statx(2) call, users that pass full paths into
-> name_to_handle_at(2) need to know which mount the file handle comes from
-> (to make sure they don't try to open_by_handle_at a file handle from a
-> different filesystem) and switching to AT_EMPTY_PATH would require
-> allocating a file for every name_to_handle_at(2) call, turning
->
->   err =3D name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
->                           AT_HANDLE_MNT_ID_UNIQUE);
->
-> into
->
->   int fd =3D openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
->   err1 =3D name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_PAT=
-H);
->   err2 =3D statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
->   mntid =3D statxbuf.stx_mnt_id;
->   close(fd);
->
-> Unlike AT_HANDLE_FID, as per Amir's suggestion, AT_HANDLE_MNT_ID_UNIQUE
-> uses a new AT_* bit from the historically-unused 0xFF range (which we
-> now define as being the "per-syscall" range for AT_* bits).
->
+Dear Neil,
 
-Sorry for nit picking, but I think that "Unlike AT_HANDLE_FID,..." is confu=
-sing
-in this statement.
-AT_HANDLE_FID is using a bit that was already effectively allocated for a
-"per-syscall" range.
-I don't think that mentioning AT_HANDLE_FID adds any clarity to the stateme=
-nt
-so better drop it?
-
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
-> Changes in v2:
-> - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
-> - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match st=
-atx.
-> - Switched to using an AT_* bit from 0xFF and defining that range as
->   being "per-syscall" for future usage.
-> - Sync tools/ copy of <linux/fcntl.h> to include changes.
-> - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f55f=
-d9215b8e@cyphar.com>
-> ---
->  fs/fhandle.c                     | 29 ++++++++++++++++++++++-------
->  include/linux/syscalls.h         |  2 +-
->  include/uapi/linux/fcntl.h       | 28 +++++++++++++++++++++-------
->  tools/include/uapi/linux/fcntl.h | 28 +++++++++++++++++++++-------
->  4 files changed, 65 insertions(+), 22 deletions(-)
->
-[...]
-
-> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> index c0bcc185fa48..9ed9d65842c1 100644
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> @@ -87,22 +87,24 @@
->  #define DN_ATTRIB      0x00000020      /* File changed attibutes */
->  #define DN_MULTISHOT   0x80000000      /* Don't remove notifier */
->
-> +#define AT_FDCWD               -100    /* Special value used to indicate
-> +                                           openat should use the current
-> +                                           working directory. */
-
-(more nit picking)
-If you are changing this line, please at least add a new line,
-this is a different namespace :-/
-and perhaps change it to "Special value of dirfd argument..."
-
-Also, better leave a comment here to discourage allocation from this range:
-
-+ /* Reserved for per-syscall flags              0xff   */
-
-> +#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
- */
-> +
->  /*
-> - * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
-CCESS is
-> - * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
-o
-> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
-CCESS
-> + * is meaningful only to faccessat, while AT_REMOVEDIR is meaningful onl=
-y to
->   * unlinkat.  The two functions do completely different things and there=
-fore,
->   * the flags can be allowed to overlap.  For example, passing AT_REMOVED=
-IR to
->   * faccessat would be undefined behavior and thus treating it equivalent=
- to
->   * AT_EACCESS is valid undefined behavior.
->   */
-
-If you are going to add this churn in this patch, please do it otherwise.
-It does not make sense to have this long explanation about pre-syscall
-AT_* flags in a different location from the comment you added about
-"All new purely-syscall-specific AT_* flags.."
-if this explanation is needed at all, it should be after the new comment
-as an example.
-
-
-> -#define AT_FDCWD               -100    /* Special value used to indicate
-> -                                           openat should use the current
-> -                                           working directory. */
-> -#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
- */
->  #define AT_EACCESS             0x200   /* Test access permitted for
->                                             effective IDs, not real IDs. =
- */
->  #define AT_REMOVEDIR           0x200   /* Remove directory instead of
->                                             unlinking file.  */
-
-I really prefer to move those to the per-syscall section
-right next to AT_HANDLE_FID and leave a comment here:
-
-/* Reserved for per-syscall flags           0x200   */
-
-> +
->  #define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
->  #define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal auto=
-mount traversal */
->  #define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname =
-*/
-> @@ -114,10 +116,22 @@
->
->  #define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
->
-> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
-.. */
-> +/*
-> + * All new purely-syscall-specific AT_* flags should consider using bits=
- from
-> + * 0xFF, but the bits used by RENAME_* (0x7) should be avoided in case u=
-sers
-> + * decide to pass AT_* flags to renameat2() by accident.
-
-Sorry, but I find the use of my renameat2() example a bit confusing
-in this sentence.
-If you mention it at all, please use "For example, the bits used by..."
-but I think it is more important to say "...should consider re-using bits
-already used by other per-syscalls flags".
-
-> These flag bits are
-> + * free for re-use by other syscall's syscall-specific flags without wor=
-ry.
-> + */
-> +
-> +/*
-> + * Flags for name_to_handle_at(2). To save AT_ flag space we re-use the
-> + * AT_EACCESS/AT_REMOVEDIR bit for AT_HANDLE_FID.
-> + */
-
-AT_EACCESS/AT_REMOVEDIR/AT_HANDLE_FID have exact same status,
-so instead of this asymmetric comment:
-
-+/* Flags for faccessat(2) */
-+#define AT_EACCESS             0x200   /* Test access permitted for
-+                                           effective IDs, not real IDs.  *=
-/
-+/* Flags for unlinkat(2) */
-+#define AT_REMOVEDIR           0x200   /* Remove directory instead of
-+                                           unlinking file.  */
-+/* Flags for name_to_handle_at(2) */
-+#define AT_HANDLE_FID          0x200   /* file handle is needed to
-                                        compare object identity and may not
-                                        be usable to open_by_handle_at(2) *=
-/
-
-> +#define AT_HANDLE_MNT_ID_UNIQUE        0x80    /* return the u64 unique =
-mount id */
-
-IDGI, I think we may have been miscommunicating :-/
-If 0x7 range is to be avoided for generic AT_ flags, then it *should* be us=
-ed
-for new per-syscall flags such as this one.
-
-The reservation of 0xff is not a strong guarantee.
-As long as people re-use new per-syscalls flags efficiently, we could
-decide to reclaim some of this space for generic AT_ flags in the future
-if it is needed.
-
-I know most of the mess was here before your patch, but I think
-it got to a point where we must put a little order before introducing
-the new per-syscall flag.
+I've applied your patch, and since then there are no lockups. Before 
+that my application reported a lockup in a minute or two, now it has 
+been running for half an hour, and still running.
 
 Thanks,
-Amir.
+Richard
+
+2024-05-24 01:31 időpontban NeilBrown ezt írta:
+> On Fri, 24 May 2024, Richard Kojedzinszky wrote:
+>> Dear devs,
+>> 
+>> I am attaching a stripped down version of the little program which
+>> triggers the bug very quickly, in a few minutes in my test lab. It
+>> turned out that a single NFS mountpoint is enough. Just start the
+>> program giving it the NFS mount as first argument. It will chdir 
+>> there,
+>> and do file operations, which will trigger a lockup in a few minutes.
+> 
+> I couldn't get the go code to run.  But then it is a long time since I
+> played with go and I didn't try very hard.
+> If you could provide simple instructions and a list of package
+> dependencies that I need to install (on Debian), I can give it a try.
+> 
+> Or you could try this patch.  It might help, but I don't have high
+> hopes.  It adds some memory barriers and fixes a bug which would cause 
+> a
+> problem if memory allocation failed (but memory allocation never 
+> fails).
+> 
+> NeilBrown
+> 
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index ac505671efbd..5bcc0d14d519 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -1804,7 +1804,7 @@ __nfs_lookup_revalidate(struct dentry *dentry, 
+> unsigned int flags,
+>  	} else {
+>  		/* Wait for unlink to complete */
+>  		wait_var_event(&dentry->d_fsdata,
+> -			       dentry->d_fsdata != NFS_FSDATA_BLOCKED);
+> +			       smp_load_acquire(&dentry->d_fsdata) != NFS_FSDATA_BLOCKED);
+>  		parent = dget_parent(dentry);
+>  		ret = reval(d_inode(parent), dentry, flags);
+>  		dput(parent);
+> @@ -2508,7 +2508,7 @@ int nfs_unlink(struct inode *dir, struct dentry 
+> *dentry)
+>  	spin_unlock(&dentry->d_lock);
+>  	error = nfs_safe_remove(dentry);
+>  	nfs_dentry_remove_handle_error(dir, dentry, error);
+> -	dentry->d_fsdata = NULL;
+> +	smp_store_release(&dentry->d_fsdata, NULL);
+>  	wake_up_var(&dentry->d_fsdata);
+>  out:
+>  	trace_nfs_unlink_exit(dir, dentry, error);
+> @@ -2616,7 +2616,7 @@ nfs_unblock_rename(struct rpc_task *task, struct 
+> nfs_renamedata *data)
+>  {
+>  	struct dentry *new_dentry = data->new_dentry;
+> 
+> -	new_dentry->d_fsdata = NULL;
+> +	smp_store_release(&new_dentry->d_fsdata, NULL);
+>  	wake_up_var(&new_dentry->d_fsdata);
+>  }
+> 
+> @@ -2717,6 +2717,10 @@ int nfs_rename(struct mnt_idmap *idmap, struct 
+> inode *old_dir,
+>  	task = nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
+>  				must_unblock ? nfs_unblock_rename : NULL);
+>  	if (IS_ERR(task)) {
+> +		if (must_unlock) {
+> +			smp_store_release(&new_dentry->d_fsdata, NULL);
+> +			wake_up_var(&new_dentry->d_fsdata);
+> +		}
+>  		error = PTR_ERR(task);
+>  		goto out;
+>  	}
 
