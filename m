@@ -1,161 +1,263 @@
-Return-Path: <linux-nfs+bounces-3364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADBD68CE09A
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 07:29:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F4E38CE244
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 10:22:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63C96282F96
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 05:29:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E92C1F21FAC
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 08:22:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE2596E612;
-	Fri, 24 May 2024 05:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370BF5B1F8;
+	Fri, 24 May 2024 08:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="lmDWMbf+";
-	dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="e7788cxT"
+	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="OVOnJYLR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C341EEE3
-	for <linux-nfs@vger.kernel.org>; Fri, 24 May 2024 05:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.61.102.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A37636AEC
+	for <linux-nfs@vger.kernel.org>; Fri, 24 May 2024 08:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716528579; cv=none; b=ZmdsvpNKhWtHt2PTxqMZfmizbAf03KN2Z1eoxRlsWu5JGVfxHMGZbTvQtT1J0g6ENTuoZcgE3stidCz9Typ22eF+4gdB84tt0mnotV6e1fonJ/O/QUv600v0a3Te6kQkKhZ5z1ovMaRUFxgGwabJYn8M6C2Dzecq5wxLwdpJ3Qs=
+	t=1716538917; cv=none; b=FaVOMX7r52rngaQhg/ezuvcwLav+BSwgpOX+m6+wvuoUieis+1RCQSfmwveki5R+nqvuF/AtOO1yJS9g+vOCYwRzdEjXwrsh+DFrrdl0n8Ga4gKWUG/gIHgf2oDBTeZDREXFJXhSKE2Y/xNwnpNc9/VM0grsKZinea9VLxe3YZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716528579; c=relaxed/simple;
-	bh=UEbqYjSejbugXogHIMp1tgxhzLaLl+myi4WNYRkACHw=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=tkelyIsMK939GwaQz02rBICOI1mRM2Wl/TuB7hXFvVMU9WPefz2LPYJ1gbokPukIhh6H+nNp8w0YXkjkdXEyLhZfJCu5LG/GlnKb3VSJ9ppwKug11J2jH3oCR/cF7kcmXQJDGPTvK7QHpB1lO+Z7TfFfryTDv4I1rtLx41uUBJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in; spf=pass smtp.mailfrom=kojedz.in; dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=lmDWMbf+; dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=e7788cxT; arc=none smtp.client-ip=109.61.102.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kojedz.in
-Received: from webmail.srv.kwebs.cloud (172-16-36-105.prometheus-node-exporter.monitoring.svc.cluster.local [172.16.36.105])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	(Authenticated sender: richard@kojedz.in)
-	by mx.kwebs.cloud (Postfix) with ESMTPSA id 2A3863334;
-	Fri, 24 May 2024 05:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
-	t=1716528572; bh=Ps+ANyr/B7q465UoT9kO3MHg2c/pLzqDVcKQhTfqIQU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=lmDWMbf+3J8BZMHYll+FtDfpmB6qFEO/lyURqU/t6s+6Bxaqs6pI05QR6ZTjd0kvf
-	 PbaGs42vDIR2ikflRwBt0Yj/JTXWrEbVJoZD7FgnaC7ANxQe1POTL5tuy/D6WA08V9
-	 Ao3Na68NVajN2z43Mfn6rF9mHjiX4weAaudE/YCHDxOPdJpPJ0VsuzyFDuLvVdzAC9
-	 y0h4nGQ8opCcXgdqRm8k7VOMjWmsWFAQAmYkO5A3fZilRgGx2R7/qvmPNeI2L2Drsa
-	 ZxckxGDmKx4dszQ4tbPL9iD9ls5BZCz8JX4E0G9fUSJoym9DewDe9B3rnXXUPDa25A
-	 u90bGFkEHGeHQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
-	t=1716528572; bh=Ps+ANyr/B7q465UoT9kO3MHg2c/pLzqDVcKQhTfqIQU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=e7788cxThA0gWW2Zl7HhfWE2YK1F/KH0tYTSX6PWTr8a7kK6V49GE2my/pqmuPSl3
-	 xoP0wwpF75iX2rX/hY2/Sq50YQ/yVZpC2LCyrqiEd7l/F1bMCsu+VzDosvmRWShEBa
-	 HdclU6rnCgZYV69ND4KE03OsE2fYj265MIdGxsYc7ZoCWZCpuQk4jsFQyIvpY0/ekT
-	 Ttt6tDquGE8Qw0hY50f+qAUhDesX7PivPOFEzqWZNXwPfnk0ihSJCA/xRk8uYXFCTW
-	 aqZ1nuXNrX1zPTqEUaLtwUJ5ShoSI9q25EXedCZgmVcRS81DuYd/wy51re0eggW2fw
-	 3kbxVRBC84w7kPF0ArGzOzc/VATSZL7Hg08vNvY1nGgs3HWptiP8SfrbC9w/Ch0lz6
-	 FoJqkkc7Tts1saUGL8/Wy2APVqm22MThoLFE3bysXRmDVkRm7VLvJaAXz/FA1bFbfR
-	 gYo9/fac4esA+iOmUbAS9EAmIZC/iy2N7yCBpamePuR8DJysQnH
+	s=arc-20240116; t=1716538917; c=relaxed/simple;
+	bh=sNSy99WRNiG5vFMSZRHj0qqO47LXRX55y+vpwZvSLPk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FQhkiaL7M8uRL3ZnKR0Aug82uqBtKTObSMYO7zdhxnDItFL8GGplVHYv7WFLhOGeqqo+PJ7+wnwRVxrcht58JDaertYv0rXCppP/oMWyLI7n0pYLvPHySYG9wao4P+1E1uBsghHZ9um90JlUtiyJ6WYOQ+VExdmGCr8Sg7LxY8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=OVOnJYLR; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6269ad7db2so54340566b.2
+        for <linux-nfs@vger.kernel.org>; Fri, 24 May 2024 01:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gooddata.com; s=google; t=1716538913; x=1717143713; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XAzc3fXDW6vEbRJ61+z3HVhXnyGMkNU1K1hcXtI5kd8=;
+        b=OVOnJYLRRpu4j94DpplC3WZiHo30oS/9rYOm5DZU0pCQYFAiHvNXiE9DDBoxs+wvj/
+         IrZAqre2ktOkVpHagG0DJm9OLYhfEr43RUkPucpbBOKfXcGvtukvx8lLy99BrGQPMugW
+         lQhM4tllr8E+55qkYvEpmkHgnSW+ZUb4LjBuw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716538913; x=1717143713;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XAzc3fXDW6vEbRJ61+z3HVhXnyGMkNU1K1hcXtI5kd8=;
+        b=eTjQhe42cjPrxc95eT5N30QBfl1YJauJfeM01bDlRaGhEyFJ3YIN60a1iCThcCC0Nw
+         8Qocu+U9I7QFr4/Waa55VsPaGfzvkhIgVUoThzmQl99vN5gEVmuCesF93rHnJ9u63/nu
+         8awABh7W+D09HqWv3tFc/rrMS6sUQWUaYFHrFeaZxhPWhvJfJlkkduuM+k4vNveK6myC
+         6y5IdAKucoTDw4dBdUiQ3FZf8Hr7VNAsH2uMjzyYf0iNibpwxKpsWrLvgiw5uEvdeXfb
+         1OWH7ldjo3oaqlqpgeLV/59sxP4BUKlxa+zsygfkDNx1J2ydFXx9H67YPWKtXoQx+vi2
+         2l4A==
+X-Gm-Message-State: AOJu0YyXb31MWwmOMGdKt78qz7GUwtZwT96wUV9pP4uLI04uYpPkkVN1
+	ltiL0vShzH69xkVV9Ieet4rlNcTUXETt9KL7HrXEDpzgJwJWNRtuEHwEtT/lgtnDcadV46ozAp1
+	pzIJeh2/VQgYWyiwy+TxKyviyYIATc9TCKaAE
+X-Google-Smtp-Source: AGHT+IEQ3GdpV2WHD9lrMG7LcRMjnqX/WDA0zxMsmoN/rxKSBomFuATHeHlYQvpkSS1ztPcP78b+UP8DbVQoreZNApc=
+X-Received: by 2002:a17:906:e84:b0:a62:404a:d0d0 with SMTP id
+ a640c23a62f3a-a62643e458cmr104296566b.42.1716538913129; Fri, 24 May 2024
+ 01:21:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 24 May 2024 07:29:31 +0200
-From: Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
-Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
-In-Reply-To: <171650710476.27191.9102106000258626652@noble.neil.brown.name>
-References: <>, <162d12087ba8374a57e2263d7ea762b5@kojedz.in>
- <171650710476.27191.9102106000258626652@noble.neil.brown.name>
-Message-ID: <bc1e45465347162c0a386cff40ec0cf7@kojedz.in>
-X-Sender: richard+debian+bugreport@kojedz.in
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAK8fFZ7rbh5o9XG1D5KAPSRyES-8W8AphxsLJXOWUFZK49i8fA@mail.gmail.com>
+ <Zk39Sr6GmwQQ5NjS@tissot.1015granger.net>
+In-Reply-To: <Zk39Sr6GmwQQ5NjS@tissot.1015granger.net>
+From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Date: Fri, 24 May 2024 10:21:27 +0200
+Message-ID: <CAK8fFZ4hPxecuCaV4T=bqZ39C0sJfXBn=rWdvPXVV_o037udfw@mail.gmail.com>
+Subject: Re: [regression] nfsstat/nfsd crash system "general protection fault,
+ probably for non-canonical address ..." after 6.8.9->6.8.10 update
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Igor Raits <igor@gooddata.com>, 
+	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Dear Neil,
+>
+> On Wed, May 22, 2024 at 04:36:57AM -0400, Jaroslav Pulchart wrote:
+> > Hello,
+> >
+> > I would like to report some issue causing a "general protection fault"
+> > crash (constantly) after we updated the kernel from 6.8.9 to 6.8.10.
+> > This is triggered when monitoring is using nfsstat on a server where
+> > nfsd is running.
+> >
+> > [ 3049.260633] general protection fault, probably for non-canonical
+> > address 0x66fb103e19e9cc89: 0000 [#1] PREEMPT SMP NOPTI
+> > [ 3049.261628] CPU: 22 PID: 74991 Comm: nfsstat Tainted: G
+> > E      6.8.10-1.gdc.el9.x86_64 #1
+> > [ 3049.262336] Hardware name: RDO OpenStack Compute/RHEL, BIOS
+> > edk2-20240214-2.el9 02/14/2024
+> > [ 3049.263003] RIP: 0010:_raw_spin_lock_irqsave+0x19/0x40
+> > [ 3049.263487] Code: cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+> > 90 0f 1f 44 00 00 41 54 9c 41 5c fa 65 ff 05 a6 92 f5 42 31 c0 ba 01
+> > 00 00 00 <f0> 0f b1 17 75 0a 4c 89 e0 41 5c c3 cc cc cc cc 89 c6 e8 d0
+> > 07 00
+> > [ 3049.264882] RSP: 0018:ffffb1bca6b9bd00 EFLAGS: 00010046
+> > [ 3049.265365] RAX: 0000000000000000 RBX: 66fb103e19e9c989 RCX: 0000000000000001
+> > [ 3049.265953] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 66fb103e19e9cc89
+> > [ 3049.266542] RBP: ffffffffc15df280 R08: 0000000000000001 R09: ffffa049a1785cb8
+> > [ 3049.267112] R10: ffffb1bca6b9bd70 R11: ffffa04964e49000 R12: 0000000000000246
+> > [ 3049.267702] R13: 66fb103e19e9cc89 R14: ffffa048445590a0 R15: 0000000000000001
+> > [ 3049.268278] FS:  00007fa3ddf03740(0000) GS:ffffa05703d00000(0000)
+> > knlGS:0000000000000000
+> > [ 3049.268928] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 3049.269443] CR2: 00007fa3dddfca50 CR3: 0000000342d1e004 CR4: 0000000000770ef0
+> > [ 3049.270025] PKRU: 55555554
+> > [ 3049.270371] Call Trace:
+> > [ 3049.270723]  <TASK>
+> > [ 3049.271035]  ? die_addr+0x33/0x90
+> > [ 3049.271423]  ? exc_general_protection+0x1ea/0x450
+> > [ 3049.271879]  ? asm_exc_general_protection+0x22/0x30
+> > [ 3049.272344]  ? _raw_spin_lock_irqsave+0x19/0x40
+> > [ 3049.272803]  __percpu_counter_sum+0xd/0x70
+> > [ 3049.273219]  nfsd_show+0x4f/0x1d0 [nfsd]
+> > [ 3049.273666]  seq_read_iter+0x11d/0x4d0
+> > [ 3049.274073]  ? avc_has_perm+0x42/0xc0
+> > [ 3049.274489]  seq_read+0xfe/0x140
+> > [ 3049.274866]  proc_reg_read+0x56/0xa0
+> > [ 3049.275257]  vfs_read+0xa7/0x340
+> > [ 3049.275647]  ? __do_sys_newfstat+0x57/0x60
+> > [ 3049.276059]  ksys_read+0x5f/0xe0
+> > [ 3049.276439]  do_syscall_64+0x5e/0x170
+> > [ 3049.276836]  entry_SYSCALL_64_after_hwframe+0x78/0x80
+> > [ 3049.277296] RIP: 0033:0x7fa3ddcfd9b2
+> > [ 3049.277719] Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea 1d 0c 00 e8 c5
+> > fd 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75
+> > 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89
+> > 54 24
+> > [ 3049.279139] RSP: 002b:00007ffd930672e8 EFLAGS: 00000246 ORIG_RAX:
+> > 0000000000000000
+> > [ 3049.279788] RAX: ffffffffffffffda RBX: 0000555ded47c2a0 RCX: 00007fa3ddcfd9b2
+> > [ 3049.280402] RDX: 0000000000000400 RSI: 0000555ded47c480 RDI: 0000000000000003
+> > [ 3049.281046] RBP: 00007fa3dddf75e0 R08: 0000000000000003 R09: 0000000000000077
+> > [ 3049.281673] R10: 000000000000005d R11: 0000000000000246 R12: 0000555ded47c2a0
+> > [ 3049.282307] R13: 0000000000000d68 R14: 00007fa3dddf69e0 R15: 0000000000000d68
+> > [ 3049.282928]  </TASK>
+> > [ 3049.283310] Modules linked in: mptcp_diag(E) xsk_diag(E)
+> > raw_diag(E) unix_diag(E) af_packet_diag(E) netlink_diag(E) udp_diag(E)
+> > tcp_diag(E) inet_diag(E) tun(E) br_netfilter(E) bridge(E) stp(E)
+> > llc(E) nfsd(E) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E) sunrpc(E)
+> > nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) binfmt_misc(E)
+> > zram(E) tls(E) isofs(E) vfat(E) fat(E) intel_rapl_msr(E)
+> > intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E) irqbypass(E)
+> > virtio_net(E) i2c_i801(E) virtio_gpu(E) i2c_smbus(E) net_failover(E)
+> > virtio_balloon(E) failover(E) virtio_dma_buf(E) fuse(E) ext4(E)
+> > mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E)
+> > crct10dif_pclmul(E) crc32_pclmul(Ea) polyval_clmulni(E)
+> > polyval_generic(E) libata(E) ghash_clmulni_intel(E) sha512_ssse3(E)
+> > virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E)
+> > raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E)
+> > dm_region_hash(E) dm_log(E) dm_mod(E)
+> > [ 3049.283345] Unloaded tainted modules: edac_mce_amd(E):1 padlock_aes(E)
+> >
+> > Any suggestion on how to fix it is appreciated.
+>
+> Bisect between v6.8.9 and v6.8.10 would give us the exact point
+> where the failures were introduced.
+>
+> I see that GregKH pulled in:
+>
+> 26a0ddb04230 ("nfsd: rename NFSD_NET_* to NFSD_STATS_*")
+> b7b05f98f3f0 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
+> abf5fb593c90 ("nfsd: make all of the nfsd stats per-network namespace")
+>
+> for v6.8.10 as a Stable-Dep-of: 18180a4550d0 ("NFSD: Fix nfsd4_encode_fattr4() crasher")
+>
+> Which is a little baffling, I don't see how those two change sets
+> are mechanically related to each other. But I suspect the culprit is
+> one of those three stat-related patches.
+>
+>
+> --
+> Chuck Lever
 
-I've applied your patch, and since then there are no lockups. Before 
-that my application reported a lockup in a minute or two, now it has 
-been running for half an hour, and still running.
 
-Thanks,
-Richard
+Hello,
 
-2024-05-24 01:31 időpontban NeilBrown ezt írta:
-> On Fri, 24 May 2024, Richard Kojedzinszky wrote:
->> Dear devs,
->> 
->> I am attaching a stripped down version of the little program which
->> triggers the bug very quickly, in a few minutes in my test lab. It
->> turned out that a single NFS mountpoint is enough. Just start the
->> program giving it the NFS mount as first argument. It will chdir 
->> there,
->> and do file operations, which will trigger a lockup in a few minutes.
-> 
-> I couldn't get the go code to run.  But then it is a long time since I
-> played with go and I didn't try very hard.
-> If you could provide simple instructions and a list of package
-> dependencies that I need to install (on Debian), I can give it a try.
-> 
-> Or you could try this patch.  It might help, but I don't have high
-> hopes.  It adds some memory barriers and fixes a bug which would cause 
-> a
-> problem if memory allocation failed (but memory allocation never 
-> fails).
-> 
-> NeilBrown
-> 
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index ac505671efbd..5bcc0d14d519 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -1804,7 +1804,7 @@ __nfs_lookup_revalidate(struct dentry *dentry, 
-> unsigned int flags,
->  	} else {
->  		/* Wait for unlink to complete */
->  		wait_var_event(&dentry->d_fsdata,
-> -			       dentry->d_fsdata != NFS_FSDATA_BLOCKED);
-> +			       smp_load_acquire(&dentry->d_fsdata) != NFS_FSDATA_BLOCKED);
->  		parent = dget_parent(dentry);
->  		ret = reval(d_inode(parent), dentry, flags);
->  		dput(parent);
-> @@ -2508,7 +2508,7 @@ int nfs_unlink(struct inode *dir, struct dentry 
-> *dentry)
->  	spin_unlock(&dentry->d_lock);
->  	error = nfs_safe_remove(dentry);
->  	nfs_dentry_remove_handle_error(dir, dentry, error);
-> -	dentry->d_fsdata = NULL;
-> +	smp_store_release(&dentry->d_fsdata, NULL);
->  	wake_up_var(&dentry->d_fsdata);
->  out:
->  	trace_nfs_unlink_exit(dir, dentry, error);
-> @@ -2616,7 +2616,7 @@ nfs_unblock_rename(struct rpc_task *task, struct 
-> nfs_renamedata *data)
->  {
->  	struct dentry *new_dentry = data->new_dentry;
-> 
-> -	new_dentry->d_fsdata = NULL;
-> +	smp_store_release(&new_dentry->d_fsdata, NULL);
->  	wake_up_var(&new_dentry->d_fsdata);
->  }
-> 
-> @@ -2717,6 +2717,10 @@ int nfs_rename(struct mnt_idmap *idmap, struct 
-> inode *old_dir,
->  	task = nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
->  				must_unblock ? nfs_unblock_rename : NULL);
->  	if (IS_ERR(task)) {
-> +		if (must_unlock) {
-> +			smp_store_release(&new_dentry->d_fsdata, NULL);
-> +			wake_up_var(&new_dentry->d_fsdata);
-> +		}
->  		error = PTR_ERR(task);
->  		goto out;
->  	}
+I run bisecting. It was easy to reproduce, simple execution of
+"nfsstat" from terminal stuck the server:
+
+abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 is the first bad commit
+
+
+$ git bisect bad
+abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 is the first bad commit
+commit abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 (HEAD)
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Fri Jan 26 10:39:47 2024 -0500
+
+    nfsd: make all of the nfsd stats per-network namespace
+
+    [ Upstream commit 4b14885411f74b2b0ce0eb2b39d0fffe54e5ca0d ]
+
+    We have a global set of counters that we modify for all of the nfsd
+    operations, but now that we're exposing these stats across all network
+    namespaces we need to make the stats also be per-network namespace.  We
+    already have some caching stats that are per-network namespace, so move
+    these definitions into the same counter and then adjust all the helpers
+    and users of these stats to provide the appropriate nfsd_net struct so
+    that the stats are maintained for the per-network namespace objects.
+
+    Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+    Reviewed-by: Jeff Layton <jlayton@kernel.org>
+    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+    Stable-dep-of: 18180a4550d0 ("NFSD: Fix nfsd4_encode_fattr4() crasher")
+    Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+ fs/nfsd/cache.h     |  2 --
+ fs/nfsd/netns.h     | 17 +++++++++++++++--
+ fs/nfsd/nfs4proc.c  |  6 +++---
+ fs/nfsd/nfs4state.c |  3 ++-
+ fs/nfsd/nfscache.c  | 36 +++++++-----------------------------
+ fs/nfsd/nfsctl.c    | 12 +++---------
+ fs/nfsd/nfsfh.c     |  3 ++-
+ fs/nfsd/stats.c     | 26 ++++++++++++++------------
+ fs/nfsd/stats.h     | 54 +++++++++++++++++++-----------------------------------
+ fs/nfsd/vfs.c       |  6 ++++--
+ 10 files changed, 69 insertions(+), 96 deletions(-)
+
+$ git bisect log
+git bisect start
+# status: waiting for both good and bad commits
+# good: [f3d61438b613b87afb63118bea6fb18c50ba7a6b] Linux 6.8.9
+git bisect good f3d61438b613b87afb63118bea6fb18c50ba7a6b
+# status: waiting for bad commit, 1 good commit known
+# bad: [a0c69a570e420e86c7569b8c052913213eef2b45] Linux 6.8.10
+git bisect bad a0c69a570e420e86c7569b8c052913213eef2b45
+# bad: [4aaed9dbe8acd2b6114458f0498a617283d6275b] hv_netvsc: Don't
+free decrypted memory
+git bisect bad 4aaed9dbe8acd2b6114458f0498a617283d6275b
+# bad: [ee190d04c2f99c8e557b00e997621c04592baed1] net: gro: add flush
+check in udp_gro_receive_segment
+git bisect bad ee190d04c2f99c8e557b00e997621c04592baed1
+# bad: [781e34b736014188ba9e46a71535237313dcda81] efi/unaccepted:
+touch soft lockup during memory accept
+git bisect bad 781e34b736014188ba9e46a71535237313dcda81
+# bad: [6a7b07689af6e4e023404bf69b1230f43b2a15bc] NFSD: Fix
+nfsd4_encode_fattr4() crasher
+git bisect bad 6a7b07689af6e4e023404bf69b1230f43b2a15bc
+# good: [e05194baae299f2148ab5f6bab659c6ce8d1f6d3] nfs: expose
+/proc/net/sunrpc/nfs in net namespaces
+git bisect good e05194baae299f2148ab5f6bab659c6ce8d1f6d3
+# good: [946ab150335d92f852288c1c6b0f0466b5d6e97f] power: supply:
+mt6360_charger: Fix of_match for usb-otg-vbus regulator
+git bisect good 946ab150335d92f852288c1c6b0f0466b5d6e97f
+# good: [b7b05f98f3f06fea3986b46e5c7fe2928676b02d] nfsd: expose
+/proc/net/sunrpc/nfsd in net namespaces
+git bisect good b7b05f98f3f06fea3986b46e5c7fe2928676b02d
+# bad: [0e8003af77879572dbc1df56860cbe2bfa8498f0] NFSD: add support
+for CB_GETATTR callback
+git bisect bad 0e8003af77879572dbc1df56860cbe2bfa8498f0
+# bad: [abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566] nfsd: make all of
+the nfsd stats per-network namespace
+git bisect bad abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566
+# first bad commit: [abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566] nfsd:
+make all of the nfsd stats per-network namespace
 
