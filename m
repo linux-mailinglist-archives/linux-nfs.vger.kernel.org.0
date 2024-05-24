@@ -1,363 +1,286 @@
-Return-Path: <linux-nfs+bounces-3362-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3363-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AA278CE066
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 06:40:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F26A88CE080
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 06:58:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9824283672
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 04:40:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C4971F217B6
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 04:58:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DC52574B;
-	Fri, 24 May 2024 04:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3630A39850;
+	Fri, 24 May 2024 04:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="QDL6NKDD";
-	dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="KNrXY5Mo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfNZZU/r"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D894A3B28F
-	for <linux-nfs@vger.kernel.org>; Fri, 24 May 2024 04:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.61.102.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9713A27B;
+	Fri, 24 May 2024 04:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716525602; cv=none; b=oHSDxoRP06IUm7Khxsq+Ziov+PRfKovRUCzD/NQJhcZJfJ1f/sxpHeggnXI19P+0jzjjdDLu+yeFYn563I71oX3FRdlQlkXXOD/Th8rhuLOIy5TJwu0gfNSeKevXIfxAJJbl5uAgHTVoWhenVfxFpIt5QsT1YQU9mqN3fE/U9tc=
+	t=1716526714; cv=none; b=snFdQ/GZogDXhG9xCHx5TZgS14osTG1Dk1Bo3qlYERBaTF6xyg2ZIyFz8jc91tzeetKbkJdl7mi+FCfSx4Ai2kDHzG2Ft4L8tV2bsiHOPEdOicD88mj8qMAbLRaNBtLmugiu1TgLTggDiKq/+nC62aXRg9ZCTyHhgzTAn6YWaB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716525602; c=relaxed/simple;
-	bh=JOpoqM1RZoXqx+i3E996xm7rnFOxfovnvyYHKyItfrw=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=e0triuMzAzYSSa3nekvQxz4LQ6sAPtpJaq9IAKsWwaSNfE4YMrEq7VaT95HySWFHss5cMmrXWx0vQDXo26FR3MICgY/gbOLvnXEEsySmtLKdVDAkm2z/S8g4wMvLEeLNwDAUmoptDAgTnnYnvx3NbZIWUGFIQ01au+YSpa5cu0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in; spf=pass smtp.mailfrom=kojedz.in; dkim=pass (2048-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=QDL6NKDD; dkim=pass (3072-bit key) header.d=kojedz.in header.i=@kojedz.in header.b=KNrXY5Mo; arc=none smtp.client-ip=109.61.102.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kojedz.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kojedz.in
-Received: from webmail.srv.kwebs.cloud (172-16-36-102.prometheus-node-exporter.monitoring.svc.cluster.local [172.16.36.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	(Authenticated sender: richard@kojedz.in)
-	by mx.kwebs.cloud (Postfix) with ESMTPSA id 7F8C931B8;
-	Fri, 24 May 2024 04:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
-	t=1716525589; bh=szlv1cHgvOcS9VEuISnx4h1Htds05fVQdR7esRFIidA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=QDL6NKDDN5o3vvx1CkdKPIrP7VWDz+dOftyN1rtVIf1vU1Qvh5awnUHXv1h+2tiiq
-	 EYUGq42T3vyS7Ilev7yUQbRzF4bzHeGMzCIVok4ejS2F6Vaei3yR8pOll49dzJnL/P
-	 DuWjXXGBmr+IZ0iSl0Waof6SOJcCWmuhuKvHFXQ/bmf7fVf6IkQkqFYbj7lD/QgkXu
-	 Uxu/JGT4kPtwQJFSN0MsNiK/XdDacDGfACmOvQmeqeLrGofgTxRydt5S0cdWovK8IY
-	 HyMHS569occJ9/J5RWuxqXQpxUyZZhy06OC84csjOeueGhlVuWNGxdZ1qDMhk8Gv9u
-	 i7vyV8dySyHXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
-	t=1716525589; bh=szlv1cHgvOcS9VEuISnx4h1Htds05fVQdR7esRFIidA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=KNrXY5MoGeMnDRt39wL0/qyvt0BksAP8i4rionsLr67qFJoRhEWlC77YiDjl7IBOS
-	 hxu/3lIoWMYgcWjDdAKi/N5I6hXf6ra9j9vVEaK/GUQ99uQUDAqaNWKtj1Bg22YNBX
-	 +Hzq9wUKqpZ+CfjdkJF+2pd16FjW5H5B9y725sy6wgQ4XnHfUhld4/kYL5WmOmfoXy
-	 Sk3QuJ6ba5VcLw9rc4yEgZZHpIEaYQG3vVAUmdxxCA+khnJEP1SxqOh5yZsUM1SO4n
-	 ai8VASEdos0m6QXHGzpYZ4GRD9GfU/91R2sPCVEexksS0WZHRg3uq9Hc8dS2VqPSWd
-	 f6YMLIERITg9V9s0KaxygHX17DtxDN9rj2DQwsDVfEtpRZndNBJasYBMzFanuGrY5W
-	 163KjoB3UuzDIPZeXolTsas3R9Qhh9ljluo6OHnYpagdmwW9bWQpRlR7EpVUeqo7hx
-	 ToFzhFdAam10sXMx6wbwx2jAaDvMzT3hHhJSfUqNuP98eXTSiEC
+	s=arc-20240116; t=1716526714; c=relaxed/simple;
+	bh=XNiUy9rDYeevLGiJZ9A/DHHrIjr9khy247wJmZzY+ds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rm2U+9+Uq6IqumCkK0I2fDo3pW/zJJyMQ0mcGQXeVtEoVCyLVyQbAyjxsYs2H/4gHZfYCKqrKwzbXcLFQIhghtXvyurMxpdKPioUgQ9Y190CjfXGMyvId8TXLEBJcZBg+5ohtO31ewHcpzUDXfN5VAhvoJku2WcxKmERVllNYxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfNZZU/r; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-794ab20699cso27508685a.2;
+        Thu, 23 May 2024 21:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716526710; x=1717131510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
+        b=bfNZZU/r9RyOPWCWXT8C59J+0vknNpPXG60DaHrOQW4Y+v2TK5gY+xo6ZynezOb8Mf
+         lWpTfFsr+J2t95tcZFNHgefnMhI9EMEJU0OqiOvcWvv1kbOsVGpdaqaPmNSTaHT3FgfL
+         9c3pyO8XuE/PiwwoqkKgMl+yfNKvIeVTtdwXeTi3RV3dG5jbnDjnT3Sbb37j8hs56dgf
+         P4/snWGHOFj61ul7/UDjbqypeS26pj67RvgHm9+YQuKAmH+aC0nPJaIRd+QrXHCdtjFH
+         lHG7Dbu1eto2JxerKNBu4ntrVgnK1vRkWU4wy8G5sXe2qsBc8MNiboxWL3mSeP7y2ulL
+         PqWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716526710; x=1717131510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yk3w0+viSFtKKuzWbFP83UAoZOZ1q21d0XNuU6k+kPk=;
+        b=K7sLZRNNSeJEk4UIVYOm91bTPKp8RtEs2eWqjx64QzqMx7Cd0qGaR4SrCxAc1Zqahl
+         jzaPJIqOkN+CMLWh8zflLx3a/zjRbJ+2UKO+PJdnXyElatvyJiKKaenmUMzcUfI7Suv6
+         0jPyAtI7vvKVgJhBMityFs7uhKkP4b0lLXSbHfEt1n80YpveLzfh+L4kIubXOnZ3FR6G
+         OfcN3dqV3q5G7QfySuVulTVZJ1xVdpdUkiF70tvWDyagotD2tM7nH/hhfBTc6htlASb8
+         x9SdGYeoRqE5hkd334qzXlBQW83W77w+aQIGuJR6unaagL1Rm2Ds/ng6YDvLqbdlJAh1
+         a88A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6x3AWYhTwYhqVuOAKaVGdz5wwA+BvQu8W/Mjihf06KHnP+Mx8aZm+5SulHaPCozbkpfdfqaDCBnf2FKtAgag2C8nxLAKRsPEf0wsL7hWHBuXJmeh6RzR7ihWPp8WeDjlpvsftXuuePTPOQe6VQPGIUvGbfYa3DD+opP72mIksRsPMwj1Twin/36NbeFPMV5Ivx3F+NBqyxBvOzYQrgilG3Q==
+X-Gm-Message-State: AOJu0YzBqs2QeK/gyfDpLFb8fKdGpxkX+ze/ECRilvL4gq14xAROrLPG
+	bplaTQraw88b/9mFDPB/88j6nBr7DxdJENBOstP//F1Jh/cQb3pgDgx65jAAg8dP5JsdCgy7s+u
+	6OhXYwgYDqVLbLP8d2HZ7nWlB2e8=
+X-Google-Smtp-Source: AGHT+IHwxoEyC/CgfcoYNTuXoypW6cR/wpwLB7WDQ5aO6pnZBvqbeq9XfR3HiSKH17tsDXpgZ02lfQFnCyS+mBCcaM4=
+X-Received: by 2002:a05:620a:817:b0:794:9a23:4915 with SMTP id
+ af79cd13be357-794ab057904mr115843085a.8.1716526710061; Thu, 23 May 2024
+ 21:58:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 24 May 2024 06:39:49 +0200
-From: Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
-Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
-In-Reply-To: <171650710476.27191.9102106000258626652@noble.neil.brown.name>
-References: <>, <162d12087ba8374a57e2263d7ea762b5@kojedz.in>
- <171650710476.27191.9102106000258626652@noble.neil.brown.name>
-Message-ID: <6e925c01180db44c5aff4475bfe72aef@kojedz.in>
-X-Sender: richard+debian+bugreport@kojedz.in
-Content-Type: multipart/mixed;
- boundary="=_1aee6e723aea2847a539d9257e25d5f0"
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+In-Reply-To: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 24 May 2024 07:58:18 +0300
+Message-ID: <CAOQ4uxhp0_HSre2LLStPVVsEJ3MqYDs1Ak9UAvB=o8Z7sVB=Mg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---=_1aee6e723aea2847a539d9257e25d5f0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+On Thu, May 23, 2024 at 11:57=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
+rote:
+>
+> Now that we provide a unique 64-bit mount ID interface in statx, we can
+> now provide a race-free way for name_to_handle_at(2) to provide a file
+> handle and corresponding mount without needing to worry about racing
+> with /proc/mountinfo parsing.
+>
+> While this is not necessary if you are using AT_EMPTY_PATH and don't
+> care about an extra statx(2) call, users that pass full paths into
+> name_to_handle_at(2) need to know which mount the file handle comes from
+> (to make sure they don't try to open_by_handle_at a file handle from a
+> different filesystem) and switching to AT_EMPTY_PATH would require
+> allocating a file for every name_to_handle_at(2) call, turning
+>
+>   err =3D name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
+>                           AT_HANDLE_MNT_ID_UNIQUE);
+>
+> into
+>
+>   int fd =3D openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
+>   err1 =3D name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_PAT=
+H);
+>   err2 =3D statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
+>   mntid =3D statxbuf.stx_mnt_id;
+>   close(fd);
+>
+> Unlike AT_HANDLE_FID, as per Amir's suggestion, AT_HANDLE_MNT_ID_UNIQUE
+> uses a new AT_* bit from the historically-unused 0xFF range (which we
+> now define as being the "per-syscall" range for AT_* bits).
+>
 
-Dear Neil,
+Sorry for nit picking, but I think that "Unlike AT_HANDLE_FID,..." is confu=
+sing
+in this statement.
+AT_HANDLE_FID is using a bit that was already effectively allocated for a
+"per-syscall" range.
+I don't think that mentioning AT_HANDLE_FID adds any clarity to the stateme=
+nt
+so better drop it?
 
-I've stripped the code more, which still triggers the bug for me. On 
-Bookworm, to get the binary, simply:
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+> Changes in v2:
+> - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
+> - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match st=
+atx.
+> - Switched to using an AT_* bit from 0xFF and defining that range as
+>   being "per-syscall" for future usage.
+> - Sync tools/ copy of <linux/fcntl.h> to include changes.
+> - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f55f=
+d9215b8e@cyphar.com>
+> ---
+>  fs/fhandle.c                     | 29 ++++++++++++++++++++++-------
+>  include/linux/syscalls.h         |  2 +-
+>  include/uapi/linux/fcntl.h       | 28 +++++++++++++++++++++-------
+>  tools/include/uapi/linux/fcntl.h | 28 +++++++++++++++++++++-------
+>  4 files changed, 65 insertions(+), 22 deletions(-)
+>
+[...]
 
-$ sudo apt-get install golang
-$ go build .
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index c0bcc185fa48..9ed9d65842c1 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -87,22 +87,24 @@
+>  #define DN_ATTRIB      0x00000020      /* File changed attibutes */
+>  #define DN_MULTISHOT   0x80000000      /* Don't remove notifier */
+>
+> +#define AT_FDCWD               -100    /* Special value used to indicate
+> +                                           openat should use the current
+> +                                           working directory. */
 
-And then give it an nfs mountpoint, e.g.:
+(more nit picking)
+If you are changing this line, please at least add a new line,
+this is a different namespace :-/
+and perhaps change it to "Special value of dirfd argument..."
 
-$ ./ds /mnt/nfs
+Also, better leave a comment here to discourage allocation from this range:
 
-Meanwhile, I will try your patch too.
++ /* Reserved for per-syscall flags              0xff   */
 
-Regards,
-Richard
+> +#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
+ */
+> +
+>  /*
+> - * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
+CCESS is
+> - * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
+o
+> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
+CCESS
+> + * is meaningful only to faccessat, while AT_REMOVEDIR is meaningful onl=
+y to
+>   * unlinkat.  The two functions do completely different things and there=
+fore,
+>   * the flags can be allowed to overlap.  For example, passing AT_REMOVED=
+IR to
+>   * faccessat would be undefined behavior and thus treating it equivalent=
+ to
+>   * AT_EACCESS is valid undefined behavior.
+>   */
 
-2024-05-24 01:31 időpontban NeilBrown ezt írta:
-> On Fri, 24 May 2024, Richard Kojedzinszky wrote:
->> Dear devs,
->> 
->> I am attaching a stripped down version of the little program which
->> triggers the bug very quickly, in a few minutes in my test lab. It
->> turned out that a single NFS mountpoint is enough. Just start the
->> program giving it the NFS mount as first argument. It will chdir 
->> there,
->> and do file operations, which will trigger a lockup in a few minutes.
-> 
-> I couldn't get the go code to run.  But then it is a long time since I
-> played with go and I didn't try very hard.
-> If you could provide simple instructions and a list of package
-> dependencies that I need to install (on Debian), I can give it a try.
-> 
-> Or you could try this patch.  It might help, but I don't have high
-> hopes.  It adds some memory barriers and fixes a bug which would cause 
-> a
-> problem if memory allocation failed (but memory allocation never 
-> fails).
-> 
-> NeilBrown
-> 
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index ac505671efbd..5bcc0d14d519 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -1804,7 +1804,7 @@ __nfs_lookup_revalidate(struct dentry *dentry, 
-> unsigned int flags,
->  	} else {
->  		/* Wait for unlink to complete */
->  		wait_var_event(&dentry->d_fsdata,
-> -			       dentry->d_fsdata != NFS_FSDATA_BLOCKED);
-> +			       smp_load_acquire(&dentry->d_fsdata) != NFS_FSDATA_BLOCKED);
->  		parent = dget_parent(dentry);
->  		ret = reval(d_inode(parent), dentry, flags);
->  		dput(parent);
-> @@ -2508,7 +2508,7 @@ int nfs_unlink(struct inode *dir, struct dentry 
-> *dentry)
->  	spin_unlock(&dentry->d_lock);
->  	error = nfs_safe_remove(dentry);
->  	nfs_dentry_remove_handle_error(dir, dentry, error);
-> -	dentry->d_fsdata = NULL;
-> +	smp_store_release(&dentry->d_fsdata, NULL);
->  	wake_up_var(&dentry->d_fsdata);
->  out:
->  	trace_nfs_unlink_exit(dir, dentry, error);
-> @@ -2616,7 +2616,7 @@ nfs_unblock_rename(struct rpc_task *task, struct 
-> nfs_renamedata *data)
->  {
->  	struct dentry *new_dentry = data->new_dentry;
-> 
-> -	new_dentry->d_fsdata = NULL;
-> +	smp_store_release(&new_dentry->d_fsdata, NULL);
->  	wake_up_var(&new_dentry->d_fsdata);
->  }
-> 
-> @@ -2717,6 +2717,10 @@ int nfs_rename(struct mnt_idmap *idmap, struct 
-> inode *old_dir,
->  	task = nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
->  				must_unblock ? nfs_unblock_rename : NULL);
->  	if (IS_ERR(task)) {
-> +		if (must_unlock) {
-> +			smp_store_release(&new_dentry->d_fsdata, NULL);
-> +			wake_up_var(&new_dentry->d_fsdata);
-> +		}
->  		error = PTR_ERR(task);
->  		goto out;
->  	}
+If you are going to add this churn in this patch, please do it otherwise.
+It does not make sense to have this long explanation about pre-syscall
+AT_* flags in a different location from the comment you added about
+"All new purely-syscall-specific AT_* flags.."
+if this explanation is needed at all, it should be after the new comment
+as an example.
 
---=_1aee6e723aea2847a539d9257e25d5f0
-Content-Transfer-Encoding: base64
-Content-Type: application/x-tar;
- name=ds.tar
-Content-Disposition: attachment;
- filename=ds.tar;
- size=10240
 
-ZG92ZWNvdC1zaW11bGF0b3IvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA3NTUAMDAwMTc1
-MQAwMDAxNzUxADAwMDAwMDAwMDAwADE0NjI0MDE0MDcwADAxNDEwMgAgNQAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABk
-b3ZlY290LXNpbXVsYXRvci9nby5zdW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDY0NAAwMDAxNzUx
-ADAwMDE3NTEAMDAwMDAwMDAwMDAAMTQ2MjQwMTM3NzMAMDE1MjM0ACAwAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHVzdGFyICAAa3JpY2h5AAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAABrcmljaHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGRv
-dmVjb3Qtc2ltdWxhdG9yL3JlYWRlci5nbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwNjQ0ADAwMDE3NTEA
-MDAwMTc1MQAwMDAwMDAwMjY0MQAxNDYyNDAxMzc1NwAwMTU3MTEAIDAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXN0YXIgIABrcmljaHkAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGFj
-a2FnZSBtYWluCgppbXBvcnQgKAoJImJ1ZmlvIgoJImNvbnRleHQiCgkibG9nIgoJIm1hdGgvcmFu
-ZCIKCSJvcyIKCSJ0aW1lIgopCgp0eXBlIHJlYWRlciBzdHJ1Y3QgewoJbCAgICAgICAgICAgKmxv
-Y2tmaWxlCglsYXN0TW9kVGltZSB0aW1lLlRpbWUKfQoKZnVuYyAociAqcmVhZGVyKSBydW4oY3R4
-IGNvbnRleHQuQ29udGV4dCwgaW5zdGFuY2UgaW50KSB7CglyLmwgPSAmbG9ja2ZpbGV7ZmlsZTog
-bG9ja0ZpbGV9CgoJd2QgOj0gbWFrZShjaGFuIGJvb2wpCgoJZ28gZnVuYygpIHsKCQl0aW1lciA6
-PSB0aW1lLk5ld1RpbWVyKHRpbWUuU2Vjb25kKQoJCWRlZmVyIHRpbWVyLlN0b3AoKQoKCQlmb3Ig
-ewoJCQlzZWxlY3QgewoJCQljYXNlIDwtY3R4LkRvbmUoKToKCQkJCXJldHVybgoJCQljYXNlIDwt
-dGltZXIuQzoKCQkJCWxvZy5QcmludGYoInJlYWRlciglZCkgaGFzIGJlZW4gYmxvY2tlZCBmb3Ig
-YSBzZWNvbmQiLCBpbnN0YW5jZSkKCQkJCXJldHVybgoJCQljYXNlIDwtd2Q6CgkJCQlpZiAhdGlt
-ZXIuU3RvcCgpIHsKCQkJCQk8LXRpbWVyLkMKCQkJCX0KCQkJCXRpbWVyLlJlc2V0KHRpbWUuU2Vj
-b25kKQoJCQl9CgkJfQoJfSgpCgoJZm9yIHsKCQlzZWxlY3QgewoJCWNhc2UgPC1jdHguRG9uZSgp
-OgoJCQlyZXR1cm4KCQlkZWZhdWx0OgoJCX0KCgkJci5kb19yZWFkKCkKCgkJd2QgPC0gdHJ1ZQoJ
-fQp9CgpmdW5jIChyICpyZWFkZXIpIGRvX3JlYWQoKSBlcnJvciB7CglzdGF0LCBlcnIgOj0gb3Mu
-U3RhdChsaXN0RmlsZSkKCWlmIGVyciAhPSBuaWwgewoJCXJldHVybiBlcnIKCX0KCgltb2RUaW1l
-IDo9IHN0YXQuTW9kVGltZSgpCglpZiAhbW9kVGltZS5BZnRlcihyLmxhc3RNb2RUaW1lKSB7CgkJ
-cmV0dXJuIG5pbAoJfQoKCWlmIGVyciA9IHIubC5Mb2NrKCk7IGVyciAhPSBuaWwgewoJCXJldHVy
-biBlcnIKCX0KCWRlZmVyIHIubC5VbmxvY2soKQoKCXJmaCwgZXJyIDo9IG9zLk9wZW4obGlzdEZp
-bGUpCglpZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciByZmguQ2xvc2UoKQoK
-CXdmaCwgZXJyIDo9IG9zLk9wZW5GaWxlKGxpc3RGaWxlTmV3LCBvcy5PX0NSRUFURXxvcy5PX1dS
-T05MWSwgMG82MDApCglpZiBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciB3Zmgu
-Q2xvc2UoKQoKCXJyIDo9IGJ1ZmlvLk5ld1JlYWRlcihyZmgpCgl3ciA6PSBidWZpby5OZXdXcml0
-ZXIod2ZoKQoKCWZvciB7CgkJbGluZSwgXyA6PSByci5SZWFkU3RyaW5nKCdcbicpCgkJaWYgbGlu
-ZSA9PSAiIiB7CgkJCWJyZWFrCgkJfQoKCQlpZiByYW5kLkludG4oMTApIDwgNCB7IC8vIGtlZXAg
-ZmlsZXMgYXQgNDAlIGNoYW5jZQoJCQl3ci5Xcml0ZVN0cmluZyhsaW5lKQoJCX0KCX0KCgl3ci5G
-bHVzaCgpCgl3ZmguQ2xvc2UoKQoKCW9zLlJlbmFtZShsaXN0RmlsZU5ldywgbGlzdEZpbGUpCgoJ
-cmV0dXJuIG5pbAp9CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZG92ZWNv
-dC1zaW11bGF0b3IvbG9ja2ZpbGUuZ28AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMTc1MQAwMDAx
-NzUxADAwMDAwMDAxMTM0ADE0NjIzNjQ0NjcwADAxNjIzNgAgMAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwYWNrYWdl
-IG1haW4KCmltcG9ydCAoCgkibWF0aC9yYW5kIgoJIm9zIgoJInRpbWUiCikKCnR5cGUgbG9ja2Zp
-bGUgc3RydWN0IHsKCWZpbGUgc3RyaW5nCglmaCAgICpvcy5GaWxlCn0KCmZ1bmMgKGwgKmxvY2tm
-aWxlKSBMb2NrKCkgKGVyciBlcnJvcikgewoJaSA6PSAwCgoJZm9yIHsKCQlpZiBfLCBlcnIgPSBv
-cy5TdGF0KGwuZmlsZSk7IGVyciAhPSBuaWwgJiYgb3MuSXNOb3RFeGlzdChlcnIpIHsKCQkJbC5m
-aCwgZXJyID0gb3MuT3BlbkZpbGUobC5maWxlLCBvcy5PX0NSRUFURXxvcy5PX1JEV1J8b3MuT19F
-WENMLCAwbzY0NCkKCQkJaWYgZXJyID09IG5pbCB7CgkJCQlyZXR1cm4KCQkJfQoJCX0gZWxzZSB7
-CgkJCWVyciA9IG9zLkVyckV4aXN0CgkJfQoKCQlpKysKCQlpZiBpID09IDE1IHsKCQkJcmV0dXJu
-CgkJfQoKCQl0aW1lLlNsZWVwKHRpbWUuTWlsbGlzZWNvbmQgKiB0aW1lLkR1cmF0aW9uKCgxICsg
-cmFuZC5JbnRuKDEwKSkpKQoJfQp9CgpmdW5jIChsICpsb2NrZmlsZSkgVW5sb2NrKCkgKGVyciBl
-cnJvcikgewoJaWYgbC5maCA9PSBuaWwgewoJCXJldHVybgoJfQoKCWwuZmguQ2xvc2UoKQoKCW9z
-LlJlbW92ZShsLmZpbGUpCgoJcmV0dXJuCn0KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZG92ZWNvdC1z
-aW11bGF0b3IvbWFpbi5nbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMTc1MQAwMDAxNzUx
-ADAwMDAwMDAxNTQ2ADE0NjI0MDEzNjU0ADAxNTM3MgAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAa3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwYWNrYWdlIG1h
-aW4KCmltcG9ydCAoCgkiY29udGV4dCIKCSJsb2ciCgkib3MiCgkib3Mvc2lnbmFsIgoJInN5bmMi
-Cgkic3lzY2FsbCIKKQoKY29uc3QgKAoJbG9ja0ZpbGUgICAgPSAibWFpbC5sb2NrIgoJbGlzdEZp
-bGUgICAgPSAibWFpbC5saXN0IgoJbGlzdEZpbGVOZXcgPSAibWFpbC5saXN0Lm5ldyIKKQoKZnVu
-YyBtYWluKCkgewoKCXBhdGggOj0gb3MuQXJnc1sxXQoJaWYgZXJyIDo9IG9zLkNoZGlyKHBhdGgp
-OyBlcnIgIT0gbmlsIHsKCQlsb2cuRmF0YWwoZXJyKQoJfQoKCWN0eCwgY2FuY2VsIDo9IGNvbnRl
-eHQuV2l0aENhbmNlbChjb250ZXh0LkJhY2tncm91bmQoKSkKCWRlZmVyIGNhbmNlbCgpCgoJZ28g
-ZnVuYygpIHsKCQlzaWdjaGFuIDo9IG1ha2UoY2hhbiBvcy5TaWduYWwsIDEpCgkJc2lnbmFsLk5v
-dGlmeShzaWdjaGFuLCBzeXNjYWxsLlNJR0lOVCwgc3lzY2FsbC5TSUdURVJNKQoKCQk8LXNpZ2No
-YW4KCgkJbG9nLlByaW50KCJFeGl0aW5nIikKCgkJY2FuY2VsKCkKCX0oKQoKCXdnIDo9ICZzeW5j
-LldhaXRHcm91cHt9CgoJbG9nLlByaW50KCJTdGFydGluZyByZWFkZXJzIGFuZCB3cml0ZXJzIikK
-Cglmb3IgaSA6PSAwOyBpIDwgNTsgaSsrIHsKCQl3Zy5BZGQoMSkKCQlnbyBmdW5jKGluc3RhbmNl
-IGludCkgewoJCQlkZWZlciB3Zy5Eb25lKCkKCgkJCXcgOj0gJnJlYWRlcnt9CgoJCQl3LnJ1bihj
-dHgsIGluc3RhbmNlKQoJCX0oaSkKCX0KCglmb3IgaSA6PSAwOyBpIDwgNTsgaSsrIHsKCQl3Zy5B
-ZGQoMSkKCQlnbyBmdW5jKGluc3RhbmNlIGludCkgewoJCQlkZWZlciB3Zy5Eb25lKCkKCgkJCXcg
-Oj0gJndyaXRlcnt9CgoJCQl3LnJ1bihjdHgsIGluc3RhbmNlKQoJCX0oaSkKCX0KCgl3Zy5XYWl0
-KCkKfQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZG92ZWNvdC1zaW11
-bGF0b3Ivd3JpdGVyLmdvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMTc1MQAwMDAxNzUxADAw
-MDAwMDAxNzYyADE0NjI0MDE0MTEzADAxNTc1MQAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-a3JpY2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwYWNrYWdlIG1haW4K
-CmltcG9ydCAoCgkiY29udGV4dCIKCSJmbXQiCgkibG9nIgoJIm1hdGgvcmFuZCIKCSJvcyIKCSJ0
-aW1lIgopCgp0eXBlIHdyaXRlciBzdHJ1Y3QgewoJbCAqbG9ja2ZpbGUKfQoKZnVuYyAodyAqd3Jp
-dGVyKSBydW4oY3R4IGNvbnRleHQuQ29udGV4dCwgaW5zdGFuY2UgaW50KSB7Cgl3LmwgPSAmbG9j
-a2ZpbGV7ZmlsZTogbG9ja0ZpbGV9CgoJd2QgOj0gbWFrZShjaGFuIGJvb2wpCgoJZ28gZnVuYygp
-IHsKCQl0aW1lciA6PSB0aW1lLk5ld1RpbWVyKHRpbWUuU2Vjb25kKQoJCWRlZmVyIHRpbWVyLlN0
-b3AoKQoKCQlmb3IgewoJCQlzZWxlY3QgewoJCQljYXNlIDwtY3R4LkRvbmUoKToKCQkJCXJldHVy
-bgoJCQljYXNlIDwtdGltZXIuQzoKCQkJCWxvZy5QcmludGYoIndyaXRlciglZCkgaGFzIGJlZW4g
-YmxvY2tlZCBmb3IgYSBzZWNvbmQiLCBpbnN0YW5jZSkKCQkJCXJldHVybgoJCQljYXNlIDwtd2Q6
-CgkJCQlpZiAhdGltZXIuU3RvcCgpIHsKCQkJCQk8LXRpbWVyLkMKCQkJCX0KCQkJCXRpbWVyLlJl
-c2V0KHRpbWUuU2Vjb25kKQoJCQl9CgkJfQoJfSgpCgoJZm9yIHsKCQlzZWxlY3QgewoJCWNhc2Ug
-PC1jdHguRG9uZSgpOgoJCQlyZXR1cm4KCQlkZWZhdWx0OgoJCX0KCgkJdy5kb193cml0ZSgpCgoJ
-CXdkIDwtIHRydWUKCX0KfQoKZnVuYyAodyAqd3JpdGVyKSBkb193cml0ZSgpIGVycm9yIHsKCWlm
-IGVyciA6PSB3LmwuTG9jaygpOyBlcnIgIT0gbmlsIHsKCQlyZXR1cm4gZXJyCgl9CglkZWZlciB3
-LmwuVW5sb2NrKCkKCglmaCwgZXJyIDo9IG9zLk9wZW5GaWxlKGxpc3RGaWxlLCBvcy5PX0NSRUFU
-RXxvcy5PX1dST05MWXxvcy5PX0FQUEVORCwgMG82MDApCglpZiBlcnIgIT0gbmlsIHsKCQlyZXR1
-cm4gZXJyCgl9CglkZWZlciBmaC5DbG9zZSgpCgoJbGluZSA6PSBmbXQuU3ByaW50ZigiZmlsZS0l
-ZC4lZFxuIiwgdGltZS5Ob3coKS5OYW5vc2Vjb25kKCksIHJhbmQuSW50KCkpCglmaC5Xcml0ZShb
-XWJ5dGUobGluZSkpCgoJcmV0dXJuIG5pbAp9CgAAAAAAAAAAAAAAAAAAZG92ZWNvdC1zaW11bGF0
-b3IvZ28ubW9kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMDA2NDQAMDAwMTc1MQAwMDAxNzUxADAwMDAw
-MDAwMDIzADE0NjI0MDEzNzczADAxNTIxNAAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAB1c3RhciAgAGtyaWNoeQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa3Jp
-Y2h5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABtb2R1bGUgZHMKCmdvIDEu
-MTkKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
---=_1aee6e723aea2847a539d9257e25d5f0--
+> -#define AT_FDCWD               -100    /* Special value used to indicate
+> -                                           openat should use the current
+> -                                           working directory. */
+> -#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
+ */
+>  #define AT_EACCESS             0x200   /* Test access permitted for
+>                                             effective IDs, not real IDs. =
+ */
+>  #define AT_REMOVEDIR           0x200   /* Remove directory instead of
+>                                             unlinking file.  */
+
+I really prefer to move those to the per-syscall section
+right next to AT_HANDLE_FID and leave a comment here:
+
+/* Reserved for per-syscall flags           0x200   */
+
+> +
+>  #define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
+>  #define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal auto=
+mount traversal */
+>  #define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname =
+*/
+> @@ -114,10 +116,22 @@
+>
+>  #define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
+>
+> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
+.. */
+> +/*
+> + * All new purely-syscall-specific AT_* flags should consider using bits=
+ from
+> + * 0xFF, but the bits used by RENAME_* (0x7) should be avoided in case u=
+sers
+> + * decide to pass AT_* flags to renameat2() by accident.
+
+Sorry, but I find the use of my renameat2() example a bit confusing
+in this sentence.
+If you mention it at all, please use "For example, the bits used by..."
+but I think it is more important to say "...should consider re-using bits
+already used by other per-syscalls flags".
+
+> These flag bits are
+> + * free for re-use by other syscall's syscall-specific flags without wor=
+ry.
+> + */
+> +
+> +/*
+> + * Flags for name_to_handle_at(2). To save AT_ flag space we re-use the
+> + * AT_EACCESS/AT_REMOVEDIR bit for AT_HANDLE_FID.
+> + */
+
+AT_EACCESS/AT_REMOVEDIR/AT_HANDLE_FID have exact same status,
+so instead of this asymmetric comment:
+
++/* Flags for faccessat(2) */
++#define AT_EACCESS             0x200   /* Test access permitted for
++                                           effective IDs, not real IDs.  *=
+/
++/* Flags for unlinkat(2) */
++#define AT_REMOVEDIR           0x200   /* Remove directory instead of
++                                           unlinking file.  */
++/* Flags for name_to_handle_at(2) */
++#define AT_HANDLE_FID          0x200   /* file handle is needed to
+                                        compare object identity and may not
+                                        be usable to open_by_handle_at(2) *=
+/
+
+> +#define AT_HANDLE_MNT_ID_UNIQUE        0x80    /* return the u64 unique =
+mount id */
+
+IDGI, I think we may have been miscommunicating :-/
+If 0x7 range is to be avoided for generic AT_ flags, then it *should* be us=
+ed
+for new per-syscall flags such as this one.
+
+The reservation of 0xff is not a strong guarantee.
+As long as people re-use new per-syscalls flags efficiently, we could
+decide to reclaim some of this space for generic AT_ flags in the future
+if it is needed.
+
+I know most of the mess was here before your patch, but I think
+it got to a point where we must put a little order before introducing
+the new per-syscall flag.
+
+Thanks,
+Amir.
 
