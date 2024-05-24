@@ -1,119 +1,180 @@
-Return-Path: <linux-nfs+bounces-3367-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3368-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DB288CE4C5
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 13:16:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A9B48CE549
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 14:27:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49D0F2823D6
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 11:16:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADF511C21922
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 May 2024 12:27:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA8684FAC;
-	Fri, 24 May 2024 11:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88B3129E98;
+	Fri, 24 May 2024 12:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QNXOHSK1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkW0tr5R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FABE83A19;
-	Fri, 24 May 2024 11:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D37E129E8C;
+	Fri, 24 May 2024 12:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716549385; cv=none; b=kO9uNQ+GhDqQkbRRfD4G7mQr4Hsfi1qjrOlOqQVrpwtdLHv9o8FxY14iBTB6M7A4G4jKAFKFyd2ZpzJFP7WuVGAAmDnSCu8+w23g9693Gkle/3Q6fjBIOXnXSLJo1X0AgeJ5kmbMHtZnRex4InvnOSVWPHfo2oSs5jy3kISz+dk=
+	t=1716553535; cv=none; b=In3o9OG/IpI0hIV2LNanjiZzJKgIloC9+GuCdVl+/rKcMfS8g6ZbAkIbK8XG1GlaRxVUWONxnYgmTjFLQp9jDlVV45B/+cBEsjCPmhnhUpjxO/FLlTwnF2Vfi3fBT1RkFEJ5kQi8RZM46VjeoWPTR5/U3oMK2xluc0NTc9lihlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716549385; c=relaxed/simple;
-	bh=oYVpw1lCIhmODT9z7ABo2JQswJluusXqyxAUWMY1H0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NV6AArPmdcskztfJidAzLyYEHfcmnMiVEEjLakyFgVmzp8GWNv2S0pPuYSE8pgAWhno5rW3sPlLjW+5Q+H797Qc9LRYbr9OvPA+/OOK8S5I502/kAADGLmlQ7HwLfcrzjUDLDica+qIjv02Alb9Ye5iJvyYTwh08Z8p4WjefRio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QNXOHSK1; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=vatKQCd19zVpo9z7MIY/Ii3SiGceuMeeq99+c0g9mvk=;
-	t=1716549383; x=1716981383; b=QNXOHSK1Zimeko8iHqnlaZrVt6enAqGcx+zwZK9WnACQrh5
-	0TRgoOU5wQJytAbgZ+rTZoomLcHYWHNxsuPswcpuX4boiAKKF+2ed782821+zYDbYSjyxaa+3qVtC
-	lIslt3Log/ffF5sqWpIaZNLRw8yljAjHKSukmxjqyzCza0Za0FGfKarvXywct/4ukLWhlt4IqPH4A
-	Q0oLT2+fNvu1cLbhvsM4IGQsZdcXTTQ+nVgbwiSoGnOT2/hTC9miXev8/fp4cRUS8SZUCHv1Qfg2R
-	6TLbJEJpn/8A2AAp3llOt9k97891uKJIyBra47YiDNM8Pu44HFVW+mbOzYc+HveQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sASuK-0005l8-B8; Fri, 24 May 2024 13:16:20 +0200
-Message-ID: <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
-Date: Fri, 24 May 2024 13:16:15 +0200
+	s=arc-20240116; t=1716553535; c=relaxed/simple;
+	bh=ZxYHa51J4F5219O37AqS4VcEPL/q/VMQFkZNaNvxL90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i09h36bHNBK+/EZcV0BhKHjTYp7vAP7KABdgm5CpaR1Lwf4GiLtPbZjiwFDvzLwY/J1HVbmj+N+8zI3L/mrR0INoq6/58h2lBoR2JDYsjyOryAKFOdVPcb91ZaFwWtYJD6yfKc0988wh5L4Zb1qUqVnETkpw9ImScsAeOUGO9uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkW0tr5R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D97DC3277B;
+	Fri, 24 May 2024 12:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716553535;
+	bh=ZxYHa51J4F5219O37AqS4VcEPL/q/VMQFkZNaNvxL90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CkW0tr5R8netKj3H1R0ye6wSoxVxKRlZiTiwB5ukR9z1c7TP8OAWTNPe+H9EmVF22
+	 iKkCl70NzB7uaY8AfBcCaRKbTyGTfdFg1jHihFJZ5Uoy8R+aVDuz0tNO8q75mlh7us
+	 Xy8VhegHlVFdHiVLAf9zzcRCH1bsnEs7SXkm37EWKHiVieSVPSCoghLYqr24+y78kR
+	 38s1l2TmBykYbhZ+4vsqtYBw2j6ggNFV733hpo7KUxTw41ziOyxLOi2+wHF+Xw4hRh
+	 mTzxV/l6+7NC5VCV6V/NgIBNtmyoV/WvvdqAmM9xUOaFZhSEqiakJdZ+TbeZxHQOKe
+	 M1jgxSlGK77Ng==
+Date: Fri, 24 May 2024 14:25:30 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Alexander Aring <alex.aring@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
+Message-ID: <20240524-ahnden-danken-02a2e9b87190@brauner>
+References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
+ <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
+ <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
-To: Jeff Layton <jlayton@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, regressions@lists.linux.dev,
- it+linux-nfs@molgen.mpg.de, Linus Torvalds <torvalds@linux-foundation.org>
-References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
- <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
- <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716549383;6b1d1540;
-X-HE-SMSGID: 1sASuK-0005l8-B8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
 
-On 21.05.24 12:01, Jeff Layton wrote:
-> On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
->> Am 19.04.24 um 18:50 schrieb Paul Menzel:
->>
->>> Since at least Linux 6.8-rc6, Linux logs the warning below:
->>>
->>>      NFSD: Unable to initialize client recovery tracking! (-110)
->>>
->>> I haven’t had time to bisect yet, so if you have an idea, that’d be great.
->>
->> 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
->> commit 74fd48739d0488e39ae18b0168720f449a06690c
->> Author: Jeff Layton <jlayton@kernel.org>
->> Date:   Fri Oct 13 09:03:53 2023 -0400
->>
->>      nfsd: new Kconfig option for legacy client tracking
->>
->>      We've had a number of attempts at different NFSv4 client tracking
->>      methods over the years, but now nfsdcld has emerged as the clear winner
->>      since the others (recoverydir and the usermodehelper upcall) are
->>      problematic.
-> [...]
-> It sounds like you need to enable nfsdcld in your environment. The old
-> recovery tracking methods are deprecated. The only surviving one
-> requires the nfsdcld daemon to be running when recovery tracking is
-> started. Alternately, you can enable this option in your kernels if you
-> want to keep using the deprecated methods in the interim.
+On Thu, May 23, 2024 at 09:52:20AM -0600, Aleksa Sarai wrote:
+> On 2024-05-21, Christian Brauner <brauner@kernel.org> wrote:
+> > On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
+> > > Now that we have stabilised the unique 64-bit mount ID interface in
+> > > statx, we can now provide a race-free way for name_to_handle_at(2) to
+> > > provide a file handle and corresponding mount without needing to worry
+> > > about racing with /proc/mountinfo parsing.
+> > > 
+> > > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bit
+> > > that doesn't make sense for name_to_handle_at(2).
+> > > 
+> > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > ---
+> > 
+> > So I think overall this is probably fine (famous last words). If it's
+> > just about being able to retrieve the new mount id without having to
+> > take the hit of another statx system call it's indeed a bit much to
+> > add a revised system call for this. Althoug I did say earlier that I
+> > wouldn't rule that out.
+> > 
+> > But if we'd that then it'll be a long discussion on the form of the new
+> > system call and the information it exposes.
+> > 
+> > For example, I lack the grey hair needed to understand why
+> > name_to_handle_at() returns a mount id at all. The pitch in commit
+> > 990d6c2d7aee ("vfs: Add name to file handle conversion support") is that
+> > the (old) mount id can be used to "lookup file system specific
+> > information [...] in /proc/<pid>/mountinfo".
+> 
+> The logic was presumably to allow you to know what mount the resolved
+> file handle came from. If you use AT_EMPTY_PATH this is not needed
+> because you could just fstatfs (and now statx(AT_EMPTY_PATH)), but if
+> you just give name_to_handle_at() almost any path, there is no race-free
+> way to make sure that you know which filesystem the file handle came
+> from.
+> 
+> I don't know if that could lead to security issues (I guess an attacker
+> could find a way to try to manipulate the file handle you get back, and
+> then try to trick you into operating on the wrong filesystem with
+> open_by_handle_at()) but it is definitely something you'd want to avoid.
 
-Hmm. Then why didn't this new config option default to "Y" for a while
-(say a year or two) before changing the default to off? That would have
-prevented people like Paul from running into the problem when running
-"olddefconfig". I think that is what Linus would have wanted in a case
-like this, but might be totally wrong there (I CCed him, in case he
-wants to share his opinion, but maybe he does not care much).
+So the following paragraphs are prefaced with: I'm not an expert on file
+handle encoding and so might be totally wrong.
 
-But I guess that's too late now, unless we want to meddle with config
-option names. But I guess that might not be worth it after half a year
-for something that only causes a warning (aiui).
+Afaiu, the uniqueness guarantee of the file handle mostly depends on:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+(1) the filesystem
+(2) the actual file handling encoding
+
+Looking at file handle encoding to me it looks like it's fairly easy to
+fake them in userspace (I guess that's ok if you think about them like a
+path but with a weird permission model built around them.) for quite a
+few filesystems.
+
+For example, for anything that uses fs/libfs.c:generic_encode_ino32_fh()
+it's easy to construct a file handle by retrieving the inode number via
+stat and the generation number via FS_IOC_GETVERSION.
+
+Encoding using the inode number and the inode generation number is
+probably not very strong so it's not impossible to generate a file
+handle that is not unique without knowing in which filesystem to
+interpret it in.
+
+The problem is with what name_to_handle_at() returns imho. A mnt_id
+doesn't pin the filesystem and the old mnt_id isn't unique. That means
+the filesystem can be unmounted and go away and the mnt_id can be
+recycled almost immediately for another mount but the file handle is
+still there.
+
+So to guarantee that a (weakly encoded) file handle is interpreted in
+the right filesystem the file handle must either be accompanied by a
+file descriptor that pins the relevant mount or have any other guarantee
+that the filesystem doesn't go away (Or of course, the file handle
+encodes the uuid of the filesystem or something or uses some sort of
+hashing scheme.).
+
+One of the features of file handles is that they're globally usable so
+they're interesting to use as handles that can be shared. IOW, one can
+send around a file handle to another process without having to pin
+anything or have a file descriptor open that needs to be sent via
+AF_UNIX.
+
+But as stated above that's potentially risky so one might still have to
+send around an fd together with the file handle if sender and receiver
+don't share the filesystem for the handle.
+
+However, with the unique mount id things improve quite a bit. Because
+now it's possible to send around the unique mount id and the file
+handle. Then one can use statmount() to figure out which filesystem this
+file handle needs to be interpreted in.
+
+> 
+> > Granted, that's doable but it'll mean a lot of careful checking to avoid
+> > races for mount id recycling because they're not even allocated
+> > cyclically. With lots of containers it becomes even more of an issue. So
+> > it's doubtful whether exposing the mount id through name_to_handle_at()
+> > would be something that we'd still do.
+> > 
+> > So really, if this is just about a use-case where you want to spare the
+> > additional system call for statx() and you need the mnt_id then
+> > overloading is probably ok.
+> > 
+> > But it remains an unpleasant thing to look at.
+> > 
+> 
+> Yeah, I agree it's ugly.
+> 
+> -- 
+> Aleksa Sarai
+> Senior Software Engineer (Containers)
+> SUSE Linux GmbH
+> <https://www.cyphar.com/>
+
+
 
