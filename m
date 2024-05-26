@@ -1,57 +1,54 @@
-Return-Path: <linux-nfs+bounces-3384-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3385-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BDED8CF414
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 13:28:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB3C8CF41A
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 13:36:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3879C1C20753
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 11:28:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A99B2813E7
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 11:36:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA96FB669;
-	Sun, 26 May 2024 11:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD0A8F40;
+	Sun, 26 May 2024 11:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoDixn5t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpyskw7o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B2B9454
-	for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 11:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8771E8C11
+	for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 11:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716722880; cv=none; b=kyn1uZJ1wZ1RSvyFUvbCmHIVBCVm4cyPbEyzFEy3sJvKcGfJaYsU8TAl+2hsnLR5hVHF7KTT0jkNh7/R4hZ0g7AY9cJSwdx7cJsnWBRl6HxM8iiUyUp87WoLOrBYQr83sRFo3YYFrq6CrmKv7mH5+dqCXfsr/pAoHog6e4UjEoA=
+	t=1716723405; cv=none; b=pY3b5TgFfNLQ4rs8y9pGAd7dOIQ+ey2txQpurMjKWQYaOacTarabMfpkdBm6/jxoGmQf+f73O5lmPVXl1i1JzacBQli9PJmnm+XlN64EPpLm78ES0MmhJe1RS1HxNy2XkL8Ed/ZufGmQ7HzQxeyqQiLVXkJr54tRWpAep/ZhAQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716722880; c=relaxed/simple;
-	bh=GmMSVJ7/NdnOxfVSKKOI3HLrTkI94ucx8+1kX6IZD9k=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eUTvVeJ/xulcMsRXbnwMTmWIaI8S3z3o6spKJRHWhZIFppeuuotw/hOH6sASbZarKt5OlNd/5Wxp6xVuxtqJDfpiGHVTn2+6Rx9pkT1jMgp8Sjg6GKe2ARWRhvWJpYD9Y/VGCFu2CGInU/8aNd7OmJYiQ7wu6Z8Phpe9SLbiG3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoDixn5t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71EFC2BD10;
-	Sun, 26 May 2024 11:27:59 +0000 (UTC)
+	s=arc-20240116; t=1716723405; c=relaxed/simple;
+	bh=tuK+q+tknkKUu4ys8Re5d6fFHIr388H57KYcWqY8Jck=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cmiIY0IAGeu82DoLNqjwRft4VkOf/QADZjf0Oe59W/17jAK0uSz4sanvgc2CiUkq7g53/17tAq/Bi015Nwff7MgL6oEDJzL5S8cIwvEoRqKePSnTtQr3y5rX0MWPp7O5KDd0tkhE6yJq8K7hEaPFAUHxXEtlEGATfL0YOlxpmAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpyskw7o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840D6C2BD10;
+	Sun, 26 May 2024 11:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716722880;
-	bh=GmMSVJ7/NdnOxfVSKKOI3HLrTkI94ucx8+1kX6IZD9k=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=OoDixn5t7X3fk3Ov5ceb6JLx+B6TS2Irb9vqNJGR3Sg/9YZNmEcMLhr27pBlI4dHZ
-	 EEldnJrYbFxlrWUcQ1DRdJA12+Bn04gEVAwmHhHALJGENDpIxXKJhSGig9Xo4OTv+x
-	 tzgkm5thzkodgDjFpSnCY624U6AXWzRc8zgT3dl+QPHBMAqr3mFKxqRw/VKYY3SFMj
-	 VsAEAxvEZVFR2GfkqAke5RK7rm3oI5ahrH/2U2SGy3jfcqoUXkkLx2toFT54PHIB5r
-	 /b3DNWeWQBXWFEMZ9uZ9GMhv3ERZSr1PtCLckJ/7JZPK2vQWOd9iGVdTbwSIixy5Iw
-	 oAtLtnjfvsRdQ==
-Message-ID: <ee3805865e12f8ed2f82f7e99e33598f0bcc6667.camel@kernel.org>
-Subject: Re: RFC2224 support in Linux /sbin/mount.nfs4?
+	s=k20201202; t=1716723404;
+	bh=tuK+q+tknkKUu4ys8Re5d6fFHIr388H57KYcWqY8Jck=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=bpyskw7oPWR4P1njsf+tdNnVd7l8CR0+7aEUuXsCyClm6dlDST5+VB7NjWMO6zXFy
+	 DkjH2uQBts3sWiM9vqmKFKg+FOPvgQreN4mgLyz8p2c48vRE4u0vnA9GHRxlKO4QZO
+	 hxWFtA76rX1sGlaOEwLyEYtyhbzNR9IVHlM9I0MBUH0PniuvA+BIvFMSz04KZH8sW0
+	 l1XBNnuEEw1JUdR8m5VYuXSL5H+k2Ad1CBIqKWgOCzpoMLpfIaguhwX3dfn3swTGNC
+	 VIstNxbuUqYw1fHvoL406VD2gvVT4T5LIEBN7ewnsW5ALF9qTqeNgvOhXXoKzSvHQe
+	 deNPNYSKVPXVA==
+Message-ID: <eb077defaf957f458b0c70c8f012ea15d866257a.camel@kernel.org>
+Subject: Re: [PATCH] nfs: Avoid flushing many pages with NFS_FILE_SYNC
 From: Jeff Layton <jlayton@kernel.org>
-To: Dan Shelton <dan.f.shelton@gmail.com>, Linux NFS Mailing List
-	 <linux-nfs@vger.kernel.org>
-Date: Sun, 26 May 2024 07:27:58 -0400
-In-Reply-To: <CAAvCNcCGhZ917yerEOMcEEj7+_Yz5by8en2F4Yr5zLk0iQEGjg@mail.gmail.com>
-References: 
-	<CAAvCNcCTWbU-ejURuUC0_xhcoU3GF+2jX28rV4+2cKgfO5Lqxg@mail.gmail.com>
-	 <619bbf23-dbfe-4c26-adb9-1cc89f3f22a2@redhat.com>
-	 <CAAvCNcCGhZ917yerEOMcEEj7+_Yz5by8en2F4Yr5zLk0iQEGjg@mail.gmail.com>
+To: Jan Kara <jack@suse.cz>, Trond Myklebust <trondmy@hammerspace.com>
+Cc: anna@kernel.org, linux-nfs@vger.kernel.org
+Date: Sun, 26 May 2024 07:36:43 -0400
+In-Reply-To: <20240524161419.18448-1-jack@suse.cz>
+References: <20240524161419.18448-1-jack@suse.cz>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,52 +133,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-05-24 at 19:11 +0200, Dan Shelton wrote:
-> On Wed, 15 May 2024 at 23:46, Steve Dickson <steved@redhat.com> wrote:
-> >=20
-> > Hey!
-> >=20
-> > On 5/14/24 5:57 PM, Dan Shelton wrote:
-> > > Hello!
-> > >=20
-> > > Solaris, Windows and libnfs NFSv4 clients support RFC2224 URLs, which
-> > > provide platform-independent paths where resources can be mounted
-> > > from, i.e. nfs://myhost//dir1/dir2
-> > >=20
-> > > Could Linux /sbin/mount.nfs4 support this too, please?
-> > Why? What does it bring to the table that the Linux client
-> > does already do via v4... with the except, of course, public
-> > filehandles, which is something I'm pretty sure the Linux
-> > client will not support.
+On Fri, 2024-05-24 at 18:14 +0200, Jan Kara wrote:
+> When we are doing WB_SYNC_ALL writeback, nfs submits write requests with
+> NFS_FILE_SYNC flag to the server (which then generally treats it as an
+> O_SYNC write). This helps to reduce latency for single requests but when
+> submitting more requests, additional fsyncs on the server side hurt
+> latency. NFS generally avoids this additional overhead by not setting
+> NFS_FILE_SYNC if desc->pg_moreio is set.
 >=20
-> This is NOT for Linux only. Every OS has its own system to describe
-> shares, and not all are compatible. URLs are portable.
+> However this logic doesn't always work. When we do random 4k writes to a =
+huge
+> file and then call fsync(2), each page writeback is going to be sent with
+> NFS_FILE_SYNC because after preparing one page for writeback, we start wr=
+iting
+> back next, nfs_do_writepage() will call nfs_pageio_cond_complete() which =
+finds
+> the page is not contiguous with previously prepared IO and submits is *wi=
+thout*
+> setting desc->pg_moreio.  Hence NFS_FILE_SYNC is used resulting in poor
+> performance.
 >=20
-> >=20
-> > So again why? WebNFS died with Sun... Plus RFC2224 talks
-> > about v2 and v3... How does it fit in a V4 world.
+> Fix the problem by setting desc->pg_moreio in nfs_pageio_cond_complete() =
+before
+> submitting outstanding IO. This improves throughput of
+> fsync-after-random-writes on my test SSD from ~70MB/s to ~250MB/s.
 >=20
-> This is NOT about WebNFS or SUN, this is to make the job of admins easier=
-.
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/nfs/pagelist.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 >=20
+> diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+> index 6efb5068c116..040b6b79c75e 100644
+> --- a/fs/nfs/pagelist.c
+> +++ b/fs/nfs/pagelist.c
+> @@ -1545,6 +1545,11 @@ void nfs_pageio_cond_complete(struct nfs_pageio_de=
+scriptor *desc, pgoff_t index)
+>  					continue;
+>  			} else if (index =3D=3D prev->wb_index + 1)
+>  				continue;
+> +			/*
+> +			 * We will submit more requests after these. Indicate
+> +			 * this to the underlying layers.
+> +			 */
+> +			desc->pg_moreio =3D 1;
+>  			nfs_pageio_complete(desc);
+>  			break;
+>  		}
 
-I think Steve is just trying to get at the use-case for this. Who is
-using nfs:// URLs in their environment, and why?=C2=A0IOW, how will adding
-this make things better?
+Nice work!
 
-Then there are the more practical questions:
-
-- will this require kernel support? If I mount using a nfs:// URL,
-should I expect to see that in /proc/self/mounts, instead of a
-host:/export ?
-
-- do you need support for public filehandles? Those were largely
-ignored by most NFS implementors, including Linux. That opens an
-entirely separate can of worms.
-
-I'm happy to consider patches that add support for this (including
-documentation), but I'd need to understand why this is a material
-improvement over the traditional ":/" syntax.
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
