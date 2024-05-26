@@ -1,98 +1,81 @@
-Return-Path: <linux-nfs+bounces-3381-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3382-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB0F88CF247
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 02:01:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12DA38CF2E5
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 10:56:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C6A11C20D41
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 00:01:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC974B21278
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 08:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 120533D62;
-	Sun, 26 May 2024 00:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7610A8BFA;
+	Sun, 26 May 2024 08:55:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK59GkrJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gOw5oCIQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B6B3C24
-	for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 00:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A259F20E3;
+	Sun, 26 May 2024 08:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716681705; cv=none; b=JOvyrf8dLHtIf97kIHOu8JTSHRUpCngzF+mtEsm9Z9aEXbOO1ZzT3FnROWR2H9tOycLZzaG7uX8vsaSQmwzb+/ycd7HFb+mi5goV6j5JMAhLlLrbVFNTGlBEyo+h20jrLOrDKKh9zNIakWO26o1tGFlzyPKF7ufDnd0q6T+snPM=
+	t=1716713754; cv=none; b=db2Q3gi0bUBjloSIGdAN7SJ+qyMFm4lObMh98Fae4l2g3bvkWHxlI3ADwy6qPV+xWWby7jWo17sEwP0kobRZPzJJqoYElDhCZQVgx7WvJxYxIEKEvR11GxIC47U+f8sPs0G1EHXFHF6XdeOVv/H9RUY9EEdE9O/FCN1bBJS5WrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716681705; c=relaxed/simple;
-	bh=12Vy624mxOQoeYC01XZoI1hXJDJhOqfSU55FT1+zaS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gMyTEyPX8Oaovl40o9HEvvJeHDIc9nK/ax/1nipjBTBPFzmLd05N+riQURJ17pzuf41llqcu2IkUBGoXjGAW736ZXCQLq1wUO/VEwx3NWrz920rgBd9mIrkE5CwAjkm9reKA5hSsB206Dw6ccq3dPKvvB2ei5CSsJt7OWsXaVA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK59GkrJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F90C2BD11;
-	Sun, 26 May 2024 00:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716681704;
-	bh=12Vy624mxOQoeYC01XZoI1hXJDJhOqfSU55FT1+zaS4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SK59GkrJhwMd6xi7G53715iyzEjlPtXlqcK0ZQluG4DZYB66yRM9ibhjjlpitrnuo
-	 RJu+hdVcwxE/cXEoEr8KsLRy05IJmhloPwnMYIBieeaMLs7Okdq8JHq4qwrHQEYqHD
-	 zsG1AA2eAZrvjt5kbGJr0SldzQDz74gQ3w3Bj4FVaGxq92D8XJZvPoM1VVjEd2Hd/P
-	 BqrBsIZ2Exp9q6RGq7b41xmkC+99W/YI5EtD7KcoSQVFfaPfhFcBtrKNa1fv+YHZSu
-	 TdbgZRDPzvSUm+dLk2p2SuNxGrRWTjSJX5eAmhcH35/RCbm3xc0yaiVB+NVM1yXuTH
-	 Rru+yvaE2oqLA==
-From: cel@kernel.org
-To: <linux-nfs@vger.kernel.org>
-Cc: jaroslav.pulchart@gooddata.com,
-	rankincj@gmail.com,
-	Josef Bacik <josef@toxicpanda.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH] sunrpc: use the struct net as the svc proc private
-Date: Sat, 25 May 2024 20:01:22 -0400
-Message-ID: <20240526000122.386951-1-cel@kernel.org>
-X-Mailer: git-send-email 2.45.1
+	s=arc-20240116; t=1716713754; c=relaxed/simple;
+	bh=q95RI9MDo5gV6M5nrfXdCIpqiERZlKWhWNRkaZjO9yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUKgsyq3PzoKO6Uu8RL8kFQ85Sk8wSPucNrEef2cifQ+NKJ0PY6u+EFw7RgWkb+lmfDVxnxlxV+CxVgfRJ87Qzi2K4k7+nqph3IUu9WPIGimaMd/XGO9rkSFTFvJUjwOvW/4fuZnLCM3PgV+XERBB+aNA6XUJkBT0GrRP2kmJiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gOw5oCIQ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=o5fN1py3K53ZyRsgQ1po2cph7J0Yga3zhzECAnBodXM=; b=gOw5oCIQOCVVj+76645UUx3Eyj
+	gCL1ADzibvXvNk4duxrNskDQyUwNjVlqSkdGN/Qd2pOw/UsrvToWe3XDKa7KjVDuUT220RF4UA22x
+	4lJt6M9sYjN18mwCPyXXMl9eijRw8U+8gxFgSZ6HCNFNacJwexw1P6K4SLPZtxanWM9/rNJwfML48
+	DZ5oIR4rWC+ow85IUj1yGQLNVfdBPntHt2SQsikPraLCPyC+nDd3CcjOyErgfZL1zVg6cxsVhD9EK
+	pLJh0ekdnzl2tDgt1gLsBIefxcIsKgps16qF76XyJNMFym/cWVfaP/V6GFoUe6+qF5TWMXB53hKgd
+	dqywKt5A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sB9fQ-0000000CNwx-3BE4;
+	Sun, 26 May 2024 08:55:48 +0000
+Date: Sun, 26 May 2024 01:55:48 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
+Message-ID: <ZlL5FEW2haiuXWNS@infradead.org>
+References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Josef Bacik <josef@toxicpanda.com>
+On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
+> Now that we have stabilised the unique 64-bit mount ID interface in
+> statx, we can now provide a race-free way for name_to_handle_at(2) to
+> provide a file handle and corresponding mount without needing to worry
+> about racing with /proc/mountinfo parsing.
 
-[ Upstream commit 418b9687dece5bd763c09b5c27a801a7e3387be9 ]
-
-nfsd is the only thing using this helper, and it doesn't use the private
-currently.  When we switch to per-network namespace stats we will need
-the struct net * in order to get to the nfsd_net.  Use the net as the
-proc private so we can utilize this when we make the switch over.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/stats.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-
-I investigated the crash reported by Chris and Jaroslav. This patch
-is missing from v6.8.y.
-
-
-diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
-index 65fc1297c6df..383860cb1d5b 100644
---- a/net/sunrpc/stats.c
-+++ b/net/sunrpc/stats.c
-@@ -314,7 +314,7 @@ EXPORT_SYMBOL_GPL(rpc_proc_unregister);
- struct proc_dir_entry *
- svc_proc_register(struct net *net, struct svc_stat *statp, const struct proc_ops *proc_ops)
- {
--	return do_register(net, statp->program->pg_name, statp, proc_ops);
-+	return do_register(net, statp->program->pg_name, net, proc_ops);
- }
- EXPORT_SYMBOL_GPL(svc_proc_register);
- 
--- 
-2.45.1
+What are the guarantees for the mount ID?  Is it stable across reboots?
+If not mixing it with file handles is a very bad idea.
 
 
