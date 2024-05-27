@@ -1,293 +1,207 @@
-Return-Path: <linux-nfs+bounces-3395-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3396-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D8638CF889
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 06:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 04E3A8CF8A5
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 07:16:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8123C1C210FF
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 04:50:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 242791C20C90
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 05:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC44D512;
-	Mon, 27 May 2024 04:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04EC079F0;
+	Mon, 27 May 2024 05:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YUaJ7g88";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jGD4+v8J";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MV1fqNgG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5LHvDK8m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwAnCtvi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B71CD50F
-	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 04:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564252F24
+	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 05:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716785424; cv=none; b=d9fl+cRaMQFxMzIE3OEHJYEB5P/UIh6huj7w+4HDVLiRY8eXVlgcVcV5dFsC5rT+Q/kPddXFLtqdg5nJJapo04/XISjZyBj6kjBPBOlrq6DBmrpMUNH0ip3Wfj/1LBfHU81IRhgwXL8TuMQegGJb9S9Sb+x9tkMXjNg0E1BK8G0=
+	t=1716786974; cv=none; b=W2govaCnrFeOPbOHsfSd1V8nLg7hhiQH0i2rwwsH/XViMh+y71jktDMb73/kHyCXLJyjTukeSK/gDOmC3MYugcU+cLJAqLZ5d6p7QusYTBobrBh/e9wdf6KXzsvniHIVK15eP5lXx6QCZCDOYQI/sSPO9e8PjbFkc3VX6lc+qDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716785424; c=relaxed/simple;
-	bh=qimbW9Mc1AQ5Hn+LUOKA2MqOn1jU1S3x5H/q9sfIahU=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Bv40R9BkquCeCakIU50F1pSI/WqR9NJhzAXRI5t6yI3D59m7SgoIbhMX+k8KVKLabJXNqKOkvmHkhGDvsLW6a17NaeH3MtauKVUu98EfmzRl5jk97g2H7HYwK4dyO+Ogf5p6zSCJmrW/ZPXDAhDkoFqcFn/meXvX5PqLsdGEzfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YUaJ7g88; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jGD4+v8J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MV1fqNgG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5LHvDK8m; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9C87421C18;
-	Mon, 27 May 2024 04:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716785420; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sB2zXpspf+7lsVA02dFuDWSk/9YYkCX0+RGKnpga/Yw=;
-	b=YUaJ7g88rZ30cLwfedkdKGlzXfj3VfxqjiQztRBQ7LRyrSy9Kr90rook9k8Lh+69/xquNn
-	JVuPW8hIUjD2+5c0zO5SA9RgbH4oMR91Kaxvj4G85QXiLYQoYSIuC6usLe7cZYyflzePeW
-	1pBZHdsAwdBpqODcRXIy4VutJRbbybQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716785420;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sB2zXpspf+7lsVA02dFuDWSk/9YYkCX0+RGKnpga/Yw=;
-	b=jGD4+v8J+991XZehqUdJLPbAz8xMuzrWFCN2FAsMPeTZVdHc90zdYqHQaca8IgJ1G+EOiq
-	3RMonYWjqxkj8JDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716785419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sB2zXpspf+7lsVA02dFuDWSk/9YYkCX0+RGKnpga/Yw=;
-	b=MV1fqNgG6EvAtremghHgIkjHGdEUtlR6SEfnEHBOb88fDihW97OY2dzboOHhrc5dfsQkeh
-	YeOgFClxD1VfjNdGCyOxfu0xP5PZ0TFNLjvYnbNgExWCT+DOhh7VL2irljxux0YtXt9T3H
-	bgYuCvLat6cksxTAwYwM/rE8i+2uJxk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716785419;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sB2zXpspf+7lsVA02dFuDWSk/9YYkCX0+RGKnpga/Yw=;
-	b=5LHvDK8mh8JI7/yTNIIeWcTKNDw3otYskFX6zOxtWG2CI0lccpdkEd77U2Z08sdm4TEQtj
-	WXr6ouWGj/NaJJBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B9EA913A6B;
-	Mon, 27 May 2024 04:50:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ne9NFwkRVGZhCgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 27 May 2024 04:50:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716786974; c=relaxed/simple;
+	bh=eb91lajp8bC4qQhybIaYDq+lFrOicsCW9PfhAmkDF2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=nOYH46scCcgALBJastsjCTnSAjJ9IHHCBl3aeCzj2sHXJChcc8dovWhaaP4cOqjrxZxj46XYQEjU0HtmlyGJ6bQHxLTBCsa2ozW409wZl+EC75BR792QjdBVXJgaEZi6gau/f6l3el6vIiMNT+68eQSIgjGOx7grpHaY6kG3uWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwAnCtvi; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso3051860a12.1
+        for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 22:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716786972; x=1717391772; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FCMb0Zy9ZpWBJ4JOXHIrTU4BjPrmbDZu8qFQLBYkJ8Y=;
+        b=gwAnCtvi4aSdfUDgyvx+DiSNivYW9ErWoGgAbQfBGKRj2T+xzK4MAQkEIrnPpoFPdD
+         sTa+vHneZvfksVyZD3PN1KXIcPoXGpEebEZGXw0QBd2o3f49mYXejJjHhpavsgwBRc8f
+         mBFIEdQmCDaIUsGlGHAk9cCmoNJ93mVA50Qe5eIFqW2W12f/uw0LxLi9SnvFs7U4esqs
+         f6ePDA+NfKi7xHUDe8KKs42/3O+dQLQCvKqonkEO/oJBdCEdrD1Ez+MBqdZucEe0k+dj
+         X/vxFHldCjjnenTeDOyjhbNuvGPHPcdqOtaJkHmLf2CVT5ToaoAqYkQ2mIhE8yAgEm2Q
+         4IOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716786972; x=1717391772;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FCMb0Zy9ZpWBJ4JOXHIrTU4BjPrmbDZu8qFQLBYkJ8Y=;
+        b=jTT6UVMHsE73RDU4UBeWE1DMWmX+5opZlm94bwyEaWsOBAP0+sZ20sJ+ML+womHBsu
+         S0az6aWCghrTOgYBbZT252DV8qeRFkhgq8ruFVpW9eImT7JO6qfKPzFU+XccPu2mDTYg
+         Nez+mHG5sooeqYKcOUcj14DoZ5IjrUZ1TkbpjHxlgeozf1gCybAuUAuamNVM0exbpjFM
+         cKXs6bzwUNJAPrieI4c684AyWeZsoW+E64wbKcueb/fU8qWaf6n5sRxbI9E2qFzDrQLW
+         Fjfe6vPh/2hu3G7jqqZL+Jvux+XyEQmtdvW2xmKBJfotGRDqfN5BP7OBPhxihuu+HhTk
+         a+aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqbzGOCmgfsS2aHCljF4bRVoYFNjSsfXCAAmg1EB+0/tjMqb4+L+l62jZMk7LbPj6GAJRdLH+UC8GJWkMRGReP4LVqY6DU3CxL
+X-Gm-Message-State: AOJu0Yz/pugS1dDvHc7dtuTlJGtytMJlVO/ZgqfW07uW2z/YUEAYhT1+
+	Jw79icleB0c69UiVcUlTGQexjwTxT/pl6NyQ0iymtJIhxHMdxKj8hOgTJNAgJqusOKrBAs57YGc
+	GfYvaXOTAhWAo0EvZg+Zq009RFRszFpoM
+X-Google-Smtp-Source: AGHT+IGh3emadAtNLo9FSZT38a1f1IcVqbe0VI0UBp4hBlO5UjfRcc24KFx9LeRV6Y1MItiS1gHdRQBpQbO07uLfJkM=
+X-Received: by 2002:a50:f68d:0:b0:578:5f47:145a with SMTP id
+ 4fb4d7f45d1cf-5785f4715e3mr6533922a12.4.1716786971496; Sun, 26 May 2024
+ 22:16:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Richard Kojedzinszky" <richard@kojedz.in>
-Cc: "Richard Kojedzinszky" <richard+debian+bugreport@kojedz.in>,
- linux-nfs@vger.kernel.org, 1071501@bugs.debian.org
-Subject: Re: Linux NFS client hangs in nfs4_lookup_revalidate
-In-reply-to: <EB269D8D-03FF-4ED1-B64C-E41B111B4AF8@kojedz.in>
-References: <>, <EB269D8D-03FF-4ED1-B64C-E41B111B4AF8@kojedz.in>
-Date: Mon, 27 May 2024 14:50:08 +1000
-Message-id: <171678540815.27191.15492517697816891799@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[debian,bugreport];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+References: <CAJiE4OkE5=6Jw3kf+vrfDYsR5ybJDKUffWGXAQd2R2AJO=4Fwg@mail.gmail.com>
+ <CAJiE4Okdie0u0YCxHj6XsQOcxTYecqQ=P-R=iuzn-iipphkwHQ@mail.gmail.com>
+ <04BECFE4-7BC0-40CE-90DE-9EEF0DB973BF@oracle.com> <CAJiE4Ok5FLgk0Asq92m7HhDwAgbiTuWo57ff=i_zaOxhnV6YvA@mail.gmail.com>
+ <CAJiE4Om+HWMCuQYsxsaOCnTAZAuLxA4B+3phqeTJNT81gp_mJw@mail.gmail.com>
+ <CAJiE4OnNpnJb7EYfujgcRbaUPqruo2j3hOdmmt3LHNHEJ8bw6g@mail.gmail.com>
+ <ZcecJNwQnXPpJ3fT@tissot.1015granger.net> <CAJiE4O=7C=6rAfkzw4dT9bs_VrxLCqYhp1tszn2h62P2ZVuiGg@mail.gmail.com>
+ <36C42C4D-E296-41B0-8418-1CFC5AB61107@oracle.com> <CAJiE4Okpwnh4aQvfaVqaSt=vHo6cVuid4w9Xd4_yGEaa3ZkGQQ@mail.gmail.com>
+In-Reply-To: <CAJiE4Okpwnh4aQvfaVqaSt=vHo6cVuid4w9Xd4_yGEaa3ZkGQQ@mail.gmail.com>
+From: gaurav gangalwar <gaurav.gangalwar@gmail.com>
+Date: Mon, 27 May 2024 10:45:59 +0530
+Message-ID: <CAJiE4OnAwurNwF+jRB84H3sfM2VK5+4Ci3a6ovrZk75zmV2Hdw@mail.gmail.com>
+Subject: Re: NFS4.0 rdma with referal
+To: Chuck Lever III <chuck.lever@oracle.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 27 May 2024, Richard Kojedzinszky wrote:
-> Dear Neil,
->=20
-> I was running it on arm64, may that be the reason?
+Hi,
+Facing one more issue while using referrals with RDMA
+If RDMA is enabled and supported on both client and server and If we
+mount parent with TCP. Then referral/submount mount will be done over
+RDMA instead of TCP, since for referral/submount mount the client
+tries with RDMA first and then TCP only of RDMA connections fails.
 
-That could certainly explain it.  I know x86_64 almost never needs
-barriers, though I have seen cases where they matter.  ppc64 is very
-sensitive.  A quick search suggests that arm64 does need barriers some
-times.
-I don't have arm64 hardware to test on but I'm happy with your
-test results.
+As we can see here parent /home  .160, mounted with tcp, t1 is
+referral mount mounted with rdma
 
-Thanks,
-NeilBrown
+> /root/tcp-mnt1 from 10.53.87.160:/home
+>  Flags: rw,relatime,vers=3D4.0,rsize=3D1048576,wsize=3D1048576,namlen=3D2=
+55,hard,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,clientaddr=3D10.53.87=
+.158,local_lock=3Dnone,addr=3D10.53.87.160
+>
+> /root/tcp-mnt1/t1 from 10.53.87.157:/:home/t1
+>  Flags: rw,relatime,vers=3D4.0,rsize=3D1048576,wsize=3D1048576,namlen=3D2=
+55,hard,proto=3Drdma,port=3D20049,timeo=3D600,retrans=3D2,sec=3Dsys,clienta=
+ddr=3D10.53.87.158,local_lock=3Dnone,addr=3D10.53.87.157
 
 
->=20
+Code which tries RDMA first, can we get transport type from parent and
+use the same?
+
+> #if IS_ENABLED(CONFIG_SUNRPC_XPRT_RDMA)
+>
+>         rpc_set_port(&ctx->nfs_server.address, NFS_RDMA_PORT);
+>
+>         error =3D nfs4_set_client(server,
+>
+>                                 ctx->nfs_server.hostname,
+>
+>                                 &ctx->nfs_server._address,
+>
+>                                 ctx->nfs_server.addrlen,
+>
+>                                 parent_client->cl_ipaddr,
+>
+>                                 XPRT_TRANSPORT_RDMA,
+>
+>                                 parent_server->client->cl_timeout,
+>
+>                                 parent_client->cl_mvops->minor_version,
+>
+>                                 parent_client->cl_nconnect,
+>
+>                                 parent_client->cl_max_connect,
+>
+>                                 parent_client->cl_net,
+>
+>                                 &parent_client->cl_xprtsec);
+>
+>         if (!error)
+>
+>                 goto init_server;
+>
+> #endif  /* IS_ENABLED(CONFIG_SUNRPC_XPRT_RDMA) */
+>
+>
+
+Regards,
+Gaurav Gangalwar
+
+On Tue, Feb 27, 2024 at 6:22=E2=80=AFPM gaurav gangalwar
+<gaurav.gangalwar@gmail.com> wrote:
+>
+> One more issue with referral code is there is no retry on connection fail=
+ure
+>
+>> Feb 26 01:49:32 rbt-el7-1 kernel: nfs_create_rpc_client: cannot create R=
+PC client. Error =3D -111
+>> Feb 26 01:49:32 rbt-el7-1 kernel: NFS4: Couldn't follow remote path
+>> Feb 26 01:49:32 rbt-el7-1 kernel: <-- nfs4_get_referral_tree() =3D -111 =
+[error]
+>
+>
+> I was expecting retries from the client if submount fails if it's a hard =
+mount on parent, but it fails submount.
+> I can understand we will be stuck in a loop if fs info is not valid, then=
+ connection will always fail.
+>
 > Regards,
-> Richard
->=20
->=20
-> On May 27, 2024 4:02:32 AM GMT+02:00, NeilBrown <neilb@suse.de> wrote:
->=20
->     On Sun, 26 May 2024, Richard Kojedzinszky wrote:
->         Dear Neil,
->        =20
->         According to my quick tests, your patch seems to fix this bug. Coul=
-d you=20
->         also manage to try my attached code, could you also reproduce the b=
-ug?
->    =20
->     Thanks for testing.
->    =20
->     I can run your test code but it isn't triggering the bug (90 minutes so
->     far).  Possibly a different compiler used for the kernel, possibly
->     hardware differences (I'm running under qemu).  Bugs related to barriers
->     (which this one seems to be) need just the right circumstances to
->     trigger so they can be hard to reproduce on a different system.
->    =20
->     I've made some cosmetic improvements to the patch and will post it to
->     the NFS maintainers.
->    =20
->     Thanks again,
->     NeilBrown
->    =20
->    =20
->        =20
->         Thanks,
->         Richard
->        =20
->         2024-05-24 07:29 id=C5=91pontban Richard Kojedzinszky ezt =C3=ADrta:
->             Dear Neil,
->            =20
->             I've applied your patch, and since then there are no lockups. B=
-efore=20
->             that my application reported a lockup in a minute or two, now i=
-t has=20
->             been running for half an hour, and still running.
->            =20
->             Thanks,
->             Richard
->            =20
->             2024-05-24 01:31 id=C5=91pontban NeilBrown ezt =C3=ADrta:
->                 On Fri, 24 May 2024, Richard Kojedzinszky wrote:
->                     Dear devs,
->                    =20
->                     I am attaching a stripped down version of the little pr=
-ogram which
->                     triggers the bug very quickly, in a few minutes in my t=
-est lab. It
->                     turned out that a single NFS mountpoint is enough. Just=
- start the
->                     program giving it the NFS mount as first argument. It w=
-ill chdir=20
->                     there,
->                     and do file operations, which will trigger a lockup in =
-a few minutes.
->                =20
->                 I couldn't get the go code to run.  But then it is a long t=
-ime since I
->                 played with go and I didn't try very hard.
->                 If you could provide simple instructions and a list of pack=
-age
->                 dependencies that I need to install (on Debian), I can give=
- it a try.
->                =20
->                 Or you could try this patch.  It might help, but I don't ha=
-ve high
->                 hopes.  It adds some memory barriers and fixes a bug which =
-would cause=20
->                 a
->                 problem if memory allocation failed (but memory allocation =
-never=20
->                 fails).
->                =20
->                 NeilBrown
->                =20
->                 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->                 index ac505671efbd..5bcc0d14d519 100644
->                 --- a/fs/nfs/dir.c
->                 +++ b/fs/nfs/dir.c
->                 @@ -1804,7 +1804,7 @@ __nfs_lookup_revalidate(struct dentry=
- *dentry,=20
->                 unsigned int flags,
->                         } else {
->                                 /* Wait for unlink to complete */
->                                 wait_var_event(&dentry->d_fsdata,
->                 -                              dentry->d_fsdata !=3D NFS_FS=
-DATA_BLOCKED);
->                 +                              smp_load_acquire(&dentry->d_=
-fsdata) !=3D NFS_FSDATA_BLOCKED);
->                                 parent =3D dget_parent(dentry);
->                                 ret =3D reval(d_inode(parent), dentry, flag=
-s);
->                                 dput(parent);
->                 @@ -2508,7 +2508,7 @@ int nfs_unlink(struct inode *dir, str=
-uct dentry=20
->                 *dentry)
->                         spin_unlock(&dentry->d_lock);
->                         error =3D nfs_safe_remove(dentry);
->                         nfs_dentry_remove_handle_error(dir, dentry, error);
->                 -       dentry->d_fsdata =3D NULL;
->                 +       smp_store_release(&dentry->d_fsdata, NULL);
->                         wake_up_var(&dentry->d_fsdata);
->                  out:
->                         trace_nfs_unlink_exit(dir, dentry, error);
->                 @@ -2616,7 +2616,7 @@ nfs_unblock_rename(struct rpc_task *t=
-ask, struct=20
->                 nfs_renamedata *data)
->                  {
->                         struct dentry *new_dentry =3D data->new_dentry;
->                =20
->                 -       new_dentry->d_fsdata =3D NULL;
->                 +       smp_store_release(&new_dentry->d_fsdata, NULL);
->                         wake_up_var(&new_dentry->d_fsdata);
->                  }
->                =20
->                 @@ -2717,6 +2717,10 @@ int nfs_rename(struct mnt_idmap *idm=
-ap, struct=20
->                 inode *old_dir,
->                         task =3D nfs_async_rename(old_dir, new_dir, old_den=
-try, new_dentry,
->                                                 must_unblock ? nfs_unblock_=
-rename : NULL);
->                         if (IS_ERR(task)) {
->                 +               if (must_unlock) {
->                 +                       smp_store_release(&new_dentry->d_fs=
-data, NULL);
->                 +                       wake_up_var(&new_dentry->d_fsdata);
->                 +               }
->                                 error =3D PTR_ERR(task);
->                                 goto out;
->                         }
->        =20
->    =20
->    =20
->=20
->=20
->=20
-
+> Gaurav Gangalwar
+>
+> On Mon, Feb 12, 2024 at 7:23=E2=80=AFPM Chuck Lever III <chuck.lever@orac=
+le.com> wrote:
+>>
+>>
+>>
+>> > On Feb 12, 2024, at 12:51=E2=80=AFAM, gaurav gangalwar <gaurav.gangalw=
+ar@gmail.com> wrote:
+>> >
+>> > I think I was using an older kernel version on a client which doesn't =
+have your fix.
+>> > I tried with the newer version v5.10, it worked fine.
+>> >
+>> > The only issue I see is we are not inheriting port from the parent in =
+nfs4_create_referral_server, so even if I use port=3D20047 in mount it will=
+ try referral submount on 20049 only.
+>> >
+>> > rpc_set_port(data->addr, NFS_RDMA_PORT);
+>> >
+>> > We could inherit this also from parent?
+>>
+>> The client is supposed to use the port number information contained
+>> in the referral. There's nothing that mandates that the two servers
+>> will use the same alternate port.
+>>
+>> Using a constant here is probably wrong for both the TCP and RDMA
+>> cases, though.
+>>
+>>
+>> --
+>> Chuck Lever
+>>
+>>
 
