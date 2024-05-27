@@ -1,282 +1,333 @@
-Return-Path: <linux-nfs+bounces-3414-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3415-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC488D080C
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 18:19:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7006B8D0866
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 18:26:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFE471F2259A
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 16:19:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 931CB1C2286B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 16:26:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C4B17E90C;
-	Mon, 27 May 2024 16:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D335361FFB;
+	Mon, 27 May 2024 16:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="ZMUFf520"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="y5+covNx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2095.outbound.protection.outlook.com [40.107.236.95])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E162629C
-	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 16:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826466; cv=fail; b=SNeLGW8PU2ZNAF3PUs2z0dcuYDl8squbatlTFrouT4fd6aSM7pScpKTddrUX5zGWS8hfL4E17eSa27t7j0z8S0zj13hWMFYPmGaEyT8N/RieNsGvquhcBJjqA2qtpH/fiq9GilU3m5L6+ESkekDMtd+lbkDO1bqTsRDvfweVCc4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826466; c=relaxed/simple;
-	bh=lvlbocSslKCXsXKwVgC2Q6DjOWZ0BSfauDB6lXx7NjY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GM7jhj0iNyj992BeowFWj385iWWxJ4s9klRE6Q3goUWVJ6Cz8xBUd7mZK1z/8rpsNJ4QB+aB5HL2J+qlOsDS8s5BKF0Whku7XHW2UTlxOwOtFNldqSt8h3rPwMlaRsgRp+vYqfF5JC4YSoEPqtD4WbUVL8HMVMJV5U3q0c/roBY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=ZMUFf520; arc=fail smtp.client-ip=40.107.236.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S+AftLGVO1CN1mU9WlqPgLFTDeE65v9xFEhsaYX8J0oOvl0sYWMkgR8d7Qnq6FA4PohgxVYkffz73l/BgeKLjm2W8hWpM7efnxxQSiZ4hoVAeESPvzEkhiUjJI74LBFhTaDY1f7F44FA99D5XTlf19f85bCxMJlR3u3AY2FN3dpwd3+GQXvlzxLhGuz6oOYAKTkM4TRZkV+2i37bXmRXJtPN1nOh1a08/3mvlrySn2IDBYqmat6U29mQWNxCqUCFnJm895gzLy41HxED/hHhM0amJ85wA3PdjrZXrGtObgsnVsDX0uIu0p37WWTPhrY1Weua+YVBrQeMK+MQl1v8Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lvlbocSslKCXsXKwVgC2Q6DjOWZ0BSfauDB6lXx7NjY=;
- b=gljx71wGGcms7iSaiFbo4DYuRxbfAfyqZxub2DUipx4DsHA84gZcdIXgOlg3yQ5fHPCdCXkGvoZXE2bPUMp2KUmofuJJHYt4I21wYo8iT0iVRdBzAd13TILYAuKecQDT5YjkUCV26uFNk0hnpuYmLzF2zqvFjiCtjNNnz52DZ8/EzERQtcmZ2mFoXEdlHE2izh5jh4+WlkL9Cy75uE4m0xBMzI2mNSXjfVDRurhAZZBu1r/2g5i70TmMZ1UPCe9bPoPYtq7Wg72aTRySm204l4+F7QwdcvIMqyGhmHREQim2bQAbR8K4Qq7JEhKg0N66ZTd8LXztrueJ3kq4BKu4ZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lvlbocSslKCXsXKwVgC2Q6DjOWZ0BSfauDB6lXx7NjY=;
- b=ZMUFf5209DlZUx8BI913sbCRt+E/VpUhAAeCsFCIZdd3yd0UQ9+ZKgGYkHxR0q2dmquMtKqxj+th0ueszam8T+cOh9i+nYxF+TSlzOpk7n+3aiBKYH3Ph7dvQT8O29IP6mA8e/TCTMfJrvMKDdG/vxMB/zzOYC4MlPIyZgLlH/w=
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
- LV8PR13MB6557.namprd13.prod.outlook.com (2603:10b6:408:229::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.16; Mon, 27 May
- 2024 16:14:20 +0000
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871]) by DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871%6]) with mapi id 15.20.7633.001; Mon, 27 May 2024
- 16:14:20 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "anna@kernel.org" <anna@kernel.org>, "neilb@suse.de" <neilb@suse.de>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"richard+debian+bugreport@kojedz.in" <richard+debian+bugreport@kojedz.in>,
-	"1071501@bugs.debian.org" <1071501@bugs.debian.org>
-Subject: Re: [PATCH] NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-Thread-Topic: [PATCH] NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-Thread-Index: AQHar+KTHwwwwsDV00+el7pgbq3jKbGrQhWA
-Date: Mon, 27 May 2024 16:14:20 +0000
-Message-ID: <a14f4bc37abb28c20cac7de3722f4b86c1fd28fb.camel@hammerspace.com>
-References: <171677905033.27191.7405469009187788343@noble.neil.brown.name>
-In-Reply-To: <171677905033.27191.7405469009187788343@noble.neil.brown.name>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|LV8PR13MB6557:EE_
-x-ms-office365-filtering-correlation-id: 0b7b2623-a527-4a42-888b-08dc7e6810c8
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UU1SQlRkWDg2SkZNRTRJQkNRL3BOeEozVWVZbU95aVlWdmVOdVppM0pxcjR3?=
- =?utf-8?B?NmxtYWV6NDkyTXpFRyszVHZuZUhlRUNaakRqN3NLaDdqckpVSml3aGY3RitE?=
- =?utf-8?B?NkE5ZlU4QzdrZlArVUFTaEM2ZE9RZmM4NW9LVVdGcE9IcGc3N2NJYVhuTEtE?=
- =?utf-8?B?ZE42LzFVTUd3d3dxNi9KK0VVN29STWN4SUl1RmpXZnZkWGxGcGhWNTRKeDd1?=
- =?utf-8?B?S0JhWFZncVZBRjM4VTlMbTBVTWd6YW1FQ2p2YVcrUkgxMVJQK1NWdStWVHM4?=
- =?utf-8?B?ekQvYnRRbDI5aUFTN3pEd2FpeUdqUGN4dVJMVU1tYnYzcUJXNkJqdzd6Z2lw?=
- =?utf-8?B?dDBpbkZJdzltQ3R5YzBSQlcwYW5na0JJblFuQlNzdE1JQVNRZGNkQnh0MllC?=
- =?utf-8?B?QjVHTjJoS0lpMkJPVTFqWU85RGZaUWNobWtXZlR0N1BHL1kyampNck9GNkNX?=
- =?utf-8?B?ZG9FWFZhQ1phUVNVVG0ra054aVUzUkdyZnEybUtGMzAvRkM0S2FJSXRsVVll?=
- =?utf-8?B?TjVtZERVK3BHalhnOVRzcDZtbUhPb0xuS1gwNWRGYVlVcEdJanM3THdsSC9H?=
- =?utf-8?B?T0t4V0l6MEZrU2U5MFUzTDFIaXZrRzMzanJzQTVZYkxJRVpuNWM1WWRGWFZk?=
- =?utf-8?B?QWRZREk1UkszSFdlcWNQOElPR0xpZTRGZ2RFZkxNUGJQZW1mdXM5ZjJzRWkw?=
- =?utf-8?B?VUlEeWVpVGNOOW9NVmh4Y2FnKzBCSTdETEloZ21KeVNuVDZ5SFB6TVlMUTVw?=
- =?utf-8?B?U1hsZWgwNXdPdm5ESDIvck1ES3krTVM1V01Xclh1ODVmc243NEsyMUsrQU1p?=
- =?utf-8?B?ODVZcytQcXRFTFZPeXpSNTdqMnFQOHJPT2FYUE9oV3dKdk1VNGV2OTROdkl1?=
- =?utf-8?B?cnprUlY4clV4U01OdzV3Q3JyUGppcEFYV0x0OGZGSjhyUjFMSTV6am11YkVW?=
- =?utf-8?B?aFhLQ3hXVys3ZGhZeXBLM3VoRFYyKzAwQ3lVM2ovS29YQU9lNlhrTXJsWWYr?=
- =?utf-8?B?RmhoQU9PNW1SK3ZzNVhWd2pIMDR2M0RsK0NIZ3Vqa3RKZkRIamNNTUFYRWw5?=
- =?utf-8?B?Vk9VRVQ3aXc1ZkdlVmhrVmJmdGYzeFhpUktRR242YUo0NGNMRldlTDFFRXht?=
- =?utf-8?B?WVI4UXhaVjUrN1ZWa3RzUzV2SDQ4OG4xeW9ITzJ0WWh3L3dsakpZcUVwRGJU?=
- =?utf-8?B?dG9xV3JOK3YwMGI2NFE5RWlNNEJEbExSUEkyOXNXYldDUXpsVFY0aTE3djg3?=
- =?utf-8?B?dDJHUWl1V3IreGQ2cU1SeTN4TGlGNmRxN2I5ZmovdmxtTjhFZlpTS2x6aWRI?=
- =?utf-8?B?WXUyTWFvZHp4TWdBbk5sSWhLMmJnajc0dnFnYlF3UnYvR3pGZGhta2dXNXB6?=
- =?utf-8?B?NFJGcGg5RTM5dG45M21ZTlFWbHpxWEViOE43TU9MNTV2QnFybG92Yk0xMDI3?=
- =?utf-8?B?RnFqd2hkOFpxTjZZNWRzaldPT1B1c3ZMelhjUnE4NGFYTE85Y002ck5aOXBh?=
- =?utf-8?B?cFNXbkNBMnJ0ZEdUSlcxR295emlOYjFmWWhUTitqeWtNRUtuOHdlY2FvTmMr?=
- =?utf-8?B?MW8rUTR6MDVURnFncUxhSEoxakw1QlcrcGR2UEhYVFNIa0dUa1YrbzRiRHJU?=
- =?utf-8?B?RlpDazY1WlhsNE1hWkZVbnBvWXJqalpoTFd6RCtNT1EweFl0UVExSE9OVVQ3?=
- =?utf-8?B?eGYzWVRvVmtUN0ttcWxJNlZWNmJ4VlBHUExVR3UrK3czZUVVRGpUbFFRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Zm8rTDlHNTJNTWI1a293MTYvbkg5NGY0Nk5jK3g3d25nMWxlZS81b1RPb0NU?=
- =?utf-8?B?NVMrY2ZUd2xQZktTZjM1UWUwcnN0OXo2dXhBN0kxV1UxQy90djRGNXZ5YThK?=
- =?utf-8?B?d1RmVlZVVVYvL2JWbkxHU0JtclQ3QnRoS1dIc2RZbjR6WHBCZXRPRXR2RUh4?=
- =?utf-8?B?Zk1XOGMxK2NOSHNGMDltYjBXNm5lYmZXcXB5K08zb0dpS1RHQ21GRUdENXlZ?=
- =?utf-8?B?Q0hrUC8vKzlYY25hRTZLNUtaTHFpSi9zWHYzd05HMVBrUXRLYTU4QkhKbldL?=
- =?utf-8?B?dHBmTHZ2ZUxjZjRJWHZKdk9Yd3RwekFoVEttbDRUR0JGVXE4YnVNdENjS29G?=
- =?utf-8?B?M09uTEVNY1BHNUFPOFdQY2lkTUN2NkpML3hSZVcrdUd4ZmNtMnFFZE5qQ3Nz?=
- =?utf-8?B?aEp3M3BaM2l1dkZGVzJiT2o5TkF5WUhwaER0OEt6ekZYRzZhTEcwSVMwMllN?=
- =?utf-8?B?RGxCa1JtdnE4ME9VYlhQNExNaWZzQ3lNUzl1Sm00aWsvSnk5R3hUM1RzNWtt?=
- =?utf-8?B?SUZjU09ieFZNZ1VwYnd2VmRvRDlhZmtBbktGU28rVWlkT2svLytDekdUOFkv?=
- =?utf-8?B?dzVpSU41aDNzbzdVTFNkMFhkdjhtUHJlYkN0bkZJNzZhL2RKS2RNNlVlTmlj?=
- =?utf-8?B?UHl0a01haXZ2NnBldmdrNW1nNERiK3F3YStpdGR4TXN6eHV6MzJsQzZoYUJm?=
- =?utf-8?B?QWpFSGl4N3J6Wmh3WEJFaGNaWWloNFJMbmdEK1gvZUw1RFNKQXJYM0JXWjFG?=
- =?utf-8?B?dnVFMy82R1F6QnZ0R2tMVndjWUNqaHVUTkNtcy8rNnNyTE1ETmxaVk12UDZy?=
- =?utf-8?B?TExkMGVSeFpIN2hkdy96UmtRSURMRmF2KzVWbm5PdDZVREVtemt0bUdMNUE0?=
- =?utf-8?B?WGdaRmFKVjVSK01ickxBV202eUFEY0NoL2ZKbi94MVFpRHFRQk1ENzJyaDBE?=
- =?utf-8?B?TkNLY1E3L3YrUmw4VTB4UlNMZmVXYWJDYWxQMnl5WnFtRko5azZaSy91cTZw?=
- =?utf-8?B?VjhVbTl2S3VzMU1SOUhsNWdJR0RIclRpa3JkWFNZU1NYTGRJYmVJT3hqWmV5?=
- =?utf-8?B?Wk9ySU1uellUYjZmZjlCcE1qOHMzQ0Nya1JsaEpnczNGcm1vNjJCbjNZTVk0?=
- =?utf-8?B?ZTRZdWFXZis5eHduUGxzWXB6Z0NIc3ZuangvcnM3WUtUK2xpc1hFZDd0RCsz?=
- =?utf-8?B?SEFBeXg3NXh6REhKQXlPbnhjd2l0cit1Q3NaN3RRdC9rUU5EVTZMMk1rR2Nx?=
- =?utf-8?B?Q09GT25zbGExWUh6MWIzQWpFOWc5WXF1cDRua25FRmJ5NStCVmtRY1BhVmUz?=
- =?utf-8?B?T1phdzkwdnd6ZlZxYTVGZjd1K2R6Y0JpUUsrOW5QZmgvTWFNT2M3YTdQQ1B3?=
- =?utf-8?B?S1laUWlBb2liZHJQdzJxa0JxT2lOU3B0d0lrYXFPVHBLbmtmUFEyM0pqTVNm?=
- =?utf-8?B?bHRSRUF6MGpacXI5aXBTT01PcW1XVXJmNngzWUJNVDMxYjMrek5IRFFwV1Jv?=
- =?utf-8?B?cHlkVTU0eXM5dnpya0RJa2VtYkJ0Z055ZXlra1pCVFFNdEQ4Sm5iYUt6WkRQ?=
- =?utf-8?B?SjBZbHJYT3ZNNy9GOENUalB3OWpvR0R1aGZ3MmoxWm1LbitaSVFFT1MyRS9u?=
- =?utf-8?B?SnhJb29aUFpIdWxaTjdyVjh1ZXNyYnNuc1A5US9LSkhxRC9yMjRWaFJxaEpp?=
- =?utf-8?B?VlBoRWlQZCtpaUdUU05mVDRVUVdlQlFnN1ZLeVRvVjBjb3BMMDNSaTVvbUt0?=
- =?utf-8?B?UTZybmpybjg2ZjdQWDcyMlppMlJ1SmlpZjlRN0Z3dFI4R09KWXZUOWJYVTIy?=
- =?utf-8?B?YjlNaW5MdUlsKzYxTDJUK2Z1YnFrblBVOE1oVDdrVWlMK0t1bFgxVDBrcW9t?=
- =?utf-8?B?d2QxYmN0NzhzVXlPMGVITlRNN3ljQWJPQmFBcjB3M3ZaTkl4UWkwT2FaUWFo?=
- =?utf-8?B?UkI5QkFwL2NKbUZ0aDhmdXhPd1RLRWoxbnpqOWc2ZW5tOVRTZ1h1TEpxT21R?=
- =?utf-8?B?UW1YdjdmRlpZV0Q4Q29rTkpBS0dXa0JCRmFWVlMwK2JqMUpUTVlhUmZLRlVW?=
- =?utf-8?B?bDJ4Z21aNFVhRUdvQ3VabVlKNmJ3eDRpdmlNTGRheExTUDJFemRmWkpLcE9Q?=
- =?utf-8?B?bkVvR0RCOHdKOE5oc0U5Q1ExU00yczBIb3VJNXNjYmhTMWZTWkh3VEhOU3lv?=
- =?utf-8?B?VCtRcGVzcTRzRStRNzFwcWdLSGFYNnRWeGcyVmpLTXRpZUx5RkRSTmtuemMy?=
- =?utf-8?B?MmhTYkNkUENucmRMajVXR0xiWE9nPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C51FC0E61CBD844794CB3B9C17B45334@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F251640B;
+	Mon, 27 May 2024 16:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716826649; cv=none; b=ZYHRw7EzVNPzWMnehzKfNVXwhq/Donyo6VPsNW7K7CAMrF/CR1r1F6C1OJyyzl8KAN9l5N45xDJrreBHvNSNwwk2dmdnw4WkLRBzkZnidR0NoM3YKJ0mK9DBekWjiHmrgwjp+tnizbQX0JlMeCce3zu0L/Eai1kYL8ICDf+DM58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716826649; c=relaxed/simple;
+	bh=iSWRUmqOiPqtPPGm+a5ZldxebOLJrjKUDsbfRT+KKP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lVfSPR56iQTcya5kJnq6Ne4TS0lwXtdzq0xaeLNuhwnzevQZM3vmC9i5h6/SNZasPL79srnNhEHgq3hAsjxWHH5+IniI8MfOXlI2x6d94HVVU7juMPUFbXwUigSSmWRDLs+fJOCPqFs+RrED+XFM4MteHdtmsNbwH3Hi8+oXx4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=y5+covNx; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=MCQy2kLdAjrxyskwoKDXL0HC2z1uOVlnYtYY9aeY4Vc=;
+	t=1716826646; x=1717258646; b=y5+covNxO9j/sDZdSFfk/eaSo9Bh/HSlQipjd/Naha8Xzz0
+	H9F9bhSow52HWI/e7MSXwQkE7fJCsM1fWk1Dt7aoIzVTpFaUthQPqKG5TRyQI+B6p0U4U+FeGDmQl
+	//gULp1p471rp2VR9OihA/eWjxkfxYUEAHzqf6GlVATtGnqy9g8uJfUPrcupERT1TVp/jXVnGBRzM
+	XT2Giw7xPD4p0mn7vdxhvYWU5mRNl+UZuOZ4ukS5aRjfBJB+kz6EbnCISC7dWw90spA6Ou2jTLUD0
+	vUmK0By3ZLlY408ryn8MlubV3mFYoYpcziJHBSWEPrVsxkwQJGZ1UuCb/h0bWJxg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sBd2J-0003VF-Ma; Mon, 27 May 2024 18:17:23 +0200
+Message-ID: <63fa6f5e-e366-42ea-9358-fd633e9bec44@leemhuis.info>
+Date: Mon, 27 May 2024 18:17:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b7b2623-a527-4a42-888b-08dc7e6810c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2024 16:14:20.2714
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5Tjf0H2TOMH4Ldt353JXMF404ebnLDQiBSemqTuuGU8Dz+5x488GKWI+hsF+I/0vA2HFqSdqhVG+P9VEs2L+NQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR13MB6557
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] nfsstat/nfsd crash system "general protection fault,
+ probably for non-canonical address ..." after 6.8.9->6.8.10 update
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Igor Raits <igor@gooddata.com>, Jeff Layton <jlayton@kernel.org>,
+ Josef Bacik <josef@toxicpanda.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+References: <CAK8fFZ7rbh5o9XG1D5KAPSRyES-8W8AphxsLJXOWUFZK49i8fA@mail.gmail.com>
+ <Zk39Sr6GmwQQ5NjS@tissot.1015granger.net>
+ <CAK8fFZ4hPxecuCaV4T=bqZ39C0sJfXBn=rWdvPXVV_o037udfw@mail.gmail.com>
+ <CAK8fFZ74tt0cC3_Jm=nA0gv6OH-QM9s08hFVOBfCM_V_FqyyqA@mail.gmail.com>
+ <DF3F5FC0-6B52-43FE-8B4B-6725B8733B51@oracle.com>
+ <bd32196b-5dbb-4226-9101-4949111d935a@leemhuis.info>
+ <15D2C9FA-0B93-4C92-950F-2E0043BF7970@oracle.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <15D2C9FA-0B93-4C92-950F-2E0043BF7970@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716826646;562e25b4;
+X-HE-SMSGID: 1sBd2J-0003VF-Ma
 
-T24gTW9uLCAyMDI0LTA1LTI3IGF0IDEzOjA0ICsxMDAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IA0K
-PiBkZW50cnktPmRfZnNkYXRhIGlzIHNldCB0byBORlNfRlNEQVRBX0JMT0NLRUQgd2hpbGUgdW5s
-aW5raW5nIG9yDQo+IHJlbmFtaW5nLW92ZXIgYSBmaWxlIHRvIGVuc3VyZSB0aGF0IG5vIG9wZW4g
-c3VjY2VlZHMgd2hpbGUgdGhlIE5GUw0KPiBvcGVyYXRpb24gcHJvZ3Jlc3NlZCBvbiB0aGUgc2Vy
-dmVyLg0KPiANCj4gU2V0dGluZyBkZW50cnktPmRfZnNkYXRhIHRvIE5GU19GU0RBVEFfQkxPQ0tF
-RCBpcyBkb25lIHVuZGVyIC0+ZF9sb2NrDQo+IGFmdGVyIGNoZWNraW5nIHRoZSByZWZjb3VudCBp
-cyBub3QgZWxldmF0ZWQuwqAgQW55IGF0dGVtcHQgdG8gb3BlbiB0aGUNCj4gZmlsZSAodGhyb3Vn
-aCB0aGF0IG5hbWUpIHdpbGwgZ28gdGhyb3VnaCBsb29rcF9vcGVuKCkgd2hpY2ggd2lsbCB0YWtl
-DQo+IC0+ZF9sb2NrIHdoaWxlIGluY3JlbWVudGluZyB0aGUgcmVmY291bnQsIHdlIGNhbiBiZSBz
-dXJlIHRoYXQgb25jZQ0KPiB0aGUNCj4gbmV3IHZhbHVlIGlzIHNldCwgX19uZnNfbG9va3VwX3Jl
-dmFsaWRhdGUoKSAqd2lsbCogc2VlIHRoZSBuZXcgdmFsdWUNCj4gYW5kDQo+IHdpbGwgYmxvY2su
-DQo+IA0KPiBXZSBkb24ndCBoYXZlIGFueSBsb2NraW5nIGd1YXJhbnRlZSB0aGF0IHdoZW4gd2Ug
-c2V0IC0+ZF9mc2RhdGEgdG8NCj4gTlVMTCwNCj4gdGhlIHdhaXRfdmFyX2V2ZW50KCkgaW4gX19u
-ZnNfbG9va3VwX3JldmFsaWRhdGUoKSB3aWxsIG5vdGljZS4NCj4gd2FpdC93YWtlIHByaW1pdGl2
-ZXMgZG8gTk9UIHByb3ZpZGUgYmFycmllcnMgdG8gZ3VhcmFudGVlIG9yZGVyLsKgIFdlDQo+IG11
-c3QgdXNlIHNtcF9sb2FkX2FjcXVpcmUoKSBpbiB3YWl0X3Zhcl9ldmVudCgpIHRvIGVuc3VyZSB3
-ZSBsb29rIGF0DQo+IGFuDQo+IHVwLXRvLWRhdGUgdmFsdWUsIGFuZCBtdXN0IHVzZSBzbXBfc3Rv
-cmVfcmVsZWFzZSgpIGJlZm9yZQ0KPiB3YWtlX3VwX3ZhcigpLg0KPiANCj4gVGhpcyBwYXRjaCBh
-ZGRzIHRob3NlIGJhcnJpZXIgZnVuY3Rpb25zIGFuZCBmYWN0b3JzIG91dA0KPiBibG9ja19yZXZh
-bGlkYXRlKCkgYW5kIHVuYmxvY2tfcmV2YWxpZGF0ZSgpIGZhciBjbGFyaXR5Lg0KPiANCj4gVGhl
-cmUgaXMgYWxzbyBhIGh5cG90aGV0aWNhbCBidWcgaW4gdGhhdCBpZiBtZW1vcnkgYWxsb2NhdGlv
-biBmYWlscw0KPiAod2hpY2ggbmV2ZXIgaGFwcGVucyBpbiBwcmFjdGljZSkgd2UgbWlnaHQgbGVh
-dmUgLT5kX2ZzZGF0YSBsb2NrZWQuDQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgbWlzc2luZyBjYWxs
-IHRvIHVuYmxvY2tfcmV2YWxpZGF0ZSgpLg0KPiANCj4gUmVwb3J0ZWQtYW5kLXRlc3RlZC1ieTog
-UmljaGFyZCBLb2plZHppbnN6a3kNCj4gPHJpY2hhcmQrZGViaWFuK2J1Z3JlcG9ydEBrb2plZHou
-aW4+DQo+IENsb3NlczogaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvY2dpLWJpbi9idWdyZXBvcnQu
-Y2dpP2J1Zz0xMDcxNTAxDQo+IEZpeGVzOiAzYzU5MzY2YzIwN2UgKCJORlM6IGRvbid0IHVuaGFz
-aCBkZW50cnkgZHVyaW5nIHVubGluay9yZW5hbWUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBOZWlsQnJv
-d24gPG5laWxiQHN1c2UuZGU+DQo+IC0tLQ0KPiDCoGZzL25mcy9kaXIuYyB8IDQ0ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+IMKgMSBmaWxlIGNoYW5nZWQs
-IDI5IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Zz
-L25mcy9kaXIuYyBiL2ZzL25mcy9kaXIuYw0KPiBpbmRleCBhYzUwNTY3MWVmYmQuLmM5MWRjMzZk
-NDFjYyAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL2Rpci5jDQo+ICsrKyBiL2ZzL25mcy9kaXIuYw0K
-PiBAQCAtMTgwMiw5ICsxODAyLDEwIEBAIF9fbmZzX2xvb2t1cF9yZXZhbGlkYXRlKHN0cnVjdCBk
-ZW50cnkgKmRlbnRyeSwNCj4gdW5zaWduZWQgaW50IGZsYWdzLA0KPiDCoAkJaWYgKHBhcmVudCAh
-PSBSRUFEX09OQ0UoZGVudHJ5LT5kX3BhcmVudCkpDQo+IMKgCQkJcmV0dXJuIC1FQ0hJTEQ7DQo+
-IMKgCX0gZWxzZSB7DQo+IC0JCS8qIFdhaXQgZm9yIHVubGluayB0byBjb21wbGV0ZSAqLw0KPiAr
-CQkvKiBXYWl0IGZvciB1bmxpbmsgdG8gY29tcGxldGUgLSBzZWUNCj4gdW5ibG9ja19yZXZhbGlk
-YXRlKCkgKi8NCj4gwqAJCXdhaXRfdmFyX2V2ZW50KCZkZW50cnktPmRfZnNkYXRhLA0KPiAtCQkJ
-wqDCoMKgwqDCoMKgIGRlbnRyeS0+ZF9mc2RhdGEgIT0NCj4gTkZTX0ZTREFUQV9CTE9DS0VEKTsN
-Cj4gKwkJCcKgwqDCoMKgwqDCoCBzbXBfbG9hZF9hY3F1aXJlKCZkZW50cnktPmRfZnNkYXRhKQ0K
-PiArCQkJwqDCoMKgwqDCoMKgICE9IE5GU19GU0RBVEFfQkxPQ0tFRCk7DQoNCkRvZXNuJ3QgdGhp
-cyBlbmQgdXAgYmVpbmcgYSByZXZlcnNlZCBBQ1FVSVJFK1JFTEVBU0UgYXMgZGVzY3JpYmVkIGlu
-DQp0aGUgIkxPQ0sgQUNRVUlTSVRJT04gRlVOQ1RJT05TIiBzZWN0aW9uIG9mIERvY3VtZW50YXRp
-b24vbWVtb3J5LQ0KYmFycmllcnMudHh0Pw0KDQpJT1c6IFNob3VsZG4ndCB0aGUgYWJvdmUgcmF0
-aGVyIGJlIHVzaW5nIFJFQURfT05DRSgpPw0KDQo+IMKgCQlwYXJlbnQgPSBkZ2V0X3BhcmVudChk
-ZW50cnkpOw0KPiDCoAkJcmV0ID0gcmV2YWwoZF9pbm9kZShwYXJlbnQpLCBkZW50cnksIGZsYWdz
-KTsNCj4gwqAJCWRwdXQocGFyZW50KTsNCj4gQEAgLTE4MTcsNiArMTgxOCwyNiBAQCBzdGF0aWMg
-aW50IG5mc19sb29rdXBfcmV2YWxpZGF0ZShzdHJ1Y3QgZGVudHJ5DQo+ICpkZW50cnksIHVuc2ln
-bmVkIGludCBmbGFncykNCj4gwqAJcmV0dXJuIF9fbmZzX2xvb2t1cF9yZXZhbGlkYXRlKGRlbnRy
-eSwgZmxhZ3MsDQo+IG5mc19kb19sb29rdXBfcmV2YWxpZGF0ZSk7DQo+IMKgfQ0KPiDCoA0KPiAr
-c3RhdGljIHZvaWQgYmxvY2tfcmV2YWxpZGF0ZShzdHJ1Y3QgZGVudHJ5ICpkZW50cnkpDQo+ICt7
-DQo+ICsJLyogb2xkIGRldm5hbWUgLSBqdXN0IGluIGNhc2UgKi8NCj4gKwlrZnJlZShkZW50cnkt
-PmRfZnNkYXRhKTsNCj4gKw0KPiArCS8qIEFueSBuZXcgcmVmZXJlbmNlIHRoYXQgY291bGQgbGVh
-ZCB0byBhbiBvcGVuDQo+ICsJICogd2lsbCB0YWtlIC0+ZF9sb2NrIGluIGxvb2t1cF9vcGVuKCkg
-LT4gZF9sb29rdXAoKS4NCj4gKwkgKi8NCj4gKwlsb2NrZGVwX2Fzc2VydF9oZWxkKCZkZW50cnkt
-PmRfbG9jayk7DQo+ICsNCj4gKwlkZW50cnktPmRfZnNkYXRhID0gTlVMTDsNCg0KV2h5IGFyZSB5
-b3UgZG9pbmcgYSBiYXJyaWVyIGZyZWUgY2hhbmdlIHRvIGRlbnRyeS0+ZF9mc2RhdGEgaGVyZSB3
-aGVuDQp5b3UgaGF2ZSB0aGUgbWVtb3J5IGJhcnJpZXIgcHJvdGVjdGVkIGNoYW5nZSBpbiB1bmJs
-b2NrX3JldmFsaWRhdGUoKT8NCg0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCB1bmJsb2NrX3Jl
-dmFsaWRhdGUoc3RydWN0IGRlbnRyeSAqZGVudHJ5KQ0KPiArew0KPiArCS8qIHN0b3JlX3JlbGVh
-c2UgZW5zdXJlcyB3YWl0X3Zhcl9ldmVudCgpIHNlZXMgdGhlIHVwZGF0ZSAqLw0KPiArCXNtcF9z
-dG9yZV9yZWxlYXNlKCZkZW50cnktPmRfZnNkYXRhLCBOVUxMKTsNCg0KU2hvdWxkbid0IHRoaXMg
-YmUgYSBXUklURV9PTkNFKCksIGZvciB0aGUgc2FtZSByZWFzb24gYXMgYWJvdmU/DQoNCj4gKwl3
-YWtlX3VwX3ZhcigmZGVudHJ5LT5kX2ZzZGF0YSk7DQo+ICt9DQo+ICsNCj4gwqAvKg0KPiDCoCAq
-IEEgd2Vha2VyIGZvcm0gb2YgZF9yZXZhbGlkYXRlIGZvciByZXZhbGlkYXRpbmcganVzdCB0aGUN
-Cj4gZF9pbm9kZShkZW50cnkpDQo+IMKgICogd2hlbiB3ZSBkb24ndCByZWFsbHkgY2FyZSBhYm91
-dCB0aGUgZGVudHJ5IG5hbWUuIFRoaXMgaXMgY2FsbGVkDQo+IHdoZW4gYQ0KPiBAQCAtMjUwMSwx
-NSArMjUyMiwxMiBAQCBpbnQgbmZzX3VubGluayhzdHJ1Y3QgaW5vZGUgKmRpciwgc3RydWN0DQo+
-IGRlbnRyeSAqZGVudHJ5KQ0KPiDCoAkJc3Bpbl91bmxvY2soJmRlbnRyeS0+ZF9sb2NrKTsNCj4g
-wqAJCWdvdG8gb3V0Ow0KPiDCoAl9DQo+IC0JLyogb2xkIGRldm5hbWUgKi8NCj4gLQlrZnJlZShk
-ZW50cnktPmRfZnNkYXRhKTsNCj4gLQlkZW50cnktPmRfZnNkYXRhID0gTkZTX0ZTREFUQV9CTE9D
-S0VEOw0KPiArCWJsb2NrX3JldmFsaWRhdGUoZGVudHJ5KTsNCj4gwqANCj4gwqAJc3Bpbl91bmxv
-Y2soJmRlbnRyeS0+ZF9sb2NrKTsNCj4gwqAJZXJyb3IgPSBuZnNfc2FmZV9yZW1vdmUoZGVudHJ5
-KTsNCj4gwqAJbmZzX2RlbnRyeV9yZW1vdmVfaGFuZGxlX2Vycm9yKGRpciwgZGVudHJ5LCBlcnJv
-cik7DQo+IC0JZGVudHJ5LT5kX2ZzZGF0YSA9IE5VTEw7DQo+IC0Jd2FrZV91cF92YXIoJmRlbnRy
-eS0+ZF9mc2RhdGEpOw0KPiArCXVuYmxvY2tfcmV2YWxpZGF0ZShkZW50cnkpOw0KPiDCoG91dDoN
-Cj4gwqAJdHJhY2VfbmZzX3VubGlua19leGl0KGRpciwgZGVudHJ5LCBlcnJvcik7DQo+IMKgCXJl
-dHVybiBlcnJvcjsNCj4gQEAgLTI2MTYsOCArMjYzNCw3IEBAIG5mc191bmJsb2NrX3JlbmFtZShz
-dHJ1Y3QgcnBjX3Rhc2sgKnRhc2ssDQo+IHN0cnVjdCBuZnNfcmVuYW1lZGF0YSAqZGF0YSkNCj4g
-wqB7DQo+IMKgCXN0cnVjdCBkZW50cnkgKm5ld19kZW50cnkgPSBkYXRhLT5uZXdfZGVudHJ5Ow0K
-PiDCoA0KPiAtCW5ld19kZW50cnktPmRfZnNkYXRhID0gTlVMTDsNCj4gLQl3YWtlX3VwX3Zhcigm
-bmV3X2RlbnRyeS0+ZF9mc2RhdGEpOw0KPiArCXVuYmxvY2tfcmV2YWxpZGF0ZShuZXdfZGVudHJ5
-KTsNCj4gwqB9DQo+IMKgDQo+IMKgLyoNCj4gQEAgLTI2NzksMTEgKzI2OTYsNiBAQCBpbnQgbmZz
-X3JlbmFtZShzdHJ1Y3QgbW50X2lkbWFwICppZG1hcCwgc3RydWN0DQo+IGlub2RlICpvbGRfZGly
-LA0KPiDCoAkJaWYgKFdBUk5fT04obmV3X2RlbnRyeS0+ZF9mbGFncyAmDQo+IERDQUNIRV9ORlNG
-U19SRU5BTUVEKSB8fA0KPiDCoAkJwqDCoMKgIFdBUk5fT04obmV3X2RlbnRyeS0+ZF9mc2RhdGEg
-PT0NCj4gTkZTX0ZTREFUQV9CTE9DS0VEKSkNCj4gwqAJCQlnb3RvIG91dDsNCj4gLQkJaWYgKG5l
-d19kZW50cnktPmRfZnNkYXRhKSB7DQo+IC0JCQkvKiBvbGQgZGV2bmFtZSAqLw0KPiAtCQkJa2Zy
-ZWUobmV3X2RlbnRyeS0+ZF9mc2RhdGEpOw0KPiAtCQkJbmV3X2RlbnRyeS0+ZF9mc2RhdGEgPSBO
-VUxMOw0KPiAtCQl9DQo+IMKgDQo+IMKgCQlzcGluX2xvY2soJm5ld19kZW50cnktPmRfbG9jayk7
-DQo+IMKgCQlpZiAoZF9jb3VudChuZXdfZGVudHJ5KSA+IDIpIHsNCj4gQEAgLTI3MDUsNyArMjcx
-Nyw3IEBAIGludCBuZnNfcmVuYW1lKHN0cnVjdCBtbnRfaWRtYXAgKmlkbWFwLCBzdHJ1Y3QNCj4g
-aW5vZGUgKm9sZF9kaXIsDQo+IMKgCQkJbmV3X2RlbnRyeSA9IGRlbnRyeTsNCj4gwqAJCQluZXdf
-aW5vZGUgPSBOVUxMOw0KPiDCoAkJfSBlbHNlIHsNCj4gLQkJCW5ld19kZW50cnktPmRfZnNkYXRh
-ID0gTkZTX0ZTREFUQV9CTE9DS0VEOw0KPiArCQkJYmxvY2tfcmV2YWxpZGF0ZShuZXdfZGVudHJ5
-KTsNCj4gwqAJCQltdXN0X3VuYmxvY2sgPSB0cnVlOw0KPiDCoAkJCXNwaW5fdW5sb2NrKCZuZXdf
-ZGVudHJ5LT5kX2xvY2spOw0KPiDCoAkJfQ0KPiBAQCAtMjcxNyw2ICsyNzI5LDggQEAgaW50IG5m
-c19yZW5hbWUoc3RydWN0IG1udF9pZG1hcCAqaWRtYXAsIHN0cnVjdA0KPiBpbm9kZSAqb2xkX2Rp
-ciwNCj4gwqAJdGFzayA9IG5mc19hc3luY19yZW5hbWUob2xkX2RpciwgbmV3X2Rpciwgb2xkX2Rl
-bnRyeSwNCj4gbmV3X2RlbnRyeSwNCj4gwqAJCQkJbXVzdF91bmJsb2NrID8gbmZzX3VuYmxvY2tf
-cmVuYW1lIDoNCj4gTlVMTCk7DQo+IMKgCWlmIChJU19FUlIodGFzaykpIHsNCj4gKwkJaWYgKG11
-c3RfdW5ibG9jaykNCj4gKwkJCXVuYmxvY2tfcmV2YWxpZGF0ZShuZXdfZGVudHJ5KTsNCj4gwqAJ
-CWVycm9yID0gUFRSX0VSUih0YXNrKTsNCj4gwqAJCWdvdG8gb3V0Ow0KPiDCoAl9DQoNCi0tIA0K
-VHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNl
-DQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On 27.05.24 17:13, Chuck Lever III wrote:
+> 
+> I intend to send this to stable:
+> https://lore.kernel.org/linux-nfs/CAK2bqV+WKFfXx8Au3iOt7CE2S6Om83haLUmkyuMKAm=KM+k2RA@mail.gmail.com/T/#t
+> today or tomorrow.
+
+Ahh, great, thx; and sorry, I had missed that patch.
+
+I saw you send it in between, which is even better, as with a bit of
+luck Greg will include this for the next release and this will be
+history in a few days. :-D
+
+Thx again.
+
+Ciao, Thorsten
+
+>> On May 27, 2024, at 1:51 AM, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> [CCing Greg and stable and regressions list]
+>>
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Please correct me if I'm wrong, but since 6.8.10 we afaics have below
+>> regression report about a general protection fault as well as two
+>> reports about NFSd related NULL pointer dereferences[1] that got some
+>> attention[2]. From a quick look I saw no fixes for those queued for the
+>> next 6.8.y release. And the series might be EOL soon.
+>>
+>> Hmmm. That sounds not really good. Is there some easy way to fix this?
+>>
+>> Chuck, you earlier mentioned (see quote below) that Greg pulled in three
+>> changes as dep into 6.8.10 that might be unneeded. Might reverting all
+>> three be the best way forward?
+>>
+>> Ciao, Thorsten
+>>
+>> [1]
+>> https://lore.kernel.org/all/CAK2bqVJoT3yy2m0OmTnqH9EAKkj6O1iTk42EyyMtvvxKh6YDKg@mail.gmail.com/
+>> and https://lore.kernel.org/all/A8DQDS.ZXN0FMYZ3DIM1@gmail.com/
+>>
+>> [2] https://x.com/spendergrsec/status/1793489498443252143
+>>
+>> On 24.05.24 20:21, Chuck Lever III wrote:
+>>>> On May 24, 2024, at 4:59 AM, Jaroslav Pulchart <jaroslav.pulchart@gooddata.com> wrote:
+>>>>
+>>>>>
+>>>>>>
+>>>>>> On Wed, May 22, 2024 at 04:36:57AM -0400, Jaroslav Pulchart wrote:
+>>>>>>> Hello,
+>>>>>>>
+>>>>>>> I would like to report some issue causing a "general protection fault"
+>>>>>>> crash (constantly) after we updated the kernel from 6.8.9 to 6.8.10.
+>>>>>>> This is triggered when monitoring is using nfsstat on a server where
+>>>>>>> nfsd is running.
+>>>>>>>
+>>>>>>> [ 3049.260633] general protection fault, probably for non-canonical
+>>>>>>> address 0x66fb103e19e9cc89: 0000 [#1] PREEMPT SMP NOPTI
+>>>>>>> [ 3049.261628] CPU: 22 PID: 74991 Comm: nfsstat Tainted: G
+>>>>>>> E      6.8.10-1.gdc.el9.x86_64 #1
+>>>>>>> [ 3049.262336] Hardware name: RDO OpenStack Compute/RHEL, BIOS
+>>>>>>> edk2-20240214-2.el9 02/14/2024
+>>>>>>> [ 3049.263003] RIP: 0010:_raw_spin_lock_irqsave+0x19/0x40
+>>>>>>> [ 3049.263487] Code: cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+>>>>>>> 90 0f 1f 44 00 00 41 54 9c 41 5c fa 65 ff 05 a6 92 f5 42 31 c0 ba 01
+>>>>>>> 00 00 00 <f0> 0f b1 17 75 0a 4c 89 e0 41 5c c3 cc cc cc cc 89 c6 e8 d0
+>>>>>>> 07 00
+>>>>>>> [ 3049.264882] RSP: 0018:ffffb1bca6b9bd00 EFLAGS: 00010046
+>>>>>>> [ 3049.265365] RAX: 0000000000000000 RBX: 66fb103e19e9c989 RCX: 0000000000000001
+>>>>>>> [ 3049.265953] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 66fb103e19e9cc89
+>>>>>>> [ 3049.266542] RBP: ffffffffc15df280 R08: 0000000000000001 R09: ffffa049a1785cb8
+>>>>>>> [ 3049.267112] R10: ffffb1bca6b9bd70 R11: ffffa04964e49000 R12: 0000000000000246
+>>>>>>> [ 3049.267702] R13: 66fb103e19e9cc89 R14: ffffa048445590a0 R15: 0000000000000001
+>>>>>>> [ 3049.268278] FS:  00007fa3ddf03740(0000) GS:ffffa05703d00000(0000)
+>>>>>>> knlGS:0000000000000000
+>>>>>>> [ 3049.268928] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>>>> [ 3049.269443] CR2: 00007fa3dddfca50 CR3: 0000000342d1e004 CR4: 0000000000770ef0
+>>>>>>> [ 3049.270025] PKRU: 55555554
+>>>>>>> [ 3049.270371] Call Trace:
+>>>>>>> [ 3049.270723]  <TASK>
+>>>>>>> [ 3049.271035]  ? die_addr+0x33/0x90
+>>>>>>> [ 3049.271423]  ? exc_general_protection+0x1ea/0x450
+>>>>>>> [ 3049.271879]  ? asm_exc_general_protection+0x22/0x30
+>>>>>>> [ 3049.272344]  ? _raw_spin_lock_irqsave+0x19/0x40
+>>>>>>> [ 3049.272803]  __percpu_counter_sum+0xd/0x70
+>>>>>>> [ 3049.273219]  nfsd_show+0x4f/0x1d0 [nfsd]
+>>>>>>> [ 3049.273666]  seq_read_iter+0x11d/0x4d0
+>>>>>>> [ 3049.274073]  ? avc_has_perm+0x42/0xc0
+>>>>>>> [ 3049.274489]  seq_read+0xfe/0x140
+>>>>>>> [ 3049.274866]  proc_reg_read+0x56/0xa0
+>>>>>>> [ 3049.275257]  vfs_read+0xa7/0x340
+>>>>>>> [ 3049.275647]  ? __do_sys_newfstat+0x57/0x60
+>>>>>>> [ 3049.276059]  ksys_read+0x5f/0xe0
+>>>>>>> [ 3049.276439]  do_syscall_64+0x5e/0x170
+>>>>>>> [ 3049.276836]  entry_SYSCALL_64_after_hwframe+0x78/0x80
+>>>>>>> [ 3049.277296] RIP: 0033:0x7fa3ddcfd9b2
+>>>>>>> [ 3049.277719] Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea 1d 0c 00 e8 c5
+>>>>>>> fd 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75
+>>>>>>> 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89
+>>>>>>> 54 24
+>>>>>>> [ 3049.279139] RSP: 002b:00007ffd930672e8 EFLAGS: 00000246 ORIG_RAX:
+>>>>>>> 0000000000000000
+>>>>>>> [ 3049.279788] RAX: ffffffffffffffda RBX: 0000555ded47c2a0 RCX: 00007fa3ddcfd9b2
+>>>>>>> [ 3049.280402] RDX: 0000000000000400 RSI: 0000555ded47c480 RDI: 0000000000000003
+>>>>>>> [ 3049.281046] RBP: 00007fa3dddf75e0 R08: 0000000000000003 R09: 0000000000000077
+>>>>>>> [ 3049.281673] R10: 000000000000005d R11: 0000000000000246 R12: 0000555ded47c2a0
+>>>>>>> [ 3049.282307] R13: 0000000000000d68 R14: 00007fa3dddf69e0 R15: 0000000000000d68
+>>>>>>> [ 3049.282928]  </TASK>
+>>>>>>> [ 3049.283310] Modules linked in: mptcp_diag(E) xsk_diag(E)
+>>>>>>> raw_diag(E) unix_diag(E) af_packet_diag(E) netlink_diag(E) udp_diag(E)
+>>>>>>> tcp_diag(E) inet_diag(E) tun(E) br_netfilter(E) bridge(E) stp(E)
+>>>>>>> llc(E) nfsd(E) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E) sunrpc(E)
+>>>>>>> nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) binfmt_misc(E)
+>>>>>>> zram(E) tls(E) isofs(E) vfat(E) fat(E) intel_rapl_msr(E)
+>>>>>>> intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E) irqbypass(E)
+>>>>>>> virtio_net(E) i2c_i801(E) virtio_gpu(E) i2c_smbus(E) net_failover(E)
+>>>>>>> virtio_balloon(E) failover(E) virtio_dma_buf(E) fuse(E) ext4(E)
+>>>>>>> mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E)
+>>>>>>> crct10dif_pclmul(E) crc32_pclmul(Ea) polyval_clmulni(E)
+>>>>>>> polyval_generic(E) libata(E) ghash_clmulni_intel(E) sha512_ssse3(E)
+>>>>>>> virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E)
+>>>>>>> raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E)
+>>>>>>> dm_region_hash(E) dm_log(E) dm_mod(E)
+>>>>>>> [ 3049.283345] Unloaded tainted modules: edac_mce_amd(E):1 padlock_aes(E)
+>>>>>>>
+>>>>>>> Any suggestion on how to fix it is appreciated.
+>>>>>>
+>>>>>> Bisect between v6.8.9 and v6.8.10 would give us the exact point
+>>>>>> where the failures were introduced.
+>>>>>>
+>>>>>> I see that GregKH pulled in:
+>>>>>>
+>>>>>> 26a0ddb04230 ("nfsd: rename NFSD_NET_* to NFSD_STATS_*")
+>>>>>> b7b05f98f3f0 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
+>>>>>> abf5fb593c90 ("nfsd: make all of the nfsd stats per-network namespace")
+>>>>>>
+>>>>>> for v6.8.10 as a Stable-Dep-of: 18180a4550d0 ("NFSD: Fix nfsd4_encode_fattr4() crasher")
+>>>>>>
+>>>>>> Which is a little baffling, I don't see how those two change sets
+>>>>>> are mechanically related to each other. But I suspect the culprit is
+>>>>>> one of those three stat-related patches.
+>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> Chuck Lever
+>>>>>
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> I run bisecting. It was easy to reproduce, simple execution of
+>>>>> "nfsstat" from terminal stuck the server:
+>>>>>
+>>>>> abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 is the first bad commit
+>>>>>
+>>>>>
+>>>>> $ git bisect bad
+>>>>> abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 is the first bad commit
+>>>>> commit abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566 (HEAD)
+>>>>> Author: Josef Bacik <josef@toxicpanda.com>
+>>>>> Date:   Fri Jan 26 10:39:47 2024 -0500
+>>>>>
+>>>>>   nfsd: make all of the nfsd stats per-network namespace
+>>>>>
+>>>>>   [ Upstream commit 4b14885411f74b2b0ce0eb2b39d0fffe54e5ca0d ]
+>>>>>
+>>>>>   We have a global set of counters that we modify for all of the nfsd
+>>>>>   operations, but now that we're exposing these stats across all network
+>>>>>   namespaces we need to make the stats also be per-network namespace.  We
+>>>>>   already have some caching stats that are per-network namespace, so move
+>>>>>   these definitions into the same counter and then adjust all the helpers
+>>>>>   and users of these stats to provide the appropriate nfsd_net struct so
+>>>>>   that the stats are maintained for the per-network namespace objects.
+>>>>>
+>>>>>   Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>>>>>   Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>>>>>   Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>>>>   Stable-dep-of: 18180a4550d0 ("NFSD: Fix nfsd4_encode_fattr4() crasher")
+>>>>>   Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>>>>
+>>>>> fs/nfsd/cache.h     |  2 --
+>>>>> fs/nfsd/netns.h     | 17 +++++++++++++++--
+>>>>> fs/nfsd/nfs4proc.c  |  6 +++---
+>>>>> fs/nfsd/nfs4state.c |  3 ++-
+>>>>> fs/nfsd/nfscache.c  | 36 +++++++-----------------------------
+>>>>> fs/nfsd/nfsctl.c    | 12 +++---------
+>>>>> fs/nfsd/nfsfh.c     |  3 ++-
+>>>>> fs/nfsd/stats.c     | 26 ++++++++++++++------------
+>>>>> fs/nfsd/stats.h     | 54 +++++++++++++++++++-----------------------------------
+>>>>> fs/nfsd/vfs.c       |  6 ++++--
+>>>>> 10 files changed, 69 insertions(+), 96 deletions(-)
+>>>>>
+>>>>> $ git bisect log
+>>>>> git bisect start
+>>>>> # status: waiting for both good and bad commits
+>>>>> # good: [f3d61438b613b87afb63118bea6fb18c50ba7a6b] Linux 6.8.9
+>>>>> git bisect good f3d61438b613b87afb63118bea6fb18c50ba7a6b
+>>>>> # status: waiting for bad commit, 1 good commit known
+>>>>> # bad: [a0c69a570e420e86c7569b8c052913213eef2b45] Linux 6.8.10
+>>>>> git bisect bad a0c69a570e420e86c7569b8c052913213eef2b45
+>>>>> # bad: [4aaed9dbe8acd2b6114458f0498a617283d6275b] hv_netvsc: Don't
+>>>>> free decrypted memory
+>>>>> git bisect bad 4aaed9dbe8acd2b6114458f0498a617283d6275b
+>>>>> # bad: [ee190d04c2f99c8e557b00e997621c04592baed1] net: gro: add flush
+>>>>> check in udp_gro_receive_segment
+>>>>> git bisect bad ee190d04c2f99c8e557b00e997621c04592baed1
+>>>>> # bad: [781e34b736014188ba9e46a71535237313dcda81] efi/unaccepted:
+>>>>> touch soft lockup during memory accept
+>>>>> git bisect bad 781e34b736014188ba9e46a71535237313dcda81
+>>>>> # bad: [6a7b07689af6e4e023404bf69b1230f43b2a15bc] NFSD: Fix
+>>>>> nfsd4_encode_fattr4() crasher
+>>>>> git bisect bad 6a7b07689af6e4e023404bf69b1230f43b2a15bc
+>>>>> # good: [e05194baae299f2148ab5f6bab659c6ce8d1f6d3] nfs: expose
+>>>>> /proc/net/sunrpc/nfs in net namespaces
+>>>>> git bisect good e05194baae299f2148ab5f6bab659c6ce8d1f6d3
+>>>>> # good: [946ab150335d92f852288c1c6b0f0466b5d6e97f] power: supply:
+>>>>> mt6360_charger: Fix of_match for usb-otg-vbus regulator
+>>>>> git bisect good 946ab150335d92f852288c1c6b0f0466b5d6e97f
+>>>>> # good: [b7b05f98f3f06fea3986b46e5c7fe2928676b02d] nfsd: expose
+>>>>> /proc/net/sunrpc/nfsd in net namespaces
+>>>>> git bisect good b7b05f98f3f06fea3986b46e5c7fe2928676b02d
+>>>>> # bad: [0e8003af77879572dbc1df56860cbe2bfa8498f0] NFSD: add support
+>>>>> for CB_GETATTR callback
+>>>>> git bisect bad 0e8003af77879572dbc1df56860cbe2bfa8498f0
+>>>>> # bad: [abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566] nfsd: make all of
+>>>>> the nfsd stats per-network namespace
+>>>>> git bisect bad abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566
+>>>>> # first bad commit: [abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566] nfsd:
+>>>>> make all of the nfsd stats per-network namespace
+>>>>
+>>>> I built a full 6.8.10 with reverted single commit
+>>>> "abf5fb593c90d3ab55d6cf1dea7bec8ee0bf3566". The server does not get
+>>>> stuck when calling "nfsstat".
+>>>
+>>> Good to know, but I don't think it's entirely safe to revert
+>>> only that patch -- all three would have to come off.
+>>>
+>>> I can't seem to get nfsstat to trigger a problem on my
+>>> server.
+>>>
+>>>
+>>> --
+>>> Chuck Lever
+>>>
+>>>
+> 
+> --
+> Chuck Lever
+> 
+> 
 
