@@ -1,69 +1,72 @@
-Return-Path: <linux-nfs+bounces-3417-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3418-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD9F8D0871
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 18:27:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B0328D0895
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 18:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD6B51C22C5F
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 16:27:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BE241C22CED
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 16:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3E6061FF7;
-	Mon, 27 May 2024 16:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA30115A87E;
+	Mon, 27 May 2024 16:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h6ef4tVo"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kZyC3pE9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8C317E901;
-	Mon, 27 May 2024 16:24:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E867346C;
+	Mon, 27 May 2024 16:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716827045; cv=none; b=sbi/IJ6UoKe6ZITU3wU0RswpRlE0i4imib0X/8EdicfR746ElspEY4MyoOIgOqrIdykrcR4V1Xea3/BmhMYBd4KgwNGwRTMK4lHoFjEA69s5fEW9fFgeIS0k6w4BmSPGcd7cgD7IoNBBKGZj/pjgvA4po/6UDHqzo5zTzLFA1i0=
+	t=1716827390; cv=none; b=TF0kIyuT6VFtpoqt90s35NUH8ohEeWnl26KaKgsy0It0HkhEe8qe6yOFQfiWUEwVIl+w53Z55av0LLToCLbu8WMxF5bXLA1fYzSnDHr7Zp6tnU9O/DU2PkEU2HkjOEU1jH8RqbNgJmPIgLC5utD470QhsI52CDRcfm/Z1h3ksow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716827045; c=relaxed/simple;
-	bh=zT3lpBZ+2fnJDWLc3sht5+aKTyNn+eXHeZ2ka4QD1CY=;
+	s=arc-20240116; t=1716827390; c=relaxed/simple;
+	bh=aRoI7xtsmkM04Wifif6pMbPQqrT8YiNfoLqdNjPbItA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hAlbtj1+d0vLs5MaYE9Lm1MlMPE1X7JGFxhZhkpyZpL8/wQNwhocHWRrLhz+ba1d4UbkPeWyW8rayPRQiPrQJeGovZD0wRxky75ICIQ8bkJ95PqdyNFz5RXF9jFQ5Omwawi91vgqOwMCuwlb8eeu3FTg0LFNgh0dCfCSXdacTSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h6ef4tVo; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=iz8Fs/816Sh6TFN564XctlfwBZ+/wfgJ+e/10Iq9TxXcfYVvU+F2EAFwIGZN1Mu5yWBo+icYw09HN6qsO/rNDBkMmpLFVrj2d/jSIuqRD8DjPTeK/j0nopoPiedNQAeQEq4SOJwxMTCwK93ESwWq+Qqa9AK/0mnuEbk4Pb2D57k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kZyC3pE9; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PKe5sDmdxLVMDi1TLTY8eblrDmzTLWLqc3P92QWHeGI=; b=h6ef4tVo/DR8bnv4zxe8tJP+Kg
-	sGdSQTmCmQRGTyRKl3IIFSHOUB+8lQhu/a2sKyB+KIrzL8UQ+q8HBD0j/bKbQcATF4KHQAH46QzdX
-	BLF3x5fIgqt0kUmyPmz29QMVk6gIyNIgxBirCsMCtSMZmrUt/dJrzGz6a1D74sFbUWUr+7mB071+l
-	RkmdI5jgDuQoTi9+fcxo11XTm1QWoQuybTXR5WCsac5OscIn9P+d/WPj5qiO2UhB7apymQG+9bWRB
-	MkeUiqREiWGl/ST5NBc88wnCmJs6pmHFlfufdriBmB1X7tGo5SY9wwu+NdueSWqSQ5KVnZnJpvxpq
-	QPKFrWLQ==;
+	bh=Fe3M1WbTvAZeXMfbjuO8H7fTMStHiUlxRCcFwILoi+4=; b=kZyC3pE9swZXYLzz8yt3pUxTp2
+	/wqUOtShL76yRoPFsx9iwX/lZDip6D8a2JAF3nE6WkONLGSDL8ETYEQFkPopmvcDWZhvA9ZZXMSLr
+	nWTrMyx6ITOcrcba+BCZnbjwJfK2EUrLu3yVC/BN7SweM9X3VBo037kruAppcin61/XenD2n4xu2q
+	FGIWh5/RkrV++5MD10M9PWWOWML8/CzcNWqw6R4R/ls6LN7ENFYL9hlycOIlt1wnz3huLCC1T0SNp
+	EhYrN47f6vcdD/SxCZMD76gOCQKv7RqTHY1WlVKJiy85arZ1tz4KMXJVApgY7W4AGPbbFLv7b+ps1
+	4m6EMf7g==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sBd8k-0000000Fpmc-09dI;
-	Mon, 27 May 2024 16:24:02 +0000
-Date: Mon, 27 May 2024 09:24:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Christoph Hellwig <hch@infradead.org>, Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+	id 1sBdEK-0000000FrSL-22Qr;
+	Mon, 27 May 2024 16:29:48 +0000
+Date: Mon, 27 May 2024 09:29:48 -0700
+From: "hch@infradead.org" <hch@infradead.org>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "hch@infradead.org" <hch@infradead.org>, "jack@suse.cz" <jack@suse.cz>,
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"alex.aring@gmail.com" <alex.aring@gmail.com>,
+	"cyphar@cyphar.com" <cyphar@cyphar.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"jlayton@kernel.org" <jlayton@kernel.org>,
+	"amir73il@gmail.com" <amir73il@gmail.com>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
  name_to_handle_at(2)
-Message-ID: <ZlSzotIrVPGrC6vt@infradead.org>
+Message-ID: <ZlS0_DWzGk24GYZA@infradead.org>
 References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
  <ZlMADupKkN0ITgG5@infradead.org>
- <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
- <ZlRy7EBaV04F2UaI@infradead.org>
- <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <30137c868039a3ae17f4ae74d07383099bfa4db8.camel@hammerspace.com>
+ <ZlRzNquWNalhYtux@infradead.org>
+ <86065f6a4f3d2f3d78f39e7a276a2d6e25bfbc9d.camel@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,35 +75,26 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527133430.ifjo2kksoehtuwrn@quack3>
+In-Reply-To: <86065f6a4f3d2f3d78f39e7a276a2d6e25bfbc9d.camel@hammerspace.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, May 27, 2024 at 03:34:30PM +0200, Jan Kara wrote:
-> So I was wondering how this is actually working in practice. Checking the
-> code, NFS server is (based on configuration in /etc/exports) either using
-> device number as the filesystem identifier or fsid / uuid as specified in
-> /etc/exports.
+On Mon, May 27, 2024 at 03:38:40PM +0000, Trond Myklebust wrote:
+> > It
+> > does not matter what mount you use to access it.
+> 
+> Sure. However if you are providing a path argument, then presumably you
+> need to know which file system (aka super_block) it eventually resolves
+> to.
 
-Yes, it's a rather suboptimal implementation.
+Except that you can't, at least not without running into potential
+races.  The only way to fix a race vs unmount/remount is to include
+the fsid part in the kernel generated file handle.
 
-> So returning the 64-bit mount ID from name_to_handle_at() weasels out of
-> these "how to identify arbitrary superblock" problems by giving userspace a
-> reasonably reliable way to generate this superblock identifier itself. I'm
-> fully open to less errorprone API for this but at this point I don't see it
-> so changing the mount ID returned from name_to_handle_at() to 64-bit unique
-> one seems like a sane practical choice to me...
+> 
+> If your use case isn't NFS servers, then what use case are you
+> targeting, and how do you expect those applications to use this API?
 
-Well, how about we fix the thing for real:
+The main user of the open by handle syscalls seems to be fanotify
+magic.
 
- - allow file systems to provide a uniqueu identifier of at least
-   uuid size (16 bytes) in the superblock or through an export operation
- - for non-persistent file systems allow to generate one at boot time
-   using the normal uuid generation helpers
- - add a new flag to name_to_handle_at/open_by_handle_at to include it
-   in the file handle, and thus make the file handle work more like
-   the normal file handle
- - add code to nfsd to directly make use of this
-
-This would solve all the problems in this proposal as well as all the
-obvious ones it doesn't solve.
 
