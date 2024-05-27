@@ -1,123 +1,172 @@
-Return-Path: <linux-nfs+bounces-3399-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3400-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89EC38CF9A0
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 08:57:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 244FD8CFE29
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 12:32:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 274D21F21269
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 06:57:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF2A22812A3
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 10:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBFD1CAA9;
-	Mon, 27 May 2024 06:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B685812F;
+	Mon, 27 May 2024 10:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="VGntrcmx"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VKZw32PC";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vHVKTRl2";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kOELjz1Z";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EouhnNv9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E221C686
-	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 06:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A083B79E1
+	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 10:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716793023; cv=none; b=VP231juAoz27mZJCWbi3eh9pNL30l+iPjBn7BpWRuQpDsxLb2LJV7rjjffU0xiWkDderQ+S4F9gaMkhkR3QHN9+HEMovEfQ/dREVDZdwrJu/BrCcVgzi0OyNUxMvh3WpcfuHK2pyQhwo8G4yRZvzASwAQ//HW0YDkggcBR1+owQ=
+	t=1716805959; cv=none; b=eS92huYy4R/zawvTEE/a6j1MZTPuW2dCxXk6bimwcxvr3lFpqzV8uhLqX6Tgv/3i0c/f7fouIsDlx+AqNXjH05nd7bc7Wqx9PO8mK0xZiyJsHb92bsggYmfukOYIM7inxRNqxb6Cd65gQLNusQ95CBf1kuWWe5CpXcPpU9vpqkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716793023; c=relaxed/simple;
-	bh=0qdsT1SiVVhdtrlVIN72WGxjOECihKeaVZq3QaoKHF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mcE/vitBOAvTFNqgTHNDHMoghvX8UvOab0hR+FitxcBZxxsVxjm1ZoPTNxz/dniYnJK7SIsycqJW2a8gFGGu27zmLgGgPN+DlUEDupGjUMTpD3YXTiFE9JDrouJoGf9nbC+Q3GhbnhiQPmtrkyluQtjGPbBIoJDCtRWmlM/VWl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=VGntrcmx; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-578517c8b49so3275325a12.3
-        for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 23:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google; t=1716793020; x=1717397820; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HfGzq1IZ9ig1OLmh0kVriw0ljpLO3lDDDWH1fMF0D0A=;
-        b=VGntrcmx0vPMMC8E2Bh5rta0KAR5XRB9CfDazR9LJZOQ/TocsDBDkZZp7dXEch+evN
-         Sp98S3L1ZgQsIINEvVIdV9zWmMnFBerR8ZuMG2Roh3oylismSs2LCKujSpLs4I2B9KZr
-         oZY/balvad2AtId+jblHcB7MmnzQXYgV3Jm5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716793020; x=1717397820;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HfGzq1IZ9ig1OLmh0kVriw0ljpLO3lDDDWH1fMF0D0A=;
-        b=WU0PeBuFHqn/F+MCxXMNvjH+fJidocePEC8zC7/4mIuEPWgUkX6/cF1KA8+hBLfnoy
-         XyKnKLjePg6U3190s0VVJAPZ06hwv6k7YtsiApZEQdFCo13Y7VvteT4cdtLNHQjbSYiA
-         rXKYUtP82A8ZKftO8wiRQWLFZeTupI+eiNG9adxPb6hpyokoBzr55llm6fJFw5bbWLf1
-         /m1p1GOaXKx/Pw1Fsp9fk0apTnthQQyrEl9boOdOwqsoglxkfn7MnuJVw5/fU29T4+VA
-         SNxTTmVvOpNW7euM/cMIArWrGfDbgam+h1l6rATk08t5fOS+ZK002NJbJ9CIW+2w4NEX
-         DRCQ==
-X-Gm-Message-State: AOJu0YxwolYNde6/x/hf+t4aknZLcNkuQqs9Bx6nxuSzKgtzydTbMvEX
-	omD9SK92ETnSiyaPu4klLhZGV6HjH2wBwxcdUxepXTm/ZXTREGLGl4WVt+Vr/TJ79VYLzYznN2M
-	m7eE7WyYC5c2G42ZvBXp4e2aI8DFHizIwv4XZ
-X-Google-Smtp-Source: AGHT+IEnYRiSoczNdt2OC3zsKoeCgJN4riPNOUs0wCSv+sdJJ220iRxFi6afV9oz/CycPnmR5aHoevDlphsxGp2FbNk=
-X-Received: by 2002:a17:906:b0cf:b0:a59:bcfd:d950 with SMTP id
- a640c23a62f3a-a62645d650amr528923466b.46.1716793020292; Sun, 26 May 2024
- 23:57:00 -0700 (PDT)
+	s=arc-20240116; t=1716805959; c=relaxed/simple;
+	bh=TjNNkAQXmBKXHYQY1qZhlCo+eQAP2H6uO2UvW02Ko7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARGXhkuo0Rdqfsa71SJg6TgC8U7Ue+r/b7Ie1vGzdsoIE7LSdWWx3n2DYye96Bf7rlNlCrfD6OGEVaoIeSUKw6oSQG4gEiQFMIUtCTwAbCjcQyYqZjMh1ryOdizqvZaSmDKFGZ7MMcf0oDJLbcX4fkzIotn1qsvRf93eflrfhd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VKZw32PC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vHVKTRl2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kOELjz1Z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EouhnNv9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 91DF221DFD;
+	Mon, 27 May 2024 10:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716805954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7wKqAT0deT6oEIQm8DExcQrRQ5vSwxEAI4WvELHNlzY=;
+	b=VKZw32PCCH9xM4XVT6aBBqIBX3huDzhgQvlYz63sWA1EUu0OzLS0tjZ6aZv4yn7B9oG9Bm
+	UMR2qUx5kj93lK/Q7UkT+LO663oknXKXGxcQmAoG9AFA8B6ZOumyOxuY2DikoCXPNSXczN
+	sxAA7TTcaxyg8XYDudWWNIYo6LcXMds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716805954;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7wKqAT0deT6oEIQm8DExcQrRQ5vSwxEAI4WvELHNlzY=;
+	b=vHVKTRl2ae30hjUMakBt3EJT/ruwycdl2aijyYsRuwtpG8o56sOLvDwRYGd0Bd5hol/f4S
+	PnK/2AY26npEe+CA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=kOELjz1Z;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=EouhnNv9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716805953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7wKqAT0deT6oEIQm8DExcQrRQ5vSwxEAI4WvELHNlzY=;
+	b=kOELjz1ZQ8ZgFaSdyjSqNOo56rOwELb7nMihvWyKpiLWyesHcZhoO5Wj9rAXw4r1bChUv+
+	Tn7ABg2LqQY3zutS8avFn/J+csqgHNChAqsIw0bI3Cs6kZBqGYIbTAFwxcETmb90etKr3r
+	l0quaAaDuKfrHYGsMZrQIP223HU7PI4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716805953;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7wKqAT0deT6oEIQm8DExcQrRQ5vSwxEAI4WvELHNlzY=;
+	b=EouhnNv9Eu3lwuSGgowsqwq4kdLsskgIu1WMfiONc97LtV176A9BC70f2W9SkAeyGfYqjM
+	Q1TeItx/BURoOkBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8655B13A56;
+	Mon, 27 May 2024 10:32:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nQy9IEFhVGalGAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 27 May 2024 10:32:33 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1A37FA07D0; Mon, 27 May 2024 12:32:33 +0200 (CEST)
+Date: Mon, 27 May 2024 12:32:33 +0200
+From: Jan Kara <jack@suse.cz>
+To: Dan Shelton <dan.f.shelton@gmail.com>
+Cc: Jan Kara <jack@suse.cz>, linux-nfs@vger.kernel.org,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>
+Subject: Re: Bad NFS performance for fsync(2)
+Message-ID: <20240527103233.yuwrdjcdfs7lewed@quack3>
+References: <20240523165436.g5xgo7aht7dtmvfb@quack3>
+ <CAAvCNcB1hsS67Cy6sZP3Mf33VCKfFsg0Vc0pH2XJt0K6Po9ZQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240526000122.386951-1-cel@kernel.org>
-In-Reply-To: <20240526000122.386951-1-cel@kernel.org>
-From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Date: Mon, 27 May 2024 08:56:33 +0200
-Message-ID: <CAK8fFZ63r=Dc1nNKt5p_oTutgMYLWCQ=F10W7k5ahPDpVRjPHg@mail.gmail.com>
-Subject: Re: [PATCH] sunrpc: use the struct net as the svc proc private
-To: cel@kernel.org
-Cc: linux-nfs@vger.kernel.org, rankincj@gmail.com, 
-	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, 
-	Igor Raits <igor@gooddata.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAvCNcB1hsS67Cy6sZP3Mf33VCKfFsg0Vc0pH2XJt0K6Po9ZQQ@mail.gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 91DF221DFD
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email]
 
->
-> From: Josef Bacik <josef@toxicpanda.com>
->
-> [ Upstream commit 418b9687dece5bd763c09b5c27a801a7e3387be9 ]
->
-> nfsd is the only thing using this helper, and it doesn't use the private
-> currently.  When we switch to per-network namespace stats we will need
-> the struct net * in order to get to the nfsd_net.  Use the net as the
-> proc private so we can utilize this when we make the switch over.
->
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/stats.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
->
-> I investigated the crash reported by Chris and Jaroslav. This patch
-> is missing from v6.8.y.
->
->
-> diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
-> index 65fc1297c6df..383860cb1d5b 100644
-> --- a/net/sunrpc/stats.c
-> +++ b/net/sunrpc/stats.c
-> @@ -314,7 +314,7 @@ EXPORT_SYMBOL_GPL(rpc_proc_unregister);
->  struct proc_dir_entry *
->  svc_proc_register(struct net *net, struct svc_stat *statp, const struct proc_ops *proc_ops)
->  {
-> -       return do_register(net, statp->program->pg_name, statp, proc_ops);
-> +       return do_register(net, statp->program->pg_name, net, proc_ops);
->  }
->  EXPORT_SYMBOL_GPL(svc_proc_register);
->
-> --
-> 2.45.1
->
+On Fri 24-05-24 19:08:51, Dan Shelton wrote:
+> On Thu, 23 May 2024 at 18:55, Jan Kara <jack@suse.cz> wrote:
+> >
+> > Hello!
+> >
+> > I've been debugging NFS performance regression with recent kernels. It
+> > seems to be at least partially related to the following behavior of NFS
+> > (which is there for a long time AFAICT). Suppose the following workload:
+> >
+> > fio --direct=0 --ioengine=sync --thread --directory=/test --invalidate=1 \
+> >   --group_reporting=1 --runtime=100 --fallocate=posix --ramp_time=10 \
+> >   --name=RandomWrites-async --new_group --rw=randwrite --size=32000m \
+> >   --numjobs=4 --bs=4k --fsync_on_close=1 --end_fsync=1 \
+> >   --filename_format='FioWorkloads.$jobnum'
+> 
+> Where do you get the fio command from?
 
-I applied a mentioned commit 418b9687dece5bd763c09b5c27a801a7e3387be9
-as a patch for 6.8.y and the system did not get stuck by the "nfsstat"
-command.
+Well, this is somewhat hand-edited fio command that our QA runs as part of
+performance testing of our kernels.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
