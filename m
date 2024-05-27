@@ -1,99 +1,99 @@
-Return-Path: <linux-nfs+bounces-3424-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3425-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 981F18D09D6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 20:17:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DF08D0E57
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 21:43:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B0B22840B4
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 18:17:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FBAF1F21552
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 19:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35DF161FD2;
-	Mon, 27 May 2024 18:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EBoD/Hrh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D30B15FD04;
+	Mon, 27 May 2024 19:43:15 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4C01DA23;
-	Mon, 27 May 2024 18:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645A217E8FC;
+	Mon, 27 May 2024 19:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716833843; cv=none; b=TgMJXZGBrUdDnaJMEyYgwlNCo1zs9i7I2nEL3Kv+O7pySw5P35wg607CqiwswRtUhFIih9lMZSGVLeO702PK3VQov4oXA6PUx4ugTF3bCeUYqyi6dAuVrPEz1fZlecaOX2jgcoTykOAwRT1Jud49iWAlXCLDp6PoDVZtCFc0fgo=
+	t=1716838994; cv=none; b=uOU/JElTTW6BhU9v4HUuUt0Ky21W9sthj6L7rvJzrV3QeeZvTaF4OBCP8C9C/x2/H8d3BC9CVvgBD6yBBW6hC1Tlzr6GKmPqfhRoWFfmDmUlZwFb3zWax4o+tT6ZRCZ4Tye1qTal0oBtcd0F1xBH0QX7PeK4uk2xSXX0WWeDU3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716833843; c=relaxed/simple;
-	bh=73l1YPr/2J7LXLM4NzJGlrHdLbkHv4cNTEwSMSwytdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bkJcHLodrcMgh7Y4trPt/IdGSec+XjkKuGyVZf2+eLsTFDeOwAINykeCxtKZcBuvfzcm4C38ozPYIADCL3AMqB0/xU94118uRSFljvV/WJgUx8l3LnqIQoN+V1Mha7/u5Eqz+DPITMfPueuM+ZR35n6hwiuF8WPFu9wOROXbpbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EBoD/Hrh; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yQPndnt/VKkoxE+QATcqk3pffHAGhUlkEJl1EekOfS0=; b=EBoD/HrhhFDFz4F7sBZCAVQPZ3
-	UdPROiG8LxqhGX4WRjDUOkrv/AG5V/dDZE0KCq0UT1U7xc+ygKs4+n3RfQWs8xwEgBIopsRAC1BlN
-	+pbsBC1Eqdkk7Lv06FUj8iLILqJU0qpqWZ5U0J3gRjRvqWmtfvof0zSHvb4fHqbpM5exeJeN9G3uC
-	h8hH6miNT4tf4zY0nvd6MDPJ15+dPejJTPhb3OPZy4JGs47OgDCjbvNVsApJ+87WwHo/jarDC3uiO
-	Nq4q6dA9H4UtVIPaE/oDcG7YAc7YUnK325Dpy7hgiSKfb0jLGQrZZWdMV9bvuI3JS1licFjcnRc7V
-	apptAnSA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sBeuM-00000007sZU-0Y5G;
-	Mon, 27 May 2024 18:17:18 +0000
-Date: Mon, 27 May 2024 19:17:18 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] filemap: Convert generic_perform_write() to support
- large folios
-Message-ID: <ZlTOLsrhD4P4Yiwl@casper.infradead.org>
-References: <20240527163616.1135968-1-hch@lst.de>
- <20240527163616.1135968-2-hch@lst.de>
+	s=arc-20240116; t=1716838994; c=relaxed/simple;
+	bh=Q6guQNGi0jjNGbWxILSZGcvVmCxeCsFldicxz8i+EQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fEfWs4x+prred9zZ8rV+KtvvE6t7lR05xA2Trju0MEnT3lSOx8mm0kRxHgYH7w9DL8Bl3dpuUVk1BJKLxabSsloCzYRIW/LCdes+XsxZL1YP1uUgf5HbfbBMSwuNQFuiZ45VpuYrYGKfdZT5RUAbNWfJRmyb0y9wQAz+826/5c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4210d426325so74555e9.2;
+        Mon, 27 May 2024 12:43:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716838992; x=1717443792;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q6guQNGi0jjNGbWxILSZGcvVmCxeCsFldicxz8i+EQI=;
+        b=Vr8eFrWgEHMoH8MkxNsZO2saW3JeLWAM2Q7hNG6SNRT0pDxkChem2q7sSxJlTPpkVH
+         lz8hLucevEvjhmuzgW1CGE2yxlvVSVsQ7NLCjYVovnWZt6tnktjAz8gGXDcumaufa855
+         A7vmyZf7FpgABbvEdByhUQzL/EjSmd2B/mO4VzWQhMtV7lXB1rI1Zyo6fXCab0QYB0Ow
+         ubxZTdb2T01QbWSHjmcBtmlj8N5yS7IKCYjXzoIsUE1tDeLgEMV25TDlHy/OSKCJk8Fd
+         R1Z6TffBSqcnmfTMlXAmNzzcR2+of/I7lzvm0lcw9j1Tr4MtCsbwwjXqEWd5/EVITtWd
+         rVGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXsWL/rLqCNVltasIIRQvN995NigLujjg49EovZHH3fvVhAMK7arPorIvEHkm+Y90c07FG/3bCZd/j2kz7VH5DkpVEu6gOzY8+rJ5VeQ==
+X-Gm-Message-State: AOJu0YwTKU6R7aHRy6mOwwSKxe+QfEY+hFoeFBMfPR13XZM+ukpWzaMU
+	II7CoKRx4/u5NZE/xde86x04WX8izohIEbkW9ARQoPYXjFwI7KN0
+X-Google-Smtp-Source: AGHT+IHPpw7qo8lDaUi+gojHWCq+4MY4MZPDTmB5gouehAe6kc+Tq5kiaXOSCym3aYXo9LOBLKqsmg==
+X-Received: by 2002:adf:f9ce:0:b0:356:7963:fe9e with SMTP id ffacd0b85a97d-3567963ffb8mr5148264f8f.6.1716838991524;
+        Mon, 27 May 2024 12:43:11 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7ed6fsm9840902f8f.9.2024.05.27.12.43.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 12:43:11 -0700 (PDT)
+Message-ID: <68098d8a-0193-4bb0-8cee-e72e7442c661@grimberg.me>
+Date: Mon, 27 May 2024 22:43:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527163616.1135968-2-hch@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: support large folios for NFS
+To: Christoph Hellwig <hch@lst.de>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>, Matthew Wilcox <willy@infradead.org>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20240527163616.1135968-1-hch@lst.de>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240527163616.1135968-1-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 27, 2024 at 06:36:08PM +0200, Christoph Hellwig wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Modelled after the loop in iomap_write_iter(), copy larger chunks from
-> userspace if the filesystem has created large folios.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> [hch: use mapping_max_folio_size to keep supporting file systems that do
->  not support large folios]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yup, this still makes sense to me.
 
-Could you remind me why we need to call flush_dcache_folio() in
-generic_perform_write() while we don't in iomap_write_iter()?
+On 27/05/2024 19:36, Christoph Hellwig wrote:
+> Hi all,
+>
+> this series adds large folio support to NFS, and almost doubles the
+> buffered write throughput from the previous bottleneck of ~2.5GB/s
+> (just like for other file systems).
+>
+> The first patch is an old one from willy that I've updated very slightly.
+> Note that this update now requires the mapping_max_folio_size helper
+> merged into Linus' tree only a few minutes ago.
 
->  		if (mapping_writably_mapped(mapping))
-> -			flush_dcache_page(page);
-> +			flush_dcache_folio(folio);
+I'll confirm that NFS buffered writes saw a dramatic >2x improvement
+against my test system.
 
-(i'm not talking about this one)
+For the series:
+Tested-by: Sagi Grimberg <sagi@grimberg.me>
 
-> -		copied = copy_page_from_iter_atomic(page, offset, bytes, i);
-> -		flush_dcache_page(page);
-> +		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
-> +		flush_dcache_folio(folio);
 
-(this one has no equivalent in iomap)
 
->  		status = a_ops->write_end(file, mapping, pos, bytes, copied,
->  						page, fsdata);
 
