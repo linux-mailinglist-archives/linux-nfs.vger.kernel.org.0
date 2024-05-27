@@ -1,223 +1,250 @@
-Return-Path: <linux-nfs+bounces-3389-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3390-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18C578CF689
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 00:32:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D6218CF6EB
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 02:06:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95A231F2171C
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 May 2024 22:32:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 130591C20CE2
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 00:06:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1466353368;
-	Sun, 26 May 2024 22:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3424B63D;
+	Mon, 27 May 2024 00:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="ZMCmjYmB"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="GxXYoX1X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2117.outbound.protection.outlook.com [40.107.93.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC78333F6;
-	Sun, 26 May 2024 22:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716762765; cv=fail; b=XklnbMxrAaLGEzZ+Z1783WSGBUxScUymXHjjUNPsyK0Sq/OrpuuuHt0pMKGySj/Qbkl0o/PYcJpyUApjvqF/qVtF80YryHkwNGSgyldcnYlQfeNHK+RK5d28dnhjbyfG3jVgL79uibb30C6cmxPeQSbegahouqp1oM1aFfjt094=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716762765; c=relaxed/simple;
-	bh=Aj4+WHvXaoRjXkjD3gW/hS5lWO0CcvO0IM5jrY1vLp4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BQhR/42CJzv4Rv/bJO2MQqToDIxzQE9Wohl+r1Y6sj7VfQ+fP/oNCDBxz6FZC1pF6zMXdAjBZfBiO+H/3vEEtJMLXwikpUyxgJ+tTW71EjeUkA+pGEro8SzezPIRtHJuuu5Q2ufBFCQ1RwX69hbNDGt8rS7FA4vskIbHWhwb+Js=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=ZMCmjYmB; arc=fail smtp.client-ip=40.107.93.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PV6DPZPfkd8diOMbJbBVJJtQNQ8cN6579TyP8Ps4yQ1BSBTWc9Yb1/lUINwyCRXT5h/5iSLdXyMZ4wFuwEcZ7Pd9Napi0YexwsHjGg5GsjlL5Ksmg5TrMpLF3cpchR9ss7Et/2uRV3D7JX5ioeKOLtplrB6/EN9XMoN54CHiWndWOp8NxOlibwGZVIS5n9TvsiuCG935bTWZpLZkPD1lBTnL9M7QRrLngQQgT1lRSxNiaGvfoPc7N8sSrTzGCcF4mf/DjTKTk35I+IuKhlclR2hNVs3kORBlWKfpYkwKDePY4TnonBf0uNXHZpcmn+MWSuf6GOGnL07eo9DlXnLcqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Aj4+WHvXaoRjXkjD3gW/hS5lWO0CcvO0IM5jrY1vLp4=;
- b=MPkrjp3Ql2HpVbJuQsM7JPPGHxus0/cOfYE/8vLZx8YBcMTGNQJYe7Ak0VZNSye8fD1Sw8kdVRFL9UpuAdWv6GNKckNOqz6Cm15DHV72eYgowVme8/L+d0Q/zYYbvhCFFCm42fD+GeKI3xlfwXamu4xpbYIqV2k+5npYH5sM5c2KLySJN3LzBixX05KTfhykOJKgpJiSU9Vt3mapj+9+wrRpxNKImvd2RKhYcM9qnlxt0bJXnVRvOlrWKd7Jhk3pBYJY/A21j5j2XFANyOrGbx2Z4x3P9/YkrVPqE79zBI2BTukpDBXu9tJaFyf3jLFN9MTG0yA34l7kjVfXBlNaRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aj4+WHvXaoRjXkjD3gW/hS5lWO0CcvO0IM5jrY1vLp4=;
- b=ZMCmjYmBt8M9V71OUAVlLnwkwSeXGla4WZFlepCe5XWt3NbFqW799dM54iu6O1z1J4lE/idEv9D6YBjmCS4MZi9lSsS6/GZNDowdqYd7mAdAZLQY7V5pBmI3KOimehFNaGdDiiqQEOI2ddydPjhdX5dbrwYSwUjhVg9ex6sSNx4=
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
- DM6PR13MB3772.namprd13.prod.outlook.com (2603:10b6:5:248::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.16; Sun, 26 May 2024 22:32:39 +0000
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871]) by DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871%6]) with mapi id 15.20.7633.001; Sun, 26 May 2024
- 22:32:39 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "cyphar@cyphar.com" <cyphar@cyphar.com>, "hch@infradead.org"
-	<hch@infradead.org>
-CC: "jack@suse.cz" <jack@suse.cz>, "brauner@kernel.org" <brauner@kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>, "alex.aring@gmail.com"
-	<alex.aring@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk"
-	<viro@zeniv.linux.org.uk>, "jlayton@kernel.org" <jlayton@kernel.org>,
-	"amir73il@gmail.com" <amir73il@gmail.com>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Thread-Topic: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Thread-Index: AQHarVPtSe6qdv/lgk2vl1eWJoqLMLGpQqoAgADb5wA=
-Date: Sun, 26 May 2024 22:32:39 +0000
-Message-ID: <30137c868039a3ae17f4ae74d07383099bfa4db8.camel@hammerspace.com>
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
-	 <ZlMADupKkN0ITgG5@infradead.org>
-In-Reply-To: <ZlMADupKkN0ITgG5@infradead.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|DM6PR13MB3772:EE_
-x-ms-office365-filtering-correlation-id: 5d3a1fbf-daf8-472d-4476-08dc7dd3c05e
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230031|366007|7416005|376005|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UStPbzlWRmhZMFZmdkZiaFcyY0haZStSUjFjRGRyY2NBN3drdVFuUGlSckxj?=
- =?utf-8?B?eisrWmE5amNMcnBxeDdzNERXcEc0VHIvSjVGNlFvckx0NXRhVGdyOXF3QXUw?=
- =?utf-8?B?QjgzR1l1eUh1NVZvczhpVEcvamttall3QUZFQk5NRSttNUFNUUpUUG9VSnlX?=
- =?utf-8?B?bEFmeTVlZG8vSVI1TDdBRG50SjVRQTNmY1gzQnQ5TzMya1NCS2t6ZGhreW8y?=
- =?utf-8?B?Z0ZTS3QzZzZXRTQybk5YU0R1RmdRdjhEOUh3Q3ZHUWQ5bS9JYVJMNDFaRDFK?=
- =?utf-8?B?RDhNV0l1VnlTbzlTdjI2OHNGY0twSSszS0YrbGppeVk1NFV0eXhCOExJK2ts?=
- =?utf-8?B?SWRzN1hidS9xSGhTcjB6RFQzTStNOENUTnBrT2ZFYjl5SWFiMk80WGhOV01r?=
- =?utf-8?B?bmErWkx0Rk4rNWdXY2xCNHowN25idERUb3UzRHZUc1Nnc3Z1cHFCTVEwYkRB?=
- =?utf-8?B?Z2xaNk92cEFpSHZ0aG02Qm1jUW11Sy9zRDhCU0J0clo1UFJ6TVVwYXU0NnNt?=
- =?utf-8?B?ZzV5R053MFNhdmhtQ3lxZlpIblNMY0ZqWTRpTjc4d2FmTVo1aVNIdHR6blRP?=
- =?utf-8?B?bzhuR0ZIZ2VSMW5xbXFHYzBndUNOcVNaVjdOWEswTDJnbGVwNTRHK2xkUjNn?=
- =?utf-8?B?bzRaRGE1cE12cDNJU3BKbDRCRG43cFpIYkl6VW5Yd2xVWUFadGpSeWpnbnFO?=
- =?utf-8?B?QTBxOW12SE0rKzJ6WXZLaDNZYTQvVHdDVUluR3dLRm5kRDFqMTlMN2t6TWJ0?=
- =?utf-8?B?K2ZHTmlHN2hpTi9TNEFRUjJYRDFDOFM5MnllVFV3dmpDM01vTGJEVzNYZHA0?=
- =?utf-8?B?ZlZ6b3ZwQ2hlbTF6eFpJQnNrbEJFelJQdS9tQUR1V3hxQzRLdnZacC9LNlBR?=
- =?utf-8?B?aXhhWnZ6NEJFUDl6ejRJK1RLWUJoVXR3RUFVUGVHVmFqVDNGNml0WjFmd3NX?=
- =?utf-8?B?TE5TZE16SjZBNTVhS09NVkw0MnFaTGNmblJmelg3RFM0ZXRyN2s0ZDhFSmRX?=
- =?utf-8?B?aVpIb1dyZUZDTUcybGNMMDFOM1JnYWFvMkNrNEVwRXRNNlZnWStaQzNsSUt5?=
- =?utf-8?B?Slh5aGVPWjhrWmNPZEFSTG40b0t3Z1VBYnpGUmVEYVBwWUo1NFlLVmtUM3o4?=
- =?utf-8?B?dndqK3c3b015bFNUOFJPSFJlSEVCOFJhQmg0emxMSjd1UzZhaFlaQm8raEpH?=
- =?utf-8?B?WXVkSkxBVEZWVmVQaHU5a1VaN3UwaGFkV1JzNkVsRHlRWWtoOFdIdG5kcG9O?=
- =?utf-8?B?bjBUUnlKekZZNGErcDRxRlJlSGxoSVNTOHVEOFFFcEM3TnVPM1pKWEpTTWg1?=
- =?utf-8?B?U0JYNGkyY0h1UFpmemdXMktPWnJNUTEvb0l1czMveHRFZ1dpTDMxRUNFTFJw?=
- =?utf-8?B?RVZKZTAwMkdySFppT0NXMDA2Y1RCM3d5VDZsLzNHY1FuQkZrcytYMDVkbGZG?=
- =?utf-8?B?QVo3dDlZOGNNa2g5dlJmWE40UTFDM3hac3ZzVjNjYXA2MVRIazNwRS95NkRK?=
- =?utf-8?B?L1ZlbFQzNkEzeHIrK2VYQ3RRQXBWdGJka09kemwwMk5sR3NQTVpNOU9nc01X?=
- =?utf-8?B?TjY0clJEalM1NWI0UzBVNENqckFsWHlsSWFpcUpXRWNGdjFGbkJ3eGZING5F?=
- =?utf-8?B?dWJoWC82N2daMm82TkV4dkdOWWJ2RnBuOEYrT0Z4a296ZnJhb2psQzQ0aGJT?=
- =?utf-8?B?aWlKdTRhditqT2pFR2dianhLdVRNTnRxbU9JcnpZMkJjZnhyWlA4SmpDK0hV?=
- =?utf-8?B?OXl3MXVOOUxWc1E4QTYxMkpwSjAyWW12eEVjWkplZUR3OU5hc1M4N0lYdDFJ?=
- =?utf-8?B?VTFaTk1KRExCb1YzSFN6UT09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VWRPenFIblRuTDZvV1FOdlY5L3FwbVlXYjRBOSthcEJmU3ZmS011UHpTTTY3?=
- =?utf-8?B?VnJWdll6aGhGVFkyZzNmcHdoVGR6M0hPVk5CbjdONVp5bWl1aFVJNnc0QnN4?=
- =?utf-8?B?M3krUHduTEV0TUJFSmh4Mkh4alMvejlCNzdCR3k1eFZpYTAxKzFvOUNVc1pM?=
- =?utf-8?B?OER3YXZTeExZZ3VEMFhHMVFUSis1TG9sWU1GSmY0RXIxdnVQZlJsK3BuTzFj?=
- =?utf-8?B?bnY4eVdnUzE5ZFlGSklnU1Z4NVpWanJIdjROK0pHb0RCVWRvSjdya2Zwdjcw?=
- =?utf-8?B?UTY1ajgzRVpMRDAxME5PTlhabzlXWTJKVDFtQmNwakxBSHE0cVZNV0N0L1la?=
- =?utf-8?B?cUpZejR4MTE0WUNKWE5GQjVoVmFicnNnakFrYlpoeFN3cEVnaDQ1clYvQ1VC?=
- =?utf-8?B?RjRxODE5bUJGMlg0a3l1MjVpcUh5SFZha2ZmSHZoQzJSb0Z0L2NJTjVmNW11?=
- =?utf-8?B?cy9wZS9LVC96dm9LbkN4TkJNR2dLOW9kd042SElTaGhiYityOUFMTGE1Y0Ra?=
- =?utf-8?B?OWtTb3hXY2NNRzlQVTUvUjRCajYwbVJYZUI5UVdvVmhLN2hLMWtaaTFzWmNU?=
- =?utf-8?B?dkdiem9iWWd1M0JGM3V2MGN2NUNHYTdCVytOMVU2akZqM044OUFiajY2TkRU?=
- =?utf-8?B?Vk80c284Q3RSMEJ3YlF5bnptN1BTQXJUaXk5UzR3M1pkTS9yV3RackVtRjRw?=
- =?utf-8?B?OTZ1eUcwM2pISmJWU0ZVK1dwc3p1TUJwa0hEeThwQUJQMlA0azVpVXYvZ2FD?=
- =?utf-8?B?T2Q5MEJTbXZOWm5iblo3OVhBdXB1TEdtU1F0QVNIQjRnQ0YrNG5BOXBDZng4?=
- =?utf-8?B?NWZ6dEptQ0JTUlNVUWMrSnh3NkFjU0RLb25vaDJLZDRrQVJkSE9oY2FmcTg4?=
- =?utf-8?B?UVFuM3Mzam02ZjdRWUI0aWVETndzdFc5ZlErbmlzam9ZVDZGY3krQkRYcFcw?=
- =?utf-8?B?bG5XbmJXaUxmL2NoZThFYkRXMDRJWmFnRzFQSzkvQlVQVzF2K2tYaWlJVEcy?=
- =?utf-8?B?eTBVRUoydHBKUGlTUXcwVERpOVIveFlQVEM5WGNnd3Nwd1ZreWlHb3JxSTRq?=
- =?utf-8?B?N1ZWcC9selN1SDFuN1hKNkZBdi8xeHhzRGdVNk9ZM1l4VVA5YWxBbVpFenk1?=
- =?utf-8?B?UjN0L3Qzd1FhMzRXNDZrS2VsOTBwekU4UzVHSDYwL0d5VVczSlIweEczS0lO?=
- =?utf-8?B?OFFtYXlmTjRUQ1JFTXM1RjBYZnN1TFhXZTUzNE1lcGlSTEVRN3htbzlBNWha?=
- =?utf-8?B?TVYxaG5FWnhQTlNSMENUNTZ4L1hLK0U1QlBwV1JFSUx0amtTQlFCSlcrZWky?=
- =?utf-8?B?YjlnYWNEWjM3LzBKRmhQekUwWHZNdFplUTJ0T20zRkpHRWs1eEt6cVdCTElU?=
- =?utf-8?B?dkVOMTV2Y3FvVjhzMms4NEJkaDkwU0tmcnU1bmM2M3p2a3kvZXg1N1MraHhu?=
- =?utf-8?B?eCtEektLbHVGK29oZll4VXptRHNIa254RVNnaklJN1dSdlVnanozT2VtZlY3?=
- =?utf-8?B?WEdQWnVjRG5yMUZYdll4aHlpSFlQcWxpWkpqNEUyM3FZTlVDRWpnVHZSTXNa?=
- =?utf-8?B?Ykd4TFI0aGhBa3dhWHZBNE5Od3BEaDlUV3dsTGx3TitmYzNwNXlEVDk4Ly9n?=
- =?utf-8?B?b3ZucHpPN3d0TlV3WWJvMFRpcVd4bWVyTDhmbEZhMEtDSEdjaG5Rd1dVejNH?=
- =?utf-8?B?dmhRUXFKakdzb1NFTnhCSTYvbU5sY2tpc1kxTWdKS25waGM0L092cE1Qblhh?=
- =?utf-8?B?Qk9TeFU4SjJybjFoMTdvdlFRcUVYa3pJNHpYcmJpb2cwMWlTeUN3Y3UxOVNO?=
- =?utf-8?B?TUpXUTVSbEJtKzFya3dubXlwTlFmbGdOcVRxSE5Semh1TmQxK2lnV0xoSjJx?=
- =?utf-8?B?RFp2OFZnRkNhM0d0M1RpRGRjTEVZY3VjUThJQzl1Qmw5dnFPVFJoNFptQzlm?=
- =?utf-8?B?dnl6RkZnVGJkckgzQ0xRUHg1N3hNT212OC95Y0JXS2NteGdYMllSWXVoU0xT?=
- =?utf-8?B?RUF0RllzNVZGTWU2TFV1djZGdko3YVR0ZzF0Y1IxVWpPVGhzWWc5WDdBd1Uz?=
- =?utf-8?B?TjBJK1J0YVQ0ejQ2NlAxL25UTElIbXhXVXdIaVZ1OFozbzhlVGpKMUwxK3E2?=
- =?utf-8?B?OTlrUGd2M0phdWluV1FGaVhDU1Ezcjd6YkxOQUpqaHp1Ni81WTdWWGZDdHh0?=
- =?utf-8?B?VVNlVG43NWY3eUFVYlVwYTM4MnNKN0dOZ1JhME13UUtIMzMrZjBGVFlrdWZm?=
- =?utf-8?B?emFBM1pvYXFldjE0bG5yeWk5QzlRPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8191549F3A7C3F45AA4DF3E9115ECC4D@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E81170
+	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 00:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716768384; cv=none; b=mB06WvkiLUxjkQS8UUpM/Wwb+/Dpwsgf9PN3G0xLYhk716ATPOHdXg1B6+34AtJG1qEwop29JUdVFbD8vgYFiyzf2OCXtTCPM+rjs+hm+6ebhAOYg3khWQr6bE/NRIdHU02CLBqYazN6oQyLA/tQQ9fmorbw/l36ebH8UmkEk28=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716768384; c=relaxed/simple;
+	bh=11eHXvJbkomQ88aqXsVVKUXVL2aEfafpgaZ7OZ1x9NM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvaPAS3393jBBozgTlVoOqydVQveYmRXz+B4wmcUh6LotsMArWjdI6aE3FdlFagvZRJ5GdmZF/zLa5lU/WR/y5DBmqTzcmmrqBQhSf39ODt5UXycYU8ELxpOoJspQcpEptII+sBW2uhuOp3MLCEcVoFVqqsjnrZY7R0vgssZ1ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=GxXYoX1X; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f8eba8dcfcso2250733b3a.3
+        for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 17:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716768381; x=1717373181; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V9R7bMtFEWMcWVXBnoMSh8LcpnoJ77tngWySOPXEB6M=;
+        b=GxXYoX1XR8ByAxluTNPkg6iSpCLNA5DlxkRkHvbREdsyESVZKXz3J7b4xdLdoT89lk
+         fsHSgkJPyr1TRg1kuwrfD6SJkGspoCEv3PYGjxE1zufxXbBNpwUWIjkx+RlX6bgXVgHg
+         tjmp+yZq6VlEI1oiRPE52U/xkj387eKr2OL+v/JVVGtmEWPjQjumQvf60wHb+aVIFqiA
+         dyoCe3PwR3wo2A54Q9uFNOri4hcOkHY4KkYke9CCvKELq9UyP8UiRYGJuxJU7EMWToe9
+         FL9NTqrEeJHAuaUCD7HwEHjqehVaTqL1hE3iYxMwYhrGWPCHcOJYsTmP5BJ0SWCp83Qr
+         8dLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716768381; x=1717373181;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V9R7bMtFEWMcWVXBnoMSh8LcpnoJ77tngWySOPXEB6M=;
+        b=aOmLqUIJmsMfXY89aeDxbp9V+nqDf90b1hO0VSHRpCUFMFZ3Q0hb1tcQNk2fX0MrtT
+         JlgRerR9cr6qADbEyp0ITndSnrBTnCxT0jpW9Itb4TY6lFFnMkHg2Dr18qOyXeYIFJ3W
+         RSq9QaVQ6JTrQCRqavdgbZCrjU0HMc8rAr0nQGXPb6NKyavlLCR0r51WJlclDB6Sj7AX
+         FaS5aGF11P8MWtJesNuey+o7RA8O2rK+DnuHhhviNsqCDyrtF5pPobkzMgdhI9n7HpVc
+         +H+gZB+QiWUOGDQAkYQoDo4Vm5SVe446ZurzI2gWMV9CNOd40A2W7Llke9yU0SzGhrW3
+         o3bA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyGv9PrH+ZhrHJzLuJJuqq58AOOqstUIA5U9bW4Qqpkfzl2caroIzUEVyIMfvlUFwsX1I2kGgvQZTk3+Syi1XirkjH1ZRbYMfR
+X-Gm-Message-State: AOJu0Yx3wOo85rCJrf4/vA2cnEaq2hSB1lCJvj0j8g/6wCZfzuStVRA1
+	CZiVKJf3oMcARJ4MEcoC6aYGzjqZ7YEG5zpK2MFBJ7rqTpCMMqoHYQ6r+yXh1HQ=
+X-Google-Smtp-Source: AGHT+IFEqGxApp8I+g0v5ZYyes8YpL0Dz6P6/dAppaN4B2DlkRcDN/gTEyOeUegityO66ngJ2bvWFA==
+X-Received: by 2002:a05:6a21:8193:b0:1af:ac96:f4bf with SMTP id adf61e73a8af0-1b212d1e48cmr8324171637.15.1716768380306;
+        Sun, 26 May 2024 17:06:20 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcfe6666sm3904218b3a.163.2024.05.26.17.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 May 2024 17:06:19 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sBNsV-00Bhhe-2w;
+	Mon, 27 May 2024 10:06:15 +1000
+Date: Mon, 27 May 2024 10:06:15 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Aleksa Sarai <cyphar@cyphar.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
+Message-ID: <ZlPOd0p7AUn7JqLu@dread.disaster.area>
+References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
+ <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
+ <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
+ <20240524-ahnden-danken-02a2e9b87190@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d3a1fbf-daf8-472d-4476-08dc7dd3c05e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2024 22:32:39.8152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cVp2TFvXloXmcqGVdPlU3YewXxwbJ0wWQWT0D2DmzjrHk/cndZp+j/BPEKu4CO8Xz9aFVkGUP0WfKBBQXwnRQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB3772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240524-ahnden-danken-02a2e9b87190@brauner>
 
-T24gU3VuLCAyMDI0LTA1LTI2IGF0IDAyOjI1IC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gVGh1LCBNYXkgMjMsIDIwMjQgYXQgMDE6NTc6MzJQTSAtMDcwMCwgQWxla3NhIFNh
-cmFpIHdyb3RlOg0KPiA+IE5vdyB0aGF0IHdlIHByb3ZpZGUgYSB1bmlxdWUgNjQtYml0IG1vdW50
-IElEIGludGVyZmFjZSBpbiBzdGF0eCwgd2UNCj4gPiBjYW4NCj4gPiBub3cgcHJvdmlkZSBhIHJh
-Y2UtZnJlZSB3YXkgZm9yIG5hbWVfdG9faGFuZGxlX2F0KDIpIHRvIHByb3ZpZGUgYQ0KPiA+IGZp
-bGUNCj4gPiBoYW5kbGUgYW5kIGNvcnJlc3BvbmRpbmcgbW91bnQgd2l0aG91dCBuZWVkaW5nIHRv
-IHdvcnJ5IGFib3V0DQo+ID4gcmFjaW5nDQo+ID4gd2l0aCAvcHJvYy9tb3VudGluZm8gcGFyc2lu
-Zy4NCj4gDQo+IGZpbGUgaGFuZGxlcyBhcmUgbm90IHRpZWQgdG8gbW91bnRzLCB0aGV5IGFyZSB0
-aWVkIHRvIHN1cGVyX2Jsb2NrcywNCj4gYW5kIHRoZXkgY2FuIHN1cnZpdmUgcmVib290cyBvciAo
-bGVzcyByZWxldmFudCkgcmVtb3VudHMuwqAgVGhpcyB0aHVzDQo+IHNlZW1zIGxpa2UgYSB2ZXJ5
-IGNvbmZ1c2luZyBpZiBub3Qgd3JvbmcgaW50ZXJmYWNlcy4NCg0KSSBhc3N1bWUgdGhlIHJlYXNv
-biBpcyB0byBnaXZlIHRoZSBjYWxsZXIgYSByYWNlIGZyZWUgd2F5IHRvIGZpZ3VyZSBvdXQNCndo
-aWNoIHN1Ym1vdW50IHRoZSBwYXRoIHJlc29sdmVzIHRvLiBUaGUgcHJvYmxlbSBpcyB0aGF0IG5v
-dGhpbmcgc3RvcHMNCmFub3RoZXIgcHJvY2VzcyBmcm9tIGNhbGxpbmcgdW1vdW50KCkgYmVmb3Jl
-IHlvdSdyZSBkb25lIHBhcnNpbmcNCi9wcm9jL21vdW50aW5mbyBhbmQgaGF2ZSByZXNvbHZlZCB0
-aGUgbW91bnQgaWQuDQoNCklmIHdlJ3JlIGxvb2tpbmcgdG8gY2hhbmdlIHRoZSBBUEksIHRoZW4g
-cGVyaGFwcyByZXR1cm5pbmcgYSBmaWxlDQpkZXNjcmlwdG9yIG1pZ2h0IGJlIGEgYmV0dGVyIGFs
-dGVybmF0aXZlPw0KTW9zdCB1c2VybGFuZCBORlMgc2VydmVycyBhcmUgaW4gYW55IGNhc2UgZ29p
-bmcgdG8gZm9sbG93IHVwIG9idGFpbmluZw0KdGhlIGZpbGVoYW5kbGUgd2l0aCBhIHN0YXQoKSBv
-ciBldmVuIGEgZnVsbCBibG93biBvcGVuKCkgaW4gb3JkZXIgdG8NCmdldCBmaWxlIGF0dHJpYnV0
-ZXMsIHNldCB1cCBmaWxlIHN0YXRlLCBldGMuIEJ5IHJldHVybmluZyBhbiBvcGVuIGZpbGUNCmRl
-c2NyaXB0b3IgdG8gdGhlIHJlc29sdmVkIGZpbGUgKGV2ZW4gaWYgaXQgaXMgb25seSBhbiBPX1BB
-VEgNCmRlc2NyaXB0b3IpIHdlIGNvdWxkIGFjY2VsZXJhdGUgdGhvc2Ugb3BlcmF0aW9ucyBpbiBh
-ZGRpdGlvbiB0byBzb2x2aW5nDQp0aGUgdW1vdW50KCkgcmFjZS4NCg0KQWx0ZXJuYXRpdmVseSwg
-anVzdCByZW1vdmUgdGhlIHBhdGggYXJndW1lbnQgYWx0b2dldGhlciwgYW5kIHJlcXVpcmUNCnRo
-ZSBkZXNjcmlwdG9yIGFyZ3VtZW50IHRvIGJlIGFuIE9fUEFUSCBvciByZWd1bGFyIG9wZW4gZmls
-ZSBkZXNjcmlwdG9yDQp0aGF0IHJlc29sdmVzIHRvIHRoZSBmaWxlIHdlIHdhbnQgdG8gZ2V0IGEg
-ZmlsZWhhbmRsZSBmb3IuIEhvd2V2ZXIgdGhpcw0Kd291bGQgcmVxdWlyZSBhIHVzZXJsYW5kIE5G
-UyBzZXJ2ZXIgdG8gZ2VuZXJhbGx5IGRvIGENCm9wZW5fYnlfaGFuZGxlX2F0KCkgdG8gcmVzb2x2
-ZSB0aGUgcGFyZW50IGRpcmVjdG9yeSBoYW5kbGUsIHRoZW4gZG8gYW4NCm9wZW5hdChPX1BBVEgp
-IHRvIGdldCB0aGUgZmlsZSB0byBsb29rIHVwLCBiZWZvcmUgYmVpbmcgYWJsZSB0byBjYWxsDQp0
-aGUgbmFtZV90b19oYW5kbGVfYXQoKSByZXBsYWNlbWVudC4NCmkuZS4gdGhlcmUgd291bGQgYmUg
-MSBleHRyYSBzeXNjYWxsLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVu
-dCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNv
-bQ0KDQoNCg==
+On Fri, May 24, 2024 at 02:25:30PM +0200, Christian Brauner wrote:
+> On Thu, May 23, 2024 at 09:52:20AM -0600, Aleksa Sarai wrote:
+> > On 2024-05-21, Christian Brauner <brauner@kernel.org> wrote:
+> > > On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
+> > > > Now that we have stabilised the unique 64-bit mount ID interface in
+> > > > statx, we can now provide a race-free way for name_to_handle_at(2) to
+> > > > provide a file handle and corresponding mount without needing to worry
+> > > > about racing with /proc/mountinfo parsing.
+> > > > 
+> > > > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bit
+> > > > that doesn't make sense for name_to_handle_at(2).
+> > > > 
+> > > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > > ---
+> > > 
+> > > So I think overall this is probably fine (famous last words). If it's
+> > > just about being able to retrieve the new mount id without having to
+> > > take the hit of another statx system call it's indeed a bit much to
+> > > add a revised system call for this. Althoug I did say earlier that I
+> > > wouldn't rule that out.
+> > > 
+> > > But if we'd that then it'll be a long discussion on the form of the new
+> > > system call and the information it exposes.
+> > > 
+> > > For example, I lack the grey hair needed to understand why
+> > > name_to_handle_at() returns a mount id at all. The pitch in commit
+> > > 990d6c2d7aee ("vfs: Add name to file handle conversion support") is that
+> > > the (old) mount id can be used to "lookup file system specific
+> > > information [...] in /proc/<pid>/mountinfo".
+> > 
+> > The logic was presumably to allow you to know what mount the resolved
+> > file handle came from. If you use AT_EMPTY_PATH this is not needed
+> > because you could just fstatfs (and now statx(AT_EMPTY_PATH)), but if
+> > you just give name_to_handle_at() almost any path, there is no race-free
+> > way to make sure that you know which filesystem the file handle came
+> > from.
+> > 
+> > I don't know if that could lead to security issues (I guess an attacker
+> > could find a way to try to manipulate the file handle you get back, and
+> > then try to trick you into operating on the wrong filesystem with
+> > open_by_handle_at()) but it is definitely something you'd want to avoid.
+> 
+> So the following paragraphs are prefaced with: I'm not an expert on file
+> handle encoding and so might be totally wrong.
+> 
+> Afaiu, the uniqueness guarantee of the file handle mostly depends on:
+> 
+> (1) the filesystem
+> (2) the actual file handling encoding
+> 
+> Looking at file handle encoding to me it looks like it's fairly easy to
+> fake them in userspace (I guess that's ok if you think about them like a
+> path but with a weird permission model built around them.) for quite a
+> few filesystems.
+
+This is a feature specifically used by XFS utilities like xfs_fsr
+and xfsdump to take pathless inode information retrieved by bulkstat
+operations to a file handle to enable arbitrary inodes in the
+filesystem to be opened.
+
+i.e. they scan the filesystem by walking the filesystem's internal
+inode index, not by walking paths to scan the filesytsem. This is
+*much* faster than path walking, especially on seek-limited storage
+hardware.
+
+Knowing the inode number, generation and fs uuid, we can
+construct a valid filehandle for that inode, and then do whatever
+operations we need to do (defrag, backup, move offline (HSM), etc)
+without needing to know the path to that inode....
+
+> The problem is with what name_to_handle_at() returns imho. A mnt_id
+> doesn't pin the filesystem and the old mnt_id isn't unique. That means
+> the filesystem can be unmounted and go away and the mnt_id can be
+> recycled almost immediately for another mount but the file handle is
+> still there.
+
+This is no different to the NFS server unexporting a filesystem -
+all attempts to resolve the file handle the client holds for that
+export must now fail. Hence the filehandle itself must have a
+superblock specific identifier in it.
+
+> So to guarantee that a (weakly encoded) file handle is interpreted in
+> the right filesystem the file handle must either be accompanied by a
+> file descriptor that pins the relevant mount or have any other guarantee
+> that the filesystem doesn't go away (Or of course, the file handle
+> encodes the uuid of the filesystem or something or uses some sort of
+> hashing scheme.).
+
+Yes, it does, and that's the superblock based identifier, not
+something that is mount based. i.e.  the handle is valid regardless
+of where the filesystem is mounted, even if the application does not
+have visibility or permitted access to the given mount. And the
+filehandle is persistent - it must work across unmount/mount,
+reboots, change of mount location, etc.
+
+That means that if you are using file handles, any filesystem that
+is shared across multiple containers can by fully accessed by user
+generated file handles from any container if no special permissions
+are required. i.e. there are no real path or mount based security
+boundaries for filehandles in existence righ now.
+
+If filehandles are going to be restricted to a specific container
+(e.g. a single mount) so that less permissions are needed to open
+the filehandle, then the filehandle itself needs to encode those
+restrictions. Decoding the filehandle needs to ensure that the
+opening context has permission to access whatever the filehandle
+points to in a restricted environment. This will prevent existing
+persistent, global filehandles from being used as restricted
+filehandles and vice versa.
+
+Restricting filehandles for use as persistent filehandles is going
+to be tricky - mount IDs are ephermeral and only valid while a mount
+is active. I'd suggest that restricted filehandles should only be
+ephemeral, too.  That would also allow restricted filehandles to use
+kernel side crypto based encoding so nobody can ever construct them
+from userspace. 
+
+Hence I think we have to look at what we are encoding in the
+filehandle itself to solve the "shared access from restricted
+environments" problem, not try to add stuff around the outside of
+the filehandle API to paper over the fact that filehandles
+themselves have no permission/restriction model built into them.
+
+This would also avoid the whole problem of "users can access any
+file in the underlying filesystem by constructing their own handles" problem that
+relaxed permissions on filehandle decoding creates, hence opening
+the door for more extensive use of filehandles in untrusted
+environments.
+
+> One of the features of file handles is that they're globally usable so
+> they're interesting to use as handles that can be shared. IOW, one can
+> send around a file handle to another process without having to pin
+> anything or have a file descriptor open that needs to be sent via
+> AF_UNIX.
+>
+> But as stated above that's potentially risky so one might still have to
+> send around an fd together with the file handle if sender and receiver
+> don't share the filesystem for the handle.
+
+Adding a trust context around the outside of an untrusted handle
+isn't the right way to address this problem - define a filehandle
+format that can be trusted and constrained within specific security
+domains and the need for external permission contexts (whatever they
+look like) to be passed with the filehandle to make it valid go away
+entirely.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
