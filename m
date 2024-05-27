@@ -1,79 +1,79 @@
-Return-Path: <linux-nfs+bounces-3390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D6218CF6EB
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 02:06:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 222918CF710
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 02:48:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 130591C20CE2
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 00:06:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB0421F21047
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 May 2024 00:48:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3424B63D;
-	Mon, 27 May 2024 00:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2768220E6;
+	Mon, 27 May 2024 00:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="GxXYoX1X"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="SK6lhW9A"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E81170
-	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 00:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7A81C3D
+	for <linux-nfs@vger.kernel.org>; Mon, 27 May 2024 00:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716768384; cv=none; b=mB06WvkiLUxjkQS8UUpM/Wwb+/Dpwsgf9PN3G0xLYhk716ATPOHdXg1B6+34AtJG1qEwop29JUdVFbD8vgYFiyzf2OCXtTCPM+rjs+hm+6ebhAOYg3khWQr6bE/NRIdHU02CLBqYazN6oQyLA/tQQ9fmorbw/l36ebH8UmkEk28=
+	t=1716770934; cv=none; b=by4WIQedohA6AyMFa0T1A60R0uWR3R6QSgvOv++224xAKI+5grrPqhw6xGghb2mZiPyTRCYV767UtJ/8UxS1ZPgSYQYvcDnSBTXzeT4YKvE4SeZMEpk6WrCFgJPj9V/HgK2BBneTk+yD+5J1lD4CuGy5M1TSBVZujBi16ZbfjOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716768384; c=relaxed/simple;
-	bh=11eHXvJbkomQ88aqXsVVKUXVL2aEfafpgaZ7OZ1x9NM=;
+	s=arc-20240116; t=1716770934; c=relaxed/simple;
+	bh=hioMBOZdyR1QV8XdN/+RNK+wt7kZa2b3j/k6NWmv97A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZvaPAS3393jBBozgTlVoOqydVQveYmRXz+B4wmcUh6LotsMArWjdI6aE3FdlFagvZRJ5GdmZF/zLa5lU/WR/y5DBmqTzcmmrqBQhSf39ODt5UXycYU8ELxpOoJspQcpEptII+sBW2uhuOp3MLCEcVoFVqqsjnrZY7R0vgssZ1ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=GxXYoX1X; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=JkBICKJR47m586j9bU9wu5cMEHdS8uhm62rS7lkDPjoy1CSb0/4M+rWuFQq0MbvQxudl6qBNfBaN/j+OuRZTgmZ2/nUYvZ2CjFafcUdvyQhizLzW6Lz4xkJ4GejXIx//gMczGNirHcwDW1hyO2TBbqFbh27tq2N7GnvnY0mh8kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=SK6lhW9A; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f8eba8dcfcso2250733b3a.3
-        for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 17:06:21 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-681a49e6e86so1387629a12.3
+        for <linux-nfs@vger.kernel.org>; Sun, 26 May 2024 17:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716768381; x=1717373181; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716770932; x=1717375732; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9R7bMtFEWMcWVXBnoMSh8LcpnoJ77tngWySOPXEB6M=;
-        b=GxXYoX1XR8ByAxluTNPkg6iSpCLNA5DlxkRkHvbREdsyESVZKXz3J7b4xdLdoT89lk
-         fsHSgkJPyr1TRg1kuwrfD6SJkGspoCEv3PYGjxE1zufxXbBNpwUWIjkx+RlX6bgXVgHg
-         tjmp+yZq6VlEI1oiRPE52U/xkj387eKr2OL+v/JVVGtmEWPjQjumQvf60wHb+aVIFqiA
-         dyoCe3PwR3wo2A54Q9uFNOri4hcOkHY4KkYke9CCvKELq9UyP8UiRYGJuxJU7EMWToe9
-         FL9NTqrEeJHAuaUCD7HwEHjqehVaTqL1hE3iYxMwYhrGWPCHcOJYsTmP5BJ0SWCp83Qr
-         8dLw==
+        bh=XuaJD1aUatqwF4qjWia2A1AlcKfhTGao9KmR227W0ZE=;
+        b=SK6lhW9ApZC3MSgqUOYeJL/b/rW1HH3TTOOg3btgc4vdqymNvrzypYfjpqD8XZTJFU
+         SV2didnjIQI528ApqLV9YP/D2HU2dVx4gogIHXUoxDsNwPeC2ILd2b3dQHW0GKv81RTz
+         5quPnGBOnmK46QyaHlksEqU7s1mdNk4yS2AukTatCIBn0JYJTVJAiipy19/Ty72zgH4t
+         esQOCSWDdCinoeTySSEPwON/aBBwgAJmp8NBsD+dP09JGV4vVQRV/xSVgH0c1rLoRfPV
+         /M76k0SSGNKO2yYcTZ6j8HDaG4F8iHouKzQ/5El3N6Zs0IdQF/gyftaO+bqLsHgoIimX
+         tS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716768381; x=1717373181;
+        d=1e100.net; s=20230601; t=1716770932; x=1717375732;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V9R7bMtFEWMcWVXBnoMSh8LcpnoJ77tngWySOPXEB6M=;
-        b=aOmLqUIJmsMfXY89aeDxbp9V+nqDf90b1hO0VSHRpCUFMFZ3Q0hb1tcQNk2fX0MrtT
-         JlgRerR9cr6qADbEyp0ITndSnrBTnCxT0jpW9Itb4TY6lFFnMkHg2Dr18qOyXeYIFJ3W
-         RSq9QaVQ6JTrQCRqavdgbZCrjU0HMc8rAr0nQGXPb6NKyavlLCR0r51WJlclDB6Sj7AX
-         FaS5aGF11P8MWtJesNuey+o7RA8O2rK+DnuHhhviNsqCDyrtF5pPobkzMgdhI9n7HpVc
-         +H+gZB+QiWUOGDQAkYQoDo4Vm5SVe446ZurzI2gWMV9CNOd40A2W7Llke9yU0SzGhrW3
-         o3bA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyGv9PrH+ZhrHJzLuJJuqq58AOOqstUIA5U9bW4Qqpkfzl2caroIzUEVyIMfvlUFwsX1I2kGgvQZTk3+Syi1XirkjH1ZRbYMfR
-X-Gm-Message-State: AOJu0Yx3wOo85rCJrf4/vA2cnEaq2hSB1lCJvj0j8g/6wCZfzuStVRA1
-	CZiVKJf3oMcARJ4MEcoC6aYGzjqZ7YEG5zpK2MFBJ7rqTpCMMqoHYQ6r+yXh1HQ=
-X-Google-Smtp-Source: AGHT+IFEqGxApp8I+g0v5ZYyes8YpL0Dz6P6/dAppaN4B2DlkRcDN/gTEyOeUegityO66ngJ2bvWFA==
-X-Received: by 2002:a05:6a21:8193:b0:1af:ac96:f4bf with SMTP id adf61e73a8af0-1b212d1e48cmr8324171637.15.1716768380306;
-        Sun, 26 May 2024 17:06:20 -0700 (PDT)
+        bh=XuaJD1aUatqwF4qjWia2A1AlcKfhTGao9KmR227W0ZE=;
+        b=Cl6+xafkrwkNpielZqjsW7rKDhvXxl2eOqIeHwh8jZwLG6gswHNalimfceEkd93pW+
+         HlHX5T2VWTOU3zjS5ZJ6KuPWB6lyR1ZaJyzZjsHeDjDLlSBSp3m+DuMshz1TrMlsBInp
+         mYXdqggJLhb8hREa84GWYS5NTNqwAvKqWcgV++XgiE7VN06kT4KCyHytox9O24Caz4VR
+         nw6+4eiSHQwGgi6b6a+dpGB6tlrVjmLGzoV5CLbMjDkFTc0qTcANKicGZ5Q0s/gOaHym
+         av4wIw/HIKGx+NRo9BfImyXMJXBSf6pV7nKlwJqhfVwnXRs4TmgDBIqVOhyGHXtqikr9
+         o7YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWEIHbnIjMq3NziXFaCJ/d5WPNBpbeYFPvuHZsizsOVYvEHG03QzrcBMCq4lyMhzjK543IiyyXmwsIMJq0EIWReMLhJdwGxV6L
+X-Gm-Message-State: AOJu0YyWkvL1G9CU4PxUj+Df453KhhXukrW/1piy1kI2sGRwZQcUOsLQ
+	9+cW0989psIXjwGW9RtEM0rCKZw8MgGweYcQauj9xTaUR55AyFGGXmsB1F2s0BM=
+X-Google-Smtp-Source: AGHT+IHbQl7/lkOzeGOau08dTp2POnpUQMA13Xqx5nrdWWiCDRBVRFXztGICisDEDkOgIzzbItS24A==
+X-Received: by 2002:a05:6a20:6a1f:b0:1b1:e7de:4d39 with SMTP id adf61e73a8af0-1b212d054b5mr8807904637.16.1716770931879;
+        Sun, 26 May 2024 17:48:51 -0700 (PDT)
 Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcfe6666sm3904218b3a.163.2024.05.26.17.06.19
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6fc06c6e5acsm2858016b3a.109.2024.05.26.17.48.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 May 2024 17:06:19 -0700 (PDT)
+        Sun, 26 May 2024 17:48:51 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
 	(envelope-from <david@fromorbit.com>)
-	id 1sBNsV-00Bhhe-2w;
-	Mon, 27 May 2024 10:06:15 +1000
-Date: Mon, 27 May 2024 10:06:15 +1000
+	id 1sBOXg-00Bjiz-37;
+	Mon, 27 May 2024 10:48:48 +1000
+Date: Mon, 27 May 2024 10:48:48 +1000
 From: Dave Chinner <david@fromorbit.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Aleksa Sarai <cyphar@cyphar.com>,
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Christian Brauner <brauner@kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -82,11 +82,12 @@ Cc: Aleksa Sarai <cyphar@cyphar.com>,
 	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH RFC] fhandle: expose u64 mount id to name_to_handle_at(2)
-Message-ID: <ZlPOd0p7AUn7JqLu@dread.disaster.area>
+Message-ID: <ZlPYcPLZBh7h9cCq@dread.disaster.area>
 References: <20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
  <20240521-verplanen-fahrschein-392a610d9a0b@brauner>
  <20240523.154320-nasty.dough.dark.swig-wIoXO62qiRSP@cyphar.com>
  <20240524-ahnden-danken-02a2e9b87190@brauner>
+ <20240524.154429-smoked.node.sleepy.dragster-w2EokFBsl7RC@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -95,153 +96,33 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240524-ahnden-danken-02a2e9b87190@brauner>
+In-Reply-To: <20240524.154429-smoked.node.sleepy.dragster-w2EokFBsl7RC@cyphar.com>
 
-On Fri, May 24, 2024 at 02:25:30PM +0200, Christian Brauner wrote:
-> On Thu, May 23, 2024 at 09:52:20AM -0600, Aleksa Sarai wrote:
-> > On 2024-05-21, Christian Brauner <brauner@kernel.org> wrote:
-> > > On Mon, May 20, 2024 at 05:35:49PM -0400, Aleksa Sarai wrote:
-> > > > Now that we have stabilised the unique 64-bit mount ID interface in
-> > > > statx, we can now provide a race-free way for name_to_handle_at(2) to
-> > > > provide a file handle and corresponding mount without needing to worry
-> > > > about racing with /proc/mountinfo parsing.
-> > > > 
-> > > > As with AT_HANDLE_FID, AT_HANDLE_UNIQUE_MNT_ID reuses a statx AT_* bit
-> > > > that doesn't make sense for name_to_handle_at(2).
-> > > > 
-> > > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > > ---
-> > > 
-> > > So I think overall this is probably fine (famous last words). If it's
-> > > just about being able to retrieve the new mount id without having to
-> > > take the hit of another statx system call it's indeed a bit much to
-> > > add a revised system call for this. Althoug I did say earlier that I
-> > > wouldn't rule that out.
-> > > 
-> > > But if we'd that then it'll be a long discussion on the form of the new
-> > > system call and the information it exposes.
-> > > 
-> > > For example, I lack the grey hair needed to understand why
-> > > name_to_handle_at() returns a mount id at all. The pitch in commit
-> > > 990d6c2d7aee ("vfs: Add name to file handle conversion support") is that
-> > > the (old) mount id can be used to "lookup file system specific
-> > > information [...] in /proc/<pid>/mountinfo".
-> > 
-> > The logic was presumably to allow you to know what mount the resolved
-> > file handle came from. If you use AT_EMPTY_PATH this is not needed
-> > because you could just fstatfs (and now statx(AT_EMPTY_PATH)), but if
-> > you just give name_to_handle_at() almost any path, there is no race-free
-> > way to make sure that you know which filesystem the file handle came
-> > from.
-> > 
-> > I don't know if that could lead to security issues (I guess an attacker
-> > could find a way to try to manipulate the file handle you get back, and
-> > then try to trick you into operating on the wrong filesystem with
-> > open_by_handle_at()) but it is definitely something you'd want to avoid.
+On Fri, May 24, 2024 at 08:58:55AM -0700, Aleksa Sarai wrote:
 > 
-> So the following paragraphs are prefaced with: I'm not an expert on file
-> handle encoding and so might be totally wrong.
-> 
-> Afaiu, the uniqueness guarantee of the file handle mostly depends on:
-> 
-> (1) the filesystem
-> (2) the actual file handling encoding
-> 
-> Looking at file handle encoding to me it looks like it's fairly easy to
-> fake them in userspace (I guess that's ok if you think about them like a
-> path but with a weird permission model built around them.) for quite a
-> few filesystems.
+> Though, regardless of the attack you are worried about, I guess we are
+> in agreement that a unique mount id from name_to_handle_at() would be a
+> good idea if we are planning for userspace to use file handles for
+> everything.
 
-This is a feature specifically used by XFS utilities like xfs_fsr
-and xfsdump to take pathless inode information retrieved by bulkstat
-operations to a file handle to enable arbitrary inodes in the
-filesystem to be opened.
+I somewhat disagree - the information needed to validate and
+restrict the scope of the filehandle needs to be encoded into the
+filehandle itself. Otherwise we've done nothing to reduce the
+potential abuse scope of the filehandle object itself, nor prevented
+users from generating their own filehandles to objects they don't
+have direct access to that are still accessible on the given "mount
+id" that are outside their direct path based permission scope.
 
-i.e. they scan the filesystem by walking the filesystem's internal
-inode index, not by walking paths to scan the filesytsem. This is
-*much* faster than path walking, especially on seek-limited storage
-hardware.
+IOWs, the filehandle must encode the restrictions on it's use
+internally so that random untrusted third parties cannot use it
+outside the context in which is was intended for...
 
-Knowing the inode number, generation and fs uuid, we can
-construct a valid filehandle for that inode, and then do whatever
-operations we need to do (defrag, backup, move offline (HSM), etc)
-without needing to know the path to that inode....
-
-> The problem is with what name_to_handle_at() returns imho. A mnt_id
-> doesn't pin the filesystem and the old mnt_id isn't unique. That means
-> the filesystem can be unmounted and go away and the mnt_id can be
-> recycled almost immediately for another mount but the file handle is
-> still there.
-
-This is no different to the NFS server unexporting a filesystem -
-all attempts to resolve the file handle the client holds for that
-export must now fail. Hence the filehandle itself must have a
-superblock specific identifier in it.
-
-> So to guarantee that a (weakly encoded) file handle is interpreted in
-> the right filesystem the file handle must either be accompanied by a
-> file descriptor that pins the relevant mount or have any other guarantee
-> that the filesystem doesn't go away (Or of course, the file handle
-> encodes the uuid of the filesystem or something or uses some sort of
-> hashing scheme.).
-
-Yes, it does, and that's the superblock based identifier, not
-something that is mount based. i.e.  the handle is valid regardless
-of where the filesystem is mounted, even if the application does not
-have visibility or permitted access to the given mount. And the
-filehandle is persistent - it must work across unmount/mount,
-reboots, change of mount location, etc.
-
-That means that if you are using file handles, any filesystem that
-is shared across multiple containers can by fully accessed by user
-generated file handles from any container if no special permissions
-are required. i.e. there are no real path or mount based security
-boundaries for filehandles in existence righ now.
-
-If filehandles are going to be restricted to a specific container
-(e.g. a single mount) so that less permissions are needed to open
-the filehandle, then the filehandle itself needs to encode those
-restrictions. Decoding the filehandle needs to ensure that the
-opening context has permission to access whatever the filehandle
-points to in a restricted environment. This will prevent existing
-persistent, global filehandles from being used as restricted
-filehandles and vice versa.
-
-Restricting filehandles for use as persistent filehandles is going
-to be tricky - mount IDs are ephermeral and only valid while a mount
-is active. I'd suggest that restricted filehandles should only be
-ephemeral, too.  That would also allow restricted filehandles to use
-kernel side crypto based encoding so nobody can ever construct them
-from userspace. 
-
-Hence I think we have to look at what we are encoding in the
-filehandle itself to solve the "shared access from restricted
-environments" problem, not try to add stuff around the outside of
-the filehandle API to paper over the fact that filehandles
-themselves have no permission/restriction model built into them.
-
-This would also avoid the whole problem of "users can access any
-file in the underlying filesystem by constructing their own handles" problem that
-relaxed permissions on filehandle decoding creates, hence opening
-the door for more extensive use of filehandles in untrusted
-environments.
-
-> One of the features of file handles is that they're globally usable so
-> they're interesting to use as handles that can be shared. IOW, one can
-> send around a file handle to another process without having to pin
-> anything or have a file descriptor open that needs to be sent via
-> AF_UNIX.
->
-> But as stated above that's potentially risky so one might still have to
-> send around an fd together with the file handle if sender and receiver
-> don't share the filesystem for the handle.
-
-Adding a trust context around the outside of an untrusted handle
-isn't the right way to address this problem - define a filehandle
-format that can be trusted and constrained within specific security
-domains and the need for external permission contexts (whatever they
-look like) to be passed with the filehandle to make it valid go away
-entirely.
+Whether that internal encoding is a mount ID, and mount namespace
+identifier or something else completely different is just a detail.
+I suspect that the creation of a restricted filehandle should be
+done by a simple API flag (e.g. AT_FH_RESTRICTED), and the kernel
+decides entirely what goes into the filehandle to restrict it to the
+context that the file handle has been created within.
 
 -Dave.
 -- 
