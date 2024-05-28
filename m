@@ -1,182 +1,212 @@
-Return-Path: <linux-nfs+bounces-3449-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3450-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12B9D8D23A4
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 21:01:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9833A8D26B2
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 23:04:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 358511C22F1A
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 19:01:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4EFBF286D80
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 21:04:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24A0944C8C;
-	Tue, 28 May 2024 19:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5140176033;
+	Tue, 28 May 2024 21:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ttWKuENY"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="onSQaaX1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944C118AF9
-	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 19:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C096B17B41C;
+	Tue, 28 May 2024 21:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922912; cv=none; b=b/apylZFg6RyBJ0QmWYNbB5iGtmMazd1vv19yCORY07Okp1fE18VE/N5aWMHKpL+PP/VpM3nIbR2qruls6KbgGoi2+3iupZN1qIm5+1wycB+Pot+ErX/gL0+ocyXVBKs1La0ievbyDJIAkrt3k5i3FTstU5ZFIrebscw1RIaEE0=
+	t=1716930261; cv=none; b=OnmGa8hLkekArIw77h2/oXjMACjl5NjBsgSSlyjScYlaADV0CNetecy3/Ag7uedR8rbTAi9bZS/HbEUDyGkoSL9Al1AB8k5L67YLb73v4KjNH2nf62uQq1Fw5r8H2q6CzPREqAE5a6tSGMkoAeFsCvZ3dQz4Bs19zXeYRR56PFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922912; c=relaxed/simple;
-	bh=szsGN+n4B4xKlfhfk5iJPwEe9R8vejDxpsv0h4Nf7oU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=DiwOmYuxcvkxDr+GIZU0TYpJq+Zs1cHJ19BJGONdGjFkpJMNqLBIK2RHXiRjAUfAb6iMlPGgB+uEDBedoGRmhWeGROHgS0yS2XDN2tJ033/QVK7gKx/8xIm8zTiYvcxMpa4Po6dTWli6U/tosqMd/8ZdcVj42b6kwPo8wtLnsDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ttWKuENY; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240528190147euoutp01ab377e899ca9301c2cdf9e1d49c43d92~TvEmh6thl2789927899euoutp01r
-	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 19:01:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240528190147euoutp01ab377e899ca9301c2cdf9e1d49c43d92~TvEmh6thl2789927899euoutp01r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716922907;
-	bh=HoBAqzCYnFZWUFCnY9A1juVwqBBHmfP+U4Tja7baPBM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=ttWKuENYwmCb0DgUfiqwHZ94nEfyl+MY6nkZ+dzYylzJ3U/4vTcfVzKPEAexDaIXS
-	 WNZXgCLBrMqgfV3IDxB/4GGO3OI7ue9uprm+GKCuodGt61zEjhpIok7nOPSVInfreE
-	 piRnJvzQC4D80NKg6Zikvn4XN2b/2v4WqhsH8Seo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240528190146eucas1p2299f2e87c3ab0067b02c0a9a943d9f56~TvElcyrX11587915879eucas1p2a;
-	Tue, 28 May 2024 19:01:46 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id E6.06.09624.A1A26566; Tue, 28
-	May 2024 20:01:46 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240528190145eucas1p1481c99394a28dc2ce06adb60f411b73d~TvElEqUqg2782127821eucas1p13;
-	Tue, 28 May 2024 19:01:45 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240528190145eusmtrp2ead789bc1e8f3770264c3bfa9898812a~TvElEMaIP0986809868eusmtrp2U;
-	Tue, 28 May 2024 19:01:45 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-e6-66562a1a5574
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id B4.22.08810.91A26566; Tue, 28
-	May 2024 20:01:45 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240528190145eusmtip2b1c04cf777bbc989ac9b037d53b9c4e0~TvEkwDrWx0757207572eusmtip20;
-	Tue, 28 May 2024 19:01:45 +0000 (GMT)
-Received: from CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) by
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Tue, 28 May 2024 20:01:44 +0100
-Received: from CAMSVWEXC01.scsc.local ([::1]) by CAMSVWEXC01.scsc.local
-	([fe80::7d73:5123:34e0:4f73%13]) with mapi id 15.00.1497.012; Tue, 28 May
-	2024 20:01:44 +0100
-From: Daniel Gomez <da.gomez@samsung.com>
-To: Matthew Wilcox <willy@infradead.org>
-CC: Christoph Hellwig <hch@lst.de>, Trond Myklebust
-	<trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/2] filemap: Convert generic_perform_write() to support
- large folios
-Thread-Topic: [PATCH 1/2] filemap: Convert generic_perform_write() to
-	support large folios
-Thread-Index: AQHasRMEv8C0Tteo9UiuY4wdfWDY+LGsy3MAgAAklwA=
-Date: Tue, 28 May 2024 19:01:43 +0000
-Message-ID: <t3dcn6yduaje2n4jhy3ru74bwy6e3jfpllws2w7rpmmxl2d4vy@5thpd63k5gc5>
-In-Reply-To: <ZlYLZDG_D74AtW5M@casper.infradead.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B06AAF4A7A624749867E4EAD7E55F679@scsc.local>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716930261; c=relaxed/simple;
+	bh=RJ/CQkZjFiXuinzKk7Iejje+UsZczuR8IPM9Px01j8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q/Kt5w4GY6XYnXT3imefyCn5XatwzW3H480HWd+Ezd8Jiy8RXM9d0xWM6/Q0lxsZm8Jsh7ltdvA3Ovx5X23NPJnWmWEGgzfrsiGPwo8oowyDSFITJVogbkVCHuP8AeBEcKRkVqzLgVZreuJAIJ+tVF/abwkZxvrOERYeZcp6yvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=onSQaaX1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=IbBjjdFJMfmL/+GMfORVSWgGlekJR5vTI9wlUJ5rqis=; b=onSQaaX1o3zLTcYXMNBiIiBSQm
+	aA+xXiq53aBOY0ZbFEP5yVh1q2nOMX7DWJ38e5laOk520SWA44jx78MSN7JPFnz5FWXUyRVk7pj3h
+	EVBDZiX5ny3fmBsLGn35IRzbVR4+Ryi0OYlunDdGhxvw2oMxXSaahDlnY/jbjWDJ0LbampR2ZoHaK
+	5ZoaIgCfVWDHP2wepMjbP02b5gXuad+V+a11ZFz0yniJSdghBmAnVEHPsAKneqFZdwzRuS3CfVmte
+	cGQEmZeTDz4vQXwVtQHsCkuOYxZ8eXC8jIBFLOjZoHLdfmZp8p9pkxfraxWHJUbwenPK/DOVR3pmG
+	X4a7v/PA==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sC3zT-000000093ho-0o6P;
+	Tue, 28 May 2024 21:04:15 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <Anna.Schumaker@Netapp.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH] nfs: Fix misuses of folio_shift() and folio_order()
+Date: Tue, 28 May 2024 22:03:15 +0100
+Message-ID: <20240528210407.2158964-1-willy@infradead.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240527163616.1135968-1-hch@lst.de>
+References: <20240527163616.1135968-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURSF8zpLpzXVoaC9YpBYlyhCxSVaF8QfRuuORk1cEm1kCihUM6W4
-	olUjKBqExgWqSEEsAoZgBdOqoFZREVzjAiguWIyCmMqigEJlGEj677v33HvPecmjMGkh4UtF
-	aWMZVquOlpNi/PqDzmdBvgFrNcF3LYTyiN2NK/MKygXKW6UVuPLDFTehfH6nklC6q0OVfzvO
-	k/OEqn+Oq0LVtcsBKmv+MVJlbTEKVTdrDKSq1ToyjFwvnhPOREfFMeykuZvFkY8aHMIdOeJd
-	pw+/Iw0olUpCIgroaXAq5bggCYkpKX0ZQXepDeOLNgQNz22IL1oR2E48JQZWLpQWEbyQi6A1
-	/TvGCX1TqR/ieK5CcH7gbh4CY24L4gSSngBlFVZhEqIoH3o8/Ciews1gdI4APjbUk9yMN70B
-	/jk+97EPvRF6cq7iPM+CpsYyktvF6bGQ3KHm2hJ6GbyxlPe1Rb3hEg0s10a0H9TndQk5xmgZ
-	1DozBXx+L8g+dwvjeRj03OCdgA6EJ2+diOdgKLlUhvM8Gr7lvCf4O4FgvtlC8jwTnhQ0C3ie
-	CJasJoyP4wUV6U6cexbQ9SK4fvB0v8F8sBov9rM3ND4sFqagQJNHPpOHh8nDw+ThYfLwMCMi
-	H8kYvS4mgtFN1jI7FTp1jE6vjVBs2R5jRb1fqrLnYYsNZTT+UjiQgEIOBBQm95FUGddopJJw
-	9e49DLt9E6uPZnQONILC5TLJ2HB/RkpHqGOZbQyzg2EHVAEl8jUIMuWsvrq+eV2HX23i/TTX
-	ScXhonLj3q8Tc4ce3Z1l3JdgXc24Fi2dG1aS4Fqj0Za0ddV1nijLeFyTvFijcfv6v2DzPoXV
-	iJ9OPyQMIRbag1tFrmcHCgsDLDL7q6Abo15erAuy6rfNaD+zbmFDl+Vk7RBn2Jmp0h/Dj1WZ
-	g/+62jfaGsm7ivjAQ1l2x/3383elxb+VOZd7Jcnz65b8+S0pnrJ12ewX8V/GfZZ5h17o1mVL
-	QzS2fKYpO9Xs99ESvspJ1Q4Kaq+OPXv79dLxhkr/EM21A35xePOm5Snxdmm2PLRowejB5e6a
-	lfdeZuw3p6zKNUiWrPg5prNkhmNoQXdyZtydNjmui1RPDsBYnfo/2KHx4MEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOKsWRmVeSWpSXmKPExsVy+t/xe7qSWmFpBn8naFm07vzPYrFy9VEm
-	iz17T7JY3Fvzn9XiwoHTrBb/b9hb/P4xh82B3ePPoY3sHptXaHlsWtXJ5rHp0yR2j903G9g8
-	Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
-	0Ms48fQQe8ESroqpzbfZGhgncnQxcnJICJhIzNu7gbWLkYtDSGApo8S+ng1sEAkZiY1frrJC
-	2MISf651gcWFBD4ySnz9JQnRcIZRYs6u50wQzkpGifdLN4FVsQloSuw7uYm9i5GDQ0RAQ+LN
-	FiOQGmaBJUwS958+AqsRFoiW+HPoIZgtIhAjcWz7VGYI20ri9at9bCC9LAKqEn0/EkHCvAK+
-	EteWHWWD2DWbSaJr6zVWkBpOoBfaG4pAahgFZCUerfzFDmIzC4hL3HoynwniAQGJJXvOM0PY
-	ohIvH/+DekxH4uz1J4wQtoHE1qX7WCBsZYkXS+6wQszRkViw+xMbhG0pcXb1WyYIW1ti2cLX
-	zBC3CUqcnPmEZQKjzCwkq2chaZ+FpH0WkvZZSNoXMLKuYhRJLS3OTc8tNtQrTswtLs1L10vO
-	z93ECExB24793LyDcd6rj3qHGJk4GA8xSnAwK4nwnpkUmibEm5JYWZValB9fVJqTWnyI0RQY
-	dBOZpUST84FJMK8k3tDMwNTQxMzSwNTSzFhJnNezoCNRSCA9sSQ1OzW1ILUIpo+Jg1OqgSm6
-	UcjgmGn3cpfPZWtPJhp2HROY+zCExWxq36zeFzO6zGM6Tx7u8SzaPuXhr6dukQ/Ni4/N4jm1
-	Ov/ZzEiWlh93N+33mrqOSeK8ccb1fXvNmcPvW1b0rWx7saAqJ1flx4SwCs8aleyFH0L27Cmy
-	D9ZyZnoSvm2ZeqLqid91xYvmmy9/pnpX627Ub9VzlSp35Gesinb4HRBnd8Lt/yXNN+UKhb9/
-	5H6QE/m8qao5ec/O799/PtlY9nplYVpx6BVOr3n8xUY90ZIvVYRl1SK1j17U1GJIkrov4TdZ
-	8xrTQavdBzXrAi8v+R9nMG2zwuO0PRbR70WMLBiVGt215+8/47y68MfG61kCi8+mKG+/nqfE
-	UpyRaKjFXFScCADgEUOcygMAAA==
-X-CMS-MailID: 20240528190145eucas1p1481c99394a28dc2ce06adb60f411b73d
-X-Msg-Generator: CA
-X-RootMTR: 20240528152340eucas1p17ba2ad78d8ea869ef44cdeedb2601f80
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240528152340eucas1p17ba2ad78d8ea869ef44cdeedb2601f80
-References: <20240527163616.1135968-1-hch@lst.de>
-	<20240527163616.1135968-2-hch@lst.de>
-	<CGME20240528152340eucas1p17ba2ad78d8ea869ef44cdeedb2601f80@eucas1p1.samsung.com>
-	<gh7wdpeqorbtvbywigkzy3fakb7a4e46y6h6nrusn6rmup6yfm@2rjq4ltwmdq4>
-	<ZlYLZDG_D74AtW5M@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 05:50:44PM +0100, Matthew Wilcox wrote:
-> On Tue, May 28, 2024 at 03:23:39PM +0000, Daniel Gomez wrote:
-> > I have the same patch for shmem and large folios tree. That was the las=
-t piece
-> > needed for getting better performance results. However, it is also need=
-ed to
-> > support folios in the write_begin() and write_end() callbacks.
->=20
-> I don't think it's *needed*.  It's nice!  But clearly not necessary
-> since Christoph made nfs work without doing that.
+Page cache indices are in units of PAGE_SIZE, not in units of
+the folio size.  Revert the change in nfs_grow_file(), and
+pass the inode to nfs_folio_length() so it can be reimplemented
+in terms of folio_mkwrite_check_truncate() which handles this
+correctly.
 
-I see. We send anyway the length with bytes and the folio allocated inside
-write_begin() is retrieved with folio_page().
+Fixes: 0c493b5cf16e ("NFS: Convert buffered writes to use folios")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+---
+ fs/nfs/file.c           |  6 +++---
+ fs/nfs/internal.h       | 16 +++++-----------
+ fs/nfs/read.c           |  2 +-
+ fs/nfs/write.c          |  9 +++++----
+ include/linux/pagemap.h |  4 ++--
+ 5 files changed, 16 insertions(+), 21 deletions(-)
 
-I did test this patch (+mapping_max_folio_size() patch) for shmem an it wor=
-ks fine for me.
->=20
-> > In order to avoid
-> > making them local to shmem, how should we do the transition to folios i=
-n these
-> > 2 callbacks? I was looking into aops->read_folio approach but what do y=
-ou think?
->=20
-> See the v2 of buffer_write_operations that I just posted.  I was waiting
-> for feedback from Christoph on the revised method for passing fsdata
-> around, but I may as well just post a v2 and see what happens.
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 6bd127e6683d..723d78bbfe3f 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -301,7 +301,7 @@ EXPORT_SYMBOL_GPL(nfs_file_fsync);
+ static bool nfs_folio_is_full_write(struct folio *folio, loff_t pos,
+ 				    unsigned int len)
+ {
+-	unsigned int pglen = nfs_folio_length(folio);
++	unsigned int pglen = nfs_folio_length(folio, folio->mapping->host);
+ 	unsigned int offset = offset_in_folio(folio, pos);
+ 	unsigned int end = offset + len;
+ 
+@@ -386,7 +386,7 @@ static int nfs_write_end(struct file *file, struct address_space *mapping,
+ 	 */
+ 	if (!folio_test_uptodate(folio)) {
+ 		size_t fsize = folio_size(folio);
+-		unsigned pglen = nfs_folio_length(folio);
++		unsigned pglen = nfs_folio_length(folio, mapping->host);
+ 		unsigned end = offset + copied;
+ 
+ 		if (pglen == 0) {
+@@ -610,7 +610,7 @@ static vm_fault_t nfs_vm_page_mkwrite(struct vm_fault *vmf)
+ 
+ 	folio_wait_writeback(folio);
+ 
+-	pagelen = nfs_folio_length(folio);
++	pagelen = nfs_folio_length(folio, inode);
+ 	if (pagelen == 0)
+ 		goto out_unlock;
+ 
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 9f0f4534744b..3b0236e67257 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -819,19 +819,13 @@ unsigned int nfs_page_length(struct page *page)
+ /*
+  * Determine the number of bytes of data the page contains
+  */
+-static inline size_t nfs_folio_length(struct folio *folio)
++static inline size_t nfs_folio_length(struct folio *folio, struct inode *inode)
+ {
+-	loff_t i_size = i_size_read(folio_file_mapping(folio)->host);
++	ssize_t ret = folio_mkwrite_check_truncate(folio, inode);
+ 
+-	if (i_size > 0) {
+-		pgoff_t index = folio_index(folio) >> folio_order(folio);
+-		pgoff_t end_index = (i_size - 1) >> folio_shift(folio);
+-		if (index < end_index)
+-			return folio_size(folio);
+-		if (index == end_index)
+-			return offset_in_folio(folio, i_size - 1) + 1;
+-	}
+-	return 0;
++	if (ret < 0)
++		ret = 0;
++	return ret;
+ }
+ 
+ /*
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index a142287d86f6..ba3bb496f832 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -296,7 +296,7 @@ int nfs_read_add_folio(struct nfs_pageio_descriptor *pgio,
+ 	unsigned int len, aligned_len;
+ 	int error;
+ 
+-	len = nfs_folio_length(folio);
++	len = nfs_folio_length(folio, inode);
+ 	if (len == 0)
+ 		return nfs_return_empty_folio(folio);
+ 
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 2329cbb0e446..7713ce7c5b3a 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -278,8 +278,8 @@ static void nfs_grow_file(struct folio *folio, unsigned int offset,
+ 
+ 	spin_lock(&inode->i_lock);
+ 	i_size = i_size_read(inode);
+-	end_index = ((i_size - 1) >> folio_shift(folio)) << folio_order(folio);
+-	if (i_size > 0 && folio_index(folio) < end_index)
++	end_index = (i_size - 1) >> PAGE_SHIFT;
++	if (i_size > 0 && folio->index < end_index)
+ 		goto out;
+ 	end = folio_file_pos(folio) + (loff_t)offset + (loff_t)count;
+ 	if (i_size >= end)
+@@ -358,7 +358,8 @@ nfs_page_group_search_locked(struct nfs_page *head, unsigned int page_offset)
+  */
+ static bool nfs_page_group_covers_page(struct nfs_page *req)
+ {
+-	unsigned int len = nfs_folio_length(nfs_page_to_folio(req));
++	struct folio *folio = nfs_page_to_folio(req);
++	unsigned int len = nfs_folio_length(folio, folio->mapping->host);
+ 	struct nfs_page *tmp;
+ 	unsigned int pos = 0;
+ 
+@@ -1356,7 +1357,7 @@ int nfs_update_folio(struct file *file, struct folio *folio,
+ 	struct nfs_open_context *ctx = nfs_file_open_context(file);
+ 	struct address_space *mapping = folio_file_mapping(folio);
+ 	struct inode *inode = mapping->host;
+-	unsigned int pagelen = nfs_folio_length(folio);
++	unsigned int pagelen = nfs_folio_length(folio, inode);
+ 	int		status = 0;
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index c6aaceed0de6..df57d7361a9a 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -212,8 +212,8 @@ enum mapping_flags {
+ 	AS_FOLIO_ORDER_MAX = 21, /* Bits 16-25 are used for FOLIO_ORDER */
+ };
+ 
+-#define AS_FOLIO_ORDER_MIN_MASK 0x001f0000
+-#define AS_FOLIO_ORDER_MAX_MASK 0x03e00000
++#define AS_FOLIO_ORDER_MIN_MASK (31 << AS_FOLIO_ORDER_MIN)
++#define AS_FOLIO_ORDER_MAX_MASK (31 << AS_FOLIO_ORDER_MAX)
+ #define AS_FOLIO_ORDER_MASK (AS_FOLIO_ORDER_MIN_MASK | AS_FOLIO_ORDER_MAX_MASK)
+ 
+ /**
+-- 
+2.43.0
 
-Interesting. I think it makes sense to convert tmpfs to
-buffered_write_operations as well. Can you add me to the v2 so I can add/re=
-view
-it for tmpfs?
-
-Thanks=
 
