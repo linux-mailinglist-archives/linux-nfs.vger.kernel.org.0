@@ -1,288 +1,95 @@
-Return-Path: <linux-nfs+bounces-3427-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3428-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0456B8D1286
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 05:27:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C6538D14DB
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 09:05:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD74B28303E
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 03:27:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D65F1C21483
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 07:05:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C51114AB8;
-	Tue, 28 May 2024 03:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D8336EB4D;
+	Tue, 28 May 2024 07:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I+PLR+Pq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t2Vxq+Rf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWfOEHfE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SdnhObC5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eom72jNj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9786E12E5D
-	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 03:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD2D45024;
+	Tue, 28 May 2024 07:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716866862; cv=none; b=Kd5Z/eOVH7HJ3ZubsNmdJaqw17V42tilUfnamNVQu9SEBMmTs7hvyNGr01NluREpazfOwjeLt2TmjkwTtkiClePAz/H58X4PxHKy4n7vtRGSYxOwdDjbhPxKQOovGRrWLvrpKruLrKcdUAaWK04PaBtPwQ9sz8y/V+ZHU8vaLpI=
+	t=1716879924; cv=none; b=DY1NYl6pWmtxSgAYTLomb63XGO/X3PiEuc24oL4nDI3B9tbTZ6W2Ddfq2BXwHzDMiBQDk8mMlj0/f436KjRro/3tUCVGVNIS4AoDDbp78T9u7gPHT6Hof+9I3WTKC06wdR/RuOfrexrfI7UneqCH8w0J/Ti4AzCoh8IDOawrkY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716866862; c=relaxed/simple;
-	bh=mdpYLEj3VNACe3U/xqp9V7GnAJKDtXd9D46ByNipgfc=;
-	h=Content-Type:MIME-Version:From:Subject:To:Cc:Date:Message-id; b=mdivQTm0b8kyN6edkQbevYQrj1BpOJQcP36ul9XGTQhSR0Ez65myu46GfsKJcBQsxtjVUNtNdBv6pwfyRa5KvEeGkp+6yrC07lrz5YjjSChAhNpbkKGu5q6Lc/cRpnl4a7vyhIjyqgRFBvuzhNpWz37fdnYWPZXbxKd1JB1Pmno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I+PLR+Pq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t2Vxq+Rf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWfOEHfE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SdnhObC5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 63E922249E;
-	Tue, 28 May 2024 03:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716866853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rX5hhHtoMCeBIqylOGhowJOMPkAWEmRnUQJaY3NmcXM=;
-	b=I+PLR+PqrO1ZJcYNK1Z2wbWgV0x1n274hIMkIsR5vmWIx6NNOeTk0Osnib9AW459R8BpRI
-	Wjs820HDcRYDyL/zPacbI3zRqzbsMa0iw5ZBETj1fslQ5JCGlj9FnkM8NGbEJe9xrrwa2W
-	G8GOFKvm3ANCpnYjkOhTWA7tXNYq3G0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716866853;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rX5hhHtoMCeBIqylOGhowJOMPkAWEmRnUQJaY3NmcXM=;
-	b=t2Vxq+RfSZ9Wd/DJBnMEXjdGJbaiLaZAdtWKzx3FXbHVF/lr/bUwgpewcdEfQlz+eCqqiX
-	skWMQL6SU3nO44Dg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZWfOEHfE;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SdnhObC5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716866852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rX5hhHtoMCeBIqylOGhowJOMPkAWEmRnUQJaY3NmcXM=;
-	b=ZWfOEHfERJvglQfcimWlGAR2MpEqBAZCQVoDtMasdpIOMwxCwxJj8NxVtVjSM4fSXGrNpF
-	HrunQxFczsJK5MDLyuFvGlJq9XCCmdf88t/QUo42vSriRK/MHZUQ9hMBqGYRgX1fT2AG+w
-	k6svc0DjscdMWNMmZKHgqA4OOetB714=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716866852;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rX5hhHtoMCeBIqylOGhowJOMPkAWEmRnUQJaY3NmcXM=;
-	b=SdnhObC5wcc5IZn6F0ohUtqCv/5yxaWSuYOAoR51n5k5cXwg2G5XCMvpkQjWoXhnGddt0x
-	G4dGpYSl+GIQiqCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2182713A55;
-	Tue, 28 May 2024 03:27:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5hs6LSFPVWbpRwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 28 May 2024 03:27:29 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716879924; c=relaxed/simple;
+	bh=AJop6tQXrPDYxKxJR+T1Rffiqt/FIeu65U1e97Oj0gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+UACKw+L1hyJEvKD7AkOVjGg7yaTFOQYTTG5MgtdUZBmNFJdU5ZakwKW6/wmaPJwDgxX16//ufAh1VezeIBBGs9RgpM4jxSW1KsXmY1XDvDf5U6ktyuq4ofFbqRSWoeJH1m+AGl1Wj8nTOL38wMdxgFI/vqu+G/jRsBtviU8fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eom72jNj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2373FC3277B;
+	Tue, 28 May 2024 07:05:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716879923;
+	bh=AJop6tQXrPDYxKxJR+T1Rffiqt/FIeu65U1e97Oj0gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eom72jNj3HosJ7FhOQZg1BOvkvv+TbQkvdMqQvXp6DUAwncaYyXag1KhYIrU2KUt4
+	 SfI/QjZvWLC6+tmKpCjdGiHDsebwnmfPivr4bzGLAHtBoxCZ4/hjRDzAM5ivkxmWWg
+	 t3td3HpR69p60eyFuhhm2T2YWAcNxuALz7c9NqxvxEIUmOCWWJmrRBDt4wcjtWCO9F
+	 TYk228KTde9hrnrxbYaYWIJL5ECp0xD5cx7LouREsZa8Msbt847nxJiTRfRBCMRVfn
+	 0Rj3nbSbLjJ244Wlhpt7wF4CI8SJlTphxmOwufB7iUsOj6JVTKPzUeztCNyQzRoZKI
+	 26v5JC4X2+BFA==
+Date: Tue, 28 May 2024 09:05:17 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "hch@infradead.org" <hch@infradead.org>, "jack@suse.cz" <jack@suse.cz>, 
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "alex.aring@gmail.com" <alex.aring@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cyphar@cyphar.com" <cyphar@cyphar.com>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jlayton@kernel.org" <jlayton@kernel.org>, 
+	"amir73il@gmail.com" <amir73il@gmail.com>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <20240528-restbetrag-zocken-df1f009dee04@brauner>
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+ <ZlMADupKkN0ITgG5@infradead.org>
+ <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
+ <ZlRy7EBaV04F2UaI@infradead.org>
+ <20240527-hagel-thunfisch-75781b0cf75d@brauner>
+ <20240527-raufen-skorpion-fa81805b3273@brauner>
+ <49b6c50a50e517b6eb61d40af6fd1fd6e9c09cb2.camel@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-Subject: [PATCH v2] NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
- Richard Kojedzinszky <richard+debian+bugreport@kojedz.in>,
- 1071501@bugs.debian.org
-Date: Tue, 28 May 2024 13:27:17 +1000
-Message-id: <171686683755.27191.3511021543845435733@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 63E922249E
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TAGGED_RCPT(0.00)[debian,bugreport];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <49b6c50a50e517b6eb61d40af6fd1fd6e9c09cb2.camel@hammerspace.com>
 
+On Mon, May 27, 2024 at 03:47:33PM +0000, Trond Myklebust wrote:
+> On Mon, 2024-05-27 at 15:17 +0200, Christian Brauner wrote:
+> > 
+> > Returning the 64bit mount id makes this race-free because we now have
+> > statmount():
+> > 
+> > u64 mnt_id = 0;
+> > name_to_handle_at(AT_FDCWD, "/path/to/file", &handle, &mnt_id, 0);
+> > statmount(mnt_id);
+> > 
+> > Which gets you the device number which one can use to figure out the
+> > uuid without ever having to open a single file (We could even expose
+> > the
+> > UUID of the filesystem through statmount() if we wanted to.).
+> > 
+> 
+> It is not race free. statmount() depends on the filesystem still being
+> mounted somewhere in your namespace, which is not guaranteed above.
 
-dentry->d_fsdata is set to NFS_FSDATA_BLOCKED while unlinking or
-renaming-over a file to ensure that no open succeeds while the NFS
-operation progressed on the server.
-
-Setting dentry->d_fsdata to NFS_FSDATA_BLOCKED is done under ->d_lock
-after checking the refcount is not elevated.  Any attempt to open the
-file (through that name) will go through lookp_open() which will take
-->d_lock while incrementing the refcount, we can be sure that once the
-new value is set, __nfs_lookup_revalidate() *will* see the new value and
-will block.
-
-We don't have any locking guarantee that when we set ->d_fsdata to NULL,
-the wait_var_event() in __nfs_lookup_revalidate() will notice.
-wait/wake primitives do NOT provide barriers to guarantee order.  We
-must use smp_load_acquire() in wait_var_event() to ensure we look at an
-up-to-date value, and must use smp_store_release() before wake_up_var().
-
-This patch adds those barrier functions and factors out
-block_revalidate() and unblock_revalidate() far clarity.
-
-There is also a hypothetical bug in that if memory allocation fails
-(which never happens in practice) we might leave ->d_fsdata locked.
-This patch adds the missing call to unblock_revalidate().
-
-Reported-and-tested-by: Richard Kojedzinszky <richard+debian+bugreport@kojedz=
-.in>
-Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1071501
-Fixes: 3c59366c207e ("NFS: don't unhash dentry during unlink/rename")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfs/dir.c | 47 ++++++++++++++++++++++++++++++++---------------
- 1 file changed, 32 insertions(+), 15 deletions(-)
-
-v1 incorrectly assigned NULL to ->d_fsdata in block_revalidate().
-It should assign NFS_FSDATA_BLOCKED.
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index ac505671efbd..bdd6cb33a370 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1802,9 +1802,10 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsigne=
-d int flags,
- 		if (parent !=3D READ_ONCE(dentry->d_parent))
- 			return -ECHILD;
- 	} else {
--		/* Wait for unlink to complete */
-+		/* Wait for unlink to complete - see unblock_revalidate() */
- 		wait_var_event(&dentry->d_fsdata,
--			       dentry->d_fsdata !=3D NFS_FSDATA_BLOCKED);
-+			       smp_load_acquire(&dentry->d_fsdata)
-+			       !=3D NFS_FSDATA_BLOCKED);
- 		parent =3D dget_parent(dentry);
- 		ret =3D reval(d_inode(parent), dentry, flags);
- 		dput(parent);
-@@ -1817,6 +1818,29 @@ static int nfs_lookup_revalidate(struct dentry *dentry=
-, unsigned int flags)
- 	return __nfs_lookup_revalidate(dentry, flags, nfs_do_lookup_revalidate);
- }
-=20
-+static void block_revalidate(struct dentry *dentry)
-+{
-+	/* old devname - just in case */
-+	kfree(dentry->d_fsdata);
-+
-+	/* Any new reference that could lead to an open
-+	 * will take ->d_lock in lookup_open() -> d_lookup().
-+	 * Holding this lock ensures we cannot race with
-+	 * __nfs_lookup_revalidate() and removes and need
-+	 * for further barriers.
-+	 */
-+	lockdep_assert_held(&dentry->d_lock);
-+
-+	dentry->d_fsdata =3D NFS_FSDATA_BLOCKED;
-+}
-+
-+static void unblock_revalidate(struct dentry *dentry)
-+{
-+	/* store_release ensures wait_var_event() sees the update */
-+	smp_store_release(&dentry->d_fsdata, NULL);
-+	wake_up_var(&dentry->d_fsdata);
-+}
-+
- /*
-  * A weaker form of d_revalidate for revalidating just the d_inode(dentry)
-  * when we don't really care about the dentry name. This is called when a
-@@ -2501,15 +2525,12 @@ int nfs_unlink(struct inode *dir, struct dentry *dent=
-ry)
- 		spin_unlock(&dentry->d_lock);
- 		goto out;
- 	}
--	/* old devname */
--	kfree(dentry->d_fsdata);
--	dentry->d_fsdata =3D NFS_FSDATA_BLOCKED;
-+	block_revalidate(dentry);
-=20
- 	spin_unlock(&dentry->d_lock);
- 	error =3D nfs_safe_remove(dentry);
- 	nfs_dentry_remove_handle_error(dir, dentry, error);
--	dentry->d_fsdata =3D NULL;
--	wake_up_var(&dentry->d_fsdata);
-+	unblock_revalidate(dentry);
- out:
- 	trace_nfs_unlink_exit(dir, dentry, error);
- 	return error;
-@@ -2616,8 +2637,7 @@ nfs_unblock_rename(struct rpc_task *task, struct nfs_re=
-namedata *data)
- {
- 	struct dentry *new_dentry =3D data->new_dentry;
-=20
--	new_dentry->d_fsdata =3D NULL;
--	wake_up_var(&new_dentry->d_fsdata);
-+	unblock_revalidate(new_dentry);
- }
-=20
- /*
-@@ -2679,11 +2699,6 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *=
-old_dir,
- 		if (WARN_ON(new_dentry->d_flags & DCACHE_NFSFS_RENAMED) ||
- 		    WARN_ON(new_dentry->d_fsdata =3D=3D NFS_FSDATA_BLOCKED))
- 			goto out;
--		if (new_dentry->d_fsdata) {
--			/* old devname */
--			kfree(new_dentry->d_fsdata);
--			new_dentry->d_fsdata =3D NULL;
--		}
-=20
- 		spin_lock(&new_dentry->d_lock);
- 		if (d_count(new_dentry) > 2) {
-@@ -2705,7 +2720,7 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *o=
-ld_dir,
- 			new_dentry =3D dentry;
- 			new_inode =3D NULL;
- 		} else {
--			new_dentry->d_fsdata =3D NFS_FSDATA_BLOCKED;
-+			block_revalidate(new_dentry);
- 			must_unblock =3D true;
- 			spin_unlock(&new_dentry->d_lock);
- 		}
-@@ -2717,6 +2732,8 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *o=
-ld_dir,
- 	task =3D nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
- 				must_unblock ? nfs_unblock_rename : NULL);
- 	if (IS_ERR(task)) {
-+		if (must_unblock)
-+			unblock_revalidate(new_dentry);
- 		error =3D PTR_ERR(task);
- 		goto out;
- 	}
---=20
-2.44.0
-
+The unsigned 64bit mount is not recyclable. It is a unique identifier
+for a mount for the lifetime of the system. Even if bumped on every
+cycle it will still take hundreds of years to overflow.
 
