@@ -1,171 +1,152 @@
-Return-Path: <linux-nfs+bounces-3453-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3454-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EF828D289A
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 01:12:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A07758D28B6
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 01:26:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF0281F2253C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 23:12:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C1841F27777
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 23:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4D517C6A;
-	Tue, 28 May 2024 23:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE5913F421;
+	Tue, 28 May 2024 23:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/NYpOVj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f3wWKC1P";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/NYpOVj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f3wWKC1P"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XmKKgpEe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBD313F439
-	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 23:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6416313EFEC
+	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 23:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716937911; cv=none; b=JiOf0esX+Rk3iXbrOwolARkuHgzychmsp/kBxkl8oI2ZjFKx8NzV6rHFrdtOa1q4aMJAu1gQzKBvBNSRKhxSDMDCR+vRPi1ieYR+qTV+Mt/HwXLfO6W30prZlOGR8fmaf1eAbgZdndpilEBbth+Yhp6v64nEYlR1OPm5URXadYc=
+	t=1716938754; cv=none; b=FB8FVdUwBXqD82TFadXMEsUmd9AB5ZZmqWhvQN+XVIY/6jv//S1cY7GR8ckAp0DiSAAQKZVzANR33x95SuEekVHquDD3B/YcUTX6PBsJ+uKTaQdue5ttKXZsfaSr+zL8XRGVf/noOPpmJNpfUb4c/VitCaBVrf8fJENEPPVY1aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716937911; c=relaxed/simple;
-	bh=Pr/zuvVfu3WX5N1zSgvQXQLN458F0kD26XwV73Gktl8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=KzvK9jKkdLqxheMCL8bpVlu3v7Q4BlZ5913IqwSVIRx8RzcVwIiVnPgFOiRm4fCQX9K4qznYdZ4+//sTAsCWiAJKQnNwu606LM1d3V7w7tC3FRN7LLhJW+dD9KSGpv3VtrUcDNihE+FkGFEK0vXQ7HpjpBXlG2lqa0A6fSANM6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/NYpOVj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f3wWKC1P; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/NYpOVj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f3wWKC1P; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 798962048F;
-	Tue, 28 May 2024 23:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716937907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d1xqmsHesKNSciEDfpS+I8mFJOg6lBIUMD8j40NmKSw=;
-	b=g/NYpOVjbrdfn4O6dgStOLYbVgetLazT5DM1EJUCgpLbUysPZ7wBW+d4fvBgp+eXq6DNe7
-	hFgT8lhXFyYBrJ6kohxi7LLPUjjJr3GhAvl6YE1WHABnyHtbO7pm8nN53Nptbc7LQ5fsc2
-	PRvSlFkfGQYu47wbO9bcXTDno1OsKqQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716937907;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d1xqmsHesKNSciEDfpS+I8mFJOg6lBIUMD8j40NmKSw=;
-	b=f3wWKC1PnTSwhP34GDnKLrZunQI2LVxxGgyCJ97xfSjDdR0BJbo25EeGOOZssZFJJMIZ8x
-	3y1H3ozSRAWefPAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="g/NYpOVj";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=f3wWKC1P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716937907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d1xqmsHesKNSciEDfpS+I8mFJOg6lBIUMD8j40NmKSw=;
-	b=g/NYpOVjbrdfn4O6dgStOLYbVgetLazT5DM1EJUCgpLbUysPZ7wBW+d4fvBgp+eXq6DNe7
-	hFgT8lhXFyYBrJ6kohxi7LLPUjjJr3GhAvl6YE1WHABnyHtbO7pm8nN53Nptbc7LQ5fsc2
-	PRvSlFkfGQYu47wbO9bcXTDno1OsKqQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716937907;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d1xqmsHesKNSciEDfpS+I8mFJOg6lBIUMD8j40NmKSw=;
-	b=f3wWKC1PnTSwhP34GDnKLrZunQI2LVxxGgyCJ97xfSjDdR0BJbo25EeGOOZssZFJJMIZ8x
-	3y1H3ozSRAWefPAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7CE4C13A6B;
-	Tue, 28 May 2024 23:11:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bC15CLBkVmZsAgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 28 May 2024 23:11:44 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716938754; c=relaxed/simple;
+	bh=XkXbS1/SIQ5uVCoW76BxhGwPjalxquKHpRLo+Wtr2to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ODvqmYM58/X/7XeRxlGkasEcncNusG2Fa7sA2ZJ8BvbAJ+ZOCfDK4foJDLGdR9gxYoLYggeTwaQ1YNt3sc9K+Nco9QI7nEx1Yq9veJ4dk5gXuJIpak4iKXuFvNPzzQlppfNDGPNFnQgpyHB3gidCgF5D7hXW/m5ODlsheQ0KCLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XmKKgpEe; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f44b441b08so10177455ad.0
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 16:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1716938753; x=1717543553; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R/Sgk1Yzp1sgcvMvS0zCkhtYU6du3DHWIlu0PixZMB8=;
+        b=XmKKgpEeh7PjkhdCUkXTMYo4bOcoah4pKM0bExap0GRvt5Uk8jXm+zd+nIbkmJnV+C
+         yt/8jw44FSFDocOSgJJczfeQPGNmHnha4ubpyX6AHjXyAYyI5KQQIUNFz6kEQZD6beWb
+         Vd8OgYyaGG/TG6APDGpH3hqn6xHltlRp+cL0WXIJwLftqa3Un+idkSKBzK5fo9J3eXDk
+         3dbJRJqpmtspweKjtkK0lHW2aDQt7bq7LT5+3Zhh6SIWsKFhs69kw5hJ49b1emUdpHn7
+         aHdmwacH4FD/HvNUFWYfZlTzUuwKsXjxYm1VncXNsXMzb480KWFJi+EA2nUXcncqHLFk
+         CSRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716938753; x=1717543553;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R/Sgk1Yzp1sgcvMvS0zCkhtYU6du3DHWIlu0PixZMB8=;
+        b=DO1LAW4jLZ5qvSsn25RB+vjhAksMAy/VhIFj/7D6nBDtE0V8OQRdPrP72OFgWvGwM2
+         YzAiPxbleen2OeAi9DWabuF3QjnxLwbfVKrqdheK42xGljteC0JdDMxjIq6fv7YCKAeJ
+         U20NNtAsPL/ob3/dRJO8XlbDipEG6PYoeD0M+Lkx8axJIZapdUOY8NFNdag2v6G7ua4J
+         4mzTPiYYateQh6uFNs8SuyUFwToph247hKe8CclkkERofVNE77LSAA0aOgUhFBa59tuh
+         +AJ4KdYHZK/TRZQHcr69VkcAJ3Fi4HRzVDGyIeOToORrxvIc/t8ZIMo7hOqaBzbW8YL/
+         ZGKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPrMaX0VOQC0QfOtuNa7FpQMohDg0eoiJMJR4IdVQRLHQzD5I5eWKkUUzEom3Vj6YC8aEXO3f0wbdeENrv64eWkSdyPP05MOXv
+X-Gm-Message-State: AOJu0Yx2wkbnmB6Jr65q1qBfAjnvFlvU+5HAGL0CUY+kWREc1CmHNWGi
+	s4NiK/Mq6Y+qOSxgDh4JitZjQHvx/Xi2nD3MDu/WUkJtOLv54HJ2CICm77HU/I0=
+X-Google-Smtp-Source: AGHT+IFvGxXkSZRiFaMmOXnG+Q4zsRIFB1iltGUHKeeZD+4PXkh7c9LGLmVlti4z7eKk5Q0uyyP8gA==
+X-Received: by 2002:a17:902:e54e:b0:1f4:ac10:3ee3 with SMTP id d9443c01a7336-1f4ac10802amr60953545ad.20.1716938752369;
+        Tue, 28 May 2024 16:25:52 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c997d0dsm86058635ad.199.2024.05.28.16.25.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 16:25:51 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sC6CT-00Dztd-1B;
+	Wed, 29 May 2024 09:25:49 +1000
+Date: Wed, 29 May 2024 09:25:49 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: "hch@infradead.org" <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, Trond Myklebust <trondmy@hammerspace.com>,
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"alex.aring@gmail.com" <alex.aring@gmail.com>,
+	"cyphar@cyphar.com" <cyphar@cyphar.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"jlayton@kernel.org" <jlayton@kernel.org>,
+	"amir73il@gmail.com" <amir73il@gmail.com>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <ZlZn/fcphsx8u/Ph@dread.disaster.area>
+References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+ <ZlMADupKkN0ITgG5@infradead.org>
+ <30137c868039a3ae17f4ae74d07383099bfa4db8.camel@hammerspace.com>
+ <ZlRzNquWNalhYtux@infradead.org>
+ <86065f6a4f3d2f3d78f39e7a276a2d6e25bfbc9d.camel@hammerspace.com>
+ <ZlS0_DWzGk24GYZA@infradead.org>
+ <20240528101152.kyvtx623djnxwonm@quack3>
+ <ZlW4a6Zdt9SPTt80@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>
-Cc: james.clark@arm.com, ltp@lists.linux.it, broonie@kernel.org,
- Aishwarya.TCV@arm.com, linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: abort nfs_atomic_open_v23 if name is too long.
-Date: Wed, 29 May 2024 09:11:36 +1000
-Message-id: <171693789645.27191.13475059024941012614@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 798962048F
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.98%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZlW4a6Zdt9SPTt80@infradead.org>
 
+On Tue, May 28, 2024 at 03:56:43AM -0700, hch@infradead.org wrote:
+> On Tue, May 28, 2024 at 12:11:52PM +0200, Jan Kara wrote:
+> > So some fanotify users may use open_by_handle_at() and name_to_handle_at()
+> > but we specifically designed fanotify to not depend on this mount id
+> > feature of the API (because it wasn't really usable couple of years ago
+> > when we were designing this with Amir). fanotify returns fsid + fhandle in
+> > its events and userspace is expected to build a mapping of fsid ->
+> > "whatever it needs to identify a filesystem" when placing fanotify marks.
+> > If it wants to open file / directory where events happened, then this
+> > usually means keeping fsid -> "some open fd on fs" mapping so that it can
+> > then use open_by_handle_at() for opening.
+> 
+> Which seems like another argument for my version of the handles to
+> include the fsid.  Although IIRC the fanotify fsid is only 64 bits which
+> isn't really good entropy, so we might have to rev that as well.
 
-An attempt to open a file with a name longer than NFS3_MAXNAMLEN will
-trigger a WARN_ON_ONCE in encode_filename3() because
-nfs_atomic_open_v23() doesn't have the test on ->d_name.len that
-nfs_atomic_open() has.
+I'm in agreement with Christoph that the filehandle needs to contain
+the restricted scope information internally. I said that in response
+to an earlier version of the patch here:
 
-So add that test.
+https://lore.kernel.org/linux-fsdevel/ZlPOd0p7AUn7JqLu@dread.disaster.area/
 
-Reported-by: James Clark <james.clark@arm.com>
-Closes: https://lore.kernel.org/all/20240528105249.69200-1-james.clark@arm.co=
-m/
-Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC correc=
-tly.")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfs/dir.c | 3 +++
- 1 file changed, 3 insertions(+)
+	"If filehandles are going to be restricted to a specific container
+	(e.g. a single mount) so that less permissions are needed to open
+	the filehandle, then the filehandle itself needs to encode those
+	restrictions. Decoding the filehandle needs to ensure that the
+	opening context has permission to access whatever the filehandle
+	points to in a restricted environment. This will prevent existing
+	persistent, global filehandles from being used as restricted
+	filehandles and vice versa."
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 342930996226..2b09b5416ef1 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2255,6 +2255,9 @@ int nfs_atomic_open_v23(struct inode *dir, struct dentr=
-y *dentry,
- 	 */
- 	int error =3D 0;
-=20
-+	if (dentry->d_name.len > NFS_SERVER(dir)->namelen)
-+		return -ENAMETOOLONG;
-+
- 	if (open_flags & O_CREAT) {
- 		file->f_mode |=3D FMODE_CREATED;
- 		error =3D nfs_do_create(dir, dentry, mode, open_flags);
---=20
-2.44.0
+But no-one has bothered to reply or acknowledge my comments so I'll
+point them out again and repeat: Filehandles generated by
+the kernel for unprivileged use *must* be self describing and self
+validating as the kernel must be able to detect and prevent
+unprivelged users from generating custom filehandles that can be
+used to access files outside the restricted scope of their
+container.
 
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
