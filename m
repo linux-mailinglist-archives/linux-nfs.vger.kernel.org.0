@@ -1,111 +1,108 @@
-Return-Path: <linux-nfs+bounces-3442-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3443-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD5F38D1CD3
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 15:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B4C68D1CF0
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 15:28:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78787282635
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 13:24:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B085284453
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 13:28:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E10316F0DB;
-	Tue, 28 May 2024 13:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8A516E87B;
+	Tue, 28 May 2024 13:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2EGtv39S"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Wm1QN3Ry"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E6F16ABC2;
-	Tue, 28 May 2024 13:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF50E16E896
+	for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 13:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902550; cv=none; b=bRhM4sBv5lEtkolsRg9yGU7d279rl7POJ0BWthQN5PVue0pseJG2uLu96y5xhS96PXOcdlNMNGRc+zLu578xZ0XLeS3IhSuzz+38RbU9CXvP7Y6+8Fi2iH45HtB8TSlZ6iEnF7cE1Yv2Ew5IuKeUzgPZxtx8jr1RyAN7bQtU5rg=
+	t=1716902913; cv=none; b=U37zfcrXkqMayB6nG1GMeLqIOZPEw4JlPVXBo5CYu4Hil2zL2o5Q3uG2Wy7Di0Wz6hsxEhfG89iKAM0Qflpo5DLwsSgaLm5aP2mEMdpVMVK9Ixhfvh5AqecleGURWzZu2lPTHxbf6pDULOu+93rw/z1Y1y+tiLC9FC+ooucPLik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902550; c=relaxed/simple;
-	bh=NEt3k5cTX/vBLDj8VzekBREGbfy53+L3rzyaecmjfoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hp6gINGt6THh/DTIs7rF/kPfkLqCqOjBxtiP7+MynnACG2erQcNBzOVBws3HDbry5Q8f/djx4pLEUQStH4rzgBE9oTZXZcYj32ba2I0W7UL9RilMr4Z9BqRhbZoeESPixFYOb5q+G2wGEn0IqvlYbK+w0tRcNDWxWQKU3r9Egg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2EGtv39S; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7qIlOU2Z3hp2e1crW0g6nFHJnET+ZWVJdelsFQ/zSdw=; b=2EGtv39Sgs60FGuVF0zny6lWfs
-	CVb4tlgG62ts9NPORP4XF5B7L0AzwbTvW7sfdPyS5qB/eNUgZSGWfnzVaLmGvKv5xmjA9IWv1lcqz
-	Qv4nxu8cX2T3ynylO7WD3EjRWLy3ljfdD9FegUhJOyrPSQrBJua451/pj3OoTIozCkAQQENaiN/Xt
-	F7dUi22SYNMvJ9MxKPnUaZl1RAnOmUVk8/3rhE++AZ1tzcEEmfDjUP2OisOFwqz03t2RCFXDHvzHx
-	uc2yUsdO+OY9EFFz/1aCKDZxE7B+/Su0CEj8cTw+JsoZQh//USMwgOjy5K2YRd9R9z5/k8LhPZae8
-	mZXM8o3A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sBwmV-00000000m5D-3Z4y;
-	Tue, 28 May 2024 13:22:23 +0000
-Date: Tue, 28 May 2024 06:22:23 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <ZlXaj9Qv0bm9PAjX@infradead.org>
-References: <ZlMADupKkN0ITgG5@infradead.org>
- <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
- <ZlRy7EBaV04F2UaI@infradead.org>
- <20240527133430.ifjo2kksoehtuwrn@quack3>
- <ZlSzotIrVPGrC6vt@infradead.org>
- <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
- <ZlWVkJwwJ0-B-Zyl@infradead.org>
- <20240528-gesell-evakuieren-899c08cbfa06@brauner>
- <ZlW4IWMYxtwbeI7I@infradead.org>
- <20240528-gipfel-dilemma-948a590a36fd@brauner>
+	s=arc-20240116; t=1716902913; c=relaxed/simple;
+	bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AI/v1+qhLXZSuHiL+dI3xBlo+TPMGpfWeWQuCgJBQvseSJR18q4TPkptYonDvjLavklzumeDqABLo/yYA8MpnD5vBlPXSqKPFLTaqhjaiTWsNhoFGt5MPtAFuq6d+TUVwBWp/fOsLiRZSa1KnzT4cdMT5jyUMqLQ1ebwX4yTLCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Wm1QN3Ry; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a633ec1cecdso81604466b.2
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 06:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1716902910; x=1717507710; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
+        b=Wm1QN3RyfSowp3OP685y93x0QSYnT927aLF6A0cd+Dr/PPr3kY9GeQaKnWyWwIqKEi
+         kSOmSfvQGe/RlzTCV8BXz1hM78yQtJgcvRvsgU73ezbBBMY2GvU/lxelFVGj8Hm3F8R2
+         WtI+cRhoXatHfGMVm6zMu6kO2ofAGu6bZ0Hos=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716902910; x=1717507710;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PBBLOV4U2IFgFSKdFT4Y43aEoeT6Ow1hJwKRcZckZ7w=;
+        b=ZtGZ7/L8/+Ti2UDoXaipVbHxuyVPCK4Ke89hQP2zA4Wawo0PTtKNdPXuao42z9Z06D
+         yQOe5OdtmDGzOMRaKTqHsw9jsLfkobaIEbbwYsujej2TmzEOBi9fMBESkJf0B8g3OFdk
+         JKxr5fDm2HIir0ithjiUUKYCaSwlJEEpsAbxzqOGgIx4a1j/R8w6P5x9oBrLO4LJmmnf
+         aIqQGU/5w+zm8HFoxmJl7+KtnNCnh6O2j8HRtYkioHSrOZ2jQkwzeUx/83cI09PqsJyW
+         R/oInbrBUvAERKqkJqM/+Wpii3GfUgbLbgQTL9Uc4Um/ltJerWSLvkyTtpwgNLCQ+AuD
+         r/Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvEk6HmjPNSdNV2dtcYG5dHeOtnQH/vQrB10E/W0RDeFNnBaXUyJUORWGWBj+iF4xE82zsLRnsniihxhl/JNNrOyc2Me/G4S0l
+X-Gm-Message-State: AOJu0YwmOAOj5RLzTP1NssulNcY3E9BgPMMpBLP+zAf7bKQrMlSnEgxv
+	FNhpw8Eslkx27d4N0OJAN5s6xEGc+EUYMEBDqz1GRpSXcKILOZEkk6B0iolRchIKHa9YyHqD4yG
+	SgGOKB+Gxxpf1HMafL6GpR3PhMIL+U62IumtQSg==
+X-Google-Smtp-Source: AGHT+IET1YleTWVR5AXg8CRN1Esbkyz90K8kriJOg4HbyfAsDwmoVK/cGg98h3bhg32ByJBXHFEIavMxNd8QwGr8f7g=
+X-Received: by 2002:a17:906:788:b0:a59:adf8:a6e1 with SMTP id
+ a640c23a62f3a-a62651144f1mr794014566b.47.1716902909983; Tue, 28 May 2024
+ 06:28:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528-gipfel-dilemma-948a590a36fd@brauner>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <ZlMADupKkN0ITgG5@infradead.org> <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
+ <ZlRy7EBaV04F2UaI@infradead.org> <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <ZlSzotIrVPGrC6vt@infradead.org> <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+ <ZlWVkJwwJ0-B-Zyl@infradead.org> <20240528-gesell-evakuieren-899c08cbfa06@brauner>
+ <ZlW4IWMYxtwbeI7I@infradead.org> <20240528-gipfel-dilemma-948a590a36fd@brauner>
+ <ZlXaj9Qv0bm9PAjX@infradead.org>
+In-Reply-To: <ZlXaj9Qv0bm9PAjX@infradead.org>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 28 May 2024 15:28:18 +0200
+Message-ID: <CAJfpegvznUGTYxxTzB5QQHWtNrCfSkWvGscacfZ67Gn+6XoD8w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 28, 2024 at 02:04:16PM +0200, Christian Brauner wrote:
-> Can you please explain how opening an fd based on a handle returned from
-> name_to_handle_at() and not using a mount file descriptor for
-> open_by_handle_at() would work?
+On Tue, 28 May 2024 at 15:24, Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Tue, May 28, 2024 at 02:04:16PM +0200, Christian Brauner wrote:
+> > Can you please explain how opening an fd based on a handle returned from
+> > name_to_handle_at() and not using a mount file descriptor for
+> > open_by_handle_at() would work?
+>
+> Same as NFS file handles:
+>
+> name_to_handle_at returns a handle that includes a file system
+> identifier.
+>
+> open_by_handle_at looks up the superblock based on that identifier.
 
-Same as NFS file handles:
+The open file needs a specific mount, holding the superblock is not sufficient.
 
-name_to_handle_at returns a handle that includes a file system
-identifier.
-
-open_by_handle_at looks up the superblock based on that identifier.
-
-For the identifier I could imagin three choices:
-
- 1) use the fsid as returned in statfs and returned by fsnotify.
-    The downside is that it is "only" 64-bit.  The upside is that
-    we have a lot of plumbing for it
- 2) fixed 128-bit identifier to provide more entropy
- 3) a variable length identifier, which is more similar to NFS,
-    but also a lot more complicated
-
-We'd need a global lookup structure to find the sb by id.  The simplest
-one would be a simple linear loop over super_blocks which isn't terribly
-efficient, but probably better than whatever userspace is doing to
-find a mount fd right now.
-
-Let me cook up a simple prototype for 1) as it shouldn't be more than
-a few hundred lines of code.
+Thanks,
+Miklos
 
