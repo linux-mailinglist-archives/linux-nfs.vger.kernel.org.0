@@ -1,64 +1,57 @@
-Return-Path: <linux-nfs+bounces-3433-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3434-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCF548D163A
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 10:28:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5B018D1717
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 11:18:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B64C1F22EB2
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 08:28:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D20AB245F4
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 May 2024 09:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552C413C807;
-	Tue, 28 May 2024 08:28:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F8813E3F7;
+	Tue, 28 May 2024 09:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="prbu0lei"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeoMYBfz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D913C3F3;
-	Tue, 28 May 2024 08:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EBB13E3E4;
+	Tue, 28 May 2024 09:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716884885; cv=none; b=N6zeOOcSywXkM0Q1PYcH7aU4ywMv8FStZFRAVKQK9eerFNPDH+8Z7B3abAXykdQOhl9pMXJGGWi+LHGpyUU/E+DUrjo7E7eb/fJf2vLcWAnqkJ6C4zVbjyMI4aaeGuJ9UJsoQIi9Sqa11MeBut8dFmdttXjTYHtJ5D1KxIbtNCw=
+	t=1716887885; cv=none; b=g8k10XE+PHoK5JDOsZiz6aRsea/gaznk7jbOvUB/XP2rwETjdPbRSY13om23lscxD72cjZM+ApxV/uDoRh2+lQYTC2mfTtHAKYVcV9nIGQc5Dhnbv6RnbkTLqSfJFMSpIkNoQCzVe5KlxkBcvtVhNLN3mpB+54tK6UYfPdSCeWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716884885; c=relaxed/simple;
-	bh=I4rJx3Vi7g8QyIjXX/Wgz8GsjvztY6q4ysfS3GR5qiI=;
+	s=arc-20240116; t=1716887885; c=relaxed/simple;
+	bh=sHDgCQroYrNtRfGIVFtzULC0y1sPXOLnGzZzrn+ZRQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ys65yQbd6XpNBs8PVTyOJ+CBM1w9SKXEpg2O4SH1vFO9eF1md2OK8WTbJHCLFDpMaKipoX40rpFB6cUvwj2mXjdvqc3mig7dw86VNlt3GHMqSSRu/FsRZdGikymdt/1oDO+vNpQlIpzuYCbUHz9l5fijNhrfYhJyWK2XebIWO0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=prbu0lei; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=T1FIunXr6SUrbznzUoW3R7DYmUUGSbdYlhleRsosS7w=; b=prbu0leiIBpQYY5tpyT42PKygl
-	hfa7Y2pw4QeYIZ/EEwGxYajHs/B9jVTVzjL06KaDsUdQb+EvH2qsBNEN8A0u3QME3BlU32oQOltQi
-	2uyG4K9CcQpJYkkz5WaxU25h+BoQnsT0+dU+xvSjZu4/hoDIMvH/2rlAR3It7oJhnHcFV8MpObUcY
-	uKSeEEfDXy3BcX6HUo69J+W0Zn5D1eYtEpAA2o7nxPj0fz9XZKrYJEDZtbjulKhuUlhOtxraKkj09
-	9kHBs/6ow304OJ+aYk7tpbku90oOYylCKgs4xoaC0bnDTDj61WBSR/SUE3n3iiI0KJxKfN4Bqr1yo
-	Jwu/zX5Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sBsBc-0000000HTn5-1wEW;
-	Tue, 28 May 2024 08:28:00 +0000
-Date: Tue, 28 May 2024 01:28:00 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEiCp/4RzAQld/LV6dBn1pAOg/RvUvsWEF1tBjBAvJ+5DiccABpEEfWo2ESB4WFGzKZKtcfV7UESkdSz0kQEMcfa+pNXs+zwjmaDHsVgaMmqi1RRneC9R/pq/yPI8C/Y0RELovoyfPHyDpiktuVY+g14MW/WoMqiXW34b3MV7+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeoMYBfz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C188C4AF08;
+	Tue, 28 May 2024 09:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716887884;
+	bh=sHDgCQroYrNtRfGIVFtzULC0y1sPXOLnGzZzrn+ZRQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SeoMYBfz+kd2DFmF2s6i6cDdVAc1SIqumXsbNcwxNaVG9Iz6Tn4mTXo9w/9nztWDm
+	 o1wKhbLzY7Rv0Dta0Rtlq7G1HjyqJv7kbB1R/39bXLne+kd6MpySpQwoDDgxC80Gcr
+	 mwVV/fe/G8paLDBn9vjyei6j9CSOPiVYl3O+7s26Ha2g6cq42W50N/SBfsP1oONQ9O
+	 5dEQ/YgzIVMX4Y1+RPeBbhqBzZd3NZrJoQbC40qtkIZf0/30Q1QLcXP9TReS8OA63Z
+	 q7dEDukMfbD/UMD8lx+agQZJNlnvbFo0EZWvc2G76BJXBU3J87fX750C9iejdqRpky
+	 nKK8uRO7orjHg==
+Date: Tue, 28 May 2024 11:17:58 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
 Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
  name_to_handle_at(2)
-Message-ID: <ZlWVkJwwJ0-B-Zyl@infradead.org>
+Message-ID: <20240528-gesell-evakuieren-899c08cbfa06@brauner>
 References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
  <ZlMADupKkN0ITgG5@infradead.org>
  <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
@@ -66,34 +59,25 @@ References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
  <20240527133430.ifjo2kksoehtuwrn@quack3>
  <ZlSzotIrVPGrC6vt@infradead.org>
  <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+ <ZlWVkJwwJ0-B-Zyl@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <ZlWVkJwwJ0-B-Zyl@infradead.org>
 
-On Tue, May 28, 2024 at 10:20:21AM +0200, Christian Brauner wrote:
-> > This would solve all the problems in this proposal as well as all the
-> > obvious ones it doesn't solve.
+> > Hell, if you twist my arm I'll even write the patches for this.
 > 
-> As I've said multiple times on the thread I agree that this is what we
-> should do next and I would be happy to take patches for this. But
-> exposing the 64bit mount id doesn't impede or complicate that work. It's
-> a simple and useful addition that can be done now and doesn't prevent us
-> from doing the proposed work.
+> I'm also happy to help with that despite very limited time, but I'd
+> rather avoid doing the misguided mount ID thing.
 
-I really confuses the user story as we now have not only one but two
-broken modes for the open by handle ops.  We just further go down the
-rabbit hole of mixing a non-persistent identifiers with a persistent
-one.
-
-> Hell, if you twist my arm I'll even write the patches for this.
-
-I'm also happy to help with that despite very limited time, but I'd
-rather avoid doing the misguided mount ID thing.
+As I've said earlier, independent of the new handle type returning the
+new mount id is useful and needed because it allows the caller to
+reliably generate a mount fd for use with open_by_handle_at() via
+statmount(). That won't be solved by a new handle type and is racy with
+the old mount id. So I intend to accept a version of this patch.
 
