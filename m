@@ -1,337 +1,555 @@
-Return-Path: <linux-nfs+bounces-3455-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3456-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5DE98D29F3
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 03:27:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E91708D2B3F
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 05:03:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A5D21F27852
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 01:27:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 181051C21801
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 03:03:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46B51E86E;
-	Wed, 29 May 2024 01:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6521DFDE;
+	Wed, 29 May 2024 03:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="FLgHbTC0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwMShRUp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2114.outbound.protection.outlook.com [40.107.94.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB3C632
-	for <linux-nfs@vger.kernel.org>; Wed, 29 May 2024 01:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716946046; cv=fail; b=AyWv/0P0guxUO6LSzc00JElfPlPsPQKHKqpmnsKy2a+7d/TWoaPmz/6qBxvdgqglImF7mdMYWlY/e4olIy1mHXb968S56oQRd4BR+9H1LxD34mSBkdhyyNPTSTQX7yb9XvmjopRid7iRD3QkuIv8fkwcsriD5Omc1j2FaLMnrbQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716946046; c=relaxed/simple;
-	bh=lGmphVMaV2hD9PvuEmeQl7AEqEffjJwX7IdTJ2ZCO/o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kutPiPhX+JyxRONl6VbxL/MT6Zdx/4qVaI7KK7pKIMlPD5vzetZwSa7QHKaNGvgRSyBCTY/rilXf6fh8Ym4K5jVCM/Q4wHN0deZi1ZDphobM9CUrJ1Sd9KRKYwvbCt5sbrxZLf4E+CCsncCmnuAHwvwiPN5gGCGggvnvg+pW/mk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=FLgHbTC0; arc=fail smtp.client-ip=40.107.94.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOm2XtIx/Xizd+G3HXW2dP09IL8NkjqjMTvdK8CE2rQF0FDa5Tf8UnyGLm2dE0awz2ujShs/yJtBH0wQeocFXw5gtJQcLKAymPZrMe6jJLlUu7Rr5q5la9Vf9oFGEWVtjDnyPMuL//+u+Oiv27ty8hfSmaBe82D6VIKrnBQWyKXg+rrdhJHV9mpia/sWuab48tzJxwoz4qCmopcvF9JzNjgyRO8ZlBM0kNcqB9HCZ72h5T6uXrTAddmxMsdVkqud7fZNONU/1TlabYwPeCKRkoz/4EFbJp4cCD3Af8ZGLCefLGJIylsN3vMflP008vCO9npNUorLjxMiUmVDeTazwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lGmphVMaV2hD9PvuEmeQl7AEqEffjJwX7IdTJ2ZCO/o=;
- b=ZS7QegutPI7JDMGqb8YqE7O3vcZjSYIVZDaeynqnBVJgPi8QDSf93y8GmlbdjojW/BAUgaGvZGNpRhXyObW57KYT83ch96xEw3Gn4Lh1sKz0yow4/LhKU5Y5RhrePw7/X7A5S1wTSVT9Kjsd9v4EAAzhouygMAJ6s6zxf1DqVpR3U6Tn7/4etHHQASKWV2bB4g4Ug6Sv/gE7WxmZDlqxJBBY0f+sy+0o4zwaIQMH52CRoPHhqR9cbGd8R4CtVa7BdiWs3BDu+PVmVvdPPb+mbXGm4M+GZhxa9pQ9fsOE26EsjExgcXlZz9iAH0SLBmnuPld2tVwH3Jxe4BTRkQXKTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGmphVMaV2hD9PvuEmeQl7AEqEffjJwX7IdTJ2ZCO/o=;
- b=FLgHbTC0vFXmAgPumaNmpMdJSEFpV1vNl0lBIwuyKfE7qScIXIKoqRFqWMvU2ABvStuKuvUMeyUnXjeZPRYqsAPZNslwDFzKHhzHgXQnU+8gSdT/H6QqKG38pM4m4bOXF3QVyW/YeqBdu142aoluda+sPxBG7s6DhvofzP6L9CU=
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
- CH2PR13MB3815.namprd13.prod.outlook.com (2603:10b6:610:91::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7587.14; Wed, 29 May 2024 01:27:18 +0000
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871]) by DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871%6]) with mapi id 15.20.7633.001; Wed, 29 May 2024
- 01:27:18 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "neilb@suse.de" <neilb@suse.de>
-CC: "anna@kernel.org" <anna@kernel.org>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "richard+debian+bugreport@kojedz.in"
-	<richard+debian+bugreport@kojedz.in>, "1071501@bugs.debian.org"
-	<1071501@bugs.debian.org>
-Subject: Re: [PATCH] NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-Thread-Topic: [PATCH] NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-Thread-Index: AQHar+KTHwwwwsDV00+el7pgbq3jKbGrQhWAgACYYICAAZRzAA==
-Date: Wed, 29 May 2024 01:27:17 +0000
-Message-ID: <808846871c4d5dc3410f610a704a7915d7cf5930.camel@hammerspace.com>
-References: <171677905033.27191.7405469009187788343@noble.neil.brown.name>	,
- <a14f4bc37abb28c20cac7de3722f4b86c1fd28fb.camel@hammerspace.com>
-	 <171685918152.27191.2794964215450312426@noble.neil.brown.name>
-In-Reply-To: <171685918152.27191.2794964215450312426@noble.neil.brown.name>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|CH2PR13MB3815:EE_
-x-ms-office365-filtering-correlation-id: ee5c1694-037e-46e6-e134-08dc7f7e7a9d
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|366007|376005|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UFRTSHZqNTdwNjRWY1Bvb1RnazcxM2lMaEUwZ3ZDRnRwa2p3K1dyOW96SGZU?=
- =?utf-8?B?dEpuK21TdVFJNlBtNEQ5anpUQm5MQmtpSDZ3bFh1SDN3bG9hRHpLZkNQY01x?=
- =?utf-8?B?Z0tEcFY5czBKRWc4NXNOZkdGaDdUK0dKQytPQmVia2s2eFphZzhoVGxkYWtH?=
- =?utf-8?B?SysySHVwYmszcHhuQlR0cUI0cy92NDVRUHltUXNCSWhzWUVldWdXWTV2TFpq?=
- =?utf-8?B?c2xCaHpwVDlSZmIwREdHLy9zUTZDRU1LVGlIeGNvYWtSRTRwaFYwbTlwYmt1?=
- =?utf-8?B?QlJpT1k2S3FDOWcwcnpTSi9PUHRLZDUyRTQ4VkZwRlc1WlhQTjhxUlhUUlZK?=
- =?utf-8?B?eVUwUlJlTXdKQ3EwZTdtK2ZweEZnVzBpWUZKdDVFbDI2eC9KWFJtTHNmcjZN?=
- =?utf-8?B?SGpUMkRhbEpWOWJKU0R2S3lMQVF2YUppdFg5bEVOR3kwVVk4NUw2VC9leUxX?=
- =?utf-8?B?VHZHUmNSenJPV2hGWjEwWEdnMjB4TWxWdDBNNGZVWVNuUVFVUk5qalZUUEJv?=
- =?utf-8?B?L2FPUnBPNTVmcHJxOVJjVmRGVWMxOFE2R2FtejRGRXkrWnlFMk9nb2lERlc3?=
- =?utf-8?B?VWxMMVNhbWVpV1JWSGllT0dqL0pTVUw0WHNuUFJkOTU0Yzh5YUNmbEh1djNl?=
- =?utf-8?B?NlNISVd4Q2Vaa0oxYXVUU0hCcEJSc0praXJSNzRMbTM3WlgycDUwcFJ4NUNh?=
- =?utf-8?B?cHIwdGRQYzlxZ0FTRmlHdTlwNFU0OTc0TERDZFAvRklKYmN2eXA3TnRyV08r?=
- =?utf-8?B?UFVTZGpwdW0vMmI5RnVLTDRGQUxDSGZLTlJ3RER4RlBjUGpiSzZVcDhIa1hH?=
- =?utf-8?B?eXh1aVc0c000Sm5OS2Z0ZFQycXRCejdZSDAwUm0vSU1ReG1OaWNoenY4VGY4?=
- =?utf-8?B?OHJJRVFQbkJlV01YY200Nzk4dTN4d3lJVFF4ZGVaQXkzV2QvYlhSM2ZtWEY2?=
- =?utf-8?B?V2ZMRmp6L2JCQ1dCMTArZTY5dDEvY2dWQkY0d3M3ZjdjaVR5QVpTSVc5S2ZZ?=
- =?utf-8?B?Qk45OU5IS2RzZHkvK1JLQitFVVRSZFdkaEpodHN4Z3M3bVdwdk1EQXJXU0NQ?=
- =?utf-8?B?Rk9PWU11a25xUnVEQWc0cHpwaFUrSU5CV0VVSjJoUUdTSldTOEgrYUZkeGUy?=
- =?utf-8?B?eS9vQ2NtOHBONTVPd2gxbmJ0Q3grajd6eXUzMStCelpWRDJ4clBxVEovbDhj?=
- =?utf-8?B?Vm8rNjhBa2RMQ25wT0tVSFhOeFFuTkYrRklTSEl3MG9ROTNQSWt5eDlHa0lB?=
- =?utf-8?B?ekpqbUVlUlE5Mm1WSXZQWXBTZy9Pc3VWSTZsUjBjTkxNYWNwL0tjNDV6KzlJ?=
- =?utf-8?B?QWJlS20xMURlVVBLSExRejNFdGdicndDZE95NXBYclROUVhvcEtJTlVVL0dh?=
- =?utf-8?B?MURJdFlLaVdMVXlQMUExZjBzV1dQM1BHWTNEamhZeTVENWl4b1VvL3NyMjNh?=
- =?utf-8?B?MzNZTmlMTmNDdzlpZ3NWK3BOWkdqMEtWWUVFd3o4emFkWWJ4bDZ1a0tjT1I1?=
- =?utf-8?B?dStVS29ML2h2aVVnbzRxMTczYnJESnB3dHpyVFE5a2Z2LzFsbGdNV0tlcjZi?=
- =?utf-8?B?d1BHeXZoOGNhbXV1SnNkZXArUVZkOEEvU3ptcjdXZ1VHbDJXdStuM0xRdjN0?=
- =?utf-8?B?V3BoY2cxNFM5S1psd3NFMVVXQVVRREZsZGJLMGZOV0tJYXpPMXdZYm13dlBD?=
- =?utf-8?B?c0hyMmRxRkVDV1krdURhQmtmWkJnYktxQm8zR0U4aGJGVTJxSERoZ1VRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Y1JtbXpRQWFuYmJiaWpPUzNqL2gxbWdWbFR0VEREWmJkcExQQitWY2xOcGRj?=
- =?utf-8?B?ZFJaYXpoQlFhbU9TWHlCaXhMWlYzOU1QTjVRYmtjcG9kUmtBZWFua1RFcWpR?=
- =?utf-8?B?RXJZWDdZenc3aW5adXpDU3FXcGp3LzZaTkNOWGlRTDl4dzV3U2YyUi9Gdzd2?=
- =?utf-8?B?NnFTeWw0NzZ2UEg4WFdIekVrZFVvZzZ1Qkc1VGpFbHppRFZaTkh4N01GNkhi?=
- =?utf-8?B?R0VzZ20xNTFLUHVZc2hOelBOT2pCTTRSNWE3eHJ5dFA5U0h0ZkhtSnd3cWpx?=
- =?utf-8?B?UVpnVVFOSUZhKzRCUUpLVXBubVdTZG5mdEhybjBSVFdiMEFlVU9YRERjLzVa?=
- =?utf-8?B?V3BJbWxjeFZFUDZWeGdZVWQ4YWZ2blgxUzBDY0ZjaUFUV20vRld4a1lzUHMx?=
- =?utf-8?B?YndidUlnMUUyeFYzWFNlVS9iWmNvQ3JJaVhKSVloMzlGWURzS2RzczZlVEJq?=
- =?utf-8?B?RlFXNmpWQTAvcjR5N3ZMWlVVaDMvYVAvVzZqZitHNmhOYjgwVVdkb1p3N2Nj?=
- =?utf-8?B?MThJb0lvSGpvVm5Wb1NBaEoxaDd5NTM1SHR6TkprT1A4TWlObzNYK2tHSjFI?=
- =?utf-8?B?NFFMSDMxWmFiWmJwaDRuWng4U2dmSnpqVUZYbExGRVBRZnBOazVzM2Y2a0F5?=
- =?utf-8?B?UVVZNGFxQi95bE9hQ2VuNHdCdXZuN0hDN1djZm9lMFRBQm5KWVkrY0l1eEVT?=
- =?utf-8?B?enM1eDFMQytjNXZJcWNNV2VVdFR0ZHFSdElJVHFzaE9YQ0FYaWdyQk16YXdG?=
- =?utf-8?B?ZE9FWWE0VnJoa0V1TlhCRUJMMURwV0tNSC9BR3RyLzZxZGdsR0hDWTRISkZ6?=
- =?utf-8?B?QkUwcWk2aHl2OFBPTUNCbHJiRUltQmZ4SjdFZ1BtSkxGSkhsSTFWTFpiWFZY?=
- =?utf-8?B?TTVkZXR5eDV6VWlZY2VRT0xMN0V2N2M0Tlk2Tm9tUlUrQlQ3S0Z5K1dQWGFR?=
- =?utf-8?B?M0VNaGNzOFJFeEF4L0ZTZUwydWIzNnNtY2FqZFZVTTkzMHVmL0JoRzh2RElU?=
- =?utf-8?B?UnorREF2aW5QeEJibzRDSE5MYnVvMGdOL3lJdHNBaStaTjRUVHJ1WitlNUdR?=
- =?utf-8?B?eUVIcjZOWnhHVmZiczJwNDVobnY0YmRSaUNnUzh0aFZ5aXFYYVVtSndqMmo2?=
- =?utf-8?B?b3NjUys1WHpGTGozZzkzNGQ3K3lreHhqK2xTV2ZGNVJnMWs3WVVhaEFlVEhH?=
- =?utf-8?B?Y0hKT3B1RXdGM2VDQk16TngxOWxqRGREZnJqOVF5MTIyaGtzMlI2ZUhMbW9V?=
- =?utf-8?B?cEY3cCtJZ1NiYWpDWDFFeEk4ZDJyTFNUMy9uK2M5NU10c1VHODlOS0EvUlhs?=
- =?utf-8?B?VkNOektIS2hjVzhVSHpmVlpteG5VZE9PNklBdllmYXdiZGRZM3NWSVhqS0to?=
- =?utf-8?B?TmxtWlBDR2djaHVxaUtMZkVNdTlhMlMzaGtCQlhwN3hHdmFNRm16T0haNk83?=
- =?utf-8?B?TWh6QVAyVGRqc2NHa3pMY0lyV25ZWGRMNjc5bEtCL3E3aWg4WC9iUWJrcFRG?=
- =?utf-8?B?dUpUbTZ2ZlRZaUdQRENyK0I4NkttTHltVHROQ3duZlhsMkZ4T29OY0s4U0lR?=
- =?utf-8?B?K0JpMDZZSHVXaFA2K285OFJnQzBCOWk3SVgybGpYcG9YWFBHWDVsS3pqbEQ1?=
- =?utf-8?B?SHRHRXV4Snd2d0twTlZUR2o5dmlnN0J5YVNEL283SnVpaVRBakcvZU9sWmRH?=
- =?utf-8?B?UzVWUlFLK3ovZldBTFRUVllON3NSTkxLc3p5TGVxM2VKNk5UNFA0blFRcytP?=
- =?utf-8?B?T0xsQkVqbExadjZyRlhQRWU5TC9KZnZNQVF6QmNQR2VOc3lpNzE4TUNEeWVM?=
- =?utf-8?B?eG52djhhbWM1Uk1HSG95bERJTkNjMGpWYmUwUEZFemxLWmhKQ1JjVDJvRlZa?=
- =?utf-8?B?YlU2SEtUeHZLcU0xYXRuQm5Zdll0UzNiOEdIMlNXc3pSc29SUnExNFEzU0dE?=
- =?utf-8?B?QU9WcEE4bW0wdEZRZ0owbUpMcmQvcm41K3F2RGRsc1lzWkMrU3RITERLWHRv?=
- =?utf-8?B?QjYxUDNsLzBvVTVTc011SG9DM3JiWmM2Lys4TnJFOUIxQ2hkdUxWK0pHUWNa?=
- =?utf-8?B?bUNTZUlkbFQrUXBLeGUzeDhGSUpQV3E1QzlYWFFzaEpoZ2YwWWpraDdoUlFs?=
- =?utf-8?B?Y3FrUmpXd01PcUUyNW0zdjFxdWlBK1NkbjlJUUp2TmExR0xpczdBS29pUzY3?=
- =?utf-8?B?aTJtcHpqblRyS0dySjNpZmJwSk5TZzg4bUwxa0ZIVEpiM1VaSGtBYjhja2Zt?=
- =?utf-8?B?cnFFOFJCcnMzemZ6VHRZb0dTcTZBPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <69336B87C4DC354696F31B05622A89D2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CD53207
+	for <linux-nfs@vger.kernel.org>; Wed, 29 May 2024 03:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716951791; cv=none; b=kBTMQn0P8qK8CmwGAPIgmIKs7/VWt9oMVgksEb7iaLDD94h8Y1PZ4si9VutjWTD19f65g9gBtfGvRoWnRDBSyOip/GqQLom9SodwxPDEWJFYPFxDopQPdoBdicM4RsW5lmpaC75yNPVIIL4Js7KsBBWALUneBJkwM0fJ5EeAwJ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716951791; c=relaxed/simple;
+	bh=W9UnJm65lWm5fNO0HQTCcC5VA0aElnV0sUpAy8ALd94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=ibU3oXd/CK2LtEoxycV+hzua0L9nzR3CxF/I/SB8SQ46B5bXDrCnXjYdoBt80d/DbbBbSVYZIsAnGP02TOwAhqzVPzkS4Q9fXZjhbxfnPc/QfsY0baq6s/mfxsG7nZ2yDUZmSxisdaun5xm7su8U23XOCCGO2B51BrRM98eJ74w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwMShRUp; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-523b017a5c6so2078374e87.1
+        for <linux-nfs@vger.kernel.org>; Tue, 28 May 2024 20:03:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716951786; x=1717556586; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ti7rhMzpm2O3Hc4EZ+Hovs+/OPB66MtoRRStkrGzpRk=;
+        b=OwMShRUpuQKLUPdsXk+hJF6Tr8UoHH25X0n7zCny5BGqZdS56y+GrjP9j5bpalUN10
+         Kah3+RTs+5AFzWegX0a7vJovJ2L/CVlkIXZK/UVZH4bJ3mJBLVCmZVcgjPCBIEco99rQ
+         kXpRjYDY/e0CUWLkDcT0kioaYdZoHjLQLumb/FqLSH9bH7PyxQy1W8bs+dP4Xs3F2DWD
+         3jAx1vJACmDUnlm1eGhI+0di3g6p+64QQ/7K3MqDjONndIR3UQwtpGv97Rg+UJc3qe16
+         pceY65HYfvVIES84/Bqkf19JX2nOL53KmbWnmQNHNYBHn+BwEo+I0E9U6bddcEkRgDRT
+         Y67g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716951786; x=1717556586;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ti7rhMzpm2O3Hc4EZ+Hovs+/OPB66MtoRRStkrGzpRk=;
+        b=YeSKnAjOGoDpzHSjWbPqhw3wUbSimwp/GPAsspoNXOHufaRUDh3ZUSqISVAWuI5F41
+         VybO0Z+QzN5WxEspS60mr3APJFr/0gPuFPYOit07GDiTgJA9fyG5jMJI49wyRYa8WEWI
+         Ao/qxsEd/hGx3/YvtMuNrm4o4MA/SNW0q1vQs1d73BIuYB5uNozjqyPSCR8abU52bAYH
+         zG7e0kZWUydlSJBGwmoIAfkWXCFegU1gAB4i6Rw6NDuiPk5636/rEJR3IJPuIFlPXTaU
+         GNeQlqIuz9BFly3Nj6zBumSkrY/iP+AsfT52K4G/RtLROjUfOcHbUM/Fm5uvwDnAPm/M
+         g5DQ==
+X-Gm-Message-State: AOJu0YytUB0zJtupGXmZTZ6sJ+nJ1/ENQPt7wUMiGKMhtNOxS2x5qZDl
+	/YQXzF5Pi58/sPZOp+2q4Qu6eEdYTUDzeSdlwPrZ4WzmSpxi/pDY6UpNUlijFOmmAhbsV9WcjSK
+	U7VeS8bhaFMplPXAbI4oUd2MGzrkIqipU
+X-Google-Smtp-Source: AGHT+IHmzq0XB1Xixqp14yJB+UZugsDiOKvRSWFu75yZLwPaK+WpjYhiejJn9p8CzWfxERt//zKV9CW4mBNywaU/6/I=
+X-Received: by 2002:ac2:57de:0:b0:523:af1f:89d9 with SMTP id
+ 2adb3069b0e04-529679319ccmr9432790e87.58.1716951785956; Tue, 28 May 2024
+ 20:03:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee5c1694-037e-46e6-e134-08dc7f7e7a9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2024 01:27:17.9262
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1QgrsozBC9X2MH+5iowIIFR74+hKwjaEg+XGfRYNuYQMy+PmvRFVn8FVfaP87ucuoB9dWfkn3BuHlAVWC1A5Lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3815
+References: <CAAvCNcCTWbU-ejURuUC0_xhcoU3GF+2jX28rV4+2cKgfO5Lqxg@mail.gmail.com>
+ <619bbf23-dbfe-4c26-adb9-1cc89f3f22a2@redhat.com> <CAAvCNcCGhZ917yerEOMcEEj7+_Yz5by8en2F4Yr5zLk0iQEGjg@mail.gmail.com>
+ <ee3805865e12f8ed2f82f7e99e33598f0bcc6667.camel@kernel.org>
+In-Reply-To: <ee3805865e12f8ed2f82f7e99e33598f0bcc6667.camel@kernel.org>
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Wed, 29 May 2024 05:02:00 +0200
+Message-ID: <CAAvCNcD0MTwBthZE3KPAoG=_gsVY=tNS5D4K+UV6+9jMJPs1Og@mail.gmail.com>
+Subject: Re: RFC2224 support in Linux /sbin/mount.nfs4?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVHVlLCAyMDI0LTA1LTI4IGF0IDExOjE5ICsxMDAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IE9u
-IFR1ZSwgMjggTWF5IDIwMjQsIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gPiBPbiBNb24sIDIw
-MjQtMDUtMjcgYXQgMTM6MDQgKzEwMDAsIE5laWxCcm93biB3cm90ZToNCj4gPiA+IA0KPiA+ID4g
-ZGVudHJ5LT5kX2ZzZGF0YSBpcyBzZXQgdG8gTkZTX0ZTREFUQV9CTE9DS0VEIHdoaWxlIHVubGlu
-a2luZyBvcg0KPiA+ID4gcmVuYW1pbmctb3ZlciBhIGZpbGUgdG8gZW5zdXJlIHRoYXQgbm8gb3Bl
-biBzdWNjZWVkcyB3aGlsZSB0aGUNCj4gPiA+IE5GUw0KPiA+ID4gb3BlcmF0aW9uIHByb2dyZXNz
-ZWQgb24gdGhlIHNlcnZlci4NCj4gPiA+IA0KPiA+ID4gU2V0dGluZyBkZW50cnktPmRfZnNkYXRh
-IHRvIE5GU19GU0RBVEFfQkxPQ0tFRCBpcyBkb25lIHVuZGVyIC0NCj4gPiA+ID5kX2xvY2sNCj4g
-PiA+IGFmdGVyIGNoZWNraW5nIHRoZSByZWZjb3VudCBpcyBub3QgZWxldmF0ZWQuwqAgQW55IGF0
-dGVtcHQgdG8gb3Blbg0KPiA+ID4gdGhlDQo+ID4gPiBmaWxlICh0aHJvdWdoIHRoYXQgbmFtZSkg
-d2lsbCBnbyB0aHJvdWdoIGxvb2twX29wZW4oKSB3aGljaCB3aWxsDQo+ID4gPiB0YWtlDQo+ID4g
-PiAtPmRfbG9jayB3aGlsZSBpbmNyZW1lbnRpbmcgdGhlIHJlZmNvdW50LCB3ZSBjYW4gYmUgc3Vy
-ZSB0aGF0DQo+ID4gPiBvbmNlDQo+ID4gPiB0aGUNCj4gPiA+IG5ldyB2YWx1ZSBpcyBzZXQsIF9f
-bmZzX2xvb2t1cF9yZXZhbGlkYXRlKCkgKndpbGwqIHNlZSB0aGUgbmV3DQo+ID4gPiB2YWx1ZQ0K
-PiA+ID4gYW5kDQo+ID4gPiB3aWxsIGJsb2NrLg0KPiA+ID4gDQo+ID4gPiBXZSBkb24ndCBoYXZl
-IGFueSBsb2NraW5nIGd1YXJhbnRlZSB0aGF0IHdoZW4gd2Ugc2V0IC0+ZF9mc2RhdGENCj4gPiA+
-IHRvDQo+ID4gPiBOVUxMLA0KPiA+ID4gdGhlIHdhaXRfdmFyX2V2ZW50KCkgaW4gX19uZnNfbG9v
-a3VwX3JldmFsaWRhdGUoKSB3aWxsIG5vdGljZS4NCj4gPiA+IHdhaXQvd2FrZSBwcmltaXRpdmVz
-IGRvIE5PVCBwcm92aWRlIGJhcnJpZXJzIHRvIGd1YXJhbnRlZSBvcmRlci7CoA0KPiA+ID4gV2UN
-Cj4gPiA+IG11c3QgdXNlIHNtcF9sb2FkX2FjcXVpcmUoKSBpbiB3YWl0X3Zhcl9ldmVudCgpIHRv
-IGVuc3VyZSB3ZSBsb29rDQo+ID4gPiBhdA0KPiA+ID4gYW4NCj4gPiA+IHVwLXRvLWRhdGUgdmFs
-dWUsIGFuZCBtdXN0IHVzZSBzbXBfc3RvcmVfcmVsZWFzZSgpIGJlZm9yZQ0KPiA+ID4gd2FrZV91
-cF92YXIoKS4NCj4gPiA+IA0KPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHRob3NlIGJhcnJpZXIgZnVu
-Y3Rpb25zIGFuZCBmYWN0b3JzIG91dA0KPiA+ID4gYmxvY2tfcmV2YWxpZGF0ZSgpIGFuZCB1bmJs
-b2NrX3JldmFsaWRhdGUoKSBmYXIgY2xhcml0eS4NCj4gPiA+IA0KPiA+ID4gVGhlcmUgaXMgYWxz
-byBhIGh5cG90aGV0aWNhbCBidWcgaW4gdGhhdCBpZiBtZW1vcnkgYWxsb2NhdGlvbg0KPiA+ID4g
-ZmFpbHMNCj4gPiA+ICh3aGljaCBuZXZlciBoYXBwZW5zIGluIHByYWN0aWNlKSB3ZSBtaWdodCBs
-ZWF2ZSAtPmRfZnNkYXRhDQo+ID4gPiBsb2NrZWQuDQo+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhl
-IG1pc3NpbmcgY2FsbCB0byB1bmJsb2NrX3JldmFsaWRhdGUoKS4NCj4gPiA+IA0KPiA+ID4gUmVw
-b3J0ZWQtYW5kLXRlc3RlZC1ieTogUmljaGFyZCBLb2plZHppbnN6a3kNCj4gPiA+IDxyaWNoYXJk
-K2RlYmlhbitidWdyZXBvcnRAa29qZWR6LmluPg0KPiA+ID4gQ2xvc2VzOiBodHRwczovL2J1Z3Mu
-ZGViaWFuLm9yZy9jZ2ktYmluL2J1Z3JlcG9ydC5jZ2k/YnVnPTEwNzE1MDENCj4gPiA+IEZpeGVz
-OiAzYzU5MzY2YzIwN2UgKCJORlM6IGRvbid0IHVuaGFzaCBkZW50cnkgZHVyaW5nDQo+ID4gPiB1
-bmxpbmsvcmVuYW1lIikNCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE5laWxCcm93biA8bmVpbGJAc3Vz
-ZS5kZT4NCj4gPiA+IC0tLQ0KPiA+ID4gwqBmcy9uZnMvZGlyLmMgfCA0NCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gwqAxIGZpbGUgY2hhbmdlZCwg
-MjkgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1n
-aXQgYS9mcy9uZnMvZGlyLmMgYi9mcy9uZnMvZGlyLmMNCj4gPiA+IGluZGV4IGFjNTA1NjcxZWZi
-ZC4uYzkxZGMzNmQ0MWNjIDEwMDY0NA0KPiA+ID4gLS0tIGEvZnMvbmZzL2Rpci5jDQo+ID4gPiAr
-KysgYi9mcy9uZnMvZGlyLmMNCj4gPiA+IEBAIC0xODAyLDkgKzE4MDIsMTAgQEAgX19uZnNfbG9v
-a3VwX3JldmFsaWRhdGUoc3RydWN0IGRlbnRyeQ0KPiA+ID4gKmRlbnRyeSwNCj4gPiA+IHVuc2ln
-bmVkIGludCBmbGFncywNCj4gPiA+IMKgCQlpZiAocGFyZW50ICE9IFJFQURfT05DRShkZW50cnkt
-PmRfcGFyZW50KSkNCj4gPiA+IMKgCQkJcmV0dXJuIC1FQ0hJTEQ7DQo+ID4gPiDCoAl9IGVsc2Ug
-ew0KPiA+ID4gLQkJLyogV2FpdCBmb3IgdW5saW5rIHRvIGNvbXBsZXRlICovDQo+ID4gPiArCQkv
-KiBXYWl0IGZvciB1bmxpbmsgdG8gY29tcGxldGUgLSBzZWUNCj4gPiA+IHVuYmxvY2tfcmV2YWxp
-ZGF0ZSgpICovDQo+ID4gPiDCoAkJd2FpdF92YXJfZXZlbnQoJmRlbnRyeS0+ZF9mc2RhdGEsDQo+
-ID4gPiAtCQkJwqDCoMKgwqDCoMKgIGRlbnRyeS0+ZF9mc2RhdGEgIT0NCj4gPiA+IE5GU19GU0RB
-VEFfQkxPQ0tFRCk7DQo+ID4gPiArCQkJwqDCoMKgwqDCoMKgIHNtcF9sb2FkX2FjcXVpcmUoJmRl
-bnRyeS0NCj4gPiA+ID5kX2ZzZGF0YSkNCj4gPiA+ICsJCQnCoMKgwqDCoMKgwqAgIT0gTkZTX0ZT
-REFUQV9CTE9DS0VEKTsNCj4gPiANCj4gPiBEb2Vzbid0IHRoaXMgZW5kIHVwIGJlaW5nIGEgcmV2
-ZXJzZWQgQUNRVUlSRStSRUxFQVNFIGFzIGRlc2NyaWJlZA0KPiA+IGluDQo+ID4gdGhlICJMT0NL
-IEFDUVVJU0lUSU9OIEZVTkNUSU9OUyIgc2VjdGlvbiBvZiBEb2N1bWVudGF0aW9uL21lbW9yeS0N
-Cj4gPiBiYXJyaWVycy50eHQ/DQo+IA0KPiBJIGRvbid0IHRoaW5rIHNvLsKgIFRoYXQgc2VjdGlv
-biBpcyB0YWxraW5nIGFib3V0IFNUT1JFIG9wZXJhdGlvbnMNCj4gd2hpY2gNCj4gY2FuIG1vdmUg
-YmFja3dhcmRzIHRocm91Z2ggQUNRVUlSRSBhbmQgZm9yd2FyZHMgdGhyb3VnaCBSRUxFQVNFLg0K
-PiANCj4gQWJvdmUgd2UgaGF2ZSBhIExPQUQgb3BlcmF0aW9uIHdoaWNoIG11c3RuJ3QgbW92ZSBi
-YWNrd2FyZHMgdGhyb3VnaA0KPiBBQ1FVSVJFLsKgIEJlbG93IHRoZXJlIGlzIGEgU1RPUkUgb3Bl
-cmF0aW9uIHdoaWNoIG11c3RuJ3QgbW92ZQ0KPiBmb3J3YXJkcw0KPiB0aHJvdWdoIGEgUkVMRUFT
-RS7CoCBCb3RoIG9mIHRob3NlIGFyZSBndWFyYW50ZWVkLg0KDQpJdCBpc24ndCBuZWNlc3Nhcnkg
-Zm9yIHRoZSBMT0FEIHRvIG1vdmUgYmFja3dhcmRzIHRocm91Z2ggdGhlIEFDUVVJUkUuDQpBcyBJ
-IHVuZGVyc3RhbmQgaXQsIHRoZSBwb2ludCBpcyB0aGF0IHRoZSBBQ1FVSVJFIGNhbiBtb3ZlIHRo
-cm91Z2ggdGhlDQpSRUxFQVNFIGFzIHBlciB0aGUgZm9sbG93aW5nIHBhcmFncmFwaCBpbiB0aGF0
-IGRvY3VtZW50Og0KDQogICAgICAgICAgICBTaW1pbGFybHksIHRoZSByZXZlcnNlIGNhc2Ugb2Yg
-YSBSRUxFQVNFIGZvbGxvd2VkIGJ5IGFuIEFDUVVJUkUgZG9lcw0KICAgICAgICAgICAgbm90IGlt
-cGx5IGEgZnVsbCBtZW1vcnkgYmFycmllci4gIFRoZXJlZm9yZSwgdGhlIENQVSdzIGV4ZWN1dGlv
-biBvZiB0aGUNCiAgICAgICAgICAgIGNyaXRpY2FsIHNlY3Rpb25zIGNvcnJlc3BvbmRpbmcgdG8g
-dGhlIFJFTEVBU0UgYW5kIHRoZSBBQ1FVSVJFIGNhbiBjcm9zcywNCiAgICAgICAgICAgIHNvIHRo
-YXQ6DQogICAgICAgICAgICANCiAgICAgICAgICAgICAgICAgICAgKkEgPSBhOw0KICAgICAgICAg
-ICAgICAgICAgICBSRUxFQVNFIE0NCiAgICAgICAgICAgICAgICAgICAgQUNRVUlSRSBODQogICAg
-ICAgICAgICAgICAgICAgICpCID0gYjsNCiAgICAgICAgICAgIA0KICAgICAgICAgICAgY291bGQg
-b2NjdXIgYXM6DQogICAgICAgICAgICANCiAgICAgICAgICAgICAgICAgICAgQUNRVUlSRSBOLCBT
-VE9SRSAqQiwgU1RPUkUgKkEsIFJFTEVBU0UgTQ0KDQpUaGlzIHdvdWxkIHByZXN1bWFibHkgYmUg
-d2h5IHRoZSBmdW5jdGlvbiBjbGVhcl9hbmRfd2FrZV91cF9iaXQoKSBuZWVkcw0KYSBmdWxsIG1l
-bW9yeSBiYXJyaWVyIG9uIG1vc3QgYXJjaGl0ZWN0dXJlcywgaW5zdGVhZCBvZiBiZWluZyBqdXN0
-IGFuDQpzbXBfd21iKCkuIElzIG15IHVuZGVyc3RhbmRpbmcgb2YgdGhpcyB3cm9uZz8NCg0KPiAN
-Cj4gPiANCj4gPiBJT1c6IFNob3VsZG4ndCB0aGUgYWJvdmUgcmF0aGVyIGJlIHVzaW5nIFJFQURf
-T05DRSgpPw0KPiA+IA0KPiA+ID4gwqAJCXBhcmVudCA9IGRnZXRfcGFyZW50KGRlbnRyeSk7DQo+
-ID4gPiDCoAkJcmV0ID0gcmV2YWwoZF9pbm9kZShwYXJlbnQpLCBkZW50cnksIGZsYWdzKTsNCj4g
-PiA+IMKgCQlkcHV0KHBhcmVudCk7DQo+ID4gPiBAQCAtMTgxNyw2ICsxODE4LDI2IEBAIHN0YXRp
-YyBpbnQgbmZzX2xvb2t1cF9yZXZhbGlkYXRlKHN0cnVjdA0KPiA+ID4gZGVudHJ5DQo+ID4gPiAq
-ZGVudHJ5LCB1bnNpZ25lZCBpbnQgZmxhZ3MpDQo+ID4gPiDCoAlyZXR1cm4gX19uZnNfbG9va3Vw
-X3JldmFsaWRhdGUoZGVudHJ5LCBmbGFncywNCj4gPiA+IG5mc19kb19sb29rdXBfcmV2YWxpZGF0
-ZSk7DQo+ID4gPiDCoH0NCj4gPiA+IMKgDQo+ID4gPiArc3RhdGljIHZvaWQgYmxvY2tfcmV2YWxp
-ZGF0ZShzdHJ1Y3QgZGVudHJ5ICpkZW50cnkpDQo+ID4gPiArew0KPiA+ID4gKwkvKiBvbGQgZGV2
-bmFtZSAtIGp1c3QgaW4gY2FzZSAqLw0KPiA+ID4gKwlrZnJlZShkZW50cnktPmRfZnNkYXRhKTsN
-Cj4gPiA+ICsNCj4gPiA+ICsJLyogQW55IG5ldyByZWZlcmVuY2UgdGhhdCBjb3VsZCBsZWFkIHRv
-IGFuIG9wZW4NCj4gPiA+ICsJICogd2lsbCB0YWtlIC0+ZF9sb2NrIGluIGxvb2t1cF9vcGVuKCkg
-LT4gZF9sb29rdXAoKS4NCj4gPiA+ICsJICovDQo+ID4gPiArCWxvY2tkZXBfYXNzZXJ0X2hlbGQo
-JmRlbnRyeS0+ZF9sb2NrKTsNCj4gPiA+ICsNCj4gPiA+ICsJZGVudHJ5LT5kX2ZzZGF0YSA9IE5V
-TEw7DQo+ID4gDQo+ID4gV2h5IGFyZSB5b3UgZG9pbmcgYSBiYXJyaWVyIGZyZWUgY2hhbmdlIHRv
-IGRlbnRyeS0+ZF9mc2RhdGEgaGVyZQ0KPiA+IHdoZW4NCj4gPiB5b3UgaGF2ZSB0aGUgbWVtb3J5
-IGJhcnJpZXIgcHJvdGVjdGVkIGNoYW5nZSBpbg0KPiA+IHVuYmxvY2tfcmV2YWxpZGF0ZSgpPw0K
-PiANCj4gT3VjaC4gVGhpcyBzaG91bGQgYmUNCj4gDQo+IAlkZW50cnktPmRfZnNkYXRhID0gTkZT
-X0ZTREFUQV9CTE9DS0VEOw0KPiANCj4gSSBtZXNzZWQgdGhhdCB1cCB3aGVuIHJlYXJyYW5naW5n
-IHRoZSBjb2RlIGFmdGVyIHRlc3RpbmcuDQo+IA0KPiBUaGlzIGRvZXNuJ3QgbmVlZCBhIGJhcnJp
-ZXIgYmVjYXVzZSBhIHNwaW5sb2NrIGlzIGhlbGQuwqAgV2UgY2hlY2sgdGhlDQo+IHJlZmNvdW50
-IHVuZGVyIHRoZSBzcGlubG9jayBhbmQgb25seSBwcm9jZWVkIGlmIHRoZXJlIGFyZSBubyBvdGhl
-cg0KPiByZWZlcmVuY2VzLsKgIFNvIGlmIF9fbmZzX2xvb2t1cF9yZXZhbGlkYXRlIGdldHMgY2Fs
-bGVkIGNvbmN1cnJlbnRseSwNCj4gaXQNCj4gbXVzdCBoYXZlIGdvdCBhIG5ldyByZWZlcmVuY2Us
-IGFuZCB0aGF0IHJlcXVpcmVzIHRoZSBzYW1lIHNwaW5sb2NrLg0KPiBTbyBpZiBpdCBpcyBjYWxs
-ZWQgYWZ0ZXIgdGhpcyBhc3NpZ25tZW50LCB0aGUgc3BpbmxvY2sgd2lsbCBwcm92aWRlDQo+IGFs
-bA0KPiBuZWVkZWQgYmFycmllcnMuDQo+IA0KPiA+IA0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+
-ICtzdGF0aWMgdm9pZCB1bmJsb2NrX3JldmFsaWRhdGUoc3RydWN0IGRlbnRyeSAqZGVudHJ5KQ0K
-PiA+ID4gK3sNCj4gPiA+ICsJLyogc3RvcmVfcmVsZWFzZSBlbnN1cmVzIHdhaXRfdmFyX2V2ZW50
-KCkgc2VlcyB0aGUNCj4gPiA+IHVwZGF0ZSAqLw0KPiA+ID4gKwlzbXBfc3RvcmVfcmVsZWFzZSgm
-ZGVudHJ5LT5kX2ZzZGF0YSwgTlVMTCk7DQo+ID4gDQo+ID4gU2hvdWxkbid0IHRoaXMgYmUgYSBX
-UklURV9PTkNFKCksIGZvciB0aGUgc2FtZSByZWFzb24gYXMgYWJvdmU/DQo+IA0KPiBObywgZm9y
-IHRoZSBzYW1lIHJlYXNvbiBhcyBhYm92ZS7CoCBXUklURV9PTkNFKCkgZG9lc24ndCBwcm92aWRl
-IGFueQ0KPiBtZW1vcnkgYmFycmllcnMsIGl0IG9ubHkgYXZvaWQgY29tcGlsZXIgb3B0aW1pc2F0
-aW9ucy7CoCBIZXJlIHdlDQo+IHJlYWxseQ0KPiBuZWVkIHRoZSBiYXJyaWVyIG9uIHNvbWUgQ1BV
-cy4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHJldmlldy4NCj4gDQo+IE5laWxCcm93bg0KPiANCj4g
-PiANCj4gPiA+ICsJd2FrZV91cF92YXIoJmRlbnRyeS0+ZF9mc2RhdGEpOw0KPiA+ID4gK30NCj4g
-PiA+ICsNCj4gPiA+IMKgLyoNCj4gPiA+IMKgICogQSB3ZWFrZXIgZm9ybSBvZiBkX3JldmFsaWRh
-dGUgZm9yIHJldmFsaWRhdGluZyBqdXN0IHRoZQ0KPiA+ID4gZF9pbm9kZShkZW50cnkpDQo+ID4g
-PiDCoCAqIHdoZW4gd2UgZG9uJ3QgcmVhbGx5IGNhcmUgYWJvdXQgdGhlIGRlbnRyeSBuYW1lLiBU
-aGlzIGlzDQo+ID4gPiBjYWxsZWQNCj4gPiA+IHdoZW4gYQ0KPiA+ID4gQEAgLTI1MDEsMTUgKzI1
-MjIsMTIgQEAgaW50IG5mc191bmxpbmsoc3RydWN0IGlub2RlICpkaXIsIHN0cnVjdA0KPiA+ID4g
-ZGVudHJ5ICpkZW50cnkpDQo+ID4gPiDCoAkJc3Bpbl91bmxvY2soJmRlbnRyeS0+ZF9sb2NrKTsN
-Cj4gPiA+IMKgCQlnb3RvIG91dDsNCj4gPiA+IMKgCX0NCj4gPiA+IC0JLyogb2xkIGRldm5hbWUg
-Ki8NCj4gPiA+IC0Ja2ZyZWUoZGVudHJ5LT5kX2ZzZGF0YSk7DQo+ID4gPiAtCWRlbnRyeS0+ZF9m
-c2RhdGEgPSBORlNfRlNEQVRBX0JMT0NLRUQ7DQo+ID4gPiArCWJsb2NrX3JldmFsaWRhdGUoZGVu
-dHJ5KTsNCj4gPiA+IMKgDQo+ID4gPiDCoAlzcGluX3VubG9jaygmZGVudHJ5LT5kX2xvY2spOw0K
-PiA+ID4gwqAJZXJyb3IgPSBuZnNfc2FmZV9yZW1vdmUoZGVudHJ5KTsNCj4gPiA+IMKgCW5mc19k
-ZW50cnlfcmVtb3ZlX2hhbmRsZV9lcnJvcihkaXIsIGRlbnRyeSwgZXJyb3IpOw0KPiA+ID4gLQlk
-ZW50cnktPmRfZnNkYXRhID0gTlVMTDsNCj4gPiA+IC0Jd2FrZV91cF92YXIoJmRlbnRyeS0+ZF9m
-c2RhdGEpOw0KPiA+ID4gKwl1bmJsb2NrX3JldmFsaWRhdGUoZGVudHJ5KTsNCj4gPiA+IMKgb3V0
-Og0KPiA+ID4gwqAJdHJhY2VfbmZzX3VubGlua19leGl0KGRpciwgZGVudHJ5LCBlcnJvcik7DQo+
-ID4gPiDCoAlyZXR1cm4gZXJyb3I7DQo+ID4gPiBAQCAtMjYxNiw4ICsyNjM0LDcgQEAgbmZzX3Vu
-YmxvY2tfcmVuYW1lKHN0cnVjdCBycGNfdGFzayAqdGFzaywNCj4gPiA+IHN0cnVjdCBuZnNfcmVu
-YW1lZGF0YSAqZGF0YSkNCj4gPiA+IMKgew0KPiA+ID4gwqAJc3RydWN0IGRlbnRyeSAqbmV3X2Rl
-bnRyeSA9IGRhdGEtPm5ld19kZW50cnk7DQo+ID4gPiDCoA0KPiA+ID4gLQluZXdfZGVudHJ5LT5k
-X2ZzZGF0YSA9IE5VTEw7DQo+ID4gPiAtCXdha2VfdXBfdmFyKCZuZXdfZGVudHJ5LT5kX2ZzZGF0
-YSk7DQo+ID4gPiArCXVuYmxvY2tfcmV2YWxpZGF0ZShuZXdfZGVudHJ5KTsNCj4gPiA+IMKgfQ0K
-PiA+ID4gwqANCj4gPiA+IMKgLyoNCj4gPiA+IEBAIC0yNjc5LDExICsyNjk2LDYgQEAgaW50IG5m
-c19yZW5hbWUoc3RydWN0IG1udF9pZG1hcCAqaWRtYXAsDQo+ID4gPiBzdHJ1Y3QNCj4gPiA+IGlu
-b2RlICpvbGRfZGlyLA0KPiA+ID4gwqAJCWlmIChXQVJOX09OKG5ld19kZW50cnktPmRfZmxhZ3Mg
-Jg0KPiA+ID4gRENBQ0hFX05GU0ZTX1JFTkFNRUQpIHx8DQo+ID4gPiDCoAkJwqDCoMKgIFdBUk5f
-T04obmV3X2RlbnRyeS0+ZF9mc2RhdGEgPT0NCj4gPiA+IE5GU19GU0RBVEFfQkxPQ0tFRCkpDQo+
-ID4gPiDCoAkJCWdvdG8gb3V0Ow0KPiA+ID4gLQkJaWYgKG5ld19kZW50cnktPmRfZnNkYXRhKSB7
-DQo+ID4gPiAtCQkJLyogb2xkIGRldm5hbWUgKi8NCj4gPiA+IC0JCQlrZnJlZShuZXdfZGVudHJ5
-LT5kX2ZzZGF0YSk7DQo+ID4gPiAtCQkJbmV3X2RlbnRyeS0+ZF9mc2RhdGEgPSBOVUxMOw0KPiA+
-ID4gLQkJfQ0KPiA+ID4gwqANCj4gPiA+IMKgCQlzcGluX2xvY2soJm5ld19kZW50cnktPmRfbG9j
-ayk7DQo+ID4gPiDCoAkJaWYgKGRfY291bnQobmV3X2RlbnRyeSkgPiAyKSB7DQo+ID4gPiBAQCAt
-MjcwNSw3ICsyNzE3LDcgQEAgaW50IG5mc19yZW5hbWUoc3RydWN0IG1udF9pZG1hcCAqaWRtYXAs
-DQo+ID4gPiBzdHJ1Y3QNCj4gPiA+IGlub2RlICpvbGRfZGlyLA0KPiA+ID4gwqAJCQluZXdfZGVu
-dHJ5ID0gZGVudHJ5Ow0KPiA+ID4gwqAJCQluZXdfaW5vZGUgPSBOVUxMOw0KPiA+ID4gwqAJCX0g
-ZWxzZSB7DQo+ID4gPiAtCQkJbmV3X2RlbnRyeS0+ZF9mc2RhdGEgPQ0KPiA+ID4gTkZTX0ZTREFU
-QV9CTE9DS0VEOw0KPiA+ID4gKwkJCWJsb2NrX3JldmFsaWRhdGUobmV3X2RlbnRyeSk7DQo+ID4g
-PiDCoAkJCW11c3RfdW5ibG9jayA9IHRydWU7DQo+ID4gPiDCoAkJCXNwaW5fdW5sb2NrKCZuZXdf
-ZGVudHJ5LT5kX2xvY2spOw0KPiA+ID4gwqAJCX0NCj4gPiA+IEBAIC0yNzE3LDYgKzI3MjksOCBA
-QCBpbnQgbmZzX3JlbmFtZShzdHJ1Y3QgbW50X2lkbWFwICppZG1hcCwNCj4gPiA+IHN0cnVjdA0K
-PiA+ID4gaW5vZGUgKm9sZF9kaXIsDQo+ID4gPiDCoAl0YXNrID0gbmZzX2FzeW5jX3JlbmFtZShv
-bGRfZGlyLCBuZXdfZGlyLCBvbGRfZGVudHJ5LA0KPiA+ID4gbmV3X2RlbnRyeSwNCj4gPiA+IMKg
-CQkJCW11c3RfdW5ibG9jayA/DQo+ID4gPiBuZnNfdW5ibG9ja19yZW5hbWUgOg0KPiA+ID4gTlVM
-TCk7DQo+ID4gPiDCoAlpZiAoSVNfRVJSKHRhc2spKSB7DQo+ID4gPiArCQlpZiAobXVzdF91bmJs
-b2NrKQ0KPiA+ID4gKwkJCXVuYmxvY2tfcmV2YWxpZGF0ZShuZXdfZGVudHJ5KTsNCj4gPiA+IMKg
-CQllcnJvciA9IFBUUl9FUlIodGFzayk7DQo+ID4gPiDCoAkJZ290byBvdXQ7DQo+ID4gPiDCoAl9
-DQo+ID4gDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVy
-LCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Sun, 26 May 2024 at 13:28, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Fri, 2024-05-24 at 19:11 +0200, Dan Shelton wrote:
+> > On Wed, 15 May 2024 at 23:46, Steve Dickson <steved@redhat.com> wrote:
+> > >
+> > > Hey!
+> > >
+> > > On 5/14/24 5:57 PM, Dan Shelton wrote:
+> > > > Hello!
+> > > >
+> > > > Solaris, Windows and libnfs NFSv4 clients support RFC2224 URLs, which
+> > > > provide platform-independent paths where resources can be mounted
+> > > > from, i.e. nfs://myhost//dir1/dir2
+> > > >
+> > > > Could Linux /sbin/mount.nfs4 support this too, please?
+> > > Why? What does it bring to the table that the Linux client
+> > > does already do via v4... with the except, of course, public
+> > > filehandles, which is something I'm pretty sure the Linux
+> > > client will not support.
+> >
+> > This is NOT for Linux only. Every OS has its own system to describe
+> > shares, and not all are compatible. URLs are portable.
+> >
+> > >
+> > > So again why? WebNFS died with Sun... Plus RFC2224 talks
+> > > about v2 and v3... How does it fit in a V4 world.
+> >
+> > This is NOT about WebNFS or SUN, this is to make the job of admins easier.
+> >
+>
+> I think Steve is just trying to get at the use-case for this. Who is
+> using nfs:// URLs in their environment, and why? IOW, how will adding
+> this make things better?
+>
+> Then there are the more practical questions:
+>
+> - will this require kernel support? If I mount using a nfs:// URL,
+> should I expect to see that in /proc/self/mounts, instead of a
+> host:/export ?
+>
+> - do you need support for public filehandles? Those were largely
+> ignored by most NFS implementors, including Linux. That opens an
+> entirely separate can of worms.
+>
+> I'm happy to consider patches that add support for this (including
+> documentation), but I'd need to understand why this is a material
+> improvement over the traditional ":/" syntax.
+
+One syntax across all platforms?
+
+The ms-nfs41-client (ref below) has a parser in nfs_mount.exe, so I
+think it would just plug into the existing /sbin/mount.nfs4
+
+Dan
+-- 
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
+
+
+---------- Forwarded message ---------
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Tue, 28 May 2024 at 18:58
+Subject: [Ms-nfs41-client-devel] ANN: NFSv4.1 filesystem client
+Windows driver binaries for Windows 10/11 for testing, 2024-05-28 ...
+To: <ms-nfs41-client-devel@lists.sourceforge.net>
+
+
+Hi!
+
+----
+
+I've created a set of test binaries for the NFSv4.1 filesystem client
+driver for Windows 10/11, based on
+https://github.com/kofemann/ms-nfs41-client (commit id
+#0cb44281d376cd6aa0e43a402153405b7b32ddd8, git bundle in tarball), for
+testing and feedback (download URL in "Download" section below).
+
+Please send comments, bugs, test reports, complaints etc. to the
+MailMan mailing list at
+https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-devel
+
+# 1. What is this ?
+NFSv4.1 client and filesystem driver for Windows 10/11
+
+# 2. Features:
+- Full NFSv4.1 protocol support
+- idmapper (mapping usernames and uid/gid values between server and
+    client)
+- Support for custom ports (NFSv4 defaults to TCP port 2049, this
+    client can use different ports per mount)
+- Support for nfs://-URL
+    * Why ? nfs://-URLs are crossplatform, portable and Character-Encoding
+      independent descriptions of NFSv4 server resources (exports).
+    - including custom ports and raw IPv6 addresses
+    - nfs://-URL conversion utility (/usr/bin/nfsurlconv) to convert
+        URLs, including non-ASCII/Unicode characters in mount path
+- Support ssh forwarding, e.g. mounting NFSv4 filesystems via ssh
+    tunnel
+- Support for long paths (up to 4096 bytes), no Windows MAXPATH limit
+- Unicode support
+- UNC paths
+    - IPv6 support in UNC paths
+    - /sbin/nfs_mount prints UNC paths in Win32+Cygwin formats
+    - Cygwin bash+ksh93 support UNC paths, e.g.
+      cd //derfwnb4966@2049/nfs4/bigdisk/mysqldb4/
+- IPv6 support
+    - IPv6 address within '[', ']'
+      (will be converted to *.ipv6-literal.net)
+- Windows ACLs
+    - Win32 C:\Windows\system32\icacls.exe
+    - Cygwin /usr/bin/setfacl+/usr/bin/getfacl
+    - Windows Explorer ACL dialog
+- SFU/Cygwin support, including:
+    - uid/gid
+    - Cygwin symlinks
+- Custom primary group support
+    - Supports primary group changes in the calling process/thread
+      (via |SetTokenInformation(..., TokenPrimaryGroup,...)|), e.g.
+      if the calling process/threads switches the primary group
+      in its access token then the NFSv4.1 client will use that
+      group as GID for file creation.
+    - newgrp(1)/sg(1)-style "winsg" utilty to run cmd.exe with
+      different primary group, e.g.
+      $ winsg [-] -g group [-c command | /C command] #
+- Software compatibility:
+    - Any NFSv4.1 server (Linux, Solaris, Illumos, FreeBSD, nfs4j,
+        ...)
+    - All tools from Cygwin/MinGW
+    - Visual Studio
+    - VMware Workstation (can use VMs hosted on NFSv4.1 filesystem)
+
+
+# 3. Requirements:
+- Windows 10 (32bit or 64bit) or Windows 11
+- Cygwin:
+    - Cygwin versions:
+        - 64bit: >= 3.5.3 (or 3.6.x-devel)
+        - 32bit: >= 3.3.6
+    - Packages (required):
+        cygwin
+        cygwin-devel
+        cygrunsrv
+        cygutils
+        cygutils-extra
+        bash
+        bzip2
+        coreutils
+        getent
+        gdb
+        grep
+        hostname
+        less
+        libiconv
+        libiconv2
+        pax
+        pbzip2
+        procps-ng
+        sed
+        tar
+        time
+        util-linux
+        wget
+    - Packages (recommended):
+        libnfs (for /usr/bin/nfs-ls)
+        make
+        git
+        gcc-core
+        gcc-g++
+        clang
+        mingw64-i686-clang
+        mingw64-x86_64-clang
+        dos2unix
+        unzip
+
+
+# 4. Download:
+$ mkdir -p ~/download
+$ cd ~/download
+$ wget 'http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing/msnfs41client_cygwin_binaries_20240528_12h15m_git0cb4428.tar.bz2'
+$ openssl sha256
+"msnfs41client_cygwin_binaries_20240528_12h15m_git0cb4428.tar.bz2"
+SHA2-256(msnfs41client_cygwin_binaries_20240528_12h15m_git0cb4428.tar.bz2)=
+e3d7adeef8b28161410bb7095036043aa587190488bf9247a00b881c19dbcc0d
+
+
+# 5. Installation (as "Administrator"):
+$ (cd / && tar -xf
+~/download/msnfs41client_cygwin_binaries_20240528_12h15m_git0cb4428.tar.bz2
+)
+$ /sbin/msnfs41client install
+<REBOOT>
+
+
+# 6. Deinstallation:
+$ (set -o xtrace ; cd / && tar -tf
+~/download/msnfs41client_cygwin_binaries_20240528_12h15m_git0cb4428.tar.bz2
+| while read i ; do [[ -f "$i" ]] && rm "$i" ; done)
+<REBOOT>
+
+
+# 7. Usage:
+# Option a)
+# * Start NFSv4 client daemon as Windows service (requires
+# "Adminstrator" account):
+
+$ sc start ms-nfs41-client-service
+
+# * Notes:
+# - requires "Adminstrator" account, and one nfsd client daemon is
+#   used for all users on a machine.
+# - The "ms-nfs41-client-service" service is installed by default as
+#   "disabled" and therefore always requires a "manual" start (e.g.
+#   $ sc start ms-nfs41-client-service #)
+# - note that DOS devices are virtualised per LSA Logon, so each Logon
+#   needs to do a separare nfs_mount.exe to mount a NFSv4 share
+# - nfsd_debug.exe will run as user "SYSTEM", but will do user
+#   impersonation for each request
+# - stopping the service will NOT unmount filesystems, and due to a
+#   bug a reboot is required to restart and mount any NFSv4
+#   filesystems again
+
+# * Administration:
+# - Follow new log messages:
+$ tail -f '/var/log/ms-nfs41-client-service.log'
+# - Query service status:
+$ sc queryex ms-nfs41-client-service
+# - Query service config:
+$ sc qc ms-nfs41-client-service
+# - Start service automatically:
+# (nfsd_debug.exe will be started automagically, but mounts are
+# not restored):
+$ sc config ms-nfs41-client-service start=auto
+# - Start service manually (default):
+$ sc config ms-nfs41-client-service start=disabled
+
+
+# Option b)
+# Run the NFSv4 client daemon manually:
+#
+# - run this preferably as "Administrator", but this is not a requirement
+# - requires separate terminal
+$ /sbin/msnfs41client run_daemon
+
+# Mount a filesystem and use it
+$ /sbin/nfs_mount -o rw N 10.49.20.110:/net_tmpfs2
+Successfully mounted '10.49.20.110@2049' to drive 'N:'
+$ cd /cygdrive/n/
+$ ls -la
+total 4
+drwxrwxrwt 5 Unix_User+0      Unix_Group+0      100 Dec  7 14:17 .
+dr-xr-xr-x 1 roland_mainz     Kein                0 Dec 14 13:48 ..
+drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  80 Dec 12 16:24 10492030
+drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec 13 17:58 directory_t
+drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec  7 11:01 test2
+
+# Unmount filesystem:
+$ cd ~ && /sbin/nfs_mount -d N:
+# OR
+$ cd ~
+$ net use N: /delete
+
+# List mounted NFSv4.1 filesystems:
+$ /sbin/nfs_mount
+
+
+# 8. Notes:
+- Cygwin 32bit can be installed like this:
+---- snip ----
+# Install Cygwin 32bit on Windows 32 with packages required by "ms-nfs41-client"
+# (Windows NFSv4.1 client):
+# 1. Get installer from https://www.cygwin.com/setup-x86.exe
+# 2. Run installer with these arguments:
+setup-x86.exe --allow-unsupported-windows -q --no-verify --site
+http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/2022/11/23/063457
+-P cygwin,cygwin-devel,cygrunsrv,cygutils,cygutils-extra,bash,bzip2,coreutils,getent,gdb,grep,hostname,less,libiconv,libiconv2,pax,pbzip2,procps-ng,sed,tar,time,util-linux,wget,libnfs,make,git,dos2unix,unzip
+---- snip ----
+
+- Idmapping (including uid/gid mapping) between NFSv4 client and
+  NFSv4 server works via /lib/msnfs41client/cygwin_idmapper.ksh,
+  which either uses builtin static data, or /usr/bin/getent passwd
+  and /usr/bin/getent group.
+  As getent uses the configured name services it should work with
+  LDAP too.
+  This is still work-in-progress, with the goal that both NFSv4
+  client and server can use different uid/gid numeric values for
+  client and server side.
+
+- UNC paths are supported, after successful mounting /sbin/nfs_mount
+  will list the paths in Cygwin UNC format.
+
+- SIDs work, users with valid Windows accounts (see Cygwin idmapping
+  above get their SIDs, unknown users with valid uid/gid values get
+  Unix_User+id/Unix_Group+id SIDs, and all others are mapped
+  to nobody/nogroup SIDs.
+
+- Workflow for nfs://-URLs:
+  - Create nfs://-URLs with nfsurlconv, read $ nfsurlconv --man # for usage
+  - pass URL to nfs_mount.exe like this:
+    $ nfs_mount -o sec=sys,rw 'L' nfs://derfwnb4966_ipv4//bigdisk #
+
+- Cygwin symlinks are supported, but might require
+  $ fsutil behavior set SymlinkEvaluation L2L:1 R2R:1 L2R:1 R2L:1 #.
+  This includes symlinks to UNC paths, e.g. as Admin
+  $ cmd /c 'mklink /d c:\home\rmainz
+\\derfwpc5131_ipv6@2049\nfs4\export\home2\rmainz' #
+  and then $ cd /cygdrive/c/home/rmainz/ # should work
+
+- performance: All binaries are build without any optimisation, so
+  the filesystem is much slower than it could be.
+
+- bad performance due to Windows Defender AntiVirus:
+  Option 1:
+  # disable Windows defender realtime monitoring
+  # (requires Admin shell)
+  powershell -Command 'Set-MpPreference -DisableRealtimeMonitoring 1'
+  Option 2:
+  Add "nfsd.exe", "nfsd_debug.exe", "ksh93.exe", "bash.exe",
+  "git.exe" and other offending commands to the process name
+  whitelist.
+
+- performance: Use vmxnet3 in VMware to improve performance
+
+- ACLs are supported via the normal Windows ACL tools, but on
+  Linux require the nfs4_getfacl/nfs4_setfacl utilities to see the
+  data.
+  * Example 1 (assuming that Windows, Linux NFSv4 client and NFSv4
+  server have a user "siegfried_wulsch"):
+  - On Windows on a NFSv4 filesystem:
+  $ icacls myhorribledata.txt /grant "siegfried_wulsch:WD" #
+  - On Linux NFSv4 clients you will then see this:
+  ---- snip ----
+  $ nfs4_getfacl myhorribledata.txt
+  A::OWNER@:rwatTcCy
+  A::siegfried_wulsch@global.loc:rwatcy
+  A::GROUP@:rtcy
+  A::EVERYONE@:rtcy
+  ---- snip ----
+
+  * Example 2 (assuming that Windows, Linux NFSv4 client and NFSv4
+  server have a group "cygwingrp2"):
+  - On Windows on a NFSv4 filesystem:
+  $ icacls myhorribledata.txt /grant "cygwingrp2:(WDAC)" /t /c #
+  - On Linux NFSv4 clients you will then see this:
+  ---- snip ----
+  $ nfs4_getfacl myhorribledata.txt
+  A::OWNER@:rwatTcCy
+  A::GROUP@:rtcy
+  A:g:cygwingrp2@global.loc:rtcy
+  A::EVERYONE@:rtcy
+  ---- snip ----
+
+- nfs_mount.exe vs. reserved ports:
+  By default the NFSv4 server on Solaris, Illumos, Linux
+  etc. only accepts connections if the NFSv4 client uses a
+  "privileged (TCP) port", i.e. using a TCP port number < 1024.
+  If nfsd.exe/nfsd_debug.exe is started without the Windows priviledge
+  to use reserved ports, then a mount attempt can fail.
+  This can be worked around on the NFSv4 server side - on Linux using
+  the "insecure" export option in /etc/exports and on Solaris/Illumos
+  using export option "resvport" (see nfs(5)).
+
+- Accessing mounts from a VMware/QEMU/VirtualBox VM using NAT requires
+  the the "insecure" export option in /etc/exports and on
+  Solaris/Illumos using export option "resvport" (see nfs(5)), as the
+  NFSv4 client source TCP port will be >= 1024.
+
+
+# 9. Known issues:
+- The kernel driver ("nfs41_driver.sys") does not yet have a
+  cryptographic signature for SecureBoot - which means it will only
+  work if SecureBoot is turned off (otherwise
+  $ /sbin/msnfs41client install # will FAIL!)
+
+- If nfsd_debug.exe crashes or gets killed, the only safe way
+  to run it again requires a reboot
+
+- LDAP support does not work yet
+
+- Attribute caching is too aggressive
+
+- Caching in the kernel does not always work. For example
+  $ tail -f ... # does not not see new data.
+  Workaround: Use GNU tail'S $ tail --follow=name ... #
+  Working theory is that this is related to FCB caching, see
+  |FCB_STATE_FILESIZECACHEING_ENABLED|, as the nfs41_driver.sys
+  kernel module does not see the |stat()| syscalls. But $ tail -f ... #
+  always works for a momemnt if something else opens the same file.
+
+- Unmounting and then mounting the same filesystem causes issues
+  as the name cache in nfsd*.exe is not flushed on umount, including
+  leftover delegations.
+
+- krb5p security with AES keys do not work against the linux server,
+  as it does not support gss krb5 v2 tokens with rotated data.
+
+- When recovering opens and locks outside of the server's grace
+  period, client does not check whether the file has been modified
+  by another client.
+
+- If nfsd.exe is restarted while a drive is mapped, that drive needs
+  to be remounted before further use.
+
+- Does not allow renaming a file on top of an existing open file.
+  Connectathon's special test op_ren has been commented out.
+
+- File access timestamps might be wrong for delegations.
+
+- Extended attributes are supported with some limitations:
+  a) the server must support NFS Named Attributes,
+  b) the order of listings cannot be guaranteed by NFS, and
+  c) the EaSize field cannot be reported for directory queries of
+  FileBothDirInformation, FileFullDirInfo, or FileIdFullDirInfo.
+
+- Win10/32bit-only: $ net use H: /delete # does not work,
+  use $ nfs_mount -d 'H' instead #
+
+# 10. Notes for troubleshooting && finding bugs/debugging:
+- nfsd_debug.exe has the -d option to set a level for debug
+  output.
+  Edit /sbin/msnfs41client to set the "-d" option.
+
+- The "msnfs41client" script has the option "watch_kernel_debuglog"
+  to get the debug output of the kernel module.
+
+  Run as Admin: $ /sbin/msnfs41client watch_kernel_debuglog #
+
+  Currently requires DebugView
+  (https://learn.microsoft.com/en-gb/sysinternals/downloads/debugview)
+  to be installed.
+
+- Watching network traffic:
+  WireShark has a command line tool called "tshark", which can be used
+  to see NFSv4 traffic. As NFSv4 uses RPC you have to filter for RPC,
+  and the RPC filter automatically identifies NFSv4 traffic on it's RPC
+  id.
+  Example for Windows:
+  (for NFSv4 default TCP port "2049", replace "2049" with the
+  desired port if you use a custom port ; use "ipconfig" to find the
+  correct interface name, in this case "Ethernet0"):
+  ---- snip ----
+  $ nfsv4port=2049 ; /cygdrive/c/Program\ Files/Wireshark/tshark \
+    -f "port $nfsv4port" -d "tcp.port==${nfsv4port},rpc" -i Ethernet0
+  ---- snip ----
+
+  If you are running inside a VMware VM on a Linux host it
+  might require $ chmod a+rw /dev/vmnet0 # on VMware host, so that
+  the VM can use "Promiscuous Mode".
+
+# 11. Source code:
+- Source code can be obtained from https://github.com/kofemann/ms-nfs41-client
+
+- Build instructions can be found at
+https://github.com/kofemann/ms-nfs41-client/tree/master/cygwin
+
+----
+
+Bye,
+Roland
+--
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /==\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
+
+
+_______________________________________________
+Ms-nfs41-client-devel mailing list
+Ms-nfs41-client-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
+
+
+-- 
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
