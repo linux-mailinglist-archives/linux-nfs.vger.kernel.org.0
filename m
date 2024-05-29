@@ -1,171 +1,117 @@
-Return-Path: <linux-nfs+bounces-3466-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3467-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 149168D2E07
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 09:23:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F3538D2E78
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 09:40:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDE17286FE5
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 07:23:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59C091C2267A
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 07:40:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5C9167260;
-	Wed, 29 May 2024 07:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927B4167D97;
+	Wed, 29 May 2024 07:40:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXO41CTm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSIW1bsK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A15D1E86E;
-	Wed, 29 May 2024 07:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6432D167D82;
+	Wed, 29 May 2024 07:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716967415; cv=none; b=r55iKs+L2v51gKztpgwX09GhXU43NDSOE3R6fZuXXAfjd/k8cydnGG/IfQq8KEWVnq+IV/4dlELYRXerkCRL2GhKFwK3gVGxFaeDshWN9dL5XXg9PSd4jqVTsX9CUNOzxRj4lDe7Y2+2SBoX/8tsFk0v8zIHnANyG6R3xwvxIho=
+	t=1716968408; cv=none; b=LSb3NmkJVXP24vd65VULe/SQGFmEBz4MuLFBrnUyOkfzRFbowSOeEg9x2EwZ65gPGuZ2Nn3jGFnsSqTDCmcHviIswJYi0ENhdrGlsRAXW4v7iV5NUYUM8gHSUEzVoddKAZIcFvfkwyMQpWZRkcx06tGV0Uio/zYjWUk/U3oDHxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716967415; c=relaxed/simple;
-	bh=YbcMUl3Yr21K+Yi7SGoXDwuE6o2cNNmCNjhlm4eRlwM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EHM48LkzjixbxsSZWpbjjhwty8oy0RN5aCI0bVbdlMwgXdq4OxQ1Dd5J+tpjwfUcH2IKOcx1wXHtUgDAM+myZEDt+6avCrsGFKlpNIRZUIRJJrpxFd8XptcOfl6yJ/jQxMUsP0dIjuF2/n0vv3tsuwJSxhkJkK1NisJA6xfRt1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXO41CTm; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-794b1052194so107070485a.1;
-        Wed, 29 May 2024 00:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716967413; x=1717572213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gI8YKF2Ka4g09jpIM8zfOLygQWEXZLeemxzrmi+Rpio=;
-        b=dXO41CTmiKomR/VS3PYisrGMb9Vkc6v1I2tfYdbPAh0etl70CPfLRpPSijckQhGqcd
-         w35GQqLwEaOVR31abLYTXRY0R5qB1gZhOnrhFOBp2KKPXPgoMxoFLXvRu0Dvi1w2Kf8Z
-         Qc+PtENOyd8A8NUtl/9vG1DbQnEMQilzZ5iKckNTckYemyTnpvQftL4bPNOLSH68S19E
-         OFFJEWz4yKLnqmPJuEadTuS2sR3QKRs3uhEmG4zQpI/ZPKE4x45vkTu1gsQGeavf807t
-         +WU33l153RY1W6qU8wzagUw4FUCq2JU3U6SR0CnZLdoX+q8LhKaQo5Cwli4Get/uaSYD
-         Hqyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716967413; x=1717572213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gI8YKF2Ka4g09jpIM8zfOLygQWEXZLeemxzrmi+Rpio=;
-        b=e2XkkfHaT13XhES4WIJnEPhaxKLdub1vWv8+SZS1P6BYxs7lc7G9VfHBhNxM0dx/9R
-         cUVXaqTp8uQ9s9DMuaNMN2QBoXbAXe1oK93ofAbJrV0kKbPe69ZGK8uUY+q6J56DRQF8
-         +XSW0H9h+8G/yYK3Pv4yV4u309miiGgHkMNu8c4ceWfife58iKspvwb0fRN+5StoYGXT
-         sPJ2K4rDirhylt88PdvK9l3rCuIdrDiuwZ9EGM2666vxkB9Hrt+lPyCcp2olJzR1pFWl
-         1l26Qd8U27oDQSaB8m/XZ4+88FN8dpEBhcZ5AJMiI8XYQ2a48fJiIjib/uBU9krs2gUt
-         Te7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVOT3VTj/qolKTJlzcLK1Gwzh9MDvFK5s9X5Bcb2Ke04e4LXqkieXFpjE8XzxBoAQie0i/taBoKiIhlxx6CmemD1/8A1dPwfsgLNcfsaUtSremw9enxHMMnDP2O42JC/zoKRx8b3i6WZ48tImCSzWrImhlNCK41BLhyAJiQQH9NdsXlsTanYE1k5D0tbB7aqqmspoEFg8LHlPBK4Oi+ShiCJA==
-X-Gm-Message-State: AOJu0Yx5ol2YkQhGplZd/BwGevvBXc7GUl5yhEwoaM2ixLqcKf+uFCED
-	zBf8DWyuEutVBQNKK8iAvbi+tPpUu1Q5LoXocvJNBU1+HagA2JQijaKExoo7ZFwx7q6ZQYJQe2Y
-	9jvl4riehuTtbsCBJxcTnkNSb8v8=
-X-Google-Smtp-Source: AGHT+IELOGt9LVPKWDBseYrnLxtudWIlzNW87iewuhSPONjHfoQRkS3n9W6KZs0Ugv5GJ5aWYJ9yBCflxFgGxEuaQ2c=
-X-Received: by 2002:a05:620a:2017:b0:792:93cb:7649 with SMTP id
- af79cd13be357-794ab1360admr1470221085a.68.1716967412804; Wed, 29 May 2024
- 00:23:32 -0700 (PDT)
+	s=arc-20240116; t=1716968408; c=relaxed/simple;
+	bh=fYdRJDyAIc+5o5Dbk1DjBWhpxgCjUP+fOk/zHS1zwnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPrZOu5YmbJHc4NYNoCTL0TG4PoNK45Z4mDG5dPRYOmXRZs4anGsCBUOS17jv5qpsQIjuW1zhC7YDYbiedYUPYq/707D787fVEq3UTW8TL8y0OCbXy6SWnDQllaVjm8NHnWvIvQp8Qek8Znq6Wg/vnQUDCTj9WMlMdq5ML1VjPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSIW1bsK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E99C2BD10;
+	Wed, 29 May 2024 07:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716968407;
+	bh=fYdRJDyAIc+5o5Dbk1DjBWhpxgCjUP+fOk/zHS1zwnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oSIW1bsKD/EAqn+s8PblXjVl3IuvA6Y/+Dquf8C9YubXIElluFUBcOh+88Dgjzrhy
+	 ElRMC+w1kRG/i1gN7A6CAxlRfcsScnfOpPgCh61hrT6lRRPLUgRux8txeNv2FHLA1L
+	 GDazokt0/5OANj2uuFXH48I/Ddx4hOxxRh5lrYO6m8RLwGcXAp1U9ttcmuXPE8/fTL
+	 k+f7YGUO/BgCulmeNnA7WVTM84Of+1x24JzSSbeeGPEyiSM2T92cssnTl2POyZrY7D
+	 p1ni0u9m0i9JYBZZM9WacOw+5LXLnNGnOJhJwv9dJgNFr0wyUN0veMYTL0k7fr8VFF
+	 3NH+V2AcRCfcA==
+Date: Wed, 29 May 2024 09:40:01 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
+References: <20240526.184753-detached.length.shallow.contents-jWkMukeD7VAC@cyphar.com>
+ <ZlRy7EBaV04F2UaI@infradead.org>
+ <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <ZlSzotIrVPGrC6vt@infradead.org>
+ <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+ <ZlWVkJwwJ0-B-Zyl@infradead.org>
+ <20240528-gesell-evakuieren-899c08cbfa06@brauner>
+ <ZlW4IWMYxtwbeI7I@infradead.org>
+ <20240528-gipfel-dilemma-948a590a36fd@brauner>
+ <ZlXaj9Qv0bm9PAjX@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
- <ZlMADupKkN0ITgG5@infradead.org> <30137c868039a3ae17f4ae74d07383099bfa4db8.camel@hammerspace.com>
- <ZlRzNquWNalhYtux@infradead.org> <86065f6a4f3d2f3d78f39e7a276a2d6e25bfbc9d.camel@hammerspace.com>
- <ZlS0_DWzGk24GYZA@infradead.org> <20240528101152.kyvtx623djnxwonm@quack3>
- <ZlW4a6Zdt9SPTt80@infradead.org> <ZlZn/fcphsx8u/Ph@dread.disaster.area> <ZlbKEr15IXO2jxXd@infradead.org>
-In-Reply-To: <ZlbKEr15IXO2jxXd@infradead.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 29 May 2024 10:23:20 +0300
-Message-ID: <CAOQ4uxiXVX-dJTN0UOjP7Zcfnks_kJoHBE+XFBecnUzzK-e5_w@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to name_to_handle_at(2)
-To: "hch@infradead.org" <hch@infradead.org>
-Cc: Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>, 
-	Trond Myklebust <trondmy@hammerspace.com>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"alex.aring@gmail.com" <alex.aring@gmail.com>, "cyphar@cyphar.com" <cyphar@cyphar.com>, 
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jlayton@kernel.org" <jlayton@kernel.org>, 
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZlXaj9Qv0bm9PAjX@infradead.org>
 
-On Wed, May 29, 2024 at 9:24=E2=80=AFAM hch@infradead.org <hch@infradead.or=
-g> wrote:
->
-> On Wed, May 29, 2024 at 09:25:49AM +1000, Dave Chinner wrote:
-> > But no-one has bothered to reply or acknowledge my comments so I'll
-> > point them out again and repeat: Filehandles generated by
-> > the kernel for unprivileged use *must* be self describing and self
-> > validating
+On Tue, May 28, 2024 at 06:22:23AM -0700, Christoph Hellwig wrote:
+> On Tue, May 28, 2024 at 02:04:16PM +0200, Christian Brauner wrote:
+> > Can you please explain how opening an fd based on a handle returned from
+> > name_to_handle_at() and not using a mount file descriptor for
+> > open_by_handle_at() would work?
+> 
+> Same as NFS file handles:
+> 
+> name_to_handle_at returns a handle that includes a file system
+> identifier.
+> 
+> open_by_handle_at looks up the superblock based on that identifier.
+> 
+> For the identifier I could imagin three choices:
+> 
+>  1) use the fsid as returned in statfs and returned by fsnotify.
+>     The downside is that it is "only" 64-bit.  The upside is that
+>     we have a lot of plumbing for it
+>  2) fixed 128-bit identifier to provide more entropy
+>  3) a variable length identifier, which is more similar to NFS,
+>     but also a lot more complicated
+> 
+> We'd need a global lookup structure to find the sb by id.  The simplest
+> one would be a simple linear loop over super_blocks which isn't terribly
+> efficient, but probably better than whatever userspace is doing to
+> find a mount fd right now.
+> 
+> Let me cook up a simple prototype for 1) as it shouldn't be more than
+> a few hundred lines of code.
 
-Very nice requirement for a very strong feature,
-which is far out of scope for the proposed patch IMO.
+Yeah, that's exactly what I figured and no that's not something we
+should do.
 
-What is "generated by the kernel for unprivileged use"?
-name_to_handle_at() is unprivileged and for example, fanotify unprivileged
-users can use it to compare a marked (i.e. watched) object with an
-object that is the subject of an event.
-This does not break any security model.
+Not just can have a really large number of superblocks if you have mount
+namespaces and large container workloads that interface also needs to be
+highly privileged.
 
-> > as the kernel must be able to detect and prevent
-> > unprivelged users from generating custom filehandles that can be
-> > used to access files outside the restricted scope of their
-> > container.
+Plus, you do have filesystems like btrfs that can be mounted multiple
+times with the same uuid.
 
-Emphasis on "that can be used to access files".
-The patch in this thread to get a unique 64bit mntid does not make any
-difference wrt to the concern above, so I am having a hard time
-understand what the fuss is about.
-
->
-> We must not generate file handle for unprivileged use at all, as they
-> bypass all the path based access controls.
->
-
-Again, how is "generate file handle for unprivileged use" related to
-the patch in question.
-
-The simple solution to the race that Aleksa is trying to prevent,
-as was mentioned several times in this thread, is to allow
-name_to_handle_at() on an empty path, e.g.:
-fd =3D openat(.., O_PATH); fstatat(fd,..); name_to_handle_at(fd,..);
-
-Aleksa prefers the unique mntid solution to save 2 syscalls.
-Would any of the objections here been called for letting
-name_to_handle_at() take an empty path?
-
-I would like to offer a different solution (also may have been
-mentioned before).
-
-I always disliked the fact that mount_id and mount_fd arguments of
-name_to_handle_at()/open_by_handle_at() are not symmetric, when
-at first glance they appear to be symmetric as the handle argument.
-
-What if we can make them symmetric and save the openat() syscall?
-
-int path_fd;
-int ret =3D name_to_handle_at(dirfd, path, handle, &path_fd,
-                                              AT_HADNLE_PATH_FD);
-
-and then kernel returns an O_PATH fd to the path object
-in addition to the file handle (requires same privilege as
-encoding the fh).
-
-Userspace can use path_fd to query unique mntid, fsid, uuid
-or whatever it needs to know in order to make sure that a
-later call in the future to open_by_handle_at() will use
-a mount_fd from the same filesystem/mount whatever,
-whether in the same boot or after reboot.
-
-If we are doing this, it also makes sense to allow mount_fd argument
-to open_by_handle_at() to accept O_PATH fd, but that makes
-sense anyway, because mount_fd is essentially a reference to
-a path.
-
-Thanks,
-Amir.
+And in general users will still need to be able to legitimately use a
+mount fd and not care about the handle type used with it.
 
