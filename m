@@ -1,241 +1,196 @@
-Return-Path: <linux-nfs+bounces-3481-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3482-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E5048D407F
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 23:48:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBA2F8D409B
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 23:59:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81DAA1C20F55
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 21:48:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40146B22F3D
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 21:59:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A377B139588;
-	Wed, 29 May 2024 21:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72471C9EAE;
+	Wed, 29 May 2024 21:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OoBxOUPd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+gs8B/N9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LRCMsFzw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vGbZvWhf"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="O4zu5oHJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2102.outbound.protection.outlook.com [40.107.223.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEC515D5B3
-	for <linux-nfs@vger.kernel.org>; Wed, 29 May 2024 21:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717019285; cv=none; b=kfkCkiuYqlUaUDYPnZ3qBMoyDVI+AhDFO7XLmuyG6WSpddLfivwiGtX4ky+Blnv8SMKjsEh6leXRe5EjbPcvGyWNmN3EApmvAYcFhxbqKfvGPOMQYM5OeAZp/TLecByzscD1JXfn4e0YTiQL9OPgJlj4qgh0ZJS11aNf/2mb7n0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717019285; c=relaxed/simple;
-	bh=UdDXh/8X5DXbLISV3eHT+Fy6CK7KZ1rybqLbVr7M2Gg=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=cf9Uixkj3oDJzYeEkjKjJSH0+Zo4w0OTk+wyOn3Sq59JPdf5g3yZjIoOH4yQGRh9t9YoCwhwt6UiUkP5qqAk4tj5/5QktdgI+E96+a6YDt5eQLOpU3v4/SJXBrFS4YfaWSDTSxjy8Mj0moUSHQ5tWC9MoWZDJZ2VjCGgxP5fyWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OoBxOUPd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+gs8B/N9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LRCMsFzw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vGbZvWhf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C03DA33743;
-	Wed, 29 May 2024 21:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1717019281; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKkHCLNtbRbYGL8lsNOT9rUTuZxVL3NNCDcyp3l+HTI=;
-	b=OoBxOUPdqsbHGolyTKiqx5xBwt0K1D01EgJtenXDDGNaLgrbf1jhThMiNAC3lzAm2iYcxu
-	nciz6oYLv3TdoLD98e+Vxw42/d38bdAMuT2jrw7kzwvPkcDUx3ydgk221sSxiODn+0fFsZ
-	4PS7ll9Yeob0qxI0D8rIuDhdxrmh2dA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1717019281;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKkHCLNtbRbYGL8lsNOT9rUTuZxVL3NNCDcyp3l+HTI=;
-	b=+gs8B/N95TtRqjb76yo23EW6qYsug7OAlnlAGfi1EpEggcInV+XmX/A6c9ms6xmXEfWv1K
-	lFPEqbojRDEChEAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LRCMsFzw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vGbZvWhf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1717019279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKkHCLNtbRbYGL8lsNOT9rUTuZxVL3NNCDcyp3l+HTI=;
-	b=LRCMsFzwHTnn8JDFoQ04+9n5Bf40P46PH36VgRYVvQ3mGTxpn2LDDQF4EciPr+Ml1Nxhi/
-	5+Lrd5kZDS0x0BO83wx4ZzavWAByBIsHEBLTxEB0N0iMrPPq0sEWn5h3m+FMxYPoz4CvD/
-	RJIygyy32NGACzQlorU2HP8+IOsMNeE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1717019279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKkHCLNtbRbYGL8lsNOT9rUTuZxVL3NNCDcyp3l+HTI=;
-	b=vGbZvWhfVZhIbVu2kkQ7San45gSUokvLV/aiiD1lThBD7r2VziclXg9p8d3D5q99M4R4m/
-	86UoNZcPktrOrFBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D666E13A6B;
-	Wed, 29 May 2024 21:47:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id r63IHY2iV2b0XwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 29 May 2024 21:47:57 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C457A225D6;
+	Wed, 29 May 2024 21:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717019990; cv=fail; b=TpzVDbLSsoMRe9E/tIU7COhymEfzV6qpW4on75iQX5/qbqWubrrKPuyGin0uED9ausllwTMJu9oqcmcHo4HR80LJW1hGqKNWtZ+LomTEbS63+xYUtB8xXhIrIy3Zt2bYkrwfwZBc/gXaPK05SsVGUFhvNwAXxYMmZj1A+jaBY8E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717019990; c=relaxed/simple;
+	bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=a5cTmLCdiDAbUNIosUUEiQ0qeejxhYr0pWyKaZWkEm3WmgOqQUzBKzwgAzdeYTzpJtNwSBdYBe+N+xdp6HefFsx5QZhQR2iQdwRkHYiUKJEC7f1/csPnxmkAMSe5cNjd7LUX4PNwQKoL5E5unBXpVFXSYYWULniVVhxp6TDkKLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=O4zu5oHJ; arc=fail smtp.client-ip=40.107.223.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q3FAXwfMlMgtYoG4S0ZrBAjaoXn5msJ7hSviQr7oVyDoDCwsWDNiInl/S7Md1zAVxhYz+Wmf97nfm1zcVlEam3TWMokz2bqU3Fbd3IiIQcSHQDsQ19kR/xo/Q8fTnFQUw8CZzYhnD3rdIvjv1T9/jtuIym8A395jV9wPNQGiNGDxJJxM4dvHCJ6ZUh92FqLiIHeURR2kXxoRuYU5LvHwP1duPLZudkGsyYBrYd8n9Tipf/HTVCNMhLDMOtdpExEy32FL9fJVcHvVJ89xcUfX1pRD4pMXKPXKzQSbYedoc7Q0vuDpZDt6A6Z1qNPc0PqEsK8G3eZpBKkssW08Fw7YGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
+ b=ijiDJ0feFhJUVhV4tcuNfWx0UQnjbKUIeDuQDZfNhINEQ3f/c9mmZbF/89cdJVVJ7gV2wyfTezCjBqOsW81E6Hx1gSN/87X5bkDb0RLJLyzhqz7N7YKO6QmQtT6ua7ZgQsH5cvfAc+O6Rx9AKQHsMIYUHf2jKkMYGH/ZI0sqbqMtqj/YKIvC6G5U159+z5KmTkXXD89KbLqaV+6JioJ10/vISd/hR6tX1kku46rq5NGuHYtUFI/l8G7ddYfoyq4mbCP3Hgp7x55F+7mLczm9w8DcjZVUIhyHOblvUtIYmIELaqIPbt1dH8jzvab0vMylMcCtwLdAsXtH9fNw7uo4+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
+ b=O4zu5oHJye4+DVWpPRhqHrsdga7H9Wld58djkwp8i5J52SknHcSqMifg3Ez5jOPYGtjX3bI2NFXVPu8BU8t/PGmnN9ZjrNbc/ThyDENI76IdnrE+8zU6Tgvf1+gEgviOpigZig3/P4LW8kZqGNpncNy+5LrGSBWn0UbBsbEX9wY=
+Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
+ SA6PR13MB6928.namprd13.prod.outlook.com (2603:10b6:806:41b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.16; Wed, 29 May
+ 2024 21:59:45 +0000
+Received: from DM8PR13MB5079.namprd13.prod.outlook.com
+ ([fe80::3312:9d7:60a8:e871]) by DM8PR13MB5079.namprd13.prod.outlook.com
+ ([fe80::3312:9d7:60a8:e871%6]) with mapi id 15.20.7633.001; Wed, 29 May 2024
+ 21:59:45 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "hch@lst.de" <hch@lst.de>, "anna@kernel.org" <anna@kernel.org>,
+	"willy@infradead.org" <willy@infradead.org>
+CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>
+Subject: Re: support large folios for NFS
+Thread-Topic: support large folios for NFS
+Thread-Index: AQHasFQEtVPFzJw4R0eoRu1V26ovVbGuxl2A
+Date: Wed, 29 May 2024 21:59:44 +0000
+Message-ID: <777517bda109f0e4a37fdd8a2d4d03479dfbceaf.camel@hammerspace.com>
+References: <20240527163616.1135968-1-hch@lst.de>
+In-Reply-To: <20240527163616.1135968-1-hch@lst.de>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|SA6PR13MB6928:EE_
+x-ms-office365-filtering-correlation-id: c5b30d36-c0e1-416d-fc70-08dc802aa670
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?R2YyQTM2bmZPc2ZFMkpuSkdaT1B4NnR5QytpbzRCZ0pHMTNIOG93MENESXlp?=
+ =?utf-8?B?WkxpZkJqeXlUcTdmb1NnVTJBTnhBeExsZklUTG9EMlVVUnhaQXZDTmNCbXZq?=
+ =?utf-8?B?bnVCeDQxNExVTlFwY2pmRS8xREY0U0QxcjVvYW5wV3FoQlVTWmdxY3hmSCtU?=
+ =?utf-8?B?QlNhckN3ZzVEK2VSTEg3emkrRm5CRGtob0t1VFVhN01sWVk2TllibzVvNENQ?=
+ =?utf-8?B?cDJ4a1dBT1JQNnQxVlBOL0MxVlRmZWpOT1VhdzIzSmNnaWVPYUVjY3plWVBY?=
+ =?utf-8?B?ZXB6cTVkcEd1bGVlaFpvNDkwWHU3MHBsOHl1OU00WTN3aVdrTGZjWXpZbEg4?=
+ =?utf-8?B?a3A5WWszaXRXWkZ4T2tpalhsTG5LRS9JakdrR1pockZiSWtJaVJmd2V1UjZ1?=
+ =?utf-8?B?K2FsSDhVWExkY0dKaklRcUV6OFViVEMxNVVyR2hEMXpjeE9GV0FWUUs2aVNN?=
+ =?utf-8?B?UFI4UzBsVktYLzlmWnlJS3F6MjB5V21EYy9mZDZ0SGoyMjlScm1ZRWo2bDRF?=
+ =?utf-8?B?OTlXNEcvbUVJWUxvVFZYK3JJaVJhTjJmYi8xME1nUEdWamJGYlovaDEzNytp?=
+ =?utf-8?B?Y1ZhY2VwOUxlVWxSYmdZaU0wTG5Wd1ZkWkZaMjl4Ull6SURXNEZ5T2hNckpC?=
+ =?utf-8?B?NmhkWGp0cVoyQUxza0ZYRnpCcFJhK2NxeEJveDRPVWo3QU83N2t0OTRpZ29l?=
+ =?utf-8?B?dTNiRXFTMjlKSVIzYTFLa1J3L0pGSFZpTzVKdzJCZCt0ZzYxcDc4YzltRTNM?=
+ =?utf-8?B?VzJTOGpla2xSN2tFdlhBSE9WV3RJZHZDdzEzcHMyTWlQRjJxYVk1RVhPQ0Rw?=
+ =?utf-8?B?Q1R0OWYxbU9aeFkrMDQvQUZtQVhaSngwWG9UVCtSMTlRYk5WSzdLdmt5Q25L?=
+ =?utf-8?B?bXZyQ0VNcGgzZ3JPc3B1ODJLNnMwaFJSMnFWR2xHOUxQUjFtUGRDQm9HY0Uw?=
+ =?utf-8?B?eWhXK2p0cEw2RXpZdXp1N01taGdkbm9UNFpKM2I5aGpFUDUzbTFpYUFjQTh3?=
+ =?utf-8?B?SU50OVBsMWtxbVc0MUVDdXJodVpaV21UdFdsU01Kdmw3em9sUjZYZlQ2Y3Bm?=
+ =?utf-8?B?dU9qN0M1LzdVc2lkd2FYTDlzSStwZUZiTFBMTVZtdVFHMHFKeG8rbmJrUzBa?=
+ =?utf-8?B?U05FSHcxWk9iT2ZrOVJ6YWhzRkExT2JQTzJNSVpqTGRnK2lydjBPdGVRVlZx?=
+ =?utf-8?B?bnoxVzRTUnNaNy9DK1JRY1kvRllrZ21GOS9UYXBoK2RrczkyTENBeDlFWmc1?=
+ =?utf-8?B?UCtUWkRBcjQxZVVkSkozYWsyL2V4aVVYejRwMUswN3YxTmFtS2MvVWhVTDlQ?=
+ =?utf-8?B?WDdaUHAvMWRvSEFnakFHMk4rMWlVd1dJY3o1NEE4blRrZ1J4ME9qSGxuWjZ6?=
+ =?utf-8?B?UUhoalFOQ1dwRTBoQTBVTFRuQ2FoakQ3TGRnd0F3ZjQzU1V3dStnTzRPdjVs?=
+ =?utf-8?B?Z1huL2dwWTZKQTJLaXA1alJvWlE1ZEhXdEY4WlZvZDdHUnBOOHJ6ZXluY1l6?=
+ =?utf-8?B?WEMwZEw3Ny9tSzBmcHlwYjJQUVR6T3VqejBDNnJQNGpPaitFS0lFZGdtVGRW?=
+ =?utf-8?B?M2xlUk1mUU9VL1BQY1pMUFFwY09iaURHNHJXaVJvWDkvRER4TWt4Mm1Sd2E2?=
+ =?utf-8?B?MFA5djBlN3I3TDZhQTdsUG9LZU12b2srWTlnekR5K0FsZEtXQUZJV2s4cHZ3?=
+ =?utf-8?B?UXlCMkVDZWtmVURBR3ZCVUx3bk10MU9WQjlib1NmamZjQjZMYzBTMTM5dnFM?=
+ =?utf-8?B?Tmg2OWdvMEJQelUzRlhVQ3huRTZmNFIwU3BRQ1Zsc2NiZk94SkJhNi85QkY2?=
+ =?utf-8?B?QnFyUjc5c0VHNll5eXVjUT09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?a2dzQ2hLRWpUblNRNFlEYXpaS1lLMU9iUGk4MkhTV2xMNko4RE40N3dNSjFI?=
+ =?utf-8?B?d3RrRjBjdjVGck8wMStLRVZOcXRSOCtKWE96TXdjNzQ5NzE1bjhDYngySUtJ?=
+ =?utf-8?B?N01id1hyLzhOdnlBTlp2Z1BIYjJqcVM4VGo4UlRLZW9pRXR1eGFlaVdtVHZ0?=
+ =?utf-8?B?WmVBc3F3TXI0bXVGcStDNnFDM3VkWlVBYTg1cU9nbHREYy8raDl6ek1mcGJv?=
+ =?utf-8?B?WHZJdTQvaDJyV3QzWHYyNU9HaFFjdE1NcC9ZZjl5amV6L2l2SnIybDl6UDZP?=
+ =?utf-8?B?RVJaOTZXUWtYcitNajVBcVNBUEpmUFNwdXRLaEo2akI2L1hSVkpLRVp6L2Zy?=
+ =?utf-8?B?bElMUkpsTU9PUmlmYm5kVjBVcTRmUHdaclBadkJkRndXamxKbmc2QjZ5ajU1?=
+ =?utf-8?B?NFZ1eHlWRjlVc29LLzNqMSt2b2RveHJwWGRmVk45d3hFZjhSQXl3dENpam1x?=
+ =?utf-8?B?YU1TNmRISExjNHMwdEY4aDJSSjdCVGl5VzF3NCtkelp4MTFsb2VMY1dCeTlj?=
+ =?utf-8?B?ZUVvY1IrNWlHVjVYSUp1Y2FuQ0h6Tk5iUDRvVWZEVXZ5K1B0cGF5VGR2cGFs?=
+ =?utf-8?B?cGp1QzdYd3NjeWNIcnhmaHZXU3ZubU02VWk4SWlVcjAwUVBsK3ZoN2dnL1B4?=
+ =?utf-8?B?NW8rSWRqUE1ud0tXRTJrRXZ6cVRTQlNoS25kOVNQK2lvKzFKL0Q5dVpPV3F2?=
+ =?utf-8?B?OVZtSWd3ank0aWcydDVka3Rra214MUJWWE1vaDNFUmpadHd3UTFTbWFpYWwr?=
+ =?utf-8?B?OHl2RUQrVUdKN2Z1R0ovN3lSK29wL2xEWXZwMHZuMTdDblUyeUhQNlJyMlM0?=
+ =?utf-8?B?TXFyTnF3NCt4Vks3My92WC9iQ2RtTmtMQ29TUDcvU2ZpOXhxL0wzbUNIaEVx?=
+ =?utf-8?B?ck9RVjZuaHRrczd3TWdlK1UwS2FCN0dxK3JPTTJhelNzbzNUUHJiaG9zYVBa?=
+ =?utf-8?B?NDhYODFjRjhWTG1QZzNVRFpmcXY4SFpzQWU5c0FhOHlSRjc5cUpDdWZCZkxs?=
+ =?utf-8?B?WmZ3b0orOE9rZEZCNGJtSUdxLzYyRHFGZ3JnM1FndXVldk9CeGZLRzFIRWlw?=
+ =?utf-8?B?a2J6bUNhY3hhYnQ0bitLNlUyTEt4NXMwUlZxbUlVSFBwTVlXSVhoYXRnT21a?=
+ =?utf-8?B?UUJjaG9aY2dPWTNXSHozUnY5cm92blY4cGF4dFgrYWJ2QmRNZzdiZ21Nb1Rt?=
+ =?utf-8?B?a2U1UzhrSzlMU3p4RnJJaC9oTlk3U29PbmhBcWx2dVdLdGNuamYyQy9qelVq?=
+ =?utf-8?B?UElTQmpNRnBBdkNGQUJDWHFRT3dLdmM5TGJidTd6akVkT3d4WUJ3SFdWMDdo?=
+ =?utf-8?B?K3NaM0tuaFVpQXMvZlZLSlZUNTEzbWpJc3gveDdEMUg1b3AwdXZrNTFVM3lG?=
+ =?utf-8?B?WW9OaFJGdSthZGFrZEV5T25EdXVIV2o4cFk5WmVBWTVHS0V0TTZkYnI2YkY0?=
+ =?utf-8?B?MWhUS1lZTndGQzhqYnVwVWhjVDZiZzhlRnh5T0NZNVhoYXNwaGY3N3Yyc3I2?=
+ =?utf-8?B?QmMra2xMUGtOakxvSGplVnppUUlhMnJoSlBBSjVVVkJ2aE9hdENyK096aVdm?=
+ =?utf-8?B?Yk1HTXEzMWYwYTJpWjhYOU1JOENVWjdZbEFqcHFQdzdrK2hxQytIU1l6aTA0?=
+ =?utf-8?B?U3ZuQlRyS2V1dTdLc2lPMGYwK2lzMGM4QUhCQ29jQi9VYno2andPTjZLYUJK?=
+ =?utf-8?B?Yk1XSUlWa3dBa2NLWUFjZDV2VVI1U3c4cHRPaTRtL01mejdqbVdlb3JFc3Av?=
+ =?utf-8?B?akZrNlA4a3Y3Z1B1VThGMmtlVUZuUDB3cUJPMlB1YU1RWnV5MjFweTFMK2xo?=
+ =?utf-8?B?bm5kb0lRT2s2V1pFMUxxOG5kSnJxamF1MTh1NUwzU1Yyd2pnL2cvN2xNRlU0?=
+ =?utf-8?B?UStLTmJiOFp1N05kNFFXNDNHRFhka042VlI4MEVod3NtSEhCOUZTVVhzVUlB?=
+ =?utf-8?B?OVV4TVVTR0RsZWlxYjQyMWFiU25FR2szV2xSVUZYMWN3VEJ3SC9MMVRySDdu?=
+ =?utf-8?B?WkZ6M04xSCtHcHJ3SThIYkdXc2FYTjl3Y2daSTgyNVlMaFNMM0dLWGZVSXAx?=
+ =?utf-8?B?WVY3ZEZDM1BMNFhPbHc3b1BkemlUQ05qWHVmcGdudVBUR2dyTnc3WmRJRlNx?=
+ =?utf-8?B?MlNEeDhGMjkzeTV6R2t1STFLRVNndUNlTi9aS0RGWHloWjNyK1VVbDBValFZ?=
+ =?utf-8?B?NVpFNThQeFB3WnBZbjFONkxndGQ4MW5OQ2E1ck9CbDFqTVgwY0lVUXFZd3o4?=
+ =?utf-8?B?Lyt0UytsRTM1RjVjTDA2VFI2M0hnPT0=?=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-ID: <10A8CFC4AE596F48A217BDD4C304E91C@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Trond Myklebust" <trondmy@hammerspace.com>
-Cc: "jack@suse.cz" <jack@suse.cz>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "anna@kernel.org" <anna@kernel.org>
-Subject: Re: NFS write congestion size
-In-reply-to: <4a4368fbc260b22ff96593cedc53954b2cbe47fd.camel@hammerspace.com>
-References: <20240529161102.5x3hhnbz32lwjcej@quack3>,
- <4a4368fbc260b22ff96593cedc53954b2cbe47fd.camel@hammerspace.com>
-Date: Thu, 30 May 2024 07:47:49 +1000
-Message-id: <171701926974.14261.6427933703776059666@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -6.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: C03DA33743
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5b30d36-c0e1-416d-fc70-08dc802aa670
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2024 21:59:44.9109
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pHW6e7epDJMJN7e9RffGj9/Ue9nhV0pGv6k4KqWiCdR5YBIAJ0G94hoFwietv/NB4GUeKG1lcx0H/8QQ5zJgXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR13MB6928
 
-On Thu, 30 May 2024, Trond Myklebust wrote:
-> On Wed, 2024-05-29 at 18:11 +0200, Jan Kara wrote:
-> > Hello,
-> > 
-> > so I was investigating why random writes to a large file over NFS got
-> > noticeably slower. The workload we use to test this is this fio
-> > command:
-> > 
-> > fio --direct=0 --ioengine=sync --thread --directory=/mnt --
-> > invalidate=1 \
-> >     --group_reporting=1 --runtime=300 --fallocate=posix --
-> > ramp_time=10 \
-> >     --name=RandomWrites-async-257024-4k-4 --new_group --rw=randwrite
-> > \
-> >     --size=32000m --numjobs=4 --bs=4k --fsync_on_close=1 --
-> > end_fsync=1 \
-> >     --filename_format='FioWorkloads.$jobnum'
-> > 
-> > Eventually I've tracked down the regression to be caused by
-> > 6df25e58532b
-> > ("nfs: remove reliance on bdi congestion") which changed the
-> > congestion
-> > mechanism from a generic bdi congestion handling to NFS private one.
-> > Before
-> > this commit the fio achieved throughput of 180 MB/s, after this
-> > commit only
-> > 120 MB/s. Now part of the regression was actually caused by
-> > inefficient
-> > fsync(2) and the fact that more dirty data was cached at the time of
-> > the
-> > last fsync after commit 6df25e58532b. After fixing fsync [1], the
-> > throughput got to 150 MB/s so better but still not quite the
-> > throughput
-> > before 6df25e58532b.
-> > 
-> > The reason for remaining regression is that bdi congestion handling
-> > was
-> > broken and the client had happily ~8GB of outstanding IO against the
-> > server
-> > despite the congestion limit was 256 MB. The new congestion handling
-> > actually works but as a result the server does not have enough dirty
-> > data
-> > to efficiently operate on and the server disk often gets idle before
-> > the
-> > client can send more.
-> > 
-> > I wanted to discuss possible solutions here.
-> > 
-> > Generally 256MB is not enough even for consumer grade contemporary
-> > disks to
-> > max out throughput. There is tunable
-> > /proc/sys/fs/nfs/nfs_congestion_kb.
-> > If I tweak it to say 1GB, that is enough to give the server enough
-> > data to
-> > saturate the disk (most of the time) and fio reaches 180MB/s as
-> > before
-> > commit 6df25e58532b. So one solution to the problem would be to
-> > change the
-> > default of nfs_congestion_kb to 1GB.
-> > 
-> > Generally the problem with this tuning is that faster disks may need
-> > even
-> > larger nfs_congestion_kb, the NFS client has no way of knowing what
-> > the
-> > right value of nfs_congestion_kb is. I personally find the concept of
-> > client throttling writes to the server flawed. The *server* should
-> > push
-> > back (or throttle) if the client is too aggressively pushing out the
-> > data
-> > and then the client can react to this backpressure. Because only the
-> > server
-> > knows how much it can handle (also given the load from other
-> > clients). And
-> > I believe this is actually what is happening in practice (e.g. when I
-> > tune
-> > nfs_congestion_kb to really high number). So I think even better
-> > solution
-> > may be to just remove the write congestion handling from the client
-> > completely. The history before commit 6df25e58532b, when congestion
-> > was
-> > effectively ignored, shows that this is unlikely to cause any
-> > practical
-> > problems. What do people think?
-> 
-> I think we do still need a mechanism to prevent the client from pushing
-> more writebacks into the RPC layer when the server throttling is
-> causing RPC transmission queues to build up. Otherwise we end up
-> increasing the latency when the application is trying to do more I/O to
-> pages that are queued up for writeback in the RPC layer (since the
-> latter will be write locked).
-
-If latency is the issue, could be make the throttling time-based?
-So we throttle if the oldest queued request is more than X seconds old?
-How easy is it to find the oldest queued request?
-
-NeilBrown
+T24gTW9uLCAyMDI0LTA1LTI3IGF0IDE4OjM2ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gSGkgYWxsLA0KPiANCj4gdGhpcyBzZXJpZXMgYWRkcyBsYXJnZSBmb2xpbyBzdXBwb3J0
+IHRvIE5GUywgYW5kIGFsbW9zdCBkb3VibGVzIHRoZQ0KPiBidWZmZXJlZCB3cml0ZSB0aHJvdWdo
+cHV0IGZyb20gdGhlIHByZXZpb3VzIGJvdHRsZW5lY2sgb2YgfjIuNUdCL3MNCj4gKGp1c3QgbGlr
+ZSBmb3Igb3RoZXIgZmlsZSBzeXN0ZW1zKS4NCj4gDQo+IFRoZSBmaXJzdCBwYXRjaCBpcyBhbiBv
+bGQgb25lIGZyb20gd2lsbHkgdGhhdCBJJ3ZlIHVwZGF0ZWQgdmVyeQ0KPiBzbGlnaHRseS4NCj4g
+Tm90ZSB0aGF0IHRoaXMgdXBkYXRlIG5vdyByZXF1aXJlcyB0aGUgbWFwcGluZ19tYXhfZm9saW9f
+c2l6ZSBoZWxwZXINCj4gbWVyZ2VkIGludG8gTGludXMnIHRyZWUgb25seSBhIGZldyBtaW51dGVz
+IGFnby4NCj4gDQo+IERpZmZzdGF0Og0KPiDCoGZzL25mcy9maWxlLmPCoCB8wqDCoMKgIDQgKysr
+LQ0KPiDCoGZzL25mcy9pbm9kZS5jIHzCoMKgwqAgMSArDQo+IMKgbW0vZmlsZW1hcC5jwqDCoCB8
+wqDCoCA0MCArKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+IMKgMyBm
+aWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gDQoNCldo
+aWNoIHRyZWUgZGlkIHlvdSBpbnRlbmQgdG8gbWVyZ2UgdGhpcyB0aHJvdWdoPyBXaWxseSdzIG9y
+IEFubmEgYW5kDQptaW5lPyBJJ20gT0sgZWl0aGVyIHdheS4gSSBqdXN0IHdhbnQgdG8gbWFrZSBz
+dXJlIHdlJ3JlIG9uIHRoZSBzYW1lDQpwYWdlLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGlu
+dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhh
+bW1lcnNwYWNlLmNvbQ0KDQoNCg==
 
