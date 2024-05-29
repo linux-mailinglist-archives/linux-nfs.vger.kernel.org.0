@@ -1,253 +1,146 @@
-Return-Path: <linux-nfs+bounces-3469-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3470-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 675788D345B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 12:19:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FE168D36C1
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 14:51:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB13228593F
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 10:19:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FDED1F28D64
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 12:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C07D169ADF;
-	Wed, 29 May 2024 10:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7621A4C70;
+	Wed, 29 May 2024 12:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="swRBNM/+"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aIMjeblZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774A04D11B
-	for <linux-nfs@vger.kernel.org>; Wed, 29 May 2024 10:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0EE23DE;
+	Wed, 29 May 2024 12:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716977954; cv=none; b=aUyZ2EqJvWZ78TvS7NtBdIS3nFK6Ma0biI8WiUOR6lu99rUSQl/uRpsFb8soTHBKtq4Udu08L9yWUx7YK9wql30mNvnE0TZdSMptNF6XO9M0Wj88mHBSi+7/ptkA70gpfrPVnxM/tYI08mqSXOrUkpWa0eQxZKG9TEPJ6y9e1Eg=
+	t=1716987072; cv=none; b=cCCTNIqqLoKg70ky6Si1q7W0GO7kxItdGxVTvoS0ybzQJBOYCTm16bTdS6uYbr7d0x7O5rbHnsSlsgLBB0udt94ZlNgcF6jZZc4xlLgxXEP7BezuYugFO/dztBPzsRqxK4eNwPBigMAsYovy07lYVPj5c2I8+3wCo/q3vqqVYvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716977954; c=relaxed/simple;
-	bh=LSTWg+rsvuFYOkOF6cwSnUA7hCVBfzA0aBKlocHZZAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m7ch3fPsgfSAcOyio1lH0CYUTl/IeXGYG46UZWP/qqSIgXbusA9gG/FS1WPd72eI32aS1lcHVpNPRTpjqPVAcbWHXnGGRYSvBVUGkfFloCaXD0UelPSGbwZCJ8D1VeFuTEpFR8TI0Bm1sbOBqZpjM7GQaqHbUM30TP06gibV93c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=swRBNM/+; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52b6ccfdf28so218025e87.2
-        for <linux-nfs@vger.kernel.org>; Wed, 29 May 2024 03:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1716977951; x=1717582751; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Vm8QJwrPDlseWEMBGEntuX8NC8tqdJObdJ0cjdPNXM=;
-        b=swRBNM/+vg0wzD+bl6avAlRBFrgASE/40APOry8mRhH5xOqN2qxvlPYZXFyhgu6/qe
-         dhnDpNQVoGLKXC1hMMX/MLNKFafxFYIQ2K+HzB3ciihpGO+zc+d7O9bk8OpqXE0Ow1oy
-         f5LrrRswi6lS3WyUS54TRKAKnto7TKtp683TmXeBJoNRyMp6cYOIAGih+ZZ7Iggx0OqT
-         LuVnz+kTqCNOzI5SMAfTgEfMDQJeGeYLP+fVZ2OV/0jAZcsgpXnOGf+v+7IcAl5276Y9
-         Q5viBtsFLH4mWlNSb7lXyYomzPCXowagJcoop+IxV8Y6fdHaERv/v+kncnZ6hm3ZmO+G
-         zFSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716977951; x=1717582751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Vm8QJwrPDlseWEMBGEntuX8NC8tqdJObdJ0cjdPNXM=;
-        b=FnqjnHuILuhjFanrl3w3+g/Y0hgYtY8ifhyTxUW6Xuj4/ZSrKyvegqFRYeH/WMhXbs
-         cKP2//FZMWVYKJp+h5A1zboao/wXOv1KVhei1Qqq59SN1mOII/dcSmhKWoznbR/zD1pH
-         qG93BEjHSP5sD28RmK7o1BGNldLv+msRaBPKc97Nk5XigSKRCZgoCbZeRiGsiv95geFX
-         BG/nX40UvV5FPjI7QT9gEWheVV3ycK2hIiNJOAToNLMkPuMpOw+/OPDgutl2UIJk+NJS
-         Vg/k4ovLoS+VCtjYcZwa2Ot0qNEAcXJI5ocgPK0qGNux6iMsKsyrHiwimx5R9ozmN5UB
-         MiHw==
-X-Gm-Message-State: AOJu0Yz21oB0F8ExikN6j1869JPm4jfIkDfcIw5upZiA+YLQDtDXshCO
-	5//jEET5FceOsL2N4mr0KO5xS6OCPHGKNMAABu9exenjisY9N2c0pcsZgxpe6qLwXXiEMe1QrHv
-	09KU6/NeNw9s3N6e6iU7CSDebYulS4LS7Z03JtB3MVGyr75ITUZ0+JyTzHuE=
-X-Google-Smtp-Source: AGHT+IGUzYRIdvoRNMdQb/TUKDqF1qZxb8inmeXLWL5WyGORFLpBzo5cAD9WWqXwUD9pLdFbKNz3zbnHT/rbHAa0dys=
-X-Received: by 2002:a19:4314:0:b0:51a:c8ba:d908 with SMTP id
- 2adb3069b0e04-52966ca8374mr9238761e87.62.1716977949578; Wed, 29 May 2024
- 03:19:09 -0700 (PDT)
+	s=arc-20240116; t=1716987072; c=relaxed/simple;
+	bh=nzeduYzqyrc4dtRTbpFp0fKRRmiHy1rwvKZ+9Q8IAwA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ImpWufHb1lNFEvoksjxmAMCyX82NOaQsXD7jYAgnWTskQDovtt/+Ay30WQRztY8RtR9eQqhKSRM07IIBRQAcjom91gTf6z/o3HvCxIJ0SBEq7pcrBb8aW7U5bOIXvme7OMGcdctJ9DHV/XJFNt6BcS/+RNnejBjmnVhrn0Kjf9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aIMjeblZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=CWj9EbBpza8KDASnIQoPoNPdtY21F25m+kK5YEbF3AU=;
+	t=1716987070; x=1717419070; b=aIMjeblZzY15D/qHPVuh4QFjyCcKwNXWbPnQaDBZPs2JX5a
+	OFrN1qGA1PBstYUxRaUKbbWIblyhF5CbYWXhOdtD2OpyP0PHbJ8gMKGW2FqTQY0EOgrK/aM+aygA7
+	S/c3xKxg/Bit8fSgGZi7u0kCV8ZdcSc8wPQvPwoBrshDjTYHJHX2NuG1UTqNPGS3j9eNyLI53L7Ue
+	b7gX0vP95crbW7PiNQD8KfcxzXkfsiuqmgdx3khsR8EGiEka5VLdtcLlhOgGoqqaWxQLMtC2yZ3b9
+	TzZXL/fcfXTs6oQ49KnEYPYwwE6VAJEP6PbS61wjSrB8dz+6GCMltZCpViSizllQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCIln-0006nE-IH; Wed, 29 May 2024 14:51:07 +0200
+Message-ID: <5fb1d05f-1736-42dc-86dc-fdc1bddcaa0c@leemhuis.info>
+Date: Wed, 29 May 2024 14:51:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPKjjnoeLkkvSZwpWw_bTCOCTfWYgjCyvjpoa95E4yroQR5zyA@mail.gmail.com>
-In-Reply-To: <CAPKjjnoeLkkvSZwpWw_bTCOCTfWYgjCyvjpoa95E4yroQR5zyA@mail.gmail.com>
-From: Zhitao Li <zhitao.li@smartx.com>
-Date: Wed, 29 May 2024 18:18:54 +0800
-Message-ID: <CAPKjjnrez+hip+VBVrLT_g6Uzxd5DGSCoCSXQnRLx-qXT09yQA@mail.gmail.com>
-Subject: Re: Question: How to customize retransmission timeout of
- unacknowledged NFS v3 TCP packet?
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ping Huang <huangping@smartx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Jeff Layton <jlayton@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
+ <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
+ <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
+ <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
+ <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716987070;c5569a1f;
+X-HE-SMSGID: 1sCIln-0006nE-IH
 
-Essentially, we need a mechanism to quickly reconnect with new
-nfs-server nodes for failover.
-I also tried to adjust mount options like "timeo" to 10s and "retrans"
-to 1,  and found that they don't work, either.  It seems that the NFS
-v3 client always tries to reconnect after some request hangs for 3
-minutes no matter what "timeo" and "retrans" is.
+On 24.05.24 18:09, Chuck Lever III wrote:
+>> On May 24, 2024, at 7:16 AM, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>> On 21.05.24 12:01, Jeff Layton wrote:
+>>> On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
+>>>> Am 19.04.24 um 18:50 schrieb Paul Menzel:
+>>>>
+>>>>> Since at least Linux 6.8-rc6, Linux logs the warning below:
+>>>>>
+>>>>>     NFSD: Unable to initialize client recovery tracking! (-110)
+>>>>>
+>>>>> I haven’t had time to bisect yet, so if you have an idea, that’d be great.
+>>>>
+>>>> 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
+>>>> commit 74fd48739d0488e39ae18b0168720f449a06690c
+>>>> Author: Jeff Layton <jlayton@kernel.org>
+>>>> Date:   Fri Oct 13 09:03:53 2023 -0400
+>>>>
+>>>>     nfsd: new Kconfig option for legacy client tracking
+>>>>
+>>>>     We've had a number of attempts at different NFSv4 client tracking
+>>>>     methods over the years, but now nfsdcld has emerged as the clear winner
+>>>>     since the others (recoverydir and the usermodehelper upcall) are
+>>>>     problematic.
+>>> [...]
+>>> It sounds like you need to enable nfsdcld in your environment. The old
+>>> recovery tracking methods are deprecated. The only surviving one
+>>> requires the nfsdcld daemon to be running when recovery tracking is
+>>> started. Alternately, you can enable this option in your kernels if you
+>>> want to keep using the deprecated methods in the interim.
+>>
+>> Hmm. Then why didn't this new config option default to "Y" for a while
+>> (say a year or two) before changing the default to off? That would have
+>> prevented people like Paul from running into the problem when running
+>> "olddefconfig". I think that is what Linus would have wanted in a case
+>> like this, but might be totally wrong there (I CCed him, in case he
+>> wants to share his opinion, but maybe he does not care much).
+> 
+> That's fair. I recall we believed at the time that very few people
+> if anyone currently use a legacy recovery tracking mechanism, and
+> the workaround, if they do, is easy.
+> 
+>> But I guess that's too late now, unless we want to meddle with config
+>> option names. But I guess that might not be worth it after half a year
+>> for something that only causes a warning (aiui).
+> 
+> In Paul's case, the default behavior might prevent proper NFSv4
+> state recovery, which is a little more hazardous than a mere
+> warning, IIUC.
+> 
+> To my surprise, it often takes quite some time for changes like
+> this to matriculate into mainstream usage, so half a year isn't
+> that long. We might want to change to a more traditional
+> deprecation path (default Y with warning, wait, default N, wait,
+> redact the old code).
 
-On Wed, May 29, 2024 at 6:10=E2=80=AFPM Zhitao Li <zhitao.li@smartx.com> wr=
-ote:
->
-> Hi, dear community,
->
-> In our NFS environment, NFS client mounts remote NFS export with its
-> VIP. The VIP can be assigned to another server node for failover.
-> However, the NFS client sends the unacknowledged packet 50s+ after the
-> VIP is ready on the new node, which is because of the exponential
-> backoff retransmission algorithm.  I tried to set this parameter
-> "tcp_retries2" smaller so that the NFS client can reconnect with the
-> new node more quickly, but this parameter didn't take effect. From
-> tcpdump entries as follows,
->   1. At "2024-05-29 11:47:00",  ARP is updated.
->   2. At "2024-05-29 11:47:52" ,  the NFS client retried to send the packe=
-t.
->   3. Then the connection is reset and a new connection starts.
->
-> I guess the parameter just takes effect for applications and doesn't
-> take effect for kernel modules like the NFS client. Could anyone give
-> some advice to customize  retransmission timeout of unacknowledged NFS
-> v3 TCP packet?
->
->
-> OS: Linux kernel v6.7.0
-> NFS mount options:
-> vers=3D3,nolock,proto=3Dtcp,rsize=3D1048576,wsize=3D1048576,hard,timeo=3D=
-600,retrans=3D2,noresvport
->
-> tcp_retries2:
-> [root@vm-play zhitaoli]# sysctl -w net.ipv4.tcp_retries2=3D5
-> net.ipv4.tcp_retries2 =3D 5
-> [root@vm-play zhitaoli]# cat /proc/sys/net/ipv4/tcp_retries2
-> 5
->
-> tcpdump entries:
->
-> 2024-05-29 11:46:02.331891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973659245 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:02.542836 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973659456 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:02.751013 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973659664 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:03.166958 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973660080 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:04.046882 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973660960 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:05.710910 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973662624 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:09.039310 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973665952 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:16.017889 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973672930 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:29.326891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973686240 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:46:55.950915 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973712864 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:47:00.379844 52:54:00:13:1f:34 > Broadcast, ethertype
-> ARP (0x0806), length 60: Reply 10.125.1.85 is-at 52:54:00:13:1f:34,
-> length 46
->
-> 2024-05-29 11:47:52.271192 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
-> ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> options [nop,nop,TS val 1973769184 ecr 28456
-> 58566], length 124: NFS request xid 1954624602 120 access fh
-> Unknown/43000001180100000000000000DE40020000000000F439000000000000000000
-> NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|NFS=
-_ACCESS_DELETE
->
-> 2024-05-29 11:47:52.272041 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
-> ethertype IPv4 (0x0800), length 54: 10.125.1.85.nfs >
-> 10.125.1.214.58428: Flags [R], seq 1148562527, win 0, length 0
->
-> 2024-05-29 11:47:52.272909 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
-> ethertype IPv4 (0x0800), length 74: 10.125.1.214.58428 >
-> 10.125.1.85.nfs: Flags [S], seq 1734997801, win 32120, options [mss
-> 1460,sackOK,TS val 1973769186 ecr 0,nop,wscale 7], length 0
->
-> 2024-05-29 11:47:52.273503 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
-> ethertype IPv4 (0x0800), length 74: 10.125.1.85.nfs >
-> 10.125.1.214.58428: Flags [S.], seq 1078843840, ack 1734997802, win
-> 28960, options [mss 1460,sackOK,TS val 2235915769 ecr
-> 1973769186,nop,wscale 7], length 0
->
->
-> Best regards,
-> Zhitao Li
+Well, that would help anybody that already ran "make olddefconfig" with
+a kernel that has 74fd48739d04, as they now have
+NFSD_LEGACY_CLIENT_TRACKING unset in their .config -- at least unless we
+rename that option and make it default to Y; but it would help everybody
+that updates from the latest longterm kernel to a future kernel that
+would contain a change like you outlined.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
