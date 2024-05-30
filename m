@@ -1,196 +1,303 @@
-Return-Path: <linux-nfs+bounces-3482-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3483-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA2F8D409B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 23:59:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C485D8D45E7
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2024 09:18:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40146B22F3D
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 May 2024 21:59:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EADEB20B11
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2024 07:18:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72471C9EAE;
-	Wed, 29 May 2024 21:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89CC64D8CC;
+	Thu, 30 May 2024 07:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="O4zu5oHJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFwl8Mcy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2102.outbound.protection.outlook.com [40.107.223.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C457A225D6;
-	Wed, 29 May 2024 21:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717019990; cv=fail; b=TpzVDbLSsoMRe9E/tIU7COhymEfzV6qpW4on75iQX5/qbqWubrrKPuyGin0uED9ausllwTMJu9oqcmcHo4HR80LJW1hGqKNWtZ+LomTEbS63+xYUtB8xXhIrIy3Zt2bYkrwfwZBc/gXaPK05SsVGUFhvNwAXxYMmZj1A+jaBY8E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717019990; c=relaxed/simple;
-	bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a5cTmLCdiDAbUNIosUUEiQ0qeejxhYr0pWyKaZWkEm3WmgOqQUzBKzwgAzdeYTzpJtNwSBdYBe+N+xdp6HefFsx5QZhQR2iQdwRkHYiUKJEC7f1/csPnxmkAMSe5cNjd7LUX4PNwQKoL5E5unBXpVFXSYYWULniVVhxp6TDkKLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=O4zu5oHJ; arc=fail smtp.client-ip=40.107.223.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q3FAXwfMlMgtYoG4S0ZrBAjaoXn5msJ7hSviQr7oVyDoDCwsWDNiInl/S7Md1zAVxhYz+Wmf97nfm1zcVlEam3TWMokz2bqU3Fbd3IiIQcSHQDsQ19kR/xo/Q8fTnFQUw8CZzYhnD3rdIvjv1T9/jtuIym8A395jV9wPNQGiNGDxJJxM4dvHCJ6ZUh92FqLiIHeURR2kXxoRuYU5LvHwP1duPLZudkGsyYBrYd8n9Tipf/HTVCNMhLDMOtdpExEy32FL9fJVcHvVJ89xcUfX1pRD4pMXKPXKzQSbYedoc7Q0vuDpZDt6A6Z1qNPc0PqEsK8G3eZpBKkssW08Fw7YGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
- b=ijiDJ0feFhJUVhV4tcuNfWx0UQnjbKUIeDuQDZfNhINEQ3f/c9mmZbF/89cdJVVJ7gV2wyfTezCjBqOsW81E6Hx1gSN/87X5bkDb0RLJLyzhqz7N7YKO6QmQtT6ua7ZgQsH5cvfAc+O6Rx9AKQHsMIYUHf2jKkMYGH/ZI0sqbqMtqj/YKIvC6G5U159+z5KmTkXXD89KbLqaV+6JioJ10/vISd/hR6tX1kku46rq5NGuHYtUFI/l8G7ddYfoyq4mbCP3Hgp7x55F+7mLczm9w8DcjZVUIhyHOblvUtIYmIELaqIPbt1dH8jzvab0vMylMcCtwLdAsXtH9fNw7uo4+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Pzz9U+rCz7LCacy/D1INA4AFIarQ1S7mzty+FALSc0=;
- b=O4zu5oHJye4+DVWpPRhqHrsdga7H9Wld58djkwp8i5J52SknHcSqMifg3Ez5jOPYGtjX3bI2NFXVPu8BU8t/PGmnN9ZjrNbc/ThyDENI76IdnrE+8zU6Tgvf1+gEgviOpigZig3/P4LW8kZqGNpncNy+5LrGSBWn0UbBsbEX9wY=
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
- SA6PR13MB6928.namprd13.prod.outlook.com (2603:10b6:806:41b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.16; Wed, 29 May
- 2024 21:59:45 +0000
-Received: from DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871]) by DM8PR13MB5079.namprd13.prod.outlook.com
- ([fe80::3312:9d7:60a8:e871%6]) with mapi id 15.20.7633.001; Wed, 29 May 2024
- 21:59:45 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "hch@lst.de" <hch@lst.de>, "anna@kernel.org" <anna@kernel.org>,
-	"willy@infradead.org" <willy@infradead.org>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>
-Subject: Re: support large folios for NFS
-Thread-Topic: support large folios for NFS
-Thread-Index: AQHasFQEtVPFzJw4R0eoRu1V26ovVbGuxl2A
-Date: Wed, 29 May 2024 21:59:44 +0000
-Message-ID: <777517bda109f0e4a37fdd8a2d4d03479dfbceaf.camel@hammerspace.com>
-References: <20240527163616.1135968-1-hch@lst.de>
-In-Reply-To: <20240527163616.1135968-1-hch@lst.de>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|SA6PR13MB6928:EE_
-x-ms-office365-filtering-correlation-id: c5b30d36-c0e1-416d-fc70-08dc802aa670
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?R2YyQTM2bmZPc2ZFMkpuSkdaT1B4NnR5QytpbzRCZ0pHMTNIOG93MENESXlp?=
- =?utf-8?B?WkxpZkJqeXlUcTdmb1NnVTJBTnhBeExsZklUTG9EMlVVUnhaQXZDTmNCbXZq?=
- =?utf-8?B?bnVCeDQxNExVTlFwY2pmRS8xREY0U0QxcjVvYW5wV3FoQlVTWmdxY3hmSCtU?=
- =?utf-8?B?QlNhckN3ZzVEK2VSTEg3emkrRm5CRGtob0t1VFVhN01sWVk2TllibzVvNENQ?=
- =?utf-8?B?cDJ4a1dBT1JQNnQxVlBOL0MxVlRmZWpOT1VhdzIzSmNnaWVPYUVjY3plWVBY?=
- =?utf-8?B?ZXB6cTVkcEd1bGVlaFpvNDkwWHU3MHBsOHl1OU00WTN3aVdrTGZjWXpZbEg4?=
- =?utf-8?B?a3A5WWszaXRXWkZ4T2tpalhsTG5LRS9JakdrR1pockZiSWtJaVJmd2V1UjZ1?=
- =?utf-8?B?K2FsSDhVWExkY0dKaklRcUV6OFViVEMxNVVyR2hEMXpjeE9GV0FWUUs2aVNN?=
- =?utf-8?B?UFI4UzBsVktYLzlmWnlJS3F6MjB5V21EYy9mZDZ0SGoyMjlScm1ZRWo2bDRF?=
- =?utf-8?B?OTlXNEcvbUVJWUxvVFZYK3JJaVJhTjJmYi8xME1nUEdWamJGYlovaDEzNytp?=
- =?utf-8?B?Y1ZhY2VwOUxlVWxSYmdZaU0wTG5Wd1ZkWkZaMjl4Ull6SURXNEZ5T2hNckpC?=
- =?utf-8?B?NmhkWGp0cVoyQUxza0ZYRnpCcFJhK2NxeEJveDRPVWo3QU83N2t0OTRpZ29l?=
- =?utf-8?B?dTNiRXFTMjlKSVIzYTFLa1J3L0pGSFZpTzVKdzJCZCt0ZzYxcDc4YzltRTNM?=
- =?utf-8?B?VzJTOGpla2xSN2tFdlhBSE9WV3RJZHZDdzEzcHMyTWlQRjJxYVk1RVhPQ0Rw?=
- =?utf-8?B?Q1R0OWYxbU9aeFkrMDQvQUZtQVhaSngwWG9UVCtSMTlRYk5WSzdLdmt5Q25L?=
- =?utf-8?B?bXZyQ0VNcGgzZ3JPc3B1ODJLNnMwaFJSMnFWR2xHOUxQUjFtUGRDQm9HY0Uw?=
- =?utf-8?B?eWhXK2p0cEw2RXpZdXp1N01taGdkbm9UNFpKM2I5aGpFUDUzbTFpYUFjQTh3?=
- =?utf-8?B?SU50OVBsMWtxbVc0MUVDdXJodVpaV21UdFdsU01Kdmw3em9sUjZYZlQ2Y3Bm?=
- =?utf-8?B?dU9qN0M1LzdVc2lkd2FYTDlzSStwZUZiTFBMTVZtdVFHMHFKeG8rbmJrUzBa?=
- =?utf-8?B?U05FSHcxWk9iT2ZrOVJ6YWhzRkExT2JQTzJNSVpqTGRnK2lydjBPdGVRVlZx?=
- =?utf-8?B?bnoxVzRTUnNaNy9DK1JRY1kvRllrZ21GOS9UYXBoK2RrczkyTENBeDlFWmc1?=
- =?utf-8?B?UCtUWkRBcjQxZVVkSkozYWsyL2V4aVVYejRwMUswN3YxTmFtS2MvVWhVTDlQ?=
- =?utf-8?B?WDdaUHAvMWRvSEFnakFHMk4rMWlVd1dJY3o1NEE4blRrZ1J4ME9qSGxuWjZ6?=
- =?utf-8?B?UUhoalFOQ1dwRTBoQTBVTFRuQ2FoakQ3TGRnd0F3ZjQzU1V3dStnTzRPdjVs?=
- =?utf-8?B?Z1huL2dwWTZKQTJLaXA1alJvWlE1ZEhXdEY4WlZvZDdHUnBOOHJ6ZXluY1l6?=
- =?utf-8?B?WEMwZEw3Ny9tSzBmcHlwYjJQUVR6T3VqejBDNnJQNGpPaitFS0lFZGdtVGRW?=
- =?utf-8?B?M2xlUk1mUU9VL1BQY1pMUFFwY09iaURHNHJXaVJvWDkvRER4TWt4Mm1Sd2E2?=
- =?utf-8?B?MFA5djBlN3I3TDZhQTdsUG9LZU12b2srWTlnekR5K0FsZEtXQUZJV2s4cHZ3?=
- =?utf-8?B?UXlCMkVDZWtmVURBR3ZCVUx3bk10MU9WQjlib1NmamZjQjZMYzBTMTM5dnFM?=
- =?utf-8?B?Tmg2OWdvMEJQelUzRlhVQ3huRTZmNFIwU3BRQ1Zsc2NiZk94SkJhNi85QkY2?=
- =?utf-8?B?QnFyUjc5c0VHNll5eXVjUT09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?a2dzQ2hLRWpUblNRNFlEYXpaS1lLMU9iUGk4MkhTV2xMNko4RE40N3dNSjFI?=
- =?utf-8?B?d3RrRjBjdjVGck8wMStLRVZOcXRSOCtKWE96TXdjNzQ5NzE1bjhDYngySUtJ?=
- =?utf-8?B?N01id1hyLzhOdnlBTlp2Z1BIYjJqcVM4VGo4UlRLZW9pRXR1eGFlaVdtVHZ0?=
- =?utf-8?B?WmVBc3F3TXI0bXVGcStDNnFDM3VkWlVBYTg1cU9nbHREYy8raDl6ek1mcGJv?=
- =?utf-8?B?WHZJdTQvaDJyV3QzWHYyNU9HaFFjdE1NcC9ZZjl5amV6L2l2SnIybDl6UDZP?=
- =?utf-8?B?RVJaOTZXUWtYcitNajVBcVNBUEpmUFNwdXRLaEo2akI2L1hSVkpLRVp6L2Zy?=
- =?utf-8?B?bElMUkpsTU9PUmlmYm5kVjBVcTRmUHdaclBadkJkRndXamxKbmc2QjZ5ajU1?=
- =?utf-8?B?NFZ1eHlWRjlVc29LLzNqMSt2b2RveHJwWGRmVk45d3hFZjhSQXl3dENpam1x?=
- =?utf-8?B?YU1TNmRISExjNHMwdEY4aDJSSjdCVGl5VzF3NCtkelp4MTFsb2VMY1dCeTlj?=
- =?utf-8?B?ZUVvY1IrNWlHVjVYSUp1Y2FuQ0h6Tk5iUDRvVWZEVXZ5K1B0cGF5VGR2cGFs?=
- =?utf-8?B?cGp1QzdYd3NjeWNIcnhmaHZXU3ZubU02VWk4SWlVcjAwUVBsK3ZoN2dnL1B4?=
- =?utf-8?B?NW8rSWRqUE1ud0tXRTJrRXZ6cVRTQlNoS25kOVNQK2lvKzFKL0Q5dVpPV3F2?=
- =?utf-8?B?OVZtSWd3ank0aWcydDVka3Rra214MUJWWE1vaDNFUmpadHd3UTFTbWFpYWwr?=
- =?utf-8?B?OHl2RUQrVUdKN2Z1R0ovN3lSK29wL2xEWXZwMHZuMTdDblUyeUhQNlJyMlM0?=
- =?utf-8?B?TXFyTnF3NCt4Vks3My92WC9iQ2RtTmtMQ29TUDcvU2ZpOXhxL0wzbUNIaEVx?=
- =?utf-8?B?ck9RVjZuaHRrczd3TWdlK1UwS2FCN0dxK3JPTTJhelNzbzNUUHJiaG9zYVBa?=
- =?utf-8?B?NDhYODFjRjhWTG1QZzNVRFpmcXY4SFpzQWU5c0FhOHlSRjc5cUpDdWZCZkxs?=
- =?utf-8?B?WmZ3b0orOE9rZEZCNGJtSUdxLzYyRHFGZ3JnM1FndXVldk9CeGZLRzFIRWlw?=
- =?utf-8?B?a2J6bUNhY3hhYnQ0bitLNlUyTEt4NXMwUlZxbUlVSFBwTVlXSVhoYXRnT21a?=
- =?utf-8?B?UUJjaG9aY2dPWTNXSHozUnY5cm92blY4cGF4dFgrYWJ2QmRNZzdiZ21Nb1Rt?=
- =?utf-8?B?a2U1UzhrSzlMU3p4RnJJaC9oTlk3U29PbmhBcWx2dVdLdGNuamYyQy9qelVq?=
- =?utf-8?B?UElTQmpNRnBBdkNGQUJDWHFRT3dLdmM5TGJidTd6akVkT3d4WUJ3SFdWMDdo?=
- =?utf-8?B?K3NaM0tuaFVpQXMvZlZLSlZUNTEzbWpJc3gveDdEMUg1b3AwdXZrNTFVM3lG?=
- =?utf-8?B?WW9OaFJGdSthZGFrZEV5T25EdXVIV2o4cFk5WmVBWTVHS0V0TTZkYnI2YkY0?=
- =?utf-8?B?MWhUS1lZTndGQzhqYnVwVWhjVDZiZzhlRnh5T0NZNVhoYXNwaGY3N3Yyc3I2?=
- =?utf-8?B?QmMra2xMUGtOakxvSGplVnppUUlhMnJoSlBBSjVVVkJ2aE9hdENyK096aVdm?=
- =?utf-8?B?Yk1HTXEzMWYwYTJpWjhYOU1JOENVWjdZbEFqcHFQdzdrK2hxQytIU1l6aTA0?=
- =?utf-8?B?U3ZuQlRyS2V1dTdLc2lPMGYwK2lzMGM4QUhCQ29jQi9VYno2andPTjZLYUJK?=
- =?utf-8?B?Yk1XSUlWa3dBa2NLWUFjZDV2VVI1U3c4cHRPaTRtL01mejdqbVdlb3JFc3Av?=
- =?utf-8?B?akZrNlA4a3Y3Z1B1VThGMmtlVUZuUDB3cUJPMlB1YU1RWnV5MjFweTFMK2xo?=
- =?utf-8?B?bm5kb0lRT2s2V1pFMUxxOG5kSnJxamF1MTh1NUwzU1Yyd2pnL2cvN2xNRlU0?=
- =?utf-8?B?UStLTmJiOFp1N05kNFFXNDNHRFhka042VlI4MEVod3NtSEhCOUZTVVhzVUlB?=
- =?utf-8?B?OVV4TVVTR0RsZWlxYjQyMWFiU25FR2szV2xSVUZYMWN3VEJ3SC9MMVRySDdu?=
- =?utf-8?B?WkZ6M04xSCtHcHJ3SThIYkdXc2FYTjl3Y2daSTgyNVlMaFNMM0dLWGZVSXAx?=
- =?utf-8?B?WVY3ZEZDM1BMNFhPbHc3b1BkemlUQ05qWHVmcGdudVBUR2dyTnc3WmRJRlNx?=
- =?utf-8?B?MlNEeDhGMjkzeTV6R2t1STFLRVNndUNlTi9aS0RGWHloWjNyK1VVbDBValFZ?=
- =?utf-8?B?NVpFNThQeFB3WnBZbjFONkxndGQ4MW5OQ2E1ck9CbDFqTVgwY0lVUXFZd3o4?=
- =?utf-8?B?Lyt0UytsRTM1RjVjTDA2VFI2M0hnPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <10A8CFC4AE596F48A217BDD4C304E91C@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32997F
+	for <linux-nfs@vger.kernel.org>; Thu, 30 May 2024 07:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717053476; cv=none; b=M9f0aayhE5Z4gFv87s+/3LMIF7gWx2K8mzUi920VvGYG0Q+pYoMjOI1qLxmk3zGSeQlo5w5k1FncN0L1vz5br3VB+LowZWgQNSRLdyi290f6aMZgyQLeWF3krLrb9UwLGkzRXuFqW8r5MambKn8MoIAYVJOa4zVQli6YHFxUpLU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717053476; c=relaxed/simple;
+	bh=reJjyPch94QfjKgJZo7cWKwkCkPcQstkfjbDsIQj+Ow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dcn4FDeS17wuykYWxzsqQ9Skt383BfAyNSEHKDcftPtRYFdx/wY/1dcMkcYPukimnn+OI17cgJu/00IfJpF1n5agC4UNV9Z973CbxBjHYTcMyBKphJvOd7ovx9se/AR3fW6socOgKrHj+E7ULvLAa7wYS8HaRjmvW1p8TLSflhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bFwl8Mcy; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59a352bbd9so85708166b.1
+        for <linux-nfs@vger.kernel.org>; Thu, 30 May 2024 00:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717053473; x=1717658273; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zr9+ioAEGHa+0b9Fk9qdvOydtRFvSKZnG/SPtPMxSyk=;
+        b=bFwl8McyNQs6z0eeUU3ZdhzBUxs1LkhZVYh6h9H5VS7tW10D3pcG1npR6zk54J9fQL
+         pCWC9Z3qPVsH6DCkXvIkn4FUSYE08+QK3mLRMjSGwkG+84OWsGTEkIWTexDiCsRajvmC
+         hUMB6W3CiERz//fJZxUcqWwT9n7LjG2KW4Tf5of6wE34RaqufmCQ0CSBFozRhS8MYcuC
+         OXxCu3SY4CoGg6NQQNAo2FQJVtvZqm7mJmq7HCnE0ACLvjeSRCysIVcYk7cdA9WXVMzi
+         /6EugjGatxUFOK7GpsahrBttt0w7Mw007yJGqd5gvzZ1pY9ExE2jlgpd9r/+bIR9EKn5
+         TOew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717053473; x=1717658273;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zr9+ioAEGHa+0b9Fk9qdvOydtRFvSKZnG/SPtPMxSyk=;
+        b=tqHBGyLXkDtqz+6TMwDsKb2+y6DrU02IV+McUgdGhfp03TllQbIdb2akg5vXUi9yh9
+         6LoCuZO1hnpTVAbzUfTSrgJGBbT+UUk3pX2WNz+YZd1Pz14Zzfpaw/IjTAYX5Cbopmzd
+         cJK1dIGvGTcidN9m9cam9Mmj0vfpUq6kKMBlxvlHfIp37Qgoc0odJ+xar620uh0HXo5Y
+         /kRXP57CLDfelJkzAWaN09FRPRezqr/bSDLDgVfdAYrXXE/iJipuN1GH+AjWR3xClkff
+         z7dtuqIB7M8MLSu6jhfpb63Dn/J5nMWuCEtxxZyf+l7mlXAVqFeEq6S7hk3ShM/FDDNZ
+         HmMg==
+X-Gm-Message-State: AOJu0YxT3IjtgVfMF1fWfTKVBw3WxnxRwoBJNrCPUjXRSiIIJ17wxiij
+	mk9TKBw0QybCpsH5gvr3Ps1wk5IMlXkT4I8uzdamUSLW3EoBlb4YYANoXTw4o6g=
+X-Google-Smtp-Source: AGHT+IG7jJ2rOycoD4fI5Hk9s/2NRhoW6YV9i/qN/qlWfa80tENEWvE7pxwRvg051njbNog0g6jrQQ==
+X-Received: by 2002:a17:906:4bc6:b0:a63:4bc:704d with SMTP id a640c23a62f3a-a65f090f193mr93652166b.1.1717053472987;
+        Thu, 30 May 2024 00:17:52 -0700 (PDT)
+Received: from localhost.localdomain ([178.132.109.247])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a666035881esm10545766b.133.2024.05.30.00.17.52
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 30 May 2024 00:17:52 -0700 (PDT)
+From: =?UTF-8?q?Bogdan-Cristian=20T=C4=83t=C4=83roiu?= <b.tataroiu@gmail.com>
+To: linux-nfs@vger.kernel.org
+Cc: =?UTF-8?q?Bogdan-Cristian=20T=C4=83t=C4=83roiu?= <b.tataroiu@gmail.com>
+Subject: [PATCH] Add guards around [nfsidmap] usages of [sysconf].
+Date: Thu, 30 May 2024 08:17:25 +0100
+Message-ID: <20240530071725.70043-1-b.tataroiu@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5b30d36-c0e1-416d-fc70-08dc802aa670
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2024 21:59:44.9109
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pHW6e7epDJMJN7e9RffGj9/Ue9nhV0pGv6k4KqWiCdR5YBIAJ0G94hoFwietv/NB4GUeKG1lcx0H/8QQ5zJgXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR13MB6928
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDI0LTA1LTI3IGF0IDE4OjM2ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gSGkgYWxsLA0KPiANCj4gdGhpcyBzZXJpZXMgYWRkcyBsYXJnZSBmb2xpbyBzdXBwb3J0
-IHRvIE5GUywgYW5kIGFsbW9zdCBkb3VibGVzIHRoZQ0KPiBidWZmZXJlZCB3cml0ZSB0aHJvdWdo
-cHV0IGZyb20gdGhlIHByZXZpb3VzIGJvdHRsZW5lY2sgb2YgfjIuNUdCL3MNCj4gKGp1c3QgbGlr
-ZSBmb3Igb3RoZXIgZmlsZSBzeXN0ZW1zKS4NCj4gDQo+IFRoZSBmaXJzdCBwYXRjaCBpcyBhbiBv
-bGQgb25lIGZyb20gd2lsbHkgdGhhdCBJJ3ZlIHVwZGF0ZWQgdmVyeQ0KPiBzbGlnaHRseS4NCj4g
-Tm90ZSB0aGF0IHRoaXMgdXBkYXRlIG5vdyByZXF1aXJlcyB0aGUgbWFwcGluZ19tYXhfZm9saW9f
-c2l6ZSBoZWxwZXINCj4gbWVyZ2VkIGludG8gTGludXMnIHRyZWUgb25seSBhIGZldyBtaW51dGVz
-IGFnby4NCj4gDQo+IERpZmZzdGF0Og0KPiDCoGZzL25mcy9maWxlLmPCoCB8wqDCoMKgIDQgKysr
-LQ0KPiDCoGZzL25mcy9pbm9kZS5jIHzCoMKgwqAgMSArDQo+IMKgbW0vZmlsZW1hcC5jwqDCoCB8
-wqDCoCA0MCArKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+IMKgMyBm
-aWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gDQoNCldo
-aWNoIHRyZWUgZGlkIHlvdSBpbnRlbmQgdG8gbWVyZ2UgdGhpcyB0aHJvdWdoPyBXaWxseSdzIG9y
-IEFubmEgYW5kDQptaW5lPyBJJ20gT0sgZWl0aGVyIHdheS4gSSBqdXN0IHdhbnQgdG8gbWFrZSBz
-dXJlIHdlJ3JlIG9uIHRoZSBzYW1lDQpwYWdlLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGlu
-dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbQ0KDQoNCg==
+sysconf(_SC_GETPW_R_SIZE_MAX) and sysconf(_SC_GETGR_R_SIZE_MAX)
+return -1 on musl, which causes either segmentation faults or ENOMEM
+errors.
+
+Replace all usages of sysconf with dedicated methods that guard against
+a result of -1.
+
+Signed-off-by: Bogdan-Cristian Tătăroiu <b.tataroiu@gmail.com>
+---
+ support/nfsidmap/gums.c             |  4 ++--
+ support/nfsidmap/libnfsidmap.c      |  4 ++--
+ support/nfsidmap/nfsidmap_common.c  | 16 ++++++++++++++++
+ support/nfsidmap/nfsidmap_private.h |  2 ++
+ support/nfsidmap/nss.c              |  8 ++++----
+ support/nfsidmap/regex.c            |  9 +++++----
+ support/nfsidmap/static.c           |  5 +++--
+ 7 files changed, 34 insertions(+), 14 deletions(-)
+
+diff --git a/support/nfsidmap/gums.c b/support/nfsidmap/gums.c
+index 1d6eb318..e94a4c50 100644
+--- a/support/nfsidmap/gums.c
++++ b/support/nfsidmap/gums.c
+@@ -475,7 +475,7 @@ static int translate_to_uid(char *local_uid, uid_t *uid, uid_t *gid)
+ 	int ret = -1;
+ 	struct passwd *pw = NULL;
+ 	struct pwbuf *buf = NULL;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 
+ 	buf = malloc(sizeof(*buf) + buflen);
+ 	if (buf == NULL)
+@@ -501,7 +501,7 @@ static int translate_to_gid(char *local_gid, uid_t *gid)
+ 	struct group *gr = NULL;
+ 	struct group grbuf;
+ 	char *buf = NULL;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	int ret = -1;
+ 
+ 	do {
+diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidmap.c
+index f8c36480..e1475879 100644
+--- a/support/nfsidmap/libnfsidmap.c
++++ b/support/nfsidmap/libnfsidmap.c
+@@ -457,7 +457,7 @@ int nfs4_init_name_mapping(char *conffile)
+ 
+ 	nobody_user = conf_get_str("Mapping", "Nobody-User");
+ 	if (nobody_user) {
+-		size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++		size_t buflen = get_pwnam_buflen();
+ 		struct passwd *buf;
+ 		struct passwd *pw = NULL;
+ 		int err;
+@@ -478,7 +478,7 @@ int nfs4_init_name_mapping(char *conffile)
+ 
+ 	nobody_group = conf_get_str("Mapping", "Nobody-Group");
+ 	if (nobody_group) {
+-		size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++		size_t buflen = get_grnam_buflen();
+ 		struct group *buf;
+ 		struct group *gr = NULL;
+ 		int err;
+diff --git a/support/nfsidmap/nfsidmap_common.c b/support/nfsidmap/nfsidmap_common.c
+index 4d2cb14f..310c68f0 100644
+--- a/support/nfsidmap/nfsidmap_common.c
++++ b/support/nfsidmap/nfsidmap_common.c
+@@ -116,3 +116,19 @@ int get_reformat_group(void)
+ 
+ 	return reformat_group;
+ }
++
++size_t get_pwnam_buflen(void)
++{
++	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	if (buflen == -1)
++		buflen = 16384;
++	return buflen;
++}
++
++size_t get_grnam_buflen(void)
++{
++	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	if (buflen == -1)
++		buflen = 16384;
++	return buflen;
++}
+diff --git a/support/nfsidmap/nfsidmap_private.h b/support/nfsidmap/nfsidmap_private.h
+index a5cb6dda..234ca9d4 100644
+--- a/support/nfsidmap/nfsidmap_private.h
++++ b/support/nfsidmap/nfsidmap_private.h
+@@ -40,6 +40,8 @@ struct conf_list *get_local_realms(void);
+ void free_local_realms(void);
+ int get_nostrip(void);
+ int get_reformat_group(void);
++size_t get_pwnam_buflen(void);
++size_t get_grnam_buflen(void);
+ 
+ typedef enum {
+ 	IDTYPE_USER = 1,
+diff --git a/support/nfsidmap/nss.c b/support/nfsidmap/nss.c
+index 0f43076e..3fc045dc 100644
+--- a/support/nfsidmap/nss.c
++++ b/support/nfsidmap/nss.c
+@@ -91,7 +91,7 @@ static int nss_uid_to_name(uid_t uid, char *domain, char *name, size_t len)
+ 	struct passwd *pw = NULL;
+ 	struct passwd pwbuf;
+ 	char *buf;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 	int err = -ENOMEM;
+ 
+ 	buf = malloc(buflen);
+@@ -119,7 +119,7 @@ static int nss_gid_to_name(gid_t gid, char *domain, char *name, size_t len)
+ 	struct group *gr = NULL;
+ 	struct group grbuf;
+ 	char *buf;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	int err;
+ 
+ 	if (domain == NULL)
+@@ -192,7 +192,7 @@ static struct passwd *nss_getpwnam(const char *name, const char *domain,
+ {
+ 	struct passwd *pw;
+ 	struct pwbuf *buf;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 	char *localname;
+ 	int err = ENOMEM;
+ 
+@@ -301,7 +301,7 @@ static int _nss_name_to_gid(char *name, gid_t *gid, int dostrip)
+ 	struct group *gr = NULL;
+ 	struct group grbuf;
+ 	char *buf, *domain;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	int err = -EINVAL;
+ 	char *localname = NULL;
+ 	char *ref_name = NULL;
+diff --git a/support/nfsidmap/regex.c b/support/nfsidmap/regex.c
+index 8424179f..ea094b95 100644
+--- a/support/nfsidmap/regex.c
++++ b/support/nfsidmap/regex.c
+@@ -46,6 +46,7 @@
+ 
+ #include "nfsidmap.h"
+ #include "nfsidmap_plugin.h"
++#include "nfsidmap_private.h"
+ 
+ #define CONFIG_GET_STRING nfsidmap_config_get
+ extern const char *nfsidmap_config_get(const char *, const char *);
+@@ -95,7 +96,7 @@ static struct passwd *regex_getpwnam(const char *name, const char *UNUSED(domain
+ {
+ 	struct passwd *pw;
+ 	struct pwbuf *buf;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 	char *localname;
+ 	size_t namelen;
+ 	int err;
+@@ -175,7 +176,7 @@ static struct group *regex_getgrnam(const char *name, const char *UNUSED(domain)
+ {
+ 	struct group *gr;
+ 	struct grbuf *buf;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	char *localgroup;
+ 	char *groupname;
+ 	size_t namelen;
+@@ -366,7 +367,7 @@ static int regex_uid_to_name(uid_t uid, char *domain, char *name, size_t len)
+ 	struct passwd *pw = NULL;
+ 	struct passwd pwbuf;
+ 	char *buf;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 	int err = -ENOMEM;
+ 
+ 	buf = malloc(buflen);
+@@ -392,7 +393,7 @@ static int regex_gid_to_name(gid_t gid, char *UNUSED(domain), char *name, size_t
+ 	struct group grbuf;
+ 	char *buf;
+     const char *name_prefix;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	int err;
+     char * groupname = NULL;
+ 
+diff --git a/support/nfsidmap/static.c b/support/nfsidmap/static.c
+index 8ac4a398..395cac06 100644
+--- a/support/nfsidmap/static.c
++++ b/support/nfsidmap/static.c
+@@ -44,6 +44,7 @@
+ #include "conffile.h"
+ #include "nfsidmap.h"
+ #include "nfsidmap_plugin.h"
++#include "nfsidmap_private.h"
+ 
+ /*
+  * Static Translation Methods
+@@ -98,7 +99,7 @@ static struct passwd *static_getpwnam(const char *name,
+ {
+ 	struct passwd *pw;
+ 	struct pwbuf *buf;
+-	size_t buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
++	size_t buflen = get_pwnam_buflen();
+ 	char *localname;
+ 	int err;
+ 
+@@ -149,7 +150,7 @@ static struct group *static_getgrnam(const char *name,
+ {
+ 	struct group *gr;
+ 	struct grbuf *buf;
+-	size_t buflen = sysconf(_SC_GETGR_R_SIZE_MAX);
++	size_t buflen = get_grnam_buflen();
+ 	char *localgroup;
+ 	int err;
+ 
+-- 
+2.44.1
+
 
