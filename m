@@ -1,278 +1,107 @@
-Return-Path: <linux-nfs+bounces-3502-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3503-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACEE78D5B6B
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 09:29:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A8B48D5C7A
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 10:15:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 646962826F2
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 07:29:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C12B1C217F9
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 08:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A2907FBDA;
-	Fri, 31 May 2024 07:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA068062A;
+	Fri, 31 May 2024 08:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="fCOa4ZOD"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hsfv1nU3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBB92B9AB
-	for <linux-nfs@vger.kernel.org>; Fri, 31 May 2024 07:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACCB78276;
+	Fri, 31 May 2024 08:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717140550; cv=none; b=XhByDNcgH6sPiedKVQvdTe0wCa3p4cgzPJ0Xe91eV5RbEdgH5aQHa0G3WlXRGzCZ6sNBTQ0s0oyicO1Saa5S9wFABSY7yDfDEmu6mmqUqJQbY/Wb9QSEH68a5DK+V8BLBUNs55yZvrmfeFty5RgAXWMS7Qw3xsCscvnfMrFONYQ=
+	t=1717143260; cv=none; b=ngNXqkjmuGzpwGy6u4bUyeKInPMGh3GADVgzDnIvkQr5c+/dJ9N1SZXPJYlv4Ij6lfmt3iCliec34ES04rMTkzOHtEg1QYgWgK4okekW1K6fXf0508cVyAXKgdqO1GU2F4GPj2fNcOvMIS0Eym7DhURQ9Qg0rZMCz28STeOyTcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717140550; c=relaxed/simple;
-	bh=1g9n/vk2DAU/dhjoTkpIU3YeNOJh0LcgR/vyQgSAS98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qXHBg0cyLgMCPTYv2oee6v9qh3QOfvlVAU3wlOUz45j5ryJzUi65LNOM/aLNYFpR0Ma/FW9QZuy9J836Ftpv5Up/9f3Gi1rZcdUnXKfZEwhrWNyKJ1zZqG8ezA/4yNsDBGly7aRuQgzoXyi4HNuJMtEw86OUehf6Im7PjEufg4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=fCOa4ZOD; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52b87e8ba1eso623417e87.3
-        for <linux-nfs@vger.kernel.org>; Fri, 31 May 2024 00:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1717140545; x=1717745345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3xVxcIFMMKF2dyo5wH4b3eGfesMKAs5vGXIsKSfBM6s=;
-        b=fCOa4ZODfOJyE2RGaOUPqa64OO8yvtjsbUYTxkfuXAxUFoB/qKYJPO1bavBINTuyvk
-         O+0yWQBX0aidgrZvr/0qPN8Ga0/8DQ5ac66ac3SMDpocDZgUDHGYxvycGjQkGvVbEeN3
-         6celPnRJ3ngvZhqRV3amu/ooPl0NWujnw41E5yo9ZHtS5/YjDkKmMGvejYfWQuuqP55Y
-         IQdmooPpPJn7+guxcI492uzW3Vs1v9yO9tZFcnJ//mv13nwtLVmArsjXX69ZC24tZUJe
-         NDysAl1otWyIfri7Y10+dveKo+InVXxtJzkzeZJaM06Kge5cEdF5yU/sNmBLGPBccEl6
-         dMBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717140545; x=1717745345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3xVxcIFMMKF2dyo5wH4b3eGfesMKAs5vGXIsKSfBM6s=;
-        b=nLV4HHH2tOLHVzfy5pygpfAPm5A9xsqruwQOobMkjWiQz5MFUYUD4GhD0z8CcIsAj6
-         Nbyn+vfEpYTkayA4EpL9faKjL30cHy1JLODnCw0B8IROE7myFVHZfpTwKnJqey4dDTv7
-         rpiiUmxyJa7W69yu7zylN5fAEJHdBQLWR/ZQdEMgBUAOy7YpP4XsHtFY2FBJODzhwFmF
-         GrMzSuzNzZA0uyoBQWs/msejG8EvXAh/7cj1BU71uIPRUBN3CyRxsmjTM33FJuM+Gt2m
-         NdaM3ZNAcFDD4uFQI5MEdWbHqBYtODa/MqDf6UJTcDgv8lZmhrrrW8RTVJrumZm4FqqM
-         Zn0Q==
-X-Gm-Message-State: AOJu0Yw5laVmasZ1PpeIVjyKIf2O8j9ZruPKUNjnGPyziyXACHHfvNDM
-	+yh9hnawDDznBx5BPsMWq0gzCvy0PrzjnYx5qJRU4KIkyDV4qJ2JyQTBrHfPjWIV4+7biKXiNxr
-	HfqMIUgIt+m/z1HKNfRcRWo3mpAyvl/7kpSpeomythH4V/K3F3M2W5Cl+
-X-Google-Smtp-Source: AGHT+IEdpdGnzUrYA9co/btCynvMiAPhCrAWOg6jyxOM43mflzaDHs7SnFtnA2KO92QtFGDT13Q224wc6ejt6o0sfzo=
-X-Received: by 2002:ac2:43a3:0:b0:52b:3cf6:db00 with SMTP id
- 2adb3069b0e04-52b896bdd0fmr724456e87.51.1717140544414; Fri, 31 May 2024
- 00:29:04 -0700 (PDT)
+	s=arc-20240116; t=1717143260; c=relaxed/simple;
+	bh=L2wsg+UyGOMk0Z8wJlmeo08VtpIEFKjlqtaUhQDmXUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qghIkjK7OE9rd4mQaqHX6lNK+Uwh9Vlon/8RKuRtsKeGZvDcfmP9HpfaAp691rpoFEg4kzBHufwbahMoi1ict8RKTvIDR2Zgcwm7Rs7mv2N1ZV0HOQAxxljkLoxYOmTbrJxz+njwl8pBTFV7sV1GgFV9J4LMSHUgZVNaEl57nK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hsfv1nU3; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zCPwI73R4MJQqX+IZ9CDgIEhpJs+l0IYh+oqHsV7kBQ=; b=hsfv1nU3pxWAGTPmsBQnTuh8pp
+	WHIwLFYZ1Hink6MH2uwDexSiqz9mOEU9Lqw5reCTaPE/vnkTsYkew/6XnRbbePMnqHLsqIriKOsqO
+	nN0RqaREbXpipEsSuBdZ1UySx6WgPstFPDbZ+Sc9FA8oTpCc4rzouziREPQRDdzUmAUy06Y6LrqYG
+	tjfEXez5qeTV8T96lmsU9b9EIZrn7nmMOKgKT4JSmLY5HwuO+V61UwEv+7ycyAjFkRbkZBbeXMdj9
+	peQXyRbt/oasf4aZQLN7clcZ32eWRKMTT96iIIMsigVQJ6Bol2cO6fIWy02vi487cdMjL4tei3J15
+	4+GB8cCg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sCxOv-00000009aJO-42ve;
+	Fri, 31 May 2024 08:14:13 +0000
+Date: Fri, 31 May 2024 01:14:13 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+	Aleksa Sarai <cyphar@cyphar.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <ZlmG1Rss6gTgbSVT@infradead.org>
+References: <ZlRy7EBaV04F2UaI@infradead.org>
+ <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <ZlSzotIrVPGrC6vt@infradead.org>
+ <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+ <ZlWVkJwwJ0-B-Zyl@infradead.org>
+ <20240528-gesell-evakuieren-899c08cbfa06@brauner>
+ <ZlW4IWMYxtwbeI7I@infradead.org>
+ <20240528-gipfel-dilemma-948a590a36fd@brauner>
+ <ZlXaj9Qv0bm9PAjX@infradead.org>
+ <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPKjjnoeLkkvSZwpWw_bTCOCTfWYgjCyvjpoa95E4yroQR5zyA@mail.gmail.com>
- <CAPKjjnrez+hip+VBVrLT_g6Uzxd5DGSCoCSXQnRLx-qXT09yQA@mail.gmail.com>
-In-Reply-To: <CAPKjjnrez+hip+VBVrLT_g6Uzxd5DGSCoCSXQnRLx-qXT09yQA@mail.gmail.com>
-From: Zhitao Li <zhitao.li@smartx.com>
-Date: Fri, 31 May 2024 15:28:49 +0800
-Message-ID: <CAPKjjnqiapiFkUNcpBm=bUT9OrQOwSFcw02N087at3JShp5EXw@mail.gmail.com>
-Subject: Re: Question: How to customize retransmission timeout of
- unacknowledged NFS v3 TCP packet?
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Ping Huang <huangping@smartx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-This problem is duplicated with
-https://lore.kernel.org/linux-nfs/YQBPR01MB10724B629B69F7969AC6BDF9586C89@Y=
-QBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM/
+On Wed, May 29, 2024 at 09:40:01AM +0200, Christian Brauner wrote:
+> Yeah, that's exactly what I figured and no that's not something we
+> should do.
+> 
+> Not just can have a really large number of superblocks if you have mount
+> namespaces and large container workloads that interface also needs to be
+> highly privileged.
 
-According to the discussion, the patch is submitted to fix the timeout
-used in xprt_socket, which is still on the way. On the other hand,
-"tcp_retries2" doesn't work in control the transmission timeout of an
-unacknowledged packet. Is there any workaround to change the
-transmission timeout?
+Again, that would be the most trivial POC.  We can easily do hash.
 
-Best regards,
-Zhitao Li
+> Plus, you do have filesystems like btrfs that can be mounted multiple
+> times with the same uuid.
 
-On Wed, May 29, 2024 at 6:18=E2=80=AFPM Zhitao Li <zhitao.li@smartx.com> wr=
-ote:
->
-> Essentially, we need a mechanism to quickly reconnect with new
-> nfs-server nodes for failover.
-> I also tried to adjust mount options like "timeo" to 10s and "retrans"
-> to 1,  and found that they don't work, either.  It seems that the NFS
-> v3 client always tries to reconnect after some request hangs for 3
-> minutes no matter what "timeo" and "retrans" is.
->
-> On Wed, May 29, 2024 at 6:10=E2=80=AFPM Zhitao Li <zhitao.li@smartx.com> =
-wrote:
-> >
-> > Hi, dear community,
-> >
-> > In our NFS environment, NFS client mounts remote NFS export with its
-> > VIP. The VIP can be assigned to another server node for failover.
-> > However, the NFS client sends the unacknowledged packet 50s+ after the
-> > VIP is ready on the new node, which is because of the exponential
-> > backoff retransmission algorithm.  I tried to set this parameter
-> > "tcp_retries2" smaller so that the NFS client can reconnect with the
-> > new node more quickly, but this parameter didn't take effect. From
-> > tcpdump entries as follows,
-> >   1. At "2024-05-29 11:47:00",  ARP is updated.
-> >   2. At "2024-05-29 11:47:52" ,  the NFS client retried to send the pac=
-ket.
-> >   3. Then the connection is reset and a new connection starts.
-> >
-> > I guess the parameter just takes effect for applications and doesn't
-> > take effect for kernel modules like the NFS client. Could anyone give
-> > some advice to customize  retransmission timeout of unacknowledged NFS
-> > v3 TCP packet?
-> >
-> >
-> > OS: Linux kernel v6.7.0
-> > NFS mount options:
-> > vers=3D3,nolock,proto=3Dtcp,rsize=3D1048576,wsize=3D1048576,hard,timeo=
-=3D600,retrans=3D2,noresvport
-> >
-> > tcp_retries2:
-> > [root@vm-play zhitaoli]# sysctl -w net.ipv4.tcp_retries2=3D5
-> > net.ipv4.tcp_retries2 =3D 5
-> > [root@vm-play zhitaoli]# cat /proc/sys/net/ipv4/tcp_retries2
-> > 5
-> >
-> > tcpdump entries:
-> >
-> > 2024-05-29 11:46:02.331891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973659245 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:02.542836 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973659456 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:02.751013 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973659664 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:03.166958 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973660080 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:04.046882 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973660960 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:05.710910 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973662624 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:09.039310 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973665952 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:16.017889 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973672930 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:29.326891 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973686240 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:46:55.950915 52:54:00:1d:a4:24 > 52:54:00:a0:93:93,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973712864 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:47:00.379844 52:54:00:13:1f:34 > Broadcast, ethertype
-> > ARP (0x0806), length 60: Reply 10.125.1.85 is-at 52:54:00:13:1f:34,
-> > length 46
-> >
-> > 2024-05-29 11:47:52.271192 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
-> > ethertype IPv4 (0x0800), length 190: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [P.], seq 129897:130021, ack 171633, win 2356,
-> > options [nop,nop,TS val 1973769184 ecr 28456
-> > 58566], length 124: NFS request xid 1954624602 120 access fh
-> > Unknown/43000001180100000000000000DE40020000000000F43900000000000000000=
-0
-> > NFS_ACCESS_READ|NFS_ACCESS_LOOKUP|NFS_ACCESS_MODIFY|NFS_ACCESS_EXTEND|N=
-FS_ACCESS_DELETE
-> >
-> > 2024-05-29 11:47:52.272041 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
-> > ethertype IPv4 (0x0800), length 54: 10.125.1.85.nfs >
-> > 10.125.1.214.58428: Flags [R], seq 1148562527, win 0, length 0
-> >
-> > 2024-05-29 11:47:52.272909 52:54:00:1d:a4:24 > 52:54:00:13:1f:34,
-> > ethertype IPv4 (0x0800), length 74: 10.125.1.214.58428 >
-> > 10.125.1.85.nfs: Flags [S], seq 1734997801, win 32120, options [mss
-> > 1460,sackOK,TS val 1973769186 ecr 0,nop,wscale 7], length 0
-> >
-> > 2024-05-29 11:47:52.273503 52:54:00:13:1f:34 > 52:54:00:1d:a4:24,
-> > ethertype IPv4 (0x0800), length 74: 10.125.1.85.nfs >
-> > 10.125.1.214.58428: Flags [S.], seq 1078843840, ack 1734997802, win
-> > 28960, options [mss 1460,sackOK,TS val 2235915769 ecr
-> > 1973769186,nop,wscale 7], length 0
-> >
-> >
-> > Best regards,
-> > Zhitao Li
+Which doesn't matter.  Just like for NFS file handles the fs identifier
+identifier plus the file part of the file handle need to be unique.
+
+> And in general users will still need to be able to legitimately use a
+> mount fd and not care about the handle type used with it.
+
+I don't understand what you mean.  If we hand out file handles with
+fsid that of course needs to be keyed off a new flag for both
+name_to_handle and open_by_hnalde that makes them not interchangable
+to handles generated without that flag.
+
 
