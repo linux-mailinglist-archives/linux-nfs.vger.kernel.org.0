@@ -1,107 +1,108 @@
-Return-Path: <linux-nfs+bounces-3503-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3504-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A8B48D5C7A
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 10:15:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 289F38D5F45
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 12:09:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C12B1C217F9
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 08:14:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A2171C20FE5
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 10:09:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA068062A;
-	Fri, 31 May 2024 08:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A2814263A;
+	Fri, 31 May 2024 10:09:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hsfv1nU3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIriLKsu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACCB78276;
-	Fri, 31 May 2024 08:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FF981ACB;
+	Fri, 31 May 2024 10:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717143260; cv=none; b=ngNXqkjmuGzpwGy6u4bUyeKInPMGh3GADVgzDnIvkQr5c+/dJ9N1SZXPJYlv4Ij6lfmt3iCliec34ES04rMTkzOHtEg1QYgWgK4okekW1K6fXf0508cVyAXKgdqO1GU2F4GPj2fNcOvMIS0Eym7DhURQ9Qg0rZMCz28STeOyTcI=
+	t=1717150169; cv=none; b=FJlj7sh2P0pBcUs6L5HTN7xoqxmaaj1kftrTqP67S/qFSZ8iBW0Q6Rz3K70gxX4TCbMm50fDvQ9ZjRNiW64YmBMXKU4UBwumpJcsA0RlKr5F/C/1rpjMTg1l4TEc7pW1xKhaH3yiRcajqSoZgMiW+zfMkqIwmRb405BQBaISi/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717143260; c=relaxed/simple;
-	bh=L2wsg+UyGOMk0Z8wJlmeo08VtpIEFKjlqtaUhQDmXUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qghIkjK7OE9rd4mQaqHX6lNK+Uwh9Vlon/8RKuRtsKeGZvDcfmP9HpfaAp691rpoFEg4kzBHufwbahMoi1ict8RKTvIDR2Zgcwm7Rs7mv2N1ZV0HOQAxxljkLoxYOmTbrJxz+njwl8pBTFV7sV1GgFV9J4LMSHUgZVNaEl57nK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hsfv1nU3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zCPwI73R4MJQqX+IZ9CDgIEhpJs+l0IYh+oqHsV7kBQ=; b=hsfv1nU3pxWAGTPmsBQnTuh8pp
-	WHIwLFYZ1Hink6MH2uwDexSiqz9mOEU9Lqw5reCTaPE/vnkTsYkew/6XnRbbePMnqHLsqIriKOsqO
-	nN0RqaREbXpipEsSuBdZ1UySx6WgPstFPDbZ+Sc9FA8oTpCc4rzouziREPQRDdzUmAUy06Y6LrqYG
-	tjfEXez5qeTV8T96lmsU9b9EIZrn7nmMOKgKT4JSmLY5HwuO+V61UwEv+7ycyAjFkRbkZBbeXMdj9
-	peQXyRbt/oasf4aZQLN7clcZ32eWRKMTT96iIIMsigVQJ6Bol2cO6fIWy02vi487cdMjL4tei3J15
-	4+GB8cCg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCxOv-00000009aJO-42ve;
-	Fri, 31 May 2024 08:14:13 +0000
-Date: Fri, 31 May 2024 01:14:13 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <ZlmG1Rss6gTgbSVT@infradead.org>
-References: <ZlRy7EBaV04F2UaI@infradead.org>
- <20240527133430.ifjo2kksoehtuwrn@quack3>
- <ZlSzotIrVPGrC6vt@infradead.org>
- <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
- <ZlWVkJwwJ0-B-Zyl@infradead.org>
- <20240528-gesell-evakuieren-899c08cbfa06@brauner>
- <ZlW4IWMYxtwbeI7I@infradead.org>
- <20240528-gipfel-dilemma-948a590a36fd@brauner>
- <ZlXaj9Qv0bm9PAjX@infradead.org>
- <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
+	s=arc-20240116; t=1717150169; c=relaxed/simple;
+	bh=Sic4nTyYw+kCcDlQNPaN6T+BaZh+LcAE+Y2eGY+gukY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qXr7toifx3pYVegUaFGFRY5kEvRLJx5ArQeLWeAGkUugyYtK7+2gnbjEv+XdQx8GbNhVietJzOc7Rm2YdaATiQRupr0mNOZJfRTPejgcwQbT2GKMicWfnvmCuXcN6hSMnPKVJahy7bcXV0KLqAzPg9nRYZJS4C/VtxZ0hSkbVhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIriLKsu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C436C116B1;
+	Fri, 31 May 2024 10:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717150169;
+	bh=Sic4nTyYw+kCcDlQNPaN6T+BaZh+LcAE+Y2eGY+gukY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=vIriLKsuUHXGkrsZUN0rQhmXJkOT4PQO7k4YbXKYkM6uuLRjZYbpN3nxFxsfdzIJk
+	 e9449mBvDdvgjEv6GGP12Y6bHwVyz8snADTrF6Ffge40pa/X6xAhYpobIkLNQAk/NO
+	 YuxCMWH5vpAQEHul1AVXArcH5/ef1OpeS9SyZSjb4Vr77AXNby30wMES8gpYIh+LbY
+	 GkbGkG2MgFQKZpQK9xlScXMz6fTMSKR4O4DOlF8fGjSfIAcqZvAS393qTcviQwnOYf
+	 Uco2HWf+kMdfJWDusJ1DbObG7n4by4bnGlv2Iwqf5nJ1TCiQJVLvfCXJqAm9zkZNkG
+	 06g1keqRLdN+Q==
+Message-ID: <1922c6893fd78b5c9af1549ac109d097341c4b0e.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: remove unused structs 'nfsd3_voidargs'
+From: Jeff Layton <jlayton@kernel.org>
+To: linux@treblig.org, chuck.lever@oracle.com, neilb@suse.de
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 31 May 2024 06:09:27 -0400
+In-Reply-To: <20240531000838.332082-1-linux@treblig.org>
+References: <20240531000838.332082-1-linux@treblig.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, May 29, 2024 at 09:40:01AM +0200, Christian Brauner wrote:
-> Yeah, that's exactly what I figured and no that's not something we
-> should do.
-> 
-> Not just can have a really large number of superblocks if you have mount
-> namespaces and large container workloads that interface also needs to be
-> highly privileged.
+On Fri, 2024-05-31 at 01:08 +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>=20
+> 'nfsd3_voidargs' in nfs[23]acl.c is unused since
+> commit 788f7183fba8 ("NFSD: Add common helpers to decode void args
+> and
+> encode void results").
+>=20
+> Remove them.
+>=20
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+> =C2=A0fs/nfsd/nfs2acl.c | 2 --
+> =C2=A0fs/nfsd/nfs3acl.c | 2 --
+> =C2=A02 files changed, 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+> index 12b2b9bc07bf..4e3be7201b1c 100644
+> --- a/fs/nfsd/nfs2acl.c
+> +++ b/fs/nfsd/nfs2acl.c
+> @@ -308,8 +308,6 @@ static void nfsaclsvc_release_access(struct
+> svc_rqst *rqstp)
+> =C2=A0	fh_put(&resp->fh);
+> =C2=A0}
+> =C2=A0
+> -struct nfsd3_voidargs { int dummy; };
+> -
+> =C2=A0#define ST 1		/* status*/
+> =C2=A0#define AT 21		/* attributes */
+> =C2=A0#define pAT (1+AT)	/* post attributes - conditional */
+> diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
+> index 73adca47d373..5e34e98db969 100644
+> --- a/fs/nfsd/nfs3acl.c
+> +++ b/fs/nfsd/nfs3acl.c
+> @@ -221,8 +221,6 @@ static void nfs3svc_release_getacl(struct
+> svc_rqst *rqstp)
+> =C2=A0	posix_acl_release(resp->acl_default);
+> =C2=A0}
+> =C2=A0
+> -struct nfsd3_voidargs { int dummy; };
+> -
+> =C2=A0#define ST 1		/* status*/
+> =C2=A0#define AT 21		/* attributes */
+> =C2=A0#define pAT (1+AT)	/* post attributes - conditional */
 
-Again, that would be the most trivial POC.  We can easily do hash.
-
-> Plus, you do have filesystems like btrfs that can be mounted multiple
-> times with the same uuid.
-
-Which doesn't matter.  Just like for NFS file handles the fs identifier
-identifier plus the file part of the file handle need to be unique.
-
-> And in general users will still need to be able to legitimately use a
-> mount fd and not care about the handle type used with it.
-
-I don't understand what you mean.  If we hand out file handles with
-fsid that of course needs to be keyed off a new flag for both
-name_to_handle and open_by_hnalde that makes them not interchangable
-to handles generated without that flag.
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
