@@ -1,62 +1,58 @@
-Return-Path: <linux-nfs+bounces-3497-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3498-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB2A8D53C2
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2024 22:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA9778D56B1
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 02:00:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF5902877A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 May 2024 20:24:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 478E7283857
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 00:00:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CEA176229;
-	Thu, 30 May 2024 20:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4BBE4C6D;
+	Fri, 31 May 2024 00:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MPwcYHY+"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="YOntawLv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9025615B574;
-	Thu, 30 May 2024 20:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77376368;
+	Fri, 31 May 2024 00:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717100483; cv=none; b=oTfPpne0GHmYKx1s4kyr0TlfdkTPiIhOp6vZU+ec9h2/Zv8QKukpivlnHGy+U3T+LCsoDKTsIssl+z27EydzynAa3wEND+O34I5jolBVRNY9f4zt0qqrOT3eeq5yvLJsRlVzrb14SgiiDCvmH0ecpat8NrLDgNasXzhJXGxk2oA=
+	t=1717113641; cv=none; b=n+eOBVtYcmTjeaqnGmywE3V3AZcMl6d6xoXeOcplSBzgNVs9ouhU0gVfxAeeXlyMk3LsRdo+BRrNglv9me1TDr98dnSWbgkNZXrKXLDrkqtIk/vqLT4FdXHfu1wnTxy/m/TzJlBPqERWzTpQBJR96NB01LhH0BROxUDaWbEb9sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717100483; c=relaxed/simple;
-	bh=awnQuNFNAj1xMVjEOM16pvrQcZGtiTlqQft8kIwYekQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IeQetMoIPJqoVnz9Grnr8/o8dl/UcHF216iAsn7tluAMmQK3iEknA7mkgo3xXH1+y5pyyLtSz+MrENUUxhCQ2ifWes2hRdNdZY8fixgOMe267y2dqHQebS7KVe31OA8clhzgfiFJ3UXvlD1zWtxSoImhgH1tBzuK+sDjz3JJEDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MPwcYHY+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=2tXTCaKONv/xd3aviOhqWrMWUBzDVFqCaPB0En8yrzE=; b=MPwcYHY+fLGlCRbSr0pUM8lp+a
-	US7P8gjZ6+P3lgaxS4U1naFRFepz3ISNdsdBrgkQvRZHT+mqQ4Xav4+2Xslk6e5+Op28k53A8AbDO
-	AB1D8T9J+ZTyD7VHnIsnpzxut56v96kijSYCfe2ZgHceeQBaT8d1KqMqMFasGD2EdqLoHQe2XHVFd
-	vZWRs5VhlmmyIoOSnriQQOT7SqYLfRYZuLv9HaAYks4yuz4jGaQgXi225rnKfTII+wSJ9tvXbnWZL
-	okWNE+onNO4U9n4jSeI26I2hYTOY1/enGrucnFctzrFi+74pmHyLI2BzCaDA4jj7t8Ffvvopap2ne
-	zYHW7N8Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCmGz-0000000B8LQ-49Y8;
-	Thu, 30 May 2024 20:21:18 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-fsdevel@vger.kernel.org,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH 09/16] nfs: Remove calls to folio_set_error
-Date: Thu, 30 May 2024 21:21:01 +0100
-Message-ID: <20240530202110.2653630-10-willy@infradead.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240530202110.2653630-1-willy@infradead.org>
-References: <20240530202110.2653630-1-willy@infradead.org>
+	s=arc-20240116; t=1717113641; c=relaxed/simple;
+	bh=grXhQQtr9vpQiwenwMlqZFIzM4wHkpKpRwTg2CYNESI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QJcBeA3VLnYG1zhVecmZOXbF1XO/WMuxOIFXuqPZ75c2QvXf2aHZ8PTfmsf+8wlzC64FzJ+VwRc41AgW3eKJoM7dub105pRVwoSAXYoNJ+BOn93WWyv1nKUfSVTJhzGm0hxa0VMUhOTDz1dzZPcWbBgR76PkM90vrCygrFDGn8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=YOntawLv; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=vsfUdDW5lGoj7Gyyc/8nWW2POiRIc6CuyqQ3G9lMaqo=; b=YOntawLvov38kYpy
+	tjmxXj4D6qFX6PSFse96I9vEvzgeDmZc2Tkc2BJxbBjlHBgYbqkEZmg6fqUOClZ1FFGLq35O1ciZk
+	PEuTxrwWiFOTefQPz9YUIhNpN3sPXzOhw45ecKae+9/Zop5owIboOu5OyC3y6wnYGKCWrvRmv9TX7
+	ZddR0flm03D6XNyBmlig0TQ3T6e/H6tt93JUMAWwTZGfDnF4aCfPTe9OAKROelbgEfFwtB97T/g7Z
+	3WNtE7NXMPsLvoHHz6dRJHVwUjzpp8Nkqf+a0/QluK2X261TnmuvjnbuWskFgc3VXv4vj0y8SDfXR
+	NGv1QZ0+3j1Sk71e6A==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1sCphC-003T5a-0q;
+	Fri, 31 May 2024 00:00:34 +0000
+From: linux@treblig.org
+To: trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] NFS: remove unused struct 'mnt_fhstatus'
+Date: Fri, 31 May 2024 01:00:33 +0100
+Message-ID: <20240531000033.294044-1-linux@treblig.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,69 +61,35 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Common code doesn't test the error flag, so we don't need to set it in
-nfs.  We can use folio_end_read() to combine the setting (or not)
-of the uptodate flag and clearing the lock flag.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+'mnt_fhstatus' has been unused since
+commit 065015e5efff ("NFS: Remove unused XDR decoder functions").
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- fs/nfs/read.c    |  2 --
- fs/nfs/symlink.c | 12 ++----------
- fs/nfs/write.c   |  1 -
- 3 files changed, 2 insertions(+), 13 deletions(-)
+ fs/nfs/mount_clnt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index a142287d86f6..cca80b5f54e0 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -122,8 +122,6 @@ static void nfs_readpage_release(struct nfs_page *req, int error)
- {
- 	struct folio *folio = nfs_page_to_folio(req);
+diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+index 68e76b626371..57c9dd700b58 100644
+--- a/fs/nfs/mount_clnt.c
++++ b/fs/nfs/mount_clnt.c
+@@ -128,11 +128,6 @@ struct mountres {
+ 	rpc_authflavor_t *auth_flavors;
+ };
  
--	if (nfs_error_is_fatal_on_server(error) && error != -ETIMEDOUT)
--		folio_set_error(folio);
- 	if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE))
- 		if (nfs_netfs_folio_unlock(folio))
- 			folio_unlock(folio);
-diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
-index 0e27a2e4e68b..1c62a5a9f51d 100644
---- a/fs/nfs/symlink.c
-+++ b/fs/nfs/symlink.c
-@@ -32,16 +32,8 @@ static int nfs_symlink_filler(struct file *file, struct folio *folio)
- 	int error;
- 
- 	error = NFS_PROTO(inode)->readlink(inode, &folio->page, 0, PAGE_SIZE);
--	if (error < 0)
--		goto error;
--	folio_mark_uptodate(folio);
--	folio_unlock(folio);
--	return 0;
+-struct mnt_fhstatus {
+-	u32 status;
+-	struct nfs_fh *fh;
+-};
 -
--error:
--	folio_set_error(folio);
--	folio_unlock(folio);
--	return -EIO;
-+	folio_end_read(folio, error == 0);
-+	return error;
- }
- 
- static const char *nfs_get_link(struct dentry *dentry,
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 3573cdc4b28f..85cddb2a6135 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -311,7 +311,6 @@ static void nfs_mapping_set_error(struct folio *folio, int error)
- {
- 	struct address_space *mapping = folio_file_mapping(folio);
- 
--	folio_set_error(folio);
- 	filemap_set_wb_err(mapping, error);
- 	if (mapping->host)
- 		errseq_set(&mapping->host->i_sb->s_wb_err,
+ /**
+  * nfs_mount - Obtain an NFS file handle for the given host and path
+  * @info: pointer to mount request arguments
 -- 
-2.43.0
+2.45.1
 
 
