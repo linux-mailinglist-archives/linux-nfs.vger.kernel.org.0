@@ -1,183 +1,111 @@
-Return-Path: <linux-nfs+bounces-3511-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3512-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3536B8D6435
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 16:14:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E43B18D681D
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 19:24:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53BB91C2598C
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 14:14:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61062B259F1
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 May 2024 17:24:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88AC516F85C;
-	Fri, 31 May 2024 14:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B3A1176AA5;
+	Fri, 31 May 2024 17:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YDduCa7t";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="N58seZjG";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YDduCa7t";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="N58seZjG"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="NY92oSB7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF26B176228
-	for <linux-nfs@vger.kernel.org>; Fri, 31 May 2024 14:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2D255E4C
+	for <linux-nfs@vger.kernel.org>; Fri, 31 May 2024 17:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717164764; cv=none; b=F4QfjJCskBDXmEkkQLxtHnjXWTCHcD7vIBz609BzG99m/rhXhefFzkTKU8vDh1WsrVakoRfJnaX3brAVmPAP6d5d+V8AGh0YoOrzcbTnhvWVLFz0/PrynE5xOFCruIZ9HuDH5Sl/weaCj7KjFp+na8tVGdTtCGKR6t2RhuBy5gY=
+	t=1717176236; cv=none; b=ICAMgVthBlnlxsfMr0wLdSKngJnoBtqESpF+50Z+Or6C+pSmC+qJHZSHJjVrfakAwRMG4RFaLKD7bcGAf5kcudCoDC7GBbjhjEHzxjyKwIJsyTtjqZ53wS7Rpc5jhqagpMQY73ILSL4C4QC/iDgRx4omo1i2Tz6Cze4FoH/yQf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717164764; c=relaxed/simple;
-	bh=gdT5hy4kcndci+E1sN42JIFcD6sLXzWHw5OgGJqxbbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XQcShDqJgpdlflhNJRhvG/JNVIpJ6Nw4bs5X6F5k/l7ZbH3Lpxr2KX64VBbU1yydLlnRE8BwGJQXbeOMvzmXuOr98z5nK7sXsfaNm+sjsPWOQ0PbbwfC5m6OqJEPSz4yKKiSbIxO0ym9wZeCUCxRqNg92uyIuIu5q34hnI/Bpvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YDduCa7t; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=N58seZjG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YDduCa7t; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=N58seZjG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9497321AD9;
-	Fri, 31 May 2024 14:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717164759; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gv2/I2H0oAgyCEyHV93+fNsOBVxzv7RP4DJlstQ7idc=;
-	b=YDduCa7tUizkHlI0pYT4vZ4/ydNEK/9RjAqDTzQt6YxKYoXzYmBP0Ki8NSO6XaG/70S7Lo
-	ODq1Cb/VSczukwJE1AOGN0c3M+H0DeEbfGxbxIqmaIsRisPApBiEyOdvyh8nezRDJIjP/y
-	+oclCNp0QrRbXEbw5mUlZmAg4bt9lzY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717164759;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gv2/I2H0oAgyCEyHV93+fNsOBVxzv7RP4DJlstQ7idc=;
-	b=N58seZjGv9lTrmOyUlTcXKdDeGeyxA/7sjI/zO7ufvKzYnfvYGOW9Z/HGFfmpu3TPNrwKG
-	4k6MD9NwQgERJIAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YDduCa7t;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=N58seZjG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717164759; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gv2/I2H0oAgyCEyHV93+fNsOBVxzv7RP4DJlstQ7idc=;
-	b=YDduCa7tUizkHlI0pYT4vZ4/ydNEK/9RjAqDTzQt6YxKYoXzYmBP0Ki8NSO6XaG/70S7Lo
-	ODq1Cb/VSczukwJE1AOGN0c3M+H0DeEbfGxbxIqmaIsRisPApBiEyOdvyh8nezRDJIjP/y
-	+oclCNp0QrRbXEbw5mUlZmAg4bt9lzY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717164759;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gv2/I2H0oAgyCEyHV93+fNsOBVxzv7RP4DJlstQ7idc=;
-	b=N58seZjGv9lTrmOyUlTcXKdDeGeyxA/7sjI/zO7ufvKzYnfvYGOW9Z/HGFfmpu3TPNrwKG
-	4k6MD9NwQgERJIAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8B606137C3;
-	Fri, 31 May 2024 14:12:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id VxUDItfaWWajcwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 31 May 2024 14:12:39 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3B983A0877; Fri, 31 May 2024 16:12:35 +0200 (CEST)
-Date: Fri, 31 May 2024 16:12:35 +0200
-From: Jan Kara <jack@suse.cz>
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"anna@kernel.org" <anna@kernel.org>
-Subject: Re: NFS write congestion size
-Message-ID: <20240531141235.gthl6nvyrb354rfc@quack3>
-References: <>
- <a86fdd86-7c3a-44e9-9d49-4b3edfab66e6@grimberg.me>
- <171706807360.14261.8929224868643154972@noble.neil.brown.name>
- <faf945a9-d1bc-45db-9543-057b7bc0ed8d@grimberg.me>
+	s=arc-20240116; t=1717176236; c=relaxed/simple;
+	bh=QIqNdZW6qbAa9mdDqBlX4maeQrhqkv56dFYUdwsq/6w=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=J0DQhpn8uMCx7FJqZoiGU6UEEGMlF+l9j3L80VfZJlnSgNHDGflCeDpM6VxMihkKYsMl2AUA/hdtzYg7M6awVjgoYITV1prPJHfaFPPonNry7/kuBYfCJvYcNCy5jj7YI83CJRgFLMbqR4omZOjXOauSuMl9JG54758JY2HLIBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=NY92oSB7; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ea82452e3dso2395031fa.2
+        for <linux-nfs@vger.kernel.org>; Fri, 31 May 2024 10:23:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1717176232; x=1717781032; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QIqNdZW6qbAa9mdDqBlX4maeQrhqkv56dFYUdwsq/6w=;
+        b=NY92oSB7BINhpcibkFAfYTS+lgghp36MEO+ybkAApJyL+9J5lRTvW21lDvKdBaNcLS
+         /MHIHRYVBJ+UwtwgYr9pU6479iKEsKk2Cn1lCFUt1Q13cbEMzbmXYQsbSvILg4Z0Nxwy
+         GgsSGEZG7/adEFO99EAaJOdARHVpe0ri8GS37NihuPt+oFB2oCmlK7vk5nizLcTXWbgf
+         Npj11+x3QGM//P7YF4q40OW77uFhUPruv+1XVtJv2BCW15v2Dedbif4QAPhUqFGyefOB
+         h7Oz7ebFWpE4zEmVi/H8PeZ6Aqd/8rohdfOQeKvXlEonbkORAHY98jzZAdVFQdrs5LZo
+         No5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717176232; x=1717781032;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QIqNdZW6qbAa9mdDqBlX4maeQrhqkv56dFYUdwsq/6w=;
+        b=WSoBtWCOpVMI4IC/bgy4VxMrBwyXgdlhQpLQ0z0J4XAQt6BkD8EKCo1pDBYpdnPMlK
+         4L8KHRj+xujJKXwhv/xgEnkVSakt/HA9FkoopiV10hCtsezg/+fV04drmpqz15OZ4URg
+         Gv93Pj0ojRN+W+ZU9sHLIuUUbI9T/5BZMQx2OEX0NJ7QR0qxIqGve+knSgec5LYt8meg
+         Pn8BcgWNst3N5rGIqelITJ0u3Sg9EHSFSkyQRybwNtsgsh6bfQwXUMy1X0fEZY12pTV0
+         xWtEzEx9D2ZTjROj11n63orgyzarVkd9rIM0SuHF62qncSd8zfSm/ad2Xf5O2KmmaecY
+         3lvg==
+X-Gm-Message-State: AOJu0Yy3RKByZyJjcT3KUIXsAg/eIeVvhqt6HC2NtcW/4OeeY5fJu65f
+	Q+4m1Zt0yjf8oIKtArOWhJW1L95ozzhy05PGzxFN4z2F8Fx89BIMdOK/0lF0hnf6lPaG+k+MnmQ
+	Y075cdbSL3x6BDCcsWim2nca068ynyTFC
+X-Google-Smtp-Source: AGHT+IF7jMCIUBYJ3x2ZRaOEIetwv/CGKMGqTKrPDF1/Ox1bHuvr+xm+4lTqwmnXnPfvAsRniavz9OXvWCpvajoZh1Y=
+X-Received: by 2002:a05:651c:1992:b0:2e5:2aa1:a76a with SMTP id
+ 38308e7fff4ca-2ea9524bd8bmr19511761fa.5.1717176232211; Fri, 31 May 2024
+ 10:23:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <faf945a9-d1bc-45db-9543-057b7bc0ed8d@grimberg.me>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	MISSING_XM_UA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 9497321AD9
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Fri, 31 May 2024 13:23:40 -0400
+Message-ID: <CAN-5tyENK71L1C=6NwdB4mkxxf1qYZ2-4e-p8FQM=SmA3tMT_g@mail.gmail.com>
+Subject: ktls-utils: question about certificate verification
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu 30-05-24 21:19:55, Sagi Grimberg wrote:
-> > > btw, I think you meant that *slower* devices may need a larger queue to
-> > > saturate,
-> > > because if the device is fast, 256MB inflight is probably enough... So
-> > > you are solving
-> > > for the "consumer grade contemporary disks".
-> > No, faster devices.  The context here is random writes.  The more of
-> > those that are in the queue on the server, the more chance it has to
-> > re-order or coalesce requests.
-> 
-> Umm, what would reorder help with if writes are random?
+Hi Chuck,
 
-Well, even though writes are random, they are still from a limited space so
-the more of them you have, the larger contiguous chunks you are actually
-going to get. But that's not really the main helping factor here. The main
-benefit of allowing more than 256MB to be fed into the server is indeed
-that the writeback on the server can be more contiguous. With 256MB limit
-what I see is that the server gets the data, then commit which triggers
-writeout of the data on the server, the server then signals completion and
-idles before the it gets more data from the client. With say 1GB or larger
-limit, the server has some data to write most of the time so overall
-throughput and disk utilization is much better.
+I've ran into the following problem while trying to mount on RHEL9.4
+client using xprtsec=tls. After some debugging I have determined that
+the reason mount by DNS name was failing is because gnutls insisted on
+having in SubjectAltName=DNS:foo.bar.com. Having a certificate that
+has a DNS name in the "CN" and then had "SubjectAltName=IP:x.x.x.x"
+was failing. But when I created a certificate with
+"SubjectAltName:IP:x.x.x.x:DNS:x.x.x.x" then I could mount (or just
+having DNS: works too but in that case mounting by IP doesn't work).
 
-So it is all about how latency of the network, the speed of the storage and
-batching of writeback completions plays together. And yes, we can just
-increase the limit but my opinion still is that limiting the number of MB
-of writeback we have outstanding against the server is a wrong way of
-throttling things because that number is difficult to get right without
-knowing storage speeds, network speeds, load from other clients and
-internals of page writeback...
+Here's the output from tlshd when it fail (with SubjectAltName "IP")::
 
-I understand Trond's concerns about latency increase as well as your
-concerns about overloading the server with RPC traffic so perhaps we need
-*some* mechanism by which the client can detect contention. But I think we
-need to come up with something better than fixed number of MB...
+tlshd[260035]: gnutls(3): self-signed cert found: subject
+`EMAIL=kolga@netapp.com,CN=rhel94.nas.lab,OU=NFS,O=Netapp,L=Ann
+Arbor,ST=MI,C=US', issuer
+`EMAIL=kolga@netapp.com,CN=rhel94.nas.lab,OU=NFS,O=Netapp,L=Ann
+Arbor,ST=MI,C=US', serial 0x751ad911565945cce5d29d1c206450538f496b90,
+RSA key 2048 bits, signed using RSA-SHA256, activated `2024-05-31
+15:07:53 UTC', expires `2024-06-30 15:07:53 UTC',
+pin-sha256="Efzu7ftve1SHxBVAIwf81jwAasQ0M3j5qWbEVuM8X8I="
+tlshd[260035]: gnutls(3): ASSERT: x509_ext.c[gnutls_subject_alt_names_get]:111
+tlshd[260035]: gnutls(3): ASSERT: x509.c[get_alt_name]:2011
+tlshd[260035]: gnutls(3): ASSERT:
+verify-high.c[gnutls_x509_trust_list_verify_crt2]:1615
+tlshd[260035]: gnutls(3): ASSERT: auto-verify.c[auto_verify_cb]:51
+tlshd[260035]: gnutls(3): ASSERT: handshake.c[_gnutls_run_verify_callback]:3018
+tlshd[260035]: gnutls(3): ASSERT:
+handshake-tls13.c[_gnutls13_handshake_client]:139
+tlshd[260035]: Certificate owner unexpected.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Question: is ktls-utils requirement for IP presence in SubjectAltName
+now requires both?
 
