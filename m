@@ -1,87 +1,117 @@
-Return-Path: <linux-nfs+bounces-3522-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3523-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A968D78C6
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 00:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 122FB8D7A31
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 04:53:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89E0E1C20756
-	for <lists+linux-nfs@lfdr.de>; Sun,  2 Jun 2024 22:15:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 444F61C20988
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 02:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD72017C7C;
-	Sun,  2 Jun 2024 22:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F294F4FC;
+	Mon,  3 Jun 2024 02:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDqhm0GG"
+	dkim=pass (2048-bit key) header.d=cipixia.com header.i=@cipixia.com header.b="KAv0703u"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.cipixia.com (mail.cipixia.com [116.203.167.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87EBAD59
-	for <linux-nfs@vger.kernel.org>; Sun,  2 Jun 2024 22:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C664CF4FA
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Jun 2024 02:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717366539; cv=none; b=Sjk9M1MQ7oAG2AnwHwu3fsIspbgPxungmDlKAqJlLrkFLtmnd4f8ivv1NgtRpcBibw3vyQFiowMwYTqF3DDa4z7JMNbJq+LzrwWSMHlJxId4OVwezzJ1sUbPRKKvkxBrykWGFyuDqZ4SyQlJxdyGuGh+eyS1B6c29wGQ58jWXzA=
+	t=1717383198; cv=none; b=iX1Ai3TvtF30dOluZ8uo2Peh339bxw/a0IwoCa6f9uoKUPf4uvkF8xcwOwLO/FF2W267YpQ7/l+0t4d7M5B68lG9hJs9Fb+hTuAWdnA3ymV754k864/u58XLearZxUSrOTF9BN/qsS8jGjZLUR4a9vzbWZ5WmP08hcPlDvFeCFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717366539; c=relaxed/simple;
-	bh=/j+qYHGn9ke71IbhkO3067RhN7UMDFPyyW8QrdlIeLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BaKYpMW00k6lKNgBfZ6lsl5DX6eR4zhM94AhPMgtHfULd7pEsK/Bvi5DbTPofqm3BsKTlyHXf6qZT8vrc1FAe7/hx0Bv8lfx+hbic/rB4ar9Jby7TuA7QMluFyzWOCBmvk/hQoSPq1KZBX/4ZXtu5UzdKs1SBz2lW987t/7w8IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDqhm0GG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D044C2BBFC;
-	Sun,  2 Jun 2024 22:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717366539;
-	bh=/j+qYHGn9ke71IbhkO3067RhN7UMDFPyyW8QrdlIeLc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YDqhm0GGouuk9tvHE6jgu3oWojEk16sepcd6t1TKQARlv80bSYbkvlJWdEmZ4PQY9
-	 hKvCRPRMEAxsTfgJuXxkaapc33BElvnVWxCj+0MAXDV9YFCetZq4N2fy0nUKaQGDeE
-	 341d8HdC3r9OgLYOCJGGlqQxZsf42gl7UrWURfYioNcWp2H4TxUXKtu2DPJ2v5sx49
-	 50yDhnQGF+achWePVUZIxi6wrekGdc6zKNGDkVFCLyRgynbvv/XGNzxMgCACkLDEVe
-	 uzhrolhR5W6N2ZqEzylawpSZ1lcbRu5aaLpZT2Bikpn5l171hT66VySAZlexeqGwcr
-	 ZV286bIvKZWQg==
-From: cel@kernel.org
-To: <linux-nfs@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH] SUNRPC: Fix loop termination condition in gss_free_in_token_pages()
-Date: Sun,  2 Jun 2024 18:15:25 -0400
-Message-ID: <20240602221525.4257-1-cel@kernel.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1717383198; c=relaxed/simple;
+	bh=BCNegYYwSTMorSpFjrzboybMGlJx6eDCECLbKhBVv7A=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=frx+eefEArpf7HpLpnrazTxDK88kijzHti8QmvWVXxfDNuuF88P5dB/+JoED1kGY5kQASPv/nJy7fsgBz+R8eRGYvOt5UIHbpjXwhZb8QQc4iLTyJxIP/HBVjurpzj8CUPCCIdKniouAe4kjHxuZbKcCzo7QId6p1JREFVa2nqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cipixia.com; spf=pass smtp.mailfrom=cipixia.com; dkim=pass (2048-bit key) header.d=cipixia.com header.i=@cipixia.com header.b=KAv0703u; arc=none smtp.client-ip=116.203.167.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cipixia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cipixia.com
+Received: from mail.cipixia.com (F36-nuremberg [127.0.0.1])
+	by mail.cipixia.com (Postfix) with ESMTP id D8D5EFEB92
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Jun 2024 02:43:10 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cipixia.com D8D5EFEB92
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cipixia.com;
+	s=rsa2048; t=1717382590;
+	bh=BCNegYYwSTMorSpFjrzboybMGlJx6eDCECLbKhBVv7A=;
+	h=Message-ID:Date:MIME-Version:User-Agent:Content-Language:To:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:From:Date:Subject:
+	 Message-ID:Content-Type;
+	b=KAv0703uZ0RKME72tDnOLFIsyukDgO670chAgKEHF7AVziwczkWy51ox55UAOkTiF
+	 3CA+6zXWU4686dEZ2x6BC74j2r3pGpCUlGtEHZfVvOkVWxFA5V7aNh1PW7JT2etD0P
+	 zZmKsjk1CBg/anLyNHODYcbD56+DsZgGRzmpa1Xp7/AQVH2/ahJLgUhLS4v7SEyWPY
+	 f9+d9oUPqnsc42kvfvah4qws/PIEC8TI0TxCD4e60FpMH+n/NmtYDzrzeHJFmNzQTl
+	 qHBWHRO/ULsHxRIWf5YyyiJ3WW07Whgc3NzgYYpfTa+UaUTPHqKdde55TxQm2nGX6L
+	 bkxyQyd58/THw==
+Received: from mail.cipixia.com ([127.0.0.1])
+ by mail.cipixia.com (mail.cipixia.com [127.0.0.1]) (amavis, port 10026)
+ with LMTP id hlncNSzVDOhI for <linux-nfs@vger.kernel.org>;
+ Mon,  3 Jun 2024 02:43:10 +0000 (UTC)
+Received: from originating.ip.scrubbed
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(No client certificate requested)
+	(Authenticated sender: matt)
+	by mail.cipixia.com (Postfix) with ESMTPSA id 5471FFEB90
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Jun 2024 02:43:10 +0000 (UTC)
+Message-ID: <2c2f8e77-33c8-4836-b7e7-785938755e03@cipixia.com>
+Date: Sun, 2 Jun 2024 19:43:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-nfs@vger.kernel.org
+From: Matt Kinni <matt@cipixia.com>
+Subject: exports option "mountpoint" ignored in nfsv4, works in v3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Wasn't sure if this was a bug or just an outdated manpage, but the
+"mountpoint" option will _not_ stop a v4 client from mounting an
+unmounted server directory in Fedora 40 with kernel 6.8.10-300 and
+nfs-utils-2.6.4-0.rc6.fc40.x86_64, however it _does_ work as expected if
+the client mounts with v3 instead:
 
-The in_token->pages[] array is not NULL terminated. This results in
-the following KASAN splat:
+# setup
+mkdir /mnt/nfs_localhost && mkdir /srv/somemountpoint
+chmod 777 /srv/somemountpoint
 
-  KASAN: maybe wild-memory-access in range [0x04a2013400000008-0x04a201340000000f]
+# in /etc/exports:
+/srv                    *(rw,all_squash,fsid=0)
+/srv/somemountpoint     *(rw,all_squash,mountpoint)
 
-Fixes: bafa6b4d95d9 ("SUNRPC: Fix gss_free_in_token_pages()")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/svcauth_gss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+# in /etc/nfs.conf:
+[nfsd]
+port=20049
+vers3=y
+vers4=y
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 96ab50eda9c2..73a90ad873fb 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1069,7 +1069,7 @@ static int gss_read_proxy_verf(struct svc_rqst *rqstp,
- 		goto out_denied_free;
- 
- 	pages = DIV_ROUND_UP(inlen, PAGE_SIZE);
--	in_token->pages = kcalloc(pages, sizeof(struct page *), GFP_KERNEL);
-+	in_token->pages = kcalloc(pages + 1, sizeof(struct page *), GFP_KERNEL);
- 	if (!in_token->pages)
- 		goto out_denied_free;
- 	in_token->page_base = 0;
--- 
-2.44.0
+# try mounting with nfs v3 while /srv/somemountpoint is a plain dir:
+mount localhost:/srv/somemountpoint /mnt/nfs_localhost -t nfs -o vers=3
 
+(cmd output)> mount.nfs: mounting localhost:/srv/somemountpoint failed,
+reason given by server: No such file or directory
+(log says)> rpc.mountd[5313]: request to export an unmounted filesystem:
+/srv/somemountpoint
+
+# so far so good
+# but now try doing the same thing with v4:
+mount localhost:/somemountpoint /mnt/nfs_localhost -t nfs -o vers=4.2
+(works without error)
+
+If I `mount -o bind /tmp /srv/somemountpoint` the v3 command works as
+expected, but the v4 command always works regardless of whether the
+underlying folder is a mount point or not.  Is this intended behavior?
+
+The exports(5) manpage does not say anything about the "mountpoint" or
+"mp" options not being valid for NFSv4, so I would expect the same
+behavior regardless of what "-o vers=..." is supplied by the client
+mount command.
 
