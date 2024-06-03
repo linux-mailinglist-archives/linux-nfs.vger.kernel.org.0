@@ -1,192 +1,118 @@
-Return-Path: <linux-nfs+bounces-3524-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3525-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA438D7FFE
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 12:30:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92CD68D8079
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 12:59:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0C7E1C235A9
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 10:30:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DB07282FB6
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jun 2024 10:59:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D12058AA5;
-	Mon,  3 Jun 2024 10:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB52C83CAA;
+	Mon,  3 Jun 2024 10:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fVrusnO7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DvKDZNoN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fVrusnO7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DvKDZNoN"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="btdc6ZCy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82974107A8;
-	Mon,  3 Jun 2024 10:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9D683CAE
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Jun 2024 10:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717410632; cv=none; b=OoDbtXPbxRgIHPk2sT07czLtfKBw23EhcVKRhHHE0ahpYgJRJbx3jPc5LG28jbCm6iu/K5esMAvwgC/qvDS6UEot12koXdSD20hsFuGfXF6R5zEqE6GBnaK3edzOjx7fdQFo+I5m8MJ9gTwGwqDSkO/e8bsKjc16Upd8Rc+ZChY=
+	t=1717412371; cv=none; b=K2lFHaAFiBQSthWeIB+lDtTjruY/hxyQ7cjib1vSnO27b97BwOaLpGO9r2jzWvlqCMRFBvoOym61WlEJRSFEoutxMbbWbPsGnqGGrGau4A0LkpcF8Qa/oNpMlW7EoOC6FIwJ+Hk2gICb1f1Vkort1VTAswQrlfYBPnb4xNv9AxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717410632; c=relaxed/simple;
-	bh=8qWOa1I4dRA0wwSvjQqmRvvLXU43Y0o1KGD3d+SozDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZY69fwR7SBiK0w4QhLKhS3EZgFa0FSvF89IFHRP2u9l/MA/AyfR3HIqDhsCHTa4s6eGzjbMtUqRf4cLSjjR8sMmx7MAG55uDrTDZTamCa8bzM1n10tIb2yD1tMAshT0G7N3dArrVxTieEHf2gM9BT1IgyxqW5NfP5KhQ2AIxAig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fVrusnO7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DvKDZNoN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fVrusnO7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DvKDZNoN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7DFA520034;
-	Mon,  3 Jun 2024 10:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717410628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1717412371; c=relaxed/simple;
+	bh=YmPPbke6e92Yj+eV02jb8C04D++PMs8QO086gTmasm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HgJ9/P+IUHeLWO8zDoao6Qd7CSigYSkjuguTyUsNPY9tigbh68mpEdD/zJzjCaagHqOgJgZGnhkP1YBOAYxgKi7MMpyRl3w5TXHyl5E/KQ8kyrNKFShEzGGXWDHdg2gy+8XDrohMV4JyHYr1WMZeQwG+5CiWp4i3agYSEAUuZDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=btdc6ZCy; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: cel@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717412366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HeD93ByCizJOPJifc4qjUJkUjOsezUwSyhkRRSdDXTI=;
-	b=fVrusnO7cteskuNXJi2yj0cacsltGC1p0Pp8PEfe/nvMDgCPAdOtEjO7ILMdvWGdn9KWKI
-	tuxOHuXQAvpbNQuSS2klTjPrvnVjHN3RmBBkH0HnpJEaKJz2qbKSX+E9B4+udGCtR9dvrF
-	PHw7TuLDKFGLCwZyRifY5MBYFKs9/l8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717410628;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HeD93ByCizJOPJifc4qjUJkUjOsezUwSyhkRRSdDXTI=;
-	b=DvKDZNoNqfMSQ+/I5NWHq6R5gElN2NQoOmzE91Z70XJZgtUCLvQcP/s6MyRaeyPhuI/4De
-	0o0hKauf7I/iPHAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717410628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HeD93ByCizJOPJifc4qjUJkUjOsezUwSyhkRRSdDXTI=;
-	b=fVrusnO7cteskuNXJi2yj0cacsltGC1p0Pp8PEfe/nvMDgCPAdOtEjO7ILMdvWGdn9KWKI
-	tuxOHuXQAvpbNQuSS2klTjPrvnVjHN3RmBBkH0HnpJEaKJz2qbKSX+E9B4+udGCtR9dvrF
-	PHw7TuLDKFGLCwZyRifY5MBYFKs9/l8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717410628;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HeD93ByCizJOPJifc4qjUJkUjOsezUwSyhkRRSdDXTI=;
-	b=DvKDZNoNqfMSQ+/I5NWHq6R5gElN2NQoOmzE91Z70XJZgtUCLvQcP/s6MyRaeyPhuI/4De
-	0o0hKauf7I/iPHAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6E41413A93;
-	Mon,  3 Jun 2024 10:30:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id POOkGkSbXWZeFgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 03 Jun 2024 10:30:28 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id F12E9A086D; Mon,  3 Jun 2024 12:30:23 +0200 (CEST)
-Date: Mon, 3 Jun 2024 12:30:23 +0200
-From: Jan Kara <jack@suse.cz>
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <20240603103023.dh2npfl76wbmyvsx@quack3>
-References: <20240527133430.ifjo2kksoehtuwrn@quack3>
- <ZlSzotIrVPGrC6vt@infradead.org>
- <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
- <ZlWVkJwwJ0-B-Zyl@infradead.org>
- <20240528-gesell-evakuieren-899c08cbfa06@brauner>
- <ZlW4IWMYxtwbeI7I@infradead.org>
- <20240528-gipfel-dilemma-948a590a36fd@brauner>
- <ZlXaj9Qv0bm9PAjX@infradead.org>
- <CAJfpegvznUGTYxxTzB5QQHWtNrCfSkWvGscacfZ67Gn+6XoD8w@mail.gmail.com>
- <20240529.013815-fishy.value.nervous.brutes-FzobWXrzoo2@cyphar.com>
+	bh=LLaCf4711wZ++xieKqsYaGmbPkHU10XDetYSRDXNfVE=;
+	b=btdc6ZCyJnTnBwcdZNtDEE/hUMHelhm3tK0betNts1CoAu9u5IbGO45U2BPMchXW+mPtrl
+	9UDa4jcj3KeHC2b1pvb0VSjh6tZptpqvCoG2kmocDd1XuUxM/jWeYR/fJ/S/uI+Znjj5+J
+	8NdtHC/XAwe8/MzKBz9xRfia3QBdYrE=
+X-Envelope-To: linux-nfs@vger.kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+X-Envelope-To: chuck.lever@oracle.com
+Message-ID: <9ae0657b-b430-9318-4e19-eae9f40307fb@linux.dev>
+Date: Mon, 3 Jun 2024 18:59:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529.013815-fishy.value.nervous.brutes-FzobWXrzoo2@cyphar.com>
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[szeredi.hu,infradead.org,kernel.org,suse.cz,zeniv.linux.org.uk,oracle.com,gmail.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,suse.com:email]
+Subject: Re: [PATCH 1/2] svcrdma: Refactor the creation of listener CMA ID
+To: cel@kernel.org, linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>
+References: <20240531131550.64044-4-cel@kernel.org>
+ <20240531131550.64044-5-cel@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Guoqing Jiang <guoqing.jiang@linux.dev>
+In-Reply-To: <20240531131550.64044-5-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat 01-06-24 01:12:31, Aleksa Sarai wrote:
-> On 2024-05-28, Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > On Tue, 28 May 2024 at 15:24, Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > On Tue, May 28, 2024 at 02:04:16PM +0200, Christian Brauner wrote:
-> > > > Can you please explain how opening an fd based on a handle returned from
-> > > > name_to_handle_at() and not using a mount file descriptor for
-> > > > open_by_handle_at() would work?
-> > >
-> > > Same as NFS file handles:
-> > >
-> > > name_to_handle_at returns a handle that includes a file system
-> > > identifier.
-> > >
-> > > open_by_handle_at looks up the superblock based on that identifier.
-> > 
-> > The open file needs a specific mount, holding the superblock is not sufficient.
-> 
-> Not to mention that providing a mount fd is what allows for extensions
-> like Christian's proposed method of allowing restricted forms of
-> open_by_handle_at() to be used by unprivileged users.
-> 
-> If file handles really are going to end up being the "correct" mechanism
-> of referencing inodes by userspace, then future API designs really need
-> to stop assuming that the user is capable(CAP_DAC_READ_SEARCH). Being
-> able to open any file in any superblock the kernel knows about
-> (presumably using a kernel-internal mount if we are getting rid of the
-> mount fd) is also capable(CAP_SYS_ADMIN) territory.
 
-Well, but this is already handled - name_to_handle_at() with AT_HANDLE_FID
-is completely unpriviledged operation. Unpriviledged userspace can use
-fhandle for comparisons with other file handles but that's all it is good
-for (similarly as inode number you get from statx(2) but does not have the
-problem with inode number uniqueness on btrfs, bcachefs, etc.). I don't
-expect unpriviledged userspace to be able to more with the fhandle it got.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+On 5/31/24 21:15, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> In a moment, I will add a second consumer of CMA ID creation in
+> svcrdma. Refactor so this code can be reused.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   net/sunrpc/xprtrdma/svc_rdma_transport.c | 67 ++++++++++++++----------
+>   1 file changed, 40 insertions(+), 27 deletions(-)
+>
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> index 2b1c16b9547d..fa50b7494a0a 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> @@ -65,6 +65,8 @@
+>   
+>   static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
+>   						 struct net *net, int node);
+> +static int svc_rdma_listen_handler(struct rdma_cm_id *cma_id,
+> +				   struct rdma_cm_event *event);
+>   static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
+>   					struct net *net,
+>   					struct sockaddr *sa, int salen,
+> @@ -122,6 +124,41 @@ static void qp_event_handler(struct ib_event *event, void *context)
+>   	}
+>   }
+>   
+> +static struct rdma_cm_id *
+> +svc_rdma_create_listen_id(struct net *net, struct sockaddr *sap,
+> +			  void *context)
+> +{
+> +	struct rdma_cm_id *listen_id;
+> +	int ret;
+> +
+> +	listen_id = rdma_create_id(net, svc_rdma_listen_handler, context,
+> +				   RDMA_PS_TCP, IB_QPT_RC);
+> +	if (IS_ERR(listen_id))
+> +		return listen_id;
+
+I am wondering if above need to return PTR_ERR(listen_id), and I find 
+some callers (in net/rds/, nvme etc)
+return PTR_ERR(id) while others (rtrs-srv, ib_isert.c) return 
+ERR_PTR(ret) with ret is set to PTR_ERR(id).
+
+Thanks,
+Guoqing
 
