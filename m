@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-3547-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3548-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAA9F8FBCBD
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2024 21:46:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6F3E8FBCBE
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2024 21:46:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED3981C218D8
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2024 19:46:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93C81282D71
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2024 19:46:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04AB42F34;
-	Tue,  4 Jun 2024 19:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91414139584;
+	Tue,  4 Jun 2024 19:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdR1QfF8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAQEgQoX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52AD372
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Jun 2024 19:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D94C1384B3
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Jun 2024 19:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717530360; cv=none; b=FHUINeMapZ9gEZrlQhHi3NEpddPfcVpI5+ZsG2fz51kAwE14oCI2wIc4S9Nx/BLPFvtSj0/on/PNRH1iQ8yIN+Sasj3u0VlHFmuHyjhDmL2IROhG89P5ckHf9yyBsCSsc8d0qBM5htYSR7t/RKXAm8TCApSqepurU85MOQACVhQ=
+	t=1717530362; cv=none; b=tUp7oTwpxsXwNr86tRIqZPC1u86e9LnMEWEJhf/QV4Jp2fyEu0QwvIGknSOyw+RWRhKbUSWQZnV2+sb/zpvIzap5zaWZ5HXrybG8n6EBjgAKfY4/PMp5X/gyiEb2gVhlqYDOg1GfAfbwd0E7wCkNxRAt6ecNzU9X+5bbgwKt41U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717530360; c=relaxed/simple;
-	bh=MeNlT7TdopZjysajwdcUBrq9ZwWCVURib/b08rUk99E=;
+	s=arc-20240116; t=1717530362; c=relaxed/simple;
+	bh=5Ydso/zVQbeAxwgu5lw6RjuckO6TvFOED90x4PG3wLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JwjvDjFclycB87ynN4+6Vg3YKMECgtdY2uDuUzCQN9JwMIXFQURMs+0w27qapw0Zke+EAY3P+lo6nG3MWrrjqAsHUxwOFU7JoV1hiRFSGviWf5FTWjiZbn0fynha+hhLI/3MTyah4zGZAJwDmvOP7TkOZGsjKqULi0DZiiQlv0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdR1QfF8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D81C4AF07;
-	Tue,  4 Jun 2024 19:45:59 +0000 (UTC)
+	 MIME-Version; b=YJ6FUVQ0oBezPBdvtaV+xJZ43uAv7ode+O3xXhfmdfcF+TYgR85xgFBr3Se+HUMQ5fy4J3iAjZ5kqllbX2idqTalLZm++iUh+02I+4JWNeLQ8lVoOb3lj9syCGCt+09ejEALSOehNto+Uhtmt6I04Wl6xpR8CepknC6zKEFQPwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAQEgQoX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBBCC2BBFC;
+	Tue,  4 Jun 2024 19:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717530360;
-	bh=MeNlT7TdopZjysajwdcUBrq9ZwWCVURib/b08rUk99E=;
+	s=k20201202; t=1717530362;
+	bh=5Ydso/zVQbeAxwgu5lw6RjuckO6TvFOED90x4PG3wLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kdR1QfF8sdkOrw06YpDfIVnXYh3bN0ne9tssZEe+uGN+aaMXg8nEqBnOQx4Oucr3K
-	 XPeL52GFnXsv5pU+cQ1YsuFsyxq7lyH5fBlTAo9y8+dF2I83MPh9ExcC7g8ECu3gx2
-	 wRZtUUkwjOArJgPGScwatI6/xbQsN1LEucTSOfsswx06ma+ncSJ9YbTAMENQLmgUZR
-	 LgQDgAjwlM13vvstbj++ehlfwcYpNF682HUOHL48GUu4XiS8QXjKEXx/U3D1rYLiFc
-	 g/fTGcbhXcRiXWDloqQV57OvHQvOCZv3OhY+kdpta07GG+TJy+vow8Gviez3b+PXDG
-	 ez+fs5XozKaGQ==
+	b=XAQEgQoXzqj7XIV2RUYlzmBgav76bYpNPET8YCkP2ztt6ujWVE+M93t0XrQi3BKBW
+	 XGjxUYrYCSm7Lej3gdARxlQKGgoZY+SOBd15SF2lKrUMrXi+Wqpa45axJ/VIGPVYlc
+	 SwDmKOSRL/96f0/jTbVPLXlFj10iqLgxv+fRMPNkJPRBQyLXETqED93gF6ziGTxdRh
+	 WBHkLFHPJp6raD4CVhLJmqa0xQqAnUXW9hbKiX9vQ14emmC5rVors8D1yBxWuCFDWb
+	 3TP9WNsGY2Jv8F0gPvOt9JiLukImsofPHcv4/if6NYi3F7r24DaCJ7l0/SjocdUC6Q
+	 fgXIib+GarcJw==
 From: cel@kernel.org
 To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 3/5] xprtrdma: Handle device removal outside of the CM event handler
-Date: Tue,  4 Jun 2024 15:45:25 -0400
-Message-ID: <20240604194522.10390-8-cel@kernel.org>
+Subject: [PATCH 4/5] xprtrdma: Clean up synopsis of frwr_mr_unmap()
+Date: Tue,  4 Jun 2024 15:45:26 -0400
+Message-ID: <20240604194522.10390-9-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240604194522.10390-6-cel@kernel.org>
 References: <20240604194522.10390-6-cel@kernel.org>
@@ -58,139 +58,52 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4252; i=chuck.lever@oracle.com; h=from:subject; bh=EAbyFc9tekg2vKPRrrre/Y17+KdtZfKCpjv5RXp4p68=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmX27gqXNjZPd6AqcfPrDmrRzozEULGd8SnLnEm 1TEiF27NJCJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZl9u4AAKCRAzarMzb2Z/ l/TxD/99FpkPXHdeDroA1lt+OALJCEcNiBwZEJXTYn5fL77nOQiPpm2Tuq2euLiMyrYxJUTsUeE tZAxBhMP66xDY9Po7qBUQtH9wDDY3K5leRhKZD/CXU610/eTjKjClE54CUII4DE9XIukHmzbF9n omIb4Qmf3zbXM15znYWhgvzBXa/XfAJwqGAtrr3xFaqmukQ5ccCj97gS7wIf8RsFCuGet/wfk4F Wvd6DxUK/82krnfgFTZtbiPou7DVWaDaSukTbnpkbG984NnwEeRb3xkDY7QjwRDkiOSgIUe7hgu OhX4XcepdEe/UeFYZEfH5N4im4AeqwvYK76YywjENcq/zGVxuByC2FsVB3mkqLihGRtgw6+vJQq 8Q/1OQoSCAeqaPd3M5Co0IdQ+nSAarSMbS0OJH4tIyOFDnnsCDqwS+tdFIVIrGgDu3lhOtxkEPl ysOruGyO6e+kGRw5U5DpRmUIq7KZjV2ZeNanCpuXwbICLAUW/aQLCThd14IgkpQbCSfabkwe39b t9SdfUkTj0U4yVIvpQf45EsqCM/Lg8coRJXFBtQb6ru9I2sHjq9Wn9K0gww+bH/SGgGUSuesEmk GWgcgQvCA8bBuW7QskZHTpePMhSMqkuYmdyKwqeHp3wXfTMkjlbp2aSSL4P/8gC8lplvdPk4axs nsPqXw4dM5rnWYw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1342; i=chuck.lever@oracle.com; h=from:subject; bh=JhOZt/3I+/9WkTp79yqTIaQpm4OZ0ujPaC35ryjiaAg=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmX27gchlNf6/z7MmrWuZ7OLNdacwUvY37eo3fw KnvwcPXUhmJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZl9u4AAKCRAzarMzb2Z/ lxrLEACnHTY2knwjhEFAAR8khFtJH4EaDT+y0eylaiv0C0yJGbL7ez2pKCu80fxnNiM4HlvklUv /T/lqooQqHMHrXLB+Zfr+Yv1mUfPdeHI3MLO8Xv2hBt1Jo/ZgUXIoKenHUa0Svs8Ds8uIFugq5b da4/+pcF6IWobzZ5q+llDSyQGMqf7G1nWoyfNKnLDiXT9Tb03AbDXoY/MRjkB0IegL4pq886W3Y NumNQYKNTkId5Q+R/7g7HnT81pF6kvuluzrssg/ITY6ZqVsPd7R/I2faBna6jhgsCduyhb2/mnI Pss3JR9O9q20xWdiH6+GwSqYINid668Es+qN6D1//dMvoCCbOzeMxGOa7mgWHdknM2UE7hpwH6H mssZt65EE2uJuCitlg+sax1/01qqM0y68H0gEQADQpNOS9KSbE3Ks3I2NJg3oBwZc6l1jYSyTFE c+eIn0AGVoG1QwDqM309fN8/EufaJ4jfC33KIKyaSFnxq1CYkWR5VB3eaYp9cZ/YGTH6XuYHmeY vgXO/QBV1+/7RtSEpQFNN8P7orjualDy/AeyWvswiDwCpFtXjYTHeaED4VkzvicbLsiXeZDY7jp V01I10Veevd7qucmqeizg+G8E3a6tVuiTsZUB3Shu0memJXH7CX/T7F6WSBYfc4sjPYYnDA0n8H Fn0yvPSO+N8ntjw==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Wait for all disconnects to complete to ensure the transport has
-divested all of its hardware resources before the underlying RDMA
-device can be removed.
+Commit 7a03aeb66c41 ("xprtrdma: Micro-optimize MR DMA-unmapping")
+removed the last use of the @r_xprt parameter in this function, but
+neglected to remove the parameter itself.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h  | 23 +++++++++++++++++++++++
- net/sunrpc/xprtrdma/verbs.c     | 23 ++++++++++++++---------
- net/sunrpc/xprtrdma/xprt_rdma.h |  2 ++
- 3 files changed, 39 insertions(+), 9 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index ecdaf088219d..ba2d6a0e41cc 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -669,6 +669,29 @@ TRACE_EVENT(xprtrdma_inline_thresh,
- DEFINE_CONN_EVENT(connect);
- DEFINE_CONN_EVENT(disconnect);
- 
-+TRACE_EVENT(xprtrdma_device_removal,
-+	TP_PROTO(
-+		const struct rdma_cm_id *id
-+	),
-+
-+	TP_ARGS(id),
-+
-+	TP_STRUCT__entry(
-+		__string(name, id->device->name)
-+		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name);
-+		memcpy(__entry->addr, &id->route.addr.dst_addr,
-+		       sizeof(struct sockaddr_in6));
-+	),
-+
-+	TP_printk("device %s to be removed, disconnecting %pISpc\n",
-+		__get_str(name), __entry->addr
-+	)
-+);
-+
- DEFINE_RXPRT_EVENT(xprtrdma_op_inject_dsc);
- 
- TRACE_EVENT(xprtrdma_op_connect,
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index a0b071089e15..04558c99e9f4 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -222,7 +222,6 @@ static void rpcrdma_update_cm_private(struct rpcrdma_ep *ep,
- static int
- rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- {
--	struct sockaddr *sap = (struct sockaddr *)&id->route.addr.dst_addr;
- 	struct rpcrdma_ep *ep = id->context;
- 
- 	might_sleep();
-@@ -241,14 +240,6 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 		ep->re_async_rc = -ENETUNREACH;
- 		complete(&ep->re_done);
- 		return 0;
--	case RDMA_CM_EVENT_DEVICE_REMOVAL:
--		pr_info("rpcrdma: removing device %s for %pISpc\n",
--			ep->re_id->device->name, sap);
--		switch (xchg(&ep->re_connect_status, -ENODEV)) {
--		case 0: goto wake_connect_worker;
--		case 1: goto disconnected;
--		}
--		return 0;
- 	case RDMA_CM_EVENT_ADDR_CHANGE:
- 		ep->re_connect_status = -ENODEV;
- 		goto disconnected;
-@@ -284,6 +275,14 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 	return 0;
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 47f33bb7bff8..31434aeb8e29 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -54,7 +54,7 @@ static void frwr_cid_init(struct rpcrdma_ep *ep,
+ 	cid->ci_completion_id = mr->mr_ibmr->res.id;
  }
  
-+static void rpcrdma_ep_removal_done(struct rpcrdma_notification *rn)
-+{
-+	struct rpcrdma_ep *ep = container_of(rn, struct rpcrdma_ep, re_rn);
-+
-+	trace_xprtrdma_device_removal(ep->re_id);
-+	xprt_force_disconnect(ep->re_xprt);
-+}
-+
- static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
- 					    struct rpcrdma_ep *ep)
+-static void frwr_mr_unmap(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr)
++static void frwr_mr_unmap(struct rpcrdma_mr *mr)
  {
-@@ -323,6 +322,10 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+ 	if (mr->mr_device) {
+ 		trace_xprtrdma_mr_unmap(mr);
+@@ -73,7 +73,7 @@ void frwr_mr_release(struct rpcrdma_mr *mr)
+ {
+ 	int rc;
+ 
+-	frwr_mr_unmap(mr->mr_xprt, mr);
++	frwr_mr_unmap(mr);
+ 
+ 	rc = ib_dereg_mr(mr->mr_ibmr);
  	if (rc)
- 		goto out;
+@@ -84,7 +84,7 @@ void frwr_mr_release(struct rpcrdma_mr *mr)
  
-+	rc = rpcrdma_rn_register(id->device, &ep->re_rn, rpcrdma_ep_removal_done);
-+	if (rc)
-+		goto out;
-+
- 	return id;
+ static void frwr_mr_put(struct rpcrdma_mr *mr)
+ {
+-	frwr_mr_unmap(mr->mr_xprt, mr);
++	frwr_mr_unmap(mr);
  
- out:
-@@ -350,6 +353,8 @@ static void rpcrdma_ep_destroy(struct kref *kref)
- 		ib_dealloc_pd(ep->re_pd);
- 	ep->re_pd = NULL;
- 
-+	rpcrdma_rn_unregister(ep->re_id->device, &ep->re_rn);
-+
- 	kfree(ep);
- 	module_put(THIS_MODULE);
- }
-diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-index da409450dfc0..341725c66ec8 100644
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -56,6 +56,7 @@
- #include <linux/sunrpc/rpc_rdma_cid.h> 	/* completion IDs */
- #include <linux/sunrpc/rpc_rdma.h> 	/* RPC/RDMA protocol */
- #include <linux/sunrpc/xprtrdma.h> 	/* xprt parameters */
-+#include <linux/sunrpc/rdma_rn.h>	/* removal notifications */
- 
- #define RDMA_RESOLVE_TIMEOUT	(5000)	/* 5 seconds */
- #define RDMA_CONNECT_RETRY_MAX	(2)	/* retries if no listener backlog */
-@@ -92,6 +93,7 @@ struct rpcrdma_ep {
- 	struct rpcrdma_connect_private
- 				re_cm_private;
- 	struct rdma_conn_param	re_remote_cma;
-+	struct rpcrdma_notification	re_rn;
- 	int			re_receive_count;
- 	unsigned int		re_max_requests; /* depends on device */
- 	unsigned int		re_inline_send;	/* negotiated */
+ 	/* The MR is returned to the req's MR free list instead
+ 	 * of to the xprt's MR free list. No spinlock is needed.
 -- 
 2.45.1
 
