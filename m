@@ -1,144 +1,126 @@
-Return-Path: <linux-nfs+bounces-3571-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3572-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FCA08FD2F4
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 18:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08F998FD696
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 21:35:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C8AD2811F7
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 16:31:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B483828945F
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 19:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D97079DE;
-	Wed,  5 Jun 2024 16:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B1914F9E2;
+	Wed,  5 Jun 2024 19:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="WxJdjSB0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1uytN83"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE667155A4D
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Jun 2024 16:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9773014F9DC;
+	Wed,  5 Jun 2024 19:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717605071; cv=none; b=rIOZiMMvPQImoNtocp9YR1oxerQaGUZsi3mzZ9s5Rh2CBuN+yNrxwJQ/VJXEL83a9oO5InRlkeXIwXVWAzv16Ks10Lx9MQ3Cn+Faeb3GXOQKxHFR5C7N0l718dhWbzY6YUXYRQltCtOavDFhSSJBP7pWdxrQnifccUiWB7f8CUQ=
+	t=1717616092; cv=none; b=f6IbVZHjM7HuhA0YYbIeJ7LynyO5GEpKgVVJHZ4/Ggg4qEG8Q7G3QAcXsLKU0Fq41LwaVs9SsUhgozB/1vrliQVV3HwpLEnb+Z72wW4iI0WrMXt59eQZI8hsQRzAsRkV6vc5RJJzC4N8OkxDwOxbCb+LNT+e6J8EzY4u9yxa+4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717605071; c=relaxed/simple;
-	bh=zJjkYApEyvblK8pH15PFceKRR+2eoUJckgORzNrtyOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n1GSOs8f83zQfYnOoeEDpMoP8c83nqupYycAgPJMcRq9P9r2ARwo6ropetD5VaGruhNow8oFlnwxHnu7JaL8MYOQ7plTnZHmH/3limq5M34b6MPwiL84xzbin0rZzunhLl+haKgxpsVnk4i3GJI+itvKtv/nfYCrUaLnwCHJI0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=WxJdjSB0; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eaa0075fefso5235481fa.3
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Jun 2024 09:31:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1717605068; x=1718209868; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zJjkYApEyvblK8pH15PFceKRR+2eoUJckgORzNrtyOk=;
-        b=WxJdjSB0BbDyZ3Whwzx3Z4Rea1ZAuUdInLSsp4rLGO9ZtT7+k2kV9lghIFqZ2dNtLR
-         8ySbaS4w/fgFUlkRzsWKoa7fDhjwxiQh2Ovkar7cM/2tEW3k8Mpzi1kO51gjAITTPP0D
-         +eP1D1HB3hGTcdCT73umGQ9vhxu1zc943U3foM24QZY74TXBDct/UXZIrcHOEzkZ3P5K
-         t7pjtchYmD8aBviZR9BO1RabQV5XhxFekFf/9GHEE3HNrzofoOzLsmS0Zx1asPX2027B
-         0fjuuADPA6lEG61IBin5FUDqnV5NQ2MXTNcyGHm+qNA0H/x/thsCwMowcwjdzlx1LVrF
-         Tz4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717605068; x=1718209868;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJjkYApEyvblK8pH15PFceKRR+2eoUJckgORzNrtyOk=;
-        b=qUnuV3r4B4N+RSiRtUgA4yjABTuSbSevN7wwWMQ0ddNVp4746Z5IsM1bzUUOtI2uB4
-         CKxTykrHd0TfrwXQLCly9GekIoYhjwjKZpThIwHyhaEAYiij21YAcl1Z7GxtAY1WEQhl
-         NDCj5By7/WVfzwglRttqpuI0rgFaLupkAHF1rRQvvcQ54nr5H9AGHzbexLFSOM8U43QR
-         GtHEc1qfXWzV7kc5MF/Wrum6wBG9zcJabwk+fwTiIBR1TRzY6yplP4uhFy82fpG//T7F
-         xnlcz7nytHftF77V1Hl6PcttqzjkbXeecmwKESbltJqjiZES11aEyeJ9iS3F/BsARed/
-         BXjg==
-X-Gm-Message-State: AOJu0Yz0/40UU+BxMWxQa0K7iOQmq7FOkQ4Z+rcMk/kJPCBTE5Y2CcGp
-	gxJMa60LSF9rcC4crjkgHOAjiwPz0jegizvvzCpRnEw6z6cV005LnWkm9V/45lZVCNcjLFQtpCB
-	94TLBNz1Vd4dg6xSzluukKohkfzJHmA==
-X-Google-Smtp-Source: AGHT+IHOylmI/HBxJOAhVvDHP1UTNcJ9aBvgUiA49PENMOTljvAuFu0sv3awjFuGs2d0cAn8ch6b0xMyATNhM1+Ypt8=
-X-Received: by 2002:a2e:3318:0:b0:2e4:c5fb:f3ed with SMTP id
- 38308e7fff4ca-2eac7a91d4dmr14763191fa.4.1717605067734; Wed, 05 Jun 2024
- 09:31:07 -0700 (PDT)
+	s=arc-20240116; t=1717616092; c=relaxed/simple;
+	bh=yVyf1BEIcx2PVrcM0FzZ6v+qCcABJKlb6amnTW2XPss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXGcodu9LUyDMKpUH0dLmqwA6OTpBf9N9YzB2gyVGoQzUV3yjuOg/SzxPq/aQlyfawJLkI2qT6y6qBTQhRLBTs/4dmBwxGlV9ENsddw0TgNP2guzcidEprf6HR/eR4jmZreWD5n9P2GGpEPvi6pnoOCqmoEvIyg9ofRIm9gL3fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1uytN83; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A3BC2BD11;
+	Wed,  5 Jun 2024 19:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717616092;
+	bh=yVyf1BEIcx2PVrcM0FzZ6v+qCcABJKlb6amnTW2XPss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1uytN836kqqNSpPm21fQWQ9tDx8HOwIq7GOSEmweKH9ycOepJ0zCgBofLtT1p/dG
+	 cuIX8ZUqnd8bnsCFD0HE9pgHSJi/t2eVMOq6Gt4cq5UnvFfoFI+BcIeMiKzCIYfqSu
+	 GBSL3KeleELK9NBb9ei8OAg6Xubr0DXG7VmZOeKdIzJ8Eitj+tsjqP0rNtFsVNVdug
+	 gkqli/i0nuQuoDZgdj3YtELuGsXdyYdgLwCEByNMxsOXQKHgXBdWlfdovE79vUPGsD
+	 x0Z5eKW1vDm5bGlFp2LexVD1g1rs3BPid9SyXWxqOnKP3KtwFwoYUEwUkhdkvfOdCB
+	 iOoIas/6pcuqA==
+Date: Wed, 5 Jun 2024 20:34:46 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 3/3] nfsd: allow passing in array of thread counts via
+ netlink
+Message-ID: <20240605193446.GW791188@kernel.org>
+References: <20240604-nfsd-next-v1-0-8df686ae61de@kernel.org>
+ <20240604-nfsd-next-v1-3-8df686ae61de@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN-5tyHghLR_eSoPq_z18_XvdySKNrWpPKjuAd2c97KKqYGjFg@mail.gmail.com>
- <6E31172E-8991-43E2-A9E0-88FEAEDDA00B@oracle.com>
-In-Reply-To: <6E31172E-8991-43E2-A9E0-88FEAEDDA00B@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 5 Jun 2024 12:30:55 -0400
-Message-ID: <CAN-5tyFVWm_p4tT1VYfmVxktsycn4K_v_KH_BKyzJ80-1rnmZA@mail.gmail.com>
-Subject: Re: NFS with TLS on 4.0
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604-nfsd-next-v1-3-8df686ae61de@kernel.org>
 
-On Wed, Jun 5, 2024 at 11:37=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
->
-> Howdy -
->
-> > On Jun 5, 2024, at 10:34=E2=80=AFAM, Olga Kornievskaia <aglo@umich.edu>=
- wrote:
-> >
-> > Hi Chuck,
-> >
-> > I noticed an interesting behaviour by the linux server. If I were to
-> > mount the linux server with vers=3D4.0,sec=3Dsys,xprtsec=3Dtls, acquire=
- a
-> > delegation, and trigger a CB_RECALL, then it is done with gss
-> > integrity. Why is that? I thought callback is supposed to be done with
-> > the same security flavor as the forechannel.
->
-> The CB_RECALL is using the same flavor and principal as was used
-> for the SETCLIENTID. That is all that the NFSv4.0 spec requires.
+On Tue, Jun 04, 2024 at 05:07:56PM -0400, Jeff Layton wrote:
+> Now that nfsd_svc can handle an array of thread counts, fix up the
+> netlink threads interface to construct one from the netlink call
+> and pass it through so we can start a pooled server the same way we
+> would start a normal one.
+> 
+> Note that any unspecified values in the array are considered zeroes,
+> so it's possible to shut down a pooled server by passing in a short
+> array that has only zeros, or even an empty array.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Thanks. For some reason I thought "do state operations with krb5i was
-4.1 thing and not 4.0". But I can see now that this started with the
-client doing SETCLIENTID using krb5i (even though mount was sec=3Dsys).
+...
 
-> Remember that xprtsec=3D does not specify a security flavor.
->
->
-> > But then also callback isn't done over TLS. Should the callback be
-> > done over TLS (and it's a future implementation to do for
-> > client/server)?
->
-> The NFSv4.0 backchannel could be done over TLS, sure.
->
->
-> > Or is this a spec restriction/limitation?
->
-> The NFSv4.0 spec doesn't know about TLS, so it doesn't take
-> a position about requiring it.
->
-> Unless there's an interoperability concern, IMO standards action
-> isn't necessary. We can definitely say, though, that a prudent
-> NFSv4.0 server implementation would choose to try TLS if the
-> forward channel used it, and a prudent NFSv4.0 client would
-> require the use of TLS on the backchannel in that case.
->
-> The Linux implementation does not do that yet -- TLS would
-> protect both directions of operation for NFSv4.1 and above,
-> but for NFSv4.0, it doesn't.
+> @@ -1690,15 +1691,22 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+>  
+>  	mutex_lock(&nfsd_mutex);
+>  
+> -	nrpools = nfsd_nrpools(net);
+> -	if (nrpools && count > nrpools)
+> -		count = nrpools;
+> -
+> -	/* XXX: make this handle non-global pool-modes */
+> -	if (count > 1)
+> +	nrpools = max(count, nfsd_nrpools(net));
+> +	nthreads = kcalloc(nrpools, sizeof(int), GFP_KERNEL);
+> +	if (!nthreads) {
+> +		ret = -ENOMEM;
+>  		goto out_unlock;
+> +	}
+> +
+> +	i = 0;
+> +	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> +		if (nla_type(attr) == NFSD_A_SERVER_THREADS) {
+> +			total += nthreads[i++] = nla_get_u32(attr);
 
-Thank you for the clarification. Not sure it is worth the effort
-(given we've been discussing deprecating 4.0 anyway) but it answers my
-question if it's a question of implementation or spec.
+Hi Jeff,
 
->
->
-> --
-> Chuck Lever
->
->
+A minor nit from my side.
+
+Total is set by otherwise unused in this function.
+
+Flagged by clang-18 W=1 allmodconfig builds.
+
+> +			if (i >= count)
+> +				break;
+> +		}
+> +	}
+>  
+> -	nthreads = nla_get_u32(info->attrs[NFSD_A_SERVER_THREADS]);
+>  	if (info->attrs[NFSD_A_SERVER_GRACETIME] ||
+>  	    info->attrs[NFSD_A_SERVER_LEASETIME] ||
+>  	    info->attrs[NFSD_A_SERVER_SCOPE]) {
+
+...
 
