@@ -1,108 +1,161 @@
-Return-Path: <linux-nfs+bounces-3558-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3559-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4950B8FBE7E
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 00:07:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59D068FC6C9
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 10:42:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD4D1F21FFD
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jun 2024 22:07:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E19E1C22AE5
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jun 2024 08:42:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0553143744;
-	Tue,  4 Jun 2024 22:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sf9NV0u1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E0B1946C0;
+	Wed,  5 Jun 2024 08:42:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEDE320C
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Jun 2024 22:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291931946C3
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Jun 2024 08:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717538867; cv=none; b=VKJBhojRmQzImdytjWV+R1gUVu4wfyecOygp170jX14d+Io5icdoanb9cE+6Z5MZLFSAF2k5A3+//6FiBrLIT1HkUiBJSkETqjU7vF56Mpko3FyZr/onO18eNt/w+vR6pBUtSn8EH51nh6m6IpRn6k9q3FzfZY7F2s12FxiovxM=
+	t=1717576950; cv=none; b=LUDuDDGGYXLJR/xGByfa9bi+F1BnOHmbhLfVNJ01BbSxWJ3DlqT4jwmNvCCtkWtN3H4TrMCrc9qvNpnVf1STZsdYhUcz8xpPtNIt4ZKXCUI589zUDDjYzL+ruPOmlsUaUwcCGsUPhVA81EicEr20+Nat8U+utOfPtAaYJp8FDAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717538867; c=relaxed/simple;
-	bh=lYKYMPFfHFQCdQYZ243zPsEk7WfGlGjBQ5vqPkX77Ck=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M5qrBpJVZ+8rLUBCA5I21ilPqg0YJ1zu48GQ5AHkF5WT5tF1WT3Ftpcix/wA+cgXF7x509v3IOiAG/j2/JBD0IyVxITuXCIkvGiJAh/ewO4VV/nYqhATS4Zsh9EmMX1kIUIQI6oQW3hKwjEd5Py6HH2E39TQDMh/CZ1GHDyz2kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sf9NV0u1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D36C4AF0A;
-	Tue,  4 Jun 2024 22:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717538866;
-	bh=lYKYMPFfHFQCdQYZ243zPsEk7WfGlGjBQ5vqPkX77Ck=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Sf9NV0u1E4Ti/xsQL8hV82Qm3sGhlKyxoQQj3RRMVEFu/bAtQYV7ksAwWvqis98vT
-	 jJTycc8Eg1jCyR8WLll6gA2IqpVBzWdkJF2dBpwAJJZhi01+4QK8wqxJMjYPeNLJtp
-	 ve1BOLAcaETMm632tvKennWisU9sSjuc8CeqSgQcA464+cXQPNL4TEjJrB3RUiA48E
-	 2v91qV1vff67+GCy7lnDZJtaw4bsZJKAxm42xSgZ3kt6lM0q8dgp5TWwd4dtyqi9cj
-	 eo251hjp3Y9ULcyQPg0aLDExwX21+MzoWt8ei/4HqgeBolsmyruUCQ2pc2wC9ZkHtX
-	 GzU7z/G9wPIAw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 04 Jun 2024 18:07:31 -0400
-Subject: [PATCH nfs-utils v4 3/3] systemd: use nfsdctl to start and stop
- the nfs server
+	s=arc-20240116; t=1717576950; c=relaxed/simple;
+	bh=P4M4MqXPdfStaxRovxntDkhfu0FZYLwXIYeKWyYbmto=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cqIFZROkGEGNIDHxaZrvtjFBp4zt4zu3TYZ9JLTN+TIY7BMC2MzNScxE6lb6NAxns8L4cm9VHA2bgAaVQr/WCklWnYoZwwSvyq+30eGDDYCRkv+PMofLAp6m/bH1ASt6BgjXYLT12uYVXUxKjd5ryTzKnNuFaoauvjCaxeNlNdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-421498a3ccfso2124435e9.1
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Jun 2024 01:42:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717576947; x=1718181747;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gF2K7qRQ3IrsmR4TpwYBfaLg0wle65nX8emoO5du54Y=;
+        b=WzuVoQuADwIii3MB2umlp6FlBE4WzsXQyh0HeWtXb78DFGtrnF/862F2VQo6zLqy5+
+         jVG/AqZYoiK6joiTC/g6F8gxspqNxMjDKQ9NtgK5JEGJhTZIaqpAL60s4EK51nbm8ogR
+         DX0qBkg9Pxvm0g3x+mpgpyNkfKpe1FYJFt2bCde6lRoZ11Nps/8p/Al3cZh/EWn67R9L
+         u88eIf0KcSoI3VzEqt5qr2/mBK25bPnbnKcHx3HSNRWr2DiknBTop2cvDNVgL6C6/izS
+         nkOfcymX//y6B67ze//r5+xpKjun1ZdlzBkoHZONQFWk7ObhouEKOYlrvWKNA7lG5CVV
+         q9xQ==
+X-Gm-Message-State: AOJu0YyKOSwBMo0Dz+eOkQlZCNJPIWAG452N41TlJCTp6Aw+LKs4ndjT
+	6QrnMTl/EVOvPE9g4AjpG/PBbS7qFtMSr0MiMmPh+KO3w+MzPosVdOSey0S/
+X-Google-Smtp-Source: AGHT+IHTjY6WWPUAXjjECEkUza25N+0RaN4SMghv/ggiJHzb59GiDp04f6+DccZnxmzhQadg78yYPQ==
+X-Received: by 2002:a05:600c:35ca:b0:420:29dd:84e2 with SMTP id 5b1f17b1804b1-4215633fe1bmr13929465e9.2.1717576947245;
+        Wed, 05 Jun 2024 01:42:27 -0700 (PDT)
+Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158102a69sm12428625e9.15.2024.06.05.01.42.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 01:42:26 -0700 (PDT)
+Message-ID: <21f6b999-ce54-4756-b687-84c1c746ca49@grimberg.me>
+Date: Wed, 5 Jun 2024 11:42:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] xprtrdma: Fix rpcrdma_reqs_reset()
+To: cel@kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20240604194522.10390-6-cel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240604194522.10390-6-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240604-nfsdctl-v4-3-a2941f782e4c@kernel.org>
-References: <20240604-nfsdctl-v4-0-a2941f782e4c@kernel.org>
-In-Reply-To: <20240604-nfsdctl-v4-0-a2941f782e4c@kernel.org>
-To: Steve Dickson <steved@redhat.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=lYKYMPFfHFQCdQYZ243zPsEk7WfGlGjBQ5vqPkX77Ck=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmX5AvaxlJtnqCCv9BXvpNnixev4Ayy4/WAmYkg
- tORVJS2MquJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZl+QLwAKCRAADmhBGVaC
- FXpcD/9uq3fjmfU2KJ6jjTiJLFN8shLjNnroc+t6SXg6YHrzXqQBzCqxEnrBLKYss7aujj8LDNo
- ddeLJBF1t41Lipw3OYW6EFNTibTGzo0O238YBC0D2P0YcKbOkv2K+2VcOxA/+RnMkFhDXz+km2e
- vXVuHwqSxJSUD95x23N9bjWXd0QPxnN/6em3EUkQpMsImyrfP8Wk26xxYvnAnSfftTKtyvypNAp
- +P75qQckZ781ydz7fk6pOaWtr2faPhuApPoztebQeb4B3H7yo6tsv6P6ycMIWM1iRQBVbcNtVkL
- 4H2fOMrrW46D/s/kxc9DyKExPStbppdpaapVsdHb1p/Rrxbf73a9pApGtilif3Xk/V7VbQuaMHr
- JKSarVHuezxNzU+VQ0vR2f+TyNyHbf0hY3jUweaGXjhzmEv1OhDoVFkABS5TZysp29qiHCQN90z
- H+cyJC2plMHz4A4WUkZ55Bu35zDn6WAazqOiEZiHcaWRIbsJmooNipETY+HZTeUUeZQgM9JlXYC
- gJRXksghHXQjQc6IxxeJGG/Bl/vVdzpIuL7WYqsHrybMdIgH70b3caXBKA9AzAK3Zjzr92+Yf7j
- YkAyo8UuvAzyWw2O1ZKR9/q/BSd6bB/jc4w5Wno4hHm6CELkC9edsrByJnEuJvlA0ZyWJe95kdZ
- S6ssrJ3buYnJq0g==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Attempt to use nfsdctl to start and stop the nfs-server. If that fails
-for any reason, use rpc.nfsd to do it instead.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- systemd/nfs-server.service | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/systemd/nfs-server.service b/systemd/nfs-server.service
-index ac17d5286d3b..8793856aa707 100644
---- a/systemd/nfs-server.service
-+++ b/systemd/nfs-server.service
-@@ -23,8 +23,8 @@ After=rpc-gssd.service gssproxy.service rpc-svcgssd.service
- Type=oneshot
- RemainAfterExit=yes
- ExecStartPre=-/usr/sbin/exportfs -r
--ExecStart=/usr/sbin/rpc.nfsd
--ExecStop=/usr/sbin/rpc.nfsd 0
-+ExecStart=/bin/sh -c '/usr/sbin/nfsdctl autostart || /usr/sbin/rpc.nfsd'
-+ExecStop=/bin/sh -c '/usr/sbin/nfsdctl threads 0 || /usr/sbin/rpc.nfsd 0'
- ExecStopPost=/usr/sbin/exportfs -au
- ExecStopPost=/usr/sbin/exportfs -f
- 
+On 04/06/2024 22:45, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> Avoid FastReg operations getting MW_BIND_ERR after a reconnect.
+>
+> rpcrdma_reqs_reset() is called on transport tear-down to get each
+> rpcrdma_req back into a clean state.
+>
+> MRs on req->rl_registered are waiting for a FastReg, are already
+> registered, or are waiting for invalidation. If the transport is
+> being torn down when reqs_reset() is called, the matching LocalInv
+> might never be posted. That leaves these MR registered /and/ on
+> req->rl_free_mrs, where they can be re-used for the next
+> connection.
+>
+> Since xprtrdma does not keep specific track of the MR state, it's
+> not possible to know what state these MRs are in, so the only safe
+> thing to do is release them immediately.
+>
+> Fixes: 5de55ce951a1 ("xprtrdma: Release in-flight MRs on disconnect")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   net/sunrpc/xprtrdma/frwr_ops.c |  3 ++-
+>   net/sunrpc/xprtrdma/verbs.c    | 16 +++++++++++++++-
+>   2 files changed, 17 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+> index ffbf99894970..47f33bb7bff8 100644
+> --- a/net/sunrpc/xprtrdma/frwr_ops.c
+> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
+> @@ -92,7 +92,8 @@ static void frwr_mr_put(struct rpcrdma_mr *mr)
+>   	rpcrdma_mr_push(mr, &mr->mr_req->rl_free_mrs);
+>   }
+>   
+> -/* frwr_reset - Place MRs back on the free list
+> +/**
+> + * frwr_reset - Place MRs back on @req's free list
+>    * @req: request to reset
+>    *
+>    * Used after a failed marshal. For FRWR, this means the MRs
+> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> index 432557a553e7..a0b071089e15 100644
+> --- a/net/sunrpc/xprtrdma/verbs.c
+> +++ b/net/sunrpc/xprtrdma/verbs.c
+> @@ -897,6 +897,8 @@ static int rpcrdma_reqs_setup(struct rpcrdma_xprt *r_xprt)
+>   
+>   static void rpcrdma_req_reset(struct rpcrdma_req *req)
+>   {
+> +	struct rpcrdma_mr *mr;
+> +
+>   	/* Credits are valid for only one connection */
+>   	req->rl_slot.rq_cong = 0;
+>   
+> @@ -906,7 +908,19 @@ static void rpcrdma_req_reset(struct rpcrdma_req *req)
+>   	rpcrdma_regbuf_dma_unmap(req->rl_sendbuf);
+>   	rpcrdma_regbuf_dma_unmap(req->rl_recvbuf);
+>   
+> -	frwr_reset(req);
+> +	/* The verbs consumer can't know the state of an MR on the
+> +	 * req->rl_registered list unless a successful completion
+> +	 * has occurred, so they cannot be re-used.
+> +	 */
 
--- 
-2.45.1
+Theoretically it would be possible to know by inspecting the FLUSH error 
+completions
+and see which of those was a registration wr (meaning the registration 
+was not ever
+executed).
+
+But I guess its simpler to just assume that it isn't reusable.
+
+> +	while ((mr = rpcrdma_mr_pop(&req->rl_registered))) {
+> +		struct rpcrdma_buffer *buf = &mr->mr_xprt->rx_buf;
+> +
+> +		spin_lock(&buf->rb_lock);
+> +		list_del(&mr->mr_all);
+> +		spin_unlock(&buf->rb_lock);
+> +
+> +		frwr_mr_release(mr);
+> +	}
+>   }
+>   
+>   /* ASSUMPTION: the rb_allreqs list is stable for the duration,
 
 
