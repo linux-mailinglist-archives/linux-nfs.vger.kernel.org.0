@@ -1,91 +1,79 @@
-Return-Path: <linux-nfs+bounces-3617-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3618-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BE17900BB8
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 20:09:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC704900DF9
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Jun 2024 00:17:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF2C61F21796
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 18:09:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74B4328253F
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 22:17:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B8E19415D;
-	Fri,  7 Jun 2024 18:09:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E473114F10E;
+	Fri,  7 Jun 2024 22:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGFKmy+H"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F90C13793E
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Jun 2024 18:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD383502BE;
+	Fri,  7 Jun 2024 22:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717783788; cv=none; b=WWPYxCPhDc7LYb/icHPt8PEwXVP7JEfkXaMEwMRRFVmqFDZ+Xhl6JBEeUK5wbjo2JQSRaRRUuJUESuZCofbUxC1JjIKt3R1cTt8iAlRDAvzfwPLifxRr/KvkHZgZqaKb2zKVI2s7HPpMOIq0K8Hu6Dr+i0d8jScdaspEzzKI59I=
+	t=1717798673; cv=none; b=l0Cz69+qtaSW+aLfwDmIoSR8xzZWungRLDPWZBp3rZV94/4fkkv4XSN6Gme7c4GzxG0pzOY6JJQXk4A0GUSX2YTJBCbw2C9kdI9jJLblxE/avEuULdgXzw9ycl8QLBr8Lr9iq0FU96HhoiNsPL2oIz2yZPTx2Z83AMUtOdghtjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717783788; c=relaxed/simple;
-	bh=fpi8Vyb+Li3D/1JBkgd0S5vi1rjs3dJmW/xHwSMKXD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2cHIajFrYRYqU3rCaxpD0OjTncZvjGm3iPUEYc7ouJpdncKsdHDAQbS/aXMOAnsUYNDsnsWQvf4tIGPtm3zCgukz7qo5VEEM0yTf3Fk1v+xK0PPm/pRCqnTrDBcGPciAu57zC+hixLKS0flrDROTLue6UmJuG4aBlGf5+QKRFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6b05c9db85fso4851316d6.2
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2024 11:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717783785; x=1718388585;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k5Zh/43/xQ7AYe5qg5zcZU31R5wWNY8+4Jdsl0IcVhE=;
-        b=lnnTyBUwcYRZWIoHMfJqirhJMAKksxFZMZq+ViDqKLIhEEHsvNoXKd6kEqlDVl1iti
-         LfFa13lJwM92lVk4mS6FZFEaJckGa+Ct2RUa6JNjpS6iJpSV208tbozHr6ImXmpSiZQ5
-         HHVWqAzP0QCfYxT2kX7212pYrwd5lEIrEkwuphjplm7BGsaiVJQIy4mokBn0bKAJZxJ5
-         5esuDt4DlhsRzbvm/q2H58z3BejRzyTYEGG/D2Ef6L8MtZCcliBENGaZW86TI0MZ9/zH
-         g6xOfSAkPZg/8i/6gwgqhpsj5ACYGVgaQ/0uRAHbyrXpqpWWQ3i/WHOemSD7rClSVeKM
-         oT3w==
-X-Gm-Message-State: AOJu0YwFQOSR5EDwROcUkOE37kBVsJ4RdaCGm3aoajSDmIYOX15CsEnD
-	bG/NXHb0TG/Hk+dTFGr7xOKtjGn3P+AC87Vyq1WI/Xy6TQ3lgYv+1AHjGAH5Mdw3okL1wfHLNR8
-	GO30TOg==
-X-Google-Smtp-Source: AGHT+IG90SHyyeekxe+0FKrpDuMMXhOZgW8m6KKzkymM5/Oao1Sk+Qfh+Pa4RWX+fBModroW5BWaeA==
-X-Received: by 2002:a05:6214:3d0b:b0:6af:5500:44a7 with SMTP id 6a1803df08f44-6b059b35214mr43459786d6.7.1717783785210;
-        Fri, 07 Jun 2024 11:09:45 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f718fb7sm19215336d6.62.2024.06.07.11.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 11:09:44 -0700 (PDT)
-Date: Fri, 7 Jun 2024 14:09:43 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [for-6.11 PATCH 00/29] nfs/nfsd: add support for localio bypass
-Message-ID: <ZmNM58Zx8sltLxtp@kernel.org>
-References: <20240607142646.20924-1-snitzer@kernel.org>
+	s=arc-20240116; t=1717798673; c=relaxed/simple;
+	bh=wlxFo891DPkzzPYAt7urOMnHbdybnK9zowy34KTI/tY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=q872BoPKByAWr30v0phKw4bQNBDaQj/P4Q6fJ99IVpXKqyubQOYQdnzOwA89sCt712zP3o72Ti5QolilytapktIbD19awp9RFKRZMgt8d8Lum6+KfEfDyi0YLed9+BWJ6TUYEMy0kv3zNtsxcbZAZwwxz60ZqoYGTcBt0sIWiDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGFKmy+H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9151EC32781;
+	Fri,  7 Jun 2024 22:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717798673;
+	bh=wlxFo891DPkzzPYAt7urOMnHbdybnK9zowy34KTI/tY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=oGFKmy+HBfovOofZIdl8/eMBpgNFSlEntWi5ty1mJ/ZixJZ1eCY/PlJZdlztWaK8J
+	 3kvHVEdxMJMpDHLj1z7HC34OvuSOWSLv6HbdSYP9TbWYSZilYhedPOSNPMIT3v2bXp
+	 8Vu6CF5VL/hwaXdwMTATaC8FrKfqCv4LpK0WeU0EVNfHxRArXQ/aDlKAebwouHVyQm
+	 Cl2mwC/FZqc41+wwaLXmJTixJGgNp34F+ZXLk0+JIErwzPUZPu6BqRO0NjxLt0w2ms
+	 K1QbPQ9otssZDX91RUiCEZKvxVhL+LgEthVdViGgwTP2aKE9EgynEi5w7FEMk6UrlK
+	 E4AvK0MlRUZug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7F790CF3BA3;
+	Fri,  7 Jun 2024 22:17:53 +0000 (UTC)
+Subject: Re: [GIT PULL] first NFSD fix for v6.10-rc
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZmMIxOjoqzW8auo6@tissot.1015granger.net>
+References: <ZmMIxOjoqzW8auo6@tissot.1015granger.net>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZmMIxOjoqzW8auo6@tissot.1015granger.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.10-1
+X-PR-Tracked-Commit-Id: 4a77c3dead97339478c7422eb07bf4bf63577008
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: eecba7c070283f053434808fa69abda36cf154b4
+Message-Id: <171779867351.7177.13875177410808866880.pr-tracker-bot@kernel.org>
+Date: Fri, 07 Jun 2024 22:17:53 +0000
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607142646.20924-1-snitzer@kernel.org>
 
-On Fri, Jun 07, 2024 at 10:26:17AM -0400, Mike Snitzer wrote:
-> 
-> My container testing was done in terms of podman managed containers.
-> I'd appreciate additional review relative to network namespaces.
-> fs/nfsd/localio.c:nfsd_local_fakerqst_create() in particular is simply
-> using the client's network namespace with rpc_net_ns(rpc_clnt). I have
-> an extra patch that updates nfsd_open_local_fh()'s first argument to
-> be the server's 'struct net' -- but I stopped short of formally
-> including that change in this series because it hasn't proven needed
-> (but more exotic hypothetical scenarios could easily expose the need
-> for it). I can append it to the series as an "RFC PATCH 30/29" as
-> needed.
+The pull request you sent on Fri, 7 Jun 2024 09:19:00 -0400:
 
-I did just post that 30/29 patch to this thread.
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.10-1
 
-And here is my git tree for these changes:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-6.11
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/eecba7c070283f053434808fa69abda36cf154b4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
