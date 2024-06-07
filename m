@@ -1,67 +1,67 @@
-Return-Path: <linux-nfs+bounces-3591-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3592-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BF8090067E
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 16:27:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A49990067F
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 16:27:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3560A1C22D23
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 14:27:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAB0F2811B7
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 14:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E0E196C7B;
-	Fri,  7 Jun 2024 14:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F576195990;
+	Fri,  7 Jun 2024 14:27:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609D6195990
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Jun 2024 14:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00BF1974F7
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Jun 2024 14:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717770420; cv=none; b=UVjz7BG4CJ2yaR3Te+PmrPFXL1LL+7Qk0qVkifpih246XhsYMO4iYAvpRwEXjmqBlCXOtTAz7i7F2efjjj90aK+uBepI+RgH9GZKKWW8AWkMqtx+jCsWjcWl0t1JdcLwPxzlyJFcqUeE/fBG9XSysUkowKNMmcmQuuN/qhL7xbk=
+	t=1717770422; cv=none; b=kMM6ZPiY4x/xjU/ZSBQ78N1F0lyjYlgIFGvQvxXWHkNaOcy/4djCVwJ0obMrni8OFfa3/cOPyzTeEnRXBf5C3oURIuaZJy/BjvnF6Ie3fXXADDSFG0lp1j2Cgr3hq1Eac5zbpQTnNBnwH4f3zLvhd6L4no2KZtVVUSsV1jtQ6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717770420; c=relaxed/simple;
-	bh=1s9XtguGzy718U2FTfcxPUJDpoNLfxn/vMir5mGQtR8=;
+	s=arc-20240116; t=1717770422; c=relaxed/simple;
+	bh=cIb3MJM4RkF/Px7ti/U0lk0FUmVhCpxVRzmtxzt/KG8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RrjEYHFteeHdS+Crq53+CyriRGPRzeud4OIiPSvaHZjo8GrwggdUwn6LMkT68hpJxpkcnTV4GK86GSSMRO8XjLBHuRSk008tH0Ic4owBZtqf4D0qogv7xaqAcw+ok9TGeu28NMYVIO0KTuTesHffoLGuc2YfVHtNGpuivE3hs8A=
+	 MIME-Version; b=hS6r4m+x9BKAWbpt/npFeu2DXQMfX8QZHZQDyEYg2ZlPun2YB85uEQddWFKwm1SaOISJ3vixNUeS0hqdiwp2GEfSCLrHcxaThoAf3S+giRz6TJuo0/MfA62/rwaCND0vF5+X+wcgb6ot8fn4Jty1FG8qHY0FkaDY3kefWfUN8kY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-795186ae3e9so129107185a.0
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2024 07:26:59 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-79523244ccfso170304285a.0
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2024 07:27:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717770418; x=1718375218;
+        d=1e100.net; s=20230601; t=1717770419; x=1718375219;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WBu4ftenDpGj2LTcihy+HJK+af1mIHEXJBb1XhHAnao=;
-        b=ivnU5rBE9XYyaoeuyJvbvFldDARGMUnctCc+JCDl40YQer1JdaJqrBGHNjG+dZRn/m
-         0rlcZuqRyFi9Acre6/asWHEE4wdVaKT11TZAUZahJ1Ptg7Wd0oqXmGr+d7pFjWynYMjf
-         zZLuKm6Jh+nYpWgGn8mR9JVp2o4mSGM6YJ4WwtTQHttLnqE+W1LLqVZRW/stpNM71Ljb
-         TvqOXkaDclYO/eSSp5PaNhCruMcFDGihMloy595aouJ0sO9NtP/c2hx9BsYyVJEUW+OK
-         b0S1FQd3tr7rQlqqVb9OtarAM0svKgjLbxUIUF9BFRHpRptr+VidKv5kPSrCNUxsP5h4
-         yU0Q==
-X-Gm-Message-State: AOJu0Yw/2OXnvaEDN6lOYct0dzFbaAtUQ1mw/sPpEI2En0QJy23RCbYu
-	Pr4sgtF9ah5v1dJMRqcOrmgr9D+ky+fTQvQiubmMoL/qSv2uSu40Bfx9G9A3ndXB5wEvamAmz+P
-	XY5GHjQ==
-X-Google-Smtp-Source: AGHT+IFS/pF1NCckuHIRpAJMbCKa7aMuVLYrirRmYAxuFHNi6ruiNyeF8DwzigfbFIdzFxTAHDBvZw==
-X-Received: by 2002:a05:620a:2a12:b0:792:b835:19be with SMTP id af79cd13be357-7953c43e61fmr337196985a.43.1717770417908;
-        Fri, 07 Jun 2024 07:26:57 -0700 (PDT)
+        bh=M9dlgZkIscT7i9SR2+2bwIs/yvQBVrOiww8RhLy2Pik=;
+        b=mrEL74Pv5uuqpcNi9FnCO74oHAQXDGDXjtqUSDbplJOOHeaY7ZdA8etPBNHmAeH2nc
+         T4LV/hUD6R1rDbCNVZS5zi627UyhLE3ZUniQ10pqvKGHhSvGh6n9BsJzbP7y6gM5KHFp
+         gegpqPWQo3RYsdFXeowzyIW967IMd/nW67CWYV5kNiUseCcw/pVZqz5sitzlENJmmfOw
+         aNTX5NStjdyaMusd65cizIIFgCpfDDO8TSXwO+TqaEXl0QUpGYqOXZybRpNGVtuGdE0l
+         eurJ/koJ9q5Wz2WQR6TfIB3jCOKhPmDplmhRohO/ImfnU0Gedoz3rrwn9HVHGy8Pem2w
+         CAPw==
+X-Gm-Message-State: AOJu0YxDXXGCxMkIMgr/UyNHqrvjS/0tlNRK7ul6REv/ocNao59gNHhk
+	AZq4d1lp7qRpz5zEAPScybekPsSDfyVvaNlLgHO1L1++DP3M9sHsBpFdnW2UO0iJmcb19nqTwZ0
+	NLlrSuQ==
+X-Google-Smtp-Source: AGHT+IHotzhRr4UBIYXOGXx8RlCjPjkX4JTugM40+0xsVIHsU7q3grEsemIIu31kmAFFCRfvh1I+Pg==
+X-Received: by 2002:a05:620a:1a22:b0:795:4d37:82a8 with SMTP id af79cd13be357-7954d378dbcmr153909885a.22.1717770419305;
+        Fri, 07 Jun 2024 07:26:59 -0700 (PDT)
 Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79532871570sm169137885a.54.2024.06.07.07.26.57
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79532887f13sm170522585a.71.2024.06.07.07.26.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 07:26:57 -0700 (PDT)
+        Fri, 07 Jun 2024 07:26:58 -0700 (PDT)
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	snitzer@hammerspace.com
-Subject: [for-6.11 PATCH 06/29] sunrpc: add rpcauth_map_to_svc_cred
-Date: Fri,  7 Jun 2024 10:26:23 -0400
-Message-ID: <20240607142646.20924-7-snitzer@kernel.org>
+Subject: [for-6.11 PATCH 07/29] sunrpc: add and export rpc_ntop6_addr_noscopeid
+Date: Fri,  7 Jun 2024 10:26:24 -0400
+Message-ID: <20240607142646.20924-8-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240607142646.20924-1-snitzer@kernel.org>
 References: <20240607142646.20924-1-snitzer@kernel.org>
@@ -73,72 +73,88 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Weston Andros Adamson <dros@primarydata.com>
+From: Peng Tao <tao.peng@primarydata.com>
 
-Add new funtion rpcauth_map_to_svc_cred which maps a generic rpc_cred to an
-svc_cred suitable for use in nfsd.
-
-This is needed by the localio code to map nfs client creds to nfs server
-credentials.
-
-Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+Signed-off-by: Peng Tao <tao.peng@primarydata.com>
 Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- include/linux/sunrpc/auth.h |  4 ++++
- net/sunrpc/auth.c           | 16 ++++++++++++++++
- 2 files changed, 20 insertions(+)
+ include/linux/sunrpc/addr.h |  9 +++++++++
+ net/sunrpc/addr.c           | 19 +++++++++++++------
+ 2 files changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sunrpc/auth.h b/include/linux/sunrpc/auth.h
-index 61e58327b1aa..5ebf031361a1 100644
---- a/include/linux/sunrpc/auth.h
-+++ b/include/linux/sunrpc/auth.h
-@@ -11,6 +11,7 @@
- #define _LINUX_SUNRPC_AUTH_H
- 
- #include <linux/sunrpc/sched.h>
-+#include <linux/sunrpc/svcauth.h>
- #include <linux/sunrpc/msg_prot.h>
- #include <linux/sunrpc/xdr.h>
- 
-@@ -184,6 +185,9 @@ int			rpcauth_uptodatecred(struct rpc_task *);
- int			rpcauth_init_credcache(struct rpc_auth *);
- void			rpcauth_destroy_credcache(struct rpc_auth *);
- void			rpcauth_clear_credcache(struct rpc_cred_cache *);
-+bool			rpcauth_map_to_svc_cred(struct rpc_auth *,
-+						const struct cred *,
-+						struct svc_cred *);
- char *			rpcauth_stringify_acceptor(struct rpc_cred *);
- 
- static inline
-diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
-index 04534ea537c8..55a03a3bcac2 100644
---- a/net/sunrpc/auth.c
-+++ b/net/sunrpc/auth.c
-@@ -308,6 +308,22 @@ rpcauth_init_credcache(struct rpc_auth *auth)
+diff --git a/include/linux/sunrpc/addr.h b/include/linux/sunrpc/addr.h
+index 07d454873b6d..e1007bddc3c4 100644
+--- a/include/linux/sunrpc/addr.h
++++ b/include/linux/sunrpc/addr.h
+@@ -68,6 +68,9 @@ static inline bool __rpc_copy_addr4(struct sockaddr *dst,
  }
- EXPORT_SYMBOL_GPL(rpcauth_init_credcache);
  
-+bool
-+rpcauth_map_to_svc_cred(struct rpc_auth *auth, const struct cred *cred,
-+			struct svc_cred *svc)
-+{
-+	svc->cr_uid = cred->uid;
-+	svc->cr_gid = cred->gid;
-+	svc->cr_flavor = auth->au_flavor;
-+	svc->cr_principal = NULL;
-+	svc->cr_gss_mech = NULL;
-+	if (cred->group_info)
-+		svc->cr_group_info = get_group_info(cred->group_info);
+ #if IS_ENABLED(CONFIG_IPV6)
++extern size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
++				       char *buf, const int buflen);
 +
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(rpcauth_map_to_svc_cred);
-+
- char *
- rpcauth_stringify_acceptor(struct rpc_cred *cred)
+ static inline bool rpc_cmp_addr6(const struct sockaddr *sap1,
+ 				 const struct sockaddr *sap2)
  {
+@@ -94,6 +97,12 @@ static inline bool __rpc_copy_addr6(struct sockaddr *dst,
+ 	return true;
+ }
+ #else	/* !(IS_ENABLED(CONFIG_IPV6) */
++static size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
++				       char *buf, const int buflen)
++{
++	return 0;
++}
++
+ static inline bool rpc_cmp_addr6(const struct sockaddr *sap1,
+ 				   const struct sockaddr *sap2)
+ {
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 97ff11973c49..78a123a7c39b 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -25,12 +25,9 @@
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 
+-static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
+-				  char *buf, const int buflen)
++size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
++				char *buf, const int buflen)
+ {
+-	const struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)sap;
+-	const struct in6_addr *addr = &sin6->sin6_addr;
+-
+ 	/*
+ 	 * RFC 4291, Section 2.2.2
+ 	 *
+@@ -55,13 +52,23 @@ static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
+ 	 */
+ 	if (ipv6_addr_v4mapped(addr))
+ 		return snprintf(buf, buflen, "::ffff:%pI4",
+-					&addr->s6_addr32[3]);
++				&addr->s6_addr32[3]);
+ 
+ 	/*
+ 	 * RFC 4291, Section 2.2.1
+ 	 */
+ 	return snprintf(buf, buflen, "%pI6c", addr);
+ }
++EXPORT_SYMBOL_GPL(rpc_ntop6_addr_noscopeid);
++
++static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
++				  char *buf, const int buflen)
++{
++	const struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)sap;
++	const struct in6_addr *addr = &sin6->sin6_addr;
++
++	return rpc_ntop6_addr_noscopeid(addr, buf, buflen);
++}
+ 
+ static size_t rpc_ntop6(const struct sockaddr *sap,
+ 			char *buf, const size_t buflen)
 -- 
 2.44.0
 
