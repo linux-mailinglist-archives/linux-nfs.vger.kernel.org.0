@@ -1,65 +1,54 @@
-Return-Path: <linux-nfs+bounces-3582-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3583-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 184879003DE
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 14:44:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FF6900455
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 15:11:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9388528715D
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 12:44:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 778E9285485
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 13:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 096911990BC;
-	Fri,  7 Jun 2024 12:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030E71940A1;
+	Fri,  7 Jun 2024 13:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmxXjMfc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31B9197522;
-	Fri,  7 Jun 2024 12:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE33C194093;
+	Fri,  7 Jun 2024 13:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717764093; cv=none; b=hF0zOlKLYUwKvF1SVLKNdjagT05ZIwVlzfN9DqFuxKW2+HwIXqmPbwLJKKWVddM3khhu7hDqg5e7hmjtQDiTXxaXlP13xkgYMzu51jjAnzvaSmDiT2Lyv/VG7hoBrUqAymgF/mRWSovZVmg5xqy3yDou38N5VlFnLPuC7FQA52Q=
+	t=1717765859; cv=none; b=X8c3OwEzvXRPnio1xcOAaup/BNMOVFwFE6Wg6fa3Q8qC4PEztl53r4bTM+rJ0ZSgtaq4P1VtU0FxujQ4g+TbnJH9wCsrVzwdQj0j4smlCq90srEg0QJsQOav1CHO8RouDYAC3Zd7TOMMWemKOzOeVAv16O3AgFejmUyvn+9lkxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717764093; c=relaxed/simple;
-	bh=UKrQB7BAzMucLmu6rSZnSX21jFfck85fX5kiW2DsiHU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p50HvAvX22ukzoYWE5SJ3K403shXWx8u57OV4k/pGToc46DKpeOQKkObNAWyCNHBcbXZooEo708bn696vrQWKTHd5qJ3NQG806D/EzRmvfFBT7WKC3UQWqGHpnGwt4lLfzutcI7ujlFgJT/d7jFz0AK1XeQHPPr71jX/hnGR/oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VwghB2pvkzsTCv;
-	Fri,  7 Jun 2024 20:37:30 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6ECE6140336;
-	Fri,  7 Jun 2024 20:41:29 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 7 Jun 2024 20:41:29 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Eric Dumazet <edumazet@google.com>, David
- Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Chuck
- Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
-	<trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>,
-	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
+	s=arc-20240116; t=1717765859; c=relaxed/simple;
+	bh=eAWSEXfpFedKdLSYjNdGwwpLGaF9xjNrz0UsBiHpu9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RC1NsIJHsjZnkzysGy3tB0V0TPKVN7y9+iCOmTIH/NrxGpFynVyuDMMaZwOxh9PUUxRg15fbrDGbs9IvbfVmF1w9MOv3+6ZD7biLFizbxtkwbs4mb4AeX5u/4Ikx+P6G7fq8sRwA7SqAKlZ20tKfAEZswJZQFPkMsXVXrMtREXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmxXjMfc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAFE2C2BBFC;
+	Fri,  7 Jun 2024 13:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717765859;
+	bh=eAWSEXfpFedKdLSYjNdGwwpLGaF9xjNrz0UsBiHpu9A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mmxXjMfcLZfBGffaen+tETp8eDcjNkhtdchr2LOkjlfBsPxNf7x0xQz4H1WId6EEi
+	 0DDSPNdfJX4rYqeZJOYIgZA9r9P40FxGnMky6O8uyIZVAK9lO3sZcxBuJw/E8W3NEk
+	 kppAq3qS4czGauhSBeQ/2TDG0o910ccNulHc8fa1zLXjjjUAHVsnQezITWgFzJGRIF
+	 qkpUu6POwOCrXKgIspE5aao8Mon3QlmAMb3APX3wAp8bR7y8fYtu1tXQk7ZaLtjAvn
+	 zy/3TSwC6pG3STyzEzD4bytdcse3kfaLaoOASjWHwodHrWPwlFjZwx0ihvxDXQePcP
+	 bXzDdOVMweWkA==
+From: cel@kernel.org
+To: <stable@vger.kernel.org>,
 	<linux-nfs@vger.kernel.org>
-Subject: [PATCH net-next v7 07/15] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Fri, 7 Jun 2024 20:38:10 +0800
-Message-ID: <20240607123819.40694-8-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240607123819.40694-1-linyunsheng@huawei.com>
-References: <20240607123819.40694-1-linyunsheng@huawei.com>
+Cc: NeilBrown <neilb@suse.de>,
+	Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 5.15] sunrpc: exclude from freezer when waiting for requests:
+Date: Fri,  7 Jun 2024 09:10:48 -0400
+Message-ID: <20240607131048.8795-1-cel@kernel.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,154 +56,84 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf200006.china.huawei.com (7.185.36.61)
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+From: NeilBrown <neilb@suse.de>
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Prior to v6.1, the freezer will only wake a kernel thread from an
+uninterruptible sleep.  Since we changed svc_get_next_xprt() to use and
+IDLE sleep the freezer cannot wake it.  We need to tell the freezer to
+ignore it instead.
+
+To make this work with only upstream commits, 5.15.y would need
+commit f5d39b020809 ("freezer,sched: Rewrite core freezer logic")
+which allows non-interruptible sleeps to be woken by the freezer.
+
+Fixes: 9b8a8e5e8129 ("nfsd: don't allow nfsd threads to be signalled.")
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- drivers/vhost/net.c             |  2 +-
- include/linux/page_frag_cache.h | 10 ++++++++++
- mm/page_frag_test.c             |  2 +-
- net/core/skbuff.c               |  6 +++---
- net/rxrpc/conn_object.c         |  4 +---
- net/rxrpc/local_object.c        |  4 +---
- net/sunrpc/svcsock.c            |  6 ++----
- 7 files changed, 19 insertions(+), 15 deletions(-)
+ fs/nfs/callback.c     | 2 +-
+ fs/nfsd/nfs4proc.c    | 3 ++-
+ net/sunrpc/svc_xprt.c | 4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 6691fac01e0d..b2737dc0dc50 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index c6fde197a6eb..6ac3a25089d1 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -23,6 +23,16 @@ struct page_frag_cache {
- 	bool pfmemalloc;
- };
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
-diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
-index c3cfce87fbbf..8b259e422fae 100644
---- a/mm/page_frag_test.c
-+++ b/mm/page_frag_test.c
-@@ -341,7 +341,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 6842fa6a71a5..ac5fe61c0ff2 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -741,12 +741,12 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 		local_bh_enable();
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index 46a0a2d6962e..8fe143cad4a2 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -124,7 +124,7 @@ nfs41_callback_svc(void *vrqstp)
+ 		} else {
+ 			spin_unlock_bh(&serv->sv_cb_lock);
+ 			if (!kthread_should_stop())
+-				schedule();
++				freezable_schedule();
+ 			finish_wait(&serv->sv_cb_waitq, &wq);
+ 		}
  	}
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 6779291efca9..e0ff2212866a 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -38,6 +38,7 @@
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
+ #include <linux/namei.h>
++#include <linux/freezer.h>
  
-@@ -834,7 +834,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
+ #include <linux/sunrpc/addr.h>
+ #include <linux/nfs_ssc.h>
+@@ -1322,7 +1323,7 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
  
- 		data = page_frag_alloc_va(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
+ 			/* allow 20secs for mount/unmount for now - revisit */
+ 			if (kthread_should_stop() ||
+-					(schedule_timeout(20*HZ) == 0)) {
++					(freezable_schedule_timeout(20*HZ) == 0)) {
+ 				finish_wait(&nn->nfsd_ssc_waitq, &wait);
+ 				kfree(work);
+ 				return nfserr_eagain;
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index b19592673eef..3cf53e3140a5 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -705,7 +705,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+ 			set_current_state(TASK_RUNNING);
+ 			return -EINTR;
+ 		}
+-		schedule_timeout(msecs_to_jiffies(500));
++		freezable_schedule_timeout(msecs_to_jiffies(500));
  	}
+ 	rqstp->rq_page_end = &rqstp->rq_pages[pages];
+ 	rqstp->rq_pages[pages] = NULL; /* this might be seen in nfsd_splice_actor() */
+@@ -765,7 +765,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 	smp_mb__after_atomic();
  
- 	if (unlikely(!data))
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 42d20412c1c3..4b1e87187614 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
+ 	if (likely(rqst_should_sleep(rqstp)))
+-		time_left = schedule_timeout(timeout);
++		time_left = freezable_schedule_timeout(timeout);
  	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
+ 		__set_current_state(TASK_RUNNING);
+ 
 -- 
-2.33.0
+2.45.1
 
 
