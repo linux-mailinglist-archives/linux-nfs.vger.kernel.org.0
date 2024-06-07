@@ -1,385 +1,196 @@
-Return-Path: <linux-nfs+bounces-3614-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3615-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3ED59006A6
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 16:28:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A6E3900938
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 17:34:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8D131C230A7
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 14:28:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B241B28A0CA
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 15:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B902199EB0;
-	Fri,  7 Jun 2024 14:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C90198E9D;
+	Fri,  7 Jun 2024 15:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="P3/QUAO6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2107.outbound.protection.outlook.com [40.107.236.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A606919753B
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Jun 2024 14:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717770456; cv=none; b=R5MAfu8mxYDf2tP+6nV4/9smunNpILSyuLVp3p8yCgcfMnuDA6gA7T5LrxR4rwx6jf1M/51NeFR6x3vByI+VkV6mFfBlmWXvjbk9//wm2mQIo7mTsBFrBwkVli3INxnPGQnF8n+IKOwI01mHmzJGu4o66ZsUbimhfrHcrBbQgJA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717770456; c=relaxed/simple;
-	bh=j6vuOT/yGClPGfCJO8Xjm7D1aJqpOJfnQd6+HojMkEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NYeploolRncsMOi5+HI8HsRLiIxAyuxEUTGoQrBbKPIV1WBtE9Xy5icfyrMInHak/lRdQ2+NdgWkcEEsWoDD0WYI1wGQQK56e+pSjnPex7EZTBuPeIcgAlPcY5caTpPO7Oy0iBwKEL46Bo4NlOvXUW4Sz7hEiDbL4MXutqHzV+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7954852d3bbso30800085a.0
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2024 07:27:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717770453; x=1718375253;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MxE2p0psvFDzNR+zpaftCzt996ur/YeGKQGdaTDW4WY=;
-        b=Ds7hLCuELQorejK2hHYErYFuv5ftwugH+SeMx2xh4zm+V+aJmCnzBlzwjgsj0z8k8+
-         XD5EbPhoKCktzsPwl8CDlUMmaH+CKORCV8EHejvo7bHEXpouwv273fpTy4UuXLYGKzcm
-         i/y6esycZacr0PgZoGe/gWXWSSgfv4jIKmZQYL4psRtLg08y0yNdHH7So27vDEnIFaEK
-         clwQEtwuQDN/0vDOeaOqn0hUQOSFQ9RT5PswSv75UpCOwzR4zb1Vv8uaYR0dENPFlldv
-         5GU4ikwuBej//JwPC/7PU2YWuWnu+r+3ZuH1Pa+PCPCBBMgPigenBpsghEHTWytYdnb2
-         lKTg==
-X-Gm-Message-State: AOJu0YzwdMWOgWtWzstJmPfqxyVeQaiz5R7ZlJR3OUzgJHzYPHabZ/WM
-	b70d1aVDPLcBHR77eZvej/JSQ3UBrMXX3xptlOBBTBN+Nj1gQGMUiLJ7HIMJp+G7rvVJntG5y+a
-	llxA=
-X-Google-Smtp-Source: AGHT+IHUfYwmv0DWmaDQDd9bar0kzp3Cui15100oDqAL3zBPo5ndT2xzzX14PKjFbE0fYostSYTVWQ==
-X-Received: by 2002:a05:620a:29c2:b0:794:ec0a:95e5 with SMTP id af79cd13be357-7953c434d61mr331150285a.37.1717770453239;
-        Fri, 07 Jun 2024 07:27:33 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-795330b2426sm171629785a.73.2024.06.07.07.27.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 07:27:32 -0700 (PDT)
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	snitzer@hammerspace.com
-Subject: [for-6.11 PATCH 29/29] nfs/localio: move managing nfsd_open_local_fh symbol to nfs_common
-Date: Fri,  7 Jun 2024 10:26:46 -0400
-Message-ID: <20240607142646.20924-30-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240607142646.20924-1-snitzer@kernel.org>
-References: <20240607142646.20924-1-snitzer@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490101CD37;
+	Fri,  7 Jun 2024 15:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717774371; cv=fail; b=tKK+Q/ywFSu7JlZJGfmrhYaFAE/HOZWxRwJ1XFI1xYWV8PYAFby3UgMz654EMd+5fCdzoD9SGoTETHsS/zaeRvKXyMd6+xa5KaxoMZjD41ypqbNZBK2QQclKHAx447OZZt9hvp2X7HdVf752Jm1g1xzazxmvf69r4LtMuPsR+Xw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717774371; c=relaxed/simple;
+	bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OnDJkvGH6RGoGw/3sZ9Hq3brEMYLPNT1iCXD3CG7ZlnXNNIsJHOiPpO7GFCK3nU8Ww5cQp2AGn+Yf0C3v9QjtNJ1fuDYek5IwIvk8iDExm8xhSy4F2aB2okyQCA6t8ATG2PJgC4TQpDLJ5pUfXa4djEfuiGVP7nf17tk83AnuyA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=P3/QUAO6; arc=fail smtp.client-ip=40.107.236.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cR4qRkqJkyywEsQMJfg3LBrVb6zeQKtXIvcpGsR82wdIm5rNsUGoY7W6BPawbDlqt/U1ozLn1PwostcDKYZRSSKjntLlLYwqvV03V+9FpzHh/aWTEltwoAXZpfUXi7xVKW3UvSmdZat2w1XADw7L5cosRup0VsCQ+0Z/lzfYSrkEI7G2mQZihx/ACj4tqavv7dH0D28AdsB8UZJdZbIMgk69ICjU2R9msrssIMvQztIy/WiGl9tpl5ni8OrivsW1ODD5D+HtmWlclJSFdqltp3JX9qORx+e/0woZME42c1/Un/6FTi45hrowGysqo7/MZe/Q62sJLtfdx1ddMCFokw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
+ b=OVdaX9bzIB70njTaRVULumbW3fOpnpfFlIkptCth8NZRHprTf6POVj3SGn+uo0rnSbtz+i+GfojoVBTfESaOF5vAIsvSW6IEwAf2CRzOCnqxjpRpUknIfJtsJQfabiTexjgGPThvKdGq1sLWcUtd6YH+povhnBDabN0Lu1+GkVfVSwfcXlxDUkO2EL5ptSYvVrHhtSmV3kU7QXyPF/CTzj7lmMFf8zY9eEQgYlnriTlg6tbYebgJJMhq8sT4Vlu0edo+ibJRvyK7AyOeKyvud3QwfGfK3G8WG2tmFB6gvn2LdKJl8xfktUduhkavzTioovJZqMZ4uDBy/GC049irng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
+ b=P3/QUAO6yVzREo1kaZGqOs/lq3bPAwc+VzLoIE0nEIISxINJNzyPMLukzCs8Y6dMeyHXzm3DnOgV9/FHexZn5MIcReXeaPvFcFaLn4xfZRymXNaclcV1RGor/SyTXoRWav4nPZF4Z07owobbMXFgOKfhoaoiAOvYc9u0SFWl8nk=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by BY1PR13MB7115.namprd13.prod.outlook.com (2603:10b6:a03:5ac::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.8; Fri, 7 Jun
+ 2024 15:32:42 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::67bb:bacd:2321:1ecb%5]) with mapi id 15.20.7656.012; Fri, 7 Jun 2024
+ 15:32:42 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "hch@lst.de" <hch@lst.de>
+CC: "anna@kernel.org" <anna@kernel.org>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "willy@infradead.org" <willy@infradead.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: support large folios for NFS
+Thread-Topic: support large folios for NFS
+Thread-Index: AQHasFQEtVPFzJw4R0eoRu1V26ovVbGuxl2AgAIcooCACvOsgIAAqIaA
+Date: Fri, 7 Jun 2024 15:32:42 +0000
+Message-ID: <cf530d0c99c2b090e789b1beaf421bb4899f1d24.camel@hammerspace.com>
+References: <20240527163616.1135968-1-hch@lst.de>
+	 <777517bda109f0e4a37fdd8a2d4d03479dfbceaf.camel@hammerspace.com>
+	 <20240531061443.GA18075@lst.de> <20240607052927.GA3442@lst.de>
+In-Reply-To: <20240607052927.GA3442@lst.de>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BY1PR13MB7115:EE_
+x-ms-office365-filtering-correlation-id: a4504199-b510-43b9-c40f-08dc87071278
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?WThEN2lBUWJScTY3NytTUWhhaDV3QUpON3Y5UUdsWFNNNE1HTlZndVV1U0Vk?=
+ =?utf-8?B?YUxIQi9mRWVwYm5oYW9vR2t5dkNUT0UvVml2L3ZNbU5QR2N2R21lT2s4WCtw?=
+ =?utf-8?B?dmlkaXZwQ0F6WU1Xb0ZnZTdJbU5jaEN1THRxMkxvbTFWL2c3WGNZbGxhNUlJ?=
+ =?utf-8?B?YUg3NE9JQXlQZ1pTanZzbGJRL2JSZDJHMkhRWUVzejRGTURhczcwRlBva1hs?=
+ =?utf-8?B?ZXl5RHdBZGpRZ2VnTEl5LzFnb1k5YitKaHhzZ2pZQWRLRG8vNmFqRXBCRm1L?=
+ =?utf-8?B?dXk1SFJLNkxzUitPb3gwcGJFNDFkQnVzeFlYYWxPb0t2YXRzOFZxMm1XaXdj?=
+ =?utf-8?B?SkwvbW9ZaHdhSXEwMHdCNXE2WjJpYTZBQnZVMy9XQ3hTUUdkQjdhOUVZaFBO?=
+ =?utf-8?B?bVQ3VWN2cHlwMmtNcDRtbDJyQUJUQ3N1VXl3UWwzZy83U2FSdFFIbGhYdVFN?=
+ =?utf-8?B?ZHM1OFBSL0FwNStlV0Fvb0Zoa2R6d3YxR1lpRXVFVDhMRGUyKzc1eUdJc2R1?=
+ =?utf-8?B?RkF0dkxCSUhPZkIrV3k1S0RZUTQ0NXloU2JSeXZmQlV2WVdpZ2VOcm41eTI4?=
+ =?utf-8?B?THpPNTVCdWhTS3hvRkpTTDRQckg0U0VRYm9kdExCM2MybDlGM0pMVWd5ZVpF?=
+ =?utf-8?B?VWVaOUZPbkw2ZXd2RVI5UzFUQW9QdWQ1WmJrVEJ2MnlZMVhjTXVHNUM1M29Y?=
+ =?utf-8?B?U2FXMFdCWThuL3h5UWlpWEJKMlIvSVpyWmFJUmN1cVhha1dNU25CQTVQZThn?=
+ =?utf-8?B?SENrWnp6dG1BSklRKzJ5QjFVcDZwb1VpZGc1aU9pbng5K1B5NTlJVFUvZlFD?=
+ =?utf-8?B?SSt4NHZIS3ozVk5yaHpoK1E2anFvc25LSDlzZWZBaEZST21xM0dsQkdQS25P?=
+ =?utf-8?B?RGtzWUYyMkU1V3FpZkdUOGFXNGd5QkQ3SkhKYWtIcURmMitUVTA2N3V3TXNG?=
+ =?utf-8?B?dWlZd3V2U3dSVHBac1RVaTRlNXk4cE5VVWhKa00rU3FqRFZsZlQ0Q1VkcmFO?=
+ =?utf-8?B?dkJLdEs5Y0xHWHRJRDIwQVlKcWFtNTN6SjVoTi9DYW9GTmhOZXNORUMxK3lV?=
+ =?utf-8?B?VEQ0ZjgxdTNNRHpiampyLzFzRHkva3FUa09aZU5CTDRPd2kyTVJCdEJwbFlJ?=
+ =?utf-8?B?Z082T1g1Nm01aTR4T24rZDEybGU2L3NqK3laTjM3TUc3OFIxOFFxUnhNTU5F?=
+ =?utf-8?B?VTc3cHdNbEFENkk4M29pdElDK0Y1R01ya3R5RDNCV2RVWHVWYlhHQmxzYkMw?=
+ =?utf-8?B?Qm9FRWUxSzl1Nk41aXRqSXdFNG9kei90Q092cVB4c3lOREgrakNTcEZNcVVC?=
+ =?utf-8?B?L2xhMzFTQVp5TzhRb2s3dGQ3bmNNVTFQZVU3RVhialdpSjNHNS91VW5xblVq?=
+ =?utf-8?B?amh5M1VzMzV5UUNCOU1wQVVqWlFmRHorcGI0azE5T0xhaGNQRjc2TUZFUURn?=
+ =?utf-8?B?aWxib0pjeFNxTEVZWjNhVmgvdVhQRU9iSDN4bzFMYmd4SXZrZW1zUU1PdFha?=
+ =?utf-8?B?UjVpcU5tN0IxMzRFVXJsUGY3TnBlV25BYk9veUQ4Z25yeW1SYVJSZzJOUXhB?=
+ =?utf-8?B?dThxS0hoYTYrTEFQeEo1STEvcENhS3JPUytlTTVNRURMSlRwL2tHYzJCbUJh?=
+ =?utf-8?B?WFY1b0pGdUdMMDc4VHp1SEU2aysxTXd5VHFkeENuMnZPVVdGb2hEbjJjZitv?=
+ =?utf-8?B?ZFM4Skx5ZnczUFBTZlNycm9FVXhsSXJzMWR1Y3loTm03NUJzWVR6dG9lbEhP?=
+ =?utf-8?B?YkhJbXovc1o1WS9PMUY5UTRvSXRhSHlWVmRjYXpScGhmbjdVY0xVbXQ5ZkJi?=
+ =?utf-8?Q?MQmFsDe5fgM8bywKAQUTqD0j8QgaO2QRXZl2c=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?S21rNFg4Y0plWXM0R3dqaTRxNldkU2pFTXdNRytDeG9GK08yQUtoREdMc2Fi?=
+ =?utf-8?B?cFlaQXhvZUxOY0lwL20rc1VEcExoOFRGSEVpNE1lV2JTMmhvTUdUSXhPZUE5?=
+ =?utf-8?B?cGFOc2VnUG1vaWlEZ1B2NVZoaFUxeHd1Z3FYWlBJZS9mNXVLSWJHTDF6UkVZ?=
+ =?utf-8?B?VDlDSURPaWRCT0Zia0thdm5GYkFjMXZLcytIbXNha0Q3akdQalU2VHArRjAv?=
+ =?utf-8?B?RkExdGhGVUxONE82RG0yaUk0RmlkL3pPTndzSmJNK3d6Ni9qdnhMNGRlUG5w?=
+ =?utf-8?B?TFgxQWREQ0l0MVlSb1oyaHZZZVlLNUVBV1UzVkd0cUdTY2RaQ1FGSjc5cU9U?=
+ =?utf-8?B?OEMyR3BWSXRLVjFpVHhQb2pyNE9UN3JlV2hENFFVdTdwWnZnTVhUU1U3dEpO?=
+ =?utf-8?B?Q3JiaFp0S2xIUjArL0VFZWE3SHoxa1Y3MXhiQmdNdHRFbFVwanJ1cWdPVFpT?=
+ =?utf-8?B?VE14TlJQNUtCQlNwWkQzMTlrbS9nR3VPeG1DdGg5cmhiaDhrMjdBZ2UwY2l3?=
+ =?utf-8?B?dXliK3pCRFJ4Uk4rMlJxWUJYSDBsU3NVREZiZXJ6aEVSajhsQitEZHc0bk9E?=
+ =?utf-8?B?czZIcVNnQldnSndVZ1g1Vm1YendqVldyaXRXN2J1bVBVaEkreXNaZDRmUjNO?=
+ =?utf-8?B?OE5Md283bkdwcUp1bksva1kxblRrYmFFd3lJRlRQRXN6OGFjVnhlZDU1MSsv?=
+ =?utf-8?B?bVJXZ1R5b3htT01hdmxrT2E5aFV0eFF0NVhDV3RuTDhHekQ1My9lZ3hBS2NH?=
+ =?utf-8?B?YlhDbFJIRS8zYlpneUkrWFlSUzFTa2d1bGFnMkd4VnYrclZQdUFna21STi9P?=
+ =?utf-8?B?TmM2Q2R3L2NjdDRxWSt3N0k3TjVEUXJpNmRsRVJhd29sQnNZVG1PTitLejRq?=
+ =?utf-8?B?Vks1UW4vWG9tSWt6WlE3cC9VVHF3QTYxcE5RSzJDRGd2M2JpOGlQQVAyRnNP?=
+ =?utf-8?B?QVNXZDM0MmsxWkhGWk5uaW93eFBSY3Z2NXFQZlFUbC9hSGt0QTYvdUdjblpO?=
+ =?utf-8?B?QVZrUGVVeU9JWkU5eFhTMkgzbkNNaE01Wjlpd1hTTlVTT3NmekVFV21KVzVL?=
+ =?utf-8?B?d3VjU0x1UWpMSjhMOEIzVmZuZmgvN3pvYTk1SEpzbUJOc09mbmNWQ2FlTVUy?=
+ =?utf-8?B?S29QbmcxYkZ3Sm5RUHRaTzZGY0IxVG92RGY1elJFRHo3dWxTcTJEV01aMWlL?=
+ =?utf-8?B?Z212YWxDM1d5ZXVCY2ZCbnpRaXp3SVBOc0RvWTF0c1lDRHUySXQxV0xBdzE3?=
+ =?utf-8?B?bU9QVzJoWUhWamJLYjBMT0NsV1pVQ1JOa3JCVlNJc3NlREpmTFFXelVxVWNX?=
+ =?utf-8?B?V0xqVWNkZ1o0MkNYL1Z2ZFhYL3ZCR3YvMzd3SjBlaFdoQWlaMjZ5cFBtMXk0?=
+ =?utf-8?B?cURDejNyS0xGaE1iazJjc1kwZ3RQQ3Ezc3RwMU15ODlTZlM2WGtzUkJXV3l6?=
+ =?utf-8?B?bGtLSFNkbUdFQU8zNEJVWHpNWmdOTk9wMTJhNjVDZDErQ3liaDJjTGZlcWdI?=
+ =?utf-8?B?bk9yLzF2TThobzFSQmwrUUlaeHlKR0t3MU4wY2Y5QlUrVUpCSUx5cGNEbnpy?=
+ =?utf-8?B?cEdrZXRFT1dsUVV4S0tOUXFENWZ3WERYckJUT2ZuNzlqZGc3VUl2aTBNVVd4?=
+ =?utf-8?B?VHJjZ1lXVDl0SjYzZ0k0SW1WR05vQUxtanRsN21mZmRoamU3R2hLRDhUaTlM?=
+ =?utf-8?B?NGZ3REZCMjkvSzUzMTJiWmJVWGxweVp2TkIrYm1KRm5KNkcyYlRZSUNNZE4x?=
+ =?utf-8?B?MjNiNkNTQUFGMTZDdW56N3N4ZFJSZVFTTGhBSjlCbklUVmpiY0J6NWxZUTdz?=
+ =?utf-8?B?aitVUFovaTQ2VGtDMlVneDRrOHBhblhMSzhXZ1l3MUhia3hJT3JzTHBIY0pK?=
+ =?utf-8?B?MVZickQ5Q01lcWN6TEpiSEFvTndHMEpwUXhsM0FCanUycUhOdG1PVU03YS9M?=
+ =?utf-8?B?ajE2WTE2U04rckYvcWVYUTRZWll0Z3l1T0hZVkRybms5VERwVnpDUGFySlJ4?=
+ =?utf-8?B?UDFSaDlkbDVrWEZhc3AvSGRZTUlkdmJsaG03bm8yc3I4RENSWjZ0aGliRjVi?=
+ =?utf-8?B?eHQrcWFCck5yNDlhRkRXSFpVcmNwb0RLUCs3NExsb0RZNUFjdUI0eHZwM09u?=
+ =?utf-8?B?UEhsQWZKUDdGU0xwSjhPSUtSV201cGFOb1p0NU12Z3haL05MU0F6MGdCZmUr?=
+ =?utf-8?B?OWN3TDdTL0FOeFBzNkJOMTB0UWdBZm9qQ3hHRVoxRlZHaXZEQkR5TUVjVWpz?=
+ =?utf-8?B?UFZYcmZMSSthbEhiSDhVbG90V0RRPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4C560D1AB4203C4BB2FD388F778A57E9@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4504199-b510-43b9-c40f-08dc87071278
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2024 15:32:42.4065
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S6DqIduqtAbEBq5jvpzNc3tG2N30Mt94/FhHNDsGFYjNXgdx1RFXyeRo2UX2+vokT8HrNu1hvP3zORWHzPYgiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR13MB7115
 
-Get nfsd_open_local_fh and store it in rpc_client during client
-creation, put the symbol during nfs_local_disable -- which is also
-called during client destruction.
-
-Eliminates the need for nfs_local_open_ctx and extra locking and
-refcounting work in fs/nfs/localio.c
-
-Also makes it so the reference to the nfsd_open_local_fh symbol is
-managed by the nfs_common module instead of the nfs client modules.
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/client.c            |  1 +
- fs/nfs/inode.c             |  1 -
- fs/nfs/internal.h          | 13 ++++--
- fs/nfs/localio.c           | 89 +++-----------------------------------
- fs/nfs_common/nfslocalio.c | 26 +++++++++++
- include/linux/nfs.h        |  4 --
- include/linux/nfs_fs_sb.h  |  2 +
- include/linux/nfslocalio.h |  8 ++++
- 8 files changed, 53 insertions(+), 91 deletions(-)
-
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 589aeba8ccbb..3d356fb05aee 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -171,6 +171,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 
- 	INIT_LIST_HEAD(&clp->cl_superblocks);
- 	clp->cl_rpcclient = clp->cl_rpcclient_localio = ERR_PTR(-EINVAL);
-+	clp->nfsd_open_local_fh = NULL;
- 
- 	clp->cl_flags = cl_init->init_flags;
- 	clp->cl_proto = cl_init->proto;
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index b80469bce8df..811c99e65a02 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2513,7 +2513,6 @@ static int __init init_nfs_fs(void)
- 	if (err)
- 		goto out1;
- 
--	nfs_local_init();
- 	err = register_nfs_fs();
- 	if (err)
- 		goto out0;
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 1b2adca930fa..e82bdc579589 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -470,11 +470,18 @@ nfs_init_localioclient(struct nfs_client *clp,
- 	if (IS_ERR(clp->cl_rpcclient_localio))
- 		goto out;
- 	/* No errors! Assume that localio is supported */
-+	clp->nfsd_open_local_fh = get_nfsd_open_local_fh();
-+	if (!clp->nfsd_open_local_fh) {
-+		rpc_shutdown_client(clp->cl_rpcclient_localio);
-+		clp->cl_rpcclient_localio = ERR_PTR(-EINVAL);
-+		goto out;
-+	}
- 	supported = true;
- out:
--	dfprintk_rcu(CLIENT, "%s: server (%s) %s NFS v%u LOCALIO\n", __func__,
--		rpc_peeraddr2str(clp->cl_rpcclient_localio, RPC_DISPLAY_ADDR),
--		(supported ? "supports" : "does not support"), vers);
-+	dfprintk_rcu(CLIENT, "%s: server (%s) %s NFS v%u LOCALIO, nfsd_open_local_fh is %s.\n",
-+		__func__, rpc_peeraddr2str(clp->cl_rpcclient_localio, RPC_DISPLAY_ADDR),
-+		(supported ? "supports" : "does not support"), vers,
-+		(clp->nfsd_open_local_fh ? "set" : "not set"));
- }
- 
- /* localio.c */
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index ff28a7315470..fb1ebc9715ff 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -27,26 +27,6 @@
- 
- #define NFSDBG_FACILITY		NFSDBG_VFS
- 
--extern int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
--			      const struct cred *cred,
--			      const struct nfs_fh *nfs_fh, const fmode_t fmode,
--			      struct file **pfilp);
--/*
-- * The localio code needs to call into nfsd to do the filehandle -> struct path
-- * mapping, but cannot be statically linked, because that will make the nfs
-- * module depend on the nfsd module.
-- *
-- * Instead, do dynamic linking to the nfsd module. This way the nfs module
-- * will only hold a reference on nfsd when it's actually in use. This also
-- * allows some sanity checking, like giving up on localio if nfsd isn't loaded.
-- */
--
--struct nfs_local_open_ctx {
--	spinlock_t lock;
--	nfs_to_nfsd_open_t open_f;
--	atomic_t refcount;
--};
--
- struct nfs_local_kiocb {
- 	struct kiocb		kiocb;
- 	struct bio_vec		*bvec;
-@@ -139,8 +119,6 @@ nfs4errno(int errno)
- 	return NFS4ERR_SERVERFAULT;
- }
- 
--static struct nfs_local_open_ctx __local_open_ctx __read_mostly;
--
- static bool localio_enabled __read_mostly = true;
- module_param(localio_enabled, bool, 0644);
- 
-@@ -151,66 +129,12 @@ bool nfs_server_is_local(const struct nfs_client *clp)
- }
- EXPORT_SYMBOL_GPL(nfs_server_is_local);
- 
--void
--nfs_local_init(void)
--{
--	struct nfs_local_open_ctx *ctx = &__local_open_ctx;
--
--	ctx->open_f = NULL;
--	spin_lock_init(&ctx->lock);
--	atomic_set(&ctx->refcount, 0);
--}
--
--static bool
--nfs_local_get_lookup_ctx(void)
--{
--	struct nfs_local_open_ctx *ctx = &__local_open_ctx;
--	nfs_to_nfsd_open_t fn = NULL;
--
--	spin_lock(&ctx->lock);
--	if (ctx->open_f == NULL) {
--		spin_unlock(&ctx->lock);
--
--		fn = symbol_request(nfsd_open_local_fh);
--		if (!fn)
--			return false;
--
--		spin_lock(&ctx->lock);
--		/* catch race */
--		if (ctx->open_f == NULL) {
--			ctx->open_f = fn;
--			fn = NULL;
--		}
--	}
--	atomic_inc(&ctx->refcount);
--	spin_unlock(&ctx->lock);
--	if (fn)
--		symbol_put(nfsd_open_local_fh);
--	return true;
--}
--
--static void
--nfs_local_put_lookup_ctx(void)
--{
--	struct nfs_local_open_ctx *ctx = &__local_open_ctx;
--	nfs_to_nfsd_open_t fn;
--
--	if (atomic_dec_and_lock(&ctx->refcount, &ctx->lock)) {
--		fn = ctx->open_f;
--		ctx->open_f = NULL;
--		spin_unlock(&ctx->lock);
--		if (fn)
--			symbol_put(nfsd_open_local_fh);
--	}
--}
--
- /*
-  * nfs_local_enable - attempt to enable local i/o for an nfs_client
-  */
--void
--nfs_local_enable(struct nfs_client *clp)
-+void nfs_local_enable(struct nfs_client *clp)
- {
--	if (nfs_local_get_lookup_ctx()) {
-+	if (READ_ONCE(clp->nfsd_open_local_fh)) {
- 		set_bit(NFS_CS_LOCAL_IO, &clp->cl_flags);
- 		trace_nfs_local_enable(clp);
- 	}
-@@ -219,12 +143,12 @@ nfs_local_enable(struct nfs_client *clp)
- /*
-  * nfs_local_disable - disable local i/o for an nfs_client
-  */
--void
--nfs_local_disable(struct nfs_client *clp)
-+void nfs_local_disable(struct nfs_client *clp)
- {
- 	if (test_and_clear_bit(NFS_CS_LOCAL_IO, &clp->cl_flags)) {
- 		trace_nfs_local_disable(clp);
--		nfs_local_put_lookup_ctx();
-+		put_nfsd_open_local_fh();
-+		clp->nfsd_open_local_fh = NULL;
- 	}
- }
- 
-@@ -299,14 +223,13 @@ struct file *
- nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
- 		  struct nfs_fh *fh, const fmode_t mode)
- {
--	struct nfs_local_open_ctx *ctx = &__local_open_ctx;
- 	struct file *filp;
- 	int status;
- 
- 	if (mode & ~(FMODE_READ | FMODE_WRITE))
- 		return ERR_PTR(-EINVAL);
- 
--	status = ctx->open_f(clp->cl_rpcclient, cred, fh, mode, &filp);
-+	status = clp->nfsd_open_local_fh(clp->cl_rpcclient, cred, fh, mode, &filp);
- 	if (status < 0) {
- 		dprintk("%s: open local file failed error=%d\n",
- 				__func__, status);
-diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-index f214cc6754a1..c454c4100976 100644
---- a/fs/nfs_common/nfslocalio.c
-+++ b/fs/nfs_common/nfslocalio.c
-@@ -40,3 +40,29 @@ bool nfsd_uuid_is_local(const uuid_t *uuid)
- 	return !uuid_is_null(nfsd_uuid);
- }
- EXPORT_SYMBOL_GPL(nfsd_uuid_is_local);
-+
-+/*
-+ * The nfs localio code needs to call into nfsd to do the filehandle -> struct path
-+ * mapping, but cannot be statically linked, because that will make the nfs module
-+ * depend on the nfsd module.
-+ *
-+ * Instead, do dynamic linking to the nfsd module (via nfs_common module). The
-+ * nfs_common module will only hold a reference on nfsd when localio is in use.
-+ * This allows some sanity checking, like giving up on localio if nfsd isn't loaded.
-+ */
-+
-+extern int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
-+			const struct cred *cred, const struct nfs_fh *nfs_fh,
-+			const fmode_t fmode, struct file **pfilp);
-+
-+nfs_to_nfsd_open_t get_nfsd_open_local_fh(void)
-+{
-+	return symbol_request(nfsd_open_local_fh);
-+}
-+EXPORT_SYMBOL_GPL(get_nfsd_open_local_fh);
-+
-+void put_nfsd_open_local_fh(void)
-+{
-+	symbol_put(nfsd_open_local_fh);
-+}
-+EXPORT_SYMBOL_GPL(put_nfsd_open_local_fh);
-diff --git a/include/linux/nfs.h b/include/linux/nfs.h
-index 80843764fad3..755944b562e9 100644
---- a/include/linux/nfs.h
-+++ b/include/linux/nfs.h
-@@ -111,10 +111,6 @@ static inline int nfs_stat_to_errno(enum nfs_stat status)
- 	return nfs_common_errtbl[i].errno;
- }
- 
--typedef int (*nfs_to_nfsd_open_t)(struct rpc_clnt *, const struct cred *,
--				  const struct nfs_fh *, const fmode_t,
--				  struct file **);
--
- #ifdef CONFIG_CRC32
- /**
-  * nfs_fhandle_hash - calculate the crc32 hash for the filehandle
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index efcdb4d8e9de..f5760b05ec87 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -8,6 +8,7 @@
- #include <linux/wait.h>
- #include <linux/nfs_xdr.h>
- #include <linux/sunrpc/xprt.h>
-+#include <linux/nfslocalio.h>
- 
- #include <linux/atomic.h>
- #include <linux/refcount.h>
-@@ -131,6 +132,7 @@ struct nfs_client {
- 	struct timespec64	cl_nfssvc_boot;
- 	seqlock_t		cl_boot_lock;
- 	struct rpc_clnt *	cl_rpcclient_localio;	/* localio RPC client handle */
-+	nfs_to_nfsd_open_t	nfsd_open_local_fh;
- };
- 
- /*
-diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-index d0bbacd0adcf..b8df1b9f248d 100644
---- a/include/linux/nfslocalio.h
-+++ b/include/linux/nfslocalio.h
-@@ -7,6 +7,7 @@
- 
- #include <linux/list.h>
- #include <linux/uuid.h>
-+#include <linux/nfs.h>
- 
- /*
-  * Global list of nfsd_uuid_t instances, add/remove
-@@ -26,4 +27,11 @@ typedef struct {
- 
- bool nfsd_uuid_is_local(const uuid_t *uuid);
- 
-+typedef int (*nfs_to_nfsd_open_t)(struct rpc_clnt *, const struct cred *,
-+				  const struct nfs_fh *, const fmode_t,
-+				  struct file **);
-+
-+nfs_to_nfsd_open_t get_nfsd_open_local_fh(void);
-+void put_nfsd_open_local_fh(void);
-+
- #endif  /* __LINUX_NFSLOCALIO_H */
--- 
-2.44.0
-
+T24gRnJpLCAyMDI0LTA2LTA3IGF0IDA3OjI5ICswMjAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
+biBGcmksIE1heSAzMSwgMjAyNCBhdCAwODoxNDo0M0FNICswMjAwLCBoY2hAbHN0LmRlwqB3cm90
+ZToNCj4gPiBPbiBXZWQsIE1heSAyOSwgMjAyNCBhdCAwOTo1OTo0NFBNICswMDAwLCBUcm9uZCBN
+eWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiBXaGljaCB0cmVlIGRpZCB5b3UgaW50ZW5kIHRvIG1lcmdl
+IHRoaXMgdGhyb3VnaD8gV2lsbHkncyBvciBBbm5hDQo+ID4gPiBhbmQNCj4gPiA+IG1pbmU/IEkn
+bSBPSyBlaXRoZXIgd2F5LiBJIGp1c3Qgd2FudCB0byBtYWtlIHN1cmUgd2UncmUgb24gdGhlDQo+
+ID4gPiBzYW1lDQo+ID4gPiBwYWdlLg0KPiA+IA0KPiA+IEknbSBwZXJmZWN0bHkgZmluZSBlaXRo
+ZXIgd2F5IHRvby7CoCBJZiB3aWxseSB3YW50cyB0byBnZXQgYW55IG90aGVyDQo+ID4gd29yayBm
+b3IgZ2VuZXJpY19wZXJmb3JtX3dyaXRlIGluIGFzIHBlciBoaXMgUkZDIHBhdGNoZXMgdGhlDQo+
+ID4gcGFnZWNhY2hlDQo+ID4gdHJlZSBtaWdodCBiZSBhIGJldHRlciBwbGFjZSwgaWYgbm90IG1h
+eWJlIHRoZSBuZnMgdHJlZS4NCj4gDQo+IFRoYXQgbWFpbnRhaW5lciBjZWxlYnJpdHkgZGVhdGgg
+bWF0Y2ggd2FzIGEgYml0IGJvcmluZyA6KcKgIEFueQ0KPiB0YWtlcnM/DQo+IA0KDQrwn5mCIFdl
+J2xsIHB1c2ggdGhlbSB0aHJvdWdoIHRoZSBORlMgdHJlZS4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1
+c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xl
+YnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
 
