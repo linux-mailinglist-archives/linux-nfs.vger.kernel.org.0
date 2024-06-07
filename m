@@ -1,196 +1,303 @@
-Return-Path: <linux-nfs+bounces-3615-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3616-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6E3900938
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 17:34:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92F59900BB7
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 20:06:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B241B28A0CA
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 15:34:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A98C1C21DB6
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jun 2024 18:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C90198E9D;
-	Fri,  7 Jun 2024 15:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="P3/QUAO6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53BD1197A90;
+	Fri,  7 Jun 2024 18:06:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2107.outbound.protection.outlook.com [40.107.236.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490101CD37;
-	Fri,  7 Jun 2024 15:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717774371; cv=fail; b=tKK+Q/ywFSu7JlZJGfmrhYaFAE/HOZWxRwJ1XFI1xYWV8PYAFby3UgMz654EMd+5fCdzoD9SGoTETHsS/zaeRvKXyMd6+xa5KaxoMZjD41ypqbNZBK2QQclKHAx447OZZt9hvp2X7HdVf752Jm1g1xzazxmvf69r4LtMuPsR+Xw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717774371; c=relaxed/simple;
-	bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OnDJkvGH6RGoGw/3sZ9Hq3brEMYLPNT1iCXD3CG7ZlnXNNIsJHOiPpO7GFCK3nU8Ww5cQp2AGn+Yf0C3v9QjtNJ1fuDYek5IwIvk8iDExm8xhSy4F2aB2okyQCA6t8ATG2PJgC4TQpDLJ5pUfXa4djEfuiGVP7nf17tk83AnuyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=P3/QUAO6; arc=fail smtp.client-ip=40.107.236.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cR4qRkqJkyywEsQMJfg3LBrVb6zeQKtXIvcpGsR82wdIm5rNsUGoY7W6BPawbDlqt/U1ozLn1PwostcDKYZRSSKjntLlLYwqvV03V+9FpzHh/aWTEltwoAXZpfUXi7xVKW3UvSmdZat2w1XADw7L5cosRup0VsCQ+0Z/lzfYSrkEI7G2mQZihx/ACj4tqavv7dH0D28AdsB8UZJdZbIMgk69ICjU2R9msrssIMvQztIy/WiGl9tpl5ni8OrivsW1ODD5D+HtmWlclJSFdqltp3JX9qORx+e/0woZME42c1/Un/6FTi45hrowGysqo7/MZe/Q62sJLtfdx1ddMCFokw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
- b=OVdaX9bzIB70njTaRVULumbW3fOpnpfFlIkptCth8NZRHprTf6POVj3SGn+uo0rnSbtz+i+GfojoVBTfESaOF5vAIsvSW6IEwAf2CRzOCnqxjpRpUknIfJtsJQfabiTexjgGPThvKdGq1sLWcUtd6YH+povhnBDabN0Lu1+GkVfVSwfcXlxDUkO2EL5ptSYvVrHhtSmV3kU7QXyPF/CTzj7lmMFf8zY9eEQgYlnriTlg6tbYebgJJMhq8sT4Vlu0edo+ibJRvyK7AyOeKyvud3QwfGfK3G8WG2tmFB6gvn2LdKJl8xfktUduhkavzTioovJZqMZ4uDBy/GC049irng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aZnB0niVu3j1F/qyPXuK9wmQX+mwzlPfyfGAqeN6pso=;
- b=P3/QUAO6yVzREo1kaZGqOs/lq3bPAwc+VzLoIE0nEIISxINJNzyPMLukzCs8Y6dMeyHXzm3DnOgV9/FHexZn5MIcReXeaPvFcFaLn4xfZRymXNaclcV1RGor/SyTXoRWav4nPZF4Z07owobbMXFgOKfhoaoiAOvYc9u0SFWl8nk=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BY1PR13MB7115.namprd13.prod.outlook.com (2603:10b6:a03:5ac::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.8; Fri, 7 Jun
- 2024 15:32:42 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb%5]) with mapi id 15.20.7656.012; Fri, 7 Jun 2024
- 15:32:42 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "hch@lst.de" <hch@lst.de>
-CC: "anna@kernel.org" <anna@kernel.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "willy@infradead.org" <willy@infradead.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: support large folios for NFS
-Thread-Topic: support large folios for NFS
-Thread-Index: AQHasFQEtVPFzJw4R0eoRu1V26ovVbGuxl2AgAIcooCACvOsgIAAqIaA
-Date: Fri, 7 Jun 2024 15:32:42 +0000
-Message-ID: <cf530d0c99c2b090e789b1beaf421bb4899f1d24.camel@hammerspace.com>
-References: <20240527163616.1135968-1-hch@lst.de>
-	 <777517bda109f0e4a37fdd8a2d4d03479dfbceaf.camel@hammerspace.com>
-	 <20240531061443.GA18075@lst.de> <20240607052927.GA3442@lst.de>
-In-Reply-To: <20240607052927.GA3442@lst.de>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BY1PR13MB7115:EE_
-x-ms-office365-filtering-correlation-id: a4504199-b510-43b9-c40f-08dc87071278
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?WThEN2lBUWJScTY3NytTUWhhaDV3QUpON3Y5UUdsWFNNNE1HTlZndVV1U0Vk?=
- =?utf-8?B?YUxIQi9mRWVwYm5oYW9vR2t5dkNUT0UvVml2L3ZNbU5QR2N2R21lT2s4WCtw?=
- =?utf-8?B?dmlkaXZwQ0F6WU1Xb0ZnZTdJbU5jaEN1THRxMkxvbTFWL2c3WGNZbGxhNUlJ?=
- =?utf-8?B?YUg3NE9JQXlQZ1pTanZzbGJRL2JSZDJHMkhRWUVzejRGTURhczcwRlBva1hs?=
- =?utf-8?B?ZXl5RHdBZGpRZ2VnTEl5LzFnb1k5YitKaHhzZ2pZQWRLRG8vNmFqRXBCRm1L?=
- =?utf-8?B?dXk1SFJLNkxzUitPb3gwcGJFNDFkQnVzeFlYYWxPb0t2YXRzOFZxMm1XaXdj?=
- =?utf-8?B?SkwvbW9ZaHdhSXEwMHdCNXE2WjJpYTZBQnZVMy9XQ3hTUUdkQjdhOUVZaFBO?=
- =?utf-8?B?bVQ3VWN2cHlwMmtNcDRtbDJyQUJUQ3N1VXl3UWwzZy83U2FSdFFIbGhYdVFN?=
- =?utf-8?B?ZHM1OFBSL0FwNStlV0Fvb0Zoa2R6d3YxR1lpRXVFVDhMRGUyKzc1eUdJc2R1?=
- =?utf-8?B?RkF0dkxCSUhPZkIrV3k1S0RZUTQ0NXloU2JSeXZmQlV2WVdpZ2VOcm41eTI4?=
- =?utf-8?B?THpPNTVCdWhTS3hvRkpTTDRQckg0U0VRYm9kdExCM2MybDlGM0pMVWd5ZVpF?=
- =?utf-8?B?VWVaOUZPbkw2ZXd2RVI5UzFUQW9QdWQ1WmJrVEJ2MnlZMVhjTXVHNUM1M29Y?=
- =?utf-8?B?U2FXMFdCWThuL3h5UWlpWEJKMlIvSVpyWmFJUmN1cVhha1dNU25CQTVQZThn?=
- =?utf-8?B?SENrWnp6dG1BSklRKzJ5QjFVcDZwb1VpZGc1aU9pbng5K1B5NTlJVFUvZlFD?=
- =?utf-8?B?SSt4NHZIS3ozVk5yaHpoK1E2anFvc25LSDlzZWZBaEZST21xM0dsQkdQS25P?=
- =?utf-8?B?RGtzWUYyMkU1V3FpZkdUOGFXNGd5QkQ3SkhKYWtIcURmMitUVTA2N3V3TXNG?=
- =?utf-8?B?dWlZd3V2U3dSVHBac1RVaTRlNXk4cE5VVWhKa00rU3FqRFZsZlQ0Q1VkcmFO?=
- =?utf-8?B?dkJLdEs5Y0xHWHRJRDIwQVlKcWFtNTN6SjVoTi9DYW9GTmhOZXNORUMxK3lV?=
- =?utf-8?B?VEQ0ZjgxdTNNRHpiampyLzFzRHkva3FUa09aZU5CTDRPd2kyTVJCdEJwbFlJ?=
- =?utf-8?B?Z082T1g1Nm01aTR4T24rZDEybGU2L3NqK3laTjM3TUc3OFIxOFFxUnhNTU5F?=
- =?utf-8?B?VTc3cHdNbEFENkk4M29pdElDK0Y1R01ya3R5RDNCV2RVWHVWYlhHQmxzYkMw?=
- =?utf-8?B?Qm9FRWUxSzl1Nk41aXRqSXdFNG9kei90Q092cVB4c3lOREgrakNTcEZNcVVC?=
- =?utf-8?B?L2xhMzFTQVp5TzhRb2s3dGQ3bmNNVTFQZVU3RVhialdpSjNHNS91VW5xblVq?=
- =?utf-8?B?amh5M1VzMzV5UUNCOU1wQVVqWlFmRHorcGI0azE5T0xhaGNQRjc2TUZFUURn?=
- =?utf-8?B?aWxib0pjeFNxTEVZWjNhVmgvdVhQRU9iSDN4bzFMYmd4SXZrZW1zUU1PdFha?=
- =?utf-8?B?UjVpcU5tN0IxMzRFVXJsUGY3TnBlV25BYk9veUQ4Z25yeW1SYVJSZzJOUXhB?=
- =?utf-8?B?dThxS0hoYTYrTEFQeEo1STEvcENhS3JPUytlTTVNRURMSlRwL2tHYzJCbUJh?=
- =?utf-8?B?WFY1b0pGdUdMMDc4VHp1SEU2aysxTXd5VHFkeENuMnZPVVdGb2hEbjJjZitv?=
- =?utf-8?B?ZFM4Skx5ZnczUFBTZlNycm9FVXhsSXJzMWR1Y3loTm03NUJzWVR6dG9lbEhP?=
- =?utf-8?B?YkhJbXovc1o1WS9PMUY5UTRvSXRhSHlWVmRjYXpScGhmbjdVY0xVbXQ5ZkJi?=
- =?utf-8?Q?MQmFsDe5fgM8bywKAQUTqD0j8QgaO2QRXZl2c=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?S21rNFg4Y0plWXM0R3dqaTRxNldkU2pFTXdNRytDeG9GK08yQUtoREdMc2Fi?=
- =?utf-8?B?cFlaQXhvZUxOY0lwL20rc1VEcExoOFRGSEVpNE1lV2JTMmhvTUdUSXhPZUE5?=
- =?utf-8?B?cGFOc2VnUG1vaWlEZ1B2NVZoaFUxeHd1Z3FYWlBJZS9mNXVLSWJHTDF6UkVZ?=
- =?utf-8?B?VDlDSURPaWRCT0Zia0thdm5GYkFjMXZLcytIbXNha0Q3akdQalU2VHArRjAv?=
- =?utf-8?B?RkExdGhGVUxONE82RG0yaUk0RmlkL3pPTndzSmJNK3d6Ni9qdnhMNGRlUG5w?=
- =?utf-8?B?TFgxQWREQ0l0MVlSb1oyaHZZZVlLNUVBV1UzVkd0cUdTY2RaQ1FGSjc5cU9U?=
- =?utf-8?B?OEMyR3BWSXRLVjFpVHhQb2pyNE9UN3JlV2hENFFVdTdwWnZnTVhUU1U3dEpO?=
- =?utf-8?B?Q3JiaFp0S2xIUjArL0VFZWE3SHoxa1Y3MXhiQmdNdHRFbFVwanJ1cWdPVFpT?=
- =?utf-8?B?VE14TlJQNUtCQlNwWkQzMTlrbS9nR3VPeG1DdGg5cmhiaDhrMjdBZ2UwY2l3?=
- =?utf-8?B?dXliK3pCRFJ4Uk4rMlJxWUJYSDBsU3NVREZiZXJ6aEVSajhsQitEZHc0bk9E?=
- =?utf-8?B?czZIcVNnQldnSndVZ1g1Vm1YendqVldyaXRXN2J1bVBVaEkreXNaZDRmUjNO?=
- =?utf-8?B?OE5Md283bkdwcUp1bksva1kxblRrYmFFd3lJRlRQRXN6OGFjVnhlZDU1MSsv?=
- =?utf-8?B?bVJXZ1R5b3htT01hdmxrT2E5aFV0eFF0NVhDV3RuTDhHekQ1My9lZ3hBS2NH?=
- =?utf-8?B?YlhDbFJIRS8zYlpneUkrWFlSUzFTa2d1bGFnMkd4VnYrclZQdUFna21STi9P?=
- =?utf-8?B?TmM2Q2R3L2NjdDRxWSt3N0k3TjVEUXJpNmRsRVJhd29sQnNZVG1PTitLejRq?=
- =?utf-8?B?Vks1UW4vWG9tSWt6WlE3cC9VVHF3QTYxcE5RSzJDRGd2M2JpOGlQQVAyRnNP?=
- =?utf-8?B?QVNXZDM0MmsxWkhGWk5uaW93eFBSY3Z2NXFQZlFUbC9hSGt0QTYvdUdjblpO?=
- =?utf-8?B?QVZrUGVVeU9JWkU5eFhTMkgzbkNNaE01Wjlpd1hTTlVTT3NmekVFV21KVzVL?=
- =?utf-8?B?d3VjU0x1UWpMSjhMOEIzVmZuZmgvN3pvYTk1SEpzbUJOc09mbmNWQ2FlTVUy?=
- =?utf-8?B?S29QbmcxYkZ3Sm5RUHRaTzZGY0IxVG92RGY1elJFRHo3dWxTcTJEV01aMWlL?=
- =?utf-8?B?Z212YWxDM1d5ZXVCY2ZCbnpRaXp3SVBOc0RvWTF0c1lDRHUySXQxV0xBdzE3?=
- =?utf-8?B?bU9QVzJoWUhWamJLYjBMT0NsV1pVQ1JOa3JCVlNJc3NlREpmTFFXelVxVWNX?=
- =?utf-8?B?V0xqVWNkZ1o0MkNYL1Z2ZFhYL3ZCR3YvMzd3SjBlaFdoQWlaMjZ5cFBtMXk0?=
- =?utf-8?B?cURDejNyS0xGaE1iazJjc1kwZ3RQQ3Ezc3RwMU15ODlTZlM2WGtzUkJXV3l6?=
- =?utf-8?B?bGtLSFNkbUdFQU8zNEJVWHpNWmdOTk9wMTJhNjVDZDErQ3liaDJjTGZlcWdI?=
- =?utf-8?B?bk9yLzF2TThobzFSQmwrUUlaeHlKR0t3MU4wY2Y5QlUrVUpCSUx5cGNEbnpy?=
- =?utf-8?B?cEdrZXRFT1dsUVV4S0tOUXFENWZ3WERYckJUT2ZuNzlqZGc3VUl2aTBNVVd4?=
- =?utf-8?B?VHJjZ1lXVDl0SjYzZ0k0SW1WR05vQUxtanRsN21mZmRoamU3R2hLRDhUaTlM?=
- =?utf-8?B?NGZ3REZCMjkvSzUzMTJiWmJVWGxweVp2TkIrYm1KRm5KNkcyYlRZSUNNZE4x?=
- =?utf-8?B?MjNiNkNTQUFGMTZDdW56N3N4ZFJSZVFTTGhBSjlCbklUVmpiY0J6NWxZUTdz?=
- =?utf-8?B?aitVUFovaTQ2VGtDMlVneDRrOHBhblhMSzhXZ1l3MUhia3hJT3JzTHBIY0pK?=
- =?utf-8?B?MVZickQ5Q01lcWN6TEpiSEFvTndHMEpwUXhsM0FCanUycUhOdG1PVU03YS9M?=
- =?utf-8?B?ajE2WTE2U04rckYvcWVYUTRZWll0Z3l1T0hZVkRybms5VERwVnpDUGFySlJ4?=
- =?utf-8?B?UDFSaDlkbDVrWEZhc3AvSGRZTUlkdmJsaG03bm8yc3I4RENSWjZ0aGliRjVi?=
- =?utf-8?B?eHQrcWFCck5yNDlhRkRXSFpVcmNwb0RLUCs3NExsb0RZNUFjdUI0eHZwM09u?=
- =?utf-8?B?UEhsQWZKUDdGU0xwSjhPSUtSV201cGFOb1p0NU12Z3haL05MU0F6MGdCZmUr?=
- =?utf-8?B?OWN3TDdTL0FOeFBzNkJOMTB0UWdBZm9qQ3hHRVoxRlZHaXZEQkR5TUVjVWpz?=
- =?utf-8?B?UFZYcmZMSSthbEhiSDhVbG90V0RRPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4C560D1AB4203C4BB2FD388F778A57E9@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD91417582
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Jun 2024 18:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717783567; cv=none; b=Db7q1/9llI1d3sNU+LBkemX+nmLCGPPIgu2wXXMJPZ16VQqjkU4RdE2nAzrIS5ioYzQtf94De0V5mo6Z/5vaRekK0MTxlaLm/U/6Q5OAfwPpuAA9yuBKvKNcBaZIgxTXCREf0NHOH/pT4R33jyiZNlfRkGfs4tZVXUQzZbhFJTU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717783567; c=relaxed/simple;
+	bh=b4L5nnaRLFkGD5090XEx0mMNvG8CVe8HUWE8FlZS8u4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAkJUwK3ayZ7c5daCgnSUVQ1asuielBxziHoRbOQ8a8w1JoP4qTRxq+x1VLDnNQnYzJdVk3hooCRUv7I8WiImHEAM1CRX43crFpD16nvxGe+8MJ/gT8CslcerkE5uwmUJfh7/CCPqEvoTZaS3uVRRxQiYX1kcvPJ+0i3ZxYUaK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5babfde1c04so374914eaf.2
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jun 2024 11:06:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717783563; x=1718388363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zTyjQnWXU/VUektGFWk3gptg4HhF5fJ8j9Hl7ufm6B0=;
+        b=cOB+wVY0s92Zp91zJ56a/O5cSb+socRp1QY8deiC8x3qVqt16BY/B4QbMy/mfLro34
+         /+3i0Z2TTJxLTdRvcGWjMFelipWZmGSt2JToQy/98oLDPaJ+Nj8C1Mu4kU+2elFruodF
+         9nuXqsGzNWetxrN3yAaUvTfwBysZEAn4rWeK2WH8cPtnlVIgsh1ElB6Dd+uXECBmHW4t
+         mjC4EwilGmO2tiFQHHLD9rw/TuYpfTLhkpE8P28v5EVpPZbOJqwRMRHw9DC0Zuf+wDUX
+         Nk4HfoEgNRKoeaHgPwle2PJ2GLZJERK8YgxoAtnHzb2l9zq18sucoqApH7ozmSsLHVJw
+         3ihQ==
+X-Gm-Message-State: AOJu0Yx9UjxrnJED4SP7jI2z9rdekqyoIuhEe7X6JafwQbIaBLY5KiE+
+	qkQMbTX0rFU7xcrZ6i98adXO40axKPJh5eIUsuTnUS4Vdhm68QMb/ZuJVeE/LMJfLBvBp9z9by2
+	2bTNMaQ==
+X-Google-Smtp-Source: AGHT+IE7zQqSuj+MjM8AKoIxtobYeTgKqWgwqoaYxNrYFDtXuHyeDPMayA7bpt2jYcf/YsBiBw1BGQ==
+X-Received: by 2002:a05:6358:c6a4:b0:19f:1343:7f0a with SMTP id e5c5f4694b2df-19f1f719dd6mr271248355d.0.1717783563359;
+        Fri, 07 Jun 2024 11:06:03 -0700 (PDT)
+Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44038ab428bsm14371631cf.53.2024.06.07.11.06.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 11:06:02 -0700 (PDT)
+Date: Fri, 7 Jun 2024 14:06:01 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Subject: [for-6.11 PATCH 30/29] nfs/nfsd: ensure localio server always uses
+ its network namespace
+Message-ID: <ZmNMCejlYlDgfA1Q@kernel.org>
+References: <20240607142646.20924-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4504199-b510-43b9-c40f-08dc87071278
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2024 15:32:42.4065
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S6DqIduqtAbEBq5jvpzNc3tG2N30Mt94/FhHNDsGFYjNXgdx1RFXyeRo2UX2+vokT8HrNu1hvP3zORWHzPYgiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR13MB7115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607142646.20924-1-snitzer@kernel.org>
 
-T24gRnJpLCAyMDI0LTA2LTA3IGF0IDA3OjI5ICswMjAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
-biBGcmksIE1heSAzMSwgMjAyNCBhdCAwODoxNDo0M0FNICswMjAwLCBoY2hAbHN0LmRlwqB3cm90
-ZToNCj4gPiBPbiBXZWQsIE1heSAyOSwgMjAyNCBhdCAwOTo1OTo0NFBNICswMDAwLCBUcm9uZCBN
-eWtsZWJ1c3Qgd3JvdGU6DQo+ID4gPiBXaGljaCB0cmVlIGRpZCB5b3UgaW50ZW5kIHRvIG1lcmdl
-IHRoaXMgdGhyb3VnaD8gV2lsbHkncyBvciBBbm5hDQo+ID4gPiBhbmQNCj4gPiA+IG1pbmU/IEkn
-bSBPSyBlaXRoZXIgd2F5LiBJIGp1c3Qgd2FudCB0byBtYWtlIHN1cmUgd2UncmUgb24gdGhlDQo+
-ID4gPiBzYW1lDQo+ID4gPiBwYWdlLg0KPiA+IA0KPiA+IEknbSBwZXJmZWN0bHkgZmluZSBlaXRo
-ZXIgd2F5IHRvby7CoCBJZiB3aWxseSB3YW50cyB0byBnZXQgYW55IG90aGVyDQo+ID4gd29yayBm
-b3IgZ2VuZXJpY19wZXJmb3JtX3dyaXRlIGluIGFzIHBlciBoaXMgUkZDIHBhdGNoZXMgdGhlDQo+
-ID4gcGFnZWNhY2hlDQo+ID4gdHJlZSBtaWdodCBiZSBhIGJldHRlciBwbGFjZSwgaWYgbm90IG1h
-eWJlIHRoZSBuZnMgdHJlZS4NCj4gDQo+IFRoYXQgbWFpbnRhaW5lciBjZWxlYnJpdHkgZGVhdGgg
-bWF0Y2ggd2FzIGEgYml0IGJvcmluZyA6KcKgIEFueQ0KPiB0YWtlcnM/DQo+IA0KDQrwn5mCIFdl
-J2xsIHB1c2ggdGhlbSB0aHJvdWdoIHRoZSBORlMgdHJlZS4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1
-c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xl
-YnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Pass the stored cl_nfssvc_net from the client to the server as first
+argument to nfsd_open_local_fh() to ensure the proper network
+namespace is used for localio.
+
+Otherwise, before this commit, the nfs_client's network namespace was
+used (as extracted from the client's cl_rpcclient). This is clearly
+not going to allow proper functionality if the client and server
+happen to have disjoint network namespaces.
+
+Elected to not rename the nfsd_uuid_t structure despite it growing a
+non-uuid member. Can revisit later.
+
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ fs/nfs/client.c            |  1 +
+ fs/nfs/localio.c           |  7 +++++--
+ fs/nfs_common/nfslocalio.c | 15 +++++++++------
+ fs/nfsd/localio.c          |  9 +++++----
+ fs/nfsd/nfssvc.c           |  1 +
+ fs/nfsd/vfs.h              |  3 ++-
+ include/linux/nfs_fs_sb.h  |  1 +
+ include/linux/nfslocalio.h | 10 ++++++----
+ 8 files changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 3d356fb05aee..16636c68148f 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -171,6 +171,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 
+ 	INIT_LIST_HEAD(&clp->cl_superblocks);
+ 	clp->cl_rpcclient = clp->cl_rpcclient_localio = ERR_PTR(-EINVAL);
++	clp->cl_nfssvc_net = NULL;
+ 	clp->nfsd_open_local_fh = NULL;
+ 
+ 	clp->cl_flags = cl_init->init_flags;
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index fb1ebc9715ff..1c970763bcc5 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -187,6 +187,7 @@ static bool nfs_local_server_getuuid(struct nfs_client *clp, uuid_t *nfsd_uuid)
+ void nfs_local_probe(struct nfs_client *clp)
+ {
+ 	uuid_t uuid;
++	struct net *net = NULL;
+ 
+ 	if (!localio_enabled)
+ 		return;
+@@ -202,8 +203,9 @@ void nfs_local_probe(struct nfs_client *clp)
+ 		if (!nfs_local_server_getuuid(clp, &uuid))
+ 			return;
+ 		/* Verify client's nfsd, with specififed uuid, is local */
+-		if (!nfsd_uuid_is_local(&uuid))
++		if (!nfsd_uuid_is_local(&uuid, &net))
+ 			return;
++		clp->cl_nfssvc_net = net;
+ 		break;
+ 	default:
+ 		return; /* localio not supported */
+@@ -229,7 +231,8 @@ nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
+ 	if (mode & ~(FMODE_READ | FMODE_WRITE))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	status = clp->nfsd_open_local_fh(clp->cl_rpcclient, cred, fh, mode, &filp);
++	status = clp->nfsd_open_local_fh(clp->cl_nfssvc_net, clp->cl_rpcclient,
++					cred, fh, mode, &filp);
+ 	if (status < 0) {
+ 		dprintk("%s: open local file failed error=%d\n",
+ 				__func__, status);
+diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+index c454c4100976..086e09b3ec38 100644
+--- a/fs/nfs_common/nfslocalio.c
++++ b/fs/nfs_common/nfslocalio.c
+@@ -12,29 +12,32 @@ MODULE_LICENSE("GPL");
+ /*
+  * Global list of nfsd_uuid_t instances, add/remove
+  * is protected by fs/nfsd/nfssvc.c:nfsd_mutex.
+- * Reads are protected RCU read lock (see below).
++ * Reads are protected by RCU read lock (see below).
+  */
+ LIST_HEAD(nfsd_uuids);
+ EXPORT_SYMBOL(nfsd_uuids);
+ 
+ /* Must be called with RCU read lock held. */
+-static const uuid_t * nfsd_uuid_lookup(const uuid_t *uuid)
++static const uuid_t * nfsd_uuid_lookup(const uuid_t *uuid,
++				struct net **netp)
+ {
+ 	nfsd_uuid_t *nfsd_uuid;
+ 
+ 	list_for_each_entry_rcu(nfsd_uuid, &nfsd_uuids, list)
+-		if (uuid_equal(&nfsd_uuid->uuid, uuid))
++		if (uuid_equal(&nfsd_uuid->uuid, uuid)) {
++			*netp = nfsd_uuid->net;
+ 			return &nfsd_uuid->uuid;
++		}
+ 
+ 	return &uuid_null;
+ }
+ 
+-bool nfsd_uuid_is_local(const uuid_t *uuid)
++bool nfsd_uuid_is_local(const uuid_t *uuid, struct net **netp)
+ {
+ 	const uuid_t *nfsd_uuid;
+ 
+ 	rcu_read_lock();
+-	nfsd_uuid = nfsd_uuid_lookup(uuid);
++	nfsd_uuid = nfsd_uuid_lookup(uuid, netp);
+ 	rcu_read_unlock();
+ 
+ 	return !uuid_is_null(nfsd_uuid);
+@@ -51,7 +54,7 @@ EXPORT_SYMBOL_GPL(nfsd_uuid_is_local);
+  * This allows some sanity checking, like giving up on localio if nfsd isn't loaded.
+  */
+ 
+-extern int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
++extern int nfsd_open_local_fh(struct net *, struct rpc_clnt *rpc_clnt,
+ 			const struct cred *cred, const struct nfs_fh *nfs_fh,
+ 			const fmode_t fmode, struct file **pfilp);
+ 
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index c4324a0fff57..0ff9ea6b8944 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -35,10 +35,10 @@ nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
+ }
+ 
+ static struct svc_rqst *
+-nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct cred *cred)
++nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
++			const struct cred *cred)
+ {
+ 	struct svc_rqst *rqstp;
+-	struct net *net = rpc_net_ns(rpc_clnt);
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	int status;
+ 
+@@ -122,7 +122,8 @@ nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct cred *cred)
+  * dependency on knfsd. So, there is no forward declaration in a header file
+  * for it.
+  */
+-int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
++int nfsd_open_local_fh(struct net *net,
++			 struct rpc_clnt *rpc_clnt,
+ 			 const struct cred *cred,
+ 			 const struct nfs_fh *nfs_fh,
+ 			 const fmode_t fmode,
+@@ -139,7 +140,7 @@ int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
+ 	/* Save creds before calling into nfsd */
+ 	save_cred = get_current_cred();
+ 
+-	rqstp = nfsd_local_fakerqst_create(rpc_clnt, cred);
++	rqstp = nfsd_local_fakerqst_create(net, rpc_clnt, cred);
+ 	if (IS_ERR(rqstp)) {
+ 		status = PTR_ERR(rqstp);
+ 		goto out_revertcred;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 72ed4ed11c95..f63cdeef9c64 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -473,6 +473,7 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
+ #endif
+ #if defined(CONFIG_NFSD_V3_LOCALIO) || defined(CONFIG_NFSD_V4_LOCALIO)
+ 	INIT_LIST_HEAD(&nn->nfsd_uuid.list);
++	nn->nfsd_uuid.net = net;
+ 	list_add_tail_rcu(&nn->nfsd_uuid.list, &nfsd_uuids);
+ #endif
+ 	nn->nfsd_net_up = true;
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index 91c50649a8c7..af07bb146e81 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -160,7 +160,8 @@ __be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
+ 
+ void		nfsd_filp_close(struct file *fp);
+ 
+-int		nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
++int		nfsd_open_local_fh(struct net *net,
++				   struct rpc_clnt *rpc_clnt,
+ 				   const struct cred *cred,
+ 				   const struct nfs_fh *nfs_fh,
+ 				   const fmode_t fmode,
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index f5760b05ec87..f47ea512eb0a 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -132,6 +132,7 @@ struct nfs_client {
+ 	struct timespec64	cl_nfssvc_boot;
+ 	seqlock_t		cl_boot_lock;
+ 	struct rpc_clnt *	cl_rpcclient_localio;	/* localio RPC client handle */
++	struct net *	        cl_nfssvc_net;
+ 	nfs_to_nfsd_open_t	nfsd_open_local_fh;
+ };
+ 
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index b8df1b9f248d..c9592ad0afe2 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -8,6 +8,7 @@
+ #include <linux/list.h>
+ #include <linux/uuid.h>
+ #include <linux/nfs.h>
++#include <net/net_namespace.h>
+ 
+ /*
+  * Global list of nfsd_uuid_t instances, add/remove
+@@ -23,13 +24,14 @@ extern struct list_head nfsd_uuids;
+ typedef struct {
+ 	uuid_t uuid;
+ 	struct list_head list;
++	struct net *net; /* nfsd's network namespace */
+ } nfsd_uuid_t;
+ 
+-bool nfsd_uuid_is_local(const uuid_t *uuid);
++bool nfsd_uuid_is_local(const uuid_t *uuid, struct net **netp);
+ 
+-typedef int (*nfs_to_nfsd_open_t)(struct rpc_clnt *, const struct cred *,
+-				  const struct nfs_fh *, const fmode_t,
+-				  struct file **);
++typedef int (*nfs_to_nfsd_open_t)(struct net *, struct rpc_clnt *,
++				const struct cred *, const struct nfs_fh *,
++				const fmode_t, struct file **);
+ 
+ nfs_to_nfsd_open_t get_nfsd_open_local_fh(void);
+ void put_nfsd_open_local_fh(void);
+-- 
+2.44.0
+
 
