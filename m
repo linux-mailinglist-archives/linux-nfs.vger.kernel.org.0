@@ -1,60 +1,57 @@
-Return-Path: <linux-nfs+bounces-3622-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3623-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9981E9015C2
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 12:53:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF36C90161A
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 14:36:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95B551C20E96
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 10:53:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78B352811E0
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 12:36:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6205222EF0;
-	Sun,  9 Jun 2024 10:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C132B9D2;
+	Sun,  9 Jun 2024 12:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fy9zL/nK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDdgjBik"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311D536AEF;
-	Sun,  9 Jun 2024 10:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AB61D69E
+	for <linux-nfs@vger.kernel.org>; Sun,  9 Jun 2024 12:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717930403; cv=none; b=IlVifhGrJkiK/8WJ31onEYWwR9SSlvEk4ycSDdmzqKVmJFVQrxElPCL0yJmCZ7ucmRBnh6JNa5nM8p0GH36ZDDKaLYbeD3COjaPDTPF8zdkmAvKSyzd+pgc9lzZnKqfLDdVjUHxdnpePioMhH28+xRXXK4fGKwMxKzKgtN/4LZc=
+	t=1717936602; cv=none; b=SHkBuhM6NAvAct0MKDtCLK6UsDg+zwWKER3h3r9vixhXTBoTqUGdPMbTZkeCPj5IFEIWb8bcxaLdRyeObla0QfWbuA/thbnpH6sL493cN5h8DXu80/+FSeVFIw3qcTjzGUBtFBjBmdLWGoSdUE7m9tU2jtmknsJCNfprPdF78yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717930403; c=relaxed/simple;
-	bh=vzXlhl8pIy+4aLqGD5A/2J6lL3lwE6kNp/vtS3X2w2o=;
+	s=arc-20240116; t=1717936602; c=relaxed/simple;
+	bh=gd9Fph8N/O1jDYnPPQhvsZekw429GpFgiXW6nfpcu5k=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KWE2WYNq2xFipRZxwK0qgWpwd+MIYy1qEEyBLa/cKvTqD22XKILJpsxw5osVOm2yzKXZ6jGlpAfDVl72AxNYIo7FLVRY5g6N4M7Bfv4V6SueUzIwx/uxSoa8elqbKj8CviFQ5w/Ac6RDhv7Xh8S6+RIbff7qHA6siPxfwQLgKqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fy9zL/nK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44D5C2BD10;
-	Sun,  9 Jun 2024 10:53:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=kW1gA8ti5Hhy27VEnPFZPH2/o2gZ9loRHVhB371TGgzD2Xn7QrDAofnQbZPcI26wQa/5PMyoYDiffeeTez+eItB2zeA+GJwvdPAP+lVSgjVbA0mdf4VsDvLrZgcGxgKEqddyR1Suy1EbNEmP9OePR3Sc1NUVJGg5Ni6lzJXrGlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDdgjBik; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32ABC2BD10;
+	Sun,  9 Jun 2024 12:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717930402;
-	bh=vzXlhl8pIy+4aLqGD5A/2J6lL3lwE6kNp/vtS3X2w2o=;
+	s=k20201202; t=1717936602;
+	bh=gd9Fph8N/O1jDYnPPQhvsZekw429GpFgiXW6nfpcu5k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fy9zL/nKWAKbj+NyTl3keko4KwpBx3x0oVukmzuVrOjZskqdS56Z4BD46w55s0ZTt
-	 UWf04cymmlwEv3RMm9GT0OYrMPSm0MZRBxE1Mvbttg3pktRodbrWgEoLn8NWZxEDJb
-	 4mUqgfjqFOTLj5kjBmga2bgU6gJUhDhAXZe0hqoiZ9zcSyyMiyIkidLDNbzYmggxAN
-	 qoUkcBSO5FAtrkXZr9zSCB9zurJegrBd7/shRAMJHnZErJlhmeqkXlAb8j2fESYiA9
-	 5Z2ny6qJ+nHI5O2h+fLCGAIOnSOjpfqzg6v2vAOHSxGAlvdPvyySklMRpdTJqZ/7n+
-	 Q3tUI57oSXl8g==
-Message-ID: <f781f8110a7f2553735e2c7b8857662d3af0a475.camel@kernel.org>
-Subject: Re: [PATCH 08/14] nfsd: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
+	b=IDdgjBikvoc5zesRf/egvAyZmnfhrhmW0TksCE5FNNXAEGO+k04eqpIO6x9fJFVJS
+	 2ucOQMtEV0H1oKgHPfvxHvshlRy1MDmNb1CdQEGulso0SIVm0Kpg3LPO+Op15iagjn
+	 DqUEHCOeLNmhHXVv4Awk+hPFvgaIgs5+Qq2MBR7a+/hyg8M1oqbsXCX0MB0pcjTNnI
+	 UbvjG/VEGYlOL50ToY0eOZOerkUv7kL6luZ1hR4ZfHAccDLXfdql1x5LTy0kCJbxkY
+	 StoB06qgB4Bk0GLOn9y4hW7T5NGKbfQqm3pMI6qP3vSAXXgYYDY42x0ZyllPydAVj+
+	 2bYEWpEyLmpug==
+Message-ID: <cde6e8571c835d571f2462d54dd00415c048c7d7.camel@kernel.org>
+Subject: Re: [for-6.11 PATCH 07/29] sunrpc: add and export
+ rpc_ntop6_addr_noscopeid
 From: Jeff Layton <jlayton@kernel.org>
-To: Julia Lawall <Julia.Lawall@inria.fr>, Chuck Lever
- <chuck.lever@oracle.com>
-Cc: kernel-janitors@vger.kernel.org, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Paul E . McKenney" <paulmck@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Date: Sun, 09 Jun 2024 06:53:20 -0400
-In-Reply-To: <20240609082726.32742-9-Julia.Lawall@inria.fr>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
-	 <20240609082726.32742-9-Julia.Lawall@inria.fr>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
+	 <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Date: Sun, 09 Jun 2024 08:36:40 -0400
+In-Reply-To: <20240607142646.20924-8-snitzer@kernel.org>
+References: <20240607142646.20924-1-snitzer@kernel.org>
+	 <20240607142646.20924-8-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,126 +136,96 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2024-06-09 at 10:27 +0200, Julia Lawall wrote:
-> Since SLOB was removed, it is not necessary to use call_rcu
-> when the callback only performs kmem_cache_free. Use
-> kfree_rcu() directly.
->=20
-> The changes were done using the following Coccinelle semantic patch.
-> This semantic patch is designed to ignore cases where the callback
-> function is used in another way.
->=20
-> // <smpl>
-> @r@
-> expression e;
-> local idexpression e2;
-> identifier cb,f;
-> position p;
-> @@
->=20
-> (
-> call_rcu(...,e2)
-> >=20
-> call_rcu(&e->f,cb@p)
-> )
->=20
-> @r1@
-> type T;
-> identifier x,r.cb;
-> @@
->=20
->  cb(...) {
-> (
->    kmem_cache_free(...);
-> >=20
->    T x =3D ...;
->    kmem_cache_free(...,x);
-> >=20
->    T x;
->    x =3D ...;
->    kmem_cache_free(...,x);
-> )
->  }
->=20
-> @s depends on r1@
-> position p !=3D r.p;
-> identifier r.cb;
-> @@
->=20
->  cb@p
->=20
-> @script:ocaml@
-> cb << r.cb;
-> p << s.p;
-> @@
->=20
-> Printf.eprintf "Other use of %s at %s:%d\n"
->    cb (List.hd p).file (List.hd p).line
->=20
-> @depends on r1 && !s@
-> expression e;
-> identifier r.cb,f;
-> position r.p;
-> @@
->=20
-> - call_rcu(&e->f,cb@p)
-> + kfree_rcu(e,f)
->=20
-> @r1a depends on !s@
-> type T;
-> identifier x,r.cb;
-> @@
->=20
-> - cb(...) {
-> (
-> -  kmem_cache_free(...);
-> >=20
-> -  T x =3D ...;
-> -  kmem_cache_free(...,x);
-> >=20
-> -  T x;
-> -  x =3D ...;
-> -  kmem_cache_free(...,x);
-> )
-> - }
-> // </smpl>
->=20
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->=20
-> ---
->  fs/nfsd/nfs4state.c |    9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a20c2c9d7d45..eba5083504c7 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -571,13 +571,6 @@ opaque_hashval(const void *ptr, int nbytes)
->  	return x;
->  }
-> =20
-> -static void nfsd4_free_file_rcu(struct rcu_head *rcu)
-> -{
-> -	struct nfs4_file *fp =3D container_of(rcu, struct nfs4_file, fi_rcu);
-> -
-> -	kmem_cache_free(file_slab, fp);
-> -}
-> -
->  void
->  put_nfs4_file(struct nfs4_file *fi)
->  {
-> @@ -585,7 +578,7 @@ put_nfs4_file(struct nfs4_file *fi)
->  		nfsd4_file_hash_remove(fi);
->  		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
->  		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
-> -		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
-> +		kfree_rcu(fi, fi_rcu);
->  	}
->  }
-> =20
+On Fri, 2024-06-07 at 10:26 -0400, Mike Snitzer wrote:
+> From: Peng Tao <tao.peng@primarydata.com>
 >=20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Still looking over the set, but this could use some justification.
+
+> Signed-off-by: Peng Tao <tao.peng@primarydata.com>
+> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  include/linux/sunrpc/addr.h |  9 +++++++++
+>  net/sunrpc/addr.c           | 19 +++++++++++++------
+>  2 files changed, 22 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/include/linux/sunrpc/addr.h b/include/linux/sunrpc/addr.h
+> index 07d454873b6d..e1007bddc3c4 100644
+> --- a/include/linux/sunrpc/addr.h
+> +++ b/include/linux/sunrpc/addr.h
+> @@ -68,6 +68,9 @@ static inline bool __rpc_copy_addr4(struct sockaddr *ds=
+t,
+>  }
+> =20
+>  #if IS_ENABLED(CONFIG_IPV6)
+> +extern size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
+> +				       char *buf, const int buflen);
+> +
+>  static inline bool rpc_cmp_addr6(const struct sockaddr *sap1,
+>  				 const struct sockaddr *sap2)
+>  {
+> @@ -94,6 +97,12 @@ static inline bool __rpc_copy_addr6(struct sockaddr *d=
+st,
+>  	return true;
+>  }
+>  #else	/* !(IS_ENABLED(CONFIG_IPV6) */
+> +static size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
+> +				       char *buf, const int buflen)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline bool rpc_cmp_addr6(const struct sockaddr *sap1,
+>  				   const struct sockaddr *sap2)
+>  {
+> diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+> index 97ff11973c49..78a123a7c39b 100644
+> --- a/net/sunrpc/addr.c
+> +++ b/net/sunrpc/addr.c
+> @@ -25,12 +25,9 @@
+> =20
+>  #if IS_ENABLED(CONFIG_IPV6)
+> =20
+> -static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
+> -				  char *buf, const int buflen)
+> +size_t rpc_ntop6_addr_noscopeid(const struct in6_addr *addr,
+> +				char *buf, const int buflen)
+>  {
+> -	const struct sockaddr_in6 *sin6 =3D (struct sockaddr_in6 *)sap;
+> -	const struct in6_addr *addr =3D &sin6->sin6_addr;
+> -
+>  	/*
+>  	 * RFC 4291, Section 2.2.2
+>  	 *
+> @@ -55,13 +52,23 @@ static size_t rpc_ntop6_noscopeid(const struct sockad=
+dr *sap,
+>  	 */
+>  	if (ipv6_addr_v4mapped(addr))
+>  		return snprintf(buf, buflen, "::ffff:%pI4",
+> -					&addr->s6_addr32[3]);
+> +				&addr->s6_addr32[3]);
+> =20
+>  	/*
+>  	 * RFC 4291, Section 2.2.1
+>  	 */
+>  	return snprintf(buf, buflen, "%pI6c", addr);
+>  }
+> +EXPORT_SYMBOL_GPL(rpc_ntop6_addr_noscopeid);
+> +
+> +static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
+> +				  char *buf, const int buflen)
+> +{
+> +	const struct sockaddr_in6 *sin6 =3D (struct sockaddr_in6 *)sap;
+> +	const struct in6_addr *addr =3D &sin6->sin6_addr;
+> +
+> +	return rpc_ntop6_addr_noscopeid(addr, buf, buflen);
+> +}
+> =20
+>  static size_t rpc_ntop6(const struct sockaddr *sap,
+>  			char *buf, const size_t buflen)
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
