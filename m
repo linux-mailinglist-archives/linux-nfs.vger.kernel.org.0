@@ -1,102 +1,98 @@
-Return-Path: <linux-nfs+bounces-3624-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3625-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BB9F901681
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 17:44:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4CB2901684
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 17:44:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F17DB2816C8
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 15:44:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F4B21F21343
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jun 2024 15:44:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9D5C45BF1;
-	Sun,  9 Jun 2024 15:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF73542A91;
+	Sun,  9 Jun 2024 15:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B681KNkz";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YgPywMVQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kYVgL6Ce";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="o+6J3Bc+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA7742A91;
-	Sun,  9 Jun 2024 15:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C3A4436A
+	for <linux-nfs@vger.kernel.org>; Sun,  9 Jun 2024 15:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717947837; cv=fail; b=d6ti5Ce2Sa80EhwkZRzGyvqUMxAuktctJ7LpXijvSXz5HKoLxpeSNp/tiN5gp9PkbdzuMN2kpptNEW9WDNEunXRss3wYmxeaCCy3kCMHpDT7O5wxzA+WeLeDghWKCHowBKez6sJXbjbLbvzzJZiEqpTm8O19u10goRpinSVKl4s=
+	t=1717947880; cv=fail; b=QMKuz8anw994PCLjfu0IA1rDnFwGw0RLB/JYCx4HjW/5XZxj0Ou1M0NGURwTQdkohk0heNvzmYHaoWi7VWlzHPbCWuqTtajhGUXkZ0WHtIVUw+6FnWnrFV7FO2lGeLo+rzM7VfU68lng2HOn5HRLKnibRnxzCvL+uNbnRaMdOtw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717947837; c=relaxed/simple;
-	bh=WuYCImMN8feQNo9hGEMgv0QiDEBxoU/oM2l2mQJ4UPw=;
+	s=arc-20240116; t=1717947880; c=relaxed/simple;
+	bh=co2mCsJe3rsb9SYwkc5EKNIZQKGs22RHG2eSpy9LlWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=abNtisNxpssAsEB04mLYcbrrNVKuZPFwSatIQ73X1n9Alu+n8Or30szyUMGYzCoKRPy+m+l8TqnnjtFzHD6AybLKxecd65wK/BzDSu9VXFgtPxHtMb4GFPc0rODJoPFbxv9e8qKJM5fZUv5GFS0fe8d8ravpiUePahHXIHI5HqA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=B681KNkz; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YgPywMVQ; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Bya2fxC6I5vAfzjP0ldvgmO+75e+xhus1IU2aHB2H5NT2pt2m4naY9A2kmfHVDjfL0OAJNdgLF2xlHyiypM7xXPtxNbJZOYXqZzE9UKGnmsEBrMZRkBdcK8UePODtZ1ykFhXexVCFlpUAPZuG73wHaIvdAQJCWOg/YcwFKv0eOw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kYVgL6Ce; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=o+6J3Bc+; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 459EkuaR011740;
-	Sun, 9 Jun 2024 15:43:42 GMT
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4595kclo023183;
+	Sun, 9 Jun 2024 15:44:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=q1wAm1xs9VgVI0d
-	bRbvHjW5Xwntp/Fv3oDwB+FZ0yeQ=; b=B681KNkz1a42ATjTUNj3QlQpvn9UpJI
-	NKuUMEF6BXzyn2H06621aCvKkwPXuGo9APBz37CSMnasY0EL8Gv73vykIWqoSZUd
-	4zfeVp1Fz1AEoDCMQgKk6fw185C98rZfI66+PTxvXyDd7IYWAR+V6o2uYvSZAGum
-	N4PyfcreSprB/1XorBwS0LV9SybvC3m18iJlcUr29h5BX2h+B5Q3jv1/cr6YO1VK
-	4iaLwsc9X8Hh4ESxiL2oJAL2ffQEp9HzEstRM6g1ftJ5g+3FmVYNGrdPEPtSalRL
-	Jmn8kWQcbaHHeI2MRSY93YSD0Si2b3bHbT3cS54OsmqQ+EJdlq7whwg==
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=p2MyCOPVmafke9g
+	WYH5weqDTl+23wQWvb8ZE6saRV+k=; b=kYVgL6CeGMCIQUVGUpLMB4DLAjrK4gj
+	NX4PyLdSliUCow/HNb71/14irG/UzGSZMjxia4ssqSYEDxFvfyNh5AzhRuE/g+zL
+	jx04EGMdQmzpb8BkI7QuN0BeD4MfARJc2MsTvdb74Tl5b0BUl4c3TbnAVUigpxVF
+	UQPwwZAdku6UygMDUHSXKwbm5TMeGLSLBHrnrGXw5GGZBgD0rzU1ffr1a4f7EwCc
+	kRb31Uib4YxROe54iiV3tqy1uV61WtdHRIGl8Bnag/HOrY61EZk79mxTUcjwv3I2
+	B5WSqBqLLNVP5EqjIG1bCacBP7AjaybzozWNyBC2n0FvmjdnzXi7/+g==
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh1919ug-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh1m99ut-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 09 Jun 2024 15:43:42 +0000 (GMT)
+	Sun, 09 Jun 2024 15:44:33 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 459CRXXr036656;
-	Sun, 9 Jun 2024 15:43:41 GMT
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 459CRZq0036693;
+	Sun, 9 Jun 2024 15:44:32 GMT
 Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yncdtu5rs-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yncdtu64u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 09 Jun 2024 15:43:41 +0000
+	Sun, 09 Jun 2024 15:44:32 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UuUsWZNRk/0XK3KvyxiBVUHYPjQxRUxJS7sCb8Wky19MYRrl6EkoJiHimDKkdUrkudQ2U4jHZx6gwDkiXySWCb5KYt30T5D8RWq0QDCIGN1+xAnLYxwn6QCJtluLUBZlaj9FDwIO/jGX9uycQ93hCVidQHuXZbrtA5yr60pD8AS5kB5asipDz8Fi3Cqrv4SKq6KXgvLQMSKIaf3NyP4pV7Jr8Y8qMXOzz5ONyfsJApzW3qXDurzC6jIM9lJxpu7+0VwAJYG2Y2iMVIIiVw4MAtx/fK2/Viua1G1sgDYlli3eRGE9VqYc3Ci5r8Jek1rzl5lpv1xdEXMMI6LOdpC2Pw==
+ b=I+9zIkFg09PRQhdvE5f7tAasubevuV0RRr+aQJjbn4LSM7fOslzpkpF63lmyLdsdaxqA6ecPmm1d1+rPu4Ybnpi+uXpoHJ430KCeDYq2KP3Qhedfdv1FUQy+PxK+4Gwrq062AMfUWwEKvmqdEv5bF4WDFj7rHNZl89P7qOaryF6ChKyt3PwqPwfB2Cwj+rI10p28CM3Xdte5eYrXGmcnh7k7YA+WYSu3CXoFIjJBG/PE+109b8UGKpxGr3kwcQ7dRiGnkEXGqevq6rIhGeyYhRGW/0X7E20DBA5EEvhL/HOVfGH+FVPESAaVR6BdSyrR+qbYRHgsUl//nONST7fgLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q1wAm1xs9VgVI0dbRbvHjW5Xwntp/Fv3oDwB+FZ0yeQ=;
- b=iGv4C/t/Vd08+rTRkE64KzVGEsMk64qg5VOucerbJWghn3lgYyRrXFIwQ/nETxpv1U7NZJ+xiaKRQ1+JZ3V4ha02J4XaZwUB+Oc7c3NfbeqkSXsizDOJQ0WT9VUcaAg3y2ilAOWVkkEu/HD7leVdjxk8Qa6AoBC1/MKID2MYLZYh7UxwqJKahA6s6s1fCS8/wNA9b8EsodUqhPbw9o0RSMBPCFeQt4Bw2Zfwa/LcrNkmGUOJ5ezujgQwipxqNUP5IE3N+Kq1IGvyfO3EXLNwn1l2TsIKxknu6YQp/gPg8FKQe3tt/8hDKo5Ghgh6hipt0hqrPhBXIoL0vc2PVPgsoA==
+ bh=p2MyCOPVmafke9gWYH5weqDTl+23wQWvb8ZE6saRV+k=;
+ b=LIR0DovEtfMJXyzraDt+oKrwOIUhHjwbdz5v2TbzHACJki28X712oR/TGY0RmZpWtnYX7Ztj1bM2Ot/LLDIeOYRxeDHtPXQDe2nyrSwXn+pxuoiObkEAbE5GMLGVGC1PGgh/18lPi7hAF0qXHJ0LfKp1D1zcADQlbSJBZGK+Y6izM5qYIIDSwJskr5j+L52sqlAqDvskP8/LlpfhWQXlibzKX3w9Zs3RDMxumsKnj6i4TXzyl8eclW817fQkbUZkIAjXUiWpshv4zd1d92MEs+0rT/40rcEbaNrMafFQG8++OEy4p8SxM5F4qnLmPNnt5FazzXuQ7g667hrtm5lNLw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q1wAm1xs9VgVI0dbRbvHjW5Xwntp/Fv3oDwB+FZ0yeQ=;
- b=YgPywMVQNv4ShKphtDcsxHAOeZ23kj69l8lp3aAYOUdxWy3eCgZ1/4Bzy6ATHxsVNCBxYNSMUK24zwucp+jPeWuO+ZqIT/UbbyXPXKvAM65ujdBc2jc8gWzilpFSCEgItVzZgjCoaJPTSVY8UlO+IOkEmd9bfV3G5jzyjOfBzbM=
+ bh=p2MyCOPVmafke9gWYH5weqDTl+23wQWvb8ZE6saRV+k=;
+ b=o+6J3Bc+qJ01rZrB+ZGVC/VfCqRibc9TMrj0oyMN/h6qSH3A57+JOg+0wCvdkt3UrwErkCZuO4CAYHsPIPRyRGEB5m2yUH7KD0RzTk9/vYuz90+A4da8wvsY37qgwrYq4sf2OMSZSXYRpG98fcYniv1ZYAH4XBRjMQwXoPPIsZI=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
  by DM4PR10MB6135.namprd10.prod.outlook.com (2603:10b6:8:b6::7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.36; Sun, 9 Jun 2024 15:43:39 +0000
+ 15.20.7633.36; Sun, 9 Jun 2024 15:44:30 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.7633.036; Sun, 9 Jun 2024
- 15:43:39 +0000
-Date: Sun, 9 Jun 2024 11:43:36 -0400
+ 15:44:30 +0000
+Date: Sun, 9 Jun 2024 11:44:27 -0400
 From: Chuck Lever <chuck.lever@oracle.com>
-To: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: kernel-janitors@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 08/14] nfsd: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZmXNqA/eM+j6gnWj@tissot.1015granger.net>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240609082726.32742-9-Julia.Lawall@inria.fr>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Subject: Re: [for-6.11 PATCH 30/29] nfs/nfsd: ensure localio server always
+ uses its network namespace
+Message-ID: <ZmXN2/e5FmRXsvIG@tissot.1015granger.net>
+References: <20240607142646.20924-1-snitzer@kernel.org>
+ <ZmNMCejlYlDgfA1Q@kernel.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240609082726.32742-9-Julia.Lawall@inria.fr>
-X-ClientProxiedBy: CH2PR07CA0046.namprd07.prod.outlook.com
- (2603:10b6:610:5b::20) To BN0PR10MB5128.namprd10.prod.outlook.com
+In-Reply-To: <ZmNMCejlYlDgfA1Q@kernel.org>
+X-ClientProxiedBy: CH2PR17CA0030.namprd17.prod.outlook.com
+ (2603:10b6:610:53::40) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -106,79 +102,79 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB6135:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1714dec-5ece-4dff-63e5-08dc889aeecb
+X-MS-Office365-Filtering-Correlation-Id: 3d8d7103-9946-428e-0e8d-08dc889b0d43
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?fk910n2TTXIM9zCUUFpSN/zwOFoidJ3Of3SpH5QWKi6Xb7q9lrDka/VP+NNJ?=
- =?us-ascii?Q?Anl49AI1He7Ltt0K2I5Ub+xJLXfq4VxMhb+nMfknf6Zo0vMFPF/enxRnnrr6?=
- =?us-ascii?Q?JVQMn4jYFuIPFhL5G3d0zE2oNKsqiYkIoR3hP1XjwuF/u1/8l5cEK1mwmzXc?=
- =?us-ascii?Q?2HzOHORjqpHYtT1GwIw8yaw82+/BM1rLARgp18hM58yv6MYsVWr2FGaAZANY?=
- =?us-ascii?Q?pow7egHNytG4UTowWJ3vbSMBvh5T/0bjc8/ptGcSBpj7l008zqEBX8tKV0ft?=
- =?us-ascii?Q?IthxrZAj3GvYeJPZ6wsWonrQhqeR33OA9FOUTkYmtVo1/70sUTUD1veL4P0P?=
- =?us-ascii?Q?b273b5FA2BT+m/MWCfxXKuxTTgkPqdW/GyiFCHJCSlWOP1IToE39CV39hDJe?=
- =?us-ascii?Q?F8mDtN18HfcVMTEyO9aZn/Tio1+lR7jh4C3FtMj0ix9R9MGly4pz5fUxDA5E?=
- =?us-ascii?Q?G/7Cy5DmsOiq1Lm8XNwyCH7vXj1AH6T6jYg5SfXbbhog6c8yfZb7Ps5fuEEQ?=
- =?us-ascii?Q?jefkRFYNH1VxvsHXoNQDUC0xZn8LfNscfvwUEJ7jSlXp1f57w3UViW4prSc7?=
- =?us-ascii?Q?lVLd6z+cQn8U9uTZhyIHOqiqEPku9G54TxFuu/1DKzfowbgprcAnjKlbMQPf?=
- =?us-ascii?Q?sPk5onQutoAgRDMF8mU1T98AnmxZ8s3kN9glOQBofCd7YOVrUHB+M1M3Bs36?=
- =?us-ascii?Q?jnvBDn1v4blO2KICqNd0bv3LMAv4fW3W66H9mBtEMKSUIT3/Uwho+Fw0n+a4?=
- =?us-ascii?Q?FuJQZjykF0wZdRl7ZGvxCUPaO8UjP3pR50nwxRudUxoREo/O6XdcIzN9bR7U?=
- =?us-ascii?Q?0wLW5FE3IVu7W6sP1bP71egJV8MlOQ9dZDpTRnrj42YbqO1ZprcDhb9mkZ9e?=
- =?us-ascii?Q?uuZp4ZNpThsQASWc1fFsafDnyny0OsFu5oSlH+IBPBV9gXJBqFt4S1FjShxA?=
- =?us-ascii?Q?EuVmiwn0PXNEXdz9uanNvcz5bbVrWDjsO8xty/MYl0q/rM6bkZqYmu4AYEbf?=
- =?us-ascii?Q?5uNK0uxTBKplgHP6fG5n15/u6gmunoTeakrsmScVpmZU2DatLLH1sIqcw4N9?=
- =?us-ascii?Q?dt5dX0RNZJ45Tdx/XfstA6H6mdDshwEaOcV35Ug5jjGPpLmaQliVf/uTb9ac?=
- =?us-ascii?Q?8vxu7lKRWF92jUdN8RWRQw07Ni/pb6sHMwZ9F9JOWOxpR/d49PXggJVmJWlc?=
- =?us-ascii?Q?yq7zgiJCMl48N1VGsYc4vIZYESXMXVlrgrkCHEwCHep8oLyob93LW69WNR22?=
- =?us-ascii?Q?qEYUt1/Zxrhax3p5xKpKmEMa+bf8vKGDCZXz0rhaq1U+vstzf5YRSYkRQdH3?=
- =?us-ascii?Q?WIVrZAPMiWhiN8KDjMHupsTA?=
+	=?us-ascii?Q?shPWYU6tKA3rXotNkW1NxbEZg0X8uPhlGBdy0X0f4FvyvOx6mwEh6KfQx17y?=
+ =?us-ascii?Q?72A9AePpIyvQ3dUFWfmAFTjxNGjBqIJ8s+2Fi0SpUcVGdkNIn92yoJB3IzoF?=
+ =?us-ascii?Q?YKnrXgk03IA0uWcaIEK9xXuRtKzq/LxDKSuaUyEZniykk2BYhcPoBFaXswpE?=
+ =?us-ascii?Q?IlTuv49oOMGdK58V93PrxeC0FsV6R76dk5Ib+X1JaE7Fwjs3N/wrEgMGvSbU?=
+ =?us-ascii?Q?f0jfFTGK61NxOG9Ofi5KVXEnf36F9prPsyHkWFloqO/jBaGDwjEL1WKPq4BP?=
+ =?us-ascii?Q?zsygkD9qZRNloe/TX95YLAfaoyug5x1xTRi5ShoiQCj5cR3O7yBxbE3vquN2?=
+ =?us-ascii?Q?Z/wzMYfWkqjkQWIND5Rkt94oVEtRi89cd99tf8WNBjPEZZu8RoImupsmsnQw?=
+ =?us-ascii?Q?qtpXKXbz7HjBqjcdOllkgoDVPmwS4igdRt95kQERgiEyTZ26BHkzyvLdd+20?=
+ =?us-ascii?Q?I77MvpfUQ+KyC48S+fGWcaj2mjeW2gYaxEF/pup/qWvm0Tshv1fgvuSmexUo?=
+ =?us-ascii?Q?nMJQI9ACiJr6z6a1daUdQRGk4dIGM8lc7XQ8KJgRvxzvQ0C04Cd9hMQgJG76?=
+ =?us-ascii?Q?bEJjmaPh3F1fQylX44eWA6IVMhzEF8XilMoV1fMdnVogpOis4CQdbR0R2hIR?=
+ =?us-ascii?Q?tUo/BOk6cTcLKFQHSKd+R4pacQTZ9F1HWHqyFxQaYXpMxyqrCmjdJJeHnUp6?=
+ =?us-ascii?Q?fNlrfHHB7sMx59YhyymlkMIlaLU1ZNpdsFdVRsC0o7sXZJGFYPQDjGcxQ9mq?=
+ =?us-ascii?Q?tG9B878zTcLs66AWtdKey9odj3Qcq9z2u0roG/Q2Z+gKwwdEWZOsfI/17bKf?=
+ =?us-ascii?Q?y7rqOq5qJ4A68CThb0tX9EfYiqokniE6bvi9N0iXeaUGxBtPpXx/3qEjPtG0?=
+ =?us-ascii?Q?UybYEfybKjQAFsA6lUOte4MG+q2cHw1yJPt00WtiHGL6ZA4m2NKBCI0V5//t?=
+ =?us-ascii?Q?ra6b3C9QwD6QOkU1bZGlz7orTRyIiuK7TugB9SmpNN0isS02mG1cFte9hUIe?=
+ =?us-ascii?Q?RZMwa/n4gsh3QA89APxmD64nW8tVQSv+5Ma9VsgZnFsBFy70XkOc/6AdBBEz?=
+ =?us-ascii?Q?tWeXLMyEbCMMMhsIBPjSxRQ5yg6Svro1vQmS1b22Q3UsfAjfYJLdWjP3xXqv?=
+ =?us-ascii?Q?3HPiq2QuRHDV934yvRfYfAiY3NMw/VjwfyrpdV3FKmGtMehlv9OzX6pL6SiG?=
+ =?us-ascii?Q?8Uz5YeperWte2nDezT2D2odCU202gtUQ7BhcdmwAGLw2OL7Aw/gNrltmM3ND?=
+ =?us-ascii?Q?tTmFJYya0OQpU1izIrKAG7gRX3La8Nk9CznRLwbZgZQGqFZmr5ElgNuJ3EfY?=
+ =?us-ascii?Q?sjRkT9jq98LiSUroi0JeydMw?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?Q8I3ELmMj1n/3fiTYZP10MsMWwp6L9O4ODMAhsTlaKDPAyr4MJgy5CwZ92aJ?=
- =?us-ascii?Q?5iT8Djv09nui5Jcv/epVFyj09hpXnecejF3TpmmadG+UvZiRTQOuIDnMadZA?=
- =?us-ascii?Q?l2XOuF9tmp4ycaR6YX1hyt/DbTmMIIn4XBibffHq/BDusg7PfN6BwTkJau79?=
- =?us-ascii?Q?epakAA8dko0uBSBaVVmL/kXr15vZnqS1HVQXwy06r7BC9SnlxY9QKqmG8UAX?=
- =?us-ascii?Q?CVKSDnnhtKFfs+yP9vQ6a4hh/9mgjg4kuFPzhhnWjSjPhv6hgpC51MiuxAaD?=
- =?us-ascii?Q?nO1td4l6MYrr4Agod0QLQeOXmDy2VJKpH4g9L4mjH2QBFK7s5B9EfPNGaA51?=
- =?us-ascii?Q?TN74qvqHAwAp2Osbcht5jUvxoMsuEuCYEu0XMZbKYgYt1c+Mg3TNgnm80+/b?=
- =?us-ascii?Q?n5amnZq74fCF5mW7jARJ4/3b8jkh9E0tSTITNEOuwoN0bppHXOXCIxvUBsEC?=
- =?us-ascii?Q?Z75qhszs50XKFfLhY2RbbWGtndV8a7P58p1oIHC74mH0UhjhqQbpaLw9Qyrs?=
- =?us-ascii?Q?agjSgfw7GUNAnucnXgGG7ivgCLSb2XGzRU7CA+B3eV3Mt9bDHX55bw2F2zHG?=
- =?us-ascii?Q?PCb+e5sA6SOLneE3Klzub1x8ui0PYoximjPjZ8JU56/BgR1HD7lRQOJtjG1V?=
- =?us-ascii?Q?TMBlN9ig6dxqshXXRG4V8WfFLhDooL6JGjIDU3E0yFOvT5iMgM3aDpSA8nSn?=
- =?us-ascii?Q?USKxzyl/KkhETalQe5id+LIJV1m0yVk1/e7Eyv7eG9LuICnKGz5NNZSbXhHc?=
- =?us-ascii?Q?b9fFNQEQ17dCmi+5HDVRIqTLoglFwd/N+31HnLGixcxtTFZMcJFYJlVFzi7j?=
- =?us-ascii?Q?z2tL7CoqlmU/9LH3KpRavXJS+jrhTMPB0DGCtWHwmzyaowb6hHD2IDLjdSL8?=
- =?us-ascii?Q?YtNT0a5dqRehhmOYDl516KRbwuusxpsdRSSkXv1d4R3OOWa9RJqGFnjd4+pc?=
- =?us-ascii?Q?OgN+/NeNStlUwhNuIJFvgNjtvMEShimBGHclXSfiZb6KuHiKEe8oCNeRWmSF?=
- =?us-ascii?Q?JzbVnUh2PDRYTPEo+9PT8fkVdemUHGe9rvHXJYLEkYrwdBiH/tgTU2iBzTWU?=
- =?us-ascii?Q?FpMvT7QIdI9BaR4KIgeTRfGoKU79OIwJFWQ/Cin0W2zW3BcHK/ZxH3dc+a87?=
- =?us-ascii?Q?oYrVUgMVVfSKH2+IZ3nIjhIrI7G9TtFcSmrPW0HQBS42yh7JR7u8NX98Glrp?=
- =?us-ascii?Q?kMl45k5X/Y9pzRcGMd8j/UYfkxj7SaWrw62W1CE7lTaGdY6NBZqZLQn7MZAH?=
- =?us-ascii?Q?7LvbOb3kc3PA/2AyC6ypTuuruMvAG3NZo4wAl5U8+Yvt6oCppNpz0sfLJXZR?=
- =?us-ascii?Q?SM3u7DM2D0AF5/0uAwQnQZpF3/u1eDhHk21m/CVcqq+sKmUEAV2wES2XeTJt?=
- =?us-ascii?Q?QVvHSc23vb9zOj9W2U8Kh9zHlQzpee8HAHySD51jrRZcYVPfkRmunbDqe+ay?=
- =?us-ascii?Q?Eyh0ZC+/VVjrFjfBVKtHW/jox6y00ml6VVUDd2lPKX9HnRETnCu7TQdplyS3?=
- =?us-ascii?Q?J2T73xNTYXjpgEv7Pd9XGRysP8x+GGUta6ZM5Fy74FHKdj23xdKGmQjD5kvc?=
- =?us-ascii?Q?p+9rBQ9KR+iRTSjRCtEG8oQ3K0jPuE1pBMrNf5XaZlHp9J3vsnXKC2L15Ily?=
- =?us-ascii?Q?1w=3D=3D?=
+	=?us-ascii?Q?sPC3sQDkMVZ6iHZgekgJx50jVEi2GXY5laxMApzwv0SJ/zgaoyKgxnkgGEfr?=
+ =?us-ascii?Q?sNQnsbIN4JfRhhx4Qe3UKH9eI4HRrQPDwT+26lH8xdj4nm/EL6RxjN0Mlhza?=
+ =?us-ascii?Q?WShmm6ETfny3JsIg98GQo9bO/rGqR4q5+KBKx0MJ3J+ud06wTIEXMbV1iiEZ?=
+ =?us-ascii?Q?KZiNkwKsS1j9HslqUWmcT7B6RfUs2GZ+gQsvc7JaRvw07leUu1w1ZcS9Kfdz?=
+ =?us-ascii?Q?lD5QvSqGfARcMlHm8lRxsInlSjlAnYclMB7CvgLJWhfNpy4893/CaVF6j0Ji?=
+ =?us-ascii?Q?xxl+BUuU4JqQ4nMmJ7ENse4FufdOkM+fMiXhfbH+y3bIFC9BiJFyNOfYkiDV?=
+ =?us-ascii?Q?9ZRHFOUu3vCcEDpADLAhE3hrJ9CTt/f9CzstkTsRwrVSz+21Mq0nqlpJaTiH?=
+ =?us-ascii?Q?ZSnaRkjHqRDvN0AYn2mWwjAQ+8E+k9IgUNq3q3omXbJl5VvnpvMCtdSoM3hn?=
+ =?us-ascii?Q?4v6glYwrX/aYnlm+kNBx5yCFHI6Oo81FtQJ7SvTh1NUmnaVsO7vwiPTGhAmx?=
+ =?us-ascii?Q?dgz98ce/Bam9MyreNJf9WxydSUSHEeYBSkNp3aN1wRv2DE9WR0GqezkTu8Ot?=
+ =?us-ascii?Q?LKqrfDsPWIc2EKn0ZmEqg2q6nP0o8v/TTpDe1LvDVJurRAw8xNzDiJSuTbVO?=
+ =?us-ascii?Q?txvKaMg4wsNOU6+ZlrkKu2+THgZ46El4Lf4/RaN/dQLCC18BCCgdM0Anh9/j?=
+ =?us-ascii?Q?vuPcYmiNsN7zv6baq9dg4tckKF0xQ8+XJjDdmK/ONUe8IctejOE/5OUsdg5R?=
+ =?us-ascii?Q?VgPP4ORGgmW8N+3yFQo0f8vplH13v3ndkugylBe4CawvrHzChorUk9a4f9Y/?=
+ =?us-ascii?Q?HkrGukvzsnl5bFozn5moibPqqmHcMGe+slIZ9FH1R1jNiB4LLD8NRAm/eUnw?=
+ =?us-ascii?Q?cogr2v8tHcHyAVlmG7Q4kdq6vYQb8WiyPLBcwOVQy7Y9vRkgC6IVA3fcFdDq?=
+ =?us-ascii?Q?mgvhSKW70JyzZNyTf+yWnDC+Ztr+eTG021dMJ99qjL7UMPNUYrLW10MUcUpQ?=
+ =?us-ascii?Q?fEttJlmfPqCe+pb99WYNbDcU+2lL27XV5lRVOq+f5O0tOqQXRWWQg44HKczn?=
+ =?us-ascii?Q?4ahUNjm/k0jYIi6z1MQIzVZ3Cey4pH48HumO1Faw0DUJ1vVJacaFOEJ0oWGw?=
+ =?us-ascii?Q?338N6jWBEf0+FaQML/d0Mr1wsr0qwqxdW2JQyCM2zQAgGmgZYi2+9vGoTqM5?=
+ =?us-ascii?Q?AKey/cM586ZENqVFEoNmeIp6ioB+mFKXq8bFt2RXtrXTsa9nlTwm55sX+iHp?=
+ =?us-ascii?Q?TDu2ONp7U6rzQMXPLcYe0ioajEF4WDdIQT4AOc/T3/b7Csz/XIQF0MC6vHMu?=
+ =?us-ascii?Q?4hTq4+z2N6YA126WOwuIccCTaUI62FS5szMhGJ9QyujY4v0CYvtPDvKYlZ2J?=
+ =?us-ascii?Q?F+CIgqJtWmf7ibGi3KFJ690SCmjo481XtZ1TRZCSn1TJQNhT48qarA2m0edL?=
+ =?us-ascii?Q?1xR1KmMw5PkPoBHFy9O4w5QY9yrEFkrVhKaxwbGJiidUqI5dMuoTkom8/vN8?=
+ =?us-ascii?Q?K66rlPDPYP2f2YlUIRkLMCw+B1QbHPrGT6tY81iksb3gMCkAtwzaSzYJayN8?=
+ =?us-ascii?Q?HeFWFPfGaAUarZqbDyY4If1eBI7xSrx6+sFkh25qPFGK3yV7z2/oHJc9DW29?=
+ =?us-ascii?Q?eA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	uxXCfPoviiIUQ29oEaqpRL3kfZPYocoNZS8kNJFidYVAD9v+WRtcAAOMsJdJsvoyBFu5JKP9Bg3rRqFrzuoeh6/Enj0PgdNHo/ocomyKa3t19aykbXatisIbqt2ZNEF8ZZHaQwbinkweScQufClbMOT3ZqaFKXALpRfhMxkcbInminPX2Q+v+fWpq9vLLwXf5JuTtoGtKC7lq12d4OjoaBvoKopiJUWQtCOsSkwvSLhGe/7ViX9JwOqO9Y3xXwOXh7jJQcuv3WBoj5qV6q8I3sqxp3RfGFPbNlWvWyTIcb797qIEDg2ciDcS8nf2vPZWrDJud5wEQ8y2oiBUXO146I/tAlKif2lrPCjDqgUHrA7lAlL4EyO1iNYdjolVdjMlPhRJsZL45ZUcR7G8CBpb4osjctcbIlhatpE3XH4OWGBeHsXQ4fOQeAkBs4YGIEjZebZNoJFCMNlpmI3FkuPm6Fsf2q9NT8s4SZwUleLrlrI9B4Gz0kcd4it5jjrMkWoWCAjWuexPwUpEwaeX43KKOECdW5STrSCXfjBm2Q2dvV+VlCNOZTV+vfK3PK4+Z/csPgPLd3kMwCQOVxHiSYja6nDYHpXG9k20aFMAMFIsEUc=
+	3yOTPTIu4wNPdnKLHPyr99jQqtzkl04dY9UvURUclv2JAUSRtVYKhZg8TpntWrQlq3GcqtIML1vId/pKaiF5NN+Mai/YAzIROc/jqJbsPgBp9aBESm5vasDrvg4MOkSC7SvxuyqDiI3K6vNGGQTnZKYnoDpamUECjmmDgtvlQwQfVX3O+MfEv8bS4xVpcYHmV/7ZBaS1+sIwlrPaukQuvOnxleoK5rJIznxXrqO8i12JRB9L2GdTr4AXUwQo4Gf+LhJUdXX/9t/eZxcXmBVfRjavUfzwfDAjlSEtCBSj4OlZPpNGIdEYP6Ai81YHMNBsDW9nK+EeQbfVMELGnu0eKafKBhcVSdYVxt+hBoBswaXD+pmaLadugpv/pYDDezFReA+7EZdlSPU5IJXCyXi7LIaRGMTPqXCcRZqRGGc+hoJ0rcYjaFiMoTRHL5zmSYGOD98XBgHRvXtxK187mAP7bdrBHUZuNXU7i+diaB2HI5ked+xMF3DXXP/zHk8+NgkQFvQ0ThTt1A2iPrKeUuoTE90MviaPqMKlLhyj4zb/qBLBV3F+kOJE4r8wljBWr7olRGR42gCvhpHY4xYu2yEcxJy1CSp+eS7PNR+0g29FvF0=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1714dec-5ece-4dff-63e5-08dc889aeecb
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d8d7103-9946-428e-0e8d-08dc889b0d43
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2024 15:43:39.3774
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2024 15:44:30.4488
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: agEE+2VCLUVaM76sg/bER+nrpjjlzva2nt/ssGppCHIh6uarcTM6UFkNOLvz3z/23FBOjEuxrdTimEfMSya3Rw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ORjYyvykGuvuMZ9wlicZ4rsm8cbQ++JTf3z6CaqRXFCQIdFpGJWAFAGXFj5tBwpAVg6qf5l625exKf42iTK5WA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6135
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
@@ -187,131 +183,240 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phish
  mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
  definitions=main-2406090124
-X-Proofpoint-GUID: kOLL6s-Q1gxt3S1Ljjh_KDhZ3B9B6PiD
-X-Proofpoint-ORIG-GUID: kOLL6s-Q1gxt3S1Ljjh_KDhZ3B9B6PiD
+X-Proofpoint-ORIG-GUID: FnvlesFj5PHaQp18tAjs5Kc0R4vZBq6P
+X-Proofpoint-GUID: FnvlesFj5PHaQp18tAjs5Kc0R4vZBq6P
 
-On Sun, Jun 09, 2024 at 10:27:20AM +0200, Julia Lawall wrote:
-> Since SLOB was removed, it is not necessary to use call_rcu
-> when the callback only performs kmem_cache_free. Use
-> kfree_rcu() directly.
+On Fri, Jun 07, 2024 at 02:06:01PM -0400, Mike Snitzer wrote:
+> Pass the stored cl_nfssvc_net from the client to the server as first
+> argument to nfsd_open_local_fh() to ensure the proper network
+> namespace is used for localio.
 > 
-> The changes were done using the following Coccinelle semantic patch.
-> This semantic patch is designed to ignore cases where the callback
-> function is used in another way.
+> Otherwise, before this commit, the nfs_client's network namespace was
+> used (as extracted from the client's cl_rpcclient). This is clearly
+> not going to allow proper functionality if the client and server
+> happen to have disjoint network namespaces.
 > 
-> // <smpl>
-> @r@
-> expression e;
-> local idexpression e2;
-> identifier cb,f;
-> position p;
-> @@
+> Elected to not rename the nfsd_uuid_t structure despite it growing a
+> non-uuid member. Can revisit later.
 > 
-> (
-> call_rcu(...,e2)
-> |
-> call_rcu(&e->f,cb@p)
-> )
-> 
-> @r1@
-> type T;
-> identifier x,r.cb;
-> @@
-> 
->  cb(...) {
-> (
->    kmem_cache_free(...);
-> |
->    T x = ...;
->    kmem_cache_free(...,x);
-> |
->    T x;
->    x = ...;
->    kmem_cache_free(...,x);
-> )
->  }
-> 
-> @s depends on r1@
-> position p != r.p;
-> identifier r.cb;
-> @@
-> 
->  cb@p
-> 
-> @script:ocaml@
-> cb << r.cb;
-> p << s.p;
-> @@
-> 
-> Printf.eprintf "Other use of %s at %s:%d\n"
->    cb (List.hd p).file (List.hd p).line
-> 
-> @depends on r1 && !s@
-> expression e;
-> identifier r.cb,f;
-> position r.p;
-> @@
-> 
-> - call_rcu(&e->f,cb@p)
-> + kfree_rcu(e,f)
-> 
-> @r1a depends on !s@
-> type T;
-> identifier x,r.cb;
-> @@
-> 
-> - cb(...) {
-> (
-> -  kmem_cache_free(...);
-> |
-> -  T x = ...;
-> -  kmem_cache_free(...,x);
-> |
-> -  T x;
-> -  x = ...;
-> -  kmem_cache_free(...,x);
-> )
-> - }
-> // </smpl>
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> 
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/nfs4state.c |    9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
+>  fs/nfs/client.c            |  1 +
+>  fs/nfs/localio.c           |  7 +++++--
+>  fs/nfs_common/nfslocalio.c | 15 +++++++++------
+>  fs/nfsd/localio.c          |  9 +++++----
+>  fs/nfsd/nfssvc.c           |  1 +
+>  fs/nfsd/vfs.h              |  3 ++-
+>  include/linux/nfs_fs_sb.h  |  1 +
+>  include/linux/nfslocalio.h | 10 ++++++----
+>  8 files changed, 30 insertions(+), 17 deletions(-)
 > 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a20c2c9d7d45..eba5083504c7 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -571,13 +571,6 @@ opaque_hashval(const void *ptr, int nbytes)
->  	return x;
->  }
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 3d356fb05aee..16636c68148f 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -171,6 +171,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
 >  
-> -static void nfsd4_free_file_rcu(struct rcu_head *rcu)
-> -{
-> -	struct nfs4_file *fp = container_of(rcu, struct nfs4_file, fi_rcu);
-> -
-> -	kmem_cache_free(file_slab, fp);
-> -}
-> -
->  void
->  put_nfs4_file(struct nfs4_file *fi)
+>  	INIT_LIST_HEAD(&clp->cl_superblocks);
+>  	clp->cl_rpcclient = clp->cl_rpcclient_localio = ERR_PTR(-EINVAL);
+> +	clp->cl_nfssvc_net = NULL;
+>  	clp->nfsd_open_local_fh = NULL;
+>  
+>  	clp->cl_flags = cl_init->init_flags;
+> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> index fb1ebc9715ff..1c970763bcc5 100644
+> --- a/fs/nfs/localio.c
+> +++ b/fs/nfs/localio.c
+> @@ -187,6 +187,7 @@ static bool nfs_local_server_getuuid(struct nfs_client *clp, uuid_t *nfsd_uuid)
+>  void nfs_local_probe(struct nfs_client *clp)
 >  {
-> @@ -585,7 +578,7 @@ put_nfs4_file(struct nfs4_file *fi)
->  		nfsd4_file_hash_remove(fi);
->  		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
->  		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
-> -		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
-> +		kfree_rcu(fi, fi_rcu);
->  	}
+>  	uuid_t uuid;
+> +	struct net *net = NULL;
+>  
+>  	if (!localio_enabled)
+>  		return;
+> @@ -202,8 +203,9 @@ void nfs_local_probe(struct nfs_client *clp)
+>  		if (!nfs_local_server_getuuid(clp, &uuid))
+>  			return;
+>  		/* Verify client's nfsd, with specififed uuid, is local */
+> -		if (!nfsd_uuid_is_local(&uuid))
+> +		if (!nfsd_uuid_is_local(&uuid, &net))
+>  			return;
+> +		clp->cl_nfssvc_net = net;
+>  		break;
+>  	default:
+>  		return; /* localio not supported */
+> @@ -229,7 +231,8 @@ nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
+>  	if (mode & ~(FMODE_READ | FMODE_WRITE))
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	status = clp->nfsd_open_local_fh(clp->cl_rpcclient, cred, fh, mode, &filp);
+> +	status = clp->nfsd_open_local_fh(clp->cl_nfssvc_net, clp->cl_rpcclient,
+> +					cred, fh, mode, &filp);
+>  	if (status < 0) {
+>  		dprintk("%s: open local file failed error=%d\n",
+>  				__func__, status);
+> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+> index c454c4100976..086e09b3ec38 100644
+> --- a/fs/nfs_common/nfslocalio.c
+> +++ b/fs/nfs_common/nfslocalio.c
+> @@ -12,29 +12,32 @@ MODULE_LICENSE("GPL");
+>  /*
+>   * Global list of nfsd_uuid_t instances, add/remove
+>   * is protected by fs/nfsd/nfssvc.c:nfsd_mutex.
+> - * Reads are protected RCU read lock (see below).
+> + * Reads are protected by RCU read lock (see below).
+>   */
+>  LIST_HEAD(nfsd_uuids);
+>  EXPORT_SYMBOL(nfsd_uuids);
+>  
+>  /* Must be called with RCU read lock held. */
+> -static const uuid_t * nfsd_uuid_lookup(const uuid_t *uuid)
+> +static const uuid_t * nfsd_uuid_lookup(const uuid_t *uuid,
+> +				struct net **netp)
+>  {
+>  	nfsd_uuid_t *nfsd_uuid;
+>  
+>  	list_for_each_entry_rcu(nfsd_uuid, &nfsd_uuids, list)
+> -		if (uuid_equal(&nfsd_uuid->uuid, uuid))
+> +		if (uuid_equal(&nfsd_uuid->uuid, uuid)) {
+> +			*netp = nfsd_uuid->net;
+>  			return &nfsd_uuid->uuid;
+> +		}
+>  
+>  	return &uuid_null;
 >  }
 >  
+> -bool nfsd_uuid_is_local(const uuid_t *uuid)
+> +bool nfsd_uuid_is_local(const uuid_t *uuid, struct net **netp)
+>  {
+>  	const uuid_t *nfsd_uuid;
+>  
+>  	rcu_read_lock();
+> -	nfsd_uuid = nfsd_uuid_lookup(uuid);
+> +	nfsd_uuid = nfsd_uuid_lookup(uuid, netp);
+>  	rcu_read_unlock();
+>  
+>  	return !uuid_is_null(nfsd_uuid);
+> @@ -51,7 +54,7 @@ EXPORT_SYMBOL_GPL(nfsd_uuid_is_local);
+>   * This allows some sanity checking, like giving up on localio if nfsd isn't loaded.
+>   */
+>  
+> -extern int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
+> +extern int nfsd_open_local_fh(struct net *, struct rpc_clnt *rpc_clnt,
+>  			const struct cred *cred, const struct nfs_fh *nfs_fh,
+>  			const fmode_t fmode, struct file **pfilp);
+>  
+> diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> index c4324a0fff57..0ff9ea6b8944 100644
+> --- a/fs/nfsd/localio.c
+> +++ b/fs/nfsd/localio.c
+> @@ -35,10 +35,10 @@ nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
+>  }
+>  
+>  static struct svc_rqst *
+> -nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct cred *cred)
+> +nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
+> +			const struct cred *cred)
+>  {
+>  	struct svc_rqst *rqstp;
+> -	struct net *net = rpc_net_ns(rpc_clnt);
+>  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>  	int status;
+>  
+> @@ -122,7 +122,8 @@ nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct cred *cred)
+>   * dependency on knfsd. So, there is no forward declaration in a header file
+>   * for it.
+>   */
+> -int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
+> +int nfsd_open_local_fh(struct net *net,
+> +			 struct rpc_clnt *rpc_clnt,
+>  			 const struct cred *cred,
+>  			 const struct nfs_fh *nfs_fh,
+>  			 const fmode_t fmode,
+> @@ -139,7 +140,7 @@ int nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
+>  	/* Save creds before calling into nfsd */
+>  	save_cred = get_current_cred();
+>  
+> -	rqstp = nfsd_local_fakerqst_create(rpc_clnt, cred);
+> +	rqstp = nfsd_local_fakerqst_create(net, rpc_clnt, cred);
+>  	if (IS_ERR(rqstp)) {
+>  		status = PTR_ERR(rqstp);
+>  		goto out_revertcred;
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 72ed4ed11c95..f63cdeef9c64 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -473,6 +473,7 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
+>  #endif
+>  #if defined(CONFIG_NFSD_V3_LOCALIO) || defined(CONFIG_NFSD_V4_LOCALIO)
+>  	INIT_LIST_HEAD(&nn->nfsd_uuid.list);
+> +	nn->nfsd_uuid.net = net;
+>  	list_add_tail_rcu(&nn->nfsd_uuid.list, &nfsd_uuids);
+>  #endif
+>  	nn->nfsd_net_up = true;
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index 91c50649a8c7..af07bb146e81 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -160,7 +160,8 @@ __be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
+>  
+>  void		nfsd_filp_close(struct file *fp);
+>  
+> -int		nfsd_open_local_fh(struct rpc_clnt *rpc_clnt,
+> +int		nfsd_open_local_fh(struct net *net,
+> +				   struct rpc_clnt *rpc_clnt,
+>  				   const struct cred *cred,
+>  				   const struct nfs_fh *nfs_fh,
+>  				   const fmode_t fmode,
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index f5760b05ec87..f47ea512eb0a 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -132,6 +132,7 @@ struct nfs_client {
+>  	struct timespec64	cl_nfssvc_boot;
+>  	seqlock_t		cl_boot_lock;
+>  	struct rpc_clnt *	cl_rpcclient_localio;	/* localio RPC client handle */
+> +	struct net *	        cl_nfssvc_net;
+>  	nfs_to_nfsd_open_t	nfsd_open_local_fh;
+>  };
+>  
+> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+> index b8df1b9f248d..c9592ad0afe2 100644
+> --- a/include/linux/nfslocalio.h
+> +++ b/include/linux/nfslocalio.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/list.h>
+>  #include <linux/uuid.h>
+>  #include <linux/nfs.h>
+> +#include <net/net_namespace.h>
+>  
+>  /*
+>   * Global list of nfsd_uuid_t instances, add/remove
+> @@ -23,13 +24,14 @@ extern struct list_head nfsd_uuids;
+>  typedef struct {
+>  	uuid_t uuid;
+>  	struct list_head list;
+> +	struct net *net; /* nfsd's network namespace */
+>  } nfsd_uuid_t;
+>  
+> -bool nfsd_uuid_is_local(const uuid_t *uuid);
+> +bool nfsd_uuid_is_local(const uuid_t *uuid, struct net **netp);
+>  
+> -typedef int (*nfs_to_nfsd_open_t)(struct rpc_clnt *, const struct cred *,
+> -				  const struct nfs_fh *, const fmode_t,
+> -				  struct file **);
+> +typedef int (*nfs_to_nfsd_open_t)(struct net *, struct rpc_clnt *,
+> +				const struct cred *, const struct nfs_fh *,
+> +				const fmode_t, struct file **);
+>  
+>  nfs_to_nfsd_open_t get_nfsd_open_local_fh(void);
+>  void put_nfsd_open_local_fh(void);
+> -- 
+> 2.44.0
 > 
 
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+For some reason, I received only patch 30/29.
 
 -- 
 Chuck Lever
