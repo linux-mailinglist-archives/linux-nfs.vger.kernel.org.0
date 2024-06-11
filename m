@@ -1,76 +1,121 @@
-Return-Path: <linux-nfs+bounces-3649-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3650-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0766C9040F4
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2024 18:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EF5A9044F1
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2024 21:37:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE5CB285A82
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2024 16:13:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC04E281411
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jun 2024 19:37:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6CB3A8E4;
-	Tue, 11 Jun 2024 16:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CB693A27B;
+	Tue, 11 Jun 2024 19:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPlkkl3L"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A9E42067;
-	Tue, 11 Jun 2024 16:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FEB386
+	for <linux-nfs@vger.kernel.org>; Tue, 11 Jun 2024 19:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718122406; cv=none; b=Lc1SiVjHNOD1lZ1dDsTNcbDMldb4P9hEQqQiZTr2nUOrO+E5Algpvmm5D2+VwaP0e4mQbaq+6cfpfb3qswxiPT7U18jILHOwPN3H5VRM2gW4AeDxnJAoyMJdpF1po7/e8X5eECK1KSTK057ql48rV0KorPbDE1pGys2gMXG/A98=
+	t=1718134631; cv=none; b=Gb8Jl/dKEpn+5XXN3FHjwm2mvXeN5XmpTY0fSXFHcL7A3JdmoTEaQ0ikTl1CvlW+urN65udImU5ELvg1Aq92j2q3Cd546eHsrgTy0o6pT9LIteYAlgOWlX6+x4aV0PjPa30FP5rjnCKUSCsLVvTrroP69UKMQLBifxdcgcp+u+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718122406; c=relaxed/simple;
-	bh=tbMHWdvlPuZV3ILs1/2g8pxQ4cjE1edWyrzdSdTpf6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJP2TVbfkvJb8IsuAvJX5S3bCFPqsUEpzXbmjoMRTbJxeFjG9zc9hHaDp2pgEUFNv3dNcvQkV0nWwy9LlhdbzEU23/Hn1Sqy0GUIPKvK2UbRiKSlCBL/kqYIDMDAc2MUuJryK+reYJRXq31sOvg7NxZ6zAlcEcKRVuCEWPCuDJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7C5CE68BEB; Tue, 11 Jun 2024 18:13:11 +0200 (CEST)
-Date: Tue, 11 Jun 2024 18:13:11 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Shaun Tancheff <shaun.tancheff@hpe.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] filemap: Convert generic_perform_write() to
- support large folios
-Message-ID: <20240611161311.GA12257@lst.de>
-References: <20240527163616.1135968-1-hch@lst.de> <20240527163616.1135968-2-hch@lst.de> <8e23be47-e542-4bb8-8da7-da7801c98e42@hpe.com>
+	s=arc-20240116; t=1718134631; c=relaxed/simple;
+	bh=NhV5OWsA+B/FCmhxwNBo5G6GCZHtSizjJW+3sBwxWnI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T8KKQcI+zvJ8OZE36GNebnyrX3Rd+JKyE2gIY9FqrH5gJ0ogn5NKd0zH2gd2UQfC8i25JPRsu/iRqNVYqO2EufMf5Ed9MaSpUU3ROQf7wxdT8LjFZPxSC2rQbkBHu1a/I2tKUhvaqUp4l0y5dNOp6iIlgMBhz6ZESj2deTRdoe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPlkkl3L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE36FC2BD10;
+	Tue, 11 Jun 2024 19:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718134629;
+	bh=NhV5OWsA+B/FCmhxwNBo5G6GCZHtSizjJW+3sBwxWnI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PPlkkl3L0W+pEQTlXnfbPXcucm7jUg1TQcJm9tdg1Qm2OLeHaMef6CvNNUR2ttnL3
+	 mrcksXg7bY0UdXWZ+bmFlu2noNBiDmSXlet3TNqctOzXKiHkC7DptAIXbN6Uo/BH2T
+	 BeibPdHTN4dI6JjwPLmyfC30OJv9M9DQ10PLUcVGSHKawRPzfNU2fR2NFRB6hrC2qS
+	 RCfUDv8VgKYQQQtY+aHD4pUtRdS4dWCDb+DbUglCGDmxUQv7axu3Ty3ZEipcBBw/Ab
+	 wtJs2bLci1aAOrsZS/LJMDtboY6EvZxGP2tII12kzVNgl7crCDWxep1ZL8e1FKg8ul
+	 xk5bgCi5OcaYw==
+From: cel@kernel.org
+To: <linux-nfs@vger.kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Tom Talpey <tom@talpey.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v2] NFSD: Support write delegations in LAYOUTGET
+Date: Tue, 11 Jun 2024 15:36:46 -0400
+Message-ID: <20240611193645.65792-2-cel@kernel.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1972; i=chuck.lever@oracle.com; h=from:subject; bh=KiSwkEQdxrnsz+ITmSH9nbey6dqXhCOQ4IYTeF0XB+Y=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmaKdOPeXASXuEPPhRckZnofX5xBjEUQiNDXU2b fQFM9g3FxWJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZminTgAKCRAzarMzb2Z/ l0iqD/wJ0EAMuruGKYzFFtwrquOIo87rreoJYzthzvBeEWorwE71Cmy7sV0o8lXl8OBfSsHzr7c Vm9dJRj8TxORH2WDUvWMOiGEbM35edQU6Bq+4Vr+WNiFdHwt/HBTRz5sLZp3TwsQpO+u0wxLnrt RIsn1uQgm+VsymFF6fUQQgn60cEGZENiy7O4nZnCuh+T9XMd1c1qvD4HlpkD4Cbl8T37BerPh0W 0Xwo6giJNs6q6IUWDOLCpAv7yfBMLfA1VIGJqZ+t7QMlnwl3jDwanshHpnOJ3xoJxTW9SrR/oWT FGnX7FBMeGwcyr4Wp99syKkFi4Z1VDMS9Mj0WSdrnEX/gUOLnrXokNWkVs3oQHg75+hXXiG/dQQ 0PN/lnaDu8jhIjJWYQyvuUeW4Bca5zRzGWU1JPyORPpmDYeYnG6a2MEiGBiHcv8ueYZvE3QKNwy DbrK3CGB20FWS+PcGxGbgEijbqa7o8kyHKFr6YM0o0cyuEA/kf/7weyIcor+mOpSNSmsiQZfU3h lLAAgIzYSvfDT6GQvBqbdSGSQkICF2ODtTFXhSE63d+IcuNG6us/E2yw4769/HAWBfzB1T7XC0L Yxpv55B+2H4eoHLhYw2TUhyTEvavF98NpRJMeH3ssoOwa3qi169ppUBXKz4lUr6A3K8l2Kdb0vy z3skmqQAKUQybAA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e23be47-e542-4bb8-8da7-da7801c98e42@hpe.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jun 11, 2024 at 05:47:12PM +0700, Shaun Tancheff wrote:
->>   	const struct address_space_operations *a_ops = mapping->a_ops;
->> +	size_t chunk = mapping_max_folio_size(mapping);
->
-> Better to default chunk to PAGE_SIZE for backward compat
-> +       size_t chunk = PAGE_SIZE;
->
->>   	long status = 0;
->>   	ssize_t written = 0;
->>   
->
-> Have fs opt in to large folio support:
->
-> +       if (mapping_large_folio_support(mapping))
-> +               chunk = PAGE_SIZE << MAX_PAGECACHE_ORDER;
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I don't think you've actually read the code, have you?
+I noticed LAYOUTGET(LAYOUTIOMODE4_RW) returning NFS4ERR_ACCESS
+unexpectedly. The NFS client had created a file with mode 0444, and
+the server had returned a write delegation on the OPEN(CREATE). The
+client was requesting a RW layout using the write delegation stateid
+so that it could flush file modifications.
+
+Creating a read-only file does not seem to be problematic for
+NFSv4.1 without pNFS, so I began looking at NFSD's implementation of
+LAYOUTGET.
+
+The failure was because fh_verify() was doing a permission check as
+part of verifying the FH presented during the LAYOUTGET. It uses the
+loga_iomode value to specify the @accmode argument to fh_verify().
+fh_verify(MAY_WRITE) on a file whose mode is 0444 fails with -EACCES.
+
+To permit LAYOUT* operations in this case, add OWNER_OVERRIDE when
+checking the access permission of the incoming file handle for
+LAYOUTGET and LAYOUTCOMMIT.
+
+Cc: Christoph Hellwig <hch@lst.de>
+X-Cc: stable@vger.kernel.org # v6.6+
+Message-Id: 4E9C0D74-A06D-4DC3-A48A-73034DC40395@oracle.com
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfs4proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 46bd20fe5c0f..2e39cf2e502a 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2269,7 +2269,7 @@ nfsd4_layoutget(struct svc_rqst *rqstp,
+ 	const struct nfsd4_layout_ops *ops;
+ 	struct nfs4_layout_stateid *ls;
+ 	__be32 nfserr;
+-	int accmode = NFSD_MAY_READ_IF_EXEC;
++	int accmode = NFSD_MAY_READ_IF_EXEC | NFSD_MAY_OWNER_OVERRIDE;
+ 
+ 	switch (lgp->lg_seg.iomode) {
+ 	case IOMODE_READ:
+@@ -2359,7 +2359,8 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
+ 	struct nfs4_layout_stateid *ls;
+ 	__be32 nfserr;
+ 
+-	nfserr = fh_verify(rqstp, current_fh, 0, NFSD_MAY_WRITE);
++	nfserr = fh_verify(rqstp, current_fh, 0,
++			   NFSD_MAY_WRITE | NFSD_MAY_OWNER_OVERRIDE);
+ 	if (nfserr)
+ 		goto out;
+ 
+-- 
+2.45.1
 
 
