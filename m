@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-3674-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3675-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE442904971
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:17:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 179AD90499E
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39F501F24780
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:17:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB324285D7D
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A79257D;
-	Wed, 12 Jun 2024 03:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8404117C77;
+	Wed, 12 Jun 2024 03:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V0HR9TJS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K68Vr3VW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V0HR9TJS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K68Vr3VW"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z8n9Fy6g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WwCMbotB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z8n9Fy6g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WwCMbotB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8241FA1
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1845210E6
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718162235; cv=none; b=NGUUg3X8xYR/9nSy4vtHXVKZ8nw+SG78oCTs458Iq1S0ZenKBQpz8VCCdifihtA0HVNreRS5ugfd9BvsytCHBz7Lu4w2s87QgE4PoR/GayR7HLqDW73a5J8nScknwLPsTAPA4itd/WjIFYKtSaNEe6PQNXAuafjntmYRw38kwcQ=
+	t=1718162653; cv=none; b=iFHwZB9ZeKcEr9gIOQVRS54mMx2oQ0mHWIlRdH8FFbvUeboxay0S5UFOh4veJd/yrlk/KqeK3VS6fd4iHU01fI/df8bUHYqQMk+mBbPbZctpazWdMCKpVgCBKQYUiolKOYO0TadTSavQU03l9YPZr+VG2H4GMCde5IhzoROLFB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718162235; c=relaxed/simple;
-	bh=26h32mF365po8TkxchgFSEOyXqNwCQ6KyCG0U5udTkw=;
+	s=arc-20240116; t=1718162653; c=relaxed/simple;
+	bh=My28Zn2RBfMerHklJnC3WxrUMGiY8M5RD5FBHfM9YeQ=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=s+jF3lysCfK6rWVZHqI5Hxi9KG7Zn0E8m2fWrlg52SVdF884is6LoPQmNuTek1C+VDgkwRvXpTbpArYAby11HtU7rgx9GY6ntm0GT4hnz3kKWDer5SkLQVlu9cKPxAnnrzfsm132eeK2xBkNkHyA3824FaZzivu0nNDLPXOLhEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V0HR9TJS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K68Vr3VW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V0HR9TJS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K68Vr3VW; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=aJnTvUKpZfuaKikszMGY1uafB4qqBSzCx/vlr7hcH0E9q4hP8VswmWY/Rr5vSGyZvPYC21J3kxACjpiGMw42XtOV5+/r8vf53mYPf7JX9lu+BjjZmWO3eWLduC+YrBBjRgKrD+4WVtZdrVSKgl0HgZTe536q2n/A2pFpNqrMC6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z8n9Fy6g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WwCMbotB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z8n9Fy6g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WwCMbotB; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A0A4720E85;
-	Wed, 12 Jun 2024 03:17:11 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BCEE620E96;
+	Wed, 12 Jun 2024 03:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718162231; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718162649; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o3QZsimHj960s5+ij0vgOONGXiA73gmE24xf2stvIP8=;
-	b=V0HR9TJS00HBY5YrttRmzk8MgBzlkeLj7prZJ6lbbLHaOwMr+F7ma32CfR6S2p7WP7K9ew
-	m6gVp+E1s3cAl9qYitXVF5+lKZiE+H75NqghZoOZ6vyPDR3deEu/wLM0iiOAW4+ob3wE12
-	azuixV38kv3e4VRC40BeBJAHfxLeOWs=
+	bh=E77Zsd/NrrEZWbR0Pr7ZA0G/40uc8LSVHigO1qhzfus=;
+	b=Z8n9Fy6gBFqN1vkFV6zrV8/QqISj5ojnh2CWaedCWC2TFV8Dnt9MTCLhRRTfd2tDeX1Ytq
+	PqJMjvKPiXozA8F1upnMC1Vfaeh2aGfkr6TcdQVFXThieGxNkdMLzgYeDFOdJzWsiOBX6D
+	Ys2M9lzQQvhkhGuSZ7TgFaLBAQmRt4g=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718162231;
+	s=susede2_ed25519; t=1718162649;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o3QZsimHj960s5+ij0vgOONGXiA73gmE24xf2stvIP8=;
-	b=K68Vr3VWuo/GHVf/Auj40fPiKdIevrOZq3Sl0GKTjr4MneifQrQ0tMIjlZ808jE/3/FhnL
-	cmqanjq8XgzzocAQ==
+	bh=E77Zsd/NrrEZWbR0Pr7ZA0G/40uc8LSVHigO1qhzfus=;
+	b=WwCMbotBBud7OqWAQ+GGSoevUQCuGVLOJqty4Z2mwjEAGpRpg7ajy1EyOnIqeWJNjZ6jGH
+	K8A9VIU/7FqhyXAg==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718162231; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718162649; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o3QZsimHj960s5+ij0vgOONGXiA73gmE24xf2stvIP8=;
-	b=V0HR9TJS00HBY5YrttRmzk8MgBzlkeLj7prZJ6lbbLHaOwMr+F7ma32CfR6S2p7WP7K9ew
-	m6gVp+E1s3cAl9qYitXVF5+lKZiE+H75NqghZoOZ6vyPDR3deEu/wLM0iiOAW4+ob3wE12
-	azuixV38kv3e4VRC40BeBJAHfxLeOWs=
+	bh=E77Zsd/NrrEZWbR0Pr7ZA0G/40uc8LSVHigO1qhzfus=;
+	b=Z8n9Fy6gBFqN1vkFV6zrV8/QqISj5ojnh2CWaedCWC2TFV8Dnt9MTCLhRRTfd2tDeX1Ytq
+	PqJMjvKPiXozA8F1upnMC1Vfaeh2aGfkr6TcdQVFXThieGxNkdMLzgYeDFOdJzWsiOBX6D
+	Ys2M9lzQQvhkhGuSZ7TgFaLBAQmRt4g=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718162231;
+	s=susede2_ed25519; t=1718162649;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o3QZsimHj960s5+ij0vgOONGXiA73gmE24xf2stvIP8=;
-	b=K68Vr3VWuo/GHVf/Auj40fPiKdIevrOZq3Sl0GKTjr4MneifQrQ0tMIjlZ808jE/3/FhnL
-	cmqanjq8XgzzocAQ==
+	bh=E77Zsd/NrrEZWbR0Pr7ZA0G/40uc8LSVHigO1qhzfus=;
+	b=WwCMbotBBud7OqWAQ+GGSoevUQCuGVLOJqty4Z2mwjEAGpRpg7ajy1EyOnIqeWJNjZ6jGH
+	K8A9VIU/7FqhyXAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 04693137DF;
-	Wed, 12 Jun 2024 03:17:08 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2360D137DF;
+	Wed, 12 Jun 2024 03:24:06 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1rdxJjQTaWYVDwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 12 Jun 2024 03:17:08 +0000
+	id gvyaLdYUaWZ2EAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 12 Jun 2024 03:24:06 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -98,21 +98,19 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
 To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+Cc: linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>,
  "Chuck Lever" <chuck.lever@oracle.com>,
  "Trond Myklebust" <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [for-6.11 PATCH 10/29] nfs/nfsd: add "local io" support
-In-reply-to: <ZmkHNr5jtGHDpko_@kernel.org>
-References: <>, <ZmkHNr5jtGHDpko_@kernel.org>
-Date: Wed, 12 Jun 2024 13:17:05 +1000
-Message-id: <171816222529.14261.9832643931623454806@noble.neil.brown.name>
-X-Spam-Score: -4.28
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.28 / 50.00];
+Subject: Re: [RFC PATCH v2 05/15] nfs: move nfs_stat_to_errno to nfs.h
+In-reply-to: <20240612030752.31754-6-snitzer@kernel.org>
+References: <20240612030752.31754-1-snitzer@kernel.org>,
+ <20240612030752.31754-6-snitzer@kernel.org>
+Date: Wed, 12 Jun 2024 13:23:59 +1000
+Message-id: <171816263943.14261.9166283683437727145@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.27 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.18)[-0.884];
+	NEURAL_HAM_SHORT(-0.17)[-0.875];
 	MIME_GOOD(-0.10)[text/plain];
 	FROM_HAS_DN(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
@@ -127,159 +125,211 @@ X-Spamd-Result: default: False [-4.28 / 50.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_TWO(0.00)[2];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,hammerspace.com:email,primarydata.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[primarydata.com:email,imap1.dmz-prg2.suse.org:helo,hammerspace.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -4.27
+X-Spam-Level: 
 
 On Wed, 12 Jun 2024, Mike Snitzer wrote:
-> On Mon, Jun 10, 2024 at 12:42:54PM -0400, Mike Snitzer wrote:
-> > On Mon, Jun 10, 2024 at 08:43:34AM -0400, Jeff Layton wrote:
-> > > On Fri, 2024-06-07 at 10:26 -0400, Mike Snitzer wrote:
-> > > > From: Weston Andros Adamson <dros@primarydata.com>
-> > > >=20
-> > > > Add client support for bypassing NFS for localhost reads, writes, and=
- commits.
-> > > >=20
-> > > > This is only useful when the client and the server are running on the=
- same
-> > > > host and in the same container.
-> > > >=20
-> > > > This has dynamic binding with the nfsd module. Local i/o will only wo=
-rk if
-> > > > nfsd is already loaded.
-> > > >=20
-> > > > [snitm: rebase accounted for commit d8b26071e65e8 ("NFSD: simplify st=
-ruct nfsfh")
-> > > > =C2=A0and commit 7c98f7cb8fda ("remove call_{read,write}_iter() funct=
-ions")]
-> > > >=20
-> > > > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
-> > > > Signed-off-by: Jeff Layton <jeff.layton@primarydata.com>
-> > > > Signed-off-by: Peng Tao <tao.peng@primarydata.com>
-> > > > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ...
-> > > > diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-> > > > new file mode 100644
-> > > > index 000000000000..ff68454a4017
-> > > > --- /dev/null
-> > > > +++ b/fs/nfsd/localio.c
-> > > > @@ -0,0 +1,179 @@
-> > > > +/*
-> > > > + * NFS server support for local clients to bypass network stack
-> > > > + *
-> > > > + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
-> > > > + */
-> > > > +
-> > > > +#include <linux/exportfs.h>
-> > > > +#include <linux/sunrpc/svcauth_gss.h>
-> > > > +#include <linux/sunrpc/clnt.h>
-> > > > +#include <linux/nfs.h>
-> > > > +#include <linux/string.h>
-> > > > +
-> > > > +#include "nfsd.h"
-> > > > +#include "vfs.h"
-> > > > +#include "netns.h"
-> > > > +#include "filecache.h"
-> > > > +
-> > > > +#define NFSDDBG_FACILITY		NFSDDBG_FH
-> > > > +
-> > > > +static void
-> > > > +nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
-> > > > +{
-> > > > +	if (rqstp->rq_client)
-> > > > +		auth_domain_put(rqstp->rq_client);
-> > > > +	if (rqstp->rq_cred.cr_group_info)
-> > > > +		put_group_info(rqstp->rq_cred.cr_group_info);
-> > > > +	kfree(rqstp->rq_cred.cr_principal);
-> > > > +	kfree(rqstp->rq_xprt);
-> > > > +	kfree(rqstp);
-> > > > +}
-> > > > +
-> > > > +static struct svc_rqst *
-> > > > +nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct c=
-red *cred)
-> > > > +{
-> > > > +	struct svc_rqst *rqstp;
-> > > > +	struct net *net =3D rpc_net_ns(rpc_clnt);
-> > > > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > > > +	int status;
-> > > > +
-> > > > +	if (!nn->nfsd_serv) {
-> > > > +		dprintk("%s: localio denied. Server not running\n", __func__);
-> > > > +		return ERR_PTR(-ENXIO);
-> > > > +	}
-> > > > +
-> > >=20
-> > > Note that the above check is racy. The nfsd_serv can go away at any
-> > > time since you're not holding the (global) nfsd_mutex (I assume?).
-> >=20
-> > Yes, worst case we should fallback to going over the network.
+> From: Peng Tao <tao.peng@primarydata.com>
 >=20
-> Actual worst case is we could crash... ;)
+> So that knfsd can use it to map nfs stat to sys errno as well.
 >=20
-> > > > +	rqstp =3D kzalloc(sizeof(*rqstp), GFP_KERNEL);
-> > > > +	if (!rqstp)
-> > > > +		return ERR_PTR(-ENOMEM);
-> > > > +
-> > > > +	rqstp->rq_xprt =3D kzalloc(sizeof(*rqstp->rq_xprt), GFP_KERNEL);
-> > > > +	if (!rqstp->rq_xprt) {
-> > > > +		status =3D -ENOMEM;
-> > > > +		goto out_err;
-> > > > +	}
-> > > > +
-> > > > +	rqstp->rq_xprt->xpt_net =3D net;
-> > > > +	__set_bit(RQ_SECURE, &rqstp->rq_flags);
-> > > > +	rqstp->rq_proc =3D 1;
-> > > > +	rqstp->rq_vers =3D 3;
-> > > > +	rqstp->rq_prot =3D IPPROTO_TCP;
-> > > > +	rqstp->rq_server =3D nn->nfsd_serv;
-> > > > +
-> > >=20
-> > > I suspect you need to carry a reference of some sort so that the
-> > > nfsd_serv doesn't go away out from under you while this is running,
-> > > since this is not operating in nfsd thread context.
-> > >=20
-> > > Typically, every nfsd thread holds a reference to the serv (in serv-
-> > > >sv_nrthreads), so that when you shut down all of the threads, it goes
-> > > away. The catch is that that refcount is currently under the protection
-> > > of the global nfsd_mutex and I doubt you want to take that in this
-> > > codepath.
-> >=20
-> > OK, I can look closer at the implications.
+> Signed-off-by: Peng Tao <tao.peng@primarydata.com>
+> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  fs/nfs/nfs2xdr.c    | 69 ---------------------------------------------
+>  include/linux/nfs.h | 63 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+), 69 deletions(-)
 >=20
-> SO I looked, and I'm saddened to see Neil's 6.8 commit 1e3577a4521e
-> ("SUNRPC: discard sv_refcnt, and svc_get/svc_put").
->=20
-> [the lack of useful refcounting with the current code kind of blew me
-> away.. but nice to see it existed not too long ago.]
->=20
-> Rather than immediately invest the effort to revert commit
-> 1e3577a4521e for my apparent needs... I'll send out v2 to allow for
-> further review and discussion.
->=20
-> But it really does feel like I _need_ svc_{get,put} and nfsd_{get,put}
+> diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
+> index c19093814296..f7ef44829f6e 100644
+> --- a/fs/nfs/nfs2xdr.c
+> +++ b/fs/nfs/nfs2xdr.c
+> @@ -27,9 +27,6 @@
+> =20
+>  #define NFSDBG_FACILITY		NFSDBG_XDR
+> =20
+> -/* Mapping from NFS error code to "errno" error code. */
+> -#define errno_NFSERR_IO		EIO
+> -
+>  /*
+>   * Declare the space requirements for NFS arguments and replies as
+>   * number of 32bit-words
+> @@ -64,8 +61,6 @@
+>  #define NFS_readdirres_sz	(1+NFS_pagepad_sz)
+>  #define NFS_statfsres_sz	(1+NFS_info_sz)
+> =20
+> -static int nfs_stat_to_errno(enum nfs_stat);
+> -
+>  /*
+>   * Encode/decode NFSv2 basic data types
+>   *
+> @@ -1054,70 +1049,6 @@ static int nfs2_xdr_dec_statfsres(struct rpc_rqst *r=
+eq, struct xdr_stream *xdr,
+>  	return nfs_stat_to_errno(status);
+>  }
+> =20
+> -
+> -/*
+> - * We need to translate between nfs status return values and
+> - * the local errno values which may not be the same.
+> - */
+> -static const struct {
+> -	int stat;
+> -	int errno;
+> -} nfs_errtbl[] =3D {
 
-You are taking a reference, and at the right time.  But it is to the
-wrong thing.
-You call symbol_request(nfsd_open_local_fh) and so get a reference to
-the nfsd module.  But you really want a reference to the nfsd service.
-
-I would suggest that you use symbol_request() to get a function which
-you then call and immediately symbol_put().... unless you need to use it
-to discard the reference to the service later.
-The function would take nfsd_mutex, check there is an nfsd_serv, sets a
-flag or whatever to indicate the serv is being used for local_io, and
-maybe returns the nfsd_serv.  As long as that flag is set the serv
-cannot be destroy.
-
-Do you need there to be available threads for LOCAL_IO to work?  If so
-the flag would cause setting the num threads to zero to fail.
-If not ....  that is weird.  It would mean that setting the number of
-threads to zero would not destroy the service and I don't think we want
-to do that.
-
-So I think that when LOCAL_IO is in use, setting number of threads to
-zero must return EBUSY or similar, even if you don't need the threads.
+Will this array appear in every .o file that is compiled using this .h
+file? That doesn't seem like a good idea.
 
 NeilBrown
+
+
+> -	{ NFS_OK,		0		},
+> -	{ NFSERR_PERM,		-EPERM		},
+> -	{ NFSERR_NOENT,		-ENOENT		},
+> -	{ NFSERR_IO,		-errno_NFSERR_IO},
+> -	{ NFSERR_NXIO,		-ENXIO		},
+> -/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> -	{ NFSERR_ACCES,		-EACCES		},
+> -	{ NFSERR_EXIST,		-EEXIST		},
+> -	{ NFSERR_XDEV,		-EXDEV		},
+> -	{ NFSERR_NODEV,		-ENODEV		},
+> -	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> -	{ NFSERR_ISDIR,		-EISDIR		},
+> -	{ NFSERR_INVAL,		-EINVAL		},
+> -	{ NFSERR_FBIG,		-EFBIG		},
+> -	{ NFSERR_NOSPC,		-ENOSPC		},
+> -	{ NFSERR_ROFS,		-EROFS		},
+> -	{ NFSERR_MLINK,		-EMLINK		},
+> -	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> -	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> -	{ NFSERR_DQUOT,		-EDQUOT		},
+> -	{ NFSERR_STALE,		-ESTALE		},
+> -	{ NFSERR_REMOTE,	-EREMOTE	},
+> -#ifdef EWFLUSH
+> -	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> -#endif
+> -	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> -	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> -	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> -	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> -	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> -	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> -	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> -	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> -	{ -1,			-EIO		}
+> -};
+> -
+> -/**
+> - * nfs_stat_to_errno - convert an NFS status code to a local errno
+> - * @status: NFS status code to convert
+> - *
+> - * Returns a local errno value, or -EIO if the NFS status code is
+> - * not recognized.  This function is used jointly by NFSv2 and NFSv3.
+> - */
+> -static int nfs_stat_to_errno(enum nfs_stat status)
+> -{
+> -	int i;
+> -
+> -	for (i =3D 0; nfs_errtbl[i].stat !=3D -1; i++) {
+> -		if (nfs_errtbl[i].stat =3D=3D (int)status)
+> -			return nfs_errtbl[i].errno;
+> -	}
+> -	dprintk("NFS: Unrecognized nfs status value: %u\n", status);
+> -	return nfs_errtbl[i].errno;
+> -}
+> -
+>  #define PROC(proc, argtype, restype, timer)				\
+>  [NFSPROC_##proc] =3D {							\
+>  	.p_proc	    =3D  NFSPROC_##proc,					\
+> diff --git a/include/linux/nfs.h b/include/linux/nfs.h
+> index ceb70a926b95..b94f51d17bc5 100644
+> --- a/include/linux/nfs.h
+> +++ b/include/linux/nfs.h
+> @@ -10,6 +10,7 @@
+> =20
+>  #include <linux/sunrpc/msg_prot.h>
+>  #include <linux/string.h>
+> +#include <linux/errno.h>
+>  #include <linux/crc32.h>
+>  #include <uapi/linux/nfs.h>
+> =20
+> @@ -46,6 +47,68 @@ enum nfs3_stable_how {
+>  	NFS_INVALID_STABLE_HOW =3D -1
+>  };
+> =20
+> +/*
+> + * We need to translate between nfs status return values and
+> + * the local errno values which may not be the same.
+> + */
+> +static const struct {
+> +	int stat;
+> +	int errno;
+> +} nfs_common_errtbl[] =3D {
+> +	{ NFS_OK,		0		},
+> +	{ NFSERR_PERM,		-EPERM		},
+> +	{ NFSERR_NOENT,		-ENOENT		},
+> +	{ NFSERR_IO,		-EIO		},
+> +	{ NFSERR_NXIO,		-ENXIO		},
+> +/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> +	{ NFSERR_ACCES,		-EACCES		},
+> +	{ NFSERR_EXIST,		-EEXIST		},
+> +	{ NFSERR_XDEV,		-EXDEV		},
+> +	{ NFSERR_NODEV,		-ENODEV		},
+> +	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> +	{ NFSERR_ISDIR,		-EISDIR		},
+> +	{ NFSERR_INVAL,		-EINVAL		},
+> +	{ NFSERR_FBIG,		-EFBIG		},
+> +	{ NFSERR_NOSPC,		-ENOSPC		},
+> +	{ NFSERR_ROFS,		-EROFS		},
+> +	{ NFSERR_MLINK,		-EMLINK		},
+> +	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> +	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> +	{ NFSERR_DQUOT,		-EDQUOT		},
+> +	{ NFSERR_STALE,		-ESTALE		},
+> +	{ NFSERR_REMOTE,	-EREMOTE	},
+> +#ifdef EWFLUSH
+> +	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> +#endif
+> +	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> +	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> +	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> +	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> +	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> +	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> +	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> +	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> +	{ -1,			-EIO		}
+> +};
+> +
+> +/**
+> + * nfs_stat_to_errno - convert an NFS status code to a local errno
+> + * @status: NFS status code to convert
+> + *
+> + * Returns a local errno value, or -EIO if the NFS status code is
+> + * not recognized.  This function is used jointly by NFSv2 and NFSv3.
+> + */
+> +static inline int nfs_stat_to_errno(enum nfs_stat status)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; nfs_common_errtbl[i].stat !=3D -1; i++) {
+> +		if (nfs_common_errtbl[i].stat =3D=3D (int)status)
+> +			return nfs_common_errtbl[i].errno;
+> +	}
+> +	return nfs_common_errtbl[i].errno;
+> +}
+> +
+>  #ifdef CONFIG_CRC32
+>  /**
+>   * nfs_fhandle_hash - calculate the crc32 hash for the filehandle
+> --=20
+> 2.44.0
+>=20
+>=20
+
 
