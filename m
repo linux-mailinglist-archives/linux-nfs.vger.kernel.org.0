@@ -1,198 +1,179 @@
-Return-Path: <linux-nfs+bounces-3655-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3656-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63674904933
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 04:56:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9BE3904952
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:07:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A14ECB21E43
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 02:55:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 232511F21F81
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E23DDDC4;
-	Wed, 12 Jun 2024 02:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43A617BB9;
+	Wed, 12 Jun 2024 03:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnBguCff";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P+G7PaQI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnBguCff";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P+G7PaQI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWCcugnu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D1F3C2F;
-	Wed, 12 Jun 2024 02:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03FA1799B
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718160951; cv=none; b=KOUgARNSxcit/AxrKntwuJlTux+okqAFhYz0dNfkDIMQNecgqWchJ+5xalJ/L8E5d03I3pOUu+FLR5gLlly7JaRdZ4dnbnM694uwB117NO7Jl9Ye9e9T4dt+yMOiRe15Ayivvkvjg6QKGwfdZjhfwd1UH6ItHMQc86nQt1UnA1M=
+	t=1718161674; cv=none; b=fO4Q01dY9cjiEdQpbxtEgDGMkkP5Ot9ONeuG0Hq0pU20LttqTCiRRIs7N0VctniY0uVDscbRKwVlJXRIUXfkx3q96dxLY7oL3hq+UgyDf4iB0Rk8V9zmYY7SAS3JQvNnrrlBuCQLBgBks3psktmWm7JsmYEr3/U4hsKkdweKm7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718160951; c=relaxed/simple;
-	bh=CWUH+foI6HMl68oOCwwSHQTb1k2+/MYYF0gH8gZanhY=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=LfdH5X3vsAokbTaX0Ba0arMr8y2rYylSd01VunIPfJSyTbDEk9rlVK/Vss0rWo3aMge9g1NoJmNU7WHUWuGAKboxz0RKKn4IQbGcILGVChUwyiJqcs/+6UA14+KeH36qubpw9krH4Y1FoCdM0O2u3vRPIBrh8Kk33zUwpJDwDCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnBguCff; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P+G7PaQI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnBguCff; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P+G7PaQI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CBEE620E49;
-	Wed, 12 Jun 2024 02:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718160947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
-	b=HnBguCffpXlQE5lNoNrD1iAZCzOx7MKcBvU13zSgMPlBdzyXItj3sG317S71ShPfLLJVUS
-	ygDf53cBGHafhqz4C3mcq9hDS+CujKgDEMit4EOF61ItG9zjqZC/yLFMLmP3lbPtYxRi1D
-	YAe6/0TAJhbtOJ4DBxrHaoVAdle+Flw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718160947;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
-	b=P+G7PaQI9wQ69zlBmPm3tK1W9z0tIcijUFV4TAu06akCknpdoUcjp7PrSe7Ua4W46plY/u
-	qeva8bmxWc6UaZAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718160947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
-	b=HnBguCffpXlQE5lNoNrD1iAZCzOx7MKcBvU13zSgMPlBdzyXItj3sG317S71ShPfLLJVUS
-	ygDf53cBGHafhqz4C3mcq9hDS+CujKgDEMit4EOF61ItG9zjqZC/yLFMLmP3lbPtYxRi1D
-	YAe6/0TAJhbtOJ4DBxrHaoVAdle+Flw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718160947;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
-	b=P+G7PaQI9wQ69zlBmPm3tK1W9z0tIcijUFV4TAu06akCknpdoUcjp7PrSe7Ua4W46plY/u
-	qeva8bmxWc6UaZAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1FDDD137DF;
-	Wed, 12 Jun 2024 02:55:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tv4oLS8OaWZPCgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 12 Jun 2024 02:55:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718161674; c=relaxed/simple;
+	bh=jXhnViIe7fzMZvQsFuF6K9Ax83b2+vjS+Tc2uXM0Fx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/f1sd6Xb4fXaPE91VumeSmWaihXsCNJdObvcwJu7/gdIeMo1x80RjchImQbxv4kKs08LPYnu9+68WS2F9uBatRxTIHEYRuBVl/2sgcpn9/MBZC9gUzNN0ZkjCPJGXDpyY8IE3RV5uIBxHlroiGO1q1X82/N+bnrLlgOf6sCBYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWCcugnu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB9EC2BD10;
+	Wed, 12 Jun 2024 03:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718161674;
+	bh=jXhnViIe7fzMZvQsFuF6K9Ax83b2+vjS+Tc2uXM0Fx8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uWCcugnumeh5aOu5Z8hBkzWW5KNgjVAzsFqb2Sg0vk2pisy8q2/mlVNApbfJH2OsD
+	 YeCCVUlQ0mmfmUOyd0QG9n8fPRypSpbwScVZ1d5NW0faAmhpgWNFhxNBTYWMgKIUvm
+	 1FjOp3XL14165T5emgW8dpIpDCeaOi0J4gYZEPvrfsghnGawPWr0IrRXp76d4xvujl
+	 zJvh9mHE8asl42ZdJCP5/mwVm19qGIy5WmiB/GanocIbNhQIUC8lJzFq4DhoTrC2Om
+	 FQQj08S4fLgCX4fi89axgnNviObZvTppxiONLvaFukp6aC9UcqYKGu0ivHxrwikVs0
+	 hf5jp1jy1J8Fg==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	snitzer@hammerspace.com
+Subject: [RFC PATCH v2 00/15] nfs/nfsd: add support for localio
+Date: Tue, 11 Jun 2024 23:07:37 -0400
+Message-ID: <20240612030752.31754-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Amir Goldstein" <amir73il@gmail.com>, "James Clark" <james.clark@arm.com>,
- ltp@lists.linux.it, linux-nfs@vger.kernel.org,
- "LKML" <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
-Subject:
- Re: [PATCH] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open used.
-In-reply-to: <20240612023748.GG1629371@ZenIV>
-References: <171815791109.14261.10223988071271993465@noble.neil.brown.name>,
- <20240612023748.GG1629371@ZenIV>
-Date: Wed, 12 Jun 2024 12:55:40 +1000
-Message-id: <171816094008.14261.10304380583720747013@noble.neil.brown.name>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.cz,gmail.com,arm.com,lists.linux.it,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Jun 2024, Al Viro wrote:
-> On Wed, Jun 12, 2024 at 12:05:11PM +1000, NeilBrown wrote:
->=20
-> > For finish_open() there are three cases:
-> >  - finish_open is used in ->atomic_open handlers.  For these we add a
-> >    call to fsnotify_open() in do_open() if FMODE_OPENED is set - which
-> >    means do_dentry_open() has been called. This happens after fsnotify_cr=
-eate().
->=20
-> 	Hummm....  There's a bit of behaviour change; in case we fail in
-> may_open(), we used to get fsnotify_open()+fsnotify_close() and with that
-> patch we's get fsnotify_close() alone.
+Hi,
 
-True.  Presumably we could fix that by doing
-diff --git a/fs/namei.c b/fs/namei.c
-index 37fb0a8aa09a..6fd04c9046fa 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3645,6 +3645,8 @@ static int do_open(struct nameidata *nd,
- 			return error;
- 		do_truncate =3D true;
- 	}
-+	if (file->f_mode & FMODE_OPENED)
-+		fsnotify_open(file);
- 	error =3D may_open(idmap, &nd->path, acc_mode, open_flag);
- 	if (!error && !(file->f_mode & FMODE_OPENED))
- 		error =3D vfs_open(&nd->path, file);
-@@ -3702,6 +3704,7 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
- 	dput(child);
- 	if (error)
- 		return error;
-+	fsnotify_open(file);
- 	/* Don't check for other permissions, the inode was just created */
- 	error =3D may_open(idmap, &file->f_path, 0, file->f_flags);
- 	if (error)
+This patch series rebases "localio" changes that Hammerspace (and
+Primary Data before it) has been carrying since 2014. The reason they
+weren't proposed for upstream inclusion until now was the handshake
+for whether or not a client and server are local was brittle, for more
+context please see this commit from v1:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-6.11.v1&id=8069f78e10f8fa4dd6aa6ba3ad643de6f95be6f6
 
-instead, but it seems a little weird sending an OPEN notification if
-may_open() fails.
+Aside from rebasing the original changes from a 5.15.130-stable
+kernel, my contribution to this series started with making the localio
+handshake more robust. To do so a new LOCALIO protocol extension has
+been added to both NFS v3 and v4. It follows the well-worn pattern
+established by the ACL protocol extension.
 
->=20
-> 	IF we don't care about that, we might as well take fsnotify_open()
-> out of vfs_open() and, for do_open()/do_tmpfile()/do_o_path(), into
-> path_openat() itself.  I mean, having
->         if (likely(!error)) {
->                 if (likely(file->f_mode & FMODE_OPENED)) {
-> 			fsnotify_open(file);
->                         return file;
-> 		}
-> in there would be a lot easier to follow...  It would lose fsnotify_open()
-> in a few more failure exits, but if we don't give a damn about having it
-> paired with fsnotify_close()...
->=20
+These changes have proven stable against various test scenarios:
+1) client and server both on localhost (for both v3 and v4.2)
+2) various permutations of client and server support enablement for
+   both local and remote client and server.
+3) client on host, server within a container (for both v3 and v4.2)
+   My container testing was in terms of podman managed containers.
 
-Should we have fsnotify_open() set a new ->f_mode flag, and
-fsnotify_close() abort if it isn't set (and clear it if it is)?
-Then we would be guaranteed a balance - which does seem like a good
-idea.
+That said, v2 is "RFC" because it still lacks proper refcounting on
+nn->nfsd_serv and I need help on how others would like to see that
+happen given svc_get/svc_put were removed with commit 1e3577a4521e
+("SUNRPC: discard sv_refcnt, and svc_get/svc_put").
+
+* Changes since v1: lots of folding and rebasing of patches to try to
+  minimize needless preservation of old code that later patches
+  removed. Dropped patches that weren't needed. Some renames and 
+  comments. Some refactoring of nfsiod_start.
+
+All review and comments are welcome!
 
 Thanks,
-NeilBrown
+Mike
+
+Mike Snitzer (6):
+  nfs_common: add NFS LOCALIO protocol extension enablement
+  nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
+  nfsd: implement v3 and v4 server support for NFS_LOCALIO_PROGRAM
+  nfs/nfsd: consolidate {encode,decode}_opaque_fixed in nfs_xdr.h
+  nfs/localio: move managing nfsd_open_local_fh symbol to nfs_common
+  nfs/nfsd: ensure localio server always uses its network namespace
+
+Peng Tao (1):
+  nfs: move nfs_stat_to_errno to nfs.h
+
+Trond Myklebust (3):
+  NFS: for localio don't call filesystem read() and write() routines
+    directly
+  NFS: Enable localio for non-pNFS I/O
+  pnfs/flexfiles: Enable localio for flexfiles I/O
+
+Weston Andros Adamson (5):
+  nfs: pass nfs_client to nfs_initiate_pgio
+  nfs: pass descriptor thru nfs_initiate_pgio path
+  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
+  sunrpc: add rpcauth_map_to_svc_cred_local
+  nfs/nfsd: add "localio" support
+
+ fs/Kconfig                                |   3 +
+ fs/nfs/Kconfig                            |  25 +
+ fs/nfs/Makefile                           |   2 +
+ fs/nfs/blocklayout/blocklayout.c          |   6 +-
+ fs/nfs/client.c                           |  17 +-
+ fs/nfs/filelayout/filelayout.c            |  16 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+ fs/nfs/inode.c                            |  61 +-
+ fs/nfs/internal.h                         |  96 ++-
+ fs/nfs/localio.c                          | 830 ++++++++++++++++++++++
+ fs/nfs/nfs2xdr.c                          |  69 --
+ fs/nfs/nfs3_fs.h                          |   1 +
+ fs/nfs/nfs3client.c                       |  25 +
+ fs/nfs/nfs3proc.c                         |   3 +
+ fs/nfs/nfs3xdr.c                          |  58 ++
+ fs/nfs/nfs4_fs.h                          |   2 +
+ fs/nfs/nfs4client.c                       |  23 +
+ fs/nfs/nfs4proc.c                         |   3 +
+ fs/nfs/nfs4xdr.c                          |  65 +-
+ fs/nfs/nfstrace.h                         |  61 ++
+ fs/nfs/pagelist.c                         |  32 +-
+ fs/nfs/pnfs.c                             |  24 +-
+ fs/nfs/pnfs.h                             |   6 +-
+ fs/nfs/pnfs_nfs.c                         |   2 +-
+ fs/nfs/write.c                            |  13 +-
+ fs/nfs_common/Makefile                    |   3 +
+ fs/nfs_common/nfslocalio.c                |  71 ++
+ fs/nfsd/Kconfig                           |  25 +
+ fs/nfsd/Makefile                          |   2 +
+ fs/nfsd/filecache.c                       |   2 +-
+ fs/nfsd/localio.c                         | 330 +++++++++
+ fs/nfsd/netns.h                           |   4 +
+ fs/nfsd/nfsd.h                            |  11 +
+ fs/nfsd/nfssvc.c                          |  93 ++-
+ fs/nfsd/trace.h                           |   3 +-
+ fs/nfsd/vfs.h                             |   9 +
+ fs/nfsd/xdr.h                             |   6 +
+ include/linux/nfs.h                       |  65 ++
+ include/linux/nfs_fs.h                    |   2 +
+ include/linux/nfs_fs_sb.h                 |   9 +
+ include/linux/nfs_xdr.h                   |  31 +-
+ include/linux/nfslocalio.h                |  39 +
+ include/linux/sunrpc/auth.h               |   4 +
+ include/uapi/linux/nfs.h                  |   4 +
+ net/sunrpc/auth.c                         |  17 +
+ 47 files changed, 2146 insertions(+), 166 deletions(-)
+ create mode 100644 fs/nfs/localio.c
+ create mode 100644 fs/nfs_common/nfslocalio.c
+ create mode 100644 fs/nfsd/localio.c
+ create mode 100644 include/linux/nfslocalio.h
+
+-- 
+2.44.0
 
 
