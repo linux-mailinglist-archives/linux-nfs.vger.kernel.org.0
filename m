@@ -1,57 +1,47 @@
-Return-Path: <linux-nfs+bounces-3684-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3685-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD010904A49
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 06:51:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2B33904AA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 07:09:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECF211C23A88
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 04:51:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EC801F2198A
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:09:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6FAA36AF5;
-	Wed, 12 Jun 2024 04:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TelMNdoo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724172C1BA;
+	Wed, 12 Jun 2024 05:09:06 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D2A36AF2
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 04:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6728DD1
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 05:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718167891; cv=none; b=ePe9WZ3zf6IkhYQoU5uDZ8f68Ef0ZndrsP+NC5Nhke8DAv4F2D7FnINVZ7g5JZz3e82OOEuhPppyDTBK+BjDNz5UQC3qjWnsesAFNc/1IMaqU815ya5NcZvLZ7vwJ+4HCdsGEoc05miGVvF2inn6MtjBgCk4RjfRnKGvVy0/zZM=
+	t=1718168946; cv=none; b=iEpwuiKNuLnvfuoIKXAhV6iH5LJqDghqsKpGXvzg8cAeBEhbaYXxskL7O8chN6DXo8xYCTjB62k1FJWJK6ObKMR8mrUyRQP9fNNQGIvEQGZeF0yR03o2YWGx1hVoSnXpls4Rvb7qZrynHrDn3tWLlXl/5rTJQ8+qnEB5pmOE/Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718167891; c=relaxed/simple;
-	bh=qERewtss8aW4faLB/3L1NvX2o6hiFROD4BXdAM61LiU=;
+	s=arc-20240116; t=1718168946; c=relaxed/simple;
+	bh=7vAdgrn/NamW2RuhsHIwT9Gl3uy2GoPF7IR6O+pZVVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aiuwArQIsn57bFZs65Ts7fL2y1s1y07o30elZd0M9JxI9ed5Pxr2HgGpBSQIsuK5wBfhRg5ZYnwsGU3eXtnv9gO5rGd8qMt2ZXBKeW1OrBng3SbwOa6CLNF4JO/LkFFitYRevuhWq9EtiK6S0cEAd7LB02yp1Dwqkxxl96KMrbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TelMNdoo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ECB8C32786;
-	Wed, 12 Jun 2024 04:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718167890;
-	bh=qERewtss8aW4faLB/3L1NvX2o6hiFROD4BXdAM61LiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TelMNdooEgNH8eo339ghYglzWWxgRY/JdesyTaTvzGnSKmciGGR1VnYOF3U/tRs+u
-	 S4E4vuCFRFvdiy+6BdxZ19R2/1pkClH3q+PzpAqYAsF5gD+5sgzqtkAneLUAGEX5Ws
-	 WIs9aNCF8zNPcnAfEfNRekTfDi4PS8dx0KkB2apWnAtXMDTwPIjvBUsr4w8XXMHQBE
-	 frhhUNcI5cDYGPaRA0c6VF/1JKt0kNdFy1iohfP7pQMS9SxioIc2/vZ5ZwpSI8uv5I
-	 zDzzW9wjSkTvQ0Ep71FVDRUUxToP+rvnyNktkqmOseqQaH+YKbMcaGAxGTT36A6Gpl
-	 bL3nPJ4Se22Mw==
-Date: Wed, 12 Jun 2024 00:51:29 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XsmxZG6/v7GM41+9F+nSdMRXOC78gpdtJY5iwh4K2tRJ29GhoDMBzWnRzK0lMWPVY5ug0x+i3CDybnc4Whm3cp3jmG014XGXzkr8lKdmnx0Xq/0LYgZX4Th+GS/B77aDIknbuaFi4BBmi/cUkrM42xmDgSqDpWy16oRfhqnI8ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 448BF68BEB; Wed, 12 Jun 2024 07:09:00 +0200 (CEST)
+Date: Wed, 12 Jun 2024 07:08:59 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: cel@kernel.org
 Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Dai Ngo <dai.ngo@oracle.com>,
+	Olga Kornievskaia <kolga@netapp.com>, Tom Talpey <tom@talpey.com>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [RFC PATCH v2 07/15] nfs/nfsd: add "localio" support
-Message-ID: <ZmkpUWUUFnftOtdl@kernel.org>
-References: <20240612030752.31754-1-snitzer@kernel.org>
- <20240612030752.31754-8-snitzer@kernel.org>
- <171816697836.14261.17806813255162604456@noble.neil.brown.name>
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2] NFSD: Support write delegations in LAYOUTGET
+Message-ID: <20240612050859.GA27147@lst.de>
+References: <20240611193645.65792-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,85 +50,32 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171816697836.14261.17806813255162604456@noble.neil.brown.name>
+In-Reply-To: <20240611193645.65792-2-cel@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Jun 12, 2024 at 02:36:18PM +1000, NeilBrown wrote:
-> On Wed, 12 Jun 2024, Mike Snitzer wrote:
-> > From: Weston Andros Adamson <dros@primarydata.com>
-> > 
-> > Add client support for bypassing NFS for localhost reads, writes, and
-> > commits. This is only useful when the client and the server are
-> > running on the same host.
-> > 
-> > nfs_local_probe() is stubbed out, later commits will enable client and
-> > server handshake via a LOCALIO protocol extension.
-> > 
-> > This has dynamic binding with the nfsd module. Localio will only work
-> > if nfsd is already loaded.
-> > 
-> > The "localio_enabled" nfs kernel module parameter can be used to
-> > disable and enable the ability to use localio support.
-> > 
-> > Also, tracepoints were added for nfs_local_open_fh, nfs_local_enable
-> > and nfs_local_disable.
-> > 
-> > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
-> > Signed-off-by: Peng Tao <tao.peng@primarydata.com>
-> > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfs/Makefile           |   2 +
-> >  fs/nfs/client.c           |   7 +
-> >  fs/nfs/inode.c            |   5 +
-> >  fs/nfs/internal.h         |  55 +++
-> >  fs/nfs/localio.c          | 798 ++++++++++++++++++++++++++++++++++++++
-> >  fs/nfs/nfstrace.h         |  61 +++
-> >  fs/nfs/pagelist.c         |   3 +
-> >  fs/nfs/write.c            |   3 +
-> >  fs/nfsd/Makefile          |   2 +
-> >  fs/nfsd/filecache.c       |   2 +-
-> >  fs/nfsd/localio.c         | 184 +++++++++
-> >  fs/nfsd/trace.h           |   3 +-
-> >  fs/nfsd/vfs.h             |   8 +
-> >  include/linux/nfs.h       |   6 +
-> >  include/linux/nfs_fs.h    |   2 +
-> >  include/linux/nfs_fs_sb.h |   5 +
-> >  include/linux/nfs_xdr.h   |   1 +
-> >  17 files changed, 1145 insertions(+), 2 deletions(-)
-> >  create mode 100644 fs/nfs/localio.c
-> >  create mode 100644 fs/nfsd/localio.c
-> > 
-> > diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
-> > index 5f6db37f461e..ad9923fb0f03 100644
-> > --- a/fs/nfs/Makefile
-> > +++ b/fs/nfs/Makefile
-> > @@ -13,6 +13,8 @@ nfs-y 			:= client.o dir.o file.o getroot.o inode.o super.o \
-> >  nfs-$(CONFIG_ROOT_NFS)	+= nfsroot.o
-> >  nfs-$(CONFIG_SYSCTL)	+= sysctl.o
-> >  nfs-$(CONFIG_NFS_FSCACHE) += fscache.o
-> > +nfs-$(CONFIG_NFS_V3_LOCALIO) += localio.o
-> > +nfs-$(CONFIG_NFS_V4_LOCALIO) += localio.o
+On Tue, Jun 11, 2024 at 03:36:46PM -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Should be just
+> I noticed LAYOUTGET(LAYOUTIOMODE4_RW) returning NFS4ERR_ACCESS
+> unexpectedly. The NFS client had created a file with mode 0444, and
+> the server had returned a write delegation on the OPEN(CREATE). The
+> client was requesting a RW layout using the write delegation stateid
+> so that it could flush file modifications.
 > 
->    nfs-$(CONFIG_NFS_LOCALIO_SUPPORT) += localio.o
+> Creating a read-only file does not seem to be problematic for
+> NFSv4.1 without pNFS, so I began looking at NFSD's implementation of
+> LAYOUTGET.
 > 
-> >  
-> >  obj-$(CONFIG_NFS_V2) += nfsv2.o
-> >  nfsv2-y := nfs2super.o proc.o nfs2xdr.o
-> > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> > index de77848ae654..c123ad22ac79 100644
-> > --- a/fs/nfs/client.c
-> > +++ b/fs/nfs/client.c
-> > @@ -178,6 +178,10 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
-> >  	clp->cl_max_connect = cl_init->max_connect ? cl_init->max_connect : 1;
-> >  	clp->cl_net = get_net(cl_init->net);
-> >  
-> > +#if defined(CONFIG_NFS_V3_LOCALIO) || defined(CONFIG_NFS_V4_LOCALIO)
+> The failure was because fh_verify() was doing a permission check as
+> part of verifying the FH presented during the LAYOUTGET. It uses the
+> loga_iomode value to specify the @accmode argument to fh_verify().
+> fh_verify(MAY_WRITE) on a file whose mode is 0444 fails with -EACCES.
 > 
-> Maybe CONFIG_NFS_LOCALIO_SUPPORT here too?  And one more place below.
+> To permit LAYOUT* operations in this case, add OWNER_OVERRIDE when
+> checking the access permission of the incoming file handle for
+> LAYOUTGET and LAYOUTCOMMIT.
 
-Yeah, I had issues with accessing CONFIG_NFS_LOCALIO_SUPPORT.. I did
-try it though. Can revisit and try harder ;)
+This looks reasonable to me:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
