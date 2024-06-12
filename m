@@ -1,265 +1,190 @@
-Return-Path: <linux-nfs+bounces-3652-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3653-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EB709048BB
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 04:05:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15F9E9048FC
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 04:26:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99D602854B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 02:05:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7908828AA39
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 02:26:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0304A15;
-	Wed, 12 Jun 2024 02:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C788EB651;
+	Wed, 12 Jun 2024 02:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOJf4R4b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCpoGaeG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOJf4R4b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCpoGaeG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVuTmSYN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB9A23A6;
-	Wed, 12 Jun 2024 02:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1757AD5D
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 02:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718157922; cv=none; b=ECMEPSkzJe1apSB7XY61r+wRaiLFJiqrDQD0FKvviBMNxuiUCYQZ3D3DSoEbAGZMHM4Z1Hc6EblWGcwLOF5aPE3gQ4r6/fbJilBRFzlmSaAljd1NFvMVode9JAcXz2NKKBlO7043QMx38bYag01E5Gv2SfIGWjVrGD7IBovB6bQ=
+	t=1718159160; cv=none; b=Oy6RjrrcqqtzuZt6/f8sb1H5Ux/QOnZGXokmOs3ps1YJm/LEASxSwMPe2RDIYdOd+Irk5+3xCDzUeD9GyFac5auT89OChT8cRDmISIR225cM7RvOO6cGlCCrk9+FZ++2KuhJ7zA4UtBv+DHM7OtbNuNwwVov7ggkW60MB734vGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718157922; c=relaxed/simple;
-	bh=Mum+qm7GtdoUKeBg3LBwrHGGRIPokdwMBt8qOoewaJ4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=HTUy4laIac+P1bLklNXolWP5sjtM+3WsYFSv8T8c13vErMjI87m79dS/VSPwS8Vva8ooAoTPNfbjEXUmIfBUJBrQOBILCMoA/F9yc9R4435skWNpvffq+cM6ohDaPC66vthMUKH7DYEKG3Pj8u2tcpDB9krxj9UCLXKRhZeK99I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOJf4R4b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCpoGaeG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOJf4R4b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCpoGaeG; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8B2C920DD4;
-	Wed, 12 Jun 2024 02:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718157918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K/0OakpSlCQtQslkD2QJx6C1Jl2BBYj8HYQ/y0YHZAk=;
-	b=sOJf4R4bJIN8Ow4VCOl2Dax7xXurTL8FrEpYKU3usMTtVsPWPcovu5ze3vkXHC30p+G8bR
-	pGR6IEQ25Wift5g+T4YlVhDdi429XsGCyyBO1KankMH+VXuq4Dc1ZKNEOx/IS87O66PUwU
-	LRAEYtLCUde7eJQO4VqmUnK4/pUouEU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718157918;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K/0OakpSlCQtQslkD2QJx6C1Jl2BBYj8HYQ/y0YHZAk=;
-	b=UCpoGaeG/mPX/Bs748g8hMLVDE7phucUzVrTMDh8o8YDEaVDGxLEmldwnF9T2sqzhiqAif
-	CfrjsOwhH8z8JtAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=sOJf4R4b;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=UCpoGaeG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718157918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K/0OakpSlCQtQslkD2QJx6C1Jl2BBYj8HYQ/y0YHZAk=;
-	b=sOJf4R4bJIN8Ow4VCOl2Dax7xXurTL8FrEpYKU3usMTtVsPWPcovu5ze3vkXHC30p+G8bR
-	pGR6IEQ25Wift5g+T4YlVhDdi429XsGCyyBO1KankMH+VXuq4Dc1ZKNEOx/IS87O66PUwU
-	LRAEYtLCUde7eJQO4VqmUnK4/pUouEU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718157918;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K/0OakpSlCQtQslkD2QJx6C1Jl2BBYj8HYQ/y0YHZAk=;
-	b=UCpoGaeG/mPX/Bs748g8hMLVDE7phucUzVrTMDh8o8YDEaVDGxLEmldwnF9T2sqzhiqAif
-	CfrjsOwhH8z8JtAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D368013AA4;
-	Wed, 12 Jun 2024 02:05:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8ja8HVoCaWbLfQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 12 Jun 2024 02:05:14 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718159160; c=relaxed/simple;
+	bh=LjKcpXQtEBH4D2rApRBFTp5bImOSvksZt39M7iRa6dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5Pn7FCqXdj+TFIwT42FauCOwZApWeayGO1JQXQHa4CB+/TzJWhnJu9FAj9eHinQb4hAL3PNGmpXRl0H9R4ojQ0HjYy+Pl7fT8nTUdS7Smpr3snzhtMh8eaFynP1jJWdK/DKrppU7kCkEONJgZw9G3HwEObEIFvM8/9i25YUVU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVuTmSYN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F20C2BD10;
+	Wed, 12 Jun 2024 02:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718159160;
+	bh=LjKcpXQtEBH4D2rApRBFTp5bImOSvksZt39M7iRa6dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GVuTmSYNVLWy7BkIL3Xe1bfQexLi6X/D9cziYuT/aDkIqqAE7hV39Pg79nBBJIp0d
+	 3xtI+FiHi7Q9vznOTFNmlAYvloeBq3u+G5+c+aFrr0xM90Ldp27umFS6JBXl+dOK+k
+	 g3f6wmvl5LQ53BJ6QckigmMcI7Z+OvVKFK09e1sky9Zv5FQca+CevnOujkkd4aT6qT
+	 inACE7k5RD6LRsQI89L5Q3QKKjnrKNLQHp28A3qPPY93gH59rbnlgn88+BWdkXehQO
+	 pfGTiZpvOvsqxY+muUGBdbjO2d8b/dj7wKyyBofPKkb1VLdSyis5elr0wVX2aKFPL8
+	 5KvW/2GzfVpjQ==
+Date: Tue, 11 Jun 2024 22:25:58 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Subject: Re: [for-6.11 PATCH 10/29] nfs/nfsd: add "local io" support
+Message-ID: <ZmkHNr5jtGHDpko_@kernel.org>
+References: <20240607142646.20924-1-snitzer@kernel.org>
+ <20240607142646.20924-11-snitzer@kernel.org>
+ <3ed173a9370c6d386f4c48cc133eb61511e291d0.camel@kernel.org>
+ <ZmctDkCCg331JS4M@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: Amir Goldstein <amir73il@gmail.com>, James Clark <james.clark@arm.com>,
- ltp@lists.linux.it, linux-nfs@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
-Subject:
- [PATCH] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open used.
-Date: Wed, 12 Jun 2024 12:05:11 +1000
-Message-id: <171815791109.14261.10223988071271993465@noble.neil.brown.name>
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,arm.com,lists.linux.it,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 8B2C920DD4
-X-Spam-Flag: NO
-X-Spam-Score: -6.51
-X-Spam-Level: 
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZmctDkCCg331JS4M@kernel.org>
 
+On Mon, Jun 10, 2024 at 12:42:54PM -0400, Mike Snitzer wrote:
+> On Mon, Jun 10, 2024 at 08:43:34AM -0400, Jeff Layton wrote:
+> > On Fri, 2024-06-07 at 10:26 -0400, Mike Snitzer wrote:
+> > > From: Weston Andros Adamson <dros@primarydata.com>
+> > > 
+> > > Add client support for bypassing NFS for localhost reads, writes, and commits.
+> > > 
+> > > This is only useful when the client and the server are running on the same
+> > > host and in the same container.
+> > > 
+> > > This has dynamic binding with the nfsd module. Local i/o will only work if
+> > > nfsd is already loaded.
+> > > 
+> > > [snitm: rebase accounted for commit d8b26071e65e8 ("NFSD: simplify struct nfsfh")
+> > >  and commit 7c98f7cb8fda ("remove call_{read,write}_iter() functions")]
+> > > 
+> > > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+> > > Signed-off-by: Jeff Layton <jeff.layton@primarydata.com>
+> > > Signed-off-by: Peng Tao <tao.peng@primarydata.com>
+> > > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+...
+> > > diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> > > new file mode 100644
+> > > index 000000000000..ff68454a4017
+> > > --- /dev/null
+> > > +++ b/fs/nfsd/localio.c
+> > > @@ -0,0 +1,179 @@
+> > > +/*
+> > > + * NFS server support for local clients to bypass network stack
+> > > + *
+> > > + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
+> > > + */
+> > > +
+> > > +#include <linux/exportfs.h>
+> > > +#include <linux/sunrpc/svcauth_gss.h>
+> > > +#include <linux/sunrpc/clnt.h>
+> > > +#include <linux/nfs.h>
+> > > +#include <linux/string.h>
+> > > +
+> > > +#include "nfsd.h"
+> > > +#include "vfs.h"
+> > > +#include "netns.h"
+> > > +#include "filecache.h"
+> > > +
+> > > +#define NFSDDBG_FACILITY		NFSDDBG_FH
+> > > +
+> > > +static void
+> > > +nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
+> > > +{
+> > > +	if (rqstp->rq_client)
+> > > +		auth_domain_put(rqstp->rq_client);
+> > > +	if (rqstp->rq_cred.cr_group_info)
+> > > +		put_group_info(rqstp->rq_cred.cr_group_info);
+> > > +	kfree(rqstp->rq_cred.cr_principal);
+> > > +	kfree(rqstp->rq_xprt);
+> > > +	kfree(rqstp);
+> > > +}
+> > > +
+> > > +static struct svc_rqst *
+> > > +nfsd_local_fakerqst_create(struct rpc_clnt *rpc_clnt, const struct cred *cred)
+> > > +{
+> > > +	struct svc_rqst *rqstp;
+> > > +	struct net *net = rpc_net_ns(rpc_clnt);
+> > > +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > > +	int status;
+> > > +
+> > > +	if (!nn->nfsd_serv) {
+> > > +		dprintk("%s: localio denied. Server not running\n", __func__);
+> > > +		return ERR_PTR(-ENXIO);
+> > > +	}
+> > > +
+> > 
+> > Note that the above check is racy. The nfsd_serv can go away at any
+> > time since you're not holding the (global) nfsd_mutex (I assume?).
+> 
+> Yes, worst case we should fallback to going over the network.
 
-When a file is opened and created with open(..., O_CREAT) we get
-both the CREATE and OPEN fsnotify events and would expect them in that
-order.   For most filesystems we get them in that order because
-open_last_lookups() calls fsnofify_create() and then do_open() (from
-path_openat()) calls vfs_open()->do_dentry_open() which calls
-fsnotify_open().
+Actual worst case is we could crash... ;)
 
-However when ->atomic_open is used, the
-   do_dentry_open() -> fsnotify_open()
-call happens from finish_open() which is called from the ->atomic_open
-handler in lookup_open() which is called *before* open_last_lookups()
-calls fsnotify_create().  So we get the "open" notification before
-"create" - which is backwards.  ltp testcase inotify02 tests this and
-reports the inconsistency.
+> > > +	rqstp = kzalloc(sizeof(*rqstp), GFP_KERNEL);
+> > > +	if (!rqstp)
+> > > +		return ERR_PTR(-ENOMEM);
+> > > +
+> > > +	rqstp->rq_xprt = kzalloc(sizeof(*rqstp->rq_xprt), GFP_KERNEL);
+> > > +	if (!rqstp->rq_xprt) {
+> > > +		status = -ENOMEM;
+> > > +		goto out_err;
+> > > +	}
+> > > +
+> > > +	rqstp->rq_xprt->xpt_net = net;
+> > > +	__set_bit(RQ_SECURE, &rqstp->rq_flags);
+> > > +	rqstp->rq_proc = 1;
+> > > +	rqstp->rq_vers = 3;
+> > > +	rqstp->rq_prot = IPPROTO_TCP;
+> > > +	rqstp->rq_server = nn->nfsd_serv;
+> > > +
+> > 
+> > I suspect you need to carry a reference of some sort so that the
+> > nfsd_serv doesn't go away out from under you while this is running,
+> > since this is not operating in nfsd thread context.
+> > 
+> > Typically, every nfsd thread holds a reference to the serv (in serv-
+> > >sv_nrthreads), so that when you shut down all of the threads, it goes
+> > away. The catch is that that refcount is currently under the protection
+> > of the global nfsd_mutex and I doubt you want to take that in this
+> > codepath.
+> 
+> OK, I can look closer at the implications.
 
-This patch lifts the fsnotify_open() call out of do_dentry_open() and
-places it higher up the call stack.  There are three callers of
-do_dentry_open().
+SO I looked, and I'm saddened to see Neil's 6.8 commit 1e3577a4521e
+("SUNRPC: discard sv_refcnt, and svc_get/svc_put").
 
-For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-directly in that caller so there should be no behavioural change.
+[the lack of useful refcounting with the current code kind of blew me
+away.. but nice to see it existed not too long ago.]
 
-For finish_open() there are three cases:
- - finish_open is used in ->atomic_open handlers.  For these we add a
-   call to fsnotify_open() in do_open() if FMODE_OPENED is set - which
-   means do_dentry_open() has been called. This happens after fsnotify_create=
-().
- - finish_open is used in ->tmpfile() handlers.  For these a call to
-   fsnotify_open() is added to vfs_tmpfile()
- - finish_open is used in gfs2_create_inode() which is used for
-   atomic_open, but also for gfs2_create() which is a ->create handler
-   and is not expected to open the file.  So losing the fsnotify_open()
-   call in this case seems correct.
+Rather than immediately invest the effort to revert commit
+1e3577a4521e for my apparent needs... I'll send out v2 to allow for
+further review and discussion.
 
-With this patch NFSv3 is restored to its previous behaviour (before
-->atomic_open support was added) of generating CREATE notifications
-before OPEN, and NFSv4 now has that same correct ordering that is has
-not had before.  I haven't tested other filesystems.
+But it really does feel like I _need_ svc_{get,put} and nfsd_{get,put}
 
-Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC correc=
-tly.")
-Reported-by: James Clark <james.clark@arm.com>
-Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d8c8@arm.=
-com
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/namei.c |  9 +++++++--
- fs/open.c  | 19 ++++++++++++-------
- 2 files changed, 19 insertions(+), 9 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 37fb0a8aa09a..32031feaf6b6 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3646,8 +3646,12 @@ static int do_open(struct nameidata *nd,
- 		do_truncate =3D true;
- 	}
- 	error =3D may_open(idmap, &nd->path, acc_mode, open_flag);
--	if (!error && !(file->f_mode & FMODE_OPENED))
--		error =3D vfs_open(&nd->path, file);
-+	if (!error) {
-+		if (file->f_mode & FMODE_OPENED)
-+			fsnotify_open(file);
-+		else
-+			error =3D vfs_open(&nd->path, file);
-+	}
- 	if (!error)
- 		error =3D security_file_post_open(file, op->acc_mode);
- 	if (!error && do_truncate)
-@@ -3706,6 +3710,7 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
- 	error =3D may_open(idmap, &file->f_path, 0, file->f_flags);
- 	if (error)
- 		return error;
-+	fsnotify_open(file);
- 	inode =3D file_inode(file);
- 	if (!(open_flag & O_EXCL)) {
- 		spin_lock(&inode->i_lock);
-diff --git a/fs/open.c b/fs/open.c
-index 89cafb572061..970f299c0e77 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1004,11 +1004,6 @@ static int do_dentry_open(struct file *f,
- 		}
- 	}
-=20
--	/*
--	 * Once we return a file with FMODE_OPENED, __fput() will call
--	 * fsnotify_close(), so we need fsnotify_open() here for symmetry.
--	 */
--	fsnotify_open(f);
- 	return 0;
-=20
- cleanup_all:
-@@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
-  */
- int vfs_open(const struct path *path, struct file *file)
- {
-+	int ret;
-+
- 	file->f_path =3D *path;
--	return do_dentry_open(file, NULL);
-+	ret =3D do_dentry_open(file, NULL);
-+	if (!ret)
-+		/*
-+		 * Once we return a file with FMODE_OPENED, __fput() will call
-+		 * fsnotify_close(), so we need fsnotify_open() here for symmetry.
-+		 */
-+		fsnotify_open(file);
-+	return ret;
- }
-=20
- struct file *dentry_open(const struct path *path, int flags,
-@@ -1178,7 +1182,8 @@ struct file *kernel_file_open(const struct path *path, =
-int flags,
- 	if (error) {
- 		fput(f);
- 		f =3D ERR_PTR(error);
--	}
-+	} else
-+		fsnotify_open(f);
- 	return f;
- }
- EXPORT_SYMBOL_GPL(kernel_file_open);
---=20
-2.44.0
-
+Mike
 
