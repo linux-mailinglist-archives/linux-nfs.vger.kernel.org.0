@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-3656-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3657-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9BE3904952
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:07:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B2CC904953
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:08:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 232511F21F81
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:07:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A015B1F22451
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:08:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43A617BB9;
-	Wed, 12 Jun 2024 03:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3AF3214;
+	Wed, 12 Jun 2024 03:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWCcugnu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqqKGJpD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03FA1799B
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895E818E02
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718161674; cv=none; b=fO4Q01dY9cjiEdQpbxtEgDGMkkP5Ot9ONeuG0Hq0pU20LttqTCiRRIs7N0VctniY0uVDscbRKwVlJXRIUXfkx3q96dxLY7oL3hq+UgyDf4iB0Rk8V9zmYY7SAS3JQvNnrrlBuCQLBgBks3psktmWm7JsmYEr3/U4hsKkdweKm7I=
+	t=1718161675; cv=none; b=BJM4knrIewzrmIlBTFRpnQW/MFmMrwrUxfte3kh2MCrUjufRO/TTlHZQZ2ky1wgAYqrr+64Pj5J546NoUnJxbN1QIw8+XpL6Zq44Y65MnJrCCCijHmCThPJwjvznO7um9moct5a43ZZpGiEfEkMZVds2FGvmPnQzaz+d9Nb4Fv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718161674; c=relaxed/simple;
-	bh=jXhnViIe7fzMZvQsFuF6K9Ax83b2+vjS+Tc2uXM0Fx8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/f1sd6Xb4fXaPE91VumeSmWaihXsCNJdObvcwJu7/gdIeMo1x80RjchImQbxv4kKs08LPYnu9+68WS2F9uBatRxTIHEYRuBVl/2sgcpn9/MBZC9gUzNN0ZkjCPJGXDpyY8IE3RV5uIBxHlroiGO1q1X82/N+bnrLlgOf6sCBYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWCcugnu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB9EC2BD10;
-	Wed, 12 Jun 2024 03:07:53 +0000 (UTC)
+	s=arc-20240116; t=1718161675; c=relaxed/simple;
+	bh=zqo5A9VtZlcvmmu0XkGwH+wtxeFhmulZftxFgSSuOAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MMDif4KY3ANicghFBH14EioB2CYvl2/7hT9t9Oyp/JFoHmKFIh9b1bbF8I4APjRYK8ON+MrFU4xDlthwnAWNWJUspwjyPqLo57sRJwuorgtiIyHb9xCbMlpGkUgc86bxTaBdHR2b6Jt4b2ELPduIPdRo7wy9VN5XvJgDXOlC1Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqqKGJpD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235AFC2BD10;
+	Wed, 12 Jun 2024 03:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718161674;
-	bh=jXhnViIe7fzMZvQsFuF6K9Ax83b2+vjS+Tc2uXM0Fx8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uWCcugnumeh5aOu5Z8hBkzWW5KNgjVAzsFqb2Sg0vk2pisy8q2/mlVNApbfJH2OsD
-	 YeCCVUlQ0mmfmUOyd0QG9n8fPRypSpbwScVZ1d5NW0faAmhpgWNFhxNBTYWMgKIUvm
-	 1FjOp3XL14165T5emgW8dpIpDCeaOi0J4gYZEPvrfsghnGawPWr0IrRXp76d4xvujl
-	 zJvh9mHE8asl42ZdJCP5/mwVm19qGIy5WmiB/GanocIbNhQIUC8lJzFq4DhoTrC2Om
-	 FQQj08S4fLgCX4fi89axgnNviObZvTppxiONLvaFukp6aC9UcqYKGu0ivHxrwikVs0
-	 hf5jp1jy1J8Fg==
+	s=k20201202; t=1718161675;
+	bh=zqo5A9VtZlcvmmu0XkGwH+wtxeFhmulZftxFgSSuOAc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mqqKGJpD20xRcg+MXmkQIlkjzbtJiQdD339s0Fwd3A1K6MA4db8TBd6tlafKZ/yUZ
+	 qXkUCHymPKZ/wBut4YfCITgPaWGzdT0F7tBZs8LQdkFpIzDN3AZgmrKhjbtzZQb/uE
+	 xDOFhBhc9FWFbYWVw+nQKryKGiPxCL9M0l+jHXGirpjkJlCKCX5coafWiJC+ng+RPs
+	 2AMXDAhJMYBHfMztbyGSW0krufGbxVTs2bg6X2zPExOo+pkt1TVh4XNULhw656dV0N
+	 KvX0GURZI6gE63m3oRapjTnvCJSbYNL5qyjUXZu/QmLAYzLGg9y/LiJMRh5rm3NteA
+	 WSOeyIJ/xcXsQ==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -47,10 +48,12 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [RFC PATCH v2 00/15] nfs/nfsd: add support for localio
-Date: Tue, 11 Jun 2024 23:07:37 -0400
-Message-ID: <20240612030752.31754-1-snitzer@kernel.org>
+Subject: [RFC PATCH v2 01/15] nfs: pass nfs_client to nfs_initiate_pgio
+Date: Tue, 11 Jun 2024 23:07:38 -0400
+Message-ID: <20240612030752.31754-2-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240612030752.31754-1-snitzer@kernel.org>
+References: <20240612030752.31754-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,120 +62,119 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Weston Andros Adamson <dros@primarydata.com>
 
-This patch series rebases "localio" changes that Hammerspace (and
-Primary Data before it) has been carrying since 2014. The reason they
-weren't proposed for upstream inclusion until now was the handshake
-for whether or not a client and server are local was brittle, for more
-context please see this commit from v1:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-6.11.v1&id=8069f78e10f8fa4dd6aa6ba3ad643de6f95be6f6
+The nfs_client is needed for localio support. Otherwise it won't be
+possible to disable localio if it is attempted but fails.
 
-Aside from rebasing the original changes from a 5.15.130-stable
-kernel, my contribution to this series started with making the localio
-handshake more robust. To do so a new LOCALIO protocol extension has
-been added to both NFS v3 and v4. It follows the well-worn pattern
-established by the ACL protocol extension.
+Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ fs/nfs/filelayout/filelayout.c         |  4 ++--
+ fs/nfs/flexfilelayout/flexfilelayout.c |  6 ++++--
+ fs/nfs/internal.h                      |  5 +++--
+ fs/nfs/pagelist.c                      | 10 ++++++----
+ 4 files changed, 15 insertions(+), 10 deletions(-)
 
-These changes have proven stable against various test scenarios:
-1) client and server both on localhost (for both v3 and v4.2)
-2) various permutations of client and server support enablement for
-   both local and remote client and server.
-3) client on host, server within a container (for both v3 and v4.2)
-   My container testing was in terms of podman managed containers.
-
-That said, v2 is "RFC" because it still lacks proper refcounting on
-nn->nfsd_serv and I need help on how others would like to see that
-happen given svc_get/svc_put were removed with commit 1e3577a4521e
-("SUNRPC: discard sv_refcnt, and svc_get/svc_put").
-
-* Changes since v1: lots of folding and rebasing of patches to try to
-  minimize needless preservation of old code that later patches
-  removed. Dropped patches that weren't needed. Some renames and 
-  comments. Some refactoring of nfsiod_start.
-
-All review and comments are welcome!
-
-Thanks,
-Mike
-
-Mike Snitzer (6):
-  nfs_common: add NFS LOCALIO protocol extension enablement
-  nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
-  nfsd: implement v3 and v4 server support for NFS_LOCALIO_PROGRAM
-  nfs/nfsd: consolidate {encode,decode}_opaque_fixed in nfs_xdr.h
-  nfs/localio: move managing nfsd_open_local_fh symbol to nfs_common
-  nfs/nfsd: ensure localio server always uses its network namespace
-
-Peng Tao (1):
-  nfs: move nfs_stat_to_errno to nfs.h
-
-Trond Myklebust (3):
-  NFS: for localio don't call filesystem read() and write() routines
-    directly
-  NFS: Enable localio for non-pNFS I/O
-  pnfs/flexfiles: Enable localio for flexfiles I/O
-
-Weston Andros Adamson (5):
-  nfs: pass nfs_client to nfs_initiate_pgio
-  nfs: pass descriptor thru nfs_initiate_pgio path
-  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
-  sunrpc: add rpcauth_map_to_svc_cred_local
-  nfs/nfsd: add "localio" support
-
- fs/Kconfig                                |   3 +
- fs/nfs/Kconfig                            |  25 +
- fs/nfs/Makefile                           |   2 +
- fs/nfs/blocklayout/blocklayout.c          |   6 +-
- fs/nfs/client.c                           |  17 +-
- fs/nfs/filelayout/filelayout.c            |  16 +-
- fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
- fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
- fs/nfs/inode.c                            |  61 +-
- fs/nfs/internal.h                         |  96 ++-
- fs/nfs/localio.c                          | 830 ++++++++++++++++++++++
- fs/nfs/nfs2xdr.c                          |  69 --
- fs/nfs/nfs3_fs.h                          |   1 +
- fs/nfs/nfs3client.c                       |  25 +
- fs/nfs/nfs3proc.c                         |   3 +
- fs/nfs/nfs3xdr.c                          |  58 ++
- fs/nfs/nfs4_fs.h                          |   2 +
- fs/nfs/nfs4client.c                       |  23 +
- fs/nfs/nfs4proc.c                         |   3 +
- fs/nfs/nfs4xdr.c                          |  65 +-
- fs/nfs/nfstrace.h                         |  61 ++
- fs/nfs/pagelist.c                         |  32 +-
- fs/nfs/pnfs.c                             |  24 +-
- fs/nfs/pnfs.h                             |   6 +-
- fs/nfs/pnfs_nfs.c                         |   2 +-
- fs/nfs/write.c                            |  13 +-
- fs/nfs_common/Makefile                    |   3 +
- fs/nfs_common/nfslocalio.c                |  71 ++
- fs/nfsd/Kconfig                           |  25 +
- fs/nfsd/Makefile                          |   2 +
- fs/nfsd/filecache.c                       |   2 +-
- fs/nfsd/localio.c                         | 330 +++++++++
- fs/nfsd/netns.h                           |   4 +
- fs/nfsd/nfsd.h                            |  11 +
- fs/nfsd/nfssvc.c                          |  93 ++-
- fs/nfsd/trace.h                           |   3 +-
- fs/nfsd/vfs.h                             |   9 +
- fs/nfsd/xdr.h                             |   6 +
- include/linux/nfs.h                       |  65 ++
- include/linux/nfs_fs.h                    |   2 +
- include/linux/nfs_fs_sb.h                 |   9 +
- include/linux/nfs_xdr.h                   |  31 +-
- include/linux/nfslocalio.h                |  39 +
- include/linux/sunrpc/auth.h               |   4 +
- include/uapi/linux/nfs.h                  |   4 +
- net/sunrpc/auth.c                         |  17 +
- 47 files changed, 2146 insertions(+), 166 deletions(-)
- create mode 100644 fs/nfs/localio.c
- create mode 100644 fs/nfs_common/nfslocalio.c
- create mode 100644 fs/nfsd/localio.c
- create mode 100644 include/linux/nfslocalio.h
-
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 29d84dc66ca3..43e16e9e0176 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -486,7 +486,7 @@ filelayout_read_pagelist(struct nfs_pgio_header *hdr)
+ 	hdr->mds_offset = offset;
+ 
+ 	/* Perform an asynchronous read to ds */
+-	nfs_initiate_pgio(ds_clnt, hdr, hdr->cred,
++	nfs_initiate_pgio(ds->ds_clp, ds_clnt, hdr, hdr->cred,
+ 			  NFS_PROTO(hdr->inode), &filelayout_read_call_ops,
+ 			  0, RPC_TASK_SOFTCONN);
+ 	return PNFS_ATTEMPTED;
+@@ -528,7 +528,7 @@ filelayout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
+ 	hdr->args.offset = filelayout_get_dserver_offset(lseg, offset);
+ 
+ 	/* Perform an asynchronous write */
+-	nfs_initiate_pgio(ds_clnt, hdr, hdr->cred,
++	nfs_initiate_pgio(ds->ds_clp, ds_clnt, hdr, hdr->cred,
+ 			  NFS_PROTO(hdr->inode), &filelayout_write_call_ops,
+ 			  sync, RPC_TASK_SOFTCONN);
+ 	return PNFS_ATTEMPTED;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 24188af56d5b..327f1a5c9fbe 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1803,7 +1803,8 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
+ 	hdr->mds_offset = offset;
+ 
+ 	/* Perform an asynchronous read to ds */
+-	nfs_initiate_pgio(ds_clnt, hdr, ds_cred, ds->ds_clp->rpc_ops,
++	nfs_initiate_pgio(ds->ds_clp, ds_clnt, hdr, ds_cred,
++			  ds->ds_clp->rpc_ops,
+ 			  vers == 3 ? &ff_layout_read_call_ops_v3 :
+ 				      &ff_layout_read_call_ops_v4,
+ 			  0, RPC_TASK_SOFTCONN);
+@@ -1871,7 +1872,8 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
+ 	hdr->args.offset = offset;
+ 
+ 	/* Perform an asynchronous write */
+-	nfs_initiate_pgio(ds_clnt, hdr, ds_cred, ds->ds_clp->rpc_ops,
++	nfs_initiate_pgio(ds->ds_clp, ds_clnt, hdr, ds_cred,
++			  ds->ds_clp->rpc_ops,
+ 			  vers == 3 ? &ff_layout_write_call_ops_v3 :
+ 				      &ff_layout_write_call_ops_v4,
+ 			  sync, RPC_TASK_SOFTCONN);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 9f0f4534744b..a9c0c29f7804 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -306,8 +306,9 @@ extern const struct nfs_pageio_ops nfs_pgio_rw_ops;
+ struct nfs_pgio_header *nfs_pgio_header_alloc(const struct nfs_rw_ops *);
+ void nfs_pgio_header_free(struct nfs_pgio_header *);
+ int nfs_generic_pgio(struct nfs_pageio_descriptor *, struct nfs_pgio_header *);
+-int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+-		      const struct cred *cred, const struct nfs_rpc_ops *rpc_ops,
++int nfs_initiate_pgio(struct nfs_client *clp, struct rpc_clnt *rpc_clnt,
++		      struct nfs_pgio_header *hdr, const struct cred *cred,
++		      const struct nfs_rpc_ops *rpc_ops,
+ 		      const struct rpc_call_ops *call_ops, int how, int flags);
+ void nfs_free_request(struct nfs_page *req);
+ struct nfs_pgio_mirror *
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 6efb5068c116..d9b795c538cd 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -844,8 +844,9 @@ static void nfs_pgio_prepare(struct rpc_task *task, void *calldata)
+ 		rpc_exit(task, err);
+ }
+ 
+-int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+-		      const struct cred *cred, const struct nfs_rpc_ops *rpc_ops,
++int nfs_initiate_pgio(struct nfs_client *clp, struct rpc_clnt *rpc_clnt,
++		      struct nfs_pgio_header *hdr, const struct cred *cred,
++		      const struct nfs_rpc_ops *rpc_ops,
+ 		      const struct rpc_call_ops *call_ops, int how, int flags)
+ {
+ 	struct rpc_task *task;
+@@ -855,7 +856,7 @@ int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+ 		.rpc_cred = cred,
+ 	};
+ 	struct rpc_task_setup task_setup_data = {
+-		.rpc_client = clnt,
++		.rpc_client = rpc_clnt,
+ 		.task = &hdr->task,
+ 		.rpc_message = &msg,
+ 		.callback_ops = call_ops,
+@@ -1070,7 +1071,8 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ 	if (ret == 0) {
+ 		if (NFS_SERVER(hdr->inode)->nfs_client->cl_minorversion)
+ 			task_flags = RPC_TASK_MOVEABLE;
+-		ret = nfs_initiate_pgio(NFS_CLIENT(hdr->inode),
++		ret = nfs_initiate_pgio(NFS_SERVER(hdr->inode)->nfs_client,
++					NFS_CLIENT(hdr->inode),
+ 					hdr,
+ 					hdr->cred,
+ 					NFS_PROTO(hdr->inode),
 -- 
 2.44.0
 
