@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-3666-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3667-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CB9B90495C
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:08:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F86190495D
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:08:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BECC1F225F5
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:08:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C2E0284312
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E239A25622;
-	Wed, 12 Jun 2024 03:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF4D27462;
+	Wed, 12 Jun 2024 03:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S673+nkY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQ3dL9bj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC5E250EC
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269E62576F
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718161688; cv=none; b=tWBwgpTuKX9+03doEov01WRRZE9KthM4bbS7HlFSQO+j9sphqi5cU7cpp00uWo+p6+CScwFzSQpeJS8LRmEqp7BpyH9QX4LIDcS4FFyJS0i2GUkwodqJpDDEzajX1e7FZQfH8fK2SMQDrfvSekUyce0c1sgKe/j4Ndrk/UVLeFQ=
+	t=1718161690; cv=none; b=Axce6J5rai44SlQi/rcGqbQfQaJ3ijypo1qTUAEH2So4HMqpsBv7xWf+w14nEgqbVE25Duz1XIXtRWkr42Tt7shgBFhyYiWmHlqVr6dFPOlq+EM7ZWxvPrHKvN69P93YumbVZy/1YqdVKBz2VX9LMfrKZIOfu2wT5sbSGRpWhkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718161688; c=relaxed/simple;
-	bh=Noogo8VEf449iO4uxp/t7QHEdzBDQXlb77KtF8kwk7U=;
+	s=arc-20240116; t=1718161690; c=relaxed/simple;
+	bh=DhC3shdhSdMxyvkN34mgJjS3Ha9Y159omTxAnQR2zRs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PH29vjlpIhKNNdQ4cwdgibFldEwfUPEKdbOTQybUJ1wP1BOND28LQyUZX03RvWqN4cN2zFDDDG1TCGNmI8b4RY760Wi32uUOD3IEyF6jj+b2eV7S988a6bpselYMlT+6mC4VxZ8t6Y6Pl8+JrGsbZzmvR2Pb/sPgmkVxQiZrRZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S673+nkY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20561C2BD10;
-	Wed, 12 Jun 2024 03:08:08 +0000 (UTC)
+	 MIME-Version; b=cDYVoPy25LYFv/xGJxkavsxuqT1b0bnVFhvuf5jlsZZsU8049t9BtNLtIsVmzIV8pcY2UewaIQFM8vCT4vaEJgbV543QOZNlyABJpf/4YgKNbC7RFtiHxFIOLDhS0pWCqbni3S1DDdcqZ+waO0FKHV3Bc8BkmLxtmcJAirgpyPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQ3dL9bj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDC1C2BD10;
+	Wed, 12 Jun 2024 03:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718161688;
-	bh=Noogo8VEf449iO4uxp/t7QHEdzBDQXlb77KtF8kwk7U=;
+	s=k20201202; t=1718161690;
+	bh=DhC3shdhSdMxyvkN34mgJjS3Ha9Y159omTxAnQR2zRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S673+nkY9ZsT2T8WcTSpF77zX9DOkoH0AD+S3RWhF2u2qI9OmEF6u7OEpJoEF+HcA
-	 RQ7FrSqzorcyxc2o58dWYvXjnIEgvcjMCrtT7v7IOEUjtpZ0tBSBHpLebwX50ptVHx
-	 BH79nZx79elL3/ynqQEGpB85VoH6hpsl+CcKMQRkVFRmhaBwUKPOo/7jVRS1akxDNZ
-	 wItjFRu8VS+WjqXNd9gFBdMS+6qSBeHJdDub3chq+VOVLNul21sae5JnUSBeVfaRz8
-	 +Sj2ZQ6AuVLF41Fqicl0ANALhBTfwQQ7XMNlpY+XcIJwDyYdndJjYavAEJnAWBxHHm
-	 JbPrvmRmi9Ahg==
+	b=aQ3dL9bj7lmqghqGQVqis7IQioVEL4MxcPa8DBCasDmSdUo7perAp47/uzZ5qVaap
+	 VwBvjEeDlViY0CC+agly/Sa4rOzGU4HPUIx+ugxRi+pojV+SYra5p9Ri2tKxq1Uyp7
+	 datVqbihq3XrzAgVTNMg6BBYK57/9PCGx8TQbklKhZq5tV0jsXJZebplDrP/3lr6fc
+	 h1hjpschzcco4m9BV1bfc03+RwtnCZjfdF9vOj9z5FnjVFRJ+M6SkH/euejLnjvAae
+	 Gozq1HjO9DhVJ38k5OCkQLW7dqVM483cYF8rt8Ky46JNxKgOdO4V831RV03PJnQQco
+	 18HKDpEqgNIoQ==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [RFC PATCH v2 10/15] pnfs/flexfiles: Enable localio for flexfiles I/O
-Date: Tue, 11 Jun 2024 23:07:47 -0400
-Message-ID: <20240612030752.31754-11-snitzer@kernel.org>
+Subject: [RFC PATCH v2 11/15] nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
+Date: Tue, 11 Jun 2024 23:07:48 -0400
+Message-ID: <20240612030752.31754-12-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240612030752.31754-1-snitzer@kernel.org>
 References: <20240612030752.31754-1-snitzer@kernel.org>
@@ -62,262 +62,504 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+LOCALIOPROC_GETUUID allows client to discover server's uuid.
 
-If the DS is local to this client, then we should be able to use local
-I/O to write the data.
+nfs_local_probe() will retrieve server's uuid via LOCALIO protocol and
+verify the server with that uuid it is known to be local. This ensures
+client and server 1: support localio 2: are local to each other.
 
-Signed-off-by: Peng Tao <tao.peng@primarydata.com>
-Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+While doing so, factor out nfs_init_localioclient() so it is used by
+both nfs3client.c and nfs4client.c
+
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c    | 113 ++++++++++++++++++++--
- fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 ++
- 3 files changed, 112 insertions(+), 9 deletions(-)
+ fs/nfs/client.c           | 10 ++++--
+ fs/nfs/internal.h         | 24 ++++++++++++++
+ fs/nfs/localio.c          | 62 ++++++++++++++++++++++++++++++++----
+ fs/nfs/nfs3_fs.h          |  1 +
+ fs/nfs/nfs3client.c       | 25 +++++++++++++++
+ fs/nfs/nfs3proc.c         |  3 ++
+ fs/nfs/nfs3xdr.c          | 67 +++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs4_fs.h          |  2 ++
+ fs/nfs/nfs4client.c       | 23 ++++++++++++++
+ fs/nfs/nfs4proc.c         |  3 ++
+ fs/nfs/nfs4xdr.c          | 52 ++++++++++++++++++++++++++++++
+ include/linux/nfs_fs_sb.h |  1 +
+ include/linux/nfs_xdr.h   | 10 ++++++
+ include/uapi/linux/nfs.h  |  4 +++
+ 14 files changed, 278 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 3ea07446f05a..ec6aaa110a7b 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -11,6 +11,7 @@
- #include <linux/nfs_mount.h>
- #include <linux/nfs_page.h>
- #include <linux/module.h>
-+#include <linux/file.h>
- #include <linux/sched/mm.h>
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index c123ad22ac79..3341707e3c2f 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -170,7 +170,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	}
  
- #include <linux/sunrpc/metrics.h>
-@@ -162,6 +163,52 @@ decode_name(struct xdr_stream *xdr, u32 *id)
- 	return 0;
- }
+ 	INIT_LIST_HEAD(&clp->cl_superblocks);
+-	clp->cl_rpcclient = ERR_PTR(-EINVAL);
++	clp->cl_rpcclient = clp->cl_rpcclient_localio = ERR_PTR(-EINVAL);
  
-+static struct file *
-+ff_local_open_fh(struct pnfs_layout_segment *lseg,
-+		 u32 ds_idx,
-+		 struct nfs_client *clp,
-+		 const struct cred *cred,
-+		 struct nfs_fh *fh,
-+		 fmode_t mode)
+ 	clp->cl_flags = cl_init->init_flags;
+ 	clp->cl_proto = cl_init->proto;
+@@ -242,6 +242,8 @@ void nfs_free_client(struct nfs_client *clp)
+ 	/* -EIO all pending I/O */
+ 	if (!IS_ERR(clp->cl_rpcclient))
+ 		rpc_shutdown_client(clp->cl_rpcclient);
++	if (!IS_ERR(clp->cl_rpcclient_localio))
++		rpc_shutdown_client(clp->cl_rpcclient_localio);
+ 
+ 	put_net(clp->cl_net);
+ 	put_nfs_version(clp->cl_nfs_mod);
+@@ -430,8 +432,10 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 			list_add_tail(&new->cl_share_link,
+ 					&nn->nfs_client_list);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_local_probe(new);
+-			return rpc_ops->init_client(new, cl_init);
++			new = rpc_ops->init_client(new, cl_init);
++			if (!IS_ERR(new))
++				 nfs_local_probe(new);
++			return new;
+ 		}
+ 
+ 		spin_unlock(&nn->nfs_client_lock);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index c299b1bfae9b..ebcc98a56567 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -453,6 +453,30 @@ extern bool nfs_check_cache_invalid(struct inode *, unsigned long);
+ extern int nfs_wait_bit_killable(struct wait_bit_key *key, int mode);
+ 
+ #if defined(CONFIG_NFS_V3_LOCALIO) || defined(CONFIG_NFS_V4_LOCALIO)
++/*
++ * Initialise an NFS localio client connection.
++ * Inlined here to allow nfs[34]client.c to share this code.
++ */
++static __always_inline void
++nfs_init_localioclient(struct nfs_client *clp,
++		       const struct rpc_program *program, u32 vers)
 +{
-+	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, ds_idx);
-+	struct file *filp, *new, __rcu **pfile;
++	bool supported = false;
 +
-+	if (!nfs_server_is_local(clp))
-+		return NULL;
-+	if (mode & FMODE_WRITE) {
-+		/*
-+		 * Always request read and write access since this corresponds
-+		 * to a rw layout.
-+		 */
-+		mode |= FMODE_READ;
-+		pfile = &mirror->rw_file;
-+	} else
-+		pfile = &mirror->ro_file;
-+
-+	new = NULL;
-+	rcu_read_lock();
-+	filp = rcu_dereference(*pfile);
-+	if (!filp) {
-+		rcu_read_unlock();
-+		new = nfs_local_open_fh(clp, cred, fh, mode);
-+		if (IS_ERR(new))
-+			return NULL;
-+		rcu_read_lock();
-+		/* try to swap in the pointer */
-+		filp = cmpxchg(pfile, NULL, new);
-+		if (!filp) {
-+			filp = new;
-+			new = NULL;
-+		}
-+	}
-+	filp = get_file_rcu(&filp);
-+	rcu_read_unlock();
-+	if (new)
-+		fput(new);
-+	return filp;
++	if (unlikely(!IS_ERR(clp->cl_rpcclient_localio)))
++		goto out;
++	clp->cl_rpcclient_localio = rpc_bind_new_program(clp->cl_rpcclient,
++							program, vers);
++	if (IS_ERR(clp->cl_rpcclient_localio))
++		goto out;
++	/* No errors! Assume that localio is supported */
++	supported = true;
++out:
++	dfprintk_rcu(CLIENT, "%s: server (%s) %s NFS v%u LOCALIO\n", __func__,
++		rpc_peeraddr2str(clp->cl_rpcclient_localio, RPC_DISPLAY_ADDR),
++		(supported ? "supports" : "does not support"), vers);
 +}
 +
- static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
- 		const struct nfs4_ff_layout_mirror *m2)
+ /* localio.c */
+ extern void nfs_local_init(void);
+ extern void nfs_local_enable(struct nfs_client *);
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index 00832c9be9f5..cce6b8917e90 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -15,6 +15,7 @@
+ #include <linux/sunrpc/addr.h>
+ #include <linux/inetdevice.h>
+ #include <net/addrconf.h>
++#include <linux/nfslocalio.h>
+ #include <linux/module.h>
+ #include <linux/bvec.h>
+ 
+@@ -229,16 +230,65 @@ nfs_local_disable(struct nfs_client *clp)
+ 	}
+ }
+ 
++static bool nfs_local_server_getuuid(struct nfs_client *clp, uuid_t *nfsd_uuid)
++{
++	u8 uuid[UUID_SIZE];
++	struct nfs_getuuidres res = {
++		uuid,
++	};
++	struct rpc_message msg = {
++		.rpc_resp = &res,
++	};
++	int status;
++
++	clp->rpc_ops->init_localioclient(clp);
++	if (IS_ERR(clp->cl_rpcclient_localio))
++		return false;
++
++	dprintk("%s: NFS issuing getuuid\n", __func__);
++	msg.rpc_proc = &clp->cl_rpcclient_localio->cl_procinfo[LOCALIOPROC_GETUUID];
++	status = rpc_call_sync(clp->cl_rpcclient_localio, &msg, 0);
++	dprintk("%s: NFS reply getuuid: status=%d uuid=%pU\n",
++		__func__, status, res.uuid);
++	if (status)
++		return false;
++
++	import_uuid(nfsd_uuid, res.uuid);
++
++	return true;
++}
++
+ /*
+- * nfs_local_probe - probe local i/o support for an nfs_client
++ * nfs_local_probe - probe local i/o support for an nfs_server and nfs_client
++ * - called after alloc_client and init_client (so cl_rpcclient exists)
+  */
+-void
+-nfs_local_probe(struct nfs_client *clp)
++void nfs_local_probe(struct nfs_client *clp)
  {
-@@ -237,8 +284,15 @@ static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
+-	bool enable = false;
++	uuid_t uuid;
  
- static void ff_layout_free_mirror(struct nfs4_ff_layout_mirror *mirror)
- {
-+	struct file *filp;
- 	const struct cred	*cred;
- 
-+	filp = rcu_access_pointer(mirror->ro_file);
-+	if (filp)
-+		fput(filp);
-+	filp = rcu_access_pointer(mirror->rw_file);
-+	if (filp)
-+		fput(filp);
- 	ff_layout_remove_mirror(mirror);
- 	kfree(mirror->fh_versions);
- 	cred = rcu_access_pointer(mirror->ro_cred);
-@@ -414,6 +468,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		struct nfs4_ff_layout_mirror *mirror;
- 		struct cred *kcred;
- 		const struct cred __rcu *cred;
-+		const struct cred __rcu *old;
- 		kuid_t uid;
- 		kgid_t gid;
- 		u32 ds_count, fh_count, id;
-@@ -513,13 +568,26 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 
- 		mirror = ff_layout_add_mirror(lh, fls->mirror_array[i]);
- 		if (mirror != fls->mirror_array[i]) {
-+			struct file *filp;
+-	if (enable)
+-		nfs_local_enable(clp);
++	if (!localio_enabled)
++		return;
 +
- 			/* swap cred ptrs so free_mirror will clean up old */
- 			if (lgr->range.iomode == IOMODE_READ) {
--				cred = xchg(&mirror->ro_cred, cred);
--				rcu_assign_pointer(fls->mirror_array[i]->ro_cred, cred);
-+				old = xchg(&mirror->ro_cred, cred);
-+				rcu_assign_pointer(fls->mirror_array[i]->ro_cred, old);
-+				/* drop file if creds changed */
-+				if (old != cred) {
-+					filp = rcu_dereference_protected(xchg(&mirror->ro_file, NULL), 1);
-+					if (filp)
-+						fput(filp);
-+				}
- 			} else {
--				cred = xchg(&mirror->rw_cred, cred);
--				rcu_assign_pointer(fls->mirror_array[i]->rw_cred, cred);
-+				old = xchg(&mirror->rw_cred, cred);
-+				rcu_assign_pointer(fls->mirror_array[i]->rw_cred, old);
-+				if (old != cred) {
-+					filp = rcu_dereference_protected(xchg(&mirror->rw_file, NULL), 1);
-+					if (filp)
-+						fput(filp);
-+				}
- 			}
- 			ff_layout_free_mirror(fls->mirror_array[i]);
- 			fls->mirror_array[i] = mirror;
-@@ -1757,6 +1825,7 @@ ff_layout_read_pagelist(struct nfs_pageio_descriptor *desc,
- 	struct pnfs_layout_segment *lseg = hdr->lseg;
- 	struct nfs4_pnfs_ds *ds;
- 	struct rpc_clnt *ds_clnt;
-+	struct file *filp;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	const struct cred *ds_cred;
- 	loff_t offset = hdr->args.offset;
-@@ -1803,12 +1872,20 @@ ff_layout_read_pagelist(struct nfs_pageio_descriptor *desc,
- 	hdr->args.offset = offset;
- 	hdr->mds_offset = offset;
- 
-+	/* Start IO accounting for local read */
-+	filp = ff_local_open_fh(lseg, idx, ds->ds_clp, ds_cred, fh,
-+				FMODE_READ);
-+	if (filp) {
-+		hdr->task.tk_start = ktime_get();
-+		ff_layout_read_record_layoutstats_start(&hdr->task, hdr);
-+	}
-+
- 	/* Perform an asynchronous read to ds */
- 	nfs_initiate_pgio(desc, ds->ds_clp, ds_clnt, hdr, ds_cred,
- 			  ds->ds_clp->rpc_ops,
- 			  vers == 3 ? &ff_layout_read_call_ops_v3 :
- 				      &ff_layout_read_call_ops_v4,
--			  0, RPC_TASK_SOFTCONN, NULL);
-+			  0, RPC_TASK_SOFTCONN, filp);
- 	put_cred(ds_cred);
- 	return PNFS_ATTEMPTED;
- 
-@@ -1829,6 +1906,7 @@ ff_layout_write_pagelist(struct nfs_pageio_descriptor *desc,
- 	struct pnfs_layout_segment *lseg = hdr->lseg;
- 	struct nfs4_pnfs_ds *ds;
- 	struct rpc_clnt *ds_clnt;
-+	struct file *filp;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	const struct cred *ds_cred;
- 	loff_t offset = hdr->args.offset;
-@@ -1873,12 +1951,20 @@ ff_layout_write_pagelist(struct nfs_pageio_descriptor *desc,
- 	 */
- 	hdr->args.offset = offset;
- 
-+	/* Start IO accounting for local write */
-+	filp = ff_local_open_fh(lseg, idx, ds->ds_clp, ds_cred, fh,
-+				FMODE_READ|FMODE_WRITE);
-+	if (filp) {
-+		hdr->task.tk_start = ktime_get();
-+		ff_layout_write_record_layoutstats_start(&hdr->task, hdr);
-+	}
-+
- 	/* Perform an asynchronous write */
- 	nfs_initiate_pgio(desc, ds->ds_clp, ds_clnt, hdr, ds_cred,
- 			  ds->ds_clp->rpc_ops,
- 			  vers == 3 ? &ff_layout_write_call_ops_v3 :
- 				      &ff_layout_write_call_ops_v4,
--			  sync, RPC_TASK_SOFTCONN, NULL);
-+			  sync, RPC_TASK_SOFTCONN, filp);
- 	put_cred(ds_cred);
- 	return PNFS_ATTEMPTED;
- 
-@@ -1912,6 +1998,7 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
- 	struct pnfs_layout_segment *lseg = data->lseg;
- 	struct nfs4_pnfs_ds *ds;
- 	struct rpc_clnt *ds_clnt;
-+	struct file *filp;
- 	struct nfs4_ff_layout_mirror *mirror;
- 	const struct cred *ds_cred;
- 	u32 idx;
-@@ -1950,10 +2037,18 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
- 	if (fh)
- 		data->args.fh = fh;
- 
-+	/* Start IO accounting for local commit */
-+	filp = ff_local_open_fh(lseg, idx, ds->ds_clp, ds_cred, fh,
-+				FMODE_READ|FMODE_WRITE);
-+	if (filp) {
-+		data->task.tk_start = ktime_get();
-+		ff_layout_commit_record_layoutstats_start(&data->task, data);
-+	}
-+
- 	ret = nfs_initiate_commit(ds_clnt, data, ds->ds_clp->rpc_ops,
--				   vers == 3 ? &ff_layout_commit_call_ops_v3 :
--					       &ff_layout_commit_call_ops_v4,
--				   how, RPC_TASK_SOFTCONN, NULL);
-+				  vers == 3 ? &ff_layout_commit_call_ops_v3 :
-+					      &ff_layout_commit_call_ops_v4,
-+				  how, RPC_TASK_SOFTCONN, filp);
- 	put_cred(ds_cred);
- 	return ret;
- out_err:
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index f84b3fb0dddd..8e042df5a2c9 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -82,7 +82,9 @@ struct nfs4_ff_layout_mirror {
- 	struct nfs_fh			*fh_versions;
- 	nfs4_stateid			stateid;
- 	const struct cred __rcu		*ro_cred;
-+	struct file __rcu		*ro_file;
- 	const struct cred __rcu		*rw_cred;
-+	struct file __rcu		*rw_file;
- 	refcount_t			ref;
- 	spinlock_t			lock;
- 	unsigned long			flags;
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index e028f5a0ef5f..e58bedfb1dcc 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -395,6 +395,12 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
- 
- 	/* connect success, check rsize/wsize limit */
- 	if (!status) {
++	switch (clp->cl_rpcclient->cl_vers) {
++	case 3:
++	case 4:
 +		/*
-+		 * ds_clp is put in destroy_ds().
-+		 * keep ds_clp even if DS is local, so that if local IO cannot
-+		 * proceed somehow, we can fall back to NFS whenever we want.
++		 * Retrieve server's uuid via LOCALIO protocol and verify the
++		 * server with that uuid it is known to be local. This ensures
++		 * client and server 1: support localio 2: are local to each other.
 +		 */
-+		nfs_local_probe(ds->ds_clp);
- 		max_payload =
- 			nfs_block_size(rpc_max_payload(ds->ds_clp->cl_rpcclient),
- 				       NULL);
++		if (!nfs_local_server_getuuid(clp, &uuid))
++			return;
++		/* Verify client's nfsd, with specififed uuid, is local */
++		if (!nfsd_uuid_is_local(&uuid))
++			return;
++		break;
++	default:
++		return; /* localio not supported */
++	}
++
++	dprintk("%s: detected local server.\n", __func__);
++	nfs_local_enable(clp);
+ }
+ EXPORT_SYMBOL_GPL(nfs_local_probe);
+ 
+diff --git a/fs/nfs/nfs3_fs.h b/fs/nfs/nfs3_fs.h
+index b333ea119ef5..efdf2b6519e9 100644
+--- a/fs/nfs/nfs3_fs.h
++++ b/fs/nfs/nfs3_fs.h
+@@ -30,6 +30,7 @@ static inline int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
+ struct nfs_server *nfs3_create_server(struct fs_context *);
+ struct nfs_server *nfs3_clone_server(struct nfs_server *, struct nfs_fh *,
+ 				     struct nfs_fattr *, rpc_authflavor_t);
++void nfs3_init_localioclient(struct nfs_client *);
+ 
+ /* nfs3super.c */
+ extern struct nfs_subversion nfs_v3;
+diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+index b0c8a39c2bbd..123e7c1fd339 100644
+--- a/fs/nfs/nfs3client.c
++++ b/fs/nfs/nfs3client.c
+@@ -7,6 +7,8 @@
+ #include "netns.h"
+ #include "sysfs.h"
+ 
++#define NFSDBG_FACILITY		NFSDBG_CLIENT
++
+ #ifdef CONFIG_NFS_V3_ACL
+ static struct rpc_stat		nfsacl_rpcstat = { &nfsacl_program };
+ static const struct rpc_version *nfsacl_version[] = {
+@@ -130,3 +132,26 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
+ 	return clp;
+ }
+ EXPORT_SYMBOL_GPL(nfs3_set_ds_client);
++
++#if defined(CONFIG_NFS_V3_LOCALIO)
++static struct rpc_stat		nfslocalio_rpcstat = { &nfslocalio_program3 };
++static const struct rpc_version *nfslocalio_version[] = {
++	[3]			= &nfslocalio_version3,
++};
++
++const struct rpc_program nfslocalio_program3 = {
++	.name			= "nfslocalio",
++	.number			= NFS_LOCALIO_PROGRAM,
++	.nrvers			= ARRAY_SIZE(nfslocalio_version),
++	.version		= nfslocalio_version,
++	.stats			= &nfslocalio_rpcstat,
++};
++
++/*
++ * Initialise an NFSv3 localio client connection
++ */
++void nfs3_init_localioclient(struct nfs_client *clp)
++{
++	nfs_init_localioclient(clp, &nfslocalio_program3, 3);
++}
++#endif /* CONFIG_NFS_V3_LOCALIO */
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index 74bda639a7cf..40b6e4d1e7be 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -1067,4 +1067,7 @@ const struct nfs_rpc_ops nfs_v3_clientops = {
+ 	.free_client	= nfs_free_client,
+ 	.create_server	= nfs3_create_server,
+ 	.clone_server	= nfs3_clone_server,
++#if defined(CONFIG_NFS_V3_LOCALIO)
++	.init_localioclient = nfs3_init_localioclient,
++#endif
+ };
+diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+index 60f032be805a..d2a17ecd12b8 100644
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -2579,3 +2579,70 @@ const struct rpc_version nfsacl_version3 = {
+ 	.counts			= nfs3_acl_counts,
+ };
+ #endif  /* CONFIG_NFS_V3_ACL */
++
++#if defined(CONFIG_NFS_V3_LOCALIO)
++
++#define LOCALIO3_getuuidres_sz	(1+XDR_QUADLEN(UUID_SIZE))
++
++static void nfs3_xdr_enc_getuuidargs(struct rpc_rqst *req,
++				struct xdr_stream *xdr,
++				const void *data)
++{
++	/* void function */
++}
++
++// FIXME: factor out from fs/nfs/nfs4xdr.c
++static int decode_opaque_fixed(struct xdr_stream *xdr, void *buf, size_t len)
++{
++	ssize_t ret = xdr_stream_decode_opaque_fixed(xdr, buf, len);
++	if (unlikely(ret < 0))
++		return -EIO;
++	return 0;
++}
++
++static inline int nfs3_decode_getuuidresok(struct xdr_stream *xdr,
++					struct nfs_getuuidres *result)
++{
++	return decode_opaque_fixed(xdr, result->uuid, UUID_SIZE);
++}
++
++static int nfs3_xdr_dec_getuuidres(struct rpc_rqst *req,
++				struct xdr_stream *xdr,
++				void *result)
++{
++	enum nfs_stat status;
++	int error;
++
++	error = decode_nfsstat3(xdr, &status);
++	if (unlikely(error))
++		goto out;
++	if (status != NFS3_OK)
++		goto out_default;
++	error = nfs3_decode_getuuidresok(xdr, result);
++out:
++	return error;
++out_default:
++	return nfs3_stat_to_errno(status);
++}
++
++static const struct rpc_procinfo nfs3_localio_procedures[] = {
++	[LOCALIOPROC_GETUUID] = {
++		.p_proc = LOCALIOPROC_GETUUID,
++		.p_encode = nfs3_xdr_enc_getuuidargs,
++		.p_decode = nfs3_xdr_dec_getuuidres,
++		.p_arglen = 1,
++		.p_replen = LOCALIO3_getuuidres_sz,
++		.p_timer = 0,
++		.p_name = "GETUUID",
++	},
++};
++
++static unsigned int nfs3_localio_counts[ARRAY_SIZE(nfs3_localio_procedures)];
++const struct rpc_version nfslocalio_version3 = {
++	.number			= 3,
++	.nrprocs		= ARRAY_SIZE(nfs3_localio_procedures),
++	.procs			= nfs3_localio_procedures,
++	.counts			= nfs3_localio_counts,
++};
++
++#endif  /* CONFIG_NFS_V3_LOCALIO */
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 7024230f0d1d..a0a41917dec2 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -538,6 +538,8 @@ extern int nfs4_proc_commit(struct file *dst, __u64 offset, __u32 count, struct
+ extern const nfs4_stateid zero_stateid;
+ extern const nfs4_stateid invalid_stateid;
+ 
++extern void nfs4_init_localioclient(struct nfs_client *);
++
+ /* nfs4super.c */
+ struct nfs_mount_info;
+ extern struct nfs_subversion nfs_v4;
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 84573df5cf5a..d2f634aa1e1b 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -1384,3 +1384,26 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
+ 
+ 	return nfs_probe_server(server, NFS_FH(d_inode(server->super->s_root)));
+ }
++
++#if defined(CONFIG_NFS_V4_LOCALIO)
++static struct rpc_stat		nfslocalio_rpcstat = { &nfslocalio_program4 };
++static const struct rpc_version *nfslocalio_version[] = {
++	[4]			= &nfslocalio_version4,
++};
++
++const struct rpc_program nfslocalio_program4 = {
++	.name			= "nfslocalio",
++	.number			= NFS_LOCALIO_PROGRAM,
++	.nrvers			= ARRAY_SIZE(nfslocalio_version),
++	.version		= nfslocalio_version,
++	.stats			= &nfslocalio_rpcstat,
++};
++
++/*
++ * Initialise an NFSv4 localio client connection
++ */
++void nfs4_init_localioclient(struct nfs_client *clp)
++{
++	nfs_init_localioclient(clp, &nfslocalio_program4, 4);
++}
++#endif /* CONFIG_NFS_V4_LOCALIO */
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index c93c12063b3a..060bc8dbee61 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10745,6 +10745,9 @@ const struct nfs_rpc_ops nfs_v4_clientops = {
+ 	.discover_trunking = nfs4_discover_trunking,
+ 	.enable_swap	= nfs4_enable_swap,
+ 	.disable_swap	= nfs4_disable_swap,
++#if defined(CONFIG_NFS_V4_LOCALIO)
++	.init_localioclient = nfs4_init_localioclient,
++#endif
+ };
+ 
+ static const struct xattr_handler nfs4_xattr_nfs4_acl_handler = {
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 1416099dfcd1..d3b4fa3245f0 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -7728,3 +7728,55 @@ const struct rpc_version nfs_version4 = {
+ 	.procs			= nfs4_procedures,
+ 	.counts			= nfs_version4_counts,
+ };
++
++#if defined(CONFIG_NFS_V4_LOCALIO)
++
++#define LOCALIO4_getuuidres_sz	(op_decode_hdr_maxsz+XDR_QUADLEN(UUID_SIZE))
++
++static void nfs4_xdr_enc_getuuidargs(struct rpc_rqst *req,
++				struct xdr_stream *xdr,
++				const void *data)
++{
++	/* void function */
++}
++
++static inline int nfs4_decode_getuuidresok(struct xdr_stream *xdr,
++					struct nfs_getuuidres *result)
++{
++	return decode_opaque_fixed(xdr, result->uuid, UUID_SIZE);
++}
++
++static int nfs4_xdr_dec_getuuidres(struct rpc_rqst *req,
++				struct xdr_stream *xdr,
++				void *result)
++{
++	// FIXME: need proper handling that isn't abusing nfs_opnum4
++	int error = decode_op_hdr(xdr, LOCALIOPROC_GETUUID);
++	if (unlikely(error))
++		goto out;
++	error = nfs4_decode_getuuidresok(xdr, result);
++out:
++	return error;
++}
++
++static const struct rpc_procinfo nfs4_localio_procedures[] = {
++	[LOCALIOPROC_GETUUID] = {
++		.p_proc = LOCALIOPROC_GETUUID,
++		.p_encode = nfs4_xdr_enc_getuuidargs,
++		.p_decode = nfs4_xdr_dec_getuuidres,
++		.p_arglen = 1,
++		.p_replen = LOCALIO4_getuuidres_sz,
++		.p_statidx = LOCALIOPROC_GETUUID,
++		.p_name = "GETUUID",
++	},
++};
++
++static unsigned int nfs4_localio_counts[ARRAY_SIZE(nfs4_localio_procedures)];
++const struct rpc_version nfslocalio_version4 = {
++	.number			= 4,
++	.nrprocs		= ARRAY_SIZE(nfs4_localio_procedures),
++	.procs			= nfs4_localio_procedures,
++	.counts			= nfs4_localio_counts,
++};
++
++#endif  /* CONFIG_NFS_V4_LOCALIO */
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 00fe469bc72e..efcdb4d8e9de 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -130,6 +130,7 @@ struct nfs_client {
+ 	/* localio */
+ 	struct timespec64	cl_nfssvc_boot;
+ 	seqlock_t		cl_boot_lock;
++	struct rpc_clnt *	cl_rpcclient_localio;	/* localio RPC client handle */
+ };
+ 
+ /*
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 764513a61601..2a438f4c2d6d 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1002,6 +1002,10 @@ struct nfs3_getaclres {
+ 	struct posix_acl *	acl_default;
+ };
+ 
++struct nfs_getuuidres {
++	__u8 *			uuid;
++};
++
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 
+ typedef u64 clientid4;
+@@ -1819,6 +1823,7 @@ struct nfs_rpc_ops {
+ 	int	(*discover_trunking)(struct nfs_server *, struct nfs_fh *);
+ 	void	(*enable_swap)(struct inode *inode);
+ 	void	(*disable_swap)(struct inode *inode);
++	void	(*init_localioclient)(struct nfs_client *);
+ };
+ 
+ /*
+@@ -1834,4 +1839,9 @@ extern const struct rpc_version nfs_version4;
+ extern const struct rpc_version nfsacl_version3;
+ extern const struct rpc_program nfsacl_program;
+ 
++extern const struct rpc_version nfslocalio_version3;
++extern const struct rpc_program nfslocalio_program3;
++extern const struct rpc_version nfslocalio_version4;
++extern const struct rpc_program nfslocalio_program4;
++
+ #endif
+diff --git a/include/uapi/linux/nfs.h b/include/uapi/linux/nfs.h
+index f356f2ba3814..e72f5564bdc0 100644
+--- a/include/uapi/linux/nfs.h
++++ b/include/uapi/linux/nfs.h
+@@ -33,6 +33,10 @@
+ #define NFS_MNT_VERSION		1
+ #define NFS_MNT3_VERSION	3
+ 
++#define NFS_LOCALIO_PROGRAM	100229
++#define LOCALIOPROC_NULL	0
++#define LOCALIOPROC_GETUUID	1
++
+ #define NFS_PIPE_DIRNAME "nfs"
+ 
+ /*
 -- 
 2.44.0
 
