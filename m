@@ -1,55 +1,63 @@
-Return-Path: <linux-nfs+bounces-3672-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3673-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60EB5904967
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:13:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 256C190496B
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 05:14:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8B77B21A14
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:12:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B36982852FE
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jun 2024 03:14:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724F3BA31;
-	Wed, 12 Jun 2024 03:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A909F168A8;
+	Wed, 12 Jun 2024 03:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKUYSZTe"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="X4IPrzcW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C483171C4
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 03:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C68320D;
+	Wed, 12 Jun 2024 03:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718161975; cv=none; b=Y0yHoMxPOIZ1SYJbUB8urwCUe5MTOChpGBqZpoeMunhajymWvuq73oJ0oZpqA8YpOCjGAhFzInN17/1x76pVThHmYSqHHSVuzQFP0xc4UPddL2kgAVRA4/bgjSl9dZsoyJf2a21buGZDiw3gtbH3iMkYzfzeSiwNIgfK1t8CzVU=
+	t=1718162053; cv=none; b=ctQyKcxMKVl/jY8+PlmyMq9Nkd5smBvr/ZawAlwTDdVlu9tq2AXxnVHMd9fmG2y88SRNVPq6SnjwJlx2hlcipr3eZ7xAfIJQlQCaP7HPZRUHSoyMvVw39JATGwmjrOH4wXJ3UkDnD1HJmrDr0SoZN/9m65pusO65CilXOiFYAww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718161975; c=relaxed/simple;
-	bh=XGiIKywJZ4DFqkvS+GDur0BKV0hZ6F7H+a0mGSa3muI=;
+	s=arc-20240116; t=1718162053; c=relaxed/simple;
+	bh=9NodQQT4LqtoSA5lSFjpkb5Utm0D00B3WBolnHe8GMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TWyc/P5DLoFlnmBq5mbHhgUThfBIKdWb+rk+JB6bLfkO/Dd4y8fRSMSsxqrnu6jnWEsmvzrUoQE8/eg+tl9y5I3nko/vxzhBw/4jhb/nGrJOhxQq3VHZx3E8z9i+yxusxJaMiwsxj82C/uwnwMHW/UuQFl/0/pT0FkcqxAfa59Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKUYSZTe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 785C5C2BD10;
-	Wed, 12 Jun 2024 03:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718161974;
-	bh=XGiIKywJZ4DFqkvS+GDur0BKV0hZ6F7H+a0mGSa3muI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rKUYSZTetUY7c8r4Wixa3zmSgJIENum2jaejHU1erpKrxNgzgGRimcvuY7xAB0zbM
-	 W5Yc4bARGRRr2oenjPzMBO+AAg/woLIvvGD6Z7Nd2mrXWcvBvVqfe+uIAPJbsYTQBO
-	 8hfepFY/KG7VgbuA/GevJR9DAQHFBfpLd6nLYQWT5B8uNAagPJbc803fzFae/5Bzeb
-	 Cs7hIN761iXiK2oUUftXc+761zsfaXKUe+CZHOquqfFhd+NM31cAh21hYaN9YOdjZw
-	 W19mLphw+4sBPsVXT+OjMak7Ng7uugi73eVn67PbeMr/6Rrg62qTbSE/FeAcYezj5B
-	 zzbVU22dbkmlA==
-Date: Tue, 11 Jun 2024 23:12:53 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, snitzer@hammerspace.com
-Subject: Re: [RFC PATCH v2 00/15] nfs/nfsd: add support for localio
-Message-ID: <ZmkSNUqa-WN7V4UJ@kernel.org>
-References: <20240612030752.31754-1-snitzer@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRHaTc7q+/IW8MsiMsK0XP1J0LaJOIKvOSTw2+vgdonkMJB0Jh8POQGPKu4CwapZO2MLkHrqod/Zku/l6xAV+ZPkoX2x2TFxv6hCSfnITO8pOGiqqeZJ10t6NsgHper2+e4rrjO6UgTKYy9+HJaputQkTP/eNbLPjqSb0utX4SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=X4IPrzcW; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FIjGGRABJCKKFF6YXfYjcpA9fG0vbhL8bpLfh5T2c90=; b=X4IPrzcWTALi93DkoznpTOtARS
+	je5oPERYb9xGG9pTKd/dsMWBTNe2+JZ2gw4ZLFbIx1fGxzcTItnJ3tyLc3JUGIzvjGZSZlw1dLQMt
+	1dDHbBbLiSFCk664b2MFZRnjz6P3OI/k5VIJqkz6t63mZKXZDXHWNiQqt3Zd6ucIplqJERbTjCSF8
+	Kx0SEwVhAFWsHi1km9OEsrHDPTGT5Kc8n8WPH4dgY7JfAoW29QGavz74h3Ip0zEDMt33l0+v4KS8Y
+	b60QRZ1B7j/npy/BhcxWRhUJMTK3OZ1k/uyg5H7wWhb7AqhjWZUCYuDcCc5qrU0ShX8EFnoUNxfGe
+	oSY5IZoQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1sHER2-00Eioe-0n;
+	Wed, 12 Jun 2024 03:14:04 +0000
+Date: Wed, 12 Jun 2024 04:14:04 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Amir Goldstein <amir73il@gmail.com>,
+	James Clark <james.clark@arm.com>, ltp@lists.linux.it,
+	linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] VFS: generate FS_CREATE before FS_OPEN when
+ ->atomic_open used.
+Message-ID: <20240612031404.GH1629371@ZenIV>
+References: <171815791109.14261.10223988071271993465@noble.neil.brown.name>
+ <20240612023748.GG1629371@ZenIV>
+ <171816094008.14261.10304380583720747013@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,8 +66,30 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240612030752.31754-1-snitzer@kernel.org>
+In-Reply-To: <171816094008.14261.10304380583720747013@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Here is my git tree for these changes:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-6.11
+On Wed, Jun 12, 2024 at 12:55:40PM +1000, NeilBrown wrote:
+> > 	IF we don't care about that, we might as well take fsnotify_open()
+> > out of vfs_open() and, for do_open()/do_tmpfile()/do_o_path(), into
+> > path_openat() itself.  I mean, having
+> >         if (likely(!error)) {
+> >                 if (likely(file->f_mode & FMODE_OPENED)) {
+> > 			fsnotify_open(file);
+> >                         return file;
+> > 		}
+> > in there would be a lot easier to follow...  It would lose fsnotify_open()
+> > in a few more failure exits, but if we don't give a damn about having it
+> > paired with fsnotify_close()...
+> > 
+> 
+> Should we have fsnotify_open() set a new ->f_mode flag, and
+> fsnotify_close() abort if it isn't set (and clear it if it is)?
+> Then we would be guaranteed a balance - which does seem like a good
+> idea.
+
+Umm...  In that case, I would rather have FMODE_NONOTIFY set just before
+the fput() in path_openat() - no need to grab another flag from ->f_mode
+(not a lot of unused ones there) and no need to add any overhead on
+the fast path.
 
