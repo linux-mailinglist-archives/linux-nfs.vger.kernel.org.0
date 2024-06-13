@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-3784-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3785-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F26BA907B8F
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:36:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 676C0907B91
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:37:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AD7B283651
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:36:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CEE01F26152
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A5114F9ED;
-	Thu, 13 Jun 2024 18:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E96C1553BC;
+	Thu, 13 Jun 2024 18:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5jFvDJg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtL/XjB2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C41A14F10C;
-	Thu, 13 Jun 2024 18:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D8015534F;
+	Thu, 13 Jun 2024 18:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718303684; cv=none; b=A19mjH8hrXp6rNl2ATYMMJAru//ptubcRc3wTx5ERuzbalsIFAO69Zm/JjMIrXK7/0ujer7ug3MMBvZdrJgo8qQinS3SmQ0TRkCqN6BVI9BpCHI30cu8b/QUAQXNiagKQbgFziqNSq7PxbXEZee6dOe1ZMibvmMHUFOe3EsoATg=
+	t=1718303686; cv=none; b=fl8lNegfFZDzK36EHnVTmqDWntBqQVPqDoe/6SbMWD7Y8rEXHb6si/3hpoYT+xnY402gjTNtdpnWjXTVYP3AZn6SYGIBd7TbXDANXFlmk7e0z94AtHl/5GNHugb1LXEOf9v2WqXAnrfdYvaRe1BlDsSGw+oGZR3P9UynVYGM7Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718303684; c=relaxed/simple;
-	bh=dne48/WuerJI5cDYxx4gUTpls8+CI/TolliuHR/okWM=;
+	s=arc-20240116; t=1718303686; c=relaxed/simple;
+	bh=YDURFbnijazgcN8VD4DI4iq+yEb5LyI+bfN3po4d1eE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E/ce1CpUjB1K+gblnd5T37w5bbPGQ8mIz1jjGNLA/WrwVx+1kAnd+2NHJz5Y4NHyfGi2ps17P/2M/nnN9oaGsWKrN52SwtBklnz5nIMFuHp9I6ewxxHk4C0rYY01oznYip5I1uOXRpGRqw66OvIeG3OKMeD0ZYlmOhC7x12gMKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5jFvDJg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE42C2BBFC;
-	Thu, 13 Jun 2024 18:34:42 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=tawwfGlNrA/MU1tBnjFxffUuMDBpzU93Cr9KCiKPsJ4Nq/u19HFadFMLdFNQ6FSAzw5vI9fExtDqJsotOb5H3IBCPGZ4hezL0VMFMyO+sIoZN8tvEcdCPAohJzbM30Q3mJMd2p5Bx5tLL54Zp5qWeu3iyhkmJ7wmWiMGo90C2DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtL/XjB2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1B1C4AF1C;
+	Thu, 13 Jun 2024 18:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718303684;
-	bh=dne48/WuerJI5cDYxx4gUTpls8+CI/TolliuHR/okWM=;
+	s=k20201202; t=1718303685;
+	bh=YDURFbnijazgcN8VD4DI4iq+yEb5LyI+bfN3po4d1eE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m5jFvDJg4ITfm6OlfyZL6K/YPjxAwqmONtVbz/QTXsIO/yEAK3OdvbrUQXWbNEcz0
-	 G0GtEs92Do0lge4ZjEGxMsYB0e5qRZNvhn152feVreJH0hW+nO1y4YbtFH7xlW499t
-	 8/DAXVtf0yoZfkl5tpAuiUWlIyZYjTm5dL6NIMO2gqEivkItszcDd7sLfObdKDY9xD
-	 BCbFYQPk677YUpDTmZpXvP+2MvUBcZ6BR/7ZvUuT8zLTFcttsnN+3SFO1xGebEFEjx
-	 Rf8iuzeauknQOh5CLh/+RQPZB+TisI/LpCcocohj6NSVfp/TrdrHYrRFFYaSu+KZvW
-	 UccR24746swcg==
+	b=EtL/XjB2M/cKBZbVDuDraemb7CL8vJfRqmoJAmE8pstG2+6pACZaPzHVU5jpLwJzw
+	 7Wpc5LjBHJ5TE1aRToVHnEhdbMTKJ4GJ7GRZoIf7s2F+IPtFUst45guIWqdv4oC0ki
+	 TKx+ZJrBM15H9CzBqSh7H87OhkbtBlBW3Sa1fomvWjvcBAnKA/hPzZv606dEye+T8f
+	 8Glc38zq9DVLteyHyMdnnXLBalc+5HLuC4j5wX0xVzsr64PfT5TNtWCIpv9qYGRCZT
+	 34Y3TXw+MIdwkErUkFP/Rml2kJN+CgYYCuxUvUHiLH9ANamnV19t1hU0ui2hpnGeFH
+	 QmxglpV1mbmTQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 13 Jun 2024 14:34:31 -0400
-Subject: [PATCH v3 2/5] nfsd: make nfsd_svc take an array of thread counts
+Date: Thu, 13 Jun 2024 14:34:32 -0400
+Subject: [PATCH v3 3/5] nfsd: allow passing in array of thread counts via
+ netlink
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-nfsd-next-v3-2-3b51c3c2fc59@kernel.org>
+Message-Id: <20240613-nfsd-next-v3-3-3b51c3c2fc59@kernel.org>
 References: <20240613-nfsd-next-v3-0-3b51c3c2fc59@kernel.org>
 In-Reply-To: <20240613-nfsd-next-v3-0-3b51c3c2fc59@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -65,183 +66,123 @@ Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5775; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=dne48/WuerJI5cDYxx4gUTpls8+CI/TolliuHR/okWM=;
- b=kA0DAAgBAA5oQRlWghUByyZiAGZrO7+iKmCHhCe4pRptwsD6IdAndP4Llz62DqD10ToMQcSsG
- IkCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJmazu/AAoJEAAOaEEZVoIV/5sQAKpX
- xHN5rsuERKUtlC9prSnDu2qMSixqkjskquUtCnoRUY8GOcrWENJbl7LviBi2PPE1hyFfH/ENUrM
- vuvicTl4WYrrzlBwPU3WiprOcABDXnAzULC7M57Hy8EXvZXmjKODEE4fd9n1j44qRMO9MD9IiZZ
- Urhet9TXfsmma04W5vAs6A04cuqyuKrbHT3WbYVi7UsmfnglGEcWsRAxtWLLB9dFoYls6DD4eGg
- ncFNnAGnPVRA25Je58xDfJlQXLn0x/DKLUX43x8xDGPVYVkyM7Z8GyBHvNaEqk0X37TNMPkyIVS
- E//Tmoznlr34b21Fx6Oi4TUX2VsM0JeITWdwvurwfEjahebQvmqBOgHLrVuE/KZX4l5Rf7Z2for
- fmRQ3NvVMn+5sGTKjhwiWv7b1bLC9E0KC5SET1dGYgvuh7G5BXco1ApsY35Ncr/849JoygxfWIb
- oJ+jJnsEwvq/+Z6lhgSfCKvRQyMucf68wit7tLySQZT9ZGWR6gTm1SaA7ELU36nkS9HJFJp7I6f
- uaTSumMMJtcTWTIoyu86h4OAOWojzA4+24Z0RnXfhBmwUFGE1fs/LG4/7SDHfi0alIcO7rMAlEO
- 00bwZUz0ZoYbCa7H8JAUtv5uQ+uKdN8B8vd7NlonYdpw1Ryw3VSzLK/zyp545LhmHgLCU0f0Izz
- 97XdW
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3124; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=YDURFbnijazgcN8VD4DI4iq+yEb5LyI+bfN3po4d1eE=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmazu/0gFtlyoRt8a0xgZFOVewMJyPR1pCaPpBK
+ VLuEIq4Jd2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZms7vwAKCRAADmhBGVaC
+ FYQwEAC68zu5Hf7AlKKPLWD6Ey5g198JeeKVFRnVu5NhRzlkU7NH6NUICRE6pkBtTq9ReHy4JoO
+ 4HXtgux11rYseX3xtaFpNR43zUof2DhlzEO8yj1f8W4+fZjWk0ggJaizFl5Wud+byYUikhpEyRl
+ T8DNvGtxr6T8xIB+xe8aQrQJK+jmdV/z2kOFMBZI8ZT9eIhRjap9DEd+z9hZ1s9dP4Uo1xcASbV
+ cqTITAviXwWpoNeCoVH29qBVFk5M3a5id9pFOjuG12c4U5OPs6jSa8Wh1Y3Jez9kEvnmEj2TJBA
+ /iks/T011QYCtvXZhflZTWo81y3OthIzJUbxV7YGryyWZ5AyKCAbGLHbPW9seaVb7fcImbxObZ+
+ nq5AQguYhWIyP4n6qJYIOgh2YmfvJ7CwmXrXiuoF9HzNwpguoYFRV9lwd4wNV1ey6d0V7cgRvLx
+ oRw7UKOLSNMKXGzwZWEb4NBRHkw8TEqQ2dPS20rPMIgyy60bOc+xTpHg3BXbxdIDdIdpjXpgkE5
+ ji2YKeF+hdGKjCJ6vY1/FVChXiW3Awr2yxcYZ9MnXSJcniVkrnkYcHqyZQtuMiBMVwMhpzjr4GU
+ iD3CKnGhEiUUOkbGQMSQWhAHl1qp5UbqhFfa4WR4DphJzX5vdrtGNPp6o2CfOR5gHfxj4q+jSjA
+ goVa0lir2woZq9A==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Now that the refcounting is fixed, rework nfsd_svc to use the same
-thread setup as the pool_threads interface. Have it take an array of
-thread counts instead of just a single value, and pass that from the
-netlink threads set interface.  Since the new netlink interface doesn't
-have the same restriction as pool_threads, move the guard against
-shutting down all threads to write_pool_threads.
+Now that nfsd_svc can handle an array of thread counts, fix up the
+netlink threads interface to construct one from the netlink call
+and pass it through so we can start a pooled server the same way we
+would start a normal one.
+
+Note that any unspecified values in the array are considered zeroes,
+so it's possible to shut down a pooled server by passing in a short
+array that has only zeros, or even an empty array.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfsctl.c | 12 ++++++++++--
- fs/nfsd/nfsd.h   |  3 ++-
- fs/nfsd/nfssvc.c | 47 ++++++++++++++++++++++++++---------------------
- 3 files changed, 38 insertions(+), 24 deletions(-)
+ fs/nfsd/nfsctl.c | 32 ++++++++++++++++++++------------
+ fs/nfsd/nfssvc.c | 12 +++++++++++-
+ 2 files changed, 31 insertions(+), 13 deletions(-)
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 202140df8f82..c0d84a6e5416 100644
+index c0d84a6e5416..dde42aad5582 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
-@@ -406,7 +406,7 @@ static ssize_t write_threads(struct file *file, char *buf, size_t size)
- 			return -EINVAL;
- 		trace_nfsd_ctl_threads(net, newthreads);
- 		mutex_lock(&nfsd_mutex);
--		rv = nfsd_svc(newthreads, net, file->f_cred, NULL);
-+		rv = nfsd_svc(1, &newthreads, net, file->f_cred, NULL);
- 		mutex_unlock(&nfsd_mutex);
- 		if (rv < 0)
- 			return rv;
-@@ -481,6 +481,14 @@ static ssize_t write_pool_threads(struct file *file, char *buf, size_t size)
- 				goto out_free;
- 			trace_nfsd_ctl_pool_threads(net, i, nthreads[i]);
- 		}
+@@ -1671,7 +1671,7 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb)
+  */
+ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	int nthreads = 0, count = 0, nrpools, ret = -EOPNOTSUPP, rem;
++	int *nthreads, count = 0, nrpools, i, ret = -EOPNOTSUPP, rem;
+ 	struct net *net = genl_info_net(info);
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	const struct nlattr *attr;
+@@ -1688,15 +1688,22 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	mutex_lock(&nfsd_mutex);
+ 
+-	nrpools = nfsd_nrpools(net);
+-	if (nrpools && count > nrpools)
+-		count = nrpools;
+-
+-	/* XXX: make this handle non-global pool-modes */
+-	if (count > 1)
++	nrpools = max(count, nfsd_nrpools(net));
++	nthreads = kcalloc(nrpools, sizeof(int), GFP_KERNEL);
++	if (!nthreads) {
++		ret = -ENOMEM;
+ 		goto out_unlock;
++	}
 +
-+		/*
-+		 * There must always be a thread in pool 0; the admin
-+		 * can't shut down NFS completely using pool_threads.
-+		 */
-+		if (nthreads[0] == 0)
-+			nthreads[0] = 1;
-+
- 		rv = nfsd_set_nrthreads(i, nthreads, net);
- 		if (rv)
- 			goto out_free;
-@@ -1722,7 +1730,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
++	i = 0;
++	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
++		if (nla_type(attr) == NFSD_A_SERVER_THREADS) {
++			nthreads[i++] = nla_get_u32(attr);
++			if (i >= nrpools)
++				break;
++		}
++	}
+ 
+-	nthreads = nla_get_u32(info->attrs[NFSD_A_SERVER_THREADS]);
+ 	if (info->attrs[NFSD_A_SERVER_GRACETIME] ||
+ 	    info->attrs[NFSD_A_SERVER_LEASETIME] ||
+ 	    info->attrs[NFSD_A_SERVER_SCOPE]) {
+@@ -1730,12 +1737,13 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
  			scope = nla_data(attr);
  	}
  
--	ret = nfsd_svc(nthreads, net, get_current_cred(), scope);
-+	ret = nfsd_svc(1, &nthreads, net, get_current_cred(), scope);
- 
+-	ret = nfsd_svc(1, &nthreads, net, get_current_cred(), scope);
+-
++	ret = nfsd_svc(nrpools, nthreads, net, get_current_cred(), scope);
++	if (ret > 0)
++		ret = 0;
  out_unlock:
  	mutex_unlock(&nfsd_mutex);
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 8f4f239d9f8a..cec8697b1cd6 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -103,7 +103,8 @@ bool		nfssvc_encode_voidres(struct svc_rqst *rqstp,
- /*
-  * Function prototypes.
-  */
--int		nfsd_svc(int nrservs, struct net *net, const struct cred *cred, const char *scope);
-+int		nfsd_svc(int n, int *nservers, struct net *net,
-+			 const struct cred *cred, const char *scope);
- int		nfsd_dispatch(struct svc_rqst *rqstp);
- 
- int		nfsd_nrthreads(struct net *);
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index cd9a6a1a9fc8..2e47fd26c9b4 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -710,6 +710,19 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
- 	return 0;
+-
+-	return ret == nthreads ? 0 : ret;
++	kfree(nthreads);
++	return ret;
  }
  
-+/**
-+ * nfsd_set_nrthreads - set the number of running threads in the net's service
-+ * @n: number of array members in @nthreads
-+ * @nthreads: array of thread counts for each pool
-+ * @net: network namespace to operate within
-+ *
-+ * This function alters the number of running threads for the given network
-+ * namespace in each pool. If passed an array longer then the number of pools
-+ * the extra pool settings are ignored. If passed an array shorter than the
-+ * number of pools, the missing values are interpreted as 0's.
-+ *
-+ * Returns 0 on success or a negative errno on error.
-+ */
- int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- {
- 	int i = 0;
-@@ -717,7 +730,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 	int err = 0;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
--	WARN_ON(!mutex_is_locked(&nfsd_mutex));
-+	lockdep_assert_held(&nfsd_mutex);
- 
- 	if (nn->nfsd_serv == NULL || n <= 0)
- 		return 0;
-@@ -744,13 +757,6 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 		}
+ /**
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 2e47fd26c9b4..9edb4f7c4cc2 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -763,8 +763,18 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
+ 					  &nn->nfsd_serv->sv_pools[i],
+ 					  nthreads[i]);
+ 		if (err)
+-			break;
++			goto out;
  	}
- 
--	/*
--	 * There must always be a thread in pool 0; the admin
--	 * can't shut down NFS completely using pool_threads.
--	 */
--	if (nthreads[0] == 0)
--		nthreads[0] = 1;
--
- 	/* apply the new numbers */
- 	for (i = 0; i < n; i++) {
- 		err = svc_set_num_threads(nn->nfsd_serv,
-@@ -762,13 +768,19 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
++
++	/* Anything undefined in array is considered to be 0 */
++	for (i = n; i < nn->nfsd_serv->sv_nrpools; ++i) {
++		err = svc_set_num_threads(nn->nfsd_serv,
++					  &nn->nfsd_serv->sv_pools[i],
++					  0);
++		if (err)
++			goto out;
++	}
++out:
  	return err;
  }
  
--/*
-- * Adjust the number of threads and return the new number of threads.
-- * This is also the function that starts the server if necessary, if
-- * this is the first time nrservs is nonzero.
-+/**
-+ * nfsd_svc: start up or shut down the nfsd server
-+ * @n: number of array members in @nthreads
-+ * @nthreads: array of thread counts for each pool
-+ * @net: network namespace to operate within
-+ * @cred: credentials to use for xprt creation
-+ * @scope: server scope value (defaults to nodename)
-+ *
-+ * Adjust the number of threads in each pool and return the new
-+ * total number of threads in the service.
-  */
- int
--nfsd_svc(int nrservs, struct net *net, const struct cred *cred, const char *scope)
-+nfsd_svc(int n, int *nthreads, struct net *net, const struct cred *cred, const char *scope)
- {
- 	int	error;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-@@ -778,13 +790,6 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred, const char *scop
- 
- 	dprintk("nfsd: creating service\n");
- 
--	nrservs = max(nrservs, 0);
--	nrservs = min(nrservs, NFSD_MAXSERVS);
--	error = 0;
--
--	if (nrservs == 0 && nn->nfsd_serv == NULL)
--		goto out;
--
- 	strscpy(nn->nfsd_name, scope ? scope : utsname()->nodename,
- 		sizeof(nn->nfsd_name));
- 
-@@ -796,7 +801,7 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred, const char *scop
- 	error = nfsd_startup_net(net, cred);
- 	if (error)
- 		goto out_put;
--	error = svc_set_num_threads(serv, NULL, nrservs);
-+	error = nfsd_set_nrthreads(n, nthreads, net);
- 	if (error)
- 		goto out_put;
- 	error = serv->sv_nrthreads;
 
 -- 
 2.45.2
