@@ -1,81 +1,82 @@
-Return-Path: <linux-nfs+bounces-3730-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3731-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE0A5906341
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 07:07:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4439906342
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 07:07:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFE021C22791
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 05:07:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B3FC283216
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 05:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F53B7E1;
-	Thu, 13 Jun 2024 05:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBED134410;
+	Thu, 13 Jun 2024 05:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1VJ0sff"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVmTMOWg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5B3131E33
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 05:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C6E131BDF
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 05:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718255227; cv=none; b=RECF3eixfLlJMKKqlbCKc/vdrqLjVu8zqNCeGo9PRhiatdv2LXBd5b2IVWFroF5ZxHMQzAu6Ms8JVYuykd8KvM8koe+rGBqkBbjMfSRLXsYVhh4eVFVGzlFuGX8CbDHBTjB1bRYJ1JfLgsQKNMjky7jqoYaf6NyrmCuuU7LVxcY=
+	t=1718255227; cv=none; b=o+lfMN80dS3ccm90/aqx+Eh+9GMaj/4l2Q34Lv205qLPIYnAZapEnqLdckI19RCp+j0MrQJVtkaoiNIPvkwjqWtIUxr+dbGGHaVT5xyV45xetRuLzUC8IkZg9RxmJyf1vLZ5nPMmRNYu9Y0xyUdkVo1VSy5u5EhyeEaCZvS19es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718255227; c=relaxed/simple;
-	bh=I/fSEgCwaXQ1JmLqmzs5nyD+/J6/JeaaClTY/1UsuUE=;
+	bh=CUek43QMrepAFh0fuXJPwtkz5MUUdrtLkRUjfji+lyE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hARtuuz18994PhM5ZMlty5Q8cWTKQnLfMrXSvHY3fo3UM4i1NvA9MzP/l/NGvU9UygR5CURPzQl8kx77iKVUQ50TEUiyH3V5BIlj8Nq870gI221B3BAwLzXbG+PktxjgLovp7RrNttUVfWn6DFwpHaKgHixTSuGKGdY2mJqw0oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1VJ0sff; arc=none smtp.client-ip=209.85.219.173
+	 MIME-Version; b=PphlvxhPObL0yMaxr/4auaiVmnxPrFLROinsIHeoe4cLpbrwl27DFHloXlSG4FIRYioYn/vd92OnRKShIgtNiPMSFfG6qq1MCTAFXQty246WVVKF0IohqycAAe4yZe/rDwt7c2iy3gjApYZaLai3WCHZhBbfSWhcObO85LovW9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVmTMOWg; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dfef5980a69so706717276.3
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 22:07:05 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-797a8cfc4ecso34744785a.3
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 22:07:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718255224; x=1718860024; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718255225; x=1718860025; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BREbmmDaPNq4NqcMp3Sku2uf9WgvnITc3SNlmS6RNxU=;
-        b=M1VJ0sffNkxt3XfOdk508mG/Rq6k8lur8BBhhhrysfYwwAjs5aaGBVYzHXraLng2gj
-         QCa2IakfdyrNGVKDmsvR2Ebz+uY1S27M90eY9nLs9WOECGmHdIE8cOllXLwUa5EzsFhN
-         hG1eJxUXb9LtecQyNXQwiFXXEOzppUW2sfy4AjYloyLbMDHi9hN2J2cIJRaZy4HTJPkX
-         WwxmvEYTqP/1/PQTGFPdPL8IL3QV/hIOBwVF0YmOXSUeQ0IJUozCDH9rb3HeEY2N8CEf
-         y7gF6xbnijoqNG+SO5qipIinIntetIOXPcG+UY1ITVhiZMuwSlNcV5oaZitNiUMr0Cqq
-         p9rQ==
+        bh=AXVYNIM3ySb8hyMlrwzCwsvmVbam1K3t/jNlIKoSsrI=;
+        b=bVmTMOWgGYrsfiu+P9PHLc6hhe8iM/vVdipYnlc9GUsAApJmVytwLP5FWyANwubg7C
+         b8vCX13eAMhgJw53di5oZTzAkrf5X3DwcIP9/qaG0khM2QgNoTrAZKQeiIvJiaFQjLr4
+         OzYwXgy/CVqI6w9CKjSTvrp7m/VhL4OnJKa1KOanpncwtp8NGJLfgGU99+GRxSgWtYOX
+         oev8dMMml8E07WTE8DpdIqcAjlbSQs/7+LWHGNvO7sDXu4ycCh0DydYo3Sv4fQ3a6adG
+         6LfQkD9ysfpb1YLA/k2rq2VbVqfHxjlBAkUI54Qerj7SXYkD8jn6K1UuE2T4xgiDdCy2
+         sDOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718255224; x=1718860024;
+        d=1e100.net; s=20230601; t=1718255225; x=1718860025;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BREbmmDaPNq4NqcMp3Sku2uf9WgvnITc3SNlmS6RNxU=;
-        b=etmqzEIN5PC7x9jsUJlMAlw+k7yS8geAy2qMVmbE7eTsX92tTcq3tbKkypW4zdgWk4
-         2MzrSCITuKdpz7abNnWIQ3xHVaJcFap4oV4166ObmX8Ap2DrI6oecF8UeZ0PJ++lBzK9
-         2JeFzO49TeVz3M8PAUXt1+vVn3OaEL0J9NijJNrLRJz52BuCe2hPQri7m9qVxCTokd3q
-         4UN5H00Q3NTpFwm0eldA77FIYeDExZWAXqEhDw3QB9K5e/gDoNGtr6aXrqEAkvlL36Kz
-         ip9EQdEi4uh03SZnwxp5IV3aXCJvdEEctDag0vLEESfz8xlYEtX7Fne3oqOykw6lQpWZ
-         ZX8g==
-X-Gm-Message-State: AOJu0YzWPtU53HRXhnOj/MioN5kvQTw2Ee0edQypNiCK+ppafJPh4Cfd
-	mB4aSVa2hRYBkqKa5s1H3OX9OfZQzaacTUI4TR+lNutcbM9VDHOAyEPG
-X-Google-Smtp-Source: AGHT+IEQgYxQNcaTkNrCQRv6MiFkQJOIwmqLWp4JvqzO/UZlIllDdaRWIalUQS8MxbhIXM6ln3msnw==
-X-Received: by 2002:a25:db03:0:b0:dfe:3e59:5a94 with SMTP id 3f1490d57ef6-dfe6891fc68mr3702806276.47.1718255224024;
+        bh=AXVYNIM3ySb8hyMlrwzCwsvmVbam1K3t/jNlIKoSsrI=;
+        b=OfDNiCIzBp9d0+Ssr90oLxWbdYEKgAaKXJcmbdWQKFuaGTEmq3XSUypphlxi+9046b
+         h2r6Ss5z0mSJRn4HAtxUeNvxMlOL0naKvHgoYNPgB9bgfMhFv1/FIubaIquY+8FXXEsa
+         +C8L5ly0JgEhGYV37kUsukRQW5QBTdok4XgY0BelP2AKUoVPAQqsCVdRXvGBrfS0MYWM
+         Fin6rScNdWIyf5bR+U19ZdVXb7apWy/5LChWYpdtoEeOdmDGAPWChlcoinQnrKI1t81d
+         1IUzUWEGC6BtyNnODXOz9jbMIsxX7XDtUnKshJpgJeHbXLR7qmkNQ40flQKZtTWq2+mA
+         83+g==
+X-Gm-Message-State: AOJu0YxlP8qwY0vXSSJ15hktTH3vnct4L2nUZC2Jfcqp2C3EJhnCuKMv
+	RBe9znLOeBhw3KrGo59T2Xgmj0Kiv9iXbwGI+AnCKHeuQwR3NXrSLPZc
+X-Google-Smtp-Source: AGHT+IGRRFqW1ZEMXFmqXRhb1U12FebxPrimCb8ni+vz8O0c9KyX6jVTjJDGcHPeTEdusmxxOIdtLw==
+X-Received: by 2002:a05:6214:5b83:b0:6b0:71c0:cbaa with SMTP id 6a1803df08f44-6b191e3bfa4mr49168096d6.33.1718255224643;
         Wed, 12 Jun 2024 22:07:04 -0700 (PDT)
 Received: from leira.trondhjem.org (c-68-40-188-158.hsd1.mi.comcast.net. [68.40.188.158])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5ed4527sm3079036d6.101.2024.06.12.22.07.03
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5ed4527sm3079036d6.101.2024.06.12.22.07.04
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 22:07:03 -0700 (PDT)
+        Wed, 12 Jun 2024 22:07:04 -0700 (PDT)
 From: trondmy@gmail.com
 X-Google-Original-From: trond.myklebust@hammerspace.com
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH 01/11] NFSv4/pnfs: Remove redundant list check
-Date: Thu, 13 Jun 2024 01:00:45 -0400
-Message-ID: <20240613050055.854323-2-trond.myklebust@hammerspace.com>
+Subject: [PATCH 02/11] NFSv4.1: constify the stateid argument in nfs41_test_stateid()
+Date: Thu, 13 Jun 2024 01:00:46 -0400
+Message-ID: <20240613050055.854323-3-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240613050055.854323-1-trond.myklebust@hammerspace.com>
+In-Reply-To: <20240613050055.854323-2-trond.myklebust@hammerspace.com>
 References: <20240613050055.854323-1-trond.myklebust@hammerspace.com>
+ <20240613050055.854323-2-trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -86,36 +87,120 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-pnfs_layout_free_bulk_destroy_list() already checks for whether the list
-is empty or not.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/pnfs.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/nfs/nfs4_fs.h        |  3 ++-
+ fs/nfs/nfs4proc.c       | 24 ++++++++++++------------
+ fs/nfs/nfs4xdr.c        |  2 +-
+ include/linux/nfs_xdr.h |  2 +-
+ 4 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index b5834728f31b..bbbb692b2a47 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -923,8 +923,6 @@ pnfs_destroy_layouts_byfsid(struct nfs_client *clp,
- 	rcu_read_unlock();
- 	spin_unlock(&clp->cl_lock);
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 7024230f0d1d..c2045a2a9d0f 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -67,7 +67,8 @@ struct nfs4_minor_version_ops {
+ 	void	(*free_lock_state)(struct nfs_server *,
+ 			struct nfs4_lock_state *);
+ 	int	(*test_and_free_expired)(struct nfs_server *,
+-			nfs4_stateid *, const struct cred *);
++					 const nfs4_stateid *,
++					 const struct cred *);
+ 	struct nfs_seqid *
+ 		(*alloc_seqid)(struct nfs_seqid_counter *, gfp_t);
+ 	void	(*session_trunk)(struct rpc_clnt *clnt,
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a4f85af880c2..ae835d14ac75 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -103,10 +103,10 @@ static struct rpc_task *_nfs41_proc_sequence(struct nfs_client *clp,
+ 		const struct cred *cred,
+ 		struct nfs4_slot *slot,
+ 		bool is_privileged);
+-static int nfs41_test_stateid(struct nfs_server *, nfs4_stateid *,
+-		const struct cred *);
++static int nfs41_test_stateid(struct nfs_server *, const nfs4_stateid *,
++			      const struct cred *);
+ static int nfs41_free_stateid(struct nfs_server *, const nfs4_stateid *,
+-		const struct cred *, bool);
++			      const struct cred *, bool);
+ #endif
  
--	if (list_empty(&layout_list))
--		return 0;
- 	return pnfs_layout_free_bulk_destroy_list(&layout_list, is_recall);
+ #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+@@ -2867,16 +2867,16 @@ static int nfs40_open_expired(struct nfs4_state_owner *sp, struct nfs4_state *st
  }
  
-@@ -947,8 +945,6 @@ pnfs_destroy_layouts_byclid(struct nfs_client *clp,
- 	rcu_read_unlock();
- 	spin_unlock(&clp->cl_lock);
- 
--	if (list_empty(&layout_list))
--		return 0;
- 	return pnfs_layout_free_bulk_destroy_list(&layout_list, is_recall);
+ static int nfs40_test_and_free_expired_stateid(struct nfs_server *server,
+-		nfs4_stateid *stateid,
+-		const struct cred *cred)
++					       const nfs4_stateid *stateid,
++					       const struct cred *cred)
+ {
+ 	return -NFS4ERR_BAD_STATEID;
  }
  
+ #if defined(CONFIG_NFS_V4_1)
+ static int nfs41_test_and_free_expired_stateid(struct nfs_server *server,
+-		nfs4_stateid *stateid,
+-		const struct cred *cred)
++					       const nfs4_stateid *stateid,
++					       const struct cred *cred)
+ {
+ 	int status;
+ 
+@@ -10357,12 +10357,12 @@ nfs41_find_root_sec(struct nfs_server *server, struct nfs_fh *fhandle,
+ }
+ 
+ static int _nfs41_test_stateid(struct nfs_server *server,
+-		nfs4_stateid *stateid,
+-		const struct cred *cred)
++			       const nfs4_stateid *stateid,
++			       const struct cred *cred)
+ {
+ 	int status;
+ 	struct nfs41_test_stateid_args args = {
+-		.stateid = stateid,
++		.stateid = *stateid,
+ 	};
+ 	struct nfs41_test_stateid_res res;
+ 	struct rpc_message msg = {
+@@ -10418,8 +10418,8 @@ static void nfs4_handle_delay_or_session_error(struct nfs_server *server,
+  * failed or the state ID is not currently valid.
+  */
+ static int nfs41_test_stateid(struct nfs_server *server,
+-		nfs4_stateid *stateid,
+-		const struct cred *cred)
++			      const nfs4_stateid *stateid,
++			      const struct cred *cred)
+ {
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 98aab2c324c9..4bf7d5c09282 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -2137,7 +2137,7 @@ static void encode_test_stateid(struct xdr_stream *xdr,
+ {
+ 	encode_op_hdr(xdr, OP_TEST_STATEID, decode_test_stateid_maxsz, hdr);
+ 	encode_uint32(xdr, 1);
+-	encode_nfs4_stateid(xdr, args->stateid);
++	encode_nfs4_stateid(xdr, &args->stateid);
+ }
+ 
+ static void encode_free_stateid(struct xdr_stream *xdr,
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 01efacae4634..45623af3e7b8 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1438,7 +1438,7 @@ struct nfs41_secinfo_no_name_args {
+ 
+ struct nfs41_test_stateid_args {
+ 	struct nfs4_sequence_args	seq_args;
+-	nfs4_stateid			*stateid;
++	nfs4_stateid			stateid;
+ };
+ 
+ struct nfs41_test_stateid_res {
 -- 
 2.45.2
 
