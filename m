@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-3753-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3754-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1074906F65
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:19:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DFF2906F69
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:19:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F52A1F21BFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:19:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16F541C22D93
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F33145FFD;
-	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21915146591;
+	Thu, 13 Jun 2024 12:16:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lq5oDNTn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="faRrTFjv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208D5145FF6;
-	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993B14658B;
+	Thu, 13 Jun 2024 12:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718281016; cv=none; b=EUygJpU0bk86WvF6m98wzE9qlZMsFDKlDYzsddOpYnjfNxE2P6G8VOARh/0LgiZ0uEP7mjP5ql91rzBP1N1kc5kwVV2zz7qJXonmv0rSqbSCWKvzO1Oqi93y91WEisOZnZCeBiTO4NRmRIqJ/qTJnmq/v4cilC+br1wA0OD6S7Q=
+	t=1718281018; cv=none; b=nACl+CbWNVv6zcVBkcUrDGU8P01dSJnV4qpXLbeOJspwy4i6A+3w39WCNEivCPbp8aE/29ZzNhhhuUjqLKLvPKcXcg4VZmMJkJwKwv6Jmw7wKzO0pOdv3Iv7jXXXOYikVPjtgcQMWinomJamwldroQxCpLWdfHIhTcAGtrSYVHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718281016; c=relaxed/simple;
-	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=beVz5CmK+Xm/DIYLB79lTpz7rttUH5f37botuXo8OAxfxbny0J0q9qVo5aUmaW13iWiJ6l9h0c6OHolFjgN7oteWxm6161TBCoRcKLpJL9ioI9B1p5BrVHh6eFq1hNboYXCru9qMcmiS8b3+8kKpWjIJ9fGT5tTBRucnDcbFWMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lq5oDNTn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9439AC32786;
-	Thu, 13 Jun 2024 12:16:54 +0000 (UTC)
+	s=arc-20240116; t=1718281018; c=relaxed/simple;
+	bh=ghg88iAsp3/i9GvYH8AftKpHuXPhVhmUoYTrJpEipyU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JInMr4BmY7pUMNC2LEq5fvny/7GgX2a/3Oyi7H9k4g3IWyYnHxxein8/NfNN7XMLxPRBPnoXnnpyyFUjOQ2DdSYFp/5dz2ID2PwH9DV8TSQV+Z8juDG+KsS99R8YTkkP42GUSa/wD9ztHXqo+8L1qONiW6GDHRCZcWNLfk4Pdp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=faRrTFjv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25514C4AF52;
+	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718281015;
-	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=lq5oDNTn+e1GkKZ2nErzc+Njjzk3f52tL6j9vfiYZlU8WgXI+UpcwQJxOKN/rk7Fm
-	 qQdynARCd0DS6dac+uRLTrHLod7Q08bNUC/wUxbPvD85vTV4DK78xDBNFfULBYXbiP
-	 cr8BS6tLMpX6+xu2ANvyxuXV7IOkPuD6xkNo84i4cxau3ETBA9xWPwBExsK0QwCcJ/
-	 TKOosv2sMMdZsCMAMJLPAvTkNJw2SratzDmSk+15sGUz7ipTBUP7FiQi9plh0hqiTy
-	 bM88EBFVkXdKc5NMZz3jSQS/RBCmem1xPVmk5jdPVfWtPaGkfh5fMYXzBllPlP/0hc
-	 PJ5pq1lek8cww==
+	s=k20201202; t=1718281017;
+	bh=ghg88iAsp3/i9GvYH8AftKpHuXPhVhmUoYTrJpEipyU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=faRrTFjvWA0Gx+Tgveq9/6Y6fhwNHY4nIjN3BzpSX+VFhXDrksHCmPwbfXUbVNS/6
+	 OyunNm68wmgIlZrgNER8CL6ZEnqiIZQdFJSdBYOdvHNk9CGtAYp6h4UAKx/XO0U8ND
+	 /ps2kXyUGNI3LqHyrecNUaNICw2TJTVo5Ew9OOwoXNu+EUAY2prHFwmjZkDYaFT/Lz
+	 tvK/uz8c0bROEBAnVXpPi+yS9otKrR6PLIG6jiW3JWEUhp8/x63vwN+ymJ13SknL3B
+	 yOvtyl7PCe1mNyJ/1FjK/Mn81n/w9gqpWqji97q1OnsOQPlffAUpv/p/3OY4Jy/Y8l
+	 ibaHfvqlYmqxg==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/5] nfsd/sunrpc: allow starting/stopping pooled NFS
- server via netlink
-Date: Thu, 13 Jun 2024 08:16:37 -0400
-Message-Id: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
+Date: Thu, 13 Jun 2024 08:16:38 -0400
+Subject: [PATCH v2 1/5] sunrpc: fix up the special handling of sv_nrpools
+ == 1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,9 +53,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACXjamYC/23MQQrDIBCF4auEWXeKERHTVe9RsrCZMZEWLRokI
- Xj32qy7/B+P74DMyXOGW3dA4uKzj6GFvHQwLTbMjJ5agxRSCS0UBpcJA28rPoWaBEkygx2g/T+
- Jnd9O6zG2XnxeY9pPuvS/9Z9SehRoyGmjLeue+P7iFPh9jWmGsdb6BWk77s2jAAAA
+Message-Id: <20240613-nfsd-next-v2-1-20bf690d65fb@kernel.org>
+References: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
+In-Reply-To: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
@@ -66,61 +66,144 @@ Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1609; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmauMwl+985IQvKqH1qc1BTaAnAhPDnAv2mUgCR
- fhb3t2xv0SJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZmrjMAAKCRAADmhBGVaC
- FfJgD/92YQiqGXFcQHYnJqPTc8bw/oPZQ01N6W5Re6kJaxOZIJfWD6wTMvt+qWDbkH3GX95e7wV
- LunethNs8AlRxEv21yEP+J+aOsxfHqZj8vVXdMFb9dtmwfKjKR0nEqTz72QvzfBrrNCQozm5k5m
- L+TeHAK+/RX/C/xHLhtinRe6Em8C1k3/wsWfFrDcn9yPaUngYVmJWFSqyVxipR0t+Gz3fYEwbpU
- yWVSl6o2U1VLvicPNiOGEK74plqqNbii3P+Fa6eWpWoCpaEaUF3EiGzz64xY/GTukm7WdawwsuV
- cm4g4LwsJ5iKkrF87H75YA/GG3edbW3cGXE8uWCkqTQcxIw3X6OMWbZAZz8dWy66hXOJGFEBcB+
- 08utiAE/waDVmkoAfsjpS8MSqegcE5zMl+I97XVSg8krFlakqYrzIwCzLCwKU1y4qdgVjlEbUqZ
- kLwoCvrJOrq33AoV83TJEryOy4vDvO4UflzQOvaK0SWDpjJgjuFW7pGcqTa9V2SGaFJZBNSIO0g
- 4gx7JN5g+I9bfawYzP29AMoV2bfUfQlfaotMfjP2OZzPzf+M2J6xdYx5EqLDN8w56troetwYTZy
- 2K0B+VVBtCKX5nXgFlhvVdiNfDY4JTSbFwp9Esn3La7zF+9rWXdNQOgqrR/CcCknQQqxTJb1zze
- 18NNpl9xiH9zMMg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3747; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ghg88iAsp3/i9GvYH8AftKpHuXPhVhmUoYTrJpEipyU=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmauM1I+D7beomyTrYtILfYwqORRq83F8h9MZxV
+ g8g/N+oUHGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZmrjNQAKCRAADmhBGVaC
+ FYUIEACMtZL5vSZIl70OP2BUH9/+TZv2zJ+WcmE4PkNq0gQqiR9blN9sZOpGNK9B5Ux0UZnBIlc
+ U6qrjqQ8CjxANOy9Ra0t+LWeo0tY/0TDhFamm0MbhMaqJ/RKLxTts8tiHDtAbE1eiE/crUXxRm7
+ 1mU1v0YRXkTujqLDfLtHVXxAraBHZPa+cglDnWDqGazEJzvopV48LUy1c9b1HtOC5A/JwQmIixN
+ 1OfvFRQDDOVrFcWpRUASKjSaJ1YfIfzwJwmayJBkkuiaTo3E28f8EVf0YUt2SnJCPzuQvWkVI0w
+ /cSoqn5mppeDpwrDNJgJZVFOwS97BEZ4PuVCfyBWOKrLc8DmxFg1v0aeWaJTQWMwtIgH9sHxmjG
+ 0on2EniQcotanZLShHl6wQJa97Jfe1lJCnSjAzWYqSsaarMNAI2p7spmxYnJUhmh14opst1FzTz
+ Z5uthQBdvzTnTz1ogD4s87lXRQoVEUxgKHyXsINj5gmoNbpZVSkBnPy1WUmpFkca9CnoKBzeLlx
+ OLtz1hVSDKFIqT1MW0DbS8++rq+cj0KiUPlYfN0vd+inTE8yBNk0O8e4Crtjft1c2+7ouQfP+4U
+ etRWYzC+3q0ANd2K4wHJu9V+p9yWv/980L0pZwq62MpEh4Pp6Fdp5GKbCukiS5eiG1kRmyfQwJh
+ mhCedEMvzlMp0UQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This is a resend of the patchset I sent a little over a week ago, with
-a couple of new patches that allow setting the pool-mode via netlink.
+Only pooled services take a reference to the svc_pool_map. The sunrpc
+code has always used the sv_nrpools value to detect whether the service
+is pooled.
 
-This patchset first attempts to detangle the pooled/non-pooled service
-handling in the sunrpc layer, unifies the codepaths that start the
-pooled vs. non-pooled nfsd, and then wires up the new netlink threads
-interface to allow you to start a pooled server by specifying an
-array of thread counts.
+The problem there is that nfsd is a pooled service, but when it's
+running in "global" pool_mode, it doesn't take a reference to the pool
+map because it has a sv_nrpools value of 1. This means that we have
+two separate codepaths for starting the server, depending on whether
+it's pooled or not.
+
+Fix this by adding a new flag to the svc_serv, that indicates whether
+the serv is pooled. With this we can have the nfsd service
+unconditionally take a reference, regardless of pool_mode.
+
+Ideally we should prevent anyone from changing the pool mode while the
+server is running, and nfsd does this if the server is in percpu or
+pernode mode. Previously, you could change the pool_mode even if there
+were nfsd's already running in "global" mode. This fixes that problem as
+well.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- add new pool-mode set/get netlink calls
+ include/linux/sunrpc/svc.h |  1 +
+ net/sunrpc/svc.c           | 26 +++++++-------------------
+ 2 files changed, 8 insertions(+), 19 deletions(-)
 
----
-Jeff Layton (5):
-      sunrpc: fix up the special handling of sv_nrpools == 1
-      nfsd: make nfsd_svc call nfsd_set_nrthreads
-      nfsd: allow passing in array of thread counts via netlink
-      sunrpc: refactor pool_mode setting code
-      nfsd: new netlink ops to get/set server pool_mode
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 23617da0e565..d0433e1642b3 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -85,6 +85,7 @@ struct svc_serv {
+ 	char *			sv_name;	/* service name */
+ 
+ 	unsigned int		sv_nrpools;	/* number of thread pools */
++	bool			sv_is_pooled;	/* is this a pooled service? */
+ 	struct svc_pool *	sv_pools;	/* array of thread pools */
+ 	int			(*sv_threadfn)(void *data);
+ 
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 2b4b1276d4e8..f80d94cbb8b1 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -250,10 +250,8 @@ svc_pool_map_get(void)
+ 	int npools = -1;
+ 
+ 	mutex_lock(&svc_pool_map_mutex);
+-
+ 	if (m->count++) {
+ 		mutex_unlock(&svc_pool_map_mutex);
+-		WARN_ON_ONCE(m->npools <= 1);
+ 		return m->npools;
+ 	}
+ 
+@@ -275,32 +273,21 @@ svc_pool_map_get(void)
+ 		m->mode = SVC_POOL_GLOBAL;
+ 	}
+ 	m->npools = npools;
+-
+-	if (npools == 1)
+-		/* service is unpooled, so doesn't hold a reference */
+-		m->count--;
+-
+ 	mutex_unlock(&svc_pool_map_mutex);
+ 	return npools;
+ }
+ 
+ /*
+- * Drop a reference to the global map of cpus to pools, if
+- * pools were in use, i.e. if npools > 1.
++ * Drop a reference to the global map of cpus to pools.
+  * When the last reference is dropped, the map data is
+- * freed; this allows the sysadmin to change the pool
+- * mode using the pool_mode module option without
+- * rebooting or re-loading sunrpc.ko.
++ * freed; this allows the sysadmin to change the pool.
+  */
+ static void
+-svc_pool_map_put(int npools)
++svc_pool_map_put(void)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+ 
+-	if (npools <= 1)
+-		return;
+ 	mutex_lock(&svc_pool_map_mutex);
+-
+ 	if (!--m->count) {
+ 		kfree(m->to_pool);
+ 		m->to_pool = NULL;
+@@ -308,7 +295,6 @@ svc_pool_map_put(int npools)
+ 		m->pool_to = NULL;
+ 		m->npools = 0;
+ 	}
+-
+ 	mutex_unlock(&svc_pool_map_mutex);
+ }
+ 
+@@ -553,9 +539,10 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
+ 	serv = __svc_create(prog, stats, bufsize, npools, threadfn);
+ 	if (!serv)
+ 		goto out_err;
++	serv->sv_is_pooled = true;
+ 	return serv;
+ out_err:
+-	svc_pool_map_put(npools);
++	svc_pool_map_put();
+ 	return NULL;
+ }
+ EXPORT_SYMBOL_GPL(svc_create_pooled);
+@@ -585,7 +572,8 @@ svc_destroy(struct svc_serv **servp)
+ 
+ 	cache_clean_deferred(serv);
+ 
+-	svc_pool_map_put(serv->sv_nrpools);
++	if (serv->sv_is_pooled)
++		svc_pool_map_put();
+ 
+ 	for (i = 0; i < serv->sv_nrpools; i++) {
+ 		struct svc_pool *pool = &serv->sv_pools[i];
 
- Documentation/netlink/specs/nfsd.yaml |  27 +++++++++
- fs/nfsd/netlink.c                     |  17 ++++++
- fs/nfsd/netlink.h                     |   2 +
- fs/nfsd/nfsctl.c                      | 102 +++++++++++++++++++++++++++++-----
- fs/nfsd/nfsd.h                        |   3 +-
- fs/nfsd/nfssvc.c                      |  30 +++++-----
- include/linux/sunrpc/svc.h            |   3 +
- include/uapi/linux/nfsd_netlink.h     |  10 ++++
- net/sunrpc/svc.c                      | 102 +++++++++++++++++++++-------------
- 9 files changed, 225 insertions(+), 71 deletions(-)
----
-base-commit: fec4124bac55ad92c47585fe537e646fe108b8fa
-change-id: 20240604-nfsd-next-b04c0d2d89a9
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.45.2
 
 
