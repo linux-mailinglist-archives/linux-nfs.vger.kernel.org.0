@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-3786-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3787-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA426907B94
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:37:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F33A3907B98
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:38:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE7851C24320
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:37:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACCA21C244B5
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9EA2156653;
-	Thu, 13 Jun 2024 18:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE06157A7D;
+	Thu, 13 Jun 2024 18:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBOa39lV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTVcaRah"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1CC156257;
-	Thu, 13 Jun 2024 18:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C5B157A67;
+	Thu, 13 Jun 2024 18:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718303687; cv=none; b=QBSCXyg1bod6I5g+hdYDh3LKjzp5+XxqmRHLmbjN6vPVYOp7OuXD3p2xzwWh63bJ4vke8yNx33x3XcAzba43QmZ+ECYdfLYKknrTNcQsawfR4qa4RAzhITd6iYVH1O7rUrnI2iY1JkAIhI0EG3ING2DCvF52Y/wFS6G5lPl0ENQ=
+	t=1718303689; cv=none; b=tSgEHs7jWnoLcoqy6lbSsHt/Dy62vvCLTl3PhOGga82bMFYR7xpofMNbYLTUGppKaOFeIPSmAvYligBnzjg1LXyv3NddUVwEDce1X1godHZdB2jJLfSm4jTrjhXl/96NFljybCnDvhGEi2xsVKgv+4qVyiKGK76pqGts9jaOEvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718303687; c=relaxed/simple;
-	bh=5pnQH8utNOC4XYM7FgM/OzSZhJOaeE1L632BBMj8Y9Y=;
+	s=arc-20240116; t=1718303689; c=relaxed/simple;
+	bh=oX0aSIaCfteVOGpAmr3SzPKXQ5QA4Z30qQIYP9WNXxc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BkAC0pNMLLPaXwIKzfCzEUa+AXfdXZa+w5F67EnI+vx4H2nks8HGT7UaBWHH0A4UBFwwNPZP0NNTwM2aHz6K3BoYvVxPCm13cUa1b8ehvgcr/Y+6iVC6aZRb4Cm2xPJQ0uOBxLHQlaagJR1oKiDgG2sDaQA30rT/6clmvNV7hsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBOa39lV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF76FC32789;
-	Thu, 13 Jun 2024 18:34:45 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=bi/euwN1CdSgBaoz70o83o2fx5zruw7UKAZcFer8tfkqO8KWFJXeUzUenNEhl2EgMN8dWRmxe3sxJWYY7DNcYoYl/RPbkCkeev4JyCRdT4RQUWX2FCH7Zf3s3pvlzoUu5KoKfMYsxMSfYsGB4TmUOxtQdPQ+ezJ9C5lNZD2AygM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTVcaRah; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB0EC32786;
+	Thu, 13 Jun 2024 18:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718303687;
-	bh=5pnQH8utNOC4XYM7FgM/OzSZhJOaeE1L632BBMj8Y9Y=;
+	s=k20201202; t=1718303688;
+	bh=oX0aSIaCfteVOGpAmr3SzPKXQ5QA4Z30qQIYP9WNXxc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=eBOa39lVdgUa1cQ7sZ+ROgH7j7VE+zuCEXWegFvkOMnIXutOQlVvAv6jFXy/2OKcs
-	 HBubddH8RZi+Ftww0EtGDAGulx+EwHY6WErxxzYcRi7WkV3eUO1M/pkEom6x4SbghL
-	 ZiF/S+Iyn8Dw/TKFMWaOF/ehQczpuvVsnsjzgOYOjdPChUGXHvhQELWF2XLIW79DaP
-	 Sa7gAAdkyeNm41OG3vTY14wxhjDBnH4p/7jNKck/cwqsN6CGRoxwywvKjAXHBbRLiN
-	 94fchKHfoXuL0GLuh98SzasKhXmLfkiH23fK/yy6Mpaksc1xJIbu0tQvjBBYF5j4Bt
-	 uWX16Sd16XuGQ==
+	b=uTVcaRahEg2tE9VBEHrzfwpmILUjcrDidXqhkiJkGfCCnyxFPbGdRo/s7Jp+31dCw
+	 Wv5K691gHOhrWTv9VGJBuqIXgU324AqTndTtg/DNoPIIjAWKvXh7Gb6cif1JPDew+y
+	 I5x8yzfNaH8hpdb/kBHJjIJYwQcXWoU+UtxbftFFSbAfRChbly4apvnXn9nNiLv7om
+	 noFEIT5Z54pTtthRB6kFXODiDFh5xQH4agM+1Fh792WlbjU/+ittFzT91+6AvyMofX
+	 vh4cK69SSGQaHLHP6CoMV4aAsptxpcEhhjsTI0Zt1+ww/opE/STQFYkwLpLY9Yeizi
+	 xmt8TBheSABVA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 13 Jun 2024 14:34:33 -0400
-Subject: [PATCH v3 4/5] sunrpc: refactor pool_mode setting code
+Date: Thu, 13 Jun 2024 14:34:34 -0400
+Subject: [PATCH v3 5/5] nfsd: new netlink ops to get/set server pool_mode
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-nfsd-next-v3-4-3b51c3c2fc59@kernel.org>
+Message-Id: <20240613-nfsd-next-v3-5-3b51c3c2fc59@kernel.org>
 References: <20240613-nfsd-next-v3-0-3b51c3c2fc59@kernel.org>
 In-Reply-To: <20240613-nfsd-next-v3-0-3b51c3c2fc59@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -65,173 +65,219 @@ Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4325; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=5pnQH8utNOC4XYM7FgM/OzSZhJOaeE1L632BBMj8Y9Y=;
- b=kA0DAAgBAA5oQRlWghUByyZiAGZrO7+iP03g8DDP7hiyAZXpIdDiLq6l1pv4z2DknHbV+ANk4
- 4kCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJmazu/AAoJEAAOaEEZVoIVjKcP/0xj
- ewFA+3+/wAwzj7GPhOAaeoOgoGDuAE8eqZjCqFU8ty8JfMhHY5Z28tAuEycUUqa+lZPD5F1rvWs
- LuGdg41b9+RNU3v7BKGTPAKVOvMh2d+D6rU3ebSzztEgTT7HEpel+2LkKektZphau4zihsEkZ8b
- 4gXFmnWHeCJQ76rs7Le/QeXGVEdZr5hjcHRa1rMe86VQ/2W9PmuVJyqsc4Raqwk6jaLG7r3IKMy
- BgmemVZlkdxNTp1bsfiNV1eziem6nBZbHFs8ha8LT4IWmfVgTQECIMqlF10cfPDc/V87OHrAymK
- 1ypWh/TKPmLiN8Y2k2dw6tOzUMozC9sm5snVSxA0L1STr2l4NWSv06vy6sIEDoYgmhrLmFWeSJ6
- Ck7RamGdB9t5zmJdMsffuL+VcCIY13UaYw9NGuOU+NDx7vERNlgImI6GOOkPqeGWKESjABDzZJN
- GLSpfO62CZgZDeF+7X691FH4+r/Zar2eoZGBcriBuUM+kLO2SZ3aabKco36ZOF/MqKyu4knztkK
- WdbTFwNoX3UugK9DS/EInSue0ufE2/J/b/xjrPWUzXJXmx23fWLj4UdvgKkvk5sWT0gp+BJuReh
- 2uNln7DlJGAzTxDUaeZbQt4zMyfKYNAGiTiEwlc7CIhjkHGLrj00IVVYc3UF2eQ3ibyXjzKIydq
- h9p2Q
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5880; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=oX0aSIaCfteVOGpAmr3SzPKXQ5QA4Z30qQIYP9WNXxc=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmazu/MC2tOxfyvdCSWTHgtLgWwt3ZXJAKwPWiu
+ fh/wg6t3qqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZms7vwAKCRAADmhBGVaC
+ FSrTEACH81IKDS1zk4sOr9sRw+nvBJg55vz8c/7lQ71MBOLBWhU3zIfM/Ih9OQvV3u+HhtOxg/u
+ gx5i8DhbD8Gz6PEWCvOM7SGpMcHEtxCEZXdsocD1RxryA1BkbCvWiYZEIfMvmDtB2suS28NCEfA
+ WHPLwNiB7zRTuJdlAED4RCHvwMCOJEUzrVjS5g/JWhjsjaVHaiPTc8yAbGalM877viqWsn6/lH8
+ SX1YuDBMo+Xm7MTrf+T3l0Sb1X0ra2408pVaS4LWNiGXZAVhCIsa6jPkHG7VXq83+Y0MMLINN/y
+ 9TrP6nbNymqS9tI7SvypJUBOea6AoG1cOesKr8Lr+zJi/92vecm+W/cIbTYDcMfN046cKI3mVqO
+ bpp7cfs/Tl9tRaUcK3BtNtOlv2pGM6FMYn7TjtSmtDuziLu5VC7MwlCbC3/3iFI+Srye7wgfrG0
+ JdHQrpWMFqLX/w0KIWzYgIMZXf7nV68rPWwDSSdijuKecmwVkgdryYWpPgKMnplS6QoQsIIy7vj
+ ra8KUuWE+y3AO/czKwFWDh+obuejsQCQjAVEml/tRhwUae9P01lZcfx9JZ16OFDOLiT8jO6tURI
+ EjOP5knWdcSVi13+oVCDU9Laa7z+6pD2tC8bHXBeB3AiPFPvtQu5/w710/flfQAPpAFr10Tekww
+ VVfP6AvUpWzoMRQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Allow the pool_mode setting code to be called from internal callers
-so we can call it from a new netlink op. Add a new svc_pool_map_get
-function to return the current setting. Change the existing module
-parameter handling to use the new interfaces under the hood.
-
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/sunrpc/svc.h |  2 ++
- net/sunrpc/svc.c           | 85 ++++++++++++++++++++++++++++++++++------------
- 2 files changed, 66 insertions(+), 21 deletions(-)
+ Documentation/netlink/specs/nfsd.yaml | 27 ++++++++++++++++
+ fs/nfsd/netlink.c                     | 17 ++++++++++
+ fs/nfsd/netlink.h                     |  2 ++
+ fs/nfsd/nfsctl.c                      | 58 +++++++++++++++++++++++++++++++++++
+ include/uapi/linux/nfsd_netlink.h     | 10 ++++++
+ 5 files changed, 114 insertions(+)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index d0433e1642b3..a7d0406b9ef5 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -399,6 +399,8 @@ struct svc_procedure {
- /*
-  * Function prototypes.
-  */
-+int sunrpc_set_pool_mode(const char *val);
-+int sunrpc_get_pool_mode(char *val, size_t size);
- int svc_rpcb_setup(struct svc_serv *serv, struct net *net);
- void svc_rpcb_cleanup(struct svc_serv *serv, struct net *net);
- int svc_bind(struct svc_serv *serv, struct net *net);
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index f80d94cbb8b1..965a27806bfd 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -72,57 +72,100 @@ static struct svc_pool_map svc_pool_map = {
- static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index d21234097167..5a98e5a06c68 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -115,6 +115,15 @@ attribute-sets:
+         type: nest
+         nested-attributes: sock
+         multi-attr: true
++  -
++    name: pool-mode
++    attributes:
++      -
++        name: mode
++        type: string
++      -
++        name: npools
++        type: u32
  
- static int
--param_set_pool_mode(const char *val, const struct kernel_param *kp)
-+__param_set_pool_mode(const char *val, struct svc_pool_map *m)
- {
--	int *ip = (int *)kp->arg;
--	struct svc_pool_map *m = &svc_pool_map;
--	int err;
-+	int err, mode;
+ operations:
+   list:
+@@ -197,3 +206,21 @@ operations:
+         reply:
+           attributes:
+             - addr
++    -
++      name: pool-mode-set
++      doc: set the current server pool-mode
++      attribute-set: pool-mode
++      flags: [ admin-perm ]
++      do:
++        request:
++          attributes:
++            - mode
++    -
++      name: pool-mode-get
++      doc: get info about server pool-mode
++      attribute-set: pool-mode
++      do:
++        reply:
++          attributes:
++            - mode
++            - npools
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index 62d2586d9902..137701153c9e 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -40,6 +40,11 @@ static const struct nla_policy nfsd_listener_set_nl_policy[NFSD_A_SERVER_SOCK_AD
+ 	[NFSD_A_SERVER_SOCK_ADDR] = NLA_POLICY_NESTED(nfsd_sock_nl_policy),
+ };
  
- 	mutex_lock(&svc_pool_map_mutex);
- 
--	err = -EBUSY;
--	if (m->count)
--		goto out;
--
- 	err = 0;
- 	if (!strncmp(val, "auto", 4))
--		*ip = SVC_POOL_AUTO;
-+		mode = SVC_POOL_AUTO;
- 	else if (!strncmp(val, "global", 6))
--		*ip = SVC_POOL_GLOBAL;
-+		mode = SVC_POOL_GLOBAL;
- 	else if (!strncmp(val, "percpu", 6))
--		*ip = SVC_POOL_PERCPU;
-+		mode = SVC_POOL_PERCPU;
- 	else if (!strncmp(val, "pernode", 7))
--		*ip = SVC_POOL_PERNODE;
-+		mode = SVC_POOL_PERNODE;
- 	else
- 		err = -EINVAL;
- 
-+	if (err)
-+		goto out;
++/* NFSD_CMD_POOL_MODE_SET - do */
++static const struct nla_policy nfsd_pool_mode_set_nl_policy[NFSD_A_POOL_MODE_MODE + 1] = {
++	[NFSD_A_POOL_MODE_MODE] = { .type = NLA_NUL_STRING, },
++};
 +
-+	if (m->count == 0)
-+		m->mode = mode;
-+	else if (mode != m->mode)
-+		err = -EBUSY;
- out:
- 	mutex_unlock(&svc_pool_map_mutex);
+ /* Ops table for nfsd */
+ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 	{
+@@ -85,6 +90,18 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 		.doit	= nfsd_nl_listener_get_doit,
+ 		.flags	= GENL_CMD_CAP_DO,
+ 	},
++	{
++		.cmd		= NFSD_CMD_POOL_MODE_SET,
++		.doit		= nfsd_nl_pool_mode_set_doit,
++		.policy		= nfsd_pool_mode_set_nl_policy,
++		.maxattr	= NFSD_A_POOL_MODE_MODE,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
++	},
++	{
++		.cmd	= NFSD_CMD_POOL_MODE_GET,
++		.doit	= nfsd_nl_pool_mode_get_doit,
++		.flags	= GENL_CMD_CAP_DO,
++	},
+ };
+ 
+ struct genl_family nfsd_nl_family __ro_after_init = {
+diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+index e3724637d64d..9459547de04e 100644
+--- a/fs/nfsd/netlink.h
++++ b/fs/nfsd/netlink.h
+@@ -26,6 +26,8 @@ int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info);
+ int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info);
+ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info);
+ int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_pool_mode_set_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb, struct genl_info *info);
+ 
+ extern struct genl_family nfsd_nl_family;
+ 
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index dde42aad5582..187e9be77b78 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2182,6 +2182,64 @@ int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info *info)
  	return err;
  }
  
- static int
--param_get_pool_mode(char *buf, const struct kernel_param *kp)
-+param_set_pool_mode(const char *val, const struct kernel_param *kp)
++/**
++ * nfsd_nl_pool_mode_set_doit - set the number of running threads
++ * @skb: reply buffer
++ * @info: netlink metadata and command arguments
++ *
++ * Return 0 on success or a negative errno.
++ */
++int nfsd_nl_pool_mode_set_doit(struct sk_buff *skb, struct genl_info *info)
 +{
-+	struct svc_pool_map *m = kp->arg;
++	const struct nlattr *attr;
 +
-+	return __param_set_pool_mode(val, m);
-+}
++	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_POOL_MODE_MODE))
++		return -EINVAL;
 +
-+int sunrpc_set_pool_mode(const char *val)
-+{
-+	return __param_set_pool_mode(val, &svc_pool_map);
++	attr = info->attrs[NFSD_A_POOL_MODE_MODE];
++	return sunrpc_set_pool_mode(nla_data(attr));
 +}
-+EXPORT_SYMBOL(sunrpc_set_pool_mode);
 +
 +/**
-+ * sunrpc_get_pool_mode - get the current pool_mode for the host
-+ * @buf: where to write the current pool_mode
-+ * @size: size of @buf
++ * nfsd_nl_pool_mode_get_doit - get info about pool_mode
++ * @skb: reply buffer
++ * @info: netlink metadata and command arguments
 + *
-+ * Grab the current pool_mode from the svc_pool_map and write
-+ * the resulting string to @buf. Returns the number of characters
-+ * written to @buf (a'la snprintf()).
++ * Return 0 on success or a negative errno.
 + */
-+int
-+sunrpc_get_pool_mode(char *buf, size_t size)
- {
--	int *ip = (int *)kp->arg;
-+	struct svc_pool_map *m = &svc_pool_map;
- 
--	switch (*ip)
-+	switch (m->mode)
- 	{
- 	case SVC_POOL_AUTO:
--		return sysfs_emit(buf, "auto\n");
-+		return snprintf(buf, size, "auto");
- 	case SVC_POOL_GLOBAL:
--		return sysfs_emit(buf, "global\n");
-+		return snprintf(buf, size, "global");
- 	case SVC_POOL_PERCPU:
--		return sysfs_emit(buf, "percpu\n");
-+		return snprintf(buf, size, "percpu");
- 	case SVC_POOL_PERNODE:
--		return sysfs_emit(buf, "pernode\n");
-+		return snprintf(buf, size, "pernode");
- 	default:
--		return sysfs_emit(buf, "%d\n", *ip);
-+		return snprintf(buf, size, "%d", m->mode);
- 	}
- }
-+EXPORT_SYMBOL(sunrpc_get_pool_mode);
-+
-+static int
-+param_get_pool_mode(char *buf, const struct kernel_param *kp)
++int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb, struct genl_info *info)
 +{
-+	char str[16];
-+	int len;
++	struct net *net = genl_info_net(info);
++	char buf[16];
++	void *hdr;
++	int err;
 +
-+	len = sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
++	skb = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	if (!skb)
++		return -ENOMEM;
 +
-+	/* Ensure we have room for newline and NUL */
-+	len = min_t(int, len, ARRAY_SIZE(str) - 2);
++	err = -EMSGSIZE;
++	hdr = genlmsg_iput(skb, info);
++	if (!hdr)
++		goto err_free_msg;
 +
-+	/* tack on the newline */
-+	str[len] = '\n';
-+	str[len + 1] = '\0';
++	err = -ERANGE;
++	if (sunrpc_get_pool_mode(buf, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++		goto err_free_msg;
 +
-+	return sysfs_emit(buf, str);
++	err = nla_put_string(skb, NFSD_A_POOL_MODE_MODE, buf) ||
++	      nla_put_u32(skb, NFSD_A_POOL_MODE_NPOOLS, nfsd_nrpools(net));
++	if (err)
++		goto err_free_msg;
++
++	genlmsg_end(skb, hdr);
++	return genlmsg_reply(skb, info);
++
++err_free_msg:
++	nlmsg_free(skb);
++	return err;
 +}
++
+ /**
+  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+  * @net: a freshly-created network namespace
+diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
+index 24c86dbc7ed5..887cbd12b695 100644
+--- a/include/uapi/linux/nfsd_netlink.h
++++ b/include/uapi/linux/nfsd_netlink.h
+@@ -70,6 +70,14 @@ enum {
+ 	NFSD_A_SERVER_SOCK_MAX = (__NFSD_A_SERVER_SOCK_MAX - 1)
+ };
  
- module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
--		 &svc_pool_map.mode, 0644);
-+		  &svc_pool_map, 0644);
++enum {
++	NFSD_A_POOL_MODE_MODE = 1,
++	NFSD_A_POOL_MODE_NPOOLS,
++
++	__NFSD_A_POOL_MODE_MAX,
++	NFSD_A_POOL_MODE_MAX = (__NFSD_A_POOL_MODE_MAX - 1)
++};
++
+ enum {
+ 	NFSD_CMD_RPC_STATUS_GET = 1,
+ 	NFSD_CMD_THREADS_SET,
+@@ -78,6 +86,8 @@ enum {
+ 	NFSD_CMD_VERSION_GET,
+ 	NFSD_CMD_LISTENER_SET,
+ 	NFSD_CMD_LISTENER_GET,
++	NFSD_CMD_POOL_MODE_SET,
++	NFSD_CMD_POOL_MODE_GET,
  
- /*
-  * Detect best pool mapping mode heuristically,
+ 	__NFSD_CMD_MAX,
+ 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
 
 -- 
 2.45.2
