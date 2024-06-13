@@ -1,285 +1,131 @@
-Return-Path: <linux-nfs+bounces-3758-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3759-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B461906F7E
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:21:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CD9F906FFD
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:24:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DF241C224C2
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:20:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83AFC1C225FF
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:24:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5450F14831F;
-	Thu, 13 Jun 2024 12:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F97D1448FA;
+	Thu, 13 Jun 2024 12:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjHe56Np"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hfCrzpDL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2E0148318;
-	Thu, 13 Jun 2024 12:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF725143C46;
+	Thu, 13 Jun 2024 12:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718281024; cv=none; b=BTDPyziI/zAbxiwz2zB/SQhmB99ekrZ48jBZuijN8/1kvPCjPV7tQmVojVfBA9eIHMxNFB8tyUK0Bj/uXf2w5NvkgHmNhtb/xXaMdSMlv9Cd6/u7cxwcRVwG9fJvbBjS64BBxYcJucu6dF9iuvob7uOBMJ1Vd1huxumkR1B0LzE=
+	t=1718281371; cv=none; b=PsM8I/KnMWmEPIOIERLRTKFoIf1LpGEc6gb7bb/n+7fH7QFbAffVl33vm+HJ85OSYFyMbMPmsPZjZYMtqlTvJljS8vbsaZG0QNMfsarY3CLyZrXSegE4rQXMfu/pOnNWzI0efTcjap0F3ASMvoauX9OLHRk4b8HyM8sTRUUuAlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718281024; c=relaxed/simple;
-	bh=wmcx3oXaU444v+p37VryHlW4ppPECsBHmL+iWyEyyfA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TdoxD2DC2rY1mh9D+Oa/RnPMYPD0DiLz+8wchaANpd5A1TN4UvIbB4JwDknSKLbdb+rWU9i7lcDp8zr6zWUMyYz+vFUDERWhQtppz97PHW/4JObzLj/sdiwXq1Z03C719HR8WMFLFjs/WbVj+YuLaVl1FeEaIQ2zks0HpfExy9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjHe56Np; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5286FC4AF50;
-	Thu, 13 Jun 2024 12:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718281023;
-	bh=wmcx3oXaU444v+p37VryHlW4ppPECsBHmL+iWyEyyfA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PjHe56Npb0tBZYkEmOu1QtTTANyDlB0ZARBUcf/3wWovjEr5ECk4FNYTFIB+epF+e
-	 00sRzWzUrhxIRDTN/gllnw0+5rY76XTCiM/pOHtY2A1ywHYDuE1Qnjm47rFU9nyDvO
-	 uPd7znBABIJoL2giwH7SNI/urhhE1KWFRleZti9QW9Z33abuSHCBrKB+ZAaX5ZazbZ
-	 EgpcmZG3Cy76EUYeZ0x+k6Bkonv5GARoN+ylCVxF6TeOiVU2l1pQ8hqBFHOWSE/L+P
-	 F1AccR//KgZeeZJ0LStjqaausnSt53qOxPv961R9vGk4sv0QbTQby6MzbxTJCfQOw1
-	 cXIhMwbe9Qulw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 13 Jun 2024 08:16:42 -0400
-Subject: [PATCH v2 5/5] nfsd: new netlink ops to get/set server pool_mode
+	s=arc-20240116; t=1718281371; c=relaxed/simple;
+	bh=D26C2QGAWbo4I1JNfd9NGM4IGwcESsf+jS9RBEkH0RY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CY2Yf/1cbSaCVVOeeAxNbsOnX+tYIvAsLI9WFjekWGPkWUMJRoL3ndlyyjSUGu0y9Axo7h/waDAzS4qvbVyCwxOs5bS804ZvBbLlepwsBScxrw0nH89G4ue1zovf+WzyWCsaqo+q9l63mSEgfv2GUwoCJHCsDMgBI5hJvC9rTEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=hfCrzpDL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46929C32786;
+	Thu, 13 Jun 2024 12:22:49 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hfCrzpDL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1718281367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zijv6FPIt5hCtiuqrLBHgYuKfY1FOvo07a77dKOwqRA=;
+	b=hfCrzpDLzmbNtF/sSyUwD/q4E2PbjKj9Fna9CH4V+V4vPbeuYBlZyE1WHIwBmUUgtmwa4e
+	hkAMHeSicVC3lwYY/+b0ttk/c79NH8Y9GniehbCUO4Tz+G6YoeBDfmgGgVjY7xbdbEJGet
+	Tjg4BjizrxilahviyNABzJbhoTcy7oY=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 199f6b88 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 13 Jun 2024 12:22:46 +0000 (UTC)
+Date: Thu, 13 Jun 2024 14:22:41 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <Zmrkkel0Fo4_g75a@zx2c4.com>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <Zmov7ZaL-54T9GiM@zx2c4.com>
+ <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-nfsd-next-v2-5-20bf690d65fb@kernel.org>
-References: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
-In-Reply-To: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5880; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=wmcx3oXaU444v+p37VryHlW4ppPECsBHmL+iWyEyyfA=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmauM2Fw1p4dKRbbedGTTpGwUDG3Im44USlA1eW
- vxTFE6HhUKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZmrjNgAKCRAADmhBGVaC
- FddID/9QM6Dcp38GscQgkKGmcMKGPIJPyl8WnnfBb+QJhqDBvqJgsTVAukKfeyjiVfV6wF8JVVz
- YbNUhiHQxQHfPHLCvrUtLPZlxm2lBp45EIP/rwX5YI9rjb0RBgLwY52u2e/F+mTCJtK2h2x0jWL
- tNUd5ZvL8x4tDEEJVbW2BeapdCT7QTd2e+B/mznNwU0zQ41QLpbFreBBS9azHOFuGkKXdJYmSRT
- nzjfRB2qrZgmwlsANQ7pR3Cy+bJbb6LDGadr5l9xhmhFdbZCnh92GAZu1xJdW0SvHqdJlT9ydhB
- M2lBp+W0jt8l1nOCcFltccFppzvugzjiJE3FJlWGC48lfE65C3kWBwO2JlSGL+V2x4DFZenLyEE
- kdWt3tlR8363/q5/zF+Y3jLFDsfV8MVKCAahGA7rDj8H0q5E7N+zH448e+zFtDIEKkPqqb6/2nC
- HRo9FOX6Z52ZZvHJYUslzFe2Pu+Wgd97FJA8MFP3r0SGo4YKG8mifIvmOERZGPT4M7aPbg6865J
- yqV0j1m3CMQPUaspYAm5YauArXWtSAR0gOTMoXeYCHwxIE8LB1RQ4NNLe9MiiCBmbgusknOF9Fc
- rXW/sBDkwsSLElrboq2RDCFhYEXAnKXlL+/+Sa1k2VOGkBTfxGNchLGV+ardCpjR0bCobajON26
- WYyhd+ozC66kHkg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- Documentation/netlink/specs/nfsd.yaml | 27 ++++++++++++++++
- fs/nfsd/netlink.c                     | 17 ++++++++++
- fs/nfsd/netlink.h                     |  2 ++
- fs/nfsd/nfsctl.c                      | 58 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/nfsd_netlink.h     | 10 ++++++
- 5 files changed, 114 insertions(+)
+On Wed, Jun 12, 2024 at 08:38:02PM -0700, Paul E. McKenney wrote:
+> o	Make the current kmem_cache_destroy() asynchronously wait for
+> 	all memory to be returned, then complete the destruction.
+> 	(This gets rid of a valuable debugging technique because
+> 	in normal use, it is a bug to attempt to destroy a kmem_cache
+> 	that has objects still allocated.)
+> 
+> o	Make a kmem_cache_destroy_rcu() that asynchronously waits for
+> 	all memory to be returned, then completes the destruction.
+> 	(This raises the question of what to is it takes a "long time"
+> 	for the objects to be freed.)
 
-diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
-index d21234097167..5a98e5a06c68 100644
---- a/Documentation/netlink/specs/nfsd.yaml
-+++ b/Documentation/netlink/specs/nfsd.yaml
-@@ -115,6 +115,15 @@ attribute-sets:
-         type: nest
-         nested-attributes: sock
-         multi-attr: true
-+  -
-+    name: pool-mode
-+    attributes:
-+      -
-+        name: mode
-+        type: string
-+      -
-+        name: npools
-+        type: u32
- 
- operations:
-   list:
-@@ -197,3 +206,21 @@ operations:
-         reply:
-           attributes:
-             - addr
-+    -
-+      name: pool-mode-set
-+      doc: set the current server pool-mode
-+      attribute-set: pool-mode
-+      flags: [ admin-perm ]
-+      do:
-+        request:
-+          attributes:
-+            - mode
-+    -
-+      name: pool-mode-get
-+      doc: get info about server pool-mode
-+      attribute-set: pool-mode
-+      do:
-+        reply:
-+          attributes:
-+            - mode
-+            - npools
-diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-index 62d2586d9902..137701153c9e 100644
---- a/fs/nfsd/netlink.c
-+++ b/fs/nfsd/netlink.c
-@@ -40,6 +40,11 @@ static const struct nla_policy nfsd_listener_set_nl_policy[NFSD_A_SERVER_SOCK_AD
- 	[NFSD_A_SERVER_SOCK_ADDR] = NLA_POLICY_NESTED(nfsd_sock_nl_policy),
- };
- 
-+/* NFSD_CMD_POOL_MODE_SET - do */
-+static const struct nla_policy nfsd_pool_mode_set_nl_policy[NFSD_A_POOL_MODE_MODE + 1] = {
-+	[NFSD_A_POOL_MODE_MODE] = { .type = NLA_NUL_STRING, },
-+};
-+
- /* Ops table for nfsd */
- static const struct genl_split_ops nfsd_nl_ops[] = {
- 	{
-@@ -85,6 +90,18 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
- 		.doit	= nfsd_nl_listener_get_doit,
- 		.flags	= GENL_CMD_CAP_DO,
- 	},
-+	{
-+		.cmd		= NFSD_CMD_POOL_MODE_SET,
-+		.doit		= nfsd_nl_pool_mode_set_doit,
-+		.policy		= nfsd_pool_mode_set_nl_policy,
-+		.maxattr	= NFSD_A_POOL_MODE_MODE,
-+		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-+	},
-+	{
-+		.cmd	= NFSD_CMD_POOL_MODE_GET,
-+		.doit	= nfsd_nl_pool_mode_get_doit,
-+		.flags	= GENL_CMD_CAP_DO,
-+	},
- };
- 
- struct genl_family nfsd_nl_family __ro_after_init = {
-diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-index e3724637d64d..9459547de04e 100644
---- a/fs/nfsd/netlink.h
-+++ b/fs/nfsd/netlink.h
-@@ -26,6 +26,8 @@ int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info);
- int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info);
- int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info);
- int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info *info);
-+int nfsd_nl_pool_mode_set_doit(struct sk_buff *skb, struct genl_info *info);
-+int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb, struct genl_info *info);
- 
- extern struct genl_family nfsd_nl_family;
- 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index d67057d5b858..d019d4b06f2a 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2184,6 +2184,64 @@ int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info *info)
- 	return err;
- }
- 
-+/**
-+ * nfsd_nl_pool_mode_set_doit - set the number of running threads
-+ * @skb: reply buffer
-+ * @info: netlink metadata and command arguments
-+ *
-+ * Return 0 on success or a negative errno.
-+ */
-+int nfsd_nl_pool_mode_set_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	const struct nlattr *attr;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_POOL_MODE_MODE))
-+		return -EINVAL;
-+
-+	attr = info->attrs[NFSD_A_POOL_MODE_MODE];
-+	return sunrpc_set_pool_mode(nla_data(attr));
-+}
-+
-+/**
-+ * nfsd_nl_pool_mode_get_doit - get info about pool_mode
-+ * @skb: reply buffer
-+ * @info: netlink metadata and command arguments
-+ *
-+ * Return 0 on success or a negative errno.
-+ */
-+int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct net *net = genl_info_net(info);
-+	char buf[16];
-+	void *hdr;
-+	int err;
-+
-+	skb = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!skb)
-+		return -ENOMEM;
-+
-+	err = -EMSGSIZE;
-+	hdr = genlmsg_iput(skb, info);
-+	if (!hdr)
-+		goto err_free_msg;
-+
-+	err = -ERANGE;
-+	if (sunrpc_get_pool_mode(buf, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+		goto err_free_msg;
-+
-+	err = nla_put_string(skb, NFSD_A_POOL_MODE_MODE, buf) ||
-+	      nla_put_u32(skb, NFSD_A_POOL_MODE_NPOOLS, nfsd_nrpools(net));
-+	if (err)
-+		goto err_free_msg;
-+
-+	genlmsg_end(skb, hdr);
-+	return genlmsg_reply(skb, info);
-+
-+err_free_msg:
-+	nlmsg_free(skb);
-+	return err;
-+}
-+
- /**
-  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
-  * @net: a freshly-created network namespace
-diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
-index 24c86dbc7ed5..887cbd12b695 100644
---- a/include/uapi/linux/nfsd_netlink.h
-+++ b/include/uapi/linux/nfsd_netlink.h
-@@ -70,6 +70,14 @@ enum {
- 	NFSD_A_SERVER_SOCK_MAX = (__NFSD_A_SERVER_SOCK_MAX - 1)
- };
- 
-+enum {
-+	NFSD_A_POOL_MODE_MODE = 1,
-+	NFSD_A_POOL_MODE_NPOOLS,
-+
-+	__NFSD_A_POOL_MODE_MAX,
-+	NFSD_A_POOL_MODE_MAX = (__NFSD_A_POOL_MODE_MAX - 1)
-+};
-+
- enum {
- 	NFSD_CMD_RPC_STATUS_GET = 1,
- 	NFSD_CMD_THREADS_SET,
-@@ -78,6 +86,8 @@ enum {
- 	NFSD_CMD_VERSION_GET,
- 	NFSD_CMD_LISTENER_SET,
- 	NFSD_CMD_LISTENER_GET,
-+	NFSD_CMD_POOL_MODE_SET,
-+	NFSD_CMD_POOL_MODE_GET,
- 
- 	__NFSD_CMD_MAX,
- 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
+These seem like the best two options.
 
--- 
-2.45.2
+> o	Make a kmem_cache_free_barrier() that blocks until all
+> 	objects in the specified kmem_cache have been freed.
+> 
+> o	Make a kmem_cache_destroy_wait() that waits for all memory to
+> 	be returned, then does the destruction.  This is equivalent to:
+> 
+> 		kmem_cache_free_barrier(&mycache);
+> 		kmem_cache_destroy(&mycache);
 
+These also seem fine, but I'm less keen about blocking behavior.
+
+Though, along the ideas of kmem_cache_destroy_rcu(), you might also
+consider renaming this last one to kmem_cache_destroy_rcu_wait/barrier().
+This way, it's RCU focused, and you can deal directly with the question
+of, "how long is too long to block/to memleak?"
+
+Specifically what I mean is that we can still claim a memory leak has
+occurred if one batched kfree_rcu freeing grace period has elapsed since
+the last call to kmem_cache_destroy_rcu_wait/barrier() or
+kmem_cache_destroy_rcu(). In that case, you quit blocking, or you quit
+asynchronously waiting, and then you splat about a memleak like we have
+now.
+
+But then, if that mechanism generally works, we don't really need a new
+function and we can just go with the first option of making
+kmem_cache_destroy() asynchronously wait. It'll wait, as you described,
+but then we adjust the tail of every kfree_rcu batch freeing cycle to
+check if there are _still_ any old outstanding kmem_cache_destroy()
+requests. If so, then we can splat and keep the old debugging info we
+currently have for finding memleaks.
+
+Jason
 
