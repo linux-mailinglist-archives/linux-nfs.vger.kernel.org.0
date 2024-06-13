@@ -1,126 +1,126 @@
-Return-Path: <linux-nfs+bounces-3752-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3753-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BDC9906DC0
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:03:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1074906F65
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 14:19:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2089B239D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:03:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F52A1F21BFD
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 12:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440FA1494DF;
-	Thu, 13 Jun 2024 11:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F33145FFD;
+	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MeI8MH8G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lq5oDNTn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7A1465A5;
-	Thu, 13 Jun 2024 11:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208D5145FF6;
+	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279953; cv=none; b=eEym6XUlUHeUQRetdQhs0+47Dkdfu2OTsn15opGPDEGokTYX2GBZeCdngY2X+SvKdyopFI47HtfHEPBnGyGFt3z2xNMu1/qTfvERLK4nNiELDL55B5LO89rU95IDYtpRRsB1+QQxNWUD7YUaAW1BzXwoRKjoc5rueP5urWanqiQ=
+	t=1718281016; cv=none; b=EUygJpU0bk86WvF6m98wzE9qlZMsFDKlDYzsddOpYnjfNxE2P6G8VOARh/0LgiZ0uEP7mjP5ql91rzBP1N1kc5kwVV2zz7qJXonmv0rSqbSCWKvzO1Oqi93y91WEisOZnZCeBiTO4NRmRIqJ/qTJnmq/v4cilC+br1wA0OD6S7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279953; c=relaxed/simple;
-	bh=0ciGaQw5y4u0nJS5KStWIT6J+uYIGGdbCRp7w2Mw+jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YchvrFWeIFsKcYdk0GjcYRko0HN+7Eacstq6pQecX1GLwEXVAvWZVQFnwrgu4p+yfUgU91pP0/8IWfllQKeW8B5E5pfOqa0CRICQOB+/YQ28Xvz2DkqNXc6jF110/wxOJyvEEskBploeA+/sL1HwsfZ+7y1fulsRpE/nZrTKmlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=MeI8MH8G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FEAAC4AF4D;
-	Thu, 13 Jun 2024 11:59:10 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MeI8MH8G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718279946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oQoeraeqQaQpCY62eMS55dJmmDU2cLnySqsO1DV0bg=;
-	b=MeI8MH8G9GaVwTubn3zbemt8iMGjhWu2xlRT5g6xh1L4MS9g8vj3/b4L5Io4CIm+PbC/28
-	K4kTBBhke2rM7bNZ2dv8VC/fK7/9r4oKXzXHf3Yt4ENzPLvg7XFBUp90WP45io3c2/cs6Q
-	JMbCSdFZKlgC96+RmMCLxV7PaJ3gRO0=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ebdb63be (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 13 Jun 2024 11:59:05 +0000 (UTC)
-Date: Thu, 13 Jun 2024 13:58:59 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZmrfA1p2zSVIaYam@zx2c4.com>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+	s=arc-20240116; t=1718281016; c=relaxed/simple;
+	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=beVz5CmK+Xm/DIYLB79lTpz7rttUH5f37botuXo8OAxfxbny0J0q9qVo5aUmaW13iWiJ6l9h0c6OHolFjgN7oteWxm6161TBCoRcKLpJL9ioI9B1p5BrVHh6eFq1hNboYXCru9qMcmiS8b3+8kKpWjIJ9fGT5tTBRucnDcbFWMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lq5oDNTn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9439AC32786;
+	Thu, 13 Jun 2024 12:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718281015;
+	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=lq5oDNTn+e1GkKZ2nErzc+Njjzk3f52tL6j9vfiYZlU8WgXI+UpcwQJxOKN/rk7Fm
+	 qQdynARCd0DS6dac+uRLTrHLod7Q08bNUC/wUxbPvD85vTV4DK78xDBNFfULBYXbiP
+	 cr8BS6tLMpX6+xu2ANvyxuXV7IOkPuD6xkNo84i4cxau3ETBA9xWPwBExsK0QwCcJ/
+	 TKOosv2sMMdZsCMAMJLPAvTkNJw2SratzDmSk+15sGUz7ipTBUP7FiQi9plh0hqiTy
+	 bM88EBFVkXdKc5NMZz3jSQS/RBCmem1xPVmk5jdPVfWtPaGkfh5fMYXzBllPlP/0hc
+	 PJ5pq1lek8cww==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/5] nfsd/sunrpc: allow starting/stopping pooled NFS
+ server via netlink
+Date: Thu, 13 Jun 2024 08:16:37 -0400
+Message-Id: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACXjamYC/23MQQrDIBCF4auEWXeKERHTVe9RsrCZMZEWLRokI
+ Xj32qy7/B+P74DMyXOGW3dA4uKzj6GFvHQwLTbMjJ5agxRSCS0UBpcJA28rPoWaBEkygx2g/T+
+ Jnd9O6zG2XnxeY9pPuvS/9Z9SehRoyGmjLeue+P7iFPh9jWmGsdb6BWk77s2jAAAA
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1609; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmauMwl+985IQvKqH1qc1BTaAnAhPDnAv2mUgCR
+ fhb3t2xv0SJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZmrjMAAKCRAADmhBGVaC
+ FfJgD/92YQiqGXFcQHYnJqPTc8bw/oPZQ01N6W5Re6kJaxOZIJfWD6wTMvt+qWDbkH3GX95e7wV
+ LunethNs8AlRxEv21yEP+J+aOsxfHqZj8vVXdMFb9dtmwfKjKR0nEqTz72QvzfBrrNCQozm5k5m
+ L+TeHAK+/RX/C/xHLhtinRe6Em8C1k3/wsWfFrDcn9yPaUngYVmJWFSqyVxipR0t+Gz3fYEwbpU
+ yWVSl6o2U1VLvicPNiOGEK74plqqNbii3P+Fa6eWpWoCpaEaUF3EiGzz64xY/GTukm7WdawwsuV
+ cm4g4LwsJ5iKkrF87H75YA/GG3edbW3cGXE8uWCkqTQcxIw3X6OMWbZAZz8dWy66hXOJGFEBcB+
+ 08utiAE/waDVmkoAfsjpS8MSqegcE5zMl+I97XVSg8krFlakqYrzIwCzLCwKU1y4qdgVjlEbUqZ
+ kLwoCvrJOrq33AoV83TJEryOy4vDvO4UflzQOvaK0SWDpjJgjuFW7pGcqTa9V2SGaFJZBNSIO0g
+ 4gx7JN5g+I9bfawYzP29AMoV2bfUfQlfaotMfjP2OZzPzf+M2J6xdYx5EqLDN8w56troetwYTZy
+ 2K0B+VVBtCKX5nXgFlhvVdiNfDY4JTSbFwp9Esn3La7zF+9rWXdNQOgqrR/CcCknQQqxTJb1zze
+ 18NNpl9xiH9zMMg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > when the callback only performs kmem_cache_free. Use
-> > > kfree_rcu() directly.
-> > > 
-> > > The changes were done using the following Coccinelle semantic patch.
-> > > This semantic patch is designed to ignore cases where the callback
-> > > function is used in another way.
-> > 
-> > How does the discussion on:
-> >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > reflect on this series? IIUC we should hold off..
-> 
-> We do need to hold off for the ones in kernel modules (such as 07/14)
-> where the kmem_cache is destroyed during module unload.
-> 
-> OK, I might as well go through them...
-> 
-> [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> 	Needs to wait, see wg_allowedips_slab_uninit().
+This is a resend of the patchset I sent a little over a week ago, with
+a couple of new patches that allow setting the pool-mode via netlink.
 
-Also, notably, this patch needs additionally:
+This patchset first attempts to detangle the pooled/non-pooled service
+handling in the sunrpc layer, unifies the codepaths that start the
+pooled vs. non-pooled nfsd, and then wires up the new netlink threads
+interface to allow you to start a pooled server by specifying an
+array of thread counts.
 
-diff --git a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
-index e4e1638fce1b..c95f6937c3f1 100644
---- a/drivers/net/wireguard/allowedips.c
-+++ b/drivers/net/wireguard/allowedips.c
-@@ -377,7 +377,6 @@ int __init wg_allowedips_slab_init(void)
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- add new pool-mode set/get netlink calls
 
- void wg_allowedips_slab_uninit(void)
- {
--	rcu_barrier();
- 	kmem_cache_destroy(node_cache);
- }
+---
+Jeff Layton (5):
+      sunrpc: fix up the special handling of sv_nrpools == 1
+      nfsd: make nfsd_svc call nfsd_set_nrthreads
+      nfsd: allow passing in array of thread counts via netlink
+      sunrpc: refactor pool_mode setting code
+      nfsd: new netlink ops to get/set server pool_mode
 
-Once kmem_cache_destroy has been fixed to be deferrable.
+ Documentation/netlink/specs/nfsd.yaml |  27 +++++++++
+ fs/nfsd/netlink.c                     |  17 ++++++
+ fs/nfsd/netlink.h                     |   2 +
+ fs/nfsd/nfsctl.c                      | 102 +++++++++++++++++++++++++++++-----
+ fs/nfsd/nfsd.h                        |   3 +-
+ fs/nfsd/nfssvc.c                      |  30 +++++-----
+ include/linux/sunrpc/svc.h            |   3 +
+ include/uapi/linux/nfsd_netlink.h     |  10 ++++
+ net/sunrpc/svc.c                      | 102 +++++++++++++++++++++-------------
+ 9 files changed, 225 insertions(+), 71 deletions(-)
+---
+base-commit: fec4124bac55ad92c47585fe537e646fe108b8fa
+change-id: 20240604-nfsd-next-b04c0d2d89a9
 
-I assume the other patches are similar -- an rcu_barrier() can be
-removed. So some manual meddling of these might be in order.
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-Jason
 
