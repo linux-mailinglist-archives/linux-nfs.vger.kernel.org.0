@@ -1,80 +1,80 @@
-Return-Path: <linux-nfs+bounces-3721-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3722-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67DEE906306
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 06:18:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FC2C906307
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 06:18:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80A7E1C2215D
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 04:18:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C3171C21B15
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 04:18:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28442135A53;
-	Thu, 13 Jun 2024 04:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23D2D135A71;
+	Thu, 13 Jun 2024 04:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daVm3DJ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khUykbhp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CD813211A
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 04:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9BD132126
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 04:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718252272; cv=none; b=VF4oDcz8nLzTf5d5bnmz58AWI/UEIXs/39yg/wedfBeWPBnJxPPErtB0Sxs6kGbhlKYK8fI0M67GC9BgNwL3b98aPIMGDbbTevzeA9ABDPQv9mbIUJuMPe4HFiMp4NtnxVJYCkz3PqdITpFhXeUsTb4inETwXsHRLLvebcrCwCg=
+	t=1718252273; cv=none; b=LNoPOhYfvNbM0SjyeV1koR4LSdA0pKaYr5lXd8fZyjkn7OhMPWpTxlo6NoRKeGQ686PmaR7UnOgZvq6ojOX7KyIZYrqIp4xPJZj1W1Pe/md5yFQMIGlEAdCTvPItHu0EmNmjL6p4L0QuXDxRji1+G2o5c5XMVy+NpQvCsA8Njvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718252272; c=relaxed/simple;
-	bh=JUa26y4trDMjXv8kJNspKCpm0ZB2QdGxG8Rie3Z4Jus=;
+	s=arc-20240116; t=1718252273; c=relaxed/simple;
+	bh=G27ACknVe5YVvRgo+hV5Oonf899wVt4uaegDn9bmehI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aiE29rnduJHqKxeQcqd/zE9h51/ats3Dqm4Va5ISpFTg1hB4Hk6vN06WbOXqyM9RhtV4k0Fj9gVfVMClBnf9bmRPawn21ZIK+GENA54iDlWayT/O9DJ49oSgjMUYfG5lFPB07uHNI+JQOJg+g9y6PnqYzEGAg7B/CruszpJYGCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=daVm3DJ0; arc=none smtp.client-ip=209.85.219.172
+	 MIME-Version; b=WX7oTUnULOpTBzf2Ic3G2ZMgmNCUqUAZ7aGdARJM3lgSx0h/6QMGRd698FiIUFEJ2BDxo4i9n6b87XzI/zxJhNsD7rc/yP+/FPoWZwO5b/1u2VFdziAOWQneNoWJwjfXy3UB4szWnUkmJUPimRCJbyCYeV55Ipo1a0dy/yRomEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=khUykbhp; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfef552d425so747781276.0
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 21:17:50 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dfab4779d95so623125276.0
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 21:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718252269; x=1718857069; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718252270; x=1718857070; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aXhoor7Xv4QJH68bc35T5Xdx6w4YGZDyOa4YHXPzbbg=;
-        b=daVm3DJ0qSa6dCu1W+YY8phtWl2w6ROQzkw77JTRTZfXewv3GOlJYWIugoqOc8fBIQ
-         dJd+VfpEvrOJZGTe7knWrRNuiXI8qkWKf2OvCTDEMmmw6dDiMHktoAoVMFS7PbGKRxn6
-         lLq5G/Njlj6zHL1rgMH8uqNOtB1WeYCujuw7ELM1W1hF9G3b2eO+fjjeBWAU2xBsA9Vg
-         GWurgTW0m7ByYED03C4OSOFyX3MtaH6JNA2JX2spYEfdPqS2ZH4cqHd3WAQ2jLF804K7
-         xCW/3RQYh6QpEIK58m9H4P81cXmUKzjf0eW/V9fYeG0ORxp++P7FgtBMjvtDXsGwJKIV
-         jBNw==
+        bh=1DBuH0RuQOohPHmiRiU+vGGomKOGtGnHlYyjvtJmgSA=;
+        b=khUykbhpYEGkKk5yTHNP0zlS90SyHitlXzNBP4wIvTqlMyJxfZmJBMmks/4xtxCPEG
+         NJdRqw4AjnJwJ1/9z8XgANj2181Z+LeSegDtBrPJiJomixSVJkgwqzj811jcfkTgcQnA
+         QjS+KJl3EuNbjiKUjXX2f+hZgDr9gZfw+snjWzZ86fERCwoOscFkdEGrt0DawTGPR+SA
+         A6AO0tlb4tmfQTAcMz5RdPGVCKbzjPJ/jxZnWBIwT89MW7HooGb67bV6R01lqUjGabPh
+         l1X1HgGR7bhObelvM5lYeTpXIIYa9g+tezloVsN2qrU8YxuJlPrqjWQUlnn96itLQkBt
+         czUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718252269; x=1718857069;
+        d=1e100.net; s=20230601; t=1718252270; x=1718857070;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aXhoor7Xv4QJH68bc35T5Xdx6w4YGZDyOa4YHXPzbbg=;
-        b=rB/9aEDQQ78l7vqnzmejPU43wk303igk54cJl4cMIYBTL/TJJEcKgYyCpAGY1zhJZ/
-         X7UxVj18exOrQzdk03tcfCJ6JOABTQGTYh/U0if23AEH5N9kPf4kAcq/LlZ5XKNvlMi0
-         SW/LtzvaHWzhlwSvh5VpLXkdhQFPYOmz1dZIHVUg2GkG40qVYk6P8izm47KpA0j1iKHf
-         PZwvoSRM76UW2jKlcQoa9Eu+7Qq3w1FNZyAhSjaNUHnL331qiYyMoEyo4q9AyBbh4i8K
-         Y+y2gLM9KDSDBZqPjT+Gg/GIiaiHVT9X/kZjt8cvKsU9genwFGVUOS3r6+xvsFy/94op
-         Z3Cw==
-X-Gm-Message-State: AOJu0YywhqB9l6AaaMleltKAss3dsuGmtaHD2/nRZmNxEyZg3tH0i1GL
-	YX4wl9J8Ko9I6sYVHHgDUf3Y4cfNFGsUoNjSPvS1u4W8f//CQHAEA10W
-X-Google-Smtp-Source: AGHT+IFm0+bize7ayOACXX7yFKnmB3UcIFwBQ51TuEaD+9ahe103xHEjZIiu35kYy1UIF6OWo5Mlzg==
-X-Received: by 2002:a25:26cd:0:b0:dff:1a2:a408 with SMTP id 3f1490d57ef6-dff01a2a6b8mr972119276.35.1718252269323;
-        Wed, 12 Jun 2024 21:17:49 -0700 (PDT)
+        bh=1DBuH0RuQOohPHmiRiU+vGGomKOGtGnHlYyjvtJmgSA=;
+        b=LTC5OoynCSCWMzxN1PWbyeqqPxZCUTyTtnGJHJopfAcR5mi3DOKQ07LGzAdlRUuXQB
+         +N23hniPX8eJRg1HFJM+gLTX1/l6XsHzoCsGVJ1oBT+MXhkjJAZMUK8Tv8yIi7PRGkho
+         XLC9est7yxmlixQcFsdCS/1QN4Ywe4SQhX9EZb7EuJxUpXg8M6oU/wqW4tAyqt22lI2P
+         dbUeLm/IRSHaCzn9g4Jv0aLNrnEeqOzdMmBgY6tj/rIX8MvdybaH5cZ6win7K71txzda
+         XgUoGL13NH2CDKZmYOylhPXMvN2YoCx2WPT24PkU/AgNGA+H80c0zehagIh7sr73KQvg
+         eEVA==
+X-Gm-Message-State: AOJu0YzJ+baDKZ8gfDWbZJMqbledbUCx7Kmt6KwwC8EVJ6WB0JTg2X4M
+	Fo0Xxhousq5eqxrb3X9c6XxdezrREfw9wIZm/9IuauwZBQZZ1zAIIuv8
+X-Google-Smtp-Source: AGHT+IGcOTyWteDQNy+wdRQkSm8RnHpkTKhC6iuV1shuWif9Gi4bu4Rg8JLYXFU34PEWQO7phvCd+A==
+X-Received: by 2002:a25:aa43:0:b0:dff:237:4cca with SMTP id 3f1490d57ef6-dff02374dd8mr1160906276.7.1718252270345;
+        Wed, 12 Jun 2024 21:17:50 -0700 (PDT)
 Received: from leira.trondhjem.org (c-68-40-188-158.hsd1.mi.comcast.net. [68.40.188.158])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c68ff3sm2851546d6.74.2024.06.12.21.17.48
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c68ff3sm2851546d6.74.2024.06.12.21.17.49
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 12 Jun 2024 21:17:49 -0700 (PDT)
 From: trondmy@gmail.com
 X-Google-Original-From: trond.myklebust@hammerspace.com
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH 12/19] NFSv4: Fix up delegated attributes in nfs_setattr
-Date: Thu, 13 Jun 2024 00:11:29 -0400
-Message-ID: <20240613041136.506908-13-trond.myklebust@hammerspace.com>
+Subject: [PATCH 13/19] NFSv4: Don't request atime/mtime/size if they are delegated to us
+Date: Thu, 13 Jun 2024 00:11:30 -0400
+Message-ID: <20240613041136.506908-14-trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240613041136.506908-12-trond.myklebust@hammerspace.com>
+In-Reply-To: <20240613041136.506908-13-trond.myklebust@hammerspace.com>
 References: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
  <20240613041136.506908-2-trond.myklebust@hammerspace.com>
  <20240613041136.506908-3-trond.myklebust@hammerspace.com>
@@ -87,6 +87,7 @@ References: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
  <20240613041136.506908-10-trond.myklebust@hammerspace.com>
  <20240613041136.506908-11-trond.myklebust@hammerspace.com>
  <20240613041136.506908-12-trond.myklebust@hammerspace.com>
+ <20240613041136.506908-13-trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -97,77 +98,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@primarydata.com>
 
-nfs_setattr calls nfs_update_inode() directly, so we have to reset the
-m/ctime there.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
 Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/inode.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ fs/nfs/nfs4proc.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 91c0aeaf6c1e..e03c512c8535 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -605,6 +605,46 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh, struct nfs_fattr *fattr)
- }
- EXPORT_SYMBOL_GPL(nfs_fhget);
- 
-+static void
-+nfs_fattr_fixup_delegated(struct inode *inode, struct nfs_fattr *fattr)
-+{
-+	unsigned long cache_validity = NFS_I(inode)->cache_validity;
-+
-+	if (!nfs_have_read_or_write_delegation(inode))
-+		return;
-+
-+	if (!(cache_validity & NFS_INO_REVAL_FORCED))
-+		cache_validity &= ~(NFS_INO_INVALID_ATIME
-+				| NFS_INO_INVALID_CHANGE
-+				| NFS_INO_INVALID_CTIME
-+				| NFS_INO_INVALID_MTIME
-+				| NFS_INO_INVALID_SIZE);
-+
-+	if (!(cache_validity & NFS_INO_INVALID_SIZE))
-+		fattr->valid &= ~(NFS_ATTR_FATTR_PRESIZE
-+				| NFS_ATTR_FATTR_SIZE);
-+
-+	if (!(cache_validity & NFS_INO_INVALID_CHANGE))
-+		fattr->valid &= ~(NFS_ATTR_FATTR_PRECHANGE
-+				| NFS_ATTR_FATTR_CHANGE);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index b0c1564a7bc7..512268c732a1 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -310,6 +310,18 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, const __u32 *src,
+ 		dst[1] &= ~FATTR4_WORD1_MODE;
+ 	if (!(cache_validity & NFS_INO_INVALID_OTHER))
+ 		dst[1] &= ~(FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP);
 +
 +	if (nfs_have_delegated_mtime(inode)) {
-+		if (!(cache_validity & NFS_INO_INVALID_CTIME))
-+			fattr->valid &= ~(NFS_ATTR_FATTR_PRECTIME
-+					| NFS_ATTR_FATTR_CTIME);
-+
-+		if (!(cache_validity & NFS_INO_INVALID_MTIME))
-+			fattr->valid &= ~(NFS_ATTR_FATTR_PREMTIME
-+					| NFS_ATTR_FATTR_MTIME);
-+
 +		if (!(cache_validity & NFS_INO_INVALID_ATIME))
-+			fattr->valid &= ~NFS_ATTR_FATTR_ATIME;
++			dst[1] &= ~FATTR4_WORD1_TIME_ACCESS;
++		if (!(cache_validity & NFS_INO_INVALID_MTIME))
++			dst[1] &= ~FATTR4_WORD1_TIME_MODIFY;
++		if (!(cache_validity & NFS_INO_INVALID_CTIME))
++			dst[1] &= ~FATTR4_WORD1_TIME_METADATA;
 +	} else if (nfs_have_delegated_atime(inode)) {
 +		if (!(cache_validity & NFS_INO_INVALID_ATIME))
-+			fattr->valid &= ~NFS_ATTR_FATTR_ATIME;
++			dst[1] &= ~FATTR4_WORD1_TIME_ACCESS;
 +	}
-+}
-+
- void nfs_update_delegated_atime(struct inode *inode)
- {
- 	spin_lock(&inode->i_lock);
-@@ -2163,6 +2203,9 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 	 */
- 	nfsi->read_cache_jiffies = fattr->time_start;
+ }
  
-+	/* Fix up any delegated attributes in the struct nfs_fattr */
-+	nfs_fattr_fixup_delegated(inode, fattr);
-+
- 	save_cache_validity = nfsi->cache_validity;
- 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
- 			| NFS_INO_INVALID_ATIME
+ static void nfs4_setup_readdir(u64 cookie, __be32 *verifier, struct dentry *dentry,
+@@ -3414,7 +3426,8 @@ static int nfs4_do_setattr(struct inode *inode, const struct cred *cred,
+ 		.inode = inode,
+ 		.stateid = &arg.stateid,
+ 	};
+-	unsigned long adjust_flags = NFS_INO_INVALID_CHANGE;
++	unsigned long adjust_flags = NFS_INO_INVALID_CHANGE |
++				     NFS_INO_INVALID_CTIME;
+ 	int err;
+ 
+ 	if (sattr->ia_valid & (ATTR_MODE | ATTR_KILL_SUID | ATTR_KILL_SGID))
+@@ -4958,7 +4971,7 @@ static int _nfs4_proc_link(struct inode *inode, struct inode *dir, const struct
+ 
+ 	nfs4_inode_make_writeable(inode);
+ 	nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, res.fattr->label), inode,
+-				NFS_INO_INVALID_CHANGE);
++				NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME);
+ 	status = nfs4_call_sync(server->client, server, &msg, &arg.seq_args, &res.seq_res, 1);
+ 	if (!status) {
+ 		nfs4_update_changeattr(dir, &res.cinfo, res.fattr->time_start,
 -- 
 2.45.2
 
