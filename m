@@ -1,264 +1,150 @@
-Return-Path: <linux-nfs+bounces-3742-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3743-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EA91906553
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 09:39:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D88B9066C1
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 10:32:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53B5CB23C49
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 07:39:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6FEC1F232E2
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 08:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF92139CFF;
-	Thu, 13 Jun 2024 07:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF9614264A;
+	Thu, 13 Jun 2024 08:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRWxTdej"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qst3DPl0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tGwHMXvO";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="w1CdRhxf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rCIchcfM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294BA136997;
-	Thu, 13 Jun 2024 07:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275013E030
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 08:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718264341; cv=none; b=TTivP3ZHbsgt1afQFIyA2fHRgSwgpRDnMplK41cBXtJTQrglZkJfsyH1n8Gyv87GB1QUB2GRa2efH97wTVdADnnNn0Z9FdI8VmtuiIdpT8Xk82mLreOsw92wxFNFYngcPLi76X+ythbm76dsE3tbjr3s6/w11fU5LDcWlgu6QOc=
+	t=1718267321; cv=none; b=S5vKgEBg4ZpNdEtz4uJk0GHAI++1pbffE0AcHBN2Qa1rIKeVXP5mDQD0Nl8uv3/eyg4GySnGLPehEQaNT4nutUPNMUUsiJeFNU3OA8/ulNmD9iER5+4Jk6HXnYs9nafQ+QxtSsMwIw3EWlC2Bmx+l0OtxgZtpuJh35vYlHQm1oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718264341; c=relaxed/simple;
-	bh=dvG7FqSwDu5lrIi/fqvjZ/j9B9W5Iep3sa2oGhXDAWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BoeFvLAgBNQwRKauiTrCpZBm3OyYuTbXyvRwGBZxmYFp1uuKW8Y20DtfuRAfA898ETyLOPMm551E2ZLP9D/bmlAFkPBooqjGuYGB1d13d4KvyTrx7Hd0eOp0Bo2ag3oXydofO3rrPLqLmkYsMcQ9kB47io6ovD1rXscZgN+BLuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRWxTdej; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b065d12e81so3859576d6.0;
-        Thu, 13 Jun 2024 00:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718264339; x=1718869139; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1E6AzK51xf6iKhcHDUiW9xjjWQsQmJ90eNQKU5H/LL0=;
-        b=nRWxTdejPPnpF7GoeT5OXx99M+wgZW3ORtwhybCbrGa5+1ugeAaoCizNj0MPT2O7fa
-         EWvy1dabOi/lDtWwrjikJ1QwEH73OaPurEnAXAqZjRt/lkyN/V5jDZKrZPT2E44qBqfW
-         qAv7dVjYhKPib/YiZFFHU9pX46udXphC363nVjyFxdBLPFjB5AOyeVfT7cR17PfTDAeA
-         aLlUDenFnEnh1VWyh8/ZFBExnSJfnHZqHwT3KBokxqbd+sZShC7sO6s9r94d8HQlrjiA
-         vOGj7JI0YWBzhAH+oVsGnEIFyQ9S98ex0jETCLfjEhyHVk/BUn8o1mmniXRGp/quidoL
-         5RCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718264339; x=1718869139;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1E6AzK51xf6iKhcHDUiW9xjjWQsQmJ90eNQKU5H/LL0=;
-        b=bizUsJr0TEwJyQ8wJJE89DUmeoWbhod26YvtdadRvaIPEhwEwdnDYz+vUwZ/BfuhwI
-         AWF/CSHWJmFKljdmsYv1BahMDEzdux2HGAXi+hXkXrv9FBUxrye4z9RP8I3sibmPt0Nj
-         p8WS1FuhVI+Psm4+SiDdGYycpnQMyUNRxHVPl4FH4ticcDIi1VtVmSQZwLph70C0usxe
-         hsBQiC7BbivFK/DHZtE4B/l6EF3kfJq3G0McIWsC2fvvWKfkb9r73Kqy7k+dEO2BFk2v
-         IrfNfnK+5gQfZtnLhVZAzt9VlVg2gSgvIIk05tHgZlKaYgBP4Oqn85ipRqZnbOjXw+Aa
-         2Z8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVOF9H1dazz6lYL9aDm/QsESdq0Hviy3IrRZM1sMKlZd6uUJE3bwgihYKphJd1hQ8uuD381Y2F0mPjv7EZ7JxdejXGnH/zbgFbd/0vZ3i34CCZF81x+jn1W/0OWBqQGbyinE6PoH580yWDGMAfV0qG9cDyneqMk0hnLbo6ycNYlsbqaW1Pi+g==
-X-Gm-Message-State: AOJu0YzTAFMqj8BB6EdUOc8XrRIhPUd2Sxy6eih88BaAbeRPmEHDtt2y
-	ybT+ciRr7XPeIsGANzwKLqFZ5OOZ0j/2JrLdP+YSNERKZQBAUG+ojCOtnsdy1M/OAuh3w9FGdN0
-	8lFHQ9CjrgOe9sj+LC23sUBopJWQ=
-X-Google-Smtp-Source: AGHT+IHVzT36nvZbeajaCGP82pKfL+ox3iyFWA+hBahWjErp+dD2xAJfXvYA0YrMJktsuFxVdiilx5R2GTaOGm2z8dI=
-X-Received: by 2002:a05:6214:3282:b0:6b0:7327:c45b with SMTP id
- 6a1803df08f44-6b191c50ed9mr28334476d6.16.1718264338926; Thu, 13 Jun 2024
- 00:38:58 -0700 (PDT)
+	s=arc-20240116; t=1718267321; c=relaxed/simple;
+	bh=nMTCTFZCk8jJdwDnaPVunAd5+RPRhpnhtPIUEQEYIRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lf7oItBDOiOmsB4z3k4vrVCH+WV9Zvn2QSowCjECYXx9e9o4htG5U9GtOqs9DIcWpPzWQ+WFjcKcc7TOSVqD+2pcF/yq/qAmioxsxh0V0hfxDRK/t6Zz4bs11NoEUQ6wkGgz/2sFbzvftBYsqApJYyKo/AtXaKTUHZtjSun4tPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qst3DPl0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tGwHMXvO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=w1CdRhxf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rCIchcfM; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D955F5D006;
+	Thu, 13 Jun 2024 08:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718267318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=A8KThnrSKY5mD4diBjbQR2NfaacmbNc7/WJuV+8WFM4=;
+	b=qst3DPl0vj9Vu1lVtjg8ShdojzEEIL+nwr8mo0HSbv88Q2KglXQuBoTvwCIAbXTiBLXy02
+	3UW8AA8DzEU1olt+za7kYeT24AXwiNCfNR3IanG2Zcjp2KyT7AdJd9sI2FAX0Yos+hvfph
+	nQ9CMPLv1edUO7S314qJi/W9NtmjSN8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718267318;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=A8KThnrSKY5mD4diBjbQR2NfaacmbNc7/WJuV+8WFM4=;
+	b=tGwHMXvOSPNRYp2zMc7e5dlKkUXL/3DeLrqgC+E+yxJhY1w6kTYe4myTFu72RkHUPdBJ09
+	OlFtCwGFyN9KGyCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=w1CdRhxf;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rCIchcfM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718267316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=A8KThnrSKY5mD4diBjbQR2NfaacmbNc7/WJuV+8WFM4=;
+	b=w1CdRhxftOfrFxWRwkkZQ/cC50LZ814cGmDYNBduX7uKiJONac4BZwgV0dROfsWo9/SIAQ
+	Dpad8vwojcVpBfqZwJKQW+sRu73wzTEaPKoAo+q1G+5bXQ26Ql0dJzjMLXug8UQIGSUVqY
+	8hP/6nKtuH0G5rPNUcau/JwYBrKbUzc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718267316;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=A8KThnrSKY5mD4diBjbQR2NfaacmbNc7/WJuV+8WFM4=;
+	b=rCIchcfMp9JNVt595QLy5ISU5RBdROAEmklQ5stpWe7QuzF8WJ29HPvlBMQJWg6QwSeYOC
+	QQFIi/3jaOqpb5DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CDF3C13A7F;
+	Thu, 13 Jun 2024 08:28:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kn1DMrStamY5XAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 13 Jun 2024 08:28:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 765A7A0870; Thu, 13 Jun 2024 10:28:21 +0200 (CEST)
+From: Jan Kara <jack@suse.cz>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: linux-nfs@vger.kernel.org,
+	Neil Brown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/3] nfs: Improve throughput for random buffered writes
+Date: Thu, 13 Jun 2024 10:28:16 +0200
+Message-Id: <20240612153022.25454-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
- <CAOQ4uxidUYY02xry+y5VpRWfBjCmAt0CnmJ3JbgLTLkZ6nn1sA@mail.gmail.com> <171819286884.14261.11045203598673536466@noble.neil.brown.name>
-In-Reply-To: <171819286884.14261.11045203598673536466@noble.neil.brown.name>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 13 Jun 2024 10:38:47 +0300
-Message-ID: <CAOQ4uxh357o5H-PQK9KY949s5pg_aaH9nMd-NzMAu_kx0WCn1Q@mail.gmail.com>
-Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
- ->atomic_open used.
-To: NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	James Clark <james.clark@arm.com>, ltp@lists.linux.it, linux-nfs@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=618; i=jack@suse.cz; h=from:subject:message-id; bh=nMTCTFZCk8jJdwDnaPVunAd5+RPRhpnhtPIUEQEYIRY=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBmaq2buBT8EuMwJ8GpcKyjt6eb0JQmXb9hGfD+st/p c1Qnps+JATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZmqtmwAKCRCcnaoHP2RA2UKFB/ 9+YRf2PvdMn4EOFap87sGJ1MipeUyk9NLnFZf4+5JdpVH0ixRZrBgWunK9BDtakagr3nByoBaVqG7I 3ZxDwKHXjdGzuWts9Thwq+j88betzQMmfrCkLjwYKGWMInMMlJnrt5tJ/jQWyqZ5QssIQK1DEzLttH ZPL8hOkQgrs4BCK4Xc4QEOXz4DGzFECLVNZOiWO0Io+wDatDvf9a02irj1NawgmUPos5VgSalsnkgX n2z868TZBc8yxAeASO2vByaoWAZiPZ0TXh4b1yGsFNq7Ms7XNnIvJGDTHGKwixrhhIrKjeoqqjFBj6 MH1FwfotyFxbfRfj7m5f7NluQfJcdv
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-2.00)[95.06%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D955F5D006
+X-Spam-Flag: NO
+X-Spam-Score: -2.01
+X-Spam-Level: 
 
-On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> On Wed, 12 Jun 2024, Amir Goldstein wrote:
-> > On Wed, Jun 12, 2024 at 10:10=E2=80=AFAM NeilBrown <neilb@suse.de> wrot=
-e:
-> > >
-> > >
-> > > When a file is opened and created with open(..., O_CREAT) we get
-> > > both the CREATE and OPEN fsnotify events and would expect them in tha=
-t
-> > > order.   For most filesystems we get them in that order because
-> > > open_last_lookups() calls fsnofify_create() and then do_open() (from
-> > > path_openat()) calls vfs_open()->do_dentry_open() which calls
-> > > fsnotify_open().
-> > >
-> > > However when ->atomic_open is used, the
-> > >    do_dentry_open() -> fsnotify_open()
-> > > call happens from finish_open() which is called from the ->atomic_ope=
-n
-> > > handler in lookup_open() which is called *before* open_last_lookups()
-> > > calls fsnotify_create.  So we get the "open" notification before
-> > > "create" - which is backwards.  ltp testcase inotify02 tests this and
-> > > reports the inconsistency.
-> > >
-> > > This patch lifts the fsnotify_open() call out of do_dentry_open() and
-> > > places it higher up the call stack.  There are three callers of
-> > > do_dentry_open().
-> > >
-> > > For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-> > > directly in that caller so there should be no behavioural change.
-> > >
-> > > For finish_open() there are two cases:
-> > >  - finish_open is used in ->atomic_open handlers.  For these we add a
-> > >    call to fsnotify_open() at the top of do_open() if FMODE_OPENED is
-> > >    set - which means do_dentry_open() has been called.
-> > >  - finish_open is used in ->tmpfile() handlers.  For these a similar
-> > >    call to fsnotify_open() is added to vfs_tmpfile()
-> >
-> > Any handlers other than ovl_tmpfile()?
->
-> Local filesystems tend to call finish_open_simple() which is a trivial
-> wrapper around finish_open().
-> Every .tmpfile handler calls either finish_open() or finish_open_simple()=
-.
->
-> > This one is a very recent and pretty special case.
-> > Did open(O_TMPFILE) used to emit an OPEN event before that change?
->
-> I believe so, yes.
->
+Hello,
 
-Right. Thanks for clarifying.
+I was thinking how to best address the performance regression coming from
+NFS write congestion. After considering various options and concerns raised
+in the previous discussion, I've got an idea for a simple option that could
+help to keep the server more busy - just mimick what block devices do and
+block the flush worker waiting for congestion to resolve instead of aborting
+the writeback. And it actually helps enough that I don't think more complex
+solutions are warranted at this point.
 
-> Thanks,
-> NeilBrown
->
-> >
-> > >
-> > > With this patch NFSv3 is restored to its previous behaviour (before
-> > > ->atomic_open support was added) of generating CREATE notifications
-> > > before OPEN, and NFSv4 now has that same correct ordering that is has
-> > > not had before.  I haven't tested other filesystems.
-> > >
-> > > Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUN=
-C correctly.")
-> > > Reported-by: James Clark <james.clark@arm.com>
-> > > Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d=
-8c8@arm.com
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  fs/namei.c |  5 +++++
-> > >  fs/open.c  | 19 ++++++++++++-------
-> > >  2 files changed, 17 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/fs/namei.c b/fs/namei.c
-> > > index 37fb0a8aa09a..057afacc4b60 100644
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -3612,6 +3612,9 @@ static int do_open(struct nameidata *nd,
-> > >         int acc_mode;
-> > >         int error;
-> > >
-> > > +       if (file->f_mode & FMODE_OPENED)
-> > > +               fsnotify_open(file);
-> > > +
-> > >         if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
-> > >                 error =3D complete_walk(nd);
-> > >                 if (error)
-> > > @@ -3700,6 +3703,8 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
-> > >         mode =3D vfs_prepare_mode(idmap, dir, mode, mode, mode);
-> > >         error =3D dir->i_op->tmpfile(idmap, dir, file, mode);
-> > >         dput(child);
-> > > +       if (file->f_mode & FMODE_OPENED)
-> > > +               fsnotify_open(file);
-> > >         if (error)
-> > >                 return error;
-> > >         /* Don't check for other permissions, the inode was just crea=
-ted */
-> > > diff --git a/fs/open.c b/fs/open.c
-> > > index 89cafb572061..970f299c0e77 100644
-> > > --- a/fs/open.c
-> > > +++ b/fs/open.c
-> > > @@ -1004,11 +1004,6 @@ static int do_dentry_open(struct file *f,
-> > >                 }
-> > >         }
-> > >
-> > > -       /*
-> > > -        * Once we return a file with FMODE_OPENED, __fput() will cal=
-l
-> > > -        * fsnotify_close(), so we need fsnotify_open() here for symm=
-etry.
-> > > -        */
-> > > -       fsnotify_open(f);
-> > >         return 0;
-> > >
-> > >  cleanup_all:
-> > > @@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
-> > >   */
-> > >  int vfs_open(const struct path *path, struct file *file)
-> > >  {
-> > > +       int ret;
-> > > +
-> > >         file->f_path =3D *path;
-> > > -       return do_dentry_open(file, NULL);
-> > > +       ret =3D do_dentry_open(file, NULL);
-> > > +       if (!ret)
-> > > +               /*
-> > > +                * Once we return a file with FMODE_OPENED, __fput() =
-will call
-> > > +                * fsnotify_close(), so we need fsnotify_open() here =
-for symmetry.
-> > > +                */
-> > > +               fsnotify_open(file);
-> >
-> > I agree that this change preserves the logic, but (my own) comment
-> > above is inconsistent with the case of:
-> >
-> >         if ((f->f_flags & O_DIRECT) && !(f->f_mode & FMODE_CAN_ODIRECT)=
-)
-> >                 return -EINVAL;
-> >
-> > Which does set FMODE_OPENED, but does not emit an OPEN event.
->
-> If I understand correctly, that case doesn't emit an OPEN event before
-> my patch, but will result in a CLOSE event.
-> After my patch ... I think it still doesn't emit OPEN.
->
-> I wonder if, instead of adding the the fsnotify_open() in do_open(), we
-> should put it in the\
->         if (file->f_mode & (FMODE_OPENED | FMODE_CREATED)) {
-> case of open_last_lookups().
->
+This patch series has two preparatory cleanups and then a patch implementing
+this idea.
 
-We cannot do that.
-See the reasoning for 7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook in=
-to
-do_dentry_open()") - we need the events for other callers of vfs_open(),
-like overlayfs and nfsd.
-
-> Or maybe it really doesn't hurt to have a CLOSE event without and OPEN.
-> OPEN without CLOSE would be problematic, but the other way around
-> shouldn't matter....  It feels untidy, but maybe we don't care.
->
-
-We have had unmatched CLOSE events for a very long time before
-7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook into do_dentry_open()")
-and I do not know of any complaints.
-
-When I made this change, its purpose was not to match all OPEN/CLOSE
-but to add missing OPEN events. However, I did try to avoid unmatched
-CLOSE at least for the common cases.
-
-Thanks,
-Amir.
+								Honza
 
