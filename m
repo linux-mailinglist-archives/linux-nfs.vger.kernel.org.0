@@ -1,209 +1,132 @@
-Return-Path: <linux-nfs+bounces-3781-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3782-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB6C1907AB7
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F521907B86
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 20:36:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C52A1F22C40
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:14:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E822B1F25790
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E10214BF9B;
-	Thu, 13 Jun 2024 18:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9068614B09C;
+	Thu, 13 Jun 2024 18:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jR/4hRHI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgGpK4MK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4001614B96D;
-	Thu, 13 Jun 2024 18:13:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6661014B061;
+	Thu, 13 Jun 2024 18:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718302433; cv=none; b=nXpBOBzOpX6pscU6B7TWZtTAEzKr5ITJyR2hw0NEofAnjqfI2n5zMQHfwX8s7QthcOMz9u1TD+9JKzBO7y4Eb7T++vIIfzrVKnoUxf4qLhrtCckUA2stxmsS9HkqDIaNqfa9KHuQT55U6+gvYusG7BZVVfxZk3hPXq5wgHT2gFE=
+	t=1718303681; cv=none; b=G+zBhe1BsuxP/Wp3OO5sUT9kRVVR/Eo3fqx11Q7Yy2VqIUAnfEkKylyyaQG/voKf4mTZpsB6I+KC94bS3Y0MKharbg9/e7M/ZOUfSO2BH2ajdoJCDIV3JdpFk1cUEzuUtuHVtXBBRUYA/Pa4D7AjnXdEmGNUqqh+gdNEtP3LDRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718302433; c=relaxed/simple;
-	bh=fTIU120VbeRegu4fENGIN2pJl0vJUhORQvgqaO97OJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8tjbkIM7wbcaaSTT780vXxwFmpPD9v8z8a4DgcXxFt+BXHyMpipXSynG5ZC2sZ+69DzalOYQmA3DuDy3+dvN7cwUzAgeDI4nSrAzo6o+WnPmVCwTxM/5e8g/eYG1MnyjjgAJtpkDqsWl/cTJ5GcOzHGsl+gVXoSqTqsJUCaQUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jR/4hRHI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EEBC32786;
-	Thu, 13 Jun 2024 18:13:52 +0000 (UTC)
+	s=arc-20240116; t=1718303681; c=relaxed/simple;
+	bh=uvgmmyR+kmgvJw5v805l711JAOX3oUJc9TWRVrpFuW8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ljYDcB2s1CaLfwbi1tzSxjYGqryD2luEchI+11Ky+fjizQvhsZsHdEyoYil6JAH2bhLuSsLvLMtJxSgPm4gUqX8ds9AkdPEwUT/p3PG8YMab/Eo2Jd8FRWK9K0MgwZeT5N/9Gd8UTIL33r4ANih9i+uV6GgVkOG3hVGbglv5ftc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgGpK4MK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A46D1C2BBFC;
+	Thu, 13 Jun 2024 18:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718302432;
-	bh=fTIU120VbeRegu4fENGIN2pJl0vJUhORQvgqaO97OJA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=jR/4hRHIvjnr0HuKMd6n8Jn2KplP88ALqz/jBpAKC7iDEoEz5yTd6fMxpCs6goNdu
-	 n8elfLSow/niMrJmWbjyCFHbgDgF7GshXU3IoT7xdE5GNXUmv9oEGHq2mjc20rGLwp
-	 q0fYO1vllub6LyzhOYauiWoAoj8VOrLrRS7uM4A5UortmkOXNr3XN6j9g1Q0nw5rZI
-	 B++vgmEbZiZmvCkQbcm552PFvnT2ReJyoa6yOeebtcW7WCh7SbYjGbpp0bBNshQbGt
-	 UgwL7TFo2YOcNsL7tdoefLVWkIgw8OEUPXV25zDiL5YxSslrNLs6bwA797sM/3Spyz
-	 ebnTt6JASQjTg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 56F78CE0760; Thu, 13 Jun 2024 11:13:52 -0700 (PDT)
-Date: Thu, 13 Jun 2024 11:13:52 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
- <ZmrfA1p2zSVIaYam@zx2c4.com>
- <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
- <Zmru7hhz8kPDPsyz@pc636>
- <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
- <Zmsuswo8OPIhY5KJ@pc636>
- <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
+	s=k20201202; t=1718303681;
+	bh=uvgmmyR+kmgvJw5v805l711JAOX3oUJc9TWRVrpFuW8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PgGpK4MKWB/jrcZPWF36YsvhTYSpWg9fst87pwnrp0beKCt22pstbAlgxvVhZALbc
+	 9liq4bBTYUIDqcUphUIEUVfo5VBA8HI2cg+ZuGDVqYSPCZLvpYB8s+HgxsEvzcuCsW
+	 cnAlc3A/fkwjKX0mq4og5wRfj93UBOOb0AKiSVTCmX11aFCU4iQhUxn7AKWAU7po8g
+	 aisSIz5DzyI79ZKHmIaQuOVuCrBVsBbNW7TyYGkrc0xYSGdIq3w1UvBkToRJWSEo2n
+	 Jiva2tnH2y6sLdu8Yf6GuUxT7iNCd65Db+LpPmmmSedz66KFi2qotKfY7dcITYAfyt
+	 Iut9aH5+kIVxA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 0/5] nfsd/sunrpc: allow starting/stopping pooled NFS
+ server via netlink
+Date: Thu, 13 Jun 2024 14:34:29 -0400
+Message-Id: <20240613-nfsd-next-v3-0-3b51c3c2fc59@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZmszOd5idhf2Cb-v@pc636>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALU7a2YC/22MQQ6CMBBFr0Jmbc201AZceQ/jApgpNJpiWtJgC
+ He3sMLE5fv57y0QOTiOcC0WCJxcdKPPUJ4K6IbG9ywcZQaFSqNBLbyNJDzPk2hRd0iKqrqpIf/
+ fga2b99b9kXlwcRrDZ08nua3/KkkKFBVZU5mGjSS+PTl4fp3H0MOWSeqgyvKoqqwqbK2pkczFt
+ j/quq5fvBkStd4AAAA=
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1823; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=uvgmmyR+kmgvJw5v805l711JAOX3oUJc9TWRVrpFuW8=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmazu+Msjh7p6JJ/Jz07l7Fdd5VzsY8TlusIJvv
+ DJ66xycKxuJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZms7vgAKCRAADmhBGVaC
+ FcsNEADSICTirj26t+OTNid+5BS22e0mtDNPFyN5ZSGKFjRGGWCEhoy+WcIOUF2rcFBv9TA2ybN
+ TIXdAezVdrjoITvCbnC1zguyT57KeJNEFjg5VbFGU6xw5vnsRA5Gbc0y3NOLO0iObcA60yaKaGn
+ adYQJP141mL8q5Q0sG/F26IFhPSZtWkOZ0QHTQVnKwCjYwfUxbAao94/owl5ogAyOseh+M7Rqfk
+ HAJnmQVmnBp5+YT2d2fnGt863dWk95+60qFftc/d0snGG3o7kw1/pcShkW6xZp1EO6a6HbBgFV+
+ HN4zqBJtESy4bD5gwob/1jtHCN4X0JW8YViGlFc7asG1YEukwImnyRYvq7AtiCsqazM56gkpC8R
+ 3zXlQzRv1G0URm4/3OO2uZ1S9BHxDcKsHmUAr/pe61JQ4wjKCKqF/Idh2mzx8p1wRZYraprD8Ew
+ Jvz+1pEbC68ckGRMrzS+vtNFe7GlNwWqT5csvTCTcxaz3ORTmCEudLfrzxdJX0hj2SnljFxrob/
+ ttux9re5Jf1oZoJx51ozQvyRTDF/7dM3SIbCg/1IC/8FXl4hdH9OrQup7nLYLGU4u6IC1NhoyDC
+ vqG82jyTmdFvf2JYhE1a0KJXCh0D2gGp66xZDgMezr6TPjNmcQf0TPthdcL7z73JAQO0tycJBPB
+ IGfpkDtQd9MMHFg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, Jun 13, 2024 at 07:58:17PM +0200, Uladzislau Rezki wrote:
-> On Thu, Jun 13, 2024 at 10:45:59AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 13, 2024 at 07:38:59PM +0200, Uladzislau Rezki wrote:
-> > > On Thu, Jun 13, 2024 at 08:06:30AM -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jun 13, 2024 at 03:06:54PM +0200, Uladzislau Rezki wrote:
-> > > > > On Thu, Jun 13, 2024 at 05:47:08AM -0700, Paul E. McKenney wrote:
-> > > > > > On Thu, Jun 13, 2024 at 01:58:59PM +0200, Jason A. Donenfeld wrote:
-> > > > > > > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> > > > > > > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > > > > > > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > > > > > > > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > > > > > > > > when the callback only performs kmem_cache_free. Use
-> > > > > > > > > > kfree_rcu() directly.
-> > > > > > > > > > 
-> > > > > > > > > > The changes were done using the following Coccinelle semantic patch.
-> > > > > > > > > > This semantic patch is designed to ignore cases where the callback
-> > > > > > > > > > function is used in another way.
-> > > > > > > > > 
-> > > > > > > > > How does the discussion on:
-> > > > > > > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> > > > > > > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > > > > > > > > reflect on this series? IIUC we should hold off..
-> > > > > > > > 
-> > > > > > > > We do need to hold off for the ones in kernel modules (such as 07/14)
-> > > > > > > > where the kmem_cache is destroyed during module unload.
-> > > > > > > > 
-> > > > > > > > OK, I might as well go through them...
-> > > > > > > > 
-> > > > > > > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> > > > > > > > 	Needs to wait, see wg_allowedips_slab_uninit().
-> > > > > > > 
-> > > > > > > Also, notably, this patch needs additionally:
-> > > > > > > 
-> > > > > > > diff --git a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
-> > > > > > > index e4e1638fce1b..c95f6937c3f1 100644
-> > > > > > > --- a/drivers/net/wireguard/allowedips.c
-> > > > > > > +++ b/drivers/net/wireguard/allowedips.c
-> > > > > > > @@ -377,7 +377,6 @@ int __init wg_allowedips_slab_init(void)
-> > > > > > > 
-> > > > > > >  void wg_allowedips_slab_uninit(void)
-> > > > > > >  {
-> > > > > > > -	rcu_barrier();
-> > > > > > >  	kmem_cache_destroy(node_cache);
-> > > > > > >  }
-> > > > > > > 
-> > > > > > > Once kmem_cache_destroy has been fixed to be deferrable.
-> > > > > > > 
-> > > > > > > I assume the other patches are similar -- an rcu_barrier() can be
-> > > > > > > removed. So some manual meddling of these might be in order.
-> > > > > > 
-> > > > > > Assuming that the deferrable kmem_cache_destroy() is the option chosen,
-> > > > > > agreed.
-> > > > > >
-> > > > > <snip>
-> > > > > void kmem_cache_destroy(struct kmem_cache *s)
-> > > > > {
-> > > > > 	int err = -EBUSY;
-> > > > > 	bool rcu_set;
-> > > > > 
-> > > > > 	if (unlikely(!s) || !kasan_check_byte(s))
-> > > > > 		return;
-> > > > > 
-> > > > > 	cpus_read_lock();
-> > > > > 	mutex_lock(&slab_mutex);
-> > > > > 
-> > > > > 	rcu_set = s->flags & SLAB_TYPESAFE_BY_RCU;
-> > > > > 
-> > > > > 	s->refcount--;
-> > > > > 	if (s->refcount)
-> > > > > 		goto out_unlock;
-> > > > > 
-> > > > > 	err = shutdown_cache(s);
-> > > > > 	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
-> > > > > 	     __func__, s->name, (void *)_RET_IP_);
-> > > > > ...
-> > > > > 	cpus_read_unlock();
-> > > > > 	if (!err && !rcu_set)
-> > > > > 		kmem_cache_release(s);
-> > > > > }
-> > > > > <snip>
-> > > > > 
-> > > > > so we have SLAB_TYPESAFE_BY_RCU flag that defers freeing slab-pages
-> > > > > and a cache by a grace period. Similar flag can be added, like
-> > > > > SLAB_DESTROY_ONCE_FULLY_FREED, in this case a worker rearm itself
-> > > > > if there are still objects which should be freed.
-> > > > > 
-> > > > > Any thoughts here?
-> > > > 
-> > > > Wouldn't we also need some additional code to later check for all objects
-> > > > being freed to the slab, whether or not that code is  initiated from
-> > > > kmem_cache_destroy()?
-> > > >
-> > > Same away as SLAB_TYPESAFE_BY_RCU is handled from the kmem_cache_destroy() function.
-> > > It checks that flag and if it is true and extra worker is scheduled to perform a
-> > > deferred(instead of right away) destroy after rcu_barrier() finishes.
-> > 
-> > Like this?
-> > 
-> > 	SLAB_DESTROY_ONCE_FULLY_FREED
-> > 
-> > 	Instead of adding a new kmem_cache_destroy_rcu()
-> > 	or kmem_cache_destroy_wait() API member, instead add a
-> > 	SLAB_DESTROY_ONCE_FULLY_FREED flag that can be passed to the
-> > 	existing kmem_cache_destroy() function.  Use of this flag would
-> > 	suppress any warnings that would otherwise be issued if there
-> > 	was still slab memory yet to be freed, and it would also spawn
-> > 	workqueues (or timers or whatever) to do any needed cleanup work.
-> > 
-> >
-> The flag is passed as all others during creating a cache:
-> 
->   slab = kmem_cache_create(name, size, ..., SLAB_DESTROY_ONCE_FULLY_FREED | OTHER_FLAGS, NULL);
-> 
-> the rest description is correct to me.
+This is a resend of the patchset I sent a little over a week ago, with
+a couple of new patches that allow setting the pool-mode via netlink.
 
-Good catch, fixed, thank you!
+This patchset first attempts to detangle the pooled/non-pooled service
+handling in the sunrpc layer, unifies the codepaths that start the
+pooled vs. non-pooled nfsd, and then wires up the new netlink threads
+interface to allow you to start a pooled server by specifying an
+array of thread counts.
 
-							Thanx, Paul
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- better announce the subtle change to the /sys/module interface
+- add more kerneldoc comments
+- Link to v2: https://lore.kernel.org/r/20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org
+
+Changes in v2:
+- add new pool-mode set/get netlink calls
+
+---
+Jeff Layton (5):
+      sunrpc: fix up the special handling of sv_nrpools == 1
+      nfsd: make nfsd_svc take an array of thread counts
+      nfsd: allow passing in array of thread counts via netlink
+      sunrpc: refactor pool_mode setting code
+      nfsd: new netlink ops to get/set server pool_mode
+
+ Documentation/netlink/specs/nfsd.yaml |  27 +++++++++
+ fs/nfsd/netlink.c                     |  17 ++++++
+ fs/nfsd/netlink.h                     |   2 +
+ fs/nfsd/nfsctl.c                      | 100 ++++++++++++++++++++++++++----
+ fs/nfsd/nfsd.h                        |   3 +-
+ fs/nfsd/nfssvc.c                      |  59 +++++++++++-------
+ include/linux/sunrpc/svc.h            |   3 +
+ include/uapi/linux/nfsd_netlink.h     |  10 +++
+ net/sunrpc/svc.c                      | 111 ++++++++++++++++++++++------------
+ 9 files changed, 256 insertions(+), 76 deletions(-)
+---
+base-commit: fec4124bac55ad92c47585fe537e646fe108b8fa
+change-id: 20240604-nfsd-next-b04c0d2d89a9
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
