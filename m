@@ -1,213 +1,152 @@
-Return-Path: <linux-nfs+bounces-3708-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3709-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE3529062C2
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 05:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84A749062FA
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 06:17:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB2571C21EC3
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 03:39:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FAA01C21133
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 04:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC25133406;
-	Thu, 13 Jun 2024 03:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B5281D559;
+	Thu, 13 Jun 2024 04:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/Q38vJo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="luxTeRwe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC998130A40;
-	Thu, 13 Jun 2024 03:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7987D8BFA
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Jun 2024 04:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718249883; cv=none; b=KRGkE0ok+wbYnTorTmGyFNa6iDPjgFcO66NRaihIrWax6yjmlEGXI2R5MVdljD/82LPZuQtW2zs1x+PC8eePOvIvdLva8h+ANWh/PIWqJIMhNMw4gw8SNj+BCEj1ol7nefqZorcEGx5MmFr8nRCbaAjx1P4bYUGlcfQlB7xvfHA=
+	t=1718252263; cv=none; b=n5LBRqqTpYk3A2xl/Tvl4gDJlvJ19UlhU90+nKQUnjqRNriKJ09hDfZq/8PPh/NCAip+NvCs/wOvzVJ7CR6frwdgt7yeYby/QI5HrnX0DNhowsPhamA00hih3w0Li2oENj/lZGjxN1RvMlOPqGC18FjyqlxOL8JJzEOD0t6eM+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718249883; c=relaxed/simple;
-	bh=MUF6QJIs92YjVFx9pLVup9B1X4v/FOHgXQ+Q1ulGSY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HW+9VwlcPz5RihUx6mpz0y4hErm5jUTcRWbLAo1ssOQ/imt9cTFXtfOJ1e5as9RT3dXmiFL2HJtY7/oK5vOzmWFwYLdpr6xv4EknNAtSIR5eGbKqatsI54Onvvh7v4SuOb12Kew5sogp2Zxa28SlOHeNVEcxCQJMk3+AS1g6uKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/Q38vJo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7817BC2BBFC;
-	Thu, 13 Jun 2024 03:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718249882;
-	bh=MUF6QJIs92YjVFx9pLVup9B1X4v/FOHgXQ+Q1ulGSY8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=D/Q38vJoRXlXt5XW/4wGVxDR3Ve5LY0YeIOEeyXy3NbqhqX2dZ1j6M305bUwT45/t
-	 UDuYraBOn5RJGcB5wbPp0mVvgGhhjTHGq9Z0Flg5xyFBTSbQm63u8OHLMVmMqygIG8
-	 n9Bktxt8XPwCkrGEjHdwaonD6xgWh8Godtd+lRtFFTJN7g05LyY6qtQ9CoXmzs1IMm
-	 s3wJnTMklP71T4XudKIUo3akJ/RvcV6b0A4eh6dGBbeQLpeU8YyAJJTIYJ6rHLoz8s
-	 fp4CPkLTgzE6dVIPWUBEYXDVCE07lQXMRXq4lTfYFbtT2/hHBATfDcVAbYnccY1Jab
-	 dAuGuN0IsVTKA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 1975FCE0DEA; Wed, 12 Jun 2024 20:38:02 -0700 (PDT)
-Date: Wed, 12 Jun 2024 20:38:02 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
- <Zmov7ZaL-54T9GiM@zx2c4.com>
- <Zmo9-YGraiCj5-MI@zx2c4.com>
+	s=arc-20240116; t=1718252263; c=relaxed/simple;
+	bh=8Mq8uAtZWia3UTnxT6VFmnSllAMR8K3s36eiGH15SR0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=U+t3dn+Yzi+K8w5AXtfxiwNGKlstcBk8pJ4wLq4Ac+y7uvarwRkKpGvp5d2jbizHMMMPh0qiEpC5ZSaleTDvB7vO4xzMBetrtZCzWz3cnARcdfVDqrpRcXm83IwAJCNC492EDIGFodQdtJN6lXBlVUHY3e8hg2/yNhgYW9/mah0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=luxTeRwe; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7955f3d4516so155061685a.1
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jun 2024 21:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718252260; x=1718857060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=es9LhqZ4Jm05dyI++sDpBq6+bzr8UYOF4BC+q1+J0JY=;
+        b=luxTeRweE2QLt97lto7ps3edHGQ1aYD/lQ2i1tFF3tJPDBAKGIBQUGBP7VRl3MdHys
+         67SalaXiln0LyUjlZKntKenIU+b2jpbHNr9utptzwn88LYDgEet2O2a98bjL0n/iC1Do
+         1F6NhX8+CUDZpAH+xoCuKhKxzguJ1YM1N3PZK1BPJKH/vtiresRn9eWi8Vec7B+Fw+4K
+         o1cTrFfG3Dc0mwcVLYgoaq1NxBNt2PGkSudUFL6XRUAp74P3XFuUNODe+WGpv2zkGwSE
+         TsxZencowqklbfHHRwTvGy3XydmBbh4sZD6xBzwCWd19mYETAkMDJQ6NQOLh+7pukEa2
+         +sUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718252260; x=1718857060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=es9LhqZ4Jm05dyI++sDpBq6+bzr8UYOF4BC+q1+J0JY=;
+        b=KmHB8v0PLUELBOyKRlK7KwA8oOpoILEc+Yw6oxA7U8WIAhC2eKP4KVbpb5IoVFlp4h
+         mUeoDhAcax8x9aMJQVeUGxRJ0jO/LjCo0SfQxyD0T0sR6NR4c9nUSRne3RCgftLQp6JT
+         i9noyCYBMQDICzmiKFSpTc5P/6mVK8gMNjHV3EonClUW149uWdGJRs3bgODCRTLKLqH9
+         lk+4vGktG+sbSfgBXc/zOyw+PU0Mgx7L2NvmhCGa9esQW2o4ppsOAvgMB6Ire6KTXBq8
+         CHS+k6aH1L0t5n/k0LYNf48WXZXeZY1vV8MUhdVVmwYmWULkTyhP4ycZKC5wLdb+AbHi
+         qTcw==
+X-Gm-Message-State: AOJu0YzyLUwJl7C2TzxsEAy3zapJYdGLN0Ax2I7IqM6ja05dKzObB8gK
+	9OMtCdp8gBdXseLPjbEnSy1ZmfTUzntM9wrGLoCebsUT/N5n2qPwnfCb
+X-Google-Smtp-Source: AGHT+IGTHVGW3Z7K/D+Oj3EcR8uJ63IK5ybH6rdylF6tGWs6jknuSfU994BP6worMxfO3KWbygFagg==
+X-Received: by 2002:a05:6214:2626:b0:6b0:6625:135 with SMTP id 6a1803df08f44-6b2a3448fbamr28042956d6.28.1718252259789;
+        Wed, 12 Jun 2024 21:17:39 -0700 (PDT)
+Received: from leira.trondhjem.org (c-68-40-188-158.hsd1.mi.comcast.net. [68.40.188.158])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c68ff3sm2851546d6.74.2024.06.12.21.17.39
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 21:17:39 -0700 (PDT)
+From: trondmy@gmail.com
+X-Google-Original-From: trond.myklebust@hammerspace.com
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH 00/19] OPEN optimisations and Attribute delegations
+Date: Thu, 13 Jun 2024 00:11:17 -0400
+Message-ID: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmo9-YGraiCj5-MI@zx2c4.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 02:31:53AM +0200, Jason A. Donenfeld wrote:
-> On Thu, Jun 13, 2024 at 01:31:57AM +0200, Jason A. Donenfeld wrote:
-> > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > > > when the callback only performs kmem_cache_free. Use
-> > > > > kfree_rcu() directly.
-> > > > > 
-> > > > > The changes were done using the following Coccinelle semantic patch.
-> > > > > This semantic patch is designed to ignore cases where the callback
-> > > > > function is used in another way.
-> > > > 
-> > > > How does the discussion on:
-> > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > > > reflect on this series? IIUC we should hold off..
-> > > 
-> > > We do need to hold off for the ones in kernel modules (such as 07/14)
-> > > where the kmem_cache is destroyed during module unload.
-> > > 
-> > > OK, I might as well go through them...
-> > > 
-> > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> > > 	Needs to wait, see wg_allowedips_slab_uninit().
-> > 
-> > Right, this has exactly the same pattern as the batman-adv issue:
-> > 
-> >     void wg_allowedips_slab_uninit(void)
-> >     {
-> >             rcu_barrier();
-> >             kmem_cache_destroy(node_cache);
-> >     }
-> > 
-> > I'll hold off on sending that up until this matter is resolved.
-> 
-> BTW, I think this whole thing might be caused by:
-> 
->     a35d16905efc ("rcu: Add basic support for kfree_rcu() batching")
-> 
-> The commit message there mentions:
-> 
->     There is an implication with rcu_barrier() with this patch. Since the
->     kfree_rcu() calls can be batched, and may not be handed yet to the RCU
->     machinery in fact, the monitor may not have even run yet to do the
->     queue_rcu_work(), there seems no easy way of implementing rcu_barrier()
->     to wait for those kfree_rcu()s that are already made. So this means a
->     kfree_rcu() followed by an rcu_barrier() does not imply that memory will
->     be freed once rcu_barrier() returns.
-> 
-> Before that, a kfree_rcu() used to just add a normal call_rcu() into the
-> list, but with the function offset < 4096 as a special marker. So the
-> kfree_rcu() calls would be treated alongside the other call_rcu() ones
-> and thus affected by rcu_barrier(). Looks like that behavior is no more
-> since this commit.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-You might well be right, and thank you for digging into this!
+Now that https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/ is
+mostly done with the review process, it is time to look at pushing the
+client implementation that we've been working on upstream.
 
-> Rather than getting rid of the batching, which seems good for
-> efficiency, I wonder if the right fix to this would be adding a
-> `should_destroy` boolean to kmem_cache, which kmem_cache_destroy() sets
-> to true. And then right after it checks `if (number_of_allocations == 0)
-> actually_destroy()`, and likewise on each kmem_cache_free(), it could
-> check `if (should_destroy && number_of_allocations == 0)
-> actually_destroy()`. This way, the work is delayed until it's safe to do
-> so. This might also mitigate other lurking bugs of bad code that calls
-> kmem_cache_destroy() before kmem_cache_free().
+The following patch series therefore adds support for the NFSv4.2
+extension to OP_OPEN to allow the client to request that the server
+return either an open stateid or a delegation instead of always sending
+the open stateid whether or not a delegation is returned.
+This allows us to optimise away CLOSE, and hence makes small or cached
+file access significantly more efficient.
 
-Here are the current options being considered, including those that
-are completely brain-dead:
+It also adds support for attribute delegations, which allow the client
+to manage the atime and mtime, and simply inform the server at file
+close time what the values should be. This means that most GETATTR
+operations to retrieve the atime/mtime values while the file is under
+I/O can be optimised away.
 
-o	Document current state.  (Must use call_rcu() if module
-	destroys slab of RCU-protected objects.)
+Finally, we also add support for the detection mechanism that allows the
+client to determine whether or not the server supports the above
+functionality.
 
-	Need to review Julia's and Uladzislau's series of patches
-	that change call_rcu() of slab objects to kfree_rcu().
+Lance Shelton (1):
+  NFS: Add a generic callback to return the delegation
 
-o	Make rcu_barrier() wait for kfree_rcu() objects.  (This is
-	surprisingly complex and will wait unnecessarily in some cases.
-	However, it does preserve current code.)
+Trond Myklebust (18):
+  NFSv4: Clean up open delegation return structure
+  NFSv4: Refactor nfs4_opendata_check_deleg()
+  NFSv4: Add new attribute delegation definitions
+  NFSv4: Plumb in XDR support for the new delegation-only setattr op
+  NFSv4: Add CB_GETATTR support for delegated attributes
+  NFSv4: Add a flags argument to the 'have_delegation' callback
+  NFSv4: Add support for delegated atime and mtime attributes
+  NFSv4: Add recovery of attribute delegations
+  NFSv4: Add a capability for delegated attributes
+  NFSv4: Enable attribute delegations
+  NFSv4: Delegreturn must set m/atime when they are delegated
+  NFSv4: Fix up delegated attributes in nfs_setattr
+  NFSv4: Don't request atime/mtime/size if they are delegated to us
+  NFSv4: Add support for the FATTR4_OPEN_ARGUMENTS attribute
+  NFSv4: Detect support for OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+  NFSv4: Add support for OPEN4_RESULT_NO_OPEN_STATEID
+  NFSv4: Ask for a delegation or an open stateid in OPEN
+  Return the delegation when deleting the sillyrenamed file
 
-o	Make a kfree_rcu_barrier() that waits for kfree_rcu() objects.
-	(This avoids the unnecessary waits, but adds complexity to
-	kfree_rcu().  This is harder than it looks, but could be done,
-	for example by maintaining pairs of per-CPU counters and handling
-	them in an SRCU-like fashion.  Need some way of communicating the
-	index, though.)
+ fs/nfs/callback.h         |   5 +-
+ fs/nfs/callback_proc.c    |  14 ++-
+ fs/nfs/callback_xdr.c     |  39 ++++++-
+ fs/nfs/delegation.c       |  59 ++++++----
+ fs/nfs/delegation.h       |  45 +++++++-
+ fs/nfs/dir.c              |   2 +-
+ fs/nfs/file.c             |   4 +-
+ fs/nfs/inode.c            | 104 +++++++++++++++--
+ fs/nfs/nfs3proc.c         |  10 +-
+ fs/nfs/nfs4proc.c         | 230 ++++++++++++++++++++++++++++----------
+ fs/nfs/nfs4xdr.c          | 131 +++++++++++++++++-----
+ fs/nfs/proc.c             |  10 +-
+ fs/nfs/read.c             |   3 +
+ fs/nfs/unlink.c           |   2 +
+ fs/nfs/write.c            |  11 +-
+ include/linux/nfs4.h      |  11 ++
+ include/linux/nfs_fs_sb.h |   2 +
+ include/linux/nfs_xdr.h   |  45 +++++++-
+ include/uapi/linux/nfs4.h |   4 +
+ 19 files changed, 586 insertions(+), 145 deletions(-)
 
-	(There might be use cases where both rcu_barrier() and
-	kfree_rcu_barrier() would need to be invoked.)
+-- 
+2.45.2
 
-	A simpler way to implement this is to scan all of the in-flight
-	objects, and queue each (either separately or in bulk) using
-	call_rcu().  This still has problems with kfree_rcu_mightsleep()
-	under low-memory conditions, in which case there are a bunch
-	of synchronize_rcu() instances waiting.  These instances could
-	use SRCU-like per-CPU arrays of counters.  Or just protect the
-	calls to synchronize_rcu() and the later frees with an SRCU
-	reader, then have the other end call synchronize_srcu().
-
-o	Make the current kmem_cache_destroy() asynchronously wait for
-	all memory to be returned, then complete the destruction.
-	(This gets rid of a valuable debugging technique because
-	in normal use, it is a bug to attempt to destroy a kmem_cache
-	that has objects still allocated.)
-
-o	Make a kmem_cache_destroy_rcu() that asynchronously waits for
-	all memory to be returned, then completes the destruction.
-	(This raises the question of what to is it takes a "long time"
-	for the objects to be freed.)
-
-o	Make a kmem_cache_free_barrier() that blocks until all
-	objects in the specified kmem_cache have been freed.
-
-o	Make a kmem_cache_destroy_wait() that waits for all memory to
-	be returned, then does the destruction.  This is equivalent to:
-
-		kmem_cache_free_barrier(&mycache);
-		kmem_cache_destroy(&mycache);
-
-Uladzislau has started discussions on the last few of these:
-https://lore.kernel.org/all/ZmnL4jkhJLIW924W@pc636/
-
-I have also added this information to a Google Document for
-easier tracking:
-https://docs.google.com/document/d/1v0rcZLvvjVGejT3523W0rDy_sLFu2LWc_NR3fQItZaA/edit?usp=sharing
-
-Other thoughts?
-
-							Thanx, Paul
 
