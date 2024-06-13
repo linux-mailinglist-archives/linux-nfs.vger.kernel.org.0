@@ -1,249 +1,205 @@
-Return-Path: <linux-nfs+bounces-3777-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3778-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D94D9078EE
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 18:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A3C6907A09
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 19:39:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCBCF1F21CBC
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 16:58:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C86E41F23195
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 17:39:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892AE1494B5;
-	Thu, 13 Jun 2024 16:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD4914A4EC;
+	Thu, 13 Jun 2024 17:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvS9Yfke"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxkFx2sc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F55A1339A4;
-	Thu, 13 Jun 2024 16:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C626114A093;
+	Thu, 13 Jun 2024 17:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718297898; cv=none; b=G0HtBQojZcv6VWtEjx6EA9m/88kJ31ArUvLeJtxA+6s7HApkCAhIED7W4jfm6YoqPdfuWoFOH/fedegD+0BCYFWmu3qloD7tKPAxXH1HHhiKHdfF/Jn2tQupXv6v7ax+b8pJfFELJKmDcRIKr4bkzFO2NLPJqgu32dnW6uoDfa8=
+	t=1718300347; cv=none; b=FvcBqipXnT4jVkCaQbuMt82mAVEta6SHLrHf2D25fq1tFY+kht90u8XLQFT+HOjE/jNRUa9ifdGf5dEqZjLgE4WZpXivzCWM1qEQXwwkyxqJtcHlgy1p6SS08yrEGsDPudHqXJsy0rKua91JAjyXuytR9RjzxBp+LjNakEDPxmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718297898; c=relaxed/simple;
-	bh=KRSGQcAao4mcEtpnNWb8+qcRBkyi8QYsN67UJSpzfec=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=puChHYtbTiPJCNupomzz+xB20x7IJGfmZ0fXb2754H8xVmKAp5ek6s4uCst2WPU8TQJpomkT6kQUcpDhufJmAnBF4UK3fblSrVHNgA+JrnQ82qvveKYCPW8uSdx9/EuWhXNeK5fs0/kCm1Otd99sbbaQnsDK3OBOu1v2+HvpWwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvS9Yfke; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A734C3277B;
-	Thu, 13 Jun 2024 16:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718297897;
-	bh=KRSGQcAao4mcEtpnNWb8+qcRBkyi8QYsN67UJSpzfec=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WvS9YfkepHgZ68WrLBfHDj/K4OtPy1FYqduNBtl8WbCps/qNwkBFBQt63b8hyCxeL
-	 7RFh7RVrbaGUarhLjfL2msY/kwvRjJzEplzQ0JaTXvP3tj4obwct+v56OLmitux17e
-	 nllm2Bgo1FWr18LnyASJC7wowS5Ibmo5TU50TFMefCdQiCo5YhdQaJRSVaWQby9oAW
-	 WAyVQaHol+HGjqUYrHva0gEybowri06Obh9uQuPPKJqslWoytn9hUnCkkL26yVRHV3
-	 YgLuoRb24pjzo+hqqngx+s3YOmsykbEY3pYtxhZ+ynurhlSp1h8xZK/b1LiQibOya7
-	 5fTFs5FQ+B0HQ==
-Message-ID: <5064ae6b3156a1601eb7a7f4f890fb125933aefb.camel@kernel.org>
-Subject: Re: [PATCH v2 2/5] nfsd: make nfsd_svc call nfsd_set_nrthreads
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lorenzo Bianconi
- <lorenzo@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org,  netdev@vger.kernel.org
-Date: Thu, 13 Jun 2024 12:58:15 -0400
-In-Reply-To: <ZmsW+kmUdtebrUcd@tissot.1015granger.net>
-References: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
-	 <20240613-nfsd-next-v2-2-20bf690d65fb@kernel.org>
-	 <ZmsW+kmUdtebrUcd@tissot.1015granger.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1718300347; c=relaxed/simple;
+	bh=fHH7Y/GCV9RKHWRoNr6bxBkzHP+WxpUKHOajIKJQc0A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lf4iKElbc9keRklBn9lGQ6hAlZqgy4ISQbyGU9RmOGzUcLz45CEiXPbxF0DhcKbF6hfq8OgdHd+aARmCwgXrcu6IYnM+lkbWWFqlXqFjCjwlUw2rnsJVGbkH+DAcK5zQ9x++sdlEBFIhfrMEohE+eeN/I1ZujTuw6ycNC6ar7qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxkFx2sc; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52bbdb15dd5so1658349e87.3;
+        Thu, 13 Jun 2024 10:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718300344; x=1718905144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=956BT+Uq9SD+emo8+jCK8z5I39sZ4FeCbRyFqSAHxWc=;
+        b=gxkFx2scR94MsRlvbmw5uI806EfMTrEnQpNzuFTxR9wGTPSOc+7D52WekaOxVJyu2P
+         wgKjqGD2SC3evJk+4k5zPryD57uZDRfw/HP4S8qUN+91swZKgCy60ho3uBSe0XlDg///
+         is7Tt4KaQcr9Z3fA8iaip8pYI8q32JWcFIKkXX6qut+iSB5q6dEVEGv78Yen3ATEOvrb
+         A+NxrI0xrwPvO1fgYJlbxpUPW1fUHJ8BagXdFv5oN74f83KWTKee5Q+NmWmYuKo1ciZV
+         rAPAmX6yQvSMDWS4J2SkiqXowLtcdDTvHrRnj3KgaD6YVbh4aWWdljhnv3GBXcDQ/cig
+         Wtqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718300344; x=1718905144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=956BT+Uq9SD+emo8+jCK8z5I39sZ4FeCbRyFqSAHxWc=;
+        b=qyMzCidkHpEcC47LckCplOQOTZ3IlM87jg53yUgh6HM6EoV5aI25PrE7h4tZL4D5Zj
+         2NXfgvqlC0q6s07e3NKEFtKNH7XcrWDLhuCKXt1lckQOSJhaofr3yRE0XI9BM8gdZmku
+         lRcvvSxFpHzHQ0+sno4jHM2s3OMqzj9VV58UuD3683x3hj4KgriGtFkAPrOyplOjKBHX
+         bliQ4xvo7UcE0F5mISvuLTLv2R8h4i5wvUlgtolo8Jj0wMKQWnq6C5PCLfH2XQzkkUqr
+         r+JwuXYFV6ESFn808yhRjDpTFtCtMdQX5JH5J11RpA5zbWr39BGlG/kU6GTfXboG1iAH
+         v8iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsay3bizCj3Do0cRqomwNingFhHf4dfl/G1I2mBShys24omAVVodi2I7UDLTQixI5vi2ONjA28IctmRD1Z/9t5qvC8peqTlua7nst0zcD0JQi8nuCRdSbROheUzaTJsEDbGTmn4DgPkKZbLh20b6c9n7FemaoUS350KWqLFc95Au4byqghV1c4Gzf+FRELc4D1+ymIwdEYIaO1vjLR4Yv25QtszYbRcTnE+Zicfcs6BiRuwx791dFhoCpeki65HZwBzenqWl4FWzJU5UsntK2zY4BfJI+DyKVM4DRfFl0Zo+7NcoJPsldjd4WF3A+VzFLfGBFkFGBFIpBdiD2w8B6JUBJDzvJEmK3mnwnseKK0tfLs/E1YYCOOww9LMyeRxnuUpDi/1i31CkC7s6cFuM08onDuRCwADKlvhr9M5yMQZUCTwvE777CPzdIGIw==
+X-Gm-Message-State: AOJu0Yw4mvVvDUWiyeYHXkAdI5AZPvyQWVmfpJI8RthwN0PGekzTw8a9
+	jYd4+USev2JiNN9x1Y9Zzgu6jDzUmYX6hWnA45Swk+Fx7oZkN2Va
+X-Google-Smtp-Source: AGHT+IEqfg03O6T4CVRhNhuT1kToVJHsIj8GcfpqCCRbVlEQmwf5k9Sqz/b5zlxpaNyn2BuI8Okyaw==
+X-Received: by 2002:a05:6512:517:b0:52b:796e:66a5 with SMTP id 2adb3069b0e04-52ca6e9954cmr243776e87.66.1718300343767;
+        Thu, 13 Jun 2024 10:39:03 -0700 (PDT)
+Received: from pc636 (host-90-233-218-141.mobileonline.telia.com. [90.233.218.141])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca288cd87sm299099e87.304.2024.06.13.10.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 10:39:03 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 13 Jun 2024 19:38:59 +0200
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <Zmsuswo8OPIhY5KJ@pc636>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <ZmrfA1p2zSVIaYam@zx2c4.com>
+ <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
+ <Zmru7hhz8kPDPsyz@pc636>
+ <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
 
-On Thu, 2024-06-13 at 11:57 -0400, Chuck Lever wrote:
-> On Thu, Jun 13, 2024 at 08:16:39AM -0400, Jeff Layton wrote:
-> > Now that the refcounting is fixed, rework nfsd_svc to use the same
-> > thread setup as the pool_threads interface. Since the new netlink
-> > interface doesn't have the same restriction as pool_threads, move
-> > the
-> > guard against shutting down all threads to write_pool_threads.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > =C2=A0fs/nfsd/nfsctl.c | 14 ++++++++++++--
-> > =C2=A0fs/nfsd/nfsd.h=C2=A0=C2=A0 |=C2=A0 3 ++-
-> > =C2=A0fs/nfsd/nfssvc.c | 18 ++----------------
-> > =C2=A03 files changed, 16 insertions(+), 19 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 202140df8f82..121b866125d4 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -406,7 +406,7 @@ static ssize_t write_threads(struct file *file,
-> > char *buf, size_t size)
-> > =C2=A0			return -EINVAL;
-> > =C2=A0		trace_nfsd_ctl_threads(net, newthreads);
-> > =C2=A0		mutex_lock(&nfsd_mutex);
-> > -		rv =3D nfsd_svc(newthreads, net, file->f_cred,
-> > NULL);
-> > +		rv =3D nfsd_svc(1, &newthreads, net, file->f_cred,
-> > NULL);
-> > =C2=A0		mutex_unlock(&nfsd_mutex);
-> > =C2=A0		if (rv < 0)
-> > =C2=A0			return rv;
-> > @@ -481,6 +481,16 @@ static ssize_t write_pool_threads(struct file
-> > *file, char *buf, size_t size)
-> > =C2=A0				goto out_free;
-> > =C2=A0			trace_nfsd_ctl_pool_threads(net, i,
-> > nthreads[i]);
-> > =C2=A0		}
-> > +
-> > +		/*
-> > +		 * There must always be a thread in pool 0; the
-> > admin
-> > +		 * can't shut down NFS completely using
-> > pool_threads.
-> > +		 *
-> > +		 * FIXME: do we really need this?
->=20
-> Hi, how do you plan to decide this question?
->=20
+On Thu, Jun 13, 2024 at 08:06:30AM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 13, 2024 at 03:06:54PM +0200, Uladzislau Rezki wrote:
+> > On Thu, Jun 13, 2024 at 05:47:08AM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 13, 2024 at 01:58:59PM +0200, Jason A. Donenfeld wrote:
+> > > > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
+> > > > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
+> > > > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
+> > > > > > > Since SLOB was removed, it is not necessary to use call_rcu
+> > > > > > > when the callback only performs kmem_cache_free. Use
+> > > > > > > kfree_rcu() directly.
+> > > > > > > 
+> > > > > > > The changes were done using the following Coccinelle semantic patch.
+> > > > > > > This semantic patch is designed to ignore cases where the callback
+> > > > > > > function is used in another way.
+> > > > > > 
+> > > > > > How does the discussion on:
+> > > > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
+> > > > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
+> > > > > > reflect on this series? IIUC we should hold off..
+> > > > > 
+> > > > > We do need to hold off for the ones in kernel modules (such as 07/14)
+> > > > > where the kmem_cache is destroyed during module unload.
+> > > > > 
+> > > > > OK, I might as well go through them...
+> > > > > 
+> > > > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+> > > > > 	Needs to wait, see wg_allowedips_slab_uninit().
+> > > > 
+> > > > Also, notably, this patch needs additionally:
+> > > > 
+> > > > diff --git a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
+> > > > index e4e1638fce1b..c95f6937c3f1 100644
+> > > > --- a/drivers/net/wireguard/allowedips.c
+> > > > +++ b/drivers/net/wireguard/allowedips.c
+> > > > @@ -377,7 +377,6 @@ int __init wg_allowedips_slab_init(void)
+> > > > 
+> > > >  void wg_allowedips_slab_uninit(void)
+> > > >  {
+> > > > -	rcu_barrier();
+> > > >  	kmem_cache_destroy(node_cache);
+> > > >  }
+> > > > 
+> > > > Once kmem_cache_destroy has been fixed to be deferrable.
+> > > > 
+> > > > I assume the other patches are similar -- an rcu_barrier() can be
+> > > > removed. So some manual meddling of these might be in order.
+> > > 
+> > > Assuming that the deferrable kmem_cache_destroy() is the option chosen,
+> > > agreed.
+> > >
+> > <snip>
+> > void kmem_cache_destroy(struct kmem_cache *s)
+> > {
+> > 	int err = -EBUSY;
+> > 	bool rcu_set;
+> > 
+> > 	if (unlikely(!s) || !kasan_check_byte(s))
+> > 		return;
+> > 
+> > 	cpus_read_lock();
+> > 	mutex_lock(&slab_mutex);
+> > 
+> > 	rcu_set = s->flags & SLAB_TYPESAFE_BY_RCU;
+> > 
+> > 	s->refcount--;
+> > 	if (s->refcount)
+> > 		goto out_unlock;
+> > 
+> > 	err = shutdown_cache(s);
+> > 	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
+> > 	     __func__, s->name, (void *)_RET_IP_);
+> > ...
+> > 	cpus_read_unlock();
+> > 	if (!err && !rcu_set)
+> > 		kmem_cache_release(s);
+> > }
+> > <snip>
+> > 
+> > so we have SLAB_TYPESAFE_BY_RCU flag that defers freeing slab-pages
+> > and a cache by a grace period. Similar flag can be added, like
+> > SLAB_DESTROY_ONCE_FULLY_FREED, in this case a worker rearm itself
+> > if there are still objects which should be freed.
+> > 
+> > Any thoughts here?
+> 
+> Wouldn't we also need some additional code to later check for all objects
+> being freed to the slab, whether or not that code is  initiated from
+> kmem_cache_destroy()?
+>
+Same away as SLAB_TYPESAFE_BY_RCU is handled from the kmem_cache_destroy() function.
+It checks that flag and if it is true and extra worker is scheduled to perform a
+deferred(instead of right away) destroy after rcu_barrier() finishes.
 
-Probably by ignoring it and letting the restriction (eventually) die
-with the old pool_threads interface. I'm amenable to dropping this
-restriction altogether though.
-
->=20
-> > +		 */
-> > +		if (nthreads[0] =3D=3D 0)
-> > +			nthreads[0] =3D 1;
-> > +
-> > =C2=A0		rv =3D nfsd_set_nrthreads(i, nthreads, net);
-> > =C2=A0		if (rv)
-> > =C2=A0			goto out_free;
-> > @@ -1722,7 +1732,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff
-> > *skb, struct genl_info *info)
-> > =C2=A0			scope =3D nla_data(attr);
-> > =C2=A0	}
-> > =C2=A0
-> > -	ret =3D nfsd_svc(nthreads, net, get_current_cred(), scope);
-> > +	ret =3D nfsd_svc(1, &nthreads, net, get_current_cred(),
-> > scope);
-> > =C2=A0
-> > =C2=A0out_unlock:
-> > =C2=A0	mutex_unlock(&nfsd_mutex);
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index 8f4f239d9f8a..cec8697b1cd6 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -103,7 +103,8 @@
-> > bool		nfssvc_encode_voidres(struct svc_rqst *rqstp,
-> > =C2=A0/*
-> > =C2=A0 * Function prototypes.
-> > =C2=A0 */
-> > -int		nfsd_svc(int nrservs, struct net *net, const
-> > struct cred *cred, const char *scope);
-> > +int		nfsd_svc(int n, int *nservers, struct net *net,
-> > +			 const struct cred *cred, const char
-> > *scope);
-> > =C2=A0int		nfsd_dispatch(struct svc_rqst *rqstp);
-> > =C2=A0
-> > =C2=A0int		nfsd_nrthreads(struct net *);
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index cd9a6a1a9fc8..076f35dc17e4 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -744,13 +744,6 @@ int nfsd_set_nrthreads(int n, int *nthreads,
-> > struct net *net)
->=20
-> Since you are slightly changing the API contract for this publicly
-> visible function, now would be a good time to add a kdoc comment.
->=20
-
-Ok.
-
->=20
-> > =C2=A0		}
-> > =C2=A0	}
-> > =C2=A0
-> > -	/*
-> > -	 * There must always be a thread in pool 0; the admin
-> > -	 * can't shut down NFS completely using pool_threads.
-> > -	 */
-> > -	if (nthreads[0] =3D=3D 0)
-> > -		nthreads[0] =3D 1;
-> > -
-> > =C2=A0	/* apply the new numbers */
-> > =C2=A0	for (i =3D 0; i < n; i++) {
-> > =C2=A0		err =3D svc_set_num_threads(nn->nfsd_serv,
-> > @@ -768,7 +761,7 @@ int nfsd_set_nrthreads(int n, int *nthreads,
-> > struct net *net)
-> > =C2=A0 * this is the first time nrservs is nonzero.
-> > =C2=A0 */
-> > =C2=A0int
-> > -nfsd_svc(int nrservs, struct net *net, const struct cred *cred,
-> > const char *scope)
-> > +nfsd_svc(int n, int *nthreads, struct net *net, const struct cred
-> > *cred, const char *scope)
->=20
-> Ditto: the patch changes the synopsis of nfsd_svc(), so I'd like a
-> kdoc comment to go with it.
->=20
-> And, this particular change is the reason for this patch, so the
-> description should state that (especially since subsequent
-> patch descriptions refer to "now that nfsd_svc takes an array
-> of threads..." : I had to come back to this patch and blink twice
-> to see why it said that).
->=20
-> A kdoc comment from sunrpc_get_pool_mode() should also be added
-> in 4/5.
->=20
-
-I'll do that and resend soon.
-
->=20
-> > =C2=A0{
-> > =C2=A0	int	error;
-> > =C2=A0	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > @@ -778,13 +771,6 @@ nfsd_svc(int nrservs, struct net *net, const
-> > struct cred *cred, const char *scop
-> > =C2=A0
-> > =C2=A0	dprintk("nfsd: creating service\n");
-> > =C2=A0
-> > -	nrservs =3D max(nrservs, 0);
-> > -	nrservs =3D min(nrservs, NFSD_MAXSERVS);
-> > -	error =3D 0;
-> > -
-> > -	if (nrservs =3D=3D 0 && nn->nfsd_serv =3D=3D NULL)
-> > -		goto out;
-> > -
-> > =C2=A0	strscpy(nn->nfsd_name, scope ? scope : utsname()-
-> > >nodename,
-> > =C2=A0		sizeof(nn->nfsd_name));
-> > =C2=A0
-> > @@ -796,7 +782,7 @@ nfsd_svc(int nrservs, struct net *net, const
-> > struct cred *cred, const char *scop
-> > =C2=A0	error =3D nfsd_startup_net(net, cred);
-> > =C2=A0	if (error)
-> > =C2=A0		goto out_put;
-> > -	error =3D svc_set_num_threads(serv, NULL, nrservs);
-> > +	error =3D nfsd_set_nrthreads(n, nthreads, net);
-> > =C2=A0	if (error)
-> > =C2=A0		goto out_put;
-> > =C2=A0	error =3D serv->sv_nrthreads;
-> >=20
-> > --=20
-> > 2.45.2
-> >=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+--
+Uladzislau Rezki
 
