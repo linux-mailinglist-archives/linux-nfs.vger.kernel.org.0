@@ -1,241 +1,263 @@
-Return-Path: <linux-nfs+bounces-3741-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3742-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EA68906521
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 09:31:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EA91906553
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 09:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9054289670
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 07:31:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53B5CB23C49
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jun 2024 07:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D62013BC1E;
-	Thu, 13 Jun 2024 07:31:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF92139CFF;
+	Thu, 13 Jun 2024 07:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfbGT37W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRWxTdej"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9421F13BC0D;
-	Thu, 13 Jun 2024 07:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294BA136997;
+	Thu, 13 Jun 2024 07:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718263875; cv=none; b=hHzPZN0hXkqC7qS3GAQhLhuzFdkxFV3hWmNFuvCVYQB2P34w43nge4kr+M3jOIVGKbqOYJYjhtHy7WDqZIu5qK2obmxD0eAsy9TxuWcOvbK+ETIyK5B7sRL0umgJ9YONSAaleydzELTLgnJrmMqVStKZiS4Zb+h/jZ9z8fQLvd0=
+	t=1718264341; cv=none; b=TTivP3ZHbsgt1afQFIyA2fHRgSwgpRDnMplK41cBXtJTQrglZkJfsyH1n8Gyv87GB1QUB2GRa2efH97wTVdADnnNn0Z9FdI8VmtuiIdpT8Xk82mLreOsw92wxFNFYngcPLi76X+ythbm76dsE3tbjr3s6/w11fU5LDcWlgu6QOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718263875; c=relaxed/simple;
-	bh=CR2vCZ7zdRzX00CQQ42G136ShNwfvXLPurS6gkUl8JM=;
+	s=arc-20240116; t=1718264341; c=relaxed/simple;
+	bh=dvG7FqSwDu5lrIi/fqvjZ/j9B9W5Iep3sa2oGhXDAWQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MVpLlAOyPgECSX5TE78QMk0q/BWZHXrpmY6a+tvOiMPEtE5p4O4cWar38+HecKUQfZivV10d/wUkLrEvhvgJ08jhkwH/MgsPh5Lx9ZcjWWt/RarccuvAGpxOuKX8F/KsbLYwMhPaPDQ0macaKPxUweza2i2WMns7DqsDepQOCF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kfbGT37W; arc=none smtp.client-ip=209.85.219.45
+	 To:Cc:Content-Type; b=BoeFvLAgBNQwRKauiTrCpZBm3OyYuTbXyvRwGBZxmYFp1uuKW8Y20DtfuRAfA898ETyLOPMm551E2ZLP9D/bmlAFkPBooqjGuYGB1d13d4KvyTrx7Hd0eOp0Bo2ag3oXydofO3rrPLqLmkYsMcQ9kB47io6ovD1rXscZgN+BLuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRWxTdej; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b0745efaeeso3530356d6.1;
-        Thu, 13 Jun 2024 00:31:13 -0700 (PDT)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b065d12e81so3859576d6.0;
+        Thu, 13 Jun 2024 00:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718263872; x=1718868672; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718264339; x=1718869139; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U5UwcZQgMEQIOp6sHS8xrUu+ogF+oqd67ekyxw5sYR8=;
-        b=kfbGT37Wp/FKNgCMJl4NNBl0M3jf5MxfYrQGnLXGEZYeQiP9D3mJP2/XsaKTwOYrZ9
-         zgIGrHQKmtQWaP5l+chM5u4qMV1+yElvHBD23mkDHfWvHMn0pagfp5gCBfvyfTrZ3su4
-         JLrJkq4cDYcKPjppSHbJTSaaMvMiyxNh7INPm2pG9ctN/kLvPcLIXVyQjBbWWZG2+XAj
-         SFN8ZRIYfV+fhx6CYOXPyp/jFw5wBj3Dz9GXfDt+0BWRioOi3Jtq3MPji2dEX0oiAENI
-         BFmwkv9kkY0IHUORerg9i8FLenqO2jwkvBdokbneqEbij2wXGbNp5pNRxwrCQfzIXpNd
-         okPA==
+        bh=1E6AzK51xf6iKhcHDUiW9xjjWQsQmJ90eNQKU5H/LL0=;
+        b=nRWxTdejPPnpF7GoeT5OXx99M+wgZW3ORtwhybCbrGa5+1ugeAaoCizNj0MPT2O7fa
+         EWvy1dabOi/lDtWwrjikJ1QwEH73OaPurEnAXAqZjRt/lkyN/V5jDZKrZPT2E44qBqfW
+         qAv7dVjYhKPib/YiZFFHU9pX46udXphC363nVjyFxdBLPFjB5AOyeVfT7cR17PfTDAeA
+         aLlUDenFnEnh1VWyh8/ZFBExnSJfnHZqHwT3KBokxqbd+sZShC7sO6s9r94d8HQlrjiA
+         vOGj7JI0YWBzhAH+oVsGnEIFyQ9S98ex0jETCLfjEhyHVk/BUn8o1mmniXRGp/quidoL
+         5RCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718263872; x=1718868672;
+        d=1e100.net; s=20230601; t=1718264339; x=1718869139;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U5UwcZQgMEQIOp6sHS8xrUu+ogF+oqd67ekyxw5sYR8=;
-        b=dkIQjtacWdNCVUjdZyNZH1ndI9UERZIfcShRdD2sbF838wAyv0Ig4xLrmzDSuM/9cm
-         r9dkYJLEImlVy8J+stFmwletcLoI+S6136HAmzo0dM+iKaDsC2L0q2es/m4U79ZujWAQ
-         d4YLtK7ZKiBzhmy1Dfh+l5muJUDP8L6rLKhbYw20+frrQyRwgHBhKaT/zK0VvuXKjLiQ
-         9hfSqZfQvWfpssCS3Au0L/LA3UC4RmOMvbHOxeOc/uE8wC60mR2eTlqtDdRk7ruYX9rR
-         RvMdZGfohtq5FtNHrepbiM6RgpmQGIwGl7XiWUaCW8N1Ko4eKY8HAlKGuVCnygOg4l4V
-         nJeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjJsG1SmX+w706/c+prPXcOOm/zrBY5ahl536nnxNS5lm6HgkxAyIf9AvOhdj1yVz/WD1hO+QDIUirILF8DvCDTmt6uu3VDbxjIwgBCtaENWwayPqVHYl8KkNS7ISncTTeI8yu6VFCR+NV4u2pIjwV+OXZZu2NFDZZEBjuEl63wckYnjSSmA==
-X-Gm-Message-State: AOJu0Yzlih9cMILX0hL3aMpCW8UVrVw5jvkJH9aVj6ZWjq+KXmACPGg3
-	LHYkuM/Muvid4wqJQj/XFK/AvEDegNHUw2C+tJjHtJziZNIW2rCwHwrMLwGowKhW/BYUmczpLzy
-	GSmcVh3CXV8LphusbJhHwZ4Lod3c=
-X-Google-Smtp-Source: AGHT+IFbpfSFMJuePaJond8yuZhV+5vlXbm32Wex30d26dnEELli5NckMHvLs+Y0Jk01EnL5twKPzTrAxlrNY5sg50U=
-X-Received: by 2002:a05:6214:4a89:b0:6b0:825e:ab71 with SMTP id
- 6a1803df08f44-6b191778be9mr51179626d6.1.1718263872153; Thu, 13 Jun 2024
- 00:31:12 -0700 (PDT)
+        bh=1E6AzK51xf6iKhcHDUiW9xjjWQsQmJ90eNQKU5H/LL0=;
+        b=bizUsJr0TEwJyQ8wJJE89DUmeoWbhod26YvtdadRvaIPEhwEwdnDYz+vUwZ/BfuhwI
+         AWF/CSHWJmFKljdmsYv1BahMDEzdux2HGAXi+hXkXrv9FBUxrye4z9RP8I3sibmPt0Nj
+         p8WS1FuhVI+Psm4+SiDdGYycpnQMyUNRxHVPl4FH4ticcDIi1VtVmSQZwLph70C0usxe
+         hsBQiC7BbivFK/DHZtE4B/l6EF3kfJq3G0McIWsC2fvvWKfkb9r73Kqy7k+dEO2BFk2v
+         IrfNfnK+5gQfZtnLhVZAzt9VlVg2gSgvIIk05tHgZlKaYgBP4Oqn85ipRqZnbOjXw+Aa
+         2Z8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVOF9H1dazz6lYL9aDm/QsESdq0Hviy3IrRZM1sMKlZd6uUJE3bwgihYKphJd1hQ8uuD381Y2F0mPjv7EZ7JxdejXGnH/zbgFbd/0vZ3i34CCZF81x+jn1W/0OWBqQGbyinE6PoH580yWDGMAfV0qG9cDyneqMk0hnLbo6ycNYlsbqaW1Pi+g==
+X-Gm-Message-State: AOJu0YzTAFMqj8BB6EdUOc8XrRIhPUd2Sxy6eih88BaAbeRPmEHDtt2y
+	ybT+ciRr7XPeIsGANzwKLqFZ5OOZ0j/2JrLdP+YSNERKZQBAUG+ojCOtnsdy1M/OAuh3w9FGdN0
+	8lFHQ9CjrgOe9sj+LC23sUBopJWQ=
+X-Google-Smtp-Source: AGHT+IHVzT36nvZbeajaCGP82pKfL+ox3iyFWA+hBahWjErp+dD2xAJfXvYA0YrMJktsuFxVdiilx5R2GTaOGm2z8dI=
+X-Received: by 2002:a05:6214:3282:b0:6b0:7327:c45b with SMTP id
+ 6a1803df08f44-6b191c50ed9mr28334476d6.16.1718264338926; Thu, 13 Jun 2024
+ 00:38:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171817619547.14261.975798725161704336@noble.neil.brown.name> <20240612-nennung-ungnade-ae9bdc5f8c4c@brauner>
-In-Reply-To: <20240612-nennung-ungnade-ae9bdc5f8c4c@brauner>
+References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
+ <CAOQ4uxidUYY02xry+y5VpRWfBjCmAt0CnmJ3JbgLTLkZ6nn1sA@mail.gmail.com> <171819286884.14261.11045203598673536466@noble.neil.brown.name>
+In-Reply-To: <171819286884.14261.11045203598673536466@noble.neil.brown.name>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 13 Jun 2024 10:31:00 +0300
-Message-ID: <CAOQ4uxgSje5Trq7CySjf7M6F92y3J2NNZihP1jzQU2n-2RNKSA@mail.gmail.com>
+Date: Thu, 13 Jun 2024 10:38:47 +0300
+Message-ID: <CAOQ4uxh357o5H-PQK9KY949s5pg_aaH9nMd-NzMAu_kx0WCn1Q@mail.gmail.com>
 Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
  ->atomic_open used.
-To: Christian Brauner <brauner@kernel.org>, NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+To: NeilBrown <neilb@suse.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
 	James Clark <james.clark@arm.com>, ltp@lists.linux.it, linux-nfs@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
+	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 4:53=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
+On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
 >
-> On Wed, Jun 12, 2024 at 05:09:55PM +1000, NeilBrown wrote:
+> On Wed, 12 Jun 2024, Amir Goldstein wrote:
+> > On Wed, Jun 12, 2024 at 10:10=E2=80=AFAM NeilBrown <neilb@suse.de> wrot=
+e:
+> > >
+> > >
+> > > When a file is opened and created with open(..., O_CREAT) we get
+> > > both the CREATE and OPEN fsnotify events and would expect them in tha=
+t
+> > > order.   For most filesystems we get them in that order because
+> > > open_last_lookups() calls fsnofify_create() and then do_open() (from
+> > > path_openat()) calls vfs_open()->do_dentry_open() which calls
+> > > fsnotify_open().
+> > >
+> > > However when ->atomic_open is used, the
+> > >    do_dentry_open() -> fsnotify_open()
+> > > call happens from finish_open() which is called from the ->atomic_ope=
+n
+> > > handler in lookup_open() which is called *before* open_last_lookups()
+> > > calls fsnotify_create.  So we get the "open" notification before
+> > > "create" - which is backwards.  ltp testcase inotify02 tests this and
+> > > reports the inconsistency.
+> > >
+> > > This patch lifts the fsnotify_open() call out of do_dentry_open() and
+> > > places it higher up the call stack.  There are three callers of
+> > > do_dentry_open().
+> > >
+> > > For vfs_open() and kernel_file_open() the fsnotify_open() is placed
+> > > directly in that caller so there should be no behavioural change.
+> > >
+> > > For finish_open() there are two cases:
+> > >  - finish_open is used in ->atomic_open handlers.  For these we add a
+> > >    call to fsnotify_open() at the top of do_open() if FMODE_OPENED is
+> > >    set - which means do_dentry_open() has been called.
+> > >  - finish_open is used in ->tmpfile() handlers.  For these a similar
+> > >    call to fsnotify_open() is added to vfs_tmpfile()
 > >
-> > When a file is opened and created with open(..., O_CREAT) we get
-> > both the CREATE and OPEN fsnotify events and would expect them in that
-> > order.   For most filesystems we get them in that order because
-> > open_last_lookups() calls fsnofify_create() and then do_open() (from
-> > path_openat()) calls vfs_open()->do_dentry_open() which calls
-> > fsnotify_open().
+> > Any handlers other than ovl_tmpfile()?
+>
+> Local filesystems tend to call finish_open_simple() which is a trivial
+> wrapper around finish_open().
+> Every .tmpfile handler calls either finish_open() or finish_open_simple()=
+.
+>
+> > This one is a very recent and pretty special case.
+> > Did open(O_TMPFILE) used to emit an OPEN event before that change?
+>
+> I believe so, yes.
+>
+
+Right. Thanks for clarifying.
+
+> Thanks,
+> NeilBrown
+>
 > >
-> > However when ->atomic_open is used, the
-> >    do_dentry_open() -> fsnotify_open()
-> > call happens from finish_open() which is called from the ->atomic_open
-> > handler in lookup_open() which is called *before* open_last_lookups()
-> > calls fsnotify_create.  So we get the "open" notification before
-> > "create" - which is backwards.  ltp testcase inotify02 tests this and
-> > reports the inconsistency.
+> > >
+> > > With this patch NFSv3 is restored to its previous behaviour (before
+> > > ->atomic_open support was added) of generating CREATE notifications
+> > > before OPEN, and NFSv4 now has that same correct ordering that is has
+> > > not had before.  I haven't tested other filesystems.
+> > >
+> > > Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUN=
+C correctly.")
+> > > Reported-by: James Clark <james.clark@arm.com>
+> > > Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d=
+8c8@arm.com
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/namei.c |  5 +++++
+> > >  fs/open.c  | 19 ++++++++++++-------
+> > >  2 files changed, 17 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index 37fb0a8aa09a..057afacc4b60 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -3612,6 +3612,9 @@ static int do_open(struct nameidata *nd,
+> > >         int acc_mode;
+> > >         int error;
+> > >
+> > > +       if (file->f_mode & FMODE_OPENED)
+> > > +               fsnotify_open(file);
+> > > +
+> > >         if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
+> > >                 error =3D complete_walk(nd);
+> > >                 if (error)
+> > > @@ -3700,6 +3703,8 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
+> > >         mode =3D vfs_prepare_mode(idmap, dir, mode, mode, mode);
+> > >         error =3D dir->i_op->tmpfile(idmap, dir, file, mode);
+> > >         dput(child);
+> > > +       if (file->f_mode & FMODE_OPENED)
+> > > +               fsnotify_open(file);
+> > >         if (error)
+> > >                 return error;
+> > >         /* Don't check for other permissions, the inode was just crea=
+ted */
+> > > diff --git a/fs/open.c b/fs/open.c
+> > > index 89cafb572061..970f299c0e77 100644
+> > > --- a/fs/open.c
+> > > +++ b/fs/open.c
+> > > @@ -1004,11 +1004,6 @@ static int do_dentry_open(struct file *f,
+> > >                 }
+> > >         }
+> > >
+> > > -       /*
+> > > -        * Once we return a file with FMODE_OPENED, __fput() will cal=
+l
+> > > -        * fsnotify_close(), so we need fsnotify_open() here for symm=
+etry.
+> > > -        */
+> > > -       fsnotify_open(f);
+> > >         return 0;
+> > >
+> > >  cleanup_all:
+> > > @@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
+> > >   */
+> > >  int vfs_open(const struct path *path, struct file *file)
+> > >  {
+> > > +       int ret;
+> > > +
+> > >         file->f_path =3D *path;
+> > > -       return do_dentry_open(file, NULL);
+> > > +       ret =3D do_dentry_open(file, NULL);
+> > > +       if (!ret)
+> > > +               /*
+> > > +                * Once we return a file with FMODE_OPENED, __fput() =
+will call
+> > > +                * fsnotify_close(), so we need fsnotify_open() here =
+for symmetry.
+> > > +                */
+> > > +               fsnotify_open(file);
 > >
-> > This patch lifts the fsnotify_open() call out of do_dentry_open() and
-> > places it higher up the call stack.  There are three callers of
-> > do_dentry_open().
+> > I agree that this change preserves the logic, but (my own) comment
+> > above is inconsistent with the case of:
 > >
-> > For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-> > directly in that caller so there should be no behavioural change.
+> >         if ((f->f_flags & O_DIRECT) && !(f->f_mode & FMODE_CAN_ODIRECT)=
+)
+> >                 return -EINVAL;
 > >
-> > For finish_open() there are two cases:
-> >  - finish_open is used in ->atomic_open handlers.  For these we add a
-> >    call to fsnotify_open() at the top of do_open() if FMODE_OPENED is
-> >    set - which means do_dentry_open() has been called.
-> >  - finish_open is used in ->tmpfile() handlers.  For these a similar
-> >    call to fsnotify_open() is added to vfs_tmpfile()
-> >
-> > With this patch NFSv3 is restored to its previous behaviour (before
-> > ->atomic_open support was added) of generating CREATE notifications
-> > before OPEN, and NFSv4 now has that same correct ordering that is has
-> > not had before.  I haven't tested other filesystems.
-> >
-> > Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC =
-correctly.")
-
-I think it is better to add (also?)
-Fixes: 7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook into
-do_dentry_open()")
-because this is when the test case was regressed for other atomic_open() fs
-
-> > Reported-by: James Clark <james.clark@arm.com>
-> > Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d8c=
-8@arm.com
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
+> > Which does set FMODE_OPENED, but does not emit an OPEN event.
 >
-> We should take this is a bugfix because it doesn't change behavior.
+> If I understand correctly, that case doesn't emit an OPEN event before
+> my patch, but will result in a CLOSE event.
+> After my patch ... I think it still doesn't emit OPEN.
+>
+> I wonder if, instead of adding the the fsnotify_open() in do_open(), we
+> should put it in the\
+>         if (file->f_mode & (FMODE_OPENED | FMODE_CREATED)) {
+> case of open_last_lookups().
 >
 
-I agree.
-I would love for this to be backported to at least v6.9.y
-because FAN_CREATE events supported on fuse,nfs, (zero f_fsid)
-only since v6.8, which triggered my fix to fanotify16 LTP test.
+We cannot do that.
+See the reasoning for 7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook in=
+to
+do_dentry_open()") - we need the events for other callers of vfs_open(),
+like overlayfs and nfsd.
 
-> But then we should follow this up with a patch series that tries to
-> rectify the open/close imbalance because I find that pretty ugly. That's
-> at least my opinion.
+> Or maybe it really doesn't hurt to have a CLOSE event without and OPEN.
+> OPEN without CLOSE would be problematic, but the other way around
+> shouldn't matter....  It feels untidy, but maybe we don't care.
 >
-> We should aim to only generate an open event when may_open() succeeds
-> and don't generate a close event when the open has failed. Maybe:
->
-> +#ifdef CONFIG_FSNOTIFY
-> +#define file_nonotify(f) ((f)->f_mode |=3D __FMODE_NONOTIFY)
-> +#else
-> +#define file_nonotify(f) ((void)(f))
-> +#endif
->
-> will do.
 
-Why bother with the ifdef? __FMODE_NONOTIFY is always defined.
+We have had unmatched CLOSE events for a very long time before
+7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook into do_dentry_open()")
+and I do not know of any complaints.
 
-Maybe something like this (untested partial patch):
-
-
-+static inline int fsnotify_open_error(struct file *f, int error)
-+{
-+       /*
-+        * Once we return a file with FMODE_OPENED, __fput() will call
-+        * fsnotify_close(), so we need to either call fsnotify_open() or
-+        * set __FMODE_NONOTIFY to suppress fsnotify_close() for symmetry.
-+        */
-+       if (error)
-+               f->f_mode |=3D __FMODE_NONOTIFY;
-+       else
-+               fsnotify_open(f);
-+       return error;
-+}
-+
- static int do_dentry_open(struct file *f,
-                          int (*open)(struct inode *, struct file *))
- {
-@@ -1004,11 +1018,6 @@ static int do_dentry_open(struct file *f,
-                }
-        }
-
--       /*
--        * Once we return a file with FMODE_OPENED, __fput() will call
--        * fsnotify_close(), so we need fsnotify_open() here for symmetry.
--        */
--       fsnotify_open(f);
-        return 0;
-
- cleanup_all:
-@@ -1085,8 +1094,11 @@ EXPORT_SYMBOL(file_path);
-  */
- int vfs_open(const struct path *path, struct file *file)
- {
-+       int error;
-+
-        file->f_path =3D *path;
--       return do_dentry_open(file, NULL);
-+       error =3D do_dentry_open(file, NULL);
-+       return fsnotify_open_error(file, error);
- }
-
- struct file *dentry_open(const struct path *path, int flags,
-@@ -1175,6 +1187,7 @@ struct file *kernel_file_open(const struct path
-*path, int flags,
-
-        f->f_path =3D *path;
-        error =3D do_dentry_open(f, NULL);
-+       fsnotify_open_error(f, error);
-        if (error) {
-                fput(f);
-                f =3D ERR_PTR(error);
-
-
->
-> Basic open permissions failing should count as failure to open and thus
-> also turn of a close event.
->
-> The somewhat ugly part is imho that security hooks introduce another
-> layer of complexity. While we do count security_file_permission() as
-> a failure to open we wouldn't e.g., count security_file_post_open() as a
-> failure to open (Though granted here that "*_post_open()" makes it
-> easier.). But it is really ugly that LSMs get to say "no" _after_ the
-> file has been opened. I suspect this is some IMA or EVM thing where they
-> hash the contents or something but it's royally ugly and I complained
-> about this before. But maybe such things should just generate an LSM
-> layer event via fsnotify in the future (FSNOTIFY_MAC) or something...
-> Then userspace can see "Hey, the VFS said yes but then the MAC stuff
-> said no."
-
-Not sure what IMA/EVM needs so cannot comment about this proposal.
+When I made this change, its purpose was not to match all OPEN/CLOSE
+but to add missing OPEN events. However, I did try to avoid unmatched
+CLOSE at least for the common cases.
 
 Thanks,
 Amir.
