@@ -1,167 +1,159 @@
-Return-Path: <linux-nfs+bounces-3826-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3827-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13F4C908B22
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 13:57:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4450908BC7
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 14:34:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB667288329
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 11:57:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B97551C20EAF
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 12:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F0D195B2A;
-	Fri, 14 Jun 2024 11:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EBAC196C7B;
+	Fri, 14 Jun 2024 12:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GUM8XvO9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NmKl29sU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GUM8XvO9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NmKl29sU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZDaF0ie"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5003D1922CF
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 11:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7C814D29B
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 12:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718366232; cv=none; b=HXR5Q+MKFtO9HUHGCKCnmBozeZBMf9zZPU0zx9BE7AzyM/TOzJgLcgM8TINMJutC/flz8aoGsLOnOoB52MJOXchIbE7xneqXOMtlAY68Mbk/wu6b90Nk18uDPRYMPM0leoJ8xdwYQiP1tqN7HxXVgPNZbHXJDxw3/nxuQP48XSI=
+	t=1718368474; cv=none; b=WglbvlPySD+wUHyaZCWvB9rYwNwqdyXy6FUJvdnjdAyAhu2lCdo3fxZzGOYrANuq0XwLm9Uj5imhs9J9kr9MiOkW4O2JKG+uLSG5EdUkcvBZ5W22+mjlduI1OGZaimuEw7Q3tmXUwURi/HuCYbQ+WsWaAAoweGMSUACHS40mazE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718366232; c=relaxed/simple;
-	bh=tjx6V5gM3qAvj3CjeYVhPAisFdqNA+kQhEoy9fqoU/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lvEDGdfAinXipIejZDAn/Ty9t+xxwKpD2+ei7huobbUCa5VPdl61+6XUCmR1ohssGEVmuaCJbR2cif5ghLOUAbGsm9OsA/9JzM/VETgR4CUgrhpIU7/uy/E42+AUJP19/DaMwEDBEnhRVSK19xjxUhegUEv2sDjjuMbAz8+P8T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GUM8XvO9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NmKl29sU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GUM8XvO9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NmKl29sU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6357833786;
-	Fri, 14 Jun 2024 11:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718366228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3GHpgEci693b/j5gKkHigiEYTE1UTfw42nIf3lOGf4M=;
-	b=GUM8XvO9Jz1wLaeBBAhmvGxFvvTJwIVN3RROeVqhz+Vmp6a2NyIT3i7g2KlMunEd4nNTxm
-	SKuS6s740vTLcK2xI4MX9sjB/op9LtCZJjV+PNVaosz6960O61HM4UWoT0DMJjXUh1N7C0
-	FUwRgmvIelat2+5pZ9Gfw6PIxwGFJU4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718366228;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3GHpgEci693b/j5gKkHigiEYTE1UTfw42nIf3lOGf4M=;
-	b=NmKl29sUGbdlvrQBmId5+mL1jfRPbqv2pdzSFlECQoZpsyws9RrUKDQzLF8dy4U2LdDdpx
-	Goq+2KYaPqQ3hfAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718366228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3GHpgEci693b/j5gKkHigiEYTE1UTfw42nIf3lOGf4M=;
-	b=GUM8XvO9Jz1wLaeBBAhmvGxFvvTJwIVN3RROeVqhz+Vmp6a2NyIT3i7g2KlMunEd4nNTxm
-	SKuS6s740vTLcK2xI4MX9sjB/op9LtCZJjV+PNVaosz6960O61HM4UWoT0DMJjXUh1N7C0
-	FUwRgmvIelat2+5pZ9Gfw6PIxwGFJU4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718366228;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3GHpgEci693b/j5gKkHigiEYTE1UTfw42nIf3lOGf4M=;
-	b=NmKl29sUGbdlvrQBmId5+mL1jfRPbqv2pdzSFlECQoZpsyws9RrUKDQzLF8dy4U2LdDdpx
-	Goq+2KYaPqQ3hfAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5825313AAF;
-	Fri, 14 Jun 2024 11:57:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id t1qAFRQwbGZQIQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 14 Jun 2024 11:57:08 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 02A4AA0869; Fri, 14 Jun 2024 13:57:03 +0200 (CEST)
-Date: Fri, 14 Jun 2024 13:57:03 +0200
-From: Jan Kara <jack@suse.cz>
-To: NeilBrown <neilb@suse.de>
-Cc: Jan Kara <jack@suse.cz>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] nfs: Block on write congestion
-Message-ID: <20240614115703.spwq6kh623vxdkgq@quack3>
-References: <20240612153022.25454-1-jack@suse.cz>
- <20240613082821.849-3-jack@suse.cz>
- <171831937031.14261.6690155619843129747@noble.neil.brown.name>
+	s=arc-20240116; t=1718368474; c=relaxed/simple;
+	bh=LdqkwonQuHSkpD225LJUUHuctdcXwS62rjOBK/WuDMQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iBqSGu3jmINc/6LW0yRWIkB/2g4cvaLCxuQB/0uVwPZpFDb+h9dcZacPaEB+JrRKSnvreAsJpf2h5DgjB0kxdJuaVFyf1xBEOUnknuDNTmtp1LPcZYcQy6JyDbO+0npMUHJC4aomO2hLRvwNtBzSGXmh303K8xOyoT8cB6n1A5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZDaF0ie; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787E9C2BD10;
+	Fri, 14 Jun 2024 12:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718368473;
+	bh=LdqkwonQuHSkpD225LJUUHuctdcXwS62rjOBK/WuDMQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=UZDaF0ieT5O3ZjJMAY+/wGkyWcJQDpfTKQBQcO68eIlowde0lganQqzLRg5xEDCuX
+	 xTt8D9qFM03Ovn8zd+4gfB4l16GyFyqlOUs3V+RpCbV9CMAe6YVFMzfP+qOvXXwgoX
+	 Z+9NL711PBVENvDhIvH6klIGE0omJ5Mpe7nM7KoQbe+XGi/5ahjEOH0bwDsFt5KSap
+	 cnr+xaThaDzywVkk1quEPTzpxBzne3oualC63HbBtyNmG5mTjLcQxxgH0dfgp/hLNa
+	 /RFtDPc/z3EzC9gwlWiUf8mV4O77ThfG6hfYyPyRIUKybMgMc3Lpj/SwsB3QwpjvZX
+	 6K3SiZjzN+EIw==
+Message-ID: <b9f5ae349c6ff90b90aff43b86bc3de8b8a9f863.camel@kernel.org>
+Subject: Re: [PATCH 00/19] OPEN optimisations and Attribute delegations
+From: Jeff Layton <jlayton@kernel.org>
+To: trondmy@gmail.com, linux-nfs@vger.kernel.org
+Cc: chuck.lever@oracle.com
+Date: Fri, 14 Jun 2024 08:34:32 -0400
+In-Reply-To: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
+References: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171831937031.14261.6690155619843129747@noble.neil.brown.name>
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Fri 14-06-24 08:56:10, NeilBrown wrote:
-> On Thu, 13 Jun 2024, Jan Kara wrote:
-> > @@ -698,12 +700,14 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
-> >  	struct nfs_pageio_descriptor pgio;
-> >  	struct nfs_io_completion *ioc = NULL;
-> >  	unsigned int mntflags = NFS_SERVER(inode)->flags;
-> > +	struct nfs_server *nfss = NFS_SERVER(inode);
-> >  	int priority = 0;
-> >  	int err;
-> >  
-> > -	if (wbc->sync_mode == WB_SYNC_NONE &&
-> > -	    NFS_SERVER(inode)->write_congested)
-> > -		return 0;
-> > +	/* Wait with writeback until write congestion eases */
-> > +	if (wbc->sync_mode == WB_SYNC_NONE && nfss->write_congested)
-> > +		wait_event(nfss->write_congestion_wait,
-> > +			   nfss->write_congested == 0);
-> 
-> If there is a network problem or the server reboot, this could wait
-> indefinitely.  Maybe wait_event_idle() ??
-> 
-> Is this only called from the writeback thread that is dedicated to this
-> fs?  If so that should be fine.  If it can be reached from a user
-> processes, then wait_event_killable() might be needed.
+On Thu, 2024-06-13 at 00:11 -0400, trondmy@gmail.com wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>=20
+> Now that https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/=C2=A0=
+is
+> mostly done with the review process, it is time to look at pushing the
+> client implementation that we've been working on upstream.
+>=20
+> The following patch series therefore adds support for the NFSv4.2
+> extension to OP_OPEN to allow the client to request that the server
+> return either an open stateid or a delegation instead of always sending
+> the open stateid whether or not a delegation is returned.
+> This allows us to optimise away CLOSE, and hence makes small or cached
+> file access significantly more efficient.
+>=20
+> It also adds support for attribute delegations, which allow the client
+> to manage the atime and mtime, and simply inform the server at file
+> close time what the values should be. This means that most GETATTR
+> operations to retrieve the atime/mtime values while the file is under
+> I/O can be optimised away.
+>=20
+> Finally, we also add support for the detection mechanism that allows the
+> client to determine whether or not the server supports the above
+> functionality.
+>=20
+> Lance Shelton (1):
+> =C2=A0 NFS: Add a generic callback to return the delegation
+>=20
+> Trond Myklebust (18):
+> =C2=A0 NFSv4: Clean up open delegation return structure
+> =C2=A0 NFSv4: Refactor nfs4_opendata_check_deleg()
+> =C2=A0 NFSv4: Add new attribute delegation definitions
+> =C2=A0 NFSv4: Plumb in XDR support for the new delegation-only setattr op
+> =C2=A0 NFSv4: Add CB_GETATTR support for delegated attributes
+> =C2=A0 NFSv4: Add a flags argument to the 'have_delegation' callback
+> =C2=A0 NFSv4: Add support for delegated atime and mtime attributes
+> =C2=A0 NFSv4: Add recovery of attribute delegations
+> =C2=A0 NFSv4: Add a capability for delegated attributes
+> =C2=A0 NFSv4: Enable attribute delegations
+> =C2=A0 NFSv4: Delegreturn must set m/atime when they are delegated
+> =C2=A0 NFSv4: Fix up delegated attributes in nfs_setattr
+> =C2=A0 NFSv4: Don't request atime/mtime/size if they are delegated to us
+> =C2=A0 NFSv4: Add support for the FATTR4_OPEN_ARGUMENTS attribute
+> =C2=A0 NFSv4: Detect support for OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGAT=
+ION
+> =C2=A0 NFSv4: Add support for OPEN4_RESULT_NO_OPEN_STATEID
+> =C2=A0 NFSv4: Ask for a delegation or an open stateid in OPEN
+> =C2=A0 Return the delegation when deleting the sillyrenamed file
+>=20
+> =C2=A0fs/nfs/callback.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 5 +-
+> =C2=A0fs/nfs/callback_proc.c=C2=A0=C2=A0=C2=A0 |=C2=A0 14 ++-
+> =C2=A0fs/nfs/callback_xdr.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 39 ++++++-
+> =C2=A0fs/nfs/delegation.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 59 =
+++++++----
+> =C2=A0fs/nfs/delegation.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 45 =
++++++++-
+> =C2=A0fs/nfs/dir.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> =C2=A0fs/nfs/file.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+> =C2=A0fs/nfs/inode.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 104 +++++++++++++++--
+> =C2=A0fs/nfs/nfs3proc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 10 +-
+> =C2=A0fs/nfs/nfs4proc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+ 230 ++++++++++++++++++++++++++++----------
+> =C2=A0fs/nfs/nfs4xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 131 +++++++++++++++++-----
+> =C2=A0fs/nfs/proc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 10 +-
+> =C2=A0fs/nfs/read.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +
+> =C2=A0fs/nfs/unlink.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> =C2=A0fs/nfs/write.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 11 +-
+> =C2=A0include/linux/nfs4.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 11 ++
+> =C2=A0include/linux/nfs_fs_sb.h |=C2=A0=C2=A0 2 +
+> =C2=A0include/linux/nfs_xdr.h=C2=A0=C2=A0 |=C2=A0 45 +++++++-
+> =C2=A0include/uapi/linux/nfs4.h |=C2=A0=C2=A0 4 +
+> =C2=A019 files changed, 586 insertions(+), 145 deletions(-)
+>=20
 
-Usually yes, but e.g. sync_file_range() can issue writeback that will block
-here as well. So I guess wait_event_killable() is a good idea. I'll update
-it.
+This all looks pretty reasonable except for the last two patches.
+Probably, they should be squashed together since there is no caller of
+->return_delegation until the last one. There is also nothing
+describing the changes there, and I think it could use some explanation
+(though I think I get what you're doing).
 
-								Honza
+Finally, I suppose we need to look at implementing support delstid in
+knfsd as well. I'll open a new feature request for that the linux-nfs
+project on github.
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+In any case, you can add:
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
