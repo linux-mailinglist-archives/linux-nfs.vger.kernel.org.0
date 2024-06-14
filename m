@@ -1,183 +1,85 @@
-Return-Path: <linux-nfs+bounces-3839-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3840-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB6AE909068
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 18:35:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BEE2909092
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 18:39:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 474C31F21B24
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 16:35:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DECD1C21DEB
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 16:39:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523A519CD07;
-	Fri, 14 Jun 2024 16:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E994C19D8B3;
+	Fri, 14 Jun 2024 16:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOhoWccc"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ld2peyfJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5DFF503
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 16:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB1316F0EA
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 16:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382776; cv=none; b=qKs7I//aqse+epsTLmr+chstDflt0+L38UVpZlzKJiZSJ4tHUkGd5zp7avcKBtdqm+FRxiCy0Va6lYdbai1x9NAQvwDUM0iNCPt1n5IDshqwEBTDUA95dAIb4c4B52PLwmygJmalstphGHo2tmAxHOJyhCIYokiH3/lC+StoXyQ=
+	t=1718383100; cv=none; b=HkRo6nSMj32WrT7akK6UfMwRz04xCYPZEgAuTCQttlLl0Wq4mh0f2lKbSAIsO7NFLhSEh+vbVaXj8qrYSCx6FIQGS33NOxP53CEDEtLxW4pNAIVSUYQCd+EgSeKA6KDsiM0nEYuLq0m4EJ5Vveul1uze6eISidjtHGRbGMiZJCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382776; c=relaxed/simple;
-	bh=C7pGa29c3UJQPU+oRVXy87+T1wudpAy0PNfQZrcHlPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iXieBDxPULeW2qji7CC/duesaWl6Fr6uVZy/yVjH3h1K0BaSlkS1hgiEMrriF+geVDzvOIazRnlnc+1W+4z6rpJFAyXT8mIfVJmEFNCg/jR5M2W98nethYdRhDQRRycuU1Y7o4dlcsQ7cC2i/gGk81VJs4qsLBAZCBt/b1va18g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GOhoWccc; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43ff9d1e0bbso12795591cf.3
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 09:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718382773; x=1718987573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BsaX8JplKRwyUTrUkFXo//5qONmSRfVNORPk4eeZ/m4=;
-        b=GOhoWccc8rGG2cPYelEHHq8h0dtj/q7GEglLn4ho1f13srMd/jvuW3cX0Hbd3kf0Sl
-         PsiaTWr968vzN7G7K8NGFlrN9q7A4+irto8xnA+bJ1f3F0ON6IsjOv9mKvq9VvAg534o
-         s9h5TnMtKYSr8q2jV+LR8X47/jMNymVNS3+5AU9AXXwGwpprNO3B3zl2F4nxbqe/3QHT
-         dpXRYRq0aWVY8ufmhdwE5ImFFDQh6PcXANkywwykg/zUWWWCiz2ggWlPcJQecIkv/Vuf
-         55JY3HlJ4HOqOuY5zCczokUO2dHVKCIRYhaN5At0dY5ZZvhKd+6UT/szPpX7F/yAb5LB
-         Lbxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718382773; x=1718987573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BsaX8JplKRwyUTrUkFXo//5qONmSRfVNORPk4eeZ/m4=;
-        b=nv2LcdyXh3VvjQGd8L2GKJYFtD3CUJyhyaFB/iNcf88JVwZTfVrX2vSiVw3rJ8oK+E
-         o//fjZdrzXAKLaTC9dS1bt06zH2OI/a7OBSYTg1JyAG1F9sr3/mpirNU2SigyQqsRcWJ
-         vZq3OPz2kz6Eh9WfRzjJvAA3I/ks76WdeGIlKJQJNrG2KlG9r+AwXzmeWY4NMp8o8iSq
-         7KHbga8joQ9/8C6bBkNQDsqd940I8/Biul2IVESEuGskGgB2Yt7oPMb3LkZyNojUJ9tW
-         fC7XmGg8uw5GcSgzS+WBtsEj0RB3ILdA9RLHBMowag7/LPufI6WdJBKwWk7J795NGz0T
-         Zkpw==
-X-Gm-Message-State: AOJu0Yy+T3cfwO70Im4kZaOaZ3Zp1g83FMIvIayHzqrxoB8bO/pUFKgN
-	UXHlMXqvYxJ+JehDYdAE4r8AZOPb4eUHdegufSZqg2Gm0puQZmCmqvHzVoOdDv3yTzbn2ZEAYW7
-	ezsHZeVqQBhY2LlVWR11/Z9LaQUS5jg==
-X-Google-Smtp-Source: AGHT+IHrcf4EJwfx2cGSTvN1tpZMLAzIgOwl67Gv9sZju0NFQB6c+R1XnqUB94nZsYwfYqHcyjEVCPU3A3wyAmen8T8=
-X-Received: by 2002:a05:622a:1449:b0:441:78:4e01 with SMTP id
- d75a77b69052e-44216b37ad6mr38737311cf.56.1718382773587; Fri, 14 Jun 2024
- 09:32:53 -0700 (PDT)
+	s=arc-20240116; t=1718383100; c=relaxed/simple;
+	bh=txfwx4TTHFCNBI3aPmpA/kISvewqK5hY7m5miiFP958=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsP/jwLfKag0mAHEPQA5+c8fFFqkB1FDnnstqp62QogoxYxsOP6X6p5SGxujRLOS4Ev7RS69Jet2Ete9vo+CIb7xDCp2smcmny9Q6a8HLUn4U31gYdVeKtJBBD5cShLvTxncllbywYUd12cZcMUM0qn5quWn5akejqjFtnJfHNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ld2peyfJ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DvukEEfwhrqamkpwO4nzLJ1nXeiSSJnGuEnMvqfEG30=; b=Ld2peyfJgaCMdo5P0r/iwTILlH
+	GEU2BK2Qv6x280YfAZVdzMlwFFqktzbcqbN9D032FccQ0rVEhSneYv0B5brTYImJEhijBm4gVFz0T
+	oAqvwGKn5k6UoJxHEvXFnI/+WL5IbB4hQe9zAwCV3FI6riNsZUbQZMjg8hUlLtJ+JtVzEY3FoQeR6
+	+G7GqC18eKpL4FBT5uUIi1WhTxI1n8eruWvqXgmb/JweVd5CsbKxy5//903kuwv+whc3aA2CfZi8Y
+	uOQofrUJOZoWM3yqAh6gL0VCTxE6YIz8i/Yj4K0qWQhATiQOh/B6VEKby3YjIH1tQM+5OMT7vdy+S
+	HFdCH8RQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sI9wO-00000003TDN-38J5;
+	Fri, 14 Jun 2024 16:38:16 +0000
+Date: Fri, 14 Jun 2024 09:38:16 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: reservation errors during fstests on pNFS block
+Message-ID: <Zmxx-H2KrT5QpJ-g@infradead.org>
+References: <34F83726-2A28-4E29-A40E-A01BED7744EC@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613041136.506908-1-trond.myklebust@hammerspace.com>
- <20240613041136.506908-2-trond.myklebust@hammerspace.com> <20240613041136.506908-3-trond.myklebust@hammerspace.com>
- <20240613041136.506908-4-trond.myklebust@hammerspace.com> <20240613041136.506908-5-trond.myklebust@hammerspace.com>
- <20240613041136.506908-6-trond.myklebust@hammerspace.com> <20240613041136.506908-7-trond.myklebust@hammerspace.com>
- <20240613041136.506908-8-trond.myklebust@hammerspace.com> <20240613041136.506908-9-trond.myklebust@hammerspace.com>
- <20240613041136.506908-10-trond.myklebust@hammerspace.com>
- <20240613041136.506908-11-trond.myklebust@hammerspace.com>
- <20240613041136.506908-12-trond.myklebust@hammerspace.com> <20240613041136.506908-13-trond.myklebust@hammerspace.com>
-In-Reply-To: <20240613041136.506908-13-trond.myklebust@hammerspace.com>
-From: Anna Schumaker <schumaker.anna@gmail.com>
-Date: Fri, 14 Jun 2024 12:32:37 -0400
-Message-ID: <CAFX2Jfk7u37+AOX_o1ZRf-QX_abSDXpKaEpHt=iOvL5Bq6opTQ@mail.gmail.com>
-Subject: Re: [PATCH 12/19] NFSv4: Fix up delegated attributes in nfs_setattr
-To: trondmy@gmail.com
-Cc: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34F83726-2A28-4E29-A40E-A01BED7744EC@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Trond,
+On Fri, Jun 14, 2024 at 02:46:49PM +0000, Chuck Lever III wrote:
+> I've finally gotten kdevops and pNFS block to the point where
+> it can run fstests smoothly with an iSCSI target. I'm seeing
+> error messages on occasion in the system journal. This set is
+> from generic/069:
 
-On Thu, Jun 13, 2024 at 12:18=E2=80=AFAM <trondmy@gmail.com> wrote:
->
-> From: Trond Myklebust <trond.myklebust@primarydata.com>
->
-> nfs_setattr calls nfs_update_inode() directly, so we have to reset the
-> m/ctime there.
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
-> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/inode.c | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+Reservation means another node has an active reservation on that LU.
+Either you did another previous attempt that fail and let the
+reservation linger, or something else in the system claimed it.
 
-After applying this patch I see a handful of new failures on xfstests:
-generic/075, generic/086, generic/112, generic/332, generic/346,
-generic/647, and generic/729. I see the first five on NFS v4.2, but
-647 and 729 both fail on v4.1 in addition to v4.2.
+> But note that generic/069 is recorded as passing without error.
 
-I hope this helps!
-Anna
+When pNFS layout access fails we fall back to normal access through the
+MDS, so this is expected.
 
->
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 91c0aeaf6c1e..e03c512c8535 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -605,6 +605,46 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh,=
- struct nfs_fattr *fattr)
->  }
->  EXPORT_SYMBOL_GPL(nfs_fhget);
->
-> +static void
-> +nfs_fattr_fixup_delegated(struct inode *inode, struct nfs_fattr *fattr)
-> +{
-> +       unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
-> +
-> +       if (!nfs_have_read_or_write_delegation(inode))
-> +               return;
-> +
-> +       if (!(cache_validity & NFS_INO_REVAL_FORCED))
-> +               cache_validity &=3D ~(NFS_INO_INVALID_ATIME
-> +                               | NFS_INO_INVALID_CHANGE
-> +                               | NFS_INO_INVALID_CTIME
-> +                               | NFS_INO_INVALID_MTIME
-> +                               | NFS_INO_INVALID_SIZE);
-> +
-> +       if (!(cache_validity & NFS_INO_INVALID_SIZE))
-> +               fattr->valid &=3D ~(NFS_ATTR_FATTR_PRESIZE
-> +                               | NFS_ATTR_FATTR_SIZE);
-> +
-> +       if (!(cache_validity & NFS_INO_INVALID_CHANGE))
-> +               fattr->valid &=3D ~(NFS_ATTR_FATTR_PRECHANGE
-> +                               | NFS_ATTR_FATTR_CHANGE);
-> +
-> +       if (nfs_have_delegated_mtime(inode)) {
-> +               if (!(cache_validity & NFS_INO_INVALID_CTIME))
-> +                       fattr->valid &=3D ~(NFS_ATTR_FATTR_PRECTIME
-> +                                       | NFS_ATTR_FATTR_CTIME);
-> +
-> +               if (!(cache_validity & NFS_INO_INVALID_MTIME))
-> +                       fattr->valid &=3D ~(NFS_ATTR_FATTR_PREMTIME
-> +                                       | NFS_ATTR_FATTR_MTIME);
-> +
-> +               if (!(cache_validity & NFS_INO_INVALID_ATIME))
-> +                       fattr->valid &=3D ~NFS_ATTR_FATTR_ATIME;
-> +       } else if (nfs_have_delegated_atime(inode)) {
-> +               if (!(cache_validity & NFS_INO_INVALID_ATIME))
-> +                       fattr->valid &=3D ~NFS_ATTR_FATTR_ATIME;
-> +       }
-> +}
-> +
->  void nfs_update_delegated_atime(struct inode *inode)
->  {
->         spin_lock(&inode->i_lock);
-> @@ -2163,6 +2203,9 @@ static int nfs_update_inode(struct inode *inode, st=
-ruct nfs_fattr *fattr)
->          */
->         nfsi->read_cache_jiffies =3D fattr->time_start;
->
-> +       /* Fix up any delegated attributes in the struct nfs_fattr */
-> +       nfs_fattr_fixup_delegated(inode, fattr);
-> +
->         save_cache_validity =3D nfsi->cache_validity;
->         nfsi->cache_validity &=3D ~(NFS_INO_INVALID_ATTR
->                         | NFS_INO_INVALID_ATIME
-> --
-> 2.45.2
->
->
+Is generic/069 that first test that failed when doing a full xfstests
+run?  Do you see LAYOUT* ops in /proc/self/mountstats for the previous
+tests?
+
 
