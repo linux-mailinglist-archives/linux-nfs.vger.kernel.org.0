@@ -1,84 +1,111 @@
-Return-Path: <linux-nfs+bounces-3846-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3847-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C8B909259
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 20:34:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBEB9092FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 21:34:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E944B23C55
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 18:34:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9F744B2358E
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 19:34:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E937F16A397;
-	Fri, 14 Jun 2024 18:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD331A38CF;
+	Fri, 14 Jun 2024 19:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iNDnAVqm"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Piy7/8cY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62E21474C5
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 18:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC8D26AD7;
+	Fri, 14 Jun 2024 19:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718390088; cv=none; b=Hic9C0oc6SxryEQZxj3HK7HhU0an9CXJQHek0SzRmaFOtpNAJP63oSg5BZi46h42is7Ouf6pvoqPuz5HbzxDir2fFio7n0hhW+6qZxy5Hcs+EVVXNDpM8IPQO/AqAgFSUc6ZU4M3G1G2gLeC8U2EAfneCvBUHsXdKX3+v3CipII=
+	t=1718393638; cv=none; b=dl+pCGeNQ2hQSLtgfDQar0YVr9tBn9Xoz2YTqbNxPUcjA5EyTrRwu28myy0oAxeTQPeEPS22PYLNrJfmvyLvdkP9gO7iYohkokIA9Pc4bp+o5prIwXozRfeY3lEfzN2eIHPNb4JzWvQH3afgsMAzTOG61BJ7TsQuZkdpAhpevJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718390088; c=relaxed/simple;
-	bh=MSy+Mp5BnDYt6yJcVhei657G1YZgPKl4YpVK0/sjL58=;
+	s=arc-20240116; t=1718393638; c=relaxed/simple;
+	bh=un2DKs68DVerlXBeKlpV6w20TzStZ/MgihGnCdsi2EU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tbdmq8B3Asj9x0kPs4idA5QgDXUgHY7r2AbKHtsMYGCeXTgdj8kRcA2bQQ+k0bHqHSg5LjvjliiEMo9H902FbmhxXspLTDKKRJPgplpPRtOPTTKKNlogVWhHCqT+8ONlqeGZpfwjWfKPuXEjNHDiyzX1VtxWrOoZXk3jpeyNEqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iNDnAVqm; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HsgS0uD7/wIZlvex5WVWALLsizpiwhAGaxWkvv+86cY=; b=iNDnAVqmylfH1+1lEZZwxsCU5o
-	RA6/Z1jFu0RpWy+JFe70vsEx4vEeLdCFwQq/hmQP8Thrw4JR6W6IVjPeE8TpeO6YmMlvRJbth810U
-	s/bR4VVarT0CuXwcYJ3FJHH6zzBcGq3JFDKj9fNBeNPaMNhWTQYit6dzj3bmLne/gwojSRtNmO/zS
-	/EgxZ+UT5ODPUPTqi2GhE/zHj8YlA6LZxC8dH7JF6nHxoValha2In+KY1es0TrOcHLHsFply6Wo9M
-	0qVJmbV0HNV4D1kcJw91OTbR2o3legoD6w44trEWfGCTjXqhfmPlJ9dZYpHJ8m45/hGcrHzNBOZR3
-	oqzAco9A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sIBl9-00000003m2j-0yyd;
-	Fri, 14 Jun 2024 18:34:47 +0000
-Date: Fri, 14 Jun 2024 11:34:47 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: reservation errors during fstests on pNFS block
-Message-ID: <ZmyNR8ALcWdVoe97@infradead.org>
-References: <34F83726-2A28-4E29-A40E-A01BED7744EC@oracle.com>
- <Zmxx-H2KrT5QpJ-g@infradead.org>
- <C02C8230-4ACA-4F2D-AC28-B9583ADCADA5@oracle.com>
- <ZmyLSZGWDeaIXdx4@infradead.org>
- <ED7EB3B3-F56A-451F-A639-D30BBA125EE6@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A5O4zg/6E5qHVKs3c8INeozn/yCj0lrM3OGaEMV7P0Y+0O6D3bR5gNgd0fArTmglhgLXkhnUt9aaXO5/h15zYzD7wXiR0UN589jbazD6q4dym9gA+Vto8AlS7sSREOCzwnnHCyWpZbIV1PVG7l0ghBlmbsBxDjKYnTtbJPzKCQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=Piy7/8cY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF8CBC2BD10;
+	Fri, 14 Jun 2024 19:33:55 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Piy7/8cY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1718393634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DXA9wvv5IhNhdgqqoog09hrS0W28PIbc3nCXFgq2mxA=;
+	b=Piy7/8cYE5kX8QxCb1ovvf7Oew+mzdXJL4F6If9Frkz4X0RUzqFF12WjwrhUhRlUy+iIKO
+	DoV+j//Avs/4vzAsOjkSD1yxY/bbFo9eXQkn/oEw9txGMiy9XDfptZ5hiqtMHXpzOrUrXv
+	cPfOpW6hB2UusbVHO75CZUsDVUtb8kw=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6d22401f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 14 Jun 2024 19:33:52 +0000 (UTC)
+Date: Fri, 14 Jun 2024 21:33:45 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <ZmybGZDbXkw7JTjc@zx2c4.com>
+References: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <ZmrfA1p2zSVIaYam@zx2c4.com>
+ <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
+ <Zmru7hhz8kPDPsyz@pc636>
+ <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
+ <Zmsuswo8OPIhY5KJ@pc636>
+ <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
+ <ZmszOd5idhf2Cb-v@pc636>
+ <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
+ <Zmw5FTX752g0vtlD@pc638.lan>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ED7EB3B3-F56A-451F-A639-D30BBA125EE6@oracle.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <Zmw5FTX752g0vtlD@pc638.lan>
 
-On Fri, Jun 14, 2024 at 06:33:02PM +0000, Chuck Lever III wrote:
-> > Well, they really should be alarming because the admin configured
-> > a block layout setup and it did not work as expected.  So it should
-> > ring alarm bells.
-> 
-> Yes, I expect that "pNFS: failed to open device
-> /dev/disk/by-id/dm-uuid-mpath-0x6001 ..." is very likely
-> operator error.
+On Fri, Jun 14, 2024 at 02:35:33PM +0200, Uladzislau Rezki wrote:
+> +	/* Should a destroy process be deferred? */
+> +	if (s->flags & SLAB_DEFER_DESTROY) {
+> +		list_move_tail(&s->list, &slab_caches_defer_destroy);
+> +		schedule_delayed_work(&slab_caches_defer_destroy_work, HZ);
+> +		goto out_unlock;
+> +	}
 
-Actually that one is purely a debug message if at all - we don't know
-if it is a mpath or non-mpath device, so we just try that first.
-So that is totally fine to downgrade or turn into a trace point.  OTOH
-a warning if you could open neither option would still be useful.
+Wouldn't it be smoother to have the actual kmem_cache_free() function
+check to see if it's been marked for destruction and the refcount is
+zero, rather than polling every one second? I mentioned this approach
+in: https://lore.kernel.org/all/Zmo9-YGraiCj5-MI@zx2c4.com/ -
 
+    I wonder if the right fix to this would be adding a `should_destroy`
+    boolean to kmem_cache, which kmem_cache_destroy() sets to true. And
+    then right after it checks `if (number_of_allocations == 0)
+    actually_destroy()`, and likewise on each kmem_cache_free(), it
+    could check `if (should_destroy && number_of_allocations == 0)
+    actually_destroy()`. 
+
+Jason
 
