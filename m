@@ -1,97 +1,176 @@
-Return-Path: <linux-nfs+bounces-3822-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3823-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 577C7908942
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 12:07:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF481908ADF
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 13:33:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 587A71C265C1
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 10:07:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 978ED1F286B5
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 11:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6520B1946A7;
-	Fri, 14 Jun 2024 10:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4857186E5D;
+	Fri, 14 Jun 2024 11:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wcjp3WhV"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QPZPxEmL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EniCxY54";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QPZPxEmL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EniCxY54"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA031946B9;
-	Fri, 14 Jun 2024 10:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED05D14D29B
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 11:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359417; cv=none; b=G3pGarfBFbN+OEEtZ56qpTS2KfpvJyRo+MqMfows2Z/ejsiikqSGb+6EGpogG2aPeezGtAc5m/1UdJN56JjR8Sfy0MQZjrsuaS1T2szO09N00eA6TB9R4cbLEMLQRg2chJ+tKR4Nz5DNGdUhje7fjZLmP5Xszlwe+TThuBPg6H0=
+	t=1718364792; cv=none; b=IH67KCuEprkNe/hsQbQ9H1flBF4ojuzOhMU0qRfZQnj+lI8n0BH2f1Kx6vm9PQe7FqMHmrxYbq5L2Vn7Kl0wQrkcGzlSgIbEOwN6a/oORRvzZ+Gu5klLo2Fg22bikzfl2MZO+QmQosxbUOJzKGzzR/uRYTY3U/+IKAkY1EqkpK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359417; c=relaxed/simple;
-	bh=LrtkEuvKffls++VLZGvU+odWuHFgeu13Obm1nGKPmcw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ebu0+9F0zkfXEhGBEbmXlUBMwId/l+dmZopncEeW5QfwC2naxGbRs+vJpKWeDdA1saacxq+bPxyV8QihumQkFYKIZW+cG83FhGqp9vu5d2J3FwOyOGiGuTbaVN2GMkCTWsEXZpwr2bibAVhskR11XDNteNBo6FWv9urHOqYwgsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wcjp3WhV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=FStQe0rOw4ovI+CUc36E/SQiQptY2BV5r14yvxvD/o8=; b=wcjp3WhVk78M5sPQVxfA8WojUN
-	z48Q4IpxtprJCyho9D71S9CReioWmnl7v2h9kyQHZXyrSHYnjIMFgmLnRFH3uMV+hX3fpZRyZ2f+7
-	kuKBR7gBriGaMAshc60VvfaoIFsrzU70w0OAGIy1V5HHLkuEiKHKa9Z+wlK1WpyNSIQ38b+IWR2Cl
-	QdIG6+n6UgZWfquOXvYUL7xE1zgUToJula4U1pipmEwOhGlHWnHudJ1Y4x5FVuzf6VD9Kt6L8z9NQ
-	oaT1kgD+PPdK5cPbdXJ5UAQjxigbvjCgZEb5Ra6lf16c21CxneLxOfRLBdcUZDdzKQIeaUNrFm9K1
-	FYbNi2uQ==;
-Received: from 2a02-8389-2341-5b80-6543-87c9-27d1-cd7c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:6543:87c9:27d1:cd7c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sI3mQ-00000002Kh1-1Wya;
-	Fri, 14 Jun 2024 10:03:34 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Steve French <sfrench@samba.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-nfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH] nfs: fix nfs_swap_rw for large-folio swap
-Date: Fri, 14 Jun 2024 12:03:25 +0200
-Message-ID: <20240614100329.1203579-2-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240614100329.1203579-1-hch@lst.de>
-References: <20240614100329.1203579-1-hch@lst.de>
+	s=arc-20240116; t=1718364792; c=relaxed/simple;
+	bh=utDP+d+njgtxR8SLt6se2h6ZYPulPNA5O9CT/lnlAJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTV5sSa27zekJ0CCD2OicBqh1ROLOigyQ+Yjilm77Su0Ouc50/XdoppuH5ivFUETKJnzbsWn7hBVcg7O2aNZtLcq/tyKctEblmDdVjpmVLrFA3vcfNpa5bJR5yPybaePtShWg593EXkyZYVoiGeHhsVP8KttIi02rnpomKXqxFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QPZPxEmL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EniCxY54; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QPZPxEmL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EniCxY54; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 42C0233747;
+	Fri, 14 Jun 2024 11:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718364789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WCT2T0iZKEoFmmpIcxaFuzJO206Q1uuOZXK6md9HkA4=;
+	b=QPZPxEmLYVdPIKMls8fmA5QbUd2JXwoJ6d1wxLBCvvFI0mwf+EHQlqgGD0Q6oJJIf4HbQs
+	lpKMuJytXvpsxmO93/aoxKtLfDsaMdi4xccLbzgXYRH5x/rAO3YCbowfx9jCisT1T1a1u9
+	NbMYWmxGdfRCWdq0MfgU32E9exTKX8s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718364789;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WCT2T0iZKEoFmmpIcxaFuzJO206Q1uuOZXK6md9HkA4=;
+	b=EniCxY54dLun5gS4+GpUm3ZWrukoi2i/y5oNIbBYBlk2sRpwLHXCMxfBDl+YPRUOjECRwT
+	g6SRR77v9GbLYhBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718364789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WCT2T0iZKEoFmmpIcxaFuzJO206Q1uuOZXK6md9HkA4=;
+	b=QPZPxEmLYVdPIKMls8fmA5QbUd2JXwoJ6d1wxLBCvvFI0mwf+EHQlqgGD0Q6oJJIf4HbQs
+	lpKMuJytXvpsxmO93/aoxKtLfDsaMdi4xccLbzgXYRH5x/rAO3YCbowfx9jCisT1T1a1u9
+	NbMYWmxGdfRCWdq0MfgU32E9exTKX8s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718364789;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WCT2T0iZKEoFmmpIcxaFuzJO206Q1uuOZXK6md9HkA4=;
+	b=EniCxY54dLun5gS4+GpUm3ZWrukoi2i/y5oNIbBYBlk2sRpwLHXCMxfBDl+YPRUOjECRwT
+	g6SRR77v9GbLYhBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 386D213AAF;
+	Fri, 14 Jun 2024 11:33:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EojFDXUqbGY6GgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 14 Jun 2024 11:33:09 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id DD16CA0873; Fri, 14 Jun 2024 13:33:08 +0200 (CEST)
+Date: Fri, 14 Jun 2024 13:33:08 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Jan Kara <jack@suse.cz>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>
+Subject: Re: [PATCH 2/3] nfs: Properly initialize server->writeback
+Message-ID: <20240614113308.sqgrnzdczbw2za5a@quack3>
+References: <20240612153022.25454-1-jack@suse.cz>
+ <20240613082821.849-2-jack@suse.cz>
+ <4ccfb492bd6af24f8bdfd085d369c7c94c1865d1.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <4ccfb492bd6af24f8bdfd085d369c7c94c1865d1.camel@kernel.org>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-As of Linux 6.10-rc the MM can swap out larger than page size chunks.
-NFS has all code ready to handle this, but has a VM_BUG_ON that
-triggers when this happens.  Simply remove the VM_BUG_ON to fix this
-use case.
+On Thu 13-06-24 15:56:36, Jeff Layton wrote:
+> On Thu, 2024-06-13 at 10:28 +0200, Jan Kara wrote:
+> > Atomic types should better be initialized with atomic_long_set()
+> > instead
+> > of relying on zeroing done by kzalloc(). Clean this up.
+> > 
+> > Signed-off-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  fs/nfs/client.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> > index de77848ae654..3b252dceebf5 100644
+> > --- a/fs/nfs/client.c
+> > +++ b/fs/nfs/client.c
+> > @@ -994,6 +994,8 @@ struct nfs_server *nfs_alloc_server(void)
+> >  
+> >  	server->change_attr_type = NFS4_CHANGE_TYPE_IS_UNDEFINED;
+> >  
+> > +	atomic_long_set(&server->writeback, 0);
+> > +
+> >  	ida_init(&server->openowner_id);
+> >  	ida_init(&server->lockowner_id);
+> >  	pnfs_init_server(server);
+> 
+> I'm guilty of doing this, well, all over the place. Is there any
+> plausible scenario where another task could see this value set to non-
+> zero after kzalloc()? One would hope not...
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/nfs/direct.c | 2 --
- 1 file changed, 2 deletions(-)
+No, it is not a practical problem these days. It is more a theoretical
+correctness thing that atomic_t should be initialized through atomic_set()
+and not memset() because in theory you don't know how some weird
+architecture decides to implement it.
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index bb2f583eb28bf1..90079ca134dd3c 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -141,8 +141,6 @@ int nfs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
- {
- 	ssize_t ret;
- 
--	VM_BUG_ON(iov_iter_count(iter) != PAGE_SIZE);
--
- 	if (iov_iter_rw(iter) == READ)
- 		ret = nfs_file_direct_read(iocb, iter, true);
- 	else
+								Honza
 -- 
-2.43.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
