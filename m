@@ -1,152 +1,178 @@
-Return-Path: <linux-nfs+bounces-3799-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3800-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F11090825B
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 05:14:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42A3D90828F
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 05:44:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77A031C21C18
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 03:14:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB40528415D
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 03:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 813161836D0;
-	Fri, 14 Jun 2024 03:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 779C2262BE;
+	Fri, 14 Jun 2024 03:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3+Ix5/t"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5E4145323;
-	Fri, 14 Jun 2024 03:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201BECC
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Jun 2024 03:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718334882; cv=none; b=K26At792lJRX3eItTkp3i8/9KeytqdVOVRuOgIDW18K2IMW+OoGKzOZqXN5IatF3XD8Az4vhnb2FlJQJ5Iz8U9HrDopchSp0aRFi4hKO2Ii8NgxduyUS6Z8N675U/H2+akid6b9xg93RJupc4eWwxmgVW9XnpV+B7tNL2a2Jyq4=
+	t=1718336668; cv=none; b=EGh1wGIXlV4ov1T2Zs9X3PAR8x3rhzgF2LxX95FVQILoEayrBZ2gwAFkE2KbV/k6xip1Pb+Gj6HQcbmw0xb+3wKL7mUkQPlSYOu1B9yV8FeZF0/uxsYqt2xgVxFcnrszb8RWekBJZena60nfEbGh6yhLZXgjXzSEZP1SZVYCDms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718334882; c=relaxed/simple;
-	bh=0ixiiw8ol5u8bIR8LGd0cG5wPj2c29OVajtD5oCH+TM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=W/CKdGWVnWPX7/FMHv7GgDxiT4fUMnW1E/xE3w/DOKpOYnHZox913xMIN7vw9HG+7hBy85rHb1GdTnWi1UwFNsmtzUdy86ngjSC9UoLDvd8RefxLWTvgXN22TONw1dEkT+0SKm7l6a/BGuQYipSlC6KOkl0IQ3UYpWPpAEpv7XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W0ksC2MQbz4f3kk6;
-	Fri, 14 Jun 2024 11:14:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id EB55D1A12BC;
-	Fri, 14 Jun 2024 11:14:29 +0800 (CST)
-Received: from [10.174.179.155] (unknown [10.174.179.155])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ6TtWtmy9O1PQ--.63899S3;
-	Fri, 14 Jun 2024 11:14:29 +0800 (CST)
-Message-ID: <ca71d3c4-0b87-8a1e-a442-236d91674a87@huaweicloud.com>
-Date: Fri, 14 Jun 2024 11:14:27 +0800
+	s=arc-20240116; t=1718336668; c=relaxed/simple;
+	bh=j60dvCHH0MqXwrW2eS6spaN1dX+ak8NtijTCVeFEZwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hXS6PQfZ7Y00pMiNh513TUbHV+9hYBKRcow+j/lAv6jP+9EVfGNbfM9AB0nD8pp5abUx4rZvaJr3dX66aJNUR9s+ul5nEoai6grl8vBHttoi1CONMDiH4THAVxZ4NJ85sq5dqYJXSJFc9PQVXKFUpce1Op7BPRHX21POGUN+y1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3+Ix5/t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A227EC2BBFC;
+	Fri, 14 Jun 2024 03:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718336667;
+	bh=j60dvCHH0MqXwrW2eS6spaN1dX+ak8NtijTCVeFEZwo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=L3+Ix5/tUsCBLpcU5ZPhVy7AbC3paGaspTdJOKDV0lZyczf1rL/NKZ4RWYh+KepeH
+	 GN9B8BCy82xqfF5oftojL0gpkPdVtPw5Cjq0yzucjoS61ICvJLYZ2FOOiISkq4Nsn1
+	 PkGqJ/i64z55U8Zz0yQBt38VWstvz4uczLssz9ydZjngvn3fgdMGMYApStl9Y+OGX6
+	 MXTomGhereGhI/JmKbJYkHiwDGKte1DLTuSrnJKXQcTq1wyCIT9wOBWfL8f3p5PnX/
+	 8nJaYxzqL/5vRIK69yXAuh1STYgkyr01yD0HVhSwnHZ+EUbHuEog4+HXK1wzfMJc38
+	 2ZHX5j6OpFOcw==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	snitzer@hammerspace.com
+Subject: [PATCH v3 00/18] nfs/nfsd: add support for localio
+Date: Thu, 13 Jun 2024 23:44:08 -0400
+Message-ID: <20240614034426.31043-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101
- Thunderbird/104.0
-From: Li Lingfeng <lilingfeng@huaweicloud.com>
-Subject: Re: [PATCH RFC 2/2] NFSv4: set sb_flags to second superblock
-To: dhowells@redhat.com, marc.dionne@auristor.com, raven@themaw.net,
- gregkh@linuxfoundation.org, rafael@kernel.org, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu,
- trond.myklebust@hammerspace.com, anna@kernel.org, sfrench@samba.org,
- pc@manguebit.com, ronniesahlberg@gmail.com, sprasad@microsoft.com,
- tom@talpey.com, bharathsm@microsoft.com, djwong@kernel.org
-Cc: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
- autofs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- zhangxiaoxu5@huawei.com, lilingfeng3@huawei.com
-References: <20240604112636.236517-1-lilingfeng@huaweicloud.com>
- <20240604112636.236517-3-lilingfeng@huaweicloud.com>
-In-Reply-To: <20240604112636.236517-3-lilingfeng@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHZQ6TtWtmy9O1PQ--.63899S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw4xAw1UGrWrtFykJw48tFb_yoW5urW8pF
-	WfAryjkr4kJF17Wa18AFWrXa4Svw18ZF4UCF93ua4kAryUXrn7X3ZxKFWYgFy8ur4furyD
-	XFWrtF13C3W7ZFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07jU-B_UUUUU=
-X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-I think this may be a problem, but I'm unable to come up with a suitable 
-solution. Would you mind providing some suggestions?
+Hi,
 
-在 2024/6/4 19:26, Li Lingfeng 写道:
-> From: Li Lingfeng <lilingfeng3@huawei.com>
->
-> During the process of mounting an NFSv4 client, two superblocks will be
-> created in sequence. The first superblock corresponds to the root
-> directory exported by the server, and the second superblock corresponds to
-> the directory that will be actually mounted. The first superblock will
-> eventually be destroyed.
-> The flag passed from user mode will only be passed to the first
-> superblock, resulting in the actual used superblock not carrying the flag
-> passed from user mode(fs_context_for_submount() will set sb_flags as 0).
->
-> If the 'ro' parameter is used in two consecutive mount commands, only the
-> first execution will create a new vfsmount, and the kernel will return
-> EBUSY on the second execution. However, if a remount command with the 'ro'
-> parameter is executed between the two mount commands, both mount commands
-> will create new vfsmounts.
->
-> The superblock generated after the first mount command does not have the
-> 'ro' flag, and the read-only status of the file system is implemented by
-> checking the read-only flag of the vfsmount. After executing the remount
-> command, the 'ro' flag will be added to the superblock. When the second
-> mount command is executed, the comparison result between the superblock
-> with the 'ro' flag and the fs_context without the flag in the
-> nfs_compare_mount_options() function will be different, resulting in the
-> creation of a new vfsmount.
->
-> This problem can be reproduced by performing the following operations:
-> mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
-> mount -t nfs -o remount,ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
-> mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
-> Two vfsmounts are generated:
-> [root@localhost ~]# mount | grep nfs
-> 192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
-> rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,
-> sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
-> 192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
-> rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,
-> sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
->
-> Fix this by setting sb_flags to second superblock.
->
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->   fs/nfs/namespace.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-> index 887aeacedebd..8b3d75af60d4 100644
-> --- a/fs/nfs/namespace.c
-> +++ b/fs/nfs/namespace.c
-> @@ -158,7 +158,7 @@ struct vfsmount *nfs_d_automount(struct path *path, unsigned int sb_flags)
->   	/* Open a new filesystem context, transferring parameters from the
->   	 * parent superblock, including the network namespace.
->   	 */
-> -	fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, path->dentry, 0);
-> +	fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, path->dentry, sb_flags);
->   	if (IS_ERR(fc))
->   		return ERR_CAST(fc);
->   
+I still need to add Documentation and also need to answer Neil's
+questions about patch 7 ("NFS: for localio don't call filesystem
+read() and write() routines directly").
+
+Most of my time was spent addressing the need to take a proper
+reference on the netns (patch 15) and nn->nfsd_serv (patches 16-18).
+
+My git tree is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/
+
+This v3 is both branch nfs-localio-for-6.11 (always tracks latest)
+and nfs-localio-for-6.11.v3
+
+nfs-localio-for-6.11.v2 and nfs-localio-for-6.11.v1 are also there.
+
+To see the changes from v2 to v3 please do:
+git remote add snitzer git://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git
+git remote update snitzer
+git diff snitzer/nfs-localio-for-6.11.v2 snitzer/nfs-localio-for-6.11.v3
+
+These changes have proven stable against various test scenarios:
+1) client and server both on localhost (for both v3 and v4.2)
+2) various permutations of client and server support enablement for
+   both local and remote client and server.
+3) client on host, server within a container (for both v3 and v4.2)
+   My container testing was in terms of podman managed containers.
+4) container stop/restart scenario documented in the last patch
+
+All review and comments are welcome!
+
+Thanks,
+Mike
+
+Mike Snitzer (10):
+  nfs_common: add NFS LOCALIO protocol extension enablement
+  nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
+  nfsd: implement v3 and v4 server support for NFS_LOCALIO_PROGRAM
+  nfs/nfsd: consolidate {encode,decode}_opaque_fixed in nfs_xdr.h
+  nfs/localio: move managing nfsd_open_local_fh symbol to nfs_common
+  nfs/nfsd: ensure localio server always uses its network namespace
+  nfsd/localio: manage netns reference in nfsd_open_local_fh
+  nfsd: prepare to use SRCU to dereference nn->nfsd_serv
+  nfsd: use SRCU to dereference nn->nfsd_serv
+  nfsd/localio: use nfsd_serv_get/put in nfsd_open_local_fh
+
+Trond Myklebust (3):
+  NFS: for localio don't call filesystem read() and write() routines directly
+  NFS: Enable localio for non-pNFS I/O
+  pnfs/flexfiles: Enable localio for flexfiles I/O
+
+Weston Andros Adamson (5):
+  nfs: pass nfs_client to nfs_initiate_pgio
+  nfs: pass descriptor thru nfs_initiate_pgio path
+  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
+  sunrpc: add rpcauth_map_to_svc_cred_local
+  nfs/nfsd: add "localio" support
+
+ fs/Kconfig                                |   3 +
+ fs/nfs/Kconfig                            |  30 +
+ fs/nfs/Makefile                           |   1 +
+ fs/nfs/blocklayout/blocklayout.c          |   6 +-
+ fs/nfs/client.c                           |  15 +-
+ fs/nfs/filelayout/filelayout.c            |  16 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+ fs/nfs/inode.c                            |  61 +-
+ fs/nfs/internal.h                         |  94 ++-
+ fs/nfs/localio.c                          | 850 ++++++++++++++++++++++
+ fs/nfs/nfs3_fs.h                          |   1 +
+ fs/nfs/nfs3client.c                       |  25 +
+ fs/nfs/nfs3proc.c                         |   3 +
+ fs/nfs/nfs3xdr.c                          |  58 ++
+ fs/nfs/nfs4_fs.h                          |   2 +
+ fs/nfs/nfs4client.c                       |  23 +
+ fs/nfs/nfs4proc.c                         |   3 +
+ fs/nfs/nfs4xdr.c                          |  65 +-
+ fs/nfs/nfstrace.h                         |  61 ++
+ fs/nfs/pagelist.c                         |  32 +-
+ fs/nfs/pnfs.c                             |  24 +-
+ fs/nfs/pnfs.h                             |   6 +-
+ fs/nfs/pnfs_nfs.c                         |   2 +-
+ fs/nfs/write.c                            |  13 +-
+ fs/nfs_common/Makefile                    |   3 +
+ fs/nfs_common/nfslocalio.c                |  71 ++
+ fs/nfsd/Kconfig                           |  30 +
+ fs/nfsd/Makefile                          |   1 +
+ fs/nfsd/filecache.c                       |  15 +-
+ fs/nfsd/localio.c                         | 398 ++++++++++
+ fs/nfsd/netns.h                           |  16 +-
+ fs/nfsd/nfs4state.c                       |  25 +-
+ fs/nfsd/nfsctl.c                          |  28 +-
+ fs/nfsd/nfsd.h                            |  11 +
+ fs/nfsd/nfssvc.c                          | 176 ++++-
+ fs/nfsd/trace.h                           |   3 +-
+ fs/nfsd/vfs.h                             |   9 +
+ fs/nfsd/xdr.h                             |   6 +
+ include/linux/nfs.h                       |   2 +
+ include/linux/nfs_fs.h                    |   2 +
+ include/linux/nfs_fs_sb.h                 |   9 +
+ include/linux/nfs_xdr.h                   |  31 +-
+ include/linux/nfslocalio.h                |  39 +
+ include/linux/sunrpc/auth.h               |   4 +
+ include/uapi/linux/nfs.h                  |   4 +
+ net/sunrpc/auth.c                         |  15 +
+ 48 files changed, 2289 insertions(+), 142 deletions(-)
+ create mode 100644 fs/nfs/localio.c
+ create mode 100644 fs/nfs_common/nfslocalio.c
+ create mode 100644 fs/nfsd/localio.c
+ create mode 100644 include/linux/nfslocalio.h
+
+-- 
+2.44.0
 
 
