@@ -1,123 +1,76 @@
-Return-Path: <linux-nfs+bounces-3820-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3821-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AC4D90868F
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 10:40:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41458908943
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 12:07:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E44591C25436
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 08:40:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEE63B25488
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jun 2024 10:07:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA38C18508D;
-	Fri, 14 Jun 2024 08:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6740195F03;
+	Fri, 14 Jun 2024 10:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ujJgfi3t"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777A71836DE;
-	Fri, 14 Jun 2024 08:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38B192B7D;
+	Fri, 14 Jun 2024 10:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718354425; cv=none; b=O8+GAzonR097uK+BZ8saqzmKJ4GURYZ6IqfWpWHursY0sEA59pmXVimVsyPEVLOl+dtxIP51mRpWU7vWgsCPeVy5MPpZmkNPag7E8kNn4EVfB3CQXB31cLgXQHxoMgiQoyliDXtdTSBW/PDiApwsC1K96KC7Ojk70j8pid76m44=
+	t=1718359415; cv=none; b=NpbS8PkKMmghKLd/sQU/P7HG9KvKVJEj99Q0bOiArdus8bfVLTNB+viiBcGZKqmNvzkGLPPbtRtgm6Uzw7kSa0jpafYfhyz831fD4ji4z5zaspVfJPPBC1eJ1AgXYklHI3MWbtvU67z0X5Edb6F9WgH12x2U4ltdP9Fcn2QrCfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718354425; c=relaxed/simple;
-	bh=fUz6PrtFBHmdSanceP4rEnElFSeTVqazvmJwnBn6bg8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OxWcqTeG85nviXwhRoja5wS+TJUgYc1lfV+t+08vup9zBJywIpBNW5uw20ZRyUVXs+xNo/kEVNjU5OmbnsZ7C7li22tPRi7GXdrIAEK4BQFEBRzXwiKOiWE0M13TANjlB93E3BYNekp3zFJMQ0MEEdnQsgyPAtTKgKNlc8lO/q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: bizesmtpsz10t1718354248tjm52n
-X-QQ-Originating-IP: qslyn0oMXcpOJEcFPvUvJm0egT/cIEGM1bOAZQB2Bz0=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Jun 2024 16:37:25 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8925404822079021439
-Message-ID: <93D6D58053EB522F+de1c8896-65e1-442d-99f6-c5b222c0a816@chenxiaosong.com>
-Date: Fri, 14 Jun 2024 16:37:24 +0800
+	s=arc-20240116; t=1718359415; c=relaxed/simple;
+	bh=79Sp5ssPZoPT9qKyEZxZNvuP0Lw4eVu9irWLP4+NS7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J1O+jNbk/aS3yL4Q+2/dJ49qb+tqy7zQ93ek5hM8dxaXoZ9FzJ60tOuPLhWzrD8caycPNYgPD77oUBz0182jhKnrUNPD1ZaMoHdvCqMNpGabhR6funiLEWBET6doJY6oMvoC530Y9/0JsXQI+jSO6Ks4deUO6gt0z3S91fWImu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ujJgfi3t; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=Y+h9mnigpjpNwUAOXWawpV3AcyMYOp0Q9u/JSf0OWCw=; b=ujJgfi3t+Id15NzIWQvK0d9stL
+	L3jS8QFAFFYlnPPhRu4LgMoMcSBHEI/OmyktKGKVaUmZvDvtIsqm7sa7uejK9asGqze2BpHixp0Ww
+	VeBrtv1kfL/GvMDWUgxDULH6QENz6YNyyADTTNJM5JIwdqF6hr6B7cFc7HA/azrCUgKh9oyd3jDq9
+	DEeFD8S9yxP6Wtl6GuzJjNhCV0Wz05p80rj52AAvV9R5f69nQ73QMYSlLiNJKnKYP/iQWmOXthvb9
+	hwBCyVAI+1p4DnLLoUnBgoRaYwLA7VlEqR1XE4px3OBBl2FjNDtPqffzZ9gg8HmKMV/UawfGPMvIm
+	GXReHQIA==;
+Received: from 2a02-8389-2341-5b80-6543-87c9-27d1-cd7c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:6543:87c9:27d1:cd7c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sI3mO-00000002KgB-0Qk1;
+	Fri, 14 Jun 2024 10:03:32 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Steve French <sfrench@samba.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-nfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: fix swap on NFS
+Date: Fri, 14 Jun 2024 12:03:24 +0200
+Message-ID: <20240614100329.1203579-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Question about pNFS documentation
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, Benjamin Coddington <bcodding@redhat.com>,
- Olga Kornievskaia <kolga@netapp.com>, Josef Bacik <josef@toxicpanda.com>,
- Jeff Layton <jlayton@kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "liuzhengyuan@kylinos.cn" <liuzhengyuan@kylinos.cn>,
- "huhai@kylinos.cn" <huhai@kylinos.cn>,
- "chenxiaosong@kylinos.cn" <chenxiaosong@kylinos.cn>
-References: <BA2DED4720A37AFC+88e58d9e-6117-476d-8e06-1d1a62037d6d@chenxiaosong.com>
- <08BB98A6-FA14-4551-B977-8BC4029DB0E1@oracle.com>
-Content-Language: en-US
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <08BB98A6-FA14-4551-B977-8BC4029DB0E1@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Thanks for your reply. By the way, are there any plans for the Linux NFS 
-server to implement the file, flexfile and object layout?
+Hi all,
 
-Thanks,
-ChenXiaoSong.
+as of 6.10-rc swap can swap out larger than PAGE_SIZE chunks, which
+trips a VM_BUG_ON in NFS.  This trivial patch seems to fix it to me,
+but I haven't really figured out what Fixes tag this should get.
 
-在 2024/6/13 23:31, Chuck Lever III 写道:
-> Hi-
-> 
->> On Jun 13, 2024, at 4:35 AM, ChenXiaoSong <chenxiaosong@chenxiaosong.com> wrote:
->>
->> Greetings,
->>
->> I am very interested in Parallel NFS (pNFS) and want to setup a testing and debugging environment for pNFS. I found some pNFS documentation [1] [2] [3], but I still don't know how to setup Linux environment about file layout, block layout, object layout, and flexible file layout. Some documentation like spNFS(simple pNFS) is unmaintained and was dropped. Can you recommend some other detailed documentation(how to use pNFS in Linux)?
->>
->> Thanks,
->> ChenXiaoSong.
->>
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-block-server.rst
->>
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-scsi-server.rst
->>
->> [3] https://linux-nfs.org/wiki/index.php/PNFS_Development
-> 
-> I'm not aware of recent documentation other than what you
-> have listed here.
-> 
-> Note that the Linux NFS client implements the file, block,
-> and flexfile layout types, but the Linux NFS server
-> implements only the pNFS block layout type.
-> 
-> I've been building out testing that we can run for each
-> release of NFSD that will exercise pNFS block layout
-> support in the Linux NFS server and client, since pNFS
-> block is the common denominator between our client and
-> server.
-> 
-> Look at the 9 commits at the tip of [1]. These contain
-> changes to kdevops that add the ability for it to set up
-> an iSCSI target and enable pNFS on its local NFS server.
-> If you can read Ansible scripts, these might help you
-> form recipes for you to set up your own environment
-> using the Linux NFS implementation and its iSCSI target
-> and initiator.
-> 
-> Admin documentation (outside of kdevops) is on the to-do
-> list, but hasn't been started.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> [1] https://github.com/chucklever/kdevops/tree/pnfs-block-testing
+Also cifs has the same VM_BUG_ON and will also need a similar fix, but
+I'll leave it to people with a working test setup.
 
