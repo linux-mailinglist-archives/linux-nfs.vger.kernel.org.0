@@ -1,245 +1,212 @@
-Return-Path: <linux-nfs+bounces-3889-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79DE390A9C8
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 11:38:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4463590AA32
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 11:51:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFABB1F25278
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 09:38:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E25B42836E3
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 09:51:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380CD192B82;
-	Mon, 17 Jun 2024 09:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4461946C4;
+	Mon, 17 Jun 2024 09:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="e0eoA3Rw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="60VR4dPt";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="e0eoA3Rw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="60VR4dPt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/CRJcwp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5022F190673;
-	Mon, 17 Jun 2024 09:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF2A194A68;
+	Mon, 17 Jun 2024 09:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718617070; cv=none; b=Ret+ZKYY3TbGmXpD59WqRmKh5AfLjYYkMvqGsHrrt9y6nIGN+lCpPBYjL8C/VZGmEjMFInjoyJo+EiCasl/Tgffn8nEA6Nc0VBTrxLE0Xw0Bg4SM/zVKu04eveDrwAoYhtQEMHAj5Rr4tCgPK6CAyyKNGF5UfQ/pOiBL496iud0=
+	t=1718617222; cv=none; b=T3+8CmJkGQp9vLmjZz5kWPbYxW2AqZwfE4CU2+OM1BOX2Lt/N9PfygdPUU0Z95nEMgcjNhNEMaV6BhDVDHAiqZFxW2Zv7cEL2JHi3oYMbPqfsmxMrn4+mZdCr4nHXJ9Qi6fqZGraHlGeMIuMKZk5qFkMu+UXowcDisTVel+SCuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718617070; c=relaxed/simple;
-	bh=6GJI8RyV4Rxgbr0HGunZUiPB2c9B8M95YOgm2k5GYIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uy12kYpESvpLidfbm0vQYkScPK9OeI1PWfb5OaMGEjzWiSHVImPeZ3KKwtZ788jI/sDN4rnhbuPADWrO6kG9y+joKQrh6ys56F2hXxPwxzTUCUVNQIynvit2mo1Yqika7kCtOUk71uM0G39TL3RDZpVzeghElTdEUb+473Pc20U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=e0eoA3Rw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=60VR4dPt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=e0eoA3Rw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=60VR4dPt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1C3045FE13;
-	Mon, 17 Jun 2024 09:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718617066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
-	b=e0eoA3RwXAUApO9OKFPUvDLR7Su4DXfOVMavcXGgWD2mB625CNUBJPgxynUWq0RXpTy8U1
-	dNsdSNXz/cOIs0WeOmwg1BkKaXMXVSMq6zA50xqDvsb5sW1PN5LCTejML6iMlLLvh9ChwR
-	vRsoNbrAf5iy8S1rJq8pbDgMGE3USQs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718617066;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
-	b=60VR4dPt9IjY7qkDextIsvc8s7WdXcsVzYK2nbo624/PVrX35T0zYvjSGzWKaS1ETvUHRr
-	KnV99vuMnASrOjDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=e0eoA3Rw;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=60VR4dPt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718617066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
-	b=e0eoA3RwXAUApO9OKFPUvDLR7Su4DXfOVMavcXGgWD2mB625CNUBJPgxynUWq0RXpTy8U1
-	dNsdSNXz/cOIs0WeOmwg1BkKaXMXVSMq6zA50xqDvsb5sW1PN5LCTejML6iMlLLvh9ChwR
-	vRsoNbrAf5iy8S1rJq8pbDgMGE3USQs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718617066;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
-	b=60VR4dPt9IjY7qkDextIsvc8s7WdXcsVzYK2nbo624/PVrX35T0zYvjSGzWKaS1ETvUHRr
-	KnV99vuMnASrOjDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E24913AAA;
-	Mon, 17 Jun 2024 09:37:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lkRuA+oDcGYgeAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 17 Jun 2024 09:37:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A9A78A0886; Mon, 17 Jun 2024 11:37:45 +0200 (CEST)
-Date: Mon, 17 Jun 2024 11:37:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: NeilBrown <neilb@suse.de>, Amir Goldstein <amir73il@gmail.com>,
-	James Clark <james.clark@arm.com>, ltp@lists.linux.it,
-	linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
- ->atomic_open used.
-Message-ID: <20240617093745.nhnc7e7efdldnjzl@quack3>
-References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
- <20240615-fahrrad-bauordnung-a349bacd8c82@brauner>
+	s=arc-20240116; t=1718617222; c=relaxed/simple;
+	bh=vsZ1trUtiw8fgH+CCMNP79vOqp5MLiAdLIcCAGUCoEo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u+pg/Yy5boLKg0P8KE0Icd/5V1xlcD+Arr5QGkM+5ZY/+ABMm4mJwd+KF9t7MhoedQxdzVJe+CXCloKNyUzPnCD4fGx4Br/dWUL45WkREt3Xz3z4Q/IAyAwzXs/QZMbaiUfN6MVX80FTinvzFNrjQZPkMdlE/97K2De5YY/+Fgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/CRJcwp; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4eb3277badcso1248770e0c.3;
+        Mon, 17 Jun 2024 02:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718617219; x=1719222019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wuDlyu9i7r0os+gEKzNJUuH1CCj1UPa7Q3D2hYttq4o=;
+        b=O/CRJcwpPOIFhTFJUoO38cq1Nmxt6g0HewdMfLUrcmWdzBGEKMerGXMUne11ZvvGyH
+         rl5hROWvdqhz6/hkxQyhaIEqQ0eLz9LtJuOClUgAA3zTL6B8aS6ZXWOpZF8KebMyTK0x
+         99vV6Cph0tXYgFSa2H7KsgjjlCrdfoWiVJhE77a6lIp0J/TW9UIti8MOBTKD0EoxxUkA
+         7BLDe3k0xM2efjnQcjzcava04eh/XBLeUp+RKA6W9SxzmMITwB36SL4BoEFOXGSoNsAF
+         bIF55AY7tuKCHk/PnIeE2zTLQ63feZIZxjrOmeW6492uS9+NmG4Y0E3ZDXZVbjwb4K5N
+         K5VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718617219; x=1719222019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wuDlyu9i7r0os+gEKzNJUuH1CCj1UPa7Q3D2hYttq4o=;
+        b=sbWa8qDms07HYW4DNE8F/Uhizl4hcn4q2Ty+eaDXnLhWYQeH6yWEnIzkShBqx+XoEn
+         Va9njfRRXnABYDhWdsiM4qyko6wIUq2UkTNGBZGLc+hzw1lgcIPqBhLu3lPyArDzjsO6
+         hf+vGc2WwHplQfMiFyEdPC4ES219C0UxAuSFOv6eI2K8CVDbTC+IOgEBDcf3rw+C1eZE
+         4dcRB7Wm0VxZ5hdZPQGXJ1OXBdX55m/lSyv2bibA9L6xB2FidTrbmNJlvVoKo03U7WiM
+         VdB5N8pp478arptniA5PtPlS0dwl6tNwRDHERiZfybaVaf4/5RABoZG600BttpO3+/TT
+         8+DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW4B+pZuRLTfwwVronbjnnLeilXx/1QBADJZXEflIQdPjvcxdi8E+grVGOt6Y0hNbJnQIhBtHGohUHT5hBQwAhW689qFd2NI7d4mkd2p84jWnrrxNHrtyHPzaiSoYhsRDcWdWScg==
+X-Gm-Message-State: AOJu0YwH9N60Z7IoLGnMnDDDEwxNNz9Wl/qDZNDSU2JLdtehmMBdNKo1
+	nmtvWzZiwA9CnujV7TSqoAtVQKrO2G25ZCISIw+nWL6yIKV9p7nE82wKcNlL/3VuSj8P29JQrgv
+	NBjhi1NafjiX9/s5JXgNKEvBjm8c=
+X-Google-Smtp-Source: AGHT+IEw6oDtm4mejFc0hZ7G9vbnUGfrUvJh9D6qHrcpHhpur5dNcAqM9IaP9weIEh32H/dNyPOlDpXOCwBcuv77C8I=
+X-Received: by 2002:a05:6122:c9f:b0:4ed:80:bd85 with SMTP id
+ 71dfb90a1353d-4ee3df992c1mr8545507e0c.5.1718617219511; Mon, 17 Jun 2024
+ 02:40:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240615-fahrrad-bauordnung-a349bacd8c82@brauner>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,gmail.com,arm.com,lists.linux.it,vger.kernel.org,zeniv.linux.org.uk,suse.cz];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 1C3045FE13
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Spam-Level: 
+References: <20240614100329.1203579-1-hch@lst.de> <20240614100329.1203579-2-hch@lst.de>
+ <20240614112148.cd1961e84b736060c54bdf26@linux-foundation.org>
+ <CAGsJ_4wnWzoScqO9_NddHcDPbe_GbAiRFVm4w_H+QDmH=e=Rsw@mail.gmail.com>
+ <20240616085436.GA28058@lst.de> <CAGsJ_4ytrnXJbfVi=PpTw34iBDqEoAm3b16oZr2VQpVWLmh5zA@mail.gmail.com>
+ <9ef638fc-5606-45da-a237-2e09ee05bbeb@arm.com>
+In-Reply-To: <9ef638fc-5606-45da-a237-2e09ee05bbeb@arm.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 17 Jun 2024 21:40:08 +1200
+Message-ID: <CAGsJ_4xDkjN0X8ogE9djmu+nDUd_PJcSwr+GVH4vUiUAeJskaQ@mail.gmail.com>
+Subject: Re: [PATCH] nfs: fix nfs_swap_rw for large-folio swap
+To: Ryan Roberts <ryan.roberts@arm.com>, Christoph Hellwig <hch@lst.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-mm@kvack.org, 
+	Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat 15-06-24 07:35:42, Christian Brauner wrote:
-> On Wed, 12 Jun 2024 17:09:55 +1000, NeilBrown wrote:
-> > When a file is opened and created with open(..., O_CREAT) we get
-> > both the CREATE and OPEN fsnotify events and would expect them in that
-> > order.   For most filesystems we get them in that order because
-> > open_last_lookups() calls fsnofify_create() and then do_open() (from
-> > path_openat()) calls vfs_open()->do_dentry_open() which calls
-> > fsnotify_open().
-> > 
-> > [...]
-> 
-> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-> Patches in the vfs.fixes branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs.fixes
-> 
-> [1/1] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open used.
->       https://git.kernel.org/vfs/vfs/c/7536b2f06724
+On Mon, Jun 17, 2024 at 8:03=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 16/06/2024 11:23, Barry Song wrote:
+> > On Sun, Jun 16, 2024 at 4:54=E2=80=AFPM Christoph Hellwig <hch@lst.de> =
+wrote:
+> >>
+> >> On Sun, Jun 16, 2024 at 12:16:10PM +1200, Barry Song wrote:
+> >>> As I understand it, this isn't happening because we don't support
+> >>> mTHP swapping out to a swapfile, whether it's on NFS or any
+> >>> other filesystem.
+> >>
+> >> It does happen.  The reason why I sent this patch is becaue I observed
+> >> the BUG_ON trigger on a trivial swap generation workload (usemem.c fro=
+m
+> >> xfstests).
+> >
+> > This is quite unusual. Could you share your setup and backtrace? I'd
+> > like to reproduce the issue, as the mm code only supports mTHP
+> > swapout on block devices. What is your swap device or swap file?
+> > Additionally, on what kind of filesystem is the executable file built
+> > from usemem.c located?
+>
+> Yes, I'm also confused by this, since as Barry says, the swap-out changes=
+ to
+> support mTHP are only intended to be activated when the swap device is a
+> non-rotating block device - swap files on file systems are explicitly not
+> supported and all swapping should be done page-by-page in that case. This
+> constraint is exactly the same as for the pre-existing PMD-size THP swap-=
+out
+> support. So if you are seeing large folios being written after the mTHP s=
+wap-out
+> change, you should also be seeing large folios before this change.
+>
+> Hopefully the stack trace will tell us what's going on here.
 
-I have reviewed the patch you've committed since I wasn't quite sure which
-changes you're going to apply after your discussion with Amir. And I have
-two comments:
+Hi Ryan, Christoph,
 
-@@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
-  */
- int vfs_open(const struct path *path, struct file *file)
- {
-+	int ret;
-+
- 	file->f_path = *path;
--	return do_dentry_open(file, NULL);
-+	ret = do_dentry_open(file, NULL);
-+	if (!ret)
-+		/*
-+		 * Once we return a file with FMODE_OPENED, __fput() will call
-+		 * fsnotify_close(), so we need fsnotify_open() here for symmetry.
-+		 */
-+		fsnotify_open(file);
-+	return ret;
- }
+I am able to reproduce the issue now. I am debugging and will update
+the root cause
+with you this week.
 
-AFAICT this will have a side-effect that now fsnotify_open() will be
-generated even for O_PATH open. It is true that fsnotify_close() is getting
-generated for them already and we should strive for symmetry. Conceptually
-it doesn't make sense to me to generate fsnotify events for O_PATH
-opens/closes but maybe I miss something. Amir, any opinion here?
+Initial investigation shows the issue might *not* be related to THP_SWPOUT.
 
-@@ -3612,6 +3612,9 @@ static int do_open(struct nameidata *nd,
- 	int acc_mode;
- 	int error;
- 
-+	if (file->f_mode & FMODE_OPENED)
-+		fsnotify_open(file);
-+
- 	if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
- 		error = complete_walk(nd);
- 		if (error)
+I am even able to reproduce it after disabling thp and mthp, entirely by
+small folios:
 
-Frankly, this works but looks as an odd place to put this notification to.
-Why not just placing it just next to where fsnotify_create() is generated
-in open_last_lookups()? Like:
+[  215.925069] folio_alloc_swap folio nr:1 anon:1 swapbacked:1
+[  215.926383] vmscan: shrink_folio_list folio nr:1 anon:1 swapbacked:1
+[  215.927008] folio_alloc_swap folio nr:1 anon:1 swapbacked:1
+[  215.929368] ------------[ cut here ]------------
+[  215.929824] kernel BUG at fs/nfs/direct.c:144!
+[  215.930403] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SM=
+P
+[  215.931264] Modules linked in:
+[  215.932328] CPU: 3 PID: 214 Comm: mthp_swpout_tes Not tainted
+6.10.0-rc3-ga12328d9fb85-dirty #292
+[  215.932953] Hardware name: linux,dummy-virt (DT)
+[  215.933461] pstate: 21400005 (nzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=
+=3D--)
+[  215.934030] pc : nfs_swap_rw+0x60/0x70
+[  215.935079] lr : swap_write_unplug+0x64/0xb0
+[  215.935559] sp : ffff800087363280
+[  215.935958] x29: ffff800087363280 x28: ffff0000c3241800 x27: fffffdffc32=
+3a4c0
+[  215.937012] x26: fffffdffc323a4c8 x25: ffff0001b4a51500 x24: ffff8000825=
+0f670
+[  215.937893] x23: 0000000000000001 x22: ffff0000c0b2da00 x21: 00000000000=
+20000
+[  215.938734] x20: ffff0000c46a8bd8 x19: ffff0000c154f800 x18: fffffffffff=
+fffff
+[  215.939594] x17: 0000000000000000 x16: 0000000000000000 x15: ffff8001073=
+63097
+[  215.940591] x14: 0000000000000000 x13: 313a64656b636162 x12: 70617773203=
+13a6e
+[  215.941621] x11: 6f6e6120313a726e x10: ffff800083e86318 x9 : ffff8000803=
+e9ad4
+[  215.942673] x8 : ffff800087363168 x7 : 0000000000000000 x6 : ffff0001adb=
+fa4c6
+[  215.943674] x5 : 0000000000000002 x4 : 0000000000020000 x3 : 00000000000=
+20000
+[  215.944673] x2 : ffff8000806015e8 x1 : ffff8000873632a0 x0 : ffff0000c15=
+4f800
+[  215.945568] Call trace:
+[  215.945906]  nfs_swap_rw+0x60/0x70
+[  215.946351]  __swap_writepage+0x2e8/0x328
+[  215.946775]  swap_writepage+0x68/0xd0
+[  215.947184]  pageout+0xe4/0x430
+[  215.947587]  shrink_folio_list+0x9bc/0xf60
+[  215.947992]  reclaim_folio_list+0x8c/0x168
+[  215.948454]  reclaim_pages+0xfc/0x178
+[  215.948843]  madvise_cold_or_pageout_pte_range+0x8d8/0xf28
+[  215.949285]  walk_pgd_range+0x390/0x808
+[  215.949660]  __walk_page_range+0x1e0/0x1f0
+[  215.950040]  walk_page_range+0x1f0/0x2c8
+[  215.950458]  madvise_pageout+0xf8/0x280
+[  215.950905]  madvise_vma_behavior+0x314/0xa20
+[  215.951361]  madvise_walk_vmas+0xc0/0x128
+[  215.951807]  do_madvise.part.0+0x110/0x558
+[  215.952298]  __arm64_sys_madvise+0x68/0x88
+[  215.952723]  invoke_syscall+0x50/0x128
+[  215.953148]  el0_svc_common.constprop.0+0x48/0xf8
+[  215.953592]  do_el0_svc+0x28/0x40
+[  215.954036]  el0_svc+0x50/0x150
+[  215.954610]  el0t_64_sync_handler+0x13c/0x158
+[  215.955070]  el0t_64_sync+0x1a4/0x1a8
+[  215.955685] Code: a8c17bfd d50323bf 9a9fd000 d65f03c0 (d4210000)
+[  215.956510] ---[ end trace 0000000000000000 ]---
 
-        if (open_flag & O_CREAT)
-                inode_lock(dir->d_inode);
-        else
-                inode_lock_shared(dir->d_inode);
-        dentry = lookup_open(nd, file, op, got_write);
--	if (!IS_ERR(dentry) && (file->f_mode & FMODE_CREATED))
--		fsnotify_create(dir->d_inode, dentry);
-+	if (!IS_ERR(dentry)) {
-+		if (file->f_mode & FMODE_CREATED)
-+	                fsnotify_create(dir->d_inode, dentry);
-+		if (file->f_mode & FMODE_OPENED)
-+			fsnotify_open(file);
-+	}
-        if (open_flag & O_CREAT)
-                inode_unlock(dir->d_inode);
-        else
-                inode_unlock_shared(dir->d_inode);
 
-That looks like a place where it is much more obvious this is for
-atomic_open() handling? Now I admit I'm not really closely familiar with
-the atomic_open() paths so maybe I miss something and do_open() is better.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+> (Sorry for my slow responses/lack of engagement over the last month; its =
+been a
+> combination of paternity leave/lack of sleep/working on other things. I'm=
+ hoping
+> to get properly back into this stuff within the next couple of weeks).
+>
+> Thanks,
+> Ryan
+>
 
