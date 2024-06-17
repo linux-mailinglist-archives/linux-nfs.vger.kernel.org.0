@@ -1,144 +1,165 @@
-Return-Path: <linux-nfs+bounces-3901-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3902-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E06C90B29C
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:43:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02D6E90B2E7
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:53:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADB841C218F3
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 14:43:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A00EB1F262B5
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 14:53:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AB21CFD58;
-	Mon, 17 Jun 2024 13:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F2E1C8FC4;
+	Mon, 17 Jun 2024 13:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQKPf0Iq"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="puKWe5LW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743F11CF3FD;
-	Mon, 17 Jun 2024 13:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35249198E9F;
+	Mon, 17 Jun 2024 13:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632264; cv=none; b=bTirE9dSE3NmoVZu+hH+I8X8BvI5i9HPoMYyAc3zFEJCLBB2qLuoh6vONS0Cnhba/wYRQAM7HTnd7rRw+S5iEsJ5EfgfDSsRDU4buOcJdmB9uV0qOZYofpY+zPPg1jj8Yi5S6hbLxFAC0J0JkDvJ+xFLD497TOCNbaslEXzD/1w=
+	t=1718632449; cv=none; b=Pgn+KJMfxHJM+37BwcyyFkqsYgj0C7IsCqkLaHPWx22oSDgVbSlB6RXctKM5VImttKN6GszhJiedde5kpdj/7z6eTsWTA0qOwDE81OFWtX4XVjVzQgLebWbs8W9FK94JEWqTWv+fE1HZ17blUFTb6vX/Uq5PidizRVy/fAlL2eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632264; c=relaxed/simple;
-	bh=WxO8wJJZE1Xds5hTG7TDExzo+Qsu32A6Rbf++HOL+EU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GpvFiYgvD/axcnwSi4Jgr7aJ6itQPCQO8b4p/elxCZjQOoTgIddOX6Dhp9XkxoDp85qYzXMtFdDI6f0+ZRPguY2CDk97D7/Qq308weuh1K1oQazH1REZa2zTKlhjS/kAEQal6QRt/hP7zveLTbDw5JRSvWcc4ij4p0nDNATGbFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TQKPf0Iq; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52c9034860dso5472308e87.2;
-        Mon, 17 Jun 2024 06:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718632261; x=1719237061; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7cjNgaPzx0K8Q2oE0VGfsHosS8QVWGPVVkZ0XS7HEDg=;
-        b=TQKPf0IqytFGGsqE2xDfJV+Yc75aA1GVgfltTY4XrrInwMIVCjx3BGZ2HlTDbMRnwJ
-         XRHsBKL6tbX9NklWtBn9G1kVOhmNQf4sMe56ykL4PUGZ+bBMRgt1fz+lzjHrFshmpNxt
-         3Ehb8nqYu4SNJbsYu2Bwvhy5GBpgF65YoUnh7r2JG0a43q7ag4ikgaBefGieszSUKUWC
-         +u/2IQY8h9V7c0/zz5Hxr4gjkM5QFZr/JR/tjbY6QKgCwcETuc+nXlJJ6diNXpu3XsHz
-         D8kOZYnSg7vFdFf8AIlVMJziVAtBXbYMqyg1pq73R2g3Q6wjMqZRH9KgQeucspWy6cKp
-         Dkug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718632261; x=1719237061;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7cjNgaPzx0K8Q2oE0VGfsHosS8QVWGPVVkZ0XS7HEDg=;
-        b=S5d4QM/PuVCo0B+/u/BEqzUjwZ8ms1Lw1DBKm5kTN5i6tr3nlSagb4MBnIrTIWsJkg
-         Pz7MfNY025VUpsD0JIgCOOo2f989iq+vCYGHpAK5rYzwOvyvahVKnZUBkEEGPTzs0ojV
-         7eCXSFUwbNm0pYkPZi2TWrWueX6THHNq5uxskxggkRuRVlqhvKeTRw0n4+/uvcLVDfaN
-         XEoJ0SGtVT/3xSvVtGkHyRTi0vGthUKB+VLI7LkXgTGq9J0cnLB3GjynDlO13N76kTc9
-         gLKiczHppRV8IEEF4H81SgrEJzU3LsRF4z/Tfgj/FbUAFIDKm+nRt8xX1XbxuX0WAWU/
-         0/Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVry97e54w1jMONLsqTN3iQPG8Q/In8s2mmyp6yrh7swqNFmafo9ZrgACCJX413o79jJuAlozTDaI+xcffuD2a5oica049dt4qVMgnn+hu+Gj46IWYL8/upcCeT9Ph6+wWA9I7QGpkoDsP9X71dG/ly8osgu3lDA5aLHV7x7pYU3aAKY4bFjE91XHnVURxT9u06fOl7UhoVEIbupdMaczqYAuW50sNXHyAufRcxsimtk0hVPg/ceQqUXExfaK9u8445wj2+eF8eukwbHmcAObsoR6M/jSKqKlpV6qswmF0/JGIQRlk3Ttq4B4M3JY4XibBSRdmOAhFM4yG1momRIxQif0HajIWaLUvjmSCH1ZKw0P4cy2wRMTqHmayzjPiaExUbrndO7xOupsbjVLTMZEPOmoXJAR45vaR2SaEb5rVLzuHiIvlvuB0/GspkTg==
-X-Gm-Message-State: AOJu0Yx44HaNSMGdV8qLfWJ7IGbEjTpeF3P27BEN/w/6rJODn8eFFjCW
-	GMV8zZ9B7K28Z7pPIpftBQfPKUcN3OdYimvSvk9ZIElfLSUFCAPd
-X-Google-Smtp-Source: AGHT+IHJ0CsNfqdOT8NJ8/aEvcd12bZPn1WcmZOT2dLARsLKNTs8V+RbkzjWhHb4g1pZvloY+oCxkw==
-X-Received: by 2002:a19:5e15:0:b0:51d:9f10:71b7 with SMTP id 2adb3069b0e04-52ca6e6812fmr7404820e87.28.1718632260306;
-        Mon, 17 Jun 2024 06:51:00 -0700 (PDT)
-Received: from pc636 (host-90-233-216-238.mobileonline.telia.com. [90.233.216.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2887d56sm1239456e87.263.2024.06.17.06.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:50:59 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 17 Jun 2024 15:50:56 +0200
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnA_QFvuyABnD3ZA@pc636>
-References: <ZmrfA1p2zSVIaYam@zx2c4.com>
- <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
- <Zmru7hhz8kPDPsyz@pc636>
- <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
- <Zmsuswo8OPIhY5KJ@pc636>
- <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
- <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
- <Zmw5FTX752g0vtlD@pc638.lan>
- <ZmybGZDbXkw7JTjc@zx2c4.com>
+	s=arc-20240116; t=1718632449; c=relaxed/simple;
+	bh=2MPnAz6vZV4CVtI9QpFVH8cHiuhbHrxIPWdcQgsPZa0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qxCGlTPjekX1KsK3VF/Jukce7n8AiEwgdGUHCVi9o5tFqHIWd/CTosj12jDMWTgFcG3hh7qVGjaboefy5128GfAw0M8YleggxLC+vTgldF1Ah8JVVzALsNaagNgn4tNuowczMtBKvui3Xps0AnafuyJT5DEbp/qk2ppMwf13q28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=puKWe5LW; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HCTsYi006730;
+	Mon, 17 Jun 2024 13:53:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=j
+	vVqQQBnWkNMvfMwHN58UAbqX4cO+LpI6I1rVUfUXNw=; b=puKWe5LWfCsyH/NxE
+	tofu2d0586D0DO6CHkiLdxCD/lt9xeLgxi2g4itKUpegudKx5y/XHaEsKK8HYt23
+	ojKYC3ATOHmeqV2KvGoOicRVP+gBEgHuXdjgq8Wq6edPqG1Lc0d0Wn3Bi/baS6cv
+	q/WmWIx2GljLzUP/HyHwqd8vTw3jmfbYabtbyU1HEZnHmCUMiE5xRjBbyaD2dqJi
+	CyulvPAYKT+0yjV479Zpq4kk8cHDadf1CYYixe6Q8au3L4nPmIseYbsIu61p7HN6
+	cBViQkGaPsJnyrYt9bJlC9r0x+BkQNJwpOtDr2oIbhZ+GIPuOtDItXWCVDWf1zE2
+	P5z/w==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytn6j86k3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 13:53:54 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HDITd3019506;
+	Mon, 17 Jun 2024 13:53:54 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysnp0ts81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 13:53:54 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HDrokZ54395340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 13:53:52 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 258632004B;
+	Mon, 17 Jun 2024 13:53:50 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5311620040;
+	Mon, 17 Jun 2024 13:53:47 +0000 (GMT)
+Received: from [9.43.117.91] (unknown [9.43.117.91])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Jun 2024 13:53:46 +0000 (GMT)
+Message-ID: <1786d5aa-2474-4bd3-92ee-c5a880a37728@linux.ibm.com>
+Date: Mon, 17 Jun 2024 19:23:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmybGZDbXkw7JTjc@zx2c4.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfsd: fix oops when reading pool_stats before server is
+ started
+To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20240617-nfsd-next-v1-1-5833b297015a@kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20240617-nfsd-next-v1-1-5833b297015a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ALCnmHpe_2LBQ6inmQFo0H-5gLV0bc3Y
+X-Proofpoint-ORIG-GUID: ALCnmHpe_2LBQ6inmQFo0H-5gLV0bc3Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_11,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 malwarescore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406170104
 
-On Fri, Jun 14, 2024 at 09:33:45PM +0200, Jason A. Donenfeld wrote:
-> On Fri, Jun 14, 2024 at 02:35:33PM +0200, Uladzislau Rezki wrote:
-> > +	/* Should a destroy process be deferred? */
-> > +	if (s->flags & SLAB_DEFER_DESTROY) {
-> > +		list_move_tail(&s->list, &slab_caches_defer_destroy);
-> > +		schedule_delayed_work(&slab_caches_defer_destroy_work, HZ);
-> > +		goto out_unlock;
-> > +	}
-> 
-> Wouldn't it be smoother to have the actual kmem_cache_free() function
-> check to see if it's been marked for destruction and the refcount is
-> zero, rather than polling every one second? I mentioned this approach
-> in: https://lore.kernel.org/all/Zmo9-YGraiCj5-MI@zx2c4.com/ -
-> 
->     I wonder if the right fix to this would be adding a `should_destroy`
->     boolean to kmem_cache, which kmem_cache_destroy() sets to true. And
->     then right after it checks `if (number_of_allocations == 0)
->     actually_destroy()`, and likewise on each kmem_cache_free(), it
->     could check `if (should_destroy && number_of_allocations == 0)
->     actually_destroy()`. 
-> 
-I do not find pooling as bad way we can go with. But your proposal
-sounds reasonable to me also. We can combine both "prototypes" to
-one and offer.
+Hello Jeff,
 
-Can you post a prototype here?
+With the below fix applied, the issue is not observed.
+Tested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-Thanks!
+Thanks for the fix.
 
---
-Uladzislau Rezki
+- Sourabh Jain
+
+On 17/06/24 17:24, Jeff Layton wrote:
+> Sourbh reported an oops that is triggerable by trying to read the
+> pool_stats procfile before nfsd had been started. Move the check for a
+> NULL serv in svc_pool_stats_start above the mutex acquisition, and fix
+> the stop routine not to unlock the mutex if there is no serv yet.
+>
+> Fixes: 7b207ccd9833 ("svc: don't hold reference for poolstats, only mutex.")
+> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   net/sunrpc/svc_xprt.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index d3735ab3e6d1..b757a8891813 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -1422,12 +1422,13 @@ static void *svc_pool_stats_start(struct seq_file *m, loff_t *pos)
+>   
+>   	dprintk("svc_pool_stats_start, *pidx=%u\n", pidx);
+>   
+> +	if (!si->serv)
+> +		return NULL;
+> +
+>   	mutex_lock(si->mutex);
+>   
+>   	if (!pidx)
+>   		return SEQ_START_TOKEN;
+> -	if (!si->serv)
+> -		return NULL;
+>   	return pidx > si->serv->sv_nrpools ? NULL
+>   		: &si->serv->sv_pools[pidx - 1];
+>   }
+> @@ -1459,7 +1460,8 @@ static void svc_pool_stats_stop(struct seq_file *m, void *p)
+>   {
+>   	struct svc_info *si = m->private;
+>   
+> -	mutex_unlock(si->mutex);
+> +	if (si->serv)
+> +		mutex_unlock(si->mutex);
+>   }
+>   
+>   static int svc_pool_stats_show(struct seq_file *m, void *p)
+>
+> ---
+> base-commit: 4ddfda417a50309f17aeb85f8d1a9a9efbc7d81c
+> change-id: 20240617-nfsd-next-8593f73544f5
+>
+> Best regards,
+
 
