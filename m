@@ -1,234 +1,155 @@
-Return-Path: <linux-nfs+bounces-3930-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3931-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C0290B78B
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 19:12:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFAD290B7BC
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 19:20:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13CB0285EC6
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 17:12:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6B251C22F29
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 17:20:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789E71684BF;
-	Mon, 17 Jun 2024 17:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3448816DC0E;
+	Mon, 17 Jun 2024 17:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GumAcy6E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgKo3Jxd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D164E16A93C;
-	Mon, 17 Jun 2024 17:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5008916CD31;
+	Mon, 17 Jun 2024 17:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718644354; cv=none; b=mAlQSRUVQCrBUMO3XqryJO0rjFGNW11tuFE2T0az6x6GBZ/Yg37A+vGCfziKzxLuMMrH3jWlkP2ft65xu/Bcpq2zrtwAgX1uEGA+crPKgRemPmPNWRZy6EdvkhrfJTrJlk+ficutHRDy5LlIriLYgZHiqWrtnFcoTO3VuzzBKLM=
+	t=1718644801; cv=none; b=jQF+43rI1b/FSJgPuVs7YUXwJ1CpE7zjAjZJiWjQ+9UZFOeyf0fju9NtptC8R10/UAWo6ZxnXATrDjCnAnji/ZsV7HbSEIXz/981Y5Q2MzZJot2jkwss9iQdZl07Ed7R3kNpfNOIlYJJpr37a7upM48C7K55LZNg9dHIwjYwDLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718644354; c=relaxed/simple;
-	bh=ISxkW9K320Bmd5RQDq2ZbzfdwhVCbKLmvhyYXjmlSCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mmuAGygfeltBK1pn0mkC2JK4W7S7C5uAOkmi/AabAPCoYUh0I+93v6oHkve4KvOlCzDEwTLjq7LTMv6uo6kV+8YZMyojvpoIKYO3jZBF34HnswFawGTA9LGvJDo5rKJal4Y98HoyIeuGRwzuUccUGcnrJxAJfHtWyfL5U9XeqlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GumAcy6E; arc=none smtp.client-ip=209.85.219.44
+	s=arc-20240116; t=1718644801; c=relaxed/simple;
+	bh=viLDpuJKEVzbprFQO23qfBQGXZv55FGbFpR7JPV8Aik=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2ERHr8FQPwMczO/gM2XLiFlFfYps2iT+b/WA5H0okILTJy+2uQYiCnUI2govMbs4p6X1Rep+IQAXEQ8RcWGkA3/a+ycDser2a7CN3gEkiZg0ecVWaDuSxm16uucougeCbgqyLb3PECYVxNNSfDqkUXfjaAr3ERvbMK+e6z2PTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgKo3Jxd; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b065d12dc6so24266096d6.0;
-        Mon, 17 Jun 2024 10:12:32 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c8c0d73d3so4957342e87.1;
+        Mon, 17 Jun 2024 10:19:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718644352; x=1719249152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L8Y4dIpWWIt1HFS2GNCWadogAx3UU4JsBC/chYCx394=;
-        b=GumAcy6EWHdHXTqJPZOoE3B6pgc/vDKL1wl3ETOntlxohzGrniCkh1tiQhTPfImK/d
-         pRliekaM/MSWrlVj2rJhQZkITJH11H3H19h3y03KjewzCx9ZB6ZiA7gzhTIIc8Yav1co
-         UDAvyI2BE6drReK9VtbyDB5zrHkHALCquDABeXwZbH5nFhrsxfUE3eCmSMPqd2OIcXPo
-         Oar2TH9q3QuvrxWKP6P3LfXimqVSO0xdb5Ng0ntvYr93pC1tdIB66USD7R1wkv/Amvx2
-         zXixo7f9PmP6EYWbV7LYq+BEY/o485Zn5+FnSRq7G4wZ6ww2S80Y+Z4UmWHai1WVoFn3
-         UvWg==
+        d=gmail.com; s=20230601; t=1718644797; x=1719249597; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vZ8O3vkKnV5WMsPPzukATAgUwpYfoN3xcCe/8i65jUE=;
+        b=SgKo3JxdtCG+m66kMjKFe+P4rEEJaI1oi+ykzaC6O/8y40LsmHTsoH4h72fRWNFz/J
+         vu3GOxMFcnuNGDnWwV3Rrpol5AmmXibVbvKdutsL8SO+o/l9UKRN1Z/ftKAdMC6/p0vL
+         QqFtE/tKKO4l3B8U+1PJD+IYtqoioOs5S0po1dhRkQuGdhbjTa0FlW7tn3piw3ftPu44
+         bsC3W7xyNvwJQgPOheWFGBIJ1Z2H6dbBRQC5wFgW3sjOorB/3qYOAWG8IukOaI2Qxbkb
+         eTwvy2+xXShPiGsRa1r7Ye/nFeTy/BtuezripavaE7XpeNC1oJHQmf9p6TnHiD5HzDPZ
+         KUfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718644352; x=1719249152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L8Y4dIpWWIt1HFS2GNCWadogAx3UU4JsBC/chYCx394=;
-        b=LqN7kNTp4lU/KJGhKPbw9EpvW0oc5DUtulgWZNohc8UnxHNtJeIPZ+XK8Gx25LhlTt
-         NwJmeAPEpXszbJsjLjt+vQW4/jX/kpavdY3by0eSEXDqpZCqK7BesHHtNPhJsPMibrWC
-         lBPnkXi+/C+wuvphtMxb2FQkinGp1OrmA4swfAsxTPBSAQt5cIv5pVjjNPIEIs8bd5nZ
-         AsWDwjHfmD0tOsJsjdXVKb6cDEpLi8qbAh73nReSF/DNarSmOutIAfR7PPnuwkopYW1X
-         pTBsFTu0pWyyPFv6YZDXwhtFcho5cciaX/xgoDiCaIFKXSWUFxrasWTK0HoTuo44shRr
-         uswg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/oacKti987OSQ5p05S6DQ42bSvNeHzvLI0NdPSYLpRVXmq1tgwjkzH5V+Vuz4H4/LV4BgTcsev46BuoVYxEc2ZKbl5SFHVcmlD5bZ/WzhoAUVJEZplAFIH6IUJuhhivxzCpjE40ytdA==
-X-Gm-Message-State: AOJu0Yw1vjDIti4Q5SuFuqqHkF95WQCu3L+/d9QiH6dVZvQc+Sqh3YL6
-	2tSyJbi3VnkfPUGXLavQwmK10NICECOO3zCEGVMEOBbWlZz4iulcCQkWIFkSOX0oCbFEbiCVGhi
-	HKlyMrlbigEStCuFClMd+WxpoSds=
-X-Google-Smtp-Source: AGHT+IHAP4gy8lnROASB8oUCFBeFNwK9k1Y9Fg4moSWCdTK/kmcqlQoziT3/xJr7TMRegSRGJNJddUNJ3mRnbsMVkrA=
-X-Received: by 2002:a0c:ef0a:0:b0:6b2:cefe:6c79 with SMTP id
- 6a1803df08f44-6b2cefe6ce9mr50141586d6.9.1718644351581; Mon, 17 Jun 2024
- 10:12:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718644797; x=1719249597;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vZ8O3vkKnV5WMsPPzukATAgUwpYfoN3xcCe/8i65jUE=;
+        b=AHEmTQkVsGEnHSXmfmE8m3j+9VJerkjODFwG45kiO8BkVYim+ux16HMSGdL3LiXInJ
+         1wgpMDUk+aBQioPfJGe3wbCLFAmUgjRjS0ntmXPEc2KKBUSkSrtGTWMnEkzWBNndxNIP
+         Lwe2zcE9zvsWuJSwhCHFJo5jxuGLhPptrYKQjgRMXynPr7Gej7akhsU1hT/kGP+zjv2r
+         s3mLMeEkfhRdN+ioAmVMtEfHFn9e3hAXiFiRgYnGc5TALAfCZI9hi3ilw7kOcaCASi2c
+         L3iUKvaNDKfy1oyPZtYLU/H/JSh3kJoydzldaOgyLsdAHIkDKrCBv8SuIAXloc8sOXNw
+         5Wow==
+X-Forwarded-Encrypted: i=1; AJvYcCXf7iKGVOjG8PrBwyOcJnZFZokqtrpWR7GZcgo0o4UFlMKvpG64oF8OYFAGWgYwLQ20gkxAftsmN6MbBByweHy6oADDF1iRb3ggza19GGL/wNlHxLQLSAFT8kemMZ4nrauPlM29Eb5MD2AwbJVayvZOscmxfkMI/e2zbBWnHxbFUhY4ZnXkph1V4nsSLL0spBmNNuS/mNiV7KAOW4DIgy99kDnXz8eVKfyDEPl++IlFro+zOcTcFsAf6pq/ivNCKJ8vtJGN+k2x6eTqL+MCuBy9eVQCiX7kaLg7IKVGXygF/wizvVbtcSbsA6CZz2sIO6k2devEoWY5cwWPXKxuqdFp73BqR9KfXAUVb30WiPkdqIPsWDlSqZzme37SxRFy97OKRiEeOebShjpiXbrCtd9/1lhgJQcarTMle/R6j1k5uIrnV9Tc44Re5ewLeQ==
+X-Gm-Message-State: AOJu0YyVsYyhi0oT7KO4uJUAtgs/gzViqsVKdw/zeSk+ahiR4ZB9ljHd
+	4sCQjw7mZJnVGK0QGHFdxxkRz7KknTB81vvkjmSZzUz2FZgqPies
+X-Google-Smtp-Source: AGHT+IF+kn6orlxXNu+KbBfK5TuJ9FRTaW/E7mKFLwWnfY9/g3N+9lA943ajPi6EK1Z9MmgGKAp4XQ==
+X-Received: by 2002:a19:8c5a:0:b0:52c:88d6:891d with SMTP id 2adb3069b0e04-52ca6e5637emr6427245e87.9.1718644797253;
+        Mon, 17 Jun 2024 10:19:57 -0700 (PDT)
+Received: from pc636 (host-90-233-216-238.mobileonline.telia.com. [90.233.216.238])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca28722b0sm1286680e87.126.2024.06.17.10.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 10:19:56 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 17 Jun 2024 19:19:53 +0200
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <ZnBwOf3faUJMbrfW@pc636>
+References: <ZmszOd5idhf2Cb-v@pc636>
+ <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
+ <Zmw5FTX752g0vtlD@pc638.lan>
+ <ZmybGZDbXkw7JTjc@zx2c4.com>
+ <ZnA_QFvuyABnD3ZA@pc636>
+ <ZnBOkZClsvAUa_5X@zx2c4.com>
+ <ZnBkvYdbAWILs7qx@pc636>
+ <CAHmME9r4q8erE3E-Xn61ZkSOdDDrgx6jhTAywx3ca4=G0z=wAA@mail.gmail.com>
+ <ZnBnb1WkJFXs5L6z@pc636>
+ <ZnBrCQy13jZV_hyZ@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617161828.6718-1-jack@suse.cz> <20240617162303.1596-2-jack@suse.cz>
-In-Reply-To: <20240617162303.1596-2-jack@suse.cz>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 17 Jun 2024 20:12:19 +0300
-Message-ID: <CAOQ4uxh2WrSGjBNNTaY4Eew3cX6iPrAT9TnpqtQFccS_omNqzg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: generate FS_CREATE before FS_OPEN when
- ->atomic_open used.
-To: Jan Kara <jack@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	James Clark <james.clark@arm.com>, linux-nfs@vger.kernel.org, NeilBrown <neilb@suse.de>, 
-	Al Viro <viro@zeniv.linux.org.uk>, ltp@lists.linux.it
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZnBrCQy13jZV_hyZ@zx2c4.com>
 
-On Mon, Jun 17, 2024 at 7:23=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+On Mon, Jun 17, 2024 at 06:57:45PM +0200, Jason A. Donenfeld wrote:
+> On Mon, Jun 17, 2024 at 06:42:23PM +0200, Uladzislau Rezki wrote:
+> > On Mon, Jun 17, 2024 at 06:33:23PM +0200, Jason A. Donenfeld wrote:
+> > > On Mon, Jun 17, 2024 at 6:30 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+> > > > Here if an "err" is less then "0" means there are still objects
+> > > > whereas "is_destroyed" is set to "true" which is not correlated
+> > > > with a comment:
+> > > >
+> > > > "Destruction happens when no objects"
+> > > 
+> > > The comment is just poorly written. But the logic of the code is right.
+> > > 
+> > OK.
+> > 
+> > > >
+> > > > >  out_unlock:
+> > > > >       mutex_unlock(&slab_mutex);
+> > > > >       cpus_read_unlock();
+> > > > > diff --git a/mm/slub.c b/mm/slub.c
+> > > > > index 1373ac365a46..7db8fe90a323 100644
+> > > > > --- a/mm/slub.c
+> > > > > +++ b/mm/slub.c
+> > > > > @@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
+> > > > >               return;
+> > > > >       trace_kmem_cache_free(_RET_IP_, x, s);
+> > > > >       slab_free(s, virt_to_slab(x), x, _RET_IP_);
+> > > > > +     if (s->is_destroyed)
+> > > > > +             kmem_cache_destroy(s);
+> > >
+> > Here i am not follow you. How do you see that a cache has been fully
+> > freed? Or is it just super draft code?
+> 
+> kmem_cache_destroy() does this in shutdown_cache().
 >
-> From: NeilBrown <neilb@suse.de>
->
-> When a file is opened and created with open(..., O_CREAT) we get
-> both the CREATE and OPEN fsnotify events and would expect them in that
-> order.   For most filesystems we get them in that order because
-> open_last_lookups() calls fsnofify_create() and then do_open() (from
-> path_openat()) calls vfs_open()->do_dentry_open() which calls
-> fsnotify_open().
->
-> However when ->atomic_open is used, the
->    do_dentry_open() -> fsnotify_open()
-> call happens from finish_open() which is called from the ->atomic_open
-> handler in lookup_open() which is called *before* open_last_lookups()
-> calls fsnotify_create.  So we get the "open" notification before
-> "create" - which is backwards.  ltp testcase inotify02 tests this and
-> reports the inconsistency.
->
-> This patch lifts the fsnotify_open() call out of do_dentry_open() and
-> places it higher up the call stack.  There are three callers of
-> do_dentry_open().
->
-> For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-> directly in that caller so there should be no behavioural change.
->
-> For finish_open() there are two cases:
->  - finish_open is used in ->atomic_open handlers.  For these we add a
->    call to fsnotify_open() at open_last_lookups() if FMODE_OPENED is
->    set - which means do_dentry_open() has been called.
->  - finish_open is used in ->tmpfile() handlers.  For these a similar
->    call to fsnotify_open() is added to vfs_tmpfile()
->
-> With this patch NFSv3 is restored to its previous behaviour (before
-> ->atomic_open support was added) of generating CREATE notifications
-> before OPEN, and NFSv4 now has that same correct ordering that is has
-> not had before.  I haven't tested other filesystems.
->
-> Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC co=
-rrectly.")
-> Reported-by: James Clark <james.clark@arm.com>
-> Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d8c8@=
-arm.com
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> Link: https://lore.kernel.org/r/171817619547.14261.975798725161704336@nob=
-le.neil.brown.name
-> Fixes: 7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook into do_dentry_=
-open()")
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> Signed-off-by: Jan Kara <jack@suse.cz>
+Right. In this scenario you invoke kmem_cache_destroy() over and over
+until the last object gets freed. This potentially slowing the kmem_cache_free()
+which is not OK, at least to me.
 
-Looks good.
-
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-
-> ---
->  fs/namei.c | 10 ++++++++--
->  fs/open.c  | 22 +++++++++++++++-------
->  2 files changed, 23 insertions(+), 9 deletions(-)
->
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 37fb0a8aa09a..1e05a0f3f04d 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -3572,8 +3572,12 @@ static const char *open_last_lookups(struct nameid=
-ata *nd,
->         else
->                 inode_lock_shared(dir->d_inode);
->         dentry =3D lookup_open(nd, file, op, got_write);
-> -       if (!IS_ERR(dentry) && (file->f_mode & FMODE_CREATED))
-> -               fsnotify_create(dir->d_inode, dentry);
-> +       if (!IS_ERR(dentry)) {
-> +               if (file->f_mode & FMODE_CREATED)
-> +                       fsnotify_create(dir->d_inode, dentry);
-> +               if (file->f_mode & FMODE_OPENED)
-> +                       fsnotify_open(file);
-> +       }
->         if (open_flag & O_CREAT)
->                 inode_unlock(dir->d_inode);
->         else
-> @@ -3700,6 +3704,8 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
->         mode =3D vfs_prepare_mode(idmap, dir, mode, mode, mode);
->         error =3D dir->i_op->tmpfile(idmap, dir, file, mode);
->         dput(child);
-> +       if (file->f_mode & FMODE_OPENED)
-> +               fsnotify_open(file);
->         if (error)
->                 return error;
->         /* Don't check for other permissions, the inode was just created =
-*/
-> diff --git a/fs/open.c b/fs/open.c
-> index 89cafb572061..f1607729acb9 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -1004,11 +1004,6 @@ static int do_dentry_open(struct file *f,
->                 }
->         }
->
-> -       /*
-> -        * Once we return a file with FMODE_OPENED, __fput() will call
-> -        * fsnotify_close(), so we need fsnotify_open() here for symmetry=
-.
-> -        */
-> -       fsnotify_open(f);
->         return 0;
->
->  cleanup_all:
-> @@ -1085,8 +1080,19 @@ EXPORT_SYMBOL(file_path);
->   */
->  int vfs_open(const struct path *path, struct file *file)
->  {
-> +       int ret;
-> +
->         file->f_path =3D *path;
-> -       return do_dentry_open(file, NULL);
-> +       ret =3D do_dentry_open(file, NULL);
-> +       if (!ret) {
-> +               /*
-> +                * Once we return a file with FMODE_OPENED, __fput() will=
- call
-> +                * fsnotify_close(), so we need fsnotify_open() here for
-> +                * symmetry.
-> +                */
-> +               fsnotify_open(file);
-> +       }
-> +       return ret;
->  }
->
->  struct file *dentry_open(const struct path *path, int flags,
-> @@ -1177,8 +1183,10 @@ struct file *kernel_file_open(const struct path *p=
-ath, int flags,
->         error =3D do_dentry_open(f, NULL);
->         if (error) {
->                 fput(f);
-> -               f =3D ERR_PTR(error);
-> +               return ERR_PTR(error);
->         }
-> +
-> +       fsnotify_open(f);
->         return f;
->  }
->  EXPORT_SYMBOL_GPL(kernel_file_open);
-> --
-> 2.35.3
->
+--
+Uladzislau Rezki
 
