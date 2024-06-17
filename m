@@ -1,251 +1,174 @@
-Return-Path: <linux-nfs+bounces-3891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3892-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEBD690AADA
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 12:15:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E93A90AB20
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 12:33:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29A2E1F239CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 10:15:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDBE01F223BD
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 10:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD1F19049D;
-	Mon, 17 Jun 2024 10:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgZjQTfR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 448717173C;
+	Mon, 17 Jun 2024 10:33:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331031BDCD;
-	Mon, 17 Jun 2024 10:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB5A5025E;
+	Mon, 17 Jun 2024 10:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718619328; cv=none; b=jbIiJKQ35RklrXjbjX4aAW6B5J5K66cAtCBuEtVvVuAo/Me6evX0RPajSLwEY5MwZoQt5jl0iLOts68WXS+h5dWcixbchWRXaKZsvtHYg4O6k+uBs2VjiNRuxHq+Pm7k62EpMBdeHCruGvc3YF5h/A938V5zXskncDoWkQu6/kM=
+	t=1718620403; cv=none; b=WsORkfk9n0GRovcDe3TbqqT7wlAu4U6z3atDVz/2siFDs1krzwVR0nX/0d9frMr6DY2iKx94EWni+DDva12sZ7ny1RCD9nLd4xQB19VyGK7fgyqjZHueAI8eJ/EP7SBFIQ4pjy5aVs3yGtx5PomRkY6SQN7h7FAMUoEHOJzmbcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718619328; c=relaxed/simple;
-	bh=/Ylp/XPo5N3EZ0PL8HetEurvBIYrwuQiVh62fDD/ehs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RtnO1qtLQZD6awynq/5oZiCiWX9ZlLeX10MDN0gIEQQ1gK2gChJv+SB29ukJ/R8Eih/npUSQyKyNquJYQRDp5px6xY/GzFn2GwnZ9FoyX6RH6aAj7uixPY1ej2hAojefDIhhWruzFkLq1+PotvmbNMMTns5yGIImWHu06H7O2OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgZjQTfR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83526C2BD10;
-	Mon, 17 Jun 2024 10:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718619327;
-	bh=/Ylp/XPo5N3EZ0PL8HetEurvBIYrwuQiVh62fDD/ehs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TgZjQTfRpviAuR//fhz9TvFMmN1P/c/TCZYsjp5iqJOOnSQW41y383EzOfA1szSEX
-	 BgraNg6JExtCVIQTUK0qejDumUkv8ZEPFRTgPTFj/RWExDIa+6hTyE45ldR0H3iczy
-	 258tQLyQAcTpiAGw7LzBU9olMriVcjZs71rCtMRz1oDUAZEBU5g37AgEbynHh/idvS
-	 8Us2O4+ruNW8GMoVoignLASxPh1Iz4h75incQDbxPOQoo8p+t046rzbBbMrsecKQfu
-	 5I6BAOqgHmyMFAnLZ1WzGr2B/h0Mo0i9JT88rxxqKwDiSlvqMnNW1QZqG7zYOyb6l3
-	 4AAYcq/hKK0/w==
-Message-ID: <1e36e3c4e4ee1243716f0da5f451ea15993a7e82.camel@kernel.org>
-Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_nl_listener_get_doit
-From: Jeff Layton <jlayton@kernel.org>
-To: syzbot <syzbot+4207adf14e7c0981d28d@syzkaller.appspotmail.com>, 
-	Dai.Ngo@oracle.com, chuck.lever@oracle.com, kolga@netapp.com, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
-	syzkaller-bugs@googlegroups.com, tom@talpey.com
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Mon, 17 Jun 2024 06:15:25 -0400
-In-Reply-To: <000000000000322bec061aeb58a3@google.com>
-References: <000000000000322bec061aeb58a3@google.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40app2) 
+	s=arc-20240116; t=1718620403; c=relaxed/simple;
+	bh=D7daG2P3zTaLVdDPsBZ0/zrVy1K9o+Z2GL96yr4V6sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uO2Dll4gjQ9kj0ZI15eHo3At01XwZTPocNxu/rDjX9ojMeHMttXIAAOZxpGmAkmcX9nXZ9l+qwMuz7hw8PvNla775ytMy4IA1ZswaFmTY/jk6LnWnYiRWoAU9r8ftDH5APeeuiS6IaD1xYtDyWgfUtT8IYH8qmQOFVOcFXHSZzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADC0FDA7;
+	Mon, 17 Jun 2024 03:33:44 -0700 (PDT)
+Received: from [10.57.73.35] (unknown [10.57.73.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 202233F6A8;
+	Mon, 17 Jun 2024 03:33:17 -0700 (PDT)
+Message-ID: <d91b3c19-5d62-457a-88e4-6bb6c3c7d6a6@arm.com>
+Date: Mon, 17 Jun 2024 11:33:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs: fix nfs_swap_rw for large-folio swap
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, Christoph Hellwig <hch@lst.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Steve French <sfrench@samba.org>, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, linux-mm@kvack.org,
+ Barry Song <v-songbaohua@oppo.com>
+References: <20240614100329.1203579-1-hch@lst.de>
+ <20240614100329.1203579-2-hch@lst.de>
+ <20240614112148.cd1961e84b736060c54bdf26@linux-foundation.org>
+ <CAGsJ_4wnWzoScqO9_NddHcDPbe_GbAiRFVm4w_H+QDmH=e=Rsw@mail.gmail.com>
+ <20240616085436.GA28058@lst.de>
+ <CAGsJ_4ytrnXJbfVi=PpTw34iBDqEoAm3b16oZr2VQpVWLmh5zA@mail.gmail.com>
+ <9ef638fc-5606-45da-a237-2e09ee05bbeb@arm.com>
+ <CAGsJ_4xDkjN0X8ogE9djmu+nDUd_PJcSwr+GVH4vUiUAeJskaQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4xDkjN0X8ogE9djmu+nDUd_PJcSwr+GVH4vUiUAeJskaQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2024-06-15 at 03:39 -0700, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    cea2a26553ac mailmap: Add my outdated addresses to the ma=
-p..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D169fd8ee98000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dfa0ce06dcc735=
-711
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D4207adf14e7c098=
-1d28d
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
->=20
-> Unfortunately, I don't have any reproducer for this issue yet.
->=20
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/1f7ce933512f/dis=
-k-cea2a265.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/0ce3b9940616/vmlinu=
-x-cea2a265.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/19e24094ea37/b=
-zImage-cea2a265.xz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+4207adf14e7c0981d28d@syzkaller.appspotmail.com
->=20
-> INFO: task syz-executor.1:17770 blocked for more than 143 seconds.
->       Not tainted 6.10.0-rc3-syzkaller-00022-gcea2a26553ac #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz-executor.1  state:D stack:23800 pid:17770 tgid:17767 ppid:11381 =
- flags:0x00000006
-> Call Trace:
->  <TASK>
->  context_switch kernel/sched/core.c:5408 [inline]
->  __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
->  __schedule_loop kernel/sched/core.c:6822 [inline]
->  schedule+0x14b/0x320 kernel/sched/core.c:6837
->  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
->  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
->  __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
->  nfsd_nl_listener_get_doit+0x115/0x5d0 fs/nfsd/nfsctl.c:2124
->  genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
->  genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
->  genl_rcv_msg+0xb16/0xec0 net/netlink/genetlink.c:1210
->  netlink_rcv_skb+0x1e5/0x430 net/netlink/af_netlink.c:2564
->  genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
->  netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
->  netlink_unicast+0x7ec/0x980 net/netlink/af_netlink.c:1361
->  netlink_sendmsg+0x8db/0xcb0 net/netlink/af_netlink.c:1905
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg+0x223/0x270 net/socket.c:745
->  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
->  ___sys_sendmsg net/socket.c:2639 [inline]
->  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f24ed27cea9
-> RSP: 002b:00007f24ee0080c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00007f24ed3b3f80 RCX: 00007f24ed27cea9
-> RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000005
-> RBP: 00007f24ed2ebff4 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->=20
->=20
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->=20
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->=20
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->=20
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->=20
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->=20
-> If you want to undo deduplication, reply with:
-> #syz undup
+On 17/06/2024 10:40, Barry Song wrote:
+> On Mon, Jun 17, 2024 at 8:03 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 16/06/2024 11:23, Barry Song wrote:
+>>> On Sun, Jun 16, 2024 at 4:54 PM Christoph Hellwig <hch@lst.de> wrote:
+>>>>
+>>>> On Sun, Jun 16, 2024 at 12:16:10PM +1200, Barry Song wrote:
+>>>>> As I understand it, this isn't happening because we don't support
+>>>>> mTHP swapping out to a swapfile, whether it's on NFS or any
+>>>>> other filesystem.
+>>>>
+>>>> It does happen.  The reason why I sent this patch is becaue I observed
+>>>> the BUG_ON trigger on a trivial swap generation workload (usemem.c from
+>>>> xfstests).
+>>>
+>>> This is quite unusual. Could you share your setup and backtrace? I'd
+>>> like to reproduce the issue, as the mm code only supports mTHP
+>>> swapout on block devices. What is your swap device or swap file?
+>>> Additionally, on what kind of filesystem is the executable file built
+>>> from usemem.c located?
+>>
+>> Yes, I'm also confused by this, since as Barry says, the swap-out changes to
+>> support mTHP are only intended to be activated when the swap device is a
+>> non-rotating block device - swap files on file systems are explicitly not
+>> supported and all swapping should be done page-by-page in that case. This
+>> constraint is exactly the same as for the pre-existing PMD-size THP swap-out
+>> support. So if you are seeing large folios being written after the mTHP swap-out
+>> change, you should also be seeing large folios before this change.
+>>
+>> Hopefully the stack trace will tell us what's going on here.
+> 
+> Hi Ryan, Christoph,
+> 
+> I am able to reproduce the issue now. I am debugging and will update
+> the root cause
+> with you this week.
 
-We've had number of these reports recently. I think I understand what's
-happening but I'm not sure how to fix it. The problem manifests as a
-stuck nfsd_mutex:
+Ahh great; for some reason I'm not receiving Chrostoph's mails so didn't see the
+stack trace and instructions until you replied to it. I had a go are repro'ing
+too but am failing to even get the systemd nfs service to start. I'll leave it
+to you.
 
-nfsd_nl_rpc_status_get_start takes the nfsd_mutex, and it's released in
-nfsd_nl_rpc_status_get_done. These are the ->start and ->done
-operations for the rpc_status_get dumpit routine.
+> 
+> Initial investigation shows the issue might *not* be related to THP_SWPOUT.
+> 
+> I am even able to reproduce it after disabling thp and mthp, entirely by
+> small folios:
+> 
+> [  215.925069] folio_alloc_swap folio nr:1 anon:1 swapbacked:1
+> [  215.926383] vmscan: shrink_folio_list folio nr:1 anon:1 swapbacked:1
+> [  215.927008] folio_alloc_swap folio nr:1 anon:1 swapbacked:1
+> [  215.929368] ------------[ cut here ]------------
+> [  215.929824] kernel BUG at fs/nfs/direct.c:144!
+> [  215.930403] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+> [  215.931264] Modules linked in:
+> [  215.932328] CPU: 3 PID: 214 Comm: mthp_swpout_tes Not tainted
+> 6.10.0-rc3-ga12328d9fb85-dirty #292
+> [  215.932953] Hardware name: linux,dummy-virt (DT)
+> [  215.933461] pstate: 21400005 (nzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> [  215.934030] pc : nfs_swap_rw+0x60/0x70
+> [  215.935079] lr : swap_write_unplug+0x64/0xb0
+> [  215.935559] sp : ffff800087363280
+> [  215.935958] x29: ffff800087363280 x28: ffff0000c3241800 x27: fffffdffc323a4c0
+> [  215.937012] x26: fffffdffc323a4c8 x25: ffff0001b4a51500 x24: ffff80008250f670
+> [  215.937893] x23: 0000000000000001 x22: ffff0000c0b2da00 x21: 0000000000020000
+> [  215.938734] x20: ffff0000c46a8bd8 x19: ffff0000c154f800 x18: ffffffffffffffff
+> [  215.939594] x17: 0000000000000000 x16: 0000000000000000 x15: ffff800107363097
+> [  215.940591] x14: 0000000000000000 x13: 313a64656b636162 x12: 7061777320313a6e
+> [  215.941621] x11: 6f6e6120313a726e x10: ffff800083e86318 x9 : ffff8000803e9ad4
+> [  215.942673] x8 : ffff800087363168 x7 : 0000000000000000 x6 : ffff0001adbfa4c6
+> [  215.943674] x5 : 0000000000000002 x4 : 0000000000020000 x3 : 0000000000020000
+> [  215.944673] x2 : ffff8000806015e8 x1 : ffff8000873632a0 x0 : ffff0000c154f800
+> [  215.945568] Call trace:
+> [  215.945906]  nfs_swap_rw+0x60/0x70
+> [  215.946351]  __swap_writepage+0x2e8/0x328
+> [  215.946775]  swap_writepage+0x68/0xd0
+> [  215.947184]  pageout+0xe4/0x430
+> [  215.947587]  shrink_folio_list+0x9bc/0xf60
+> [  215.947992]  reclaim_folio_list+0x8c/0x168
+> [  215.948454]  reclaim_pages+0xfc/0x178
+> [  215.948843]  madvise_cold_or_pageout_pte_range+0x8d8/0xf28
+> [  215.949285]  walk_pgd_range+0x390/0x808
+> [  215.949660]  __walk_page_range+0x1e0/0x1f0
+> [  215.950040]  walk_page_range+0x1f0/0x2c8
+> [  215.950458]  madvise_pageout+0xf8/0x280
+> [  215.950905]  madvise_vma_behavior+0x314/0xa20
+> [  215.951361]  madvise_walk_vmas+0xc0/0x128
+> [  215.951807]  do_madvise.part.0+0x110/0x558
+> [  215.952298]  __arm64_sys_madvise+0x68/0x88
+> [  215.952723]  invoke_syscall+0x50/0x128
+> [  215.953148]  el0_svc_common.constprop.0+0x48/0xf8
+> [  215.953592]  do_el0_svc+0x28/0x40
+> [  215.954036]  el0_svc+0x50/0x150
+> [  215.954610]  el0t_64_sync_handler+0x13c/0x158
+> [  215.955070]  el0t_64_sync+0x1a4/0x1a8
+> [  215.955685] Code: a8c17bfd d50323bf 9a9fd000 d65f03c0 (d4210000)
+> [  215.956510] ---[ end trace 0000000000000000 ]---
+> 
+> 
+>>
+>> (Sorry for my slow responses/lack of engagement over the last month; its been a
+>> combination of paternity leave/lack of sleep/working on other things. I'm hoping
+>> to get properly back into this stuff within the next couple of weeks).
+>>
+>> Thanks,
+>> Ryan
+>>
 
-I think syzbot is triggering one of the two "goto errout_skb"
-conditions in netlink_dump (not sure which). In those cases we end up
-returning from that function without calling ->done, which would lead
-to the hung mutex like we see here.
-
-Is this a bug in the netlink code, or is the rpc_status_get dumpit
-routine not using ->start and ->done correctly?
-
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
 
