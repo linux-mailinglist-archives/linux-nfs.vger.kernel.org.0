@@ -1,160 +1,132 @@
-Return-Path: <linux-nfs+bounces-3928-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3929-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD5790B7EE
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 19:24:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E23690B782
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 19:10:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0AF24B2D9DF
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 17:04:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 738891C2167E
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 17:10:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9006A1684B5;
-	Mon, 17 Jun 2024 17:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63BCB16A937;
+	Mon, 17 Jun 2024 17:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="EB2EkGMp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrHrcJs4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335ED157A41;
-	Mon, 17 Jun 2024 17:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA74116849F;
+	Mon, 17 Jun 2024 17:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718643886; cv=none; b=qkcsgBQyW0rexLKdZ78TNvWDCma4os597paEArZokglqfi33DymwRx6wfBOI9+7hvgisLvysTBdedq0DzoQFBldOg72vuP/kDK2qUgPXN7A4psdTAQ3+sPrP/fO+LlECCDMcKd9cw0an5bE60LcjeuRegk6Il52uFLHOMIzYM5k=
+	t=1718644226; cv=none; b=Rok5FPrsCUp6Ymg4rorfsA343TvWWEMdWE3quazZQtOAPc2MNetWGUvubhrnR1kTZED4GNWEp+5xIkmEPHwRfBxzG68yAiIikn5AC0HT5pKJbA9xJDcc2O+Rb3n3eigGX/QkUI7mVNgxfWQiFTyICz6b8jL7vuz+8/jXJlobLu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718643886; c=relaxed/simple;
-	bh=aTo9WYNfxMDXZ7XIaowP99DTt7UkkCN5iUpRoKtIZ2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dsl3/YOPNyS6QHfnbNS/r18sXYQod2vZ2/kpzY4mOIvF7ZL4rdhZIT7/xPmHTz7oyckn9poapuPIsDChPy6C3A6WgDxGy6nLvgMV8anFIgBlBMJwawmm6kZFdO+J1xhAPTk23bBVWsv16bMCf5NqDPb+XZrqN3Rb5xz9G7JvvR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=EB2EkGMp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552BDC2BD10;
-	Mon, 17 Jun 2024 17:04:43 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="EB2EkGMp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718643881;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ARICZd145/mpU/6/C4ChaIGt7llEKLdE0hg6cGdHWdo=;
-	b=EB2EkGMp1iSSR/ZoBjTvLsRipbJ/3GyF1pF67bPbTJpZpZViXHWNSdGe3Wp0tZUf6UwcS3
-	PPQY3tLkcp6pOnHOdpKJJIurtRSa2uJJxmso4eaZw7W4rybzLkYu5iwhPsWnqpDdk5ApWJ
-	+Lmz+dK5Qx+05M2/zNiFzoH33PNzOFM=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 81f95149 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 17 Jun 2024 17:04:41 +0000 (UTC)
-Date: Mon, 17 Jun 2024 19:04:34 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnBsomxy_cCnnIBy@zx2c4.com>
-References: <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
- <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
- <Zmw5FTX752g0vtlD@pc638.lan>
- <ZmybGZDbXkw7JTjc@zx2c4.com>
- <ZnA_QFvuyABnD3ZA@pc636>
- <ZnBOkZClsvAUa_5X@zx2c4.com>
- <ZnBkvYdbAWILs7qx@pc636>
- <CAHmME9r4q8erE3E-Xn61ZkSOdDDrgx6jhTAywx3ca4=G0z=wAA@mail.gmail.com>
- <b415b8e3-24cc-4747-a30d-706e1dcfdff7@suse.cz>
+	s=arc-20240116; t=1718644226; c=relaxed/simple;
+	bh=f7lK7VGmYzBBx6VWAje1NRnDphBiTs3HuNXvgL0+QKA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TDraNwawjU/UIx5MHqdQIM1DvSt4np1HQZ/NtPonMOlzH3hmYnzqXMbz/LOIPoyBeak+s/ldu1cOCHgB/BTarLB5MT7OfX+MAGLL89KoGmiGWEXSJvIhW2dPleqe1Q4GOnXm0/Hh08QweG/NMPOYY7x9yui7bM9YYAS3nAQQDI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrHrcJs4; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7955ddc6516so328462685a.1;
+        Mon, 17 Jun 2024 10:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718644224; x=1719249024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Ez6wONf2/2cmZH1p6FhYRBtC2vHp1WfaArV/rCGFFw=;
+        b=PrHrcJs4mBXi+T5uuh+YgcSWSgyBapk/EIPHjy/UX7t4HX52tbhISzr2VQksrYmaCi
+         UDULXOmArr8kRjmfxVcGsHm4WKjSAX2vWT9wkjwmz6dJUkWUGPHg7SSH0iuSGfcZJiR0
+         J3Le62CkEpB0IWIRmtd2XgmNuIx8KB0rkIgm6kNAXT7Qo9sBpCtKhYwI0Tb8YU4gTgU3
+         /DjR+gugho2ddln64oCpF7scaiZ1rT6XGDKL0Fdobc1KVPy3W+HQ3TeJGdbd8jRR79V2
+         Q90/nYxxg/PKSyYxFBvQmzZPj8tHSgNFHVPFHLXMdTu8WTkQvERxp3/OAhtor+FfuDt9
+         SclQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718644224; x=1719249024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Ez6wONf2/2cmZH1p6FhYRBtC2vHp1WfaArV/rCGFFw=;
+        b=ggJ7CQXAJ5SLvop3gwxnY1NFjckOrjWOYy1G2nX6YBPApVgV7qtJJoL5BRFO3gwTd1
+         3zxlRVpmx943TpjbJPLxX5poYtRbohU+tRVrvtqxDiDIhKopC5MVy7xW6VGBb7Kbxknr
+         8XcLkLG5Bx7OxSIOaBw8T5jaAqzVhqZLgJBPfy4sX8aQa4zO1eSRFUESGOOCyr2dgyCy
+         vn8V6WySoMzSrO9Mcof2vgdDPKZv61Ptr/Zqg05AwDVdAX0tPkLktkwfDLRzLXht22IK
+         M8fAhI5Ji9S5BRtHU7x4Eu/KNPeUGXvSegrhabSmKoxO5X87kmR+v1HeYJMxcTcrtIR+
+         RWbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWX1SzTnLF7YjDF0lT5zSzLn/RPyhb2x3iSMZpISZLyHkq5U0PfudSPXjM3DG3STRorz7a+RjSPJ5kGy2hoj6RjxJKz9GfPvAx3eIYas+jGwVUtBhdSj4J9J5xfgl2/vEG+P3WbwdGaTA==
+X-Gm-Message-State: AOJu0YweWlCCtBrvF8lLjtjfLGLCnN/hchuAOptRXpm0RgU7hGw6GWxK
+	VAxm53dfE9FtXpw3uZ7QqxbDGbDLtCtMUCrQneYefbNxrdQXBGHOFbaypEHhkWsSGwgw1F9P+Pl
+	f20zj/TBUKCYrN+MDPyNWD/LSGbU5Rpda
+X-Google-Smtp-Source: AGHT+IE9bI2jvgejW/jzxrWszTj6tPjedhG1vNzpswD5en5Ch8uMMStXbN2LpP+ohG6igpZ+tMRJAOhxZlXkWeXTLZs=
+X-Received: by 2002:a05:620a:4687:b0:795:4a03:8032 with SMTP id
+ af79cd13be357-798d258afc8mr1338207985a.52.1718644223569; Mon, 17 Jun 2024
+ 10:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b415b8e3-24cc-4747-a30d-706e1dcfdff7@suse.cz>
+References: <20240617161828.6718-1-jack@suse.cz> <20240617162303.1596-1-jack@suse.cz>
+In-Reply-To: <20240617162303.1596-1-jack@suse.cz>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 17 Jun 2024 20:10:11 +0300
+Message-ID: <CAOQ4uxhYuvs5_q+jqL-OAXzfPJv_NJTQpkGPzysGhq4i+WSjPw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] fsnotify: Do not generate events for O_PATH file descriptors
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	James Clark <james.clark@arm.com>, linux-nfs@vger.kernel.org, NeilBrown <neilb@suse.de>, 
+	Al Viro <viro@zeniv.linux.org.uk>, ltp@lists.linux.it
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 17, 2024 at 06:38:52PM +0200, Vlastimil Babka wrote:
-> On 6/17/24 6:33 PM, Jason A. Donenfeld wrote:
-> > On Mon, Jun 17, 2024 at 6:30 PM Uladzislau Rezki <urezki@gmail.com> wrote:
-> >> Here if an "err" is less then "0" means there are still objects
-> >> whereas "is_destroyed" is set to "true" which is not correlated
-> >> with a comment:
-> >>
-> >> "Destruction happens when no objects"
-> > 
-> > The comment is just poorly written. But the logic of the code is right.
-> > 
-> >>
-> >> >  out_unlock:
-> >> >       mutex_unlock(&slab_mutex);
-> >> >       cpus_read_unlock();
-> >> > diff --git a/mm/slub.c b/mm/slub.c
-> >> > index 1373ac365a46..7db8fe90a323 100644
-> >> > --- a/mm/slub.c
-> >> > +++ b/mm/slub.c
-> >> > @@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
-> >> >               return;
-> >> >       trace_kmem_cache_free(_RET_IP_, x, s);
-> >> >       slab_free(s, virt_to_slab(x), x, _RET_IP_);
-> >> > +     if (s->is_destroyed)
-> >> > +             kmem_cache_destroy(s);
-> >> >  }
-> >> >  EXPORT_SYMBOL(kmem_cache_free);
-> >> >
-> >> > @@ -5342,9 +5344,6 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
-> >> >               if (!slab->inuse) {
-> >> >                       remove_partial(n, slab);
-> >> >                       list_add(&slab->slab_list, &discard);
-> >> > -             } else {
-> >> > -                     list_slab_objects(s, slab,
-> >> > -                       "Objects remaining in %s on __kmem_cache_shutdown()");
-> >> >               }
-> >> >       }
-> >> >       spin_unlock_irq(&n->list_lock);
-> >> >
-> >> Anyway it looks like it was not welcome to do it in the kmem_cache_free()
-> >> function due to performance reason.
-> > 
-> > "was not welcome" - Vlastimil mentioned *potential* performance
-> > concerns before I posted this. I suspect he might have a different
-> > view now, maybe?
-> > 
-> > Vlastimil, this is just checking a boolean (which could be
-> > unlikely()'d), which should have pretty minimal overhead. Is that
-> > alright with you?
-> 
-> Well I doubt we can just set and check it without any barriers? The
-> completion of the last pending kfree_rcu() might race with
-> kmem_cache_destroy() in a way that will leave the cache there forever, no?
-> And once we add barriers it becomes a perf issue?
+On Mon, Jun 17, 2024 at 7:23=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+>
+> Currently we will not generate FS_OPEN events for O_PATH file
+> descriptors but we will generate FS_CLOSE events for them. This is
+> asymmetry is confusing. Arguably no fsnotify events should be generated
+> for O_PATH file descriptors as they cannot be used to access or modify
+> file content, they are just convenient handles to file objects like
+> paths. So fix the asymmetry by stopping to generate FS_CLOSE for O_PATH
+> file descriptors.
+>
+> Signed-off-by: Jan Kara <jack@suse.cz>
 
-Hm, yea you might be right about barriers being required. But actually,
-might this point toward a larger problem with no matter what approach,
-polling or event, is chosen? If the current rule is that
-kmem_cache_free() must never race with kmem_cache_destroy(), because
-users have always made diligent use of call_rcu()/rcu_barrier() and
-such, but now we're going to let those race with each other - either by
-my thing above or by polling - so we're potentially going to get in trouble
-and need some barriers anyway. 
+Looks good.
 
-I think?
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-Jason
+> ---
+>  include/linux/fsnotify.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+> index 4da80e92f804..278620e063ab 100644
+> --- a/include/linux/fsnotify.h
+> +++ b/include/linux/fsnotify.h
+> @@ -112,7 +112,13 @@ static inline int fsnotify_file(struct file *file, _=
+_u32 mask)
+>  {
+>         const struct path *path;
+>
+> -       if (file->f_mode & FMODE_NONOTIFY)
+> +       /*
+> +        * FMODE_NONOTIFY are fds generated by fanotify itself which shou=
+ld not
+> +        * generate new events. We also don't want to generate events for
+> +        * FMODE_PATH fds (involves open & close events) as they are just
+> +        * handle creation / destruction events and not "real" file event=
+s.
+> +        */
+> +       if (file->f_mode & (FMODE_NONOTIFY | FMODE_PATH))
+>                 return 0;
+>
+>         path =3D &file->f_path;
+> --
+> 2.35.3
+>
 
