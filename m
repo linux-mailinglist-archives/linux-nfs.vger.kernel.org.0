@@ -1,86 +1,279 @@
-Return-Path: <linux-nfs+bounces-3899-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3900-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B840690B21A
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:32:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A67B190B23D
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:35:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FC0328861B
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 14:32:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3450E285AFA
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 14:35:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2DD19B5B5;
-	Mon, 17 Jun 2024 13:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A4C1BE22B;
+	Mon, 17 Jun 2024 13:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DIjeiUcF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nxhy3icL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26BB194C6B
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 13:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077AA1BD512;
+	Mon, 17 Jun 2024 13:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632188; cv=none; b=hO2madp5sT0HyyLekIgIVj9AKTsHOAM4ATFNf28nKUkt3fCjWHQpKS12CiHkSeuBU6u0DQIU36Adl7bmWD58KaDc1/BnoGo3VquwM4KvM6l9IadgOIVMx9TQ96WfQ8Y91TznEFgmJkHcpAGw5VwG8oqdnD97WBJGj3qG3/1vuKQ=
+	t=1718632210; cv=none; b=CBItUyCUpZBjorcoD9oFTrMMgA40i3Ej3ddYZHgdF6MbJfue3I5fZhwPJfVmpxA4W3SRjhcHtsSXZc3UjClHlmMJ7GON4LnNXM4l62SbCECw1y2s3//etrzBxmFHeJgQ3rixCL/QKm+ioBTJxboPtt3uf1L/kZDy371Q1NgD67o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632188; c=relaxed/simple;
-	bh=Cta9FEZW2jKUMp1ni7LEVw6pwDqm8iS07zPeeRzgmm4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lIbhTVdDHhCqwlhijBcmORQGuB9+GgTM83VhhpDhhT8B+dcczK8zWR4wZfYK5tuyZ24ifz+ymHYwsOZ1PUyijTr6c0swbHNrEKFOpp6fN+aV1VvtU+F9nSsy7aB+MH1K1FWop4aMwjYEnwB1MCW232itGHNp4cd7brjpvXnxIjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DIjeiUcF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718632186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cta9FEZW2jKUMp1ni7LEVw6pwDqm8iS07zPeeRzgmm4=;
-	b=DIjeiUcFWzfOgI799obrrhKOlAZ8U9b2V0kfsltbIkMhbOTYkAEGYYeHtdwADU9zbtgN0t
-	dhXL8J9HMxknpl99UhOXg/vdfdGhGP8d2j0ZNSaIpPQrPvrw3+fiH0AjYVMUFc9mJ/oN9U
-	1JcGtoGEKNj/QabtNqQa9D4kj7umXa4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-KjdOjSSSOZq0tusy-DzQPA-1; Mon,
- 17 Jun 2024 09:49:44 -0400
-X-MC-Unique: KjdOjSSSOZq0tusy-DzQPA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 26F3819560B3
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 13:49:44 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.4])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40FD31956048
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 13:49:43 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: knfsd svcauth_gss_ oops on 6.10-rc2
-Date: Mon, 17 Jun 2024 09:49:40 -0400
-Message-ID: <721C0350-F45A-4923-AAF6-2CAC430F3940@redhat.com>
-In-Reply-To: <F5C621C3-EE32-4D4D-8ABE-E2A337651E59@redhat.com>
-References: <F5C621C3-EE32-4D4D-8ABE-E2A337651E59@redhat.com>
+	s=arc-20240116; t=1718632210; c=relaxed/simple;
+	bh=YMzX6ooz3JsUkie/XsaWHUpwkokp4Qo3s799ez1M10k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9hLFVVx21HcnpKksvV4oHkc8mB+41tgTZ3j7sTFGCMvmtQ1Oqdv8vwHeedxqpS0Qac36b764ICFAs8/IxSkMDfx56ZAic8XqOKRtTI2JD8hWskR+PM4kM1ZgD2xS9ZxlHqi7+vdpTNHnop+m3PEY2wxPPXQ80wJZ2f6F6Bud00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nxhy3icL; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-797f222c9f9so258853385a.3;
+        Mon, 17 Jun 2024 06:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718632208; x=1719237008; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uafBfjF9BGnnEyoetBs+q1J93YDTYA8APT02I3KvMtE=;
+        b=Nxhy3icLkBssqMVHYTgQ8Ui8UvA7suNaUBJnqH4k21CYQCcrl33wqfkNV3+5LaGzew
+         euLby8ixiYfcefNKUnvJ0TaN56DQnFDcMPhx/5N8+lphG62KI85glh29d7g9YX205hsk
+         BwXJOBK8OtL+Ryeoqc4LbIoTKqy+WcyMh0HcE4SdEmUVgTe+22zIxTBiGoCyF8290CG7
+         8IlMvCzu45p9J/kZFtM96ld2zo+RE9qfWrOmyrVEzag+QHQvLDlnWg3N/xUygEGpRRv1
+         M4jyclhZEprsOTzKGe4CEZidT6vXqgVTFGMzAssxbzZwAjnyCKdAZ/Jh0hY2kgtQ+3g3
+         o+sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718632208; x=1719237008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uafBfjF9BGnnEyoetBs+q1J93YDTYA8APT02I3KvMtE=;
+        b=vJ4YBG769tHuAJUOQwjk2VTpUsssOKGWYjfAhqMG0PVTmR053d/vVbtl2UWva+aP8p
+         ZBjhNc6YKvoqwhOM6rbZrrC8ke8tlCP44v6ddDCjXvbxdYgz/Xpg61PvyWQhcQ0uTMO+
+         VF4oVDyNjQRLzMnnsyX4ADDkAGcyxQi5zMdzfDr+Qt9vEhrWfVhgmMoVm1lKnh+cQ7YY
+         TjRvtg4tNJMya05Nn4Gh183WhAYw42X2rGoJHNwahLLldkwr61UDVjWBsJKUiYYUHS0Z
+         EI1V7e8vP2gANIdEmjPMTvzqvjVwWxBvGYYyNhz1cn7UejQNFzKWoJlx/rN7Nklrrqww
+         /ASg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWOjFeVJhe9xKxk8RwF5MzJazlAeaf2XNwifts5zihYQjcR5xcO1V8VtJ6qjYLseFthlXof3fcNKC5eYkCIZXNzXV28TeG+2LGXkXE3AUNn2O0QoPzmj1O/WIxuf8h2eyuRoWgg9/Fpe8z0/hlh8Fl8J8lm/2hTAAaG/nFDumYVyI9ndO41w==
+X-Gm-Message-State: AOJu0YwN1YcOTLLxLq7ILxCPpBMqaomdbYBZ0wL4/2X4L898qTwoXSrC
+	MTNlx8wp2BV80oXSNGDgilTldTgXUgYf3pRSTcEvvUnBAm80IE2s+yCN7HEDiFNhRpDsT8JzKM1
+	4H08TR4qOwQXFXZXNdQN2KZxHsQg=
+X-Google-Smtp-Source: AGHT+IFCVTLsrP0x9BXCG8zvXI+ugi8pb1IfH41pX+8htWWGkprkwbA7/blxrVWGjWHUC+ygmzazhT+4NLZm8CQ6DtM=
+X-Received: by 2002:a05:620a:318b:b0:795:4cc8:6dba with SMTP id
+ af79cd13be357-798d269406emr1165225485a.58.1718632207841; Mon, 17 Jun 2024
+ 06:50:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
+ <20240615-fahrrad-bauordnung-a349bacd8c82@brauner> <20240617093745.nhnc7e7efdldnjzl@quack3>
+ <CAOQ4uxiN3JnH-oJTw63rTR_B8oPBfB7hWyun0Hsb3ZX3AORf2g@mail.gmail.com> <20240617130739.ki5tpsbgvhumdrla@quack3>
+In-Reply-To: <20240617130739.ki5tpsbgvhumdrla@quack3>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 17 Jun 2024 16:49:55 +0300
+Message-ID: <CAOQ4uxhGD563ye9F=+m_gcaDuYJPbD1mbwmtm0y476Oxe5fH6Q@mail.gmail.com>
+Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
+ ->atomic_open used.
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>, NeilBrown <neilb@suse.de>, James Clark <james.clark@arm.com>, 
+	ltp@lists.linux.it, linux-nfs@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 17 Jun 2024, at 9:46, Benjamin Coddington wrote:
+On Mon, Jun 17, 2024 at 4:07=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+>
+> On Mon 17-06-24 15:09:09, Amir Goldstein wrote:
+> > On Mon, Jun 17, 2024 at 12:37=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+> > > On Sat 15-06-24 07:35:42, Christian Brauner wrote:
+> > > > On Wed, 12 Jun 2024 17:09:55 +1000, NeilBrown wrote:
+> > > > > When a file is opened and created with open(..., O_CREAT) we get
+> > > > > both the CREATE and OPEN fsnotify events and would expect them in=
+ that
+> > > > > order.   For most filesystems we get them in that order because
+> > > > > open_last_lookups() calls fsnofify_create() and then do_open() (f=
+rom
+> > > > > path_openat()) calls vfs_open()->do_dentry_open() which calls
+> > > > > fsnotify_open().
+> > > > >
+> > > > > [...]
+> > > >
+> > > > Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+> > > > Patches in the vfs.fixes branch should appear in linux-next soon.
+> > > >
+> > > > Please report any outstanding bugs that were missed during review i=
+n a
+> > > > new review to the original patch series allowing us to drop it.
+> > > >
+> > > > It's encouraged to provide Acked-bys and Reviewed-bys even though t=
+he
+> > > > patch has now been applied. If possible patch trailers will be upda=
+ted.
+> > > >
+> > > > Note that commit hashes shown below are subject to change due to re=
+base,
+> > > > trailer updates or similar. If in doubt, please check the listed br=
+anch.
+> > > >
+> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > > > branch: vfs.fixes
+> > > >
+> > > > [1/1] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open use=
+d.
+> > > >       https://git.kernel.org/vfs/vfs/c/7536b2f06724
+> > >
+> > > I have reviewed the patch you've committed since I wasn't quite sure =
+which
+> > > changes you're going to apply after your discussion with Amir. And I =
+have
+> > > two comments:
+> > >
+> > > @@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
+> > >   */
+> > >  int vfs_open(const struct path *path, struct file *file)
+> > >  {
+> > > +       int ret;
+> > > +
+> > >         file->f_path =3D *path;
+> > > -       return do_dentry_open(file, NULL);
+> > > +       ret =3D do_dentry_open(file, NULL);
+> > > +       if (!ret)
+> > > +               /*
+> > > +                * Once we return a file with FMODE_OPENED, __fput() =
+will call
+> > > +                * fsnotify_close(), so we need fsnotify_open() here =
+for symmetry.
+> > > +                */
+> > > +               fsnotify_open(file);
+> >
+> > Please add { } around multi line indented text.
+> >
+> > > +       return ret;
+> > >  }
+> > >
+> > > AFAICT this will have a side-effect that now fsnotify_open() will be
+> > > generated even for O_PATH open. It is true that fsnotify_close() is g=
+etting
+> > > generated for them already and we should strive for symmetry. Concept=
+ually
+> > > it doesn't make sense to me to generate fsnotify events for O_PATH
+> > > opens/closes but maybe I miss something. Amir, any opinion here?
+> >
+> > Good catch!
+> >
+> > I agree that we do not need OPEN nor CLOSE events for O_PATH.
+> > I suggest to solve it with:
+> >
+> > @@ -915,7 +929,7 @@ static int do_dentry_open(struct file *f,
+> >         f->f_sb_err =3D file_sample_sb_err(f);
+> >
+> >         if (unlikely(f->f_flags & O_PATH)) {
+> > -               f->f_mode =3D FMODE_PATH | FMODE_OPENED;
+> > +               f->f_mode =3D FMODE_PATH | FMODE_OPENED | __FMODE_NONOT=
+IFY;
+> >                 f->f_op =3D &empty_fops;
+> >                 return 0;
+> >         }
+>
+> First I was somewhat nervous about this as it results in returning O_PATH
+> fd with __FMODE_NONOTIFY to userspace and I was afraid it may influence
+> generation of events *somewhere*.
 
-> My aarch64 system just popped this on a krb5i mount.. I will investigat=
-e, but maybe looks familiar:
+It influences my POC code of future lookup permission event:
+https://github.com/amir73il/linux/commits/fan_lookup_perm/
+which is supposed to generate events on lookup with O_PATH fd.
 
-Nevermind, gah - Chuck's already fixed it (4a77c3dead97339478c7422eb07bf4=
-bf63577008), and I reviewed it.. sorry for the noise.
+> But checking a bit, we use 'file' for
+> generating only open, access, modify, and close events so yes, this shoul=
+d
+> be safe. Alternatively we could add explicit checks for !O_PATH when
+> generating open / close events.
+>
 
-Coffee.
+So yeh, this would be better:
 
+--- a/include/linux/fsnotify.h
++++ b/include/linux/fsnotify.h
+@@ -112,7 +112,7 @@ static inline int fsnotify_file(struct file *file,
+__u32 mask)
+ {
+        const struct path *path;
+
+-       if (file->f_mode & FMODE_NONOTIFY)
++       if (file->f_mode & (FMODE_NONOTIFY | FMODE_PATH))
+                return 0;
+
+        path =3D &file->f_path;
+--
+
+It is a dilemma, if this patch should be separate.
+On the one hand it fixes unbalanced CLOSE events on O_PATH fd,
+so it is an independent fix.
+OTOH, it is a requirement for moving fsnotify_open() out of
+do_dentry_open(), so not so healthy to separate them, when it is less clear
+that they need to be backported together.
+
+> > > @@ -3612,6 +3612,9 @@ static int do_open(struct nameidata *nd,
+> > >         int acc_mode;
+> > >         int error;
+> > >
+> > > +       if (file->f_mode & FMODE_OPENED)
+> > > +               fsnotify_open(file);
+> > > +
+> > >         if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
+> > >                 error =3D complete_walk(nd);
+> > >                 if (error)
+> > >
+> > > Frankly, this works but looks as an odd place to put this notificatio=
+n to.
+> > > Why not just placing it just next to where fsnotify_create() is gener=
+ated
+> > > in open_last_lookups()? Like:
+> > >
+> > >         if (open_flag & O_CREAT)
+> > >                 inode_lock(dir->d_inode);
+> > >         else
+> > >                 inode_lock_shared(dir->d_inode);
+> > >         dentry =3D lookup_open(nd, file, op, got_write);
+> > > -       if (!IS_ERR(dentry) && (file->f_mode & FMODE_CREATED))
+> > > -               fsnotify_create(dir->d_inode, dentry);
+> > > +       if (!IS_ERR(dentry)) {
+> > > +               if (file->f_mode & FMODE_CREATED)
+> > > +                       fsnotify_create(dir->d_inode, dentry);
+> > > +               if (file->f_mode & FMODE_OPENED)
+> > > +                       fsnotify_open(file);
+> > > +       }
+> > >         if (open_flag & O_CREAT)
+> > >                 inode_unlock(dir->d_inode);
+> > >         else
+> > >                 inode_unlock_shared(dir->d_inode);
+> > >
+> > > That looks like a place where it is much more obvious this is for
+> > > atomic_open() handling? Now I admit I'm not really closely familiar w=
+ith
+> > > the atomic_open() paths so maybe I miss something and do_open() is be=
+tter.
+> >
+> > It looks nice, but I think it is missing the fast lookup case without O=
+_CREAT
+> > (i.e. goto finish_lookup).
+>
+> I don't think so. AFAICT that case will generate the event in vfs_open()
+> anyway and not in open_last_lookups() / do_open(). Am I missing something=
+?
+
+No. I am. This code is hard to follow.
+I am fine with your variant, but maybe after so many in-tree changes
+including the extra change of O_PATH, perhaps it would be better
+to move this patch to your fsnotify tree?
+
+Thanks,
+Amir.
 
