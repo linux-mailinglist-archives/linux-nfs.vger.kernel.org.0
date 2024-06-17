@@ -1,109 +1,137 @@
-Return-Path: <linux-nfs+bounces-3858-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3860-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 194B6909CF6
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Jun 2024 12:23:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 033BE90A1B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 03:25:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1CFE1F2121E
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Jun 2024 10:23:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 192371C20D82
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 01:25:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B0A16C694;
-	Sun, 16 Jun 2024 10:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9719468E;
+	Mon, 17 Jun 2024 01:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C12PPYTz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+s9rl+v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A689D481A3;
-	Sun, 16 Jun 2024 10:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926E233E7
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 01:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718533413; cv=none; b=LTIK52xpCqAIFCu3Knxo1R3EgG1yPvPefikLooRxYs0jin25qo9WrVkzdJ1YKKQaabuKWhLmfjnzOB71TCXScoyEP0K+oENLjogH5TcO6Cku1hM9B46QaFWnZUwQwE2+Clg7UAJseHD+O5+czYINShifFT6zghfLPlNKy5dnhvo=
+	t=1718587510; cv=none; b=VNUKFx9w+HPoX5pjwoT8hvz+qMWY6sD9U4BuLFD8kOZHSNQ/45gzesvMgRxwpb6XOe6Zi84usxfjU5gjzTXN8u0SYz1U1SFoPB/MwfgRLCuuGyzUYRW5hvcjO7ze4y6SVByM61a7JugBbOXRbpOa5L1d9f8GqwboqG6QtYa0+vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718533413; c=relaxed/simple;
-	bh=by8ohJEJs6lukJSLMe+E/tLehUWJmbmsLCVuB3MSp7g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pTTxTOwoazFsHFWNhFaKXxmfczXwF2QlG0a292wjCujdPHzPkX3Q3RFBjgZAeeznH6JNxpQQeUwnQ6WNlKG2AZJj92KXUubUnEGEXZbBWNL0M5bWiSMB3binkhb8f/xszAaxgK1UiPzyZvR09TGC18RNI6PATiiGh8tTMxytT+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C12PPYTz; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4ed0abe8580so1104222e0c.2;
-        Sun, 16 Jun 2024 03:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718533410; x=1719138210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MSBxsPczZ+4pot3zvMVUtuvia7JJEO/t9QU4pSIhmLc=;
-        b=C12PPYTz9h/ZJx7CkCEJ1ZhSkF3bp+FMzFdpdIbrs8D2WPVaeN/aKtRWQ3hxMe7ydQ
-         M0mHihYih1NjUvAbkrSHVWqWGFhVy66bvg4oIJNAkjKPu5kTt6Lh8nEqfq+9N4DX6OMY
-         PoTdoNK8rXfOmSemJT1eBMU20xjmeTSA7cWs6Clsd+j2K6PzQ6EfAUpCN5Qk6lmD0B4V
-         GO01lrSrBxyhlhcy5LmKm2eNfjir6o5l6l8Tt2l4ngliaq7+6xp5r3oIXIyA99xj1RDx
-         MHNlY+IiOyKK0UxeJo8J7v7HYm7rznjaz8Fr8Rutwq9PnbJyHqO/F+qAbWlGo5UlHJ5d
-         AMBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718533410; x=1719138210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MSBxsPczZ+4pot3zvMVUtuvia7JJEO/t9QU4pSIhmLc=;
-        b=H7bkMQEnpuV2hiiyBSanjDm/bFFKpkAHXmxqj6j4RCQ+7NKnNaZyDZuEEZmmxPFL3m
-         s5VIhW2CUSCfBsdo/fgkSgE97KcCiA5Vhfh+1laCEFmT6fFPo0jWTvTn9jIWkwgK/v/6
-         DHSkPoai36Tx8jZRJyYQ1UE+fy4T9g+Pl3I919SOPbTeaoueBtdE8iFepquYARvnJIbW
-         lcavhHmZ3o+Kcbk78JmY0JxGd6cj8aTaT8CrM9RlhE7U1HnKbNcH5YH8pS4r2g7qU6mg
-         QoW5gPYoQJXPKYzGTo8qrDDQG3bC+bVXd1gtZsPkL8qLhgXjLs15aO6JHeY8lTkF5IBv
-         5qoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmOjVMdbAHDNdl8/hNVBKY7lCEDb50jsV0kkvj8xm7sTQ/k3DEeeriJAk3aaKsSfmJaJMHjWrKWrIbTicb/buJGt5vNS6Ggj1ZzZFyqK3kxvRmX4NDtrxm28rXKYbqgtVS1mkglQ==
-X-Gm-Message-State: AOJu0Yx+1zdl9ufc6zMeB1xdrQK5043uJsx8yKwVD9pwhPuvNSV7QXaW
-	aiFuUgFPiUAxVZIdeGANxHJnRliSI38GLERSR7MXcJ6YIV8fj8jujf57+wbZ50gtV8zq0cfc68O
-	eWJ1ymCRvUe1umyZWVGlCiF7Dc+o=
-X-Google-Smtp-Source: AGHT+IEEl4jPkQqUM+tuvbj8jM0PJmlDwSYA0hEp4W8mWisa+3eruCF0wyklnGyyisWLVfbaOiXpgiyXYE5YuXsglc0=
-X-Received: by 2002:a05:6122:20a5:b0:4eb:5d5b:a894 with SMTP id
- 71dfb90a1353d-4ee3e291ec4mr6496762e0c.6.1718533409829; Sun, 16 Jun 2024
- 03:23:29 -0700 (PDT)
+	s=arc-20240116; t=1718587510; c=relaxed/simple;
+	bh=EvNQtMdJaMMHPFFjdG0pNphrouB80bY49YOiwanq22c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=pw4QPrtvYMi0Bu9BKhT3jkgUal2nAnoLoN3PbHdbgj+sAanhWvf8z+Wz2xYLekgsRBOoNfTqFebatTToMFthwXwZY2RK9x+T9Alc7f9Pvo2/tf/QZSanJhfYb9gAf+jMAGc7+UAav+uZHeMlQACiWeHy7Z/iSiGx+j0Zx4wROAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+s9rl+v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E0DC2BBFC
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 01:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718587509;
+	bh=EvNQtMdJaMMHPFFjdG0pNphrouB80bY49YOiwanq22c=;
+	h=From:To:Subject:Date:From;
+	b=R+s9rl+vMUehuDHyw2KOLJi7/l+HTvYEeN9VdvdppcBjnJwJorEqeOnQKYHrUxEM+
+	 SkiFuvlFciqMcSof6/yvOR4bOL4qSDNNx08+Wqq3e5CK/PTydsRi4uYLbB0ex3CZVA
+	 EVgx3/FSrz6Gr/1tOHXH6qzj+1KKeFdB0kdMUlmQI197DHAJcJE5KPrcFlyRSzh388
+	 FmumCL65hL0IQATyZwUqKXX/BugCGg5bDnRUhiAAKs3TJ8BHdufunl8f2YJlFCoy+W
+	 0o85aBSDUYrSTrTIM6TwNRSbXskDzTktutnBPglLkr+2YaWIELbJa1VVqXZgupRpk7
+	 VKLkfLS8Jx7qg==
+From: trondmy@kernel.org
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH v2 00/19] OPEN optimisations and Attribute delegations
+Date: Sun, 16 Jun 2024 21:21:18 -0400
+Message-ID: <20240617012137.674046-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614100329.1203579-1-hch@lst.de> <20240614100329.1203579-2-hch@lst.de>
- <20240614112148.cd1961e84b736060c54bdf26@linux-foundation.org>
- <CAGsJ_4wnWzoScqO9_NddHcDPbe_GbAiRFVm4w_H+QDmH=e=Rsw@mail.gmail.com> <20240616085436.GA28058@lst.de>
-In-Reply-To: <20240616085436.GA28058@lst.de>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sun, 16 Jun 2024 18:23:16 +0800
-Message-ID: <CAGsJ_4ytrnXJbfVi=PpTw34iBDqEoAm3b16oZr2VQpVWLmh5zA@mail.gmail.com>
-Subject: Re: [PATCH] nfs: fix nfs_swap_rw for large-folio swap
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-mm@kvack.org, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 16, 2024 at 4:54=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
-e:
->
-> On Sun, Jun 16, 2024 at 12:16:10PM +1200, Barry Song wrote:
-> > As I understand it, this isn't happening because we don't support
-> > mTHP swapping out to a swapfile, whether it's on NFS or any
-> > other filesystem.
->
-> It does happen.  The reason why I sent this patch is becaue I observed
-> the BUG_ON trigger on a trivial swap generation workload (usemem.c from
-> xfstests).
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-This is quite unusual. Could you share your setup and backtrace? I'd
-like to reproduce the issue, as the mm code only supports mTHP
-swapout on block devices. What is your swap device or swap file?
-Additionally, on what kind of filesystem is the executable file built
-from usemem.c located?
+Now that https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/ is
+mostly done with the review process, it is time to look at pushing the
+client implementation that we've been working on upstream.
 
->
+The following patch series therefore adds support for the NFSv4.2
+extension to OP_OPEN to allow the client to request that the server
+return either an open stateid or a delegation instead of always sending
+the open stateid whether or not a delegation is returned.
+This allows us to optimise away CLOSE, and hence makes small or cached
+file access significantly more efficient.
+
+It also adds support for attribute delegations, which allow the client
+to manage the atime and mtime, and simply inform the server at file
+close time what the values should be. This means that most GETATTR
+operations to retrieve the atime/mtime values while the file is under
+I/O can be optimised away.
+
+Finally, we also add support for the detection mechanism that allows the
+client to determine whether or not the server supports the above
+functionality.
+
+v2:
+ - Fix issues when compiling without CONFIG_NFS_V4
+ - Update "NFSv4: Fix up delegated attributes in nfs_setattr" to fix
+   regressions pointed out by Anna Schumaker
+ - Squash commits "NFSv4: Ask for a delegation or an open stateid in
+   OPEN" and "Return the delegation when deleting the sillyrenamed file"
+   as suggested by Jeff Layton
+ - Add "NFSv4: Don't send delegation-related share access modes to
+   CLOSE"
+
+Lance Shelton (1):
+  Return the delegation when deleting sillyrenamed files
+
+Trond Myklebust (18):
+  NFSv4: Clean up open delegation return structure
+  NFSv4: Refactor nfs4_opendata_check_deleg()
+  NFSv4: Add new attribute delegation definitions
+  NFSv4: Plumb in XDR support for the new delegation-only setattr op
+  NFSv4: Add CB_GETATTR support for delegated attributes
+  NFSv4: Add a flags argument to the 'have_delegation' callback
+  NFSv4: Add support for delegated atime and mtime attributes
+  NFSv4: Add recovery of attribute delegations
+  NFSv4: Add a capability for delegated attributes
+  NFSv4: Enable attribute delegations
+  NFSv4: Delegreturn must set m/atime when they are delegated
+  NFSv4: Fix up delegated attributes in nfs_setattr
+  NFSv4: Don't request atime/mtime/size if they are delegated to us
+  NFSv4: Add support for the FATTR4_OPEN_ARGUMENTS attribute
+  NFSv4: Detect support for OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+  NFSv4: Add support for OPEN4_RESULT_NO_OPEN_STATEID
+  NFSv4: Ask for a delegation or an open stateid in OPEN
+  NFSv4: Don't send delegation-related share access modes to CLOSE
+
+ fs/nfs/callback.h         |   5 +-
+ fs/nfs/callback_proc.c    |  14 ++-
+ fs/nfs/callback_xdr.c     |  39 +++++-
+ fs/nfs/delegation.c       |  67 ++++++----
+ fs/nfs/delegation.h       |  45 ++++++-
+ fs/nfs/dir.c              |   2 +-
+ fs/nfs/file.c             |   4 +-
+ fs/nfs/inode.c            |  86 +++++++++++--
+ fs/nfs/nfs3proc.c         |  10 +-
+ fs/nfs/nfs4proc.c         | 248 ++++++++++++++++++++++++++++----------
+ fs/nfs/nfs4xdr.c          | 131 +++++++++++++++-----
+ fs/nfs/proc.c             |  10 +-
+ fs/nfs/read.c             |   3 +
+ fs/nfs/unlink.c           |   2 +
+ fs/nfs/write.c            |  11 +-
+ include/linux/nfs4.h      |  11 ++
+ include/linux/nfs_fs_sb.h |   2 +
+ include/linux/nfs_xdr.h   |  45 ++++++-
+ include/uapi/linux/nfs4.h |   4 +
+ 19 files changed, 589 insertions(+), 150 deletions(-)
+
+-- 
+2.45.2
+
 
