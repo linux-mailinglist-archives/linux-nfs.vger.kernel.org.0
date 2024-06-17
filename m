@@ -1,337 +1,207 @@
-Return-Path: <linux-nfs+bounces-3921-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3922-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BB5B90B650
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 18:26:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E0D90B65E
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 18:31:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 918E61C21E67
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:26:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD1271C23002
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jun 2024 16:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741CB14F9D7;
-	Mon, 17 Jun 2024 16:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C1CA1598EC;
+	Mon, 17 Jun 2024 16:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzsoFndl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B4D14EC61
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 16:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0165158DD4;
+	Mon, 17 Jun 2024 16:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718641593; cv=none; b=sSGbZKVJLveSQWvhZCDaWWH+HaRh+nluAZHUjO68in9q6qy4duiTamgn0I0lMKLS493tIn5DYTaFEbE5BohR42fynSeTkmqndw+BUt6J2F/Pyxpne8GFNs0Ajp2clzJqLT0/M/COIXk4k/+chY5VZEdrwz4kEdRwntl2DlZMkF4=
+	t=1718641861; cv=none; b=OETSlEzlt6Ld1ESHkJ6ob/keXD6zd0rwUg5CizZw+w8gk7nARDX1I2hYzBBx5vW4rT3GGcEq+R6gJU+5KPTrrCzrd47VDfNhuMYZAmQ4M9pJH1fdOEzfzWudYGeeR70eoD5y6RmpZtjXJMC8zyggPtMwob+LUcpoQH1zJ6IhUUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718641593; c=relaxed/simple;
-	bh=qLyEFuA14kR1AkSeqyKqPZnAuUc7zICR4J1TT5bQVpk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=X3Ep4w0wLMlD2OYxgE1YwpfQoU5gY0RaEezdTZSOZscfSIHRvXPDtDLS/GoPtN+89vbO2xcvHv0oY1BKXhkpD8Y2JKIR+X3dJnG8AKnkTM9w9gDV7n1ZjypXxewltr0pE4Yf3QzKDG1EwRv13ZEJ9lbIJDolzGbayTfnpXdp8HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7ebf00251b9so424532939f.2
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jun 2024 09:26:31 -0700 (PDT)
+	s=arc-20240116; t=1718641861; c=relaxed/simple;
+	bh=N+Qryf05FJj1hGepJO+grejqagGTDFVxmTmLFR24LxA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XJv0QkfMjbcK6LvuLikCBtyxRNLBz++eE3esTISmsjxaBhzJqCUERXfBBS60Qreg8xq+WvMAbSu5kei1SxCoWXS+lWeOTKuho9tSdexO9gsMHAbOkSnh7gzHVygKu3E3q6g7XlFuR4K4Gh081Frn1OX6GfeL6vSZHLc9wqevgFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IzsoFndl; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebe6495aedso42867981fa.0;
+        Mon, 17 Jun 2024 09:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718641858; x=1719246658; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P18NXjBrMly2kaNOMkzQiyWW0KiEt9TV5gbmtLRhdnE=;
+        b=IzsoFndljoYmFfZmzKjWO0y7B8sVwieQnmonFcQGhlZk1LiRZ/S6QKGZTV1AKY6MH+
+         6Vo+dLGcTL2Vv2E/pbRdL38QYElOjdFR8jOBiNPW24IS5BW+kzEXNRdMfSb9jp6Ewean
+         pDtMwixWFQYsCKbih32MNuZt+7FYYR3Canr74iZmOl7oNsNfXhLak7c8W7V9cG5pdB9Q
+         HrlN4xolvduCdgGprtGxzeywjmEPKiNZP2HSjGCiomeulNM76EJnFG4d0qJI36fgjWP0
+         xgkppzYOtcJyXQZzuZ5NPzja5a2AEHarQdyPfuJTuJFTRRYVUU68+4e02NCGBiWFAUFv
+         +kyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718641591; x=1719246391;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S8Llh/+tG69M7DZzRHmCoTFxXiG1AfxNjgtwz5+HayM=;
-        b=HjJPSDuAlP3km7rDCBhiC9L0wUNwv/laacVYXeP04aBgl4eFcxBfgA2A/xSpykFUSl
-         HiWgHML756MtPt4uLS8HGwMgYjtj8NePakr75Ca2wiM+QBS/7V9X8Btowrb7SVc5Wu14
-         Km0QsWU2Lt7y20FoKv593CKBjqYHtW7D56iFh/cv0BIi3kbAfqca7mcfJ+fjm8JqgWKA
-         6hrY1CfEH9H5hc41CekUYq36Ba/MUJuDQj10L+t5ovzFBLtorvACJbqKNL72+EwJagXr
-         aD+z2hD0LSv3+N8UBYR4NrKNH041COLiyIK4drsRUpyseIK3j3hDTzTF2LgUEZJAmb6x
-         9F3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVN/UeDhDBlUdhTpaNRLJ4/7Fy+gsARuQ41ZJ85UcqtcBHB7l6xWDRb2fCyyZWw8//vN3gr79pi1VhRQu4LEV8KbxUGtAmC7uky
-X-Gm-Message-State: AOJu0YzPmuqmGCA3+/O8YoOObyiU+w78a8Niycki0U7LzS47UpFJ6Jpw
-	aZ9ZntA1Mes0ZG8WA2d+WO6zSkeZd5HKkKC78igpON/cPCbhNIB1nYF7jZTBuuHnpZc4v0nXu/l
-	zrK4MK4oP6qE86o5khTfNEdPbz9ZE9FuFnIwQh4EsuGmj2IROwDzS+9Q=
-X-Google-Smtp-Source: AGHT+IGSGFXoPYBjpHQDgGvN5h3yWz3g3pgtSmkmzIrj9a8mdcN7s3DpohRzw/3ElYVBEcDhQeMM0CF1dFJm16vVO0/SFDPelwVX
+        d=1e100.net; s=20230601; t=1718641858; x=1719246658;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P18NXjBrMly2kaNOMkzQiyWW0KiEt9TV5gbmtLRhdnE=;
+        b=NQfNJUHQ+lyHYNcxnNI1Md1WHmQmRcDvErix9HmkKdp5drJjJZ1i6LoKRqt6Wf7sDO
+         OkXJM3GLjZ1lpnGN+mP/ISU94l5tv6iJUrFQW8Uz3y6zYCMVxLsDrZQuUS6lHgSb0eEN
+         DmxMcPxDUslRakWqA6+yjPptK3tBdzNIrFF98f0ks3Oa95nI9fs4hrw8cmK7YmXeKWj+
+         /amXkr7/TWvmcOU1r0a3wJIIURE8a7piZbYpKvc6Lao98SBypMMEUyX4v1rqSvlkb8s5
+         ulY9myrT/n8crUZ1goFbRsbMregU8lbpfQ2+K7Rol4Qs/XEIYnJnsKL6aXDeP+3YT3n5
+         pOyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVleeA6xn5BOtkxGX4FWGbpeD4/T15dmo5/xbFDclKPkKGFuhMDZeG75nHijC0OdUuR8lYbJoIxBtUqOcHDWDzJREwr0L2lJMwsOoe5oIJw4VuE7Cd0hffwAYqI5j6N+THUNWZxPMO8U4Y8HC9nQQ5FalzoJmhbSbF3oQKCMIJZgZhTkrN7M4bzMNLQAYf9VR13wKEc7PWMAc5+//Y45ZhpLdTrxzld10oJWGO6OJd9eIhIJADE+jLVgkuhx5HoyVaDmLw7KSuUA2WH+3B6G4z8mnHHg9oovCwzpeZROGElqtV5kJG1OhvZ+526deYv4eOOHAjNG2G0tVCyp6TadECmVrD2iU0O1ZfjTTleo1T6AB0DkpIglliEIsCdrjHExcwxQ2f/txa9/oKp4MExRbBhh/RM1t0JbYhttty0f1NK5Ryexlnixss7jN9yUw==
+X-Gm-Message-State: AOJu0YxbktrJ7Srt36nbvYrAZRHcU9Zr0H5CPczrYiaj5mUd5Z4QICvM
+	QcSq/gkJ0Lrt6uq+F3oGNC8fSnyqBwiZ40HuWOS2UGo0mKxMaS2V
+X-Google-Smtp-Source: AGHT+IEPhqe0DMj4rMlaXsMOCbhrl4lbGG1gPjCGb7ivFIirSumn2PP7mfmxsW/9BAzDd49k/bprGA==
+X-Received: by 2002:a2e:9cd6:0:b0:2eb:fdd3:8fa2 with SMTP id 38308e7fff4ca-2ec0e5c5816mr68620871fa.13.1718641857513;
+        Mon, 17 Jun 2024 09:30:57 -0700 (PDT)
+Received: from pc636 (host-90-233-216-238.mobileonline.telia.com. [90.233.216.238])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c78400sm14106751fa.84.2024.06.17.09.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 09:30:57 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 17 Jun 2024 18:30:53 +0200
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <ZnBkvYdbAWILs7qx@pc636>
+References: <Zmru7hhz8kPDPsyz@pc636>
+ <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
+ <Zmsuswo8OPIhY5KJ@pc636>
+ <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
+ <ZmszOd5idhf2Cb-v@pc636>
+ <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
+ <Zmw5FTX752g0vtlD@pc638.lan>
+ <ZmybGZDbXkw7JTjc@zx2c4.com>
+ <ZnA_QFvuyABnD3ZA@pc636>
+ <ZnBOkZClsvAUa_5X@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8718:b0:4b7:c9b5:675c with SMTP id
- 8926c6da1cb9f-4b96413cde5mr530754173.6.1718641590823; Mon, 17 Jun 2024
- 09:26:30 -0700 (PDT)
-Date: Mon, 17 Jun 2024 09:26:30 -0700
-In-Reply-To: <ZnBjsQazkJK0MyNk@lore-desk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000847d65061b186d5f@google.com>
-Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_nl_listener_get_doit
-From: syzbot <syzbot+4207adf14e7c0981d28d@syzkaller.appspotmail.com>
-To: lorenzo@kernel.org
-Cc: chuck.lever@oracle.com, dai.ngo@oracle.com, jlayton@kernel.org, 
-	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	lorenzo@kernel.org, neilb@suse.de, syzkaller-bugs@googlegroups.com, 
-	tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnBOkZClsvAUa_5X@zx2c4.com>
 
->> Hello,
->> 
->> syzbot found the following issue on:
->> 
->> HEAD commit:    cea2a26553ac mailmap: Add my outdated addresses to the map..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=169fd8ee980000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
->> dashboard link: https://syzkaller.appspot.com/bug?extid=4207adf14e7c0981d28d
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->> 
->> Unfortunately, I don't have any reproducer for this issue yet.
->> 
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/1f7ce933512f/disk-cea2a265.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/0ce3b9940616/vmlinux-cea2a265.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/19e24094ea37/bzImage-cea2a265.xz
->> 
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+4207adf14e7c0981d28d@syzkaller.appspotmail.com
->> 
->> INFO: task syz-executor.1:17770 blocked for more than 143 seconds.
->>       Not tainted 6.10.0-rc3-syzkaller-00022-gcea2a26553ac #0
->> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> task:syz-executor.1  state:D stack:23800 pid:17770 tgid:17767 ppid:11381  flags:0x00000006
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5408 [inline]
->>  __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
->>  __schedule_loop kernel/sched/core.c:6822 [inline]
->>  schedule+0x14b/0x320 kernel/sched/core.c:6837
->>  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
->>  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
->>  __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
->>  nfsd_nl_listener_get_doit+0x115/0x5d0 fs/nfsd/nfsctl.c:2124
->>  genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
->>  genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
->>  genl_rcv_msg+0xb16/0xec0 net/netlink/genetlink.c:1210
->>  netlink_rcv_skb+0x1e5/0x430 net/netlink/af_netlink.c:2564
->>  genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
->>  netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
->>  netlink_unicast+0x7ec/0x980 net/netlink/af_netlink.c:1361
->>  netlink_sendmsg+0x8db/0xcb0 net/netlink/af_netlink.c:1905
->>  sock_sendmsg_nosec net/socket.c:730 [inline]
->>  __sock_sendmsg+0x223/0x270 net/socket.c:745
->>  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
->>  ___sys_sendmsg net/socket.c:2639 [inline]
->>  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
->>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f24ed27cea9
->> RSP: 002b:00007f24ee0080c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
->> RAX: ffffffffffffffda RBX: 00007f24ed3b3f80 RCX: 00007f24ed27cea9
->> RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000005
->> RBP: 00007f24ed2ebff4 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->> 
->> 
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->> 
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> 
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->> 
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->> 
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->> 
->> If you want to undo deduplication, reply with:
->> #syz undup
->> 
+On Mon, Jun 17, 2024 at 04:56:17PM +0200, Jason A. Donenfeld wrote:
+> On Mon, Jun 17, 2024 at 03:50:56PM +0200, Uladzislau Rezki wrote:
+> > On Fri, Jun 14, 2024 at 09:33:45PM +0200, Jason A. Donenfeld wrote:
+> > > On Fri, Jun 14, 2024 at 02:35:33PM +0200, Uladzislau Rezki wrote:
+> > > > +	/* Should a destroy process be deferred? */
+> > > > +	if (s->flags & SLAB_DEFER_DESTROY) {
+> > > > +		list_move_tail(&s->list, &slab_caches_defer_destroy);
+> > > > +		schedule_delayed_work(&slab_caches_defer_destroy_work, HZ);
+> > > > +		goto out_unlock;
+> > > > +	}
+> > > 
+> > > Wouldn't it be smoother to have the actual kmem_cache_free() function
+> > > check to see if it's been marked for destruction and the refcount is
+> > > zero, rather than polling every one second? I mentioned this approach
+> > > in: https://lore.kernel.org/all/Zmo9-YGraiCj5-MI@zx2c4.com/ -
+> > > 
+> > >     I wonder if the right fix to this would be adding a `should_destroy`
+> > >     boolean to kmem_cache, which kmem_cache_destroy() sets to true. And
+> > >     then right after it checks `if (number_of_allocations == 0)
+> > >     actually_destroy()`, and likewise on each kmem_cache_free(), it
+> > >     could check `if (should_destroy && number_of_allocations == 0)
+> > >     actually_destroy()`. 
+> > > 
+> > I do not find pooling as bad way we can go with. But your proposal
+> > sounds reasonable to me also. We can combine both "prototypes" to
+> > one and offer.
+> > 
+> > Can you post a prototype here?
+> 
+> This is untested, but the simplest, shortest possible version would be:
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 5f8f47c5bee0..907c0ea56c01 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -275,6 +275,7 @@ struct kmem_cache {
+>  	unsigned int inuse;		/* Offset to metadata */
+>  	unsigned int align;		/* Alignment */
+>  	unsigned int red_left_pad;	/* Left redzone padding size */
+> +	bool is_destroyed;		/* Destruction happens when no objects */
+>  	const char *name;		/* Name (only for display!) */
+>  	struct list_head list;		/* List of slab caches */
+>  #ifdef CONFIG_SYSFS
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 1560a1546bb1..f700bed066d9 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -494,8 +494,8 @@ void kmem_cache_destroy(struct kmem_cache *s)
+>  		goto out_unlock;
+> 
+>  	err = shutdown_cache(s);
+> -	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
+> -	     __func__, s->name, (void *)_RET_IP_);
+> +	if (err)
+> +		s->is_destroyed = true;
 >
-> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git 4ddfda417a50
+Here if an "err" is less then "0" means there are still objects
+whereas "is_destroyed" is set to "true" which is not correlated
+with a comment:
 
-This crash does not have a reproducer. I cannot test it.
+"Destruction happens when no objects"
 
->
-> From be9676fba16c0b8769c3b6094f35da39b1ba3953 Mon Sep 17 00:00:00 2001
-> Message-ID: <be9676fba16c0b8769c3b6094f35da39b1ba3953.1718640518.git.lorenzo@kernel.org>
-> From: Lorenzo Bianconi <lorenzo@kernel.org>
-> Date: Mon, 17 Jun 2024 16:26:26 +0200
-> Subject: [PATCH] NFSD: grab nfsd_mutex in nfsd_nl_rpc_status_get_dumpit()
->
-> Grab nfsd_mutex lock in nfsd_nl_rpc_status_get_dumpit routine and remove
-> nfsd_nl_rpc_status_get_start() and nfsd_nl_rpc_status_get_done(). This
-> patch fix the syzbot log reported below:
->
-> INFO: task syz-executor.1:17770 blocked for more than 143 seconds.
->       Not tainted 6.10.0-rc3-syzkaller-00022-gcea2a26553ac #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz-executor.1  state:D stack:23800 pid:17770 tgid:17767 ppid:11381  flags:0x00000006
-> Call Trace:
->  <TASK>
->  context_switch kernel/sched/core.c:5408 [inline]
->  __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
->  __schedule_loop kernel/sched/core.c:6822 [inline]
->  schedule+0x14b/0x320 kernel/sched/core.c:6837
->  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
->  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
->  __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
->  nfsd_nl_listener_get_doit+0x115/0x5d0 fs/nfsd/nfsctl.c:2124
->  genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
->  genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
->  genl_rcv_msg+0xb16/0xec0 net/netlink/genetlink.c:1210
->  netlink_rcv_skb+0x1e5/0x430 net/netlink/af_netlink.c:2564
->  genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
->  netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
->  netlink_unicast+0x7ec/0x980 net/netlink/af_netlink.c:1361
->  netlink_sendmsg+0x8db/0xcb0 net/netlink/af_netlink.c:1905
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg+0x223/0x270 net/socket.c:745
->  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
->  ___sys_sendmsg net/socket.c:2639 [inline]
->  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f24ed27cea9
-> RSP: 002b:00007f24ee0080c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00007f24ed3b3f80 RCX: 00007f24ed27cea9
-> RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000005
-> RBP: 00007f24ed2ebff4 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->
-> Fixes: 1bd773b4f0c9 ("nfsd: hold nfsd_mutex across entire netlink operation")
-> Fixes: bd9d6a3efa97 ("NFSD: add rpc_status netlink support")
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  Documentation/netlink/specs/nfsd.yaml |  2 --
->  fs/nfsd/netlink.c                     |  2 --
->  fs/nfsd/netlink.h                     |  3 --
->  fs/nfsd/nfsctl.c                      | 48 ++++++---------------------
->  4 files changed, 11 insertions(+), 44 deletions(-)
->
-> diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
-> index 5a98e5a06c68..c87658114852 100644
-> --- a/Documentation/netlink/specs/nfsd.yaml
-> +++ b/Documentation/netlink/specs/nfsd.yaml
-> @@ -132,8 +132,6 @@ operations:
->        doc: dump pending nfsd rpc
->        attribute-set: rpc-status
->        dump:
-> -        pre: nfsd-nl-rpc-status-get-start
-> -        post: nfsd-nl-rpc-status-get-done
->          reply:
->            attributes:
->              - xid
-> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> index 137701153c9e..ca54aa583530 100644
-> --- a/fs/nfsd/netlink.c
-> +++ b/fs/nfsd/netlink.c
-> @@ -49,9 +49,7 @@ static const struct nla_policy nfsd_pool_mode_set_nl_policy[NFSD_A_POOL_MODE_MOD
->  static const struct genl_split_ops nfsd_nl_ops[] = {
->  	{
->  		.cmd	= NFSD_CMD_RPC_STATUS_GET,
-> -		.start	= nfsd_nl_rpc_status_get_start,
->  		.dumpit	= nfsd_nl_rpc_status_get_dumpit,
-> -		.done	= nfsd_nl_rpc_status_get_done,
->  		.flags	= GENL_CMD_CAP_DUMP,
->  	},
->  	{
-> diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> index 9459547de04e..8eb903f24c41 100644
-> --- a/fs/nfsd/netlink.h
-> +++ b/fs/nfsd/netlink.h
-> @@ -15,9 +15,6 @@
->  extern const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1];
->  extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1];
->  
-> -int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
-> -int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
-> -
->  int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
->  				  struct netlink_callback *cb);
->  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info);
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index e5d2cc74ef77..78091a73b33b 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1468,28 +1468,6 @@ static int create_proc_exports_entry(void)
->  
->  unsigned int nfsd_net_id;
->  
-> -/**
-> - * nfsd_nl_rpc_status_get_start - Prepare rpc_status_get dumpit
-> - * @cb: netlink metadata and command arguments
-> - *
-> - * Return values:
-> - *   %0: The rpc_status_get command may proceed
-> - *   %-ENODEV: There is no NFSD running in this namespace
-> - */
-> -int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb)
-> -{
-> -	struct nfsd_net *nn = net_generic(sock_net(cb->skb->sk), nfsd_net_id);
-> -	int ret = -ENODEV;
-> -
-> -	mutex_lock(&nfsd_mutex);
-> -	if (nn->nfsd_serv)
-> -		ret = 0;
-> -	else
-> -		mutex_unlock(&nfsd_mutex);
-> -
-> -	return ret;
-> -}
-> -
->  static int nfsd_genl_rpc_status_compose_msg(struct sk_buff *skb,
->  					    struct netlink_callback *cb,
->  					    struct nfsd_genl_rqstp *rqstp)
-> @@ -1566,8 +1544,16 @@ static int nfsd_genl_rpc_status_compose_msg(struct sk_buff *skb,
->  int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
->  				  struct netlink_callback *cb)
->  {
-> -	struct nfsd_net *nn = net_generic(sock_net(skb->sk), nfsd_net_id);
->  	int i, ret, rqstp_index = 0;
-> +	struct nfsd_net *nn;
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +
-> +	nn = net_generic(sock_net(skb->sk), nfsd_net_id);
-> +	if (!nn->nfsd_serv) {
-> +		ret = -ENODEV;
-> +		goto out_unlock;
-> +	}
->  
->  	rcu_read_lock();
->  
-> @@ -1644,22 +1630,10 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
->  	ret = skb->len;
->  out:
->  	rcu_read_unlock();
-> -
-> -	return ret;
-> -}
-> -
-> -/**
-> - * nfsd_nl_rpc_status_get_done - rpc_status_get dumpit post-processing
-> - * @cb: netlink metadata and command arguments
-> - *
-> - * Return values:
-> - *   %0: Success
-> - */
-> -int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb)
-> -{
-> +out_unlock:
->  	mutex_unlock(&nfsd_mutex);
->  
-> -	return 0;
-> +	return ret;
+>  out_unlock:
+>  	mutex_unlock(&slab_mutex);
+>  	cpus_read_unlock();
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 1373ac365a46..7db8fe90a323 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
+>  		return;
+>  	trace_kmem_cache_free(_RET_IP_, x, s);
+>  	slab_free(s, virt_to_slab(x), x, _RET_IP_);
+> +	if (s->is_destroyed)
+> +		kmem_cache_destroy(s);
 >  }
->  
->  /**
-> -- 
-> 2.45.1
->
->
+>  EXPORT_SYMBOL(kmem_cache_free);
+> 
+> @@ -5342,9 +5344,6 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
+>  		if (!slab->inuse) {
+>  			remove_partial(n, slab);
+>  			list_add(&slab->slab_list, &discard);
+> -		} else {
+> -			list_slab_objects(s, slab,
+> -			  "Objects remaining in %s on __kmem_cache_shutdown()");
+>  		}
+>  	}
+>  	spin_unlock_irq(&n->list_lock);
+> 
+Anyway it looks like it was not welcome to do it in the kmem_cache_free()
+function due to performance reason.
+
+--
+Uladzislau Rezki
 
