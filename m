@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4023-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4024-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D77890DD37
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 22:20:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7883A90DD38
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 22:20:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 201011C2277E
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 20:20:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9AB7B219FE
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 20:20:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE121741F6;
-	Tue, 18 Jun 2024 20:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650651741CC;
+	Tue, 18 Jun 2024 20:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mt43bpau"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d18wznAT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F420C1741CC
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 20:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416571741CB
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 20:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718742010; cv=none; b=Rw14wlrhz6VxyxbmrMTRkHunwFUxiC4YSrIubdP9fzBiL+cHH21GG5PsXTDavucRIcJq0n3ItHYaCNIwexW6IX4+lqPLdligWL3fOpHbFsVgu2QCZZWum6PLCKNWw9++yenzyiceKA4Z9UxG8eNX8rcpWohsnuQg/x0upEcoVlc=
+	t=1718742011; cv=none; b=gaZHyYyIgfa1/zyE8iU9WngjijrDCUepG2ZCc/A7MZR9O6TOv1/uPXEQQGyrFa2ypdEhdJ7MwIhIGx/nBf/6MO0TEJ1NkyXyscLlrsYcivIGD9uarLtw/bNIr/qCH0jZzf8Ns/sQxgm62grCMCnEsfxFloTdhYz/GAaKDyBIhjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718742010; c=relaxed/simple;
-	bh=Uo6DnS+mYsPMAEaCJhvNdBJISHgwkf7ZZCxSyHB5dwc=;
+	s=arc-20240116; t=1718742011; c=relaxed/simple;
+	bh=+5rBHJBoSUxQpEQkjdtqaVNO4JRHlU+Epbi+OTSjtuI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2XwNz6FkLYKbD2WNapC1UqLdkFS4kH7ktK2a42e+hjr3y5GxcJicwpTxiZ+Ru3nKQrEKPmzPHnZ/fOD3zVvnPm3afvPZ62WBdcTyb3IBF2rRRi5b+cM4e7z50PJEnq6s4Kxzbr+78d3O7hh52hJdfHifho0838BiZjTwPQjiYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mt43bpau; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3CA2C3277B;
-	Tue, 18 Jun 2024 20:20:09 +0000 (UTC)
+	 MIME-Version; b=FQwVyct7q6C3/yfzEMnJByUc/mNIfjDPVOX8TeLx6nzHl1aDV7xzXeCy1u3hpnJl7JXMBs6c3HXyckU1gwgHHLe5ZQSrTvtSeqzC0QlobJSu6wyz4XPwuHt6exrR4FZx4AiOxQYew+3RfpNZ363golglblxJePOVVN2urbV2sHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d18wznAT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F27C3277B;
+	Tue, 18 Jun 2024 20:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718742009;
-	bh=Uo6DnS+mYsPMAEaCJhvNdBJISHgwkf7ZZCxSyHB5dwc=;
+	s=k20201202; t=1718742011;
+	bh=+5rBHJBoSUxQpEQkjdtqaVNO4JRHlU+Epbi+OTSjtuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mt43bpauxhUtbVbvPmy+fuYCavzNpNNU52xUtgKM07QCFpIOxfqN8IUKyXqYOFtuB
-	 O7Rcy9PHGM9oAXck2dJ53EHG9sm/8zZI310o8P/czW9lUTHh00Dnt7ASNkUe3nldzc
-	 J43FnEuN6Z8CEAhgO1jZz7YpXAC6x+wM5POZtnJyLq3Y/LCMn10sbzytL398iCetBz
-	 q9R/cmiwb8tZySs5I98qLJ/104VUaZ/aPyCCWbotTcg2oZrm1hNJOmDjhtz2fKAvmc
-	 Zk9e0guJzOOHwQ48ByNzZ3WxNWQak6weVGEGl7VAACEr1IQvWKFZ2KoT8xdfGEuv2b
-	 xnUQL0bQU58Mg==
+	b=d18wznATVzjRbPmUrBKNbwrgmIrWuhbFlA4n+s3ssDvbGePTJtyXF3829JC9og5UV
+	 GBvpzZZvM6hb78cK8UDsKzlB0x5LDE8YuE+eobS/lHbqD+6ag8mEhmoehE19plAF4B
+	 X3VoRPOTf8LBl93GBXHa/33Fv6Z4N7RVvsi6rv1WJdGHv+rdUE5Z7GCGnpPlvNQBPG
+	 CW0kfKmdRATLFwweI1yjQL44IAY6L3MowxpOiPYozpOrDy7e+9/lCKDi7FmVJQEEol
+	 gRBemld3SG4oUi5TK+uXmmB1LfoAPRiu/l6mWdQFRgY9fZPE6xd1nBwoHfEPRGyAZv
+	 X14GgtWcnFuzg==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v5 15/19] nfsd: prepare to use SRCU to dereference nn->nfsd_serv
-Date: Tue, 18 Jun 2024 16:19:45 -0400
-Message-ID: <20240618201949.81977-16-snitzer@kernel.org>
+Subject: [PATCH v5 16/19] nfsd: use SRCU to dereference nn->nfsd_serv
+Date: Tue, 18 Jun 2024 16:19:46 -0400
+Message-ID: <20240618201949.81977-17-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240618201949.81977-1-snitzer@kernel.org>
 References: <20240618201949.81977-1-snitzer@kernel.org>
@@ -62,203 +62,334 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The next commit switches the nfsd_serv member for struct nfsd_net over
-to a void pointer (void __rcu *).  Prepare for this by assigning
-nn->nfsd_serv to an struct svc_serv pointer that is then happily
-dereferenced.  This eliminates what would otherwise be numerous void
-pointer dereferences after the next commit.
+Introduce nfsd_serv_get, nfsd_serv_put and nfsd_serv_sync and update
+the nfsd code to prevent nfsd_destroy_serv from destroying
+nn->nfsd_serv until all nfsd code is done with it (particularly the
+localio code that doesn't run in the context of nfsd's svc threads,
+nor does it take the nfsd_mutex).
 
-All nfsd code what audited so that methods that hold nfsd_mutex will
-continue to directly dereference nn->nfsd_serv.
+Commit 83d5e5b0af90 ("dm: optimize use SRCU and RCU") provided a
+familiar well-worn pattern for how implement.
 
+Suggested-by: NeilBrown <neilb@suse.de>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/nfsctl.c | 21 +++++++++++++--------
- fs/nfsd/nfssvc.c | 34 ++++++++++++++++++----------------
- 2 files changed, 31 insertions(+), 24 deletions(-)
+ fs/nfsd/filecache.c | 13 ++++++++---
+ fs/nfsd/netns.h     | 12 ++++++++--
+ fs/nfsd/nfs4state.c | 25 ++++++++++++++-------
+ fs/nfsd/nfsctl.c    |  7 ++++--
+ fs/nfsd/nfssvc.c    | 55 ++++++++++++++++++++++++++++++++++++---------
+ 5 files changed, 87 insertions(+), 25 deletions(-)
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index e5d2cc74ef77..1bddbbf7418e 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -687,10 +687,11 @@ static ssize_t write_versions(struct file *file, char *buf, size_t size)
- static ssize_t __write_ports_names(char *buf, struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 99631fa56662..474b3a3af3fb 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -413,12 +413,15 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
+ 		struct nfsd_file *nf = list_first_entry(dispose,
+ 						struct nfsd_file, nf_lru);
+ 		struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
++		int srcu_idx;
++		struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+ 		struct nfsd_fcache_disposal *l = nn->fcache_disposal;
  
--	if (nn->nfsd_serv == NULL)
-+	if (serv == NULL)
- 		return 0;
--	return svc_xprt_names(nn->nfsd_serv, buf, SIMPLE_TRANSACTION_LIMIT);
-+	return svc_xprt_names(serv, buf, SIMPLE_TRANSACTION_LIMIT);
+ 		spin_lock(&l->lock);
+ 		list_move_tail(&nf->nf_lru, &l->freeme);
+ 		spin_unlock(&l->lock);
+-		svc_wake_up(nn->nfsd_serv);
++		svc_wake_up(serv);
++		nfsd_serv_put(nn, srcu_idx);
+ 	}
+ }
+ 
+@@ -443,11 +446,15 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+ 		for (i = 0; i < 8 && !list_empty(&l->freeme); i++)
+ 			list_move(l->freeme.next, &dispose);
+ 		spin_unlock(&l->lock);
+-		if (!list_empty(&l->freeme))
++		if (!list_empty(&l->freeme)) {
++			int srcu_idx;
++			struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+ 			/* Wake up another thread to share the work
+ 			 * *before* doing any actual disposing.
+ 			 */
+-			svc_wake_up(nn->nfsd_serv);
++			svc_wake_up(serv);
++			nfsd_serv_put(nn, srcu_idx);
++		}
+ 		nfsd_file_dispose_list(&dispose);
+ 	}
+ }
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 0c5a1d97e4ac..0eebcc03bcd3 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -139,8 +139,12 @@ struct nfsd_net {
+ 	u32 clverifier_counter;
+ 
+ 	struct svc_info nfsd_info;
+-#define nfsd_serv nfsd_info.serv
+-
++	/*
++	 * The current 'nfsd_serv' at nfsd_info.serv
++	 * Use nfsd_serv_get() or take nfsd_mutex to dereference.
++	 */
++	void __rcu *nfsd_serv;
++	struct srcu_struct nfsd_serv_srcu;
+ 
+ 	/*
+ 	 * clientid and stateid data for construction of net unique COPY
+@@ -225,6 +229,10 @@ struct nfsd_net {
+ extern bool nfsd_support_version(int vers);
+ extern void nfsd_netns_free_versions(struct nfsd_net *nn);
+ 
++extern struct svc_serv *nfsd_serv_get(struct nfsd_net *nn, int *srcu_idx);
++extern void nfsd_serv_put(struct nfsd_net *nn, int srcu_idx);
++extern void nfsd_serv_sync(struct nfsd_net *nn);
++
+ extern unsigned int nfsd_net_id;
+ 
+ void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..8876810e569d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1919,6 +1919,8 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn
+ 	u32 num = ca->maxreqs;
+ 	unsigned long avail, total_avail;
+ 	unsigned int scale_factor;
++	int srcu_idx;
++	struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+ 
+ 	spin_lock(&nfsd_drc_lock);
+ 	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
+@@ -1940,7 +1942,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn
+ 	 * Give the client one slot even if that would require
+ 	 * over-allocation--it is better than failure.
+ 	 */
+-	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
++	scale_factor = max_t(unsigned int, 8, serv->sv_nrthreads);
+ 
+ 	avail = clamp_t(unsigned long, avail, slotsize,
+ 			total_avail/scale_factor);
+@@ -1949,6 +1951,8 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
+ 
++	nfsd_serv_put(nn, srcu_idx);
++
+ 	return num;
+ }
+ 
+@@ -3702,12 +3706,16 @@ nfsd4_replay_create_session(struct nfsd4_create_session *cr_ses,
+ 
+ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn)
+ {
+-	u32 maxrpc = nn->nfsd_serv->sv_max_mesg;
++	int srcu_idx;
++	struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
++	u32 maxrpc = serv->sv_max_mesg;
++	__be32 status = nfs_ok;
+ 
+-	if (ca->maxreq_sz < NFSD_MIN_REQ_HDR_SEQ_SZ)
+-		return nfserr_toosmall;
+-	if (ca->maxresp_sz < NFSD_MIN_RESP_HDR_SEQ_SZ)
+-		return nfserr_toosmall;
++	if (ca->maxreq_sz < NFSD_MIN_REQ_HDR_SEQ_SZ ||
++	    ca->maxresp_sz < NFSD_MIN_RESP_HDR_SEQ_SZ) {
++		status = nfserr_toosmall;
++		goto out;
++	}
+ 	ca->headerpadsz = 0;
+ 	ca->maxreq_sz = min_t(u32, ca->maxreq_sz, maxrpc);
+ 	ca->maxresp_sz = min_t(u32, ca->maxresp_sz, maxrpc);
+@@ -3726,8 +3734,9 @@ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfs
+ 	 * accounting is soft and provides no guarantees either way.
+ 	 */
+ 	ca->maxreqs = nfsd4_get_drc_mem(ca, nn);
+-
+-	return nfs_ok;
++out:
++	nfsd_serv_put(nn, srcu_idx);
++	return status;
  }
  
  /*
-@@ -717,7 +718,7 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
- 	serv = nn->nfsd_serv;
- 	err = svc_addsock(serv, net, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
- 
--	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
-+	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
- 		nfsd_destroy_serv(net);
- 
- 	return err;
-@@ -765,7 +766,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- 		svc_xprt_put(xprt);
- 	}
- out_err:
--	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
-+	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
- 		nfsd_destroy_serv(net);
- 
- 	return err;
-@@ -1674,6 +1675,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
- 	int *nthreads, count = 0, nrpools, i, ret = -EOPNOTSUPP, rem;
- 	struct net *net = genl_info_net(info);
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
- 	const struct nlattr *attr;
- 	const char *scope = NULL;
- 
-@@ -1708,7 +1710,8 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
- 	    info->attrs[NFSD_A_SERVER_LEASETIME] ||
- 	    info->attrs[NFSD_A_SERVER_SCOPE]) {
- 		ret = -EBUSY;
--		if (nn->nfsd_serv && nn->nfsd_serv->sv_nrthreads)
-+		serv = nn->nfsd_serv;
-+		if (serv && serv->sv_nrthreads)
- 			goto out_unlock;
- 
- 		ret = -EINVAL;
-@@ -1757,6 +1760,7 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info)
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 1bddbbf7418e..2d4c29c25c6a 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1569,10 +1569,12 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
  {
- 	struct net *net = genl_info_net(info);
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
- 	void *hdr;
- 	int err;
+ 	struct nfsd_net *nn = net_generic(sock_net(skb->sk), nfsd_net_id);
+ 	int i, ret, rqstp_index = 0;
++	int srcu_idx;
++	struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
  
-@@ -1781,11 +1785,12 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info)
- 	if (err)
- 		goto err_unlock;
+ 	rcu_read_lock();
  
--	if (nn->nfsd_serv) {
-+	serv = nn->nfsd_serv;
-+	if (serv) {
- 		int i;
+-	for (i = 0; i < nn->nfsd_serv->sv_nrpools; i++) {
++	for (i = 0; i < serv->sv_nrpools; i++) {
+ 		struct svc_rqst *rqstp;
  
- 		for (i = 0; i < nfsd_nrpools(net); ++i) {
--			struct svc_pool *sp = &nn->nfsd_serv->sv_pools[i];
-+			struct svc_pool *sp = &serv->sv_pools[i];
+ 		if (i < cb->args[0]) /* already consumed */
+@@ -1580,7 +1582,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
  
- 			err = nla_put_u32(skb, NFSD_A_SERVER_THREADS,
- 					  atomic_read(&sp->sp_nrthreads));
-@@ -2103,7 +2108,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
- 			err = ret;
- 	}
+ 		rqstp_index = 0;
+ 		list_for_each_entry_rcu(rqstp,
+-				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
++				&serv->sv_pools[i].sp_all_threads,
+ 				rq_all) {
+ 			struct nfsd_genl_rqstp genl_rqstp;
+ 			unsigned int status_counter;
+@@ -1645,6 +1647,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+ 	ret = skb->len;
+ out:
+ 	rcu_read_unlock();
++	nfsd_serv_put(nn, srcu_idx);
  
--	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
-+	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
- 		nfsd_destroy_serv(net);
- 
- out_unlock_mtx:
+ 	return ret;
+ }
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 48bfd3c6d619..bfc58001dd9a 100644
+index bfc58001dd9a..f84530f95eb8 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -309,10 +309,12 @@ int nfsd_nrthreads(struct net *net)
- {
- 	int rv = 0;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
- 
- 	mutex_lock(&nfsd_mutex);
--	if (nn->nfsd_serv)
--		rv = nn->nfsd_serv->sv_nrthreads;
-+	serv = nn->nfsd_serv;
-+	if (serv)
-+		rv = serv->sv_nrthreads;
- 	mutex_unlock(&nfsd_mutex);
- 	return rv;
- }
-@@ -321,16 +323,17 @@ static int nfsd_init_socks(struct net *net, const struct cred *cred)
- {
- 	int error;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
- 
--	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
-+	if (!list_empty(&serv->sv_permsocks))
- 		return 0;
- 
--	error = svc_xprt_create(nn->nfsd_serv, "udp", net, PF_INET, NFS_PORT,
-+	error = svc_xprt_create(serv, "udp", net, PF_INET, NFS_PORT,
- 				SVC_SOCK_DEFAULTS, cred);
- 	if (error < 0)
- 		return error;
- 
--	error = svc_xprt_create(nn->nfsd_serv, "tcp", net, PF_INET, NFS_PORT,
-+	error = svc_xprt_create(serv, "tcp", net, PF_INET, NFS_PORT,
- 				SVC_SOCK_DEFAULTS, cred);
- 	if (error < 0)
- 		return error;
-@@ -742,11 +745,12 @@ int nfsd_create_serv(struct net *net)
- int nfsd_nrpools(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
- 
--	if (nn->nfsd_serv == NULL)
-+	if (serv == NULL)
- 		return 0;
- 	else
--		return nn->nfsd_serv->sv_nrpools;
-+		return serv->sv_nrpools;
+@@ -300,6 +300,26 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change
+ 	return 0;
  }
  
- int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
-@@ -780,14 +784,15 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 	int tot = 0;
- 	int err = 0;
++struct svc_serv *nfsd_serv_get(struct nfsd_net *nn, int *srcu_idx)
++	__acquires(nn->nfsd_serv_srcu)
++{
++	*srcu_idx = srcu_read_lock(&nn->nfsd_serv_srcu);
++
++	return srcu_dereference(nn->nfsd_serv, &nn->nfsd_serv_srcu);
++}
++
++void nfsd_serv_put(struct nfsd_net *nn, int srcu_idx)
++	__releases(nn->nfsd_serv_srcu)
++{
++	srcu_read_unlock(&nn->nfsd_serv_srcu, srcu_idx);
++}
++
++void nfsd_serv_sync(struct nfsd_net *nn)
++{
++	synchronize_srcu(&nn->nfsd_serv_srcu);
++	synchronize_rcu_expedited();
++}
++
+ /*
+  * Maximum number of nfsd processes
+  */
+@@ -507,6 +527,7 @@ static void nfsd_shutdown_net(struct net *net)
+ 		lockd_down(net);
+ 		nn->lockd_up = false;
+ 	}
++	cleanup_srcu_struct(&nn->nfsd_serv_srcu);
+ #if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+ 	list_del_rcu(&nn->nfsd_uuid.list);
+ #endif
+@@ -514,6 +535,7 @@ static void nfsd_shutdown_net(struct net *net)
+ 	nfsd_shutdown_generic();
+ }
+ 
++// FIXME: eliminate nfsd_notifier_lock
+ static DEFINE_SPINLOCK(nfsd_notifier_lock);
+ static int nfsd_inetaddr_event(struct notifier_block *this, unsigned long event,
+ 	void *ptr)
+@@ -523,20 +545,22 @@ static int nfsd_inetaddr_event(struct notifier_block *this, unsigned long event,
+ 	struct net *net = dev_net(dev);
  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
+ 	struct sockaddr_in sin;
++	int srcu_idx;
++	struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
  
- 	lockdep_assert_held(&nfsd_mutex);
+-	if (event != NETDEV_DOWN || !nn->nfsd_serv)
++	if (event != NETDEV_DOWN || !serv)
+ 		goto out;
  
--	if (nn->nfsd_serv == NULL || n <= 0)
-+	if (serv == NULL || n <= 0)
+ 	spin_lock(&nfsd_notifier_lock);
+-	if (nn->nfsd_serv) {
++	if (serv) {
+ 		dprintk("nfsd_inetaddr_event: removed %pI4\n", &ifa->ifa_local);
+ 		sin.sin_family = AF_INET;
+ 		sin.sin_addr.s_addr = ifa->ifa_local;
+-		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin);
++		svc_age_temp_xprts_now(serv, (struct sockaddr *)&sin);
+ 	}
+ 	spin_unlock(&nfsd_notifier_lock);
+-
+ out:
++	nfsd_serv_put(nn, srcu_idx);
+ 	return NOTIFY_DONE;
+ }
+ 
+@@ -553,22 +577,24 @@ static int nfsd_inet6addr_event(struct notifier_block *this,
+ 	struct net *net = dev_net(dev);
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	struct sockaddr_in6 sin6;
++	int srcu_idx;
++	struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+ 
+-	if (event != NETDEV_DOWN || !nn->nfsd_serv)
++	if (event != NETDEV_DOWN || !serv)
+ 		goto out;
+ 
+ 	spin_lock(&nfsd_notifier_lock);
+-	if (nn->nfsd_serv) {
++	if (serv) {
+ 		dprintk("nfsd_inet6addr_event: removed %pI6\n", &ifa->addr);
+ 		sin6.sin6_family = AF_INET6;
+ 		sin6.sin6_addr = ifa->addr;
+ 		if (ipv6_addr_type(&sin6.sin6_addr) & IPV6_ADDR_LINKLOCAL)
+ 			sin6.sin6_scope_id = ifa->idev->dev->ifindex;
+-		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin6);
++		svc_age_temp_xprts_now(serv, (struct sockaddr *)&sin6);
+ 	}
+ 	spin_unlock(&nfsd_notifier_lock);
+-
+ out:
++	nfsd_serv_put(nn, srcu_idx);
+ 	return NOTIFY_DONE;
+ }
+ 
+@@ -589,9 +615,12 @@ void nfsd_destroy_serv(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	struct svc_serv *serv = nn->nfsd_serv;
+ 
++	lockdep_assert_held(&nfsd_mutex);
++
+ 	spin_lock(&nfsd_notifier_lock);
+-	nn->nfsd_serv = NULL;
++	rcu_assign_pointer(nn->nfsd_serv, NULL);
+ 	spin_unlock(&nfsd_notifier_lock);
++	nfsd_serv_sync(nn);
+ 
+ 	/* check if the notifier still has clients */
+ 	if (atomic_dec_return(&nfsd_notifier_refcount) == 0) {
+@@ -711,6 +740,10 @@ int nfsd_create_serv(struct net *net)
+ 	if (nn->nfsd_serv)
  		return 0;
  
--	if (n > nn->nfsd_serv->sv_nrpools)
--		n = nn->nfsd_serv->sv_nrpools;
-+	if (n > serv->sv_nrpools)
-+		n = serv->sv_nrpools;
- 
- 	/* enforce a global maximum number of threads */
- 	tot = 0;
-@@ -810,18 +815,15 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 
- 	/* apply the new numbers */
- 	for (i = 0; i < n; i++) {
--		err = svc_set_num_threads(nn->nfsd_serv,
--					  &nn->nfsd_serv->sv_pools[i],
-+		err = svc_set_num_threads(serv, &serv->sv_pools[i],
- 					  nthreads[i]);
- 		if (err)
- 			goto out;
++	error = init_srcu_struct(&nn->nfsd_serv_srcu);
++	if (error)
++		return error;
++
+ 	if (nfsd_max_blksize == 0)
+ 		nfsd_max_blksize = nfsd_get_default_max_blksize();
+ 	nfsd_reset_versions(nn);
+@@ -727,8 +760,10 @@ int nfsd_create_serv(struct net *net)
  	}
+ 	spin_lock(&nfsd_notifier_lock);
+ 	nn->nfsd_info.mutex = &nfsd_mutex;
+-	nn->nfsd_serv = serv;
++	nn->nfsd_info.serv = serv;
++	rcu_assign_pointer(nn->nfsd_serv, nn->nfsd_info.serv);
+ 	spin_unlock(&nfsd_notifier_lock);
++	nfsd_serv_sync(nn);
  
- 	/* Anything undefined in array is considered to be 0 */
--	for (i = n; i < nn->nfsd_serv->sv_nrpools; ++i) {
--		err = svc_set_num_threads(nn->nfsd_serv,
--					  &nn->nfsd_serv->sv_pools[i],
--					  0);
-+	for (i = n; i < serv->sv_nrpools; ++i) {
-+		err = svc_set_num_threads(serv, &serv->sv_pools[i], 0);
- 		if (err)
- 			goto out;
- 	}
+ 	set_max_drc();
+ 	/* check if the notifier is already set */
 -- 
 2.44.0
 
