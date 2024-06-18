@@ -1,169 +1,174 @@
-Return-Path: <linux-nfs+bounces-4007-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4008-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16D8190DD1F
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 22:16:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A628390DD29
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 22:19:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E637281F9A
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 20:16:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D7EFB21FBF
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 20:19:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6075445BE4;
-	Tue, 18 Jun 2024 20:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38DA15EFB1;
+	Tue, 18 Jun 2024 20:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tshRZ5lz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYrlrz6q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B10639AEC
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 20:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D078C15E5DB
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 20:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718741810; cv=none; b=hiUpMlWy/Es8jLpFlfYydeg9d6w+6ZF/sjA4tFDwPJpRwZggf9NYXl0r5s9KoyshEmN3vs/V/htkHAMq+7e8xdGRhWR2ASFZJpsSYfciAWnKb5Wc6HKkqupqVN0jpyOHn8jnc+VTzWViTT8AnUFbp+eaab/TgyFqtWslyigREJ0=
+	t=1718741990; cv=none; b=SyYzxTYn4GqFTThyuCC9Lplgv19ZM14dT4V4fV7hrXRCrCsUCB69xsHI7EONGUM7EXxPe/rXqKfmLBkZYju2DUqxjbVlKE72Pb7Bnr5gmlXUbyo23cgF5wUS7euvY1zhV4HU/SzbM99WQ96Y2wPziCBy5/jFGx9O5/sRITiH510=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718741810; c=relaxed/simple;
-	bh=U0HMQZg1l6Q+V2Lt4tLwAkm8pXBlZIOJHT+PHZMI0uk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AM7hkSX+yuc5PvV+4tBjscUhYvKi0Ont0OTbn/8pC8IVJSgMF0QEW0sGAv8ZVXe1cddNgpDTbJuhmiyNGQrg8FmkBtDBI/wG7Pv3u1T+3YcMSQ44HoVme/2p2jn7hdAsygg6NftQsS/SHZLj3O1T/jRje6Qb3PpB/boFjdw5V7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tshRZ5lz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050DDC3277B;
-	Tue, 18 Jun 2024 20:16:48 +0000 (UTC)
+	s=arc-20240116; t=1718741990; c=relaxed/simple;
+	bh=ch9JEbK3Y8rYaPaxE0CUETbKQ6AFDDXCM9ZtzQa05KQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OuHbS5Ota27Sdm/xdM/abo2rUEs9th/EW6sH5E8H8XgEh3R+vmjpiM8bhdxkufMwKZp1Y5bkpFLcYqMrCtr9JnMGgCsomIpRmt+TX7Wl/D5uqvBshEw+YpcCai82cHdd3XrpDsk5jhAnj+MoEv3FXE1ufGKGjUaQyZnsyMFF5eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYrlrz6q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241F5C3277B;
+	Tue, 18 Jun 2024 20:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718741809;
-	bh=U0HMQZg1l6Q+V2Lt4tLwAkm8pXBlZIOJHT+PHZMI0uk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tshRZ5lzeGvuXHNpcJqWd5ytYmKaVIsob94K6ANXJ/6OXU/prhLoG9e41k53qFvP1
-	 Yvr4omggEjwtbB0+o5auky+hCWbtl+N3SHrB+b+ucErlNSwlganxMn/ICXUwW8VLtW
-	 TRLmkVeBf4gHEPrAzpZFG+MIwDCH36G7XhdaKTPp7LiZQ80G0G/D6grSVOGtWodcaS
-	 w3PIb+VYALWkUSoGWZ0n8oL9sgbLeRffxY03XlTH3eEKe1G1Wlpmt8WfQ1FPsOgVx1
-	 d+cRKjEwMcvQbdeVDOgW0mlSzD9GIAqCG1SeY5A+UZBrTTIPLZ/mz3fWRZvG1jzCFz
-	 4Yh9NR2xTQfrg==
-Message-ID: <87354accc0d1166eb60827c0f8da545e0669915b.camel@kernel.org>
-Subject: Re: knfsd performance
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever III <chuck.lever@oracle.com>, Trond Myklebust
-	 <trondmy@hammerspace.com>, Dave Chinner <david@fromorbit.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, "neilb@suse.com"
-	 <neilb@suse.com>
-Date: Tue, 18 Jun 2024 16:16:47 -0400
-In-Reply-To: <7F7971B5-C7C8-4D0B-99CB-2D6CA8235FDD@oracle.com>
-References: <313d317dc0ca136de106979add5695ef5e2101e7.camel@hammerspace.com>
-	 <58A84B36-C121-46F8-ABCB-BE4F212E9C81@oracle.com>
-	 <754f3e0f6f962cbd46b2b22e87d9de9f8b285ab4.camel@hammerspace.com>
-	 <7FFACD6E-86D2-4D14-BF03-77081B4CFF38@oracle.com>
-	 <70766c4bd70742d0da79be50ebaf2eaeb7b18559.camel@hammerspace.com>
-	 <7F7971B5-C7C8-4D0B-99CB-2D6CA8235FDD@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=k20201202; t=1718741990;
+	bh=ch9JEbK3Y8rYaPaxE0CUETbKQ6AFDDXCM9ZtzQa05KQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NYrlrz6qQTrTXb4x/0udnc9u2Pzr3Rwmt7R0vRpNK9qmtDn0okyfrfJ5irkF5so6E
+	 g/Mj1meuguzD+QTnWPYB/S4vr70CFnC2BLL0IrEdk5tf94bpVLSv//iXCZ5l6NvgXc
+	 0qfpP/RhxhT7k4ccYmZuXuP6Ys0eVdPe3Cx66ZJ0fGfWH9b7sP2s5ezvXU0F+SlT9+
+	 Xyd+ESFjH3KXVOAUFzkhvBkElS4eYG+08cKHPJfk/5kqCgEawJkkW42ME+9r85bm4B
+	 5jnfE/BZFwxgu35lwaEOghC9EyNx7lcGRlaaJjqzBYC7hiEbrWgt8lO3rJd8Iy+/lp
+	 nKfGe6JHHzg7A==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	snitzer@hammerspace.com
+Subject: [PATCH v5 00/19] nfs/nfsd: add support for localio
+Date: Tue, 18 Jun 2024 16:19:30 -0400
+Message-ID: <20240618201949.81977-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-06-18 at 19:54 +0000, Chuck Lever III wrote:
->=20
->=20
-> > On Jun 18, 2024, at 3:50=E2=80=AFPM, Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> >=20
-> > On Tue, 2024-06-18 at 19:39 +0000, Chuck Lever III wrote:
-> > >=20
-> > >=20
-> > > > On Jun 18, 2024, at 3:29=E2=80=AFPM, Trond Myklebust
-> > > > <trondmy@hammerspace.com> wrote:
-> > > >=20
-> > > > On Tue, 2024-06-18 at 18:40 +0000, Chuck Lever III wrote:
-> > > > >=20
-> > > > >=20
-> > > > > > On Jun 18, 2024, at 2:32=E2=80=AFPM, Trond Myklebust
-> > > > > > <trondmy@hammerspace.com> wrote:
-> > > > > >=20
-> > > > > > I recently back ported Neil's lwq code and sunrpc server
-> > > > > > changes to
-> > > > > > our
-> > > > > > 5.15.130 based kernel in the hope of improving the
-> > > > > > performance
-> > > > > > for
-> > > > > > our
-> > > > > > data servers.
-> > > > > >=20
-> > > > > > Our performance team recently ran a fio workload on a
-> > > > > > client
-> > > > > > that
-> > > > > > was
-> > > > > > doing 100% NFSv3 reads in O_DIRECT mode over an RDMA
-> > > > > > connection
-> > > > > > (infiniband) against that resulting server. I've attached
-> > > > > > the
-> > > > > > resulting
-> > > > > > flame graph from a perf profile run on the server side.
-> > > > > >=20
-> > > > > > Is anyone else seeing this massive contention for the spin
-> > > > > > lock
-> > > > > > in
-> > > > > > __lwq_dequeue? As you can see, it appears to be dwarfing
-> > > > > > all
-> > > > > > the
-> > > > > > other
-> > > > > > nfsd activity on the system in question here, being
-> > > > > > responsible
-> > > > > > for
-> > > > > > 45%
-> > > > > > of all the perf hits.
-> > > > >=20
-> > > > > I haven't seen that, but I've been working on other issues.
-> > > > >=20
-> > > > > What's the nfsd thread count on your test server? Have you
-> > > > > seen a similar impact on 6.10 kernels ?
-> > > > >=20
-> > > >=20
-> > > > 640 knfsd threads. The machine was a supermicro 2029BT-HNR with
-> > > > 2xIntel
-> > > > 6150, 384GB of memory and 6xWDC SN840.
-> > > >=20
-> > > > Unfortunately, the machine was a loaner, so cannot compare to
-> > > > 6.10.
-> > > > That's why I was asking if anyone has seen anything similar.
-> > >=20
-> > > If this system had more than one NUMA node, then using
-> > > svc's "numa pool" mode might have helped.
-> > >=20
-> >=20
-> > Interesting. I had forgotten about that setting.
-> >=20
-> > Just out of curiosity, is there any reason why we might not want to
-> > default to that mode on a NUMA enabled system?
->=20
-> Can't think of one off hand. Maybe back in the day it was
-> hard to tell when you were actually /on/ a NUMA system.
->=20
-> Copying Dave to see if he has any recollection.
->=20
+Hi,
 
-It's at least partly because of the klunkiness of the old pool_threads
-interface: You have to bring up the server first using the "threads"
-procfile, and then you can actually bring up threads in the various
-pools using pool_threads.
+This v5 is rebased on Chuck's nfsd-next (only required one adjustment
+in patch 15 to account for new code that dereferences nn->nfsd_serv).
 
-Same for shutdown. You have to bring down the pool_threads first and
-then you can bring down the final thread and the rest of the server
-with it. Why it was designed this way, I have NFC.
+Only other change is patch 19 to add Documentation/filesystems/nfs/localio.rst
 
-The new nfsdctl tool and netlink interfaces should make this simpler in
-the future. You'll be able to set the pool-mode in /etc/nfs.conf and
-configure a list of per-pool thread counts in there too. Once we have
-that, I think we'll be in a better position to consider doing it by
-default.
+My git tree is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/
 
-Eventually we'd like to make the thread poos dynamic, at which point
-making that the default becomes much simpler from an administrative
-standpoint.
---=20
-Jeff Layton <jlayton@kernel.org>
+This v5 is both branch nfs-localio-for-6.11 (always tracks latest)
+and nfs-localio-for-6.11.v5
+
+Branches nfs-localio-for-6.11.v[1234] are also available.
+
+To see the changes from v4 to v5 please do:
+git remote add snitzer git://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git
+git remote update snitzer
+git diff snitzer/nfs-localio-for-6.11.v4 snitzer/nfs-localio-for-6.11.v5
+
+[NOTE: there will be noise due to nfsd-next causing the base kernel to
+       move from v6.10-rc2 to v6.10-rc3]
+
+All review and comments are welcome!
+
+Thanks,
+Mike
+
+Mike Snitzer (11):
+  nfs_common: add NFS LOCALIO protocol extension enablement
+  nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
+  nfsd: implement v3 and v4 server support for NFS_LOCALIO_PROGRAM
+  nfs/nfsd: consolidate {encode,decode}_opaque_fixed in nfs_xdr.h
+  nfs/localio: move managing nfsd_open_local_fh symbol to nfs_common
+  nfs/nfsd: ensure localio server always uses its network namespace
+  nfsd/localio: manage netns reference in nfsd_open_local_fh
+  nfsd: prepare to use SRCU to dereference nn->nfsd_serv
+  nfsd: use SRCU to dereference nn->nfsd_serv
+  nfsd/localio: use SRCU to dereference nn->nfsd_serv in nfsd_open_local_fh
+  nfs: add Documentation/filesystems/nfs/localio.rst
+
+Trond Myklebust (3):
+  NFS: Enable localio for non-pNFS I/O
+  pnfs/flexfiles: Enable localio for flexfiles I/O
+  nfs/localio: use dedicated workqueues for filesystem read and write
+
+Weston Andros Adamson (5):
+  nfs: pass nfs_client to nfs_initiate_pgio
+  nfs: pass descriptor thru nfs_initiate_pgio path
+  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
+  sunrpc: add rpcauth_map_to_svc_cred_local
+  nfs/nfsd: add "localio" support
+
+ Documentation/filesystems/nfs/localio.rst | 101 +++
+ fs/Kconfig                                |   3 +
+ fs/nfs/Kconfig                            |  30 +
+ fs/nfs/Makefile                           |   1 +
+ fs/nfs/blocklayout/blocklayout.c          |   6 +-
+ fs/nfs/client.c                           |  15 +-
+ fs/nfs/filelayout/filelayout.c            |  16 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+ fs/nfs/inode.c                            |  61 +-
+ fs/nfs/internal.h                         |  88 ++-
+ fs/nfs/localio.c                          | 850 ++++++++++++++++++++++
+ fs/nfs/nfs3_fs.h                          |   1 +
+ fs/nfs/nfs3client.c                       |  25 +
+ fs/nfs/nfs3proc.c                         |   3 +
+ fs/nfs/nfs3xdr.c                          |  58 ++
+ fs/nfs/nfs4_fs.h                          |   2 +
+ fs/nfs/nfs4client.c                       |  23 +
+ fs/nfs/nfs4proc.c                         |   3 +
+ fs/nfs/nfs4xdr.c                          |  65 +-
+ fs/nfs/nfstrace.h                         |  61 ++
+ fs/nfs/pagelist.c                         |  32 +-
+ fs/nfs/pnfs.c                             |  24 +-
+ fs/nfs/pnfs.h                             |   6 +-
+ fs/nfs/pnfs_nfs.c                         |   2 +-
+ fs/nfs/write.c                            |  13 +-
+ fs/nfs_common/Makefile                    |   3 +
+ fs/nfs_common/nfslocalio.c                |  71 ++
+ fs/nfsd/Kconfig                           |  30 +
+ fs/nfsd/Makefile                          |   1 +
+ fs/nfsd/filecache.c                       |  15 +-
+ fs/nfsd/localio.c                         | 398 ++++++++++
+ fs/nfsd/netns.h                           |  16 +-
+ fs/nfsd/nfs4state.c                       |  25 +-
+ fs/nfsd/nfsctl.c                          |  28 +-
+ fs/nfsd/nfsd.h                            |  11 +
+ fs/nfsd/nfssvc.c                          | 182 ++++-
+ fs/nfsd/trace.h                           |   3 +-
+ fs/nfsd/vfs.h                             |   9 +
+ fs/nfsd/xdr.h                             |   6 +
+ include/linux/nfs.h                       |   2 +
+ include/linux/nfs_fs.h                    |   2 +
+ include/linux/nfs_fs_sb.h                 |   9 +
+ include/linux/nfs_xdr.h                   |  31 +-
+ include/linux/nfslocalio.h                |  41 ++
+ include/linux/sunrpc/auth.h               |   4 +
+ include/uapi/linux/nfs.h                  |   4 +
+ net/sunrpc/auth.c                         |  15 +
+ 49 files changed, 2388 insertions(+), 146 deletions(-)
+ create mode 100644 Documentation/filesystems/nfs/localio.rst
+ create mode 100644 fs/nfs/localio.c
+ create mode 100644 fs/nfs_common/nfslocalio.c
+ create mode 100644 fs/nfsd/localio.c
+ create mode 100644 include/linux/nfslocalio.h
+
+-- 
+2.44.0
+
 
