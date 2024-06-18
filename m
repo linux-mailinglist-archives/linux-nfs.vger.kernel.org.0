@@ -1,92 +1,95 @@
-Return-Path: <linux-nfs+bounces-3975-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3976-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBF7790C44B
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 09:29:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D332D90C50D
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 10:55:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F3011F21AE4
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 07:29:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A75B12834AB
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 08:55:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BD4413C805;
-	Tue, 18 Jun 2024 06:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75DC154C15;
+	Tue, 18 Jun 2024 07:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeIblFJ2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqNg+6e9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DACB13AA5E;
-	Tue, 18 Jun 2024 06:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48940154C00;
+	Tue, 18 Jun 2024 07:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693829; cv=none; b=GLi4QCCOSvvirMIvhXVQZww5Rs++z4YTo/tjQB0dfHI7j1i1PdmSNnoirp4wuujMggUg5dQboAAMwFgxTQEhkti8/57pFrJYAuxSCnBiH5VflPMNKXqXWmEVZOZeKfEVuPLb6YlgTFoURG0WwHDv6oAGHTpA6YQO8apJzlgXmog=
+	t=1718695400; cv=none; b=DkNPrfzF4JUELBjei7/T7semTayN9JXlaZdZJKUPLXB4rUcFZOVsvlKwSphGQFusM0egLmcvmULHyWTKCxhACV1LxZLiWlY6FRmIO91pWMD2Y81utINw34SmUIZNxpZAZVY2HTTJxaCNCAkQyThZ2wI8R6/7SNDNlvuWFjiWGrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693829; c=relaxed/simple;
-	bh=aXpZbCmgX6agv4GtPNMTFIx+xSarK2fPZBoKqm70O9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KeVSaJipR0iOV7ie01Z81uU5oqd5aswOeQa2pgm3G2e4ZhUBLDp2tCJHusQUW23G3fSY0i+Oe4QlI4zphyAxcL27ydsfE2wgRrshjGUyLGXpvCrT435xpXHOUCavuypOIetlqCLImlZZK7qqhLVeEZpDl9fzhbyld+VmckMa7zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aeIblFJ2; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1718695400; c=relaxed/simple;
+	bh=SCsuJ+kfzDOMEQ57UrziTxcGFOjstcZqXtS5oCJ1WXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MNOVgb8KqRxIj+Wk+wi2j2lSK1wXW73SDo5BPhv0zA6GZySb0RLhpAXRzR4OlTVVewgTbcBsBvKFhY8wqH/PwkuQI8Rflj9p1qzjpxnX6T4M1UI7FUs1fS+MvlQ2hFGMuVsRAyPuqyK7UqZhNpwoA3bz559f85Pyx2phP2w/ZmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqNg+6e9; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f480624d10so42051035ad.1;
-        Mon, 17 Jun 2024 23:57:07 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-705e9e193caso2088015b3a.2;
+        Tue, 18 Jun 2024 00:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718693827; x=1719298627; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718695398; x=1719300198; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KmF6KPc9+GZruNyUDMjMgjUoCjmX7IHTZKqjKvSeh3Q=;
-        b=aeIblFJ2ESs35SjVkjPCUzQ+7T7XCuedn3IXWyqubKTzt8+0y+RUZkzKYcwpoDLI1y
-         3J1/UTT1iMUoH+jHqQJxKGjp2Ivsrs6J/p3B5fUw6auPghOsJ4dSyUFr2ZjD/+Rg2elo
-         K35VfB175sYK+4jsc/czEe+pXQa7EfLbLKX8RRPakWFyfmDcD+B6SzicQzzXscU137IA
-         BoMmI9vouzGRgjeBMDgfrwvMBnnYYTVCR06rnEr8Zg9G6NZm+IT8tWV0T2PwPbSGq/vw
-         iJQJI9IxZOUKHSwTARFRgjtXuxUzJlsacuJuo5Ck6zG1RgbCRlPW7rZz1HXPouqrgQLq
-         dl2A==
+        bh=n7p6iRUSW5XVR70B17ZTO0vLEn0KFEfKaxRI0vxTAiM=;
+        b=hqNg+6e9XoplbgmtkinhKOtcOw91xvatwus2dS9sHoLk/AqUQRKWRVdzcA93e5+FHo
+         l9pruqhluNglUQ/4WTs5qGmqlm1morVlpabsSWReVP6ddvQAZzy/rNoqryxlv8RNH5bF
+         qbH1H+vUaEbTPTegdjFVmGS4OQVdbP3dHLZ2YrP3amXwD/bMrE5ZCUTip1rHSAAoNTA3
+         ZfzPfyACOr5FFUXElzlA5eWgilzEzFVAXvHSzGxuYBhr7T+mq47bFdNjkNaSZoUhbjz1
+         3eyr9cD1iAACkq6FJ8HS0KVdaXn1fHjvEqKycKYgN0hDbIokI1Gw2khLKyCvz3wwGOMC
+         GKUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718693827; x=1719298627;
+        d=1e100.net; s=20230601; t=1718695398; x=1719300198;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KmF6KPc9+GZruNyUDMjMgjUoCjmX7IHTZKqjKvSeh3Q=;
-        b=strhEOmj2MX/F6eNSvNw1Fcn6Q/e5PDknWjDV1CEo+Aqs48slNbGfzkyqSInP287QV
-         UIhZhHGXAbEOcswtIRITqmPall1y1zD9ugz2vmXlQi8UbAgQNn3o2h4Ba3+1gZ+hsaZK
-         /nIkA7d6yRD0vSvt934JjXSvBTRo8oHNS5uLTCZxA9etFjiePFeXYHrYqtmvrt860tWP
-         PNQWWHO6No4TUezIqg5BckKVx4R7jxCp5KbZkeMpP02+usv8u18c4FlVNdb0vUL+eiky
-         J0z+CRjksHsNMXP4L4+CHgFvVcdptOd24ABuwVKUUHjbi+K5lX60fj4Ltf6RrxmWThpB
-         lmWg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1UMvM6Z3ZNrdM24qFnGe7fgtk/R8HN418d9N0NPbyIIbaske+QKi75Zq3HzgE9um5ErHwIfyAy8PllfywEFsG3BJLe9iSc1G345Cn5Hy1PpeCl1vinnr0Ww2BUSdHJbyWYgYXGgAdUQDQM0shgbGI63zBU0WUUIneVLCbsg==
-X-Gm-Message-State: AOJu0Yzcu61R6T1iLUIctChKv/MUwya+TAN/ao9DuD5v5s7AqGct0g3y
-	szQOs59LB3X8J4lbNqE5rlAIZVpnRdzKTVQQZb0ULp7NqoJBZiJq
-X-Google-Smtp-Source: AGHT+IHMal/AokP8mwiRaq7bZ9i72VrxZV0AeSOZR7Q0WLxVY4/dev/bAUoih6DePWgeyRaz3HVOZQ==
-X-Received: by 2002:a17:902:f682:b0:1f7:1ba3:b91c with SMTP id d9443c01a7336-1f8625c0724mr165605715ad.1.1718693827416;
-        Mon, 17 Jun 2024 23:57:07 -0700 (PDT)
+        bh=n7p6iRUSW5XVR70B17ZTO0vLEn0KFEfKaxRI0vxTAiM=;
+        b=Ya8oJHIiTdWzqEBZfAgcNXwkTTGa8EoIkqbu3shfDeCWtXbVuJipepabJT4g8d8FND
+         4j1UmBzoEKCvD/Hd3quntsK9eBGSEXyo/P6e0UCJ6RxBIh5eSyy82QNr0mm/l7Zvv9xi
+         qvMchotTc+jXxwkqq3OaP1oWzTQfsdEunlMrGwFRI9Dt6ieB7n2Wd72gwKqdWl3kp4xh
+         PDZ+5LiC7+bYinz2N0aByi/PBgnlIfCEuxU1kMoLmnNuIn6biSfABKK24thM7Gj2cQEv
+         rNP2Q0mVmtPKh4NiuF3CkT63tGbFcLNpHZxy+cnoVfkAPG2RP4JuFZqBDLngfys5l2Y5
+         flDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXrtYS6AmRTLxwLOu6V/FNN9ji1ET4lzxurK+BbIjLbqO7FPfyvhFC7P56kKQWaua4cIQzkORsijvn120hTE9AjVdCyh9JFzkauuFGUZzvxk/AXieedwHc/0WNQ7XLeHo8b5AFhr1obz5X37ex28aRdzG/ne03VeyQYmvMNg==
+X-Gm-Message-State: AOJu0YyaMSxPTOii4griQFHQ7uljs4dAFZqHmL7sJtb9TeGz3JXPrSJx
+	IMYDxtG3V6VM0Zpza3/UTaAVaZnxu+grzgOmj28u5bf757OWcQ1A
+X-Google-Smtp-Source: AGHT+IGLgq7HqLryiT2SHaAY/eKo2T49wUObwJ5Wedf9z2+YS6ZtJtX6QZyW4RjJ+hSMRnucE8IAoA==
+X-Received: by 2002:aa7:88cd:0:b0:705:befb:fcd2 with SMTP id d2e1a72fcca58-705d71b105fmr13944511b3a.33.1718695398519;
+        Tue, 18 Jun 2024 00:23:18 -0700 (PDT)
 Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e80ef6sm90156395ad.115.2024.06.17.23.57.01
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb4aa4fsm8396536b3a.131.2024.06.18.00.23.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 23:57:07 -0700 (PDT)
+        Tue, 18 Jun 2024 00:23:18 -0700 (PDT)
 From: Barry Song <21cnbao@gmail.com>
 To: akpm@linux-foundation.org,
+	linux-cifs@vger.kernel.org,
 	linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org
+	sfrench@samba.org
 Cc: anna@kernel.org,
 	chrisl@kernel.org,
 	hanchuanhua@oppo.com,
 	hch@lst.de,
 	jlayton@kernel.org,
-	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
 	neilb@suse.de,
 	ryan.roberts@arm.com,
-	sfrench@samba.org,
 	stable@vger.kernel.org,
 	trondmy@kernel.org,
 	v-songbaohua@oppo.com,
 	ying.huang@intel.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Martin Wege <martin.l.wege@gmail.com>
-Subject: [PATCH v2] nfs: drop the incorrect assertion in nfs_swap_rw()
-Date: Tue, 18 Jun 2024 18:56:47 +1200
-Message-Id: <20240618065647.21791-1-21cnbao@gmail.com>
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>
+Subject: [PATCH v2] cifs: drop the incorrect assertion in cifs_swap_rw()
+Date: Tue, 18 Jun 2024 19:22:58 +1200
+Message-Id: <20240618072258.33128-1-21cnbao@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -96,7 +99,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Barry Song <v-songbaohua@oppo.com>
 
 Since commit 2282679fb20b ("mm: submit multipage write for SWP_FS_OPS
 swap-space"), we can plug multiple pages then unplug them all together.
@@ -108,7 +111,7 @@ THP_SWPOUT to non-block devices.
 
 Fixes: 2282679fb20b ("mm: submit multipage write for SWP_FS_OPS swap-space")
 Reported-by: Christoph Hellwig <hch@lst.de>
-Closes: https://lore.kernel.org/linux-mm/20240617053201.GA16852@lst.de/
+Closes: https://lore.kernel.org/linux-mm/20240614100329.1203579-1-hch@lst.de/
 Cc: NeilBrown <neilb@suse.de>
 Cc: Anna Schumaker <anna@kernel.org>
 Cc: Steve French <sfrench@samba.org>
@@ -118,28 +121,33 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>
 Cc: Chris Li <chrisl@kernel.org>
 Cc: "Huang, Ying" <ying.huang@intel.com>
 Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Paulo Alcantara <pc@manguebit.com>
+Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
+Cc: Shyam Prasad N <sprasad@microsoft.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: Bharath SM <bharathsm@microsoft.com>
 Cc: <stable@vger.kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Martin Wege <martin.l.wege@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Barry: figure out the cause and correct the commit message]
 Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 ---
- fs/nfs/direct.c | 2 --
+ -v2:
+ * drop the assertion instead of fixing the assertion.
+   per the comments of Willy, Christoph in nfs thread.
+
+ fs/smb/client/file.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index bb2f583eb28b..90079ca134dd 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -141,8 +141,6 @@ int nfs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 9d5c2440abfc..1e269e0bc75b 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -3200,8 +3200,6 @@ static int cifs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
  {
  	ssize_t ret;
  
--	VM_BUG_ON(iov_iter_count(iter) != PAGE_SIZE);
+-	WARN_ON_ONCE(iov_iter_count(iter) != PAGE_SIZE);
 -
  	if (iov_iter_rw(iter) == READ)
- 		ret = nfs_file_direct_read(iocb, iter, true);
+ 		ret = netfs_unbuffered_read_iter_locked(iocb, iter);
  	else
 -- 
 2.34.1
