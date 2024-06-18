@@ -1,106 +1,102 @@
-Return-Path: <linux-nfs+bounces-3988-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-3989-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDB1C90D5B1
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 16:42:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B716C90D5BE
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 16:43:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D8F41F21A0E
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 14:42:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50C98287B97
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jun 2024 14:43:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C2C171E7C;
-	Tue, 18 Jun 2024 14:28:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEBE18EFF3;
+	Tue, 18 Jun 2024 14:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKgSBSao"
+	dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b="dP0pTa09"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.aixigo.de (mail.aixigo.de [5.145.142.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1781416F82B;
-	Tue, 18 Jun 2024 14:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D306142E9E
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 14:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.145.142.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718720890; cv=none; b=cxxO9BSH2CM0KbqWnpBC6/hHs2hq1AHgw810NaCMwOPc0HltBWepFLYPWMB5sRlS7sxXuMXo20htMwREjx3UYTv/7dX68Lmz7qEfWEOOfnxJW0o8sHxD0BJuikc8Vvj4CGzBMbKjIl4u9fyn5LI+UJZmslAJSyoAqZxE1OEx5Bc=
+	t=1718721012; cv=none; b=WFv3diJr4JaALOGoM5DetKThjuMRmIm+o/mJ28/6PpSPDWAYsWKGSkZbcBvWpaCBj48PlqIJ2JBh0KUU2S7+1s1GWrYa4IGtjToHLMHft8FvpEU2ufZ0H9QEHKkUnhjKx95iGLF2HDotShLNKxT8PpW3URy848d5s0t30i0IFHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718720890; c=relaxed/simple;
-	bh=Tvh4hB5cyhfUoWV+w/CwDW/s35vlDm+9FWKgwonoTug=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kpYErKgGczXZsV//DWnpe4PU0iqVsEm8Mcr5RuYCJgGHRnFyWUorD3UdltoRe+rNFEvSEiSt190MHODRTcUpnPYa4qiiU0nuhMIGXKsVUfOQlUdh7CiAN+1DjChhcWN8g0DJ4+r9JYoFvnXtzvceWls84FYebGk3ZFDv+pHSmjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKgSBSao; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E02C4AF48;
-	Tue, 18 Jun 2024 14:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718720889;
-	bh=Tvh4hB5cyhfUoWV+w/CwDW/s35vlDm+9FWKgwonoTug=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dKgSBSaoQFby1RLs8vJoGD3tvLVQFetZ88877MWwWI2J5G4Np0wHCoAd2xh94Djrr
-	 IZbaLRIZ9/JvcSGgwxrmnoCkMGmmeG7REBAQWQKUzTNCTNJ0EqdUqI6m3ij63Cr/D8
-	 TG+58ieBAHONiwJJG2qH1VobC+bDyR3Pk1j5yYbXU5zZC+NtfQg6WY0V2Ii1jahx0G
-	 7T6pxhFG39+CNNT60Jst7rD4okCHtrMjaUcyhcIr4DWJumC/Sa0VqpnID3N/7Uucol
-	 Pa+4UVSHInZo+vGQGJxWcNCFkNtcMBEP0+6sbS4tpMVBg9XNIfGWPoLa+j8o7Up4jY
-	 dHcIDL7w4pX6Q==
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Amir Goldstein <amir73il@gmail.com>,
-	James Clark <james.clark@arm.com>,
-	linux-nfs@vger.kernel.org,
-	NeilBrown <neilb@suse.de>,
-	Al Viro <viro@ZenIV.linux.org.uk>,
-	ltp@lists.linux.it
-Subject: Re: [PATCH 1/2] fsnotify: Do not generate events for O_PATH file descriptors
-Date: Tue, 18 Jun 2024 16:28:01 +0200
-Message-ID: <20240618-modular-galaabend-c0dba5521bc4@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617162303.1596-1-jack@suse.cz>
-References: <20240617161828.6718-1-jack@suse.cz> <20240617162303.1596-1-jack@suse.cz>
+	s=arc-20240116; t=1718721012; c=relaxed/simple;
+	bh=m+lufUCVJy8Qq6t2fyvRq59q+gXkYSrez1SCu5tFaAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5qjrQbAXKlRUVAYQl6QXqf6+42ePThSXTSdDfEN1z3TuyzwnfNPNwULrOharE255rSprbeVh0lMsSixhoqZdlKF233TZf+Dj1/mQRenMmHfgcwm7nFjBKrK6DqtV2rTbeBhwc8i7AL6gZKSOQ2/m97+rsQXZVH3nTtOSOD+FOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com; spf=pass smtp.mailfrom=aixigo.com; dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b=dP0pTa09; arc=none smtp.client-ip=5.145.142.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aixigo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=m+lufUCVJy8Q
+	q6t2fyvRq59q+gXkYSrez1SCu5tFaAM=; h=in-reply-to:from:references:cc:to:
+	subject:date; d=aixigo.com; b=dP0pTa09XEB/7I5PHoEqMTvvQmxRt8SiUGpk0e++
+	2gl8/7AKoeNB3jLj3IBsZUyyIIaHVwuoaXBDW6iN/pmbF8tMpeFclcTGzaEqjGWTR/VXFL
+	b+uV+AHkQDbh0mrXabLOtuBaq3TEIh3LGfKrijx3smQmedkAmlcJG4BcD69Yk=
+Received: from mailhost.ac.aixigo.de (mailhost.ac.aixigo.de [172.19.96.11])
+	by mail.aixigo.de (OpenSMTPD) with ESMTPS id 9a2eb13f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 18 Jun 2024 16:29:56 +0200 (CEST)
+Received: from [172.19.97.128] (dpcl082.ac.aixigo.de [172.19.97.128])
+	by mailhost.ac.aixigo.de (8.17.1.9/8.17.1.9/Debian-2) with ESMTPS id 45IETt8E833597
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 18 Jun 2024 16:29:55 +0200
+Message-ID: <661a6c9a-81d6-46fd-87ec-274100b12189@aixigo.com>
+Date: Tue, 18 Jun 2024 16:29:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1524; i=brauner@kernel.org; h=from:subject:message-id; bh=Tvh4hB5cyhfUoWV+w/CwDW/s35vlDm+9FWKgwonoTug=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQVziw0EtThc9yhHjBVc8nF/wIBweu/TvnxQdrpEWP+m VfqqX3rOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACayq4aR4eS+tjbZzeycTZGz ZR+frL35eMNW07C58YqTY7pvf2cN+M/w33+7q+KDE3+svMtPqL3+XuyWLXXSgulhYrpj6qtivrk V/AA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Betterbird (Linux)
+Subject: Re: nfsd becomes a zombie
+To: Calum Mackay <calum.mackay@oracle.com>,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
+ <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
+ <4eeb2367-c869-4960-869b-c23ef824e044@oracle.com>
+From: Harald Dunkel <harald.dunkel@aixigo.com>
+Content-Language: en-US
+In-Reply-To: <4eeb2367-c869-4960-869b-c23ef824e044@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 1.0.3 at srvvm01.ac.aixigo.de
+X-Virus-Status: Clean
 
-On Mon, 17 Jun 2024 18:23:00 +0200, Jan Kara wrote:
-> Currently we will not generate FS_OPEN events for O_PATH file
-> descriptors but we will generate FS_CLOSE events for them. This is
-> asymmetry is confusing. Arguably no fsnotify events should be generated
-> for O_PATH file descriptors as they cannot be used to access or modify
-> file content, they are just convenient handles to file objects like
-> paths. So fix the asymmetry by stopping to generate FS_CLOSE for O_PATH
-> file descriptors.
+On 2024-06-17 21:20:54, Calum Mackay wrote:
 > 
-> [...]
+> Harald: do you have a Debian/Ubuntu kernel version that doesn't see the
+> issue, please? i.e. ideally from the same 6.1.y series…
+> 
 
-I added a Cc stable to the first patch because this seems like a bugfix
-per the mail discussion.
+I had migrated the Server from Debian 11 to Debian 12 on Dec 11th 2023.
+The kernel version provided by Debian 11 at that time was 5.10.197. I
+can't remember having seen a frozen nfsd with this version.
 
----
+Since Dec 11th I had these kernels in use (all provided by Debian):
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+	6.1.66			linux-image-6.1.0-15-amd64
+	6.1.69			linux-image-6.1.0-17-amd64
+	6.1.76			linux-image-6.1.0-18-amd64
+	6.1.85			linux-image-6.1.0-20-amd64
+	6.1.90			linux-image-6.1.0-21-amd64
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+These are all "upstream" version numbers. The second column lists
+Debian's package names.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+AFAIR nfsd got stuck only on the 6.1.90 kernel (installed and booted
+on May 18th, first time freeze on May 26th). But I've got a weak
+memory in cases like this. I haven't found older kernel log files.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Please remember that I have seen a frozen nfsd only 3 times since
+May 26th. Its not easy to reproduce.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
 
-[1/2] fsnotify: Do not generate events for O_PATH file descriptors
-      https://git.kernel.org/vfs/vfs/c/702eb71fd650
-[2/2] vfs: generate FS_CREATE before FS_OPEN when ->atomic_open used.
-      https://git.kernel.org/vfs/vfs/c/7d1cf5e624ef
+Regards
+
+Harri
 
