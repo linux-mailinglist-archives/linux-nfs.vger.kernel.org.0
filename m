@@ -1,83 +1,57 @@
-Return-Path: <linux-nfs+bounces-4076-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4077-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF38590F46D
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 18:46:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 136DF90F4FE
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 19:26:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4514D1F2314F
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 16:46:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F1C1285394
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 17:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91AD155301;
-	Wed, 19 Jun 2024 16:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E30155C8B;
+	Wed, 19 Jun 2024 17:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6v5z/sd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvC5B15y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929CB2262B;
-	Wed, 19 Jun 2024 16:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059D0155C8A
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 17:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718815596; cv=none; b=a1/Cb2UNdUvQC4Pmw0B4YWM9yyv2/OFUUJJKpOoTBjFWJ57gMu9K9OGJiVbkOmSPaaJUFlpMJ9i64A9D4YYjDgBewIiDdJHCJMCkrn9vvmb+/lpG3oC6c5wPM2JHUUE45PAZ6C0gl9L4p/p2xYrl/bHJzD8dVes0STdQxzr5RFk=
+	t=1718817987; cv=none; b=OjtEuUCWYsoMZpH1p1JWTL7XunS6cBuDk0+OxK2HITF6DXgNwOjlssPUePZ/mflTPM9q8X6uQMj9V1dSzLJwv9vmsrNT0VntR8yrMy4IwcBBcoWfT9BPV9buuSH+JbLl3WkjHI6XkX++Ku/3oHm6YdDrfTv20ieXchfSeeZ0UBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718815596; c=relaxed/simple;
-	bh=EYkeKSbtNt6ckvuCFzfSCizaZJeveGlRlQZbS2iiRBM=;
+	s=arc-20240116; t=1718817987; c=relaxed/simple;
+	bh=ilCFfZGmqUK0y5pVuZCP6Vs0M/4k/wVAGQPDXv2KjJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3XEZcnslU7UfPPApSN7e6PKOnz60D7GtxSNPqeHcmMw9e4M9XycHHGL+FbgKx1kwoe0FEYuAsHE+VIjEwK7wgK7ayQe0GikRDTCeErD7H82n1lD254DRgsj0pIaKTvb886yrYxuQdoHM9nme1R1VDmySejtYurB7T3gqoK37wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6v5z/sd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5A8C2BBFC;
-	Wed, 19 Jun 2024 16:46:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UPHodL8xR3MG7whayK7hWuc/qip6zTOh+kaO5uOfpwxYSqxqm2+nHS4LKIgyLVtzAG6KBtWL8jHmZbR7odYyTrbjoxYQjbsw3fe2S3VEfH8LvgCCW2fsudgfexQUQN+L6kfc6uo1ek8vRiMHZktOuewg4A2/9ghO+Bc5x9Z4Bgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvC5B15y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD79C2BBFC;
+	Wed, 19 Jun 2024 17:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718815596;
-	bh=EYkeKSbtNt6ckvuCFzfSCizaZJeveGlRlQZbS2iiRBM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=U6v5z/sdVrRwT3ywPATsj7XmP7jMC/9Ue7euI2CV/THH1rdybzupp61Q3EwrfCb0Z
-	 oRYlNRBfdTqybOoKx/k80D0IFIG9kqzvnBfEhD0JRlH5VjuYxCM23EMd3xBXpXT4V1
-	 1uKiOxgwzsrXXxoSU+L5hezYeMeNJITqk3/QT2yQTixMKTvXNKFLINUqCcR1a6Eofa
-	 +OA6Ypzrq6AdcZ9WeH29C2vx0ekyMr+caeurBrnmo/hQuNhH7uVp+yJZMA3eeltGHh
-	 vqikZFgBg0Khso/7VAufzpVxv9ZrPvAsnpHAA9QtIEbrLcOlZKN9roRJ/XJu5hty2l
-	 uLXG9ZdVaWb9A==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id EC3CDCE09D8; Wed, 19 Jun 2024 09:46:35 -0700 (PDT)
-Date: Wed, 19 Jun 2024 09:46:35 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <04567347-c138-48fb-a5ab-44cc6a318549@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
- <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
- <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
- <ZnCDgdg1EH6V7w5d@pc636>
- <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
- <ZnFT1Czb8oRb0SE7@pc636>
- <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
- <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz>
- <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
- <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
+	s=k20201202; t=1718817984;
+	bh=ilCFfZGmqUK0y5pVuZCP6Vs0M/4k/wVAGQPDXv2KjJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JvC5B15ypCXKTjmt6L9UX8zLRlG6omY+KsnS3BVxKCK9k7aJFHCOFmAiq8BqSKv/3
+	 p5jAiGAMQND03nZA/Hmknv6ao8KxcBSrgT0mhhsOfDSMbmuuN6NQEvd9TM9CKhmyCS
+	 doO4/fEB/m9v5brUD/pDtd4NSo3DLmLd8KGf6dOxdciCArm0P/FHH6QW7utdiV2e9I
+	 v/QqYnQ6aQLulNi3Z0bomtIwAFT0wXd7cqYLucKod6H9RyBcPhT93kN7kN4UVL+W2n
+	 LM33INVuE7pTPsXhdAtyiOyongEQh5iBMuwzbMUv1QXe9Uo0qZsobMPkRtMPyBNOAo
+	 21UXd76lW+biQ==
+Date: Wed, 19 Jun 2024 13:26:23 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>, snitzer@hammerspace.com
+Subject: Re: [PATCH v5 16/19] nfsd: use SRCU to dereference nn->nfsd_serv
+Message-ID: <ZnMUv3NJ7w1cE5dU@kernel.org>
+References: <20240618201949.81977-1-snitzer@kernel.org>
+ <20240618201949.81977-17-snitzer@kernel.org>
+ <808b8e465430e66b5b3c3bf048a3a165ba41231b.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -86,143 +60,135 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
+In-Reply-To: <808b8e465430e66b5b3c3bf048a3a165ba41231b.camel@kernel.org>
 
-On Wed, Jun 19, 2024 at 11:28:13AM +0200, Vlastimil Babka wrote:
-> On 6/18/24 7:53 PM, Paul E. McKenney wrote:
-> > On Tue, Jun 18, 2024 at 07:21:42PM +0200, Vlastimil Babka wrote:
-> >> On 6/18/24 6:48 PM, Paul E. McKenney wrote:
-> >> > On Tue, Jun 18, 2024 at 11:31:00AM +0200, Uladzislau Rezki wrote:
-> >> >> > On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
-> >> >> > >> +
-> >> >> > >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
-> >> >> > >> +
-> >> >> > >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
-> >> >> > > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
-> >> >> > > wanted to avoid initially.
-> >> >> > 
-> >> >> > I wanted to avoid new API or flags for kfree_rcu() users and this would
-> >> >> > be achieved. The barrier is used internally so I don't consider that an
-> >> >> > API to avoid. How difficult is the implementation is another question,
-> >> >> > depending on how the current batching works. Once (if) we have sheaves
-> >> >> > proven to work and move kfree_rcu() fully into SLUB, the barrier might
-> >> >> > also look different and hopefully easier. So maybe it's not worth to
-> >> >> > invest too much into that barrier and just go for the potentially
-> >> >> > longer, but easier to implement?
-> >> >> > 
-> >> >> Right. I agree here. If the cache is not empty, OK, we just defer the
-> >> >> work, even we can use a big 21 seconds delay, after that we just "warn"
-> >> >> if it is still not empty and leave it as it is, i.e. emit a warning and
-> >> >> we are done.
-> >> >> 
-> >> >> Destroying the cache is not something that must happen right away. 
-> >> > 
-> >> > OK, I have to ask...
-> >> > 
-> >> > Suppose that the cache is created and destroyed by a module and
-> >> > init/cleanup time, respectively.  Suppose that this module is rmmod'ed
-> >> > then very quickly insmod'ed.
-> >> > 
-> >> > Do we need to fail the insmod if the kmem_cache has not yet been fully
-> >> > cleaned up?
-> >> 
-> >> We don't have any such link between kmem_cache and module to detect that, so
-> >> we would have to start tracking that. Probably not worth the trouble.
+On Wed, Jun 19, 2024 at 08:39:46AM -0400, Jeff Layton wrote:
+> On Tue, 2024-06-18 at 16:19 -0400, Mike Snitzer wrote:
+> > Introduce nfsd_serv_get, nfsd_serv_put and nfsd_serv_sync and update
+> > the nfsd code to prevent nfsd_destroy_serv from destroying
+> > nn->nfsd_serv until all nfsd code is done with it (particularly the
+> > localio code that doesn't run in the context of nfsd's svc threads,
+> > nor does it take the nfsd_mutex).
 > > 
-> > Fair enough!
+> > Commit 83d5e5b0af90 ("dm: optimize use SRCU and RCU") provided a
+> > familiar well-worn pattern for how implement.
 > > 
-> >> >  If not, do we have two versions of the same kmem_cache in
-> >> > /proc during the overlap time?
-> >> 
-> >> Hm could happen in /proc/slabinfo but without being harmful other than
-> >> perhaps confusing someone. We could filter out the caches being destroyed
-> >> trivially.
+> > Suggested-by: NeilBrown <neilb@suse.de>
+> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > ---
+> >  fs/nfsd/filecache.c | 13 ++++++++---
+> >  fs/nfsd/netns.h     | 12 ++++++++--
+> >  fs/nfsd/nfs4state.c | 25 ++++++++++++++-------
+> >  fs/nfsd/nfsctl.c    |  7 ++++--
+> >  fs/nfsd/nfssvc.c    | 55 ++++++++++++++++++++++++++++++++++++---------
+> >  5 files changed, 87 insertions(+), 25 deletions(-)
 > > 
-> > Or mark them in /proc/slabinfo?  Yet another column, yay!!!  Or script
-> > breakage from flagging the name somehow, for example, trailing "/"
-> > character.
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 99631fa56662..474b3a3af3fb 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -413,12 +413,15 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
+> >  		struct nfsd_file *nf = list_first_entry(dispose,
+> >  						struct nfsd_file, nf_lru);
+> >  		struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
+> > +		int srcu_idx;
+> > +		struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+> >  		struct nfsd_fcache_disposal *l = nn->fcache_disposal;
+> >  
+> >  		spin_lock(&l->lock);
+> >  		list_move_tail(&nf->nf_lru, &l->freeme);
+> >  		spin_unlock(&l->lock);
+> > -		svc_wake_up(nn->nfsd_serv);
+> > +		svc_wake_up(serv);
+> > +		nfsd_serv_put(nn, srcu_idx);
+> >  	}
+> >  }
+> >  
+> > @@ -443,11 +446,15 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+> >  		for (i = 0; i < 8 && !list_empty(&l->freeme); i++)
+> >  			list_move(l->freeme.next, &dispose);
+> >  		spin_unlock(&l->lock);
+> > -		if (!list_empty(&l->freeme))
+> > +		if (!list_empty(&l->freeme)) {
+> > +			int srcu_idx;
+> > +			struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
+> >  			/* Wake up another thread to share the work
+> >  			 * *before* doing any actual disposing.
+> >  			 */
+> > -			svc_wake_up(nn->nfsd_serv);
+> > +			svc_wake_up(serv);
+> > +			nfsd_serv_put(nn, srcu_idx);
+> > +		}
+> >  		nfsd_file_dispose_list(&dispose);
+> >  	}
+> >  }
+> > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> > index 0c5a1d97e4ac..0eebcc03bcd3 100644
+> > --- a/fs/nfsd/netns.h
+> > +++ b/fs/nfsd/netns.h
+> > @@ -139,8 +139,12 @@ struct nfsd_net {
+> >  	u32 clverifier_counter;
+> >  
+> >  	struct svc_info nfsd_info;
+> > -#define nfsd_serv nfsd_info.serv
+> > -
+> > +	/*
+> > +	 * The current 'nfsd_serv' at nfsd_info.serv
+> > +	 * Use nfsd_serv_get() or take nfsd_mutex to dereference.
+> > +	 */
+> > +	void __rcu *nfsd_serv;
 > 
-> Yeah I've been resisting such changes to the layout and this wouldn't be
-> worth it, apart from changing the name itself but not in a dangerous way
-> like with "/" :)
-
-;-) ;-) ;-)
-
-> >> Sysfs and debugfs might be more problematic as I suppose directory names
-> >> would clash. I'll have to check... might be even happening now when we do
-> >> detect leaked objects and just leave the cache around... thanks for the
-> >> question.
-> > 
-> > "It is a service that I provide."  ;-)
-> > 
-> > But yes, we might be living with it already and there might already
-> > be ways people deal with it.
+> I don't understand why you need a void pointer here. This should only
+> ever hold a pointer to the serv or NULL. It seems like this work just
+> as well: 
 > 
-> So it seems if the sysfs/debugfs directories already exist, they will
-> silently not be created. Wonder if we have such cases today already because
-> caches with same name exist. I think we do with the zsmalloc using 32 caches
-> with same name that we discussed elsewhere just recently.
+> 	struct svc_serv __rcu *nfsd_serv;
 > 
-> Also indeed if the cache has leaked objects and won't be thus destroyed,
-> these directories indeed stay around, as well as the slabinfo entry, and can
-> prevent new ones from being created (slabinfo lines with same name are not
-> prevented).
 
-New one on me!
+It is defensive, future-proofs us from some new code being introduced
+that dereferences nn->nfsd_serv without proper use of nfsd_serv_get().
 
-> But it wouldn't be great to introduce this possibility to happen for the
-> temporarily delayed removal due to kfree_rcu() and a module re-insert, since
-> that's a legitimate case and not buggy state due to leaks.
 
-Agreed.
-
-> The debugfs directory we could remove immediately before handing over to the
-> scheduled workfn, but if it turns out there was a leak and the workfn leaves
-> the cache around, debugfs dir will be gone and we can't check the
-> alloc_traces/free_traces files there (but we have the per-object info
-> including the traces in the dmesg splat).
+> > @@ -589,9 +615,12 @@ void nfsd_destroy_serv(struct net *net)
+> >  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> >  	struct svc_serv *serv = nn->nfsd_serv;
+> >  
+> > +	lockdep_assert_held(&nfsd_mutex);
+> > +
+> >  	spin_lock(&nfsd_notifier_lock);
+> > -	nn->nfsd_serv = NULL;
+> > +	rcu_assign_pointer(nn->nfsd_serv, NULL);
+> >  	spin_unlock(&nfsd_notifier_lock);
+> > +	nfsd_serv_sync(nn);
+> >  
+> >  	/* check if the notifier still has clients */
+> >  	if (atomic_dec_return(&nfsd_notifier_refcount) == 0) {
+> > @@ -711,6 +740,10 @@ int nfsd_create_serv(struct net *net)
+> >  	if (nn->nfsd_serv)
+> >  		return 0;
+> >  
+> > +	error = init_srcu_struct(&nn->nfsd_serv_srcu);
+> > +	if (error)
+> > +		return error;
+> > +
+> >  	if (nfsd_max_blksize == 0)
+> >  		nfsd_max_blksize = nfsd_get_default_max_blksize();
+> >  	nfsd_reset_versions(nn);
+> > @@ -727,8 +760,10 @@ int nfsd_create_serv(struct net *net)
+> >  	}
+> >  	spin_lock(&nfsd_notifier_lock);
+> >  	nn->nfsd_info.mutex = &nfsd_mutex;
+> > -	nn->nfsd_serv = serv;
+> > +	nn->nfsd_info.serv = serv;
+> > +	rcu_assign_pointer(nn->nfsd_serv, nn->nfsd_info.serv);
+> >  	spin_unlock(&nfsd_notifier_lock);
+> > +	nfsd_serv_sync(nn);
 > 
-> The sysfs directory is currently removed only with the whole cache being
-> destryed due to sysfs/kobject lifetime model. I'd love to untangle it for
-> other reasons too, but haven't investigated it yet. But again it might be
-> useful for sysfs dir to stay around for inspection, as for the debugfs.
-> 
-> We could rename the sysfs/debugfs directories before queuing the work? Add
-> some prefix like GOING_AWAY-$name. If leak is detected and cache stays
-> forever, another rename to LEAKED-$name. (and same for the slabinfo). But
-> multiple ones with same name might pile up, so try adding a counter then?
-> Probably messy to implement, but perhaps the most robust in the end? The
-> automatic counter could also solve the general case of people using same
-> name for multiple caches.
-> 
-> Other ideas?
+> I get why you're doing the synchronize on destroy, but why on the
+> create? You're not tearing anything down here, so I don't see the need
+> to ensure synchronization.
 
-Move the going-away files/directories to some new directoriesy?  But you
-would still need a counter or whatever.  I honestly cannot say what
-would be best from the viewpoint of existing software scanning those
-files and directories.
+Yeah, it isn't needed.  Fixed, thanks.
 
-							Thanx, Paul
-
-> Thanks,
-> Vlastimil
-> 
-> > 
-> > 							Thanx, Paul
-> > 
-> >> >> > > Since you do it asynchronous can we just repeat
-> >> >> > > and wait until it a cache is furry freed?
-> >> >> > 
-> >> >> > The problem is we want to detect the cases when it's not fully freed
-> >> >> > because there was an actual read. So at some point we'd need to stop the
-> >> >> > repeats because we know there can no longer be any kfree_rcu()'s in
-> >> >> > flight since the kmem_cache_destroy() was called.
-> >> >> > 
-> >> >> Agree. As noted above, we can go with 21 seconds(as an example) interval
-> >> >> and just perform destroy(without repeating).
-> >> >> 
-> >> >> --
-> >> >> Uladzislau Rezki
-> >> 
-> 
+Mike
 
