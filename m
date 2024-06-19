@@ -1,167 +1,160 @@
-Return-Path: <linux-nfs+bounces-4074-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4075-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BE5D90F095
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 16:32:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81A4690F20B
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 17:24:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 133C71F20FA1
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 14:32:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C6241F229DB
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 15:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3051EA84;
-	Wed, 19 Jun 2024 14:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58609335A7;
+	Wed, 19 Jun 2024 15:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="F3i361Wt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="D2jQGQgI";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="F3i361Wt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="D2jQGQgI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A6A1DFCF
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 14:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A98182B5;
+	Wed, 19 Jun 2024 15:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807493; cv=none; b=ZqEC8cz1oWFpjG4TwBCVwy+Mx9dh2ZFvNqeizGVDLD66KYfl0MxByQWnJA27jozLpLw4ID1qjJOsBNCNZkhDJg6Ya3Hxwnm2bmWLOtIWwlpSuwE44+LApbuu1DoRHaythFoTGmrqXpSvzKqbG6Iy8b+6d7YqS+AxNKO7pBYdZ6U=
+	t=1718810660; cv=none; b=Wwxy6M+R3U6ShV1UbWTvWR1XYG9RvozWOLAncvUUGOZuttuxxCzoXg8uAccGBE9SCXT5goZdXq4CnJE4gQmPkXmS4VXvF3bKsniahEl5gd0FcluoeWwBhlMAVfhdCAiaiNHkEdIGvcbiyxEcHu3Fn39kjz+q3yaVI8xaraf4Rus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807493; c=relaxed/simple;
-	bh=RZU5lORkNnORZpnCjfXUNotmWV9UatnF+GElG+A6Zbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZokjpbZ38MZGJwirTVLFluChaSTX3Lwz6e1kIPKDEhARx0jwKojN+uq3tC1ggSzGGGND/AaKwYs/OjzJnDmozvFCzNSmwcR0OaeNEy9hhSNRHyAYjGIEsub1AjEUe62swqB+PWkOgqP3aM3nCahrL600siDqh5OfKmpZswbEGrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4210f0bb857so6680195e9.1
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 07:31:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718807490; x=1719412290;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U/C0tGijynZTo3jaeD+eCQud0y8VVGQWBhwzk2KRK+U=;
-        b=XrmVqNWuwSJdRYy6GyVw8Jii1F93sCnkUict2qY46MVKnC4LnHlgwXIYFDyGyahKMo
-         0tk8iorTNBci3olFIXGnK3VH6T2XXhwZ9e6hbTSY/2pjqOH1jxaqm7h97L5bV3u92NjD
-         2US8ZE/B0UfTU7acGLpC4XO9BLdBAGcO3u5FfM/5b6oLoLoP96EdoxLgAKmcEznhZ8F9
-         P/IOvBIruqN3RWR0k+HXNNcoHb6mEfYRe3a21J4fQq08V74zlpse3rNLlDq8GM8KQ3Jw
-         MKRAoLsy3sKx5sLA5sUAcP4yP8k1WrELtWs9beG4Gzn+s+VCJV6DXsHKeyEo/jDPz0zc
-         B2Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDAWGyQ+1UidthWca6Hg26iXyEw2VE3HoqJaUl+lMS3FuSMlxaah4Q8Gk1Q+y2rFvtpNcQplObw9R7/LazxG3mnqiakuxUSjEI
-X-Gm-Message-State: AOJu0YxAKUZnGPvRgM5UZOcQCeNDCX+WF46dbnoyWT68l66G3hsAFlTS
-	EXRTV/Jb3ScYiHg/0zR1/GDEbZEdIz0PwZi0xuk4q27cU0CCmsqQNZeejMrN
-X-Google-Smtp-Source: AGHT+IEDHCiBSIu4GrQ2XzQiReM86yG+gK8jxbHXgF17mF9sk4ZKKIMQe2OKgBEPuA21nEPSxqgubA==
-X-Received: by 2002:a5d:5f4e:0:b0:35f:2a75:91fd with SMTP id ffacd0b85a97d-36319990ef6mr1944690f8f.6.1718807469922;
-        Wed, 19 Jun 2024 07:31:09 -0700 (PDT)
-Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de68asm271534975e9.29.2024.06.19.07.31.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 07:31:09 -0700 (PDT)
-Message-ID: <50f63382-eeb1-4615-a0ac-987afee11902@grimberg.me>
-Date: Wed, 19 Jun 2024 17:31:08 +0300
+	s=arc-20240116; t=1718810660; c=relaxed/simple;
+	bh=ARoPuZGHWeRN8MWNbYI/DpJeTPhKv4n+bAv1vc+aLOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kM6qBVcPkTeg4+j6Z9s73F3g4tZmPd+GirqH1O70FTWq1Iha3RfuwdPQhwOcnbZxD12Boif1z3v9/LVVTvaMdRCXhu95hxz9u0XoMffymFBEN/ybqd1Qh7eyVqGNEHCGt0YB8sZ7MhpjhfN0eR2kq2wHMXGWEGLt2GkRpX2xhqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=F3i361Wt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=D2jQGQgI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=F3i361Wt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=D2jQGQgI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B01D521A20;
+	Wed, 19 Jun 2024 15:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718810656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NJ+UYFD/N7qm9nO59jHP1L8zunVg8bgGBkSW5rkBCpE=;
+	b=F3i361WtkEjU+H+ilI6YVXHdA85TftedojuS6LUaCp4KNYVnn5LIznNVqaTdwnyZ7Js1cc
+	c+u9UQXPDdGvRD/Q5UgyvKjuucSJ126K45QdoNkhWClvGEN2ngp/EWGdcDHn2azr4uF8LC
+	By5YaCQFkyFjqCdllSF4ewiMt2KQ2wc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718810656;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NJ+UYFD/N7qm9nO59jHP1L8zunVg8bgGBkSW5rkBCpE=;
+	b=D2jQGQgIJ/3hj3FNZn6UisJAU4ikRVT1uATuGVBs7YWKiUJFd8gVLXoycWazMmbp2RLYNO
+	mSYmKIUNK+qrORBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718810656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NJ+UYFD/N7qm9nO59jHP1L8zunVg8bgGBkSW5rkBCpE=;
+	b=F3i361WtkEjU+H+ilI6YVXHdA85TftedojuS6LUaCp4KNYVnn5LIznNVqaTdwnyZ7Js1cc
+	c+u9UQXPDdGvRD/Q5UgyvKjuucSJ126K45QdoNkhWClvGEN2ngp/EWGdcDHn2azr4uF8LC
+	By5YaCQFkyFjqCdllSF4ewiMt2KQ2wc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718810656;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NJ+UYFD/N7qm9nO59jHP1L8zunVg8bgGBkSW5rkBCpE=;
+	b=D2jQGQgIJ/3hj3FNZn6UisJAU4ikRVT1uATuGVBs7YWKiUJFd8gVLXoycWazMmbp2RLYNO
+	mSYmKIUNK+qrORBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97A7613668;
+	Wed, 19 Jun 2024 15:24:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id FSf9JCD4cmbSIgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 19 Jun 2024 15:24:16 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id F0473A0887; Wed, 19 Jun 2024 17:24:11 +0200 (CEST)
+Date: Wed, 19 Jun 2024 17:24:11 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+	Amir Goldstein <amir73il@gmail.com>,
+	James Clark <james.clark@arm.com>, linux-nfs@vger.kernel.org,
+	NeilBrown <neilb@suse.de>, Al Viro <viro@ZenIV.linux.org.uk>,
+	ltp@lists.linux.it
+Subject: Re: [PATCH 1/2] fsnotify: Do not generate events for O_PATH file
+ descriptors
+Message-ID: <20240619152411.gf7bzkrlwsdrci5t@quack3>
+References: <20240617161828.6718-1-jack@suse.cz>
+ <20240617162303.1596-1-jack@suse.cz>
+ <20240618-modular-galaabend-c0dba5521bc4@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfs: add 'noextend' option for lock-less 'lost writes'
- prevention
-To: Trond Myklebust <trondmy@hammerspace.com>,
- "dan.aloni@vastdata.com" <dan.aloni@vastdata.com>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <20240618153313.3167460-1-dan.aloni@vastdata.com>
- <d2f48ca233f85da80f2193cd92e6f97feb587a69.camel@hammerspace.com>
- <ae298053-bdee-4a8a-b6a9-e57de79abc97@grimberg.me>
- <5366ff2a4f731dbd93a56e109d6809a5348cf080.camel@hammerspace.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <5366ff2a4f731dbd93a56e109d6809a5348cf080.camel@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618-modular-galaabend-c0dba5521bc4@brauner>
+X-Spam-Score: -3.80
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,vger.kernel.org,gmail.com,arm.com,suse.de,ZenIV.linux.org.uk,lists.linux.it];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
 
+On Tue 18-06-24 16:28:01, Christian Brauner wrote:
+> On Mon, 17 Jun 2024 18:23:00 +0200, Jan Kara wrote:
+> > Currently we will not generate FS_OPEN events for O_PATH file
+> > descriptors but we will generate FS_CLOSE events for them. This is
+> > asymmetry is confusing. Arguably no fsnotify events should be generated
+> > for O_PATH file descriptors as they cannot be used to access or modify
+> > file content, they are just convenient handles to file objects like
+> > paths. So fix the asymmetry by stopping to generate FS_CLOSE for O_PATH
+> > file descriptors.
+> > 
+> > [...]
+> 
+> I added a Cc stable to the first patch because this seems like a bugfix
+> per the mail discussion.
 
+Yes, makes sense. Thanks!
 
-On 19/06/2024 17:15, Trond Myklebust wrote:
-> On Wed, 2024-06-19 at 11:37 +0300, Sagi Grimberg wrote:
->>
->> On 18/06/2024 21:59, Trond Myklebust wrote:
->>> Hi Dan,
->>>
->>> On Tue, 2024-06-18 at 18:33 +0300, Dan Aloni wrote:
->>>> There are some applications that write to predefined non-
->>>> overlapping
->>>> file offsets from multiple clients and therefore don't need to
->>>> rely
->>>> on
->>>> file locking. However, NFS file system behavior of extending
->>>> writes
->>>> to
->>>> to deal with write fragmentation, causes those clients to corrupt
->>>> each
->>>> other's data.
->>>>
->>>> To help these applications, this change adds the `noextend`
->>>> parameter
->>>> to
->>>> the mount options, and handles this case in
->>>> `nfs_can_extend_write`.
->>>>
->>>> Clients can additionally add the 'noac' option to ensure page
->>>> cache
->>>> flush on read for modified files.
->>> I'm not overly enamoured of the name "noextend". To me that sounds
->>> like
->>> it might have something to do with preventing appends. Can we find
->>> something that is a bit more descriptive?
->> nopbw (No page boundary writes) ?
->>
->>> That said, and given your last comment about reads. Wouldn't it be
->>> better to have the application use O_DIRECT for these workloads?
->>> Turning off attribute caching is both racy and an inefficient way
->>> to
->>> manage page cache consistency. It forces the client to bombard the
->>> server with GETATTR requests in order to check that the page cache
->>> is
->>> in synch, whereas your description of the workload appears to
->>> suggest
->>> that the correct assumption should be that it is not in synch.
->>>
->>> IOW: I'm asking if the better solution might not be to rather
->>> implement
->>> something akin to Solaris' "forcedirectio"?
->> This access pattern represents a common case in HPC where different
->> workers
->> write records to a shared output file which do not necessarily align
->> to
->> a page boundary.
->>
->> This is not everything that the app is doing nor the only file it is
->> accessing, so IMO forcing
->> directio universally is may penalize the application.
-> Worse than forcing an attribute revalidation on every read?
+								Honza
 
-For this use-case, yes. Different workloads may or may not be interested 
-in reading
-this file.
-
->
-> BTW: We've been asked about the same issue from some of our customers,
-> and are planning on solving the problem by adding a new per-file
-> attribute to the NFSv4.2 protocol.
-
-Interesting, I recently joined the ietf mailing list but have not seen 
-discussion
-this as of yet. Would be interested to learn more.
-
->
-> The detection of that NOCACHE attribute would cause the client to
-> automatically choose O_DIRECT on file open, overriding the default
-> buffered I/O model. So this would allow the user or sysadmin to specify
-> at file creation time that this file will be used for purposes that are
-> incompatible with caching.
-
-user/sysadmin as in not the client? setting this out-of-band?
-That does not work where the application and the sysadmin do not know about
-each other (i.e. in a cloud environment).
-
-The use-case that is described here cannot be mandated by the server because
-the file usage pattern is really driven by the application.
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
