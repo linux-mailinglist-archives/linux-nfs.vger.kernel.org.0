@@ -1,178 +1,180 @@
-Return-Path: <linux-nfs+bounces-4088-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4089-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EBF790F60A
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 20:27:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32A8990F798
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 22:40:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1AD01C215A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 18:27:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8DEE1F22350
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 20:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A6215698D;
-	Wed, 19 Jun 2024 18:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF35D158D6C;
+	Wed, 19 Jun 2024 20:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER3sIalh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtR2ymSn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1FB15252C
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 18:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A946D46426
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 20:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718821638; cv=none; b=dBPdGyXCgT95M+i01udpuuimcOVDc+OTRYat9Vety37BVyUr6YkFth94qB+TMHTGRsFv+yvil2dBTLQ46Xd8eTebWUlvhrLGSq+WmopDEY5ZjAxHrwcGDC3esv2c9Q35OHd1N14zn9roUT74l9QySsgYAuO2xBvGaDXtGZ3nhJk=
+	t=1718829634; cv=none; b=IBEOzAXiw/oCnTxelLkpyQ0AZl/2tqIYA9Aqk7wqTiJv3pGBAVjWXNdUN9UmCFgfpAy4p0t2qQkvS2xZ43V43ifkODvvmPQL5cvljYjMNkmu+AQFQJYKLwic4zo9w5YWnHQh9uQ6EnvWpjoTzh49ML+KLZabgTOu2CtxoGgqKRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718821638; c=relaxed/simple;
-	bh=S60GYBN2p2y8Mn5gFO73cCsdNp/Y+R1egxZthLLsVG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9bd130h219beoeXn6YSm9OVStdtLRDUKMxAcB3BCyDNE11zo3vJIWXEx+ACNYczcROpewQNijlPjldSPiVgvHt6WHXFSw7ABHzZT3PzVQomtpCParG6porssGrRACGphHSvyt6cKaG7EQgLY9h2S/Q+jmhgc5sbumkp3o7cns8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER3sIalh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218D7C2BBFC;
-	Wed, 19 Jun 2024 18:27:18 +0000 (UTC)
+	s=arc-20240116; t=1718829634; c=relaxed/simple;
+	bh=YQMG5M6h19EeN9pSDndPZ2RQ95UwFOX6Ogoj3/zkkfo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dmFdpGRDxMoS1k5FUV/qxTWRPrGHXgPK0zkmcMsI5LR48fQIkH2gVV/UhEn15gG8ipdNpchP2jSKNfHKCbdPTmF+cS6BTPkcPiJFcpweemKbcM/ugNPp3unE7SJat2fvUx6Tk5xdNfmCtCe2ywXif64adCR4quTGygghiwMlvW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtR2ymSn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C57C2BBFC;
+	Wed, 19 Jun 2024 20:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718821638;
-	bh=S60GYBN2p2y8Mn5gFO73cCsdNp/Y+R1egxZthLLsVG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ER3sIalh1BuaA4TXMniA7TS3Vrk8QdxBYNxSm2Hwdk+NEOJfCE20FdAJitDwm5EKq
-	 nk3OVJl714anglzp41s5DNlIb+zfdBs2gMjtLh8BOpolps2NijxS+Js4X1AmVvHsOI
-	 ngP1Pv2Bj2QqfbolKQ6F8izdv3LppfNWsE54meVqknf/AJ8fnGbAfl+zno4eAbgzCv
-	 M6Si29j5uhf5/aB7r9Y3SPQRUUXAcVuPlYWQc7DlzemsRrUR1xIbiSrPi2d76vxPB9
-	 NXSVZR89dxZiJB+gtxXGeNqf1MruM/03mBdVI5OpyiHXDYnyHr7Y6bA5xPkLjBGhJR
-	 qTPH5BwtSf0RA==
-Date: Wed, 19 Jun 2024 14:27:17 -0400
+	s=k20201202; t=1718829634;
+	bh=YQMG5M6h19EeN9pSDndPZ2RQ95UwFOX6Ogoj3/zkkfo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UtR2ymSnBsG5F2+jucV/MIHeRS+X7z4xQfGqo9SPDyUv8w27+cNfKxq368HSSZn5o
+	 llbTcLxaV1X+AbTqAd0cN0MzyBCpsrKEUMgu4rqBiOK9u0bacAVXJQ4xL3dKv6rjb2
+	 7DgQqJl6rsnCTa5joMQ3bDGvmVHM9wAk9MkPtFzr2DbkwFROxZgrzGZDDTl3Lo3Cxa
+	 WqbXLpAp1GQmXEqGfoSHsI6IYnR9hzRdiMmMU+9Al1xGZQZgKbSRLzQ1D3+6bV4Y/7
+	 qie+x0wCdt1ncBMfWnBfNpFyqK6RXIrEwE+1Qh/S+LOQvNnHnCcCLo1doBdcunA5zc
+	 i+mjw7ylbPhMw==
 From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [PATCH v5 19/19] nfs: add
- Documentation/filesystems/nfs/localio.rst
-Message-ID: <ZnMjBazCgoCd9jHh@kernel.org>
-References: <>
- <ZnIAMJ0wqjcTBszm@tissot.1015granger.net>
- <171877602532.14261.15898737346476163897@noble.neil.brown.name>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	snitzer@hammerspace.com
+Subject: [PATCH v6 00/18] nfs/nfsd: add support for localio
+Date: Wed, 19 Jun 2024 16:40:14 -0400
+Message-ID: <20240619204032.93740-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171877602532.14261.15898737346476163897@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024 at 03:47:05PM +1000, NeilBrown wrote:
-> On Wed, 19 Jun 2024, Chuck Lever wrote:
-> > On Tue, Jun 18, 2024 at 04:19:49PM -0400, Mike Snitzer wrote:
-> > > This document gives an overview of the LOCALIO protocol extension
-> > > added to the Linux NFS client and server (both v3 and v4) to allow a
-> > > client and server to reliably handshake to determine if they are on
-> > > the same host.  The LOCALIO protocol extension follows the well-worn
-> > > pattern established by the ACL protocol extension.
-> > > 
-> > > The robust handshake between local client and server is just the
-> > > beginning, the ultimate use-case this locality makes possible is the
-> > > client is able to issue reads, writes and commits directly to the
-> > > server without having to go over the network.
-> > > 
-> > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > > ---
-> > >  Documentation/filesystems/nfs/localio.rst | 101 ++++++++++++++++++++++
-> > >  include/linux/nfslocalio.h                |   2 +
-> > >  2 files changed, 103 insertions(+)
-> > >  create mode 100644 Documentation/filesystems/nfs/localio.rst
-> > > 
-> > > diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/filesystems/nfs/localio.rst
-> > > new file mode 100644
-> > > index 000000000000..4b4595037a7f
-> > > --- /dev/null
-> > > +++ b/Documentation/filesystems/nfs/localio.rst
-> > > @@ -0,0 +1,101 @@
-> > > +===========
-> > > +NFS localio
-> > > +===========
-> > > +
-> > > +This document gives an overview of the LOCALIO protocol extension added
-> > > +to the Linux NFS client and server (both v3 and v4) to allow a client
-> > > +and server to reliably handshake to determine if they are on the same
-> > > +host.  The LOCALIO protocol extension follows the well-worn pattern
-> > > +established by the ACL protocol extension.
-> > > +
-> > > +The LOCALIO protocol extension is needed to allow robust discovery of
-> > > +clients local to their servers.  Prior to this extension a fragile
-> > > +sockaddr network address based match against all local network
-> > > +interfaces was attempted.  But unlike the LOCALIO protocol extension,
-> > > +the sockaddr-based matching didn't handle use of iptables or containers.
-> > > +
-> > > +The robust handshake between local client and server is just the
-> > > +beginning, the ultimate use-case this locality makes possible is the
-> > > +client is able to issue reads, writes and commits directly to the server
-> > > +without having to go over the network.  This is particularly useful for
-> > > +container usecases (e.g. kubernetes) where it is possible to run an IO
-> > > +job local to the server.
-> > > +
-> > > +The performance advantage realized from localio's ability to bypass
-> > > +using XDR and RPC for reads, writes and commits can be extreme, e.g.:
-> > > +fio for 20 secs with 24 libaio threads, 64k directio reads, qd of 8,
-> > > +-  With localio:
-> > > +  read: IOPS=691k, BW=42.2GiB/s (45.3GB/s)(843GiB/20002msec)
-> > > +-  Without localio:
-> > > +  read: IOPS=15.7k, BW=984MiB/s (1032MB/s)(19.2GiB/20013msec)
-> > > +
-> > > +RPC
-> > > +---
-> > > +
-> > > +The LOCALIO RPC protocol consists of a single "GETUUID" RPC that allows
-> > > +the client to retrieve a server's uuid.  LOCALIOPROC_GETUUID encodes the
-> > > +server's uuid_t in terms of the fixed UUID_SIZE (16 bytes).  The fixed
-> > > +size opaque encode and decode XDR methods are used instead of the less
-> > > +efficient variable sized methods.
-> > 
-> > I'm reading between the lines ("well-worn pattern established by
-> > the [NFS]ACL protocol"). I'm guessing that the client and server
-> > will exchange this protocol on the same connection as NFS traffic?
-> > 
-> > The use of the term "extension" in this Document might be atypical.
-> > An /extension/ means that the base RPC program (NFS in this case)
-> > is somehow modified. However, if LOCALIO is a distinct RPC program
-> > then this isn't an extension of the NFS protocol, per se.
-> > 
-> > A protocol spec needs to include:
-> > 
-> > o The RPC program and version number
-> > 
-> > o A description of each its procedures, along with an XDR definition
-> >   of its arguments and results
-> > 
-> > o Any related constants or bit mask values
-> 
-> Note that providing this information in the format of a ".x" file as
-> understood by rpcgen is a good approach.
+Hi,
 
-I've approximated that in an update for v6, but I'm sure it'll leave
-you and Chuck wanting ;)
- 
-> It isn't clear to me why you implement both v3 and v4 of the LOCALIO
-> program.  I don't see how they relate to the NFS protocol version.  Just
-> implement v1 which simply returns the UUID.
+This v6 changes include:
+- Quite a bit of rebasing to eliminate intermediate steps that include
+  throwaway code (thanks to Jeff Layton for calling those out).
+- Moved the Kconfig changes to the end of the series to ensure that
+  localio cannot be enabled until the code is feature complete.
+- Removed needless nfsd_serv_sync() call from nfsd_create_serv().
+- Removed inline from fs/nfsd/localio.c:nfs_stat_to_errno
+- Wrapped localio struct nfs_client members and related
+  fs/nfs/client.c init code with #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+- Requested a unique RPC program number from IANA but switched to
+  using 0x20000002 until one is assigned.
+- Improved the Documentation and some code comments.
 
-Yeah, I'd love to pull it out to be standalone but in practice the
-pattern I followed from NFS ACL (to use rpc_bind_new_program) took me
-down the path of implementing it for both v3 and v4.  It did help to
-put the endpoints to action by leveraging what NFS already provides
-for encoding status though.
+Otherwise, not a lot of actual code changes.
 
-Would be nice to avoid it but it isn't immediately clear to me how.
-Can be done as followup work but it'd take me some time to sort it
-out -- might be you could cut through it more easily?
+My git tree is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/
 
-Only having a single LOCALIO protocol version would allow for
-nfs_init_localioclient() to not need 'vers' to be specified. And it'd
-remove the need for the .init_localioclient hook I added (as well as
-the use of __always_inline to share nfs_init_localioclient between
-fs/nfs/nfs[34]client.c)
+This v6 is both branch nfs-localio-for-6.11 (always tracks latest)
+and nfs-localio-for-6.11.v6
 
+Branches nfs-localio-for-6.11.v[12345] are also available.
+
+To see the changes from v5 to v6 please do:
+git remote add snitzer git://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git
+git remote update snitzer
+git diff snitzer/nfs-localio-for-6.11.v5 snitzer/nfs-localio-for-6.11.v6
+
+All review and comments are welcome!
+
+Thanks,
 Mike
+
+Mike Snitzer (10):
+  nfs_common: add NFS LOCALIO auxiliary protocol enablement
+  nfsd/localio: manage netns reference in nfsd_open_local_fh
+  nfs: implement v3 and v4 client support for NFS_LOCALIO_PROGRAM
+  nfsd: implement v3 and v4 server support for NFS_LOCALIO_PROGRAM
+  nfs/nfsd: consolidate {encode,decode}_opaque_fixed in nfs_xdr.h
+  nfsd: prepare to use SRCU to dereference nn->nfsd_serv
+  nfsd: use SRCU to dereference nn->nfsd_serv
+  nfsd/localio: use SRCU to dereference nn->nfsd_serv in nfsd_open_local_fh
+  nfs: add Documentation/filesystems/nfs/localio.rst
+  nfs/nfsd: add Kconfig options to allow localio to be enabled
+
+Trond Myklebust (3):
+  NFS: Enable localio for non-pNFS I/O
+  pnfs/flexfiles: Enable localio for flexfiles I/O
+  nfs/localio: use dedicated workqueues for filesystem read and write
+
+Weston Andros Adamson (5):
+  nfs: pass nfs_client to nfs_initiate_pgio
+  nfs: pass descriptor thru nfs_initiate_pgio path
+  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
+  sunrpc: add rpcauth_map_to_svc_cred_local
+  nfs/nfsd: add "localio" support
+
+ Documentation/filesystems/nfs/localio.rst | 148 ++++
+ fs/Kconfig                                |   3 +
+ fs/nfs/Kconfig                            |  30 +
+ fs/nfs/Makefile                           |   1 +
+ fs/nfs/blocklayout/blocklayout.c          |   6 +-
+ fs/nfs/client.c                           |  15 +-
+ fs/nfs/filelayout/filelayout.c            |  16 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+ fs/nfs/inode.c                            |  61 +-
+ fs/nfs/internal.h                         |  88 ++-
+ fs/nfs/localio.c                          | 850 ++++++++++++++++++++++
+ fs/nfs/nfs3_fs.h                          |   1 +
+ fs/nfs/nfs3client.c                       |  25 +
+ fs/nfs/nfs3proc.c                         |   3 +
+ fs/nfs/nfs3xdr.c                          |  58 ++
+ fs/nfs/nfs4_fs.h                          |   2 +
+ fs/nfs/nfs4client.c                       |  23 +
+ fs/nfs/nfs4proc.c                         |   3 +
+ fs/nfs/nfs4xdr.c                          |  65 +-
+ fs/nfs/nfstrace.h                         |  61 ++
+ fs/nfs/pagelist.c                         |  32 +-
+ fs/nfs/pnfs.c                             |  24 +-
+ fs/nfs/pnfs.h                             |   6 +-
+ fs/nfs/pnfs_nfs.c                         |   2 +-
+ fs/nfs/write.c                            |  13 +-
+ fs/nfs_common/Makefile                    |   3 +
+ fs/nfs_common/nfslocalio.c                |  71 ++
+ fs/nfsd/Kconfig                           |  30 +
+ fs/nfsd/Makefile                          |   1 +
+ fs/nfsd/filecache.c                       |  15 +-
+ fs/nfsd/localio.c                         | 398 ++++++++++
+ fs/nfsd/netns.h                           |  18 +-
+ fs/nfsd/nfs4state.c                       |  25 +-
+ fs/nfsd/nfsctl.c                          |  28 +-
+ fs/nfsd/nfsd.h                            |  11 +
+ fs/nfsd/nfssvc.c                          | 181 ++++-
+ fs/nfsd/trace.h                           |   3 +-
+ fs/nfsd/vfs.h                             |   9 +
+ fs/nfsd/xdr.h                             |   6 +
+ include/linux/nfs.h                       |   2 +
+ include/linux/nfs_fs.h                    |   2 +
+ include/linux/nfs_fs_sb.h                 |  10 +
+ include/linux/nfs_xdr.h                   |  31 +-
+ include/linux/nfslocalio.h                |  41 ++
+ include/linux/sunrpc/auth.h               |   4 +
+ include/uapi/linux/nfs.h                  |   4 +
+ net/sunrpc/auth.c                         |  15 +
+ 49 files changed, 2438 insertions(+), 145 deletions(-)
+ create mode 100644 Documentation/filesystems/nfs/localio.rst
+ create mode 100644 fs/nfs/localio.c
+ create mode 100644 fs/nfs_common/nfslocalio.c
+ create mode 100644 fs/nfsd/localio.c
+ create mode 100644 include/linux/nfslocalio.h
+
+-- 
+2.44.0
+
 
