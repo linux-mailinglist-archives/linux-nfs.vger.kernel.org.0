@@ -1,83 +1,165 @@
-Return-Path: <linux-nfs+bounces-4053-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74D2590E3DD
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 08:58:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C14E390E40F
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 09:10:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77E1F1C22A48
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 06:58:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45A2E1F2386D
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 07:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7EC6BB58;
-	Wed, 19 Jun 2024 06:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6CD74BE0;
+	Wed, 19 Jun 2024 07:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3xl/Dr0"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zWOkUNJz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Us6Wa99A";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mahoiPa/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TGuDIep/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B06F306
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 06:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B386139
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 07:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718780302; cv=none; b=D0DdZXnkNBkPlPgQTUW6Z0hq2GQ5kEDrFaiLqiTGXNXuMU0NdprMBpabUNt50aQSiYfgaLZZPjoCi0+BElrzTLeLHwv8OXtt5YSNMq2ZWwFz3uzWaC0qVgT9oKGVn0hesL+0H55ohG3Qb5O4vNp9F9JEnPZ84xZs26XoXtlcczw=
+	t=1718781027; cv=none; b=Y17NFWGEMGtdLDOsETGi1W3gKsnEASOYFJ2ablCQnnMKJzFE5KH9Ul5DmDjSJPWo1PyZA2SjdHW8jmBU5uGHs4up5U3lxttSYkXdugHffUx7a7UoIrph8kvVDjJxkgus8WE3o+Eiyl/PujIpWi5nGPLdXyrxI76HMwfti96m4MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718780302; c=relaxed/simple;
-	bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HW+GgykAYnkI0VCvwCrG2jJeVT3O4uF7ufjSxxKRmJkINy+KMSYWdCdihoo4LN15jV+gmmkLB2oO4BY7qjc1b2Et9y4lSngkIB9iApTF5nJgFWJ3SGDudrilEPFWejMUc29c9skfaygwWHTfT26R+ap1YuqITdBa608q9wncGxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3xl/Dr0; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6f9fe791f8so82777266b.0
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 23:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718780299; x=1719385099; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
-        b=H3xl/Dr0+WQHDvgYeuOJcBlDMZQyI7jydTbSuRgI9NuNhI6ewfK8XZbIM0l7SrwIxP
-         Dce7h00Ebeb1YCM4L/whlrTlLS/ecv97npLBavP46F/yoyYQTkYLDqGaD32cbkg6JQ0Z
-         0FYWvVyg6W5znjF8uF6YFPj2GhGAFmhXJC3WE6aG/2p2+tmrpJ9eqVlF1CwpDMmcPdIi
-         /uVyG3hmFfC6RBXFel2CwOOscMXWr7Nycuymly5CwR2pFHQ63KGwTLr0zAgAmUBki7y2
-         3N4o946+ueGcjz8S7+BavNXIbcFTLDBjvutsR/wBPCyivbnoDZYHVapGMtSdoC2WL2eq
-         i91w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718780299; x=1719385099;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
-        b=bZrD9SCV+oDg/MhsBDpok5k5kLrjupO83X4A2oiD2kwgUx5WYHRZpc4O8dFq83qZSo
-         zbtqco1LApSeIXPC93+FeCjnhUtypXGNCrx01QBlhoUkudBA+NX4pcZSrgpNFTnC2IvR
-         cp5J4csMuf3IQeVCjA7ZuR+YL7me4ZQhy5cYSes7s/fvR74G8ttecmfNoTnwqUKSQW2k
-         GuaHZ1Oqc64PmScXtDaMkf4+aeQsJHqFKuELa3sTU1M5WQwEhq23mJzMnoHzcxqn+AqW
-         Ggbsayv2PTB3FUIYiWZAg8BPZfqqJTk+gbluX03ZrXxsK6ahGc5feVQczu5uxGOX/gWF
-         yAZA==
-X-Gm-Message-State: AOJu0Ywpw3TCMbbPuN83JyL166oaN81/TenMA/lx6y3jIcWjwTtzweTC
-	N/cSIF5NtPjpVhAFVS2tE+NHgpJs4FVQRWozU0s/I+Em1Fr7KJ1dRZEmphSf7AKCcrcngot4LfN
-	UpitsI0BXIaBkBjB8zqlN4INzSfNHM1Et
-X-Google-Smtp-Source: AGHT+IEe+b3l82eK3lRLey279Sa5HCc0GpoxQx207FUVIxkdlRrp8zWd2DrR9VsBAshvbfhRWTHbQJoaABpQ4u8pxm8=
-X-Received: by 2002:a17:906:33db:b0:a6f:6364:4168 with SMTP id
- a640c23a62f3a-a6f9506f6ffmr262512966b.30.1718780298739; Tue, 18 Jun 2024
- 23:58:18 -0700 (PDT)
+	s=arc-20240116; t=1718781027; c=relaxed/simple;
+	bh=EuaVi/+yDQASvlOr/3Tzd2bddbHLAnMsTzIyau30NsA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=tZAGjoGGrhMd2hHuVta8n/3axt0zosXaz0AaKVCXfZev5JE8M8em49aM6s+rmj8KJu4szsXHeu2gDO+EWBuX6+KCRVukBc/2ORuj13oLAdqcrMTfK9p7PAwuLOqX+nANM/9VLUgRFMsFfe/qzUySVsTrcEtVjY8RDw6fk6J2CxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zWOkUNJz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Us6Wa99A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mahoiPa/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TGuDIep/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 305101F7FE;
+	Wed, 19 Jun 2024 07:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718781023; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVfc2rlSQljbD2nRiPzC/IFCdvxvG3Ygev4ei1J/p+M=;
+	b=zWOkUNJziRhj+e9R3zEfRGVGxl75Z7MMrlT5AwZWxL43jL6OD51ZaRN/ltYwPKVPiwz60g
+	SJUzHVbR0zINrUnRxPeZ9f2qagfS08DBk0lVbjZZMiBh26jEwX9TmTm57kp2L499NQtUHt
+	I6vSbYnAHEFvvZI15T/k5B6GJMDdrWs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718781023;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVfc2rlSQljbD2nRiPzC/IFCdvxvG3Ygev4ei1J/p+M=;
+	b=Us6Wa99ACdZHhJO5lLSEw1AncIlsiep5c1Ds+sDld8wn5xRzUF/I5QWui9e4kdaCZy2iZ5
+	AvQ93KgdiE79kYAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718781022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVfc2rlSQljbD2nRiPzC/IFCdvxvG3Ygev4ei1J/p+M=;
+	b=mahoiPa/LgykqWktOd9IgCW0ifEChxww4eDjKGi72pT2lNd4olNfoTyBbOPS5Sse9jlQuc
+	SImGyuNDuhENVkqQMMLaK8W4GlJjFDTEt2Ogd1EGKvmLScmWsi9pOg9+H6H1KIM6c2z98I
+	5t2UPx6DvezD3oHHdD6h3yWieW6PGQ4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718781022;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVfc2rlSQljbD2nRiPzC/IFCdvxvG3Ygev4ei1J/p+M=;
+	b=TGuDIep/Z/3Z6LLAio/MFl8dvKhuRe7ePtxoOmXOrxON/E+16b2Zh16ojiLWwXG1dsZYt6
+	G7DZREIf2imlRfBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 263CD13AAA;
+	Wed, 19 Jun 2024 07:10:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Pjl3LlqEcmYdBAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 19 Jun 2024 07:10:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Wed, 19 Jun 2024 08:58:07 +0200
-Message-ID: <CANH4o6PRoq26hkB=EJ=bX1r15TjkHSMcxzgrP8oGw+Yy7D4P3Q@mail.gmail.com>
-Subject: Mailing list for FreeBSD NFSv4.1/2nfsd?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: "NeilBrown" <neilb@suse.de>
+To: "Christoph Hellwig" <hch@infradead.org>
+Cc: "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Trond Myklebust" <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Subject: Re: [PATCH v5 00/19] nfs/nfsd: add support for localio
+In-reply-to: <ZnJxTsUuAkenmvWP@infradead.org>
+References:
+ <20240618201949.81977-1-snitzer@kernel.org>, <ZnJxTsUuAkenmvWP@infradead.org>
+Date: Wed, 19 Jun 2024 17:10:10 +1000
+Message-id: <171878101003.14261.1089014272023335768@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
 
-Hello,
+On Wed, 19 Jun 2024, Christoph Hellwig wrote:
+> What happened to the requirement that all protocol extensions added
+> to Linux need to be standardized in IETF RFCs?
+> 
+> 
 
-Is there a list for FreeBSD NFSv4.1/v4.2 nfsd?
+Is that requirement documented somewhere?  Not that I doubt it, but it
+would be nice to know where it is explicit.  I couldn't quickly find
+anything in Documentation/
+
+Can we get by without the LOCALIO protocol?
+
+For NFSv4.1 we could use the server_owner4 returned by EXCHANGE_ID.  It
+is explicitly documented as being usable to determine if two servers are
+the same.
+
+For NFSv4.0 ... I don't think we should encourage that to be used.
+
+For NFSv3 it is harder.  I'm not as ready to deprecate it as I am for
+4.0.  There is nothing in NFSv3 or MOUNT or NLM that is comparable to
+server_owner4.  If krb5 was used there would probably be a server
+identity in there that could be used.
+I think the server could theoretically return an AUTH_SYS verifier in
+each RPC reply and that could be used to identify the server.  I'm not
+sure that is a good idea though.
+
+Going through the IETF process for something that is entirely private to
+Linux seems a bit more than should be necessary..
 
 Thanks,
-Martin
+NeilBrown
+
 
