@@ -1,83 +1,124 @@
-Return-Path: <linux-nfs+bounces-4058-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4059-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 485DE90E4FC
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 09:56:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 697DC90E5E7
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 10:38:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7D212849F2
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 07:56:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 211171F22235
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 08:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C00182DB;
-	Wed, 19 Jun 2024 07:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b="Tzgd1f/O"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04DC79B84;
+	Wed, 19 Jun 2024 08:37:57 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.aixigo.de (mail.aixigo.de [5.145.142.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ED577F0B
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 07:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.145.142.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DC87D071
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 08:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718783791; cv=none; b=UbOKFbDhQdYkLftZ8OrAxziXjYDUtxwOCs9L9yWRI7rBvgudjExhF2s9+neoPc0OfXZtachaR3bl2jjH5GEvh+gVi8LlauGSzPy5nRSSAflTFYn0Xof3fml1Of4Cqf9erMjftFjcQgXojk6suMa8HI/9CgYSs1aEge9pdTei0GQ=
+	t=1718786277; cv=none; b=jtVDU4desYm8r3fKtsZ79DTzcQe2iFSmrN2PpRISUdZr2TKS3zxuQk8KmsLgh/SOCMjq/yPdQKjl3me6l2ZtQkIGNm0+KKj0MC+K/LGVXAh4d22jR9rsgP63n+3Ng6aFAVz4GrU8qPGKNKedMrwqNMtQQRCWN97K959RaLKSh0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718783791; c=relaxed/simple;
-	bh=0fdCcYEhbPFd8wZWWdMbdCk2Ayjn8q0rQ0RuZolKMk8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OiEYQSROr6LLXSfQjYdX2MoWWzhWsd0UQ8/cUWs7WYxHjZbm5cWh00/yBC7Rjh0NogXSn+CDOlLpdldhQK/IhhqQAad5Ty7SDHLeiDHugoX1IBLzJvbu1uSDdw0J7sa/hXTanzcqh+8p2hkdBru10HIVnJv8WQAiVexKTbEwsoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com; spf=pass smtp.mailfrom=aixigo.com; dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b=Tzgd1f/O; arc=none smtp.client-ip=5.145.142.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aixigo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=0fdCcYEhbPFd
-	8wZWWdMbdCk2Ayjn8q0rQ0RuZolKMk8=; h=in-reply-to:references:cc:to:from:
-	subject:date; d=aixigo.com; b=Tzgd1f/OlVlVENrFsv/ie89leolQPYP/6/8/qzfp
-	y2Xxnky8CiNi5qO3bZLg441VHWO4pDHoYImEnhxg3EtjlThlduKJ6KSQK8Uq7gqESm9ggH
-	BwWByBFPO8d0m0bUUxGU/xZZHCGCBOHCimXEELbJBQx6twahCkfP9eTIaqlmk=
-Received: from mailhost.ac.aixigo.de (mailhost.ac.aixigo.de [172.19.96.11])
-	by mail.aixigo.de (OpenSMTPD) with ESMTPS id b264cebc (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 19 Jun 2024 09:56:24 +0200 (CEST)
-Received: from [172.19.97.128] (dpcl082.ac.aixigo.de [172.19.97.128])
-	by mailhost.ac.aixigo.de (8.17.1.9/8.17.1.9/Debian-2) with ESMTPS id 45J7uNS9996389
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 19 Jun 2024 09:56:23 +0200
-Message-ID: <9523b03b-8851-4f7d-a789-f5613f45de80@aixigo.com>
-Date: Wed, 19 Jun 2024 09:56:23 +0200
+	s=arc-20240116; t=1718786277; c=relaxed/simple;
+	bh=3nHxUuO9yUa7vxH3Kp/IvZeB9wJnsIfiOgwvVRlFTNM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rK7XNmtNx3v4DpDg5FuJO64CLr4Ufxg8ci6K48TnyerV9FzmPthRjFshBs0X2jDlwPxsDktBppYpBBW+9G4oSI1n6LSwalg4331KNzQfky/Shee9+EwMZ0xbqq3kRLJL8yz7J52r1ajy02dlDkNAdB7zJBxd0tJXpOxo79a/r/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4210f0bb857so6414565e9.1
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 01:37:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718786274; x=1719391074;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Ube6FSne86GE5z2fnvXBFbtaksEs6jMUI0I4bGf6VE=;
+        b=uINkT4V35C0DG5kwj8VGfIwfIXP9DaZEZoPFj8aHeQkgMOn9rfth4/GyZQwqzNxKpr
+         9x9r5LfepcF1o2ltv+W3h7FRbnAFviaiOxryOCNKmL2HWJ5NyZsLCFxe/HRw170Feetc
+         So8SWYMpn9j6KW2i7jR45MsbCVabM7RLXGYkkLi9eO/k8ayu2uvyNgwI+vzgE3aNH97u
+         03HzinUkd7augBEKdhS00ns6HRjSHYR/FQiJXfw52ZK2kjAJp4sFEbHkN1f1v4Yz/8WA
+         dDE4bBsbCe5Dt36uPfhY+CVtbhn2oEtZFrYikhsz+B71oiv8nKsGLJ4Hh76lXKXMr+sZ
+         bshg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2TVcSdOWl6RnHhDjrNqrP5R5jkprEPKj/FBgGxyNvDOKNXIJxNcgBgTCfOhe9/9ToaQJ/ht4r4Fko0AT0Elw7lFYAZqNb4t49
+X-Gm-Message-State: AOJu0Yx/yQuJifDaIz4p37cBOV31wu2FlyeWDfuT3F+r9qHYC1WFdhG5
+	cTqTqshFmPRnawxlq2NJoLx3rOpVgYMDWsk7xMpx4pJldUK912Y4
+X-Google-Smtp-Source: AGHT+IGxWTywv+BmFz+WyfhPaWb9XS6cwcxyW/gCHvpZ51/FjngtuMUHIDqQ1AE62W/zDdblkYLtlA==
+X-Received: by 2002:a05:600c:4fc9:b0:421:bb51:d630 with SMTP id 5b1f17b1804b1-424752981b8mr12801485e9.2.1718786274069;
+        Wed, 19 Jun 2024 01:37:54 -0700 (PDT)
+Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe9184sm252070585e9.13.2024.06.19.01.37.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 01:37:53 -0700 (PDT)
+Message-ID: <ae298053-bdee-4a8a-b6a9-e57de79abc97@grimberg.me>
+Date: Wed, 19 Jun 2024 11:37:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: nfsd becomes a zombie
-From: Harald Dunkel <harald.dunkel@aixigo.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
- <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
- <4eeb2367-c869-4960-869b-c23ef824e044@oracle.com>
- <661a6c9a-81d6-46fd-87ec-274100b12189@aixigo.com>
- <ZnGfEDvQB1FRGVQK@tissot.1015granger.net>
- <668b479b-3a51-4287-b9d7-44d6dfa4eaf4@aixigo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs: add 'noextend' option for lock-less 'lost writes'
+ prevention
+To: Trond Myklebust <trondmy@hammerspace.com>,
+ "dan.aloni@vastdata.com" <dan.aloni@vastdata.com>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20240618153313.3167460-1-dan.aloni@vastdata.com>
+ <d2f48ca233f85da80f2193cd92e6f97feb587a69.camel@hammerspace.com>
 Content-Language: en-US
-In-Reply-To: <668b479b-3a51-4287-b9d7-44d6dfa4eaf4@aixigo.com>
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <d2f48ca233f85da80f2193cd92e6f97feb587a69.camel@hammerspace.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 1.0.3 at srvvm01.ac.aixigo.de
-X-Virus-Status: Clean
 
-On 2024-06-19 09:32:23, Harald Dunkel wrote:
-> 
-> I have 3 clients with more recent kernel versions 5.10.209, 5.10.218
-> and 6.7.12. The 5.10.x hosts are running Debian 12 and this kernel
 
-5.10.x kernel means Debian *11*, of course.
 
-> for several months, but the host with 6.7.12 is running this kernel
-> since May 16th.
-> 
+On 18/06/2024 21:59, Trond Myklebust wrote:
+> Hi Dan,
+>
+> On Tue, 2024-06-18 at 18:33 +0300, Dan Aloni wrote:
+>> There are some applications that write to predefined non-overlapping
+>> file offsets from multiple clients and therefore don't need to rely
+>> on
+>> file locking. However, NFS file system behavior of extending writes
+>> to
+>> to deal with write fragmentation, causes those clients to corrupt
+>> each
+>> other's data.
+>>
+>> To help these applications, this change adds the `noextend` parameter
+>> to
+>> the mount options, and handles this case in `nfs_can_extend_write`.
+>>
+>> Clients can additionally add the 'noac' option to ensure page cache
+>> flush on read for modified files.
+> I'm not overly enamoured of the name "noextend". To me that sounds like
+> it might have something to do with preventing appends. Can we find
+> something that is a bit more descriptive?
+
+nopbw (No page boundary writes) ?
+
+>
+> That said, and given your last comment about reads. Wouldn't it be
+> better to have the application use O_DIRECT for these workloads?
+> Turning off attribute caching is both racy and an inefficient way to
+> manage page cache consistency. It forces the client to bombard the
+> server with GETATTR requests in order to check that the page cache is
+> in synch, whereas your description of the workload appears to suggest
+> that the correct assumption should be that it is not in synch.
+>
+> IOW: I'm asking if the better solution might not be to rather implement
+> something akin to Solaris' "forcedirectio"?
+
+This access pattern represents a common case in HPC where different workers
+write records to a shared output file which do not necessarily align to 
+a page boundary.
+
+This is not everything that the app is doing nor the only file it is 
+accessing, so IMO forcing
+directio universally is may penalize the application.
 
