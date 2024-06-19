@@ -1,71 +1,83 @@
-Return-Path: <linux-nfs+bounces-4052-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4053-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D901D90E2E0
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 07:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74D2590E3DD
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 08:58:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C25341C23613
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 05:49:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77E1F1C22A48
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jun 2024 06:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC4E148788;
-	Wed, 19 Jun 2024 05:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7EC6BB58;
+	Wed, 19 Jun 2024 06:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W/Aa1AHF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3xl/Dr0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFE2224D2
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 05:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B06F306
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Jun 2024 06:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718776144; cv=none; b=ii6pn9YiEBZiv7QLUxGUAkDjvI/j3Qc5g8LBIbP2JJJjmoh2XYD+YfC1zqhs0Ykdfg1fNV6x1dTLlhbNSACiky48LFV9sxBZhup9pP5Tx+29SEyyBydrqAM7xKi6sEfxky+HuIfD4bkhPeIZ5b4VJ4jJBabNyMYmP4nYvamXevc=
+	t=1718780302; cv=none; b=D0DdZXnkNBkPlPgQTUW6Z0hq2GQ5kEDrFaiLqiTGXNXuMU0NdprMBpabUNt50aQSiYfgaLZZPjoCi0+BElrzTLeLHwv8OXtt5YSNMq2ZWwFz3uzWaC0qVgT9oKGVn0hesL+0H55ohG3Qb5O4vNp9F9JEnPZ84xZs26XoXtlcczw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718776144; c=relaxed/simple;
-	bh=W73dxHGT2SpdwPdu01UWBRykOKpnTQF3flKU3L6YRhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b13R/XkKAFfI1u/00rVf2uc2zv+tqZdkoy70frd6m4336ndUV28hvaJ3rQsQYfloQ11g9PxmdakyuB9y9CaAT3AMuNNQmV8LZBZXV3VLJg9kAcl+pBUgltmxOOmfscPkopZbVkWe/HvdiXKW8oF6r9wf8+oUiUl3udcPJySkWEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W/Aa1AHF; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=W73dxHGT2SpdwPdu01UWBRykOKpnTQF3flKU3L6YRhw=; b=W/Aa1AHFad3I3lzKXS9L1UJFEr
-	HToO9E++irVaKTrVkmM0r74Vi3X8v37gTmbjEbZXtw5SsSeddSMgpCd/YmCsCUrjI4hRp1nQBWnV6
-	JoR9i+B7yD7XvGvS2Fi3GqYTLFLikU883v7G4MbUvXCb0Je3HqjMVfSTa2r5y+KMbcw5+U+8QqYzi
-	ekMAk5Xc26M2lRvXm+75GyJMuvLx334yLCiVX9FzvZULlYUn4A98BaEPyPDEtYx/t7xgjiUFGhzFj
-	q0MFFYbbQCVp3eH1O41O6U1c6izIPskL+cLC0lDOm2RaGo8M48PXfyZzdUtfudTzq/ON5ZZc9Cuc5
-	QSoMGdjw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJoBq-0000000HYx6-1zRu;
-	Wed, 19 Jun 2024 05:49:02 +0000
-Date: Tue, 18 Jun 2024 22:49:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, snitzer@hammerspace.com
-Subject: Re: [PATCH v5 00/19] nfs/nfsd: add support for localio
-Message-ID: <ZnJxTsUuAkenmvWP@infradead.org>
-References: <20240618201949.81977-1-snitzer@kernel.org>
+	s=arc-20240116; t=1718780302; c=relaxed/simple;
+	bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HW+GgykAYnkI0VCvwCrG2jJeVT3O4uF7ufjSxxKRmJkINy+KMSYWdCdihoo4LN15jV+gmmkLB2oO4BY7qjc1b2Et9y4lSngkIB9iApTF5nJgFWJ3SGDudrilEPFWejMUc29c9skfaygwWHTfT26R+ap1YuqITdBa608q9wncGxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3xl/Dr0; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6f9fe791f8so82777266b.0
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Jun 2024 23:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718780299; x=1719385099; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
+        b=H3xl/Dr0+WQHDvgYeuOJcBlDMZQyI7jydTbSuRgI9NuNhI6ewfK8XZbIM0l7SrwIxP
+         Dce7h00Ebeb1YCM4L/whlrTlLS/ecv97npLBavP46F/yoyYQTkYLDqGaD32cbkg6JQ0Z
+         0FYWvVyg6W5znjF8uF6YFPj2GhGAFmhXJC3WE6aG/2p2+tmrpJ9eqVlF1CwpDMmcPdIi
+         /uVyG3hmFfC6RBXFel2CwOOscMXWr7Nycuymly5CwR2pFHQ63KGwTLr0zAgAmUBki7y2
+         3N4o946+ueGcjz8S7+BavNXIbcFTLDBjvutsR/wBPCyivbnoDZYHVapGMtSdoC2WL2eq
+         i91w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718780299; x=1719385099;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vYQrGugz098M8L/ITcOWNrQgqIKlz1rRbPECUeyyDUA=;
+        b=bZrD9SCV+oDg/MhsBDpok5k5kLrjupO83X4A2oiD2kwgUx5WYHRZpc4O8dFq83qZSo
+         zbtqco1LApSeIXPC93+FeCjnhUtypXGNCrx01QBlhoUkudBA+NX4pcZSrgpNFTnC2IvR
+         cp5J4csMuf3IQeVCjA7ZuR+YL7me4ZQhy5cYSes7s/fvR74G8ttecmfNoTnwqUKSQW2k
+         GuaHZ1Oqc64PmScXtDaMkf4+aeQsJHqFKuELa3sTU1M5WQwEhq23mJzMnoHzcxqn+AqW
+         Ggbsayv2PTB3FUIYiWZAg8BPZfqqJTk+gbluX03ZrXxsK6ahGc5feVQczu5uxGOX/gWF
+         yAZA==
+X-Gm-Message-State: AOJu0Ywpw3TCMbbPuN83JyL166oaN81/TenMA/lx6y3jIcWjwTtzweTC
+	N/cSIF5NtPjpVhAFVS2tE+NHgpJs4FVQRWozU0s/I+Em1Fr7KJ1dRZEmphSf7AKCcrcngot4LfN
+	UpitsI0BXIaBkBjB8zqlN4INzSfNHM1Et
+X-Google-Smtp-Source: AGHT+IEe+b3l82eK3lRLey279Sa5HCc0GpoxQx207FUVIxkdlRrp8zWd2DrR9VsBAshvbfhRWTHbQJoaABpQ4u8pxm8=
+X-Received: by 2002:a17:906:33db:b0:a6f:6364:4168 with SMTP id
+ a640c23a62f3a-a6f9506f6ffmr262512966b.30.1718780298739; Tue, 18 Jun 2024
+ 23:58:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618201949.81977-1-snitzer@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+From: Martin Wege <martin.l.wege@gmail.com>
+Date: Wed, 19 Jun 2024 08:58:07 +0200
+Message-ID: <CANH4o6PRoq26hkB=EJ=bX1r15TjkHSMcxzgrP8oGw+Yy7D4P3Q@mail.gmail.com>
+Subject: Mailing list for FreeBSD NFSv4.1/2nfsd?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-What happened to the requirement that all protocol extensions added
-to Linux need to be standardized in IETF RFCs?
+Hello,
 
+Is there a list for FreeBSD NFSv4.1/v4.2 nfsd?
+
+Thanks,
+Martin
 
