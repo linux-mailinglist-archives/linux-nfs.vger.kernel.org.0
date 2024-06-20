@@ -1,34 +1,34 @@
-Return-Path: <linux-nfs+bounces-4177-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4178-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D76A910F15
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 19:41:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6B39910F17
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 19:41:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65AB61C21B3C
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 17:41:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9112B1F232FC
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 17:41:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B161C2329;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8D61C2332;
 	Thu, 20 Jun 2024 17:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcOdI4K7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3c+aZgO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EA71B3F3C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BE31C2305
 	for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2024 17:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904801; cv=none; b=AlqEY2/8PxWAXXElVBFTZ1iTZNAAoIQ/UbpIJ0EQhleQ5fZOtm3JoaXgpLXZwKOlMaVG5l961oYde8c/49//JIv19DD9pWsONTES5QKvRUQagV4W/5aVDgsd0CLn2NpNAM25ty0ad0QS+PRRQ31PFXX7wY34ViJRS8f3a9ewzLM=
+	t=1718904801; cv=none; b=X+89llJhoqXOS1aG0fbTy22JHNPJSfxkKG2IN/6QLCm/0HJlXXhwsS+TAJbHlINA4vlNky/xKOWmE8u6tx6mN24GTdFEj28yYzbMp2rDRR8lzNAh7XCySn12YJ/QnLPWCQJURpnToqrfCL7JmYVBMjYoSOyjdBFZbzr1hbVUc6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718904801; c=relaxed/simple;
-	bh=uNQJZwf5yvLmUciK79dFXHBncqmHSHmd+MY40pmnnuA=;
+	bh=2p9kWBbTHfnvBQ8i8TFWcwLEKkJ12Z5z63HjOwGkKNc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dce9nGjMGurp2tUZygYlQPe5m+eurDMBzjBe/etOHeBGtkU9W/U3esCUc8RUjio5AioOOcqsj/yhuHjMMKFzA8q+yJooEehOOH99TRcCtUuB2Hh2p1Csb2eziKAeCbjt8n75hMfx2783xF7IU4pIRkupf3Plv67sDSAjMGcTnWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VcOdI4K7; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=pPtFDtXIr2A4zlVOx499BgUH9qOEiZC/oBvu9Fiuy9k3TtOyCjGYWgwM2HrX32nt9CBsI7WdeCQf+OrkIxfcGkjk3Wzhl+4mYTkIFslWMrkOTYIb95Du4r424FoaqF4BKqF6/d8CuSuhou7OekMEkZF34TXoe+OLOXl3Qtut2NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E3c+aZgO; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -37,25 +37,25 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ts5ZCKmEyEPwC8pHpdqPl9OxtkpjpqDkyGOj4sN+myw=;
-	b=VcOdI4K7XaoPKWwZ2CTjVklO0uYPlaBltIPw/3G/ZNf5rcjx3CE6Yy6+oe+8/Bvosi2pd0
-	4CeIP/cFuY8tZd3v3a0ilLeNSdzUgpYW1PzHRP68lYk+WSJG8WgJTArjA/jE+QR7HXQQpr
-	UoSNveiL8MceN+UdLFNm8o4TK4sgKlQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=tcCzhA8XUd6wWPEL49ATAv4+dcrLDrKKLcUOQlZf5aE=;
+	b=E3c+aZgO6DrT0poRT1Y+OHhlctVuTMIB6iHLzPtF3gYGg/yUhd5NMdNWeRBnoVPAawqaNz
+	glUG7/8SCPMuEcClEQwshm6F8kDBMq9ROJ4PrpcjTeansbWiqzLK8MgYDwyA6FmMel35U3
+	OjC8zRbGpQ6HtHwAHoYCQQMzciPIJSk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-378-OqI8PTsvNIisGVH6w9IAGQ-1; Thu,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-694-dzyJCI2LOGq-cKgSo75gZA-1; Thu,
  20 Jun 2024 13:33:14 -0400
-X-MC-Unique: OqI8PTsvNIisGVH6w9IAGQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+X-MC-Unique: dzyJCI2LOGq-cKgSo75gZA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C42B1956056;
-	Thu, 20 Jun 2024 17:33:03 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E57F51956087;
+	Thu, 20 Jun 2024 17:33:10 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.39.195.156])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 340171955E80;
-	Thu, 20 Jun 2024 17:32:56 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B52743000602;
+	Thu, 20 Jun 2024 17:33:04 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
@@ -80,10 +80,11 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/17] cifs: Defer read completion
-Date: Thu, 20 Jun 2024 18:31:27 +0100
-Message-ID: <20240620173137.610345-10-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Steve French <sfrench@samba.org>
+Subject: [PATCH 10/17] cifs: Only pick a channel once per read request
+Date: Thu, 20 Jun 2024 18:31:28 +0100
+Message-ID: <20240620173137.610345-11-dhowells@redhat.com>
 In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
 References: <20240620173137.610345-1-dhowells@redhat.com>
 Precedence: bulk
@@ -93,73 +94,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+In cifs, only pick a channel when setting up a read request rather than
+doing so individually for every subrequest and instead use that channel for
+all.  This mirrors what the code in v6.9 does.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- fs/smb/client/smb2pdu.c      | 15 ++++++++++++---
- include/trace/events/netfs.h |  7 +++++--
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ fs/smb/client/cifsglob.h |  1 +
+ fs/smb/client/file.c     | 14 +++-----------
+ 2 files changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index 38a06e8a0f90..e213cecd5094 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -4484,6 +4484,16 @@ smb2_new_read_req(void **buf, unsigned int *total_len,
- 	return rc;
- }
+diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
+index 4b00512fb9f9..b48d3f5e8889 100644
+--- a/fs/smb/client/cifsglob.h
++++ b/fs/smb/client/cifsglob.h
+@@ -1494,6 +1494,7 @@ struct cifs_aio_ctx {
+ struct cifs_io_request {
+ 	struct netfs_io_request		rreq;
+ 	struct cifsFileInfo		*cfile;
++	struct TCP_Server_Info		*server;
+ };
  
-+static void smb2_readv_worker(struct work_struct *work)
-+{
-+	struct cifs_io_subrequest *rdata =
-+		container_of(work, struct cifs_io_subrequest, subreq.work);
-+
-+	netfs_subreq_terminated(&rdata->subreq,
-+				(rdata->result == 0 || rdata->result == -EAGAIN) ?
-+				rdata->got_bytes : rdata->result, true);
-+}
-+
- static void
- smb2_readv_callback(struct mid_q_entry *mid)
+ /* asynchronous read support */
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 67dd8fcd0e6d..16fa1ac1ed2d 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -134,17 +134,15 @@ static void cifs_issue_write(struct netfs_io_subrequest *subreq)
+ static bool cifs_clamp_length(struct netfs_io_subrequest *subreq)
  {
-@@ -4578,9 +4588,8 @@ smb2_readv_callback(struct mid_q_entry *mid)
- 			rdata->result = 0;
- 	}
- 	rdata->credits.value = 0;
--	netfs_subreq_terminated(&rdata->subreq,
--				(rdata->result == 0 || rdata->result == -EAGAIN) ?
--				rdata->got_bytes : rdata->result, true);
-+	INIT_WORK(&rdata->subreq.work, smb2_readv_worker);
-+	queue_work(cifsiod_wq, &rdata->subreq.work);
- 	release_mid(mid);
- 	add_credits(server, &credits, 0);
- }
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index fc5dbd19f120..db603a4e22cd 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -412,6 +412,7 @@ TRACE_EVENT(netfs_folio,
- 		    __field(ino_t,			ino)
- 		    __field(pgoff_t,			index)
- 		    __field(unsigned int,		nr)
-+		    __field(bool,			ra_trigger)
- 		    __field(enum netfs_folio_trace,	why)
- 			     ),
+ 	struct netfs_io_request *rreq = subreq->rreq;
+-	struct TCP_Server_Info *server;
+ 	struct cifs_io_subrequest *rdata = container_of(subreq, struct cifs_io_subrequest, subreq);
+ 	struct cifs_io_request *req = container_of(subreq->rreq, struct cifs_io_request, rreq);
++	struct TCP_Server_Info *server = req->server;
+ 	struct cifs_sb_info *cifs_sb = CIFS_SB(rreq->inode->i_sb);
+ 	size_t rsize = 0;
+ 	int rc;
  
-@@ -420,11 +421,13 @@ TRACE_EVENT(netfs_folio,
- 		    __entry->why = why;
- 		    __entry->index = folio_index(folio);
- 		    __entry->nr = folio_nr_pages(folio);
-+		    __entry->ra_trigger = folio_test_readahead(folio);
- 			   ),
+ 	rdata->xid = get_xid();
+ 	rdata->have_xid = true;
+-
+-	server = cifs_pick_channel(tlink_tcon(req->cfile->tlink)->ses);
+ 	rdata->server = server;
  
--	    TP_printk("i=%05lx ix=%05lx-%05lx %s",
-+	    TP_printk("i=%05lx ix=%05lx-%05lx %s%s",
- 		      __entry->ino, __entry->index, __entry->index + __entry->nr - 1,
--		      __print_symbolic(__entry->why, netfs_folio_traces))
-+		      __print_symbolic(__entry->why, netfs_folio_traces),
-+		      __entry->ra_trigger ? " *RA*" : "")
- 	    );
+ 	if (cifs_sb->ctx->rsize == 0)
+@@ -203,14 +201,7 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
+ 	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 	rdata->pid = pid;
  
- TRACE_EVENT(netfs_write_iter,
+-	rc = adjust_credits(rdata->server, &rdata->credits, rdata->subreq.len);
+-	if (!rc) {
+-		if (rdata->req->cfile->invalidHandle)
+-			rc = -EAGAIN;
+-		else
+-			rc = rdata->server->ops->async_readv(rdata);
+-	}
+-
++	rc = rdata->server->ops->async_readv(rdata);
+ out:
+ 	if (rc)
+ 		netfs_subreq_terminated(subreq, rc, false);
+@@ -250,6 +241,7 @@ static int cifs_init_request(struct netfs_io_request *rreq, struct file *file)
+ 		open_file = file->private_data;
+ 		rreq->netfs_priv = file->private_data;
+ 		req->cfile = cifsFileInfo_get(open_file);
++		req->server = cifs_pick_channel(tlink_tcon(req->cfile->tlink)->ses);
+ 	} else if (rreq->origin != NETFS_WRITEBACK) {
+ 		WARN_ON_ONCE(1);
+ 		return -EIO;
 
 
