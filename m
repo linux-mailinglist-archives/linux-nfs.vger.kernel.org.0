@@ -1,240 +1,123 @@
-Return-Path: <linux-nfs+bounces-4165-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4166-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0FD0910D6F
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 18:46:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9240F910D8F
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 18:51:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F1C61F2173B
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 16:46:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 383C8282774
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 16:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF364156256;
-	Thu, 20 Jun 2024 16:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D4D71B29BB;
+	Thu, 20 Jun 2024 16:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JFeEkL4R"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SR9S5Ux0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328601AD4B9
-	for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2024 16:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEDF17545;
+	Thu, 20 Jun 2024 16:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718901990; cv=none; b=joeXkRoS0LM3zvbShQN9Kxuss4vKtzIutbMJxZ5pyTuM1ec5/Lf+GMnumBCT6aWiWz/6vO8Sa2QFcK4NnIbiVfr7Fu1BGjRDDYiA2zU8M+EL6s7tn3Kbp/ADirSMrtfLZxCdE4pjOQg+fNi6qZ45denW94jP83K5FAJAWWRENwc=
+	t=1718902285; cv=none; b=otaDUPEnPcdXcN+UWHYmv6ULxA/L9wBeX3zsAZ6QK7523ZYhvwlYqGZhqJPNXf+xSqFaPan00FUfRPNkOuzu+Uuzw8/iMusRL2tRe5OVfPX+pqLRH98HUgv/9UBIDbJN5/jswP1GLOp/cpu8N3cZs0B6kN5J2Lym9CwfdyDphk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718901990; c=relaxed/simple;
-	bh=Iqdc18b71yd5rfjyx56KwNBcDaAUJPsAUoWlzT0kB9g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nNbgcz71NOkbF0uXg5J6H/e3eg1rJqQeVbfSQhBjkJ0bgKhoye6Q0inbcUYWGfAU/6LsIvy2yXwhK1J+kGPjVdUxHU67CJeByTR76KWCleQ8zWadcrl2NtYnuT+jeF/EmZbhz6qpFgCX/udC+t0k5Jk79G2x/CKDFX2LDe/N+mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JFeEkL4R; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718901987;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qykFAtq5iH1tdtpzJH/2DdAmc8C4INcfqisdlnxgLzo=;
-	b=JFeEkL4Rq78ZK553Tn6gkA8cv9sGHLYR6QIF3O2HINWHl0HyzdBcGm7sBGFCaP7bs+wXXp
-	BQCwrD4XaGlqbmR9SJN2E5LfKumG8OMQY5zLduGv8X9II3aPDVOcfJ7aRpnPDWgZlycCFg
-	YguJZSIDEFEqA7y/5TQhJVvlYff13QU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-557-TNLXNZvtP66G4Z2_JUPCYg-1; Thu,
- 20 Jun 2024 12:46:24 -0400
-X-MC-Unique: TNLXNZvtP66G4Z2_JUPCYg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68FAC195DE3B;
-	Thu, 20 Jun 2024 16:46:18 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.4])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAC5E3011D27;
-	Thu, 20 Jun 2024 16:45:58 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: cel@kernel.org, linux-nfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [RFC PATCH 3/4] nfs/blocklayout: Fix premature PR key
- unregistration
-Date: Thu, 20 Jun 2024 12:45:56 -0400
-Message-ID: <3590D3CB-E9C3-4C78-8077-7458F9E6C966@redhat.com>
-In-Reply-To: <762051B8-1265-42BA-8002-B4BD4E117488@redhat.com>
-References: <20240619173929.177818-6-cel@kernel.org>
- <20240619173929.177818-9-cel@kernel.org>
- <D3359408-4D02-415A-9557-19A6EFE5DDCE@redhat.com>
- <ZnQ927sF7oRT+KmF@tissot.1015granger.net>
- <F421047C-FACF-46EF-9169-07C8FF5FCF3A@redhat.com>
- <ZnRO8BA/TlQjpCmg@tissot.1015granger.net>
- <762051B8-1265-42BA-8002-B4BD4E117488@redhat.com>
+	s=arc-20240116; t=1718902285; c=relaxed/simple;
+	bh=MeliXT5KED5LejV7TsrW5cNoTiGDZuWdQFvaVIeCEJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ndA2daTJU0GycgX9KAhsQIvRAk0HYkHdRFC2bqau/RqXSzmiiLXCeIrk9Gphyv9Id8qwzNVmlYjc1IwGGX7NJI9pzTuLU23HZBVZhZcPoUCRZdE5e6s5E3cu6G5G9vf91/ZMV7W3gCmUbXSbfqS7NBPt31lamTUzg59zcjshTME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SR9S5Ux0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K9v5IY028296;
+	Thu, 20 Jun 2024 16:51:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4ZjUbYHQGmQ5Ple2LZPQoQcCC6f2MCBqlTdQhDqkWbo=; b=SR9S5Ux0DZmkRmMP
+	FkCO5KuwLQqaxE7t5MZ2TMmGstZARPCMKQjovlUoN08bF9iGoCkv3wlGyqZCIPTC
+	ijlOH/ys0riPgbR8gwBBEiceVll7AdbplgckkrOeExcpT6S+uRYYAuxdxgIxe+ep
+	MjhdfKs3RDJtbpiqIY0LLcuES8ttx124CeKS9v9rT44Wa0aQ9xHRo7uyFwCtZLrm
+	RJ6oF6tLRYZFsV3rX8lL664wJZF1KtHfuwJz3Vds/X0Gsu+nmoNRi8CCtmgvJEzg
+	y2BucUOX/cRc2kZsfyMbR56ZPrLNC9sX60JLQh91zAG73J7HJulmUfv8Q9PkzeKp
+	Cb9aVA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yv7jejbcs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 16:51:07 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KGp6cn011269
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 16:51:06 GMT
+Received: from [10.48.244.93] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
+ 2024 09:51:05 -0700
+Message-ID: <41eb004c-c7d2-407e-b324-2332aa400c72@quicinc.com>
+Date: Thu, 20 Jun 2024 09:51:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: nfs: add missing MODULE_DESCRIPTION() macros
+Content-Language: en-US
+To: Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust
+	<trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck
+ Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia
+	<kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20240527-md-fs-nfs-v1-1-64a15e9b53a6@quicinc.com>
+ <a7e7b2a3e9898225836d8263aff9e01e60390f37.camel@kernel.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <a7e7b2a3e9898225836d8263aff9e01e60390f37.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qiTPOXVP4hKmalFaq6vKQ4vc5j3tHFQe
+X-Proofpoint-ORIG-GUID: qiTPOXVP4hKmalFaq6vKQ4vc5j3tHFQe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=991
+ clxscore=1015 priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406200121
 
-On 20 Jun 2024, at 11:56, Benjamin Coddington wrote:
+On 6/20/2024 9:33 AM, Jeff Layton wrote:
+> On Mon, 2024-05-27 at 10:58 -0700, Jeff Johnson wrote:
+...
+>> diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
+>> index 1479583fbb62..8f034aa8c88b 100644
+>> --- a/fs/nfs_common/grace.c
+>> +++ b/fs/nfs_common/grace.c
+>> @@ -139,6 +139,7 @@ exit_grace(void)
+>>  }
+>>  
+>>  MODULE_AUTHOR("Jeff Layton <jlayton@primarydata.com>");
+>> +MODULE_DESCRIPTION("lockd and nfsv4 grace period control");
+> 
+> This module has some code that does other things too. It's basically
+> some core infrastructure shared by the NFS client and server. Maybe
+> this should read "NFS client and server infrastructure" ?
 
-> On 20 Jun 2024, at 11:46, Chuck Lever wrote:
->
->> On Thu, Jun 20, 2024 at 11:30:54AM -0400, Benjamin Coddington wrote:
->>> On 20 Jun 2024, at 10:34, Chuck Lever wrote:
->>>
->>>> On Thu, Jun 20, 2024 at 09:51:46AM -0400, Benjamin Coddington wrote:=
+thanks, will update in v2
 
->>>>> On 19 Jun 2024, at 13:39, cel@kernel.org wrote:
->>>>>
->>>>>> From: Chuck Lever <chuck.lever@oracle.com>
->>>>>>
->>>>>> During generic/069 runs with pNFS SCSI layouts, the NFS client emi=
-ts
->>>>>> the following in the system journal:
->>>>>>
->>>>>> kernel: pNFS: failed to open device /dev/disk/by-id/dm-uuid-mpath-=
-0x6001405e3366f045b7949eb8e4540b51 (-2)
->>>>>> kernel: pNFS: using block device sdb (reservation key 0x666b60901e=
-7b26b3)
->>>>>> kernel: pNFS: failed to open device /dev/disk/by-id/dm-uuid-mpath-=
-0x6001405e3366f045b7949eb8e4540b51 (-2)
->>>>>> kernel: pNFS: using block device sdb (reservation key 0x666b60901e=
-7b26b3)
->>>>>> kernel: sd 6:0:0:1: reservation conflict
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#16 FAILED Result: hostbyte=3DDID_OK =
-driverbyte=3DDRIVER_OK cmd_age=3D0s
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#16 CDB: Write(10) 2a 00 00 00 00 50 =
-00 00 08 00
->>>>>> kernel: reservation conflict error, dev sdb, sector 80 op 0x1:(WRI=
-TE) flags 0x0 phys_seg 1 prio class 2
->>>>>> kernel: sd 6:0:0:1: reservation conflict
->>>>>> kernel: sd 6:0:0:1: reservation conflict
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#18 FAILED Result: hostbyte=3DDID_OK =
-driverbyte=3DDRIVER_OK cmd_age=3D0s
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#17 FAILED Result: hostbyte=3DDID_OK =
-driverbyte=3DDRIVER_OK cmd_age=3D0s
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#18 CDB: Write(10) 2a 00 00 00 00 60 =
-00 00 08 00
->>>>>> kernel: sd 6:0:0:1: [sdb] tag#17 CDB: Write(10) 2a 00 00 00 00 58 =
-00 00 08 00
->>>>>> kernel: reservation conflict error, dev sdb, sector 96 op 0x1:(WRI=
-TE) flags 0x0 phys_seg 1 prio class 0
->>>>>> kernel: reservation conflict error, dev sdb, sector 88 op 0x1:(WRI=
-TE) flags 0x0 phys_seg 1 prio class 0
->>>>>> systemd[1]: fstests-generic-069.scope: Deactivated successfully.
->>>>>> systemd[1]: fstests-generic-069.scope: Consumed 5.092s CPU time.
->>>>>> systemd[1]: media-test.mount: Deactivated successfully.
->>>>>> systemd[1]: media-scratch.mount: Deactivated successfully.
->>>>>> kernel: sd 6:0:0:1: reservation conflict
->>>>>> kernel: failed to unregister PR key.
->>>>>>
->>>>>> This appears to be due to a race. bl_alloc_lseg() calls this:
->>>>>>
->>>>>> 561 static struct nfs4_deviceid_node *
->>>>>> 562 bl_find_get_deviceid(struct nfs_server *server,
->>>>>> 563                 const struct nfs4_deviceid *id, const struct c=
-red *cred,
->>>>>> 564                 gfp_t gfp_mask)
->>>>>> 565 {
->>>>>> 566         struct nfs4_deviceid_node *node;
->>>>>> 567         unsigned long start, end;
->>>>>> 568
->>>>>> 569 retry:
->>>>>> 570         node =3D nfs4_find_get_deviceid(server, id, cred, gfp_=
-mask);
->>>>>> 571         if (!node)
->>>>>> 572                 return ERR_PTR(-ENODEV);
->>>>>>
->>>>>> nfs4_find_get_deviceid() does a lookup without the spin lock first=
-=2E
->>>>>> If it can't find a matching deviceid, it creates a new device_info=
-
->>>>>> (which calls bl_alloc_deviceid_node, and that registers the device=
-'s
->>>>>> PR key).
->>>>>>
->>>>>> Then it takes the nfs4_deviceid_lock and looks up the deviceid aga=
-in.
->>>>>> If it finds it this time, bl_find_get_deviceid() frees the spare
->>>>>> (new) device_info, which unregisters the PR key for the same devic=
-e.
->>>>>>
->>>>>> Any subsequent I/O from this client on that device gets EBADE.
->>>>>>
->>>>>> The umount later unregisters the device's PR key again.
->>>>>>
->>>>>> To prevent this problem, register the PR key after the deviceid_no=
-de
->>>>>> lookup.
->>>>>
->>>>> Hi Chuck - nice catch, but I'm not seeing how we don't have the sam=
-e problem
->>>>> after this patch, instead it just seems like it moves the race.  Wh=
-at
->>>>> prevents another process waiting to take the nfs4_deviceid_lock fro=
-m
->>>>> unregistering the same device?  I think we need another way to sign=
-al
->>>>> bl_free_device that we don't want to unregister for the case where =
-the new
->>>>> device isn't added to nfs4_deviceid_cache.
->>>>
->>>> That's a (related but) somewhat different issue. I haven't seen
->>>> that in practice so far.
->>>>
->>>>
->>>>> No good ideas yet - maybe we can use a flag set within the
->>>>> nfs4_deviceid_lock?
->>>>
->>>> Well this smells like a use for a reference count on the block
->>>> device, but fs/nfs doesn't control the definition of that data
->>>> structure.
->>>
->>> I think we need two things to fix this race:
->>>  - a way to determine if the current thread is the one
->>>    that added the device to the to the cache, if so do the register
->>>  - a way to determine if we're freeing because we lost the race to th=
-e
->>>    cache, if so don't un-register.
->>
->> My patch is supposed to deal with all of that already. Can you show
->> me specifically what is not getting handled by my proposed change?
->
-> Well - I may be missing something, but it looks like with this patch yo=
-u can
-> still have:
->
-> Thread
-> A                           B
->
-> nfs4_find_get_deviceid
-> new{a} =3D nfs4_get_device_info
-> locks nfs4_deviceid_lock
->                             nfs4_find_get_deviceid
->                             new{b} =3D nfs4_get_device_info
->                             spins on nfs4_deviceid_lock
-> adds new{a} to the cache
-> unlocks nfs4_deviceid_lock
-> pr_register
->                             locks nfs4_deviceid_lock
->                             finds new{a}
->                             pr_UNregisters new{b}
->
-> In this case, you end up with an unregistered device.
-
-Oh jeez Chuck, nevermind - I am missing something, that we check the the
-new{b} pnfs_block_dev->pr_registred before unregistering it.
-
-So, actually - I think this patch does solve the problem.  I apologize fo=
-r
-the noise here.
-
-Ben
+/jeff
 
 
