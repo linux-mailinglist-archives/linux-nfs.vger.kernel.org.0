@@ -1,66 +1,78 @@
-Return-Path: <linux-nfs+bounces-4131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D920290FD5D
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 09:14:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C200910073
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 11:35:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 63181B2464C
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 07:14:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B01F284385
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 09:35:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DBA42ABA;
-	Thu, 20 Jun 2024 07:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5E6C1CD2A;
+	Thu, 20 Jun 2024 09:35:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8268142058
-	for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2024 07:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD2A1802E
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2024 09:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718867640; cv=none; b=GP/60OuYzHkPtJA8VO3J6HU3wO9w8msApYLdpA/UNq3QIaVdtUVFNb9L4A12HRBNd/A9HyhSiPVfmm+wv9h/96bWrDvL4/nC2XLkqzUXctCl1HM+sC/cK105xmmH7Ju0m87cI6yp1MrCVr63lfSpeGLeLYME1AdNwv3vHzYfmRs=
+	t=1718876100; cv=none; b=MPx0oWT+hE/phZcPw0iTsvHPsK1MBtOu8Qwz6eybPJkRnQcaVXD0tJLfs9wyiOAYetPn9i81FN6MRbrMMKobbKq/Y+cSMfYfUkoGu3+U3Hp0F5D0XGlGUdjWaL/IZHaHg2yhVkk6bvWnWJlm1kw+4c5vnTG5LTU/Z7nV9J/xX6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718867640; c=relaxed/simple;
-	bh=dkxXONUJxK+YgN/BoQzA6nKRDvO716SRbRZhjtaUK00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvxVbITCmmVSu5DI3QMwl57l+Ns3/RjvpB9OFRIkMSjvO2/g4jEg831H2naeUPVOZQ2yCgq9joBFl7IEhr0KOThwEMqTK2rHU/KykFdP+PSdM35mHrsbEk6Tpld3k2MT4UXZZH41yfJir1y6Y6yBsBJQAsTGSKaud7H88yrxeGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6D07A68B05; Thu, 20 Jun 2024 09:13:54 +0200 (CEST)
-Date: Thu, 20 Jun 2024 09:13:54 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev, Christoph Hellwig <hch@lst.de>,
-	trondmy@kernel.org, anna@kernel.org, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfs: remove dead code for the old swap over NFS
- implementation
-Message-ID: <20240620071354.GA23317@lst.de>
-References: <20240615080827.1239935-1-hch@lst.de> <975db363-b830-499b-89f8-9d843da47427@moroto.mountain>
+	s=arc-20240116; t=1718876100; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m2+1zuM3rReYnZ6aJnwdzmyB0bnRbupW6IAFGfVW/Y9A3UR+6FcASmRfGNxTh1p+ctuzOAXBB5yDVlWEFhDayUMXjQzLqQGnq3TjuCmUKw3JuzgVfoKtrDjA6Zmt+J/yXN3EV69chmNUfz3Qle2V5+nO1uRrDQEOsDDRcCjYnvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec18643661so443061fa.0
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jun 2024 02:34:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718876097; x=1719480897;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=tn86uOvDjCPHWqYpripare/mkC5fjZYeXUQzOgAFC7b9CDlfQ947dTDflpqDoc5hWi
+         ExLsYAcy8ByPt+dMlORn16gbh7uNSV8iXpojAoB5Gq+T+9rFDFu7bkDw0SPtCH4awzlz
+         8JVvFmVZEfB5Xl4FP5LQ2wiPO9f9jayaPbuQ/L4adO9CSSsQ3axpLWMdLFtVJsOtrQSb
+         x3b+gBDYugKhyg1wbGrq0qlXCuf+1jmthxLvTpEiE/J5OkaF5WMj1SlxFw/R5T/sZKnA
+         TXTUxLZBx47hHfENfOpPdcFwGQr/gpig5AfRrsmHUyc6HPg85+U8zu32XIEKE7Par0IT
+         juLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqhGKvS3Dtjhuv0YoUyHspKhxbkyOQgKLpYcN7PSCngFdHSgOVWjv83Cvzsi4HQQt3oGt/WnZiZmi904SAsHxHPWxx5M0Ivx3I
+X-Gm-Message-State: AOJu0YxGJq8FWfl1HHtVstdHvbC2DR0unG1nDLHJU//5AKqY0X3i4sO2
+	s64A7grhnil99swSknwbZXxq7d9aFvUFXUrmGqeZQhrcBfBUG55L
+X-Google-Smtp-Source: AGHT+IECo4gADEuycVyl+VQKljkx9/c42Zc1/OC5INIm8uWTyk4QcMLbQnWZBuqNnek7eLi15xNYkQ==
+X-Received: by 2002:a2e:8052:0:b0:2ec:4399:9be1 with SMTP id 38308e7fff4ca-2ec4399a471mr11600991fa.0.1718876096700;
+        Thu, 20 Jun 2024 02:34:56 -0700 (PDT)
+Received: from [10.100.102.74] (46-117-188-129.bb.netvision.net.il. [46.117.188.129])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0ca68esm19371975e9.30.2024.06.20.02.34.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 02:34:56 -0700 (PDT)
+Message-ID: <bc3fe638-838b-4d05-a3a0-83a65c77009e@grimberg.me>
+Date: Thu, 20 Jun 2024 12:34:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <975db363-b830-499b-89f8-9d843da47427@moroto.mountain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs/blocklayout: fput() needed for ENODEV error flow
+To: cel@kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>
+Cc: Ben Coddington <bcodding@redhat.com>, linux-nfs@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20240619135255.176454-2-cel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240619135255.176454-2-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 05:06:52PM +0300, Dan Carpenter wrote:
-> Hi Christoph,
-> 
-> kernel test robot noticed the following build warnings:
-
-Seems like this is a pre-existing condition.  But it is indeed a bit
-silly.  In fact the whole nfs_page_to_folio thing is a bit weird,
-pages always are folios as well, so storing a union of a page and
-folio in nfs_page doesn't make a whole lot of sense.  I'll look
-into cleaning this up in a follow on patch.
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
