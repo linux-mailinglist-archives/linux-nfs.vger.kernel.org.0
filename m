@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-4190-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4191-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5362F91134A
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 22:35:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 518C39113AF
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 22:50:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E46E1C21A01
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 20:35:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C49FAB21CD9
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jun 2024 20:50:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217814AEE6;
-	Thu, 20 Jun 2024 20:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32EA776041;
+	Thu, 20 Jun 2024 20:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="h2seSato"
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="ALJdfkXV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD0555880;
-	Thu, 20 Jun 2024 20:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1CA73D3B8;
+	Thu, 20 Jun 2024 20:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718915727; cv=none; b=M7f3Jv67ZT1YigwqOkIqS/OmIUCZJSku/W7piXL2AAHi6qbl9nULQcoKgbaGyEWnwb/JSxbhLTxKhPdc1SPa2j/o2XI/wGWDE8KrF213pNc7jQABCQDfvb2hrj3oR1MQ3G1n5muz28WMX4rnfTU1dieJ9Ux50Dz9WRWXA430Rrw=
+	t=1718916618; cv=none; b=OcLXR+gDKLZ1vwHCwveoZNxneJAsHnlHaZkoo2r8ERzTFcVeJH2Dmd7HjeVzS36YnAsMPk1I3kJpJsciMCprfYJRbw6xh5kc7mO7nK1D/lmeQ5tUgOXGVdbALe1bjivgImBeqMx8H4XCAT/K9tIKAlwknkROlGoAnT5S5SgUPeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718915727; c=relaxed/simple;
-	bh=rY6eGqJ75wEmGu1HgeNvbS4fJ9EDXfDA5wrtzZT6MjI=;
+	s=arc-20240116; t=1718916618; c=relaxed/simple;
+	bh=AvGVFTfgQ8CQv1Ova9G8llKmivCTuZfd3jl734L9bIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sN85Nz/t2T5VP9AGGPpC63OHtDlA+/IZYAaUevHidnT3AvOpC4Q08z7WjdoFLAzGyPyEtHoKq5GAERHAPakJu/T5OoMzHAgPNt1Br4JSz50VPlMlIEI0tHnOAKNg20BejX4QZ0CoSxiLaop++MreoPq98ezkCRK761D596v7rrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=h2seSato; arc=none smtp.client-ip=62.210.214.84
+	 Content-Type:Content-Disposition:In-Reply-To; b=TggXoK4Q1dS4G3j/kMm6dHRd116TfXOEA7c3wU2lS8eT7kg3f2NhKJCr1RejTTc1SCpkExX2thyxAYWu/EK/lLsVIbDRI7dnXIONTA4ZHvgwTRbaOOyYGX6454Ge4ysiG3CSI5SENOQycLhjztzZqjiEOGysKknDz5R9nRNeyxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=ALJdfkXV; arc=none smtp.client-ip=62.210.214.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id CB8F014C2DD;
-	Thu, 20 Jun 2024 22:35:08 +0200 (CEST)
+	by submarine.notk.org (Postfix) with ESMTPS id 8A5F214C2DD;
+	Thu, 20 Jun 2024 22:50:08 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1718915715;
+	s=2; t=1718916615;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UaFyOqx3Wna3PHffZA3lbOwaWZobih6I6zyfeyta8vg=;
-	b=h2seSatoOQGsC1oNd084UzbsoydUhd9vEuvTIVA67+KxCi+z8q0IS0pjF2KDpOyEXXn6xC
-	V5F5tFKch54wcT/63BHhocLiZ4AACqT7Li3GdqjRb9Uoce/o9dTPxiHGE3wZwgzlrvpbcq
-	r+1Z8DInjQu2mvVXoWl5Vtyzy4YtD5CUQZ+l8QQu5f6ZIOEm7+irf9TT9TglH+VFtK9Bf0
-	bUxiZ+0w0EPSZyZ4qOyV46FOnADlcelQ9/eQBgzAH5dQg48/EYTHDT1P+dqnsewYmXODfm
-	X8KMzeUD8xxj/M3UhmTOhPXsiVwITjND5inF4G6cZ4fpaCqg3uxxlbubVPnIGw==
+	bh=VLVCmMswFYW/yptkreRA4q0clrbQSOEC9H3udI4LuGU=;
+	b=ALJdfkXV4jYbTnxVURz9T/eVwi75e+Jpzd/NnEdNtowVW0EPginJ+UR6WjORHnH38deSjd
+	uJwnIU9Cj7KamD9RuKu8/mGuiDvl4zepXXeiSbVTriN0efe9Ugz46seuDEdUL9p7r7KRLr
+	P7bpbNTjSYBxjIuPaVX1MWKzMKecMwktnyLawuNoID0Mbc/ddEMnIWkpd3XG+6pyYH418a
+	3W/N9t5Qfs/oTZaI9U3i3KvnPFWdkdWReTPrI5Iv2PcSTYiBLmAJf7px1y70cBjtciXJPK
+	i5woghwPVaymjTFrWRyF7a/0NAHSSLe6Bk1rVFeZVi+wKnfbRR0RGgGH6UokHw==
 Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 9c0e7542;
-	Thu, 20 Jun 2024 20:35:04 +0000 (UTC)
-Date: Fri, 21 Jun 2024 05:34:49 +0900
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 39921304;
+	Thu, 20 Jun 2024 20:50:04 +0000 (UTC)
+Date: Fri, 21 Jun 2024 05:49:49 +0900
 From: Dominique Martinet <asmadeus@codewreck.org>
 To: David Howells <dhowells@redhat.com>
 Cc: Christian Brauner <christian@brauner.io>,
@@ -67,9 +67,10 @@ Cc: Christian Brauner <christian@brauner.io>,
 	Latchesar Ionkov <lucho@ionkov.net>,
 	Christian Schoenebeck <linux_oss@crudebyte.com>
 Subject: Re: [PATCH 06/17] 9p: Enable multipage folios
-Message-ID: <ZnSSaeLo8dY7cu3W@codewreck.org>
+Message-ID: <ZnSV7TmLpmucb8el@codewreck.org>
 References: <20240620173137.610345-1-dhowells@redhat.com>
  <20240620173137.610345-7-dhowells@redhat.com>
+ <ZnSSaeLo8dY7cu3W@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -78,16 +79,23 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240620173137.610345-7-dhowells@redhat.com>
+In-Reply-To: <ZnSSaeLo8dY7cu3W@codewreck.org>
 
-David Howells wrote on Thu, Jun 20, 2024 at 06:31:24PM +0100:
-> Enable support for multipage folios on the 9P filesystem.  This is all
-> handled through netfslib and is already enabled on AFS and CIFS also.
+Dominique Martinet wrote on Fri, Jun 21, 2024 at 05:34:49AM +0900:
+> David Howells wrote on Thu, Jun 20, 2024 at 06:31:24PM +0100:
+> > Enable support for multipage folios on the 9P filesystem.  This is all
+> > handled through netfslib and is already enabled on AFS and CIFS also.
+> 
+> Since this is fairly unrelated to the other patches let's take this
+> through the 9p tree as well - I'll run some quick tests to verify writes
+> go from 4k to something larger
 
-Since this is fairly unrelated to the other patches let's take this
-through the 9p tree as well - I'll run some quick tests to verify writes
-go from 4k to something larger and it doesn't blow up immediately and
-push it out for 6.11
+(huh, my memory is rotten, we were already aggregating writes at some
+point without this. Oh, well, at least it doesn't seem to blow up)
+
+> and it doesn't blow up immediately and push it out for 6.11
+
+Queued for -next.
 
 -- 
 Dominique Martinet | Asmadeus
