@@ -1,227 +1,96 @@
-Return-Path: <linux-nfs+bounces-4213-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4214-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EAC89120A3
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 11:32:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D08E49129CF
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 17:33:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89634B230CD
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 09:32:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E70DC1C21574
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 15:33:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2CA16E868;
-	Fri, 21 Jun 2024 09:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E99A5CDE9;
+	Fri, 21 Jun 2024 15:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHWS9DXt"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="fygYASqW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D351E482C8;
-	Fri, 21 Jun 2024 09:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2BE20DF7
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2024 15:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962338; cv=none; b=Uo8u30sQpnpgMhBssBYcui9caZahVcbWV8Qa3QoG7FiNo/xA8bJMvhrUn7yMHcr8w8HsiEgh+0qhocj+1E89TblcumCB+LZPoVeOfXdRpsO8hiivd1FP6YCxotsGhkAWeyynY1wfqh2MTDr+k4Q/eYAby2eBIIfUVe1jtSSNiok=
+	t=1718984012; cv=none; b=Sn8qZf3xomMHQYW9HKYoZVmJqVaZWqltAAlcoi4tTJGWBbe2M33qluJwHBCgfnx7C72mHb7+JwBxD6i+mJClj+QEml6A45elUuWuTneckTDzx5iNI42oeAKCbCzyIcM74wLcQGwux2YrADb/gnpVYLgF6RLprg+JxheEbmWXrlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962338; c=relaxed/simple;
-	bh=tX3lbP0oIbLXstNsFkYy7tmCmp7K2WDT7BZj38Vc58w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4HRfTm5EPxZyncVOyHzG2RwedWRBCeaNjk6VmLIkv2oE7EhMpw4YdqW6832zFwUAojLsEQmc/4saS8Ff8TqP57ecEjrauBP2PI/F8E1rknC9yWrOFPMsgX2FYfkI4KBd3wO+LTQMt5qjn2GpCaCaRMyjo0j9kSlpxiV4pplnI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHWS9DXt; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1718984012; c=relaxed/simple;
+	bh=2/uuki3mPxiuT2RcBxutzAgHY1UXEeT+4Rl2hZxZ1a4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sh5X9Rm4MQ9yIuo/0qJg8eMU8kqU6frs3573HWNbp4i8hpeSZmaW2ndBLlO7YfumpwQ9NCOxCFfcenqIPlzSLx1DWCZswKhQXlVzWPJukXic+CH29ynuSbocv1lLM5vNpMA96fgfWaHEAkpG6xD65sGwfOEauckORYGwA/eODiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=fygYASqW; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57cc30eaf0aso951999a12.2;
-        Fri, 21 Jun 2024 02:32:16 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec4d899e9aso953451fa.2
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2024 08:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718962335; x=1719567135; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LXjbiUeKX1jEQnL+FwWLcen6cX7ksdYWye9qn3fwv6g=;
-        b=DHWS9DXt13LiribTgN2bFTRDmxtyLV6IugelHM34OjdJd2ZlVkJZrZVzo188uPm+6F
-         nJOebWgnUBywhTTS8Ax6m2BWlthz09YQm9I0ybOkWVpdiVl3ikslR7uqk/AeA7Dp0OHu
-         GxTcDEN2qtTwAZVEfitZKxqWR7Tzxvx9tY3FD3C1QoiS6kdr95Zf9Rp7NAY2dm0ebP8H
-         YamJigxkBQ+XWKofXRFmw2rEVpME2dPoRkqRz+RBxAPum+ADALYaM1UpF6KsyF2gV6gu
-         MMeMLSJ5M2eJThJU+tEyQHXT2unV7hp283rA7EcUVO1cKyfxJAx8eDaoXl2H9VZD7CS6
-         TGoQ==
+        d=umich.edu; s=google-2016-06-03; t=1718984008; x=1719588808; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2/uuki3mPxiuT2RcBxutzAgHY1UXEeT+4Rl2hZxZ1a4=;
+        b=fygYASqWg+nKNioqHk7vP9ba7rETbkJN2UGSZ341ZCfJ3abozpjPPfRfaMMQzSMj6T
+         I3V03U+U4Wcl86YzzFxcPO+bVLLpL+WPCAobQ5JP4idZJVqu2pP30WfBVS6Ypr5S3Yyj
+         RYvXGkGqYRqmdYp/k0DEHN15uj2Q6Mhu9+7g2+J7+YgfAFU+xqormkZpf4RAdaTsWVNB
+         FMQ7WyQ+0rq2q7g1sf5cpP0km8PRUVbas8YkCxc3mnMO4/d0FE8+oOHzgmN530GHD8fO
+         sec5CEsv4Ov/9eXAQV5zUaVsvRoHE02ytBIJg/cnnRTHdlgmMJpQd4ciXiEzpHDCPsFI
+         vuRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718962335; x=1719567135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LXjbiUeKX1jEQnL+FwWLcen6cX7ksdYWye9qn3fwv6g=;
-        b=SEmlM5N11fHyWBqnA+j0sKITFQCOUyI1d740MV2oCGmlquzQ9K2F2/kkeNiouWsMhy
-         Hy4Dkke0nRk1mbNcj3FP5GG3r8n1wViYmjOlFT3+HQdhx8kjn8f144N8Wv3Gl5fWsYLr
-         pj4TbJST39aj3gpJ6L7ISKE+NPk7RKRu4VGB1RFtUhI7i7ZcEmj9crMwAPW6R/lGwo93
-         K67POJZPwSGheQe4pQSmtoeDNZCUNPBDH1DJ/R9aLywW+ezqJAqbpHZ82ZdddTEjlyd4
-         HUQe3sgh7A01I8ilUKUytwBxEChrbeCijlrmMfYBoSz81svheAucI2nfgbmQod6LEpW0
-         szKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsHXq3IZ+DU1wQFIte1T+StCLSQKiubG5fdrMQbufCImFUw/+WmzKXpS+G94YxTHYZMYPLxa3UiWLNflmF6mQDzPzx7Fci7TkqIRCdv98/6daniRcZreiYVkVqgvm2ImhIftkgAMDDrGbKgDynA/cDcXn0PpM7vHeolSW3CzJ3yMRm98KGJLDPicOBeDsukR2VclJoyAgnKW1f2lJsT1QWJpn4wIXQZGLS+nrtVzo9RTMujH4bdXtUbMQeeWFaGXiSD5A/oS5PoJLaMfGl9O9R3rkeuEtEkmU0U7J9K/YVrrJQLOOI3ePWefYkMzPo5I8gqPpzxjZIkhPYPWf2HE2FtP3+4sxgAbdBtStPDJU9AdL6i8lQNv4QwOEqj8ntCPbeCJOsorwyRrzo1SGdoAYPRGjljsARK+Kvp4JkKOQVub+hbZdQOpa+xgPQFw==
-X-Gm-Message-State: AOJu0YwnrLyS2yw9Wh8270dYG9hHynYiiWubYziAsEyVia3LuPplYFp4
-	jTiLXRI/L+6xR22gTZE7xa6KqUdqkMrxgW3gVjoK5hXcqvLWuyElAILmhpnIGJ0=
-X-Google-Smtp-Source: AGHT+IEG3QIZH1aO0GWd9T0Xk/3yUg93srj60sGG+BwmRF3tpMGbSRtFwCmQB/INPoCeCqb37IZhUg==
-X-Received: by 2002:a50:d60b:0:b0:57a:79c2:e9d6 with SMTP id 4fb4d7f45d1cf-57d07ea9ccbmr5867695a12.33.1718962334727;
-        Fri, 21 Jun 2024 02:32:14 -0700 (PDT)
-Received: from pc636 (176-227-201-31.ftth.glasoperator.nl. [31.201.227.176])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf56e9f3sm62345066b.215.2024.06.21.02.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 02:32:14 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Fri, 21 Jun 2024 11:32:12 +0200
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnVInAV8BXhgAjP_@pc636>
-References: <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
- <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
- <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
- <ZnCDgdg1EH6V7w5d@pc636>
- <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
- <ZnFT1Czb8oRb0SE7@pc636>
- <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
- <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz>
- <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
- <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
+        d=1e100.net; s=20230601; t=1718984008; x=1719588808;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2/uuki3mPxiuT2RcBxutzAgHY1UXEeT+4Rl2hZxZ1a4=;
+        b=cBXReM56M315z2OIhMM3QnPD7y+46VkRxSCJXmw5riRzaAva9oOpqe6OdbdTxCVHKN
+         UTerJ/syP7vzkfXTid3aNA0WHqtrztqu42HaN3a5nuuPKndeJDQBDXs0zgp2Uot3+MBj
+         uGv9JDdjlVP30AOOj8EJKpuqz1TyDmP8NFFztKiFoDeIQIaNjbmUzccfRpFYggGXrhnO
+         F69aSnFZW9AcO/+ahFv6xaCAE75DXBTNWeKqaJooRUK7Ewvy82Q+os3RN4X+WQT1zeAm
+         j5nJc12nBPAgc0/SVczrt+y20Sw+w67r7f5bZfnTb8aGbndRKmzJOcoDTkmnH2vavjjE
+         kLig==
+X-Gm-Message-State: AOJu0YxU6twolmXFoMiIfmuKCjlZucGND63eDSpPgzDRoDRaoR4LiRSe
+	Ehq4aBKDyOGTMWcYfAW6aGZsz20wcKSt5nF4k1HWYWLTiu5bqkHBJGIVc/GJG9sPJjJYFD+Bh91
+	iywad5c+E7dNATNa4sI0v/VWY+es=
+X-Google-Smtp-Source: AGHT+IGmmkg2bZd5KNDVQALLo4de1dTRnloJLiLABIe+BXl+iaI5TqG7lLWTANuEYh+rgbpVt0P79xpZdz331aEd/1Q=
+X-Received: by 2002:a2e:9d91:0:b0:2ec:4228:9b97 with SMTP id
+ 38308e7fff4ca-2ec42289e01mr36097091fa.0.1718984008161; Fri, 21 Jun 2024
+ 08:33:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
+References: <d489e2d7-d4ed-424b-8994-6abf36a01e06@oracle.com>
+In-Reply-To: <d489e2d7-d4ed-424b-8994-6abf36a01e06@oracle.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Fri, 21 Jun 2024 11:33:16 -0400
+Message-ID: <CAN-5tyFQpEdSnco8SZWY_nsZVdYhAg+x_EAMmbWW5uYutyDA9g@mail.gmail.com>
+Subject: Re: ktls-utils: question about certificate verification
+To: Calum Mackay <calum.mackay@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 19, 2024 at 11:28:13AM +0200, Vlastimil Babka wrote:
-> On 6/18/24 7:53 PM, Paul E. McKenney wrote:
-> > On Tue, Jun 18, 2024 at 07:21:42PM +0200, Vlastimil Babka wrote:
-> >> On 6/18/24 6:48 PM, Paul E. McKenney wrote:
-> >> > On Tue, Jun 18, 2024 at 11:31:00AM +0200, Uladzislau Rezki wrote:
-> >> >> > On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
-> >> >> > >> +
-> >> >> > >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
-> >> >> > >> +
-> >> >> > >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
-> >> >> > > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
-> >> >> > > wanted to avoid initially.
-> >> >> > 
-> >> >> > I wanted to avoid new API or flags for kfree_rcu() users and this would
-> >> >> > be achieved. The barrier is used internally so I don't consider that an
-> >> >> > API to avoid. How difficult is the implementation is another question,
-> >> >> > depending on how the current batching works. Once (if) we have sheaves
-> >> >> > proven to work and move kfree_rcu() fully into SLUB, the barrier might
-> >> >> > also look different and hopefully easier. So maybe it's not worth to
-> >> >> > invest too much into that barrier and just go for the potentially
-> >> >> > longer, but easier to implement?
-> >> >> > 
-> >> >> Right. I agree here. If the cache is not empty, OK, we just defer the
-> >> >> work, even we can use a big 21 seconds delay, after that we just "warn"
-> >> >> if it is still not empty and leave it as it is, i.e. emit a warning and
-> >> >> we are done.
-> >> >> 
-> >> >> Destroying the cache is not something that must happen right away. 
-> >> > 
-> >> > OK, I have to ask...
-> >> > 
-> >> > Suppose that the cache is created and destroyed by a module and
-> >> > init/cleanup time, respectively.  Suppose that this module is rmmod'ed
-> >> > then very quickly insmod'ed.
-> >> > 
-> >> > Do we need to fail the insmod if the kmem_cache has not yet been fully
-> >> > cleaned up?
-> >> 
-> >> We don't have any such link between kmem_cache and module to detect that, so
-> >> we would have to start tracking that. Probably not worth the trouble.
-> > 
-> > Fair enough!
-> > 
-> >> >  If not, do we have two versions of the same kmem_cache in
-> >> > /proc during the overlap time?
-> >> 
-> >> Hm could happen in /proc/slabinfo but without being harmful other than
-> >> perhaps confusing someone. We could filter out the caches being destroyed
-> >> trivially.
-> > 
-> > Or mark them in /proc/slabinfo?  Yet another column, yay!!!  Or script
-> > breakage from flagging the name somehow, for example, trailing "/"
-> > character.
-> 
-> Yeah I've been resisting such changes to the layout and this wouldn't be
-> worth it, apart from changing the name itself but not in a dangerous way
-> like with "/" :)
-> 
-> >> Sysfs and debugfs might be more problematic as I suppose directory names
-> >> would clash. I'll have to check... might be even happening now when we do
-> >> detect leaked objects and just leave the cache around... thanks for the
-> >> question.
-> > 
-> > "It is a service that I provide."  ;-)
-> > 
-> > But yes, we might be living with it already and there might already
-> > be ways people deal with it.
-> 
-> So it seems if the sysfs/debugfs directories already exist, they will
-> silently not be created. Wonder if we have such cases today already because
-> caches with same name exist. I think we do with the zsmalloc using 32 caches
-> with same name that we discussed elsewhere just recently.
-> 
-> Also indeed if the cache has leaked objects and won't be thus destroyed,
-> these directories indeed stay around, as well as the slabinfo entry, and can
-> prevent new ones from being created (slabinfo lines with same name are not
-> prevented).
-> 
-> But it wouldn't be great to introduce this possibility to happen for the
-> temporarily delayed removal due to kfree_rcu() and a module re-insert, since
-> that's a legitimate case and not buggy state due to leaks.
-> 
-> The debugfs directory we could remove immediately before handing over to the
-> scheduled workfn, but if it turns out there was a leak and the workfn leaves
-> the cache around, debugfs dir will be gone and we can't check the
-> alloc_traces/free_traces files there (but we have the per-object info
-> including the traces in the dmesg splat).
-> 
-> The sysfs directory is currently removed only with the whole cache being
-> destryed due to sysfs/kobject lifetime model. I'd love to untangle it for
-> other reasons too, but haven't investigated it yet. But again it might be
-> useful for sysfs dir to stay around for inspection, as for the debugfs.
-> 
-> We could rename the sysfs/debugfs directories before queuing the work? Add
-> some prefix like GOING_AWAY-$name. If leak is detected and cache stays
-> forever, another rename to LEAKED-$name. (and same for the slabinfo). But
-> multiple ones with same name might pile up, so try adding a counter then?
-> Probably messy to implement, but perhaps the most robust in the end? The
-> automatic counter could also solve the general case of people using same
-> name for multiple caches.
-> 
-> Other ideas?
-> 
-One question. Maybe it is already late but it is better to ask rather than not.
+Hi Calum,
 
-What do you think if we have a small discussion about it on the LPC 2024 as a
-topic? It might be it is already late or a schedule is set by now. Or we fix
-it by a conference time.
+My surprise was to find that having the DNS name in CN was not
+sufficient when a SAN (with IP) is present. Apparently it's the old
+way of automatically putting the DNS name in CN and these days it's
+preferred to have it in the SAN.
 
-Just a thought.
-
---
-Uladzislau Rezki
+If the infrastructure doesn't require pnfs (ie mounting by IP) then it
+doesn't matter where the DNS name is put in the certificate whether it
+is in CN or the SAN. However, I found out that for pnfs server like
+ONTAP, the certificate must contain SAN with ipAddress and dnsName
+extensions regardless of having DNS in CN. I have not tried doing
+wildcards (in SAN for the DNS name) but I assumed gnuTLS would accept
+them. I should try it.
 
