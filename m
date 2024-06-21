@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-4218-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4219-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19BEE912B42
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 18:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B7CB912B44
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 18:22:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B06E1C2383C
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 16:22:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE7841C2259C
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 16:22:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC7515FCF6;
-	Fri, 21 Jun 2024 16:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C7D15FA8E;
+	Fri, 21 Jun 2024 16:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IibhThhU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ3ZaC/Z"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF5615FA8E
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2024 16:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FD0757F8
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2024 16:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718986968; cv=none; b=I3mEIbA7BMlq76bXXyP0QICsIVaTXiyvsdMeSOS8YFoCrxUKiBOVOgckKhE9fzxmTPklueXJEBW4RiOfIm0xGpgGxFYqeIyPvU8jotLg5s4dXOX3mxYfNdPXxbr2cJYqy6ug3Ba1PPYgOPVrM9LNkG6BlmAbVAEhOKW9U4uSA+E=
+	t=1718986969; cv=none; b=WIqxX+5xYdfLB/MA+0tNaPrxmV8kDwLFVCl81HoElSfQ0YiJuTwWEHC1AlLya9OLIj6YSM6uON/yEvED018j+lhwiG5kwatG0uWMQTmGKNVcFYjMemVEAmA8SEap8Kr2JC/q2LjqKnbdaapdiobnxhleN8lHjf98cRVLbSQuOuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718986968; c=relaxed/simple;
-	bh=XxHBKFUgCKg2xyacrqzKz+eonu2yKQTOyCo1Zf4Bm6Q=;
+	s=arc-20240116; t=1718986969; c=relaxed/simple;
+	bh=3AyN7eBGp/n6ypHxMBe6DgNA5mGNClFo9oRXpD8FlGI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PkkypS+de2QLTNwePaWAeT12JcK1mOuy12TaqB4SONV+VUERfeJIEGMVQlOmkQgxObBI8lqAXwZhr16x3dyxs058obYaJUUUTAkCBGF3bdKATO7m5djVBMZ8ZstXn5AgsaokV3zpwFxxUYd6/s+DFRvKkEHoB117SAt1eXy/hdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IibhThhU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BBB7C3277B;
-	Fri, 21 Jun 2024 16:22:47 +0000 (UTC)
+	 MIME-Version; b=NBdSvoT9vrz1X19PCE3retSOz7P13lhPHzdfoHJzPTFsaXHKmcbwVrSHK4y/65vPrhOTRyrgab1QK6n7ePrVqjUCL1IbkcKAtvTubPP2QXQh0Fqx588+fFbzhaM0NNajmBw6j9XiOnRt/a2n9ROEUITLXB5KIz0xbIPWFNJfb4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJ3ZaC/Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C77C2BBFC;
+	Fri, 21 Jun 2024 16:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718986967;
-	bh=XxHBKFUgCKg2xyacrqzKz+eonu2yKQTOyCo1Zf4Bm6Q=;
+	s=k20201202; t=1718986969;
+	bh=3AyN7eBGp/n6ypHxMBe6DgNA5mGNClFo9oRXpD8FlGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IibhThhUrRBC7fY4DW3kXilVAJG7pA9ALdlcUZUA3M0BbEs0maXqvTrrTNH7IbFyz
-	 vo/AiyfEYp3ekj0roH0mny7WBRQzWCGXA3Vo96lRd2dZdTEyu0in9+7MCe4L1PNfb3
-	 /eZ6TIumnWst1wA6t09ea2jcl/SK1K82l070hDIA73zTDU18Ab0FyaQb3iEjFrHNKk
-	 k/UjmWR7gI9Vk6su90WgvcEpy78fOLanH9yGoqkUivJp/7uv2EdEu9mkBfC1t+jWHP
-	 VzqSg11Dw/YJ2Q1X7bfogD0WzxkVy7UmZg3r2sTjHU2dzK1D2YWD6uey28mqQZn2oc
-	 LC/GvIkOYGekw==
+	b=iJ3ZaC/ZXuiYKcwZszKAwQ8mFeNj5BIxMVf0S1KQGzzyFZPMvJaPjoyqYlkNYfej4
+	 1QqsUPcX/1sqfXKBkAoIzDfWlWM3XH+O7QfmOdlkR6UanSzPbtvydvy4Inp86h65u3
+	 MdNIYkTf8AMLbairpM0jkIRg4/fjRTz9YVhvIq+xGzszt44L2MWlPkuz3ObEqysxtL
+	 Br8uHttdLfCShE5IzGbwnlBMHl9BQ50e6us3Xg45fk7A7gKIfGqmTYFVkpMVpjzSXH
+	 jv1988cnBrR2HGsgs1ny/zXQvMyXZc8Gsn64a6BMVXzipOIfnaCtG8mfxagsX/aZzR
+	 f60goZjOKx8yA==
 From: cel@kernel.org
 To: <linux-nfs@vger.kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 3/4] nfs/blocklayout: Report only when /no/ device is found
-Date: Fri, 21 Jun 2024 12:22:31 -0400
-Message-ID: <20240621162227.215412-9-cel@kernel.org>
+Subject: [PATCH v2 4/4] nfs/blocklayout: SCSI layout trace points for reservation key reg/unreg
+Date: Fri, 21 Jun 2024 12:22:32 -0400
+Message-ID: <20240621162227.215412-10-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240621162227.215412-6-cel@kernel.org>
 References: <20240621162227.215412-6-cel@kernel.org>
@@ -57,55 +57,248 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1766; i=chuck.lever@oracle.com; h=from:subject; bh=JXCWdR0tBvdkJh40ZArpq43pt9oBHejJ+7HeGkgKvPw=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmdajIp4dVUnDsv7nPQuod8ZNFjVCA1BfiJOQUm HAghjG59lyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZnWoyAAKCRAzarMzb2Z/ l951EACAwg8sJ2da9gEYbvlXaHFqekHiB/P/4Ewfkvj85d7eRvMjLQPF8KmQ6/gOoN/Xbz1/fSi 4aWMa+koU9n7lhy6MoLxdRAlmYJpBrCEJ83uPGzvxft2/nTGDX5QX2IcOWZeedonmfg8AiwUbC/ EQmlw/xHbU5ExMXnwUcciw+GJp167a2Qtl3Z3OfVFK2HqtxWvY9N4jNwIS6LU9i0b2mMnhFrvRM ra6OVe8on9qRbASqA69GXFdQqa0XUwO/AoulZuh61f8Se8ce6297BpQWMh9msNwXlDnA047xiAV UsSCJBYyMd3BY2GmT7QEccn7rPP3a+0enQeW3ntpkwM+WgeFcYqzHroa+YtDfi7e1Jsa7vWYKuQ +CGkmL6f2EGalVsLr5Gf+deBicsf9SpEM91p0BUUg9cZUoFHW/05KO6NHUvFuNoemRXzJWaLeKI cqwlVn8dgsOmdmUgLPA+j6eoQidHJSuY3vDWyQgh0snWamk0VZ0Q0FAsDveCC2+fCBlIHA8D87J yPoG2KjItUlhC0gitJKVE/ji+6eBkJCVbV7H2SEKqRMWoGTRiglqFgA93RVnN5i12xbJ8e/e2xl mtrWmVPuYYv9rVbLRYUJQxUkXY84wADcqGylnRPgWxfuzyaKyOXwLQBESXZ7EOYmiPww+3VXq1M k/r1Gmly++74ecA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7677; i=chuck.lever@oracle.com; h=from:subject; bh=NlKYBrxzhnWHDbaYiUYQu2l0Pz3FH1hQafDBlBBUiGY=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmdajJW5zBQ1H0pr6CmxN0ujkGVzAdx5BkbUkZs DrPvMeWwpaJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZnWoyQAKCRAzarMzb2Z/ l2RDD/4vQHoyNxuncMPRbY+uuvavSeOs4d2liNP3VkmOKOB8yuP40cKve0ohGRyXOoQgeR6n5WV VeIVx7Ml3UVKe/dN2htf9etvqR/KzPFyL57Q/UBBbqG9bAVRl22jH5++78/sQxlnF6+GF4GVOtN XCDMZxlQL0AaSEdWwMYVPzyPBA345CS2hqHBkMoK52ZwvDrjUc4VMkcNJQHzQ/j+lx86+PpLZ10 zjCnr23MXvte9vbV9/Z9QK1N3BE+P25YIT0NeGgBDL8fSeZhVlZVUhVW3eyqEMM34hOXKfIN/iB ZHEZ0L5mOVXnot1UH/e058S+OcKDD+TGp1cyppOG6PdPKYiNQnuNOsX13UyrrMQ0vjTc43CNUlQ fiOhg8a2yDJSoepHBRfPgNjk5rrB7wsb1/kzXe4+ytH6eZXYoter8qyRXYneVnPiX0BydcyOxb1 WE81kdFCvTnR3i5Z0dkRhkWipNBNQR5QhGZ9yAKOWxE2SM82DRYJc/JWwvgWNkz6kvWRatlhccN WgEPe4GH6YcN+zkLncKqj+uv0338D2A7TP+OkyBDj7bZEooN6Uf80WjNEFjuvwzc1nlyFO/oWGS 1L9q+DtdjjsDaL8tdKysLhL6kwYeY4BuOJtik2AuATUw476+3ZKqgwNVfxI9TsmFAg1+NiiDSfd KWtWJVy82lhe9VQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Since commit f931d8374cad ("nfs/blocklayout: refactor block device
-opening"), an error is reported when no multi-path device is found.
-But this isn't a fatal error if the subsequent device open is
-successful. On systems without multi-path devices, this message
-always appears whether there is a problem or not.
+An administrator cannot take action on these messages, but the
+reported errors might be helpful for troubleshooting. Transition
+them to trace points so these events appear in the trace log and
+can be easily lined up with other traced NFS client operations.
 
-Instead, generate less system journal noise by reporting an error
-only when both open attempts fail. The new error message is more
-actionable since it indicates that there is a real configuration
-issue to be addressed.
+Examples:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+   append_writer-6147  [000]    80.247393: bl_pr_key_reg:        device=sdb key=0x666dcdabf29514fe
+   append_writer-6147  [000]    80.247842: bl_pr_key_unreg:      device=sdb key=0x666dcdabf29514fe
+
+     umount.nfs4-6172  [002]    84.950409: bl_pr_key_unreg_err:  device=sdb key=0x666dcdabf29514fe error=24
+
+Christoph points out that:
+> ... Note that the disk_name isn't really what
+> we'd want to trace anyway, as it misses the partition information.
+> The normal way to print the device name is the %pg printk specifier,
+> but I'm not sure how to correctly use that for tracing which wants
+> a string in the entry for binary tracing.
+
+The trace points copy the pr_info() that they are replacing, and
+show only the parent device name and not the partition. I'm still
+looking into how to record both parts of the device name.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/blocklayout/dev.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/nfs/blocklayout/dev.c | 30 +++++++-------
+ fs/nfs/nfs4trace.c       |  7 ++++
+ fs/nfs/nfs4trace.h       | 88 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 111 insertions(+), 14 deletions(-)
 
 diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
-index 83753a08a19d..568f685dee4b 100644
+index 568f685dee4b..6c5d290ca81d 100644
 --- a/fs/nfs/blocklayout/dev.c
 +++ b/fs/nfs/blocklayout/dev.c
-@@ -338,7 +338,7 @@ bl_open_path(struct pnfs_block_volume *v, const char *prefix)
- 	bdev_file = bdev_file_open_by_path(devname, BLK_OPEN_READ | BLK_OPEN_WRITE,
- 					NULL, NULL);
- 	if (IS_ERR(bdev_file)) {
--		pr_warn("pNFS: failed to open device %s (%ld)\n",
-+		dprintk("failed to open device %s (%ld)\n",
- 			devname, PTR_ERR(bdev_file));
+@@ -10,6 +10,7 @@
+ #include <linux/pr.h>
+ 
+ #include "blocklayout.h"
++#include "../nfs4trace.h"
+ 
+ #define NFSDBG_FACILITY		NFSDBG_PNFS_LD
+ 
+@@ -26,12 +27,14 @@ bl_free_device(struct pnfs_block_dev *dev)
+ 		if (test_and_clear_bit(PNFS_BDEV_REGISTERED, &dev->flags)) {
+ 			struct block_device *bdev = file_bdev(dev->bdev_file);
+ 			const struct pr_ops *ops = bdev->bd_disk->fops->pr_ops;
+-			int error;
++			int status;
+ 
+-			error = ops->pr_register(file_bdev(dev->bdev_file),
+-				dev->pr_key, 0, false);
+-			if (error)
+-				pr_err("failed to unregister PR key.\n");
++			status = ops->pr_register(bdev, dev->pr_key, 0, false);
++			if (status)
++				trace_bl_pr_key_unreg_err(bdev, dev->pr_key,
++							  status);
++			else
++				trace_bl_pr_key_unreg(bdev, dev->pr_key);
+ 		}
+ 
+ 		if (dev->bdev_file)
+@@ -243,10 +246,10 @@ static bool bl_pr_register_scsi(struct pnfs_block_dev *dev)
+ 
+ 	status = ops->pr_register(bdev, 0, dev->pr_key, true);
+ 	if (status) {
+-		pr_err("pNFS: failed to register key for block device %s.",
+-		       bdev->bd_disk->disk_name);
++		trace_bl_pr_key_reg_err(bdev, dev->pr_key, status);
+ 		return false;
+ 	}
++	trace_bl_pr_key_reg(bdev, dev->pr_key);
+ 	return true;
+ }
+ 
+@@ -351,8 +354,9 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 		struct pnfs_block_volume *volumes, int idx, gfp_t gfp_mask)
+ {
+ 	struct pnfs_block_volume *v = &volumes[idx];
+-	struct file *bdev_file;
++	struct block_device *bdev;
+ 	const struct pr_ops *ops;
++	struct file *bdev_file;
+ 	int error;
+ 
+ 	if (!bl_validate_designator(v))
+@@ -373,8 +377,9 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 		return PTR_ERR(bdev_file);
+ 	}
+ 	d->bdev_file = bdev_file;
++	bdev = file_bdev(bdev_file);
+ 
+-	d->len = bdev_nr_bytes(file_bdev(d->bdev_file));
++	d->len = bdev_nr_bytes(bdev);
+ 	d->map = bl_map_simple;
+ 	d->pr_key = v->scsi.pr_key;
+ 
+@@ -383,13 +388,10 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 		goto out_blkdev_put;
  	}
  
-@@ -367,8 +367,11 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
- 	bdev_file = bl_open_path(v, "dm-uuid-mpath-0x");
- 	if (IS_ERR(bdev_file))
- 		bdev_file = bl_open_path(v, "wwn-0x");
--	if (IS_ERR(bdev_file))
-+	if (IS_ERR(bdev_file)) {
-+		pr_warn("pNFS: no device found for volume %*phN\n",
-+			v->scsi.designator_len, v->scsi.designator);
- 		return PTR_ERR(bdev_file);
-+	}
- 	d->bdev_file = bdev_file;
+-	pr_info("pNFS: using block device %s (reservation key 0x%llx)\n",
+-		file_bdev(d->bdev_file)->bd_disk->disk_name, d->pr_key);
+-
+-	ops = file_bdev(d->bdev_file)->bd_disk->fops->pr_ops;
++	ops = bdev->bd_disk->fops->pr_ops;
+ 	if (!ops) {
+ 		pr_err("pNFS: block device %s does not support reservations.",
+-				file_bdev(d->bdev_file)->bd_disk->disk_name);
++				bdev->bd_disk->disk_name);
+ 		error = -EINVAL;
+ 		goto out_blkdev_put;
+ 	}
+diff --git a/fs/nfs/nfs4trace.c b/fs/nfs/nfs4trace.c
+index d22c6670f770..389941ccc9c9 100644
+--- a/fs/nfs/nfs4trace.c
++++ b/fs/nfs/nfs4trace.c
+@@ -2,6 +2,8 @@
+ /*
+  * Copyright (c) 2013 Trond Myklebust <Trond.Myklebust@netapp.com>
+  */
++#include <uapi/linux/pr.h>
++#include <linux/blkdev.h>
+ #include <linux/nfs_fs.h>
+ #include "nfs4_fs.h"
+ #include "internal.h"
+@@ -29,5 +31,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(ff_layout_read_error);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(ff_layout_write_error);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(ff_layout_commit_error);
  
- 	d->len = bdev_nr_bytes(file_bdev(d->bdev_file));
++EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_reg);
++EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_reg_err);
++EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_unreg);
++EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_unreg_err);
++
+ EXPORT_TRACEPOINT_SYMBOL_GPL(fl_getdevinfo);
+ #endif
+diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+index 4de8780a7c48..f2090a491fcb 100644
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -2153,6 +2153,94 @@ TRACE_EVENT(ff_layout_commit_error,
+ 		)
+ );
+ 
++DECLARE_EVENT_CLASS(pnfs_bl_pr_key_class,
++	TP_PROTO(
++		const struct block_device *bdev,
++		u64 key
++	),
++	TP_ARGS(bdev, key),
++	TP_STRUCT__entry(
++		__field(u64, key)
++		__field(dev_t, dev)
++		__string(device, bdev->bd_disk->disk_name)
++	),
++	TP_fast_assign(
++		__entry->key = key;
++		__entry->dev = bdev->bd_dev;   
++		__assign_str(device);
++	),
++	TP_printk("dev=%d,%d (%s) key=0x%016llx",
++		MAJOR(__entry->dev), MINOR(__entry->dev),
++		__get_str(device), __entry->key
++	)
++);
++
++#define DEFINE_NFS4_BLOCK_PRKEY_EVENT(name) \
++	DEFINE_EVENT(pnfs_bl_pr_key_class, name, \
++		TP_PROTO( \
++			const struct block_device *bdev, \
++			u64 key \
++		), \
++		TP_ARGS(bdev, key))
++DEFINE_NFS4_BLOCK_PRKEY_EVENT(bl_pr_key_reg);
++DEFINE_NFS4_BLOCK_PRKEY_EVENT(bl_pr_key_unreg);
++
++/*
++ * From uapi/linux/pr.h
++ */
++TRACE_DEFINE_ENUM(PR_STS_SUCCESS);
++TRACE_DEFINE_ENUM(PR_STS_IOERR);
++TRACE_DEFINE_ENUM(PR_STS_RESERVATION_CONFLICT);
++TRACE_DEFINE_ENUM(PR_STS_RETRY_PATH_FAILURE);
++TRACE_DEFINE_ENUM(PR_STS_PATH_FAST_FAILED);
++TRACE_DEFINE_ENUM(PR_STS_PATH_FAILED);
++
++#define show_pr_status(x) \
++	__print_symbolic(x, \
++		{ PR_STS_SUCCESS,		"SUCCESS" }, \
++		{ PR_STS_IOERR,			"IOERR" }, \
++		{ PR_STS_RESERVATION_CONFLICT,	"RESERVATION_CONFLICT" }, \
++		{ PR_STS_RETRY_PATH_FAILURE,	"RETRY_PATH_FAILURE" }, \
++		{ PR_STS_PATH_FAST_FAILED,	"PATH_FAST_FAILED" }, \
++		{ PR_STS_PATH_FAILED,		"PATH_FAILED" })
++
++DECLARE_EVENT_CLASS(pnfs_bl_pr_key_err_class,
++	TP_PROTO(
++		const struct block_device *bdev,
++		u64 key,
++		int status
++	),
++	TP_ARGS(bdev, key, status),
++	TP_STRUCT__entry(
++		__field(u64, key)
++		__field(dev_t, dev)
++		__field(unsigned long, status)
++		__string(device, bdev->bd_disk->disk_name)
++	),
++	TP_fast_assign(
++		__entry->key = key;
++		__entry->dev = bdev->bd_dev;   
++		__entry->status = status;
++		__assign_str(device);
++	),
++	TP_printk("dev=%d,%d (%s) key=0x%016llx status=%s",
++		MAJOR(__entry->dev), MINOR(__entry->dev),
++		__get_str(device), __entry->key,
++		show_pr_status(__entry->status)
++	)
++);
++
++#define DEFINE_NFS4_BLOCK_PRKEY_ERR_EVENT(name) \
++	DEFINE_EVENT(pnfs_bl_pr_key_err_class, name, \
++		TP_PROTO( \
++			const struct block_device *bdev, \
++			u64 key, \
++			int status \
++		), \
++		TP_ARGS(bdev, key, status))
++DEFINE_NFS4_BLOCK_PRKEY_ERR_EVENT(bl_pr_key_reg_err);
++DEFINE_NFS4_BLOCK_PRKEY_ERR_EVENT(bl_pr_key_unreg_err);
++
+ #ifdef CONFIG_NFS_V4_2
+ TRACE_DEFINE_ENUM(NFS4_CONTENT_DATA);
+ TRACE_DEFINE_ENUM(NFS4_CONTENT_HOLE);
 -- 
 2.45.1
 
