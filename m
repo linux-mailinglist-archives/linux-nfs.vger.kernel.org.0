@@ -1,57 +1,45 @@
-Return-Path: <linux-nfs+bounces-4226-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4227-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F4799130FB
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2024 01:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1DF091320A
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2024 07:03:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B0CB286BD5
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jun 2024 23:58:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E3A32842E7
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jun 2024 05:03:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3825D16E86A;
-	Fri, 21 Jun 2024 23:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlB6crW1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC25D148FFB;
+	Sat, 22 Jun 2024 05:03:38 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1250738FB9
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Jun 2024 23:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DD71494BC
+	for <linux-nfs@vger.kernel.org>; Sat, 22 Jun 2024 05:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719014324; cv=none; b=py/Z8rAphPO1FJDDgLvfplwNbeeoX1p4zlEKDDXAANcH9WHYdWPVyQaN3PRm7OwQUWyqo3rYUyd8twHSXzqca6DBLZIqLvrmWuYuEwj7bvKBob/PsZKWhBkiqfJ9/W+keYmUdwuQLF22k6osSaPR/0eqgvCHhRE1+Xm+e1rLJUA=
+	t=1719032618; cv=none; b=VVtASPPJWHMsbCuahV7Arzo4yedqPsk41N3knOKmpw1ajY9xlj9ni/XI/8O45ZBa0/o7mM4eIfGaqIlJC2YdDkY1U5o/Qu9I8IjKgGj0GHqUO2Dcx3fwuhP6+Lgb3l/S3mAze4luS1ro9DApUmRfUzc9NmaimA5NcinqWdLNSag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719014324; c=relaxed/simple;
-	bh=M37eRCS6waoF++4/JqtjmQeZ/o+Q7BsyEisN3o7VKyA=;
+	s=arc-20240116; t=1719032618; c=relaxed/simple;
+	bh=hPorZphDROpuoa4XsxvAxmkjKuQ7hxMUthxxRSowAX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLh2dV+1Hal+Tihg7ewqgPDOBBx4Vn6/S+s0mmj2864uigedzPsTWLSMkTQHoUZAq6u6m006IuIXAPJNLyOmMxGuS5wzEXPQl8hGh7+y5KvwhHqNddDuupQoDFCUlL7N0th0Yuz0WqISXNSI3fJ0ZQxGdDybwOP8iec1kJPmT/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlB6crW1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD85C2BBFC;
-	Fri, 21 Jun 2024 23:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719014323;
-	bh=M37eRCS6waoF++4/JqtjmQeZ/o+Q7BsyEisN3o7VKyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tlB6crW1+fFJ5nxafUL8RbIQjfMA7R0YYodC8qSmqWy4Crwfs/btg2ft6er+m+l6E
-	 Jq+oO661h/WNFNjca1cZB4KX9vazCiCo8Or/M8yFbrGIc4SYlE0mrTgzGtE2GqA84P
-	 H7xxVN2Z9zhU4Vl8gBqmBcG9pmWZCngLnNPzEmEECU1lYvSjz1xfMU9w4CPiWCab0L
-	 GABzS76+2O5VHxdXzCp9fwHJUhJOcjYoBQLlcSghgeZ0TgIVGpWuIkIEoJWAPxnlGW
-	 n7UEQDopCYkuO7D6YN7PDgC956hsjU9zGqytgTAblkMiYka+Q39w1mpMNPITlwQ8LP
-	 fkM7LEwFIzHeg==
-Date: Fri, 21 Jun 2024 19:58:42 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [PATCH v6 15/18] nfsd: use SRCU to dereference nn->nfsd_serv
-Message-ID: <ZnYTsl2N7DMWLhjb@kernel.org>
-References: <20240619204032.93740-1-snitzer@kernel.org>
- <20240619204032.93740-16-snitzer@kernel.org>
- <171895171341.14261.1146008422146566199@noble.neil.brown.name>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFpiSvO5f9YC4G8kwZVwH/0eqJBEidw2+QOs9U6ga5q3dAHmKiSwHTlaZLwJiWbzwWYebrB4iddT3ax2ZwmgjL6e3mfETvMnOGNNpEe4yePEDhtOsO5N3KSDuW9Hf7+B5WjV4uZrePEVyIVJCDig4Q+TBTr8kwqoUTE2+oytFNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 56F8C68C7B; Sat, 22 Jun 2024 07:03:25 +0200 (CEST)
+Date: Sat, 22 Jun 2024 07:03:25 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: cel@kernel.org
+Cc: linux-nfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v2 1/4] nfs/blocklayout: Fix premature PR key
+ unregistration
+Message-ID: <20240622050324.GA11110@lst.de>
+References: <20240621162227.215412-6-cel@kernel.org> <20240621162227.215412-7-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,99 +48,31 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171895171341.14261.1146008422146566199@noble.neil.brown.name>
+In-Reply-To: <20240621162227.215412-7-cel@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Jun 21, 2024 at 04:35:13PM +1000, NeilBrown wrote:
-> On Thu, 20 Jun 2024, Mike Snitzer wrote:
-> > Introduce nfsd_serv_get, nfsd_serv_put and nfsd_serv_sync and update
-> > the nfsd code to prevent nfsd_destroy_serv from destroying
-> > nn->nfsd_serv until all nfsd code is done with it (particularly the
-> > localio code that doesn't run in the context of nfsd's svc threads,
-> > nor does it take the nfsd_mutex).
-> > 
-> > Commit 83d5e5b0af90 ("dm: optimize use SRCU and RCU") provided a
-> > familiar well-worn pattern for how implement.
-> > 
-> > Suggested-by: NeilBrown <neilb@suse.de>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfsd/filecache.c | 13 ++++++++---
-> >  fs/nfsd/netns.h     | 14 ++++++++++--
-> >  fs/nfsd/nfs4state.c | 25 ++++++++++++++-------
-> >  fs/nfsd/nfsctl.c    |  7 ++++--
-> >  fs/nfsd/nfssvc.c    | 54 ++++++++++++++++++++++++++++++++++++---------
-> >  5 files changed, 88 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index 99631fa56662..474b3a3af3fb 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -413,12 +413,15 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
-> >  		struct nfsd_file *nf = list_first_entry(dispose,
-> >  						struct nfsd_file, nf_lru);
-> >  		struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
-> > +		int srcu_idx;
-> > +		struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
-> >  		struct nfsd_fcache_disposal *l = nn->fcache_disposal;
-> >  
-> >  		spin_lock(&l->lock);
-> >  		list_move_tail(&nf->nf_lru, &l->freeme);
-> >  		spin_unlock(&l->lock);
-> > -		svc_wake_up(nn->nfsd_serv);
-> > +		svc_wake_up(serv);
-> > +		nfsd_serv_put(nn, srcu_idx);
-> >  	}
-> >  }
-> >  
-> > @@ -443,11 +446,15 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
-> >  		for (i = 0; i < 8 && !list_empty(&l->freeme); i++)
-> >  			list_move(l->freeme.next, &dispose);
-> >  		spin_unlock(&l->lock);
-> > -		if (!list_empty(&l->freeme))
-> > +		if (!list_empty(&l->freeme)) {
-> > +			int srcu_idx;
-> > +			struct svc_serv *serv = nfsd_serv_get(nn, &srcu_idx);
-> >  			/* Wake up another thread to share the work
-> >  			 * *before* doing any actual disposing.
-> >  			 */
-> > -			svc_wake_up(nn->nfsd_serv);
-> > +			svc_wake_up(serv);
-> > +			nfsd_serv_put(nn, srcu_idx);
-> > +		}
-> >  		nfsd_file_dispose_list(&dispose);
-> >  	}
-> >  }
-> > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > index 0c5a1d97e4ac..92d0d0883f17 100644
-> > --- a/fs/nfsd/netns.h
-> > +++ b/fs/nfsd/netns.h
-> > @@ -139,8 +139,14 @@ struct nfsd_net {
-> >  	u32 clverifier_counter;
-> >  
-> >  	struct svc_info nfsd_info;
-> > -#define nfsd_serv nfsd_info.serv
-> > -
-> > +	/*
-> > +	 * The current 'nfsd_serv' at nfsd_info.serv.  Using 'void' rather than
-> > +	 * 'struct svc_serv' to guard against new code dereferencing nfsd_serv
-> > +	 * without using proper synchronization.
-> > +	 * Use nfsd_serv_get() or take nfsd_mutex to dereference.
-> > +	 */
-> > +	void __rcu *nfsd_serv;
-> > +	struct srcu_struct nfsd_serv_srcu;
-> >  
-> 
-> srcu_struct is not tiny.  I think it would make sense to use a global
-> struct for all net namespaces.
+On Fri, Jun 21, 2024 at 12:22:29PM -0400, cel@kernel.org wrote:
+> @@ -367,14 +391,7 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+>  		goto out_blkdev_put;
+>  	}
+>  
+> -	error = ops->pr_register(file_bdev(d->bdev_file), 0, d->pr_key, true);
+> -	if (error) {
+> -		pr_err("pNFS: failed to register key for block device %s.",
+> -				file_bdev(d->bdev_file)->bd_disk->disk_name);
+> -		goto out_blkdev_put;
+> -	}
+> -
+> -	d->pr_registered = true;
+> +	d->pr_register = bl_pr_register_scsi;
 
-Right, definitely _not_ tiny.
- 
-> Most users do seem to be embed them in some other structure - but not
-> all....  kfd_processes_srcu stm_source_srcu
+I think this will break complex (slice, concat, stripe) volumes,
+as we'll never call ->pr_register for them at all.  We'll also need
+a register callback for them, which then calls into underlying
+volume, similar to how bl_parse_deviceid works.  That would also
+do away with the need for the d->pr_register callback, we could
+just do the swithc on the volume types which might be more
+efficient.  (the same is actually true for the ->map callback,
+but that's a separate cleanup).
 
-I haven't used a global SRCU (DEFINE_SRCU, etc) for multiple objects
-before.  I'll look closer but this won't be addressed in v7.
-
-Thanks,
-Mike
 
