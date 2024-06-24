@@ -1,153 +1,188 @@
-Return-Path: <linux-nfs+bounces-4257-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4258-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AEB29152B7
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 17:42:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7805A9153B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 18:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4F29282AFF
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 15:42:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ED492852AE
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 16:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2A719D063;
-	Mon, 24 Jun 2024 15:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C8CA19DF52;
+	Mon, 24 Jun 2024 16:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTqQz3Ti"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn3aikag"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9808F19D896
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 15:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CA819AA7E
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 16:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719243714; cv=none; b=ifenojsDxX2rKBzwywPj/YkyxqB/oniiqIIuawdbPWLgRxhnvkdQSf8x/u7T1uuetpZkEIa/HKP85A0uHKHnJxEHUgr+wryFNEgCTIzfJIyBAPA39owQszw0UOhJEP8rJKnHsWhAuE8SpeE4ekzaNmtlD/7z99KYTsSyL6DTZk8=
+	t=1719246464; cv=none; b=UphA2pFmIvzPMJ+XPkOkYpsqTtNzbGd63n4yoSir8U6uZMWJNpxEbWyPlPG6GB/gLT2WAa7oGfSfUC1Cuq5NrmfA6YH1iVCSoe/IcX2GOEP/otKB+MkscmKMId8yTo53XrwQVwq/5rHKdVf+6HvLim7+WgFTQSCk2EUFDSBjziQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719243714; c=relaxed/simple;
-	bh=ou2IYPd5H8oIxbYtS+lxtyCimVmTneL/zTys27sA4hI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FBADp0esl5GcZIlSWXyjHXT8daQfPxKl6d2+yNpyhuvcUJubrvLocYjUE70ivILOQCnmiu+FORNFg3KehG7VbUDMk57KXuJopysbC2p9Vm4BiNvVI3UTbsHiVPE0ZKkbDQBRrjIyLUb9ipPmHM/BFvt8VaVFOsMj9LIaKqSJ1uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTqQz3Ti; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebc724e1fdso4558351fa.1
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 08:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719243711; x=1719848511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WKl6joGBgm3Yyr5MlRLNs+CldhaTbvtmdB/d5MQfGSo=;
-        b=YTqQz3TiOLzdKt0e9okKNvhozlQlU8sAJD1VwJpF31ET02cVoEXBNaOmbIj3loEcKD
-         oqpwoi2FU6mODC8qD+6liAEoRfunNMKqeiGGTRZ8LHAdu9crHAfCbW7s0M3Q+DOL0sZ3
-         WuPzkoxXDJjjyMjY+xzOgFxqSEm6xgt5H6fe87oh9BK3cx1Gf/Yn+lfbW+9rvc4HHSZ4
-         IjSaLlYBMAw7J6Pu6Cj+Khyng8WgNxEPF9pQCgoI0GT49UyvI1YNY919NBG7WYJ5QcnT
-         63hWfdygYx/N00yJYWLrgqns5esmZFqdZT3DrgOd+GDMNBd0Xd05aZ9QaW6JmFuJHaFH
-         /DWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719243711; x=1719848511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WKl6joGBgm3Yyr5MlRLNs+CldhaTbvtmdB/d5MQfGSo=;
-        b=aKhjuybZnxqL+wANoIkaDjc55f1K4EwxJVbeYD5P4xax7IiUl6EuNf5g4L+QJ4dMWI
-         7MTXY/Z3p8E/i2tWdofLWVO+SSOZ5vTonAxCYHzXxsJ0Bvs7aRHicX/tPw94mt1lPdY2
-         0Vj0ZTAC7P1Tygs6WpfgTX4+KadIIE/XN53h/TgDg8L/cJiPpmN8FtMRWcKDUsn37zzJ
-         WBvF/DvYAI/32gOSm9Qu9UmwheQf3QfN60gW4jIejio08syLA8oPwAxY5eHpj4znIbye
-         iT7wec9DTzmVgrfCoPW9Gv7eQNoS2GhrIiHxFGFzjBK1H/2NzE71574jbOy80zr/JkDk
-         5pAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHMv21BkSjPqbLKz0vudkUZygCZgFgciSKMnpOjEtQ2+qMlmxs+b53d15xFPHNbG7BGIOCNyz0dMRXkd1Jqp9bZS7a2uT2Z/3k
-X-Gm-Message-State: AOJu0Yy480YklPYj7+b8sdOv1GgXP1JApvHN52wdDDjOgDa/wcrXGfqI
-	UTmzEJHVqtmCJ3XlS3h3hh1BYeko8mYNboXqiXVlwORwSgRh/+9Ktz1RMt32uL+Qfile/UNlyWP
-	qE3SaXBHEtVS+QeAj/O/tJ06B72P9ESA4
-X-Google-Smtp-Source: AGHT+IEowdd7Oqi8+WVTIve4IFlj6dOlzN1b4vgtYMXCaLst+WBEe+bn/YcNZa4K/WgpIsFF1Qq+eRGtX9mBZGqZFsQ=
-X-Received: by 2002:a2e:3c12:0:b0:2ec:5361:4e21 with SMTP id
- 38308e7fff4ca-2ec54d0a940mr38277531fa.5.1719243710492; Mon, 24 Jun 2024
- 08:41:50 -0700 (PDT)
+	s=arc-20240116; t=1719246464; c=relaxed/simple;
+	bh=g06GviFp/CHSc0liGrZgP/1mGa+hTqvF01U/rd8Zsu0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n/wLMvzGxhOMzLuZ7hj6kSNMTjOlF4Mzrlchla3vigyVNVbM7oEN8JfJjJigtJRhsD1m6/S04mSLz7RLpH2bXB3GN0UnTU+TytaydIINvAYhBHvCUezfiV55xUCXfiyJ0rtrHdhiWKydii3MXaFhVVPGxZ7sVX1Be0bT2PG/IKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn3aikag; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B484C2BBFC;
+	Mon, 24 Jun 2024 16:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719246463;
+	bh=g06GviFp/CHSc0liGrZgP/1mGa+hTqvF01U/rd8Zsu0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fn3aikagig30plidPalhmd3ErTfHxPV8H43P/mUZ3SJqEyBYjCZflWmjxPGIlc7E6
+	 R9S6QhlWWapa0WTQOu5SEAWJSOtsnAIGiJ05Xr12lDc7f1Votr8yJcRAjVqviXyBJi
+	 1UKjjBr9tFGHC8AXF0XeH2BToHQK3iDhq18fReZbexba83oAXoZr3z/AZ9sQ9G6Ybt
+	 mQzwaRPfSwCzZlOxsuFD6Z1NHfd6SFCz2u6REfd3FmsYkO8XPVuUFQX6EGMb0orhWk
+	 UwN8WLiamwVE9gla0UYLdpxdUtpzhU+HkpWI+H9Pw9f6eX2QetZ2pp033BSYU17QoL
+	 WOa62ownhGs8Q==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	snitzer@hammerspace.com
+Subject: [PATCH v7 00/20] nfs/nfsd: add support for localio
+Date: Mon, 24 Jun 2024 12:27:21 -0400
+Message-ID: <20240624162741.68216-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624132827.71808-1-olga.kornievskaia@gmail.com> <bb2d44bc4f10032ce1abdd7cbc576cc5ea5da5c5.camel@hammerspace.com>
-In-Reply-To: <bb2d44bc4f10032ce1abdd7cbc576cc5ea5da5c5.camel@hammerspace.com>
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date: Mon, 24 Jun 2024 11:41:38 -0400
-Message-ID: <CAN-5tyEPQMTLFP=r9s2wj3RqdV3DjU3wEeWAnmDfs+_NDBxp2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.1 another fix for EXCHGID4_FLAG_USE_PNFS_DS for
- DS server
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>, 
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 24, 2024 at 11:17=E2=80=AFAM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> Hi Olga,
->
-> On Mon, 2024-06-24 at 09:28 -0400, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > Previously in order to mark the communication with the DS server,
-> > we tried to use NFS_CS_DS in cl_flags. However, this flag would
-> > only be saved for the DS server and in case where DS equals MDS,
-> > the client would not find a matching nfs_client in nfs_match_client
-> > that represents the MDS (but is also a DS).
-> >
-> > Instead, don't rely on the NFS_CS_DS but instead use NFS_CS_PNFS.
-> >
-> > Fixes: 379e4adfddd6 ("NFSv4.1: fixup use EXCHGID4_FLAG_USE_PNFS_DS
-> > for DS server")
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  fs/nfs/nfs4client.c | 6 ++----
-> >  fs/nfs/nfs4proc.c   | 2 +-
-> >  2 files changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> > index 11e3a285594c..ac80f87cb9d9 100644
-> > --- a/fs/nfs/nfs4client.c
-> > +++ b/fs/nfs/nfs4client.c
-> > @@ -231,9 +231,8 @@ struct nfs_client *nfs4_alloc_client(const struct
-> > nfs_client_initdata *cl_init)
-> >               __set_bit(NFS_CS_INFINITE_SLOTS, &clp->cl_flags);
-> >       __set_bit(NFS_CS_DISCRTRY, &clp->cl_flags);
-> >       __set_bit(NFS_CS_NO_RETRANS_TIMEOUT, &clp->cl_flags);
-> > -
-> > -     if (test_bit(NFS_CS_DS, &cl_init->init_flags))
-> > -             __set_bit(NFS_CS_DS, &clp->cl_flags);
-> > +     if (test_bit(NFS_CS_PNFS, &cl_init->init_flags))
-> > +             __set_bit(NFS_CS_PNFS, &clp->cl_flags);
->
-> Won't this change cause the match in nfs_get_client() to fail?
+Hi,
 
-At which stage? The problem was that nfs_match_client explicitly looks
-for NFS_CS_DS for matching.
+IANA has assigned the RPC program number 400122 for localio!
 
-                /* Match request for a dedicated DS */
-                if (test_bit(NFS_CS_DS, &data->init_flags) !=3D
-                    test_bit(NFS_CS_DS, &clp->cl_flags))
-                        continue;
+Tested with xfstests, all is passing agsint NFS v3 and v4.2 (localio
+ontop of XFS) except generic/355 (which tests if suid bit gets cleared
+with directio).
 
-We have pnfs flow creating client where NFS_CS_DS was set in
-init_flags and yet the stored nfs_client didn't because we dont mark
-the MDS exchange_id with DS flags.
+My git tree is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/
 
-In my testing the fixed way appropriately finds the MDS's nfs_client
-for when MDS=3DDS and for when it's not there isn't one to begin with
-but we still only mark USE_PNFS_DS on the pnfs path and not 4.1 mount.
+This v7 is both branch nfs-localio-for-6.11 (always tracks latest)
+and nfs-localio-for-6.11.v7
 
->
->
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+Quite a bit has changed since v6:
+- Updated to use IANA assigned RPC program number 400122.
+- Thanks to Neil the localio protocol stands on its own and is
+  simplified, all of Neil's changes were included. But a patch is
+  needed to sunrpc to remove the BUG_ON if p_arglen is 0 (otherwise
+  the NULL rpc used during connection triggers the BUG_ON.
+- Reduced Kconfig knobs down to NFS_LOCALIO and NFSD_LOCALIO. Left
+  them piece-wise for reason detailed in the last patch.
+- Added MODULE_DESCRIPTION to nfs_localio module.
+- Removed all the AIO directio code from fs/nfs/localio.c because it
+  wasn't used (since nothing ever set NFS_IOHDR_ODIRECT).  But even if
+  enabled the async kiocb completion wasn't ever used in practice.
+
+TODO:
+- For directio, fix kiocb so that it conveys IOCB_DIRECT to underlying
+  filesystem.
+- Must fix xfstests generic/355.
+- Look closer at implementing standlone SRCU to avoid bloating
+  nfsd_net -- idea of shared SRCU is very unintuitive to me...
+
+FYI:
+- Really rather not play games with 'localio_enabled' to get all of
+  localio code to build but be disabled by default.. just too fiddley.
+
+All review and comments are welcome!
+
+Thanks,
+Mike
+
+Mike Snitzer (11):
+  nfs_common: add NFS LOCALIO auxiliary protocol enablement
+  nfsd/localio: manage netns reference in nfsd_open_local_fh
+  nfs/nfsd: factor out {encode,decode}_opaque_fixed to nfs_xdr.h
+  SUNRPC: remove call_allocate() BUG_ON if p_arglen=0 to allow RPC with void arg
+  nfs: implement client support for NFS_LOCALIO_PROGRAM
+  nfsd: implement server support for NFS_LOCALIO_PROGRAM
+  nfsd: prepare to use SRCU to dereference nn->nfsd_serv
+  nfsd: use SRCU to dereference nn->nfsd_serv
+  nfsd/localio: use SRCU to dereference nn->nfsd_serv in nfsd_open_local_fh
+  nfs: add Documentation/filesystems/nfs/localio.rst
+  nfs/nfsd: add Kconfig options to allow localio to be enabled
+
+NeilBrown (1):
+  SUNRPC: replace program list with program array
+
+Trond Myklebust (3):
+  NFS: Enable localio for non-pNFS I/O
+  pnfs/flexfiles: Enable localio for flexfiles I/O
+  nfs/localio: use dedicated workqueues for filesystem read and write
+
+Weston Andros Adamson (5):
+  nfs: pass nfs_client to nfs_initiate_pgio
+  nfs: pass descriptor thru nfs_initiate_pgio path
+  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
+  sunrpc: add rpcauth_map_to_svc_cred_local
+  nfs/nfsd: add "localio" support
+
+ Documentation/filesystems/nfs/localio.rst | 134 ++++
+ fs/Kconfig                                |   3 +
+ fs/nfs/Kconfig                            |  14 +
+ fs/nfs/Makefile                           |   1 +
+ fs/nfs/blocklayout/blocklayout.c          |   6 +-
+ fs/nfs/client.c                           |  15 +-
+ fs/nfs/filelayout/filelayout.c            |  16 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+ fs/nfs/inode.c                            |  61 +-
+ fs/nfs/internal.h                         |  61 +-
+ fs/nfs/localio.c                          | 851 ++++++++++++++++++++++
+ fs/nfs/nfs4xdr.c                          |  13 -
+ fs/nfs/nfstrace.h                         |  61 ++
+ fs/nfs/pagelist.c                         |  32 +-
+ fs/nfs/pnfs.c                             |  24 +-
+ fs/nfs/pnfs.h                             |   6 +-
+ fs/nfs/pnfs_nfs.c                         |   2 +-
+ fs/nfs/write.c                            |  13 +-
+ fs/nfs_common/Makefile                    |   3 +
+ fs/nfs_common/nfslocalio.c                |  72 ++
+ fs/nfsd/Kconfig                           |  14 +
+ fs/nfsd/Makefile                          |   1 +
+ fs/nfsd/filecache.c                       |  15 +-
+ fs/nfsd/localio.c                         | 327 +++++++++
+ fs/nfsd/netns.h                           |  18 +-
+ fs/nfsd/nfs4state.c                       |  25 +-
+ fs/nfsd/nfsctl.c                          |  30 +-
+ fs/nfsd/nfsd.h                            |   2 +-
+ fs/nfsd/nfssvc.c                          | 165 +++--
+ fs/nfsd/trace.h                           |   3 +-
+ fs/nfsd/vfs.h                             |   9 +
+ include/linux/nfs.h                       |   9 +
+ include/linux/nfs_fs.h                    |   2 +
+ include/linux/nfs_fs_sb.h                 |  10 +
+ include/linux/nfs_xdr.h                   |  20 +-
+ include/linux/nfslocalio.h                |  41 ++
+ include/linux/sunrpc/auth.h               |   4 +
+ include/linux/sunrpc/svc.h                |   7 +-
+ net/sunrpc/auth.c                         |  15 +
+ net/sunrpc/clnt.c                         |   1 -
+ net/sunrpc/svc.c                          |  68 +-
+ net/sunrpc/svc_xprt.c                     |   2 +-
+ net/sunrpc/svcauth_unix.c                 |   3 +-
+ 45 files changed, 2116 insertions(+), 202 deletions(-)
+ create mode 100644 Documentation/filesystems/nfs/localio.rst
+ create mode 100644 fs/nfs/localio.c
+ create mode 100644 fs/nfs_common/nfslocalio.c
+ create mode 100644 fs/nfsd/localio.c
+ create mode 100644 include/linux/nfslocalio.h
+
+-- 
+2.44.0
+
 
