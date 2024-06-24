@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4265-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4266-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B24B9153BC
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 18:28:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 489519153BE
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 18:28:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05A75B20F8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 16:28:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D4EFEB2463C
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 16:28:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40EAF19E7C0;
-	Mon, 24 Jun 2024 16:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF3919DF5D;
+	Mon, 24 Jun 2024 16:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KReoKorA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyc9NuGa"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D25D19DFBB
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 16:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B7619E7CC
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 16:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246473; cv=none; b=Kd7ZeDCBfotpKG4CDAO8vUDfL2B654cvEns9FHB012Fk94rpaS1ojps+BEPhV6s+mJZkJIYhw5vboQRIxmn+h9PwkFBShIHm0JWSVnF9KQrASw1JTMX4xx7hcfbkHx5hSkhvnVyi20DVK5BBrfJr3BeSAPxfI+5V0RVXuRb+iew=
+	t=1719246474; cv=none; b=FOs2WY1+mKJQ7xHZryDu/YfmMiKLOyeVgVdFCbHA4TtZas4t2k2hiEuNRIdZCkPs9BCuA7c54BcBXEmCOIXKi3VYJglxow8mswOFL/+GtLvJuiqnEjoRix0c4ViRp9AUQ94rpbZoL3m8/RQZPdcch5kPfOcE0Y/OWel2BtN05BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246473; c=relaxed/simple;
-	bh=T55cTPW5qP6dqOWHwB8vLj8iL18KbzL5QZhNnku5foo=;
+	s=arc-20240116; t=1719246474; c=relaxed/simple;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tAUc8IkCI0YADWg/ANfQ/y7OQ4zywv/99VwlESEpA4xJjXjrpq8toAPif/FCN2qCdUQkjx7W8PQSegtIs9TxVUSaaf3ZYMSOQxqYhgOaJp6c+P7UyVfKR30cgqYkxhtj6jfXjxs2vmxl8qpV+g95CZNjadlCeFjpb55WeR0PoHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KReoKorA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD8EC4AF0E;
-	Mon, 24 Jun 2024 16:27:52 +0000 (UTC)
+	 MIME-Version; b=cu9yDW7vEdBZ9bVLbOz6bksHyx2lK6j70TcX2YpiDAbFdTH6bS7dOzmnCCctyWQe0ejTrGLn/RuVihqGWxU8Ntl/4TasprgCdbgDzZgKys7dXNnTDqQ+rRmCltC3hsiQsgj5eo2DiQosL1FYXETdheGq2VUlARiSSRJKo6lENyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyc9NuGa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E82DC32786;
+	Mon, 24 Jun 2024 16:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719246473;
-	bh=T55cTPW5qP6dqOWHwB8vLj8iL18KbzL5QZhNnku5foo=;
+	s=k20201202; t=1719246474;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KReoKorAW2coEB8jdF3M9s1zNSbDoMGQ3RK3nW/bFEXMVVq31XnMis5wGhgdmz+4K
-	 WpCDgi3TuyG9DvwhGMhH3Af+5oTOwDhUdX8mdJ5kGABcCF70DssCkVe6OKcIuTN3Bz
-	 D8pzIWK87x5wSHsEtlKPa2MvU8ZWxpQvC2dtqzIrqgF854594nRJd/3U7zccXMGh34
-	 BuuJ32AmuxR5TnuqL7WbdylUGLJNWdeyDuOKC+sKHhjqyjsRKR+uqzuDKiD8GCZ5yt
-	 V/LB7Rr60bqhmTRiC60O4Zir9NTk0XENpWnToHSYeymBd96ruscsYvmbW9ZeGreyQl
-	 9+3uydttqcbDw==
+	b=kyc9NuGaNwQcjjRgYHsrK486bR5w1d8nif2b7SG8rd7h1Lp8vsPNI6kBkw0buT4go
+	 KaUc6h0JQWjYfz4dleDXZu4r1nWW9uWHlt3sWeYzoiIxkQGb9pdYoxXB6/DBCCrDoJ
+	 iJx4dhdysCNGWCC/hPQLjexfNl7jTML3avwUHdAKIzCNsAHruSU/kjdZJ7fRH6nXhe
+	 omxL4CCMNjLCAQaXOG1CZpeAyhiWZ3l68bbbIeq+AVZiDuLql0YJQtPujxK57pJyUQ
+	 +L4SYuOMNjFGN37xZSWDt4fImF/6Eb6hGOllFagdjCR4pOHjrKxFeS0OPqIjjufKXk
+	 A7xJLXOSAJQXA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v7 07/20] nfsd/localio: manage netns reference in nfsd_open_local_fh
-Date: Mon, 24 Jun 2024 12:27:28 -0400
-Message-ID: <20240624162741.68216-8-snitzer@kernel.org>
+Subject: [PATCH v7 08/20] NFS: Enable localio for non-pNFS I/O
+Date: Mon, 24 Jun 2024 12:27:29 -0400
+Message-ID: <20240624162741.68216-9-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240624162741.68216-1-snitzer@kernel.org>
 References: <20240624162741.68216-1-snitzer@kernel.org>
@@ -62,124 +62,85 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use maybe_get_net() and put_net() in nfsd_open_local_fh().
-Also refactor nfsd_open_local_fh() slightly.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
+Try a local open of the file we're writing to, and if it succeeds, then
+do local I/O.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/localio.c | 45 ++++++++++++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 19 deletions(-)
+ fs/nfs/pagelist.c | 19 ++++++++++---------
+ fs/nfs/write.c    |  7 ++++++-
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-index e9aa0997f898..f6df66b1d523 100644
---- a/fs/nfsd/localio.c
-+++ b/fs/nfsd/localio.c
-@@ -99,18 +99,11 @@ nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
- 
- static struct svc_rqst *
- nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
--			const struct cred *cred)
-+			const struct cred *cred, struct svc_serv *serv)
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index b08420b8e664..3ee78da5ebc4 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1063,6 +1063,7 @@ EXPORT_SYMBOL_GPL(nfs_generic_pgio);
+ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
  {
- 	struct svc_rqst *rqstp;
--	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int status;
+ 	struct nfs_pgio_header *hdr;
++	struct file *filp;
+ 	int ret;
+ 	unsigned short task_flags = 0;
  
--	/* FIXME: not running in nfsd context, must get reference on nfsd_serv */
--	if (unlikely(!READ_ONCE(nn->nfsd_serv))) {
--		dprintk("%s: localio denied. Server not running\n", __func__);
--		return ERR_PTR(-ENXIO);
--	}
--
- 	rqstp = kzalloc(sizeof(*rqstp), GFP_KERNEL);
- 	if (!rqstp)
- 		return ERR_PTR(-ENOMEM);
-@@ -120,13 +113,13 @@ nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
- 		status = -ENOMEM;
- 		goto out_err;
+@@ -1074,18 +1075,18 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ 	nfs_pgheader_init(desc, hdr, nfs_pgio_header_free);
+ 	ret = nfs_generic_pgio(desc, hdr);
+ 	if (ret == 0) {
++		struct nfs_client *clp = NFS_SERVER(hdr->inode)->nfs_client;
++
++		filp = nfs_local_file_open(clp, hdr->cred, hdr->args.fh,
++					   hdr->args.context);
++
+ 		if (NFS_SERVER(hdr->inode)->nfs_client->cl_minorversion)
+ 			task_flags = RPC_TASK_MOVEABLE;
+-		ret = nfs_initiate_pgio(desc,
+-					NFS_SERVER(hdr->inode)->nfs_client,
+-					NFS_CLIENT(hdr->inode),
+-					hdr,
+-					hdr->cred,
+-					NFS_PROTO(hdr->inode),
+-					desc->pg_rpc_callops,
+-					desc->pg_ioflags,
++		ret = nfs_initiate_pgio(desc, clp, NFS_CLIENT(hdr->inode),
++					hdr, hdr->cred, NFS_PROTO(hdr->inode),
++					desc->pg_rpc_callops, desc->pg_ioflags,
+ 					RPC_TASK_CRED_NOREF | task_flags,
+-					NULL);
++					filp);
  	}
--
- 	rqstp->rq_xprt->xpt_net = net;
-+
- 	__set_bit(RQ_SECURE, &rqstp->rq_flags);
- 	rqstp->rq_proc = 1;
- 	rqstp->rq_vers = 3;
- 	rqstp->rq_prot = IPPROTO_TCP;
--	rqstp->rq_server = nn->nfsd_serv;
-+	rqstp->rq_server = serv;
- 
- 	/* Note: we're connecting to ourself, so source addr == peer addr */
- 	rqstp->rq_addrlen = rpc_peeraddr(rpc_clnt,
-@@ -188,28 +181,44 @@ int nfsd_open_local_fh(struct net *net,
- 			 const fmode_t fmode,
- 			 struct file **pfilp)
- {
-+	struct nfsd_net *nn;
- 	const struct cred *save_cred;
- 	struct svc_rqst *rqstp;
- 	struct svc_fh fh;
- 	struct nfsd_file *nf;
- 	int status = 0;
- 	int mayflags = NFSD_MAY_LOCALIO;
-+	struct svc_serv *serv;
- 	__be32 beres;
- 
-+	if (nfs_fh->size > NFS4_FHSIZE)
-+		return -EINVAL;
-+
-+	/* Not running in nfsd context, must safely get reference on nfsd_serv */
-+	net = maybe_get_net(net);
-+	if (!net) {
-+		dprintk("%s: localio denied. Server netns not available\n", __func__);
-+		return -ENXIO;
-+	}
-+	nn = net_generic(net, nfsd_net_id);
-+
-+	serv = READ_ONCE(nn->nfsd_serv);
-+	if (unlikely(!serv)) {
-+		dprintk("%s: localio denied. Server not running\n", __func__);
-+		status = -ENXIO;
-+		goto out_net;
-+	}
-+
- 	/* Save creds before calling into nfsd */
- 	save_cred = get_current_cred();
- 
--	rqstp = nfsd_local_fakerqst_create(net, rpc_clnt, cred);
-+	rqstp = nfsd_local_fakerqst_create(net, rpc_clnt, cred, serv);
- 	if (IS_ERR(rqstp)) {
- 		status = PTR_ERR(rqstp);
- 		goto out_revertcred;
- 	}
- 
- 	/* nfs_fh -> svc_fh */
--	if (nfs_fh->size > NFS4_FHSIZE) {
--		status = -EINVAL;
--		goto out;
--	}
- 	fh_init(&fh, NFS4_FHSIZE);
- 	fh.fh_handle.fh_size = nfs_fh->size;
- 	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
-@@ -225,17 +234,15 @@ int nfsd_open_local_fh(struct net *net,
- 		dprintk("%s: fh_verify failed %d\n", __func__, status);
- 		goto out_fh_put;
- 	}
--
- 	*pfilp = get_file(nf->nf_file);
--
- 	nfsd_file_put(nf);
- out_fh_put:
- 	fh_put(&fh);
--
--out:
- 	nfsd_local_fakerqst_destroy(rqstp);
- out_revertcred:
- 	revert_creds(save_cred);
-+out_net:
-+	put_net(net);
- 	return status;
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(nfsd_open_local_fh);
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index b29b0fd5431f..b2c06b8b88cd 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1802,6 +1802,8 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 		struct nfs_commit_info *cinfo)
+ {
+ 	struct nfs_commit_data	*data;
++	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
++	struct file *filp;
+ 	unsigned short task_flags = 0;
+ 
+ 	/* another commit raced with us */
+@@ -1818,9 +1820,12 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 	nfs_init_commit(data, head, NULL, cinfo);
+ 	if (NFS_SERVER(inode)->nfs_client->cl_minorversion)
+ 		task_flags = RPC_TASK_MOVEABLE;
++
++	filp = nfs_local_file_open(clp, data->cred, data->args.fh,
++				   data->context);
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+ 				   data->mds_ops, how,
+-				   RPC_TASK_CRED_NOREF | task_flags, NULL);
++				   RPC_TASK_CRED_NOREF | task_flags, filp);
+ }
+ 
+ /*
 -- 
 2.44.0
 
