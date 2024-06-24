@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4273-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4274-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C54A09153C5
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 18:28:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 898389153C6
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 18:28:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 518CA1F24E91
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 16:28:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09C331F2101F
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 16:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B86C19DF8A;
-	Mon, 24 Jun 2024 16:28:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35B3019DF91;
+	Mon, 24 Jun 2024 16:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgL4n064"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/GVjo/x"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D1913C3DD
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 16:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185813C3DD
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 16:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246484; cv=none; b=aYNQfuewroTsZIAlmquA/x57tGQ/RvuwcLVobJ7SPNXuHoxnr7NcpljCIHNToK1ctQ2OBhmYZMV/9LdQBXahvqST2fe5Mb410Jab2O9YezNggTfOmR3QKboS1fHpOxl5Z6zXGafVNC+pkPyIY/sUCFCjRjhCMC6EAnDmNr0xBIg=
+	t=1719246485; cv=none; b=AP3t4iWVGPBFlEIfbx954kL5cRLasWxReP6SbjIrjODiPnoGi4ttV9qQ3/nVmxOJ+gHoBhUIAhLVbQ9HAKjdaWr457QCxzrX0RPegokRdv4SZqEE1Wg6lStlxYeeecerDz8+wZixFEuSL3YvLa/XITtQ5VqRQRGkun2473Yb4wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246484; c=relaxed/simple;
-	bh=pietP8JLYcuxAgKo3oinZUtpPxBf4meEGhX2b4c2BkU=;
+	s=arc-20240116; t=1719246485; c=relaxed/simple;
+	bh=RJ2GnsIukQdBlP1QK3lVe5vpkJJ29N4nydMbM/zAUys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XUSwOWNhwbajyHbkQKbQKPktRCcKPwf7am78YdpmEgCNg09Z7yrKjvo0cc1BrNIEdX28SJ7fY7AWckY2dz8VaqopCjFwEUvcT45NpHlTXBnF2Z3LTUC0ZLTiCKfD1thaDLhjXgfs5m+F2XVaJkL4TmlBPCWvSRiAFSagO+S+XaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgL4n064; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62ABEC32782;
-	Mon, 24 Jun 2024 16:28:03 +0000 (UTC)
+	 MIME-Version; b=fiMbzINOPJzxpVlrZolxBgYSmP/f5p+bAU2VlLM3Bx58mnGDSe9YgwPoW5SdSTryn9UjIUPzvacUckNSRXi+kkRdncBYzoP5k71lJOL8j1jt0MtXYXAzmX613bI06SCUhld2zJoRHlo/VlsG2n8SCG8cNT7w5PLfxndUtKTUnZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/GVjo/x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9C5DC2BBFC;
+	Mon, 24 Jun 2024 16:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719246483;
-	bh=pietP8JLYcuxAgKo3oinZUtpPxBf4meEGhX2b4c2BkU=;
+	s=k20201202; t=1719246484;
+	bh=RJ2GnsIukQdBlP1QK3lVe5vpkJJ29N4nydMbM/zAUys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NgL4n064St8c9wsLguukpNbyQXfei5BRI1LBaShtEaUlALuvdmwBA1wN+ZhldBcqh
-	 C4EdgskDF9RUuakAfMw6LjlOFG5MnQ+EjQt94UeSeJjzknUFydjoKFlVJOmzCCFrTP
-	 Eoy+bUtKvAuQlt1ZKGmU/Vh8TqQbrmHScUGzzjHoKqrPhnNj4s+wON6xGBdk8/c4mM
-	 3L7T8fbfcZKsKvkqYBdVULG1F7gi5tBn6nn1yJgdaNoOdySKVdPN+qqjmK7U5mh41k
-	 4Bxphk7uBYCQlK/el/++Dh2doHs2oG/i0s6z8msyfwdvOCm/c99KMm0jm69Cw2iakE
-	 XghNKeS4Qvbjg==
+	b=O/GVjo/xHnLBIg9tUcNdSzpMGdqXZv5ubS7K6MG4bF3RmNfIbp3oRR3LmYh70P8hq
+	 4K3B0ZTptukrUBBq14CoxFPyRvYI6E1YeuIxNMu+JIkjzvLV1uP7KceckhY0uhmCWN
+	 zNKVcPLYMghjeV0yDWG+gmVQxhE93p8pkoKQ5KiAHJtE1eouysdaHq94KNDgIPJ+b9
+	 iHjSjz+jSo2U3N5nZ3cI1m+IB78F8BzxMz3Dw21tex//BlQMmAcS45KgPJ882hGOtJ
+	 4JBr2S6/pHoZp73e61xxXD1OgqNLpxPw/TKuRDqzYq4JO1C8CyUHC5qY+yOiYVuXSu
+	 K483o5GabMEtg==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v7 15/20] SUNRPC: replace program list with program array
-Date: Mon, 24 Jun 2024 12:27:36 -0400
-Message-ID: <20240624162741.68216-16-snitzer@kernel.org>
+Subject: [PATCH v7 16/20] nfsd: prepare to use SRCU to dereference nn->nfsd_serv
+Date: Mon, 24 Jun 2024 12:27:37 -0400
+Message-ID: <20240624162741.68216-17-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240624162741.68216-1-snitzer@kernel.org>
 References: <20240624162741.68216-1-snitzer@kernel.org>
@@ -62,420 +62,203 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: NeilBrown <neil@brown.name>
+The next commit switches the nfsd_serv member for struct nfsd_net over
+to a void pointer (void __rcu *).  Prepare for this by assigning
+nn->nfsd_serv to an struct svc_serv pointer that is then happily
+dereferenced.  This eliminates what would otherwise be numerous void
+pointer dereferences after the next commit.
 
-A service created with svc_create_pooled() can be given a linked list of
-programs and all of these will be served.
+All nfsd code what audited so that methods that hold nfsd_mutex will
+continue to directly dereference nn->nfsd_serv.
 
-Using a linked list makes it cumbersome when there are several programs
-that can be optionally selected with CONFIG settings.
-
-So change to use an array with explicit size.  svc_create() is always
-passed a single program.  svc_create_pooled() now must be used for
-multiple programs.
-
-Signed-off-by: NeilBrown <neil@brown.name>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/nfsctl.c           |  2 +-
- fs/nfsd/nfsd.h             |  2 +-
- fs/nfsd/nfssvc.c           | 69 ++++++++++++++++++--------------------
- include/linux/sunrpc/svc.h |  7 ++--
- net/sunrpc/svc.c           | 68 +++++++++++++++++++++----------------
- net/sunrpc/svc_xprt.c      |  2 +-
- net/sunrpc/svcauth_unix.c  |  3 +-
- 7 files changed, 80 insertions(+), 73 deletions(-)
+ fs/nfsd/nfsctl.c | 21 +++++++++++++--------
+ fs/nfsd/nfssvc.c | 34 ++++++++++++++++++----------------
+ 2 files changed, 31 insertions(+), 24 deletions(-)
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index e5d2cc74ef77..6fb92bb61c6d 100644
+index 6fb92bb61c6d..075ada559e18 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
-@@ -2265,7 +2265,7 @@ static __net_init int nfsd_net_init(struct net *net)
- 	if (retval)
- 		goto out_repcache_error;
- 	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
--	nn->nfsd_svcstats.program = &nfsd_program;
-+	nn->nfsd_svcstats.program = &nfsd_programs[0];
- 	nn->nfsd_versions = NULL;
- 	nn->nfsd4_minorversions = NULL;
- 	nfsd4_init_leases_net(nn);
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index cec8697b1cd6..c3f7c5957950 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -80,7 +80,7 @@ struct nfsd_genl_rqstp {
- 	u32			rq_opnum[NFSD_MAX_OPS_PER_COMPOUND];
- };
+@@ -687,10 +687,11 @@ static ssize_t write_versions(struct file *file, char *buf, size_t size)
+ static ssize_t __write_ports_names(char *buf, struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv = nn->nfsd_serv;
  
--extern struct svc_program	nfsd_program;
-+extern struct svc_program	nfsd_programs[];
- extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
- extern struct mutex		nfsd_mutex;
- extern spinlock_t		nfsd_drc_lock;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index bc69a2c90077..1df9e18c510b 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -36,7 +36,6 @@
- #define NFSDDBG_FACILITY	NFSDDBG_SVC
- 
- atomic_t			nfsd_th_cnt = ATOMIC_INIT(0);
--extern struct svc_program	nfsd_program;
- static int			nfsd(void *vrqstp);
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- static int			nfsd_acl_rpcbind_set(struct net *,
-@@ -89,16 +88,6 @@ static const struct svc_version *nfsd_localio_version[] = {
- 
- #define NFSD_LOCALIO_NRVERS		ARRAY_SIZE(nfsd_localio_version)
- 
--static struct svc_program	nfsd_localio_program = {
--	.pg_prog		= NFS_LOCALIO_PROGRAM,
--	.pg_nvers		= NFSD_LOCALIO_NRVERS,
--	.pg_vers		= nfsd_localio_version,
--	.pg_name		= "nfslocalio",
--	.pg_class		= "nfsd",
--	.pg_authenticate	= &svc_set_client,
--	.pg_init_request	= svc_generic_init_request,
--	.pg_rpcbind_set		= svc_generic_rpcbind_set,
--};
- #endif /* CONFIG_NFSD_LOCALIO */
- 
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-@@ -111,23 +100,9 @@ static const struct svc_version *nfsd_acl_version[] = {
- # endif
- };
- 
--#define NFSD_ACL_MINVERS            2
-+#define NFSD_ACL_MINVERS	2
- #define NFSD_ACL_NRVERS		ARRAY_SIZE(nfsd_acl_version)
- 
--static struct svc_program	nfsd_acl_program = {
--#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
--	.pg_next		= &nfsd_localio_program,
--#endif /* CONFIG_NFSD_LOCALIO */
--	.pg_prog		= NFS_ACL_PROGRAM,
--	.pg_nvers		= NFSD_ACL_NRVERS,
--	.pg_vers		= nfsd_acl_version,
--	.pg_name		= "nfsacl",
--	.pg_class		= "nfsd",
--	.pg_authenticate	= &svc_set_client,
--	.pg_init_request	= nfsd_acl_init_request,
--	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
--};
--
- #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
- 
- static const struct svc_version *nfsd_version[] = {
-@@ -140,25 +115,44 @@ static const struct svc_version *nfsd_version[] = {
- #endif
- };
- 
--#define NFSD_MINVERS    	2
-+#define NFSD_MINVERS		2
- #define NFSD_NRVERS		ARRAY_SIZE(nfsd_version)
- 
--struct svc_program		nfsd_program = {
--#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
--	.pg_next		= &nfsd_acl_program,
--#else
--#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
--	.pg_next		= &nfsd_localio_program,
--#endif /* CONFIG_NFSD_LOCALIO */
--#endif
-+struct svc_program		nfsd_programs[] = {
-+	{
- 	.pg_prog		= NFS_PROGRAM,		/* program number */
- 	.pg_nvers		= NFSD_NRVERS,		/* nr of entries in nfsd_version */
- 	.pg_vers		= nfsd_version,		/* version table */
- 	.pg_name		= "nfsd",		/* program name */
- 	.pg_class		= "nfsd",		/* authentication class */
--	.pg_authenticate	= &svc_set_client,	/* export authentication */
-+	.pg_authenticate	= svc_set_client,	/* export authentication */
- 	.pg_init_request	= nfsd_init_request,
- 	.pg_rpcbind_set		= nfsd_rpcbind_set,
-+	},
-+#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-+	{
-+	.pg_prog		= NFS_ACL_PROGRAM,
-+	.pg_nvers		= NFSD_ACL_NRVERS,
-+	.pg_vers		= nfsd_acl_version,
-+	.pg_name		= "nfsacl",
-+	.pg_class		= "nfsd",
-+	.pg_authenticate	= svc_set_client,
-+	.pg_init_request	= nfsd_acl_init_request,
-+	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
-+	},
-+#endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
-+#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
-+	{
-+	.pg_prog		= NFS_LOCALIO_PROGRAM,
-+	.pg_nvers		= NFSD_LOCALIO_NRVERS,
-+	.pg_vers		= nfsd_localio_version,
-+	.pg_name		= "nfslocalio",
-+	.pg_class		= "nfsd",
-+	.pg_authenticate	= svc_set_client,
-+	.pg_init_request	= svc_generic_init_request,
-+	.pg_rpcbind_set		= svc_generic_rpcbind_set,
-+	}
-+#endif /* IS_ENABLED(CONFIG_NFSD_LOCALIO) */
- };
- 
- bool nfsd_support_version(int vers)
-@@ -696,7 +690,8 @@ int nfsd_create_serv(struct net *net)
- 	if (nfsd_max_blksize == 0)
- 		nfsd_max_blksize = nfsd_get_default_max_blksize();
- 	nfsd_reset_versions(nn);
--	serv = svc_create_pooled(&nfsd_program, &nn->nfsd_svcstats,
-+	serv = svc_create_pooled(nfsd_programs, ARRAY_SIZE(nfsd_programs),
-+				 &nn->nfsd_svcstats,
- 				 nfsd_max_blksize, nfsd);
- 	if (serv == NULL)
- 		return -ENOMEM;
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index a7d0406b9ef5..7c86b1696398 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -66,9 +66,10 @@ enum {
-  * We currently do not support more than one RPC program per daemon.
-  */
- struct svc_serv {
--	struct svc_program *	sv_program;	/* RPC program */
-+	struct svc_program *	sv_programs;	/* RPC programs */
- 	struct svc_stat *	sv_stats;	/* RPC statistics */
- 	spinlock_t		sv_lock;
-+	unsigned int		sv_nprogs;	/* Number of sv_programs */
- 	unsigned int		sv_nrthreads;	/* # of server threads */
- 	unsigned int		sv_maxconn;	/* max connections allowed or
- 						 * '0' causing max to be based
-@@ -329,10 +330,9 @@ struct svc_process_info {
- };
+-	if (nn->nfsd_serv == NULL)
++	if (serv == NULL)
+ 		return 0;
+-	return svc_xprt_names(nn->nfsd_serv, buf, SIMPLE_TRANSACTION_LIMIT);
++	return svc_xprt_names(serv, buf, SIMPLE_TRANSACTION_LIMIT);
+ }
  
  /*
-- * List of RPC programs on the same transport endpoint
-+ * RPC program - an array of these can use the same transport endpoint
-  */
- struct svc_program {
--	struct svc_program *	pg_next;	/* other programs (same xprt) */
- 	u32			pg_prog;	/* program number */
- 	unsigned int		pg_lovers;	/* lowest version */
- 	unsigned int		pg_hivers;	/* highest version */
-@@ -414,6 +414,7 @@ void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
- void		   svc_rqst_free(struct svc_rqst *);
- void		   svc_exit_thread(struct svc_rqst *);
- struct svc_serv *  svc_create_pooled(struct svc_program *prog,
-+				     unsigned int nprog,
- 				     struct svc_stat *stats,
- 				     unsigned int bufsize,
- 				     int (*threadfn)(void *data));
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 965a27806bfd..d9f348aa0672 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -440,10 +440,11 @@ EXPORT_SYMBOL_GPL(svc_rpcb_cleanup);
+@@ -717,7 +718,7 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
+ 	serv = nn->nfsd_serv;
+ 	err = svc_addsock(serv, net, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
  
- static int svc_uses_rpcbind(struct svc_serv *serv)
- {
--	struct svc_program	*progp;
--	unsigned int		i;
-+	unsigned int		p, i;
-+
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
+-	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
++	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
+ 		nfsd_destroy_serv(net);
  
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
- 		for (i = 0; i < progp->pg_nvers; i++) {
- 			if (progp->pg_vers[i] == NULL)
- 				continue;
-@@ -480,7 +481,7 @@ __svc_init_bc(struct svc_serv *serv)
-  * Create an RPC service
-  */
- static struct svc_serv *
--__svc_create(struct svc_program *prog, struct svc_stat *stats,
-+__svc_create(struct svc_program *prog, int nprogs, struct svc_stat *stats,
- 	     unsigned int bufsize, int npools, int (*threadfn)(void *data))
- {
- 	struct svc_serv	*serv;
-@@ -491,7 +492,8 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- 	if (!(serv = kzalloc(sizeof(*serv), GFP_KERNEL)))
- 		return NULL;
- 	serv->sv_name      = prog->pg_name;
--	serv->sv_program   = prog;
-+	serv->sv_programs  = prog;
-+	serv->sv_nprogs    = nprogs;
- 	serv->sv_stats     = stats;
- 	if (bufsize > RPCSVC_MAXPAYLOAD)
- 		bufsize = RPCSVC_MAXPAYLOAD;
-@@ -499,17 +501,18 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- 	serv->sv_max_mesg  = roundup(serv->sv_max_payload + PAGE_SIZE, PAGE_SIZE);
- 	serv->sv_threadfn = threadfn;
- 	xdrsize = 0;
--	while (prog) {
--		prog->pg_lovers = prog->pg_nvers-1;
--		for (vers=0; vers<prog->pg_nvers ; vers++)
--			if (prog->pg_vers[vers]) {
--				prog->pg_hivers = vers;
--				if (prog->pg_lovers > vers)
--					prog->pg_lovers = vers;
--				if (prog->pg_vers[vers]->vs_xdrsize > xdrsize)
--					xdrsize = prog->pg_vers[vers]->vs_xdrsize;
-+	for (i = 0; i < nprogs; i++) {
-+		struct svc_program *progp = &prog[i];
-+
-+		progp->pg_lovers = progp->pg_nvers-1;
-+		for (vers = 0; vers < progp->pg_nvers ; vers++)
-+			if (progp->pg_vers[vers]) {
-+				progp->pg_hivers = vers;
-+				if (progp->pg_lovers > vers)
-+					progp->pg_lovers = vers;
-+				if (progp->pg_vers[vers]->vs_xdrsize > xdrsize)
-+					xdrsize = progp->pg_vers[vers]->vs_xdrsize;
- 			}
--		prog = prog->pg_next;
+ 	return err;
+@@ -765,7 +766,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
+ 		svc_xprt_put(xprt);
  	}
- 	serv->sv_xdrsize   = xdrsize;
- 	INIT_LIST_HEAD(&serv->sv_tempsocks);
-@@ -558,13 +561,14 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- struct svc_serv *svc_create(struct svc_program *prog, unsigned int bufsize,
- 			    int (*threadfn)(void *data))
+ out_err:
+-	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
++	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
+ 		nfsd_destroy_serv(net);
+ 
+ 	return err;
+@@ -1674,6 +1675,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	int *nthreads, count = 0, nrpools, i, ret = -EOPNOTSUPP, rem;
+ 	struct net *net = genl_info_net(info);
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv;
+ 	const struct nlattr *attr;
+ 	const char *scope = NULL;
+ 
+@@ -1708,7 +1710,8 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	    info->attrs[NFSD_A_SERVER_LEASETIME] ||
+ 	    info->attrs[NFSD_A_SERVER_SCOPE]) {
+ 		ret = -EBUSY;
+-		if (nn->nfsd_serv && nn->nfsd_serv->sv_nrthreads)
++		serv = nn->nfsd_serv;
++		if (serv && serv->sv_nrthreads)
+ 			goto out_unlock;
+ 
+ 		ret = -EINVAL;
+@@ -1757,6 +1760,7 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info)
  {
--	return __svc_create(prog, NULL, bufsize, 1, threadfn);
-+	return __svc_create(prog, 1, NULL, bufsize, 1, threadfn);
+ 	struct net *net = genl_info_net(info);
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv;
+ 	void *hdr;
+ 	int err;
+ 
+@@ -1781,11 +1785,12 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info)
+ 	if (err)
+ 		goto err_unlock;
+ 
+-	if (nn->nfsd_serv) {
++	serv = nn->nfsd_serv;
++	if (serv) {
+ 		int i;
+ 
+ 		for (i = 0; i < nfsd_nrpools(net); ++i) {
+-			struct svc_pool *sp = &nn->nfsd_serv->sv_pools[i];
++			struct svc_pool *sp = &serv->sv_pools[i];
+ 
+ 			err = nla_put_u32(skb, NFSD_A_SERVER_THREADS,
+ 					  atomic_read(&sp->sp_nrthreads));
+@@ -2103,7 +2108,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 			err = ret;
+ 	}
+ 
+-	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks))
++	if (!serv->sv_nrthreads && list_empty(&serv->sv_permsocks))
+ 		nfsd_destroy_serv(net);
+ 
+ out_unlock_mtx:
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 1df9e18c510b..c16c7d630859 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -288,10 +288,12 @@ int nfsd_nrthreads(struct net *net)
+ {
+ 	int rv = 0;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv;
+ 
+ 	mutex_lock(&nfsd_mutex);
+-	if (nn->nfsd_serv)
+-		rv = nn->nfsd_serv->sv_nrthreads;
++	serv = nn->nfsd_serv;
++	if (serv)
++		rv = serv->sv_nrthreads;
+ 	mutex_unlock(&nfsd_mutex);
+ 	return rv;
  }
- EXPORT_SYMBOL_GPL(svc_create);
- 
- /**
-  * svc_create_pooled - Create an RPC service with pooled threads
-- * @prog: the RPC program the new service will handle
-+ * @prog:  Array of RPC programs the new service will handle
-+ * @nprogs: Number of programs in the array
-  * @stats: the stats struct if desired
-  * @bufsize: maximum message size for @prog
-  * @threadfn: a function to service RPC requests for @prog
-@@ -572,6 +576,7 @@ EXPORT_SYMBOL_GPL(svc_create);
-  * Returns an instantiated struct svc_serv object or NULL.
-  */
- struct svc_serv *svc_create_pooled(struct svc_program *prog,
-+				   unsigned int nprogs,
- 				   struct svc_stat *stats,
- 				   unsigned int bufsize,
- 				   int (*threadfn)(void *data))
-@@ -579,7 +584,7 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
- 	struct svc_serv *serv;
- 	unsigned int npools = svc_pool_map_get();
- 
--	serv = __svc_create(prog, stats, bufsize, npools, threadfn);
-+	serv = __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
- 	if (!serv)
- 		goto out_err;
- 	serv->sv_is_pooled = true;
-@@ -602,16 +607,16 @@ svc_destroy(struct svc_serv **servp)
- 
- 	*servp = NULL;
- 
--	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
-+	dprintk("svc: svc_destroy(%s)\n", serv->sv_programs->pg_name);
- 	timer_shutdown_sync(&serv->sv_temptimer);
- 
- 	/*
- 	 * Remaining transports at this point are not expected.
- 	 */
- 	WARN_ONCE(!list_empty(&serv->sv_permsocks),
--		  "SVC: permsocks remain for %s\n", serv->sv_program->pg_name);
-+		  "SVC: permsocks remain for %s\n", serv->sv_programs->pg_name);
- 	WARN_ONCE(!list_empty(&serv->sv_tempsocks),
--		  "SVC: tempsocks remain for %s\n", serv->sv_program->pg_name);
-+		  "SVC: tempsocks remain for %s\n", serv->sv_programs->pg_name);
- 
- 	cache_clean_deferred(serv);
- 
-@@ -1156,15 +1161,16 @@ int svc_register(const struct svc_serv *serv, struct net *net,
- 		 const int family, const unsigned short proto,
- 		 const unsigned short port)
+@@ -300,16 +302,17 @@ static int nfsd_init_socks(struct net *net, const struct cred *cred)
  {
--	struct svc_program	*progp;
--	unsigned int		i;
-+	unsigned int		p, i;
- 	int			error = 0;
+ 	int error;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv = nn->nfsd_serv;
  
- 	WARN_ON_ONCE(proto == 0 && port == 0);
- 	if (proto == 0 && port == 0)
- 		return -EINVAL;
+-	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
++	if (!list_empty(&serv->sv_permsocks))
+ 		return 0;
  
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
-+
- 		for (i = 0; i < progp->pg_nvers; i++) {
+-	error = svc_xprt_create(nn->nfsd_serv, "udp", net, PF_INET, NFS_PORT,
++	error = svc_xprt_create(serv, "udp", net, PF_INET, NFS_PORT,
+ 				SVC_SOCK_DEFAULTS, cred);
+ 	if (error < 0)
+ 		return error;
  
- 			error = progp->pg_rpcbind_set(net, progp, i,
-@@ -1216,13 +1222,14 @@ static void __svc_unregister(struct net *net, const u32 program, const u32 versi
- static void svc_unregister(const struct svc_serv *serv, struct net *net)
+-	error = svc_xprt_create(nn->nfsd_serv, "tcp", net, PF_INET, NFS_PORT,
++	error = svc_xprt_create(serv, "tcp", net, PF_INET, NFS_PORT,
+ 				SVC_SOCK_DEFAULTS, cred);
+ 	if (error < 0)
+ 		return error;
+@@ -722,11 +725,12 @@ int nfsd_create_serv(struct net *net)
+ int nfsd_nrpools(struct net *net)
  {
- 	struct sighand_struct *sighand;
--	struct svc_program *progp;
- 	unsigned long flags;
--	unsigned int i;
-+	unsigned int p, i;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv = nn->nfsd_serv;
  
- 	clear_thread_flag(TIF_SIGPENDING);
+-	if (nn->nfsd_serv == NULL)
++	if (serv == NULL)
+ 		return 0;
+ 	else
+-		return nn->nfsd_serv->sv_nrpools;
++		return serv->sv_nrpools;
+ }
  
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
-+
- 		for (i = 0; i < progp->pg_nvers; i++) {
- 			if (progp->pg_vers[i] == NULL)
- 				continue;
-@@ -1328,7 +1335,7 @@ svc_process_common(struct svc_rqst *rqstp)
- 	struct svc_process_info process;
- 	enum svc_auth_status	auth_res;
- 	unsigned int		aoffset;
--	int			rc;
-+	int			pr, rc;
- 	__be32			*p;
+ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
+@@ -760,14 +764,15 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
+ 	int tot = 0;
+ 	int err = 0;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct svc_serv *serv = nn->nfsd_serv;
  
- 	/* Will be turned off only when NFSv4 Sessions are used */
-@@ -1352,9 +1359,12 @@ svc_process_common(struct svc_rqst *rqstp)
- 	rqstp->rq_vers = be32_to_cpup(p++);
- 	rqstp->rq_proc = be32_to_cpup(p);
+ 	lockdep_assert_held(&nfsd_mutex);
  
--	for (progp = serv->sv_program; progp; progp = progp->pg_next)
-+	for (pr = 0; pr < serv->sv_nprogs; pr++) {
-+		progp = &serv->sv_programs[pr];
-+
- 		if (rqstp->rq_prog == progp->pg_prog)
- 			break;
-+	}
+-	if (nn->nfsd_serv == NULL || n <= 0)
++	if (serv == NULL || n <= 0)
+ 		return 0;
  
- 	/*
- 	 * Decode auth data, and add verifier to reply buffer.
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index d3735ab3e6d1..16634afdf253 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -268,7 +268,7 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 		spin_unlock(&svc_xprt_class_lock);
- 		newxprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
- 		if (IS_ERR(newxprt)) {
--			trace_svc_xprt_create_err(serv->sv_program->pg_name,
-+			trace_svc_xprt_create_err(serv->sv_programs->pg_name,
- 						  xcl->xcl_name, sap, len,
- 						  newxprt);
- 			module_put(xcl->xcl_owner);
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 04b45588ae6f..8ca98b146ec8 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -697,7 +697,8 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
- 	rqstp->rq_auth_stat = rpc_autherr_badcred;
- 	ipm = ip_map_cached_get(xprt);
- 	if (ipm == NULL)
--		ipm = __ip_map_lookup(sn->ip_map_cache, rqstp->rq_server->sv_program->pg_class,
-+		ipm = __ip_map_lookup(sn->ip_map_cache,
-+				      rqstp->rq_server->sv_programs->pg_class,
- 				    &sin6->sin6_addr);
+-	if (n > nn->nfsd_serv->sv_nrpools)
+-		n = nn->nfsd_serv->sv_nrpools;
++	if (n > serv->sv_nrpools)
++		n = serv->sv_nrpools;
  
- 	if (ipm == NULL)
+ 	/* enforce a global maximum number of threads */
+ 	tot = 0;
+@@ -790,18 +795,15 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
+ 
+ 	/* apply the new numbers */
+ 	for (i = 0; i < n; i++) {
+-		err = svc_set_num_threads(nn->nfsd_serv,
+-					  &nn->nfsd_serv->sv_pools[i],
++		err = svc_set_num_threads(serv, &serv->sv_pools[i],
+ 					  nthreads[i]);
+ 		if (err)
+ 			goto out;
+ 	}
+ 
+ 	/* Anything undefined in array is considered to be 0 */
+-	for (i = n; i < nn->nfsd_serv->sv_nrpools; ++i) {
+-		err = svc_set_num_threads(nn->nfsd_serv,
+-					  &nn->nfsd_serv->sv_pools[i],
+-					  0);
++	for (i = n; i < serv->sv_nrpools; ++i) {
++		err = svc_set_num_threads(serv, &serv->sv_pools[i], 0);
+ 		if (err)
+ 			goto out;
+ 	}
 -- 
 2.44.0
 
