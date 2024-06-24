@@ -1,93 +1,135 @@
-Return-Path: <linux-nfs+bounces-4283-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4284-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FEA79158A9
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 23:14:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3177E915A41
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 01:08:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F11BAB207B8
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 21:14:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C04E0B2324E
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 23:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313C11A01BD;
-	Mon, 24 Jun 2024 21:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6551A2553;
+	Mon, 24 Jun 2024 23:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPqnN8hv"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ogEGcE89";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sSjqCXkP";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DJ2qL0Ry";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e/cJ7BGc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5C419AD93
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 21:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDBB19FA92
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 23:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719263670; cv=none; b=PYGhvgbKezHmGywTAoFNm3PY3nHd9J2zsP/DWfgRJUZdbRj6vg95l4Z8dtGa1kH6iLSitqxFTel1Z6nX869nunVCHPfAnAjI18CKPqKTghyPhlvzR98wOYfSO6UbwaI9Ht0PB12Io5JQf5MLY932ZllgejPj2erSwMx5omHkhjE=
+	t=1719270532; cv=none; b=Y1Ak3qEUIn6Bz2H8q/hGQQXI8k3eDLIJKWr1pgaeV/BnfVEmSGCF+D7N070wfbSKH3ByPJnlJAn95j5dOAfLoHQCOSl5oO0uaVHqAG5yfVBViaNdWxFY4RC1FB7EGDWSzh25lyQe774sFIqk/UDaq+6ONF6eVtQ59GAylfOVZrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719263670; c=relaxed/simple;
-	bh=4RQBqRUSNxjzHncQ0QYq2XDe6G/NCxmWF8SJKYlm2mM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TOAuPfcs5NNdOlca2Pt+MRrfxKa9YiWXdZCMSW5g3liDssKTwkcrLwdSsBJH1WkAsP6AGt+vrQBQdgnaW+AYHX12TYmc/3Sn6ac0wwZtRrfZsu5ufhmByym/jNtcMSzyn2Er4JoXDLzMDtnYZRTXEtXuOoYz/e7Yy/QQrDUmWc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPqnN8hv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE0CC2BBFC;
-	Mon, 24 Jun 2024 21:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719263669;
-	bh=4RQBqRUSNxjzHncQ0QYq2XDe6G/NCxmWF8SJKYlm2mM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WPqnN8hvX0tRzd5SDi10sDqJvz4ENArNrTuEumtcSQCXnkphoFHFYhwPapi1Wx8BJ
-	 Y/EcvbDaVrq0oLMoJuoSmW+kQG8AvB4NzaaC3smhYxE/vgAckrFbIxVwQQPzSYDduF
-	 n8vdtOFdiyVSLV9hhmgeDu+3oUA3DcNE5ql9NuoLYVrs5+A8tskKwWrvRZNOva9ZMw
-	 j7MbkStvUu1gEIT46CJN6HJ80KtQhQt3KjlTwu4CjH/Tf0M/ZjrMK8md2IH26YFC2q
-	 88WuiqkI22lDjsw2S4EV7KEcJDLgExADBsNOuB17lCdMc4AVd3z+PHkP++Kbx3tdAl
-	 bllVyC8kInc0g==
-From: cel@kernel.org
-To: <linux-nfs@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>
-Subject: [PATCH] MAINTAINERS: Add a bugzilla link for NFSD
-Date: Mon, 24 Jun 2024 17:14:16 -0400
-Message-ID: <20240624211415.262398-2-cel@kernel.org>
-X-Mailer: git-send-email 2.45.1
+	s=arc-20240116; t=1719270532; c=relaxed/simple;
+	bh=WVQvhYQBQKuRJA8OkM1Ksv1Aw1aPCYbtXOEDTSi7LKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OvhRuX1d81EpWv4Rhr52DZ6NhV8YD4cJXJXi4IVDGtBBRwufjqprl2wDcmJ3WivoFeVmiSMJCpCF0g3nvf3usptUY2gMvILeF340dX+lpxgWKW0apmE2dnoi0hJbMEte/QE4vJVSkJ/AmWi3yqgqJGDVv7Xn41LJIZ+0UWIAKaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ogEGcE89; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sSjqCXkP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DJ2qL0Ry; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e/cJ7BGc; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B1FFD1F7F3;
+	Mon, 24 Jun 2024 23:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719270529; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WVQvhYQBQKuRJA8OkM1Ksv1Aw1aPCYbtXOEDTSi7LKk=;
+	b=ogEGcE89Ak53Yi4TQTOCFdrfmAZo6ew9YktdZBPhTQo5q0f3mXWcokfiVOVPhhb6fq+8ck
+	WzqrxpVo8JdJnV59IL8Qla64eJFtBJ2SC6X2oongUn+vPZqU39GsD+iHejf+N1hnXIlvZf
+	kFX/99oqgyqo5366fxq1O0WuPumPAho=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719270529;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WVQvhYQBQKuRJA8OkM1Ksv1Aw1aPCYbtXOEDTSi7LKk=;
+	b=sSjqCXkPRBGHw2tDbcDp4KCRIF1xP+DlMUICImBo6nTi/M1u5V3KIYjnyTY1Fqsx7pnhsP
+	JsifxlqcR7LQ7TAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719270527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WVQvhYQBQKuRJA8OkM1Ksv1Aw1aPCYbtXOEDTSi7LKk=;
+	b=DJ2qL0RyRzqqkhi/YmGLm/sb5cQ5wbZD0ST2WXLmUMc1VZIc7+yRAtUFt+hy7HzT7Nh5HZ
+	WE4QSJgRfFi2i1V4pmF4eHREhWyWQJTZfOkRLhcC9QpXILaEQsUCJvM3N3w294pSdSuWEc
+	qqBYbtgrdDrNO8OvV9VvSR4nQqFDkdM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719270527;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WVQvhYQBQKuRJA8OkM1Ksv1Aw1aPCYbtXOEDTSi7LKk=;
+	b=e/cJ7BGc4KNx95va+hOfibGrYoHVU2TTtrcX3Xke4kE591Q62kVUjj6AmnGhx45NbA4xVT
+	ClNyIC9z9c+Iu9Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1FAA41384C;
+	Mon, 24 Jun 2024 23:08:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +3jcLHz8eWZiGwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 24 Jun 2024 23:08:44 +0000
+From: NeilBrown <neilb@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Subject: [PATCH 0/2] nfsd: proper fix for NULL deref in svc_pool_stats_start()
+Date: Tue, 25 Jun 2024 09:04:55 +1000
+Message-ID: <20240624230734.17084-1-neilb@suse.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=958; i=chuck.lever@oracle.com; h=from:subject; bh=bqED3cZ26lsPwkYX1RzwNcoLZs7oGGCtOU3oyBnJw98=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmeeGncG0nQfKb5/SGvD9daw1+IeH86MaTJUkfU GVmFazQbBCJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZnnhpwAKCRAzarMzb2Z/ l5+gEACs5cjNTjCSha3LlREndFowsUCAXgNDtJdSFwHv0yY8z8+e6xq6qqiMPjXK5EkrWYFn31I Dsni+YH6/31gkQm6KAyF+mbBfKhMDqpCw5cvAys0o2yiOjpxuNJX8g38mIfOk75oBd7u/UcO+nV tPGb4ylGEMI6+pa0W9gLRA2HUk5EAZm7HSetZ87AfitGyYDyku2f28G0mYILNbKcfvJn+elaN/u 0lCtj9Vc8zwlYkgfULCiulWji4T0L7SBQeY61lXU4VqMD69DyLhglStGSaQJf2Rgm8WQSUYZb5b oQtn44BVUN00iXFb0JeVifDNH0QSuP2UWC8UFsYmzJfaxhjGaw6IxvcUnFV8+1f/6gMav8bzKUn adcAC+yGOG2waYS2ctNfbPVo0AG5nemHMVb2/608P9ZK6PTTxUZJhYiNWvBqbYtgu6SDx1MY2xq XmWcQLRRIEnSRkr0fEIEx5EOobPSuag4N9zQlWw9lzyIVdlUR0bu10uoRSZrzIGlH64LoxddSlK CleVROhGValzot+WqDBFGV10ZARoySFmtExyz3tYa/ET7m//OGVgYlysVFwmQDprcLOdzMnEfX8 T+6PB/sYsTatNkP2x7TcYeu2pvxO6Ja6mT7xpPvv2DM+Ccq8TI+I7wu4XqmThlM2YVtIyIBxYvm Lz0Ro3NYLL3ORSQ==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.60
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.60 / 50.00];
+	BAYES_HAM(-2.80)[99.13%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-From: Chuck Lever <chuck.lever@oracle.com>
+A recent patch attempted to fix a NULL pointer deref but introduced a
+different NULL pointer deref and a possible unbalance unlock.
 
-I recently found out about B: for noting where subsystem bugs can be
-filed. I do pay attention to bugzilla.kernel.org. The Linux NFS
-community has decided to steer kernel NFS issues to the kernel.org
-bugzilla instead of bugzilla.linux-nfs.org.
+This series fixes the bug correctly and reverts the faulty fix.
 
-Remove the W: entry; the sourceforge information is stale and
-unmaintained.
+(Sorry for not reviewing this patch earlier)
 
-Cc: Thorsten Leemhuis <linux@leemhuis.info>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+NeilBrown
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ca8f35dfe03..a91e510bc303 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11980,7 +11980,7 @@ R:	Dai Ngo <Dai.Ngo@oracle.com>
- R:	Tom Talpey <tom@talpey.com>
- L:	linux-nfs@vger.kernel.org
- S:	Supported
--W:	http://nfs.sourceforge.net/
-+B:	https://bugzilla.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
- F:	Documentation/filesystems/nfs/
- F:	fs/lockd/
--- 
-2.45.1
-
+ [PATCH 1/2] nfsd: initialise nfsd_info.mutex early.
+ [PATCH 2/2] Revert "nfsd: fix oops when reading pool_stats before
 
