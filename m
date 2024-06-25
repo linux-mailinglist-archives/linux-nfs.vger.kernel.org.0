@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-4290-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4291-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E3C9166C3
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 13:59:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EF59916843
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 14:44:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3ED3828CDCF
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 11:59:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 509A81C20B46
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 12:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA68814A0BD;
-	Tue, 25 Jun 2024 11:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B59156654;
+	Tue, 25 Jun 2024 12:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Os458h8Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjJJi9b9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9682115442A
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Jun 2024 11:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730FD1553A7
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Jun 2024 12:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719316774; cv=none; b=nTZhuHveGHlwFQcKApVGnDzeiopFR7Sfy2PnptZT2lWZbhHIGdR7T2KFRVKz/OKik1eUfrOcFN3J8FZkeJkTzMatr7yydNHkNuPO6ScqSkPt6skuo6s6cu+nCQU4pKV3z6n81PYlvkhfSnC5VTAtVpdjSuENCqys5jOT1z7yCP8=
+	t=1719319438; cv=none; b=NuMMDHEo85cmzkfhk5MxW0LYxPA2B5Rb6BwtIi5mQDtStYh6gHajXgPtkuH480BuUVaoORqKLii8PBEpGWkMU91rAY9dnB54PbDYbcxZYsVQd90v92+nXXYCGOaKKVXLOgv882VGCPKVSRCyI//8gxbbkl2FAzFjtR05Ctfeks4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719316774; c=relaxed/simple;
-	bh=6SQE3nvFulCf9WcXk5BrcJnY8OyQMrIoRacyOdQKjhw=;
+	s=arc-20240116; t=1719319438; c=relaxed/simple;
+	bh=cxRRgnl/at+BfQJiXdeYSY3XknqruRxPmD03XFjy8nM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qhx27HQO8Sm/6xML2SFbPLPP4d/JJsh4DBhU/pIiVf5HgW0xjTsy1JWG4PPDQQiGwNLnYOIjZ5ZpTTbi0qrZiTrvn75RRrxTHU2z9B8iYGWdp/ADdtcpFjS8MRaJBAT6Eaj0Uw6szDwsAFghc/pnh2cwqlQY6MZ34JuEadfMNdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Os458h8Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C43DC32789;
-	Tue, 25 Jun 2024 11:59:33 +0000 (UTC)
+	 Content-Type:MIME-Version; b=rRsNCTrP6THo9rxckPflhauNz5rtpgB0GlSZZpprKN9mId5nBgmyb8ovcLOaULAVMz5E71uay/UlvljXcrs9Fc0fdHCNfu9hUlvKX1Rcie6sjc2pgtFalFnfo0oPh18NFx7YRPr7gSm/s2SsFegehoWctajt7Z89Cg8cAPhRyE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjJJi9b9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F37DC32781;
+	Tue, 25 Jun 2024 12:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719316774;
-	bh=6SQE3nvFulCf9WcXk5BrcJnY8OyQMrIoRacyOdQKjhw=;
+	s=k20201202; t=1719319438;
+	bh=cxRRgnl/at+BfQJiXdeYSY3XknqruRxPmD03XFjy8nM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Os458h8ZRxDO29ybMptHlYhdKCAbL92UA0qn7ECruyFPzQ/LfmNQvMlVyM/XjL02a
-	 UOfpEhITAuOFjAr/1U5KWTyT/zgJom5HDHp2ynv6S0CYloCjT8Ohq2G5t9eZn6cgjq
-	 7wOKQrNy/ttMqqZfgk9MLQiRKS1qbVY9GoskU2PCMYRizj4k+MRe1rH7xiFg+9RzOA
-	 lQ5JEvuSyx4vpA+zj5gY9k35Myhyv6+dZIY0LZcx4MyC/3ZDGToFnoh/ApTfn0YjvT
-	 o32jxEIp1xFAUfMhlkYoDAZd0NocGUMhBwPqrrVlo92NuTjeT0506uiLdS8DE54wpT
-	 HlguAUyKqxK3Q==
-Message-ID: <2dfb2b239031ac4fd34996fdb3d404d1160f2158.camel@kernel.org>
-Subject: Re: [PATCH v7 19/20] nfs: add
- Documentation/filesystems/nfs/localio.rst
+	b=GjJJi9b9/ntGiiOHHFChVptA+MO6fxCfba2CeIG3fuNctv+d/k8r+hmmyKDUy3nFW
+	 TiEoVgUV/59dhMA/FQyLbIQQ5PEZmYjm7R5y/LknJIFjl+En1PClcl7FQMnoI1gBV/
+	 rcS04ZuXgpN8VmmDjDMqOqsBo8Xx/04nUNdCVpoY8Y4wsfneVVvBY8u0lgsNibqEv0
+	 UcWX9qZ/fF+IZQaMDqflFe8BHzV7HCOC6D8XMpeJsJNgOtTNPqdqhSz0kzA6cNx9uu
+	 +Jpo/7j9yypdmt2VY8f1lSr+7A2osybOE/s+4micXbRfXgkHyiqEXW/Y+jYrOQqgaU
+	 3HSvNMWcY8h2A==
+Message-ID: <9473de7704c599192a91b12465e3f6aba278d10e.camel@kernel.org>
+Subject: Re: [PATCH v7 17/20] nfsd: use SRCU to dereference nn->nfsd_serv
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
 Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
  <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
  snitzer@hammerspace.com
-Date: Tue, 25 Jun 2024 07:59:31 -0400
-In-Reply-To: <20240624162741.68216-20-snitzer@kernel.org>
+Date: Tue, 25 Jun 2024 08:43:56 -0400
+In-Reply-To: <20240624162741.68216-18-snitzer@kernel.org>
 References: <20240624162741.68216-1-snitzer@kernel.org>
-	 <20240624162741.68216-20-snitzer@kernel.org>
+	 <20240624162741.68216-18-snitzer@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
@@ -64,213 +63,363 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2024-06-24 at 12:27 -0400, Mike Snitzer wrote:
-> This document gives an overview of the LOCALIO auxiliary RPC protocol
-> added to the Linux NFS client and server (both v3 and v4) to allow a
-> client and server to reliably handshake to determine if they are on the
-> same host.=C2=A0 The LOCALIO auxiliary protocol's implementation, which u=
-ses
-> the same connection as NFS traffic, follows the pattern established by
-> the NFS ACL protocol extension.
+> Introduce nfsd_serv_get, nfsd_serv_put and nfsd_serv_sync and update
+> the nfsd code to prevent nfsd_destroy_serv from destroying
+> nn->nfsd_serv until all nfsd code is done with it (particularly the
+> localio code that doesn't run in the context of nfsd's svc threads,
+> nor does it take the nfsd_mutex).
 >=20
-> The robust handshake between local client and server is just the
-> beginning, the ultimate usecase this locality makes possible is the
-> client is able to issue reads, writes and commits directly to the server
-> without having to go over the network.=C2=A0 This is particularly useful =
-for
-> container usecases (e.g. kubernetes) where it is possible to run an IO
-> job local to the server.
+> Commit 83d5e5b0af90 ("dm: optimize use SRCU and RCU") provided a
+> familiar well-worn pattern for how implement.
 >=20
+> Suggested-by: NeilBrown <neilb@suse.de>
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
-> =C2=A0Documentation/filesystems/nfs/localio.rst | 134 +++++++++++++++++++=
-+++
-> =C2=A0include/linux/nfslocalio.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A02 files changed, 136 insertions(+)
-> =C2=A0create mode 100644 Documentation/filesystems/nfs/localio.rst
+> =C2=A0fs/nfsd/filecache.c | 13 ++++++++---
+> =C2=A0fs/nfsd/netns.h=C2=A0=C2=A0=C2=A0=C2=A0 | 14 ++++++++++--
+> =C2=A0fs/nfsd/nfs4state.c | 25 ++++++++++++++-------
+> =C2=A0fs/nfsd/nfsctl.c=C2=A0=C2=A0=C2=A0 |=C2=A0 7 ++++--
+> =C2=A0fs/nfsd/nfssvc.c=C2=A0=C2=A0=C2=A0 | 54 +++++++++++++++++++++++++++=
++++++++++---------
+> =C2=A05 files changed, 88 insertions(+), 25 deletions(-)
 >=20
-> diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/fi=
-lesystems/nfs/localio.rst
-> new file mode 100644
-> index 000000000000..e856b6273e78
-> --- /dev/null
-> +++ b/Documentation/filesystems/nfs/localio.rst
-> @@ -0,0 +1,134 @@
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +NFS localio
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +This document gives an overview of the LOCALIO auxiliary RPC protocol
-> +added to the Linux NFS client and server (both v3 and v4) to allow a
-> +client and server to reliably handshake to determine if they are on the
-> +same host.=C2=A0 The LOCALIO auxiliary protocol's implementation, which =
-uses
-> +the same connection as NFS traffic, follows the pattern established by
-> +the NFS ACL protocol extension.
-> +
-> +The LOCALIO auxiliary protocol is needed to allow robust discovery of
-> +clients local to their servers.=C2=A0 Prior to this LOCALIO protocol a
-> +fragile sockaddr network address based match against all local network
-> +interfaces was attempted.=C2=A0 But unlike the LOCALIO protocol, the
-> +sockaddr-based matching didn't handle use of iptables or containers.
-> +
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 99631fa56662..474b3a3af3fb 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -413,12 +413,15 @@ nfsd_file_dispose_list_delayed(struct list_head *di=
+spose)
+> =C2=A0		struct nfsd_file *nf =3D list_first_entry(dispose,
+> =C2=A0						struct nfsd_file, nf_lru);
+> =C2=A0		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+> +		int srcu_idx;
+> +		struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> =C2=A0
+> =C2=A0		spin_lock(&l->lock);
+> =C2=A0		list_move_tail(&nf->nf_lru, &l->freeme);
+> =C2=A0		spin_unlock(&l->lock);
+> -		svc_wake_up(nn->nfsd_serv);
+> +		svc_wake_up(serv);
+> +		nfsd_serv_put(nn, srcu_idx);
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> @@ -443,11 +446,15 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+> =C2=A0		for (i =3D 0; i < 8 && !list_empty(&l->freeme); i++)
+> =C2=A0			list_move(l->freeme.next, &dispose);
+> =C2=A0		spin_unlock(&l->lock);
+> -		if (!list_empty(&l->freeme))
+> +		if (!list_empty(&l->freeme)) {
+> +			int srcu_idx;
+> +			struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0			/* Wake up another thread to share the work
+> =C2=A0			 * *before* doing any actual disposing.
+> =C2=A0			 */
+> -			svc_wake_up(nn->nfsd_serv);
+> +			svc_wake_up(serv);
+> +			nfsd_serv_put(nn, srcu_idx);
+> +		}
+> =C2=A0		nfsd_file_dispose_list(&dispose);
+> =C2=A0	}
+> =C2=A0}
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 0c5a1d97e4ac..92d0d0883f17 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -139,8 +139,14 @@ struct nfsd_net {
+> =C2=A0	u32 clverifier_counter;
+> =C2=A0
+> =C2=A0	struct svc_info nfsd_info;
+> -#define nfsd_serv nfsd_info.serv
+> -
+> +	/*
+> +	 * The current 'nfsd_serv' at nfsd_info.serv.=C2=A0 Using 'void' rather=
+ than
+> +	 * 'struct svc_serv' to guard against new code dereferencing nfsd_serv
+> +	 * without using proper synchronization.
+> +	 * Use nfsd_serv_get() or take nfsd_mutex to dereference.
+> +	 */
+> +	void __rcu *nfsd_serv;
+> +	struct srcu_struct nfsd_serv_srcu;
 
-The above paragraph sounds like there was an earlier implementation in
-mainline kernels that used address matching. It might be good to point
-out that that was a private implementation.
+I'm still not sold on the use of a void pointer here. It might protect
+you from using nn->nfsd_serv directly, but if you do:
 
-> +The robust handshake between local client and server is just the
-> +beginning, the ultimate usecase this locality makes possible is the
-> +client is able to issue reads, writes and commits directly to the server
-> +without having to go over the network.=C2=A0 This is particularly useful=
- for
-> +container usecases (e.g. kubernetes) where it is possible to run an IO
-> +job local to the server.
-> +
-> +The performance advantage realized from localio's ability to bypass
-> +using XDR and RPC for reads, writes and commits can be extreme, e.g.:
-> +fio for 20 secs with 24 libaio threads, 64k directio reads, qd of 8,
-> +-=C2=A0 With localio:
-> +=C2=A0 read: IOPS=3D691k, BW=3D42.2GiB/s (45.3GB/s)(843GiB/20002msec)
-> +-=C2=A0 Without localio:
-> +=C2=A0 read: IOPS=3D15.7k, BW=3D984MiB/s (1032MB/s)(19.2GiB/20013msec)
-> +
-> +RPC
-> +---
-> +
-> +The LOCALIO auxiliary RPC protocol consists of a single "GETUUID" RPC
-> +method that allows the Linux NFS client to retrieve a Linux NFS server's
-> +uuid.=C2=A0 This protocol isn't part of an IETF standard, nor does it ne=
-ed to
-> +be considering it is Linux-to-Linux auxiliary RPC protocol that amounts
-> +to an implementation detail.
-> +
-> +The GETUUID method encodes the server's uuid_t in terms of the fixed
-> +UUID_SIZE (16 bytes).=C2=A0 The fixed size opaque encode and decode XDR
-> +methods are used instead of the less efficient variable sized methods.
-> +
-> +The RPC program number for the NFS_LOCALIO_PROGRAM is 400122 (as assigne=
-d
-> +by IANA, see https://www.iana.org/assignments/rpc-program-numbers/=C2=A0=
-):
-> +Linux Kernel Organization=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 400122=C2=
-=A0 nfslocalio
-> +
+    struct svc_serv *serv =3D nn->nfsd_serv;
 
-Nice! Glad this got officially registered fast.
+...that will still work. If you really want to guard against direct
+dereferencing, maybe it should be an unsigned long? Then you really
+will have to cast to use it.
 
-> +The LOCALIO protocol spec in rpcgen syntax is:
+> =C2=A0
+> =C2=A0	/*
+> =C2=A0	 * clientid and stateid data for construction of net unique COPY
+> @@ -225,6 +231,10 @@ struct nfsd_net {
+> =C2=A0extern bool nfsd_support_version(int vers);
+> =C2=A0extern void nfsd_netns_free_versions(struct nfsd_net *nn);
+> =C2=A0
+> +extern struct svc_serv *nfsd_serv_get(struct nfsd_net *nn, int *srcu_idx=
+);
+> +extern void nfsd_serv_put(struct nfsd_net *nn, int srcu_idx);
+> +extern void nfsd_serv_sync(struct nfsd_net *nn);
 > +
-> +/* raw RFC 9562 UUID */
-> +#define UUID_SIZE 16
-> +typedef u8 uuid_t<UUID_SIZE>;
+> =C2=A0extern unsigned int nfsd_net_id;
+> =C2=A0
+> =C2=A0void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn);
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a20c2c9d7d45..8876810e569d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1919,6 +1919,8 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_a=
+ttrs *ca, struct nfsd_net *nn
+> =C2=A0	u32 num =3D ca->maxreqs;
+> =C2=A0	unsigned long avail, total_avail;
+> =C2=A0	unsigned int scale_factor;
+> +	int srcu_idx;
+> +	struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0
+> =C2=A0	spin_lock(&nfsd_drc_lock);
+> =C2=A0	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
+> @@ -1940,7 +1942,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_a=
+ttrs *ca, struct nfsd_net *nn
+> =C2=A0	 * Give the client one slot even if that would require
+> =C2=A0	 * over-allocation--it is better than failure.
+> =C2=A0	 */
+> -	scale_factor =3D max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+> +	scale_factor =3D max_t(unsigned int, 8, serv->sv_nrthreads);
+> =C2=A0
+> =C2=A0	avail =3D clamp_t(unsigned long, avail, slotsize,
+> =C2=A0			total_avail/scale_factor);
+> @@ -1949,6 +1951,8 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_a=
+ttrs *ca, struct nfsd_net *nn
+> =C2=A0	nfsd_drc_mem_used +=3D num * slotsize;
+> =C2=A0	spin_unlock(&nfsd_drc_lock);
+> =C2=A0
+> +	nfsd_serv_put(nn, srcu_idx);
 > +
-> +program NFS_LOCALIO_PROGRAM {
-> +=C2=A0=C2=A0=C2=A0 version LOCALIO_V1 {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL(=
-void) =3D 0;
+> =C2=A0	return num;
+> =C2=A0}
+> =C2=A0
+> @@ -3702,12 +3706,16 @@ nfsd4_replay_create_session(struct nfsd4_create_s=
+ession *cr_ses,
+> =C2=A0
+> =C2=A0static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *c=
+a, struct nfsd_net *nn)
+> =C2=A0{
+> -	u32 maxrpc =3D nn->nfsd_serv->sv_max_mesg;
+> +	int srcu_idx;
+> +	struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> +	u32 maxrpc =3D serv->sv_max_mesg;
+> +	__be32 status =3D nfs_ok;
+> =C2=A0
+> -	if (ca->maxreq_sz < NFSD_MIN_REQ_HDR_SEQ_SZ)
+> -		return nfserr_toosmall;
+> -	if (ca->maxresp_sz < NFSD_MIN_RESP_HDR_SEQ_SZ)
+> -		return nfserr_toosmall;
+> +	if (ca->maxreq_sz < NFSD_MIN_REQ_HDR_SEQ_SZ ||
+> +	=C2=A0=C2=A0=C2=A0 ca->maxresp_sz < NFSD_MIN_RESP_HDR_SEQ_SZ) {
+> +		status =3D nfserr_toosmall;
+> +		goto out;
+> +	}
+> =C2=A0	ca->headerpadsz =3D 0;
+> =C2=A0	ca->maxreq_sz =3D min_t(u32, ca->maxreq_sz, maxrpc);
+> =C2=A0	ca->maxresp_sz =3D min_t(u32, ca->maxresp_sz, maxrpc);
+> @@ -3726,8 +3734,9 @@ static __be32 check_forechannel_attrs(struct nfsd4_=
+channel_attrs *ca, struct nfs
+> =C2=A0	 * accounting is soft and provides no guarantees either way.
+> =C2=A0	 */
+> =C2=A0	ca->maxreqs =3D nfsd4_get_drc_mem(ca, nn);
+> -
+> -	return nfs_ok;
+> +out:
+> +	nfsd_serv_put(nn, srcu_idx);
+> +	return status;
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 075ada559e18..d3eeb829bc9b 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1569,10 +1569,12 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff =
+*skb,
+> =C2=A0{
+> =C2=A0	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net_id=
+);
+> =C2=A0	int i, ret, rqstp_index =3D 0;
+> +	int srcu_idx;
+> +	struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0
+> =C2=A0	rcu_read_lock();
+> =C2=A0
+> -	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> +	for (i =3D 0; i < serv->sv_nrpools; i++) {
+> =C2=A0		struct svc_rqst *rqstp;
+> =C2=A0
+> =C2=A0		if (i < cb->args[0]) /* already consumed */
+> @@ -1580,7 +1582,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *s=
+kb,
+> =C2=A0
+> =C2=A0		rqstp_index =3D 0;
+> =C2=A0		list_for_each_entry_rcu(rqstp,
+> -				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> +				&serv->sv_pools[i].sp_all_threads,
+> =C2=A0				rq_all) {
+> =C2=A0			struct nfsd_genl_rqstp genl_rqstp;
+> =C2=A0			unsigned int status_counter;
+> @@ -1645,6 +1647,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *s=
+kb,
+> =C2=A0	ret =3D skb->len;
+> =C2=A0out:
+> =C2=A0	rcu_read_unlock();
+> +	nfsd_serv_put(nn, srcu_idx);
+> =C2=A0
+> =C2=A0	return ret;
+> =C2=A0}
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index c16c7d630859..6f41fb832484 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -279,6 +279,26 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 minor=
+version, enum vers_op change
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +struct svc_serv *nfsd_serv_get(struct nfsd_net *nn, int *srcu_idx)
+> +	__acquires(nn->nfsd_serv_srcu)
+> +{
+> +	*srcu_idx =3D srcu_read_lock(&nn->nfsd_serv_srcu);
 > +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uuid_t
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GETUU=
-ID(void) =3D 1;
-> +=C2=A0=C2=A0=C2=A0 } =3D 1;
-> +} =3D 400122;
+> +	return srcu_dereference(nn->nfsd_serv, &nn->nfsd_serv_srcu);
+> +}
 > +
-> +LOCALIO uses the same transport connection as NFS traffic.=C2=A0 As such=
-,
-> +LOCALIO is not registered with rpcbind.
+> +void nfsd_serv_put(struct nfsd_net *nn, int srcu_idx)
+> +	__releases(nn->nfsd_serv_srcu)
+> +{
+> +	srcu_read_unlock(&nn->nfsd_serv_srcu, srcu_idx);
+> +}
 > +
-> +Once an NFS client and server handshake as "local", the client will
-> +bypass the network RPC protocol for read, write and commit operations.
-> +Due to this XDR and RPC bypass, these operations will operate faster.
+> +void nfsd_serv_sync(struct nfsd_net *nn)
+> +{
+> +	synchronize_srcu(&nn->nfsd_serv_srcu);
+> +	synchronize_rcu_expedited();
+> +}
 > +
-> +NFS Common and Server
-> +---------------------
-> +
-> +First use is in nfsd, to add access to a global nfsd_uuids list in
-> +nfs_common that is used to register and then identify local nfsd
-> +instances.
-> +
-
-First use of what? This sentence doesn't parse well.
-
-> +nfsd_uuids is protected by the nfsd_mutex or RCU read lock and is
-> +composed of nfsd_uuid_t instances that are managed as nfsd creates them
-> +(per network namespace).
-> +
-> +nfsd_uuid_is_local() and nfsd_uuid_lookup() are used to search all local
-> +nfsd for the client specified nfsd uuid.
-> +
-> +The nfsd_uuids list is the basis for localio enablement, as such it has
-> +members that point to nfsd memory for direct use by the client
-> +(e.g. 'net' is the server's network namespace, through it the client can
-> +access nn->nfsd_serv with proper rcu read access).=C2=A0 It is this clie=
-nt
-> +and server synchronization that enables advanced usage and lifetime of
-> +objects to span from the host kernel's nfsd to per-container knfsd
-> +instances that are connected to nfs client's running on the same local
-> +host.
-> +
-> +NFS Client
-> +----------
-> +
-> +fs/nfs/localio.c:nfs_local_probe() will retrieve a server's uuid via
-> +LOCALIO protocol and check if the server with that uuid is known to be
-> +local.=C2=A0 This ensures client and server 1: support localio 2: are lo=
-cal
-> +to each other.
-> +
-> +See fs/nfs/localio.c:nfs_local_open_fh() and
-> +fs/nfsd/localio.c:nfsd_open_local_fh() for the interface that makes
-> +focused use of nfsd_uuid_t struct to allow a client local to a server to
-> +open a file pointer without needing to go over the network.
-> +
-> +The client's fs/nfs/localio.c:nfs_local_open_fh() will call into the
-> +server's fs/nfsd/localio.c:nfsd_open_local_fh() and carefully access
-> +both the nfsd network namespace and the associated nn->nfsd_serv in
-> +terms of RCU.=C2=A0 If nfsd_open_local_fh() finds that client no longer =
-sees
-> +valid nfsd objects (be it struct net or nn->nfsd_serv) it returns ENXIO
-> +to nfs_local_open_fh() and the client will try to reestablish the
-> +LOCALIO resources needed by calling nfs_local_probe() again.=C2=A0 This
-> +recovery is needed if/when an nfsd instance running in a container were
-> +to reboot while a localio client is connected to it.
-> +
-> +Testing
-> +-------
-> +
-> +The LOCALIO auxiliary protocol and associated NFS localio read, write
-> +and commit access have proven stable against various test scenarios but
-> +these have not yet been formalized in any testsuite:
-> +
-> +-=C2=A0 Client and server both on localhost (for both v3 and v4.2).
-> +
-> +-=C2=A0 Various permutations of client and server support enablement for
-> +=C2=A0=C2=A0 both local and remote client and server.=C2=A0 Testing agai=
-nst NFS storage
-> +=C2=A0=C2=A0 products that don't support the LOCALIO protocol was also p=
-erformed.
-> +
-> +-=C2=A0 Client on host, server within a container (for both v3 and v4.2)
-> +=C2=A0=C2=A0 The container testing was in terms of podman managed contai=
-ners and
-> +=C2=A0=C2=A0 includes container stop/restart scenario.
-> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-> index c9592ad0afe2..a9722e18b527 100644
-> --- a/include/linux/nfslocalio.h
-> +++ b/include/linux/nfslocalio.h
-> @@ -20,6 +20,8 @@ extern struct list_head nfsd_uuids;
-> =C2=A0 * Each nfsd instance has an nfsd_uuid_t that is accessible through=
- the
-> =C2=A0 * global nfsd_uuids list. Useful to allow a client to negotiate if=
- localio
-> =C2=A0 * possible with its server.
-> + *
-> + * See Documentation/filesystems/nfs/localio.rst for more detail.
+> =C2=A0/*
+> =C2=A0 * Maximum number of nfsd processes
 > =C2=A0 */
-> =C2=A0typedef struct {
-> =C2=A0	uuid_t uuid;
+> @@ -486,6 +506,7 @@ static void nfsd_shutdown_net(struct net *net)
+> =C2=A0		lockd_down(net);
+> =C2=A0		nn->lockd_up =3D false;
+> =C2=A0	}
+> +	cleanup_srcu_struct(&nn->nfsd_serv_srcu);
+> =C2=A0#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+> =C2=A0	list_del_rcu(&nn->nfsd_uuid.list);
+> =C2=A0#endif
+> @@ -493,6 +514,7 @@ static void nfsd_shutdown_net(struct net *net)
+> =C2=A0	nfsd_shutdown_generic();
+> =C2=A0}
+> =C2=A0
+> +// FIXME: nfsd_serv_{get,put} should make it safe to eliminate nfsd_noti=
+fier_lock
+> =C2=A0static DEFINE_SPINLOCK(nfsd_notifier_lock);
+> =C2=A0static int nfsd_inetaddr_event(struct notifier_block *this, unsigne=
+d long event,
+> =C2=A0	void *ptr)
+> @@ -502,20 +524,22 @@ static int nfsd_inetaddr_event(struct notifier_bloc=
+k *this, unsigned long event,
+> =C2=A0	struct net *net =3D dev_net(dev);
+> =C2=A0	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =C2=A0	struct sockaddr_in sin;
+> +	int srcu_idx;
+> +	struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0
+> -	if (event !=3D NETDEV_DOWN || !nn->nfsd_serv)
+> +	if (event !=3D NETDEV_DOWN || !serv)
+> =C2=A0		goto out;
+> =C2=A0
+> =C2=A0	spin_lock(&nfsd_notifier_lock);
+> -	if (nn->nfsd_serv) {
+> +	if (serv) {
+> =C2=A0		dprintk("nfsd_inetaddr_event: removed %pI4\n", &ifa->ifa_local);
+> =C2=A0		sin.sin_family =3D AF_INET;
+> =C2=A0		sin.sin_addr.s_addr =3D ifa->ifa_local;
+> -		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin);
+> +		svc_age_temp_xprts_now(serv, (struct sockaddr *)&sin);
+> =C2=A0	}
+> =C2=A0	spin_unlock(&nfsd_notifier_lock);
+> -
+> =C2=A0out:
+> +	nfsd_serv_put(nn, srcu_idx);
+> =C2=A0	return NOTIFY_DONE;
+> =C2=A0}
+> =C2=A0
+> @@ -532,22 +556,24 @@ static int nfsd_inet6addr_event(struct notifier_blo=
+ck *this,
+> =C2=A0	struct net *net =3D dev_net(dev);
+> =C2=A0	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =C2=A0	struct sockaddr_in6 sin6;
+> +	int srcu_idx;
+> +	struct svc_serv *serv =3D nfsd_serv_get(nn, &srcu_idx);
+> =C2=A0
+> -	if (event !=3D NETDEV_DOWN || !nn->nfsd_serv)
+> +	if (event !=3D NETDEV_DOWN || !serv)
+> =C2=A0		goto out;
+> =C2=A0
+> =C2=A0	spin_lock(&nfsd_notifier_lock);
+> -	if (nn->nfsd_serv) {
+> +	if (serv) {
+> =C2=A0		dprintk("nfsd_inet6addr_event: removed %pI6\n", &ifa->addr);
+> =C2=A0		sin6.sin6_family =3D AF_INET6;
+> =C2=A0		sin6.sin6_addr =3D ifa->addr;
+> =C2=A0		if (ipv6_addr_type(&sin6.sin6_addr) & IPV6_ADDR_LINKLOCAL)
+> =C2=A0			sin6.sin6_scope_id =3D ifa->idev->dev->ifindex;
+> -		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin6);
+> +		svc_age_temp_xprts_now(serv, (struct sockaddr *)&sin6);
+> =C2=A0	}
+> =C2=A0	spin_unlock(&nfsd_notifier_lock);
+> -
+> =C2=A0out:
+> +	nfsd_serv_put(nn, srcu_idx);
+> =C2=A0	return NOTIFY_DONE;
+> =C2=A0}
+> =C2=A0
+> @@ -568,9 +594,12 @@ void nfsd_destroy_serv(struct net *net)
+> =C2=A0	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =C2=A0	struct svc_serv *serv =3D nn->nfsd_serv;
+> =C2=A0
+> +	lockdep_assert_held(&nfsd_mutex);
+> +
+> =C2=A0	spin_lock(&nfsd_notifier_lock);
+> -	nn->nfsd_serv =3D NULL;
+> +	rcu_assign_pointer(nn->nfsd_serv, NULL);
+> =C2=A0	spin_unlock(&nfsd_notifier_lock);
+> +	nfsd_serv_sync(nn);
+> =C2=A0
+> =C2=A0	/* check if the notifier still has clients */
+> =C2=A0	if (atomic_dec_return(&nfsd_notifier_refcount) =3D=3D 0) {
+> @@ -690,6 +719,10 @@ int nfsd_create_serv(struct net *net)
+> =C2=A0	if (nn->nfsd_serv)
+> =C2=A0		return 0;
+> =C2=A0
+> +	error =3D init_srcu_struct(&nn->nfsd_serv_srcu);
+> +	if (error)
+> +		return error;
+> +
+> =C2=A0	if (nfsd_max_blksize =3D=3D 0)
+> =C2=A0		nfsd_max_blksize =3D nfsd_get_default_max_blksize();
+> =C2=A0	nfsd_reset_versions(nn);
+> @@ -707,7 +740,8 @@ int nfsd_create_serv(struct net *net)
+> =C2=A0	}
+> =C2=A0	spin_lock(&nfsd_notifier_lock);
+> =C2=A0	nn->nfsd_info.mutex =3D &nfsd_mutex;
+> -	nn->nfsd_serv =3D serv;
+> +	nn->nfsd_info.serv =3D serv;
+> +	rcu_assign_pointer(nn->nfsd_serv, nn->nfsd_info.serv);
+> =C2=A0	spin_unlock(&nfsd_notifier_lock);
+> =C2=A0
+> =C2=A0	set_max_drc();
 
 --=20
 Jeff Layton <jlayton@kernel.org>
