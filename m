@@ -1,186 +1,235 @@
-Return-Path: <linux-nfs+bounces-4286-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4287-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2497D915A43
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 01:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26EFC915DD7
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 06:58:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7FC83B235BD
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jun 2024 23:09:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E9A1B210E4
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jun 2024 04:57:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF4B1A2553;
-	Mon, 24 Jun 2024 23:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1081D12FF89;
+	Tue, 25 Jun 2024 04:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yEg38E1j";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zmc9p+Pd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yEg38E1j";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zmc9p+Pd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh6q57uj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF07519FA92
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Jun 2024 23:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE404596E
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Jun 2024 04:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719270544; cv=none; b=sj5yRoCGm+q4Lps+h35skkWc+DE/xn+jD3gUn28gTZXvKtrISIFXe9oml4BV+BwbvRaOhgn/vXzFM+HoTSWvWlsXvvYFk+qExcvgdVhRt3ul0449c8/fe+wTvGue2n9jYAiWeYKaI3ZP42JTKxAHSHhl3dJ3RY65jMmElS5OLR8=
+	t=1719291476; cv=none; b=RXQaHh4vErAVV+nQo10HtSsYnZ58X9Q3oh7lZuH4fjp708C3DJgHQL7lzvIHkdhmbhkJaeIgU429lOmzSXZBC5uwD7DT8V1BEc5CDqgKsoojdR2OzlXeaR1F2Nm2VkBePFaXRFGmV7mOLDI3l6idRSDSMDrYyzdlHBhQxsC6u6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719270544; c=relaxed/simple;
-	bh=XhB3q4wBzdYO+hqhkKTi1xpsaLyRC0ZrWcvtFB5AuCY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RUshMxueNp1QflXmKXZjCNbRnYQZK1bY3LI0TDHmxT2zFPYQLugoC3bhJxvnjbDSOqNPKKkHODqg9Kzb1gpUi2M987jBoaVamRISAEbZ7+O4UTa/KVEDnqlphY8XuKSK6NqahB5VXLTHTEazeLepht/QsbNCFCzWZyn/EQMI990=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yEg38E1j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zmc9p+Pd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yEg38E1j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zmc9p+Pd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2A8681F7E7;
-	Mon, 24 Jun 2024 23:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719270541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4m8h2r4d3O1V72gjB+ZmpoEgee47F37BldhuQUZ348=;
-	b=yEg38E1j0Wvwpqq43uhJ9006omaiWtmIMwHa27uQpXf0FbF1Fgye2sKm9N1vUB+YjVpipx
-	/uXB6Yd2lCnusyt8ar/Rwuqk9NGarVS63lsKM3+9S6johBsnr6Dv1fJnlWOFOWrelrjFvt
-	pjOb8O5J3TWZDQdXNkEi+LkNKggeuqA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719270541;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4m8h2r4d3O1V72gjB+ZmpoEgee47F37BldhuQUZ348=;
-	b=Zmc9p+PdxN6PygZZFafI4sHyln0WJyz1Bv027ZXqi9d/S5NFpkRYlpc4Rhzzawspk7B13A
-	jrzDkbFx/5ix3vDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719270541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4m8h2r4d3O1V72gjB+ZmpoEgee47F37BldhuQUZ348=;
-	b=yEg38E1j0Wvwpqq43uhJ9006omaiWtmIMwHa27uQpXf0FbF1Fgye2sKm9N1vUB+YjVpipx
-	/uXB6Yd2lCnusyt8ar/Rwuqk9NGarVS63lsKM3+9S6johBsnr6Dv1fJnlWOFOWrelrjFvt
-	pjOb8O5J3TWZDQdXNkEi+LkNKggeuqA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719270541;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4m8h2r4d3O1V72gjB+ZmpoEgee47F37BldhuQUZ348=;
-	b=Zmc9p+PdxN6PygZZFafI4sHyln0WJyz1Bv027ZXqi9d/S5NFpkRYlpc4Rhzzawspk7B13A
-	jrzDkbFx/5ix3vDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91DC11384C;
-	Mon, 24 Jun 2024 23:08:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uYPmDYr8eWZ4GwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 24 Jun 2024 23:08:58 +0000
-From: NeilBrown <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 2/2] Revert "nfsd: fix oops when reading pool_stats before server is started"
-Date: Tue, 25 Jun 2024 09:04:57 +1000
-Message-ID: <20240624230734.17084-3-neilb@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240624230734.17084-1-neilb@suse.de>
-References: <20240624230734.17084-1-neilb@suse.de>
+	s=arc-20240116; t=1719291476; c=relaxed/simple;
+	bh=njbsYB1xoEua+SUVYyBOpwwNTAVO4DBOYOwGprUsSfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZ/Q3c4aY+Cr7n7IIsbF/at5wCOKTb84Oj+9COlLBZLH2NlTiw9CpDQpc4wic7lXRPGDi46IqKG1xVxO1TeETUQKOuSr+aQ8ox0H2RVCdpu0saMDyK7bCVJOa2l33dp4bq9Rl+vBOP6XQLJshGYb0pELmGub2mGt8Xy1cS+hiAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh6q57uj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76909C32782;
+	Tue, 25 Jun 2024 04:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719291475;
+	bh=njbsYB1xoEua+SUVYyBOpwwNTAVO4DBOYOwGprUsSfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yh6q57ujtLvkBilIFxCki2ntj5I5OegP46MJnrgb+HseSk6TRzaBmTGcWtPBa+GCJ
+	 T/Q8yKwV1ubmS0VvZyiF63Nf5jHA0UBWB+MVORL6TYjmmsBXVsnBJE7azNs/P1FPh2
+	 OAkB1ndzpxS5oPL2KL8f3YIjAq7o8LWW3JRO4scz+0SnI3ot0BU+SS8eqeclPQ0Qkj
+	 CRBwJRL5l84nbHfQ/bos3b6wz5oBuTTrk18pMrRpw1CBZFdZXk8bNbdg0yihisSTgQ
+	 FCh+ro2zk8BtIey/O3XjRB+g3HNnFSJTb5ZUeXqG0PJZgAsf4V07+HnmYoga/+AdvW
+	 y6Nn508HLdUbg==
+Date: Tue, 25 Jun 2024 00:57:54 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>, snitzer@hammerspace.com
+Subject: Re: [PATCH v7 06/20] nfs/nfsd: add "localio" support
+Message-ID: <ZnpOUiAhapJaRMXm@kernel.org>
+References: <20240624162741.68216-1-snitzer@kernel.org>
+ <20240624162741.68216-7-snitzer@kernel.org>
+ <Znm6YjFetA6pG/5W@tissot.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Znm6YjFetA6pG/5W@tissot.1015granger.net>
 
-This reverts commit 8e948c365d9c10b685d1deb946bd833d6a9b43e0.
+On Mon, Jun 24, 2024 at 02:26:42PM -0400, Chuck Lever wrote:
+> On Mon, Jun 24, 2024 at 12:27:27PM -0400, Mike Snitzer wrote:
+> > From: Weston Andros Adamson <dros@primarydata.com>
+> > 
+> > Add client support for bypassing NFS for localhost reads, writes, and
+> > commits. This is only useful when the client and the server are
+> > running on the same host.
+> > 
+> > nfs_local_probe() is stubbed out, later commits will enable client and
+> > server handshake via a Linux-only LOCALIO auxiliary RPC protocol.
+> > 
+> > This has dynamic binding with the nfsd module (via nfs_localio module
+> > which is part of nfs_common). Localio will only work if nfsd is
+> > already loaded.
+> > 
+> > The "localio_enabled" nfs kernel module parameter can be used to
+> > disable and enable the ability to use localio support.
+> > 
+> > Tracepoints were added for nfs_local_open_fh, nfs_local_enable and
+> > nfs_local_disable.
+> > 
+> > Also, pass the stored cl_nfssvc_net from the client to the server as
+> > first argument to nfsd_open_local_fh() to ensure the proper network
+> > namespace is used for localio.
+> > 
+> > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+> > Signed-off-by: Peng Tao <tao.peng@primarydata.com>
+> > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > ---
+> >  fs/nfs/Makefile           |   1 +
+> >  fs/nfs/client.c           |   3 +
+> >  fs/nfs/inode.c            |   4 +
+> >  fs/nfs/internal.h         |  51 +++
+> >  fs/nfs/localio.c          | 654 ++++++++++++++++++++++++++++++++++++++
+> >  fs/nfs/nfstrace.h         |  61 ++++
+> >  fs/nfs/pagelist.c         |   3 +
+> >  fs/nfs/write.c            |   3 +
+> 
+> Hi Mike -
+> 
+> I'd prefer to see this patch split into two patches, one for the
+> NFS client, and one for the NFS server. The other patches in this
+> series seem to have a clear line between server and client
+> changes.
 
-The reverted commit moves a test on a field protected by a mutex outside
-of the protection of that mutex, and so is obviously racey.
+Will do.
 
-Depending on how the race goes, si->serv might be NULL when dereferenced
-in svc_pool_stats_start(), or svc_pool_stats_stop() might unlock a mutex
-that hadn't been locked.
+> > diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> > new file mode 100644
+> > index 000000000000..e9aa0997f898
+> > --- /dev/null
+> > +++ b/fs/nfsd/localio.c
+> > @@ -0,0 +1,244 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * NFS server support for local clients to bypass network stack
+> > + *
+> > + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
+> > + * Copyright (C) 2019 Trond Myklebust <trond.myklebust@hammerspace.com>
+> > + * Copyright (C) 2024 Mike Snitzer <snitzer@hammerspace.com>
+> > + */
+> > +
+> > +#include <linux/exportfs.h>
+> > +#include <linux/sunrpc/svcauth_gss.h>
+> > +#include <linux/sunrpc/clnt.h>
+> > +#include <linux/nfs.h>
+> > +#include <linux/string.h>
+> > +
+> > +#include "nfsd.h"
+> > +#include "vfs.h"
+> > +#include "netns.h"
+> > +#include "filecache.h"
+> > +
+> > +#define NFSDDBG_FACILITY		NFSDDBG_FH
+> 
+> I think I'd rather prefer to see trace points in here rather than
+> new dprintk call sites. In any event, perhaps NFSDDBG_FH is not
+> especially appropriate?
 
-This bug that the commit tried to fix has been addressed by initialising
-->mutex earlier.
+I think NFSDDBG_FH is most appropriate given this localio is most
+focused on opening a file handle.  (The getuuid not so much)
 
-Fixes: 8e948c365d9c ("nfsd: fix oops when reading pool_stats before server is started")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- net/sunrpc/svc_xprt.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+I'm not loving how overdone the trace points interface is. in my
+experience, trace points are also a serious source of conflicts when
+backporting changes to older kernels.
 
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 49a3bea33f9d..dd86d7f1e97e 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -1421,13 +1421,12 @@ static void *svc_pool_stats_start(struct seq_file *m, loff_t *pos)
- 
- 	dprintk("svc_pool_stats_start, *pidx=%u\n", pidx);
- 
--	if (!si->serv)
--		return NULL;
--
- 	mutex_lock(si->mutex);
- 
- 	if (!pidx)
- 		return SEQ_START_TOKEN;
-+	if (!si->serv)
-+		return NULL;
- 	return pidx > si->serv->sv_nrpools ? NULL
- 		: &si->serv->sv_pools[pidx - 1];
- }
-@@ -1459,8 +1458,7 @@ static void svc_pool_stats_stop(struct seq_file *m, void *p)
- {
- 	struct svc_info *si = m->private;
- 
--	if (si->serv)
--		mutex_unlock(si->mutex);
-+	mutex_unlock(si->mutex);
- }
- 
- static int svc_pool_stats_show(struct seq_file *m, void *p)
--- 
-2.44.0
+But if you were inclined to switch this code over to trace points once
+it is merged, who am I to stop you! ;)
 
+> > +
+> > +/**
+> > + * nfs_stat_to_errno - convert an NFS status code to a local errno
+> > + * @status: NFS status code to convert
+> > + *
+> > + * Returns a local errno value, or -EIO if the NFS status code is
+> > + * not recognized.  This function is used jointly by NFSv2 and NFSv3.
+> > + */
+> > +static int nfs_stat_to_errno(enum nfs_stat status)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; nfs_common_errtbl[i].stat != -1; i++) {
+> > +		if (nfs_common_errtbl[i].stat == (int)status)
+> > +			return nfs_common_errtbl[i].errno;
+> > +	}
+> > +	return nfs_common_errtbl[i].errno;
+> > +}
+> 
+> I get it: The existing nfserrno() function on the server is the
+> reverse mapping from this one, and you need to undo the nfsstat
+> returned from nfsd_file_acquire().
+> 
+> The documenting comments here confusing in the context of why this
+> function is necessary on the server. For example, "This function is
+> used jointly by NFSv2 and NFSv3"... Maybe instead, explain that
+> nfsd_file_acquire() returns an nfsstat that needs to be translated
+> to an errno before being returned to a local client application.
+
+Thanks, fixed.
+
+> > +static void
+> > +nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
+> > +{
+> > +	if (rqstp->rq_client)
+> > +		auth_domain_put(rqstp->rq_client);
+> > +	if (rqstp->rq_cred.cr_group_info)
+> > +		put_group_info(rqstp->rq_cred.cr_group_info);
+> > +	/* rpcauth_map_to_svc_cred_local() clears cr_principal */
+> > +	WARN_ON_ONCE(rqstp->rq_cred.cr_principal != NULL);
+> > +	kfree(rqstp->rq_xprt);
+> > +	kfree(rqstp);
+> > +}
+> > +
+> > +static struct svc_rqst *
+> > +nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
+> > +			const struct cred *cred)
+> > +{
+> > +	struct svc_rqst *rqstp;
+> > +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > +	int status;
+> > +
+> > +	/* FIXME: not running in nfsd context, must get reference on nfsd_serv */
+> 
+> What's your plan for addressing this FIXME?
+
+The SRCU (and nfsd_serv_get, nfsd_serv_put and nfsd_serv_sync) in
+later patches addresses it.
+
+FYI: And now that I looked closer at Neil's earlier suggestion (to
+have a single SRCU for all of nfsd_net -- rather than having one
+embedded in each): I'll try to include that change for v8.
+
+> > diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> > index 57cd70062048..af07bb146e81 100644
+> > --- a/fs/nfsd/vfs.h
+> > +++ b/fs/nfsd/vfs.h
+> > @@ -36,6 +36,8 @@
+> >  #define NFSD_MAY_CREATE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE)
+> >  #define NFSD_MAY_REMOVE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE|NFSD_MAY_TRUNC)
+> >  
+> > +#define NFSD_MAY_LOCALIO		0x800000
+> > +
+> 
+> Nit: I'd prefer to see NFSD_MAY_LOCALIO inserted just after
+> NFSD_MAY_64BIT_COOKIE. Is there a reason the value of the new flag
+> should not be 0x2000 ?
+
+Fixed.
 
