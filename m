@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-4345-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4346-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40CF4918E6E
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:28:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43AEE918E70
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 721CF1C22385
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:28:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F187C287F40
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:28:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A5519069C;
-	Wed, 26 Jun 2024 18:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49037190680;
+	Wed, 26 Jun 2024 18:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsI5WwKq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjIDwkaI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1130190699;
-	Wed, 26 Jun 2024 18:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219A1190670;
+	Wed, 26 Jun 2024 18:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719426482; cv=none; b=Uh7kpR8Mo5eFUIv0454NbvrV5IB2Tm9A0J/XM8PkK9zcwLXDNqidA3axx3ZieeLHtj0T4XGaNXoazjNEpAHqs3BJqpkaKCFuFw5CJboPXptXC8d9V3vgcg5p28Mwq+lrdUvKjkcxVa3MEv3Wm/MJVaUQ/HrLZkLFHACj7OD69qY=
+	t=1719426484; cv=none; b=AUzRLL4JAroWE8l56RsOjIAv1LgBAb+qoUZLNQR9F347VCerEeGWWBpSDyTncRcT7Xt9jZ5O0C/3DXpYnArkaHzhu2uBUO4/BsLuS5gvu+3t+0n9h3XMBckEO6AbJZayT4IDom6Od4Gkbjx6Tt9HRrgY9lQaZ15InPdU9Wi+TLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719426482; c=relaxed/simple;
-	bh=lz4BNp2Exc9fBCHQYkJbsU/O6zJopS2cxihAzvadqlc=;
+	s=arc-20240116; t=1719426484; c=relaxed/simple;
+	bh=mUXoOORlfk0p8dZ15nWYoTWVRGfem9OjwPIECWFk5OM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bKJfRPCK5E7ZFQC/+SatIr2/oFwWQ2LHK2XrIjVzd+oyEjn7tnQKy8DFq06SGexpE1r93p3LwhQdLhRSE7HrSZKhYcfQ1cuuqUQnirvXTkb8qe3hcWisWCMlXPiCtxFuLj6mhMrz2Tlq8OTvF7n3nDrlQFpj6GlJyqQmBvhiZNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsI5WwKq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06EE8C32782;
-	Wed, 26 Jun 2024 18:28:00 +0000 (UTC)
+	 MIME-Version; b=ocwffVpnpdw74+2buYxSKe23eVuF8LbxZDOCKevgOzsN6WlFcYIPIB0mSU30B84jbJ8C66OjsGGedMXVPb1oU+1rNNclrmBRKcuoEGgc/BpVrmSbggfPLZTIuVT8NOOSXnTNqBgaYmFzno/SMQOWRAtV0sGZbrcX8CpsO+mw/Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjIDwkaI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76848C32789;
+	Wed, 26 Jun 2024 18:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719426481;
-	bh=lz4BNp2Exc9fBCHQYkJbsU/O6zJopS2cxihAzvadqlc=;
+	s=k20201202; t=1719426484;
+	bh=mUXoOORlfk0p8dZ15nWYoTWVRGfem9OjwPIECWFk5OM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rsI5WwKq0/sqv4WkNMb69+zAT6DSAYqn8iVPxqUdH+XE3ZXGPfGhe2tykwh+wLfGC
-	 WdE8rpXBUDqAq5mlvEQ/ssFiCH09f6sPJX6Oh72iSXvGZCW8awXqixfwXm+r8mqM/2
-	 FtoUE0CCr6c+t2ZRZaRuZNnaRmMEsjInrCsUkYVqkW5L4GnTaFRLInytBQNf6FBeNp
-	 OP6x6sAkpfpuFb/8zrTUS79xONqihNQEkT/EqSOmvItdCAFo6vEhEXyQF53K35VN9K
-	 VOD4qgE+qq7vD0sAvZZZZ6U+HGHwr3PDSgT2B0p7lOIg1J5qEnhllYU6l1pGgEaOdZ
-	 rnBBEYZ2w/r0w==
+	b=FjIDwkaIiCKbUMJhO/TebQNu1zSYQwAJn1a+Z87pcQ+Ztra74TA6UOELhudnr2szt
+	 KI9tJnhhuK8oWOztGKNI4jLbmVEEZtzGBp1cIE+s13/6C9tbY7BtadZ/2ORWqiwIJn
+	 Od8z+C1GV+ZtOLPisTabwh6L1WuA/83Yn/WDOXjlCk2tX0CYZB6U3FPDGHzAI3ZxD2
+	 eLvBiFGdpnGZr3dWasBjC1bmV+UTuftjaua/wukCW4oN0/Ldl2RaX/tm/RbqbYUkhY
+	 pqIJOIPNR3f9fcCsDCtNTUMrH9DPFuMIwnLaxi1dcC3KkHXGatLH/EqDAkMuj3D/ND
+	 FkEqdwZTPWoGg==
 From: cel@kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	<stable@vger.kernel.org>,
-	Yunjian Wang <wangyunjian@huawei.com>
-Subject: [PATCH 5.10 1/5] SUNRPC: Fix null pointer dereference in svc_rqst_free()
-Date: Wed, 26 Jun 2024 14:27:41 -0400
-Message-ID: <20240626182745.288665-2-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 5.10 2/5] SUNRPC: Fix a NULL pointer deref in trace_svc_stats_latency()
+Date: Wed, 26 Jun 2024 14:27:42 -0400
+Message-ID: <20240626182745.288665-3-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240626182745.288665-1-cel@kernel.org>
 References: <20240626182745.288665-1-cel@kernel.org>
@@ -61,36 +61,99 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit b9f83ffaa0c096b4c832a43964fe6bff3acffe10 ]
+[ Upstream commit 5c11720767f70d34357d00a15ba5a0ad052c40fe ]
 
-When alloc_pages_node() returns null in svc_rqst_alloc(), the
-null rq_scratch_page pointer will be dereferenced when calling
-put_page() in svc_rqst_free(). Fix it by adding a null check.
+Some paths through svc_process() leave rqst->rq_procinfo set to
+NULL, which triggers a crash if tracing happens to be enabled.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 5191955d6fc6 ("SUNRPC: Prepare for xdr_stream-style decoding on the server-side")
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Fixes: 89ff87494c6e ("SUNRPC: Display RPC procedure names instead of proc numbers")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/sunrpc/svc.h    |  1 +
+ include/trace/events/sunrpc.h |  8 ++++----
+ net/sunrpc/svc.c              | 15 +++++++++++++++
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 1cf7a7799cc0..8583825c4aea 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -498,6 +498,7 @@ void		   svc_wake_up(struct svc_serv *);
+ void		   svc_reserve(struct svc_rqst *rqstp, int space);
+ struct svc_pool *  svc_pool_for_cpu(struct svc_serv *serv, int cpu);
+ char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
++const char *	   svc_proc_name(const struct svc_rqst *rqstp);
+ int		   svc_encode_result_payload(struct svc_rqst *rqstp,
+ 					     unsigned int offset,
+ 					     unsigned int length);
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 56e4a57d2538..5d34deca0f30 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1578,7 +1578,7 @@ TRACE_EVENT(svc_process,
+ 		__field(u32, vers)
+ 		__field(u32, proc)
+ 		__string(service, name)
+-		__string(procedure, rqst->rq_procinfo->pc_name)
++		__string(procedure, svc_proc_name(rqst))
+ 		__string(addr, rqst->rq_xprt ?
+ 			 rqst->rq_xprt->xpt_remotebuf : "(null)")
+ 	),
+@@ -1588,7 +1588,7 @@ TRACE_EVENT(svc_process,
+ 		__entry->vers = rqst->rq_vers;
+ 		__entry->proc = rqst->rq_proc;
+ 		__assign_str(service, name);
+-		__assign_str(procedure, rqst->rq_procinfo->pc_name);
++		__assign_str(procedure, svc_proc_name(rqst));
+ 		__assign_str(addr, rqst->rq_xprt ?
+ 			     rqst->rq_xprt->xpt_remotebuf : "(null)");
+ 	),
+@@ -1854,7 +1854,7 @@ TRACE_EVENT(svc_stats_latency,
+ 	TP_STRUCT__entry(
+ 		__field(u32, xid)
+ 		__field(unsigned long, execute)
+-		__string(procedure, rqst->rq_procinfo->pc_name)
++		__string(procedure, svc_proc_name(rqst))
+ 		__string(addr, rqst->rq_xprt->xpt_remotebuf)
+ 	),
+ 
+@@ -1862,7 +1862,7 @@ TRACE_EVENT(svc_stats_latency,
+ 		__entry->xid = be32_to_cpu(rqst->rq_xid);
+ 		__entry->execute = ktime_to_us(ktime_sub(ktime_get(),
+ 							 rqst->rq_stime));
+-		__assign_str(procedure, rqst->rq_procinfo->pc_name);
++		__assign_str(procedure, svc_proc_name(rqst));
+ 		__assign_str(addr, rqst->rq_xprt->xpt_remotebuf);
+ 	),
+ 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 26d972c54a59..ac7b3a93d992 100644
+index ac7b3a93d992..f8815ae776e6 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -845,7 +845,8 @@ void
- svc_rqst_free(struct svc_rqst *rqstp)
- {
- 	svc_release_buffer(rqstp);
--	put_page(rqstp->rq_scratch_page);
-+	if (rqstp->rq_scratch_page)
-+		put_page(rqstp->rq_scratch_page);
- 	kfree(rqstp->rq_resp);
- 	kfree(rqstp->rq_argp);
- 	kfree(rqstp->rq_auth_data);
+@@ -1612,6 +1612,21 @@ u32 svc_max_payload(const struct svc_rqst *rqstp)
+ }
+ EXPORT_SYMBOL_GPL(svc_max_payload);
+ 
++/**
++ * svc_proc_name - Return RPC procedure name in string form
++ * @rqstp: svc_rqst to operate on
++ *
++ * Return value:
++ *   Pointer to a NUL-terminated string
++ */
++const char *svc_proc_name(const struct svc_rqst *rqstp)
++{
++	if (rqstp && rqstp->rq_procinfo)
++		return rqstp->rq_procinfo->pc_name;
++	return "unknown";
++}
++
++
+ /**
+  * svc_encode_result_payload - mark a range of bytes as a result payload
+  * @rqstp: svc_rqst to operate on
 -- 
 2.45.1
 
