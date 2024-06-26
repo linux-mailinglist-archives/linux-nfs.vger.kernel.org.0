@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFE87918E56
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:25:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEFA6918E57
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:25:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E34E81C21469
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:25:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77B511F275B7
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D57190486;
-	Wed, 26 Jun 2024 18:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD3F19048B;
+	Wed, 26 Jun 2024 18:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYJx2zaT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cx03lzmr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7619047F
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Jun 2024 18:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51219047F
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Jun 2024 18:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719426293; cv=none; b=b4mVUGFauI+JyqHxNMtXKWpyDbvzy3KrEIOA7J57plWxFEOI7cc2OkcCk+hf6ZWrzvafcDdA0Zt5hEDssLqeihM8u2EhMoq80yF1octmjcRdZwfof+11WpglwOfLKlY6Tm3AxgN32YWpmCoAqVcdkirPTXT+S86x5cx7ztXFpyM=
+	t=1719426294; cv=none; b=MZykMAyAk/CgVeGkuUjyj6KkG7h0JcunNqq2O6obmUYTtl/tHwvGfGQVLl3PD5i5PM5IUbNsfPPlSF35ArQUUX+piBGnVQw1ngO1wp5qwVSeG+5eg4W5PHP6AvoZGkdsTvJLoyC+FuyiQDPCfLk6n6cgWoBxxM8TGfGa0MX35II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719426293; c=relaxed/simple;
-	bh=nt8Pma0dL3RpE4tCNO0Dhbf8OugOU5QH7AdULOHN108=;
+	s=arc-20240116; t=1719426294; c=relaxed/simple;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ug0+NMhf3odvUUxC3LawjJSHdtj1LA5MG3htHcJxmPdt7IWMQhrBnzxS+ASemu+Hffz4/eDNIFwJLRzTULqrfWwunCkwZYIbIzYkEyCBdXnC4CQH8qxPBT7z4YKYqSZsaBwZHfayRKDjLeufKjhOYJYysXHzGdXWngsiuJyv/FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYJx2zaT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5A0C116B1;
-	Wed, 26 Jun 2024 18:24:52 +0000 (UTC)
+	 MIME-Version; b=OghF7407uWIo1jDwqhFCVShXgH7z7L5dB4PkS78pHA0oWgksPKyDmSyvaXgbVrtLaQnAewAWjeG8uoNy/YSCTTZ0x0ki9HzW5b+ehzR1aOfvvvqlgTaZ1gnWCgMclkECHchihGB0WK1abtjgOiyHMvMNHIVPiyOShoFsdCwyfHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cx03lzmr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B4C7C116B1;
+	Wed, 26 Jun 2024 18:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719426293;
-	bh=nt8Pma0dL3RpE4tCNO0Dhbf8OugOU5QH7AdULOHN108=;
+	s=k20201202; t=1719426294;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DYJx2zaTmie0Ded/VijauAKfJokNS6d3d603CghGUpSP3gGIEtdM8Ty4JZX8R8mQ9
-	 HNtu+idmTVH9Qvcpb5pzdxervTznkUdodB3WzBWTL3xX+txcqpku5Q4kR7plGeLEOX
-	 C5P7GbhwZsms3mfWxN/PoO6ijBEdzCz83WtHEvBU5FURg9P/eg5+xFKcfEx/aif3Qm
-	 t+GYcl/bJBbk1v+ScHDTngBknlkEfJQJhWCa6adql3eO854Lzy6v1N6MQJ9mgbvv7H
-	 gN0XnpO7Ru8Hs9a+voiM3GpWSgDh0KAgA0j6J7waZJ6ng9gn2PllE0creWRG6rIv3M
-	 MQFGZUleGfcXw==
+	b=Cx03lzmrYHR3YpHCU0oxDtnkuguUV4CQhst3IFDNGyvxmLKLEpVETW68GB2r8fHLd
+	 WsF3pawLS4YBIcxp8DpYMH6Ii+oiDwdV8BRyqC2JXRtDs1YicP3GPSuV4FmbygRcqm
+	 J8tuSqy833aCUsRi17OnI4bYkNS1LhvSvHBhQsm0kn0Oj5CKfcd1uDgQb0Gdhyx9YO
+	 6/yKn/D47y4HmX/QbObXUPvquB5qycK4jJA1JuDbu49vkk+RJawnfrQLqLK/dKFYlM
+	 81gMSWg3+fwgKoSwUdgPSK60Jlwr66RmaRmtwZm8bF9nOBXA6XeI2RoVwT5dTs4IHF
+	 nCAfdWxQfbC7A==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v8 10/18] nfs/nfsd: add Kconfig options to allow localio to be enabled
-Date: Wed, 26 Jun 2024 14:24:30 -0400
-Message-ID: <20240626182438.69539-11-snitzer@kernel.org>
+Subject: [PATCH v8 11/18] NFS: Enable localio for non-pNFS I/O
+Date: Wed, 26 Jun 2024 14:24:31 -0400
+Message-ID: <20240626182438.69539-12-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240626182438.69539-1-snitzer@kernel.org>
 References: <20240626182438.69539-1-snitzer@kernel.org>
@@ -62,87 +62,85 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CONFIG_NFS_LOCALIO controls the client enablement and
-CONFIG_NFSD_LOCALIO the server enablement.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-While it is true that it doesn't make sense, on a using LOCALIO level,
-to have one without the other: it is useful to allow a mix be
-configured for testing purposes.  It could be that the same control
-could be achieved by exposing a discrete "localio_enabled"
-module_param in the server (nfsd.ko) like is already available in the
-client (nfs.ko).
+Try a local open of the file we're writing to, and if it succeeds, then
+do local I/O.
 
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/Kconfig      |  3 +++
- fs/nfs/Kconfig  | 14 ++++++++++++++
- fs/nfsd/Kconfig | 14 ++++++++++++++
- 3 files changed, 31 insertions(+)
+ fs/nfs/pagelist.c | 19 ++++++++++---------
+ fs/nfs/write.c    |  7 ++++++-
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index a46b0cbc4d8f..170083ff2a51 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -377,6 +377,9 @@ config NFS_ACL_SUPPORT
- 	tristate
- 	select FS_POSIX_ACL
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index b08420b8e664..3ee78da5ebc4 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1063,6 +1063,7 @@ EXPORT_SYMBOL_GPL(nfs_generic_pgio);
+ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ {
+ 	struct nfs_pgio_header *hdr;
++	struct file *filp;
+ 	int ret;
+ 	unsigned short task_flags = 0;
  
-+config NFS_COMMON_LOCALIO_SUPPORT
-+	tristate
+@@ -1074,18 +1075,18 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ 	nfs_pgheader_init(desc, hdr, nfs_pgio_header_free);
+ 	ret = nfs_generic_pgio(desc, hdr);
+ 	if (ret == 0) {
++		struct nfs_client *clp = NFS_SERVER(hdr->inode)->nfs_client;
 +
- config NFS_COMMON
- 	bool
- 	depends on NFSD || NFS_FS || LOCKD
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 57249f040dfc..311ae8bc587f 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -86,6 +86,20 @@ config NFS_V4
++		filp = nfs_local_file_open(clp, hdr->cred, hdr->args.fh,
++					   hdr->args.context);
++
+ 		if (NFS_SERVER(hdr->inode)->nfs_client->cl_minorversion)
+ 			task_flags = RPC_TASK_MOVEABLE;
+-		ret = nfs_initiate_pgio(desc,
+-					NFS_SERVER(hdr->inode)->nfs_client,
+-					NFS_CLIENT(hdr->inode),
+-					hdr,
+-					hdr->cred,
+-					NFS_PROTO(hdr->inode),
+-					desc->pg_rpc_callops,
+-					desc->pg_ioflags,
++		ret = nfs_initiate_pgio(desc, clp, NFS_CLIENT(hdr->inode),
++					hdr, hdr->cred, NFS_PROTO(hdr->inode),
++					desc->pg_rpc_callops, desc->pg_ioflags,
+ 					RPC_TASK_CRED_NOREF | task_flags,
+-					NULL);
++					filp);
+ 	}
+ 	return ret;
+ }
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index b29b0fd5431f..b2c06b8b88cd 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1802,6 +1802,8 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 		struct nfs_commit_info *cinfo)
+ {
+ 	struct nfs_commit_data	*data;
++	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
++	struct file *filp;
+ 	unsigned short task_flags = 0;
  
- 	  If unsure, say Y.
+ 	/* another commit raced with us */
+@@ -1818,9 +1820,12 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 	nfs_init_commit(data, head, NULL, cinfo);
+ 	if (NFS_SERVER(inode)->nfs_client->cl_minorversion)
+ 		task_flags = RPC_TASK_MOVEABLE;
++
++	filp = nfs_local_file_open(clp, data->cred, data->args.fh,
++				   data->context);
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+ 				   data->mds_ops, how,
+-				   RPC_TASK_CRED_NOREF | task_flags, NULL);
++				   RPC_TASK_CRED_NOREF | task_flags, filp);
+ }
  
-+config NFS_LOCALIO
-+	tristate "NFS client support for the LOCALIO auxiliary protocol"
-+	depends on NFS_V3 || NFS_V4
-+	select NFS_COMMON_LOCALIO_SUPPORT
-+	help
-+	  Some NFS servers support an auxiliary NFS LOCALIO protocol
-+	  that is not an official part of the NFS version 3 or 4 protocol.
-+
-+	  This option enables support for the LOCALIO protocol in the
-+	  kernel's NFS client.  Enable this to bypass using the NFS
-+	  protocol when issuing reads, writes and commits to the server.
-+
-+	  If unsure, say N.
-+
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index ec2ab6429e00..a36ff66c7430 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -89,6 +89,20 @@ config NFSD_V4
- 
- 	  If unsure, say N.
- 
-+config NFSD_LOCALIO
-+	tristate "NFS server support for the LOCALIO auxiliary protocol"
-+	depends on NFSD || NFSD_V4
-+	select NFS_COMMON_LOCALIO_SUPPORT
-+	help
-+	  Some NFS servers support an auxiliary NFS LOCALIO protocol
-+	  that is not an official part of the NFS version 3 or 4 protocol.
-+
-+	  This option enables support for the LOCALIO protocol in the
-+	  kernel's NFS server.  Enable this to bypass using the NFS
-+	  protocol when issuing reads, writes and commits to the server.
-+
-+	  If unsure, say N.
-+
- config NFSD_PNFS
- 	bool
- 
+ /*
 -- 
 2.44.0
 
