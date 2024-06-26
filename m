@@ -1,55 +1,58 @@
-Return-Path: <linux-nfs+bounces-4344-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4345-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19255918E67
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:28:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40CF4918E6E
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 20:28:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B20361F272F5
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:27:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 721CF1C22385
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jun 2024 18:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4360190499;
-	Wed, 26 Jun 2024 18:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A5519069C;
+	Wed, 26 Jun 2024 18:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSeYGX/a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsI5WwKq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0AE6E613;
-	Wed, 26 Jun 2024 18:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1130190699;
+	Wed, 26 Jun 2024 18:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719426476; cv=none; b=oZhkYM0Q5eY6C4DJanxz3+2Nz2FpRZ1+8ATkSxZAT/jA7u5jjAn/bUyB2uOe9I+mtIEkdKy1AS0Y1KeZK5G9GyAeAhHExp6wuQPc8dOmTDzLTXmEZL3ew1D4Qb1QtCuZ+Rgq9deBqD/8iPB5ykMtLNSMI91jYShkAJ3LauNJUkk=
+	t=1719426482; cv=none; b=Uh7kpR8Mo5eFUIv0454NbvrV5IB2Tm9A0J/XM8PkK9zcwLXDNqidA3axx3ZieeLHtj0T4XGaNXoazjNEpAHqs3BJqpkaKCFuFw5CJboPXptXC8d9V3vgcg5p28Mwq+lrdUvKjkcxVa3MEv3Wm/MJVaUQ/HrLZkLFHACj7OD69qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719426476; c=relaxed/simple;
-	bh=G+ZtIjhf8cOWG76YSlWa0IMYIwTaKc2Nr1+gh6cDYSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T+S64HguOiwmpmcaaWuch30S+fK8VGSRd7ppA13vLugmQk/jfgCxKD5vUDkCFB+tP7wYthyCJj/qPJRKakeVJMsx/+XF+d6gQuW2u6S/q+96lDk1h3PVSAooWTpcFHopFkw7xcz+1kUbuSTFF8Q8GU9b2N6jaDo0db+RYC2sR68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSeYGX/a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD856C116B1;
-	Wed, 26 Jun 2024 18:27:55 +0000 (UTC)
+	s=arc-20240116; t=1719426482; c=relaxed/simple;
+	bh=lz4BNp2Exc9fBCHQYkJbsU/O6zJopS2cxihAzvadqlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bKJfRPCK5E7ZFQC/+SatIr2/oFwWQ2LHK2XrIjVzd+oyEjn7tnQKy8DFq06SGexpE1r93p3LwhQdLhRSE7HrSZKhYcfQ1cuuqUQnirvXTkb8qe3hcWisWCMlXPiCtxFuLj6mhMrz2Tlq8OTvF7n3nDrlQFpj6GlJyqQmBvhiZNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsI5WwKq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06EE8C32782;
+	Wed, 26 Jun 2024 18:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719426476;
-	bh=G+ZtIjhf8cOWG76YSlWa0IMYIwTaKc2Nr1+gh6cDYSw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NSeYGX/aZGCEqRpqaf4tdmhZuqklSEw38+FzhGi9jbnRr6mUYaftyVTYQV7bfEpt5
-	 vMUyuN7dAlQk/FmrIDFjvxMnbQxszSAIWrg62YmsZC8pIGqKrqXlRfY5GJd78IjHA6
-	 xG8fOSqbG7Jo02n2e1yi9A5pBWEaPM5Ehd3WCFmzQKlcrtOfjgTJ8ackSKXlrt5lnC
-	 YkAyY3m/rKQkcZ+if2KxRU8/5u9aMb4VzZ4iMeAzAv4pty3myVtaEBzJMzlLvKNcIv
-	 0wenqQP6sCDgNroXNtpmCwO3lZUsLH/Bq+k42wlzH5eIFCqGLnLfZGaHMQJNqDQkQd
-	 VGy/8jcnRJugQ==
+	s=k20201202; t=1719426481;
+	bh=lz4BNp2Exc9fBCHQYkJbsU/O6zJopS2cxihAzvadqlc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rsI5WwKq0/sqv4WkNMb69+zAT6DSAYqn8iVPxqUdH+XE3ZXGPfGhe2tykwh+wLfGC
+	 WdE8rpXBUDqAq5mlvEQ/ssFiCH09f6sPJX6Oh72iSXvGZCW8awXqixfwXm+r8mqM/2
+	 FtoUE0CCr6c+t2ZRZaRuZNnaRmMEsjInrCsUkYVqkW5L4GnTaFRLInytBQNf6FBeNp
+	 OP6x6sAkpfpuFb/8zrTUS79xONqihNQEkT/EqSOmvItdCAFo6vEhEXyQF53K35VN9K
+	 VOD4qgE+qq7vD0sAvZZZZ6U+HGHwr3PDSgT2B0p7lOIg1J5qEnhllYU6l1pGgEaOdZ
+	 rnBBEYZ2w/r0w==
 From: cel@kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	<stable@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 5.10 0/5] Five missing NFSD fixes for v5.10.y
-Date: Wed, 26 Jun 2024 14:27:40 -0400
-Message-ID: <20240626182745.288665-1-cel@kernel.org>
+	Yunjian Wang <wangyunjian@huawei.com>
+Subject: [PATCH 5.10 1/5] SUNRPC: Fix null pointer dereference in svc_rqst_free()
+Date: Wed, 26 Jun 2024 14:27:41 -0400
+Message-ID: <20240626182745.288665-2-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240626182745.288665-1-cel@kernel.org>
+References: <20240626182745.288665-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,32 +61,36 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-Hi-
+[ Upstream commit b9f83ffaa0c096b4c832a43964fe6bff3acffe10 ]
 
-It was pointed out that the NFSD fixes that went into 5.10.220 were
-missing a few forward fixes from upstream. These five are the ones
-I identified. I've run them through the usual NFSD CI tests and
-found no new issues.
+When alloc_pages_node() returns null in svc_rqst_alloc(), the
+null rq_scratch_page pointer will be dereferenced when calling
+put_page() in svc_rqst_free(). Fix it by adding a null check.
 
-Chuck Lever (3):
-  SUNRPC: Fix a NULL pointer deref in trace_svc_stats_latency()
-  SUNRPC: Fix svcxdr_init_decode's end-of-buffer calculation
-  SUNRPC: Fix svcxdr_init_encode's buflen calculation
+Addresses-Coverity: ("Dereference after null check")
+Fixes: 5191955d6fc6 ("SUNRPC: Prepare for xdr_stream-style decoding on the server-side")
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/svc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Jeff Layton (1):
-  nfsd: hold a lighter-weight client reference over CB_RECALL_ANY
-
-Yunjian Wang (1):
-  SUNRPC: Fix null pointer dereference in svc_rqst_free()
-
- fs/nfsd/nfs4state.c           |  7 ++-----
- include/linux/sunrpc/svc.h    | 20 ++++++++++++++++----
- include/trace/events/sunrpc.h |  8 ++++----
- net/sunrpc/svc.c              | 18 +++++++++++++++++-
- 4 files changed, 39 insertions(+), 14 deletions(-)
-
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 26d972c54a59..ac7b3a93d992 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -845,7 +845,8 @@ void
+ svc_rqst_free(struct svc_rqst *rqstp)
+ {
+ 	svc_release_buffer(rqstp);
+-	put_page(rqstp->rq_scratch_page);
++	if (rqstp->rq_scratch_page)
++		put_page(rqstp->rq_scratch_page);
+ 	kfree(rqstp->rq_resp);
+ 	kfree(rqstp->rq_argp);
+ 	kfree(rqstp->rq_auth_data);
 -- 
 2.45.1
 
