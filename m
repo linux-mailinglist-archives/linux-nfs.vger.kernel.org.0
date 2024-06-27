@@ -1,68 +1,57 @@
-Return-Path: <linux-nfs+bounces-4368-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4369-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D228291AB89
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 17:37:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 927C291ABC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 17:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DA3A1F2339F
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 15:37:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EDF81F21EDC
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 15:48:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECAE5199384;
-	Thu, 27 Jun 2024 15:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA3319922C;
+	Thu, 27 Jun 2024 15:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NC1H/10N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLhDsLDP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5401990AD;
-	Thu, 27 Jun 2024 15:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665C8199224
+	for <linux-nfs@vger.kernel.org>; Thu, 27 Jun 2024 15:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719502551; cv=none; b=oYIgZdZM6FzJ5GqExVT3USBjcRe0u6sYWbeAgzZ5kttE1sux/3z78yFbOsml/EaaDy6yVjIk+XbFm0t0XTL3a3NDCqTDbEKxK73vdwj7+e6X2iHN+8MHWZZy7rZXJg6I3atrExkENo2ENzggr3HiMqjQC6V7ZXfIAaT0Pp1Pu4k=
+	t=1719503291; cv=none; b=cnX3NtMsyvwLCc3NLzE8jGRTEEbHuVbWYBwOFxDpHseGbhuQvId2Z2xmtvGXcD37occNe5+6lribfyBkp930Z/0k3LuHFBYCNCNiJ4vfzaDoK1jfU6KMfKTdePhcQTuEdnJhWid45WIS1HuSOAGEWw9lJ1JmYtAhZMJSqwW8sho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719502551; c=relaxed/simple;
-	bh=3d+ajZj2euzfXWW4x2ZVNbEbE/hiWAhLUJ05o+3lc94=;
+	s=arc-20240116; t=1719503291; c=relaxed/simple;
+	bh=p8599W2HG6F9Wqge5BwoWu5IeHnKU8geQEW8Pqepk1I=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EuW7mjY0eydCX4YOz0n9k+HqvjRoLtB8gKu8J9Hor8YtN1O1IaWsxGHIYgM5PyLMXqallhgFUpIYlZVbDwIZWFB8eYeYw0mp3i5E/RUIlNVWYHXOaT8UL2FJphtnr8AxLiybfpFjvi/l4o/0dPFEdnS0ASx7XQzBQZFsFmDWaUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NC1H/10N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CAB1C2BBFC;
-	Thu, 27 Jun 2024 15:35:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AvDjr153511QFRXb3V2yNafdSW+elwwNHdUQ9Y4ED7vaku/d+HMQFzN+fNSBV8sDLUqHDOhPLJDwB6TbtPnbs6m7uBnF+zT34SFb27XExD318xzY0e2uEjKxppQpe0teX65gYAN2R0h28rMDQJtfmYPJqUV+SvwEhYc4YlkS63c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLhDsLDP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 648E4C2BBFC;
+	Thu, 27 Jun 2024 15:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719502551;
-	bh=3d+ajZj2euzfXWW4x2ZVNbEbE/hiWAhLUJ05o+3lc94=;
+	s=k20201202; t=1719503291;
+	bh=p8599W2HG6F9Wqge5BwoWu5IeHnKU8geQEW8Pqepk1I=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NC1H/10NXcID8rY9p89rWEAilDyHattVM/B3S+cB3nevhfH2M8Hlv8SgNjn/6dZJC
-	 sRWB8/Rw8VzseX+Nbw5GcoeuBBZqKzg0fjYr1tbnFOj7RIiCIxo8VIYkepm1BXl7qQ
-	 srlkLW/NyhucsDg8cgElhVTp+lgSdl8sd1nao7ii6y4Y8kF5pVIQ/Da3OcJZS8yIVA
-	 vcib8biIamy9bwaOsNRscLh2IR17ooEqQaBMpnuh9UIYbXaE+8CuG3B0jLqqay37dl
-	 Xfk3VAPKYStIu6GGEw/El657VGTfBuUw+Z0d8iNzcL17Qr+3l2b/CSrxDrZ7L4PSHK
-	 AwkS+1XzKVvtg==
-Message-ID: <4470c858a2a9056a9a26bb48ce36dbfc52a463e2.camel@kernel.org>
-Subject: Re: [PATCH 04/10] fs: add infrastructure for multigrain timestamps
+	b=OLhDsLDPJ7HZmQtRTHy2x4j1ERcvLwNhC8zXWIHzhm7Pn0p/ZiH3zbhQb9HpZ+uap
+	 yMgfG+BgWFBGJc7cVj+acpOquxX9udItzuJ1g52MTExLZdmZXLKUC6+liKuxLEzifI
+	 5quD8MmGr3Ut44RRZW6G6cDWa4nQMTbQErR3GfVFYznd0DMNaydVUz6oNLjdJnheSh
+	 vQE/Ypszvk/KvVaYguDMPvJwde8qz2MZYoZeq25cfOmlVUF8ubC5w30Zk5Vbo/zS+S
+	 O9AJEkdGjAgTbrAGBLQUM0wUWgS+3S3AyG34koCsNCbl7AAk8UPNMH0vr2EZCgbFkn
+	 WCLRgy/E7g3Xw==
+Message-ID: <618117cfff2c4581cdcda15586f3f771e37faebc.camel@kernel.org>
+Subject: Re: [PATCH v8 07/18] nfsd: add "localio" support
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
- <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, Theodore
- Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Chris
- Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
- <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, Andrew Morton
- <akpm@linux-foundation.org>,  kernel-team@fb.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-mm@kvack.org,  linux-nfs@vger.kernel.org
-Date: Thu, 27 Jun 2024 11:35:47 -0400
-In-Reply-To: <Zn1/FVS4NrAwEBwz@tissot.1015granger.net>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
-	 <20240626-mgtime-v1-4-a189352d0f8f@kernel.org>
-	 <Zn1/FVS4NrAwEBwz@tissot.1015granger.net>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
+ <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+ snitzer@hammerspace.com
+Date: Thu, 27 Jun 2024 11:48:09 -0400
+In-Reply-To: <20240626182438.69539-8-snitzer@kernel.org>
+References: <20240626182438.69539-1-snitzer@kernel.org>
+	 <20240626182438.69539-8-snitzer@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
@@ -73,620 +62,384 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-06-27 at 11:02 -0400, Chuck Lever wrote:
-> On Wed, Jun 26, 2024 at 09:00:24PM -0400, Jeff Layton wrote:
-> > The VFS always uses coarse-grained timestamps when updating the ctime
-> > and mtime after a change. This has the benefit of allowing filesystems
-> > to optimize away a lot metadata updates, down to around 1 per jiffy,
-> > even when a file is under heavy writes.
-> >=20
-> > Unfortunately, this has always been an issue when we're exporting via
-> > NFSv3, which relies on timestamps to validate caches. A lot of changes
-> > can happen in a jiffy, so timestamps aren't sufficient to help the
-> > client decide to invalidate the cache. Even with NFSv4, a lot of
-> > exported filesystems don't properly support a change attribute and are
-> > subject to the same problems with timestamp granularity. Other
-> > applications have similar issues with timestamps (e.g backup
-> > applications).
-> >=20
-> > If we were to always use fine-grained timestamps, that would improve th=
-e
-> > situation, but that becomes rather expensive, as the underlying
-> > filesystem would have to log a lot more metadata updates.
-> >=20
-> > What we need is a way to only use fine-grained timestamps when they are
-> > being actively queried. Now that the ctime is stored as a ktime_t, we
-> > can sacrifice the lowest bit in the word to act as a flag marking
-> > whether the current timestamp has been queried via stat() or the like.
-> >=20
-> > This solves the problem of being able to distinguish the timestamp
-> > between updates, but introduces a new problem: it's now possible for a
-> > file being changed to get a fine-grained timestamp and then a file that
-> > was altered later to get a coarse-grained one that appears older than
-> > the earlier fine-grained time. To remedy this, keep a global ktime_t
-> > value that acts as a timestamp floor.
-> >=20
-> > When we go to stamp a file, we first get the latter of the current floo=
-r
-> > value and the current coarse-grained time (call this "now"). If the
-> > current inode ctime hasn't been queried then we just attempt to stamp i=
-t
-> > with that value using a cmpxchg() operation.
-> >=20
-> > If it has been queried, then first see whether the current coarse time
-> > appears later than what we have. If it does, then we accept that value.
-> > If it doesn't, then we get a fine-grained time and try to swap that int=
-o
-> > the global floor. Whether that succeeds or fails, we take the resulting
-> > floor time and try to swap that into the ctime.
-> >=20
-> > There is still one remaining problem:
-> >=20
-> > All of this works as long as the realtime clock is monotonically
-> > increasing. If the clock ever jumps backwards, then we could end up in =
-a
-> > situation where the floor value is "stuck" far in advance of the clock.
-> >=20
-> > To remedy this, sanity check the floor value and if it's more than 6ms
-> > (~2 jiffies) ahead of the current coarse-grained clock, disregard the
-> > floor value, and just accept the current coarse-grained clock.
-> >=20
-> > Filesystems opt into this by setting the FS_MGTIME fstype flag.=C2=A0 O=
-ne
-> > caveat: those that do will always present ctimes that have the lowest
-> > bit unset, even when the on-disk ctime has it set.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > =C2=A0fs/inode.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 168 +++++++++++++++++++++++++++++++++------
-> > =C2=A0fs/stat.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 39 ++++++++-
-> > =C2=A0include/linux/fs.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 30 +++++++
-> > =C2=A0include/trace/events/timestamp.h |=C2=A0 97 +++++++++++++++++++++=
+On Wed, 2024-06-26 at 14:24 -0400, Mike Snitzer wrote:
+> Pass the stored cl_nfssvc_net from the client to the server as
+> first argument to nfsd_open_local_fh() to ensure the proper network
+> namespace is used for localio.
+>=20
+> Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+> Signed-off-by: Peng Tao <tao.peng@primarydata.com>
+> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+> =C2=A0fs/nfsd/Makefile=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0fs/nfsd/filecache.c |=C2=A0=C2=A0 2 +-
+> =C2=A0fs/nfsd/localio.c=C2=A0=C2=A0 | 246 +++++++++++++++++++++++++++++++=
++++++++++++++
+> =C2=A0fs/nfsd/nfssvc.c=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0fs/nfsd/trace.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> =C2=A0fs/nfsd/vfs.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 9 +=
 +
-> > =C2=A04 files changed, 306 insertions(+), 28 deletions(-)
-> >=20
-> > diff --git a/fs/inode.c b/fs/inode.c
-> > index 5d2b0dfe48c3..12790a26102c 100644
-> > --- a/fs/inode.c
-> > +++ b/fs/inode.c
-> > @@ -62,6 +62,8 @@ static unsigned int i_hash_shift __ro_after_init;
-> > =C2=A0static struct hlist_head *inode_hashtable __ro_after_init;
-> > =C2=A0static __cacheline_aligned_in_smp DEFINE_SPINLOCK(inode_hash_lock=
-);
-> > =C2=A0
-> > +/* Don't send out a ctime lower than this (modulo backward clock jumps=
-). */
-> > +static __cacheline_aligned_in_smp ktime_t ctime_floor;
+> =C2=A06 files changed, 260 insertions(+), 2 deletions(-)
+> =C2=A0create mode 100644 fs/nfsd/localio.c
 >=20
-> This is piece of memory that will be hit pretty hard (and you
-> obviously recognize that because of the alignment attribute).
->=20
-> Would it be of any benefit to keep a distinct ctime_floor in each
-> super block instead?
->=20
+> diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+> index b8736a82e57c..78b421778a79 100644
+> --- a/fs/nfsd/Makefile
+> +++ b/fs/nfsd/Makefile
+> @@ -23,3 +23,4 @@ nfsd-$(CONFIG_NFSD_PNFS) +=3D nfs4layouts.o
+> =C2=A0nfsd-$(CONFIG_NFSD_BLOCKLAYOUT) +=3D blocklayout.o blocklayoutxdr.o
+> =C2=A0nfsd-$(CONFIG_NFSD_SCSILAYOUT) +=3D blocklayout.o blocklayoutxdr.o
+> =C2=A0nfsd-$(CONFIG_NFSD_FLEXFILELAYOUT) +=3D flexfilelayout.o flexfilela=
+youtxdr.o
+> +nfsd-$(CONFIG_NFSD_LOCALIO) +=3D localio.o
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index ad9083ca144b..99631fa56662 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -52,7 +52,7 @@
+> =C2=A0#define NFSD_FILE_CACHE_UP		=C2=A0=C2=A0=C2=A0=C2=A0 (0)
+> =C2=A0
+> =C2=A0/* We only care about NFSD_MAY_READ/WRITE for this cache */
+> -#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE)
+> +#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE|NFSD_MAY_LOCALI=
+O)
+> =C2=A0
+> =C2=A0static DEFINE_PER_CPU(unsigned long, nfsd_file_cache_hits);
+> =C2=A0static DEFINE_PER_CPU(unsigned long, nfsd_file_acquisitions);
+> diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> new file mode 100644
+> index 000000000000..ba9187735947
+> --- /dev/null
+> +++ b/fs/nfsd/localio.c
+> @@ -0,0 +1,246 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * NFS server support for local clients to bypass network stack
+> + *
+> + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
+> + * Copyright (C) 2019 Trond Myklebust <trond.myklebust@hammerspace.com>
+> + * Copyright (C) 2024 Mike Snitzer <snitzer@hammerspace.com>
+> + */
+> +
+> +#include <linux/exportfs.h>
+> +#include <linux/sunrpc/svcauth_gss.h>
+> +#include <linux/sunrpc/clnt.h>
+> +#include <linux/nfs.h>
+> +#include <linux/string.h>
+> +
+> +#include "nfsd.h"
+> +#include "vfs.h"
+> +#include "netns.h"
+> +#include "filecache.h"
+> +
+> +#define NFSDDBG_FACILITY		NFSDDBG_FH
+> +
+> +/*
+> + * We need to translate between nfs status return values and
+> + * the local errno values which may not be the same.
+> + * - duplicated from fs/nfs/nfs2xdr.c to avoid needless bloat of
+> + *=C2=A0=C2=A0 all compiled nfs objects if it were in include/linux/nfs.=
+h
+> + */
+> +static const struct {
+> +	int stat;
+> +	int errno;
+> +} nfs_common_errtbl[] =3D {
+> +	{ NFS_OK,		0		},
+> +	{ NFSERR_PERM,		-EPERM		},
+> +	{ NFSERR_NOENT,		-ENOENT		},
+> +	{ NFSERR_IO,		-EIO		},
+> +	{ NFSERR_NXIO,		-ENXIO		},
+> +/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> +	{ NFSERR_ACCES,		-EACCES		},
+> +	{ NFSERR_EXIST,		-EEXIST		},
+> +	{ NFSERR_XDEV,		-EXDEV		},
+> +	{ NFSERR_NODEV,		-ENODEV		},
+> +	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> +	{ NFSERR_ISDIR,		-EISDIR		},
+> +	{ NFSERR_INVAL,		-EINVAL		},
+> +	{ NFSERR_FBIG,		-EFBIG		},
+> +	{ NFSERR_NOSPC,		-ENOSPC		},
+> +	{ NFSERR_ROFS,		-EROFS		},
+> +	{ NFSERR_MLINK,		-EMLINK		},
+> +	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> +	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> +	{ NFSERR_DQUOT,		-EDQUOT		},
+> +	{ NFSERR_STALE,		-ESTALE		},
+> +	{ NFSERR_REMOTE,	-EREMOTE	},
+> +#ifdef EWFLUSH
+> +	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> +#endif
+> +	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> +	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> +	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> +	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> +	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> +	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> +	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> +	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> +	{ -1,			-EIO		}
+> +};
+> +
+> +/**
+> + * nfs_stat_to_errno - convert an NFS status code to a local errno
+> + * @status: NFS status code to convert
+> + *
+> + * Returns a local errno value, or -EIO if the NFS status code is
+> + * not recognized.=C2=A0 nfsd_file_acquire() returns an nfsstat that
+> + * needs to be translated to an errno before being returned to a
+> + * local client application.
+> + */
+> +static int nfs_stat_to_errno(enum nfs_stat status)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; nfs_common_errtbl[i].stat !=3D -1; i++) {
+> +		if (nfs_common_errtbl[i].stat =3D=3D (int)status)
+> +			return nfs_common_errtbl[i].errno;
+> +	}
+> +	return nfs_common_errtbl[i].errno;
+> +}
+> +
+> +static void
+> +nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
+> +{
+> +	if (rqstp->rq_client)
+> +		auth_domain_put(rqstp->rq_client);
+> +	if (rqstp->rq_cred.cr_group_info)
+> +		put_group_info(rqstp->rq_cred.cr_group_info);
+> +	/* rpcauth_map_to_svc_cred_local() clears cr_principal */
+> +	WARN_ON_ONCE(rqstp->rq_cred.cr_principal !=3D NULL);
+> +	kfree(rqstp->rq_xprt);
+> +	kfree(rqstp);
+> +}
+> +
+> +static struct svc_rqst *
+> +nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
+> +			const struct cred *cred)
+> +{
+> +	struct svc_rqst *rqstp;
+> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> +	int status;
+> +
+> +	/* FIXME: not running in nfsd context, must get reference on nfsd_serv =
+*/
+> +	if (unlikely(!READ_ONCE(nn->nfsd_serv))) {
+> +		dprintk("%s: localio denied. Server not running\n", __func__);
 
-Good question. Dave Chinner suggested the same thing, but I think it's
-a potential problem:
+Chuck mentioned this earlier, but I don't think we ought to merge the
+dprintks. If they're useful for debugging then they should be turned
+into tracepoints. This one, I'd probably just drop.
 
-The first series had to be reverted because inodes that had been
-modified in order could appear to be modified in reverse order with the
-right combination of fine and coarse grained timestamps. With the new
-floor value, that's no longer possible, but if we were to make it per-
-sb then it becomes possible again with files in different filesystems.
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	rqstp =3D kzalloc(sizeof(*rqstp), GFP_KERNEL);
+> +	if (!rqstp)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rqstp->rq_xprt =3D kzalloc(sizeof(*rqstp->rq_xprt), GFP_KERNEL);
+> +	if (!rqstp->rq_xprt) {
+> +		status =3D -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	rqstp->rq_xprt->xpt_net =3D net;
+> +	__set_bit(RQ_SECURE, &rqstp->rq_flags);
+> +	rqstp->rq_proc =3D 1;
+> +	rqstp->rq_vers =3D 3;
+> +	rqstp->rq_prot =3D IPPROTO_TCP;
+> +	rqstp->rq_server =3D nn->nfsd_serv;
+> +
+> +	/* Note: we're connecting to ourself, so source addr =3D=3D peer addr *=
+/
+> +	rqstp->rq_addrlen =3D rpc_peeraddr(rpc_clnt,
+> +			(struct sockaddr *)&rqstp->rq_addr,
+> +			sizeof(rqstp->rq_addr));
+> +
+> +	rpcauth_map_to_svc_cred_local(rpc_clnt->cl_auth, cred, &rqstp->rq_cred)=
+;
+> +
+> +	/*
+> +	 * set up enough for svcauth_unix_set_client to be able to wait
+> +	 * for the cache downcall. Note that we do _not_ want to allow the
+> +	 * request to be deferred for later revisit since this rqst and xprt
+> +	 * are not set up to run inside of the normal svc_rqst engine.
+> +	 */
+> +	INIT_LIST_HEAD(&rqstp->rq_xprt->xpt_deferred);
+> +	kref_init(&rqstp->rq_xprt->xpt_ref);
+> +	spin_lock_init(&rqstp->rq_xprt->xpt_lock);
+> +	rqstp->rq_chandle.thread_wait =3D 5 * HZ;
+> +
+> +	status =3D svcauth_unix_set_client(rqstp);
+> +	switch (status) {
+> +	case SVC_OK:
+> +		break;
+> +	case SVC_DENIED:
+> +		status =3D -ENXIO;
+> +		dprintk("%s: client %pISpc denied localio access\n",
+> +				__func__, (struct sockaddr *)&rqstp->rq_addr);
+> +		goto out_err;
+> +	default:
+> +		status =3D -ETIMEDOUT;
+> +		dprintk("%s: client %pISpc temporarily denied localio access\n",
+> +				__func__, (struct sockaddr *)&rqstp->rq_addr);
+> +		goto out_err;
+> +	}
+> +
+> +	return rqstp;
+> +
+> +out_err:
 
-This sort of timestamp comparison is done by tools like "make", and
-it's rather common to keep built objects in one location and generate
-or copy source files to another. My worry is that managing the floor as
-anything but a global value could cause regressions in those sorts of
-workloads.
+The two above can probably be turned into a single tracepoint here,
+though it might just be best to have a single tracepoint that always
+fires when this function exits.
 
->=20
-> > =C2=A0/*
-> > =C2=A0 * Empty aops. Can be used for the cases where the user does not
-> > =C2=A0 * define any of the address_space operations.
-> > @@ -2077,19 +2079,86 @@ int file_remove_privs(struct file *file)
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL(file_remove_privs);
-> > =C2=A0
-> > +/*
-> > + * The coarse-grained clock ticks once per jiffy (every 2ms or so). If=
- the
-> > + * current floor is >6ms in the future, assume that the clock has jump=
-ed
-> > + * backward.
-> > + */
-> > +#define CTIME_FLOOR_MAX_NS	6000000
-> > +
-> > +/**
-> > + * coarse_ctime - return the current coarse-grained time
-> > + * @floor: current ctime_floor value
-> > + *
-> > + * Get the coarse-grained time, and then determine whether to
-> > + * return it or the current floor value. Returns the later of the
-> > + * floor and coarse grained time, unless the floor value is too
-> > + * far into the future. If that happens, assume the clock has jumped
-> > + * backward, and that the floor should be ignored.
-> > + */
-> > +static ktime_t coarse_ctime(ktime_t floor)
-> > +{
-> > +	ktime_t now =3D ktime_get_coarse_real() & ~I_CTIME_QUERIED;
-> > +
-> > +	/* If coarse time is already newer, return that */
-> > +	if (ktime_before(floor, now))
-> > +		return now;
-> > +
-> > +	/* Ensure floor is not _too_ far in the future */
-> > +	if (ktime_after(floor, now + CTIME_FLOOR_MAX_NS))
-> > +		return now;
-> > +
-> > +	return floor;
-> > +}
-> > +
-> > +/**
-> > + * current_time - Return FS time (possibly fine-grained)
-> > + * @inode: inode.
-> > + *
-> > + * Return the current time truncated to the time granularity supported=
- by
-> > + * the fs, as suitable for a ctime/mtime change. If the ctime is flagg=
-ed
-> > + * as having been QUERIED, get a fine-grained timestamp.
-> > + */
-> > +struct timespec64 current_time(struct inode *inode)
-> > +{
-> > +	ktime_t ctime, floor =3D smp_load_acquire(&ctime_floor);
-> > +	ktime_t now =3D coarse_ctime(floor);
-> > +	struct timespec64 now_ts =3D ktime_to_timespec64(now);
-> > +
-> > +	if (!is_mgtime(inode))
-> > +		goto out;
-> > +
-> > +	/* If nothing has queried it, then coarse time is fine */
-> > +	ctime =3D smp_load_acquire(&inode->__i_ctime);
-> > +	if (ctime & I_CTIME_QUERIED) {
-> > +		/*
-> > +		 * If there is no apparent change, then
-> > +		 * get a fine-grained timestamp.
-> > +		 */
-> > +		if ((now | I_CTIME_QUERIED) =3D=3D ctime) {
-> > +			ktime_get_real_ts64(&now_ts);
-> > +			now_ts.tv_nsec &=3D ~I_CTIME_QUERIED;
-> > +		}
-> > +	}
-> > +out:
-> > +	return timestamp_truncate(now_ts, inode);
-> > +}
-> > +EXPORT_SYMBOL(current_time);
-> > +
-> > =C2=A0static int inode_needs_update_time(struct inode *inode)
-> > =C2=A0{
-> > +	struct timespec64 now, ts;
-> > =C2=A0	int sync_it =3D 0;
-> > -	struct timespec64 now =3D current_time(inode);
-> > -	struct timespec64 ts;
-> > =C2=A0
-> > =C2=A0	/* First try to exhaust all avenues to not sync */
-> > =C2=A0	if (IS_NOCMTIME(inode))
-> > =C2=A0		return 0;
-> > =C2=A0
-> > +	now =3D current_time(inode);
-> > +
-> > =C2=A0	ts =3D inode_get_mtime(inode);
-> > =C2=A0	if (!timespec64_equal(&ts, &now))
-> > -		sync_it =3D S_MTIME;
-> > +		sync_it |=3D S_MTIME;
-> > =C2=A0
-> > =C2=A0	ts =3D inode_get_ctime(inode);
-> > =C2=A0	if (!timespec64_equal(&ts, &now))
-> > @@ -2485,25 +2554,6 @@ struct timespec64 timestamp_truncate(struct time=
-spec64 t, struct inode *inode)
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL(timestamp_truncate);
-> > =C2=A0
-> > -/**
-> > - * current_time - Return FS time
-> > - * @inode: inode.
-> > - *
-> > - * Return the current time truncated to the time granularity supported=
- by
-> > - * the fs.
-> > - *
-> > - * Note that inode and inode->sb cannot be NULL.
-> > - * Otherwise, the function warns and returns time without truncation.
-> > - */
-> > -struct timespec64 current_time(struct inode *inode)
-> > -{
-> > -	struct timespec64 now;
-> > -
-> > -	ktime_get_coarse_real_ts64(&now);
-> > -	return timestamp_truncate(now, inode);
-> > -}
-> > -EXPORT_SYMBOL(current_time);
-> > -
-> > =C2=A0/**
-> > =C2=A0 * inode_get_ctime - fetch the current ctime from the inode
-> > =C2=A0 * @inode: inode from which to fetch ctime
-> > @@ -2518,12 +2568,18 @@ struct timespec64 inode_get_ctime(const struct =
-inode *inode)
-> > =C2=A0{
-> > =C2=A0	ktime_t ctime =3D inode->__i_ctime;
-> > =C2=A0
-> > +	if (is_mgtime(inode))
-> > +		ctime &=3D ~I_CTIME_QUERIED;
-> > =C2=A0	return ktime_to_timespec64(ctime);
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL(inode_get_ctime);
-> > =C2=A0
-> > =C2=A0struct timespec64 inode_set_ctime_to_ts(struct inode *inode, stru=
-ct timespec64 ts)
-> > =C2=A0{
-> > +	trace_inode_set_ctime_to_ts(inode, &ts);
-> > +
-> > +	if (is_mgtime(inode))
-> > +		ts.tv_nsec &=3D ~I_CTIME_QUERIED;
-> > =C2=A0	inode->__i_ctime =3D ktime_set(ts.tv_sec, ts.tv_nsec);
-> > =C2=A0	trace_inode_set_ctime_to_ts(inode, &ts);
-> > =C2=A0	return ts;
-> > @@ -2535,14 +2591,74 @@ EXPORT_SYMBOL(inode_set_ctime_to_ts);
-> > =C2=A0 * @inode: inode
-> > =C2=A0 *
-> > =C2=A0 * Set the inode->i_ctime to the current value for the inode. Ret=
-urns
-> > - * the current value that was assigned to i_ctime.
-> > + * the current value that was assigned to i_ctime. If this is a not
-> > + * multigrain inode, then we just set it to whatever the coarse time i=
-s.
-> > + *
-> > + * If it is multigrain, then we first see if the coarse-grained
-> > + * timestamp is distinct from what we have. If so, then we'll just use
-> > + * that. If we have to get a fine-grained timestamp, then do so, and
-> > + * try to swap it into the floor. We accept the new floor value
-> > + * regardless of the outcome of the cmpxchg. After that, we try to
-> > + * swap the new value into __i_ctime. Again, we take the resulting
-> > + * ctime, regardless of the outcome of the swap.
-> > =C2=A0 */
-> > =C2=A0struct timespec64 inode_set_ctime_current(struct inode *inode)
-> > =C2=A0{
-> > -	struct timespec64 now =3D current_time(inode);
-> > +	ktime_t ctime, now, cur, floor =3D smp_load_acquire(&ctime_floor);
-> > +
-> > +	now =3D coarse_ctime(floor);
-> > =C2=A0
-> > -	inode_set_ctime_to_ts(inode, now);
-> > -	return now;
-> > +	/* Just return that if this is not a multigrain fs */
-> > +	if (!is_mgtime(inode)) {
-> > +		inode->__i_ctime =3D now;
-> > +		goto out;
-> > +	}
-> > +
-> > +	/*
-> > +	 * We only need a fine-grained time if someone has queried it,
-> > +	 * and the current coarse grained time isn't later than what's
-> > +	 * already there.
-> > +	 */
-> > +	ctime =3D smp_load_acquire(&inode->__i_ctime);
-> > +	if ((ctime & I_CTIME_QUERIED) && !ktime_after(now, ctime & ~I_CTIME_Q=
-UERIED)) {
-> > +		ktime_t old;
-> > +
-> > +		/* Get a fine-grained time */
-> > +		now =3D ktime_get_real() & ~I_CTIME_QUERIED;
-> > +
-> > +		/*
-> > +		 * If the cmpxchg works, we take the new floor value. If
-> > +		 * not, then that means that someone else changed it after we
-> > +		 * fetched it but before we got here. That value is just
-> > +		 * as good, so keep it.
-> > +		 */
-> > +		old =3D cmpxchg(&ctime_floor, floor, now);
-> > +		trace_ctime_floor_update(inode, floor, now, old);
-> > +		if (old !=3D floor)
-> > +			now =3D old;
-> > +	}
-> > +retry:
-> > +	/* Try to swap the ctime into place. */
-> > +	cur =3D cmpxchg(&inode->__i_ctime, ctime, now);
-> > +	trace_ctime_inode_update(inode, ctime, now, cur);
-> > +
-> > +	/* If swap occurred, then we're done */
-> > +	if (cur !=3D ctime) {
-> > +		/*
-> > +		 * Was the change due to someone marking the old ctime QUERIED?
-> > +		 * If so then retry the swap. This can only happen once since
-> > +		 * the only way to clear I_CTIME_QUERIED is to stamp the inode
-> > +		 * with a new ctime.
-> > +		 */
-> > +		if (!(ctime & I_CTIME_QUERIED) && (ctime | I_CTIME_QUERIED) =3D=3D c=
-ur) {
-> > +			ctime =3D cur;
-> > +			goto retry;
-> > +		}
-> > +		/* Otherwise, take the new ctime */
-> > +		now =3D cur & ~I_CTIME_QUERIED;
-> > +	}
-> > +out:
-> > +	return timestamp_truncate(ktime_to_timespec64(now), inode);
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL(inode_set_ctime_current);
-> > =C2=A0
-> > diff --git a/fs/stat.c b/fs/stat.c
-> > index 6f65b3456cad..7e9bd16b553b 100644
-> > --- a/fs/stat.c
-> > +++ b/fs/stat.c
-> > @@ -22,10 +22,39 @@
-> > =C2=A0
-> > =C2=A0#include <linux/uaccess.h>
-> > =C2=A0#include <asm/unistd.h>
-> > +#include <trace/events/timestamp.h>
-> > =C2=A0
-> > =C2=A0#include "internal.h"
-> > =C2=A0#include "mount.h"
-> > =C2=A0
-> > +/**
-> > + * fill_mg_cmtime - Fill in the mtime and ctime and flag ctime as QUER=
-IED
-> > + * @stat: where to store the resulting values
-> > + * @request_mask: STATX_* values requested
-> > + * @inode: inode from which to grab the c/mtime
-> > + *
-> > + * Given @inode, grab the ctime and mtime out if it and store the resu=
-lt
-> > + * in @stat. When fetching the value, flag it as queried so the next w=
-rite
-> > + * will ensure a distinct timestamp.
-> > + */
-> > +void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode=
- *inode)
-> > +{
-> > +	atomic_long_t *pc =3D (atomic_long_t *)&inode->__i_ctime;
-> > +
-> > +	/* If neither time was requested, then don't report them */
-> > +	if (!(request_mask & (STATX_CTIME|STATX_MTIME))) {
-> > +		stat->result_mask &=3D ~(STATX_CTIME|STATX_MTIME);
-> > +		return;
-> > +	}
-> > +
-> > +	stat->mtime.tv_sec =3D inode->i_mtime_sec;
-> > +	stat->mtime.tv_nsec =3D inode->i_mtime_nsec;
-> > +	stat->ctime =3D ktime_to_timespec64(atomic_long_fetch_or(I_CTIME_QUER=
-IED, pc) &
-> > +						~I_CTIME_QUERIED);
-> > +	trace_fill_mg_cmtime(inode, atomic_long_read(pc));
-> > +}
-> > +EXPORT_SYMBOL(fill_mg_cmtime);
-> > +
-> > =C2=A0/**
-> > =C2=A0 * generic_fillattr - Fill in the basic attributes from the inode=
- struct
-> > =C2=A0 * @idmap:		idmap of the mount the inode was found from
-> > @@ -58,8 +87,14 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 r=
-equest_mask,
-> > =C2=A0	stat->rdev =3D inode->i_rdev;
-> > =C2=A0	stat->size =3D i_size_read(inode);
-> > =C2=A0	stat->atime =3D inode_get_atime(inode);
-> > -	stat->mtime =3D inode_get_mtime(inode);
-> > -	stat->ctime =3D inode_get_ctime(inode);
-> > +
-> > +	if (is_mgtime(inode)) {
-> > +		fill_mg_cmtime(stat, request_mask, inode);
-> > +	} else {
-> > +		stat->ctime =3D inode_get_ctime(inode);
-> > +		stat->mtime =3D inode_get_mtime(inode);
-> > +	}
-> > +
-> > =C2=A0	stat->blksize =3D i_blocksize(inode);
-> > =C2=A0	stat->blocks =3D inode->i_blocks;
-> > =C2=A0
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 4b10db12725d..5694cb6c4dc2 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -1608,6 +1608,23 @@ static inline struct timespec64 inode_set_mtime(=
-struct inode *inode,
-> > =C2=A0	return inode_set_mtime_to_ts(inode, ts);
-> > =C2=A0}
-> > =C2=A0
-> > +/*
-> > + * Multigrain timestamps
-> > + *
-> > + * Conditionally use fine-grained ctime and mtime timestamps when ther=
-e
-> > + * are users actively observing them via getattr. The primary use-case
-> > + * for this is NFS clients that use the ctime to distinguish between
-> > + * different states of the file, and that are often fooled by multiple
-> > + * operations that occur in the same coarse-grained timer tick.
-> > + *
-> > + * We use the least significant bit of the ktime_t to track the QUERIE=
-D
-> > + * flag. This means that filesystems with multigrain timestamps effect=
-ively
-> > + * have 2ns resolution for the ctime, even if they advertise 1ns s_tim=
-e_gran.
-> > + */
-> > +#define I_CTIME_QUERIED		(1LL)
-> > +
-> > +static inline bool is_mgtime(const struct inode *inode);
-> > +
-> > =C2=A0struct timespec64 inode_get_ctime(const struct inode *inode);
-> > =C2=A0struct timespec64 inode_set_ctime_to_ts(struct inode *inode, stru=
-ct timespec64 ts);
-> > =C2=A0
-> > @@ -2477,6 +2494,7 @@ struct file_system_type {
-> > =C2=A0#define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
-> > =C2=A0#define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission=
- events */
-> > =C2=A0#define FS_ALLOW_IDMAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FS has been updated to handle vf=
-s idmappings. */
-> > +#define FS_MGTIME		64	/* FS uses multigrain timestamps */
-> > =C2=A0#define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() du=
-ring rename() internally. */
-> > =C2=A0	int (*init_fs_context)(struct fs_context *);
-> > =C2=A0	const struct fs_parameter_spec *parameters;
-> > @@ -2500,6 +2518,17 @@ struct file_system_type {
-> > =C2=A0
-> > =C2=A0#define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
-> > =C2=A0
-> > +/**
-> > + * is_mgtime: is this inode using multigrain timestamps
-> > + * @inode: inode to test for multigrain timestamps
-> > + *
-> > + * Return true if the inode uses multigrain timestamps, false otherwis=
-e.
-> > + */
-> > +static inline bool is_mgtime(const struct inode *inode)
-> > +{
-> > +	return inode->i_sb->s_type->fs_flags & FS_MGTIME;
-> > +}
-> > +
-> > =C2=A0extern struct dentry *mount_bdev(struct file_system_type *fs_type=
-,
-> > =C2=A0	int flags, const char *dev_name, void *data,
-> > =C2=A0	int (*fill_super)(struct super_block *, void *, int));
-> > @@ -3234,6 +3263,7 @@ extern void page_put_link(void *);
-> > =C2=A0extern int page_symlink(struct inode *inode, const char *symname,=
- int len);
-> > =C2=A0extern const struct inode_operations page_symlink_inode_operation=
-s;
-> > =C2=A0extern void kfree_link(void *);
-> > +void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode=
- *inode);
-> > =C2=A0void generic_fillattr(struct mnt_idmap *, u32, struct inode *, st=
-ruct kstat *);
-> > =C2=A0void generic_fill_statx_attr(struct inode *inode, struct kstat *s=
-tat);
-> > =C2=A0extern int vfs_getattr_nosec(const struct path *, struct kstat *,=
- u32, unsigned int);
-> > diff --git a/include/trace/events/timestamp.h b/include/trace/events/ti=
-mestamp.h
-> > index 35ff875d3800..1f71738aa38c 100644
-> > --- a/include/trace/events/timestamp.h
-> > +++ b/include/trace/events/timestamp.h
-> > @@ -8,6 +8,78 @@
-> > =C2=A0#include <linux/tracepoint.h>
-> > =C2=A0#include <linux/fs.h>
-> > =C2=A0
-> > +TRACE_EVENT(ctime_floor_update,
-> > +	TP_PROTO(struct inode *inode,
-> > +		 ktime_t old,
-> > +		 ktime_t new,
-> > +		 ktime_t cur),
-> > +
-> > +	TP_ARGS(inode, old, new, cur),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(dev_t,				dev)
-> > +		__field(ino_t,				ino)
-> > +		__field(ktime_t,			old)
-> > +		__field(ktime_t,			new)
-> > +		__field(ktime_t,			cur)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->dev		=3D inode->i_sb->s_dev;
-> > +		__entry->ino		=3D inode->i_ino;
-> > +		__entry->old		=3D old;
-> > +		__entry->new		=3D new;
-> > +		__entry->cur		=3D cur;
-> > +	),
-> > +
-> > +	TP_printk("ino=3D%d:%d:%lu old=3D%llu.%lu new=3D%llu.%lu cur=3D%llu.%=
-lu swp=3D%c",
-> > +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
-> > +		ktime_to_timespec64(__entry->old).tv_sec,
-> > +		ktime_to_timespec64(__entry->old).tv_nsec,
-> > +		ktime_to_timespec64(__entry->new).tv_sec,
-> > +		ktime_to_timespec64(__entry->new).tv_nsec,
-> > +		ktime_to_timespec64(__entry->cur).tv_sec,
-> > +		ktime_to_timespec64(__entry->cur).tv_nsec,
-> > +		(__entry->old =3D=3D __entry->cur) ? 'Y' : 'N'
-> > +	)
-> > +);
-> > +
-> > +TRACE_EVENT(ctime_inode_update,
-> > +	TP_PROTO(struct inode *inode,
-> > +		 ktime_t old,
-> > +		 ktime_t new,
-> > +		 ktime_t cur),
-> > +
-> > +	TP_ARGS(inode, old, new, cur),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(dev_t,				dev)
-> > +		__field(ino_t,				ino)
-> > +		__field(ktime_t,			old)
-> > +		__field(ktime_t,			new)
-> > +		__field(ktime_t,			cur)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->dev		=3D inode->i_sb->s_dev;
-> > +		__entry->ino		=3D inode->i_ino;
-> > +		__entry->old		=3D old;
-> > +		__entry->new		=3D new;
-> > +		__entry->cur		=3D cur;
-> > +	),
-> > +
-> > +	TP_printk("ino=3D%d:%d:%ld old=3D%llu.%ld new=3D%llu.%ld cur=3D%llu.%=
-ld swp=3D%c",
-> > +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
-> > +		ktime_to_timespec64(__entry->old).tv_sec,
-> > +		ktime_to_timespec64(__entry->old).tv_nsec,
-> > +		ktime_to_timespec64(__entry->new).tv_sec,
-> > +		ktime_to_timespec64(__entry->new).tv_nsec,
-> > +		ktime_to_timespec64(__entry->cur).tv_sec,
-> > +		ktime_to_timespec64(__entry->cur).tv_nsec,
-> > +		(__entry->old =3D=3D __entry->cur ? 'Y' : 'N')
-> > +	)
-> > +);
-> > +
-> > =C2=A0TRACE_EVENT(inode_needs_update_time,
-> > =C2=A0	TP_PROTO(struct inode *inode,
-> > =C2=A0		 struct timespec64 *now,
-> > @@ -70,6 +142,31 @@ TRACE_EVENT(inode_set_ctime_to_ts,
-> > =C2=A0		__entry->ts_sec, __entry->ts_nsec
-> > =C2=A0	)
-> > =C2=A0);
-> > +
-> > +TRACE_EVENT(fill_mg_cmtime,
-> > +	TP_PROTO(struct inode *inode,
-> > +		 ktime_t ctime),
-> > +
-> > +	TP_ARGS(inode, ctime),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(dev_t,			dev)
-> > +		__field(ino_t,			ino)
-> > +		__field(ktime_t,		ctime)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->dev		=3D inode->i_sb->s_dev;
-> > +		__entry->ino		=3D inode->i_ino;
-> > +		__entry->ctime		=3D ctime;
-> > +	),
-> > +
-> > +	TP_printk("ino=3D%d:%d:%ld ctime=3D%llu.%lu",
-> > +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
-> > +		ktime_to_timespec64(__entry->ctime).tv_sec,
-> > +		ktime_to_timespec64(__entry->ctime).tv_nsec
-> > +	)
-> > +);
-> > =C2=A0#endif /* _TRACE_TIMESTAMP_H */
-> > =C2=A0
-> > =C2=A0/* This part must be outside protection */
-> >=20
-> > --=20
-> > 2.45.2
-> >=20
-> >=20
->=20
+> +	nfsd_local_fakerqst_destroy(rqstp);
+> +	return ERR_PTR(status);
+> +}
+> +
+> +/*
+> + * nfsd_open_local_fh - lookup a local filehandle @nfs_fh and map to @fi=
+le
+> + *
+> + * This function maps a local fh to a path on a local filesystem.
+> + * This is useful when the nfs client has the local server mounted - it =
+can
+> + * avoid all the NFS overhead with reads, writes and commits.
+> + *
+> + * on successful return, caller is responsible for calling path_put. Als=
+o
+> + * note that this is called from nfs.ko via find_symbol() to avoid an ex=
+plicit
+> + * dependency on knfsd. So, there is no forward declaration in a header =
+file
+> + * for it.
+> + */
+> +int nfsd_open_local_fh(struct net *net,
+> +			 struct rpc_clnt *rpc_clnt,
+> +			 const struct cred *cred,
+> +			 const struct nfs_fh *nfs_fh,
+> +			 const fmode_t fmode,
+> +			 struct file **pfilp)
+> +{
+> +	const struct cred *save_cred;
+> +	struct svc_rqst *rqstp;
+> +	struct svc_fh fh;
+> +	struct nfsd_file *nf;
+> +	int status =3D 0;
+> +	int mayflags =3D NFSD_MAY_LOCALIO;
+> +	__be32 beres;
+> +
+> +	/* Save creds before calling into nfsd */
+> +	save_cred =3D get_current_cred();
+> +
+> +	rqstp =3D nfsd_local_fakerqst_create(net, rpc_clnt, cred);
+> +	if (IS_ERR(rqstp)) {
+> +		status =3D PTR_ERR(rqstp);
+> +		goto out_revertcred;
+> +	}
+> +
+> +	/* nfs_fh -> svc_fh */
+> +	if (nfs_fh->size > NFS4_FHSIZE) {
+> +		status =3D -EINVAL;
+> +		goto out;
+> +	}
+> +	fh_init(&fh, NFS4_FHSIZE);
+> +	fh.fh_handle.fh_size =3D nfs_fh->size;
+> +	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
+> +
+> +	if (fmode & FMODE_READ)
+> +		mayflags |=3D NFSD_MAY_READ;
+> +	if (fmode & FMODE_WRITE)
+> +		mayflags |=3D NFSD_MAY_WRITE;
+> +
+> +	beres =3D nfsd_file_acquire(rqstp, &fh, mayflags, &nf);
+> +	if (beres) {
+> +		status =3D nfs_stat_to_errno(be32_to_cpu(beres));
+> +		dprintk("%s: fh_verify failed %d\n", __func__, status);
+
+This should also be a tracepoint.
+
+> +		goto out_fh_put;
+> +	}
+> +
+> +	*pfilp =3D get_file(nf->nf_file);
+> +
+> +	nfsd_file_put(nf);
+> +out_fh_put:
+> +	fh_put(&fh);
+> +
+> +out:
+> +	nfsd_local_fakerqst_destroy(rqstp);
+> +out_revertcred:
+> +	revert_creds(save_cred);
+> +	return status;
+> +}
+> +EXPORT_SYMBOL_GPL(nfsd_open_local_fh);
+> +
+> +/* Compile time type checking, not used by anything */
+> +static nfs_to_nfsd_open_t __maybe_unused nfsd_open_local_fh_typecheck =
+=3D nfsd_open_local_fh;
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 1222a0a33fe1..a477d2c5088a 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -431,6 +431,7 @@ static int nfsd_startup_net(struct net *net, const st=
+ruct cred *cred)
+> =C2=A0#endif
+> =C2=A0#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+> =C2=A0	INIT_LIST_HEAD(&nn->nfsd_uuid.list);
+> +	nn->nfsd_uuid.net =3D net;
+> =C2=A0	list_add_tail_rcu(&nn->nfsd_uuid.list, &nfsd_uuids);
+> =C2=A0#endif
+> =C2=A0	nn->nfsd_net_up =3D true;
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 77bbd23aa150..9c0610fdd11c 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -86,7 +86,8 @@ DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
+> =C2=A0		{ NFSD_MAY_NOT_BREAK_LEASE,	"NOT_BREAK_LEASE" },	\
+> =C2=A0		{ NFSD_MAY_BYPASS_GSS,		"BYPASS_GSS" },		\
+> =C2=A0		{ NFSD_MAY_READ_IF_EXEC,	"READ_IF_EXEC" },	\
+> -		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" })
+> +		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" },	\
+> +		{ NFSD_MAY_LOCALIO,		"LOCALIO" })
+> =C2=A0
+> =C2=A0TRACE_EVENT(nfsd_compound,
+> =C2=A0	TP_PROTO(
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index 57cd70062048..5146f0c81752 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -33,6 +33,8 @@
+> =C2=A0
+> =C2=A0#define NFSD_MAY_64BIT_COOKIE		0x1000 /* 64 bit readdir cookies for=
+ >=3D NFSv3 */
+> =C2=A0
+> +#define NFSD_MAY_LOCALIO		0x2000
+> +
+> =C2=A0#define NFSD_MAY_CREATE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE)
+> =C2=A0#define NFSD_MAY_REMOVE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE|NFSD_MAY_TRU=
+NC)
+> =C2=A0
+> @@ -158,6 +160,13 @@ __be32		nfsd_permission(struct svc_rqst *, struct sv=
+c_export *,
+> =C2=A0
+> =C2=A0void		nfsd_filp_close(struct file *fp);
+> =C2=A0
+> +int		nfsd_open_local_fh(struct net *net,
+> +				=C2=A0=C2=A0 struct rpc_clnt *rpc_clnt,
+> +				=C2=A0=C2=A0 const struct cred *cred,
+> +				=C2=A0=C2=A0 const struct nfs_fh *nfs_fh,
+> +				=C2=A0=C2=A0 const fmode_t fmode,
+> +				=C2=A0=C2=A0 struct file **pfilp);
+> +
+> =C2=A0static inline int fh_want_write(struct svc_fh *fh)
+> =C2=A0{
+> =C2=A0	int ret;
 
 --=20
 Jeff Layton <jlayton@kernel.org>
