@@ -1,119 +1,177 @@
-Return-Path: <linux-nfs+bounces-4362-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4363-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E88F1919CC5
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 03:04:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37C1391A34D
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 12:01:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3BB8282ABE
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 01:04:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEC671F22F12
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jun 2024 10:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECD271B52;
-	Thu, 27 Jun 2024 01:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3DD871B3A;
+	Thu, 27 Jun 2024 10:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwfaFDJ/"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="B4Ds9cp/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2407A6FE21;
-	Thu, 27 Jun 2024 01:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C366A4501F
+	for <linux-nfs@vger.kernel.org>; Thu, 27 Jun 2024 10:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719450057; cv=none; b=FkgEJl656rQ7V6RkTpAYCqtS2ni91oII2zY4E02pdN9aqQ3RaYf6iZH80MvzfbZgl8q0R/yfFmNAVK0U54TBbWglW0fe1aS2WUMqHAhSivk1EnJfdkgyup1SGb17K1/nih5qaJX3Kk8VfvH0Kf+FF09trKuGk+Pf9j1oqVwUF+E=
+	t=1719482495; cv=none; b=dApOelfde1J5xMJP5J07bte6VQAXWrnWFfImmh8ewf21HJpXCMIDGxDEAQFLo8dnBVMql63YOzJuyKtOhuZFPtWTnsaHdS6n3QbBqaXXMziiUi7tuaOa9vn6B/ReKdRg2s7N0mDe2ciMUee5GzMzSLSPxpYRylD7H9M9tsKbiA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719450057; c=relaxed/simple;
-	bh=cVjMReDf/y0/Eps4SzleHHnDCMnHwvcYHN7Dj4UkNNg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VeiNBurWdn0Ftj7D7500gdk+eyTCSdobeqUDrn+c63gazqNjf5TGDC1+HQ+ROtwXJ4fPvucUTCvP/qEtDgvTfvDYAf770DybC1kI0J4Zzdi+8V9bSYOGZc92ns6qTEo3rc/bUDNvYsKshMmc/ARiRy7BBNT7cV2upn+egNW73NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwfaFDJ/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F045DC116B1;
-	Thu, 27 Jun 2024 01:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719450057;
-	bh=cVjMReDf/y0/Eps4SzleHHnDCMnHwvcYHN7Dj4UkNNg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nwfaFDJ/c30GiYmVc82cD+AdVo7ASrnc05c022cx7CwFpW+ctla+QGAWhR7g1u/0N
-	 FYQFKuzWEbo7DOQHlPOPzqZ9JMeE0rDVK2Z9M4eU1oHAd2ynL1MMg1rhKgKBK5LXIA
-	 N57GBUcpsaC9GC0Vd33/hTbi+JuMNBPY7ftTa2coNIlhKyUl9lKFV375aDLvjgKRlh
-	 W34ZJnjvdQcAdBbpmX5o392KQ/rt6/HfqCiZTEzUsxfJdRLGhocUh1i3gvv/k3wsHo
-	 0HntC5Inb6+MF0og3whrwgsMnla76xGCkDZAFd7OXXdWHpqiiGu+SiRTccaF1IsHZd
-	 ziBcVX92FrFqw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 26 Jun 2024 21:00:30 -0400
-Subject: [PATCH 10/10] tmpfs: add support for multigrain timestamps
+	s=arc-20240116; t=1719482495; c=relaxed/simple;
+	bh=yPJyYSeU5VmheAo4lTrsfMptclBHkcndYqGbKyDloyE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Yq/EOBNVLCl5vT9Gr+oFaE6S/ZM80Q0reAhKysP/k7XlmlrdV88Vt6rHZEPCKWwB3XGKDdwFb5Z1N1MPIe8zUMfu7syxXrQZ9G1V/ni4So2OHk34e3tTqyMV+lQsgi/nhAl09mFV0ZRnQl0M05mBe6SLdepAFRE1QRX6ZgjOo2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=B4Ds9cp/; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so449981fa.0
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jun 2024 03:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1719482491; x=1720087291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=16FykWRljFOxc2fhfDF33MaQd3ZkvRluKtEq7iRVdGs=;
+        b=B4Ds9cp/wgVcBhQ4QXq3w53gmLGVMAl5QX1dpJP/X3N1TLZ3JULvaqvJsMWKIJRV7I
+         8J482UL1ZGqR9t9yQFc9ThSelemM7CsKHJyAXhx/xizXrCNrMciQPl+ad/0olrUigmc2
+         Nwzsxk2k8depemwf1eeKY/b5X+vNroQNP4qO/381CUWacMzo9iJ3/0eInIhm15ouQXOG
+         pdiFhrpskrYbkay4nh7ZUirIp+S+GWddi050Bz2yeHKYcXer6gyfI76eaBoWblpV4OV8
+         MzZ2axKWbkmJPx0kZhxODAAgN5RQt6dK2pZC4KfiZdkP70kmEsP0lMLjmhd2qslWGmd2
+         DbKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719482491; x=1720087291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=16FykWRljFOxc2fhfDF33MaQd3ZkvRluKtEq7iRVdGs=;
+        b=PCZRoF2u3BY7iqWj/LD+giywcAhG3/WNzXigCexPA4SQsSDdHT3MDFSoTIxKysTGeQ
+         wI/BzookG7iPy+XmXEyLtF0mbS3xZCjxmU1CQ4k1ltE4rbHG3BNsl+YQrbUAnXSgHp6n
+         2Ol/qcTLihoPdNBo8GpfHDlgB4VPm/5fD27WVecpMRpEC5L/DC9lb6gY+ifT1ziToo7F
+         RidxZxIaphqQnUdlUShNLW7htJHoTD6UhvayjjeoQQ93bG911iGwj9vUc8hl7FY8vKmB
+         ug39aCgBqBkwP3y9lQgTEC9f2JxtP11UTUVWbKb2WeJsjdQtIZgGuPh7qQgqrVVdgiQB
+         7ctw==
+X-Gm-Message-State: AOJu0Yx2Pc3QMntqCtnUKUxqnEzScqFXpuLIqrQqFzGjF53J1gNawf68
+	lOqujq3yXf1MoiJMfu+JUuNsd5Ijf2mC6V4PKDXEH1wgOBvTY6w4SiqUMWhNwYD7tAehkWazCib
+	Y
+X-Google-Smtp-Source: AGHT+IHgFay0vbUOn5s5dcknnWF0o72jsFw0nuCBBLtT97W4+7E9kh/OL2g3T9vHtWe/Oe94KC3mYw==
+X-Received: by 2002:a2e:b173:0:b0:2ec:5945:62e9 with SMTP id 38308e7fff4ca-2ee4645fff7mr26280391fa.32.1719482491332;
+        Thu, 27 Jun 2024 03:01:31 -0700 (PDT)
+Received: from jupiter.vstd.int ([176.230.79.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42564b65a0fsm18995405e9.16.2024.06.27.03.01.30
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 03:01:30 -0700 (PDT)
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: add 'noalignwrite' option for lock-less 'lost writes' prevention
+Date: Thu, 27 Jun 2024 13:01:29 +0300
+Message-Id: <20240627100129.2482408-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-mgtime-v1-10-a189352d0f8f@kernel.org>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
-In-Reply-To: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=775; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=cVjMReDf/y0/Eps4SzleHHnDCMnHwvcYHN7Dj4UkNNg=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmfLmvmuG1qE25UPrDynn3xIhwH5hC1wcY+8bCj
- oncJyX2Q2OJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZny5rwAKCRAADmhBGVaC
- FZiQEADD/GWDUAnr+QPK/65D/8cdJ2MjbHRshcq6JjFg04ftIlKReTiXHUgZFibwslcU1/KJXqA
- AeCQYsajkGNfClYJdPooe+9fYkC/bZ9TuTbCx8vgEkdy5spW1PqMwKpcYnaOtz0rt+y7f+dDbvZ
- Il5HQomOyFFjic4OS56a9d3g7ZKHKrMT25Wr1E2xXYMp/1TFSnsZ6PzqJZC83R08MKAk9AiLN8W
- ATgs3TQWKeBloEOKCB49jcfGIHtirxKLivKHL04iaZImju21FOjEedEXy021mtUKZyS7/UIF7Vy
- 7tSTQr9F9vTxs93vtzmWUDC0cLFTtfaog4o/C9zuhVTW/mjZ4JmWIalSU6uBqnFqemiucQSCe45
- q9afVDCLHijyoaX+aX1D2/8vYg//+/oDAPzmt0VmULKwekM+f3ZtbPVKqSOI9HaVAhV769zRd9u
- MWeehoAPSlcJTBKBZrQVCIX5aX7q0CQnuN7+t/nESwmDBtRnwLzpAj//XiDM68TFxPn6wHMV+O3
- e0sUqEzWfynVDKhu9OXrLQb1Pq0wfWdW/G60LQlJCK1iST4tmUat5GbRh6rexvj9nTJXgdnyJ0R
- YLi8/dD1+0aE1S1yt8LtuIzPrKFhLnTNMcmcmi1DKRiDPpKRcRqI7FY3mFi18w9FfIKybfXInFJ
- Sm7/fCDwxamE4rw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+There are some applications that write to predefined non-overlapping
+file offsets from multiple clients and therefore don't need to rely on
+file locking. However, if these applications want non-aligned offsets
+and sizes they need to either use locks or risk data corruption, as the
+NFS client defaults to extending writes to whole pages.
 
-tmpfs only requires the FS_MGTIME flag.
+This commit adds a new mount option `noalignwrite`, which allows to turn
+that off and avoid the need of locking, as long as these applications
+don't overlap on offsets.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
 ---
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/fs_context.c       | 8 ++++++++
+ fs/nfs/super.c            | 3 +++
+ fs/nfs/write.c            | 3 +++
+ include/linux/nfs_fs_sb.h | 1 +
+ 4 files changed, 15 insertions(+)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index ff7c756a7d02..d650f48444e0 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4653,7 +4653,7 @@ static struct file_system_type shmem_fs_type = {
- 	.parameters	= shmem_fs_parameters,
- #endif
- 	.kill_sb	= kill_litter_super,
--	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-+	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
- };
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 6c9f3f6645dd..7e000d782e28 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -49,6 +49,7 @@ enum nfs_param {
+ 	Opt_bsize,
+ 	Opt_clientaddr,
+ 	Opt_cto,
++	Opt_alignwrite,
+ 	Opt_fg,
+ 	Opt_fscache,
+ 	Opt_fscache_flag,
+@@ -149,6 +150,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_u32   ("bsize",		Opt_bsize),
+ 	fsparam_string("clientaddr",	Opt_clientaddr),
+ 	fsparam_flag_no("cto",		Opt_cto),
++	fsparam_flag_no("alignwrite",	Opt_alignwrite),
+ 	fsparam_flag  ("fg",		Opt_fg),
+ 	fsparam_flag_no("fsc",		Opt_fscache_flag),
+ 	fsparam_string("fsc",		Opt_fscache),
+@@ -592,6 +594,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		else
+ 			ctx->flags |= NFS_MOUNT_TRUNK_DISCOVERY;
+ 		break;
++	case Opt_alignwrite:
++		if (result.negated)
++			ctx->flags |= NFS_MOUNT_NO_ALIGNWRITE;
++		else
++			ctx->flags &= ~NFS_MOUNT_NO_ALIGNWRITE;
++		break;
+ 	case Opt_ac:
+ 		if (result.negated)
+ 			ctx->flags |= NFS_MOUNT_NOAC;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index cbbd4866b0b7..1382ae19bba4 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -549,6 +549,9 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
+ 	else
+ 		seq_puts(m, ",local_lock=posix");
  
- void __init shmem_init(void)
-
++	if (nfss->flags & NFS_MOUNT_NO_ALIGNWRITE)
++		seq_puts(m, ",noalignwrite");
++
+ 	if (nfss->flags & NFS_MOUNT_WRITE_EAGER) {
+ 		if (nfss->flags & NFS_MOUNT_WRITE_WAIT)
+ 			seq_puts(m, ",write=wait");
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 2329cbb0e446..cfe8061bf005 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1315,7 +1315,10 @@ static int nfs_can_extend_write(struct file *file, struct folio *folio,
+ 	struct file_lock_context *flctx = locks_inode_context(inode);
+ 	struct file_lock *fl;
+ 	int ret;
++	unsigned int mntflags = NFS_SERVER(inode)->flags;
+ 
++	if (mntflags & NFS_MOUNT_NO_ALIGNWRITE)
++		return 0;
+ 	if (file->f_flags & O_DSYNC)
+ 		return 0;
+ 	if (!nfs_folio_write_uptodate(folio, pagelen))
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 92de074e63b9..4d28b4a328a7 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -157,6 +157,7 @@ struct nfs_server {
+ #define NFS_MOUNT_WRITE_WAIT		0x02000000
+ #define NFS_MOUNT_TRUNK_DISCOVERY	0x04000000
+ #define NFS_MOUNT_SHUTDOWN			0x08000000
++#define NFS_MOUNT_NO_ALIGNWRITE		0x10000000
+ 
+ 	unsigned int		fattr_valid;	/* Valid attributes */
+ 	unsigned int		caps;		/* server capabilities */
 -- 
-2.45.2
+2.39.3
 
 
