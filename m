@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53AFB91C7DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 23:11:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC0AF91C7DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 23:11:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2F711F23429
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 21:11:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC8181C2115D
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 21:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3038B7BB06;
-	Fri, 28 Jun 2024 21:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 865F17EEF5;
+	Fri, 28 Jun 2024 21:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTpG2mWD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sv6O5PwW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2357603A
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Jun 2024 21:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622117E591
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Jun 2024 21:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719609077; cv=none; b=YoF99I8jGMLbjjdcHBoSLsVTmMP+qKhkicT0jcwEVIF64Fp9FCHG7N4/YuQtKMbB8q5OKK3pbuBR1vDCqG7A1Ep8zpryWMGFON9fQdElx6sE0yqsb45rY+dkTAdtrbdcxMRBvC+Fe9DLUblTO4rd8O3gMd49G4+GO27GILIAb1g=
+	t=1719609078; cv=none; b=cDxzkZ/YaGPzNtt5OMXPp9Uh0+46BhKt/CE+WlV9SYxVkZG+382v+27yFMIZGaPZ1R9SyJbDIyy2CeDW2WzNMzfDyX+wI0xWvOifk6Xmv2ChkPSjw1MRnwJdbZU6h70OYF6nB7TbwoIAz7aEWX/CBXooUyVU5yVH+tAioqzkjEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719609077; c=relaxed/simple;
-	bh=XhEv8fwdZACCNVWBPNo7yZqRCS+Wc21X92zuNOcifjI=;
+	s=arc-20240116; t=1719609078; c=relaxed/simple;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q+zAh2EgGnlrDzODN6g2NQ1z2Xd+xECWaYageQ9X2T9S7uQNKQtlWfEAFeto9bJUD+x4I9Mf+K7NYcNrfN0/NvdAHIu4EaHuk7jpJBuCWpp1rV4v1eMGUBdZJrZq6naosjfFofh2fQbFu1F4BZB10DqYSc5Ac4Gck3k3wVbRGxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTpG2mWD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736FDC116B1;
-	Fri, 28 Jun 2024 21:11:16 +0000 (UTC)
+	 MIME-Version; b=WAF5I/1uM3suWvjjXlbkKfNZcux+WkhanEqtzxXyDkRlhP8IKpXPsmc67MIiZF0MBtHc4dljt/Ap8KIOK+EpIJPitW0KSZDxi6uJlPNDxwhGQk5AivktVPJrf0e0po4uAdZVy7+DuSgel7kFV42S8QRPQRBXPnlcRnZ1eK/ohbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sv6O5PwW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA076C116B1;
+	Fri, 28 Jun 2024 21:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719609076;
-	bh=XhEv8fwdZACCNVWBPNo7yZqRCS+Wc21X92zuNOcifjI=;
+	s=k20201202; t=1719609077;
+	bh=X3eeEYlS9YLp7iD3PjCjsrl81HV+UMdSCrHhb+Bvz6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jTpG2mWDgzmSIxBy40LEpfyYDlx0V7L+IRzDLkCQn9+KwXM8xHiNXC2Q0EccSzvVD
-	 URKvVhgWrQBS0yqmUa0YpSCzNrJ659T3UA2UHgdjwygwDiPp+wTCKVLp50ILwrm828
-	 gQPU6xgRQA3SZxay71zn5+3g4CC8RRGym/dh80Lv0UA31/vKDZ9AYG3gDLlxjzHd+Z
-	 Bkwe+FDzJzhlrut9J/UMj3qgcDlIEBseh56g1p2sGzmi/HUYV4BiSvhNLXoApzpWOq
-	 QkxjMa/rElY1HCo74bvaeg93ILa0uLroQV+VsOqweIFK9G/t+Z9/9iGG1bxkLkgkQ5
-	 Agi8Zg7Saix/A==
+	b=Sv6O5PwWJgzQpQlnOgmJvBVVSQrLUhaW0SaNcgXwIPdSqk/+lRYnaI8sKsdatigaX
+	 C6eFGFNzzZ7uR6E/t97IzS/i+XV3IxmMWmFpOvcI6qnJsr4shzIKZ74bqIn9mC96eE
+	 TgZNWXmTJtU6uWChPsdjGiWurdOze65nYDnheiMvDQ/PMpMUmVhTGtoTAUGpq8hb1L
+	 54vSjTXilEwkmnPUvpwX5KXrH7x0FHvid8kICW8ew9OzQ9sl9L+DcT2GHjPZVBw1ER
+	 qcBl5FiW/94A4JzxbUq0WXkVel5DnQLXwVemxX4zCJsPrvfDiqPB1pKXofOuEUf+Y0
+	 cwoTR7erw7bbw==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v9 07/19] nfs/localio: fix nfs_localio_vfs_getattr() to properly support v4
-Date: Fri, 28 Jun 2024 17:10:53 -0400
-Message-ID: <20240628211105.54736-8-snitzer@kernel.org>
+Subject: [PATCH v9 08/19] nfs: enable localio for non-pNFS I/O
+Date: Fri, 28 Jun 2024 17:10:54 -0400
+Message-ID: <20240628211105.54736-9-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240628211105.54736-1-snitzer@kernel.org>
 References: <20240628211105.54736-1-snitzer@kernel.org>
@@ -63,101 +63,85 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is nfs-localio code which blurs the boundary between server and
-client...
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The change_attr is used by NFS to detect if a file might have changed.
-This code is used to get the attributes after a write request.  NFS
-uses a GETATTR request to the server at other times.  The change_attr
-should be consistent between the two else comparisons will be
-meaningless.
+Try a local open of the file we're writing to, and if it succeeds, then
+do local I/O.
 
-So nfs_localio_vfs_getattr() should use the same change_attr as the
-one that would be used if the NFS GETATTR request were made.  For
-NFSv3, that is nfs_timespec_to_change_attr() as was already
-implemented.  For NFSv4 it is something different (as implemented in
-this commit).
-
-[above header derived from linux-nfs message Neil sent on this topic]
-Suggested-by: NeilBrown <neil@brown.name>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfs/localio.c | 48 +++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 39 insertions(+), 9 deletions(-)
+ fs/nfs/pagelist.c | 19 ++++++++++---------
+ fs/nfs/write.c    |  7 ++++++-
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index 0f7d6d55087b..fe96f05ba8ca 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -364,21 +364,47 @@ nfs_set_local_verifier(struct inode *inode,
- 	verf->committed = how;
- }
- 
-+/* Factored out from fs/nfsd/vfs.h:fh_getattr() */
-+static int __vfs_getattr(struct path *p, struct kstat *stat, int version)
-+{
-+	u32 request_mask = STATX_BASIC_STATS;
-+
-+	if (version == 4)
-+		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
-+	return vfs_getattr(p, stat, request_mask, AT_STATX_SYNC_AS_STAT);
-+}
-+
-+/*
-+ * Copied from fs/nfsd/nfsfh.c:nfsd4_change_attribute(),
-+ * FIXME: factor out to common code.
-+ */
-+static u64 __nfsd4_change_attribute(const struct kstat *stat,
-+				    const struct inode *inode)
-+{
-+	u64 chattr;
-+
-+	if (stat->result_mask & STATX_CHANGE_COOKIE) {
-+		chattr = stat->change_cookie;
-+		if (S_ISREG(inode->i_mode) &&
-+		    !(stat->attributes & STATX_ATTR_CHANGE_MONOTONIC)) {
-+			chattr += (u64)stat->ctime.tv_sec << 30;
-+			chattr += stat->ctime.tv_nsec;
-+		}
-+	} else {
-+		chattr = time_to_chattr(&stat->ctime);
-+	}
-+	return chattr;
-+}
-+
- static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index b08420b8e664..3ee78da5ebc4 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1063,6 +1063,7 @@ EXPORT_SYMBOL_GPL(nfs_generic_pgio);
+ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
  {
- 	struct kstat stat;
- 	struct file *filp = iocb->kiocb.ki_filp;
- 	struct nfs_pgio_header *hdr = iocb->hdr;
- 	struct nfs_fattr *fattr = hdr->res.fattr;
-+	int version = NFS_PROTO(hdr->inode)->version;
+ 	struct nfs_pgio_header *hdr;
++	struct file *filp;
+ 	int ret;
+ 	unsigned short task_flags = 0;
  
--	if (unlikely(!fattr) || vfs_getattr(&filp->f_path, &stat,
--					    STATX_INO |
--					    STATX_ATIME |
--					    STATX_MTIME |
--					    STATX_CTIME |
--					    STATX_SIZE |
--					    STATX_BLOCKS,
--					    AT_STATX_SYNC_AS_STAT))
-+	if (unlikely(!fattr) || __vfs_getattr(&filp->f_path, &stat, version))
- 		return;
+@@ -1074,18 +1075,18 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ 	nfs_pgheader_init(desc, hdr, nfs_pgio_header_free);
+ 	ret = nfs_generic_pgio(desc, hdr);
+ 	if (ret == 0) {
++		struct nfs_client *clp = NFS_SERVER(hdr->inode)->nfs_client;
++
++		filp = nfs_local_file_open(clp, hdr->cred, hdr->args.fh,
++					   hdr->args.context);
++
+ 		if (NFS_SERVER(hdr->inode)->nfs_client->cl_minorversion)
+ 			task_flags = RPC_TASK_MOVEABLE;
+-		ret = nfs_initiate_pgio(desc,
+-					NFS_SERVER(hdr->inode)->nfs_client,
+-					NFS_CLIENT(hdr->inode),
+-					hdr,
+-					hdr->cred,
+-					NFS_PROTO(hdr->inode),
+-					desc->pg_rpc_callops,
+-					desc->pg_ioflags,
++		ret = nfs_initiate_pgio(desc, clp, NFS_CLIENT(hdr->inode),
++					hdr, hdr->cred, NFS_PROTO(hdr->inode),
++					desc->pg_rpc_callops, desc->pg_ioflags,
+ 					RPC_TASK_CRED_NOREF | task_flags,
+-					NULL);
++					filp);
+ 	}
+ 	return ret;
+ }
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index b29b0fd5431f..b2c06b8b88cd 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1802,6 +1802,8 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 		struct nfs_commit_info *cinfo)
+ {
+ 	struct nfs_commit_data	*data;
++	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
++	struct file *filp;
+ 	unsigned short task_flags = 0;
  
- 	fattr->valid = (NFS_ATTR_FATTR_FILEID |
-@@ -394,7 +420,11 @@ static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
- 	fattr->atime = stat.atime;
- 	fattr->mtime = stat.mtime;
- 	fattr->ctime = stat.ctime;
--	fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
-+	if (version == 4) {
-+		fattr->change_attr =
-+			__nfsd4_change_attribute(&stat, file_inode(filp));
-+	} else
-+		fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
- 	fattr->du.nfs3.used = stat.blocks << 9;
+ 	/* another commit raced with us */
+@@ -1818,9 +1820,12 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 	nfs_init_commit(data, head, NULL, cinfo);
+ 	if (NFS_SERVER(inode)->nfs_client->cl_minorversion)
+ 		task_flags = RPC_TASK_MOVEABLE;
++
++	filp = nfs_local_file_open(clp, data->cred, data->args.fh,
++				   data->context);
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+ 				   data->mds_ops, how,
+-				   RPC_TASK_CRED_NOREF | task_flags, NULL);
++				   RPC_TASK_CRED_NOREF | task_flags, filp);
  }
  
+ /*
 -- 
 2.44.0
 
