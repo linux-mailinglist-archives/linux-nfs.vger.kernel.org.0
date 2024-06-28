@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-4401-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4402-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 406C791C7E5
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C17191C7E6
 	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 23:11:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA2F4B21565
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 21:11:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D39881F2368F
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jun 2024 21:11:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2DB80638;
-	Fri, 28 Jun 2024 21:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22E080BF7;
+	Fri, 28 Jun 2024 21:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skzHAaAM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4JwU+Oo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC6F80611
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Jun 2024 21:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E19F80BF2
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Jun 2024 21:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719609092; cv=none; b=MXUvQovZdi8anG7idGqJxVWP0L9ehC7YnJQjnkjQ9D6K1z+awIuqzE0reRF9ViHeATiw15MX7r+BajZxxhv1y8+6ef6Lgpwp1wEJ16quZD1nAKVqIh2qgXH0+0XlDQW+sD4/oXTyVbTLm0diVDcusZjpO1H/DZ7L2tX13R+5GOM=
+	t=1719609093; cv=none; b=KuQtra7CpGoP0G0PfE/YtOH6gXCysDX09KxcA9MD9jQFqG7qrkPJyqpyDSuB8JXphaMKhuvJqpOZzFxY8FASP7xQcob6XwjL8w7R033EU3d2S4ttWdMO6WNO9JYZy50o/yOCtF72LPZFcBTed/vkkMcukWdxV765swK/1lg8he4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719609092; c=relaxed/simple;
-	bh=JOlXV7VrRs69ILlO0HLeRSkT1F4k9jqZHBkVvKGFEMQ=;
+	s=arc-20240116; t=1719609093; c=relaxed/simple;
+	bh=fIeBSLZr0SrIVnozCurcXsB/NWqRoXeeEaAncq/MJTU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V00OgklAANwAQhmsRahflcA/xQr/LdHbYJdWVSA14YFBjV+LNt5Bss/nClxSP57G6qU7ijL0CGZLW+UNtY7A5MCY/nmV71L+Lvvnp0F5P5b95EobWUvb4jVoSF/xOmY21MC4PGk6LyrsLd+2u7A0HRbyifZWdisxxUihgCTCa4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skzHAaAM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D21C116B1;
-	Fri, 28 Jun 2024 21:11:31 +0000 (UTC)
+	 MIME-Version; b=IWaLZhpDZdsNTh+E/Jbh0qW6pNUjSPo/Y58WqGp1yDE1L4+pReyFVAghmhruAXX8FdS5oiGuR7SRSAMyNhkqihEYR2fnZ8k3Q2TQXv7FnDkUie9WEDWDSUu32xrBx3V3rzzDx0Vwu5ftfrS4fY+Qug+omgY3S3jEwpZiwMRAtQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4JwU+Oo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8D1C116B1;
+	Fri, 28 Jun 2024 21:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719609092;
-	bh=JOlXV7VrRs69ILlO0HLeRSkT1F4k9jqZHBkVvKGFEMQ=;
+	s=k20201202; t=1719609093;
+	bh=fIeBSLZr0SrIVnozCurcXsB/NWqRoXeeEaAncq/MJTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=skzHAaAMXEVdFedNE6pvP9w/Av9DF9tWrhXe943S0RfeVvjiXVrzjUN+TjXxERb+5
-	 UbNf8DcadRIDbzbdSN+XlEkdVLBbLX5bcT2LXlrTUx6yJYrAKC2a8voaJIqj1vzTqg
-	 NEkdMXzN8NKDsdDGUum/206ZN2GJ1GUl6pwUF9F/g3IETnCpeUHc9EoQt3P/IdTmFo
-	 3rtpzzA704Hwz1/Fhjq52KaOv9E9lu2mRofiWeb9Tx7mv54kpZMGwB6498wbcm8kOx
-	 g2aL+YpyxpFC50yQmrRiADHXqKkAsZYzO2qkJDWVLMmDFGtrcEsBvyP7bdhYt5FMXg
-	 H/uD0gpS1tCXA==
+	b=f4JwU+Oor0XRR5eGAsvksElAoJTg7DE1rXfBqbqsF8zZxpsr+9miLe/Gw/zlW4dR1
+	 6rsjfKyjjuAYZoN3rAk+01knrfl0N3Ub4DIDg/n5Hv7BQbM/R/gtDvB7b20Qpz3B9s
+	 IDXsIY/dfLfmJ+KtkrPoJE1dLghqMDF4xHZMMZzuVx8usgAWpKqAFqcCMhdxVjh00f
+	 FWOP02AQd74dfMjeZtEsaTfowlIhmJnr3HCoR72wfLVQXjgBC6QF4err0IOE2C0cJg
+	 rUwRcdejN7odqoFw5LIg+cG1dqenrHcAPGCeT7yBaOqxrBLRjpIyOvFL2yisXnpYWc
+	 pegI1e0ToAc7A==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v9 18/19] SUNRPC: replace program list with program array
-Date: Fri, 28 Jun 2024 17:11:04 -0400
-Message-ID: <20240628211105.54736-19-snitzer@kernel.org>
+Subject: [PATCH v9 19/19] nfs: add Documentation/filesystems/nfs/localio.rst
+Date: Fri, 28 Jun 2024 17:11:05 -0400
+Message-ID: <20240628211105.54736-20-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240628211105.54736-1-snitzer@kernel.org>
 References: <20240628211105.54736-1-snitzer@kernel.org>
@@ -63,420 +63,181 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: NeilBrown <neil@brown.name>
+This document gives an overview of the LOCALIO auxiliary RPC protocol
+added to the Linux NFS client and server (both v3 and v4) to allow a
+client and server to reliably handshake to determine if they are on the
+same host.  The LOCALIO auxiliary protocol's implementation, which uses
+the same connection as NFS traffic, follows the pattern established by
+the NFS ACL protocol extension.
 
-A service created with svc_create_pooled() can be given a linked list of
-programs and all of these will be served.
+The robust handshake between local client and server is just the
+beginning, the ultimate usecase this locality makes possible is the
+client is able to issue reads, writes and commits directly to the server
+without having to go over the network.  This is particularly useful for
+container usecases (e.g. kubernetes) where it is possible to run an IO
+job local to the server.
 
-Using a linked list makes it cumbersome when there are several programs
-that can be optionally selected with CONFIG settings.
-
-So change to use an array with explicit size.  svc_create() is always
-passed a single program.  svc_create_pooled() now must be used for
-multiple programs.
-
-Signed-off-by: NeilBrown <neil@brown.name>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/nfsctl.c           |  2 +-
- fs/nfsd/nfsd.h             |  2 +-
- fs/nfsd/nfssvc.c           | 69 ++++++++++++++++++--------------------
- include/linux/sunrpc/svc.h |  7 ++--
- net/sunrpc/svc.c           | 68 +++++++++++++++++++++----------------
- net/sunrpc/svc_xprt.c      |  2 +-
- net/sunrpc/svcauth_unix.c  |  3 +-
- 7 files changed, 80 insertions(+), 73 deletions(-)
+ Documentation/filesystems/nfs/localio.rst | 135 ++++++++++++++++++++++
+ include/linux/nfslocalio.h                |   2 +
+ 2 files changed, 137 insertions(+)
+ create mode 100644 Documentation/filesystems/nfs/localio.rst
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index e5d2cc74ef77..6fb92bb61c6d 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2265,7 +2265,7 @@ static __net_init int nfsd_net_init(struct net *net)
- 	if (retval)
- 		goto out_repcache_error;
- 	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
--	nn->nfsd_svcstats.program = &nfsd_program;
-+	nn->nfsd_svcstats.program = &nfsd_programs[0];
- 	nn->nfsd_versions = NULL;
- 	nn->nfsd4_minorversions = NULL;
- 	nfsd4_init_leases_net(nn);
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index cec8697b1cd6..c3f7c5957950 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -80,7 +80,7 @@ struct nfsd_genl_rqstp {
- 	u32			rq_opnum[NFSD_MAX_OPS_PER_COMPOUND];
- };
- 
--extern struct svc_program	nfsd_program;
-+extern struct svc_program	nfsd_programs[];
- extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
- extern struct mutex		nfsd_mutex;
- extern spinlock_t		nfsd_drc_lock;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 6cc6a1971e21..ef2532303ece 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -36,7 +36,6 @@
- #define NFSDDBG_FACILITY	NFSDDBG_SVC
- 
- atomic_t			nfsd_th_cnt = ATOMIC_INIT(0);
--extern struct svc_program	nfsd_program;
- static int			nfsd(void *vrqstp);
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- static int			nfsd_acl_rpcbind_set(struct net *,
-@@ -89,16 +88,6 @@ static const struct svc_version *localio_versions[] = {
- 
- #define NFSD_LOCALIO_NRVERS		ARRAY_SIZE(localio_versions)
- 
--static struct svc_program	nfsd_localio_program = {
--	.pg_prog		= NFS_LOCALIO_PROGRAM,
--	.pg_nvers		= NFSD_LOCALIO_NRVERS,
--	.pg_vers		= localio_versions,
--	.pg_name		= "nfslocalio",
--	.pg_class		= "nfsd",
--	.pg_authenticate	= &svc_set_client,
--	.pg_init_request	= svc_generic_init_request,
--	.pg_rpcbind_set		= svc_generic_rpcbind_set,
--};
- #endif /* CONFIG_NFSD_LOCALIO */
- 
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-@@ -111,23 +100,9 @@ static const struct svc_version *nfsd_acl_version[] = {
- # endif
- };
- 
--#define NFSD_ACL_MINVERS            2
-+#define NFSD_ACL_MINVERS	2
- #define NFSD_ACL_NRVERS		ARRAY_SIZE(nfsd_acl_version)
- 
--static struct svc_program	nfsd_acl_program = {
--#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
--	.pg_next		= &nfsd_localio_program,
--#endif /* CONFIG_NFSD_LOCALIO */
--	.pg_prog		= NFS_ACL_PROGRAM,
--	.pg_nvers		= NFSD_ACL_NRVERS,
--	.pg_vers		= nfsd_acl_version,
--	.pg_name		= "nfsacl",
--	.pg_class		= "nfsd",
--	.pg_authenticate	= &svc_set_client,
--	.pg_init_request	= nfsd_acl_init_request,
--	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
--};
--
- #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
- 
- static const struct svc_version *nfsd_version[] = {
-@@ -140,25 +115,44 @@ static const struct svc_version *nfsd_version[] = {
- #endif
- };
- 
--#define NFSD_MINVERS    	2
-+#define NFSD_MINVERS		2
- #define NFSD_NRVERS		ARRAY_SIZE(nfsd_version)
- 
--struct svc_program		nfsd_program = {
--#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
--	.pg_next		= &nfsd_acl_program,
--#else
--#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
--	.pg_next		= &nfsd_localio_program,
--#endif /* CONFIG_NFSD_LOCALIO */
--#endif
-+struct svc_program		nfsd_programs[] = {
-+	{
- 	.pg_prog		= NFS_PROGRAM,		/* program number */
- 	.pg_nvers		= NFSD_NRVERS,		/* nr of entries in nfsd_version */
- 	.pg_vers		= nfsd_version,		/* version table */
- 	.pg_name		= "nfsd",		/* program name */
- 	.pg_class		= "nfsd",		/* authentication class */
--	.pg_authenticate	= &svc_set_client,	/* export authentication */
-+	.pg_authenticate	= svc_set_client,	/* export authentication */
- 	.pg_init_request	= nfsd_init_request,
- 	.pg_rpcbind_set		= nfsd_rpcbind_set,
-+	},
-+#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-+	{
-+	.pg_prog		= NFS_ACL_PROGRAM,
-+	.pg_nvers		= NFSD_ACL_NRVERS,
-+	.pg_vers		= nfsd_acl_version,
-+	.pg_name		= "nfsacl",
-+	.pg_class		= "nfsd",
-+	.pg_authenticate	= svc_set_client,
-+	.pg_init_request	= nfsd_acl_init_request,
-+	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
-+	},
-+#endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
-+#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
-+	{
-+	.pg_prog		= NFS_LOCALIO_PROGRAM,
-+	.pg_nvers		= NFSD_LOCALIO_NRVERS,
-+	.pg_vers		= localio_versions,
-+	.pg_name		= "nfslocalio",
-+	.pg_class		= "nfsd",
-+	.pg_authenticate	= svc_set_client,
-+	.pg_init_request	= svc_generic_init_request,
-+	.pg_rpcbind_set		= svc_generic_rpcbind_set,
-+	}
-+#endif /* IS_ENABLED(CONFIG_NFSD_LOCALIO) */
- };
- 
- bool nfsd_support_version(int vers)
-@@ -735,7 +729,8 @@ int nfsd_create_serv(struct net *net)
- 	if (nfsd_max_blksize == 0)
- 		nfsd_max_blksize = nfsd_get_default_max_blksize();
- 	nfsd_reset_versions(nn);
--	serv = svc_create_pooled(&nfsd_program, &nn->nfsd_svcstats,
-+	serv = svc_create_pooled(nfsd_programs, ARRAY_SIZE(nfsd_programs),
-+				 &nn->nfsd_svcstats,
- 				 nfsd_max_blksize, nfsd);
- 	if (serv == NULL)
- 		return -ENOMEM;
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index a7d0406b9ef5..7c86b1696398 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -66,9 +66,10 @@ enum {
-  * We currently do not support more than one RPC program per daemon.
+diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/filesystems/nfs/localio.rst
+new file mode 100644
+index 000000000000..7f211e3fc34c
+--- /dev/null
++++ b/Documentation/filesystems/nfs/localio.rst
+@@ -0,0 +1,135 @@
++===========
++NFS localio
++===========
++
++This document gives an overview of the LOCALIO auxiliary RPC protocol
++added to the Linux NFS client and server (both v3 and v4) to allow a
++client and server to reliably handshake to determine if they are on the
++same host.  The LOCALIO auxiliary protocol's implementation, which uses
++the same connection as NFS traffic, follows the pattern established by
++the NFS ACL protocol extension.
++
++The LOCALIO auxiliary protocol is needed to allow robust discovery of
++clients local to their servers.  In a private implementation that
++preceded use of this LOCALIO protocol, a fragile sockaddr network
++address based match against all local network interfaces was attempted.
++But unlike the LOCALIO protocol, the sockaddr-based matching didn't
++handle use of iptables or containers.
++
++The robust handshake between local client and server is just the
++beginning, the ultimate usecase this locality makes possible is the
++client is able to issue reads, writes and commits directly to the server
++without having to go over the network.  This is particularly useful for
++container usecases (e.g. kubernetes) where it is possible to run an IO
++job local to the server.
++
++The performance advantage realized from localio's ability to bypass
++using XDR and RPC for reads, writes and commits can be extreme, e.g.:
++fio for 20 secs with 24 libaio threads, 64k directio reads, qd of 8,
++-  With localio:
++  read: IOPS=691k, BW=42.2GiB/s (45.3GB/s)(843GiB/20002msec)
++-  Without localio:
++  read: IOPS=15.7k, BW=984MiB/s (1032MB/s)(19.2GiB/20013msec)
++
++RPC
++---
++
++The LOCALIO auxiliary RPC protocol consists of a single "GETUUID" RPC
++method that allows the Linux NFS client to retrieve a Linux NFS server's
++uuid.  This protocol isn't part of an IETF standard, nor does it need to
++be considering it is Linux-to-Linux auxiliary RPC protocol that amounts
++to an implementation detail.
++
++The GETUUID method encodes the server's uuid_t in terms of the fixed
++UUID_SIZE (16 bytes).  The fixed size opaque encode and decode XDR
++methods are used instead of the less efficient variable sized methods.
++
++The RPC program number for the NFS_LOCALIO_PROGRAM is 400122 (as assigned
++by IANA, see https://www.iana.org/assignments/rpc-program-numbers/ ):
++Linux Kernel Organization       400122  nfslocalio
++
++The LOCALIO protocol spec in rpcgen syntax is:
++
++/* raw RFC 9562 UUID */
++#define UUID_SIZE 16
++typedef u8 uuid_t<UUID_SIZE>;
++
++program NFS_LOCALIO_PROGRAM {
++    version LOCALIO_V1 {
++        void
++            NULL(void) = 0;
++
++        uuid_t
++            GETUUID(void) = 1;
++    } = 1;
++} = 400122;
++
++LOCALIO uses the same transport connection as NFS traffic.  As such,
++LOCALIO is not registered with rpcbind.
++
++Once an NFS client and server handshake as "local", the client will
++bypass the network RPC protocol for read, write and commit operations.
++Due to this XDR and RPC bypass, these operations will operate faster.
++
++NFS Common and Server
++---------------------
++
++Localio is used by nfsd to add access to a global nfsd_uuids list in
++nfs_common that is used to register and then identify local nfsd
++instances.
++
++nfsd_uuids is protected by the nfsd_mutex or RCU read lock and is
++composed of nfsd_uuid_t instances that are managed as nfsd creates them
++(per network namespace).
++
++nfsd_uuid_is_local() and nfsd_uuid_lookup() are used to search all local
++nfsd for the client specified nfsd uuid.
++
++The nfsd_uuids list is the basis for localio enablement, as such it has
++members that point to nfsd memory for direct use by the client
++(e.g. 'net' is the server's network namespace, through it the client can
++access nn->nfsd_serv with proper rcu read access).  It is this client
++and server synchronization that enables advanced usage and lifetime of
++objects to span from the host kernel's nfsd to per-container knfsd
++instances that are connected to nfs client's running on the same local
++host.
++
++NFS Client
++----------
++
++fs/nfs/localio.c:nfs_local_probe() will retrieve a server's uuid via
++LOCALIO protocol and check if the server with that uuid is known to be
++local.  This ensures client and server 1: support localio 2: are local
++to each other.
++
++See fs/nfs/localio.c:nfs_local_open_fh() and
++fs/nfsd/localio.c:nfsd_open_local_fh() for the interface that makes
++focused use of nfsd_uuid_t struct to allow a client local to a server to
++open a file pointer without needing to go over the network.
++
++The client's fs/nfs/localio.c:nfs_local_open_fh() will call into the
++server's fs/nfsd/localio.c:nfsd_open_local_fh() and carefully access
++both the nfsd network namespace and the associated nn->nfsd_serv in
++terms of RCU.  If nfsd_open_local_fh() finds that client no longer sees
++valid nfsd objects (be it struct net or nn->nfsd_serv) it returns ENXIO
++to nfs_local_open_fh() and the client will try to reestablish the
++LOCALIO resources needed by calling nfs_local_probe() again.  This
++recovery is needed if/when an nfsd instance running in a container were
++to reboot while a localio client is connected to it.
++
++Testing
++-------
++
++The LOCALIO auxiliary protocol and associated NFS localio read, write
++and commit access have proven stable against various test scenarios but
++these have not yet been formalized in any testsuite:
++
++-  Client and server both on localhost (for both v3 and v4.2).
++
++-  Various permutations of client and server support enablement for
++   both local and remote client and server.  Testing against NFS storage
++   products that don't support the LOCALIO protocol was also performed.
++
++-  Client on host, server within a container (for both v3 and v4.2)
++   The container testing was in terms of podman managed containers and
++   includes container stop/restart scenario.
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index c9592ad0afe2..a9722e18b527 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -20,6 +20,8 @@ extern struct list_head nfsd_uuids;
+  * Each nfsd instance has an nfsd_uuid_t that is accessible through the
+  * global nfsd_uuids list. Useful to allow a client to negotiate if localio
+  * possible with its server.
++ *
++ * See Documentation/filesystems/nfs/localio.rst for more detail.
   */
- struct svc_serv {
--	struct svc_program *	sv_program;	/* RPC program */
-+	struct svc_program *	sv_programs;	/* RPC programs */
- 	struct svc_stat *	sv_stats;	/* RPC statistics */
- 	spinlock_t		sv_lock;
-+	unsigned int		sv_nprogs;	/* Number of sv_programs */
- 	unsigned int		sv_nrthreads;	/* # of server threads */
- 	unsigned int		sv_maxconn;	/* max connections allowed or
- 						 * '0' causing max to be based
-@@ -329,10 +330,9 @@ struct svc_process_info {
- };
- 
- /*
-- * List of RPC programs on the same transport endpoint
-+ * RPC program - an array of these can use the same transport endpoint
-  */
- struct svc_program {
--	struct svc_program *	pg_next;	/* other programs (same xprt) */
- 	u32			pg_prog;	/* program number */
- 	unsigned int		pg_lovers;	/* lowest version */
- 	unsigned int		pg_hivers;	/* highest version */
-@@ -414,6 +414,7 @@ void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
- void		   svc_rqst_free(struct svc_rqst *);
- void		   svc_exit_thread(struct svc_rqst *);
- struct svc_serv *  svc_create_pooled(struct svc_program *prog,
-+				     unsigned int nprog,
- 				     struct svc_stat *stats,
- 				     unsigned int bufsize,
- 				     int (*threadfn)(void *data));
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 965a27806bfd..d9f348aa0672 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -440,10 +440,11 @@ EXPORT_SYMBOL_GPL(svc_rpcb_cleanup);
- 
- static int svc_uses_rpcbind(struct svc_serv *serv)
- {
--	struct svc_program	*progp;
--	unsigned int		i;
-+	unsigned int		p, i;
-+
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
- 
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
- 		for (i = 0; i < progp->pg_nvers; i++) {
- 			if (progp->pg_vers[i] == NULL)
- 				continue;
-@@ -480,7 +481,7 @@ __svc_init_bc(struct svc_serv *serv)
-  * Create an RPC service
-  */
- static struct svc_serv *
--__svc_create(struct svc_program *prog, struct svc_stat *stats,
-+__svc_create(struct svc_program *prog, int nprogs, struct svc_stat *stats,
- 	     unsigned int bufsize, int npools, int (*threadfn)(void *data))
- {
- 	struct svc_serv	*serv;
-@@ -491,7 +492,8 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- 	if (!(serv = kzalloc(sizeof(*serv), GFP_KERNEL)))
- 		return NULL;
- 	serv->sv_name      = prog->pg_name;
--	serv->sv_program   = prog;
-+	serv->sv_programs  = prog;
-+	serv->sv_nprogs    = nprogs;
- 	serv->sv_stats     = stats;
- 	if (bufsize > RPCSVC_MAXPAYLOAD)
- 		bufsize = RPCSVC_MAXPAYLOAD;
-@@ -499,17 +501,18 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- 	serv->sv_max_mesg  = roundup(serv->sv_max_payload + PAGE_SIZE, PAGE_SIZE);
- 	serv->sv_threadfn = threadfn;
- 	xdrsize = 0;
--	while (prog) {
--		prog->pg_lovers = prog->pg_nvers-1;
--		for (vers=0; vers<prog->pg_nvers ; vers++)
--			if (prog->pg_vers[vers]) {
--				prog->pg_hivers = vers;
--				if (prog->pg_lovers > vers)
--					prog->pg_lovers = vers;
--				if (prog->pg_vers[vers]->vs_xdrsize > xdrsize)
--					xdrsize = prog->pg_vers[vers]->vs_xdrsize;
-+	for (i = 0; i < nprogs; i++) {
-+		struct svc_program *progp = &prog[i];
-+
-+		progp->pg_lovers = progp->pg_nvers-1;
-+		for (vers = 0; vers < progp->pg_nvers ; vers++)
-+			if (progp->pg_vers[vers]) {
-+				progp->pg_hivers = vers;
-+				if (progp->pg_lovers > vers)
-+					progp->pg_lovers = vers;
-+				if (progp->pg_vers[vers]->vs_xdrsize > xdrsize)
-+					xdrsize = progp->pg_vers[vers]->vs_xdrsize;
- 			}
--		prog = prog->pg_next;
- 	}
- 	serv->sv_xdrsize   = xdrsize;
- 	INIT_LIST_HEAD(&serv->sv_tempsocks);
-@@ -558,13 +561,14 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
- struct svc_serv *svc_create(struct svc_program *prog, unsigned int bufsize,
- 			    int (*threadfn)(void *data))
- {
--	return __svc_create(prog, NULL, bufsize, 1, threadfn);
-+	return __svc_create(prog, 1, NULL, bufsize, 1, threadfn);
- }
- EXPORT_SYMBOL_GPL(svc_create);
- 
- /**
-  * svc_create_pooled - Create an RPC service with pooled threads
-- * @prog: the RPC program the new service will handle
-+ * @prog:  Array of RPC programs the new service will handle
-+ * @nprogs: Number of programs in the array
-  * @stats: the stats struct if desired
-  * @bufsize: maximum message size for @prog
-  * @threadfn: a function to service RPC requests for @prog
-@@ -572,6 +576,7 @@ EXPORT_SYMBOL_GPL(svc_create);
-  * Returns an instantiated struct svc_serv object or NULL.
-  */
- struct svc_serv *svc_create_pooled(struct svc_program *prog,
-+				   unsigned int nprogs,
- 				   struct svc_stat *stats,
- 				   unsigned int bufsize,
- 				   int (*threadfn)(void *data))
-@@ -579,7 +584,7 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
- 	struct svc_serv *serv;
- 	unsigned int npools = svc_pool_map_get();
- 
--	serv = __svc_create(prog, stats, bufsize, npools, threadfn);
-+	serv = __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
- 	if (!serv)
- 		goto out_err;
- 	serv->sv_is_pooled = true;
-@@ -602,16 +607,16 @@ svc_destroy(struct svc_serv **servp)
- 
- 	*servp = NULL;
- 
--	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
-+	dprintk("svc: svc_destroy(%s)\n", serv->sv_programs->pg_name);
- 	timer_shutdown_sync(&serv->sv_temptimer);
- 
- 	/*
- 	 * Remaining transports at this point are not expected.
- 	 */
- 	WARN_ONCE(!list_empty(&serv->sv_permsocks),
--		  "SVC: permsocks remain for %s\n", serv->sv_program->pg_name);
-+		  "SVC: permsocks remain for %s\n", serv->sv_programs->pg_name);
- 	WARN_ONCE(!list_empty(&serv->sv_tempsocks),
--		  "SVC: tempsocks remain for %s\n", serv->sv_program->pg_name);
-+		  "SVC: tempsocks remain for %s\n", serv->sv_programs->pg_name);
- 
- 	cache_clean_deferred(serv);
- 
-@@ -1156,15 +1161,16 @@ int svc_register(const struct svc_serv *serv, struct net *net,
- 		 const int family, const unsigned short proto,
- 		 const unsigned short port)
- {
--	struct svc_program	*progp;
--	unsigned int		i;
-+	unsigned int		p, i;
- 	int			error = 0;
- 
- 	WARN_ON_ONCE(proto == 0 && port == 0);
- 	if (proto == 0 && port == 0)
- 		return -EINVAL;
- 
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
-+
- 		for (i = 0; i < progp->pg_nvers; i++) {
- 
- 			error = progp->pg_rpcbind_set(net, progp, i,
-@@ -1216,13 +1222,14 @@ static void __svc_unregister(struct net *net, const u32 program, const u32 versi
- static void svc_unregister(const struct svc_serv *serv, struct net *net)
- {
- 	struct sighand_struct *sighand;
--	struct svc_program *progp;
- 	unsigned long flags;
--	unsigned int i;
-+	unsigned int p, i;
- 
- 	clear_thread_flag(TIF_SIGPENDING);
- 
--	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
-+	for (p = 0; p < serv->sv_nprogs; p++) {
-+		struct svc_program *progp = &serv->sv_programs[p];
-+
- 		for (i = 0; i < progp->pg_nvers; i++) {
- 			if (progp->pg_vers[i] == NULL)
- 				continue;
-@@ -1328,7 +1335,7 @@ svc_process_common(struct svc_rqst *rqstp)
- 	struct svc_process_info process;
- 	enum svc_auth_status	auth_res;
- 	unsigned int		aoffset;
--	int			rc;
-+	int			pr, rc;
- 	__be32			*p;
- 
- 	/* Will be turned off only when NFSv4 Sessions are used */
-@@ -1352,9 +1359,12 @@ svc_process_common(struct svc_rqst *rqstp)
- 	rqstp->rq_vers = be32_to_cpup(p++);
- 	rqstp->rq_proc = be32_to_cpup(p);
- 
--	for (progp = serv->sv_program; progp; progp = progp->pg_next)
-+	for (pr = 0; pr < serv->sv_nprogs; pr++) {
-+		progp = &serv->sv_programs[pr];
-+
- 		if (rqstp->rq_prog == progp->pg_prog)
- 			break;
-+	}
- 
- 	/*
- 	 * Decode auth data, and add verifier to reply buffer.
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index d3735ab3e6d1..16634afdf253 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -268,7 +268,7 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
- 		spin_unlock(&svc_xprt_class_lock);
- 		newxprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
- 		if (IS_ERR(newxprt)) {
--			trace_svc_xprt_create_err(serv->sv_program->pg_name,
-+			trace_svc_xprt_create_err(serv->sv_programs->pg_name,
- 						  xcl->xcl_name, sap, len,
- 						  newxprt);
- 			module_put(xcl->xcl_owner);
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 04b45588ae6f..8ca98b146ec8 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -697,7 +697,8 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
- 	rqstp->rq_auth_stat = rpc_autherr_badcred;
- 	ipm = ip_map_cached_get(xprt);
- 	if (ipm == NULL)
--		ipm = __ip_map_lookup(sn->ip_map_cache, rqstp->rq_server->sv_program->pg_class,
-+		ipm = __ip_map_lookup(sn->ip_map_cache,
-+				      rqstp->rq_server->sv_programs->pg_class,
- 				    &sin6->sin6_addr);
- 
- 	if (ipm == NULL)
+ typedef struct {
+ 	uuid_t uuid;
 -- 
 2.44.0
 
