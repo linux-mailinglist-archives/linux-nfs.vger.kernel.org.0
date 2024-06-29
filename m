@@ -1,101 +1,99 @@
-Return-Path: <linux-nfs+bounces-4405-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4406-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6809891CDFF
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jun 2024 17:51:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86DE291CE0D
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jun 2024 18:00:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11DE9283050
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jun 2024 15:51:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEA81B210FD
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jun 2024 16:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DE13D994;
-	Sat, 29 Jun 2024 15:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE331DDEA;
+	Sat, 29 Jun 2024 16:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e2m4uIUj";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ci5iiLOJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SHC9Wosi";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ArQXAfX3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936F621364
-	for <linux-nfs@vger.kernel.org>; Sat, 29 Jun 2024 15:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14C8A945
+	for <linux-nfs@vger.kernel.org>; Sat, 29 Jun 2024 16:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719676257; cv=fail; b=h3+ynbJmC3e8ZUBNS1LK9n6I63tvSoqPseoLf94UDFtH2Yjt9hZbzoKT+diRl6q78+R6rwp6R//IbJHMZtLuLvNQu8npakZxzU1NG/fKCl5VxfSUJpNT2RvnLJiLaYuHBl+fKQbFwTN1BrXjlJbW+j7cD4VuunI5fQvwGKTOdZo=
+	t=1719676829; cv=fail; b=jbVbmY3eZezPZgYrlwatCL09aq1Znar+08PFRjogrkicq03rCQqZv5OnfYmjs37rOBHSiv0sVr0IifnuSzYTEKpZiCVCsS8Zm+Lm6j5ocVRZzXDxl3vTFddcXDJxIuvhGEkYLsSk4K1GAHbFnGtXNprcK0XJqeVAoWw2oIudzYM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719676257; c=relaxed/simple;
-	bh=6HTaP4di1PoxaHwVVeCwfkMXhl8TfBu2g16HZTg0xdc=;
+	s=arc-20240116; t=1719676829; c=relaxed/simple;
+	bh=vpxDmrJ1xYH/zQ0a0wcFCTHnPPAH577H6gS7lSIQdQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tgjSf3Z3SfvUpMTu9zQwQHf1X9QyH3tx7psUixFYWG4zHojzaRFsS5uFZYkipWfLiBQrvd9OWiGyEaxGIdUE2Gqr1n9Jmcou5hevOwh4Qft2CmnU+fhLitWVhMe+tZbswaUqR5MzhObzsGjEShIq0iSjq+th1SHgTQCIMOSLKbA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=e2m4uIUj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ci5iiLOJ; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cnqgeACp60vV2zEC31nXjzaiD+erwzjvh4USrGgU3yIfZEqCu0cjgTuMdEMCvjqgB61u8yAfuDEjppj6dG29drqcdNN5A9PIn8u5PdxTilPSZeALqoZDIT33ynmk3uXWhbsdjqEZIFUAM7JYqA4hF1K1VqRwVmjRSMoZc/gnOkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SHC9Wosi; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ArQXAfX3; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45TDShjv008043;
-	Sat, 29 Jun 2024 15:50:47 GMT
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45TCFwB8031596;
+	Sat, 29 Jun 2024 16:00:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=MwgfApyR4/3xpYp
-	2Z0UUqK+x3CHS84PxYD1AhVQyJOk=; b=e2m4uIUjA2u2b6bz7Zk9iKaZQw+RILG
-	KtRyIFAOFI+t/zPsWQnT7hdbN/+Mz4BWHyO/4LS50MUhx6aWNbnoSTtYDGdhZLw3
-	KT6wRs/GSsKpo6C0EDcf5TfNlr1oYsrRn5WvCAMWPkGb+7oJ4splk61WD6uLgVap
-	pa1xtgq74ZYkUhetFbUffZEd8ns7zefPCIgWQu74x0C9dDWElu2Pe6x0thFmu3Fg
-	xnu3QnY/0JhvrHIppfDbOHYRX5hMbxgfSORJ041KjM/WtQkZYsEf1Xrd9+zziHH1
-	xrm8zTuCgJSrcfVfngSt/hx0j+XWtlhWdIbCmEeJoXHfgMa7WzjueJA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 402a590eve-1
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=v3uEEqa1OrIHTSb
+	GvgThBKVBOzQy2zTeO18PBt+g2S8=; b=SHC9Wosim0tcRsSo/0q3668nBV3n0UO
+	YFkuvkzmSqyeYvu1sJFYcokwLuAIz2hlqPvaHPxgmBghcI/DEJvB5rLogRvlJeAI
+	0w/y8HNlKI5pHYTo8zW829DzHZnBnccBGeA/2r79K3gjITDRTLVjLv7y0TwzSiQq
+	sQSnXZWFj+84OPv0jikgd0R4RwfVgBEtztH9+0sqeKlG99tASXoVpThl4THZgjlq
+	2hltXCixNHMZcYBEDgErsLqojmU7AiX/qeetsYm9zCXoZcWzlt/gmyB9NoInNsxX
+	LAbXUyLYjEypL+McQLJyvCUg8ZoXiJL1CQpr1CuJowlgvnrc/h2OHkQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4029vsgfgf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 29 Jun 2024 15:50:46 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45TAeFWk017080;
-	Sat, 29 Jun 2024 15:50:45 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4028qbbxf0-1
+	Sat, 29 Jun 2024 16:00:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45TDqvMD033829;
+	Sat, 29 Jun 2024 16:00:07 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4028q54urr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 29 Jun 2024 15:50:45 +0000
+	Sat, 29 Jun 2024 16:00:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K5LgMdwzqcVwkcs0oaupYB38vsHvKxK4EAxFHCyXsgbK19LYAxJpWcvXbZ7AuzBjDzEebmKReFZ/iFI/PghupjD+oaTmOFFXWAAIdIdmGkm4LqJxfOLY9ceZN1C+dyn1INYb/hnU3SMbTc3aZi0QglPv22Tis1IApLmNEZdCZ0s8sRf1fL0wbk9O6WA+etkKH7Es8uEReiWgMX1tEKx7aOD+4q61KT30okCWRKMFmgUmuX1Gs8ATyv9zrPxgAu2y3qX8uYHSQXYTZXoXdbGRQqIkOc4ZNEA/0+vYriJpNhoZ5WDQz6+3ie5ovwPzQCVr5WNKZJ/9hCk9adu/H5+u1Q==
+ b=EFfjHTwzhGoMfWJob+GRExGq1Avg4HZXtCUa9pa/CahC1gFrV3UvdqybT9ugau1rYUeFu3gwlimCDGWezK+NvUdIA8BmN7LORqJSZuY5pai7ya5lHjD84OuUiHihWatPOd+vaEpQyZUoVkWTSg0n4pzxYXFpZYOji5ix21tLRwdmk0ibMnzf5/8nEFPmkBJtUiF5fE5J/yGXOwE5EoCbmJYHeWQ065IFkJu90hJu2TNYbBW60J8KX76VTLZTAH/tEJnCdOqmX4yFBlfKbBim/2SyCvw4oOOYLd1yoMqK4hQ6a3HrORr1V+06TePM1lI3n9oTJeLjKFYogorxkBk2Pw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MwgfApyR4/3xpYp2Z0UUqK+x3CHS84PxYD1AhVQyJOk=;
- b=UxSU1c3IvuFNmn0L0ePpKUPedt63A1CtMEgPnn/rWZypkYUhVJ8k88ECm4rgHyHB6wJqiAbVQ1ojVgTHSRFysTPX49h1PKq0NIrV2y1zInYMeO82UHCEvyVaMELlnJdEE9REHu77ViRo90GzTlhXREnII/mJr2CSfIZ2DSldzRbiaO8EHFcBZxzTjpoeuxHo4c+9dVu0m65SNrn9OSpSmracrR/c39nRvBe+byL5v6W0+4DN9RBZWVFozfk2eTa1Sm/4Sko4wqVomLeinZa7Gpov3PXAAjHxYuGcPME4oKEoJ1Adzrn/3meC/l94X2PkguiZA0ZkRgqt2hTNuDV+Yg==
+ bh=v3uEEqa1OrIHTSbGvgThBKVBOzQy2zTeO18PBt+g2S8=;
+ b=YJJKxTV1G8Z07bo2rNldGuhl25XsOU+mFuK54ah7tOFcXt8rU9drF0Z5Jaxlr0CkoilJHuAUI4KMIyCQfnoiOZSArIYzvjK4iFVv4VTy82wj3+1DIye2u4EBnwRX++wG5y7e5HwfabHwp/CG/yPBX4Ch7RTE2Ac5w3tbyLczQ+18d/atLaThledLqX7xhAk7ypiJRJjXXkTT10iIE9vzbTNOKqlXzmFcQR/7IReB73leBcspWiUCKcwMODWhSt5eEvzlTsnz8skwHzIZLeKYye8eVI4ekW4VaI3MuBxyOQ9yQ4WThbBXOviKfHzUcoLwv1YnWU39P4Rdyqfz+6KstA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MwgfApyR4/3xpYp2Z0UUqK+x3CHS84PxYD1AhVQyJOk=;
- b=ci5iiLOJ8oggOyhvlUvxuJvGMBl34c6xNE8Xr3LLJE0j2kaPmF41VYcM5BhYbwNmXCNJZWK7FXOLNmhIkbjhbRpdQj6NKO/LMGRxFW8NxuM96ZKiE7wkaDkUhLeWFAC82Rccp5pIitSkEfCNWq8/dweoNKLTKv+cdRC+2VDAMJo=
+ bh=v3uEEqa1OrIHTSbGvgThBKVBOzQy2zTeO18PBt+g2S8=;
+ b=ArQXAfX3C21rYF38vaKm//w3X/N+we4c0mKvmQcEdUIwH61lB8hkUgUCkMb6ZpBXcgAFk1o8hmbCCRbnwggVfM85oit+iByRduXg4pJMCUwa1Ds2xpgyIsgCBwnHHP+eQffF5rLm2uTBqXK14dG8MPfim1q9iV26Fi8K/R2+qLk=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS0PR10MB6996.namprd10.prod.outlook.com (2603:10b6:8:152::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Sat, 29 Jun
- 2024 15:50:42 +0000
+ by DS7PR10MB7277.namprd10.prod.outlook.com (2603:10b6:8:d8::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.29; Sat, 29 Jun 2024 16:00:05 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7719.028; Sat, 29 Jun 2024
- 15:50:42 +0000
-Date: Sat, 29 Jun 2024 11:50:39 -0400
+ 16:00:04 +0000
+Date: Sat, 29 Jun 2024 12:00:00 -0400
 From: Chuck Lever <chuck.lever@oracle.com>
 To: Mike Snitzer <snitzer@kernel.org>
 Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
         Anna Schumaker <anna@kernel.org>,
         Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
         snitzer@hammerspace.com
-Subject: Re: [PATCH v9 07/19] nfs/localio: fix nfs_localio_vfs_getattr() to
- properly support v4
-Message-ID: <ZoAtT4M3jCIF8pIC@tissot.1015granger.net>
+Subject: Re: [PATCH v9 18/19] SUNRPC: replace program list with program array
+Message-ID: <ZoAvgLhX+fOdoXXU@tissot.1015granger.net>
 References: <20240628211105.54736-1-snitzer@kernel.org>
- <20240628211105.54736-8-snitzer@kernel.org>
+ <20240628211105.54736-19-snitzer@kernel.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628211105.54736-8-snitzer@kernel.org>
-X-ClientProxiedBy: CH0PR04CA0103.namprd04.prod.outlook.com
- (2603:10b6:610:75::18) To BN0PR10MB5128.namprd10.prod.outlook.com
+In-Reply-To: <20240628211105.54736-19-snitzer@kernel.org>
+X-ClientProxiedBy: CH0P220CA0002.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:610:ef::14) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -104,194 +102,517 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS0PR10MB6996:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb7007e3-9026-4a0a-ab92-08dc98533b65
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB7277:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac936613-31ab-424e-161a-08dc98548a05
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?W8xyP4qBmylWMdrabWSTbuZLw5AwXNO1GrXXB9sandUp4THobQyfzZQSSXhR?=
- =?us-ascii?Q?BDktjVbWkvbYZf5AI/aCwzH0sRoWXF7ilSlTI1A5lMQ3SjjdQtXmHTOb9Tpy?=
- =?us-ascii?Q?8hsktYwQLsK4OvWj++8mQDfa+ltQUH2YyonUJJDM+TaOPFqMzRp4ukYEGo1K?=
- =?us-ascii?Q?RAEnsNtGowCP8UOizLsCXNdlMoyrOYI2VvcSFDUrfkffkg9C5ceX7Pa38L59?=
- =?us-ascii?Q?0pjhOtRhm16g6teUlhg6HzI/r+2p324nu9G5IQFQj4GxS2BP6SP+cr0zrSu3?=
- =?us-ascii?Q?gtyvIYcFr32+Xl5hDWuAtKZjd5+eZy6Ak6iR8/zoaQDAX7KlrtrQwr6OxiCn?=
- =?us-ascii?Q?jXLP4+31orrIDdnxlITh+8zeJFGzAKiIQXCV5yxpEepBvTb8uY3LecVed6W4?=
- =?us-ascii?Q?qgrzGKb6D435qTcbnhPBkJcwO0Mw2FpYIgEgp30EcBhZipAsemBmVNurjDj0?=
- =?us-ascii?Q?TLrNIkeWDo1hz5Hvbpu6XauXezeAb86qrioQ/yA/v5iOxzqPgIvv2EnBu87J?=
- =?us-ascii?Q?oER0KPxNQhLTC0tuNeYSxLomXv7+SddfM3qYmE++i5BmxQdODsP43Qx5qo5X?=
- =?us-ascii?Q?/eEkTaCy1qDn9CeLglKS0YW2k6GdYRw51XZBqOg8WsOSHxIaP+B936+77zK6?=
- =?us-ascii?Q?B5ObPNnj/9hBsdMJy84OhfneJC81XEkI1e47pft0VEKwXsCCfYdLUlnuM2IB?=
- =?us-ascii?Q?6THLB9/rfOKj1dO/lwdPxSpHuypKDRmZ6prKBPsJZ4QAbmnfiXk8fUsEyWR/?=
- =?us-ascii?Q?txgD+fVUUtchwWsK9HL61l7t8BJrptfVnbr3S3Zfpa5pTVzEmmWUxbPx55zl?=
- =?us-ascii?Q?xhdvOIjYVVDctXlgjhaal9TNwWrb3B+2HKhqatyRxvQ5zK66kdA1jNBF/Lyr?=
- =?us-ascii?Q?7RxO32VpAn0TD0W7dKDiperkmX/ftTB9iR1pwQUcBFQGkHB+yCcGBUbJmpor?=
- =?us-ascii?Q?j+dL5V1eaa7dwMt7GMexkvpPxM0cdoG281r2Qe3+UscDWlxD1I7sJvKqAgXN?=
- =?us-ascii?Q?R4Xv+XjnLwqDZaBuDhgOxDnjE8jWqJ4rBa5CNquzE0WreSWTqUTcmQWIg/5+?=
- =?us-ascii?Q?yYrei7eMrYjliX/5qszo1k1hEx+a//2pMFdCEWqb6DSo2oCM6IWbkAz6++Gn?=
- =?us-ascii?Q?2IHibruK1Fzx/iSkatqbg9/EI6wWfMou+3TyuvrFJ9NNU+PPdEy1KPg/BtML?=
- =?us-ascii?Q?nBn9NJfQpWDABBd2C+rR1Tq0xl5Oh4WFs9ofrCLQL+WTabhM0br3MfKMYOI2?=
- =?us-ascii?Q?cq0tlGx2VrGqW1RnoJ30V5GYhPYG5k3tj5rT00a1QBZyePEbKIOqScstTq7k?=
- =?us-ascii?Q?K2QRo9sErScpURHYzaTZs2Ed2hwOdUMmJ0hMc7KXWwOtsA=3D=3D?=
+	=?us-ascii?Q?IJqufqalq4FBOIt7Ne4hBKt61O9dMrTW/CtCvVcVeiSzie+a+20wgjPBDD+X?=
+ =?us-ascii?Q?qaoPp+LTc4O36ah02jtSxUT8syayDk5Y40Wu+HDwd1nmM9ohHJCyR6QtxDu1?=
+ =?us-ascii?Q?Xf6FgD6KSHbJEYS/pNFpm3Ttj9VvxOQbcn6PkMMa86YJj9YhSDPLdGg7A485?=
+ =?us-ascii?Q?jzgdot/ZhE5yLyHwqYMjWtbKbAYsyxvKB+aHodXkPWIfVHAgUdEFtE5NpqBt?=
+ =?us-ascii?Q?LOx2p3WzcIhuTwo25g0MLZJvwXAtIdJ+8HDAxeN6yLBuQBZp5CgZuuRFvUn9?=
+ =?us-ascii?Q?q7nJ/qk5bFK/X/8o+y1w+yAxWye0iyxzrE8o4XH9169yeOW54yopcH22iGOz?=
+ =?us-ascii?Q?IE1nnNvwBNXgUoAA/yYJPybXEa8BacnjcCwcxFsW/idpxNDqiGMDTezqtxz2?=
+ =?us-ascii?Q?Z4kl80RdqzFayei3zoINeQms8V0Vt1wD86HZdf3gVScIlskZMZvT539fWpwy?=
+ =?us-ascii?Q?7Bn9zyalywnau2SNJCb9K+YZATjPTscblry3psTaQ0H/IOh+5iDoyo0ir7vr?=
+ =?us-ascii?Q?KRc6t9ZllgCuDKfQJCyNwajPVNQ+iZpbP4IJV1ch+K6jx8PldUdwa7dq5RMS?=
+ =?us-ascii?Q?8t67cgoh5oMBJtle7gYUDaPrHOFPqhiBHDKLpApbl93nyBm6iVhn+j/wTWLK?=
+ =?us-ascii?Q?ZvH55F1aAdZ5wZ5hEVqw76neHVEgbaqKA6jcVvo3ZQO5WfqWKZllIL/MTFmU?=
+ =?us-ascii?Q?GsoBRY43Nf/NkygbQYR/CiKi1qwfQ8EidmEEH5Iunr1aHmsxjsYaYvpVlyNl?=
+ =?us-ascii?Q?ltBWXR6YjlHdZ1V90v2rgmnbTUFRS+swNVxuK+dDxMXo8QO3U15lFHEtCeX6?=
+ =?us-ascii?Q?VQp4CQxxuimYOZciRYbURFdo2wHMpPmt1Y2qrHg0ypDR55wNmFVg6hpOOVAi?=
+ =?us-ascii?Q?kjf1Od0gt8LxwibuMloXO9ujTP5+hrDZjWoGXNHu7DOwcf7BDUi6cqW4jgjQ?=
+ =?us-ascii?Q?Ok70Fcuz0OaToA9bcM+Xx+vO0iTaoxu1RRB4taSiN4xGoGUlRL6ZcsrXURV2?=
+ =?us-ascii?Q?chkxDpW72IQBb1D8aq8TQ6ntOlRMPfbmdp21U9mrTDINz1atLGx0Oucx4311?=
+ =?us-ascii?Q?aKLminkv3B7DG3SAxjsiivzYi8g0ej1K2cxV4+PhCyToUH21u7Ep/Pg0FrK9?=
+ =?us-ascii?Q?SHP9XepgrhL0l6as/8iHw3av+0FZPndLADSV4P0INKZHVR1FX2omi6O1tPrI?=
+ =?us-ascii?Q?LmDeBnX09TuwgCD1fh0ovp0EARCauThZM24fef9mqR+7ZLoNGESD6ParWO2e?=
+ =?us-ascii?Q?hT0UYdbRQKEFpCa0o0US55Y3FZpio1OYjwQHC78pI0T1Bq/KLvaMoZusAWtO?=
+ =?us-ascii?Q?aX7ED80iHHdymPzpiBuGdmfj5h3xudKd4mrZgwKr5rlaKQ=3D=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?81mT/3qfdzJMUJC3oTVj1NUSuxikroii3BzsJB8tKtSYDfE2aapDCYfK6YOV?=
- =?us-ascii?Q?rh+HPyu0PSXXJoZvxe4wwJ+3yhvd9rwggs77VUPK9OSzgp7eRz7upDbFpVrl?=
- =?us-ascii?Q?ptBaP11Z6qstsej8u+hdFf2JR498+8IIp/pwNVSvOVv+eJsHzIHIJj6CGjZh?=
- =?us-ascii?Q?lR45KB4vYVJdPypB2mlnuhuFqUsfKbPDAgM+l06cg7cKdXKZQvbOJiAOuT05?=
- =?us-ascii?Q?1ABuwLULhhb9F17W9wy8AfV7L2F/3j1cOACdVAblYriQiHgEfd8AxyLwscXS?=
- =?us-ascii?Q?5VPwPRkrsfjdqGxp6i+RRHk0ZrIzwOBsDAdqTM/gugqlqImi2oHkHBF0yFlD?=
- =?us-ascii?Q?TTHbgQfEuq0b1nwOrnwGS25E+r4RD6rpJSKg1Omx3OvCMkVsIp0lpyusVGcK?=
- =?us-ascii?Q?GcCFKffCXSqL/ug0+BckJ+oE7WKy6zroz2gsesIO+EXzxYq72DOqyqtMUZd0?=
- =?us-ascii?Q?YcL951cTD0Grp9yB21pGxNrmjzkPKJbsDyWy4tsParrRA9wT3k0JVEcQkOH/?=
- =?us-ascii?Q?zx8xkZIbMaclfQqF+Dn8Ygq0lJsPQtg2QAw9XAwDfpF16Pasde+aXs6crlIB?=
- =?us-ascii?Q?hWVxYFOUL1ZqZ9182kHb1ERkCeoV5tdqAJrOjsGvWFPGATZ6bCTtos0A4WE0?=
- =?us-ascii?Q?xCocBVum2ZScLfMwEzR20S0bL1rBbiPY+GCG4I6nmzUSVTJ2aihFvJMPCJUQ?=
- =?us-ascii?Q?BZlQAz3bRW5OgVIAQk/qCMgvSpmAb4D3hotQQCZb12rW3nNkygWYDIdDYYRg?=
- =?us-ascii?Q?SwyhzGm+3g3dUXzsQdIkSvE3Wi68vLsOYYSk7Gowg3+z192w5xvaYXrxcgVf?=
- =?us-ascii?Q?dE1ev13gt0gkpCCSfolH93otZuDoVQGIvnaTsfYbXuJadvKRcjpIqY59WgME?=
- =?us-ascii?Q?gLvtE3nJFQ6O8pOBAOxOUDq+x2BRZ7xIc2nOaGwnTMGAli9bNuE2a3w+FbxU?=
- =?us-ascii?Q?wPBX5tX9rd8XZ9RX2G+RBaMMIyp3N1HI7ESEdi2CCZwS+1VN8LvsZKyuXqea?=
- =?us-ascii?Q?sBG0EP+LSYTFNZhuGXPF6LUkmvmllHGTUCWvW7W3Sr7Hw3kJZhp2+wQyml+h?=
- =?us-ascii?Q?Idbl7KbFgoN8MzQdtSR+LVzi3UCENyNl/rR9IGM0xpBvRJKreFwaYBNf8LhV?=
- =?us-ascii?Q?BerwBH3/L7rHlaPPwAvXkGLFkXFyLaoq/gt2bU6swVE+8BSth1ItIE2RbWB6?=
- =?us-ascii?Q?8KYbwDAc38PkSiKmLWE17knEIyTu+FX+HmL1oV6xTLjaAK7n8iBuX0AhvDfE?=
- =?us-ascii?Q?VknJMTAXjGyY7KP6QggFdRh0Hwvtjyo3ol7RN5PNY7C1yuSUeJq1pSjdEsMm?=
- =?us-ascii?Q?FNTaMVlsEZKFxlxzS1TbesY6GbuoBbPX5EZfY25PTsNkhqnfaAj6yS7AP33o?=
- =?us-ascii?Q?W6XebqhrKMO+XkXjOmMGs7lPF03SykhsZi1w4vytcD6YaTm54K+G1kYCEG36?=
- =?us-ascii?Q?VuAAmrQkD2PayejMOHYtv4u0S6H9qmvQPoDHV/zJRgrWhH4lr/1Cw800NLmZ?=
- =?us-ascii?Q?s+m79zCarNShpkF/MipderRLY14FqVOfO/0Qqj02q8yQudazCmeV7oIjkxcP?=
- =?us-ascii?Q?u6Wfg0CSVcPlW9Wpk3grZ84Y+p9bdmR9fdaXtcpi?=
+	=?us-ascii?Q?TCRZ2e+CsHwdWPip3rTCdcmFjQVaACRSUseEEdyNATY2zq9GmPrBaaOXLfFX?=
+ =?us-ascii?Q?8JnQeFLex5+3vXy8FG/FlUn5ODwdY3ty33q3sgEOs7HwKPdeQq1u4pVIExbJ?=
+ =?us-ascii?Q?Vm0x2s0VY0JysDiynBOwyFyLdAsFIZytCo1FlpGfch/rWsPklg69pSCtGEL5?=
+ =?us-ascii?Q?fr7OZRzLR9SQr3HkhrvlcP9aG+WBrWugxbi8nyQLqeLomgeJGN1+EcOfcW+V?=
+ =?us-ascii?Q?UtC8/DhF6z0iolBYbbiTpsFE2KpBCoAOeHaY8ee8Lul8yBecT+Ye1TeLuBx/?=
+ =?us-ascii?Q?U3T+UGXAJKSDfuBKhQQlxkQKVdKLoNew06YxYEO3jFzzI5HO7b9rhpSfBri4?=
+ =?us-ascii?Q?N/DzLMxUilaNHLcT2o7/qpudRDUduiy1Dh0FgM39aoA7lijhaN+qn65jHbgI?=
+ =?us-ascii?Q?2aEFaHAnzQGuzzaVjos1gwsDlTVR8CKtgXb4Jl6vc3wcz0G8MLiAiVZ4vtnp?=
+ =?us-ascii?Q?AYQGe6YzxsJR533a2jPoab+bkDMiI2Up1xc+CEq6erZOL6WcYhmU9jGsguC/?=
+ =?us-ascii?Q?2G/zZbB1vCH27z4c1/6fNMcAE1PYljxhwqWbxllwUHYIvwMTsDHPMxUd4L7/?=
+ =?us-ascii?Q?u5sSFq9RhLyhmchfWIwX3tPOyS1WtHPxbuUluCaeMXm3SNCWNRegW7MWP6dA?=
+ =?us-ascii?Q?tI+YIxKueDgH37C4IGPv524tgVUy5jRarPwNkOKMAsoUqMuIdcJmND5SihRV?=
+ =?us-ascii?Q?P7esn3GXdfSV1w/rZfcO8jdkQrNQ/dk2s2iCTXGWBEyQ9wiFjO3PrgW8257L?=
+ =?us-ascii?Q?0cbgzD8b7MYJLB+11IfnrIElegAuYroHj2b7LH8rbAzh9mZijJm4dc4tQSVi?=
+ =?us-ascii?Q?5+AdOwF+VrDTMMy1hn+hJaK29Wl2ZdZuIjVd0R11XmzLjY1SkqgwXBVaF716?=
+ =?us-ascii?Q?z4/NmfPIIbgVbK0iDdguSy7b4AuVoqepmZPH/WXRZZ/D/5LusQUwtddVfQGt?=
+ =?us-ascii?Q?n1dPfjfga6dZU0Bj7haoepWNQcUV5x5l6Ks7E9rLm6SnIzLD2I2dcNuvOn7l?=
+ =?us-ascii?Q?5pvNGNDMs4l624JyEo27I/BrUmw2emZgOgbnrqKNxsJGZVTZm7zT8h5K55Ah?=
+ =?us-ascii?Q?2EUYiUaSibpJx/ISVtkflQHwHjw8+KD+wyBBhORTnHNaG4GkUe/bDV3ih4dn?=
+ =?us-ascii?Q?6q0ZMnndPizxTxXfKWGJibVlE0ocgGEKdFkCkeG1tazWMYoIM3gUHrJbRmNO?=
+ =?us-ascii?Q?ypJeq5X0Q2B49e8zI4jNDYU3FldfSGzx2Hzh3m1/zklyjui+3Xi8+cimLGji?=
+ =?us-ascii?Q?EMwJgmyzUKNBV6xIjTEPsno84qNcH61JHDosqXn9ejs8cH5O9y7fre/p5ilY?=
+ =?us-ascii?Q?/r3oz4meRDVpt8GeW/U2zS1MU62PJTSlpyBZeua/C4FHGoSdn4Zf/m+8TPk+?=
+ =?us-ascii?Q?Co/IxuybthssD9rdftPe86Cr7zWM0bIrED5z6YjXaKWNMInnPwnx5qUzgBgd?=
+ =?us-ascii?Q?jC/DlaQeanUFonXuYUmL/cun3e9ET//vZjDtmQNsPc09t9FD95bFRBbR0js0?=
+ =?us-ascii?Q?qs+ve5LzNeeWKK9ZdL0vU5kpCJuN53StFmOtUD82iIAMer0Hp7xIJ+rZibOV?=
+ =?us-ascii?Q?JDEWJXGOPoc9swm5lxvblYkkFjQSIYEuO83I88P2?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	rx+jw1PgWQMfJW62P2iWhw68zXqI6YL3nfQyzjQFircMcTaa23pyqrhTlO/Q7lBgvvK40dsFbW98wcBaOXJxQBoWIUGxQyEuVx05Q95IMpbigB/8KfX1yhis/VE47MZB+wuaGsLJekovl6S7G2y81X5qlPiP2NaLRlAEqwvC6wzHq42BXnNthnGN2a8GBWg3oz0YqLtHjdPSyTvhoyCwFGxiUDaIZOkzGHfxVU2Wr4lcV8Bsa6IPcNn5B3fnK/UIPreSHvVEFtWwiiUu+4LO3ocNYQrL8TZ68DsoPmIIZweWAfszKy0iXbN41Y2+aEAo1kCSVV2fq4HKWCcv0s5V4gWg/H7LK1cU0bdY11Gm7KTNbztTC+kqG+kaQYbUhWwpAQy/fmLkDw4Epi9YHmf8/hbHlw5rAticWr26epONNevTD3GMVsZ+8FAtlJeEV8C8Eclmf5ZVuYWjDTRlzMlytct3m3PyU3aHR6nkmQSsxywT8KxYSIq9H+/Vv4H9KoX+m6s4Tl7cWqLwT9NF4IDGLmx5Idu5HUtRSiVSxIUuSV5BU+Roy5QSSPm5CSvLHkInBet/J7QejexKRDTPmzrkvQwWanLUua+9sEvRVhAKQeg=
+	KHQqOZaN8CMffYEQb7REJ70M0zjrO1GZKnwGwpFUdcAzX/s+JLyX62XVKVEMHN9uVvsSb1DxQyc11CQmY+ahj24yiKJL/rZ4rixVqXxINcmHGX8lommf7OPU7n0NEDy6jRdjG6kMelnTn5pPLCTZ5CW/+GKoPfuCXrUkTuRUlQiODjccDwFLzymjqFdHtXQHDo40KZyoXGs+uVPDmubC23nKYsPhtYSzW6xUB4nq6fxSLtZ1HAP2dEp7C0On51ndJYrcE7AvqoVRruUacY3uaSISTuydBgfOhhd2pTsnKmCnT4IkjHhx0Df8TI1T2pXUmAOuE1p4zh7M+JnvXo6PfMsO8W17ILm8/HrBWhdihYXMfcmdcCaEY1LvayVq1uNQVnzHRMoexU6yVnqck9eoSEDngidiIZIVbjWqeUWFIRJRH5kUfU31Ac1n+N5FkdMvvt5FcDk8KtAWCL0yNdisFBORDGvJiIUTEHuLdjUxvN0Yx8XlZ23BudLXHNzR0UXiysg66fs8uhwhOoH6W5SmyFHmETXpIE5s+dXIaXN41U2DX9xNkOAjVaaZF9MZ2beFImnzsAOnapKrMZzdFXfvFhTe9pKZryvv782fTXBohQU=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb7007e3-9026-4a0a-ab92-08dc98533b65
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac936613-31ab-424e-161a-08dc98548a05
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2024 15:50:42.7409
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2024 16:00:04.1266
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9gXLNJrqsd3sQ9C8AuO4/forxkThXlsDdgTc0yNA53GT8xJ24h5qiMoyniM2t0MYYa/b6QZEI+5HhNkUijWvGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6996
+X-MS-Exchange-CrossTenant-UserPrincipalName: Co5hq/YAkOtJKJFhat1I+BvPq91mDUCvlHtD2LQKcynt3f8jNKlmO4TLeBlbJiIhrKl2O+uvVWOCaQduesrY4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7277
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-29_06,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 phishscore=0 spamscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2406180000 definitions=main-2406290112
-X-Proofpoint-GUID: RpSwXXEUlB0TRz6UCZiCBskJwn3Fqkt4
-X-Proofpoint-ORIG-GUID: RpSwXXEUlB0TRz6UCZiCBskJwn3Fqkt4
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2406290113
+X-Proofpoint-GUID: ICpNdudgXCPxrMmej2y-4xb5ah3DJ_ly
+X-Proofpoint-ORIG-GUID: ICpNdudgXCPxrMmej2y-4xb5ah3DJ_ly
 
-On Fri, Jun 28, 2024 at 05:10:53PM -0400, Mike Snitzer wrote:
-> This is nfs-localio code which blurs the boundary between server and
-> client...
+On Fri, Jun 28, 2024 at 05:11:04PM -0400, Mike Snitzer wrote:
+> From: NeilBrown <neil@brown.name>
 > 
-> The change_attr is used by NFS to detect if a file might have changed.
-> This code is used to get the attributes after a write request.  NFS
-> uses a GETATTR request to the server at other times.  The change_attr
-> should be consistent between the two else comparisons will be
-> meaningless.
+> A service created with svc_create_pooled() can be given a linked list of
+> programs and all of these will be served.
 > 
-> So nfs_localio_vfs_getattr() should use the same change_attr as the
-> one that would be used if the NFS GETATTR request were made.  For
-> NFSv3, that is nfs_timespec_to_change_attr() as was already
-> implemented.  For NFSv4 it is something different (as implemented in
-> this commit).
+> Using a linked list makes it cumbersome when there are several programs
+> that can be optionally selected with CONFIG settings.
 > 
-> [above header derived from linux-nfs message Neil sent on this topic]
+> So change to use an array with explicit size.  svc_create() is always
+> passed a single program.  svc_create_pooled() now must be used for
+> multiple programs.
 
-Instead of this note, I recommend:
+Instead of this last sentence, it might be more clear to say:
 
-Message-Id: <171918165963.14261.959545364150864599@noble.neil.brown.name>
+> After this patch is applied, API consumers must use only
+> svc_create_pooled() when creating an RPC service that listens for
+> more than one RPC program.
+
+I like the idea of replacing these static linked lists.
 
 
-> Suggested-by: NeilBrown <neil@brown.name>
+> Signed-off-by: NeilBrown <neil@brown.name>
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfs/localio.c | 48 +++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 39 insertions(+), 9 deletions(-)
+>  fs/nfsd/nfsctl.c           |  2 +-
+>  fs/nfsd/nfsd.h             |  2 +-
+>  fs/nfsd/nfssvc.c           | 69 ++++++++++++++++++--------------------
+>  include/linux/sunrpc/svc.h |  7 ++--
+>  net/sunrpc/svc.c           | 68 +++++++++++++++++++++----------------
+>  net/sunrpc/svc_xprt.c      |  2 +-
+>  net/sunrpc/svcauth_unix.c  |  3 +-
+>  7 files changed, 80 insertions(+), 73 deletions(-)
 > 
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 0f7d6d55087b..fe96f05ba8ca 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -364,21 +364,47 @@ nfs_set_local_verifier(struct inode *inode,
->  	verf->committed = how;
->  }
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index e5d2cc74ef77..6fb92bb61c6d 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2265,7 +2265,7 @@ static __net_init int nfsd_net_init(struct net *net)
+>  	if (retval)
+>  		goto out_repcache_error;
+>  	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
+> -	nn->nfsd_svcstats.program = &nfsd_program;
+> +	nn->nfsd_svcstats.program = &nfsd_programs[0];
+>  	nn->nfsd_versions = NULL;
+>  	nn->nfsd4_minorversions = NULL;
+>  	nfsd4_init_leases_net(nn);
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index cec8697b1cd6..c3f7c5957950 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -80,7 +80,7 @@ struct nfsd_genl_rqstp {
+>  	u32			rq_opnum[NFSD_MAX_OPS_PER_COMPOUND];
+>  };
 >  
-> +/* Factored out from fs/nfsd/vfs.h:fh_getattr() */
-> +static int __vfs_getattr(struct path *p, struct kstat *stat, int version)
-> +{
-> +	u32 request_mask = STATX_BASIC_STATS;
-> +
-> +	if (version == 4)
-> +		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
-> +	return vfs_getattr(p, stat, request_mask, AT_STATX_SYNC_AS_STAT);
-> +}
-> +
-> +/*
-> + * Copied from fs/nfsd/nfsfh.c:nfsd4_change_attribute(),
-> + * FIXME: factor out to common code.
-> + */
-> +static u64 __nfsd4_change_attribute(const struct kstat *stat,
-> +				    const struct inode *inode)
-> +{
-> +	u64 chattr;
-> +
-> +	if (stat->result_mask & STATX_CHANGE_COOKIE) {
-> +		chattr = stat->change_cookie;
-> +		if (S_ISREG(inode->i_mode) &&
-> +		    !(stat->attributes & STATX_ATTR_CHANGE_MONOTONIC)) {
-> +			chattr += (u64)stat->ctime.tv_sec << 30;
-> +			chattr += stat->ctime.tv_nsec;
-> +		}
-> +	} else {
-> +		chattr = time_to_chattr(&stat->ctime);
+> -extern struct svc_program	nfsd_program;
+> +extern struct svc_program	nfsd_programs[];
+>  extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
+>  extern struct mutex		nfsd_mutex;
+>  extern spinlock_t		nfsd_drc_lock;
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 6cc6a1971e21..ef2532303ece 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -36,7 +36,6 @@
+>  #define NFSDDBG_FACILITY	NFSDDBG_SVC
+>  
+>  atomic_t			nfsd_th_cnt = ATOMIC_INIT(0);
+> -extern struct svc_program	nfsd_program;
+>  static int			nfsd(void *vrqstp);
+>  #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+>  static int			nfsd_acl_rpcbind_set(struct net *,
+> @@ -89,16 +88,6 @@ static const struct svc_version *localio_versions[] = {
+>  
+>  #define NFSD_LOCALIO_NRVERS		ARRAY_SIZE(localio_versions)
+>  
+> -static struct svc_program	nfsd_localio_program = {
+> -	.pg_prog		= NFS_LOCALIO_PROGRAM,
+> -	.pg_nvers		= NFSD_LOCALIO_NRVERS,
+> -	.pg_vers		= localio_versions,
+> -	.pg_name		= "nfslocalio",
+> -	.pg_class		= "nfsd",
+> -	.pg_authenticate	= &svc_set_client,
+> -	.pg_init_request	= svc_generic_init_request,
+> -	.pg_rpcbind_set		= svc_generic_rpcbind_set,
+> -};
+>  #endif /* CONFIG_NFSD_LOCALIO */
+>  
+>  #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> @@ -111,23 +100,9 @@ static const struct svc_version *nfsd_acl_version[] = {
+>  # endif
+>  };
+>  
+> -#define NFSD_ACL_MINVERS            2
+> +#define NFSD_ACL_MINVERS	2
+>  #define NFSD_ACL_NRVERS		ARRAY_SIZE(nfsd_acl_version)
+>  
+> -static struct svc_program	nfsd_acl_program = {
+> -#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+> -	.pg_next		= &nfsd_localio_program,
+> -#endif /* CONFIG_NFSD_LOCALIO */
+> -	.pg_prog		= NFS_ACL_PROGRAM,
+> -	.pg_nvers		= NFSD_ACL_NRVERS,
+> -	.pg_vers		= nfsd_acl_version,
+> -	.pg_name		= "nfsacl",
+> -	.pg_class		= "nfsd",
+> -	.pg_authenticate	= &svc_set_client,
+> -	.pg_init_request	= nfsd_acl_init_request,
+> -	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
+> -};
+> -
+>  #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
+>  
+>  static const struct svc_version *nfsd_version[] = {
+> @@ -140,25 +115,44 @@ static const struct svc_version *nfsd_version[] = {
+>  #endif
+>  };
+>  
+> -#define NFSD_MINVERS    	2
+> +#define NFSD_MINVERS		2
+>  #define NFSD_NRVERS		ARRAY_SIZE(nfsd_version)
+>  
+> -struct svc_program		nfsd_program = {
+> -#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> -	.pg_next		= &nfsd_acl_program,
+> -#else
+> -#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+> -	.pg_next		= &nfsd_localio_program,
+> -#endif /* CONFIG_NFSD_LOCALIO */
+> -#endif
+> +struct svc_program		nfsd_programs[] = {
+> +	{
+>  	.pg_prog		= NFS_PROGRAM,		/* program number */
+>  	.pg_nvers		= NFSD_NRVERS,		/* nr of entries in nfsd_version */
+>  	.pg_vers		= nfsd_version,		/* version table */
+>  	.pg_name		= "nfsd",		/* program name */
+>  	.pg_class		= "nfsd",		/* authentication class */
+> -	.pg_authenticate	= &svc_set_client,	/* export authentication */
+> +	.pg_authenticate	= svc_set_client,	/* export authentication */
+>  	.pg_init_request	= nfsd_init_request,
+>  	.pg_rpcbind_set		= nfsd_rpcbind_set,
+> +	},
+> +#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> +	{
+> +	.pg_prog		= NFS_ACL_PROGRAM,
+> +	.pg_nvers		= NFSD_ACL_NRVERS,
+> +	.pg_vers		= nfsd_acl_version,
+> +	.pg_name		= "nfsacl",
+> +	.pg_class		= "nfsd",
+> +	.pg_authenticate	= svc_set_client,
+> +	.pg_init_request	= nfsd_acl_init_request,
+> +	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
+> +	},
+> +#endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
+> +#if IS_ENABLED(CONFIG_NFSD_LOCALIO)
+> +	{
+> +	.pg_prog		= NFS_LOCALIO_PROGRAM,
+> +	.pg_nvers		= NFSD_LOCALIO_NRVERS,
+> +	.pg_vers		= localio_versions,
+> +	.pg_name		= "nfslocalio",
+> +	.pg_class		= "nfsd",
+> +	.pg_authenticate	= svc_set_client,
+> +	.pg_init_request	= svc_generic_init_request,
+> +	.pg_rpcbind_set		= svc_generic_rpcbind_set,
 > +	}
-> +	return chattr;
-> +}
-> +
->  static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
+> +#endif /* IS_ENABLED(CONFIG_NFSD_LOCALIO) */
+>  };
+>  
+>  bool nfsd_support_version(int vers)
+> @@ -735,7 +729,8 @@ int nfsd_create_serv(struct net *net)
+>  	if (nfsd_max_blksize == 0)
+>  		nfsd_max_blksize = nfsd_get_default_max_blksize();
+>  	nfsd_reset_versions(nn);
+> -	serv = svc_create_pooled(&nfsd_program, &nn->nfsd_svcstats,
+> +	serv = svc_create_pooled(nfsd_programs, ARRAY_SIZE(nfsd_programs),
+> +				 &nn->nfsd_svcstats,
+>  				 nfsd_max_blksize, nfsd);
+>  	if (serv == NULL)
+>  		return -ENOMEM;
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index a7d0406b9ef5..7c86b1696398 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -66,9 +66,10 @@ enum {
+>   * We currently do not support more than one RPC program per daemon.
+>   */
+>  struct svc_serv {
+> -	struct svc_program *	sv_program;	/* RPC program */
+> +	struct svc_program *	sv_programs;	/* RPC programs */
+>  	struct svc_stat *	sv_stats;	/* RPC statistics */
+>  	spinlock_t		sv_lock;
+> +	unsigned int		sv_nprogs;	/* Number of sv_programs */
+>  	unsigned int		sv_nrthreads;	/* # of server threads */
+>  	unsigned int		sv_maxconn;	/* max connections allowed or
+>  						 * '0' causing max to be based
+> @@ -329,10 +330,9 @@ struct svc_process_info {
+>  };
+>  
+>  /*
+> - * List of RPC programs on the same transport endpoint
+> + * RPC program - an array of these can use the same transport endpoint
+>   */
+>  struct svc_program {
+> -	struct svc_program *	pg_next;	/* other programs (same xprt) */
+>  	u32			pg_prog;	/* program number */
+>  	unsigned int		pg_lovers;	/* lowest version */
+>  	unsigned int		pg_hivers;	/* highest version */
+> @@ -414,6 +414,7 @@ void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
+>  void		   svc_rqst_free(struct svc_rqst *);
+>  void		   svc_exit_thread(struct svc_rqst *);
+>  struct svc_serv *  svc_create_pooled(struct svc_program *prog,
+> +				     unsigned int nprog,
+>  				     struct svc_stat *stats,
+>  				     unsigned int bufsize,
+>  				     int (*threadfn)(void *data));
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 965a27806bfd..d9f348aa0672 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -440,10 +440,11 @@ EXPORT_SYMBOL_GPL(svc_rpcb_cleanup);
+>  
+>  static int svc_uses_rpcbind(struct svc_serv *serv)
 >  {
->  	struct kstat stat;
->  	struct file *filp = iocb->kiocb.ki_filp;
->  	struct nfs_pgio_header *hdr = iocb->hdr;
->  	struct nfs_fattr *fattr = hdr->res.fattr;
-> +	int version = NFS_PROTO(hdr->inode)->version;
+> -	struct svc_program	*progp;
+> -	unsigned int		i;
+> +	unsigned int		p, i;
+> +
+> +	for (p = 0; p < serv->sv_nprogs; p++) {
+> +		struct svc_program *progp = &serv->sv_programs[p];
 >  
-> -	if (unlikely(!fattr) || vfs_getattr(&filp->f_path, &stat,
-> -					    STATX_INO |
-> -					    STATX_ATIME |
-> -					    STATX_MTIME |
-> -					    STATX_CTIME |
-> -					    STATX_SIZE |
-> -					    STATX_BLOCKS,
-> -					    AT_STATX_SYNC_AS_STAT))
-> +	if (unlikely(!fattr) || __vfs_getattr(&filp->f_path, &stat, version))
->  		return;
->  
->  	fattr->valid = (NFS_ATTR_FATTR_FILEID |
-> @@ -394,7 +420,11 @@ static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
->  	fattr->atime = stat.atime;
->  	fattr->mtime = stat.mtime;
->  	fattr->ctime = stat.ctime;
-> -	fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
-> +	if (version == 4) {
-> +		fattr->change_attr =
-> +			__nfsd4_change_attribute(&stat, file_inode(filp));
-> +	} else
-> +		fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
->  	fattr->du.nfs3.used = stat.blocks << 9;
+> -	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
+>  		for (i = 0; i < progp->pg_nvers; i++) {
+>  			if (progp->pg_vers[i] == NULL)
+>  				continue;
+> @@ -480,7 +481,7 @@ __svc_init_bc(struct svc_serv *serv)
+>   * Create an RPC service
+>   */
+>  static struct svc_serv *
+> -__svc_create(struct svc_program *prog, struct svc_stat *stats,
+> +__svc_create(struct svc_program *prog, int nprogs, struct svc_stat *stats,
+>  	     unsigned int bufsize, int npools, int (*threadfn)(void *data))
+>  {
+>  	struct svc_serv	*serv;
+> @@ -491,7 +492,8 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
+>  	if (!(serv = kzalloc(sizeof(*serv), GFP_KERNEL)))
+>  		return NULL;
+>  	serv->sv_name      = prog->pg_name;
+> -	serv->sv_program   = prog;
+> +	serv->sv_programs  = prog;
+> +	serv->sv_nprogs    = nprogs;
+>  	serv->sv_stats     = stats;
+>  	if (bufsize > RPCSVC_MAXPAYLOAD)
+>  		bufsize = RPCSVC_MAXPAYLOAD;
+> @@ -499,17 +501,18 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
+>  	serv->sv_max_mesg  = roundup(serv->sv_max_payload + PAGE_SIZE, PAGE_SIZE);
+>  	serv->sv_threadfn = threadfn;
+>  	xdrsize = 0;
+> -	while (prog) {
+> -		prog->pg_lovers = prog->pg_nvers-1;
+> -		for (vers=0; vers<prog->pg_nvers ; vers++)
+> -			if (prog->pg_vers[vers]) {
+> -				prog->pg_hivers = vers;
+> -				if (prog->pg_lovers > vers)
+> -					prog->pg_lovers = vers;
+> -				if (prog->pg_vers[vers]->vs_xdrsize > xdrsize)
+> -					xdrsize = prog->pg_vers[vers]->vs_xdrsize;
+> +	for (i = 0; i < nprogs; i++) {
+> +		struct svc_program *progp = &prog[i];
+> +
+> +		progp->pg_lovers = progp->pg_nvers-1;
+> +		for (vers = 0; vers < progp->pg_nvers ; vers++)
+> +			if (progp->pg_vers[vers]) {
+> +				progp->pg_hivers = vers;
+> +				if (progp->pg_lovers > vers)
+> +					progp->pg_lovers = vers;
+> +				if (progp->pg_vers[vers]->vs_xdrsize > xdrsize)
+> +					xdrsize = progp->pg_vers[vers]->vs_xdrsize;
+>  			}
+> -		prog = prog->pg_next;
+>  	}
+>  	serv->sv_xdrsize   = xdrsize;
+>  	INIT_LIST_HEAD(&serv->sv_tempsocks);
+> @@ -558,13 +561,14 @@ __svc_create(struct svc_program *prog, struct svc_stat *stats,
+>  struct svc_serv *svc_create(struct svc_program *prog, unsigned int bufsize,
+>  			    int (*threadfn)(void *data))
+>  {
+> -	return __svc_create(prog, NULL, bufsize, 1, threadfn);
+> +	return __svc_create(prog, 1, NULL, bufsize, 1, threadfn);
 >  }
+>  EXPORT_SYMBOL_GPL(svc_create);
 >  
+>  /**
+>   * svc_create_pooled - Create an RPC service with pooled threads
+> - * @prog: the RPC program the new service will handle
+> + * @prog:  Array of RPC programs the new service will handle
+> + * @nprogs: Number of programs in the array
+>   * @stats: the stats struct if desired
+>   * @bufsize: maximum message size for @prog
+>   * @threadfn: a function to service RPC requests for @prog
+> @@ -572,6 +576,7 @@ EXPORT_SYMBOL_GPL(svc_create);
+>   * Returns an instantiated struct svc_serv object or NULL.
+>   */
+>  struct svc_serv *svc_create_pooled(struct svc_program *prog,
+> +				   unsigned int nprogs,
+>  				   struct svc_stat *stats,
+>  				   unsigned int bufsize,
+>  				   int (*threadfn)(void *data))
+> @@ -579,7 +584,7 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
+>  	struct svc_serv *serv;
+>  	unsigned int npools = svc_pool_map_get();
+>  
+> -	serv = __svc_create(prog, stats, bufsize, npools, threadfn);
+> +	serv = __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
+>  	if (!serv)
+>  		goto out_err;
+>  	serv->sv_is_pooled = true;
+> @@ -602,16 +607,16 @@ svc_destroy(struct svc_serv **servp)
+>  
+>  	*servp = NULL;
+>  
+> -	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
+> +	dprintk("svc: svc_destroy(%s)\n", serv->sv_programs->pg_name);
+>  	timer_shutdown_sync(&serv->sv_temptimer);
+>  
+>  	/*
+>  	 * Remaining transports at this point are not expected.
+>  	 */
+>  	WARN_ONCE(!list_empty(&serv->sv_permsocks),
+> -		  "SVC: permsocks remain for %s\n", serv->sv_program->pg_name);
+> +		  "SVC: permsocks remain for %s\n", serv->sv_programs->pg_name);
+>  	WARN_ONCE(!list_empty(&serv->sv_tempsocks),
+> -		  "SVC: tempsocks remain for %s\n", serv->sv_program->pg_name);
+> +		  "SVC: tempsocks remain for %s\n", serv->sv_programs->pg_name);
+>  
+>  	cache_clean_deferred(serv);
+>  
+> @@ -1156,15 +1161,16 @@ int svc_register(const struct svc_serv *serv, struct net *net,
+>  		 const int family, const unsigned short proto,
+>  		 const unsigned short port)
+>  {
+> -	struct svc_program	*progp;
+> -	unsigned int		i;
+> +	unsigned int		p, i;
+>  	int			error = 0;
+>  
+>  	WARN_ON_ONCE(proto == 0 && port == 0);
+>  	if (proto == 0 && port == 0)
+>  		return -EINVAL;
+>  
+> -	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
+> +	for (p = 0; p < serv->sv_nprogs; p++) {
+> +		struct svc_program *progp = &serv->sv_programs[p];
+> +
+>  		for (i = 0; i < progp->pg_nvers; i++) {
+>  
+>  			error = progp->pg_rpcbind_set(net, progp, i,
+> @@ -1216,13 +1222,14 @@ static void __svc_unregister(struct net *net, const u32 program, const u32 versi
+>  static void svc_unregister(const struct svc_serv *serv, struct net *net)
+>  {
+>  	struct sighand_struct *sighand;
+> -	struct svc_program *progp;
+>  	unsigned long flags;
+> -	unsigned int i;
+> +	unsigned int p, i;
+>  
+>  	clear_thread_flag(TIF_SIGPENDING);
+>  
+> -	for (progp = serv->sv_program; progp; progp = progp->pg_next) {
+> +	for (p = 0; p < serv->sv_nprogs; p++) {
+> +		struct svc_program *progp = &serv->sv_programs[p];
+> +
+>  		for (i = 0; i < progp->pg_nvers; i++) {
+>  			if (progp->pg_vers[i] == NULL)
+>  				continue;
+> @@ -1328,7 +1335,7 @@ svc_process_common(struct svc_rqst *rqstp)
+>  	struct svc_process_info process;
+>  	enum svc_auth_status	auth_res;
+>  	unsigned int		aoffset;
+> -	int			rc;
+> +	int			pr, rc;
+>  	__be32			*p;
+>  
+>  	/* Will be turned off only when NFSv4 Sessions are used */
+> @@ -1352,9 +1359,12 @@ svc_process_common(struct svc_rqst *rqstp)
+>  	rqstp->rq_vers = be32_to_cpup(p++);
+>  	rqstp->rq_proc = be32_to_cpup(p);
+>  
+> -	for (progp = serv->sv_program; progp; progp = progp->pg_next)
+> +	for (pr = 0; pr < serv->sv_nprogs; pr++) {
+> +		progp = &serv->sv_programs[pr];
+> +
+>  		if (rqstp->rq_prog == progp->pg_prog)
+>  			break;
+> +	}
+>  
+>  	/*
+>  	 * Decode auth data, and add verifier to reply buffer.
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index d3735ab3e6d1..16634afdf253 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -268,7 +268,7 @@ static int _svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
+>  		spin_unlock(&svc_xprt_class_lock);
+>  		newxprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
+>  		if (IS_ERR(newxprt)) {
+> -			trace_svc_xprt_create_err(serv->sv_program->pg_name,
+> +			trace_svc_xprt_create_err(serv->sv_programs->pg_name,
+>  						  xcl->xcl_name, sap, len,
+>  						  newxprt);
+>  			module_put(xcl->xcl_owner);
+> diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
+> index 04b45588ae6f..8ca98b146ec8 100644
+> --- a/net/sunrpc/svcauth_unix.c
+> +++ b/net/sunrpc/svcauth_unix.c
+> @@ -697,7 +697,8 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
+>  	rqstp->rq_auth_stat = rpc_autherr_badcred;
+>  	ipm = ip_map_cached_get(xprt);
+>  	if (ipm == NULL)
+> -		ipm = __ip_map_lookup(sn->ip_map_cache, rqstp->rq_server->sv_program->pg_class,
+> +		ipm = __ip_map_lookup(sn->ip_map_cache,
+> +				      rqstp->rq_server->sv_programs->pg_class,
+>  				    &sin6->sin6_addr);
+>  
+>  	if (ipm == NULL)
 > -- 
 > 2.44.0
+> 
 > 
 
 -- 
