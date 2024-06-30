@@ -1,427 +1,329 @@
-Return-Path: <linux-nfs+bounces-4447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8999A91D467
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 00:23:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1734891D468
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 00:24:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A09D91C2080D
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 22:23:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90A7F1F21154
+	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 22:24:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BE76EB73;
-	Sun, 30 Jun 2024 22:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5FD6EB73;
+	Sun, 30 Jun 2024 22:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zefnVeQf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+a2qVN2Q";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zefnVeQf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+a2qVN2Q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X+DBd6aP";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FQAhgrYt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E2D6EB4A
-	for <linux-nfs@vger.kernel.org>; Sun, 30 Jun 2024 22:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719786191; cv=none; b=BpMIPtyP+E6Brt7EEceoWKqyV7Vrda2K/2oyUsOQ2kTduzs/i8XHhDn8WB0v/pavRPafHXwBbs36DgLtSvBkOlrbxOKOn0FaLYT68GhRtes6pMYqw+j16iMmvgfPxL7T4dC7ndQHPQvBiLauVgsb5C2tr9dGmknaBIXEbsfA0zY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719786191; c=relaxed/simple;
-	bh=rwC9QUXv6SY13AkZhO9IqUn9egQkbwbadm6au4DvT74=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=VmHIduxD/I/N4cHZSebw/gXk8VHaTDIwUkW2A7fxtwlk3KUI6fELctvF9xFSJBm2jZAZ2Sry16ys1Tq+Ln6XxI3lu3hcROOZBBmdAjdYkVR8z8zMWibCtKGh6DhyLKWiegMH+KZQ5tOEVUID5IpYzBE8QwAAefMcWzrdgBG1oD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zefnVeQf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+a2qVN2Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zefnVeQf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+a2qVN2Q; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 169A7219ED;
-	Sun, 30 Jun 2024 22:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719786187; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qO0RQj5rQMy407hwNtrms3etu5ybHwpoeLx+HFcqbU8=;
-	b=zefnVeQf0UnkupJEiaNFlZdkk9jiXwO1BQ40+SjpfPdAzIEaNWxvFlL6/0YnDNnXK2bIxC
-	SZXVP/apjUjv0U1vckZ+PMSc28mxl/t+o4ro1qUiMP+VVUC9swCzaEI22b+T+WZjwkjpy+
-	rXWpB17dlK0qfIQIk+oggB7h0sDHsvI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719786187;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qO0RQj5rQMy407hwNtrms3etu5ybHwpoeLx+HFcqbU8=;
-	b=+a2qVN2QCmszMUj589rbVN1oW37zObHRHlBnuAaksxas/BM0aoq5Q7H3W5lRW7AKHXE/r4
-	C+S3O7j4sa1mNpBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zefnVeQf;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+a2qVN2Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719786187; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qO0RQj5rQMy407hwNtrms3etu5ybHwpoeLx+HFcqbU8=;
-	b=zefnVeQf0UnkupJEiaNFlZdkk9jiXwO1BQ40+SjpfPdAzIEaNWxvFlL6/0YnDNnXK2bIxC
-	SZXVP/apjUjv0U1vckZ+PMSc28mxl/t+o4ro1qUiMP+VVUC9swCzaEI22b+T+WZjwkjpy+
-	rXWpB17dlK0qfIQIk+oggB7h0sDHsvI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719786187;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qO0RQj5rQMy407hwNtrms3etu5ybHwpoeLx+HFcqbU8=;
-	b=+a2qVN2QCmszMUj589rbVN1oW37zObHRHlBnuAaksxas/BM0aoq5Q7H3W5lRW7AKHXE/r4
-	C+S3O7j4sa1mNpBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 186E113A7F;
-	Sun, 30 Jun 2024 22:23:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rRqBK8fagWagbQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 30 Jun 2024 22:23:03 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE26C6EB4A
+	for <linux-nfs@vger.kernel.org>; Sun, 30 Jun 2024 22:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719786242; cv=fail; b=c9fONxwg8nwsX6+LtgiwJHpxh6OWcL1mXoo3jHjYe5KSHQsY+kYLrzuQ98z9FLOpMoHLNi5m1qVf/gJkgqJcYp3JK31k+lVdkPYdlj3jNwavEz2UsQGtw14Ip55QuPH+kClu5+Dkgoz/bjrvoJjN63XfZL5wBiyTeQYAT+2wECw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719786242; c=relaxed/simple;
+	bh=OU6QsIjdIy9tGkWX3LC4MgkvyfVmdgh2hzMFgNRRYRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VZz8yJKi5sw+ZS0/5sj6P56RXAbUv+9SvM0Y+ZWsn+oUFlU/rxaNA7H4mzm/WTCxGLfNqAjOVobbCAIlFHBy3IZjW/LP7Ij/kAbID6lmIdcCx+OxMvTiKM/rMfjLVpPcX+LNn4b58wYSuQDE82baY6FeNhcRwJN0eDgC7zGOniA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=X+DBd6aP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FQAhgrYt; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ULJrbE009789;
+	Sun, 30 Jun 2024 22:23:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=v0iXRMtjcCR2Sff
+	v+yBW9IUs8PrDlKTv4ybcXA6n4q4=; b=X+DBd6aPsq3DpSMV6xAq6jG3z+TvDje
+	AxRdKoJm3B2uD6GNjmgXJPZaY8AKT9QWFYhYjQJTKKJl7lCWM0IewWd7J1WpcMKI
+	OUL5OiutdigtpSEzbqOyIHGfdzdmcIOrb6PJtkxOEc/YcAY0/Fcn8+cXkSWGpiwJ
+	boay8QBsmPduVVhyVJIZ73iOZStMhkRGgrQ9vTARrrR/BlgKOOEuXQjzIMlI4oz7
+	L9scc6MbHfMSqXUWJCGNOIjHobc4d2aorflph75FNa3hf9Sb3D+WswxmTXZd+7p5
+	Us0j+12P+wuXcQzQ0Qvv9uUkOAUJNHBJend/vNxflN3SJu/nYtKcqLg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 402a591hhp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 30 Jun 2024 22:23:46 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45UI4Vlm018993;
+	Sun, 30 Jun 2024 22:23:45 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2041.outbound.protection.outlook.com [104.47.73.41])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4028qc32fq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 30 Jun 2024 22:23:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PfyAIwM4Znn81AQkUX2upQ2he28XgD4PthXWY5V8HcX5bUGqEULlDhJgVJIp6aNj0UrRtUAb4y+RUdZY2qxkMLjN0+519lGKFG0LhqwKgkakQb5vY3TS2Sr8vqXJ+xkqLccx88mUY39T6SpX2iZ/3OdFJCBQTppDRG0ZPwa6FDDx4Pi5Tpv1HPRotyZQLih35wARfnrvslXoJ74e0hQFYYsbFE7feqVsPKI5qnyK9H4b7/sWURGWkA57v/FwTL93dH5DfAH44X9YEcOTSrGlms55TmlCOgbfwsU7wgykBpq4ML1LGDath92DycrZVAtET6ziro78ugegFlEqjuo42w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v0iXRMtjcCR2Sffv+yBW9IUs8PrDlKTv4ybcXA6n4q4=;
+ b=LBiBU3xtKjUT0tdP9p6CGFvc0VhLKZCT2uvPlgKWBoc/wkwxnZyrXXd+ckdJKaB0YDJZj38Qj9l7NFb4Wn/PqGy8KlZL6Kc7MH+QcGd85hHEtjeB3BbuaxMSkvDzvR0nAMST2tb6JmXGPPlXMzoTdz/WTLHlc7HIALVlRyMm/c9rNb7ZOx/rGt5GFI4m/ABLExcdzUuGAtTfwjqt7y9sMNxiTWMwIUUPWJOvGM7tCF0Swc5ZwQq2TKjqxOB50+h+eBGy8XfVFrXohw/aGVIpdiWQaQov0IcW8Jhr3cpgUUXEhH8150mow5uD8gdQ5n7oZXHDHCnwzMKy+HJG27ImEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v0iXRMtjcCR2Sffv+yBW9IUs8PrDlKTv4ybcXA6n4q4=;
+ b=FQAhgrYt8QraMc6UvvYCnS0Zaj57Sg1Dvtfh2FJrRD+DEeI+HCsg9KH/2iS7z3Ajc/Mo1Z1N2DgdfUFSQWzakIu42oPdHIseZVHeDwwOkvIk7Tx00im6pnMRSu7h2coaa9u0zAtksuSpzL0aHAmBhzZAjs/1flxFgJUvtyGj3qs=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH4PR10MB8196.namprd10.prod.outlook.com (2603:10b6:610:246::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Sun, 30 Jun
+ 2024 22:23:43 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7719.028; Sun, 30 Jun 2024
+ 22:23:42 +0000
+Date: Sun, 30 Jun 2024 18:23:39 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
+        Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>, snitzer@hammerspace.com
+Subject: Re: [PATCH v9 07/19] nfs/localio: fix nfs_localio_vfs_getattr() to
+ properly support v4
+Message-ID: <ZoHa67EVj49oxqhn@tissot.1015granger.net>
+References: <>
+ <ZoAtT4M3jCIF8pIC@tissot.1015granger.net>
+ <171978489020.16071.9497041442174299803@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171978489020.16071.9497041442174299803@noble.neil.brown.name>
+X-ClientProxiedBy: CH2PR10CA0029.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::39) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>, snitzer@hammerspace.com
-Subject: Re: [PATCH v9 13/19] nfsd: add "localio" support
-In-reply-to: <ZoCIQjxougYwplsp@tissot.1015granger.net>
-References: <>, <ZoCIQjxougYwplsp@tissot.1015granger.net>
-Date: Mon, 01 Jul 2024 08:22:56 +1000
-Message-id: <171978617639.16071.17212237728640634496@noble.neil.brown.name>
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 169A7219ED
-X-Spam-Flag: NO
-X-Spam-Score: -5.51
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH4PR10MB8196:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c8cf863-37aa-4dc1-df64-08dc99534c8e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?6n1J7kL31Piq5x5x2nXijv9S0eSzeL+iOedczeokw6c7acjGStAqkqvUutIy?=
+ =?us-ascii?Q?i/bUcI+pU4P3pmUXF+DNyMpFmSgay2o8Id7F43lwvdV8Fg1Ug20vtytHv+Xq?=
+ =?us-ascii?Q?xSBXHzx/Q/cPZpP1vv0QEPGMYJfbDYK2WRdTOXCDGmpTGutY9I6EsbLYqx3Q?=
+ =?us-ascii?Q?oS5NWauv+ugEzebMnnkH6dEZ6RX30qZB3WLqL303cjNofceHwMvD0JMiRaQW?=
+ =?us-ascii?Q?ULuon+uzBI65uwzwOLCLtEv7xts7A1bfGpAr9NHMMkCvc3Yb50neL8zHfvaU?=
+ =?us-ascii?Q?etekG8FR/lTQFyOx9dUeiDpffUaqN7mkmS2aLzQlIZMFQHIncHhNkPGUH8iY?=
+ =?us-ascii?Q?At5MsOPFnahjOSRi6AGyjTCplMAVdoU2qvlbZBrUcqivEvifXOpp3319GUMU?=
+ =?us-ascii?Q?RRwrE6VdX/IEVeDS8YOlmK1o9gp026b5hwAnBJzhxCjE8KQKpQD1kqpfa8Fo?=
+ =?us-ascii?Q?XpBd326YjYo/bAT1mbJGuwBcMIfxue7pH5lw8YeCT+T6ljI/QPzXJQgxwiyx?=
+ =?us-ascii?Q?HxS8Ghw7JXdetTHBOoMgR9dBYjaBrzqDZDZPA4SpGq8/02JmxmMD3oEXk/Ng?=
+ =?us-ascii?Q?NQ5+RBV6FP0Dy4Vray1vYWSQG2exHUeoU5dMYmHsbVWyPVGg5xLr1tevEwvG?=
+ =?us-ascii?Q?UAMLmrqlbJuTeF8774lZPYPwqlnzadMsofttrjJOBXcoFlKqZYpKDiBienBa?=
+ =?us-ascii?Q?RxKJ7JmbExz0QS3iNKLXWSa8XDJB+w2IDpYTfFj8rPhRYQu1H+w1QcFYJGdl?=
+ =?us-ascii?Q?x1ocGMZHVkTQaL6pGTa/3dZ7PNVZFPGbpvav20H1tQO35Kh7QpDyznUdz2Ku?=
+ =?us-ascii?Q?xxRwqA1KoEy4GtuH7kM67QP0aGErNXVYw3biIr3ebDxIFLEa407mP3ennPNU?=
+ =?us-ascii?Q?mMiCw/RWHarNF4hb+W/IzrM4snhj+c6qneJGMTG1QFmZ9Kk9Kh+WhPN0JlO9?=
+ =?us-ascii?Q?ROnprCsf8A6cMkpcsUvRdC8JkE0CcUM9Ag80iO5bc2CvLdSwV8LA/VMg+126?=
+ =?us-ascii?Q?BftRc/3bTbDJ0K2aaHm9/Tq6eZhnyVFtgGu5B2lES8H6HTbwDd42097q+v+U?=
+ =?us-ascii?Q?prlNJ/8LKnD+8UryOmqlUXpdqOyyVxLCnuf/MFA9s27rruaj8vSTB7OlLGce?=
+ =?us-ascii?Q?aJfv2zZ5Urw6tnaeaFEYzlG0jke5yJPm8KNprFPutu6tDGG0VrSQMjuctayI?=
+ =?us-ascii?Q?w5vsqrqSmBRFXREHnWn2Dzltc8aDdz3ih56Oe6XOHSj5ByibgXXYmwNNj01Y?=
+ =?us-ascii?Q?hXsH+9vAREpei9VF2vwwVK2evtHE3AZ0WlA6SQfvA3bqYcqDdxE+BPgtgH26?=
+ =?us-ascii?Q?hT0=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?lZg2hQ+oDMKiKqIkHvKg3ojx/4u4X7sOnI+nbGRt7E5ce0se7aDKtYa/+Quf?=
+ =?us-ascii?Q?2HX7FRUUjrF+Wg4NCCey4r7lLCH+RKShAiBqmWSAY2iX4FlW1e4N6mgY7i9b?=
+ =?us-ascii?Q?d9mgCBxESg3NnHlDsk7+yWy8ghN9IyI10S2Zqfakb/gjSeQfwBxB4CY7jOb6?=
+ =?us-ascii?Q?34WTSa/iBJ5U1GvmggDMvgRu7xFpwjFpe4OSkMq+b0g+AhJN98S9AsaX1XFn?=
+ =?us-ascii?Q?GATneu9tksbgfwPvY7aNqfCEZ1jZWBmeDWQEX04jszi8XUwQUB0M707xWAVo?=
+ =?us-ascii?Q?xILJiUiSkuv/0AbmPxTKm1Tf/dnB1LxLWd9qgaIg9wSFeDdym3LXVAjcOhiY?=
+ =?us-ascii?Q?pZjJLGRnpfoab5D86IIfZjBzDNNvlmJ05zuHH8S13stmUbKRfOvcGV3XOeD1?=
+ =?us-ascii?Q?huOKdAt06CrYmQcRe09jtrRA8sR/YE/Yegtuo3zXedXZptX4koJSv2JwOrcF?=
+ =?us-ascii?Q?hiDSMntVHepa0dMQE4tYElDQhsZkh3riwUUVyYJ5yJFTBBr4qDNn6xmYgauV?=
+ =?us-ascii?Q?6Ri4K6UHMs6nZSSYCSvvf4ScC4TqTgL9FMX+NLzJhkW/otzbulCTNGcSVyI/?=
+ =?us-ascii?Q?6q4hB8LAwFwFeZi7jV/XA8uAysWyH87n6X+Xjk+c8y4caMrU1TDrjFVz9sBO?=
+ =?us-ascii?Q?ixLvJI14vBj3Sc7Dx7fqtk1payOHUvSPxMS91I/Stwxb3PCIRhAP4VX30JoX?=
+ =?us-ascii?Q?AR5r6CpyIajBH8UWERwTD98nnXUNep6MiSUPhAMako2qT/Z19WAKnLkC0+TZ?=
+ =?us-ascii?Q?byRHDn8VkSJoDs6PtPrAUI/f4p/zNmK5kANCuojOCwiSjl9dtmXKx9i2Cx0d?=
+ =?us-ascii?Q?pD4f/mz+gC7tZpoQ6aymjvladyBpVJtz+9D/01s9yDGQVSnq4GaOFxUGdscH?=
+ =?us-ascii?Q?baZj+JMk7bB0+Dv8t7XTmcTdzDZovhGY4SM9ob6ZrhMLZ5EBdiyIFFlj6rOK?=
+ =?us-ascii?Q?OWxWA5sK9k2cXySsIJl2aV1PeeDxmt1w2eiLmj8XoDrgv/n6SM4/be0puK20?=
+ =?us-ascii?Q?5u/L/NqtutR/2v2fl99pMfPd94k5o8LD0WeTp7WdvpgJ6bcUYjuc2jm/eBdj?=
+ =?us-ascii?Q?6Pgr79Gp/eve/AJKmqBpvJT36G5uf5YDjJX+RfjAjhrdWKKguC3K2SUos78q?=
+ =?us-ascii?Q?qNCAndeeXJcQUGNQ+QWvqwPGfqGlr4p4qHrYSB7gcEr4UaxiaIKlxirSOYxT?=
+ =?us-ascii?Q?Ygh47Rvk4qt+Tt/YuJd8kU3R9JvUwbC/1KDclnTPA0kVRTXhVGwEAPve6Liw?=
+ =?us-ascii?Q?qpRKAghCdxoldl7a5vmlGGi0MgjnwgQxmVNZS5WTf7Z00Kn6Gql2bBNKbfjI?=
+ =?us-ascii?Q?yQBnJPaDIaipbYZ1sZrQCi9RgGQZRYahp6peZL3lSTHpF6CFDugP9Hdtnsfn?=
+ =?us-ascii?Q?53dqqjl4HfnJpkrtMJ+ZCyx3lfB1KWSpcBUrW4V3eqUe4ko1hpJOXN0GcdNH?=
+ =?us-ascii?Q?sc1I6Ai0Cpwlb8BNfx9VEctQvOEmmfr1F2NqC0BIv18DTu+0B5BSZbLiRh+S?=
+ =?us-ascii?Q?btMZtLYTZtkOekZERBT7WUAME8Zqn0EuhwsqMbTbfnPzvUPsxzIpS3W0phMd?=
+ =?us-ascii?Q?jOGTFCuqW36Tzj1jO0J3AUUE9/VzAMfzjP8hRybI?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	r091O9kWmMxIDYgdDxyCX5V7aI9u3skSHjrkpWhG82xk7fsdgkdnIt6GkvSPdgeu3Xoe3CyjnpjcShxlkZeCgpFtltgf1Wqn0rKbyRgJNmQb1cNEoculeCxKG0E8Fo0t5v6/JCpswp/22ClfYCBmPfyndwkX852UdHaYk9QOFbfbqOKup7AscrnblCVt8+xQPdTE3aiaBvejKf4HvR15tuUmqhZpxipCpAXP16u9H27t2xS/gKG1i76eTBgQXKpMJOR36NgLQowFkgLGR5TdVQGuuvvCzn7sn6qavWyZhJ2/ceFUZ9uA/kI4NrhQ9g7Num3EG5b3AGfwm4eGFzRpkVhQcbovKNwipYZNf62n4QwvC51ndeq7WugChzZye4MPB/K2/4BNNikVkKQZcfpK/nD0Onc1Aez1i1HixUaM4iwwMI6VTZSmW9dPllOanj8IQ3+2gxNB5B6XHptU95mRKLR88Rh+q3F+vnPwwtHO/P1FVEvuclnA9GEuVuaHT+uR/AqX2UEFFQAUwbRcp1D28Sx56yyc5kyQHyApge2wxw4x3NlBZw3fEGe8D4uyYsTOkgRcASRkL1lS9iancjcvcyxxz1MprAl41q7435At65w=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c8cf863-37aa-4dc1-df64-08dc99534c8e
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2024 22:23:42.6501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0kSDEC/vBgo1kCbBUZ3hveDF8GumgXU30jLVs0bnlum0T6PB4zK3u7f7gLnKr4HS/uTxBANBOEV7BaqjEPeDMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR10MB8196
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-30_16,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2406300180
+X-Proofpoint-GUID: VEGMGOxqXPzqECSXzsqbxN0h0tevbNAo
+X-Proofpoint-ORIG-GUID: VEGMGOxqXPzqECSXzsqbxN0h0tevbNAo
 
-On Sun, 30 Jun 2024, Chuck Lever wrote:
-> Sorry, I guess I expected to have more time to learn about these
-> patches before writing review comments. But if you want them to go
-> in soon, I had better look more closely at them now.
->=20
->=20
-> On Fri, Jun 28, 2024 at 05:10:59PM -0400, Mike Snitzer wrote:
-> > Pass the stored cl_nfssvc_net from the client to the server as
->=20
-> This is the only mention of cl_nfssvc_net I can find in this
-> patch. I'm not sure what it is. Patch description should maybe
-> provide some context.
->=20
->=20
-> > first argument to nfsd_open_local_fh() to ensure the proper network
-> > namespace is used for localio.
->=20
-> Can the patch description say something about the distinct mount=20
-> namespaces -- if the local application is running in a different
-> container than the NFS server, are we using only the network
-> namespaces for authorizing the file access? And is that OK to do?
-> If yes, patch description should explain that NFS local I/O ignores
-> the boundaries of mount namespaces and why that is OK to do.
->=20
->=20
-> > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
-> > Signed-off-by: Peng Tao <tao.peng@primarydata.com>
-> > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfsd/Makefile    |   1 +
-> >  fs/nfsd/filecache.c |   2 +-
-> >  fs/nfsd/localio.c   | 239 ++++++++++++++++++++++++++++++++++++++++++++
-> >  fs/nfsd/nfssvc.c    |   1 +
-> >  fs/nfsd/trace.h     |   3 +-
-> >  fs/nfsd/vfs.h       |   9 ++
-> >  6 files changed, 253 insertions(+), 2 deletions(-)
-> >  create mode 100644 fs/nfsd/localio.c
-> >=20
-> > diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-> > index b8736a82e57c..78b421778a79 100644
-> > --- a/fs/nfsd/Makefile
-> > +++ b/fs/nfsd/Makefile
-> > @@ -23,3 +23,4 @@ nfsd-$(CONFIG_NFSD_PNFS) +=3D nfs4layouts.o
-> >  nfsd-$(CONFIG_NFSD_BLOCKLAYOUT) +=3D blocklayout.o blocklayoutxdr.o
-> >  nfsd-$(CONFIG_NFSD_SCSILAYOUT) +=3D blocklayout.o blocklayoutxdr.o
-> >  nfsd-$(CONFIG_NFSD_FLEXFILELAYOUT) +=3D flexfilelayout.o flexfilelayoutx=
-dr.o
-> > +nfsd-$(CONFIG_NFSD_LOCALIO) +=3D localio.o
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index ad9083ca144b..99631fa56662 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -52,7 +52,7 @@
-> >  #define NFSD_FILE_CACHE_UP		     (0)
-> > =20
-> >  /* We only care about NFSD_MAY_READ/WRITE for this cache */
-> > -#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE)
-> > +#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE|NFSD_MAY_LOCALI=
-O)
-> > =20
-> >  static DEFINE_PER_CPU(unsigned long, nfsd_file_cache_hits);
-> >  static DEFINE_PER_CPU(unsigned long, nfsd_file_acquisitions);
-> > diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-> > new file mode 100644
-> > index 000000000000..759a5cb79652
-> > --- /dev/null
-> > +++ b/fs/nfsd/localio.c
-> > @@ -0,0 +1,239 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * NFS server support for local clients to bypass network stack
-> > + *
-> > + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
-> > + * Copyright (C) 2019 Trond Myklebust <trond.myklebust@hammerspace.com>
-> > + * Copyright (C) 2024 Mike Snitzer <snitzer@hammerspace.com>
-> > + */
-> > +
-> > +#include <linux/exportfs.h>
-> > +#include <linux/sunrpc/svcauth_gss.h>
-> > +#include <linux/sunrpc/clnt.h>
-> > +#include <linux/nfs.h>
-> > +#include <linux/string.h>
-> > +
-> > +#include "nfsd.h"
-> > +#include "vfs.h"
-> > +#include "netns.h"
-> > +#include "filecache.h"
-> > +
-> > +#define NFSDDBG_FACILITY		NFSDDBG_FH
->=20
-> With no more dprintk() call sites in this patch, you no longer need
-> this macro definition.
->=20
->=20
-> > +/*
-> > + * We need to translate between nfs status return values and
-> > + * the local errno values which may not be the same.
-> > + * - duplicated from fs/nfs/nfs2xdr.c to avoid needless bloat of
-> > + *   all compiled nfs objects if it were in include/linux/nfs.h
-> > + */
-> > +static const struct {
-> > +	int stat;
-> > +	int errno;
-> > +} nfs_common_errtbl[] =3D {
-> > +	{ NFS_OK,		0		},
-> > +	{ NFSERR_PERM,		-EPERM		},
-> > +	{ NFSERR_NOENT,		-ENOENT		},
-> > +	{ NFSERR_IO,		-EIO		},
-> > +	{ NFSERR_NXIO,		-ENXIO		},
-> > +/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
-> > +	{ NFSERR_ACCES,		-EACCES		},
-> > +	{ NFSERR_EXIST,		-EEXIST		},
-> > +	{ NFSERR_XDEV,		-EXDEV		},
-> > +	{ NFSERR_NODEV,		-ENODEV		},
-> > +	{ NFSERR_NOTDIR,	-ENOTDIR	},
-> > +	{ NFSERR_ISDIR,		-EISDIR		},
-> > +	{ NFSERR_INVAL,		-EINVAL		},
-> > +	{ NFSERR_FBIG,		-EFBIG		},
-> > +	{ NFSERR_NOSPC,		-ENOSPC		},
-> > +	{ NFSERR_ROFS,		-EROFS		},
-> > +	{ NFSERR_MLINK,		-EMLINK		},
-> > +	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
-> > +	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
-> > +	{ NFSERR_DQUOT,		-EDQUOT		},
-> > +	{ NFSERR_STALE,		-ESTALE		},
-> > +	{ NFSERR_REMOTE,	-EREMOTE	},
-> > +#ifdef EWFLUSH
-> > +	{ NFSERR_WFLUSH,	-EWFLUSH	},
-> > +#endif
-> > +	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
-> > +	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
-> > +	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
-> > +	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
-> > +	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
-> > +	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
-> > +	{ NFSERR_BADTYPE,	-EBADTYPE	},
-> > +	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
-> > +	{ -1,			-EIO		}
-> > +};
-> > +
-> > +/**
-> > + * nfs_stat_to_errno - convert an NFS status code to a local errno
-> > + * @status: NFS status code to convert
-> > + *
-> > + * Returns a local errno value, or -EIO if the NFS status code is
-> > + * not recognized.  nfsd_file_acquire() returns an nfsstat that
-> > + * needs to be translated to an errno before being returned to a
-> > + * local client application.
-> > + */
-> > +static int nfs_stat_to_errno(enum nfs_stat status)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i =3D 0; nfs_common_errtbl[i].stat !=3D -1; i++) {
-> > +		if (nfs_common_errtbl[i].stat =3D=3D (int)status)
-> > +			return nfs_common_errtbl[i].errno;
-> > +	}
-> > +	return nfs_common_errtbl[i].errno;
-> > +}
-> > +
-> > +static void
-> > +nfsd_local_fakerqst_destroy(struct svc_rqst *rqstp)
-> > +{
-> > +	if (rqstp->rq_client)
-> > +		auth_domain_put(rqstp->rq_client);
-> > +	if (rqstp->rq_cred.cr_group_info)
-> > +		put_group_info(rqstp->rq_cred.cr_group_info);
-> > +	/* rpcauth_map_to_svc_cred_local() clears cr_principal */
-> > +	WARN_ON_ONCE(rqstp->rq_cred.cr_principal !=3D NULL);
-> > +	kfree(rqstp->rq_xprt);
-> > +	kfree(rqstp);
-> > +}
-> > +
-> > +static struct svc_rqst *
-> > +nfsd_local_fakerqst_create(struct net *net, struct rpc_clnt *rpc_clnt,
-> > +			const struct cred *cred)
-> > +{
-> > +	struct svc_rqst *rqstp;
-> > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > +	int status;
-> > +
-> > +	/* FIXME: not running in nfsd context, must get reference on nfsd_serv =
-*/
-> > +	if (unlikely(!READ_ONCE(nn->nfsd_serv)))
-> > +		return ERR_PTR(-ENXIO);
-> > +
-> > +	rqstp =3D kzalloc(sizeof(*rqstp), GFP_KERNEL);
-> > +	if (!rqstp)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	rqstp->rq_xprt =3D kzalloc(sizeof(*rqstp->rq_xprt), GFP_KERNEL);
-> > +	if (!rqstp->rq_xprt) {
-> > +		status =3D -ENOMEM;
-> > +		goto out_err;
-> > +	}
->=20
-> struct svc_rqst is pretty big (like, bigger than a couple of pages).
-> What happens if this allocation fails?
->=20
-> And how often does it occur -- does that add significant overhead?
->=20
->=20
-> > +
-> > +	rqstp->rq_xprt->xpt_net =3D net;
-> > +	__set_bit(RQ_SECURE, &rqstp->rq_flags);
-> > +	rqstp->rq_proc =3D 1;
-> > +	rqstp->rq_vers =3D 3;
->=20
-> IMO these need to be symbolic constants, not integers. Or, at least
-> there needs to be some documenting comments that explain these are
-> fake and why that's OK to do. Or, are there better choices?
->=20
->=20
-> > +	rqstp->rq_prot =3D IPPROTO_TCP;
-> > +	rqstp->rq_server =3D nn->nfsd_serv;
-> > +
-> > +	/* Note: we're connecting to ourself, so source addr =3D=3D peer addr */
-> > +	rqstp->rq_addrlen =3D rpc_peeraddr(rpc_clnt,
-> > +			(struct sockaddr *)&rqstp->rq_addr,
-> > +			sizeof(rqstp->rq_addr));
-> > +
-> > +	rpcauth_map_to_svc_cred_local(rpc_clnt->cl_auth, cred, &rqstp->rq_cred);
-> > +
-> > +	/*
-> > +	 * set up enough for svcauth_unix_set_client to be able to wait
-> > +	 * for the cache downcall. Note that we do _not_ want to allow the
-> > +	 * request to be deferred for later revisit since this rqst and xprt
-> > +	 * are not set up to run inside of the normal svc_rqst engine.
-> > +	 */
-> > +	INIT_LIST_HEAD(&rqstp->rq_xprt->xpt_deferred);
-> > +	kref_init(&rqstp->rq_xprt->xpt_ref);
-> > +	spin_lock_init(&rqstp->rq_xprt->xpt_lock);
-> > +	rqstp->rq_chandle.thread_wait =3D 5 * HZ;
-> > +
-> > +	status =3D svcauth_unix_set_client(rqstp);
-> > +	switch (status) {
-> > +	case SVC_OK:
-> > +		break;
-> > +	case SVC_DENIED:
-> > +		status =3D -ENXIO;
-> > +		goto out_err;
-> > +	default:
-> > +		status =3D -ETIMEDOUT;
-> > +		goto out_err;
-> > +	}
->=20
-> Interesting. Why would svcauth_unix_set_client fail for a local I/O
-> request? Wouldn't it only be because the local application is trying
-> to open a file it doesn't have permission to?
->=20
+On Mon, Jul 01, 2024 at 08:01:30AM +1000, NeilBrown wrote:
+> On Sun, 30 Jun 2024, Chuck Lever wrote:
+> > On Fri, Jun 28, 2024 at 05:10:53PM -0400, Mike Snitzer wrote:
+> > > This is nfs-localio code which blurs the boundary between server and
+> > > client...
+> > > 
+> > > The change_attr is used by NFS to detect if a file might have changed.
+> > > This code is used to get the attributes after a write request.  NFS
+> > > uses a GETATTR request to the server at other times.  The change_attr
+> > > should be consistent between the two else comparisons will be
+> > > meaningless.
+> > > 
+> > > So nfs_localio_vfs_getattr() should use the same change_attr as the
+> > > one that would be used if the NFS GETATTR request were made.  For
+> > > NFSv3, that is nfs_timespec_to_change_attr() as was already
+> > > implemented.  For NFSv4 it is something different (as implemented in
+> > > this commit).
+> > > 
+> > > [above header derived from linux-nfs message Neil sent on this topic]
+> > 
+> > Instead of this note, I recommend:
+> > 
+> > Message-Id: <171918165963.14261.959545364150864599@noble.neil.brown.name>
+> 
+> Linus would not be impressed.  He likes links that you can click on and
+> follow.
 
-I'm beginning to think this section of code is the of the sort where you
-need to be twice as clever when debugging as you where when writing.  It
-is trying to get the client to use interfaces written for server-side
-actions, and it isn't a good fit.
+I've read email that suggests he doesn't like those either. Another
+day ending in "y", I guess.
 
-I think that instead we should modify fh_verify() so that it takes
-explicit net, rq_vers, rq_cred, rq_client as well as the rqstp, and
-the localio client passes in a NULL rqstp.
 
-Getting the rq_client is an interesting challenge.
-The above code (if I'm reading it correctly) gets the server-side
-address of the IP connection, and passes that through to the sunrpc code
-as though it is the client address.  So as long as the server is
-exporting to itself, and as long as no address translation is happening
-on the path, this works.  It feels messy though - and fragile.
+> So
+>    Link: https://lore.kernel.org/171918165963.14261.959545364150864599@noble.neil.brown.name
+> 
+> is preferred (at least I think that is the current state of the
+> conversation
+> 
+> see https://lore.kernel.org/all/CAHk-=wiD9du3fBHuLYzwUSdNgY+hxMZEWNZpqJXy-=wD2wafdg@mail.gmail.com/
 
-I would rather we had some rq_client (struct auth_domain) that was
-dedicated to localio.  The client should be able to access it based on
-the fact that it could rather the server UUID using the LOCALIO RPC
-protocol.
+As I read it, this refers to using Message-Id: to link to a patch
+submission. I'm linking to a discussion thread, not to a patch.
+Just to be clear.
 
-I'm not sure what exactly this would look like, but the=20
-'struct auth_domain *' should be something that can be accessed
-directly, not looked up in a cache.
 
-I can try to knock up a patch to allow fh_verify (and nfsd_file_acquire)
-without an rqstp.  I won't try the auth_domain change until I hear what
-others think.
+> NeilBrown
+> 
+> > 
+> > 
+> > > Suggested-by: NeilBrown <neil@brown.name>
+> > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > > ---
+> > >  fs/nfs/localio.c | 48 +++++++++++++++++++++++++++++++++++++++---------
+> > >  1 file changed, 39 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> > > index 0f7d6d55087b..fe96f05ba8ca 100644
+> > > --- a/fs/nfs/localio.c
+> > > +++ b/fs/nfs/localio.c
+> > > @@ -364,21 +364,47 @@ nfs_set_local_verifier(struct inode *inode,
+> > >  	verf->committed = how;
+> > >  }
+> > >  
+> > > +/* Factored out from fs/nfsd/vfs.h:fh_getattr() */
+> > > +static int __vfs_getattr(struct path *p, struct kstat *stat, int version)
+> > > +{
+> > > +	u32 request_mask = STATX_BASIC_STATS;
+> > > +
+> > > +	if (version == 4)
+> > > +		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
+> > > +	return vfs_getattr(p, stat, request_mask, AT_STATX_SYNC_AS_STAT);
+> > > +}
+> > > +
+> > > +/*
+> > > + * Copied from fs/nfsd/nfsfh.c:nfsd4_change_attribute(),
+> > > + * FIXME: factor out to common code.
+> > > + */
+> > > +static u64 __nfsd4_change_attribute(const struct kstat *stat,
+> > > +				    const struct inode *inode)
+> > > +{
+> > > +	u64 chattr;
+> > > +
+> > > +	if (stat->result_mask & STATX_CHANGE_COOKIE) {
+> > > +		chattr = stat->change_cookie;
+> > > +		if (S_ISREG(inode->i_mode) &&
+> > > +		    !(stat->attributes & STATX_ATTR_CHANGE_MONOTONIC)) {
+> > > +			chattr += (u64)stat->ctime.tv_sec << 30;
+> > > +			chattr += stat->ctime.tv_nsec;
+> > > +		}
+> > > +	} else {
+> > > +		chattr = time_to_chattr(&stat->ctime);
+> > > +	}
+> > > +	return chattr;
+> > > +}
+> > > +
+> > >  static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
+> > >  {
+> > >  	struct kstat stat;
+> > >  	struct file *filp = iocb->kiocb.ki_filp;
+> > >  	struct nfs_pgio_header *hdr = iocb->hdr;
+> > >  	struct nfs_fattr *fattr = hdr->res.fattr;
+> > > +	int version = NFS_PROTO(hdr->inode)->version;
+> > >  
+> > > -	if (unlikely(!fattr) || vfs_getattr(&filp->f_path, &stat,
+> > > -					    STATX_INO |
+> > > -					    STATX_ATIME |
+> > > -					    STATX_MTIME |
+> > > -					    STATX_CTIME |
+> > > -					    STATX_SIZE |
+> > > -					    STATX_BLOCKS,
+> > > -					    AT_STATX_SYNC_AS_STAT))
+> > > +	if (unlikely(!fattr) || __vfs_getattr(&filp->f_path, &stat, version))
+> > >  		return;
+> > >  
+> > >  	fattr->valid = (NFS_ATTR_FATTR_FILEID |
+> > > @@ -394,7 +420,11 @@ static void nfs_local_vfs_getattr(struct nfs_local_kiocb *iocb)
+> > >  	fattr->atime = stat.atime;
+> > >  	fattr->mtime = stat.mtime;
+> > >  	fattr->ctime = stat.ctime;
+> > > -	fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
+> > > +	if (version == 4) {
+> > > +		fattr->change_attr =
+> > > +			__nfsd4_change_attribute(&stat, file_inode(filp));
+> > > +	} else
+> > > +		fattr->change_attr = nfs_timespec_to_change_attr(&fattr->ctime);
+> > >  	fattr->du.nfs3.used = stat.blocks << 9;
+> > >  }
+> > >  
+> > > -- 
+> > > 2.44.0
+> > > 
+> > 
+> > -- 
+> > Chuck Lever
+> > 
+> 
 
-NeilBrown
+-- 
+Chuck Lever
 
