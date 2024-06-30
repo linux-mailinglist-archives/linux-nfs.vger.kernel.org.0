@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-4416-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4417-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4730E91D2B3
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 18:37:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5625791D2B4
+	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 18:37:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7ED51F212A1
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 16:37:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FB171C20971
+	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jun 2024 16:37:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4707153BD9;
-	Sun, 30 Jun 2024 16:37:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFBC915445B;
+	Sun, 30 Jun 2024 16:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jYxakxId"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1jtQkmo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF82153838
-	for <linux-nfs@vger.kernel.org>; Sun, 30 Jun 2024 16:37:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C76C153838
+	for <linux-nfs@vger.kernel.org>; Sun, 30 Jun 2024 16:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719765463; cv=none; b=fL1O+WuxFwmysYf4PlPiBe8wUGBDEyC/Lo5uzz/pnCM85EmqzYB9B8USa9StyhnzYj/UULED1XqBFXgD/sjNLOxefYP4OOULHRoNHgi6Hj+FFMz6ci73iDctrDJpz0mRTx2R8QEzzjQMwtqWDcf7Z6tggH5klRMRRKsQ4id6EYI=
+	t=1719765464; cv=none; b=r9j9hlF8lpJscDSNPrPzrU8XKID//l4j6S+7L1X6dfe1bKYxgJ5YyvipNEYZWk984Kl68813Q7fcl0Xz5rHTkzNIvVSOE3BHDjW/yZO3Br6VNhy5lEvZDfMUKF3t8UZDMQ+BtbduKQBNl420AJLkYh+xubVnXWHb6GDagIMGZFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719765463; c=relaxed/simple;
-	bh=uX2M82FwJ3Z9/z6+m112zSbWhk2NtArQoUprB89CtVg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PT8b3+EsGDi0FenWJMepO4+8bFI3rSvRwNTNOXfWRuNdGmYeBXVXIcIJMZBFct5SmzqBOeDqC2IQlER4wbePV+K+TsFXqR/iRDPDB+4/zxWHsjq34NW7cCVD7wfwHIevZSJeJYHmC1JykJgTmRPuJuNgjHTQNOhQ+3mGgM9u0WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jYxakxId; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6054C2BD10;
-	Sun, 30 Jun 2024 16:37:42 +0000 (UTC)
+	s=arc-20240116; t=1719765464; c=relaxed/simple;
+	bh=tmkERfoTUiJ8+89vv7FT3X2MSkEEVlz9hWozpswzLCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qh/+8qxRBAZlNBM6PsYDxGa2trSpgwGkZafx3UZVbSZw6trAUjjOjxq5hfENfetDwEZ+jzj/Ra3y006tALYJ+Gu+LKv19yNhAEh6llmeepTkcdVd33XeCdm6YdsVA51Pe86I8WCYw3GA6HdsQqPMmAMV50TePqU7aCfLcpzQneM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1jtQkmo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43450C4AF0D;
+	Sun, 30 Jun 2024 16:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719765463;
-	bh=uX2M82FwJ3Z9/z6+m112zSbWhk2NtArQoUprB89CtVg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jYxakxIdmbMzcmn7MpfwlX12/cJJt80vRAxC1EJeVsDwj0X7fVi75ZK9DCW9LnDXY
-	 d+skWFRmP0yoaQk1ML79Qx4tSj8mq1354HgqlBa+Yyb2ZmbgIVtvYhsFil3sv0y4AR
-	 BkMmG0mvUksxeHz1U2/lV01QcIItFsT4hVFa+5O9LizXl5+mXBaWY6kOgTUKnbOBgV
-	 tZffVJ1RYov/0SkR6Jifrl/mcZ+OBGUmokQ/5GzjMafzVtqKPGc925rIexkIFGpVPT
-	 tmiOM4OKGEjGsva3Rkv/nbTnZ5OVo4UUv9qABlxDuM9++jK8LlBKwbVOzM5nmAmAX4
-	 /Oqvq3uERgP2w==
+	s=k20201202; t=1719765464;
+	bh=tmkERfoTUiJ8+89vv7FT3X2MSkEEVlz9hWozpswzLCE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=a1jtQkmoiSkhNm6KTn8Z16GNGks3bErMpJ7RcUZ9u9BlK9t9qvnTjqmdErTvtKZLT
+	 CyIVvThYx0uIUCuve7fkBVa0x0Sh147opOZdH6p9CS8hE6DzIy2f39Y6us/UMtA963
+	 YlBS2396owLkE/sy1ItqhkznOPHv5D/fZCyoixXUrtepuMIO8RUlZLBjPILT05Rvh3
+	 qXouMJRG7Ha6DNTSZMArMg+BbOZlW7MCAmohqCfPE20piq20ck1M86whHsVq9oCD+z
+	 9Bn4n/O6C7v/Fwgm604i/Bb3Lq593OVo2CWsRl8sTSKtpjO3RYKn76eUmATa5Ta8OK
+	 pkNbi87u1QiUA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,10 +49,12 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>,
 	snitzer@hammerspace.com
-Subject: [PATCH v10 00/19] nfs/nfsd: add support for localio
-Date: Sun, 30 Jun 2024 12:37:22 -0400
-Message-ID: <20240630163741.48753-1-snitzer@kernel.org>
+Subject: [PATCH v10 01/19] SUNRPC: add rpcauth_map_to_svc_cred_local
+Date: Sun, 30 Jun 2024 12:37:23 -0400
+Message-ID: <20240630163741.48753-2-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240630163741.48753-1-snitzer@kernel.org>
+References: <20240630163741.48753-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,107 +63,71 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Weston Andros Adamson <dros@primarydata.com>
 
-Changes since v9:
-- Inverted series so that NFSD changes come before NFS.
-- Addressed many of Chuck's various review comments for "[PATCH v9
-  13/19] nfsd: add "localio" support"
+Add new funtion rpcauth_map_to_svc_cred_local which maps a generic
+cred to a svc_cred suitable for use in nfsd.
 
-TODO:
-- Hopefully get a favorable response to this patch from XFS engineers:
-  https://marc.info/?l=linux-xfs&m=171976530416523&w=2
-  (otherwise, will need to revisit using dedicated workqueue patch)
+This is needed by the localio code to map nfs client creds to nfs
+server credentials.
 
-All review and comments are welcome!
+Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ include/linux/sunrpc/auth.h |  4 ++++
+ net/sunrpc/auth.c           | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-Thanks,
-Mike
-
-My git tree is here:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/
-
-This v10 is both branch nfs-localio-for-6.11 (always tracks latest)
-and nfs-localio-for-6.11.v10
-
-Mike Snitzer (10):
-  nfs: factor out {encode,decode}_opaque_fixed to nfs_xdr.h
-  nfs_common: add NFS LOCALIO auxiliary protocol enablement
-  nfsd: add Kconfig options to allow localio to be enabled
-  nfsd: manage netns reference in nfsd_open_local_fh
-  nfsd: use percpu_ref to interlock nfsd_destroy_serv and nfsd_open_local_fh
-  nfsd: implement server support for NFS_LOCALIO_PROGRAM
-  nfs: fix nfs_localio_vfs_getattr() to properly support v4
-  SUNRPC: remove call_allocate() BUG_ON if p_arglen=0 to allow RPC with void arg
-  nfs: implement client support for NFS_LOCALIO_PROGRAM
-  nfs: add Documentation/filesystems/nfs/localio.rst
-
-NeilBrown (1):
-  SUNRPC: replace program list with program array
-
-Trond Myklebust (2):
-  nfs: enable localio for non-pNFS I/O
-  pnfs/flexfiles: enable localio for flexfiles I/O
-
-Weston Andros Adamson (6):
-  SUNRPC: add rpcauth_map_to_svc_cred_local
-  nfsd: add "localio" support
-  nfs: pass nfs_client to nfs_initiate_pgio
-  nfs: pass descriptor thru nfs_initiate_pgio path
-  nfs: pass struct file to nfs_init_pgio and nfs_init_commit
-  nfs: add "localio" support
-
- Documentation/filesystems/nfs/localio.rst | 135 ++++
- fs/Kconfig                                |   3 +
- fs/nfs/Kconfig                            |  14 +
- fs/nfs/Makefile                           |   1 +
- fs/nfs/blocklayout/blocklayout.c          |   6 +-
- fs/nfs/client.c                           |  15 +-
- fs/nfs/filelayout/filelayout.c            |  16 +-
- fs/nfs/flexfilelayout/flexfilelayout.c    | 131 +++-
- fs/nfs/flexfilelayout/flexfilelayout.h    |   2 +
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
- fs/nfs/inode.c                            |   4 +
- fs/nfs/internal.h                         |  60 +-
- fs/nfs/localio.c                          | 827 ++++++++++++++++++++++
- fs/nfs/nfs4xdr.c                          |  13 -
- fs/nfs/nfstrace.h                         |  61 ++
- fs/nfs/pagelist.c                         |  32 +-
- fs/nfs/pnfs.c                             |  24 +-
- fs/nfs/pnfs.h                             |   6 +-
- fs/nfs/pnfs_nfs.c                         |   2 +-
- fs/nfs/write.c                            |  13 +-
- fs/nfs_common/Makefile                    |   3 +
- fs/nfs_common/nfslocalio.c                |  74 ++
- fs/nfsd/Kconfig                           |  14 +
- fs/nfsd/Makefile                          |   1 +
- fs/nfsd/filecache.c                       |   2 +-
- fs/nfsd/localio.c                         | 329 +++++++++
- fs/nfsd/netns.h                           |  12 +-
- fs/nfsd/nfsctl.c                          |   2 +-
- fs/nfsd/nfsd.h                            |   2 +-
- fs/nfsd/nfssvc.c                          | 116 ++-
- fs/nfsd/trace.h                           |   3 +-
- fs/nfsd/vfs.h                             |   9 +
- include/linux/nfs.h                       |   9 +
- include/linux/nfs_fs.h                    |   2 +
- include/linux/nfs_fs_sb.h                 |  10 +
- include/linux/nfs_xdr.h                   |  20 +-
- include/linux/nfslocalio.h                |  42 ++
- include/linux/sunrpc/auth.h               |   4 +
- include/linux/sunrpc/svc.h                |   7 +-
- net/sunrpc/auth.c                         |  15 +
- net/sunrpc/clnt.c                         |   1 -
- net/sunrpc/svc.c                          |  68 +-
- net/sunrpc/svc_xprt.c                     |   2 +-
- net/sunrpc/svcauth_unix.c                 |   3 +-
- 44 files changed, 1986 insertions(+), 135 deletions(-)
- create mode 100644 Documentation/filesystems/nfs/localio.rst
- create mode 100644 fs/nfs/localio.c
- create mode 100644 fs/nfs_common/nfslocalio.c
- create mode 100644 fs/nfsd/localio.c
- create mode 100644 include/linux/nfslocalio.h
-
+diff --git a/include/linux/sunrpc/auth.h b/include/linux/sunrpc/auth.h
+index 61e58327b1aa..872f594a924c 100644
+--- a/include/linux/sunrpc/auth.h
++++ b/include/linux/sunrpc/auth.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_SUNRPC_AUTH_H
+ 
+ #include <linux/sunrpc/sched.h>
++#include <linux/sunrpc/svcauth.h>
+ #include <linux/sunrpc/msg_prot.h>
+ #include <linux/sunrpc/xdr.h>
+ 
+@@ -184,6 +185,9 @@ int			rpcauth_uptodatecred(struct rpc_task *);
+ int			rpcauth_init_credcache(struct rpc_auth *);
+ void			rpcauth_destroy_credcache(struct rpc_auth *);
+ void			rpcauth_clear_credcache(struct rpc_cred_cache *);
++void			rpcauth_map_to_svc_cred_local(struct rpc_auth *,
++						      const struct cred *,
++						      struct svc_cred *);
+ char *			rpcauth_stringify_acceptor(struct rpc_cred *);
+ 
+ static inline
+diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
+index 04534ea537c8..00f12ca779c5 100644
+--- a/net/sunrpc/auth.c
++++ b/net/sunrpc/auth.c
+@@ -308,6 +308,21 @@ rpcauth_init_credcache(struct rpc_auth *auth)
+ }
+ EXPORT_SYMBOL_GPL(rpcauth_init_credcache);
+ 
++void
++rpcauth_map_to_svc_cred_local(struct rpc_auth *auth, const struct cred *cred,
++			      struct svc_cred *svc)
++{
++	svc->cr_uid = cred->uid;
++	svc->cr_gid = cred->gid;
++	svc->cr_flavor = auth->au_flavor;
++	if (cred->group_info)
++		svc->cr_group_info = get_group_info(cred->group_info);
++	/* These aren't relevant for local (network is bypassed) */
++	svc->cr_principal = NULL;
++	svc->cr_gss_mech = NULL;
++}
++EXPORT_SYMBOL_GPL(rpcauth_map_to_svc_cred_local);
++
+ char *
+ rpcauth_stringify_acceptor(struct rpc_cred *cred)
+ {
 -- 
 2.44.0
 
