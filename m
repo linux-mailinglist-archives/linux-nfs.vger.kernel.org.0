@@ -1,179 +1,170 @@
-Return-Path: <linux-nfs+bounces-4467-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4468-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A76091D76E
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 07:27:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4266191DC70
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 12:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 487FA1C222B9
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 05:27:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6E221F23783
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 10:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B206136AF5;
-	Mon,  1 Jul 2024 05:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7BD6136664;
+	Mon,  1 Jul 2024 10:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kXWylXVC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf+KOvFJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F28B2B9BF
-	for <linux-nfs@vger.kernel.org>; Mon,  1 Jul 2024 05:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC5612C486;
+	Mon,  1 Jul 2024 10:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719811651; cv=none; b=emOzrzsI4ta7FhTK8d0a3kyjTNw8w+DCABI8Ws/2tV2z7/D7NB7Gi48z1f6IClPOC7cJZeFBldWcjEdUOdCl27kr9zkxVSDwJBygf7rYLAanX5AYH8LxkRtkRb70yK0mcxvVrbhlPS7zkBBcUDJ7pl8IG9nfKtBIa0d4zXUuBKQ=
+	t=1719829628; cv=none; b=nr907TUxMiIPiDM8qxVmudbKR1475DJ7J+kZ9xzTJWobOJRJYwLNRMw9+qleiHt4r2FTGooGgKYm6rRiE2lD5pzYeBBKKgmosMWQtWj7sVeT/fGUZWBDLmqbqnHEAyE1+QtGejTZOLVr29UyHNuwTTRTnXcBy9Hp5zz9x03hLwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719811651; c=relaxed/simple;
-	bh=oV7nQN1EifSU0v4cqgYVaJIKplNON3+wrxjETY0Br/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U1eNZrN73Hp4E8g2rO1PDLqsqXLq3uBMxBJVazWDv6j71WvDBPpJf5aJ4TI7MvOhlvAZcFz0JqSZT2+vcBtnXqhhvLvI11piymKKihpmOQmCrzhyDPE0zVEoGNGoZZHH+3F0SEi8bmOyenXerRwxAq9HX8QRbS94h8K984P8Wh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kXWylXVC; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=wDVlN7FW9pZgEBXB6oVrItHNSRXsXL5XBqOIsrcVOZA=; b=kXWylXVCIAVVExhpHvAPmUJTaK
-	AiNtGJDQKxdKM7Hd84RX9XY6ODA8SuV8DqwoHjLyBgyD6mUHBgweUmoSvZXcUh1JdwLWUsu+0uN3T
-	haKU5d7CSwQcFHc5kb1bB8ijFeCaG1BiT/spE5eT3SkTOO0DIaTY02yQjPozWxZfEjnUbMV8s1aJG
-	6tPKjQdBTBUd/zxHr/hNlAcC/h1ndq+DJKljBjvXVWhqGqFdLFPEHz+Qtc/6oF5bbs6UBrT3PyZly
-	nrMMVTk5HmZNg6E+ieun42IxSuyTjjQzNlDzfHrDm2xt8PeA6GRBiVdiDk5YVhggZWBLgYfbtvjg/
-	pbpBqRFw==;
-Received: from 2a02-8389-2341-5b80-ec0f-1986-7d09-2a29.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:ec0f:1986:7d09:2a29] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sO9ZZ-00000001kDr-2JXW;
-	Mon, 01 Jul 2024 05:27:29 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 7/7] nfs: don't reuse partially completed requests in nfs_lock_and_join_requests
-Date: Mon,  1 Jul 2024 07:26:54 +0200
-Message-ID: <20240701052707.1246254-8-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240701052707.1246254-1-hch@lst.de>
-References: <20240701052707.1246254-1-hch@lst.de>
+	s=arc-20240116; t=1719829628; c=relaxed/simple;
+	bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aNBvx+6AygEdqOb1vQs/mPAwO0Z8X8LlColdthzknqCVMPHASWprmI1fstOCuJsxNDWK2HAPGyTQylF+r9KjN4f7eOIs7KyGVrtFJADmRwzWEJfzc4fYMFFoDGHvwBv9C/jJvGkulPO3BtiafOGJd/W3i/w54ZIyf8NNd1zwTYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf+KOvFJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A2DC116B1;
+	Mon,  1 Jul 2024 10:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719829628;
+	bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Vf+KOvFJKBw679ZYAgmsH0RLuGYp8IAiSlCCZUhsTO4bKK7aVVnIt6i4tns2GxcVc
+	 arXIZflCj58WmK6HjROQJKCEmt3cQ5z0Hzi3pn3cztxRDFM9AW3TTN05aRVRbzfTIP
+	 nb/Zx0ZvRRprqg1+Pe8fWPIbcD8w30t2kT6oAPo+uHh9tj3fWC6GkC1S99hRvIETG8
+	 521TVFm4Rxsi2Kpi4RFWUdZBsF5bKnOYBn+8q1ndAmtmtM2N3/ewIfHvBZfYQtQ7KW
+	 HZaynh8qe10p4ksacSS8KtMrPUEca2HAktvREYgJJmRJZftrOhVHQ9Oj0ZFkjFs9uC
+	 8nHV+WEk81uqA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 00/11] fs: multigrain timestamp redux
+Date: Mon, 01 Jul 2024 06:26:36 -0400
+Message-Id: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFyEgmYC/2XMQQ7CIBCF4as0sxYDaBt05T1MF7UMdKKFZmiIp
+ uHuYrcu/5eXb4OETJjg2mzAmClRDDX0oYFxGoJHQbY2aKnPstOdmP1KM4p2tEY+lLFGSajnhdH
+ Re4fufe2J0hr5s7tZ/dY/IishxaDM5dRqK51xtydywNcxsoe+lPIFCXxMlJ0AAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3820; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmgoRw4WRZGASUb0ntKxZvyqMtYMkx8cPpzxKSo
+ 7jHqLZ2ou6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZoKEcAAKCRAADmhBGVaC
+ FRklD/0V9mb072IqdAyazN2How8Y2mDXc3TC/CKJ07/XI2o0+GsYhF4MwAHLt4dLmtP0m5lVEYt
+ IXSS117t5QAbroXjMGDO78L/ngFJ6XHQNs8ApzjMPUa8wiawbeiKGEYtqgRm0+QcHsSkXtOKbfN
+ /YpUKYMts3Zt4XXHBcfdJNv2QCNem83SoduUEY5ZGw+Cm3Zi428oPzX4zNx+KGveuc0atwcVkoM
+ bNcs4Ua8HzyOOjnAZPcbSyLDv7nl4Lp8AeF86Pzg9s/TpY1We1cUclLV4H0DBoGVSc6rYrn73IJ
+ F6XwQI5jldA2SxQpsuUq3Q9fRBGLIvU82LiSsJ6TuneSFb/nlLahtrbfTsFZKeBv1T8AtN/Bm3g
+ 7JF8I8BESppicGDpFegi78JzwQvXq9QqPEeQoL7aFSVVBjDjlqz5kGT+3dZn5T6RoKRMPqNiTGY
+ jIBsiFOWOR2qM8jpIb5mwYfHjSJSVf0FYhYrzNiOBhC60Mo5QrsyK73HTwf0ouEznjygtcaOgqs
+ FevfDb09sW8WOF9igWYRK8bqpYkDbxPGVkflRLNElGxBooBGRokJsXnKOj63BWkqpAmZxct3dR6
+ zcO9QewsnTTV5FQuOh/q1SzW+lOoa+eIAOqMTV8bsC+bXen4HUI4jXfhPlhbAOHNxurzh0M7nLT
+ mBgV2UQww4zEPtQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-When NFS requests are split into sub-requests, nfs_inode_remove_request
-calls nfs_page_group_sync_on_bit to set PG_REMOVE on this sub-request and
-only completes the head requests once PG_REMOVE is set on all requests.
-This means that when nfs_lock_and_join_requests sees a PG_REMOVE bit, I/O
-on the request is in progress and has partially completed.   If such a
-request is returned to nfs_try_to_update_request, it could be extended
-with the newly dirtied region and I/O for the combined range will be
-re-scheduled, leading to extra I/O.
+This set is essentially unchanged from the last one, aside from the
+new file in Documentation/. I had a review comment from Andi Kleen
+suggesting that the ctime_floor should be per time_namespace, but I
+think that's incorrect as the realtime clock is not namespaced.
 
-Change the logic to instead restart the search for a request when any
-PG_REMOVE bit is set, as the completion handler will remove the request
-as soon as it can take the page group lock.  This not only avoid
-extending the I/O but also does the right thing for the callers that
-want to cancel or flush the request.
+At LSF/MM this year, we had a discussion about the inode change
+attribute. At the time I mentioned that I thought I could salvage the
+multigrain timestamp work that had to be reverted last year [1].  That
+version had to be reverted because it was possible for a file to get a
+coarse grained timestamp that appeared to be earlier than another file
+that had recently gotten a fine-grained stamp.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+This version corrects the problem by establishing a per-time_namespace
+ctime_floor value that should prevent this from occurring. In the above
+situation that was problematic before, the two files might end up with
+the same timestamp value, but they won't appear to have been modified in
+the wrong order.
+
+That problem was discovered by the test-stat-time gnulib test. Note that
+that test still fails on multigrain timestamps, but that's because its
+method of determining the minimum delay that will show a timestamp
+change will no longer work with multigrain timestamps. I have a patch to
+change the testcase to use a different method that I've posted to the
+bug-gnulib mailing list.
+
+The big question with this set is whether the performance will be
+suitable. The testing I've done seems to show performance parity with
+multigrain timestamps enabled, but it's hard to rule this out regressing
+some workload.
+
+This set is based on top of Christian's vfs.misc branch (which has the
+earlier change to track inode timestamps as discrete integers). If there
+are no major objections, I'd like to let this soak in linux-next for a
+bit to see if any problems shake out.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfs/write.c | 49 ++++++++++++++++++++-----------------------------
- 1 file changed, 20 insertions(+), 29 deletions(-)
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 2c089444303982..4dffdc5aadb2e2 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -144,31 +144,6 @@ static void nfs_io_completion_put(struct nfs_io_completion *ioc)
- 		kref_put(&ioc->refcount, nfs_io_completion_release);
- }
- 
--static void
--nfs_page_set_inode_ref(struct nfs_page *req, struct inode *inode)
--{
--	if (!test_and_set_bit(PG_INODE_REF, &req->wb_flags)) {
--		kref_get(&req->wb_kref);
--		atomic_long_inc(&NFS_I(inode)->nrequests);
--	}
--}
--
--static int
--nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
--{
--	int ret;
--
--	if (!test_bit(PG_REMOVE, &req->wb_flags))
--		return 0;
--	ret = nfs_page_group_lock(req);
--	if (ret)
--		return ret;
--	if (test_and_clear_bit(PG_REMOVE, &req->wb_flags))
--		nfs_page_set_inode_ref(req, inode);
--	nfs_page_group_unlock(req);
--	return 0;
--}
--
- /**
-  * nfs_folio_find_head_request - find head request associated with a folio
-  * @folio: pointer to folio
-@@ -564,6 +539,7 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
- 	struct inode *inode = folio->mapping->host;
- 	struct nfs_page *head, *subreq;
- 	struct nfs_commit_info cinfo;
-+	bool removed;
- 	int ret;
- 
- 	/*
-@@ -588,18 +564,18 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
- 		goto retry;
- 	}
- 
--	ret = nfs_cancel_remove_inode(head, inode);
--	if (ret < 0)
--		goto out_unlock;
--
- 	ret = nfs_page_group_lock(head);
- 	if (ret < 0)
- 		goto out_unlock;
- 
-+	removed = test_bit(PG_REMOVE, &head->wb_flags);
-+
- 	/* lock each request in the page group */
- 	for (subreq = head->wb_this_page;
- 	     subreq != head;
- 	     subreq = subreq->wb_this_page) {
-+		if (test_bit(PG_REMOVE, &subreq->wb_flags))
-+			removed = true;
- 		ret = nfs_page_group_lock_subreq(head, subreq);
- 		if (ret < 0)
- 			goto out_unlock;
-@@ -607,6 +583,21 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
- 
- 	nfs_page_group_unlock(head);
- 
-+	/*
-+	 * If PG_REMOVE is set on any request, I/O on that request has
-+	 * completed, but some requests were still under I/O at the time
-+	 * we locked the head request.
-+	 *
-+	 * In that case the above wait for all requests means that all I/O
-+	 * has now finished, and we can restart from a clean slate.  Let the
-+	 * old requests go away and start from scratch instead.
-+	 */
-+	if (removed) {
-+		nfs_unroll_locks(head, head);
-+		nfs_unlock_and_release_request(head);
-+		goto retry;
-+	}
-+
- 	nfs_init_cinfo_from_inode(&cinfo, inode);
- 	nfs_join_page_group(head, &cinfo, inode);
- 	return head;
+---
+Jeff Layton (11):
+      fs: turn inode ctime fields into a single ktime_t
+      fs: uninline inode_get_ctime and inode_set_ctime_to_ts
+      fs: tracepoints for inode_needs_update_time and inode_set_ctime_to_ts
+      fs: add infrastructure for multigrain timestamps
+      fs: add percpu counters to count fine vs. coarse timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+      Documentation: add a new file documenting multigrain timestamps
+
+ Documentation/filesystems/multigrain-ts.rst | 126 ++++++++++++++++
+ fs/attr.c                                   |  52 ++++++-
+ fs/btrfs/file.c                             |  25 +---
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 221 +++++++++++++++++++++++++---
+ fs/stat.c                                   |  39 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |   6 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  61 +++++---
+ include/trace/events/timestamp.h            | 173 ++++++++++++++++++++++
+ mm/shmem.c                                  |   2 +-
+ 13 files changed, 639 insertions(+), 79 deletions(-)
+---
+base-commit: 2e8c78ef85682671dae2ac3a5aa039b07be0fc0b
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
 -- 
-2.43.0
+Jeff Layton <jlayton@kernel.org>
 
 
