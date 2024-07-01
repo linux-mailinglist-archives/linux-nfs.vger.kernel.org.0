@@ -1,90 +1,89 @@
-Return-Path: <linux-nfs+bounces-4499-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4500-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59F6391E47B
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 17:47:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 716A691E6BD
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 19:35:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05D75280D21
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 15:46:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C20B1C21936
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jul 2024 17:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 325D516D312;
-	Mon,  1 Jul 2024 15:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D0116EB44;
+	Mon,  1 Jul 2024 17:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4PSDxvO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V9fKX6kz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3973236
-	for <linux-nfs@vger.kernel.org>; Mon,  1 Jul 2024 15:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF1216EB48
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Jul 2024 17:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848816; cv=none; b=AMucXyLACSl9sA/WIWmZUNmxG+QBFySWVRmVxw2C+RIxI07kMyzxrOcd3AJZ3DM0cysJOrEi0W4DnYc939EUVmfloInAdztgsxwGBazW8LlRQaIkvq8cmj64QAgKLiGV+7vNmAIW6d9yBGcnPHk4Hu+jT3JnCYRtfig/YE4tVTE=
+	t=1719855344; cv=none; b=G7tmFfVe1ux8Q4IyMZHxV1tfMLUcyK0smTdktH8vs8lVO00upF6rUboMY25nwdnfmdHY0DAZQfjMT22lQOVp+lVpJfDrF+TqA4YrMfWK4xCLD25IvCWeXEZ62XVt3HqDIK+cUuOVG1wJDRvQBOxfFFExY5s21dDr1LnrpNCIbaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848816; c=relaxed/simple;
-	bh=6KqaJYm72s/7X1nlpkNFECNPJZ+ts7qATIci6fuE0Yc=;
+	s=arc-20240116; t=1719855344; c=relaxed/simple;
+	bh=macPBOOIHMcgp3rlj4fUhSoSdwYGpxZkNZnR5EjHCHQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4kCb0GpqkqH3uPRe9wOzFiAxFIFAqi8uvM8VwLhD91pyOXVOYWKAD4KTtjqpm+53m269ZpVAK3nYV0h3sufMIz2RI5bAm9rfJTlM7BZUVOdVPYXDKWvkZwHR+i5iaaXtPNuIx5t1pSDAbCO+b/8VIaHUaEvbsQzdtmwh6Tkzt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c4PSDxvO; arc=none smtp.client-ip=192.198.163.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnhMMmWdHbMnR3NWQYQjuumf5vm2DBqoiRJNm7hXDiVR/b2FpYJ0cmSmHqFyXa+WE7vb7uXJ7FtGI+tWHFjyoUSmx7AKELO5exYUMw4jnCPA/6IQPogPyrt94yOnIVcEgEMzX0PeeyeO3J/P9YdhcGnPMhHTlbeFX+89wmT5LcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V9fKX6kz; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719848812; x=1751384812;
+  t=1719855340; x=1751391340;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6KqaJYm72s/7X1nlpkNFECNPJZ+ts7qATIci6fuE0Yc=;
-  b=c4PSDxvOG2T9dVxISao+ydFW8MPlh6clruvhgdkdXITaYsRs0RyR4sDv
-   iDYTlRlKIwqxh0LWI2fC9catsTgDNIIp4u2Q33wZ72hImDjUg9aMGPgyL
-   tqVeGSAaaoX25YaaDmnsVFzEkRAADIxr2MpeYdPM6/kJlZLf/wZvQl654
-   oAHegC2KjR0HcXDqiYvAAR6jNUTYanmjyBKue6IGwXOYdtdcOB8l5AMlG
-   uOjOf9dDWgZZO4X8tf1xJo47g6zRINKuUNzLdZyF920uJ5XB0JwX2L6Ai
-   9A/bG/+81ITqzfvl7Si1rtChAfFrYQsRs3VpCgJ2hxuLkPPJ4DKfmU+lP
-   w==;
-X-CSE-ConnectionGUID: AVFNfpwaRV6CN4+Kzo9YRw==
-X-CSE-MsgGUID: TDjQDFEnSJW5Y4NcTRb+cQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="17201690"
+  bh=macPBOOIHMcgp3rlj4fUhSoSdwYGpxZkNZnR5EjHCHQ=;
+  b=V9fKX6kz4mFqh1wZNWSQa1/OTAqiR8QATNi5f9UhZdx+apQ2MPQkLo8M
+   qeG+2B9htxNLAEqBfQ3ceBZrXHcaKn0Z32ldMNwbnBvfHgO4ZytWfRUQL
+   +RNxOuERyx8ePi4fzn8Ca9mdVlsFctJRoVqUudOw5Kt/4eRSR6XEfbs+p
+   1IuEL0PcDhJXouWGP50ZVFQz1dwGqBueZ0lgK2ZHrosJlGMPLe9nx4KLS
+   sX0frPLeIf7EUlolPUSIqbnuF+S9sSymA/6IEuhQXefF9RSrwuL4SvT7Z
+   hoClIjqlDE8IJy1no37xO9SBCwkiF++2sg07f4XoAJK2IjJGo37wM3yGs
+   Q==;
+X-CSE-ConnectionGUID: h8dGC3y/QjSV71kqRl3Mxw==
+X-CSE-MsgGUID: ehR3NObJTCqnFANp9CSM4g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16871230"
 X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="17201690"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:46:51 -0700
-X-CSE-ConnectionGUID: 97PKWlRJQqCyGd628igqlg==
-X-CSE-MsgGUID: 2OKKG6IjQ9OZru7Pdioizw==
+   d="scan'208";a="16871230"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:35:38 -0700
+X-CSE-ConnectionGUID: u0/y7GCdTtm8l6dvjLkJEw==
+X-CSE-MsgGUID: jIDeMB13RYC9NirNffUyMg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="68788818"
+   d="scan'208";a="45413364"
 Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 01 Jul 2024 08:46:47 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 01 Jul 2024 10:35:35 -0700
 Received: from kbuild by 68891e0c336b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sOJEr-000Mws-1M;
-	Mon, 01 Jul 2024 15:46:45 +0000
-Date: Mon, 1 Jul 2024 23:46:13 +0800
+	id 1sOKw9-000N72-0l;
+	Mon, 01 Jul 2024 17:35:33 +0000
+Date: Tue, 2 Jul 2024 01:34:34 +0800
 From: kernel test robot <lkp@intel.com>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>, Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH 1/6] nfsd: introduce __fh_verify which takes explicit
- nfsd_net arg
-Message-ID: <202407012313.vEtlGGRL-lkp@intel.com>
-References: <20240701025802.22985-2-neilb@suse.de>
+Subject: Re: [PATCH 2/6] nfsd: add cred parameter to __fh_verify()
+Message-ID: <202407020129.uUBFQk9E-lkp@intel.com>
+References: <20240701025802.22985-3-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="3tYVI+21Ay0ddaWS"
+Content-Type: multipart/mixed; boundary="Kox77dHPm7bHJvKQ"
 Content-Disposition: inline
-In-Reply-To: <20240701025802.22985-2-neilb@suse.de>
+In-Reply-To: <20240701025802.22985-3-neilb@suse.de>
 
 
---3tYVI+21Ay0ddaWS
+--Kox77dHPm7bHJvKQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -100,8 +99,8 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfsd-introduce-__fh_verify-which-takes-explicit-nfsd_net-arg/20240701-122856
 base:   linus/master
-patch link:    https://lore.kernel.org/r/20240701025802.22985-2-neilb%40suse.de
-patch subject: [PATCH 1/6] nfsd: introduce __fh_verify which takes explicit nfsd_net arg
+patch link:    https://lore.kernel.org/r/20240701025802.22985-3-neilb%40suse.de
+patch subject: [PATCH 2/6] nfsd: add cred parameter to __fh_verify()
 config: parisc-defconfig
 compiler: hppa-linux-gcc (GCC) 13.2.0
 reproduce (this is a W=1 build):
@@ -109,139 +108,141 @@ reproduce (this is a W=1 build):
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407012313.vEtlGGRL-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407020129.uUBFQk9E-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> fs/nfsd/nfsfh.c:331: warning: Function parameter or struct member 'nn' not described in '__fh_verify'
->> fs/nfsd/nfsfh.c:331: warning: expecting prototype for fh_verify(). Prototype was for __fh_verify() instead
+   fs/nfsd/nfsfh.c:334: warning: Function parameter or struct member 'nn' not described in '__fh_verify'
+>> fs/nfsd/nfsfh.c:334: warning: Function parameter or struct member 'cred' not described in '__fh_verify'
+   fs/nfsd/nfsfh.c:334: warning: expecting prototype for fh_verify(). Prototype was for __fh_verify() instead
 
 
-vim +331 fs/nfsd/nfsfh.c
+vim +334 fs/nfsd/nfsfh.c
 
-03550fac06c4f0c J. Bruce Fields 2008-03-14  300  
-b3d47676d474ecd J. Bruce Fields 2008-10-20  301  /**
-b3d47676d474ecd J. Bruce Fields 2008-10-20  302   * fh_verify - filehandle lookup and access checking
-b3d47676d474ecd J. Bruce Fields 2008-10-20  303   * @rqstp: pointer to current rpc request
-b3d47676d474ecd J. Bruce Fields 2008-10-20  304   * @fhp: filehandle to be verified
-b3d47676d474ecd J. Bruce Fields 2008-10-20  305   * @type: expected type of object pointed to by filehandle
-b3d47676d474ecd J. Bruce Fields 2008-10-20  306   * @access: type of access needed to object
-b3d47676d474ecd J. Bruce Fields 2008-10-20  307   *
-b3d47676d474ecd J. Bruce Fields 2008-10-20  308   * Look up a dentry from the on-the-wire filehandle, check the client's
-b3d47676d474ecd J. Bruce Fields 2008-10-20  309   * access to the export, and set the current task's credentials.
-b3d47676d474ecd J. Bruce Fields 2008-10-20  310   *
-b3d47676d474ecd J. Bruce Fields 2008-10-20  311   * Regardless of success or failure of fh_verify(), fh_put() should be
-b3d47676d474ecd J. Bruce Fields 2008-10-20  312   * called on @fhp when the caller is finished with the filehandle.
-b3d47676d474ecd J. Bruce Fields 2008-10-20  313   *
-b3d47676d474ecd J. Bruce Fields 2008-10-20  314   * fh_verify() may be called multiple times on a given filehandle, for
-b3d47676d474ecd J. Bruce Fields 2008-10-20  315   * example, when processing an NFSv4 compound.  The first call will look
-b3d47676d474ecd J. Bruce Fields 2008-10-20  316   * up a dentry using the on-the-wire filehandle.  Subsequent calls will
-b3d47676d474ecd J. Bruce Fields 2008-10-20  317   * skip the lookup and just perform the other checks and possibly change
-b3d47676d474ecd J. Bruce Fields 2008-10-20  318   * the current task's credentials.
-03550fac06c4f0c J. Bruce Fields 2008-03-14  319   *
-b3d47676d474ecd J. Bruce Fields 2008-10-20  320   * @type specifies the type of object expected using one of the S_IF*
-b3d47676d474ecd J. Bruce Fields 2008-10-20  321   * constants defined in include/linux/stat.h.  The caller may use zero
-b3d47676d474ecd J. Bruce Fields 2008-10-20  322   * to indicate that it doesn't care, or a negative integer to indicate
-b3d47676d474ecd J. Bruce Fields 2008-10-20  323   * that it expects something not of the given type.
-03550fac06c4f0c J. Bruce Fields 2008-03-14  324   *
-b3d47676d474ecd J. Bruce Fields 2008-10-20  325   * @access is formed from the NFSD_MAY_* constants defined in
-93f580a9a2413de Oleg Drokin     2016-07-07  326   * fs/nfsd/vfs.h.
-03550fac06c4f0c J. Bruce Fields 2008-03-14  327   */
-63e675e35f79eda NeilBrown       2024-07-01  328  static __be32
-63e675e35f79eda NeilBrown       2024-07-01  329  __fh_verify(struct svc_rqst *rqstp, struct nfsd_net *nn,
-63e675e35f79eda NeilBrown       2024-07-01  330  	    struct svc_fh *fhp, umode_t type, int access)
-03550fac06c4f0c J. Bruce Fields 2008-03-14 @331  {
-20ad856e47323e2 Amir Goldstein  2021-01-06  332  	struct svc_export *exp = NULL;
-03550fac06c4f0c J. Bruce Fields 2008-03-14  333  	struct dentry	*dentry;
-03550fac06c4f0c J. Bruce Fields 2008-03-14  334  	__be32		error;
-03550fac06c4f0c J. Bruce Fields 2008-03-14  335  
-03550fac06c4f0c J. Bruce Fields 2008-03-14  336  	if (!fhp->fh_dentry) {
-63e675e35f79eda NeilBrown       2024-07-01  337  		error = nfsd_set_fh_dentry(rqstp, nn, fhp);
-03550fac06c4f0c J. Bruce Fields 2008-03-14  338  		if (error)
-03550fac06c4f0c J. Bruce Fields 2008-03-14  339  			goto out;
-864f0f61f829bac J. Bruce Fields 2009-11-25  340  	}
-^1da177e4c3f415 Linus Torvalds  2005-04-16  341  	dentry = fhp->fh_dentry;
-^1da177e4c3f415 Linus Torvalds  2005-04-16  342  	exp = fhp->fh_export;
-051382885552e12 Chuck Lever     2022-06-21  343  
-051382885552e12 Chuck Lever     2022-06-21  344  	trace_nfsd_fh_verify(rqstp, fhp, type, access);
-051382885552e12 Chuck Lever     2022-06-21  345  
-6fa02839bf9412e J. Bruce Fields 2007-11-12  346  	/*
-864f0f61f829bac J. Bruce Fields 2009-11-25  347  	 * We still have to do all these permission checks, even when
-864f0f61f829bac J. Bruce Fields 2009-11-25  348  	 * fh_dentry is already set:
-864f0f61f829bac J. Bruce Fields 2009-11-25  349  	 * 	- fh_verify may be called multiple times with different
-864f0f61f829bac J. Bruce Fields 2009-11-25  350  	 * 	  "access" arguments (e.g. nfsd_proc_create calls
-864f0f61f829bac J. Bruce Fields 2009-11-25  351  	 * 	  fh_verify(...,NFSD_MAY_EXEC) first, then later (in
-864f0f61f829bac J. Bruce Fields 2009-11-25  352  	 * 	  nfsd_create) calls fh_verify(...,NFSD_MAY_CREATE).
-864f0f61f829bac J. Bruce Fields 2009-11-25  353  	 *	- in the NFSv4 case, the filehandle may have been filled
-864f0f61f829bac J. Bruce Fields 2009-11-25  354  	 *	  in by fh_compose, and given a dentry, but further
-864f0f61f829bac J. Bruce Fields 2009-11-25  355  	 *	  compound operations performed with that filehandle
-864f0f61f829bac J. Bruce Fields 2009-11-25  356  	 *	  still need permissions checks.  In the worst case, a
-864f0f61f829bac J. Bruce Fields 2009-11-25  357  	 *	  mountpoint crossing may have changed the export
-864f0f61f829bac J. Bruce Fields 2009-11-25  358  	 *	  options, and we may now need to use a different uid
-864f0f61f829bac J. Bruce Fields 2009-11-25  359  	 *	  (for example, if different id-squashing options are in
-864f0f61f829bac J. Bruce Fields 2009-11-25  360  	 *	  effect on the new filesystem).
-6fa02839bf9412e J. Bruce Fields 2007-11-12  361  	 */
-03a816b46d7eba7 Steve Dickson   2009-09-09  362  	error = check_pseudo_root(rqstp, dentry, exp);
-03a816b46d7eba7 Steve Dickson   2009-09-09  363  	if (error)
-03a816b46d7eba7 Steve Dickson   2009-09-09  364  		goto out;
-03a816b46d7eba7 Steve Dickson   2009-09-09  365  
-6fa02839bf9412e J. Bruce Fields 2007-11-12  366  	error = nfsd_setuser_and_check_port(rqstp, exp);
-7fc90ec93a5eb71 J. Bruce Fields 2006-06-30  367  	if (error)
-7fc90ec93a5eb71 J. Bruce Fields 2006-06-30  368  		goto out;
-7fc90ec93a5eb71 J. Bruce Fields 2006-06-30  369  
-e75b23f9e323b1e J. Bruce Fields 2016-07-19  370  	error = nfsd_mode_check(rqstp, dentry, type);
-^1da177e4c3f415 Linus Torvalds  2005-04-16  371  	if (error)
-^1da177e4c3f415 Linus Torvalds  2005-04-16  372  		goto out;
-^1da177e4c3f415 Linus Torvalds  2005-04-16  373  
-9091224f3cff472 J. Bruce Fields 2007-07-17  374  	/*
-9091224f3cff472 J. Bruce Fields 2007-07-17  375  	 * pseudoflavor restrictions are not enforced on NLM,
-9091224f3cff472 J. Bruce Fields 2007-07-17  376  	 * which clients virtually always use auth_sys for,
-9091224f3cff472 J. Bruce Fields 2007-07-17  377  	 * even while using RPCSEC_GSS for NFS.
-9091224f3cff472 J. Bruce Fields 2007-07-17  378  	 */
-204f4ce75434c34 J. Bruce Fields 2011-04-08  379  	if (access & NFSD_MAY_LOCK || access & NFSD_MAY_BYPASS_GSS)
-04716e6621ff4ab J. Bruce Fields 2008-08-07  380  		goto skip_pseudoflavor_check;
-04716e6621ff4ab J. Bruce Fields 2008-08-07  381  	/*
-04716e6621ff4ab J. Bruce Fields 2008-08-07  382  	 * Clients may expect to be able to use auth_sys during mount,
-04716e6621ff4ab J. Bruce Fields 2008-08-07  383  	 * even if they use gss for everything else; see section 2.3.2
-04716e6621ff4ab J. Bruce Fields 2008-08-07  384  	 * of rfc 2623.
-04716e6621ff4ab J. Bruce Fields 2008-08-07  385  	 */
-04716e6621ff4ab J. Bruce Fields 2008-08-07  386  	if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT
-04716e6621ff4ab J. Bruce Fields 2008-08-07  387  			&& exp->ex_path.dentry == dentry)
-04716e6621ff4ab J. Bruce Fields 2008-08-07  388  		goto skip_pseudoflavor_check;
-04716e6621ff4ab J. Bruce Fields 2008-08-07  389  
-32c1eb0cd7ee00b Andy Adamson    2007-07-17  390  	error = check_nfsd_access(exp, rqstp);
-32c1eb0cd7ee00b Andy Adamson    2007-07-17  391  	if (error)
-32c1eb0cd7ee00b Andy Adamson    2007-07-17  392  		goto out;
-32c1eb0cd7ee00b Andy Adamson    2007-07-17  393  
-04716e6621ff4ab J. Bruce Fields 2008-08-07  394  skip_pseudoflavor_check:
-^1da177e4c3f415 Linus Torvalds  2005-04-16  395  	/* Finally, check access permissions. */
-0ec757df9743025 J. Bruce Fields 2007-07-17  396  	error = nfsd_permission(rqstp, exp, dentry, access);
-^1da177e4c3f415 Linus Torvalds  2005-04-16  397  out:
-93c128e709aec23 Jeff Layton     2022-10-12  398  	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
-^1da177e4c3f415 Linus Torvalds  2005-04-16  399  	if (error == nfserr_stale)
-4b14885411f74b2 Josef Bacik     2024-01-26  400  		nfsd_stats_fh_stale_inc(nn, exp);
-^1da177e4c3f415 Linus Torvalds  2005-04-16  401  	return error;
-^1da177e4c3f415 Linus Torvalds  2005-04-16  402  }
-^1da177e4c3f415 Linus Torvalds  2005-04-16  403  
+03550fac06c4f0 J. Bruce Fields 2008-03-14  302  
+b3d47676d474ec J. Bruce Fields 2008-10-20  303  /**
+b3d47676d474ec J. Bruce Fields 2008-10-20  304   * fh_verify - filehandle lookup and access checking
+b3d47676d474ec J. Bruce Fields 2008-10-20  305   * @rqstp: pointer to current rpc request
+b3d47676d474ec J. Bruce Fields 2008-10-20  306   * @fhp: filehandle to be verified
+b3d47676d474ec J. Bruce Fields 2008-10-20  307   * @type: expected type of object pointed to by filehandle
+b3d47676d474ec J. Bruce Fields 2008-10-20  308   * @access: type of access needed to object
+b3d47676d474ec J. Bruce Fields 2008-10-20  309   *
+b3d47676d474ec J. Bruce Fields 2008-10-20  310   * Look up a dentry from the on-the-wire filehandle, check the client's
+b3d47676d474ec J. Bruce Fields 2008-10-20  311   * access to the export, and set the current task's credentials.
+b3d47676d474ec J. Bruce Fields 2008-10-20  312   *
+b3d47676d474ec J. Bruce Fields 2008-10-20  313   * Regardless of success or failure of fh_verify(), fh_put() should be
+b3d47676d474ec J. Bruce Fields 2008-10-20  314   * called on @fhp when the caller is finished with the filehandle.
+b3d47676d474ec J. Bruce Fields 2008-10-20  315   *
+b3d47676d474ec J. Bruce Fields 2008-10-20  316   * fh_verify() may be called multiple times on a given filehandle, for
+b3d47676d474ec J. Bruce Fields 2008-10-20  317   * example, when processing an NFSv4 compound.  The first call will look
+b3d47676d474ec J. Bruce Fields 2008-10-20  318   * up a dentry using the on-the-wire filehandle.  Subsequent calls will
+b3d47676d474ec J. Bruce Fields 2008-10-20  319   * skip the lookup and just perform the other checks and possibly change
+b3d47676d474ec J. Bruce Fields 2008-10-20  320   * the current task's credentials.
+03550fac06c4f0 J. Bruce Fields 2008-03-14  321   *
+b3d47676d474ec J. Bruce Fields 2008-10-20  322   * @type specifies the type of object expected using one of the S_IF*
+b3d47676d474ec J. Bruce Fields 2008-10-20  323   * constants defined in include/linux/stat.h.  The caller may use zero
+b3d47676d474ec J. Bruce Fields 2008-10-20  324   * to indicate that it doesn't care, or a negative integer to indicate
+b3d47676d474ec J. Bruce Fields 2008-10-20  325   * that it expects something not of the given type.
+03550fac06c4f0 J. Bruce Fields 2008-03-14  326   *
+b3d47676d474ec J. Bruce Fields 2008-10-20  327   * @access is formed from the NFSD_MAY_* constants defined in
+93f580a9a2413d Oleg Drokin     2016-07-07  328   * fs/nfsd/vfs.h.
+03550fac06c4f0 J. Bruce Fields 2008-03-14  329   */
+63e675e35f79ed NeilBrown       2024-07-01  330  static __be32
+72924991777f5b NeilBrown       2024-07-01  331  __fh_verify(struct svc_rqst *rqstp,
+72924991777f5b NeilBrown       2024-07-01  332  	    struct nfsd_net *nn, struct svc_cred *cred,
+63e675e35f79ed NeilBrown       2024-07-01  333  	    struct svc_fh *fhp, umode_t type, int access)
+03550fac06c4f0 J. Bruce Fields 2008-03-14 @334  {
+20ad856e47323e Amir Goldstein  2021-01-06  335  	struct svc_export *exp = NULL;
+03550fac06c4f0 J. Bruce Fields 2008-03-14  336  	struct dentry	*dentry;
+03550fac06c4f0 J. Bruce Fields 2008-03-14  337  	__be32		error;
+03550fac06c4f0 J. Bruce Fields 2008-03-14  338  
+03550fac06c4f0 J. Bruce Fields 2008-03-14  339  	if (!fhp->fh_dentry) {
+72924991777f5b NeilBrown       2024-07-01  340  		error = nfsd_set_fh_dentry(rqstp, nn, cred, fhp);
+03550fac06c4f0 J. Bruce Fields 2008-03-14  341  		if (error)
+03550fac06c4f0 J. Bruce Fields 2008-03-14  342  			goto out;
+864f0f61f829ba J. Bruce Fields 2009-11-25  343  	}
+^1da177e4c3f41 Linus Torvalds  2005-04-16  344  	dentry = fhp->fh_dentry;
+^1da177e4c3f41 Linus Torvalds  2005-04-16  345  	exp = fhp->fh_export;
+051382885552e1 Chuck Lever     2022-06-21  346  
+051382885552e1 Chuck Lever     2022-06-21  347  	trace_nfsd_fh_verify(rqstp, fhp, type, access);
+051382885552e1 Chuck Lever     2022-06-21  348  
+6fa02839bf9412 J. Bruce Fields 2007-11-12  349  	/*
+864f0f61f829ba J. Bruce Fields 2009-11-25  350  	 * We still have to do all these permission checks, even when
+864f0f61f829ba J. Bruce Fields 2009-11-25  351  	 * fh_dentry is already set:
+864f0f61f829ba J. Bruce Fields 2009-11-25  352  	 * 	- fh_verify may be called multiple times with different
+864f0f61f829ba J. Bruce Fields 2009-11-25  353  	 * 	  "access" arguments (e.g. nfsd_proc_create calls
+864f0f61f829ba J. Bruce Fields 2009-11-25  354  	 * 	  fh_verify(...,NFSD_MAY_EXEC) first, then later (in
+864f0f61f829ba J. Bruce Fields 2009-11-25  355  	 * 	  nfsd_create) calls fh_verify(...,NFSD_MAY_CREATE).
+864f0f61f829ba J. Bruce Fields 2009-11-25  356  	 *	- in the NFSv4 case, the filehandle may have been filled
+864f0f61f829ba J. Bruce Fields 2009-11-25  357  	 *	  in by fh_compose, and given a dentry, but further
+864f0f61f829ba J. Bruce Fields 2009-11-25  358  	 *	  compound operations performed with that filehandle
+864f0f61f829ba J. Bruce Fields 2009-11-25  359  	 *	  still need permissions checks.  In the worst case, a
+864f0f61f829ba J. Bruce Fields 2009-11-25  360  	 *	  mountpoint crossing may have changed the export
+864f0f61f829ba J. Bruce Fields 2009-11-25  361  	 *	  options, and we may now need to use a different uid
+864f0f61f829ba J. Bruce Fields 2009-11-25  362  	 *	  (for example, if different id-squashing options are in
+864f0f61f829ba J. Bruce Fields 2009-11-25  363  	 *	  effect on the new filesystem).
+6fa02839bf9412 J. Bruce Fields 2007-11-12  364  	 */
+03a816b46d7eba Steve Dickson   2009-09-09  365  	error = check_pseudo_root(rqstp, dentry, exp);
+03a816b46d7eba Steve Dickson   2009-09-09  366  	if (error)
+03a816b46d7eba Steve Dickson   2009-09-09  367  		goto out;
+03a816b46d7eba Steve Dickson   2009-09-09  368  
+72924991777f5b NeilBrown       2024-07-01  369  	error = nfsd_setuser_and_check_port(rqstp, cred, exp);
+7fc90ec93a5eb7 J. Bruce Fields 2006-06-30  370  	if (error)
+7fc90ec93a5eb7 J. Bruce Fields 2006-06-30  371  		goto out;
+7fc90ec93a5eb7 J. Bruce Fields 2006-06-30  372  
+e75b23f9e323b1 J. Bruce Fields 2016-07-19  373  	error = nfsd_mode_check(rqstp, dentry, type);
+^1da177e4c3f41 Linus Torvalds  2005-04-16  374  	if (error)
+^1da177e4c3f41 Linus Torvalds  2005-04-16  375  		goto out;
+^1da177e4c3f41 Linus Torvalds  2005-04-16  376  
+9091224f3cff47 J. Bruce Fields 2007-07-17  377  	/*
+9091224f3cff47 J. Bruce Fields 2007-07-17  378  	 * pseudoflavor restrictions are not enforced on NLM,
+9091224f3cff47 J. Bruce Fields 2007-07-17  379  	 * which clients virtually always use auth_sys for,
+9091224f3cff47 J. Bruce Fields 2007-07-17  380  	 * even while using RPCSEC_GSS for NFS.
+9091224f3cff47 J. Bruce Fields 2007-07-17  381  	 */
+204f4ce75434c3 J. Bruce Fields 2011-04-08  382  	if (access & NFSD_MAY_LOCK || access & NFSD_MAY_BYPASS_GSS)
+04716e6621ff4a J. Bruce Fields 2008-08-07  383  		goto skip_pseudoflavor_check;
+04716e6621ff4a J. Bruce Fields 2008-08-07  384  	/*
+04716e6621ff4a J. Bruce Fields 2008-08-07  385  	 * Clients may expect to be able to use auth_sys during mount,
+04716e6621ff4a J. Bruce Fields 2008-08-07  386  	 * even if they use gss for everything else; see section 2.3.2
+04716e6621ff4a J. Bruce Fields 2008-08-07  387  	 * of rfc 2623.
+04716e6621ff4a J. Bruce Fields 2008-08-07  388  	 */
+04716e6621ff4a J. Bruce Fields 2008-08-07  389  	if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT
+04716e6621ff4a J. Bruce Fields 2008-08-07  390  			&& exp->ex_path.dentry == dentry)
+04716e6621ff4a J. Bruce Fields 2008-08-07  391  		goto skip_pseudoflavor_check;
+04716e6621ff4a J. Bruce Fields 2008-08-07  392  
+32c1eb0cd7ee00 Andy Adamson    2007-07-17  393  	error = check_nfsd_access(exp, rqstp);
+32c1eb0cd7ee00 Andy Adamson    2007-07-17  394  	if (error)
+32c1eb0cd7ee00 Andy Adamson    2007-07-17  395  		goto out;
+32c1eb0cd7ee00 Andy Adamson    2007-07-17  396  
+04716e6621ff4a J. Bruce Fields 2008-08-07  397  skip_pseudoflavor_check:
+^1da177e4c3f41 Linus Torvalds  2005-04-16  398  	/* Finally, check access permissions. */
+72924991777f5b NeilBrown       2024-07-01  399  	error = nfsd_permission(cred, exp, dentry, access);
+^1da177e4c3f41 Linus Torvalds  2005-04-16  400  out:
+93c128e709aec2 Jeff Layton     2022-10-12  401  	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
+^1da177e4c3f41 Linus Torvalds  2005-04-16  402  	if (error == nfserr_stale)
+4b14885411f74b Josef Bacik     2024-01-26  403  		nfsd_stats_fh_stale_inc(nn, exp);
+^1da177e4c3f41 Linus Torvalds  2005-04-16  404  	return error;
+^1da177e4c3f41 Linus Torvalds  2005-04-16  405  }
+^1da177e4c3f41 Linus Torvalds  2005-04-16  406  
 
 -- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
---3tYVI+21Ay0ddaWS
+--Kox77dHPm7bHJvKQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=reproduce
 
 reproduce (this is a W=1 build):
         git clone https://github.com/intel/lkp-tests.git ~/lkp-tests
         git checkout linus/master
-        b4 shazam https://lore.kernel.org/r/20240701025802.22985-2-neilb@suse.de
+        b4 shazam https://lore.kernel.org/r/20240701025802.22985-3-neilb@suse.de
         # save the config file
         mkdir build_dir && cp config build_dir/.config
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=parisc olddefconfig
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=parisc SHELL=/bin/bash fs/nfsd/
 
---3tYVI+21Ay0ddaWS
+--Kox77dHPm7bHJvKQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=config
 
@@ -3922,5 +3923,5 @@ CONFIG_LKDTM=m
 # end of Rust hacking
 # end of Kernel hacking
 
---3tYVI+21Ay0ddaWS--
+--Kox77dHPm7bHJvKQ--
 
