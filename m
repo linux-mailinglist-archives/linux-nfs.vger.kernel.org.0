@@ -1,170 +1,260 @@
-Return-Path: <linux-nfs+bounces-4559-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4560-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AC4D924637
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 19:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69C019246FA
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 20:06:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F3E2B269B4
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 17:32:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6B47B25464
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 18:06:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E6081BD005;
-	Tue,  2 Jul 2024 17:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F621C0DF4;
+	Tue,  2 Jul 2024 18:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b="bcv9T56D"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b8cjFzl9";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ehiwPEBd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.aixigo.de (mail.aixigo.de [5.145.142.10])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D961C0043
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Jul 2024 17:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.145.142.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719941539; cv=none; b=tqqTib7p2B/PEHOk7HSnbhMCKacP0XUd5wL/9OEbDTcK916C6SqViFA5BYlmEmXjUhbFn4bJ1BQtpfIS6QIErCdE2ZT74EDoR8Ozb18PhZhWa8cEk5SuaemETYSd+508cjqR0RMDpLatK8fyaGD5cRF+VGlr9RXsZ/sgjuSXtUg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719941539; c=relaxed/simple;
-	bh=yvzVAQJCOvaSALW4Xy4PSORMPNHH80fMk5hw5VwZA3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e0o5HxOJLbHbozFtiA42+m0gwkR18iSDIzb4xGgPoA7GUAc9ymL8I06T+HV9pZwXHiqtwMKmi7oAj30vJPwOuuDY30TSyVujr3iw+/OuaN+RXQddhN9AegxocoftQGu3dGiccH1eImKtZfhjVLJJSCFC/XT43LQ0+pvUbuqZMfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com; spf=pass smtp.mailfrom=aixigo.com; dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b=bcv9T56D; arc=none smtp.client-ip=5.145.142.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aixigo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=yvzVAQJCOvaS
-	ALW4Xy4PSORMPNHH80fMk5hw5VwZA3s=; h=in-reply-to:from:references:cc:to:
-	subject:date; d=aixigo.com; b=bcv9T56DB3DQJLmHFBkp4UMY0Kj269YWGeQLU3/N
-	8ZNO4Fg0iD4f1yJXe64yX4s/isQpXAQ0wYXl2FZ1ZWu89D91UZj6ZlzxwaEoWRwyGou1FA
-	bN1s7I0uR9IAMrCg0cbQfrX21PkObBnCRsiKxRwr4F487Zyo84+pq98iBwgKc=
-Received: from mailhost.ac.aixigo.de (mailhost.ac.aixigo.de [172.19.96.11])
-	by mail.aixigo.de (OpenSMTPD) with ESMTPS id f578876d (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 2 Jul 2024 19:25:31 +0200 (CEST)
-Received: from [172.19.97.128] (dpcl082.ac.aixigo.de [172.19.97.128])
-	by mailhost.ac.aixigo.de (8.17.1.9/8.17.1.9/Debian-2+deb12u2) with ESMTPS id 462HPUeW006652
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 2 Jul 2024 19:25:30 +0200
-Message-ID: <88734306-3076-422a-9884-47f76756fcc9@aixigo.com>
-Date: Tue, 2 Jul 2024 19:25:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FC8178381
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jul 2024 18:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719943583; cv=fail; b=olNMa1k46xdBn3lzNwSydGXAyoi0cPX3tTvBay/Ff+NcAS5HbpHicNZkjpmxWo3p2GQRC3mFajaAZ7R0Tk/l0mqvUpHOgebdfxqYD4kcxO/AJ2R9zPgVO0sQV+ipXRmBjyDu0zqU0aX7A39KUi/RtlPdRq1qVj4MXO4DEK+C9hc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719943583; c=relaxed/simple;
+	bh=gNN7d2SVWrC2MM/6E0M/pqZ82kgUd77i2pxSGd5rIwI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z66l8+ITci9IglTcdH9qDG4ssMdAKjX4H8wiGFVjdmrXs3aN5pAuHaKLEnoqsxfJ/JlrroUdkUbTTeiSjgAOb8spZiwFHwcWTVFk3izo4lwfry5YkwW4Swtsbvsvr+6e/vbEbMWrsnePXW8AhCkWfZQv8bzjoLe4NJLVaESkeWk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=b8cjFzl9; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ehiwPEBd; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HfXPp006974;
+	Tue, 2 Jul 2024 18:06:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-id:content-transfer-encoding:mime-version;
+	 s=corp-2023-11-20; bh=gNN7d2SVWrC2MM/6E0M/pqZ82kgUd77i2pxSGd5rI
+	wI=; b=b8cjFzl98qQNRW4vIDAW5RUlLO8UIUmCTml3laJWLtPDxkcxns/V2l7ZN
+	UUNDRQCsM8cpIQVzm7qUFlh0QAqn//P8fXR2uvm3WpRKyk/KlkfS0VLEyd/asS0V
+	Q8fSAzXHqM7Wul8P0B0Cc0q4qYzQdV37l69kyB5daL8LIlygiDjhpESlK0Nzm6op
+	Ooz2rz/qhUi2RXkZN0exBJRgqMSV3uzElWR/nCquk4SLAeNINWXgHnilf9nxKPZH
+	TdrFQk3euPIlyw1Eoh0ewkFedrJ/+MPmu76TKNhnI0OKg3jdIMelPdzq0S8m3FXw
+	xtNA1g9GYEviLRfAPevA2iU7gEQbg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 402a596b6k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Jul 2024 18:06:13 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 462I514X023607;
+	Tue, 2 Jul 2024 18:06:12 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 404n0y42w4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Jul 2024 18:06:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nDit3C0ksNA9Yoh/WzAiMrsSlvBR2TqSzsr+MbwTxMCeWMIgr017ces7/ZpeaUTcjTLuxR7NCUe4vH94kJZMF+N1PWENY2AWVL/LzivVw3AJe6nbJ7dXfsstFRABdXrl4ib5wtJxRstmIRvLHC/RRB0Wza2pV4ApSEBbeDR1WtMw0nFNYcAuehfI9G+A/as0OnqT56gDr6/R+AAz09oQYlkh5KJd+/hQwaW+tSqb+WwjXowjNw03/Yee1m4HXsVRjtPrKDUtDRhnxgFqTL6+fYhWYpq7FvxAVFa54PqY7YQ8Rj0Ad4twNS1BunD+2BuTWm1CRdddpqMzWKuu9Izokg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gNN7d2SVWrC2MM/6E0M/pqZ82kgUd77i2pxSGd5rIwI=;
+ b=AB3r/y5JMR08XuWy3ApOYH3R3hkFeu5/JZ+HvYjHtLiGJLRpGx6zglSd0IQ6o9X1NeAl3qKQkJMkW9+GmcbsDRZUIG/PdQnS4cUIyLdRy9qRTZ7cx8xlQDhp1yMNJ7nhQy4dRhEScHHqFVwT2Y5r+GXsLRcyZylSZXWVdvaXzwf3K7OQJfp9fYDmmy7Y2z/W8MV2tEVL68LKcprFbwZmbMcbdNuYc9tQQNjMyuuD2xpT8pwvo+AOnfCe5BtjMG+Xdm0UfDMYlnivlyLPTltsOJugj9qJe2l7j9EUDB8kJYs4rqjmKam6EQvjGwNgCVJyNpNENDhTo+bw98UVW7iSSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gNN7d2SVWrC2MM/6E0M/pqZ82kgUd77i2pxSGd5rIwI=;
+ b=ehiwPEBdinhegpljLXAsxDnYWcQoVJaiRMkh485pI/Eb37pcAGtw3uoRO4dnVsNe1qDjEa7RkpLSREGfMyDYVLhePlK+peGZIHRVcVYDvZ+kC+bmINkHIKAIQ5jG9bVG52HyuBxTjTphRYjiVMZGUzBqxnBy9e/mPN1EsGd4hkg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CO1PR10MB4564.namprd10.prod.outlook.com (2603:10b6:303:6f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.25; Tue, 2 Jul
+ 2024 18:06:09 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7741.017; Tue, 2 Jul 2024
+ 18:06:09 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Mike Snitzer <snitzer@kernel.org>
+CC: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Jeff Layton
+	<jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Trond Myklebust
+	<trondmy@hammerspace.com>, Neil Brown <neilb@suse.de>,
+        "snitzer@hammerspace.com" <snitzer@hammerspace.com>
+Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
+Thread-Topic: [PATCH v11 00/20] nfs/nfsd: add support for localio
+Thread-Index: AQHazJzmgcDeJH7XRUCD8QiVhiofhbHju8AA
+Date: Tue, 2 Jul 2024 18:06:09 +0000
+Message-ID: <3A583EDC-519C-4820-87E9-F4DC164656DB@oracle.com>
+References: <20240702162831.91604-1-snitzer@kernel.org>
+In-Reply-To: <20240702162831.91604-1-snitzer@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.600.62)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CO1PR10MB4564:EE_
+x-ms-office365-filtering-correlation-id: 82cae321-1337-43ab-9fcb-08dc9ac1a6a3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?cHgwcUVIanNFZnlYdlYxWEFhUE9kTUxTM1Jyc3A4dlVteWVrMlphWmNDY0Rj?=
+ =?utf-8?B?elpsd1BSb3htMWk4TW5MaXF6a1Y2MEUyNFdDNHQxZVdJT0JsQWg0NkhrODNy?=
+ =?utf-8?B?bFAzYS92b1RvNG1DVHRZSTNVSjZEZ2pGNFRacW4rWEthZm5oZjU4RnFnWVpW?=
+ =?utf-8?B?SVl5cCtWMW84Y1h3QXoxazFKa2V4TGVaYzZjMUhjMWptY1B6NWlwM1loSlJk?=
+ =?utf-8?B?cmM1NzRoaVc5cEZqSUlERDFjSDVmK3Iwc2RGQjMxWURNSVhtU3dWYzRuMGNC?=
+ =?utf-8?B?Szh4MTNpcDNrQUNVNGk2bHNNUjJ0cHhMdE5JeHlQUjEvMDBreEZlaWFodXN4?=
+ =?utf-8?B?V3o3K2lVYnpHUlJiaG9TTC9TaUpqbmRVNkszaG1JOGoxUURlSTlxRk1NbEJB?=
+ =?utf-8?B?aXNuSEk2NExIK21QYVNXdEtBUFFWTVdoWnZ1Ymp5bnhGWkRXaWxHUUwwOWFW?=
+ =?utf-8?B?QmhZQjZLRTdqNGVVdlFHVFRONSt4Y1BQaVg3T2t0OStXOUYwUjh5ZjcvbC9p?=
+ =?utf-8?B?cWwvNWVjeVpmc0xyUHdlVTNZOUI1KzRnQjJLZnVMd21ERUl1TzJaMG9Qdzkv?=
+ =?utf-8?B?SGlKQnNjeDIyd25oSmh3UFRpTURoaVhBRWFvQ3VGS3ZJOGJHNmh6QXBwS1ZQ?=
+ =?utf-8?B?ekZEaWE1QUlocDFFdEE5MXpPSSs2SlBMWCtkdFpOMzZvRkwrMkhqUlJYbk5q?=
+ =?utf-8?B?cTR2VzlQOFRvS3JwOEM1L2xBLzJLd0NZc3FKelhHN2R3U0lYUzZaU1EzMnQr?=
+ =?utf-8?B?d0dvOG9ncFBJUGkwQi9jb2dYV09ORWc0WnlxcWVheVRlTUtnMXpFQnBxL1hW?=
+ =?utf-8?B?NDBGb0dUamdFdXBCRHFqTDVMMy9qUXpDdVJCS2N6dzRpdFYwcnZsTEZzSWpi?=
+ =?utf-8?B?aWVidzA0UUVHb1JtNStDenRURTZ3dDUwcmtTT1RNZmR1dE5jTDVndDI0MFcr?=
+ =?utf-8?B?VDl0VDM2VlFBcW9CNTk0eGY5dW45M3RPZk1ZQitSQ2pTbCtEUWQ3bzlQaUl0?=
+ =?utf-8?B?Z2pFcUQxOUxkVmRZK1lzSXZDMnBRcmxxTG5uTDRrai9JSGkvM0dHRGVFTHRq?=
+ =?utf-8?B?WUpBK1hXVEVzK1BXWmxraFE2VHlIMTdNdGlVVU9BYTM3ZFhlYTFHNWdTc3l4?=
+ =?utf-8?B?ZFhrcVIvbkJmSTJSWlE3c0NqKzlwTE9lZ2p6d1p1Z0EvZDlSQXRGU05YM2Jr?=
+ =?utf-8?B?MGVpSzZzR2xZcHh3WmZNeDhwREYrVXp6NTAwR25ETG8xb21OR2t1a3o5L2pi?=
+ =?utf-8?B?bEIrZUlrWXM3K1hBVTJCZzBuRmNpOFRVTkRVamNia3gwTHByRWltdHgxSXYr?=
+ =?utf-8?B?OVBNNkZTa1dVaHJYVFBvUHE5U1M3ZFFFa0dRazNoQlhFRnUySWhLT1JYTVA2?=
+ =?utf-8?B?bzZyc0p6ek15SHJmd0xqcWNwbjVueERobldYeis3WUQvM3Vkc1N2Z0VxYTRO?=
+ =?utf-8?B?NjUzUUFJS1VUVGxzb2NGWnMxQ2xlOU9uVUh3UEt4L3Awclc5NnlPcTQ1RzAv?=
+ =?utf-8?B?ZlliL0diSWlXbXVWTXA3N1NNY1FaaUc4WHR1b1dEd3l3NGZRbVc1Z0U5ak1I?=
+ =?utf-8?B?ZDRuSzVkdDZ0bmFMT3VFV3BNTlBFWkd6M1pkL1hWM3MvR3hzakhWTE4wZ2tP?=
+ =?utf-8?B?QlJDbnRBTFJvRjdPV2R4R3Jod1orVGxYQ2RDUktUeVVCNVVTS2ExL1pSdnRN?=
+ =?utf-8?B?QnZVbDJOWVlYelA4R2x2bWkydzhyb2pYZmlwYWs5UG9sNFF2Y2FQRkN0Unow?=
+ =?utf-8?B?a2VsdlU3b3Zid1BDR1c4SFBFMzRFVkk4S3RDYno3TTdMNS81NU00cGRqN0ZJ?=
+ =?utf-8?Q?a0UYYa+rTR2MOvktg5zQnkBGAB7nPhos4c7Nw=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?cS9QYlVWblJQKy9OTndRUmFWTlU5ZzJTNFp4R1V3R0phRE1uOU54anlGd1F4?=
+ =?utf-8?B?eFZybDYweG1hZWNjWVVkWVZIMkxiYW5odEdUWnBPTVpTZHNQTlZ4VTRKUHI5?=
+ =?utf-8?B?Tmk4NDcrbXJ4QnVqZTAzS1ZwallaOVBvL3BaUk5NZ3pGQ0hLMFhtYUQ3cU1J?=
+ =?utf-8?B?TGVOWlBmWVdGWGNFVkYwNEltcHdzUFpZUmM5b3VQMTBwUUkyRFhGanE4QVcx?=
+ =?utf-8?B?alRwWlhvMDQwVGN5R2l2d2FuZk1YbHdqS0w5ZGw1emVMQVpDdEcxZTI1emlK?=
+ =?utf-8?B?RDFyamp3ckxTYTNvWk1JY3NqakFpWXJrQkRXTGNsSlQvTC9ERGRyUys2OS9U?=
+ =?utf-8?B?OC9CQUMrN04zZ0RGMHpiVHBqRVIyNkpJc1V0WmVSM2J0bTNZTVYzQUU0ckV2?=
+ =?utf-8?B?NjN6cDczQjE4WWtNMUZnQjhtbDcyK1ZQRlA3RmhmM2xkTFJmOUdwQkZLWDJP?=
+ =?utf-8?B?alA5SmVmam5GaExKQ3M4VlY1R0hOMi9UbTkwMkRmTXBEeHlnZ1JnVWt2Mzk5?=
+ =?utf-8?B?QmJESGNwR1R4a2lhbk1lTEx5NWRETE1BUzhvdlFpSFpobklBWUVBeVNseW96?=
+ =?utf-8?B?NGlSNWhpYlcxZ3pVWDhkVkhKWFlEbTZwZEdCcWU1MEREWUdaN0U1b3pURWcy?=
+ =?utf-8?B?U3JncXovVEZIenp2dDhVZUF2UXp0VFJsbnJSTmtVV2ovMHJaa2RCMVdvWEFH?=
+ =?utf-8?B?N1ZUOU9RdEdiS1Jvb2hKTFQvQzU4NGl6OFlYYzh0NXU5RTFEQ2J6WEJUZmls?=
+ =?utf-8?B?K0JLZkZwdjI2dU9QanBGMksvMEVjbnEyOURpbHR1S1gyYklZVGNhMVpDZmRx?=
+ =?utf-8?B?cHkxemlZcnpmZHJtY2kwV0tobGdnd1d3eklxTk8vR1dNTmQyTFk1bzJ3akJ5?=
+ =?utf-8?B?WldTOGU5a2M0dHZuYlliRVlhUUI1WnZZT3pWbFBMSVpUS1A2dCtFc1UrTFZo?=
+ =?utf-8?B?Nk16UHlsUXNPWWxXK3l3aHgvdFhvWkNqc2c4WUtibnVwbUNucTRhSXJjVTRa?=
+ =?utf-8?B?OG1yNDBncHF2eWVFQnorUXE3Y2FGNE41V0VQVkNveUllMGdWREZQUUdOSDVK?=
+ =?utf-8?B?WmNrZG0vMk9KL3NBRnJMa2RPcHRqUG0yK0xxUW95bTVwMjZVUWo0TkI3RitD?=
+ =?utf-8?B?aFcwZFRVOGIxbGEyaFd5bHFhaS9KWlhubGVCbTRiSHZEcWdSRDZqY0JpZGFO?=
+ =?utf-8?B?WFdnYks4YUhpYitmMUJVWXRzem9ocU84S1ExY2haTXBYNjhKRnhQc0o0bUtx?=
+ =?utf-8?B?bDNDajlHQ1N4akp5NEJ4c0F1L0hSbUhoWW9FLzRjdERlZlZLeHpQSVplL001?=
+ =?utf-8?B?UnpFNWRJWjR5MG0vc3JJQm0vUXp4SXJGZEkwWTBNWHZmd2NxZmwrcFJYVGxr?=
+ =?utf-8?B?SU1wbjlOd2dkS1ZhUGdqV0pYSThsbGlEQ0V5YU9vUDRyQm5MNk5RcUhmY01Y?=
+ =?utf-8?B?cGdtU3pVK3NsQW50NDQ1blVZRlE2YklyY0o3Ly9vQTF1eEdsSFVRcUx1K1gr?=
+ =?utf-8?B?QzhtU2tyOXBGOTNienNzTjBLdHVieWlFbHZBMG1Yc1ZkK3N4N3dYZFF6aFZ5?=
+ =?utf-8?B?N2Q2cDJ5dThPeVdTZ2w5Q1NkMFpTZ3JqNjV5YWlDc21pZzRGNWJGc2ZGNjY2?=
+ =?utf-8?B?cDFWamhwdXJiS2dnU1pIblk4MjdsTUdMNmlaNisvUUpEby9nTkMxYkRuQzZj?=
+ =?utf-8?B?TnhIUTRqL2lPOFhzdkk3VXRGK1ROMmgxL0JYOWR4RzlxMHg5MDkvV3E0M2xV?=
+ =?utf-8?B?NmI1YittRFFnZHBmUHZTVUNRWGJGZjV0RHFhQ2Z4aEx6U3BqRG1qaFphWkFX?=
+ =?utf-8?B?Y3E3ekdmT0h5RjdONzZ3ekpSTkNoWlpwTnNCaEpMRFgzOEoraHFtNVZzM09T?=
+ =?utf-8?B?TzA2Z1dQeGxTejVaZVJ6enpnTXdES1RCc2M0QVN3NDcvb0ZvdnByQ1FRL2JI?=
+ =?utf-8?B?WFZGak9qcml2ZWg5SUZNd3U0TWdpaGU3clllYXFveGxKZ1Q2QXpZYjhmbE13?=
+ =?utf-8?B?L2ZqSFdVWDRicWxxVUsyai85aE1jbWx0aHduSmp2RVNaUHFjZ2Vpd1JPRldJ?=
+ =?utf-8?B?bDNXVW1MdWJoR2FFTVlPWjdyWDZ5QnlhRFhHNU96NndKWURRTHdYYzRxbzNP?=
+ =?utf-8?B?K0dNb0ZGckQ1Nng2d0tENUlaL2pEWTFaQmhWdUEweE1tNXpsNmJ0MHNJMEJr?=
+ =?utf-8?B?eUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2CB7335FB67FC44DA3829A519C14EF4D@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: nfsd becomes a zombie
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
- <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
- <4eeb2367-c869-4960-869b-c23ef824e044@oracle.com>
- <661a6c9a-81d6-46fd-87ec-274100b12189@aixigo.com>
- <ZnGfEDvQB1FRGVQK@tissot.1015granger.net>
- <668b479b-3a51-4287-b9d7-44d6dfa4eaf4@aixigo.com>
- <27922D49-743D-4FC2-86C6-6926FE52537D@oracle.com>
-From: Harald Dunkel <harald.dunkel@aixigo.com>
-Content-Language: en-US
-In-Reply-To: <27922D49-743D-4FC2-86C6-6926FE52537D@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 1.0.5 at srvvm01.ac.aixigo.de
-X-Virus-Status: Clean
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Z4RgRnq0HgeGwAWpKyQTkr6MGuc4OC2bbtUo8uJVaN+ckv98qQygAsaJNVoSaEjFv3AlmanuiN7ERc+lEvTUuXoKpiehlqamJnWWb1ocjaKjWaBQ2qIRYjG7E+CzqUTb9Nv+mqRi9ngGud3mG1bN2hRJwhe8/qMPZzyRm9vgl2GQd6SinVPQAnjBwHH3W8z5dpKzNhZoVd0iHX4MC92bZkIVG9TSJTMA2LtkRM3Rsn4RDdvYXNZbmry/OLDRkb/zgn/E0tseiRTuFYCUZN6nQA0HyLeYQy8SDT4UAnw5Rn1oxXIwQ3HdMZiogF1pwkvfIXr7cY/r3ubzMXEmnq99/g2lYTVXKjz23Gc8Qa+9isivQCkPbhN+VQ0Xh5gvTHVIdXQPeaVdViOhJyHsB78dAlHPpX+jlkG2lLFsqhbA4ZN+deWRZK68WjVCrl5qzedS2cBptslz6WqaCK/dLwtdJC8irmXAfsnKfkcNRRN/E/GyZ3tCm0KdnRa015zDPxIRePfMqI2aQqmv183HRVy1PtFjEZwzdbAYKxXIGYpqTxhEx4LYZDFqK9z8e7F/bJEkgo6Mv66J4WXMFU/Sw2xhmWA0T1t5iOGD5IrRYBczYTo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82cae321-1337-43ab-9fcb-08dc9ac1a6a3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2024 18:06:09.4793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: l7GxbVnkrKKHn8jRleBs9XZm03457KKVZyEFlj57hoWzNLpzBuJo9ZmIinW9g2FEYpmISPHM/hnPlngKRrvXew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4564
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-02_13,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2407020132
+X-Proofpoint-GUID: 37a7yiz3KgX6XxCkEK7d0k7OpdDBypGR
+X-Proofpoint-ORIG-GUID: 37a7yiz3KgX6XxCkEK7d0k7OpdDBypGR
 
-Hi folks,
-
-my NAS ran into this problem again. NFS got stuck somehow, and
-the nfsd couldn't be killed :-(.
-
-dmesg:
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000749c823f xid 5bf8d3d0
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ce307050 xid 3b4fbd9f
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000f7f9161e xid 0a26635c
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000007c978512 xid 384cbf0c
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000dc3c09f6 xid 53cc0e3e
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000d1675728 xid 129006af
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000047159b90 xid 0c06b6e0
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000008b3b3ac xid 641bb0da
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000009eb832dc xid 005fcc99
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000042dcce88 xid b3cf5de4
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b66bbd6f xid d4f06b56
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b5e5e5a3 xid c032dbba
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000e123efc9 xid 99fa75d9
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ca43f6f0 xid e38d5b74
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ad683927 xid 277cde8c
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000e8e01f09 xid 641df4a4
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000006223d195 xid 3dba2d2a
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b73943aa xid a688e47f
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000004cd80e49 xid 64e688ca
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ef92587f xid 70bf2e44
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000a5ff94a6 xid c0f7a668
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000fd9a0890 xid 0df7d2c7
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000c42ddaac xid 800e710e
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000f43275cf xid 8b05e704
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000009a1d5dcf xid 3c2ba924
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000007cad732d xid e73a0429
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000008e7d297f xid 075a98e5
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ed964446 xid 8bb8e568
-[Tue Jul  2 17:20:19 2024] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b14782f0 xid 4c4ae7c5
-[Tue Jul  2 17:23:28 2024] INFO: task nfsd:3037 blocked for more than 120 seconds.
-[Tue Jul  2 17:23:28 2024]       Not tainted 6.1.0-21-amd64 #1 Debian 6.1.90-1
-[Tue Jul  2 17:23:28 2024] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[Tue Jul  2 17:23:28 2024] task:nfsd            state:D stack:0     pid:3037  ppid:2      flags:0x00004000
-[Tue Jul  2 17:23:28 2024] Call Trace:
-[Tue Jul  2 17:23:28 2024]  <TASK>
-[Tue Jul  2 17:23:28 2024]  __schedule+0x34d/0x9e0
-[Tue Jul  2 17:23:28 2024]  schedule+0x5a/0xd0
-[Tue Jul  2 17:23:28 2024]  schedule_timeout+0x118/0x150
-[Tue Jul  2 17:23:28 2024]  wait_for_completion+0x86/0x160
-[Tue Jul  2 17:23:28 2024]  __flush_workqueue+0x152/0x420
-[Tue Jul  2 17:23:28 2024]  nfsd4_destroy_session+0x1b6/0x250 [nfsd]
-[Tue Jul  2 17:23:28 2024]  nfsd4_proc_compound+0x355/0x660 [nfsd]
-[Tue Jul  2 17:23:28 2024]  nfsd_dispatch+0x1a1/0x2b0 [nfsd]
-[Tue Jul  2 17:23:28 2024]  svc_process_common+0x289/0x5e0 [sunrpc]
-[Tue Jul  2 17:23:28 2024]  ? svc_recv+0x4e5/0x890 [sunrpc]
-[Tue Jul  2 17:23:28 2024]  ? nfsd_svc+0x360/0x360 [nfsd]
-[Tue Jul  2 17:23:28 2024]  ? nfsd_shutdown_threads+0x90/0x90 [nfsd]
-[Tue Jul  2 17:23:28 2024]  svc_process+0xad/0x100 [sunrpc]
-[Tue Jul  2 17:23:28 2024]  nfsd+0xd5/0x190 [nfsd]
-[Tue Jul  2 17:23:28 2024]  kthread+0xda/0x100
-[Tue Jul  2 17:23:28 2024]  ? kthread_complete_and_exit+0x20/0x20
-[Tue Jul  2 17:23:28 2024]  ret_from_fork+0x22/0x30
-[Tue Jul  2 17:23:28 2024]  </TASK>
-[Tue Jul  2 17:23:28 2024] INFO: task nfsd:3038 blocked for more than 120 seconds.
-[Tue Jul  2 17:23:28 2024]       Not tainted 6.1.0-21-amd64 #1 Debian 6.1.90-1
-[Tue Jul  2 17:23:28 2024] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-
-
-/var/log/kern.log:
-2024-06-28T10:40:40.273493+02:00 nasl006b kernel: [959982.169372] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000d1675728 xid 372e06af
-2024-06-28T10:40:40.273507+02:00 nasl006b kernel: [959982.169374] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000506887ca xid 5be3c4d4
-2024-06-28T10:40:40.273508+02:00 nasl006b kernel: [959982.169379] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b5e5e5a3 xid e5d0daba
-2024-06-28T10:40:40.273509+02:00 nasl006b kernel: [959982.169423] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b66bbd6f xid 69696b56
-2024-06-28T10:40:40.273509+02:00 nasl006b kernel: [959982.169498] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000008b3b3ac xid 89b9afda
-2024-06-28T10:40:40.273510+02:00 nasl006b kernel: [959982.169504] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000a5ff94a6 xid e595a668
-2024-06-28T10:40:40.273512+02:00 nasl006b kernel: [959982.169529] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000f7f9161e xid 2fc4625c
-2024-06-28T10:40:40.273513+02:00 nasl006b kernel: [959982.169659] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b73943aa xid cb26e47f
-2024-06-28T10:40:40.273514+02:00 nasl006b kernel: [959982.169691] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000009a1d5dcf xid 61c9a824
-2024-06-28T10:40:40.273514+02:00 nasl006b kernel: [959982.169697] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000749c823f xid 8096d3d0
-2024-06-28T10:40:40.944609+02:00 nasl006b kernel: [959983.506736] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000190b801c xid bdd1dcd0
-2024-06-28T10:40:40.948612+02:00 nasl006b kernel: [959983.512235] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000042dcce88 xid d76d5de4
-2024-06-28T10:40:40.952617+02:00 nasl006b kernel: [959983.514349] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000007cad732d xid 0bd90329
-2024-06-28T10:40:40.952623+02:00 nasl006b kernel: [959983.514564] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000004cd80e49 xid 898488ca
-2024-06-28T10:40:40.952624+02:00 nasl006b kernel: [959983.514951] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000abccd646 xid d0d28401
-2024-06-28T10:40:40.952624+02:00 nasl006b kernel: [959983.515009] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ef92587f xid 955d2e44
-2024-06-28T10:40:40.952625+02:00 nasl006b kernel: [959983.515060] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000ed964446 xid b056e568
-2024-07-02T17:20:23.113792+02:00 nasl006b kernel: [1329564.790305] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000b14782f0 xid 4c4ae7c5
-2024-07-02T17:23:32.268700+02:00 nasl006b kernel: [1329753.944957]  nfsd_dispatch+0x1a1/0x2b0 [nfsd]
-2024-07-02T17:23:32.300740+02:00 nasl006b kernel: [1329753.969482]  svc_process_common+0x289/0x5e0 [sunrpc]
-2024-07-02T17:23:32.300757+02:00 nasl006b kernel: [1329753.969919]  nfsd+0xd5/0x190 [nfsd]
-2024-07-02T17:23:32.364636+02:00 nasl006b kernel: [1329754.041100]  ? nfsd_svc+0x360/0x360 [nfsd]
-2024-07-02T17:23:32.419012+02:00 nasl006b kernel: [1329754.088290]  svc_process+0xad/0x100 [sunrpc]
-2024-07-02T17:23:32.419020+02:00 nasl006b kernel: [1329754.088337]  ret_from_fork+0x22/0x30
-2024-07-02T17:23:32.443744+02:00 nasl006b kernel: [1329754.111842]  svc_process+0xad/0x100 [sunrpc]
-2024-07-02T17:23:32.443749+02:00 nasl006b kernel: [1329754.111882]  ? kthread_complete_and_exit+0x20/0x20
-2024-07-02T17:23:32.488628+02:00 nasl006b kernel: [1329754.161331]  ? kthread_complete_and_exit+0x20/0x20
-
-
-Regards
-Harri
+DQoNCj4gT24gSnVsIDIsIDIwMjQsIGF0IDEyOjI44oCvUE0sIE1pa2UgU25pdHplciA8c25pdHpl
+ckBrZXJuZWwub3JnPiB3cm90ZToNCj4gDQo+IEhpLA0KPiANCj4gVGhlcmUgc2VlbXMgdG8gYmUg
+Y29uc2Vuc3VzIHRoYXQgdGhlc2UgY2hhbmdlcyB3b3J0aHdoaWxlIGFuZA0KPiBleHRlbnNpdmVs
+eSBpdGVyYXRlZCBvbi4NCg0KSSBkb24ndCBzZWUgYSBwdWJsaWMgY29uc2Vuc3VzIGFib3V0ICJl
+eHRlbnNpdmVseSBpdGVyYXRlZA0Kb24iLiBUaGUgZm9sa3MgeW91IHRhbGsgdG8gcHJpdmF0ZWx5
+IG1pZ2h0IGJlbGlldmUgdGhhdCwNCnRob3VnaC4NCg0KDQo+IEknZCB2ZXJ5IG11Y2ggbGlrZSB0
+aGVzZSBjaGFuZ2VzIHRvIGxhbmQgdXBzdHJlYW0gYXMtaXMgKHVubGVzcyByZXZpZXcNCj4gdGVh
+c2VzIG91dCBzb21lIHNob3ctc3RvcHBlcikuICBUaGVzZSBjaGFuZ2VzIGhhdmUgYmVlbiB0ZXN0
+ZWQgZmFpcmx5DQo+IGV4dGVuc2l2ZWx5ICh2aWEgeGZzdGVzdHMpIGF0IHRoaXMgcG9pbnQuDQo+
+IA0KPiBDYW4gd2Ugbm93IHBsZWFzZSBwcm92aWRlIGZvcm1hbCByZXZpZXcgdGFncyBhbmQgbWVy
+Z2UgdGhlc2UgY2hhbmdlcw0KPiB0aHJvdWdoIHRoZSBORlMgY2xpZW50IHRyZWUgZm9yIDYuMTE/
+DQoNCkNvbnRyaWJ1dG9ycyBkb24ndCBnZXQgdG8gZGV0ZXJtaW5lIHRoZSBrZXJuZWwgcmVsZWFz
+ZSB3aGVyZQ0KdGhlaXIgY29kZSBsYW5kczsgbWFpbnRhaW5lcnMgbWFrZSB0aGF0IGRlY2lzaW9u
+LiBZb3UndmUgc3RhdGVkDQp5b3VyIHByZWZlcmVuY2UsIGFuZCB3ZSBhcmUgdHJ5aW5nIHRvIGFj
+Y29tbW9kYXRlLiBCdXQgZnJhbmtseSwNCnRoZSAoc2VydmVyKSBjaGFuZ2VzIGRvbid0IHN0YW5k
+IHVwIHRvIGNsb3NlIGluc3BlY3Rpb24geWV0Lg0KDQpPbmUgb2YgdGhlIGNsaWVudCBtYWludGFp
+bmVycyBoYXMgaGFkIHllYXJzIHRvIGxpdmUgd2l0aCB0aGlzDQp3b3JrLiBCdXQgdGhlIHNlcnZl
+ciBtYWludGFpbmVycyBoYWQgdGhlaXIgZmlyc3QgbG9vayBhdCB0aGlzDQpqdXN0IGEgZmV3IHdl
+ZWtzIGFnbywgYW5kIHRoaXMgaXMgbm90IHRoZSBvbmx5IHRoaW5nIGFueSBvZiB1cw0KaGF2ZSBv
+biBvdXIgcGxhdGVzIGF0IHRoZSBtb21lbnQuIFNvIHlvdSBuZWVkIHRvIGJlIHBhdGllbnQuDQoN
+Cg0KPiBGWUk6DQo+IC0gSSBkbyBub3QgaW50ZW5kIHRvIHJlYmFzZSB0aGlzIHNlcmllcyBvbnRv
+cCBvZiBOZWlsQnJvd24ncyBwYXJ0aWFsDQo+ICBleHBsb3JhdGlvbiBvZiBzaW1wbGlmeWluZyBh
+d2F5IHRoZSBuZWVkIGZvciBhICJmYWtlIiBzdmNfcnFzdA0KPiAgKG5vYmxlIGdvYWxzIGFuZCBo
+YXBweSB0byBoZWxwIHRob3NlIGNoYW5nZXMgbGFuZCB1cHN0cmVhbSBhcyBhbg0KPiAgaW5jcmVt
+ZW50YWwgaW1wcm92ZW1lbnQpOg0KPiAgaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtbmZzJm09
+MTcxOTgwMjY5NTI5OTY1Jnc9Mg0KDQpTb3JyeSwgcmViYXNpbmcgaXMgZ29pbmcgdG8gYmUgYSBy
+ZXF1aXJlbWVudC4NCg0KQWdhaW4sIGFzIHdpdGggdGhlIGRwcmludGsgc3R1ZmYsIHRoaXMgaXMg
+Y29kZSB0aGF0IHdvdWxkIGdldA0KcmV2ZXJ0ZWQgb3IgcmVwbGFjZWQgYXMgc29vbiBhcyB3ZSBt
+ZXJnZS4gV2UgZG9uJ3Qga25vd2luZ2x5DQptZXJnZSB0aGF0IGtpbmQgb2YgY29kZTsgd2UgZml4
+IGl0IGZpcnN0Lg0KDQpUbyBtYWtlIGl0IG9mZmljaWFsLCBmb3IgdjExIG9mIHRoaXMgc2VyaWVz
+Og0KDQogIE5hY2tlZC1ieTogQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+DQoN
+CkknbGwgYmUgbXVjaCBtb3JlIHJlYWR5IHRvIGNvbnNpZGVyIGFuIEFja2VkLWJ5OiBvbmNlIHRo
+ZQ0KImZha2Ugc3ZjX3Jxc3QiIGNvZGUgaGFzIGJlZW4gcmVwbGFjZWQuDQoNCg0KPiAtIEluIGFk
+ZGl0aW9uLCB0d2Vha3MgdG8gdXNlIG5mc2RfZmlsZV9hY3F1aXJlX2djKCkgaW5zdGVhZCBvZg0K
+PiAgbmZzZF9maWxlX2FjcXVpcmUoKSBhcmVuJ3QgYSBwcmlvcml0eS4NCg0KVGhlIGRpc2N1c3Np
+b24gaGFzIG1vdmVkIHdlbGwgYmV5b25kIHRoYXQgbm93Li4uIElJVUMgdGhlDQpwcmVmZXJyZWQg
+YXBwcm9hY2ggbWlnaHQgYmUgdG8gaG9sZCB0aGUgZmlsZSBvcGVuIHVudGlsIHRoZQ0KbG9jYWwg
+YXBwIGlzIGRvbmUgd2l0aCBpdC4gSG93ZXZlciwgSSdtIHN0aWxsIG5vdCBjb252aW5jZWQNCnRo
+ZXJlJ3MgYSBiZW5lZml0IHRvIHVzaW5nIHRoZSBORlNEIGZpbGUgY2FjaGUgdnMuIGEgcGxhaW4N
+CmRlbnRyeV9vcGVuKCkuDQoNCk5laWwncyBjbGVhbi11cCBtaWdodCBub3QgbmVlZCBhZGQgYSBu
+ZXcgbmZzZF9maWxlX2FjcXVpcmUoKQ0KQVBJIGlmIHdlIGdvIHdpdGggcGxhaW4gZGVudHJ5X29w
+ZW4oKS4NCg0KVGhlcmUgYXJlIHN0aWxsIGludGVyZXN0aW5nIGNob2ljZXMgdG8gbWFrZSBoZXJl
+IGJlZm9yZSBpdA0KaXMgbWVyZ2VkLCBzbyBJTU8gdGhlIGNob2ljZXMgYXJvdW5kIG5mc2RfZmls
+ZV9hY3F1aXJlKCkNCnJlbWFpbiBhIHByaW9yaXR5IGZvciBtZXJnZS1yZWFkaW5lc3MuDQoNCg0K
+LS0NCkNodWNrIExldmVyDQoNCg0K
 
