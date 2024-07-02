@@ -1,67 +1,57 @@
-Return-Path: <linux-nfs+bounces-4505-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4506-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19B1B91EBC7
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 02:22:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B54FF91EBCD
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 02:29:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 439C11C203A2
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 00:22:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 358D21F22148
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 00:29:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 268734A03;
-	Tue,  2 Jul 2024 00:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BD357464;
+	Tue,  2 Jul 2024 00:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYYjhApb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7vfRD9O"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51F01C27;
-	Tue,  2 Jul 2024 00:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373E07462
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jul 2024 00:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719879731; cv=none; b=XoapwzLRhDPeJN+k5e6a/+vqzS5INzf/VhK5l2p/2EbtGqlD6+z4jQRay8vIPsvSxQKLP85zg2NjSRV19lFkcK/r8XdSpO3hM2IUNlA0orAtaftKMn5kJ5VNmv3ofyswMonFCMzg9y9J7JQA0Fn3pW43RP12155dBpRHDZW/qiE=
+	t=1719880167; cv=none; b=Ey81aO655Sws+wXJtIEUSoHAWEA/K/dzvQW5tPsgGqaiuFXPtlG8Zl9EXFKl8OrquwzGTMO1jJfH426FFFN8QSKfloPJ00SuY0n/PBKlv0BIjhqRBslkgiuwx/ZR2uSRphVP7GFPiGrAh6jZOFXjcePPAgwwiUa4VJnVc/8n7aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719879731; c=relaxed/simple;
-	bh=eilQUQR1hEY1n0+7vh9oO2ffjz4mLnCHXgoFHh9075A=;
+	s=arc-20240116; t=1719880167; c=relaxed/simple;
+	bh=4BkTgDF6myjvF5WqMsDCL+8HbdsHVEOm6vrROn2tjZw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=P6AZPYQxCsTsHY0mBYDjJOTyvfqg4ekqK0qS/F+A2Oz8ylIlyD7kYcvpx8znNRpcRLKv9i1Pvc4PqcYfUteUtqK5CpVb5pPn9Lwwt6NHAlaHQzp5gNCMilNWo/IvSULvrdDDTZjzPgkOynZmLY07lKCMXVIxSZqhZNj4daHNrNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYYjhApb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C20C116B1;
-	Tue,  2 Jul 2024 00:22:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=TU0YAOprx10rrPA5+v9tmnNn08E6MwdiXjhDX3md5X6J1As1OS4RwUEi6/RBp4WNd0n1rm+MjXHlgLzJn2kxJxA0Z3PxbsAiCVPbUlQ73Rvu4xEsPHBMewkLaCt+ehmNuRM3UfaXo8cwjfW0RGNdEWK8kWgZe6iD5GCK7uhxDMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7vfRD9O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2740CC116B1;
+	Tue,  2 Jul 2024 00:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719879730;
-	bh=eilQUQR1hEY1n0+7vh9oO2ffjz4mLnCHXgoFHh9075A=;
+	s=k20201202; t=1719880166;
+	bh=4BkTgDF6myjvF5WqMsDCL+8HbdsHVEOm6vrROn2tjZw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IYYjhApbHDW/NxyC5Q3C1G5etBVbKHdmHFdwzcNJFv2Izbhy9mFkpPzBs7YgR3aum
-	 1AaUcEHTDLbxEJPLHmrAYKyrUlW9eX7ZFQA5Wm6Ovs/EwwqwtSDDZbVv2g9t4vCdgP
-	 II/UQWgyLap2u/3qfpXg0xt7JFVPt1BqeBm4yGQl1IAXukM5aaRUY4v2SsphfUN41q
-	 ShisS2T+OJxZ8snKNBhLFzrVgwyGauII9kRgPWVkcHvS2BAUMpRaqSuHRLUSB6WzcZ
-	 YpmKvfjNaZO4Lg1yCO8wXW6pWvLBrVCvqH0fACgBeiC5euBZMq9WkvH7yV8tk/bOKy
-	 ubH5Qzu19+jGA==
-Message-ID: <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+	b=I7vfRD9OBVk1ZsQv86w1/8Ego0u/gMPWCE9qWZyHWiGq3TjK82GVB+iYzThoYRB++
+	 HpAbGeqWRP2hYUK9yaYYtgOhaijVOugUoqTPoFOpaqnSSR1kvP/ib/L0ptuKK65yo/
+	 h9RDHKK1fJgSkj6YWPiCZduIRl4MkEZ/FLWxnzJOsOfBKrPMaaUgPq3H2cjYoSbAlX
+	 kzQjQMcU/hBZHxdXCHdpJUfSB6ZplR0bN49oEdJtpl7Z6T5p90dpmtK5mrpMjJ+IIi
+	 BBiMhmNjaaHhzHcibryeeJVlhfpTQQ9wI2mNC66rwJ97Eu3Y9GmBnYGPPoDV8A4JER
+	 28KnP4bkotuvA==
+Message-ID: <062a99d674ea282b317d9e0b457f336810dd5d88.camel@kernel.org>
+Subject: Re: [PATCH 6/6] nfsd: add nfsd_file_acquire_local().
 From: Jeff Layton <jlayton@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
- <chandan.babu@oracle.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- kernel-team@fb.com,  linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org,  linux-ext4@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-mm@kvack.org,  linux-nfs@vger.kernel.org
-Date: Mon, 01 Jul 2024 20:22:07 -0400
-In-Reply-To: <20240701224941.GE612460@frogsfrogsfrogs>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
-	 <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
-	 <20240701224941.GE612460@frogsfrogsfrogs>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Olga
+ Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Mike Snitzer <snitzer@kernel.org>
+Date: Mon, 01 Jul 2024 20:29:25 -0400
+In-Reply-To: <171987815216.16071.11700950008759904924@noble.neil.brown.name>
+References: <>, <a97c04d1166243f758ad5e3f2cc267aa9360b3f8.camel@kernel.org>
+	 <171987815216.16071.11700950008759904924@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -146,146 +136,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-07-01 at 15:49 -0700, Darrick J. Wong wrote:
-> On Wed, Jun 26, 2024 at 09:00:21PM -0400, Jeff Layton wrote:
-> > The ctime is not settable to arbitrary values. It always comes from the
-> > system clock, so we'll never stamp an inode with a value that can't be
-> > represented there. If we disregard people setting their system clock
-> > past the year 2262, there is no reason we can't replace the ctime field=
-s
-> > with a ktime_t.
+On Tue, 2024-07-02 at 09:55 +1000, NeilBrown wrote:
+> On Mon, 01 Jul 2024, Jeff Layton wrote:
 > >=20
-> > Switch the ctime fields to a single ktime_t. Move the i_generation down
-> > above i_fsnotify_mask and then move the i_version into the resulting 8
-> > byte hole. This shrinks struct inode by 8 bytes total, and should
-> > improve the cache footprint as the i_version and ctime are usually
-> > updated together.
-> >=20
-> > The one downside I can see to switching to a ktime_t is that if someone
-> > has a filesystem with files on it that has ctimes outside the ktime_t
-> > range (before ~1678 AD or after ~2262 AD), we won't be able to display
-> > them properly in stat() without some special treatment in the
-> > filesystem. The operating assumption here is that that is not a
-> > practical problem.
+> > Neil, in an earlier email you mentioned that the client could hold onto
+> > the nfsd_file reference over several operations and then put it. That
+> > would be fine too, but I'm unclear on how the client will manage this.
+> > Does the client have a way to keep track of the nfsd_file over several
+> > operations to the same inode?
 >=20
-> What happens if a filesystem with the ability to store ctimes beyond
-> whatever ktime_t supports (AFAICT 2^63-1 nanonseconds on either side of
-> the Unix epoch)?  I think the behavior with your patch is that ktime_set
-> clamps the ctime on iget because the kernel can't handle it?
+> Looking at=20
+>    [PATCH v10 13/19] nfs: add "localio" support
 >=20
-> It's a little surprising that the ctime will suddenly jump back in time
-> to 2262, but maybe you're right that nobody will notice or care? ;)
+> you can see that=20
+>    struct file *local_filp;
+> is added to "struct nfs_open_context".  An nfs_open_context is stored
+> in file->private_data and is attached to the inode via nfsi->open_files.
+> It holds the nfs state for any file open on the NFS filesystem..
 >=20
+> ->local_filp is set the first time nfs_local_file_open_cache() is called
+> and remains set until the final __put_nfs_open_context() call destroys
+> the context.  So it lasts as long as the NFS file is open.  Note that
+> only one successful ->nfsd_open_local_fh() call is made for each opened
+> NFS file.  All IO then uses the "struct file*" with no further reference
+> to nfsd.
+>=20
+> If we stored an nfsd_file in the nfs_open_context, either as well as
+> the 'struct file*' or instead of, then we could call nfsd_file_put()
+> when the nfs file is closed.  That seems to be the correct lifetime and
+> matches (almost) exactly what happens with NFSv4 where OPEN and CLOSE
+> are send over the wire.
 >=20
 
-Yeah, it'd be clamped at KTIME_MAX when we pull in the inode from disk,
-a'la ktime_set.
-
-I think it's important to note that the ctime is not settable from
-userland, so if an on-disk ctime is outside of the ktime_t range, there
-are only two possibilities:
-
-1) the system clock was set to some time (far) in the future when the
-file's metadata was last altered (bad clock? time traveling fs?).
-
-...or...
-
-2) the filesystem has been altered (fuzzing? deliberate doctoring?).
-
-None of these seem like legitimate use cases so I'm arguing that we
-shouldn't worry about them.
-
-(...ok maybe the time travel one could be legit, but someone needs to
-step up and make a case for it, if so.)
+Ok.
 
 > >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  include/linux/fs.h | 26 +++++++++++---------------
-> >  1 file changed, 11 insertions(+), 15 deletions(-)
-> >=20
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 5ff362277834..5139dec085f2 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -662,11 +662,10 @@ struct inode {
-> >  	loff_t			i_size;
-> >  	time64_t		i_atime_sec;
-> >  	time64_t		i_mtime_sec;
-> > -	time64_t		i_ctime_sec;
-> >  	u32			i_atime_nsec;
-> >  	u32			i_mtime_nsec;
-> > -	u32			i_ctime_nsec;
-> > -	u32			i_generation;
-> > +	ktime_t			__i_ctime;
-> > +	atomic64_t		i_version;
-> >  	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
-> >  	unsigned short          i_bytes;
-> >  	u8			i_blkbits;
-> > @@ -701,7 +700,6 @@ struct inode {
-> >  		struct hlist_head	i_dentry;
-> >  		struct rcu_head		i_rcu;
-> >  	};
-> > -	atomic64_t		i_version;
-> >  	atomic64_t		i_sequence; /* see futex */
-> >  	atomic_t		i_count;
-> >  	atomic_t		i_dio_count;
-> > @@ -724,6 +722,8 @@ struct inode {
-> >  	};
-> > =20
-> > =20
-> > +	u32			i_generation;
-> > +
-> >  #ifdef CONFIG_FSNOTIFY
-> >  	__u32			i_fsnotify_mask; /* all events this inode cares about */
-> >  	/* 32-bit hole reserved for expanding i_fsnotify_mask */
-> > @@ -1608,29 +1608,25 @@ static inline struct timespec64 inode_set_mtime=
-(struct inode *inode,
-> >  	return inode_set_mtime_to_ts(inode, ts);
-> >  }
-> > =20
-> > -static inline time64_t inode_get_ctime_sec(const struct inode *inode)
-> > +static inline struct timespec64 inode_get_ctime(const struct inode *in=
-ode)
-> >  {
-> > -	return inode->i_ctime_sec;
-> > +	return ktime_to_timespec64(inode->__i_ctime);
-> >  }
-> > =20
-> > -static inline long inode_get_ctime_nsec(const struct inode *inode)
-> > +static inline time64_t inode_get_ctime_sec(const struct inode *inode)
-> >  {
-> > -	return inode->i_ctime_nsec;
-> > +	return inode_get_ctime(inode).tv_sec;
-> >  }
-> > =20
-> > -static inline struct timespec64 inode_get_ctime(const struct inode *in=
-ode)
-> > +static inline long inode_get_ctime_nsec(const struct inode *inode)
-> >  {
-> > -	struct timespec64 ts =3D { .tv_sec  =3D inode_get_ctime_sec(inode),
-> > -				 .tv_nsec =3D inode_get_ctime_nsec(inode) };
-> > -
-> > -	return ts;
-> > +	return inode_get_ctime(inode).tv_nsec;
-> >  }
-> > =20
-> >  static inline struct timespec64 inode_set_ctime_to_ts(struct inode *in=
-ode,
-> >  						      struct timespec64 ts)
-> >  {
-> > -	inode->i_ctime_sec =3D ts.tv_sec;
-> > -	inode->i_ctime_nsec =3D ts.tv_nsec;
-> > +	inode->__i_ctime =3D ktime_set(ts.tv_sec, ts.tv_nsec);
-> >  	return ts;
-> >  }
-> > =20
-> >=20
-> > --=20
-> > 2.45.2
-> >=20
-> >=20
+> > Even then, I still think we're probably better off just garbage
+> > collecting thse, since it seems likely that they will end up being
+> > reused in many cases.
+>=20
+> Why does this logic apply to localio, but not to normal NFSv4 access?
+>=20
 
+The main idea with the filecache was to keep open files around for a
+little while to reduce the open/close overhead between v3 RPCs. The
+argument for not caching files with v4 is that we have an open stateid
+that pins the open file in place, so we don't need to do that there.
+
+Hanging an nfsd_file off of the nfs client's open_context sounds like a
+reasonable alternative.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
