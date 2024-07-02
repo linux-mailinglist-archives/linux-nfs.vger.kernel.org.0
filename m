@@ -1,388 +1,348 @@
-Return-Path: <linux-nfs+bounces-4570-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4571-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3580E9249D0
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 23:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA91B9249F9
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 23:34:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58E5A1C2126F
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 21:17:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3ABF1C2086F
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jul 2024 21:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF4C14EC7F;
-	Tue,  2 Jul 2024 21:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF08D154C00;
+	Tue,  2 Jul 2024 21:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ms0qJBnM";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aj3vUQkU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WR9dJoxQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6740128372
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Jul 2024 21:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719955042; cv=fail; b=DGfXc2z1R4TQUzA9csKHmtHduX5+81t9WdOND+DsGr9kjs7Iyi+ePdZCy+WmnAjm5PvjCLatFLPt9zmKfJ9hn0IDNi3Ma2QWx99QJkHb5KDNiFMoeULDQxTzWrphIeFaBiFjKbvNhqgZ+fdG2xiKzTI9x0rtGx0fFeBKNcsh+eI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719955042; c=relaxed/simple;
-	bh=a4fy3Af61S6FL6hEeF2Wm7FSJ5Q2nT5N45UOn3bThxg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RkUTO+ocnvSgrdwHJjfTCgeCtPTrz6Kc9tRdGyp8gTlfHtSiqjExtx/LHtH/Jffa3llU1cw+JEz793Tb9l03ij9sPMS1kAYWMhbpSRi7ZI+osvjhkgdnG/Iqbe1Xf8u+Spxr2ChWPJhkfswUq+2HM7M1Ise9jH6OrzxWrrn0r+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ms0qJBnM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aj3vUQkU; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462L0Eom007881;
-	Tue, 2 Jul 2024 21:17:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-id:content-transfer-encoding:mime-version;
-	 s=corp-2023-11-20; bh=a4fy3Af61S6FL6hEeF2Wm7FSJ5Q2nT5N45UOn3bTh
-	xg=; b=Ms0qJBnMgbQDbOR10i07SBsQJjDaV4t5RjGgcWI1Staj1m+wGNsdMEmHN
-	KcqNGa06J+kg67yabfKyOU2BhRwXeUH3up/iQnEKyTQB+Dbf3gV1IlScFDUeNM/R
-	1E0wgNcgfDW8oXlBeUJSyfp066Oepj7nSjUW1UK/NuKVhNNGMI94VO81aeARUiBF
-	VE0OAnfL/L8OgPYOaFXlgh0VkEPMuseoMU+0ENiDXyhZ0TvNagcqbmld5xoLZDMb
-	5qGJuBZxIKkROc1fb9kd+EMwDWw+W9trgqncz3FJfqtU9suM1/ozsnUNRxxt1UGg
-	OQwDzs7QbphVe2AWZji7qz3FSbMhQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 402a596q4f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Jul 2024 21:17:16 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 462K7Re4021541;
-	Tue, 2 Jul 2024 21:17:15 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2044.outbound.protection.outlook.com [104.47.51.44])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4028qee86u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Jul 2024 21:17:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mIjwYxgIbeyXwwXcUFteG/RFhu7RgJSlc3xxEXfJr7ZDV1enNVgUy+bEbteeiXXpfnrDupw5/yIoNFheUNDeIo/dZLdAUQ/ZrSZ5WE+O3W3vvGsz80MvVimoZm16UoThOAJTzD4G8sSYP/9Ba2AWR4TuTc+v3MU1ZDYBcHCnzZGq5/yy5u6g4/QQsoRNOSE8fwHpKIFkzNGDXp9YzuHUeB0P0MymypQSxNL5ovE4jqilqFamMDmTCW+sGp7X3fqGFRhPvCa2vxG7roRylGgoqUtLBUBc2OSftaLXmHAN+KjZfRs4r6fa2faZTtjJ8ak8nGOluqmDU3aNZDllgU16xA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a4fy3Af61S6FL6hEeF2Wm7FSJ5Q2nT5N45UOn3bThxg=;
- b=SOGH9mzsAo4MCBH2jmIBaEdTDn/uCAUvj4J7Bw0sDn7JMgAQNQKO57hyGLKvkU5AC0pC3ngTwufQFd4dcIiIkQp41c9GDvKrCOsqfkb5vkBcRhqr8cGarBAZu7LvPBUNBszppTEd/7tk5rI/2VS/NtYlvGko45sCC91eM3OBne83/w7qO45dX+7PEABt9LYcCPQOg3C9YUm4lohgbCSEWn1+2VA4HO6Njx872ZqsWRSDZVocTWfmP2p/3QTQo8+5DhdfgZjeGq+T9moW6/bCPOkkb63iogQGTKouse4D/GNeAsRROKf+RjdZfcgnN4LCYWspEdJ0+2ikUvWVk1SgUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4fy3Af61S6FL6hEeF2Wm7FSJ5Q2nT5N45UOn3bThxg=;
- b=aj3vUQkUd0Pu7SpgUx+HbNhMFqbgqjACMLBIzr8By8N+NAmqd7yH5u0jWKqoXsrzBpbZ8gw0DaQIP0fOSdyNSpeJirJ76A9fyKXJmtf1XloHxpztlAabvoCJC0/wXzheVz79JGifG4eYaspn5u5VXhQ9sOmOQGTlvwyvCKppHXc=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BLAPR10MB4913.namprd10.prod.outlook.com (2603:10b6:208:307::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Tue, 2 Jul
- 2024 21:17:13 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7741.017; Tue, 2 Jul 2024
- 21:17:13 +0000
-From: Chuck Lever III <chuck.lever@oracle.com>
-To: David Wysochanski <dwysocha@redhat.com>
-CC: Dave Wysochanski <wysochanski@pobox.com>,
-        Linux NFS Mailing List
-	<linux-nfs@vger.kernel.org>
-Subject: Re: BUG in nfs_read_folio() when tracing is enabled
-Thread-Topic: BUG in nfs_read_folio() when tracing is enabled
-Thread-Index: AQHawomlHGP4JoBiP0qrNn07fsoVObHkAGuAgAAE3gA=
-Date: Tue, 2 Jul 2024 21:17:13 +0000
-Message-ID: <DA939E32-2E25-4EDE-BC25-2D5E50F4B711@oracle.com>
-References: <C225EF84-ED3A-435F-B90D-7A5EF6AC8430@oracle.com>
- <CALF+zOkKf=5YcSZg6OyYHFzTqL3Fktzch95PQ9UOB0SDzqFZgg@mail.gmail.com>
-In-Reply-To: 
- <CALF+zOkKf=5YcSZg6OyYHFzTqL3Fktzch95PQ9UOB0SDzqFZgg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3774.600.62)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|BLAPR10MB4913:EE_
-x-ms-office365-filtering-correlation-id: afc281b4-338b-4a9b-e741-08dc9adc5783
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?bVBVc3lLdUZ1WUkyM2VpeGRzTGJxWGRjRWhSd2xpbWlCbzB1UjlOcDFmR0k5?=
- =?utf-8?B?VXY2TFNKdlV4MWdtSlg4b0dFVVo5ZjBUSVpIU0lmU3RtcExUbFY0eCt3MkQz?=
- =?utf-8?B?MDMycmo4L3hvbW9hUFNoRmhwWDczcjh2eXlzcFJuSlpUcmd2UG1jUWM3bXFS?=
- =?utf-8?B?c1FNeENwZDJtNTVQR0kwZXpNcE1XeERoclFWQWJ0OHBaU05XQ09KeTVmdmJh?=
- =?utf-8?B?b1gvUVhGYXRCTGNBRFVWY3N4S0tEd29NNm9kSU1PaUNZNVl5UWpTRDNxbVpX?=
- =?utf-8?B?ejhiL3N3VGdiSnlwSFYxWDRxaG91TFRwSFZzZk5qQXBZUDVBWFg3YlpjRzI2?=
- =?utf-8?B?ZXZma0ZmdkoybmdVV0tlZzdQVHVBelE3S0N4dUVIMXd2NUxKU1hJWEcvK2xs?=
- =?utf-8?B?U3ZHY2NPeVQydHlzVkFPbUpnNGxmSDA4NDFNU1hxLzhKVmRpelo4WU9oVkcz?=
- =?utf-8?B?cGRrbW0rc1ZtNTVWaWk2OXd0NmdDemZKNjhRQ0F0Qmd3TlJtV0pUTTZYK3Zv?=
- =?utf-8?B?NWxSZFpVcDFxRGhBaE1IMUJZajIxRFhmeUdTaUMrY2w4N2Z4RmY0Z2ZzUnBN?=
- =?utf-8?B?T0JoUytJUjlIYU0yK1cxbDZ1TUtsbnZjL0dXZHlPbU50cm9FZDduQnNiTEJQ?=
- =?utf-8?B?K0JYbXpxRU5kSXVManZHeTliVEtDVlpjcS9PZlp6SWlaV3JSMUxqaXVxWnJz?=
- =?utf-8?B?NGg5RGhjR3F0MVFoUEg1KzZ6WFcyTDRLUjllMmk0K08zSHQzcTFYRXdFZEZI?=
- =?utf-8?B?T3RmNnZHazQ3QmtwdlRSOUFTTjBNSjFaNFN2MENpVHVJYkVUQmYwcTZKTlA4?=
- =?utf-8?B?ZGlRQy8wQ3NGQU4rSi9Ca2xVWDdNMnBTVVFvTVNSRTNKbjlnMUpBaExRK3d4?=
- =?utf-8?B?QXc2WVA3OG1jNlNxV3BzQzRraVh1OWNvR3lISkFDYlBjNUxvNXpNV1BqemZX?=
- =?utf-8?B?c3padkdza0hhLzhra09nQTIxVlY0eWlHOHpWNWdpYW5HNWpNSWFPRFlFR25R?=
- =?utf-8?B?U0xuNzBISDJUS1JaeXg5Unc1SmU5WXE2dWxObU1iRmIrOGQrREl2WXd5Wlhj?=
- =?utf-8?B?RFlzQzk0NGxTY2MrNFl3WnEwOU14dGg1bUF0YWlRTy9TRitrOHpJOGFvTGtY?=
- =?utf-8?B?L2VLTmVPb0JZTkkrQ3JHVlozTy9GbjFQMG5QdUw4cmRzU3Ryem5PV1R4Zjdk?=
- =?utf-8?B?ZHAzRzdkUHdBNGhzdzdDbjJrTGh6bFJCYkJFazhmTlJBN1FSZUpRUHpxU1Ir?=
- =?utf-8?B?bG51S1J2Z1dOdWNnMUVLT2lDRW5NS2daUVkzZ3krZnNuVXUzeTVHRG5vYmRF?=
- =?utf-8?B?TitWZ2NFZzdhOGxWaXlaTWhQL1RkSWZDbWpUbmJPYVlESGQzSlFWOHpPNUhM?=
- =?utf-8?B?ZzROd29GYlJ2MnBQUTJFdEVneU5zYzhsOTVSeEg3K2Rxa3pVYjNPZVV3Q0xk?=
- =?utf-8?B?bFVBWEdQSnBLUVdGaWNsdFJNWDd5eXEyMzF6THJ0N1pFcytTU2lhWHREMFM2?=
- =?utf-8?B?RFVDQzNyTWFKd3Z0aXlQMjFUM0FJUzdPUnBEWXdVaEV4ME9QMGhKb0xibE4y?=
- =?utf-8?B?SjBYVHpsV3p1SlZxakJ1MTlaOVJ5NEN3TUpJaFJmKzFyVllwcTA3aXcxMnpk?=
- =?utf-8?B?SlhIckZBMXFmcDN5a0ozTkJOaTBkWTdoa1NQTWJ3Qmo4SjZtQXo4aHRJcSt4?=
- =?utf-8?B?QytxOXdiTVRoejM0VUxOd2FENnBlS2pzeEdYTi9ib1pDUGhYZDNSb3p4L0J4?=
- =?utf-8?B?Z1ZiaWRIb05xZlloWUtUYlhQQU5RQ3Q1cVdEY0JDdFExMzJiMmdsU1d4S3RB?=
- =?utf-8?B?VkFEM001MjFobTdSTUNRTDhIUGZIM3hFbmE3VTZIZXZqT1FlRGxLSnJ4S1cx?=
- =?utf-8?B?T2JKMlozSzh5SmFrUjlKUnFMNEQ4THpRZnRVcGhXWXhDZnc9PQ==?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?bGRROXQySFB4RHg5WGpJbFNNTDl5ekRJOVMwckxzS1RXT0Z3TU5JY2JzcVgw?=
- =?utf-8?B?M09RL1Q0NGdCTklOQjJkMHdMQ2tpMjM1Smttc3liRWo4c3FqdjhRN2tIQjBr?=
- =?utf-8?B?RDNlYzdCQWdvc2o3Skc5aEx1TFF1aE1DdEh4UzVuWXltSFUvbXhDQUZnVDNl?=
- =?utf-8?B?TTZET3F3eWlJNTBkMWlLZGcwRGwzbXVMWEJ2RGwxUzNYekh5bTl0by8zSFd6?=
- =?utf-8?B?Vi9XNTlDYlJiV3dSdWtMT2R3UzlKMnl6c3BuVUhWWVJsMXRrWTVVN09DdUJU?=
- =?utf-8?B?VjIvZlBDZzdJYThaNWV5QlJkYk5nQW1Tb3g1dTFTRFRzV2FCTzA4YUFIMkVI?=
- =?utf-8?B?S0tySm1YM0dkVXdMMWw3dmo0a3RjTnJaWkM4dFdmRzd6eldkaWNmbkpCTTY3?=
- =?utf-8?B?VURwelJvcGYyanZPUFhGUnl5S2IyRlZCeXphanVnbUpoRDhaY0JkMDJyc3Vv?=
- =?utf-8?B?a1A3NkZ6MjMybExiMTlKbmN3MGVUZmY1R1Q4OFg5NmEwNWlDQXJYaGVZclpx?=
- =?utf-8?B?UXAvSHZ4Vlc3UFFuVnJrckExUmZRSVAwSGppcUZyVFZHamNQVEo2dHBCQXFj?=
- =?utf-8?B?WHN4RVlrUCt5WURiQ0Zyc0NvQkhvajhaK0V2eXIvdWZjVThrZVY4Ny8wcDFW?=
- =?utf-8?B?TklNeUhNTzloMEJLMlVCaVdxY1lPemFOM2hGeEtiSGZjRXR1STFHeUo2T3Nt?=
- =?utf-8?B?VVRuMU1KeVI4QTgzalJodEFrc0N6ek51RHoweFhVdmxvb3hzdVRDbTl1czZz?=
- =?utf-8?B?dm9SbTNrWURURmtIZ0c2QXlpUU1sK0RyUEVnMktQWkY4cm0zczFMNVhFcHNC?=
- =?utf-8?B?OWxRMU1Na2xNdng3dGovVytwd1YwR0p2YTJvU2ZYcEJXL0ZVUHBub2ZjRzNQ?=
- =?utf-8?B?TW8yT3dSaXpubWlNTTdES1BvTnVJUExXWk4vVFBiV3NlOHJQTldDNC9ybFAr?=
- =?utf-8?B?TjRKRTFnanVmZ1JTMnp6QWFUaFFZamRtUTQ4T04rVmdLYUdEMzdLd1VuY1J1?=
- =?utf-8?B?MjhSZTMwVXdYZVRUSFRieUVPQjQyLy9tSzRlSVRzVm13K0U1aHp6VzJOYnNq?=
- =?utf-8?B?aS8rUkRmVGVTUC9XdlBJZXV4SDRsTFduY1BRa0gvU25xL3VKWW9OejM0ZjYz?=
- =?utf-8?B?WmNxTGhIK3BlMDBFb2NEZlMwZmtXWkQ0cGNjOUxna0I5VzVhemVGY0ExeUx5?=
- =?utf-8?B?T1ZXTnJMNDNOeHI3MEE1dTFKekEvZ3FHdThsZXlIZGVkQXgzaFQ5YVFlYko0?=
- =?utf-8?B?STJnUVRzQkNMM0dEaVhGWTgrb3dPRU9ta2wzQml0UmR0UWYrazluNEZraUxE?=
- =?utf-8?B?QVpjNGJNSVBtWStBSkQrbGRxa3hHN21XdHVJR1gyUTczUGxoUFQxakdsdG9E?=
- =?utf-8?B?TEFkTllvWmRlU0QzK0ovcUlvSkZNM0t6Z3BHaXpjRDFhc1dZSVdCeU4xK1h1?=
- =?utf-8?B?SlBUV1Y4NU9TL1FwUy9adU9oNWE1bWNMa0V2UzFWQzBBZG45VHlZcW9VU1FD?=
- =?utf-8?B?ZGJJRk9XUVFMaEJ2bzhGOWhyUlJ0T096R1VYVWFwQ1NaZUQyOEp5ajdTZVlx?=
- =?utf-8?B?WWhqMVNqWUpocThlZnI3SkVOR1ZrNEdjdlFUc0R1T3V3ZEdnVXRENnFZeXQ1?=
- =?utf-8?B?MHRiYnBmYmo4VHZ2MkdKcjcvNW1ITU8rN3BTVmVnWjhpM1hycjFGczBDV1dp?=
- =?utf-8?B?Mll6Y3FubEZoOUZZc2pDcEphUFp1bzM5dkN4Ynk1ZHgvVEVNQllJWGRiSmxO?=
- =?utf-8?B?QUVnN1NVM0N1eWxxTDZiR00vR01SOVJqaDlDOFBseURZdHA3K0xORnlsOVI3?=
- =?utf-8?B?c29wdXpzNUtBQ1N2dzJCTGNRUUdhQWhjclExRmZKNUdKSStVSFpVa3lpakIw?=
- =?utf-8?B?eE5uNE9LUXZWMUtUdklnOW5DSjg0eWwyVVA0a08rcU9PMTJORWRGQVkxbzZH?=
- =?utf-8?B?Y3N6dlpTVytVTnZpZFp5Sis1aU1XRUNGWkpQVTErRGFlYjZzOGszTENOYzB2?=
- =?utf-8?B?SjVMOXFSQks2VjdVN0EveHc0K3AxYVdOcE1yQ1BSSmNLQktwYjZRQUpYaUNm?=
- =?utf-8?B?UTZPV05Jd1YxU1JYUkp2SllaSVFldkdUUXNUaEJOcTd6YU4rZW8vSS95YjNM?=
- =?utf-8?B?c0dxUC9QTEJ3NERIZTB0b05FcmVacWVKQXRZbTdaM1BZc25JcSsydW9xVk5Q?=
- =?utf-8?B?d0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D4EA5984AE36F4F8D2C351A11853F2B@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35FE7EEE7
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jul 2024 21:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719956083; cv=none; b=NpfIHwfgGpzKzFtrjknGt2zzEtY6iTsap6IV/PFQ6TdBu6kOHCLTUHH/vKu23iUCduflVtn4d2KK8Gc1KG/ZjNNlgusPxMatyxJRA0AR++mb0vpp8dEIEy2v3y7sp2d058CO7ZHDpxvHEMOpQ+PkeY6ea2hgYqj1zCbYAcuORCA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719956083; c=relaxed/simple;
+	bh=rToR3A68/PO/gpxaE07agso9a8uOAalq+oOovLSXlUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xb3vqeKBwhilMyncs7gnsgA4Up+N4zcAzKFbDqaARIGX9wKVmof8eZC5JwL5Vvv3Cca1zM8gaUOh6qycSH+pNSxbWYs/404pzwZ6Z2umrSuK3bKTmQ++0OriGHNHqATU5jO4wtdn8wf+8TKJWhzotXjYXvUjMatlNYdoBWiaVYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WR9dJoxQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719956080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PTmmJtB/8IECA0ahTy0pwqP+ikRSpYYDTN2l7AK2MB0=;
+	b=WR9dJoxQMlL23MAczhFdRTlbBLePtHZHIOaSF736+aoIDzide0yiHEf4E3+6yDYEyItSoL
+	GLv3OdTgbNwAfns9QHIRqxfTp3Q0aqvM0NAWaHKzvmNxYyoSpYQtOvjqSETpEINvRL2O2k
+	EL5WxiDHt0PhvoXTWpO+bHLCEzoNRR0=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-317-rKw0yJA1PiS_5AMmXvHQ3Q-1; Tue, 02 Jul 2024 17:34:39 -0400
+X-MC-Unique: rKw0yJA1PiS_5AMmXvHQ3Q-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c973f95c13so198970a91.3
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Jul 2024 14:34:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719956076; x=1720560876;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PTmmJtB/8IECA0ahTy0pwqP+ikRSpYYDTN2l7AK2MB0=;
+        b=KogC/SXBbujkLB4gW3UKclcXYJJJ+QCWw8JzD4xdLMGBikRebCfD71Ps2u77+WAvM0
+         d6WuUpE/0wnZs+fA6Cl5ms1/UMe6shNe/6BA4f+uyu0zOwzCt77oQBn3MZBZz5s4oF+/
+         Oc+zj12JtQeIu613QNQ68SozetNvreSAH74p2ifqxKQuBad97QOmRjCYvzL4fuKeKjpt
+         iDsoVk64NwW++jsVQFkyCiKV46NA0Lnl+aA9dTPcy0GG9hbPuuekWoiGx4oXp/il2/sC
+         E4BPO8sXBwr7A2af40jGqLWp+EJQtf7hqRPNnvXwf4y7vn7AjtIPyFR4FVPFgGPq6VME
+         dZ3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUI46bb8Am05Tz4dWM20Ap5LgAowfq3MnSnhLJBe2iEvpVbtC/u4oLTpvjuP0V2VnXNg/zBexLY8bbLmrRHpypobE4ekwGNsEgB
+X-Gm-Message-State: AOJu0Yzw3HhJyMmx5TxvLpuZzBhB8s1S/kD8uIBBuovqePkdGeulT3XQ
+	LViPPtZaI7HIhEadge5PPK5WU0taeEfnKFXyfaiqpgpn1Ggat5sBiJmJfUymIkKCoQEPpatLlR0
+	C2YEW3rzRLPFPc2kSeDsnFwSnN5pfvPtsPj+x9ct7nMHoP+PPFvTCSWSQT4bcRFO5qrZwl8vCKH
+	IeSDC7BXIlIojQVIu2XlK1A/jVpfKi2OQ6Up3KfhOsAj8=
+X-Received: by 2002:a17:90a:fa88:b0:2c2:c3fb:b13c with SMTP id 98e67ed59e1d1-2c93d771f41mr5494821a91.44.1719956075734;
+        Tue, 02 Jul 2024 14:34:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEO77/f506S+Vz8LrroEFk2/tbi/PV23L5toLtMEfX8iKTVoIJx1gLKk/xq9nPSN3OgVCc8oGxDv1xQruTsibw=
+X-Received: by 2002:a17:90a:fa88:b0:2c2:c3fb:b13c with SMTP id
+ 98e67ed59e1d1-2c93d771f41mr5494808a91.44.1719956075210; Tue, 02 Jul 2024
+ 14:34:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	GfV07kWhcSucq5Pj6up1YAxzdEzwavr3OOytrdPh08pGPH/TfD5vgHP3QhijYVdHeEqAfVp7Gh0AKF0iJtQt6QrFstkn9YYmvzr9he06XpvWZ3g02g6HgPAFiw0TifHm4IkyXvaBDx+6bDhVhvCNDgxAOcnMGcFfl9hnCBBXRimCJrjA7xC8oE6Fs/L4xq6JcCeO7biK8lMogMzZStbJFyiOGtEBHvWYwDnjgcBwFgLWy1lRGu+oZghFfHHn9UpZKFJN7egr6iPJ/4h1vBjBfwy15t7cfrSvYvNiL4140C7PrNLQaYzoHrShrzoLTZCp4IXxM3nDvP+kP8K2GrEAzOvzxk611JBx48XvJPY8WlyQvPg996A0ibse6EXgUYJb5ZRqyy+yl2t615Fxrui2gZ9QFSDGfBbKTI4ClR0SCkEdC9JftfGRobGrnC488vnKqKxgS7DFg3PcxIHzkhCsknhit39kJnH4C0eaHDR5UaaOgxTYn1Ia5AefKxgtq37FlUYXgVhW9N95l//H9WcglmeWMOiStno6ghhU5D5+my4hgaj0P8v1euHScyGRNXsyvoeLwAqBiZ1pz7PFl5Xy2JLYkLVFUawPf63wohl3oQo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afc281b4-338b-4a9b-e741-08dc9adc5783
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2024 21:17:13.0991
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 272eTuellPRAXCMOS2qZpOVSnHhfvRwjcII4+QdNGYj+LmPiZzKzxDowaclo3odMTW9wNtD3SfVZDnF9n9iSVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4913
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_16,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
- definitions=main-2407020157
-X-Proofpoint-GUID: aVDTob1ExtGd9LLG3ZIhgm6Em5_4Pd6-
-X-Proofpoint-ORIG-GUID: aVDTob1ExtGd9LLG3ZIhgm6Em5_4Pd6-
+References: <C225EF84-ED3A-435F-B90D-7A5EF6AC8430@oracle.com>
+ <CALF+zOkKf=5YcSZg6OyYHFzTqL3Fktzch95PQ9UOB0SDzqFZgg@mail.gmail.com> <DA939E32-2E25-4EDE-BC25-2D5E50F4B711@oracle.com>
+In-Reply-To: <DA939E32-2E25-4EDE-BC25-2D5E50F4B711@oracle.com>
+From: David Wysochanski <dwysocha@redhat.com>
+Date: Tue, 2 Jul 2024 17:33:58 -0400
+Message-ID: <CALF+zOkwYrZcen=xat9nQ_EhOcfRFdLji56nrXsqWh4w_3RAHg@mail.gmail.com>
+Subject: Re: BUG in nfs_read_folio() when tracing is enabled
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Dave Wysochanski <wysochanski@pobox.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCj4gT24gSnVsIDIsIDIwMjQsIGF0IDQ6NTnigK9QTSwgRGF2aWQgV3lzb2NoYW5za2kgPGR3
-eXNvY2hhQHJlZGhhdC5jb20+IHdyb3RlOg0KPiANCj4gU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5
-LCBtb3JlIGJlbG93Lg0KPiANCj4gT24gV2VkLCBKdW4gMTksIDIwMjQgYXQgNDo0NuKAr1BNIENo
-dWNrIExldmVyIElJSSA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4gd3JvdGU6DQo+PiANCj4+IEhp
-IERhdmUtDQo+PiANCj4+IEknbSB0ZXN0aW5nIHBORlMgU0NTSSBsYXlvdXRzIHdpdGggdHJhY2lu
-ZyBlbmFibGVkIG9uIHRoZQ0KPj4gY2xpZW50LCBhbmQgSSBoaXQgdGhpcyBCVUcgdHdpY2UgdG9k
-YXk6DQo+PiANCj4+IEJVRzoga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSwgYWRkcmVz
-czogMDAwMDAwMDAwMDAwMDAwMA0KPj4gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNzIGluIGtl
-cm5lbCBtb2RlDQo+PiAjUEY6IGVycm9yX2NvZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UN
-Cj4+IFBHRCAwIFA0RCAwICBPb3BzOiBPb3BzOiAwMDAwIFsjMV0gUFJFRU1QVCBTTVAgUFRJDQo+
-PiBDUFU6IDAgUElEOiA1MjIzMCBDb21tOiBmaW8gTm90IHRhaW50ZWQgNi4xMC4wLXJjNC1nOWYx
-ZTBlNDk1MDkzICM1DQo+PiBIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChRMzUgKyBJ
-Q0g5LCAyMDA5KSwgQklPUyAxLjE2LjMtMi5mYzQwIDA0LzAxLzIwMTQNCj4+IFJJUDogMDAxMDpu
-ZnNfZm9saW9fbGVuZ3RoKzB4MjkvMHgxNzAgW25mc10NCj4+IENvZGU6IDkwIDQxIDU2IDQxIDU1
-IDQxIDU0IDU1IDUzIDQ4IDg5IGZiIDQ4IDgzIGVjIDA4IDQ4IDhiIDA3IGE5IDAwIDAwIDA0IDAw
-IDc0IDBjIDQ4IDhiIDA3IGY2IGM0IDA4IDBmIDg1IDg5IDAwIDAwIDAwIDQ4IDhiIDQzIDE4IDw0
-OD4gOGIgMDAgNDggOGIgNjggNTAgNDggODUgZWQgN2UgNjYgNDggOGIgMDMgYTggNDAgNzQgN2Mg
-NGMgOGIgNmINCj4+IFJTUDogMDAxODpmZmZmYjA4MDBjMmFiYjI4IEVGTEFHUzogMDAwMTAyNDYN
-Cj4+IFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IGZmZmZlNWQ4YzQ0ZjRhMDAgUkNYOiBmZmZm
-ZmZmZmE4NTI1MDAwDQo+PiBSRFg6IDAwMTdmZmZmZDAwMDAwMjggUlNJOiAwMDAwMDAwMDAwMDAw
-MDRlIFJESTogZmZmZmU1ZDhjNDRmNGEwMA0KPj4gUkJQOiBmZmZmOTg3MTkxMTUwMWI4IFIwODog
-ZmZmZjk4NzE5MTE1MDAyMCBSMDk6IDAwMDAwMDAwMDAwMDAwMDMNCj4+IFIxMDogMDAwMDAwMDAw
-MDAwMDAwNiBSMTE6IDAwMDAwMDAwMDAwMDAwMDAgUjEyOiBmZmZmZTVkOGM0NGY0YTAwDQo+PiBS
-MTM6IGZmZmZiMDgwMGMyYWJiNjAgUjE0OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogZmZmZmU1ZDhj
-NDRmNGEwMA0KPj4gRlM6ICAwMDAwN2YxZDI1ZDZmMDgwKDAwMDApIEdTOmZmZmY5ODcyNzdjMDAw
-MDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4gQ1M6ICAwMDEwIERTOiAwMDAwIEVT
-OiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4gQ1IyOiAwMDAwMDAwMDAwMDAwMDAwIENS
-MzogMDAwMDAwMDEzY2NlMDAwNSBDUjQ6IDAwMDAwMDAwMDAxNzBlZjANCj4+IENhbGwgVHJhY2U6
-DQo+PiA8VEFTSz4NCj4+ID8gX19kaWVfYm9keS5jb2xkKzB4MTkvMHgyNw0KPj4gPyBwYWdlX2Zh
-dWx0X29vcHMrMHhjYS8weDJhMA0KPj4gPyBzZWFyY2hfbW9kdWxlX2V4dGFibGVzKzB4MTkvMHg2
-MA0KPj4gPyBzZWFyY2hfYnBmX2V4dGFibGVzKzB4NWYvMHg4MA0KPj4gPyBleGNfcGFnZV9mYXVs
-dCsweDdlLzB4MTgwDQo+PiA/IGFzbV9leGNfcGFnZV9mYXVsdCsweDI2LzB4MzANCj4+ID8gbmZz
-X2ZvbGlvX2xlbmd0aCsweDI5LzB4MTcwIFtuZnNdDQo+PiB0cmFjZV9ldmVudF9yYXdfZXZlbnRf
-bmZzX2ZvbGlvX2V2ZW50X2RvbmUrMHhkYy8weDE3MCBbbmZzXQ0KPj4gbmZzX3JlYWRfZm9saW8r
-MHgxNmQvMHgyNjAgW25mc10NCj4+ID8gX19wZnhfbmZzX3JlYWRfZm9saW8rMHgxMC8weDEwIFtu
-ZnNdDQo+PiBmaWxlbWFwX3JlYWRfZm9saW8rMHg0My8weGUwDQo+PiBmaWxlbWFwX2ZhdWx0KzB4
-NzBkLzB4ZDAwDQo+PiBfX2RvX2ZhdWx0KzB4MzUvMHgxMjANCj4+IGRvX2ZhdWx0KzB4YmIvMHg0
-NzANCj4+IF9faGFuZGxlX21tX2ZhdWx0KzB4N2U5LzB4MTA2MA0KPj4gPyBtdF9maW5kKzB4MjFj
-LzB4NTcwDQo+PiBoYW5kbGVfbW1fZmF1bHQrMHhmMC8weDMwMA0KPj4gZG9fdXNlcl9hZGRyX2Zh
-dWx0KzB4MjE3LzB4NjIwDQo+PiBleGNfcGFnZV9mYXVsdCsweDdlLzB4MTgwDQo+PiBhc21fZXhj
-X3BhZ2VfZmF1bHQrMHgyNi8weDMwDQo+PiBSSVA6IDAwMzM6MHg3ZjFkMjVlY2VkYjcNCj4+IENv
-ZGU6IDdlIDZmIDQ0IDE2IGUwIDQ4IDI5IGZlIDQ4IDgzIGUxIGUwIDQ4IDAxIGNlIDBmIDFmIDQw
-IDAwIGM1IGZlIDZmIDRlIDYwIGM1IGZlIDZmIDU2IDQwIGM1IGZlIDZmIDVlIDIwIGM1IGZlIDZm
-IDI2IDQ4IDgzIGM2IDgwIDxjNT4gZmQgN2YgNDkgNjAgYzUgZmQgN2YgNTEgNDAgYzUgZmQgN2Yg
-NTkgMjAgYzUgZmQgN2YgMjEgNDggODMgYzENCj4+IFJTUDogMDAyYjowMDAwN2ZmZDkyZGY3ZjU4
-IEVGTEFHUzogMDAwMTAyMDMNCj4+IFJBWDogMDAwMDdmMWQxZDBlNjAwMCBSQlg6IDAwMDA1NjIx
-MTg2N2Y2YzAgUkNYOiAwMDAwN2YxZDFkMGU2ZjYwDQo+PiBSRFg6IDAwMDAwMDAwMDAwMDEwMDAg
-UlNJOiAwMDAwNTYyMTE4Njk5ZWUwIFJESTogMDAwMDdmMWQxZDBlNjAwMA0KPj4gUkJQOiAwMDAw
-N2ZmZDkyZGY3ZjcwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAwMDAwMDAwMDAN
-Cj4+IFIxMDogMDAwMDU2MjExODY4OGYzMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDEgUjEyOiAwMDAw
-N2YxZDFkMTZhYWMwDQo+PiBSMTM6IDAwMDA3ZmZkOTJkZjgwMzAgUjE0OiAwMDAwMDAwMDAwMDAw
-MDAxIFIxNTogMDAwMDAwMDAwMDAwMTAwMA0KPj4gPC9UQVNLPg0KPj4gTW9kdWxlcyBsaW5rZWQg
-aW46IGJsb2NrbGF5b3V0ZHJpdmVyIHJwY3NlY19nc3Nfa3JiNSBhdXRoX3JwY2dzcyBuZnN2NCBk
-bnNfcmVzb2x2ZXIgbmZzIGxvY2tkIGdyYWNlIGlzY3NpX3RjcCBsaWJpc2NzaV90Y3AgbGliaXNj
-c2kgc2NzaV90cmFuc3BvcnRfaXNjc2kgbmZ0X2ZpYl9pbmV0IG5mdF9maWJfaXB2NCBuZnRfZmli
-X2lwdjYgbmZ0X2ZpYiBuZnRfcmVqZWN0X2luZXQgbmZfcmVqZWN0X2lwdjQgbmZfcmVqZWN0X2lw
-djYgbmZ0X3JlamVjdCBuZnRfY3QgbmZ0X2M+DQo+PiBDUjI6IDAwMDAwMDAwMDAwMDAwMDANCj4+
-IC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQ0KPj4gUklQOiAwMDEwOm5mc19m
-b2xpb19sZW5ndGgrMHgyOS8weDE3MCBbbmZzXQ0KPj4gQ29kZTogOTAgNDEgNTYgNDEgNTUgNDEg
-NTQgNTUgNTMgNDggODkgZmIgNDggODMgZWMgMDggNDggOGIgMDcgYTkgMDAgMDAgMDQgMDAgNzQg
-MGMgNDggOGIgMDcgZjYgYzQgMDggMGYgODUgODkgMDAgMDAgMDAgNDggOGIgNDMgMTggPDQ4PiA4
-YiAwMCA0OCA4YiA2OCA1MCA0OCA4NSBlZCA3ZSA2NiA0OCA4YiAwMyBhOCA0MCA3NCA3YyA0YyA4
-YiA2Yg0KPj4gUlNQOiAwMDE4OmZmZmZiMDgwMGMyYWJiMjggRUZMQUdTOiAwMDAxMDI0Ng0KPj4g
-UkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogZmZmZmU1ZDhjNDRmNGEwMCBSQ1g6IGZmZmZmZmZm
-YTg1MjUwMDANCj4+IFJEWDogMDAxN2ZmZmZkMDAwMDAyOCBSU0k6IDAwMDAwMDAwMDAwMDAwNGUg
-UkRJOiBmZmZmZTVkOGM0NGY0YTAwDQo+PiBSQlA6IGZmZmY5ODcxOTExNTAxYjggUjA4OiBmZmZm
-OTg3MTkxMTUwMDIwIFIwOTogMDAwMDAwMDAwMDAwMDAwMw0KPj4gUjEwOiAwMDAwMDAwMDAwMDAw
-MDA2IFIxMTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6IGZmZmZlNWQ4YzQ0ZjRhMDANCj4+IFIxMzog
-ZmZmZmIwODAwYzJhYmI2MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiBmZmZmZTVkOGM0NGY0
-YTAwDQo+PiBGUzogIDAwMDA3ZjFkMjVkNmYwODAoMDAwMCkgR1M6ZmZmZjk4NzI3N2MwMDAwMCgw
-MDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQo+PiBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAw
-MDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQo+PiBDUjI6IDAwMDAwMDAwMDAwMDAwMDAgQ1IzOiAw
-MDAwMDAwMTNjY2UwMDA1IENSNDogMDAwMDAwMDAwMDE3MGVmMA0KPj4gDQo+PiBjZWxAcmVub2ly
-OmxpbnV4JCBzY3JpcHRzL2ZhZGRyMmxpbmUgZnMvbmZzL25mcy5rbyBuZnNfZm9saW9fbGVuZ3Ro
-KzB4MjkNCj4+IG5mc19mb2xpb19sZW5ndGgrMHgyOS8weDE3MDoNCj4+IG5mc19mb2xpb19sZW5n
-dGggYXQgL2hvbWUvY2VsL3NyYy9rZGV2b3BzL2NlbC9saW51eC9mcy9uZnMvaW50ZXJuYWwuaDo4
-MjQgKGRpc2NyaW1pbmF0b3IgMSkNCj4+IA0KPj4gV2hpY2ggaW4gbXkgdmVyc2lvbiBvZiB0aGUg
-c291cmNlIGNvZGUgaXM6DQo+PiANCj4+IDgyMiBzdGF0aWMgaW5saW5lIHNpemVfdCBuZnNfZm9s
-aW9fbGVuZ3RoKHN0cnVjdCBmb2xpbyAqZm9saW8pDQo+PiA4MjMgew0KPj4gODI0ICAgICAgICAg
-bG9mZl90IGlfc2l6ZSA9IGlfc2l6ZV9yZWFkKGZvbGlvX2ZpbGVfbWFwcGluZyhmb2xpbyktPmhv
-c3QpOw0KPj4gDQo+IA0KPiBPayBzbyBsb29rcyBsaWtlIHdlIG5lZWQgdG8gZ28gZGVlcGVyIHRv
-IGtub3cgd2hhdCB0aGUgTlVMTCBwb2ludGVyDQo+IHJlcHJlc2VudGVkIGluIHRoZSBCVUcgc3Rh
-dGVtZW50Lg0KPiBEZWNvZGluZyB0aGUgb29wczoNCj4gJCB+L2dpdC9rZXJuZWwvc2NyaXB0cy9k
-ZWNvZGVjb2RlIDwgLi9vb3BzLnR4dA0KPiBDb2RlOiA5MCA0MSA1NiA0MSA1NSA0MSA1NCA1NSA1
-MyA0OCA4OSBmYiA0OCA4MyBlYyAwOCA0OCA4YiAwNyBhOSAwMA0KPiAwMCAwNCAwMCA3NCAwYyA0
-OCA4YiAwNyBmNiBjNCAwOCAwZiA4NSA4OSAwMCAwMCAwMCA0OCA4YiA0MyAxOCA8NDg+IDhiDQo+
-IDAwIDQ4IDhiIDY4IDUwIDQ4IDg1IGVkIDdlIDY2IDQ4IDhiIDAzIGE4IDQwIDc0IDdjIDRjIDhi
-IDZiDQo+IEFsbCBjb2RlDQo+ID09PT09PT09DQo+ICAgMDogOTAgICAgICAgICAgICAgICAgICAg
-IG5vcA0KPiAgIDE6IDQxIDU2ICAgICAgICAgICAgICAgIHB1c2ggICAlcjE0DQo+ICAgMzogNDEg
-NTUgICAgICAgICAgICAgICAgcHVzaCAgICVyMTMNCj4gICA1OiA0MSA1NCAgICAgICAgICAgICAg
-ICBwdXNoICAgJXIxMg0KPiAgIDc6IDU1ICAgICAgICAgICAgICAgICAgICBwdXNoICAgJXJicA0K
-PiAgIDg6IDUzICAgICAgICAgICAgICAgICAgICBwdXNoICAgJXJieA0KPiAgIDk6IDQ4IDg5IGZi
-ICAgICAgICAgICAgICBtb3YgICAgJXJkaSwlcmJ4DQo+ICAgYzogNDggODMgZWMgMDggICAgICAg
-ICAgc3ViICAgICQweDgsJXJzcA0KPiAgMTA6IDQ4IDhiIDA3ICAgICAgICAgICAgICBtb3YgICAg
-KCVyZGkpLCVyYXgNCj4gIDEzOiBhOSAwMCAwMCAwNCAwMCAgICAgICAgdGVzdCAgICQweDQwMDAw
-LCVlYXgNCj4gIDE4OiA3NCAwYyAgICAgICAgICAgICAgICBqZSAgICAgMHgyNg0KPiAgMWE6IDQ4
-IDhiIDA3ICAgICAgICAgICAgICBtb3YgICAgKCVyZGkpLCVyYXgNCj4gIDFkOiBmNiBjNCAwOCAg
-ICAgICAgICAgICAgdGVzdCAgICQweDgsJWFoDQo+ICAyMDogMGYgODUgODkgMDAgMDAgMDAgICAg
-am5lICAgIDB4YWYNCj4gIDI2OiA0OCA4YiA0MyAxOCAgICAgICAgICBtb3YgICAgMHgxOCglcmJ4
-KSwlcmF4DQo+ICAyYToqIDQ4IDhiIDAwICAgICAgICAgICAgICBtb3YgICAgKCVyYXgpLCVyYXgg
-PC0tIHRyYXBwaW5nIGluc3RydWN0aW9uDQo+ICAyZDogNDggOGIgNjggNTAgICAgICAgICAgbW92
-ICAgIDB4NTAoJXJheCksJXJicA0KPiAgMzE6IDQ4IDg1IGVkICAgICAgICAgICAgICB0ZXN0ICAg
-JXJicCwlcmJwDQo+ICAzNDogN2UgNjYgICAgICAgICAgICAgICAgamxlICAgIDB4OWMNCj4gIDM2
-OiA0OCA4YiAwMyAgICAgICAgICAgICAgbW92ICAgICglcmJ4KSwlcmF4DQo+ICAzOTogYTggNDAg
-ICAgICAgICAgICAgICAgdGVzdCAgICQweDQwLCVhbA0KPiAgM2I6IDc0IDdjICAgICAgICAgICAg
-ICAgIGplICAgICAweGI5DQo+ICAzZDogNGMgICAgICAgICAgICAgICAgICAgIHJleC5XUg0KPiAg
-M2U6IDhiICAgICAgICAgICAgICAgICAgICAuYnl0ZSAweDhiDQo+ICAzZjogNmIgICAgICAgICAg
-ICAgICAgICAgIC5ieXRlIDB4NmINCj4gDQo+IENvZGUgc3RhcnRpbmcgd2l0aCB0aGUgZmF1bHRp
-bmcgaW5zdHJ1Y3Rpb24NCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PQ0KPiAgIDA6IDQ4IDhiIDAwICAgICAgICAgICAgICBtb3YgICAgKCVyYXgpLCVyYXgNCj4g
-ICAzOiA0OCA4YiA2OCA1MCAgICAgICAgICBtb3YgICAgMHg1MCglcmF4KSwlcmJwDQo+ICAgNzog
-NDggODUgZWQgICAgICAgICAgICAgIHRlc3QgICAlcmJwLCVyYnANCj4gICBhOiA3ZSA2NiAgICAg
-ICAgICAgICAgICBqbGUgICAgMHg3Mg0KPiAgIGM6IDQ4IDhiIDAzICAgICAgICAgICAgICBtb3Yg
-ICAgKCVyYngpLCVyYXgNCj4gICBmOiBhOCA0MCAgICAgICAgICAgICAgICB0ZXN0ICAgJDB4NDAs
-JWFsDQo+ICAxMTogNzQgN2MgICAgICAgICAgICAgICAgamUgICAgIDB4OGYNCj4gIDEzOiA0YyAg
-ICAgICAgICAgICAgICAgICAgcmV4LldSDQo+ICAxNDogOGIgICAgICAgICAgICAgICAgICAgIC5i
-eXRlIDB4OGINCj4gIDE1OiA2YiAgICAgICAgICAgICAgICAgICAgLmJ5dGUgMHg2Yg0KPiANCj4g
-DQo+IFNuaXAgb3V0IHRoZSBlc3NlbnRpYWwgaW5zdHJ1Y3Rpb25zLCB3aGljaCBzaG93cyB3ZSBq
-dXN0IGhhdmUgcmVhZCBhbg0KPiBhZGRyZXNzIGF0IGFuIG9mZnNldCBvZiAweDE4LCB0aGVuIHRo
-YXQgbXVzdCBoYXZlIGJlZW4gTlVMTCBhbmQgd2UNCj4gdHJpZWQgdG8gZGVyZWZlcmVuY2UgTlVM
-TCB3aGljaCBsZWQgdG8gdGhlIEJVRzoNCj4gICA5OiA0OCA4OSBmYiAgICAgICAgICAgICAgbW92
-ICAgICVyZGksJXJieA0KPiAuLi4NCj4gIDI2OiA0OCA4YiA0MyAxOCAgICAgICAgICBtb3YgICAg
-MHgxOCglcmJ4KSwlcmF4DQo+ICAyYToqIDQ4IDhiIDAwICAgICAgICAgICAgICBtb3YgICAgKCVy
-YXgpLCVyYXggPC0tIHRyYXBwaW5nIGluc3RydWN0aW9uDQo+IA0KPiBTbyB0aGUgcXVlc3Rpb24g
-aXMgd2hhdCBpcyBhdCBvZmZzZXQgMHgxOCBpbiB0aGUgYWJvdmUgY29kZSBpbg0KPiBuZnNfZm9s
-aW9fbGVuZ3RoKCk/DQo+IE5vdyBmb2xpb19maWxlX21hcHBpbmcoKSByZXR1cm5zIGFuIGFkZHJl
-c3Nfc3BhY2UgcG9pbnRlciAsYW5kDQo+IGFkZHJlc3Nfc3BhY2UtPmhvc3QgaXMgYXQgb2Zmc2V0
-IDAuDQo+IFNvIGlmICdtYXBwaW5nJyBpcyBhdCBvZmZzZXQgMHgxOCBvZiBmb2xpbywgdGhlbiBt
-YXBwaW5nIGlzIE5VTEwuICBBbmQNCj4gZnJvbSB0aGUgY29kZSwgdGhpcyBzZWVtcyB0byBmaXQu
-DQo+IA0KPiAzMTAgc3RydWN0IGZvbGlvIHsNCj4gMzExICAgICAgICAgLyogcHJpdmF0ZTogZG9u
-J3QgZG9jdW1lbnQgdGhlIGFub24gdW5pb24gKi8NCj4gMzEyICAgICAgICAgdW5pb24gew0KPiAz
-MTMgICAgICAgICAgICAgICAgIHN0cnVjdCB7DQo+IDMxNCAgICAgICAgIC8qIHB1YmxpYzogKi8N
-Cj4gMzE1ICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+IDMx
-NiAgICAgICAgICAgICAgICAgICAgICAgICB1bmlvbiB7DQo+IDMxNyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgbHJ1Ow0KPiAzMTggICAgICAgICAvKiBw
-cml2YXRlOiBhdm9pZCBjbHV0dGVyaW5nIHRoZSBvdXRwdXQgKi8NCj4gMzE5ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHsNCj4gMzIwICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB2b2lkICpfX2ZpbGxlcjsNCj4gMzIxICAgICAgICAgLyogcHVi
-bGljOiAqLw0KPiAzMjIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVu
-c2lnbmVkIGludCBtbG9ja19jb3VudDsNCj4gMzIzICAgICAgICAgLyogcHJpdmF0ZTogKi8NCj4g
-MzI0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gMzI1ICAgICAgICAgLyog
-cHVibGljOiAqLw0KPiAzMjYgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gMzI3ICAgICAg
-ICAgICAgICAgICAgICAgICAgIHN0cnVjdCBhZGRyZXNzX3NwYWNlICptYXBwaW5nOw0KPiAzMjgg
-ICAgICAgICAgICAgICAgICAgICAgICAgcGdvZmZfdCBpbmRleDsNCj4gDQo+IA0KPiA0NDUgc3Rh
-dGljIGlubGluZSBzdHJ1Y3QgYWRkcmVzc19zcGFjZSAqZm9saW9fZmlsZV9tYXBwaW5nKHN0cnVj
-dCBmb2xpbyAqZm9saW8pDQo+IDQ0NiB7DQo+IDQ0NyAgICAgICAgIGlmICh1bmxpa2VseShmb2xp
-b190ZXN0X3N3YXBjYWNoZShmb2xpbykpKQ0KPiA0NDggICAgICAgICAgICAgICAgIHJldHVybiBz
-d2FwY2FjaGVfbWFwcGluZyhmb2xpbyk7DQo+IDQ0OQ0KPiA0NTAgICAgICAgICByZXR1cm4gZm9s
-aW8tPm1hcHBpbmc7DQo+IDQ1MSB9DQo+IA0KPiBTbyBpdCBzZWVtcyBmb2xpby0+bWFwcGluZyA9
-PSBOVUxMIGFuZCB0aGF0IGlzIHdoeSB3ZSBCVUcuDQo+IA0KPiANCj4+IEknbSBwaW5naW5nIHlv
-dSBmaXJzdCBhYm91dCB0aGlzIGJlY2F1c2UgeW91IGNoYW5nZWQgdGhlDQo+PiBjb2RlIGFyb3Vu
-ZCB0aGUgdHJhY2VfbmZzX2FvcF9yZWFkX2RvbmUoKSBjYWxsIHNpdGUgaW4NCj4+IGNvbW1pdCAw
-MDBkYmUwYmVjMDUgKCJORlM6IENvbnZlcnQgYnVmZmVyZWQgcmVhZCBwYXRocyB0bw0KPj4gdXNl
-IG5ldGZzIHdoZW4gZnNjYWNoZSBpcyBlbmFibGVkIikuDQo+PiANCj4gDQo+IElmIEkgaGF2ZSB0
-aGUgYWJvdmUgYW5hbHlzaXMgcmlnaHQsIHRoZW4gbWF5YmUgdGhpcyBwYXRjaCB3b3VsZCBmaXgg
-aXQ/DQo+IEFsc28gSSB3b25kZXIgaWYgbmZzX3BhZ2VfbGVuZ3RoKCkgbWlnaHQgaGF2ZSB0aGUg
-c2FtZSBpc3N1ZT8NCj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvaW50ZXJuYWwuaCBiL2ZzL25m
-cy9pbnRlcm5hbC5oDQo+IGluZGV4IDlmMGY0NTM0NzQ0Yi4uODMyZjA3OTk0Yjg4IDEwMDY0NA0K
-PiAtLS0gYS9mcy9uZnMvaW50ZXJuYWwuaA0KPiArKysgYi9mcy9uZnMvaW50ZXJuYWwuaA0KPiBA
-QCAtODIxLDcgKzgyMSwxMiBAQCB1bnNpZ25lZCBpbnQgbmZzX3BhZ2VfbGVuZ3RoKHN0cnVjdCBw
-YWdlICpwYWdlKQ0KPiAgKi8NCj4gc3RhdGljIGlubGluZSBzaXplX3QgbmZzX2ZvbGlvX2xlbmd0
-aChzdHJ1Y3QgZm9saW8gKmZvbGlvKQ0KPiB7DQo+IC0gICAgICAgbG9mZl90IGlfc2l6ZSA9IGlf
-c2l6ZV9yZWFkKGZvbGlvX2ZpbGVfbWFwcGluZyhmb2xpbyktPmhvc3QpOw0KPiArICAgICAgIGxv
-ZmZfdCBpX3NpemU7DQo+ICsNCj4gKyAgICAgICBpZiAoIWZvbGlvLT5tYXBwaW5nKQ0KPiArICAg
-ICAgICAgICAgICAgcmV0dXJuIDA7DQo+ICsNCj4gKyAgICAgICBpX3NpemUgPSBpX3NpemVfcmVh
-ZChmb2xpb19maWxlX21hcHBpbmcoZm9saW8pLT5ob3N0KTsNCj4gDQo+ICAgICAgICBpZiAoaV9z
-aXplID4gMCkgew0KPiAgICAgICAgICAgICAgICBwZ29mZl90IGluZGV4ID0gZm9saW9faW5kZXgo
-Zm9saW8pID4+IGZvbGlvX29yZGVyKGZvbGlvKTsNCg0KRXhlY3V0aW9uIHBhc3NlZCB0cmFjZV9u
-ZnNfYW9wX3JlYWRwYWdlKCkgd2l0aG91dCBpbmNpZGVudCwNCnNvIGZvbGlvLT5tYXBwaW5nIHdh
-cyBhIHZhbGlkIHBvaW50ZXIgYXMgd2UgZW50ZXJlZA0KbmZzX3JlYWRfZm9saW8oKS4NCg0KV2hh
-dCBJIGRvbid0IHVuZGVyc3RhbmQgaXMgd2hldGhlciB5b3UgZXhwZWN0IGZvbGlvLT5tYXBwaW5n
-DQp0byBiZWNvbWUgTlVMTCB3aGlsZSBuZnNfcmVhZF9mb2xpbygpIGlzIHJ1bm5pbmcuDQoNCg0K
-LS0NCkNodWNrIExldmVyDQoNCg0K
+On Tue, Jul 2, 2024 at 5:17=E2=80=AFPM Chuck Lever III <chuck.lever@oracle.=
+com> wrote:
+>
+>
+>
+> > On Jul 2, 2024, at 4:59=E2=80=AFPM, David Wysochanski <dwysocha@redhat.=
+com> wrote:
+> >
+> > Sorry for the late reply, more below.
+> >
+> > On Wed, Jun 19, 2024 at 4:46=E2=80=AFPM Chuck Lever III <chuck.lever@or=
+acle.com> wrote:
+> >>
+> >> Hi Dave-
+> >>
+> >> I'm testing pNFS SCSI layouts with tracing enabled on the
+> >> client, and I hit this BUG twice today:
+> >>
+> >> BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >> #PF: supervisor read access in kernel mode
+> >> #PF: error_code(0x0000) - not-present page
+> >> PGD 0 P4D 0  Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> >> CPU: 0 PID: 52230 Comm: fio Not tainted 6.10.0-rc4-g9f1e0e495093 #5
+> >> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40=
+ 04/01/2014
+> >> RIP: 0010:nfs_folio_length+0x29/0x170 [nfs]
+> >> Code: 90 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b 07 a9 00 0=
+0 04 00 74 0c 48 8b 07 f6 c4 08 0f 85 89 00 00 00 48 8b 43 18 <48> 8b 00 48=
+ 8b 68 50 48 85 ed 7e 66 48 8b 03 a8 40 74 7c 4c 8b 6b
+> >> RSP: 0018:ffffb0800c2abb28 EFLAGS: 00010246
+> >> RAX: 0000000000000000 RBX: ffffe5d8c44f4a00 RCX: ffffffffa8525000
+> >> RDX: 0017ffffd0000028 RSI: 000000000000004e RDI: ffffe5d8c44f4a00
+> >> RBP: ffff9871911501b8 R08: ffff987191150020 R09: 0000000000000003
+> >> R10: 0000000000000006 R11: 0000000000000000 R12: ffffe5d8c44f4a00
+> >> R13: ffffb0800c2abb60 R14: 0000000000000000 R15: ffffe5d8c44f4a00
+> >> FS:  00007f1d25d6f080(0000) GS:ffff987277c00000(0000) knlGS:0000000000=
+000000
+> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> CR2: 0000000000000000 CR3: 000000013cce0005 CR4: 0000000000170ef0
+> >> Call Trace:
+> >> <TASK>
+> >> ? __die_body.cold+0x19/0x27
+> >> ? page_fault_oops+0xca/0x2a0
+> >> ? search_module_extables+0x19/0x60
+> >> ? search_bpf_extables+0x5f/0x80
+> >> ? exc_page_fault+0x7e/0x180
+> >> ? asm_exc_page_fault+0x26/0x30
+> >> ? nfs_folio_length+0x29/0x170 [nfs]
+> >> trace_event_raw_event_nfs_folio_event_done+0xdc/0x170 [nfs]
+> >> nfs_read_folio+0x16d/0x260 [nfs]
+> >> ? __pfx_nfs_read_folio+0x10/0x10 [nfs]
+> >> filemap_read_folio+0x43/0xe0
+> >> filemap_fault+0x70d/0xd00
+> >> __do_fault+0x35/0x120
+> >> do_fault+0xbb/0x470
+> >> __handle_mm_fault+0x7e9/0x1060
+> >> ? mt_find+0x21c/0x570
+> >> handle_mm_fault+0xf0/0x300
+> >> do_user_addr_fault+0x217/0x620
+> >> exc_page_fault+0x7e/0x180
+> >> asm_exc_page_fault+0x26/0x30
+> >> RIP: 0033:0x7f1d25ecedb7
+> >> Code: 7e 6f 44 16 e0 48 29 fe 48 83 e1 e0 48 01 ce 0f 1f 40 00 c5 fe 6=
+f 4e 60 c5 fe 6f 56 40 c5 fe 6f 5e 20 c5 fe 6f 26 48 83 c6 80 <c5> fd 7f 49=
+ 60 c5 fd 7f 51 40 c5 fd 7f 59 20 c5 fd 7f 21 48 83 c1
+> >> RSP: 002b:00007ffd92df7f58 EFLAGS: 00010203
+> >> RAX: 00007f1d1d0e6000 RBX: 000056211867f6c0 RCX: 00007f1d1d0e6f60
+> >> RDX: 0000000000001000 RSI: 0000562118699ee0 RDI: 00007f1d1d0e6000
+> >> RBP: 00007ffd92df7f70 R08: 0000000000000000 R09: 0000000000000000
+> >> R10: 0000562118688f30 R11: 0000000000000001 R12: 00007f1d1d16aac0
+> >> R13: 00007ffd92df8030 R14: 0000000000000001 R15: 0000000000001000
+> >> </TASK>
+> >> Modules linked in: blocklayoutdriver rpcsec_gss_krb5 auth_rpcgss nfsv4=
+ dns_resolver nfs lockd grace iscsi_tcp libiscsi_tcp libiscsi scsi_transpor=
+t_iscsi nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_r=
+eject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_c>
+> >> CR2: 0000000000000000
+> >> ---[ end trace 0000000000000000 ]---
+> >> RIP: 0010:nfs_folio_length+0x29/0x170 [nfs]
+> >> Code: 90 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b 07 a9 00 0=
+0 04 00 74 0c 48 8b 07 f6 c4 08 0f 85 89 00 00 00 48 8b 43 18 <48> 8b 00 48=
+ 8b 68 50 48 85 ed 7e 66 48 8b 03 a8 40 74 7c 4c 8b 6b
+> >> RSP: 0018:ffffb0800c2abb28 EFLAGS: 00010246
+> >> RAX: 0000000000000000 RBX: ffffe5d8c44f4a00 RCX: ffffffffa8525000
+> >> RDX: 0017ffffd0000028 RSI: 000000000000004e RDI: ffffe5d8c44f4a00
+> >> RBP: ffff9871911501b8 R08: ffff987191150020 R09: 0000000000000003
+> >> R10: 0000000000000006 R11: 0000000000000000 R12: ffffe5d8c44f4a00
+> >> R13: ffffb0800c2abb60 R14: 0000000000000000 R15: ffffe5d8c44f4a00
+> >> FS:  00007f1d25d6f080(0000) GS:ffff987277c00000(0000) knlGS:0000000000=
+000000
+> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> CR2: 0000000000000000 CR3: 000000013cce0005 CR4: 0000000000170ef0
+> >>
+> >> cel@renoir:linux$ scripts/faddr2line fs/nfs/nfs.ko nfs_folio_length+0x=
+29
+> >> nfs_folio_length+0x29/0x170:
+> >> nfs_folio_length at /home/cel/src/kdevops/cel/linux/fs/nfs/internal.h:=
+824 (discriminator 1)
+> >>
+> >> Which in my version of the source code is:
+> >>
+> >> 822 static inline size_t nfs_folio_length(struct folio *folio)
+> >> 823 {
+> >> 824         loff_t i_size =3D i_size_read(folio_file_mapping(folio)->h=
+ost);
+> >>
+> >
+> > Ok so looks like we need to go deeper to know what the NULL pointer
+> > represented in the BUG statement.
+> > Decoding the oops:
+> > $ ~/git/kernel/scripts/decodecode < ./oops.txt
+> > Code: 90 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b 07 a9 00
+> > 00 04 00 74 0c 48 8b 07 f6 c4 08 0f 85 89 00 00 00 48 8b 43 18 <48> 8b
+> > 00 48 8b 68 50 48 85 ed 7e 66 48 8b 03 a8 40 74 7c 4c 8b 6b
+> > All code
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> >   0: 90                    nop
+> >   1: 41 56                push   %r14
+> >   3: 41 55                push   %r13
+> >   5: 41 54                push   %r12
+> >   7: 55                    push   %rbp
+> >   8: 53                    push   %rbx
+> >   9: 48 89 fb              mov    %rdi,%rbx
+> >   c: 48 83 ec 08          sub    $0x8,%rsp
+> >  10: 48 8b 07              mov    (%rdi),%rax
+> >  13: a9 00 00 04 00        test   $0x40000,%eax
+> >  18: 74 0c                je     0x26
+> >  1a: 48 8b 07              mov    (%rdi),%rax
+> >  1d: f6 c4 08              test   $0x8,%ah
+> >  20: 0f 85 89 00 00 00    jne    0xaf
+> >  26: 48 8b 43 18          mov    0x18(%rbx),%rax
+> >  2a:* 48 8b 00              mov    (%rax),%rax <-- trapping instruction
+> >  2d: 48 8b 68 50          mov    0x50(%rax),%rbp
+> >  31: 48 85 ed              test   %rbp,%rbp
+> >  34: 7e 66                jle    0x9c
+> >  36: 48 8b 03              mov    (%rbx),%rax
+> >  39: a8 40                test   $0x40,%al
+> >  3b: 74 7c                je     0xb9
+> >  3d: 4c                    rex.WR
+> >  3e: 8b                    .byte 0x8b
+> >  3f: 6b                    .byte 0x6b
+> >
+> > Code starting with the faulting instruction
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >   0: 48 8b 00              mov    (%rax),%rax
+> >   3: 48 8b 68 50          mov    0x50(%rax),%rbp
+> >   7: 48 85 ed              test   %rbp,%rbp
+> >   a: 7e 66                jle    0x72
+> >   c: 48 8b 03              mov    (%rbx),%rax
+> >   f: a8 40                test   $0x40,%al
+> >  11: 74 7c                je     0x8f
+> >  13: 4c                    rex.WR
+> >  14: 8b                    .byte 0x8b
+> >  15: 6b                    .byte 0x6b
+> >
+> >
+> > Snip out the essential instructions, which shows we just have read an
+> > address at an offset of 0x18, then that must have been NULL and we
+> > tried to dereference NULL which led to the BUG:
+> >   9: 48 89 fb              mov    %rdi,%rbx
+> > ...
+> >  26: 48 8b 43 18          mov    0x18(%rbx),%rax
+> >  2a:* 48 8b 00              mov    (%rax),%rax <-- trapping instruction
+> >
+> > So the question is what is at offset 0x18 in the above code in
+> > nfs_folio_length()?
+> > Now folio_file_mapping() returns an address_space pointer ,and
+> > address_space->host is at offset 0.
+> > So if 'mapping' is at offset 0x18 of folio, then mapping is NULL.  And
+> > from the code, this seems to fit.
+> >
+> > 310 struct folio {
+> > 311         /* private: don't document the anon union */
+> > 312         union {
+> > 313                 struct {
+> > 314         /* public: */
+> > 315                         unsigned long flags;
+> > 316                         union {
+> > 317                                 struct list_head lru;
+> > 318         /* private: avoid cluttering the output */
+> > 319                                 struct {
+> > 320                                         void *__filler;
+> > 321         /* public: */
+> > 322                                         unsigned int mlock_count;
+> > 323         /* private: */
+> > 324                                 };
+> > 325         /* public: */
+> > 326                         };
+> > 327                         struct address_space *mapping;
+> > 328                         pgoff_t index;
+> >
+> >
+> > 445 static inline struct address_space *folio_file_mapping(struct folio=
+ *folio)
+> > 446 {
+> > 447         if (unlikely(folio_test_swapcache(folio)))
+> > 448                 return swapcache_mapping(folio);
+> > 449
+> > 450         return folio->mapping;
+> > 451 }
+> >
+> > So it seems folio->mapping =3D=3D NULL and that is why we BUG.
+> >
+> >
+> >> I'm pinging you first about this because you changed the
+> >> code around the trace_nfs_aop_read_done() call site in
+> >> commit 000dbe0bec05 ("NFS: Convert buffered read paths to
+> >> use netfs when fscache is enabled").
+> >>
+> >
+> > If I have the above analysis right, then maybe this patch would fix it?
+> > Also I wonder if nfs_page_length() might have the same issue?
+> >
+> > diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+> > index 9f0f4534744b..832f07994b88 100644
+> > --- a/fs/nfs/internal.h
+> > +++ b/fs/nfs/internal.h
+> > @@ -821,7 +821,12 @@ unsigned int nfs_page_length(struct page *page)
+> >  */
+> > static inline size_t nfs_folio_length(struct folio *folio)
+> > {
+> > -       loff_t i_size =3D i_size_read(folio_file_mapping(folio)->host);
+> > +       loff_t i_size;
+> > +
+> > +       if (!folio->mapping)
+> > +               return 0;
+> > +
+> > +       i_size =3D i_size_read(folio_file_mapping(folio)->host);
+> >
+> >        if (i_size > 0) {
+> >                pgoff_t index =3D folio_index(folio) >> folio_order(foli=
+o);
+>
+> Execution passed trace_nfs_aop_readpage() without incident,
+> so folio->mapping was a valid pointer as we entered
+> nfs_read_folio().
+>
+> What I don't understand is whether you expect folio->mapping
+> to become NULL while nfs_read_folio() is running.
+>
+
+Was your test running both reads and truncates on the same file in parallel=
+?
+
+Once the read completes I believe the page is unlocked.  Then if
+truncates are running in parallel, then I think this can happen
+(folio->mapping =3D NULL as a result of truncate).
+
+>
+> --
+> Chuck Lever
+>
+>
+
 
