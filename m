@@ -1,199 +1,155 @@
-Return-Path: <linux-nfs+bounces-4612-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4613-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1149926B7B
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jul 2024 00:25:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ECC2926C35
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jul 2024 01:02:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BEE4282A0B
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 22:25:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9255C281472
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 23:02:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF21136643;
-	Wed,  3 Jul 2024 22:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEAE518F2D9;
+	Wed,  3 Jul 2024 23:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rXD1O088";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f7yx2Et3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rXD1O088";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f7yx2Et3"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="j+1cPsQs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643F125760
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jul 2024 22:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A3413DBAA
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jul 2024 23:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720045499; cv=none; b=LCQrCsHcULgFmZQZdvGRXKsUCUBl2zqs4M3hcUc1dbkMiJnatDIFlyu5ibKN2pYLObAK8TR+WmaV6h6WcTopLiZULyS/cfV4tKgPYqDJyLdJpS+X9Jlh4CWPGSkVFZrVD1UDG21c7FDpQW7x4TeeD0rcskYtvqYJeVb7FVPGb0U=
+	t=1720047734; cv=none; b=JZ2qrXOKtmf17/V9SF1kAWLKDv14330y0lwHLQW1LosN/72GQmed5b30qUWsv7q7z+tvviwuqGkvKgt37oLZ/4AxuS0ypkO5aGH5ZesocGQMGKe2M3b6GTQADYraIm0FhrGjUFo1Z4e7dO4+E4i+8h/TGaBzo2Lo0+UL2/euoPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720045499; c=relaxed/simple;
-	bh=dpz/oTutQukMh62IElnW8i+uwi9QCR0Heqzj6R09bxk=;
-	h=Content-Type:MIME-Version:From:To:cc:Subject:Date:Message-id; b=il1U9w3izqiYRiIULMX/kCe0qMFulg9dQ+eWeyABZ2mi15qfnPMknuEtrIx7j9gzhURLoI8LslkFrp9hjnGWt1t8HJoAlVnotuHmr5WadMMENCNg3fVtOMD4qbE1Y3moOZuL4Qbm2muNzwyefnH5BrX9vhJvBt4a1iRZCKmcmHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rXD1O088; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f7yx2Et3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rXD1O088; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f7yx2Et3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5A32D1F78C;
-	Wed,  3 Jul 2024 22:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720045495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K9RAdz4O2RFKB43rN/Oq2p8uIBVW5ienN44rz73zRBs=;
-	b=rXD1O088577i1lQCGmAhpmwZThSyLNq2vOOyS3CcWnFD4RTiEOQS1A7VpdwyIzUU2igtiZ
-	cpHZFaxD5d1i575ckCqTpZLvJOucrivPMN4zBpviPQYNugfKj668GpDHbt06w3U2SCWWdG
-	KmCOStp62w53H+uwqhfMCCjEGc532Ts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720045495;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K9RAdz4O2RFKB43rN/Oq2p8uIBVW5ienN44rz73zRBs=;
-	b=f7yx2Et3kyT/OShCT9C0QxBg4JBySHSdZf+K9ctsdbYeiEYf5X3bIQCS11SSDkblbfH2CH
-	DuuiARIPNel3X/BQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720045495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K9RAdz4O2RFKB43rN/Oq2p8uIBVW5ienN44rz73zRBs=;
-	b=rXD1O088577i1lQCGmAhpmwZThSyLNq2vOOyS3CcWnFD4RTiEOQS1A7VpdwyIzUU2igtiZ
-	cpHZFaxD5d1i575ckCqTpZLvJOucrivPMN4zBpviPQYNugfKj668GpDHbt06w3U2SCWWdG
-	KmCOStp62w53H+uwqhfMCCjEGc532Ts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720045495;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K9RAdz4O2RFKB43rN/Oq2p8uIBVW5ienN44rz73zRBs=;
-	b=f7yx2Et3kyT/OShCT9C0QxBg4JBySHSdZf+K9ctsdbYeiEYf5X3bIQCS11SSDkblbfH2CH
-	DuuiARIPNel3X/BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5CAA713889;
-	Wed,  3 Jul 2024 22:24:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4BZnALTPhWbHOwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 03 Jul 2024 22:24:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1720047734; c=relaxed/simple;
+	bh=b/tZudZ4MxQfNa6R4TJI1O0ixve9TnQVGqOVLhkkSHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PANFri18Y5bZeTWaoSJYmVlqsfaJCHbNhEuz2bDET4k2Bqm0E9UdgPohFZ2hw4lKlB+m2YW/MfFTsy1gM323q0ckAnncDPHWxmr7nTmOsnkyh1DQv3lbq4++/1w0mVjpCEFnP8GkzlHC+ZaNEtOOWkMMocJrP1zkzsKe4Redg4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=j+1cPsQs; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f4a5344ec7so501805ad.1
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Jul 2024 16:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1720047732; x=1720652532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RQ8689AvEPkediPvUKKNjHlFAD8V9KTAIbnDO82hhz0=;
+        b=j+1cPsQsz5fytIJ+RqfR0WhTiscQEvMuj8Z274BiII5YGlagYMsoIhjlsMlL02YKO4
+         siQqZm+hwfDuPBvHKGImpO3ySk2Uvp70LXtHnd2WfbgWKN6AYrXaosISiP8uxVWquxfw
+         GOtm/fOP1CHU5jZ79imeW3fj8A+xbnKzi0ylZadyYAyIwQhKsuVr80MBM0R0dKrzuB3R
+         HtMl2LczpmTZ65lr2Sn+ikGyBHtBkfnLM8yeYfTSI650ylUggu2EkAHM+K2enJrO9Cc9
+         Z/sTnoW8qcXFwFeKFA/VEIMK2MkBLEqJyi79aixQFuYLyFEPuCPRkjv+jLt96d0MgLL/
+         Xx3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720047732; x=1720652532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RQ8689AvEPkediPvUKKNjHlFAD8V9KTAIbnDO82hhz0=;
+        b=kgyzAvK5K588DHLWGJl+Oy66yHwNrOgBXr3duzDA5gt+3hkGJwPpGKwx1J+e9YTbQr
+         2F8hqTWpRTc7SGlWV0rYrKK4qNCclNHx/bBSG834x8VDCABl0iSc/j1F7VkD5fCPaKTU
+         +B357OUYTvL+/d6WrNpZPJjL1POkDlV9cqaP6BTMKrzDpiYKUuG3bPTHNFUUaVauBiIe
+         x9wUAfnlg/9KAAOXNPllV8ywdEuRXTb/N3yZwf1la/ixrKebQtwLGfmZ9SYTKpHrq4xJ
+         AJ8C1M6hbMLwqcHnuqmhM/lhUwAqagrQL60/w9SJlJrymnlY/kdage2GNZ9vjSTwynmD
+         DdQA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2kyZGTlB30prcG0/xldBmZkSjQSK5znhV+R8aQl6cs+C8X6DM4Dz5nKBZRgeatue9mcCNHV6kfZQC+I/lEBuVMl+y+WeeU0AP
+X-Gm-Message-State: AOJu0YwZku4jhBqFOeiqBq4aJESc+A39ds1VlT18BjHuHjsKSABLHpqR
+	jsV3xMKNY7TYCkx9o0aiej0ds2xW8ptAA9bq19e7S1MOXzzRu0g0UTajVH0oVTYB1VjQ4BkliC5
+	D
+X-Google-Smtp-Source: AGHT+IGLJxyk3WkMtbQ0yuAmN9CXHoHO/7sN9iAr/E8zwGNefnoIPl0V4O+kd0pz+bQHVaJSp5nwAw==
+X-Received: by 2002:a17:902:fc45:b0:1fa:d491:a472 with SMTP id d9443c01a7336-1fb1a04e7dfmr47354265ad.11.1720047732469;
+        Wed, 03 Jul 2024 16:02:12 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb2f38983fsm3268355ad.18.2024.07.03.16.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 16:02:12 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sP8zJ-003BI3-2e;
+	Thu, 04 Jul 2024 09:02:09 +1000
+Date: Thu, 4 Jul 2024 09:02:09 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: NeilBrown <neilb@suse.de>, Mike Snitzer <snitzer@kernel.org>,
+	linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: enable WQ_MEM_RECLAIM on m_sync_workqueue
+Message-ID: <ZoXYcbWmYouaybfE@dread.disaster.area>
+References: <>
+ <ZoI0dKgc8oRoKKUn@infradead.org>
+ <172000614061.16071.4185403871079452726@noble.neil.brown.name>
+ <ZoVdAPusEMugHBl8@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>
-cc: Anna Schumaker <anna@kernel.org>,
- Trond Myklebust <trondmy@hammerspace.com>,
- Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org
-Subject: Security issue in NFS localio
-Date: Thu, 04 Jul 2024 08:24:44 +1000
-Message-id: <172004548435.16071.5145237815071160040@noble.neil.brown.name>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoVdAPusEMugHBl8@infradead.org>
 
+On Wed, Jul 03, 2024 at 07:15:28AM -0700, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2024 at 09:29:00PM +1000, NeilBrown wrote:
+> > I know nothing of this stance.  Do you have a reference?
+> 
+> No particular one.
+> 
+> > I have put a modest amount of work into ensure NFS to a server on the
+> > same machine works and last I checked it did - though I'm more
+> > confident of NFSv3 than NFSv4 because of the state manager thread.
+> 
+> How do you propagate the NOFS flag (and NOIO for a loop device) to
+> the server an the workqueues run by the server and the file system
+> call by it?  How do you ensure WQ_MEM_RECLAIM gets propagate to
+> all workqueues that could be called by the file system on the
+> server (the problem kicking off this discussion)?
 
-I've been pondering security questions with localio - particularly
-wondering what questions I need to ask.  I've found three focal points
-which overlap but help me organise my thoughts:
-1- the LOCALIO RPC protocol
-2- the 'auth_domain' that nfsd uses to authorise access
-3- the credential that is used to access the file
+Don't forget PF_LOCAL_THROTTLE, too.  I note that nfsd_vfs_write()
+knows when it is doing local loopback write IO and in that case sets
+PF_LOCAL_THROTTLE:
 
-1/ It occurs to me that I could find out the UUID reported by a given
-local server (just ask it over the RPC connection), find out the
-filehandle for some file that I don't have write access to (not too
-hard), and create a private NFS server (hacking nfs-ganasha?) which
-reports the same uuid and reports that I have access to a file with
-that filehandle.  If I then mount from that server inside a private
-container on the same host that is running the local server, I would get
-localio access to the target file.
+	if (test_bit(RQ_LOCAL, &rqstp->rq_flags) &&
+            !(exp_op_flags & EXPORT_OP_REMOTE_FS)) {
+                /*
+                 * We want throttling in balance_dirty_pages()
+                 * and shrink_inactive_list() to only consider
+                 * the backingdev we are writing to, so that nfs to
+                 * localhost doesn't cause nfsd to lock up due to all
+                 * the client's dirty pages or its congested queue.
+                 */
+                current->flags |= PF_LOCAL_THROTTLE;
+                restore_flags = true;
+        }
 
-I might not be able to write to it because of credential checking, but I
-think that is getting a lot closer to unauthorised access than I would
-like.
+This also has impact on memory reclaim congestion throttling (i.e.
+it turns it off), which is also needed for loopback IO to prevent it
+being throttled by reclaim because it getting congested trying to
+reclaim all the dirty pages on the upper filesystem that the IO
+thread is trying to clean...
 
-I would much prefer it if there was no credible way to subvert the
-LOCALIO protocol.
+However, I don't see it calling memalloc_nofs_save() there to
+prevent memory reclaim recursion back into the upper NFS client
+filesystem.
 
-My current idea goes like this:
- - NFS client tells nfs_common it is going to probe for localio
-   and gets back a nonce.  nfs_common records that this probe is happening
- - NFS client sends the nonce to the server over LOCALIO.
- - server tells nfs_common "I just got this nonce - does it mean
-   anything?".  If it does, the server gets connected with the client
-   through nfs_common.  The server reports success over LOCALIO.
-   If it doesn't the server reports failure of LOCALIO.
- - NFS client gets the reply and tells nfs_common that it has a reply
-   so the nonce is invalidated.  If the reply was success and nfs_local
-   confirms there is a connection, then the two stay connected.
+I suspect that because filesystems like XFS hard code GFP_NOFS
+context for page cache allocation to prevent NFSD loopback IO from
+deadlocking hides this issue. We've had to do that because,
+historically speaking, there wasn't been a way for high level IO
+submitters to indicate they need GFP_NOFS allocation context.
 
-I think that having a nonce (single-use uuid) is better than using the
-same uuid for the life of the server, and I think that sending it
-proactively by client rather than reactively by the server is also
-safer.
+Howver, we have had the memalloc_nofs_save/restore() scoped API for
+several years now, so it seems to me that the nfsd should really be
+using this rather than requiring the filesystem to always use
+GFP_NOFS allocations to avoid loopback IO memory allocation
+deadlocks...
 
-2/ The localio access should use exactly the same auth_domain as the
-   network access uses.  This ensure the credentials implied by
-   rootsquash and allsquash are used correctly.  I think the current
-   code has the client guessing what IP address the server will see and
-   finding an auth_domain based on that.  I'm not comfortable with that.
-   
-   In the new LOCALIO protocol I suggest above, the server registers
-   with nfs_common at the moment it receives an RPC request.  At that
-   moment it knows the characteristics of the connection - remote IP?
-   krb5?  tls?  - and can determine an auth_domain and give it to
-   nfs_common and so make it available to the client.
-
-   Jeff wondered about an export option to explicitly enable LOCALIO.  I
-   had wondered about that too.  But I think that if we firmly tie the
-   localio auth_domain to the connection as above, that shouldn't be needed.
-
-3/ The current code uses the 'struct cred' of the application to look up
-   the file in the server code.  When a request goes over the wire the
-   credential is translated to uid/gid (or krb identity) and this is
-   mapped back to a credential on the server which might be in a
-   different uid name space (might it?  Does that even work for nfsd?)
-
-   I think that if rootsquash or allsquash is in effect the correct
-   server-side credential is used but otherwise the client-side
-   credential is used.  That is likely correct in many cases but I'd
-   like to be convinced that it is correct in all case.  Maybe it is
-   time to get a deeper understanding of uid name spaces.
-
-Have I missed anything?  Any other thoughts?
-
-Thanks,
-NeilBrown
-  
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
