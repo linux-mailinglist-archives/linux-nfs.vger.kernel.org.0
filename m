@@ -1,96 +1,130 @@
-Return-Path: <linux-nfs+bounces-4585-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4586-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 866F89252F1
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 07:27:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E094925452
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 09:01:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD9721C24CB2
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 05:27:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E82691F25937
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 07:01:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81F094502F;
-	Wed,  3 Jul 2024 05:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27C40839F1;
+	Wed,  3 Jul 2024 07:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zjLqNvHb"
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="O9WaVZNs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B012E1DB;
-	Wed,  3 Jul 2024 05:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787A833D5;
+	Wed,  3 Jul 2024 07:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719984437; cv=none; b=roMgobLRv21sgccVcw7vcBApURE0pYowhoslD3sYOej/UueC0rG0lHY+ZAT99Jt3O5ZfngLYzMAUdaIzT36yz+s0dVTN3Pp6tO1Z9VBrUJeLvI7u1FwnlSaNmfx5bzcAjjaxiwcX4Qc6JPRNqEakOjFe9HhmqwLFQL5ZvAl5Ng8=
+	t=1719990111; cv=none; b=HoR1R2gVNm8ccw51LysNSGyHXqVqR/el9WgXC5TVS94zB5SOsYgS+ytD66qUzRpqsiA/Tmx6xTQLXgJ/jiDt0qZduol8IuOeYC3NeeVXE447VaQLKgXccsogbi1ewrPbwQW7+aTu6Ouy0H5JPuki9M268Bk01L9W77PYPgvfaic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719984437; c=relaxed/simple;
-	bh=J7UtXdVsH0Dw4tNImhJzkj7vjFu39SjrHJHN2KzikT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuerSqskrtXsgt0B6FUjUkjLLFFDNOTiXGTo0dqpxmxaKEQfMvxaS84U8o+6vxBb9NZcjrG/vDrMIe+hUSf62pLi0ssD629kceWJSeWKLxjHj+CYZlMUDmDNraFQYG3oWjLQ7uqqF9SntvfEDZnUP0kJkqqudn0Ip1UsWx+1+dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=zjLqNvHb; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1719990111; c=relaxed/simple;
+	bh=Z+z8IqF9p2OuVi283o4CfF1bk3TE4Li6a22iqTpCbd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bu9gjQJ39L2Ra6zaQJmAZrnRcuWqhVPNVz+IokK0vfNPN3vkq6rC2Cw4au77ktOQxhNvdfHwJSwJLA+eWxGmJedQWGtQaShOrCeiVpYZXYsyP7HTNTUSnAPOwkwNy7swqiYLlL3MBMJSfj1gjUgCfb3hWjmAH7urX9v1zpQlEq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=O9WaVZNs; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=esNNsuJGjIuM6Ww/dTRdzcA7GhPLycKN8GnrTM6U61w=; b=zjLqNvHb33FcejJlisXXryXdLR
-	P2ufv7DorFVmR0mc6IHxAwnrVNY6psPL5Zyj5YQ5jnlpzKWxYo/Ycw4dvtV2E0X2Lcdw41irhZttF
-	Al6PKmK91DYcBqEfO+zgSf1+/lwW/O8cgnpkGF31tbc8nUjHX8PHGqiKJTxm5Wnxllc8yS04FmfLi
-	pA86woHVKDXUXDSvJaalFwuDIMNcEnJwPzMpTXn1KUJcaiZCXD6xbk1WAr/Hmxk5lDzG0yt2Fyk+W
-	5P7rvn9FY8cXdXcv+QZnWBbTuPed94nu0sFBeBuFk3XWk+OxurZBBnUL8hIxXGjQfTOaej+CdUuUL
-	HXFxzssw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOsWN-000000092z8-3yX1;
-	Wed, 03 Jul 2024 05:27:11 +0000
-Date: Tue, 2 Jul 2024 22:27:11 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <ZoThL-Fmyt-9Akrc@infradead.org>
-References: <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
- <20240702101902.qcx73xgae2sqoso7@quack3>
- <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
- <ZoPs0TfTEktPaCHo@infradead.org>
- <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
- <ZoPvR39vGeluD5T2@infradead.org>
- <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
- <ZoQY4jdTc5dHPGGG@infradead.org>
- <4ec1fbdc6568e16da40f41789081805e764fd83e.camel@kernel.org>
- <ZoThH9fWsdzq7IXR@infradead.org>
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=7+iquzvX4RJb1J5IQ5AgA+Y0XDzL+plsSrlY+5cXPF4=; b=O9WaVZNs5nv+YZ2SDDU0P3yjYn
+	ATEtvoOuvLqq0ttBQar/Kvezkh16mTqvHPRBIiG6jFQ2nIEjkSbaayp74apar5TclWqs/1hqY+Cvj
+	VHK5SlkFOp7Jh+AuazopR5+GIe8cv8pS/JJg2PVOQSf9EsaXsn/0xd0mmbvN6YlKPPliwrZVSK6wD
+	PGb7Xcl1lA5rMyJEGq5RCFHWKvISFlRV7VBAWFur1gZjiAVvSKyavpWHw575Uwg88ladOhOx86CoH
+	3SVSytZG+TriQwgURfS74FOPawKfZA/btpYWDtFeiO8RuZWC0RsenIwFqiz9288Quh8USJhq5p2xk
+	oTqcTD7A==;
+Received: from 41.249.197.178.dynamic.cust.swisscom.net ([178.197.249.41] helo=localhost)
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sOtzi-000Knh-NT; Wed, 03 Jul 2024 09:01:34 +0200
+From: Daniel Borkmann <daniel@iogearbox.net>
+To: kuba@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Lex Siegel <usiegl00@gmail.com>,
+	Neil Brown <neilb@suse.de>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Subject: [PATCH net v3] net, sunrpc: Remap EPERM in case of connection failure in xs_tcp_setup_socket
+Date: Wed,  3 Jul 2024 09:01:20 +0200
+Message-Id: <2e62f0fc284b2f27156cd497fbb733b55a5ade43.1719592013.git.daniel@iogearbox.net>
+X-Mailer: git-send-email 2.21.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoThH9fWsdzq7IXR@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27324/Tue Jul  2 10:40:44 2024)
 
-On Tue, Jul 02, 2024 at 10:26:55PM -0700, Christoph Hellwig wrote:
-> So while shrinking the inodes sounds nice, the tradeoff to have to
-> check all timestamps from disk / the server for validity doesn't
-> sound as positive.  So I'm glade we're avoiding this at least for.
+When using a BPF program on kernel_connect(), the call can return -EPERM. This
+causes xs_tcp_setup_socket() to loop forever, filling up the syslog and causing
+the kernel to potentially freeze up.
 
-... now.
+Neil suggested:
+
+  This will propagate -EPERM up into other layers which might not be ready
+  to handle it. It might be safer to map EPERM to an error we would be more
+  likely to expect from the network system - such as ECONNREFUSED or ENETDOWN.
+
+ECONNREFUSED as error seems reasonable. For programs setting a different error
+can be out of reach (see handling in 4fbac77d2d09) in particular on kernels
+which do not have f10d05966196 ("bpf: Make BPF_PROG_RUN_ARRAY return -err
+instead of allow boolean"), thus given that it is better to simply remap for
+consistent behavior. UDP does handle EPERM in xs_udp_send_request().
+
+Fixes: d74bad4e74ee ("bpf: Hooks for sys_connect")
+Fixes: 4fbac77d2d09 ("bpf: Hooks for sys_bind")
+Co-developed-by: Lex Siegel <usiegl00@gmail.com>
+Signed-off-by: Lex Siegel <usiegl00@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Neil Brown <neilb@suse.de>
+Cc: Trond Myklebust <trondmy@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>
+Link: https://github.com/cilium/cilium/issues/33395
+Link: https://lore.kernel.org/bpf/171374175513.12877.8993642908082014881@noble.neil.brown.name
+---
+ [ Fixes tags are set to the orig connect commit so that stable team
+   can pick this up. ]
+
+ v1 -> v2 -> v3:
+   - Plain resend, adding correct sunrpc folks to Cc
+     https://lore.kernel.org/bpf/Zn7wtStV+iafWRXj@tissot.1015granger.net/
+
+ net/sunrpc/xprtsock.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index dfc353eea8ed..0e1691316f42 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2441,6 +2441,13 @@ static void xs_tcp_setup_socket(struct work_struct *work)
+ 		transport->srcport = 0;
+ 		status = -EAGAIN;
+ 		break;
++	case -EPERM:
++		/* Happens, for instance, if a BPF program is preventing
++		 * the connect. Remap the error so upper layers can better
++		 * deal with it.
++		 */
++		status = -ECONNREFUSED;
++		fallthrough;
+ 	case -EINVAL:
+ 		/* Happens, for instance, if the user specified a link
+ 		 * local IPv6 address without a scope-id.
+-- 
+2.21.0
+
 
