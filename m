@@ -1,61 +1,60 @@
-Return-Path: <linux-nfs+bounces-4594-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4595-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A0DF926486
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 17:12:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB47D9264A5
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 17:16:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 069DE28E2D9
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 15:11:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68A5BB217D5
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jul 2024 15:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA39717DA23;
-	Wed,  3 Jul 2024 15:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C49176AB9;
+	Wed,  3 Jul 2024 15:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jT0upB7a"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="unnkKDZg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E9817BB1F
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jul 2024 15:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B6B1DFD1
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jul 2024 15:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019512; cv=none; b=KaCpqeC0Azoj7yr9Ff2t19ETduaWx3ElTn5FudZrPNcsuXTlZt4sULGmDzgZnKEipIhwKeB2BQP+FCGVQPMZqBYSIHFnsA8w7I/wKXrJP0nNaaEUiBUjXC4A8IQc703n6FiX+HHoLOlY03/OOXTCKEZyYoA0JkrWXvBTNcTf3xY=
+	t=1720019767; cv=none; b=ALrnRGWoF30hB+Y2XYWi6HGiwYaGdAQJUj6KWSmCpp6wXJf537eozcMQqgC+4LU7/O5n441Lv+JBxGKZ4W5ylvDTUMfwERPo5lzEC3+hjkAqsBilV6uS9YA8fCjlNx4XdsG8RNtK61+6MFQJIY8JGWVSLjJ2yNU7NSQeDxY9FGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019512; c=relaxed/simple;
-	bh=xAZ9w2mpL/pwgf60fpSD3rtvrzIEULXXErstpTmWRIg=;
+	s=arc-20240116; t=1720019767; c=relaxed/simple;
+	bh=NUPKBwXcw5ZAjsmeVICYWeLAWvPT2hoAZ3/n39kNtts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/ltlKLLXq8ejtH2TYn1WqDPSvfDiWMLGc6m1xRlPCO3aIeXadDJZ5pBZpiyRey22s32YutfUzCKMBtybSRTXzSmoHXO3bXQDfSJgBEII8k022+uUXO79af2hxTjdFS/uQh29XU+ppBMfW86s7+GbeaYwXcYQbSwWSFrW9iDh8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jT0upB7a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793FDC2BD10;
-	Wed,  3 Jul 2024 15:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720019512;
-	bh=xAZ9w2mpL/pwgf60fpSD3rtvrzIEULXXErstpTmWRIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jT0upB7aM7rY9k+36DlCLTR3bC9PGoaWzuiGJBW8T9wqeXfUTRBG9vpQORRzapd/V
-	 S4WECOR5SwOm5S+laTdakQm3Uus+zKswuTnwjW9zb4Ufy81NPlr9hPchH1iiZM4ECL
-	 fNQXm3/RQ0e+DBnH4Zr+UwVxtQu6uaf3LV2bwoPpUhxBcJTZbuSOuvloNRvC1Gj9qG
-	 zxfHfYMJ+bNoQrml4QEYWvkw7kkkgVLv3b0SIV1R+VPeHByIXIBNpzHB3rhlbYcH56
-	 OGszCcZsXpFSuC711hWDHMmhE1dYXk1E2HD9iHsOPSBExZcicLd/j9GEsEhM59RGZh
-	 Q0rq+qF4wpgbg==
-Date: Wed, 3 Jul 2024 11:11:51 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ufrylb3UTXORLHxJGB4+DgBtn+q1LhAnFOn2KBCOrSPTtJoLvz+oXz3R/mej/a3zVI7bBdexFZpFiXBjXJytIVxhBo84chdKhZ/A/TGjiNfe4t51J9Jwkud8n+9nV/HPZ4StoTSx59+aUr5j8A+FLLv1XWR/86N4lGqDIBV6rhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=unnkKDZg; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UI4wBnyTVQ10cgqYjHBsDXQRiUYIPPVRpdpHLNUgG+8=; b=unnkKDZgeDvsrm9TUQl92NKdbc
+	9+HD9+TpLteXpF8rFdffsrOTtWlQczoxlpZz3/ijmNXTsz67hKLQVwUkr3SygVk7BKhCDSgDE8lXf
+	pa9xMS5bgjQC9F64gAVm24MGGVcGG+G4Ds7rsKsWxtNsa4xi90/LEnG8UaZblL1doMbMakh/pFahv
+	cm+luJrqVAlzxqFwuswg/dyOPOET7nmp7+jQhZUMIk8hg+cPw2F0LKtk3atsSRgAchfUgoIAyDIjz
+	DTgstYhJ7WerQz3j1yoEeUNskYDRbBNItcF3W2XMa1UXIOfpcD5BJa1JbJmL/xxzPCu3OO6FtYOiU
+	S+XYZxUA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sP1iC-0000000AeFk-2WCA;
+	Wed, 03 Jul 2024 15:16:00 +0000
+Date: Wed, 3 Jul 2024 08:16:00 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
-	Neil Brown <neilb@suse.de>, Dave Chinner <david@fromorbit.com>
+	NeilBrown <neilb@suse.de>, snitzer@hammerspace.com
 Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-Message-ID: <ZoVqN7J6vbl0BzIl@kernel.org>
+Message-ID: <ZoVrMBmOS9BalBXO@infradead.org>
 References: <20240702162831.91604-1-snitzer@kernel.org>
- <3A583EDC-519C-4820-87E9-F4DC164656DB@oracle.com>
- <ZoTb-OiUB5z4N8Jy@infradead.org>
- <ZoURUoz1ZBTZ2sr_@kernel.org>
- <ZoVdP-S01NOyZqlQ@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,32 +63,30 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZoVdP-S01NOyZqlQ@infradead.org>
+In-Reply-To: <20240702162831.91604-1-snitzer@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Jul 03, 2024 at 07:16:31AM -0700, Christoph Hellwig wrote:
-> On Wed, Jul 03, 2024 at 04:52:34AM -0400, Mike Snitzer wrote:
-> > Ultimately I simply wanted to keep momentum up, I'm sure you can
-> > relate to having a vision for phasing changes in without missing a
-> > cycle.  But happy to just continue working it into the 6.12
-> > development window.
-> 
-> It just feels really rushed to have something with cross-subsystem
-> communication going in past -rc6 in a US holiday week.  Sometimes
-> not rushing things too much will lead to much better results.
+I've stated looking a bit at the code, and the architectural model
+confuses me more than a bit.
 
-Yes, I knew it to be very tight given the holiday.  I should've just
-yielded to the reality of the calendar and there being some extra
-changes needed (remove "fake" svc_rqst in fs/nfsd/localio.c -- I was
-hopeful that could be done incrementally after merge but I digress).
+A first thing that would be very helpful is an actual problem statement.
+The only mention of a concrete use case is about containers, implying
+that this about a client in one container/namespace with the server
+or the servers in another containers/namespace.  Is that the main use
+case, are there others?
 
-Will welcome any help you might offer to optimize localio as much as
-possible (doesn't need to be in near-term, whenever you might have
-time to look).  Its current approach to use synchronous buffered
-read_iter and write_iter, with active waiting, should be improved.
+I kinda deduct from that that the client and server probably do not
+have the same view and access permissions to the underlying file
+systems?  As this would defeat the use of NFS I suspect that is the
+case, but it should probably be stated clearly somewhere.
 
-But Dave's idea to go full RMW to be page aligned will complicate a
-forecasted NFS roadmap item to allow for: "do-not-cache capabilities,
-so that the NFS server can turn off the buffer caching of files on
-clients (force O_DIRECT-like writing/reading)".  But even that seems a
-catch-22 given the NFS client doesn't enforce DIO alignment.
+Going from there I don't understand why we need multiple layers of
+server bypass.  The normal way to do this in NFSv4 is to use pNFS
+layout.
+
+I.e. you add a pnfs localio layout that just does local reads
+and writes for the I/O path.  We'd still need a way to find a good
+in-kernel way to get the file structure, but compared to the two
+separate layers of bypasses in the current code it should be
+significantly simpler.
 
