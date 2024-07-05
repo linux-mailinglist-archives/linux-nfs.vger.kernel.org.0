@@ -1,232 +1,175 @@
-Return-Path: <linux-nfs+bounces-4663-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4664-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93B85928E6E
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 22:59:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E629928EE5
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 23:40:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 231E11F2583B
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 20:59:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2414128844E
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 21:40:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75972145A00;
-	Fri,  5 Jul 2024 20:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D84DF144D01;
+	Fri,  5 Jul 2024 21:40:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1PZHYML"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OYInPBGJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XMgWgRJv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OYInPBGJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XMgWgRJv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B2B1459FE;
-	Fri,  5 Jul 2024 20:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0A13F42A
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jul 2024 21:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720213160; cv=none; b=X/zTGv0l+4SztZbgj8xC8lhF9SP5U965tiwgMy+ODP18p0U3FDxIEHB2MYNjz64+uq3zvJGQytOp6EKphXoKY4DlThfFK/Lkleye4Q0RXSobX7gOASh6iZbCWfCU2fujYmFN+fDL3bDBKSW9mIOEpkH/ERm2C82jWERTcJCYNUE=
+	t=1720215608; cv=none; b=jOSf3n7E9w+0vJV/gizERE8B2WjiBds120rs1ko9Tc/gOmVnr7aXShbClKHTycfuCJ0QKsXyaNZ4Hkc6yHMmi0s76UqTNQ2xJQBmU/UeHlhHzJwNxg/IykOWqYYxxxDYlqBuSwpTBpuwiqXADhESqIScfrpwKOq/RgBfRSLkZvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720213160; c=relaxed/simple;
-	bh=DusGE1cbAr1wr2RiyF/fWaMqiaLUnByl1oNy227VTkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvgBeYFRXHQQ6RjKN2l8KTo0px8zAVnSSgpybu5Y4GJzlGUwMLhr7hhooDDkKZJfQhJvsVvUbacgbtXPV4gJmBW+N9A0mXVXLMRsAtvcX9VMJD5isFQeHeELhB8prbByY2XYzyYvx0LVDm2PDaP8yXYtW3jhg/LsBxSdgNx2qxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s1PZHYML; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=/Kb85RBByRKA+7u8OSLey5Gf4F7B6fkoI9PSqKXpd2Q=; b=s1PZHYMLbcx7leKxCoOb+zA0Fz
-	WIgyuKpHtDdcKqCLFMKJm8ZdS6QhpDzWXz3psaK/RrEFicjAvC9fRqL5HAT31ux5CfxQVeh4HKD0X
-	Dx24gnQRdn8NofoFKxzTI/jnLJmmwJH1h45FomlHuaYKmQ1yIASsbnk8eT7XGeIaOpr7pax7/9R9L
-	8mYcqfXnv1pbLDD9qjjTe0NbegNpKCrQ76+gi3XOO3yEIOPGi7NEb6y8eD/bv/s/jgiRHqnWvbz4C
-	lN6+iO5k1jTKZfqtpQ8SSiC4ZitAY/UPwKEm1V9UOzJ7gah70FkWDPocpHML7eJpZHIMqILz2A6iW
-	+Az7UDbg==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPq1N-0000000GpGP-3COr;
-	Fri, 05 Jul 2024 20:59:09 +0000
-Message-ID: <27400c92-632b-4f58-956a-eb2cbb0cfe26@infradead.org>
-Date: Fri, 5 Jul 2024 13:59:08 -0700
+	s=arc-20240116; t=1720215608; c=relaxed/simple;
+	bh=co2ctFHy2KTxaHuJoWRqF+GwctXfbDPE9pPctp0bWw4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=E077QMZZUaven2Csx7xOBoEl7FrU1kfiAgodZW796UnKbtimSRz1veZt5hPDifRU3gmEq8dDp7x4e7XODAQfa3QgIU1fn4Tm0EfHJ1C+mjPMUylLTjqoGZJGGYaakxRWwMPC38aishvz7zb86PR/AqK31TtjrFhnl08sDsKO7kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OYInPBGJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XMgWgRJv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OYInPBGJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XMgWgRJv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1A2C71F7DB;
+	Fri,  5 Jul 2024 21:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720215605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hrRZTWScHtmUax2ZS3azJ8Db6J6hASSReX9iW47V1qk=;
+	b=OYInPBGJcc1WKEUdi3Oh6M79TELvVyeVgzZU4rWIfvJx5OWsgoYYoUYR2pscJmnYtm4nvc
+	K8EEEvrdCEiTQPMsfg5JtUyO8mQDWN4Dkw1ngowCxm5fBoR+lWWNXnrM97hte5YL26KzIU
+	JDLOtUV02V1Lu0OQIvMGC/o20rI1XgY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720215605;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hrRZTWScHtmUax2ZS3azJ8Db6J6hASSReX9iW47V1qk=;
+	b=XMgWgRJvr++leKAs2U+3ZA3Q4kz58ahXtJhte/1L+NDLO8ZjB1NZI40rMVJybuTViB98Lz
+	poQYpqxim+8GLqCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=OYInPBGJ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=XMgWgRJv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720215605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hrRZTWScHtmUax2ZS3azJ8Db6J6hASSReX9iW47V1qk=;
+	b=OYInPBGJcc1WKEUdi3Oh6M79TELvVyeVgzZU4rWIfvJx5OWsgoYYoUYR2pscJmnYtm4nvc
+	K8EEEvrdCEiTQPMsfg5JtUyO8mQDWN4Dkw1ngowCxm5fBoR+lWWNXnrM97hte5YL26KzIU
+	JDLOtUV02V1Lu0OQIvMGC/o20rI1XgY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720215605;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hrRZTWScHtmUax2ZS3azJ8Db6J6hASSReX9iW47V1qk=;
+	b=XMgWgRJvr++leKAs2U+3ZA3Q4kz58ahXtJhte/1L+NDLO8ZjB1NZI40rMVJybuTViB98Lz
+	poQYpqxim+8GLqCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C9F913889;
+	Fri,  5 Jul 2024 21:40:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id J9tHLDFoiGYzCwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 05 Jul 2024 21:40:01 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] Documentation: add a new file documenting
- multigrain timestamps
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong"
- <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
- Christoph Hellwig <hch@infradead.org>, kernel-team@fb.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240705-mgtime-v3-0-85b2daa9b335@kernel.org>
- <20240705-mgtime-v3-5-85b2daa9b335@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240705-mgtime-v3-5-85b2daa9b335@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Mike Snitzer" <snitzer@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Trond Myklebust" <trondmy@hammerspace.com>,
+ "Christoph Hellwig" <hch@infradead.org>, linux-nfs@vger.kernel.org
+Subject: Re: Security issue in NFS localio
+In-reply-to: <ZoYlvk7LnhyUCYU1@kernel.org>
+References: <172004548435.16071.5145237815071160040@noble.neil.brown.name>,
+ <ZoYlvk7LnhyUCYU1@kernel.org>
+Date: Sat, 06 Jul 2024 07:39:49 +1000
+Message-id: <172021558910.11489.5865399031739295244@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 1A2C71F7DB
+X-Spam-Score: -5.51
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-
-
-On 7/5/24 10:02 AM, Jeff Layton wrote:
-> Add a high-level document that describes how multigrain timestamps work,
-> rationale for them, and some info about implementation and tradeoffs.
+On Thu, 04 Jul 2024, Mike Snitzer wrote:
+> On Thu, Jul 04, 2024 at 08:24:44AM +1000, NeilBrown wrote:
 > 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
+> > 2/ The localio access should use exactly the same auth_domain as the
+> >    network access uses.  This ensure the credentials implied by
+> >    rootsquash and allsquash are used correctly.  I think the current
+> >    code has the client guessing what IP address the server will see and
+> >    finding an auth_domain based on that.  I'm not comfortable with that.
 > 
-> diff --git a/Documentation/filesystems/multigrain-ts.rst b/Documentation/filesystems/multigrain-ts.rst
-> new file mode 100644
-> index 000000000000..70d36955bb83
-> --- /dev/null
-> +++ b/Documentation/filesystems/multigrain-ts.rst
-> @@ -0,0 +1,120 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
-> +Multigrain Timestamps
-> +=====================
-> +
-> +Introduction
-> +============
-> +Historically, the kernel has always used a coarse time values to stamp
+> nfsd_local_fakerqst_create() isn't guessing.  rpc_peeraddr() returns the
+> IP address of the server because the rpc_clnt is the same as
+> established for traditional network access.
 
-                                       used coarse time values
+I think it is guessing in exactly they same way that your previous
+internal code tried to use IP addresses to guess whether the server was
+on the same host or not.
 
-> +inodes. This value is updated on every jiffy, so any change that happens
-> +within that jiffy will end up with the same timestamp.
-> +
-> +When the kernel goes to stamp an inode (due to a read or write), it first gets
-> +the current time and then compares it to the existing timestamp(s) to see
-> +whether anything will change. If nothing changed, then it can avoid updating
-> +the inode's metadata.
-> +
-> +Coarse timestamps are therefore good from a performance standpoint, since they
-> +reduce the need for metadata updates, but bad from the standpoint of
-> +determining whether anything has changed, since a lot of things can happen in a
-> +jiffy.
-> +
-> +They are particularly troublesome with NFSv3, where unchanging timestamps can
-> +make it difficult to tell whether to invalidate caches. NFSv4 provides a
-> +dedicated change attribute that should always show a visible change, but not
-> +all filesystems implement this properly, causing the NFS server to substitute
-> +the ctime in many cases.
-> +
-> +Multigrain timestamps aim to remedy this by selectively using fine-grained
-> +timestamps when a file has had its timestamps queried recently, and the current
-> +coarse-grained time does not cause a change.
-> +
-> +Inode Timestamps
-> +================
-> +There are currently 3 timestamps in the inode that are updated to the current
-> +wallclock time on different activity:
-> +
-> +ctime:
-> +  The inode change time. This is stamped with the current time whenever
-> +  the inode's metadata is changed. Note that this value is not settable
-> +  from userland.
-> +
-> +mtime:
-> +  The inode modification time. This is stamped with the current time
-> +  any time a file's contents change.
-> +
-> +atime:
-> +  The inode access time. This is stamped whenever an inode's contents are
-> +  read. Widely considered to be a terrible mistake. Usually avoided with
-> +  options like noatime or relatime.
-> +
-> +Updating the mtime always implies a change to the ctime, but updating the
-> +atime due to a read request does not.
-> +
-> +Multigrain timestamps are only tracked for the ctime and the mtime. atimes are
-> +not affected and always use the coarse-grained value (subject to the floor).
-> +
-> +Inode Timestamp Ordering
-> +========================
-> +
-> +In addition just providing info about changes to individual files, file
-> +timestamps also serve an important purpose in applications like "make". These
-> +programs measure timestamps in order to determine whether source files might be
-> +newer than cached objects.
-> +
-> +Userland applications like make can only determine ordering based on
-> +operational boundaries. For a syscall those are the syscall entry and exit
-> +points. For io_uring or nfsd operations, that's the request submission and
-> +response. In the case of concurrent operations, userland can make no
-> +determination about the order in which things will occur.
-> +
-> +For instance, if a single thread modifies one file, and then another file in
-> +sequence, the second file must show an equal or later mtime than the first. The
-> +same is true if two threads are issuing similar operations that do not overlap
-> +in time.
-> +
-> +If however, two threads have racing syscalls that overlap in time, then there
-> +is no such guarantee, and the second file may appear to have been modified
-> +before, after or at the same time as the first, regardless of which one was
-> +submitted first.
-> +
-> +Multigrain Timestamps
-> +=====================
-> +Multigrain timestamps are aimed at ensuring that changes to a single file are
-> +always recognizeable, without violating the ordering guarantees when multiple
+Whatever reasons you had for thinking that was fragile and needed to be
+replaced - apply those reasons to the mechanism for choosing an
+'auth_domain' (which is what the IP address is used for).  I am
+confident that we need to choose the auth_domain when the client is
+making a LOCALIO RPC request to the server, and to use that auth_domain
+for subsequent interactions with that client (and possibly a different
+auth_domain for a different client).
 
-          recognizable
-according to what I can find on the web.
-
-> +different files are modified. This affects the mtime and the ctime, but the
-> +atime will always use coarse-grained timestamps.
-> +
-> +It uses an unused bit in the i_ctime_nsec field to indicate whether the mtime
-> +or ctime has been queried. If either or both have, then the kernel takes
-> +special care to ensure the next timestamp update will display a visible change.
-> +This ensures tight cache coherency for use-cases like NFS, without sacrificing
-> +the benefits of reduced metadata updates when files aren't being watched.
-> +
-> +The Ctime Floor Value
-> +=====================
-> +It's not sufficient to simply use fine or coarse-grained timestamps based on
-> +whether the mtime or ctime has been queried. A file could get a fine grained
-> +timestamp, and then a second file modified later could get a coarse-grained one
-> +that appears earlier than the first, which would break the kernel's timestamp
-> +ordering guarantees.
-> +
-> +To mitigate this problem, we maintain a global floor value that ensures that
-> +this can't happen. The two files in the above example may appear to have been
-> +modified at the same time in such a case, but they will never show the reverse
-> +order. To avoid problems with realtime clock jumps, the floor is managed as a
-> +monotonic ktime_t, and the values are converted to realtime clock values as
-> +needed.
-> +
-> +Implementation Notes
-> +====================
-> +Multigrain timestamps are intended for use by local filesystems that get
-> +ctime values from the local clock. This is in contrast to network filesystems
-> +and the like that just mirror timestamp values from a server.
-> +
-> +For most filesystems, it's sufficient to just set the FS_MGTIME flag in the
-> +fstype->fs_flags in order to opt-in, providing the ctime is only ever set via
-> +inode_set_ctime_current(). If the filesystem has a ->getattr routine that
-> +doesn't call generic_fillattr, then you should have it call fill_mg_cmtime to
-> +fill those values.
+> 
+> It's now 4th of July for me, so I'm with Jeff: I need a drink! ;)
 > 
 
--- 
-~Randy
+Hope you enjoyed your drink!
+
+NeilBrown
 
