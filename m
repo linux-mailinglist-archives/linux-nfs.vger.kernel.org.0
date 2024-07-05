@@ -1,232 +1,139 @@
-Return-Path: <linux-nfs+bounces-4629-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4630-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CC52927FD4
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 03:42:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D0B5928162
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 07:18:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D19DB21324
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 01:42:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A59D91F211D0
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 05:18:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1B7FBFC;
-	Fri,  5 Jul 2024 01:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7679C27452;
+	Fri,  5 Jul 2024 05:18:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEwPFGeG"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RYPhi+IR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B0EEDD;
-	Fri,  5 Jul 2024 01:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E18B4C70
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jul 2024 05:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720143739; cv=none; b=kOALvTpgqBP9FPDnrJyl1HvWz/4MsK78E9UZToOCSDSlToDsm9zHwdO69bcDGWXL+FShKYCUgt627rlN2OQWxbFvVOvTL9VH/GfArEiuyYV52XTL74aCXcp8II8YIUbnKeiiR0W508v4ydu7K878REpfrMGcx00A02+Vkwno7ME=
+	t=1720156703; cv=none; b=fLY9J2qXkAQWxoHQTCO+r5oqkiVB8NrZn1q8CwodZ4TLBs6qag7a2LbXEMTzC3gWym/iW9VAQiLH9y0s3rG5xRtjLIXfmmzr79KluTqzvWc2JLyefUeeu3eJChQpmRbEseDlgt5xInqgpKC/IKDSDCtKihY3WcMWygyjmJ7//QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720143739; c=relaxed/simple;
-	bh=N9zCE5gbX4i5ttVLz8oCFLcEIsG1PazvLAoiqe9Aem0=;
+	s=arc-20240116; t=1720156703; c=relaxed/simple;
+	bh=MZybyo/5eUQeEKpdpdA4WwjA0x8ItqgvuRf9Tgb8Eh8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JVAXNWXXOzG3o4ynnGe/8S0zcBn5Zvp/MGUpV7JfBD+zCIvaauwOfc9RQOp9vA2wTzVMLVGKokl5xgt9owdNd347oAitR2KlzjsLVGVSjq6IVl+0jKey15eb2AoKX+UZ1N/i7KDDY3KKvNdfCWBomPNlNkkiLK4dtLtgQmhvQ98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEwPFGeG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D12B0C3277B;
-	Fri,  5 Jul 2024 01:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720143739;
-	bh=N9zCE5gbX4i5ttVLz8oCFLcEIsG1PazvLAoiqe9Aem0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AEwPFGeGYEqg+o5k1d89Y/mGxm/NLx4OHc5kltn+H67/o2Go6LDw4nbNfL1KkZMck
-	 CRpVoCktz+zLeESUX0wI3udZIa14xqWEdpu9z4j+uRsH8gAgkOORnHaMwgynFif+2v
-	 c5NXjo5Pf3rUb/trvX7Ee/2x0BpoJrT/gyEam6OciCVGCLhUvjSKwQLdRFD6XX6doj
-	 IWUGZA81Dz0rapKjV3lsdUpkvhq8ybEuxFvDS3z0ZAYsKtgVbZFOOJsEXFrUwm2pcX
-	 f0S9pdHddhyB6PsSi6TuXw/f5z9QvEwZZUiDkCxhn8ks9sBZ3RGSIQTwBL9eUtG24b
-	 SJEVkUkpa2spA==
-Date: Thu, 4 Jul 2024 21:42:17 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Chuck Lever III <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Christoph Hellwig <hch@infradead.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/JpOvawKse8BewZGN8qCT4pLVrKdC4Y5Gyb/gfbf9xr/5kx2UjHzkN1K/fnI1Tls1Z77Jb1Hsp9Ic06negOncvUt78tUoxiy8Tkan6J3ZSAzjBzHFiLkVz7tvT/szAlWpNvplQHOIgLye2WRlMBBgfPyacadr1ywxrGagbGxWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RYPhi+IR; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=f94O0eiqWAsOk+riNCK06aeTfoDPZGh8nx8gC7Nd+ow=; b=RYPhi+IR4PDvuuii8A3+q8fhtY
+	lI0YuXelPmZ4B/OaVU5qRUPwGzQX1cMB8Hd18zy+W5jglxH9MUuFknL4WD0f/6oXvVFmqHjxy8dj1
+	3RQ7V3eX1oGY8/7r6lzltKW0v//ox9Is5jsbi9SPg9tj9NSvPnfAUxUs5+QDdhXj30ph4Cx74F2/P
+	Jbjg9U8xSBTIg7Ssr9DbmVHP4mDbe8OLGAQTm5gwdGCL/LvnPJyf8M4Ed8V5GOfWeHBAhzxJztEkU
+	p8rbSbYTb34fIsAwJv7cF1XsrlQHjatXLUYbVy/4X9hvtwNpJWXYuYYdfsmOaSssnsJXCQSYH6WKh
+	3lUJ6bIQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sPbKp-0000000EvxL-0aJe;
+	Fri, 05 Jul 2024 05:18:15 +0000
+Date: Thu, 4 Jul 2024 22:18:15 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever III <chuck.lever@oracle.com>,
 	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: Security issue in NFS localio
-Message-ID: <ZodPeeJzhZOtiUo1@kernel.org>
-References: <172004548435.16071.5145237815071160040@noble.neil.brown.name>
- <23DE2D13-1E1D-4EFE-9348-5B9055B30009@oracle.com>
- <ZocvhIoQfzzhp+mh@dread.disaster.area>
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	Neil Brown <neilb@suse.de>, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
+Message-ID: <ZoeCFwzmGiQT4V0a@infradead.org>
+References: <ZoTb-OiUB5z4N8Jy@infradead.org>
+ <ZoURUoz1ZBTZ2sr_@kernel.org>
+ <ZoVdP-S01NOyZqlQ@infradead.org>
+ <ZoVqN7J6vbl0BzIl@kernel.org>
+ <ZoVrqp-EpkPAhTGs@infradead.org>
+ <F1585F6E-8C41-4361-B4FA-F9BD6E26F3A9@oracle.com>
+ <ZoVv4IVNC2dP1EaM@kernel.org>
+ <4486ee80a487c174ec88c7e12705d99e22ae812a.camel@kernel.org>
+ <ZoY6e-BmRJFLkziG@infradead.org>
+ <ZobqkgBeQaPwq7ly@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZocvhIoQfzzhp+mh@dread.disaster.area>
+In-Reply-To: <ZobqkgBeQaPwq7ly@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Jul 05, 2024 at 09:25:56AM +1000, Dave Chinner wrote:
-> On Thu, Jul 04, 2024 at 07:00:23PM +0000, Chuck Lever III wrote:
+On Thu, Jul 04, 2024 at 02:31:46PM -0400, Mike Snitzer wrote:
+> Some new layout misses the entire point of having localio work for
+> NFSv3 and NFSv4.  NFSv3 is very ubiquitous.
+
+I'm getting tird of bringing up this "oh NFSv3" again and again without
+any explanation of why that matters for communication insides the
+same Linux kernel instance with a kernel that obviously requires
+patching.  Why is running an obsolete protocol inside the same OS
+instance required.  Maybe it is, but if so it needs a very good
+explanation.
+
+> And in this localio series, flexfiles is trained to use localio.
+> (Which you apparently don't recognize or care about because nfsd
+> doesn't have flexfiles server support).
+
+And you fail to explain why it matters.  You are trying to sell this
+code, you better have an explanation why it's complicated and convoluted
+as hell.  So far we are running in circles but there has been no clear
+explanation of use cases.
+
+> > > Can the client use its localio access to bypass that since it's not
+> > > going across the network anymore? Maybe by using open_by_handle_at on
+> > > the NFS share on a guessed filehandle? I think we need to ensure that
+> > > that isn't possible.
 > > 
+> > If a file system is shared by containers and users in containers have
+> > the capability to use open_by_handle_at the security model is already
+> > broken without NFS or localio involved.
+> 
+> Containers deployed by things like podman.io and kubernetes are
+> perfectly happy to allow containers permission to drive knfsd threads
+> in the host kernel.  That this is foreign to you is odd.
+> 
+> An NFS client that happens to be on the host should work perfectly
+> fine too (if it has adequate permissions).
+
+Can you please stop the personal attacks?  I am just stating the fact
+that IF the containers using the NFS mount has access to the exported
+file systems and the privileges to use open by handle there is nothing
+nfsd can do about security as the container has full access to the file
+system anyway.  That's a fact and how you deploy the various containers
+is completely irrelevant.  It is also in case that you didn't notice
+it last time about the _client_ containers as stated by me and the
+original poster I replied to.
+
+> > > I wonder if it's also worthwhile to gate localio access on an export
+> > > option, just out of an abundance of caution.
 > > 
-> > > On Jul 3, 2024, at 6:24 PM, NeilBrown <neilb@suse.de> wrote:
-> > > 
-> > > 
-> > > I've been pondering security questions with localio - particularly
-> > > wondering what questions I need to ask.  I've found three focal points
-> > > which overlap but help me organise my thoughts:
-> > > 1- the LOCALIO RPC protocol
-> > > 2- the 'auth_domain' that nfsd uses to authorise access
-> > > 3- the credential that is used to access the file
-> > > 
-> > > 1/ It occurs to me that I could find out the UUID reported by a given
-> > > local server (just ask it over the RPC connection), find out the
-> > > filehandle for some file that I don't have write access to (not too
-> > > hard), and create a private NFS server (hacking nfs-ganasha?) which
-> > > reports the same uuid and reports that I have access to a file with
-> > > that filehandle.  If I then mount from that server inside a private
-> > > container on the same host that is running the local server, I would get
-> > > localio access to the target file.
+> > export and mount option.  We're speaking a non-standard side band
+> > protocol here, there is no way that should be done without explicit
+> > opt-in from both sides.
 > 
-> This seems amazingly complex for something that is actually really
-> simple.
+> That is already provided my existing controls.  With both Kconfig
+> options that default to N, and the ability to disable the use of
+> localio entirely even if enabled in the Kconfig:
+> echo N > /sys/module/nfs/parameters/localio_enabled
 
-Could be completely wrong, but I'm inferring you've read more
-linux-nfs email (particularly about alternative directions for
-implementation) than looked at the localio code.  But more below.
+And all of that is global and not per-mount or nfsd instance, which
+doesn't exactly scale to a multi-tenant container hosting setup.
 
-> Keep in mind that I am speaking from having direct
-> experience with developing and maintaining NFS client IO bypass
-> infrastructure from when I worked at SGI as an NFS engineer.
-
-Thanks for sharing all this about IRIX, really helpful.
-
-> So, let's look at the Irix NFS client/server and the "Bulk Data
-> Service" protocol extensions that SGI wrote for NFSv3 back in the
-> mid 1990s.  Here's an overview from the 1996 product documentation
-> "Getting Started with BDSpro":
-> 
-> https://irix7.com/techpubs/007-3274-001.pdf
-> 
-> At least read chapter 1 so you grok the fundamentals of how the IO
-> bypass worked. It should look familiar, because it isn't very
-> different to how NFS over RDMA or client side IO for pNFS works.
-> 
-> Essentially, The NFS client transparently sent all the data IO (read
-> and write) over a separate communications channel for any IO that
-> met the size and alignment constraints. This was effectively a
-> "remote-IO" bypass that streamed data rather than packetised it
-> (NFS_READ/NFS_WRITE is packetised data with RTT latency issues).
-> By getting rid of the round trip latency penalty, data could be
-> sent/recieved at full network throughput rates.
-> 
-> [ As an aside, the BDS side channel was also the mechanism that used
-> by SGI for NFS over RDMA with custom full stack network offload
-> hardware back in the mid 1990s. NFS w/ BDS ran at about 800MB/s on
-> those networks on machines with 200MHz CPUs (think MIPS r10k). ]
-> 
-> The client side userspace has no idea this low level protocol
-> hijacking occurs, and it doesn't need to because all it changes
-> is the read/write IO speed. The NFS protocol is still used for all
-> authorisation, access checks, metadata operations, etc, and all that
-> changes is how NFS_READ and NFS_WRITE operations are performed.
-> 
-> The local-io stuff is no different - we're just using a different
-> client side IO path in kernel. We don't need a new protocol, nor do
-> we need userspace to be involved *at all*.  The kernel NFS client
-> can easily discover that it is on the same host as the server. The
-> server already does this "client is on the same host", so both will
-> then know they can *transparently* enable the localio bypass without
-> involving userspace at all.
-> 
-> The NFS protocol still provides all the auth, creds, etc to allow
-> the NFS client read and write access to the file. The NFS server
-> provides the client with a filehandle build by the underlying
-> filesystem for the file the NFS client has been permission to
-> access.
-> 
-> The local filesystem will accept that filehandle from any kernel
-> side context via the export ops for that filesystem. This provides
-> a mechanism for the NFS client to convert that to a dentry
-> and so open the file directly from the file handle. This is what the
-> server already does, so it should be able to share the filehandle
-> decode and open code from the server, maybe even just reach into the
-> server export table directly....
-> 
-> IOWs, we don't need to care about whether the mount is visible to
-> the NFS client - the filesystem *export* is visible to the *kernel*
-> and the export ops allow unfettered filehandle decoding. Containers
-> are irrelevant - the server has granted access to the file, and so
-> the NFS client has effective permissions to resolve the filehandle
-> directly..
-
-IRIX sounds well engineered.  The Linux NFS code's interfaces aren't
-so clean/precise.  The data structures are pretty tightly coupled (one
-big struct nfs_client, nfs_server, nfsd_net, etc.  sunrpc's svc_rqst
-in particular carries auth info that is used as part of the the wire
-protocol business end -- so NFS auth is in the layer localio wants to
-bypass).  And as such interfaces tend to do a lot of different tasks
-on behalf of structures that carry the kitchen sink.
-
-So retrofitting the Linux NFS and RPC code to allow a subset of the
-NFS client and server code to be used isn't so clean.
-
-But what you described IRIX did is pretty much what my localio series
-provides, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
-
-(Always room for improvement, like I said to Christoph, especially on
-the IO submission and handling side.. as you've seen it is doing
-buffered IO and is synchronous.. really leaving performance lackluster
-but lots of upside to be had making it async and support DIO).
-
-> Fundamentally, this is the same permission and access model that
-> pNFS is built on. Hence I don't understand why this local-io bypass
-> needs something completely new and seemingly very complex...
-
-pNFS doesn't need to have a direct role in any of this localio code,
-but pNFS can use localio if it is enabled, e.g.:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=5e7bf77fbbecdbea0e6ae7174c97a69b11e3098a
-
-Localio not being tightly coupled to pNFS enables localio to easily
-support NFSv3.  NFSv3 support is a requirement and there is no reason
-not to support it.
-
-Anyway, I really think Neil's ideas for localio improvement are solid.
-Especially factoring out the auth_domain to ensure bog standard NFS
-authentication and security mechanisms used.  Though IMO the proposed
-localio protocol changes aren't _really_ needed, but I also won't
-fight to stop localio nfsd UUID sharing being more ephemeral and
-risk-averse...
-
-The only reason there is a sideband/auxilliary "localio protocol" is
-the NFS protocol is very focused on enabling NFS spec implementation.
-I actually framed it in terms of NFS encode and decode on the server
-side and Chuck wanted me to make sure to decouple localio so that it
-stood on its own (I agree with him, I just didn't think to do it that
-way).  I just needed a a means to generate and get a UUID from the
-server to anchor the mechanism for nfs_common to allow the client and
-server to rendezvous, see:
-
-nfs_common:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=cb542e791eda114adcc9291feb6c66a5ea338f7c
-nfs server:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=877a8212c3af37b5ba32959275f4c49bfe805f24
-nfs client:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=572b36de2bb1dde06d6da4488686c9fbbc79d7e1
-
-Really quite simple.
-
-And the pgio hooks used to branch to localio handling of READ, WRITE and
-COMMIT are the interface point for then generating a kiocb and issuing
-the IO accordingly (last 2 commits below):
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=46569e6d92a074188bb1f0090d36c327729ab418
-
-But even the buffered and direct IO in nfsd are really tightly coupled
-to the wire protocol interface.  So localio hooks pgio and calls down
-to the underlying filesystem with its own side channel (that uses
-.read_iter and .write_iter), see fs/nfs/localio.c
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=877a8212c3af37b5ba32959275f4c49bfe805f24
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=4222309dac70e485f089738d0ffe9113b9a5a1e1
 
