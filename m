@@ -1,58 +1,62 @@
-Return-Path: <linux-nfs+bounces-4641-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4642-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C950928A75
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 16:15:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E80E928A95
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 16:20:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D8D71C20DC5
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 14:15:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 276961F2659B
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jul 2024 14:20:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7AD14A08B;
-	Fri,  5 Jul 2024 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BBF016A95C;
+	Fri,  5 Jul 2024 14:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cryv6cZP"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r0D7UW5K"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886C7146A69
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Jul 2024 14:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E165314885C
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jul 2024 14:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720188947; cv=none; b=AgHRMm15yhbt9GigbOdsbT0qAJJkXtuawgX2qaGoyIVye7qjDcZd0mxNb1zYdt5tz2iscSBFjQNTRZo46ReUWKf+B4+872rq2IwbtbvAaW6zXQgiWLwyW48BtqKYfvFFwXNBqxoqZE1FkyH7/1Rk9Y0CrjGD6U0MDcUlR6oDuEw=
+	t=1720189113; cv=none; b=kvX0X2QZfjGNdw6KCoRR5uPXGHUrGs/MYIScFx9HCpv46U9tJSzv4zzbfbcQ/AC9Dqu6vJAfTbIesppjxdgjuhAUgNiaLYuMA8/HWzMjMF050iMvkE3mM3Y0u7YGbM5n26MT9qNG/HzRU8BLLckUxvwyoJFCZfZYRmWxflO1Ygc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720188947; c=relaxed/simple;
-	bh=1T/Trj9bwCworsC2SIOFCU683E2UnRW2hVO161Txw8Q=;
+	s=arc-20240116; t=1720189113; c=relaxed/simple;
+	bh=EgKY2uQ9UiVx9OlpI9n6fSYUwT4WaTs/0R1en5cuEyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N1Jd62BTeA/ZUX2icIDhfBX45Akc3CtWcFKGSSbMUCHYDMXc6wtcBJMQW8h+tC8sbtbb3cGLmSTT4v14DcfYNbJp0GieyUXmDwBlgZwLwJHofdMcNNen4Q+6MI8wR780R7Pidhr6g8Ivhsp7jXu6vQImdM1o23blbRzmAEYgGLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cryv6cZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B673C116B1;
-	Fri,  5 Jul 2024 14:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720188947;
-	bh=1T/Trj9bwCworsC2SIOFCU683E2UnRW2hVO161Txw8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cryv6cZP3fZevG8kpm6htYncTuaWsOrmGmhwLiADDw/QU9h1v3eiczVA04gKsVfRu
-	 PGXjs4gt3sp+NEtryWjH+2jFalMCt0kIbuj/Zh3kSKf+qWH+cjK+V+5iu6LCSkaiit
-	 AgMGSoYumivco3F3BIrHMOuS/z7GUbUteO67kw4wFOT9yftduk38rxmpE9lJWfapjq
-	 QMCW299PyiMugpK0TRiG7oLyVGocwkTU8iwB8uezmfk/ULcoo9R2DZR4LgFirHnnfi
-	 B7lGUtuFDSLnT7S7OYvIIjI4R8d9YsQHdiEbo64xSC9a+nnNkaud3PTqJEJrxdMqYJ
-	 kuCiM9MNwIslg==
-Date: Fri, 5 Jul 2024 10:15:46 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Jeff Layton <jlayton@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=inhIvUKbiE5td3A6UgYa2h3rB7U4B58wuNFwOFIeBVdLa7KENIBMh+nBbsdsew0MmEnQDUmwT0A7fslAXCRs1S7X9tO++bLg6XIm0Pd/7OV3zzwEOkZuvDTRrpCRtThBh/I6fciUEgTL6aryM7CLqT8HrrGAXNzhCNFhEvBJfFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r0D7UW5K; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Kd9rD3kvoYlR3JyBGN8fswNHveRKK7xWKnjPd9MxAW8=; b=r0D7UW5KzuDnetdexfyAtph8NI
+	cQ9UL1DiKHi8JCb8R3rO78KIf0W9+rBIbI/nlHwAlQRPiLbAyrtvwZ7NFLu4sGdSM+OfCLJgR50U5
+	MOa5H1nkvzUGKk1xPyj0a3t86c7kx3XTo9zgS1Ro/ITZn9UKp0MXFcYlZq+ULJvTfA1fOKSe584y8
+	o4SIBGzw+XhRMb50MDTy/SfjHwrzWpiGVGNz3lW8CkfINSgC9w4r7FST6/0Nt/2E5VIiY/b59Z5cO
+	59YlqD48R3chbsYIYTHqEmkrn5sdtX9b68jyvemaydNqcNngyVN3/9ulWK92gj7kaJGvszca4mxRQ
+	cKyWHlvA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sPjld-0000000GBCi-41Cn;
+	Fri, 05 Jul 2024 14:18:29 +0000
+Date: Fri, 5 Jul 2024 07:18:29 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
 	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	Neil Brown <neilb@suse.de>, Dave Chinner <david@fromorbit.com>
 Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-Message-ID: <ZogAEqYvJaYLVyKj@kernel.org>
-References: <ZoVdP-S01NOyZqlQ@infradead.org>
- <ZoVqN7J6vbl0BzIl@kernel.org>
+Message-ID: <ZogAtVfeqXv3jgAv@infradead.org>
+References: <ZoVqN7J6vbl0BzIl@kernel.org>
  <ZoVrqp-EpkPAhTGs@infradead.org>
  <F1585F6E-8C41-4361-B4FA-F9BD6E26F3A9@oracle.com>
  <ZoVv4IVNC2dP1EaM@kernel.org>
@@ -61,45 +65,25 @@ References: <ZoVdP-S01NOyZqlQ@infradead.org>
  <ZobqkgBeQaPwq7ly@kernel.org>
  <ZoeCFwzmGiQT4V0a@infradead.org>
  <57C1CB2B-3B46-48F3-A095-417845001C3E@oracle.com>
+ <ZogAEqYvJaYLVyKj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57C1CB2B-3B46-48F3-A095-417845001C3E@oracle.com>
+In-Reply-To: <ZogAEqYvJaYLVyKj@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Jul 05, 2024 at 01:35:18PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Jul 5, 2024, at 1:18 AM, Christoph Hellwig <hch@infradead.org> wrote:
-> > 
-> > On Thu, Jul 04, 2024 at 02:31:46PM -0400, Mike Snitzer wrote:
-> >> Some new layout misses the entire point of having localio work for
-> >> NFSv3 and NFSv4.  NFSv3 is very ubiquitous.
-> > 
-> > I'm getting tird of bringing up this "oh NFSv3" again and again without
-> > any explanation of why that matters for communication insides the
-> > same Linux kernel instance with a kernel that obviously requires
-> > patching.  Why is running an obsolete protocol inside the same OS
-> > instance required.  Maybe it is, but if so it needs a very good
-> > explanation.
-> 
-> I agree: I think the requirement for NFSv3 in this situation
-> needs a clear justification. Both peers are recent vintage
-> Linux kernels; both peers can use NFSv4.x, there's no
-> explicit need for backwards compatibility in the use cases
-> that have been provided so far.
-> 
-> Generally I do agree with Neil's "why not NFSv3, we still
-> support it" argument. But with NFSv4, you get better locking
-> semantics, delegation, pNFS (possibly), and proper protocol
-> extensibility. There are really strong reasons to restrict
-> this facility to NFSv4.
+On Fri, Jul 05, 2024 at 10:15:46AM -0400, Mike Snitzer wrote:
+> NFSv3 is needed because NFSv3 is used to initiate IO to NFSv3 knfsd on
+> the same host.
 
-NFSv3 is needed because NFSv3 is used to initiate IO to NFSv3 knfsd on
-the same host.
+That doesn't really bring is any further.  Why is it required?
+
+I think we'll just need to stop this discussion until we have reasonable
+documentation of the use cases and assumptions, because without that
+we'll get hund up in dead loops.
 
