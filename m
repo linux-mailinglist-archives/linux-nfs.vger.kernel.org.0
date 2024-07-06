@@ -1,98 +1,89 @@
-Return-Path: <linux-nfs+bounces-4676-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4677-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D80E929159
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2024 08:42:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44F28929160
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2024 08:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C7D22830FB
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2024 06:42:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1D901F22186
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jul 2024 06:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A78D1B285;
-	Sat,  6 Jul 2024 06:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dDuok2VG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F0241B7E9;
+	Sat,  6 Jul 2024 06:50:21 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E009C17C68
-	for <linux-nfs@vger.kernel.org>; Sat,  6 Jul 2024 06:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075E61B813;
+	Sat,  6 Jul 2024 06:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720248152; cv=none; b=FefeRyTJbEzqoR9H5zDXsy0kzHwLHsSCvZ1NtY+ISPMjFsC05mvZ/L/VmkjJRs5987HcB17emhHItwzPdSRf2DQ8K/cO9W8H27+cTqkr+O8N7sRlC78022WLuwCgSgXRR8AeaVML3IcE0Sb3iP4duUOO0SlFqXWhV1vFkdDWmEE=
+	t=1720248621; cv=none; b=U/oMPhdKEmaX0Dw5xeMS4Sz3J2KPg25jPZtql6CguoocD5lUGWrvFl6Zxs4OTrJNbQs6CMfTjdmGUtYfRpqU8DJhljTUwIiXISYb2AO4Qq6sO7Ngt80E7SdxJ/Xk1gZBRaaZgaZFYaJyl7cIFgeGkU1C2lIRSD4PVFoi5MCtI1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720248152; c=relaxed/simple;
-	bh=pbRHl0ZA6GoE99YYTQAj6lyXLTKhJUgYvqTyMDh3TD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hr2lvduyOfCMgaU8QtJeyCZOsx3HgBLUOKxXre7K3l1EKrq9N2JxGKYcpYBAfOj/pBk/dQkLfLu7QleEuVTF0zMmd8X1ehd63cltSYyw5Pd0C/ocJtf3U6WOSAsFfINMWyurMHaEm8OB3/MofWu7nVCZDAVV9q5va/3C+TkbXCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dDuok2VG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zUZt5tObI5Xb1kCTAv2Q8zq8Y7pJw8jQQnC1nGNPzAE=; b=dDuok2VGTWcpnSRC9rPjwmXOWp
-	y/lctArFfM4XZkf7y3eoNB/3kC6kHsZqjxvFlbG3DQQWCsKSZfIZ5R8BvyG/1r3Sg07Tnzag9gh4L
-	2EePYWaBeqqipxWFumrZGO/hCPXUhFjBqTZTQ35mi/8Kbqi4Jy1Dt0xSI2/bV7LnZlcCw+gK5B91f
-	7Vg3lYd30VosExH9sYoIseR2GFu3XP9MUIpWu98IefEBrARHQI2vFbRP5mFMVJUMvZ5ovfmMPvd8m
-	WAH8sHpUmrlCmEHV9FtR/TsyADNCLRpOEQzhUKXo4dmSAihHMw6QaIWhDWa8pCp2CjgYrfbNHV+Is
-	3pejvFQA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPz7t-0000000HQgv-3xgF;
-	Sat, 06 Jul 2024 06:42:29 +0000
-Date: Fri, 5 Jul 2024 23:42:29 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever III <chuck.lever@oracle.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-Message-ID: <ZojnVdrEtmbvNXd-@infradead.org>
-References: <>
- <Zojd6fVPG5XASErn@infradead.org>
- <172024784245.11489.13308466638278184214@noble.neil.brown.name>
+	s=arc-20240116; t=1720248621; c=relaxed/simple;
+	bh=5MS9rJ78/RT9kgdiRXH/5IXlRvtRiHkHLpbDOxHfKMI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ICoKkweJuD8JJP9wL2tu56RtApaBG7vO/EW7TW+xiLQ/PfCgB0XAduLu9JmyVlhYHwRXW/Z4j3iEeqI/B3d0Tfvsb9af1V9ay1HQiyRUl1c2Gx+mUYUcnClY1RKLd+NJvg7nP4N/GuCgK4Jt2liFgUT55JvEExi1z7Qi3IDdhgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WGLWF0d5Nz1j69g;
+	Sat,  6 Jul 2024 14:46:01 +0800 (CST)
+Received: from kwepemd200011.china.huawei.com (unknown [7.221.188.251])
+	by mail.maildlp.com (Postfix) with ESMTPS id 94ECF1A0188;
+	Sat,  6 Jul 2024 14:50:09 +0800 (CST)
+Received: from cgs.huawei.com (10.244.148.83) by
+ kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Sat, 6 Jul 2024 14:50:08 +0800
+From: Gaosheng Cui <cuigaosheng1@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <chuck.lever@oracle.com>,
+	<jlayton@kernel.org>, <neilb@suse.de>, <kolga@netapp.com>,
+	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<steved@redhat.com>, <kwc@citi.umich.edu>, <cuigaosheng1@huawei.com>
+CC: <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH -next] gss_krb5: Fix the error handling path for crypto_sync_skcipher_setkey
+Date: Sat, 6 Jul 2024 14:50:08 +0800
+Message-ID: <20240706065008.451441-1-cuigaosheng1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172024784245.11489.13308466638278184214@noble.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200011.china.huawei.com (7.221.188.251)
 
-On Sat, Jul 06, 2024 at 04:37:22PM +1000, NeilBrown wrote:
-> > a different scheme for bypassing the server for I/O.  Maybe there is
-> > a really good killer argument for doing that, but it needs to be clearly
-> > stated and defended instead of assumed.
-> 
-> Could you provide a reference to the text book - or RFC - that describes
-> a pNFS DS protocol that completely bypasses the network, allowing the
-> client and MDS to determine if they are the same host and to potentially
-> do zero-copy IO.
+If we fail to call crypto_sync_skcipher_setkey, we should free the
+memory allocation for cipher, replace err_return with err_free_cipher
+to free the memory of cipher.
 
-I did not say that we have the exact same functionality available and
-there is no work to do at all, just that it is the standard way to bypass
-the server.
+Fixes: 4891f2d008e4 ("gss_krb5: import functionality to derive keys into the kernel")
+Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+---
+ net/sunrpc/auth_gss/gss_krb5_keys.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-RFC 5662, RFC 5663 and RFC 8154 specify layouts that completely bypass
-the network and require the client and server to find out that they talk
-to the same storage devuce, and directly perform zero copy I/O.
-They do not require to be on the same host, though.
-
-> If not, I will find it hard to understand your claim that it is "the
-> text book example".
-
-pNFS is all about handing out grants to bypass the server for I/O.
-That is exactly what localio is doing.
+diff --git a/net/sunrpc/auth_gss/gss_krb5_keys.c b/net/sunrpc/auth_gss/gss_krb5_keys.c
+index 06d8ee0db000..4eb19c3a54c7 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_keys.c
++++ b/net/sunrpc/auth_gss/gss_krb5_keys.c
+@@ -168,7 +168,7 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
+ 		goto err_return;
+ 	blocksize = crypto_sync_skcipher_blocksize(cipher);
+ 	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len))
+-		goto err_return;
++		goto err_free_cipher;
+ 
+ 	ret = -ENOMEM;
+ 	inblockdata = kmalloc(blocksize, gfp_mask);
+-- 
+2.25.1
 
 
