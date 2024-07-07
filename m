@@ -1,56 +1,54 @@
-Return-Path: <linux-nfs+bounces-4693-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4694-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D1A792977D
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 12:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5E5F92978E
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 13:07:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAA8C1F21256
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 10:49:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72BA91F2141E
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 11:07:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3BB31C694;
-	Sun,  7 Jul 2024 10:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F051CD35;
+	Sun,  7 Jul 2024 11:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7ZVhrsG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGWDENwd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B867D1C68C;
-	Sun,  7 Jul 2024 10:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF401CD32
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jul 2024 11:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720349361; cv=none; b=CsQaHLNB80HVcQjmVkTamyLsCsZbPnZ01huVu8uekCLkR7EFsUTuEXX6dxIStG2ZGo37tVKuGhtMQ4OvjvfpXCJcGogjZ0TliyBYx/xE2Mz6m0pcMpbcWAg+3VahlS8Y4TTHkbgUCV+1Qf6bI/Ibk0TxgVgmHBlpfPR+ptAa+Hg=
+	t=1720350413; cv=none; b=rg9vbI+MaFSaCUjqBJ36zm5xttoVSqJ3TfAxFVmCvn+aJaaBUMIDD0+KRzixwZb2KwJZLN8LMq5v/WmEnIqM9ULlF8DBR44Dw2EbYGKxl+Sh7g7SHSUbDl+SdGKgrmWMEi7TfIgM1WlpjWjUb2uZv3049Qrf0ltv+FZ8lfzhE1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720349361; c=relaxed/simple;
-	bh=PVeeT1vuKAzmmUc8lT97zvSGNvt7Pq7VMHk/PwTN2Vg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PxW8uVD/GP9eD11MT736OpEpowskMDduTsqPGktp/ZqJ/fdD/Ir39wgZHer5RDytdT8UdYLgLYQ12cQSIDdp9EtLk8fZbt4KyaoAkTmBMevhoqqIeSBdZdF9z73SOueQ+Zbu7nYJrnsUyYz2L4WLroQN52HMTZxXRxNGCrfR1P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7ZVhrsG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770E9C3277B;
-	Sun,  7 Jul 2024 10:49:20 +0000 (UTC)
+	s=arc-20240116; t=1720350413; c=relaxed/simple;
+	bh=sOsnqKcaAo9BTIWBY8EDsNn+OOJnUV9memnF2bwbtHE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F+xPC1rX5iTXLEwLEwnZLByhJxlb3QTnRGaumLpowH8PedwCqlL4WJvkdrXbd53CG+aTjKHFy1C38BwfzN8pagQ7fleM5IUaViO5Qems6yonrf46bchT1fur7CFMOKxW7xCE1kKHyjUtcJ7ro3/EOZ6kHpeXsWy5oJ9MqJsBm2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGWDENwd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F8C8C3277B;
+	Sun,  7 Jul 2024 11:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720349361;
-	bh=PVeeT1vuKAzmmUc8lT97zvSGNvt7Pq7VMHk/PwTN2Vg=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=b7ZVhrsGSDe2E9rR9Ha7eAhR8S2/rzcyFztgnM01EfqLaggWbaCEuT3PQnRYMvSy2
-	 iDyVAK8OReNsfWoUYO0dTfBJbJytdZKgQtP2x8c02nJH/lAvWNfu/CX1ZFJUYCaO88
-	 F9hR7YGU8CJslyapmBKhmg6MEy2Q8UcYlWVuLmxkPu5vDPrO+4ehUjNLE4Bx2RGHPb
-	 uSs26wTdQUhl9gX0HbCywRGWIfAnCUup3S3U42GkHWleufPZF9jsezAX1GTImts4z/
-	 jh8vckR2MYzEieuEglHqT6L0QuaiIIN90jf7+9meHVBiwI82oQvwMUe/nAa++Wa+jx
-	 UunaFPIgh0X6Q==
-Message-ID: <9825cc5ff85d4a2a4ce1c955f49681bef8d03442.camel@kernel.org>
-Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_umount
+	s=k20201202; t=1720350413;
+	bh=sOsnqKcaAo9BTIWBY8EDsNn+OOJnUV9memnF2bwbtHE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=SGWDENwd2y6cZWAdDDB97ODPUDgI4WUJzIe7MWcbMbrT8omm0dGVTvmESEXyAnir0
+	 YIBjkv77zsqD21FP/9E1XsZIJZfbhJhUKmHHuBleXEnVB/MKPUJx0C6okLUaMkriNd
+	 j7qCS7gGNWWWxc4xo4z5Jl44x//VyZwWkG9/ETWXnlZ4CED7E5OWf2F5zYDuV+aiNX
+	 4cft8LcPMk/61gnx+5rq8STQjq5OR4YbRcNXx93/gm3bQtiNEpg7Zgh9bP2t0EtsKC
+	 yG/fysTieqmO+3BxQQbamuNDbF+fomO5OXlN4c2f30uZdx+nn1ZfcSo+vNI1Zpr+2g
+	 3axEb+ipPaJUw==
+Message-ID: <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
+Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
 From: Jeff Layton <jlayton@kernel.org>
-To: syzbot <syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com>, 
-	Dai.Ngo@oracle.com, chuck.lever@oracle.com, kolga@netapp.com, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
-	syzkaller-bugs@googlegroups.com, tom@talpey.com
-Date: Sun, 07 Jul 2024 06:49:19 -0400
-In-Reply-To: <000000000000f8ed54061ca0d9a5@google.com>
-References: <000000000000f8ed54061ca0d9a5@google.com>
+To: Sagi Grimberg <sagi@grimberg.me>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Sun, 07 Jul 2024 07:06:51 -0400
+In-Reply-To: <20240706224207.927978-1-sagi@grimberg.me>
+References: <20240706224207.927978-1-sagi@grimberg.me>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,265 +133,61 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2024-07-06 at 21:37 -0700, syzbot wrote:
-> Hello,
+On Sun, 2024-07-07 at 01:42 +0300, Sagi Grimberg wrote:
+> Many applications open files with O_WRONLY, fully intending to write
+> into the opened file. There is no reason why these applications should
+> not enjoy a write delegation handed to them.
 >=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    1dd28064d416 Merge tag 'integrity-v6.10-fix' of ssh://ra.=
-k..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16814d7698000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D1ace69f521989=
-b1f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Db568ba42c85a332=
-a88ee
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
->=20
-> Unfortunately, I don't have any reproducer for this issue yet.
->=20
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/20c723869b92/dis=
-k-1dd28064.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/c2a9a7382516/vmlinu=
-x-1dd28064.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/9872fe6f2853/b=
-zImage-1dd28064.xz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com
->=20
-> INFO: task syz.0.2871:13167 blocked for more than 143 seconds.
->       Not tainted 6.10.0-rc6-syzkaller-00212-g1dd28064d416 #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz.0.2871      state:D stack:26704 pid:13167 tgid:13165 ppid:10304 =
- flags:0x00000004
-> Call Trace:
->  <TASK>
->  context_switch kernel/sched/core.c:5408 [inline]
->  __schedule+0x1796/0x49d0 kernel/sched/core.c:6745
->  __schedule_loop kernel/sched/core.c:6822 [inline]
->  schedule+0x14b/0x320 kernel/sched/core.c:6837
->  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
->  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
->  __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
->  nfsd_shutdown_threads+0x4e/0xd0 fs/nfsd/nfssvc.c:632
->  nfsd_umount+0x43/0xd0 fs/nfsd/nfsctl.c:1412
->  deactivate_locked_super+0xc4/0x130 fs/super.c:473
->  put_fs_context+0x94/0x780 fs/fs_context.c:516
->  fscontext_release+0x65/0x80 fs/fsopen.c:73
->  __fput+0x24a/0x8a0 fs/file_table.c:422
->  task_work_run+0x24f/0x310 kernel/task_work.c:180
->  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->  exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
->  exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
->  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
->  syscall_exit_to_user_mode+0x168/0x360 kernel/entry/common.c:218
->  do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f11fe775bd9
-> RSP: 002b:00007f11ff494048 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-> RAX: 0000000000000000 RBX: 00007f11fe903f60 RCX: 00007f11fe775bd9
-> RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000003
-> RBP: 00007f11fe7e4aa1 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 000000000000000b R14: 00007f11fe903f60 R15: 00007ffc04bba328
->  </TASK>
->=20
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/30:
->  #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire i=
-nclude/linux/rcupdate.h:329 [inline]
->  #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock incl=
-ude/linux/rcupdate.h:781 [inline]
->  #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: debug_show_all_loc=
-ks+0x55/0x2a0 kernel/locking/lockdep.c:6614
-> 3 locks held by kworker/u8:4/66:
->  #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: pr=
-ocess_one_work kernel/workqueue.c:3223 [inline]
->  #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: pr=
-ocess_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
->  #1: ffffc900020afd00 ((work_completion)(&map->work)){+.+.}-{0:0}, at: pr=
-ocess_one_work kernel/workqueue.c:3224 [inline]
->  #1: ffffc900020afd00 ((work_completion)(&map->work)){+.+.}-{0:0}, at: pr=
-ocess_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
->  #2: ffffffff8e3391c0 (rcu_state.barrier_mutex){+.+.}-{3:3}, at: rcu_barr=
-ier+0x4c/0x530 kernel/rcu/tree.c:4448
-> 4 locks held by udevd/4534:
->  #0: ffff88805a0fdd58 (&p->lock){+.+.}-{3:3}, at: seq_read_iter+0xb7/0xd6=
-0 fs/seq_file.c:182
->  #1: ffff88806542ec88 (&of->mutex#2){+.+.}-{3:3}, at: kernfs_seq_start+0x=
-53/0x3b0 fs/kernfs/file.c:154
->  #2: ffff88805af532d8 (kn->active#5){++++}-{0:0}, at: kernfs_seq_start+0x=
-72/0x3b0 fs/kernfs/file.c:155
->  #3: ffff8880686c90e8 (&dev->mutex){....}-{3:3}, at: device_lock include/=
-linux/device.h:1009 [inline]
->  #3: ffff8880686c90e8 (&dev->mutex){....}-{3:3}, at: uevent_show+0x17d/0x=
-340 drivers/base/core.c:2743
-> 2 locks held by getty/4842:
->  #0: ffff88802f9d10a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wa=
-it+0x25/0x70 drivers/tty/tty_ldisc.c:243
->  #1: ffffc9000312b2f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_r=
-ead+0x6b5/0x1e10 drivers/tty/n_tty.c:2211
-> 3 locks held by kworker/u9:10/5101:
->  #0: ffff88802e1fa148 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_=
-work kernel/workqueue.c:3223 [inline]
->  #0: ffff88802e1fa148 ((wq_completion)hci2){+.+.}-{0:0}, at: process_sche=
-duled_works+0x90a/0x1830 kernel/workqueue.c:3329
->  #1: ffffc90003827d00 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:=
-0}, at: process_one_work kernel/workqueue.c:3224 [inline]
->  #1: ffffc90003827d00 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:=
-0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
->  #2: ffff888020eb4d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_wor=
-k+0x1ec/0x400 net/bluetooth/hci_sync.c:322
-> 2 locks held by syz.4.2691/12623:
->  #0: ffffffff8f63ad70 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/n=
-etlink/genetlink.c:1218
->  #1: ffffffff8e5fff48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_=
-doit+0x12d/0x1a90 fs/nfsd/nfsctl.c:1940
-> 2 locks held by syz.0.2871/13167:
->  #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_l=
-ock fs/super.c:56 [inline]
->  #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_l=
-ock_excl fs/super.c:71 [inline]
->  #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: deactivat=
-e_super+0xb5/0xf0 fs/super.c:505
->  #1: ffffffff8e5fff48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_shutdown_threads=
-+0x4e/0xd0 fs/nfsd/nfssvc.c:632
-
-Above there are two tasks that are holding/blocked on the nfsd_mutex.
-The first is the stuck thread. The second is a task that took it in
-nfsd_nl_listener_set_doit. I don't see a way to exit that function
-without releasing that mutex, so it seems likely that thread is stuck
-too for some reason. Unfortunately, we don't have a stack trace from
-that task, so I can't tell what it's doing.
-
-
-> 1 lock held by udevd/14823:
-> 2 locks held by syz-executor/15993:
->  #0: ffffffff8f5d4908 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rt=
-netlink.c:79 [inline]
->  #0: ffffffff8f5d4908 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x8=
-42/0x1180 net/core/rtnetlink.c:6632
->  #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_l=
-ock kernel/rcu/tree_exp.h:323 [inline]
->  #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_=
-rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
-> 1 lock held by syz.4.3895/16063:
->  #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_l=
-ock fs/super.c:58 [inline]
->  #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: super_loc=
-k+0x27c/0x400 fs/super.c:120
-> 4 locks held by kvm-nx-lpage-re/16077:
->  #0: ffffffff8e361f28 (cgroup_mutex){+.+.}-{3:3}, at: cgroup_lock include=
-/linux/cgroup.h:368 [inline]
->  #0: ffffffff8e361f28 (cgroup_mutex){+.+.}-{3:3}, at: cgroup_attach_task_=
-all+0x27/0xe0 kernel/cgroup/cgroup-v1.c:61
->  #1: ffffffff8e1ce5b0 (cpu_hotplug_lock){++++}-{0:0}, at: cgroup_attach_l=
-ock+0x11/0x40 kernel/cgroup/cgroup.c:2413
->  #2: ffffffff8e362110 (cgroup_threadgroup_rwsem){++++}-{0:0}, at: cgroup_=
-attach_task_all+0x31/0xe0 kernel/cgroup/cgroup-v1.c:62
->  #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_l=
-ock kernel/rcu/tree_exp.h:291 [inline]
->  #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_=
-rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> NMI backtrace for cpu 1
-> CPU: 1 PID: 30 Comm: khungtaskd Not tainted 6.10.0-rc6-syzkaller-00212-g1=
-dd28064d416 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 06/07/2024
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->  nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
->  nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
->  trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
->  check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
->  watchdog+0xfde/0x1020 kernel/hung_task.c:379
->  kthread+0x2f0/0x390 kernel/kthread.c:389
->  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->  </TASK>
-> Sending NMI from CPU 1 to CPUs 0:
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 1109 Comm: kworker/u8:6 Not tainted 6.10.0-rc6-syzkaller-0021=
-2-g1dd28064d416 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 06/07/2024
-> Workqueue: writeback wb_workfn (flush-8:0)
-> RIP: 0010:bio_add_page+0xb7/0x840 block/bio.c:1118
-> Code: 05 00 00 8b 5d 00 45 89 f4 41 f7 d4 89 df 44 89 e6 e8 dd 6f 11 fd 4=
-4 39 e3 76 0a e8 13 6e 11 fd e9 20 04 00 00 48 89 6c 24 28 <49> 8d 5f 70 48=
- 89 d8 48 c1 e8 03 48 89 44 24 30 42 0f b6 04 28 84
-> RSP: 0018:ffffc900045ce610 EFLAGS: 00000213
-> RAX: 0000000000000000 RBX: 000000000000a000 RCX: ffff888022311e00
-> RDX: ffff888022311e00 RSI: 00000000ffffefff RDI: 000000000000a000
-> RBP: ffff88802eb37a28 R08: ffffffff8484b8a3 R09: 1ffffd4000090b30
-> R10: dffffc0000000000 R11: fffff94000090b31 R12: 00000000ffffefff
-> R13: dffffc0000000000 R14: 0000000000001000 R15: ffff88802eb37a00
-> FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b30e11ff8 CR3: 000000000e132000 CR4: 00000000003526f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <NMI>
->  </NMI>
->  <TASK>
->  bio_add_folio+0x52/0x80 block/bio.c:1160
->  io_submit_add_bh fs/ext4/page-io.c:422 [inline]
->  ext4_bio_write_folio+0x1691/0x1da0 fs/ext4/page-io.c:560
->  mpage_submit_folio+0x1af/0x230 fs/ext4/inode.c:1869
->  mpage_process_page_bufs+0x6c9/0x8d0 fs/ext4/inode.c:1982
->  mpage_prepare_extent_to_map+0xec7/0x1c80 fs/ext4/inode.c:2490
->  ext4_do_writepages+0xc52/0x3d40 fs/ext4/inode.c:2632
->  ext4_writepages+0x213/0x3c0 fs/ext4/inode.c:2768
->  do_writepages+0x359/0x870 mm/page-writeback.c:2656
->  __writeback_single_inode+0x165/0x10b0 fs/fs-writeback.c:1651
->  writeback_sb_inodes+0x99c/0x1380 fs/fs-writeback.c:1947
->  __writeback_inodes_wb+0x11b/0x260 fs/fs-writeback.c:2018
->  wb_writeback+0x495/0xd40 fs/fs-writeback.c:2129
->  wb_check_old_data_flush fs/fs-writeback.c:2233 [inline]
->  wb_do_writeback fs/fs-writeback.c:2286 [inline]
->  wb_workfn+0xba1/0x1090 fs/fs-writeback.c:2314
->  process_one_work kernel/workqueue.c:3248 [inline]
->  process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3329
->  worker_thread+0x86d/0xd50 kernel/workqueue.c:3409
->  kthread+0x2f0/0x390 kernel/kthread.c:389
->  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->  </TASK>
->=20
->=20
+> Cc: Dai Ngo <dai.ngo@oracle.com>
+> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> Note: I couldn't find any reason to why the initial implementation chose
+> to offer write delegations only to NFS4_SHARE_ACCESS_BOTH, but it seemed
+> like an oversight to me. So I figured why not just send it out and see wh=
+o
+> objects...
 >=20
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>  fs/nfsd/nfs4state.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >=20
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->=20
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->=20
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->=20
-> If you want to undo deduplication, reply with:
-> #syz undup
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a20c2c9d7d45..69d576b19eb6 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5784,15 +5784,15 @@ nfs4_set_delegation(struct nfsd4_open *open, stru=
+ct nfs4_ol_stateid *stp,
+>  	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
+>  	 *   on its own, all opens."
+>  	 *
+> -	 * Furthermore the client can use a write delegation for most READ
+> -	 * operations as well, so we require a O_RDWR file here.
+> -	 *
+> -	 * Offer a write delegation in the case of a BOTH open, and ensure
+> -	 * we get the O_RDWR descriptor.
+> +	 * Offer a write delegation in the case of a BOTH open (ensure
+> +	 * a O_RDWR descriptor) Or WRONLY open (with a O_WRONLY descriptor).
+>  	 */
+>  	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) =3D=3D NFS4_SHARE_=
+ACCESS_BOTH) {
+>  		nf =3D find_rw_file(fp);
+>  		dl_type =3D NFS4_OPEN_DELEGATE_WRITE;
+> +	} else if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> +		nf =3D find_writeable_file(fp);
+> +		dl_type =3D NFS4_OPEN_DELEGATE_WRITE;
+>  	}
+> =20
+>  	/*
+
+
+I *think* the main reason we limited this before is because a write
+delegation is really a read/write delegation. There is no such thing as
+a write-only delegation.
+
+Suppose the user is prevented from doing reads against the inode (by
+permission bits or ACLs). The server gives out a WRITE delegation on a
+O_WRONLY open. Will the client allow cached opens for read regardless
+of the server's permissions? Or, does it know to check vs. the server
+if the client tries to do an open for read in this situation?
 
 --=20
 Jeff Layton <jlayton@kernel.org>
