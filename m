@@ -1,70 +1,70 @@
-Return-Path: <linux-nfs+bounces-4698-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4699-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1314C9299D8
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 23:49:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 095C09299F1
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 00:05:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC4B32815D4
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 21:49:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C0011F211E7
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 22:05:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6E72E85E;
-	Sun,  7 Jul 2024 21:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1C514A82;
+	Sun,  7 Jul 2024 22:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0pSDV4J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5ZgqrMp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF20D76F1B
-	for <linux-nfs@vger.kernel.org>; Sun,  7 Jul 2024 21:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A86D26A
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jul 2024 22:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720388966; cv=none; b=Xl1rM4JadK3jZ9CTd7SIMragYVets0wDY1WnBkst7hIkytc/3nQqAHP13Y4r7tMR/qB0OIEqayyWomkoro9L3Zx209XXTT5KPKQBWyStV8Q7O8OXCJA9NYinbtuoGugFV/VKOw2XpesHAKfrzqeZzUsqMobkRx/mjmRsa/YWV7E=
+	t=1720389949; cv=none; b=sQSepN4kplB+q/8HvoCLZv7RBx3MwPgG0mOX7BPNF488Qk4uJN5beTEPWo82SMYy1vbNKXQiSKqF9v90pIVr0vZ+0wFpsPVOFhhXj0/d+dDc7/qG1ATdBEBZ0VxVx5VL9IeEvDEEflr5NxHmBQFS4AN8VxeGJAL2E2mruWOgWnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720388966; c=relaxed/simple;
-	bh=ciZBox53dB3xvDpXHlJw5G3G8BQ3hynEmsf2ZayQ3ss=;
+	s=arc-20240116; t=1720389949; c=relaxed/simple;
+	bh=m0lQaxboMSBMMialQOA4PQ7OOgWKtq1KTI5gmp1liBA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vnw1RHV3of54eyMMecD+zKg6tE/0mKACld647UHDoUT78MsGzakqcPKX4aP65ZcCQ0eDq3PSJfokIt3wlCUTW0YNlgOfiWK49zq1/ummgBihX+M318k1dHwJ58pt4uovcDZWg/4SYqQY/AMUlq6CQkRudKtihSLXwCGKuQEXH3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0pSDV4J; arc=none smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=BSBUgRS4X3VXLqvSMtFdmkv8hC1mdv2X2p2tUWo8kZCxDsheWYvnQc+cY3tVSfAFxZdAg7VPISQ8blFL0c/gR7YxJL1yw+GEV73RZlWenEYzr/m+kNT971c65ZWKawlJAGU3nQsCdfmX7c2IPmg/T68z3qxMo2YFjF//NRbUj0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5ZgqrMp; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb1c918860so28072995ad.1
-        for <linux-nfs@vger.kernel.org>; Sun, 07 Jul 2024 14:49:24 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-73aba5230b6so2085085a12.1
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Jul 2024 15:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720388964; x=1720993764; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720389947; x=1720994747; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dWjThoMGEdg5rExaj5Ixi0ucwSvOnp9TOGvXLC4TwAY=;
-        b=A0pSDV4JpXNYKU/RmySfVemkPDb4TsfGkTK3cjovUXDQ3sxKH96I94gEM4Fwkc1oRb
-         3YMI8KEcwvBabqq18wDWL4IKe9ipoO8KOGfnJRnI+40j8BYaUCsVXHtE4jodm4jQ7MMb
-         bzcu8EDzZ0PlxqOiT3efgx6tBKZ786u54rJ5zbnXn/ZBJyfnMKejnFSUzxY0tww/Opal
-         naYnt5ITOdj0RiGNZmpciPacxki+QM6EGYAsAYeN4heQHCm4RS15LSQZD0KbGYLiezqy
-         ofhjwQmknBpEx07qZQtks3T0v5F1bx+43XKm70b/fA4OLp5qBbLR1f6gWnLzWe59xx5f
-         gC/Q==
+        bh=PgBnW7csaL4UhHd55Q6xeNJTP8OEO4RGnu79pptwebI=;
+        b=F5ZgqrMp2/lablLMDvOjhMklsQRqXnc7yGTuF5lp/7uXKoQ128/enw3TSgWTNYfNt7
+         Qzuq/4keveg5AdpvJkgXzo+9/ckTK6IyoL6QDl0UpEoyteUQEF/jpEU/51Ll/5RVuFZP
+         SIPyTp4BFD80gIQkLxOuI0hN8+Oi96zJ6Y/oHBT1qFP4TROVEO4tPknCIdPHfUJd3A8L
+         Q70fePmfngawCklEYwGtyfltzzfKGgOB8omdsgmMJ1DXUdHq9VeMgf4skanG1i94DNja
+         l457d6QOekqj+IAuCwgCTExBmR8K60qD7FSfFJB8i/2lHMphRps1Kz5e2NqBfUBiOQri
+         4sTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720388964; x=1720993764;
+        d=1e100.net; s=20230601; t=1720389947; x=1720994747;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dWjThoMGEdg5rExaj5Ixi0ucwSvOnp9TOGvXLC4TwAY=;
-        b=sEZeylwJYjx2EcUeds+RnCWMRqhrYIaIta/S1x9jjV0sLTuRiMSfyQykx1lbxsVdCo
-         sjGqSNVmRNgPT8qog2/YLDyAhwj/N5UcJ+RXCvrBhWixjMP1rHdKApLgzWROYFmTyM0X
-         ohRYlxQV+E999OH4Y2negnlI/arrlRvc4JUzQYx45uT/bU3WvGefFqHFLaVX5S4zNTI9
-         /8AWdS/nrVJg2dVvlN6dDK16YT4yPTDZNmxazfy//UaGIJQVnLlQrCk+m7mCBHvc4maZ
-         BQ1lQCWGo3rIyKI4SZ8kFXB729DaunX2y3WfBdMNGQ4rgWIXouRpyNAQCL5cS35UYp96
-         PDcw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4DF4EBgOehZcTNtRzLgpmBsKcGBBENJ4uLxOAnequbLXFU8nUEqKJ47ixf2B3cteCiWSCmESndjhp1+SBOxe4f+05EP/3KHHP
-X-Gm-Message-State: AOJu0YxW3RVDMHoDn6jFIilMs1akDCQtX7Johr6/5sQdegrPgMUgM2Ly
-	0ZwYIHo+YdmAib9wUJVg7Xd9QHyoL8RlfgZ65zg3v5Tf/yIiUDaj/UT/FGsi6MiCS1Z5/It7L6b
-	TWLadn5LL4AuDM7IxrFhCKl6jgQ==
-X-Google-Smtp-Source: AGHT+IF4vneaiy2AdvCADvGV8bbYuKNj+vYi9D528RYMyfmho4b35UijszdojPm4ZHTREl96fhwvHpIIP772sPmXz84=
-X-Received: by 2002:a17:90a:6807:b0:2c2:4109:9466 with SMTP id
- 98e67ed59e1d1-2c99f30922emr14229528a91.8.1720388964036; Sun, 07 Jul 2024
- 14:49:24 -0700 (PDT)
+        bh=PgBnW7csaL4UhHd55Q6xeNJTP8OEO4RGnu79pptwebI=;
+        b=JE6UC9qLK/tmo6nC5wsPf8V50W6zzLNCrf9gnbbKnli3GeOQjh0vVkgs69/8rK7dsw
+         iQw0HkDoixYvp3vbqUOVhG1V9RddWG1+6Ux5pc1mCicAUUTAH11yTrdMbhjqIAa0gXKk
+         G0uYYKKZ/RvIuf3vsEjOzbPaBl0S95FJRZYoZITrazyGyUs13XphmGDDMQqwJjwRSDtl
+         iKWobN27LjO+tZEN+sJyuixrRrTreY6wpvJgjgcjgkDOhCVxHCBWUrStGLi3zjy2flrA
+         q9fa1cbSR/0xlFPIGlMLmQXcSDWlpMU5UE/W1j2XtEc7JeU5uRl5DKkgtc+tHFQ20FLl
+         Bheg==
+X-Forwarded-Encrypted: i=1; AJvYcCWE6lzwwvMXDlkaEp/lufa6Yq1zlrmiqjCf1/SkHCP0tcy4BuMExfHvQ6dYnE1I/ZnKDhiYeRshD36tUn49iUta5dw0Ojk7NSx8
+X-Gm-Message-State: AOJu0YzgZf0SuEW+mWPd2ZMXXrkjRhNok4roSGaWv3MfVbQfm3mB7ZLR
+	IQCHLyqMxJ6WgcX/D/9+JwanDGEi5xIxAGN9TLx2QE2ynXSJy5S/s9G3uP1rmcUFnYP8k0aPEzW
+	VW66+CbscN+t/2SgoXnrS5J7+eg4d
+X-Google-Smtp-Source: AGHT+IEcoX2yduhj3VOegiUWpar4/YVUL8C28UwSNXGxvbrKpLilBxINHr0BYPL4eNRN9fU2jXZChA7W26zjgRs54zk=
+X-Received: by 2002:a17:90a:ce15:b0:2c8:3e89:bbab with SMTP id
+ 98e67ed59e1d1-2c99f3c0834mr14342034a91.22.1720389947418; Sun, 07 Jul 2024
+ 15:05:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -75,8 +75,8 @@ References: <20240706224207.927978-1-sagi@grimberg.me> <114581777d5b61b6973ec9ef
  <CAM5tNy5WLTk6KbVwe4J8+0=ChhGQgXnK_Matt2Y1j_8W-0KR9g@mail.gmail.com> <bdae2f17-7fca-484e-ae46-b822df9f3576@grimberg.me>
 In-Reply-To: <bdae2f17-7fca-484e-ae46-b822df9f3576@grimberg.me>
 From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sun, 7 Jul 2024 14:49:14 -0700
-Message-ID: <CAM5tNy7XLxrLMchDTA+AZJkYUGw41FQpajVN6s2f7Z6qnFjkmg@mail.gmail.com>
+Date: Sun, 7 Jul 2024 15:05:37 -0700
+Message-ID: <CAM5tNy51seoWht2vk46DX_setpaoe26PDYTQ-CwmLC_iyY0mNg@mail.gmail.com>
 Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
 To: Sagi Grimberg <sagi@grimberg.me>
 Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
@@ -205,18 +205,6 @@ ng
 > but even if it
 > did, what would it set in the OPEN_WANT flags for O_WRONLY open? it would
 > set OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG.
-I didn't think to mention that the client was a rather old 6.3 kernel.
-If the Linux client is still not setting OPEN4_SHARE_ACCESS_WANT_xxx
-flags, then maybe it should do so?
-And maybe the client developers will be encouraged to set them, if the serv=
-er
-uses them?
-
-I'll admit I had assumed they weren't there just because my kernel is
-out of date.
-
-rick
-
 >
 > I do agree that there is an argument to be made that Linux nfsd should no=
 t
@@ -225,4 +213,22 @@ t
 > how this particular delegation against a wronly open is any different
 > from any
 > other type of delegation that Linux nfsd hands out today.
+I guess the point I was trying to make was that, if a client explicitly
+asks for a write delegation, then you issue it and the client screws up,
+"the client got what it asked for".
+
+However, if the client has not previously seen a write delegation for this
+case and is not asking for it, then if it is buggy in this respect, a
+server upgrade
+results in a client failure (fun and bothersome to track down, even if
+it really a
+client bug). ie. There is a risk in this change (as Jeff noted) and imho th=
+at
+needs to be considered (and tested for as far as practicable).
+
+Anyhow, all the best and good luck with it, rick
+ps: I suspect you guys are like me, in that you do not have easy access
+      to other clients, like the resurrected CITI Windows client or the
+      VMware one. (I think there is also a NFSv4.1 client in Windows
+      server edition?)
 
