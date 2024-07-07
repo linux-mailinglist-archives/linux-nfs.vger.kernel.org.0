@@ -1,312 +1,262 @@
-Return-Path: <linux-nfs+bounces-4690-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4691-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD85B929634
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 02:42:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37892929680
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 06:37:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BCB01C2040D
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 00:42:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B09B91F21540
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jul 2024 04:37:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35277EDC;
-	Sun,  7 Jul 2024 00:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhVwior+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F7DE4C9F;
+	Sun,  7 Jul 2024 04:37:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA71A55
-	for <linux-nfs@vger.kernel.org>; Sun,  7 Jul 2024 00:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F82914
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jul 2024 04:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720312968; cv=none; b=WbmR8tPlqPG8q3qcDs6HQpJ7VNMh1q+35/i0x7JRQh5V7kAGb7k9cB+UURShI+wjL2P5cLAUkaLhUUFbh71qLZfG7S/HRNd9N9F7lygTF3URP4SbVj8NrQXaeCXcmLgg3zqxlrxXRucKbA7BmrQWTrwa2KREzn2lsRvYIsYOyp0=
+	t=1720327040; cv=none; b=alkRCm7sUgXDWmvbQi8akFyRbusNlxf1KZPC//7iQUwRyPRaTfdh8PXZpEulChy2Z7ST5MytFbyErDuWKwDVg6FZaE1YCcQxhQXwIS4PxjgVGay/Irk/Rz4zi4+20a1644gu6dEMRfNc5dq5P2x6xER/T0+AD0yORobrkldRXr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720312968; c=relaxed/simple;
-	bh=eQxvqdrV49NCX8kvv8x0GuP85KL9WRdU7fvwWbvZq78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZGDHGDae9+IqkX+ZOM4OXMj4XecVUWQ+8OyGGRgDRXWBUJgk29XVfTJBCcztGJxbxcb5pZYucyfhw9Idl/5yIwnd8kONXS/bjC7g4C3nlvoJ0eL0x6S7ji+ffh7jaAzY7SX19x5Wx0ey8LIIBgOdcUeTOtjKypdhBcmtqV1uis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhVwior+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44610C2BD10;
-	Sun,  7 Jul 2024 00:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720312967;
-	bh=eQxvqdrV49NCX8kvv8x0GuP85KL9WRdU7fvwWbvZq78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JhVwior+4zrxko/zaynWICYj0T+Zm/T18Gr5ysStSM9ZVKLh7I+e2GamBcnjlXCWf
-	 ka1F2EAqBXS46PgOoSuBytlpL7nVRDvNaC0Uqu2WLEsyLb6cuWnuka03CDTkf52aAE
-	 0ENkdTst2L56LqgkawA1VOawTX06tC1nic6JBFTswa15owKqu1Uxhj16YmnarqZ7AO
-	 95YcYmnm+JnwxCiERzjp6CZJTg/i5BYzcRrOPzLN1zkroRco3gdY28/AsBJfl9bxD9
-	 DH2OL1K/z7y8dqty2UYkFsNpMvLKrBCWGOXVJkjBVelMe7eZwOILYf769431yPru4B
-	 M1YRZPNbPxJRw==
-Date: Sat, 6 Jul 2024 20:42:46 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Jeff Layton <jlayton@kernel.org>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Neil Brown <neilb@suse.de>, Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-Message-ID: <Zonkhsx6M_y03lfL@kernel.org>
-References: <ZoY6e-BmRJFLkziG@infradead.org>
- <ZobqkgBeQaPwq7ly@kernel.org>
- <ZoeCFwzmGiQT4V0a@infradead.org>
- <57C1CB2B-3B46-48F3-A095-417845001C3E@oracle.com>
- <ZogAEqYvJaYLVyKj@kernel.org>
- <ZogAtVfeqXv3jgAv@infradead.org>
- <ZogFBqv0z7Rnh4_p@kernel.org>
- <990C712E-99B0-4227-B67D-0DBAA2B2B72E@oracle.com>
- <ZojBAC3XYIee9wN2@kernel.org>
- <0BF11705-597B-404F-88F9-D4BCB7AC9937@oracle.com>
+	s=arc-20240116; t=1720327040; c=relaxed/simple;
+	bh=yIKuhHGfruoPRqDEvuUTDKJvUOhkTvSw1jACis+h55Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UsvTqkTgOrdb7Dp+/unskfXaKISKF0zV3KbxVXudClpmr0Fdc8leLUavLGuSzeh8ZA/gs+uu5nHaLUA7L8/uwqWIjFh/i486x5zZAIVlJ7jGkGhd+cmiGHxyow9w8TRWuLTleaVLMbsVtuX2QAdLXjJAHLqzEm/BXj42+cfnxLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7fb19ed628aso39248139f.0
+        for <linux-nfs@vger.kernel.org>; Sat, 06 Jul 2024 21:37:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720327037; x=1720931837;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=847Syez982U0hK7vwnP6rn1hKfKGm4NShJJm5zdQrIg=;
+        b=MufRrudjxKtp/v3C+Jt8yui1004jCCVsYipwrgOn+nLisDfUY8JhtxpPxJAveEvQN8
+         DANbT21p6W5QLBwOrw31LnOpS8DboTzpwy03w29dk3p4OEhKZa0RoNVxTQ7BizANF+OT
+         RAhaRrC6jVdv3ulEWDq5xMYofOjQ+xQ/1ZNnQUVO7TuHm4UieIO1ineIyX2kc9y924g8
+         t0TTiUlSjXCtH9JeQDdqHwQId3WbngSgtRIhyJv+F4MkfudOca4Rtu++1SzbtjAi+qgo
+         bc532o1qtX+wLf4a/Tq//Vg+1t7nKsugwm3vX4oWP6/jSw5mFDOr6annWTglMwirztED
+         eDHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNx7y+VmiplXXYRhs9ASPkoqud2jUcUnIgZYy25WCYUj7gCal84pdUVCqvbW3TkHE3Gnq7qALcn8Sg0m/DyKgr2fXq3wgusHFv
+X-Gm-Message-State: AOJu0YxRKijQJc77XI5assbAuts/RyqaKJsFaBCKb1HT3bZXouTnfyu4
+	e8cHcXh3DnNuEGWHG/zlOUiJnlE5m3hUHiVDPR7hDu+F5RMhsxzTwrO8yTtnQnXDcAKVVvYMjZa
+	34PLXaTADG1gpX3HZ/AJHy9GwkR4tWC2AsQ3ssVsWbXdVbIRIp27cmLY=
+X-Google-Smtp-Source: AGHT+IHegbxktD4rEG0N60jxzd3v3jWD7RbxaKu3fPtktMJBhV//64hjOub/PwNWMtJerUp5Rnh58EyWd/gg2OKLqURL+fRD43AM
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0BF11705-597B-404F-88F9-D4BCB7AC9937@oracle.com>
+X-Received: by 2002:a05:6602:6182:b0:7f8:c131:3bf5 with SMTP id
+ ca18e2360f4ac-7f8c13142c6mr33138039f.2.1720327037574; Sat, 06 Jul 2024
+ 21:37:17 -0700 (PDT)
+Date: Sat, 06 Jul 2024 21:37:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8ed54061ca0d9a5@google.com>
+Subject: [syzbot] [nfs?] INFO: task hung in nfsd_umount
+From: syzbot <syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
+	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	neilb@suse.de, syzkaller-bugs@googlegroups.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
 
-Chuck,
+Hello,
 
-I think we can both agree there is no real benefit to us trading
-punches and looking like fools more than we already have.
+syzbot found the following issue on:
 
-I say that not to impugn you or your position, but we look foolish.
+HEAD commit:    1dd28064d416 Merge tag 'integrity-v6.10-fix' of ssh://ra.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16814d76980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1ace69f521989b1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=b568ba42c85a332a88ee
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-I will pull my punches entirely (I really am, I could blow up
-everything and that'll really be career limiting, heh).  My aim is to
-say my peace in this reply and hopefully we can set this unfortunate
-exchange to one side. 
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I'll learn what I can from it, maybe you will, maybe others will...
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/20c723869b92/disk-1dd28064.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c2a9a7382516/vmlinux-1dd28064.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9872fe6f2853/bzImage-1dd28064.xz
 
-On Sat, Jul 06, 2024 at 04:58:50PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Jul 5, 2024, at 11:58 PM, Mike Snitzer <snitzer@kernel.org> wrote:
-> > 
-> > 
-> > Hi Chuck,
-> > 
-> > I'm out-gunned with this good-cop/bad-cop dynamic.  I was replying to
-> > Christoph.  Who has taken to feign incapable of understanding localio
-> > yet is perfectly OK with flexing like he is an authority on the topic.
-> 
-> Well let's try a reality test.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com
 
-Perception is reality, so your reality is different than mine.
+INFO: task syz.0.2871:13167 blocked for more than 143 seconds.
+      Not tainted 6.10.0-rc6-syzkaller-00212-g1dd28064d416 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz.0.2871      state:D stack:26704 pid:13167 tgid:13165 ppid:10304  flags:0x00000004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x1796/0x49d0 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+ __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
+ nfsd_shutdown_threads+0x4e/0xd0 fs/nfsd/nfssvc.c:632
+ nfsd_umount+0x43/0xd0 fs/nfsd/nfsctl.c:1412
+ deactivate_locked_super+0xc4/0x130 fs/super.c:473
+ put_fs_context+0x94/0x780 fs/fs_context.c:516
+ fscontext_release+0x65/0x80 fs/fsopen.c:73
+ __fput+0x24a/0x8a0 fs/file_table.c:422
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x360 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f11fe775bd9
+RSP: 002b:00007f11ff494048 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 00007f11fe903f60 RCX: 00007f11fe775bd9
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000003
+RBP: 00007f11fe7e4aa1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f11fe903f60 R15: 00007ffc04bba328
+ </TASK>
 
-Neil, Christoph and yourself all took my last "Who has taken to feign"
-sentence above as some ad-hominem attack.  It wasn't, Christoph was
-acting like the localio code incomprehensible for effect.
- 
-> Christoph has authored an IETF RFC on pNFS. He's also contributed
-> the pNFS SCSI (and now NVMe) implementation in the Linux server
-> and client. He seems to know the code well enough to offer an
-> informed opinion.
+Showing all locks held in the system:
+1 lock held by khungtaskd/30:
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+3 locks held by kworker/u8:4/66:
+ #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc900020afd00 ((work_completion)(&map->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc900020afd00 ((work_completion)(&map->work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+ #2: ffffffff8e3391c0 (rcu_state.barrier_mutex){+.+.}-{3:3}, at: rcu_barrier+0x4c/0x530 kernel/rcu/tree.c:4448
+4 locks held by udevd/4534:
+ #0: ffff88805a0fdd58 (&p->lock){+.+.}-{3:3}, at: seq_read_iter+0xb7/0xd60 fs/seq_file.c:182
+ #1: ffff88806542ec88 (&of->mutex#2){+.+.}-{3:3}, at: kernfs_seq_start+0x53/0x3b0 fs/kernfs/file.c:154
+ #2: ffff88805af532d8 (kn->active#5){++++}-{0:0}, at: kernfs_seq_start+0x72/0x3b0 fs/kernfs/file.c:155
+ #3: ffff8880686c90e8 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:1009 [inline]
+ #3: ffff8880686c90e8 (&dev->mutex){....}-{3:3}, at: uevent_show+0x17d/0x340 drivers/base/core.c:2743
+2 locks held by getty/4842:
+ #0: ffff88802f9d10a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000312b2f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b5/0x1e10 drivers/tty/n_tty.c:2211
+3 locks held by kworker/u9:10/5101:
+ #0: ffff88802e1fa148 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff88802e1fa148 ((wq_completion)hci2){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc90003827d00 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc90003827d00 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+ #2: ffff888020eb4d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_work+0x1ec/0x400 net/bluetooth/hci_sync.c:322
+2 locks held by syz.4.2691/12623:
+ #0: ffffffff8f63ad70 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff8e5fff48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_doit+0x12d/0x1a90 fs/nfsd/nfsctl.c:1940
+2 locks held by syz.0.2871/13167:
+ #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_lock fs/super.c:56 [inline]
+ #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_lock_excl fs/super.c:71 [inline]
+ #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: deactivate_super+0xb5/0xf0 fs/super.c:505
+ #1: ffffffff8e5fff48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_shutdown_threads+0x4e/0xd0 fs/nfsd/nfssvc.c:632
+1 lock held by udevd/14823:
+2 locks held by syz-executor/15993:
+ #0: ffffffff8f5d4908 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+ #0: ffffffff8f5d4908 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x842/0x1180 net/core/rtnetlink.c:6632
+ #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:323 [inline]
+ #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
+1 lock held by syz.4.3895/16063:
+ #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: __super_lock fs/super.c:58 [inline]
+ #0: ffff88804e1920e0 (&type->s_umount_key#77){++++}-{3:3}, at: super_lock+0x27c/0x400 fs/super.c:120
+4 locks held by kvm-nx-lpage-re/16077:
+ #0: ffffffff8e361f28 (cgroup_mutex){+.+.}-{3:3}, at: cgroup_lock include/linux/cgroup.h:368 [inline]
+ #0: ffffffff8e361f28 (cgroup_mutex){+.+.}-{3:3}, at: cgroup_attach_task_all+0x27/0xe0 kernel/cgroup/cgroup-v1.c:61
+ #1: ffffffff8e1ce5b0 (cpu_hotplug_lock){++++}-{0:0}, at: cgroup_attach_lock+0x11/0x40 kernel/cgroup/cgroup.c:2413
+ #2: ffffffff8e362110 (cgroup_threadgroup_rwsem){++++}-{0:0}, at: cgroup_attach_task_all+0x31/0xe0 kernel/cgroup/cgroup-v1.c:62
+ #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
+ #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
 
-I am _not_ questioning (and _never_ have questioned) Christoph's
-extensive contributions, experience or intelligence.
+=============================================
 
-I am calling out that Christoph didn't actually review the localio
-code but proceeded to make extreme baseless negative judgments of it.
+NMI backtrace for cpu 1
+CPU: 1 PID: 30 Comm: khungtaskd Not tainted 6.10.0-rc6-syzkaller-00212-g1dd28064d416 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
+ watchdog+0xfde/0x1020 kernel/hung_task.c:379
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 1109 Comm: kworker/u8:6 Not tainted 6.10.0-rc6-syzkaller-00212-g1dd28064d416 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Workqueue: writeback wb_workfn (flush-8:0)
+RIP: 0010:bio_add_page+0xb7/0x840 block/bio.c:1118
+Code: 05 00 00 8b 5d 00 45 89 f4 41 f7 d4 89 df 44 89 e6 e8 dd 6f 11 fd 44 39 e3 76 0a e8 13 6e 11 fd e9 20 04 00 00 48 89 6c 24 28 <49> 8d 5f 70 48 89 d8 48 c1 e8 03 48 89 44 24 30 42 0f b6 04 28 84
+RSP: 0018:ffffc900045ce610 EFLAGS: 00000213
+RAX: 0000000000000000 RBX: 000000000000a000 RCX: ffff888022311e00
+RDX: ffff888022311e00 RSI: 00000000ffffefff RDI: 000000000000a000
+RBP: ffff88802eb37a28 R08: ffffffff8484b8a3 R09: 1ffffd4000090b30
+R10: dffffc0000000000 R11: fffff94000090b31 R12: 00000000ffffefff
+R13: dffffc0000000000 R14: 0000000000001000 R15: ffff88802eb37a00
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30e11ff8 CR3: 000000000e132000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <NMI>
+ </NMI>
+ <TASK>
+ bio_add_folio+0x52/0x80 block/bio.c:1160
+ io_submit_add_bh fs/ext4/page-io.c:422 [inline]
+ ext4_bio_write_folio+0x1691/0x1da0 fs/ext4/page-io.c:560
+ mpage_submit_folio+0x1af/0x230 fs/ext4/inode.c:1869
+ mpage_process_page_bufs+0x6c9/0x8d0 fs/ext4/inode.c:1982
+ mpage_prepare_extent_to_map+0xec7/0x1c80 fs/ext4/inode.c:2490
+ ext4_do_writepages+0xc52/0x3d40 fs/ext4/inode.c:2632
+ ext4_writepages+0x213/0x3c0 fs/ext4/inode.c:2768
+ do_writepages+0x359/0x870 mm/page-writeback.c:2656
+ __writeback_single_inode+0x165/0x10b0 fs/fs-writeback.c:1651
+ writeback_sb_inodes+0x99c/0x1380 fs/fs-writeback.c:1947
+ __writeback_inodes_wb+0x11b/0x260 fs/fs-writeback.c:2018
+ wb_writeback+0x495/0xd40 fs/fs-writeback.c:2129
+ wb_check_old_data_flush fs/fs-writeback.c:2233 [inline]
+ wb_do_writeback fs/fs-writeback.c:2286 [inline]
+ wb_workfn+0xba1/0x1090 fs/fs-writeback.c:2314
+ process_one_work kernel/workqueue.c:3248 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3329
+ worker_thread+0x86d/0xd50 kernel/workqueue.c:3409
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-And you've glossed over that entirely and made it about "Christoph is
-Christoph, who are you again?". Well aware who he is but I'm saying
-baseless negative judgments are also a very regular occurrence from
-him when he decides he just wants to blow up what I am doing (could be
-he has done this to others, I have no idea).  It isn't about the
-technical details in the moment he does this, if he says it it must be
-true, the aim is taint my work.  Sad because I thought that dynamic
-died when I finally relented in our feud over NVMe vs DM multipath
-that spanned 2018 to 2021)
 
-But damnit, it is happening all over again, now in the context of
-localio. And you're buying it because he is parroting your concerns
-about "why can't pNFS be used instead!?"
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Neil won't get an answer after having called Christoph out on this
-(unless Christoph now wants to try to make a liar out of me by
-fabricating something well after his moment to do so has passed):
-https://marc.info/?l=linux-nfs&m=172021727813076&w=2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If Christoph could arrest his propensity to do harm where it not
-warranted I'd take every single technical critical feedback very
-seriously and adjust the code as needed.  When it is about the code,
-_actually_ about the code.. Christoph rules.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-He knows this, happy to say it (again): I respect his technical
-ability, etc.  I do _not_ respect him making blanket statements about 
-code without saying _why_ he arrived at his judgment.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-<snip many words from me answering "why NFSv3?">
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-> > Hammerspace would like to get all its Linux kernel NFS innovation
-> > upstream.  And I'm trying to do that.  localio is my first task and
-> > I've been working on it with focus for the past 2 months since joining
-> > Hammerspace.  But you basically know all this, I said all of it to you
-> > at LSF.
-> > 
-> > So if you know all these things (I _know_ you do), why are you
-> > treating me in this way?  I feel like I'm caught in the middle of some
-> > much bigger divide than anything I've been involved with, caused or
-> > made privy to.
-> 
-> Yes, NFS is larger (much larger) and much older than the
-> Linux implementation of it. I'm sorry your new colleagues
-> have not seen fit to help you fit yourself into this
-> picture.
-
-See a non-sequitur that takes shots at Hammerspace isn't professional.
-
-Over the numerous iterations of localio there have been a handful of
-times you have taken to name drop "Hammerspace" with a negative
-connotation, simmering with contempt.  Like I and others should feel
-shame by association.
-
-They haven't done anything wrong here.  Trond hasn't done anything
-wrong here.  Whatever you grievance with Hammerspace, when interacting
-with me please know I don't have any context for it.  It is immaterial
-to me and I don't need to know.  If/when you have individual technical
-problems with something Hammerspace is doing let's just work it
-through without it needing to be this awkward elephant.
-
-> > Guess the messenger gets shot sometimes.
-> 
-> This is exactly the problem: your attitude of victimhood.
-
-Statements like that show you're going out of your way to make an
-enemy of me with no _real_ basis.  But let me be clear: I have
-absolutely been a victim of bullying and serious psychological attacks
-over this past week, particularly repeat gaslighting by both you and
-Christoph.  That you're so unaware of how you have spun a false
-narrative and are now tag-teaming with Christoph to attack me further
-has been apparent for all to see. Hopefully linux-nfs is low traffic ;)
-
-You have obviously formed an unfavorable opinion of me, apparent
-turning point was my v11 patch header and ensuing negative exchange. I
-own being too pushy when seeking progress on localio v11's inclusion
-for 6.11; I apologized for that.
-
-Hopefully we can actually get past all of this.
-
-> You act like our questions are personal attacks on you.
-
-No, I act like your personal attacks are personal attacks.  Questions
-and technical issues are always fair game.  I pushed back on _one_
-of your NFSD requirements (tracepoints), sorry if that was some
-indication that I'm a malcontent.. but I'm not.  I can have a
-technical opinion though.  SO I may make them known at times.
-
-> Answering "I don't know" or "I need to think about it" or
-> "Let me ask someone" or "Can you explain that further" is
-> perfectly fine. Acknowledging the areas where you need to
-> learn more is a quintessential part of being a professional
-> software engineer.
-
-I'm not afraid to admit when I don't know something (I've said it to
-you when we met at LSF).  I'm in no way an expert in NFS, you are.  I
-respect your command of NFS and welcome learning from you (like I have
-to this point and hope to in the future).
-
-> ---
-> 
-> I have no strong feelings one way or another about flexfiles.
-> 
-> And, I remain a full-throated advocate of the NFSv3 support
-> in the Linux NFS stack.
-> 
-> If you get an impression from me, come talk to me first
-> to confirm it. Don't go talk to your colleagues; in
-> particular don't talk to the ones who like to spread a lot
-> of weird ideas about me. You're getting bad information.
-
-I haven't ever heard from anyone at Hammerspace about you.  And I
-haven't sought insight about you either.  AFAIK you aren't on anyone's
-mind within Hammerspace (other than me given I'm actively dealing with
-this unfortunate situation). 
-
-> ---
-> 
-> Our question isn't "Why NFSv3?" It's: Can your design
-> document explain in detail how the one existing application
-> (the data mover) will use and benefit from loopback
-> acceleration? It needs to explain why the data mover
-> does not use possibly more suitable solutions like
-> NFSv4.2 COPY. Why are we going to the effort of adding
-> this side car instead of using facilities that are
-> already available?
-> 
-> We're not asking for a one sentence email. A one sentence
-> email is not "a response in simple terms". It is a petulant
-> dismissal of our request for more info.
-
-Well I in no way intended it to be petulant.  I was trying to reduce
-the attack surface.  And if you'd trust me at my word that'd go a long
-way.
-
-Try to take a step back and trust me when I tell you something.
-You're welcome to unfulfilled by an answer and seek clarity, but I
-promise you I'm not evasive or leaving information on the floor when
-I answer questions.  If I don't know something I seek the details out.
-
-But you and Christoph are making a simple line of development
-(localio) into some referendum on design choices in layers you have no
-charter to concern yourself with (Hammerspace's data movers). You
-still cannot accept that localio is devoid of pNFS use case
-requirements (as required by Hammerspace) but still see fit to
-reengineer the feature in terms of pNFS.
-
-Hammerspace simply wants to optimize an NFS client on a host
-connecting to an NFSD running in a container on the same host.  It is
-doing that in service to its distributed namespace that it is hosting
-in disparate NFSD instances.  But the "data movers" are a sideband
-remapping/reshaping/rebalancing service.  Completely disjoint from the
-distribute pNFS namespace that the primary (flexfiles) clients are
-accessing.
-
-> We're asking for a real problem statement and use case,
-> in detail, in the design document, not in email.
-> 
-> (Go read the requests in this thread again. Honest, that's
-> all we're asking for).
-
-I'll consult with Trond to try to see how he suggests appeasing your
-request more than I already have.  But you really are departing
-heavily from the narrow scope that localio covers.
-
-> ---
-> 
-> But finally: We've asked repeatedly for very typical
-> changes and answers, and though sometimes we're met
-> with a positive response, other times we get a defensive
-> response, or "I don't feel like it" or "that's busy work"
-> or "you're wasting my time." That doesn't sound like the
-> spirit of co-operation that I would like to see from a
-> regular contributor, nor do I expect it from someone who
-> is also a Linux kernel maintainer who really ought to
-> know better.
-
-Projecting attributes and actions onto me doesn't make them true. I
-haven't done or said most of the things you just asserted there.
-
-I pushed back on tracepoints, but in the end I removed all the
-dprintk()s from the NFSD code.
-
-> So heed Christoph's excellent advice: go eat a Snickers.
-> Calm down. Breathe. None of the rest of us are anywhere
-> near as upset about this as you are right now.
-
-Your words say otherwise, they have become quite negatively charged to
-harm in the last week, but please let's just move on.  I'm serious, no
-lasting harm done from my vantage point, I can move on if you can.
-
-Thanks,
-Mike
+If you want to undo deduplication, reply with:
+#syz undup
 
