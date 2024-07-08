@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-4702-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4703-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F0AF929B37
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 06:03:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22806929B3E
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 06:10:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27C732813FC
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 04:03:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27BB91C20AB3
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 04:10:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D6B8C06;
-	Mon,  8 Jul 2024 04:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBE96FCC;
+	Mon,  8 Jul 2024 04:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pWaPd6Qc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vQn/yJRq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pWaPd6Qc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vQn/yJRq"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O0rc3t8+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p0XfdAP6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O0rc3t8+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p0XfdAP6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD838BF3
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 04:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DFE6FC5
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 04:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720411397; cv=none; b=qCrAgwhzWTxIia8Xxqfr48xxOMQimzmSXPA80aK7On2hUnW5h6vCn+m7ROC02/RbHLl39lxAxQdNQ4uMyQ6Rb3DQe7zAuvUfeHa/pr90gKTyrycgOJ+P0zxzXgYZUjD8YWqnbHsv8xoO6ajX0d3T3GfcvuA0E9gtt5p4ZWkozY0=
+	t=1720411847; cv=none; b=pjrrVdYz//1OUduXSbI6HhI4bXu9IkbHYXpYb/RlhCNivDljSpK6xRHuOnecrnrfCAVEpEobkm4EYf/JH9EvXqdPxkQ+as0+IhMY9BUcTkrhNCgiviwrKc+xahd164t/B/M+BfryMJKNuZXS+U0Yr+aq9mvNJ1PVAXn0Xj7Ayz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720411397; c=relaxed/simple;
-	bh=s25a7XtAo4Nbu55cmY9fq/Pn4XwK7TWn7cmOxzsiKtA=;
+	s=arc-20240116; t=1720411847; c=relaxed/simple;
+	bh=m987WkuDPlGftAnxdZP6Sk1VdBp6KrjMbhRCoI9IeJg=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pqvgcxgjmGyQ9FgfB8BwAhcqEeNQZSB5Sx+WvPFi8uey1ubjzIPt5sk6FGbercXsIBUvEQHhoIbUr1pkHsS7D41jPII7KOuT+Gnnp9L9r86Vn3JRXE9MUFykQzBIXpVYn+CkcKW3rN09yZS/s4gkllVk59bbS1K7b6C8LOtlGQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pWaPd6Qc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vQn/yJRq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pWaPd6Qc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vQn/yJRq; arc=none smtp.client-ip=195.135.223.130
+	 References:Date:Message-id; b=pg/Ovdf7tLvzaxwTn7x2E0ZUIGHmPOQdPhud4MqRTXXRtV2WRa9upvtuMadh2xCUD6uNhextl/QC6CsOa3ndb29IgwcoZ90Tk9iknHFgPBzxQ9dB1cWVIicp7v5RLcrgncSSPdRowMl5ZODsK8hhvbJODqrxw79/HBLb0IvvxQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O0rc3t8+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p0XfdAP6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O0rc3t8+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p0XfdAP6; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DA61F21B03;
-	Mon,  8 Jul 2024 04:03:13 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BC4BD1FBBC;
+	Mon,  8 Jul 2024 04:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720411393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720411843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KXBo1ebNPC0r073Ipz/6sQCNvrMPvQjQKkXxNgGQMFE=;
-	b=pWaPd6QcSFzKRjALSCBMxTc/DyGZSG8JAalV+jcNbB17su33mDkoaOlDSn/IATa54Ogl3b
-	iYuJgJUbNgDc+6uFZnFs+lNZqvKRPTiUfL2mx5iN02z6GUB/ysNk0rvg2yZ9rOMyTNo6bz
-	ukLCToOocnB04F0V3V4pU2MVLHCkO44=
+	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
+	b=O0rc3t8+63jxO6nwHzRP3Fl+b4vPJm3wHg31So/F++KB6j7zACqgq7tml7mPQ5XyBFw4Ud
+	bJXMOJQ9wku4atPjSP24PDcl88S89aCvTEa743Z/zatRI1xPzvxe0OrWyUFskB71sN5GBk
+	jWcquB8zYmrxeuCZMVtcvWvBSjlscMY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720411393;
+	s=susede2_ed25519; t=1720411843;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KXBo1ebNPC0r073Ipz/6sQCNvrMPvQjQKkXxNgGQMFE=;
-	b=vQn/yJRqvJQ7tcQvlj0UCQ/gJTKjOszseI1iyoJ6m42jZfPInutCy3+/LvuT7UB8MBnCoS
-	UCITqUKaSg2h49BA==
-Authentication-Results: smtp-out1.suse.de;
+	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
+	b=p0XfdAP6PhljQPl1oUzL5G7SEr4LzFLjOuhHLidEPJcNGsGadhG3TpneZbyb8bZWL+IWyt
+	igfB3uegqfICWzBQ==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720411393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720411843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KXBo1ebNPC0r073Ipz/6sQCNvrMPvQjQKkXxNgGQMFE=;
-	b=pWaPd6QcSFzKRjALSCBMxTc/DyGZSG8JAalV+jcNbB17su33mDkoaOlDSn/IATa54Ogl3b
-	iYuJgJUbNgDc+6uFZnFs+lNZqvKRPTiUfL2mx5iN02z6GUB/ysNk0rvg2yZ9rOMyTNo6bz
-	ukLCToOocnB04F0V3V4pU2MVLHCkO44=
+	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
+	b=O0rc3t8+63jxO6nwHzRP3Fl+b4vPJm3wHg31So/F++KB6j7zACqgq7tml7mPQ5XyBFw4Ud
+	bJXMOJQ9wku4atPjSP24PDcl88S89aCvTEa743Z/zatRI1xPzvxe0OrWyUFskB71sN5GBk
+	jWcquB8zYmrxeuCZMVtcvWvBSjlscMY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720411393;
+	s=susede2_ed25519; t=1720411843;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KXBo1ebNPC0r073Ipz/6sQCNvrMPvQjQKkXxNgGQMFE=;
-	b=vQn/yJRqvJQ7tcQvlj0UCQ/gJTKjOszseI1iyoJ6m42jZfPInutCy3+/LvuT7UB8MBnCoS
-	UCITqUKaSg2h49BA==
+	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
+	b=p0XfdAP6PhljQPl1oUzL5G7SEr4LzFLjOuhHLidEPJcNGsGadhG3TpneZbyb8bZWL+IWyt
+	igfB3uegqfICWzBQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91C9212FF6;
-	Mon,  8 Jul 2024 04:03:10 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6E7BC12FF6;
+	Mon,  8 Jul 2024 04:10:40 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WvrhDf5ki2ZTVQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 08 Jul 2024 04:03:10 +0000
+	id MYP1BMBmi2b3VgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 08 Jul 2024 04:10:40 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -97,29 +97,28 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Christoph Hellwig" <hch@infradead.org>
+To: "Chuck Lever III" <chuck.lever@oracle.com>
 Cc: "Christoph Hellwig" <hch@infradead.org>,
  "Mike Snitzer" <snitzer@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever III" <chuck.lever@oracle.com>,
  "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
  "Anna Schumaker" <anna@kernel.org>,
  "Trond Myklebust" <trondmy@hammerspace.com>,
  "Dave Chinner" <david@fromorbit.com>
 Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-In-reply-to: <ZojnVdrEtmbvNXd-@infradead.org>
-References: <>, <ZojnVdrEtmbvNXd-@infradead.org>
-Date: Mon, 08 Jul 2024 14:03:02 +1000
-Message-id: <172041138255.15471.5728203307255005157@noble.neil.brown.name>
+In-reply-to: <CCC79F21-93A6-4483-A0B8-62E062BE4E6A@oracle.com>
+References: <>, <CCC79F21-93A6-4483-A0B8-62E062BE4E6A@oracle.com>
+Date: Mon, 08 Jul 2024 14:10:36 +1000
+Message-id: <172041183681.15471.6809923976922602158@noble.neil.brown.name>
 X-Spam-Score: -4.30
 X-Spam-Level: 
 X-Spam-Flag: NO
 X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+	BAYES_HAM(-3.00)[99.99%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ARC_NA(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -133,55 +132,38 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 	RCVD_COUNT_TWO(0.00)[2];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Sat, 06 Jul 2024, Christoph Hellwig wrote:
-> On Sat, Jul 06, 2024 at 04:37:22PM +1000, NeilBrown wrote:
-> > > a different scheme for bypassing the server for I/O.  Maybe there is
-> > > a really good killer argument for doing that, but it needs to be clearly
-> > > stated and defended instead of assumed.
-> > 
-> > Could you provide a reference to the text book - or RFC - that describes
-> > a pNFS DS protocol that completely bypasses the network, allowing the
-> > client and MDS to determine if they are the same host and to potentially
-> > do zero-copy IO.
+On Sun, 07 Jul 2024, Chuck Lever III wrote:
 > 
-> I did not say that we have the exact same functionality available and
-> there is no work to do at all, just that it is the standard way to bypass
-> the server.
-
-Sometimes what you don't say is important.  As you acknowledge there is
-work to do.  Understanding how much work is involved is critical to
-understanding that possible direction.
-
+> Both the Linux NFS client and server implement RFC 8154
+> well enough that this could be an alternative or even a
+> better solution than LOCALIO. The server stores an XFS
+> file system on the devices, and hands out layouts with
+> the device ID and LBAs of the extents where file content
+> is located.
 > 
-> RFC 5662, RFC 5663 and RFC 8154 specify layouts that completely bypass
-> the network and require the client and server to find out that they talk
-> to the same storage devuce, and directly perform zero copy I/O.
-> They do not require to be on the same host, though.
+> The fly in this ointment is the need for NFSv3 support.
 
-Thanks.
+Another fly in this ointment is that only XFS currently implements that
+.map_blocks export_operation, so only it could be used as a server-side
+filesystem.
+
+Maybe that would not be a barrier to Mike, but it does make it a lot
+less interesting to me (not that I have a particular use case in mind,
+but I just find "local bypass for NFSv4.1+ on XFS" less interesting than
+"local bypass for NFS on Linux").
+
+But my interest isn't a requirement of course.
 
 > 
-> > If not, I will find it hard to understand your claim that it is "the
-> > text book example".
-> 
-> pNFS is all about handing out grants to bypass the server for I/O.
-> That is exactly what localio is doing.
+> In an earlier email Mike mentioned that Hammerspace isn't
+> interested in providing a centrally managed directory of
+> block devices that could be utilized by the MDS to simply
+> inform the client of local devices. I don't think that's
+> the only possible solution for discovering the locality of
+> storage devices.
 
-Yes, there is clearly an alignment.
-
-But pNFS is about handing out grants using standardised protocols that
-support interoperability between distinct nodes, and possibly distinct
-implementations.  localio doesn't need any of that.  It all exists in a
-single implementation on a single node.  So in that sense there can be
-expected to be different priorities.
-
-Why should we pay the costs of pNFS when implementing localio?  That
-question can only be answered if we have a good understanding of the
-costs and benefits.  And that requires having a concrete proposal for
-the "pNFS" option - if only a detailed sketch.
-
-Just because pNFS could be part of the answer (which I don't dispute)
-that doesn't necessarily mean it should be part of the answer.
+Could you sketch out an alternate solution so that it can be assessed
+objectively? 
 
 Thanks,
 NeilBrown
