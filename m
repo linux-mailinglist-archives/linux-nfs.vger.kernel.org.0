@@ -1,170 +1,184 @@
-Return-Path: <linux-nfs+bounces-4703-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4704-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22806929B3E
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 06:10:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50E25929C21
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 08:23:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27BB91C20AB3
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 04:10:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7398B1C21454
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 06:23:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBE96FCC;
-	Mon,  8 Jul 2024 04:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O0rc3t8+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p0XfdAP6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O0rc3t8+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p0XfdAP6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2651E12E75;
+	Mon,  8 Jul 2024 06:23:37 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DFE6FC5
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 04:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58535125DE
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 06:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720411847; cv=none; b=pjrrVdYz//1OUduXSbI6HhI4bXu9IkbHYXpYb/RlhCNivDljSpK6xRHuOnecrnrfCAVEpEobkm4EYf/JH9EvXqdPxkQ+as0+IhMY9BUcTkrhNCgiviwrKc+xahd164t/B/M+BfryMJKNuZXS+U0Yr+aq9mvNJ1PVAXn0Xj7Ayz8=
+	t=1720419817; cv=none; b=F6FeR6xzneXd+ItrF8BZ5qlqcp2noqeCOcY+PVh5ljwKgTZrBeO85PvvpMXnOCRC4WL1wR691B3L75rT2RTthg4klfmP+XeVWMFpLUmAIqzpmbywpmJtPpXtdaANnrPDgVFbEK623qp1T3tveKe5dWsYpPZCdVj+t3d27npXzB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720411847; c=relaxed/simple;
-	bh=m987WkuDPlGftAnxdZP6Sk1VdBp6KrjMbhRCoI9IeJg=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pg/Ovdf7tLvzaxwTn7x2E0ZUIGHmPOQdPhud4MqRTXXRtV2WRa9upvtuMadh2xCUD6uNhextl/QC6CsOa3ndb29IgwcoZ90Tk9iknHFgPBzxQ9dB1cWVIicp7v5RLcrgncSSPdRowMl5ZODsK8hhvbJODqrxw79/HBLb0IvvxQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O0rc3t8+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p0XfdAP6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O0rc3t8+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p0XfdAP6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BC4BD1FBBC;
-	Mon,  8 Jul 2024 04:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720411843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
-	b=O0rc3t8+63jxO6nwHzRP3Fl+b4vPJm3wHg31So/F++KB6j7zACqgq7tml7mPQ5XyBFw4Ud
-	bJXMOJQ9wku4atPjSP24PDcl88S89aCvTEa743Z/zatRI1xPzvxe0OrWyUFskB71sN5GBk
-	jWcquB8zYmrxeuCZMVtcvWvBSjlscMY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720411843;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
-	b=p0XfdAP6PhljQPl1oUzL5G7SEr4LzFLjOuhHLidEPJcNGsGadhG3TpneZbyb8bZWL+IWyt
-	igfB3uegqfICWzBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720411843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
-	b=O0rc3t8+63jxO6nwHzRP3Fl+b4vPJm3wHg31So/F++KB6j7zACqgq7tml7mPQ5XyBFw4Ud
-	bJXMOJQ9wku4atPjSP24PDcl88S89aCvTEa743Z/zatRI1xPzvxe0OrWyUFskB71sN5GBk
-	jWcquB8zYmrxeuCZMVtcvWvBSjlscMY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720411843;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OB1zH0n//0xoMnhJErfxYpmPyBjRULGG+TcAdVmfvPU=;
-	b=p0XfdAP6PhljQPl1oUzL5G7SEr4LzFLjOuhHLidEPJcNGsGadhG3TpneZbyb8bZWL+IWyt
-	igfB3uegqfICWzBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6E7BC12FF6;
-	Mon,  8 Jul 2024 04:10:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MYP1BMBmi2b3VgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 08 Jul 2024 04:10:40 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1720419817; c=relaxed/simple;
+	bh=orRHPyHqkO7de1P6G5WaHNU195IXg9JT2/XQgz5h5Vw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eJXvN2d6ZDjZ8c9t3ZdBKaUGFTxS0bvQe63nAFjg1L1Eey0bKctYqGPNten7GV3MqB1t7DUzc87aj/vOaMuqXH3zHa15JCP2KyYqEhcYmrkk1PzMrqQkx49xHdZdImtEkFOUkYBi6gpdd99BtdafuizykH72Fh5mQLe8TGFDuz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e98c72d2bso348027e87.0
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Jul 2024 23:23:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720419813; x=1721024613;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3T+HZXsdRZhd+qzsbHa7mJeJMMqOvGwgge/A5xNwgjM=;
+        b=PPjV5Iv0796rAgWcNATH6IR2WSPmjHRJTq1HlUvyFXQnaHPdIXtsa/KJ9Ub75PhqSn
+         nvsABQVrz7scYZQ5rX7WTn+wjQDRmEWGlSXjAo/8tDRDlHJAhNTc9BAobuPeUSJ1AirT
+         sq4y9AYvwVmNSOqvRtSdrlrr/xW+PDWZI9t4CaV4ZhKoj8OAOS35ZbSwHV+riIx4mQFW
+         vogz3x86UhS91lev55pjOXlX4LbYhh6wuH38bbwaELse/YVmz8gR1glFEIZsq3u/wyBn
+         Abw7aGSvq+xaP5gWyi8WiVLKDG2DLGRQ9ULKuSsfNAQF29PHe7cCnPSqILGsNB0OzZ11
+         TE4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJvaA0pZgr3TmTHdhyox0Gm/AR+ZQ6MTgmnCyYFikHXgiP/yfXhJ3InoynyEHEjo3uutcpARWUjfTJAd8eXZiayla/sqpRqpc4
+X-Gm-Message-State: AOJu0Yye+iJUqBho0b7xfWOzkkMKw9zSeD8z9YuOE+CUjYE9wW3gcism
+	yiZxYhekFJihUCZAwtnV5UvOIEgou2xg/IcfRG+7tJAXkSH+H/+s
+X-Google-Smtp-Source: AGHT+IGHejerc/KYFtmtQ2LQWSb+T4shocROlPU+e/T1ZUSgAxwUqYwhfXIC8lQKUddBViu3VuC8QQ==
+X-Received: by 2002:a2e:9848:0:b0:2ec:4ed6:f4a with SMTP id 38308e7fff4ca-2ee8ee13dbfmr67225451fa.5.1720419813180;
+        Sun, 07 Jul 2024 23:23:33 -0700 (PDT)
+Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d50f5sm150262045e9.9.2024.07.07.23.23.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jul 2024 23:23:32 -0700 (PDT)
+Message-ID: <f490f4dc-5a90-4f1c-a585-b50eac62da70@grimberg.me>
+Date: Mon, 8 Jul 2024 09:23:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever III" <chuck.lever@oracle.com>
-Cc: "Christoph Hellwig" <hch@infradead.org>,
- "Mike Snitzer" <snitzer@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
- "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>,
- "Dave Chinner" <david@fromorbit.com>
-Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
-In-reply-to: <CCC79F21-93A6-4483-A0B8-62E062BE4E6A@oracle.com>
-References: <>, <CCC79F21-93A6-4483-A0B8-62E062BE4E6A@oracle.com>
-Date: Mon, 08 Jul 2024 14:10:36 +1000
-Message-id: <172041183681.15471.6809923976922602158@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
+To: Rick Macklem <rick.macklem@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ linux-nfs@vger.kernel.org
+References: <20240706224207.927978-1-sagi@grimberg.me>
+ <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
+ <CAM5tNy5WLTk6KbVwe4J8+0=ChhGQgXnK_Matt2Y1j_8W-0KR9g@mail.gmail.com>
+ <bdae2f17-7fca-484e-ae46-b822df9f3576@grimberg.me>
+ <CAM5tNy7XLxrLMchDTA+AZJkYUGw41FQpajVN6s2f7Z6qnFjkmg@mail.gmail.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <CAM5tNy7XLxrLMchDTA+AZJkYUGw41FQpajVN6s2f7Z6qnFjkmg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 07 Jul 2024, Chuck Lever III wrote:
-> 
-> Both the Linux NFS client and server implement RFC 8154
-> well enough that this could be an alternative or even a
-> better solution than LOCALIO. The server stores an XFS
-> file system on the devices, and hands out layouts with
-> the device ID and LBAs of the extents where file content
-> is located.
-> 
-> The fly in this ointment is the need for NFSv3 support.
 
-Another fly in this ointment is that only XFS currently implements that
-.map_blocks export_operation, so only it could be used as a server-side
-filesystem.
 
-Maybe that would not be a barrier to Mike, but it does make it a lot
-less interesting to me (not that I have a particular use case in mind,
-but I just find "local bypass for NFSv4.1+ on XFS" less interesting than
-"local bypass for NFS on Linux").
+On 08/07/2024 0:49, Rick Macklem wrote:
+> On Sun, Jul 7, 2024 at 1:21 PM Sagi Grimberg <sagi@grimberg.me> wrote:
+>>
+>>
+>> On 07/07/2024 22:05, Rick Macklem wrote:
+>>> On Sun, Jul 7, 2024 at 4:07 AM Jeff Layton <jlayton@kernel.org> wrote:
+>>>> On Sun, 2024-07-07 at 01:42 +0300, Sagi Grimberg wrote:
+>>>>> Many applications open files with O_WRONLY, fully intending to write
+>>>>> into the opened file. There is no reason why these applications should
+>>>>> not enjoy a write delegation handed to them.
+>>>>>
+>>>>> Cc: Dai Ngo <dai.ngo@oracle.com>
+>>>>> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+>>>>> ---
+>>>>> Note: I couldn't find any reason to why the initial implementation chose
+>>>>> to offer write delegations only to NFS4_SHARE_ACCESS_BOTH, but it seemed
+>>>>> like an oversight to me. So I figured why not just send it out and see who
+>>>>> objects...
+>>>>>
+>>>>>    fs/nfsd/nfs4state.c | 10 +++++-----
+>>>>>    1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>>> index a20c2c9d7d45..69d576b19eb6 100644
+>>>>> --- a/fs/nfsd/nfs4state.c
+>>>>> +++ b/fs/nfsd/nfs4state.c
+>>>>> @@ -5784,15 +5784,15 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>>>>>          *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
+>>>>>          *   on its own, all opens."
+>>>>>          *
+>>>>> -      * Furthermore the client can use a write delegation for most READ
+>>>>> -      * operations as well, so we require a O_RDWR file here.
+>>>>> -      *
+>>>>> -      * Offer a write delegation in the case of a BOTH open, and ensure
+>>>>> -      * we get the O_RDWR descriptor.
+>>>>> +      * Offer a write delegation in the case of a BOTH open (ensure
+>>>>> +      * a O_RDWR descriptor) Or WRONLY open (with a O_WRONLY descriptor).
+>>>>>          */
+>>>>>         if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
+>>>>>                 nf = find_rw_file(fp);
+>>>>>                 dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>>>>> +     } else if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+>>>>> +             nf = find_writeable_file(fp);
+>>>>> +             dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>>>>>         }
+>>>>>
+>>>>>         /*
+>>>> I *think* the main reason we limited this before is because a write
+>>>> delegation is really a read/write delegation. There is no such thing as
+>>>> a write-only delegation.
+>>>>
+>>>> Suppose the user is prevented from doing reads against the inode (by
+>>>> permission bits or ACLs). The server gives out a WRITE delegation on a
+>>>> O_WRONLY open. Will the client allow cached opens for read regardless
+>>>> of the server's permissions? Or, does it know to check vs. the server
+>>>> if the client tries to do an open for read in this situation?
+>>> I was curious and tried a simple test yesterday, using the FreeBSD server
+>>> configured to issue a write delegation for a write-only open.
+>>> The test simply opened write-only first and then read-only, for a file
+>>> with mode 222. It worked as expected for both the Linux and FreeBSD
+>>> clients (ie. returned a failure for the read-only open).
+>>> I've attached the packet capture for the Linux client, in case you are
+>>> interested.
+>> Nice, thanks for testing!
+>>
+>>> I do believe this is allowed by the RFCs. In fact I think the RFCs
+>>> allow a server
+>>> to issue a write delegation for a read open (not that I am convinced that is a
+>>> good idea). The main thing to check is what the ACE in the write delegation
+>>> reply looks like, since my understanding is that the client is expected to do
+>>> an Access unless the ACE allows access.
+>>> Here's a little snippet:
+>>>       nfsace4   permissions; /* Defines users who don't
+>>>                                 need an ACCESS call as
+>>>                                 part of a delegated
+>>>                                 open. */
+>> Yes, I had the same understanding...
+>>
+>>> Now, is it a good idea to do this?
+>>> Well, my opinion (as the outsider;-) is that the server should follow whatever
+>>> the client requests, as far as practicable. ie. The OPEN_WANT flags:
+>>>      const OPEN4_SHARE_ACCESS_WANT_NO_PREFERENCE     = 0x0000;
+>>>      const OPEN4_SHARE_ACCESS_WANT_READ_DELEG        = 0x0100;
+>>>      const OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG       = 0x0200;
+>>>      const OPEN4_SHARE_ACCESS_WANT_ANY_DELEG         = 0x0300;
+>>>      const OPEN4_SHARE_ACCESS_WANT_NO_DELEG          = 0x0400;
+>>> If the client does not provide these (4.0 or 4.1/4.2, but no flags), then I
+>>> suppose I might be concerned that there is a buggy client out there that
+>>> would do what Jeff suggested (ie. assume it can open the file for reading
+>>> after getting a write delegation).
+>> Well, that is obviously not what the Linux client is asking for today,
+>> but even if it
+>> did, what would it set in the OPEN_WANT flags for O_WRONLY open? it would
+>> set OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG.
+> I didn't think to mention that the client was a rather old 6.3 kernel.
+> If the Linux client is still not setting OPEN4_SHARE_ACCESS_WANT_xxx
+> flags, then maybe it should do so?
 
-But my interest isn't a requirement of course.
+To me, it seems simple enough to make it set the want flags, but I don't
+have any context to why it wasn't done up until now...
 
-> 
-> In an earlier email Mike mentioned that Hammerspace isn't
-> interested in providing a centrally managed directory of
-> block devices that could be utilized by the MDS to simply
-> inform the client of local devices. I don't think that's
-> the only possible solution for discovering the locality of
-> storage devices.
-
-Could you sketch out an alternate solution so that it can be assessed
-objectively? 
-
-Thanks,
-NeilBrown
+Perhaps Trond and/or Anna can chime in.
 
