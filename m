@@ -1,754 +1,271 @@
-Return-Path: <linux-nfs+bounces-4713-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4714-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F04F92A3B9
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 15:35:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61E2892A479
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 16:19:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF2B61F223E6
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 13:35:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D53771F21F9D
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jul 2024 14:19:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B99A7E56B;
-	Mon,  8 Jul 2024 13:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C28825745;
+	Mon,  8 Jul 2024 14:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hC6i44yV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fgkd9wjS";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="g7YV9vbU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E936D6A022
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 13:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445708; cv=none; b=O9Npw5Nh2jFOb1LPoWxnYo3JwVZJunUH5JleD1DqJR+yvAg0ZRVxy6H/1Ud3K6K5GG7qOnFZN/w3COTSMV51p17WZMXwUHQyQAprwSs5fYz87tpdqm2KDSdXcR4TF1FkH1JzuL5jTHY0I+9tSm1pcEvtSj3zkpe4EI1U0QzfuxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445708; c=relaxed/simple;
-	bh=QmhmXr3PA1ZV++s8Wxje+2+/LGDox6++KLGQ2DFY244=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IwG0jsLClnaTFHlaxMQ/RyKtCip7rLc0WaCnOuf9WzB7TYFHqvUnJmYqVhDLpce8dJ6LkVfSbLeX0Ub0XszLcHtLb0LqZ4Jr885XVbng2ue0ufmdsOEZUNbXVfIDPJBIxVoWHV1h+oHJ06PRkAQ7rA4W7iUmrKl8YQgpybrSfLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hC6i44yV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA2AC116B1;
-	Mon,  8 Jul 2024 13:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720445707;
-	bh=QmhmXr3PA1ZV++s8Wxje+2+/LGDox6++KLGQ2DFY244=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hC6i44yViiZYv7Qe9axpKCWUfOZC2sqvEFS91hSwv6Pslt0wuAKLOfgVZhn6oESM/
-	 7aoaypdq7sd5yXKWjDX2vIeWJcN+x0d4R5BDbF9eQBHeLv4O8cpD8xRTj/ZxIhPuDB
-	 o8o86/rm8epPNe3BaYHAjuLf1/5ccUTYbgyvnO9CtdJKR3q3W/m1ISSIck3Od84FU6
-	 BOQnLyLEmDORkYFnykFggapd67vv6PUAcuwProMrcenFQFRRdeWTfDwtle5Cg++wNc
-	 PrRONlrQLaWmNmLQGuWvFnREidy6tIZ/UIwt6KvHQkSjUMgGNsNwCaZgyzL6l1fW56
-	 IUyHu9Z1na0GQ==
-Message-ID: <321ddc16356d75f9eb6e5ab15c4e28fae1466267.camel@kernel.org>
-Subject: Re: Leaked nfsd_file due to race condition and early unhash
- (fs/nfsd/filecache.c)
-From: Jeff Layton <jlayton@kernel.org>
-To: Youzhong Yang <youzhong@gmail.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date: Mon, 08 Jul 2024 09:35:05 -0400
-In-Reply-To: <CADpNCvZ-kEc6hOQHsbn7yHtvB-acg_gQwzEjN9zcjw0oM2RgGw@mail.gmail.com>
-References: 
-	<CADpNCvYGqA3a51OH=AcqmKyAmnx3yoZjYPo7US+qk-OMX789vA@mail.gmail.com>
-	 <ZoWWis0AgvmiVzBU@tissot.1015granger.net>
-	 <CADpNCvbxN5hmORArs+vb5D7nRC4xNf1U4oUSDbkUx8MPV547rA@mail.gmail.com>
-	 <0445d64ebcc7185bf48cc05f72ca29b859f45c26.camel@poochiereds.net>
-	 <CADpNCvZ-kEc6hOQHsbn7yHtvB-acg_gQwzEjN9zcjw0oM2RgGw@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCC8823CB
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jul 2024 14:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720448340; cv=fail; b=PWHxzoYqLflqRwcUe8Y76DVACzWm3rQi/bKpl71dSJIagB/dpyokbckqpTy+TyIT4xAdEHVJ36fkp0qD5CrCT8iw8KJ6tKCQOBW/uZYiKPnLqqzvf3xgRrFeRMM3oRomNS1IEH6SYrFJFtcTmQiBKGcFLFJKkWSt/DZv9oYLaKw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720448340; c=relaxed/simple;
+	bh=p9jP41ov9vu/kLSRgVUVZ8T5msWLTUy/nvoM6f0zgX4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=njLr6Wi+pRw6i6Cw67H/pHoyGYF9zj3nrfFBFSP6SX8xXjGAW+rSgM8GD60H0cmTuuQtwBjc7dhd7nkITAFs1e+OoJWVZ8XfWhU9yTfAn0ff0QCqpayht/FrTyvG2hqNBj479qT4Iwfz07GUbfdlyyYPJ7MZVbbt4j/o1hVi/g8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fgkd9wjS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=g7YV9vbU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4687fVDc004189;
+	Mon, 8 Jul 2024 14:18:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-id:content-transfer-encoding:mime-version;
+	 s=corp-2023-11-20; bh=p9jP41ov9vu/kLSRgVUVZ8T5msWLTUy/nvoM6f0zg
+	X4=; b=fgkd9wjSTSgRzoaSX7h5n/Ci1ccfru7Qnq47+OSvYLWRgRP9C+yZMwJgQ
+	LEG8+HMTVNAsOml4gR1ofI7r0c7pFdyLmsQ4OcLS1oYhJ6KzRIyDjkKHBb5a58vG
+	kkl16yNpMlC0aD6CI3+x6bTAHTyNOJKjGYxjgCq0ZXCbgw9XZyPmdFRz1Qfr97fC
+	lkCeP1AzglxQnERSMXhf1ori6zHbLWoFmiBHSWB5Bvnh5MZZyWJkA3bpxvh/a9Ug
+	cQYfH41tEJ725h5PcWhkQKywKpPGFMxMBP4DzSh60mhwxzuTeBfdLWg26q9IUSKu
+	rzZdkwcAslxaXJkWChXv3g8RQua8A==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wt8ar1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 Jul 2024 14:18:49 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 468DNjDc007417;
+	Mon, 8 Jul 2024 14:18:47 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 407tu1qj5y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 Jul 2024 14:18:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cHEISPoAa8Yh2BccRD2grNTU3zAMyVX85hBhPvJu2aIG06oJMM42G0xtpM0SP7Glod0Tm4TDo1S8DNJ8+tbZyphH2k11vPaHuygM5xwAZxVElZyhHj+JgkkdKe3Ruiyr9cvWZR6Zo3wWTPjKqIvM6AfqF4TVvzyD97ED3yNF3qjw0naBLH7ysBx1rB5D/ZRPiQTWyvRa5CmnaLKE+C2WATcn4K9/5qtuXv3nD7xBPahy9hE3ciqY398S1S8COFFgHg4uroXH4/3yE5w+yRmhoHFdgoRZLQL45L5Y/qlOEQYOztQgjRohvyqm2rQWFVLUukNXoyeV3FxJHpgsS5Pu4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p9jP41ov9vu/kLSRgVUVZ8T5msWLTUy/nvoM6f0zgX4=;
+ b=HOX0TGy1vhP6u0QtifQNgGX5oL5gIa4so234AmV9fiVDnyUicx7jRyxeXqAQPl/WG5vlq+lIrNTuQnKIqm4riASMl1aZPVFIHMgs/Y7HdFR9OgjNiHwL7igP1hR3NGGa4iKndD6vXftdq6XYKVD82qDESEFV366IvK6NjWnV7DBv1ED7X5x/Lqpg4P3FwUbitWBfVOod/1rVmKqR7Wd2jHFzeJI5G+A8v/fh5wXog7D/R3kC5orWL+BrEQvNUEhjUOJ8Z5G6zattB5Yl/fViT+fvEawtIQxnn4Qj+y6RjUMjLnRevQUl9FQU+4o7fp77kwdu+6usv/TnG1jEnU5ZnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p9jP41ov9vu/kLSRgVUVZ8T5msWLTUy/nvoM6f0zgX4=;
+ b=g7YV9vbUdU+j/FLkwJPY0+pycmW0qWXRprVIvQSc6JZEXS2xLOm2plr2RU5czmkqo+YfX98hsH9vYhyLU7ZJtYmg7L2aC6/aHcmH96qBSnYF1UxN2Ca4A1kf7TWWAv1D7H7axGwMAC0rrZkp2VFaufFRuIfz/AFZtg313dAXC0Q=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH3PR10MB7988.namprd10.prod.outlook.com (2603:10b6:610:1c2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
+ 2024 14:18:45 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 14:18:45 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Jeff Layton <jlayton@kernel.org>
+CC: Sagi Grimberg <sagi@grimberg.me>,
+        Linux NFS Mailing List
+	<linux-nfs@vger.kernel.org>,
+        Dai Ngo <dai.ngo@oracle.com>
+Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
+Thread-Topic: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
+Thread-Index: AQHaz/XBfwkxQ1O/ZU+jeIGo74rnYLHrG52AgAHH5gA=
+Date: Mon, 8 Jul 2024 14:18:44 +0000
+Message-ID: <9156BC30-78C3-4854-8BC3-510E586B4613@oracle.com>
+References: <20240706224207.927978-1-sagi@grimberg.me>
+ <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
+In-Reply-To: <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.600.62)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CH3PR10MB7988:EE_
+x-ms-office365-filtering-correlation-id: 0eac446f-a8d7-41c9-89e8-08dc9f58e05b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?aUZjeEtXWk93dXBCRTN0U04rZHNuZ0g3T1dLQlZVcU15VGQxbnJVYjhiemtt?=
+ =?utf-8?B?NkxhMjl4SU9IWURlRXc3d05tSG1naWYwR1FqZzV0SjIvL1RiMzYyWHJBVUFK?=
+ =?utf-8?B?ZjEyMVlVcHQwS1VNRVlVYWdDWUFsMG5PRy9JcmFtUTBkZ1B2UFpPUm84d25I?=
+ =?utf-8?B?M2FxdUxReWZRRW5EZndOM3M5UlF4OUdUUXFqdGNOMjMwWCtIUjZxTFNiVWtr?=
+ =?utf-8?B?RmJqYjl4UWRRVlVZL0pkVXZtdkErRnBrd21xTVZ4WkVROGFQQ1VLd0FNM05P?=
+ =?utf-8?B?QnRiWEJLeTVPekIvemR3VE0wNnM2a2VwNGpXc0wvanZVdkN2TEdNNDArRDhi?=
+ =?utf-8?B?ZlFWaTF5WUcvVFNDN3ZiclR6eXQrZDY1RVVWQnVwRStJaE9VdUNESlZiRFJq?=
+ =?utf-8?B?TUNPUCsrZUcxK0RXb2xoZ3g1K2Qxc2xNV1hGR3FCWVNkZEY4dnBqempoTVVK?=
+ =?utf-8?B?Y0F0bkVTcFJzRnBvditNbG1ZYm0rWkhUZ1Z6dHpvVVZVbXpabHprOHFGYUNV?=
+ =?utf-8?B?U0w0cWRYd1EwK0NZZ3F5K1lCbnAzNUJodG5IUHpJT3VEWnc4M3dRK0liRFFI?=
+ =?utf-8?B?TkRLSFRYMWVTWFE2ZUpxT3poTkNrT09PS1lybzZyYUpVKzVpZUdtUExGbmFY?=
+ =?utf-8?B?TEluV1Fzd1FUR3F0TjlQdFFTRVVLVG8vQjAyeERzUFBGS0pjTlBYUjd4ZFJH?=
+ =?utf-8?B?TXBBYXZKL3V3SFNEQ3h1VEk0Wk5pYXp2d3RpSjBLMVpzRzlzcUdLbjlGMnR3?=
+ =?utf-8?B?cVVXSFp0a3ZMbUF1S1ZLN1lCV2RLOWhSTkk0MUdMa0kwQmZXSUR0cXRPV2sw?=
+ =?utf-8?B?U2pieGNJMWtzUDJiNVV2VDdheFROWHBvZklhdk5rckQ1allQdnRDaVVzdGhP?=
+ =?utf-8?B?aXNuQkJFcGllTjZUa1F3QlpQeFhpeVcwYkVybUpiR1VhcHpZUzlOcXlWWXZI?=
+ =?utf-8?B?bitrWkVML2cwbytXSmJ6L3BiaDQwVW1YeHBrZHJLUzkwOTJkOExtc3k1ZXZQ?=
+ =?utf-8?B?Q2xlZXF2RGRoSkNERkI2TjNsU1RCc2U3R2k4Qm44MEVmWWFpT3Q1dUZNK2FJ?=
+ =?utf-8?B?YWZnZFNqNUhDajlHT1dwMlU0YisxYUoydUtoZnNQSjl3SzVLVEYxL20yVEE1?=
+ =?utf-8?B?Z1kwK3lwNEdoVWJBci9OOFY0dkJ3NkZNdWVkY0UwWVJhdTVpL2Nnbmg3ZFBo?=
+ =?utf-8?B?WnQyQVB4UXNESzN3L09nMEZDTkk1STRCdlBCVXA2dC80SVVKNnluWHF6eHhV?=
+ =?utf-8?B?dktZMUxCWE5OdElUa1Q3NVVoQ3lZa2JZWlFGalRIbUw5VlhvQ0JmeU5uWDFN?=
+ =?utf-8?B?dmgxRXhaSElMQmFUN1FWRTBwdDcyclpRdmNnZEp1T1ZXVjRWM1hoRXJtSmVD?=
+ =?utf-8?B?VEtVWnRLaXBjUHZBUmh0d3p3Ni9ZdUVSUndWWkJ3b2djMVJveG01eGlFb1pq?=
+ =?utf-8?B?WlE5MVlrOTVwckpRWVVqN2JpZUdYczI3R2xjbURwRW5Reko0OGxYZXI1SDhG?=
+ =?utf-8?B?ZENpUy9sYTFWRWJUVVphUnFlSGx4VW5SdUNXQVdXVm12VjlNaDhHMjFTNHY5?=
+ =?utf-8?B?NmtuVVEzbERSbHRFQWxHV1J5RTRwM0VpUWZvWWMrZE1FZ0RyKytJRXN2Zzhw?=
+ =?utf-8?B?c1Q1YVpNSTAzOGxrZ2tzSWVPYmZJL21ZQ3VDZUFYTDZXTFo2SHlPditBOTJE?=
+ =?utf-8?B?eUsva0FhNjNRMmZsUFF0WTZaS2ljbjhLR1RXUWI3TGU3cjFxQ2FGVHJVUFZO?=
+ =?utf-8?B?RVF0NFlWMnVwMzZRNGNXZkFkbFJVdFVPZmhRenEwQllOY1hnbCt4ejF3eFh0?=
+ =?utf-8?B?M0xjNVdBbVB1L29RckhPTE8xaWRYTWtnZDFiUXVVY2svaWt0MGpDdFdYTFBP?=
+ =?utf-8?B?SFBXZ21hV2JBYVNBcmVCZ3hQZy8zRUUyRUdCUklCYTlVTFE9PQ==?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?VURGVVZQczlkVnhQbUQyMHRIVFRKd21jZ2xXdGducjhuTUZnNC9sYmt2emQy?=
+ =?utf-8?B?blRpZmtjc0NEcDdPQXR5NXljbFliWXRJRzRxWVlrdFUvUU85OENMN0VZdk9D?=
+ =?utf-8?B?RXVyZkpNWnlxTnkyWnY3WVRLK3p6R3BlZzVwZFhoakt0VkxLT2ZjdXp0ZjFp?=
+ =?utf-8?B?aVhxQUdPVnlUN1NWdnRwcTJUdVJ4Wm1IQlJYaEpleUxUOWNDc2pXQTg0NFN5?=
+ =?utf-8?B?S2JIZ0RpY3BCZG93bE5ib1pyenZPc3JYa2xUWE16SE5RckZmdVBzazI5SEND?=
+ =?utf-8?B?WmVnVW9XbSt5c3dkcXpRWm1DREs2dm0zc2I5Sk50MHI5QmluK20yMWw4d25h?=
+ =?utf-8?B?Ri9QUDhTRHVDS1VzUFBmVmhxVHR3eHRQWS9TRGdZaEx4WHdJVEZ3MGNsNXQx?=
+ =?utf-8?B?N1VQaUdNaFZOT1JEcjk0YjVJeXZzSnFBcktNdHhxSi9ZRlNHK3BaTEhmUGdu?=
+ =?utf-8?B?REs0cFBGNllRbHJZdlYyM1huQkpadHg2YVVSL3JBRXdvZ3hmZVlkZk5zQnFr?=
+ =?utf-8?B?WHNhR1VtdEJPaHBNNHN1WkFVYXpRUUFXNEppaHNEZDFkOUpaZDJSOXVTUUR6?=
+ =?utf-8?B?Z3FleDVkbUY4WmxKaWc2TWRlQjNINFpsOERMMndrVHRISURpaVZ1YkhJS2My?=
+ =?utf-8?B?ZVRqcHRWYm5OdktCblJRanpLdGdLUW1STWQvZXMrMjhwUGt2MERvVHZ1MVV0?=
+ =?utf-8?B?M01ZQXpzbmhBc2JUQ0RSVUg2VDh4UEJrK1BCTlhvSWFla3pjd1JHVC9TWHpC?=
+ =?utf-8?B?N1hFMnQ5UFVjNExydDUrczAxcUJJRjQxR1k3d0dIcmNrSFlMblRNRjRQQ3dB?=
+ =?utf-8?B?Zit6UW9PQmtiUGIybUNNNmIzZWVxY1dRdUZTWHJIS1F4SklDNWFaQ0cxU2lx?=
+ =?utf-8?B?cnBOZzFqQUt2RnJLTSt6THpqZ2ttZjZtWEdnNTMrbi92djhRdHlQbzNtNTJ0?=
+ =?utf-8?B?Z1Rtb0JZQzI4ZDAxVjZPcHM5Rk0rRk9qSnhnVi8yRU0yV3VRell0clFKZERL?=
+ =?utf-8?B?Tm8yalU0T3B6MnNjZHZUSzlzZDVLY2Z2UzJ3UHJMOWV0NVZtN0IwcjZCQk5t?=
+ =?utf-8?B?UUM4TzUzUjBsSEhOL1RveWYwTWhDV3k3MnZQbDBXbmR3UjRUNmJVWG1udEpn?=
+ =?utf-8?B?Ky84OVN2Z01BV1FJa1RWMmZ2bTVUQklYMnY3aEI2MzRQM0hTSEVYcktIZXRp?=
+ =?utf-8?B?SDdoSE1yT0EwQ0hlb0Y0ZEVxcE05RGk0dDZYREZlWnRQaXlNTnVyYU9lR1px?=
+ =?utf-8?B?b2I1MXY4WW94STdaYlQ4QUZMcE1sUldKK2NsRGRIOC9xUm9vS1J6SGJsbE9K?=
+ =?utf-8?B?UElFUGxLSlYzQWRmS0hKUkpSajl3ZHZiOFgxZmM5ZmxaeCtudG83N2grbjdk?=
+ =?utf-8?B?U1JpK3JKTm1SUzVRSmwwcG9WVkc1VE44UEJoNHlMdStVUXM5UjJvZVdGOWtF?=
+ =?utf-8?B?ekpkd2VGai9rOTNjaUx4WWVjZVJ0V25hSmJManEvZDNELzMwZG1JRGlFRGhT?=
+ =?utf-8?B?a0FpcXBCLzRkSVBZZ2g5YzNyaGUwU3lBQzFyQlpOZ1YzWmowR2hpUERrQ01K?=
+ =?utf-8?B?SUMzR3RRU3VNMURvUFkwM2tDVVBRRnpLYWU0YnBPN0xRMzFkeVRlV2dzWld2?=
+ =?utf-8?B?RGcybTdJcXZQSDhUS2xyYk1MQXZHRENPUnpqbmNvamU0MzlSVEtDbWhKUTdI?=
+ =?utf-8?B?WGRDRTJ0dzh4YnE2cFBWbFFtVVMzRERhUWc3SCtSMFNTbDF4eVpscjNZOFZh?=
+ =?utf-8?B?RlFidWdSdy9WdFJFODF0VkZZRXlMZytHUDJoVVJrbjQ2S2ZUc0VpeU1zUHI2?=
+ =?utf-8?B?b1UxZWtoclN4L2p3OW9ZRlRpSFVWc1prOVlucHFIQkI1YnY3cUczcnBLNDBm?=
+ =?utf-8?B?ZXFFakt6N3dPMzhSYS9hTXg2cFZmUGZ2K2VYRS9xZWVkTEptaU8ydWllT29v?=
+ =?utf-8?B?RGZtRWt4c1YzK3ZIRldmclpmeFBXZVFmUmRzNHdIL0FRL0JUN1hIdENFeHJB?=
+ =?utf-8?B?dDdRUkUrb2lKNUk1aExWZGQvMjhFaS9DcEdOMml0a2lTdkdsVWtJQ2p4Z0oy?=
+ =?utf-8?B?ZEQ2ZmRXVUNPYmZWM3RVcE80cExoRGhpMU85bUg3M0s4eTIvUXA5RlZzVVkv?=
+ =?utf-8?B?TlNid1h0TzloVlFCNGJlRncvMktkTnQ1cFlOZXY3akd0MmM5dXpkNEh5YTd2?=
+ =?utf-8?B?dEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AC1F6FC2DFD00F4192B29E8C96CA3513@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	s49i5sKM1UWZGf8eJPSOq0oAd9xo3IAlY5P8ma7fd2xjAmfbcpEWvw0dYAAXsTg2jlOCqPf8ZQa1vcFnp84SSJeMgfzaz20A8tupoNjDO23rT9Hs4dbm9Yu84IpMuipw++J0IU7Hs8LsqNQbGGdNbteCDkiWNA32+MTbKt3wq9E3bU9kLKYSPRpOTSULUrIjFBHvhI2dpo5JoOe2Cx/z39m895OqCSuP3OMyEV0hU+wZHhd8NI1HMQMhi4/dPH3wH9g04HQ8enRwZTkkwzaYYAOEGA5Fdvzs6QHYwP66KgOaZzJPVLywjCLTCh5fKBlYldLWDO/nECTxajiTr7p0J2MknrHSDiWmpfpGc/UzNQ/1J0pquTS4J3e7yrGalIa+xlOby7X/u5uUKNG7FTax3pmKpe4xHLsPlX1SJfel+DNIbjFhTieT4NhK6SdzpPk7bt4gh0T0Fw4r2fQ/Fpzbxjoh2Q/cKyKsSEHXX4rfYhFSR63ZDqeFQSkoIy+QFaMFzOubq3vIiDuXnTZgPRHLpOk23ZSFJE58PFSLJk+4da+QJGqnTM4NA+tJ7/Vl/y+ttMnnJT/9Ls24nqTPevIyh6Nflax1XYxvb10GGoX3vs0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0eac446f-a8d7-41c9-89e8-08dc9f58e05b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2024 14:18:44.9526
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VG+8SQWsEzR0ha7401MDILZAcXqs0EYX1+0GS0Cp95pyQbdrGNxwD+XfNLY/VdX0v41jD730yQ/JVNSvm+SSxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7988
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 phishscore=0 spamscore=0 adultscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2407080108
+X-Proofpoint-GUID: rH2Bec2-LaflLynFXf_pPKaCUPw3nJNh
+X-Proofpoint-ORIG-GUID: rH2Bec2-LaflLynFXf_pPKaCUPw3nJNh
 
-On Mon, 2024-07-08 at 08:58 -0400, Youzhong Yang wrote:
-> Thank you Jeff for your invaluable insights. I was leaning towards
-> adding a new list_head too, and tested this approach on kernel 6.6 by
-> continuously hammering the server with heavy nfs load for the last few
-> days, not a single leak.
->=20
-> Here goes the patch (based on Linux kernel master branch), please review:
->=20
-> From: Youzhong Yang <youzhong@gmail.com>
-> Date: Thu, 4 Jul 2024 11:25:40 -0400
-> Subject: [PATCH] nfsd: fix nfsd_file leaking due to mixed use of nf->nf_l=
-ru
->=20
-> nfsd_file_put() in one thread can race with another thread doing
-> garbage collection (running nfsd_file_gc() -> list_lru_walk() ->
-> nfsd_file_lru_cb()):
->=20
-> =C2=A0 * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do nfsd_file=
-_lru_add().
-> =C2=A0 * nfsd_file_lru_add() returns true (with NFSD_FILE_REFERENCED bit =
-set)
-> =C2=A0 * garbage collector kicks in, nfsd_file_lru_cb() clears REFERENCED=
- bit and
-> =C2=A0=C2=A0=C2=A0 returns LRU_ROTATE.
-> =C2=A0 * garbage collector kicks in again, nfsd_file_lru_cb() now
-> decrements nf->nf_ref
-> =C2=A0=C2=A0=C2=A0 to 0, runs nfsd_file_unhash(), removes it from the LRU=
- and adds to
-> the dispose
-> =C2=A0=C2=A0=C2=A0 list [list_lru_isolate_move(lru, &nf->nf_lru, head)]
-> =C2=A0 * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so it
-> tries to remove
-> =C2=A0=C2=A0=C2=A0 the 'nf' from the LRU [if (!nfsd_file_lru_remove(nf))]=
-. The 'nf'
-> has been added
-> =C2=A0=C2=A0=C2=A0 to the 'dispose' list by nfsd_file_lru_cb(), so
-> nfsd_file_lru_remove(nf) simply
-> =C2=A0=C2=A0=C2=A0 treats it as part of the LRU and removes it, which lea=
-ds to its removal from
-> =C2=A0=C2=A0=C2=A0 the 'dispose' list.
-> =C2=A0 * At this moment, 'nf' is unhashed with its nf_ref being 0, and no=
-t
-> on the LRU.
-> =C2=A0=C2=A0=C2=A0 nfsd_file_put() continues its execution [if
-> (refcount_dec_and_test(&nf->nf_ref))],
-> =C2=A0=C2=A0=C2=A0 as nf->nf_ref is already 0, nf->nf_ref is set to
-> REFCOUNT_SATURATED, and the 'nf'
-> =C2=A0=C2=A0=C2=A0 gets no chance of being freed.
->=20
-> nfsd_file_put() can also race with nfsd_file_cond_queue():
-> =C2=A0 * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do nfsd_file=
-_lru_add().
-> =C2=A0 * nfsd_file_lru_add() sets REFERENCED bit and returns true.
-> =C2=A0 * Some userland application runs 'exportfs -f' or something like
-> that, which triggers
-> =C2=A0=C2=A0=C2=A0 __nfsd_file_cache_purge() -> nfsd_file_cond_queue().
-> =C2=A0 * In nfsd_file_cond_queue(), it runs [if (!nfsd_file_unhash(nf))],
-> unhash is done
-> =C2=A0=C2=A0=C2=A0 successfully.
-> =C2=A0 * nfsd_file_cond_queue() runs [if (!nfsd_file_get(nf))], now
-> nf->nf_ref goes to 2.
-> =C2=A0 * nfsd_file_cond_queue() runs [if (nfsd_file_lru_remove(nf))], it =
-succeeds.
-> =C2=A0 * nfsd_file_cond_queue() runs [if (refcount_sub_and_test(decrement=
-,
-> &nf->nf_ref))]
-> =C2=A0=C2=A0=C2=A0 (with "decrement" being 2), so the nf->nf_ref goes to =
-0, the 'nf'
-> is added to the
-> =C2=A0=C2=A0=C2=A0 dispose list [list_add(&nf->nf_lru, dispose)]
-> =C2=A0 * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so it
-> tries to remove
-> =C2=A0=C2=A0=C2=A0 the 'nf' from the LRU [if (!nfsd_file_lru_remove(nf))]=
-, although
-> the 'nf' is not
-> =C2=A0=C2=A0=C2=A0 in the LRU, but it is linked in the 'dispose' list,
-> nfsd_file_lru_remove() simply
-> =C2=A0=C2=A0=C2=A0 treats it as part of the LRU and removes it. This lead=
-s to its removal from
-> =C2=A0=C2=A0=C2=A0 the 'dispose' list!
-> =C2=A0 * Now nf->ref is 0, unhashed. nfsd_file_put() continues its execut=
-ion and set
-> =C2=A0=C2=A0=C2=A0 nf->nf_ref to REFCOUNT_SATURATED.
->=20
-> As shown in the above analysis, using nf_lru for both the LRU list and
-> dispose list
-> can cause the leaks. This patch adds a new list_head nf_gc in struct
-> nfsd_file, and uses
-> it for the dispose list. It's not expected to have a nfsd_file
-> unhashed but it's not
-> added to the dispose list, so in nfsd_file_cond_queue() and
-> nfsd_file_lru_cb() nfsd_file
-> is unhashed after being added to the dispose list.
->=20
-
-I don't see where we require the object to be either hashed or on the
-dispose list.  I think you probably just want to do a patch that
-changes the dispose list to use a dedicated list_head without
-reordering when the these things are unhashed.
-
-> Signed-off-by: Youzhong Yang <youzhong@gmail.com>
-> ---
-> =C2=A0fs/nfsd/filecache.c | 23 ++++++++++++++---------
-> =C2=A0fs/nfsd/filecache.h |=C2=A0 1 +
-> =C2=A02 files changed, 15 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index ad9083ca144b..3aef2ddfce94 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -216,6 +216,7 @@ nfsd_file_alloc(struct net *net, struct inode
-> *inode, unsigned char need,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return NULL;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 INIT_LIST_HEAD(&nf->nf_lru);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 INIT_LIST_HEAD(&nf->nf_gc);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf->nf_birthtime =3D ktime_get=
-();
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf->nf_file =3D NULL;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf->nf_cred =3D get_current_cr=
-ed();
-> @@ -393,8 +394,8 @@ nfsd_file_dispose_list(struct list_head *dispose)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfsd_file *nf;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (!list_empty(dispose)) {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nf =3D list_first_entry(dispose, struct nfsd_file, nf_lru);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_del_init(&nf->nf_lru);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nf =3D list_first_entry(dispose, struct nfsd_file, nf_gc);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_del_init(&nf->nf_gc);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 nfsd_file_free(nf);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0}
-> @@ -411,12 +412,12 @@ nfsd_file_dispose_list_delayed(struct list_head *di=
-spose)
-> =C2=A0{
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while(!list_empty(dispose)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 struct nfsd_file *nf =3D list_first_entry(dispose,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfsd_file, nf=
-_lru);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfsd_file, nf=
-_gc);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net=
-_id);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 spin_lock(&l->lock);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_move_tail(&nf->nf_lru, &l->freeme);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_move_tail(&nf->nf_gc, &l->freeme);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 spin_unlock(&l->lock);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 svc_wake_up(nn->nfsd_serv);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> @@ -502,8 +503,10 @@ nfsd_file_lru_cb(struct list_head *item, struct
-> list_lru_one *lru,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Refcount went to zero. Unha=
-sh it and queue it to the dispose list */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_lru_isolate(lru, &nf->nf_lru);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_add(&nf->nf_gc, head);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Unhash after removing from LRU a=
-nd adding to dispose list */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_file_unhash(nf);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_lru_isolate_move(lru, &nf->nf_=
-lru, head);
-
-I don't see the point in reordering these operations. Hashing is all
-about making the thing findable by nfsd operations. The _last_ thing we
-want to do is put it on the dispose list while the thing can still be
-found by nfsd threads doing operations.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this_cpu_inc(nfsd_file_evictio=
-ns);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 trace_nfsd_file_gc_disposed(nf=
-);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return LRU_REMOVED;
-> @@ -565,7 +568,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, struct
-> list_head *dispose)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int decrement =3D 1;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If we raced with someone el=
-se unhashing, ignore it */
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!nfsd_file_unhash(nf))
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!test_bit(NFSD_FILE_HASHED, &nf=
-->nf_flags))
-
-The above change looks wrong. I don't think we need to change this.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If we can't get a reference=
-, ignore it */
-> @@ -578,7 +581,9 @@ nfsd_file_cond_queue(struct nfsd_file *nf, struct
-> list_head *dispose)
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If refcount goes to 0, then=
- put on the dispose list */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (refcount_sub_and_test(decr=
-ement, &nf->nf_ref)) {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_add(&nf->nf_lru, dispose);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_add(&nf->nf_gc, dispose);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 /* Unhash after adding to dispose list */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nfsd_file_unhash(nf);
-
-This too looks wrong? Maybe I'm unclear on the race you're trying to
-fix with this? What's the harm in unhashing it early?
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 trace_nfsd_file_closing(nf);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0}
-> @@ -654,8 +659,8 @@ nfsd_file_close_inode_sync(struct inode *inode)
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_file_queue_for_close(inod=
-e, &dispose);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (!list_empty(&dispose)) =
-{
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nf =3D list_first_entry(&dispose, struct nfsd_file, nf_lru);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_del_init(&nf->nf_lru);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nf =3D list_first_entry(&dispose, struct nfsd_file, nf_gc);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_del_init(&nf->nf_gc);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 nfsd_file_free(nf);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0}
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index c61884def906..3fbec24eea6c 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -44,6 +44,7 @@ struct nfsd_file {
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfsd_file_mark=C2=A0=C2=
-=A0 *nf_mark;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct list_head=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf_lru;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct list_head=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 nf_gc;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rcu_head=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf_rcu;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ktime_t=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- nf_birthtime;
-> =C2=A0};
-> --
-> 2.34.1
->
-> On Thu, Jul 4, 2024 at 7:14=E2=80=AFAM Jeff Layton <jlayton@poochiereds.n=
-et> wrote:
-> >=20
-> > On Wed, 2024-07-03 at 16:46 -0400, Youzhong Yang wrote:
-> > > Thank you Chuck. Here are my quick answers to your comments:
-> > >=20
-> > > - I don't have a quick reproducer. I reproduced it by using hundreds
-> > > of nfs clients generating +600K ops under our workload in the testing
-> > > environment. Theoretically it should be possible to simplify the
-> > > reproduction but I am still working on it.
-> > >=20
-> > > -=C2=A0 I understand zfs is an out-of-tree file system. That's fine. =
-But
-> > > this leaking can happen to any file system, and leaking is not a good
-> > > thing no matter what file system it is.
-> > >=20
-> > > -=C2=A0 I will try to come up with a reproducer using xfs or btrfs if=
- possible.
-> > >=20
-> > > Now back to the problem itself, here are my findings:
-> > >=20
-> > > - nfsd_file_put() in one thread can race with another thread doing
-> > > garbage collection (running nfsd_file_gc() -> list_lru_walk() ->
-> > > nfsd_file_lru_cb()):
-> > >=20
-> > > =C2=A0 * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do nfsd_=
-file_lru_add().
-> > > =C2=A0 * nfsd_file_lru_add() returns true (thus NFSD_FILE_REFERENCED =
-bit
-> > > set for nf->nf_flags)
-> > > =C2=A0 * garbage collector kicks in, nfsd_file_lru_cb() clears REFERE=
-NCED
-> > > bit and returns LRU_ROTATE.
-> > > =C2=A0 * garbage collector kicks in again, nfsd_file_lru_cb() now
-> > > decrements nf->nf_ref to 0, runs nfsd_file_unhash(), removes it from
-> > > the LRU and adds to the dispose list [list_lru_isolate_move(lru,
-> > > &nf->nf_lru, head);]
-> > > =C2=A0 * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so =
-it
-> > > tries to remove the 'nf' from the LRU [if (!nfsd_file_lru_remove(nf))=
-]
-> > > =C2=A0 * The 'nf' has been added to the 'dispose' list by
-> > > nfsd_file_lru_cb(), so nfsd_file_lru_remove(nf) simply treats it as
-> > > part of the LRU and removes it, which leads it to be removed from the
-> > > 'dispose' list.
-> > > =C2=A0 * At this moment, nf->nf_ref is 0, it's unhashed, and not on t=
-he
-> > > LRU. nfsd_file_put() continues its execution [if
-> > > (refcount_dec_and_test(&nf->nf_ref))], as nf->nf_ref is already 0, no=
-w
-> > > bad thing happens: nf->nf_ref is set to REFCOUNT_SATURATED, and the
-> > > 'nf' is leaked.
-> > >=20
-> > > To make this happen, the right timing is crucial. It can be reproduce=
-d
-> > > by adding artifical delays in filecache.c, or hammering the nfsd with
-> > > tons of ops.
-> > >=20
-> > > - Let's see how nfsd_file_put() can race with nfsd_file_cond_queue():
-> > > =C2=A0 * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do nfsd_=
-file_lru_add().
-> > > =C2=A0 * nfsd_file_lru_add() sets REFERENCED bit and returns true.
-> > > =C2=A0 * 'exportfs -f' or something like that triggers
-> > > __nfsd_file_cache_purge() -> nfsd_file_cond_queue().
-> > > =C2=A0 * In nfsd_file_cond_queue(), it runs [if (!nfsd_file_unhash(nf=
-))],
-> > > unhash is done successfully.
-> > > =C2=A0 * nfsd_file_cond_queue() runs [if (!nfsd_file_get(nf))], now
-> > > nf->nf_ref goes to 2.
-> > > =C2=A0 * nfsd_file_cond_queue() runs [if (nfsd_file_lru_remove(nf))],=
- it succeeds.
-> > > =C2=A0 * nfsd_file_cond_queue() runs [if (refcount_sub_and_test(decre=
-ment,
-> > > &nf->nf_ref))] (with "decrement" being 2), so the nf->nf_ref goes to
-> > > 0, the 'nf' is added to the dispost list [list_add(&nf->nf_lru,
-> > > dispose)]
-> > > =C2=A0 * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so =
-it
-> > > tries to remove the 'nf' from the LRU [if
-> > > (!nfsd_file_lru_remove(nf))], although the 'nf' is not in the LRU, bu=
-t
-> > > it is linked in the 'dispose' list, nfsd_file_lru_remove() simply
-> > > treats it as part of the LRU and removes it. This leads to its remova=
-l
-> > > from the 'dispose' list!
-> > > =C2=A0 * Now nf->ref is 0, unhashed. nfsd_file_put() continues its
-> > > execution and sets nf->nf_ref to REFCOUNT_SATURATED.
-> > >=20
-> > > The purpose of nf->nf_lru is problematic. As you can see, it is used
-> > > for the LRU list, and also the 'dispose' list. Adding another 'struct
-> > > list_head' specifically for the 'dispose' list seems to be a better
-> > > way of fixing this race condition. Either way works for me.
-> > >=20
-> > > Would you agree my above analysis makes sense? Thanks.
-> > >=20
-> >=20
-> > I think so. It's been a while since I've done much work in this code,
-> > but it does sound like there is a race in the LRU handling.
-> >=20
-> >=20
-> > Like Chuck said, the nf->nf_lru list should be safe to use for multiple
-> > purposes, but that's only the case if we're not using that list as an
-> > indicator.
-> >=20
-> > The list_lru code does check this:
-> >=20
-> > =C2=A0=C2=A0=C2=A0 if (!list_empty(item)) {
-> >=20
-> > ...so if we ever check this while it's sitting on the dispose list, it
-> > will handle it incorrectly. It sounds like that's the root cause of the
-> > problem you're seeing?
-> >=20
-> > If so, then maybe a separate list_head for disposal would be better.
-> >=20
-> > > Here is my patch with signed-off-by:
-> > >=20
-> > > From: Youzhong Yang <youzhong@gmail.com>
-> > > Date: Mon, 1 Jul 2024 06:45:22 -0400
-> > > Subject: [PATCH] nfsd: fix nfsd_file leaking due to race condition an=
-d early
-> > > =C2=A0unhash
-> > >=20
-> > > Signed-off-by: Youzhong Yang <youzhong@gmail.com>
-> > > ---
-> > > =C2=A0fs/nfsd/filecache.c | 14 +++++++++++++-
-> > > =C2=A01 file changed, 13 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > index 1a6d5d000b85..2323829f7208 100644
-> > > --- a/fs/nfsd/filecache.c
-> > > +++ b/fs/nfsd/filecache.c
-> > > @@ -389,6 +389,17 @@ nfsd_file_put(struct nfsd_file *nf)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!=
-nfsd_file_lru_remove(nf))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 }
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 /*
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 * Racing with nfsd_file_cond_queue() or nfsd_file_=
-lru_cb(),
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 * it's unhashed but then removed from the dispose =
-list,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 * so we need to free it.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (refcount_read(&nf->nf_ref) =3D=3D 0 &&
-> >=20
-> > A refcount_read in this path is a red flag to me. Anytime you're just
-> > looking at the refcount without changing anything just screams out
-> > "race condition".
-> >=20
-> > In this case, what guarantee is there that this won't run afoul of the
-> > timing? We could check this and find out it's 1 just before it goes to
-> > 0 and you check the other conditions.
-> >=20
-> > Does anything prevent that?
-> >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !test_bit(NFSD_FILE_HASHED, &nf-=
->nf_flags) &&
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&nf->nf_lru)) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_fil=
-e_free(nf);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 }
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (refcount_dec_and_test(=
-&nf->nf_ref))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 nfsd_file_free(nf);
-> > > @@ -576,7 +587,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, struct
-> > > list_head *dispose)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int decrement =3D 1;
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If we raced with someon=
-e else unhashing, ignore it */
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!nfsd_file_unhash(nf))
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!test_bit(NFSD_FILE_HASHED,=
- &nf->nf_flags))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return;
-> >=20
-> > Same here: you're just testing for the HASHED bit, but could this also
-> > race with someone who is setting it just after you get here. Why is
-> > that not a problem?
-> >=20
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If we can't get a refer=
-ence, ignore it */
-> > > @@ -590,6 +601,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, struct
-> > > list_head *dispose)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If refcount goes to 0, =
-then put on the dispose list */
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (refcount_sub_and_test(=
-decrement, &nf->nf_ref)) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 list_add(&nf->nf_lru, dispose);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 nfsd_file_unhash(nf);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 trace_nfsd_file_closing(nf);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > =C2=A0}
-> > > --
-> > > 2.43.0
-> > >=20
-> > > On Wed, Jul 3, 2024 at 2:21=E2=80=AFPM Chuck Lever <chuck.lever@oracl=
-e.com> wrote:
-> > > >=20
-> > > > On Wed, Jul 03, 2024 at 10:12:33AM -0400, Youzhong Yang wrote:
-> > > > > Hello,
-> > > > >=20
-> > > > > I'd like to report a nfsd_file leaking issue and propose a fix fo=
-r it.
-> > > > >=20
-> > > > > When I tested Linux kernel 6.8 and 6.6, I noticed nfsd_file leaks
-> > > > > which led to undestroyable file systems (zfs),
-> > > >=20
-> > > > Thanks for the report. Some initial comments:
-> > > >=20
-> > > > - Do you have a specific reproducer? In other words, what is the
-> > > > =C2=A0 simplest program that can run on an NFS client that will tri=
-gger
-> > > > =C2=A0 this leak, and can you post it?
-> > > >=20
-> > > > - "zfs" is an out-of-tree file system, so it's not directly
-> > > > =C2=A0 supported for NFSD.
-> > > >=20
-> > > > - The guidelines for patch submission require us to fix issues in
-> > > > =C2=A0 upstream Linux first (currently that's v6.10-rc6). Then that=
- fix
-> > > > =C2=A0 can be backported to older stable kernels like 6.6.
-> > > >=20
-> > > > Can you reproduce the leak with one of the in-kernel filesystems
-> > > > (either xfs or btrfs would be great) and with NFSD in 6.10-rc6?
-> > > >=20
-> > > > One more comment below.
-> > > >=20
-> > > >=20
-> > > > > here are some examples:
-> > > > >=20
-> > > > > crash> struct nfsd_file -x ffff88e160db0460
-> > > > > struct nfsd_file {
-> > > > > =C2=A0 nf_rlist =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 rhead =3D {
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 next =3D 0xffff8921fa2392f1
-> > > > > =C2=A0=C2=A0=C2=A0 },
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0x0
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_inode =3D 0xffff8882bc312ef8,
-> > > > > =C2=A0 nf_file =3D 0xffff88e2015b1500,
-> > > > > =C2=A0 nf_cred =3D 0xffff88e3ab0e7800,
-> > > > > =C2=A0 nf_net =3D 0xffffffff83d41600 <init_net>,
-> > > > > =C2=A0 nf_flags =3D 0x8,
-> > > > > =C2=A0 nf_ref =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 refs =3D {
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 counter =3D 0xc0000000
-> > > > > =C2=A0=C2=A0=C2=A0 }
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_may =3D 0x4,
-> > > > > =C2=A0 nf_mark =3D 0xffff88e1bddfb320,
-> > > > > =C2=A0 nf_lru =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0xffff88e160db04a8,
-> > > > > =C2=A0=C2=A0=C2=A0 prev =3D 0xffff88e160db04a8
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_rcu =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0x10000000000,
-> > > > > =C2=A0=C2=A0=C2=A0 func =3D 0x0
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_birthtime =3D 0x73d22fc1728
-> > > > > }
-> > > > >=20
-> > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter,nf_lru,nf_fi=
-le -x
-> > > > > ffff88839a53d850
-> > > > > =C2=A0 nf_flags =3D 0x8,
-> > > > > =C2=A0 nf_ref.refs.counter =3D 0x0
-> > > > > =C2=A0 nf_lru =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0xffff88839a53d898,
-> > > > > =C2=A0=C2=A0=C2=A0 prev =3D 0xffff88839a53d898
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_file =3D 0xffff88810ede8700,
-> > > > >=20
-> > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter,nf_lru,nf_fi=
-le -x
-> > > > > ffff88c32b11e850
-> > > > > =C2=A0 nf_flags =3D 0x8,
-> > > > > =C2=A0 nf_ref.refs.counter =3D 0x0
-> > > > > =C2=A0 nf_lru =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0xffff88c32b11e898,
-> > > > > =C2=A0=C2=A0=C2=A0 prev =3D 0xffff88c32b11e898
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_file =3D 0xffff88c20a701c00,
-> > > > >=20
-> > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter,nf_lru,nf_fi=
-le -x
-> > > > > ffff88e372709700
-> > > > > =C2=A0 nf_flags =3D 0xc,
-> > > > > =C2=A0 nf_ref.refs.counter =3D 0x0
-> > > > > =C2=A0 nf_lru =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0xffff88e372709748,
-> > > > > =C2=A0=C2=A0=C2=A0 prev =3D 0xffff88e372709748
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_file =3D 0xffff88e0725e6400,
-> > > > >=20
-> > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter,nf_lru,nf_fi=
-le -x
-> > > > > ffff8982864944d0
-> > > > > =C2=A0 nf_flags =3D 0xc,
-> > > > > =C2=A0 nf_ref.refs.counter =3D 0x0
-> > > > > =C2=A0 nf_lru =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 next =3D 0xffff898286494518,
-> > > > > =C2=A0=C2=A0=C2=A0 prev =3D 0xffff898286494518
-> > > > > =C2=A0 },
-> > > > > =C2=A0 nf_file =3D 0xffff89803c0ff700,
-> > > > >=20
-> > > > > The leak occurs when nfsd_file_put() races with nfsd_file_cond_qu=
-eue()
-> > > > > or nfsd_file_lru_cb(). With the following patch, I haven't observ=
-ed
-> > > > > any leak after a few days heavy nfs load:
-> > > >=20
-> > > > Our patch submission guidelines require a Signed-off-by:
-> > > > line at the end of the patch description. See the "Sign your work -
-> > > > the Developer's Certificate of Origin" section of
-> > > >=20
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tree/Documentation/process/submitting-patches.rst?h=3Dv6.10-rc6
-> > > >=20
-> > > > (Needed here in case your fix is acceptable).
-> > > >=20
-> > > >=20
-> > > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > > index 1a6d5d000b85..2323829f7208 100644
-> > > > > --- a/fs/nfsd/filecache.c
-> > > > > +++ b/fs/nfsd/filecache.c
-> > > > > @@ -389,6 +389,17 @@ nfsd_file_put(struct nfsd_file *nf)
-> > > > > =C2=A0 if (!nfsd_file_lru_remove(nf))
-> > > > > =C2=A0 return;
-> > > > > =C2=A0 }
-> > > > > + /*
-> > > > > + * Racing with nfsd_file_cond_queue() or nfsd_file_lru_cb(),
-> > > > > + * it's unhashed but then removed from the dispose list,
-> > > > > + * so we need to free it.
-> > > > > + */
-> > > > > + if (refcount_read(&nf->nf_ref) =3D=3D 0 &&
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 !test_bit(NFSD_FILE_HASHED, &nf->nf_fla=
-gs) &&
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&nf->nf_lru)) {
-> > > > > + nfsd_file_free(nf);
-> > > > > + return;
-> > > > > + }
-> > > > > =C2=A0 }
-> > > > > =C2=A0 if (refcount_dec_and_test(&nf->nf_ref))
-> > > > > =C2=A0 nfsd_file_free(nf);
-> > > > > @@ -576,7 +587,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, st=
-ruct
-> > > > > list_head *dispose)
-> > > > > =C2=A0 int decrement =3D 1;
-> > > > >=20
-> > > > > =C2=A0 /* If we raced with someone else unhashing, ignore it */
-> > > > > - if (!nfsd_file_unhash(nf))
-> > > > > + if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags))
-> > > > > =C2=A0 return;
-> > > > >=20
-> > > > > =C2=A0 /* If we can't get a reference, ignore it */
-> > > > > @@ -590,6 +601,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, st=
-ruct
-> > > > > list_head *dispose)
-> > > > > =C2=A0 /* If refcount goes to 0, then put on the dispose list */
-> > > > > =C2=A0 if (refcount_sub_and_test(decrement, &nf->nf_ref)) {
-> > > > > =C2=A0 list_add(&nf->nf_lru, dispose);
-> > > > > + nfsd_file_unhash(nf);
-> > > > > =C2=A0 trace_nfsd_file_closing(nf);
-> > > > > =C2=A0 }
-> > > > > =C2=A0}
-> > > > >=20
-> > > > > Please kindly review the patch and let me know if it makes sense.
-> > > > >=20
-> > > > > Thanks,
-> > > > >=20
-> > > > > -Youzhong
-> > > > >=20
-> > > >=20
-> > > > --
-> > > > Chuck Lever
-> > >=20
-> >=20
-> > --
-> > Jeff Layton <jlayton@poochiereds.net>
-
---=20
-Jeff Layton <jlayton@poochiereds.net>
-
---=20
-Jeff Layton <jlayton@kernel.org>
+DQoNCj4gT24gSnVsIDcsIDIwMjQsIGF0IDc6MDbigK9BTSwgSmVmZiBMYXl0b24gPGpsYXl0b25A
+a2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBTdW4sIDIwMjQtMDctMDcgYXQgMDE6NDIgKzAz
+MDAsIFNhZ2kgR3JpbWJlcmcgd3JvdGU6DQo+PiBNYW55IGFwcGxpY2F0aW9ucyBvcGVuIGZpbGVz
+IHdpdGggT19XUk9OTFksIGZ1bGx5IGludGVuZGluZyB0byB3cml0ZQ0KPj4gaW50byB0aGUgb3Bl
+bmVkIGZpbGUuIFRoZXJlIGlzIG5vIHJlYXNvbiB3aHkgdGhlc2UgYXBwbGljYXRpb25zIHNob3Vs
+ZA0KPj4gbm90IGVuam95IGEgd3JpdGUgZGVsZWdhdGlvbiBoYW5kZWQgdG8gdGhlbS4NCj4+IA0K
+Pj4gQ2M6IERhaSBOZ28gPGRhaS5uZ29Ab3JhY2xlLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IFNh
+Z2kgR3JpbWJlcmcgPHNhZ2lAZ3JpbWJlcmcubWU+DQo+PiAtLS0NCj4+IE5vdGU6IEkgY291bGRu
+J3QgZmluZCBhbnkgcmVhc29uIHRvIHdoeSB0aGUgaW5pdGlhbCBpbXBsZW1lbnRhdGlvbiBjaG9z
+ZQ0KPj4gdG8gb2ZmZXIgd3JpdGUgZGVsZWdhdGlvbnMgb25seSB0byBORlM0X1NIQVJFX0FDQ0VT
+U19CT1RILCBidXQgaXQgc2VlbWVkDQo+PiBsaWtlIGFuIG92ZXJzaWdodCB0byBtZS4gU28gSSBm
+aWd1cmVkIHdoeSBub3QganVzdCBzZW5kIGl0IG91dCBhbmQgc2VlIHdobw0KPj4gb2JqZWN0cy4u
+Lg0KPj4gDQo+PiBmcy9uZnNkL25mczRzdGF0ZS5jIHwgMTAgKysrKystLS0tLQ0KPj4gMSBmaWxl
+IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAt
+LWdpdCBhL2ZzL25mc2QvbmZzNHN0YXRlLmMgYi9mcy9uZnNkL25mczRzdGF0ZS5jDQo+PiBpbmRl
+eCBhMjBjMmM5ZDdkNDUuLjY5ZDU3NmIxOWViNiAxMDA2NDQNCj4+IC0tLSBhL2ZzL25mc2QvbmZz
+NHN0YXRlLmMNCj4+ICsrKyBiL2ZzL25mc2QvbmZzNHN0YXRlLmMNCj4+IEBAIC01Nzg0LDE1ICs1
+Nzg0LDE1IEBAIG5mczRfc2V0X2RlbGVnYXRpb24oc3RydWN0IG5mc2Q0X29wZW4gKm9wZW4sIHN0
+cnVjdCBuZnM0X29sX3N0YXRlaWQgKnN0cCwNCj4+ICAqICAiQW4gT1BFTl9ERUxFR0FURV9XUklU
+RSBkZWxlZ2F0aW9uIGFsbG93cyB0aGUgY2xpZW50IHRvIGhhbmRsZSwNCj4+ICAqICAgb24gaXRz
+IG93biwgYWxsIG9wZW5zLiINCj4+ICAqDQo+PiAtICAqIEZ1cnRoZXJtb3JlIHRoZSBjbGllbnQg
+Y2FuIHVzZSBhIHdyaXRlIGRlbGVnYXRpb24gZm9yIG1vc3QgUkVBRA0KPj4gLSAgKiBvcGVyYXRp
+b25zIGFzIHdlbGwsIHNvIHdlIHJlcXVpcmUgYSBPX1JEV1IgZmlsZSBoZXJlLg0KPj4gLSAgKg0K
+Pj4gLSAgKiBPZmZlciBhIHdyaXRlIGRlbGVnYXRpb24gaW4gdGhlIGNhc2Ugb2YgYSBCT1RIIG9w
+ZW4sIGFuZCBlbnN1cmUNCj4+IC0gICogd2UgZ2V0IHRoZSBPX1JEV1IgZGVzY3JpcHRvci4NCj4+
+ICsgICogT2ZmZXIgYSB3cml0ZSBkZWxlZ2F0aW9uIGluIHRoZSBjYXNlIG9mIGEgQk9USCBvcGVu
+IChlbnN1cmUNCj4+ICsgICogYSBPX1JEV1IgZGVzY3JpcHRvcikgT3IgV1JPTkxZIG9wZW4gKHdp
+dGggYSBPX1dST05MWSBkZXNjcmlwdG9yKS4NCj4+ICAqLw0KPj4gaWYgKChvcGVuLT5vcF9zaGFy
+ZV9hY2Nlc3MgJiBORlM0X1NIQVJFX0FDQ0VTU19CT1RIKSA9PSBORlM0X1NIQVJFX0FDQ0VTU19C
+T1RIKSB7DQo+PiBuZiA9IGZpbmRfcndfZmlsZShmcCk7DQo+PiBkbF90eXBlID0gTkZTNF9PUEVO
+X0RFTEVHQVRFX1dSSVRFOw0KPj4gKyB9IGVsc2UgaWYgKG9wZW4tPm9wX3NoYXJlX2FjY2VzcyAm
+IE5GUzRfU0hBUkVfQUNDRVNTX1dSSVRFKSB7DQo+PiArIG5mID0gZmluZF93cml0ZWFibGVfZmls
+ZShmcCk7DQo+PiArIGRsX3R5cGUgPSBORlM0X09QRU5fREVMRUdBVEVfV1JJVEU7DQo+PiB9DQo+
+PiANCj4+IC8qDQoNClRoYW5rcyBTYWdpLCBJJ20gZ2xhZCB0byBzZWUgdGhpcyBwb3N0aW5nIQ0K
+DQoNCj4gSSAqdGhpbmsqIHRoZSBtYWluIHJlYXNvbiB3ZSBsaW1pdGVkIHRoaXMgYmVmb3JlIGlz
+IGJlY2F1c2UgYSB3cml0ZQ0KPiBkZWxlZ2F0aW9uIGlzIHJlYWxseSBhIHJlYWQvd3JpdGUgZGVs
+ZWdhdGlvbi4gVGhlcmUgaXMgbm8gc3VjaCB0aGluZyBhcw0KPiBhIHdyaXRlLW9ubHkgZGVsZWdh
+dGlvbi4NCg0KSSByZWNhbGwgKHF1aXRlIGRpbWx5KSB0aGF0IERhaSBmb3VuZCBzb21lIGJhZCBi
+ZWhhdmlvcg0KaW4gYSBzdWJ0bGUgY29ybmVyIGNhc2UsIHNvIHdlIGRlY2lkZWQgdG8gbGVhdmUg
+dGhpcyBvbg0KdGhlIHRhYmxlIGFzIGEgcG9zc2libGUgZnV0dXJlIGVuaGFuY2VtZW50LiBBZGRp
+bmcgRGFpLg0KDQoNCj4gU3VwcG9zZSB0aGUgdXNlciBpcyBwcmV2ZW50ZWQgZnJvbSBkb2luZyBy
+ZWFkcyBhZ2FpbnN0IHRoZSBpbm9kZSAoYnkNCj4gcGVybWlzc2lvbiBiaXRzIG9yIEFDTHMpLiBU
+aGUgc2VydmVyIGdpdmVzIG91dCBhIFdSSVRFIGRlbGVnYXRpb24gb24gYQ0KPiBPX1dST05MWSBv
+cGVuLiBXaWxsIHRoZSBjbGllbnQgYWxsb3cgY2FjaGVkIG9wZW5zIGZvciByZWFkIHJlZ2FyZGxl
+c3MNCj4gb2YgdGhlIHNlcnZlcidzIHBlcm1pc3Npb25zPyBPciwgZG9lcyBpdCBrbm93IHRvIGNo
+ZWNrIHZzLiB0aGUgc2VydmVyDQo+IGlmIHRoZSBjbGllbnQgdHJpZXMgdG8gZG8gYW4gb3BlbiBm
+b3IgcmVhZCBpbiB0aGlzIHNpdHVhdGlvbj8NCg0KTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IGEg
+d3JpdGUgZGVsZWdhdGlvbiBpcyBubyBtb3JlDQp0aGFuIGEgcHJvbWlzZSBieSB0aGUgc2VydmVy
+IHRvIHRlbGwgdGhlIGNsaWVudCBpZiBhbm90aGVyDQpjbGllbnQgd2FudHMgYWNjZXNzIHRvIHRo
+ZSBmaWxlLiBTbyBncmFudGluZyBhIHdyaXRlDQpkZWxlZ2F0aW9uIG9uIGEgcmVhZC1vbmx5IG9y
+IHdyaXRlLW9ubHkgT1BFTiBzaG91bGQgYmUNCmZpbmUgdG8gZG8gKGF0IHRoZSBkaXNjcmV0aW9u
+IG9mIHRoZSBzZXJ2ZXIsIG9mIGNvdXJzZSkuDQoNClRoZSBpc3N1ZSBhYm91dCB0aGUgQUNFIGlz
+IG1vb3QgZm9yIE5GU0QgcmlnaHQgbm93IGJlY2F1c2UNCk5GU0QgcmV0dXJucyBhbiBlbXB0eSBB
+Q0UuIFRoYXQgc2hvdWxkIHJlcXVpcmUgdGhlIGNsaWVudCB0bw0KY29udGludWUgdG8gc2VuZCBB
+Q0NFU1Mgb3BlcmF0aW9ucyB0byB0aGUgc2VydmVyIGFzIG5lZWRlZC4NCg0KDQotLQ0KQ2h1Y2sg
+TGV2ZXINCg0KDQo=
 
