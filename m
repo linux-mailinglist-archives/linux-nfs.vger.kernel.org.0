@@ -1,117 +1,185 @@
-Return-Path: <linux-nfs+bounces-4746-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4747-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4477892B07A
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 08:46:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D4ED92B0F2
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 09:18:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DAED282D47
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 06:45:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D1E31C20A3A
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 07:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3CB242067;
-	Tue,  9 Jul 2024 06:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73A9A12C80F;
+	Tue,  9 Jul 2024 07:18:47 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD90F3C2F;
-	Tue,  9 Jul 2024 06:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3C01DA303
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Jul 2024 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507555; cv=none; b=dNkLYIvGQSPO3T9L+ZrVt4vuwVDac5L/MpVxogluVk7u4vp9rpNsf/KNDVn+edMXnf6hxRsWrQNFEES816KAqh4/65Pw92hEo8P7krs75OOtc7rl86eLoZr5ocq305t231Zaamhe8rVV3DZbYi/pMPo31o77lLgYuFl5ZaeX1hQ=
+	t=1720509527; cv=none; b=LDbeD6bdpKLMVefgp2YMaILeWMLL4Fof/78dVNhAVAKXC3Okcju8BNXopiFxvumCbV1aEBe+TEKRNp1E7soul55jfpNsAMQFZzFfbhD9RXDVn4O8KqsHfOs7rpon3kzkaBUE3Bertm+BRQJ9rpeaXpYXQjwDV2VXUiKPMR3wtSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507555; c=relaxed/simple;
-	bh=1XMZCWaOwMOgvFv/A5wmGB+T7zimBDaGzI+FQllMaNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRpk59mT9pg2Mo9Mg4wLnMWJDAsGngb8EjFb4CaYWi39/Hz7QxEg3JN43UhMW82BHYKgVIApKDq7hOtVnmChWXvJ6mpOuhuOx5H+akm1dcwdYdH9dLjgAwWyVKuNWResvGiCe00jPKXB+Fg0df5pdi66cO9kbqH9CStuV0tlVeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 049B21F79B;
-	Tue,  9 Jul 2024 06:45:52 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E06FB1369A;
-	Tue,  9 Jul 2024 06:45:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gJDzNZ/cjGZzCAAAD6G6ig
-	(envelope-from <chrubis@suse.cz>); Tue, 09 Jul 2024 06:45:51 +0000
-Date: Tue, 9 Jul 2024 08:48:32 +0200
-From: Cyril Hrubis <chrubis@suse.cz>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Greg KH <greg@kroah.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-	Sherry Yang <sherry.yang@oracle.com>,
-	linux-stable <stable@vger.kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Calum Mackay <calum.mackay@oracle.com>,
-	"kernel-team@fb.com" <kernel-team@fb.com>,
-	"ltp@lists.linux.it" <ltp@lists.linux.it>
-Subject: Re: [LTP] [PATCH 1/1] nfsstat01: Update client RPC calls for kernel
- 6.9
-Message-ID: <ZozdQCwODOyO73U_@rei>
-References: <d4b235df-4ee5-4824-9d48-e3b3c1f1f4d1@oracle.com>
- <2fc3a3fd-7433-45ba-b281-578355dca64c@oracle.com>
- <296EA0E6-0E72-4EA1-8B31-B025EB531F9B@oracle.com>
- <2024070638-shale-avalanche-1b51@gregkh>
- <E1A8C506-12CF-474B-9C1C-25EC93FCC206@oracle.com>
- <2024070814-very-vitamins-7021@gregkh>
- <64D2D29F-BCC0-4A44-BB75-D85B80B75959@oracle.com>
+	s=arc-20240116; t=1720509527; c=relaxed/simple;
+	bh=BP3cUmNK85xFHu9pPhCxadQ9V3QzbZ9oy98w5Xemuk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKmO3387s+iQIditafvw8bEVCHWANopgH9gK3OquOtjOax23KQoRolJh/0/4R0+xgGqXqbtrV1t/oZjfCn2LGVm/lakAFFh2wjePZI2B71xZq7kpf6AUbvQwEhzAS/VRAGvifXGBQfqK+MHzDnSf7ohH7iqWdFFLra+p80erGNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3679483091aso323053f8f.0
+        for <linux-nfs@vger.kernel.org>; Tue, 09 Jul 2024 00:18:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720509524; x=1721114324;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KRdKo92p0pq+CqHeU/r+394j47v9rK+z3x1LSHZb9Og=;
+        b=m1NKPzpDNdtHD31HJC9mBz0oYb0d1rd6bT9pMYszPbcKrmqPyAv+nAb5bI4ICMvatX
+         +FXY36/woAXkdBuSZNFBKaa7B/j9R1xrhbXqHW2bL8tvq9SueRpJtn+sLnSte37AfD87
+         VOkb70n41Kir5i26QCVWYNfWIAq34Ymnm2Ahj81v0L9OgK1L1vqv2mVlqrao7g6uB1SZ
+         EFKCUOkRpweDmhXbiWaiq9w5Qtls+HKdrevvW1ko02TeVf2v5AUQ9xvwlWEJJtmz+Ae1
+         UseMmgrI0CRmhyZB8ig1WrowT5A1kzbTLBWVZJzrLs/Pc3cY1bL7EMPbPpxh/QIbgv2i
+         z3PA==
+X-Gm-Message-State: AOJu0Yxafgw4cMeqzGpzEI2vjjN6Ka3Ix4DChtnrKDMdMjpyxSlKeF2A
+	eEqZFMxIc3m32KCv6R+YpT4TBMZdGS/uTVjZkqWo+5vm8oMiditL
+X-Google-Smtp-Source: AGHT+IF4mZLHxzfcspTY9UQk8RQo3Mf8zPbd8Kbn0UfPaTY0+6sUqKycBZ+JETEVspNDj5CrNpKXqA==
+X-Received: by 2002:a5d:64c1:0:b0:367:9505:73ed with SMTP id ffacd0b85a97d-367ceae1d39mr1005786f8f.7.1720509523721;
+        Tue, 09 Jul 2024 00:18:43 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.198.251.dynamic.barak-online.net. [85.65.198.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06b6sm1653229f8f.86.2024.07.09.00.18.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 00:18:43 -0700 (PDT)
+Message-ID: <9b9430e9-845b-4e21-b021-cfc387cbd01e@grimberg.me>
+Date: Tue, 9 Jul 2024 10:18:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64D2D29F-BCC0-4A44-BB75-D85B80B75959@oracle.com>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Queue-Id: 049B21F79B
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
+To: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever III <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20240706224207.927978-1-sagi@grimberg.me>
+ <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
+ <9156BC30-78C3-4854-8BC3-510E586B4613@oracle.com>
+ <3b4ec3b0-5359-4f95-81a3-1d558756bddd@oracle.com>
+ <5a071e49-f214-41d3-b29f-aa1860b12455@grimberg.me>
+ <e23bb0d4-7f83-45fd-8df1-b127e1f749db@oracle.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <e23bb0d4-7f83-45fd-8df1-b127e1f749db@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi!
-> There is a change in behavior in the upstream code, but Josef's
-> patches fix an information leak and make the statistics more
-> sensible in container environments. I'm not certain that
-> should be considered a regression, but confess I don't know
-> the regression rules to this fine a degree of detail.
-> 
-> If it is indeed a regression, how can we go about retaining
-> both behaviors (selectable by Kconfig or perhaps administrative
-> UI)?
 
-That is IMHO the worst solution, every userspace tool would have to be
-able to work with both formats for an undefinite amount of time and the
-only added value of this approach would be a Kconfig option to enable
-information leak...
 
--- 
-Cyril Hrubis
-chrubis@suse.cz
+On 09/07/2024 0:41, Dai Ngo wrote:
+>
+> On 7/8/24 11:56 AM, Sagi Grimberg wrote:
+>>
+>>
+>> On 08/07/2024 20:39, Dai Ngo wrote:
+>>>
+>>> On 7/8/24 7:18 AM, Chuck Lever III wrote:
+>>>>
+>>>>> On Jul 7, 2024, at 7:06 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>>>>>
+>>>>> On Sun, 2024-07-07 at 01:42 +0300, Sagi Grimberg wrote:
+>>>>>> Many applications open files with O_WRONLY, fully intending to write
+>>>>>> into the opened file. There is no reason why these applications 
+>>>>>> should
+>>>>>> not enjoy a write delegation handed to them.
+>>>>>>
+>>>>>> Cc: Dai Ngo <dai.ngo@oracle.com>
+>>>>>> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+>>>>>> ---
+>>>>>> Note: I couldn't find any reason to why the initial 
+>>>>>> implementation chose
+>>>>>> to offer write delegations only to NFS4_SHARE_ACCESS_BOTH, but it 
+>>>>>> seemed
+>>>>>> like an oversight to me. So I figured why not just send it out 
+>>>>>> and see who
+>>>>>> objects...
+>>>>>>
+>>>>>> fs/nfsd/nfs4state.c | 10 +++++-----
+>>>>>> 1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>>
+>>>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>>>> index a20c2c9d7d45..69d576b19eb6 100644
+>>>>>> --- a/fs/nfsd/nfs4state.c
+>>>>>> +++ b/fs/nfsd/nfs4state.c
+>>>>>> @@ -5784,15 +5784,15 @@ nfs4_set_delegation(struct nfsd4_open 
+>>>>>> *open, struct nfs4_ol_stateid *stp,
+>>>>>>   *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
+>>>>>>   *   on its own, all opens."
+>>>>>>   *
+>>>>>> -  * Furthermore the client can use a write delegation for most READ
+>>>>>> -  * operations as well, so we require a O_RDWR file here.
+>>>>>> -  *
+>>>>>> -  * Offer a write delegation in the case of a BOTH open, and ensure
+>>>>>> -  * we get the O_RDWR descriptor.
+>>>>>> +  * Offer a write delegation in the case of a BOTH open (ensure
+>>>>>> +  * a O_RDWR descriptor) Or WRONLY open (with a O_WRONLY 
+>>>>>> descriptor).
+>>>>>>   */
+>>>>>> if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == 
+>>>>>> NFS4_SHARE_ACCESS_BOTH) {
+>>>>>> nf = find_rw_file(fp);
+>>>>>> dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>>>>>> + } else if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+>>>>>> + nf = find_writeable_file(fp);
+>>>>>> + dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>>>>>> }
+>>>>>>
+>>>>>> /*
+>>>> Thanks Sagi, I'm glad to see this posting!
+>>>>
+>>>>
+>>>>> I *think* the main reason we limited this before is because a write
+>>>>> delegation is really a read/write delegation. There is no such 
+>>>>> thing as
+>>>>> a write-only delegation.
+>>>> I recall (quite dimly) that Dai found some bad behavior
+>>>> in a subtle corner case, so we decided to leave this on
+>>>> the table as a possible future enhancement. Adding Dai.
+>>>
+>>> If I remember correctly, granting write delegation on OPEN with
+>>> NFS4_SHARE_ACCESS_WRITE without additional changes causes the git
+>>> test to fail.
+>>
+>> That's good to know.
+>> Have you reported this over the list before?
+>
+> I submitted a patch to allow the client to use write delegation, granted
+> on OPEN with NFS4_SHARE_ACCESS_WRITE, to read:
+>
+> https://lore.kernel.org/linux-nfs/1688089960-24568-3-git-send-email-dai.ngo@oracle.com/ 
+>
+>
+> This patch fixed the problem with the git test. However Jeff reported 
+> another
+> problem might be related to this patch:
+>
+> https://lore.kernel.org/linux-nfs/6756f84c4ff92845298ce4d7e3c4f0fb20671d3d.camel@kernel.org 
+>
+>
+> I did not investigate this pynfs problem since we dropped this support.
+
+I see, thanks for the info. I initially thought that the client has an 
+issue. But now
+I see that you referred to nfsd that is unable to process a READ with a 
+writedeleg stid
+(which is allowed).
+
+Is there any appetite to address this? Or are we fine with not handing 
+out delegations
+in these case? The patch I sent served its goal, which was to understand 
+if there is
+some reasoning behind the lack of it.
 
