@@ -1,213 +1,194 @@
-Return-Path: <linux-nfs+bounces-4756-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4757-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F3B292C4F9
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 22:48:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86BB292C671
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 01:13:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 056D528178D
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 20:48:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B74751C224FB
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 23:13:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 866C3146D74;
-	Tue,  9 Jul 2024 20:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A0D156F3C;
+	Tue,  9 Jul 2024 23:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ob3XUogJ"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k9/vqXxT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+XbylW6g";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k9/vqXxT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+XbylW6g"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F0A1B86DD;
-	Tue,  9 Jul 2024 20:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF3B1509BD;
+	Tue,  9 Jul 2024 23:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720558084; cv=none; b=QSEcL5t4XH/w0Ly8PewCzI5abw5cOfF5o1iunFW+X3nVx1tQHW3kdHnn8cew+KGaQuOOMYTYwD7SYt2UvFuVAWTg4DIW58rfyKECJig+JYF+8gGjHGLjHYH0qlb+8toJRFxyjDQtYt/XlKhO0vVY/6eQfe8CHcYfmjGvkKscwbk=
+	t=1720566788; cv=none; b=eqFS3mTeJExwsnvZhcrpvPW/OJppzfXc3dBnGuJlMQQYkdUxKIjA9zWRLotxZnc3vfagPU3yTb96V+0hybJuP3Ke0yFDSSIqS8ECULAl/w9BLaq6ri+A859Mf+7A7IX5Jzi4iFVNXaCfB7js1QbsLAPLJkb9NxbF525UpsTyptQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720558084; c=relaxed/simple;
-	bh=0IDf6TB+FYUHkNkAUQiGcWACaOXwFtv93FPLqJAuQF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qKABrg6mUGXBopM0v+zJ9xIWPcFj/XCzW2Dy6FyAKY5SyNV0Q0Sj4TiQeqBf6dvuVdmcOj69v+u9MH/jA6gj9Cpsj/iXtO77a6FXGhz5Tv7AVHiGF6TVs8lKVEEjbTzXVNFj4M8GasBsc7CeDE4EL8BNQUbVcLcvdN2oybCbLLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ob3XUogJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469C1YTq003817;
-	Tue, 9 Jul 2024 20:47:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gjNkgghvbaiGaVfC9986p0MdHkU4HA49qHYTTJZJj+w=; b=ob3XUogJJYo0F6Iw
-	dAlAUZfolnpZiFGj7Z365Xx6MLB76up8l3/wgNhUhN0z+mxVCJ/1VpE+7g7WQJzg
-	7AS4iqTP/8tmDYYKZFJAQvxbybfrPW6aC/QOZwvv12q49C6Szjlh42cNg7/P1miF
-	xJfebFzaQrjodTJPY5mxUBBRcK0WTjdVSB93hK4WXMb8oo+flHlj5N7A14LHuno1
-	K2CrwhsxcM9oJHIn2syZaUhgZYg4h+zg2Me1DNrK27EcBa6YjVHl422ZNcJZFGzu
-	8ZD4aQZQRM2fD1MXQFecjvHDH1A5gp/a4ZCm0UapkibYgLAvR3JBeZdsiw25mRqd
-	mQ+3sg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 408w0rae1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 20:47:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469Klmvt014652
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 20:47:48 GMT
-Received: from [10.48.245.228] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
- 13:47:47 -0700
-Message-ID: <e0a9f5ab-92d4-4a41-8693-358e861f2ef6@quicinc.com>
-Date: Tue, 9 Jul 2024 13:47:41 -0700
+	s=arc-20240116; t=1720566788; c=relaxed/simple;
+	bh=b/s21hwgUctXd/+avvt3JeKnrJBBAzIDE3Gg2rhieLU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=m648egV1qA98cL/RWcvPjCyz/7hsvyLhjnfAUe+KanjAVFLGf0htbeOS72DC4R2s18ETx61ngbiNxaLSCFy/rfenlSLHJ+j/qJsrVXhmQgWdScY0Y7U47fXif07/PtPhWeXpp2R90lQ3toHStVUW45nCq84wfVAxZiXSfsQyOs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k9/vqXxT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+XbylW6g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k9/vqXxT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+XbylW6g; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F4761F7A4;
+	Tue,  9 Jul 2024 23:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720566785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6PKMJQI3MzIXTGas0ngwth5zI/3inxDJ0TRzr7rZK4=;
+	b=k9/vqXxT+GZLRRxHhtIm2lLA/eC/je9btnB8E6s6JH5IDk5wpGp7z2AgEk9lRp3UJUL9uH
+	7dBDVh/RffKpb8N0NwnHxAs7+zxSqDWwGVYLuMX1U7Ht4iYTukL3hJm0OaxjhPtnb7xng+
+	9rxxgld+lhQ6SXrpBziFuNdoGRdJcKQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720566785;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6PKMJQI3MzIXTGas0ngwth5zI/3inxDJ0TRzr7rZK4=;
+	b=+XbylW6gtKDF3C+V/j+E3JSPMqXsRRb6j3EL+wT83K5Ksf/jT/A5rG4ZUPXQ+0uyt8qsI2
+	XGiAl5AB+lNo7eBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720566785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6PKMJQI3MzIXTGas0ngwth5zI/3inxDJ0TRzr7rZK4=;
+	b=k9/vqXxT+GZLRRxHhtIm2lLA/eC/je9btnB8E6s6JH5IDk5wpGp7z2AgEk9lRp3UJUL9uH
+	7dBDVh/RffKpb8N0NwnHxAs7+zxSqDWwGVYLuMX1U7Ht4iYTukL3hJm0OaxjhPtnb7xng+
+	9rxxgld+lhQ6SXrpBziFuNdoGRdJcKQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720566785;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6PKMJQI3MzIXTGas0ngwth5zI/3inxDJ0TRzr7rZK4=;
+	b=+XbylW6gtKDF3C+V/j+E3JSPMqXsRRb6j3EL+wT83K5Ksf/jT/A5rG4ZUPXQ+0uyt8qsI2
+	XGiAl5AB+lNo7eBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A38251369A;
+	Tue,  9 Jul 2024 23:13:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MfN9Ef7DjWYgMgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 09 Jul 2024 23:13:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] fs: nfs: add missing MODULE_DESCRIPTION() macros
-Content-Language: en-US
-To: Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust
-	<trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck
- Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia
-	<kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey
-	<tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240625-md-fs-nfs-v2-1-2316b64ffaa5@quicinc.com>
- <abe2e12fcd6a64b603179f234ca684a182657d6a.camel@kernel.org>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <abe2e12fcd6a64b603179f234ca684a182657d6a.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bDOqncjgmTe-V7cPJHhh8rGPj9jFqcW8
-X-Proofpoint-GUID: bDOqncjgmTe-V7cPJHhh8rGPj9jFqcW8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_09,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090141
+From: "NeilBrown" <neilb@suse.de>
+To: "Christoph Hellwig" <hch@infradead.org>
+Cc: "Christoph Hellwig" <hch@infradead.org>,
+ "Dave Chinner" <david@fromorbit.com>, "Mike Snitzer" <snitzer@kernel.org>,
+ linux-xfs@vger.kernel.org, "Brian Foster" <bfoster@redhat.com>,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: enable WQ_MEM_RECLAIM on m_sync_workqueue
+In-reply-to: <ZoVdAPusEMugHBl8@infradead.org>
+References: <>, <ZoVdAPusEMugHBl8@infradead.org>
+Date: Wed, 10 Jul 2024 09:12:58 +1000
+Message-id: <172056677808.15471.5200774043985229799@noble.neil.brown.name>
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
 
-On 6/25/2024 9:44 AM, Jeff Layton wrote:
-> On Tue, 2024-06-25 at 09:42 -0700, Jeff Johnson wrote:
->> Fix the 'make W=1' warnings:
->> WARNING: modpost: missing MODULE_DESCRIPTION() in
->> fs/nfs_common/nfs_acl.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in
->> fs/nfs_common/grace.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfs.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv2.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv3.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
->>
->> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
->> ---
->> Changes in v2:
->> - Updated the description in grace.c per Jeff Layton
->> - Link to v1:
->> https://lore.kernel.org/r/20240527-md-fs-nfs-v1-1-64a15e9b53a6@quicinc.com
->> ---
->>  fs/nfs/inode.c         | 1 +
->>  fs/nfs/nfs2super.c     | 1 +
->>  fs/nfs/nfs3super.c     | 1 +
->>  fs/nfs/nfs4super.c     | 1 +
->>  fs/nfs_common/grace.c  | 1 +
->>  fs/nfs_common/nfsacl.c | 1 +
->>  6 files changed, 6 insertions(+)
->>
->> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
->> index acef52ecb1bb..57c473e9d00f 100644
->> --- a/fs/nfs/inode.c
->> +++ b/fs/nfs/inode.c
->> @@ -2538,6 +2538,7 @@ static void __exit exit_nfs_fs(void)
->>  
->>  /* Not quite true; I just maintain it */
->>  MODULE_AUTHOR("Olaf Kirch <okir@monad.swb.de>");
->> +MODULE_DESCRIPTION("NFS client support");
->>  MODULE_LICENSE("GPL");
->>  module_param(enable_ino64, bool, 0644);
->>  
->> diff --git a/fs/nfs/nfs2super.c b/fs/nfs/nfs2super.c
->> index 467f21ee6a35..b1badc70bd71 100644
->> --- a/fs/nfs/nfs2super.c
->> +++ b/fs/nfs/nfs2super.c
->> @@ -26,6 +26,7 @@ static void __exit exit_nfs_v2(void)
->>  	unregister_nfs_version(&nfs_v2);
->>  }
->>  
->> +MODULE_DESCRIPTION("NFSv2 client support");
->>  MODULE_LICENSE("GPL");
->>  
->>  module_init(init_nfs_v2);
->> diff --git a/fs/nfs/nfs3super.c b/fs/nfs/nfs3super.c
->> index 8a9be9e47f76..20a80478449e 100644
->> --- a/fs/nfs/nfs3super.c
->> +++ b/fs/nfs/nfs3super.c
->> @@ -27,6 +27,7 @@ static void __exit exit_nfs_v3(void)
->>  	unregister_nfs_version(&nfs_v3);
->>  }
->>  
->> +MODULE_DESCRIPTION("NFSv3 client support");
->>  MODULE_LICENSE("GPL");
->>  
->>  module_init(init_nfs_v3);
->> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
->> index 8da5a9c000f4..b29a26923ce0 100644
->> --- a/fs/nfs/nfs4super.c
->> +++ b/fs/nfs/nfs4super.c
->> @@ -332,6 +332,7 @@ static void __exit exit_nfs_v4(void)
->>  	nfs_dns_resolver_destroy();
->>  }
->>  
->> +MODULE_DESCRIPTION("NFSv4 client support");
->>  MODULE_LICENSE("GPL");
->>  
->>  module_init(init_nfs_v4);
->> diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
->> index 1479583fbb62..27cd0d13143b 100644
->> --- a/fs/nfs_common/grace.c
->> +++ b/fs/nfs_common/grace.c
->> @@ -139,6 +139,7 @@ exit_grace(void)
->>  }
->>  
->>  MODULE_AUTHOR("Jeff Layton <jlayton@primarydata.com>");
->> +MODULE_DESCRIPTION("NFS client and server infrastructure");
->>  MODULE_LICENSE("GPL");
->>  module_init(init_grace)
->>  module_exit(exit_grace)
->> diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
->> index 5a5bd85d08f8..ea382b75b26c 100644
->> --- a/fs/nfs_common/nfsacl.c
->> +++ b/fs/nfs_common/nfsacl.c
->> @@ -29,6 +29,7 @@
->>  #include <linux/nfs3.h>
->>  #include <linux/sort.h>
->>  
->> +MODULE_DESCRIPTION("NFS ACL support");
->>  MODULE_LICENSE("GPL");
->>  
->>  struct nfsacl_encode_desc {
->>
->> ---
->> base-commit: 50736169ecc8387247fe6a00932852ce7b057083
->> change-id: 20240527-md-fs-nfs-42f19eb60b50
->>
+On Thu, 04 Jul 2024, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2024 at 09:29:00PM +1000, NeilBrown wrote:
+> > I know nothing of this stance.  Do you have a reference?
 > 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> No particular one.
+> 
+> > I have put a modest amount of work into ensure NFS to a server on the
+> > same machine works and last I checked it did - though I'm more
+> > confident of NFSv3 than NFSv4 because of the state manager thread.
+> 
+> How do you propagate the NOFS flag (and NOIO for a loop device) to
+> the server an the workqueues run by the server and the file system
+> call by it?  How do you ensure WQ_MEM_RECLAIM gets propagate to
+> all workqueues that could be called by the file system on the
+> server (the problem kicking off this discussion)?
+> 
 
-I don't see this in linux-next yet so following up to see if anything else is
-needed to get this merged.
+Do we need to propagate these?
 
+NOFS is for deadlock avoidance.  A filesystem "backend" (Dave's term - I
+think for the parts of the fs that handle write-back) might allocate
+memory, that might block waiting for memory reclaim, memory reclaim
+might re-enter the filesystem backend and might block on a lock (or
+similar) held while allocating memory.  NOFS breaks that deadlock.
+
+The important thing here isn't the NOFS flag, it is breaking any
+possible deadlock.
+
+Layered filesystems introduce a new complexity.  The backend for one
+filesystem can call into the front end of another filesystem.  That
+front-end is not required to use NOFS and even if we impose
+PF_MEMALLOC_NOFS, the front-end might wait for some work-queue action
+which doesn't inherit the NOFS flag.
+
+But this doesn't necessarily matter.  Calling into the filesystem is not
+the problem - blocking waiting for a reply is the problem.  It is
+blocking that creates deadlocks.  So if the backend of one filesystem
+queues to a separate thread the work for the front end of the other
+filesystem and doesn't wait for the work to complete, then a deadlock
+cannot be introduced.
+
+/dev/loop uses the loop%d workqueue for this.  loop-back NFS hands the
+front-end work over to nfsd.  The proposed localio implementation uses a
+nfslocaliod workqueue for exactly the same task.  These remove the
+possibility of deadlock and mean that there is no need to pass NOFS
+through to the front-end of the backing filesystem.
+
+Note that there is a separate question concerning pageout to a swap
+file.  pageout needs more than just deadlock avoidance.  It needs
+guaranteed progress in low memory conditions.   It needs PF_MEMALLOC (or
+mempools) and that cannot be finessed using work queues.  I don't think
+that Linux is able to support pageout through layered filesystems.
+
+So while I support loop-back NFS and swap-over-NFS, I don't support them
+in combination.  We don't support swap on /dev/loop when it is backed by
+a file - for that we have swap-to-file.
+
+Thank you for challenging me on this - it helped me clarify my thoughts
+and understanding for myself.
+
+NeilBrown
 
