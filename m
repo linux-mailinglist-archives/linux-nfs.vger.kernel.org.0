@@ -1,100 +1,163 @@
-Return-Path: <linux-nfs+bounces-4762-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4763-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC02E92CBAD
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 09:11:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AA3392CFAF
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 12:49:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53871B20EC5
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 07:11:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3403C1F22AF3
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 10:49:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC4E181AC3;
-	Wed, 10 Jul 2024 07:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404B418FDCF;
+	Wed, 10 Jul 2024 10:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="j6W+IKCc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E41081AB6
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 07:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7546418FC99
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 10:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720595499; cv=none; b=VIO46MU0WZAJ5P5dJLHXqnOcRICA9BAPeA94liHsYXMIC5LHpau3dvSzwTLdPZlQ28ee/f2B9kfU9MaBVObblk1VryajoKlqPGjW+ljiMupmIH1DKtucHJbcFkmFcB9/2XYtykaGMwYRgowP5hvTXJiCO6zQXJHYMBkGL/SH4tI=
+	t=1720608020; cv=none; b=DHuca/ulY4sw3yG++D4iFb//YjrxZ5DP5i6K2WJohuzRgdPKOeLMeRwYAGyRpux5rAxCG7xuUEV05YHla6BLG6WMEw6qfioAe6AMyX5JHjcet10wsL7Uvjau8oq/Us2+8Ia5SNZF9rx5JPQDOcwPcXjZAigpzMw0OrzRORUfzH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720595499; c=relaxed/simple;
-	bh=iENuf5oUz86OlWiuNSiX5zfcExDZC6pnKYUm0K5Cz6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rHB8kslMczF1hVLNDI042DYCHgthw39zgCKxdyHQZ6m5AljBFkpSxbZYOSXS0XgEnqDjDHSwKLbyHna9k4BmkWCcLEq+ggD3yH74nj5DLU5gUvT1iAo4CairftdJnv5IkYjLpsNoJk9zySUbQan7a424kO3sJiItNUm8mBfbNOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-426719e2efeso2293335e9.0
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 00:11:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720595496; x=1721200296;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTBMlKUTvJ66hhjiedV7n69ZDwISZmrEDQq26n8Oq68=;
-        b=TgJ6q3mWUHUlRRQEoCpw08EUvWYMid5sfo7i0kJ4uQI8pfBsHuWRs58nTRRRYSiMeB
-         8Sn5Sb47sysYTYohMUb8Br5/COnLfXbL074x/wBSc3+u+yfEIZP26n8v+gfU6wmd7rS0
-         UZxVVuZpPG74F9HdlhgRVHogVXuUDDO9Phd0biSvje/xfmA2wNQCFbISezYcZq8suN0m
-         dgE0/Ksiha2+OE/WfR2hxinCz/jz5ZI04evmfIUAGfAiH+Scu9qynjgR0iLnf2Ks7Rdy
-         2iJFfpI9LA0Y1Nu5m6znQyY7PUCxtCuiM6OtR8JSNHuF91fGCPJ32Mu/qnKeqVpe3GRi
-         ML5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVpti1My6Zh7IsLd5vhQafek5E68G/1qIK7C9A+/T9IgkpVvr1evtoGnufhfsxOSsXt5EujhTANcXY5Wp4RZPEjr/vrUYX6UvoX
-X-Gm-Message-State: AOJu0YzwL/Xjacr3axZzhfI8l3w/5yMTMQim5kTsckzJL9TqabX8NKew
-	KSKk99hbWHeY+wxYzsMYAxrdxbLlQsGAggNy8JA0iQPG1H0g/fuIC2qVaOB/
-X-Google-Smtp-Source: AGHT+IHzO3Jz8rrp75GkOY1ZPaNYj//tgY4ozTBjND4OtxQbRi1L3iwuwO2NBYl6QrYUVJC2//5dwg==
-X-Received: by 2002:a05:600c:354c:b0:426:668f:5ed7 with SMTP id 5b1f17b1804b1-426707fad40mr31792305e9.2.1720595496266;
-        Wed, 10 Jul 2024 00:11:36 -0700 (PDT)
-Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427268be96dsm40269025e9.37.2024.07.10.00.11.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 00:11:35 -0700 (PDT)
-Message-ID: <500c22cd-b88c-48e6-8cb4-732f66f8e913@grimberg.me>
-Date: Wed, 10 Jul 2024 10:11:34 +0300
+	s=arc-20240116; t=1720608020; c=relaxed/simple;
+	bh=Xx/77QXmQOzbWW+RKoawBCq44/4/6sBILOL7vzUmlW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GKnZ5RcGL3Z6kd0Vso3OpRwAI6jNaPZAR/uV7fk0pHvTR7WprALGKxIjvg05RsbgCIROpU2ViNpgnhQwW33EHcGJ5bBe1iTmerphOpL9UYV9tC8XTE+UFi5GBgzPuQokojsspQecxa4MFivWSCGz75gJLafcRKxaTTCvi7y9jq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=j6W+IKCc; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1720608017; x=1752144017;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Xx/77QXmQOzbWW+RKoawBCq44/4/6sBILOL7vzUmlW0=;
+  b=j6W+IKCcFU5BGW5zVsCW1CwDNZ/+Nm5YE5+RtIkydxYgsE3hl/Ydwpn7
+   Ia8KVcXGW/SvQ3jt575eqCjCytr8bUydacIuoQ2twUAt3IcOjGqjqXhTD
+   Q0cKspDkI8CPrC5brWfDMPHR4ueTl5CHaX8s0vNqxGaHooHTOwJdIrxXn
+   +MbDnHEE4dyXQHXToUJssw3FxWrKloo9WbHuSb0WCIUo+iGpn/MKhq6YO
+   8l1pWqf/38h0SSkgbiXIbhI9FOnuhEIcB23Sf/8VrFz4mOKanSRB5fBF9
+   GD+evcqPkotsnoQVKVTWz142KafAPPJvgmjywjYbZUobjmdALzpsqQJLv
+   w==;
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="165756246"
+X-IronPort-AV: E=Sophos;i="6.09,197,1716217200"; 
+   d="scan'208";a="165756246"
+Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 19:39:05 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 840C3D6EF1
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 19:39:03 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id D2FFCD3F2D
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 19:39:02 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6314A20086EB9
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 19:39:02 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id C86721A0002;
+	Wed, 10 Jul 2024 18:39:01 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v3] NFSv4: add tracepoint to referral events
+Date: Wed, 10 Jul 2024 18:38:30 +0800
+Message-ID: <20240710103854.1387-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.45.2.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rfc] nfsd: offer write delegation for O_WRONLY opens
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Dai Ngo <dai.ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20240706224207.927978-1-sagi@grimberg.me>
- <114581777d5b61b6973ec9ef2537ee887989e197.camel@kernel.org>
- <9156BC30-78C3-4854-8BC3-510E586B4613@oracle.com>
- <3b4ec3b0-5359-4f95-81a3-1d558756bddd@oracle.com>
- <5a071e49-f214-41d3-b29f-aa1860b12455@grimberg.me>
- <e23bb0d4-7f83-45fd-8df1-b127e1f749db@oracle.com>
- <9b9430e9-845b-4e21-b021-cfc387cbd01e@grimberg.me>
- <53440FD0-58F1-4B92-BCC3-20CB91BB529C@oracle.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <53440FD0-58F1-4B92-BCC3-20CB91BB529C@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28520.007
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28520.007
+X-TMASE-Result: 10-2.585900-10.000000
+X-TMASE-MatchedRID: Dkfyeyxtv0b/R1NSMc2qCR1kSRHxj+Z5G3SoAWcU42VL/3rQmWrTBugo
+	SvaKsl/kIvrftAIhWmLy9zcRSkKatYrOQQ708E7z0wmR34xRQc8JHI5dPooIdZsoi2XrUn/J8m+
+	hzBStansfRoCwBzgRYidET58jp62S5PD2NeNcxCxxXYgfayWQBSLVwocV5DmjG7OgHVO6QHHc2X
+	bP1mOqXndVOi67bPLqk8kCvv06YY5JvVA3dgEBC3agksmjhmHVwGC8e6520fKw0PJt06oJaHpaQ
+	l5xviY7wxgWdRvK9Un9g+oMf9KM6Q==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
+Trace new locations when hitting a referral:
 
-> Yes, as an NFSD co-maintainer, I would like to see the
-> READ stateid issue addressed. We just got distracted
-> by other things in the meantime.
+  nfs4_referral_location: referral_host=192.168.122.210 referral_path=/share12
 
-OK, so reading the correspondence from the last time, it seems that
-the breakage was the usage of anon stateid on a read. The spec says that
-the client should use a stateid associated with a open/deleg to avoid
-self-recall, but allowed to use the anon stateid.
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+---
+v3:
+    fit one parameter style of __assign_str
 
-I think that Dai's patch is a good starting point but needs to add 
-handling of
-the anon stateid case. The server should check if the client holds a 
-delegation,
-if so simply allow, if another client holds a deleg, it should recall?
+ fs/nfs/nfs4namespace.c |  3 +++
+ fs/nfs/nfs4trace.h     | 25 +++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-Thoughts?
+diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
+index 9a98595bb160..fca9fb801bc2 100644
+--- a/fs/nfs/nfs4namespace.c
++++ b/fs/nfs/nfs4namespace.c
+@@ -24,6 +24,7 @@
+ #include "nfs4_fs.h"
+ #include "nfs.h"
+ #include "dns_resolve.h"
++#include "nfs4trace.h"
+ 
+ #define NFSDBG_FACILITY		NFSDBG_VFS
+ 
+@@ -351,6 +352,8 @@ static int try_location(struct fs_context *fc,
+ 		p += ctx->nfs_server.export_path_len;
+ 		*p = 0;
+ 
++		trace_nfs4_referral_location(ctx->nfs_server.hostname,
++			ctx->nfs_server.export_path);
+ 		ret = nfs4_get_referral_tree(fc);
+ 		if (ret == 0)
+ 			return 0;
+diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+index 4de8780a7c48..ad0af7addcb0 100644
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -2600,6 +2600,31 @@ DEFINE_NFS4_XATTR_EVENT(nfs4_setxattr);
+ DEFINE_NFS4_XATTR_EVENT(nfs4_removexattr);
+ 
+ DEFINE_NFS4_INODE_EVENT(nfs4_listxattr);
++
++TRACE_EVENT(nfs4_referral_location,
++		TP_PROTO(
++			const char *hostname,
++			const char *path
++		),
++
++		TP_ARGS(hostname, path),
++
++		TP_STRUCT__entry(
++			__string(referral_hostname, hostname)
++			__string(referral_path, path)
++		),
++
++		TP_fast_assign(
++			__assign_str(referral_hostname);
++			__assign_str(referral_path);
++		),
++
++		TP_printk(
++			"referral_host=%s referral_path=%s",
++			__get_str(referral_hostname),
++			__get_str(referral_path)
++		)
++);
+ #endif /* CONFIG_NFS_V4_2 */
+ 
+ #endif /* CONFIG_NFS_V4_1 */
+-- 
+2.39.1
+
 
