@@ -1,114 +1,202 @@
-Return-Path: <linux-nfs+bounces-4759-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4760-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A1B092C6C6
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 01:51:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F89992C6EC
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 02:10:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA3D71F22C6F
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jul 2024 23:51:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7BD12819A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jul 2024 00:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D75D189F46;
-	Tue,  9 Jul 2024 23:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F7CAA5F;
+	Wed, 10 Jul 2024 00:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DCzTmhwt"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xJ61/Q8F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sYntfS7a";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xJ61/Q8F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sYntfS7a"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97901474BE;
-	Tue,  9 Jul 2024 23:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77240EC4
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jul 2024 00:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720569064; cv=none; b=TFvvw2c/yr6PwYfrGzm6e1X5N/XUsWe2WItObIjs2vjViq9ID1xxFxLYHEd15GReIPunxWkAJpg+eR5iv4qftlpHDkkmAlxBt+N1fD5ex+L9etrXb97uHhGmV9ZdAfmgOnh2OXFkguOpnxM9eHSSl1l0qR6X5CrjLcJfqXJQKvg=
+	t=1720570235; cv=none; b=nNBVrVCo1DBqZUZpDti3GIKmT2TzJIEr7ZwB9NgTjwh7RapPNP01CvO7cgy3aqCacuJCQuajjzcT99yhRRJUnKqnSxrZCJ3K91KOlANLLcZV1i4ctbDKs02NaDNQDF4cQN8ZXsW3ZUt7BLdy4d9lgmyI1rGvooYt14vPV5jtKyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720569064; c=relaxed/simple;
-	bh=06szhZhvI5y/0ml1HztEAZfKngl9g/YYJWu9WNQ4sLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rI+84Xf2G2rgFW86L2Zm+CaVFbcWAOIddwGqcFuW3PFvXG158EE3UuvVWI2bS9S2T+3Fy8Ii4WSpCg5yrDIJKu8pZgiPXCIWcBiZepm8uPvj+9eFzRhhlsc8i4kNrQEkMWZbuILInTWRCiF6gSxpigOPwAX40AGoaZHbzdrBjSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DCzTmhwt; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=1MnKJi0jeAHhcjlp5AtWFQ8iIjqs+OJI3rZ7gK/CmMU=; b=DCzTmhwt94ownkzIzPjjLO9YFf
-	eu92ryb30Y5fTRUbNpYryFLMftlaguCeCXoN5EOazjbAsFOs+tBSCQRNU7Q9+73B6Auj6hO18pDHa
-	tVqNTGWjeWJdyOsHdlhu3/6ety3pwwmck57aAkc4fbaq1wmZauOvq+WLqpISS8yRZqCLos8OaPI4C
-	hs61AA6++huLcis6+2wfhFY8FKzdLoiDZGfl8hPNz2QPC/0WLP/nmKUoFVXt2uML9oLLHVZjGnISQ
-	SNynxgD4UGwrFpzo35YzDs92U2UM4UsY3+jCn/D4vFLAhvCA1+Qv96t7MNQa7spkBp1odrX3/w5pV
-	UYTO+k7A==;
-Received: from [50.53.4.147] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRKbT-00000008U6L-2tpi;
-	Tue, 09 Jul 2024 23:50:35 +0000
-Message-ID: <420ac42f-dad2-4fd9-b36a-6405d14b6e25@infradead.org>
-Date: Tue, 9 Jul 2024 16:50:24 -0700
+	s=arc-20240116; t=1720570235; c=relaxed/simple;
+	bh=1GZqn69tGKE6WeawoNkADr+omxwmQJrgrVOh1GaDbZ8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=jVDye09bEEy2qAj44X1+hTAduCiNA9Awk65Dgmd+MKq7/AM6i6Jh2XqcZOGoBfO+BftKu36rj8iwXeQqFUR9tyWW32hFURAiJ7sb8anEZhyqaauu8iHxlHJ4GocSSfhQwUX+KdcTJBVIhWnpfJz3cXn7kYYfa6rAwl9tnOgMHTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xJ61/Q8F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sYntfS7a; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xJ61/Q8F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sYntfS7a; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3CE3421A86;
+	Wed, 10 Jul 2024 00:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720570229; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vWxZgQLVqWTcDtojWPryawt124jKjABHoDxF3Jv72Lk=;
+	b=xJ61/Q8FREqqGxzrWaCfEJjRYW/JM+3csLK9v2wyocTIQH0dMJM9jWgz/QUz/1FmUXdpWC
+	zja6CpmhZlppsidE3sbE4AfzzFfRFSi0Zo6YVJrTQqUEeBEz9QTW457XuARyngptFLG7ia
+	iZ1e+UXgVyXRNNvyezbCh+xMl8Whgu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720570229;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vWxZgQLVqWTcDtojWPryawt124jKjABHoDxF3Jv72Lk=;
+	b=sYntfS7aWrkdIe9Ha2mQwyD+bwaLe9IIzb476EEyRVtDXz+N15EqtGImbDmUab+l+XDeY/
+	D9ZlAGLvsLHsqnDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720570229; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vWxZgQLVqWTcDtojWPryawt124jKjABHoDxF3Jv72Lk=;
+	b=xJ61/Q8FREqqGxzrWaCfEJjRYW/JM+3csLK9v2wyocTIQH0dMJM9jWgz/QUz/1FmUXdpWC
+	zja6CpmhZlppsidE3sbE4AfzzFfRFSi0Zo6YVJrTQqUEeBEz9QTW457XuARyngptFLG7ia
+	iZ1e+UXgVyXRNNvyezbCh+xMl8Whgu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720570229;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vWxZgQLVqWTcDtojWPryawt124jKjABHoDxF3Jv72Lk=;
+	b=sYntfS7aWrkdIe9Ha2mQwyD+bwaLe9IIzb476EEyRVtDXz+N15EqtGImbDmUab+l+XDeY/
+	D9ZlAGLvsLHsqnDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5BB65136CD;
+	Wed, 10 Jul 2024 00:10:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 33vYKW7RjWZIQAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 10 Jul 2024 00:10:22 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/9] Documentation: add a new file documenting
- multigrain timestamps
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong"
- <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
- Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
- <20240708-mgtime-v4-5-a0f3c6fb57f3@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240708-mgtime-v4-5-a0f3c6fb57f3@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Christoph Hellwig" <hch@infradead.org>
+Cc: "Christoph Hellwig" <hch@infradead.org>,
+ "Mike Snitzer" <snitzer@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ "Chuck Lever III" <chuck.lever@oracle.com>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Trond Myklebust" <trondmy@hammerspace.com>,
+ "Dave Chinner" <david@fromorbit.com>
+Subject: Re: [PATCH v11 00/20] nfs/nfsd: add support for localio
+In-reply-to: <ZouzQ8trA1YW0CdS@infradead.org>
+References: <>, <ZouzQ8trA1YW0CdS@infradead.org>
+Date: Wed, 10 Jul 2024 10:10:15 +1000
+Message-id: <172057021554.15471.12747291940440767258@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
+On Mon, 08 Jul 2024, Christoph Hellwig wrote:
+> On Mon, Jul 08, 2024 at 02:03:02PM +1000, NeilBrown wrote:
+> > > I did not say that we have the exact same functionality available and
+> > > there is no work to do at all, just that it is the standard way to bypa=
+ss
+> > > the server.
+> >=20
+> > Sometimes what you don't say is important.  As you acknowledge there is
+> > work to do.  Understanding how much work is involved is critical to
+> > understanding that possible direction.
+>=20
+> Of course there is.  I've never said we don't need to do any work,
+> I'm just asking why we are not using the existing infrastruture to do
+> it.
+>=20
+> > But pNFS is about handing out grants using standardised protocols that
+> > support interoperability between distinct nodes, and possibly distinct
+> > implementations.  localio doesn't need any of that.  It all exists in a
+> > single implementation on a single node.  So in that sense there can be
+> > expected to be different priorities.
+> >=20
+> > Why should we pay the costs of pNFS when implementing localio?
+>=20
+> Why do you think we pay a cost for it?  From all I can tell it makes
+> the job simpler, especially if we want to do things like bypassing
+> the second page cache.
+>=20
+> > That
+> > question can only be answered if we have a good understanding of the
+> > costs and benefits.  And that requires having a concrete proposal for
+> > the "pNFS" option - if only a detailed sketch.
+>=20
+> I sketched the the very sketchy sketch earlier - add a new localio
+> layout that does local file I/O.  The I/O side of that is pretty
+> tivial, and maybe I can find some time to write draft code.  The file
+> open side is just as horrible as in the current localio proposal,
+> and I could just reuse that for now, although I think the concept
+> of opening the file in the client contect is fundamentally wrong
+> no matter how we skin the cat.
+>=20
 
+I had been assuming that you were proposing a new pNFS layout type with
+associated protocol extension, an RFC describing them, and navigation of
+the IETF standards process.  These are (some of) the costs I was
+thinking of.  Of course the IETF requires demonstration of
+interoperability between multiple implementations, and as that is
+impossible for localio, we would fail before we started.
 
-On 7/8/24 8:53 AM, Jeff Layton wrote:
-> Add a high-level document that describes how multigrain timestamps work,
-> rationale for them, and some info about implementation and tradeoffs.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
-> 
-> diff --git a/Documentation/filesystems/multigrain-ts.rst b/Documentation/filesystems/multigrain-ts.rst
-> new file mode 100644
-> index 000000000000..e4f52a9e3c51
-> --- /dev/null
-> +++ b/Documentation/filesystems/multigrain-ts.rst
-> @@ -0,0 +1,120 @@
+But I now suspect that I guessed your intention wrongly (I'm rubbish at
+guessing other people's intentions).  Your use of the word
+"infrastructure" above and the sketchy sketch you provide (thanks) seems
+to indicate you are only suggesting that we re-use some of the pnfs
+abstractions and interfaces already implemented in the Linux NFS client
+and server.
 
-> +Inode Timestamp Ordering
-> +========================
-> +
-> +In addition just providing info about changes to individual files, file
+Is that what you mean?
 
-   In addition to just
+If it is, then it isn't immediately clear to me that this would have to
+be NFSv4 only.  The different versions already share code where that
+makes sense.  Moving the pnfs code from the nfsv4 module to a new pnfs
+module which nfsv3 also depends on might make sense.
 
-> +timestamps also serve an important purpose in applications like "make". These
-> +programs measure timestamps in order to determine whether source files might be
-> +newer than cached objects.
+I'm keen to know what you are really thinking.
 
+Thanks,
+NeilBrown
 
