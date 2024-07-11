@@ -1,120 +1,114 @@
-Return-Path: <linux-nfs+bounces-4792-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4793-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0357C92E2EC
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 11:00:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E33992E3EE
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 11:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 053F31C2387B
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 09:00:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D4EF9B20A2A
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 09:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD07A14AD3A;
-	Thu, 11 Jul 2024 09:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B20315747C;
+	Thu, 11 Jul 2024 09:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=truschnigg.info header.i=@truschnigg.info header.b="W4H1pjbM"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="IHWlugbK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from truschnigg.info (truschnigg.info [89.163.150.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C793984D12;
-	Thu, 11 Jul 2024 09:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.163.150.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFF1156F39
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 09:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688448; cv=none; b=nPz7affMS8XkmqymjcO1T1tl5ZZdmqXc2XiLYsnoxhqcvmqzcU5t5RN0z22rLJf/dQlCtn1jIxlOGbibY8KfQ6RTpI627RO2r9DsDp22xRq+1C+EtUht1GHCrwbycVKHroSnBdWaX76CHd1i9bwmS+HpLb0blEkYvlH9eZzNqTE=
+	t=1720691955; cv=none; b=Oqh+01/p+cChYko98HFhaW2aB4TmExhG98sX5aaZRki0H5ue6hXOHConNRS7Pqcyj95fLIMDjRbGSnfjD5Nf+w7gzFDfezrvR0Gn39fj6LP4ifyRkmD5fE8uxZM7hStFBYwY7/oHyWELzkBHTVzRCbPPUz++pUez1IWoTilCQbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688448; c=relaxed/simple;
-	bh=mRczEEAH6XeYv8BF6ySO7OwPG/kDJ2JRgS0b/aWEgsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TgL77lYuaUgfaoSxe1jBVJeDHvBFIjqGqYmvZupckMuCqPYmXWDTwl44h9ZXB+Dqmu8bDkZt6S1z5TVQDrcoW9FRl4KyAhGTCfIcXOoi8doCfSv0NHg5F6NXEzkOgxD6no3McCQ/YUq+U+ofagd3Apa1129BSlJUKcmEo9/uFoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=truschnigg.info; spf=pass smtp.mailfrom=truschnigg.info; dkim=pass (2048-bit key) header.d=truschnigg.info header.i=@truschnigg.info header.b=W4H1pjbM; arc=none smtp.client-ip=89.163.150.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=truschnigg.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truschnigg.info
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=truschnigg.info;
-	s=m22; t=1720687902;
-	bh=mRczEEAH6XeYv8BF6ySO7OwPG/kDJ2JRgS0b/aWEgsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W4H1pjbM55ZHcp7dfatkvrIiONYtu4iTWt+hhFUooUlgmfVGxQ5J0TB01mBE88cLs
-	 OmbObZ0nprP25rbJQXW1BcbkLS5S8ZDdY7gyZnZWFfx7fgdg/fFW8a0/V0prS7jITE
-	 ECHPa5PfNrPqboIlb20vK6is0r4lsnpkBtiOZGQTerGpN6JjRhyyh+3wCyWjNsRHs6
-	 hUAp+khV+YpUU0Ii5VNgPC082HSdmkF1ips1MT1l24RP68bMdKl3uGykLf8XPz2cfO
-	 7JQQseNiU5go2amrWY54KXzXxeoTIKs0oiWxsI30WOoRavlc+kK+rb9iVqP7wx+vb9
-	 BTRkcGVBo3Few==
-Received: from vault.lan (unknown [IPv6:2a02:1748:fafe:cf3f:1eb7:2cff:fe02:8261])
-	by truschnigg.info (Postfix) with ESMTPSA id 3D6D820435;
-	Thu, 11 Jul 2024 08:51:42 +0000 (UTC)
-Date: Thu, 11 Jul 2024 10:51:39 +0200
-From: Johannes Truschnigg <johannes@truschnigg.info>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-raid@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: Re: How to debug intermittent increasing md/inflight but no disk
- activity?
-Message-ID: <Zo-dG8EGbfp_ghOB@vault.lan>
-References: <4a706b9c-5c47-4e51-87fc-9a1c012d89ba@molgen.mpg.de>
- <Zo8VXAy5jTavSIO8@dread.disaster.area>
+	s=arc-20240116; t=1720691955; c=relaxed/simple;
+	bh=MQ+7Sojr6KBt4qe6V+KdJq6Adpv93YUAocS4JZT4LRU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HgHWpCEPS7xXJ2FE+ujTLoAwo2feBdaZ+hS2wAupFkwpxwYwBEOBqvOV49vzCM8tmw5uTBp1zwy9cHp8Z1HTFRj8pd+prmRyta26yfilQ/9VgxRV8oOBnV0OUhDBrLLMQWxPIsn6W4wbPpx78Ic/TMCElWV8QtOYaM0YQKdAu1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=IHWlugbK; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52caebc6137so573059e87.0
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 02:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1720691951; x=1721296751; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GuuWVjlB0Cz7vUqKOIne/mXP7a2S7gB34xkezwA42A8=;
+        b=IHWlugbKrgPbiAwBHrWOyL4bD0gbm5Kdk0vZ6nKfZeaKbedxgXbqqpJCX71cHpvDpp
+         Shc8HDJ8/gWWev0EO+UqvvG2d97Zttdho7bjaJuUWwybxpg3s7oYUBOA5zLuihJuvzoA
+         kET2HXvR3MndP8z1kHlO0Hd76mhcgAKL045keTeU8S2xD373c6BI72TFR0XLfX4LiJc+
+         GfI45K1YOQtvDIbLoEPDpu6DLjj718h6aHWdJcZlwq7gEaIFQL12zpIUf6ELrNo8M8Js
+         wrp7qq+6ugTIgybW+VUWdFiy6c15FKodNK1b6qdTfmrDiPaEx9yvV3EKKUGSc8iwBTFk
+         OAVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720691951; x=1721296751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GuuWVjlB0Cz7vUqKOIne/mXP7a2S7gB34xkezwA42A8=;
+        b=Lp4j2Gmkp61UghTEGNfOuw/cPVD04gjlR7OsM2TOgTQ3O17zyTv8/1jx0U++sF5e+0
+         eIJH+qPblb8MT4RLAZVyx0YEL8u+r4U1pTHA4jVOLa7SdqIvwWZifnYtgRjqOrCcJ621
+         2VL8byJrn4w4Tj8EBAP3LYiihLhKTjCPR57I3ECmzNDoV39m4NzIqGI4GCutqOVWR3NP
+         4wREUmLgrBxZVQVJYIJpLn4dMtWsgX2h/C6HFYAb/IuUywzc3NLdXTOrPp/H1+7jsop1
+         qnCgpyO7GMSzCVBk9yXiVBJZqE8B4KaFjVBPbxsH+dUqmi7bifUnG23dNpg9d0IaiPWK
+         zR7Q==
+X-Gm-Message-State: AOJu0YwFNvG3PgQqnusbzYXt47XMhGkzsEuUU6v8dPH47d4U4Yf/ADf2
+	eIYxnKoXA0WOYh7QNYynIgzLiLd8NNrFm92TfLlWbbaohKjT4UZ7AIA12tKMZYWRmVj7YNLvcNP
+	b
+X-Google-Smtp-Source: AGHT+IH54NMvus/TRmrMfLiVkmV0kogw0GU5suMDAjQk7W866o7lzZtkL5UGq2FiElKLm4rQS0dV2g==
+X-Received: by 2002:a05:6512:3c99:b0:52c:ddb8:6cfd with SMTP id 2adb3069b0e04-52eb99a0965mr5585703e87.40.1720691950659;
+        Thu, 11 Jul 2024 02:59:10 -0700 (PDT)
+Received: from jupiter.vstd.int ([176.230.79.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e187sm7374169f8f.21.2024.07.11.02.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 02:59:10 -0700 (PDT)
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] rpcrdma: fix handling for RDMA_CM_EVENT_DISCONNECTED due to address change
+Date: Thu, 11 Jul 2024 12:59:07 +0300
+Message-Id: <20240711095908.1604235-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CA/8qHnSry4tIedh"
-Content-Disposition: inline
-In-Reply-To: <Zo8VXAy5jTavSIO8@dread.disaster.area>
+Content-Transfer-Encoding: 8bit
 
+We observed a scenario in IB bonding where RDMA_CM_EVENT_ADDR_CHANGE is
+followed by RDMA_CM_EVENT_DISCONNECTED on a connected endpoint. This
+sequence causes a negative reference splat and subsequent tear-down
+issues due to a duplication in the disconnection path.
 
---CA/8qHnSry4tIedh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This fix aligns with the approach taken in a previous change
+4836da219781 ("rpcrdma: fix handling for RDMA_CM_EVENT_DEVICE_REMOVAL"),
+addressing a similar issue.
 
-I just wanted to chime in to express a sincere "thank you!" to all of you
-involved in this thread, for providing such a terrific example of how to
-clearly and exhaustively present a systems problem, and then also how to
-methodically determine its root cause.
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+---
+ net/sunrpc/xprtrdma/verbs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If there were a textbook on this subject in the IT/CompSci context (if there
-is, please let me know!), *this* exchange should make it into the next edit=
-ion
-on how to get problems analyzed and resolved.
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 432557a553e7..e42f5664ecaf 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -273,7 +273,8 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		wake_up_all(&ep->re_connect_wait);
+ 		return 0;
+ 	case RDMA_CM_EVENT_DISCONNECTED:
+-		ep->re_connect_status = -ECONNABORTED;
++		if (xchg(&ep->re_connect_status, -ECONNABORTED) != 1)
++			break;
+ disconnected:
+ 		rpcrdma_force_disconnect(ep);
+ 		return rpcrdma_ep_put(ep);
+-- 
+2.39.3
 
-I will keep it in my personal bookmarks right next to [0], which is a short
-but great essay about how what you just put into practice is possible in
-theory, and which I've used whenever needed to inspire hope in others (and,
-truth be told, also in myself :)) in the face of the daunting complexity of
-modern computer systems.
-
-[0]: https://blog.nelhage.com/post/computers-can-be-understood/
-
---=20
-with best regards:
-- Johannes Truschnigg ( johannes@truschnigg.info )
-
-www:   https://johannes.truschnigg.info/
-
---CA/8qHnSry4tIedh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEGu9IhkI+7/aKLUWF95W3jMsYfLUFAmaPnRgACgkQ95W3jMsY
-fLVRfg//UdNTCBR+P2/nOsG3Si2N6n/AOMKgTJKZBlcUas0eKuuqKvjHTVk6Z5nM
-WZgyBY3dUW/vDn6ZhpEZg2NA+uHSEWd3HbSpXEgrJ/JZJN2t3vciwSEzdIoA6qy/
-0QCSbdR8PwxpPSWemkfGeQXblT3ZcgrjGaLyEjPkKF3GxOKGsW81F5YIdQyJkrLQ
-lGgj/luNdacT7qTbII169+VlBe4QQsRm71mG2oGgnjgl2/rVLLmqmBpGYYrkLJH8
-dCZ6jmRQryWsphKWKisWOQD7Je34tRNkAZO36Upb6oRNf5XgsdtPummYZNpxoCJm
-ft69lsgeGaYnN5mKjUbA+KMj9UiSqPygEeQXNVlQWGuKVjN8PBKG4GFvkV8p41T9
-XvZuAorpiAnEiVr971pmm0q5NoOVBXLM/h5r+5Q6CFTYGGYeX5iVUxUkWtwG8eAV
-0xVJ15JSnLQeGHynQs8jgKN49iwmqbJq4l4bs+paLH4hzpx3tCvzl1nH23pYQXof
-g9igwMErSWWBNkJPXcomiaFL7tMFT/ensfkRxvSObDIuNZ4zaF/DuyPQZJygyOYi
-XoJQqM5umzY7KGTT7kbGNr1mUJiVLunfBiBwuzYX2wW30hKlubnm4m/HOl2HTJGT
-EGhRxv8gkYeS/TNBMtqCKNLh93Uz1yIaNm8MTgloCnV7DXrhNYc=
-=HCJz
------END PGP SIGNATURE-----
-
---CA/8qHnSry4tIedh--
 
