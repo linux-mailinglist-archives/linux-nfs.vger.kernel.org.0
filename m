@@ -1,59 +1,59 @@
-Return-Path: <linux-nfs+bounces-4795-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4796-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2DA292E42E
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 12:08:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C28D092E446
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 12:11:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B580D289279
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 10:08:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 478AAB216BF
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 10:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4F0157E93;
-	Thu, 11 Jul 2024 10:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892A61527A1;
+	Thu, 11 Jul 2024 10:11:17 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B085CDE9
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 10:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C514E2F1
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 10:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720692487; cv=none; b=oyFUaoCnaDm2TJpLkgxRFaLjhSuI1+o3+KjbTRHW1xjX+ASfAS68pS7nHus1Vma2ZQaMOX0363Ok3o259GJo99bIVmAhHgPjTaNPfwPbXms89nwktTMdWm/URbJcXq4/o0VpnA8Olb67Qypiej4OoJUhiCHHa0t868MZxLmYfUA=
+	t=1720692677; cv=none; b=e3Z4NwOQd20dAXNzkFbz2NzhOvZAVrcRVA0bPSX1XhbrCcM31wRZmOZfIF/tfZn03EWUP/7ZtrLGbVhOe7O6kkzfWhdf28BhAXrxxqUUjiatJgJCBq976mGsbQs5huwAVyggCVcSUNK0KR+rBCHuNxCsIEdGDDVXmULcSs01WXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720692487; c=relaxed/simple;
-	bh=8w1kIjq/QH8NCq7TyMS6VWRcdT0AfDYZnIW/iWkVqIw=;
+	s=arc-20240116; t=1720692677; c=relaxed/simple;
+	bh=RNFZdcyCboRm7+e9Iwv8AoqZh62hZok+R2Fk2KG/qf8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q5nDZzSG+yMtZyLtaH6lZFBAX1qIhFCwbvRiKa4rbzbzqtZXVEIoC+xGEr4kxeCKLwHQ4CphP72b471+/mPALoi19sBO7TncD7gEKjQfEmyPDoy5wb/cnRWl/CVpg+SVJmRz1GbAxHnSE37+SxPNhVGO/+Y1+1xbf2sNaVrjzeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:Content-Type; b=WnfOmb/Kj0E9gIAA73cXf0hud8misTjmqhnAScIz/dxFyFFHDqOaBWJx9/mVST1svrOH/3AprDTRK+dIx3oJ93wHwo4+FiNZyNutEJ/8953JfFxeJkHQBj3AhWXo7XrVei/L36+HwJTXt9B/OJRP5+f/iUdzaCzTVfvmLv3ucrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-426ff626778so442625e9.2
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 03:08:04 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42671c659e4so443995e9.3
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 03:11:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720692483; x=1721297283;
+        d=1e100.net; s=20230601; t=1720692674; x=1721297474;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOw1xL4XHhTZlrF1GwZqKhS0+zZtzEZWgnsFa3Dxk8A=;
-        b=iVrWN4u+feoJi2WFz7MwwLuH/Xez2OJdo2yOPpbpqikDh0x2/gw7fMYVr7FOIZ5QEV
-         tQAGIBgKOKo5OjMc8bXBhghMmvMVx1JRLaMe7odAY4PJ6vS/38T4RNWFKb0/vvh+GzUP
-         rcG+MlEikzWjmaEV5jvITCnqsDQbMp1zy+JeKFKWY1kOKOpOq/mgJoP37AI3+WCLXiRG
-         BJkFkGGqKg3UEl+ROtDuRFrn0X4oir2vghZnpk7S8Gu2YfU/9PQ0BuNky3XFbkZTIZ78
-         X9i8m3cg06dE7nfdIO6LqGuUpdxUqjqdcRMvmuVDTX2Na5VA30Bj7EBlPjLRwERGPbwX
-         HV1g==
-X-Gm-Message-State: AOJu0YzAHEhoEzyMqE571fMusYpEBrCO0aIiNPVYeCJJ76e9ephY31Ul
-	4CD6zBCXgAaimzozeQCTkr+Zw57VawI/C8IEPZJgRxUrgvxwJ6bv/K+hEDJT
-X-Google-Smtp-Source: AGHT+IGuPvHCMs+K3/55L/UK6KSkArcQn5LQ8YEbpgGOCPevANue7PjUSDSy0cDBPjOG/JHPSIc5FQ==
-X-Received: by 2002:a05:600c:1c96:b0:426:6ecc:e5c4 with SMTP id 5b1f17b1804b1-42798364b42mr12345285e9.4.1720692483379;
-        Thu, 11 Jul 2024 03:08:03 -0700 (PDT)
+        bh=/hPFhI1KddiGJt7tvOYZXrrD/wSJCIduHna/79+J9Mk=;
+        b=ZXlD2DdPWmSdWkQWxkqrLjwu2aVGvwZQj20bt0EVUfFZ0a0/a/HSPvGfGo2YUTjIJQ
+         hXvsd9lyV5/Q8L+3Rg7sjHOCbMDRjII1XY/4TdMAV7+osS9NQo3dXtNDf+14rKzOTHg3
+         s17qS6T7fANOQ+XlDopASAgKJHW8FwWeNezv2AX6+1feUltjBakW1x7t5oqGVUaANXcB
+         rK2a1+6P91LnzSrH5MrfJrT19RtCvYylsZDBeNX7HDTwUy04ZWDAyt1+PUB5pR67ZNyD
+         DjHlhCmhu/5Rq6BsqH28XlMJW0kwzwm16twinbzomy/Rcy3ncEHRFAYvmWWLOtat/cvF
+         aZEg==
+X-Gm-Message-State: AOJu0YyT0U6M8huJW76pC2Y3l6/fvPORtwV3XBemnbBGKw7t+XHTGLus
+	xJnixFV5kEEg0PcmJmcMX1jR9EG1soLG2JOo/GDmzoNbKqorANOj
+X-Google-Smtp-Source: AGHT+IHv/kYPBDowvgDnGENyrGMbGkefq+F79D0rLaH1bWEXoNNHb3EdgvcpLF6bsDuD6oxP5OxiyQ==
+X-Received: by 2002:a5d:6489:0:b0:366:eb60:bd12 with SMTP id ffacd0b85a97d-367f05a545dmr1261847f8f.3.1720692674037;
+        Thu, 11 Jul 2024 03:11:14 -0700 (PDT)
 Received: from [10.100.102.74] (85.65.198.251.dynamic.barak-online.net. [85.65.198.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e02esm7354939f8f.3.2024.07.11.03.08.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e17csm7420705f8f.7.2024.07.11.03.11.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 03:08:02 -0700 (PDT)
-Message-ID: <11b327b2-4953-448d-9807-f22434cf0070@grimberg.me>
-Date: Thu, 11 Jul 2024 13:08:01 +0300
+        Thu, 11 Jul 2024 03:11:13 -0700 (PDT)
+Message-ID: <a4811705-b72f-4a1a-9ea8-11435b002259@grimberg.me>
+Date: Thu, 11 Jul 2024 13:11:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,32 +61,32 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rpcrdma: fix handling for RDMA_CM_EVENT_DISCONNECTED
- due to address change
+Subject: Re: [PATCH 2/2] rpcrdma: improve handling of
+ RDMA_CM_EVENT_ADDR_CHANGE
 To: Dan Aloni <dan.aloni@vastdata.com>, chuck.lever@oracle.com
 Cc: linux-nfs@vger.kernel.org
 References: <20240711095908.1604235-1-dan.aloni@vastdata.com>
+ <20240711095908.1604235-2-dan.aloni@vastdata.com>
 Content-Language: en-US
 From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20240711095908.1604235-1-dan.aloni@vastdata.com>
+In-Reply-To: <20240711095908.1604235-2-dan.aloni@vastdata.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 11/07/2024 12:59, Dan Aloni wrote:
-> We observed a scenario in IB bonding where RDMA_CM_EVENT_ADDR_CHANGE is
-> followed by RDMA_CM_EVENT_DISCONNECTED on a connected endpoint. This
-> sequence causes a negative reference splat and subsequent tear-down
-> issues due to a duplication in the disconnection path.
->
-> This fix aligns with the approach taken in a previous change
-> 4836da219781 ("rpcrdma: fix handling for RDMA_CM_EVENT_DEVICE_REMOVAL"),
-> addressing a similar issue.
+> It would be beneficial to implement handling similar to
+> RDMA_CM_EVENT_DEVICE_REMOVAL in the case where RDMA_CM_EVENT_ADDR_CHANGE
+> is issued for an unconnected CM.
 
-I think a code comment will help here. This whole handler is not very 
-intuitive (but
-that may be a result of the rdma_cm state machine, the picture in other 
-ulps do not
-look materially different).
+I think Chuck has a pending series for handling device removals with a 
+dedicated
+ib_client. So one would have to rebase against the other...
+
+See: 
+https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.gittopic-device-removal
+
+Other than that, looks good,
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
