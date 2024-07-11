@@ -1,167 +1,1652 @@
-Return-Path: <linux-nfs+bounces-4815-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4816-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E96D92EAFA
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 16:44:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0881892EB0F
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 16:54:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFDB4B2270C
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 14:44:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E3C71C20FE6
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 14:54:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E6816A93F;
-	Thu, 11 Jul 2024 14:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E44158DA2;
+	Thu, 11 Jul 2024 14:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="q1PXf1Gy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jM9ECtd5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CE3161B43
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 14:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A4A12C549
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 14:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720709078; cv=none; b=ev6QjES7Z/YWjLWTMqX9FEyKMSfkblZnUnsLz/2G378Y+wUXvvPVbp8PXvbDZSQVtEDFJL6ziQxM5N2xYfPfHYFBhfNXJ4cCLjw8lZnl5HeRHCRz0gopRdI9XwSsr7MV3sDG51J9zHRcaG1MeF421hnQvi8YfNyMpY/uUspQsIo=
+	t=1720709674; cv=none; b=U2foZ24ywDj8IV9R5FnGsMKYJAeOOAFv/7kasJrahshnA75zwz9yqCDrylf3VwRhZ9deUKRF4rz+MikDbs93npD2ma2yLVokZ2srxHEd/NEA2fl9d4PZGqrUMg1XlbBiRbDxtS861PzD3BfW+yxYt7odwMrTE9vNZijz4hwVm6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720709078; c=relaxed/simple;
-	bh=MMu6kiGgrdyVeIGgo0o2g5ISXoiklOJgpiyd0c6Mhcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCWxO5ltvvmUYd1cKIezGcfprAjH8VCK1MsRQPLA2TMNGHSSLPTaXNABOERnZGbaq/UVZ3PAw2UEq7pm2hqk2PSoEhPjti2neDbIA7NlxFMuPwP0TbB1VPpg/Xp9qN7nRr+TMrmtT613MP0IvwuvoXvVdnSwEueH/BPjx+t442M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=q1PXf1Gy; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-65651296d91so8568737b3.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 07:44:36 -0700 (PDT)
+	s=arc-20240116; t=1720709674; c=relaxed/simple;
+	bh=RrMjYaffLbaR0YKpcslyvgsrckSMSsTc3SoJIdmmJHI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A2nodsAudoAiRKnE21Cc27ai9qAVckK7N8BPmy385FDpAh5CS6+34F+ncrjxMAsUCr82UlTP5+D1UEe41d92mniLmZCLFcWeRpQGC/jyrSDve8wX2nI0s/Wkq/eKgoaWwuSRd3z2fkKK+CJk0+bBSyN5afpPcnsIgxjW71hk6fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jM9ECtd5; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e03a63ec15eso933019276.1
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 07:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1720709075; x=1721313875; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6PLNSJZMY2HBtPFlfBgNDPZWDEOAS/uY6eb53FVzXU=;
-        b=q1PXf1GybYh1aDXkOQriXh3etXHQaQvAEvEHvmjzflwesjMtmTkIcKjsvkM3cvyMew
-         1ADOSrKUCZeN1Bc6ndt1rYxk0DDfHkzu9xezqPuUzubgvhJWQPvuMkrPn/0U5ZZxfo9i
-         fctEzUyU1X+gwXWNkJGT6Qb6Rul3J21Wfk7CiQmTfo+8/rA+YGP6qKw6dLORH3DeagL/
-         y8faZ8jpGGnpY3BUumaQJl7BBvPzevdG9+6FJ6dQodNUGNJSp/gYUNCG5drWdvmjx5Mn
-         cv8yTWT0bLgjhtN0Oa3FCF0hNCixvqUBhriTBD67tVMd36sVAEQFtLzVdeP7ReM7JUpg
-         nXbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720709075; x=1721313875;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1720709669; x=1721314469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p6PLNSJZMY2HBtPFlfBgNDPZWDEOAS/uY6eb53FVzXU=;
-        b=dGNBOpHIXDtzXtKSKuODqqTe+rnZhW/T6X5oeHp2xVHzFmXE4pPHMoj/1pPwChBd+4
-         9nmo0spimWyeZwPG7VfxiXEOn4gZPEaplieHynACDiECV4UzkABnUXCsK1eJ5Yi9bQVM
-         9dYXIcrjY4WI+qxz94tDp1g+1c2TndXMyo5ilpUtpJfCIGeNhc5rQ41x468viNelLe3O
-         UvcYR+t14nppGbl5Ny7wiHe+bBH2BkGDo4Va3oPMxlmr5DrpFB8qDzudKLan73Pr9B8N
-         6WV+yD0KfSvAN0/ZCi6cZqHCobhkgHyFpl+8jgfVvsPqzu+RRKzInRa6/SO2SwWp0ffb
-         +DOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwadKkYbrxBwVhPsuULc4J5cSTKkZtVHmVfbIp2srsdAju1BP8IEhz/f01+HZa7yHXY3lBeN/ZcgCv+3WuuJe7qYk+Yxw3r9fb
-X-Gm-Message-State: AOJu0YwSBU2isdvH+Tt/uc0W5LuJj7CIZ1trPx2XL+fFQX0DF2nEPnol
-	Y2hMpUWQe4kKZ8TKQPhsq/m0wPyqybi4A4gsnTktEnjnvnvosOvolVR+5ue61/g=
-X-Google-Smtp-Source: AGHT+IFAnEDVnsGx1tZ1AxBo1QTn+tOSC2MfALvNb6Q+MllvTQBzHLMq8T3kjDK5yp3+1lqcT3GiRg==
-X-Received: by 2002:a05:690c:3385:b0:62f:2553:d3b3 with SMTP id 00721157ae682-658ef3414eemr120805467b3.29.1720709075414;
-        Thu, 11 Jul 2024 07:44:35 -0700 (PDT)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4936079sm11198567b3.15.2024.07.11.07.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 07:44:34 -0700 (PDT)
-Date: Thu, 11 Jul 2024 10:44:34 -0400
-From: Josef Bacik <josef@toxicpanda.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>,
-	kernel-team@fb.com, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] fs: multigrain timestamp redux
-Message-ID: <20240711144434.GB1235314@perftesting>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
+        bh=9KeOXrgbPqSyAOgUE4AtCJudM7R8IfA5Wx0Ua3oJ4yE=;
+        b=jM9ECtd5dh5rqQ0L6ax4ezCGghoM+yYhq9wk93k7HPy/iO/iEK3vpeDvA/xQF8gzxA
+         /c3MTystkiVjQDZYF/XSfCUe9KnRU6C/0sWNjWme1tptbjdVDHqrEi4DilAvltyy27bJ
+         n3P7oFXxaPrByZJoqDqdP6x83+IkNfVfSjjUTEL3793Y1m/Yt5Z3VDt8iROdRthknkxZ
+         hgHzqVtfx8yDPP5MIVLEhbRjFXplpFeDKtEwUgsCahl/sxcbxhqwPgWMH5z08+cVrfRV
+         l3K5BBe0lsBG1qEh8C8THiD17yhzeg9eGYn8aQmOnHLJ9yvxAuX9FM9VbSZxJLZgv2HY
+         6aQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720709669; x=1721314469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9KeOXrgbPqSyAOgUE4AtCJudM7R8IfA5Wx0Ua3oJ4yE=;
+        b=hoop8raCpIZQhjR4QnguHKVrNA96/AEli2cPMS3P1kPUR902B5A8uEmb2RQpoJEmFV
+         jdJ4q8D4OyFsD74/worcuW/nxC/Ch+CzI9BKjFl4dMOCW1isH5uwqbg1xl1jNTEii9XB
+         1yZ4IdpzWEaBGyEuxCb339xPXkomquptpSFrnWzBba25l5v+PMq12CB8NXYAaoTj6Ig7
+         b2s/syJu2Ln/gxRMUIRkkHtWbuxY3UbD+AiTcUCH0O7WWFU15HAjj0oK0F0dwZ2LZZKF
+         hLvPpk0+Ry9JJxF2S6jXeGxlBjzKmDenBfgUn2zCRTOGmUBKeWAQlgJmVOGPQfoAs+I/
+         RFdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGWg3szcMiRGD+Li10NShVcN9E97nME87HqiThhw9S/zgqCVQnxflfN9XsNH6eaaCVYMZfyciT120R2uOGTWmJKxmBDUMV1GOv
+X-Gm-Message-State: AOJu0YxsxW1IaxmTb0S92yfW487b9xCaAjj97qzPQ7jA7U0N6clVv8kI
+	80D6em3D9QCf9z656WYL1Xm1Ao0kKBe2Tovoco1/4OxujEu/kf620zzII+Emknmud8NDXxoHqgc
+	Veixc6R+brzcfU8CIPfwbRdoIlD4=
+X-Google-Smtp-Source: AGHT+IH1We3VTuVUJl4PiqIe5a+/EpClWQgRcJLu+iuL0Lep1LUeEXreyZG0/7BR4KSvIJeXk+vJTkGKSoPw/u+d6cM=
+X-Received: by 2002:a25:2704:0:b0:e03:5f7f:1215 with SMTP id
+ 3f1490d57ef6-e041b095eb0mr10468503276.38.1720709669028; Thu, 11 Jul 2024
+ 07:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
+References: <CADpNCvYGqA3a51OH=AcqmKyAmnx3yoZjYPo7US+qk-OMX789vA@mail.gmail.com>
+ <ZoWWis0AgvmiVzBU@tissot.1015granger.net> <CADpNCvbxN5hmORArs+vb5D7nRC4xNf1U4oUSDbkUx8MPV547rA@mail.gmail.com>
+ <0445d64ebcc7185bf48cc05f72ca29b859f45c26.camel@poochiereds.net>
+ <CADpNCvZ-kEc6hOQHsbn7yHtvB-acg_gQwzEjN9zcjw0oM2RgGw@mail.gmail.com>
+ <321ddc16356d75f9eb6e5ab15c4e28fae1466267.camel@kernel.org>
+ <CADpNCvb5kpghbEj+yU1OgKF0BJS9dYDtFgRz3ArfCamCnyn_Ww@mail.gmail.com>
+ <c138dd82bb493abe7b0c34b1e2803437bd163c54.camel@kernel.org>
+ <CADpNCvY-hTbO6OGAHO4N43UZjEtv5eyDmNU-S19ULn1iUOES3A@mail.gmail.com>
+ <e1480c3a6ec15d6df9edd26bdb9e39a2edb51c6a.camel@kernel.org>
+ <CADpNCvbfrDr7WbgKc+-TMHV-C+p9Fzp7vLNz6VB==29EcjqVYg@mail.gmail.com>
+ <3bb40da41e450141a0c91f32f184f465d3c5f203.camel@kernel.org>
+ <CADpNCvZ0wpPqenm-Qydnpki7HgjUMNB+UgcFa9ZrTY4bK+wEFw@mail.gmail.com>
+ <ed0dcff753054e8fe651ce6ecc89d9c8bfc2d38e.camel@kernel.org>
+ <CADpNCvY4p3zdFRAk4vivt35GqUm_x0P10KHUTVjO4gQPN+R4zg@mail.gmail.com> <117c90eecca7bbcf617d6d1c8b6f42df3814690d.camel@kernel.org>
+In-Reply-To: <117c90eecca7bbcf617d6d1c8b6f42df3814690d.camel@kernel.org>
+From: Youzhong Yang <youzhong@gmail.com>
+Date: Thu, 11 Jul 2024 10:54:17 -0400
+Message-ID: <CADpNCvYWfkbvabEt8u9Wn2=LWPbFTKUyr8JE_tKuJSyLj-XiFw@mail.gmail.com>
+Subject: Re: Leaked nfsd_file due to race condition and early unhash (fs/nfsd/filecache.c)
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 11, 2024 at 07:08:04AM -0400, Jeff Layton wrote:
-> tl;dr for those who have been following along:
-> 
-> There are several changes in this version. The conversion of ctime to
-> be a ktime_t value has been dropped, and we now use an unused bit in
-> the nsec field as the QUERIED flag (like the earlier patchset did).
-> 
-> The floor value is now tracked as a monotonic clock value, and is
-> converted to a realtime value on an as-needed basis. This eliminates the
-> problem of trying to detect when the realtime clock jumps backward.
-> 
-> Longer patch description for those just joining in:
-> 
-> At LSF/MM this year, we had a discussion about the inode change
-> attribute. At the time I mentioned that I thought I could salvage the
-> multigrain timestamp work that had to be reverted last year [1].
-> 
-> That version had to be reverted because it was possible for a file to
-> get a coarse grained timestamp that appeared to be earlier than another
-> file that had recently gotten a fine-grained stamp.
-> 
-> This version corrects the problem by establishing a per-time_namespace
-> ctime_floor value that should prevent this from occurring. In the above
-> situation, the two files might end up with the same timestamp value, but
-> they won't appear to have been modified in the wrong order.
-> 
-> That problem was discovered by the test-stat-time gnulib test. Note that
-> that test still fails on multigrain timestamps, but that's because its
-> method of determining the minimum delay that will show a timestamp
-> change will no longer work with multigrain timestamps. I have a patch to
-> change the testcase to use a different method that is in the process of
-> being merged.
-> 
-> The testing I've done seems to show performance parity with multigrain
-> timestamps enabled vs. disabled, but it's hard to rule this out
-> regressing some workload.
-> 
-> This set is based on top of Christian's vfs.misc branch (which has the
-> earlier change to track inode timestamps as discrete integers). If there
-> are no major objections, I'd like to have this considered for v6.12,
-> after a nice long full-cycle soak in linux-next.
-> 
-> PS: I took a stab at a conversion for bcachefs too, but it's not
-> trivial. bcachefs handles timestamps backward from the way most
-> block-based filesystems do. Instead of updating them in struct inode and
-> eventually copying them to a disk-based representation, it does the
-> reverse and updates the timestamps in its in-core image of the on-disk
-> inode, and then copies that into struct inode. Either that will need to
-> be changed, or we'll need to come up with a different way to do this for
-> bcachefs.
-> 
-> [1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+I'd like to report that your patches + the "list_head nf_gc" patch
+together have been tested under heavy nfs load generated by machines
+in our testing farm, no leak has been observed.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Surely my reproducer can no longer reproduce the issue once the
+patches are applied.
 
-Thanks,
+FYI here is the reproducer:
+https://github.com/youzhongyang/nfsd-file-leaks
 
-Josef
+On Wed, Jul 10, 2024 at 4:22=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Great! If you're able to test the patches I sent earlier today, please
+> let us know if they help with your reproducer.
+>
+>
+> On Wed, 2024-07-10 at 10:49 -0400, Youzhong Yang wrote:
+> > Thanks Jeff. Just sent out a separate e-mail.
+> >
+> > I have a simple reproducer now, it's a C program, I will upload it to
+> > a github repository together with a readme file and then post the link
+> > (if allowed) here.
+> >
+> > On Wed, Jul 10, 2024 at 9:40=E2=80=AFAM Jeff Layton <jlayton@kernel.org=
+> wrote:
+> > >
+> > > Can you send it as a separate [PATCH] email? I think your MUA is
+> > > mangling the patches as I couldn't apply it earlier. Either use git-
+> > > send-email or have a look over this page:
+> > >
+> > >
+> > >     https://www.kernel.org/doc/html/latest/process/email-clients.html=
+#email-clients
+> > >
+> > > Thanks!
+> > > Jeff
+> > >
+> > > On Wed, 2024-07-10 at 09:33 -0400, Youzhong Yang wrote:
+> > > > Thanks. Here it is again:
+> > > >
+> > > > commit c6e69cebc052cb82d91fc81a98aee20749fe8d47
+> > > > Author: Youzhong Yang <youzhong@gmail.com>
+> > > > Date:   Thu Jul 4 11:25:40 2024 -0400
+> > > >
+> > > >     nfsd: fix nfsd_file leaking due to mixed use of nf->nf_lru
+> > > >
+> > > >     nfsd_file_put() in one thread can race with another thread doin=
+g
+> > > >     garbage collection (running nfsd_file_gc() -> list_lru_walk() -=
+>
+> > > >     nfsd_file_lru_cb()):
+> > > >
+> > > >       * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do
+> > > > nfsd_file_lru_add().
+> > > >       * nfsd_file_lru_add() returns true (with NFSD_FILE_REFERENCED
+> > > > bit set)
+> > > >       * garbage collector kicks in, nfsd_file_lru_cb() clears
+> > > > REFERENCED bit and
+> > > >         returns LRU_ROTATE.
+> > > >       * garbage collector kicks in again, nfsd_file_lru_cb() now
+> > > > decrements nf->nf_ref
+> > > >         to 0, runs nfsd_file_unhash(), removes it from the LRU and
+> > > > adds to the dispose
+> > > >         list [list_lru_isolate_move(lru, &nf->nf_lru, head)]
+> > > >       * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so
+> > > > it
+> > > > tries to remove
+> > > >         the 'nf' from the LRU [if (!nfsd_file_lru_remove(nf))]. The
+> > > > 'nf' has been added
+> > > >         to the 'dispose' list by nfsd_file_lru_cb(), so
+> > > > nfsd_file_lru_remove(nf) simply
+> > > >         treats it as part of the LRU and removes it, which leads to
+> > > > its removal from
+> > > >         the 'dispose' list.
+> > > >       * At this moment, 'nf' is unhashed with its nf_ref being 0, a=
+nd
+> > > > not on the LRU.
+> > > >         nfsd_file_put() continues its execution [if
+> > > > (refcount_dec_and_test(&nf->nf_ref))],
+> > > >         as nf->nf_ref is already 0, nf->nf_ref is set to
+> > > > REFCOUNT_SATURATED, and the 'nf'
+> > > >         gets no chance of being freed.
+> > > >
+> > > >     nfsd_file_put() can also race with nfsd_file_cond_queue():
+> > > >       * In nfsd_file_put(), nf->nf_ref is 1, so it tries to do
+> > > > nfsd_file_lru_add().
+> > > >       * nfsd_file_lru_add() sets REFERENCED bit and returns true.
+> > > >       * Some userland application runs 'exportfs -f' or something
+> > > > like
+> > > > that, which triggers
+> > > >         __nfsd_file_cache_purge() -> nfsd_file_cond_queue().
+> > > >       * In nfsd_file_cond_queue(), it runs [if
+> > > > (!nfsd_file_unhash(nf))], unhash is done
+> > > >         successfully.
+> > > >       * nfsd_file_cond_queue() runs [if (!nfsd_file_get(nf))], now
+> > > > nf->nf_ref goes to 2.
+> > > >       * nfsd_file_cond_queue() runs [if (nfsd_file_lru_remove(nf))]=
+,
+> > > > it succeeds.
+> > > >       * nfsd_file_cond_queue() runs [if
+> > > > (refcount_sub_and_test(decrement, &nf->nf_ref))]
+> > > >         (with "decrement" being 2), so the nf->nf_ref goes to 0, th=
+e
+> > > > 'nf' is added to the
+> > > >         dispose list [list_add(&nf->nf_lru, dispose)]
+> > > >       * nfsd_file_put() detects NFSD_FILE_HASHED bit is cleared, so
+> > > > it
+> > > > tries to remove
+> > > >         the 'nf' from the LRU [if (!nfsd_file_lru_remove(nf))],
+> > > > although the 'nf' is not
+> > > >         in the LRU, but it is linked in the 'dispose' list,
+> > > > nfsd_file_lru_remove() simply
+> > > >         treats it as part of the LRU and removes it. This leads to
+> > > > its
+> > > > removal from
+> > > >         the 'dispose' list!
+> > > >       * Now nf->ref is 0, unhashed. nfsd_file_put() continues its
+> > > > execution and set
+> > > >         nf->nf_ref to REFCOUNT_SATURATED.
+> > > >
+> > > >     As shown in the above analysis, using nf_lru for both the LRU
+> > > > list
+> > > > and dispose list
+> > > >     can cause the leaks. This patch adds a new list_head nf_gc in
+> > > > struct nfsd_file, and uses
+> > > >     it for the dispose list.
+> > > >
+> > > >     Signed-off-by: Youzhong Yang <youzhong@gmail.com>
+> > > >
+> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > > index ad9083ca144b..22ebd7fb8639 100644
+> > > > --- a/fs/nfsd/filecache.c
+> > > > +++ b/fs/nfsd/filecache.c
+> > > > @@ -216,6 +216,7 @@ nfsd_file_alloc(struct net *net, struct inode
+> > > > *inode, unsigned char need,
+> > > >                 return NULL;
+> > > >
+> > > >         INIT_LIST_HEAD(&nf->nf_lru);
+> > > > +       INIT_LIST_HEAD(&nf->nf_gc);
+> > > >         nf->nf_birthtime =3D ktime_get();
+> > > >         nf->nf_file =3D NULL;
+> > > >         nf->nf_cred =3D get_current_cred();
+> > > > @@ -393,8 +394,8 @@ nfsd_file_dispose_list(struct list_head *dispos=
+e)
+> > > >         struct nfsd_file *nf;
+> > > >
+> > > >         while (!list_empty(dispose)) {
+> > > > -               nf =3D list_first_entry(dispose, struct nfsd_file,
+> > > > nf_lru);
+> > > > -               list_del_init(&nf->nf_lru);
+> > > > +               nf =3D list_first_entry(dispose, struct nfsd_file,
+> > > > nf_gc);
+> > > > +               list_del_init(&nf->nf_gc);
+> > > >                 nfsd_file_free(nf);
+> > > >         }
+> > > >  }
+> > > > @@ -411,12 +412,12 @@ nfsd_file_dispose_list_delayed(struct list_he=
+ad
+> > > > *dispose)
+> > > >  {
+> > > >         while(!list_empty(dispose)) {
+> > > >                 struct nfsd_file *nf =3D list_first_entry(dispose,
+> > > > -                                               struct nfsd_file,
+> > > > nf_lru);
+> > > > +                                               struct nfsd_file,
+> > > > nf_gc);
+> > > >                 struct nfsd_net *nn =3D net_generic(nf->nf_net,
+> > > > nfsd_net_id);
+> > > >                 struct nfsd_fcache_disposal *l =3D nn->fcache_dispo=
+sal;
+> > > >
+> > > >                 spin_lock(&l->lock);
+> > > > -               list_move_tail(&nf->nf_lru, &l->freeme);
+> > > > +               list_move_tail(&nf->nf_gc, &l->freeme);
+> > > >                 spin_unlock(&l->lock);
+> > > >                 svc_wake_up(nn->nfsd_serv);
+> > > >         }
+> > > > @@ -503,7 +504,8 @@ nfsd_file_lru_cb(struct list_head *item, struct
+> > > > list_lru_one *lru,
+> > > >
+> > > >         /* Refcount went to zero. Unhash it and queue it to the
+> > > > dispose list */
+> > > >         nfsd_file_unhash(nf);
+> > > > -       list_lru_isolate_move(lru, &nf->nf_lru, head);
+> > > > +       list_lru_isolate(lru, &nf->nf_lru);
+> > > > +       list_add(&nf->nf_gc, head);
+> > > >         this_cpu_inc(nfsd_file_evictions);
+> > > >         trace_nfsd_file_gc_disposed(nf);
+> > > >         return LRU_REMOVED;
+> > > > @@ -578,7 +580,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, stru=
+ct
+> > > > list_head *dispose)
+> > > >
+> > > >         /* If refcount goes to 0, then put on the dispose list */
+> > > >         if (refcount_sub_and_test(decrement, &nf->nf_ref)) {
+> > > > -               list_add(&nf->nf_lru, dispose);
+> > > > +               list_add(&nf->nf_gc, dispose);
+> > > >                 trace_nfsd_file_closing(nf);
+> > > >         }
+> > > >  }
+> > > > @@ -654,8 +656,8 @@ nfsd_file_close_inode_sync(struct inode *inode)
+> > > >
+> > > >         nfsd_file_queue_for_close(inode, &dispose);
+> > > >         while (!list_empty(&dispose)) {
+> > > > -               nf =3D list_first_entry(&dispose, struct nfsd_file,
+> > > > nf_lru);
+> > > > -               list_del_init(&nf->nf_lru);
+> > > > +               nf =3D list_first_entry(&dispose, struct nfsd_file,
+> > > > nf_gc);
+> > > > +               list_del_init(&nf->nf_gc);
+> > > >                 nfsd_file_free(nf);
+> > > >         }
+> > > >  }
+> > > > diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> > > > index c61884def906..3fbec24eea6c 100644
+> > > > --- a/fs/nfsd/filecache.h
+> > > > +++ b/fs/nfsd/filecache.h
+> > > > @@ -44,6 +44,7 @@ struct nfsd_file {
+> > > >
+> > > >         struct nfsd_file_mark   *nf_mark;
+> > > >         struct list_head        nf_lru;
+> > > > +       struct list_head        nf_gc;
+> > > >         struct rcu_head         nf_rcu;
+> > > >         ktime_t                 nf_birthtime;
+> > > >  };
+> > > >
+> > > > On Wed, Jul 10, 2024 at 8:49=E2=80=AFAM Jeff Layton <jlayton@kernel=
+.org>
+> > > > wrote:
+> > > > >
+> > > > > Ok, thanks. I went crawling over the filecache code, and found a
+> > > > > couple
+> > > > > of potential nfsd_file leaks. I'm testing patches now and will
+> > > > > likely
+> > > > > send them along later today.
+> > > > >
+> > > > > I think we do still want the patch to add nf_gc list_head. I'm no=
+t
+> > > > > certain there is a race there, but it's safer to just use a
+> > > > > separate
+> > > > > list_head and it doesn't represent a lot of memory.
+> > > > >
+> > > > > Could you post that one individually so that Chuck can pick it up=
+?
+> > > > >
+> > > > > Thanks,
+> > > > > Jeff
+> > > > >
+> > > > > On Tue, 2024-07-09 at 15:13 -0400, Youzhong Yang wrote:
+> > > > > > It's not on the LRU:
+> > > > > >
+> > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter,nf_lru,nf_=
+gc
+> > > > > > ffff898107b95980
+> > > > > >   nf_flags =3D 12,
+> > > > > >   nf_ref.refs.counter =3D 1
+> > > > > >   nf_lru =3D {
+> > > > > >     next =3D 0xffff898107b959c8,
+> > > > > >     prev =3D 0xffff898107b959c8
+> > > > > >   },
+> > > > > >   nf_gc =3D {
+> > > > > >     next =3D 0xffff898107b959d8,
+> > > > > >     prev =3D 0xffff898107b959d8
+> > > > > >   },
+> > > > > >
+> > > > > > I don't have an easy reproducer now as I am having difficulty
+> > > > > > generating tons of NFS read/write ops using a limited number of
+> > > > > > nfs
+> > > > > > clients. I use our in-house testing farm to test the patch.
+> > > > > >
+> > > > > > Thanks.
+> > > > > >
+> > > > > > On Tue, Jul 9, 2024 at 3:05=E2=80=AFPM Jeff Layton <jlayton@ker=
+nel.org>
+> > > > > > wrote:
+> > > > > > >
+> > > > > > > On Tue, 2024-07-09 at 14:37 -0400, Youzhong Yang wrote:
+> > > > > > > > Thanks Jeff.
+> > > > > > > >
+> > > > > > > > Unfortunately the early unhash easily leads to leaks:
+> > > > > > > >
+> > > > > > > > crash> kmem -S nfsd_file | grep '\[ffff' | sed -e 's|\[||' =
+-e
+> > > > > > > > 's|\]||'
+> > > > > > > > > xargs -i echo struct nfsd_file.nf_flags,nf_ref.refs.count=
+er
+> > > > > > > > > '{}' >
+> > > > > > > > /var/tmp/nfsd_files
+> > > > > > > > crash> !wc -l /var/tmp/nfsd_files
+> > > > > > > > 19 /var/tmp/nfsd_files
+> > > > > > > > crash> < /var/tmp/nfsd_files
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88865c778900
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 2
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88865c778cc0
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 3
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff8885d5f35e00
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 1
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88817443e780
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 3
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88818b3f0600
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 2
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88a4490f8300
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 1
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff88a0dab183c0
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 40
+> > > > > > >
+> > > > > > > That's a lot of references! Might be interesting to look more
+> > > > > > > closely
+> > > > > > > at that one, but the refcounts are all over the place, so it
+> > > > > > > really
+> > > > > > > does look like we just have a refcount leak somewhere.
+> > > > > > >
+> > > > > > > > ...
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff89209535f200
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 2
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff8980e15138c0
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 7
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff898107b95800
+> > > > > > > >   nf_flags =3D 8,
+> > > > > > > >   nf_ref.refs.counter =3D 3
+> > > > > > > > crash> struct nfsd_file.nf_flags,nf_ref.refs.counter
+> > > > > > > > ffff898107b95980
+> > > > > > > >   nf_flags =3D 12,
+> > > > > > >
+> > > > > > > The others are NFSD_FILE_GC. This one is also
+> > > > > > > NFSD_FILE_REFERENCED. Are
+> > > > > > > these objects on the LRU?
+> > > > > > >
+> > > > > > > >   nf_ref.refs.counter =3D 1
+> > > > > > > >
+> > > > > > > > nfsd_file_do_acquire() -> nfsd_file_lookup_locked() relies =
+on
+> > > > > > > > the
+> > > > > > > > hash
+> > > > > > > > table to find the nfsd_file,
+> > > > > > > > but I am still scratching my head why and how this happens.
+> > > > > > > >
+> > > > > > > > FYI, here is the patch I applied for testing:
+> > > > > > > >
+> > > > > > >
+> > > > > > > The above suggests to me that there is a garden-variety
+> > > > > > > refcount leak
+> > > > > > > somewhere. Whenever some bit of the code takes a reference to
+> > > > > > > an object
+> > > > > > > (like a nfsd_file), it's implicitly required to eventually pu=
+t
+> > > > > > > that
+> > > > > > > reference. Typically that means that the code needs to mainta=
+in
+> > > > > > > a
+> > > > > > > pointer to that object, as it can be unhashed at any time and
+> > > > > > > it can't
+> > > > > > > rely on finding the same object later.
+> > > > > > >
+> > > > > > > Do you have a reproducer for this?
+> > > > > > >
+> > > > > > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > > > > > > index ad9083ca144b..22ebd7fb8639 100644
+> > > > > > > > --- a/fs/nfsd/filecache.c
+> > > > > > > > +++ b/fs/nfsd/filecache.c
+> > > > > > > > @@ -216,6 +216,7 @@ nfsd_file_alloc(struct net *net, struct
+> > > > > > > > inode
+> > > > > > > > *inode, unsigned char need,
+> > > > > > > >                 return NULL;
+> > > > > > > >
+> > > > > > > >         INIT_LIST_HEAD(&nf->nf_lru);
+> > > > > > > > +       INIT_LIST_HEAD(&nf->nf_gc);
+> > > > > > > >         nf->nf_birthtime =3D ktime_get();
+> > > > > > > >         nf->nf_file =3D NULL;
+> > > > > > > >         nf->nf_cred =3D get_current_cred();
+> > > > > > > > @@ -393,8 +394,8 @@ nfsd_file_dispose_list(struct list_head
+> > > > > > > > *dispose)
+> > > > > > > >         struct nfsd_file *nf;
+> > > > > > > >
+> > > > > > > >         while (!list_empty(dispose)) {
+> > > > > > > > -               nf =3D list_first_entry(dispose, struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_lru);
+> > > > > > > > -               list_del_init(&nf->nf_lru);
+> > > > > > > > +               nf =3D list_first_entry(dispose, struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_gc);
+> > > > > > > > +               list_del_init(&nf->nf_gc);
+> > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > >         }
+> > > > > > > >  }
+> > > > > > > > @@ -411,12 +412,12 @@ nfsd_file_dispose_list_delayed(struct
+> > > > > > > > list_head
+> > > > > > > > *dispose)
+> > > > > > > >  {
+> > > > > > > >         while(!list_empty(dispose)) {
+> > > > > > > >                 struct nfsd_file *nf =3D
+> > > > > > > > list_first_entry(dispose,
+> > > > > > > > -                                               struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_lru);
+> > > > > > > > +                                               struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_gc);
+> > > > > > > >                 struct nfsd_net *nn =3D net_generic(nf->nf_=
+net,
+> > > > > > > > nfsd_net_id);
+> > > > > > > >                 struct nfsd_fcache_disposal *l =3D nn-
+> > > > > > > > > fcache_disposal;
+> > > > > > > >
+> > > > > > > >                 spin_lock(&l->lock);
+> > > > > > > > -               list_move_tail(&nf->nf_lru, &l->freeme);
+> > > > > > > > +               list_move_tail(&nf->nf_gc, &l->freeme);
+> > > > > > > >                 spin_unlock(&l->lock);
+> > > > > > > >                 svc_wake_up(nn->nfsd_serv);
+> > > > > > > >         }
+> > > > > > > > @@ -503,7 +504,8 @@ nfsd_file_lru_cb(struct list_head *item=
+,
+> > > > > > > > struct
+> > > > > > > > list_lru_one *lru,
+> > > > > > > >
+> > > > > > > >         /* Refcount went to zero. Unhash it and queue it to
+> > > > > > > > the
+> > > > > > > > dispose list */
+> > > > > > > >         nfsd_file_unhash(nf);
+> > > > > > > > -       list_lru_isolate_move(lru, &nf->nf_lru, head);
+> > > > > > > > +       list_lru_isolate(lru, &nf->nf_lru);
+> > > > > > > > +       list_add(&nf->nf_gc, head);
+> > > > > > > >         this_cpu_inc(nfsd_file_evictions);
+> > > > > > > >         trace_nfsd_file_gc_disposed(nf);
+> > > > > > > >         return LRU_REMOVED;
+> > > > > > > > @@ -578,7 +580,7 @@ nfsd_file_cond_queue(struct nfsd_file
+> > > > > > > > *nf, struct
+> > > > > > > > list_head *dispose)
+> > > > > > > >
+> > > > > > > >         /* If refcount goes to 0, then put on the dispose
+> > > > > > > > list */
+> > > > > > > >         if (refcount_sub_and_test(decrement, &nf->nf_ref)) =
+{
+> > > > > > > > -               list_add(&nf->nf_lru, dispose);
+> > > > > > > > +               list_add(&nf->nf_gc, dispose);
+> > > > > > > >                 trace_nfsd_file_closing(nf);
+> > > > > > > >         }
+> > > > > > > >  }
+> > > > > > > > @@ -654,8 +656,8 @@ nfsd_file_close_inode_sync(struct inode
+> > > > > > > > *inode)
+> > > > > > > >
+> > > > > > > >         nfsd_file_queue_for_close(inode, &dispose);
+> > > > > > > >         while (!list_empty(&dispose)) {
+> > > > > > > > -               nf =3D list_first_entry(&dispose, struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_lru);
+> > > > > > > > -               list_del_init(&nf->nf_lru);
+> > > > > > > > +               nf =3D list_first_entry(&dispose, struct
+> > > > > > > > nfsd_file,
+> > > > > > > > nf_gc);
+> > > > > > > > +               list_del_init(&nf->nf_gc);
+> > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > >         }
+> > > > > > > >  }
+> > > > > > > > diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> > > > > > > > index c61884def906..3fbec24eea6c 100644
+> > > > > > > > --- a/fs/nfsd/filecache.h
+> > > > > > > > +++ b/fs/nfsd/filecache.h
+> > > > > > > > @@ -44,6 +44,7 @@ struct nfsd_file {
+> > > > > > > >
+> > > > > > > >         struct nfsd_file_mark   *nf_mark;
+> > > > > > > >         struct list_head        nf_lru;
+> > > > > > > > +       struct list_head        nf_gc;
+> > > > > > > >         struct rcu_head         nf_rcu;
+> > > > > > > >         ktime_t                 nf_birthtime;
+> > > > > > > >  };
+> > > > > > > >
+> > > > > > > > On Mon, Jul 8, 2024 at 10:55=E2=80=AFAM Jeff Layton
+> > > > > > > > <jlayton@kernel.org>
+> > > > > > > > wrote:
+> > > > > > > > >
+> > > > > > > > > On Mon, 2024-07-08 at 10:23 -0400, Youzhong Yang wrote:
+> > > > > > > > > > Thanks Jeff.
+> > > > > > > > > >
+> > > > > > > > > > I am ok with reverting the unhash/dispose list reorderi=
+ng
+> > > > > > > > > > in
+> > > > > > > > > > nfsd_file_lru_cb(), as it doesn't make much of a
+> > > > > > > > > > difference,
+> > > > > > > > > > but for nfsd_file_cond_queue(), imagining this:
+> > > > > > > > > >
+> > > > > > > > > > - A nfsd_file is hashed
+> > > > > > > > > > - In nfsd_file_cond_queue(), [if (!nfsd_file_unhash(nf)=
+)]
+> > > > > > > > > > will
+> > > > > > > > > > get it
+> > > > > > > > > > unhashed, doesn't it?
+> > > > > > > > > > - It continues to get a reference by nfsd_file_get()
+> > > > > > > > > > - It continues to remove itself from LRU by
+> > > > > > > > > > nfsd_file_lru_remove() if
+> > > > > > > > > > it is on the LRU.
+> > > > > > > > > > - Now it runs refcount_sub_and_test(), what happens if
+> > > > > > > > > > the refcnt
+> > > > > > > > > > does
+> > > > > > > > > > not go to 0? How can this nfsd_file be found again?
+> > > > > > > > > > Through the
+> > > > > > > > > > hash
+> > > > > > > > > > table? Through the LRU walk? how?
+> > > > > > > > > >
+> > > > > > > > > > Thanks again.
+> > > > > > > > > >
+> > > > > > > > > > -Youzhong
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > It won't need to be found again. The holders of the extra
+> > > > > > > > > references
+> > > > > > > > > will put those references when they are finished. Since t=
+he
+> > > > > > > > > object
+> > > > > > > > > is
+> > > > > > > > > no longer HASHED, nfsd_file_put just does this:
+> > > > > > > > >
+> > > > > > > > >         if (refcount_dec_and_test(&nf->nf_ref))
+> > > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > > >
+> > > > > > > > > So that should be fine.
+> > > > > > > > >
+> > > > > > > > > > On Mon, Jul 8, 2024 at 9:35=E2=80=AFAM Jeff Layton
+> > > > > > > > > > <jlayton@kernel.org>
+> > > > > > > > > > wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > On Mon, 2024-07-08 at 08:58 -0400, Youzhong Yang wrot=
+e:
+> > > > > > > > > > > > Thank you Jeff for your invaluable insights. I was
+> > > > > > > > > > > > leaning
+> > > > > > > > > > > > towards
+> > > > > > > > > > > > adding a new list_head too, and tested this approac=
+h
+> > > > > > > > > > > > on
+> > > > > > > > > > > > kernel
+> > > > > > > > > > > > 6.6 by
+> > > > > > > > > > > > continuously hammering the server with heavy nfs lo=
+ad
+> > > > > > > > > > > > for the
+> > > > > > > > > > > > last few
+> > > > > > > > > > > > days, not a single leak.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Here goes the patch (based on Linux kernel master
+> > > > > > > > > > > > branch),
+> > > > > > > > > > > > please
+> > > > > > > > > > > > review:
+> > > > > > > > > > > >
+> > > > > > > > > > > > From: Youzhong Yang <youzhong@gmail.com>
+> > > > > > > > > > > > Date: Thu, 4 Jul 2024 11:25:40 -0400
+> > > > > > > > > > > > Subject: [PATCH] nfsd: fix nfsd_file leaking due to
+> > > > > > > > > > > > mixed use
+> > > > > > > > > > > > of
+> > > > > > > > > > > > nf->nf_lru
+> > > > > > > > > > > >
+> > > > > > > > > > > > nfsd_file_put() in one thread can race with another
+> > > > > > > > > > > > thread
+> > > > > > > > > > > > doing
+> > > > > > > > > > > > garbage collection (running nfsd_file_gc() ->
+> > > > > > > > > > > > list_lru_walk()
+> > > > > > > > > > > > ->
+> > > > > > > > > > > > nfsd_file_lru_cb()):
+> > > > > > > > > > > >
+> > > > > > > > > > > >   * In nfsd_file_put(), nf->nf_ref is 1, so it trie=
+s
+> > > > > > > > > > > > to do
+> > > > > > > > > > > > nfsd_file_lru_add().
+> > > > > > > > > > > >   * nfsd_file_lru_add() returns true (with
+> > > > > > > > > > > > NFSD_FILE_REFERENCED
+> > > > > > > > > > > > bit set)
+> > > > > > > > > > > >   * garbage collector kicks in, nfsd_file_lru_cb()
+> > > > > > > > > > > > clears
+> > > > > > > > > > > > REFERENCED bit and
+> > > > > > > > > > > >     returns LRU_ROTATE.
+> > > > > > > > > > > >   * garbage collector kicks in again,
+> > > > > > > > > > > > nfsd_file_lru_cb() now
+> > > > > > > > > > > > decrements nf->nf_ref
+> > > > > > > > > > > >     to 0, runs nfsd_file_unhash(), removes it from
+> > > > > > > > > > > > the LRU
+> > > > > > > > > > > > and
+> > > > > > > > > > > > adds to
+> > > > > > > > > > > > the dispose
+> > > > > > > > > > > >     list [list_lru_isolate_move(lru, &nf->nf_lru,
+> > > > > > > > > > > > head)]
+> > > > > > > > > > > >   * nfsd_file_put() detects NFSD_FILE_HASHED bit is
+> > > > > > > > > > > > cleared,
+> > > > > > > > > > > > so
+> > > > > > > > > > > > it
+> > > > > > > > > > > > tries to remove
+> > > > > > > > > > > >     the 'nf' from the LRU [if
+> > > > > > > > > > > > (!nfsd_file_lru_remove(nf))].
+> > > > > > > > > > > > The
+> > > > > > > > > > > > 'nf'
+> > > > > > > > > > > > has been added
+> > > > > > > > > > > >     to the 'dispose' list by nfsd_file_lru_cb(), so
+> > > > > > > > > > > > nfsd_file_lru_remove(nf) simply
+> > > > > > > > > > > >     treats it as part of the LRU and removes it,
+> > > > > > > > > > > > which leads
+> > > > > > > > > > > > to
+> > > > > > > > > > > > its removal from
+> > > > > > > > > > > >     the 'dispose' list.
+> > > > > > > > > > > >   * At this moment, 'nf' is unhashed with its nf_re=
+f
+> > > > > > > > > > > > being 0,
+> > > > > > > > > > > > and
+> > > > > > > > > > > > not
+> > > > > > > > > > > > on the LRU.
+> > > > > > > > > > > >     nfsd_file_put() continues its execution [if
+> > > > > > > > > > > > (refcount_dec_and_test(&nf->nf_ref))],
+> > > > > > > > > > > >     as nf->nf_ref is already 0, nf->nf_ref is set t=
+o
+> > > > > > > > > > > > REFCOUNT_SATURATED, and the 'nf'
+> > > > > > > > > > > >     gets no chance of being freed.
+> > > > > > > > > > > >
+> > > > > > > > > > > > nfsd_file_put() can also race with
+> > > > > > > > > > > > nfsd_file_cond_queue():
+> > > > > > > > > > > >   * In nfsd_file_put(), nf->nf_ref is 1, so it trie=
+s
+> > > > > > > > > > > > to do
+> > > > > > > > > > > > nfsd_file_lru_add().
+> > > > > > > > > > > >   * nfsd_file_lru_add() sets REFERENCED bit and
+> > > > > > > > > > > > returns true.
+> > > > > > > > > > > >   * Some userland application runs 'exportfs -f' or
+> > > > > > > > > > > > something
+> > > > > > > > > > > > like
+> > > > > > > > > > > > that, which triggers
+> > > > > > > > > > > >     __nfsd_file_cache_purge() ->
+> > > > > > > > > > > > nfsd_file_cond_queue().
+> > > > > > > > > > > >   * In nfsd_file_cond_queue(), it runs [if
+> > > > > > > > > > > > (!nfsd_file_unhash(nf))],
+> > > > > > > > > > > > unhash is done
+> > > > > > > > > > > >     successfully.
+> > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > (!nfsd_file_get(nf))],
+> > > > > > > > > > > > now
+> > > > > > > > > > > > nf->nf_ref goes to 2.
+> > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > (nfsd_file_lru_remove(nf))],
+> > > > > > > > > > > > it succeeds.
+> > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > (refcount_sub_and_test(decrement,
+> > > > > > > > > > > > &nf->nf_ref))]
+> > > > > > > > > > > >     (with "decrement" being 2), so the nf->nf_ref
+> > > > > > > > > > > > goes to 0,
+> > > > > > > > > > > > the
+> > > > > > > > > > > > 'nf'
+> > > > > > > > > > > > is added to the
+> > > > > > > > > > > >     dispose list [list_add(&nf->nf_lru, dispose)]
+> > > > > > > > > > > >   * nfsd_file_put() detects NFSD_FILE_HASHED bit is
+> > > > > > > > > > > > cleared,
+> > > > > > > > > > > > so
+> > > > > > > > > > > > it
+> > > > > > > > > > > > tries to remove
+> > > > > > > > > > > >     the 'nf' from the LRU [if
+> > > > > > > > > > > > (!nfsd_file_lru_remove(nf))],
+> > > > > > > > > > > > although
+> > > > > > > > > > > > the 'nf' is not
+> > > > > > > > > > > >     in the LRU, but it is linked in the 'dispose'
+> > > > > > > > > > > > list,
+> > > > > > > > > > > > nfsd_file_lru_remove() simply
+> > > > > > > > > > > >     treats it as part of the LRU and removes it. Th=
+is
+> > > > > > > > > > > > leads
+> > > > > > > > > > > > to
+> > > > > > > > > > > > its removal from
+> > > > > > > > > > > >     the 'dispose' list!
+> > > > > > > > > > > >   * Now nf->ref is 0, unhashed. nfsd_file_put()
+> > > > > > > > > > > > continues its
+> > > > > > > > > > > > execution and set
+> > > > > > > > > > > >     nf->nf_ref to REFCOUNT_SATURATED.
+> > > > > > > > > > > >
+> > > > > > > > > > > > As shown in the above analysis, using nf_lru for bo=
+th
+> > > > > > > > > > > > the LRU
+> > > > > > > > > > > > list and
+> > > > > > > > > > > > dispose list
+> > > > > > > > > > > > can cause the leaks. This patch adds a new list_hea=
+d
+> > > > > > > > > > > > nf_gc in
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > nfsd_file, and uses
+> > > > > > > > > > > > it for the dispose list. It's not expected to have =
+a
+> > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > unhashed but it's not
+> > > > > > > > > > > > added to the dispose list, so in
+> > > > > > > > > > > > nfsd_file_cond_queue() and
+> > > > > > > > > > > > nfsd_file_lru_cb() nfsd_file
+> > > > > > > > > > > > is unhashed after being added to the dispose list.
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > I don't see where we require the object to be either
+> > > > > > > > > > > hashed or
+> > > > > > > > > > > on
+> > > > > > > > > > > the
+> > > > > > > > > > > dispose list.  I think you probably just want to do a
+> > > > > > > > > > > patch
+> > > > > > > > > > > that
+> > > > > > > > > > > changes the dispose list to use a dedicated list_head
+> > > > > > > > > > > without
+> > > > > > > > > > > reordering when the these things are unhashed.
+> > > > > > > > > > >
+> > > > > > > > > > > > Signed-off-by: Youzhong Yang <youzhong@gmail.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >  fs/nfsd/filecache.c | 23 ++++++++++++++---------
+> > > > > > > > > > > >  fs/nfsd/filecache.h |  1 +
+> > > > > > > > > > > >  2 files changed, 15 insertions(+), 9 deletions(-)
+> > > > > > > > > > > >
+> > > > > > > > > > > > diff --git a/fs/nfsd/filecache.c
+> > > > > > > > > > > > b/fs/nfsd/filecache.c
+> > > > > > > > > > > > index ad9083ca144b..3aef2ddfce94 100644
+> > > > > > > > > > > > --- a/fs/nfsd/filecache.c
+> > > > > > > > > > > > +++ b/fs/nfsd/filecache.c
+> > > > > > > > > > > > @@ -216,6 +216,7 @@ nfsd_file_alloc(struct net *net=
+,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > inode
+> > > > > > > > > > > > *inode, unsigned char need,
+> > > > > > > > > > > >                 return NULL;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         INIT_LIST_HEAD(&nf->nf_lru);
+> > > > > > > > > > > > +       INIT_LIST_HEAD(&nf->nf_gc);
+> > > > > > > > > > > >         nf->nf_birthtime =3D ktime_get();
+> > > > > > > > > > > >         nf->nf_file =3D NULL;
+> > > > > > > > > > > >         nf->nf_cred =3D get_current_cred();
+> > > > > > > > > > > > @@ -393,8 +394,8 @@ nfsd_file_dispose_list(struct
+> > > > > > > > > > > > list_head
+> > > > > > > > > > > > *dispose)
+> > > > > > > > > > > >         struct nfsd_file *nf;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         while (!list_empty(dispose)) {
+> > > > > > > > > > > > -               nf =3D list_first_entry(dispose, st=
+ruct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_lru);
+> > > > > > > > > > > > -               list_del_init(&nf->nf_lru);
+> > > > > > > > > > > > +               nf =3D list_first_entry(dispose, st=
+ruct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_gc);
+> > > > > > > > > > > > +               list_del_init(&nf->nf_gc);
+> > > > > > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >  }
+> > > > > > > > > > > > @@ -411,12 +412,12 @@
+> > > > > > > > > > > > nfsd_file_dispose_list_delayed(struct
+> > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > >  {
+> > > > > > > > > > > >         while(!list_empty(dispose)) {
+> > > > > > > > > > > >                 struct nfsd_file *nf =3D
+> > > > > > > > > > > > list_first_entry(dispose,
+> > > > > > > > > > > > -
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_lru);
+> > > > > > > > > > > > +
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_gc);
+> > > > > > > > > > > >                 struct nfsd_net *nn =3D net_generic=
+(nf-
+> > > > > > > > > > > > > nf_net,
+> > > > > > > > > > > > nfsd_net_id);
+> > > > > > > > > > > >                 struct nfsd_fcache_disposal *l =3D =
+nn-
+> > > > > > > > > > > > > fcache_disposal;
+> > > > > > > > > > > >
+> > > > > > > > > > > >                 spin_lock(&l->lock);
+> > > > > > > > > > > > -               list_move_tail(&nf->nf_lru, &l-
+> > > > > > > > > > > > > freeme);
+> > > > > > > > > > > > +               list_move_tail(&nf->nf_gc, &l-
+> > > > > > > > > > > > > freeme);
+> > > > > > > > > > > >                 spin_unlock(&l->lock);
+> > > > > > > > > > > >                 svc_wake_up(nn->nfsd_serv);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > > @@ -502,8 +503,10 @@ nfsd_file_lru_cb(struct
+> > > > > > > > > > > > list_head *item,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > list_lru_one *lru,
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >
+> > > > > > > > > > > >         /* Refcount went to zero. Unhash it and que=
+ue
+> > > > > > > > > > > > it to
+> > > > > > > > > > > > the
+> > > > > > > > > > > > dispose list */
+> > > > > > > > > > > > +       list_lru_isolate(lru, &nf->nf_lru);
+> > > > > > > > > > > > +       list_add(&nf->nf_gc, head);
+> > > > > > > > > > > > +       /* Unhash after removing from LRU and addin=
+g
+> > > > > > > > > > > > to
+> > > > > > > > > > > > dispose
+> > > > > > > > > > > > list */
+> > > > > > > > > > > >         nfsd_file_unhash(nf);
+> > > > > > > > > > > > -       list_lru_isolate_move(lru, &nf->nf_lru,
+> > > > > > > > > > > > head);
+> > > > > > > > > > >
+> > > > > > > > > > > I don't see the point in reordering these operations.
+> > > > > > > > > > > Hashing
+> > > > > > > > > > > is
+> > > > > > > > > > > all
+> > > > > > > > > > > about making the thing findable by nfsd operations. T=
+he
+> > > > > > > > > > > _last_
+> > > > > > > > > > > thing we
+> > > > > > > > > > > want to do is put it on the dispose list while the
+> > > > > > > > > > > thing can
+> > > > > > > > > > > still
+> > > > > > > > > > > be
+> > > > > > > > > > > found by nfsd threads doing operations.
+> > > > > > > > > > >
+> > > > > > > > > > > >         this_cpu_inc(nfsd_file_evictions);
+> > > > > > > > > > > >         trace_nfsd_file_gc_disposed(nf);
+> > > > > > > > > > > >         return LRU_REMOVED;
+> > > > > > > > > > > > @@ -565,7 +568,7 @@ nfsd_file_cond_queue(struct
+> > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > *nf,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > >         int decrement =3D 1;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         /* If we raced with someone else unhashing,
+> > > > > > > > > > > > ignore it
+> > > > > > > > > > > > */
+> > > > > > > > > > > > -       if (!nfsd_file_unhash(nf))
+> > > > > > > > > > > > +       if (!test_bit(NFSD_FILE_HASHED, &nf-
+> > > > > > > > > > > > > nf_flags))
+> > > > > > > > > > >
+> > > > > > > > > > > The above change looks wrong. I don't think we need t=
+o
+> > > > > > > > > > > change
+> > > > > > > > > > > this.
+> > > > > > > > > > >
+> > > > > > > > > > > >                 return;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         /* If we can't get a reference, ignore it *=
+/
+> > > > > > > > > > > > @@ -578,7 +581,9 @@ nfsd_file_cond_queue(struct
+> > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > *nf,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > >
+> > > > > > > > > > > >         /* If refcount goes to 0, then put on the
+> > > > > > > > > > > > dispose
+> > > > > > > > > > > > list */
+> > > > > > > > > > > >         if (refcount_sub_and_test(decrement, &nf-
+> > > > > > > > > > > > > nf_ref)) {
+> > > > > > > > > > > > -               list_add(&nf->nf_lru, dispose);
+> > > > > > > > > > > > +               list_add(&nf->nf_gc, dispose);
+> > > > > > > > > > > > +               /* Unhash after adding to dispose
+> > > > > > > > > > > > list */
+> > > > > > > > > > > > +               nfsd_file_unhash(nf);
+> > > > > > > > > > >
+> > > > > > > > > > > This too looks wrong? Maybe I'm unclear on the race
+> > > > > > > > > > > you're
+> > > > > > > > > > > trying
+> > > > > > > > > > > to
+> > > > > > > > > > > fix with this? What's the harm in unhashing it early?
+> > > > > > > > > > >
+> > > > > > > > > > > >                 trace_nfsd_file_closing(nf);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >  }
+> > > > > > > > > > > > @@ -654,8 +659,8 @@ nfsd_file_close_inode_sync(stru=
+ct
+> > > > > > > > > > > > inode
+> > > > > > > > > > > > *inode)
+> > > > > > > > > > > >
+> > > > > > > > > > > >         nfsd_file_queue_for_close(inode, &dispose);
+> > > > > > > > > > > >         while (!list_empty(&dispose)) {
+> > > > > > > > > > > > -               nf =3D list_first_entry(&dispose,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_lru);
+> > > > > > > > > > > > -               list_del_init(&nf->nf_lru);
+> > > > > > > > > > > > +               nf =3D list_first_entry(&dispose,
+> > > > > > > > > > > > struct
+> > > > > > > > > > > > nfsd_file,
+> > > > > > > > > > > > nf_gc);
+> > > > > > > > > > > > +               list_del_init(&nf->nf_gc);
+> > > > > > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >  }
+> > > > > > > > > > > > diff --git a/fs/nfsd/filecache.h
+> > > > > > > > > > > > b/fs/nfsd/filecache.h
+> > > > > > > > > > > > index c61884def906..3fbec24eea6c 100644
+> > > > > > > > > > > > --- a/fs/nfsd/filecache.h
+> > > > > > > > > > > > +++ b/fs/nfsd/filecache.h
+> > > > > > > > > > > > @@ -44,6 +44,7 @@ struct nfsd_file {
+> > > > > > > > > > > >
+> > > > > > > > > > > >         struct nfsd_file_mark   *nf_mark;
+> > > > > > > > > > > >         struct list_head        nf_lru;
+> > > > > > > > > > > > +       struct list_head        nf_gc;
+> > > > > > > > > > > >         struct rcu_head         nf_rcu;
+> > > > > > > > > > > >         ktime_t                 nf_birthtime;
+> > > > > > > > > > > >  };
+> > > > > > > > > > > > --
+> > > > > > > > > > > > 2.34.1
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Thu, Jul 4, 2024 at 7:14=E2=80=AFAM Jeff Layton
+> > > > > > > > > > > > <jlayton@poochiereds.net> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > On Wed, 2024-07-03 at 16:46 -0400, Youzhong Yang
+> > > > > > > > > > > > > wrote:
+> > > > > > > > > > > > > > Thank you Chuck. Here are my quick answers to
+> > > > > > > > > > > > > > your
+> > > > > > > > > > > > > > comments:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > - I don't have a quick reproducer. I reproduced
+> > > > > > > > > > > > > > it by
+> > > > > > > > > > > > > > using
+> > > > > > > > > > > > > > hundreds
+> > > > > > > > > > > > > > of nfs clients generating +600K ops under our
+> > > > > > > > > > > > > > workload in
+> > > > > > > > > > > > > > the
+> > > > > > > > > > > > > > testing
+> > > > > > > > > > > > > > environment. Theoretically it should be possibl=
+e
+> > > > > > > > > > > > > > to
+> > > > > > > > > > > > > > simplify
+> > > > > > > > > > > > > > the
+> > > > > > > > > > > > > > reproduction but I am still working on it.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > -  I understand zfs is an out-of-tree file
+> > > > > > > > > > > > > > system. That's
+> > > > > > > > > > > > > > fine. But
+> > > > > > > > > > > > > > this leaking can happen to any file system, and
+> > > > > > > > > > > > > > leaking
+> > > > > > > > > > > > > > is
+> > > > > > > > > > > > > > not a good
+> > > > > > > > > > > > > > thing no matter what file system it is.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > -  I will try to come up with a reproducer usin=
+g
+> > > > > > > > > > > > > > xfs or
+> > > > > > > > > > > > > > btrfs
+> > > > > > > > > > > > > > if possible.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Now back to the problem itself, here are my
+> > > > > > > > > > > > > > findings:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > - nfsd_file_put() in one thread can race with
+> > > > > > > > > > > > > > another
+> > > > > > > > > > > > > > thread
+> > > > > > > > > > > > > > doing
+> > > > > > > > > > > > > > garbage collection (running nfsd_file_gc() ->
+> > > > > > > > > > > > > > list_lru_walk()
+> > > > > > > > > > > > > > ->
+> > > > > > > > > > > > > > nfsd_file_lru_cb()):
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >   * In nfsd_file_put(), nf->nf_ref is 1, so it
+> > > > > > > > > > > > > > tries to
+> > > > > > > > > > > > > > do
+> > > > > > > > > > > > > > nfsd_file_lru_add().
+> > > > > > > > > > > > > >   * nfsd_file_lru_add() returns true (thus
+> > > > > > > > > > > > > > NFSD_FILE_REFERENCED bit
+> > > > > > > > > > > > > > set for nf->nf_flags)
+> > > > > > > > > > > > > >   * garbage collector kicks in,
+> > > > > > > > > > > > > > nfsd_file_lru_cb() clears
+> > > > > > > > > > > > > > REFERENCED
+> > > > > > > > > > > > > > bit and returns LRU_ROTATE.
+> > > > > > > > > > > > > >   * garbage collector kicks in again,
+> > > > > > > > > > > > > > nfsd_file_lru_cb()
+> > > > > > > > > > > > > > now
+> > > > > > > > > > > > > > decrements nf->nf_ref to 0, runs
+> > > > > > > > > > > > > > nfsd_file_unhash(),
+> > > > > > > > > > > > > > removes
+> > > > > > > > > > > > > > it from
+> > > > > > > > > > > > > > the LRU and adds to the dispose list
+> > > > > > > > > > > > > > [list_lru_isolate_move(lru,
+> > > > > > > > > > > > > > &nf->nf_lru, head);]
+> > > > > > > > > > > > > >   * nfsd_file_put() detects NFSD_FILE_HASHED bi=
+t
+> > > > > > > > > > > > > > is
+> > > > > > > > > > > > > > cleared,
+> > > > > > > > > > > > > > so it
+> > > > > > > > > > > > > > tries to remove the 'nf' from the LRU [if
+> > > > > > > > > > > > > > (!nfsd_file_lru_remove(nf))]
+> > > > > > > > > > > > > >   * The 'nf' has been added to the 'dispose' li=
+st
+> > > > > > > > > > > > > > by
+> > > > > > > > > > > > > > nfsd_file_lru_cb(), so nfsd_file_lru_remove(nf)
+> > > > > > > > > > > > > > simply
+> > > > > > > > > > > > > > treats
+> > > > > > > > > > > > > > it as
+> > > > > > > > > > > > > > part of the LRU and removes it, which leads it =
+to
+> > > > > > > > > > > > > > be
+> > > > > > > > > > > > > > removed
+> > > > > > > > > > > > > > from the
+> > > > > > > > > > > > > > 'dispose' list.
+> > > > > > > > > > > > > >   * At this moment, nf->nf_ref is 0, it's
+> > > > > > > > > > > > > > unhashed, and
+> > > > > > > > > > > > > > not
+> > > > > > > > > > > > > > on the
+> > > > > > > > > > > > > > LRU. nfsd_file_put() continues its execution [i=
+f
+> > > > > > > > > > > > > > (refcount_dec_and_test(&nf->nf_ref))], as nf-
+> > > > > > > > > > > > > > > nf_ref is
+> > > > > > > > > > > > > > already 0, now
+> > > > > > > > > > > > > > bad thing happens: nf->nf_ref is set to
+> > > > > > > > > > > > > > REFCOUNT_SATURATED,
+> > > > > > > > > > > > > > and the
+> > > > > > > > > > > > > > 'nf' is leaked.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > To make this happen, the right timing is crucia=
+l.
+> > > > > > > > > > > > > > It can
+> > > > > > > > > > > > > > be
+> > > > > > > > > > > > > > reproduced
+> > > > > > > > > > > > > > by adding artifical delays in filecache.c, or
+> > > > > > > > > > > > > > hammering
+> > > > > > > > > > > > > > the
+> > > > > > > > > > > > > > nfsd with
+> > > > > > > > > > > > > > tons of ops.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > - Let's see how nfsd_file_put() can race with
+> > > > > > > > > > > > > > nfsd_file_cond_queue():
+> > > > > > > > > > > > > >   * In nfsd_file_put(), nf->nf_ref is 1, so it
+> > > > > > > > > > > > > > tries to
+> > > > > > > > > > > > > > do
+> > > > > > > > > > > > > > nfsd_file_lru_add().
+> > > > > > > > > > > > > >   * nfsd_file_lru_add() sets REFERENCED bit and
+> > > > > > > > > > > > > > returns
+> > > > > > > > > > > > > > true.
+> > > > > > > > > > > > > >   * 'exportfs -f' or something like that trigge=
+rs
+> > > > > > > > > > > > > > __nfsd_file_cache_purge() ->
+> > > > > > > > > > > > > > nfsd_file_cond_queue().
+> > > > > > > > > > > > > >   * In nfsd_file_cond_queue(), it runs [if
+> > > > > > > > > > > > > > (!nfsd_file_unhash(nf))],
+> > > > > > > > > > > > > > unhash is done successfully.
+> > > > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > > > (!nfsd_file_get(nf))],
+> > > > > > > > > > > > > > now
+> > > > > > > > > > > > > > nf->nf_ref goes to 2.
+> > > > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > > > (nfsd_file_lru_remove(nf))], it succeeds.
+> > > > > > > > > > > > > >   * nfsd_file_cond_queue() runs [if
+> > > > > > > > > > > > > > (refcount_sub_and_test(decrement,
+> > > > > > > > > > > > > > &nf->nf_ref))] (with "decrement" being 2), so t=
+he
+> > > > > > > > > > > > > > nf-
+> > > > > > > > > > > > > > > nf_ref
+> > > > > > > > > > > > > > goes to
+> > > > > > > > > > > > > > 0, the 'nf' is added to the dispost list
+> > > > > > > > > > > > > > [list_add(&nf-
+> > > > > > > > > > > > > > > nf_lru,
+> > > > > > > > > > > > > > dispose)]
+> > > > > > > > > > > > > >   * nfsd_file_put() detects NFSD_FILE_HASHED bi=
+t
+> > > > > > > > > > > > > > is
+> > > > > > > > > > > > > > cleared,
+> > > > > > > > > > > > > > so it
+> > > > > > > > > > > > > > tries to remove the 'nf' from the LRU [if
+> > > > > > > > > > > > > > (!nfsd_file_lru_remove(nf))], although the 'nf'
+> > > > > > > > > > > > > > is not in
+> > > > > > > > > > > > > > the
+> > > > > > > > > > > > > > LRU, but
+> > > > > > > > > > > > > > it is linked in the 'dispose' list,
+> > > > > > > > > > > > > > nfsd_file_lru_remove()
+> > > > > > > > > > > > > > simply
+> > > > > > > > > > > > > > treats it as part of the LRU and removes it. Th=
+is
+> > > > > > > > > > > > > > leads
+> > > > > > > > > > > > > > to
+> > > > > > > > > > > > > > its removal
+> > > > > > > > > > > > > > from the 'dispose' list!
+> > > > > > > > > > > > > >   * Now nf->ref is 0, unhashed. nfsd_file_put()
+> > > > > > > > > > > > > > continues
+> > > > > > > > > > > > > > its
+> > > > > > > > > > > > > > execution and sets nf->nf_ref to
+> > > > > > > > > > > > > > REFCOUNT_SATURATED.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > The purpose of nf->nf_lru is problematic. As yo=
+u
+> > > > > > > > > > > > > > can see,
+> > > > > > > > > > > > > > it
+> > > > > > > > > > > > > > is used
+> > > > > > > > > > > > > > for the LRU list, and also the 'dispose' list.
+> > > > > > > > > > > > > > Adding
+> > > > > > > > > > > > > > another
+> > > > > > > > > > > > > > 'struct
+> > > > > > > > > > > > > > list_head' specifically for the 'dispose' list
+> > > > > > > > > > > > > > seems to
+> > > > > > > > > > > > > > be a
+> > > > > > > > > > > > > > better
+> > > > > > > > > > > > > > way of fixing this race condition. Either way
+> > > > > > > > > > > > > > works for
+> > > > > > > > > > > > > > me.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Would you agree my above analysis makes sense?
+> > > > > > > > > > > > > > Thanks.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I think so. It's been a while since I've done muc=
+h
+> > > > > > > > > > > > > work in
+> > > > > > > > > > > > > this
+> > > > > > > > > > > > > code,
+> > > > > > > > > > > > > but it does sound like there is a race in the LRU
+> > > > > > > > > > > > > handling.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Like Chuck said, the nf->nf_lru list should be sa=
+fe
+> > > > > > > > > > > > > to use
+> > > > > > > > > > > > > for
+> > > > > > > > > > > > > multiple
+> > > > > > > > > > > > > purposes, but that's only the case if we're not
+> > > > > > > > > > > > > using that
+> > > > > > > > > > > > > list
+> > > > > > > > > > > > > as an
+> > > > > > > > > > > > > indicator.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > The list_lru code does check this:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > >     if (!list_empty(item)) {
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > ...so if we ever check this while it's sitting on
+> > > > > > > > > > > > > the
+> > > > > > > > > > > > > dispose
+> > > > > > > > > > > > > list, it
+> > > > > > > > > > > > > will handle it incorrectly. It sounds like that's
+> > > > > > > > > > > > > the root
+> > > > > > > > > > > > > cause of the
+> > > > > > > > > > > > > problem you're seeing?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > If so, then maybe a separate list_head for dispos=
+al
+> > > > > > > > > > > > > would
+> > > > > > > > > > > > > be
+> > > > > > > > > > > > > better.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > Here is my patch with signed-off-by:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > From: Youzhong Yang <youzhong@gmail.com>
+> > > > > > > > > > > > > > Date: Mon, 1 Jul 2024 06:45:22 -0400
+> > > > > > > > > > > > > > Subject: [PATCH] nfsd: fix nfsd_file leaking du=
+e
+> > > > > > > > > > > > > > to race
+> > > > > > > > > > > > > > condition and early
+> > > > > > > > > > > > > >  unhash
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Signed-off-by: Youzhong Yang <youzhong@gmail.co=
+m>
+> > > > > > > > > > > > > > ---
+> > > > > > > > > > > > > >  fs/nfsd/filecache.c | 14 +++++++++++++-
+> > > > > > > > > > > > > >  1 file changed, 13 insertions(+), 1 deletion(-=
+)
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > diff --git a/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > b/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > index 1a6d5d000b85..2323829f7208 100644
+> > > > > > > > > > > > > > --- a/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > +++ b/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > @@ -389,6 +389,17 @@ nfsd_file_put(struct
+> > > > > > > > > > > > > > nfsd_file *nf)
+> > > > > > > > > > > > > >                         if
+> > > > > > > > > > > > > > (!nfsd_file_lru_remove(nf))
+> > > > > > > > > > > > > >                                 return;
+> > > > > > > > > > > > > >                 }
+> > > > > > > > > > > > > > +               /*
+> > > > > > > > > > > > > > +                * Racing with
+> > > > > > > > > > > > > > nfsd_file_cond_queue() or
+> > > > > > > > > > > > > > nfsd_file_lru_cb(),
+> > > > > > > > > > > > > > +                * it's unhashed but then remov=
+ed
+> > > > > > > > > > > > > > from
+> > > > > > > > > > > > > > the
+> > > > > > > > > > > > > > dispose list,
+> > > > > > > > > > > > > > +                * so we need to free it.
+> > > > > > > > > > > > > > +                */
+> > > > > > > > > > > > > > +               if (refcount_read(&nf->nf_ref) =
+=3D=3D
+> > > > > > > > > > > > > > 0 &&
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > A refcount_read in this path is a red flag to me.
+> > > > > > > > > > > > > Anytime
+> > > > > > > > > > > > > you're just
+> > > > > > > > > > > > > looking at the refcount without changing anything
+> > > > > > > > > > > > > just
+> > > > > > > > > > > > > screams
+> > > > > > > > > > > > > out
+> > > > > > > > > > > > > "race condition".
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > In this case, what guarantee is there that this
+> > > > > > > > > > > > > won't run
+> > > > > > > > > > > > > afoul
+> > > > > > > > > > > > > of the
+> > > > > > > > > > > > > timing? We could check this and find out it's 1
+> > > > > > > > > > > > > just before
+> > > > > > > > > > > > > it
+> > > > > > > > > > > > > goes to
+> > > > > > > > > > > > > 0 and you check the other conditions.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Does anything prevent that?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > +                   !test_bit(NFSD_FILE_HASHED,
+> > > > > > > > > > > > > > &nf-
+> > > > > > > > > > > > > > > nf_flags) &&
+> > > > > > > > > > > > > > +                   list_empty(&nf->nf_lru)) {
+> > > > > > > > > > > > > > +                       nfsd_file_free(nf);
+> > > > > > > > > > > > > > +                       return;
+> > > > > > > > > > > > > > +               }
+> > > > > > > > > > > > > >         }
+> > > > > > > > > > > > > >         if (refcount_dec_and_test(&nf->nf_ref))
+> > > > > > > > > > > > > >                 nfsd_file_free(nf);
+> > > > > > > > > > > > > > @@ -576,7 +587,7 @@ nfsd_file_cond_queue(struct
+> > > > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > > > *nf, struct
+> > > > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > > > >         int decrement =3D 1;
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >         /* If we raced with someone else
+> > > > > > > > > > > > > > unhashing,
+> > > > > > > > > > > > > > ignore it
+> > > > > > > > > > > > > > */
+> > > > > > > > > > > > > > -       if (!nfsd_file_unhash(nf))
+> > > > > > > > > > > > > > +       if (!test_bit(NFSD_FILE_HASHED, &nf-
+> > > > > > > > > > > > > > > nf_flags))
+> > > > > > > > > > > > > >                 return;
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Same here: you're just testing for the HASHED bit=
+,
+> > > > > > > > > > > > > but
+> > > > > > > > > > > > > could
+> > > > > > > > > > > > > this also
+> > > > > > > > > > > > > race with someone who is setting it just after yo=
+u
+> > > > > > > > > > > > > get
+> > > > > > > > > > > > > here.
+> > > > > > > > > > > > > Why is
+> > > > > > > > > > > > > that not a problem?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >         /* If we can't get a reference, ignore =
+it
+> > > > > > > > > > > > > > */
+> > > > > > > > > > > > > > @@ -590,6 +601,7 @@ nfsd_file_cond_queue(struct
+> > > > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > > > *nf, struct
+> > > > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > > > >         /* If refcount goes to 0, then put on t=
+he
+> > > > > > > > > > > > > > dispose
+> > > > > > > > > > > > > > list */
+> > > > > > > > > > > > > >         if (refcount_sub_and_test(decrement, &n=
+f-
+> > > > > > > > > > > > > > > nf_ref)) {
+> > > > > > > > > > > > > >                 list_add(&nf->nf_lru, dispose);
+> > > > > > > > > > > > > > +               nfsd_file_unhash(nf);
+> > > > > > > > > > > > > >                 trace_nfsd_file_closing(nf);
+> > > > > > > > > > > > > >         }
+> > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > --
+> > > > > > > > > > > > > > 2.43.0
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Wed, Jul 3, 2024 at 2:21=E2=80=AFPM Chuck Le=
+ver
+> > > > > > > > > > > > > > <chuck.lever@oracle.com> wrote:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > On Wed, Jul 03, 2024 at 10:12:33AM -0400,
+> > > > > > > > > > > > > > > Youzhong Yang
+> > > > > > > > > > > > > > > wrote:
+> > > > > > > > > > > > > > > > Hello,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > I'd like to report a nfsd_file leaking issu=
+e
+> > > > > > > > > > > > > > > > and
+> > > > > > > > > > > > > > > > propose
+> > > > > > > > > > > > > > > > a fix for it.
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > When I tested Linux kernel 6.8 and 6.6, I
+> > > > > > > > > > > > > > > > noticed
+> > > > > > > > > > > > > > > > nfsd_file leaks
+> > > > > > > > > > > > > > > > which led to undestroyable file systems
+> > > > > > > > > > > > > > > > (zfs),
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Thanks for the report. Some initial comments:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > - Do you have a specific reproducer? In other
+> > > > > > > > > > > > > > > words,
+> > > > > > > > > > > > > > > what
+> > > > > > > > > > > > > > > is the
+> > > > > > > > > > > > > > >   simplest program that can run on an NFS
+> > > > > > > > > > > > > > > client that
+> > > > > > > > > > > > > > > will
+> > > > > > > > > > > > > > > trigger
+> > > > > > > > > > > > > > >   this leak, and can you post it?
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > - "zfs" is an out-of-tree file system, so it'=
+s
+> > > > > > > > > > > > > > > not
+> > > > > > > > > > > > > > > directly
+> > > > > > > > > > > > > > >   supported for NFSD.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > - The guidelines for patch submission require
+> > > > > > > > > > > > > > > us to fix
+> > > > > > > > > > > > > > > issues in
+> > > > > > > > > > > > > > >   upstream Linux first (currently that's v6.1=
+0-
+> > > > > > > > > > > > > > > rc6).
+> > > > > > > > > > > > > > > Then
+> > > > > > > > > > > > > > > that fix
+> > > > > > > > > > > > > > >   can be backported to older stable kernels
+> > > > > > > > > > > > > > > like 6.6.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Can you reproduce the leak with one of the in=
+-
+> > > > > > > > > > > > > > > kernel
+> > > > > > > > > > > > > > > filesystems
+> > > > > > > > > > > > > > > (either xfs or btrfs would be great) and with
+> > > > > > > > > > > > > > > NFSD in
+> > > > > > > > > > > > > > > 6.10-
+> > > > > > > > > > > > > > > rc6?
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > One more comment below.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > here are some examples:
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > crash> struct nfsd_file -x ffff88e160db0460
+> > > > > > > > > > > > > > > > struct nfsd_file {
+> > > > > > > > > > > > > > > >   nf_rlist =3D {
+> > > > > > > > > > > > > > > >     rhead =3D {
+> > > > > > > > > > > > > > > >       next =3D 0xffff8921fa2392f1
+> > > > > > > > > > > > > > > >     },
+> > > > > > > > > > > > > > > >     next =3D 0x0
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_inode =3D 0xffff8882bc312ef8,
+> > > > > > > > > > > > > > > >   nf_file =3D 0xffff88e2015b1500,
+> > > > > > > > > > > > > > > >   nf_cred =3D 0xffff88e3ab0e7800,
+> > > > > > > > > > > > > > > >   nf_net =3D 0xffffffff83d41600 <init_net>,
+> > > > > > > > > > > > > > > >   nf_flags =3D 0x8,
+> > > > > > > > > > > > > > > >   nf_ref =3D {
+> > > > > > > > > > > > > > > >     refs =3D {
+> > > > > > > > > > > > > > > >       counter =3D 0xc0000000
+> > > > > > > > > > > > > > > >     }
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_may =3D 0x4,
+> > > > > > > > > > > > > > > >   nf_mark =3D 0xffff88e1bddfb320,
+> > > > > > > > > > > > > > > >   nf_lru =3D {
+> > > > > > > > > > > > > > > >     next =3D 0xffff88e160db04a8,
+> > > > > > > > > > > > > > > >     prev =3D 0xffff88e160db04a8
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_rcu =3D {
+> > > > > > > > > > > > > > > >     next =3D 0x10000000000,
+> > > > > > > > > > > > > > > >     func =3D 0x0
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_birthtime =3D 0x73d22fc1728
+> > > > > > > > > > > > > > > > }
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > crash> struct
+> > > > > > > > > > > > > > > > nfsd_file.nf_flags,nf_ref.refs.counter,nf_l=
+ru
+> > > > > > > > > > > > > > > > ,nf_file
+> > > > > > > > > > > > > > > > -x
+> > > > > > > > > > > > > > > > ffff88839a53d850
+> > > > > > > > > > > > > > > >   nf_flags =3D 0x8,
+> > > > > > > > > > > > > > > >   nf_ref.refs.counter =3D 0x0
+> > > > > > > > > > > > > > > >   nf_lru =3D {
+> > > > > > > > > > > > > > > >     next =3D 0xffff88839a53d898,
+> > > > > > > > > > > > > > > >     prev =3D 0xffff88839a53d898
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_file =3D 0xffff88810ede8700,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > crash> struct
+> > > > > > > > > > > > > > > > nfsd_file.nf_flags,nf_ref.refs.counter,nf_l=
+ru
+> > > > > > > > > > > > > > > > ,nf_file
+> > > > > > > > > > > > > > > > -x
+> > > > > > > > > > > > > > > > ffff88c32b11e850
+> > > > > > > > > > > > > > > >   nf_flags =3D 0x8,
+> > > > > > > > > > > > > > > >   nf_ref.refs.counter =3D 0x0
+> > > > > > > > > > > > > > > >   nf_lru =3D {
+> > > > > > > > > > > > > > > >     next =3D 0xffff88c32b11e898,
+> > > > > > > > > > > > > > > >     prev =3D 0xffff88c32b11e898
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_file =3D 0xffff88c20a701c00,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > crash> struct
+> > > > > > > > > > > > > > > > nfsd_file.nf_flags,nf_ref.refs.counter,nf_l=
+ru
+> > > > > > > > > > > > > > > > ,nf_file
+> > > > > > > > > > > > > > > > -x
+> > > > > > > > > > > > > > > > ffff88e372709700
+> > > > > > > > > > > > > > > >   nf_flags =3D 0xc,
+> > > > > > > > > > > > > > > >   nf_ref.refs.counter =3D 0x0
+> > > > > > > > > > > > > > > >   nf_lru =3D {
+> > > > > > > > > > > > > > > >     next =3D 0xffff88e372709748,
+> > > > > > > > > > > > > > > >     prev =3D 0xffff88e372709748
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_file =3D 0xffff88e0725e6400,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > crash> struct
+> > > > > > > > > > > > > > > > nfsd_file.nf_flags,nf_ref.refs.counter,nf_l=
+ru
+> > > > > > > > > > > > > > > > ,nf_file
+> > > > > > > > > > > > > > > > -x
+> > > > > > > > > > > > > > > > ffff8982864944d0
+> > > > > > > > > > > > > > > >   nf_flags =3D 0xc,
+> > > > > > > > > > > > > > > >   nf_ref.refs.counter =3D 0x0
+> > > > > > > > > > > > > > > >   nf_lru =3D {
+> > > > > > > > > > > > > > > >     next =3D 0xffff898286494518,
+> > > > > > > > > > > > > > > >     prev =3D 0xffff898286494518
+> > > > > > > > > > > > > > > >   },
+> > > > > > > > > > > > > > > >   nf_file =3D 0xffff89803c0ff700,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > The leak occurs when nfsd_file_put() races
+> > > > > > > > > > > > > > > > with
+> > > > > > > > > > > > > > > > nfsd_file_cond_queue()
+> > > > > > > > > > > > > > > > or nfsd_file_lru_cb(). With the following
+> > > > > > > > > > > > > > > > patch, I
+> > > > > > > > > > > > > > > > haven't observed
+> > > > > > > > > > > > > > > > any leak after a few days heavy nfs load:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Our patch submission guidelines require a
+> > > > > > > > > > > > > > > Signed-off-
+> > > > > > > > > > > > > > > by:
+> > > > > > > > > > > > > > > line at the end of the patch description. See
+> > > > > > > > > > > > > > > the "Sign
+> > > > > > > > > > > > > > > your work -
+> > > > > > > > > > > > > > > the Developer's Certificate of Origin" sectio=
+n
+> > > > > > > > > > > > > > > of
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/g=
+it/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=
+=3Dv6.10-rc6
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > (Needed here in case your fix is acceptable).
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > diff --git a/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > > > b/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > > > index 1a6d5d000b85..2323829f7208 100644
+> > > > > > > > > > > > > > > > --- a/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > > > +++ b/fs/nfsd/filecache.c
+> > > > > > > > > > > > > > > > @@ -389,6 +389,17 @@ nfsd_file_put(struct
+> > > > > > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > > > > > *nf)
+> > > > > > > > > > > > > > > >   if (!nfsd_file_lru_remove(nf))
+> > > > > > > > > > > > > > > >   return;
+> > > > > > > > > > > > > > > >   }
+> > > > > > > > > > > > > > > > + /*
+> > > > > > > > > > > > > > > > + * Racing with nfsd_file_cond_queue() or
+> > > > > > > > > > > > > > > > nfsd_file_lru_cb(),
+> > > > > > > > > > > > > > > > + * it's unhashed but then removed from the
+> > > > > > > > > > > > > > > > dispose
+> > > > > > > > > > > > > > > > list,
+> > > > > > > > > > > > > > > > + * so we need to free it.
+> > > > > > > > > > > > > > > > + */
+> > > > > > > > > > > > > > > > + if (refcount_read(&nf->nf_ref) =3D=3D 0 &=
+&
+> > > > > > > > > > > > > > > > +     !test_bit(NFSD_FILE_HASHED, &nf-
+> > > > > > > > > > > > > > > > > nf_flags) &&
+> > > > > > > > > > > > > > > > +     list_empty(&nf->nf_lru)) {
+> > > > > > > > > > > > > > > > + nfsd_file_free(nf);
+> > > > > > > > > > > > > > > > + return;
+> > > > > > > > > > > > > > > > + }
+> > > > > > > > > > > > > > > >   }
+> > > > > > > > > > > > > > > >   if (refcount_dec_and_test(&nf->nf_ref))
+> > > > > > > > > > > > > > > >   nfsd_file_free(nf);
+> > > > > > > > > > > > > > > > @@ -576,7 +587,7 @@
+> > > > > > > > > > > > > > > > nfsd_file_cond_queue(struct
+> > > > > > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > > > > > *nf, struct
+> > > > > > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > > > > > >   int decrement =3D 1;
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > >   /* If we raced with someone else unhashin=
+g,
+> > > > > > > > > > > > > > > > ignore
+> > > > > > > > > > > > > > > > it
+> > > > > > > > > > > > > > > > */
+> > > > > > > > > > > > > > > > - if (!nfsd_file_unhash(nf))
+> > > > > > > > > > > > > > > > + if (!test_bit(NFSD_FILE_HASHED, &nf-
+> > > > > > > > > > > > > > > > > nf_flags))
+> > > > > > > > > > > > > > > >   return;
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > >   /* If we can't get a reference, ignore it
+> > > > > > > > > > > > > > > > */
+> > > > > > > > > > > > > > > > @@ -590,6 +601,7 @@
+> > > > > > > > > > > > > > > > nfsd_file_cond_queue(struct
+> > > > > > > > > > > > > > > > nfsd_file
+> > > > > > > > > > > > > > > > *nf, struct
+> > > > > > > > > > > > > > > > list_head *dispose)
+> > > > > > > > > > > > > > > >   /* If refcount goes to 0, then put on the
+> > > > > > > > > > > > > > > > dispose
+> > > > > > > > > > > > > > > > list
+> > > > > > > > > > > > > > > > */
+> > > > > > > > > > > > > > > >   if (refcount_sub_and_test(decrement, &nf-
+> > > > > > > > > > > > > > > > > nf_ref))
+> > > > > > > > > > > > > > > > {
+> > > > > > > > > > > > > > > >   list_add(&nf->nf_lru, dispose);
+> > > > > > > > > > > > > > > > + nfsd_file_unhash(nf);
+> > > > > > > > > > > > > > > >   trace_nfsd_file_closing(nf);
+> > > > > > > > > > > > > > > >   }
+> > > > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > Please kindly review the patch and let me
+> > > > > > > > > > > > > > > > know if it
+> > > > > > > > > > > > > > > > makes sense.
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > Thanks,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > -Youzhong
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > --
+> > > > > > > > > > > > > > > Chuck Lever
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > --
+> > > > > > > > > > > > > Jeff Layton <jlayton@poochiereds.net>
+> > > > > > > > > > >
+> > > > > > > > > > > --
+> > > > > > > > > > > Jeff Layton <jlayton@poochiereds.net>
+> > > > > > > > > > >
+> > > > > > > > > > > --
+> > > > > > > > > > > Jeff Layton <jlayton@kernel.org>
+> > > > > > > > >
+> > > > > > > > > --
+> > > > > > > > > Jeff Layton <jlayton@kernel.org>
+> > > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Jeff Layton <jlayton@kernel.org>
+> > > > >
+> > > > > --
+> > > > > Jeff Layton <jlayton@kernel.org>
+> > >
+> > > --
+> > > Jeff Layton <jlayton@kernel.org>
+> >
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
 
