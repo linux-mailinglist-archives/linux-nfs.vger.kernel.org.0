@@ -1,101 +1,121 @@
-Return-Path: <linux-nfs+bounces-4823-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4825-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2967692EBED
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 17:49:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B94AA92EC01
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 17:52:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C18741F248C6
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 15:49:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA6981C227AA
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 15:52:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0409915FCEA;
-	Thu, 11 Jul 2024 15:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AECC8479;
+	Thu, 11 Jul 2024 15:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHwiAlUZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwJN54eF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFD38479
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 15:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCB316C856
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 15:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720712945; cv=none; b=rBm2QMl0UpdzYPbRBDjqU/LbeYyAgrAN3IZV0PUXZtLCA0If6TVTed7XNTzLkDpBZTOoHkHDoAkNPcRTAMYF+C1WvG+AiQJwqFqah1ZbnxEilZESZ7+7khjYnJPInlpcKtfJ3OJIuj5HrJuY6loQlgGYqgw7Q5uR3T3+FBI0HeY=
+	t=1720713153; cv=none; b=ue/PcCKnJv4UjST5T45QQTi1CbU8BKiCdlb8bCe8OvVc+2kMqN5SOLz+KrxvOEvY93eD6Rm2jeNobtEPOnttUwR3UMi2lq5iamXMCgyvjdelk+gEJ9IrmHl6hx+Tu1BdAMUXNs7Q1nzUI7az67ymRAOW6fpFu7SHjLD75/haji8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720712945; c=relaxed/simple;
-	bh=PgEQzDMdb7+UQponoMVcwupKhZY1ZTjXq7E/ESGylfc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D37x2MI3xff41oPrm72MIA1aD/y+opET+8WrOCp6hJcWfng5WJ5re2elggg1gH1+LsCWZlc0dOXCqCT3BKB+TnGKOMnZEwvTXcXE/j+PQKPkv+Y60iG/0gW10eLjd/P6Ky4pA35eSIkOLXsLmo0smYm7O5DnLFbwttYt1SBk4RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VHwiAlUZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720712943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lo81TB1e9c3aqFmqb4SYDYiKTXD+9fUwRg29FIH0FMw=;
-	b=VHwiAlUZAyIEKtdYV54ffprJSiUv8EDs2RF/r638VS7w/XEN5B+vMrubBTcZB1xv3FzQKG
-	/QxxYERDs3L++akdXOPMcUP1LouOpdYz/DK91UA7uPSUP/ecgg1wjkcsTOOXY8Q/gkdITD
-	T/3NY2vD1u7PpeG4+BWXnIIPDPzFRVU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-587--I57n-_gNneEdEQ8_9MNXg-1; Thu,
- 11 Jul 2024 11:49:01 -0400
-X-MC-Unique: -I57n-_gNneEdEQ8_9MNXg-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6103E1955F44;
-	Thu, 11 Jul 2024 15:49:00 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.4])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1CD5C19560AE;
-	Thu, 11 Jul 2024 15:48:58 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: Fixup gss_status tracepoint error output
-Date: Thu, 11 Jul 2024 11:48:56 -0400
-Message-ID: <C3887ED2-B331-4AC9-A73B-326D7DDAC5FD@redhat.com>
-In-Reply-To: <Zo/6G7ANcWEWkd0l@tissot.1015granger.net>
-References: <27526e921037d6217bdfc6a078c53d37ae9effab.1720711381.git.bcodding@redhat.com>
- <Zo/6G7ANcWEWkd0l@tissot.1015granger.net>
+	s=arc-20240116; t=1720713153; c=relaxed/simple;
+	bh=2q4MLguFzl9Av9BWNza8PfEcDFD43RZ/JY2+wWgl1TY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MEpoQlM7Z7UEzt54OGgY4aOaZKf28BEH2MB1No5nwNqHqztmFgVDSiyxI6L4C4pP+Y3mJrKZbBhUzIH5E4/4PWSzubv5mOtTCjbsYgEhHARJSNzN6gDs1QmEBtuMen3f3v3MsH0GBEZXouHM2f/e+G+zjpr/2wSuZxHzURLiVOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GwJN54eF; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dff17fd97b3so1058444276.2
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 08:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720713151; x=1721317951; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dii1a8vBELo5bie0AVf64Osw//xbexhTZ6XrEjZHEc8=;
+        b=GwJN54eFio8YHo8LOpd0yCJIzz5ao3gg/+x3XO3UBnwo0PAr1gyXSBbN6Id41S8LRf
+         uVKqj+MnG62KXPkuf9VzTd/c2LHNXppkzEGjIBHNJstpqIEI6PsVkCIRih/A7IdU6yEZ
+         Qt0C0PTd9iwfAQ07Od3a4hGf9qvAeAU927WP9BmpWKvcpSlC3ewzdVA8tCMseilm+L1e
+         jgFSYnrsOz1ujKEGTqOH1flYNwE3qeJY6nQcCFBEZPEaKuA4ioyrdfMfm/5F12hfQDUV
+         zGVXBx/4LtlCSnVYoPO/DhSh+QJP/KhFvtpbSouOQmI6/ZvzUSc6+eMp/mJQ8pBt3/SI
+         BIMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720713151; x=1721317951;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dii1a8vBELo5bie0AVf64Osw//xbexhTZ6XrEjZHEc8=;
+        b=SXtkRSVZM/FGNeAFZHOTdYirII6mBy2mPoUpdJWHyMskHvRKXJimJoAtU1eqK+roQw
+         cJnJwfP5GuDtg718rw50sJv90ie1G62pOqnBOmQ1J1I8UhDydaGgUVrP6EeQ3mnWdWn3
+         QXSmPgtgFPa5VIuKElS89uXEXASW90SJuB6cDv5yZYDlMQeFDKRPuvQOmKm4kbEdZKcj
+         LE7o2ZpkXQVEUc6kT0TaKfCvWQPYymeqllo3cxIvMpjJgkLoTqCBmnMe8eIr9gd33O8K
+         rSJ9FjIC1rWlLdwspmu60fN6gGFbBHsXoXc9V1ClpiQRKD0iLWSMyMBJRGuxNDOPCfgJ
+         FzPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHdBDju/zGoGPypAudfy/4F/8zqrwGJ/ObaDZBfBMCjCq/qYjAS+Ex0gNBNPlr7v5iC6G/few9cEKSn1BB2EaJcCc3auYJBFNL
+X-Gm-Message-State: AOJu0YwXxctkbGdKdyiWcSIVeX+1wMJ/tjEe8iANhxkpMu2YgXq10MLm
+	Th30H2IOL2mfzcMEzcpzbU2PQ2BQVpob8dDoHOQbMn917kTFGBeUNbfxHA==
+X-Google-Smtp-Source: AGHT+IFZ5pTQX4LSpD3vpSNvOLGpNBBtl95GWxWxYt0pRrVnpr2SbHB9n/VPtJiB0YPbOpyf3vDogw==
+X-Received: by 2002:a25:e084:0:b0:e03:a5d0:b1e with SMTP id 3f1490d57ef6-e041b059475mr10517643276.22.1720713150579;
+        Thu, 11 Jul 2024 08:52:30 -0700 (PDT)
+Received: from ubuntu-dev.mathworks.com ([144.212.138.9])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61b9c4c0dsm26665846d6.15.2024.07.11.08.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 08:52:30 -0700 (PDT)
+From: Youzhong Yang <youzhong@gmail.com>
+To: chuck.lever@oracle.com,
+	linux-nfs@vger.kernel.org
+Cc: Youzhong Yang <youzhong@gmail.com>
+Subject: [PATCH] nfsd: use system_unbound_wq for nfsd_file_gc_worker()
+Date: Thu, 11 Jul 2024 11:51:33 -0400
+Message-ID: <20240711155215.84162-1-youzhong@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-On 11 Jul 2024, at 11:28, Chuck Lever wrote:
+After many rounds of changes in filecache.c, the fix by commit
+ce7df055(NFSD: Make the file_delayed_close workqueue UNBOUND)
+is gone, now we are getting syslog messages like these:
 
-> On Thu, Jul 11, 2024 at 11:24:01AM -0400, Benjamin Coddington wrote:
->> The GSS routine errors are values, not flags.
->
-> My reading of kernel and user space GSS code is that these are
-> indeed flags and can be combined. The definitions are found in
-> include/linux/sunrpc/gss_err.h:
->
-> To wit:
->
-> 116 /*
-> 117  * Routine errors:
-> 118  */
-> 119 #define GSS_S_BAD_MECH (((OM_uint32) 1ul) << GSS_C_ROUTINE_ERROR_OFFSET)
-> 120 #define GSS_S_BAD_NAME (((OM_uint32) 2ul) << GSS_C_ROUTINE_ERROR_OFFSET)
+[ 1618.186688] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 4 times, consider switching to WQ_UNBOUND
+[ 1638.661616] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 8 times, consider switching to WQ_UNBOUND
+[ 1665.284542] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 16 times, consider switching to WQ_UNBOUND
+[ 1759.491342] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 32 times, consider switching to WQ_UNBOUND
+[ 3013.012308] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 64 times, consider switching to WQ_UNBOUND
+[ 3154.172827] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 128 times, consider switching to WQ_UNBOUND
+[ 3422.461924] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 256 times, consider switching to WQ_UNBOUND
+[ 3963.152054] workqueue: nfsd_file_gc_worker [nfsd] hogged CPU for >13333us 512 times, consider switching to WQ_UNBOUND
 
-I read this as just values shifted left by a constant.
+Consider use system_unbound_wq instead of system_wq for
+nfsd_file_gc_worker().
 
-No where in-kernel are they bitwise combined.  I noticed this problem in practice
-while reading the tracepoint output from corrupted GSS hash routines.
+Signed-off-by: Youzhong Yang <youzhong@gmail.com>
+---
+ fs/nfsd/filecache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ben
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index ad9083ca144b..e7faa373d45e 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -111,7 +111,7 @@ static void
+ nfsd_file_schedule_laundrette(void)
+ {
+ 	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
+-		queue_delayed_work(system_wq, &nfsd_filecache_laundrette,
++		queue_delayed_work(system_unbound_wq, &nfsd_filecache_laundrette,
+ 				   NFSD_LAUNDRETTE_DELAY);
+ }
+ 
+-- 
+2.45.2
 
 
