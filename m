@@ -1,92 +1,95 @@
-Return-Path: <linux-nfs+bounces-4796-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4797-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C28D092E446
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 12:11:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B33D92E4BE
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 12:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 478AAB216BF
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 10:11:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15BF7282A81
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 10:30:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892A61527A1;
-	Thu, 11 Jul 2024 10:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B935158D94;
+	Thu, 11 Jul 2024 10:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jg5MwVVA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C514E2F1
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 10:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62003131E4B;
+	Thu, 11 Jul 2024 10:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720692677; cv=none; b=e3Z4NwOQd20dAXNzkFbz2NzhOvZAVrcRVA0bPSX1XhbrCcM31wRZmOZfIF/tfZn03EWUP/7ZtrLGbVhOe7O6kkzfWhdf28BhAXrxxqUUjiatJgJCBq976mGsbQs5huwAVyggCVcSUNK0KR+rBCHuNxCsIEdGDDVXmULcSs01WXQ=
+	t=1720693829; cv=none; b=RUGeeUVLoIC/OgTBo+I6gZAzizOb0vPUAHs0N7eu7FGeXXOP31GLGiV2sBVkxcqibL20utDrmP40wgvtkQrVMJ4KKAQyvKLqYM04Y7g0Q8ITqQkirFLASn3GUcRnpgg4Ty8nRU7fPBM4b84sTkEPa9cQo1j4PweQMmGz4xPXUsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720692677; c=relaxed/simple;
-	bh=RNFZdcyCboRm7+e9Iwv8AoqZh62hZok+R2Fk2KG/qf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WnfOmb/Kj0E9gIAA73cXf0hud8misTjmqhnAScIz/dxFyFFHDqOaBWJx9/mVST1svrOH/3AprDTRK+dIx3oJ93wHwo4+FiNZyNutEJ/8953JfFxeJkHQBj3AhWXo7XrVei/L36+HwJTXt9B/OJRP5+f/iUdzaCzTVfvmLv3ucrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42671c659e4so443995e9.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 03:11:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720692674; x=1721297474;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hPFhI1KddiGJt7tvOYZXrrD/wSJCIduHna/79+J9Mk=;
-        b=ZXlD2DdPWmSdWkQWxkqrLjwu2aVGvwZQj20bt0EVUfFZ0a0/a/HSPvGfGo2YUTjIJQ
-         hXvsd9lyV5/Q8L+3Rg7sjHOCbMDRjII1XY/4TdMAV7+osS9NQo3dXtNDf+14rKzOTHg3
-         s17qS6T7fANOQ+XlDopASAgKJHW8FwWeNezv2AX6+1feUltjBakW1x7t5oqGVUaANXcB
-         rK2a1+6P91LnzSrH5MrfJrT19RtCvYylsZDBeNX7HDTwUy04ZWDAyt1+PUB5pR67ZNyD
-         DjHlhCmhu/5Rq6BsqH28XlMJW0kwzwm16twinbzomy/Rcy3ncEHRFAYvmWWLOtat/cvF
-         aZEg==
-X-Gm-Message-State: AOJu0YyT0U6M8huJW76pC2Y3l6/fvPORtwV3XBemnbBGKw7t+XHTGLus
-	xJnixFV5kEEg0PcmJmcMX1jR9EG1soLG2JOo/GDmzoNbKqorANOj
-X-Google-Smtp-Source: AGHT+IHv/kYPBDowvgDnGENyrGMbGkefq+F79D0rLaH1bWEXoNNHb3EdgvcpLF6bsDuD6oxP5OxiyQ==
-X-Received: by 2002:a5d:6489:0:b0:366:eb60:bd12 with SMTP id ffacd0b85a97d-367f05a545dmr1261847f8f.3.1720692674037;
-        Thu, 11 Jul 2024 03:11:14 -0700 (PDT)
-Received: from [10.100.102.74] (85.65.198.251.dynamic.barak-online.net. [85.65.198.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e17csm7420705f8f.7.2024.07.11.03.11.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 03:11:13 -0700 (PDT)
-Message-ID: <a4811705-b72f-4a1a-9ea8-11435b002259@grimberg.me>
-Date: Thu, 11 Jul 2024 13:11:11 +0300
+	s=arc-20240116; t=1720693829; c=relaxed/simple;
+	bh=MWbxo5hX/d3HKrLdJECLxxEFxt+vVxRq//De0VGcD0Y=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b1MKJdU1eDO+5hb2dP7KeTnEj3gzJP2poLHxj0eGsrQdYlQB+kjr92fK929EhjtsjvHdEr9IHsEui0INyGzrb0KBWWUBCPKwLRK5C/VLPp064a9gD2eptoBsmHYpjJz6y1zJxPatnnzpCN3P+3liBMzYIzhsbB035SZxSfKFubo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jg5MwVVA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EADEEC4AF07;
+	Thu, 11 Jul 2024 10:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720693829;
+	bh=MWbxo5hX/d3HKrLdJECLxxEFxt+vVxRq//De0VGcD0Y=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jg5MwVVA9aTov7OM4BsOV3kjfQxg4+01qXup6nnITs3NS6O8fBQ3zBoWgD3bnj41t
+	 SVpynfUF+9q5D+n2GCvDJDQqnZuOboSH+z2rlHuMY1M5c1Ac5jqVOl6fF9zmvnoY1P
+	 0JDZdnibMcomRTtUKt9j3ZJ1CJEKSrKdfk+Ce9X5mRrWjDo17PG1eZat4CylM7mAXX
+	 r3jPj45uMHRlyZ9zYMypTkAsRe0ucOuI7S6LSjyzCWIu18JppsBZfMimGbG6ASo4RP
+	 h4v29wNLjxgrUG6pjn61OzpgDnKLbsWyyNSwcD9sLKS7yZIqaFq2f1RN2aYDsWR+zU
+	 RkGEC9u53L4eQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DA16DC43153;
+	Thu, 11 Jul 2024 10:30:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] rpcrdma: improve handling of
- RDMA_CM_EVENT_ADDR_CHANGE
-To: Dan Aloni <dan.aloni@vastdata.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org
-References: <20240711095908.1604235-1-dan.aloni@vastdata.com>
- <20240711095908.1604235-2-dan.aloni@vastdata.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20240711095908.1604235-2-dan.aloni@vastdata.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3 resend] net,
+ sunrpc: Remap EPERM in case of connection failure in xs_tcp_setup_socket
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172069382888.18320.4145482834911828098.git-patchwork-notify@kernel.org>
+Date: Thu, 11 Jul 2024 10:30:28 +0000
+References: <9069ec1d59e4b2129fc23433349fd5580ad43921.1720075070.git.daniel@iogearbox.net>
+In-Reply-To: <9069ec1d59e4b2129fc23433349fd5580ad43921.1720075070.git.daniel@iogearbox.net>
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: kuba@kernel.org, netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+ usiegl00@gmail.com, neilb@suse.de, trondmy@kernel.org, anna@kernel.org
+
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Thu,  4 Jul 2024 08:41:57 +0200 you wrote:
+> When using a BPF program on kernel_connect(), the call can return -EPERM. This
+> causes xs_tcp_setup_socket() to loop forever, filling up the syslog and causing
+> the kernel to potentially freeze up.
+> 
+> Neil suggested:
+> 
+>   This will propagate -EPERM up into other layers which might not be ready
+>   to handle it. It might be safer to map EPERM to an error we would be more
+>   likely to expect from the network system - such as ECONNREFUSED or ENETDOWN.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v3,resend] net, sunrpc: Remap EPERM in case of connection failure in xs_tcp_setup_socket
+    https://git.kernel.org/netdev/net/c/626dfed5fa3b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-
-On 11/07/2024 12:59, Dan Aloni wrote:
-> It would be beneficial to implement handling similar to
-> RDMA_CM_EVENT_DEVICE_REMOVAL in the case where RDMA_CM_EVENT_ADDR_CHANGE
-> is issued for an unconnected CM.
-
-I think Chuck has a pending series for handling device removals with a 
-dedicated
-ib_client. So one would have to rebase against the other...
-
-See: 
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.gittopic-device-removal
-
-Other than that, looks good,
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
