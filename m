@@ -1,74 +1,67 @@
-Return-Path: <linux-nfs+bounces-4844-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4845-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3559A92EFE0
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 21:41:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAD6592F100
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 23:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 595F31C2236A
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 19:41:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69949282F90
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 21:20:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CB9F187352;
-	Thu, 11 Jul 2024 19:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9E91A01A5;
+	Thu, 11 Jul 2024 21:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/05WNiO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQtHPsAU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D51157469;
-	Thu, 11 Jul 2024 19:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EE21A00F1;
+	Thu, 11 Jul 2024 21:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720726854; cv=none; b=vDuY164iP7JT1a4TLGWm+1OvMq+zgRx4fBnk5qkfBYCXS85JL+Feyii0iOyonIxnb4+dZNFUzLd3cxsVVsZCcyAD/56L9K5JBSaoh088HVXmb0l/WJCUUprrHxGL07eisthbJGIK5gRTajlDTIin3fniL1SxCIllzRNq/j58MTs=
+	t=1720732739; cv=none; b=pPFUT2BlFLUkArwooDC0FcDRiHlqnQzvHwz42/yrDto0MzMBO2GUyBFcUMvrRg/XuDKQ4FN5VrjAt+2qDV8kN6OnVLku0mfqhsPU6CEn5YboORkEJXnQR5+RRe3dE2zWS6ifVToDyzAyFeLXPv5MG8VuLvvvvtThv9UlngIECOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720726854; c=relaxed/simple;
-	bh=EVnGtV8AHFqpOc+alVUBVW5Ol8gc7DzmHy1wr9gczMY=;
+	s=arc-20240116; t=1720732739; c=relaxed/simple;
+	bh=Q8stzAgS/RJWc8fmHzv4cDeadSCxZ997x8OzXXJU0ms=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TfxNvHkV74A5ogYbdg+sVH8I1S8UZAD3z+tIkRKMSIU1yeiX8K98WaO81EgEHkei25d+6V2dBk8p5gQgYiJxXlCao7bLijbjU2t9AiU7Ou6BOiurG/psw0yTfBeZLKxeEN8WHyLnEMbKSqni4hMZI9JlBeqlNqUmMSn0Emh3xaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/05WNiO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8294C116B1;
-	Thu, 11 Jul 2024 19:40:50 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ggJMMN4L4+5o8zqQ8ENgyIwZuStTYo93iScSgcrmtRAc7JdcPHKOF2Bo1OdkN7yeZTPrCHp8m9AXN7d2u+f6LSxw6bxkED+y78Wiu5qJ/Dldil4c8hlkR6iZkDAU43zpawDM/+v/q3XqCiXTXIL2njQZKS1F7uMK/MWDrAv6n0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQtHPsAU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10C9C116B1;
+	Thu, 11 Jul 2024 21:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720726853;
-	bh=EVnGtV8AHFqpOc+alVUBVW5Ol8gc7DzmHy1wr9gczMY=;
+	s=k20201202; t=1720732739;
+	bh=Q8stzAgS/RJWc8fmHzv4cDeadSCxZ997x8OzXXJU0ms=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=f/05WNiOm5/jRoAIKleOwYtEiZWO8GkFKlbH+a/sBGr8vHmHTP533Qi/sK++dNV6I
-	 pa5Owcvqp/re04OS8MQ2FqY13bZCilE6WR7P7qjCLek5YwhvGFhM8tm+cAc3aCvgg5
-	 sP9HM55SsitKekzxqZUAlwdYYdEpGHMIKtB1mfJnWOcICE95Kj8Z3kxcc8OzWONZEe
-	 i2QBMw15CsD7G/3e9fEX93vgN7Ia64hbvG+yvRC7gupeCDONU+hs2lvJw8fWY9fIH1
-	 mUvQrcoKR1jkb1V3GxnpCYeGZFDMm2yleW1emv9PK5Yoo9oIAe+iZfTSMuJay4LO/X
-	 t08oNBRNZNkqw==
-Message-ID: <2a1db34612bc5ba6fe7722d2e031e216270dd4c2.camel@kernel.org>
-Subject: Re: [PATCH v5 6/9] xfs: switch to multigrain timestamps
+	b=qQtHPsAUD9XdquhOVr33DAl5s6OTV7WOm+bBhGyq4MHysMMw3MBQvzQF/LsHEAdmQ
+	 G+9K14nKnx0gN0mVA19mhlP6h1YVv9u6aVc+iMAKYZf0SbYus/Yytd5RZZ2LgePoIG
+	 BEcRfr8uODSafjrhpMl+FO9+h2Hfyxpyzf8bWmBkzToISlVUa/nBVHOW2twXq9a9/G
+	 KCoPVp+/LSwosa3l/tC1HCQizksUnVq+BzDDzNs99IH6mmRQ+ro4KESF9PY0l1DpE9
+	 sIrahSoH/Fw5Wid26UqsWV2FOL8O5bt9McWllMhxveryhTaiCB5KnkfBxfv+ctzugi
+	 aWltg3mzuhDLw==
+Message-ID: <4c6e9568e9e3ea5e16b82a79df39cefa780f82b3.camel@kernel.org>
+Subject: Re: [LTP] [PATCH 1/1] nfsstat01: Update client RPC calls for kernel
+ 6.9
 From: Jeff Layton <jlayton@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
- <chandan.babu@oracle.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan
- Corbet <corbet@lwn.net>,  Dave Chinner <david@fromorbit.com>, Andi Kleen
- <ak@linux.intel.com>, Christoph Hellwig <hch@infradead.org>,  Uros Bizjak
- <ubizjak@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, Arnd
- Bergmann <arnd@arndb.de>,  Randy Dunlap <rdunlap@infradead.org>,
- kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-  linux-doc@vger.kernel.org
-Date: Thu, 11 Jul 2024 15:40:49 -0400
-In-Reply-To: <20240711191435.GV1998502@frogsfrogsfrogs>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-	 <20240711-mgtime-v5-6-37bb5b465feb@kernel.org>
-	 <20240711150920.GU1998502@frogsfrogsfrogs>
-	 <95a135dcec10423b9bcb9f53a1420d80b4afdba7.camel@kernel.org>
-	 <20240711191435.GV1998502@frogsfrogsfrogs>
+To: Chuck Lever III <chuck.lever@oracle.com>, Greg KH <greg@kroah.com>
+Cc: Sherry Yang <sherry.yang@oracle.com>, Calum Mackay
+ <calum.mackay@oracle.com>,  linux-stable <stable@vger.kernel.org>, Petr
+ Vorel <pvorel@suse.cz>, Trond Myklebust <trondmy@hammerspace.com>,  Anna
+ Schumaker <anna@kernel.org>, Linux NFS Mailing List
+ <linux-nfs@vger.kernel.org>,  "kernel-team@fb.com" <kernel-team@fb.com>,
+ "ltp@lists.linux.it" <ltp@lists.linux.it>, Avinesh Kumar <akumar@suse.de>,
+ Neil Brown <neilb@suse.de>, Josef Bacik <josef@toxicpanda.com>
+Date: Thu, 11 Jul 2024 17:18:56 -0400
+In-Reply-To: <64D2D29F-BCC0-4A44-BB75-D85B80B75959@oracle.com>
+References: <d4b235df-4ee5-4824-9d48-e3b3c1f1f4d1@oracle.com>
+	 <2fc3a3fd-7433-45ba-b281-578355dca64c@oracle.com>
+	 <296EA0E6-0E72-4EA1-8B31-B025EB531F9B@oracle.com>
+	 <2024070638-shale-avalanche-1b51@gregkh>
+	 <E1A8C506-12CF-474B-9C1C-25EC93FCC206@oracle.com>
+	 <2024070814-very-vitamins-7021@gregkh>
+	 <64D2D29F-BCC0-4A44-BB75-D85B80B75959@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -153,282 +146,191 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-07-11 at 12:14 -0700, Darrick J. Wong wrote:
-> On Thu, Jul 11, 2024 at 11:58:59AM -0400, Jeff Layton wrote:
-> > On Thu, 2024-07-11 at 08:09 -0700, Darrick J. Wong wrote:
-> > > On Thu, Jul 11, 2024 at 07:08:10AM -0400, Jeff Layton wrote:
-> > > > Enable multigrain timestamps, which should ensure that there is an
-> > > > apparent change to the timestamp whenever it has been written after
-> > > > being actively observed via getattr.
+On Mon, 2024-07-08 at 17:49 +0000, Chuck Lever III wrote:
+>=20
+> > On Jul 8, 2024, at 6:36=E2=80=AFAM, Greg KH <greg@kroah.com> wrote:
+> >=20
+> > On Sat, Jul 06, 2024 at 07:46:19AM +0000, Sherry Yang wrote:
+> > >=20
+> > >=20
+> > > > On Jul 6, 2024, at 12:11=E2=80=AFAM, Greg KH <greg@kroah.com> wrote=
+:
 > > > >=20
-> > > > Also, anytime the mtime changes, the ctime must also change, and th=
-ose
-> > > > are now the only two options for xfs_trans_ichgtime. Have that func=
-tion
-> > > > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
-> > > > always set.
+> > > > On Fri, Jul 05, 2024 at 02:19:18PM +0000, Chuck Lever III wrote:
+> > > > >=20
+> > > > >=20
+> > > > > > On Jul 2, 2024, at 6:55=E2=80=AFPM, Calum Mackay <calum.mackay@=
+oracle.com> wrote:
+> > > > > >=20
+> > > > > > To clarify=E2=80=A6
+> > > > > >=20
+> > > > > > On 02/07/2024 5:54 pm, Calum Mackay wrote:
+> > > > > > > hi Petr,
+> > > > > > > I noticed your LTP patch [1][2] which adjusts the nfsstat01 t=
+est on v6.9 kernels, to account for Josef's changes [3], which restrict the=
+ NFS/RPC stats per-namespace.
+> > > > > > > I see that Josef's changes were backported, as far back as lo=
+ngterm v5.4,
+> > > > > >=20
+> > > > > > Sorry, that's not quite accurate.
+> > > > > >=20
+> > > > > > Josef's NFS client changes were all backported from v6.9, as fa=
+r as longterm v5.4.y:
+> > > > > >=20
+> > > > > > 2057a48d0dd0 sunrpc: add a struct rpc_stats arg to rpc_create_a=
+rgs
+> > > > > > d47151b79e32 nfs: expose /proc/net/sunrpc/nfs in net namespaces
+> > > > > > 1548036ef120 nfs: make the rpc_stat per net namespace
+> > > > > >=20
+> > > > > >=20
+> > > > > > Of Josef's NFS server changes, four were backported from v6.9 t=
+o v6.8:
+> > > > > >=20
+> > > > > > 418b9687dece sunrpc: use the struct net as the svc proc private
+> > > > > > d98416cc2154 nfsd: rename NFSD_NET_* to NFSD_STATS_*
+> > > > > > 93483ac5fec6 nfsd: expose /proc/net/sunrpc/nfsd in net namespac=
+es
+> > > > > > 4b14885411f7 nfsd: make all of the nfsd stats per-network names=
+pace
+> > > > > >=20
+> > > > > > and the others remained only in v6.9:
+> > > > > >=20
+> > > > > > ab42f4d9a26f sunrpc: don't change ->sv_stats if it doesn't exis=
+t
+> > > > > > a2214ed588fb nfsd: stop setting ->pg_stats for unused stats
+> > > > > > f09432386766 sunrpc: pass in the sv_stats struct through svc_cr=
+eate_pooled
+> > > > > > 3f6ef182f144 sunrpc: remove ->pg_stats from svc_program
+> > > > > > e41ee44cc6a4 nfsd: remove nfsd_stats, make th_cnt a global coun=
+ter
+> > > > > > 16fb9808ab2c nfsd: make svc_stat per-network namespace instead =
+of global
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > I'm wondering if this difference between NFS client, and NFS se=
+rver, stat behaviour, across kernel versions, may perhaps cause some user c=
+onfusion?
+> > > > >=20
+> > > > > As a refresher for the stable folken, Josef's changes make
+> > > > > nfsstats silo'd, so they no longer show counts from the whole
+> > > > > system, but only for NFS operations relating to the local net
+> > > > > namespace. That is a surprising change for some users, tools,
+> > > > > and testing.
+> > > > >=20
+> > > > > I'm not clear on whether there are any rules/guidelines around
+> > > > > LTS backports causing behavior changes that user tools, like
+> > > > > nfsstat, might be impacted by.
 > > > >=20
-> > > > Finally, stop setting STATX_CHANGE_COOKIE in getattr, since the cti=
-me
-> > > > should give us better semantics now.
+> > > > The same rules that apply for Linus's tree (i.e. no userspace
+> > > > regressions.)
 > > >=20
-> > > Following up on "As long as the fs isn't touching i_ctime_nsec direct=
-ly,
-> > > you shouldn't need to worry about this" from:
-> > > https://lore.kernel.org/linux-xfs/cae5c28f172ac57b7eaaa98a00b23f342f0=
-1ba64.camel@kernel.org/
+> > > Given the current data we have, LTP nfsstat01[1] failed on LTS v5.4.2=
+78 because of kernel commit 1548036ef1204 ("nfs:
+> > > make the rpc_stat per net namespace") [2]. Other LTS which backported=
+ the same commit are very likely troubled with the same LTP test failure.
 > > >=20
-> > > xfs /does/ touch i_ctime_nsec directly when it's writing inodes to di=
-sk.
-> > > From xfs_inode_to_disk, see:
+> > > The following are the LTP nfsstat01 failure output
 > > >=20
-> > > 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_get_ctime(inode));
+> > > =3D=3D=3D=3D=3D=3D=3D=3D
+> > > network 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+> > > network 1 TINFO: add local addr 10.0.0.2/24
+> > > network 1 TINFO: add local addr fd00:1:1:1::2/64
+> > > network 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+> > > network 1 TINFO: add remote addr 10.0.0.1/24
+> > > network 1 TINFO: add remote addr fd00:1:1:1::1/64
+> > > network 1 TINFO: Network config (local -- remote):
+> > > network 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+> > > network 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+> > > network 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
+> > > <<<test_start>>>
+> > > tag=3Dveth|nfsstat3_01 stime=3D1719943586
+> > > cmdline=3D"nfsstat01"
+> > > contacts=3D""
+> > > analysis=3Dexit
+> > > <<<test_output>>>
+> > > incrementing stop
+> > > nfsstat01 1 TINFO: timeout per run is 0h 20m 0s
+> > > nfsstat01 1 TINFO: setup NFSv3, socket type udp
+> > > nfsstat01 1 TINFO: Mounting NFS: mount -t nfs -o proto=3Dudp,vers=3D3=
+ 10.0.0.2:/tmp/netpan-4577/LTP_nfsstat01.lz6zhgQHoV/3/udp /tmp/netpan-4577/=
+LTP_nfsstat01.lz6zhgQHoV/3/0
+> > > nfsstat01 1 TINFO: checking RPC calls for server/client
+> > > nfsstat01 1 TINFO: calls 98/0
+> > > nfsstat01 1 TINFO: Checking for tracking of RPC calls for server/clie=
+nt
+> > > nfsstat01 1 TINFO: new calls 102/0
+> > > nfsstat01 1 TPASS: server RPC calls increased
+> > > nfsstat01 1 TFAIL: client RPC calls not increased
+> > > nfsstat01 1 TINFO: checking NFS calls for server/client
+> > > nfsstat01 1 TINFO: calls 2/2
+> > > nfsstat01 1 TINFO: Checking for tracking of NFS calls for server/clie=
+nt
+> > > nfsstat01 1 TINFO: new calls 3/3
+> > > nfsstat01 1 TPASS: server NFS calls increased
+> > > nfsstat01 1 TPASS: client NFS calls increased
+> > > nfsstat01 2 TINFO: Cleaning up testcase
+> > > nfsstat01 2 TINFO: SELinux enabled in enforcing mode, this may affect=
+ test results
+> > > nfsstat01 2 TINFO: it can be disabled with TST_DISABLE_SELINUX=3D1 (r=
+equires super/root)
+> > > nfsstat01 2 TINFO: install seinfo to find used SELinux profiles
+> > > nfsstat01 2 TINFO: loaded SELinux profiles: none
 > > >=20
-> > > AFAICT, inode_get_ctime itself remains unchanged, and still returns
-> > > inode->__i_ctime, right?=C2=A0 In which case it's returning a raw tim=
-espec64,
-> > > which can include the QUERIED flag in tv_nsec, right?
+> > > Summary:
+> > > passed 3
+> > > failed 1
+> > > skipped 0
+> > > warnings 0
+> > > <<<execution_status>>>
+> > > initiation_status=3D"ok"
+> > > duration=3D1 termination_type=3Dexited termination_id=3D1 corefile=3D=
+no
+> > > cutime=3D11 cstime=3D16
+> > > <<<test_end>>>
+> > > ltp-pan reported FAIL
+> > > =3D=3D=3D=3D=3D=3D=3D=3D
 > > >=20
+> > > We can observe the number of RPC client calls is 0, which is wired. A=
+nd this happens from the kernel commit 57d1ce96d7655 ("nfs: make the rpc_st=
+at per net namespace=E2=80=9D). So now we=E2=80=99re not sure the kernel ba=
+ckport of nfs client changes is proper, or the LTP tests / userspace need t=
+o be modified.
+> > >=20
+> > > If no userspace regression, should we revert the Josef=E2=80=99s NFS =
+client-side changes on LTS?
 > >=20
-> > No, in the first patch in the series, inode_get_ctime becomes this:
-> >=20
-> > #define I_CTIME_QUERIED         ((u32)BIT(31))
-> >=20
-> > static inline time64_t inode_get_ctime_sec(const struct inode *inode)
-> > {
-> >         return inode->i_ctime_sec;
-> > }
-> >=20
-> > static inline long inode_get_ctime_nsec(const struct inode *inode)
-> > {
-> >         return inode->i_ctime_nsec & ~I_CTIME_QUERIED;
-> > }
-> >=20
-> > static inline struct timespec64 inode_get_ctime(const struct inode *ino=
-de)
-> > {
-> >         struct timespec64 ts =3D { .tv_sec  =3D inode_get_ctime_sec(ino=
-de),
-> >                                  .tv_nsec =3D inode_get_ctime_nsec(inod=
-e) };
-> >=20
-> >         return ts;
-> > }
+> > This sounds like a regression in Linus's tree too, so why isn't it
+> > reverted there first?
 >=20
-> Doh!  I forgot that this has already been soaking in the vfs tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/include/linux/fs.h?h=3Dnext-20240711&id=3D3aa63a569c64e708df547a8913c84e6=
-4a06e7853
+> There is a change in behavior in the upstream code, but Josef's
+> patches fix an information leak and make the statistics more
+> sensible in container environments. I'm not certain that
+> should be considered a regression, but confess I don't know
+> the regression rules to this fine a degree of detail.
 >=20
-> > ...which should ensure that you never store the QUERIED bit.
->=20
-> So yep, we're fine here.  Sorry about the noise; this was the very
-> subtle clue in the diff that the change had already been applied:
->=20
->  static inline struct timespec64 inode_get_ctime(const struct inode *inod=
-e)
-> @@ -1626,13 +1637,7 @@ static inline struct timespec64 inode_get_ctime(co=
-nst struct inode *inode)
->  	return ts;
->  }
->=20
-> (Doh doh doh doh doh...)
->=20
-> > > Now let's look at the consumer:
-> > >=20
-> > > static inline xfs_timestamp_t
-> > > xfs_inode_to_disk_ts(
-> > > 	struct xfs_inode		*ip,
-> > > 	const struct timespec64		tv)
-> > > {
-> > > 	struct xfs_legacy_timestamp	*lts;
-> > > 	xfs_timestamp_t			ts;
-> > >=20
-> > > 	if (xfs_inode_has_bigtime(ip))
-> > > 		return cpu_to_be64(xfs_inode_encode_bigtime(tv));
-> > >=20
-> > > 	lts =3D (struct xfs_legacy_timestamp *)&ts;
-> > > 	lts->t_sec =3D cpu_to_be32(tv.tv_sec);
-> > > 	lts->t_nsec =3D cpu_to_be32(tv.tv_nsec);
-> > >=20
-> > > 	return ts;
-> > > }
-> > >=20
-> > > For the !bigtime case (aka before we added y2038 support) the queried
-> > > flag gets encoded into the tv_nsec field since xfs doesn't filter the
-> > > queried flag.
-> > >=20
-> > > For the bigtime case, the timespec is turned into an absolute nsec co=
-unt
-> > > since the xfs epoch (which is the minimum timestamp possible under th=
-e
-> > > old encoding scheme):
-> > >=20
-> > > static inline uint64_t xfs_inode_encode_bigtime(struct timespec64 tv)
-> > > {
-> > > 	return xfs_unix_to_bigtime(tv.tv_sec) * NSEC_PER_SEC + tv.tv_nsec;
-> > > }
-> > >=20
-> > > Here we'd also be mixing in the QUERIED flag, only now we've encoded =
-a
-> > > time that's a second in the future.=C2=A0 I think the solution is to =
-add a:
-> > >=20
-> > > static inline struct timespec64
-> > > inode_peek_ctime(const struct inode *inode)
-> > > {
-> > > 	return (struct timespec64){
-> > > 		.tv_sec =3D inode->__i_ctime.tv_sec,
-> > > 		.tv_nsec =3D inode->__i_ctime.tv_nsec & ~I_CTIME_QUERIED,
-> > > 	};
-> > > }
-> > >=20
-> > > similar to what inode_peek_iversion does for iversion; and then
-> > > xfs_inode_to_disk can do:
-> > >=20
-> > > 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_peek_ctime(inode));
-> > >=20
-> > > which would prevent I_CTIME_QUERIED from going out to disk.
-> > >=20
-> > > At load time, xfs_inode_from_disk uses inode_set_ctime_to_ts so I thi=
-nk
-> > > xfs won't accidentally introduce QUERIED when it's loading an inode f=
-rom
-> > > disk.
-> > >=20
-> > >=20
-> >=20
-> > Also already done in this patchset:
-> >=20
-> > struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct tim=
-espec64 ts)
-> > {
-> >         inode->i_ctime_sec =3D ts.tv_sec;
-> >         inode->i_ctime_nsec =3D ts.tv_nsec & ~I_CTIME_QUERIED;
-> >         trace_inode_set_ctime_to_ts(inode, &ts);
-> >         return ts;
-> > }
-> > EXPORT_SYMBOL(inode_set_ctime_to_ts);
-> >=20
-> > Basically, we never want to store or fetch the QUERIED flag from disk,
-> > and since it's in an unused bit, we can just universally mask it off
-> > when dealing with "external" users of it.
-> >=20
-> > One caveat -- I am using the sign bit for the QUERIED flag, so I'm
-> > assuming that no one should ever pass inode_set_ctime_to_ts a negative
-> > tv_nsec value.
-> >=20
-> > Maybe I should add a WARN_ON_ONCE here to check for that? It seems
-> > nonsensical, but you never know...
->=20
-> Well in theory filesystems should validate incoming timestamps and
-> reject tv_nsec with the high bit set, but I'd bet there's a filesystem
-> out there that allows negative nanoseconds, even if the kernel will
-> never pass it such a thing. ;)
+> If it is indeed a regression, how can we go about retaining
+> both behaviors (selectable by Kconfig or perhaps administrative
+> UI)?
 >=20
 
-Hmm, in that case, we probably should normalize the timestamp in this
-function before setting the ctime to it. That way we can ensure that
-the bit will be meaningless when we use it. I think the kernel has a
-way to do that. I'll take a look tomorrow.
+I'd argue that the old behavior was a bug, and that Josef fixed
+it.=C2=A0These stats should probably have been made per-net when all of the
+original nfsd namespace work was done, but no one noticed until
+recently. Whoops.=C2=A0
 
-Thanks!
+A couple of hacky ideas for how we might deal with this:
 
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > =C2=A0fs/xfs/libxfs/xfs_trans_inode.c |=C2=A0 6 +++---
-> > > > =C2=A0fs/xfs/xfs_iops.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++-------
-> > > > =C2=A0fs/xfs/xfs_super.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > > > =C2=A03 files changed, 7 insertions(+), 11 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_tr=
-ans_inode.c
-> > > > index 69fc5b981352..1f3639bbf5f0 100644
-> > > > --- a/fs/xfs/libxfs/xfs_trans_inode.c
-> > > > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
-> > > > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
-> > > > =C2=A0	ASSERT(tp);
-> > > > =C2=A0	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
-> > > > =C2=A0
-> > > > -	tv =3D current_time(inode);
-> > > > +	/* If the mtime changes, then ctime must also change */
-> > > > +	ASSERT(flags & XFS_ICHGTIME_CHG);
-> > > > =C2=A0
-> > > > +	tv =3D inode_set_ctime_current(inode);
-> > > > =C2=A0	if (flags & XFS_ICHGTIME_MOD)
-> > > > =C2=A0		inode_set_mtime_to_ts(inode, tv);
-> > > > -	if (flags & XFS_ICHGTIME_CHG)
-> > > > -		inode_set_ctime_to_ts(inode, tv);
-> > > > =C2=A0	if (flags & XFS_ICHGTIME_CREATE)
-> > > > =C2=A0		ip->i_crtime =3D tv;
->=20
-> And as I mentioned elsewhere in this thread, 6.11 contains a change to
-> make it so that xfs_trans_ichgtime can set the access time.  That breaks
-> the old assertion that XFS_ICHGTIME_CHG is always set, but I think we
-> can work around that easily.
->=20
-> 	if (flags & XFS_ICHGTIME_CHG)
-> 		tv =3D inode_set_ctime_current(inode);
-> 	else
-> 		tv =3D current_time(inode);
->=20
-> --D
->=20
-> > > > =C2=A0}
-> > > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > > > index a00dcbc77e12..d25872f818fa 100644
-> > > > --- a/fs/xfs/xfs_iops.c
-> > > > +++ b/fs/xfs/xfs_iops.c
-> > > > @@ -592,8 +592,9 @@ xfs_vn_getattr(
-> > > > =C2=A0	stat->gid =3D vfsgid_into_kgid(vfsgid);
-> > > > =C2=A0	stat->ino =3D ip->i_ino;
-> > > > =C2=A0	stat->atime =3D inode_get_atime(inode);
-> > > > -	stat->mtime =3D inode_get_mtime(inode);
-> > > > -	stat->ctime =3D inode_get_ctime(inode);
-> > > > +
-> > > > +	fill_mg_cmtime(stat, request_mask, inode);
-> > > > +
-> > > > =C2=A0	stat->blocks =3D XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_del=
-ayed_blks);
-> > > > =C2=A0
-> > > > =C2=A0	if (xfs_has_v3inodes(mp)) {
-> > > > @@ -603,11 +604,6 @@ xfs_vn_getattr(
-> > > > =C2=A0		}
-> > > > =C2=A0	}
-> > > > =C2=A0
-> > > > -	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) =
-{
-> > > > -		stat->change_cookie =3D inode_query_iversion(inode);
-> > > > -		stat->result_mask |=3D STATX_CHANGE_COOKIE;
-> > > > -	}
-> > > > -
-> > > > =C2=A0	/*
-> > > > =C2=A0	 * Note: If you add another clause to set an attribute flag,=
- please
-> > > > =C2=A0	 * update attributes_mask below.
-> > > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > > > index 27e9f749c4c7..210481b03fdb 100644
-> > > > --- a/fs/xfs/xfs_super.c
-> > > > +++ b/fs/xfs/xfs_super.c
-> > > > @@ -2052,7 +2052,7 @@ static struct file_system_type xfs_fs_type =
-=3D {
-> > > > =C2=A0	.init_fs_context	=3D xfs_init_fs_context,
-> > > > =C2=A0	.parameters		=3D xfs_fs_parameters,
-> > > > =C2=A0	.kill_sb		=3D xfs_kill_sb,
-> > > > -	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-> > > > +	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
-> > > > =C2=A0};
-> > > > =C2=A0MODULE_ALIAS_FS("xfs");
-> > > > =C2=A0
-> > > >=20
-> > > > --=20
-> > > > 2.45.2
-> > > >=20
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
+1/ add a new line to the output of /proc/net/rpc/nfsd. It could just
+say "per-net\n" or "per-net <netns_id_number>\n" or something. nfsstat
+should ignore it, but LTP test could look for it and handle it
+appropriately. That could even be useful later for nfsstat too I guess.
+
+2/ move the file to a new name and make the old filename be a symlink
+to the new one. nfsstat would still work, but LTP would be able to see
+whether it was a symlink to detect the difference...or could just make
+a new symlink that points to the file and LTP could look for its
+presence.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
