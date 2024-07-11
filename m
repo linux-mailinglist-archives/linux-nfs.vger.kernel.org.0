@@ -1,301 +1,124 @@
-Return-Path: <linux-nfs+bounces-4826-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4827-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3316C92EC28
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 17:59:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CAA492EC31
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 18:00:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B448E1F2158B
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 15:59:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 506FC1C23860
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 16:00:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F19116D336;
-	Thu, 11 Jul 2024 15:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFCF715B12B;
+	Thu, 11 Jul 2024 16:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RilZTT6o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6J8jPbU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2741642B;
-	Thu, 11 Jul 2024 15:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D61716C862
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jul 2024 16:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713544; cv=none; b=J8N0b2Nf8kl1udAgGOt9VmqmILYq8sZLyLF/fjOAKf7QXOl1jq2Xva4KLyLpeGZYA20goED1R1rfVEisTce8WWbG1Byh6ecOCAiwR25+HwamCsQhT4XKSetdPTSQQuKKtRn4QXWXCv+iQK08BnvtEVmynR4+nDsitm/wIb88H/g=
+	t=1720713613; cv=none; b=tPYbBQ5maXqWx5itCXd4NjwjOUlJjfosmhoR6TpPZtbUyqMaNxoocT/yM+f5rfUgPNU6qV0TaaDSZ+Gb5v6XVu/BITttxpOpQUdfZBgqS1d0T1C4j1bWeUQLsCk8irqwxd/ijwj4b/8r5t904+KwrkG5TWl/0NIsQES8o++E7oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713544; c=relaxed/simple;
-	bh=1iLtZj+CaSFvlN0D+8+pdkXrtfvKV5SmTmwUWZ1gvV0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=THgJNlrMH2AirPc8jYoSpWKU+G6hLdFwNzXdUtIc+uwB3HU5aPy8ein3/ZSjLztPnKvCVWJMg+zQkiNtM9ODY670BBBMUm0pVXh9YhyIfmvDpx1wocxE+E4vFz5B/vExT8l4mTtGvJWiLG+WJ0AcTTEq6zXnSpdeXQPI6EI+5vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RilZTT6o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE46C116B1;
-	Thu, 11 Jul 2024 15:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720713543;
-	bh=1iLtZj+CaSFvlN0D+8+pdkXrtfvKV5SmTmwUWZ1gvV0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RilZTT6oQtB3tiFj/GIIBLC/ZRyo/VwTLg6HQJgTA712ulSCbnbRO4v0zINaanpUK
-	 ABZ8d+FUa1TePSU4UhYsEfvQh60kgDvbI4e/j/tlO+tAjM9R6/soCKIEYBMlPHBcWv
-	 cGrbjS0JEruStBXVgumxtfdnFeSH36LKmMd22fRmlYCDZprXXbDV2Gmz3IWyAAiiZZ
-	 hfkUQtRkrfRR6JUGbHe0VYIov2586luk7489V92JJ/E/qguhEy5iuGlQIJ57vMOrsc
-	 SUNeO2WIhbtrjGUoFyl/SiU9RRRQ6zQvzunSnGG3mjtAxql0i2eB1qXakgTalIYLOO
-	 sPbQM9506Agzg==
-Message-ID: <95a135dcec10423b9bcb9f53a1420d80b4afdba7.camel@kernel.org>
-Subject: Re: [PATCH v5 6/9] xfs: switch to multigrain timestamps
-From: Jeff Layton <jlayton@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
- <chandan.babu@oracle.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan
- Corbet <corbet@lwn.net>,  Dave Chinner <david@fromorbit.com>, Andi Kleen
- <ak@linux.intel.com>, Christoph Hellwig <hch@infradead.org>,  Uros Bizjak
- <ubizjak@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, Arnd
- Bergmann <arnd@arndb.de>,  Randy Dunlap <rdunlap@infradead.org>,
- kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-  linux-doc@vger.kernel.org
-Date: Thu, 11 Jul 2024 11:58:59 -0400
-In-Reply-To: <20240711150920.GU1998502@frogsfrogsfrogs>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-	 <20240711-mgtime-v5-6-37bb5b465feb@kernel.org>
-	 <20240711150920.GU1998502@frogsfrogsfrogs>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1720713613; c=relaxed/simple;
+	bh=iBNan4igZOqEHbuqzg7wSGY4RxxK9eAxM67RUrKZb5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QJRZ/ermmEC4KkDCK6zhzFLbnGoetA08XZB5XQcom6Udot0mSqwIqyAjaeX1TFlR2glnGsU0ZwSsjggEGmyWf9O4oQXUdI+hnpLshcto+iUAcXgng6I3XOZswlNDShFOJAlAbK8vXpJ77HFisvKgIUon82PXJ7Sc0gSgYNGFgzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6J8jPbU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720713611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lJ+EVCONDTjKVvtv9/k+vweQQ+vOMJC4raIjALEeIW0=;
+	b=i6J8jPbUdgBGca1rkCN5XnWz/sBUSAE1c7P06cByGQt++wTDMzwV29QvxZuL1imIwm85lW
+	NoBP55KVlpviYWtUsnKdXQDY2Q+QAyhfu6Izn7ZfhNe0+LB2+yiMmaWIt75L0JJyM78gVX
+	AcTCw8I5XDsPZGDCTU8g8YicPsEAeHw=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-tECmJWjHNOebHXW76XDMrQ-1; Thu,
+ 11 Jul 2024 12:00:06 -0400
+X-MC-Unique: tECmJWjHNOebHXW76XDMrQ-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB6571954B34;
+	Thu, 11 Jul 2024 16:00:03 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.48.4])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B795E1955BD4;
+	Thu, 11 Jul 2024 16:00:02 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] SUNRPC: Fixup gss_status tracepoint error output
+Date: Thu, 11 Jul 2024 12:00:00 -0400
+Message-ID: <057A51C2-DE21-4B66-9901-D360AADA756F@redhat.com>
+In-Reply-To: <2799ECE7-E3D9-45E6-9B47-47934B38A284@oracle.com>
+References: <27526e921037d6217bdfc6a078c53d37ae9effab.1720711381.git.bcodding@redhat.com>
+ <Zo/6G7ANcWEWkd0l@tissot.1015granger.net>
+ <C3887ED2-B331-4AC9-A73B-326D7DDAC5FD@redhat.com>
+ <2799ECE7-E3D9-45E6-9B47-47934B38A284@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, 2024-07-11 at 08:09 -0700, Darrick J. Wong wrote:
-> On Thu, Jul 11, 2024 at 07:08:10AM -0400, Jeff Layton wrote:
-> > Enable multigrain timestamps, which should ensure that there is an
-> > apparent change to the timestamp whenever it has been written after
-> > being actively observed via getattr.
-> >=20
-> > Also, anytime the mtime changes, the ctime must also change, and those
-> > are now the only two options for xfs_trans_ichgtime. Have that function
-> > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
-> > always set.
-> >=20
-> > Finally, stop setting STATX_CHANGE_COOKIE in getattr, since the ctime
-> > should give us better semantics now.
->=20
-> Following up on "As long as the fs isn't touching i_ctime_nsec directly,
-> you shouldn't need to worry about this" from:
-> https://lore.kernel.org/linux-xfs/cae5c28f172ac57b7eaaa98a00b23f342f01ba6=
-4.camel@kernel.org/
->=20
-> xfs /does/ touch i_ctime_nsec directly when it's writing inodes to disk.
-> From xfs_inode_to_disk, see:
->=20
-> 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_get_ctime(inode));
->=20
-> AFAICT, inode_get_ctime itself remains unchanged, and still returns
-> inode->__i_ctime, right?=C2=A0 In which case it's returning a raw timespe=
-c64,
-> which can include the QUERIED flag in tv_nsec, right?
->=20
+On 11 Jul 2024, at 11:52, Chuck Lever III wrote:
 
-No, in the first patch in the series, inode_get_ctime becomes this:
+>> On Jul 11, 2024, at 11:48 AM, Benjamin Coddington <bcodding@redhat.com> wrote:
+>>
+>> On 11 Jul 2024, at 11:28, Chuck Lever wrote:
+>>
+>>> On Thu, Jul 11, 2024 at 11:24:01AM -0400, Benjamin Coddington wrote:
+>>>> The GSS routine errors are values, not flags.
+>>>
+>>> My reading of kernel and user space GSS code is that these are
+>>> indeed flags and can be combined. The definitions are found in
+>>> include/linux/sunrpc/gss_err.h:
+>>>
+>>> To wit:
+>>>
+>>> 116 /*
+>>> 117  * Routine errors:
+>>> 118  */
+>>> 119 #define GSS_S_BAD_MECH (((OM_uint32) 1ul) << GSS_C_ROUTINE_ERROR_OFFSET)
+>>> 120 #define GSS_S_BAD_NAME (((OM_uint32) 2ul) << GSS_C_ROUTINE_ERROR_OFFSET)
+>>
+>> I read this as just values shifted left by a constant.
+>>
+>> No where in-kernel are they bitwise combined.
+>
+> The kernel gets GSS status values from user space code too.
+>
+>
+>> I noticed this problem in practice
+>> while reading the tracepoint output from corrupted GSS hash routines.
+>
+> Can you describe the problem?
 
-#define I_CTIME_QUERIED         ((u32)BIT(31))
+It was a week ago or so, and I don't have the test setup any longer, but the
+tracepoint would not print the actual error returned, rather the bitwise
+combination of that error.
 
-static inline time64_t inode_get_ctime_sec(const struct inode *inode)
-{
-        return inode->i_ctime_sec;
-}
+Look closer at the values - it makes no sense that these are bits, else
+GSS_S_BAD_NAMETYPE is the same as GSS_S_BAD_MECH|GSS_S_BAD_NAME.
 
-static inline long inode_get_ctime_nsec(const struct inode *inode)
-{
-        return inode->i_ctime_nsec & ~I_CTIME_QUERIED;
-}
+Ben
 
-static inline struct timespec64 inode_get_ctime(const struct inode *inode)
-{
-        struct timespec64 ts =3D { .tv_sec  =3D inode_get_ctime_sec(inode),
-                                 .tv_nsec =3D inode_get_ctime_nsec(inode) }=
-;
-
-        return ts;
-}
-
-...which should ensure that you never store the QUERIED bit.
-
-> Now let's look at the consumer:
->=20
-> static inline xfs_timestamp_t
-> xfs_inode_to_disk_ts(
-> 	struct xfs_inode		*ip,
-> 	const struct timespec64		tv)
-> {
-> 	struct xfs_legacy_timestamp	*lts;
-> 	xfs_timestamp_t			ts;
->=20
-> 	if (xfs_inode_has_bigtime(ip))
-> 		return cpu_to_be64(xfs_inode_encode_bigtime(tv));
->=20
-> 	lts =3D (struct xfs_legacy_timestamp *)&ts;
-> 	lts->t_sec =3D cpu_to_be32(tv.tv_sec);
-> 	lts->t_nsec =3D cpu_to_be32(tv.tv_nsec);
->=20
-> 	return ts;
-> }
->=20
-> For the !bigtime case (aka before we added y2038 support) the queried
-> flag gets encoded into the tv_nsec field since xfs doesn't filter the
-> queried flag.
->=20
-> For the bigtime case, the timespec is turned into an absolute nsec count
-> since the xfs epoch (which is the minimum timestamp possible under the
-> old encoding scheme):
->=20
-> static inline uint64_t xfs_inode_encode_bigtime(struct timespec64 tv)
-> {
-> 	return xfs_unix_to_bigtime(tv.tv_sec) * NSEC_PER_SEC + tv.tv_nsec;
-> }
->=20
-> Here we'd also be mixing in the QUERIED flag, only now we've encoded a
-> time that's a second in the future.=C2=A0 I think the solution is to add =
-a:
->=20
-> static inline struct timespec64
-> inode_peek_ctime(const struct inode *inode)
-> {
-> 	return (struct timespec64){
-> 		.tv_sec =3D inode->__i_ctime.tv_sec,
-> 		.tv_nsec =3D inode->__i_ctime.tv_nsec & ~I_CTIME_QUERIED,
-> 	};
-> }
->=20
-> similar to what inode_peek_iversion does for iversion; and then
-> xfs_inode_to_disk can do:
->=20
-> 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_peek_ctime(inode));
->=20
-> which would prevent I_CTIME_QUERIED from going out to disk.
->=20
-> At load time, xfs_inode_from_disk uses inode_set_ctime_to_ts so I think
-> xfs won't accidentally introduce QUERIED when it's loading an inode from
-> disk.
->=20
->=20
-
-Also already done in this patchset:
-
-struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct timespe=
-c64 ts)
-{
-        inode->i_ctime_sec =3D ts.tv_sec;
-        inode->i_ctime_nsec =3D ts.tv_nsec & ~I_CTIME_QUERIED;
-        trace_inode_set_ctime_to_ts(inode, &ts);
-        return ts;
-}
-EXPORT_SYMBOL(inode_set_ctime_to_ts);
-
-Basically, we never want to store or fetch the QUERIED flag from disk,
-and since it's in an unused bit, we can just universally mask it off
-when dealing with "external" users of it.
-
-One caveat -- I am using the sign bit for the QUERIED flag, so I'm
-assuming that no one should ever pass inode_set_ctime_to_ts a negative
-tv_nsec value.
-
-Maybe I should add a WARN_ON_ONCE here to check for that? It seems
-nonsensical, but you never know...
-
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > =C2=A0fs/xfs/libxfs/xfs_trans_inode.c |=C2=A0 6 +++---
-> > =C2=A0fs/xfs/xfs_iops.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++-------
-> > =C2=A0fs/xfs/xfs_super.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A03 files changed, 7 insertions(+), 11 deletions(-)
-> >=20
-> > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_=
-inode.c
-> > index 69fc5b981352..1f3639bbf5f0 100644
-> > --- a/fs/xfs/libxfs/xfs_trans_inode.c
-> > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
-> > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
-> > =C2=A0	ASSERT(tp);
-> > =C2=A0	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
-> > =C2=A0
-> > -	tv =3D current_time(inode);
-> > +	/* If the mtime changes, then ctime must also change */
-> > +	ASSERT(flags & XFS_ICHGTIME_CHG);
-> > =C2=A0
-> > +	tv =3D inode_set_ctime_current(inode);
-> > =C2=A0	if (flags & XFS_ICHGTIME_MOD)
-> > =C2=A0		inode_set_mtime_to_ts(inode, tv);
-> > -	if (flags & XFS_ICHGTIME_CHG)
-> > -		inode_set_ctime_to_ts(inode, tv);
-> > =C2=A0	if (flags & XFS_ICHGTIME_CREATE)
-> > =C2=A0		ip->i_crtime =3D tv;
-> > =C2=A0}
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index a00dcbc77e12..d25872f818fa 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -592,8 +592,9 @@ xfs_vn_getattr(
-> > =C2=A0	stat->gid =3D vfsgid_into_kgid(vfsgid);
-> > =C2=A0	stat->ino =3D ip->i_ino;
-> > =C2=A0	stat->atime =3D inode_get_atime(inode);
-> > -	stat->mtime =3D inode_get_mtime(inode);
-> > -	stat->ctime =3D inode_get_ctime(inode);
-> > +
-> > +	fill_mg_cmtime(stat, request_mask, inode);
-> > +
-> > =C2=A0	stat->blocks =3D XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed=
-_blks);
-> > =C2=A0
-> > =C2=A0	if (xfs_has_v3inodes(mp)) {
-> > @@ -603,11 +604,6 @@ xfs_vn_getattr(
-> > =C2=A0		}
-> > =C2=A0	}
-> > =C2=A0
-> > -	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) {
-> > -		stat->change_cookie =3D inode_query_iversion(inode);
-> > -		stat->result_mask |=3D STATX_CHANGE_COOKIE;
-> > -	}
-> > -
-> > =C2=A0	/*
-> > =C2=A0	 * Note: If you add another clause to set an attribute flag, ple=
-ase
-> > =C2=A0	 * update attributes_mask below.
-> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > index 27e9f749c4c7..210481b03fdb 100644
-> > --- a/fs/xfs/xfs_super.c
-> > +++ b/fs/xfs/xfs_super.c
-> > @@ -2052,7 +2052,7 @@ static struct file_system_type xfs_fs_type =3D {
-> > =C2=A0	.init_fs_context	=3D xfs_init_fs_context,
-> > =C2=A0	.parameters		=3D xfs_fs_parameters,
-> > =C2=A0	.kill_sb		=3D xfs_kill_sb,
-> > -	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-> > +	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
-> > =C2=A0};
-> > =C2=A0MODULE_ALIAS_FS("xfs");
-> > =C2=A0
-> >=20
-> > --=20
-> > 2.45.2
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
 
