@@ -1,124 +1,88 @@
-Return-Path: <linux-nfs+bounces-4807-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4808-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED3792E5DC
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 13:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D814292E768
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 13:48:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8C572871B1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 11:16:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93BED2849FF
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jul 2024 11:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E748216EC1A;
-	Thu, 11 Jul 2024 11:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZWlnKSt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A87615534D;
+	Thu, 11 Jul 2024 11:48:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xmailer.gwdg.de (xmailer.gwdg.de [134.76.10.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51116EC13;
-	Thu, 11 Jul 2024 11:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7732904;
+	Thu, 11 Jul 2024 11:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696132; cv=none; b=WiDNZQPMKCPB4neqpz6fWrlCsjNS2aqsmREd5Wy8GSiiEU6j+9sXOdfCgdDSzl75LL5BOfoGpTAjrSyGQVBHrlN33RTGWMpdcHpUBjM02s9U4FDzLcmlYeRdwyKOdzdKm0J2jUtiusnRXPZkgsfkvElq0J+5MH8umi85UMHiY+U=
+	t=1720698484; cv=none; b=UoJ8PsMvezVkw13xWcXJ8FQogMqSljADer4XlpbHAtzIW1hw3k6v373SrMWj9NJ8jp1Y69TfKVFVzlIhZBaglqEt1vR7grxYnud9mXR3c2nKVdTb8zZLmLGKzqseCbkbPEbNW/A0ziNDgf2t/h/gNF0beF9HTowmDAIdUtvzPk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696132; c=relaxed/simple;
-	bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rGTIkZbdQXaTOpzkA+/lkrP89EoQlmxGB4SgocJhEIrIaFf9Rn2N3I1mDxyneWnS5zsofDjMwkXCEnXgEIDexDeI0SfpLnhsRV2wkKax73b7owcBbM4S9Ego08pcTpELRo9t3bvz8ahFBBaaZJbnzs+PNCFMoHfdvupxxXDJEdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZWlnKSt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C94C4AF0D;
-	Thu, 11 Jul 2024 11:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720696132;
-	bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kZWlnKStTWj/I08Tl3NCNpksnVXMXWM9yXlhktX3p2YwFtK1kZcembFkaADm1ByML
-	 2hqUuLfknzwwRWW8jz0tWvJZnTLio+NcpivJ7DKtiZzjradOKuHmkN/rEMucFiJoVD
-	 qrqSIY5CLhJuV+gEMUuHR4ZYrg39tcU+yG36QOb53fR2jfy+FtZv4VnGEX/i9um87T
-	 Hct1UhKTZePkdLV9+ldCeBWNs80da+df5Om6mWiOakKtFDt83ux9e+hcKRLH/jc+dO
-	 wb08v3rnt5ZOUgzIkWiy7lcUXUxtmHZ5Xyy9dCUoLkfwj8sgDCq5Us7mAzhTwXAyWR
-	 bhpic4mjWPRMQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jul 2024 07:08:13 -0400
-Subject: [PATCH v5 9/9] tmpfs: add support for multigrain timestamps
+	s=arc-20240116; t=1720698484; c=relaxed/simple;
+	bh=jxYhJAW9FsXI8+iwIzytS+MQhfBzOQ/G2qYzaJ8TymQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXivORQwbBlD2wi5Nc8D5ixj4inFuxwBv3cuFasVYHZoN+w8N7PHcuWjVbtZYxVQoau84I1tYXUONa6R2jhsApPRPWvWrNjUaQvf1xMLMgfrTov3+5LKpXUo2f/zmCWrqBejcy3SDDWQ8k1r5fafv35amGE81W5VRAbC+KVnMZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuebingen.mpg.de; spf=pass smtp.mailfrom=tuebingen.mpg.de; arc=none smtp.client-ip=134.76.10.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuebingen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuebingen.mpg.de
+Received: from mailgw.tuebingen.mpg.de ([192.124.27.5] helo=tuebingen.mpg.de)
+	by mailer.gwdg.de with esmtp (GWDG Mailer)
+	(envelope-from <maan@tuebingen.mpg.de>)
+	id 1sRrtJ-000Veo-1u;
+	Thu, 11 Jul 2024 13:23:13 +0200
+Received: from [10.35.40.80] (HELO mailhost.tuebingen.mpg.de)
+  by tuebingen.mpg.de (CommuniGate Pro SMTP 6.2.6)
+  with SMTP id 59008868; Thu, 11 Jul 2024 13:23:12 +0200
+Received: by mailhost.tuebingen.mpg.de (sSMTP sendmail emulation); Thu, 11 Jul 2024 13:23:12 +0200
+Date: Thu, 11 Jul 2024 13:23:12 +0200
+From: Andre Noll <maan@tuebingen.mpg.de>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-raid@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-xfs@vger.kernel.org, it+linux-raid@molgen.mpg.de
+Subject: Re: How to debug intermittent increasing md/inflight but no disk
+ activity?
+Message-ID: <Zo_AoEPrCl0SfK1Z@tuebingen.mpg.de>
+References: <4a706b9c-5c47-4e51-87fc-9a1c012d89ba@molgen.mpg.de>
+ <Zo8VXAy5jTavSIO8@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-mgtime-v5-9-37bb5b465feb@kernel.org>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-In-Reply-To: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
- Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
- Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
- Randy Dunlap <rdunlap@infradead.org>, kernel-team@fb.com, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=775; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmj70l7ZnQeMlGHhjvFghMhoPkLSm0RtSQvRi/6
- iYpytjkGrGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZo+9JQAKCRAADmhBGVaC
- FZNfEADRHxrrM5sremg5UaJseVwuJj4hBX4wOg9PWhSGsvDhBSLnesYgeOMU7tABwVt/Z/8KcII
- E7FyeB7UeKZrk8KHbfDLrkFr4s2S/TsKPL0w538UEz8RtlzRM4BSv05QfJBJoRKpw3uBgJQA2St
- owelXYZBb5lXQeYVY3Xjg6yE03rw7iXm7Wu6v+u5+KVwkX9L5Cybg1j5UmqyA7WAs0lIqln/R+p
- wRjdQjL+3DK8MeqWiReYlmE9bBRLXa6DAseu3M4zC6xlaNGriEHoTWjFGbtyVwrPBailuJjRHrY
- wlIbkJBkkU72wY8rV4URo52g0iKX5b26BzHIzseEAqFJP6QHZGBVS6xFGsT/V4kw6EtPicdbsYN
- 7FlnO1dz1NWgv+TY02YEv5Gwd1Qxi3FeOHpJxt9o+5H5ASHjBGqlsdfjbp/hykirLGwFeBwQjAr
- vrz+47ffKte5ROyhV/V2djA/crlVqZq8xMxybO3ewVl5FymC+c4VbtWkTS60XsbXyFieFVR6Akb
- lnJcrsgvNEjeJoI01ocrq89wTYm9uYLYl6Z4W/Ffcp9WVS+BDgNe2Qk0r7JXbZ/aKZ8Jjm96txk
- +IdIydQLrUXuYBlPjpWI3oZp1xjrFddm/vOkQfR9dOD4JKH/hotMg3sRlNQzAo7lHreH0cGxP+Y
- TpESK6T5rsq7iwQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zo8VXAy5jTavSIO8@dread.disaster.area>
+User-Agent: Mutt/2.2.13 (00d56288) (2024-03-09)
+X-Spam-Level: $
+X-Virus-Scanned: (clean) by clamav
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+On Thu, Jul 11, 09:12, Dave Chinner wrote
 
-tmpfs only requires the FS_MGTIME flag.
+> > Of course it’s not reproducible, but any insight how to debug this next time
+> > is much welcomed.
+> 
+> Probably not a lot you can do short of reconfiguring your RAID6
+> storage devices to handle small IOs better. However, in general,
+> RAID6 /always sucks/ for small IOs, and the only way to fix this
+> problem is to use high performance SSDs to give you a massive excess
+> of write bandwidth to burn on write amplification....
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FWIW, our approach to mitigate the write amplification suckage of large
+HDD-backed raid6 arrays for small I/Os is to set up a bcache device
+by combining such arrays with two small SSDs (configured as raid1).
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 7f2b609945a5..75a9a73a769f 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4660,7 +4660,7 @@ static struct file_system_type shmem_fs_type = {
- 	.parameters	= shmem_fs_parameters,
- #endif
- 	.kill_sb	= kill_litter_super,
--	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-+	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- 
- void __init shmem_init(void)
-
+Best
+Andre
 -- 
-2.45.2
-
+Max Planck Institute for Biology
+Tel: (+49) 7071 601 829
+Max-Planck-Ring 5, 72076 Tübingen, Germany
+http://people.tuebingen.mpg.de/maan/
 
