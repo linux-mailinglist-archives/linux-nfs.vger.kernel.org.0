@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-4860-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4861-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E9992F98F
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2024 13:31:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3F2492F99B
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2024 13:35:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 382511C21BB5
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2024 11:31:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 476381F22371
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jul 2024 11:35:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8941613D502;
-	Fri, 12 Jul 2024 11:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574E9155382;
+	Fri, 12 Jul 2024 11:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kksica2j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfRSN2xp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DFB8BFC;
-	Fri, 12 Jul 2024 11:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323251422D0
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Jul 2024 11:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720783900; cv=none; b=Kt+/yEwcZz3VFFkvC/FZuNFdIK2l1baSoO3AcogIuPrRzdV3e/1lDvgAe631UhOPU2B72ZUDEQpccDnKzn4/8LXa2i74cKypGxpJ9KxsCL9PC3upthbnn3WC5daFqPYr2lLCQ/RmTj5GtEost1BuHK0rlU1rve6OIJD7+d+4f+g=
+	t=1720784134; cv=none; b=O271Wq6bgarC32trmjHueTRi8ozuXWs+2e0JDckVHX5LlSlo608xUXKvmJ6H97wdX8z1H3kL1Cg88Xic9C4ev0yr8iDXoHoVUQ1rTpiREqnzxX2NBiVYCR2rmsMOvaqB355KPiPtuPB98r+ynVtD5k3VZIjn2f9vRWZSeCgNjTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720783900; c=relaxed/simple;
-	bh=ya1TxP6EXts7cEVu9KfRQ/+Pzs9WeTmHIPyDJNQtBRg=;
+	s=arc-20240116; t=1720784134; c=relaxed/simple;
+	bh=Zk5Z+7RRZEAi8uNgtUaLcn2YGYDLjset1UhFdLg8nh0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iptb+eiNxS3db2RNiPRbl/DaNjktJPvCnMODdE2Ik9WLE+bcUlEmDc0PC1QIy5hLPAcTAK1P28TqtqbjAdwUP50veJ1l6bzvN2WwViN3yd8sNzvQTYKmENaLwAvX46p563VbTxQV/Y6TgrLZ0aXrFPWdXNw6JBmrm2soWEk1YZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kksica2j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F8BC32782;
-	Fri, 12 Jul 2024 11:31:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=EehATe52/4yYYMrUGgIih5azMQAIAqLnNwyFmgWzQWG2pGZE2uXaFHWAWnNLmJaQkAwLjxDvsqXKoKzOR5T8VdKgpFIdV7L21ZK5Z/XKIKHVLZen4RvNPFfQDFZDbBCgGX8q3po7EcWuELAu9IXjbC8cHiacL9WKwkMTscNCJxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfRSN2xp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435B1C32782;
+	Fri, 12 Jul 2024 11:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720783900;
-	bh=ya1TxP6EXts7cEVu9KfRQ/+Pzs9WeTmHIPyDJNQtBRg=;
+	s=k20201202; t=1720784133;
+	bh=Zk5Z+7RRZEAi8uNgtUaLcn2YGYDLjset1UhFdLg8nh0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kksica2j2nmkuC7jOEJDT3G94nmsWxHOatX7ZyWhP3bPvy3zFAgOjq5nNtCqwfFiY
-	 Mi+V+pj9Ym7xWPAcqjup/w7ENLYbFAGOLMDhz4wPrpbH0Kgb99THDH30mg6QvIHoCJ
-	 6CUo81a0CdyfydGmIUySqNsR0/YT8/KBnBEu1NUd4TytNSabuWOU/pTu8FvJ2l3nfI
-	 tUKzhV81H6dG/cZUuxnxmUJ17ScKGQJOltjznHPLxJvYTCVHjKCNF2pljWJcJD78jU
-	 YbS/G1/nRIiwLFwGvHs2CXx5EnBy+ZQBflWAhNp8idD1J+OXkyBqifgXss9lGRAW4j
-	 XkslK4S1t/y5A==
-Message-ID: <17aef036ab46b1d8e3f2dbf9433411390c4e7343.camel@kernel.org>
-Subject: Re: [PATCH -next,v2] gss_krb5: refactor code to return correct
- PTR_ERR in krb5_DK
+	b=CfRSN2xpBHv24/aYU/P0LV+ef0yPYRSDLhpPK4dNV4zYakfm7me3/uYnAxFdk0H9P
+	 evHMT3j5cbpw3kVcgVNyuEUE0eQmPL9bUfy74EhRKt8lcYonNZ7TWo/pxFrf00bDG9
+	 B7SPawjxiLWrK4oF6lmXMiqVR1m41em8x4ShVyr4K/smcPzj1MycE3prJQ+s+vAmd2
+	 NWRm6nxERsooiORGDpwqLolB9OufFhigol9CRdOzXQ3pPWp4jIx90MBGRKoLUCpYaV
+	 NqtgZ75/Qw6RHscttrhSlSH/gSRWyzYp1eEQNwP10CKpxYgaRB+1it7D24i/EKpLG2
+	 VRvUVNeJNN+gA==
+Message-ID: <dc5740f34194e769809d19d8467ac2c10e131fe7.camel@kernel.org>
+Subject: Re: [PATCH] SUNRPC: Fixup gss_status tracepoint error output
 From: Jeff Layton <jlayton@kernel.org>
-To: Gaosheng Cui <cuigaosheng1@huawei.com>, trondmy@kernel.org,
- anna@kernel.org,  chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
- Dai.Ngo@oracle.com,  tom@talpey.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org,  pabeni@redhat.com, horms@kernel.org
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-Date: Fri, 12 Jul 2024 07:31:37 -0400
-In-Reply-To: <20240712072423.1942417-1-cuigaosheng1@huawei.com>
-References: <20240712072423.1942417-1-cuigaosheng1@huawei.com>
+To: Benjamin Coddington <bcodding@redhat.com>, Trond Myklebust
+	 <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
+ Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Fri, 12 Jul 2024 07:35:32 -0400
+In-Reply-To: <27526e921037d6217bdfc6a078c53d37ae9effab.1720711381.git.bcodding@redhat.com>
+References: 
+	<27526e921037d6217bdfc6a078c53d37ae9effab.1720711381.git.bcodding@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,38 +136,28 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-07-12 at 15:24 +0800, Gaosheng Cui wrote:
-> Refactor the code in krb5_DK to return PTR_ERR when an error occurs.
+On Thu, 2024-07-11 at 11:24 -0400, Benjamin Coddington wrote:
+> The GSS routine errors are values, not flags.
 >=20
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 > ---
-> v2: Update IS_ERR to PTR_ERR, thanks very much!
->  net/sunrpc/auth_gss/gss_krb5_keys.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  include/trace/events/rpcgss.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_keys.c b/net/sunrpc/auth_gss/gs=
-s_krb5_keys.c
-> index 4eb19c3a54c7..5ac8d06ab2c0 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_keys.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_keys.c
-> @@ -164,10 +164,14 @@ static int krb5_DK(const struct gss_krb5_enctype *g=
-k5e,
->  		goto err_return;
+> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.=
+h
+> index 7f0c1ceae726..b0b6300a0cab 100644
+> --- a/include/trace/events/rpcgss.h
+> +++ b/include/trace/events/rpcgss.h
+> @@ -54,7 +54,7 @@ TRACE_DEFINE_ENUM(GSS_S_UNSEQ_TOKEN);
+>  TRACE_DEFINE_ENUM(GSS_S_GAP_TOKEN);
 > =20
->  	cipher =3D crypto_alloc_sync_skcipher(gk5e->encrypt_name, 0, 0);
-> -	if (IS_ERR(cipher))
-> +	if (IS_ERR(cipher)) {
-> +		ret =3D PTR_ERR(cipher);
->  		goto err_return;
-> +	}
-> +
->  	blocksize =3D crypto_sync_skcipher_blocksize(cipher);
-> -	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len))
-> +	ret =3D crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len);
-> +	if (ret)
->  		goto err_free_cipher;
-> =20
->  	ret =3D -ENOMEM;
+>  #define show_gss_status(x)						\
+> -	__print_flags(x, "|",						\
+> +	__print_symbolic(x, 						\
+>  		{ GSS_S_BAD_MECH, "GSS_S_BAD_MECH" },			\
+>  		{ GSS_S_BAD_NAME, "GSS_S_BAD_NAME" },			\
+>  		{ GSS_S_BAD_NAMETYPE, "GSS_S_BAD_NAMETYPE" },		\
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
