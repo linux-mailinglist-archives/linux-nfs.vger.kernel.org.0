@@ -1,137 +1,167 @@
-Return-Path: <linux-nfs+bounces-4875-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4876-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FD9C930363
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 04:59:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEE329304BD
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 11:33:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D29D1F22355
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 02:59:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAE011C212BA
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 09:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C439125B9;
-	Sat, 13 Jul 2024 02:59:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC6546525;
+	Sat, 13 Jul 2024 09:33:52 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A12A1849;
-	Sat, 13 Jul 2024 02:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC51E14006;
+	Sat, 13 Jul 2024 09:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720839583; cv=none; b=DB+mBvH5RObZSt6mRHkMZLhQUhlN5xEpBC26j17Heki0Hqc+8saYEVZHdxXhU7aTgK8IX13UgKptuB9HwQva7qD81b61Alp/x7CtEk7bB+X26ydGoAnSeu3AVMpZpfzmXvM12dN9cm+/4895bt/eFBIPOTWTEOXZVXG4+a2jex4=
+	t=1720863232; cv=none; b=k36fOj9du/nGFTDmnh9JjGgyKHUFOJ824XYvODiA7YbRtHikj70r1lscCGp5DSVOyAf40//umRdtm+XR+IymZP7B0VlcmBc7InIcd5QLANqMSxQ5HfKXvax6C79Kun7oOfnNGNsK/DOjbaxc8fyDcXu1D4iOFpUJpjfxM3ChswU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720839583; c=relaxed/simple;
-	bh=O6bTVwvQaYdt6K0mhtCJE/WG81yT3XSy98eP6Cc32Xw=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lbBwvQfxFKdECoIq8D7JPBw37weGM7c0D0aRoBC6IBahWzRifTvv6zHjRmLobWmAfcyTqTCtE5qJJNdB8Zjxk9kRxCFGnvHoOrIGwWa0tX+QzdSNaFjwV6dw/BL/U1wPTrvrdRvSGPV87QqadJ6Py6954xFSRBKZwfVw16DvpmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WLY354cx1z1JC9c;
-	Sat, 13 Jul 2024 10:54:41 +0800 (CST)
-Received: from kwepemd200011.china.huawei.com (unknown [7.221.188.251])
-	by mail.maildlp.com (Postfix) with ESMTPS id AE3A418009E;
-	Sat, 13 Jul 2024 10:59:27 +0800 (CST)
-Received: from [10.67.110.176] (10.67.110.176) by
- kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sat, 13 Jul 2024 10:59:26 +0800
-Subject: Re: [PATCH -next,v2] gss_krb5: refactor code to return correct
- PTR_ERR in krb5_DK
-To: Chuck Lever <chuck.lever@oracle.com>
-CC: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
-	<neilb@suse.de>, <kolga@netapp.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <linux-nfs@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-References: <20240712072423.1942417-1-cuigaosheng1@huawei.com>
- <ZpEx/Jejy/CiXE5Z@tissot.1015granger.net>
- <ZpE9luTCrUnh8RBH@tissot.1015granger.net>
-From: cuigaosheng <cuigaosheng1@huawei.com>
-Message-ID: <0735690c-9c05-b932-7883-c2f7425b3076@huawei.com>
-Date: Sat, 13 Jul 2024 10:59:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+	s=arc-20240116; t=1720863232; c=relaxed/simple;
+	bh=qP+ZWRJw9XdA41KriPewH6eyrYWfvyN3N5xFr5B/tRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMNmjc2Vhvz4aD6P8WwukqcItSyZT5VuuhNyh9KhabmkRFwy6xLFhFWo0tdxJZE2NeoLYVBX5I4W+WjpSCBBJe4vkXWGN7A0/BiDfI53Iiu7zYqzIvgDmUvnCRZNXlF0PhlDoxmCqFJtYvqBwGqg+Ec3c/9MYby0ka76IrkGH5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WLjvL2M1hz4f3jcr;
+	Sat, 13 Jul 2024 17:33:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 1E1731A0181;
+	Sat, 13 Jul 2024 17:33:46 +0800 (CST)
+Received: from [10.174.179.155] (unknown [10.174.179.155])
+	by APP4 (Coremail) with SMTP id gCh0CgCHazn3SZJmNY0DAA--.2101S3;
+	Sat, 13 Jul 2024 17:33:45 +0800 (CST)
+Message-ID: <afa05166-6def-d3ac-dd22-8b605f5e37d7@huaweicloud.com>
+Date: Sat, 13 Jul 2024 17:33:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZpE9luTCrUnh8RBH@tissot.1015granger.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200011.china.huawei.com (7.221.188.251)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101
+ Thunderbird/104.0
+Subject: Re: [PATCH RFC 2/2] NFSv4: set sb_flags to second superblock
+To: dhowells@redhat.com, marc.dionne@auristor.com, raven@themaw.net,
+ gregkh@linuxfoundation.org, rafael@kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu,
+ trond.myklebust@hammerspace.com, anna@kernel.org, sfrench@samba.org,
+ pc@manguebit.com, ronniesahlberg@gmail.com, sprasad@microsoft.com,
+ tom@talpey.com, bharathsm@microsoft.com, djwong@kernel.org
+Cc: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+ autofs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ zhangxiaoxu5@huawei.com, lilingfeng3@huawei.com
+References: <20240604112636.236517-1-lilingfeng@huaweicloud.com>
+ <20240604112636.236517-3-lilingfeng@huaweicloud.com>
+ <ca71d3c4-0b87-8a1e-a442-236d91674a87@huaweicloud.com>
+From: Li Lingfeng <lilingfeng@huaweicloud.com>
+In-Reply-To: <ca71d3c4-0b87-8a1e-a442-236d91674a87@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCHazn3SZJmNY0DAA--.2101S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw1xuFW5JF15Cr1fKr4kWFg_yoW5KF13pF
+	WxAFyjkrWkJF18Wa10yFZ5Xa4Sv348Za1UJFn3Zas7ZrWUXrn2q3W2grWYgFy8Zr4xur1U
+	XF48tF13uF13AFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9vb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCYjI0S
+	jxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU04xRDUUUUU==
+X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-Thanks for reviewing this patch.
+Friendly ping ...
 
-I think this modification makes sense, for example, if 
-crypto_sync_skcipher_setkey
+Thanks
 
-return -ENOMEM, it's better to return -ENOMEM than to return -EINVAL,
-
-just like elsewhere.
-
-On 2024/7/12 22:28, Chuck Lever wrote:
-> On Fri, Jul 12, 2024 at 09:39:08AM -0400, Chuck Lever wrote:
->> On Fri, Jul 12, 2024 at 03:24:23PM +0800, Gaosheng Cui wrote:
->>> Refactor the code in krb5_DK to return PTR_ERR when an error occurs.
->> My understanding of the current code is that if either
->> crypto_alloc_sync_skcipher() or crypto_sync_skcipher_blocksize()
->> fails, then krb5_DK() returns -EINVAL. At the only call site for
->> krb5_DK(), that return code is unconditionally discarded. Thus I
->> don't see that the proposed change is necessary or improves
->> anything.
-> My understanding is wrong  ;-)
+在 2024/6/14 11:14, Li Lingfeng 写道:
+> I think this may be a problem, but I'm unable to come up with a 
+> suitable solution. Would you mind providing some suggestions?
 >
-> The return code isn't discarded. A non-zero return code from
-> krb5_DK() is carried back up the call stack. The logic in
-> krb5_derive_key_v2() does not use the kernel's usual error flow
-> form, so I missed this.
->
-> However, it still isn't clear to me why the error behavior here
-> needs to change. It's possible, for example, that -EINVAL is
-> perfectly adequate to indicate when sync_skcipher() can't find the
-> specified encryption algorithm (gk5e->encrypt_name).
->
-> Specifying the wrong encryption type: -EINVAL. That makes sense.
->
->
->>> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
->>> ---
->>> v2: Update IS_ERR to PTR_ERR, thanks very much!
->>>   net/sunrpc/auth_gss/gss_krb5_keys.c | 8 ++++++--
->>>   1 file changed, 6 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/sunrpc/auth_gss/gss_krb5_keys.c b/net/sunrpc/auth_gss/gss_krb5_keys.c
->>> index 4eb19c3a54c7..5ac8d06ab2c0 100644
->>> --- a/net/sunrpc/auth_gss/gss_krb5_keys.c
->>> +++ b/net/sunrpc/auth_gss/gss_krb5_keys.c
->>> @@ -164,10 +164,14 @@ static int krb5_DK(const struct gss_krb5_enctype *gk5e,
->>>   		goto err_return;
->>>   
->>>   	cipher = crypto_alloc_sync_skcipher(gk5e->encrypt_name, 0, 0);
->>> -	if (IS_ERR(cipher))
->>> +	if (IS_ERR(cipher)) {
->>> +		ret = PTR_ERR(cipher);
->>>   		goto err_return;
->>> +	}
->>> +
->>>   	blocksize = crypto_sync_skcipher_blocksize(cipher);
->>> -	if (crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len))
->>> +	ret = crypto_sync_skcipher_setkey(cipher, inkey->data, inkey->len);
->>> +	if (ret)
->>>   		goto err_free_cipher;
->>>   
->>>   	ret = -ENOMEM;
->>> -- 
->>> 2.25.1
->>>
->> -- 
->> Chuck Lever
+> 在 2024/6/4 19:26, Li Lingfeng 写道:
+>> From: Li Lingfeng <lilingfeng3@huawei.com>
 >>
+>> During the process of mounting an NFSv4 client, two superblocks will be
+>> created in sequence. The first superblock corresponds to the root
+>> directory exported by the server, and the second superblock 
+>> corresponds to
+>> the directory that will be actually mounted. The first superblock will
+>> eventually be destroyed.
+>> The flag passed from user mode will only be passed to the first
+>> superblock, resulting in the actual used superblock not carrying the 
+>> flag
+>> passed from user mode(fs_context_for_submount() will set sb_flags as 0).
+>>
+>> If the 'ro' parameter is used in two consecutive mount commands, only 
+>> the
+>> first execution will create a new vfsmount, and the kernel will return
+>> EBUSY on the second execution. However, if a remount command with the 
+>> 'ro'
+>> parameter is executed between the two mount commands, both mount 
+>> commands
+>> will create new vfsmounts.
+>>
+>> The superblock generated after the first mount command does not have the
+>> 'ro' flag, and the read-only status of the file system is implemented by
+>> checking the read-only flag of the vfsmount. After executing the remount
+>> command, the 'ro' flag will be added to the superblock. When the second
+>> mount command is executed, the comparison result between the superblock
+>> with the 'ro' flag and the fs_context without the flag in the
+>> nfs_compare_mount_options() function will be different, resulting in the
+>> creation of a new vfsmount.
+>>
+>> This problem can be reproduced by performing the following operations:
+>> mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+>> mount -t nfs -o remount,ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+>> mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+>> Two vfsmounts are generated:
+>> [root@localhost ~]# mount | grep nfs
+>> 192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
+>> rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2, 
+>>
+>> sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
+>> 192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
+>> rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2, 
+>>
+>> sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
+>>
+>> Fix this by setting sb_flags to second superblock.
+>>
+>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>> ---
+>>   fs/nfs/namespace.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+>> index 887aeacedebd..8b3d75af60d4 100644
+>> --- a/fs/nfs/namespace.c
+>> +++ b/fs/nfs/namespace.c
+>> @@ -158,7 +158,7 @@ struct vfsmount *nfs_d_automount(struct path 
+>> *path, unsigned int sb_flags)
+>>       /* Open a new filesystem context, transferring parameters from the
+>>        * parent superblock, including the network namespace.
+>>        */
+>> -    fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, 
+>> path->dentry, 0);
+>> +    fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, 
+>> path->dentry, sb_flags);
+>>       if (IS_ERR(fc))
+>>           return ERR_CAST(fc);
+
 
