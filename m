@@ -1,74 +1,54 @@
-Return-Path: <linux-nfs+bounces-4878-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4879-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C7319306C8
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 19:44:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E61930722
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 21:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAF9A1F21513
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 17:44:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215AF1C2159D
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jul 2024 19:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC7413D2B8;
-	Sat, 13 Jul 2024 17:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60BAA13F43C;
+	Sat, 13 Jul 2024 19:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pkm-inc.com header.i=@pkm-inc.com header.b="NWUK4CaQ"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="lOAKR95T"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF8C13D251
-	for <linux-nfs@vger.kernel.org>; Sat, 13 Jul 2024 17:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F251BC37;
+	Sat, 13 Jul 2024 19:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720892677; cv=none; b=Z5I1BPUqVKVeEiFXELggIUsIZignzYrTq0ajUpGHSgV0msV1eyJyc9NgJ3CDgh8yfUzSaetAc+zRVdzBOjMrEFyDg1Sx6gFhdxOYAheZMAg4Ci2kn8Mf8Im5EozWpsZYxMtqApX+hUQ44GE3BkobHmvI45gv+LUCeDqZpavP2LM=
+	t=1720898221; cv=none; b=qKmOOs0uIc/1IKNio8bNFhhuJo3e1kLB6FqPxE82DYGvbGQgMKVCyfs4MldJK9208nZHDzw4C0KG4uHbL15aeXI6FPr2HgyzJ3zRyQu2sChAgPMTBsdKiXtnlwIoGCUUr13VkxXl3L4uRsisop5p56X2n2oeqthXsMEbIgxlNvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720892677; c=relaxed/simple;
-	bh=h6qj8j/tk+9bD1Mk0fOIH8Rdp8S07IKcm6LTSRSiDyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E9FmLkM7hz2vZJgXHzGa9opBhDmEgYVUgg5cwDit7HfWSLwKWo7ncFcJaYuMKcdXDwy0QltGqU+eVgM9Hrj62YEMqSBK6f22quXcfjSSUTEpa65pf/wy7v7BBvilw9Lggyy9yEGlCq79dsAvgaYD5Jc7P/ZFMz5vNROlYubDoJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pkm-inc.com; spf=pass smtp.mailfrom=pkm-inc.com; dkim=pass (2048-bit key) header.d=pkm-inc.com header.i=@pkm-inc.com header.b=NWUK4CaQ; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pkm-inc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pkm-inc.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee86c09963so2763691fa.1
-        for <linux-nfs@vger.kernel.org>; Sat, 13 Jul 2024 10:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pkm-inc.com; s=google; t=1720892673; x=1721497473; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h6qj8j/tk+9bD1Mk0fOIH8Rdp8S07IKcm6LTSRSiDyc=;
-        b=NWUK4CaQ012fah0hBV9HJeu4gkqWZcCVvVH45ahSSpmkI+jPmzPYOhYzvBngs/Qk6A
-         XkNYq+ImHKSvPIVkYq5H5KPb/QroqemkIB67sWxH4QXyBwX3lVbFa/otc6G6YWs8tu8W
-         EBR02jeEe7a+pGvbF0LZX5AVqc+qwO2khDRDfGpFyJbw1NGs1sVtco+95BKDVCQvYNOt
-         SKD5fvNMeyFS4V2e9Mo6lq97uBPqDFOoY9OYzJ9235KR3rwoEt3RELSijmblRgLhPF1r
-         wyLUbIN4R3RfoFFsiX7OvYJATmJTti1SJhUG+busn3Bp7pHvbJrjdehhR7JWghBLKzKQ
-         rQXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720892673; x=1721497473;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h6qj8j/tk+9bD1Mk0fOIH8Rdp8S07IKcm6LTSRSiDyc=;
-        b=nM3TGcvawlQajR9h5aEoRMR1MP4cW+FhZmqsmL6HEPA2OLXkyrXb8JYbps5lN486wj
-         xlLtzpLBLgfZaIX4H0NDPJDY4sWeICow3r6mwRe3rXnKcrVCrdiRBIG+4DUtaP72aMnl
-         Mv/m04bVIEwbESiCD//rt1IUA1zBbHnmYHCijrfz0JNrP21cY4ps27Xl/iCE86L/OHvO
-         jSp7ps+CqnPbub87gfSdsNbvjuf/s0yj9BzwFgbzx/1zfydD/HeRowmToDXCkYVlPMgS
-         B7jd1wJa+LdAt7N1RX4qHJdpFS8TLYkdjQS21zuKaSj7ny1uroW0d+pHkr911xplPpkq
-         fR1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqTdM11SHFYIm/EqYxf5Q1LHwPy0GUIi7ARQBSBAwxrGpuIu1C+wIGwoH07rdWrvmYMr5/yVvFyComATcztCg+r8vxSzPxvQzK
-X-Gm-Message-State: AOJu0Yz2lt3ZssbzV75mBeLrxgrpLeZdRpMDOTpH5hDi1DeI5mwg8dy9
-	+4xPxsaODb6fsyTqrknXhqpwuGOYkFLGIch6vuh/DayYezH8sUJTinoPn/w0Bqk=
-X-Google-Smtp-Source: AGHT+IHOoxjWrTisdhlA1m3++y8eYZnLCX54VYutH2TnfyneT7NOZDzk2yYmDCwN+K4hxjY931Pj8A==
-X-Received: by 2002:a05:6512:ac6:b0:52c:9ae0:bef3 with SMTP id 2adb3069b0e04-52eb99ff48fmr9920828e87.5.1720892673384;
-        Sat, 13 Jul 2024 10:44:33 -0700 (PDT)
-Received: from ?IPV6:2001:470:1f1a:1c9::2? (tunnel923754-pt.tunnel.tserv1.bud1.ipv6.he.net. [2001:470:1f1a:1c9::2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc80112fsm67927066b.183.2024.07.13.10.44.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jul 2024 10:44:32 -0700 (PDT)
-Message-ID: <aff42939-93e6-4a6e-b485-a313a1acb3f7@pkm-inc.com>
-Date: Sat, 13 Jul 2024 19:44:31 +0200
+	s=arc-20240116; t=1720898221; c=relaxed/simple;
+	bh=fIllpoDxxfPmzGlVdFqG2Dd8k9qDQSm8a4VANbMlw/8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=c42yW6EAM1sMwHEhKs1e8m9FtIKFqiZm8AArGRPZ/Oo2jM6F91ZRUIz/1+GBKjjPS3ZUAy7lM4qKdWgFJlgxRJAGKz8wRpXIgYGdQtNjMPRUprl+1oADsIYH7wMRUB1JuZ3uOiRpOR0BqwnEdFgd24cHn+xnXKztUkS7gCrKn1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=lOAKR95T; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720898176; x=1721502976; i=markus.elfring@web.de;
+	bh=58QnkHd6/w55w5TERgZr8FgykSb/+JmRwMIOmIkhJT0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=lOAKR95TuMkoPKhSE5sTdhKKXaSqfyy/diHSsgIriaTZT6+f1EMUgjXe0rNRCrOl
+	 PqN3RJh55W5lX+phsUjxM4qwSCBhkr1yxNHLP/vaDUIYj06FWYTxNAH9xDuiADwjB
+	 yIDG0ODLIZ/FSKGVSituzJ56HwBUgY8gQnV5lgtsw/3OO/K7x6X5TLkq56yNTxqEG
+	 Jt0iS8ojFxvgcjTFZZedsvUz9rv8LhHAO1V7EqSZnc3fSi8NJtanGzY5WSsh87Wn8
+	 G6PfLCOA9Zu2mQ7C30fAyI87Mgmr/afvOK5hGkk8G6ZxJJI1K9dQQ9e/3lFaM0mos
+	 jrFfjIlxO5BYDTUU5Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MXocY-1sryIV3qma-00VNUQ; Sat, 13
+ Jul 2024 21:16:15 +0200
+Message-ID: <ab25204c-5a53-42e1-ab3a-c4f704ebc929@web.de>
+Date: Sat, 13 Jul 2024 21:16:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,38 +56,68 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: How to debug intermittent increasing md/inflight but no disk
- activity?
-To: Dave Chinner <david@fromorbit.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-raid@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-block@vger.kernel.org,
- linux-xfs@vger.kernel.org, it+linux-raid@molgen.mpg.de
-References: <4a706b9c-5c47-4e51-87fc-9a1c012d89ba@molgen.mpg.de>
- <Zo8VXAy5jTavSIO8@dread.disaster.area>
- <7c300510-bab8-4389-adba-c3219a11578d@pkm-inc.com>
- <ZpG///ZaN9KfPPcf@dread.disaster.area>
+To: linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <kolga@netapp.com>, Tom Talpey <tom@talpey.com>
 Content-Language: en-GB
-From: =?UTF-8?Q?Dragan_Milivojevi=C4=87?= <galileo@pkm-inc.com>
-In-Reply-To: <ZpG///ZaN9KfPPcf@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] nfsd: Use seq_putc() in seq_quote_mem()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4U1i3VGg2hW2biQjqwkau4fUlaA5QrRWSFAddPSaI4TxmZ4QO76
+ coIgIqYor+kRQck6xu6QazchcZJ29e2lrXW9kjLsnIYqVmoCSMJkgAywYa4Bjf9uh8u07Up
+ U6/kWxYIgA/FBZ3mEVRPPZ/7mXfsd+CMyVxFivIsaTJqyM5Wwd0Q83FxCKjdT2dcfUFNu6i
+ WJifVuZhz0ky4EXPtMRcA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:S09+jYoUjpE=;61J+iwp2722nWrtNBlXdKcjngN5
+ mzrumDrpaVgh7cQCjVk2unTYR7BmNMNg6urfqDXdCWw4dpA8ryHryzfawZOuKDbmCN0Qvz1n5
+ Hvxmy+ags+EppEnlazERupHDvS9IH4rVxW6rZFqDCuDMYnccMNhPtp6AAV2TTGczH3OO58iaC
+ I3FnGOqfgVZgKqpP++t3WKCl2pi7106T0QXvVanXZLR+cU2Jd7Po+i9gvuTvqi3r7zqoUHOhy
+ 9LUQZmYolt0EOapVAusjIE5GX6vNRXRVTXmgkvEZq64SXQaV5+9Ja/vJsvXJeCaNCW+VmD1ej
+ NAeuJtNzLoMe2WLKnDg2tRKQVE1lFZhLnPqlrX59VdF/P8EfZJmNXTy22UJ8USUfMxmCVt/I0
+ V+licQVZbl2K5Y84VzkJqkVsa68sfX2BLV6zIAnYzJPSMV3pvr1KnMNI69/UjMvwULZudX2CW
+ m9JGO3kaTTJGCAUab2vBEdyVl141SmhE/jLvbwobMJJuJE5F8PH5ugHdIu8g2UG1fqF5+DnKv
+ dLHhcGmMa2SEOE8M+s+1wqTg6pLJBQtTNfpuMUgJwvdQJOZsgUtkjq2TFINA8BlFhJHY60GTA
+ AIFJS0/AEGq71YpZGkiTE5i0CoOVR6Yj3kzVYud1vWn31ZlyK3wwI+QrXm1Nak+lP1Ki4NyzS
+ XZ5M9VBmi99kAPHM/QJU8v1uDoHzveI6uA1tq5qIy6RxSUoskTiQmEUPnHqlncOHYY7tXNiEd
+ bJuFPhqHIzNbUgg0t7aHAap0uRTRoWjRD4jzmAFpnKGIjL+JMXOFeJuQkmFH25YPZGy9E2QW7
+ yrWa1DB/qsEr23uHrGu2o/ow==
 
-On 13/07/2024 01:45, Dave Chinner wrote:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 13 Jul 2024 21:07:09 +0200
 
-> That's irrelevant to the problem being discussed. The OP is
-> reporting stalls due to the bursty incoming workload vastly
-> outpacing the rate of draining of storage device. the above comment
-> is not about how close to "raw performace" the MD device gets on
-> NVMe SSDs - it's about how much faster it is for the given workload
-> than HDDs.
+Double quotation characters should be put into a sequence
+around other data.
+Thus use the function =E2=80=9Cseq_putc=E2=80=9D accordingly.
 
+This issue was transformed by using the Coccinelle software.
 
-NVMe raid is faster than HDD raid, that is true. Relative performance
-degradation is a different matter. When used with the default bitmap
-settings MD raid sends a ton of disk flushes, even with full stripe writes,
-and that kills the already atrocious performance.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/nfsd/nfs4state.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-OP should modify his array and remove or move the bitmap to an external
-drive and see how much that will help.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..1d15165a15cf 100644
+=2D-- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2636,9 +2636,9 @@ static struct nfs4_client *get_nfsdfs_clp(struct ino=
+de *inode)
+
+ static void seq_quote_mem(struct seq_file *m, char *data, int len)
+ {
+-	seq_puts(m, "\"");
++	seq_putc(m, '"');
+ 	seq_escape_mem(m, data, len, ESCAPE_HEX | ESCAPE_NAP | ESCAPE_APPEND, "\=
+"\\");
+-	seq_puts(m, "\"");
++	seq_putc(m, '"');
+ }
+
+ static const char *cb_state2str(int state)
+=2D-
+2.45.2
 
 
