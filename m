@@ -1,248 +1,296 @@
-Return-Path: <linux-nfs+bounces-4933-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4934-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8013E931A40
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 20:25:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9790931A44
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 20:29:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B1531F21C2E
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 18:25:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1AF51B22411
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 18:29:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92BBA482EF;
-	Mon, 15 Jul 2024 18:25:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A6A76E611;
+	Mon, 15 Jul 2024 18:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="Boug55xQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WW8iEsT2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF8118B1A
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 18:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EEC18B1A;
+	Mon, 15 Jul 2024 18:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721067913; cv=none; b=NGvOxagSiWPalt1WIWWK20Q9QtjNBziDvlxEm/VgGmgbBODYd5HwU2s0SY/MlXWjd8ZCEVWeCkL8WGg4zzaeaaNRuqjDpDRi6J7RtZXbz3w3bWqskip2R110T5xN5/zFCnmdC0nm8ESLftbW+rhOyL6NbiF9DU0yrc4Fj6181Tg=
+	t=1721068149; cv=none; b=RWA4GzLrsoGBVzw8ivPnTuc7AxOpeh4zvy8X9U/oegLCYakTo9eK23aLrEY8u7OnyzPWMASuup7HvsN8ogsFvrXyW4UytgmqoEsn3p+qRKBzDe/IIJQR5KWVLKnkIr5GVyRu2KrB0bd+enPvNrl8/U6RUbVt70H44ckOCHaJ6L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721067913; c=relaxed/simple;
-	bh=mpEpxSRRTRkk5YVuqQgSXOOhMaUcwFiMNY1p9tnrw0A=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=n8U+HlkRULFwM+VphyGb2j5oQvAxzprSA/UKDdjqazh+da0bFqMCgCzeZwllXxc0JJodaqRUxQ3p2bPN11/YReSFlwzdWnAKvks9MGN5Ow79FUp26kJh8r2yaYcgB6jLIxi0DgOOgGTiA49x/W8HJiQOpuuZnU/BE0X664RuF3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=Boug55xQ; arc=none smtp.client-ip=212.27.42.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 496814DAC9
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 20:17:51 +0200 (CEST)
-Received: from [192.168.1.10] (unknown [46.22.16.140])
-	(Authenticated sender: blokos@free.fr)
-	by smtp2-g21.free.fr (Postfix) with ESMTPSA id CBB8A2003DD
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 20:17:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1721067463;
-	bh=mpEpxSRRTRkk5YVuqQgSXOOhMaUcwFiMNY1p9tnrw0A=;
-	h=Date:To:From:Subject:From;
-	b=Boug55xQ3OXDpNgYm7t0Zv40zJio3TwXcDswaz9pfy/4pQhAswEOnSGAdEUoYs/04
-	 RIhGmwthZuB/nsRyUmqEmYpDPbbVt+XZcI8kIxzQTMQFOrALMiBdicnItJ+ZnX3zvq
-	 /nrd6KdusE1ClGWdIoX1AuidSmGU/S+t9ZAMdsj7b2jUayroe6hewdNGyoBzUFXkA+
-	 MtzhfeyAWkPELUjXE+IN+lyioc7sbN/J+KuL9YKpIWQ8IJwG363fg4KpNx8RPIx0Eo
-	 MtneuN6+Fr0beZMnoVf2P2F7wO1nYcXNc/AfkFZyOpkkdlmJQgc06L1PIGquD2EFo/
-	 eZPjSoX/Kkytw==
-Message-ID: <b78c88db-8b3a-4008-94cb-82ae08f0e37b@free.fr>
-Date: Mon, 15 Jul 2024 11:17:42 -0700
+	s=arc-20240116; t=1721068149; c=relaxed/simple;
+	bh=fTKTqXvODxiH14W2JlEV67Ic+f/odwUbY+RedfTGRAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kc6nXXmvpDfxpPvqfQxPxU7giIyy7TeW/SQkE01TKDSN71xbRrBokSfBPW6ff0No7o4P9GXCt54Y4Az6hd5C+a94hZ93MvFTV4uqk9MZL7JFj7JZH71uUEplIv+AagH8XPzi+279c/AMtYSYxnnB7e2S6rJuamBLt5o2JEioc38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WW8iEsT2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A1BC32782;
+	Mon, 15 Jul 2024 18:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721068148;
+	bh=fTKTqXvODxiH14W2JlEV67Ic+f/odwUbY+RedfTGRAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WW8iEsT27XWeAdUScm3j2X4Bh2cAg1X9i4WUdmMLYvtm9ybgPYTx6KiTuSgH7N6+N
+	 uRRGguxn96doXRGES6t/+aL41zanbegNtxTe94PzaUzvk+MsN282U/5p/QrJdVZCud
+	 e98mU4p6E/jmED8DQEMCu9sCfzUTGJ9eqdeBG8JHrq8y+WNOFEhOafoksGPn57SnkG
+	 GQkGHC+LBsDIQt6i3/aaZrSBWGcfQKufk+E0zF75Zh8CGEBuW2p8EMiguxrSEIjM4n
+	 zRzyhz/pyivD45aZtoqITSSGNIT32RoCiEoODnkQhVT4//xeBMEGcaLlcXpbe9IujP
+	 XljTMyyAvBiVg==
+Date: Mon, 15 Jul 2024 11:29:08 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 2/9] fs: tracepoints around multigrain timestamp events
+Message-ID: <20240715182908.GC103014@frogsfrogsfrogs>
+References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
+ <20240715-mgtime-v6-2-48e5d34bd2ba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-nfs@vger.kernel.org
-From: blokos <blokos@free.fr>
-Subject: kernel 6.10
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715-mgtime-v6-2-48e5d34bd2ba@kernel.org>
 
-Hi there,
+On Mon, Jul 15, 2024 at 08:48:53AM -0400, Jeff Layton wrote:
+> Add some tracepoints around various multigrain timestamp events.
+> 
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-since kernel 6.10 I see this in dmesg
+Woot!
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-[ 1110.417792] BUG: kernel NULL pointer dereference, address: 
-00000000000003a6
-[ 1110.417835] #PF: supervisor read access in kernel mode
-[ 1110.417843] #PF: error_code(0x0000) - not-present page
-[ 1110.417850] PGD 0 P4D 0
-[ 1110.417856] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-[ 1110.417864] CPU: 6 PID: 79 Comm: kworker/u32:4 Tainted: 
-G                T  6.10.0 #1
-[ 1110.417875] Hardware name: Dell Inc. PowerEdge R210 II/03X6X0, BIOS 
-2.10.0 05/24/2018
-[ 1110.417884] Workqueue: writeback wb_workfn (flush-0:67)
-[ 1110.417895] RIP: 0010:nfs_folio_find_private_request+0x3c/0xa0
-[ 1110.417905] Code: 8b 07 f6 c4 08 75 56 4c 8b 63 18 48 8b 03 31 ed f6 
-c4 40 74 3c 49 83 c4 48 4c 89 e7 e8 7d 0a e7 00 48 8b 6b 28 48 85 ed 74 
-1f <48> 39 6d 50 75 4f 48 8d 7d 34 b 8 01 00 00 00 f0 0f c1 45 34 85 c0
-[ 1110.417925] RSP: 0018:ffffb1ddc02ff858 EFLAGS: 00010206
-[ 1110.417932] RAX: 0000000000000000 RBX: ffffde301370f780 RCX: 
-000037dc6007b980
-[ 1110.417942] RDX: 0000000000000001 RSI: ffffb1ddc02ffb78 RDI: 
-ffff9a012332cb40
-[ 1110.417950] RBP: 0000000000000356 R08: 0000000000000001 R09: 
-0000000000000048
-[ 1110.417959] R10: 0000000000000006 R11: ffffffffffffffff R12: 
-ffff9a012332cb40
-[ 1110.417968] R13: ffff9a012332c970 R14: ffff9a012332c970 R15: 
-ffffb1ddc02ff93c
-[ 1110.417977] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
-knlGS:000000000000000 0
-[ 1110.417986] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1110.417994] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
-00000000001706f0
-[ 1110.418003] Call Trace:
-[ 1110.418008]  <TASK>
-[ 1110.418012]  ? __die_body.cold+0x19/0x2c
-[ 1110.418020]  ? page_fault_oops+0x155/0x2b0
-[ 1110.418028]  ? search_module_extables+0x10/0x50
-[ 1110.418036]  ? search_bpf_extables+0x56/0x80
-[ 1110.418044]  ? exc_page_fault+0x66/0xb0
-[ 1110.418052]  ? asm_exc_page_fault+0x22/0x30
-[ 1110.418061]  ? nfs_folio_find_private_request+0x3c/0xa0
-[ 1110.418069]  ? nfs_folio_find_private_request+0x33/0xa0
-[ 1110.418076]  nfs_lock_and_join_requests+0xd8/0x290
-[ 1110.418084]  ? __mod_memcg_lruvec_state+0xfc/0x1d0
-[ 1110.418093]  nfs_page_async_flush+0x16/0x320
-[ 1110.418100]  ? __pfx_nfs_writepages_callback+0x10/0x10
-[ 1110.418107]  nfs_writepages_callback+0x3d/0x70
-[ 1110.418283]  write_cache_pages+0x5f/0xb0
-[ 1110.418426]  nfs_writepages+0x13d/0x210
-[ 1110.418567]  do_writepages+0x78/0x280
-[ 1110.418706]  ? __skb_datagram_iter+0x76/0x2a0
-[ 1110.418846]  ? __pfx_simple_copy_to_iter+0x10/0x10
-[ 1110.418986]  __writeback_single_inode+0x30/0x190
-[ 1110.419123]  ? select_task_rq_fair+0x7e8/0x1db0
-[ 1110.419258]  writeback_sb_inodes+0x21a/0x4a0
-[ 1110.419394]  __writeback_inodes_wb+0x47/0xe0
-[ 1110.419529]  wb_writeback.isra.0+0x174/0x1e0
-[ 1110.419662]  wb_workfn+0x1e8/0x310
-[ 1110.419794]  process_one_work+0x16d/0x280
-[ 1110.419924]  worker_thread+0x256/0x390
-[ 1110.420052]  ? __pfx_worker_thread+0x10/0x10
-[ 1110.420177]  kthread+0xc9/0x100
-[ 1110.420301]  ? __pfx_kthread+0x10/0x10
-[ 1110.420425]  ret_from_fork+0x2b/0x40
-[ 1110.420548]  ? __pfx_kthread+0x10/0x10
-[ 1110.420670]  ret_from_fork_asm+0x1a/0x30
-[ 1110.420791]  </TASK>
-[ 1110.420924] Modules linked in: tls nft_chain_nat xt_MASQUERADE nf_nat 
-nf_conntrack_netl ink xt_addrtype dm_thin_pool dm_persistent_data 
-dm_bio_prison ts_bm nft_limit xt_string xt _connlimit nf_conncount 
-xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 x 
-t_hashlimit nft_compat nf_tables sch_prio act_police cls_u32 sch_ingress 
-iscsi_tcp libiscs i_tcp rdma_ucm ib_iser libiscsi rdma_rxe ib_uverbs 
-ip6_udp_tunnel udp_tunnel scsi_transpor t_iscsi ip_set_hash_ip lz4 
-lz4_compress jc42 gpio_ich kvm_intel kvm bnx2 lpc_ich sch_fq_co del 
-dm_multipath zstd raid0 polyval_clmulni polyval_generic sha512_ssse3 
-sha256_ssse3 sha1 _ssse3 scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse 
-br_netfilter bridge stp llc mgag200 drm_ shmem_helper snd_aloop snd_pcm 
-snd_timer snd soundcore i915 i2c_algo_bit drm_buddy ttm drm 
-_display_helper i2c_dev msr
-[ 1110.421864] CR2: 00000000000003a6
-[ 1110.421988] ---[ end trace 0000000000000000 ]---
-[ 1110.430766] RIP: 0010:nfs_folio_find_private_request+0x3c/0xa0
-[ 1110.430997] Code: 8b 07 f6 c4 08 75 56 4c 8b 63 18 48 8b 03 31 ed f6 
-c4 40 74 3c 49 83 c4 48 4c 89 e7 e8 7d 0a e7 00 48 8b 6b 28 48 85 ed 74 
-1f <48> 39 6d 50 75 4f 48 8d 7d 34 b 8 01 00 00 00 f0 0f c1 45 34 85 c0
-[ 1110.431266] RSP: 0018:ffffb1ddc02ff858 EFLAGS: 00010206
-[ 1110.431400] RAX: 0000000000000000 RBX: ffffde301370f780 RCX: 
-000037dc6007b980
-[ 1110.431536] RDX: 0000000000000001 RSI: ffffb1ddc02ffb78 RDI: 
-ffff9a012332cb40
-[ 1110.431673] RBP: 0000000000000356 R08: 0000000000000001 R09: 
-0000000000000048
-[ 1110.431810] R10: 0000000000000006 R11: ffffffffffffffff R12: 
-ffff9a012332cb40
-[ 1110.431949] R13: ffff9a012332c970 R14: ffff9a012332c970 R15: 
-ffffb1ddc02ff93c
-[ 1110.432088] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
-knlGS:000000000000000 0
-[ 1110.432231] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1110.432373] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
-00000000001706f0
-[ 1110.432518] note: kworker/u32:4[79] exited with irqs disabled
-[ 1110.432677] note: kworker/u32:4[79] exited with preempt_count 1
-[ 1110.432847] ------------[ cut here ]------------
-[ 1110.433033] WARNING: CPU: 6 PID: 79 at kernel/exit.c:825 
-do_exit+0x82b/0xa40
-[ 1110.433184] Modules linked in: tls nft_chain_nat xt_MASQUERADE nf_nat 
-nf_conntrack_netl ink xt_addrtype dm_thin_pool dm_persistent_data 
-dm_bio_prison ts_bm nft_limit xt_string xt _connlimit nf_conncount 
-xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 x 
-t_hashlimit nft_compat nf_tables sch_prio act_police cls_u32 sch_ingress 
-iscsi_tcp libiscs i_tcp rdma_ucm ib_iser libiscsi rdma_rxe ib_uverbs 
-ip6_udp_tunnel udp_tunnel scsi_transpor t_iscsi ip_set_hash_ip lz4 
-lz4_compress jc42 gpio_ich kvm_intel kvm bnx2 lpc_ich sch_fq_co del 
-dm_multipath zstd raid0 polyval_clmulni polyval_generic sha512_ssse3 
-sha256_ssse3 sha1 _ssse3 scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse 
-br_netfilter bridge stp llc mgag200 drm_ shmem_helper snd_aloop snd_pcm 
-snd_timer snd soundcore i915 i2c_algo_bit drm_buddy ttm drm 
-_display_helper i2c_dev msr
-[ 1110.434416] CPU: 6 PID: 79 Comm: kworker/u32:4 Tainted: G D         
-T  6.10.0 #1
-[ 1110.434588] Hardware name: Dell Inc. PowerEdge R210 II/03X6X0, BIOS 
-2.10.0 05/24/2018
-[ 1110.434792] Workqueue: writeback wb_workfn (flush-0:67)
-[ 1110.434976] RIP: 0010:do_exit+0x82b/0xa40
-[ 1110.435151] Code: 83 d0 0c 00 00 e9 e9 fd ff ff 48 8b bb 90 0a 00 00 
-31 f6 e8 97 e2 ff ff e9 6f fd ff ff 48 89 df e8 da 4a 0f 00 e9 cd f9 ff 
-ff <0f> 0b e9 40 f8 ff ff 4c 89 e6 b f 05 06 00 00 e8 41 f0 00 00 e9 c3
-[ 1110.435533] RSP: 0018:ffffb1ddc02ffed8 EFLAGS: 00010282
-[ 1110.435725] RAX: 0000000000000000 RBX: ffff99fa40b5c000 RCX: 
-0000000000000000
-[ 1110.435918] RDX: 0000000000000001 RSI: 0000000000002710 RDI: 
-ffff99fa40bd18c0
-[ 1110.436115] RBP: ffff99fa40bde300 R08: 0000000000000000 R09: 
-ffffb1ddc02ffdc8
-[ 1110.436311] R10: ffffffffa334b428 R11: 0000000000000003 R12: 
-0000000000000009
-[ 1110.436509] R13: ffff99fa40bd18c0 R14: 0000000000000000 R15: 
-0000000000000000
-[ 1110.436707] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
-knlGS:000000000000000 0
-[ 1110.436908] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1110.437130] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
-00000000001706f0
-[ 1110.437348] Call Trace:
-[ 1110.437556]  <TASK>
-[ 1110.437750]  ? __warn+0x7f/0xb1
-[ 1110.437943]  ? do_exit+0x82b/0xa40
-[ 1110.438133]  ? report_bug+0xf6/0x140
-[ 1110.438319]  ? handle_bug+0x3c/0x80
-[ 1110.438500]  ? exc_invalid_op+0x13/0x60
-[ 1110.438694]  ? asm_exc_invalid_op+0x16/0x20
-[ 1110.438872]  ? do_exit+0x82b/0xa40
-[ 1110.439050]  ? do_exit+0x64/0xa40
-[ 1110.439243]  make_task_dead+0x88/0x90
-[ 1110.439412]  rewind_stack_and_make_dead+0x16/0x20
-[ 1110.439577] RIP: 0000:0x0
-[ 1110.439756] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-[ 1110.439918] RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX: 
-0000000000000000
-[ 1110.440085] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 
-0000000000000000
-[ 1110.440267] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 
-0000000000000000
-[ 1110.440428] RBP: 0000000000000000 R08: 0000000000000000 R09: 
-0000000000000000
-[ 1110.440596] R10: 0000000000000000 R11: 0000000000000000 R12: 
-0000000000000000
-[ 1110.440762] R13: 0000000000000000 R14: 0000000000000000 R15: 
-0000000000000000
-[ 1110.440917]  </TASK>
-[ 1110.441068] ---[ end trace 0000000000000000 ]---
+--D
 
-
-I really don't know what's happening here
-
-thanks for your help
-
-Sarah
-
+> ---
+>  fs/inode.c                       |   9 ++-
+>  fs/stat.c                        |   3 +
+>  include/trace/events/timestamp.h | 124 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 135 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 417acbeabef3..869994285e87 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -22,6 +22,9 @@
+>  #include <linux/iversion.h>
+>  #include <linux/rw_hint.h>
+>  #include <trace/events/writeback.h>
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/timestamp.h>
+> +
+>  #include "internal.h"
+>  
+>  /*
+> @@ -2569,6 +2572,7 @@ EXPORT_SYMBOL(inode_nohighmem);
+>  
+>  struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct timespec64 ts)
+>  {
+> +	trace_inode_set_ctime_to_ts(inode, &ts);
+>  	set_normalized_timespec64(&ts, ts.tv_sec, ts.tv_nsec);
+>  	inode->i_ctime_sec = ts.tv_sec;
+>  	inode->i_ctime_nsec = ts.tv_nsec;
+> @@ -2668,13 +2672,16 @@ struct timespec64 inode_set_ctime_current(struct inode *inode)
+>  	cur = cns;
+>  
+>  	/* No need to cmpxchg if it's exactly the same */
+> -	if (cns == now_ts.tv_nsec && inode->i_ctime_sec == now_ts.tv_sec)
+> +	if (cns == now_ts.tv_nsec && inode->i_ctime_sec == now_ts.tv_sec) {
+> +		trace_ctime_xchg_skip(inode, &now_ts);
+>  		goto out;
+> +	}
+>  retry:
+>  	/* Try to swap the nsec value into place. */
+>  	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, now_ts.tv_nsec)) {
+>  		/* If swap occurred, then we're (mostly) done */
+>  		inode->i_ctime_sec = now_ts.tv_sec;
+> +		trace_ctime_ns_xchg(inode, cns, now_ts.tv_nsec, cur);
+>  	} else {
+>  		/*
+>  		 * Was the change due to someone marking the old ctime QUERIED?
+> diff --git a/fs/stat.c b/fs/stat.c
+> index df7fdd3afed9..552dfd67688b 100644
+> --- a/fs/stat.c
+> +++ b/fs/stat.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/uaccess.h>
+>  #include <asm/unistd.h>
+>  
+> +#include <trace/events/timestamp.h>
+> +
+>  #include "internal.h"
+>  #include "mount.h"
+>  
+> @@ -49,6 +51,7 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
+>  	stat->mtime = inode_get_mtime(inode);
+>  	stat->ctime.tv_sec = inode->i_ctime_sec;
+>  	stat->ctime.tv_nsec = ((u32)atomic_fetch_or(I_CTIME_QUERIED, pcn)) & ~I_CTIME_QUERIED;
+> +	trace_fill_mg_cmtime(inode, &stat->ctime, &stat->mtime);
+>  }
+>  EXPORT_SYMBOL(fill_mg_cmtime);
+>  
+> diff --git a/include/trace/events/timestamp.h b/include/trace/events/timestamp.h
+> new file mode 100644
+> index 000000000000..c9e5ec930054
+> --- /dev/null
+> +++ b/include/trace/events/timestamp.h
+> @@ -0,0 +1,124 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM timestamp
+> +
+> +#if !defined(_TRACE_TIMESTAMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_TIMESTAMP_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/fs.h>
+> +
+> +#define CTIME_QUERIED_FLAGS \
+> +	{ I_CTIME_QUERIED, "Q" }
+> +
+> +DECLARE_EVENT_CLASS(ctime,
+> +	TP_PROTO(struct inode *inode,
+> +		 struct timespec64 *ctime),
+> +
+> +	TP_ARGS(inode, ctime),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(time64_t,	ctime_s)
+> +		__field(u32,		ctime_ns)
+> +		__field(u32,		gen)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		= inode->i_sb->s_dev;
+> +		__entry->ino		= inode->i_ino;
+> +		__entry->gen		= inode->i_generation;
+> +		__entry->ctime_s	= ctime->tv_sec;
+> +		__entry->ctime_ns	= ctime->tv_nsec;
+> +	),
+> +
+> +	TP_printk("ino=%d:%d:%ld:%u ctime=%lld.%u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->ctime_s, __entry->ctime_ns
+> +	)
+> +);
+> +
+> +DEFINE_EVENT(ctime, inode_set_ctime_to_ts,
+> +		TP_PROTO(struct inode *inode,
+> +			 struct timespec64 *ctime),
+> +		TP_ARGS(inode, ctime));
+> +
+> +DEFINE_EVENT(ctime, ctime_xchg_skip,
+> +		TP_PROTO(struct inode *inode,
+> +			 struct timespec64 *ctime),
+> +		TP_ARGS(inode, ctime));
+> +
+> +TRACE_EVENT(ctime_ns_xchg,
+> +	TP_PROTO(struct inode *inode,
+> +		 u32 old,
+> +		 u32 new,
+> +		 u32 cur),
+> +
+> +	TP_ARGS(inode, old, new, cur),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(u32,		gen)
+> +		__field(u32,		old)
+> +		__field(u32,		new)
+> +		__field(u32,		cur)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		= inode->i_sb->s_dev;
+> +		__entry->ino		= inode->i_ino;
+> +		__entry->gen		= inode->i_generation;
+> +		__entry->old		= old;
+> +		__entry->new		= new;
+> +		__entry->cur		= cur;
+> +	),
+> +
+> +	TP_printk("ino=%d:%d:%ld:%u old=%u:%s new=%u cur=%u:%s",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->old & ~I_CTIME_QUERIED,
+> +		__print_flags(__entry->old & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS),
+> +		__entry->new,
+> +		__entry->cur & ~I_CTIME_QUERIED,
+> +		__print_flags(__entry->cur & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS)
+> +	)
+> +);
+> +
+> +TRACE_EVENT(fill_mg_cmtime,
+> +	TP_PROTO(struct inode *inode,
+> +		 struct timespec64 *ctime,
+> +		 struct timespec64 *mtime),
+> +
+> +	TP_ARGS(inode, ctime, mtime),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(time64_t,	ctime_s)
+> +		__field(time64_t,	mtime_s)
+> +		__field(u32,		ctime_ns)
+> +		__field(u32,		mtime_ns)
+> +		__field(u32,		gen)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		= inode->i_sb->s_dev;
+> +		__entry->ino		= inode->i_ino;
+> +		__entry->gen		= inode->i_generation;
+> +		__entry->ctime_s	= ctime->tv_sec;
+> +		__entry->mtime_s	= mtime->tv_sec;
+> +		__entry->ctime_ns	= ctime->tv_nsec;
+> +		__entry->mtime_ns	= mtime->tv_nsec;
+> +	),
+> +
+> +	TP_printk("ino=%d:%d:%ld:%u ctime=%lld.%u mtime=%lld.%u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->ctime_s, __entry->ctime_ns,
+> +		__entry->mtime_s, __entry->mtime_ns
+> +	)
+> +);
+> +#endif /* _TRACE_TIMESTAMP_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> 
+> -- 
+> 2.45.2
+> 
+> 
 
