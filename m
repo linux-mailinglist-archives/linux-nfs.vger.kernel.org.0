@@ -1,135 +1,248 @@
-Return-Path: <linux-nfs+bounces-4932-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4933-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 360A9931952
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 19:30:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8013E931A40
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 20:25:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 963F41F21EAE
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 17:30:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B1531F21C2E
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 18:25:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670C1487A7;
-	Mon, 15 Jul 2024 17:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92BBA482EF;
+	Mon, 15 Jul 2024 18:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jT5WVxfy"
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="Boug55xQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428C4481AA
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 17:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF8118B1A
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 18:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064561; cv=none; b=DoBU0xV5Ur8iNOWz8l5xqxrvc3gnxSs32ZtLX/D7vWaNBJ/4j5CI0bJgC/LLkQJlKQzfhNGe96AuOxrp/taVxbsFlYgwpwT5WKf/vgC5xKAbEtAnrKtsNeTgolNxHpeBcmJhhmhDas+M7/itZ34nf5BpN44CTgJ1PjfoHx6j1OQ=
+	t=1721067913; cv=none; b=NGvOxagSiWPalt1WIWWK20Q9QtjNBziDvlxEm/VgGmgbBODYd5HwU2s0SY/MlXWjd8ZCEVWeCkL8WGg4zzaeaaNRuqjDpDRi6J7RtZXbz3w3bWqskip2R110T5xN5/zFCnmdC0nm8ESLftbW+rhOyL6NbiF9DU0yrc4Fj6181Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064561; c=relaxed/simple;
-	bh=tJ8mmPgLbKYtzPRz7mC72tOjK+XMrULLgPs2rmhmnrc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G6yW8fIbBnIEw05ztbrDB5oshzUMi4HDqN3hy7Vht7eepO15dRLSlNLEBh6Hcnh3HfozGyXteI4zjxXjazuqRgZSYTQ76IypMK1vaGy5slH8dRjjoYVq1UFwFSwId97XseINFyL05A9oAlb00/fQNl1+ImnePa6BnLkhac5R6T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jT5WVxfy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236E4C32782;
-	Mon, 15 Jul 2024 17:29:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721064560;
-	bh=tJ8mmPgLbKYtzPRz7mC72tOjK+XMrULLgPs2rmhmnrc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jT5WVxfyP2F4HSqkECX52rfjzx7D/bavRPlTqEL7osl/dLeZhic6MGeLcO53Hc8Ov
-	 kHwcgZgfjy6FcpqTwjxIbKdL2YnN9WtC+QakBSsbjDmr/PaaOPH/FFDKDgtfSZ9Ldz
-	 YcUw9uNwTBfAoIVE1gDekG8Kz+KO/54nLGDfm9U6UaSSGPLwebJKwm7ZuMKrUljyRR
-	 d1T+JC/tq1YGNsTM3PJl8htPf19adrmm/l+Q5f42qiatKoix+9hKLG0TpWz9NOwk+i
-	 GRhjOnmaCUFO5hak2jYUK7Zbn6MZ2BAD0moayV06r16cvrT1YXETc53ivHhmRiV1uI
-	 77TOgvJyj0zmw==
-Message-ID: <ca50839f334e4898a2da19c2d129ecdf24e0540b.camel@kernel.org>
-Subject: Re: [PATCH 00/14 RFC] support automatic changes to nfsd thread count
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steve Dickson
-	 <steved@redhat.com>
-Date: Mon, 15 Jul 2024 13:29:18 -0400
-In-Reply-To: <20240715074657.18174-1-neilb@suse.de>
-References: <20240715074657.18174-1-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1721067913; c=relaxed/simple;
+	bh=mpEpxSRRTRkk5YVuqQgSXOOhMaUcwFiMNY1p9tnrw0A=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=n8U+HlkRULFwM+VphyGb2j5oQvAxzprSA/UKDdjqazh+da0bFqMCgCzeZwllXxc0JJodaqRUxQ3p2bPN11/YReSFlwzdWnAKvks9MGN5Ow79FUp26kJh8r2yaYcgB6jLIxi0DgOOgGTiA49x/W8HJiQOpuuZnU/BE0X664RuF3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=Boug55xQ; arc=none smtp.client-ip=212.27.42.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 496814DAC9
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 20:17:51 +0200 (CEST)
+Received: from [192.168.1.10] (unknown [46.22.16.140])
+	(Authenticated sender: blokos@free.fr)
+	by smtp2-g21.free.fr (Postfix) with ESMTPSA id CBB8A2003DD
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 20:17:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1721067463;
+	bh=mpEpxSRRTRkk5YVuqQgSXOOhMaUcwFiMNY1p9tnrw0A=;
+	h=Date:To:From:Subject:From;
+	b=Boug55xQ3OXDpNgYm7t0Zv40zJio3TwXcDswaz9pfy/4pQhAswEOnSGAdEUoYs/04
+	 RIhGmwthZuB/nsRyUmqEmYpDPbbVt+XZcI8kIxzQTMQFOrALMiBdicnItJ+ZnX3zvq
+	 /nrd6KdusE1ClGWdIoX1AuidSmGU/S+t9ZAMdsj7b2jUayroe6hewdNGyoBzUFXkA+
+	 MtzhfeyAWkPELUjXE+IN+lyioc7sbN/J+KuL9YKpIWQ8IJwG363fg4KpNx8RPIx0Eo
+	 MtneuN6+Fr0beZMnoVf2P2F7wO1nYcXNc/AfkFZyOpkkdlmJQgc06L1PIGquD2EFo/
+	 eZPjSoX/Kkytw==
+Message-ID: <b78c88db-8b3a-4008-94cb-82ae08f0e37b@free.fr>
+Date: Mon, 15 Jul 2024 11:17:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-nfs@vger.kernel.org
+From: blokos <blokos@free.fr>
+Subject: kernel 6.10
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-07-15 at 17:14 +1000, NeilBrown wrote:
-> This patch set (against nfsd-next) enables automatic adjustment of the
-> number of nfsd threads.=C2=A0 The number can increase under high load, an=
-d
-> reduce after idle periods.
->=20
-> The first few patches (1-6) are cleanups that may not be entirely
-> relevant to the current series.=C2=A0 They could safely land any time and
-> only need minimal review.
->=20
-> Patch 9,10,11 remove some places were sv_nrthreads are used for things
-> other than counting threads.=C2=A0 It is use to adjust other limits.=C2=
-=A0 At the
-> time this seemed like an easy and sensible solution.=C2=A0 I now have to
-> repent of that short-cut and find a better way to impose reasonable
-> limits.
->=20
-> These and the other sundry patches (7,8,12) can, I think safely land
-> whenever that get sufficient review.=C2=A0 I think they are sensible even=
- if
-> we won't end up adjusting threads dynamically.
->=20
-> Patches 13 and 14 build on all this to provide the desired
-> functionality.=C2=A0 Patch 13 allows the maximum to be configured, and pa=
-tch
-> 14 starts or stops threads based on some simple triggers.
->=20
-> For 13 I decided that if the user/admin makes no explicit configuration,
-> then the currently request number of threads becomes a minimum, and a
-> maximum is determined based on the amount of memory.=C2=A0 This will make
-> the patch set immediately useful but shouldn't unduly impact existing
-> configurations.
->=20
-> For patch 14 I only implemented starting a thread when there is work to
-> do but no threads to do it, and stopping a thread when it has been idle
-> for 5 seconds.=C2=A0 The start-up is deliberately serialised so at least =
-one
-> NFS request is serviced between the decision to start a thread and the
-> action of starting it.=C2=A0 This hopefully encourages a ramping up of th=
-read
-> count rather than a sudden jump.
->=20
-> There is certain room for discussion around the wisdom of these
-> heuristics, and what other heuristics are needed - we probably want a
-> shrinker to impose memory pressure of the number of threads.=C2=A0 We
-> probably want a thread to exit rather than retry when a memory
-> allocation in svc_alloc_arg() fails.
->=20
-> I certainly wouldn't recommend patch 14 landing in any hurry at all.
->=20
-> I'd love to hear what y'all think, and what experiences you have when
-> testing it.
->=20
->=20
+Hi there,
 
-This looks mostly reasonable, modulo a few nits on the later patches.
-You can add my Reviewed-by to 1-9. 10-12 others look tentatively OK
-too, but I'm less familiar with the slot handling code, and it sounds
-like you're going to rework that part anyway.
+since kernel 6.10 I see this in dmesg
 
-For 13 I have some ideas about how we should present this from a user
-interface standpoint that I wrote in my reply. The heuristics you came
-up with in 14 look like a fine place to start.
+[ 1110.417792] BUG: kernel NULL pointer dereference, address: 
+00000000000003a6
+[ 1110.417835] #PF: supervisor read access in kernel mode
+[ 1110.417843] #PF: error_code(0x0000) - not-present page
+[ 1110.417850] PGD 0 P4D 0
+[ 1110.417856] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+[ 1110.417864] CPU: 6 PID: 79 Comm: kworker/u32:4 Tainted: 
+G                T  6.10.0 #1
+[ 1110.417875] Hardware name: Dell Inc. PowerEdge R210 II/03X6X0, BIOS 
+2.10.0 05/24/2018
+[ 1110.417884] Workqueue: writeback wb_workfn (flush-0:67)
+[ 1110.417895] RIP: 0010:nfs_folio_find_private_request+0x3c/0xa0
+[ 1110.417905] Code: 8b 07 f6 c4 08 75 56 4c 8b 63 18 48 8b 03 31 ed f6 
+c4 40 74 3c 49 83 c4 48 4c 89 e7 e8 7d 0a e7 00 48 8b 6b 28 48 85 ed 74 
+1f <48> 39 6d 50 75 4f 48 8d 7d 34 b 8 01 00 00 00 f0 0f c1 45 34 85 c0
+[ 1110.417925] RSP: 0018:ffffb1ddc02ff858 EFLAGS: 00010206
+[ 1110.417932] RAX: 0000000000000000 RBX: ffffde301370f780 RCX: 
+000037dc6007b980
+[ 1110.417942] RDX: 0000000000000001 RSI: ffffb1ddc02ffb78 RDI: 
+ffff9a012332cb40
+[ 1110.417950] RBP: 0000000000000356 R08: 0000000000000001 R09: 
+0000000000000048
+[ 1110.417959] R10: 0000000000000006 R11: ffffffffffffffff R12: 
+ffff9a012332cb40
+[ 1110.417968] R13: ffff9a012332c970 R14: ffff9a012332c970 R15: 
+ffffb1ddc02ff93c
+[ 1110.417977] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
+knlGS:000000000000000 0
+[ 1110.417986] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1110.417994] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
+00000000001706f0
+[ 1110.418003] Call Trace:
+[ 1110.418008]  <TASK>
+[ 1110.418012]  ? __die_body.cold+0x19/0x2c
+[ 1110.418020]  ? page_fault_oops+0x155/0x2b0
+[ 1110.418028]  ? search_module_extables+0x10/0x50
+[ 1110.418036]  ? search_bpf_extables+0x56/0x80
+[ 1110.418044]  ? exc_page_fault+0x66/0xb0
+[ 1110.418052]  ? asm_exc_page_fault+0x22/0x30
+[ 1110.418061]  ? nfs_folio_find_private_request+0x3c/0xa0
+[ 1110.418069]  ? nfs_folio_find_private_request+0x33/0xa0
+[ 1110.418076]  nfs_lock_and_join_requests+0xd8/0x290
+[ 1110.418084]  ? __mod_memcg_lruvec_state+0xfc/0x1d0
+[ 1110.418093]  nfs_page_async_flush+0x16/0x320
+[ 1110.418100]  ? __pfx_nfs_writepages_callback+0x10/0x10
+[ 1110.418107]  nfs_writepages_callback+0x3d/0x70
+[ 1110.418283]  write_cache_pages+0x5f/0xb0
+[ 1110.418426]  nfs_writepages+0x13d/0x210
+[ 1110.418567]  do_writepages+0x78/0x280
+[ 1110.418706]  ? __skb_datagram_iter+0x76/0x2a0
+[ 1110.418846]  ? __pfx_simple_copy_to_iter+0x10/0x10
+[ 1110.418986]  __writeback_single_inode+0x30/0x190
+[ 1110.419123]  ? select_task_rq_fair+0x7e8/0x1db0
+[ 1110.419258]  writeback_sb_inodes+0x21a/0x4a0
+[ 1110.419394]  __writeback_inodes_wb+0x47/0xe0
+[ 1110.419529]  wb_writeback.isra.0+0x174/0x1e0
+[ 1110.419662]  wb_workfn+0x1e8/0x310
+[ 1110.419794]  process_one_work+0x16d/0x280
+[ 1110.419924]  worker_thread+0x256/0x390
+[ 1110.420052]  ? __pfx_worker_thread+0x10/0x10
+[ 1110.420177]  kthread+0xc9/0x100
+[ 1110.420301]  ? __pfx_kthread+0x10/0x10
+[ 1110.420425]  ret_from_fork+0x2b/0x40
+[ 1110.420548]  ? __pfx_kthread+0x10/0x10
+[ 1110.420670]  ret_from_fork_asm+0x1a/0x30
+[ 1110.420791]  </TASK>
+[ 1110.420924] Modules linked in: tls nft_chain_nat xt_MASQUERADE nf_nat 
+nf_conntrack_netl ink xt_addrtype dm_thin_pool dm_persistent_data 
+dm_bio_prison ts_bm nft_limit xt_string xt _connlimit nf_conncount 
+xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 x 
+t_hashlimit nft_compat nf_tables sch_prio act_police cls_u32 sch_ingress 
+iscsi_tcp libiscs i_tcp rdma_ucm ib_iser libiscsi rdma_rxe ib_uverbs 
+ip6_udp_tunnel udp_tunnel scsi_transpor t_iscsi ip_set_hash_ip lz4 
+lz4_compress jc42 gpio_ich kvm_intel kvm bnx2 lpc_ich sch_fq_co del 
+dm_multipath zstd raid0 polyval_clmulni polyval_generic sha512_ssse3 
+sha256_ssse3 sha1 _ssse3 scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse 
+br_netfilter bridge stp llc mgag200 drm_ shmem_helper snd_aloop snd_pcm 
+snd_timer snd soundcore i915 i2c_algo_bit drm_buddy ttm drm 
+_display_helper i2c_dev msr
+[ 1110.421864] CR2: 00000000000003a6
+[ 1110.421988] ---[ end trace 0000000000000000 ]---
+[ 1110.430766] RIP: 0010:nfs_folio_find_private_request+0x3c/0xa0
+[ 1110.430997] Code: 8b 07 f6 c4 08 75 56 4c 8b 63 18 48 8b 03 31 ed f6 
+c4 40 74 3c 49 83 c4 48 4c 89 e7 e8 7d 0a e7 00 48 8b 6b 28 48 85 ed 74 
+1f <48> 39 6d 50 75 4f 48 8d 7d 34 b 8 01 00 00 00 f0 0f c1 45 34 85 c0
+[ 1110.431266] RSP: 0018:ffffb1ddc02ff858 EFLAGS: 00010206
+[ 1110.431400] RAX: 0000000000000000 RBX: ffffde301370f780 RCX: 
+000037dc6007b980
+[ 1110.431536] RDX: 0000000000000001 RSI: ffffb1ddc02ffb78 RDI: 
+ffff9a012332cb40
+[ 1110.431673] RBP: 0000000000000356 R08: 0000000000000001 R09: 
+0000000000000048
+[ 1110.431810] R10: 0000000000000006 R11: ffffffffffffffff R12: 
+ffff9a012332cb40
+[ 1110.431949] R13: ffff9a012332c970 R14: ffff9a012332c970 R15: 
+ffffb1ddc02ff93c
+[ 1110.432088] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
+knlGS:000000000000000 0
+[ 1110.432231] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1110.432373] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
+00000000001706f0
+[ 1110.432518] note: kworker/u32:4[79] exited with irqs disabled
+[ 1110.432677] note: kworker/u32:4[79] exited with preempt_count 1
+[ 1110.432847] ------------[ cut here ]------------
+[ 1110.433033] WARNING: CPU: 6 PID: 79 at kernel/exit.c:825 
+do_exit+0x82b/0xa40
+[ 1110.433184] Modules linked in: tls nft_chain_nat xt_MASQUERADE nf_nat 
+nf_conntrack_netl ink xt_addrtype dm_thin_pool dm_persistent_data 
+dm_bio_prison ts_bm nft_limit xt_string xt _connlimit nf_conncount 
+xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 x 
+t_hashlimit nft_compat nf_tables sch_prio act_police cls_u32 sch_ingress 
+iscsi_tcp libiscs i_tcp rdma_ucm ib_iser libiscsi rdma_rxe ib_uverbs 
+ip6_udp_tunnel udp_tunnel scsi_transpor t_iscsi ip_set_hash_ip lz4 
+lz4_compress jc42 gpio_ich kvm_intel kvm bnx2 lpc_ich sch_fq_co del 
+dm_multipath zstd raid0 polyval_clmulni polyval_generic sha512_ssse3 
+sha256_ssse3 sha1 _ssse3 scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse 
+br_netfilter bridge stp llc mgag200 drm_ shmem_helper snd_aloop snd_pcm 
+snd_timer snd soundcore i915 i2c_algo_bit drm_buddy ttm drm 
+_display_helper i2c_dev msr
+[ 1110.434416] CPU: 6 PID: 79 Comm: kworker/u32:4 Tainted: G D         
+T  6.10.0 #1
+[ 1110.434588] Hardware name: Dell Inc. PowerEdge R210 II/03X6X0, BIOS 
+2.10.0 05/24/2018
+[ 1110.434792] Workqueue: writeback wb_workfn (flush-0:67)
+[ 1110.434976] RIP: 0010:do_exit+0x82b/0xa40
+[ 1110.435151] Code: 83 d0 0c 00 00 e9 e9 fd ff ff 48 8b bb 90 0a 00 00 
+31 f6 e8 97 e2 ff ff e9 6f fd ff ff 48 89 df e8 da 4a 0f 00 e9 cd f9 ff 
+ff <0f> 0b e9 40 f8 ff ff 4c 89 e6 b f 05 06 00 00 e8 41 f0 00 00 e9 c3
+[ 1110.435533] RSP: 0018:ffffb1ddc02ffed8 EFLAGS: 00010282
+[ 1110.435725] RAX: 0000000000000000 RBX: ffff99fa40b5c000 RCX: 
+0000000000000000
+[ 1110.435918] RDX: 0000000000000001 RSI: 0000000000002710 RDI: 
+ffff99fa40bd18c0
+[ 1110.436115] RBP: ffff99fa40bde300 R08: 0000000000000000 R09: 
+ffffb1ddc02ffdc8
+[ 1110.436311] R10: ffffffffa334b428 R11: 0000000000000003 R12: 
+0000000000000009
+[ 1110.436509] R13: ffff99fa40bd18c0 R14: 0000000000000000 R15: 
+0000000000000000
+[ 1110.436707] FS:  0000000000000000(0000) GS:ffff9a015fc00000(0000) 
+knlGS:000000000000000 0
+[ 1110.436908] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1110.437130] CR2: 00000000000003a6 CR3: 0000000447242004 CR4: 
+00000000001706f0
+[ 1110.437348] Call Trace:
+[ 1110.437556]  <TASK>
+[ 1110.437750]  ? __warn+0x7f/0xb1
+[ 1110.437943]  ? do_exit+0x82b/0xa40
+[ 1110.438133]  ? report_bug+0xf6/0x140
+[ 1110.438319]  ? handle_bug+0x3c/0x80
+[ 1110.438500]  ? exc_invalid_op+0x13/0x60
+[ 1110.438694]  ? asm_exc_invalid_op+0x16/0x20
+[ 1110.438872]  ? do_exit+0x82b/0xa40
+[ 1110.439050]  ? do_exit+0x64/0xa40
+[ 1110.439243]  make_task_dead+0x88/0x90
+[ 1110.439412]  rewind_stack_and_make_dead+0x16/0x20
+[ 1110.439577] RIP: 0000:0x0
+[ 1110.439756] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+[ 1110.439918] RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX: 
+0000000000000000
+[ 1110.440085] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 
+0000000000000000
+[ 1110.440267] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 
+0000000000000000
+[ 1110.440428] RBP: 0000000000000000 R08: 0000000000000000 R09: 
+0000000000000000
+[ 1110.440596] R10: 0000000000000000 R11: 0000000000000000 R12: 
+0000000000000000
+[ 1110.440762] R13: 0000000000000000 R14: 0000000000000000 R15: 
+0000000000000000
+[ 1110.440917]  </TASK>
+[ 1110.441068] ---[ end trace 0000000000000000 ]---
 
-Cheers!
---=20
-Jeff Layton <jlayton@kernel.org>
+
+I really don't know what's happening here
+
+thanks for your help
+
+Sarah
+
 
