@@ -1,246 +1,259 @@
-Return-Path: <linux-nfs+bounces-4909-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4910-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75339931347
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 13:43:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A95E931428
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 14:26:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C7982845AC
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 11:43:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1A832816B9
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 12:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CE5D18A92F;
-	Mon, 15 Jul 2024 11:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A56418A95B;
+	Mon, 15 Jul 2024 12:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1FFE2h8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DwD7nGYk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CD418A93C
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 11:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F02418787F;
+	Mon, 15 Jul 2024 12:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721043790; cv=none; b=sBk2F6vRrsPja4Va3ea2IgsUTyC8d+jWIoPPLPLR7uKxV82ibYab7hHoN3GA4pni66Oc27m8nig5uKRKDzjetjda67I+MmqDcp6mGtTzv5v8v5PcfzcY0S4QgfURs+DJXntxjritQxWC28p0e6R5pLdD6rFWfPrqP5mSUEInb7s=
+	t=1721046356; cv=none; b=NH5VRaPh4QI7DpQwrsW+uPEokRDw5e42/vy70QCJcv49kdXnOYQH3UztYybCdpcqCeMegn/rHm76nYtRAcPmsiRNADW0cdytgjzqh2Y2GmhGQTAOm48fXyUBfWFc+eZhMjfweky1DjSGVmGtfqSMwzhoXS3MXL2i81TxqBNuS7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721043790; c=relaxed/simple;
-	bh=lPkUo+qEJMOSNPoeEMKotjaCvLtf2qS4ZsO3ZdXOcy8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ColuTu911beNMpXIh8Q1BjDtr3uLuG4aqmnQ+cghQmjlYBzuW/1qeYRLu6OKErMULySs6Ql0MYadEvXv5hEppusBmh+AKPBAeFGBqN1NFVx8DwqY9YWTNq8MmotKvD8NCvGJGKHpVlGxNhubMFscoieU04gfecUjEl5ygVzJVJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1FFE2h8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD4DC32782;
-	Mon, 15 Jul 2024 11:43:09 +0000 (UTC)
+	s=arc-20240116; t=1721046356; c=relaxed/simple;
+	bh=ljU/zTyYsCLzTYt08UP6MIU1t99CrcH9Dh+yt1J8Jug=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cXqvbdC+iT5hIuZhGNvRvMhXdC47XkIjbJpZ4/a22ZBl7WjThbFC60V5eHqvQtyzRAwzmZ1gZy31p2PLAdoO7VdvY4M/PDFouqSYqOw0ZAIa6V8Frb42FLoYN7CgM9pIGmDZrcieG6LWOn3Z9CyPgunoxO4CIep9zpU/zuI2LaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DwD7nGYk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E3EC32782;
+	Mon, 15 Jul 2024 12:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721043790;
-	bh=lPkUo+qEJMOSNPoeEMKotjaCvLtf2qS4ZsO3ZdXOcy8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=r1FFE2h80XfRFy88wGnI/DfxMmy8CPjrhBSDZK8UjofhuMGdyoAgVxFgLndnyFEQ5
-	 z0Viwo6GVJAB6yuuxKlK7voJ6ku+odImK8I+njiTep8e0m/+qd7YBAAOuzLx9JH9mT
-	 y1t8HMi2dlnbFc2jD3dkQ/6YFKaaeK6CYtpaVD7hGEw4OZoEqpwFHzjfUx+BXtLCUE
-	 wow4whPuJoEMae2ACHFe9YlZxJp17SOWx/D9AxboZyOPHiHkuKzchU5XwOvxNbD93L
-	 owv2AWTAKk8QF1M+6uiUGJE6q1CIoivjPbZxgjSaQ0NhK7TNjSHHXhonx63PPduPRz
-	 kSWpqjRpV1qPA==
+	s=k20201202; t=1721046356;
+	bh=ljU/zTyYsCLzTYt08UP6MIU1t99CrcH9Dh+yt1J8Jug=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=DwD7nGYkHlXKdXAQGUp8lN8mzurYVc/qxbckO40SsptkloSr3tHMv1NFJM0GUN4qK
+	 qN0e47V9PTiLgbh01+WCjkADgDasHULPtoYvTvXD84P1Vd1BIsfrz4FlkkDixagNms
+	 SvFuYZ1ewD01LbfPPO1z9Zta4ZzCinBuEOOKxN+pqSbJ5NAnf+QjbXEXVX3BX34s0v
+	 4qzFUNwTy+QWfevPjwm1kALX0AonDcG38h9a9HzUpNFU5A32/xzAFkuOVXo/CXerE3
+	 UpcDwOLRlocma/DUDcgWW4qS7y7zp14pWlWhpu7GWentp3zQmvtQONeeBIu05M97Pl
+	 URHm1quN+rr7A==
+Message-ID: <85dcb63bd31b962039269bef6e3791c82cef9ecb.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: remove unneeded EEXIST error check in
+ nfsd_do_file_acquire
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 15 Jul 2024 07:43:02 -0400
-Subject: [PATCH 2/2] nfsdctl: fix compiler warnings
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia
+ <kolga@netapp.com>,  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, linux-nfs@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ Youzhong Yang <youzhong@gmail.com>
+Date: Mon, 15 Jul 2024 08:25:53 -0400
+In-Reply-To: <172100324023.15471.746980048334211968@noble.neil.brown.name>
+References: <20240711-nfsd-next-v1-1-f9f944500503@kernel.org>
+	 <172100324023.15471.746980048334211968@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40app2) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-nfsdctl-v1-2-c09c314f540d@kernel.org>
-References: <20240715-nfsdctl-v1-0-c09c314f540d@kernel.org>
-In-Reply-To: <20240715-nfsdctl-v1-0-c09c314f540d@kernel.org>
-To: Steve Dickson <steved@redhat.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4999; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=lPkUo+qEJMOSNPoeEMKotjaCvLtf2qS4ZsO3ZdXOcy8=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmlQtL1D4O72BEdJ/ElwYMoKIJgN9XEkyCJ1938
- u479xHJMQSJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZpULSwAKCRAADmhBGVaC
- FeUoD/4mmQM5V7GAMUuLzgafSgpWMeGyNdhnPUw0Ds9nUfrU68Cxm8QqniWd6HbNYNtL4vXhOGk
- D1IUWe1fD1jxNBINL0df9m5MfKkC7ViDbBgI3Lz/jg2gGvD90aBXf41LGyEPUhwFXfy8k24qD/N
- Rid6Uo+iktIX8iYRC1Hhwo9k7iABDeq5I0MCx/FoNROZfPWBB3P+3IqLl77KJMYc15aLggN9C/X
- f7oKoSz+X+R+BeWU3dyZ/OQbS6lKMQd6/T8VLXq4A4MZKKLO8B4MgFu4KTUDxbNdcMcgfM9h/w7
- fPjya7s2VDeZohS5Tfhvg/DKMMzgKfFDMt+olA+uVpAaCM4+wF2+D0QNnlf4gD14bXNsc6vWoRn
- Ru6LV9Pu+VtH7f+Btb5uVo9Cbey4jVhA+YHYlrcqPMzFut0ChWs1cFJWn5sDxT1rCpkCRhduFXi
- ZRwETBNt95WIM2YvXprvv0Xg/Y+DRofXkq7y3aoUWOFSJAUH2Pqizo8S5y4B6s+6rRVEC4GXF+T
- DqMFWp6osMU4lMsGIg77peXEhfKeOE9ffgJL4iUa2OeqTpIuo06uqnrGG5/Sn2wh8JavoOZ5JBc
- 62CNRL5Ym49baGVJlyoLUOHViMeQB8HlhkvfcsyY94l7et/gr52lYvCxmSVoyFHxIpo8Qyb8tK5
- PP96+YDNblIAFkQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Fix a pile of compiler warnings.
+On Mon, 2024-07-15 at 10:27 +1000, NeilBrown wrote:
+> On Fri, 12 Jul 2024, Jeff Layton wrote:
+> > Given that we do the search and insertion while holding the i_lock, I
+> > don't think it's possible for us to get EEXIST here. Remove this case.
+>=20
+> I was going to comment that as rhltable_insert() cannot return -EEXIST
+> that is an extra reason to discard the check.  But then I looked at the
+> code an I cannot convince myself that it cannot.
+> If __rhashtable_insert_fast() finds that tbl->future_tbl is not NULL it
+> calls rhashtable_insert_slow(), and that seems to fail if the key
+> already exists.  But it shouldn't for an rhltable, it should just add
+> the new item to the linked list for that key.
+>=20
+> It looks like this has always been broken: adding to an rhltable during
+> a resize event can cause EEXIST....
+>=20
+> Would anyone like to check my work?  I'm surprise that hasn't been
+> noticed if it is really the case.
+>=20
+>=20
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- utils/nfsdctl/nfsdctl.c | 48 ++++++++++++++----------------------------------
- 1 file changed, 14 insertions(+), 34 deletions(-)
+I don't know this code well at all, but it looks correct to me:
 
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index eb2c8cca4f42..f7c276320085 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -44,7 +44,6 @@
-  */
- 
- static int debug_level;
--static int nl_family_id;
- 
- struct nfs_version {
- 	uint8_t	major;
-@@ -84,16 +83,6 @@ static const struct option help_only_options[] = {
- 	{ },
- };
- 
--static void debug(int level, const char *fmt, ...)
--{
--	va_list args;
--
--	va_start(args, fmt);
--	if (level <= debug_level)
--		vprintf(fmt, args);
--	va_end(args);
--}
--
- #define NFSD4_OPS_MAX_LEN	sizeof(nfsd4_ops) / sizeof(nfsd4_ops[0])
- static const char *nfsd4_ops[] = {
- 	[OP_ACCESS]		= "OP_ACCESS",
-@@ -317,8 +306,6 @@ static void parse_threads_get(struct genlmsghdr *gnlh)
- 
- 	nla_for_each_attr(attr, genlmsg_attrdata(gnlh, 0),
- 			  genlmsg_attrlen(gnlh, 0), rem) {
--		struct nlattr *a;
--
- 		switch (nla_type(attr)) {
- 		case NFSD_A_SERVER_GRACETIME:
- 			printf("gracetime: %u\n", nla_get_u32(attr));
-@@ -327,7 +314,7 @@ static void parse_threads_get(struct genlmsghdr *gnlh)
- 			printf("leasetime: %u\n", nla_get_u32(attr));
- 			break;
- 		case NFSD_A_SERVER_SCOPE:
--			printf("scope: %s\n", nla_data(attr));
-+			printf("scope: %s\n", (const char *)nla_data(attr));
- 			break;
- 		case NFSD_A_SERVER_THREADS:
- 			pool_threads[i++] = nla_get_u32(attr);
-@@ -352,7 +339,7 @@ static void parse_pool_mode_get(struct genlmsghdr *gnlh)
- 			  genlmsg_attrlen(gnlh, 0), rem) {
- 		switch (nla_type(attr)) {
- 		case NFSD_A_POOL_MODE_MODE:
--			printf("pool-mode: %s\n", nla_data(attr));
-+			printf("pool-mode: %s\n", (const char *)nla_data(attr));
- 			break;
- 		case NFSD_A_POOL_MODE_NPOOLS:
- 			printf("npools: %u\n", nla_get_u32(attr));
-@@ -366,7 +353,6 @@ static void parse_pool_mode_get(struct genlmsghdr *gnlh)
- static int recv_handler(struct nl_msg *msg, void *arg)
- {
- 	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
--	const struct nlattr *attr = genlmsg_attrdata(gnlh, 0);
- 
- 	switch (gnlh->cmd) {
- 	case NFSD_CMD_RPC_STATUS_GET:
-@@ -573,7 +559,7 @@ static void threads_usage(void)
- static int threads_func(struct nl_sock *sock, int argc, char **argv)
- {
- 	uint8_t cmd = NFSD_CMD_THREADS_GET;
--	uint32_t *pool_threads = NULL;
-+	int *pool_threads = NULL;
- 	int opt, pools = 0;
- 
- 	optind = 1;
-@@ -589,7 +575,7 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
- 		char **targv = &argv[optind];
- 		int i;
- 
--		pools = argc - optind, i;
-+		pools = argc - optind;
- 		pool_threads = alloca(pools * sizeof(*pool_threads));
- 		cmd = NFSD_CMD_THREADS_SET;
- 
-@@ -785,8 +771,7 @@ static void version_usage(void)
- 
- static int version_func(struct nl_sock *sock, int argc, char ** argv)
- {
--	char *endptr = NULL;
--	int opt, ret, threads, i;
-+	int ret, i;
- 
- 	/* help is only valid as first argument after command */
- 	if (argc > 1 &&
-@@ -940,7 +925,7 @@ static int update_listeners(const char *str)
- 	char buf[INET6_ADDRSTRLEN + 16];
- 	char sign = *str;
- 	char *netid, *addr, *port, *end;
--	struct addrinfo *res, *ai;
-+	struct addrinfo *res;
- 	int i, ret;
- 	struct addrinfo hints = { .ai_flags = AI_PASSIVE,
- 				  .ai_family = AF_INET,
-@@ -1156,9 +1141,7 @@ static void listener_usage(void)
- 
- static int listener_func(struct nl_sock *sock, int argc, char ** argv)
- {
--	char *endptr = NULL;
--	int ret, opt, threads, i;
--	int argidx;
-+	int ret, i;
- 
- 	/* help is only valid as first argument after command */
- 	if (argc > 1 &&
-@@ -1255,16 +1238,14 @@ static int pool_mode_func(struct nl_sock *sock, int argc, char **argv)
- 
- 	if (optind < argc) {
- 		char **targv = &argv[optind];
--		int i;
- 
- 		cmd = NFSD_CMD_POOL_MODE_SET;
- 
- 		/* empty string? */
--		if (targv[i][0] == '\0') {
--			fprintf(stderr, "Invalid threads value %s.\n", targv[i]);
-+		if (*targv[0] == '\0') {
-+			fprintf(stderr, "Invalid threads value %s.\n", targv[0]);
- 			return 1;
- 		}
--
- 		pool_mode = targv[0];
- 	}
- 	return pool_mode_doit(sock, cmd, pool_mode);
-@@ -1272,18 +1253,17 @@ static int pool_mode_func(struct nl_sock *sock, int argc, char **argv)
- 
- #define MAX_LISTENER_LEN (64 * 2 + 16)
- 
--static int
-+static void
- add_listener(const char *netid, const char *addr, const char *port)
- {
- 		char buf[MAX_LISTENER_LEN];
--		int ret;
- 
- 		if (strchr(addr, ':'))
--			ret = snprintf(buf, MAX_LISTENER_LEN, "+%s:[%s]:%s",
--					netid, addr, port);
-+			snprintf(buf, MAX_LISTENER_LEN, "+%s:[%s]:%s",
-+				 netid, addr, port);
- 		else
--			ret = snprintf(buf, MAX_LISTENER_LEN, "+%s:%s:%s",
--					netid, addr, port);
-+			snprintf(buf, MAX_LISTENER_LEN, "+%s:%s:%s",
-+				 netid, addr, port);
- 		buf[MAX_LISTENER_LEN - 1] = '\0';
- 		update_listeners(buf);
- }
+static void *rhashtable_try_insert(struct rhashtable *ht, const void *key,
+                                   struct rhash_head *obj)
+{
+        struct bucket_table *new_tbl;
+        struct bucket_table *tbl;
+        struct rhash_lock_head __rcu **bkt;
+        unsigned long flags;
+        unsigned int hash;
+        void *data;
 
--- 
-2.45.2
+        new_tbl =3D rcu_dereference(ht->tbl);
 
+        do {
+                tbl =3D new_tbl;
+                hash =3D rht_head_hashfn(ht, tbl, obj, ht->p);
+                if (rcu_access_pointer(tbl->future_tbl))
+                        /* Failure is OK */
+                        bkt =3D rht_bucket_var(tbl, hash);
+                else
+                        bkt =3D rht_bucket_insert(ht, tbl, hash);
+                if (bkt =3D=3D NULL) {
+                        new_tbl =3D rht_dereference_rcu(tbl->future_tbl, ht=
+);
+                        data =3D ERR_PTR(-EAGAIN);
+                } else {
+                        flags =3D rht_lock(tbl, bkt);
+                        data =3D rhashtable_lookup_one(ht, bkt, tbl,
+                                                     hash, key, obj);
+                        new_tbl =3D rhashtable_insert_one(ht, bkt, tbl,
+                                                        hash, obj, data);
+                        if (PTR_ERR(new_tbl) !=3D -EEXIST)
+                                data =3D ERR_CAST(new_tbl);
+
+                        rht_unlock(tbl, bkt, flags);
+                }
+        } while (!IS_ERR_OR_NULL(new_tbl));
+
+        if (PTR_ERR(data) =3D=3D -EAGAIN)
+                data =3D ERR_PTR(rhashtable_insert_rehash(ht, tbl) ?:
+                               -EAGAIN);
+
+        return data;
+}
+
+I'm assuming the part we need to worry about is where
+rhashtable_insert_one returns -EEXIST.
+
+It holds the rht_lock across the lookup and insert though. So if
+rhashtable_insert_one returns -EEXIST, then "data" must be something
+valid. In that case, "data" won't be overwritten and it will fall
+through and return the pointer to the entry already there.
+
+That said, this logic is really convoluted, so I may have missed
+something too.
+
+> >=20
+> > Cc: Youzhong Yang <youzhong@gmail.com>
+> > Fixes: c6593366c0bf ("nfsd: don't kill nfsd_files because of lease brea=
+k error")
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > This is replacement for PATCH 1/3 in the series I sent yesterday. I
+> > think it makes sense to just eliminate this case.
+> > ---
+> >  fs/nfsd/filecache.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index f84913691b78..b9dc7c22242c 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -1038,8 +1038,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+> >  	if (likely(ret =3D=3D 0))
+> >  		goto open_file;
+> > =20
+> > -	if (ret =3D=3D -EEXIST)
+> > -		goto retry;
+> >  	trace_nfsd_file_insert_err(rqstp, inode, may_flags, ret);
+> >  	status =3D nfserr_jukebox;
+> >  	goto construction_err;
+> >=20
+> > ---
+> > base-commit: ec1772c39fa8dd85340b1a02040806377ffbff27
+> > change-id: 20240711-nfsd-next-c9d17f66e2bd
+> >=20
+> > Best regards,
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
