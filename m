@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-4907-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4908-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12ACF931346
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 13:43:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47DEB931348
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 13:43:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1F342844C1
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 11:43:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5F13B22695
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 11:43:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27A3F18A934;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C727318A938;
 	Mon, 15 Jul 2024 11:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVvJ3xzI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbCJDr4n"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B9D18A92F
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 11:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40B818A92F
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 11:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721043789; cv=none; b=h1LrJ+gXXfIPbjq6sBPTqVzKUiOnSPFpSPrYONc44i+GPWsx9x/q/3gGekj2xFAws8R15viWRX/8Nq/3X3V+AQP0rIlz1aVBxxrH4itrPJwzhVhpA2ljhLlgSNxIWcKIiE9vpMEF6JcRwO6i/t7NKBsOrUKk9E97Iqz6HD8yO4c=
+	t=1721043789; cv=none; b=ReMxx4K6/yOONx6qwUdBLc/SoWGzrTVlSZTAQV9om64QWF5RbWtK5yp68ik3/JtCF43eXXaYGwy8NHvDbFYAwtc4ouPcRY9/HMctjkiqRj4EZ6bdhqDa0ZPLk9MnpJb12QEIKI7v9krulBlDeCVKxRqgcy29RF7hs8pCVZHl3Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721043789; c=relaxed/simple;
-	bh=/BSuJm+MAetEJfC0LjEPtEMpvCSWMNsiRNTFX5ygVYk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dDMPukwSTaa61jMoFH8odKF48WydD5fWZbMSdO6Fr55A5qZCfFK3PTAIA2GKgMTJGnbpYe5zW6NZbZ7FcsZ+hEBt79LiJTHQ2SmF6+Dg8yfhiF7HeFBdnfGah80pheGc/Mv8A6YKksvVRipX2Kckund1HYpnfghurc+RZ125ej8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVvJ3xzI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1296BC32782;
-	Mon, 15 Jul 2024 11:43:07 +0000 (UTC)
+	bh=9ndgA6SeamOVqIvnSLALNTaJ/1qk+hDAUaUia2oMyWo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=huf+t/KgxPLqp15n/LaO/Ve/vi8GDWzOWMLoP4Rc57yB+yTgHbXVfba1UUnJJmcjM2ysVgbF5ZBv7Qg+2yE8pSMvpF8W3vYau2+yLZkkM653e1RkONy97kj7cimEBqwDGOMxma2N21RGAPTwrh5rsTQJwcmbIDSQkeyqxvAE0MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbCJDr4n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB7C9C4AF0B;
+	Mon, 15 Jul 2024 11:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721043788;
-	bh=/BSuJm+MAetEJfC0LjEPtEMpvCSWMNsiRNTFX5ygVYk=;
-	h=From:Subject:Date:To:Cc:From;
-	b=DVvJ3xzIq5NcPPI2nAdIZ9zxKpIiNLLfDJ1cV/SPUJfggwrnGPVS7soHReuAeoySO
-	 dkU0+o97LJjqQgOwhYsgAN21vPheCiunQNVSigr5iI1hrTsm3gLSboFujtaqexpfh3
-	 o/UXeBRWc0kOdt1P2utM6gNl2x2A6B2RqICtONWs9L58vteRtaP0O+tCJdpXkeXdKR
-	 TXO4kP7ibkq20m0dcYV0Y4YmJbpcOJ8wc4bG8TIzj63Je2woBi/Zh2FClazUQPutp5
-	 cigUPEpD5oblVpCuI623d/Uo+G2++Lfeh0zvAGYxyZB74leND0iQM9co3D9OGS4N4i
-	 gB7HnLkVMRWJQ==
+	s=k20201202; t=1721043789;
+	bh=9ndgA6SeamOVqIvnSLALNTaJ/1qk+hDAUaUia2oMyWo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=pbCJDr4nQCvvBYAfuj3504REOUmnbGuIMehXo7MD2qcE2Yiwrpd1cb2V7pa1xAbpk
+	 mU7Q9l2QC4yDoFq0gIIx6Kfvb58bdTnou1hdlQuSRZDSvjxXN+oCyotJAk/JkZ/Yx1
+	 9ztJb4EHC6vR83XalMTQaZGKcYSBr07iY6ZIxzsRbCk1PqMtTv4D48Xl6ucWVa8QoT
+	 SXEtHl1KXE00ULj1d8p4qWE/RjSR/r1bQSSgg+smteP7O2JGKZBur+3ucd2Ni34/+P
+	 29EKiEa5HGSjIaFNDRQEi/4c2oMY/TlKimue8koDvUR7uRR7R+vLtsofrNKgYj0FTa
+	 +gENtvEeaH5xA==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 0/2] nfsdctl: fix default threads and clean up compiler
- warnings
-Date: Mon, 15 Jul 2024 07:43:00 -0400
-Message-Id: <20240715-nfsdctl-v1-0-c09c314f540d@kernel.org>
+Date: Mon, 15 Jul 2024 07:43:01 -0400
+Subject: [PATCH 1/2] nfsdctl: make "autostart" default to 16 threads
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,55 +52,103 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEQLlWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDc0NT3by04pTkkhzd5MREU5OkFCMLC9M0JaDqgqLUtMwKsEnRsbW1AB5
- BYzpZAAAA
+Message-Id: <20240715-nfsdctl-v1-1-c09c314f540d@kernel.org>
+References: <20240715-nfsdctl-v1-0-c09c314f540d@kernel.org>
+In-Reply-To: <20240715-nfsdctl-v1-0-c09c314f540d@kernel.org>
 To: Steve Dickson <steved@redhat.com>, 
  Lorenzo Bianconi <lorenzo@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
  Neil Brown <neilb@suse.de>
 Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=916; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=/BSuJm+MAetEJfC0LjEPtEMpvCSWMNsiRNTFX5ygVYk=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmlQtGQkstbbcO7CEOqgB+EZ7pSyqwuvC7OWNVF
- t4gi4Vb2fKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZpULRgAKCRAADmhBGVaC
- FdlUD/9jaPNsl93Dq7eNG9zTj7fiQZQY+WTpndcvFPh//xpavQjE+VvaFbSqnM+feK7kVlhUEd+
- PLRcYmPh6Se6U5PcK5rHQW08V1uwGPixSN7oAcNxnvcpJ8rUgA5h5ZbcfS3aVTrQSJD017HV3oX
- 0XxXETc5I/tmUNF5JBTI5BZohGvwQ7V/Eo65XP3vw9xrg+w/a7jBzGh3eu1aMhU53AXJBjQwflt
- /i8PPuCuaZQNZeGFnfPhi+C4aQHVVoTpGlex8DCK2UMbMG/6cNNA/2MXwP0ZV7IhmphoLnXIAaQ
- SXT+uf0QIRvZEqWv99NAyXiSUB+gnMCzohRyspRVLvMXAUyyHmh8P4HiYP9BzR5GtId+8K3QHMi
- SEbRO97B8YMTg1g3N2Y8HvLS/i9d4L9bJ8a5wZb/1mGWsnK9c2nGdDB18a46+LcyKw/RqUnHBKt
- CDJTkZD2j0FW2TGHU6ZvhvM66tbPEpkH3j0YO3r1tLx9RRsb35j0gAbnOlyWZHAudaIfSYk/xs1
- 431hAoSfoUXJU5WglnpIPcn3OmHRRgsoJlX0CFgZn3ZN08usWUH8Pb+Xx+VkwF5fLZoj/XJm4NS
- S8S48sYtgV0Hex+WiTHScFow5EBCdIIYCVErnJyY2vlbEQRHn7hiS02v17vt+R6mPWSxhYmOPpb
- yK+wYLpYWisLBAg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2425; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=9ndgA6SeamOVqIvnSLALNTaJ/1qk+hDAUaUia2oMyWo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmlQtLnK6pKUWJCjyXPMYVOsL65XCYTP5NhcSpY
+ eOukxtor6qJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZpULSwAKCRAADmhBGVaC
+ FV2TD/9zZtI/vedDrTy96AC8cI7i2jC9LY1OAN0NoAgel/BeFn6k9RjMTxIQWQbiH2o6gV/3MnP
+ AxZTCYCKkdAx8JoJ/LxOofGJkV9as2F6pRvEdCbEKqpM0oN2BCSHx+y8wEnDbhreyaJ15S6BK7G
+ WGK1oTeFp5bepzFbdrBqFIPOJa+H9uBcBVBKJI87kGmsDlwhH+m6Pg0sTS1vul5x5rCPZj9juq0
+ R7c4hi26Ps6IrOd4hYTLRqd2675pVV3O2rz8TX9X+Oed+0MoT2jLfselRBPqe6d120MaGE+n2UF
+ VzrHalOrwXSfEMxcVUSiLmZ1bV7InDyBh5dntAjDTIV3nq7Z/4kzMJRHxiwkLMDKZ45Izs1vGr+
+ wb9AaLd8iDzQA+qIqo9/TSlvXPHQHOwRBPp6SBGklmMXcn36ivp65/TLsjGYEX3l5Ak5n0tlEC1
+ Cycz+tnTyixMwAk8MwRtWrEHHc6J2SyHtMj3Qzfl6zuj7mviD6vXwQpeVxujMEI36Djk69bGbpE
+ wJSxDmFj4/wQH47TExYxkvURiJcKKHxVAS7QD2emnR3oLdNtraDPpNpsPzHeKxnGLrv4T28+rIH
+ 345rkK8BZMa67b2y/u9adtoyIo33qET3VA3LIYCtZZ4mwKMEPc87RGGF/n56oy18gB4CK4IHJs9
+ ytfYBJZtVhVEaDA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Steve noticed while playing with the nfsdctl patches that I had goofed
-setting the default number of threads when it wasn't specified in
-nfs.conf. The first patch fixes that. The second patch cleans up a bunch
-of compiler warnings that I missed in the original submission.
-
-Both should apply cleanly on top of the v5 nfsdctl series [1] that I
-sent last month.
-
-[1]: https://lore.kernel.org/linux-nfs/20240613-nfsdctl-v5-0-0b7a39102bac@kernel.org/
+The original nfsdctl posting required the user to set a threads= value
+in nfs.conf, or autostart wouldn't work properly. rpc.nfsd has a default
+of 8 threads, which is pitifully low in the modern age. For nfsdctl,
+double that value to default to 16 threads.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (2):
-      nfsdctl: make "autostart" default to 16 threads
-      nfsdctl: fix compiler warnings
+ utils/nfsdctl/nfsdctl.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
- utils/nfsdctl/nfsdctl.c | 80 ++++++++++++++++++++-----------------------------
- 1 file changed, 33 insertions(+), 47 deletions(-)
----
-base-commit: 44dd12f5a715b419d83f81657ea68ea435f6c248
-change-id: 20240715-nfsdctl-caa54bd2885f
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index 55bf5cd21783..eb2c8cca4f42 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -1356,9 +1356,12 @@ static void autostart_usage(void)
+ 	printf("    Start the server with the settings in /etc/nfs.conf.\n");
+ }
+ 
++/* default number of nfsd threads when not specified in nfs.conf */
++#define DEFAULT_AUTOSTART_THREADS	16
++
+ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ {
+-	int *threads, grace, lease, idx, ret, opt;
++	int *threads, grace, lease, idx, ret, opt, pools;
+ 	struct conf_list *thread_str;
+ 	struct conf_list_node *n;
+ 	char *scope, *pool_mode;
+@@ -1399,26 +1402,29 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ 	scope = conf_get_str("nfsd", "scope");
+ 
+ 	thread_str = conf_get_list("nfsd", "threads");
+-	if (!thread_str || thread_str->cnt == 0)
+-		return 0;
++	pools = thread_str ? thread_str->cnt : 1;
+ 
+-	threads = calloc(thread_str->cnt, sizeof(int));
++	threads = calloc(pools, sizeof(int));
+ 	if (!threads)
+ 		return -ENOMEM;
+ 
+-	idx = 0;
+-	TAILQ_FOREACH(n, &(thread_str->fields), link) {
+-		char *endptr = NULL;
++	if (thread_str) {
++		idx = 0;
++		TAILQ_FOREACH(n, &(thread_str->fields), link) {
++			char *endptr = NULL;
+ 
+-		threads[idx++] = strtol(n->field, &endptr, 0);
+-		if (!endptr || *endptr != '\0') {
+-			fprintf(stderr, "Invalid threads value %s.\n", n->field);
+-			ret = -EINVAL;
+-			goto out;
++			threads[idx++] = strtol(n->field, &endptr, 0);
++			if (!endptr || *endptr != '\0') {
++				fprintf(stderr, "Invalid threads value %s.\n", n->field);
++				ret = -EINVAL;
++				goto out;
++			}
+ 		}
++	} else {
++		threads[0] = DEFAULT_AUTOSTART_THREADS;
+ 	}
+ 
+-	ret = threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, thread_str->cnt,
++	ret = threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, pools,
+ 			   threads, scope);
+ out:
+ 	free(threads);
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.45.2
 
 
