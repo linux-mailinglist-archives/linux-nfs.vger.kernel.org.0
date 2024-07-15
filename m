@@ -1,273 +1,232 @@
-Return-Path: <linux-nfs+bounces-4926-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4927-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAFC89316E9
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 16:37:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB859316F4
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 16:40:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A0FB1C20F10
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 14:37:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9620E282091
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jul 2024 14:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9CA618C199;
-	Mon, 15 Jul 2024 14:37:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7924B13D531;
+	Mon, 15 Jul 2024 14:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vm3sExLx";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KyaQGeB/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbqTi/2b"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D06433B3;
-	Mon, 15 Jul 2024 14:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721054237; cv=fail; b=XdxZX6AwpUzZhbWAZKBF7ydUKOVi87OjpLhmTfCuXmYWjsHLnHmAvzusrNEreUDoHujJDES6mKwtWwy+zsQ6MGxpCqs6VLintV37FAvxlDCBQnlz6iykf1LM6+ECkaaak9NPSWtEUzOBJ6IV2ouGDUI3NB5fb9Hll+MBibYaiXU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721054237; c=relaxed/simple;
-	bh=0Xl1EbP0fYLL14UC/6qkrQe/lIkYJ/yotFx/IW6/KyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=U+eqT7MDHrnbhT+Hl1ezVnq15y+9ph/hvLe0/VNACojG9h1mOpbOe4S0QaZG58uamRq9IzcZTlntet9mulpeW4X6r9DeLD/4wGZmVn4RFxxqNymso7H1a2V0SKXKWHasxht/GxDadGwE6bV4Qvnj4cfTIXQguTxW3VVaIXjIsZU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Vm3sExLx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=KyaQGeB/; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FENseR015185;
-	Mon, 15 Jul 2024 14:37:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:content-type:mime-version; s=
-	corp-2023-11-20; bh=fC0d1kTZsMWmqaI3ARr6FOElmWVeQyXHtsqzyBy88Mw=; b=
-	Vm3sExLx9S89nCWk9gpbnM/juhNJza6vxUUttI8jbJiMBwRQW7mWzh/mi6KL4O6K
-	/TgtrKE4jDSuwX+7StaiZvNQCCxqyVDCtDUkAHQA9vR+S7Ep07LBg4sfh79IWQBx
-	LVSey5l62O67lSsoIuo8fMUx6xej+DycqDL6Kgw5h/Z/KSHU3OuMtM/piELmc+gr
-	/QVJ0RGSQl8WCJ5hrxH3oMhKA6rU8uWUHSeqFHFGlSOvM9UE5ZvDdclpRl5ZZcMk
-	t9WcscrYQzIaiAznB0hDcx3GWDSPQN7yrBrE8QeXdSvhK50uwhdJHAFTrnwCeY5j
-	20SL76+vMKU6nonAta4TKA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40bg613h2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jul 2024 14:37:11 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46FDNlLY038983;
-	Mon, 15 Jul 2024 14:37:11 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2041.outbound.protection.outlook.com [104.47.70.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40bg17nucw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jul 2024 14:37:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uovwRCcwn8DrKaQ+qqpad/0zbPhJ9WlazaI7xdjfXwzVYH31yEwV+9daOFjSP/r6ZzenGKsGRvfmYNXlZgVyJZKxVbhgC8WMJhtT1eGJeVpdaTMAT7ppeKg7xiuWkVess6CTsw59uGuX+dOqQJvh4Tk6/y0uq7PQijK0yQaADcGtakHEjk1PU6V2tpnc3v5qeGeZv0JmK2yRuPK3OF6nbBSeKd6bwBN/zzMm/ydQeeVIoLRwxSVy5egLc4Auu2qxQDgqyy4rZYSjyX8uPRR5rav8vZDJ0jRzPEZvLzxxScVvliG11cRg8klgRhEkqtCDaxNLSETg0UhNK9o/39bj4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fC0d1kTZsMWmqaI3ARr6FOElmWVeQyXHtsqzyBy88Mw=;
- b=FlwT5BberJcnCnlPEwD2csUGis63tROc/AcB9VugnSgRslRPtnNRz3r99+/uxQBdk4tDMxkGHE7/iWEYH2EtR5n1Omi+s4vzqa8yA2JQJGrPQGVK6xTcSlTkrb+gHAf5O9ojy5fyABz315N7FZ2yPlP0VaBG9jJ2lPBXfdYw6bmTf0p6Da69irY7ghg4P/NZRn7rvrzz2Y/S/lzGcUN4qeEgLntJU576Pnw1w09snQ5MgPAx6OejnaTW46XxAy/T+zZdr7sgkxQjW2INs7fe5tZf99kEZa6+2IjbeU+RrRmm+Y9TxnBU2QpHoSHZq0s8tTgiK4Gt1hgHp352EMe5aA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fC0d1kTZsMWmqaI3ARr6FOElmWVeQyXHtsqzyBy88Mw=;
- b=KyaQGeB/OxOPK1Y8xqjVBlltOgcy9lhNq8BiotN6STcPNX3b3KAnrBNL26kn906bzKHet9FYrpP9Mx6+X67D5iPHs2Ss98BRoQfx/0ygni1gUP0UVjTKyDSuGShpNAZ46Oy4E564Jx+BqnKdgcjfOKAsXyDwubmm2i4sUcnPS0A=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MN6PR10MB7443.namprd10.prod.outlook.com (2603:10b6:208:46f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Mon, 15 Jul
- 2024 14:37:08 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 14:37:08 +0000
-Date: Mon, 15 Jul 2024 10:37:05 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD changes for v6.11
-Message-ID: <ZpU0EWtsVcy+J3DO@tissot.1015granger.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ClientProxiedBy: CH2PR04CA0006.namprd04.prod.outlook.com
- (2603:10b6:610:52::16) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DE5433B3
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Jul 2024 14:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721054399; cv=none; b=KvUFOmwZK6m7+Sth59aTntnOPc+7ljahgmgk3JQG6HFoZtnCvWs/K4Tk1RjUz3xLEhSGuHo/jJLQISCXlXBAkGwuC8YdDZ+iQ5q6/bcuQ4GUP9g3YVbGSEn45i7obXTWoeCsZJLni4ZBrq3yQCGFyy3/3hnS2ODnI4jOz3kIgVI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721054399; c=relaxed/simple;
+	bh=jmGPcUF7ZSIOA2YSY0sfqR37pwNwyuzyemk2ERvLqok=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YxIszy5IgoPRSLEBToh1RZdkubkd8IWzIlyO6jgO7NStbj4ugLtDryqy983cgXAOXM0ip8dJIVjDi6sC2+Q9Omdk2dA9Do3wovzXm9/lFHloRshalHYu1aQ+voThyBnJl1vX2XrxnmJyZA0d68MiRpiHanPsF38x8IILJcBxY1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbqTi/2b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C11C32782;
+	Mon, 15 Jul 2024 14:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721054399;
+	bh=jmGPcUF7ZSIOA2YSY0sfqR37pwNwyuzyemk2ERvLqok=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=CbqTi/2bpQ5tOlEgCs9GzRGoAlCsTvk8mEl03h3kGlJF+OKYRaUJF5mNN33HRPZRb
+	 IwgdXwORs6QW0YWUIR/UBY9qB5Y0/D6oVaFqx8MmSmtPd+ntl7HafulTX29GiXKnBB
+	 sTJz4fU2oGucR0XXGN3cdAC2y/SyA9y3KIuCKmjiPcLWRiuCoXoQwjQCO0WVcAjc8n
+	 odINz/k4kEAwmeqcnzwYQ4KNS5GlG54taUoCZwqLPUW12hWHGE43KEqv5fD8GABYbj
+	 ChLq2t1m9T4b7YINDkG4hKgPuBXfPs9xBE7EGehl+YrO4C8YjX2e/SfOlGU2/Ggv7p
+	 +O9uNz0L+Nd2g==
+Message-ID: <d48f18e8205ce046f17a3db3591314bf3cc851ea.camel@kernel.org>
+Subject: Re: [PATCH 07/14] Change unshare_fs_struct() to never fail.
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steve Dickson
+	 <steved@redhat.com>
+Date: Mon, 15 Jul 2024 10:39:57 -0400
+In-Reply-To: <20240715074657.18174-8-neilb@suse.de>
+References: <20240715074657.18174-1-neilb@suse.de>
+	 <20240715074657.18174-8-neilb@suse.de>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN6PR10MB7443:EE_
-X-MS-Office365-Filtering-Correlation-Id: e623b148-3bb7-4772-7310-08dca4db9afd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?jIdJcHXlocsvdLu/FbyyVwY0dDMJmBfUnvGlN7mi49I900tj3fGXf39tCAeU?=
- =?us-ascii?Q?i0zdhQRVwwPHwS6l0u+3J3Qek0U3JHcZzAXOM1S6P4D5TpAz2vRQOZx7F0uJ?=
- =?us-ascii?Q?q14GX0Va3nUgYUHmSony1lo0yiwrCJk8nExQu7685GCwrwjTwurEvvId1TuK?=
- =?us-ascii?Q?1aAxs264iHaNW7H1mQNClvF1pFBF67WUkl1hK8nDdyjPrNH7q86SiO/zVNRb?=
- =?us-ascii?Q?Tr2Jc3nFY3KKTKeXILjVm3CG33Z+g9Guven6/YIas66HGY00/K52zVtF89D0?=
- =?us-ascii?Q?p+bOiLFbsUnYjPggBnzJmaq/f9psybZukBMlTRmkTEHCXMS1bz9QP1wFuVxO?=
- =?us-ascii?Q?6lRE+7ul0Fc5rG9tjIynlAmHEPDa1Q1l5uux5OjCPmLn/DNl+7/QrpGVFzSO?=
- =?us-ascii?Q?22FF9/Bdtk3rZoWYLfw1FMJ2ucrMFxhrsTgowrgK+CM6FwSYprGJmpl0rkti?=
- =?us-ascii?Q?CqKP6qy22Tfs/NQpjuER/+WJ1SOw09pnvXzQQrQHhVVPYYCzN2yJS+gsN7Td?=
- =?us-ascii?Q?RpQqrAxvG0bxyntaYRswCVIb91XFJghBe7Gbvlr5HlJmTJlcp4e4u2NAXFa7?=
- =?us-ascii?Q?GMK/FjN1OKqvo9l5tNUFZODkKRCTRziHVICj6FOY1/mXpHoV/4o/4iGrRPfc?=
- =?us-ascii?Q?bIp52mRQKSVUe2QAtFPUbPt1pRZILTV9z7/Jq7BntvWn3VgGsUi8iRQpRzE8?=
- =?us-ascii?Q?D/5lSsaT7aoUxqjpI1Q0OHDlJ1em81qE3IuhOlwSB+MY4y7KpGIsn8Bu51Pq?=
- =?us-ascii?Q?UZF6C+R4Yzc70k9Y6xyzeGWldCCV/vQhlfZvpjz7+OF7RAIozRk32fifdM88?=
- =?us-ascii?Q?djq/2vuwljMZoB05Zje9cSNcxZVuHxzYyXLL+37qeVAOcEmIm3ZlVB6QEUud?=
- =?us-ascii?Q?wbLwNpK5Dqjg6IlA9xvCuAUEfQ0hnqvld5HPDpPiFVRqxjENep/u/ZTAPZl7?=
- =?us-ascii?Q?wNMQiZ2VT8K718A45Rhp6DQ1g75BezEhA+jqS44cJrHZc8YWMdf5ZW8ybMn6?=
- =?us-ascii?Q?TBFPzossMAZyegO5BR6ncNdke0T3kHOG3ghdqarfBM26yLqcFMzuLtbgdF5p?=
- =?us-ascii?Q?osqDS7Q7X1r2VnkAMHm7T4LtbAEmUz1lKSSCnn+Ibz7ptoyYkHVfUBv9K+hQ?=
- =?us-ascii?Q?QbKlQh/T2aXACoHNBO61J03qadGlPfKXSOsaZCeKN18Ebo/LwVYr0xYH0n66?=
- =?us-ascii?Q?jDOmE76lym1tFcdfUgRjGDfdAvvKfRVwpWpc1Z1yMO9lzYvTsmRKCVeaqL+W?=
- =?us-ascii?Q?rFYKQY6f2yFPHGUkJjFMZ/8gJBa5sQ3pke1Qi7DfK0K5RqakdSmyWZJ05srH?=
- =?us-ascii?Q?O1s=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?6GHGQgdR+Ig61LMohTSbFdI17WqsUVjngGc078y4Or2OfdyHGbnzP2g66JBH?=
- =?us-ascii?Q?0q9zuhXDGufYbyAfvfFcpYQCJJXq6cQvcjBSC+4BLsyPJ31PsTxx2FTfasjB?=
- =?us-ascii?Q?QzrTlv7pgLg/xowTGPHM6XojF4EKWn764Z+IijbiuDuL7hzoOKQ/Ab/24eBw?=
- =?us-ascii?Q?3X96cgKG0z4GlYjEqGGQ9P6oKCmi/+97MPJsUP13drg+PNpzt/DMqPJ2mBX/?=
- =?us-ascii?Q?NZMcqjdfkmuEgHRdieyETtrm1bwNf1IibeBlPQ3HEc6v+Sub0gpR5U1Iq5wD?=
- =?us-ascii?Q?K6//5J9hyBORrWgrlWHvGkGfIgfWX8+L0/fem1Sypqs21ucqF9MVL+piM5hH?=
- =?us-ascii?Q?tWRVwRYt2gGilFlRFHTUeYY/J0eJ3midkVeoojuOFiRtdyakmHG08rrEJWHj?=
- =?us-ascii?Q?i3ivcDCVtZgVONcjWn2mlOzcRzAvsB21CL4+bT+jJKFGMaSM3Cmzy1tt35AB?=
- =?us-ascii?Q?ixkxijntx+q3CVMgpg2XSYfumm8gx1f+iMT39jXXVyJd8gi745pSzHiIDzUv?=
- =?us-ascii?Q?arUOotFMqPn71Q+UXAb7CLTlvFXYdXa5apMeIL/9R2K25g7tKnQflRGMFDLE?=
- =?us-ascii?Q?HIoosk4vbLlg7efQS0G4GZjTVqowDxVt1srkdkXwW+t93XeRX6D/SzL+GMke?=
- =?us-ascii?Q?iFg8JXykvKwSsXSimrzaH+566BbNQZ/rtqHujYbVJm54wvTpLcdtrN3T+8YA?=
- =?us-ascii?Q?3hOWzYOK/0WV9YYHOMNSa2qYkJJ0gHCF/PmFUDn83HmVG6IlggeYLW5bdSlg?=
- =?us-ascii?Q?dTOkuPzDZ4XKRkriSVt3IAqZomt0I0NIvXDdgJuHH+PR8kFlMzvkD/t7zeLv?=
- =?us-ascii?Q?NFURXv8V1ggH5v6ZsJvWT/lX1BNVN5kvd+EmMr5uJcaOxt054ct7OOYpNAF4?=
- =?us-ascii?Q?yUD1hVqMql+Aj7/ufFtlf0oeSJdFWnivtat4BpHur+4NSO4FG9Rv855WsIz8?=
- =?us-ascii?Q?aohPoUCEvK/OopjVIsG0M/Jz3xZNygs/IJWbVqiRNFruou95+ixMnmT6xgVJ?=
- =?us-ascii?Q?6uMOPkob3S0oBaVN2hqJ6UEZTy5xkcSs4Fbq07yJjoKu6wq1I2XK2BJTRgco?=
- =?us-ascii?Q?AgVzy0fu2M3zLYr2iocGlyt6XHoDUz5tiwND1+jvle4kRSTfHQMZVmo4IwEl?=
- =?us-ascii?Q?VUgsn/fLgJMlxTeQUygZywJmZirMm9ZG/v2oWmfb/1NVqMAIvb+pLpSut1Xi?=
- =?us-ascii?Q?hJ5t8tyvxOYFha3Dw8YPv6npLOtFn9fqhqY22vchsDnqcQzwNqo/x0VL+yoq?=
- =?us-ascii?Q?jkU1mmWFiOvwrdXuC3M03Shr21iR0xZ1iBd4FUQKWZMwpKwfdaQJ9NMeJqf8?=
- =?us-ascii?Q?P5Gzhk7seIem1FWBFtkkSw0iF9AOcsTwJRXoNFkAUb4CzXnTa293VUZziuoD?=
- =?us-ascii?Q?1mlysXFqpUdEnmu0wlIVok4eNMRA5VKVDsZnEFdEKlC9WeFOsef3uHwc0gPT?=
- =?us-ascii?Q?gk8C7sn57+hpcR0QgIKvAItVIy9fKOG3IhIxwgUOF9Lr+Lhl99YqNKcmQlS9?=
- =?us-ascii?Q?Ph+L7I9FZTdVRz7facORogRSP/MMNiGA2OH7LaCmL/TQpY6NxcUObOOpCvtB?=
- =?us-ascii?Q?Cz0V11m+IkbxGlr94zAZV9vYAhfFlwPHJm2ixSu/?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	V/whBs0DqDsWbwqf7lu4LH+Q8WoUmBO8mJfWaHu2hEq9ahPparaUDf6Uu19MWIpzIROD64JgG5sO7EmJXY+8b2TeZYlC/m6z9fM2kw5MPqDRZuX52B0kUZJ8ARJU00WK9x1hjIVwJc6WU6D1AvIwPOufJIxCychykc4vcd+Tf4HHi99ptXwYbNJNN452TdJ8CFjZPUFhXK/f3FmskHUgGUwH9RVFEit6iGyoYgexqq+ESBkoJ+E8WxbyQKOTe3yBW46BDtfIOSzlaxdJwULtIR49WwZLUlugFxKGCcpdzmq6d+G3f8q37g8+0YtDElxowMfRxS2kKfeMLCIdu9w30/kxkefrXWsE4/P8Y/VGr9gd07utTJM0byIN1InXHcZoJgpXOcn+u5V6hMVIXiLo30tpKTCXTicA0OvmZ1cbZLQa/53Qrkdb2XfXi9JftRabsfLTfFrnzAHTHXrWusX1UgGzQx1ShLvZQsgM1E4dtJ5XPuAD7+rg2Dtf89ikBnOLZZGI/9wPSdVhmoS+RPJSq/yt0I2NkQ1ycNxxV4dRoqEZvKAZqI0Q181+/jktgmMJLThf0oJGDbtOXIRwu+dGDMY2vdqUhBz7gni+ri3lAzU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e623b148-3bb7-4772-7310-08dca4db9afd
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 14:37:08.5897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BHWPvbcRftkaUvdckKWVNjaz95AyGITQ1Xu4wRDEsFaHaF4eN5xN0aZrPY840xVtRYXv2lvYmcxe3/2w+kCmHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB7443
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_09,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2406180000 definitions=main-2407150115
-X-Proofpoint-GUID: bczQTkYI3C1vd_2t9ZeehVhHGh9uPNnM
-X-Proofpoint-ORIG-GUID: bczQTkYI3C1vd_2t9ZeehVhHGh9uPNnM
 
-The following changes since commit 256abd8e550ce977b728be79a74e1729438b4948:
+On Mon, 2024-07-15 at 17:14 +1000, NeilBrown wrote:
+> nfsd threads need to not share the init fs_struct as they need to
+> manipulate umask independently.=C2=A0 So they call unshare_fs_struct() an=
+d
+> are the only user of that function.
+>=20
+> In the unlikely event that unshare_fs_struct() fails, the thread will
+> exit calling svc_exit_thread() BEFORE svc_thread_should_stop() reports
+> 'true'.
+>=20
+> This is a problem because svc_exit_thread() assumes that
+> svc_stop_threads() is running and consequently (in the nfsd case)
+> nfsd_mutex is held.=C2=A0 This ensures that the list_del_rcu() call in
+> svc_exit_thread() cannot race with any other manipulation of
+> ->sp_all_threads.
+>=20
+> While it would be possible to add some other exclusion, doing so would
+> introduce unnecessary complexity.=C2=A0 unshare_fs_struct() does not fail=
+ in
+> practice.=C2=A0 So the simplest solution is to make this explicit.=C2=A0 =
+i.e.=C2=A0 use
+> __GFP_NOFAIL which is safe on such a small allocation - about 64 bytes.
+>=20
 
-  Linux 6.10-rc7 (2024-07-07 14:23:46 -0700)
+I know some folks are trying hard to get rid of (or minimize the use
+of) __GFP_NOFAIL. This might not be a long term solution.
 
-are available in the Git repository at:
+> Change unshare_fs_struct() to not return any error, and remove the error
+> handling from nfsd().
+>=20
+> An alternate approach would be to create a variant of
+> kthread_create_on_node() which didn't set CLONE_FS.
+>=20
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.11
+This sounds like it might be the better approach. I guess you could
+just add a set of CLONE_* flags to struct kthread_create_info and fix
+up the callers to set that appropriately?
 
-for you to fetch changes up to 769d20028f45a4f442cfe558a32faba357a7f5e2:
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+> =C2=A0fs/fs_struct.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 42 ++++++++++++++++++++-------------------
+> =C2=A0fs/nfsd/nfssvc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 9 +++------
+> =C2=A0include/linux/fs_struct.h |=C2=A0 2 +-
+> =C2=A03 files changed, 26 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/fs/fs_struct.c b/fs/fs_struct.c
+> index 64c2d0814ed6..49fba862e408 100644
+> --- a/fs/fs_struct.c
+> +++ b/fs/fs_struct.c
+> @@ -109,35 +109,39 @@ void exit_fs(struct task_struct *tsk)
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static void init_fs_struct(struct fs_struct *fs, struct fs_struct *old)
+> +{
+> +	fs->users =3D 1;
+> +	fs->in_exec =3D 0;
+> +	spin_lock_init(&fs->lock);
+> +	seqcount_spinlock_init(&fs->seq, &fs->lock);
+> +	fs->umask =3D old->umask;
+> +
+> +	spin_lock(&old->lock);
+> +	fs->root =3D old->root;
+> +	path_get(&fs->root);
+> +	fs->pwd =3D old->pwd;
+> +	path_get(&fs->pwd);
+> +	spin_unlock(&old->lock);
+> +}
+> +
+> =C2=A0struct fs_struct *copy_fs_struct(struct fs_struct *old)
+> =C2=A0{
+> =C2=A0	struct fs_struct *fs =3D kmem_cache_alloc(fs_cachep, GFP_KERNEL);
+> =C2=A0	/* We don't need to lock fs - think why ;-) */
+> -	if (fs) {
+> -		fs->users =3D 1;
+> -		fs->in_exec =3D 0;
+> -		spin_lock_init(&fs->lock);
+> -		seqcount_spinlock_init(&fs->seq, &fs->lock);
+> -		fs->umask =3D old->umask;
+> -
+> -		spin_lock(&old->lock);
+> -		fs->root =3D old->root;
+> -		path_get(&fs->root);
+> -		fs->pwd =3D old->pwd;
+> -		path_get(&fs->pwd);
+> -		spin_unlock(&old->lock);
+> -	}
+> +	if (fs)
+> +		init_fs_struct(fs, old);
+> =C2=A0	return fs;
+> =C2=A0}
+> =C2=A0
+> -int unshare_fs_struct(void)
+> +void unshare_fs_struct(void)
+> =C2=A0{
+> =C2=A0	struct fs_struct *fs =3D current->fs;
+> -	struct fs_struct *new_fs =3D copy_fs_struct(fs);
+> +	struct fs_struct *new_fs =3D kmem_cache_alloc(fs_cachep,
+> +						=C2=A0=C2=A0=C2=A0 GFP_KERNEL| __GFP_NOFAIL);
+> =C2=A0	int kill;
+> =C2=A0
+> -	if (!new_fs)
+> -		return -ENOMEM;
+> +	init_fs_struct(new_fs, fs);
+> =C2=A0
+> =C2=A0	task_lock(current);
+> =C2=A0	spin_lock(&fs->lock);
+> @@ -148,8 +152,6 @@ int unshare_fs_struct(void)
+> =C2=A0
+> =C2=A0	if (kill)
+> =C2=A0		free_fs_struct(fs);
+> -
+> -	return 0;
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(unshare_fs_struct);
+> =C2=A0
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 7377422a34df..f5de04a63c6f 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -873,11 +873,9 @@ nfsd(void *vrqstp)
+> =C2=A0
+> =C2=A0	/* At this point, the thread shares current->fs
+> =C2=A0	 * with the init process. We need to create files with the
+> -	 * umask as defined by the client instead of init's umask. */
+> -	if (unshare_fs_struct() < 0) {
+> -		printk("Unable to start nfsd thread: out of memory\n");
+> -		goto out;
+> -	}
+> +	 * umask as defined by the client instead of init's umask.
+> +	 */
+> +	unshare_fs_struct();
+> =C2=A0
+> =C2=A0	current->fs->umask =3D 0;
+> =C2=A0
+> @@ -899,7 +897,6 @@ nfsd(void *vrqstp)
+> =C2=A0
+> =C2=A0	atomic_dec(&nfsd_th_cnt);
+> =C2=A0
+> -out:
+> =C2=A0	/* Release the thread */
+> =C2=A0	svc_exit_thread(rqstp);
+> =C2=A0	return 0;
+> diff --git a/include/linux/fs_struct.h b/include/linux/fs_struct.h
+> index 783b48dedb72..8282e6c7ff29 100644
+> --- a/include/linux/fs_struct.h
+> +++ b/include/linux/fs_struct.h
+> @@ -22,7 +22,7 @@ extern void set_fs_root(struct fs_struct *, const struc=
+t path *);
+> =C2=A0extern void set_fs_pwd(struct fs_struct *, const struct path *);
+> =C2=A0extern struct fs_struct *copy_fs_struct(struct fs_struct *);
+> =C2=A0extern void free_fs_struct(struct fs_struct *);
+> -extern int unshare_fs_struct(void);
+> +extern void unshare_fs_struct(void);
+> =C2=A0
+> =C2=A0static inline void get_fs_root(struct fs_struct *fs, struct path *r=
+oot)
+> =C2=A0{
 
-  nfsd: nfsd_file_lease_notifier_call gets a file_lease as an argument (2024-07-12 12:58:48 -0400)
-
-----------------------------------------------------------------
-NFSD 6.11 Release Notes
-
-This is a light release containing optimizations, code clean-ups,
-and minor bug fixes. This development cycle focused on work outside
-of upstream kernel development:
-
-1. Continuing to build upstream CI for NFSD based on kdevops
-2. Continuing to focus on the quality of NFSD in LTS kernels
-3. Participation in IETF nfsv4 WG discussions about NFSv4 ACLs,
-   directory delegation, and NFSv4.2 COPY offload
-
-Notable features in v6.11 that were not pulled through the NFSD tree
-include NFS server-side support for the new pNFS NVMe layout type
-[RFC9561]. Functional testing for pNFS block layouts like this one
-has been introduced to our kdevops CI harness. Work on improving
-the resolution of file attribute time stamps in local filesystems
-is also ongoing tree-wide.
-
-As always I am grateful to NFSD contributors, reviewers, testers,
-and bug reporters who participated during this cycle.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      lockd: Use *-y instead of *-objs in Makefile
-
-Chuck Lever (6):
-      svcrdma: Refactor the creation of listener CMA ID
-      svcrdma: Handle ADDR_CHANGE CM event properly
-      NFSD: Fix nfsdcld warning
-      NFSD: Support write delegations in LAYOUTGET
-      SUNRPC: Add a trace point in svc_xprt_deferred_close
-      MAINTAINERS: Add a bugzilla link for NFSD
-
-Dan Carpenter (1):
-      NFSD: harden svcxdr_dupstr() and svcxdr_tmpalloc() against integer overflows
-
-Dr. David Alan Gilbert (1):
-      NFSD: remove unused structs 'nfsd3_voidargs'
-
-Gaosheng Cui (1):
-      gss_krb5: Fix the error handling path for crypto_sync_skcipher_setkey
-
-Jeff Layton (6):
-      sunrpc: fix up the special handling of sv_nrpools == 1
-      nfsd: make nfsd_svc take an array of thread counts
-      nfsd: allow passing in array of thread counts via netlink
-      sunrpc: refactor pool_mode setting code
-      nfsd: new netlink ops to get/set server pool_mode
-      nfsd: nfsd_file_lease_notifier_call gets a file_lease as an argument
-
- Documentation/netlink/specs/nfsd.yaml    |  27 +++++++++++++++++++++++++++
- MAINTAINERS                              |   2 +-
- fs/lockd/Makefile                        |   9 ++++-----
- fs/nfsd/Kconfig                          |   2 +-
- fs/nfsd/filecache.c                      |   2 +-
- fs/nfsd/netlink.c                        |  17 +++++++++++++++++
- fs/nfsd/netlink.h                        |   2 ++
- fs/nfsd/nfs2acl.c                        |   2 --
- fs/nfsd/nfs3acl.c                        |   2 --
- fs/nfsd/nfs4proc.c                       |   5 +++--
- fs/nfsd/nfs4recover.c                    |   4 ++--
- fs/nfsd/nfs4xdr.c                        |  12 ++++++------
- fs/nfsd/nfsctl.c                         |  99 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------
- fs/nfsd/nfsd.h                           |   3 ++-
- fs/nfsd/nfssvc.c                         |  66 ++++++++++++++++++++++++++++++++++++++++++++----------------------
- include/linux/sunrpc/svc.h               |   3 +++
- include/uapi/linux/nfsd_netlink.h        |  10 ++++++++++
- net/sunrpc/auth_gss/gss_krb5_keys.c      |   2 +-
- net/sunrpc/svc.c                         | 111 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------
- net/sunrpc/svc_xprt.c                    |   1 +
- net/sunrpc/xprtrdma/svc_rdma_transport.c |  83 +++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------
- 21 files changed, 337 insertions(+), 127 deletions(-)
-
--- 
-Chuck Lever
+--=20
+Jeff Layton <jlayton@kernel.org>
 
