@@ -1,58 +1,70 @@
-Return-Path: <linux-nfs+bounces-4946-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4947-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0B5E93248C
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2024 13:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B971D9326C7
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2024 14:45:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E7A9B22558
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2024 11:01:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAEC7B23266
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jul 2024 12:45:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F0813D8B6;
-	Tue, 16 Jul 2024 11:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DD219AA43;
+	Tue, 16 Jul 2024 12:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBFDmLP3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiwl5Hui"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB1D3DBB7
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jul 2024 11:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776BF13CA99;
+	Tue, 16 Jul 2024 12:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721127657; cv=none; b=M91/juMk2i/54HpvTnZVwNvQMRmx2VXxgxi/+Yn+jVcISd+v0pC3yZN5hALzDRVkUiev7Yk57FWAvkP6/stwlkvYgT9TxWb3iLOPkr1wlIZRYjApWW9QmslMOyCGMCrMG/1z/ESLo8bcq+3U4ej+HA8APyhQprM8hXg1ZJcXSrs=
+	t=1721133920; cv=none; b=XAdG/EIJGMbBFG/GfiN6oTw06IIWQjxmOKeLdyStmC+THmE/xuS7/5Mnx5dRkRx09mcgiTBOq289jAR5GJG6qFFwzje8vgQgLRkVFuUl5Q9u3X0ejJvnHe9OvKOfXJgWsFpJRI25+uK7s29ljZjAxixT1fyAYT5MOtruFOoc684=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721127657; c=relaxed/simple;
-	bh=9QVyTp2LRNGTR/4nZfKUHwhdq0+VjiNLYWFnRoZcBbo=;
+	s=arc-20240116; t=1721133920; c=relaxed/simple;
+	bh=+AQCaC6DcBfkCdsqvpZHVphZxm3GlWguUrFsg0hQi1M=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c9wrmGPCMqWLyTRzefc8R02TpPHwiWO2V080hzKdoLKXpAbn2p5VZwSGBErRNr5Uj4tv0RjBGdBLpM5OlAZEKMBbs733ptpmSums04MVP8zA66xUmb/BIGpwUKxyUH3LDZXNRTZ//fGPhbtbmOu7ezhvZf5QACKnoTnGOMgRqQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBFDmLP3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B3FC116B1;
-	Tue, 16 Jul 2024 11:00:56 +0000 (UTC)
+	 Content-Type:MIME-Version; b=c7oP3Ue7ihZpIfneOFwNxCbQrOtaX/wBa/AdytapVzCilABlDGvk10UNqi/g7QV9YS7/skbdSGEwYJ2wVG9OijQZ1vTM3GAhdr6wHXv1ug/x2MIj85e3tHTRwoucZeKARwA8FzVpyc+h7fe6VYOFdn1TOHzbbVVmEeDrSLpFxSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiwl5Hui; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 642BBC4AF0C;
+	Tue, 16 Jul 2024 12:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721127657;
-	bh=9QVyTp2LRNGTR/4nZfKUHwhdq0+VjiNLYWFnRoZcBbo=;
+	s=k20201202; t=1721133920;
+	bh=+AQCaC6DcBfkCdsqvpZHVphZxm3GlWguUrFsg0hQi1M=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QBFDmLP3VLTt/f20IYje+7P90MzHKBwzjqUimyFQC7/N5EHseqgAYafCnOmtrqouR
-	 07AWWKUAW0U17mvkH0eQVGJBhGFyW3shXMjPfiDcBurhcgTkuWjDE9M2ZXaw00kZdM
-	 wV9npS0nY5vUBF6X18NwoAEwO63NZTcNRxobM4YZpANxoU9MkQDprH8CpsvCFkgu2F
-	 q+tTFlpIftpvc0NR363IPcG5/0WVWQ2kOHl/qzodELDn+Plr1bQtMdkikNNBwzEI3S
-	 Mg6zbE+MiE//o+EbLuTtFoYiJBhTL3OpPvNi1x/BYWwtsG5poXtWwXMoskngVDCfDX
-	 kTFk4HtjQ68ow==
-Message-ID: <27b282045253419857b67f3240ab8ec5f585cf40.camel@kernel.org>
-Subject: Re: [PATCH 13/14] nfsd: introduce concept of a maximum number of
- threads.
+	b=hiwl5HuiPDv3S+z3HiJqFrbZ+bTUzUtnHvIQzdEXsCA8ByBoQB/KThY4Bxp11pjuQ
+	 6FevPHpetfq5h2qtwBRaxEB/k4Em+9dM82l63QNeuJL1GD7tSz+LetemTkMaRTCc7b
+	 d30H5rqim+FNCCUzqAs501bOVYCOtYLWazAlBZATbVuxFMIjpVgkEBk2Jy3iuUtRoo
+	 8kElGEpnszndKDjojw2Kw/wD5Gmk427rG/bw2jKJGkmvNXNwnPDffuuDyj4x2s4nvs
+	 AKRupHoIgWHhzz2k703WaBfTkioqf+ypD5KsV5hRrN8WMXzGREKRha0o1Yk0oAyzKZ
+	 AFlUYHdVbIiVA==
+Message-ID: <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
+Subject: Re: [PATCH v6 0/9] fs: multigrain timestamp redux
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Olga
- Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Steve Dickson <steved@redhat.com>
-Date: Tue, 16 Jul 2024 07:00:55 -0400
-In-Reply-To: <172110007383.15471.14744199179662433209@noble.neil.brown.name>
-References: <>, <f12bdd8dde21de4473d38fada67b60ef5883e8dc.camel@kernel.org>
-	 <172110007383.15471.14744199179662433209@noble.neil.brown.name>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chandan Babu R <chandan.babu@oracle.com>,  "Darrick J. Wong"
+ <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan
+ Corbet <corbet@lwn.net>, Dave Chinner <david@fromorbit.com>, Andi Kleen
+ <ak@linux.intel.com>, Christoph Hellwig <hch@infradead.org>, Uros Bizjak
+ <ubizjak@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, Arnd
+ Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-mm@kvack.org,  linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
+Date: Tue, 16 Jul 2024 08:45:16 -0400
+In-Reply-To: <20240716-zerlegen-haudegen-ba86a22f4322@brauner>
+References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
+	 <20240716-zerlegen-haudegen-ba86a22f4322@brauner>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,431 +149,36 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2024-07-16 at 13:21 +1000, NeilBrown wrote:
-> On Tue, 16 Jul 2024, Jeff Layton wrote:
-> > On Mon, 2024-07-15 at 17:14 +1000, NeilBrown wrote:
-> > > A future patch will allow the number of threads in each nfsd pool to
-> > > vary dynamically.
-> > > The lower bound will be the number explicit requested via
-> > > /proc/fs/nfsd/threads or /proc/fs/nfsd/pool_threads
-> > >=20
-> > > The upper bound can be set in each net-namespace by writing
-> > > /proc/fs/nfsd/max_threads.=C2=A0 This upper bound applies across all =
-pools,
-> > > there is no per-pool upper limit.
-> > >=20
-> > > If no upper bound is set, then one is calculated.=C2=A0 A global uppe=
-r limit
-> > > is chosen based on amount of memory.=C2=A0 This limit only affects dy=
-namic
-> > > changes. Static configuration can always over-ride it.
-> > >=20
-> > > We track how many threads are configured in each net namespace, with =
-the
-> > > max or the min.=C2=A0 We also track how many net namespaces have nfsd
-> > > configured with only a min, not a max.
-> > >=20
-> > > The difference between the calculated max and the total allocation is
-> > > available to be shared among those namespaces which don't have a maxi=
-mum
-> > > configured.=C2=A0 Within a namespace, the available share is distribu=
-ted
-> > > equally across all pools.
-> > >=20
-> > > In the common case there is one namespace and one pool.=C2=A0 A small=
- number
-> > > of threads are configured as a minimum and no maximum is set.=C2=A0 I=
-n this
-> > > case the effective maximum will be directly based on total memory.
-> > > Approximately 8 per gigabyte.
-> > >=20
+On Tue, 2024-07-16 at 09:37 +0200, Christian Brauner wrote:
+> On Mon, Jul 15, 2024 at 08:48:51AM GMT, Jeff Layton wrote:
+> > I think this is pretty much ready for linux-next now. Since the latest
+> > changes are pretty minimal, I've left the Reviewed-by's intact. It woul=
+d
+> > be nice to have acks or reviews from maintainers for ext4 and tmpfs too=
+.
 > >=20
+> > I did try to plumb this into bcachefs too, but the way it handles
+> > timestamps makes that pretty difficult. It keeps the active copies in a=
+n
+> > internal representation of the on-disk inode and periodically copies
+> > them to struct inode. This is backward from the way most blockdev
+> > filesystems do this.
 > >=20
-> > Some of this may come across as bikeshedding, but I'd probably prefer
-> > that this work a bit differently:
-> >=20
-> > 1/ I don't think we should enable this universally -- at least not
-> > initially. What I'd prefer to see is a new pool_mode for the dynamic
-> > threadpools (maybe call it "dynamic"). That gives us a clear opt-in
-> > mechanism. Later once we're convinced it's safe, we can make "dynamic"
-> > the default instead of "global".
-> >=20
-> > 2/ Rather than specifying a max_threads value separately, why not allow
-> > the old threads/pool_threads interface to set the max and just have a
-> > reasonable minimum setting (like the current default of 8). Since we're
-> > growing the threadpool dynamically, I don't see why we need to have a
-> > real configurable minimum.
-> >=20
-> > 3/ the dynamic pool-mode should probably be layered on top of the
-> > pernode pool mode. IOW, in a NUMA configuration, we should split the
-> > threads across NUMA nodes.
+> > Christian, would you be willing to pick these up  with an eye toward
+> > v6.12 after the merge window settles?
 >=20
-> Maybe we should start by discussing the goal.  What do we want
-> configuration to look like when we finish?
->=20
-> I think we want it to be transparent.  Sysadmin does nothing, and it all
-> works perfectly.  Or as close to that as we can get.
->=20
+> Yup. About to queue it up. I'll try to find some time to go through it
+> so I might have some replies later but that shouldn't hold up linux-next
+> at all.
 
-That's a nice eventual goal, but what do we do if we make this change
-and it's not behaving for them? We need some way for them to revert to
-traditional behavior if the new mode isn't working well.
+Great!
 
-> So I think the "nproc" option to rpc.nfsd should eventually be ignored
-> except for whether it is zero or non-zero.  If it is non-zero we start 1
-> thread on each NUMA node and let that grow with limits imposed primarily
-> by memory pressure.
->=20
-> We should probably change
->=20
-> #define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
->=20
-> to
->=20
-> #define SVC_POOL_DEFAULT	SVC_POOL_AUTO
->=20
-> about 10 years ago, but failing that, maybe change it tomorrow?
->=20
+There is one minor update to the percpu counter patch to compile those
+out when debugfs isn't enabled, so it may be best to pick the series
+from the "mgtime" branch in my public git tree. Let me know if you'd
+rather I re-post the series though.
 
-At this point, I wouldn't change the defaults until we're ready to make
-dynamic mode the default.
-
-> I'm not sure how
->     /proc/fs/nfsd/{threads,pool_threads}
-> should be handled.=C2=A0
->=20
-
-Technically, I'm fine with _not_ handling them here. We do have the new
-netlink interfaces that are better suited for this. We could make the
-opt-in for dynamic mode contingent on using that somehow.
-
-> Like you I don't think it is really useful to have
-> a configured minimum but I don't want them to be imposed as a maximum
-> because I want servers with the current default (of 8) to be able to
-> start more new threads if necessary without needing a config change.
-> Maybe that outcome can be delayed until rpc.nfsd is updated?
->=20
-
-That's a bit too aggressive for my tastes. I really do think we need to
-allow people to opt-in for this at first. Once we've grown comfortable
-with how it all works, we can consider changing the default then.
-
-> I don't really like the idea of a dynamic pool mode.  I want the pool to
-> *always* be dynamic.
->=20
->=20
-
-I think that's a good eventual goal, but I think we need to proceed
-with caution. Given that this is all based around heuristics, we'll
-need a way for people to revert to more traditional behavior if it's
-not working well for them. Making this into a pool-mode and allowing
-people to opt-in initially seems like a simple way to do that.
-
-I am fine with eventually discarding the pool-mode settings altogether
-if we get dynamic mode working well enough. I'd just prefer a more
-incremental approach to getting there.
-
->=20
-> >=20
-> >=20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > > =C2=A0fs/nfsd/netns.h=C2=A0 |=C2=A0 6 +++++
-> > > =C2=A0fs/nfsd/nfsctl.c | 45 +++++++++++++++++++++++++++++++++++
-> > > =C2=A0fs/nfsd/nfsd.h=C2=A0=C2=A0 |=C2=A0 4 ++++
-> > > =C2=A0fs/nfsd/nfssvc.c | 61 +++++++++++++++++++++++++++++++++++++++++=
-+++++++
-> > > =C2=A0fs/nfsd/trace.h=C2=A0 | 19 +++++++++++++++
-> > > =C2=A05 files changed, 135 insertions(+)
-> > >=20
-> > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > > index 0d2ac15a5003..329484696a42 100644
-> > > --- a/fs/nfsd/netns.h
-> > > +++ b/fs/nfsd/netns.h
-> > > @@ -133,6 +133,12 @@ struct nfsd_net {
-> > > =C2=A0	 */
-> > > =C2=A0	unsigned int max_connections;
-> > > =C2=A0
-> > > +	/*
-> > > +	 * Maximum number of threads to auto-adjust up to.=C2=A0 If 0 then =
-a
-> > > +	 * share of nfsd_max_threads will be used.
-> > > +	 */
-> > > +	unsigned int max_threads;
-> > > +
-> > > =C2=A0	u32 clientid_base;
-> > > =C2=A0	u32 clientid_counter;
-> > > =C2=A0	u32 clverifier_counter;
-> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > index d85b6d1fa31f..37e9936567e9 100644
-> > > --- a/fs/nfsd/nfsctl.c
-> > > +++ b/fs/nfsd/nfsctl.c
-> > > @@ -48,6 +48,7 @@ enum {
-> > > =C2=A0	NFSD_Ports,
-> > > =C2=A0	NFSD_MaxBlkSize,
-> > > =C2=A0	NFSD_MaxConnections,
-> > > +	NFSD_MaxThreads,
-> > > =C2=A0	NFSD_Filecache,
-> > > =C2=A0	NFSD_Leasetime,
-> > > =C2=A0	NFSD_Gracetime,
-> > > @@ -68,6 +69,7 @@ static ssize_t write_versions(struct file *file, ch=
-ar *buf, size_t size);
-> > > =C2=A0static ssize_t write_ports(struct file *file, char *buf, size_t=
- size);
-> > > =C2=A0static ssize_t write_maxblksize(struct file *file, char *buf, s=
-ize_t size);
-> > > =C2=A0static ssize_t write_maxconn(struct file *file, char *buf, size=
-_t size);
-> > > +static ssize_t write_maxthreads(struct file *file, char *buf, size_t=
- size);
-> > > =C2=A0#ifdef CONFIG_NFSD_V4
-> > > =C2=A0static ssize_t write_leasetime(struct file *file, char *buf, si=
-ze_t size);
-> > > =C2=A0static ssize_t write_gracetime(struct file *file, char *buf, si=
-ze_t size);
-> > > @@ -87,6 +89,7 @@ static ssize_t (*const write_op[])(struct file *, c=
-har *, size_t) =3D {
-> > > =C2=A0	[NFSD_Ports] =3D write_ports,
-> > > =C2=A0	[NFSD_MaxBlkSize] =3D write_maxblksize,
-> > > =C2=A0	[NFSD_MaxConnections] =3D write_maxconn,
-> > > +	[NFSD_MaxThreads] =3D write_maxthreads,
-> > > =C2=A0#ifdef CONFIG_NFSD_V4
-> > > =C2=A0	[NFSD_Leasetime] =3D write_leasetime,
-> > > =C2=A0	[NFSD_Gracetime] =3D write_gracetime,
-> > > @@ -939,6 +942,47 @@ static ssize_t write_maxconn(struct file *file, =
-char *buf, size_t size)
-> > > =C2=A0	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%u\n", maxcon=
-n);
-> > > =C2=A0}
-> > > =C2=A0
-> > > +/*
-> > > + * write_maxthreads - Set or report the current max number threads
-> > > + *
-> > > + * Input:
-> > > + *			buf:		ignored
-> > > + *			size:		zero
-> > > + * OR
-> > > + *
-> > > + * Input:
-> > > + *			buf:		C string containing an unsigned
-> > > + *					integer value representing the new
-> > > + *					max number of threads
-> > > + *			size:		non-zero length of C string in @buf
-> > > + * Output:
-> > > + *	On success:	passed-in buffer filled with '\n'-terminated C string
-> > > + *			containing numeric value of max_threads setting
-> > > + *			for this net namespace;
-> > > + *			return code is the size in bytes of the string
-> > > + *	On error:	return code is zero or a negative errno value
-> > > + */
-> > > +static ssize_t write_maxthreads(struct file *file, char *buf, size_t=
- size)
-> > > +{
-> > > +	char *mesg =3D buf;
-> > > +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> > > +	unsigned int maxthreads =3D nn->max_threads;
-> > > +
-> > > +	if (size > 0) {
-> > > +		int rv =3D get_uint(&mesg, &maxthreads);
-> > > +
-> > > +		if (rv)
-> > > +			return rv;
-> > > +		trace_nfsd_ctl_maxthreads(netns(file), maxthreads);
-> > > +		mutex_lock(&nfsd_mutex);
-> > > +		nn->max_threads =3D maxthreads;
-> > > +		nfsd_update_nets();
-> > > +		mutex_unlock(&nfsd_mutex);
-> > > +	}
-> > > +
-> > > +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%u\n", maxthreads)=
-;
-> > > +}
-> > > +
-> > > =C2=A0#ifdef CONFIG_NFSD_V4
-> > > =C2=A0static ssize_t __nfsd4_write_time(struct file *file, char *buf,=
- size_t size,
-> > > =C2=A0				=C2=A0 time64_t *time, struct nfsd_net *nn)
-> > > @@ -1372,6 +1416,7 @@ static int nfsd_fill_super(struct super_block *=
-sb, struct fs_context *fc)
-> > > =C2=A0		[NFSD_Ports] =3D {"portlist", &transaction_ops, S_IWUSR|S_IRU=
-GO},
-> > > =C2=A0		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_=
-IWUSR|S_IRUGO},
-> > > =C2=A0		[NFSD_MaxConnections] =3D {"max_connections", &transaction_op=
-s, S_IWUSR|S_IRUGO},
-> > > +		[NFSD_MaxThreads] =3D {"max_threads", &transaction_ops, S_IWUSR|S_=
-IRUGO},
-> > > =C2=A0		[NFSD_Filecache] =3D {"filecache", &nfsd_file_cache_stats_fop=
-s, S_IRUGO},
-> > > =C2=A0#ifdef CONFIG_NFSD_V4
-> > > =C2=A0		[NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops, S_I=
-WUSR|S_IRUSR},
-> > > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > > index e4c643255dc9..6874c2de670b 100644
-> > > --- a/fs/nfsd/nfsd.h
-> > > +++ b/fs/nfsd/nfsd.h
-> > > @@ -156,6 +156,10 @@ int nfsd_create_serv(struct net *net);
-> > > =C2=A0void nfsd_destroy_serv(struct net *net);
-> > > =C2=A0
-> > > =C2=A0extern int nfsd_max_blksize;
-> > > +void nfsd_update_nets(void);
-> > > +extern unsigned int	nfsd_max_threads;
-> > > +extern unsigned long	nfsd_net_used;
-> > > +extern unsigned int	nfsd_net_cnt;
-> > > =C2=A0
-> > > =C2=A0static inline int nfsd_v4client(struct svc_rqst *rq)
-> > > =C2=A0{
-> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > index b005b2e2e6ad..75d78c17756f 100644
-> > > --- a/fs/nfsd/nfssvc.c
-> > > +++ b/fs/nfsd/nfssvc.c
-> > > @@ -80,6 +80,21 @@ DEFINE_SPINLOCK(nfsd_drc_lock);
-> > > =C2=A0unsigned long	nfsd_drc_max_mem;
-> > > =C2=A0unsigned long	nfsd_drc_slotsize_sum;
-> > > =C2=A0
-> > > +/*
-> > > + * nfsd_max_threads is auto-configured based on available ram.
-> > > + * Each network namespace can configure a minimum number of threads
-> > > + * and optionally a maximum.
-> > > + * nfsd_net_used is the number of the max or min from each net names=
-pace.
-> > > + * nfsd_new_cnt is the number of net namespaces with a configured mi=
-nimum
-> > > + *=C2=A0=C2=A0=C2=A0 but no configured maximum.
-> > > + * When nfsd_max_threads exceeds nfsd_net_used, the different is div=
-ided
-> > > + * by nfsd_net_cnt and this number gives the excess above the config=
-ured minimum
-> > > + * for all net namespaces without a configured maximum.
-> > > + */
-> > > +unsigned int	nfsd_max_threads;
-> > > +unsigned long	nfsd_net_used;
-> > > +unsigned int	nfsd_net_cnt;
-> > > +
-> > > =C2=A0#if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-> > > =C2=A0static const struct svc_version *nfsd_acl_version[] =3D {
-> > > =C2=A0# if defined(CONFIG_NFSD_V2_ACL)
-> > > @@ -130,6 +145,47 @@ struct svc_program		nfsd_program =3D {
-> > > =C2=A0	.pg_rpcbind_set		=3D nfsd_rpcbind_set,
-> > > =C2=A0};
-> > > =C2=A0
-> > > +void nfsd_update_nets(void)
-> > > +{
-> > > +	struct net *net;
-> > > +
-> > > +	if (nfsd_max_threads =3D=3D 0) {
-> > > +		nfsd_max_threads =3D (nr_free_buffer_pages() >> 7) /
-> > > +			(NFSSVC_MAXBLKSIZE >> PAGE_SHIFT);
-> > > +	}
-> > > +	nfsd_net_used =3D 0;
-> > > +	nfsd_net_cnt =3D 0;
-> > > +	down_read(&net_rwsem);
-> > > +	for_each_net(net) {
-> > > +		struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > > +
-> > > +		if (!nn->nfsd_serv)
-> > > +			continue;
-> > > +		if (nn->max_threads > 0) {
-> > > +			nfsd_net_used +=3D nn->max_threads;
-> > > +		} else {
-> > > +			nfsd_net_used +=3D nn->nfsd_serv->sv_nrthreads;
-> > > +			nfsd_net_cnt +=3D 1;
-> > > +		}
-> > > +	}
-> > > +	up_read(&net_rwsem);
-> > > +}
-> > > +
-> > > +static inline int nfsd_max_pool_threads(struct svc_pool *p, struct n=
-fsd_net *nn)
-> > > +{
-> > > +	int svthreads =3D nn->nfsd_serv->sv_nrthreads;
-> > > +
-> > > +	if (nn->max_threads > 0)
-> > > +		return nn->max_threads;
-> > > +	if (nfsd_net_cnt =3D=3D 0 || svthreads =3D=3D 0)
-> > > +		return 0;
-> > > +	if (nfsd_max_threads < nfsd_net_cnt)
-> > > +		return p->sp_nrthreads;
-> > > +	/* Share nfsd_max_threads among all net, then among pools in this n=
-et. */
-> > > +	return p->sp_nrthreads +
-> > > +		nfsd_max_threads / nfsd_net_cnt * p->sp_nrthreads / svthreads;
-> > > +}
-> > > +
-> > > =C2=A0bool nfsd_support_version(int vers)
-> > > =C2=A0{
-> > > =C2=A0	if (vers >=3D NFSD_MINVERS && vers <=3D NFSD_MAXVERS)
-> > > @@ -474,6 +530,7 @@ void nfsd_destroy_serv(struct net *net)
-> > > =C2=A0	spin_lock(&nfsd_notifier_lock);
-> > > =C2=A0	nn->nfsd_serv =3D NULL;
-> > > =C2=A0	spin_unlock(&nfsd_notifier_lock);
-> > > +	nfsd_update_nets();
-> > > =C2=A0
-> > > =C2=A0	/* check if the notifier still has clients */
-> > > =C2=A0	if (atomic_dec_return(&nfsd_notifier_refcount) =3D=3D 0) {
-> > > @@ -614,6 +671,8 @@ int nfsd_create_serv(struct net *net)
-> > > =C2=A0	nn->nfsd_serv =3D serv;
-> > > =C2=A0	spin_unlock(&nfsd_notifier_lock);
-> > > =C2=A0
-> > > +	nfsd_update_nets();
-> > > +
-> > > =C2=A0	set_max_drc();
-> > > =C2=A0	/* check if the notifier is already set */
-> > > =C2=A0	if (atomic_inc_return(&nfsd_notifier_refcount) =3D=3D 1) {
-> > > @@ -720,6 +779,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, stru=
-ct net *net)
-> > > =C2=A0			goto out;
-> > > =C2=A0	}
-> > > =C2=A0out:
-> > > +	nfsd_update_nets();
-> > > =C2=A0	return err;
-> > > =C2=A0}
-> > > =C2=A0
-> > > @@ -759,6 +819,7 @@ nfsd_svc(int n, int *nthreads, struct net *net, c=
-onst struct cred *cred, const c
-> > > =C2=A0	error =3D nfsd_set_nrthreads(n, nthreads, net);
-> > > =C2=A0	if (error)
-> > > =C2=A0		goto out_put;
-> > > +	nfsd_update_nets();
-> > > =C2=A0	error =3D serv->sv_nrthreads;
-> > > =C2=A0out_put:
-> > > =C2=A0	if (serv->sv_nrthreads =3D=3D 0)
-> > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > > index 77bbd23aa150..92b888e178e8 100644
-> > > --- a/fs/nfsd/trace.h
-> > > +++ b/fs/nfsd/trace.h
-> > > @@ -2054,6 +2054,25 @@ TRACE_EVENT(nfsd_ctl_maxconn,
-> > > =C2=A0	)
-> > > =C2=A0);
-> > > =C2=A0
-> > > +TRACE_EVENT(nfsd_ctl_maxthreads,
-> > > +	TP_PROTO(
-> > > +		const struct net *net,
-> > > +		int maxthreads
-> > > +	),
-> > > +	TP_ARGS(net, maxthreads),
-> > > +	TP_STRUCT__entry(
-> > > +		__field(unsigned int, netns_ino)
-> > > +		__field(int, maxthreads)
-> > > +	),
-> > > +	TP_fast_assign(
-> > > +		__entry->netns_ino =3D net->ns.inum;
-> > > +		__entry->maxthreads =3D maxthreads
-> > > +	),
-> > > +	TP_printk("maxthreads=3D%d",
-> > > +		__entry->maxthreads
-> > > +	)
-> > > +);
-> > > +
-> > > =C2=A0TRACE_EVENT(nfsd_ctl_time,
-> > > =C2=A0	TP_PROTO(
-> > > =C2=A0		const struct net *net,
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
->=20
-
+Thanks!
 --=20
 Jeff Layton <jlayton@kernel.org>
 
