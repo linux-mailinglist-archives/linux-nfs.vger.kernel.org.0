@@ -1,66 +1,67 @@
-Return-Path: <linux-nfs+bounces-4958-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4959-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7614933540
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2024 04:04:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCD34933570
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2024 04:28:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B3A31F22B7E
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2024 02:04:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98A36282927
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jul 2024 02:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F10ED8;
-	Wed, 17 Jul 2024 02:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41373469D;
+	Wed, 17 Jul 2024 02:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="s8qeoV72"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HG1TN3Se"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85801749C
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Jul 2024 02:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478234C99
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Jul 2024 02:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721181829; cv=none; b=fCcIdGSYh2aybYRcfW9pze2GNeaTu+dcasfNHyX9fcsP83BwamCGcCNR0N7/SaiY/p8OHDp8VMCqg7vEXODZRJNFvyO1VsgNzMdE5ptjdb8rDy6K63VBntFARgiHXwJbg6PQzWT1iCl6WnD7Y6KDX24oTx5KFbPut+JidCoEm+U=
+	t=1721183302; cv=none; b=SHeYWzSP6flKImLFs0XJX7VAmoV5fVw0lr9r1kb4jtrmyJECei+YcYcEX4IPX+W/9rSAtaxnChlbDUIruzMxs2VoevBFi8LNFnIc8SLdjWbDp3mepCK2L0NLB63j5wAqL0P1cOGLuum0dC1b6QIJ+qeGd8lt9Yqf3s07k2n18Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721181829; c=relaxed/simple;
-	bh=E3HyFyTNw/TyCtWqmiCHaanIiuKclvmC1/LI8ttAwOY=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=h9MlC0k4/zk464j/XQlwHk2OUNwg/QvBH9Ls70uucmOnjnx+xZVnBFe9OmGNU+MOgD1SCmjv2bMhG7xsIUUMtsODM8VdY0jYHOXCLFU99zR9n4FWHX8pNUhacvQjeQQ6DDfR7cybW0bmyo2x2R9aMiREb5EvzP76ewowpoW/MzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=s8qeoV72; arc=none smtp.client-ip=203.205.221.155
+	s=arc-20240116; t=1721183302; c=relaxed/simple;
+	bh=jDuQ2/JGgFUTftUeOi3OhcScBUst85koeCjDXq4MHQI=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ZnCMNHoMbMbLSEjjm1cX4QL3GBI1gxjyFi0vkZD42JPj/KGFriMYNHvT4imP9CmHXZbuNuMXs985XH5CkB16NU4vGYXg3dTq1EJarWewCc16UX6mqQ9I2nuZMXC06GEy4qw1z8buk7VTTmKZgVqstu0K3NdTDboX/JzIZd3lolc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HG1TN3Se; arc=none smtp.client-ip=162.62.58.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1721181518; bh=Y7sYY4dhYDTnGVwiN6MTL3KlcnW7yEjnpiwyBbkQyTA=;
+	t=1721183289; bh=pirgFiecSv05H24ZNtrHCkO4UcUYxwHSjiqbR6wRIO4=;
 	h=From:To:Cc:Subject:Date;
-	b=s8qeoV72JOYxT2EeBeRAK/TvQaKL2vM5BcmReXhDq2fM33gUMX95iBciyVAb/wbSA
-	 TcVVHmyWoAt9QpHuf7AZLI6Rq94cne5+46C76fFiwprPkPwSKPFeGCLtf7Qu84sXF0
-	 ABY3QTnZla209GpkMDU2ADTN2SRYH3RMNZQg/xu4=
+	b=HG1TN3SegRnCJwO2eRumpcn/KMDybx56rF+cIDjn1p158Xj9nitdAs+NSDHzWlS+E
+	 /pHOUL8Jhxc11KdAX4c7PUDv/7nSdSKm1kfxZDIcqRJglqc47FTP+o3QKGCzS58Tfn
+	 IKRFaCsw3JnkQWsu1oZBUfSpfXeFRXzQZY6msyG4=
 Received: from localhost.localdomain ([123.150.8.42])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id EA48C8AC; Wed, 17 Jul 2024 09:58:36 +0800
-X-QQ-mid: xmsmtpt1721181516tw3ss803o
-Message-ID: <tencent_A858F696592599629C0E743528247B763F07@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uTvYm/QMfwMHW+YRCUsLBrl8OIlKfX9LF9kYjU48o16YzBJaWx6M
-	 Th9xQrHIY4wI+V+7S+nw2qqN+jrxipirhznUnyCW4GW/0xEbvXbL2buoFz11rV3aN33/kYj1rkFy
-	 Uo+lMGNN8ri0p6fiIXH75ZN/9Il/eaLAS1XwvKWVmrCKZMvBqGee8rF7tV7vJNEzNAEi6oADOMcg
-	 oiJwKmAaYFmUZ0OjaBIDFJKWdjM4X08VYZHNQRTv3qSHcTTY2IqRVLtN23I/VDEHI1mlQqk95Rnl
-	 KDqxkgbPTcvWaCE81C8/0gBQPdMXDtmjg1M11rMJepG9LZUvaZ2NPoKK6fGLQLdfjlhYwl2Y2LCw
-	 m49uFo68/Tcr+lHvC8urL9KQzCVgANwg/ZMyPF7itB5hZFD5R0Sw4Vfs28oR2zu1/TszdvIg2lVQ
-	 9zoDe18dhQHSJDoiiRe+TNcpZFGXisoJy7Pm/8g/0aZvuFjTpF8L8mQic2+5EhIIMgPUt79lKu9q
-	 hviq4e1T3A9P7vP3AaTk26CPxSKveOx0+wQgVVOq/PXMUGetWlng1C87XrT6u06BelOi6uIJ1IHn
-	 oiSdHH9VRFirntxgvNYjOciwX59h524eP5Y+Bu+d+Sbt8nfPlg+Du7+Sz5OHybgFA2b9ESgrdrZU
-	 hBaC6I2eTbS/qhztPbYkI9UIx69978p8o6XtVzpr+kD0LfAcsmSCZMiJVdbYxVxMizOtJETwW9bn
-	 qdEpPjHuT7zeu6236R88oQqiu5xG1twUYmU1LF87EtaQZbtSmc5uk4lYHFnKXhJqOz1WRMG5aVQ7
-	 BT+dIadaxBGiDqvUT437Ayje+oSxc/a6bk88PD6cfI8mX6S7dkgREzX9BRuh3yu05gs/PiL5TXNo
-	 raG24llI8tJl93KalN6x6kxnnFlqUfoq9xhLC7mbkL
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 6B60B833; Wed, 17 Jul 2024 10:26:54 +0800
+X-QQ-mid: xmsmtpt1721183214t2rmke7m2
+Message-ID: <tencent_DB960C1E4E3B7A2A549B3D95DF223BDAEC06@qq.com>
+X-QQ-XMAILINFO: OUUXHEo9i1ukzs8WPNiJ4QMwWu5yuHkmA10NOc6WuzVsVEBg/GjHfLbc7AN0uy
+	 yFmzxu6/7xPmbypT22mIY2UTfUin8PU8lgIt3dGDoW1Q1AhKr+f6nJA0na8gn1tMuQnXocgtkH3F
+	 cWDHgKaILVsKnbbQXI4yo++Hlr6+w1WEDoj4id4pBen3fSG6paHuI1tFqMHcSkDxhxKeG2cJ1IV5
+	 +RoOEhq7+Ke7BwA2Ax3o+ufmUn3rq/aiFhOSVTexAGK5GTphCdXagFMPwxFMKcSaiSXlVv6N/npT
+	 mXrghJ5G8oXKCqafrjJcUuHygbNJFk43VkL9ULfIPy6l9f1RRi4hkMqGfudIfubcPbMf2lFLDtmv
+	 Ol8NV7xLzFoZl+fy2l450Fqm72yRGA/9PfhsXAdV0HjVV0YdYAK7iBHw+nwHDCd6X+PKAFwgA58s
+	 LnvB+C+TeMQ0U+BH9qglci0KsoMuic084VbnJjbPXV9VodOUUVE0oNe0r20Ikr0DEXx+U/cXmP29
+	 vk58ALbSkUuIX2wcZLrr6HgBN8AMw3Jj0pKpyNmvcRmlRUx2QwG+ySCKBZpAHwBNMmFbBPK1W6tM
+	 bzb+km/dawSMmABYfvxtaCLVrdbGYf/fo1dQuJaYnDIYjWBVzwNZvkdkjr2aYD4sQ7s7nlhhlOgS
+	 KHK2CsehaTxaX0nKAOrgzrhrPsKaRmhpuLQsDSMqXbHhsfJr4VCC4pR+sqqoGdg6LQtrC56yf5o7
+	 uM7629o8DiVw8mRqjPAP0Oa/WME7cRkHqyyOmRvDUVOYN1tz3HCI3XDfvTvqhasp3xvk+u9vGRlc
+	 CnZZ/Uk0XsuS2hv8uxq88rk3akEU15piZPSJuMA2Vcb0S6lKGKVqD6I6yo1N/5bUMhl/FnlziRBP
+	 m6czUq86QmOi22GbJnIkd/hPKRvICQePnaia8/JRVcbHt2EdhZmu5MfCLbp6mZX+NrK+5NOSbt0H
+	 F+m/Li60nMjKUVSHwJTUrYAl3DqEELle697lkVgdr1181q/5EooNg+BccPpmdx
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 From: 597607025@qq.com
 To: linux-nfs@vger.kernel.org
 Cc: Zhang Yaqi <zhangyaqi@kylinos.cn>
-Subject: [PATCH] tests/nsm_client: Fix nsm_client compile warnings
-Date: Wed, 17 Jul 2024 09:58:18 +0800
-X-OQ-MSGID: <20240717015818.42771-1-597607025@qq.com>
+Subject: [PATCH] tests/nsm_client: Fix nsm_client compile warnings 
+Date: Wed, 17 Jul 2024 10:26:41 +0800
+X-OQ-MSGID: <20240717022641.42982-1-597607025@qq.com>
 X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -68,20 +69,20 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 
 From: Zhang Yaqi <zhangyaqi@kylinos.cn>
 
-when compiling after make
-cd tests/nsm_client
-make nsm_client
+when  compiling after make 
+cd tests/nsm_client 
+make nsm_client 
 then it shows:
-nsm_client.c: In function ‘hex2bin’:
+
+nsm_client.c: In function hex2bin:
 nsm_client.c:104:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
   for (i = 0; *src && i < dstlen; i++) {
                         ^
-nsm_client.c: In function ‘bin2hex’:
+nsm_client.c: In function bin2hex:
 nsm_client.c:122:16: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
   for (i = 0; i < srclen; i++)
 
