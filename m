@@ -1,231 +1,280 @@
-Return-Path: <linux-nfs+bounces-4996-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-4997-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D415937CD3
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jul 2024 21:04:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3105F9382EC
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jul 2024 23:33:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6346AB214CB
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jul 2024 19:04:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEC6A2814B1
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jul 2024 21:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA511482F3;
-	Fri, 19 Jul 2024 19:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HxNNBlFS";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hPtWPby7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4589B146D6C;
+	Sat, 20 Jul 2024 21:33:13 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B272E8C06;
-	Fri, 19 Jul 2024 19:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721415869; cv=fail; b=VhlR5GHHQVOsgLxr2sgwAxxHzPxENQIs3sUzoqoSd6RwPsT7jU+soRhl/rMoPszTKK/dJc7rcpKodobLt+YSIwP5OsvyYjBw8yqVWQy7klnf8jIkbUS7wNNwhm/ejuqvQ3KS2fbEEljV0ctFbLs3gFs7cBQ/kiHBXfl1yEeLjtw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721415869; c=relaxed/simple;
-	bh=lm++fztdX+wK89p2BgFjAs+qzYPouWmaSAGQblEbM4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=g4Jk32nVncMFeqfrUQbYsbUgbrBsQanW2GVmv/OAD3g1honwar0NcOCj1NWWMGXEDDMBmB1gCzC9AAlaKgGrB57fA3h8p56kvhvbH1vAXZXAezxTTletEr60c3alygl6Qtbur1EzxQFf6ZT+dFzvgcmwGGwHarquJGx8zcwp5XE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HxNNBlFS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hPtWPby7; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46JJ0ZpK013196;
-	Fri, 19 Jul 2024 19:04:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=kzp+F0YYhK4lVb+
-	KRJNh2VzUEzXvHc0RgxZSOsal8jw=; b=HxNNBlFS4S0not3PafG1WoaHFl4XjXC
-	sVwNP8Xlp5DInVC9jpECOySoxGtHs+CdVuHOrYp6WMTiALPyxyDjx4IPSsMs0zWf
-	IGYekseQbPawyeHGpGQhBAXbjt8eGyancXoZgrv53H4C+r1A6cva7jshQN8QHsCd
-	hDzJhX3FGYgff3YbT9sGGHbOGHjUEYpTddluKo6qoCOXZebuN9+ZlPpfVKLxDKTI
-	RDkhgq1bjfW07Z0LIuyoKpA2Zv2wtVGZvjjyg6XQRufTvbyr3bjnTmzPrBDYyIsw
-	NLIuGHsLZcnFzMWpUzbIOjPZfhNp1dnk4l1raoEM3v+KWffuk1cqZYw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40fwwvr09k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Jul 2024 19:04:11 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46JH07i2021679;
-	Fri, 19 Jul 2024 19:04:10 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40dwew9d8p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Jul 2024 19:04:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kTeDXIt4S6q/FRx2sRerrOEqxQPJFASUMGcfbJRUv1Ds3unOQ3qavxolSkRpdqJ8fZTi1KOs0Tw4jP/Ue/MNdyAAryLg3t6H0RHBelIICZpUPsxAcvEwLIsXsQbqWTxBKeT2xpnGtmx/5KN6uu7Gh1sQOT+w2aC0DRtBqhd3ggXNQlVyEVkbmGiyErurMqOEuuchX7yNgtbi9rQ8t0V+qAPrsT4UGZukZ3JcvyX1tbHszY1chjzD7SO/J5yj0b2NwXzV4ncEA8SaCwfTeX3Vp+rbUr+8nV4dMKVBDJ4S3jHi1aqJQIgPyFW2CxnbF54Sg5IF5arsXefcRVBo+obZBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kzp+F0YYhK4lVb+KRJNh2VzUEzXvHc0RgxZSOsal8jw=;
- b=YRhBKe6hPG7EuhfYyviHpm14kfLLMyffKO+aNOD0RzfUznFHL4fufTYEBWx8ksRMo2a5UdL6xUxk2V0z21i2EPXXX2fMD3S0GGhgOjfxH0toA26dKcOyWzhqO3UastqvhUfFtFpSZ/8k5XnbuDkzcAXgd5rR4xODZ5giEsY8vv2qTzQiHaYxdS2DCm8bloH+X1UohAM9Ij6jXHrkPROGB+gxpObYV1JohEdQAWBMlGaaMdtx8A/fcs0ILwB5yX5hEGb3mD2Z/CIkTRF3TuJOd2iwfxhwGMWjk0t/b5RXl91zKtOX5GxoF2x89V6K8YH9T3mEu87kaJ/xjWBKWKpl9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kzp+F0YYhK4lVb+KRJNh2VzUEzXvHc0RgxZSOsal8jw=;
- b=hPtWPby7jnUap3XJcKESYJU36bG+Cl80AJ9Cwv9Gq80wR7thm5+nL/OhfpQyaOSopqQ31GEU204KhJ+mLtboGZwWc/d7UDoFOAeYy7+Y7LqXAI7RYGxyKxqgW6LgmjdQJmfieSjSqsmt6J2TBQ/fbzq58mqPmRst36qDIFfr/xk=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH4PR10MB8196.namprd10.prod.outlook.com (2603:10b6:610:246::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Fri, 19 Jul
- 2024 19:03:05 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7784.016; Fri, 19 Jul 2024
- 19:03:05 +0000
-Date: Fri, 19 Jul 2024 15:03:02 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve Dickson <steved@redhat.com>
-Subject: Re: [PATCH] nfsd: don't set SVC_SOCK_ANONYMOUS when creating nfsd
- sockets
-Message-ID: <Zpq4Ziq9YVuGqV7b@tissot.1015granger.net>
-References: <20240719-nfsd-next-v1-1-b6a9a899a908@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240719-nfsd-next-v1-1-b6a9a899a908@kernel.org>
-X-ClientProxiedBy: CH2PR19CA0026.namprd19.prod.outlook.com
- (2603:10b6:610:4d::36) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605604CE09
+	for <linux-nfs@vger.kernel.org>; Sat, 20 Jul 2024 21:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721511193; cv=none; b=lTIFFz6MwxPcqc5czojqlfdz9yefqhTb+0RaHTXYhLeykYSPjNevOe47AWHUXu0rq1w6s8Qy0IqGqATO/NqYrVlTN0SDYhFrYg2Uh9vznyZ1hnzNrS7VdnTvgfG7+9cIP2zzNkmEy5foMVA2nNyn5D5V7aX1GoAXZe9KpL+DX6Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721511193; c=relaxed/simple;
+	bh=eiO8t/161g67fZki6HGMZFC5kyTAw+3gYpQbhlADmaI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=P3TI/6cXbVxWsZvnXjm9ptC7sIOuvKiU1GRfBtbyHDLNR7rWOGQEM1SPs2uCpQgCDxOkMdA9Nn3viB4i1RTvMo9aNlo6T8h2o+C77x6MWkIHN1/Z63yRyFXMqSkLPKPFUkN/A1nGpAnb8Cr7y4OiXRBolB43QzOVTp5R3Uzx1zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-396c41de481so45240145ab.3
+        for <linux-nfs@vger.kernel.org>; Sat, 20 Jul 2024 14:33:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721511190; x=1722115990;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ihLxrsOhIj2j4UTX6DqcbntyPixc5QK3lMbZ//Qm7Bw=;
+        b=M+cBYNht5ufJfDCfNrC5A2ubyeHuqYeLry3aJq8NdNBkot8dBiEncAsnliDeOPDEiE
+         iUDO8Nm2apM9qLBh+hzUmy4YdCH+8y5mfZabU1NYfvuooa4oqj/6VpEznyY2+l2JSv2D
+         VaNl+XjYBnlZSaGpOE2I8LoA7SSC3aZxOX5IfqZpTHW66/rgppIlbMjTGWbMLeGefdLP
+         sh5jigFQcJw/WYV6mLO0+YeaZQ9VANKAYB6uys4pT/M3aXUc4M4EY/ITZkhgBzBvpWfr
+         KkyDgYSo2noFHC39L31UTP8UKnYtzlZ+49AFym3phrvhT7cAxnioIdZeT1bY6MrFVJKC
+         wumw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyA59xvMyk5h/F3T0zu//XNgDdiwtBrNMhpRz4w1RA+Swefxu/sWqy2Mr1FE0stdV2kfjfSNHwBO/LiiHymcF/yduXYD6AzFSD
+X-Gm-Message-State: AOJu0Ywlsz5m6rUf864vAHrC5qS7Sjsyzvhol+xCGaBrSMBLyebSTOl5
+	0CTWU2iDCCUVdOc/GoMT2sZFliafv6MnxjCdxk7fmMLY5h2pEQSdpBlv46HF9O9/fLTb2dVGU5g
+	PW+JrOm1waWP9SpYb1CruvwDuxCeaJgRUNO7T8/Hj7JdEyDPSEp4o9oo=
+X-Google-Smtp-Source: AGHT+IH6LJq/qzqbcxO1ruHYTl3FHFxNrJwmPy4R/j39QN4z8JyF8Yvx/VpmZb7Do8KO7C1igoqH/swXmz6ppWPcE7jXiZ8tuQ7u
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH4PR10MB8196:EE_
-X-MS-Office365-Filtering-Correlation-Id: e50d54bc-8089-4dae-ac94-08dca8256bdf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?dxMW+N9L9sPO4AroV1hwCzXQboY4ZuBmwROSrzHsU63c1P3vdmxSThfvW84E?=
- =?us-ascii?Q?lmhIYba4gTFpaUuk2DP3x5jZEzJ/5mHkdiGBLgg5fMQ8dMvYCkdVCY/ko+vR?=
- =?us-ascii?Q?/9m2V5QTRwrBT969Fii0cyIoK2j//sz+xjKg0cN07Nj+i/ICbtUGo0c+3PPb?=
- =?us-ascii?Q?M+b552G0FB/rrpBM4ogtl3FO4Du36R5TVB0ywPbWgtm0bZaHAZIgNgrsitX9?=
- =?us-ascii?Q?STTq2kZUqmFq2Jq348eNjW+0DtaInHaaCIKpFbBvuzTh80ECNNvfWwGLZCzp?=
- =?us-ascii?Q?YD1K6SqZdfSw/zn+agL90YL4eh9BXBl9eme/wbajtjvVl5+yt82wydUKAm5j?=
- =?us-ascii?Q?2A6MjrVqiupTwNJqaq9QqTmtgMjrmaYbmVaK77m7SZW3vJxtUErbvBiN12p4?=
- =?us-ascii?Q?5l8MZ6wGiWfqvKIAwUde7XDfWoo5UfKxoOcE7nIrS4Lj4aGi/242Nd3sbSup?=
- =?us-ascii?Q?Benk5zV+SPKAoDC1N8AIVeV+nJ6x0q+AlEznTiEuzXy3S7AosSs+UammTjDw?=
- =?us-ascii?Q?Xph1qPwS0e0BXd4AWYJhsfzgvjri02qz5Skv3CFjvEMXzT+CnHvgCDQzpEce?=
- =?us-ascii?Q?H1TC8dyOCV80H0awpi1M6URE9d9DnSeWcGf3KH1lJhN+j6452C6f3eD+F1R8?=
- =?us-ascii?Q?c1ajRRfsp0VP8EZB3sE9tVh7He1EdltIhPLkl2/aEQPdxyoqaxpEa1NiYnwK?=
- =?us-ascii?Q?02MirhxaIb+flf77r+BgJAd1HbIjVWPUu7PdQh4ebrt0DycMRRYeDdRQ0yku?=
- =?us-ascii?Q?xU2KH1PfE1sVNBZGxdHgVnA+cUdqwrxOtgczFJCJzy8KP5bU78rDNnB8cAw8?=
- =?us-ascii?Q?K92MrdJLyQabrvoB0g5JwoPSx3m6f+3O066JSGuJ9eT3jJNJ1ZyeNQkn1TYI?=
- =?us-ascii?Q?/q9KdruDTT2fgL5wjOtknSFeK74CE50QDwVuAooaP4ZFOD2OXSvhdGIqwgJJ?=
- =?us-ascii?Q?Z/vZaNnpHGR585N+HkI/SfDyH7+NZj4BmQ9hIiNLmiZpuQPUEt6iZsdtXiV1?=
- =?us-ascii?Q?Kb3kFo76t8ypfVoEzkzribD9XoZpz1oCKoKPOKOycPpWasfJFLwR5TIL7mpv?=
- =?us-ascii?Q?eHLyOO2TrewUqHK5qZcw7i/ytzyhCz/eXe5HBG6UqhccR937BMyjRF/kQN9z?=
- =?us-ascii?Q?wrsYiiruHicOhz859CTMxZ3/5+ItjqBZvaUeIP+1CGUpyQRQgvLTBhWVuZvo?=
- =?us-ascii?Q?gquPJ9EoMDaxy/c0W0pT8x1mXVGw3gKQErNvWOeERVjHiTso4eH1CVaXqHxr?=
- =?us-ascii?Q?cYieT12W67L0hFKnXuLu4DIRIxEutrUwtaZlJQpBgBiFvfKOZV8HUhSCPmU2?=
- =?us-ascii?Q?Oj9gX8O0pxtiKBdX5tJ/OOkmUXqyMdMt8aF0y/Fub4o54Q=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?mbZ5epSJqE/P0Bh5Syp++G2KZEv3TRu3sRZxZY9lH5cdED4AOCLBwp/lzrzH?=
- =?us-ascii?Q?YZLbkm5NU6HCeeEr7uPQRPRj8H2XOkfA7XoB3rWsySXpqQEKmx/CPsvhCIJy?=
- =?us-ascii?Q?sdyLbYGnrYhS7uicgjvdAO+Lw5mWCyCmZYlYRtN/MfXTD+/o6VMWjvMcX5Gm?=
- =?us-ascii?Q?svuHeidLbc1j2PTgPFPObowZBBVEWkzqcr7+qDzRtbiCEwPAlrj2rp6aEfm3?=
- =?us-ascii?Q?eWNB6rCSQ47u7Ru9pUF5HDH9w4W5AfMglUIQ3lT+IHenVu0s92naglbOK5D3?=
- =?us-ascii?Q?RAmS8vcWtURGCDf6rkDIc1Gvm4QaGapJLZ8G+ED91l17weaBpBs3d4BGKJVX?=
- =?us-ascii?Q?tJUgpBxgS+qKVcBfllVataHI1pCj9dWt5PRSMMTMbhsNmD1p6p0DjwMBSf/O?=
- =?us-ascii?Q?NNiJSV4GsO0mnDGsXPWtd3R5wZKh2S/X9femF2NhDHwZeVe+L48zg4PrOopx?=
- =?us-ascii?Q?TQPL5hdjMG85Zlqzi2PqYyOA+oJq9VdFy3LpVsl0jzN4kfmtHkq9AX+QCWFF?=
- =?us-ascii?Q?zT5+KjesozkKL4PrXtLbcHqUhvZ88o41N8sVMvagPpE/n0KqwwTS5tgINAkr?=
- =?us-ascii?Q?X/YKwf8jOQZZ2IIILoN9gEwv/yB6Gq2S73f3Jt8ug01NAGTGvcrWJnVFjksq?=
- =?us-ascii?Q?GkS0TYl+K7VH8YN8BUCP17+jTYenra6WVuq2ynN8/c+gE++zJk7SVCTPOonZ?=
- =?us-ascii?Q?JPMiZUf1iNS6YdeQ6/XGtfrppa+dWvzEgZPsBZ4zyfrkMEdlkBiNj1W1j1c0?=
- =?us-ascii?Q?uwd+3CTfPZPJpMenkBlq6nrEIBi3OC0JN4/948ksxB8WEi+FLq68FsmFxot/?=
- =?us-ascii?Q?LS9Q9McKPeaIGFUrkwcRsz1U27SAMAeECopgt2Mrbn6a0u/vFk8VxqA7UdDH?=
- =?us-ascii?Q?6yiH03ws8WJ4iWjjeD5GStZF+1+cWkJ5WuzIkUv/ZaCj+z/V7tV5UtfMTHYl?=
- =?us-ascii?Q?qvnNDcavnj3mofZor0bSTYB3tWzsW12E9YLD8LKrGWZp6LwTXkVBxoYEj6sb?=
- =?us-ascii?Q?nsT+7BFhHF8XvvPI1aui05b7Daz0Hi1UzK4gyg5z1JwRTREc51yNhCdKnzWs?=
- =?us-ascii?Q?v99UX53N9jsXCi8DJJEU8/o00H81gIcdXehZkGlSS27EMOJumKXh9qTMcw4q?=
- =?us-ascii?Q?kBAXOmGS9QfBvUzT5Jg8ngGFqfW9daBt/3sYbJYYnwFn/s2UpnJ3+zq++w27?=
- =?us-ascii?Q?6p68mi6b4YZWZQ+Q76gAXTtDEv69Zv0LDQl42YBwkZ4AWc5ZKRmQPJZdrlsd?=
- =?us-ascii?Q?OM977/axoOXbYxRTzMQ/MeuhYyrN/fik3QWF1lwcQuiWGenOarK+xsi5D5Ew?=
- =?us-ascii?Q?Fb5Oj+p1mq6hmQ5FWxGw6pPWngaDoFJUebXDgkaw0SHa8aSjbvOyY5TZ9nEc?=
- =?us-ascii?Q?3DV6o/WGaStyAHFLt35jwJ4wS7KA84/vXwO+XeB5cF991mskU0DTAvPj1Hzd?=
- =?us-ascii?Q?+KccJe/nd7E2ZGCYE+AMVtctsMZ6IgXibO7yOMtg+uE3BD2JYmIZigVjXoto?=
- =?us-ascii?Q?mfIYMa7X3nJ9vTP3BvZUKU4IlTXpuNZbGcY3zCb70k1xzCZ6MjeaugA1vLRp?=
- =?us-ascii?Q?+IkA3Evx3eTvLxaqqUnowu66dKg+amajVQIdL49Q?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	M+DdyVewed9sYPtSha9MM4xsxgAOzrP8KBGaDOvU4mzl4wgzJ1z3UU68NP3dc6X3vIB+4P3QEyuSm1CL6/fEqjdpmdA0C3bKcEMkFjWQn7MDhOQ7KMkx4aSN6aHQij6egpBLsjEJXXDiYkVuIJml3iXYtkRuWwgKxiBww8YzkxHgBi1gB5YXb8jGSA3dpZomPk0Xv/EaVzzo3OxGsssp91flenIM8C6GarjZgk9aDu/cjliPcer+f2Vy99G+t/4/xYcrT3UyLMNLPsmFTNs6PPa22+9heTXV1eEp63CUmPhXMJnhA7achvTYeIBev2U2ZY+3pX5alkmYhgNPvBNbLJ8vAKcX0niZ0jQqF/Z0Pat1O/PPkyUmeF5Ma+Mt84UK2o54sozuMZR5GuCHYjAJxYHEQe8c/KiOMmJxYciflQR/kclHr2V3TNnse96uiW+TXIRzJS6oucojx+u9aGsyzBHecHOQ6y3Oh3zCMUkppg1SRhB2tqTLet4IDGQuWWTZSf0aCntBXHE2QyKEii6ft0mGbxxC4KP9W9YcBEZw/DOwGUH6SajOp1/s6kA/prMU8enpiOlrZFAzLjsBAiW1ZcV7DPT5EoF3HU8kKKLBGyY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e50d54bc-8089-4dae-ac94-08dca8256bdf
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2024 19:03:05.7914
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jk5iJBYyrrl4C99nl55KZb753aYYZ8RQoQUFa3Ep6LhfyOMfaQGlY9mMPxrXcRKeVKrjgvkXw8sCIymcTXIr0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR10MB8196
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-19_06,2024-07-18_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2407190142
-X-Proofpoint-GUID: BKBHrJJWkQOgssVmVGJrY0V6RKIa39b_
-X-Proofpoint-ORIG-GUID: BKBHrJJWkQOgssVmVGJrY0V6RKIa39b_
+X-Received: by 2002:a05:6e02:1d94:b0:382:56bd:dfbc with SMTP id
+ e9e14a558f8ab-398e509bcecmr1963015ab.2.1721511190529; Sat, 20 Jul 2024
+ 14:33:10 -0700 (PDT)
+Date: Sat, 20 Jul 2024 14:33:10 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fd1bc1061db48ead@google.com>
+Subject: [syzbot] [nfs?] INFO: task hung in nfsd_nl_rpc_status_get_dumpit
+From: syzbot <syzbot+68f089d6e18e8b1d41eb@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
+	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	neilb@suse.de, syzkaller-bugs@googlegroups.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 19, 2024 at 02:55:53PM -0400, Jeff Layton wrote:
-> When creating nfsd sockets via the netlink interface, we do want to
-> register with the portmapper. Don't set SVC_SOCK_ANONYMOUS.
+Hello,
 
-NFSD's RDMA transports don't register with rpcbind, for example.
+syzbot found the following issue on:
+
+HEAD commit:    d7e78951a8b8 Merge tag 'net-6.11-rc0' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=139afe79980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4420b8b2270c1b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=68f089d6e18e8b1d41eb
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7f08d7d67259/disk-d7e78951.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b8fd351d830d/vmlinux-d7e78951.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1bb4a3d18f9e/bzImage-d7e78951.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+68f089d6e18e8b1d41eb@syzkaller.appspotmail.com
+
+INFO: task syz.4.464:6984 blocked for more than 144 seconds.
+      Not tainted 6.10.0-syzkaller-09703-gd7e78951a8b8 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz.4.464       state:D stack:26160 pid:6984  tgid:6982  ppid:5094   flags:0x00004004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5188 [inline]
+ __schedule+0xe37/0x5490 kernel/sched/core.c:6529
+ __schedule_loop kernel/sched/core.c:6606 [inline]
+ schedule+0xe7/0x350 kernel/sched/core.c:6621
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6678
+ __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+ __mutex_lock+0x5b8/0x9c0 kernel/locking/mutex.c:752
+ nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+ genl_dumpit+0x11c/0x220 net/netlink/genetlink.c:1027
+ netlink_dump+0x552/0xcc0 net/netlink/af_netlink.c:2325
+ __netlink_dump_start+0x6d9/0x9b0 net/netlink/af_netlink.c:2440
+ genl_family_rcv_msg_dumpit+0x1e1/0x2e0 net/netlink/genetlink.c:1076
+ genl_family_rcv_msg net/netlink/genetlink.c:1192 [inline]
+ genl_rcv_msg+0x470/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2550
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+ netlink_unicast+0x544/0x830 net/netlink/af_netlink.c:1357
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg net/socket.c:745 [inline]
+ ____sys_sendmsg+0xab5/0xc90 net/socket.c:2597
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2651
+ __sys_sendmsg+0x117/0x1f0 net/socket.c:2680
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff23e775b59
+RSP: 002b:00007ff23f596048 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007ff23e905f60 RCX: 00007ff23e775b59
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 000000000000000c
+RBP: 00007ff23e7e4e5d R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007ff23e905f60 R15: 00007ffdc08a1768
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/30:
+ #0: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:327 [inline]
+ #0: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:839 [inline]
+ #0: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x75/0x340 kernel/locking/lockdep.c:6620
+3 locks held by kworker/u8:3/52:
+3 locks held by kworker/u8:4/62:
+ #0: ffff888029d7b948 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work+0x1277/0x1b40 kernel/workqueue.c:3206
+ #1: ffffc900015d7d80 ((work_completion)(&(&ifa->dad_work)->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1b40 kernel/workqueue.c:3207
+ #2: ffffffff8f763ce8 (rtnl_mutex){+.+.}-{3:3}, at: addrconf_dad_work+0xcf/0x1500 net/ipv6/addrconf.c:4194
+3 locks held by kworker/1:2/928:
+ #0: ffff888015480948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x1277/0x1b40 kernel/workqueue.c:3206
+ #1: ffffc90003c7fd80 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1b40 kernel/workqueue.c:3207
+ #2: ffff88802d224240 (&data->fib_lock){+.+.}-{3:3}, at: nsim_fib_event_work+0x1bb/0x26e0 drivers/net/netdevsim/fib.c:1489
+2 locks held by kworker/u8:9/2475:
+ #0: 
+ffff8880b923ec98 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:568 [inline]
+ffff8880b923ec98 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x7e/0x130 kernel/sched/core.c:553
+ #1: ffff8880b9228a48 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2d9/0x900 kernel/sched/psi.c:989
+2 locks held by getty/4849:
+ #0: ffff88802f1020a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
+ #1: 
+ffffc900031232f0
+ (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0xfc8/0x1490 drivers/tty/n_tty.c:2211
+4 locks held by kworker/1:3/5137:
+ #0: ffff8880b923ec98 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:568 [inline]
+ #0: ffff8880b923ec98 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x7e/0x130 kernel/sched/core.c:553
+ #1: ffff8880b9328a48 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2d9/0x900 kernel/sched/psi.c:989
+ #2: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:327 [inline]
+ #2: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:839 [inline]
+ #2: ffffffff8dbb29a0 (rcu_read_lock){....}-{1:2}, at: check_lifetime+0x73/0xab0 net/ipv4/devinet.c:719
+ #3: ffffffff94dea408 (&obj_hash[i].lock){-.-.}-{2:2}, at: debug_object_activate+0x199/0x540 lib/debugobjects.c:709
+2 locks held by syz.0.392/6658:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_doit+0xe3/0x1b30 fs/nfsd/nfsctl.c:1956
+3 locks held by syz.4.464/6984:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffff888078416678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x154/0x9b0 net/netlink/af_netlink.c:2404
+ #2: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+3 locks held by syz.3.482/7069:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffff888065de7678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x154/0x9b0 net/netlink/af_netlink.c:2404
+ #2: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+3 locks held by syz.1.578/7517:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffff888063317678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x154/0x9b0 net/netlink/af_netlink.c:2404
+ #2: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+3 locks held by syz.3.733/8134:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffff888060faa678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x154/0x9b0 net/netlink/af_netlink.c:2404
+ #2: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+3 locks held by syz.0.772/8293:
+ #0: ffffffff8f801330 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffff88801f9c1678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x154/0x9b0 net/netlink/af_netlink.c:2404
+ #2: ffffffff8dfb7fe8 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_dumpit+0xb1/0x1160 fs/nfsd/nfsctl.c:1550
+3 locks held by syz-executor/8376:
+ #0: ffffffff8f763ce8 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+ #0: ffffffff8f763ce8 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x372/0xea0 net/core/rtnetlink.c:6644
+ #1: ffff888023ff5428 (&wg->device_update_lock){+.+.}-{3:3}, at: wg_open+0x203/0x4e0 drivers/net/wireguard/device.c:50
+ #2: ffffffff8dbbe138 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock+0x282/0x3b0 kernel/rcu/tree_exp.h:296
+1 lock held by syz.3.811/8466:
+ #0: ffffffff8dbbe000 (rcu_state.barrier_mutex){+.+.}-{3:3}, at: rcu_barrier+0x48/0x6c0 kernel/rcu/tree.c:4486
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 30 Comm: khungtaskd Not tainted 6.10.0-syzkaller-09703-gd7e78951a8b8 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
+ watchdog+0xf86/0x1240 kernel/hung_task.c:379
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.10.0-syzkaller-09703-gd7e78951a8b8 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/27/2024
+RIP: 0010:debug_spin_lock_before kernel/locking/spinlock_debug.c:88 [inline]
+RIP: 0010:do_raw_spin_lock+0xe2/0x2c0 kernel/locking/spinlock_debug.c:115
+Code: 65 48 8b 05 d0 3a 9b 7e 48 39 c2 0f 84 61 01 00 00 4c 8d 63 08 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 0f b6 14 02 <4c> 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 68 01 00 00 8b
+RSP: 0018:ffffc90000157890 EFLAGS: 00000802
+RAX: dffffc0000000000 RBX: ffff888019b44600 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffffff8b2cb840 RDI: ffff888019b44604
+RBP: 1ffff9200002af13 R08: 0000000000000000 R09: fffffbfff2856a82
+R10: ffffffff942b5417 R11: 0000000000000000 R12: ffff888019b44608
+R13: ffff888019b44610 R14: ffff888019b44600 R15: 0100000000000004
+FS:  0000000000000000(0000) GS:ffff8880b9200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f9e2ff8 CR3: 000000007d8d6000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <NMI>
+ </NMI>
+ <TASK>
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+ _raw_spin_lock_irqsave+0x42/0x60 kernel/locking/spinlock.c:162
+ class_raw_spinlock_irqsave_constructor include/linux/spinlock.h:551 [inline]
+ try_to_wake_up+0x9a/0x13e0 kernel/sched/core.c:4051
+ swake_up_locked kernel/sched/swait.c:29 [inline]
+ swake_up_locked kernel/sched/swait.c:21 [inline]
+ complete_with_flags kernel/sched/completion.c:24 [inline]
+ complete+0xb0/0x200 kernel/sched/completion.c:47
+ __usb_hcd_giveback_urb+0x389/0x6e0 drivers/usb/core/hcd.c:1650
+ usb_giveback_urb_bh+0x28f/0x570 drivers/usb/core/hcd.c:1684
+ process_one_work+0x9c5/0x1b40 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ bh_worker+0x5a4/0x8a0 kernel/workqueue.c:3569
+ workqueue_softirq_action+0x12c/0x190 kernel/workqueue.c:3596
+ tasklet_action+0x14/0x70 kernel/softirq.c:810
+ handle_softirqs+0x216/0x8f0 kernel/softirq.c:554
+ run_ksoftirqd kernel/softirq.c:928 [inline]
+ run_ksoftirqd+0x3a/0x60 kernel/softirq.c:920
+ smpboot_thread_fn+0x661/0xa10 kernel/smpboot.c:164
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
 
-> Fixes: 16a471177496 NFSD: add listener-{set,get} netlink command
-> Reported-by: Steve Dickson <steved@redhat.com>
-> Cc: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/nfsctl.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 9e0ea6fc2aa3..34eb2c2cbcde 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -2069,8 +2069,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
->  			continue;
->  		}
->  
-> -		ret = svc_xprt_create_from_sa(serv, xcl_name, net, sa,
-> -					      SVC_SOCK_ANONYMOUS,
-> +		ret = svc_xprt_create_from_sa(serv, xcl_name, net, sa, 0,
->  					      get_current_cred());
->  		/* always save the latest error */
->  		if (ret < 0)
-> 
-> ---
-> base-commit: 769d20028f45a4f442cfe558a32faba357a7f5e2
-> change-id: 20240719-nfsd-next-d9582a2c50c2
-> 
-> Best regards,
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Chuck Lever
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
