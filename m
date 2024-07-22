@@ -1,104 +1,144 @@
-Return-Path: <linux-nfs+bounces-5009-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5010-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63D069391CE
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 17:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06E1F9392E9
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 19:01:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFDA6B212FF
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 15:30:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70EC4B21AC9
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 17:01:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B981E16D9D4;
-	Mon, 22 Jul 2024 15:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042B316C451;
+	Mon, 22 Jul 2024 17:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udibmumu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiwS14Ym"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F58C2FD;
-	Mon, 22 Jul 2024 15:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4491C2FD
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2024 17:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721662227; cv=none; b=p8FN06doOpvaxjdxpphp8fwlG6O/IxIkn/c6iJut3nFZAdgI6JLcbN31k7Y7LGuB9e6rGetoRLOOFZ0XA+fw6eYX1bBDGkh/GX/ogb1olU8GjJH3YxHTRAevCspNEA2rRXEY18BgZxJhq7SbdbAHc6uD7sDz4hvmwJMMhRjvHpM=
+	t=1721667697; cv=none; b=ATn372QSW/XDiLzb/08as5FAXWoljkNY73Sf9VZbkI0Z191jd+bmSbL/FtDJEvi1DxdNMYDHi93M8KKRS4PM8JtJFdfeiIhMB20LcBwlcJHKNHhQUuDAOF78kmZCVCp+0EGnY2NTC1iacbWQM6Sf/rvoCxASNPaa283lVZgZ/4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721662227; c=relaxed/simple;
-	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WjkMXh2+Ieay6zEP/Wtr7UfLo4dPHN+SxoK+rirZ2t1ex+JnC55HDr6cbUYB1+fi2PG5vJbSfoVOEjouIdw5x3auBu+UTCH4DCINZW0o3Q1rJEKmmzQmC68U8fmVKQwRIG23RtRnQS68NBQquvB2ECLv2EB5xaeWPedWaQ83mLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udibmumu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F691C116B1;
-	Mon, 22 Jul 2024 15:30:19 +0000 (UTC)
+	s=arc-20240116; t=1721667697; c=relaxed/simple;
+	bh=q0y5b3MTYa/6DYbxPP8pbhlPCiLB+CK+qPsWLjZ0FdM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t5E0piwZae7+FTfPmbsKIdiUAKhDRBrtskdxAyNQRqTYewPCXemw78re2acqoqcUUUG9MUuENlFdLvZiJ7GbrX/bkIe3+BTNhJkXohY6VQYkU1hGOpfAyMGo0Nd9OmO8jZfFSYvUMb7CCn8Zg6QRqdwZZy9U70zgmcKEV3R81KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiwS14Ym; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FE1C116B1;
+	Mon, 22 Jul 2024 17:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721662227;
-	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Udibmumu7SLzxEKxqIecKZDLnygO3K9IPmsYRL3I6hL5eYqNIVWX7mLjSpajAEdtJ
-	 +34Wwg7S23Sx/TsNHnSCLXzlaT8K9BzSvT0TpzDZp4qpSIexecgt4YBIFxTyDVKdR4
-	 zoGjpH6i7DCAVXe/q3qIV7BqGL/VhVJeejTJZQ5AjoBDa5DUQ2nz2ml/skzftzqSlC
-	 5qNp9evMwxpnZuVl0mgCMoNVIFBdte25OlWnbcPfa0aHZjnWFch12yFrsCVCKAOuGg
-	 mqnhjXYfz2YA35SyHO1xRH0Y7C6QIOmi+MTocaJsucU4+99bRjM3aqFDZEN/X/Fw9k
-	 bZ6cWyiYCD1kA==
-Date: Mon, 22 Jul 2024 17:30:17 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R <chandan.babu@oracle.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
-	Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Randy Dunlap <rdunlap@infradead.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 0/9] fs: multigrain timestamp redux
-Message-ID: <20240722-festmachen-lehrstellen-f86d1bd28997@brauner>
-References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
- <20240716-zerlegen-haudegen-ba86a22f4322@brauner>
- <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
+	s=k20201202; t=1721667697;
+	bh=q0y5b3MTYa/6DYbxPP8pbhlPCiLB+CK+qPsWLjZ0FdM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LiwS14Ymdgdv5WkZ7Lr30mEnn6sW0N8NRB542MJhDxM8i6HqVD90sUu5WA55Y944c
+	 bqNuAhnI/imloDNJx3c8uteIKSr0wQNK+1+47eHfd/6qSx0kxnFixW0hIfTIaFJWG2
+	 NPpF2ARiUikYRaqR9ryq2ZwR3xmJMY5hITl0FLlukZXFEReV2KUpqc/XziBUZTIiFX
+	 LAsjTge37m7UT+q915Q8PlchRVHDRJ0LxM1pdsuM6eeuwYJqBPW9dSUfLKaFKNSbzC
+	 j7gcPR3SMgAbwNazTCyS4JwwLZoer/WRqkDQQ6jHFHiErMOenwKs8QMoom2gBC1J2x
+	 3pynRdFRYHcfA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH nfs-utils v6 0/3] nfsdctl: add a new nfsdctl tool to
+ nfs-utils
+Date: Mon, 22 Jul 2024 13:01:32 -0400
+Message-Id: <20240722-nfsdctl-v6-0-1b9d63710eb5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGyQnmYC/2WNQQ7CIBBFr9LMWgxQQqsr72FctDC0ExvaQCWap
+ neXsFHj8mfee7NBxEAY4VxtEDBRpNnnoQ8VmLHzAzKyeYPkUnElJPMuWrNOzHVtb1tVc+MsZHo
+ J6OhZSlfIEHusNEW45dNIcZ3Dq/xIogB/uSQYZ+istgZ7Y7i63DF4nI5zGEokyW9Rf0SZxVOna
+ t30jeBW/oj7vr8BVT8+J+MAAAA=
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2285; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=q0y5b3MTYa/6DYbxPP8pbhlPCiLB+CK+qPsWLjZ0FdM=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmnpBvqVxxQmQxkHqZewfLQ60mbtO7W76b3VJUT
+ DYUBJAW97uJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZp6QbwAKCRAADmhBGVaC
+ FQZ1D/kBhqa8svDSRioqGN0GtB4pY0MIA/gsOvU8+acyRNQs3gDLeWghqEEzt156ryIwyf/eg8l
+ FR+NRzOQQSeDVg1jJA47F0BuxDJcEpAAx4tX6Js3V8KULgrt8FKecnAi2+o0Xhzskt0lPoiafjU
+ 7+uF9el31eO7YpQzVpQPLvlSnpSwQ+wdKxNs9Zte3PGR2QXKORRKSFvEqN6MWU25ABrZE6cAFLR
+ dnTsI7k7pmuina09rOuSbNrkk1uR6+uibCfFyQIgAp/xLk2p3iR6wfJ5WZ7JHH4HboiP8xDIjcW
+ /pIYLnWxjMFo4fGhpCR1wVT2wlIVHvbf/LcvmAIQlY3jo4DdLj80iMWvVdI0GTTt5G5c11rxvXD
+ lw4ec9HBcYrL5NvspeWjCNMq26A1NMTj7CFxGbWC7BTMp/dPAhOU0BfCJIfe58xF6PH9EYvQJMv
+ r51w4AoIhwN2ciC7g6BbsQV+Vk0HaD4aPqV+9ehLUGATUbsRVUhSNK17L1/0PSqZ3vgS0ZYzLGt
+ pOXvyLSTUid7Pl4n9aEljaGqbKuBRVtIbnQzM3FM2iH2M8RPy67b/Tr/R7TI2Phv/G4djKlw1vu
+ 7HB/Cv1p3CJ9KS/vuiII/0YP5PC4H0viT4teXoSnk4ALw2/O1CoGU+mtb98XdoxrWbGEUHCCynd
+ varAsMyA32NHQmw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Jul 16, 2024 at 08:45:16AM GMT, Jeff Layton wrote:
-> On Tue, 2024-07-16 at 09:37 +0200, Christian Brauner wrote:
-> > On Mon, Jul 15, 2024 at 08:48:51AM GMT, Jeff Layton wrote:
-> > > I think this is pretty much ready for linux-next now. Since the latest
-> > > changes are pretty minimal, I've left the Reviewed-by's intact. It would
-> > > be nice to have acks or reviews from maintainers for ext4 and tmpfs too.
-> > > 
-> > > I did try to plumb this into bcachefs too, but the way it handles
-> > > timestamps makes that pretty difficult. It keeps the active copies in an
-> > > internal representation of the on-disk inode and periodically copies
-> > > them to struct inode. This is backward from the way most blockdev
-> > > filesystems do this.
-> > > 
-> > > Christian, would you be willing to pick these up  with an eye toward
-> > > v6.12 after the merge window settles?
-> > 
-> > Yup. About to queue it up. I'll try to find some time to go through it
-> > so I might have some replies later but that shouldn't hold up linux-next
-> > at all.
-> 
-> Great!
-> 
-> There is one minor update to the percpu counter patch to compile those
-> out when debugfs isn't enabled, so it may be best to pick the series
-> from the "mgtime" branch in my public git tree. Let me know if you'd
+Hi Steve,
 
-I did that now and pushed to vfs.mgtime. Please take a look as I rebased
-onto current master and resolved conflicts in xfs and btrfs. Thanks!
+Here's an squashed version of the nfsdctl patches, that represents
+the latest changes. Let me know if you run into any other problems,
+and thanks for helping to test this!
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v6:
+- make the default number of threads 16 in autostart
+- doc updates
+
+Changes in v5:
+- add support for pool-mode setting
+- fix up the handling of nfsd_netlink.h in autoconf
+- Link to v4: https://lore.kernel.org/r/20240604-nfsdctl-v4-0-a2941f782e4c@kernel.org
+
+Changes in v4:
+- add ability to specify an array of pool thread counts in nfs.conf
+- Link to v3: https://lore.kernel.org/r/20240423-nfsdctl-v3-0-9e68181c846d@kernel.org
+
+Changes in v3:
+- split nfsdctl.h so we can include the UAPI header as-is
+- squash the patches together that added Lorenzo's version and convert
+  it to the new interface
+- adapt to latest version of netlink interface changes
+  + have THREADS_SET/GET report an array of thread counts (one per pool)
+  + pass scope in as a string to THREADS_SET instead of using unshare() trick
+
+Changes in v2:
+- Adapt to latest kernel netlink interface changes (in particular, send
+  the leastime and gracetime when they are set in the config).
+- More help text for different subcommands
+- New nfsdctl(8) manpage
+- Patch to make systemd preferentially use nfsdctl instead of rpc.nfsd
+- Link to v1: https://lore.kernel.org/r/20240412-nfsdctl-v1-0-efd6dcebcc04@kernel.org
+
+---
+Jeff Layton (3):
+      nfsdctl: add the nfsdctl utility to nfs-utils
+      nfsdctl: asciidoc source for the manpage
+      systemd: use nfsdctl to start and stop the nfs server
+
+ configure.ac                 |   19 +
+ systemd/nfs-server.service   |    4 +-
+ utils/Makefile.am            |    4 +
+ utils/nfsdctl/Makefile.am    |   13 +
+ utils/nfsdctl/nfsd_netlink.h |   96 +++
+ utils/nfsdctl/nfsdctl.8      |  304 ++++++++
+ utils/nfsdctl/nfsdctl.adoc   |  158 +++++
+ utils/nfsdctl/nfsdctl.c      | 1570 ++++++++++++++++++++++++++++++++++++++++++
+ utils/nfsdctl/nfsdctl.h      |   93 +++
+ 9 files changed, 2259 insertions(+), 2 deletions(-)
+---
+base-commit: b76dbaa48f7c239accb0c2d1e1d51ddd73f4d6be
+change-id: 20240412-nfsdctl-fa8bd8430cfd
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
