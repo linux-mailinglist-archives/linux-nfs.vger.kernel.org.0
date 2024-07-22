@@ -1,149 +1,105 @@
-Return-Path: <linux-nfs+bounces-5002-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5003-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DFC29386A6
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 01:25:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D85D1938BE0
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 11:17:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5AF041C20A58
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jul 2024 23:25:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 164581C20C91
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jul 2024 09:17:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4F121119A;
-	Sun, 21 Jul 2024 23:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4066A16A37C;
+	Mon, 22 Jul 2024 09:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HLMV2/7t";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCJcAuJX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HLMV2/7t";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UCJcAuJX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLZ0IS9N"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63738C8D1;
-	Sun, 21 Jul 2024 23:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A464168C20
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2024 09:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721604334; cv=none; b=a3aHbWpRXuH044C0co2WVZxigOW7nMuHyWosDrGQl15QvXWHE7rq3Q14Ai3fTjnLOTMCs8BoIYd3+/VHJLiRjcTf8ZqlwwpHVNluvaz7ObTipNHQcWaXK+tzXgJhYcqBa3sRwHdahp1uP6Biq/+2Ag+JKujd1VJvdS0RlP6AXkQ=
+	t=1721639845; cv=none; b=UM8Ny/GpbsD7ke8NFYJzp1966OB+nK4Al/2/eLSIf7QFH10lgz/hLvkG0NohpTlY7+v1ATixclux4VHcbGTPPtKhTeRjvshqhQ96a7CoZtacWWUSVmtgscy7SP/b1h8sVURqFw4g1IQu346xAWgJqPGf8UMElbcHC0qlM0d6OZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721604334; c=relaxed/simple;
-	bh=CbaYzrUD2iMm2wdIHqFl4k72sqXFd+rW/EZyjaakQ+A=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Gx8rKNV90gDRW1rnckZg7z9Mo1uJ/bZpmNpfLlRmrZrkOvIxlccCW4I25uEp1yAQFQrkPEp8pv8dzkFiAriHyHR7tx1OjXPCVRGTrdNpAE61IFFd9G65RXjkTHxNpf7bAF+TDkD9VS1wEULgwrpldPzBg8JDsqHeKk4sDrJF8GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HLMV2/7t; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCJcAuJX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HLMV2/7t; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UCJcAuJX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1721639845; c=relaxed/simple;
+	bh=E30xYizy50M/gnD5hNpv7Bp1+w+yMzrpUDqXA5Ku56Q=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qT6+UjXbk/X4UhXXtq5jJaMctkD3N3/yq/+FSk3Bm7rXKoIyWtlg5tQ2uZvPsUgtrKuAfYgOm4kPHltLiaurlTqD6zMfqtqEUcWogOkWpXbFGGcS4lSO4PpCtCWL+NEOG3iVliXI5gP9U5nzFIBkFteXX+5t+Nkswo5OZRNKOrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WLZ0IS9N; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721639841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dHyfL7iUIRrfiNyEs/Fnf/n7vTlVpaDSivpVqXnkDlE=;
+	b=WLZ0IS9NM/ULaZ93Nyh2/HhC66q+1vh/w7yCzDaUEvG7ksceDW8tuGyPAM4rJqh+9bXApQ
+	vSYAKGP95iH/vr7AlCaOqGb6Y7Y/fbCvu/xmdrnCJENYTuAyjMnTWiRKgfL9Y0/r/wiLvm
+	6LGYds28RogtqJ1UTKyEgWkziqSThcE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-CdUF98RMPmWm2gCRS3l-8A-1; Mon,
+ 22 Jul 2024 05:17:17 -0400
+X-MC-Unique: CdUF98RMPmWm2gCRS3l-8A-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7778B2189C;
-	Sun, 21 Jul 2024 23:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721604330; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk1jHAwGkiu6UCef6ZEZVtApSi1BPm7kBs9tfGFJ7rk=;
-	b=HLMV2/7tM9cqZXpRQyjpAFh5lB+OG+Wj19ADR8xdY9ZpAYVe8HCzz8zOP3/pDlZeGflgiu
-	fYBBVrITfbff3irQYEBSzeqSc5XraQ1VPdvb4TtS/uAR4vh+7GNJUMfUw70ee6YPRKDeAa
-	FGyyghTHr2C+JyCPuJsoC827Px8t8D8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721604330;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk1jHAwGkiu6UCef6ZEZVtApSi1BPm7kBs9tfGFJ7rk=;
-	b=UCJcAuJXXRo9nEzL+fb885jzBJ0ABf3lYlPXesaj2jAg4ZAp4ueTAGZ2mW5nSfVBtXgttU
-	UxinaAERnUkaVUCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721604330; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk1jHAwGkiu6UCef6ZEZVtApSi1BPm7kBs9tfGFJ7rk=;
-	b=HLMV2/7tM9cqZXpRQyjpAFh5lB+OG+Wj19ADR8xdY9ZpAYVe8HCzz8zOP3/pDlZeGflgiu
-	fYBBVrITfbff3irQYEBSzeqSc5XraQ1VPdvb4TtS/uAR4vh+7GNJUMfUw70ee6YPRKDeAa
-	FGyyghTHr2C+JyCPuJsoC827Px8t8D8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721604330;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lk1jHAwGkiu6UCef6ZEZVtApSi1BPm7kBs9tfGFJ7rk=;
-	b=UCJcAuJXXRo9nEzL+fb885jzBJ0ABf3lYlPXesaj2jAg4ZAp4ueTAGZ2mW5nSfVBtXgttU
-	UxinaAERnUkaVUCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 67430132CB;
-	Sun, 21 Jul 2024 23:25:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MJNaB+eYnWb9VwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 21 Jul 2024 23:25:27 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2E441955D56
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2024 09:17:16 +0000 (UTC)
+Received: from bighat.boston.devel.redhat.com (unknown [10.22.8.88])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2AF5A1955D45
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jul 2024 09:17:16 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] rpc-gssd.service has status failed (due to rpc.gssd segfault).
+Date: Mon, 22 Jul 2024 05:16:38 -0400
+Message-ID: <20240722091638.53546-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <kolga@netapp.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Lorenzo Bianconi" <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Steve Dickson" <steved@redhat.com>
-Subject:
- Re: [PATCH] nfsd: don't set SVC_SOCK_ANONYMOUS when creating nfsd sockets
-In-reply-to: <Zpq4Ziq9YVuGqV7b@tissot.1015granger.net>
-References: <20240719-nfsd-next-v1-1-b6a9a899a908@kernel.org>,
- <Zpq4Ziq9YVuGqV7b@tissot.1015granger.net>
-Date: Mon, 22 Jul 2024 09:25:07 +1000
-Message-id: <172160430713.18529.16870160544594676027@noble.neil.brown.name>
-X-Spam-Score: -4.10
-X-Spamd-Result: default: False [-4.10 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Sat, 20 Jul 2024, Chuck Lever wrote:
-> On Fri, Jul 19, 2024 at 02:55:53PM -0400, Jeff Layton wrote:
-> > When creating nfsd sockets via the netlink interface, we do want to
-> > register with the portmapper. Don't set SVC_SOCK_ANONYMOUS.
-> 
-> NFSD's RDMA transports don't register with rpcbind, for example.
+From: Paulo Andrade <pandrade@redhat.com>
 
-For RDMA, what does inet->sk_family and in->sk_protocol contain in
-svc_setup_socket()? 
+Ensure strings are not NULL before doing a strdup() in error path.
 
-Could that code detect that it doesn't make sense to register the socket
-with rpcbind?
+Fixes: https://issues.redhat.com/browse/RHEL-43286
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ utils/gssd/gssd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-NeilBrown
+diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+index d7a28225..01ce7d18 100644
+--- a/utils/gssd/gssd.c
++++ b/utils/gssd/gssd.c
+@@ -365,12 +365,12 @@ gssd_read_service_info(int dirfd, struct clnt_info *clp)
+ 
+ fail:
+ 	printerr(0, "ERROR: failed to parse %s/info\n", clp->relpath);
+-	clp->upcall_address = strdup(address);
+-	clp->upcall_port = strdup(port);
++	clp->upcall_address = address ? strdup(address) : NULL;
++	clp->upcall_port = port ? strdup(port) : NULL;
+ 	clp->upcall_program = program;
+ 	clp->upcall_vers = version;
+-	clp->upcall_protoname = strdup(protoname);
+-	clp->upcall_service = strdup(service);
++	clp->upcall_protoname = protoname ? strdup(protoname) : NULL;
++	clp->upcall_service = service ? strdup(service) : NULL;
+ 	free(servername);
+ 	free(protoname);
+ 	clp->servicename = NULL;
+-- 
+2.45.2
+
 
