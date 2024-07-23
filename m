@@ -1,113 +1,128 @@
-Return-Path: <linux-nfs+bounces-5018-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5019-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBBC393A36D
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 17:00:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA74693A38F
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 17:13:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B7961F23A7B
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 15:00:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9470E2845A7
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 15:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5164B154BE8;
-	Tue, 23 Jul 2024 15:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFD4ivup"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09AD156C52;
+	Tue, 23 Jul 2024 15:13:35 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA0D154433
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 15:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6EE15445E;
+	Tue, 23 Jul 2024 15:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721746820; cv=none; b=kP1bpSTfwIlq1IZRa1FzKGxwAM4ehJBvCBRWXCurez1jw5n9ApU4tR6ltG+DCzEJMhuL6G0sEQ6SEEYnhIM2xN5nn8SBnq8I6IZu1mWCAl2840GR6MyGCuIFxEdsTKX5eyBhXrVpf7enlYQPD+VGodOrHhtRkuMUoz/qKxCrq2s=
+	t=1721747615; cv=none; b=Wv67X7x6L4G5ss5NxDNZzpWP3SEZ6XTr+hyICpMz8WgAgP8O5CZSujQQhfQNY073Nzq9TCZG5O7jxN0o6QsqUNZNUeeTBmKr1IGWDi048Odz+mZeS3jG+YW8SAWc/rEojnN/t03KKkVs4FXM+53cTSrQIoiTEWRQ53p1gKDu5rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721746820; c=relaxed/simple;
-	bh=sbiejUL7m2hGyKh+nA0uq2pUIy1GdtI/GzU814h8yA8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gN3qYV4XrQB+MBbLQjmT/JS8KnivhIyOWZmIl45DfeVPbVEWkLdvifdV0F9lnEcc7lxcl3BWxN+kvGP6tUtaKJmKfdOCbvUvC451gFiL+H+hQ+JAAGUVjGEDVaP0xqik+C6k2QPK27m0XeBTNl7iATMNIrDm7VHjbB5PafWVKKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFD4ivup; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4218C4AF09;
-	Tue, 23 Jul 2024 15:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721746820;
-	bh=sbiejUL7m2hGyKh+nA0uq2pUIy1GdtI/GzU814h8yA8=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=HFD4ivuptHd90LCwirUPsrLk6zuuzHS81W8kafsMJsEQ+hKxS0FxN1oaOHu12hB4f
-	 UBcknslmmKcXTVMioXDrsFb2X/nGZBbP8VZKTZcda5GegOph9FmDZJttSQ2Jn1Ygya
-	 nfh7Qif3AO0DKWv7BDm7nNK+m3/JS9T11naDMqLHr9QVR5aHIdycpS986XRj6CIFsn
-	 0q8SHj9CfBD/VfXFUPkanVrDStN1gKUvqcbDbT5ZfCIHGW/KZ/GeEU08MnOo35VY7P
-	 21u0EvpwSXMlD2pNo3ni5rKoMnnCyUHpGwYyG1mrDjergTzgqVVDfAv+Dtz6KTxPD4
-	 I/2uTElxS6hgw==
-Message-ID: <9b556bf4be06b7200d4912160548aa4a92b04780.camel@kernel.org>
-Subject: Re: Limits to number of files opened by remote hosts over NFSv4?
-From: Jeff Layton <jlayton@kernel.org>
-To: Brian Cowan <brian.cowan@hcl-software.com>, linux-nfs@vger.kernel.org
-Date: Tue, 23 Jul 2024 11:00:18 -0400
-In-Reply-To: <CAGOwBeW31AThuSLW-aWE0wAz302qaXDaCKCOmmOPjCewB8rkgw@mail.gmail.com>
-References: 
-	<CAGOwBeW31AThuSLW-aWE0wAz302qaXDaCKCOmmOPjCewB8rkgw@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1721747615; c=relaxed/simple;
+	bh=Za5OmoIPnwYq3WL7lttx6A0b9aUoBbyxeW7yzzYMZEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UBAMgY2r5HCpkTGc1Y5Clsy0UezrNONt1TLHVTfu0MaSSaQicaPfgao3774+xgfBOCOYLMbXWvwfbWUc0C0Ypi61dyXeMQuXMBL/+Hxw8uS7RjkqoHUfLeS3lQECoePRxV+DnJlFl5nCBPBqMQExwyq/NmwLStnx/6/XRRnSvw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3B68961E5FE01;
+	Tue, 23 Jul 2024 17:13:22 +0200 (CEST)
+Message-ID: <e49eb11d-bd62-434a-9480-7d7a6f20e946@molgen.mpg.de>
+Date: Tue, 23 Jul 2024 17:13:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: How to debug intermittent increasing md/inflight but no disk
+ activity?
+To: Andre Noll <maan@tuebingen.mpg.de>, Dave Chinner <david@fromorbit.com>
+Cc: linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
+ it+linux-raid@molgen.mpg.de
+References: <4a706b9c-5c47-4e51-87fc-9a1c012d89ba@molgen.mpg.de>
+ <Zo8VXAy5jTavSIO8@dread.disaster.area> <Zo_AoEPrCl0SfK1Z@tuebingen.mpg.de>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <Zo_AoEPrCl0SfK1Z@tuebingen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-07-23 at 10:15 -0400, Brian Cowan wrote:
-> I am responsible for supporting an application that opens LOTS of
-> files over NFS from a given host, and potentially a few files/host
-> from a LOT of clients. We've run into some "interesting" limitations
-> from other OS's when it comes to NFSv4...
->=20
-> Solaris, for example, "only" allows 10K or so files per NFS export to
-> be opened over NFSv4. When you have 2500+ client hosts opening files
-> over NFSv4, the Solaris NFS server stops responding to "open" requests
-> until an entry in its state table is freed up by a file close. Which
-> causes single threaded client processes trying to open said files to
-> hang... Luckily we convinced that customer to move the clients back to
-> using NFSv3 since they didn't need the additional features of V4.
->=20
-> We're also seeing a potential issue with NetApp filers where opening
-> too many files from a single host seems to have issues. We're being
-> told that DataOnTAP has a per-client-host limit on the number of files
-> in the Openstate pool (and not being told what that limit is...) I say
-> "potential" since the only report is from things falling apart after
-> moving from AIX 7.2 to 7.3 (meaning there is a non-zero chance that
-> this is actually an AIX NFS issue). In this case, NFSv3 is not an
-> option since NFSv4 ACLs are required...
->=20
-> Anyway, as a result, I'm trying to find out if the Linux NFSv4 server
-> has a limit on either total number of files, total number of files per
-> export, or total files per host.
->=20
+Dear Andre, dear Dave,
 
-An interesting question. There is a practical limit:
 
-Each on-the-wire OPEN takes a stateid, and when we allocate a new one,
-we generate its id with an idr hash. That's limited to 2^32 values, so
-once you hit that many active stateids you won't be able to create
-more.
+Thank you for your replies.
 
-Note that that includes all stateful objects (open, lock, delegation
-and layout stateids), so you may not be able to do that many OPENs
-depending on what else is out there.
 
-In principle, we might be able to extend that too, but we'd need some
-evidence that someone's workload was hitting that limit.
+Am 11.07.24 um 13:23 schrieb Andre Noll:
+> On Thu, Jul 11, 09:12, Dave Chinner wrote
+> 
+>>> Of course it’s not reproducible, but any insight how to debug this next time
+>>> is much welcomed.
+>>
+>> Probably not a lot you can do short of reconfiguring your RAID6
+>> storage devices to handle small IOs better. However, in general,
+>> RAID6 /always sucks/ for small IOs, and the only way to fix this
+>> problem is to use high performance SSDs to give you a massive excess
+>> of write bandwidth to burn on write amplification....
+> 
+> FWIW, our approach to mitigate the write amplification suckage of large
+> HDD-backed raid6 arrays for small I/Os is to set up a bcache device
+> by combining such arrays with two small SSDs (configured as raid1).
 
-Beyond that, I can't think of any other limits we might have on being
-able to create new stateful objects. I'll chime in again though if I
-think of others though.
---=20
-Jeff Layton <jlayton@kernel.org>
+Now that file servers with software RAID proliferate in our institute 
+due to old systems with battery backed hardware RAID controllers are 
+taken offline, we noticed performance problems. (We still have not found 
+the silver bullet yet.) My colleague Donald was testing bcache in March, 
+but due to the slightly more complex setup, a colleague is currently 
+experimenting with a write journal for the software RAID.
+
+
+Kind regards,
+
+Paul
+
+
+PS: *bcache* performance test:
+
+     time bash -c '(cd /jbod/MG002/scratch/x && for i in $(seq -w 1000); 
+do echo a >  data.$i; done)'
+
+| setting                                | time/s  | time/s  | time/s |
+|----------------------------------------|---------|---------|--------|
+| xfs/raid6                              | 40.826 | 41.638 | 44.685 |
+| bcache/xfs/raid6 mode none             | 32.642 | 29.274 | 27.491 |
+| bcache/xfs/raid6 mode writethrough     | 27.028 | 31.754 | 28.884 |
+| bache/xfs/raid6 mode writearound       | 24.526 | 30.808 | 28.940 |
+| bcache/xfs/raid6 mode writeback        |  5.795 |  6.456 |  7.230 |
+| bcachefs 10+2                          | 10,321 | 11,832 | 12,671 |
+| bcachefs 10+2+nvme (writeback)         |  9.026 |  8.676 |  8.619 |
+| xfs/raid6 (12*100GB)                   | 32.446 | 25.583 | 24.007 |
+| xfs/raid5 (12*100GB)                   | 27.934 | 23.705 | 22.558 |
+| xfs/bcache(10*raid6,2*raid1 cache) writethrough | 56.240 | 47.997 | 
+45.321 |
+| xfs/bcache(10*raid6,2*raid1 cache) writeback  | 82.230 | 85.779 | 85.814 |
+| xfs/bcache(10*raid6,2*raid1 cache(ssd)) writethrough | 26.459 | 23.631 
+| 23.586 |
+| xfs/bcache(10*raid6,2*raid1 cache(ssd)) writeback  |  7.729 |  7.073 | 
+  6.958 |
+| as above with sequential_cutoff=0      |  6.397 |  6.826 |  6.759 |
+
+`sequential_cutoff=0` significantly speeds up the `tar xf 
+node-v20.11.0.tar.gz` from 13m45.108s to 5m31.379s ! Maybe the 
+sequential cutoff thing doesn't work well over nfs.
+
+1.  Build kernel over NFS with the usual setup: 27m38s
+2.  Build kernel over NFS with xfs+bcache with two (raid1) SSDs: 10m27s
 
