@@ -1,43 +1,81 @@
-Return-Path: <linux-nfs+bounces-5019-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5020-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA74693A38F
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 17:13:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA72B93A42B
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 18:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9470E2845A7
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 15:13:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB735B223F8
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 16:09:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09AD156C52;
-	Tue, 23 Jul 2024 15:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41DE1156F4D;
+	Tue, 23 Jul 2024 16:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eiQYOd/v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6EE15445E;
-	Tue, 23 Jul 2024 15:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D3C156F40
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 16:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721747615; cv=none; b=Wv67X7x6L4G5ss5NxDNZzpWP3SEZ6XTr+hyICpMz8WgAgP8O5CZSujQQhfQNY073Nzq9TCZG5O7jxN0o6QsqUNZNUeeTBmKr1IGWDi048Odz+mZeS3jG+YW8SAWc/rEojnN/t03KKkVs4FXM+53cTSrQIoiTEWRQ53p1gKDu5rQ=
+	t=1721750975; cv=none; b=f4VoC+/xY5pIbrszweJo5IOO2r9pssx+j5MRoEPNYWOQ+sjDXNCnZkTBJTsuAzpSlYBopHJwAN50za6ccPgOOkU6dF9299VzM3oH8SIYF4FCKxIsFOdq4DTaH6zN+vGlYMBc48o1dKd2EWu+citAk9PhF1r8P/cbumIXwcI7n8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721747615; c=relaxed/simple;
-	bh=Za5OmoIPnwYq3WL7lttx6A0b9aUoBbyxeW7yzzYMZEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBAMgY2r5HCpkTGc1Y5Clsy0UezrNONt1TLHVTfu0MaSSaQicaPfgao3774+xgfBOCOYLMbXWvwfbWUc0C0Ypi61dyXeMQuXMBL/+Hxw8uS7RjkqoHUfLeS3lQECoePRxV+DnJlFl5nCBPBqMQExwyq/NmwLStnx/6/XRRnSvw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3B68961E5FE01;
-	Tue, 23 Jul 2024 17:13:22 +0200 (CEST)
-Message-ID: <e49eb11d-bd62-434a-9480-7d7a6f20e946@molgen.mpg.de>
-Date: Tue, 23 Jul 2024 17:13:21 +0200
+	s=arc-20240116; t=1721750975; c=relaxed/simple;
+	bh=4qy8ZBcAnI9dzraGgDlkTxLiVtqd3ERS3tYif//cUyo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=suvaXymCpEA8bnTpvaZfU6SRPN7JWDh/HDwhNSYQhpCfdinJj/oRzppRfhhnIHOzR8nrUkNY+uU1QkYwBX0eLsjZiswSzzGER80gD4YlwsbJE8z1OnjpkYm0gWvD/sAkJWK4B9qONvXAES24Rtb1TsQx64pWUhsD1rB8ZW7A0gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eiQYOd/v; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721750971;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wxNq8BfOTtQ08jqfWMm5N9QmG6cTevIgJrzk8banxpo=;
+	b=eiQYOd/vQJKG7WS0m1XuuPe0FPShUJEPZunxuQM1CNHWLiR4TxMooPxTqsGMJHpTrIlDiX
+	KUyNCRKkxBhWVkbsJNpIDAqk4EGki0Wv3Z3dNbY9ihiEho2xoPlv8vhahdRp+XK6oLUs5M
+	gXVAEJcrVNWrZ2C0veazAtw8ULDLcfM=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-385-P7BdaKRVO7KiSQ-kgYCKAg-1; Tue, 23 Jul 2024 12:09:30 -0400
+X-MC-Unique: P7BdaKRVO7KiSQ-kgYCKAg-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b797b6b4aeso17859576d6.0
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 09:09:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721750968; x=1722355768;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wxNq8BfOTtQ08jqfWMm5N9QmG6cTevIgJrzk8banxpo=;
+        b=rDiF1dHUl6gt5zqv+7c1jsJRuJ3HBlGT6JbqOZkSfzbmtS3GY7YVXypqOc7vqKl/7D
+         vfgNxoEPc1ghtSyokjEMON23AdUYiEkeLSoQwNipsR4qiW2sJ/A5NVEj6zlWtzW+niuZ
+         n/55lwrH7d4EzKF6owerF7uMgNrPVjQ5sEVZ3PM47fCEOdnnzTGEjbzwiD4jakz/urG0
+         36R0/DWoaevcuwTbvj2xftsbYEkjrcHUTDThVtOlSM4gbkh76Lu8nqV+Ms5gYVFKKFll
+         44AB372Vz6P+rP6UjWjLYKiBF30To7liEWE4qyWnt/7BVcVYt5PEeEUGdKtMaiMDtEqn
+         82zg==
+X-Gm-Message-State: AOJu0YwsLGNooH8jNmN25taTbm4lyOuZVNx+fo/Irl9/RHgqr3DdBn4m
+	9+Q1Bd4t5pCz+UsYKREWuSQ55agbFSd+1wErkLrtWYvZzWdsv4QLIjDYL0ImH74NyvdkcXjTV25
+	RAH26j755H00DuAVbU8XFJEpfi0lYuJAyebd95tzPr/dupHPj4+LwBJfelmb4ZpIsntURplydDu
+	OTJ3zdVSZldOIeIkYOk1LQNvxzeCzMh+fSCA4lWHo=
+X-Received: by 2002:a05:620a:2585:b0:7a1:5683:4aad with SMTP id af79cd13be357-7a1a13d0f8fmr849080185a.9.1721750967980;
+        Tue, 23 Jul 2024 09:09:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjaSSQmdISTrN+qUskXaZO8bAJfSO2Dz1avu0JB1YROImeDmXqJNGwriMd2X6ixNVW6PNn7w==
+X-Received: by 2002:a05:620a:2585:b0:7a1:5683:4aad with SMTP id af79cd13be357-7a1a13d0f8fmr849077585a.9.1721750967469;
+        Tue, 23 Jul 2024 09:09:27 -0700 (PDT)
+Received: from [10.193.21.13] ([66.187.232.65])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a1990743bbsm494306285a.103.2024.07.23.09.09.26
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jul 2024 09:09:26 -0700 (PDT)
+Message-ID: <9b2b3578-930c-48e0-bbbd-26c87ada482a@redhat.com>
+Date: Tue, 23 Jul 2024 12:09:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -45,84 +83,38 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: How to debug intermittent increasing md/inflight but no disk
- activity?
-To: Andre Noll <maan@tuebingen.mpg.de>, Dave Chinner <david@fromorbit.com>
-Cc: linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
- it+linux-raid@molgen.mpg.de
-References: <4a706b9c-5c47-4e51-87fc-9a1c012d89ba@molgen.mpg.de>
- <Zo8VXAy5jTavSIO8@dread.disaster.area> <Zo_AoEPrCl0SfK1Z@tuebingen.mpg.de>
+Subject: Re: [PATCH] nfsidmap: Fix a memory leak
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20240722093209.64038-1-steved@redhat.com>
 Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <Zo_AoEPrCl0SfK1Z@tuebingen.mpg.de>
+In-Reply-To: <20240722093209.64038-1-steved@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Andre, dear Dave,
+Content-Transfer-Encoding: 7bit
 
 
-Thank you for your replies.
 
+On 7/22/24 5:32 AM, Steve Dickson wrote:
+> Reported-by: Zhang Yaqi <zhangyaqi@kylinos.cn>
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed...
 
-Am 11.07.24 um 13:23 schrieb Andre Noll:
-> On Thu, Jul 11, 09:12, Dave Chinner wrote
+steved.
+> ---
+>   support/nfsidmap/umich_ldap.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
->>> Of course it’s not reproducible, but any insight how to debug this next time
->>> is much welcomed.
->>
->> Probably not a lot you can do short of reconfiguring your RAID6
->> storage devices to handle small IOs better. However, in general,
->> RAID6 /always sucks/ for small IOs, and the only way to fix this
->> problem is to use high performance SSDs to give you a massive excess
->> of write bandwidth to burn on write amplification....
-> 
-> FWIW, our approach to mitigate the write amplification suckage of large
-> HDD-backed raid6 arrays for small I/Os is to set up a bcache device
-> by combining such arrays with two small SSDs (configured as raid1).
+> diff --git a/support/nfsidmap/umich_ldap.c b/support/nfsidmap/umich_ldap.c
+> index 1aa2af49..0f88ba44 100644
+> --- a/support/nfsidmap/umich_ldap.c
+> +++ b/support/nfsidmap/umich_ldap.c
+> @@ -200,6 +200,7 @@ static int set_krb5_ccname(const char *krb5_ccache_name)
+>   		IDMAP_LOG(5, ("Failed to set creds cache for kerberos, err(%d)",
+>   			      retval));
+>   	}
+> +	free(env);
+>   #endif /* else HAVE_GSS_KRB5_CCACHE_NAME */
+>   out:
+>   	return retval;
 
-Now that file servers with software RAID proliferate in our institute 
-due to old systems with battery backed hardware RAID controllers are 
-taken offline, we noticed performance problems. (We still have not found 
-the silver bullet yet.) My colleague Donald was testing bcache in March, 
-but due to the slightly more complex setup, a colleague is currently 
-experimenting with a write journal for the software RAID.
-
-
-Kind regards,
-
-Paul
-
-
-PS: *bcache* performance test:
-
-     time bash -c '(cd /jbod/MG002/scratch/x && for i in $(seq -w 1000); 
-do echo a >  data.$i; done)'
-
-| setting                                | time/s  | time/s  | time/s |
-|----------------------------------------|---------|---------|--------|
-| xfs/raid6                              | 40.826 | 41.638 | 44.685 |
-| bcache/xfs/raid6 mode none             | 32.642 | 29.274 | 27.491 |
-| bcache/xfs/raid6 mode writethrough     | 27.028 | 31.754 | 28.884 |
-| bache/xfs/raid6 mode writearound       | 24.526 | 30.808 | 28.940 |
-| bcache/xfs/raid6 mode writeback        |  5.795 |  6.456 |  7.230 |
-| bcachefs 10+2                          | 10,321 | 11,832 | 12,671 |
-| bcachefs 10+2+nvme (writeback)         |  9.026 |  8.676 |  8.619 |
-| xfs/raid6 (12*100GB)                   | 32.446 | 25.583 | 24.007 |
-| xfs/raid5 (12*100GB)                   | 27.934 | 23.705 | 22.558 |
-| xfs/bcache(10*raid6,2*raid1 cache) writethrough | 56.240 | 47.997 | 
-45.321 |
-| xfs/bcache(10*raid6,2*raid1 cache) writeback  | 82.230 | 85.779 | 85.814 |
-| xfs/bcache(10*raid6,2*raid1 cache(ssd)) writethrough | 26.459 | 23.631 
-| 23.586 |
-| xfs/bcache(10*raid6,2*raid1 cache(ssd)) writeback  |  7.729 |  7.073 | 
-  6.958 |
-| as above with sequential_cutoff=0      |  6.397 |  6.826 |  6.759 |
-
-`sequential_cutoff=0` significantly speeds up the `tar xf 
-node-v20.11.0.tar.gz` from 13m45.108s to 5m31.379s ! Maybe the 
-sequential cutoff thing doesn't work well over nfs.
-
-1.  Build kernel over NFS with the usual setup: 27m38s
-2.  Build kernel over NFS with xfs+bcache with two (raid1) SSDs: 10m27s
 
