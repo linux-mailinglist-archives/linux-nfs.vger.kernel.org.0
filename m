@@ -1,140 +1,118 @@
-Return-Path: <linux-nfs+bounces-5015-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5016-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D91293A11D
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 15:17:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB29193A21E
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 15:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08E09283D4E
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 13:17:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22AEC283E6E
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 13:58:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAEA2152DF7;
-	Tue, 23 Jul 2024 13:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080DE153810;
+	Tue, 23 Jul 2024 13:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b="QFIEbTCy"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="q/p3klEl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA04B152799
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 13:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721740601; cv=pass; b=Tl0coIQUc8w2pw94v1Tg0itCYNxnjPutLY4OnaaiK4D2LfCzydFOJDUN5O5Au9V0oyHtLyRWJJ6gOlGoDHAK9x0Hw5CR08h0UkEeWBwghaO5JyGusW/arPUrOqD/87GvA1ZWBF7jjajkcx8bcRj/XLDt32VuY4kjpEGLMGdHwgg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721740601; c=relaxed/simple;
-	bh=cDsDfh4FfE/o/bEz2PLwUiUsRVscYusaORlJmMsndSo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HF/7B3b8oQ0FHXeV0BvFS8Ws51bor9jR25Dc0J9c3PiJr7PhLDBvng6WqE2XJmC1442LZosMjR7VaPrvZcOR5lhzPWgacI15004ctpvJZHrSc7oMXnAxrEFV+pd82PygztxiGs0rf044GplNzs9TVI20QGOa/7aLVPyW3XhdU7g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=nrubsig.org; dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b=QFIEbTCy; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nrubsig.org
-X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 34B5E365F99
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 13:16:39 +0000 (UTC)
-Received: from pdx1-sub0-mail-a206.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A7392365195
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 13:16:38 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1721740598; a=rsa-sha256;
-	cv=none;
-	b=Zhc/XSyrJpXzJEh9yehRqkYQHOMUMS6RZLfIOuzrXXnh3ZfDaDaaXabOesYLdB9aROQyUB
-	4UO9DiaXHzE+94w8oF+xPy8PKXw5jdM08CQpv4HDurrCswXNynz84z/BfqVNetlBQNMsgs
-	ER+G0q4J+XYwhw5qT+VPIpy6lpJpa5IAxFiBdJG9TmF9WzYMUfIJ9HZvBZv46EB+4YaIud
-	1ylvEbmsPlKIAIIysJ6f7l76hOpUmpyyNU9RQmcOKvauKdD8EJYGkaL3+H4RsEUgqf9mf7
-	DjmjY44bDDQXCMOXeNk2UX8KzFHMLKoTQ/qHHITtt0ZA/mCWcdXKhKq0nldWnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1721740598;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:mime-version:mime-version:
-	 content-type:content-type:dkim-signature;
-	bh=9l91go5wPK7kQ/kvneJOiWbTYnB3hbpUXyrIyRuhQj4=;
-	b=F45J0FCV69HNZ6Idx+A1xNJxLr16DvL94uOl12SI+8v3zEfkTw/H+DfxMFw1X3yidiS21t
-	tKXRm49dWvZbSkcTsfVahC4n/ifmWPcQ52uvCcQkssPF/kYG4bhPqneXCm12kAVpii/DYy
-	glR2KyaIAiQm6ue65urzwwzacoktlLCQe/j/1Ni28PtnG7bCO9UEAAG23ET6IPEeByykdu
-	142MdTX6oSdmH92A/GkuAzBELuzHNMg30tJApD4OZ78QFFfrxtms1wtzo/CNxKIf/x+bf0
-	DqfzqdDZQd+kgYyHvewrqbhCjLInGy+wyaa/9dJyKwPvbmp21LyupXE6I+Chtw==
-ARC-Authentication-Results: i=1;
-	rspamd-587dc898b6-59lbj;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=roland.mainz@nrubsig.org
-X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|gisburn@nrubsig.org
-X-MailChannels-Auth-Id: dreamhost
-X-Well-Made-Name: 16a4331b5f05d2ca_1721740598941_1275429556
-X-MC-Loop-Signature: 1721740598941:2495758973
-X-MC-Ingress-Time: 1721740598941
-Received: from pdx1-sub0-mail-a206.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.180.92 (trex/7.0.2);
-	Tue, 23 Jul 2024 13:16:38 +0000
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: gisburn@nrubsig.org)
-	by pdx1-sub0-mail-a206.dreamhost.com (Postfix) with ESMTPSA id 4WSyN643RfzK4
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 06:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nrubsig.org;
-	s=dreamhost; t=1721740598;
-	bh=9l91go5wPK7kQ/kvneJOiWbTYnB3hbpUXyrIyRuhQj4=;
-	h=Reply-To:From:Date:Subject:To:Content-Type;
-	b=QFIEbTCy9HE7IS+H795zF7jT4LGEhR3wQ8qEKsLQXoGSwzlqRZnW7OIjq3yxhQie0
-	 6PXsDQVCpQLUve5JZtL/THB0+Styary9zW7zd65HX7DKMbHsorLNmtPEnVafHDrSFA
-	 4oO+Ic2EBfV0KaD0CrfagAXEI4+ggXsHc4Z3732WISFizi0Y9rwoSqWE12zZ+6e9jT
-	 eREzByi6jjgZzHFGxfhkcJxQovXe7ROQp/Uh9SBu9k4UXDn6DyHDDd212ZJ0GsDTpQ
-	 7NANCFhQ84dWtqFCQiMawNg1c257MGO7pCa0FrgMO7xrSFMlky55f5Zv0Vyn6h5oTX
-	 Ok4QPerCMDH/A==
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8036ce66134so214415939f.3
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 06:16:38 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx3jtFd3ZHg1GWtMZvBVhyP/anNZwWac3IrQ3G/izVsjp1RoJkm
-	C2t2rMgeGMFw8HapEp5KNitVEi7lN0pGy2o4YlTT6iGJAA+Xee/QsUhrJpbYCm28vDE4UUvJdbv
-	+QgswpIGUBBaXhCL3yQKwm7xufPY=
-X-Google-Smtp-Source: AGHT+IFb1s97AREixdUuIPbwJKFTkHGorcpPUbO2eqypOrjudh4Ig7j3ZxXJTz9GzzqTkgyeIApia5QeQiO2RehXe00=
-X-Received: by 2002:a05:6602:160d:b0:7f9:217c:c109 with SMTP id
- ca18e2360f4ac-81ea3c2eff4mr354756039f.9.1721740597830; Tue, 23 Jul 2024
- 06:16:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65B4153808
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 13:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721743117; cv=none; b=IaELfTLrLuQedMcsn6W3L4UnTwZY9w66jCPOoO4jxW3Tq+7D668OqY6kgPPpDdno3DowrytxHqskEFcp4FoiCsWmrI9qZZLTYUdbMiyAH6h0adS3/5jWkjQDFgkDC9EQ61L2PXIsN95Gj1NGU8w9abgU6swVES8AtKj1Ha5vlz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721743117; c=relaxed/simple;
+	bh=Fejn2ohM1Wg5zp4n/r8tyH9iKRpedPEHPQ6riWQqEbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oJx6Rl+f/1cpQoy07RupQGgOPQU+nR3hIu3kWDXxPxxNoeXpVkqCoBH03Cf8mCQr+nMb4Lk+0DHWDNIId0rTAvfBwR6Q1xZFosWFdTR3jdgu5GqpVflIjn5Wq2LGD2RVmhQyxgGDtGyc8kvPCat8FeLpw04kQPn8NBN+M6IIitQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=q/p3klEl; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3684c05f7afso683384f8f.2
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 06:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1721743114; x=1722347914; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mejxLsKJw9NfDFkwm6U9PaL0qoSJ+b1gvXRg/m+0XnQ=;
+        b=q/p3klElpxRkTVpefr8LqJennMmnJljwxcNnKd4I7/nrOqwU8lg7HYlXht5dnAqUcZ
+         xFrtEu7muAMRYJjItoKBnC2o960R6Bxbiyn+olDLOpgY9FY/maawN4MfmzuYe1B0bnAb
+         wyfCReunMF+xuWjohTx6A3U6Ao382SC7WjV2gHJ+2se4GTeUxoD9wXNhUvvGJu55SAQ5
+         O1y284yKx/rgOu/hzxRMjSYD9U3Kiw1Kdgt8Wsj12MI0iALt9fdJjoEpalLe7rkJkh6d
+         NtUWS6BYjUxwgGZfisS2X5aR5pBmf+kh7IX2YQfU1RCxjQ7ATSEBC+kjLIxdsm23FULL
+         YAtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721743114; x=1722347914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mejxLsKJw9NfDFkwm6U9PaL0qoSJ+b1gvXRg/m+0XnQ=;
+        b=OQWLMSE+Y6S6dtP+RHTHAIip6XHsB0YGGfaLSzoX3B23xM+dN9IYVn10uEkCkS6GRZ
+         SOEuJ9R0TVt/OWkKi3BTWzPnirdSeqA5m1o1x5Gp5XiprDPszq/qbVHRe2fwyTeg6p0R
+         QbPwYp04rYSA+R0JeNjZuskTdPTiJhi/18AQgRshlPb0Kb1uYHPtTFEb2EC22oTPg+3S
+         HJWVwH+la2Pr6xVrCVjdvnHQoWJ8OFr3zei3iJi1pxrql8dzryvZzbXqcBDksjiTCFzC
+         wbOfG9UQvWKmnAnp4vYAAH1Xvozqs5R1eUc41GEmnBdgEvGrVJiOuJDpXN7d00nnHpZ3
+         tC+Q==
+X-Gm-Message-State: AOJu0YxVe0YDJgoqEblr94Lx8/KXZLzy9llIq74imDGrIMg417ebSvZP
+	7BiwnTeN6YBco1AmslMI6pHeAN6VDmgPSr3V+YKsDH/3q8gZLqEY62SBdulsGjSe+LBhhYmHtHZ
+	foBPLMjx4w17JyY+ox6571jTi8xU3FA==
+X-Google-Smtp-Source: AGHT+IEutF4JOBPd9wIw2wWjbZcc3MBU6d0wKCluN/qEUGf1h/5ZDjsY9okcL3805XXIBCJ1vMk+If3ZFS7CotLZTbE=
+X-Received: by 2002:a2e:6d12:0:b0:2f0:1dfb:9b64 with SMTP id
+ 38308e7fff4ca-2f01dfb9be4mr13335121fa.7.1721743103675; Tue, 23 Jul 2024
+ 06:58:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Reply-To: gisburn@nrubsig.org
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Tue, 23 Jul 2024 15:16:12 +0200
-X-Gmail-Original-Message-ID: <CAKAoaQmG+FRhQquBJzFkr+BHFDCxxKky706Za2+nC9CNf8i10w@mail.gmail.com>
-Message-ID: <CAKAoaQmG+FRhQquBJzFkr+BHFDCxxKky706Za2+nC9CNf8i10w@mail.gmail.com>
-Subject: New NFSv4.2 attribute |FATTR4_TMPFILE| (sort of opposite of
+References: <CAKAoaQmG+FRhQquBJzFkr+BHFDCxxKky706Za2+nC9CNf8i10w@mail.gmail.com>
+In-Reply-To: <CAKAoaQmG+FRhQquBJzFkr+BHFDCxxKky706Za2+nC9CNf8i10w@mail.gmail.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Tue, 23 Jul 2024 09:58:11 -0400
+Message-ID: <CAN-5tyG+t1Q=Tr0FtTzWhKE-=hLvWOarNn3_ArUt9VYuZ=aauQ@mail.gmail.com>
+Subject: Re: New NFSv4.2 attribute |FATTR4_TMPFILE| (sort of opposite of
  |FATTR4_OFFLINE|) ?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, ms-nfs41-client-devel@lists.sourceforge.net
+To: gisburn@nrubsig.org
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, ms-nfs41-client-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Tue, Jul 23, 2024 at 9:17=E2=80=AFAM Roland Mainz <roland.mainz@nrubsig.=
+org> wrote:
+>
+> Hi!
+>
+> ----
+>
+> [2nd attempt to send this email]
+> The Win32 API has |FILE_ATTRIBUTE_TEMPORARY| (see
+> https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-cr=
+eatefilea)
+> to optimise for short-lived/small temporary files - would it be useful
+> to reflect that in the NFSv4.2 protocol via a |FATTR4_TMPFILE|
+> attribute (sort of the opposite of |FATTR4_OFFLINE|, such a
+> |FATTR4_TMPFILE| should be ignored by HSM, and flushing to stable
+> storage should be relaxed/delayed as long as possible) ?
 
-----
+I think a more appropriate medium for this message is an IETF NFSv4
+mailing list as FATTR4_TMPFILE is not a spec attribute.
 
-[2nd attempt to send this email]
-The Win32 API has |FILE_ATTRIBUTE_TEMPORARY| (see
-https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea)
-to optimise for short-lived/small temporary files - would it be useful
-to reflect that in the NFSv4.2 protocol via a |FATTR4_TMPFILE|
-attribute (sort of the opposite of |FATTR4_OFFLINE|, such a
-|FATTR4_TMPFILE| should be ignored by HSM, and flushing to stable
-storage should be relaxed/delayed as long as possible) ?
 
-----
-
-Bye,
-Roland
--- 
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /==\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
+>
+> ----
+>
+> Bye,
+> Roland
+> --
+>   __ .  . __
+>  (o.\ \/ /.o) roland.mainz@nrubsig.org
+>   \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+>   /O /=3D=3D\ O\  TEL +49 641 3992797
+>  (;O/ \/ \O;)
+>
 
