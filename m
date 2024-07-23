@@ -1,132 +1,65 @@
-Return-Path: <linux-nfs+bounces-5022-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5023-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E36793A50D
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 19:38:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80AF593A843
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 22:45:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A3EF28430B
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 17:37:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CAD71C21BA3
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 20:45:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2C1158A17;
-	Tue, 23 Jul 2024 17:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10EAC13DB9F;
+	Tue, 23 Jul 2024 20:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="gUiVb8+r"
+	dkim=pass (1024-bit key) header.d=trodman.com header.i=@trodman.com header.b="qC4GnJRc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mta-101a.earthlink-vadesecure.net (mta-101b.earthlink-vadesecure.net [51.81.61.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xklwu-2.xen.prgmr.com (xklwu-2.xen.prgmr.com [71.19.154.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280E21586C9
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 17:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048B22E634
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 20:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.154.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721756240; cv=none; b=vFnjCOnOEMvtWdDklkpRlfRUYs2Qh+Ba2EAKl4R/sYPQ7359VE31Wlcz3RuqpHG299vNpNdHnLmMrgf5rnHuh+rSpLPwl5As78y8QxBuklhUtYrgZ2gz/ya0GFZ2o1mPkHtCscu4cKK44X9nF0OS2DvA/S43PDNQcNJX7WSGZEQ=
+	t=1721767532; cv=none; b=keCBa7dyIfIbmLdvu+FOavMFrjFLuSJVVNo57cvzFiZEZ1eVh4cI7zkryDi7La1nWBQsRlr4nJ6tRGZqS9ejyeFzmkshRGj5e+WKldXV7k/rsCWgQVemSYWKHW+f0aiS2bAXKhGRjtuULXVticyLC225l4BygFC0hlWG0BoW/3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721756240; c=relaxed/simple;
-	bh=6RvyKDDAl4Jv3Q5TrMZNA6w8l9uwi4/yYUn7pLSp6HQ=;
-	h=From:To:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u0naXDTP8Nk8dAbfwCpUa/IxCd7V5HSq2D+ii6q1c+0W5ktrHHqANKV9TzLsrEm50iHO05Z5Ll0jDdKO8vwBAr4uNcRNLwWSbob5hBwGfgFEnI+AYj0RWat+v+VcWcBt9K+O8u/3yr336b0Hd+yDsIV7u0fFe1X20gPVPsqh4EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com; spf=pass smtp.mailfrom=mindspring.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=gUiVb8+r; arc=none smtp.client-ip=51.81.61.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mindspring.com
-Authentication-Results: earthlink-vadesecure.net;
- auth=pass smtp.auth=ffilzlnx@mindspring.com smtp.mailfrom=ffilzlnx@mindspring.com;
-DKIM-Signature: v=1; a=rsa-sha256; bh=6RvyKDDAl4Jv3Q5TrMZNA6w8l9uwi4/yYUn7pL
- Sp6HQ=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:
- list-subscribe:list-post:list-owner:list-archive; q=dns/txt;
- s=dk12062016; t=1721755322; x=1722360122; b=gUiVb8+r0T+o3waFi9uQQY8aHi5
- htRItYL6QmCy2VW5dm2raAOSyamYO8mpAZGCeqKjuf9RIifJEiwFwpA6mjL5rvD2uyL0WAa
- 6YE07kSggv3yUZuOj46d4LRCedEiETFfQW7QoZ2kTOzd5lFCkT/MWMbT4QBbTRvqp16Luqm
- Xt7ToKixaSCBwGqjRPMW+1HInfljflE/gS+VTKicPpkvn89b5RDF/f+VR/xidfQONdAiKJH
- JU2FzC+b6PcpIMnHwBWPpsAMzW3awo7Wx46pm2PqyBrt6lx/zOH/E8OQpLERVMZWSJDM2tT
- tnamDwj8P4Qo3HfwC7Q6Yy8iX0KtuKA==
-Received: from FRANKSTHINKPAD ([174.174.49.201])
- by vsel1nmtao01p.internal.vadesecure.com with ngmta
- id 3bb018e7-17e4e757d03bb4f5; Tue, 23 Jul 2024 17:22:02 +0000
-From: "Frank Filz" <ffilzlnx@mindspring.com>
-To: "'Brian Cowan'" <brian.cowan@hcl-software.com>,
-	<linux-nfs@vger.kernel.org>
-References: <CAGOwBeW31AThuSLW-aWE0wAz302qaXDaCKCOmmOPjCewB8rkgw@mail.gmail.com>
-In-Reply-To: <CAGOwBeW31AThuSLW-aWE0wAz302qaXDaCKCOmmOPjCewB8rkgw@mail.gmail.com>
-Subject: RE: Limits to number of files opened by remote hosts over NFSv4?
-Date: Tue, 23 Jul 2024 10:22:01 -0700
-Message-ID: <02af01dadd24$d51d7690$7f5863b0$@mindspring.com>
+	s=arc-20240116; t=1721767532; c=relaxed/simple;
+	bh=nHkfhNvR0a3Ra2p3LrQq4apIzMv9izMScgXvPjopMPI=;
+	h=Message-Id:From:To:Subject:MIME-Version:Content-Type:Date; b=fl3i8cXrE7btn6HA9zJzq1UP8QVeuVKFKTicw8KOdTcDJm0EkM2JlV/fuXsEl4yPZz0Lr/UEC/W3w7u8MLWwOEN/TXiOXZ4wM0wUye6Z34/fMnJPEuc4KZkSp29vlGrj77LQYM4ixvTvuwWfJycF00IXhNhD13fxaNjF5L9mleU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trodman.com; spf=pass smtp.mailfrom=trodman.com; dkim=pass (1024-bit key) header.d=trodman.com header.i=@trodman.com header.b=qC4GnJRc; arc=none smtp.client-ip=71.19.154.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trodman.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trodman.com
+Received: from epjdn.zq3q.org (epjdn.zq3q.org [71.19.149.160])
+	by xklwu-2.xen.prgmr.com (8.17.1/8.15.2) with ESMTPS id 46NJrpEo047072
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 14:53:51 -0500
+DKIM-Filter: OpenDKIM Filter v2.11.0 xklwu-2.xen.prgmr.com 46NJrpEo047072
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=trodman.com;
+	s=myselector; t=1721764431;
+	bh=A1HbTKAfa/jbGNmjzN7inLFbvfgiTSEQPLDOxKENvpk=;
+	h=From:To:Subject:Date:From;
+	b=qC4GnJRcPPoMQjMAM58XLeH+okaZDEUMfzyzjzUZ2/wKMMvP9gfnoHcVESW60nCpA
+	 fxkLPfzPYFXGyx68BaMJ5Wrr5lUIbXb6tZlGWAgoM+mH0ikA8E5uNj6uoQ41Fqv9q0
+	 Pc8h2OB7uTJtCV+N0iOX7AX/0r6jLRSwRaSiZ6mg=
+Received: from epjdn.zq3q.org (localhost [127.0.0.1])
+	by epjdn.zq3q.org (8.17.1/8.15.2) with ESMTP id 46NJrpWr3811115
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 14:53:51 -0500
+Message-Id: <202407231953.46NJrpWr3811115@epjdn.zq3q.org>
+From: linux-nfs@trodman.com
+To: linux-nfs@vger.kernel.org
+Subject: recipe/example for nftables supporting Internet nfs4?
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQMKQycs3wvwijO88vToxeb8/jxcO6+lwoHQ
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3811110.1721764431.1@epjdn.zq3q.org>
+Date: Tue, 23 Jul 2024 14:53:51 -0500
 
-Any server is likely to have some limit based on the memory use for the =
-open state.
+I have a fedora server on Internet sharing out NFS; working ok for 3+years w/firewalld.  I'm going w/pure nftables on a new server. Does anyone have a recipe/example for setting up an NFS server using nftables?
 
-We recently introduced a configuration to limit the number of opens per =
-clientid in nfs-ganesha for comparison, prior to that it was not =
-specifically limited (and the configuration defaults to no limit) other =
-than we would eventually run out of memory.
-
-It's probably good to have a limit, but your case suggests a value in =
-that limit being configurable.
-
-Frank
-
-> -----Original Message-----
-> From: Brian Cowan [mailto:brian.cowan@hcl-software.com]
-> Sent: Tuesday, July 23, 2024 7:16 AM
-> To: linux-nfs@vger.kernel.org
-> Subject: Limits to number of files opened by remote hosts over NFSv4?
->=20
-> I am responsible for supporting an application that opens LOTS of =
-files over NFS
-> from a given host, and potentially a few files/host from a LOT of =
-clients. We've
-> run into some "interesting" limitations from other OS's when it comes =
-to
-> NFSv4...
->=20
-> Solaris, for example, "only" allows 10K or so files per NFS export to =
-be opened
-> over NFSv4. When you have 2500+ client hosts opening files over NFSv4, =
-the
-> Solaris NFS server stops responding to "open" requests until an entry =
-in its state
-> table is freed up by a file close. Which causes single threaded client =
-processes
-> trying to open said files to hang... Luckily we convinced that =
-customer to move
-> the clients back to using NFSv3 since they didn't need the additional =
-features of
-> V4.
->=20
-> We're also seeing a potential issue with NetApp filers where opening =
-too many
-> files from a single host seems to have issues. We're being told that =
-DataOnTAP
-> has a per-client-host limit on the number of files in the Openstate =
-pool (and not
-> being told what that limit is...) I say "potential" since the only =
-report is from
-> things falling apart after moving from AIX 7.2 to 7.3 (meaning there =
-is a non-
-> zero chance that this is actually an AIX NFS issue). In this case, =
-NFSv3 is not an
-> option since NFSv4 ACLs are required...
->=20
-> Anyway, as a result, I'm trying to find out if the Linux NFSv4 server =
-has a limit on
-> either total number of files, total number of files per export, or =
-total files per
-> host.
-
+thank-you
 
