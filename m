@@ -1,122 +1,154 @@
-Return-Path: <linux-nfs+bounces-5025-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5026-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4489493A996
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 01:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B6B2993AB6F
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 04:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D68881F22CFE
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jul 2024 23:06:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55C6C1F22783
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 02:56:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19AB225760;
-	Tue, 23 Jul 2024 23:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3B7C4A00;
+	Wed, 24 Jul 2024 02:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwBhZj5v"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SYeFk4mM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a10NZMfu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AgxZoZZ9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Mz+VUMpq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBC713C90C
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 23:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51761CAA1
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 02:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721775988; cv=none; b=MM9rF+1HNbhk9zH6NMFYifsPMn0biRYmX9tLCmCTkCvVADcH1c9mFp82BmG+ilObuZ25OgYMC4CHnqclLbnvFYSkS1Wtp683DNgptx76K2jJtbBW0ugpQC4ywNqZ+/6ZP47eNtzo1oYEif51RS/2af5y9C07+VyqcA5pdcSjM0s=
+	t=1721789779; cv=none; b=uJ1luCtuee5wGB/vb+nbUcinn4vLb4bvDFjnut7mwCxQ64zXjN7UeLL+gKipae+zJHWCMyOYNcXYu87eZ6r/+2R5ZJz8rd5s+ivjTITX8NVr/fOcEZJxrRV4hh6ewClAyj/4ENwxRuKLNz2c6evZvAzH9CbnPtQpPxfJWo20t/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721775988; c=relaxed/simple;
-	bh=W/uA2Sb1VJ0fHrOQsPM7jx40414ParbC7xM9H/JQkC4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=h42sdMMVg8wUZpSmqEznJdNu9wl/I0Jc+hQGTeImhUnkY5kBi4A78bZGDnaWpLEBXXIS5vsuYmkL6MvdPsu6CKdz/gK2vVkYxQLYSPWDDrh26aF6C3gHTtbV9lKWZHrIA5hUpt5gHs7JVNSWuGeRuhnofAyOsoSz0BreEKGJw30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dwBhZj5v; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-260f81f7fb5so3128335fac.0
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Jul 2024 16:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721775985; x=1722380785; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W/uA2Sb1VJ0fHrOQsPM7jx40414ParbC7xM9H/JQkC4=;
-        b=dwBhZj5vCXzvvS+MFemMX6h/yzOb2c6Xlbsg5JlItMjIN8e/xhQY/72jdGqNwjsYf6
-         g3XrvPbpT7x+CRp963xExg71lhhlYBtuaNnQTEIUvFionYiEqyrcmLW0SdcfsjU5A7L7
-         lXzIZ6x4O9qhleTnRFtRBIdpEzcusUhk7Pr5CHJIPol80lkrQ72NdJca00QndiopnBqr
-         AutKR3zEANSRsUoZ5s5EQnrqda/vkUcaL9aQJYLtBKbz6cGP4kn+Ls3APr9Wg9iJU2SQ
-         yGkFtlRSw3aYGc2jphOuoU+OJ9WHnnfaDIHjmAbAjFRwORt68Kimz8FvoIqY4hGkf1Ji
-         NtkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721775985; x=1722380785;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W/uA2Sb1VJ0fHrOQsPM7jx40414ParbC7xM9H/JQkC4=;
-        b=V0Uz4CFTqL99S/oe+ZyFeu5jDWz/HoqUd6GjFLp03PRt5solcf9nNofO04+NXairAs
-         8j9LMo1PPWQ8PEDfbV6UA+4IbktBuGYjThsUEmtjSMPjru25YG4c/a4G4OrCguw2a1OQ
-         3rcZtirp8484oe1/Pl29XMIEKi+5OJt1c3b/IDqgri0eZyzHvnEcfYQ1Z3jYS/lgDact
-         tdsLCLTHl4s8tqOwqIM5KrWHfCwj0jp/BfRdRcrder0DlUtGIqhf7ZltU+s4XAE6Y4bb
-         22jKWg690vkqdAhCJk9sZidBh2PqqNcuH1UqXxu+V0Kc52RoKmqp4xFQeHewid7qXX8q
-         Tt9A==
-X-Gm-Message-State: AOJu0Yy7Axb/2+U51Y/GST4vqBWYr/BbCmD8zxYDL+x+osZI8nrYoHZw
-	gNo4rC8v/l55NCIRZaC5rXSjZ9Twkj31m8ULsIQOm7PIwv19kbzs+/uYw6pu+QKBOL7mVWYK6VI
-	1Nk9KRqhA+JTZM12mQ3JtVxgp5c+jm8Za
-X-Google-Smtp-Source: AGHT+IGWDz1mUN9wbjnvTs6Dgg/Q3Lu77Jd3I9QjMsgGonV7QF3h9KsF7cd0jcFohm/8gYJNG6Yh+Ep/Ofh8VStEtLE=
-X-Received: by 2002:a05:6870:970f:b0:261:1600:b1eb with SMTP id
- 586e51a60fabf-261214eac1emr12447281fac.31.1721775985489; Tue, 23 Jul 2024
- 16:06:25 -0700 (PDT)
+	s=arc-20240116; t=1721789779; c=relaxed/simple;
+	bh=/cJWzmDuTw8ALl287hbm67hiOP0uSOHTMk4ljhTvYD0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=EKxFBhNcSAN3iUpFFdFkr8lLMNPhMs9syCLpOdovxkot9cKCmKyqY61+eY0zA7EoVBszyArEej00XUxbyLk9D/DzjO7VWMTaad5CvnoGodnaSbt9rTTz1IiDPXWyMKQYDqM8SaS+4d1JtgEamaGOanh1K2bldIzBw0JN5N6SwAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SYeFk4mM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a10NZMfu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AgxZoZZ9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Mz+VUMpq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CD33421A55;
+	Wed, 24 Jul 2024 02:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721789776; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=llYf8cdoMmXNPjASRMUGiALkRpCkttvi7ZFgEK02HG8=;
+	b=SYeFk4mMDRkPNloNeKpc4Yg62UfG5eyriqMSgcHw+aXm38k572uM+yF8qQOMMLLNJc++3V
+	VZfz6YwEHvNQ4CIniYZcn5lJoTRyuhCfdiDoqS7PyRIKW6U2y/3U4CFgHHoMINDpwNTOtO
+	n9fWwIiWj6G8+im1b8rqBWnCBZbmgBM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721789776;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=llYf8cdoMmXNPjASRMUGiALkRpCkttvi7ZFgEK02HG8=;
+	b=a10NZMfulPsS0Mb1+mgCuAGxuQ3SDb5l9NUPlpotQg09mzjHFUs2Ig1mf2u0WzXsPf6KYf
+	TXx78vaPizKNz6Dw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=AgxZoZZ9;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Mz+VUMpq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721789775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=llYf8cdoMmXNPjASRMUGiALkRpCkttvi7ZFgEK02HG8=;
+	b=AgxZoZZ9Vl09EgmeV4fZVqYAo1jv9kTa1/4m/TDvxO27oqUJf72LUvbwM+jR9vMuyA0LAc
+	Klz/u6i4fT54ECX7dw9w8fvqVMRRu+DxqrrDmmx5mcDTsG5Q7Gn4ny+6XTK1lFsrhsIL/b
+	rWi3x6MF0GXAbKO3PamfJ2+t98p+X9A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721789775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=llYf8cdoMmXNPjASRMUGiALkRpCkttvi7ZFgEK02HG8=;
+	b=Mz+VUMpqMmb4/wynd1gEPAFk+T2cDENy8t0PLxFkbO9bCC9wpdL65OFPgrXwlSdRmudDjr
+	tpj5Wga3s0RoVbBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 597C91324F;
+	Wed, 24 Jul 2024 02:56:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kjrRA01toGbTfAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 24 Jul 2024 02:56:13 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQmG+FRhQquBJzFkr+BHFDCxxKky706Za2+nC9CNf8i10w@mail.gmail.com>
- <CAN-5tyG+t1Q=Tr0FtTzWhKE-=hLvWOarNn3_ArUt9VYuZ=aauQ@mail.gmail.com>
-In-Reply-To: <CAN-5tyG+t1Q=Tr0FtTzWhKE-=hLvWOarNn3_ArUt9VYuZ=aauQ@mail.gmail.com>
-From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Wed, 24 Jul 2024 01:05:59 +0200
-Message-ID: <CAAvCNcBQK+z5=NUN3AmDG6qnEUJvwgF11479TrKwhTEC1qV-fg@mail.gmail.com>
-Subject: Re: New NFSv4.2 attribute |FATTR4_TMPFILE| (sort of opposite of
- |FATTR4_OFFLINE|) ?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, ms-nfs41-client-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neilb@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: don't EXPORT_SYMBOL nfsd4_ssc_init_umount_work()
+Date: Wed, 24 Jul 2024 12:55:49 +1000
+Message-id: <172178974983.18529.7196430427173527960@noble.neil.brown.name>
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.31 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -1.31
+X-Rspamd-Queue-Id: CD33421A55
 
-On Tue, 23 Jul 2024 at 15:58, Olga Kornievskaia <aglo@umich.edu> wrote:
->
-> On Tue, Jul 23, 2024 at 9:17=E2=80=AFAM Roland Mainz <roland.mainz@nrubsi=
-g.org> wrote:
-> >
-> > Hi!
-> >
-> > ----
-> >
-> > [2nd attempt to send this email]
-> > The Win32 API has |FILE_ATTRIBUTE_TEMPORARY| (see
-> > https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-=
-createfilea)
-> > to optimise for short-lived/small temporary files - would it be useful
-> > to reflect that in the NFSv4.2 protocol via a |FATTR4_TMPFILE|
-> > attribute (sort of the opposite of |FATTR4_OFFLINE|, such a
-> > |FATTR4_TMPFILE| should be ignored by HSM, and flushing to stable
-> > storage should be relaxed/delayed as long as possible) ?
->
-> I think a more appropriate medium for this message is an IETF NFSv4
-> mailing list
 
-Where is that list?
+nfsd4_ssc_init_umount_work() is only used in the nfsd module, so there
+is no neex to EXPORT it.
 
-> as FATTR4_TMPFILE is not a spec attribute.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfsd/nfs4state.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I think the question was what the Linux nfsd people think about such
-an attribute.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..1795bd8e7ae9 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6268,7 +6268,6 @@ void nfsd4_ssc_init_umount_work(struct nfsd_net *nn)
+ 	INIT_LIST_HEAD(&nn->nfsd_ssc_mount_list);
+ 	init_waitqueue_head(&nn->nfsd_ssc_waitq);
+ }
+-EXPORT_SYMBOL_GPL(nfsd4_ssc_init_umount_work);
+ 
+ /*
+  * This is called when nfsd is being shutdown, after all inter_ssc
+-- 
+2.44.0
 
-But I also have a related question: Can the Linux nfsv4 client code
-see the O_TMPFILE flag from openat() syscalls? If that is the case,
-then O_TMPFILE ----> {FATTR4_TMPFILE, true}, and Linux nfsd can
-optimise such files too.
-
-Dan
---=20
-Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
