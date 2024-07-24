@@ -1,289 +1,366 @@
-Return-Path: <linux-nfs+bounces-5040-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5041-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E48CC93B791
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 21:30:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5191793B7A2
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 21:37:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A8B7B211B5
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 19:30:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06D8C282311
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 19:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDCA4D8B9;
-	Wed, 24 Jul 2024 19:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760FB16B73E;
+	Wed, 24 Jul 2024 19:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="jyztWeUg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ITu6ZO5Z";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="0UbE6ifA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D1161924
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 19:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721849411; cv=none; b=Ycfi2qRxRARMaGy53dCHqtPBm4VDmrRmG2yrZo+hfHoIp848qZNQ5I1nmGGK02M57IGCzPTjkVvvfGPE2k+P2wfwh2QyvFYH8BbkOSoP3gz+3nAxt+Q33qkyN80mZgeEe1ZEqGGnxfh6YmDgYPOq08dqY49ZZ7tuwN57Ayq/1f0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721849411; c=relaxed/simple;
-	bh=C2sO7dqXw1jKtQzg3n9d5rMRpP04G805g7bJib7MfWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OvkUlhsjGgfEO1yNIoFkPQguBtHASf8riFveyKYt/XwIjGYkMEl6Bt2keOCsO5FwOdrOKFNSUVcc7knLgKfOf1HUjYe0gTwczdv6sw5gu+FFLyZXvzHf80CRh2hMyVwTSM6qgbonfi6vi5mZt9dIVIkyg1eSymeIg1cttnv5Uco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=jyztWeUg; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ef302f5dbbso184901fa.2
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 12:30:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C54D52F6F
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 19:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721849836; cv=fail; b=RRMNchurXE6lXen6EPCCFAhB8PL07IioROMQ2yEVgDRovSds4numVObU4qJKzHfsvuG0wAbm3SvR3QJ9B4bTFvvEVeBzlAObB5/OUAkcNlpaoDSt3x05jf0y96OW0mYyav9a7+CzwLL/8J5kioDvnTA/GBH2jfhrzD4XutafvRM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721849836; c=relaxed/simple;
+	bh=B8TchjH6MBc3ynK1LYBU292OPGLxTm8Q+zqKwTcVQeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uvd0GT4EGxA7XuKWxnsIvQbs99sdBBn4e2DAaSdGjy8uGrW1TzQyLfxu4MLctIbkbE/s9ly6vcTVKZKqeGMqaxuYz3ywcue5VXwmYn4TJaUioca8HSy9lu6gH84tIATWSxMImNXguOjjtCrf2zTQIaEvvjnoBHQ86buYzZc87zg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ITu6ZO5Z; dkim=fail (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=0UbE6ifA reason="signature verification failed"; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46OFXW4G026925;
+	Wed, 24 Jul 2024 19:37:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:content-transfer-encoding:in-reply-to:mime-version; s=
+	corp-2023-11-20; bh=jV0RY3x7+nRFzt3HAHFBuTqrwyM90iIxrLtxmQpk9pM=; b=
+	ITu6ZO5ZGLz4YVtkfjAn903APG6C/Q9qq17rEnEwUDIlcGylEciqecQ0KdQIAfTy
+	4VK9QM0owLk/YlajcgDujQ+YEm8xOiRpZLnz/e780jIiKW5KGIDyOOJ+NUQTZc0m
+	v9XMbnxGZZooRYiRonvGU0kb0Z78bhSOh9flHiEG4xKzroLg3X5YyoqpuDQZ5B8d
+	nT09pwZwa3FXJ2Qm8+4ssfiqhBcAGLLNPokdXSHelJRihn+bAlURRJ2Mqjmjceq7
+	dJk4H7KM/SEYajo+iK4fM24VU6ksGSY/qNCabTrsEkUHIJJhUp5SizEhyGdRPPIY
+	mwDQrwcbg14jlNmnueJs9Q==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40hft0htcr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Jul 2024 19:37:04 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46OIO8wd040109;
+	Wed, 24 Jul 2024 19:37:03 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40h26pbnqk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Jul 2024 19:37:03 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j9XylJHWJpsQPSJGc2/sMQzBr956fA4jspKYkyX67GP6p6HEV9o6PDYQX0SX9UeHzw+WyFp3DGLjy8JMnWX/E8mCAC596AX3km+/N0trjwAdOlLYvfdfHDHt2aahvNXATsZ//mC476ymm9KNNwbT6eM+r6M70Tn82Jvr4+uTfLIHnHqHHaJ5KK4+HdV3ejx0pj9vFJ4aIrysrHrFFV4LY6YB1qQSo0eTMN5XBSlXeAsN1WOIkmlPRbQS3OnTMToDxw9axkFnPOMwURfOwXpIGcVDk7UQ90B9rnH8VO08klPftmb6d/hpiwxLjbg1MOSl03HwCZOoPm4qXBuB53Es6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iEANHYYZZGBJ7ql1PX2QzoxHY3080flIx7crnR6gkt8=;
+ b=FnBM6gn8w52L62k/r/6meudMYh2fBf7FdyjO2+eqsalPnSaaiDLaaelB0MglS6oYnyFXqFnN92Mffc3HGUdfQkH213vRvMwFqmzh/kMRpyer1TsSVMBd6Jn8/SVxpDL2QIXaVZV0hQB4MVbmcLG7OIsJtIf1gmk+/HIykQECUARJpy6lS+iCfLHwfl/xtCioXI40jtmsTkBMUy5Gh5cWp+BR9aa7YR5lRmTsZWSk3w6KHW2KQ6o58RaxhxlOZ8AvmdQpVQKuEcAO8M0tOBPer6DEAH4PQvbRdvK9n8XMkixDzBkI6Ts2vD8mlmblwqxz2O3S2ekIKEVfeLImGw2MOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1721849408; x=1722454208; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fka3TkL8rRapKbveK2mgG8w8xF9/AxS+3TvYRTWR1YI=;
-        b=jyztWeUgFbOorGGk6pZR7Es3JoPv5lY6m7Tr0/RjsoYqEx/W3LUOIyIvzJmZH/H4Y3
-         4V0aPZcVNAk69qLutWKn3/WceXDPxUok0QbGlYvOeHB+aQQWC1DVGI3cEbXWRo3+wqBf
-         Q54G2rfQqXR23ZjvpaQn6Oq/mGxJnSno+fFxZyR/LYTjrJG1QXBt2XeLD2lfy93dfCsS
-         1jaA4LTN0rwl4DPfxnA7iTUN+zowWC6RYY6OOr8os5H4vMdVPnmJGkiRKQHg2eswGPLH
-         dmLY9jXE/Za/kwK/ifNs03WNH9zcNyTMdwPHz1nyma15jBg6Zfd3dkBV+p6QYbeXjFmh
-         FXvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721849408; x=1722454208;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fka3TkL8rRapKbveK2mgG8w8xF9/AxS+3TvYRTWR1YI=;
-        b=HpiuNt7kpm8NVNjWq2EEZEHgSjqMqxGRc4htKdFHKa5gu4llW3MUejOp2oXrTugh4q
-         ooy00UAlL7kB6TLwhIYU8UDHZM7ViWSg+Czo3f6Z2fXyqCAti0aR3WIGXb+BxtFE5lMC
-         glJrdKhLK++f5ySVbiP+zg1/bg8cd1jkd1DBqpVOmS8w3uAR5G/EKTPDl+Qu761qGtrg
-         2xKnLZoI3BiJgLKrTeP1O8T6vfDGVEir7tFV8Gcsjo6tlNE0KdufaK8ZHfRwpLCff4Ao
-         bjmDFDk+DfIHb+/+UL/rBXgjA2OuARdWiog3bsIec0B2YvFi3rVqAbA+GvnvyqIeT2c8
-         E3BA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwxUzx8iZ2ulQrfG0UfOCxz7kcqn+oDsIByZI8ToxGlBS87FbsBWZSHRKHzDczJvTYcez4qwfI5jhxqC4NyrcMlsbyssd8wqBX
-X-Gm-Message-State: AOJu0YyK2bzjFZantnJuJM831GecnjLHkkZTxW7dKet8bkuY2VlJNfn8
-	HXgC4NWdr8LOrdBOFvqThEZvJFxc5+d1iShMEampkEkZSylZa4NCU4uzaXF3ipJ7mhnAAjbyenH
-	5y3Kx4tP8hzNg2fSPuW7RkoyqW+wq3Q==
-X-Google-Smtp-Source: AGHT+IHJ53kXaobjnDjGyyDXz3E9xCZ1Fuq75WbMtoDEfH+gKHssnROsPKPVEKCK6JwKiD1+JVcyqxFnesdAMMUsW3w=
-X-Received: by 2002:a2e:2205:0:b0:2ef:2e5d:3703 with SMTP id
- 38308e7fff4ca-2f03c602db5mr569841fa.0.1721849407534; Wed, 24 Jul 2024
- 12:30:07 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iEANHYYZZGBJ7ql1PX2QzoxHY3080flIx7crnR6gkt8=;
+ b=0UbE6ifAPYnnWyW1fICP+3wknDkFUgDloKyzv/szhOjPOIZkJG3Ckj/YePagnBYa/fZg+w8zOWatBZYXOXqlFsmVW/t3gibuEAFdLIjkRVXchx97S6+pdDweeOKicns5UI5CgelLF3zGtAGlp58fqxYr/Jgxlme0EhIH1qJeAjg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by LV8PR10MB7824.namprd10.prod.outlook.com (2603:10b6:408:1e7::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Wed, 24 Jul
+ 2024 19:37:00 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7784.017; Wed, 24 Jul 2024
+ 19:37:00 +0000
+Date: Wed, 24 Jul 2024 15:36:56 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Steve Dickson <steved@redhat.com>
+Subject: Re: [PATCH 05/14] sunrpc: change sp_nrthreads from atomic_t to
+ unsigned int.
+Message-ID: <ZqFX2ECVBuQ+Xy3+@tissot.1015granger.net>
+References: <>
+ <cf8d0e7e1ddaa4d8e1923be8274ff0679713e471.camel@kernel.org>
+ <172109362034.15471.7453960747189036602@noble.neil.brown.name>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <172109362034.15471.7453960747189036602@noble.neil.brown.name>
+X-ClientProxiedBy: CH5PR05CA0014.namprd05.prod.outlook.com
+ (2603:10b6:610:1f0::24) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240724170138.1942307-1-sagi@grimberg.me> <20240724170138.1942307-2-sagi@grimberg.me>
-In-Reply-To: <20240724170138.1942307-2-sagi@grimberg.me>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 24 Jul 2024 15:29:55 -0400
-Message-ID: <CAN-5tyF4fjD4sGDx7CTnYWuCcOLsX3dSQpiPyLNNQAM1Hd5TJg@mail.gmail.com>
-Subject: Re: [PATCH rfc 2/2] NFSD: allow client to use write delegation
- stateid for READ
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <dai.ngo@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|LV8PR10MB7824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5818b7f6-7a78-415c-1754-08dcac17fcb7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?+3oTACXGAedWWVR2eqd6JkeAK/vvd1NGL4RnqkY6KEMWZkKYTooKIrewWA?=
+ =?iso-8859-1?Q?KFxzOTgK6yyVmBEpyBtNV+bPiRN2Xh/cGv72Hu354vjrDAHm0Oise2sGDM?=
+ =?iso-8859-1?Q?9rEce7pMqmPdH3Bt38vV4djWQEqzVFnRKexoCC7QlVh8Id4t1BiCCUrUVF?=
+ =?iso-8859-1?Q?cPgF8o37OIVGbAQKTvyc0ehCxm8/3em4mXBwPxoXX+XF5vwyhfkZJRM0ob?=
+ =?iso-8859-1?Q?jPLYZEq3ZFZ5iYdX7nGgIQHVG/IRgAE466UwqgX0jH/SDR9c+DSsLxZr8b?=
+ =?iso-8859-1?Q?sb8/aNerrsBz/iQTRQNOp4LPeKBjquArVcjGZ22CzjE0ljQSY50gZ9qEQ2?=
+ =?iso-8859-1?Q?kOjpDCdvKaY9YRB2QDFtY7iW+WQDrSOvlaJi5XUG2ySHjetr8YJ5Xz/gQK?=
+ =?iso-8859-1?Q?3tjcargne8EswHWY4L5wNIZ5rNhQnH4Vep5y9m3TplCLcqn5BSBU/CFgaF?=
+ =?iso-8859-1?Q?74FAiowBNUkKMk1uoozX+E2g6KTp2JnNHhW7O9mvpZK9GeQd19q0UugRiU?=
+ =?iso-8859-1?Q?I1jy9gmMai2HcxSOX+iI+tchp5gPmVx5GhQU37e047xmIxRT4A3Q2PhqY1?=
+ =?iso-8859-1?Q?+hIiUmShU08tmmb2ldGwLbd5n/7QHvNmiq0ISKmcKnFzD2+pE9nAsr83lD?=
+ =?iso-8859-1?Q?sA2QX2Rp2Y2SB3/7+tm+irZCJlNPjeNsLiC0CLNbglga52HCWUmWMiQgC+?=
+ =?iso-8859-1?Q?Mr5tfehD06lX5HMPXNenavrn+bjfv3ugB59199ywWPHM8kgadAKV9tazGM?=
+ =?iso-8859-1?Q?/5nBjG1UptIvyoo4akIkV19gnkW6N0o3BtkUqEWBKkfJDSu/pbiCT6W8u8?=
+ =?iso-8859-1?Q?kUx8EBNB59Nk8omg4vj19b5KBmn+bGY0+mmXASIodHYHKJW9LQd13KjbrX?=
+ =?iso-8859-1?Q?3gli4T/YNQLVMZKdVAdd1/NARC2K1Knz1xfsCV92869I67RC6pyaS8/b05?=
+ =?iso-8859-1?Q?2iFCKNtJYQ6i7+bRAOwsC37xdqZ9QRQ4P5lBvUCibmILaCYqWYtDuQmpx6?=
+ =?iso-8859-1?Q?JHY1ZVe9wmi+9IjNofZnOQLORmAqWF7Z2aLXTn+Zmz322bQcSqW6Mj778P?=
+ =?iso-8859-1?Q?0Wb4EFi4iwdfhw8SLcvaFUl8O/qGbJEfG2InWS/CdL1QNdNuCasiYjPXO7?=
+ =?iso-8859-1?Q?XRK4eM1L6bBa+OuZWISmupf8qWPhp9HDvfaMFI3ZpQa30wWgKQkzhuIKg0?=
+ =?iso-8859-1?Q?G+n1WmnhkYhpVpSzuNg1ZZqVBFxdq+ZVb9dUqS8dZbsFABSPj6Zid60rs1?=
+ =?iso-8859-1?Q?RzHwY6xMDSz6UCPocQGKsdXGE0JePWmnJ37k6vWnLS1ahc4OVZhGHT8P1v?=
+ =?iso-8859-1?Q?O0Q5bKfwkNkjU3D8htU/QsWjGUWqkBdvNQn+JxyCECutn//hE2LNJu7leO?=
+ =?iso-8859-1?Q?9zacbpNJ4a8VjBz2JATjWFbLVbStjYVg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?EqqC7XXp1Z/JBk8pNWI4Z7PGxuDAfzCcf4ty67IBvGk0g5WWlukGdSKE6W?=
+ =?iso-8859-1?Q?GDFHN5TsWKR6ief76COuzQb1G8DYIcyk6hX4X5BzllVI0/v4Vgfs8SjZRQ?=
+ =?iso-8859-1?Q?uDI+q/ej6Rl0A19TO4yn7mBtIyUFtZus+eWvefXVN/H7c0paSQ6lfkm6qr?=
+ =?iso-8859-1?Q?kr1b47mPneHWqwFL1CGSmAR0vasaQoE8gp5N6iKqyhuzNPR2LxOHJDAhjR?=
+ =?iso-8859-1?Q?jfkzlhS33pUsqNBMXcuoaJGAmEG2a66PhL6S01W5x1pJ9GTnbGKWjN5oNJ?=
+ =?iso-8859-1?Q?NUgXeci5QDL3ZLdGQgJG9myOZ4oQbFZIibeiyc8f8mRdk3tdup/DJ4ASH1?=
+ =?iso-8859-1?Q?Egc/rPCqcAa7Zk8Sz3/hEr1BWjBwieZh3mU+0yDeQVWgsRLFK1gyoe4ou4?=
+ =?iso-8859-1?Q?EAHgLP5nMEn0/WH+VPuCBAfm7JVjAYMmJcOW/8uOiRxfhK4kwHxwvNQ+K4?=
+ =?iso-8859-1?Q?LNgaV8Oxm49oLzcwNRe9DavcKpQs+ZiteierfWkSJIXJL+KH0Z7kmxyUud?=
+ =?iso-8859-1?Q?p0FJAGo3tIaPDL3EpAJ9Stzl4eekOobY4+VjxSJ8/f3ZZcRoNcL0tcKMXI?=
+ =?iso-8859-1?Q?3ieOHp2bEUUagPizVlfZ+Bh1W4Zcp51Wo3A4RMR/uTo/RFJpjN6Yyiy+2c?=
+ =?iso-8859-1?Q?kwQj3PlCT1W9saIiNB6AbrSSobtKyKx6fbjFT2d77y4tWhL1QNqaAUEX3u?=
+ =?iso-8859-1?Q?N6a7vtMypnJofB/kt35xHJYKBAU8+BP3n/KWzoMyLazPsccV5yFmtxmAX9?=
+ =?iso-8859-1?Q?Kq74aa8tmn5uJZ22jLIVfMnC4HkdyPMXPTb/WmNAvgi9mlGIxDFoi3sf7K?=
+ =?iso-8859-1?Q?qOd7qD+unX4A7qaqBxEdVJLpAlzQ0B7fjZ0MC7P4n9doowxHL9BLOISqgt?=
+ =?iso-8859-1?Q?gIy6Yvf+UBFUFF4gAxnZW6WY3Tajsz1FlwtDtkNCypHjy1RcCDiX0piX4z?=
+ =?iso-8859-1?Q?qbdXpFdKwb9XH4LxLYaHYDzgMHDdtg9bt3NOF+ZGGlhEjyjnpEsVgHo8Ku?=
+ =?iso-8859-1?Q?+bTZDBMN7ZtKsSXk5SzA4al7a9iNcNfWTG8ILJVUijfggATb6qA/eb9lAl?=
+ =?iso-8859-1?Q?vVR4ocorKJThQ0P/6FV5Es/Yqjk2OgmuGGf0cu2Gvt1PTHnyqoA9GD8ZG7?=
+ =?iso-8859-1?Q?R0Tna0o9hN8FMmBTJo9Fq6j/n76t6/BtNC/Lr9g5QN+KKrJlvPmVb1x7aS?=
+ =?iso-8859-1?Q?L2yPwjfJP0Kv6D45Ka1z2RYjLfRVnXutByMEkMDxKBxgv/UG2bDEkXobOx?=
+ =?iso-8859-1?Q?8K2vuT7jsHXBq72QGG5FIiRL9BikrpOMyRs7rGpxOHiuuD5DgEar5w803L?=
+ =?iso-8859-1?Q?30gIaMtC+LcQLKGcyEgP61+VbkqPLVaSlXr7PiF0nu8LminowPrETDmfKk?=
+ =?iso-8859-1?Q?ZFadpLcSAm4EH3D8Hx6bEhxNqFMU/D4QLrlRaAxU3jDK2fwtujH3S5x8QW?=
+ =?iso-8859-1?Q?/ctbhN2/9jsAy5FahPQ4MxCtKPXSf7cm7AYt6CwPNH0q6PlckeD+RfRtg5?=
+ =?iso-8859-1?Q?X2ocBzIjTnanS8GzlcglTBzjXPJ2iHgnieP7hf6dqZSKWZo8521U14Z/+q?=
+ =?iso-8859-1?Q?XsZU9x/9/wTEoGXC0OpY6Y3TQESCICT9PHao7N4scCZYi2EcggOwx0Fz1x?=
+ =?iso-8859-1?Q?IuP9le0D9xZsYLamkkftErC2s8vEkqpDEZxWXDmBJ5O2x+noO02ekVrg?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	aPJoSvPv6R9gMkXBZMNUJl8YIZNAwC5w5uq/N8+CmfcEY+LkjC39W/+z6f5toLpf0DLN5h4nD70gQxUsSAUrmh3jwuZuZ79K9feJ543W3k7G0LT03BxJT+3ikpbJvUJKfrk+kJluNwDX2XiMBbfPGo1FMdinskEZONRg7rLDfxoZBIt0tGQyDb7S98yKovQtGQ9P+Dsikm32QA8jvsZEL/6IdjhzfewqRiNpwf8f4VC4cGI6vnQHMs95vL4ioQlIagWnvfWMSdsyg268ItY3ky5YQf0QgLsJUPi8KJvauUEBW262qQeRKWYZk8tRjBkB9BNTqzl2/lgR+t5GXQiKdID4p35pC+8v+qLy4FNBNfn3Ei7I8AnW1DR1ZDbLvS+qF/nuOaVsGnY6JDTM15qlOrHRACFzyu8J8C8tZ3plxk3zHaX2ZQxL91x/CFQpXE7jvtKy+bUs6WUJpwrVYpTY6sPOX6SercsYeaG3Yy3rPRJRxI97rJWySLVhzElVFrwyUgq5SPLqHe0ZHqyQdKzVPj+jDOD9LZyZGMJGnz2oEZaLoVpdJwqpToIcW65Qgz3bx/TChG5OJiiUDIheAcGdASAUFEa5r0vWmASQ8a6juJM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5818b7f6-7a78-415c-1754-08dcac17fcb7
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2024 19:37:00.4980
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NHip5oVMxEcXRVefWNK0zgQN0labX5obnuGU7shiPhfGRqgnRPBpmkGERPWbsahgVKGk1UBFwiostWEkd8rWbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR10MB7824
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-24_21,2024-07-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=958 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2407240140
+X-Proofpoint-GUID: b7uN5JqEmGAH4tWpigYCiol2-Cdfc_6U
+X-Proofpoint-ORIG-GUID: b7uN5JqEmGAH4tWpigYCiol2-Cdfc_6U
 
-On Wed, Jul 24, 2024 at 1:01=E2=80=AFPM Sagi Grimberg <sagi@grimberg.me> wr=
-ote:
->
-> Based on a patch fom Dai Ngo, allow NFSv4 client to use write delegation
-> stateid for READ operation. Per RFC 8881 section 9.1.2. Use of the
-> Stateid and Locking.
->
-> In addition, for anonymous stateids, check for pending delegations by
-> the filehandle and client_id, and if a conflict found, recall the delegat=
-ion
-> before allowing the read to take place.
->
-> Suggested-by: Dai Ngo <dai.ngo@oracle.com>
-> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-> ---
->  fs/nfsd/nfs4proc.c  | 22 +++++++++++++++++++--
->  fs/nfsd/nfs4state.c | 47 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/nfs4xdr.c   |  9 +++++++++
->  fs/nfsd/state.h     |  2 ++
->  fs/nfsd/xdr4.h      |  2 ++
->  5 files changed, 80 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 7b70309ad8fb..324984ec70c6 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -979,8 +979,24 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_comp=
-ound_state *cstate,
->         /* check stateid */
->         status =3D nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->cur=
-rent_fh,
->                                         &read->rd_stateid, RD_STATE,
-> -                                       &read->rd_nf, NULL);
-> -
-> +                                       &read->rd_nf, &read->rd_wd_stid);
+On Tue, Jul 16, 2024 at 11:33:40AM +1000, NeilBrown wrote:
+> On Tue, 16 Jul 2024, Jeff Layton wrote:
+> > On Mon, 2024-07-15 at 17:14 +1000, NeilBrown wrote:
+> > > sp_nrthreads is only ever accessed under the service mutex
+> > >   nlmsvc_mutex nfs_callback_mutex nfsd_mutex
+> > > so these is no need for it to be an atomic_t.
+> > > 
+> > > The fact that all code using it is single-threaded means that we can
+> > > simplify svc_pool_victim and remove the temporary elevation of
+> > > sp_nrthreads.
+> > > 
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/nfsd/nfsctl.c           |  2 +-
+> > >  fs/nfsd/nfssvc.c           |  2 +-
+> > >  include/linux/sunrpc/svc.h |  4 ++--
+> > >  net/sunrpc/svc.c           | 31 +++++++++++--------------------
+> > >  4 files changed, 15 insertions(+), 24 deletions(-)
+> > > 
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index 5b0f2e0d7ccf..d85b6d1fa31f 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+> > > @@ -1769,7 +1769,7 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info)
+> > >  			struct svc_pool *sp = &nn->nfsd_serv->sv_pools[i];
+> > >  
+> > >  			err = nla_put_u32(skb, NFSD_A_SERVER_THREADS,
+> > > -					  atomic_read(&sp->sp_nrthreads));
+> > > +					  sp->sp_nrthreads);
+> > >  			if (err)
+> > >  				goto err_unlock;
+> > >  		}
+> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > index 4438cdcd4873..7377422a34df 100644
+> > > --- a/fs/nfsd/nfssvc.c
+> > > +++ b/fs/nfsd/nfssvc.c
+> > > @@ -641,7 +641,7 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
+> > >  
+> > >  	if (serv)
+> > >  		for (i = 0; i < serv->sv_nrpools && i < n; i++)
+> > > -			nthreads[i] = atomic_read(&serv->sv_pools[i].sp_nrthreads);
+> > > +			nthreads[i] = serv->sv_pools[i].sp_nrthreads;
+> > >  	return 0;
+> > >  }
+> > >  
+> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > > index e4fa25fafa97..99e9345d829e 100644
+> > > --- a/include/linux/sunrpc/svc.h
+> > > +++ b/include/linux/sunrpc/svc.h
+> > > @@ -33,9 +33,9 @@
+> > >   * node traffic on multi-node NUMA NFS servers.
+> > >   */
+> > >  struct svc_pool {
+> > > -	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
+> > > +	unsigned int		sp_id;		/* pool id; also node id on NUMA */
+> > >  	struct lwq		sp_xprts;	/* pending transports */
+> > > -	atomic_t		sp_nrthreads;	/* # of threads in pool */
+> > > +	unsigned int		sp_nrthreads;	/* # of threads in pool */
+> > >  	struct list_head	sp_all_threads;	/* all server threads */
+> > >  	struct llist_head	sp_idle_threads; /* idle server threads */
+> > >  
+> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > index 072ad115ae3d..0d8588bc693c 100644
+> > > --- a/net/sunrpc/svc.c
+> > > +++ b/net/sunrpc/svc.c
+> > > @@ -725,7 +725,7 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+> > >  	serv->sv_nrthreads += 1;
+> > >  	spin_unlock_bh(&serv->sv_lock);
+> > >  
+> > > -	atomic_inc(&pool->sp_nrthreads);
+> > > +	pool->sp_nrthreads += 1;
+> > >  
+> > >  	/* Protected by whatever lock the service uses when calling
+> > >  	 * svc_set_num_threads()
+> > > @@ -780,31 +780,22 @@ svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
+> > >  	struct svc_pool *pool;
+> > >  	unsigned int i;
+> > >  
+> > > -retry:
+> > >  	pool = target_pool;
+> > >  
+> > > -	if (pool != NULL) {
+> > > -		if (atomic_inc_not_zero(&pool->sp_nrthreads))
+> > > -			goto found_pool;
+> > > -		return NULL;
+> > > -	} else {
+> > > +	if (!pool) {
+> > >  		for (i = 0; i < serv->sv_nrpools; i++) {
+> > >  			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
+> > > -			if (atomic_inc_not_zero(&pool->sp_nrthreads))
+> > > -				goto found_pool;
+> > > +			if (pool->sp_nrthreads)
+> > > +				break;
+> > >  		}
+> > > -		return NULL;
+> > >  	}
+> > >  
+> > > -found_pool:
+> > > -	set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+> > > -	set_bit(SP_NEED_VICTIM, &pool->sp_flags);
+> > > -	if (!atomic_dec_and_test(&pool->sp_nrthreads))
+> > > +	if (pool && pool->sp_nrthreads) {
+> > > +		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+> > > +		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
+> > >  		return pool;
+> > > -	/* Nothing left in this pool any more */
+> > > -	clear_bit(SP_NEED_VICTIM, &pool->sp_flags);
+> > > -	clear_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+> > > -	goto retry;
+> > > +	}
+> > > +	return NULL;
+> > >  }
+> > >  
+> > >  static int
+> > > @@ -883,7 +874,7 @@ svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+> > >  	if (!pool)
+> > >  		nrservs -= serv->sv_nrthreads;
+> > >  	else
+> > > -		nrservs -= atomic_read(&pool->sp_nrthreads);
+> > > +		nrservs -= pool->sp_nrthreads;
+> > >  
+> > >  	if (nrservs > 0)
+> > >  		return svc_start_kthreads(serv, pool, nrservs);
+> > > @@ -953,7 +944,7 @@ svc_exit_thread(struct svc_rqst *rqstp)
+> > >  
+> > >  	list_del_rcu(&rqstp->rq_all);
+> > >  
+> > > -	atomic_dec(&pool->sp_nrthreads);
+> > > +	pool->sp_nrthreads -= 1;
+> > >  
+> > >  	spin_lock_bh(&serv->sv_lock);
+> > >  	serv->sv_nrthreads -= 1;
+> > 
+> > I don't think svc_exit_thread is called with the nfsd_mutex held, so if
+> > several threads were exiting at the same time, they could race here.
+> 
+> This is subtle and deserves explanation in the commit.
 
-Now I can see that this patch wants to leverage the "returned stateid
-of the nfs4_preprocess_stateid_op() but the logic in the previous
-patch was in the way because it distinguished the copy_notify by the
-non-null passed in stateid. So I would suggest that in order to not
-break the copy_notify and help with this functionality something else
-is sent into nfs4_proprocess_staetid_op() to allow for the stateid to
-be passed and then distinguish between copy_notify and read.
+Hi Neil, assuming you mean "commit message" here, are you planning
+to resend 5/14 with this update?
 
-> +       /*
-> +        * rd_wd_stid is needed for nfsd4_encode_read to allow write
-> +        * delegation stateid used for read. Its refcount is decremented
-> +        * by nfsd4_read_release when read is done.
-> +        */
-> +       if (!status) {
-> +               if (!read->rd_wd_stid) {
-> +                       /* special stateid? */
-> +                       status =3D nfsd4_deleg_read_conflict(rqstp, cstat=
-e->clp,
-> +                               &cstate->current_fh);
-> +               } else if (read->rd_wd_stid->sc_type !=3D SC_TYPE_DELEG |=
-|
-> +                          delegstateid(read->rd_wd_stid)->dl_type !=3D
-> +                                               NFS4_OPEN_DELEGATE_WRITE)=
- {
-> +                       nfs4_put_stid(read->rd_wd_stid);
-> +                       read->rd_wd_stid =3D NULL;
-> +               }
-> +       }
->         read->rd_rqstp =3D rqstp;
->         read->rd_fhp =3D &cstate->current_fh;
->         return status;
-> @@ -990,6 +1006,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_comp=
-ound_state *cstate,
->  static void
->  nfsd4_read_release(union nfsd4_op_u *u)
->  {
-> +       if (u->read.rd_wd_stid)
-> +               nfs4_put_stid(u->read.rd_wd_stid);
->         if (u->read.rd_nf)
->                 nfsd_file_put(u->read.rd_nf);
->         trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index dc61a8adfcd4..7e6b9fb31a4c 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -8805,6 +8805,53 @@ nfsd4_get_writestateid(struct nfsd4_compound_state=
- *cstate,
->         get_stateid(cstate, &u->write.wr_stateid);
->  }
->
-> +/**
-> + * nfsd4_deleg_read_conflict - Recall if read causes conflict
-> + * @rqstp: RPC transaction context
-> + * @clp: nfs client
-> + * @fhp: nfs file handle
-> + * @inode: file to be checked for a conflict
-> + * @modified: return true if file was modified
-> + * @size: new size of file if modified is true
-> + *
-> + * This function is called when there is a conflict between a write
-> + * delegation and a read that is using a special stateid where the
-> + * we cannot derive the client stateid exsistence. The server
-> + * must recall a conflicting delegation before allowing the read
-> + * to continue.
-> + *
-> + * Returns 0 if there is no conflict; otherwise an nfs_stat
-> + * code is returned.
-> + */
-> +__be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
-> +               struct nfs4_client *clp, struct svc_fh *fhp)
-> +{
-> +       struct nfs4_file *fp;
-> +       __be32 status =3D 0;
-> +
-> +       fp =3D nfsd4_file_hash_lookup(fhp);
-> +       if (!fp)
-> +               return nfs_ok;
-> +
-> +       spin_lock(&state_lock);
-> +       spin_lock(&fp->fi_lock);
-> +       if (!list_empty(&fp->fi_delegations) &&
-> +           !nfs4_delegation_exists(clp, fp)) {
-> +               /* conflict, recall deleg */
-> +               status =3D nfserrno(nfsd_open_break_lease(fp->fi_inode,
-> +                                       NFSD_MAY_READ));
-> +               if (status)
-> +                       goto out;
-> +               if (!nfsd_wait_for_delegreturn(rqstp, fp->fi_inode))
-> +                       status =3D nfserr_jukebox;
-> +       }
-> +out:
-> +       spin_unlock(&fp->fi_lock);
-> +       spin_unlock(&state_lock);
-> +       return status;
-> +}
-> +
-> +
->  /**
->   * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
->   * @rqstp: RPC transaction context
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index c7bfd2180e3f..f0fe526fac3c 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4418,6 +4418,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, _=
-_be32 nfserr,
->         unsigned long maxcount;
->         struct file *file;
->         __be32 *p;
-> +       fmode_t o_fmode =3D 0;
->
->         if (nfserr)
->                 return nfserr;
-> @@ -4437,10 +4438,18 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp,=
- __be32 nfserr,
->         maxcount =3D min_t(unsigned long, read->rd_length,
->                          (xdr->buf->buflen - xdr->buf->len));
->
-> +       if (read->rd_wd_stid) {
-> +               /* allow READ using write delegation stateid */
-> +               o_fmode =3D file->f_mode;
-> +               file->f_mode |=3D FMODE_READ;
-> +       }
->         if (file->f_op->splice_read && splice_ok)
->                 nfserr =3D nfsd4_encode_splice_read(resp, read, file, max=
-count);
->         else
->                 nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount)=
-;
-> +       if (o_fmode)
-> +               file->f_mode =3D o_fmode;
-> +
->         if (nfserr) {
->                 xdr_truncate_encode(xdr, starting_len);
->                 return nfserr;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index ffc217099d19..c1f13b5877c6 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -780,6 +780,8 @@ static inline bool try_to_expire_client(struct nfs4_c=
-lient *clp)
->         return clp->cl_state =3D=3D NFSD4_EXPIRABLE;
->  }
->
-> +extern __be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
-> +               struct nfs4_client *clp, struct svc_fh *fhp);
->  extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
->                 struct inode *inode, bool *file_modified, u64 *size);
->  #endif   /* NFSD4_STATE_H */
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index fbdd42cde1fa..434973a6a8b1 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -426,6 +426,8 @@ struct nfsd4_read {
->         struct svc_rqst         *rd_rqstp;          /* response */
->         struct svc_fh           *rd_fhp;            /* response */
->         u32                     rd_eof;             /* response */
-> +
-> +       struct nfs4_stid        *rd_wd_stid;            /* internal */
->  };
->
->  struct nfsd4_readdir {
-> --
-> 2.43.0
->
->
+
+> svc_exit_thread() is called in a thread *after* svc_thread_should_stop()
+> has returned true.  That means RQ_VICTIM is set and most likely
+> SP_NEED_VICTIM was set
+> 
+> SP_NEED_VICTIM is set in svc_pool_victim() which is called from
+> svc_stop_kthreads() which requires that the mutex is held.
+> svc_stop_kthreads() waits for SP_VICTIM_REMAINS to be cleared which is
+> the last thing that svc_exit_thread() does.
+> So when svc_exit_thread() is called, the mutex is held by some other
+> thread that is calling svc_set_num_threads().
+> 
+> This is also why the list_del_rcu() in svc_exit_thread() is safe.
+> 
+> The case there svc_exit_thread() is called but SP_NEED_VICTIM wasn't set
+> (only RQ_VICTIM) is in the ETIMEDOUT case of nfsd(), in which case
+> nfsd() ensures that the mutex is held.
+> 
+> This was why
+>  [PATCH 07/14] Change unshare_fs_struct() to never fail.
+> was needed.  If that fails in the current code, svc_exit_thread() can be
+> called without the mutex - which is already a theoretical problem for
+> the list_del_rcu().
+> 
+> Thanks,
+> NeilBrown
+
+-- 
+Chuck Lever
 
