@@ -1,133 +1,126 @@
-Return-Path: <linux-nfs+bounces-5034-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5035-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8015393B4C1
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 18:17:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC31E93B580
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 19:01:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2964D1F24EBE
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 16:17:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81D391F23DEA
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 17:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2EE2837F;
-	Wed, 24 Jul 2024 16:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=trodman.com header.i=@trodman.com header.b="N6GNborc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 053AB15E5BB;
+	Wed, 24 Jul 2024 17:01:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from xklwu-2.xen.prgmr.com (xklwu-2.xen.prgmr.com [71.19.154.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5D82595
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 16:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.154.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575EB15B118
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 17:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721837858; cv=none; b=IpFsLIgtYc3gnhLdLP2f4udPYL0INmPszjTLGK6eChtgBngg7dDljhe9+Q0zV/ti5vMpn99JgKH04MXrHSkdzKkqiBbA3lO9EYRrpFAzZnOblrnnUXAsxoF3hs8AXR6odaDUbCqXTv9SegNu3sKVlxVU3TNTDfhT7e95YKvLi7w=
+	t=1721840503; cv=none; b=mcAKSYi6K95IZ6wSG6dSq4rPcYqr2YmCofEosbQf3d/UbgO6LlLA5qbbshXd8lb/8woO3iiJ5z6v7+4fQURgp2vPLbVRdo6/capt3ltQRb0PiR4fYROT8NzOGw2E8n/1hiuMncB9G7lJGrYpO/qTx2QtUyCQWCOhO2iCEFvpWkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721837858; c=relaxed/simple;
-	bh=9EiXNgcci9CdyqSo+Dw9gPMZHgyRCcctaO22JjLzf2M=;
-	h=Message-Id:To:From:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date; b=Z7z9zkmmAlz0KxwYKaNglTt+K/EJgP3S//i7kHhqVVNXO9/j79TgWCx4asYhllCDt+nrS0luqyPFkMljBbW61BNgQkBuAc35OwBz3O7dKX74Z7S31QBhzyl26pgQT5DOPpU37TTsBYshhXfAjZm2vrBu1GiUlR+jQK04udxtR1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trodman.com; spf=pass smtp.mailfrom=trodman.com; dkim=pass (1024-bit key) header.d=trodman.com header.i=@trodman.com header.b=N6GNborc; arc=none smtp.client-ip=71.19.154.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trodman.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trodman.com
-Received: from epjdn.zq3q.org (epjdn.zq3q.org [71.19.149.160])
-	by xklwu-2.xen.prgmr.com (8.17.1/8.15.2) with ESMTPS id 46OGHWQT082116
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 24 Jul 2024 11:17:32 -0500
-DKIM-Filter: OpenDKIM Filter v2.11.0 xklwu-2.xen.prgmr.com 46OGHWQT082116
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=trodman.com;
-	s=myselector; t=1721837852;
-	bh=XtMsoTaNw6p/qEOfxVy8PcihS54LKbfhFDnJXVrXSoM=;
-	h=To:From:Subject:In-reply-to:References:Date:From;
-	b=N6GNborcI5tFuEZw7NA6dR04Hgi5GJ5Gzr96MPz3zBlSO3PgCRt1wmzLCLAnq+Ym/
-	 ZVOxuLbrrE2gKAxn+QAQYSwzsADYAweDS2L3dBywu/aEgMvzFO1CJgNriq8YVk1Hc5
-	 tYl71LZvGsWh1admT4qV0BrLFZsfLK0EXyToImJI=
-Received: from epjdn.zq3q.org (localhost [127.0.0.1])
-	by epjdn.zq3q.org (8.17.1/8.15.2) with ESMTP id 46OGHVKY064027;
-	Wed, 24 Jul 2024 11:17:32 -0500
-Message-Id: <202407241617.46OGHVKY064027@epjdn.zq3q.org>
-To: linux-nfs@vger.kernel.org
-From: linux-nfs@trodman.com
-Subject: Re: recipe/example | nftables for Internet nfs4? << iif enp1s0 tcp dport 2049               counter accept comment "allow nfs"
-In-reply-to: <9a8043e5-9f97-45c0-a26f-a882acd1e320@oracle.com>
-References: <202407231953.46NJrpWr3811115@epjdn.zq3q.org> <9a8043e5-9f97-45c0-a26f-a882acd1e320@oracle.com>
-Comments: In-reply-to Calum Mackay <calum.mackay@oracle.com>
-   message dated "Tue, 23 Jul 2024 22:28:21 +0100."
+	s=arc-20240116; t=1721840503; c=relaxed/simple;
+	bh=A6mnSytyRRhS/M5RACCrhsE3DHJmBeKbu17U1c5fhNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aXpwjONrY+QfXobN5uOFHFcpn6i1WzsQg58+lMVPz186AYvqQTNhGc6xRQ2aWvS/NYSdBCD5dE0gd9A//vYlrB2GTb2IJqjjd9rP9Ok7Z29DkN8F1zLX+4CZP7MNFtvAP56GunTxSyD03oukYUQUllaGGxKRt7rB2wm1+pTMpsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7044c737d7cso632753a34.0
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 10:01:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721840501; x=1722445301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LoQojwDQKITkZnXvmzmdlnhdbbSQV5a5SekgF3mUFtA=;
+        b=CyEwQgYILYmUS6tH1iRJNPKx1WJwxNHKh+LIgVISWwb0ieoUWXxeQy+eMM+r8OWl+v
+         8jXXYvsdMJMzevPmbI84BiCRupApJibVEsMr88+PO1SmuXRGmBh1c6YYzDLz6+0Q+kIE
+         MYwkA6fqfUt1CM5lsykYUiNg/lAFn/Cxkd6G73tMrdJ5xhDTXCFopst9TP+XzEgdxw/N
+         BDamBhXRGURgBtv6fqcI68lFmNiFkgtkGI7LN+luikXx1COfySO+/kiRAGfFxelK9GE8
+         AKCoviAZnLoDeWkWPhlAaKoJvGiZIBM4gFxoZNI4ifBAEX0tSQNV7xoGdPAq2gI7EHLS
+         Xzyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRUx6rz+MxXtFQz2EREpLRaAFgKKD0Nls7ZsU1Gwg8r3K9YcuaMWDstFra71YQdI+d6Xt/Cn14n6XdLRMdXtHdr7lbsIKul6uT
+X-Gm-Message-State: AOJu0YwlS+P2EdPEXGC9HPOMG0Z33Z6QGy80iBLZxwTmT9I0ajb/naSD
+	qEysUWGDGqfK2t72ZrhSnm/NxRVI5vXJEcFfm4e+cIze8ZHGXDiH
+X-Google-Smtp-Source: AGHT+IHmMnhmHbIWpvWXYglhpYtHvw4L42HPnIiW1qYpDVv3cUq3EI7NZRq+lStmf1oUBWEFb0fEvQ==
+X-Received: by 2002:a05:6820:2d4b:b0:5cd:13e0:b0d3 with SMTP id 006d021491bc7-5d5adefc90emr265308eaf.2.1721840500973;
+        Wed, 24 Jul 2024 10:01:40 -0700 (PDT)
+Received: from vastdata-ubuntu2.. ([12.220.158.163])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5d59ee65be5sm368297eaf.24.2024.07.24.10.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 10:01:40 -0700 (PDT)
+From: Sagi Grimberg <sagi@grimberg.me>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Dai Ngo <dai.ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH rfc 1/2] nfsd: don't assume copy notify when preprocessing the stateid
+Date: Wed, 24 Jul 2024 10:01:37 -0700
+Message-ID: <20240724170138.1942307-1-sagi@grimberg.me>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <64022.1721837851.1@epjdn.zq3q.org>
-Date: Wed, 24 Jul 2024 11:17:31 -0500
+Content-Transfer-Encoding: 8bit
 
-On Tue 7/23/24 22:28 +0100 Calum Mackay wrote:
->On 23/07/2024 8:53 pm, linux-nfs@trodman.com wrote:
->> I have a fedora server on Internet sharing out NFS; working ok for 3+years w/firewalld.  I'm going w/pure nftables on a new server. Does anyone have a recipe/example for setting up an NFS server using nftables?
->
->I'm still stuck on iptables, but I imagine it ought to be something 
->simple like adding this to your NFSv4 server's inbound chain:
->
->	tcp dport 2049 accept
->
->assuming you have a default accept policy on your outbound chain.
->
->That's just for NFSv4 over TCP, of course. And you might want to add ct 
->connection tracking state, etc.
+Move the stateid handling to nfsd4_copy_notify, if nfs4_preprocess_stateid_op
+did not produce an output stateid, error out.
 
-Thank you Calum.
+Copy notify specifically does not permit the use of special stateids,
+so enforce that outside generic stateid pre-processing.
 
-As you suggested, I added:
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ fs/nfsd/nfs4proc.c  | 4 +++-
+ fs/nfsd/nfs4state.c | 6 +-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-iif enp1s0 tcp dport 2049               counter accept comment "allow nfs"
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 46bd20fe5c0f..7b70309ad8fb 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1942,7 +1942,7 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	struct nfsd4_copy_notify *cn = &u->copy_notify;
+ 	__be32 status;
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+-	struct nfs4_stid *stid;
++	struct nfs4_stid *stid = NULL;
+ 	struct nfs4_cpntf_state *cps;
+ 	struct nfs4_client *clp = cstate->clp;
+ 
+@@ -1951,6 +1951,8 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 					&stid);
+ 	if (status)
+ 		return status;
++	if (!stid)
++		return nfserr_bad_stateid;
+ 
+ 	cn->cpn_lease_time.tv_sec = nn->nfsd4_lease;
+ 	cn->cpn_lease_time.tv_nsec = 0;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 69d576b19eb6..dc61a8adfcd4 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -7020,11 +7020,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
+ 		*nfp = NULL;
+ 
+ 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid)) {
+-		if (cstid)
+-			status = nfserr_bad_stateid;
+-		else
+-			status = check_special_stateids(net, fhp, stateid,
+-									flags);
++		status = check_special_stateids(net, fhp, stateid, flags);
+ 		goto done;
+ 	}
+ 
+-- 
+2.43.0
 
-I then tried mount -v ... and it got farther but failed
-
-    mount.nfs4: mount(2): Permission denied
-
-Then I restarted nftables.service, It worked!
-
---
-thanks!
-Tom
-
---8<---------------cut here---------------start------------->8--- 
-# cat /etc/sysconfig/nftables.conf |_rmcm ## comments stripped. enp1s0 faces Internet
-flush ruleset
-table inet filter {
-    chain input {
-        type filter hook input priority 0;
-        iif enp1s0 tcp dport {ssh}              counter accept comment "allow ssh"
-        iif enp1s0 tcp dport {http, https}      counter accept comment "allow http, https"
-        iif enp1s0 tcp dport 2049               counter accept comment "allow nfs"
-        iif enp1s0 tcp dport {smtp}             counter accept comment "smtp"
-        iif enp1s0 ct state {established, related} counter accept comment "allow established Internet packets"
-        iif enp1s0 counter drop comment "dropped Internet packets"
-        iif enp2s0 accept comment "allow local packets"
-    }
-    chain forward {
-        type filter hook forward priority 0;
-        iif enp1s0 oif enp2s0 ct state {established, related} counter accept comment "allow Internet est/relat"
-        iif enp2s0 oif enp1s0 counter accept comment "allow lan to Internet"
-        iif enp1s0 drop
-    }
-    chain output {
-        type filter hook output priority 0;
-    }
-}
-table nat {
-    chain output {
-        type nat hook output priority -100;
-    }
-    chain prerouting {
-        type nat hook prerouting priority -100;
-    }
-    chain postrouting {
-        type nat hook postrouting priority 100;
-        ip saddr 10.164.123.0/24  oif enp1s0 counter snat MY_SERVERS_INTERNET_IP comment "snat/static ip"
-    }
-}
 
