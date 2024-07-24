@@ -1,137 +1,111 @@
-Return-Path: <linux-nfs+bounces-5030-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5031-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1F1C93B04F
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 13:26:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB57993B203
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 15:53:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B71F01C2117E
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 11:26:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 600DC283A16
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jul 2024 13:53:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6190B156F30;
-	Wed, 24 Jul 2024 11:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7A2158DC3;
+	Wed, 24 Jul 2024 13:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MHDHelTx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAP2//Vl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1634915689A
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 11:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D456E13E020;
+	Wed, 24 Jul 2024 13:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721820412; cv=none; b=T8f7165VgqyZ3tOH64k1P8U8DClJi1cO97iKZZnMrQNI4YoOIDPcgz7RsaaDFMRVl9rq2O+llOArQQF/1vtxmw7spuqRJ/QLJcrbvR+ozWTEaQUamdmP5c5CtNfkFLMa9XIaefvBVMPJCrccFRELJICUScB0efmQvytiijyI3Xk=
+	t=1721829216; cv=none; b=Rv0Kp+InsbzBKLBu2jjtRL8k1OcREHL4Ps0hGnqAqa8NN5Z2xdK1vWK/GbM09zJATconytTYWTr9uYL73vczPY5hh2XIGuLurfbXl9mTK1Yjhd4Nwf5YF+bSP2ndZNCn5sp1ZRe5Wc3xteO1r+V/dMDI7gxPhJAvHXN/WOiQyZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721820412; c=relaxed/simple;
-	bh=IGeQhr18CB487p09WOzQ28jrpxxt4Pe/w5MgNaqByGo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pFdizcrm6PJGxovHn8SPMh2Z9iswZDP+eRbgiAtjhllsezhRwx3M/xabmfudH/Bl8Q2A4a36+eYrkpZ5szi8qwUXbkO42rhkVaMfvKAoEZYDyQYoRSftVgXHE/UyegQFGUYc2MdbjvsLZUmCRU6OuuIoLfbav8RdI5pDw9S9l1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MHDHelTx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721820409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UHL1y20+LMUJgE+Tk1FHL2Fer0A8K3eiU6L4brLtyuw=;
-	b=MHDHelTxYQa52/cijjOJbdOsXl4FFZiAmM+rNe7i6ynjG3xuEJRkxPMV4esYyuyEUuaBhv
-	OHN74yAlNSOIGGlvWbMkZ3Ue8wUuv01KcDke3NY6WeLJGLi7h7Czsg14h8YGbmhZF2zC+z
-	ikVJOvcNtrZWAWhP0fHL0CIZZZ31QTY=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-472-sXK0SzweOC2JIx4EI6KBIA-1; Wed, 24 Jul 2024 07:26:47 -0400
-X-MC-Unique: sXK0SzweOC2JIx4EI6KBIA-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-447e66bbc62so3538741cf.2
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jul 2024 04:26:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721820406; x=1722425206;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UHL1y20+LMUJgE+Tk1FHL2Fer0A8K3eiU6L4brLtyuw=;
-        b=AFR5M70PQK+pHSfD2f132gpExMesS2hxZC/vzE8dZyfiQmtKUBuN3aNtIZUIoKT4o9
-         X1X+PJKPdHKrtjT119hd1NIMPe1pzEh6p8BFbcruJ9K0fEH2XlrNJ7d690WoV9M9VOpH
-         wVyaPP0o+DF+lOQPxAge4mzjNXCJPwSBvDmw4BpvogafJu8xeg1Ztq9h/VfKImtnryeK
-         hEK5zEK0B7K8MCjE3yJqyLQX8AECzlSRbgKg/JFO3EXZywx3QYl/45JSssleYOULI+89
-         3BuDdWDFFUkRbfH1/gwVg+J38Iwr02fqm10Z6edZk5pbBXBlekzTrFonQtuHHyV9MVYP
-         qJ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVM26MrNL3PGU2PtV/d2inFw5T6uXKG2Y6zlT55RlYUNDe+3CIeOU9CbIMCpAWDcQ4hXprwzJH71WcN57T7jNqbs3nkyJoQK46k
-X-Gm-Message-State: AOJu0YxvslVwRrROOAp5djJeDiMy0DeQdpxtEmOE/8ct/Ryg67uztrtQ
-	8n08EDY/8sdRrsuxStMDOd+uCpaDrvjNHf2i4S37EKRyY5z3dzhRObLRQjqUvTn+UA2aNiLLh9U
-	M/ZMI2+GZ0vACrtT9+o2/fcleB63UVV9kmY9IBwkK1G8QeMVH096LYQgSTWl1TaLZrw==
-X-Received: by 2002:a05:6214:2d44:b0:6b5:ddf3:c142 with SMTP id 6a1803df08f44-6b94f01406dmr93287446d6.5.1721820405849;
-        Wed, 24 Jul 2024 04:26:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+ejZ+n9YjXifZsrffxgzpHJnJuiasBDWpaiQLoz4b8B9v65SIYCtREl5rLk6pS8xxsOSvfw==
-X-Received: by 2002:a05:6214:2d44:b0:6b5:ddf3:c142 with SMTP id 6a1803df08f44-6b94f01406dmr93287336d6.5.1721820405399;
-        Wed, 24 Jul 2024 04:26:45 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.163.123])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b96af3211csm37031126d6.100.2024.07.24.04.26.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jul 2024 04:26:44 -0700 (PDT)
-Message-ID: <93f4b015-90e1-46d1-bea5-64c2f8818179@redhat.com>
-Date: Wed, 24 Jul 2024 07:26:43 -0400
+	s=arc-20240116; t=1721829216; c=relaxed/simple;
+	bh=07Vzl6re9ZHoHnUQaqXa2n0Sm3JNDNE/aQbliYyNUPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSSzTIBDxdv0JLtBfh0RrFv+uy+NmG1dIcNFaej0eDwcxijtjKZINehLVWPm7sCdlSNsoSfv3hCj2pbUK1/QG83S9OeroYJ032d2MMwcqucsTlIq+EnuvPJ9v+IMC71o5ZXIxlDNbvlVTWO8y48uEycbC9LvRviM0O2ZagUqHrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAP2//Vl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0F7C32781;
+	Wed, 24 Jul 2024 13:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721829215;
+	bh=07Vzl6re9ZHoHnUQaqXa2n0Sm3JNDNE/aQbliYyNUPE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=WAP2//VlWUSM9jrjWrTnlUR5U9gfJcKWxfEehwSsgCifqJ1HhI5rmor2MgAYiE7Hj
+	 k3H3D8gUK01HrebDYiJ8EV56b+RO+InO4F1HL2zNXYqpPk0VVAstDY9HBgwUy8+jTo
+	 8Kp+cbZnfcsDTxUnkpS1wiQgO6T2KXSlCCZwyOB4EAFefvi0zRPKDPVqPNBGFqV5Kn
+	 m54HgAjJfy8we9Y9tl7LY7L4gaHz6KkuEz0NmtF8JUJfXUWPMHmL6c8XZgfCklah1Y
+	 U/SwoGTJa9N4jZ4SGcPsHczOthJTxHkGyBSbyg3+L/BrGVV8TCmbKAOKTgYYxrZSSF
+	 Ywifo4pkBnatw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A535FCE0A6E; Wed, 24 Jul 2024 06:53:34 -0700 (PDT)
+Date: Wed, 24 Jul 2024 06:53:34 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <b3d9710a-805e-4e37-8295-b5ec1133d15c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
+ <ZnCDgdg1EH6V7w5d@pc636>
+ <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
+ <ZnFT1Czb8oRb0SE7@pc636>
+ <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
+ <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz>
+ <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
+ <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
+ <ZnVInAV8BXhgAjP_@pc636>
+ <df0716ac-c995-498c-83ee-b8c25302f9ed@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: systemd/nfs-server.service: Is `ExecStopPost=/usr/sbin/exportfs
- -au` necessary?
-To: Paul Menzel <pmenzel@molgen.mpg.de>, linux-nfs@vger.kernel.org
-Cc: it+linux-nfs@molgen.mpg.de
-References: <92cfc598-d81c-4c2f-b8c6-3d2ab589fe18@molgen.mpg.de>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <92cfc598-d81c-4c2f-b8c6-3d2ab589fe18@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df0716ac-c995-498c-83ee-b8c25302f9ed@suse.cz>
 
+On Mon, Jul 15, 2024 at 10:39:38PM +0200, Vlastimil Babka wrote:
+> On 6/21/24 11:32 AM, Uladzislau Rezki wrote:
+> > On Wed, Jun 19, 2024 at 11:28:13AM +0200, Vlastimil Babka wrote:
+> > One question. Maybe it is already late but it is better to ask rather than not.
+> > 
+> > What do you think if we have a small discussion about it on the LPC 2024 as a
+> > topic? It might be it is already late or a schedule is set by now. Or we fix
+> > it by a conference time.
+> > 
+> > Just a thought.
+> 
+> Sorry for the late reply. The MM MC turned out to be so packed I didn't even
+> propose a slab topic. We could discuss in hallway track or a BOF, but
+> hopefully if the current direction taken by my RFC brings no unexpected
+> surprise, and the necessary RCU barrier side is also feasible, this will be
+> settled by time of plumbers.
 
+That would be even better!
 
-On 7/22/24 9:18 AM, Paul Menzel wrote:
-> Dear NFS folks,
-> 
-> 
-> Since the beginning in 2014 with commit 929aaa7eeab1 (Added 
-> systemd/nfs-server.service) the systemd service unit 
-> `systemd/nfs-server.service` has
-> 
->      Description=NFS server and services
->      […]
->      [Service]
->      Type=oneshot
->      RemainAfterExit=yes
->      ExecStartPre=-/usr/sbin/exportfs -r
->      ExecStart=/usr/sbin/rpc.nfsd
->      ExecStop=/usr/sbin/rpc.nfsd 0
->      ExecStopPost=/usr/sbin/exportfs -au
->      ExecStopPost=/usr/sbin/exportfs -f
-> 
-> and this is still present today as of commit b76dbaa48f7c (exports(5): 
-> update and correct information about subdirectory exports) [1].
-> 
-> Is flushing out the kernel’s export table with `exportfs -au` really 
-> necessary when stopping the NFS server?
-What problem does it cause to clean things up
-when the server is shutdown?
-
-steved.
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: 
-> https://git.linux-nfs.org/?p=steved/nfs-utils.git;a=blob;f=systemd/nfs-server.service;h=ac17d5286d3bf93d693fea5554eb439425f6857c;hb=b76dbaa48f7c239accb0c2d1e1d51ddd73f4d6be
-> 
-
+							Thanx, Paul
 
