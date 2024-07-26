@@ -1,93 +1,94 @@
-Return-Path: <linux-nfs+bounces-5056-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5057-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D842593CCB4
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06DB593CCB5
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E600B20C42
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 386B828124B
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A24A18E11;
-	Fri, 26 Jul 2024 02:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E637318E11;
+	Fri, 26 Jul 2024 02:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xdsSOdq5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVm46ZXt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xdsSOdq5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVm46ZXt"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QU4afctr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QintuUqb";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QU4afctr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QintuUqb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29685320B
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBAC320B
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721960769; cv=none; b=f9HC7vHkFi4X7q0nrIoifYTYMmiRIUtS/KyMpCAP2+Om+YMAf7MXxDFAn0rbDBtIKHd0yZ6W17mtyUabFwqxvh6iyrZ4H6r/RH+33We3/LYyRm8Svv2ugwaiqO7dpwykaCufyZkFgAwifR+A7xDdas85qYb0UTDkRQ6+akYcuE4=
+	t=1721960774; cv=none; b=SX/IOGD/6iCgdeyAk41Jm0LU8KfoC+fsMiyWHYTNUoq7ym1rpiiF4fXvaEXnsJk6cciTWhwHCOQXaJaNkNiUO6mSNy5Vl5pYkc3a33OE1DuuAPq7AHX8/7rumQSGiRmymidxdRRebRALdiXAV8ThfOcnzhV024HN3t6h43SksC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721960769; c=relaxed/simple;
-	bh=WvPk+zqr3yL5x76Ik89kycYmJojENDNysIp9dL9xK2g=;
+	s=arc-20240116; t=1721960774; c=relaxed/simple;
+	bh=H+Mb84lISPPcLCSKrCa+3G1tqKmhfQ2U0vfew5wwU7o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SGwh0jr2PsqPxUsV701bHgJJBy6Spd3m2Bsa4VJs7parJ8NLKaoLxp4RGbhtu2YE5rwCSSQyj7YbRGPsy+OFUEHVHmXYjzyjjY0RBsNzj1i1XCyRnLxHZr7hI4al3ZDf6V30P0uNAKXEvUoM2tjNkT6UtT06+B7P9CHawAUtDJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xdsSOdq5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVm46ZXt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xdsSOdq5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVm46ZXt; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=WtQfMg4SSoqNJoXi2mIQwsnH1D+OT3GcGyUCgXg1vefYyKD55HPC3RNFWy//WaVZc5om+NyLJwlC8r9zb6t+H3qArjyuTHZXi/6F48mtUzswwu4qZVj6jY1TJtRHXKlh+Yb4dHzm2SmTC4iyfT96nj9NfHHI5uXZ4Xd1Tna5lds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QU4afctr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QintuUqb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QU4afctr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QintuUqb; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C18F1F842;
-	Fri, 26 Jul 2024 02:26:05 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 05D30218BB;
+	Fri, 26 Jul 2024 02:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960771; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
-	b=xdsSOdq5zWJ/vy8LaNRLDoPYekDcGGpdjaaHPbKi8Y2G3CbKb2lx7Qe6QcsHTmLbmkrAWX
-	AFLeyatzNqD/snJu+Kg1KOOJtEf8ndDMM2InBit3TFEgw21Flo1anUi3NZV1af5rN9Cn5E
-	hq2bSM8KA1t1OSnRme7m/10V0yPC6HU=
+	bh=hoFISfuP5t+G0rWFwVY1UulJot7cJ6ChkZ8KaEYuIAc=;
+	b=QU4afctrVDsH7ZR4oFXizctSKQaRhx2EnDRihwDwlvrjumgQ2Aho+5SdvNMIYUInMAdaxK
+	xN5RUn0oCdqy3encGGoq8Z5u5/e+AuEinfMHWgB3bQorjms+jBLOVJyg78Kn/LYyd5uMTr
+	6Xq+VH2npXUeB0zoZUYQNx6YrBBtEgU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960765;
+	s=susede2_ed25519; t=1721960771;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
-	b=ZVm46ZXtDIJNAU/3g88avKicbZ8EGmDH2t4/SC0i8Q636xCELurvFXDEIKtAPpW+NV4OY+
-	KcR9LXqf35e78uCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
+	bh=hoFISfuP5t+G0rWFwVY1UulJot7cJ6ChkZ8KaEYuIAc=;
+	b=QintuUqbl6SzlJyftPqh0E+jE3JkGhwCJmOj79SHGP1XJlTGllWpOuzwzbOYU3KGpD1Mb1
+	m6fabDrUcQqrEUDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QU4afctr;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QintuUqb
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960771; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
-	b=xdsSOdq5zWJ/vy8LaNRLDoPYekDcGGpdjaaHPbKi8Y2G3CbKb2lx7Qe6QcsHTmLbmkrAWX
-	AFLeyatzNqD/snJu+Kg1KOOJtEf8ndDMM2InBit3TFEgw21Flo1anUi3NZV1af5rN9Cn5E
-	hq2bSM8KA1t1OSnRme7m/10V0yPC6HU=
+	bh=hoFISfuP5t+G0rWFwVY1UulJot7cJ6ChkZ8KaEYuIAc=;
+	b=QU4afctrVDsH7ZR4oFXizctSKQaRhx2EnDRihwDwlvrjumgQ2Aho+5SdvNMIYUInMAdaxK
+	xN5RUn0oCdqy3encGGoq8Z5u5/e+AuEinfMHWgB3bQorjms+jBLOVJyg78Kn/LYyd5uMTr
+	6Xq+VH2npXUeB0zoZUYQNx6YrBBtEgU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960765;
+	s=susede2_ed25519; t=1721960771;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
-	b=ZVm46ZXtDIJNAU/3g88avKicbZ8EGmDH2t4/SC0i8Q636xCELurvFXDEIKtAPpW+NV4OY+
-	KcR9LXqf35e78uCw==
+	bh=hoFISfuP5t+G0rWFwVY1UulJot7cJ6ChkZ8KaEYuIAc=;
+	b=QintuUqbl6SzlJyftPqh0E+jE3JkGhwCJmOj79SHGP1XJlTGllWpOuzwzbOYU3KGpD1Mb1
+	m6fabDrUcQqrEUDQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4A6D5138A7;
-	Fri, 26 Jul 2024 02:26:03 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E27AE138A7;
+	Fri, 26 Jul 2024 02:26:08 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id idlnADsJo2aqWAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:26:03 +0000
+	id B+ewJUAJo2awWAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:26:08 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -95,9 +96,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 2/6] nfsd: Pass 'cred' instead of 'rqstp' to some functions.
-Date: Fri, 26 Jul 2024 12:21:31 +1000
-Message-ID: <20240726022538.32076-3-neilb@suse.de>
+Subject: [PATCH 3/6] nfsd: Move error code mapping to per-version xdr code.
+Date: Fri, 26 Jul 2024 12:21:32 +1000
+Message-ID: <20240726022538.32076-4-neilb@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240726022538.32076-1-neilb@suse.de>
 References: <20240726022538.32076-1-neilb@suse.de>
@@ -108,267 +109,368 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 05D30218BB
+X-Spam-Score: -4.81
 X-Spam-Level: 
-X-Spamd-Result: default: False [0.40 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[]
 X-Spam-Flag: NO
-X-Spam-Score: 0.40
+X-Spamd-Result: default: False [-4.81 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:dkim];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-nfsd_permission(), exp_rdonly(), nfsd_setuser(), and nfsexp_flags()
-only ever need the cred out of rqstp, so pass it explicitly instead of
-the whole rqstp.
+There is code scatter around nfsd which chooses an error status based on
+the particular version of nfs being used.  It is cleaner to have the
+version specific choices in version specific code.
 
-This makes the interfaces cleaner.
+With this patch common code returns the most specific error code
+possible and the version specific code maps that if necessary.
+
+One complication is that the NFSv4 code NFS4ERR_SYMLINK might be used
+where v3 expects NFSERR_NOTDIR of NFSERR_INVAL.  To handle this we
+introduce an internal error code NFSERR_SYMLINK_NOT_DIR and convert that
+as appropriate for all versions.
+
+The selection of numbers for internal error codes was previously ad hoc.
+Now it uses an enum which starts at the first unused error code.
+
+NFSv4.1+ now returns NFS4ERR_WRONG_TYPE when that is appropriate.  It
+previously returned NFS4ERR_SYMLINK as that seemed best for NFSv4.0.
+According to RFC5661 15.1.2.9 NFSv4.0 was expected to return
+NFSERR_INVAL in these cases, so that is how the code now behaves.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/auth.c      | 14 +++++++-------
- fs/nfsd/auth.h      |  2 +-
- fs/nfsd/export.h    |  3 ++-
- fs/nfsd/nfs4state.c |  3 ++-
- fs/nfsd/nfsfh.c     |  6 +++---
- fs/nfsd/nfsproc.c   |  9 +++++----
- fs/nfsd/vfs.c       | 21 ++++++++++++---------
- fs/nfsd/vfs.h       |  2 +-
- 8 files changed, 33 insertions(+), 27 deletions(-)
+ fs/nfsd/export.c     |  2 +-
+ fs/nfsd/nfs3xdr.c    | 17 +++++++++++++++++
+ fs/nfsd/nfs4proc.c   | 11 +++--------
+ fs/nfsd/nfs4xdr.c    | 15 +++++++++++++++
+ fs/nfsd/nfsd.h       | 23 +++++++++++++++++++----
+ fs/nfsd/nfsfh.c      | 26 ++++++++++----------------
+ fs/nfsd/nfsxdr.c     | 19 +++++++++++++++++++
+ fs/nfsd/vfs.c        | 14 ++++----------
+ include/linux/nfs4.h |  3 +++
+ 9 files changed, 91 insertions(+), 39 deletions(-)
 
-diff --git a/fs/nfsd/auth.c b/fs/nfsd/auth.c
-index e6beaaf4f170..93e33d1ee891 100644
---- a/fs/nfsd/auth.c
-+++ b/fs/nfsd/auth.c
-@@ -5,26 +5,26 @@
- #include "nfsd.h"
- #include "auth.h"
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 9aa5f95f18a8..7bb4f2075ac5 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -1121,7 +1121,7 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
+ 		return 0;
  
--int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp)
-+int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp)
- {
- 	struct exp_flavor_info *f;
- 	struct exp_flavor_info *end = exp->ex_flavors + exp->ex_nflavors;
- 
- 	for (f = exp->ex_flavors; f < end; f++) {
--		if (f->pseudoflavor == rqstp->rq_cred.cr_flavor)
-+		if (f->pseudoflavor == cred->cr_flavor)
- 			return f->flags;
- 	}
- 	return exp->ex_flags;
- 
+ denied:
+-	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
++	return nfserr_wrongsec;
  }
- 
--int nfsd_setuser(struct svc_rqst *rqstp, struct svc_export *exp)
-+int nfsd_setuser(struct svc_cred *cred, struct svc_export *exp)
- {
- 	struct group_info *rqgi;
- 	struct group_info *gi;
- 	struct cred *new;
- 	int i;
--	int flags = nfsexp_flags(rqstp, exp);
-+	int flags = nfsexp_flags(cred, exp);
- 
- 	/* discard any old override before preparing the new set */
- 	revert_creds(get_cred(current_real_cred()));
-@@ -32,10 +32,10 @@ int nfsd_setuser(struct svc_rqst *rqstp, struct svc_export *exp)
- 	if (!new)
- 		return -ENOMEM;
- 
--	new->fsuid = rqstp->rq_cred.cr_uid;
--	new->fsgid = rqstp->rq_cred.cr_gid;
-+	new->fsuid = cred->cr_uid;
-+	new->fsgid = cred->cr_gid;
- 
--	rqgi = rqstp->rq_cred.cr_group_info;
-+	rqgi = cred->cr_group_info;
- 
- 	if (flags & NFSEXP_ALLSQUASH) {
- 		new->fsuid = exp->ex_anon_uid;
-diff --git a/fs/nfsd/auth.h b/fs/nfsd/auth.h
-index dbd66424f600..fc75c5d90be4 100644
---- a/fs/nfsd/auth.h
-+++ b/fs/nfsd/auth.h
-@@ -12,6 +12,6 @@
-  * Set the current process's fsuid/fsgid etc to those of the NFS
-  * client user
-  */
--int nfsd_setuser(struct svc_rqst *, struct svc_export *);
-+int nfsd_setuser(struct svc_cred *, struct svc_export *);
- 
- #endif /* LINUX_NFSD_AUTH_H */
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index cb17f05e3329..3794ae253a70 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -99,7 +99,8 @@ struct svc_expkey {
- #define EX_NOHIDE(exp)		((exp)->ex_flags & NFSEXP_NOHIDE)
- #define EX_WGATHER(exp)		((exp)->ex_flags & NFSEXP_GATHERED_WRITES)
- 
--int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp);
-+struct svc_cred;
-+int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp);
- __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp);
  
  /*
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a20c2c9d7d45..eadb7d1a7f13 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6889,7 +6889,8 @@ nfs4_check_file(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfs4_stid *s,
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index a7a07470c1f8..8d75759c600d 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -111,6 +111,23 @@ svcxdr_encode_nfsstat3(struct xdr_stream *xdr, __be32 status)
+ {
+ 	__be32 *p;
  
- 	nf = nfs4_find_file(s, flags);
- 	if (nf) {
--		status = nfsd_permission(rqstp, fhp->fh_export, fhp->fh_dentry,
-+		status = nfsd_permission(&rqstp->rq_cred,
-+					 fhp->fh_export, fhp->fh_dentry,
- 				acc | NFSD_MAY_OWNER_OVERRIDE);
- 		if (status) {
- 			nfsd_file_put(nf);
++	switch (status) {
++	case nfserr_symlink_not_dir:
++		status = nfserr_notdir;
++		break;
++	case nfserr_symlink:
++	case nfserr_wrong_type:
++		status = nfserr_inval;
++		break;
++	case nfserr_nofilehandle:
++		status = nfserr_badhandle;
++		break;
++	case nfserr_wrongsec:
++	case nfserr_file_open:
++		status = nfserr_acces;
++		break;
++	}
++
+ 	p = xdr_reserve_space(xdr, sizeof(status));
+ 	if (!p)
+ 		return false;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index d5ed01c72910..c4b65f747d8b 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -166,14 +166,9 @@ static __be32 nfsd_check_obj_isreg(struct svc_fh *fh)
+ 		return nfs_ok;
+ 	if (S_ISDIR(mode))
+ 		return nfserr_isdir;
+-	/*
+-	 * Using err_symlink as our catch-all case may look odd; but
+-	 * there's no other obvious error for this case in 4.0, and we
+-	 * happen to know that it will cause the linux v4 client to do
+-	 * the right thing on attempts to open something other than a
+-	 * regular file.
+-	 */
+-	return nfserr_symlink;
++	if (S_ISLNK(mode))
++		return nfserr_symlink;
++	return nfserr_wrong_type;
+ }
+ 
+ static void nfsd4_set_open_owner_reply_cache(struct nfsd4_compound_state *cstate, struct nfsd4_open *open, struct svc_fh *resfh)
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index c7bfd2180e3f..117dea18cbc8 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -5748,6 +5748,14 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
+ 
+ 	if (op->opnum == OP_ILLEGAL)
+ 		goto status;
++
++	if (op->status == nfserr_wrong_type &&
++	    resp->cstate.minorversion == 0)
++		/* RFC5661 - 15.1.2.9 */
++		op->status = nfserr_inval;
++	if (op->status == nfserr_symlink_not_dir)
++		op->status = nfserr_symlink;
++
+ 	if (op->status && opdesc &&
+ 			!(opdesc->op_flags & OP_NONTRIVIAL_ERROR_ENCODE))
+ 		goto status;
+@@ -5870,6 +5878,13 @@ nfs4svc_encode_compoundres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ 	 */
+ 	p = resp->statusp;
+ 
++	if (resp->cstate.status == nfserr_wrong_type &&
++	    resp->cstate.minorversion == 0)
++		/* RFC5661 - 15.1.2.9 */
++		resp->cstate.status = nfserr_inval;
++	if (resp->cstate.status == nfserr_symlink_not_dir)
++		resp->cstate.status = nfserr_symlink;
++
+ 	*p++ = resp->cstate.status;
+ 	*p++ = htonl(resp->taglen);
+ 	memcpy(p, resp->tag, resp->taglen);
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 8f4f239d9f8a..0f499066aa72 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -327,16 +327,31 @@ void		nfsd_lockd_shutdown(void);
+ #define nfserr_noxattr			cpu_to_be32(NFS4ERR_NOXATTR)
+ 
+ /* error codes for internal use */
++enum {
++	NFSERR_DROPIT = NFS4ERR_FIRST_FREE,
+ /* if a request fails due to kmalloc failure, it gets dropped.
+  *  Client should resend eventually
+  */
+-#define	nfserr_dropit		cpu_to_be32(30000)
++#define	nfserr_dropit		cpu_to_be32(NFSERR_DROPIT)
++
+ /* end-of-file indicator in readdir */
+-#define	nfserr_eof		cpu_to_be32(30001)
++	NFSERR_EOF,
++#define	nfserr_eof		cpu_to_be32(NFSERR_EOF)
++
+ /* replay detected */
+-#define	nfserr_replay_me	cpu_to_be32(11001)
++	NFSERR_REPLAY_ME,
++#define	nfserr_replay_me	cpu_to_be32(NFSERR_REPLAY_ME)
++
+ /* nfs41 replay detected */
+-#define	nfserr_replay_cache	cpu_to_be32(11002)
++	NFSERR_REPLAY_CACHE,
++#define	nfserr_replay_cache	cpu_to_be32(NFSERR_REPLAY_CACHE)
++
++/* symlink found where dir expected - handled differently to
++ * other symlink found errors by NSv3.
++ */
++	NFSERR_SYMLINK_NOT_DIR,
++#define	nfserr_symlink_not_dir	cpu_to_be32(NFSERR_SYMLINK_NOT_DIR)
++};
+ 
+ /* Check for dir entries '.' and '..' */
+ #define isdotent(n, l)	(l < 3 && n[0] == '.' && (l == 1 || n[1] == '.'))
 diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 4ebb3c334cc2..a485d630d10e 100644
+index a485d630d10e..8fb56e2f896c 100644
 --- a/fs/nfsd/nfsfh.c
 +++ b/fs/nfsd/nfsfh.c
-@@ -102,7 +102,7 @@ static bool nfsd_originating_port_ok(struct svc_rqst *rqstp, int flags)
- static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
- 					  struct svc_export *exp)
+@@ -62,8 +62,7 @@ static int nfsd_acceptable(void *expv, struct dentry *dentry)
+  * the write call).
+  */
+ static inline __be32
+-nfsd_mode_check(struct svc_rqst *rqstp, struct dentry *dentry,
+-		umode_t requested)
++nfsd_mode_check(struct dentry *dentry, umode_t requested)
  {
--	int flags = nfsexp_flags(rqstp, exp);
-+	int flags = nfsexp_flags(&rqstp->rq_cred, exp);
+ 	umode_t mode = d_inode(dentry)->i_mode & S_IFMT;
  
- 	/* Check if the request originated from a secure port. */
- 	if (!nfsd_originating_port_ok(rqstp, flags)) {
-@@ -113,7 +113,7 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+@@ -76,17 +75,16 @@ nfsd_mode_check(struct svc_rqst *rqstp, struct dentry *dentry,
+ 		}
+ 		return nfs_ok;
  	}
- 
- 	/* Set user creds for this exportpoint */
--	return nfserrno(nfsd_setuser(rqstp, exp));
-+	return nfserrno(nfsd_setuser(&rqstp->rq_cred, exp));
+-	/*
+-	 * v4 has an error more specific than err_notdir which we should
+-	 * return in preference to err_notdir:
+-	 */
+-	if (rqstp->rq_vers == 4 && mode == S_IFLNK)
++	if (mode == S_IFLNK) {
++		if (requested == S_IFDIR)
++			return nfserr_symlink_not_dir;
+ 		return nfserr_symlink;
++	}
+ 	if (requested == S_IFDIR)
+ 		return nfserr_notdir;
+ 	if (mode == S_IFDIR)
+ 		return nfserr_isdir;
+-	return nfserr_inval;
++	return nfserr_wrong_type;
  }
  
- static inline __be32 check_pseudo_root(struct svc_rqst *rqstp,
-@@ -394,7 +394,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ static bool nfsd_originating_port_ok(struct svc_rqst *rqstp, int flags)
+@@ -162,10 +160,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+ 	int len;
+ 	__be32 error;
  
- skip_pseudoflavor_check:
- 	/* Finally, check access permissions. */
--	error = nfsd_permission(rqstp, exp, dentry, access);
-+	error = nfsd_permission(&rqstp->rq_cred, exp, dentry, access);
- out:
- 	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
- 	if (error == nfserr_stale)
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 36370b957b63..97aab34593ef 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -331,10 +331,11 @@ nfsd_proc_create(struct svc_rqst *rqstp)
- 					 *   echo thing > device-special-file-or-pipe
- 					 * by doing a CREATE with type==0
- 					 */
--					resp->status = nfsd_permission(rqstp,
--								 newfhp->fh_export,
--								 newfhp->fh_dentry,
--								 NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
-+					resp->status = nfsd_permission(
-+						&rqstp->rq_cred,
-+						newfhp->fh_export,
-+						newfhp->fh_dentry,
-+						NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
- 					if (resp->status && resp->status != nfserr_rofs)
- 						goto out_unlock;
- 				}
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 29b1f3613800..0862f6ae86a9 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -421,8 +421,9 @@ nfsd_get_write_access(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (iap->ia_size < inode->i_size) {
- 		__be32 err;
+-	error = nfserr_stale;
+-	if (rqstp->rq_vers > 2)
+-		error = nfserr_badhandle;
+-	if (rqstp->rq_vers == 4 && fh->fh_size == 0)
++	error = nfserr_badhandle;
++	if (fh->fh_size == 0)
+ 		return nfserr_nofilehandle;
  
--		err = nfsd_permission(rqstp, fhp->fh_export, fhp->fh_dentry,
--				NFSD_MAY_TRUNC | NFSD_MAY_OWNER_OVERRIDE);
-+		err = nfsd_permission(&rqstp->rq_cred,
-+				      fhp->fh_export, fhp->fh_dentry,
-+				      NFSD_MAY_TRUNC | NFSD_MAY_OWNER_OVERRIDE);
- 		if (err)
- 			return err;
- 	}
-@@ -814,7 +815,8 @@ nfsd_access(struct svc_rqst *rqstp, struct svc_fh *fhp, u32 *access, u32 *suppor
+ 	if (fh->fh_version != 1)
+@@ -239,9 +235,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+ 	/*
+ 	 * Look up the dentry using the NFS file handle.
+ 	 */
+-	error = nfserr_stale;
+-	if (rqstp->rq_vers > 2)
+-		error = nfserr_badhandle;
++	error = nfserr_badhandle;
  
- 			sresult |= map->access;
+ 	fileid_type = fh->fh_fileid_type;
  
--			err2 = nfsd_permission(rqstp, export, dentry, map->how);
-+			err2 = nfsd_permission(&rqstp->rq_cred, export,
-+					       dentry, map->how);
- 			switch (err2) {
- 			case nfs_ok:
- 				result |= map->access;
-@@ -1475,7 +1477,8 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	dirp = d_inode(dentry);
- 
- 	dchild = dget(resfhp->fh_dentry);
--	err = nfsd_permission(rqstp, fhp->fh_export, dentry, NFSD_MAY_CREATE);
-+	err = nfsd_permission(&rqstp->rq_cred, fhp->fh_export, dentry,
-+			      NFSD_MAY_CREATE);
- 	if (err)
+@@ -368,7 +362,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	if (error)
  		goto out;
  
-@@ -2255,9 +2258,9 @@ nfsd_statfs(struct svc_rqst *rqstp, struct svc_fh *fhp, struct kstatfs *stat, in
- 	return err;
- }
+-	error = nfsd_mode_check(rqstp, dentry, type);
++	error = nfsd_mode_check(dentry, type);
+ 	if (error)
+ 		goto out;
  
--static int exp_rdonly(struct svc_rqst *rqstp, struct svc_export *exp)
-+static int exp_rdonly(struct svc_cred *cred, struct svc_export *exp)
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index 5777f40c7353..9bb306bdc225 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -38,6 +38,25 @@ svcxdr_encode_stat(struct xdr_stream *xdr, __be32 status)
  {
--	return nfsexp_flags(rqstp, exp) & NFSEXP_READONLY;
-+	return nfsexp_flags(cred, exp) & NFSEXP_READONLY;
- }
+ 	__be32 *p;
  
- #ifdef CONFIG_NFSD_V4
-@@ -2501,8 +2504,8 @@ nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name,
-  * Check for a user's access permissions to this inode.
-  */
- __be32
--nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
--					struct dentry *dentry, int acc)
-+nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
-+		struct dentry *dentry, int acc)
- {
- 	struct inode	*inode = d_inode(dentry);
- 	int		err;
-@@ -2533,7 +2536,7 @@ nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
- 	 */
- 	if (!(acc & NFSD_MAY_LOCAL_ACCESS))
- 		if (acc & (NFSD_MAY_WRITE | NFSD_MAY_SATTR | NFSD_MAY_TRUNC)) {
--			if (exp_rdonly(rqstp, exp) ||
-+			if (exp_rdonly(cred, exp) ||
- 			    __mnt_is_readonly(exp->ex_path.mnt))
- 				return nfserr_rofs;
- 			if (/* (acc & NFSD_MAY_WRITE) && */ IS_IMMUTABLE(inode))
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 57cd70062048..1565c1dc28b6 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -153,7 +153,7 @@ __be32		nfsd_readdir(struct svc_rqst *, struct svc_fh *,
- __be32		nfsd_statfs(struct svc_rqst *, struct svc_fh *,
- 				struct kstatfs *, int access);
++	switch (status) {
++	case nfserr_symlink_not_dir:
++		status = nfserr_notdir;
++		break;
++	case nfserr_symlink:
++	case nfserr_wrong_type:
++		status = nfserr_inval;
++		break;
++	case nfserr_nofilehandle:
++	case nfserr_badhandle:
++		status = nfserr_stale;
++		break;
++	case nfserr_wrongsec:
++	case nfserr_xdev:
++	case nfserr_file_open:
++		status = nfserr_acces;
++		break;
++	}
++
+ 	p = xdr_reserve_space(xdr, sizeof(status));
+ 	if (!p)
+ 		return false;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 0862f6ae86a9..cf96a2ef6533 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1770,10 +1770,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 		if (!err)
+ 			err = nfserrno(commit_metadata(tfhp));
+ 	} else {
+-		if (host_err == -EXDEV && rqstp->rq_vers == 2)
+-			err = nfserr_acces;
+-		else
+-			err = nfserrno(host_err);
++		err = nfserrno(host_err);
+ 	}
+ 	dput(dnew);
+ out_drop_write:
+@@ -1839,7 +1836,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	if (!flen || isdotent(fname, flen) || !tlen || isdotent(tname, tlen))
+ 		goto out;
  
--__be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
-+__be32		nfsd_permission(struct svc_cred *, struct svc_export *,
- 				struct dentry *, int);
+-	err = (rqstp->rq_vers == 2) ? nfserr_acces : nfserr_xdev;
++	err = nfserr_xdev;
+ 	if (ffhp->fh_export->ex_path.mnt != tfhp->fh_export->ex_path.mnt)
+ 		goto out;
+ 	if (ffhp->fh_export->ex_path.dentry != tfhp->fh_export->ex_path.dentry)
+@@ -1854,7 +1851,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
  
- void		nfsd_filp_close(struct file *fp);
+ 	trap = lock_rename(tdentry, fdentry);
+ 	if (IS_ERR(trap)) {
+-		err = (rqstp->rq_vers == 2) ? nfserr_acces : nfserr_xdev;
++		err = nfserr_xdev;
+ 		goto out_want_write;
+ 	}
+ 	err = fh_fill_pre_attrs(ffhp);
+@@ -2023,10 +2020,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 		/* name is mounted-on. There is no perfect
+ 		 * error status.
+ 		 */
+-		if (nfsd_v4client(rqstp))
+-			err = nfserr_file_open;
+-		else
+-			err = nfserr_acces;
++		err = nfserr_file_open;
+ 	} else {
+ 		err = nfserrno(host_err);
+ 	}
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index 0d896ce296ce..04dad965fa66 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -290,6 +290,9 @@ enum nfsstat4 {
+ 	/* xattr (RFC8276) */
+ 	NFS4ERR_NOXATTR        = 10095,
+ 	NFS4ERR_XATTR2BIG      = 10096,
++
++	/* can be used for internal errors */
++	NFS4ERR_FIRST_FREE
+ };
+ 
+ /* error codes for internal client use */
 -- 
 2.44.0
 
