@@ -1,94 +1,93 @@
-Return-Path: <linux-nfs+bounces-5058-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5059-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7CF493CCB6
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF35293CCB7
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 460761F21881
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40E61B20C4D
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F161AACC;
-	Fri, 26 Jul 2024 02:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6327E18E11;
+	Fri, 26 Jul 2024 02:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GCQLaVLv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O3dyNFOO";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GCQLaVLv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O3dyNFOO"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p59urOrp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+1Dr0gcL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p59urOrp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+1Dr0gcL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F981320B
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C7B320B
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721960783; cv=none; b=S5Gnr5ODB/elH1xPfExBmSIA5Ch0mTOgHtHTIlisrPfFuySY9Xlt3q7pxbRZKYygS5GtAXCmC9Yu9pCm+3gpu1D9aFRT1Tj4vBYblrVMXemDZCbalXAgIc41f/nFnjiSYqTVABzJLx25DHyrzBvq0Ufz+hQGBsjNBylb4UomKpQ=
+	t=1721960793; cv=none; b=Ki3uos0g2p2EYHulcKwPdEpaMqnrxcBsO+GyAAKrf9JhGAeBHqgAY1sGA+r9t/lKG1JbvGBaCP/vWm+CxsDHySiol2VoLJ2zjIxDJJdSN6oSUH4E+U4G8qzOlooTfBUoZBiV+n4FBE0R4LcsH2ZlB/PIRzIPnnc7hQqoZxhu1fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721960783; c=relaxed/simple;
-	bh=oKeEYNTeIiUr+CnYWyzvAy2bPWiK+BTudtJZks5zseE=;
+	s=arc-20240116; t=1721960793; c=relaxed/simple;
+	bh=yYk3Ed8LgtENSLsQml/V/zzpitRsk4zXFfu40C5sMuE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pk0Ng5lG1rhVnRZDcu2GngbJC07EZNMIUKm1HEBxwaK1bDdxwc/FsIO80U5pOTBywD+YFswJyXVCmnTh9M1Ae4YPh5NKJ3Y6S+kLY5Qli24qr+TT5P+45YcAQBk60w24jjcxPCVIpQ/h4l4EgDnDkIQjjVXjhFQpfqqWrqSRFdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GCQLaVLv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O3dyNFOO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GCQLaVLv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O3dyNFOO; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=nrSrzgq03G/is4DoqM0/DPUGuAdjQbOUJBkn8eHZZ4AKDIr3osJH12VKoxw+JEZUZttDaGKWbGU5fgliNuj00NaJxRQ2o6v/xS+96nthY0fpdZTzmeC5Rc1Fcwx+9SIMSs6ps60f2JCkNKFczIrqtoSciPemfB30gQd+4rzVyq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p59urOrp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+1Dr0gcL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p59urOrp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+1Dr0gcL; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 81E5D218CE;
-	Fri, 26 Jul 2024 02:26:20 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1266F1F7DB;
+	Fri, 26 Jul 2024 02:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960790; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=42ueM8I1IdmeN0YkaoHIzfqIeXG64gVPDJ9NM4swI7A=;
-	b=GCQLaVLvP9PRZ4LTnTChT23nC8KQoVP5w6Tl2XYkdo0a9qca+zrtunfPDIhqpXREzwgwx2
-	dYaTfThxL+D/JJ6Lq13/ZxmEJrnLyI2DIi+T5EUJXXHBHD0TV/NdVCYxFToRFKYLvaUUPl
-	yJrRapRT961+MmRyVFZ7rkmMpvDX7DA=
+	bh=oZGwaaCHjgjIRrOTgzx/sHL/MXZiqFB9Htyt5FS4Kl0=;
+	b=p59urOrp6q/8O5PNb3TcvslTVtiwPzt2gogR3EaviozzTO8QUwQXdxDpdMbN47zF0flMcE
+	9Fkby6qZNgvn5YlFfuxXoo92RxIe8dZ3vt6rKKgpbYLBc0wmVOYbhEE7qRPA/+pDhyiBCd
+	5zFptFMapWnXKBQ0sMuBoZmTvmUDbUs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960780;
+	s=susede2_ed25519; t=1721960790;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=42ueM8I1IdmeN0YkaoHIzfqIeXG64gVPDJ9NM4swI7A=;
-	b=O3dyNFOOkEfXSE8fcQplubUtu/u26O9aLgjMZPhWXYWo4kIAs1qJqYCBi9H6MJzAkNrGZR
-	5Pp3NHcjjdFT+vCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=GCQLaVLv;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=O3dyNFOO
+	bh=oZGwaaCHjgjIRrOTgzx/sHL/MXZiqFB9Htyt5FS4Kl0=;
+	b=+1Dr0gcL+x24tIMogmnZHIse9vMmmASJFY6j8e97SV6ph1xN3ZBafPSUAdzJN1BTDCYC9W
+	PwbeJ4MydJex33Aw==
+Authentication-Results: smtp-out2.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960790; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=42ueM8I1IdmeN0YkaoHIzfqIeXG64gVPDJ9NM4swI7A=;
-	b=GCQLaVLvP9PRZ4LTnTChT23nC8KQoVP5w6Tl2XYkdo0a9qca+zrtunfPDIhqpXREzwgwx2
-	dYaTfThxL+D/JJ6Lq13/ZxmEJrnLyI2DIi+T5EUJXXHBHD0TV/NdVCYxFToRFKYLvaUUPl
-	yJrRapRT961+MmRyVFZ7rkmMpvDX7DA=
+	bh=oZGwaaCHjgjIRrOTgzx/sHL/MXZiqFB9Htyt5FS4Kl0=;
+	b=p59urOrp6q/8O5PNb3TcvslTVtiwPzt2gogR3EaviozzTO8QUwQXdxDpdMbN47zF0flMcE
+	9Fkby6qZNgvn5YlFfuxXoo92RxIe8dZ3vt6rKKgpbYLBc0wmVOYbhEE7qRPA/+pDhyiBCd
+	5zFptFMapWnXKBQ0sMuBoZmTvmUDbUs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960780;
+	s=susede2_ed25519; t=1721960790;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=42ueM8I1IdmeN0YkaoHIzfqIeXG64gVPDJ9NM4swI7A=;
-	b=O3dyNFOOkEfXSE8fcQplubUtu/u26O9aLgjMZPhWXYWo4kIAs1qJqYCBi9H6MJzAkNrGZR
-	5Pp3NHcjjdFT+vCQ==
+	bh=oZGwaaCHjgjIRrOTgzx/sHL/MXZiqFB9Htyt5FS4Kl0=;
+	b=+1Dr0gcL+x24tIMogmnZHIse9vMmmASJFY6j8e97SV6ph1xN3ZBafPSUAdzJN1BTDCYC9W
+	PwbeJ4MydJex33Aw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 65E6E138A7;
-	Fri, 26 Jul 2024 02:26:18 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA4F1138A7;
+	Fri, 26 Jul 2024 02:26:27 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vMEaB0oJo2a5WAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:26:18 +0000
+	id T+l0J1MJo2bBWAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:26:27 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -96,9 +95,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 4/6] nfsd: use nfsd_v4client() in nfsd_breaker_owns_lease()
-Date: Fri, 26 Jul 2024 12:21:33 +1000
-Message-ID: <20240726022538.32076-5-neilb@suse.de>
+Subject: [PATCH 5/6] nfsd: further centralize protocol version checks.
+Date: Fri, 26 Jul 2024 12:21:34 +1000
+Message-ID: <20240726022538.32076-6-neilb@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240726022538.32076-1-neilb@suse.de>
 References: <20240726022538.32076-1-neilb@suse.de>
@@ -109,115 +108,121 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 81E5D218CE
-X-Spam-Score: -4.81
 X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.81 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
+X-Spamd-Result: default: False [0.40 / 50.00];
 	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	ARC_NA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DKIM_TRACE(0.00)[suse.de:+]
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: 0.40
 
-nfsd_breaker_owns_lease() current open-codes the same test that
-nfsd_v4client() performs.
-
-With this patch we use nfsd_v4client() instead.
-
-Also as i_am_nfsd() is only used in combination with kthread_data(),
-replace it with nfsd_current_rqst() which combines the two and returns a
-valid svc_rqst, or NULL.
-
-The test for NULL is moved into nfsd_v4client() for code clarity.
+With this patch the only places that test ->rq_vers against a specific
+version are nfsd_v4client() and nfsd_set_fh_dentry().
+The latter sets some flags in the svc_fh, which now includes:
+  fh_64bit_cookies
+  fh_use_wgather
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 7 ++-----
- fs/nfsd/nfsd.h      | 4 ++--
- fs/nfsd/nfssvc.c    | 6 ++++--
- 3 files changed, 8 insertions(+), 9 deletions(-)
+ fs/nfsd/nfsfh.c | 4 ++++
+ fs/nfsd/nfsfh.h | 2 ++
+ fs/nfsd/vfs.c   | 9 +++------
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index eadb7d1a7f13..c2edd8a21bd4 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5274,11 +5274,8 @@ static bool nfsd_breaker_owns_lease(struct file_lease *fl)
- 	struct svc_rqst *rqst;
- 	struct nfs4_client *clp;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 8fb56e2f896c..e21647cbfca9 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -278,13 +278,17 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+ 	case 4:
+ 		if (dentry->d_sb->s_export_op->flags & EXPORT_OP_NOATOMIC_ATTR)
+ 			fhp->fh_no_atomic_attr = true;
++		fhp->fh_64bit_cookies = true;
+ 		break;
+ 	case 3:
+ 		if (dentry->d_sb->s_export_op->flags & EXPORT_OP_NOWCC)
+ 			fhp->fh_no_wcc = true;
++		fhp->fh_64bit_cookies = true;
+ 		break;
+ 	case 2:
+ 		fhp->fh_no_wcc = true;
++		if (EX_WGATHER(exp))
++			fhp->fh_use_wgather = true;
+ 	}
  
--	if (!i_am_nfsd())
--		return false;
--	rqst = kthread_data(current);
--	/* Note rq_prog == NFS_ACL_PROGRAM is also possible: */
--	if (rqst->rq_prog != NFS_PROGRAM || rqst->rq_vers < 4)
-+	rqst = nfsd_current_rqst();
-+	if (!nfsd_v4client(rqst))
- 		return false;
- 	clp = *(rqst->rq_lease_breaker);
- 	return dl->dl_stid.sc_client == clp;
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 0f499066aa72..e6626b22ab17 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -114,7 +114,7 @@ int		nfsd_pool_stats_open(struct inode *, struct file *);
- int		nfsd_pool_stats_release(struct inode *, struct file *);
- void		nfsd_shutdown_threads(struct net *net);
+ 	return 0;
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 6ebdf7ea27bf..8d46e203d139 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -88,6 +88,8 @@ typedef struct svc_fh {
+ 						 * wcc data is not atomic with
+ 						 * operation
+ 						 */
++	bool			fh_use_wgather;	/* NFSv2 wgather option */
++	bool			fh_64bit_cookies;/* readdir cookie size */
+ 	int			fh_flags;	/* FH flags */
+ 	bool			fh_post_saved;	/* post-op attrs saved */
+ 	bool			fh_pre_saved;	/* pre-op attrs saved */
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index cf96a2ef6533..ec99c91df173 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1162,7 +1162,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+ 	errseq_t		since;
+ 	__be32			nfserr;
+ 	int			host_err;
+-	int			use_wgather;
+ 	loff_t			pos = offset;
+ 	unsigned long		exp_op_flags = 0;
+ 	unsigned int		pflags = current->flags;
+@@ -1188,12 +1187,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+ 	}
  
--bool		i_am_nfsd(void);
-+struct svc_rqst *nfsd_current_rqst(void);
+ 	exp = fhp->fh_export;
+-	use_wgather = (rqstp->rq_vers == 2) && EX_WGATHER(exp);
  
- struct nfsdfs_client {
- 	struct kref cl_ref;
-@@ -155,7 +155,7 @@ extern int nfsd_max_blksize;
+ 	if (!EX_ISSYNC(exp))
+ 		stable = NFS_UNSTABLE;
  
- static inline int nfsd_v4client(struct svc_rqst *rq)
- {
--	return rq->rq_prog == NFS_PROGRAM && rq->rq_vers == 4;
-+	return rq && rq->rq_prog == NFS_PROGRAM && rq->rq_vers == 4;
- }
- static inline struct user_namespace *
- nfsd_user_namespace(const struct svc_rqst *rqstp)
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 89d7918de7b1..f6ce51eb232e 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -642,9 +642,11 @@ void nfsd_shutdown_threads(struct net *net)
- 	mutex_unlock(&nfsd_mutex);
- }
+-	if (stable && !use_wgather)
++	if (stable && !fhp->fh_use_wgather)
+ 		flags |= RWF_SYNC;
  
--bool i_am_nfsd(void)
-+struct svc_rqst *nfsd_current_rqst(void)
- {
--	return kthread_func(current) == nfsd;
-+	if (kthread_func(current) == nfsd)
-+		return kthread_data(current);
-+	return NULL;
- }
+ 	iov_iter_kvec(&iter, ITER_SOURCE, vec, vlen, *cnt);
+@@ -1212,7 +1210,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+ 	if (host_err < 0)
+ 		goto out_nfserr;
  
- int nfsd_create_serv(struct net *net)
+-	if (stable && use_wgather) {
++	if (stable && fhp->fh_use_wgather) {
+ 		host_err = wait_for_concurrent_writes(file);
+ 		if (host_err < 0)
+ 			commit_reset_write_verifier(nn, rqstp, host_err);
+@@ -2175,8 +2173,7 @@ nfsd_readdir(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t *offsetp,
+ 	loff_t		offset = *offsetp;
+ 	int             may_flags = NFSD_MAY_READ;
+ 
+-	/* NFSv2 only supports 32 bit cookies */
+-	if (rqstp->rq_vers > 2)
++	if (fhp->fh_64bit_cookies)
+ 		may_flags |= NFSD_MAY_64BIT_COOKIE;
+ 
+ 	err = nfsd_open(rqstp, fhp, S_IFDIR, may_flags, &file);
 -- 
 2.44.0
 
