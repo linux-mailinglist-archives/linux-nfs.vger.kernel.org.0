@@ -1,94 +1,93 @@
-Return-Path: <linux-nfs+bounces-5055-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5056-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1417993CCB2
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D842593CCB4
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 04:26:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 357DB1C21798
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E600B20C42
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 02:26:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 844AD18E11;
-	Fri, 26 Jul 2024 02:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A24A18E11;
+	Fri, 26 Jul 2024 02:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qnZp6g7F";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7fwOKSVW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EspUoORz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ACHjHff8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xdsSOdq5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVm46ZXt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xdsSOdq5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVm46ZXt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0370320B
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29685320B
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 02:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721960759; cv=none; b=GMKNSNDOuOeDpOqwfSK/snIO/CeChl8CbDsRCHdg8KuWqZwEvDhfhVsOrHKLLUiJfa4AXqy2upB4h50P7nEi8Si9bAh1WgAdukvaFsj0/ZIBKKWuuA0lPtZLkEWHlE6cug3ChB4M1xvUgWXllT+Bw7d7sg36Jm9IkQ94U6WZeQA=
+	t=1721960769; cv=none; b=f9HC7vHkFi4X7q0nrIoifYTYMmiRIUtS/KyMpCAP2+Om+YMAf7MXxDFAn0rbDBtIKHd0yZ6W17mtyUabFwqxvh6iyrZ4H6r/RH+33We3/LYyRm8Svv2ugwaiqO7dpwykaCufyZkFgAwifR+A7xDdas85qYb0UTDkRQ6+akYcuE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721960759; c=relaxed/simple;
-	bh=KCF4czo+yUS88OAbBFiA+0GhX37hBNhElGgr/6wDIYg=;
+	s=arc-20240116; t=1721960769; c=relaxed/simple;
+	bh=WvPk+zqr3yL5x76Ik89kycYmJojENDNysIp9dL9xK2g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=frfvpGcAtOnNVbRqBbP8GnlgRzW1vBTYjIIUaJ6AC+fT5++WmC6GTI+gSQ5YEJMQ/335hWWTXyKWbvG6KKnYvADdHan6HnWpyVyk2SYLppngO83ITzLuV4ghhYaeVHX4u1WEARem79mbGWwJLAyar/E0so0ExJ/7OCSBL/gXsV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qnZp6g7F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7fwOKSVW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EspUoORz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ACHjHff8; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=SGwh0jr2PsqPxUsV701bHgJJBy6Spd3m2Bsa4VJs7parJ8NLKaoLxp4RGbhtu2YE5rwCSSQyj7YbRGPsy+OFUEHVHmXYjzyjjY0RBsNzj1i1XCyRnLxHZr7hI4al3ZDf6V30P0uNAKXEvUoM2tjNkT6UtT06+B7P9CHawAUtDJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xdsSOdq5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVm46ZXt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xdsSOdq5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVm46ZXt; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D0717218BB;
-	Fri, 26 Jul 2024 02:25:55 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C18F1F842;
+	Fri, 26 Jul 2024 02:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZXwqUNstSgtv7WxZQUaa53ufR4iWjPEjwaND782BzUA=;
-	b=qnZp6g7FUU7JjACjom3W2+v21zQYgRrMHZ33xfKbHLOxIpw7VL8SYXg5S4eC0wucj3l9QQ
-	f+BnQGv7Afjs0LyRCxTvHrTU/Hp8oh68acvcRztM+RtP11c1Z7hWhhaCJc/ChUWwUk60pw
-	aw2ldlv1x7EMib+5BCJ4JJeGCaHnLfQ=
+	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
+	b=xdsSOdq5zWJ/vy8LaNRLDoPYekDcGGpdjaaHPbKi8Y2G3CbKb2lx7Qe6QcsHTmLbmkrAWX
+	AFLeyatzNqD/snJu+Kg1KOOJtEf8ndDMM2InBit3TFEgw21Flo1anUi3NZV1af5rN9Cn5E
+	hq2bSM8KA1t1OSnRme7m/10V0yPC6HU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960756;
+	s=susede2_ed25519; t=1721960765;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZXwqUNstSgtv7WxZQUaa53ufR4iWjPEjwaND782BzUA=;
-	b=7fwOKSVWBtYLb24KzNaxArTKtzLKEkfe7iNdIPr3OyytKAtW30E38SU+A5nMCSFL5elsBC
-	VdJ6VJMbqqYeYpBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EspUoORz;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ACHjHff8
+	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
+	b=ZVm46ZXtDIJNAU/3g88avKicbZ8EGmDH2t4/SC0i8Q636xCELurvFXDEIKtAPpW+NV4OY+
+	KcR9LXqf35e78uCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721960755; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721960765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZXwqUNstSgtv7WxZQUaa53ufR4iWjPEjwaND782BzUA=;
-	b=EspUoORzzaRQzaSLeruTZMK0lzv53JqCMxnWDY7JILaWOUkyDP+vs9DgqTFHHK4j3eHicw
-	Lpd2oe9SUX9NYPLBQz2HXWNAZuNYsTLbm6Ccx11W/TNDS88oOxI8mEmvnhNayDljxM1OhE
-	xPLCcDHU2j2VGSgTtb15aNfRDCRt6WU=
+	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
+	b=xdsSOdq5zWJ/vy8LaNRLDoPYekDcGGpdjaaHPbKi8Y2G3CbKb2lx7Qe6QcsHTmLbmkrAWX
+	AFLeyatzNqD/snJu+Kg1KOOJtEf8ndDMM2InBit3TFEgw21Flo1anUi3NZV1af5rN9Cn5E
+	hq2bSM8KA1t1OSnRme7m/10V0yPC6HU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721960755;
+	s=susede2_ed25519; t=1721960765;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZXwqUNstSgtv7WxZQUaa53ufR4iWjPEjwaND782BzUA=;
-	b=ACHjHff8C3wYGUYI0Wq9bhMcjfH58eb6XI7CQl+AfbB9V5WjIXC44el9WViO0J1xp/lCXQ
-	BU6jzE/ird5IRqAQ==
+	bh=V+s3EIjJfqnud84vE2uuHejOgviRKS9gsFW2AbxRX5k=;
+	b=ZVm46ZXtDIJNAU/3g88avKicbZ8EGmDH2t4/SC0i8Q636xCELurvFXDEIKtAPpW+NV4OY+
+	KcR9LXqf35e78uCw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B45F2138A7;
-	Fri, 26 Jul 2024 02:25:53 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4A6D5138A7;
+	Fri, 26 Jul 2024 02:26:03 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qxtDGjEJo2acWAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:25:53 +0000
+	id idlnADsJo2aqWAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 26 Jul 2024 02:26:03 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -96,9 +95,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 1/6] nfsd: Don't pass all of rqst into rqst_exp_find()
-Date: Fri, 26 Jul 2024 12:21:30 +1000
-Message-ID: <20240726022538.32076-2-neilb@suse.de>
+Subject: [PATCH 2/6] nfsd: Pass 'cred' instead of 'rqstp' to some functions.
+Date: Fri, 26 Jul 2024 12:21:31 +1000
+Message-ID: <20240726022538.32076-3-neilb@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240726022538.32076-1-neilb@suse.de>
 References: <20240726022538.32076-1-neilb@suse.de>
@@ -110,161 +109,266 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.81 / 50.00];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+X-Spamd-Result: default: False [0.40 / 50.00];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
 X-Spam-Flag: NO
-X-Spam-Score: -1.81
-X-Rspamd-Queue-Id: D0717218BB
+X-Spam-Score: 0.40
 
-Rather than passing the whole rqst, pass the pieces that are actually
-needed.  This makes the inputs to rqst_exp_find() more obvious.
+nfsd_permission(), exp_rdonly(), nfsd_setuser(), and nfsexp_flags()
+only ever need the cred out of rqstp, so pass it explicitly instead of
+the whole rqstp.
+
+This makes the interfaces cleaner.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/export.c   | 35 ++++++++++++++++++++++++++---------
- fs/nfsd/export.h   |  4 +++-
- fs/nfsd/nfs4proc.c |  4 +++-
- fs/nfsd/nfsfh.c    |  4 +++-
- 4 files changed, 35 insertions(+), 12 deletions(-)
+ fs/nfsd/auth.c      | 14 +++++++-------
+ fs/nfsd/auth.h      |  2 +-
+ fs/nfsd/export.h    |  3 ++-
+ fs/nfsd/nfs4state.c |  3 ++-
+ fs/nfsd/nfsfh.c     |  6 +++---
+ fs/nfsd/nfsproc.c   |  9 +++++----
+ fs/nfsd/vfs.c       | 21 ++++++++++++---------
+ fs/nfsd/vfs.h       |  2 +-
+ 8 files changed, 33 insertions(+), 27 deletions(-)
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 50b3135d07ac..9aa5f95f18a8 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1164,19 +1164,35 @@ rqst_exp_get_by_name(struct svc_rqst *rqstp, struct path *path)
- 	return gssexp;
- }
+diff --git a/fs/nfsd/auth.c b/fs/nfsd/auth.c
+index e6beaaf4f170..93e33d1ee891 100644
+--- a/fs/nfsd/auth.c
++++ b/fs/nfsd/auth.c
+@@ -5,26 +5,26 @@
+ #include "nfsd.h"
+ #include "auth.h"
  
-+/**
-+ * rqst_exp_find - Find an svc_export in the context of a rqst or similar
-+ * @reqp:	The handle to be used to suspend the request if a cache-upcall is needed
-+ *		If NULL, missing in-cache information will result in failure.
-+ * @net:	The network namespace in which the request exists
-+ * @cl:		default auth_domain to use for looking up the export
-+ * @gsscl:	an alternate auth_domain defined using deprecated gss/krb5 format.
-+ * @fsid_type:	The type of fsid to look for
-+ * @fsidv:	The actual fsid to look up in the context of either client.
-+ *
-+ * Perform a lookup for @cl/@fsidv in the given @net for an export.  If
-+ * none found and @gsscl specified, repeat the lookup.
-+ *
-+ * Returns an export, or an error pointer.
-+ */
- struct svc_export *
--rqst_exp_find(struct svc_rqst *rqstp, int fsid_type, u32 *fsidv)
-+rqst_exp_find(struct cache_req *reqp, struct net *net,
-+	      struct auth_domain *cl, struct auth_domain *gsscl,
-+	      int fsid_type, u32 *fsidv)
+-int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp)
++int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp)
  {
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_export *gssexp, *exp = ERR_PTR(-ENOENT);
--	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
- 	struct cache_detail *cd = nn->svc_export_cache;
+ 	struct exp_flavor_info *f;
+ 	struct exp_flavor_info *end = exp->ex_flavors + exp->ex_nflavors;
  
--	if (rqstp->rq_client == NULL)
-+	if (!cl)
- 		goto gss;
+ 	for (f = exp->ex_flavors; f < end; f++) {
+-		if (f->pseudoflavor == rqstp->rq_cred.cr_flavor)
++		if (f->pseudoflavor == cred->cr_flavor)
+ 			return f->flags;
+ 	}
+ 	return exp->ex_flags;
  
- 	/* First try the auth_unix client: */
--	exp = exp_find(cd, rqstp->rq_client, fsid_type,
--		       fsidv, &rqstp->rq_chandle);
-+	exp = exp_find(cd, cl, fsid_type, fsidv, reqp);
- 	if (PTR_ERR(exp) == -ENOENT)
- 		goto gss;
- 	if (IS_ERR(exp))
-@@ -1186,10 +1202,9 @@ rqst_exp_find(struct svc_rqst *rqstp, int fsid_type, u32 *fsidv)
- 		return exp;
- gss:
- 	/* Otherwise, try falling back on gss client */
--	if (rqstp->rq_gssclient == NULL)
-+	if (!gsscl)
- 		return exp;
--	gssexp = exp_find(cd, rqstp->rq_gssclient, fsid_type, fsidv,
--						&rqstp->rq_chandle);
-+	gssexp = exp_find(cd, gsscl, fsid_type, fsidv, reqp);
- 	if (PTR_ERR(gssexp) == -ENOENT)
- 		return exp;
- 	if (!IS_ERR(exp))
-@@ -1220,7 +1235,9 @@ struct svc_export *rqst_find_fsidzero_export(struct svc_rqst *rqstp)
- 
- 	mk_fsid(FSID_NUM, fsidv, 0, 0, 0, NULL);
- 
--	return rqst_exp_find(rqstp, FSID_NUM, fsidv);
-+	return rqst_exp_find(&rqstp->rq_chandle, SVC_NET(rqstp),
-+			     rqstp->rq_client, rqstp->rq_gssclient,
-+			     FSID_NUM, fsidv);
  }
  
- /*
+-int nfsd_setuser(struct svc_rqst *rqstp, struct svc_export *exp)
++int nfsd_setuser(struct svc_cred *cred, struct svc_export *exp)
+ {
+ 	struct group_info *rqgi;
+ 	struct group_info *gi;
+ 	struct cred *new;
+ 	int i;
+-	int flags = nfsexp_flags(rqstp, exp);
++	int flags = nfsexp_flags(cred, exp);
+ 
+ 	/* discard any old override before preparing the new set */
+ 	revert_creds(get_cred(current_real_cred()));
+@@ -32,10 +32,10 @@ int nfsd_setuser(struct svc_rqst *rqstp, struct svc_export *exp)
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+-	new->fsuid = rqstp->rq_cred.cr_uid;
+-	new->fsgid = rqstp->rq_cred.cr_gid;
++	new->fsuid = cred->cr_uid;
++	new->fsgid = cred->cr_gid;
+ 
+-	rqgi = rqstp->rq_cred.cr_group_info;
++	rqgi = cred->cr_group_info;
+ 
+ 	if (flags & NFSEXP_ALLSQUASH) {
+ 		new->fsuid = exp->ex_anon_uid;
+diff --git a/fs/nfsd/auth.h b/fs/nfsd/auth.h
+index dbd66424f600..fc75c5d90be4 100644
+--- a/fs/nfsd/auth.h
++++ b/fs/nfsd/auth.h
+@@ -12,6 +12,6 @@
+  * Set the current process's fsuid/fsgid etc to those of the NFS
+  * client user
+  */
+-int nfsd_setuser(struct svc_rqst *, struct svc_export *);
++int nfsd_setuser(struct svc_cred *, struct svc_export *);
+ 
+ #endif /* LINUX_NFSD_AUTH_H */
 diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index ca9dc230ae3d..cb17f05e3329 100644
+index cb17f05e3329..3794ae253a70 100644
 --- a/fs/nfsd/export.h
 +++ b/fs/nfsd/export.h
-@@ -127,6 +127,8 @@ static inline struct svc_export *exp_get(struct svc_export *exp)
- 	cache_get(&exp->h);
- 	return exp;
- }
--struct svc_export * rqst_exp_find(struct svc_rqst *, int, u32 *);
-+struct svc_export *rqst_exp_find(struct cache_req *reqp, struct net *net,
-+				 struct auth_domain *cl, struct auth_domain *gsscl,
-+				 int fsid_type, u32 *fsidv);
+@@ -99,7 +99,8 @@ struct svc_expkey {
+ #define EX_NOHIDE(exp)		((exp)->ex_flags & NFSEXP_NOHIDE)
+ #define EX_WGATHER(exp)		((exp)->ex_flags & NFSEXP_GATHERED_WRITES)
  
- #endif /* NFSD_EXPORT_H */
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 46bd20fe5c0f..d5ed01c72910 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2231,7 +2231,9 @@ nfsd4_getdeviceinfo(struct svc_rqst *rqstp,
- 		return nfserr_noent;
- 	}
+-int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp);
++struct svc_cred;
++int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp);
+ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp);
  
--	exp = rqst_exp_find(rqstp, map->fsid_type, map->fsid);
-+	exp = rqst_exp_find(&rqstp->rq_chandle, SVC_NET(rqstp),
-+			    rqstp->rq_client, rqstp->rq_gssclient,
-+			    map->fsid_type, map->fsid);
- 	if (IS_ERR(exp)) {
- 		dprintk("%s: could not find device id\n", __func__);
- 		return nfserr_noent;
+ /*
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..eadb7d1a7f13 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6889,7 +6889,8 @@ nfs4_check_file(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfs4_stid *s,
+ 
+ 	nf = nfs4_find_file(s, flags);
+ 	if (nf) {
+-		status = nfsd_permission(rqstp, fhp->fh_export, fhp->fh_dentry,
++		status = nfsd_permission(&rqstp->rq_cred,
++					 fhp->fh_export, fhp->fh_dentry,
+ 				acc | NFSD_MAY_OWNER_OVERRIDE);
+ 		if (status) {
+ 			nfsd_file_put(nf);
 diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 0b75305fb5f5..4ebb3c334cc2 100644
+index 4ebb3c334cc2..a485d630d10e 100644
 --- a/fs/nfsd/nfsfh.c
 +++ b/fs/nfsd/nfsfh.c
-@@ -195,7 +195,9 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
- 	data_left -= len;
- 	if (data_left < 0)
- 		return error;
--	exp = rqst_exp_find(rqstp, fh->fh_fsid_type, fh->fh_fsid);
-+	exp = rqst_exp_find(&rqstp->rq_chandle, SVC_NET(rqstp),
-+			    rqstp->rq_client, rqstp->rq_gssclient,
-+			    fh->fh_fsid_type, fh->fh_fsid);
- 	fid = (struct fid *)(fh->fh_fsid + len);
+@@ -102,7 +102,7 @@ static bool nfsd_originating_port_ok(struct svc_rqst *rqstp, int flags)
+ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+ 					  struct svc_export *exp)
+ {
+-	int flags = nfsexp_flags(rqstp, exp);
++	int flags = nfsexp_flags(&rqstp->rq_cred, exp);
  
- 	error = nfserr_stale;
+ 	/* Check if the request originated from a secure port. */
+ 	if (!nfsd_originating_port_ok(rqstp, flags)) {
+@@ -113,7 +113,7 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+ 	}
+ 
+ 	/* Set user creds for this exportpoint */
+-	return nfserrno(nfsd_setuser(rqstp, exp));
++	return nfserrno(nfsd_setuser(&rqstp->rq_cred, exp));
+ }
+ 
+ static inline __be32 check_pseudo_root(struct svc_rqst *rqstp,
+@@ -394,7 +394,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 
+ skip_pseudoflavor_check:
+ 	/* Finally, check access permissions. */
+-	error = nfsd_permission(rqstp, exp, dentry, access);
++	error = nfsd_permission(&rqstp->rq_cred, exp, dentry, access);
+ out:
+ 	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
+ 	if (error == nfserr_stale)
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 36370b957b63..97aab34593ef 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -331,10 +331,11 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 					 *   echo thing > device-special-file-or-pipe
+ 					 * by doing a CREATE with type==0
+ 					 */
+-					resp->status = nfsd_permission(rqstp,
+-								 newfhp->fh_export,
+-								 newfhp->fh_dentry,
+-								 NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
++					resp->status = nfsd_permission(
++						&rqstp->rq_cred,
++						newfhp->fh_export,
++						newfhp->fh_dentry,
++						NFSD_MAY_WRITE|NFSD_MAY_LOCAL_ACCESS);
+ 					if (resp->status && resp->status != nfserr_rofs)
+ 						goto out_unlock;
+ 				}
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 29b1f3613800..0862f6ae86a9 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -421,8 +421,9 @@ nfsd_get_write_access(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (iap->ia_size < inode->i_size) {
+ 		__be32 err;
+ 
+-		err = nfsd_permission(rqstp, fhp->fh_export, fhp->fh_dentry,
+-				NFSD_MAY_TRUNC | NFSD_MAY_OWNER_OVERRIDE);
++		err = nfsd_permission(&rqstp->rq_cred,
++				      fhp->fh_export, fhp->fh_dentry,
++				      NFSD_MAY_TRUNC | NFSD_MAY_OWNER_OVERRIDE);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -814,7 +815,8 @@ nfsd_access(struct svc_rqst *rqstp, struct svc_fh *fhp, u32 *access, u32 *suppor
+ 
+ 			sresult |= map->access;
+ 
+-			err2 = nfsd_permission(rqstp, export, dentry, map->how);
++			err2 = nfsd_permission(&rqstp->rq_cred, export,
++					       dentry, map->how);
+ 			switch (err2) {
+ 			case nfs_ok:
+ 				result |= map->access;
+@@ -1475,7 +1477,8 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	dirp = d_inode(dentry);
+ 
+ 	dchild = dget(resfhp->fh_dentry);
+-	err = nfsd_permission(rqstp, fhp->fh_export, dentry, NFSD_MAY_CREATE);
++	err = nfsd_permission(&rqstp->rq_cred, fhp->fh_export, dentry,
++			      NFSD_MAY_CREATE);
+ 	if (err)
+ 		goto out;
+ 
+@@ -2255,9 +2258,9 @@ nfsd_statfs(struct svc_rqst *rqstp, struct svc_fh *fhp, struct kstatfs *stat, in
+ 	return err;
+ }
+ 
+-static int exp_rdonly(struct svc_rqst *rqstp, struct svc_export *exp)
++static int exp_rdonly(struct svc_cred *cred, struct svc_export *exp)
+ {
+-	return nfsexp_flags(rqstp, exp) & NFSEXP_READONLY;
++	return nfsexp_flags(cred, exp) & NFSEXP_READONLY;
+ }
+ 
+ #ifdef CONFIG_NFSD_V4
+@@ -2501,8 +2504,8 @@ nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name,
+  * Check for a user's access permissions to this inode.
+  */
+ __be32
+-nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
+-					struct dentry *dentry, int acc)
++nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
++		struct dentry *dentry, int acc)
+ {
+ 	struct inode	*inode = d_inode(dentry);
+ 	int		err;
+@@ -2533,7 +2536,7 @@ nfsd_permission(struct svc_rqst *rqstp, struct svc_export *exp,
+ 	 */
+ 	if (!(acc & NFSD_MAY_LOCAL_ACCESS))
+ 		if (acc & (NFSD_MAY_WRITE | NFSD_MAY_SATTR | NFSD_MAY_TRUNC)) {
+-			if (exp_rdonly(rqstp, exp) ||
++			if (exp_rdonly(cred, exp) ||
+ 			    __mnt_is_readonly(exp->ex_path.mnt))
+ 				return nfserr_rofs;
+ 			if (/* (acc & NFSD_MAY_WRITE) && */ IS_IMMUTABLE(inode))
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index 57cd70062048..1565c1dc28b6 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -153,7 +153,7 @@ __be32		nfsd_readdir(struct svc_rqst *, struct svc_fh *,
+ __be32		nfsd_statfs(struct svc_rqst *, struct svc_fh *,
+ 				struct kstatfs *, int access);
+ 
+-__be32		nfsd_permission(struct svc_rqst *, struct svc_export *,
++__be32		nfsd_permission(struct svc_cred *, struct svc_export *,
+ 				struct dentry *, int);
+ 
+ void		nfsd_filp_close(struct file *fp);
 -- 
 2.44.0
 
