@@ -1,55 +1,56 @@
-Return-Path: <linux-nfs+bounces-5066-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5067-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FD7793D37B
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 14:50:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E51D593D385
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 14:51:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F3651F2111E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 12:50:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4ED92845D4
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 12:51:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57CF417BB00;
-	Fri, 26 Jul 2024 12:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E39117B505;
+	Fri, 26 Jul 2024 12:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiZfsMq0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKeGR11e"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A7D2B9DB
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 12:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3980F2B9DB
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 12:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721998216; cv=none; b=qw56QQhVqRc/iBPne9UTRwNG1LTiV1cLh8X4L+98316D4YAFsRiWPr11EfbLVA+fFJs/uirAYycBCj0Wf4E00+DLYwSWtCBA9C6loR+2Uk6bkVRNJD+gXWJkXYdGm0QQ9VjcA46vcU4wgBaFeeSk2SAVqMPNxkFkfdz3Uoyw1/g=
+	t=1721998310; cv=none; b=eKdlurSfzxBt6elDJL/ROwOb73qbhLeP9grh/xhZQw+hMnztVOMyTOJ8HLRVryu27Zq0MSrlQqj4QluNVb4EzdNn02Ryz2aUz4ZZh4pUp5rLP4MRfMhEO/ekEN4uLgPf5V6wJa7U/AV8B2TMykJv9zsx+H8/CpaoQa84VwZRtiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721998216; c=relaxed/simple;
-	bh=xKY44aVjIy3OXk3bhk43SRiwGznBK0RyCegg7rldi4w=;
+	s=arc-20240116; t=1721998310; c=relaxed/simple;
+	bh=Y11TGmrdl1kA8Wl1RcjLziuOVffKtjaICozJWGXFSiA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DElpx1/KmKT1x/jVYueZsp3D5ztx9RKnT2yy5a5xle9dGgyUMgl7bdsZbf38M7JWspUHiB+QTbT3u5Jr7bVWO3o2znfX2HzpT7niGMDsEQm6nMwl/i+EecklgqaQey//thgZ+g+82h4OGxzeNeQbke5zMkybBkWNUYOTtsibxrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiZfsMq0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C20C4AF07;
-	Fri, 26 Jul 2024 12:50:15 +0000 (UTC)
+	 Content-Type:MIME-Version; b=h8WlBL2YC3RrbjP0n7RIddMsBXE2hFudN0luRsmtXf/2v7YfGcFYok7XDcWPN9zRQF/JDjTLIANmlw5VfF187eI3uuT4A8wbQjjdMd0wnD0T0u4SxaRKOYgq2FqV3IU8vLRQHwxeCykuT9QAXr19OGST7s6RoVFVqTR3WSjO/j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKeGR11e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2481FC32782;
+	Fri, 26 Jul 2024 12:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721998215;
-	bh=xKY44aVjIy3OXk3bhk43SRiwGznBK0RyCegg7rldi4w=;
+	s=k20201202; t=1721998309;
+	bh=Y11TGmrdl1kA8Wl1RcjLziuOVffKtjaICozJWGXFSiA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CiZfsMq0jFT7yhYDyn3CdWq2G5orPDpTw/cb5Z/UqWHg07OJl56Y6PzI5y7oHH4g1
-	 A5yIzjiskewydUb/GUFhf0xFDg0LfTxxHlM4uo95rOuy40raMrgqQwPVtGYUDnAUB0
-	 i/CWzh+b83vaLl35vxQ1BJ00tbBsFXEyQlovrNqlQKo8rNLxhvRhVP0wcxRMZuO+e0
-	 tCDM7j7816Wct4kKqvRto4RrCmn7EQnkXMZuLx/QI0AWjIF4pmsFIv7rSAm1sGM+ke
-	 RNYGrUxJ+FucMVxhM8Dj8KUE1hHo/ECAJWnV2jmHXHcp/WiOyACsPbV+7xuG6N6Ns9
-	 G3Coj620VqYZQ==
-Message-ID: <6d0c68577601cea8edeefa1cfd30d99e44f5231f.camel@kernel.org>
-Subject: Re: [PATCH 0/6] nfsd: assorted clean-ups
+	b=DKeGR11eBAxtYtXVDbOgIpF0xf9Ekv3xubv5vHs3m7AFzJSgIcVOHuTt3TTjZ3FTw
+	 dHApC5yak9FK+8T5LpYOsvb62v2ExO2JTpWHVLusEosQEf9Iwji7j2pxdUK04ap3+O
+	 5LCYnslSsN4FNRQiSlJZ4FzoNiPpiVHAb5MGQpBRIZpNj5L3kKEijp6AEfrruOMLTR
+	 A46VqY1PfAThu4BlVLTY5exxxhd2sJ6wXghBd2q598Qio9MloM4Iv47PUFvwIZVFQY
+	 cWZy0mNugQk5bgYmZkdPXf1dqen8uNiLIJt+7yacv4HOO+fQ6z76tdDxKYEbLbUrD4
+	 hEg6Wvm7ilokw==
+Message-ID: <e11a2d3712ae168034bb109c4ee6ab5344660d1d.camel@kernel.org>
+Subject: Re: [PATCH] sunrpc: document locking rules for svc_exit_thread()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Fri, 26 Jul 2024 08:50:13 -0400
-In-Reply-To: <20240726022538.32076-1-neilb@suse.de>
-References: <20240726022538.32076-1-neilb@suse.de>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Steve Dickson <steved@redhat.com>
+Date: Fri, 26 Jul 2024 08:51:48 -0400
+In-Reply-To: <172196639503.18529.16126598330625338469@noble.neil.brown.name>
+References: <172196639503.18529.16126598330625338469@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,32 +135,52 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-07-26 at 12:21 +1000, NeilBrown wrote:
-> My recent series (that may not now be needed) to allow fh_verify() to
-> not be given an rqstp pointer (instead taking the individual fields that
-> it actually needs) exposed several opportunities for improving code
-> cleanliness.  This series provides just those.
+On Fri, 2024-07-26 at 13:59 +1000, NeilBrown wrote:
 >=20
-> I'm not convinced that the last 2 are a genuine improvement, but that
-> follow a pattern set by earlier patches, and maybe they are a good idea.
+> The locking required for svc_exit_thread() is not obvious, so document
+> it in a kdoc comment.
 >=20
-> There is some minor behavioural change in that some error codes are
-> changed as described in patch 3.
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
 >=20
-> Thanks,
+> Rather than repost patch 5/14 of my recent set for dynamic thread
+> management, I decided to provide this as an independent patch which
+> could usefully be inserted into the series before 5/14.  That will make
+> that patch easier to understand/review.
+>=20
 > NeilBrown
 >=20
->  [PATCH 1/6] nfsd: Don't pass all of rqst into rqst_exp_find()
->  [PATCH 2/6] nfsd: Pass 'cred' instead of 'rqstp' to some functions.
->  [PATCH 3/6] nfsd: Move error code mapping to per-version xdr code.
->  [PATCH 4/6] nfsd: use nfsd_v4client() in nfsd_breaker_owns_lease()
->  [PATCH 5/6] nfsd: further centralize protocol version checks.
->  [PATCH 6/6] nfsd: move V4ROOT version check to nfsd_set_fh_dentry()
+>=20
+>  net/sunrpc/svc.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 26b6e73fc0de..4c3df893c532 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -955,6 +955,20 @@ void svc_rqst_release_pages(struct svc_rqst *rqstp)
+>  	}
+>  }
+> =20
+> +/**
+> + * svc_exit_thread - finalise the termination of a sunrpc server thread
+> + * @rqstp: the svc_rqst which represents the thread.
+> + *
+> + * When a thread started with svc_new_thread() exits it must call
+> + * svc_exit_thread() as its last act.  This must be done with the
+> + * service mutex held.  Normally this is held by a DIFFERENT thread, the
+> + * one that is calling svc_set_num_threads() and which will wait for
+> + * SP_VICTIM_REMAINS to be cleared before dropping the mutex.  If the
+> + * thread exits for any reason other than svc_thread_should_stop()
+> + * returning %true (which indicated that svc_set_num_threads() is
+> + * waiting for it to exit), then it must take the service mutex itself,
+> + * which can only safely be done using mutex_try_lock().
+> + */
+>  void
+>  svc_exit_thread(struct svc_rqst *rqstp)
+>  {
 
-
-This all looks reasonable to me. The last two do seem more marginal
-than the first four, but I think they make the code more readable, on
-balance.
+Nice to have this clearly stated.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
