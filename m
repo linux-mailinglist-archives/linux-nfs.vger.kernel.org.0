@@ -1,199 +1,295 @@
-Return-Path: <linux-nfs+bounces-5073-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5074-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5B7A93D4C5
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 16:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F138293D550
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 16:49:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04FF51C23206
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 14:08:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BB7B1C20432
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jul 2024 14:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4262A1860;
-	Fri, 26 Jul 2024 14:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988E212B6C;
+	Fri, 26 Jul 2024 14:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="iYkUoxug"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUOfD0U6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12F946BF
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 14:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745364405
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 14:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722002879; cv=none; b=QyinGOEE5wCXcViEhrduX5/weQlm1pOQkxY023Jii9/IyPrjp7oauq3j+3lMyGVWqnkMdK2rbX5zL4fOCZg9QUJfBoblCVKp5RA4q/d2aVbpUrF+UwK8PuDqrDnS1U2gceiYO4cAdq4lvexVge2KcjFt84Sp4U2LBsfui3bZYdk=
+	t=1722005355; cv=none; b=KZpZx9i9uCfWkcyqLGmu8rLS+XxMvLcqUJ/je9kUrIlAsq3XWXKZF622O6Juv4z5EKClbr5mEztMzIT3lpAXgqCPydox+g5oJiV7Ucxcyf2B1rvhzVVDwsae4IV6HJlWMIbXL8uXSLPZakeTXXg8pN44ADFS69Zi82Amfp3BJ+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722002879; c=relaxed/simple;
-	bh=4+6OK0xJXvChmNtbSJBWSBb7ENdASWUGXJtp3eDZLxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cn3/P/YsPGupfgSN0ec/JMEdI/6SkksFuAy3iyEwJYtt3/SjBpRYWvSGA9Y6WEdm5FyEbX0PsmrTvuO+J3Bo3dxsejXcVnVguZ8QOxTjeCYaJNpB/Y2RCBwsIfP4YkieA+AneiAGA6jKOaYMnYC7qIU3SIe9S0BM6GgOdr5NLkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=iYkUoxug; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ef260c4467so2354791fa.0
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jul 2024 07:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1722002875; x=1722607675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6VRDx+JDLl6as5NghRbhrYBOlha+xkDJBX07gfto8Sc=;
-        b=iYkUoxug8VKo+Jmsdob8SbdNb5AvXAuLu2ljP1Df4yAsYThVAF7XcFJY079V+2xDSF
-         SOCJNVgDrSr6Ugib1hmHVstAvwNFaZrRkYOS/0cujO/FMAWfEZKP9ZIdUcDmyGI1c5Vo
-         yimjx0qFiX6u0SYjGXmrI0mL6vNEE0e05XpB6UiZ5YWFthrztIFtOYX4xAD44t70Nmo0
-         rDZcu/fu4hZP9sd4TdKMPgdlRt8gcXw9d8hunDt7rJBkXVTNSQzNl3zc6kJuCd74uS4q
-         92b+AkeER+/2MIqOn68cTTIOnrA6QEyBpjYK+HFllGGuCexXPipmB7WHYjtFeR2pMUGo
-         UcXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722002875; x=1722607675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6VRDx+JDLl6as5NghRbhrYBOlha+xkDJBX07gfto8Sc=;
-        b=D4i7uhyUt7GIHdMq7Fzl50Odp3m71AQRrNyWAO/8QgaRRajisqyb4Y5RhvDbcL8tZC
-         897ZyCdXnVp4/RyZbe8DYGlVepmL52AYAFLuoQ5PK336dwo1lMMz4rTmNSp/3198Ad0P
-         MYvzehD9CDTRfF6FNo9xbBEhY0GqDBaVvjkSpiMkYQdJZWW146yvwO4OnaC7OvbjTxdE
-         HoYpyC2DJCr6uRxKi8ChnMSQKmGUXxQpSQa9yNOcH9fr2BfgMhBu6+Rh9KWpoxW38uf9
-         dz9sN3wdfQLgK1+lRKlAllmqh+dY5OdrFYV+rksSEh9IBGT20ApYv3oYJu/KmMs+H0zh
-         nrCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0Gw8i7/2zXDLOR3KcL86wQO4HpmcqxgC+7GByqQZvceThZU/KTjhnqEjdGDaa3erKfeaQJBIO+s8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV90rfnQiaij0fEIC0r3+EIQI7FFBHBd8+IKchp/bi3UHu81QH
-	YBVwXMf4hA9sFWg1u5Ukvoo06nn32MMcj74pHsCRaWKL7uPR5A5miz1X6+z2Kzgj6TAQeyri7jV
-	zYiANs/vas54dyOwUuixjPIKUvsI=
-X-Google-Smtp-Source: AGHT+IGUQqmNdnwkm2cBGsiI0OvVvTmjd8W7JjexnQkr2NhD/FoksBURBH8uaeB7WEwVCgoMuKHOhv6UFdjlAeDMc54=
-X-Received: by 2002:a2e:a7d6:0:b0:2ee:d55c:603 with SMTP id
- 38308e7fff4ca-2f03c7c94fcmr28580571fa.7.1722002874616; Fri, 26 Jul 2024
- 07:07:54 -0700 (PDT)
+	s=arc-20240116; t=1722005355; c=relaxed/simple;
+	bh=oei0bszvYCWzU/iJg9A5EZKSPCpaw4f/dlYWZ2uMnIo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=naqpinCgm9bweYHwz/C/XBl1YPksYjuEctVfJJdA1/Qk1ZaCIrMEr3WuGwhHKaKLPggJOiMTsFbFWNBBCN6h2+nbv/PTQGGYQnU5CWmxCHZNuJ3+NWjtpQYupaPQtX8fi4xlwyFavdyqBhEIYz7ss5M461MQnGMXZSVPZjWI3q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUOfD0U6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A535BC32782;
+	Fri, 26 Jul 2024 14:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722005355;
+	bh=oei0bszvYCWzU/iJg9A5EZKSPCpaw4f/dlYWZ2uMnIo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=dUOfD0U6vW3lidbWr0nyUfM2GVjxqablIex+PlHZKse4AYCmHzc5CYp8T5NlO5WT5
+	 CfflXrN+XaC7Mv+QM8iyIG6rjAtJN/Dl/HWznFkdsVBJBYUOX/lAUgT2COQgGw91rU
+	 84XHUkIEA9//fColkTqs3HJCmZoReEosSl+CNA7B8tIWMFdIncXL/t4Hd01qySdCLK
+	 I/v2TAq2TjWiNOVg9UqstHziEPdmUkpVqMpV72BOdKkFYV8csiVylWA0pkhXAvTpjs
+	 w4VlPeRM+nMrxq8rNsZQGRGLMiZVML2AzfwyvypSVIJQFT0gtfshvWE9ydzSgSz8Sd
+	 oZ09gJDddxAEQ==
+Message-ID: <eb3e5b92661cfb597de7211e8d7101658ee7cec5.camel@kernel.org>
+Subject: Re: [PATCH rfc 2/2] NFSD: allow client to use write delegation
+ stateid for READ
+From: Jeff Layton <jlayton@kernel.org>
+To: Sagi Grimberg <sagi@grimberg.me>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Dai Ngo <dai.ngo@oracle.com>, linux-nfs@vger.kernel.org
+Date: Fri, 26 Jul 2024 10:49:13 -0400
+In-Reply-To: <5d5df6d434189a19ca0be3d37cf1a2f4b7e60008.camel@kernel.org>
+References: <20240724170138.1942307-1-sagi@grimberg.me>
+	 <20240724170138.1942307-2-sagi@grimberg.me>
+	 <5d5df6d434189a19ca0be3d37cf1a2f4b7e60008.camel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240724170138.1942307-1-sagi@grimberg.me> <ZqE0kTRdRAibsjm7@tissot.1015granger.net>
- <CAN-5tyGAm3LYqTaJvu=w32UEdRPhOCAMtdhnK0e0KacYzTw7Uw@mail.gmail.com>
- <cf9e9f1c-6e54-4982-a82e-9208a3979989@grimberg.me> <CAN-5tyHj2JNWxzjkKQCK=+AMic25E9vXLVH8iFvc1ur4C+AuEg@mail.gmail.com>
- <ZqOo2UJHfOF3UbDj@tissot.1015granger.net>
-In-Reply-To: <ZqOo2UJHfOF3UbDj@tissot.1015granger.net>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Fri, 26 Jul 2024 10:07:42 -0400
-Message-ID: <CAN-5tyE_fFeMuoH5XU+ghLxjfFskN5phCb9-b10VVQMk-rq7cw@mail.gmail.com>
-Subject: Re: [PATCH rfc 1/2] nfsd: don't assume copy notify when preprocessing
- the stateid
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Dai Ngo <dai.ngo@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 26, 2024 at 9:47=E2=80=AFAM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
->
-> On Thu, Jul 25, 2024 at 09:51:11AM -0400, Olga Kornievskaia wrote:
-> > On Wed, Jul 24, 2024 at 5:43=E2=80=AFPM Sagi Grimberg <sagi@grimberg.me=
-> wrote:
-> > >
-> > >
-> > >
-> > >
-> > > On 24/07/2024 22:12, Olga Kornievskaia wrote:
-> > > > On Wed, Jul 24, 2024 at 1:06=E2=80=AFPM Chuck Lever <chuck.lever@or=
-acle.com> wrote:
-> > > >> Adding Olga for her review and comments.
-> > > >>
-> > > >> On Wed, Jul 24, 2024 at 10:01:37AM -0700, Sagi Grimberg wrote:
-> > > >>> Move the stateid handling to nfsd4_copy_notify, if nfs4_preproces=
-s_stateid_op
-> > > >>> did not produce an output stateid, error out.
-> > > >>>
-> > > >>> Copy notify specifically does not permit the use of special state=
-ids,
-> > > >>> so enforce that outside generic stateid pre-processing.
-> > > > I dont see how this patch is accomplishing this. As far as I can te=
-ll
-> > > > (just by looking at the code without actually testing it) instead i=
-t
-> > > > does exactly the opposite.
-> > >
-> > > I haven't tested this either, does pynfs have a test for it?
-> > >
-> > > >
-> > > >>> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-> > > >>> ---
-> > > >>>   fs/nfsd/nfs4proc.c  | 4 +++-
-> > > >>>   fs/nfsd/nfs4state.c | 6 +-----
-> > > >>>   2 files changed, 4 insertions(+), 6 deletions(-)
-> > > >>>
-> > > >>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > >>> index 46bd20fe5c0f..7b70309ad8fb 100644
-> > > >>> --- a/fs/nfsd/nfs4proc.c
-> > > >>> +++ b/fs/nfsd/nfs4proc.c
-> > > >>> @@ -1942,7 +1942,7 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, s=
-truct nfsd4_compound_state *cstate,
-> > > >>>        struct nfsd4_copy_notify *cn =3D &u->copy_notify;
-> > > >>>        __be32 status;
-> > > >>>        struct nfsd_net *nn =3D net_generic(SVC_NET(rqstp), nfsd_n=
-et_id);
-> > > >>> -     struct nfs4_stid *stid;
-> > > >>> +     struct nfs4_stid *stid =3D NULL;
-> > > >>>        struct nfs4_cpntf_state *cps;
-> > > >>>        struct nfs4_client *clp =3D cstate->clp;
-> > > >>>
-> > > >>> @@ -1951,6 +1951,8 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, s=
-truct nfsd4_compound_state *cstate,
-> > > >>>                                        &stid);
-> > > >>>        if (status)
-> > > >>>                return status;
-> > > >>> +     if (!stid)
-> > > >>> +             return nfserr_bad_stateid;
-> > > >>>
-> > > >>>        cn->cpn_lease_time.tv_sec =3D nn->nfsd4_lease;
-> > > >>>        cn->cpn_lease_time.tv_nsec =3D 0;
-> > > >>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > >>> index 69d576b19eb6..dc61a8adfcd4 100644
-> > > >>> --- a/fs/nfsd/nfs4state.c
-> > > >>> +++ b/fs/nfsd/nfs4state.c
-> > > >>> @@ -7020,11 +7020,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst=
- *rqstp,
-> > > >>>                *nfp =3D NULL;
-> > > >>>
-> > > >>>        if (ZERO_STATEID(stateid) || ONE_STATEID(stateid)) {
-> > > >>> -             if (cstid)
-> > > >>> -                     status =3D nfserr_bad_stateid;
-> > > >>> -             else
-> > > >>> -                     status =3D check_special_stateids(net, fhp,=
- stateid,
-> > > >>> -                                                                =
-     flags);
-> > > > This code was put in by Bruce in commit ("nfsd: fix crash on
-> > > > COPY_NOTIFY with special stateid"). Its intentions were to make sur=
-e
-> > > > that IF COPY_NOTFY was sent with a special state it, then the serve=
-r
-> > > > would produce an error (in this case bad_stateid). Only from
-> > > > copy_notify do we call nfs4_preproces_stateid_op() with a non-null
-> > > > cstid. This above logic is needed here as far as I can tell.
-> > >
-> > > So the purpose was now special stateids will not generate an output
-> > > stateid, which COPY_NOTIFY now checks, and fails locally in this case=
-.
-> >
-> > Ok I see it now I do agree with the nfsd4_copy_notify() changes it
-> > should be still guard against the use of special stateid.
-> >
-> > > Maybe I'm missing something, but my assumption is that if a client
-> > > sends a COPY_NOTIFY with a special stateid, it will still error out w=
-ith
-> > > bad stateid (due to the change in nfsd4_copy_notify...\
-> >
-> > I agree now. Thank you for the explanation. Looks good.
->
-> Hi Olga, may I add a Reviewed-by: from you?
+On Fri, 2024-07-26 at 09:54 -0400, Jeff Layton wrote:
+> On Wed, 2024-07-24 at 10:01 -0700, Sagi Grimberg wrote:
+> > Based on a patch fom Dai Ngo, allow NFSv4 client to use write
+> > delegation
+> > stateid for READ operation. Per RFC 8881 section 9.1.2. Use of the
+> > Stateid and Locking.
+> >=20
+> > In addition, for anonymous stateids, check for pending delegations
+> > by
+> > the filehandle and client_id, and if a conflict found, recall the
+> > delegation
+> > before allowing the read to take place.
+> >=20
+> > Suggested-by: Dai Ngo <dai.ngo@oracle.com>
+> > Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+> > ---
+> > =C2=A0fs/nfsd/nfs4proc.c=C2=A0 | 22 +++++++++++++++++++--
+> > =C2=A0fs/nfsd/nfs4state.c | 47
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> > =C2=A0fs/nfsd/nfs4xdr.c=C2=A0=C2=A0 |=C2=A0 9 +++++++++
+> > =C2=A0fs/nfsd/state.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> > =C2=A0fs/nfsd/xdr4.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> > =C2=A05 files changed, 80 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index 7b70309ad8fb..324984ec70c6 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -979,8 +979,24 @@ nfsd4_read(struct svc_rqst *rqstp, struct
+> > nfsd4_compound_state *cstate,
+> > =C2=A0	/* check stateid */
+> > =C2=A0	status =3D nfs4_preprocess_stateid_op(rqstp, cstate,
+> > &cstate->current_fh,
+> > =C2=A0					&read->rd_stateid,
+> > RD_STATE,
+> > -					&read->rd_nf, NULL);
+> > -
+> > +					&read->rd_nf, &read-
+> > >rd_wd_stid);
+>=20
+> In the case where we have multiple stateids for this client, are we
+> guaranteed to get back the delegation stateid here? What if we get
+> back
+> the open stateid for the O_WRONLY open instead?
+>=20
 
-Of course.
+Oh, duh -- disregard this. We're looking for a specific stateid here,
+so if the client sends a delegation stateid, that's what we'll find.
+=20
+>=20
+> > +	/*
+> > +	 * rd_wd_stid is needed for nfsd4_encode_read to allow
+> > write
+> > +	 * delegation stateid used for read. Its refcount is
+> > decremented
+> > +	 * by nfsd4_read_release when read is done.
+> > +	 */
+> > +	if (!status) {
+> > +		if (!read->rd_wd_stid) {
+> > +			/* special stateid? */
+> > +			status =3D nfsd4_deleg_read_conflict(rqstp,
+> > cstate->clp,
+> > +				&cstate->current_fh);
+> > +		} else if (read->rd_wd_stid->sc_type !=3D
+> > SC_TYPE_DELEG ||
+> > +			=C2=A0=C2=A0 delegstateid(read->rd_wd_stid)->dl_type
+> > !=3D
+> > +						NFS4_OPEN_DELEGATE
+> > _WRITE) {
+> > +			nfs4_put_stid(read->rd_wd_stid);
+> > +			read->rd_wd_stid =3D NULL;
+> > +		}
+> > +	}
+> > =C2=A0	read->rd_rqstp =3D rqstp;
+> > =C2=A0	read->rd_fhp =3D &cstate->current_fh;
+> > =C2=A0	return status;
+> > @@ -990,6 +1006,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct
+> > nfsd4_compound_state *cstate,
+> > =C2=A0static void
+> > =C2=A0nfsd4_read_release(union nfsd4_op_u *u)
+> > =C2=A0{
+> > +	if (u->read.rd_wd_stid)
+> > +		nfs4_put_stid(u->read.rd_wd_stid);
+> > =C2=A0	if (u->read.rd_nf)
+> > =C2=A0		nfsd_file_put(u->read.rd_nf);
+> > =C2=A0	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index dc61a8adfcd4..7e6b9fb31a4c 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -8805,6 +8805,53 @@ nfsd4_get_writestateid(struct
+> > nfsd4_compound_state *cstate,
+> > =C2=A0	get_stateid(cstate, &u->write.wr_stateid);
+> > =C2=A0}
+> > =C2=A0
+> > +/**
+> > + * nfsd4_deleg_read_conflict - Recall if read causes conflict
+> > + * @rqstp: RPC transaction context
+> > + * @clp: nfs client
+> > + * @fhp: nfs file handle
+> > + * @inode: file to be checked for a conflict
+> > + * @modified: return true if file was modified
+> > + * @size: new size of file if modified is true
+> > + *
+> > + * This function is called when there is a conflict between a
+> > write
+> > + * delegation and a read that is using a special stateid where the
+> > + * we cannot derive the client stateid exsistence. The server
+> > + * must recall a conflicting delegation before allowing the read
+> > + * to continue.
+> > + *
+> > + * Returns 0 if there is no conflict; otherwise an nfs_stat
+> > + * code is returned.
+> > + */
+> > +__be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
+> > +		struct nfs4_client *clp, struct svc_fh *fhp)
+> > +{
+> > +	struct nfs4_file *fp;
+> > +	__be32 status =3D 0;
+> > +
+> > +	fp =3D nfsd4_file_hash_lookup(fhp);
+> > +	if (!fp)
+> > +		return nfs_ok;
+> > +
+> > +	spin_lock(&state_lock);
+> > +	spin_lock(&fp->fi_lock);
+> > +	if (!list_empty(&fp->fi_delegations) &&
+> > +	=C2=A0=C2=A0=C2=A0 !nfs4_delegation_exists(clp, fp)) {
+> > +		/* conflict, recall deleg */
+> > +		status =3D nfserrno(nfsd_open_break_lease(fp-
+> > >fi_inode,
+> > +					NFSD_MAY_READ));
+> > +		if (status)
+> > +			goto out;
+> > +		if (!nfsd_wait_for_delegreturn(rqstp, fp-
+> > >fi_inode))
+> > +			status =3D nfserr_jukebox;
+> > +	}
+> > +out:
+> > +	spin_unlock(&fp->fi_lock);
+> > +	spin_unlock(&state_lock);
+> > +	return status;
+> > +}
+> > +
+> > +
+> > =C2=A0/**
+> > =C2=A0 * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes
+> > conflict
+> > =C2=A0 * @rqstp: RPC transaction context
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index c7bfd2180e3f..f0fe526fac3c 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -4418,6 +4418,7 @@ nfsd4_encode_read(struct nfsd4_compoundres
+> > *resp, __be32 nfserr,
+> > =C2=A0	unsigned long maxcount;
+> > =C2=A0	struct file *file;
+> > =C2=A0	__be32 *p;
+> > +	fmode_t o_fmode =3D 0;
+> > =C2=A0
+> > =C2=A0	if (nfserr)
+> > =C2=A0		return nfserr;
+> > @@ -4437,10 +4438,18 @@ nfsd4_encode_read(struct nfsd4_compoundres
+> > *resp, __be32 nfserr,
+> > =C2=A0	maxcount =3D min_t(unsigned long, read->rd_length,
+> > =C2=A0			 (xdr->buf->buflen - xdr->buf->len));
+> > =C2=A0
+> > +	if (read->rd_wd_stid) {
+> > +		/* allow READ using write delegation stateid */
+> > +		o_fmode =3D file->f_mode;
+> > +		file->f_mode |=3D FMODE_READ;
+> > +	}
 
->
-> --
-> Chuck Lever
+^^^
+I do agree with Chuck that this looks sketchy.
+
+> > =C2=A0	if (file->f_op->splice_read && splice_ok)
+> > =C2=A0		nfserr =3D nfsd4_encode_splice_read(resp, read,
+> > file, maxcount);
+> > =C2=A0	else
+> > =C2=A0		nfserr =3D nfsd4_encode_readv(resp, read, file,
+> > maxcount);
+> > +	if (o_fmode)
+> > +		file->f_mode =3D o_fmode;
+> > +
+> > =C2=A0	if (nfserr) {
+> > =C2=A0		xdr_truncate_encode(xdr, starting_len);
+> > =C2=A0		return nfserr;
+> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > index ffc217099d19..c1f13b5877c6 100644
+> > --- a/fs/nfsd/state.h
+> > +++ b/fs/nfsd/state.h
+> > @@ -780,6 +780,8 @@ static inline bool try_to_expire_client(struct
+> > nfs4_client *clp)
+> > =C2=A0	return clp->cl_state =3D=3D NFSD4_EXPIRABLE;
+> > =C2=A0}
+> > =C2=A0
+> > +extern __be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
+> > +		struct nfs4_client *clp, struct svc_fh *fhp);
+> > =C2=A0extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp=
+,
+> > =C2=A0		struct inode *inode, bool *file_modified, u64
+> > *size);
+> > =C2=A0#endif=C2=A0=C2=A0 /* NFSD4_STATE_H */
+> > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> > index fbdd42cde1fa..434973a6a8b1 100644
+> > --- a/fs/nfsd/xdr4.h
+> > +++ b/fs/nfsd/xdr4.h
+> > @@ -426,6 +426,8 @@ struct nfsd4_read {
+> > =C2=A0	struct svc_rqst		*rd_rqstp;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 /*
+> > response */
+> > =C2=A0	struct svc_fh		*rd_fhp;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* response */
+> > =C2=A0	u32			rd_eof;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 /* response */
+> > +
+> > +	struct nfs4_stid	*rd_wd_stid;		/*
+> > internal */
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0struct nfsd4_readdir {
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
