@@ -1,358 +1,362 @@
-Return-Path: <linux-nfs+bounces-5099-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5100-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D56B893E0C0
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 21:58:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292C293E10A
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 23:15:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83B45281FED
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 19:58:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A0B81F214D3
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 21:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D4C1D69E;
-	Sat, 27 Jul 2024 19:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACD238FB0;
+	Sat, 27 Jul 2024 21:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XLO66jjI";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pw0nNSC1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CrAtYhu4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B018138FA1
-	for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 19:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722110322; cv=fail; b=gV+6HtlCu3Lw1RAYiy/UuxjdLhzhQH2C8EBcxEhXsQr62jmLGTd8YVLygk4pmd8UV4D34G9tmsmuHhdHbIiEgYlG6bJlGoYWsl+Z0hHFIfYusphBueeMsZG2/deSdG2ogPFD0X+krQJ/ALL4uA/0nbSPsrNa0Iaa9EMYRSFHG9w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722110322; c=relaxed/simple;
-	bh=c8pRRJRyxGi8L13EGwAfk9Wt+8zNq12A8eitzG1+fFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eLIeZfuf8NrWKaB2GcyBsHabTX/QDBh4B9ENDHz8u8GWwMB51Vn3yisu3FnVFfryjw4aKvt0sq5zc5JsTuV4erJMMNtgfjtz0J5hTaKs2UYPUMw51I6Jx3fmHDvXcRYMJzTo9wkZx9sd6VUcrfLsqYTc4JODF9H9wTajdesSgVg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XLO66jjI; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=pw0nNSC1; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46RCTQWo032176;
-	Sat, 27 Jul 2024 19:58:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=Vf1Vc0QAPeuY8+S
-	EcsiahTb1+vPtZXJ7YTv2MDTvB68=; b=XLO66jjILfFM9Bq7YofLQQ7TsymdAAQ
-	8avR7yewJOgbxIQfoDu3mL6vOJ374OyZZvS5QWAbpTHHHtUNbQF0WKO6vd+7lJXc
-	1BWtcOrVLTrxRQ3gz47X4sF+0Zxwy3jM2Jo88/guIqP5wNcedxzjWRNpsHE/mPDr
-	PrV1NZYTlrL09dAaDmtE/LJlfmXTWEUaXDv2zkSzmvA2r7RLV2BLZ8CNRnN956Kb
-	hUsc7Xa9fhURcwZrl9j2K9NlKaN+TGTnRp6EREvh9fFE0hUWBIWr8xrnTqpO6Xzk
-	xmROR9Bq0lzyAQWFzMOn89RUYJlceeGDiV2mJPw55WdkPyNRhZqRK+w==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40mqtagjbn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 27 Jul 2024 19:58:27 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46RG15gp021195;
-	Sat, 27 Jul 2024 19:58:26 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2043.outbound.protection.outlook.com [104.47.55.43])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40mqb6ynur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 27 Jul 2024 19:58:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wjvA/4Oi2Y6H/0QUMD+FXwm5LHxLWCxUWdWyYR+3V6qBeI+tG1WlaJryjhLdz71tho+ITBv2TT9+F4cLJUS+TPFeCxJNX4R/K8YXphcdAzuCpcm2dI8wd0R4KNuUCY31gZRgQBeX2LPBRY2iHVgDLNP7IigLIeaPkQWnBr6upHJCZrrDsmLw45QKpp6M/ECD1uc21r7NPh6+b9GVWjharGrqQ5v0qmAB6NApy7G7n5f8nWhAWFhfTw40qXQAWhwmawy72VQDZyWzXOsbw3zwMVo+pcS85mhskM80Sa3pVSATur+MF/XadBk3U+tOo10hR/zPWjGsE6FE50ScjJ8EFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vf1Vc0QAPeuY8+SEcsiahTb1+vPtZXJ7YTv2MDTvB68=;
- b=i28ZDWTns+u8X1Iie0/dNrQg2BYAVUi01QFmwSnfGDnAXIbVr7jx4Bc7vCfDfyGAQT9lwgivzcAMhOt0pKTQvWeq8WESiGyO/mnCX45sT6zWW3iesJV/MSEvfqkJy10GsAsOFgklQvjMTH3pyMwW9/OIMCJjQjwP6wVBHQpOO2rLQ8baAhj1GPE9EMMVM3OWQIzhrqDh08mpuAuz0WcXG3gHsYEf/iUxLIeLA104YPrHma1GQ8eZ0vbMdEq++4wQhZ9eQyxNTUvtZpMw8DxNM6S6uJHRuOITy2zC7NJC2/guqfQ8p6DmLRPS7bPNrA6jpP8bzJYqBxq1lV69OzyhuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EEF446A5
+	for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 21:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722114906; cv=none; b=VMIrHg1FzcQgWe+GN9+t61q+xetSAaSiuoFMnkJqx36qVIYdswyz7e6q20ATb5eQbMtcZyWAoRaeq2IwzVGaHmUkohcKxWBUmMU5I/OEMb3sHHLrAJytpJeoKZ/d5BeQWXtImfJzVndNHUMuzkrsqz9KWsggFgwvI3yI8XTUndw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722114906; c=relaxed/simple;
+	bh=3fx+fj4gBQRJ1G8Z5cHEf8+6hKrmjjI15/MpDn7Thxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGL9Xi3L2jX3cOt7D7mBNALOTeUfl2DY2CBeebQnun3CkZ8zUbD0r/EySdHR9VjoyHgZfBNkhfWpmskubTVXzZHqu99pdjSWXxn2t+q7Y8Ij3Lbr/GMzv1OtJGtuHwEkRhxtrCFZameZBq4+8vU/AvSOsdLfz4miwnMrxLx67ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CrAtYhu4; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52f01afa11cso3467989e87.0
+        for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 14:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vf1Vc0QAPeuY8+SEcsiahTb1+vPtZXJ7YTv2MDTvB68=;
- b=pw0nNSC1BMDUe9CmtnVKqecKaRdyJyYvbgkX3+Ez5VETOJX+ETQYX+yYDsPj7FmEHuXCRdsdCxbmhIloHaqin2Uh+IQNlVtj/+CZCISmvlxZ2S3Clle4DUWwLDhD2KggxDoC24PjAjPnrkt1Y4/+5DfM4Dy9AK3dNVb1WchhXHw=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM3PR10MB7928.namprd10.prod.outlook.com (2603:10b6:0:44::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7784.19; Sat, 27 Jul 2024 19:58:21 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7807.025; Sat, 27 Jul 2024
- 19:58:21 +0000
-Date: Sat, 27 Jul 2024 15:58:18 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Dai Ngo <dai.ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH rfc 2/2] NFSD: allow client to use write delegation
- stateid for READ
-Message-ID: <ZqVRWps0RZ7GQROb@tissot.1015granger.net>
-References: <20240724170138.1942307-1-sagi@grimberg.me>
- <20240724170138.1942307-2-sagi@grimberg.me>
- <ZqOtYYV2rQ7ROqXs@tissot.1015granger.net>
- <a9705537-e9ec-47e6-8a96-b783868d96e9@grimberg.me>
- <ZqVQRVgblq4TfF9a@tissot.1015granger.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZqVQRVgblq4TfF9a@tissot.1015granger.net>
-X-ClientProxiedBy: CH0PR13CA0017.namprd13.prod.outlook.com
- (2603:10b6:610:b1::22) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1722114902; x=1722719702; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ubiIZPpTt7ow4bk7CJKFW65JRV/8g31lBi6Cv15KBWU=;
+        b=CrAtYhu4cFOe5gQVRtBzbbvFX0qW5IM9jsurkgGQX0uq7il1qTcLyv/FaL1SsYyyla
+         D+PRA6TSrQNisrYbBoYU49rW/VWDXfscuV3oOaAGsxzRJ2WdX8GZ0UTFKMJU3QN4YNFj
+         Oo7OlduBge2aIZycLp+04vnvdq41wWE16+8rYTjbtRxGzhbmCqP+ex7MRnQft57Uz4g2
+         LY7/OTs/6zpcztZ29p6+huXu8Mg69TKZRoN4c2VqHRJ5pmm0U9+P/FGVANTLka15dlmf
+         8HpdCg4KY35zXWAQT9ih2lxcsZIoQxA1PS+tWThlu3qNNOccuDluNu82dKzBg6aatPtH
+         2nrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722114902; x=1722719702;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubiIZPpTt7ow4bk7CJKFW65JRV/8g31lBi6Cv15KBWU=;
+        b=bs5VVl/yppoEGjHIOZCWe62x9A7C+/JtHgG3c/Rx2WZwbCK8txI0hGb4lVdfOMuWQ0
+         C+vjJy0l7gCHagvzQlmNXoQCGP9DZ7KvuJ6bVt3ZsnG6t0H1VXc3krEj7a750DO1C2XX
+         Ng3IBVf8/izaBRoe2VgLBI/iXfA6Q7D+IP5uZwJSlEUzRqTw6tbO1q4kQcqryN9DPYcC
+         h4P/BBov0AYbWWGGSfE6Na2ZiDkjfccs+IyPxoa16IuzL6kkfL+9DZcOeSQolfSB59Rt
+         So1UWVOQYPDeF/P+BMxSSsI4gNXM8WwHW+5Rvqsnwq+e99fzjFyK1kx9uoGzob7ilmx9
+         j1MA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4O3XHi9aoj0f36g9KOlAXsJ6ML8ehDXJ0FkZ/ZD/aVu5mFIkJ1RE+bYpXT6Vaq/FeKEwIbpMUu0174+kmyNOC7gOhzhQytz96
+X-Gm-Message-State: AOJu0YxmHeeRND8JBG/n9rk5loK3aeyIJbHRjz8SI2U3B2H7ytpGh7NQ
+	IOQ8RcN/rwTHKvBIu3SMv83YA91tqr9ssLmNtHLzwLbcwCmsytuX
+X-Google-Smtp-Source: AGHT+IFbljVMmpbwYoFZ5DunVZheQcd0RKqwF0Mp0OfwQRPS3cKafXIjdi94TLha+1foVj/I+P7X5g==
+X-Received: by 2002:a05:6512:2c95:b0:52c:cc38:592c with SMTP id 2adb3069b0e04-5309b1ee533mr2251652e87.0.1722114901403;
+        Sat, 27 Jul 2024 14:15:01 -0700 (PDT)
+Received: from eldamar.lan (host-79-40-60-99.business.telecomitalia.it. [79.40.60.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad93105sm314461866b.167.2024.07.27.14.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jul 2024 14:15:01 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 21342BE2EE8; Sat, 27 Jul 2024 23:15:00 +0200 (CEST)
+Date: Sat, 27 Jul 2024 23:15:00 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org, it+linux-nfs@molgen.mpg.de
+Subject: Re: `rcu: INFO: rcu_sched self-detected stall on CPU` and spinning
+ kworker `rpciod`
+Message-ID: <ZqVjVEV5IF_vz4Eq@eldamar.lan>
+References: <76a841e5-4e3d-4942-9a4b-24f87d6b79a5@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM3PR10MB7928:EE_
-X-MS-Office365-Filtering-Correlation-Id: 057b4c37-bd07-495b-c4ce-08dcae76773b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ejT2Z7sTeiSprChXgi8cc0FY7Tp3nWuvm5eyX79RXMMl6dVHoqzIpMufjGY+?=
- =?us-ascii?Q?3gEAoPd7MX+jBRPZSBzW3FZI2I2eLo5GAKN847/znIEUcYYiJixj4KYXTS63?=
- =?us-ascii?Q?82PE4WFjs0ZbevPiIJd4cw5hRm9YuXU/YHfTSzk4tA3KVB82XTVrsXnQSqSI?=
- =?us-ascii?Q?Te6UJjuGaZpsVDjBOSsIU2Roy+yiew38PtjlCgb1H/UESPCPU2A3W3YeHlz5?=
- =?us-ascii?Q?eJR/Hye95H44VEnVNcFixUk3yTNfbxfDTD78gwPke+70oI5it9hTH9qggJFk?=
- =?us-ascii?Q?mbLLjTcFKygGujpMcANyJInF5VqGNOuihE1ZlIGorB1v4uM+6QDPI1UtrTY0?=
- =?us-ascii?Q?5D3GdRWrvEhPt1KhxaHeSq/bbUe/24K8OUYyGHw5J6VIPhAtzimr6bMLYBVN?=
- =?us-ascii?Q?I5DpI9Xuy7pgLcj+RXEU+luV5NIchWsimtEp+vjSqUGnOf6K4UciolVRwBxD?=
- =?us-ascii?Q?kxi7TyMhHiyFrX1DuBmEjF3NybanCeD3nKOlwOGwc3zd+F2B5RrLOB8A7vTI?=
- =?us-ascii?Q?+yiPtZNzsDOTAwvwtymJUk0QOFE05qZx4wDkRUkket/HdgZuZq5Xouhm2L7W?=
- =?us-ascii?Q?WNGkI5+AC1S7oxd4xkKpKvaYTVfEez7XlKucQSWYp3HKmognjezxEsgGom6K?=
- =?us-ascii?Q?RAhttoAx6Gp9Lv0FBLQRkThGHOY35KOQbQ3mveSLiqaptOEM7DJkKwisg6Aq?=
- =?us-ascii?Q?i+hg/YDTWulJ7RUkGs4JxbxWj9pgDvGzHxng4QOUvkp6Rda1eFIENA5wIj9c?=
- =?us-ascii?Q?EEbZ2AWBe6fV/Ra74pRZmygo2J7pQ9bGWOHV5mAic4t55z2XikarYY9IRbVk?=
- =?us-ascii?Q?0uU9cEDH2jg4+lSrUM/TOrvidT1g5qNNOmx1kz1Bfa+SJxj8/BW/yzN4WOV1?=
- =?us-ascii?Q?3XM5zF6djW4D3AVfc5A940QPbEqYLNZsWNJVw3K6n24z2gRhrM4OANKSu/Bl?=
- =?us-ascii?Q?kF9CxPTnxjQk0c1mrZEaiAUIja1FTaurt8O7E7fVk+sdt0WYQtcizpk+zBUS?=
- =?us-ascii?Q?dKkc0M240ActQuiEb4r1lDzxUP51syTpNlGCAr438G9BCG1OIEz8+yAIyTyS?=
- =?us-ascii?Q?kXrmzYTAnW4ExD0rSUkaxIYYmtqQSHD5g6cD//aGkrc4r2zdHK9uwYECfah2?=
- =?us-ascii?Q?gvlkb+WOXh912iu3jtv7DgADDKE+oLok24Ivc33uAIANE3DkNtwqwiXjJ1fP?=
- =?us-ascii?Q?sypxYw+wDyHNlGXRGCBzYF/NqVF3IezrQzDm7V7Gss0lA+BmBEF16vPCKs02?=
- =?us-ascii?Q?qrG6KCDof5M0UaByDbApw66+tq1o2M44GHksQT8nlGOOfrPnc1Tp3yAn7IJP?=
- =?us-ascii?Q?eBA54aMNIaSkTUnKPAmqcf5ECTetll9rRgHQGL2cDCCELw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?T/D3uzCS31J7tNtA8fiiLgPvW1cDZk58SX1xB1tv5zIcYjk54VlKVXL20IKf?=
- =?us-ascii?Q?KK9PZlRmHLkOicf0iR32SKyY8V4rrPcdRrT509Zvss15bn7FYqtKBTc8/ERG?=
- =?us-ascii?Q?Lx73+5m5zNc3/5vLGIlEQnU1+KqXNsYNt8bViHkGA9eopul0Zmq7wf6eUqb4?=
- =?us-ascii?Q?/eWoyOAcAg6iQPjrtoRBYBKUT4gtbuF43z0eHC8Y7mGzfFO8ffZEON8QQlaE?=
- =?us-ascii?Q?FG6ByWtuSsko+NjdnuXUXvnM157iwIRId6MsEktLfMfj4kpjB+h0QL37JxT4?=
- =?us-ascii?Q?+ZPbee4wnET6ASRSnm4yQlZHHkVy9mqKeCe4S9ekIMsUraOwf2FyDW1dhc69?=
- =?us-ascii?Q?G9ipRMZe2y9GlVHnteHU00AgbK3soeJbxD7iOpw581fxJIc/SjWInYZwqcaE?=
- =?us-ascii?Q?U0me+N5dDs3vMZ7QQKBUnsqiwmxjSmNdsjXhjmhLuWex1B+QPuRzM8H7s5Dt?=
- =?us-ascii?Q?n+fH3WThwj2pFbFrCfXjYDpXKC2j0NY3QxUDV1UIFNzki2Dg5z5b/p45I8kx?=
- =?us-ascii?Q?dbMwYhtaORvCI04WNWSd3kqj+LXpfufJ9V1rBs0APjblHIjbvzb2VjC219b/?=
- =?us-ascii?Q?Ss5LgQ0BknYGeq8ii+VU+9yp9RD43KNplpTpz2kB54zAJikEiam3LWtO2wsp?=
- =?us-ascii?Q?UG1wCQDqNk4WDJgb3cyXDZjqtGlle7CkTGn9YuR1lFvGBokVsPy90JVcAbcn?=
- =?us-ascii?Q?GbuwdecOPOUoHPYXnTApC5MoUR7TtPt5lZTJj4KDNPx1oG9AW85dW2r5ybHX?=
- =?us-ascii?Q?G8X08gEOKFfpKEm0MZ3e+t1qDiyr6NZ+rTv86Gx+PRWFtpo2Ckqx4ys92MGH?=
- =?us-ascii?Q?5pb8MEnb+bYTyqG5Vd7gUgJQBFg/8/EYXDnU4zquiKdWbvhNkes415wh2qmn?=
- =?us-ascii?Q?WLMkISonq/ExMTSHHlKVyolXeaZBqLMMmrhlorLwk9+LykB/JSUFwxtxxWbQ?=
- =?us-ascii?Q?Kd9077iv4XEKpbksK0STLUogGVrNF/urkQRvrDkDdAB1rITYhJ9t0dngBpPE?=
- =?us-ascii?Q?cH+IXacADUAuxg6SiA49R4MbKT5zkTAv54FDdx8sTi9u3ouVrgw8CADXQ9/A?=
- =?us-ascii?Q?yTJYMJW9AB+zMCDRFge0WvoGY/1LkEvKh4gkyn95PHQyA6ZGMYhzDAFuCHUK?=
- =?us-ascii?Q?zx13+x3FgXTbiLCas98fe4GI1UxJdqWkbigffkDLx2ssS0BzwJ/+5szzquEf?=
- =?us-ascii?Q?yzr0PzKku8Ls8X1Y0/QVmJ54wvrTtjVzL5YsmnAI8zddgOTi1doTFpbyYFC5?=
- =?us-ascii?Q?OXgZNEMbjCPYRpaOM76s3jxEd0jc0ds/xK2oH900mOaNhdfGZbY3eqUhxzbi?=
- =?us-ascii?Q?LzEQeRQRxwUFTkA/6ycTXF1bDNTOApGb1ECsi9C0MCjdT+gEmMoCk8qTyKw3?=
- =?us-ascii?Q?xUiBcd6dU9xGKPliNaj0i0PN7aFiGejYyKAi9jVi8p9eJalxoEGuTXnh7Atr?=
- =?us-ascii?Q?2JzV5iuwCFCicqucEfs2wO3UPHnOOdOLqU1Pv/tXyMaVp/S9JhudH4HqKXBA?=
- =?us-ascii?Q?8rE8MT49PTh81w1k3NlNMc8LQ9Kgd74364EY0zJZqbDwMtzAA1HXGal2fXFx?=
- =?us-ascii?Q?hrmvrjcUTolbuhVinpHGzdhmn/8RDwzy+UlQJLIv?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Lv+nvd1spuX92EdhqKeCPf2Y5M39/pAtbBC5fmuTe0KZ3PIJ8WOrqMPUqjwg+aQ3tFqEThpQtQpFtfISjRcHVyyymMmtoSBwUDS3cFqRxY9dDAlcVX2GIsNNrrTgBFHfnYjcnRhdAdXO7uUbEowLAc6bZj2q2c62diLZ4XIumWfrnovAoXIIlFTebl21DtknTflTs39iYDb9ayKlQtXtmdk1Y5LJe04sjj+WHRIGKsiZLq9KIKdIcfLThte6XLNwuAoWXNzNctLB7mzzZUQWujylc35/Qog+Pq+dNbA3H3Us6yxKF3er7CSCrXW84hiWcZTqzt2KkGPC3Sz6yrDdXY0qnOt82keBZfpawGZZk61kLF2wbHcwpzFC+cgL1FOHVMWga7YJhi5RTXbV7cLbDkddFuuKIr67EIeYMXdzFJnd16/oV44EhgYyVqoBT/tcTnK0bGDXaB1qrDNZKL71L+YYBCXj53N0mnurLyfvxr1EkTLaz31vPfW4mjxjDvLlUzv+R5wHlArJwKwOYqZQUdKUi9hH9ey9efQ+t4USHt7XYFfyZqyp/9mxspNwfu9ItJh9+RniOUy5nbZyGhPN/7simmy6ka6qUDiPdK0PLkc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 057b4c37-bd07-495b-c4ce-08dcae76773b
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2024 19:58:21.0598
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q2JHxi2aPIJiSHEGS32Q1lepNTcJ/u0/kRmSDD7AsygGJm3qzRmlgZTriEaSbG6c5QH+G+CCmBqyptLd3iSL0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR10MB7928
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-27_13,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2407270137
-X-Proofpoint-GUID: whgXlE9i0yg42ZInkfNB7XvCYj6TdBrZ
-X-Proofpoint-ORIG-GUID: whgXlE9i0yg42ZInkfNB7XvCYj6TdBrZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76a841e5-4e3d-4942-9a4b-24f87d6b79a5@molgen.mpg.de>
 
-On Sat, Jul 27, 2024 at 03:53:41PM -0400, Chuck Lever wrote:
-> On Sat, Jul 27, 2024 at 10:26:24PM +0300, Sagi Grimberg wrote:
-> > 
-> > 
-> > 
-> > On 26/07/2024 17:06, Chuck Lever wrote:
-> > > On Wed, Jul 24, 2024 at 10:01:38AM -0700, Sagi Grimberg wrote:
-> > > > Based on a patch fom Dai Ngo, allow NFSv4 client to use write delegation
-> > > > stateid for READ operation. Per RFC 8881 section 9.1.2. Use of the
-> > > > Stateid and Locking.
-> > > > 
-> > > > In addition, for anonymous stateids, check for pending delegations by
-> > > > the filehandle and client_id, and if a conflict found, recall the delegation
-> > > > before allowing the read to take place.
-> > > > 
-> > > > Suggested-by: Dai Ngo <dai.ngo@oracle.com>
-> > > > Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-> > > > ---
-> > > >   fs/nfsd/nfs4proc.c  | 22 +++++++++++++++++++--
-> > > >   fs/nfsd/nfs4state.c | 47 +++++++++++++++++++++++++++++++++++++++++++++
-> > > >   fs/nfsd/nfs4xdr.c   |  9 +++++++++
-> > > >   fs/nfsd/state.h     |  2 ++
-> > > >   fs/nfsd/xdr4.h      |  2 ++
-> > > >   5 files changed, 80 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > > index 7b70309ad8fb..324984ec70c6 100644
-> > > > --- a/fs/nfsd/nfs4proc.c
-> > > > +++ b/fs/nfsd/nfs4proc.c
-> > > > @@ -979,8 +979,24 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> > > >   	/* check stateid */
-> > > >   	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
-> > > >   					&read->rd_stateid, RD_STATE,
-> > > > -					&read->rd_nf, NULL);
-> > > > -
-> > > > +					&read->rd_nf, &read->rd_wd_stid);
-> > > > +	/*
-> > > > +	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
-> > > > +	 * delegation stateid used for read. Its refcount is decremented
-> > > > +	 * by nfsd4_read_release when read is done.
-> > > > +	 */
-> > > > +	if (!status) {
-> > > > +		if (!read->rd_wd_stid) {
-> > > > +			/* special stateid? */
-> > > > +			status = nfsd4_deleg_read_conflict(rqstp, cstate->clp,
-> > > > +				&cstate->current_fh);
-> > > > +		} else if (read->rd_wd_stid->sc_type != SC_TYPE_DELEG ||
-> > > > +			   delegstateid(read->rd_wd_stid)->dl_type !=
-> > > > +						NFS4_OPEN_DELEGATE_WRITE) {
-> > > > +			nfs4_put_stid(read->rd_wd_stid);
-> > > > +			read->rd_wd_stid = NULL;
-> > > > +		}
-> > > > +	}
-> > > >   	read->rd_rqstp = rqstp;
-> > > >   	read->rd_fhp = &cstate->current_fh;
-> > > >   	return status;
-> > > > @@ -990,6 +1006,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> > > >   static void
-> > > >   nfsd4_read_release(union nfsd4_op_u *u)
-> > > >   {
-> > > > +	if (u->read.rd_wd_stid)
-> > > > +		nfs4_put_stid(u->read.rd_wd_stid);
-> > > >   	if (u->read.rd_nf)
-> > > >   		nfsd_file_put(u->read.rd_nf);
-> > > >   	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
-> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > index dc61a8adfcd4..7e6b9fb31a4c 100644
-> > > > --- a/fs/nfsd/nfs4state.c
-> > > > +++ b/fs/nfsd/nfs4state.c
-> > > > @@ -8805,6 +8805,53 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
-> > > >   	get_stateid(cstate, &u->write.wr_stateid);
-> > > >   }
-> > > > +/**
-> > > > + * nfsd4_deleg_read_conflict - Recall if read causes conflict
-> > > > + * @rqstp: RPC transaction context
-> > > > + * @clp: nfs client
-> > > > + * @fhp: nfs file handle
-> > > > + * @inode: file to be checked for a conflict
-> > > > + * @modified: return true if file was modified
-> > > > + * @size: new size of file if modified is true
-> > > > + *
-> > > > + * This function is called when there is a conflict between a write
-> > > > + * delegation and a read that is using a special stateid where the
-> > > > + * we cannot derive the client stateid exsistence. The server
-> > > > + * must recall a conflicting delegation before allowing the read
-> > > > + * to continue.
-> > > > + *
-> > > > + * Returns 0 if there is no conflict; otherwise an nfs_stat
-> > > > + * code is returned.
-> > > > + */
-> > > > +__be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
-> > > > +		struct nfs4_client *clp, struct svc_fh *fhp)
-> > > > +{
-> > > > +	struct nfs4_file *fp;
-> > > > +	__be32 status = 0;
-> > > > +
-> > > > +	fp = nfsd4_file_hash_lookup(fhp);
-> > > > +	if (!fp)
-> > > > +		return nfs_ok;
-> > > > +
-> > > > +	spin_lock(&state_lock);
-> > > > +	spin_lock(&fp->fi_lock);
-> > > > +	if (!list_empty(&fp->fi_delegations) &&
-> > > > +	    !nfs4_delegation_exists(clp, fp)) {
-> > > > +		/* conflict, recall deleg */
-> > > > +		status = nfserrno(nfsd_open_break_lease(fp->fi_inode,
-> > > > +					NFSD_MAY_READ));
-> > > > +		if (status)
-> > > > +			goto out;
-> > > > +		if (!nfsd_wait_for_delegreturn(rqstp, fp->fi_inode))
-> > > > +			status = nfserr_jukebox;
-> > > > +	}
-> > > > +out:
-> > > > +	spin_unlock(&fp->fi_lock);
-> > > > +	spin_unlock(&state_lock);
-> > > > +	return status;
-> > > > +}
-> > > > +
-> > > > +
-> > > >   /**
-> > > >    * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
-> > > >    * @rqstp: RPC transaction context
-> > > > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > > > index c7bfd2180e3f..f0fe526fac3c 100644
-> > > > --- a/fs/nfsd/nfs4xdr.c
-> > > > +++ b/fs/nfsd/nfs4xdr.c
-> > > > @@ -4418,6 +4418,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
-> > > >   	unsigned long maxcount;
-> > > >   	struct file *file;
-> > > >   	__be32 *p;
-> > > > +	fmode_t o_fmode = 0;
-> > > >   	if (nfserr)
-> > > >   		return nfserr;
-> > > > @@ -4437,10 +4438,18 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
-> > > >   	maxcount = min_t(unsigned long, read->rd_length,
-> > > >   			 (xdr->buf->buflen - xdr->buf->len));
-> > > > +	if (read->rd_wd_stid) {
-> > > > +		/* allow READ using write delegation stateid */
-> > > > +		o_fmode = file->f_mode;
-> > > > +		file->f_mode |= FMODE_READ;
-> > > > +	}
-> > > nfsd4_encode_read_plus() needs to handle write delegation stateids
-> > > as well.
-> > 
-> > Yes, missed that one.
-> > 
-> > > 
-> > > I'm not too sure about modifying the f_mode on an nfsd_file you
-> > > just got from a cache of shared nfsd_files.
-> > 
-> > If that is a problem, nfsd can open the file with rw access to begin with
-> > if a write deleg was given?
+Hi,
+
+On Wed, Jul 17, 2024 at 07:33:24AM +0200, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> IMO, it's not a question of whether there is a write delegation, but
-> rather what intent the client told the server during the OPEN. The
-> server would need to open the local file for R/W when it gets a
-> O_WRONLY open. Not saying this is the right thing to do, just
-> thinking out loud...
+> 
+> Using Linux 5.15.160 on a Dell PowerEdge T440/021KCD, BIOS 2.11.2
+> 04/22/2021, a mount from another server hung. Linux logs:
+> 
+> ```
+> $ dmesg -T
+> [Wed Jul  3 16:39:34 2024] Linux version 5.15.160.mx64.476
+> (root@theinternet.molgen.mpg.de) (gcc (GCC) 12.3.0, GNU ld (GNU Binutils)
+> 2.41) #1 SMP Wed Jun 5 12:24:15 CEST 2024
+> [Wed Jul  3 16:39:34 2024] Command line: root=LABEL=root ro
+> crashkernel=64G-:256M console=ttyS0,115200n8 console=tty0 init=/bin/systemd
+> audit=0 random.trust_cpu=on systemd.unified_cgroup_hierarchy
+> […]
+> [Wed Jul  3 16:39:34 2024] DMI: Dell Inc. PowerEdge T440/021KCD, BIOS 2.11.2
+> 04/22/2021
+> […]
+> [Tue Jul 16 06:00:10 2024] md: md3: data-check interrupted.
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000ee580afa xid 6890a3d2
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000d4d84570 xid 3ca4017a
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000aeeb49cf xid b6f12d96
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000056d1aff1 xid 6ad5584a
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000008075849 xid 406ed865
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000028481e8f xid 7f81b676
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000155c8644 xid 26099b1f
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000c384ff38 xid 7ed4dbf5
+> [Tue Jul 16 11:06:01 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000001bba6d7e xid a930d2bf
+> [Tue Jul 16 11:11:04 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000155c8644 xid 5b099b1f
+> [Tue Jul 16 11:11:04 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000c384ff38 xid b3d4dbf5
+> [Tue Jul 16 11:11:04 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000001bba6d7e xid de30d2bf
+> [Tue Jul 16 11:20:21 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000001bba6d7e xid 4431d2bf
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000007ce5d717 xid 2c364663
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000001bba6d7e xid df31d2bf
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000000be8f11f xid acdab0f5
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000d6d182c4 xid 3d172cb9
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000976cd55a xid a6cb0a18
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000e11f40dd xid 35f006fd
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000042906e77 xid d9415db0
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000bc03be29 xid eed92785
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000056d1aff1 xid a1d6584a
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000008075849 xid 776fd865
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000aeeb49cf xid edf22d96
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 000000009327f72c xid 12b9ab32
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000b55d160f xid 0e3dd152
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000976cd55a xid a7cb0a18
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000042906e77 xid da415db0
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000bc03be29 xid efd92785
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000008075849 xid 786fd865
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000aeeb49cf xid eef22d96
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000ee580afa xid 9f91a3d2
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000060d5bb55 xid 3aea57c8
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000d4d84570 xid 73a5017a
+> [Tue Jul 16 11:35:58 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000155c8644 xid 5d0a9b1f
+> [Tue Jul 16 11:35:59 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 0000000028481e8f xid b682b676
+> [Tue Jul 16 11:35:59 2024] receive_cb_reply: Got unrecognized reply: calldir
+> 0x1 xpt_bc_xprt 00000000c384ff38 xid b5d5dbf5
+> [Tue Jul 16 11:36:40 2024] rcu: INFO: rcu_sched self-detected stall on CPU
+> [Tue Jul 16 11:36:40 2024] rcu: 	13-....: (20997 ticks this GP)
+> idle=54f/1/0x4000000000000000 softirq=31904928/31904928 fqs=4433
+> [Tue Jul 16 11:36:40 2024] 	(t=21017 jiffies g=194958993 q=5715)
+> [Tue Jul 16 11:36:40 2024] Task dump for CPU 13:
+> [Tue Jul 16 11:36:40 2024] task:kworker/u34:2   state:R  running task
+> stack:    0 pid:30413 ppid:     2 flags:0x00004008
+> [Tue Jul 16 11:36:40 2024] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> [Tue Jul 16 11:36:40 2024] Call Trace:
+> [Tue Jul 16 11:36:40 2024]  <IRQ>
+> [Tue Jul 16 11:36:40 2024]  sched_show_task.cold+0xc2/0xda
+> [Tue Jul 16 11:36:40 2024]  rcu_dump_cpu_stacks+0xa1/0xd3
+> [Tue Jul 16 11:36:40 2024]  rcu_sched_clock_irq.cold+0xc7/0x1e7
+> [Tue Jul 16 11:36:40 2024]  ? trigger_load_balance+0x6d/0x300
+> [Tue Jul 16 11:36:40 2024]  ? scheduler_tick+0xda/0x260
+> [Tue Jul 16 11:36:40 2024]  update_process_times+0xa1/0xe0
+> [Tue Jul 16 11:36:40 2024]  tick_sched_timer+0x8e/0xa0
+> [Tue Jul 16 11:36:40 2024]  ? tick_sched_do_timer+0x90/0x90
+> [Tue Jul 16 11:36:40 2024]  __hrtimer_run_queues+0x139/0x2a0
+> [Tue Jul 16 11:36:40 2024]  hrtimer_interrupt+0xf4/0x210
+> [Tue Jul 16 11:36:40 2024]  __sysvec_apic_timer_interrupt+0x5f/0xe0
+> [Tue Jul 16 11:36:40 2024]  sysvec_apic_timer_interrupt+0x69/0x90
+> [Tue Jul 16 11:36:40 2024]  </IRQ>
+> [Tue Jul 16 11:36:40 2024]  <TASK>
+> [Tue Jul 16 11:36:40 2024]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [Tue Jul 16 11:36:40 2024] RIP: 0010:read_tsc+0x3/0x20
+> [Tue Jul 16 11:36:40 2024] Code: cc cc cc cc cc cc cc 8b 05 56 ab 72 01 c3
+> cc cc cc cc 0f 1f 44 00 00 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00
+> 0f 01 f9 <66> 90 48 c1 e2 20 48 09 d0 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00
+> [Tue Jul 16 11:36:40 2024] RSP: 0018:ffffc900087cfe00 EFLAGS: 00000246
+> [Tue Jul 16 11:36:40 2024] RAX: 00000000226dc8b8 RBX: 000000003f3c079e RCX:
+> 000000000000100d
+> [Tue Jul 16 11:36:40 2024] RDX: 00000000004535c4 RSI: 0000000000000046 RDI:
+> ffffffff82435600
+> [Tue Jul 16 11:36:40 2024] RBP: 0003ed08d3641da3 R08: ffffffffa012c770 R09:
+> ffffffffa012c788
+> [Tue Jul 16 11:36:40 2024] R10: 0000000000000003 R11: 0000000000000283 R12:
+> 0000000000000000
+> [Tue Jul 16 11:36:40 2024] R13: 0000000000000001 R14: ffff88909311c000 R15:
+> ffff88909311c005
+> [Tue Jul 16 11:36:40 2024]  ktime_get+0x38/0xa0
+> [Tue Jul 16 11:36:40 2024]  ? rpc_sleep_on_priority+0x70/0x70 [sunrpc]
+> [Tue Jul 16 11:36:40 2024]  rpc_exit_task+0x9a/0x100 [sunrpc]
+> [Tue Jul 16 11:36:40 2024]  __rpc_execute+0x6e/0x410 [sunrpc]
+> [Tue Jul 16 11:36:40 2024]  rpc_async_schedule+0x29/0x40 [sunrpc]
+> [Tue Jul 16 11:36:40 2024]  process_one_work+0x1d7/0x3a0
+> [Tue Jul 16 11:36:40 2024]  worker_thread+0x4a/0x3c0
+> [Tue Jul 16 11:36:40 2024]  ? process_one_work+0x3a0/0x3a0
+> [Tue Jul 16 11:36:40 2024]  kthread+0x115/0x140
+> [Tue Jul 16 11:36:40 2024]  ? set_kthread_struct+0x50/0x50
+> [Tue Jul 16 11:36:40 2024]  ret_from_fork+0x1f/0x30
+> [Tue Jul 16 11:36:40 2024]  </TASK>
+> [Tue Jul 16 11:37:19 2024] rcu: INFO: rcu_sched self-detected stall on CPU
+> [Tue Jul 16 11:37:19 2024] rcu: 	7-....: (21000 ticks this GP)
+> idle=5b1/1/0x4000000000000000 softirq=29984492/29984492 fqs=5159
+> [Tue Jul 16 11:37:19 2024] 	(t=21017 jiffies g=194959001 q=2008)
+> [Tue Jul 16 11:37:19 2024] Task dump for CPU 7:
+> [Tue Jul 16 11:37:19 2024] task:kworker/u34:2   state:R  running task
+> stack:    0 pid:30413 ppid:     2 flags:0x00004008
+> [Tue Jul 16 11:37:19 2024] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> [Tue Jul 16 11:37:19 2024] Call Trace:
+> [Tue Jul 16 11:37:19 2024]  <IRQ>
+> [Tue Jul 16 11:37:19 2024]  sched_show_task.cold+0xc2/0xda
+> [Tue Jul 16 11:37:19 2024]  rcu_dump_cpu_stacks+0xa1/0xd3
+> [Tue Jul 16 11:37:19 2024]  rcu_sched_clock_irq.cold+0xc7/0x1e7
+> [Tue Jul 16 11:37:19 2024]  ? trigger_load_balance+0x6d/0x300
+> [Tue Jul 16 11:37:19 2024]  ? scheduler_tick+0xda/0x260
+> [Tue Jul 16 11:37:19 2024]  update_process_times+0xa1/0xe0
+> [Tue Jul 16 11:37:19 2024]  tick_sched_timer+0x8e/0xa0
+> [Tue Jul 16 11:37:19 2024]  ? tick_sched_do_timer+0x90/0x90
+> [Tue Jul 16 11:37:19 2024]  __hrtimer_run_queues+0x139/0x2a0
+> [Tue Jul 16 11:37:19 2024]  hrtimer_interrupt+0xf4/0x210
+> [Tue Jul 16 11:37:19 2024]  __sysvec_apic_timer_interrupt+0x5f/0xe0
+> [Tue Jul 16 11:37:19 2024]  sysvec_apic_timer_interrupt+0x69/0x90
+> [Tue Jul 16 11:37:19 2024]  </IRQ>
+> [Tue Jul 16 11:37:19 2024]  <TASK>
+> [Tue Jul 16 11:37:19 2024]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [Tue Jul 16 11:37:19 2024] RIP: 0010:_raw_spin_lock+0x10/0x20
+> [Tue Jul 16 11:37:19 2024] Code: b8 00 02 00 00 f0 0f c1 07 a9 ff 01 00 00
+> 75 05 c3 cc cc cc cc e9 f0 05 59 ff 0f 1f 44 00 00 31 c0 ba 01 00 00 00 f0
+> 0f b1 17 <75> 05 c3 cc cc cc cc 89 c6 e9 62 02 59 ff 66 90 0f 1f 44 00 00 fa
+> [Tue Jul 16 11:37:19 2024] RSP: 0018:ffffc900087cfe30 EFLAGS: 00000246
+> [Tue Jul 16 11:37:19 2024] RAX: 0000000000000000 RBX: ffff88997131a500 RCX:
+> 0000000000000001
+> [Tue Jul 16 11:37:19 2024] RDX: 0000000000000001 RSI: ffff88997131a500 RDI:
+> ffffffffa012c700
+> [Tue Jul 16 11:37:19 2024] RBP: ffffffffa012c700 R08: ffffffffa012c770 R09:
+> ffffffffa012c788
+> [Tue Jul 16 11:37:19 2024] R10: 0000000000000003 R11: 0000000000000283 R12:
+> ffff88997131a530
+> [Tue Jul 16 11:37:19 2024] R13: 0000000000000001 R14: ffff88909311c000 R15:
+> ffff88909311c005
+> [Tue Jul 16 11:37:19 2024]  __rpc_execute+0x95/0x410 [sunrpc]
+> [Tue Jul 16 11:37:19 2024]  rpc_async_schedule+0x29/0x40 [sunrpc]
+> [Tue Jul 16 11:37:19 2024]  process_one_work+0x1d7/0x3a0
+> [Tue Jul 16 11:37:19 2024]  worker_thread+0x4a/0x3c0
+> [Tue Jul 16 11:37:19 2024]  ? process_one_work+0x3a0/0x3a0
+> [Tue Jul 16 11:37:19 2024]  kthread+0x115/0x140
+> [Tue Jul 16 11:37:19 2024]  ? set_kthread_struct+0x50/0x50
+> [Tue Jul 16 11:37:19 2024]  ret_from_fork+0x1f/0x30
+> [Tue Jul 16 11:37:19 2024]  </TASK>
+> [Tue Jul 16 11:37:57 2024] rcu: INFO: rcu_sched self-detected stall on CPU
+> […]
+> ```
 
-OK, thinking about this again... The nfsd_file that is associated
-with a write delegation is probably going to need to be a local
-O_RDWR open, if a write delegation state ID can be used for READ or
-WRITE.
+FWIW, on one NFS server occurence we are seeing something very close
+to the above but in the 5.10.y case for the Debian kernel after
+updating to 5.10.218-1 to 5.10.221-1, so kernel after which had the
+big NFS related stack backported.
 
+One backtrace we were able to catch was
 
--- 
-Chuck Lever
+[...]
+Jul 27 15:24:52 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000003d26f7ec xid b172e1c6
+Jul 27 15:24:52 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000017f1552a xid a90d7751
+Jul 27 15:24:52 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000006337c521 xid 8e5e58bd
+Jul 27 15:24:54 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000cbf89319 xid c2da3c73
+Jul 27 15:24:54 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000e2588a21 xid a01bfec6
+Jul 27 15:24:54 nfsserver kernel: receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 000000005fda63ca xid c2eeeaa6
+[...]
+Jul 27 15:25:15 nfsserver kernel: rcu: INFO: rcu_sched self-detected stall on CPU
+Jul 27 15:25:15 nfsserver kernel: rcu:         15-....: (5250 ticks this GP) idle=74e/1/0x4000000000000000 softirq=3160997/3161006 fqs=2233 
+Jul 27 15:25:15 nfsserver kernel:         (t=5255 jiffies g=8381377 q=106333)
+Jul 27 15:25:15 nfsserver kernel: NMI backtrace for cpu 15
+Jul 27 15:25:15 nfsserver kernel: CPU: 15 PID: 3725556 Comm: kworker/u42:4 Not tainted 5.10.0-31-amd64 #1 Debian 5.10.221-1
+Jul 27 15:25:15 nfsserver kernel: Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+Jul 27 15:25:15 nfsserver kernel: Workqueue: rpciod rpc_async_schedule [sunrpc]
+Jul 27 15:25:15 nfsserver kernel: Call Trace:
+Jul 27 15:25:15 nfsserver kernel:  <IRQ>
+Jul 27 15:25:15 nfsserver kernel:  dump_stack+0x6b/0x83
+Jul 27 15:25:15 nfsserver kernel:  nmi_cpu_backtrace.cold+0x32/0x69
+Jul 27 15:25:15 nfsserver kernel:  ? lapic_can_unplug_cpu+0x80/0x80
+Jul 27 15:25:15 nfsserver kernel:  nmi_trigger_cpumask_backtrace+0xdf/0xf0
+Jul 27 15:25:15 nfsserver kernel:  rcu_dump_cpu_stacks+0xa5/0xd7
+Jul 27 15:25:15 nfsserver kernel:  rcu_sched_clock_irq.cold+0x202/0x3d9
+Jul 27 15:25:15 nfsserver kernel:  ? trigger_load_balance+0x5a/0x220
+Jul 27 15:25:15 nfsserver kernel:  update_process_times+0x8c/0xc0
+Jul 27 15:25:15 nfsserver kernel:  tick_sched_handle+0x22/0x60
+Jul 27 15:25:15 nfsserver kernel:  tick_sched_timer+0x65/0x80
+Jul 27 15:25:15 nfsserver kernel:  ? tick_sched_do_timer+0x90/0x90
+Jul 27 15:25:15 nfsserver kernel:  __hrtimer_run_queues+0x127/0x280
+Jul 27 15:25:15 nfsserver kernel:  hrtimer_interrupt+0x110/0x2c0
+Jul 27 15:25:15 nfsserver kernel:  __sysvec_apic_timer_interrupt+0x5c/0xe0
+Jul 27 15:25:15 nfsserver kernel:  asm_call_irq_on_stack+0xf/0x20
+Jul 27 15:25:15 nfsserver kernel:  </IRQ>
+Jul 27 15:25:15 nfsserver kernel:  sysvec_apic_timer_interrupt+0x72/0x80
+Jul 27 15:25:15 nfsserver kernel:  asm_sysvec_apic_timer_interrupt+0x12/0x20
+Jul 27 15:25:15 nfsserver kernel: RIP: 0010:mod_delayed_work_on+0x5d/0x90
+Jul 27 15:25:15 nfsserver kernel: Code: 00 4c 89 e7 e8 34 fe ff ff 89 c3 83 f8 f5 74 e9 85 c0 78 1b 89 ef 4c 89 f1 4c 89 e2 4c 89 ee e8 f9 fc ff ff 48 8b 3c 24 57 9d <0f> 1f 44 >
+Jul 27 15:25:15 nfsserver kernel: RSP: 0018:ffffb5efe356fd90 EFLAGS: 00000246
+Jul 27 15:25:15 nfsserver kernel: RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000003820000f
+Jul 27 15:25:15 nfsserver kernel: RDX: 0000000038000000 RSI: 0000000000000046 RDI: 0000000000000246
+Jul 27 15:25:15 nfsserver kernel: RBP: 0000000000002000 R08: ffffffffc0884430 R09: ffffffffc0884448
+Jul 27 15:25:15 nfsserver kernel: R10: 0000000000000003 R11: 0000000000000003 R12: ffffffffc0884428
+Jul 27 15:25:15 nfsserver kernel: R13: ffff8c89d0f6b800 R14: 00000000000001f4 R15: 0000000000000000
+Jul 27 15:25:15 nfsserver kernel:  __rpc_sleep_on_priority_timeout+0x111/0x120 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  rpc_delay+0x56/0x90 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  rpc_exit_task+0x5a/0x140 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  ? __rpc_do_wake_up_task_on_wq+0x1e0/0x1e0 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  __rpc_execute+0x6d/0x410 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  rpc_async_schedule+0x29/0x40 [sunrpc]
+Jul 27 15:25:15 nfsserver kernel:  process_one_work+0x1b3/0x350
+Jul 27 15:25:15 nfsserver kernel:  worker_thread+0x53/0x3e0
+Jul 27 15:25:15 nfsserver kernel:  ? process_one_work+0x350/0x350
+Jul 27 15:25:15 nfsserver kernel:  kthread+0x118/0x140
+Jul 27 15:25:15 nfsserver kernel:  ? __kthread_bind_mask+0x60/0x60
+Jul 27 15:25:15 nfsserver kernel:  ret_from_fork+0x1f/0x30
+[...]
+
+Is there anything which could help debug this issue?
+
+Regards,
+Salvatore
 
