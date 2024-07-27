@@ -1,80 +1,80 @@
-Return-Path: <linux-nfs+bounces-5086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6179B93E002
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 17:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 247BC93E00A
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 17:59:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15099281745
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 15:52:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D45A928237E
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jul 2024 15:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D177B181CE8;
-	Sat, 27 Jul 2024 15:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56A29183081;
+	Sat, 27 Jul 2024 15:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fS/3CMzd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMr+r+Pp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2A617E9
-	for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 15:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E03C18306E
+	for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 15:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722095521; cv=none; b=h5se4zrj1xmAejymduZlALosBwUoKqGPRgbvKWBpG4M3/0VRo3p/dS8DN0F2er96nRdl9h1JZ2lleb8bnEUlcmj0gSicT/10/AKuLxbuovflq5GFxYKk/1Jybs9xREAEIJqxeXDs/49kgauxp6BrHS2FZRXj/nOz/oHf1ysfzV8=
+	t=1722095986; cv=none; b=UYl1ZtRIiqzD/ixIOD3udBm7cKOzVPVwoDh0VEWWRp40eZsaJIO0wqUIH5GTgTwY2bxUjbdy9VfcHd/iC34EF1Xo8wQWKmFDEJo+ygdX3SKRzZf7VzTvJVYudnP5exNlHST77k+ADcEH+a+GdpEn4FLsqi0sIsfAaoXhQNzhKOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722095521; c=relaxed/simple;
-	bh=wKRw4Lj60znWvlLhierxgNsukDEW1JJiRoYM2oe1JPc=;
+	s=arc-20240116; t=1722095986; c=relaxed/simple;
+	bh=xLrx1OJ1lgcWq7GAnUR39PxILn/dm4AHOVjXUlJ7eKo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kvM6ueDCcrRoSZcDx0CkzEhCvN8KmOQzqfCEIF9XgcVP00CXF1rSv1eqvNz1tETQRB/YagqmUNE7YPNPGg6dKwgWC0VXWTRSa4sw6b9pFJ48k9DSM+n6NyzLTirhoILBf/A0X7z7dh8H2N2bpUoPTMcvbVTW0OeSV2FHyALBaxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fS/3CMzd; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=XtPRWZommR/MhBiL8YUZNw1la4EaoQgp0PbACwqRIu3utG0wPgnW2EuGQavc8YE/gzmPJJjNPqIZCM1Wlw1TJa/+uHZiRPKa89B1fLNKf83//REV9bk6wBsbaxWa4/RQE7YehvLpof4Li/FGr3Ca6+K5d6zTTWrVyo3pI0RZG7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LMr+r+Pp; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722095518;
+	s=mimecast20190719; t=1722095983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DjXP4U2ZQjAvrtS/Sv0nT/6vVppQeGfEzHCoGoW4rWE=;
-	b=fS/3CMzdHPu7d/X8S3dm+me2iDh9QSYJubX09OclJLrQ8fwTNXDfSZUemIFh8KKlxriJ0H
-	d4W+ztZ9ATJkSn/h22oFJpWX54qCOJ1BtL7JhUDVzzN9l/0gKL2QxJEmQiuNXA8xkVyuUi
-	wnrzZetxYJFpWZjf9jO0aG+61nswuyA=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1ENAHWpImkf9AdX6AhPCf0Z2e9wi8xThW6/MDd3tw3I=;
+	b=LMr+r+Pp034oVI7XvvaejqWJzNU4ghrYxEA2LaK8OTa53v88YJlA+eoIsa2dnBOqI+kTN4
+	kqBGlvytpAxOzxzUOGSrifbcDqvKR1BBzZBZLQ3+5qPY5pqvgpElBumkPLc0gIYr+l/6EI
+	jzqnt0hiTzUCdeWv+gTUhQq8BUX0GHc=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-414-OoMjL-9VOs--wqVKy9A0nQ-1; Sat, 27 Jul 2024 11:51:56 -0400
-X-MC-Unique: OoMjL-9VOs--wqVKy9A0nQ-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-70446c55dc4so525001a34.0
-        for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 08:51:56 -0700 (PDT)
+ us-mta-490-X3YAcpHCNii3HnDNPEzmRw-1; Sat, 27 Jul 2024 11:59:41 -0400
+X-MC-Unique: X3YAcpHCNii3HnDNPEzmRw-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-45009e27b83so1855981cf.1
+        for <linux-nfs@vger.kernel.org>; Sat, 27 Jul 2024 08:59:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722095514; x=1722700314;
+        d=1e100.net; s=20230601; t=1722095980; x=1722700780;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjXP4U2ZQjAvrtS/Sv0nT/6vVppQeGfEzHCoGoW4rWE=;
-        b=kmljiLh7cvddMmRn8dmfCx266EsrZYf5CiVIeOABVt5ZqA/VvVUn4iOt2zuZpoHqV2
-         KFV7vG5fij0xSZxhdv7JC/AyfVS8Gp2dlwg+VskqU0QwGqPKrYiHG36cugrl0n+CXWe/
-         yP8bWo7KInMUGnRSGM8X7K6gTB1yk8klmOS6vMR0ws7TCE8TvLkSUnispwx0C+eHV3Rg
-         M/d1KUrPhLm/kcZwvWO5pHLmn6IyW9pggNynKOb9khRXdVcgtIvuZCAVhB0P8iGCvOPu
-         QBxWJMAc5ZTYlFg71RPbHLdEn5kWCoHR9ZkA8NF87S3In2yx44mCuTMxf9FV6+T64wYj
-         b72A==
-X-Forwarded-Encrypted: i=1; AJvYcCWF5T9o0doRHIxC5BwMrhtdUdqqtxcJV/AfVDNvidd9dXYh42A1CZMtbqnq8MWMf7w2WaXw0XukH5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0tfVvTCoUqkxBrA/CaKvpjXNwtY5VkPztLw+vaSic5xZ6/RUa
-	4Y/NkrmnkMd21m+26IwXDT45AP7gPtYot6h3y/QbZVJRHdiv2Cmy+wkmO+FPEdaDwVQaZtppAY4
-	VSa+W/GsprYWaLRXXS3ao/C7c7xj1t91Ac4udH2rJ6SISfxou+Em1egk54lnF294wFg==
-X-Received: by 2002:a05:6830:604:b0:708:b80d:f40 with SMTP id 46e09a7af769-7092fb4217dmr5855115a34.5.1722095514663;
-        Sat, 27 Jul 2024 08:51:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6tjcATRoI7n6wR11Cd8apVsh1C6FyUyKR25+pUGsXVh11uTv7wDzCh8BPngq2mbCAGq9tIQ==
-X-Received: by 2002:a05:6830:604:b0:708:b80d:f40 with SMTP id 46e09a7af769-7092fb4217dmr5855111a34.5.1722095514290;
-        Sat, 27 Jul 2024 08:51:54 -0700 (PDT)
+        bh=1ENAHWpImkf9AdX6AhPCf0Z2e9wi8xThW6/MDd3tw3I=;
+        b=wSv/uKhDYR6ScY/Z1ELER/Ft06pKwrrxHrovvzLv+SK2POB6t+OZGg/S0SIDZ5cEgB
+         IDTlZj15q8Qv3tuoSUF9Y69q0gwElGJ5Q2BK5m24xxOA8TO8adOKd7qmQON9diYgXxu4
+         E1zdlfE0slCW62KIhqWIbiI0dF4WoIDJQUzRZnTOYeTNiYnAO4t5xcexSmoz1KB2Rhes
+         jDNScCKFKn02sK4rfAegVsEuN7Vs2jn92R06lezlFoPm3K+5Bt5dENP3WZ8h0OeKlCX4
+         lo27MCbfML0uFlaAT22MkX4yB94byf/uszfoaLhw8YXMPf/2u2vNUXVK2YVHFS33p4gE
+         XnKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWd/HgTttFzZBV+lrpBpHc3w2B9XHEXZSnhkNO0rrY83Z63QmiLvkkwImYOTXHoWH6Sv/e9A7BQ8EtZ8gqUwbfbIB0fRm9J1yvR
+X-Gm-Message-State: AOJu0YyyZdwfj8Nb6lamCs9aUkaYYlxq/11ReGEcXwlivGgelfUepnFu
+	JsVEd+gHZaUY+MrqfOR1fcTk3Ok+UZ5bqWK1sPh8Grf91ON43b+YYrf0N3pDXNo4F7RCG9vYVCa
+	Ohkf6drXSf8lrlrcwFTH35QGS5izcz2M8G8YTqx0YP+xATTxKCtBCbK9Glntbcn3ztw==
+X-Received: by 2002:a05:620a:44d0:b0:79f:44d:2b8a with SMTP id af79cd13be357-7a1d696513emr696293285a.5.1722095980155;
+        Sat, 27 Jul 2024 08:59:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRE1OORygI0Gjf8ocdNrH8RrMCaCr5nMyqL3cKKsV0wrJHGh+nfht6geyL6SK7XAWuxovMcg==
+X-Received: by 2002:a05:620a:44d0:b0:79f:44d:2b8a with SMTP id af79cd13be357-7a1d696513emr696292485a.5.1722095979777;
+        Sat, 27 Jul 2024 08:59:39 -0700 (PDT)
 Received: from [172.31.1.12] ([70.109.163.123])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44fe812350bsm24739621cf.9.2024.07.27.08.51.53
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a1d73ed3bcsm314457685a.66.2024.07.27.08.59.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jul 2024 08:51:53 -0700 (PDT)
-Message-ID: <778657bc-5d5c-4103-858a-d3e86962e681@redhat.com>
-Date: Sat, 27 Jul 2024 11:51:52 -0400
+        Sat, 27 Jul 2024 08:59:39 -0700 (PDT)
+Message-ID: <fbee4a4d-fb1f-4dc6-a5d1-bb2d476a22a7@redhat.com>
+Date: Sat, 27 Jul 2024 11:59:38 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,40 +82,32 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Can rpc.mountd NOT be hardcoded to listen on 0.0.0.0?
-To: =?UTF-8?Q?Niklas_Hamb=C3=BCchen?= <mail@nh2.me>, linux-nfs@vger.kernel.org
-References: <dfcca43f-0dad-4188-b092-0176cfaab2c8@nh2.me>
- <53701c8f-d3a7-4e34-b0ca-c8a8daec4446@nh2.me>
+Subject: Re: Patch for small typo in nfsmount.conf
+To: Matthew Comben <matthew@dockstudios.co.uk>, linux-nfs@vger.kernel.org
+References: <CAJw_U8fKkq25Ft_82MasFA2WQLHh4Vv+8af7DfHFbH6R0KmF1w@mail.gmail.com>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <53701c8f-d3a7-4e34-b0ca-c8a8daec4446@nh2.me>
+In-Reply-To: <CAJw_U8fKkq25Ft_82MasFA2WQLHh4Vv+8af7DfHFbH6R0KmF1w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On 7/27/24 11:09 AM, Niklas Hambüchen wrote:
-> I wrote a possible implementation of `--host` for nfs-utils's `rpc.mountd` here:
+
+On 7/26/24 5:14 AM, Matthew Comben wrote:
+> Dear NFS maintainers,
 > 
-> https://github.com/nh2/nfs-utils/compare/mountd-listen-host-option
+> I found this small typo (and appreciate it may seem like a waste of your 
+> time). But I've prepared a patch to correct (as I currently interpret 
+> the comment), if you are interested in it :)
 > 
-> (stable link: https://github.com/nh2/nfs-utils/commit/b77a10686fe042d3709bcde958edd0926d3e5f41)
+> Apologies in advance if I have prepared this patch incorrectly - I did 
+> no see any specific information in the "about" of 
+> https://git.kernel.org/pub/scm/linux/kernel/git/rw/nfs-utils.git/about 
+> <https://git.kernel.org/pub/scm/linux/kernel/git/rw/nfs-utils.git/about>
 > 
-> Please let me know if that would be acceptable.
-> In case that patch is already good, feel free to pull it!
-> 
-> I haven't tested it in a real NFS setup yet, just compiled and started it locally so far.
-When you do finish the testing please use
-'git commit -s' which will add the Signed-off-by: tag
-and then using 'git format-patch' to create the patch
-
-To post the patch, inline, I generally use
-'git send-email'
-
-Finally, I don't see any man page update for
-this new option.
-
-Thanks!
+> Many thanks
+> Matt
+Committed...
 
 steved.
 
