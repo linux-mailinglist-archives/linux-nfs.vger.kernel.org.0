@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-5110-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5111-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E8EE93E72A
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 18:04:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 782C793E740
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 18:06:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 603F51C213EC
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 16:04:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2AF3B21FFF
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 16:06:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8AD1586FE;
-	Sun, 28 Jul 2024 15:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5C915E5CF;
+	Sun, 28 Jul 2024 15:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GM8RsSWc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvTq6rRp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FAD157484;
-	Sun, 28 Jul 2024 15:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E4A15DBDD;
+	Sun, 28 Jul 2024 15:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722181800; cv=none; b=XNxK0D4fbRWZnThcOGPrzuI1Uk+O20C9ZLVRq1aNmCWGdAjSf4WSYP+Y/lMALM8OZmTK56LlIxLuYOatWePBCv9OPClIfSS5QLfOt1DrdJ2x9A8Frzwv5yBbeBg71ttNFYnEgY7iEH7eddy2xx18xFWb9ID6xsxQ4hraX0hDge0=
+	t=1722181837; cv=none; b=igZjFe0B5oqJkBmAGpg+u3hm2VB9Nj57+/GOx5tnEKXIldBkFRW3vqHfLySxTqW3Jqdwsv/5GQFE/7sGcxuF+PPdFUfy1e5dhb7pfYRzDNdZeGtxpqM5gnwtYDhZsR75nnUSri8WwJAwFvQcdMK2LViHfY0njkWtndN4wLCXk+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722181800; c=relaxed/simple;
-	bh=y6pIeYbB6+lpyvvtYVHUUVmb4tpbRuegA1GXDCj+U4Y=;
+	s=arc-20240116; t=1722181837; c=relaxed/simple;
+	bh=i5KDizLcs5tBp+Q0VEtgWSeDywDwJ0HdupJ6lt18wSs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cof03cHCL7cJObZRbKhh/xfAySL+Q+oF6tT4Ec0pTmyjAS+0Rlky535QjdK3dHelKjjidASfTnfHnYZnw/bB7XQUfUjmUmuCQkjn8D6WPXKga+DpM7MCfG3usru5vxpT7UMeft4qPYkvxJqWDKkHS3sPpT+k63iVqIp9ODfAQdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GM8RsSWc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D58C116B1;
-	Sun, 28 Jul 2024 15:49:58 +0000 (UTC)
+	 MIME-Version; b=qJMUGKvgSsQdl7+CHWResmryPYKg0jjppXXIDrm3IiQJjirtAsUTiAryU4rUCMKAtTtHKgYlA9E6q8kklCJr7vQRzm0yT1/XrHWikh/Pbt7QKfeGfYo3IVxBHTTz+4c4RrIwGWgMell81TGAEx0x1nkZMpLr6rkxGgGqEft4UOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvTq6rRp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E82C4AF0A;
+	Sun, 28 Jul 2024 15:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722181800;
-	bh=y6pIeYbB6+lpyvvtYVHUUVmb4tpbRuegA1GXDCj+U4Y=;
+	s=k20201202; t=1722181837;
+	bh=i5KDizLcs5tBp+Q0VEtgWSeDywDwJ0HdupJ6lt18wSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GM8RsSWcoupxrwUndKjxEc22In4SUcOkhKmZBrkhVGbz50xsjJxcFAHmbE8j5/ZEd
-	 F/YGu466jxb6iHB802ytowAXeajLWh84LaQ2CZVv/Llu4vNpoFRiCmVJUu70+APX4A
-	 rBqGAlKOzpthoK5tPrNsaNYw/dEyJ1qFC4kP87bzTUHy/POBkuRK0Cgnf9zIdJ1ZOx
-	 krSzQUEHjSWOSD5mudNWNMNas2MbpIurB/VHdvHAThc5v/fQqLPTzaKqfPvmi/vtNt
-	 5oIerhUtQKzUPWDWZTlOwOFfai0O2Ff/JzHfS/VbAQqX0umdZyclqUESkkYMsHD0vS
-	 3UEoOkvDAypKg==
+	b=FvTq6rRpT81v4XtKffHwhI2MZtpYElIYOJpc559Fg/U9RZcGaL2BjmpmgL5eQg8Zt
+	 Gb21jsjTpvB+4hJ3sIgvY/gFN0C/T8v/qtQMdxRV/aBgemYVMoGfqGJAQcTSNfqAZ0
+	 RedHl8b1h3Y2djSTdqFRk6ANtECyz3lk868qz+wf8637nSzD//Cz6Ee+e3+vxnTN5k
+	 ERFrkg+vgPKMEj4tWBITv5V2KQ//lKlg4rNxnaQdrAx8U3cyatkPGgKdh/8A672Up0
+	 wHZOCd798879z8jZBMXbaIYjISxhxmk1QM+BP1i7okJp3t5JwG4l0CZjUHdlO+xSL6
+	 eBw78MiZhlr4g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -57,12 +57,12 @@ Cc: Benjamin Coddington <bcodding@redhat.com>,
 	pabeni@redhat.com,
 	linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 10/10] SUNRPC: Fix a race to wake a sync task
-Date: Sun, 28 Jul 2024 11:49:08 -0400
-Message-ID: <20240728154927.2050160-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 7/7] SUNRPC: Fix a race to wake a sync task
+Date: Sun, 28 Jul 2024 11:50:01 -0400
+Message-ID: <20240728155014.2050414-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240728154927.2050160-1-sashal@kernel.org>
-References: <20240728154927.2050160-1-sashal@kernel.org>
+In-Reply-To: <20240728155014.2050414-1-sashal@kernel.org>
+References: <20240728155014.2050414-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.164
+X-stable-base: Linux 5.10.223
 Content-Transfer-Encoding: 8bit
 
 From: Benjamin Coddington <bcodding@redhat.com>
@@ -104,7 +104,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index a00890962e115..540220264b31e 100644
+index a4c9d410eb8d5..f4b1b7fee2c05 100644
 --- a/net/sunrpc/sched.c
 +++ b/net/sunrpc/sched.c
 @@ -348,8 +348,10 @@ static void rpc_make_runnable(struct workqueue_struct *wq,
