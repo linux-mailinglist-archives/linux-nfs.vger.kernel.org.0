@@ -1,67 +1,67 @@
-Return-Path: <linux-nfs+bounces-5116-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5117-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEB3293E970
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 22:41:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 083C393E971
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 22:41:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B1DE1F21A1E
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 20:41:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CF3E1C2132D
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jul 2024 20:41:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58AE76C76;
-	Sun, 28 Jul 2024 20:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DD9770EF;
+	Sun, 28 Jul 2024 20:41:13 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8BA75808
-	for <linux-nfs@vger.kernel.org>; Sun, 28 Jul 2024 20:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26196F2F7
+	for <linux-nfs@vger.kernel.org>; Sun, 28 Jul 2024 20:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722199272; cv=none; b=rTEO+oKy/5Qiofu6dw4Ecj8faWtR0S2yfNaBlV6NWjZmCAWTOOSHDTzWbMnKQDlsUgiHJvZaVBWOMHu8EotG1832E5sKvxs7PEgBH2wrhoSX9WvBylcQhcguclGwQfcQ+H+BJbTSpy5n4YE1jhYk7w5+ochjXJS5sqHBbn1lJdU=
+	t=1722199273; cv=none; b=SR4LeFoCDIaT5g020yIq0cIGM2G1b8JqK2H+1keplx24mZLxck+gnUUq0IFxf+p5NLzNfBaZI1OASzVx3exe/wqBwFiJKSzqNHHkktgH/tO5Y3tyBz7CjDn60CESLjM+KaXiern+QK5SsAR//rQd02mZ5g+Cwk0o2R2OQwKiYlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722199272; c=relaxed/simple;
-	bh=GJTaV/mWwpAV6MmhuQFRBhAL4U0GmiGeeBq5DulHVyY=;
+	s=arc-20240116; t=1722199273; c=relaxed/simple;
+	bh=SWFp4adxcnYATOBc6ElcuQ2pV9NiD7053Zi/uzhTVUk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AobQltd5KC1yyhsnt0rgfsS9/g6WGJihmYRTL/Ekw1iyTBiHIJWSFpi1xmiOwmxg5Bpoaf6yxyeeFUXGZMNTq7KzYngGwNMvaeVp7ySiQ0BcIiI7ASdGJ7W0h9g7tcx4hIg4odjr0gyiDM3lysO/k5UmfM8Suy6/SAxbnYjtx6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=KKBikJawVW4YDyHsX1v2+YP9o34mGTfcJRc4yoMfgTCX4yy0tBADk1DckbMYEZbAj+Ho+3RvBblfYtZ+jJUMVUTUeGUUKcl014y3u5QsffuO4WXNu4wTVNPk4kdCHpT/OQ3J2PePolvut9DvDXnneKBrqfqixYDo5g9f/imHm5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-36830a54b34so201344f8f.0
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Jul 2024 13:41:10 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4280ef642fbso2244395e9.1
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jul 2024 13:41:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722199269; x=1722804069;
+        d=1e100.net; s=20230601; t=1722199270; x=1722804070;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=txBjn/1fH3AQubL9MsRoFT8Ypx4NNGLxqt9t2ggiyqU=;
-        b=MPgQY2CDTTpW2gi3ILuebd4qWUhul98/Y0XeLodYQRiyn//QOlADSjzxfgkU5TBUos
-         ah+yNweUe9MVCf1aP9MGzu+GsMGni2WKmkAcT94HXzJbkmIACo+w5r3fhSPdi1i9p9Z/
-         C8cdcKmr8HRarQtObEEqxyVjLG+zSISkqM0WWrYioTHFN2k6dmfh9nCrqI9+8xMqy5P5
-         UVB2Vfn7TMavPGLfWcqS9LluDqLR0uyROtN5ZiYbZVN1Kw5ZX0HX4HzYVBqZ5eDBJqaW
-         yohNLx/R5lKeij6nettmk56aHzHfbDZdeVr4Grj3TT63MPPaR/kmGi840fwiu58IisVb
-         gosA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4lBptIpDXCKDbEpoPtNtAZ9WdkcbgKMv1QqjN5TIGYq+nxSquDxOFTtlDuAFgkcTbkrSgROSbXikJzDRF7KvmB/A8jCuJadzS
-X-Gm-Message-State: AOJu0YwXIBCI6xjTZZ5YE8zdggT7D/ocZtyk4IKtARYEiuDPjTRFG20P
-	yImYevWi232NbmC/dTnx3s7fRzs1oKvw4/YcXbAZaKkQHs4wUbDF
-X-Google-Smtp-Source: AGHT+IF8SynIirq/G5aO2nERVrGNhToETtevt4cScmqywMrVkVJkOK6MJLK10M5i/Y6IkpYru3GOaQ==
-X-Received: by 2002:a05:600c:3b87:b0:426:5f08:542b with SMTP id 5b1f17b1804b1-428053c9c55mr56508145e9.0.1722199268592;
-        Sun, 28 Jul 2024 13:41:08 -0700 (PDT)
+        bh=szo805fxHdddtXZQo66WsK4pJwLFljNG8awu3F91cTk=;
+        b=fDR7jug2snskblg2VDtSUepKzumlEbcusd2pI5PuP3ZuorFd4YeVxKg6yhzoUqmW3L
+         qhOR7YtSJkqm57IWmYDGuGvJo6Kba4lr2n2rMyE9yBbLqWtYvqJVcsQTZgWukdRyE9Ft
+         DJ9L+GbWagUWShybHPqSnqK7ZZQ6IMJbkbwIwi4M6ok3O+WEyekjtRjjas8+fQXL2piw
+         4zOEfdD7pJlspaA2GwPiFeHZwlwN+hatoptqTYPdQ0TSa13WsA8Z7kp7U+TM2jNDcwx1
+         ibBjfkhCqfPEbs7eRrb1ZdY6hffPVEx5PmQCLbm+NsVfyVFx9b5oxJxTkREXxQo3flyP
+         2e0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXNJ6yK57qA9I1K7kVIMGgeVnZkKTqbGGYuuglUro45LsFAxmvHZnBNaKeeUfMaOfjIDVX2JDEHA27IMXhiqfgtHAenZuWp589l
+X-Gm-Message-State: AOJu0YwGTY+LZmEecWoEIhCDynrJdbsbPXzWJDPREhjLBjZPKvf5NWKO
+	//urh9p5o2B2Ji8DUrYxOxMSJ61Oztw+uvQlS75OAvIgim3Omejx6ve+aw==
+X-Google-Smtp-Source: AGHT+IG7B7MYxTyX6KP6QLMHZA1/VBKABweT3OyMiDPS4UZaLSOELizGz+2uVsXaYB7F/tGzGjCmVQ==
+X-Received: by 2002:a05:600c:4511:b0:425:65b1:abb4 with SMTP id 5b1f17b1804b1-428053beee0mr52831785e9.0.1722199269790;
+        Sun, 28 Jul 2024 13:41:09 -0700 (PDT)
 Received: from localhost.localdomain (89-138-69-172.bb.netvision.net.il. [89.138.69.172])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280d13570bsm98701395e9.7.2024.07.28.13.41.07
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280d13570bsm98701395e9.7.2024.07.28.13.41.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jul 2024 13:41:08 -0700 (PDT)
+        Sun, 28 Jul 2024 13:41:09 -0700 (PDT)
 From: Sagi Grimberg <sagi@grimberg.me>
 To: Chuck Lever <chuck.lever@oracle.com>
 Cc: Dai Ngo <dai.ngo@oracle.com>,
 	Olga Kornievskaia <aglo@umich.edu>,
 	Jeff Layton <jlayton@kernel.org>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/3] nfsd: Offer write delegations for o_wronly opens
-Date: Sun, 28 Jul 2024 23:41:03 +0300
-Message-ID: <20240728204104.519041-3-sagi@grimberg.me>
+Subject: [PATCH v2 3/3] nfsd: resolve possible conflicts of reads using special stateids and write delegations
+Date: Sun, 28 Jul 2024 23:41:04 +0300
+Message-ID: <20240728204104.519041-4-sagi@grimberg.me>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728204104.519041-1-sagi@grimberg.me>
 References: <20240728204104.519041-1-sagi@grimberg.me>
@@ -73,161 +73,114 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to support write delegations with O_WRONLY opens, we need to
-allow the clients to read using the write delegation stateid (Per RFC
-8881 section 9.1.2. Use of the Stateid and Locking).
+In case a client issues a read using a special (anonymous) stateid, we need
+to check if there is a conflicting write delegation already given to a different
+client. If it is, recall the delegation before processing the read.
 
-Hence, we check for NFS4_SHARE_ACCESS_WRITE set in open request, and
-in case the share access flag does not set NFS4_SHARE_ACCESS_READ as
-well, we'll open the file locally with O_RDWR in order to allow the
-client to use the write delegation stateid when issuing a read in case
-it may choose to.
-
-Plus, find_rw_file singular call-site is now removed, remove it altogether.
-
-Note: reads using special stateids that conflict with pending write
-delegations are undetected, and will be covered in a follow on patch.
+If the client holding the write delegation sends this read, it probably needs
+to be fixed, but nonetheless, as the spec allows it, we accept the read, and
+don't recall the client delegation.
 
 Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- fs/nfsd/nfs4proc.c  | 18 +++++++++++++++++-
- fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++----------------------
- fs/nfsd/xdr4.h      |  2 ++
- 3 files changed, 39 insertions(+), 23 deletions(-)
+ fs/nfsd/nfs4proc.c  | 11 +++++++----
+ fs/nfsd/nfs4state.c | 47 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/state.h     |  2 ++
+ 3 files changed, 56 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 7b70309ad8fb..041bcc3ab5d7 100644
+index 041bcc3ab5d7..8a61c3bb2289 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -979,8 +979,22 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	/* check stateid */
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					&read->rd_stateid, RD_STATE,
--					&read->rd_nf, NULL);
-+					&read->rd_nf, &read->rd_wd_stid);
- 
-+	/*
-+	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
-+	 * delegation stateid used for read. Its refcount is decremented
-+	 * by nfsd4_read_release when read is done.
-+	 */
-+	if (!status) {
-+		if (read->rd_wd_stid &&
-+		    (read->rd_wd_stid->sc_type != SC_TYPE_DELEG ||
-+		     delegstateid(read->rd_wd_stid)->dl_type !=
-+					NFS4_OPEN_DELEGATE_WRITE)) {
-+			nfs4_put_stid(read->rd_wd_stid);
-+			read->rd_wd_stid = NULL;
-+		}
-+	}
- 	read->rd_rqstp = rqstp;
- 	read->rd_fhp = &cstate->current_fh;
- 	return status;
-@@ -990,6 +1004,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- static void
- nfsd4_read_release(union nfsd4_op_u *u)
- {
-+	if (u->read.rd_wd_stid)
-+		nfs4_put_stid(u->read.rd_wd_stid);
- 	if (u->read.rd_nf)
- 		nfsd_file_put(u->read.rd_nf);
- 	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
+@@ -987,10 +987,13 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	 * by nfsd4_read_release when read is done.
+ 	 */
+ 	if (!status) {
+-		if (read->rd_wd_stid &&
+-		    (read->rd_wd_stid->sc_type != SC_TYPE_DELEG ||
+-		     delegstateid(read->rd_wd_stid)->dl_type !=
+-					NFS4_OPEN_DELEGATE_WRITE)) {
++		if (!read->rd_wd_stid) {
++			/* special stateid? */
++			status = nfsd4_deleg_read_conflict(rqstp, cstate->clp,
++				&cstate->current_fh);
++		} else if (read->rd_wd_stid->sc_type != SC_TYPE_DELEG ||
++			   delegstateid(read->rd_wd_stid)->dl_type !=
++						NFS4_OPEN_DELEGATE_WRITE) {
+ 			nfs4_put_stid(read->rd_wd_stid);
+ 			read->rd_wd_stid = NULL;
+ 		}
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0645fccbf122..538b6e1127a2 100644
+index 538b6e1127a2..a6c6d813c59c 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -639,18 +639,6 @@ find_readable_file(struct nfs4_file *f)
- 	return ret;
+@@ -8803,6 +8803,53 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+ 	get_stateid(cstate, &u->write.wr_stateid);
  }
  
--static struct nfsd_file *
--find_rw_file(struct nfs4_file *f)
--{
--	struct nfsd_file *ret;
--
--	spin_lock(&f->fi_lock);
--	ret = nfsd_file_get(f->fi_fds[O_RDWR]);
--	spin_unlock(&f->fi_lock);
--
--	return ret;
--}
--
- struct nfsd_file *
- find_any_file(struct nfs4_file *f)
- {
-@@ -5784,15 +5772,11 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
- 	 *   on its own, all opens."
- 	 *
--	 * Furthermore the client can use a write delegation for most READ
--	 * operations as well, so we require a O_RDWR file here.
--	 *
--	 * Offer a write delegation in the case of a BOTH open, and ensure
--	 * we get the O_RDWR descriptor.
-+	 * Offer a write delegation for WRITE or BOTH access
- 	 */
--	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
--		nf = find_rw_file(fp);
-+	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
- 		dl_type = NFS4_OPEN_DELEGATE_WRITE;
-+		nf = find_writeable_file(fp);
- 	}
- 
- 	/*
-@@ -5934,8 +5918,8 @@ static void nfsd4_open_deleg_none_ext(struct nfsd4_open *open, int status)
-  * open or lock state.
-  */
- static void
--nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
--		     struct svc_fh *currentfh)
-+nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
-+		struct nfs4_ol_stateid *stp, struct svc_fh *currentfh)
- {
- 	struct nfs4_delegation *dp;
- 	struct nfs4_openowner *oo = openowner(stp->st_stateowner);
-@@ -5994,6 +5978,20 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		dp->dl_cb_fattr.ncf_cur_fsize = stat.size;
- 		dp->dl_cb_fattr.ncf_initial_cinfo =
- 			nfsd4_change_attribute(&stat, d_inode(currentfh->fh_dentry));
-+		if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) != NFS4_SHARE_ACCESS_BOTH) {
-+			struct nfsd_file *nf = NULL;
++/**
++ * nfsd4_deleg_read_conflict - Recall if read causes conflict
++ * @rqstp: RPC transaction context
++ * @clp: nfs client
++ * @fhp: nfs file handle
++ * @inode: file to be checked for a conflict
++ * @modified: return true if file was modified
++ * @size: new size of file if modified is true
++ *
++ * This function is called when there is a conflict between a write
++ * delegation and a read that is using a special stateid where the
++ * we cannot derive the client stateid exsistence. The server
++ * must recall a conflicting delegation before allowing the read
++ * to continue.
++ *
++ * Returns 0 if there is no conflict; otherwise an nfs_stat
++ * code is returned.
++ */
++__be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
++		struct nfs4_client *clp, struct svc_fh *fhp)
++{
++	struct nfs4_file *fp;
++	__be32 status = 0;
 +
-+			/* make sure the file is opened locally for O_RDWR */
-+			status = nfsd_file_acquire_opened(rqstp, currentfh,
-+				nfs4_access_to_access(NFS4_SHARE_ACCESS_BOTH),
-+				open->op_filp, &nf);
-+			if (status) {
-+				nfs4_put_stid(&dp->dl_stid);
-+				destroy_delegation(dp);
-+				goto out_no_deleg;
-+			}
-+			stp->st_stid.sc_file->fi_fds[O_RDWR] = nf;
-+		}
- 	} else {
- 		open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
- 		trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
-@@ -6123,7 +6121,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	* Attempt to hand out a delegation. No error return, because the
- 	* OPEN succeeds even if we fail.
- 	*/
--	nfs4_open_delegation(open, stp, &resp->cstate.current_fh);
-+	nfs4_open_delegation(rqstp, open, stp, &resp->cstate.current_fh);
- nodeleg:
- 	status = nfs_ok;
- 	trace_nfsd_open(&stp->st_stid.sc_stateid);
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index fbdd42cde1fa..434973a6a8b1 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -426,6 +426,8 @@ struct nfsd4_read {
- 	struct svc_rqst		*rd_rqstp;          /* response */
- 	struct svc_fh		*rd_fhp;            /* response */
- 	u32			rd_eof;             /* response */
++	fp = nfsd4_file_hash_lookup(fhp);
++	if (!fp)
++		return nfs_ok;
 +
-+	struct nfs4_stid	*rd_wd_stid;		/* internal */
- };
++	spin_lock(&state_lock);
++	spin_lock(&fp->fi_lock);
++	if (!list_empty(&fp->fi_delegations) &&
++	    !nfs4_delegation_exists(clp, fp)) {
++		/* conflict, recall deleg */
++		status = nfserrno(nfsd_open_break_lease(fp->fi_inode,
++					NFSD_MAY_READ));
++		if (status)
++			goto out;
++		if (!nfsd_wait_for_delegreturn(rqstp, fp->fi_inode))
++			status = nfserr_jukebox;
++	}
++out:
++	spin_unlock(&fp->fi_lock);
++	spin_unlock(&state_lock);
++	return status;
++}
++
++
+ /**
+  * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
+  * @rqstp: RPC transaction context
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index ffc217099d19..c1f13b5877c6 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -780,6 +780,8 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+ 	return clp->cl_state == NFSD4_EXPIRABLE;
+ }
  
- struct nfsd4_readdir {
++extern __be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
++		struct nfs4_client *clp, struct svc_fh *fhp);
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+ 		struct inode *inode, bool *file_modified, u64 *size);
+ #endif   /* NFSD4_STATE_H */
 -- 
 2.43.0
 
