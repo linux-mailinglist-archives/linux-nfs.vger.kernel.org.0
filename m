@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-5162-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5163-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EAA193FACB
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 18:25:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BDF493FAD2
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 18:25:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29E92287F7F
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 16:25:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4758C288253
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 16:25:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCEC18C345;
-	Mon, 29 Jul 2024 16:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C23D618D4AA;
+	Mon, 29 Jul 2024 16:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNk+RNII"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TA8+xJFI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5B118C333
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 16:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C99118C359
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 16:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722270093; cv=none; b=oPf8Mr8QDtP3zFnYqeBZPk5NuzTq3vv0aUzq5mICoRkQ6FicsSph0ARJNTxSsPqw0lPr9S/TNU/fuhxY2b4aDG+1NjIqT+PnVJUX6qepJ5baogYzWfbVmg68dyCiYKNnyrEm9yKunbFkqwrzfu18SWzVR0lUJ25p3Vrxfo9NOQ8=
+	t=1722270099; cv=none; b=WjWafV2KMiCok3pE1UXK7TXjtDAh9A5v8FsVzuD3jjxUU/KgpLEZN3vDJe5ApRfG/l8n8dNdl38aw5ADbRj88MOYomu7gs55oX7bfrFSs0odDd6UqOL7IXx5r5/hkVuqcQhQUSg5D6OGeu/Gm36xqv6QkjGJr7P+Bca3mLsMp/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722270093; c=relaxed/simple;
-	bh=C5NL+fAln/8YXM+yewDmGdqKwWDBaK6NIwxdcpmg4ME=;
+	s=arc-20240116; t=1722270099; c=relaxed/simple;
+	bh=6OL5PMa+SlSt8Y5zAH6A5gNRbHcRLAUcUiHqm1VY5z4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BrkzS7asTnj1APCmbbGp1xTFPVjMazCilLcN4O85V2IxcHsxqkBtEmIwuvElJXFDTrBRcnYEKoRljuIMsG+KgzyUmkevmLJoFfVGlE8++W9S+nRcgChOiRK+PFmPfPCmTQnjYP+TSld9w+eSkqweqCET/YB3Q26Gd1zKLMcfHwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aNk+RNII; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=HGgvIxlGatS/WBuwED/9OcvzGBdXLBK90P5AHyc34e/j8DB/xX4idjzfcqRGycGEBulpdf4W++jnTVcCMccCPiK/wFmpaGvmJoxLAVtcYhzZtRNa9E21C5UYS5OtCt3u9WZH0rdfRuZo3gP+xlq6AKI07uA9kUXlr5v2Tqa3Fa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TA8+xJFI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722270090;
+	s=mimecast20190719; t=1722270097;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VaCJib0YVbDCLysCH93azqktUZ6nzBMH27AQ6nd/ato=;
-	b=aNk+RNIItNbEfXuaUwZ8oAJrHdj0vTjdx6lwCsDxMiDpMaZkl2PcJ+KxVI3wPJL4zCVzO8
-	8reH3XoSDZcL0Hi0e+XoN7MLpUeyn0HupRaOo4RkJlH4sIZUct+dUYJxknrmK+8YpxwzZd
-	OZIOfINYpTFa7Qmb3oid/LvkRMT6+XM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=dPT79eRMO93ZrwuayO/GcRsT7PMF2J9kIs2W0R0Ojik=;
+	b=TA8+xJFIlpZI7s2btJwQcM2JDb05zCGI22ewYA+cH61WqPqo+4Wv1LCZrwVssqPcsZGpMO
+	yjFn0G+WvEauuLxq7HLwb4O573AElC95JaJho+oZhYvWVDH55LZ4LF50tuvfOHd63AxosL
+	KFykimJ4M9gpcDkVD+IBqVIasaz7kYM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-902ZwM7xNvy1JIDLmrqLCw-1; Mon,
- 29 Jul 2024 12:21:25 -0400
-X-MC-Unique: 902ZwM7xNvy1JIDLmrqLCw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-1Lo1BiuPMUe_TUHCooMZgA-1; Mon,
+ 29 Jul 2024 12:21:32 -0400
+X-MC-Unique: 1Lo1BiuPMUe_TUHCooMZgA-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 363661955F40;
-	Mon, 29 Jul 2024 16:21:22 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0868F1955D52;
+	Mon, 29 Jul 2024 16:21:29 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.216])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 368ED195605F;
-	Mon, 29 Jul 2024 16:21:16 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 436081955D45;
+	Mon, 29 Jul 2024 16:21:23 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
@@ -81,9 +81,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/24] netfs: Remove NETFS_COPY_TO_CACHE
-Date: Mon, 29 Jul 2024 17:19:38 +0100
-Message-ID: <20240729162002.3436763-10-dhowells@redhat.com>
+Subject: [PATCH 10/24] netfs: Set the request work function upon allocation
+Date: Mon, 29 Jul 2024 17:19:39 +0100
+Message-ID: <20240729162002.3436763-11-dhowells@redhat.com>
 In-Reply-To: <20240729162002.3436763-1-dhowells@redhat.com>
 References: <20240729162002.3436763-1-dhowells@redhat.com>
 Precedence: bulk
@@ -95,68 +95,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Remove NETFS_COPY_TO_CACHE as it isn't used anymore.
+Set the work function in the netfs_io_request work_struct when we allocate
+the request rather than doing this later.  This reduces the number of
+places we need to set it in future code.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Jeff Layton <jlayton@kernel.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/main.c              | 3 +--
- include/linux/netfs.h        | 3 +--
- include/trace/events/netfs.h | 3 +--
- 3 files changed, 3 insertions(+), 6 deletions(-)
+ fs/netfs/internal.h    | 1 +
+ fs/netfs/io.c          | 4 +---
+ fs/netfs/objects.c     | 9 ++++++++-
+ fs/netfs/write_issue.c | 1 -
+ 4 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/fs/netfs/main.c b/fs/netfs/main.c
-index 5f0f438e5d21..1ee712bb3610 100644
---- a/fs/netfs/main.c
-+++ b/fs/netfs/main.c
-@@ -37,11 +37,10 @@ static const char *netfs_origins[nr__netfs_io_origin] = {
- 	[NETFS_READAHEAD]		= "RA",
- 	[NETFS_READPAGE]		= "RP",
- 	[NETFS_READ_FOR_WRITE]		= "RW",
--	[NETFS_COPY_TO_CACHE]		= "CC",
-+	[NETFS_DIO_READ]		= "DR",
- 	[NETFS_WRITEBACK]		= "WB",
- 	[NETFS_WRITETHROUGH]		= "WT",
- 	[NETFS_UNBUFFERED_WRITE]	= "UW",
--	[NETFS_DIO_READ]		= "DR",
- 	[NETFS_DIO_WRITE]		= "DW",
- };
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index 9e6e0e59d7e4..f2920b4ee726 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -29,6 +29,7 @@ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
+ /*
+  * io.c
+  */
++void netfs_rreq_work(struct work_struct *work);
+ int netfs_begin_read(struct netfs_io_request *rreq, bool sync);
  
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 5e623e52e5a2..daaa6eae3a9f 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -208,11 +208,10 @@ enum netfs_io_origin {
- 	NETFS_READAHEAD,		/* This read was triggered by readahead */
- 	NETFS_READPAGE,			/* This read is a synchronous read */
- 	NETFS_READ_FOR_WRITE,		/* This read is to prepare a write */
--	NETFS_COPY_TO_CACHE,		/* This write is to copy a read to the cache */
-+	NETFS_DIO_READ,			/* This is a direct I/O read */
- 	NETFS_WRITEBACK,		/* This write was triggered by writepages */
- 	NETFS_WRITETHROUGH,		/* This write was made by netfs_perform_write() */
- 	NETFS_UNBUFFERED_WRITE,		/* This is an unbuffered write */
--	NETFS_DIO_READ,			/* This is a direct I/O read */
- 	NETFS_DIO_WRITE,		/* This is a direct I/O write */
- 	nr__netfs_io_origin
- } __mode(byte);
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index bd4f6f1f1040..b5a30d9a0d20 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -34,11 +34,10 @@
- 	EM(NETFS_READAHEAD,			"RA")		\
- 	EM(NETFS_READPAGE,			"RP")		\
- 	EM(NETFS_READ_FOR_WRITE,		"RW")		\
--	EM(NETFS_COPY_TO_CACHE,			"CC")		\
-+	EM(NETFS_DIO_READ,			"DR")		\
- 	EM(NETFS_WRITEBACK,			"WB")		\
- 	EM(NETFS_WRITETHROUGH,			"WT")		\
- 	EM(NETFS_UNBUFFERED_WRITE,		"UW")		\
--	EM(NETFS_DIO_READ,			"DR")		\
- 	E_(NETFS_DIO_WRITE,			"DW")
+ /*
+diff --git a/fs/netfs/io.c b/fs/netfs/io.c
+index 27dbea0f3867..874bbf2386a4 100644
+--- a/fs/netfs/io.c
++++ b/fs/netfs/io.c
+@@ -278,7 +278,7 @@ static void netfs_rreq_assess(struct netfs_io_request *rreq, bool was_async)
+ 	netfs_rreq_completed(rreq, was_async);
+ }
  
- #define netfs_rreq_traces					\
+-static void netfs_rreq_work(struct work_struct *work)
++void netfs_rreq_work(struct work_struct *work)
+ {
+ 	struct netfs_io_request *rreq =
+ 		container_of(work, struct netfs_io_request, work);
+@@ -584,8 +584,6 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
+ 	// TODO: Use bounce buffer if requested
+ 	rreq->io_iter = rreq->iter;
+ 
+-	INIT_WORK(&rreq->work, netfs_rreq_work);
+-
+ 	/* Chop the read into slices according to what the cache and the netfs
+ 	 * want and submit each one.
+ 	 */
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index f4a642727479..1dbcd7f44eca 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -52,9 +52,16 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	INIT_LIST_HEAD(&rreq->io_streams[0].subrequests);
+ 	INIT_LIST_HEAD(&rreq->io_streams[1].subrequests);
+ 	INIT_LIST_HEAD(&rreq->subrequests);
+-	INIT_WORK(&rreq->work, NULL);
+ 	refcount_set(&rreq->ref, 1);
+ 
++	if (origin == NETFS_READAHEAD ||
++	    origin == NETFS_READPAGE ||
++	    origin == NETFS_READ_FOR_WRITE ||
++	    origin == NETFS_DIO_READ)
++		INIT_WORK(&rreq->work, netfs_rreq_work);
++	else
++		INIT_WORK(&rreq->work, netfs_write_collection_worker);
++
+ 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
+ 	if (cached) {
+ 		__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 2f4f795124a8..6e835670dc58 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -107,7 +107,6 @@ struct netfs_io_request *netfs_create_write_req(struct address_space *mapping,
+ 
+ 	wreq->contiguity = wreq->start;
+ 	wreq->cleaned_to = wreq->start;
+-	INIT_WORK(&wreq->work, netfs_write_collection_worker);
+ 
+ 	wreq->io_streams[0].stream_nr		= 0;
+ 	wreq->io_streams[0].source		= NETFS_UPLOAD_TO_SERVER;
 
 
