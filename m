@@ -1,306 +1,164 @@
-Return-Path: <linux-nfs+bounces-5125-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5126-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32BC093EB1E
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 04:22:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA03693ED53
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 08:23:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B4D281A5A
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 02:22:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86CB0281BB0
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 06:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A0F79DC7;
-	Mon, 29 Jul 2024 02:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vOZLes2c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/0792vEH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vOZLes2c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/0792vEH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20A583CD9;
+	Mon, 29 Jul 2024 06:22:43 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B9D78276
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 02:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25CB82877
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 06:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722219724; cv=none; b=QH5QUcylP+lhdTcjfv9zkGvFw+D5hbckMs5bZbxS5iAHKtj0N5w0CjzlUVJNVebWDiZc8EV2+zHKtK9xzLFp2afGHSS7JC0HRCwP9R8jk9YGUn1bG4nu49mKoYA1tSuGg+bkA18aIUX8TFTJXQu2zwjRbkgqAxWBkhHYXDkTe0s=
+	t=1722234163; cv=none; b=VgeYyLW08vxYBn1zfhKJ1mzAPo2NjKsGnqvT4+PoudWF9yVjQr6aC9+inbRdOR97gRgLIysla5KxtoLH7nQ7aYmViUkkMgRW+cWk/wV1o09cjQcOlbH3J/DLQKwiibBm4zb8qZHmC4Cuex8KNtZjSBE4KYvo6eYzxwTcPPSedNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722219724; c=relaxed/simple;
-	bh=pUI5tI9G2TsCn72k/pOKxdujU79W+EbmIFvxzaRu284=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mAPgSkfhfCMCWpK51WtOIg15AkKPXGYEBxDt5nRpvJFthAwFr4pCSxDoUpMv5msgLkaqxhVsWeZfsvvSSRBhId8XiXN2ABMoApG1dk4rBwqA2AUcO/Xm+mRAieLlEFmD/UMjSoThoXwIQzfyt+W2dL6rLJpAQjptWlpicKOhF3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vOZLes2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/0792vEH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vOZLes2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/0792vEH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 46A8D21A7C;
-	Mon, 29 Jul 2024 02:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722219721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rTZre9Nes98S1WB+k5IlBZaH3wxfyk/ejd9zWFZyg1U=;
-	b=vOZLes2cMVrewg9GVrxseVVrdn7JbMllB8MlOUEokOg6vBaxuFnJ/WOG9yAH/0gIWswEx8
-	rMgeL8vzcVXVXdW+ZO1wiDRfQrydeYPY1F+dKrpJlsqzS+uZgtbghz+EdpygiwfANSxW41
-	COME3ccojTkRLaJ4H9z4B3plkNfd52g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722219721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rTZre9Nes98S1WB+k5IlBZaH3wxfyk/ejd9zWFZyg1U=;
-	b=/0792vEHOtskrr5QHcKaoMvXjP87Cde7fZO6DfLxTtFbUYRlyJwXb8aEW5YVU35ovzqbiO
-	p6HI/kD71IjhRNAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722219721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rTZre9Nes98S1WB+k5IlBZaH3wxfyk/ejd9zWFZyg1U=;
-	b=vOZLes2cMVrewg9GVrxseVVrdn7JbMllB8MlOUEokOg6vBaxuFnJ/WOG9yAH/0gIWswEx8
-	rMgeL8vzcVXVXdW+ZO1wiDRfQrydeYPY1F+dKrpJlsqzS+uZgtbghz+EdpygiwfANSxW41
-	COME3ccojTkRLaJ4H9z4B3plkNfd52g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722219721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rTZre9Nes98S1WB+k5IlBZaH3wxfyk/ejd9zWFZyg1U=;
-	b=/0792vEHOtskrr5QHcKaoMvXjP87Cde7fZO6DfLxTtFbUYRlyJwXb8aEW5YVU35ovzqbiO
-	p6HI/kD71IjhRNAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2816213704;
-	Mon, 29 Jul 2024 02:21:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oqybM8b8pmbnHQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 29 Jul 2024 02:21:58 +0000
-From: NeilBrown <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 2/2] sunrpc: allow svc threads to fail initialisation cleanly
-Date: Mon, 29 Jul 2024 12:18:21 +1000
-Message-ID: <20240729022126.4450-3-neilb@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240729022126.4450-1-neilb@suse.de>
-References: <20240729022126.4450-1-neilb@suse.de>
+	s=arc-20240116; t=1722234163; c=relaxed/simple;
+	bh=hjjIMtLXsRowWJTsFZFs0FGHMWuAIRn3zMKwdzFZlVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IHcp2BEpdwkvvOem/1THvJPRwB51KzSFbR614T7Po8vgP7ifZxCeg7JLLArVkjdstnXlBbHTVKWFc93YHTEdBOjQ6HYzn5BcWv6E6XER7qHmWXShglZxeW3MecLfgylq7j/55rIm2g6ZXw+0B6oD37jFCtCF3w9SGdk6RLgJZBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4280921baa2so1077395e9.2
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Jul 2024 23:22:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722234160; x=1722838960;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BcrMmy1kl1trlyFU4fNrbFfE/gf001bjOnJ7xTNIN84=;
+        b=Kie9TgW8CubN0Agid+rWkPVKPXhozfVcvvLNElaIpa8UrDQu9nHUE9tJwz1BYMNCr7
+         pQJmW1jwjr/kq1c9HWi2sJGlWv96+nKh98soskVcXk4D0vF9sV7l8XKf+jPd00i0djoe
+         FJqldpUgC6BFuszI2x4O5r3hoOiQymzZKZM6B4Q6kkZ9t1jLKuMchNpWvQweH2WUtCf2
+         cjx77X3ja+A9nkhX+uoZ30CGsSQX4FxLz9XqFcVHke+osnibUAc/WkY5ajv4CutdjvbN
+         t5oGF5QcT5sTURpq91OmJrQs59l6ULCnIeViThBLmytXjNs2yPXSiCESE1yePBKdc58F
+         MeXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0b5jqZruqD9NgDnIdt4vT6xN2TQgynhI5QDoDWFDqkZqvERH4vkpRF9BI9PMSdeSmXVWGIbAPAiion+o3isUnVSLbuCedhFHc
+X-Gm-Message-State: AOJu0Yz8sZ/7W6AjrK/15GO7aXonPLGVfSoBH+ByErJi1tvpcBa6Rilq
+	B4Z4FhFJLU1ALIEQ6u5srS0NHaJpfAMEoXrnvnvqodCSJXkiclDA
+X-Google-Smtp-Source: AGHT+IFYGT1k7kCPuLrOqHIqyzA2D6/4fdpD7+t3cofOCztVkirsr19TzmkJvH5ZMr0361MeWFJ8hA==
+X-Received: by 2002:a05:600c:19c7:b0:427:9f6f:4913 with SMTP id 5b1f17b1804b1-4280576b7famr58912055e9.5.1722234159977;
+        Sun, 28 Jul 2024 23:22:39 -0700 (PDT)
+Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280574003bsm161755635e9.17.2024.07.28.23.22.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jul 2024 23:22:39 -0700 (PDT)
+Message-ID: <aa94fd00-0a91-4924-a943-2e21e6da1df8@grimberg.me>
+Date: Mon, 29 Jul 2024 09:22:38 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] nfsd: resolve possible conflicts of reads using
+ special stateids and write delegations
+To: kernel test robot <lkp@intel.com>, Chuck Lever <chuck.lever@oracle.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Dai Ngo <dai.ngo@oracle.com>, Olga Kornievskaia <aglo@umich.edu>,
+ Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+References: <20240728204104.519041-4-sagi@grimberg.me>
+ <202407290814.7REsmaH7-lkp@intel.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <202407290814.7REsmaH7-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If an svc thread needs to perform some initialisation that might fail,
-it has no good way to handle the failure.
 
-Before the thread can exit it must call svc_exit_thread(), but that
-requires the service mutex to be held.  The thread cannot simply take
-the mutex as that could deadlock if there is a concurrent attempt to
-shut down all threads (which is unlikely, but not impossible).
 
-nfsd currently call svc_exit_thread() unprotected in the unlikely event
-that unshare_fs_struct() fails.
 
-We can clean this up by introducing svc_thread_init_status() by which an
-svc thread can report whether initialisation has succeeded.  If it has,
-it continues normally into the action loop.  If it has not,
-svc_thread_init_status() immediately aborts the thread.
-svc_start_kthread() waits for either of these to happen, and calls
-svc_exit_thread() (under the mutex) if the thread aborted.
+On 29/07/2024 3:35, kernel test robot wrote:
+> Hi Sagi,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.11-rc1 next-20240726]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Sagi-Grimberg/nfsd-don-t-assume-copy-notify-when-preprocessing-the-stateid/20240729-044834
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/20240728204104.519041-4-sagi%40grimberg.me
+> patch subject: [PATCH v2 3/3] nfsd: resolve possible conflicts of reads using special stateids and write delegations
+> config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240729/202407290814.7REsmaH7-lkp@intel.com/config)
+> compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240729/202407290814.7REsmaH7-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407290814.7REsmaH7-lkp@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>>> fs/nfsd/nfs4state.c:8826: warning: Excess function parameter 'inode' description in 'nfsd4_deleg_read_conflict'
+>>> fs/nfsd/nfs4state.c:8826: warning: Excess function parameter 'modified' description in 'nfsd4_deleg_read_conflict'
+>>> fs/nfsd/nfs4state.c:8826: warning: Excess function parameter 'size' description in 'nfsd4_deleg_read_conflict'
+>
+> vim +8826 fs/nfsd/nfs4state.c
+>
+>    8805	
+>    8806	/**
+>    8807	 * nfsd4_deleg_read_conflict - Recall if read causes conflict
+>    8808	 * @rqstp: RPC transaction context
+>    8809	 * @clp: nfs client
+>    8810	 * @fhp: nfs file handle
+>    8811	 * @inode: file to be checked for a conflict
+>    8812	 * @modified: return true if file was modified
+>    8813	 * @size: new size of file if modified is true
+>    8814	 *
+>    8815	 * This function is called when there is a conflict between a write
+>    8816	 * delegation and a read that is using a special stateid where the
+>    8817	 * we cannot derive the client stateid exsistence. The server
+>    8818	 * must recall a conflicting delegation before allowing the read
+>    8819	 * to continue.
+>    8820	 *
+>    8821	 * Returns 0 if there is no conflict; otherwise an nfs_stat
+>    8822	 * code is returned.
+>    8823	 */
+>    8824	__be32 nfsd4_deleg_read_conflict(struct svc_rqst *rqstp,
+>    8825			struct nfs4_client *clp, struct svc_fh *fhp)
+>> 8826	{
+>    8827		struct nfs4_file *fp;
+>    8828		__be32 status = 0;
+>    8829	
+>    8830		fp = nfsd4_file_hash_lookup(fhp);
+>    8831		if (!fp)
+>    8832			return nfs_ok;
+>    8833	
+>    8834		spin_lock(&state_lock);
+>    8835		spin_lock(&fp->fi_lock);
+>    8836		if (!list_empty(&fp->fi_delegations) &&
+>    8837		    !nfs4_delegation_exists(clp, fp)) {
+>    8838			/* conflict, recall deleg */
+>    8839			status = nfserrno(nfsd_open_break_lease(fp->fi_inode,
+>    8840						NFSD_MAY_READ));
+>    8841			if (status)
+>    8842				goto out;
+>    8843			if (!nfsd_wait_for_delegreturn(rqstp, fp->fi_inode))
+>    8844				status = nfserr_jukebox;
+>    8845		}
+>    8846	out:
+>    8847		spin_unlock(&fp->fi_lock);
+>    8848		spin_unlock(&state_lock);
+>    8849		return status;
+>    8850	}
+>    8851	
+>
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/lockd/svc.c             |  2 ++
- fs/nfs/callback.c          |  2 ++
- fs/nfsd/nfssvc.c           |  9 +++------
- include/linux/sunrpc/svc.h | 28 ++++++++++++++++++++++++++++
- net/sunrpc/svc.c           | 11 +++++++++++
- 5 files changed, 46 insertions(+), 6 deletions(-)
-
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index ab8042a5b895..7d74858e1abe 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -125,6 +125,8 @@ lockd(void *vrqstp)
- 	struct net *net = &init_net;
- 	struct lockd_net *ln = net_generic(net, lockd_net_id);
- 
-+	svc_thread_init_status(rqstp, 0);
-+
- 	/* try_to_freeze() is called from svc_recv() */
- 	set_freezable();
- 
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 8adfcd4c8c1a..6cf92498a5ac 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -76,6 +76,8 @@ nfs4_callback_svc(void *vrqstp)
- {
- 	struct svc_rqst *rqstp = vrqstp;
- 
-+	svc_thread_init_status(rqstp, 0);
-+
- 	set_freezable();
- 
- 	while (!svc_thread_should_stop(rqstp))
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 89d7918de7b1..2a99787d6a86 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -915,11 +915,9 @@ nfsd(void *vrqstp)
- 
- 	/* At this point, the thread shares current->fs
- 	 * with the init process. We need to create files with the
--	 * umask as defined by the client instead of init's umask. */
--	if (unshare_fs_struct() < 0) {
--		printk("Unable to start nfsd thread: out of memory\n");
--		goto out;
--	}
-+	 * umask as defined by the client instead of init's umask.
-+	 */
-+	svc_thread_init_status(rqstp, unshare_fs_struct());
- 
- 	current->fs->umask = 0;
- 
-@@ -941,7 +939,6 @@ nfsd(void *vrqstp)
- 
- 	atomic_dec(&nfsd_th_cnt);
- 
--out:
- 	/* Release the thread */
- 	svc_exit_thread(rqstp);
- 	return 0;
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 01383ea077ad..2c4366afc9bd 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -21,6 +21,7 @@
- #include <linux/wait.h>
- #include <linux/mm.h>
- #include <linux/pagevec.h>
-+#include <linux/kthread.h>
- 
- /*
-  *
-@@ -231,6 +232,11 @@ struct svc_rqst {
- 	struct net		*rq_bc_net;	/* pointer to backchannel's
- 						 * net namespace
- 						 */
-+
-+	int			rq_err;		/* Thread sets this to inidicate
-+						 * initialisation success.
-+						 */
-+
- 	unsigned long	bc_to_initval;
- 	unsigned int	bc_to_retries;
- 	void **			rq_lease_breaker; /* The v4 client breaking a lease */
-@@ -304,6 +310,28 @@ static inline bool svc_thread_should_stop(struct svc_rqst *rqstp)
- 	return test_bit(RQ_VICTIM, &rqstp->rq_flags);
- }
- 
-+/**
-+ * svc_thread_init_status - report whether thread has initialised successfully
-+ * @rqstp: the thread in question
-+ * @err: errno code
-+ *
-+ * After performing any initialisation that could fail, and before starting
-+ * normal work, each sunrpc svc_thread must call svc_thread_init_status()
-+ * with an appropriate error, or zero.
-+ *
-+ * If zero is passed, the thread is ready and must continue until
-+ * svc_thread_should_stop() returns true.  If a non-zero error is passed
-+ * the call will not return - the thread will exit.
-+ */
-+static inline void svc_thread_init_status(struct svc_rqst *rqstp, int err)
-+{
-+	/* store_release ensures svc_start_kthreads() sees the error */
-+	smp_store_release(&rqstp->rq_err, err);
-+	wake_up_var(&rqstp->rq_err);
-+	if (err)
-+		kthread_exit(1);
-+}
-+
- struct svc_deferred_req {
- 	u32			prot;	/* protocol (UDP or TCP) */
- 	struct svc_xprt		*xprt;
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index c0e91bea72e7..0fc9c97ae419 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -662,6 +662,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	if (!svc_init_buffer(rqstp, serv->sv_max_mesg, node))
- 		goto out_enomem;
- 
-+	rqstp->rq_err = -EAGAIN; /* No error yet */
-+
- 	spin_lock_bh(&serv->sv_lock);
- 	serv->sv_nrthreads += 1;
- 	spin_unlock_bh(&serv->sv_lock);
-@@ -760,6 +762,7 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 	struct svc_pool *chosen_pool;
- 	unsigned int state = serv->sv_nrthreads-1;
- 	int node;
-+	int err;
- 
- 	do {
- 		nrservs--;
-@@ -782,6 +785,14 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 
- 		svc_sock_update_bufs(serv);
- 		wake_up_process(task);
-+
-+		/* load_acquire ensures we get value stored in svc_thread_init_status() */
-+		wait_var_event(&rqstp->rq_err, smp_load_acquire(&rqstp->rq_err) != -EAGAIN);
-+		err = rqstp->rq_err;
-+		if (err) {
-+			svc_exit_thread(rqstp);
-+			return err;
-+		}
- 	} while (nrservs > 0);
- 
- 	return 0;
--- 
-2.44.0
-
+Its not clear what is the warning about here...
 
