@@ -1,93 +1,246 @@
-Return-Path: <linux-nfs+bounces-5131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D70193F5BE
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 14:44:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2709293F5FF
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 14:58:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D039B21909
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 12:44:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 029801C2218A
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 12:58:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE7C148826;
-	Mon, 29 Jul 2024 12:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B63vP/Ge"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CDD214901B;
+	Mon, 29 Jul 2024 12:58:52 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8B2209B
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 12:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D4B148826
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 12:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722257077; cv=none; b=Ado3lsp3MwoB0I9Hg5LVnscXzGhplxpqEtfNkphsbNVtRsM+bM4VgJg0v1WoPSMioxYgVw2CJm+0F7D2pMdVB+lJvPQhWJb219dtC5FRyeOeE+rs2XG3s6sHzV543c45Vkd2vDLxyipRQbGS90jCuk2QBvcabqdglX202H653Co=
+	t=1722257932; cv=none; b=dW7YRNUkOW34mG4qRGTJsGmjngI/xrwCXytOg8mSMiYQm2vBMfsrZUqiyhIHKzuF7OZmlvDgc5wXrVWWH/CgYXfuGisaE/D7mXNh8MbeGK7MPNWIt52V0BBgPAZk1AqCcfZdUpRzwoS59bSwqSB/U0jqLY+AdmjMxsYU2LWZE+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722257077; c=relaxed/simple;
-	bh=rPyimJGQABbg8pkswYBNs+SMGfRrfnX+kewJOYlq+JI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Cvma1qL9zt61NugOAlAd41C3ttAtaiTzCnozKEQsBmiiO+MIyk0Qc8igZgTqmH58JnEU0ROdAmgVKaDVB6tS50QHxUJEjdI0lCr8NCEr36pHopx9KJjCs/H7p52IunlL3aP7+G7+AJnnOgtnHYePajd9LujbZdjw5GhdVAxLp18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B63vP/Ge; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1C0C4AF0A;
-	Mon, 29 Jul 2024 12:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722257076;
-	bh=rPyimJGQABbg8pkswYBNs+SMGfRrfnX+kewJOYlq+JI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=B63vP/GeryxBuYdC3xAyqTcIyX7cywcVPXZTnaxxW0aVyKpmuOy2HEdyN5AlXpVIS
-	 Ndb2jTDHgMg4T/+AKKNQMyxK+uT5nnGbcMcWq6jYdK3Hpjwdvw5IugK6MCRKpBbXz1
-	 GIfwi21CkVJo/p6PwvJYgUpGsPimgFTUufB3q+LLGieAEGUvVmcPxBIpJQNUY8xOmk
-	 N3vLkLReUPuwctR2LAs7QlEuTu574JhAh7gngo1jwkPyhQf31hyPrYANjFqzAA3JqJ
-	 5pNTTSFYc26HL5T3+6jV0Rq54CKlz/t6QG4PMEqADbqLBuJfsUEx7dyEgxYzxlCkTC
-	 rh1hPgfPQXMNA==
-Message-ID: <2a4b6699d513d3664a57c76e1aa6da2beb4c6393.camel@kernel.org>
-Subject: Re: [PATCH 0/2] nfsd: fix handling of error from unshare_fs_struct()
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Mon, 29 Jul 2024 08:44:35 -0400
-In-Reply-To: <20240729022126.4450-1-neilb@suse.de>
-References: <20240729022126.4450-1-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1722257932; c=relaxed/simple;
+	bh=ZzEhtHNYiC/QdDw6XckAQZmLbZnJleBG1E5TMCN29wY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UJUl5ciQwe7eqpDT/miAP/C3pX8isj4pyZPK8gy7GS2lmt4BRUUUEXiAYVfILHlbzGOH9KA0OxQ9xH9hykXgtQnBHnMAhbl7gQMxn8GIjfL5GqmdCshh9FNmKw9XJ5oQouFNMY3SYQLJxhguc/0+R7INGNeDXWNi4B84k5069iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-36830a54b34so250326f8f.0
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 05:58:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722257929; x=1722862729;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gniDgVWezgZ15ReB5A+uynQH11FwStHDAHn3P5u02z0=;
+        b=CJEalk2vfcbN5k6KZ+jjoBiN00bDZfySC/dfQP6Se3AbecsVV2Lt1IWLMbsSTo/4xx
+         z6bRkWgrAuTPDiADvZ0RypplNb/Hqd0nI0PisqYlXWHV+a/FFxDd1Z4bZUSzFiDJTgge
+         Z8XO9hhJyps0YTv2v1fgW5CqUD2ttzFCuWS6i3W4FXyBrjNuj9qMzrqSr6iw1c5WO1Lh
+         DnEw0W2s4SXUWdb+MPUC3y5p2PHxTF4EUDrFOdBztMyN/6IcNLxMPoWmbCvH5/gQUPhv
+         10d1LJKsD9J4MXA1PukNO+zRV/kfvoSEtrE28n8+exd1EXxfFTefaPe5IVa0l/X/Ag1o
+         8syw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiThgBP+E/1QwlnVIDBQJ4JiYLfTYNALFML87tWidJhcc+59Xc8Az3N/PHoPEz/CSx0Mc28V0V/HjQEzKsKKIV/aa9tmlFxZbq
+X-Gm-Message-State: AOJu0YyE3sMDel65P5Pg0euIYoAEHnmpBnD7htsIPrMwESGUsk9UJ3U+
+	NeyTORk4XHjx7FbX0dDMLu3h+D5JGXcqgj1oxfGH45oPXxBORAyU
+X-Google-Smtp-Source: AGHT+IE+SbcUS0oMXR4Pa7RTljpC67wRzwBwVQOzi32/CJOvuK5w7pOM8DKlVmDgdk14obKsjFkCuQ==
+X-Received: by 2002:a05:6000:402c:b0:366:eb60:bd0c with SMTP id ffacd0b85a97d-36b34bf28ebmr6517212f8f.3.1722257928184;
+        Mon, 29 Jul 2024 05:58:48 -0700 (PDT)
+Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4281ef5a416sm21275285e9.33.2024.07.29.05.58.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jul 2024 05:58:47 -0700 (PDT)
+Message-ID: <6a78bd6b-b5c4-489c-a7dd-bd688fed8d94@grimberg.me>
+Date: Mon, 29 Jul 2024 15:58:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] nfsd: Offer write delegations for o_wronly opens
+To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Dai Ngo <dai.ngo@oracle.com>, Olga Kornievskaia <aglo@umich.edu>,
+ linux-nfs@vger.kernel.org
+References: <20240728204104.519041-1-sagi@grimberg.me>
+ <20240728204104.519041-3-sagi@grimberg.me>
+ <81765320f56c349298be08457ef2211a581c29f9.camel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <81765320f56c349298be08457ef2211a581c29f9.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-07-29 at 12:18 +1000, NeilBrown wrote:
-> These two patches replace my previous patch:
-> =C2=A0[PATCH 07/14] Change unshare_fs_struct() to never fail.
->=20
-> I had explored ways to change kthread_create() to avoid the need for
-> GFP_NOFAIL and concluded that we can do everything we need in the
-> sunrpc
-> layer.=C2=A0 So the first patch here is a simple cleanup, and the second
-> adds
-> simple infrastructure for an svc thread to confirm that it has
-> started
-> up and to report if it was successful in that.
->=20
-> Thanks,
-> NeilBrown
->=20
->=20
->=20
-> =C2=A0[PATCH 1/2] sunrpc: merge svc_rqst_alloc() into svc_prepare_thread(=
-)
-> =C2=A0[PATCH 2/2] sunrpc: allow svc threads to fail initialisation cleanl=
-y
 
-I like this solution better:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+On 29/07/2024 15:10, Jeff Layton wrote:
+> On Sun, 2024-07-28 at 23:41 +0300, Sagi Grimberg wrote:
+>> In order to support write delegations with O_WRONLY opens, we need to
+>> allow the clients to read using the write delegation stateid (Per RFC
+>> 8881 section 9.1.2. Use of the Stateid and Locking).
+>>
+>> Hence, we check for NFS4_SHARE_ACCESS_WRITE set in open request, and
+>> in case the share access flag does not set NFS4_SHARE_ACCESS_READ as
+>> well, we'll open the file locally with O_RDWR in order to allow the
+>> client to use the write delegation stateid when issuing a read in
+>> case
+>> it may choose to.
+>>
+>> Plus, find_rw_file singular call-site is now removed, remove it
+>> altogether.
+>>
+>> Note: reads using special stateids that conflict with pending write
+>> delegations are undetected, and will be covered in a follow on patch.
+>>
+>> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+>> ---
+>>   fs/nfsd/nfs4proc.c  | 18 +++++++++++++++++-
+>>   fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++----------------------
+>>   fs/nfsd/xdr4.h      |  2 ++
+>>   3 files changed, 39 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>> index 7b70309ad8fb..041bcc3ab5d7 100644
+>> --- a/fs/nfsd/nfs4proc.c
+>> +++ b/fs/nfsd/nfs4proc.c
+>> @@ -979,8 +979,22 @@ nfsd4_read(struct svc_rqst *rqstp, struct
+>> nfsd4_compound_state *cstate,
+>>   	/* check stateid */
+>>   	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate-
+>>> current_fh,
+>>   					&read->rd_stateid, RD_STATE,
+>> -					&read->rd_nf, NULL);
+>> +					&read->rd_nf, &read-
+>>> rd_wd_stid);
+>>   
+>> +	/*
+>> +	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
+>> +	 * delegation stateid used for read. Its refcount is
+>> decremented
+>> +	 * by nfsd4_read_release when read is done.
+>> +	 */
+>> +	if (!status) {
+>> +		if (read->rd_wd_stid &&
+>> +		    (read->rd_wd_stid->sc_type != SC_TYPE_DELEG ||
+>> +		     delegstateid(read->rd_wd_stid)->dl_type !=
+>> +					NFS4_OPEN_DELEGATE_WRITE)) {
+>> +			nfs4_put_stid(read->rd_wd_stid);
+>> +			read->rd_wd_stid = NULL;
+>> +		}
+>> +	}
+>>   	read->rd_rqstp = rqstp;
+>>   	read->rd_fhp = &cstate->current_fh;
+>>   	return status;
+>> @@ -990,6 +1004,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct
+>> nfsd4_compound_state *cstate,
+>>   static void
+>>   nfsd4_read_release(union nfsd4_op_u *u)
+>>   {
+>> +	if (u->read.rd_wd_stid)
+>> +		nfs4_put_stid(u->read.rd_wd_stid);
+>>   	if (u->read.rd_nf)
+>>   		nfsd_file_put(u->read.rd_nf);
+>>   	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index 0645fccbf122..538b6e1127a2 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -639,18 +639,6 @@ find_readable_file(struct nfs4_file *f)
+>>   	return ret;
+>>   }
+>>   
+>> -static struct nfsd_file *
+>> -find_rw_file(struct nfs4_file *f)
+>> -{
+>> -	struct nfsd_file *ret;
+>> -
+>> -	spin_lock(&f->fi_lock);
+>> -	ret = nfsd_file_get(f->fi_fds[O_RDWR]);
+>> -	spin_unlock(&f->fi_lock);
+>> -
+>> -	return ret;
+>> -}
+>> -
+>>   struct nfsd_file *
+>>   find_any_file(struct nfs4_file *f)
+>>   {
+>> @@ -5784,15 +5772,11 @@ nfs4_set_delegation(struct nfsd4_open *open,
+>> struct nfs4_ol_stateid *stp,
+>>   	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to
+>> handle,
+>>   	 *   on its own, all opens."
+>>   	 *
+>> -	 * Furthermore the client can use a write delegation for
+>> most READ
+>> -	 * operations as well, so we require a O_RDWR file here.
+>> -	 *
+>> -	 * Offer a write delegation in the case of a BOTH open, and
+>> ensure
+>> -	 * we get the O_RDWR descriptor.
+>> +	 * Offer a write delegation for WRITE or BOTH access
+>>   	 */
+>> -	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) ==
+>> NFS4_SHARE_ACCESS_BOTH) {
+>> -		nf = find_rw_file(fp);
+>> +	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+>>   		dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>> +		nf = find_writeable_file(fp);
+>>   	}
+>>   
+>>   	/*
+>> @@ -5934,8 +5918,8 @@ static void nfsd4_open_deleg_none_ext(struct
+>> nfsd4_open *open, int status)
+>>    * open or lock state.
+>>    */
+>>   static void
+>> -nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid
+>> *stp,
+>> -		     struct svc_fh *currentfh)
+>> +nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open
+>> *open,
+>> +		struct nfs4_ol_stateid *stp, struct svc_fh
+>> *currentfh)
+>>   {
+>>   	struct nfs4_delegation *dp;
+>>   	struct nfs4_openowner *oo = openowner(stp->st_stateowner);
+>> @@ -5994,6 +5978,20 @@ nfs4_open_delegation(struct nfsd4_open *open,
+>> struct nfs4_ol_stateid *stp,
+>>   		dp->dl_cb_fattr.ncf_cur_fsize = stat.size;
+>>   		dp->dl_cb_fattr.ncf_initial_cinfo =
+>>   			nfsd4_change_attribute(&stat,
+>> d_inode(currentfh->fh_dentry));
+>> +		if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH)
+>> != NFS4_SHARE_ACCESS_BOTH) {
+>> +			struct nfsd_file *nf = NULL;
+>> +
+>> +			/* make sure the file is opened locally for
+>> O_RDWR */
+>> +			status = nfsd_file_acquire_opened(rqstp,
+>> currentfh,
+>> +				nfs4_access_to_access(NFS4_SHARE_ACC
+>> ESS_BOTH),
+>> +				open->op_filp, &nf);
+>> +			if (status) {
+>> +				nfs4_put_stid(&dp->dl_stid);
+>> +				destroy_delegation(dp);
+>> +				goto out_no_deleg;
+>> +			}
+>> +			stp->st_stid.sc_file->fi_fds[O_RDWR] = nf;
+> I have a bit of a concern here. When we go to put access references to
+> the fi_fds, that's done according to the st_access_bmap. Here though,
+> you're adding an extra reference for the O_RDWR fd, but I don't see
+> where you're calling set_access for that on the delegation stateid? Am
+> I missing where that happens? Not doing that may lead to fd leaks if it
+> was missed.
+
+Ah, this is something that I did not fully understand...
+However it looks like st_access_bmap is not something that is
+accounted on the delegation stateid...
+
+Can I simply set it on the open stateid (stp)?
 
