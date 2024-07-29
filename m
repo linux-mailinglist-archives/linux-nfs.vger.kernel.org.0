@@ -1,211 +1,778 @@
-Return-Path: <linux-nfs+bounces-5186-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5187-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC13940094
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 23:47:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85EA39400AB
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 23:56:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7925283071
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 21:47:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39513283E3A
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 21:56:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 336B415ECD0;
-	Mon, 29 Jul 2024 21:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3BD78C98;
+	Mon, 29 Jul 2024 21:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J19mciat";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="E6eZiSyF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhGxo0Ys"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A8178C98
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 21:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722289658; cv=fail; b=oKfcKhgh8bOHkzrWaAI0rkefuF9SqjtfN4pQ7sVkwq+i2JfKonriIFoUGIWpGuU3V2CWxhtyBPslJrq9nZRNbSwGZl72I3FoKwXKTaZSi1dc6soy1aGY26qGcKjkjbCSaOKNrH/UwmMTsttFb8BeCjSv9s4ISiy2Wo3mwdnwAS0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722289658; c=relaxed/simple;
-	bh=Mx3KLa1zpPXs06NqM57qwo1Umv5MYupXkiSmGZ4Im2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jb74mSjC1e51IjPLt+MDF1dH+k2raPFF62v92mBwR7rJMzhYF9So76UZ1N2nzob3d7wacxtKOsfRJorv/ZMaQTuERKrVzYdsZXdlmZFD4B2sYvjgPGB/08Zgzw9BHOI8sfJKOa9wZ93LkHkWZAgg+elqCKS9WABeIBI3XeJfbqo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=J19mciat; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=E6eZiSyF; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TKtWRN008113;
-	Mon, 29 Jul 2024 21:47:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=AGuze2oab/nwbL1
-	lxA0vbyo5q6XvDoILKtOj78mXqHk=; b=J19mciatkfR8bU8+J0cApOw9lTi4KJU
-	7DCDZV/5wBAxJANmyfZVpCIEupo06Ob9isjByvUSNah0BijDCJKLFTwNej01i8qS
-	OsJU0YchGRz+JlX2oD4f8cltNpjOf6yNbDBxpjD/LkueRHQHRrIMZTCleI2Lw85q
-	n4KG0AhOi9VgR9nZCNmaRnCfwF1Ql/+iazq0ETti6YbVoXWZ6TpYOeDYw62sErKG
-	Mz9GFaAOh4Uccg+iC/XK2DBraQuCOLGGNRU/+/ypSg+qk5KTvIBcdRp7vVIMJnBG
-	2ARr0mdAetedGfTogrbVHpBFfjBRIiGKw0eTNpmlbHwhZlFUns8/A3A==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40mqackqdp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jul 2024 21:47:26 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46TKvg8f013030;
-	Mon, 29 Jul 2024 21:47:25 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40nkh5s8uc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jul 2024 21:47:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OeREssfGU2asDy7aiPgC1CXPaIIZQy2WCnXK0wWta6fPGxz61AINX9XbXmu+NgiAlscajaXvuteHLLdcu4njrYICuCETdlouE8ILfpaqeYoQfPSzpNsI0HBBVqPruDcYwXtOzfz1c1ybajoMHHZaNvpAzocuf2fg8Fc13tIVO5klQ8ogTC/TVgkG5rXg2RsjDdn3QCH0X4B15o6JzU7Fm2mhK9yqI7uyv2fmUxO/pXQqEdS48h0OMGdG0+DVxwZ22NwmH4Id68TmzhaK1IGB31a+dBpMOjU0WnH4BmNEIet32NbrOTi5009MkM36PI7UqQ/4q94nQ0gGdRugJZzCTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AGuze2oab/nwbL1lxA0vbyo5q6XvDoILKtOj78mXqHk=;
- b=fVYZnLu6tpY8ZZi8leERuZpntghlqmFd58WAEN3XvNv3S5rGs79tEyFSGO3Lqh0E4J5Yt/0ViwKNZdUw1GiprHFtammhzwG+Hm8Z5jigd3at+4HSnVk4arM/78ZwqimPWK/79RM54NNEa0wsS29XOdYe963xnh5KvpXrvH0/pCoQhva+lfD2UJ8HBwAqF7SYkW7Fmf+5DRTcILSpMUJfoHJDMUbB4207U7jpz+07ropObkdah7ZXll/TnadEPzsFa1lYHu/QubcaXvVM3hlj7gxMiSrW1rVVLpXvkfsMrX3/Fz/8j+FiQr8DZ60R1mLzADMm/7QpGkjapeSKiI5tlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AD18C35F
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 21:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722290189; cv=none; b=D9hr93w+z5Uw2UsSCgwL1RiJ8gbVhwNE0gOsDdf0jKKBedF+JEHybgFsB8CCLAVA5sGAkJaZCixfq7rbVfW/PZuC+1uR0XFi+JKl3aJ/CygKajlCFRHeDinqdfwXQCeJmOXojTHOKxT+llYJrhxRblCS0/PHUd/m+zuTw8CVwDE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722290189; c=relaxed/simple;
+	bh=bFXBKMg/KySruoi6qX1n1wqepACFmfdRqeU/7cQF0sg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=PMcalbUiwjaDhA5bMNUMT8NormPHZafnak/k2Ff1CjJNfJVRfrZERC1N24olw8PySPMyQt/lXV673mU9jTUZcl8DMNEfOeh/XnDhWOjei3mTGLStb2SPryMXc7pRzy3vkjFznmSefMKyahB6r/NOPduH8H7TZX6ZZ7RnZRRmHXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhGxo0Ys; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1fd69e44596so24070155ad.1
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 14:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AGuze2oab/nwbL1lxA0vbyo5q6XvDoILKtOj78mXqHk=;
- b=E6eZiSyFbfOsSb8bwJMjv3iJgVDSVIPP2h4Ep/gEuvajZ5Q4aOEFSG/KanaEtuuBoA4rG8/UhUAKso986NSA93zeHf52q0Glfk7kOsOTXa5QLwdFMvW2GaDjOhCaPw3WqXh9Jv1Vgj0vwZ1kboKmIx3vVhMMPbIPGsZHrFf3b10=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN4PR10MB5574.namprd10.prod.outlook.com (2603:10b6:806:205::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.28; Mon, 29 Jul
- 2024 21:47:23 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7807.026; Mon, 29 Jul 2024
- 21:47:22 +0000
-Date: Mon, 29 Jul 2024 17:47:19 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 0/2 v2] nfsd: fix handling of error from
- unshare_fs_struct()
-Message-ID: <ZqgN5+kl4U40veEo@tissot.1015granger.net>
-References: <20240729212217.30747-1-neilb@suse.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240729212217.30747-1-neilb@suse.de>
-X-ClientProxiedBy: CH2PR07CA0017.namprd07.prod.outlook.com
- (2603:10b6:610:20::30) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1722290187; x=1722894987; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=slLA7DfyX/XjuBTiTlMWQWfiF3WJWi3pcs/EKCtTH3o=;
+        b=QhGxo0Ys9Od0vl/XEmrtxZgU29q55M6UTDjW+uHPPaF/YEpps4SfRRL1sXBFOnR5oP
+         9yQiVpDSdLrbFKCnNiGUuzmsrrucaOQ8aRDoEBQ9srVX5hU2MWqv7tuSrGDH5TjLTk5K
+         6AkyH6oBw/rhSRZjMONR+w9X31PecMHLFNTF9pJCVqHgZEembjWYlxXJWmlWGDE6xdf2
+         QGnjpTYYZ+aCW7iTE5mTJ0FHzvFSSwpXog6pCel+Q59BzPdPFztAK92vqadTfHAR/PiT
+         p/pL3KpBO84FmKB7t5P/CJCeiYEKB66GShz5BzTOQn6UbwcrbBOQVAi0JEqu+YzyQ2jZ
+         HJXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722290187; x=1722894987;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=slLA7DfyX/XjuBTiTlMWQWfiF3WJWi3pcs/EKCtTH3o=;
+        b=RFPsNO/bkdeWYPoKVVQFZKbISUU3UaavHXwEQwmHTx8depHqwC4Ayox4K9eDDGXnMg
+         2qBEOHr4k2fLMXd0u1ooSUUzpUKBNOC4WIM7snjcyuKiN+G2uwKUbP2wo6uM4Pn2o1GY
+         7YVcSqQRBSoHWHollFFGY8cikbKAVZtyTV6uZ72JxbOpPWWjU04dGFnjPM69xa/i89FQ
+         WwN1cFqKOWNa2+FfTNCVD1z9mspqhQdvqdrqwT1v03HeiqqaNfucv2dix0FJw3pSWdEf
+         LAY6VrHZxMXE5zkaVsVomqd0dBOGaV+dgpXTBfeDUC4SUH3OZRaGVnk+luH/GAt7ndzo
+         mW9Q==
+X-Gm-Message-State: AOJu0YyZvL81ksXjrQ1tCEkK5IOcSKs704FUJDBCv/vVcoqHKHVjAne0
+	9ubyQHLRTwOjylvvDg3q7vR2+KxPWdEAX1Sv8mE0Oo/sX3I56/XG0gnUSw==
+X-Google-Smtp-Source: AGHT+IGhiZbx9SOPDYxc5tzvf8GZ7GYNTq1YBThyUPqaho6orhm3h0LnQKm2ebZj3e0ctJcZGCIcPQ==
+X-Received: by 2002:a17:902:e811:b0:1fd:8dfd:3553 with SMTP id d9443c01a7336-1ff37bec1cemr1384765ad.18.1722290185826;
+        Mon, 29 Jul 2024 14:56:25 -0700 (PDT)
+Received: from [192.168.86.113] (syn-076-091-193-045.res.spectrum.com. [76.91.193.45])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7c7fdafsm88050565ad.52.2024.07.29.14.56.24
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jul 2024 14:56:25 -0700 (PDT)
+Message-ID: <66be75a6-2d3f-4f5b-96da-327556170c4a@gmail.com>
+Date: Mon, 29 Jul 2024 14:56:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SN4PR10MB5574:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4dc640e9-2102-4858-b4bc-08dcb01806e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3QAND40OFUVAsf9URzsfY+a6Viyt2A8YDf4JwGoZRZvvP7eusYazhnFM+0ab?=
- =?us-ascii?Q?mzM4G/YUPFC9fVTVIg6exRiSSeQy/YmG/kq/FRzCspvlR7R5dMWqt+edLQzJ?=
- =?us-ascii?Q?lMNXtQpca0aBLkYXi9Ho23txYe+OJmrnH67BVX4mqvVzKY3E3WtsYTDSP8A5?=
- =?us-ascii?Q?D7TwQe5OdxUu6lrBpgzt+oz/4pwRTTG4c4/fWZ8XnIS7vay5oShLBWjtiPBp?=
- =?us-ascii?Q?MRwY0WZ0YhjRwLQ0HZAdWwhsZjuEMkYHD8beS5dCFtfsHbXBP3K4shCxhvQy?=
- =?us-ascii?Q?c9JdLvvtESVG/nI27PD9pbpAezsTgJQmRo550Y2G/tGIwLAKfs9qrLJ+BKm7?=
- =?us-ascii?Q?Qn5ivaovZ+dphDhndXWvyvmUMzCszCggMSMuh5uZkdRoelcwI3pJ3Q2iox9C?=
- =?us-ascii?Q?tJ31004sgULdQxzu0N8NwNU1QngZL4rK1OKFomz2LhrnXH3bcS7H6x5nY2Hr?=
- =?us-ascii?Q?ADAsg56wFE4NvRg12X+85ZpILayufQ71WnlAmB9clisqMhhMJxG8XJGh/3/S?=
- =?us-ascii?Q?O4d2wjLCghbNqyPka/gpRP1mLdv+9oq8y+Xc5KSEGfwXA8vTsJiF9VmQ4sWa?=
- =?us-ascii?Q?42RirLPCd4o158RyVtFUPInP9AtnUQpM/uKGr2nzb4XJgFAHwa/XHRS33ZEo?=
- =?us-ascii?Q?dKrCJg1V/29lhbli7+u0NxzWGWDyfQLhcqzhB7vgD0kGgLPsW7+666hLl6X8?=
- =?us-ascii?Q?EEoGmZ6HlDfVFxNxWb3SIuLwnEPW3UYtdy6+LMz5XeizESEsFYfQZfj8CxFg?=
- =?us-ascii?Q?V+k5izJWEByezyVpK+lj1fQbn16ybne+qnWE3YjyzrLSvitPSK59NmnX2NO6?=
- =?us-ascii?Q?7GdQwhSDHwUP+kU2mQcxMkXUpZh4t5aS1hF+l3XvmNnDs19mwbaYs8Evu4t0?=
- =?us-ascii?Q?OlVhzo8TOdzxp2zUhRedEl8HDTnChsFpfG0kyxKtFBmSwYvm8um7uiRrdeaL?=
- =?us-ascii?Q?HsS+XnDSnxc4X35KfRW/VPEE2n8mO8+wQK1RkmKRrpkoQioEZP2+6RRTv8QY?=
- =?us-ascii?Q?18ve6QuvI297cB3Y0Y+C71IBgPGQZEyo4Lc8DtzCX5g2r9WIjR9SwXEDZKbe?=
- =?us-ascii?Q?MsSx+2AN42PjKH8PmaEQ0N3OgLhtVDSDXc9ATSH3ALHsnsCurmAqcrPQcloY?=
- =?us-ascii?Q?ZEHq7nPUqew7cm1qDDJ3OqAkAOg5rNMWYEEcgaU1KzCQfHA3cOlUmQq/OBcx?=
- =?us-ascii?Q?VjmE+bL6m7RmxCaGOcRrgmGPxKEtVA8UEf2OOispCWNvvTvxdHUFgm8FUV0d?=
- =?us-ascii?Q?vF3aA4b26jE6wlx6TrkcgWZnG2UJLF/OBmD27EiJh0rXOpGyWd0fRGQ3babs?=
- =?us-ascii?Q?A1SV1pFTaQxBEUpro/jLNDWy2nKOvKOkkThGL7mBx3DbWA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xT9h0d/Vb0TTFkjkmUjVf80nW09tHwTKM5q+qZhWiuGSigPmX3PiQbu9zfv8?=
- =?us-ascii?Q?gVMTUXd2JJRmOqBetlfNIvrQFTCw2RAuHl/SVAXA3am8jwgp0e05/Iv07Iqq?=
- =?us-ascii?Q?8QLjnQpmg7VonbUeEw7IfXJmlbUbxufv2CAq6MtuGQOKQxffsa1ihHVfMi36?=
- =?us-ascii?Q?LWVrmyCOzCike/lH6TShb3zz05iQST/rktO/czN5PHmkzg9LXG2lg+6bjWH6?=
- =?us-ascii?Q?burqvMyLd988/DIpj47I/I3FMvCily77AbuSrN3/xmlYOy0SwFYjNdO7tx2b?=
- =?us-ascii?Q?SorSrF7SmaepXAHGMA1I7jfoJuxVjVnJbbr/JjUsUJw9L60znMAdeazl+Dc0?=
- =?us-ascii?Q?9p2UloA8v9/HYwrn2G8B/fa7ohMtOWugI7KJc7Xl2sjJEAgtGHZgWp5yPQP4?=
- =?us-ascii?Q?idIUJHjZL0e2B/wtBFu5BuOOXRbIFxz/ZQrCGhIuvvD4rqktXkfYOlkeE1DR?=
- =?us-ascii?Q?SrbRAlp/fD/yEffTR0cn5yb8l+GEENUwJxqORBZFFcVI5dqRE403fpX8lgf7?=
- =?us-ascii?Q?37ElGIxX7CBzIo3yP9W6j3TLJLNmf902GLlt6l79EIN+h/3fKZe20n2Qrbr6?=
- =?us-ascii?Q?FmjzghD+WPitlIA52MM29Pehe0T6yqpdWM/oR24Fpc99yEj5D27uAadJ+j5z?=
- =?us-ascii?Q?Ozq6OYUmOeZcdWv0uhwS8uYeWe+SwnMOsklMIhjTaiIMb8gRVRUFr9VG/GXL?=
- =?us-ascii?Q?9Km4PYz0IcxXo+lNBBA5NAW+BAkwnjP2I13xUnGbtzGh7TkRtRUi6X+hUKpw?=
- =?us-ascii?Q?t2dWHPab717H/nHMTgIjjoDIJ/1TvfcQUFdrfBwfwEtFkhns7HJ4bSZf40Rp?=
- =?us-ascii?Q?hpSCuZfCuGtgVQfdPKe3isbke2WAwXwpIk349lCjWMnXLCPUrhWbv0kWs1V9?=
- =?us-ascii?Q?CL53j5XAG1YqfsA8m4Bj1aCL4vmV5GCcGiD6ms3bNIHDo/K7EheH+HMt4sNj?=
- =?us-ascii?Q?iWVF380Tew9WLTcoJ9YMR0aywiYgeyEHStWIr6qFzUOoOXp6eOMkrRNqPVCD?=
- =?us-ascii?Q?NtEMI3HA/m0eOmd5mmHyq5OWoc9qMZzCkTmIwWVLqaCGB4fb6qcVW7E70gG9?=
- =?us-ascii?Q?OEnsrpsiTFTltoV9rD7+nYK7ZQ55WoYvik1M0N9gcvbJ8lwXD9lMHF3wr/hi?=
- =?us-ascii?Q?yfCXfiqWFLITEgx3BF3ug4gjn19fl3Mo/HELd91ypTym49UXaGRZug1818yo?=
- =?us-ascii?Q?SKRHAVMJZFmlLlVxa24bBvvU1AfX2lmqjVubr9WM6oa1iGFksS7YYaiexkSX?=
- =?us-ascii?Q?a0oFKoPBSv+dnDxWN7QbuYSXC6nMH81mNvxVv7l4Qikj/Oui3a4wci2K4P3v?=
- =?us-ascii?Q?ZxlKGt263XN+UHcthH9+GNPE/wSFRPWILODwExU94nr0L1TGKJUt96G6zH61?=
- =?us-ascii?Q?sxQ2/Mq8u8CTirCCTkHSuvsMCLNNY+Wgm0cXpVRhyqdcP2kn0udOzPGZpauY?=
- =?us-ascii?Q?Sm1dkTgdhWJOuMlP+oli3WMPLMdJxbzJmE24eWLLcFgP4gpF/qvneE6WZnUi?=
- =?us-ascii?Q?QkEZqRn5H9Eyt6phzrAvWKzZHO2AMoErBYAIb3XW3Ta55QK1smjYA2Tah+rL?=
- =?us-ascii?Q?I6dRjKqvgooCnY6n2XklL/UvcN7ltRfWGXkh3Y5f?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Or3xLmB+UMh0oZ6DAiPUZS0aWHRhcrQCRbwBjf7g/t9dgt4ZxIMNcS7JWRJbaMIQWSL+2HqlKH7qcaMfy6BLiRqSuvDHP69f7B92YRVRSZcqSO6yESw8MpagrCb0Rsn4xSIc3khQnB8WnakL1nWXBAG8ZqCYSLnancY2YVTKebMhRtF8SPFRMDjaSnU6Uky60nmUW27MwmvKZQwiSay5ucFxWUfwuIhLJmA02AD8BKYT0cVdB4tRMr3dbnayJ0bjGnyKROoO4sUVagOT6YxZTOWmdtIWpX0U8G16Cl8cuzGiMzzxxrzi6o3qKudIKrSuM9l3WNPKNjD7rzgl2TY+JYuUmNYHX16RlJgf4EBEysCaWJSXc7sebV3izI6p3D9dcIQ8/wUZ6r/fMrYXmt/s08/Q11ZjlbG9eOdnOeTFnOldZUZVmheMGFHwVa75wrB+H7Xiz/leKvHW0faLWkp6AX7iV6CK3OtR5PHGgqWLE6RTY+zcmkYxz3OZwfyfiSPc5FW+0uoDp7DdrsjwJyTPhzdEgb2mF1tKaDNY5hZofLhxiCl2GnvIldcRCHdBzQz+7h2TJpkeMxXAQgf8mQkLU1XD0Uq1U1HYzqnO/RviG4s=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc640e9-2102-4858-b4bc-08dcb01806e1
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2024 21:47:22.2451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NUyLLxLhDib+2xOZ4cf166ZFyQ/8/86lVGJTeIBw1IV5o++noTf5b4LMVgz8mY3nOP8QW9IEvbEYpwxVrXVEPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR10MB5574
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-29_20,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=627 malwarescore=0
- suspectscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2407110000 definitions=main-2407290148
-X-Proofpoint-ORIG-GUID: EJ1sauwEMUxHORfCXD6qhyRXbFcV2R4p
-X-Proofpoint-GUID: EJ1sauwEMUxHORfCXD6qhyRXbFcV2R4p
+User-Agent: Mozilla Thunderbird
+Subject: NFS client failure
+Content-Language: en-US
+From: marc eshel <eshel.marc@gmail.com>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <c4f1d8bf-745b-4a98-9d38-2da4c355d691@gmail.com>
+In-Reply-To: <c4f1d8bf-745b-4a98-9d38-2da4c355d691@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 30, 2024 at 07:19:40AM +1000, NeilBrown wrote:
-> This v2 applies correctly to  git/cel/linux#master.
-> 
-> These two patches replace my previous patch:
->  [PATCH 07/14] Change unshare_fs_struct() to never fail.
-> 
-> I had explored ways to change kthread_create() to avoid the need for
-> GFP_NOFAIL and concluded that we can do everything we need in the sunrpc
-> layer.  So the first patch here is a simple cleanup, and the second adds
-> simple infrastructure for an svc thread to confirm that it has started
-> up and to report if it was successful in that.
-> 
-> Thanks,
-> NeilBrown
-> 
->  [PATCH 1/2] sunrpc: merge svc_rqst_alloc() into svc_prepare_thread()
->  [PATCH 2/2] sunrpc: allow svc threads to fail initialisation cleanly
 
-Applied to nfsd-next (for 6.12) and pushed. Thanks!
-
--- 
-Chuck Lever
+On 7/29/24 2:50 PM, marc eshel wrote:
+>
+> Using NFS client to connect (before a read) from the pNFS DS I see the 
+> following on the NFS client side and the Ganesha Server side (The DS) 
+>  any ideas what the client did not like.
+>
+> Thanks, Marc.
+>
+> Jul 28 10:26:04 svl-marcrh-node-1 kernel: NFS: permission(0:51/7169), 
+> mask=0x81, res=0
+>
+> Jul 28 10:26:04 svl-marcrh-node-1 kernel: --> nfs41_call_sync_prepare 
+> data->seq_server 00000000ff0f7422
+>
+> Jul 28 10:26:04 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:04 svl-marcrh-node-1 kernel: NFS: 
+> nfs_update_inode(0:51/245760 fh_crc=0x11f91d95 ct=1 info=0x427e7f)
+>
+> Jul 28 10:26:04 svl-marcrh-node-1 kernel: NFS: dentry_delete(/file8m, 
+> 48084c)
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: NFS: permission(0:51/7169), 
+> mask=0x81, res=0
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: NFS: 
+> nfs_update_inode(0:51/245760 fh_crc=0x11f91d95 ct=3 info=0x427e7f)
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs41_call_sync_prepare 
+> data->seq_server 00000000ff0f7422
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: <-- _nfs4_proc_getdeviceinfo 
+> status=0
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node 
+> stripe count  1
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node 
+> ds_num 1
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: RPC:       Couldn't create 
+> auth handle (flavor 390004)
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs4_proc_create_session 
+> clp=00000000bf42bf91 session=000000004af72bf8
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs4_init_channel_attrs: 
+> Fore Channel : max_rqst_sz=1049620 max_resp_sz=1049480 max_ops=8 
+> max_reqs=64
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs4_init_channel_attrs: 
+> Back Channel : max_rqst_sz=4096 max_resp_sz=4096 max_resp_sz_cached=0 
+> max_ops=2 max_reqs=16
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs4_proc_create_session 
+> client>seqid 2 sessionid 4:1722187461:2:0
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: <-- 
+> nfs41_proc_reclaim_complete status=0
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs4_read_done
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs4_read_done
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs4_read_done
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: --> nfs4_read_done
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> ….
+>
+> Jul 28 10:26:05 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:06 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:06 svl-marcrh-node-1 kernel: NFS: 
+> nfs_update_inode(0:51/245760 fh_crc=0x11f91d95 ct=2 info=0x27040)
+>
+> Jul 28 10:26:06 svl-marcrh-node-1 kernel: nfs4_close_done: ret = 0
+>
+> Jul 28 10:26:06 svl-marcrh-node-1 kernel: NFS: dentry_delete(/file8m, 
+> 48084c)
+>
+> Jul 28 10:26:46 svl-marcrh-node-1 kernel: <-- 
+> nfs41_proc_async_sequence status=0
+>
+> Jul 28 10:26:46 svl-marcrh-node-1 kernel: nfs41_sequence_process: 
+> Error 0 free the slot
+>
+> Jul 28 10:26:46 svl-marcrh-node-1 kernel: nfs41_sequence_call_done 
+> rpc_cred 000000008d476879
+>
+>      5.784003013 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    
+> -2, anon_gid=    -2, , sys)
+>
+>      5.784031320 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, none, sys)
+>
+>      5.784048104 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, sys)
+>
+>      5.784183909 395973 TRACE_GANESHA: [svc_15] nfs_null :NFS3 :DEBUG 
+> :REQUEST PROCESSING: Calling NFS_NULL
+>
+>      5.784958341 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    
+> -2, anon_gid=    -2, , sys)
+>
+>      5.784981736 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, none, sys)
+>
+>      5.785016198 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, sys)
+>
+>      5.785062392 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 1 operations, res = 0x7f2a20001be0, tag = 
+> NO TAG
+>
+>      5.785114712 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 1 operations nfs4 operations {EXCHANGE_ID}
+>
+>      5.785151123 389339 TRACE_GANESHA: [svc_11] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 42 is OP_EXCHANGE_ID
+>
+>      5.785183182 389339 TRACE_GANESHA: [svc_11] nfs4_op_exchange_id 
+> :CLIENT ID :DEBUG :EXCHANGE_ID pnfs_flags 0x00010000 eia_flags 0x00040101
+>
+>      5.785309869 389339 TRACE_GANESHA: [svc_11] inc_client_record_ref 
+> :CLIENT ID :F_DBG :Increment refcount {0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.785345676 389339 TRACE_GANESHA: [svc_11] inc_client_id_ref 
+> :CLIENT ID :F_DBG :Increment refcount Clientid {0x7f2a200021a0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000001} UNCONFIRMED 
+> Client={0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 reservations=0 
+> refcount=1} to 1
+>
+>      5.785368820 389339 TRACE_GANESHA: [svc_11] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Decrement refcount now=1 {0x7f2a200020a0 
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.785382625 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.785395515 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.785416713 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :DEBUG :Status of OP_EXCHANGE_ID in position 0 = NFS4_OK, op response 
+> size is 0 total response size is 36
+>
+>      5.785546764 389339 TRACE_GANESHA: [svc_11] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f2a20001e30 
+> (resarraylen=1)
+>
+>      5.786242209 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    
+> -2, anon_gid=    -2, , sys)
+>
+>      5.786274623 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, none, sys)
+>
+>      5.786292745 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, anon_gid=    -2, expire=      60, sys)
+>
+>      5.786313843 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 1 operations, res = 0x7f29fc001310, tag = 
+> NO TAG
+>
+>      5.786329329 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 1 operations nfs4 operations {EXCHANGE_ID}
+>
+>      5.786343154 395973 TRACE_GANESHA: [svc_15] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 42 is OP_EXCHANGE_ID
+>
+>      5.786377249 395973 TRACE_GANESHA: [svc_15] nfs4_op_exchange_id 
+> :CLIENT ID :DEBUG :EXCHANGE_ID pnfs_flags 0x00010000 eia_flags 0x00040101
+>
+>      5.786413732 395973 TRACE_GANESHA: [svc_15] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Decrement refcount Clientid {0x7f2a200021a0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000001} EXPIRED 
+> Client={0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 reservations=0 
+> refcount=1} refcount to 0
+>
+>      5.786426971 395973 TRACE_GANESHA: [svc_15] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Free Clientid refcount now=0 {0x7f2a200021a0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000001} EXPIRED 
+> Client={0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 reservations=0 
+> refcount=1}
+>
+>      5.786455632 395973 TRACE_GANESHA: [svc_15] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Decrement refcount now=1 {0x7f2a200020a0 
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.786478133 395973 TRACE_GANESHA: [svc_15] inc_client_record_ref 
+> :CLIENT ID :F_DBG :Increment refcount {0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.786496149 395973 TRACE_GANESHA: [svc_15] inc_client_id_ref 
+> :CLIENT ID :F_DBG :Increment refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} UNCONFIRMED 
+> Client={0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 reservations=0 
+> refcount=1} to 1
+>
+>      5.786510720 395973 TRACE_GANESHA: [svc_15] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Decrement refcount now=1 {0x7f2a200020a0 
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.786524531 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.786537391 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.786551547 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :DEBUG :Status of OP_EXCHANGE_ID in position 0 = NFS4_OK, op response 
+> size is 0 total response size is 36
+>
+>      5.786678902 395973 TRACE_GANESHA: [svc_15] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f29fc001560 
+> (resarraylen=1)
+>
+>      5.786833586 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    
+> -2, anon_gid=    -2, , sys)
+>
+>      5.786891569 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 1 operations, res = 0x7f2a20002ae0, tag = 
+> NO TAG
+>
+>      5.786907017 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 1 operations nfs4 operations {CREATE_SESSION}
+>
+>      5.786938593 389339 TRACE_GANESHA: [svc_11] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 43 is OP_CREATE_SESSION
+>
+>      5.786996781 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :DEBUG :CREATE_SESSION client addr=::ffff:10.11.56.193 
+> clientid=Epoch=0x66a7e0c6 Counter=0x00000002 -------------------
+>
+>      5.787030153 389339 TRACE_GANESHA: [svc_11] inc_client_id_ref 
+> :CLIENT ID :F_DBG :Increment refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} UNCONFIRMED 
+> Client={0x7f2a200020a0 nam
+>
+> e=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} 
+> t_delta=0 reservations=0 refcount=2} to 2
+>
+>      5.787046306 389339 TRACE_GANESHA: [svc_11] inc_client_record_ref 
+> :CLIENT ID :F_DBG :Increment refcount {0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.787061232 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Client Record 0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2 cr_confirmed_rec=(nil) cr_unco
+>
+> nfirmed_rec=0x7f29fc0026d0
+>
+>      5.787074437 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :DEBUG :CREATE_SESSION clientid=Epoch=0x66a7e0c6 
+> Counter=0x00000002 csa_sequence=1 clientid_cs_seq=1 data_oppos=0
+>
+>      5.787091144 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Found 0x7f29fc0026d0 ClientID={Epoch=0x66a7e0c6 
+> Counter=0x00000002} UNCONFIRMED Client={0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1
+>
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 reservations=0 
+> refcount=2
+>
+>      5.787115990 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Fore Channel attributes ca_headerpadsize 0 
+> ca_maxrequestsize 1049620 ca_maxresponsesize 1049480 
+> ca_maxresponsesize_cached 758
+>
+> 4 ca_maxoperations 8 ca_maxrequests 64
+>
+>      5.787129437 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Back Channel attributes ca_headerpadsize 0 
+> ca_maxrequestsize 4096 ca_maxresponsesize 4096 
+> ca_maxresponsesize_cached 0 ca_maxo
+>
+> perations 2 ca_maxrequests 16
+>
+>      5.787211408 389339 TRACE_GANESHA: [svc_11] inc_client_id_ref 
+> :CLIENT ID :F_DBG :Increment refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} UNCONFIRMED 
+> Client={0x7f2a200020a0 nam
+>
+> e=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} 
+> t_delta=0 reservations=0 refcount=3} to 3
+>
+>      5.787250959 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Confirming new 0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} UNCONFIRMED 
+> Client={0x7f2a200020a0 name=(44:Linu
+>
+> x NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 
+> reservations=0 refcount=3
+>
+>      5.787313756 389339 TRACE_GANESHA: [svc_11] fs_create_clid_name 
+> :CLIENT ID :DEBUG :Created client name [::ffff:10.11.56.193-(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com)]
+>
+>      5.787386559 389339 TRACE_GANESHA: [svc_11] fs_add_clid :CLIENT ID 
+> :DEBUG :Created client dir 
+> [/var/lib/nfs/ganesha/v4recov/node0/::ffff:10.11.56.193-(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com)]
+>
+>      5.787413463 389339 TRACE_GANESHA: [svc_11] nfs4_chk_clid_impl 
+> :CLIENT ID :DEBUG :chk for 7397128053987475458
+>
+>      5.787441005 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :DEBUG :Confirmed 0x7f29fc0026d0 ClientID={Epoch=0x66a7e0c6 
+> Counter=0x00000002} CONFIRMED Client={0x7f2a200020a0 name=(44:Linux NFSv4
+>
+> .1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 
+> reservations=0 refcount=3
+>
+>      5.787457512 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :F_DBG :Client Record 0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=2 cr_confirmed_rec=0x7f29fc0026d
+>
+> 0 cr_unconfirmed_rec=(nil)
+>
+>      5.787526325 389339 TRACE_GANESHA: [svc_11] nfs4_op_create_session 
+> :SESSIONS :DEBUG :success session 0x7f2a20002f40 
+> {sessionid=(16:0x02000000c6e0a7660100000000000000)} csa_flags 0x3 
+> csr_flags 0x2
+>
+>      5.787554916 389339 TRACE_GANESHA: [svc_11] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Decrement refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} CONFIRMED 
+> Client={0x7f2a200020a0 name=
+>
+> (44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} 
+> t_delta=0 reservations=0 refcount=3} refcount to 2
+>
+>      5.787571861 389339 TRACE_GANESHA: [svc_11] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Decrement refcount now=1 {0x7f2a200020a0 
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.787585600 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.787598472 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.787612249 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :DEBUG :Status of OP_CREATE_SESSION in position 0 = NFS4_OK, op 
+> response size is 112 total response size is 148
+>
+>      5.787721136 389339 TRACE_GANESHA: [svc_11] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f2a20002590 
+> (resarraylen=1)
+>
+>      5.787906140 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    -2, a
+>
+> non_gid= -2,                , sys)
+>
+>      5.787946036 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, none, sys)
+>
+>      5.787975742 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, sys)
+>
+>      5.788052517 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 2 operations, res = 0x7f29fc002070, tag = 
+> NO TAG
+>
+>      5.788087408 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 2 operations nfs4 operations {SEQUENCE, 
+> RECLAIM_COMPLETE}
+>
+>      5.788117846 395973 TRACE_GANESHA: [svc_15] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 53 is OP_SEQUENCE
+>
+>      5.788165215 395973 TRACE_GANESHA: [svc_15] 
+> nfs41_Session_Get_Pointer :SESSIONS :F_DBG :Get Session 
+> sessionid=(16:0x02000000c6e0a7660100000000000000)
+>
+>      5.788187319 395973 TRACE_GANESHA: [svc_15] 
+> nfs41_Session_Get_Pointer :SESSIONS :F_DBG :Session 
+> sessionid=(16:0x02000000c6e0a7660100000000000000) Found
+>
+>      5.788242777 395973 TRACE_GANESHA: [svc_15] nfs4_op_sequence 
+> :SESSIONS :DEBUG :SEQUENCE session=0x7f2a20002f40
+>
+>      5.788283602 395973 TRACE_GANESHA: [svc_15] 
+> reserve_lease_or_expire :CLIENT ID :F_DBG :Reserve Lease 
+> 0x7f29fc0026d0 ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} 
+> CONFIRMED Client={0x7f2a200020a0 name=(44:Linux
+>
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} t_delta=0 
+> reservations=1 refcount=2 (Valid=YES 60 seconds left
+>
+>      5.788305835 395973 TRACE_GANESHA: [svc_15] nfs4_op_sequence 
+> :SESSIONS :F_DBG :Don't use session slot 0=0x7f2a20003900 for DRC
+>
+>      5.788320442 395973 TRACE_GANESHA: [svc_15] check_resp_room :NFS4 
+> :F_DBG :Status of OP_SEQUENCE in position 0 is ok so far, op response 
+> size = 40 total response size would be = 84 out of max 1049480/7584
+>
+>      5.788352724 395973 TRACE_GANESHA: [svc_15] check_session_conn 
+> :SESSIONS :F_DBG :Comparing addr ::ffff:10.11.56.193:996 for 
+> OP_SEQUENCE to Session bound addr ::ffff:10.11.56.193:996
+>
+>      5.788372492 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.788386706 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.788400303 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :DEBUG :Status of OP_SEQUENCE in position 0 = NFS4_OK, op response 
+> size is 40 total response size is 76
+>
+>      5.788415252 395973 TRACE_GANESHA: [svc_15] process_one_op :NFS4 
+> :DEBUG :Request 1: opcode 58 is OP_RECLAIM_COMPLETE
+>
+>      5.788429355 395973 TRACE_GANESHA: [svc_15] check_resp_room :NFS4 
+> :F_DBG :Status of OP_RECLAIM_COMPLETE in position 1 is ok so far, op 
+> response size = 4 total response size would be = 92 out of max 
+> 1049480/7584
+>
+>      5.788465437 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.788479686 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.788492986 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :DEBUG :Status of OP_RECLAIM_COMPLETE in position 1 = NFS4_OK, op 
+> response size is 4 total response size is 84
+>
+>      5.788512857 395973 TRACE_GANESHA: [svc_15] update_lease :CLIENT 
+> ID :F_DBG :Update Lease 0x7f29fc0026d0 ClientID={Epoch=0x66a7e0c6 
+> Counter=0x00000002} CONFIRMED Client={0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl
+>
+> -marcrh-node-1.fyre.ibm.com) refcount=1} t_delta=0 reservations=0 
+> refcount=2
+>
+>      5.788610239 395973 TRACE_GANESHA: [svc_15] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f29fc0022c0 
+> (resarraylen=2)
+>
+>      5.789131433 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    -2, a
+>
+> non_gid= -2,                , sys)
+>
+>      5.789151102 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, none, sys)
+>
+>      5.789179306 389339 TRACE_GANESHA: [svc_11] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, sys)
+>
+>      5.789243406 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 1 operations, res = 0x7f2a20001440, tag = 
+> NO TAG
+>
+>      5.789270968 389339 TRACE_GANESHA: [svc_11] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 1 operations nfs4 operations {DESTROY_SESSION}
+>
+>      5.789292769 389339 TRACE_GANESHA: [svc_11] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 44 is OP_DESTROY_SESSION
+>
+>      5.789324008 389339 TRACE_GANESHA: [svc_11] 
+> nfs41_Session_Get_Pointer :SESSIONS :F_DBG :Get Session 
+> sessionid=(16:0x02000000c6e0a7660100000000000000)
+>
+>      5.789347635 389339 TRACE_GANESHA: [svc_11] 
+> nfs41_Session_Get_Pointer :SESSIONS :F_DBG :Session 
+> sessionid=(16:0x02000000c6e0a7660100000000000000) Found
+>
+>      5.789374279 389339 TRACE_GANESHA: [svc_11] check_session_conn 
+> :SESSIONS :F_DBG :Comparing addr ::ffff:10.11.56.193:996 for 
+> OP_DESTROY_SESSION to Session bound addr ::ffff:10.11.56.193:996
+>
+>      5.789396299 389339 TRACE_GANESHA: [svc_11] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Decrement refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} CONFIRMED 
+> Client={0x7f2a200020a0 name=
+>
+> (44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} 
+> t_delta=0 reservations=0 refcount=2} refcount to 1
+>
+>      5.789410060 389339 TRACE_GANESHA: [svc_11] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f29fc0025b0 
+> (resarraylen=2)
+>
+>      5.789450150 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.789463993 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.789463993 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.789477602 389339 TRACE_GANESHA: [svc_11] complete_op :NFS4 
+> :DEBUG :Status of OP_DESTROY_SESSION in position 0 = NFS4_OK, op 
+> response size is 4 total response size is 40
+>
+>      5.789564757 389339 TRACE_GANESHA: [svc_11] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f2a20001690 
+> (resarraylen=1)
+>
+>      5.789753915 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :EXPORT_DEFAULTS (options=020021e0/0701f1ff 
+> no_root_squash, RWrw,    , ---, TCP, ----, ,         , anon_uid=    -2, a
+>
+> non_gid= -2,                , sys)
+>
+>      5.789787721 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :default options (options=03303002/ffffffff 
+> root_squash   , ----, 34-, UDP, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, none, sys)
+>
+>      5.789818999 395973 TRACE_GANESHA: [svc_15] export_check_access 
+> :EXPORT :M_DBG :Final options   (options=023021e0/ffffffff 
+> no_root_squash, RWrw, 34-, ---, TCP, ----, No Manage_Gids, -- Deleg, 
+> anon_uid=    -2, a
+>
+> non_gid=    -2, expire=      60, sys)
+>
+>      5.789840590 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :DEBUG :COMPOUND: There are 1 operations, res = 0x7f29fc003150, tag = 
+> NO TAG
+>
+>      5.789855216 395973 TRACE_GANESHA: [svc_15] nfs4_Compound :NFS4 
+> :F_DBG :COMPOUND: There are 1 operations nfs4 operations 
+> {DESTROY_CLIENTID}
+>
+>      5.789874099 395973 TRACE_GANESHA: [svc_15] process_one_op :NFS4 
+> :DEBUG :Request 0: opcode 57 is OP_DESTROY_CLIENTID
+>
+>      5.789910130 395973 TRACE_GANESHA: [svc_15] 
+> nfs4_op_destroy_clientid :CLIENT ID :DEBUG :DESTROY_CLIENTID 
+> clientid=Epoch=0x66a7e0c6 Counter=0x00000002
+>
+>      5.789930494 395973 TRACE_GANESHA: [svc_15] inc_client_id_ref 
+> :CLIENT ID :F_DBG :Increment refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} CONFIRMED 
+> Client={0x7f2a200020a0 name=
+>
+> (44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} 
+> t_delta=0 reservations=0 refcount=2} to 2
+>
+>      5.789945301 395973 TRACE_GANESHA: [svc_15] inc_client_record_ref 
+> :CLIENT ID :F_DBG :Increment refcount {0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.789960256 395973 TRACE_GANESHA: [svc_15] 
+> nfs4_op_destroy_clientid :CLIENT ID :F_DBG :Client Record 
+> 0x7f2a200020a0 name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) 
+> refcount=2 cr_confirmed_rec=0x7f29fc00
+>
+> 26d0 cr_unconfirmed_rec=(nil)
+>
+>      5.789978554 395973 TRACE_GANESHA: [svc_15] 
+> nfs4_op_destroy_clientid :CLIENT ID :DEBUG :Removing confirmed 
+> clientid 0x7f29fc0026d0 ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} 
+> CONFIRMED Client={0x7f2a200020a0
+>
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} 
+> t_delta=0 reservations=0 refcount=2
+>
+>      5.790117503 395973 TRACE_GANESHA: [svc_15] fs_rm_clid_impl 
+> :CLIENT ID :DEBUG :Removed client dir 
+> (/var/lib/nfs/ganesha/v4recov/node0/::ffff:10.11.56.193-(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com))
+>
+>      5.790141122 395973 TRACE_GANESHA: [svc_15] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Decrement refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} EXPIRED 
+> Client={0x7f2a200020a0 name=(4
+>
+> 4:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2} t_delta=0 
+> reservations=0 refcount=2} refcount to 1
+>
+>      5.790156176 395973 TRACE_GANESHA: [svc_15] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Decrement refcount now=1 {0x7f2a200020a0 
+> name=(44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=2}
+>
+>      5.790172109 395973 TRACE_GANESHA: [svc_15] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Decrement refcount Clientid {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} EXPIRED 
+> Client={0x7f2a200020a0 name=(4
+>
+> 4:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} t_delta=0 
+> reservations=0 refcount=1} refcount to 0
+>
+>      5.790185156 395973 TRACE_GANESHA: [svc_15] dec_client_id_ref 
+> :CLIENT ID :F_DBG :Free Clientid refcount now=0 {0x7f29fc0026d0 
+> ClientID={Epoch=0x66a7e0c6 Counter=0x00000002} EXPIRED 
+> Client={0x7f2a200020a0 name=(
+>
+> 44:Linux NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1} t_delta=0 
+> reservations=0 refcount=1}
+>
+>      5.790200509 395973 TRACE_GANESHA: [svc_15] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Try to remove {0x7f2a200020a0 name=(44:Linux 
+> NFSv4.1 svl-marcrh-node-1.fyre.ibm.com) refcount=1}
+>
+>      5.790215662 395973 TRACE_GANESHA: [svc_15] dec_client_record_ref 
+> :CLIENT ID :F_DBG :Free {0x7f2a200020a0 name=(44:Linux NFSv4.1 
+> svl-marcrh-node-1.fyre.ibm.com) refcount=1}
+>
+>      5.790231007 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Current FH  Len=0 (EMPTY)
+>
+>      5.790244094 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :F_DBG :Saved FH    Len=0 (EMPTY)
+>
+>      5.790262649 395973 TRACE_GANESHA: [svc_15] complete_op :NFS4 
+> :DEBUG :Status of OP_DESTROY_CLIENTID in position 0 = NFS4_OK, op 
+> response size is 4 total response size is 40
+>
+>      5.790341620 395973 TRACE_GANESHA: [svc_15] 
+> release_nfs4_res_compound :NFS4 :F_DBG :Compound Free 0x7f29fc0033a0 
+> (resarraylen=1)
+>
 
