@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-5134-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5135-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42E3993F67F
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 15:13:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 914C793F689
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 15:17:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E2D11F241F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 13:13:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE0371C2137F
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 13:17:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E07AA145B3E;
-	Mon, 29 Jul 2024 13:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A497E7406F;
+	Mon, 29 Jul 2024 13:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1DwXEsP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVR9b0zH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB97A1E4A2
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 13:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803C53C24
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 13:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722258637; cv=none; b=Gn3LYXDmgqQEClz1oPgSR0gbpYIUdeiWR73219CN9yEBufCLFbxikKYSMlOXWldPDmUw3BcwGECXgocGPiJ7joMU8iz6iQq6EGEx5bGIMlyiUs0w4EvtqzYrCpFn70bT3GkkxE05B1TqXRojhw2e4/lUnfZUHxLrvPzrfVYmJEA=
+	t=1722259069; cv=none; b=FEXy/oAqaMLAnEJQI1aIIHXAkJY83K6oopB+31HXK6D0wv6n8uP8x7ZniXRdSsGUZ6YnzFWiVLVyYq5ul70kPzc7Ul/GwAr9oj1HwylmQS5R2reb+5hxucr2+RmKLcJ3tdNZfAMfdUoTfU9oGXMzneRhb7NF66dc4//tVqG2ZKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722258637; c=relaxed/simple;
-	bh=Eh+dTuAYpGGF/3pHGgnZWPRSafl0Li2cw2qTOgLzOsg=;
+	s=arc-20240116; t=1722259069; c=relaxed/simple;
+	bh=ZRfMXRrpXHpL8A4AI94VXzrVW+YTe6kiDDWKPQx31i0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dZ6Y99zWgA96AAvJsaZ2ryYZrZDLaibam/LenRG6muIfB0R1WEdOrDzgPYqXDr2s69ziJom+BeHTuyKwnHWZCw+15Px0sk0ItWiW3N5cjOzAkgGK469cgp1RjTSe6z/ZpwWIBp/dZurpaqb+orJu28nR8MdIgTvoVtVlJw52g90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1DwXEsP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD7AC4AF0C;
-	Mon, 29 Jul 2024 13:10:36 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ESPjEIysY39+V+Y2f50BHnVUDNYSQKf+YGXL4cvI1PB89ZH2lMnRFTIG5FafT5rGyGKG0B9gYHl3xBB4dAL7Dq3hDVSxV9PDCGGnhnSp+2e0KX4UE8+bIwFoEZ3+Vk52nWLDeNtip/c7kmkPnygrekA6ZMg+uBe9e2qSKcARwN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVR9b0zH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA9DC32786;
+	Mon, 29 Jul 2024 13:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722258637;
-	bh=Eh+dTuAYpGGF/3pHGgnZWPRSafl0Li2cw2qTOgLzOsg=;
+	s=k20201202; t=1722259069;
+	bh=ZRfMXRrpXHpL8A4AI94VXzrVW+YTe6kiDDWKPQx31i0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=u1DwXEsPuSK7FzBvhOH+mOlZwXzOdnfgt1WqCCSuZooeH1QVWDPKx4F6foLGCo0Vj
-	 Vd771Jx1pbI8HApMeoL3DMTYm0UM5eqoBNeu/Uc9Z9pUJrno/+R22BVkYZDqX/WRNB
-	 gS9E1518g8JjLO38vs5H1sV0+RchXV9EJoqtJfkNJCjSO7jIOGLQwXz3QhV11wZuGt
-	 1gSFyZMxrj4AqfyRJdlE9dF4zAS27Wo/aHixrv8/p/RHNkIVzhmqp8kItWwBCYhJip
-	 l2v0F0ZiK+oRXKimv4MiS2boLpE4simCCz3mV4lYhskOSFm9sPkdUON4VTYzdkccom
-	 HtA8IS9xP3beg==
-Message-ID: <cb6cf6834ca3383804b7bd994eeaf310cfbf8c78.camel@kernel.org>
+	b=jVR9b0zH0WnVt+dgt/FvJeHA+hoZt6hexujgoe7bN6IbeQ1bYS/kDzJiM2x+SpdKk
+	 24P8CxwopejJJnOrgO1bNaVGOU0XGJeNq/UQ0l1kLfbgwwUwaF3RSVMYZ/Hi8Wv84W
+	 jBi35+seWJtdDAsY2YCwZnzRJ3HA/cA4MSeDu3b5Eg8abwam0qsKmyKDWqosXcm3kh
+	 F0EXhNF6/VTmR6hOCZzOo3dOD9e62bDndKICyn7w1URVHYWD6ZF+q4t4Gs6ZykAOYt
+	 tAqStuL4RKDILB9iOMZMEjz60yr6MEZhC15//SRkRZMhoFk2RTzgHi9O1m/1GBW2d3
+	 Jbvi2G+Uz8HjQ==
+Message-ID: <581a28fcf0f7ae177dd08706803401246bbb79f5.camel@kernel.org>
 Subject: Re: [PATCH v2 2/3] nfsd: Offer write delegations for o_wronly opens
 From: Jeff Layton <jlayton@kernel.org>
 To: Sagi Grimberg <sagi@grimberg.me>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Dai Ngo <dai.ngo@oracle.com>, Olga Kornievskaia <aglo@umich.edu>, 
 	linux-nfs@vger.kernel.org
-Date: Mon, 29 Jul 2024 09:10:35 -0400
-In-Reply-To: <6a78bd6b-b5c4-489c-a7dd-bd688fed8d94@grimberg.me>
+Date: Mon, 29 Jul 2024 09:17:47 -0400
+In-Reply-To: <a468cd66-0099-4642-a0cd-7f0a3c5cbe66@grimberg.me>
 References: <20240728204104.519041-1-sagi@grimberg.me>
 	 <20240728204104.519041-3-sagi@grimberg.me>
-	 <81765320f56c349298be08457ef2211a581c29f9.camel@kernel.org>
-	 <6a78bd6b-b5c4-489c-a7dd-bd688fed8d94@grimberg.me>
+	 <78944d2e1ba2831eb6e46bd7009dfd5e176d48bb.camel@kernel.org>
+	 <a468cd66-0099-4642-a0cd-7f0a3c5cbe66@grimberg.me>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozzuxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedY
 	xp8+9eiVUNpxF4SiU4i9JDfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRDCHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1gYy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVVAaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJOaEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhpf8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+mQZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65ke5Ag0ETpXRPAEQAJkVmzCmF+IEenf9a2nZRXMluJohnfl2wCMmw5qNzyk0f+mYuTwTCpw7BE2H0yXk4ZfAuA+xdj14K0A1Dj52j/fKRuDqoNAhQe0b6ipo85Sz98G+XnmQOMeFVp5G1Z7r/QP/nus3mXvtFsu9lLSjMA0cam2NLDt7vx3l9kUYlQBhyIE7/DkKg+3fdqRg7qJoMHNcODtQY+n3hMyaVpplJ/l0DdQDbRSZi5AzDM3DWZEShhuP6/E2LN4O3xWnZukEiz688d1ppl7vBZO9wBql6Ft9Og74diZrTN6lXGGjEWRvO55h6ijMsLCLNDRAVehPhZvSlPldtUuvhZLAjdWpwmzbRIwgoQcO51aWeKthpcpj8feDdKdlVjvJO9fgFD5kqZQiErRVPpB7VzA/pYV5Mdy7GMbPjmO0IpoL0tVZ8JvUzUZXB3ErS/dJflvboAAQeLpLCkQjqZiQ/D
@@ -67,11 +67,11 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-07-29 at 15:58 +0300, Sagi Grimberg wrote:
+On Mon, 2024-07-29 at 15:59 +0300, Sagi Grimberg wrote:
 >=20
 >=20
 >=20
-> On 29/07/2024 15:10, Jeff Layton wrote:
+> On 29/07/2024 15:26, Jeff Layton wrote:
 > > On Sun, 2024-07-28 at 23:41 +0300, Sagi Grimberg wrote:
 > > > In order to support write delegations with O_WRONLY opens, we
 > > > need to
@@ -114,13 +114,12 @@ On Mon, 2024-07-29 at 15:58 +0300, Sagi Grimberg wrote:
 > > > nfsd4_compound_state *cstate,
 > > > =C2=A0=C2=A0	/* check stateid */
 > > > =C2=A0=C2=A0	status =3D nfs4_preprocess_stateid_op(rqstp, cstate,
-> > > &cstate-
-> > > > current_fh,
+> > > &cstate->current_fh,
 > > > =C2=A0=C2=A0					&read->rd_stateid,
 > > > RD_STATE,
 > > > -					&read->rd_nf, NULL);
 > > > +					&read->rd_nf, &read-
-> > > > rd_wd_stid);
+> > > >rd_wd_stid);
 > > > =C2=A0=20
 > > > +	/*
 > > > +	 * rd_wd_stid is needed for nfsd4_encode_read to allow
@@ -178,12 +177,10 @@ On Mon, 2024-07-29 at 15:58 +0300, Sagi Grimberg wrote:
 > > > =C2=A0=C2=A0find_any_file(struct nfs4_file *f)
 > > > =C2=A0=C2=A0{
 > > > @@ -5784,15 +5772,11 @@ nfs4_set_delegation(struct nfsd4_open
-> > > *open,
-> > > struct nfs4_ol_stateid *stp,
+> > > *open, struct nfs4_ol_stateid *stp,
 > > > =C2=A0=C2=A0	 *=C2=A0 "An OPEN_DELEGATE_WRITE delegation allows the c=
 lient
-> > > to
-> > > handle,
+> > > to handle,
 > > > =C2=A0=C2=A0	 *=C2=A0=C2=A0 on its own, all opens."
 > > > =C2=A0=C2=A0	 *
 > > > -	 * Furthermore the client can use a write delegation for
@@ -191,8 +188,7 @@ lient
 > > > -	 * operations as well, so we require a O_RDWR file here.
 > > > -	 *
 > > > -	 * Offer a write delegation in the case of a BOTH open,
-> > > and
-> > > ensure
+> > > and ensure
 > > > -	 * we get the O_RDWR descriptor.
 > > > +	 * Offer a write delegation for WRITE or BOTH access
 > > > =C2=A0=C2=A0	 */
@@ -206,14 +202,12 @@ lient
 > > > =C2=A0=20
 > > > =C2=A0=C2=A0	/*
 > > > @@ -5934,8 +5918,8 @@ static void
-> > > nfsd4_open_deleg_none_ext(struct
-> > > nfsd4_open *open, int status)
+> > > nfsd4_open_deleg_none_ext(struct nfsd4_open *open, int status)
 > > > =C2=A0=C2=A0 * open or lock state.
 > > > =C2=A0=C2=A0 */
 > > > =C2=A0=C2=A0static void
 > > > -nfs4_open_delegation(struct nfsd4_open *open, struct
-> > > nfs4_ol_stateid
-> > > *stp,
+> > > nfs4_ol_stateid *stp,
 > > > -		=C2=A0=C2=A0=C2=A0=C2=A0 struct svc_fh *currentfh)
 > > > +nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open
 > > > *open,
@@ -224,25 +218,33 @@ lient
 > > > =C2=A0=C2=A0	struct nfs4_openowner *oo =3D openowner(stp-
 > > > >st_stateowner);
 > > > @@ -5994,6 +5978,20 @@ nfs4_open_delegation(struct nfsd4_open
-> > > *open,
-> > > struct nfs4_ol_stateid *stp,
+> > > *open, struct nfs4_ol_stateid *stp,
 > > > =C2=A0=C2=A0		dp->dl_cb_fattr.ncf_cur_fsize =3D stat.size;
 > > > =C2=A0=C2=A0		dp->dl_cb_fattr.ncf_initial_cinfo =3D
 > > > =C2=A0=C2=A0			nfsd4_change_attribute(&stat,
 > > > d_inode(currentfh->fh_dentry));
 > > > +		if ((open->op_share_access &
-> > > NFS4_SHARE_ACCESS_BOTH)
-> > > !=3D NFS4_SHARE_ACCESS_BOTH) {
+> > > NFS4_SHARE_ACCESS_BOTH) !=3D NFS4_SHARE_ACCESS_BOTH) {
+> > More comments on this part:
+> >=20
+> >=20
+> > nit: You've already tested for NFS4_SHARE_ACCESS_WRITE here, and
+> > this
+> > seems easier to read:
+> >=20
+> > 		if (!(open->op_share_access &
+> > NFS4_SHARE_ACCESS_READ))
+> >=20
+> >=20
+> >=20
 > > > +			struct nfsd_file *nf =3D NULL;
 > > > +
 > > > +			/* make sure the file is opened locally
-> > > for
-> > > O_RDWR */
+> > > for O_RDWR */
 > > > +			status =3D nfsd_file_acquire_opened(rqstp,
 > > > currentfh,
 > > > +				nfs4_access_to_access(NFS4_SHARE
-> > > _ACC
-> > > ESS_BOTH),
+> > > _ACCESS_BOTH),
 > > > +				open->op_filp, &nf);
 > > > +			if (status) {
 > > > +				nfs4_put_stid(&dp->dl_stid);
@@ -251,28 +253,101 @@ lient
 > > > +			}
 > > > +			stp->st_stid.sc_file->fi_fds[O_RDWR] =3D
 > > > nf;
-> > I have a bit of a concern here. When we go to put access references
-> > to
-> > the fi_fds, that's done according to the st_access_bmap. Here
-> > though,
-> > you're adding an extra reference for the O_RDWR fd, but I don't see
-> > where you're calling set_access for that on the delegation stateid?
-> > Am
-> > I missing where that happens? Not doing that may lead to fd leaks
-> > if it
-> > was missed.
+> > How do you know that this fd isn't already set? Also, this field is
+> > protected by the sc_file->fi_lock and that's not held here.
 >=20
-> Ah, this is something that I did not fully understand...
-> However it looks like st_access_bmap is not something that is
-> accounted on the delegation stateid...
+> Something like this?
+> --
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a6c6d813c59c..ee0c65ff1940 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5978,19 +5978,24 @@ nfs4_open_delegation(struct svc_rqst *rqstp,=20
+> struct nfsd4_open *open,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 dp->dl_cb_fattr.ncf_cur_fsize =3D stat.size;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 dp->dl_cb_fattr.ncf_initial_cinfo =3D
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nf=
+sd4_change_attribute(&stat,=20
+> d_inode(currentfh->fh_dentry));
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH)
+> !=3D=20
+> NFS4_SHARE_ACCESS_BOTH) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 if (!(open->op_share_access &
+> NFS4_SHARE_ACCESS_READ)) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 access =3D=
+=20
+> nfs4_access_to_access(NFS4_SHARE_ACCESS_BOTH);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs4_fi=
+le *fp =3D stp->st_stid.sc_file;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st=
+ruct nfsd_file *nf =3D NULL;
 >=20
-> Can I simply set it on the open stateid (stp)?
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*=
+ make sure the file is opened locally for=20
+> O_RDWR */
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_access(acc=
+ess, stp);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st=
+atus =3D nfsd_file_acquire_opened(rqstp,
+> currentfh,
+> - nfs4_access_to_access(NFS4_SHARE_ACCESS_BOTH),
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 open->op_filp, &nf);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 access, open->op_filp, &nf);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
+ (status) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfs4_put_stid(&dp->dl_stid);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 destroy_delegation(dp);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_no_deleg;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 stp->st_stid.s=
+c_file->fi_fds[O_RDWR] =3D nf;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&fp-=
+>fi_lock);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!fp->fi_fd=
+s[O_RDWR])
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fp->fi_fds[O_RDWR] =3D nf;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&fp-=
+>fi_lock);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> --
+>=20
 
-That would likely fix the leak, but I'm not sure that's the best
-approach. You have an NFS4_SHARE_ACCESS_WRITE-only stateid here, and
-that would turn it a NFS4_SHARE_ACCESS_BOTH one, wouldn't it?
+Your MUA mangled it a bit, but that probably would work. You do also
+need to put the nf reference though if you don't assign
+fp->fi_fds[O_RDWR] here.
 
-It wouldn't surprise me if that might break a testcase or two.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
