@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-5154-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5155-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6138793FA84
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 18:21:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B51E093FA8A
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 18:21:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16F3E2847C5
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 16:21:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E75671C2208A
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jul 2024 16:21:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 327A615EFA0;
-	Mon, 29 Jul 2024 16:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88A4A17E8E5;
+	Mon, 29 Jul 2024 16:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MCA8xd2n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="apOhyN5w"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BD415EFA1
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 16:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A3C15D5C1
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jul 2024 16:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722270034; cv=none; b=F8ypwdRhbZeUqw7TXd8+cjO9salgom70EGuACpYHLOOwTEDFyK6ZK3QGrsR6lPJJhbm6+IqEq10wY8TYWt0XQFKiagGbT/D/kclLQRpZyJSvKiQN12XpmyU+cVGzaGS+ayTbE7epCPMXAXgB7u2yEjRx16zrkApe9FIT4JZxWn8=
+	t=1722270042; cv=none; b=IV+ZuMdbHa54AS4Vj/3TiQMk3t5TOWXbKF8AIbFVpJEh82rBCU5RUCZyrGXdMfgcaMFbbk3UrY4J/3qoFcDsKYmcand/FDOWQ6HUadf430qtKa4VSLcquJ0tYddi4aU4w4qRgqelZvigh1Ockpd+PpVdZJgQKyS8fDxhk+s+/X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722270034; c=relaxed/simple;
-	bh=DUg5JFwyYXml/uolcp+r/rbm4g5UIFq85UmqbbzCzZg=;
+	s=arc-20240116; t=1722270042; c=relaxed/simple;
+	bh=fZBSvxMxbAQZkZtiGc4RF0+420hS/GpbQoVBSrmCKa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HKukEBDt9KtaJtWWWnRb18mYy+GM4AtFNef17+stBR6sMR+TUPEFt427PLBOTiMFJOsEDZHeSyobYda69sYfeBrcTqY+dkGWfdYTezw50arSZV22yXxbxQP8RGtknkd9CGD2r86pMbE7Rl+x/nuQF8vHOEYI/Dj3WFqsEjnR1fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MCA8xd2n; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=UuGOvZuXaOnf7QihP7ZaXzAd9R2j0Ftws8WNukEZbkP5iguZBNuvVvEagw2tQUYCVI4LDuoXj1JhYN623k6bPy19qM1xANVuNbrUR8XCLaAA5yBi/UIGGMRoh9leMgd25t7tfPodn8NZncxfAnizn4IPItjxHCc7cVTIbVezbhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=apOhyN5w; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722270030;
+	s=mimecast20190719; t=1722270039;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BPjOG63ucqIecfQUcEvOk2uVbkRV7p0tyL6NVisM1C4=;
-	b=MCA8xd2nhBo/pB1lmaxFN5ng1AlXwf0mJpF0+PiVeNUxo1lxFmL6VvIABDqF5BSrSeX5UE
-	yzNWcofD/qjcKOPbs2A12f/T0+eJOR0+i0NkiVW3et+4eZZyytAZfZPV+qG2Fu1OxmcYOL
-	wbDsnlKdA79apO1/MbqIUN848nAnhQI=
+	bh=Wvz9YBrTPFQ9wVYP2d1umk84aV9uv83ek2O7Ma2LSP4=;
+	b=apOhyN5wOUocUWIDRw+HtKXDR27ljo92oDGeA7vMr+ChP8CIU5l+Sr6Bmtrk9yxGjVvfdk
+	UyNqc2PfR03+kqwnxHNYaNkmR6haOHL/RE8Ohm7xusReQbL+OXDZSMNaFf2Q+12Mq/Rb/r
+	YxcCu+pCyrlEVJ7gBn0WXbKUCNymE0w=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-pbazTEYXMY-3m3K78NsRKg-1; Mon,
- 29 Jul 2024 12:20:26 -0400
-X-MC-Unique: pbazTEYXMY-3m3K78NsRKg-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-U7bPQnvjMCGinNQMEYrDUw-1; Mon,
+ 29 Jul 2024 12:20:35 -0400
+X-MC-Unique: U7bPQnvjMCGinNQMEYrDUw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 407551955D4C;
-	Mon, 29 Jul 2024 16:20:22 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 64EFB1955D4B;
+	Mon, 29 Jul 2024 16:20:30 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.216])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9A2B5195605F;
-	Mon, 29 Jul 2024 16:20:14 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B49B03000193;
+	Mon, 29 Jul 2024 16:20:23 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
@@ -81,11 +81,11 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Max Kellermann <max.kellermann@ionos.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 01/24] fs/netfs/fscache_cookie: add missing "n_accesses" check
-Date: Mon, 29 Jul 2024 17:19:30 +0100
-Message-ID: <20240729162002.3436763-2-dhowells@redhat.com>
+	Christian Brauner <brauner@kernel.org>,
+	Gao Xiang <xiang@kernel.org>
+Subject: [PATCH 02/24] cachefiles: Fix non-taking of sb_writers around set/removexattr
+Date: Mon, 29 Jul 2024 17:19:31 +0100
+Message-ID: <20240729162002.3436763-3-dhowells@redhat.com>
 In-Reply-To: <20240729162002.3436763-1-dhowells@redhat.com>
 References: <20240729162002.3436763-1-dhowells@redhat.com>
 Precedence: bulk
@@ -95,113 +95,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Max Kellermann <max.kellermann@ionos.com>
+Unlike other vfs_xxxx() calls, vfs_setxattr() and vfs_removexattr() don't
+take the sb_writers lock, so the caller should do it for them.
 
-This fixes a NULL pointer dereference bug due to a data race which
-looks like this:
+Fix cachefiles to do this.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000008
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 33 PID: 16573 Comm: kworker/u97:799 Not tainted 6.8.7-cm4all1-hp+ #43
-  Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 10/17/2018
-  Workqueue: events_unbound netfs_rreq_write_to_cache_work
-  RIP: 0010:cachefiles_prepare_write+0x30/0xa0
-  Code: 57 41 56 45 89 ce 41 55 49 89 cd 41 54 49 89 d4 55 53 48 89 fb 48 83 ec 08 48 8b 47 08 48 83 7f 10 00 48 89 34 24 48 8b 68 20 <48> 8b 45 08 4c 8b 38 74 45 49 8b 7f 50 e8 4e a9 b0 ff 48 8b 73 10
-  RSP: 0018:ffffb4e78113bde0 EFLAGS: 00010286
-  RAX: ffff976126be6d10 RBX: ffff97615cdb8438 RCX: 0000000000020000
-  RDX: ffff97605e6c4c68 RSI: ffff97605e6c4c60 RDI: ffff97615cdb8438
-  RBP: 0000000000000000 R08: 0000000000278333 R09: 0000000000000001
-  R10: ffff97605e6c4600 R11: 0000000000000001 R12: ffff97605e6c4c68
-  R13: 0000000000020000 R14: 0000000000000001 R15: ffff976064fe2c00
-  FS:  0000000000000000(0000) GS:ffff9776dfd40000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000008 CR3: 000000005942c002 CR4: 00000000001706f0
-  Call Trace:
-   <TASK>
-   ? __die+0x1f/0x70
-   ? page_fault_oops+0x15d/0x440
-   ? search_module_extables+0xe/0x40
-   ? fixup_exception+0x22/0x2f0
-   ? exc_page_fault+0x5f/0x100
-   ? asm_exc_page_fault+0x22/0x30
-   ? cachefiles_prepare_write+0x30/0xa0
-   netfs_rreq_write_to_cache_work+0x135/0x2e0
-   process_one_work+0x137/0x2c0
-   worker_thread+0x2e9/0x400
-   ? __pfx_worker_thread+0x10/0x10
-   kthread+0xcc/0x100
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork+0x30/0x50
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork_asm+0x1b/0x30
-   </TASK>
-  Modules linked in:
-  CR2: 0000000000000008
-  ---[ end trace 0000000000000000 ]---
-
-This happened because fscache_cookie_state_machine() was slow and was
-still running while another process invoked fscache_unuse_cookie();
-this led to a fscache_cookie_lru_do_one() call, setting the
-FSCACHE_COOKIE_DO_LRU_DISCARD flag, which was picked up by
-fscache_cookie_state_machine(), withdrawing the cookie via
-cachefiles_withdraw_cookie(), clearing cookie->cache_priv.
-
-At the same time, yet another process invoked
-cachefiles_prepare_write(), which found a NULL pointer in this code
-line:
-
-  struct cachefiles_object *object = cachefiles_cres_object(cres);
-
-The next line crashes, obviously:
-
-  struct cachefiles_cache *cache = object->volume->cache;
-
-During cachefiles_prepare_write(), the "n_accesses" counter is
-non-zero (via fscache_begin_operation()).  The cookie must not be
-withdrawn until it drops to zero.
-
-The counter is checked by fscache_cookie_state_machine() before
-switching to FSCACHE_COOKIE_STATE_RELINQUISHING and
-FSCACHE_COOKIE_STATE_WITHDRAWING (in "case
-FSCACHE_COOKIE_STATE_FAILED"), but not for
-FSCACHE_COOKIE_STATE_LRU_DISCARDING ("case
-FSCACHE_COOKIE_STATE_ACTIVE").
-
-This patch adds the missing check.  With a non-zero access counter,
-the function returns and the next fscache_end_cookie_access() call
-will queue another fscache_cookie_state_machine() call to handle the
-still-pending FSCACHE_COOKIE_DO_LRU_DISCARD.
-
-Fixes: 12bb21a29c19 ("fscache: Implement cookie user counting and resource pinning")
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Fixes: 9ae326a69004 ("CacheFiles: A cache that backs onto a mounted filesystem")
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
+cc: Christian Brauner <brauner@kernel.org>
+cc: Gao Xiang <xiang@kernel.org>
 cc: netfs@lists.linux.dev
+cc: linux-erofs@lists.ozlabs.org
 cc: linux-fsdevel@vger.kernel.org
-cc: stable@vger.kernel.org
 ---
- fs/netfs/fscache_cookie.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/cachefiles/xattr.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/fs/netfs/fscache_cookie.c b/fs/netfs/fscache_cookie.c
-index bce2492186d0..d4d4b3a8b106 100644
---- a/fs/netfs/fscache_cookie.c
-+++ b/fs/netfs/fscache_cookie.c
-@@ -741,6 +741,10 @@ static void fscache_cookie_state_machine(struct fscache_cookie *cookie)
- 			spin_lock(&cookie->lock);
- 		}
- 		if (test_bit(FSCACHE_COOKIE_DO_LRU_DISCARD, &cookie->flags)) {
-+			if (atomic_read(&cookie->n_accesses) != 0)
-+				/* still being accessed: postpone it */
-+				break;
-+
- 			__fscache_set_cookie_state(cookie,
- 						   FSCACHE_COOKIE_STATE_LRU_DISCARDING);
- 			wake = true;
+diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
+index 4dd8a993c60a..7c6f260a3be5 100644
+--- a/fs/cachefiles/xattr.c
++++ b/fs/cachefiles/xattr.c
+@@ -64,9 +64,15 @@ int cachefiles_set_object_xattr(struct cachefiles_object *object)
+ 		memcpy(buf->data, fscache_get_aux(object->cookie), len);
+ 
+ 	ret = cachefiles_inject_write_error();
+-	if (ret == 0)
+-		ret = vfs_setxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache,
+-				   buf, sizeof(struct cachefiles_xattr) + len, 0);
++	if (ret == 0) {
++		ret = mnt_want_write_file(file);
++		if (ret == 0) {
++			ret = vfs_setxattr(&nop_mnt_idmap, dentry,
++					   cachefiles_xattr_cache, buf,
++					   sizeof(struct cachefiles_xattr) + len, 0);
++			mnt_drop_write_file(file);
++		}
++	}
+ 	if (ret < 0) {
+ 		trace_cachefiles_vfs_error(object, file_inode(file), ret,
+ 					   cachefiles_trace_setxattr_error);
+@@ -151,8 +157,14 @@ int cachefiles_remove_object_xattr(struct cachefiles_cache *cache,
+ 	int ret;
+ 
+ 	ret = cachefiles_inject_remove_error();
+-	if (ret == 0)
+-		ret = vfs_removexattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache);
++	if (ret == 0) {
++		ret = mnt_want_write(cache->mnt);
++		if (ret == 0) {
++			ret = vfs_removexattr(&nop_mnt_idmap, dentry,
++					      cachefiles_xattr_cache);
++			mnt_drop_write(cache->mnt);
++		}
++	}
+ 	if (ret < 0) {
+ 		trace_cachefiles_vfs_error(object, d_inode(dentry), ret,
+ 					   cachefiles_trace_remxattr_error);
+@@ -208,9 +220,15 @@ bool cachefiles_set_volume_xattr(struct cachefiles_volume *volume)
+ 	memcpy(buf->data, p, volume->vcookie->coherency_len);
+ 
+ 	ret = cachefiles_inject_write_error();
+-	if (ret == 0)
+-		ret = vfs_setxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache,
+-				   buf, len, 0);
++	if (ret == 0) {
++		ret = mnt_want_write(volume->cache->mnt);
++		if (ret == 0) {
++			ret = vfs_setxattr(&nop_mnt_idmap, dentry,
++					   cachefiles_xattr_cache,
++					   buf, len, 0);
++			mnt_drop_write(volume->cache->mnt);
++		}
++	}
+ 	if (ret < 0) {
+ 		trace_cachefiles_vfs_error(NULL, d_inode(dentry), ret,
+ 					   cachefiles_trace_setxattr_error);
 
 
