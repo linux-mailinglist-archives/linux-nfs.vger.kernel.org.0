@@ -1,150 +1,77 @@
-Return-Path: <linux-nfs+bounces-5191-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5192-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEB8394029D
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 02:43:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B06C7940E51
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 11:53:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C95EB21277
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 00:43:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69079286643
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 09:53:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1AAE4A28;
-	Tue, 30 Jul 2024 00:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WbG4LGPr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JZf5pGV8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WbG4LGPr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JZf5pGV8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5BD194C86;
+	Tue, 30 Jul 2024 09:53:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58044A21
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jul 2024 00:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABB6194C78;
+	Tue, 30 Jul 2024 09:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722300200; cv=none; b=ng4JTs+5wLB2ci4Pvx2gedsrB1QRAPHwfEj6jJL+I8ai+Vf/o5x81dvPpqGig+rYg80ERwOr92z94eLUGLOhU5pJ2OLCY4yfRjXbhHgDMrC2DcOvm94pRM/ttRAFQVjk6Sba1VpLZIkY6hsYqCEjxBMq/q4WqIbjlcgy7jK1cu4=
+	t=1722333198; cv=none; b=TRTbpt1X9L//FovYEoHTrgtBqAl8oj4E/jy2QmDrDdEOXvypE0MtTYms8SlwAG4PCcwMsQE+IP/wE3BY0QxTjyRBiVHNSoZcBMOZ901Axbhxn6Dd5s1G9n7mnKL1IjUROr/6izlmVMN+zQpXtRG+FhzLUVLiLWOiDlMqx2C8Hlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722300200; c=relaxed/simple;
-	bh=OtoLdq7jbytXhxaIbF5YmmCYVCmr3xcT3agPiC7CGsI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=EHNXdAg6NklXEluEjQAJiRYvZuHr/Rt8K2B6k2QGzfFLi/6j6Oi9xzNROAOloRJtH0XHmnVyIr1qGbkeHwKYdpLxld5zZ7iSzc1MJgVFRcoMU5S6TGpxxucKJdph/PKHNy4E4dLbK05rndzI2Oqetx7Tnz0yLmfQaCwMy9UPBbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WbG4LGPr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JZf5pGV8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WbG4LGPr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JZf5pGV8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 067E821A92;
-	Tue, 30 Jul 2024 00:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722300196; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jvI7h6H0ChMf/Km9B1XSel7MZo+jtYomnG/K/e/IoO0=;
-	b=WbG4LGPrIMC/Tf6ubjbW+dyWG+qCBIM8hS1yzKCmvXO7grqaiiR/zFqqODw0S3R10iwAGB
-	VZn2EvVDxEnpfBETfQZDCv3oD3yXNZkf/h5MRkerd5mPKY74ZpGzzEiiBBI4okeuSTd9x8
-	1ncl1smy0g9YeuFDuH32oHkmeJ6zM/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722300196;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jvI7h6H0ChMf/Km9B1XSel7MZo+jtYomnG/K/e/IoO0=;
-	b=JZf5pGV8XUiURSpwahUOBSnKBjLJEnuj1yl7CGDNCYeOe1n7Fmh2uo6LnpRdmJdGH5VjVg
-	GTvC1aBma2Z2UBAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722300196; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jvI7h6H0ChMf/Km9B1XSel7MZo+jtYomnG/K/e/IoO0=;
-	b=WbG4LGPrIMC/Tf6ubjbW+dyWG+qCBIM8hS1yzKCmvXO7grqaiiR/zFqqODw0S3R10iwAGB
-	VZn2EvVDxEnpfBETfQZDCv3oD3yXNZkf/h5MRkerd5mPKY74ZpGzzEiiBBI4okeuSTd9x8
-	1ncl1smy0g9YeuFDuH32oHkmeJ6zM/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722300196;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jvI7h6H0ChMf/Km9B1XSel7MZo+jtYomnG/K/e/IoO0=;
-	b=JZf5pGV8XUiURSpwahUOBSnKBjLJEnuj1yl7CGDNCYeOe1n7Fmh2uo6LnpRdmJdGH5VjVg
-	GTvC1aBma2Z2UBAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E01DC13983;
-	Tue, 30 Jul 2024 00:43:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XfitJCE3qGYECwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 30 Jul 2024 00:43:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1722333198; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GmhjAdhLsP2Lwk7lFqBt/+GwEAhjbqS6cwsdFpn05pj6b1QcrHDR+67N6IHGOnPCqj5LNfpyu0cUz/oGT+IJHZvJdls5GdDOyyEX2N4YPf9Tl78/3ShBVuDLW0qf2+R5AJQwVSUOonW2Cpqv6wE8Go9oAMtCDnyUyiIe94kCW2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4280ac10b7cso506685e9.3;
+        Tue, 30 Jul 2024 02:53:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722333195; x=1722937995;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=FHjpB3uJcUO4mlf+jIsXk/Y7BSkL1HzdZYmawL4lz9LN4euWEbc1YSEWLqLozMNsi9
+         qqsolBuDl9sZoZf6Rrs2q9eYHxv4o1T9T2GozeHTvwoZmaanjWeHcJij8+od6ED9MfgO
+         HsNlGR7oGSC9OpxyL/wi5UBpUapKyn9dwhNNf5rzply48VJB2cnTuPN9Iy81aW2WIpR/
+         kJuww3btEiVMNEGtZup8PwxrObh4+xhaPVaaRGDfgZkcdnS6Nr67XOiAgjtaGSWhQa+h
+         8jvJBCEg1gxeGCDZUTVcMfdtT100yoOhwN7+O8nvssfylq1Dmp8qHs7a+MeI+a14vGVi
+         OGFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVljkHnBbXPiM7pDFVNfaeLCU2D5K4wbPs+tZS88wTgK6RGl9xAI7BYe7pLeQBLrP+jEvFv29CKswQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJDoB2kRnG35aCSrkPXSgyQjr1y4608IRjsFE9zJvkdJE0fr8g
+	ia78mbaNYJ4knlPFSKBhH473YP0wA/0VVD7QcYBO0OxxSvStGNE4hrOH3g==
+X-Google-Smtp-Source: AGHT+IHuGlZeF848OSae2YeQ5EGMts48qZxhNu+xx7PBOp70Uj061GlfcKfdKbZXFMYoOJdYG9WLNg==
+X-Received: by 2002:a05:600c:1c2a:b0:427:f1a9:cb06 with SMTP id 5b1f17b1804b1-428053c9004mr75819685e9.0.1722333195122;
+        Tue, 30 Jul 2024 02:53:15 -0700 (PDT)
+Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428089c28f0sm193299255e9.28.2024.07.30.02.53.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jul 2024 02:53:14 -0700 (PDT)
+Message-ID: <2ede2b62-cecc-4bcc-8cc3-5e84528e8405@grimberg.me>
+Date: Tue, 30 Jul 2024 12:53:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 0/2] nfsd: fix handling of error from unshare_fs_struct()
-In-reply-to: <Zqeo1c37E6xDDgSA@tissot.1015granger.net>
-References: <20240729022126.4450-1-neilb@suse.de>,
- <Zqeo1c37E6xDDgSA@tissot.1015granger.net>
-Date: Tue, 30 Jul 2024 10:43:10 +1000
-Message-id: <172230019067.31176.5761077158743507069@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.10 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -1.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] svcrdma: Handle device removal outside of the CM event
+ handler
+To: cel@kernel.org, linux-nfs@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20240729205232.54932-1-cel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240729205232.54932-1-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jul 2024, Chuck Lever wrote:
-> 
-> In 2/2, what is the reason to make svc_thread_init_status() a static
-> inline rather than an exported function? I don't think this is going
-> to be a performance hot path, but maybe it becomes one in a future
-> patch?
-> 
-
-Sorry - I missed this question the first time.
-
-My reasoning was that it was a tiny function which would be optimised
-even smaller in two out of three call sites where the err number is a
-constant zero.  Also my original draft didn't even have this as a
-function but was open coded.
-
-I don't think it matters much either way.
-
-Thanks,
-NeilBrown
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
