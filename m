@@ -1,77 +1,109 @@
-Return-Path: <linux-nfs+bounces-5192-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5193-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B06C7940E51
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 11:53:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4745D940FBE
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 12:43:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69079286643
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 09:53:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 038C228279A
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jul 2024 10:43:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5BD194C86;
-	Tue, 30 Jul 2024 09:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AECE19EEDF;
+	Tue, 30 Jul 2024 10:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9qFpIo0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABB6194C78;
-	Tue, 30 Jul 2024 09:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9C919EED3;
+	Tue, 30 Jul 2024 10:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722333198; cv=none; b=TRTbpt1X9L//FovYEoHTrgtBqAl8oj4E/jy2QmDrDdEOXvypE0MtTYms8SlwAG4PCcwMsQE+IP/wE3BY0QxTjyRBiVHNSoZcBMOZ901Axbhxn6Dd5s1G9n7mnKL1IjUROr/6izlmVMN+zQpXtRG+FhzLUVLiLWOiDlMqx2C8Hlk=
+	t=1722335833; cv=none; b=FLJZJ+ngMITkPFQCyeqlBM9u6zv1zGlXtQeXr+rJwj9NcVCd6LvigNi4M0gvDMcpLdjx3vZCtNA6vjCip3v6euW4PhA7XhpXLtLWNlLPa/lH+vR7zdynOU5iHoUH2QDl4dyib1+d0OOxuKWgvf1ImgfuW+BaSBilQBLkmF/yUPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722333198; c=relaxed/simple;
-	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GmhjAdhLsP2Lwk7lFqBt/+GwEAhjbqS6cwsdFpn05pj6b1QcrHDR+67N6IHGOnPCqj5LNfpyu0cUz/oGT+IJHZvJdls5GdDOyyEX2N4YPf9Tl78/3ShBVuDLW0qf2+R5AJQwVSUOonW2Cpqv6wE8Go9oAMtCDnyUyiIe94kCW2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4280ac10b7cso506685e9.3;
-        Tue, 30 Jul 2024 02:53:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722333195; x=1722937995;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=FHjpB3uJcUO4mlf+jIsXk/Y7BSkL1HzdZYmawL4lz9LN4euWEbc1YSEWLqLozMNsi9
-         qqsolBuDl9sZoZf6Rrs2q9eYHxv4o1T9T2GozeHTvwoZmaanjWeHcJij8+od6ED9MfgO
-         HsNlGR7oGSC9OpxyL/wi5UBpUapKyn9dwhNNf5rzply48VJB2cnTuPN9Iy81aW2WIpR/
-         kJuww3btEiVMNEGtZup8PwxrObh4+xhaPVaaRGDfgZkcdnS6Nr67XOiAgjtaGSWhQa+h
-         8jvJBCEg1gxeGCDZUTVcMfdtT100yoOhwN7+O8nvssfylq1Dmp8qHs7a+MeI+a14vGVi
-         OGFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVljkHnBbXPiM7pDFVNfaeLCU2D5K4wbPs+tZS88wTgK6RGl9xAI7BYe7pLeQBLrP+jEvFv29CKswQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJDoB2kRnG35aCSrkPXSgyQjr1y4608IRjsFE9zJvkdJE0fr8g
-	ia78mbaNYJ4knlPFSKBhH473YP0wA/0VVD7QcYBO0OxxSvStGNE4hrOH3g==
-X-Google-Smtp-Source: AGHT+IHuGlZeF848OSae2YeQ5EGMts48qZxhNu+xx7PBOp70Uj061GlfcKfdKbZXFMYoOJdYG9WLNg==
-X-Received: by 2002:a05:600c:1c2a:b0:427:f1a9:cb06 with SMTP id 5b1f17b1804b1-428053c9004mr75819685e9.0.1722333195122;
-        Tue, 30 Jul 2024 02:53:15 -0700 (PDT)
-Received: from [10.50.4.202] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428089c28f0sm193299255e9.28.2024.07.30.02.53.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 02:53:14 -0700 (PDT)
-Message-ID: <2ede2b62-cecc-4bcc-8cc3-5e84528e8405@grimberg.me>
-Date: Tue, 30 Jul 2024 12:53:13 +0300
+	s=arc-20240116; t=1722335833; c=relaxed/simple;
+	bh=M4eg2RA2dVioVZclF6JHvBR8dH2//m8JYd+0R0imYZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oS4hArUrx6Prr7CfWwKMfARlYg2SgGEowgRNKc8G/IaU0+Ek/SWet4JPz1Amuc+VJ8asIALEFWKUv8+HRgypCEEYvEqySjIv4Mtc6ACfdTp+12yC4uyukGBnJ/DXpnhjbpxm/Aa64HrZUV18RdhceKCUPjTatH9jViqlNv2EBtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9qFpIo0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF37C4AF09;
+	Tue, 30 Jul 2024 10:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722335832;
+	bh=M4eg2RA2dVioVZclF6JHvBR8dH2//m8JYd+0R0imYZA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=N9qFpIo0XG2+as2sCBNP421gFXLGXitO22buNn5D+6stzkGoS9HaPxRMQqxX3xjf9
+	 5e0x5+W/0YeRenNHJORfGa8KySj2GvC6/qYC74VKf3edqHJZtBdtU5wUEgxTiZIys7
+	 dtAHSf71IblUjBJwJH68PfzO3Oy280ihPuDRIAMonzaoO+YKFYnoMFsAqUi1uDtKS/
+	 ThKrqUheO+S2RtVhc0ZR4X0gXngw7CFN4oA0Dkj1d8hCBRHiH9HWcB81smZLZRrvxd
+	 nLBYxt6mb/TF5Zv0aaFYjMjJ9kKYa+4zqrmAkyowfILhIoIbYwVRdRFZFEBp1JM1j5
+	 LqOnkS4Ymt4sw==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gao Xiang <xiang@kernel.org>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: (subset) [PATCH 00/24] netfs: Read/write improvements
+Date: Tue, 30 Jul 2024 12:36:50 +0200
+Message-ID: <20240730-kaschieren-glitten-89d803c5d4ae@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240729162002.3436763-1-dhowells@redhat.com>
+References: <20240729162002.3436763-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] svcrdma: Handle device removal outside of the CM event
- handler
-To: cel@kernel.org, linux-nfs@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <20240729205232.54932-1-cel@kernel.org>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20240729205232.54932-1-cel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=961; i=brauner@kernel.org; h=from:subject:message-id; bh=M4eg2RA2dVioVZclF6JHvBR8dH2//m8JYd+0R0imYZA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaStOOQfILK00PPW9Etftt1+ufrx1Tc7OsPuXM7c9UVy9 72fTsfXtXaUsjCIcTHIiimyOLSbhMst56nYbJSpATOHlQlkCAMXpwBM5PF/RobHbwN1fQ3vrlPe zSXvY39gUXmtoiHrhCNck4/oH0uNlIph+MO777/y1U2XvSv+ZVQlPeSt+/k3J6znVvq6zOVlMw5 vUuYBAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Mon, 29 Jul 2024 17:19:29 +0100, David Howells wrote:
+> This set of patches includes one fscache fix and one cachefiles fix
+> 
+>  (1) Fix a cookie access race in fscache.
+> [...]
+
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[01/24] fs/netfs/fscache_cookie: add missing "n_accesses" check
+        https://git.kernel.org/vfs/vfs/c/965a561e4026
 
