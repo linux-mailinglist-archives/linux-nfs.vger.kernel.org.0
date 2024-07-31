@@ -1,223 +1,143 @@
-Return-Path: <linux-nfs+bounces-5199-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5200-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E1B9942F35
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2024 14:53:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC5E9430FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2024 15:34:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B244C1C22B42
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2024 12:53:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7B3E2834CA
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Jul 2024 13:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4F21B4C40;
-	Wed, 31 Jul 2024 12:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F651B1519;
+	Wed, 31 Jul 2024 13:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b="kR6JzRAs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from a1-bg02.venev.name (a1-bg02.venev.name [213.240.239.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2030F1B151A;
-	Wed, 31 Jul 2024 12:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6671B1505
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Jul 2024 13:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.240.239.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722430258; cv=none; b=PCPS64jnLjbGbk/k0JaOCWJiopZpNfXlPUSh4bQYcz/DG/zZ02RxH3TMC2R05g/bMx1YnFFUVNDINVrO2TvBAILL79E/rrrsVpKx3pL8bM1bL3Fd43AraN0VOEfIQoNkDMwL+Zgf1qsIkwBYH8hXprw3/Y4kHW6IHvuzuVobvkw=
+	t=1722432831; cv=none; b=TZ22dxJ4GMvHvptxiygPWSdherOpJ4JnzBMhX7+4Ars1rQgq0Q+45c5i6BfoU+Rug4D53dEeHw213FLiCfIFDVnrHka6MV/FegbCFPSjQqgszysPtlTAWPQMw2ez50+TZmGB014yZ7nGFrGGUGjDYi5sBVMioGUOBzauB7xeS+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722430258; c=relaxed/simple;
-	bh=/TP1EzjsGYroKvTptxI1/bBGTaIFFkyUDNtNgKWpOe8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2CLYITCJK2hdX4poD+cy3n4BrNOSItQeWxUSlz8Z7RVzH1DOMM/Gviw1+9xpYL6WUbD2GSU1RqxlzFZCbCk9qYBJYXud2dxmGEUrej5doYi+3nVJxVVcMLr+/EWA3DvS/NyD7CoVyE5pzkGxyiKlBZNmuvsbJMFHo8e5Sf3XSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WYsQT3Z71zxVyf;
-	Wed, 31 Jul 2024 20:50:41 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 33032180AE3;
-	Wed, 31 Jul 2024 20:50:53 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 31 Jul 2024 20:50:52 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, "Michael S. Tsirkin"
-	<mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Eric Dumazet <edumazet@google.com>, David
- Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Trond
- Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
-	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, <kvm@vger.kernel.org>,
-	<virtualization@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-afs@lists.infradead.org>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH net-next v12 05/14] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Wed, 31 Jul 2024 20:44:55 +0800
-Message-ID: <20240731124505.2903877-6-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240731124505.2903877-1-linyunsheng@huawei.com>
-References: <20240731124505.2903877-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1722432831; c=relaxed/simple;
+	bh=6NPU+dqs4Y1NhpRq0CZksz5dVBsK0wDLqfrDEEsfpoY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pxn/ybT3uI4Lm2BfG0IXJNFPR0qfuPwGLXnHiSBPl8txT1RhrKt7tCrTD4ACi/zQzQd7ikkSeBQagtVEq6bfa2yMtnMoSOAMw07pD6Qm8uG8/BXqBzzqBbm/OfDIrCxCZp4D9q4kNHKQYEoElAZrgYRuMruF/CWZUE01d/P02ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name; spf=pass smtp.mailfrom=venev.name; dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b=kR6JzRAs; arc=none smtp.client-ip=213.240.239.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=venev.name
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=venev.name;
+	s=default; h=Content-Transfer-Encoding:Content-Type:Date:To:From:Subject:
+	Message-ID:Reply-To:Sender; bh=9RQbIJDp3ePYZ5FrvHKDzcSSI06YKTjK1cHZumUBJyI=; 
+	b=kR6JzRAsYm0u1ibIS3xvOWD8gteYzQAYjQgMTU8GAMca05pnspd7l03xHedwhad4/dr+ZEicWKJ
+	ICappycZGcrCqy4uWkvnEkYnHEB39IVkRPVVX4cfWgSoPPfV8YkY7YjLkuZojRDrSCPY1Fe3JiozH
+	Q31M632k+4exIJbJzQ+maK0wFyv2KJ++eHP0dQR1NJsIFjMfqIDvOKYhFt5du53jW/Tff2hlo+bmp
+	5yLrgdhThXefDOOc0MEUTcjpq5qfzymcVds7GzvTwdzdNsW3NvixW5r5VIABhK2fcU/GkrJR2xZGk
+	z9XAsHCrk2Pp+eLyZKZG9JHeeVJFpEeHfobd0M9YsphRh4jRhExRBLPa95W4qklVDYKGJzL4Con5P
+	EnZubjAgVejQXzbBVmFxgifqtraIIgsCeD0iY9ykvWy4Ec1olEWr2JiD4rWw4ciRGlps1oimXgRya
+	tk1ky4RuP+zknfO29NTEFQdvQLjz0ncRw2J60iToUdZQql62f6+dw9v9vH7SPhQL4zTF+dMcuP9S+
+	kY3/qakffHyvYO6AtU+CP0ES2gxnESSJoLSOYvk+/pBgB4HwefYi5boadZARFjOESgMJuP86ONMh4
+	DmxDXP3Gcdn3PrWnGlL2oN4YbpvDqwYfdr+meVQlWsZF2BQHHOJ17cqwMacV78Y5JVUMM=;
+Received: from a1-bg02.venev.name ([213.240.239.49] helo=pmx1.venev.name)
+	by a1-bg02.venev.name with esmtps
+	id 1sZ9SO-00000000yRL-3MVu
+	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	(envelope-from <hristo@venev.name>);
+	Wed, 31 Jul 2024 13:33:32 +0000
+Received: from plank.m.venev.name ([212.39.89.14])
+	by pmx1.venev.name with ESMTPSA
+	id et4PJSs9qmaMiwMAT9YxdQ
+	(envelope-from <hristo@venev.name>); Wed, 31 Jul 2024 13:33:32 +0000
+Message-ID: <637700fc5d1cb1e16860c1ccb122b4135d8250c4.camel@venev.name>
+Subject: Re: kernel 6.10
+From: Hristo Venev <hristo@venev.name>
+To: blokos <blokos@free.fr>, Dan Aloni <dan.aloni@vastdata.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, David Howells
+ <dhowells@redhat.com>, "linux-nfs@vger.kernel.org"
+ <linux-nfs@vger.kernel.org>
+Date: Wed, 31 Jul 2024 15:33:31 +0200
+In-Reply-To: <72597ba7-2950-4c61-bb77-8c82e573710c@free.fr>
+References: <b78c88db-8b3a-4008-94cb-82ae08f0e37b@free.fr>
+	 <3feb741cb32edd8c48a458be53d6e3915e6c18ed.camel@hammerspace.com>
+	 <zyclq4jtvvtz6vamljvfiw6cgnr763yvycl3ibydybducivhqh@lj2hgweowpsa>
+	 <3bd0bfc1fced855902c8963d03e8041f4452b291.camel@hammerspace.com>
+	 <47219e1df5edbfaf7e8a64ebf543a908511ace85.camel@venev.name>
+	 <5412f22e497b11c1cd3fc8b8d8f30d372b68cd03.camel@venev.name>
+	 <sl7cfmykqthhjss3qxeg2aweykff2gurcjqczfry62ne6edrfa@oocwcci6im3o>
+	 <72597ba7-2950-4c61-bb77-8c82e573710c@free.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf200006.china.huawei.com (7.185.36.61)
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+On Sun, 2024-07-28 at 03:39 -0700, blokos wrote:
+>=20
+> On 7/28/2024 1:33 AM, Dan Aloni wrote:
+> > On 2024-07-28 02:57:42, Hristo Venev wrote:
+> > > On Sun, 2024-07-28 at 02:34 +0200, Hristo Venev wrote:
+> > > > On Sun, 2024-07-21 at 16:40 +0000, Trond Myklebust wrote:
+> > > > > On Sun, 2024-07-21 at 14:03 +0300, Dan Aloni wrote:
+> > > > > > On 2024-07-16 16:09:54, Trond Myklebust wrote:
+> > > > > > > [..]
+> > > > > > > 	gdb -batch -quiet -ex 'list
+> > > > > > > *(nfs_folio_find_private_request+0x3c)' -ex quit nfs.ko
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > I suspect this will show that the problem is occurring
+> > > > > > > inside
+> > > > > > > the
+> > > > > > > function folio_get_private(), but I'd like to be sure
+> > > > > > > that is
+> > > > > > > the
+> > > > > > > case.
+> > > > > > I would suspect that `->private_data` gets corrupted
+> > > > > > somehow.
+> > > > > > Maybe
+> > > > > > the folio_test_private() call needs to be protected by
+> > > > > > either the
+> > > > > > &mapping->i_private_lock, or folio lock?
+> > > > > >=20
+> > > > > If the problem is indeed happening in "folio_get_private()",
+> > > > > then
+> > > > > the
+> > > > > dereferenced address value of 00000000000003a6 would seem to
+> > > > > indicate
+> > > > > that the pointer value of 'folio' itself is screwed up,
+> > > > > doesn't it?
+> > > > The NULL dereference appears to be at the `WARN_ON_ONCE(req-
+> > > > >wb_head
+> > > > !=3D
+> > > > req);` check.
+> > > >=20
+> > > > On my kernel the offset inside `nfs_folio_find_private_request`
+> > > > is
+> > > > +0x3f, but the address is again 0x3a6, meaning that `req` is
+> > > > for some
+> > > > reason set to 0x356 (the crash is on `cmp %rbp,0x50(%rbp)`).
+> > > ... and 0x356 happens to be NETFS_FOLIO_COPY_TO_CACHE. Maybe the
+> > > NETFS_RREQ_USE_PGPRIV2 flag is lost somehow?
+> > Seems NETFS_FOLIO_COPY_TO_CACHE relates to fscache use, you are
+> > activating that, right?
+> >=20
+> > Also in addition to my suggestion earlier, I think perhaps we need
+> > to
+> > use `folio_attach_private` and `folio_detach_private` instead of
+> > directly using `folio_set_private`, for which the NFS client seems
+> > to be
+> > the only direct user.
+> On my side Yes, fscache is used
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
----
- drivers/vhost/net.c             |  2 +-
- include/linux/page_frag_cache.h | 10 ++++++++++
- mm/page_frag_test.c             |  2 +-
- net/core/skbuff.c               |  6 +++---
- net/rxrpc/conn_object.c         |  4 +---
- net/rxrpc/local_object.c        |  4 +---
- net/sunrpc/svcsock.c            |  6 ++----
- 7 files changed, 19 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 6691fac01e0d..b2737dc0dc50 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index ef038a07925c..7c9125a9aed3 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/types.h>
- #include <linux/mm_types_task.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
-diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
-index 9eaa3ab74b29..6df8d8865afe 100644
---- a/mm/page_frag_test.c
-+++ b/mm/page_frag_test.c
-@@ -344,7 +344,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 4b8acd967793..76a473b1072d 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -749,14 +749,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -846,7 +846,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc_va(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 42d20412c1c3..4b1e87187614 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
--- 
-2.33.0
-
+Same here. Disabling caching (by not running cachefilesd; the fsc mount
+option is still specified) seems to mitigate the issue. However, we'd
+ideally like to keep caching on.
 
