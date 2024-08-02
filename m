@@ -1,189 +1,186 @@
-Return-Path: <linux-nfs+bounces-5216-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5217-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5041A945610
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2024 03:44:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C0C0945BCA
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2024 12:06:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B492CB22757
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2024 01:44:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF4A61F21EB2
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2024 10:06:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE30A1AAC4;
-	Fri,  2 Aug 2024 01:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="l8kuj9LN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FA41DAC77;
+	Fri,  2 Aug 2024 10:06:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC514199A2;
-	Fri,  2 Aug 2024 01:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC301D0DF3;
+	Fri,  2 Aug 2024 10:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722563055; cv=none; b=lK9Zs9Dj7MHQx+HKWsHpNLo1nw9C/9nZ2UdQrbduxCPI4K7WV+qcbxV2le21uPzjKYYt90A8tBXyQj/PeQ5qAUASEhuB4mXmzRA889jbBxfinXXAwWKn7E58pz87TSNjqJ7r5flT3TO8BSF9PuQjYaY3c04hU+a6rbz6yFBxQ7U=
+	t=1722593174; cv=none; b=OAVHH/h9/kcmXOmOrAlyMkI1aB2YG6OdBueAjYRhDcI/j9TTy0WX2X60r9Gk/ugyRAYKz0ztIrpODUdoa9d+jqNMXTQsc0DMQYucOxLq+mee20WUCllgItPJq4mcROOH++GyBMxKdElsYSb1YU4PjZVNpCmGfabNnqkN/NhDahM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722563055; c=relaxed/simple;
-	bh=AOHlQpp439hxXb8Yhi0cw6rbI7T9wbusdFDZsoOV5IU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKxa+cZecpaYHSiMpuCmA7dDMnGqxzTZRyTyxHekLKHq0IU4Dmu0sQ1omm2vCWNXSdbqH2qAV1KCYnTQrEvDDG19mQdWlFvBCacvob6r8Ez96wMe1lQWvIsy+N4EIO15dNPteLBQtOffNh8ZETZwC9adywk08u6ueo1cGhwmkx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=l8kuj9LN; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WZpXM4GcRz9sRt;
-	Fri,  2 Aug 2024 03:44:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1722563043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rX5EutK1564BvFK6uRJjpD10n8gil980gFWkU6pBKcA=;
-	b=l8kuj9LNJSkG1HDlE84DRgEPD5l4U2ZvOu8ucxxAt+bBLucAibv9BFY32ZcHRT3HvJb2Oj
-	Rrr/ipAJyEn3TBchVEgoOQnx497Vw9dUw2rj3majF1imXkczlTVl7Kdp5fp0gs8srw9Swr
-	qEux0YiQuY1FSzFwLAEuw3YOt22VnAmovWpN2GOobnNlProTG7bQWk5Dt8Wd7ylJisP975
-	ubaGZg7icectV6xdUI78iaFg18JtnYA0QbWYLELGvdLnVhGdYcDA0u43t8053r8tv/DqmR
-	wiFMHaKxp+2By482c9Dgln4a8MfA6KboPF91OyZFKeDUCqoIri31gt7K2CsJ0Q==
-Date: Fri, 2 Aug 2024 11:43:50 +1000
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RFC v3 0/2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
-Message-ID: <20240802.010502-peachy.struggle.moldy.shape-YcRNLL7bq7EE@cyphar.com>
-References: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
- <20240801142812.GA4187848@perftesting>
+	s=arc-20240116; t=1722593174; c=relaxed/simple;
+	bh=p8KHDp5T541LzcauHdbygkcHm9Fm1n44ZnrMVKkUu6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SOgQ7GfF56r340AGHYlMhxNn2hddkmE4ORKqztgMe/R/ElCHZ4NY3DLfeRSdhR4ioKqpaDgKPHHz3aTW6SfTobElblnjhsJ2TTXflp4JFnXddjXXUpRMxHzS4fv7Rd1Y0NQo1EiuDylSXrOp9ZhVn1N7kcfZ1hoyxazLg69IU8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wb1ZM6Y7HzQnl8;
+	Fri,  2 Aug 2024 18:01:31 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0F1351800A1;
+	Fri,  2 Aug 2024 18:05:53 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 2 Aug 2024 18:05:52 +0800
+Message-ID: <877efebe-f316-4192-aada-dd2657b74125@huawei.com>
+Date: Fri, 2 Aug 2024 18:05:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c7qvxlthxg64t2lg"
-Content-Disposition: inline
-In-Reply-To: <20240801142812.GA4187848@perftesting>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v12 04/14] mm: page_frag: add '_va' suffix to
+ page_frag API
+To: Alexander Duyck <alexander.duyck@gmail.com>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Subbaraya Sundeep
+	<sbhatta@marvell.com>, Jeroen de Borst <jeroendb@google.com>, Praveen
+ Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>,
+	Eric Dumazet <edumazet@google.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Sunil Goutham
+	<sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>, hariprasad
+	<hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, Sean Wang
+	<sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo
+ Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith
+ Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+	<kch@nvidia.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Andrii
+ Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
+	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-nvme@lists.infradead.org>,
+	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-mm@kvack.org>, <bpf@vger.kernel.org>, <linux-afs@lists.infradead.org>,
+	<linux-nfs@vger.kernel.org>
+References: <20240731124505.2903877-1-linyunsheng@huawei.com>
+ <20240731124505.2903877-5-linyunsheng@huawei.com>
+ <CAKgT0UcqdeSJdjZ_FfwyCnT927TwOkE4zchHLOkrBEmhGzex9g@mail.gmail.com>
+ <22fda86c-d688-42e7-99e8-e2f8fcf1a5ba@huawei.com>
+ <CAKgT0UcuGj8wvC87=A+hkarRupfhjGM0BPzLUT2AJc8Ovg_TFg@mail.gmail.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <CAKgT0UcuGj8wvC87=A+hkarRupfhjGM0BPzLUT2AJc8Ovg_TFg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
+On 2024/8/1 23:21, Alexander Duyck wrote:
+> On Thu, Aug 1, 2024 at 6:01 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2024/8/1 2:13, Alexander Duyck wrote:
+>>> On Wed, Jul 31, 2024 at 5:50 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>
+>>>> Currently the page_frag API is returning 'virtual address'
+>>>> or 'va' when allocing and expecting 'virtual address' or
+>>>> 'va' as input when freeing.
+>>>>
+>>>> As we are about to support new use cases that the caller
+>>>> need to deal with 'struct page' or need to deal with both
+>>>> 'va' and 'struct page'. In order to differentiate the API
+>>>> handling between 'va' and 'struct page', add '_va' suffix
+>>>> to the corresponding API mirroring the page_pool_alloc_va()
+>>>> API of the page_pool. So that callers expecting to deal with
+>>>> va, page or both va and page may call page_frag_alloc_va*,
+>>>> page_frag_alloc_pg*, or page_frag_alloc* API accordingly.
+>>>>
+>>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
+>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>> Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+>>>
+>>> I am naking this patch. It is a pointless rename that is just going to
+>>> obfuscate the git history for these callers.
+>>
+>> I responded to your above similar comment in v2, and then responded more
+>> detailedly in v11, both got not direct responding, it would be good to
+>> have more concrete feedback here instead of abstract argument.
+>>
+>> https://lore.kernel.org/all/74e7259a-c462-e3c1-73ac-8e3f49fb80b8@huawei.com/
+>> https://lore.kernel.org/all/11187fe4-9419-4341-97b5-6dad7583b5b6@huawei.com/
+> 
+> I will make this much more understandable. This patch is one of the
+> ones that will permanently block this set in my opinion. As such I
+> will never ack this patch as I see no benefit to it. Arguing with me
+> on this is moot as you aren't going to change my mind, and I don't
+> have all day to argue back and forth with you on every single patch.
 
---c7qvxlthxg64t2lg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let's move on to more specific technical discussion then.
 
-On 2024-08-01, Josef Bacik <josef@toxicpanda.com> wrote:
-> On Thu, Aug 01, 2024 at 01:52:39PM +1000, Aleksa Sarai wrote:
-> > Now that we provide a unique 64-bit mount ID interface in statx(2), we
-> > can now provide a race-free way for name_to_handle_at(2) to provide a
-> > file handle and corresponding mount without needing to worry about
-> > racing with /proc/mountinfo parsing or having to open a file just to do
-> > statx(2).
-> >=20
-> > While this is not necessary if you are using AT_EMPTY_PATH and don't
-> > care about an extra statx(2) call, users that pass full paths into
-> > name_to_handle_at(2) need to know which mount the file handle comes from
-> > (to make sure they don't try to open_by_handle_at a file handle from a
-> > different filesystem) and switching to AT_EMPTY_PATH would require
-> > allocating a file for every name_to_handle_at(2) call, turning
-> >=20
-> >   err =3D name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
-> >                           AT_HANDLE_MNT_ID_UNIQUE);
-> >=20
-> > into
-> >=20
-> >   int fd =3D openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
-> >   err1 =3D name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_P=
-ATH);
-> >   err2 =3D statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
-> >   mntid =3D statxbuf.stx_mnt_id;
-> >   close(fd);
-> >=20
-> > Also, this series adds a patch to clarify how AT_* flag allocation
-> > should work going forwards.
-> >=20
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> > Changes in v3:
-> > - Added a patch describing how AT_* flags should be allocated in the
-> >   future, based on Amir's suggestions.
-> > - Included AT_* aliases for RENAME_* flags to further indicate that
-> >   renameat2(2) is an *at(2) syscall and to indicate that those flags
-> >   have been allocated already in the per-syscall range.
-> > - Switched AT_HANDLE_MNT_ID_UNIQUE to use 0x01 (to reuse
-> >   (AT_)RENAME_NOREPLACE).
-> > - v2: <https://lore.kernel.org/r/20240523-exportfs-u64-mount-id-v2-1-f9=
-f959f17eb1@cyphar.com>
-> > Changes in v2:
-> > - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
-> > - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match =
-statx.
-> > - Switched to using an AT_* bit from 0xFF and defining that range as
-> >   being "per-syscall" for future usage.
-> > - Sync tools/ copy of <linux/fcntl.h> to include changes.
-> > - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f5=
-5fd9215b8e@cyphar.com>
-> >=20
-> > ---
-> > Aleksa Sarai (2):
-> >       uapi: explain how per-syscall AT_* flags should be allocated
-> >       fhandle: expose u64 mount id to name_to_handle_at(2)
-> >=20
->=20
-> Wasn't the conclusion from this discussion last time that we needed to re=
-visit
-> this API completely?  Christoph had some pretty adamant objections.
+> 
+> As far as your API extension and naming maybe you should look like
+> something like bio_vec and borrow the naming from that since that is
+> essentially what you are passing back and forth is essentially that
+> instead of a page frag which is normally a virtual address.
 
-There was a discussion about reworking the API and I agree with most of
-the issues raised about file handles (I personally don't really like
-this interface and it's a bit of a shame that it seems this is going to
-be the interface that replaces inode numbers) so I'm not at all opposed
-to reworking it.
+I thought about adding something like bio_vec before, but I am not sure
+what you have in mind is somthing like I considered before?
+Let's say that we reuse bio_vec like something below for the new APIs:
 
-However, I agree with Christian[1] that we can fix this existing issue
-in the existing API fairly easily and then work on a new API separately.
-The existing usage of name_to_handle_at() is fundamentally unsafe (as
-outlined in the man page) and we can fix that fairly easily.
+struct bio_vec {
+	struct page	*bv_page;
+	void		*va;
+	unsigned int	bv_len;
+	unsigned int	bv_offset;
+};
 
-[1]: https://lore.kernel.org/all/20240527-hagel-thunfisch-75781b0cf75d@brau=
-ner/
+It seems we have the below options for the new API:
 
-> That being said the uapi comments patch looks good to me, you can add
->=20
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
->=20
-> to that one.  The other one I'm going to let others who have stronger opi=
-nions
-> than me argue about.  Thanks,
->=20
-> Josef
+option 1, it seems like a better option from API naming point of view, but
+it needs to return a bio_vec pointer to the caller, it seems we need to have
+extra space for the pointer, I am not sure how we can avoid the memory waste
+for sk_page_frag() case in patch 12:
+struct bio_vec *page_frag_alloc_bio(struct page_frag_cache *nc,
+				    unsigned int fragsz, gfp_t gfp_mask);
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+option 2, it need both the caller and callee to have a its own local space
+for 'struct bio_vec ', I am not sure if passing the content instead of
+the pointer of a struct through the function returning is the common pattern
+and if it has any performance impact yet:
+struct bio_vec page_frag_alloc_bio(struct page_frag_cache *nc,
+				   unsigned int fragsz, gfp_t gfp_mask);
 
---c7qvxlthxg64t2lg
-Content-Type: application/pgp-signature; name="signature.asc"
+option 3, the caller passes the pointer of 'struct bio_vec ' to the callee,
+and page_frag_alloc_bio() fills in the data, I am not sure what is the point
+of indirect using 'struct bio_vec ' instead of passing 'va' & 'fragsz' &
+'offset' through pointers directly:
+bool page_frag_alloc_bio(struct page_frag_cache *nc,
+			 unsigned int fragsz, gfp_t gfp_mask, struct bio_vec *bio);
 
------BEGIN PGP SIGNATURE-----
+If one of the above option is something in your mind? Yes, please be more specific
+about which one is the prefer option, and why it is the prefer option than the one
+introduced in this patchset?
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZqw51QAKCRAol/rSt+lE
-b4pZAP0REm8hqjt6l74YM2JQI+BQIfgYBKBGk78diZBwiJ5jxgD+KhCe4dt7UT3O
-P4dv9Kd0Ol79OKqHOpG5Fs+2TkIQcQg=
-=Z43g
------END PGP SIGNATURE-----
+If no, please be more specific what that is in your mind?
 
---c7qvxlthxg64t2lg--
 
