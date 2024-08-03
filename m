@@ -1,480 +1,192 @@
-Return-Path: <linux-nfs+bounces-5223-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5224-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 470BD94660D
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2024 01:04:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68F9C946A0B
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2024 16:22:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 698B51C214FB
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Aug 2024 23:04:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A451281AC0
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2024 14:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B485258;
-	Fri,  2 Aug 2024 23:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0015C1E895;
+	Sat,  3 Aug 2024 14:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nwHzGUmw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3I6N4pQ2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nwHzGUmw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3I6N4pQ2"
+	dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b="FrwiArAm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a1-bg02.venev.name (a1-bg02.venev.name [213.240.239.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE9F6D1A8
-	for <linux-nfs@vger.kernel.org>; Fri,  2 Aug 2024 23:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD051DA26
+	for <linux-nfs@vger.kernel.org>; Sat,  3 Aug 2024 14:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.240.239.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722639880; cv=none; b=DMT9WchoC89qxgMgDDsz0OjDXh3CKVy8HvjAWwB/AZY777g3tvAyCXwOpnL2JTS+UQw4alHbTPS4SsK6VGtxbsi+EK9347j362VXHPe8CuwSPqLSJn9c05nbXPRf9gJLxqAKAyFdFXVtpu8hO/Dm/mVNS1VWxj7C7nT35hWoUJI=
+	t=1722694953; cv=none; b=h7th5AAF77NkvDqMNsUBkjV5spT+Itgqr3JzyiGmkZehRefRMAHlJ6dTI2JREEpED+fKywW3bOhvAM9IholS8sy3sE2OmqvYvQhoJsU+X1XnmNLN9I/dkGVkaSRrbV6zpRqiscJOC8x+Y6LTJ80e5ZOtBek6nktTl7r++jfO9Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722639880; c=relaxed/simple;
-	bh=1//FNwdwKhnQm4u6grYRz+KsqA1sSqgrv1CFoo4Mpts=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pakzj6N5OFbcP1sCgz/ICsrN9fptB/fKwczLAEqshRPUFzWEj9HXMZIKrp22AHQSPgob1X623KIdmwabXCPkqflY7aQYF11E2M3NEaVrW+ExzF6L8yWYXlqSdrbtveDa8XGE/JzUgsbh7r1ouwO0/XxdCl9z95Bsp3TcyQVvfrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nwHzGUmw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3I6N4pQ2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nwHzGUmw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3I6N4pQ2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6674421B57;
-	Fri,  2 Aug 2024 23:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722639876; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUvHAOwUI/DPKxayChubb2t1MqPSzcYCOhesbe9nBWY=;
-	b=nwHzGUmwUZBapwRrT7sMG+AUX+bzKvuu4N257Qg1npPPWciFiv7HHWSvnb4jJCu7hAx4W8
-	j1oKRhi/+L3CGFN/05ahVXvc+P1cB+ajrCpnd2X7CD0sma5IAIXywHORTswbWJAK8Ud32y
-	qdrOJTZyptwP0MqmHRUp+8cOdUFXjdw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722639876;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUvHAOwUI/DPKxayChubb2t1MqPSzcYCOhesbe9nBWY=;
-	b=3I6N4pQ20fRLySQcZIYNW/IeIpX3+49Oin++ZUcBtTnOhcMAGWmGjuvEB/k6iqWhHhy3Kz
-	FrUOppn6WSe+3CBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nwHzGUmw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=3I6N4pQ2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722639876; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUvHAOwUI/DPKxayChubb2t1MqPSzcYCOhesbe9nBWY=;
-	b=nwHzGUmwUZBapwRrT7sMG+AUX+bzKvuu4N257Qg1npPPWciFiv7HHWSvnb4jJCu7hAx4W8
-	j1oKRhi/+L3CGFN/05ahVXvc+P1cB+ajrCpnd2X7CD0sma5IAIXywHORTswbWJAK8Ud32y
-	qdrOJTZyptwP0MqmHRUp+8cOdUFXjdw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722639876;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUvHAOwUI/DPKxayChubb2t1MqPSzcYCOhesbe9nBWY=;
-	b=3I6N4pQ20fRLySQcZIYNW/IeIpX3+49Oin++ZUcBtTnOhcMAGWmGjuvEB/k6iqWhHhy3Kz
-	FrUOppn6WSe+3CBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D4FF13999;
-	Fri,  2 Aug 2024 23:04:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id FecRCQFmrWaLAgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 02 Aug 2024 23:04:33 +0000
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1722694953; c=relaxed/simple;
+	bh=QQhrTUm090zz6E/U6gQ09n+M/ixO06zRM3QE6YrLq1w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Tbz3HSIzQWFizCUzg8VtyHxPaKJpso+YHeknhm15Xhc8J9ybL4p93MoE80UtH2GSSTVId1FHh40MZzufVfMLSiMW8KESkwZQ3sqxSJj3rJ4zrSlW4T9FoEiIQJAQNlFDeGO5SU0uktjAYk2k38ZA1bHnR5p08pZMptvzrEZAwAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name; spf=pass smtp.mailfrom=venev.name; dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b=FrwiArAm; arc=none smtp.client-ip=213.240.239.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=venev.name
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=venev.name;
+	s=default; h=Content-Transfer-Encoding:Content-Type:Date:To:From:Subject:
+	Message-ID:Reply-To:Sender; bh=v9+U+E6gGyv3zoTHMcYMniz/edUGQHDA2sqRpT9cn/E=; 
+	b=FrwiArAmgdzBixWXT/8paTnnLBlPVELuc/WVBB9CHotyrazPleEGtVs0pIFzNdg2RIbN/Q5kQfe
+	3tY5V+YRyUCcApPC4vO/UH6POrRltH4wFLf+RGUSX2+/qzbnTIfWypKhiIfyTzfxu3uXv+/OkZSRs
+	yJxQ317sCwqqLIvDZPwJ4KL5EcU5yaDSNErPAV/IMz7dq6nuxM7M91UDPN49SNK52JeQ/j9EifR55
+	pGUAT4w9KBlejwYoh9GeJOb/JuyBSUpcRMhTF0p0XHf8lT1eVlyLKXs1hiVmLKYB/XVU0mvwMQCT5
+	/5MHzM/ws9dbjEtPzEvN1Skl0oXrX0pCz+goba249wSEJufBy7DkfujQYNU3exCX3gKKEHjn8Vvvv
+	AZyJ2zch3m6R/evO+4SEtTcVLJwDvGmLxenrF3XtaIUpdLjMxKNASGu2LNK2Iychiq9zXbU3CbOVA
+	zUuqAhaS49ZwqCDdzx4nKLD+Qj35qmR+SG5ayY00SCCYX/cV9L7CBpgIY6ORUjIFjHYkRkU7jCjcD
+	eHGR83JRuzbOR2PiEa0QZmyrY5MBwh9v9DSnLXf1MFPaO7KiFDK5Hp3kgkf9rKD2g+CDCmOx48FkN
+	iLSkrGoEobbTNnwso4MHz/HWzOpljkd/lCCyrGlfd3O35H6igYWWhO47kzN/buTHuMpD4=;
+Received: from a1-bg02.venev.name ([213.240.239.49] helo=pmx1.venev.name)
+	by a1-bg02.venev.name with esmtps
+	id 1saFeD-00000003Esz-2Es2
+	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	(envelope-from <hristo@venev.name>);
+	Sat, 03 Aug 2024 14:22:17 +0000
+Received: from a1-bg02.venev.name ([213.240.239.49])
+	by pmx1.venev.name with ESMTPSA
+	id gBjeBhk9rmZuyAsAT9YxdQ
+	(envelope-from <hristo@venev.name>); Sat, 03 Aug 2024 14:22:17 +0000
+Message-ID: <056dde73b48f7a6ee1ca9bf6cc2f0f11536424c3.camel@venev.name>
+Subject: Re: kernel 6.10
+From: Hristo Venev <hristo@venev.name>
+To: Trond Myklebust <trondmy@hammerspace.com>, "dan.aloni@vastdata.com"
+	 <dan.aloni@vastdata.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "blokos@free.fr" <blokos@free.fr>, "dhowells@redhat.com"
+ <dhowells@redhat.com>
+Date: Sat, 03 Aug 2024 17:22:16 +0300
+In-Reply-To: <eba1f68169ce0bfdd5e0881e04f67b0c57d6ce2e.camel@hammerspace.com>
+References: <b78c88db-8b3a-4008-94cb-82ae08f0e37b@free.fr>
+	 <3feb741cb32edd8c48a458be53d6e3915e6c18ed.camel@hammerspace.com>
+	 <zyclq4jtvvtz6vamljvfiw6cgnr763yvycl3ibydybducivhqh@lj2hgweowpsa>
+	 <3bd0bfc1fced855902c8963d03e8041f4452b291.camel@hammerspace.com>
+	 <47219e1df5edbfaf7e8a64ebf543a908511ace85.camel@venev.name>
+	 <5412f22e497b11c1cd3fc8b8d8f30d372b68cd03.camel@venev.name>
+	 <sl7cfmykqthhjss3qxeg2aweykff2gurcjqczfry62ne6edrfa@oocwcci6im3o>
+	 <eba1f68169ce0bfdd5e0881e04f67b0c57d6ce2e.camel@hammerspace.com>
+Autocrypt: addr=hristo@venev.name; prefer-encrypt=mutual;
+ keydata=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
+ AjQ6o01lu
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org, "Olga Kornievskaia" <kolga@netapp.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Steve Dickson" <steved@redhat.com>
-Subject: Re: [PATCH 04/14] nfsd: don't allocate the versions array.
-In-reply-to: <Zq1Q8f1Dslc2Cvjo@kernel.org>
-References: <>, <Zq1Q8f1Dslc2Cvjo@kernel.org>
-Date: Sat, 03 Aug 2024 09:04:26 +1000
-Message-id: <172263986618.6062.12535168158374219174@noble.neil.brown.name>
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -6.51
-X-Rspamd-Queue-Id: 6674421B57
 
-On Sat, 03 Aug 2024, Mike Snitzer wrote:
-> On Mon, Jul 15, 2024 at 05:14:17PM +1000, NeilBrown wrote:
-> > Instead of using kmalloc to allocate an array for storing active version
-> > info, just declare and array to the max size - it is only 5 or so.
-> >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfs/nfs4state.c |   2 +
-> >  fs/nfsd/cache.h    |   2 +-
-> >  fs/nfsd/netns.h    |   6 +--
-> >  fs/nfsd/nfsctl.c   |  10 +++--
-> >  fs/nfsd/nfsd.h     |   9 +++-
-> >  fs/nfsd/nfssvc.c   | 100 ++++++++-------------------------------------
-> >  6 files changed, 36 insertions(+), 93 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> > index 5b452411e8fd..68c663626480 100644
-> > --- a/fs/nfs/nfs4state.c
-> > +++ b/fs/nfs/nfs4state.c
-> > @@ -1953,6 +1953,8 @@ static int nfs4_do_reclaim(struct nfs_client *clp, =
-const struct nfs4_state_recov
-> >  				if (lost_locks)
-> >  					pr_warn("NFS: %s: lost %d locks\n",
-> >  						clp->cl_hostname, lost_locks);
-> > +				nfs4_free_state_owners(&freeme);
-> > +
-> >  				set_bit(ops->owner_flag_bit, &sp->so_flags);
-> >  				nfs4_put_state_owner(sp);
-> >  				status =3D nfs4_recovery_handle_error(clp, status);
->=20
-> Hey Neil,
->=20
-> This call to nfs4_free_state_owners() feels out of place given the
-> rest of this patch.  Was it meant to be folded into a different
-> patch?
-
-I think I was writing a different patch (there is a case where the
-lost-locks warning can be incorrect) and I got half way and stopped for
-some reason.  Then later I wanted to do this patch and did "git stash"
-but I hadn't saved all my work.  So when I later did a "save all
-buffers" that change went into the wrong patch.
-
-I'll follow up on Monday - thanks for noticing and letting me know!
-
-NeilBrown
-
-
->=20
-> Thanks,
-> Mike
->=20
->=20
-> > diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-> > index 66a05fefae98..bb7addef4a31 100644
-> > --- a/fs/nfsd/cache.h
-> > +++ b/fs/nfsd/cache.h
-> > @@ -10,7 +10,7 @@
-> >  #define NFSCACHE_H
-> > =20
-> >  #include <linux/sunrpc/svc.h>
-> > -#include "netns.h"
-> > +#include "nfsd.h"
-> > =20
-> >  /*
-> >   * Representation of a reply cache entry.
-> > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > index 14ec15656320..238fc4e56e53 100644
-> > --- a/fs/nfsd/netns.h
-> > +++ b/fs/nfsd/netns.h
-> > @@ -152,8 +152,8 @@ struct nfsd_net {
-> >  	/*
-> >  	 * Version information
-> >  	 */
-> > -	bool *nfsd_versions;
-> > -	bool *nfsd4_minorversions;
-> > +	bool nfsd_versions[NFSD_MAXVERS + 1];
-> > +	bool nfsd4_minorversions[NFSD_SUPPORTED_MINOR_VERSION + 1];
-> > =20
-> >  	/*
-> >  	 * Duplicate reply cache
-> > @@ -219,8 +219,6 @@ struct nfsd_net {
-> >  #define nfsd_netns_ready(nn) ((nn)->sessionid_hashtbl)
-> > =20
-> >  extern bool nfsd_support_version(int vers);
-> > -extern void nfsd_netns_free_versions(struct nfsd_net *nn);
-> > -
-> >  extern unsigned int nfsd_net_id;
-> > =20
-> >  void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn);
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 9b47723fc110..5b0f2e0d7ccf 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -2232,8 +2232,9 @@ int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb,=
- struct genl_info *info)
-> >   */
-> >  static __net_init int nfsd_net_init(struct net *net)
-> >  {
-> > -	int retval;
-> >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > +	int retval;
-> > +	int i;
-> > =20
-> >  	retval =3D nfsd_export_init(net);
-> >  	if (retval)
-> > @@ -2247,8 +2248,10 @@ static __net_init int nfsd_net_init(struct net *ne=
-t)
-> >  		goto out_repcache_error;
-> >  	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
-> >  	nn->nfsd_svcstats.program =3D &nfsd_program;
-> > -	nn->nfsd_versions =3D NULL;
-> > -	nn->nfsd4_minorversions =3D NULL;
-> > +	for (i =3D 0; i < sizeof(nn->nfsd_versions); i++)
-> > +		nn->nfsd_versions[i] =3D nfsd_support_version(i);
-> > +	for (i =3D 0; i < sizeof(nn->nfsd4_minorversions); i++)
-> > +		nn->nfsd4_minorversions[i] =3D nfsd_support_version(4);
-> >  	nn->nfsd_info.mutex =3D &nfsd_mutex;
-> >  	nn->nfsd_serv =3D NULL;
-> >  	nfsd4_init_leases_net(nn);
-> > @@ -2279,7 +2282,6 @@ static __net_exit void nfsd_net_exit(struct net *ne=
-t)
-> >  	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
-> >  	nfsd_idmap_shutdown(net);
-> >  	nfsd_export_shutdown(net);
-> > -	nfsd_netns_free_versions(nn);
-> >  }
-> > =20
-> >  static struct pernet_operations nfsd_net_ops =3D {
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index 39e109a7d56d..369c3b3ce53e 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -23,9 +23,7 @@
-> > =20
-> >  #include <uapi/linux/nfsd/debug.h>
-> > =20
-> > -#include "netns.h"
-> >  #include "export.h"
-> > -#include "stats.h"
-> > =20
-> >  #undef ifdebug
-> >  #ifdef CONFIG_SUNRPC_DEBUG
-> > @@ -37,7 +35,14 @@
-> >  /*
-> >   * nfsd version
-> >   */
-> > +#define NFSD_MINVERS			2
-> > +#define	NFSD_MAXVERS			4
-> >  #define NFSD_SUPPORTED_MINOR_VERSION	2
-> > +bool nfsd_support_version(int vers);
-> > +
-> > +#include "netns.h"
-> > +#include "stats.h"
-> > +
-> >  /*
-> >   * Maximum blocksizes supported by daemon under various circumstances.
-> >   */
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index f25b26bc5670..4438cdcd4873 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -116,15 +116,12 @@ static const struct svc_version *nfsd_version[] =3D=
- {
-> >  #endif
-> >  };
-> > =20
-> > -#define NFSD_MINVERS    	2
-> > -#define NFSD_NRVERS		ARRAY_SIZE(nfsd_version)
-> > -
-> >  struct svc_program		nfsd_program =3D {
-> >  #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
-> >  	.pg_next		=3D &nfsd_acl_program,
-> >  #endif
-> >  	.pg_prog		=3D NFS_PROGRAM,		/* program number */
-> > -	.pg_nvers		=3D NFSD_NRVERS,		/* nr of entries in nfsd_version */
-> > +	.pg_nvers		=3D NFSD_MAXVERS+1,	/* nr of entries in nfsd_version */
-> >  	.pg_vers		=3D nfsd_version,		/* version table */
-> >  	.pg_name		=3D "nfsd",		/* program name */
-> >  	.pg_class		=3D "nfsd",		/* authentication class */
-> > @@ -135,78 +132,24 @@ struct svc_program		nfsd_program =3D {
-> > =20
-> >  bool nfsd_support_version(int vers)
-> >  {
-> > -	if (vers >=3D NFSD_MINVERS && vers < NFSD_NRVERS)
-> > +	if (vers >=3D NFSD_MINVERS && vers <=3D NFSD_MAXVERS)
-> >  		return nfsd_version[vers] !=3D NULL;
-> >  	return false;
-> >  }
-> > =20
-> > -static bool *
-> > -nfsd_alloc_versions(void)
-> > -{
-> > -	bool *vers =3D kmalloc_array(NFSD_NRVERS, sizeof(bool), GFP_KERNEL);
-> > -	unsigned i;
-> > -
-> > -	if (vers) {
-> > -		/* All compiled versions are enabled by default */
-> > -		for (i =3D 0; i < NFSD_NRVERS; i++)
-> > -			vers[i] =3D nfsd_support_version(i);
-> > -	}
-> > -	return vers;
-> > -}
-> > -
-> > -static bool *
-> > -nfsd_alloc_minorversions(void)
-> > -{
-> > -	bool *vers =3D kmalloc_array(NFSD_SUPPORTED_MINOR_VERSION + 1,
-> > -			sizeof(bool), GFP_KERNEL);
-> > -	unsigned i;
-> > -
-> > -	if (vers) {
-> > -		/* All minor versions are enabled by default */
-> > -		for (i =3D 0; i <=3D NFSD_SUPPORTED_MINOR_VERSION; i++)
-> > -			vers[i] =3D nfsd_support_version(4);
-> > -	}
-> > -	return vers;
-> > -}
-> > -
-> > -void
-> > -nfsd_netns_free_versions(struct nfsd_net *nn)
-> > -{
-> > -	kfree(nn->nfsd_versions);
-> > -	kfree(nn->nfsd4_minorversions);
-> > -	nn->nfsd_versions =3D NULL;
-> > -	nn->nfsd4_minorversions =3D NULL;
-> > -}
-> > -
-> > -static void
-> > -nfsd_netns_init_versions(struct nfsd_net *nn)
-> > -{
-> > -	if (!nn->nfsd_versions) {
-> > -		nn->nfsd_versions =3D nfsd_alloc_versions();
-> > -		nn->nfsd4_minorversions =3D nfsd_alloc_minorversions();
-> > -		if (!nn->nfsd_versions || !nn->nfsd4_minorversions)
-> > -			nfsd_netns_free_versions(nn);
-> > -	}
-> > -}
-> > -
-> >  int nfsd_vers(struct nfsd_net *nn, int vers, enum vers_op change)
-> >  {
-> > -	if (vers < NFSD_MINVERS || vers >=3D NFSD_NRVERS)
-> > +	if (vers < NFSD_MINVERS || vers > NFSD_MAXVERS)
-> >  		return 0;
-> >  	switch(change) {
-> >  	case NFSD_SET:
-> > -		if (nn->nfsd_versions)
-> > -			nn->nfsd_versions[vers] =3D nfsd_support_version(vers);
-> > +		nn->nfsd_versions[vers] =3D nfsd_support_version(vers);
-> >  		break;
-> >  	case NFSD_CLEAR:
-> > -		nfsd_netns_init_versions(nn);
-> > -		if (nn->nfsd_versions)
-> > -			nn->nfsd_versions[vers] =3D false;
-> > +		nn->nfsd_versions[vers] =3D false;
-> >  		break;
-> >  	case NFSD_TEST:
-> > -		if (nn->nfsd_versions)
-> > -			return nn->nfsd_versions[vers];
-> > -		fallthrough;
-> > +		return nn->nfsd_versions[vers];
-> >  	case NFSD_AVAIL:
-> >  		return nfsd_support_version(vers);
-> >  	}
-> > @@ -233,23 +176,16 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 mino=
-rversion, enum vers_op change
-> > =20
-> >  	switch(change) {
-> >  	case NFSD_SET:
-> > -		if (nn->nfsd4_minorversions) {
-> > -			nfsd_vers(nn, 4, NFSD_SET);
-> > -			nn->nfsd4_minorversions[minorversion] =3D
-> > -				nfsd_vers(nn, 4, NFSD_TEST);
-> > -		}
-> > +		nfsd_vers(nn, 4, NFSD_SET);
-> > +		nn->nfsd4_minorversions[minorversion] =3D
-> > +			nfsd_vers(nn, 4, NFSD_TEST);
-> >  		break;
-> >  	case NFSD_CLEAR:
-> > -		nfsd_netns_init_versions(nn);
-> > -		if (nn->nfsd4_minorversions) {
-> > -			nn->nfsd4_minorversions[minorversion] =3D false;
-> > -			nfsd_adjust_nfsd_versions4(nn);
-> > -		}
-> > +		nn->nfsd4_minorversions[minorversion] =3D false;
-> > +		nfsd_adjust_nfsd_versions4(nn);
-> >  		break;
-> >  	case NFSD_TEST:
-> > -		if (nn->nfsd4_minorversions)
-> > -			return nn->nfsd4_minorversions[minorversion];
-> > -		return nfsd_vers(nn, 4, NFSD_TEST);
-> > +		return nn->nfsd4_minorversions[minorversion];
-> >  	case NFSD_AVAIL:
-> >  		return minorversion <=3D NFSD_SUPPORTED_MINOR_VERSION &&
-> >  			nfsd_vers(nn, 4, NFSD_AVAIL);
-> > @@ -568,11 +504,11 @@ void nfsd_reset_versions(struct nfsd_net *nn)
-> >  {
-> >  	int i;
-> > =20
-> > -	for (i =3D 0; i < NFSD_NRVERS; i++)
-> > +	for (i =3D 0; i <=3D NFSD_MAXVERS; i++)
-> >  		if (nfsd_vers(nn, i, NFSD_TEST))
-> >  			return;
-> > =20
-> > -	for (i =3D 0; i < NFSD_NRVERS; i++)
-> > +	for (i =3D 0; i <=3D NFSD_MAXVERS; i++)
-> >  		if (i !=3D 4)
-> >  			nfsd_vers(nn, i, NFSD_SET);
-> >  		else {
-> > @@ -905,17 +841,17 @@ nfsd_init_request(struct svc_rqst *rqstp,
-> >  	if (likely(nfsd_vers(nn, rqstp->rq_vers, NFSD_TEST)))
-> >  		return svc_generic_init_request(rqstp, progp, ret);
-> > =20
-> > -	ret->mismatch.lovers =3D NFSD_NRVERS;
-> > -	for (i =3D NFSD_MINVERS; i < NFSD_NRVERS; i++) {
-> > +	ret->mismatch.lovers =3D NFSD_MAXVERS + 1;
-> > +	for (i =3D NFSD_MINVERS; i <=3D NFSD_MAXVERS; i++) {
-> >  		if (nfsd_vers(nn, i, NFSD_TEST)) {
-> >  			ret->mismatch.lovers =3D i;
-> >  			break;
-> >  		}
-> >  	}
-> > -	if (ret->mismatch.lovers =3D=3D NFSD_NRVERS)
-> > +	if (ret->mismatch.lovers > NFSD_MAXVERS)
-> >  		return rpc_prog_unavail;
-> >  	ret->mismatch.hivers =3D NFSD_MINVERS;
-> > -	for (i =3D NFSD_NRVERS - 1; i >=3D NFSD_MINVERS; i--) {
-> > +	for (i =3D NFSD_MAXVERS; i >=3D NFSD_MINVERS; i--) {
-> >  		if (nfsd_vers(nn, i, NFSD_TEST)) {
-> >  			ret->mismatch.hivers =3D i;
-> >  			break;
-> > --=20
-> > 2.44.0
-> >=20
+On Wed, 2024-07-31 at 15:27 +0000, Trond Myklebust wrote:
+> On Sun, 2024-07-28 at 11:33 +0300, Dan Aloni wrote:
+> > On 2024-07-28 02:57:42, Hristo Venev wrote:
+> > >=20
+> > >=20
+> > > ... and 0x356 happens to be NETFS_FOLIO_COPY_TO_CACHE. Maybe the
+> > > NETFS_RREQ_USE_PGPRIV2 flag is lost somehow?
 > >=20
 >=20
+> Why is netfs setting folio->private at all when it is running on top
+> of
+> NFS? It doesn't own that field.
 
+As I mentioned previously, there is something going on with the
+`NETFS_RREQ_USE_PGPRIV2` flag. In particular, it appears that it isn't
+always set in `netfs_alloc_request()`. This may happen when
+`netfs_is_cache_enabled()` returns false on a cache-enabled filesystem.
+Maybe the inode cache state is not yet fully initialized?
+
+The patch below seems to fix the issue, in the sense that reading from
+the filesystem is no longer a guaranteed crash.
+
+
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index f4a6427274792..a74ca90c86c9b 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -27,7 +27,6 @@ struct netfs_io_request *netfs_alloc_request(struct addre=
+ss_space *mapping,
+ 	bool is_unbuffered =3D (origin =3D=3D NETFS_UNBUFFERED_WRITE ||
+ 			      origin =3D=3D NETFS_DIO_READ ||
+ 			      origin =3D=3D NETFS_DIO_WRITE);
+-	bool cached =3D !is_unbuffered && netfs_is_cache_enabled(ctx);
+ 	int ret;
+=20
+ 	for (;;) {
+@@ -56,8 +55,9 @@ struct netfs_io_request *netfs_alloc_request(struct addre=
+ss_space *mapping,
+ 	refcount_set(&rreq->ref, 1);
+=20
+ 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
+-	if (cached) {
+-		__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
++	if (!is_unbuffered && fscache_cookie_valid(netfs_i_cookie(ctx))) {
++		if (netfs_is_cache_enabled(ctx))
++			__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
+ 		if (test_bit(NETFS_ICTX_USE_PGPRIV2, &ctx->flags))
+ 			/* Filesystem uses deprecated PG_private_2 marking. */
+ 			__set_bit(NETFS_RREQ_USE_PGPRIV2, &rreq->flags);
+
+
+However, there is still another issue: Unmounting deadlocks on
+`folio_wait_private_2`:
+
+   [root@localhost ~]# cat /proc/489/stack
+   [<0>] folio_wait_private_2+0xc7/0x130
+   [<0>] truncate_cleanup_folio+0x4a/0x80
+   [<0>] truncate_inode_pages_range+0xe1/0x3c0
+   [<0>] nfs4_evict_inode+0x10/0x70
+   [<0>] evict+0xbd/0x160
+   [<0>] evict_inodes+0x15e/0x1e0
+   [<0>] generic_shutdown_super+0x34/0x160
+   [<0>] kill_anon_super+0xd/0x40
+   [<0>] nfs_kill_super+0x1c/0x30
+   [<0>] deactivate_locked_super+0x27/0xa0
+   [<0>] cleanup_mnt+0xb5/0x150
+   [<0>] task_work_run+0x52/0x80
+   [<0>] syscall_exit_to_user_mode+0xef/0x100
+   [<0>] do_syscall_64+0x53/0x870
+   [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+  =20
+In 6.9 the `NETFS_RREQ_COPY_TO_CACHE` flag used to be considered by
+`netfs_rreq_assess`. Now it no longer appears to be checked anywhere.
+With the new netfs cache implementation, how/when is the `PG_private_2`
+flag cleared and when is data written to cache?
 
