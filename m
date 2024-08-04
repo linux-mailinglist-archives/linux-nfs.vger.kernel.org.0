@@ -1,52 +1,74 @@
-Return-Path: <linux-nfs+bounces-5225-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5226-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7422946ACE
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2024 20:22:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7CFE946C1F
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Aug 2024 06:30:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50C1E1F21567
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Aug 2024 18:22:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38F0A2810B1
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Aug 2024 04:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77E851114;
-	Sat,  3 Aug 2024 18:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B3A8467;
+	Sun,  4 Aug 2024 04:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="HrJyGaFj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKKSMq+R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E078F18633
-	for <linux-nfs@vger.kernel.org>; Sat,  3 Aug 2024 18:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D6B2F2E;
+	Sun,  4 Aug 2024 04:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722709342; cv=none; b=rlj13vRirY0fHs/64rrbrS7lRmewmKS4utlNB4oLkhSyXPxBPdqco3066nU/4otAQHHuwitpO9h7jOaePyRkAPDNC4aj+SsN6+g1aaUUqkGLb0QYlZ3QSzWrdAzze0JFW0h8rPPc+HMcd0zYkTDodwJ7R+/2LxBwqlgBZLSGdwY=
+	t=1722745840; cv=none; b=NwmbsWEw6zROZENcbiNqfm0b5tSo3ztGgZtMfHuXlH+OXOBaxegd5rsEZUUfd52hDYyKMPGFk5rmEYZQo66/fEzOP0MOmCvU0j2ZWJuLUd6AiHKfQ3SrB+fkPo8kveuzPMF7vMMPqYIkNPirM15vmBayUebt8chNio7BkkkTQcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722709342; c=relaxed/simple;
-	bh=/Oacuwo3q9P0TXuw02Njv//dCDm7Z9owpxbNMjv49g8=;
+	s=arc-20240116; t=1722745840; c=relaxed/simple;
+	bh=xoY1WzZPEPZ9zAsX+Nnqw7SzRfo1OpiTjGhSMUtJtEA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j9S687iN8hN2dwsJHbZQxWp9OxwF9rW0uXMNnbxPcqBOnMxjIIJtNMPcnO+aBo6+bBNfK2U55KZ6vl7MCDZCm+KZfauIGd6kp1879ha1rY0rt3sbsvsriqPb/QtGHMNh4kAUEo4YXVz5ucd4tWApbkkglyA9qDufMcu5TSZlhkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=HrJyGaFj; arc=none smtp.client-ip=212.27.42.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from [192.168.1.12] (unknown [46.22.16.104])
-	(Authenticated sender: blokos@free.fr)
-	by smtp6-g21.free.fr (Postfix) with ESMTPSA id 56012780506;
-	Sat,  3 Aug 2024 20:22:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1722709331;
-	bh=/Oacuwo3q9P0TXuw02Njv//dCDm7Z9owpxbNMjv49g8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HrJyGaFjy0/BceCvCcTAhi0CZtQjNXM6eeX2lIOO7xE54BRjrwF7SWxmS0KHjkgX6
-	 dku63iyxQVjXHnJEsi1sd6nzyoNgW+ggRnCPkT1N4bHhIh4SM4Eaw8DNFfJ7BV8kfo
-	 GXNsD8//ppoMli234HsWa3tKcVgHaFpyHCHVeKD0SPyNqHgVBvKBkH6aAaiYwMea+R
-	 wdxExtW7odMPKNMcd+GllexKzkFPUwJqZQg4W5K7dbHfQgifxEVdIRlfAE3qCCce7N
-	 +GlMGJU/9HGMyJ1m3uCEZ9rPPZDUbZ1Uwl4xeddA7k+luagHJBHtbTLqwN/S42TW6H
-	 KqOWaPghbheHw==
-Message-ID: <8d852313-1d8e-4ddd-b676-3f7a17503c86@free.fr>
-Date: Sat, 3 Aug 2024 11:22:03 -0700
+	 In-Reply-To:Content-Type; b=NdNj8S68gi+JFTU4fa0c1nT/p478l7S2g3latHV/dnxXRFNGHgBX2OAe+KlAwZbFzSmn1QCTq9jTsJdy2q2RIGDF+uENTam+FdnCK38Z9t98EzhT1JEUwt97h4gW/GLSJfJ/bEaMhmh18AH9k6zFlptXEY5naeNlRtB/yW5wj3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aKKSMq+R; arc=none smtp.client-ip=209.85.215.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f196.google.com with SMTP id 41be03b00d2f7-7a1be7b5d70so3307797a12.0;
+        Sat, 03 Aug 2024 21:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722745838; x=1723350638; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xlk57dWXqV77ALqJZrDySJJvovhv9kbwJVS4WA6M5w0=;
+        b=aKKSMq+RhNBYIt8V/r2WOc8MypCENcKF78dKysOu486R7FKA1pNZDndCE3MLJ7Hscm
+         CGCFbOQiq4rfPH93aof/VpoA6EfGI8iWO2xo3KZsISA07ymH58i6h4cbhEZP5vhD0Spf
+         rO+evI5+ZWYYD3aW7BVxtkQfratvg9eHVf79j4v2415M9TkUDGGZ3aSsX7QXFAHb3hop
+         aly22D01kTwhWlvFpe9eOTFdiFtQg6dRgMSq2cqfWyHNYEaUIxI+T2AwIF6M0DnHL1l3
+         f/li+FOYFj+6nu0oUg428wnuwDKxtyAOHVdoOGhVEY3++S+SduuGGRwULlqsITIWNjQ6
+         23wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722745838; x=1723350638;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlk57dWXqV77ALqJZrDySJJvovhv9kbwJVS4WA6M5w0=;
+        b=T3+dK+Ovs5O29pbUfwP+0nRGsJW0H4eUfaCeZcdaNFUTuKChHZXPCdDOXA3Fgdvveq
+         QBPQf5nWOQOcGnF/Uy6mWg+XAPj6dbxK7/xHDQvvhf2xEEPrJ01x9dit62AYD6FsdMAl
+         FZQs+xTi06nXevSgDtpVA1Ycx4YsJAvwif2Z0gumTwBbhcWBKh315M6c3nYfs9V2xIg0
+         BA2AbIGfAvLie6bT8TzDp94Y/1PXLZX3/gx8i6qsVVchKY8F3l+X+hOeJSPscy/7u3ga
+         oOba1mWCf/ZS477PwbaE1GQ0iahIRPjBJcJQcpRUVEFzLeBEFkqEzsZY7BGHbyHw4f+O
+         DVwg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2QxRPToWRskOIhE+7hszw6xnqWu8NCYwGv5n0BbKJSev8qEI0KYMwhysLnliqD951kq78dWBmP6apwmBdXRi5jDyVZ3JO9u32DK+qsISyPaVmjWyMj2RqBZqKxkSYA8thEA0NyqBL+KTscyLSclR/SOd+O+sAl9QzEdpX4EWUyBvb52H5g6Cbz47sGqPEO5A3KcOQXL2Ze3Vpy/D2zzZK+rH1YVd6+Ps8
+X-Gm-Message-State: AOJu0Yzx7X5KdnJQmkiBtHuuL1vB/fQbDfn7w+b6jUm8hIO1Wkiyv5dN
+	3u+YbKYdnQTswSmEK1nvCRNmaz4HdB9KdDs6uxllfOhwuvkLPLJx
+X-Google-Smtp-Source: AGHT+IGsvTDJ4EYqxMHnrnabL29RSd4zV3sYpylbcRFlgCkQFp8MTku4ddABSnqWe2wodzlqv0aHUA==
+X-Received: by 2002:a05:6a21:3d8b:b0:1c6:9968:f4f4 with SMTP id adf61e73a8af0-1c699690eacmr14086917637.11.1722745837611;
+        Sat, 03 Aug 2024 21:30:37 -0700 (PDT)
+Received: from ?IPV6:2409:8a55:301b:e120:f82c:57ba:8bf:3093? ([2409:8a55:301b:e120:f82c:57ba:8bf:3093])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b764fb4994sm3417427a12.62.2024.08.03.21.30.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 Aug 2024 21:30:37 -0700 (PDT)
+Message-ID: <2a29ce61-7136-4b9b-9940-504228b10cba@gmail.com>
+Date: Sun, 4 Aug 2024 12:30:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,99 +76,163 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: kernel 6.10
+Subject: Re: [PATCH net-next v12 04/14] mm: page_frag: add '_va' suffix to
+ page_frag API
+To: Alexander Duyck <alexander.duyck@gmail.com>,
+ Yunsheng Lin <linyunsheng@huawei.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Subbaraya Sundeep <sbhatta@marvell.com>,
+ Jeroen de Borst <jeroendb@google.com>,
+ Praveen Kaligineedi <pkaligineedi@google.com>,
+ Shailend Chand <shailend@google.com>, Eric Dumazet <edumazet@google.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Sunil Goutham <sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>,
+ hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>,
+ Sean Wang <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org,
+ kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org,
+ bpf@vger.kernel.org, linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org
+References: <20240731124505.2903877-1-linyunsheng@huawei.com>
+ <20240731124505.2903877-5-linyunsheng@huawei.com>
+ <CAKgT0UcqdeSJdjZ_FfwyCnT927TwOkE4zchHLOkrBEmhGzex9g@mail.gmail.com>
+ <22fda86c-d688-42e7-99e8-e2f8fcf1a5ba@huawei.com>
+ <CAKgT0UcuGj8wvC87=A+hkarRupfhjGM0BPzLUT2AJc8Ovg_TFg@mail.gmail.com>
+ <877efebe-f316-4192-aada-dd2657b74125@huawei.com>
+ <CAKgT0UfUkqR2TJQt6cSEdANNxQEOkjGqpPXhaXmrrxB0KwXmEQ@mail.gmail.com>
 Content-Language: en-US
-To: Hristo Venev <hristo@venev.name>,
- Trond Myklebust <trondmy@hammerspace.com>,
- "dan.aloni@vastdata.com" <dan.aloni@vastdata.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "dhowells@redhat.com" <dhowells@redhat.com>
-References: <b78c88db-8b3a-4008-94cb-82ae08f0e37b@free.fr>
- <3feb741cb32edd8c48a458be53d6e3915e6c18ed.camel@hammerspace.com>
- <zyclq4jtvvtz6vamljvfiw6cgnr763yvycl3ibydybducivhqh@lj2hgweowpsa>
- <3bd0bfc1fced855902c8963d03e8041f4452b291.camel@hammerspace.com>
- <47219e1df5edbfaf7e8a64ebf543a908511ace85.camel@venev.name>
- <5412f22e497b11c1cd3fc8b8d8f30d372b68cd03.camel@venev.name>
- <sl7cfmykqthhjss3qxeg2aweykff2gurcjqczfry62ne6edrfa@oocwcci6im3o>
- <eba1f68169ce0bfdd5e0881e04f67b0c57d6ce2e.camel@hammerspace.com>
- <056dde73b48f7a6ee1ca9bf6cc2f0f11536424c3.camel@venev.name>
-From: blokos <blokos@free.fr>
-In-Reply-To: <056dde73b48f7a6ee1ca9bf6cc2f0f11536424c3.camel@venev.name>
+From: Yunsheng Lin <yunshenglin0825@gmail.com>
+In-Reply-To: <CAKgT0UfUkqR2TJQt6cSEdANNxQEOkjGqpPXhaXmrrxB0KwXmEQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+On 8/3/2024 1:00 AM, Alexander Duyck wrote:
+
+>>
+>>>
+>>> As far as your API extension and naming maybe you should look like
+>>> something like bio_vec and borrow the naming from that since that is
+>>> essentially what you are passing back and forth is essentially that
+>>> instead of a page frag which is normally a virtual address.
+>>
+>> I thought about adding something like bio_vec before, but I am not sure
+>> what you have in mind is somthing like I considered before?
+>> Let's say that we reuse bio_vec like something below for the new APIs:
+>>
+>> struct bio_vec {
+>>          struct page     *bv_page;
+>>          void            *va;
+>>          unsigned int    bv_len;
+>>          unsigned int    bv_offset;
+>> };
+> 
+> I wasn't suggesting changing the bio_vec. I was suggesting that be
+> what you pass as a pointer reference instead of the offset. Basically
+> your use case is mostly just for populating bio_vec style structures
+> anyway.
+
+I wasn't trying/going to reuse/change bio_vec for page_frag, I was just
+having a hard time coming with a good new name for it.
+The best one I came up with is pfrag_vec, but I am not sure about the
+'vec' as the "vec" portion of the name would suggest, iovec structures 
+tend to come in arrays, mentioned in the below article:
+https://lwn.net/Articles/625077/
+
+Anther one is page_frag, which is currently in use.
+
+Or any better one in your mind?
+
+> 
+>> It seems we have the below options for the new API:
+>>
+>> option 1, it seems like a better option from API naming point of view, but
+>> it needs to return a bio_vec pointer to the caller, it seems we need to have
+>> extra space for the pointer, I am not sure how we can avoid the memory waste
+>> for sk_page_frag() case in patch 12:
+>> struct bio_vec *page_frag_alloc_bio(struct page_frag_cache *nc,
+>>                                      unsigned int fragsz, gfp_t gfp_mask);
+>>
+>> option 2, it need both the caller and callee to have a its own local space
+>> for 'struct bio_vec ', I am not sure if passing the content instead of
+>> the pointer of a struct through the function returning is the common pattern
+>> and if it has any performance impact yet:
+>> struct bio_vec page_frag_alloc_bio(struct page_frag_cache *nc,
+>>                                     unsigned int fragsz, gfp_t gfp_mask);
+>>
+>> option 3, the caller passes the pointer of 'struct bio_vec ' to the callee,
+>> and page_frag_alloc_bio() fills in the data, I am not sure what is the point
+>> of indirect using 'struct bio_vec ' instead of passing 'va' & 'fragsz' &
+>> 'offset' through pointers directly:
+>> bool page_frag_alloc_bio(struct page_frag_cache *nc,
+>>                           unsigned int fragsz, gfp_t gfp_mask, struct bio_vec *bio);
+>>
+>> If one of the above option is something in your mind? Yes, please be more specific
+>> about which one is the prefer option, and why it is the prefer option than the one
+>> introduced in this patchset?
+>>
+>> If no, please be more specific what that is in your mind?
+> 
+> Option 3 is more or less what I had in mind. Basically you would
+> return an int to indicate any errors and you would be populating a
+> bio_vec during your allocation. In addition you would use the bio_vec
+
+Actually using this new bio_vec style structures does not seem to solve
+the APIs naming issue this patch is trying to solve as my understanding,
+as the new struct is only about passing one pointer or multi-pointers
+from API naming perspective. It is part of the API naming, but not all
+of it.
+
+> as a tracker of the actual fragsz so when you commit you are
+> committing with the fragsz as it was determined at the time of putting
+> the bio_vec together so you can theoretically catch things like if the
+> underlying offset had somehow changed from the time you setup the
+
+I think we might need a stronger argument than the above to use the new
+*vec thing other than the above debugging feature.
+
+I looked throught the bio_vec related info, and come along somewhat not
+really related, but really helpful "What’s all this get us" section:
+https://docs.kernel.org/block/biovecs.html
+
+So the question seems to be: what is this new struct for page_frag get
+us?
+
+Generally, I am argeed with the new struct thing if it does bring us
+something other than the above debugging feature. Otherwise we should
+avoid introducing a new thing which is hard to argue about its existent.
+
+> allocation. It would fit well into your probe routines since they are
+> all essentially passing the page, offset, and fragsz throughout the
+> code.
+
+For the current probe routines, the 'va' need to be passed, do you
+expect the 'va' to be passed by function return, double pointer, or
+new the *_vec pointer?
+
+> 
 
 
-On 8/3/2024 7:22 AM, Hristo Venev wrote:
-> On Wed, 2024-07-31 at 15:27 +0000, Trond Myklebust wrote:
->> On Sun, 2024-07-28 at 11:33 +0300, Dan Aloni wrote:
->>> On 2024-07-28 02:57:42, Hristo Venev wrote:
->>>>
->>>> ... and 0x356 happens to be NETFS_FOLIO_COPY_TO_CACHE. Maybe the
->>>> NETFS_RREQ_USE_PGPRIV2 flag is lost somehow?
->> Why is netfs setting folio->private at all when it is running on top
->> of
->> NFS? It doesn't own that field.
-> As I mentioned previously, there is something going on with the
-> `NETFS_RREQ_USE_PGPRIV2` flag. In particular, it appears that it isn't
-> always set in `netfs_alloc_request()`. This may happen when
-> `netfs_is_cache_enabled()` returns false on a cache-enabled filesystem.
-> Maybe the inode cache state is not yet fully initialized?
->
-> The patch below seems to fix the issue, in the sense that reading from
-> the filesystem is no longer a guaranteed crash.
->
->
-> diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-> index f4a6427274792..a74ca90c86c9b 100644
-> --- a/fs/netfs/objects.c
-> +++ b/fs/netfs/objects.c
-> @@ -27,7 +27,6 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
->   	bool is_unbuffered = (origin == NETFS_UNBUFFERED_WRITE ||
->   			      origin == NETFS_DIO_READ ||
->   			      origin == NETFS_DIO_WRITE);
-> -	bool cached = !is_unbuffered && netfs_is_cache_enabled(ctx);
->   	int ret;
->   
->   	for (;;) {
-> @@ -56,8 +55,9 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
->   	refcount_set(&rreq->ref, 1);
->   
->   	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
-> -	if (cached) {
-> -		__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
-> +	if (!is_unbuffered && fscache_cookie_valid(netfs_i_cookie(ctx))) {
-> +		if (netfs_is_cache_enabled(ctx))
-> +			__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
->   		if (test_bit(NETFS_ICTX_USE_PGPRIV2, &ctx->flags))
->   			/* Filesystem uses deprecated PG_private_2 marking. */
->   			__set_bit(NETFS_RREQ_USE_PGPRIV2, &rreq->flags);
->
->
-> However, there is still another issue: Unmounting deadlocks on
-> `folio_wait_private_2`:
->
->     [root@localhost ~]# cat /proc/489/stack
->     [<0>] folio_wait_private_2+0xc7/0x130
->     [<0>] truncate_cleanup_folio+0x4a/0x80
->     [<0>] truncate_inode_pages_range+0xe1/0x3c0
->     [<0>] nfs4_evict_inode+0x10/0x70
->     [<0>] evict+0xbd/0x160
->     [<0>] evict_inodes+0x15e/0x1e0
->     [<0>] generic_shutdown_super+0x34/0x160
->     [<0>] kill_anon_super+0xd/0x40
->     [<0>] nfs_kill_super+0x1c/0x30
->     [<0>] deactivate_locked_super+0x27/0xa0
->     [<0>] cleanup_mnt+0xb5/0x150
->     [<0>] task_work_run+0x52/0x80
->     [<0>] syscall_exit_to_user_mode+0xef/0x100
->     [<0>] do_syscall_64+0x53/0x870
->     [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
->     
-> In 6.9 the `NETFS_RREQ_COPY_TO_CACHE` flag used to be considered by
-> `netfs_rreq_assess`. Now it no longer appears to be checked anywhere.
-> With the new netfs cache implementation, how/when is the `PG_private_2`
-> flag cleared and when is data written to cache?
-I don't know if it can help, but I noticed this issue growing when the 
-responsive time of the NFS server (or cachefilesd?) is longer because of 
-the network or a busy server doing other tasks.
 
