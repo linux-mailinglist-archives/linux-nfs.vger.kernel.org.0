@@ -1,237 +1,483 @@
-Return-Path: <linux-nfs+bounces-5231-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5232-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DA819471BD
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 01:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14340947474
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 06:56:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 304DC280F93
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Aug 2024 23:22:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6675281255
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 04:56:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C030213B585;
-	Sun,  4 Aug 2024 23:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 843001411E9;
+	Mon,  5 Aug 2024 04:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="PAICr7wX"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjsuZmLT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zgjj1TIo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjsuZmLT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zgjj1TIo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2135.outbound.protection.outlook.com [40.107.220.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2811755C;
-	Sun,  4 Aug 2024 23:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722813731; cv=fail; b=lkyuzpzFXTSkyw4PRkyZFK5AFW1ReLd4oxzi9BZziQ3LN6ISnc+X9IVGbT3ormTn9h2Hi/qzgGeX+d0mYoQlCRdXlEC7UStL+mUyUPXcS5eih98w9yZ+vOuXU3DxngMOvcSxceKLKIJrBT4vdZaD4sS09ecrylOnjP3VTQYYmm0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722813731; c=relaxed/simple;
-	bh=gbqWVtVtEVI3F+OI8tRieFYtXUdC+vTs5CNttn7U7Uc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=c6C+1Myl8GuzjlOS4ZBTbfcKq34fVvL4KF8VI46MtxBQzKjm+3q3g7rgBHX8qJ3Ah3DD/UR0G3+ZMMNBKdOvaZtr9gwyvozhKYJdWdM7I0i9eSCRoRIwMJ4IeAj8F9xdsD9tYkh6bL0avWi4PoUAVGNE7C6FQk6aOVn1uVPGHlw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=PAICr7wX; arc=fail smtp.client-ip=40.107.220.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w4S3o2Ee0zZqXUHiJFi+XZuYfhmo9nKI7hcoFqB0cVdp5C6ulH+gQwbM7YovEcfKuYxgc2Zpw3xWC5ykPDX1Tg99dw1zBns6QMGtKdLGRbk9YOqSkPMoFFLIcTLoRQXcR5MKS8/x/UW54c4eH15ONB4FGjQLqYJJM86qdLE8aDD+F+nMYYRAUXp2h47Zzay4ukQd4ekcLauZZsN83Y2OXvYeaRlAbngDjMwgFUvV8crRbNoBRbieugCoFB4WHGSWSlbiwCk0oHPac/RTFpv2R1axHYi/VGyIbap3juQhPz+LuCYt0DQBCn+BCbdQ1aNATMUgGXyycJX662F3TjSrdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gbqWVtVtEVI3F+OI8tRieFYtXUdC+vTs5CNttn7U7Uc=;
- b=eG0NNDSmT7QskE/b/96ndMk3xS0i/AkQ4NU8XO7Rch553N3F9BGdz4FbfwR11892S2K6vQ/4sguWeqVaUa7Pr3o9dSBvIFQIGErlwYPMtoOXhAQsN0hVgBK8WFy41Ub0/9oivQdvDFkHMtjsj2eOxT9jGCnssO97lRnNBys8PuExOjva0b4KMrs00tWQxpjwrt4dtzD1G9dz/8D5VByaexflrTYJM1mwd8sqNL3NVOCvjfzlz/Q2Y9uK+plmc8jGud7pKbWZuGFTr+/07434h9FSR4TBfwvSbaG6E2pglc0MAVc0TAMGeRtxFW5IBocbylwcK59N4nUGIY5/SasR/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gbqWVtVtEVI3F+OI8tRieFYtXUdC+vTs5CNttn7U7Uc=;
- b=PAICr7wXYqND9ZtC+pfaIj9GXN8DVyXyaJiZKzH75jWYIPcZfeeAoR7B4yIPy33uIUflfY/0y53+Cvbyb1ih3cUT4s+QxwpqO8ncQzmfGNT1+46JCqIVXd8+2w67qHd8gFHUknezKNfzJ0Jfc4b94UoY4KOveJqxYdq7u9+1Vmg=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MW4PR13MB5625.namprd13.prod.outlook.com (2603:10b6:303:180::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.25; Sun, 4 Aug
- 2024 23:22:06 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb%4]) with mapi id 15.20.7828.023; Sun, 4 Aug 2024
- 23:22:04 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "max.kellermann@ionos.com" <max.kellermann@ionos.com>, "hristo@venev.name"
-	<hristo@venev.name>, "dhowells@redhat.com" <dhowells@redhat.com>
-CC: "dan.aloni@vastdata.com" <dan.aloni@vastdata.com>, "xiubli@redhat.com"
-	<xiubli@redhat.com>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "ceph-devel@vger.kernel.org"
-	<ceph-devel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "netfs@lists.linux.dev"
-	<netfs@lists.linux.dev>, "jlayton@kernel.org" <jlayton@kernel.org>,
-	"idryomov@gmail.com" <idryomov@gmail.com>, "willy@infradead.org"
-	<willy@infradead.org>, "blokos@free.fr" <blokos@free.fr>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] netfs: Set NETFS_RREQ_WRITE_TO_CACHE when caching is
- possible
-Thread-Topic: [PATCH] netfs: Set NETFS_RREQ_WRITE_TO_CACHE when caching is
- possible
-Thread-Index: AQHa5nZeXxhhTSZSo0iyVLaKinBVZrIXvU2A
-Date: Sun, 4 Aug 2024 23:22:04 +0000
-Message-ID: <ba17aecba9615f85b7901ea96609abdad3c29db1.camel@hammerspace.com>
-References: <20240729091532.855688-1-max.kellermann@ionos.com>
-	 <3575457.1722355300@warthog.procyon.org.uk>
-	 <CAKPOu+9_TQx8XaB2gDKzwN-YoN69uKoZGiCDPQjz5fO-2ztdFQ@mail.gmail.com>
-	 <CAKPOu+-4C7qPrOEe=trhmpqoC-UhCLdHGmeyjzaUymg=k93NEA@mail.gmail.com>
-	 <3717298.1722422465@warthog.procyon.org.uk>
-	 <CAKPOu+-4LQM2-Ciro0LbbhVPa+YyHD3BnLL+drmG5Ca-b4wmLg@mail.gmail.com>
-	 <845520c7e608c31751506f8162f994b48d235776.camel@venev.name>
-In-Reply-To: <845520c7e608c31751506f8162f994b48d235776.camel@venev.name>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MW4PR13MB5625:EE_
-x-ms-office365-filtering-correlation-id: 87a0b4a9-328e-448d-c23e-08dcb4dc405e
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018|15866825006|41080700001;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UEJmTXRBMWdaeEJCSGJxUElScGJlekhKR28rY1U0V2tyUnR3UlhZRktwT3B3?=
- =?utf-8?B?U1NuNi9uUjJlRUVsQ01KblgzZnBaNDZIN0FBS0E5eUZYUklDV3ArK2Mxb2Fl?=
- =?utf-8?B?aTJINjNxUjdwRnBQekk2REVLM2U3cEtHTUFIbXRBZlhuYzNlWkt0REZUdExH?=
- =?utf-8?B?R3BJYko0YWJSK1Z2RUtvU0VkeGJlamZQVmplVncyVGhFSHdZZk51cFUwT3Z2?=
- =?utf-8?B?N0l0MDBaNUNScEhOekhud0hkeXo0alExcDVWUmxHd1lvV0VodytRSjNiSktz?=
- =?utf-8?B?eGc0d3dBWlN4WmI5SWpFYW1HT2kzaUxrUUJVRkwyN21MQVFlSjUzOUZkcklH?=
- =?utf-8?B?NUs4Qko5Uy9oWXM3WFEreUNRUS90bkZFRWtXSS9xR0w3ZzBJNVBpeHpFOXhi?=
- =?utf-8?B?WG1yL1RhNUJYNVlqK0U3QWNrSHpNSVF4NkVEblAxZ3RWdVcrc2t5Q3hlN2c0?=
- =?utf-8?B?Z1p1Y2xXdEFjNHJmQzBXVjNVUWhTUHpRY21vRmM2RUwxMmI5SjVBZEZpMG5q?=
- =?utf-8?B?V2JGdkhETlFUbmRHUGtnSHFUUFhYdmQxTGFkbUFITWpCVHFQaEdMWGJRNmJt?=
- =?utf-8?B?RU44OGUwTzEwdVVnM3FPOW5UQXBCZHJQTGxFODZtUVZvRWt4MVIzSnhsNWNt?=
- =?utf-8?B?akZCNkE0VEpvYkMwSWtXN1g1bUxmZEtWajBZdXkwWmVaZE1QeWFBTWxOSjA0?=
- =?utf-8?B?UDIzTktPNkFyM2hHak9ZeHV6MlBjRzF5L2JJRk5IbjBlNXl5d3ZhMVlvTzhF?=
- =?utf-8?B?Yk8wZWZkMitZQVlCKy9xMTZNZno5NjZ0L2h4SngrOGFIcTR4M3hab1d4SVov?=
- =?utf-8?B?bnF5eC9RYUVFQUpyZHVqdkhBcWFJTGd2UzRQbHEyS3V2STl1MlJXODNuS2RG?=
- =?utf-8?B?UFlqWTdQMVRSa2g2UEt3L2xFbkNvMG9BUk9jTkYyK2lZWCtTN0FhRGxOaG1G?=
- =?utf-8?B?UjBPQWI0UitwZjdTRUpaOFdNdUFUcFl6YnY5dUJhaFI3YnpaNDRFdDBFaDNS?=
- =?utf-8?B?cllxaGZqRU5BQlBJVGt0VDNza3pucjlxOGhyQkRnKytLNFJsdGVCRWU1bm1o?=
- =?utf-8?B?QUtVbXhKNVEzVG5TU3h3UVZxSjM1dGFLd2NuWDJhWWJPYmQ1cElRNSs5MXhv?=
- =?utf-8?B?NGJ0OWNzMk5JSjhCalNxajNIVmxCamJCdStBd25MV2piTlNRcmE0MWg5TlhX?=
- =?utf-8?B?eTU1ZVBDc0VHdk5tVW9FTjV5QTBKYkI1YlBjTklXelpBcTVLWWhrTUM5VXVF?=
- =?utf-8?B?QitkYkxvMGNLY1VMbG5WdFBoZVRnZU5VS1l2K05FRnZveC9PNDhSV01Sakov?=
- =?utf-8?B?TjAwdk83T0ZiazJIempON2wzbmpMNEpDdXQwdGNuWHJoQzU3MWFjZEJkQUZH?=
- =?utf-8?B?eG1UMisrKytNUE9sYWpiaXNEVnoxOVNpallKci9wbEcrMFpBeXUxcjlXQnYw?=
- =?utf-8?B?ejRDd3RrWEcvWkUxMzFDMVo2c2JjVlhVdmdRSEFWSlZTbGR3TTkzUzArdytG?=
- =?utf-8?B?WlNKKzJxWmFoaUxZMTF2UnhHSFFHVWJUTm5JVFI5TG51K3kvQUgxY2RPRDRa?=
- =?utf-8?B?ZG90ekdnSCtqKzVreG4wQ09SVGRXeTFMSC8rUXpLenVCUVQrT01CbVJYSWxF?=
- =?utf-8?B?aDVqd2FSeHBFZ0p5T1p4aDlwaUw3d0czanpOT1UreSswdlpyYXA1b1g3SXRp?=
- =?utf-8?B?cE01TzI4TkUyOVBJTlR2Q1dVbDRPOWJXZ2I5MXpQUVhHd0tlMEZxTk5tZ29G?=
- =?utf-8?B?R2FHZnpXUUlUSmdlYmdrYkpPU1hTTGpZSjJVcXN0WHU0ck1kUndZUFJPcXpJ?=
- =?utf-8?B?TGtYM2Y0MHp0UVhORnB5b0VBVm51cWNBYXZIWkp4ZmdubTg2UTlWNk90ZHdD?=
- =?utf-8?B?bjlTZmtDeldyUUJXVExVRDl4L0hrNHdsN0Z2c3NzaXlyUzZxTjNjekI1dkNY?=
- =?utf-8?Q?okqSB2Y+E3s=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018)(15866825006)(41080700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Q3M4V0tobWQrWjh3OFIxRWlQdkRTQjJwQkthTUJwdkhNWllkTzFBQXNnNDRE?=
- =?utf-8?B?cVd2bENLeFU1SEJzbmllblRxSXZqYy8wQnlzaUdWVG9KRFcwRzA0Q2lVdVZE?=
- =?utf-8?B?a3dkVEVjenJCL3MvaUI2MWtoYXN6OGNWa25QZXZyNkxGUkE5Z1RvVUdyM3FK?=
- =?utf-8?B?MUx6VWxKZmNVYXQvQm13aEQ0Z09tVkhsUWJaOTA5SDVHK1FraCt0Qno1VW55?=
- =?utf-8?B?V3l2S3h1L0RXTENiUytMQVF4ZW1nQ3oyMGRRbmJ3QmFaeEJPb2VSbVNaa3kr?=
- =?utf-8?B?L2ZFRU5nM3RJd0R6TGIrVC9GS3ZmZUgrdS9maHJOWStlN01nelBKdXJhK24r?=
- =?utf-8?B?bjBrOXMvMTlCcmk5UDdoRUJOR2NYamtyZGg0NGVhYTVnNHM4Zjg2OXR2UzVt?=
- =?utf-8?B?RUpaUllLdUZWTUJuWFh0YURvK0NQb2dQOWE2RFI5ay95VHBlSGVUeUVYNFZG?=
- =?utf-8?B?NDdjWjlDeXMwd0ZvUVNrbW5raytpUUNydnd0R3dGU1dlNGw1UmJ5YUIrek1t?=
- =?utf-8?B?cmhTQmtPaFJnUHR0L1ZTOGJMU0lXWktadlMzRWVSdUVnUFcyb2QreXpHY2Jy?=
- =?utf-8?B?RU1EcTJ4eWUyQVZWazhwY0o4TUhGZDEyMWFRZExwSWxHckJCV2V2OXNjUjR0?=
- =?utf-8?B?TEhwUWJJTk1ZMTFnRVNlOW1iaHhxekdGcGJQeHdwMEpaTVN2d0RGRTl6dUZq?=
- =?utf-8?B?aGR4dklaTlpNTjEyNjVyMmZScjlBK2N6bkNmZnd0QzhLZEJzYSs4ditTdkNZ?=
- =?utf-8?B?SUpUR0p3aFJMaU8zZFFnSzd5cmhNdHltYmIxNlQ3U3dTOUtXRmdtWlM4Snhp?=
- =?utf-8?B?VlVwcVFrdUxSMnF1OGVEeFNlMkZuOXdZNUFHYjlnVWZlWVNMaFhWV3djeUtG?=
- =?utf-8?B?VlhGbXovbForRUVqVWtMWkc4RkorR2NNbktZRDZjS1J1N3J6YjZTanhLZFhF?=
- =?utf-8?B?aGU3REtKNDI1VTkrOVM5VXpBM1h4bkFraVNlT3VFU0RTcm5QVnZqTVhDRWVp?=
- =?utf-8?B?cy95VS9kUGY1ajRWSWV1dTZiWlhCdndaZ0wyMTlUZFB3TTRXV2dxQzdOSlBZ?=
- =?utf-8?B?TGJVdHpZbUhscHB1dW9rTXlQWWxaQ3hvVWZ4c290Z1BJODZkYXIraWlISmdu?=
- =?utf-8?B?eHU0cU5MZ053WkQ5aHp3ZGk5cDdMREsvQndLN0hqWHlJWWtrck9NN2JlV0w0?=
- =?utf-8?B?b3RpdjdOM2VVSlZHRjRIc3FjekZBNjhkR0hXQWhxMmEvYUx5OWN3ZHdhSnFa?=
- =?utf-8?B?MC9sWnJSQmZVMEdNYVZEdy9vUmN0YWFOUlRaRnlocmx0eTA5TjF4SXlyU2hj?=
- =?utf-8?B?SFFncU1mRkQ0Vnp3cG9KRFZPZ25FOEllSzNzU1BBZDNoYml2TFRmelJ0Z29s?=
- =?utf-8?B?MEJJWWxLNGliYnBqSXROQUp3SmVqTWgwK0FnMVYyT1hpZkhVUjdaQjFBQTln?=
- =?utf-8?B?WmtxYm5KNTAwMmNQS2pDY0hJdmltTWxtN0w5VVVHNWZxWU5lcmRHclZSNUxQ?=
- =?utf-8?B?c3FiQldqMG9FUnVWUFpvaWpwbFQ5NE9ybndaRHlxNVg5K3QyV0EzU0c3dWlC?=
- =?utf-8?B?TklSaFp6NlduZHpsOTJVZ2tOWGtMMUlnZTdoUkNRbFB5WlB3MldNUDdjZU5E?=
- =?utf-8?B?eDBSM2sxM1FnbHg5K2svMmxuaXdzTGpNVjNvRlA4OWQvV0Q5VGdSYmZOOGFk?=
- =?utf-8?B?eVBMbi9JVml4WU41cVVuQnlhNCtxTGs3a0ZZR2tRQlk3VG1GVVNMOWtwRnZr?=
- =?utf-8?B?Z2R1T0hpWlJWdHdUL0gyaS9jUG9BZmFsTGkyU016Z3pmK09zM2FSTXJ3UlZC?=
- =?utf-8?B?eVJoMTJpN2t3bEFKVDZYZW5UU2xDT1Q4eWJWRFZ6VXZKc3pOaytaWmljM2JS?=
- =?utf-8?B?Uk5QeWdFeVlIcSsyaU9MYjF4b2xIUHlxbW5rc2MrUmszSHc5RTQxNlErOXZt?=
- =?utf-8?B?SE5Zait0WW5FREExdVdDMGE2a09oMHVKcjlSUFpXRnpXeUhmUm8wYWl0KzVS?=
- =?utf-8?B?RXNjTExqeEY2cTJia0k2VFA5cXFCOHk3UTUvN3JGUUQreHA0Q1F6ZjBWZGZm?=
- =?utf-8?B?eEVvMk4rbkx6QVpJZFBucmlxaFV5d3RRaTBERERmMlM2TzBleEladG9sTkl2?=
- =?utf-8?B?RXN6SkNEVmFjSnFleUtqMGdwa0l0L0VkQlpoSC9BNW5VdkxLU1VPNkpXRkRp?=
- =?utf-8?B?TTVYSzJ5cGE4RjNRSWxFZHF1aGV4Zi8vNWErRGFIeXd6Z1M5MmdWeCtsYUdO?=
- =?utf-8?B?cUpCdHUyKzJQK1ZYY2F6aExVZjNnPT0=?=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5CA13C673
+	for <linux-nfs@vger.kernel.org>; Mon,  5 Aug 2024 04:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722833769; cv=none; b=pTKVzUG7MNcjUQJTIaBrK48xPaQ79f4+Yo50SqrQ5hvHpPSAS85UBbQrrwUQ7swJqA4f2CYi7Te8guHU5kj5Y8hUxZfX9OHxPargFZKb1MO615kpuFAsETdGI0wZE+akHRGTBWG6fUcU6bolAcIzReCBA2cRe3R5fEhw7rTKtk0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722833769; c=relaxed/simple;
+	bh=IXwX1MhBUe8tnfdbwh23GFnFsVy5USyP6EuohlBgh+U=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=pkqHCWX/WztlsHcZOde3hrvr3al8Y/mm1djd0u3HBq7m+PISmVnh059eA1JMKiYHukwbXCKMexVbcUosO8vyosdQDw1EpKWQbrQq/vQBzZGMSoeibwb8K29mVvGUb3JUN1ahMF3xQjod4FwuhQJ3piT5lc4roaqiaEimKASo5B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjsuZmLT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zgjj1TIo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjsuZmLT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zgjj1TIo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2A6521FCD8;
+	Mon,  5 Aug 2024 04:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722833757; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w8rW8JoyF8/Pyr0Kpm8W8qqWl+cxqjrn+5AdbnaIW9U=;
+	b=xjsuZmLTzs8yXAuZrsIelCB0NDbgB3D3KcKD/5DbMbqSK/6H3DbOTENUyBMlX/JQ0fHqPF
+	+bfxAkvWAF1xvJhOBtFtZBoWiJzBiJ3uVrR2EJsjoXKH4YIY6bPtwHhcbKtt9dkR7xX8FG
+	Ui3oKGTHGMYRwx2A1KVt2k/DjkiN1uo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722833757;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w8rW8JoyF8/Pyr0Kpm8W8qqWl+cxqjrn+5AdbnaIW9U=;
+	b=zgjj1TIou2vuuR49zBEnk5bbSO69t0RbHd9rqWgSj2uI2mdwKDLoeUFSNkBn+sz4Vke8wB
+	xAZ0fbOr8yXQ/tDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722833757; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w8rW8JoyF8/Pyr0Kpm8W8qqWl+cxqjrn+5AdbnaIW9U=;
+	b=xjsuZmLTzs8yXAuZrsIelCB0NDbgB3D3KcKD/5DbMbqSK/6H3DbOTENUyBMlX/JQ0fHqPF
+	+bfxAkvWAF1xvJhOBtFtZBoWiJzBiJ3uVrR2EJsjoXKH4YIY6bPtwHhcbKtt9dkR7xX8FG
+	Ui3oKGTHGMYRwx2A1KVt2k/DjkiN1uo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722833757;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w8rW8JoyF8/Pyr0Kpm8W8qqWl+cxqjrn+5AdbnaIW9U=;
+	b=zgjj1TIou2vuuR49zBEnk5bbSO69t0RbHd9rqWgSj2uI2mdwKDLoeUFSNkBn+sz4Vke8wB
+	xAZ0fbOr8yXQ/tDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2968113ACF;
+	Mon,  5 Aug 2024 04:55:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y5aCM1lbsGYnJgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 05 Aug 2024 04:55:53 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E9B0E6991ECDD4F8A6321C4BFEC3D75@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87a0b4a9-328e-448d-c23e-08dcb4dc405e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2024 23:22:04.5302
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: po9T2cbSOcJOTZXqvY9KvACTDFY+KtMrsTV8oHuJKrpN2mDWi94jZT0OccrQD6SP9ZwEx+Xu9KcQxh1wk3PSsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5625
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Mike Snitzer" <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, "Olga Kornievskaia" <kolga@netapp.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Steve Dickson" <steved@redhat.com>
+Subject: Re: [PATCH 04/14] nfsd: don't allocate the versions array.
+In-reply-to: <172263986618.6062.12535168158374219174@noble.neil.brown.name>
+References: <>, <Zq1Q8f1Dslc2Cvjo@kernel.org>,
+ <172263986618.6062.12535168158374219174@noble.neil.brown.name>
+Date: Mon, 05 Aug 2024 14:55:46 +1000
+Message-id: <172283374675.6062.6848122859794837508@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-T24gU3VuLCAyMDI0LTA4LTA0IGF0IDE2OjU3ICswMzAwLCBIcmlzdG8gVmVuZXYgd3JvdGU6DQo+
-IEluIGFkZGl0aW9uIHRvIENlcGgsIGluIE5GUyB0aGVyZSBhcmUgYWxzbyBzb21lIGNyYXNoZXMg
-cmVsYXRlZCB0bw0KPiB0aGUNCj4gdXNlIG9mIDB4MzU2IGFzIGEgcG9pbnRlci4NCj4gDQo+IGBu
-ZXRmc19pc19jYWNoZV9lbmFibGVkKClgIG9ubHkgcmV0dXJucyB0cnVlIHdoZW4gdGhlIGZzY2Fj
-aGUgY29va2llDQo+IGlzDQo+IGZ1bGx5IGluaXRpYWxpemVkLiBUaGlzIG1heSBoYXBwZW4gYWZ0
-ZXIgdGhlIHJlcXVlc3QgaGFzIGJlZW4NCj4gY3JlYXRlZCwNCj4gc28gY2hlY2sgZm9yIHRoZSBj
-b29raWUncyBleGlzdGVuY2UgaW5zdGVhZC4NCj4gDQo+IExpbms6DQo+IGh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2xpbnV4LW5mcy9iNzhjODhkYi04YjNhLTQwMDgtOTRjYi04MmFlMDhmMGUzN2JA
-ZnJlZS5mci9ULw0KPiBGaXhlczogMmZmMWU5NzU4N2Y0ICgibmV0ZnM6IFJlcGxhY2UgUEdfZnNj
-YWNoZSBieSBzZXR0aW5nIGZvbGlvLQ0KPiA+cHJpdmF0ZSBhbmQgbWFya2luZyBkaXJ0eSIpDQo+
-IENjOiBsaW51eC1uZnNAdmdlci5rZXJuZWwub3JnwqA8bGludXgtbmZzQHZnZXIua2VybmVsLm9y
-Zz4NCj4gQ2M6IGJsb2tvcyA8Ymxva29zQGZyZWUuZnI+DQo+IENjOiBUcm9uZCBNeWtsZWJ1c3Qg
-PHRyb25kbXlAaGFtbWVyc3BhY2UuY29tPg0KPiBDYzogZGFuLmFsb25pQHZhc3RkYXRhLmNvbcKg
-PGRhbi5hbG9uaUB2YXN0ZGF0YS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEhyaXN0byBWZW5ldiA8
-aHJpc3RvQHZlbmV2Lm5hbWU+DQo+IC0tLQ0KPiDCoGZzL25ldGZzL29iamVjdHMuYyB8IDYgKysr
-LS0tDQo+IMKgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZXRmcy9vYmplY3RzLmMgYi9mcy9uZXRmcy9vYmplY3Rz
-LmMNCj4gaW5kZXggZjRhNjQyNzI3NDc5Mi4uYTc0Y2E5MGM4NmM5YiAxMDA2NDQNCj4gLS0tIGEv
-ZnMvbmV0ZnMvb2JqZWN0cy5jDQo+ICsrKyBiL2ZzL25ldGZzL29iamVjdHMuYw0KPiBAQCAtMjcs
-NyArMjcsNiBAQCBzdHJ1Y3QgbmV0ZnNfaW9fcmVxdWVzdCAqbmV0ZnNfYWxsb2NfcmVxdWVzdChz
-dHJ1Y3QNCj4gYWRkcmVzc19zcGFjZSAqbWFwcGluZywNCj4gwqAJYm9vbCBpc191bmJ1ZmZlcmVk
-ID0gKG9yaWdpbiA9PSBORVRGU19VTkJVRkZFUkVEX1dSSVRFIHx8DQo+IMKgCQkJwqDCoMKgwqDC
-oCBvcmlnaW4gPT0gTkVURlNfRElPX1JFQUQgfHwNCj4gwqAJCQnCoMKgwqDCoMKgIG9yaWdpbiA9
-PSBORVRGU19ESU9fV1JJVEUpOw0KPiAtCWJvb2wgY2FjaGVkID0gIWlzX3VuYnVmZmVyZWQgJiYg
-bmV0ZnNfaXNfY2FjaGVfZW5hYmxlZChjdHgpOw0KPiDCoAlpbnQgcmV0Ow0KPiDCoA0KPiDCoAlm
-b3IgKDs7KSB7DQo+IEBAIC01Niw4ICs1NSw5IEBAIHN0cnVjdCBuZXRmc19pb19yZXF1ZXN0ICpu
-ZXRmc19hbGxvY19yZXF1ZXN0KHN0cnVjdA0KPiBhZGRyZXNzX3NwYWNlICptYXBwaW5nLA0KPiDC
-oAlyZWZjb3VudF9zZXQoJnJyZXEtPnJlZiwgMSk7DQo+IMKgDQo+IMKgCV9fc2V0X2JpdChORVRG
-U19SUkVRX0lOX1BST0dSRVNTLCAmcnJlcS0+ZmxhZ3MpOw0KPiAtCWlmIChjYWNoZWQpIHsNCj4g
-LQkJX19zZXRfYml0KE5FVEZTX1JSRVFfV1JJVEVfVE9fQ0FDSEUsICZycmVxLT5mbGFncyk7DQo+
-ICsJaWYgKCFpc191bmJ1ZmZlcmVkICYmDQo+IGZzY2FjaGVfY29va2llX3ZhbGlkKG5ldGZzX2lf
-Y29va2llKGN0eCkpKSB7DQo+ICsJCWlmKG5ldGZzX2lzX2NhY2hlX2VuYWJsZWQoY3R4KSkNCj4g
-KwkJCV9fc2V0X2JpdChORVRGU19SUkVRX1dSSVRFX1RPX0NBQ0hFLCAmcnJlcS0NCj4gPmZsYWdz
-KTsNCj4gwqAJCWlmICh0ZXN0X2JpdChORVRGU19JQ1RYX1VTRV9QR1BSSVYyLCAmY3R4LT5mbGFn
-cykpDQo+IMKgCQkJLyogRmlsZXN5c3RlbSB1c2VzIGRlcHJlY2F0ZWQgUEdfcHJpdmF0ZV8yDQo+
-IG1hcmtpbmcuICovDQo+IMKgCQkJX19zZXRfYml0KE5FVEZTX1JSRVFfVVNFX1BHUFJJVjIsICZy
-cmVxLQ0KPiA+ZmxhZ3MpOw0KDQpEb2VzIHRoaXMgbWVhbiB0aGF0IG5ldGZzIGNvdWxkIHN0aWxs
-IGVuZCB1cCBzZXR0aW5nIGEgdmFsdWUgZm9yIGZvbGlvLQ0KPnByaXZhdGUgaW4gTkZTIGdpdmVu
-IHNvbWUgb3RoZXIgc2V0IG9mIGNpcmN1bXN0YW5jZXM/DQoNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1
-c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xl
-YnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Sat, 03 Aug 2024, NeilBrown wrote:
+> On Sat, 03 Aug 2024, Mike Snitzer wrote:
+> > On Mon, Jul 15, 2024 at 05:14:17PM +1000, NeilBrown wrote:
+> > > Instead of using kmalloc to allocate an array for storing active version
+> > > info, just declare and array to the max size - it is only 5 or so.
+> > >=20
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/nfs/nfs4state.c |   2 +
+> > >  fs/nfsd/cache.h    |   2 +-
+> > >  fs/nfsd/netns.h    |   6 +--
+> > >  fs/nfsd/nfsctl.c   |  10 +++--
+> > >  fs/nfsd/nfsd.h     |   9 +++-
+> > >  fs/nfsd/nfssvc.c   | 100 ++++++++-------------------------------------
+> > >  6 files changed, 36 insertions(+), 93 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> > > index 5b452411e8fd..68c663626480 100644
+> > > --- a/fs/nfs/nfs4state.c
+> > > +++ b/fs/nfs/nfs4state.c
+> > > @@ -1953,6 +1953,8 @@ static int nfs4_do_reclaim(struct nfs_client *clp=
+, const struct nfs4_state_recov
+> > >  				if (lost_locks)
+> > >  					pr_warn("NFS: %s: lost %d locks\n",
+> > >  						clp->cl_hostname, lost_locks);
+> > > +				nfs4_free_state_owners(&freeme);
+> > > +
+> > >  				set_bit(ops->owner_flag_bit, &sp->so_flags);
+> > >  				nfs4_put_state_owner(sp);
+> > >  				status =3D nfs4_recovery_handle_error(clp, status);
+> >=20
+> > Hey Neil,
+> >=20
+> > This call to nfs4_free_state_owners() feels out of place given the
+> > rest of this patch.  Was it meant to be folded into a different
+> > patch?
+>=20
+> I think I was writing a different patch (there is a case where the
+> lost-locks warning can be incorrect) and I got half way and stopped for
+> some reason.  Then later I wanted to do this patch and did "git stash"
+> but I hadn't saved all my work.  So when I later did a "save all
+> buffers" that change went into the wrong patch.
+>=20
+> I'll follow up on Monday - thanks for noticing and letting me know!
+
+Chuck / Jeff - could you please just remove the change to fs/nfs/ from
+this patch - that is probably easier than me sending an incremental
+patch or a revised version.
+
+Thanks,
+NeilBrown
+
+
+>=20
+> NeilBrown
+>=20
+>=20
+> >=20
+> > Thanks,
+> > Mike
+> >=20
+> >=20
+> > > diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
+> > > index 66a05fefae98..bb7addef4a31 100644
+> > > --- a/fs/nfsd/cache.h
+> > > +++ b/fs/nfsd/cache.h
+> > > @@ -10,7 +10,7 @@
+> > >  #define NFSCACHE_H
+> > > =20
+> > >  #include <linux/sunrpc/svc.h>
+> > > -#include "netns.h"
+> > > +#include "nfsd.h"
+> > > =20
+> > >  /*
+> > >   * Representation of a reply cache entry.
+> > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> > > index 14ec15656320..238fc4e56e53 100644
+> > > --- a/fs/nfsd/netns.h
+> > > +++ b/fs/nfsd/netns.h
+> > > @@ -152,8 +152,8 @@ struct nfsd_net {
+> > >  	/*
+> > >  	 * Version information
+> > >  	 */
+> > > -	bool *nfsd_versions;
+> > > -	bool *nfsd4_minorversions;
+> > > +	bool nfsd_versions[NFSD_MAXVERS + 1];
+> > > +	bool nfsd4_minorversions[NFSD_SUPPORTED_MINOR_VERSION + 1];
+> > > =20
+> > >  	/*
+> > >  	 * Duplicate reply cache
+> > > @@ -219,8 +219,6 @@ struct nfsd_net {
+> > >  #define nfsd_netns_ready(nn) ((nn)->sessionid_hashtbl)
+> > > =20
+> > >  extern bool nfsd_support_version(int vers);
+> > > -extern void nfsd_netns_free_versions(struct nfsd_net *nn);
+> > > -
+> > >  extern unsigned int nfsd_net_id;
+> > > =20
+> > >  void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn);
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index 9b47723fc110..5b0f2e0d7ccf 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+> > > @@ -2232,8 +2232,9 @@ int nfsd_nl_pool_mode_get_doit(struct sk_buff *sk=
+b, struct genl_info *info)
+> > >   */
+> > >  static __net_init int nfsd_net_init(struct net *net)
+> > >  {
+> > > -	int retval;
+> > >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > > +	int retval;
+> > > +	int i;
+> > > =20
+> > >  	retval =3D nfsd_export_init(net);
+> > >  	if (retval)
+> > > @@ -2247,8 +2248,10 @@ static __net_init int nfsd_net_init(struct net *=
+net)
+> > >  		goto out_repcache_error;
+> > >  	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
+> > >  	nn->nfsd_svcstats.program =3D &nfsd_program;
+> > > -	nn->nfsd_versions =3D NULL;
+> > > -	nn->nfsd4_minorversions =3D NULL;
+> > > +	for (i =3D 0; i < sizeof(nn->nfsd_versions); i++)
+> > > +		nn->nfsd_versions[i] =3D nfsd_support_version(i);
+> > > +	for (i =3D 0; i < sizeof(nn->nfsd4_minorversions); i++)
+> > > +		nn->nfsd4_minorversions[i] =3D nfsd_support_version(4);
+> > >  	nn->nfsd_info.mutex =3D &nfsd_mutex;
+> > >  	nn->nfsd_serv =3D NULL;
+> > >  	nfsd4_init_leases_net(nn);
+> > > @@ -2279,7 +2282,6 @@ static __net_exit void nfsd_net_exit(struct net *=
+net)
+> > >  	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+> > >  	nfsd_idmap_shutdown(net);
+> > >  	nfsd_export_shutdown(net);
+> > > -	nfsd_netns_free_versions(nn);
+> > >  }
+> > > =20
+> > >  static struct pernet_operations nfsd_net_ops =3D {
+> > > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > > index 39e109a7d56d..369c3b3ce53e 100644
+> > > --- a/fs/nfsd/nfsd.h
+> > > +++ b/fs/nfsd/nfsd.h
+> > > @@ -23,9 +23,7 @@
+> > > =20
+> > >  #include <uapi/linux/nfsd/debug.h>
+> > > =20
+> > > -#include "netns.h"
+> > >  #include "export.h"
+> > > -#include "stats.h"
+> > > =20
+> > >  #undef ifdebug
+> > >  #ifdef CONFIG_SUNRPC_DEBUG
+> > > @@ -37,7 +35,14 @@
+> > >  /*
+> > >   * nfsd version
+> > >   */
+> > > +#define NFSD_MINVERS			2
+> > > +#define	NFSD_MAXVERS			4
+> > >  #define NFSD_SUPPORTED_MINOR_VERSION	2
+> > > +bool nfsd_support_version(int vers);
+> > > +
+> > > +#include "netns.h"
+> > > +#include "stats.h"
+> > > +
+> > >  /*
+> > >   * Maximum blocksizes supported by daemon under various circumstances.
+> > >   */
+> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > index f25b26bc5670..4438cdcd4873 100644
+> > > --- a/fs/nfsd/nfssvc.c
+> > > +++ b/fs/nfsd/nfssvc.c
+> > > @@ -116,15 +116,12 @@ static const struct svc_version *nfsd_version[] =
+=3D {
+> > >  #endif
+> > >  };
+> > > =20
+> > > -#define NFSD_MINVERS    	2
+> > > -#define NFSD_NRVERS		ARRAY_SIZE(nfsd_version)
+> > > -
+> > >  struct svc_program		nfsd_program =3D {
+> > >  #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> > >  	.pg_next		=3D &nfsd_acl_program,
+> > >  #endif
+> > >  	.pg_prog		=3D NFS_PROGRAM,		/* program number */
+> > > -	.pg_nvers		=3D NFSD_NRVERS,		/* nr of entries in nfsd_version */
+> > > +	.pg_nvers		=3D NFSD_MAXVERS+1,	/* nr of entries in nfsd_version */
+> > >  	.pg_vers		=3D nfsd_version,		/* version table */
+> > >  	.pg_name		=3D "nfsd",		/* program name */
+> > >  	.pg_class		=3D "nfsd",		/* authentication class */
+> > > @@ -135,78 +132,24 @@ struct svc_program		nfsd_program =3D {
+> > > =20
+> > >  bool nfsd_support_version(int vers)
+> > >  {
+> > > -	if (vers >=3D NFSD_MINVERS && vers < NFSD_NRVERS)
+> > > +	if (vers >=3D NFSD_MINVERS && vers <=3D NFSD_MAXVERS)
+> > >  		return nfsd_version[vers] !=3D NULL;
+> > >  	return false;
+> > >  }
+> > > =20
+> > > -static bool *
+> > > -nfsd_alloc_versions(void)
+> > > -{
+> > > -	bool *vers =3D kmalloc_array(NFSD_NRVERS, sizeof(bool), GFP_KERNEL);
+> > > -	unsigned i;
+> > > -
+> > > -	if (vers) {
+> > > -		/* All compiled versions are enabled by default */
+> > > -		for (i =3D 0; i < NFSD_NRVERS; i++)
+> > > -			vers[i] =3D nfsd_support_version(i);
+> > > -	}
+> > > -	return vers;
+> > > -}
+> > > -
+> > > -static bool *
+> > > -nfsd_alloc_minorversions(void)
+> > > -{
+> > > -	bool *vers =3D kmalloc_array(NFSD_SUPPORTED_MINOR_VERSION + 1,
+> > > -			sizeof(bool), GFP_KERNEL);
+> > > -	unsigned i;
+> > > -
+> > > -	if (vers) {
+> > > -		/* All minor versions are enabled by default */
+> > > -		for (i =3D 0; i <=3D NFSD_SUPPORTED_MINOR_VERSION; i++)
+> > > -			vers[i] =3D nfsd_support_version(4);
+> > > -	}
+> > > -	return vers;
+> > > -}
+> > > -
+> > > -void
+> > > -nfsd_netns_free_versions(struct nfsd_net *nn)
+> > > -{
+> > > -	kfree(nn->nfsd_versions);
+> > > -	kfree(nn->nfsd4_minorversions);
+> > > -	nn->nfsd_versions =3D NULL;
+> > > -	nn->nfsd4_minorversions =3D NULL;
+> > > -}
+> > > -
+> > > -static void
+> > > -nfsd_netns_init_versions(struct nfsd_net *nn)
+> > > -{
+> > > -	if (!nn->nfsd_versions) {
+> > > -		nn->nfsd_versions =3D nfsd_alloc_versions();
+> > > -		nn->nfsd4_minorversions =3D nfsd_alloc_minorversions();
+> > > -		if (!nn->nfsd_versions || !nn->nfsd4_minorversions)
+> > > -			nfsd_netns_free_versions(nn);
+> > > -	}
+> > > -}
+> > > -
+> > >  int nfsd_vers(struct nfsd_net *nn, int vers, enum vers_op change)
+> > >  {
+> > > -	if (vers < NFSD_MINVERS || vers >=3D NFSD_NRVERS)
+> > > +	if (vers < NFSD_MINVERS || vers > NFSD_MAXVERS)
+> > >  		return 0;
+> > >  	switch(change) {
+> > >  	case NFSD_SET:
+> > > -		if (nn->nfsd_versions)
+> > > -			nn->nfsd_versions[vers] =3D nfsd_support_version(vers);
+> > > +		nn->nfsd_versions[vers] =3D nfsd_support_version(vers);
+> > >  		break;
+> > >  	case NFSD_CLEAR:
+> > > -		nfsd_netns_init_versions(nn);
+> > > -		if (nn->nfsd_versions)
+> > > -			nn->nfsd_versions[vers] =3D false;
+> > > +		nn->nfsd_versions[vers] =3D false;
+> > >  		break;
+> > >  	case NFSD_TEST:
+> > > -		if (nn->nfsd_versions)
+> > > -			return nn->nfsd_versions[vers];
+> > > -		fallthrough;
+> > > +		return nn->nfsd_versions[vers];
+> > >  	case NFSD_AVAIL:
+> > >  		return nfsd_support_version(vers);
+> > >  	}
+> > > @@ -233,23 +176,16 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 mi=
+norversion, enum vers_op change
+> > > =20
+> > >  	switch(change) {
+> > >  	case NFSD_SET:
+> > > -		if (nn->nfsd4_minorversions) {
+> > > -			nfsd_vers(nn, 4, NFSD_SET);
+> > > -			nn->nfsd4_minorversions[minorversion] =3D
+> > > -				nfsd_vers(nn, 4, NFSD_TEST);
+> > > -		}
+> > > +		nfsd_vers(nn, 4, NFSD_SET);
+> > > +		nn->nfsd4_minorversions[minorversion] =3D
+> > > +			nfsd_vers(nn, 4, NFSD_TEST);
+> > >  		break;
+> > >  	case NFSD_CLEAR:
+> > > -		nfsd_netns_init_versions(nn);
+> > > -		if (nn->nfsd4_minorversions) {
+> > > -			nn->nfsd4_minorversions[minorversion] =3D false;
+> > > -			nfsd_adjust_nfsd_versions4(nn);
+> > > -		}
+> > > +		nn->nfsd4_minorversions[minorversion] =3D false;
+> > > +		nfsd_adjust_nfsd_versions4(nn);
+> > >  		break;
+> > >  	case NFSD_TEST:
+> > > -		if (nn->nfsd4_minorversions)
+> > > -			return nn->nfsd4_minorversions[minorversion];
+> > > -		return nfsd_vers(nn, 4, NFSD_TEST);
+> > > +		return nn->nfsd4_minorversions[minorversion];
+> > >  	case NFSD_AVAIL:
+> > >  		return minorversion <=3D NFSD_SUPPORTED_MINOR_VERSION &&
+> > >  			nfsd_vers(nn, 4, NFSD_AVAIL);
+> > > @@ -568,11 +504,11 @@ void nfsd_reset_versions(struct nfsd_net *nn)
+> > >  {
+> > >  	int i;
+> > > =20
+> > > -	for (i =3D 0; i < NFSD_NRVERS; i++)
+> > > +	for (i =3D 0; i <=3D NFSD_MAXVERS; i++)
+> > >  		if (nfsd_vers(nn, i, NFSD_TEST))
+> > >  			return;
+> > > =20
+> > > -	for (i =3D 0; i < NFSD_NRVERS; i++)
+> > > +	for (i =3D 0; i <=3D NFSD_MAXVERS; i++)
+> > >  		if (i !=3D 4)
+> > >  			nfsd_vers(nn, i, NFSD_SET);
+> > >  		else {
+> > > @@ -905,17 +841,17 @@ nfsd_init_request(struct svc_rqst *rqstp,
+> > >  	if (likely(nfsd_vers(nn, rqstp->rq_vers, NFSD_TEST)))
+> > >  		return svc_generic_init_request(rqstp, progp, ret);
+> > > =20
+> > > -	ret->mismatch.lovers =3D NFSD_NRVERS;
+> > > -	for (i =3D NFSD_MINVERS; i < NFSD_NRVERS; i++) {
+> > > +	ret->mismatch.lovers =3D NFSD_MAXVERS + 1;
+> > > +	for (i =3D NFSD_MINVERS; i <=3D NFSD_MAXVERS; i++) {
+> > >  		if (nfsd_vers(nn, i, NFSD_TEST)) {
+> > >  			ret->mismatch.lovers =3D i;
+> > >  			break;
+> > >  		}
+> > >  	}
+> > > -	if (ret->mismatch.lovers =3D=3D NFSD_NRVERS)
+> > > +	if (ret->mismatch.lovers > NFSD_MAXVERS)
+> > >  		return rpc_prog_unavail;
+> > >  	ret->mismatch.hivers =3D NFSD_MINVERS;
+> > > -	for (i =3D NFSD_NRVERS - 1; i >=3D NFSD_MINVERS; i--) {
+> > > +	for (i =3D NFSD_MAXVERS; i >=3D NFSD_MINVERS; i--) {
+> > >  		if (nfsd_vers(nn, i, NFSD_TEST)) {
+> > >  			ret->mismatch.hivers =3D i;
+> > >  			break;
+> > > --=20
+> > > 2.44.0
+> > >=20
+> > >=20
+> >=20
+>=20
+>=20
+>=20
+
 
