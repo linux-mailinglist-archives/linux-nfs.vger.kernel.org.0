@@ -1,232 +1,144 @@
-Return-Path: <linux-nfs+bounces-5238-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5239-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16F74947E31
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 17:34:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3463B948243
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 21:25:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D815281CAD
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 15:34:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 660681C20AFB
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Aug 2024 19:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C804C155C88;
-	Mon,  5 Aug 2024 15:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b="DU1vCdcd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A344415B147;
+	Mon,  5 Aug 2024 19:24:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from a1-bg02.venev.name (a1-bg02.venev.name [213.240.239.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D620524D7;
-	Mon,  5 Aug 2024 15:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.240.239.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991C3364AB
+	for <linux-nfs@vger.kernel.org>; Mon,  5 Aug 2024 19:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722872084; cv=none; b=aP/+/GbXCctKNk3kTo8rKSD5zg8eB3uWnz3g6kPaV0/ybUsIDDmEIp0zTzrK/TYu3NFvEF78hQRFsqbZMZQltNKAJebVZdvCek5dWk+50uRwJmcVMezAEEIvxNpkcgMGxVgBAiH8+Z0FK5M7HpqF1nAulYvmZdvQ+5/UNkt4NRU=
+	t=1722885899; cv=none; b=ObE3AVvswItHoRmP69CVm2joBfok6JqdbxTNaTvX6QHZkardXpluOTIWsq+90AyU73zaykyxMQeyF5kMr3vLSnkvoBmgHpMM3F7RyQbfJcD5nVNHKNWVhgjQ21L/OpSYDgr9tZsdtYEoEQnX+ZrESoYMlM/vanXlWhackNS07Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722872084; c=relaxed/simple;
-	bh=az9IZNBf572XOHxYtYloLtOpMtowQ2MhfSY+bSjR3u0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UXyP5K77W7JpuiZr+pdCUm1Pqa8jDRVrl40T94ROkxmbtXDkJXJW2eEHN5sDJYr45C0yk/M3iuULt81x+gB716sQdMTUrRiTpOfvt+MSq4ZLnHWQe3mmWoCfG1fSHzU8Y6eBhSGItiueodl3Y/18eNgOLh8NETeqBZzs4O0AN44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name; spf=pass smtp.mailfrom=venev.name; dkim=pass (4096-bit key) header.d=venev.name header.i=@venev.name header.b=DU1vCdcd; arc=none smtp.client-ip=213.240.239.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=venev.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=venev.name
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=venev.name;
-	s=default; h=Content-Type:Date:To:From:Subject:Message-ID:
-	Content-Transfer-Encoding:Reply-To:Sender;
-	bh=+75xdacdFsxgXARR9Bk36Kwb9foV0OHSOEia2xj7zNY=; b=DU1vCdcd8zw9fBuCWcoIUbwd1N
-	2iT4Z2yvNfgooj+qsR6kbQdFMB9mEb7MPKt+VAoy6pAe7pdqbgGMWBQrTjm5IV6JpccyuRHsKWCg8
-	Rm17xbh2I4uvc8TnSgoWclni/8uEnZX1ZZNQZxYYW6vOydyZyCxT1dwypsgxPJWMzLLdQpNi9XOzZ
-	jBdxIDopSyhf0zizQWlafTUXsK7M8QxIKO6z3QFsgepxGo7bCk96cgSQoj9gHujAgmI29thBGKnyZ
-	JIHQo5ifmjbTVVxxKdXiAmT2JnJtfvBzgOSDGRnJiqWkna5Bz5E1b1neZS7ktgEtT2RHJNLn+ij+8
-	c0twlongBZLwZmjIhvx4IMPrzemy8q5T1L97b0sO72NJvGvnJWzyX0TlX2+R8Jw9DwsIohvt63eqW
-	MoEUb5Ss/pbmwKjWA50Ci8vF+YZggJfErFSVHV4vuZ648gk776yysPSbzOrwMy6FxkMY+MrEwAVF6
-	z5CW82XGZNsIuwlYe4uhvqrl67Yygm4I/UHkyfVvGCHb8guYqtSndoAm83uWZbVrjk+/oC6rDYviQ
-	RLzXAlFqmhITeb21xqpoxDmHR7V5nOxYNlXwzj1jjvUHlxOYl3meT+TU7c9TDxbWQmoUuqBsiXZNU
-	4nlHURCPdc4d2xHyDHQQ6UAtQuaw/qfcCTwy00QFM=;
-Received: from a1-bg02.venev.name ([213.240.239.49] helo=pmx1.venev.name)
-	by a1-bg02.venev.name with esmtps
-	id 1sazj7-00000000p6D-1noa
-	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	(envelope-from <hristo@venev.name>);
-	Mon, 05 Aug 2024 15:34:25 +0000
-Received: from plank.m.venev.name ([213.240.239.48])
-	by pmx1.venev.name with ESMTPSA
-	id CTunOf/wsGZK/wIAT9YxdQ
-	(envelope-from <hristo@venev.name>); Mon, 05 Aug 2024 15:34:25 +0000
-Message-ID: <c39524ab0e2b2045f21bc64f3742ac2b96abd2b9.camel@venev.name>
-Subject: Re: [PATCH] netfs: Set NETFS_RREQ_WRITE_TO_CACHE when caching is
- possible
-From: Hristo Venev <hristo@venev.name>
-To: Trond Myklebust <trondmy@hammerspace.com>, "max.kellermann@ionos.com"
-	 <max.kellermann@ionos.com>, "dhowells@redhat.com" <dhowells@redhat.com>
-Cc: "dan.aloni@vastdata.com" <dan.aloni@vastdata.com>, "xiubli@redhat.com"
- <xiubli@redhat.com>, "linux-fsdevel@vger.kernel.org"
- <linux-fsdevel@vger.kernel.org>, "ceph-devel@vger.kernel.org"
- <ceph-devel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "netfs@lists.linux.dev"
- <netfs@lists.linux.dev>,  "jlayton@kernel.org" <jlayton@kernel.org>,
- "idryomov@gmail.com" <idryomov@gmail.com>,  "willy@infradead.org"
- <willy@infradead.org>, "blokos@free.fr" <blokos@free.fr>, 
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date: Mon, 05 Aug 2024 18:34:23 +0300
-In-Reply-To: <ba17aecba9615f85b7901ea96609abdad3c29db1.camel@hammerspace.com>
-References: <20240729091532.855688-1-max.kellermann@ionos.com>
-	 <3575457.1722355300@warthog.procyon.org.uk>
-	 <CAKPOu+9_TQx8XaB2gDKzwN-YoN69uKoZGiCDPQjz5fO-2ztdFQ@mail.gmail.com>
-	 <CAKPOu+-4C7qPrOEe=trhmpqoC-UhCLdHGmeyjzaUymg=k93NEA@mail.gmail.com>
-	 <3717298.1722422465@warthog.procyon.org.uk>
-	 <CAKPOu+-4LQM2-Ciro0LbbhVPa+YyHD3BnLL+drmG5Ca-b4wmLg@mail.gmail.com>
-	 <845520c7e608c31751506f8162f994b48d235776.camel@venev.name>
-	 <ba17aecba9615f85b7901ea96609abdad3c29db1.camel@hammerspace.com>
-Autocrypt: addr=hristo@venev.name; prefer-encrypt=mutual;
- keydata=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
- AjQ6o01lu
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-m+Z7TPUh5Rd+PvHZw/pU"
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+	s=arc-20240116; t=1722885899; c=relaxed/simple;
+	bh=6Q4LPTYlXj2jdqmZ1SaCW4NNNog8qg2JSrVP1KBASnw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BRS1c7Oxpjr/YLwkga/x2pjNqEuyf2VEYMbjhrmDgeBBavU0B1F6ezw/C4s+r1dN+5/d1H0ik5AfIbJsWTji4oyq196tM+fOlxoHp+MJxzOToZZQuZniVTa11+tphrVlo3ayAq1kxhibTC/98Mb/5N02ZtD/bqUTUnVtVUH2XFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-36830a54b34so839247f8f.0
+        for <linux-nfs@vger.kernel.org>; Mon, 05 Aug 2024 12:24:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722885896; x=1723490696;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9MwDLgoNu4LXZIciKWBF6aAsZeAYC6tbeEFPBDoaR8=;
+        b=XXqZNNTGNKJUMB4nWiGPby1hxVfhXhfs1jLNAEye2ZjtVc3iKcLftsRILT4CGRz2Mz
+         dFMQF2x7GAbfpi6///EfTI5qtGVOemi98/+8MHXeN9vBW7OLawfA+nmIeczmKPpkQ8NT
+         cNT/y8NZqa0TT9sEBAIoWUO57ixhwWffMFSXte0ccbOG8bwPFKw6iRn5yVnmuFFuv1d+
+         N+BoWehxjSh/twWIJ34tnBQBpkW0HD9EJZ/CDJiOsv6Ti2t2gx6V+YMVQRCVpU7vfBvd
+         /TkbywllvqW3n/hVYbrx6FHQWQco1N+LOTrZzV6H1nGHeE6jfv+JxIRQ3yMr0NUYAZt5
+         Ea8g==
+X-Forwarded-Encrypted: i=1; AJvYcCV1g0WJIhOyQEi2hEqloYVHtIMRBcr6zfbkTku7DbTf6bVCYe09pWapDk/d/GG4lppvVzj2orQVCA212nOLn61KznoLpZkbFBGc
+X-Gm-Message-State: AOJu0YxxULS5+c/P4tdpjb5pFKKiO8SNFULYz2Fec/x5zK7davGCMLXx
+	S544Bh5M0OhBzFjKOr4Y8q7Kzcw4quC0wksreVBokXlyUkoEjLwp
+X-Google-Smtp-Source: AGHT+IG0N8ummiR4C4JZMD0VYDygUNKc4HJ4Hh6IapF5zvL5u1xguHV5B5prFAomWCnTAQ/IdKbJlw==
+X-Received: by 2002:a05:600c:3b92:b0:426:5dd5:f245 with SMTP id 5b1f17b1804b1-428e6af8117mr59063025e9.2.1722885895488;
+        Mon, 05 Aug 2024 12:24:55 -0700 (PDT)
+Received: from [10.100.102.74] (CBL217-132-143-121.bb.netvision.net.il. [217.132.143.121])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428e6e7d57asm151593195e9.33.2024.08.05.12.24.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Aug 2024 12:24:54 -0700 (PDT)
+Message-ID: <888d4896-5936-44cd-8bc2-3bc683c0128e@grimberg.me>
+Date: Mon, 5 Aug 2024 22:24:53 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Question about NFS client locks and delegations
+To: Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <6378987a-e289-4173-9f09-093ba50ee75f@grimberg.me>
+ <740027864c432cfda867145110b8c5f43d7b0ec4.camel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <740027864c432cfda867145110b8c5f43d7b0ec4.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---=-m+Z7TPUh5Rd+PvHZw/pU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, 2024-08-04 at 23:22 +0000, Trond Myklebust wrote:
-> On Sun, 2024-08-04 at 16:57 +0300, Hristo Venev wrote:
-> > In addition to Ceph, in NFS there are also some crashes related to
-> > the
-> > use of 0x356 as a pointer.
-> >=20
-> > `netfs_is_cache_enabled()` only returns true when the fscache
-> > cookie
-> > is
-> > fully initialized. This may happen after the request has been
-> > created,
-> > so check for the cookie's existence instead.
-> >=20
-> > Link:
-> > https://lore.kernel.org/linux-nfs/b78c88db-8b3a-4008-94cb-82ae08f0e37b@=
-free.fr/T/
-> > Fixes: 2ff1e97587f4 ("netfs: Replace PG_fscache by setting folio-
-> > > private and marking dirty")
-> > Cc: linux-nfs@vger.kernel.org=C2=A0<linux-nfs@vger.kernel.org>
-> > Cc: blokos <blokos@free.fr>
-> > Cc: Trond Myklebust <trondmy@hammerspace.com>
-> > Cc: dan.aloni@vastdata.com=C2=A0<dan.aloni@vastdata.com>
-> > Signed-off-by: Hristo Venev <hristo@venev.name>
-> > ---
-> > =C2=A0fs/netfs/objects.c | 6 +++---
-> > =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-> > index f4a6427274792..a74ca90c86c9b 100644
-> > --- a/fs/netfs/objects.c
-> > +++ b/fs/netfs/objects.c
-> > @@ -27,7 +27,6 @@ struct netfs_io_request
-> > *netfs_alloc_request(struct
-> > address_space *mapping,
-> > =C2=A0	bool is_unbuffered =3D (origin =3D=3D NETFS_UNBUFFERED_WRITE ||
-> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 origin =3D=3D NETFS_DIO_READ ||
-> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 origin =3D=3D NETFS_DIO_WRITE);
-> > -	bool cached =3D !is_unbuffered &&
-> > netfs_is_cache_enabled(ctx);
-> > =C2=A0	int ret;
-> > =C2=A0
-> > =C2=A0	for (;;) {
-> > @@ -56,8 +55,9 @@ struct netfs_io_request
-> > *netfs_alloc_request(struct
-> > address_space *mapping,
-> > =C2=A0	refcount_set(&rreq->ref, 1);
-> > =C2=A0
-> > =C2=A0	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
-> > -	if (cached) {
-> > -		__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq-
-> > >flags);
-> > +	if (!is_unbuffered &&
-> > fscache_cookie_valid(netfs_i_cookie(ctx))) {
-> > +		if(netfs_is_cache_enabled(ctx))
-> > +			__set_bit(NETFS_RREQ_WRITE_TO_CACHE,
-> > &rreq-
-> > > flags);
-> > =C2=A0		if (test_bit(NETFS_ICTX_USE_PGPRIV2, &ctx->flags))
-> > =C2=A0			/* Filesystem uses deprecated PG_private_2
-> > marking. */
-> > =C2=A0			__set_bit(NETFS_RREQ_USE_PGPRIV2, &rreq-
-> > > flags);
->=20
-> Does this mean that netfs could still end up setting a value for
-> folio-
-> > private in NFS given some other set of circumstances?
-
-Hopefully not? For NFS the cookie should be allocated in
-`nfs_fscache_init_inode`, and for Ceph I think `ceph_fill_inode` (which
-calls `ceph_fscache_register_inode_cookie`) should also be called early
-enough as well.
-
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
 
 
---=-m+Z7TPUh5Rd+PvHZw/pU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+On 05/08/2024 15:39, Jeff Layton wrote:
+> On Mon, 2024-08-05 at 12:46 +0300, Sagi Grimberg wrote:
+>> Hey,
+>>
+>> I'm looking at the NFS client locking code, and it seems to me that it
+>> violates the spec
+>> by caching locks when holding a read delegation.
+>>
+>>   From 18.10.4.  IMPLEMENTATION
+>> --
+>>      When a client holds an OPEN_DELEGATE_WRITE delegation, the client
+>>      holding that delegation is assured that there are no opens by other
+>>      clients.  Thus, there can be no conflicting LOCK operations from such
+>>      clients.  Therefore, the client may be handling locking requests
+>>      locally, without doing LOCK operations on the server.  If it does
+>>      that, it must be prepared to update the lock status on the server, by
+>>      sending appropriate LOCK and LOCKU operations before returning the
+>>      delegation.
+>>
+>>      When one or more clients hold OPEN_DELEGATE_READ delegations, any
+>>      LOCK operation where the server is implementing mandatory locking
+>>      semantics MUST result in the recall of all such delegations. The
+>>      LOCK operation may not be granted until all such delegations are
+>>      returned or revoked.  Except where this happens very quickly, one or
+>>      more NFS4ERR_DELAY errors will be returned to requests made while the
+>>      delegation remains outstanding.
+>> --
+>>
+>> I don't see how the second paragraph can be met if the client caches locks.
+>> I've added a set of changes to address this [1] (untested, its designed
+>> to illustrate the point).
+>>
+>> Any thoughts on this?
+>>
+> I don't think this is a bug.
+>
+> First, we only implement advisory locking in the client. The server may
+> enforce mandatory locking, but it's up to the server to mediate that
+> properly by recalling delegations at the right time. The client only
+> cares that it got a delegation when it comes to locking.
+>
+> Only one client can hold a write delegation, so the real question is
+> this: can two clients caching locks under read delegations set locks
+> that conflict with one another?
+>
+> The answer is no. The protocol does not allow you to set write locks on
+> SHARE_ACCESS_READ stateids. In the case where we open SHARE_ACCESS_BOTH
+> and get back a read delegation, we _know_ that nothing else can hold a
+> read delegation on the file and be caching locks because we have the
+> file open for write.
 
------BEGIN PGP SIGNATURE-----
+Ah, this last part is the subtle part I was missing. Meaning that no 2 
+clients
+can hold a read delegation and SHARE_ACCESS_WRITE/SHARE_ACCESS_BOTH opens
+at the same time. I revisited the spec and it reinforces this in section 
+18.16.4 and
+the text reinforces this. IIRC it differs from SMB where leases are 
+recalled only
+when a WRITE comes along that is considered a conflict, not the 
+initially at OPEN time.
 
-iQIzBAABCgAdFiEEb/2s7vGPWBH9BOGpSkmD6rj9B8sFAmaw8P8ACgkQSkmD6rj9
-B8uUow/+N0iSbLU5Dj4n4YCskaXe0oYauxtSCavu/FgTNgiGxMSAZAftYPNXznPt
-pD955SG00oNSAv3pJ899be31Pngurud6Ab7mhBJ+0JRNBsxJnD1NYAcDTAlKhLT/
-u6PDNmB82e0fnDSOx9PYQXuepfTwG3xuUJblbLU62O/D3XEEe9BgTfevf+4LHqZF
-z7ezu6qdGxeKyeVjWysFWdwjDybOYvdpiBgUML+0gnQq8A+RrB7dnVjfEJmxqksL
-0ciUxXg+uvQHNVtCoR+zuKRztS7dpgeYgggUGgHVXFdC3WzCxExJZemZmXJBmB+L
-8rWM4TGFCet6lNE1H5RUsBpvGQcYKqGpPDpeLQuI+dhmmTg3q29IM9ERTsD91FqA
-b+xzw0B84IPa2j6RWHjvh4C8kHRRKaDroCuzB8/9tl5XwqFYFjoF/9aO+Js6Cwf6
-5gukhuhgWFfxlqr8XJ7jQsS+KRMVGbvGxFezuquPGcINEfK+g5yPQDUBv334H/Jh
-W4yKbXZ4pHeXiZLSXqBuDZYK2oGRRJaTYJ+9875HCDEZC377I7DGT7EcpUj1afVb
-KsA9k5xMB/RRbP9n6VVBZ5e1osIwZfkCPG9+ZiqBbi658gHoTPsOJ0X4Z2R0p1I6
-2owPKsdeN2oUerNNVQ/5MBKqWzgwsjvMO0KreUMgl7b97fIDbSI=
-=67v8
------END PGP SIGNATURE-----
+A code comment would have been useful here...
 
---=-m+Z7TPUh5Rd+PvHZw/pU--
+Thanks for the explanation Jeff!
 
