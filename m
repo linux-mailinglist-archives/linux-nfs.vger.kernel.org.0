@@ -1,179 +1,116 @@
-Return-Path: <linux-nfs+bounces-5249-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5250-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3509949C81
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 01:58:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E745B949D89
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 03:59:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72E59282A2F
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Aug 2024 23:58:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73078B23ACC
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 01:59:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FF316A94B;
-	Tue,  6 Aug 2024 23:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9B5318FDA9;
+	Wed,  7 Aug 2024 01:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQRLrez3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FTwCnFW/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQRLrez3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FTwCnFW/"
+	dkim=pass (2048-bit key) header.d=ixsystems.com header.i=@ixsystems.com header.b="grcg18Ef"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C8166F14
-	for <linux-nfs@vger.kernel.org>; Tue,  6 Aug 2024 23:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9331FC8E0
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Aug 2024 01:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722988723; cv=none; b=NU5vMv5N2BSHb5YHo7t9AnqVryklQhylhalYuAOc84d7OrKVbUFJp1C4tSPCwt426HoWKS8hGJbAYw4zxcyFLvMccqRAL8TQQXS+RmE5AA1FPVtWY+A9mPAIQXC15stQo9UG4VwpQkUUPjqiU2fb/LWjXccbI90YMvXpGjknIeA=
+	t=1722995950; cv=none; b=NatTWfij8rDnz5gaYlNM3CA78DEVu64hatovyn0NG92e9842n4RW68UZz1x3NNi71vS2RH/pgicQ1ydhAF1ymUadr8n6daDi02ZCNisbejTbM8+yhkHc8bLVw65Tir/uY0XwPsNWcjZ0U4KAfkd95RToHadAXKnvzXmUXZd35Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722988723; c=relaxed/simple;
-	bh=Il550vVIKbpSZhcx9ATJLfGSPW2tWQxcZJATz+y4CRI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=DRcnsYkzb8rJDr/x5h+aeMaTc/BzZpLiQ6oAnA20tdki6/rBa3aigtQKiOG50A55j8lsTXRfIUUJrzDiJv16uK2yZ1HVQSNanBNxUpqkUg2qf1AkmhQVoaY09pWo1hqhZfQia0XhvjNseUDOyQwXim21YHRAljX0avuXWEp5okM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQRLrez3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FTwCnFW/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQRLrez3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FTwCnFW/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0371721C1D;
-	Tue,  6 Aug 2024 23:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722988720; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RyGmfJ4twubWZi/YkFhzFT8bNfFtN453CAZ3vNrnONE=;
-	b=CQRLrez3cI+uYqrOSDyk5NR6Zgj38CtfQI5+DYlmgRdF9VYJfG5Hw5SM57dHF07OJ12Bxg
-	dQxB/lKQlLRIeT7ksiQ/Yfj1QaVq+fIRF1ttxUsJbWkiHy35Zavp5AynDk3CK6erk4Nxri
-	+qVyYtY4tjJHKJLktDqMY+lQgYttx1M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722988720;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RyGmfJ4twubWZi/YkFhzFT8bNfFtN453CAZ3vNrnONE=;
-	b=FTwCnFW/LEB2otBSIbgaf7yjkhJZ9eTXXmHtnOKF44kz0UvoJ/8KkXVO91+1j/yiweFFys
-	R+hHaLwG20/ZxODw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CQRLrez3;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="FTwCnFW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722988720; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RyGmfJ4twubWZi/YkFhzFT8bNfFtN453CAZ3vNrnONE=;
-	b=CQRLrez3cI+uYqrOSDyk5NR6Zgj38CtfQI5+DYlmgRdF9VYJfG5Hw5SM57dHF07OJ12Bxg
-	dQxB/lKQlLRIeT7ksiQ/Yfj1QaVq+fIRF1ttxUsJbWkiHy35Zavp5AynDk3CK6erk4Nxri
-	+qVyYtY4tjJHKJLktDqMY+lQgYttx1M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722988720;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RyGmfJ4twubWZi/YkFhzFT8bNfFtN453CAZ3vNrnONE=;
-	b=FTwCnFW/LEB2otBSIbgaf7yjkhJZ9eTXXmHtnOKF44kz0UvoJ/8KkXVO91+1j/yiweFFys
-	R+hHaLwG20/ZxODw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 988711340C;
-	Tue,  6 Aug 2024 23:58:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NiKXE624smZgcwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 06 Aug 2024 23:58:37 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1722995950; c=relaxed/simple;
+	bh=skMbL4HeJKvCzlDBjA0ZutSBXr/oskyL0uj+M4mKkDM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Svv9TW0NGDtTmO3XYj3ztciIscmgPKJEXecrFbPG0SCoMaL0CyumbbySTFivQg8XQkcSINhEEgyLoat73h1jglOMDn6b4fPx8ustljJGQxk30DBGT4qldi5iY6QuWQdf+rLTIhsFWyAhcIERT9TvSZfjfmqV6TcLUY92Y5WwBf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixsystems.com; spf=pass smtp.mailfrom=ixsystems.com; dkim=pass (2048-bit key) header.d=ixsystems.com header.i=@ixsystems.com header.b=grcg18Ef; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixsystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixsystems.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70d199fb3dfso1029475b3a.3
+        for <linux-nfs@vger.kernel.org>; Tue, 06 Aug 2024 18:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ixsystems.com; s=google; t=1722995948; x=1723600748; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCIPcCSDa/PEPZmF24DhQG9SXXfINSbv01ae/ezl4x0=;
+        b=grcg18EfJ7XF54dE1Z7NxClmHB1pFFxzS8ZHdy++UBdBcHvyZ5U4oezCCs8+ZTDcVl
+         ZHlmXOsxwiX9uUr5mLAaOQ7MMXgw6mLBwVEXGkTwt13xxW8hFVFu7s8X3x4gWoDy9LnP
+         JbnENHg6VzCGwDPoxQy5Z/JDemwNjG6UYFxPbK8Rb04GAifLSFKbKyw+VRbkTAUMmR/t
+         G4kbHxmcFamaC3vEUySCRC4dr9Ngh+IHpXGwJ1T9TZybSkQX5ODkxVg4GHfH2qUuifOD
+         7hhZfnXkhOV3YyEAuX9FlQD2VnF2wKjIscl7KHV3pwVxi36mPDtCqFTw0CPwqSX6McfX
+         p1JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722995948; x=1723600748;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SCIPcCSDa/PEPZmF24DhQG9SXXfINSbv01ae/ezl4x0=;
+        b=N2gXshKNf0OK4VnLhCUxJE1tTC5pFtFcbOVS20DXbbMR3pyCvXmyHCLThs0n8Z2pwH
+         OhzOP7yo/xL4hRsHbDP6ryPFZb59jkLI+kccSd4hOh4Buv4Y+DdVb37tLgKynrrD2lNv
+         g9wpAj8jlNRn/Y3ZzG/i0GIcHYiGDJZPgxKZZ4PQqaDOIq0j/wZ6UOy/dS3JXJ4R1yui
+         Vl26OeUOejOsaRQ7Z/hn9XUZSLsdNElZY/J63aBzTtaEe9zYi0X23SwmiJwP2O6ATiSp
+         0Wt+O9H2tg5P97pHpdaMVZ3n+w6E8zgI06zcQnPHNuQgaVQ1eA9SPScf8bHUWyEOVR3z
+         xnMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpeEJxqs+0xMDXkwlpyXgaljszUvyrSi597CT1hK3WvJu3NB+gMOKL3zADSQbhH63ekCFWasi/0lDgmHZGR8Oqv3WnmbLz/lWw
+X-Gm-Message-State: AOJu0YzI1NvgzEif/qVSSruHBWnWROJnDIYCZKMIr16zl/0lEu1i17Y5
+	6aSIu1MG8fzqvfGyabR5Ilbbx+WVaIpD/uu2aeFAo2rddN4Faim/pRn0M89t0A==
+X-Google-Smtp-Source: AGHT+IGgoRPV9X4BvPZbIAPUX5vt+UcpWRpi4UuFqMbgHFTS0xMqohswYbEz1lvorjjyQD99FiV7GQ==
+X-Received: by 2002:a05:6a21:338b:b0:1c6:ecee:184c with SMTP id adf61e73a8af0-1c6ecee1963mr1205795637.32.1722995947116;
+        Tue, 06 Aug 2024 18:59:07 -0700 (PDT)
+Received: from localhost.localdomain (c-174-62-124-140.hsd1.ca.comcast.net. [174.62.124.140])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5905f85csm94345695ad.160.2024.08.06.18.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 18:59:06 -0700 (PDT)
+From: Mark Grimes <mark.grimes@ixsystems.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Grimes <mark.grimes@ixsystems.com>
+Subject: [PATCH] nfsd: Add quotes to client info 'callback address'
+Date: Tue,  6 Aug 2024 18:58:34 -0700
+Message-Id: <20240807015834.44960-1-mark.grimes@ixsystems.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Guoqing Jiang" <guoqing.jiang@linux.dev>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
- Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: remove unnecessary cache_put from idmap_lookup
-In-reply-to: <20240805105715.11660-1-guoqing.jiang@linux.dev>
-References: <20240805105715.11660-1-guoqing.jiang@linux.dev>
-Date: Wed, 07 Aug 2024 09:58:34 +1000
-Message-id: <172298871466.6062.17538058852164217892@noble.neil.brown.name>
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 0371721C1D
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
 
-On Mon, 05 Aug 2024, Guoqing Jiang wrote:
-> It is not needed given cache_check already calls cache_put on failure,
-> otherwise we call cache_put twice in case of -ETIMEDOUT.   
+The 'callback address' in client_info_show is output without quotes
+causing yaml parsers to fail on processing IPv6 addresses.
+Adding quotes to 'callback address' also matches that used by
+the 'address' field.
 
-cache_check() was called on a different *item.
+Signed-off-by: Mark Grimes <mark.grimes@ixsystems.com>
+---
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This cache_put() puts the *item returned by lookup_fn() two lines
-earlier.
-
-The current code is correct.
-
-NeilBrown
-
-> 
-> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
-> ---
->  fs/nfsd/nfs4idmap.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
-> index 7a806ac13e31..08a354783d57 100644
-> --- a/fs/nfsd/nfs4idmap.c
-> +++ b/fs/nfsd/nfs4idmap.c
-> @@ -521,7 +521,6 @@ idmap_lookup(struct svc_rqst *rqstp,
->  		*item = lookup_fn(detail, key);
->  		if (*item != prev_item)
->  			goto retry;
-> -		cache_put(&(*item)->h, detail);
->  	}
->  	return ret;
->  }
-> -- 
-> 2.35.3
-> 
-> 
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..0061ae253f4d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2692,7 +2692,7 @@ static int client_info_show(struct seq_file *m, void *v)
+ 			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+ 	}
+ 	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
+-	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
++	seq_printf(m, "callback address: \"%pISpc\"\n", &clp->cl_cb_conn.cb_addr);
+ 	seq_printf(m, "admin-revoked states: %d\n",
+ 		   atomic_read(&clp->cl_admin_revoked));
+ 	drop_client(clp);
+-- 
+2.39.2
 
 
