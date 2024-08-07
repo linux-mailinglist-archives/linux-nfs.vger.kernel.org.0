@@ -1,178 +1,107 @@
-Return-Path: <linux-nfs+bounces-5251-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5252-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1880C949DCE
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 04:36:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2EE7949E96
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 05:46:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4624CB231FA
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 02:36:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F30028B3F5
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 03:46:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045B915C125;
-	Wed,  7 Aug 2024 02:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16FE2433BB;
+	Wed,  7 Aug 2024 03:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qQbDMoSR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="k7kmkVC6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qQbDMoSR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="k7kmkVC6"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kBpsMhbZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB57927448;
-	Wed,  7 Aug 2024 02:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879001A269;
+	Wed,  7 Aug 2024 03:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722998195; cv=none; b=cJd0WWbkf960HgqLQo/m0SK6PkmJMy89uWi983ijNxtKfRks7i0HzLYqGxC6+T82lNzg9mjBfxppqc4oZ10e09Ufa7XHzPeYmVRaWSEATt5ScBWjnOgBGFDdCs2iwpXissjUSfPgooohKhycPin0lrZ86/HtLYWiZ8XghOZbTds=
+	t=1723002383; cv=none; b=d+oXrm4eGJTsTMXQ2RqhY79GEMDWhXj5HG/Zo0RQdQ2sWKJvc4NSNgCIs3OldNS96zMDFFqhKe0Oi+bAZp2/1M2xUNh20RzbKTC1pblivQbimA/SrsNyqQqtS0zLsR60JLTd+zZkHahRymC2xlmGTuZXyGq+69NzkjlcQahH85E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722998195; c=relaxed/simple;
-	bh=3zkE2aQ84FOdj99kuvMqnv3a8PFT3iuwSPl/0NQavIc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Ju7gqXZ+BwjP/rmwPgr4Xl3lT3dB40VHX9ELBGAJJI5STnp10UoDZlLefKvyKRRcHhM9TGaJWAXTXjXf0u5eTM77yzO7fyNCwa9A9vs6SGure8jGMcA1499I8zzJsQMOycMwpHgHgtUQku1ahV8P+itNQ3w+fqtQ26v7Y1jcVZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qQbDMoSR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=k7kmkVC6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qQbDMoSR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=k7kmkVC6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B019F21C63;
-	Wed,  7 Aug 2024 02:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722998191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evSZJWKiFHKspX0ZnwM7WTwRVQ/hfVcYOCcLm08v6cw=;
-	b=qQbDMoSRwvaosyg0QNu6gaDQ7VytrpyhlqoBhv+Fus/rfNQtCAOOj6Aa9kRi0MKuMe3pAj
-	gbty4tYJtHXdv19hgq6Awi0omw0hpA1k7D9IA7JpQJoPrERZut5K7jWD32x4kam6GIBuRq
-	Ov2DWD2K4WHwG3xgqF+kNHErzUYzt64=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722998191;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evSZJWKiFHKspX0ZnwM7WTwRVQ/hfVcYOCcLm08v6cw=;
-	b=k7kmkVC6Ndd1Q8Cmm+wWHXZcuFfqEVgBfM5tgozzTq1Xq2oLAp7Pv9t8tqfl3ZvFsyLhsN
-	v+hlej2g/k6lkFDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722998191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evSZJWKiFHKspX0ZnwM7WTwRVQ/hfVcYOCcLm08v6cw=;
-	b=qQbDMoSRwvaosyg0QNu6gaDQ7VytrpyhlqoBhv+Fus/rfNQtCAOOj6Aa9kRi0MKuMe3pAj
-	gbty4tYJtHXdv19hgq6Awi0omw0hpA1k7D9IA7JpQJoPrERZut5K7jWD32x4kam6GIBuRq
-	Ov2DWD2K4WHwG3xgqF+kNHErzUYzt64=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722998191;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evSZJWKiFHKspX0ZnwM7WTwRVQ/hfVcYOCcLm08v6cw=;
-	b=k7kmkVC6Ndd1Q8Cmm+wWHXZcuFfqEVgBfM5tgozzTq1Xq2oLAp7Pv9t8tqfl3ZvFsyLhsN
-	v+hlej2g/k6lkFDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 041E513297;
-	Wed,  7 Aug 2024 02:36:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8yKwKqzdsmaEHAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 07 Aug 2024 02:36:28 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1723002383; c=relaxed/simple;
+	bh=S7xTj1+BRrFzibxP14qb9afX2Rlcc7Yzirv1sNhukC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r35b0so3qFIjK2gQC4RJydfRZCD3att8F6kgWZ9yFNloc9sqTHdBSYbttKQ4PSFkeOf0+PJMuXYMuuhm5WiJlM/frXCteqFGAQ3eUZtE1U8p3Efn4QCnjhxQ27+USrURN5v3GOEN/o4/Cdm6xCoLOfCQc3/cvrDAB15fhumu5Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kBpsMhbZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Jy5sBXXGr2voNP18guOdqKk17MKFMl8ptCuzk1nlp0Q=; b=kBpsMhbZ+1Pgy99WHBD3YzI4XG
+	Hqy0KiWbREOfNTGd4D85Ztw2vyfymYiId0v/fTjNdlVAQK/i5x/NoKEy/QsyytCQ29qGuUAPcq9Qm
+	vjWq9+4BtI6nienJ8u7m7JMTT8t8SpdKlmHFaOFuyV61i2voDWVr/HNRi6uBFNEFEKkv5wF5jsRT4
+	QsFXi0/Oqo98Wx1ic4RCpOZYs5IrLeuD9EiwRoO7eiq16UpiiqcAEe8uXB9oQygLNDqEwGOxHUSal
+	larh/IiUtXsxc/JN3FDf2sNmqYdwc6o9DNqJ+ZGljoforqQ0namjXayDrOo23zksSQNAh0C4Om5cd
+	UgGbrBrg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbXct-00000006gRT-3Off;
+	Wed, 07 Aug 2024 03:46:16 +0000
+Date: Wed, 7 Aug 2024 04:46:15 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: kernel test robot <oliver.sang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
+	ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+	reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [fs]  cdc4ad36a8:
+ kernel_BUG_at_include/linux/page-flags.h
+Message-ID: <ZrLuBz1eBdgFzIyC@casper.infradead.org>
+References: <202408062249.2194d51b-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mark Grimes" <mark.grimes@ixsystems.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Mark Grimes" <mark.grimes@ixsystems.com>
-Subject: Re: [PATCH] nfsd: Add quotes to client info 'callback address'
-In-reply-to: <20240807015834.44960-1-mark.grimes@ixsystems.com>
-References: <20240807015834.44960-1-mark.grimes@ixsystems.com>
-Date: Wed, 07 Aug 2024 12:36:25 +1000
-Message-id: <172299818573.6062.18188541572825124295@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202408062249.2194d51b-lkp@intel.com>
 
-On Wed, 07 Aug 2024, Mark Grimes wrote:
-> The 'callback address' in client_info_show is output without quotes
-> causing yaml parsers to fail on processing IPv6 addresses.
-> Adding quotes to 'callback address' also matches that used by
-> the 'address' field.
+On Tue, Aug 06, 2024 at 10:26:17PM +0800, kernel test robot wrote:
+> kernel test robot noticed "kernel_BUG_at_include/linux/page-flags.h" on:
+> 
+> commit: cdc4ad36a871b7ac43fcc6b2891058d332ce60ce ("fs: Convert aops->write_begin to take a folio")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> [test failed on linux-next/master 1e391b34f6aa043c7afa40a2103163a0ef06d179]
+> 
+> in testcase: boot
 
-Reviewed-by: NeilBrown <neilb@suse.de>
+This patch should fix it.
 
-It is conceivable that existing code already handles the existing format
-and could break, but it seems unlikely.  nfs-utils has code to parse
-this file but it ignores "callback address" and doesn't care about the
-content of "address" just including it in logs.
-
-Consistency with "address" is a strong argument - strong enough to risk
-the unlikely breakage.
-
-Thanks,
-NeilBrown
+Christian, can you squash the fix in?
 
 
->=20
-> Signed-off-by: Mark Grimes <mark.grimes@ixsystems.com>
-> ---
->  fs/nfsd/nfs4state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a20c2c9d7d45..0061ae253f4d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2692,7 +2692,7 @@ static int client_info_show(struct seq_file *m, void =
-*v)
->  			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
->  	}
->  	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
-> -	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
-> +	seq_printf(m, "callback address: \"%pISpc\"\n", &clp->cl_cb_conn.cb_addr);
->  	seq_printf(m, "admin-revoked states: %d\n",
->  		   atomic_read(&clp->cl_admin_revoked));
->  	drop_client(clp);
-> --=20
-> 2.39.2
->=20
->=20
-
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 7d28304aea0f..66ff87417090 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2904,7 +2904,8 @@ shmem_write_begin(struct file *file, struct address_space *mapping,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (folio_test_has_hwpoisoned(folio)) {
++	if (folio_test_hwpoison(folio) ||
++	    (folio_test_large(folio) && folio_test_has_hwpoisoned(folio))) {
+ 		folio_unlock(folio);
+ 		folio_put(folio);
+ 		return -EIO;
 
