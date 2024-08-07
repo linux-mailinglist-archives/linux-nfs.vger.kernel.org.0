@@ -1,56 +1,54 @@
-Return-Path: <linux-nfs+bounces-5255-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5256-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 536A594A540
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 12:18:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54D1594A544
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 12:19:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D98B284AEA
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 10:18:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60E671C209BD
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Aug 2024 10:19:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912121D363F;
-	Wed,  7 Aug 2024 10:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A1C31D1735;
+	Wed,  7 Aug 2024 10:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBbgnsNa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2qnemvI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DA31C57A7;
-	Wed,  7 Aug 2024 10:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F2A13F435
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Aug 2024 10:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723025893; cv=none; b=EKbyedh/qTO4TBamfjEEgVNFOmzO9ZY09A8He5iNJS5I8gy48yugBhjXnkRrpEKIfEPeugD8frUOhIdgs003Vhm6vaYAu274ww7qmXc1bfkcDYP2yZlzsfawDRLXHgzf5tyIXQwQYTPgvalfACJg2gUXA7e1rG3/LTAmnNH/To4=
+	t=1723025956; cv=none; b=M1UkghfRzC/s8wyGpa2V0IjFKBUmsknntRef/k4gVpaaNQvR0PXYYdkbjy4CtFj76c5LdL44FJ5vKe4Lf6LPNn19YW5lrRzqvX6POxpJelYWWF8bpmSwzUW5IdbEO3lYENy0vUqAxaR+l3dpZYm/d9SvVMjRfCcAoGLVN2hjMuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723025893; c=relaxed/simple;
-	bh=R6fNwZmLY5rpcb46K6cHgVcksILsk6yl4mdc/FzHnI0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sHt5eKyGA8CSqNmnXFm/8mR8wSQobpcpeWFAxWkmAEJY2Ed9NOy2B5BYc+pDJrFGKNZS3zy+CHes8gnMJqZgDzMJU+pRG0ivQR0h7FKfBPSwKDziuMwYiGLxXdqdmjIVEIDQtYKrKHrLPqXXUQ7RzfXNofWkxRm/Y9AYanm62Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBbgnsNa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAFCC32782;
-	Wed,  7 Aug 2024 10:18:12 +0000 (UTC)
+	s=arc-20240116; t=1723025956; c=relaxed/simple;
+	bh=JG6MCtiB1PEikPX2aHf2/rSuxDRnvZLoGT87pJTVEfs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SvxfB4jpcMWZcgpgWF4xu0Jm2CTe1yV438+D8DfcybJpmNc/6rwvYdrf15sOQpR5bCIxsLuhtPDXy1DW8M9aHfJ3rQKq2nYAx9H2ZxDfzk3L/EK1q1DVlKlG4f1Xzi++4Fmhfss4+cwA1n5IP+PXLI2BdkJVmcNnCvCL5QTPtqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2qnemvI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B346C32782;
+	Wed,  7 Aug 2024 10:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723025893;
-	bh=R6fNwZmLY5rpcb46K6cHgVcksILsk6yl4mdc/FzHnI0=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=aBbgnsNab9y4AMGjIhA2v8cnb/vplXdohADQJ17AlGvcUfOA5Ozj95pWUxL6SdSXt
-	 m9ZgZzJJdWXgiV9EqFt20c+wySxjlEo8fP43eI7qmpOT5rdPKeF6maqRefSUCSeTh9
-	 vv0XX0HLIb5YIWLvNahaZ3/nHvJshJ875vnLfZQHVVQwBd3OGZG2+gEybvMfSVLXQZ
-	 k6H9TKCUQwaV1JghBSbKa+IdAPR+yqhqznCk1M18qGfxXH3Se/+M89K9oHI63OeJYU
-	 4OQxbhnibbnlRXdK7CsuZHXUEuyxormvfeQsVSudObgDqm8s/5ifeche+kDWBz2rkL
-	 44PPOYvg/BBnw==
-Message-ID: <f25caed757e57f5083a991de4d7e8494d62deae5.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Add quotes to client info 'callback address'
+	s=k20201202; t=1723025955;
+	bh=JG6MCtiB1PEikPX2aHf2/rSuxDRnvZLoGT87pJTVEfs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=d2qnemvIbvobWvZ1dE60QB+SSv+f3Y+JkEUvtvfk0NEXktGeWlzXZ0UEQQBa1GO7H
+	 1PKFi75qZYxQQkn8mupNRokBK723NX2GXYsIsdTmCcGW754XcqETAIgu4npQf7JOuZ
+	 OVqIFbowdDPQNE5vkwWFGVVXYCLtjMupumMVlykW139tEzsbzQrqjixdDPyWtGNfg9
+	 6XeOxrRq+GlW8KRBM1JIimZWfMAKvMJn6aERZMqnMm/03F4lBPZfk00FfMLPcAWXCv
+	 faN7FSjvnKTIrvcy+HVay1wL5VD5m/3DQkBrPDLyCX1WciKwUnp+Dh13TgRWQG9oHb
+	 3GaDcItv+JPSg==
+Message-ID: <45ac8547f20da0f840f45b365542e0ce42c80c73.camel@kernel.org>
+Subject: Re: [PATCH] SQUASH nfsd: don't allocate the versions array
 From: Jeff Layton <jlayton@kernel.org>
-To: Mark Grimes <mark.grimes@ixsystems.com>, Chuck Lever
- <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 07 Aug 2024 06:18:11 -0400
-In-Reply-To: <20240807015834.44960-1-mark.grimes@ixsystems.com>
-References: <20240807015834.44960-1-mark.grimes@ixsystems.com>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Wed, 07 Aug 2024 06:19:14 -0400
+In-Reply-To: <172298840561.6062.13050352142637689126@noble.neil.brown.name>
+References: <172298840561.6062.13050352142637689126@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,34 +133,33 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2024-08-06 at 18:58 -0700, Mark Grimes wrote:
-> The 'callback address' in client_info_show is output without quotes
-> causing yaml parsers to fail on processing IPv6 addresses.
-> Adding quotes to 'callback address' also matches that used by
-> the 'address' field.
+On Wed, 2024-08-07 at 09:53 +1000, NeilBrown wrote:
 >=20
-> Signed-off-by: Mark Grimes <mark.grimes@ixsystems.com>
+> In "nfsd: don't allocate the versions array" I made the various arrays
+> of version information fixed-sized - except nfsd_version.
+> The size of nfsd_version was determined by  CONFIG settings and could be
+> smaller than the index used by nfsd_support_version().
+>=20
+> This patch makes it fixed-size.  It should be squashed into the original.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 2 +-
+>  fs/nfsd/nfssvc.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a20c2c9d7d45..0061ae253f4d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2692,7 +2692,7 @@ static int client_info_show(struct seq_file *m, voi=
-d *v)
->  			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
->  	}
->  	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
-> -	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
-> +	seq_printf(m, "callback address: \"%pISpc\"\n", &clp->cl_cb_conn.cb_add=
-r);
->  	seq_printf(m, "admin-revoked states: %d\n",
->  		   atomic_read(&clp->cl_admin_revoked));
->  	drop_client(clp);
-
-I agree with Neil's assessment here:
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 1cef09a3c78e..defc430f912f 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -106,7 +106,7 @@ static struct svc_program	nfsd_acl_program =3D {
+> =20
+>  #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
+> =20
+> -static const struct svc_version *nfsd_version[] =3D {
+> +static const struct svc_version *nfsd_version[NFSD_MAXVERS+1] =3D {
+>  #if defined(CONFIG_NFSD_V2)
+>  	[2] =3D &nfsd_version2,
+>  #endif
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
