@@ -1,225 +1,119 @@
-Return-Path: <linux-nfs+bounces-5265-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5266-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E27694BDD8
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 14:44:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 542DA94BFA1
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 16:24:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCB1FB23ACF
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 12:44:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93E07B288D6
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 14:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A681718EFC4;
-	Thu,  8 Aug 2024 12:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF6C18F2D6;
+	Thu,  8 Aug 2024 14:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTa1eG+v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E57618DF65;
-	Thu,  8 Aug 2024 12:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAD818F2D2
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Aug 2024 14:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723120992; cv=none; b=ptFM5UruknoqRVXoFVUZgc3fpJ9xB2ld+s9KgSNDp418PtkVWY3ulzvS/5SEEcgYZrQ+E8eacZq7cZTmRpC6zF7UOL8wGvG0rQaN/Bz3ezb4MoC2a+mWIu+0QzdjcWljlXwUadmYU9VYQC8V9VVTB1Jc/UziiVK0mu+5fom4tIg=
+	t=1723126989; cv=none; b=EeCLwIeN/6ELAlI2RNhYvNQQ/DvoIBVKlf0u+I8HCR9ulEIhJ2aeA2rkYq6fUYEZrDfN0f5yPDl3YCvRUvSoUfa0sVKVBUj454qzNc0qc9wBzGZ/cyai3wg/MZxT+vlYqg+FcsYPnGWqnry+nQ49GGsOR74cEa1jOrEBSuQ4Jb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723120992; c=relaxed/simple;
-	bh=CI3zxLH0zZj018ZWJV+vX4G8HpwhfIULDnyKWg02Dwo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aD8ngFfjPxbRbtbIT+0fXBfIGey9PnemsCqD4htRwy3HhPP9g+Il0iIK2h2VzDZrPpbXrPz23VpVtD8BtQyaNzHFhTBgg/e3Nv56qyLWnGtZJPCX9Jd6FN2a5n9oAb6oiQ4MWqQDMmaqUZFRwOBdY4ZV7i7QGm22dFVaNQtGk8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Wfmsf2PcYz1T6t7;
-	Thu,  8 Aug 2024 20:42:46 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4515D180106;
-	Thu,  8 Aug 2024 20:43:08 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 8 Aug 2024 20:43:07 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
-	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
- Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Shuah Khan
-	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH net-next v13 05/14] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Thu, 8 Aug 2024 20:37:05 +0800
-Message-ID: <20240808123714.462740-6-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240808123714.462740-1-linyunsheng@huawei.com>
-References: <20240808123714.462740-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1723126989; c=relaxed/simple;
+	bh=46t6+h+KCXnf0rOEL6KQxMgdjLUN9sJoIMT9CoQ/lvE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lalEHhy0GyyYnRqAlDY1XyW5lmedS7wM4V9ciailgjMfbV1R7wWg3ujdYJTM5pWcWUUkeLIp2ywII0441BMgqfO/h/wBu39rBE7tyjsXNt+iNtpGSjVdgFp76LSZK12TfcfgCpoiRL/5J/rC8UqH28/2eFcVM8Fn+4XvqPmpThg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTa1eG+v; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-451b7e1d157so5999111cf.3
+        for <linux-nfs@vger.kernel.org>; Thu, 08 Aug 2024 07:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723126987; x=1723731787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H6d9RnEGZjhv6lXe1TweVqzgDaDUsqpQIjmcbPxFo4c=;
+        b=KTa1eG+vKrtGIbX5BINh5iH2rdH4OkBA+BwgDob/+XAZn240PAy7xtjuqBtOUo9TIp
+         CrwLap3Z6EvvFSBUb7B7KKVlKymoO5BjVIsJyEIGm9t9NPjArDvJfcYRrSInbjBqzSmI
+         mxUgvVotYerI3KRYLnARtC5XnVGHvwnejhQ9VNXGqEEm8W7vqNii/GQmDtotI9XRN8j+
+         o+g3xvsZ+lHuCeFzL0L5JZS5ZmvdvLwpPPrOF6IPC7iS1OuzX24xO9md6UXkVPEpsiSr
+         8yAfHhgVEFzsU/AUsVqbLY9OVwI2pCtSePC8vMNVYjjeOYBPmTHAs76sRjHlQHZf93sv
+         3PMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723126987; x=1723731787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H6d9RnEGZjhv6lXe1TweVqzgDaDUsqpQIjmcbPxFo4c=;
+        b=JI237mIAh6cAULLPUV1Awh5NAJaCm8ZWcvjdVbmGC1hTDOPj2Bm+mIcF0tu3UEeD/u
+         4X0DE8usJUTnG1cojW2ebbIw2Pp+pm2F6KxuPuby2Kj6WAaNjE2OuhDGa5d8NBmNFRbv
+         JWg5qULzrJN5JbOMOTAR/ERFsbD1X2O7EQkOo4otO5Fj3rGpA0GZCLJrSaXbK/SxMNPL
+         NWf7XUbg9jCAM/DIsmULrIcpvC87vshDrwCnAFgvaJurDASbP2YbCuhclwELrsDULipo
+         OUMOFQpAujnGPHBlbzwKOPGRvhk2PEh9BIC6RrgJLi+yvvzhjq4XxBoiBDKl/+Mt8rTC
+         jXAQ==
+X-Gm-Message-State: AOJu0YwjSGhKxqK/MMY+x1JHZcM2DxdcayfErR62HXJgAiDGXpQC1p0f
+	R3EUgx/CegirxO77Cu5qfb2vxiBswj03QLriWxpIFHh5rYIqvxaxzt5WGlSbQ1JWBpEk3fdyaVu
+	sJtzPqDp4KRajiEWfnYMhpJvCzB8=
+X-Google-Smtp-Source: AGHT+IEER+boocRs/NS7M822FtcaWPrj8sMSvRS4qoOIpUbIh5ZHiI0EpUv9+Gk6TdhO+KkNGIHwm1zksL4EPPoefgw=
+X-Received: by 2002:a05:622a:5a88:b0:446:33dc:7e3f with SMTP id
+ d75a77b69052e-451d42fc219mr30186881cf.58.1723126986770; Thu, 08 Aug 2024
+ 07:23:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+References: <c4f1d8bf-745b-4a98-9d38-2da4c355d691@gmail.com>
+ <66be75a6-2d3f-4f5b-96da-327556170c4a@gmail.com> <e39131ce-1816-49e1-8319-820472892a38@gmail.com>
+In-Reply-To: <e39131ce-1816-49e1-8319-820472892a38@gmail.com>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Thu, 8 Aug 2024 10:22:50 -0400
+Message-ID: <CAFX2JfmSE-_Vxw8NogUAzxDSZWY0nm1=DdyCgeUVAh-U7HNU3A@mail.gmail.com>
+Subject: Re: NFS client to pNFS DS
+To: marc eshel <eshel.marc@gmail.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@hammerspace.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+Hi Marc,
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
----
- drivers/vhost/net.c                                   |  2 +-
- include/linux/page_frag_cache.h                       | 10 ++++++++++
- net/core/skbuff.c                                     |  6 +++---
- net/rxrpc/conn_object.c                               |  4 +---
- net/rxrpc/local_object.c                              |  4 +---
- net/sunrpc/svcsock.c                                  |  6 ++----
- tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
- 7 files changed, 19 insertions(+), 15 deletions(-)
+On Mon, Aug 5, 2024 at 5:51=E2=80=AFPM marc eshel <eshel.marc@gmail.com> wr=
+ote:
+>
+> Hi Trond,
+>
+> Will the Linux NFS client try to us krb5i regardless of the MDS
+> configuration?
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 6691fac01e0d..b2737dc0dc50 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index ef038a07925c..7c9125a9aed3 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/types.h>
- #include <linux/mm_types_task.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 6cf2c51a34e1..bb77c3fd192f 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -752,14 +752,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -849,7 +849,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc_va(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 42d20412c1c3..4b1e87187614 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
-diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-index e522611452c9..3b98df379ce6 100644
---- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
-+++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-@@ -120,7 +120,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
--- 
-2.33.0
+My expectation is that the NFS client will use SECINFO_NO_NAME to find
+the preferred security flavors of the server. If krb5i is first on the
+list that the server returns then that's what the client will use.
 
+>
+> Is there any option to avoid it?
+
+Yes, you can use the '-o sec=3D$FLAVOR' mount option to mount with other
+security flavors. Valid flavors are 'none', 'sys', 'krb5', 'krb5i',
+and 'krb5p'. I hope this helps!
+
+Anna
+
+>
+> Thanks, Marc.
+>
+> ul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
+> stripe count  1
+> Jul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
+> ds_num 1
+> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC:       Couldn't create
+> auth handle (flavor 390004)
+>
+>
 
