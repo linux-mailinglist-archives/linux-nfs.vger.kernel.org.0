@@ -1,119 +1,123 @@
-Return-Path: <linux-nfs+bounces-5266-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5267-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 542DA94BFA1
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 16:24:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08BCF94C51A
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 21:17:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93E07B288D6
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 14:24:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38F8B1C2176A
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Aug 2024 19:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF6C18F2D6;
-	Thu,  8 Aug 2024 14:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122EB12C81F;
+	Thu,  8 Aug 2024 19:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTa1eG+v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dyMf1Tb6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAD818F2D2
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Aug 2024 14:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC6E1EEE4
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Aug 2024 19:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723126989; cv=none; b=EeCLwIeN/6ELAlI2RNhYvNQQ/DvoIBVKlf0u+I8HCR9ulEIhJ2aeA2rkYq6fUYEZrDfN0f5yPDl3YCvRUvSoUfa0sVKVBUj454qzNc0qc9wBzGZ/cyai3wg/MZxT+vlYqg+FcsYPnGWqnry+nQ49GGsOR74cEa1jOrEBSuQ4Jb8=
+	t=1723144617; cv=none; b=TFHx4W6XaiDLbyRcdq3boVnJCojvWVTI9t27p2X3Ethmoqnf7tdpwREVQRSaoa/pJC1mTf9hr010qkPDiVFZH+GJ802ABkUh7xeFLl5+PsjZiXhI4ChJ/kfRxmVqYKtE4mowDE8XNexJnabhF21gIKE02+hl06XbaLsTtXB5HlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723126989; c=relaxed/simple;
-	bh=46t6+h+KCXnf0rOEL6KQxMgdjLUN9sJoIMT9CoQ/lvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lalEHhy0GyyYnRqAlDY1XyW5lmedS7wM4V9ciailgjMfbV1R7wWg3ujdYJTM5pWcWUUkeLIp2ywII0441BMgqfO/h/wBu39rBE7tyjsXNt+iNtpGSjVdgFp76LSZK12TfcfgCpoiRL/5J/rC8UqH28/2eFcVM8Fn+4XvqPmpThg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTa1eG+v; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-451b7e1d157so5999111cf.3
-        for <linux-nfs@vger.kernel.org>; Thu, 08 Aug 2024 07:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723126987; x=1723731787; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H6d9RnEGZjhv6lXe1TweVqzgDaDUsqpQIjmcbPxFo4c=;
-        b=KTa1eG+vKrtGIbX5BINh5iH2rdH4OkBA+BwgDob/+XAZn240PAy7xtjuqBtOUo9TIp
-         CrwLap3Z6EvvFSBUb7B7KKVlKymoO5BjVIsJyEIGm9t9NPjArDvJfcYRrSInbjBqzSmI
-         mxUgvVotYerI3KRYLnARtC5XnVGHvwnejhQ9VNXGqEEm8W7vqNii/GQmDtotI9XRN8j+
-         o+g3xvsZ+lHuCeFzL0L5JZS5ZmvdvLwpPPrOF6IPC7iS1OuzX24xO9md6UXkVPEpsiSr
-         8yAfHhgVEFzsU/AUsVqbLY9OVwI2pCtSePC8vMNVYjjeOYBPmTHAs76sRjHlQHZf93sv
-         3PMQ==
+	s=arc-20240116; t=1723144617; c=relaxed/simple;
+	bh=ugyLFCFlhdk30o5w/HOAgEWE1xSMIqRqi53ZNaImKlE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=QvBtNxBCw6/JmqzGYtPOggCbizMPG05FhG9pDX5ok7xwLoIgG/4g2UB9COchbJyRSeHYuOo8mxErn5k95J2ZqQcqrZ86nJ38SS/KscbvqzKuPkR34nLsb97Lp+fro5bxJaS7JRHnsk8hRc/vGs7eiHmrZUuuJmILZFw5qtr/FQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dyMf1Tb6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723144614;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gAeYIn2ibBkCHCqEmSw/1JITV58/txNyVwMXGFAlMhY=;
+	b=dyMf1Tb6P5SoJ4HRmesfkepfiPaXLVZU3KS4HQSYvrxb5PbY9u7XK0Sw1IbRHdZ2xTnMQN
+	QHb54wHbZqvkQgbKexVGDYBKnYJXsu37GFbOLw1s4SESq+d/D7PlrQwys0/gN14AUbSiWv
+	ZepYm9CHjadJGuY1D07iANIIR/ljoBM=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-601-ucKC5vJYM0WxFnx2b3NVTQ-1; Thu, 08 Aug 2024 15:16:52 -0400
+X-MC-Unique: ucKC5vJYM0WxFnx2b3NVTQ-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-44fe325cd56so2566971cf.1
+        for <linux-nfs@vger.kernel.org>; Thu, 08 Aug 2024 12:16:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723126987; x=1723731787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H6d9RnEGZjhv6lXe1TweVqzgDaDUsqpQIjmcbPxFo4c=;
-        b=JI237mIAh6cAULLPUV1Awh5NAJaCm8ZWcvjdVbmGC1hTDOPj2Bm+mIcF0tu3UEeD/u
-         4X0DE8usJUTnG1cojW2ebbIw2Pp+pm2F6KxuPuby2Kj6WAaNjE2OuhDGa5d8NBmNFRbv
-         JWg5qULzrJN5JbOMOTAR/ERFsbD1X2O7EQkOo4otO5Fj3rGpA0GZCLJrSaXbK/SxMNPL
-         NWf7XUbg9jCAM/DIsmULrIcpvC87vshDrwCnAFgvaJurDASbP2YbCuhclwELrsDULipo
-         OUMOFQpAujnGPHBlbzwKOPGRvhk2PEh9BIC6RrgJLi+yvvzhjq4XxBoiBDKl/+Mt8rTC
-         jXAQ==
-X-Gm-Message-State: AOJu0YwjSGhKxqK/MMY+x1JHZcM2DxdcayfErR62HXJgAiDGXpQC1p0f
-	R3EUgx/CegirxO77Cu5qfb2vxiBswj03QLriWxpIFHh5rYIqvxaxzt5WGlSbQ1JWBpEk3fdyaVu
-	sJtzPqDp4KRajiEWfnYMhpJvCzB8=
-X-Google-Smtp-Source: AGHT+IEER+boocRs/NS7M822FtcaWPrj8sMSvRS4qoOIpUbIh5ZHiI0EpUv9+Gk6TdhO+KkNGIHwm1zksL4EPPoefgw=
-X-Received: by 2002:a05:622a:5a88:b0:446:33dc:7e3f with SMTP id
- d75a77b69052e-451d42fc219mr30186881cf.58.1723126986770; Thu, 08 Aug 2024
- 07:23:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723144609; x=1723749409;
+        h=content-transfer-encoding:content-language:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gAeYIn2ibBkCHCqEmSw/1JITV58/txNyVwMXGFAlMhY=;
+        b=odwVGcRRWMitWXo7WYyrmbKYN6M4m+Jq+VfKQ+Gvd0YwEAwPfpU/uEUS5LTAE2xp0w
+         jNVdP2TijlMcCEk4tcFOen7ILV+dzXHzyeFEdN/KOU6lz/o3jesK5YEcNJTW8F+fHP8X
+         LEgryUxl9M1Ql1GTFTzORmOVIKnCm5oDA4JVW5U4pY4br0BgtkfBBWcU/Jwk27/oApbc
+         VNUZYXrigwVpHdjr20CPJzIjc34gzEboVT6bM/iA9gsAuCihkI5SyI4M5VD4feJiQBrR
+         5n9GUbGFwkB1LnaVfEHKkYa9SIBaJJsr2RgCpLG21Wnz9wwi9Lffyn4UQx2ddS4MsGks
+         U2aw==
+X-Gm-Message-State: AOJu0YyEFcntu6fqB1BSgekTsh/bjtvoILazSEw8AS7wHfxP+VyVt+3M
+	Cab6UueR6k9hX3lwvugOy+V2wiUL6DNzMh/+WuKuEeVHwNFCTMLOLoxILprHehl6uM7dIXqgf37
+	ydqG0cozD7BkJa4ELlZLXZupHQsogDWBImzCDOp5eGsmbspEgGEfCxp3MTOIk6406UV4T9BXXrb
+	AXUUctMCYjIvaTRmzB8lrie19IGvV8Sabx7b5EbwQ=
+X-Received: by 2002:a05:622a:5d2:b0:450:2fea:4e91 with SMTP id d75a77b69052e-451d420f3camr20709411cf.4.1723144608945;
+        Thu, 08 Aug 2024 12:16:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbe5g572/soGPe2oNlArzZTSS1eA4YZDys+uK3UmOuxUXGa2ywfRG1sHynDd1FidCFauoMKg==
+X-Received: by 2002:a05:622a:5d2:b0:450:2fea:4e91 with SMTP id d75a77b69052e-451d420f3camr20709251cf.4.1723144608423;
+        Thu, 08 Aug 2024 12:16:48 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.249.141])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-451c8731492sm15514521cf.44.2024.08.08.12.16.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Aug 2024 12:16:47 -0700 (PDT)
+Message-ID: <0cad3141-b5e3-472c-9981-d475b9fbd4e9@redhat.com>
+Date: Thu, 8 Aug 2024 15:16:46 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c4f1d8bf-745b-4a98-9d38-2da4c355d691@gmail.com>
- <66be75a6-2d3f-4f5b-96da-327556170c4a@gmail.com> <e39131ce-1816-49e1-8319-820472892a38@gmail.com>
-In-Reply-To: <e39131ce-1816-49e1-8319-820472892a38@gmail.com>
-From: Anna Schumaker <schumaker.anna@gmail.com>
-Date: Thu, 8 Aug 2024 10:22:50 -0400
-Message-ID: <CAFX2JfmSE-_Vxw8NogUAzxDSZWY0nm1=DdyCgeUVAh-U7HNU3A@mail.gmail.com>
-Subject: Re: NFS client to pNFS DS
-To: marc eshel <eshel.marc@gmail.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Steve Dickson <steved@redhat.com>
+Subject: Announcing the Fall 2024 Bakeathon
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>, NFSv4 <nfsv4@ietf.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Marc,
+Hello,
 
-On Mon, Aug 5, 2024 at 5:51=E2=80=AFPM marc eshel <eshel.marc@gmail.com> wr=
-ote:
->
-> Hi Trond,
->
-> Will the Linux NFS client try to us krb5i regardless of the MDS
-> configuration?
+Red Hat is pleased to announce that we'll be hosting the
+Fall 2024 Bakeathon at our Westford office in Massachusetts, US.
 
-My expectation is that the NFS client will use SECINFO_NO_NAME to find
-the preferred security flavors of the server. If krb5i is first on the
-list that the server returns then that's what the client will use.
+The event will be F2F as well as virtual. Hoping to
+draw as many participants as possible.
 
->
-> Is there any option to avoid it?
+Details, event registration, network info and hotel info are here [1].
 
-Yes, you can use the '-o sec=3D$FLAVOR' mount option to mount with other
-security flavors. Valid flavors are 'none', 'sys', 'krb5', 'krb5i',
-and 'krb5p'. I hope this helps!
+Date: Mon Oct 21 to Fri Oct 25
+Address: Red Hat, 314 Littleton Rd, Westford, MA
+Event Registration: [2]
 
-Anna
+We have "talks at 2" (EST) [3]  everyday... Please feel
+free sign up for a talk if you want to present a topic
+the to the community... They are very informal...
+Definitely feel free to attended!
 
->
-> Thanks, Marc.
->
-> ul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
-> stripe count  1
-> Jul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
-> ds_num 1
-> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC:       Couldn't create
-> auth handle (flavor 390004)
->
->
+Any questions please send them to bakeathon-contact@googlegroups.com
+
+I hope to see you there... One way or the other!
+
+steved.
+
+[1] http://www.nfsv4bat.org/Events/2024/Oct/BAT/index.html
+
+[2] 
+https://docs.google.com/spreadsheets/d/1kJfCNeKyQhVRaV8p3X_2THsERegsgTOpkkdgv3X_-Ys/edit?gid=0#gid=0
+
+[3] 
+https://docs.google.com/spreadsheets/d/1kJfCNeKyQhVRaV8p3X_2THsERegsgTOpkkdgv3X_-Ys/edit?gid=0#gid=0
+
 
