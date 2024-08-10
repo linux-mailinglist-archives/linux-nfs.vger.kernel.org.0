@@ -1,283 +1,214 @@
-Return-Path: <linux-nfs+bounces-5277-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5278-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35E7E94DA54
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 05:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4B1B94DDC6
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 19:41:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B388E1F22762
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 03:43:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A8141F2162D
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 17:41:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCC213698E;
-	Sat, 10 Aug 2024 03:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A38158528;
+	Sat, 10 Aug 2024 17:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="WkNdRh3F"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eNBhKa+A";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gz0NRZv5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92F2C130499;
-	Sat, 10 Aug 2024 03:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723261409; cv=none; b=sJ/ixwM9dBlUIhVFT/oGjlTXU9EUnx09rCzcMYvHpJS+OgxCZgQ63MzFQ3+wIvIo2X8lDz3SQbcr6i974WSWrW2/aiYQYyTtTL8eekNEfTbtF9NVBRG1S/xz/gBYltzXhPP2aE7MLsCbK3MGbAWqADlTqynKzrc19tdevOnfqMU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723261409; c=relaxed/simple;
-	bh=Dz5ljV4C748Y92oEca2eVRU5aSIzT2ITH61W5Nh4i/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFQ4/4KLK3S9x214cPErrkpHQgd6M1AacjecwDcGVK++Gy+zSJ0JnSA9pwmnh1KdA74OEPhuEijUMZQWkKbU/ForafzjNHWxoA7ccwI+3ErcdU36zLt/gtC2mGqSxxnNUtH5pQb/k/K53NwxKQRmYalXMYAH5AiCOncUa4p77W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=WkNdRh3F; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id AFD2D14C1E1;
-	Sat, 10 Aug 2024 05:36:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1723261020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXmz9TkuAk5dB9bidybN3xvJsbLPHMH9nJKkDG6YnBg=;
-	b=WkNdRh3FW+h436ZD2wTCZZcior92lVbGevCb3rRz0k936m8bvJstFVmU4VZF7o9JwI9NAw
-	FPctBPVQbGGS0wly8cI+p8y4LPuoeqZv+2HMro9sAZW8Nc6Od7ogMoRxhPEUkzEmpsXLeh
-	ciryvAC9PLG7ZMsdIovM1qB2WNPnywMqie/hpEceQiSL3HzvXNm+3C4Y+uk3jJGpxcDj6V
-	8utSUf51piAQUGusY6ERcYSrShyvksEzxMGkkybbHuEcPVxCIzosllf7i/ec6ygZcKUzma
-	UYWJ8ldN6E4J2UEG9GFyHn0A08v50UG+tspHpnu3iOG2FnjUM91DKDsXe8JKbQ==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 1dc60f99;
-	Sat, 10 Aug 2024 03:36:53 +0000 (UTC)
-Date: Sat, 10 Aug 2024 12:36:38 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Ilya Dryomov <idryomov@gmail.com>, Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev,
-	linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] 9p: Fix DIO read through netfs
-Message-ID: <ZrbgRnXV-snNicjY@codewreck.org>
-References: <1229195.1723211769@warthog.procyon.org.uk>
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAFA1B810;
+	Sat, 10 Aug 2024 17:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723311658; cv=fail; b=K+ENzppdFIo1w43YZdvgb2az6I8YRqj6q7kdRzQpHA5rcoHXpvyv3yG1TUghl2k6KbhiyGmN6cUlIfxvXP3wSppcJcNbcaN1/gpE4uw8UBewSC2LKIqC/wlI3KkcluZPARzwrNgbAM5r5ZasKAhMUqXvD7aGFJCjDRU6itZ0JLg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723311658; c=relaxed/simple;
+	bh=kGx7Hh8hE+6mR6U74+P8JCU8L1EprXcx7DV9JdFd1Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=HU8ZnbUZ8jOUmfGbPPtOcXI9Qs/aX/sqGGO89kHgR+55GxCvIQsq72c8eLl1j06xeThD5DlPMNsLNbVcuFeklX44iP0/uclPzR5jp1rfvaFn7MTIqaiifH2meFixHo1Q+0eywRxADCojpuQWXTWAe7iD02Tpw/oXfaNiQ23URKM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eNBhKa+A; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gz0NRZv5; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47AFwDuq012600;
+	Sat, 10 Aug 2024 17:40:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:content-type:mime-version; s=
+	corp-2023-11-20; bh=OkpxjZ1OCH+Pq0GPS5TxhabPVnzIA7QrxYmMFyvZ0R0=; b=
+	eNBhKa+AYNAkmq9wy4JBp4lzlvVi46GeWfKqzrrvDp45wa3y28PmhyZtdKRINeSU
+	ENzvP/k6K1EthuMueMTEgKXBL+KggKe2e/kRDO3tbL3nJzicifSXKCHN8t45+Nlz
+	7UiC0/OOx5poFWdF5hzw/2B4G+19qN/vWOlkY3Vcf8dtyP3Yg1vb9CJbyCu1hvKe
+	K0SnhjigsQVf+aREVYZQMtxSiPtNS1AUmr6tbZ/oHvq4wefafnrcwAEhRlzFrzt7
+	sCzlaqza0Regl12Nk7+N8pKQuL3wqsW9Vt6p3IAeYGeJ67l6u5+FMz4Nl1K10jYV
+	wpveMGA8QAi/Zolny8NZ5A==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40wytt8f36-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 10 Aug 2024 17:40:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 47AHLqqq000678;
+	Sat, 10 Aug 2024 17:40:44 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40wxn5vkb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 10 Aug 2024 17:40:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jQC5kG2v+4XYJu63vDnCQEWurxBEM6v0C4USw3O63FwVlMw0giomN1+jdVHy9/jolKyY8y+69nYYaFhryqNNpB+aa+crSFkw+wSVOmo1FdujF2qJ5GlrHKf6tzcnmD3wFaFXXx/CfV9P86f/5Dyk8oNIcYgiiPdEk6EcixlSRYUD79zBwGnU5TzdWQCMYclZ6/2BG7bOTTo3iNZMkAkS7lafA28PnepKQviUklDuKPXtebbq18Wn4C3Oce7gQ3kfU9/cKHpnudTuUVkKvu7vVrozTSFV0kCr+ILhbrSOHfY5CN15B2m0wBLOLrx0njP+Kmjf/lroGvdGxwJnQfiHgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OkpxjZ1OCH+Pq0GPS5TxhabPVnzIA7QrxYmMFyvZ0R0=;
+ b=KjxluBFZiS79Igya2klktS9U6THPxy3lICQdcxzKV6OnfCd1iFzA3XF5f8qE4omlePUxbYJtfdKLaiv1daUSTQxTRP9vjK8p5EdLQuNXNm06SeD78gjQnb7DCVlFu1rtNpNFWKV7z4r8LEEusDCiVIHii3xtsKn1Qt/xrNWf2SUDXNuPb1+GsoRj/DHa4ll559GrGjnGyTCbj4il56W25XeXLSjtjaiOzgNlEPEyZztd/rWlFjB7O3nqCJskCcXni40+9F93XMjq/PAQJ7WvA5jbyk+CFUbNQFy3oaO0yuBDlaAkeFARft/2NR04IElSfH8zD0qrT+EVFxEZzJArhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OkpxjZ1OCH+Pq0GPS5TxhabPVnzIA7QrxYmMFyvZ0R0=;
+ b=gz0NRZv5Ht/IfYj2H163UETYct4twOdxq96axb3Xoo4u/TmNFIyM1F8WtGUX1j83X6TqCTUXnQ2FJZJ9L81QWeK6HRK6ApVzMRvhvBPxjjFlrt/wAjDisOLVmdIBNRUAvfHBhvNSKfo/JRBeVaQAy907HJzZe1NZbP5UOeuTdbg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CYYPR10MB7569.namprd10.prod.outlook.com (2603:10b6:930:bb::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.8; Sat, 10 Aug
+ 2024 17:40:42 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7849.013; Sat, 10 Aug 2024
+ 17:40:41 +0000
+Date: Sat, 10 Aug 2024 13:40:39 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL] nfsd fixes for v6.11
+Message-ID: <ZremFwYpY1m/5w88@tissot.1015granger.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: CH2PR08CA0011.namprd08.prod.outlook.com
+ (2603:10b6:610:5a::21) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1229195.1723211769@warthog.procyon.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CYYPR10MB7569:EE_
+X-MS-Office365-Filtering-Correlation-Id: 81900f0a-3312-42da-0c4b-08dcb9638e2c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?V0m41G2LLwPSs7de4P1VC2okTNkenrbXQjP8J2zwxzNuoGtD1GjN91RGAK67?=
+ =?us-ascii?Q?57nrxKDN8seMrYvsfSdTXw1/mP0sWHhHivzs5BMgTQFrrNgdsPDqZkuNyH5I?=
+ =?us-ascii?Q?NGyngoOraVQSwjjeb/JVJt8Qj1Hi3Qjb/dAxDxEXoFYX85e2PzQ0vPYF+O5d?=
+ =?us-ascii?Q?eGqS4lcVST3GsJgDDavfYsmhqkAOEyc4XVDMyb/lZ30duIo95799NdV4jHA6?=
+ =?us-ascii?Q?oDsWeP7GKBCPK0vL44IvFEGupe2b4fwtBgOCNtoOzyb9qIpWiZrhtE4IB3PM?=
+ =?us-ascii?Q?YXzKjE+8PuOZxaPOIhkfuDB76FAabvz5tL8GjZrn66t9Ifa5hSKoujFPnR2n?=
+ =?us-ascii?Q?5BjCKUG8l2QyfLHCZNaBdJEqqSxHoOXZ/9oBTw0GHyYQNSKdL1YM9IiegYn3?=
+ =?us-ascii?Q?TnhCGLzUTRldAtEwV6/jpH38Wa9mbCC71c00zfmp4go5zSXZVBLmVajfdkxY?=
+ =?us-ascii?Q?WzJa/QYavRWb1EW93TmjmYk18SkvaVD/m+Z4Q4URL3ZkQ0XWQaBVPFrkkjXd?=
+ =?us-ascii?Q?QHH6BH3z9LRrrKibEhC10e6mxD73wd656D9zvF6Z8cW5VYhbN7wSscEtsDyx?=
+ =?us-ascii?Q?MRLlph+10JLOP10hNcwqhFLYuBo8ZbdxgWem+/9zlp7p6gsfvxAeQfb11J07?=
+ =?us-ascii?Q?ifibOu4TNzt7igPo0iOqNSSEjhe3FaNACYWV2jsWtKAQxEWTBgp3HUbcspg/?=
+ =?us-ascii?Q?Lvul4r5oPTHDV4SCv3XfLxiQ8ozUFGjkSiS/V13hoKQhxMUz3V/nWPLZCIKD?=
+ =?us-ascii?Q?G2P4TjEPDAuAzU4QEUJlZuw584CwBJlC/s9qrCr6I2ZMUR8qjmd1MgqxNFjL?=
+ =?us-ascii?Q?e1EZeVuluv2WZspC7es9Czuo0VyM343yredbALnefdRNP5gbSgrW8GcIU6gA?=
+ =?us-ascii?Q?KBhlAcVQ1kscbvbKUdo3PynL7bCkRGXVbGRyuZxRiReQQGPkCtCeiJN20M7O?=
+ =?us-ascii?Q?p92nW7JqAMJRcaC7MaZLR8zvXEmJBV1wPVHT81ug1V838ox9e4DhwYv6odeR?=
+ =?us-ascii?Q?V2DJEAGZPZGRyrWknry/PSDTFNeyqMZR+UaDu28oT57K50NXoYFjR8AY+/q8?=
+ =?us-ascii?Q?Hu7Vff0JDRGspfWoYIX2qHxsE3rIxAo6BRV/u2/RLnnZWc7+wDZ3dU7pvIaE?=
+ =?us-ascii?Q?Lq1tfTATdJrfVAvLJroFBUfUYFBQhOiok7I7dge/tEdtlsVznkP+SkSS6aKC?=
+ =?us-ascii?Q?4NyZ/iF5NmQCQC8DcmVCPPxbuB4Poyq1fFpfsZFelMV4IB5yR36RqMEuj7SD?=
+ =?us-ascii?Q?+X6YSLIuiINYge8YpF5QYr2FrAZIQUHLcramXeuPM16rfHcuScdu8g1j+NO+?=
+ =?us-ascii?Q?tRQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?az39hPmRYBaEJpo0Vi0Ype2iXu2t7HQeUwKl06yt+8Wvs9VQvr7W6Y3JC8u5?=
+ =?us-ascii?Q?IW2EKWB/1U0qoI+c247QJmTLvAmRH8bNCRM1kULkX3toAl81hb7xs7s+loIw?=
+ =?us-ascii?Q?uZWsKGb32GvQsjaBHu6HbCHE1ZPPZp2a+36NxSd/9DwTcGGzO6gvTpvqecfy?=
+ =?us-ascii?Q?GwdQtYQffxctGl2vNBmpydk5ppNYnZv4fufEkClTqOi5HMuM1wmDyT8QLgg+?=
+ =?us-ascii?Q?1GH9Hyd/VWL0DtNmQ1hjH0z1pBm22pPQAqtByZC12CJS0ljWrM2CLYR79b9F?=
+ =?us-ascii?Q?bpY/WRO6WHFDBEgFOC6qmi22PEPYZrBVy4p5UAitvXfMBc3WzWFI1ULbd6iT?=
+ =?us-ascii?Q?zyd4hW7KMalnGwFAxOUeohE4JSxpILzNLPkQyeE7vO6msUV9F1+VwAcCnM49?=
+ =?us-ascii?Q?ovPp2c4kT4UAbUEOZ7/qbVnGfO76CRFwZAIj63YXh/HdbbnhuA90v+RG1iGN?=
+ =?us-ascii?Q?uOXRsPicZxuKGpkXQedR/W/Sm+6k/8Inz7/i/CJ3/n5kpTY7vSP2p4XDCEOB?=
+ =?us-ascii?Q?TzWZt6w1pOLxlIjdeQrR0BOYRPS2WJlr75v725KUopNSsWTAJ8bB0pNDcYUa?=
+ =?us-ascii?Q?UhU+qeGS65HkHUXyxOxljLdW92ND97QCQY+gcO+E3Fu0izM//r8vHchQ2Uvl?=
+ =?us-ascii?Q?LjGIgL9tmSNgpsl9LZ8QbzgcCefhUmbGHwBQIcJo534NMWLUXHKvq9gS+MjV?=
+ =?us-ascii?Q?pNHBqxR3XzY06JjchQuvEiMGBH1xTEszVPtNDXboG5OdT+HkFp6MUjo8bNMj?=
+ =?us-ascii?Q?QL5Kt0s2QSIQjx+rlEFJb7UAZuReA9skoehEzxbF4Lcz6X1auIDKALf5okr1?=
+ =?us-ascii?Q?ZB6X3kQDqBDjTJ4W3hcVYzvqlBSZusRE5OaNl9e0G8jAHOzW9mx3Wm5pUybQ?=
+ =?us-ascii?Q?38SbIb7+KxZ/uPDFkmXQtLr7k1ApNB9/Ye9D3H3rz0XQ+NzVuKZSI7xxZxlm?=
+ =?us-ascii?Q?g72+fVR8+VYHELLVPH4CpF1SxQCbncKi8FkLlc1+SoeJXZpu+9w5l026cAN/?=
+ =?us-ascii?Q?uF2j5RcFLH6Jox4K9PinsCoQavrcuNROs/0EvPC23jsEeo0JbqMvwS08r5wR?=
+ =?us-ascii?Q?ZAAF1wMZ4zmGjvHA1oJd0tUd2/mIPfMneiTiyRBkiU2x2MYsdXPlIh9RmRyN?=
+ =?us-ascii?Q?nT3uZHfCLRXrLdDsqu349JmVEl+ob+9RPNVhwFSyXeNrOCE8b+JAFFX7dS3c?=
+ =?us-ascii?Q?EU0JVDhAWuTy5wobGkoP8IAq1umOzpFIFLEL6Prg3vchengroRn7KJbC639a?=
+ =?us-ascii?Q?pmvVIxweDbfrfKHbRhl69i89ZtxtXijX1D1mTHfEkI4CPs3qP1VjAYyLbhqJ?=
+ =?us-ascii?Q?OXgb9l7XBOXEqCRTXYA02i7eM6PUF9XqFPO3oR8gm3PMsLmyzqtRSStmxJSA?=
+ =?us-ascii?Q?B5erH11fwU7lHkBX2XkyKUiezTtzcyYgLs0WMOg6a5CKtXrrdFbf/eewIlH0?=
+ =?us-ascii?Q?hyQMxMLIcUNWUZJaQURLyR7lWKrGuenCVVOPK+2zgFd5SHD58rgzGrYum6kc?=
+ =?us-ascii?Q?eW9O0tS/FzKU1BP6CFMCq32/5goptmmgbbBIAX0YMfpZA+EC4zHtAVln5Qn4?=
+ =?us-ascii?Q?Unpn4ILqS8HG+1gb9cph6LUWmqJ+QRtxGUj2jK5b?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	xM/Baxk7jSM/7XI2xu7Bh5F+Urf+R8rwp84hykFdDQMywiZSa76BDCFX2hMJYA4c2GeDNYqbGBhNgzYZAOr2eimXednRa0vib59Paa6jCZspV2wsMgvbl168WF3D4mhOZff5/XpmRNCwi+vluxmDl5ibBNvdBUqDoOovN/tLwZtKfAqxG0bHEhvxHZ23YwdLVE8mTie12gl9rxAEPXlFzundj9VpqOLZaiWHW3aPIupEX132UIow8nCjgTcak7S9RrQueoXxPJFKyZliaI0AzgtS8rzoE4HL7teJHMmnbz1bGkYtt9re5MG6VOUbR428PsA+5HsTM3aqw1+gResv/slmojVKAORnh7/IjuzTJm2LwTNb4w1DG4/VURGdd7Iy5ZQUTBDhd7j7I2VyyAuCu/evIOo+2o14riuL1ZR29Qe2Q7x5/QOjd2MbxLNp9l20RfZeUECW9CybjJF0lAEcwF+gp9Fe9ujFQYhBkb7nq68px/kphOmUtnvPCVaWYJE/GaFw7M/eA4mUEni8xpHLqfP3mYfghP6a969w38zmCx803J6KsEpFuD1SEn2Q7LoIItococQdkF9m4wutC+h1LNzQZGuXrfOu0RkDEB3y6iI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81900f0a-3312-42da-0c4b-08dcb9638e2c
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2024 17:40:41.8713
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2aNIPlQwxqD4U0XZx1EgTPv94hiCmz4Xy/NdihVkLe0LGCjP3P82vawB/qHgycOYRhaRx2z7xTTtinEcoGHsig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7569
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-10_15,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ mlxlogscore=679 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2407110000 definitions=main-2408100133
+X-Proofpoint-ORIG-GUID: gFWTHpy-a3O8aFL9NzF8NQFlK5GbZ-MA
+X-Proofpoint-GUID: gFWTHpy-a3O8aFL9NzF8NQFlK5GbZ-MA
 
-David Howells wrote on Fri, Aug 09, 2024 at 02:56:09PM +0100:
-> From: Dominique Martinet <asmadeus@codewreck.org>
-> 
-> 9p: Fix DIO read through netfs
+The following changes since commit 769d20028f45a4f442cfe558a32faba357a7f5e2:
 
-nitpick: now sure how that ended up here but this is duplicated with the
-subject (the commit message ends up with this line twice)
+  nfsd: nfsd_file_lease_notifier_call gets a file_lease as an argument (2024-07-12 12:58:48 -0400)
 
-> If a program is watching a file on a 9p mount, it won't see any change in
-> size if the file being exported by the server is changed directly in the
-> source filesystem, presumably because 9p doesn't have change notifications,
-> and because netfs skips the reads if the file is empty.
-> 
-> Fix this by attempting to read the full size specified when a DIO read is
-> requested (such as when 9p is operating in unbuffered mode) and dealing
-> with a short read if the EOF was less than the expected read.
-> 
-> To make this work, filesystems using netfslib must not set
-> NETFS_SREQ_CLEAR_TAIL if performing a DIO read where that read hit the EOF.
-> I don't want to mandatorily clear this flag in netfslib for DIO because,
-> say, ceph might make a read from an object that is not completely filled,
-> but does not reside at the end of file - and so we need to clear the
-> excess.
-> 
-> This can be tested by watching an empty file over 9p within a VM (such as
-> in the ktest framework):
-> 
->         while true; do read content; if [ -n "$content" ]; then echo $content; break; fi; done < /host/tmp/foo
+are available in the Git repository at:
 
-(This is basically the same thing but if one wants to control the read
-timing for more precise/verbose debugging:
-  exec 3< /host/tmp/foo
-  read -u 3 content && echo $content
-  (repeat as appropriate)
-  exec 3>&-
-)
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.11-1
 
-> then writing something into the empty file.  The watcher should immediately
-> display the file content and break out of the loop.  Without this fix, it
-> remains in the loop indefinitely.
-> 
-> Fixes: 80105ed2fd27 ("9p: Use netfslib read/write_iter")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218916
-> Written-by: Dominique Martinet <asmadeus@codewreck.org>
+for you to fetch changes up to 91da337e5d506f2c065d20529d105ca40090e320:
 
-Thanks for adding extra comments & fixing other filesystems.
+  nfsd: don't set SVC_SOCK_ANONYMOUS when creating nfsd sockets (2024-07-22 09:47:39 -0400)
 
-I've checked this covers all cases of setting NETFS_SREQ_CLEAR_TAIL so
-hopefully shouldn't have further side effects, this sounds good to me:
+----------------------------------------------------------------
+nfsd-6.11 fixes:
+- Two minor fixes for recent changes
 
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      sunrpc: avoid -Wformat-security warning
 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Eric Van Hensbergen <ericvh@kernel.org>
-> cc: Latchesar Ionkov <lucho@ionkov.net>
-> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-> cc: Marc Dionne <marc.dionne@auristor.com>
-> cc: Ilya Dryomov <idryomov@gmail.com>
-> cc: Steve French <sfrench@samba.org>
-> cc: Paulo Alcantara <pc@manguebit.com>
-> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> cc: v9fs@lists.linux.dev
-> cc: linux-afs@lists.infradead.org
-> cc: ceph-devel@vger.kernel.org
-> cc: linux-cifs@vger.kernel.org
-> cc: linux-nfs@vger.kernel.org
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/9p/vfs_addr.c     |    3 ++-
->  fs/afs/file.c        |    3 ++-
->  fs/ceph/addr.c       |    6 ++++--
->  fs/netfs/io.c        |   17 +++++++++++------
->  fs/nfs/fscache.c     |    3 ++-
->  fs/smb/client/file.c |    3 ++-
->  6 files changed, 23 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-> index a97ceb105cd8..24fdc74caeba 100644
-> --- a/fs/9p/vfs_addr.c
-> +++ b/fs/9p/vfs_addr.c
-> @@ -75,7 +75,8 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
->  
->  	/* if we just extended the file size, any portion not in
->  	 * cache won't be on server and is zeroes */
-> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
-> +	if (subreq->rreq->origin != NETFS_DIO_READ)
-> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
->  
->  	netfs_subreq_terminated(subreq, err ?: total, false);
->  }
-> diff --git a/fs/afs/file.c b/fs/afs/file.c
-> index c3f0c45ae9a9..ec1be0091fdb 100644
-> --- a/fs/afs/file.c
-> +++ b/fs/afs/file.c
-> @@ -242,7 +242,8 @@ static void afs_fetch_data_notify(struct afs_operation *op)
->  
->  	req->error = error;
->  	if (subreq) {
-> -		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
-> +		if (subreq->rreq->origin != NETFS_DIO_READ)
-> +			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
->  		netfs_subreq_terminated(subreq, error ?: req->actual_len, false);
->  		req->subreq = NULL;
->  	} else if (req->done) {
-> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-> index cc0a2240de98..c4744a02db75 100644
-> --- a/fs/ceph/addr.c
-> +++ b/fs/ceph/addr.c
-> @@ -246,7 +246,8 @@ static void finish_netfs_read(struct ceph_osd_request *req)
->  	if (err >= 0) {
->  		if (sparse && err > 0)
->  			err = ceph_sparse_ext_map_end(op);
-> -		if (err < subreq->len)
-> +		if (err < subreq->len &&
-> +		    subreq->rreq->origin != NETFS_DIO_READ)
->  			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
->  		if (IS_ENCRYPTED(inode) && err > 0) {
->  			err = ceph_fscrypt_decrypt_extents(inode,
-> @@ -282,7 +283,8 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io_subrequest *subreq)
->  	size_t len;
->  	int mode;
->  
-> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
-> +	if (rreq->origin != NETFS_DIO_READ)
-> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
->  	__clear_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
->  
->  	if (subreq->start >= inode->i_size)
-> diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-> index c179a1c73fa7..5367caf3fa28 100644
-> --- a/fs/netfs/io.c
-> +++ b/fs/netfs/io.c
-> @@ -530,7 +530,8 @@ void netfs_subreq_terminated(struct netfs_io_subrequest *subreq,
->  
->  	if (transferred_or_error == 0) {
->  		if (__test_and_set_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags)) {
-> -			subreq->error = -ENODATA;
-> +			if (rreq->origin != NETFS_DIO_READ)
-> +				subreq->error = -ENODATA;
->  			goto failed;
->  		}
->  	} else {
-> @@ -601,9 +602,14 @@ netfs_rreq_prepare_read(struct netfs_io_request *rreq,
->  			}
->  			if (subreq->len > ictx->zero_point - subreq->start)
->  				subreq->len = ictx->zero_point - subreq->start;
-> +
-> +			/* We limit buffered reads to the EOF, but let the
-> +			 * server deal with larger-than-EOF DIO/unbuffered
-> +			 * reads.
-> +			 */
-> +			if (subreq->len > rreq->i_size - subreq->start)
-> +				subreq->len = rreq->i_size - subreq->start;
->  		}
-> -		if (subreq->len > rreq->i_size - subreq->start)
-> -			subreq->len = rreq->i_size - subreq->start;
->  		if (rreq->rsize && subreq->len > rreq->rsize)
->  			subreq->len = rreq->rsize;
->  
-> @@ -739,11 +745,10 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
->  	do {
->  		_debug("submit %llx + %llx >= %llx",
->  		       rreq->start, rreq->submitted, rreq->i_size);
-> -		if (rreq->origin == NETFS_DIO_READ &&
-> -		    rreq->start + rreq->submitted >= rreq->i_size)
-> -			break;
->  		if (!netfs_rreq_submit_slice(rreq, &io_iter))
->  			break;
-> +		if (test_bit(NETFS_SREQ_NO_PROGRESS, &rreq->flags))
-> +			break;
->  		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
->  		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
->  			break;
-> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-> index bf29a65c5027..7a558dea75c4 100644
-> --- a/fs/nfs/fscache.c
-> +++ b/fs/nfs/fscache.c
-> @@ -363,7 +363,8 @@ void nfs_netfs_read_completion(struct nfs_pgio_header *hdr)
->  		return;
->  
->  	sreq = netfs->sreq;
-> -	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
-> +	if (test_bit(NFS_IOHDR_EOF, &hdr->flags) &&
-> +	    sreq->rreq->origin != NETFS_DIO_READ)
->  		__set_bit(NETFS_SREQ_CLEAR_TAIL, &sreq->flags);
->  
->  	if (hdr->error)
-> diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-> index b2405dd4d4d4..3f3842e7b44a 100644
-> --- a/fs/smb/client/file.c
-> +++ b/fs/smb/client/file.c
-> @@ -217,7 +217,8 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
->  			goto out;
->  	}
->  
-> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
-> +	if (subreq->rreq->origin != NETFS_DIO_READ)
-> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
->  
->  	rc = rdata->server->ops->async_readv(rdata);
->  out:
-> 
+Jeff Layton (1):
+      nfsd: don't set SVC_SOCK_ANONYMOUS when creating nfsd sockets
+
+ fs/nfsd/nfsctl.c | 3 +--
+ net/sunrpc/svc.c | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
 -- 
-Dominique Martinet | Asmadeus
+Chuck Lever
 
