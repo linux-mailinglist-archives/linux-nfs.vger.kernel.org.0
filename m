@@ -1,162 +1,283 @@
-Return-Path: <linux-nfs+bounces-5276-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D714794D4AB
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Aug 2024 18:27:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E7E94DA54
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 05:43:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D827281067
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Aug 2024 16:27:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B388E1F22762
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Aug 2024 03:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1CA182B3;
-	Fri,  9 Aug 2024 16:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCC213698E;
+	Sat, 10 Aug 2024 03:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+17kbU7"
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="WkNdRh3F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F368217ADE8
-	for <linux-nfs@vger.kernel.org>; Fri,  9 Aug 2024 16:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92F2C130499;
+	Sat, 10 Aug 2024 03:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723220823; cv=none; b=ulJnpfSCGCPvUewUBSGsPZbXZzhK5b5xy9YLF8HL1j/zzXH+2kfC/Frp/XoVMmfnzPzCEnvq08zsGPACU/SEDlZBHGEqo24MbYK4iLv+dn/EHhCcGiKYSfCoOFV06YU+j1Ra9dY/IvvumWGdregdr6gwcv8tS98S68BrIqs+AZ8=
+	t=1723261409; cv=none; b=sJ/ixwM9dBlUIhVFT/oGjlTXU9EUnx09rCzcMYvHpJS+OgxCZgQ63MzFQ3+wIvIo2X8lDz3SQbcr6i974WSWrW2/aiYQYyTtTL8eekNEfTbtF9NVBRG1S/xz/gBYltzXhPP2aE7MLsCbK3MGbAWqADlTqynKzrc19tdevOnfqMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723220823; c=relaxed/simple;
-	bh=fIdJFldZvPHmxKZQM61RpXQ6EsuDyZ1gCRWkfzCF778=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0BrV9BVJJVkepV1FoQQkGHHVuPvBTwIsv0BcTp1Dlkr141ieEus7inVS3QaBp29xCkDTtUB/jjb865+SeLHibdu/yZ46CawA2yMJgUSc+/TIittccYV6V79hg3LGnkiHVUoUoa/4GTm3OPeYm3IUdFwkDHZJ8N4DOpskHBdJyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+17kbU7; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fc5296e214so23102685ad.0
-        for <linux-nfs@vger.kernel.org>; Fri, 09 Aug 2024 09:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723220821; x=1723825621; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OsG50onX1vjlSKKFDnq4ai6+NhN0VsRM7/xiC7es870=;
-        b=U+17kbU7hyeUAqwL6eHeOlES+h9u2a/nWAKhY1bMX2HU69JX3PmyMIFEi3PUEm+ehG
-         7O+HMsqrEpDQIopTDFAEDomzM0hSrT9tJ2WK3Wi1AfEKTJSZLCjgc75vK//ZpklQT2G2
-         QlQrq0qMfBi3/3Vb45MIPiK+ZUqTIjcgDji3Z1uHdB7iwb+YimbhMPYxllRDf5Q3rEUg
-         SsCvee6jk79Ot6e3N821nXFT5ufjj07AzY0f+vNTxSYnhM0PbzVac1zTsiQfkFayH3lA
-         Xz8cCd362BYB+d0SaROuz+OSF62aPcaGjNRtMKOY7ELeVXALO0tsgl50YajIZE0qK9MI
-         unOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723220821; x=1723825621;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OsG50onX1vjlSKKFDnq4ai6+NhN0VsRM7/xiC7es870=;
-        b=tIvsMksTomKwQzLYfoLOP7E6rt/Itrt5j9nwzCiaWfF0g1znBLrlvEoZJsSmzK9e7z
-         YeYdAO21jMp9KkeFg7JgCF97P25LoMDaBItgl3F3pNZZl+5srSUvGLrYqBvzmwLD/h3x
-         XsmDdIYi635cyYw7DwgNvqj9jKEWinX0UQBtxG8mDItNUUVBtVY1ZxjjLAlL20/tvN/e
-         1vbho9V/NTm/Z2z2K2oFDPyZF/q0AVBzT/FXYAtOjNhrFY/qs4CmZ+Au7gTToHEIByQI
-         yhxyNTGB18yUocTtfv4mMYNOGSt6teSuKHn6AlFfS7Zh4nBviLeY0bEmQ+nbPEy6FtYB
-         OaPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjaIBle/a8Qgv59dAoh/nRSiFAj7HBF+kDYvYygnDAjREBX0/fiF0eWFZZJWgQCi+CcxFnJHLB8LdyAjU+54G2smtKvxQyK58M
-X-Gm-Message-State: AOJu0YxUCqg8YXmmdmTvf4uYe2gXD9AWZ6BbKjaaSDMiIVuQL2T5X8nT
-	6uWZj54AbM48tLY9oDsdVgxTF+GTBjdOBiJ29Mj62L8y5wzQDltl
-X-Google-Smtp-Source: AGHT+IEl9Yw7sW6HhTfrkQE0XUQYndgSHv6iLMfH69tYIyy1VXXoiea5FU93Wz1wlutqFLtRB6b1zQ==
-X-Received: by 2002:a17:902:ccd2:b0:1fc:a869:7fb7 with SMTP id d9443c01a7336-200ae5f2f97mr20661155ad.54.1723220821118;
-        Fri, 09 Aug 2024 09:27:01 -0700 (PDT)
-Received: from [192.168.86.113] (syn-076-091-193-045.res.spectrum.com. [76.91.193.45])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f26f4bsm144443355ad.34.2024.08.09.09.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Aug 2024 09:27:00 -0700 (PDT)
-Message-ID: <4851b332-b3d1-4f45-9fcf-5c42b8d5b483@gmail.com>
-Date: Fri, 9 Aug 2024 09:26:59 -0700
+	s=arc-20240116; t=1723261409; c=relaxed/simple;
+	bh=Dz5ljV4C748Y92oEca2eVRU5aSIzT2ITH61W5Nh4i/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFQ4/4KLK3S9x214cPErrkpHQgd6M1AacjecwDcGVK++Gy+zSJ0JnSA9pwmnh1KdA74OEPhuEijUMZQWkKbU/ForafzjNHWxoA7ccwI+3ErcdU36zLt/gtC2mGqSxxnNUtH5pQb/k/K53NwxKQRmYalXMYAH5AiCOncUa4p77W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=WkNdRh3F; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id AFD2D14C1E1;
+	Sat, 10 Aug 2024 05:36:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1723261020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hXmz9TkuAk5dB9bidybN3xvJsbLPHMH9nJKkDG6YnBg=;
+	b=WkNdRh3FW+h436ZD2wTCZZcior92lVbGevCb3rRz0k936m8bvJstFVmU4VZF7o9JwI9NAw
+	FPctBPVQbGGS0wly8cI+p8y4LPuoeqZv+2HMro9sAZW8Nc6Od7ogMoRxhPEUkzEmpsXLeh
+	ciryvAC9PLG7ZMsdIovM1qB2WNPnywMqie/hpEceQiSL3HzvXNm+3C4Y+uk3jJGpxcDj6V
+	8utSUf51piAQUGusY6ERcYSrShyvksEzxMGkkybbHuEcPVxCIzosllf7i/ec6ygZcKUzma
+	UYWJ8ldN6E4J2UEG9GFyHn0A08v50UG+tspHpnu3iOG2FnjUM91DKDsXe8JKbQ==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 1dc60f99;
+	Sat, 10 Aug 2024 03:36:53 +0000 (UTC)
+Date: Sat, 10 Aug 2024 12:36:38 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Ilya Dryomov <idryomov@gmail.com>, Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9p: Fix DIO read through netfs
+Message-ID: <ZrbgRnXV-snNicjY@codewreck.org>
+References: <1229195.1723211769@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFS client to pNFS DS
-Content-Language: en-US
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Anna Schumaker <schumaker.anna@gmail.com>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- Trond Myklebust <trondmy@hammerspace.com>
-References: <c4f1d8bf-745b-4a98-9d38-2da4c355d691@gmail.com>
- <66be75a6-2d3f-4f5b-96da-327556170c4a@gmail.com>
- <e39131ce-1816-49e1-8319-820472892a38@gmail.com>
- <CAN-5tyEx=j2OiRZVd+18x-2Y36SGGsJxAVApudT+mWjiNGDyxA@mail.gmail.com>
- <CAFX2Jf=k0SC4iFzj+24HbR-4MPkk0bkGCvnnOiv0OYgqO4QOBw@mail.gmail.com>
- <8ab0fd49-0c90-42bd-a34e-9dcf63a99bd5@gmail.com>
- <CAN-5tyHMAWmnwgfR7ih_7ygUUfOdGfE7ntf2nxRTFY+USy2HYQ@mail.gmail.com>
-From: marc eshel <eshel.marc@gmail.com>
-In-Reply-To: <CAN-5tyHMAWmnwgfR7ih_7ygUUfOdGfE7ntf2nxRTFY+USy2HYQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1229195.1723211769@warthog.procyon.org.uk>
 
+David Howells wrote on Fri, Aug 09, 2024 at 02:56:09PM +0100:
+> From: Dominique Martinet <asmadeus@codewreck.org>
+> 
+> 9p: Fix DIO read through netfs
 
-On 8/9/24 8:15 AM, Olga Kornievskaia wrote:
-> On Fri, Aug 9, 2024 at 10:09 AM marc eshel <eshel.marc@gmail.com> wrote:
->> Thanks for the replies, I am a little rusty with debugging NFS but this what I see when the NFS client tried to create a session with the DS.
->>
->> Ganesha was configured for sec=sys and the client mount had the option sec=sys, I assume flavor 390004 means it was trying to use krb5i.
-> For 4.1, the client will always try to do state operations with krb5i
-> even when sec=sys when the client detects that it's configured to do
-> Kerberos (ie., gssd is running). This context creation is triggered
-> regardless of whether the rpc client is used for MDS or DS.
->
-> My question to you: is the MDS configured with Kerberos but the DS
-> isn't? And also, does this lead to a failure?
-Both MDS DS are configured for sec=sys and it is leading to client 
-switching from DS to MDS so yes, it is pNFS failure. What I see on the 
-DS is the client creating a session and than imminently destroying it 
-before committing it. If the is something else that I can debug I will 
-be happy to.
+nitpick: now sure how that ended up here but this is duplicated with the
+subject (the commit message ends up with this line twice)
 
-Marc.
+> If a program is watching a file on a 9p mount, it won't see any change in
+> size if the file being exported by the server is changed directly in the
+> source filesystem, presumably because 9p doesn't have change notifications,
+> and because netfs skips the reads if the file is empty.
+> 
+> Fix this by attempting to read the full size specified when a DIO read is
+> requested (such as when 9p is operating in unbuffered mode) and dealing
+> with a short read if the EOF was less than the expected read.
+> 
+> To make this work, filesystems using netfslib must not set
+> NETFS_SREQ_CLEAR_TAIL if performing a DIO read where that read hit the EOF.
+> I don't want to mandatorily clear this flag in netfslib for DIO because,
+> say, ceph might make a read from an object that is not completely filled,
+> but does not reside at the end of file - and so we need to clear the
+> excess.
+> 
+> This can be tested by watching an empty file over 9p within a VM (such as
+> in the ktest framework):
+> 
+>         while true; do read content; if [ -n "$content" ]; then echo $content; break; fi; done < /host/tmp/foo
 
->
->> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC:       Couldn't create
->> auth handle (flavor 390004)
->>
->> Marc.
->>
->> On 8/9/24 6:06 AM, Anna Schumaker wrote:
->>
->> On Thu, Aug 8, 2024 at 6:07 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->>
->> On Mon, Aug 5, 2024 at 5:51 PM marc eshel <eshel.marc@gmail.com> wrote:
->>
->> Hi Trond,
->>
->> Will the Linux NFS client try to us krb5i regardless of the MDS
->> configuration?
->>
->> Is there any option to avoid it?
->>
->> I was under the impression the linux client has no way of choosing a
->> different auth_gss security flavor for the DS than the MDS. Meaning
->>
->> That's a good point, I completely missed that this is specifically for the DS.
->>
->> that if mount command has say sec=krb5i then both MDS and DS
->> connections have to do krb5i and if say the DS isn't configured for
->> Kerberos, then IO would fallback to MDS. I no longer have a pnfs
->>
->> That's what I would expect, too.
->>
->> server to verify whether or not what I say is true but that is what my
->> memory tells me is the case.
->>
->>
->> Thanks, Marc.
->>
->> ul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
->> stripe count  1
->> Jul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
->> ds_num 1
->> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC:       Couldn't create
->> auth handle (flavor 390004)
->>
->>
+(This is basically the same thing but if one wants to control the read
+timing for more precise/verbose debugging:
+  exec 3< /host/tmp/foo
+  read -u 3 content && echo $content
+  (repeat as appropriate)
+  exec 3>&-
+)
+
+> then writing something into the empty file.  The watcher should immediately
+> display the file content and break out of the loop.  Without this fix, it
+> remains in the loop indefinitely.
+> 
+> Fixes: 80105ed2fd27 ("9p: Use netfslib read/write_iter")
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218916
+> Written-by: Dominique Martinet <asmadeus@codewreck.org>
+
+Thanks for adding extra comments & fixing other filesystems.
+
+I've checked this covers all cases of setting NETFS_SREQ_CLEAR_TAIL so
+hopefully shouldn't have further side effects, this sounds good to me:
+
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Eric Van Hensbergen <ericvh@kernel.org>
+> cc: Latchesar Ionkov <lucho@ionkov.net>
+> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+> cc: Marc Dionne <marc.dionne@auristor.com>
+> cc: Ilya Dryomov <idryomov@gmail.com>
+> cc: Steve French <sfrench@samba.org>
+> cc: Paulo Alcantara <pc@manguebit.com>
+> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> cc: v9fs@lists.linux.dev
+> cc: linux-afs@lists.infradead.org
+> cc: ceph-devel@vger.kernel.org
+> cc: linux-cifs@vger.kernel.org
+> cc: linux-nfs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>  fs/9p/vfs_addr.c     |    3 ++-
+>  fs/afs/file.c        |    3 ++-
+>  fs/ceph/addr.c       |    6 ++++--
+>  fs/netfs/io.c        |   17 +++++++++++------
+>  fs/nfs/fscache.c     |    3 ++-
+>  fs/smb/client/file.c |    3 ++-
+>  6 files changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+> index a97ceb105cd8..24fdc74caeba 100644
+> --- a/fs/9p/vfs_addr.c
+> +++ b/fs/9p/vfs_addr.c
+> @@ -75,7 +75,8 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
+>  
+>  	/* if we just extended the file size, any portion not in
+>  	 * cache won't be on server and is zeroes */
+> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+> +	if (subreq->rreq->origin != NETFS_DIO_READ)
+> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+>  
+>  	netfs_subreq_terminated(subreq, err ?: total, false);
+>  }
+> diff --git a/fs/afs/file.c b/fs/afs/file.c
+> index c3f0c45ae9a9..ec1be0091fdb 100644
+> --- a/fs/afs/file.c
+> +++ b/fs/afs/file.c
+> @@ -242,7 +242,8 @@ static void afs_fetch_data_notify(struct afs_operation *op)
+>  
+>  	req->error = error;
+>  	if (subreq) {
+> -		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+> +		if (subreq->rreq->origin != NETFS_DIO_READ)
+> +			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+>  		netfs_subreq_terminated(subreq, error ?: req->actual_len, false);
+>  		req->subreq = NULL;
+>  	} else if (req->done) {
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index cc0a2240de98..c4744a02db75 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -246,7 +246,8 @@ static void finish_netfs_read(struct ceph_osd_request *req)
+>  	if (err >= 0) {
+>  		if (sparse && err > 0)
+>  			err = ceph_sparse_ext_map_end(op);
+> -		if (err < subreq->len)
+> +		if (err < subreq->len &&
+> +		    subreq->rreq->origin != NETFS_DIO_READ)
+>  			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+>  		if (IS_ENCRYPTED(inode) && err > 0) {
+>  			err = ceph_fscrypt_decrypt_extents(inode,
+> @@ -282,7 +283,8 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io_subrequest *subreq)
+>  	size_t len;
+>  	int mode;
+>  
+> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+> +	if (rreq->origin != NETFS_DIO_READ)
+> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+>  	__clear_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+>  
+>  	if (subreq->start >= inode->i_size)
+> diff --git a/fs/netfs/io.c b/fs/netfs/io.c
+> index c179a1c73fa7..5367caf3fa28 100644
+> --- a/fs/netfs/io.c
+> +++ b/fs/netfs/io.c
+> @@ -530,7 +530,8 @@ void netfs_subreq_terminated(struct netfs_io_subrequest *subreq,
+>  
+>  	if (transferred_or_error == 0) {
+>  		if (__test_and_set_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags)) {
+> -			subreq->error = -ENODATA;
+> +			if (rreq->origin != NETFS_DIO_READ)
+> +				subreq->error = -ENODATA;
+>  			goto failed;
+>  		}
+>  	} else {
+> @@ -601,9 +602,14 @@ netfs_rreq_prepare_read(struct netfs_io_request *rreq,
+>  			}
+>  			if (subreq->len > ictx->zero_point - subreq->start)
+>  				subreq->len = ictx->zero_point - subreq->start;
+> +
+> +			/* We limit buffered reads to the EOF, but let the
+> +			 * server deal with larger-than-EOF DIO/unbuffered
+> +			 * reads.
+> +			 */
+> +			if (subreq->len > rreq->i_size - subreq->start)
+> +				subreq->len = rreq->i_size - subreq->start;
+>  		}
+> -		if (subreq->len > rreq->i_size - subreq->start)
+> -			subreq->len = rreq->i_size - subreq->start;
+>  		if (rreq->rsize && subreq->len > rreq->rsize)
+>  			subreq->len = rreq->rsize;
+>  
+> @@ -739,11 +745,10 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
+>  	do {
+>  		_debug("submit %llx + %llx >= %llx",
+>  		       rreq->start, rreq->submitted, rreq->i_size);
+> -		if (rreq->origin == NETFS_DIO_READ &&
+> -		    rreq->start + rreq->submitted >= rreq->i_size)
+> -			break;
+>  		if (!netfs_rreq_submit_slice(rreq, &io_iter))
+>  			break;
+> +		if (test_bit(NETFS_SREQ_NO_PROGRESS, &rreq->flags))
+> +			break;
+>  		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
+>  		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
+>  			break;
+> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+> index bf29a65c5027..7a558dea75c4 100644
+> --- a/fs/nfs/fscache.c
+> +++ b/fs/nfs/fscache.c
+> @@ -363,7 +363,8 @@ void nfs_netfs_read_completion(struct nfs_pgio_header *hdr)
+>  		return;
+>  
+>  	sreq = netfs->sreq;
+> -	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
+> +	if (test_bit(NFS_IOHDR_EOF, &hdr->flags) &&
+> +	    sreq->rreq->origin != NETFS_DIO_READ)
+>  		__set_bit(NETFS_SREQ_CLEAR_TAIL, &sreq->flags);
+>  
+>  	if (hdr->error)
+> diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+> index b2405dd4d4d4..3f3842e7b44a 100644
+> --- a/fs/smb/client/file.c
+> +++ b/fs/smb/client/file.c
+> @@ -217,7 +217,8 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
+>  			goto out;
+>  	}
+>  
+> -	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+> +	if (subreq->rreq->origin != NETFS_DIO_READ)
+> +		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+>  
+>  	rc = rdata->server->ops->async_readv(rdata);
+>  out:
+> 
+
+-- 
+Dominique Martinet | Asmadeus
 
