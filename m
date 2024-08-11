@@ -1,79 +1,55 @@
-Return-Path: <linux-nfs+bounces-5301-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5302-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B610794E110
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 14:19:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7ADA94E26F
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 19:26:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 707962812ED
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 12:19:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D42DE1C2036E
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 17:26:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C7364C618;
-	Sun, 11 Aug 2024 12:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D9817552;
+	Sun, 11 Aug 2024 17:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="SVB/G7x9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CynZUm7z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC84D8A1
-	for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2024 12:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7044C7E
+	for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2024 17:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723378761; cv=none; b=IfWijW3DZKUKNwAXaJkmm7W/IFdUSz+1R3n6cYFrbzzuVK+8H0ViFOnJBpOD5yneS6EjI1vMq8HgH/DH51xXFmK7x0/awQZ1txFgV83lHpOHxecU0jwfBDi+ucd9AToL8fFGWzoQyFSEaMFJKq1ITFg4P2RjrKpqdc5jgGeF5wc=
+	t=1723397192; cv=none; b=GCGVNfcwJpUBkCn/MhfVyYKZ8dTyW7LFK9Af6/GZEt6sZgpfBKN3MVtFp/4AAicezqdx3+Ltu7wBSZDJGMnhn4kIOlyPl/UXA5AeV4k1qwCSBK6ggYv18uV7FMeAvoKErwp4lin1Ve4vX2s2tr6LOwZcZJAtlsq5dKOO6P3dtLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723378761; c=relaxed/simple;
-	bh=3THWZrnCdxgnYfH8MMSmKFUk7cd+A+Ovt5MCn7efbvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l3uRKRAV6mp9fF5gO7evUdB+7t5ntaizotL8DL4NpFsm9CDXuXjKjrU9dyed4E2jLOOGqreGQH9aMDMH1bocIXhS+LhPtIL0+MYk7TNWDWZ8vvax1T4+GrrLNb3QjhgZjxJ8cXSqM/VQDXe4yIeN8maW7vm+wZ+z9aoTPVrFfsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=SVB/G7x9; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52f01ec08d6so4779760e87.2
-        for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2024 05:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723378757; x=1723983557; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yP70h5sOAav0dcTN2sWxjb2tAt3WMCTYkQx1cJFN3BA=;
-        b=SVB/G7x9xrqyaiugcAw8YnRjd4EJSIYD3LECHCbdDcyntQ16KzinEyOMjqA/bNgRZ+
-         hDYOmy5OtsUg41y5IN5PAuzUgsU/48XGy4e54KRFNGjsXpPhlBnpxNURichQMTscATi7
-         3KF4Oq5PWAukJdDI19sqMCND07Tzr8oDca/23rteEL3d6ZmdXmo8C0UCThiDzgZHUd7g
-         0M7R3W1jGh2HwutO3EkRdNqr2HrF/b/DfOr6z3sbpdHoMYyjy8bG1xrNb5ZD7mFK3Zim
-         zMLHW0UShdA3gCZimkdgjGaUpNF18vNBOpIgqeHgBEWn9soUhkSr7ikeoq4vyX06r1bu
-         fJxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723378757; x=1723983557;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yP70h5sOAav0dcTN2sWxjb2tAt3WMCTYkQx1cJFN3BA=;
-        b=eBsnDXiZQRPYTwjhr8uYrcfJfbZhyyckGa7bWH/PQYErV0R1IKncpHRejWbASLwI7Y
-         CVR4HqtpEUInVty0WofYjNvsOGiCWqSI3NagPrcdXB1iFG9XvejMUPcKcb7YG9kVJsGg
-         L56oxU+wQ8QQQEVJ2Zb8sn+X2bejEZipZVhn5mcJRoe0WoRD3B9KXxlz/Q2tHVT4sezg
-         Us36rxlz/ISpvljY3czeaVKQ/RS3cFVz4K/zpEoIOIGajnPaUVox+0seu0OJnKrNqMQd
-         aHwc14ZawPcr0C4IVF63T8RATc+lWpY5a2agpz0mLjxeDCHCaV/M7ho+QxtpubJuoBaD
-         Y2GQ==
-X-Gm-Message-State: AOJu0YxkTTgsZA34wHYS2ozqgwj4+wzzDpn2GmQd/aSUTj4kKTQPgH0C
-	Twd3ffxkbkOloRLQkZbYjrRjbYf5IbYbfTxMHvx2GfTO7O5oivjwmROikqjzas4=
-X-Google-Smtp-Source: AGHT+IEXj75gYbZxGPL3C+2QgkpuQN10QPxBcziNY/qe5bJnu2lhrqOwXI6sj69mDovW8m9xxYPsbw==
-X-Received: by 2002:a05:6512:1094:b0:52e:9670:e40b with SMTP id 2adb3069b0e04-530eea25075mr4956639e87.39.1723378756786;
-        Sun, 11 Aug 2024 05:19:16 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-163.dynamic.mnet-online.de. [62.216.208.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb0e1235sm144196566b.55.2024.08.11.05.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Aug 2024 05:19:16 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] nfs: Remove unnecessary NULL check before kfree()
-Date: Sun, 11 Aug 2024 14:18:10 +0200
-Message-ID: <20240811121809.127561-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1723397192; c=relaxed/simple;
+	bh=+ALnNmN/1JovfQik/Fgvz0u3Jg9vYfQ5wssz0oTm7uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FhArux5GpuG27MOL5zbQB+ckNcDyxJ5in8Tu1Eo6JF5P60T5tqdGmd95LQx6RTAmp969Ug94xQFaBx4edSGrTgDn5Izt9wG+1MhxN5XbJZ6FqutDx65zH9aIvEkoyR2fDmtKSgzmzW2Bf1T1dl8O/PY6Rb2Ns814FmeaXfhuG/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CynZUm7z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9706AC32786;
+	Sun, 11 Aug 2024 17:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723397192;
+	bh=+ALnNmN/1JovfQik/Fgvz0u3Jg9vYfQ5wssz0oTm7uw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CynZUm7zXt0KTkA//BKIkjGrATozDXEFpecfG1Gsw0zh/953CM6vYl2e3bvWIpFKs
+	 nrbl5PF1sns+rBvsWa+MpZO0g+1X7emJzAms0ruacDWI0SLQW5/64GEyZaYa5+qhP8
+	 rHbr1jbf7jU4A1+IOr6cQiPb+GrDeM+ZF0Hpfv1Rue7kK7uZ1D4GuJVv/79pN7tO/a
+	 IVAIl7jyEAY4MuSAbEKZCrbQNmtO30NnA2KZUFHSefaXRUD6qLsUwqlPUmpims4nwo
+	 4r5zy5OwKyZO9CsEv59KcR5EBa5T49neeXC7FPJsbfb7l6mlNJnU1XAnW24oU6Soc7
+	 UNBJ19wpCqjwQ==
+From: cel@kernel.org
+To: <linux-nfs@vger.kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Cedric Blancher <cedric.blancher@gmail.com>,
+	Dan Shelton <dan.f.shelton@gmail.com>,
+	Roland Mainz <roland.mainz@nrubsig.org>
+Subject: [PATCH] NFSD: Fix NFSv4's PUTPUBFH operation
+Date: Sun, 11 Aug 2024 13:26:07 -0400
+Message-ID: <20240811172607.7804-1-cel@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,34 +58,55 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since kfree() already checks if its argument is NULL, an additional
-check before calling kfree() is unnecessary and can be removed.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Remove it and thus also the following Coccinelle/coccicheck warning
-reported by ifnullfree.cocci:
+According to RFC 8881, all minor versions of NFSv4 support PUTPUBFH.
 
-  WARNING: NULL check before some freeing functions is not needed
+Replace the XDR decoder for PUTPUBFH with a "noop" since we no
+longer want the minorversion check, and PUTPUBFH has no arguments to
+decode. (Ideally nfsd4_decode_noop should really be called
+nfsd4_decode_void).
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+PUTPUBFH should now behave just like PUTROOTFH.
+
+Reported-by: Cedric Blancher <cedric.blancher@gmail.com>
+Fixes: e1a90ebd8b23 ("NFSD: Combine decode operations for v4 and v4.1")
+Cc: Dan Shelton <dan.f.shelton@gmail.com>
+Cc: Roland Mainz <roland.mainz@nrubsig.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/read.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfsd/nfs4xdr.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index a6103333b666..81bd1b9aba17 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -48,8 +48,7 @@ static struct nfs_pgio_header *nfs_readhdr_alloc(void)
- 
- static void nfs_readhdr_free(struct nfs_pgio_header *rhdr)
- {
--	if (rhdr->res.scratch != NULL)
--		kfree(rhdr->res.scratch);
-+	kfree(rhdr->res.scratch);
- 	kmem_cache_free(nfs_rdata_cachep, rhdr);
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 42b41d55d4ed..adfafe48b947 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -1245,14 +1245,6 @@ nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+ 	return nfs_ok;
  }
  
+-static __be32
+-nfsd4_decode_putpubfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
+-{
+-	if (argp->minorversion == 0)
+-		return nfs_ok;
+-	return nfserr_notsupp;
+-}
+-
+ static __be32
+ nfsd4_decode_read(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+ {
+@@ -2374,7 +2366,7 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
+ 	[OP_OPEN_CONFIRM]	= nfsd4_decode_open_confirm,
+ 	[OP_OPEN_DOWNGRADE]	= nfsd4_decode_open_downgrade,
+ 	[OP_PUTFH]		= nfsd4_decode_putfh,
+-	[OP_PUTPUBFH]		= nfsd4_decode_putpubfh,
++	[OP_PUTPUBFH]		= nfsd4_decode_noop,
+ 	[OP_PUTROOTFH]		= nfsd4_decode_noop,
+ 	[OP_READ]		= nfsd4_decode_read,
+ 	[OP_READDIR]		= nfsd4_decode_readdir,
 -- 
-2.46.0
+2.45.2
 
 
