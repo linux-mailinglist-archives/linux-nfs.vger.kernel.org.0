@@ -1,178 +1,297 @@
-Return-Path: <linux-nfs+bounces-5305-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5306-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED1BF94E2D4
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 21:50:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 862F594E59F
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 06:06:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AFBF1C208E5
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Aug 2024 19:50:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94721F21F40
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 04:06:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6071547E4;
-	Sun, 11 Aug 2024 19:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED63D2AF0A;
+	Mon, 12 Aug 2024 04:06:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2eDbH4H"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ukOwvS8x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7yF26hp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ukOwvS8x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7yF26hp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B454526ACB
-	for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2024 19:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8856380C
+	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 04:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723405840; cv=none; b=iu5up8P/l6cRBhnR8dAq15YE9ft4O/sE+lEe4JqYL+p1EvLMMfoAKKZ03kpWq/WPQOS/B0OqAvXwxTtsOonNdlPhU/7mOGjfWOIy3jmQCSicfmUld+mmPQKWA29shEebJ5MP1VNGCQWL96Qph/g+YciuZ01Y2oRDbAfqmv+gLUI=
+	t=1723435599; cv=none; b=qEgY/4UanrnOJ5aJCuxNesAXv6XkDcCNsIfY/MH3YiFkbbKpgwX8k12YbPMP7ECanqdZyfHlIQBAsZkyfDENMeYdBBN9U+n6y89ztL3VBSVl+Ub8b28PP26P7dtVyBBRBqH4TnMdLlqjgEkaIoCoooSWQyQkGsggiUd/aEA0xrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723405840; c=relaxed/simple;
-	bh=GddqtmpooNTTIihhRpAXOm6clrljH3p3PV47in4gUiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qmXQOtrKTUggsfhG/6NNNdx/knTWKwC24n2hFr672A32VuDQD2ZscLHBnDO6y5VktLHGmwncAOCRvRU5Au2juYkVFmx4uhFELhyS7elrcpvHrE1yxn/9lHvr07WUiw/Hlocxxo6i06jT9/wubLXGlXsJenCuZZO94wUw7QLGmX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2eDbH4H; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-710ec581999so1010987b3a.2
-        for <linux-nfs@vger.kernel.org>; Sun, 11 Aug 2024 12:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723405838; x=1724010638; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qeoGOgzPbQB7C2LuHl09vcqZZw19yc52YYo1wyEBEGA=;
-        b=S2eDbH4HFEf2MbOKx7RgVjuZsl5E8rTRN166YjoV8MtX58sMA6wnhObqbqdsoDT0z/
-         UdUKaCryZGaefCTGX8q6kbRhRxsGumQDlcJ+Dbr1sb24+GEv7yILbS6oL2VfjC0wyt1j
-         fHtmNdRFlr3qFCsHGAQ7L7kgqndW1C/MxLPFQSrcXf3inMMmCOLPv+VGXyDpGCKM43el
-         C/OGuCaBbcTy4j+ZRVz3j1noA+wQVFOfZSKHUEL9L1MdsxAgcwINsqyF5SiXUgkPBCAP
-         ygiEpwGNq/cqTR35qLJpEWYTkCoqPjrbEdZERXDWBxp7l0M7IwEyZ5uPTjbMctuL5LIq
-         VEQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723405838; x=1724010638;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qeoGOgzPbQB7C2LuHl09vcqZZw19yc52YYo1wyEBEGA=;
-        b=MmfwJ12oGIINjPSQzokCXXSUSEImONEyH58RArr/rW9VeI5B/8KkFCUJjjB/Rtph8Q
-         zsww9/pHyFn9zlaVIc/2vd+L3mVJ8cSgCs/xnTnsySyherQcFhacC9dlWCaM7c9cc3EI
-         NBX9jEWjQZ2l2z4kA/2UyZY6ybBapxhUIpTd0Kmhy/IaXwV6P8GMsthL3E8bRPQh54/B
-         N0MnmyPSLRZQXpuvadhxnrD6lRsehw1GYv/VahBqKXdpbg0MbSJ19GvOcRNAQgu+7Au+
-         J25FWP2bDRU2Oma9LCNtjxAsoUi2xNs58yiMqTxC9lZyk2UYhlTQOV5tgjLplB58G8WO
-         YI9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXc66fgL9dW6ag232CFn3xpklYJ94eN0uhjt5Dxw356XYlRxEOLgGcG5y+UmsRWgb4zZBoFXalk1FsQSzSTE2Ex2nv4V+8B6M9e
-X-Gm-Message-State: AOJu0Yx3UiVKYuHIPta2b2hSgLvxuykTyz8ZGcM5RbiIIUj11xh4TvZN
-	+PCMyfEWufF67FlcUXkwfcFvYYuN2W3tB5m4st25zIeFYNe6BrMrB5ZCtGju
-X-Google-Smtp-Source: AGHT+IETT6ZLQlgua9m3KXgtC6Z7UdZY1/94ZEDMsSPMUQgsjIlkxALoK1D+kSZuxzWk6drHy4MqWg==
-X-Received: by 2002:a05:6a20:9f9b:b0:1c4:87b2:e07d with SMTP id adf61e73a8af0-1c89ff243a9mr10974011637.16.1723405837775;
-        Sun, 11 Aug 2024 12:50:37 -0700 (PDT)
-Received: from [192.168.86.113] (syn-076-091-193-045.res.spectrum.com. [76.91.193.45])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710e5a89dfesm2698597b3a.159.2024.08.11.12.50.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Aug 2024 12:50:37 -0700 (PDT)
-Message-ID: <24bf013f-78af-4d05-80ae-1b35ed54c6a0@gmail.com>
-Date: Sun, 11 Aug 2024 12:50:36 -0700
+	s=arc-20240116; t=1723435599; c=relaxed/simple;
+	bh=j/bu3Q++3GmdiY6fi1xwJpCx7ZcE2cMBh3s68qKeaE4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=O3NAKaUeA5BsnFCmvyD7bmBcMeGOhSG1yhx03kDCVgCv1wjaWsDW1WyPy+RCNbpci78Eiv2NDbOKZFlO0pSBPlcAN7DDk8QAgkpobcLt/zITxtgOKWxUUmQKlGMddxTlbgRKmcfbtmVjIaY2P0WL4UbzAAIeI2V2AwsXtGZfu+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ukOwvS8x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7yF26hp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ukOwvS8x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7yF26hp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6054920205;
+	Mon, 12 Aug 2024 04:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1723435590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
+	b=ukOwvS8xb2eNajeWpOFRUI6nb+Wi+9uEw6DMDbFLPs4t+u8qFH17QTQPAhetmgyYnJQpHf
+	2G+X4o05jQ3fV6Z9+wmhxLkIFNnl9b9+aQW/Zg1rtu4VEl353HdMuGAJfQPxgelZ48GINN
+	SU4Rd/PZvn8tnuxmO24Gbyi1zr+xBzM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1723435590;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
+	b=R7yF26hp/GE4zvNvOxjLXZH4t9SGRsfj0SW0MdfLbhHZOp57xvWqMEns3kj9g6uzc7Rm5q
+	YoiZLI/LWeoacmBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ukOwvS8x;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=R7yF26hp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1723435590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
+	b=ukOwvS8xb2eNajeWpOFRUI6nb+Wi+9uEw6DMDbFLPs4t+u8qFH17QTQPAhetmgyYnJQpHf
+	2G+X4o05jQ3fV6Z9+wmhxLkIFNnl9b9+aQW/Zg1rtu4VEl353HdMuGAJfQPxgelZ48GINN
+	SU4Rd/PZvn8tnuxmO24Gbyi1zr+xBzM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1723435590;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
+	b=R7yF26hp/GE4zvNvOxjLXZH4t9SGRsfj0SW0MdfLbhHZOp57xvWqMEns3kj9g6uzc7Rm5q
+	YoiZLI/LWeoacmBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CE3413957;
+	Mon, 12 Aug 2024 04:06:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ljqvNESKuWYQWQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 12 Aug 2024 04:06:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFS client to pNFS DS
-Content-Language: en-US
-To: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>,
- Olga Kornievskaia <aglo@umich.edu>
-Cc: Anna Schumaker <schumaker.anna@gmail.com>, linux-nfs@vger.kernel.org,
- Trond Myklebust <trondmy@hammerspace.com>
-References: <CAN-5tyHXg8=Sv8MS7vJUwG+=Av8oL6Bk_ZDDfwjEf3-R0KT=dg@mail.gmail.com>
- <685478263.45656552.1723405271880.JavaMail.zimbra@z-mbx-2>
-From: marc eshel <eshel.marc@gmail.com>
-In-Reply-To: <685478263.45656552.1723405271880.JavaMail.zimbra@z-mbx-2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neilb@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] SQUASH: nfsd: move error choice for incorrect object types to
+ version-specific code.
+Date: Mon, 12 Aug 2024 14:06:25 +1000
+Message-id: <172343558582.6062.9756574878881138559@noble.neil.brown.name>
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 6054920205
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spam-Flag: NO
 
 
-On 8/11/24 12:41 PM, Mkrtchyan, Tigran wrote:
->> On 10. Aug 2024, at 23:20, Olga Kornievskaia <aglo@umich.edu> wrote:
->>
->> ﻿On Fri, Aug 9, 2024 at 12:27 PM marc eshel <eshel.marc@gmail.com> wrote:
->>>
->>> On 8/9/24 8:15 AM, Olga Kornievskaia wrote:
->>>> On Fri, Aug 9, 2024 at 10:09 AM marc eshel <eshel.marc@gmail.com> wrote:
->>>>> Thanks for the replies, I am a little rusty with debugging NFS but this what I see when the NFS client tried to create a session with the DS.
->>>>>
->>>>> Ganesha was configured for sec=sys and the client mount had the option sec=sys, I assume flavor 390004 means it was trying to use krb5i.
->>>> For 4.1, the client will always try to do state operations with krb5i
->>>> even when sec=sys when the client detects that it's configured to do
->>>> Kerberos (ie., gssd is running). This context creation is triggered
->>>> regardless of whether the rpc client is used for MDS or DS.
->>>>
->>>> My question to you: is the MDS configured with Kerberos but the DS
->>>> isn't? And also, does this lead to a failure?
->>> Both MDS DS are configured for sec=sys and it is leading to client
->>> switching from DS to MDS so yes, it is pNFS failure. What I see on the
->>> DS is the client creating a session and than imminently destroying it
->>> before committing it. If the is something else that I can debug I will
->>> be happy to.
->> pnfs failure is unexpected. I'm pretty confident that a non-kerberos
->> configured client can do normal pnfs with sec=sys. I can help debug,
-> Yes, I can confirm that. All RHEL kernels and weekly -rc kernels from Linus works as expected. We mount always with sec=sys, and despite the fact, that hosts configured to support kerberos due to AFS and GPFS, the access to DSes is never an issue and never tries to use kerberos.
->
-> Tigran.
+[This should be squashed into the existing patch for the same name,
+with this commit message used instead of the current one.  It addresses
+the pynfs failures that Jeff found]
 
-Hi Tigran,
+If an NFS operation expects a particular sort of object (file, dir, link,
+etc) but gets a file handle for a different sort of object, it must
+return an error.  The actual error varies among NFS version in non-trivial
+ways.
 
-It is possible that it is failing back to MDS for another reason and the 
-error message that I see is not the reason for the failure. Are you 
-using pNFS with Ganesha and GPFS?
+For v2 and v3 there are ISDIR and NOTDIR errors and, for NFSv4 only,
+INVAL is suitable.
 
-Marc.
+For v4.0 there is also NFS4ERR_SYMLINK which should be used if a SYMLINK
+was found when not expected.  This take precedence over NOTDIR.
 
->
->> if you want to send me a network trace and tracepoint output. Btw what
->> kernel/distro are you using?
->>
->>> Marc.
->>>
->>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC: Couldn't create
->>>>> auth handle (flavor 390004)
->>>>>
->>>>> Marc.
->>>>>
->>>>> On 8/9/24 6:06 AM, Anna Schumaker wrote:
->>>>>
->>>>> On Thu, Aug 8, 2024 at 6:07 PM Olga Kornievskaia <aglo@umich.edu> wrote:
->>>>>
->>>>> On Mon, Aug 5, 2024 at 5:51 PM marc eshel <eshel.marc@gmail.com> wrote:
->>>>>
->>>>> Hi Trond,
->>>>>
->>>>> Will the Linux NFS client try to us krb5i regardless of the MDS
->>>>> configuration?
->>>>>
->>>>> Is there any option to avoid it?
->>>>>
->>>>> I was under the impression the linux client has no way of choosing a
->>>>> different auth_gss security flavor for the DS than the MDS. Meaning
->>>>>
->>>>> That's a good point, I completely missed that this is specifically for the DS.
->>>>>
->>>>> that if mount command has say sec=krb5i then both MDS and DS
->>>>> connections have to do krb5i and if say the DS isn't configured for
->>>>> Kerberos, then IO would fallback to MDS. I no longer have a pnfs
->>>>>
->>>>> That's what I would expect, too.
->>>>>
->>>>> server to verify whether or not what I say is true but that is what my
->>>>> memory tells me is the case.
->>>>>
->>>>>
->>>>> Thanks, Marc.
->>>>>
->>>>> ul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
->>>>> stripe count 1
->>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
->>>>> ds_num 1
->>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC: Couldn't create
->>>>> auth handle (flavor 390004)
->>>>>
->>>>>
+For v4.1+ there is also NFS4ERR_WRONG_TYPE which should be used in
+preference to EINVAL when none of the specific error codes apply.
+
+When nfsd_mode_check() finds a symlink where it expected a directory it
+needs to return an error code that can be converted to NOTDIR for v2 or
+v3 but will be SYMLINK for v4.  It must be different from the error
+code returns when it finds a symlink but expects a regular file - that
+must be converted to EINVAL or SYMLINK.
+
+So we introduce an internal error code nfserr_symlink_not_dir which each
+version converts as appropriate.
+
+nfsd_check_obj_isreg() is similar to nfsd_mode_check() except that it is
+only used by NFSv4 and only for OPEN.  NFSERR_INVAL is never a suitable
+error if the object is the wrong time.  For v4.0 we use nfserr_symlink
+for non-dirs even if not a symlink.  For v4.1 we have nfserr_wrong_type.
+To handle this difference we introduce an internal status code
+nfserr_wrong_type_open.
+
+As a result of these changes, nfsd_mode_check() doesn't need an rqstp
+arg any more.
+
+Note that NFSv4 operations are actually performed in the xdr code(!!!)
+so to the only place that we can map the status code successfully is in
+nfsd4_encode_operation().
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfsd/nfs4proc.c | 21 +--------------------
+ fs/nfsd/nfs4xdr.c  | 26 ++++++++++++++++++++++++++
+ fs/nfsd/nfsd.h     |  6 ++++++
+ 3 files changed, 33 insertions(+), 20 deletions(-)
+
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 2e355085e443..e010d627d545 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -168,7 +168,7 @@ static __be32 nfsd_check_obj_isreg(struct svc_fh *fh)
+ 		return nfserr_isdir;
+ 	if (S_ISLNK(mode))
+ 		return nfserr_symlink;
+-	return nfserr_wrong_type;
++	return nfserr_wrong_type_open;
+ }
+=20
+ static void nfsd4_set_open_owner_reply_cache(struct nfsd4_compound_state *cs=
+tate, struct nfsd4_open *open, struct svc_fh *resfh)
+@@ -179,23 +179,6 @@ static void nfsd4_set_open_owner_reply_cache(struct nfsd=
+4_compound_state *cstate
+ 			&resfh->fh_handle);
+ }
+=20
+-static __be32 nfsd4_map_status(__be32 status, u32 minor)
+-{
+-	switch (status) {
+-	case nfs_ok:
+-		break;
+-	case nfserr_wrong_type:
+-		/* RFC 8881 - 15.1.2.9 */
+-		if (minor =3D=3D 0)
+-			status =3D nfserr_inval;
+-		break;
+-	case nfserr_symlink_not_dir:
+-		status =3D nfserr_symlink;
+-		break;
+-	}
+-	return status;
+-}
+-
+ static inline bool nfsd4_create_is_exclusive(int createmode)
+ {
+ 	return createmode =3D=3D NFS4_CREATE_EXCLUSIVE ||
+@@ -2815,8 +2798,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			nfsd4_encode_replay(resp->xdr, op);
+ 			status =3D op->status =3D op->replay->rp_status;
+ 		} else {
+-			op->status =3D nfsd4_map_status(op->status,
+-						      cstate->minorversion);
+ 			nfsd4_encode_operation(resp, op);
+ 			status =3D op->status;
+ 		}
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 42b41d55d4ed..a0c1fc19aea4 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -5729,6 +5729,30 @@ __be32 nfsd4_check_resp_size(struct nfsd4_compoundres =
+*resp, u32 respsize)
+ 	return nfserr_rep_too_big;
+ }
+=20
++static __be32 nfsd4_map_status(__be32 status, u32 minor)
++{
++	switch (status) {
++	case nfs_ok:
++		break;
++	case nfserr_wrong_type:
++		/* RFC 8881 - 15.1.2.9 */
++		if (minor =3D=3D 0)
++			status =3D nfserr_inval;
++		break;
++	case nfserr_wrong_type_open:
++		/* RFC 7530 - 16.16.6 */
++		if (minor =3D=3D 0)
++			status =3D nfserr_symlink;
++		else
++			status =3D nfserr_wrong_type;
++		break;
++	case nfserr_symlink_not_dir:
++		status =3D nfserr_symlink;
++		break;
++	}
++	return status;
++}
++
+ void
+ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
+ {
+@@ -5796,6 +5820,8 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, =
+struct nfsd4_op *op)
+ 						so->so_replay.rp_buf, len);
+ 	}
+ status:
++	op->status =3D nfsd4_map_status(op->status,
++				      resp->cstate.minorversion);
+ 	*p =3D op->status;
+ release:
+ 	if (opdesc && opdesc->op_release)
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 4ccbf014a2c7..b4503e698ffd 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -359,6 +359,12 @@ enum {
+  */
+ 	NFSERR_SYMLINK_NOT_DIR,
+ #define	nfserr_symlink_not_dir	cpu_to_be32(NFSERR_SYMLINK_NOT_DIR)
++
++/* non-{reg,dir,symlink} found by open - handled differently
++ * in v4.0 than v4.1.
++ */
++	NFSERR_WRONG_TYPE_OPEN,
++#define	nfserr_wrong_type_open	cpu_to_be32(NFSERR_WRONG_TYPE_OPEN)
+ };
+=20
+ /* Check for dir entries '.' and '..' */
+--=20
+2.44.0
+
 
