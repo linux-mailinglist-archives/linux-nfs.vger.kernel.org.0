@@ -1,297 +1,279 @@
-Return-Path: <linux-nfs+bounces-5306-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5307-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 862F594E59F
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 06:06:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50E6994E730
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 08:52:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94721F21F40
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 04:06:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 031B4280234
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 06:52:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED63D2AF0A;
-	Mon, 12 Aug 2024 04:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577E51509A0;
+	Mon, 12 Aug 2024 06:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ukOwvS8x";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7yF26hp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ukOwvS8x";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7yF26hp"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="0nKeDJk/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8856380C
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 04:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C6A4C9F
+	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 06:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723435599; cv=none; b=qEgY/4UanrnOJ5aJCuxNesAXv6XkDcCNsIfY/MH3YiFkbbKpgwX8k12YbPMP7ECanqdZyfHlIQBAsZkyfDENMeYdBBN9U+n6y89ztL3VBSVl+Ub8b28PP26P7dtVyBBRBqH4TnMdLlqjgEkaIoCoooSWQyQkGsggiUd/aEA0xrE=
+	t=1723445541; cv=none; b=pqkYXbvAvSlNE3hrVrpSj/4NQanOW5ux2n67lvsWLMDoNQ/ZQNAL+QYklkhHfb+muW1HskPY8pfP/ojUQYu9mJgWXVBNlz4xzGl5UgU2Z5YWCREftTmYGW++l92ofR+ZLaM3AyUjkZqvTnDylMe+FVPec5WI4obylOAWbY4koGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723435599; c=relaxed/simple;
-	bh=j/bu3Q++3GmdiY6fi1xwJpCx7ZcE2cMBh3s68qKeaE4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=O3NAKaUeA5BsnFCmvyD7bmBcMeGOhSG1yhx03kDCVgCv1wjaWsDW1WyPy+RCNbpci78Eiv2NDbOKZFlO0pSBPlcAN7DDk8QAgkpobcLt/zITxtgOKWxUUmQKlGMddxTlbgRKmcfbtmVjIaY2P0WL4UbzAAIeI2V2AwsXtGZfu+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ukOwvS8x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7yF26hp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ukOwvS8x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7yF26hp; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6054920205;
-	Mon, 12 Aug 2024 04:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723435590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
-	b=ukOwvS8xb2eNajeWpOFRUI6nb+Wi+9uEw6DMDbFLPs4t+u8qFH17QTQPAhetmgyYnJQpHf
-	2G+X4o05jQ3fV6Z9+wmhxLkIFNnl9b9+aQW/Zg1rtu4VEl353HdMuGAJfQPxgelZ48GINN
-	SU4Rd/PZvn8tnuxmO24Gbyi1zr+xBzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723435590;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
-	b=R7yF26hp/GE4zvNvOxjLXZH4t9SGRsfj0SW0MdfLbhHZOp57xvWqMEns3kj9g6uzc7Rm5q
-	YoiZLI/LWeoacmBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ukOwvS8x;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=R7yF26hp
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723435590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
-	b=ukOwvS8xb2eNajeWpOFRUI6nb+Wi+9uEw6DMDbFLPs4t+u8qFH17QTQPAhetmgyYnJQpHf
-	2G+X4o05jQ3fV6Z9+wmhxLkIFNnl9b9+aQW/Zg1rtu4VEl353HdMuGAJfQPxgelZ48GINN
-	SU4Rd/PZvn8tnuxmO24Gbyi1zr+xBzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723435590;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CZhuvpclt90pmpoeJIPzajClQqph/b/ol+PIX8tebus=;
-	b=R7yF26hp/GE4zvNvOxjLXZH4t9SGRsfj0SW0MdfLbhHZOp57xvWqMEns3kj9g6uzc7Rm5q
-	YoiZLI/LWeoacmBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CE3413957;
-	Mon, 12 Aug 2024 04:06:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ljqvNESKuWYQWQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 12 Aug 2024 04:06:28 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1723445541; c=relaxed/simple;
+	bh=4WeL4ehB8/QnVudWfvxbh9DXQuB7hA8ZhFoulhF61rQ=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=Odm3P3tigu5ZhDhg0lmVTvb+X/gI8h0tiYA80VBmIAf18DxoISxW2djqfYUa3o3EWp393VP8+PsbLoWD6d7nksWbHCefqErb1zyUA3x2aMHBUL+5WwsXKlx0wy5ligMSQdI/LPB/bfAZ3dQJhvuZZ04YBvj6ZwS8Amks27l3tn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=0nKeDJk/; arc=none smtp.client-ip=131.169.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id 8571413F648
+	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 08:52:14 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 8571413F648
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1723445534; bh=pXaXoHTDYCm7AWw4nmwBm316icqLHgiNyGZVkjPH5fY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=0nKeDJk/+sbl8vO8symdgggYgwPsAJw1rJ/qvMe3GbMO4Mn4oq4Q+GIInKqF2G9LI
+	 exoBjyrxlDnVcm+7Yy0X/8nBU1TNtUz85uNNAX4HABCcrsqy5yfD5Yo3ViCRanxq5v
+	 In6BLxmcy3V8LI7YgEg0py/ygTwPEWyT1BC9qtGs=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id 6DC1020038;
+	Mon, 12 Aug 2024 08:52:14 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [194.95.233.47])
+	by smtp-m-2.desy.de (Postfix) with ESMTP id 616AB16003F;
+	Mon, 12 Aug 2024 08:52:14 +0200 (CEST)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
+	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id 73ED9220043;
+	Mon, 12 Aug 2024 08:52:08 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-2.desy.de (Postfix) with ESMTP id 900CE2003F;
+	Mon, 12 Aug 2024 08:52:07 +0200 (CEST)
+Date: Mon, 12 Aug 2024 08:52:05 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: marc eshel <eshel.marc@gmail.com>
+Cc: Olga Kornievskaia <aglo@umich.edu>, 
+	schumaker anna <schumaker.anna@gmail.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Trond Myklebust <trondmy@hammerspace.com>
+Message-ID: <1030980705.45726678.1723445525556.JavaMail.zimbra@desy.de>
+In-Reply-To: <24bf013f-78af-4d05-80ae-1b35ed54c6a0@gmail.com>
+References: <CAN-5tyHXg8=Sv8MS7vJUwG+=Av8oL6Bk_ZDDfwjEf3-R0KT=dg@mail.gmail.com> <685478263.45656552.1723405271880.JavaMail.zimbra@z-mbx-2> <24bf013f-78af-4d05-80ae-1b35ed54c6a0@gmail.com>
+Subject: Re: NFS client to pNFS DS
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] SQUASH: nfsd: move error choice for incorrect object types to
- version-specific code.
-Date: Mon, 12 Aug 2024 14:06:25 +1000
-Message-id: <172343558582.6062.9756574878881138559@noble.neil.brown.name>
-X-Spam-Score: -4.51
-X-Rspamd-Queue-Id: 6054920205
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_45726681_323893000.1723445527495"
+X-Mailer: Zimbra 9.0.0_GA_4612 (ZimbraWebClient - FF128 (Linux)/9.0.0_GA_4612)
+Thread-Topic: NFS client to pNFS DS
+Thread-Index: GqS4n0O0Fx94uPeqCZ7xDKI//a471A==
+
+------=_Part_45726681_323893000.1723445527495
+Date: Mon, 12 Aug 2024 08:52:05 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: marc eshel <eshel.marc@gmail.com>
+Cc: Olga Kornievskaia <aglo@umich.edu>, 
+	schumaker anna <schumaker.anna@gmail.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Trond Myklebust <trondmy@hammerspace.com>
+Message-ID: <1030980705.45726678.1723445525556.JavaMail.zimbra@desy.de>
+In-Reply-To: <24bf013f-78af-4d05-80ae-1b35ed54c6a0@gmail.com>
+References: <CAN-5tyHXg8=Sv8MS7vJUwG+=Av8oL6Bk_ZDDfwjEf3-R0KT=dg@mail.gmail.com> <685478263.45656552.1723405271880.JavaMail.zimbra@z-mbx-2> <24bf013f-78af-4d05-80ae-1b35ed54c6a0@gmail.com>
+Subject: Re: NFS client to pNFS DS
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 9.0.0_GA_4612 (ZimbraWebClient - FF128 (Linux)/9.0.0_GA_4612)
+Thread-Topic: NFS client to pNFS DS
+Thread-Index: GqS4n0O0Fx94uPeqCZ7xDKI//a471A==
 
 
-[This should be squashed into the existing patch for the same name,
-with this commit message used instead of the current one.  It addresses
-the pynfs failures that Jeff found]
 
-If an NFS operation expects a particular sort of object (file, dir, link,
-etc) but gets a file handle for a different sort of object, it must
-return an error.  The actual error varies among NFS version in non-trivial
-ways.
+----- Original Message -----
+> From: "marc eshel" <eshel.marc@gmail.com>
+> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>, "Olga Kornievskaia" <a=
+glo@umich.edu>
+> Cc: "schumaker anna" <schumaker.anna@gmail.com>, "linux-nfs" <linux-nfs@v=
+ger.kernel.org>, "Trond Myklebust"
+> <trondmy@hammerspace.com>
+> Sent: Sunday, 11 August, 2024 21:50:36
+> Subject: Re: NFS client to pNFS DS
 
-For v2 and v3 there are ISDIR and NOTDIR errors and, for NFSv4 only,
-INVAL is suitable.
+> On 8/11/24 12:41 PM, Mkrtchyan, Tigran wrote:
+>>> On 10. Aug 2024, at 23:20, Olga Kornievskaia <aglo@umich.edu> wrote:
+>>>
+>>> =EF=BB=BFOn Fri, Aug 9, 2024 at 12:27=E2=80=AFPM marc eshel <eshel.marc=
+@gmail.com> wrote:
+>>>>
+>>>> On 8/9/24 8:15 AM, Olga Kornievskaia wrote:
+>>>>> On Fri, Aug 9, 2024 at 10:09=E2=80=AFAM marc eshel <eshel.marc@gmail.=
+com> wrote:
+>>>>>> Thanks for the replies, I am a little rusty with debugging NFS but t=
+his what I
+>>>>>> see when the NFS client tried to create a session with the DS.
+>>>>>>
+>>>>>> Ganesha was configured for sec=3Dsys and the client mount had the op=
+tion sec=3Dsys,
+>>>>>> I assume flavor 390004 means it was trying to use krb5i.
+>>>>> For 4.1, the client will always try to do state operations with krb5i
+>>>>> even when sec=3Dsys when the client detects that it's configured to d=
+o
+>>>>> Kerberos (ie., gssd is running). This context creation is triggered
+>>>>> regardless of whether the rpc client is used for MDS or DS.
+>>>>>
+>>>>> My question to you: is the MDS configured with Kerberos but the DS
+>>>>> isn't? And also, does this lead to a failure?
+>>>> Both MDS DS are configured for sec=3Dsys and it is leading to client
+>>>> switching from DS to MDS so yes, it is pNFS failure. What I see on the
+>>>> DS is the client creating a session and than imminently destroying it
+>>>> before committing it. If the is something else that I can debug I will
+>>>> be happy to.
+>>> pnfs failure is unexpected. I'm pretty confident that a non-kerberos
+>>> configured client can do normal pnfs with sec=3Dsys. I can help debug,
+>> Yes, I can confirm that. All RHEL kernels and weekly -rc kernels from Li=
+nus
+>> works as expected. We mount always with sec=3Dsys, and despite the fact,=
+ that
+>> hosts configured to support kerberos due to AFS and GPFS, the access to =
+DSes is
+>> never an issue and never tries to use kerberos.
+>>
+>> Tigran.
+>=20
+> Hi Tigran,
+>=20
+> It is possible that it is failing back to MDS for another reason and the
+> error message that I see is not the reason for the failure. Are you
+> using pNFS with Ganesha and GPFS?
+>=20
+> Marc.
 
-For v4.0 there is also NFS4ERR_SYMLINK which should be used if a SYMLINK
-was found when not expected.  This take precedence over NOTDIR.
+Hi Marc,
 
-For v4.1+ there is also NFS4ERR_WRONG_TYPE which should be used in
-preference to EINVAL when none of the specific error codes apply.
+pNFS is used exclusively with dCache. Can you provide the packet capture
+of failing pNFS traffic, like mount + cp + umount?
 
-When nfsd_mode_check() finds a symlink where it expected a directory it
-needs to return an error code that can be converted to NOTDIR for v2 or
-v3 but will be SYMLINK for v4.  It must be different from the error
-code returns when it finds a symlink but expects a regular file - that
-must be converted to EINVAL or SYMLINK.
+Best regards,
+   Tigran.
 
-So we introduce an internal error code nfserr_symlink_not_dir which each
-version converts as appropriate.
+>=20
+>>
+>>> if you want to send me a network trace and tracepoint output. Btw what
+>>> kernel/distro are you using?
+>>>
+>>>> Marc.
+>>>>
+>>>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC: Couldn't create
+>>>>>> auth handle (flavor 390004)
+>>>>>>
+>>>>>> Marc.
+>>>>>>
+>>>>>> On 8/9/24 6:06 AM, Anna Schumaker wrote:
+>>>>>>
+>>>>>> On Thu, Aug 8, 2024 at 6:07=E2=80=AFPM Olga Kornievskaia <aglo@umich=
+.edu> wrote:
+>>>>>>
+>>>>>> On Mon, Aug 5, 2024 at 5:51=E2=80=AFPM marc eshel <eshel.marc@gmail.=
+com> wrote:
+>>>>>>
+>>>>>> Hi Trond,
+>>>>>>
+>>>>>> Will the Linux NFS client try to us krb5i regardless of the MDS
+>>>>>> configuration?
+>>>>>>
+>>>>>> Is there any option to avoid it?
+>>>>>>
+>>>>>> I was under the impression the linux client has no way of choosing a
+>>>>>> different auth_gss security flavor for the DS than the MDS. Meaning
+>>>>>>
+>>>>>> That's a good point, I completely missed that this is specifically f=
+or the DS.
+>>>>>>
+>>>>>> that if mount command has say sec=3Dkrb5i then both MDS and DS
+>>>>>> connections have to do krb5i and if say the DS isn't configured for
+>>>>>> Kerberos, then IO would fallback to MDS. I no longer have a pnfs
+>>>>>>
+>>>>>> That's what I would expect, too.
+>>>>>>
+>>>>>> server to verify whether or not what I say is true but that is what =
+my
+>>>>>> memory tells me is the case.
+>>>>>>
+>>>>>>
+>>>>>> Thanks, Marc.
+>>>>>>
+>>>>>> ul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_node
+>>>>>> stripe count 1
+>>>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: nfs4_fl_alloc_deviceid_nod=
+e
+>>>>>> ds_num 1
+>>>>>> Jul 30 11:10:58 svl-marcrh-node-1 kernel: RPC: Couldn't create
+>>>>>> auth handle (flavor 390004)
+>>>>>>
 
-nfsd_check_obj_isreg() is similar to nfsd_mode_check() except that it is
-only used by NFSv4 and only for OPEN.  NFSERR_INVAL is never a suitable
-error if the object is the wrong time.  For v4.0 we use nfserr_symlink
-for non-dirs even if not a symlink.  For v4.1 we have nfserr_wrong_type.
-To handle this difference we introduce an internal status code
-nfserr_wrong_type_open.
+------=_Part_45726681_323893000.1723445527495
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-As a result of these changes, nfsd_mode_check() doesn't need an rqstp
-arg any more.
-
-Note that NFSv4 operations are actually performed in the xdr code(!!!)
-so to the only place that we can map the status code successfully is in
-nfsd4_encode_operation().
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4proc.c | 21 +--------------------
- fs/nfsd/nfs4xdr.c  | 26 ++++++++++++++++++++++++++
- fs/nfsd/nfsd.h     |  6 ++++++
- 3 files changed, 33 insertions(+), 20 deletions(-)
-
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 2e355085e443..e010d627d545 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -168,7 +168,7 @@ static __be32 nfsd_check_obj_isreg(struct svc_fh *fh)
- 		return nfserr_isdir;
- 	if (S_ISLNK(mode))
- 		return nfserr_symlink;
--	return nfserr_wrong_type;
-+	return nfserr_wrong_type_open;
- }
-=20
- static void nfsd4_set_open_owner_reply_cache(struct nfsd4_compound_state *cs=
-tate, struct nfsd4_open *open, struct svc_fh *resfh)
-@@ -179,23 +179,6 @@ static void nfsd4_set_open_owner_reply_cache(struct nfsd=
-4_compound_state *cstate
- 			&resfh->fh_handle);
- }
-=20
--static __be32 nfsd4_map_status(__be32 status, u32 minor)
--{
--	switch (status) {
--	case nfs_ok:
--		break;
--	case nfserr_wrong_type:
--		/* RFC 8881 - 15.1.2.9 */
--		if (minor =3D=3D 0)
--			status =3D nfserr_inval;
--		break;
--	case nfserr_symlink_not_dir:
--		status =3D nfserr_symlink;
--		break;
--	}
--	return status;
--}
--
- static inline bool nfsd4_create_is_exclusive(int createmode)
- {
- 	return createmode =3D=3D NFS4_CREATE_EXCLUSIVE ||
-@@ -2815,8 +2798,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			nfsd4_encode_replay(resp->xdr, op);
- 			status =3D op->status =3D op->replay->rp_status;
- 		} else {
--			op->status =3D nfsd4_map_status(op->status,
--						      cstate->minorversion);
- 			nfsd4_encode_operation(resp, op);
- 			status =3D op->status;
- 		}
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 42b41d55d4ed..a0c1fc19aea4 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -5729,6 +5729,30 @@ __be32 nfsd4_check_resp_size(struct nfsd4_compoundres =
-*resp, u32 respsize)
- 	return nfserr_rep_too_big;
- }
-=20
-+static __be32 nfsd4_map_status(__be32 status, u32 minor)
-+{
-+	switch (status) {
-+	case nfs_ok:
-+		break;
-+	case nfserr_wrong_type:
-+		/* RFC 8881 - 15.1.2.9 */
-+		if (minor =3D=3D 0)
-+			status =3D nfserr_inval;
-+		break;
-+	case nfserr_wrong_type_open:
-+		/* RFC 7530 - 16.16.6 */
-+		if (minor =3D=3D 0)
-+			status =3D nfserr_symlink;
-+		else
-+			status =3D nfserr_wrong_type;
-+		break;
-+	case nfserr_symlink_not_dir:
-+		status =3D nfserr_symlink;
-+		break;
-+	}
-+	return status;
-+}
-+
- void
- nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
- {
-@@ -5796,6 +5820,8 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, =
-struct nfsd4_op *op)
- 						so->so_replay.rp_buf, len);
- 	}
- status:
-+	op->status =3D nfsd4_map_status(op->status,
-+				      resp->cstate.minorversion);
- 	*p =3D op->status;
- release:
- 	if (opdesc && opdesc->op_release)
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 4ccbf014a2c7..b4503e698ffd 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -359,6 +359,12 @@ enum {
-  */
- 	NFSERR_SYMLINK_NOT_DIR,
- #define	nfserr_symlink_not_dir	cpu_to_be32(NFSERR_SYMLINK_NOT_DIR)
-+
-+/* non-{reg,dir,symlink} found by open - handled differently
-+ * in v4.0 than v4.1.
-+ */
-+	NFSERR_WRONG_TYPE_OPEN,
-+#define	nfserr_wrong_type_open	cpu_to_be32(NFSERR_WRONG_TYPE_OPEN)
- };
-=20
- /* Check for dir entries '.' and '..' */
---=20
-2.44.0
-
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQWCKDCq74or/A6r3iyeFcUzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yMzExMjkxMTUwMjRaFw0yNDEyMjgxMTUwMjRaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANIlFsEQpmV0zy2TtESnOX3d0a17dmceoaYpX2Sn9gwd
+obCTBa2Ud/YsGJOuGMb/v1kO/4RyvlXTJFAI4Ui8GJf68MpkMHosIVzisWSPfsBnfWPxgwDTITuS
+dwdviezHtvw8HM/Ksv1vjBODQcPgxBJCL/HUswzXEJEetYnnMwzBzLPHyTIuCmlJWRuTtFxNKeTN
+yeMzCfm/lsoHI7cch6N+/cFzYGBl9fAKA67iLjlw+2p4IxsycFPi0PGpIxnb6N9vnTmpO9yybaoQ
+KuQppnfm9cF8m6AaNoE16JqRcdxgpNbtfZTencbHnwlKukpBLGrlZcFdo/BPzjN0uBHK/W9YPMv1
+MOtPaZF0rcjf2FiYUASRUNemOxCu2hkkUvN7UzPuFPszTt4Z4GF/7T76xh7jFQZnBVT8duwbvRDF
+q/7rwHN7ZkSpXvIamqojIseNiBTOwC+0L3SaGQYN60JkQx+d+XoMFcFsm6mnyykwv5l2s3rXgQ7G
+f73YgNG14esVa82Pbb6Rk43cUcay3DpWAlz7U/bODzePJ1pQcgpHuLJ78u2Sv2n5+YQg9huoGm6N
+7eKfucPubjFE4Lpqp9O/I8IJBTwK0KNHSDOB0SFn3vaC6bt/kLGgbpsWW0yv+PzZyqmvYFZXTjlT
+tgv3q86kM1sWSgCd/tuxuwWDkv2RHfbvAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFAKakYwt5EgoalXKWoNDPhs+2W3/MA0GCSqGSIb3DQEB
+DAUAA4ICAQBlAH4oPlVJWw5MWlmenHfZE/N2Ep7tU89SXGQaIZoADcgr0Uzm1+wNIs7Qon9CovjH
+dZ+7zAF1/gDdfYXy+odOMq1xjSeSwHcjuUarzndM1S0uV9DIr4SCRyXf+JP5aaOwVDpoV7JWlp+U
+ptDsBqjEpB+nV2M9LlgRLBp4cdxKu6n/fjJkChR9hd+lDo9bGnR9Uj3KpYWq8GHpoNumUUjSz9A+
+qPTYh4cAqRP12nk5Gqjs+ZnsG4j3EM/QFHQbQUtim0jQAA8TJ6whO7gpLKBuYfqXOdwgHT7Lgsw6
+KMjhJSZs37WCOjj0mwmSzVAlX7FMmDimZt/lI7kpDfUtYHK+F8c11FxH2yZbrhjaa2rB3qXv4hIB
+hrhbt/TNTra8D9C8s3CzxU1FvpREW2VuULyEf36g7ZDcUGom3md/kJFKWqj92KET7JcMp4K79aW/
+s65vvcxXDJX6hWiBDkGBFX5Vqy4ni39zo6X9edqRxkJQIN7d4xFhihUvcUo4oLSeybfYNr+RY+tC
+/s2PvoUHBsXqfrR5gjo7wz+CBh2O9JSA0g1OvGOpCdTw/EZ00gs4sOTU9heD3x5PzP0DJI+0DM/u
+NUH0v918lSJP8zE1N4PjNO1FeqA0l95tQe231ZOZSbd+3EfDjWmvWnPneL2xo+MSXqBDSW4Ua88m
+2C2tFcwvOwAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQWCKD
+Cq74or/A6r3iyeFcUzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNDA4MTIwNjUyMDhaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIMj4UGJTK8MN+RtIjJrTdr4p2FMQ
+pcb5se1tWR7Y2h1fMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAH10YmMWlcNYZrnPzb/DYvZEr6x2Zx3bPJzc4D5g
+jDG/iHROshe83FLvHermp7Rne/K6yYv/FoKiIwdgnl9LvuKBIHRvX8Ic5jKqzr//yd60wbupvg97
+iIeLTRbSYRJb86ZvRIw89ZYFdQpB0gAoSOQjp9cy2Py+gdb+UaPY1FN5qYOXNwjQOzLA/oh2TNEP
+gdm1pCExDCp/zHeSZqTQztWUP5ACYQc9wuYtvbLNXf9ZY9hPDf0j+gGjo3UzAS61RHOHfgEKeEw3
+NpcZdDq5Z+8SN5r5ICAT/NZTRHsdV1qfE6Ya9TsPSLQRyR9UVHiBKjc+FPPumMoljj2B9+djlRsP
+GOmjOWIF7X5aRU0lgINnupjmnQAMWYvSJjrHcZk3gz+ayHfPX/95UG365O2eyND/onsm78gGgOom
+rr205j1D8nLFEPLKab/dO/kIq1Yma9BoJbkeI4zgZMKl7yO8FNTz5IxW6NVSKa0Hr6K31dOgqBeE
+wNLv5sfx/g9b8BuJqAxGd01o0dtPqEwSJ59KLOFeB7NRCOWxfMfuAImC3l5JSDLY5Q2ZC+g/EvSm
+IYAE01161O4G0iwunkWetmvdc4F61k44Nb6LDAVUkF+V8RHtgDLNxRhmSxogMPdOMO46ObsqOgSx
++lC9Cnquime37r8eMoxzQdZGuqJuY/YTNc+FAAAAAAAA
+------=_Part_45726681_323893000.1723445527495--
 
