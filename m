@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-5329-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5330-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64F7B94F99F
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2024 00:36:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66B4994F9A3
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Aug 2024 00:37:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0FE71F22C43
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 22:36:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBE7CB20F30
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 22:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6315D197A8E;
-	Mon, 12 Aug 2024 22:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B93A196D98;
+	Mon, 12 Aug 2024 22:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH25Bjjg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0me3M/h"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388D4197552;
-	Mon, 12 Aug 2024 22:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2428A15C12D;
+	Mon, 12 Aug 2024 22:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723502202; cv=none; b=WqoWvljOIOM5RuFoe9x4rAsXqX9tll7cftBPvTmsAM7Gwm1Oo1Wo3K7AtTluvXC75Ag8JTdE/U+TQtSEgpE9VVdwcOkGGK/Ev77+K9ZK7nT7dDg28nVF/3l5vS1R2c5x3vmhqt3z1iqxXqAtFM/2kYS5y2lzBB5DzyvN7bFmoZ8=
+	t=1723502211; cv=none; b=raDSYOs6CCEPJyyLjgfMiGrltnAzEZRMNcRmRNIyQHN5StR/BpU0rowyT/2/j0mW3zJzrM4xdtEJbJgd33mvP9/C6FCuSp1EBVGn4sW4CtxLYeamtbaK3emqsOMcO2nLdTuX4naBxIXEDtCMRAjeRYs7DnpuvcX85qqUVJyfCzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723502202; c=relaxed/simple;
-	bh=1Bh5CbbMX7hZ1zl701mxKKQB40Taa/z12S5WCsGZMRU=;
+	s=arc-20240116; t=1723502211; c=relaxed/simple;
+	bh=G9Msut34DqAAazda0rdR5nN26BB3XPcxOexuyYlfea0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qqDajBLNpZxjSMZ79DZsuidrZ2R5iQgWHKLcSZSUXGhgNUwmeKp7JPh1mXIQgAMD73HsDO7CiZ2dqox0IBuPm08TpB+pIFVAunPgQbPR/wleyDtmzWGdMLg4MqAgDW1asUGJICrpB0LqeuD9zskUo9ChPPZGU94fE9JrN6jjC0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH25Bjjg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8DDC4AF0D;
-	Mon, 12 Aug 2024 22:36:40 +0000 (UTC)
+	 MIME-Version; b=OJBS/mGksjQFJbdu/ZulbQ9ws2v3Kfn8YMGEHySkILbF0rtbfKaEpXLRw8D9q7LWyE9mTLSzr5+Uug+Oehh2z/a/eYs9WqbtQn2zQPubyyYzflO/9XgXlYcvdiTmlV/JUGafxPMxq7PYfFOSJTWqo/tGDOFXOBab1myxTnE7Kas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0me3M/h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CD0C4AF0D;
+	Mon, 12 Aug 2024 22:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723502201;
-	bh=1Bh5CbbMX7hZ1zl701mxKKQB40Taa/z12S5WCsGZMRU=;
+	s=k20201202; t=1723502211;
+	bh=G9Msut34DqAAazda0rdR5nN26BB3XPcxOexuyYlfea0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XH25BjjgYxsn7DK744zC2XHon1rNugIPURNla6VcvG3VH7QBW/zX9kRne2SDd8Dds
-	 dRUI2VLIHVCuPf8khJmSncll4UKNadgvlQkYctF4pWjInttqmwZQecN5Z7qZrVkGWT
-	 DmxXo7NkA7FFH1TKL2O2jvgeVEpIiuDpgMcY4FaR0EUKpxUWcuRt/XVUx9I5Ppnj6h
-	 TXJ4yp0OLM9rU9sr0C9tSQ/KyhPFXHtcwr4TbbQcTMr/aQa+VUAVVTNd7Dd745hxcR
-	 2VIWmE4kP1Y7LJ5LPBBLvKuBPikICmOXPKNPr6WK+2rjhOpjcAUjIc9/rlCuuuSzHn
-	 eoLFAPGFFY4QA==
+	b=Y0me3M/hgasgRwjiCnWF4AwP4j60T3fLnmrh4B+jaTboGcRyN2a57ZJ2/T+GG9b2w
+	 aaK3pwvCsBUVKDmd1BgjnKoKQ8Hk+lLwxeH/qhgdEQb2dBc1M4m/9z1+YvQFF5e2u0
+	 EMMzhokLUNW20XijKq4asSxnuyu+SQQcDmTkCBKZDRoJ/ZtcqCHwy5PkTmsmWw36zs
+	 dxUXl7LxIdsTMELcvUYtrSZBFn4TNCz8fSzVIamZNa9FdnnKhT00BwU3CxCb85dUA6
+	 t9Vva31clYs8mCibbQXTdKRbAz8YQ00incffVDHmZN9ez5wmPU6e9yu6K66qWax0pJ
+	 F7pdjDH+PVbmg==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc: <linux-nfs@vger.kernel.org>,
 	kernel-team@fb.com,
 	Josef Bacik <josef@toxicpanda.com>,
 	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 6.6.y 03/12] sunrpc: don't change ->sv_stats if it doesn't exist
-Date: Mon, 12 Aug 2024 18:35:55 -0400
-Message-ID: <20240812223604.32592-4-cel@kernel.org>
+Subject: [PATCH 6.6.y 04/12] nfsd: stop setting ->pg_stats for unused stats
+Date: Mon, 12 Aug 2024 18:35:56 -0400
+Message-ID: <20240812223604.32592-5-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240812223604.32592-1-cel@kernel.org>
 References: <20240812223604.32592-1-cel@kernel.org>
@@ -66,112 +66,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit ab42f4d9a26f1723dcfd6c93fcf768032b2bb5e7 ]
+[ Upstream commit a2214ed588fb3c5b9824a21cff870482510372bb ]
 
-We check for the existence of ->sv_stats elsewhere except in the core
-processing code.  It appears that only nfsd actual exports these values
-anywhere, everybody else just has a write only copy of sv_stats in their
-svc_program.  Add a check for ->sv_stats before every adjustment to
-allow us to eliminate the stats struct from all the users who don't
-report the stats.
+A lot of places are setting a blank svc_stats in ->pg_stats and never
+utilizing these stats.  Remove all of these extra structs as we're not
+reporting these stats anywhere.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ fs/lockd/svc.c    | 3 ---
+ fs/nfs/callback.c | 3 ---
+ fs/nfsd/nfssvc.c  | 5 -----
+ 3 files changed, 11 deletions(-)
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 691499d1d231..03a51c5ec822 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1377,7 +1377,8 @@ svc_process_common(struct svc_rqst *rqstp)
- 		goto err_bad_proc;
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 6579948070a4..a62331487ebf 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -712,8 +712,6 @@ static const struct svc_version *nlmsvc_version[] = {
+ #endif
+ };
  
- 	/* Syntactic check complete */
--	serv->sv_stats->rpccnt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpccnt++;
- 	trace_svc_process(rqstp, progp->pg_name);
+-static struct svc_stat		nlmsvc_stats;
+-
+ #define NLM_NRVERS	ARRAY_SIZE(nlmsvc_version)
+ static struct svc_program	nlmsvc_program = {
+ 	.pg_prog		= NLM_PROGRAM,		/* program number */
+@@ -721,7 +719,6 @@ static struct svc_program	nlmsvc_program = {
+ 	.pg_vers		= nlmsvc_version,	/* version table */
+ 	.pg_name		= "lockd",		/* service name */
+ 	.pg_class		= "nfsd",		/* share authentication with nfsd */
+-	.pg_stats		= &nlmsvc_stats,	/* stats table */
+ 	.pg_authenticate	= &lockd_authenticate,	/* export authentication */
+ 	.pg_init_request	= svc_generic_init_request,
+ 	.pg_rpcbind_set		= svc_generic_rpcbind_set,
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index 466ebf1d41b2..869c88978899 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -399,15 +399,12 @@ static const struct svc_version *nfs4_callback_version[] = {
+ 	[4] = &nfs4_callback_version4,
+ };
  
- 	aoffset = xdr_stream_pos(xdr);
-@@ -1429,7 +1430,8 @@ svc_process_common(struct svc_rqst *rqstp)
- 	goto close_xprt;
+-static struct svc_stat nfs4_callback_stats;
+-
+ static struct svc_program nfs4_callback_program = {
+ 	.pg_prog = NFS4_CALLBACK,			/* RPC service number */
+ 	.pg_nvers = ARRAY_SIZE(nfs4_callback_version),	/* Number of entries */
+ 	.pg_vers = nfs4_callback_version,		/* version table */
+ 	.pg_name = "NFSv4 callback",			/* service name */
+ 	.pg_class = "nfs",				/* authentication class */
+-	.pg_stats = &nfs4_callback_stats,
+ 	.pg_authenticate = nfs_callback_authenticate,
+ 	.pg_init_request = svc_generic_init_request,
+ 	.pg_rpcbind_set	= svc_generic_rpcbind_set,
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 7ef6af908faa..1c5bdcdcd239 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -89,7 +89,6 @@ unsigned long	nfsd_drc_max_mem;
+ unsigned long	nfsd_drc_mem_used;
  
- err_bad_rpc:
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	xdr_stream_encode_u32(xdr, RPC_MSG_DENIED);
- 	xdr_stream_encode_u32(xdr, RPC_MISMATCH);
- 	/* Only RPCv2 supported */
-@@ -1440,7 +1442,8 @@ svc_process_common(struct svc_rqst *rqstp)
- err_bad_auth:
- 	dprintk("svc: authentication failed (%d)\n",
- 		be32_to_cpu(rqstp->rq_auth_stat));
--	serv->sv_stats->rpcbadauth++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadauth++;
- 	/* Restore write pointer to location of reply status: */
- 	xdr_truncate_encode(xdr, XDR_UNIT * 2);
- 	xdr_stream_encode_u32(xdr, RPC_MSG_DENIED);
-@@ -1450,7 +1453,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+-static struct svc_stat	nfsd_acl_svcstats;
+ static const struct svc_version *nfsd_acl_version[] = {
+ # if defined(CONFIG_NFSD_V2_ACL)
+ 	[2] = &nfsd_acl_version2,
+@@ -108,15 +107,11 @@ static struct svc_program	nfsd_acl_program = {
+ 	.pg_vers		= nfsd_acl_version,
+ 	.pg_name		= "nfsacl",
+ 	.pg_class		= "nfsd",
+-	.pg_stats		= &nfsd_acl_svcstats,
+ 	.pg_authenticate	= &svc_set_client,
+ 	.pg_init_request	= nfsd_acl_init_request,
+ 	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
+ };
  
- err_bad_prog:
- 	dprintk("svc: unknown program %d\n", rqstp->rq_prog);
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	*rqstp->rq_accept_statp = rpc_prog_unavail;
- 	goto sendit;
+-static struct svc_stat	nfsd_acl_svcstats = {
+-	.program	= &nfsd_acl_program,
+-};
+ #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
  
-@@ -1458,7 +1462,8 @@ svc_process_common(struct svc_rqst *rqstp)
- 	svc_printk(rqstp, "unknown version (%d for prog %d, %s)\n",
- 		       rqstp->rq_vers, rqstp->rq_prog, progp->pg_name);
- 
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	*rqstp->rq_accept_statp = rpc_prog_mismatch;
- 
- 	/*
-@@ -1472,19 +1477,22 @@ svc_process_common(struct svc_rqst *rqstp)
- err_bad_proc:
- 	svc_printk(rqstp, "unknown procedure (%d)\n", rqstp->rq_proc);
- 
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	*rqstp->rq_accept_statp = rpc_proc_unavail;
- 	goto sendit;
- 
- err_garbage_args:
- 	svc_printk(rqstp, "failed to decode RPC header\n");
- 
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	*rqstp->rq_accept_statp = rpc_garbage_args;
- 	goto sendit;
- 
- err_system_err:
--	serv->sv_stats->rpcbadfmt++;
-+	if (serv->sv_stats)
-+		serv->sv_stats->rpcbadfmt++;
- 	*rqstp->rq_accept_statp = rpc_system_err;
- 	goto sendit;
- }
-@@ -1536,7 +1544,8 @@ void svc_process(struct svc_rqst *rqstp)
- out_baddir:
- 	svc_printk(rqstp, "bad direction 0x%08x, dropping request\n",
- 		   be32_to_cpu(*p));
--	rqstp->rq_server->sv_stats->rpcbadfmt++;
-+	if (rqstp->rq_server->sv_stats)
-+		rqstp->rq_server->sv_stats->rpcbadfmt++;
- out_drop:
- 	svc_drop(rqstp);
- }
+ static const struct svc_version *nfsd_version[] = {
 -- 
 2.45.1
 
