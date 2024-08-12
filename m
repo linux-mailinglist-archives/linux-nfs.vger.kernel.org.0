@@ -1,54 +1,57 @@
-Return-Path: <linux-nfs+bounces-5321-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5322-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09C5794F203
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74FD794F204
 	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 17:48:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88FD4B23DCB
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 15:48:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20B2F1F223C0
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Aug 2024 15:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AADC4183CD9;
-	Mon, 12 Aug 2024 15:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A82B184541;
+	Mon, 12 Aug 2024 15:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oanhKlVU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9AsJPqH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865F21474C3
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 15:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258461474C3
+	for <linux-nfs@vger.kernel.org>; Mon, 12 Aug 2024 15:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723477685; cv=none; b=JGz2IkrBb2P3oggllMGOLwqZs/UHWZeACcfAJ4+kuh21nLiwgciuULn0OECjjTfOrfD1pPIt0yPdssSFjsk7s3zAmXMSbZgFv00o40RBHtpAlfTekTdIqNCtzzZBpYLEdfwPM4HYhh+TUxJJlUpHGpjHA4hzWRKUGUe1RIh5Jok=
+	t=1723477689; cv=none; b=iZ5akZsP74NmWvbzJKIcxC7cGVJ07MJ8zYlQXBDZB8VE8k+FUtp78pNIlJTxNW7EhED6/YMandI8YiUGDZ30vYk1IdAQa30DeENwHtI8yJKLw+ds3BxJzJOF17HLDExOugXJjDLOl5kNgGaNlilGyFitOyKtyEoKx97rg/sHi1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723477685; c=relaxed/simple;
-	bh=W475sTn0irtnas14KwAh2q9pZ9DBSjnO6TsuW1Gh2iQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aUUNefUUW9L9xQQn6D+Hwj0yVGXafJLMsiA71TitEUAJCn/4tLlBEs0FzCfg+N3um7cfqL+q40XyDUOQxtHAxgVaQhVyP0EaNaZMgHkZXsg2XR3DUMttjQEBAQTPS+XFQLrx77/LjEZPTVsfEk7ux9DEErT6+22RqqOUgjXbHj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oanhKlVU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A39E6C32782;
-	Mon, 12 Aug 2024 15:48:04 +0000 (UTC)
+	s=arc-20240116; t=1723477689; c=relaxed/simple;
+	bh=k0m32zStcWiR9oAdVE1hhSQ7NggAdOm/k9S8q9Ko1B0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T2tf7zuO6C5TVmb5elearROIEmPESJQ58dWQcqvYIarySblp28PuWz7JmZ2XMKip1NcIYQREZjGSaS2styjANKlx0o8lyKF90+xNZqC2T4QV5gO1pdkNX1bU1BJcSdPlgQEgj0zmB8agiu84uiyPX9Zr4wlVqjPLj6mxcnLXrJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9AsJPqH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACABC4AF09;
+	Mon, 12 Aug 2024 15:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723477685;
-	bh=W475sTn0irtnas14KwAh2q9pZ9DBSjnO6TsuW1Gh2iQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oanhKlVUIcrxxslGZoWF5A1OlL1eVmms8EvnyjMuQJabCvQa568CEoNm89KNYdhsl
-	 Wu2cPaDnFUTD+a2MVv5dIqKu5HBKPdsQs6ZUjBTRQGuXbVqosAAzRbHcCxEE9hkjX3
-	 gVT/ZRW6iKpHIhSzsYY1cuP34+dWx1JmGlILgEYyThjMtFKmNaH7iortPIKR/HbeZz
-	 XcEKyc3GCD7MaxMP+Y5QbXdO/CsrDbL6rbUxRMoeoL1rONLgD37l8TLo6ZKzh2dvKK
-	 xjfIvxUb5fzdVh9o9L4ys9pDEVOhbJuJqvuQBi69aGWk/KJ6WHpZE2sS7bYY9KhyQz
-	 CMDH+4BKrHdKw==
+	s=k20201202; t=1723477688;
+	bh=k0m32zStcWiR9oAdVE1hhSQ7NggAdOm/k9S8q9Ko1B0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q9AsJPqHjUMfu3xar6CM7m2/NwliXDhFMzGeg9cHSsmJ3+D+LwfpY3ydrMWjtsCr0
+	 XVXmgh1rQTa/4b2iYV5SgE21lVMj7AkFNDlhkMYvEDhrY8XfnmRSqezgzhswuBQPFF
+	 0LH8zHJbU4pUFDxtChL1Zfq9yHd0VrE7KOE57waobCrL2zMckIGiWxWXVGmqArdZKj
+	 6rCgvVFWvxiITPcaeJVVUAOkRk/mq9+r5VAvT6LOlMBHyjBLLyCncSKrFtS6x7m8if
+	 Ap9DGAu9WYPd64bJw0PA9UrgxgSJTXgUw8wdG4zTmzHEcRa8eWaomCibFHBS6oe3If
+	 /DaSRV8x9WLNA==
 From: cel@kernel.org
 To: Anna Schumaker <anna@kernel.org>
 Cc: Sagi Grimberg <sagi@grimberg.me>,
 	<linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 0/3] Fixes for NFS/RDMA device removal
-Date: Mon, 12 Aug 2024 11:47:56 -0400
-Message-ID: <20240812154759.29870-1-cel@kernel.org>
+Subject: [PATCH 1/3] rpcrdma: Device kref is over-incremented on error from xa_alloc
+Date: Mon, 12 Aug 2024 11:47:57 -0400
+Message-ID: <20240812154759.29870-2-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240812154759.29870-1-cel@kernel.org>
+References: <20240812154759.29870-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,18 +62,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Fix a handful of nits for the NFS/RDMA device removal code that
-went into v6.11-rc.
+If the device's reference count is too high, the device completion
+callback never fires.
 
-Chuck Lever (3):
-  rpcrdma: Device kref is over-incremented on error from xa_alloc
-  rpcrdma: Use XA_FLAGS_ALLOC instead of XA_FLAGS_ALLOC1
-  rpcrdma: Trace connection registration and unregistration
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/ib_client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/trace/events/rpcrdma.h  | 36 +++++++++++++++++++++++++++++++++
- net/sunrpc/xprtrdma/ib_client.c |  6 ++++--
- 2 files changed, 40 insertions(+), 2 deletions(-)
-
+diff --git a/net/sunrpc/xprtrdma/ib_client.c b/net/sunrpc/xprtrdma/ib_client.c
+index a938c19c3490..4d1e9fa89573 100644
+--- a/net/sunrpc/xprtrdma/ib_client.c
++++ b/net/sunrpc/xprtrdma/ib_client.c
+@@ -62,9 +62,9 @@ int rpcrdma_rn_register(struct ib_device *device,
+ 	if (!rd || test_bit(RPCRDMA_RD_F_REMOVING, &rd->rd_flags))
+ 		return -ENETUNREACH;
+ 
+-	kref_get(&rd->rd_kref);
+ 	if (xa_alloc(&rd->rd_xa, &rn->rn_index, rn, xa_limit_32b, GFP_KERNEL) < 0)
+ 		return -ENOMEM;
++	kref_get(&rd->rd_kref);
+ 	rn->rn_done = done;
+ 	return 0;
+ }
 -- 
 2.45.1
 
