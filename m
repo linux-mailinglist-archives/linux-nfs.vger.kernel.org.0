@@ -1,254 +1,216 @@
-Return-Path: <linux-nfs+bounces-5390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C749F95241D
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 22:51:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D59CF952451
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 22:56:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBC3F1C22B6F
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 20:51:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D5FB28BE08
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 20:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171E91EB4A8;
-	Wed, 14 Aug 2024 20:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45281C7B66;
+	Wed, 14 Aug 2024 20:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KyhRivtJ"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yqWwRQIN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rIJLONRs";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yqWwRQIN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rIJLONRs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FF11EB49A
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 20:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8632139CE3;
+	Wed, 14 Aug 2024 20:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723668140; cv=none; b=nzqL+LsUOE5bv+ULThNlvHYtQgT0AhAKw6y4f8rs5QEsaAKakC1Oza+xynV35pg8aMCQA6/C70chP7QUS3U2AG0gzLi7mKyI9F9xMHJ/iyHKcoDufe5UNZ5UDEmlEkr2S6UdpgbH/vg1XVZQV9RR9PN/iukqVHOD9vJwzW7kyLY=
+	t=1723668933; cv=none; b=fZWzVH9Di8P2OoDbwV0qxLGj+Q0p4gpk3AAm3IMA5qifRTwc6mwkDBLnbT/ZPCC4J3LLdC+TLt/I6PAlWFOCFHTE46j6mKcbIyLpsnVHmHDZk4fQxqgct/8rj9jNTkzZBSm+bVqW4iHNDslmcGF9xYsypDRaBZUS2PNsffjueQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723668140; c=relaxed/simple;
-	bh=/4RHZpXKGmdLr3x2mXP5YKs8fw+5k6cV3FZeRK23GrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lFimb+6pLATIJ23VTTWEth3QmXQkV41y+SQ8mJtxveFmQRR9zhtGOpH+LrZtTwuAe3hbNtaKLURC+QQESZdpALv8PrQDKGXBAWv8hZkeMZRVIP/Lu+Vt7o9xG9QIRNESo5/ri2g17WDZ8OCIV+E6xRFSHYYeyfMKlVoDrLb5SE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KyhRivtJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723668137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G4MNzaMiFDukGg48jovETePA3npABSpoRCz9c88nf5g=;
-	b=KyhRivtJ1PG5fedj7EyoTu7QAcKkPoqsuccCajNQCvyQK/okAQzArKEMX9sHoEaiY77iWN
-	Fpv1mWb7suj0BHqSacLdHLJ0IEe5W1smySQhe+HhhWVwVG925KDrUa4fDo7ggCzOLML/p2
-	2hXeqcNdzflv9ZRH/ucRc71XtiNBr1U=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-497-k4Nb6-ZQNa-w-MVZAByrPQ-1; Wed,
- 14 Aug 2024 16:42:11 -0400
-X-MC-Unique: k4Nb6-ZQNa-w-MVZAByrPQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	s=arc-20240116; t=1723668933; c=relaxed/simple;
+	bh=v2IX03IhpCuH6MLem2g/w9nxBu0Dw9BexMpD2Pa9Nbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YqD5PbMCCkGpJZ81w0NtFG0SyHN8sOx17TEI6IB91mlrpOrmTegQcCpxTn1z2Ub7BFA5ZnAkO0WAuU6WD9wzDuFah5tWRLNcWTAbUj7Lpmr06JtHjzjzg6TT3XWzzLvEEyYY+IXF7UMAaosV5bnvEQOZs4J1QdLLdgCIt+VhkU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yqWwRQIN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rIJLONRs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yqWwRQIN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rIJLONRs; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97CAC1954B0F;
-	Wed, 14 Aug 2024 20:42:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9B2041955F66;
-	Wed, 14 Aug 2024 20:42:02 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>,
-	Enzo Matsumiya <ematsumiya@suse.de>
-Subject: [PATCH v2 25/25] cifs: Don't support ITER_XARRAY
-Date: Wed, 14 Aug 2024 21:38:45 +0100
-Message-ID: <20240814203850.2240469-26-dhowells@redhat.com>
-In-Reply-To: <20240814203850.2240469-1-dhowells@redhat.com>
-References: <20240814203850.2240469-1-dhowells@redhat.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C7E5522491;
+	Wed, 14 Aug 2024 20:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1723668929;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAjON+M4IeNnOood1XuavEXjY8AwurJgpvp+EZZXZco=;
+	b=yqWwRQINYL2+afUCxk95HWgkkIE/LcDZHZFke7nCFSiyGW7cGrcgw/SGw24WQ4WKpcJnhy
+	5g1ZXwhZLdb7Ewxi/OmneCaTSA80SQIJHL+aOuwuuXWaI+ft0uIK5gBvAf8nqxXwuo5xzO
+	s7hlO6PIrtP42Hrs5TJVPaNJNhJuWA4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1723668929;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAjON+M4IeNnOood1XuavEXjY8AwurJgpvp+EZZXZco=;
+	b=rIJLONRsh0V6mMbzTbgadksDWdvGbj3aZW2qkkP8TwYELkvOSS8kZ0Vzz+xnXiA/g9L41M
+	R5E5OXPPe0rJIWBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1723668929;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAjON+M4IeNnOood1XuavEXjY8AwurJgpvp+EZZXZco=;
+	b=yqWwRQINYL2+afUCxk95HWgkkIE/LcDZHZFke7nCFSiyGW7cGrcgw/SGw24WQ4WKpcJnhy
+	5g1ZXwhZLdb7Ewxi/OmneCaTSA80SQIJHL+aOuwuuXWaI+ft0uIK5gBvAf8nqxXwuo5xzO
+	s7hlO6PIrtP42Hrs5TJVPaNJNhJuWA4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1723668929;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAjON+M4IeNnOood1XuavEXjY8AwurJgpvp+EZZXZco=;
+	b=rIJLONRsh0V6mMbzTbgadksDWdvGbj3aZW2qkkP8TwYELkvOSS8kZ0Vzz+xnXiA/g9L41M
+	R5E5OXPPe0rJIWBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC476139B9;
+	Wed, 14 Aug 2024 20:55:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yRkRNMAZvWa1RwAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Wed, 14 Aug 2024 20:55:28 +0000
+Date: Wed, 14 Aug 2024 22:55:19 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: NeilBrown <neilb@suse.de>
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever III <chuck.lever@oracle.com>, Greg KH <greg@kroah.com>,
+	Sherry Yang <sherry.yang@oracle.com>,
+	Calum Mackay <calum.mackay@oracle.com>,
+	linux-stable <stable@vger.kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	"kernel-team@fb.com" <kernel-team@fb.com>,
+	"ltp@lists.linux.it" <ltp@lists.linux.it>,
+	Avinesh Kumar <akumar@suse.de>, Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [LTP] [PATCH 1/1] nfsstat01: Update client RPC calls for kernel
+ 6.9
+Message-ID: <20240814205519.GA550121@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <>
+ <f74754b59ffc564ef882566beda87b3f354da48c.camel@kernel.org>
+ <172078283934.15471.13377048166707693692@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172078283934.15471.13377048166707693692@noble.neil.brown.name>
+X-Spam-Score: -3.50
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Spam-Level: 
 
-There's now no need to support ITER_XARRAY in cifs as netfslib hands down
-ITER_FOLIOQ instead - and that's simpler to use with iterate_and_advance()
-as it doesn't hold the RCU read lock over the step function.
+> On Fri, 12 Jul 2024, Jeff Layton wrote:
+> > On Fri, 2024-07-12 at 16:12 +1000, NeilBrown wrote:
 
-This is part of the process of phasing out ITER_XARRAY.
+> > > My point is that if we are going to change the kernel to accommodate LTP
+> > > at all, we should accommodate LTP as it is today.  If we are going to
+> > > change LTP to accommodate the kernel, then it should accommodate the
+> > > kernel as it is today.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Tom Talpey <tom@talpey.com>
-cc: Enzo Matsumiya <ematsumiya@suse.de>
-cc: linux-cifs@vger.kernel.org
----
- fs/smb/client/cifsencrypt.c | 51 -------------------------------------
- fs/smb/client/smbdirect.c   | 49 -----------------------------------
- 2 files changed, 100 deletions(-)
 
-diff --git a/fs/smb/client/cifsencrypt.c b/fs/smb/client/cifsencrypt.c
-index 991a1ab047e7..7481b21a0489 100644
---- a/fs/smb/client/cifsencrypt.c
-+++ b/fs/smb/client/cifsencrypt.c
-@@ -25,54 +25,6 @@
- #include "../common/arc4.h"
- #include <crypto/aead.h>
- 
--/*
-- * Hash data from an XARRAY-type iterator.
-- */
--static ssize_t cifs_shash_xarray(const struct iov_iter *iter, ssize_t maxsize,
--				 struct shash_desc *shash)
--{
--	struct folio *folios[16], *folio;
--	unsigned int nr, i, j, npages;
--	loff_t start = iter->xarray_start + iter->iov_offset;
--	pgoff_t last, index = start / PAGE_SIZE;
--	ssize_t ret = 0;
--	size_t len, offset, foffset;
--	void *p;
--
--	if (maxsize == 0)
--		return 0;
--
--	last = (start + maxsize - 1) / PAGE_SIZE;
--	do {
--		nr = xa_extract(iter->xarray, (void **)folios, index, last,
--				ARRAY_SIZE(folios), XA_PRESENT);
--		if (nr == 0)
--			return -EIO;
--
--		for (i = 0; i < nr; i++) {
--			folio = folios[i];
--			npages = folio_nr_pages(folio);
--			foffset = start - folio_pos(folio);
--			offset = foffset % PAGE_SIZE;
--			for (j = foffset / PAGE_SIZE; j < npages; j++) {
--				len = min_t(size_t, maxsize, PAGE_SIZE - offset);
--				p = kmap_local_page(folio_page(folio, j));
--				ret = crypto_shash_update(shash, p, len);
--				kunmap_local(p);
--				if (ret < 0)
--					return ret;
--				maxsize -= len;
--				if (maxsize <= 0)
--					return 0;
--				start += len;
--				offset = 0;
--				index++;
--			}
--		}
--	} while (nr == ARRAY_SIZE(folios));
--	return 0;
--}
--
- static size_t cifs_shash_step(void *iter_base, size_t progress, size_t len,
- 			      void *priv, void *priv2)
- {
-@@ -96,9 +48,6 @@ static int cifs_shash_iter(const struct iov_iter *iter, size_t maxsize,
- 	struct iov_iter tmp_iter = *iter;
- 	int err = -EIO;
- 
--	if (iov_iter_type(iter) == ITER_XARRAY)
--		return cifs_shash_xarray(iter, maxsize, shash);
--
- 	if (iterate_and_advance_kernel(&tmp_iter, maxsize, shash, &err,
- 				       cifs_shash_step) != maxsize)
- 		return err;
-diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
-index c946b38ca825..80262a36030f 100644
---- a/fs/smb/client/smbdirect.c
-+++ b/fs/smb/client/smbdirect.c
-@@ -2584,52 +2584,6 @@ static ssize_t smb_extract_folioq_to_rdma(struct iov_iter *iter,
- 	return ret;
- }
- 
--/*
-- * Extract folio fragments from an XARRAY-class iterator and add them to an
-- * RDMA list.  The folios are not pinned.
-- */
--static ssize_t smb_extract_xarray_to_rdma(struct iov_iter *iter,
--					  struct smb_extract_to_rdma *rdma,
--					  ssize_t maxsize)
--{
--	struct xarray *xa = iter->xarray;
--	struct folio *folio;
--	loff_t start = iter->xarray_start + iter->iov_offset;
--	pgoff_t index = start / PAGE_SIZE;
--	ssize_t ret = 0;
--	size_t off, len;
--	XA_STATE(xas, xa, index);
--
--	rcu_read_lock();
--
--	xas_for_each(&xas, folio, ULONG_MAX) {
--		if (xas_retry(&xas, folio))
--			continue;
--		if (WARN_ON(xa_is_value(folio)))
--			break;
--		if (WARN_ON(folio_test_hugetlb(folio)))
--			break;
--
--		off = offset_in_folio(folio, start);
--		len = min_t(size_t, maxsize, folio_size(folio) - off);
--
--		if (!smb_set_sge(rdma, folio_page(folio, 0), off, len)) {
--			rcu_read_unlock();
--			return -EIO;
--		}
--
--		maxsize -= len;
--		ret += len;
--		if (rdma->nr_sge >= rdma->max_sge || maxsize <= 0)
--			break;
--	}
--
--	rcu_read_unlock();
--	if (ret > 0)
--		iov_iter_advance(iter, ret);
--	return ret;
--}
--
- /*
-  * Extract page fragments from up to the given amount of the source iterator
-  * and build up an RDMA list that refers to all of those bits.  The RDMA list
-@@ -2657,9 +2611,6 @@ static ssize_t smb_extract_iter_to_rdma(struct iov_iter *iter, size_t len,
- 	case ITER_FOLIOQ:
- 		ret = smb_extract_folioq_to_rdma(iter, rdma, len);
- 		break;
--	case ITER_XARRAY:
--		ret = smb_extract_xarray_to_rdma(iter, rdma, len);
--		break;
- 	default:
- 		WARN_ON_ONCE(1);
- 		return -EIO;
+> > The problem is that there is no way for userland tell the difference
+> > between the older and newer behavior. That was what I was suggesting we
+> > add.
+
+> To make sure I wasn't talking through my hat, I had a look at the ltp
+> code.
+
+> The test in question simply tests that the count of RPC calls increases.
+
+> It can get the count of RPC calls in one of 2 ways :
+>  1/ "lhost" - look directly in /proc/net/rpc/{nfs,nfsd}
+>  2/ "rhost" - ssh to the server and look in that file.
+
+FYI "rhost" in LTP can be either using namespaces (Single Host Configuration [1]),
+which is run by default, or SSH based (Two Host Configuration [2]). IMHO most of
+the testers (including myself run tests simply via network namespaces).
+
+NOTE: I suppose CONFIG_NAMESPACES=y is a must for 'ip netns' to be working, thus
+tests would hopefully failed early on kernel having that disabled.
+
+> The current test to "fix" this for kernels -ge "6.9" is to force the use
+> of "rhost".
+
+> I'm guessing that always using "rhost" for the nfsd stats would always
+> work.
+
+FYI this old commit [3] allowed these tests to be working in network namespaces.
+It reads for network namespaces both /proc/net/rpc/{nfs,nfsd} from non-namespace
+("lhost").  This is the subject of the change in 6.9, which now fails.
+And for SSH based we obviously look on "rhost" already.
+
+> But if not, the code could get both the local and remote nfsd stats, and
+> check that at least one of them increases (and neither decrease).
+
+This sounds reasonable, thanks for a hint. I'll just look for client RPC calls
+(/proc/net/rpc/nfs) in both non-namespace and namespace. The only think is that
+we effectively give up checking where it should be (if it for whatever reason in
+the future changes again, we miss that). I'm not sure if this would be treated
+the same as the current situation (Josef Bacik had obvious reasons for this to
+be working).
+
+@Josef @NFS maintainers: WDYT?
+
+Kind regards,
+Petr
+
+> So ltp doesn't need to know which kernel is being used - it can be
+> written to work safely on either.
+
+> NeilBrown
+
+[1] https://github.com/linux-test-project/ltp/tree/master/testcases/network#single-host-configuration
+[2] https://github.com/linux-test-project/ltp/tree/master/testcases/network#two-host-configuration
+[3] https://github.com/linux-test-project/ltp/commit/40958772f11d90e4b5052e7e772a3837d285cf89
+
+> > To be clear, I hold this opinion loosely. If the consensus is that we
+> > need to revert things then so be it. I just don't see the value of
+> > doing that in this particular situation.
+> > -- 
+> > Jeff Layton <jlayton@kernel.org>
+
 
 
