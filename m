@@ -1,174 +1,268 @@
-Return-Path: <linux-nfs+bounces-5364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5656951F16
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 17:51:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AD71952371
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 22:39:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D35AB21F0F
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 15:50:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FD2B1C22137
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 20:39:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1CD1B580A;
-	Wed, 14 Aug 2024 15:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B0D1C688B;
+	Wed, 14 Aug 2024 20:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLOWP2sR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d+zVprGD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136A628DC3;
-	Wed, 14 Aug 2024 15:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFB41C57AC
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 20:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723650602; cv=none; b=VfqJZmtmpCafY8LVqTl6ejKEFDwJbQPhoLqT/sc+fF7vOU/h702FKiBPYTK1X4u/5cCS+wAHR4NOaYMUVHMAkgNNDv8d8AxIh/hAmXybEacA87WEy1GP90DfGhJY8aJBV9+3XwPDTT4gmdEkXGkqx5FAHp35lMO4OIc05qfhb30=
+	t=1723667954; cv=none; b=htqpuMjSBoGDQvHVnPLOEuu7200Bz0/Y6iWs63OlrEr4A6hooyAGlxrjfgyBwNnEwwiip9fAv9lUrwYZ2CExhujCchRZQSbpP+VX96cGo295S7uRoh6wer4M5WzALhMGMctKjWh2gsX9fS35tlwDE6Dz7Ag2M2lOc0OLeXKij3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723650602; c=relaxed/simple;
-	bh=6vcFZWl/iSCK/BZGfGXgt8ur06Ij2rRs68cC5ThdJyg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YrFzmcvlRvWA4Kr3gzyAOzaCDsRsLDN269BpFCF9F99aUqJKMCrOksIzB/ZgjTp7SNfJqBMlRQtAA6l3koTLwrXltrWVvYBu7C9QyROdbCshTuB67uwyIU8t1TzSvqVL63fSOICfxy10C1EBvu5zcWiiDPRDphqgSPMyYZ5HEZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLOWP2sR; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7093472356dso3808967a34.0;
-        Wed, 14 Aug 2024 08:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723650600; x=1724255400; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fDv9V0v7KkpdJrpMs0piYzLNRxXj+irK5gUuUzZpGhs=;
-        b=eLOWP2sR+BDKCHyg1t27NoPaSeje4K4pIGR9xPHFZdEA7vIadrUaxzXJY9HKNHZDgh
-         Ko7dYBloGZWSNBULmrWdpL9j6RsTMpfUfePQ81CoCjQX2UVJPxH6NwW5dG3fvttfnsqp
-         f/bxETrCpDybYP4O/Z2k/PPPr7dbEi41mLrY/6a7oMfPvufWbhn2AA60HSnF7TOhMZ7q
-         Yt/EiZZFellVwdiCI4uCPibIuzSvuFZ/rWXY0KZxJMA82OtmsVc0onHKeMsiJLqaHuGk
-         FxodljGBwBqOgnmvAGwiQqxs2Gf5flh3mrVBxQd9dE+kME5yJG9xN5x9KW/Wh3wG/rGA
-         YU1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723650600; x=1724255400;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fDv9V0v7KkpdJrpMs0piYzLNRxXj+irK5gUuUzZpGhs=;
-        b=i/wVqWdoHd2tFl8xcEaUOj/G0qStpT4zH/eUP4CDLSE/ChptxXWnczqa9Ym+1fqLIL
-         Oy/WqyYxfl15hqM3t7kefnFkaDUjjZooxW4HQXfBxJylwbZ/cQQmYzcUbpP6aXjV5ykx
-         srKfqJ/Z0YKHE2oSrtljGxYPnUcGNUKPSKh3YBH/vSC4jKokk8uWwj5MsyMI9Gods+Dm
-         Sst9VsmrPk2cEkylXk2Ko7YnVgPp9VxnxfvTi5vcbrI0J6FW8OeHkI1bA8v6by8zmmjL
-         opASoHX7TPLm1L+j4/w9kl7r72WXHyRdtFM+cZ3LiwoNOaa1oieOjwUg3ZiX35v/hR1/
-         hEyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJCiznzieD6tQyaYwwroalQbZA2dmX1LIayV6sPfsO8edRT26kxQ/sbOzpziFDxJOjmhYlhi6HCB5uWS1/JUQc0HyqEShtJ9yUE0xmuTqtTX8yJxmZRijNOTq9V6eODMgAJhsRnnRvuIqx9H7ABI2YngI8NLWzd5lLb78hkNtwxuSOorZT07wCS8ExpD3x3YTbGPBsevcDibeoCk/oROzm4HlS345x3rU0WU5YGJsViYc5
-X-Gm-Message-State: AOJu0Yy+1LZLxzdrEfzX5+W4NDgHcaggD6grGK0IPom8RBeR0/WOl32c
-	HkavQDuSm0ENvoM/PPPRDitZ9QJnq30/EfrlxIK4oUhIeK1azUun
-X-Google-Smtp-Source: AGHT+IF+xU5hTvBzD845HScA3WjHDYwvu17hmSc7al7mxeLt+8xp5o7SMvsr67KFPwp2VJkvDAOPFA==
-X-Received: by 2002:a05:6830:638b:b0:709:3f84:c1e0 with SMTP id 46e09a7af769-70c9d9c25a1mr3660423a34.26.1723650600144;
-        Wed, 14 Aug 2024 08:50:00 -0700 (PDT)
-Received: from ?IPv6:2605:59c8:829:4c00:82ee:73ff:fe41:9a02? ([2605:59c8:829:4c00:82ee:73ff:fe41:9a02])
-        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-70c7b880badsm2269478a34.54.2024.08.14.08.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 08:49:59 -0700 (PDT)
-Message-ID: <d1a23116d054e2ebb00067227f0cffecefe33e11.camel@gmail.com>
-Subject: Re: [PATCH net-next v13 04/14] mm: page_frag: add '_va' suffix to
- page_frag API
-From: Alexander H Duyck <alexander.duyck@gmail.com>
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
- kuba@kernel.org,  pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep
- <sbhatta@marvell.com>, Chuck Lever <chuck.lever@oracle.com>, Sagi Grimberg
- <sagi@grimberg.me>, Jeroen de Borst <jeroendb@google.com>, Praveen
- Kaligineedi <pkaligineedi@google.com>, Shailend Chand
- <shailend@google.com>, Eric Dumazet <edumazet@google.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Sunil Goutham <sgoutham@marvell.com>,
- Geetha sowjanya <gakula@marvell.com>, hariprasad <hkelam@marvell.com>,
- Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, Mark Lee
- <Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Keith Busch <kbusch@kernel.org>,
-  Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Chaitanya
- Kulkarni <kch@nvidia.com>,  "Michael S. Tsirkin" <mst@redhat.com>, Jason
- Wang <jasowang@redhat.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
- <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  David Howells
- <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Jeff Layton
- <jlayton@kernel.org>,  Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
- <anna@kernel.org>,  Shuah Khan <shuah@kernel.org>,
- intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org, 
- kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
- bpf@vger.kernel.org, linux-afs@lists.infradead.org,
- linux-nfs@vger.kernel.org,  linux-kselftest@vger.kernel.org
-Date: Wed, 14 Aug 2024 08:49:53 -0700
-In-Reply-To: <20240808123714.462740-5-linyunsheng@huawei.com>
-References: <20240808123714.462740-1-linyunsheng@huawei.com>
-	 <20240808123714.462740-5-linyunsheng@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1723667954; c=relaxed/simple;
+	bh=58NvRL6I3meHI4Ytv/TxU/cXiYub3jbCyc5s3+cIGXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q3NnlVE6Iy1sCEv+OJloOjG8krNJQej36gdhvZBX7KgYRQxe5UJHc5bhxhsLUxXL9zuhNkuslA2ZY5f4bXaIzTCOQx8VR+vjed1eMh5oTITmNKbYgyilp4+dHWHRsgJfJCtk8xxXC4s2XNnk0enwXgE8tqSOLJInVobQcVoM+rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d+zVprGD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723667951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2qkrZ0/6WswDsKwJcP06CqB1C0tA8HBneZAb2bmJdwA=;
+	b=d+zVprGD9n3Zl3PRcaMEQYlk+qal1tzTAbFGr6CeSisVO4jEAVQ7/ZGj+L3DU2SY8+4sgy
+	R9WwG+OMWwOzdKbn3q0QE+4NW1KTx6yiUphW5+k32w+5UYs9U+uD724oDdLNDvR3fHxeoQ
+	bby0D7N20CEgJarlG76mLlHbFV0rWdY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-609-4Uw9jJb8M_aeO76Ft5VBjg-1; Wed,
+ 14 Aug 2024 16:39:05 -0400
+X-MC-Unique: 4Uw9jJb8M_aeO76Ft5VBjg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06CDE1956095;
+	Wed, 14 Aug 2024 20:39:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E87101955E8C;
+	Wed, 14 Aug 2024 20:38:53 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/25] netfs: Read/write improvements
+Date: Wed, 14 Aug 2024 21:38:20 +0100
+Message-ID: <20240814203850.2240469-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, 2024-08-08 at 20:37 +0800, Yunsheng Lin wrote:
-> Currently the page_frag API is returning 'virtual address'
-> or 'va' when allocing and expecting 'virtual address' or
-> 'va' as input when freeing.
->=20
-> As we are about to support new use cases that the caller
-> need to deal with 'struct page' or need to deal with both
-> 'va' and 'struct page'. In order to differentiate the API
-> handling between 'va' and 'struct page', add '_va' suffix
-> to the corresponding API mirroring the page_pool_alloc_va()
-> API of the page_pool. So that callers expecting to deal with
-> va, page or both va and page may call page_frag_alloc_va*,
-> page_frag_alloc_pg*, or page_frag_alloc* API accordingly.
->=20
-> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> Acked-by: Sagi Grimberg <sagi@grimberg.me>
-> ---
->  drivers/net/ethernet/google/gve/gve_rx.c      |  4 ++--
->  drivers/net/ethernet/intel/ice/ice_txrx.c     |  2 +-
->  drivers/net/ethernet/intel/ice/ice_txrx.h     |  2 +-
->  drivers/net/ethernet/intel/ice/ice_txrx_lib.c |  2 +-
->  .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |  4 ++--
->  .../marvell/octeontx2/nic/otx2_common.c       |  2 +-
->  drivers/net/ethernet/mediatek/mtk_wed_wo.c    |  4 ++--
->  drivers/nvme/host/tcp.c                       |  8 +++----
->  drivers/nvme/target/tcp.c                     | 22 +++++++++----------
->  drivers/vhost/net.c                           |  6 ++---
->  include/linux/page_frag_cache.h               | 21 +++++++++---------
->  include/linux/skbuff.h                        |  2 +-
->  kernel/bpf/cpumap.c                           |  2 +-
->  mm/page_frag_cache.c                          | 12 +++++-----
->  net/core/skbuff.c                             | 16 +++++++-------
->  net/core/xdp.c                                |  2 +-
->  net/rxrpc/txbuf.c                             | 15 +++++++------
->  net/sunrpc/svcsock.c                          |  6 ++---
->  .../selftests/mm/page_frag/page_frag_test.c   | 13 ++++++-----
->  19 files changed, 75 insertions(+), 70 deletions(-)
->=20
+Hi Christian, Steve, Willy,
 
-I still say no to this patch. It is an unnecessary name change and adds
-no value. If you insist on this patch I will reject the set every time.
+This set of patches includes a couple of fixes:
 
-The fact is it is polluting the git history and just makes things
-harder to maintain without adding any value as you aren't changing what
-the function does and there is no need for this. In addition it just
-makes it that much harder to backport fixes in the future as people
-will have to work around the rename.
+ (1) Revert the removal of waits on PG_private_2 from netfs_release_page()
+     and netfs_invalidate_page().
+
+ (2) Make cachefiles take the sb_writers lock around set/removexattr.
+
+A couple of adjustments to the /proc/fs/netfs/stats file:
+
+ (3) All the netfs stats lines begin 'Netfs:'.  Change this to something a
+     bit more useful.
+
+ (4) Add a couple of stats counters to track the numbers of skips and waits
+     on the per-inode writeback serialisation lock to make it easier to
+     check for this as a source of performance loss.
+
+Some miscellaneous bits:
+
+ (5) Reduce the number of conditional branches in netfs_perform_write().
+
+ (6) Move the CIFS_INO_MODIFIED_ATTR flag to the netfs_inode struct and
+     remove cifs_post_modify().
+
+ (7) Move the max_len/max_nr_segs members from netfs_io_subrequest to
+     netfs_io_request as they're only needed for one subreq at a time.
+
+ (8) Add an 'unknown' source value for tracing purposes.
+
+ (9) Remove NETFS_COPY_TO_CACHE as it's no longer used.
+
+(10) Set the request work function up front at allocation time.
+
+(11) Use bh-disabling spinlocks for rreq->lock as cachefiles completion may
+     be run from block-filesystem DIO completion in softirq context.
+
+Then there's the main performance enhancing changes:
+
+(12) Define a structure, struct folio_queue, and a new iterator type,
+     ITER_FOLIOQ, to hold a buffer as a replacement for ITER_XARRAY.  See
+     that patch for questions about naming and form.
+
+(13) Provide a copy_folio_from_iter() wrapper.
+
+(14) Make cifs RDMA support ITER_FOLIOQ.
+
+(15) Use folio queues in the write-side helpers instead of xarrays.
+
+(16) Add a function to reset the iterator in a subrequest.
+
+(17) Simplify the write-side helpers to use sheaves to skip gaps rather than
+     trying to work out where gaps are.
+
+(18) In afs, make the read subrequests asynchronous, putting them into work
+     items to allow the next patch to do progressive unlocking/reading.
+
+(19) Overhaul the read-side helpers to improve performance.
+
+(20) Remove fs/netfs/io.c.
+
+(21) Fix the caching of a partial block at the end of a file.
+
+(22) Allow a store to be cancelled.
+
+Then some changes for cifs to make it use folio queues instead of xarrays
+for crypto bufferage:
+
+(23) Use raw iteration functions rather than manually coding iteration when
+     hashing data.
+
+(24) Switch to using folio_queue for crypto buffers.
+
+(25) Remove the xarray bits.
+
+Changes
+=======
+ver #2)
+ - Rebase to the merge of vfs.fixes after v6.11-rc3.
+ - Add fixes for missing waits on PG_private_2.
+ - Make the read-side helper overhaul support PG_private_2-based
+   filesystems also.
+ - When reading, only limit server downloads to the max download size, not
+   cache reads or simple zeroing.
+ - Add some missing cases of skipping forward when iterating over a folio
+   queue list when the place we're at has the current slot number parked
+   just past the last slot (typically, because we're extending the list
+   incrementally).
+ - Don't use folio_batch_release() to release the refs on pages in the
+   folio_queue struct mid-read as we rely on the count in the batch later.
+ - Fix the determination of whether an operation can access the cache.
+
+David
+
+David Howells (25):
+  netfs, ceph: Partially revert "netfs: Replace PG_fscache by setting
+    folio->private and marking dirty"
+  cachefiles: Fix non-taking of sb_writers around set/removexattr
+  netfs: Adjust labels in /proc/fs/netfs/stats
+  netfs: Record contention stats for writeback lock
+  netfs: Reduce number of conditional branches in netfs_perform_write()
+  netfs, cifs: Move CIFS_INO_MODIFIED_ATTR to netfs_inode
+  netfs: Move max_len/max_nr_segs from netfs_io_subrequest to
+    netfs_io_stream
+  netfs: Reserve netfs_sreq_source 0 as unset/unknown
+  netfs: Remove NETFS_COPY_TO_CACHE
+  netfs: Set the request work function upon allocation
+  netfs: Use bh-disabling spinlocks for rreq->lock
+  mm: Define struct folio_queue and ITER_FOLIOQ to handle a sequence of
+    folios
+  iov_iter: Provide copy_folio_from_iter()
+  cifs: Provide the capability to extract from ITER_FOLIOQ to RDMA SGEs
+  netfs: Use new folio_queue data type and iterator instead of xarray
+    iter
+  netfs: Provide an iterator-reset function
+  netfs: Simplify the writeback code
+  afs: Make read subreqs async
+  netfs: Speed up buffered reading
+  netfs: Remove fs/netfs/io.c
+  cachefiles, netfs: Fix write to partial block at EOF
+  netfs: Cancel dirty folios that have no storage destination
+  cifs: Use iterate_and_advance*() routines directly for hashing
+  cifs: Switch crypto buffer to use a folio_queue rather than an xarray
+  cifs: Don't support ITER_XARRAY
+
+ fs/9p/vfs_addr.c             |   5 +-
+ fs/afs/file.c                |  30 +-
+ fs/afs/fsclient.c            |   9 +-
+ fs/afs/write.c               |   4 +-
+ fs/afs/yfsclient.c           |   9 +-
+ fs/cachefiles/io.c           |  19 +-
+ fs/cachefiles/xattr.c        |  34 +-
+ fs/ceph/addr.c               |  76 ++--
+ fs/ceph/inode.c              |   1 +
+ fs/netfs/Makefile            |   4 +-
+ fs/netfs/buffered_read.c     | 766 ++++++++++++++++++++-------------
+ fs/netfs/buffered_write.c    | 309 +++++++-------
+ fs/netfs/direct_read.c       | 147 ++++++-
+ fs/netfs/internal.h          |  43 +-
+ fs/netfs/io.c                | 796 -----------------------------------
+ fs/netfs/iterator.c          |  50 +++
+ fs/netfs/main.c              |   7 +-
+ fs/netfs/misc.c              | 101 +++++
+ fs/netfs/objects.c           |  16 +-
+ fs/netfs/read_collect.c      | 544 ++++++++++++++++++++++++
+ fs/netfs/read_pgpriv2.c      | 264 ++++++++++++
+ fs/netfs/read_retry.c        | 256 +++++++++++
+ fs/netfs/stats.c             |  27 +-
+ fs/netfs/write_collect.c     | 246 ++++-------
+ fs/netfs/write_issue.c       |  93 ++--
+ fs/nfs/fscache.c             |  19 +-
+ fs/nfs/fscache.h             |   7 +-
+ fs/smb/client/cifsencrypt.c  | 144 +------
+ fs/smb/client/cifsglob.h     |   3 +-
+ fs/smb/client/cifssmb.c      |   6 +-
+ fs/smb/client/file.c         |  71 ++--
+ fs/smb/client/smb2ops.c      | 218 +++++-----
+ fs/smb/client/smb2pdu.c      |  10 +-
+ fs/smb/client/smbdirect.c    |  82 ++--
+ include/linux/folio_queue.h  | 156 +++++++
+ include/linux/iov_iter.h     | 104 +++++
+ include/linux/netfs.h        |  45 +-
+ include/linux/uio.h          |  18 +
+ include/trace/events/netfs.h | 144 +++++--
+ lib/iov_iter.c               | 240 ++++++++++-
+ lib/kunit_iov_iter.c         | 259 ++++++++++++
+ lib/scatterlist.c            |  69 ++-
+ 42 files changed, 3515 insertions(+), 1936 deletions(-)
+ delete mode 100644 fs/netfs/io.c
+ create mode 100644 fs/netfs/read_collect.c
+ create mode 100644 fs/netfs/read_pgpriv2.c
+ create mode 100644 fs/netfs/read_retry.c
+ create mode 100644 include/linux/folio_queue.h
 
 
