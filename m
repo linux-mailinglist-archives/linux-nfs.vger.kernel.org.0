@@ -1,213 +1,184 @@
-Return-Path: <linux-nfs+bounces-5346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5348-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 004B39515BD
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 09:46:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF23B9517C1
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:33:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A5A41F243F4
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 07:46:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70F80283E24
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 09:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4365A4DA00;
-	Wed, 14 Aug 2024 07:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C21B14A088;
+	Wed, 14 Aug 2024 09:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WfTNVC8/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hQsnQmc8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WfTNVC8/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hQsnQmc8"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EcBNECJk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qV/9a5/T";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EcBNECJk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qV/9a5/T"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F6A8488;
-	Wed, 14 Aug 2024 07:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E63149C6E;
+	Wed, 14 Aug 2024 09:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723621575; cv=none; b=Lr7HYyzptHKjkrbLg5UynaZBSi0cYjDZqn7wdn8OsH24FrscVhsPZBMSE6XU9cV0Wm6BBAJuC0dbSE9ABmjTQzoi5dn7Cb5QoZy/EqUHNhhPuH6nAhnK3ESzWhfF3KXz5PAw/5IEFa/ZEygRsLIESLaowQMcnYQ3rvdatZYHDSQ=
+	t=1723628020; cv=none; b=kx/yf7owjUE/TPxm//oyyWN2z7Hmtqa6shbwT2q/rUt+V+qW/bvnDv1T/EUx2oyYUPuc3KnJpzTr6jY7Su0YsaxAWgSGa7Qwfpj/8SUJUI/rV1WcoHAhbXxXpSkf8gifzJBjqOD9xow9HAZg7DwnFYQDEy/cDvhsCQljLlitQlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723621575; c=relaxed/simple;
-	bh=ZN3Dy3Cu3HOgYeh/kioHxc1YS1vbbrnFHsAmzBFL/PI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EN3yE5gVJMNw17NK2kQMxuNtpS1o+3e8j34pi6pJSgGey994ZgUQJMV+ZKhuGj+lEO9C9aqioSpSR7ZhWJ0ReDrLlhRatDANjPwBBb5tb1HFNNkID/SD/+M8kUHCIk/KYvb6ybcnE8csr+LedmSHT6Xsm4B3XUtdXng9t4VhJ5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WfTNVC8/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hQsnQmc8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WfTNVC8/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hQsnQmc8; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1723628020; c=relaxed/simple;
+	bh=s7oN0Z48Kg8PWcmO3xdWsXRQV7obhRA8qPW1uEIgD14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qqzzfwEFapLAYBkedNXwW1kCaU64Qmp1qor3jxDdAeB+LMu0//8xT7R8yb0nfzLNh/OEKo3EHyCE+S6tItHcD6naB0fnM1XIViMVgCUpIXkYZBEkiGh8zJrmkErEA//cx0uM+FxOMS4+jY6UVnnGdz4306d04O9qcNw6fS4/enU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EcBNECJk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qV/9a5/T; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EcBNECJk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qV/9a5/T; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0662B1F7E1;
-	Wed, 14 Aug 2024 07:46:05 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AE1FF1FE84;
+	Wed, 14 Aug 2024 09:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1723621565;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xaVy4wFx7dCh6VdJK0U8mZ4nIvitG+veJTGq8x//eX4=;
-	b=WfTNVC8/uVDWTVk6JVyskOKqeZA9dfLCprIky1s7hApwybS7ZbSjbknR7LoWiqnoEbIH0k
-	m5vsKSCi4YaJ06epVVKcVejTeYvRfra208BGtxHURecKo+Lfksw3PRuzhExfaxcLotx+Zl
-	zBpLOEHdNURj3VrrO2tLH5Mg+Q98Jjc=
+	t=1723628016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8KeldISweYlyBn2Rc9jXHmgstsM042C0JEwQi1qpA5g=;
+	b=EcBNECJkunPEwB6NgrF64fglWkog6OrjXafUtcT+5xVbmmFEBbzt6KiORVgSsIU7TSykqf
+	0ukuJrim9W4uh6F3RvkhZova/76S4tHmKO/jhAQv20JsmpYdBb9Zr00a0NEJepGbo7v+ka
+	juMt1+Z4iI5S3mcBZ+KbvtiQ5Argjbw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1723621565;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xaVy4wFx7dCh6VdJK0U8mZ4nIvitG+veJTGq8x//eX4=;
-	b=hQsnQmc8ODY+A9pc4Mu+B8GaXYp48qvNHJaUEZ934B1AI89uZaoDLgolCSZN4ffGAf/HBJ
-	UtZ+3N2wHzNaQjBA==
+	s=susede2_ed25519; t=1723628016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8KeldISweYlyBn2Rc9jXHmgstsM042C0JEwQi1qpA5g=;
+	b=qV/9a5/T8nX/rhE8qAQfz7v+ExUmetnwb5TvAT+cx+Ot3wfnN0RmkgyUUVFbkkGXzD6T9X
+	tngrNSfBl4wHf7BQ==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="WfTNVC8/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=hQsnQmc8
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1723621565;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xaVy4wFx7dCh6VdJK0U8mZ4nIvitG+veJTGq8x//eX4=;
-	b=WfTNVC8/uVDWTVk6JVyskOKqeZA9dfLCprIky1s7hApwybS7ZbSjbknR7LoWiqnoEbIH0k
-	m5vsKSCi4YaJ06epVVKcVejTeYvRfra208BGtxHURecKo+Lfksw3PRuzhExfaxcLotx+Zl
-	zBpLOEHdNURj3VrrO2tLH5Mg+Q98Jjc=
+	t=1723628016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8KeldISweYlyBn2Rc9jXHmgstsM042C0JEwQi1qpA5g=;
+	b=EcBNECJkunPEwB6NgrF64fglWkog6OrjXafUtcT+5xVbmmFEBbzt6KiORVgSsIU7TSykqf
+	0ukuJrim9W4uh6F3RvkhZova/76S4tHmKO/jhAQv20JsmpYdBb9Zr00a0NEJepGbo7v+ka
+	juMt1+Z4iI5S3mcBZ+KbvtiQ5Argjbw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1723621565;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xaVy4wFx7dCh6VdJK0U8mZ4nIvitG+veJTGq8x//eX4=;
-	b=hQsnQmc8ODY+A9pc4Mu+B8GaXYp48qvNHJaUEZ934B1AI89uZaoDLgolCSZN4ffGAf/HBJ
-	UtZ+3N2wHzNaQjBA==
+	s=susede2_ed25519; t=1723628016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8KeldISweYlyBn2Rc9jXHmgstsM042C0JEwQi1qpA5g=;
+	b=qV/9a5/T8nX/rhE8qAQfz7v+ExUmetnwb5TvAT+cx+Ot3wfnN0RmkgyUUVFbkkGXzD6T9X
+	tngrNSfBl4wHf7BQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B8D52139B9;
-	Wed, 14 Aug 2024 07:46:04 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11E5013B1A;
+	Wed, 14 Aug 2024 08:57:29 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tTTAK7xgvGZKMwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 14 Aug 2024 07:46:04 +0000
-Date: Wed, 14 Aug 2024 09:45:59 +0200
+	id 9+FTAnlxvGYqagAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Wed, 14 Aug 2024 08:57:29 +0000
 From: Petr Vorel <pvorel@suse.cz>
-To: cel@kernel.org
-Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org,
-	sherry.yang@oracle.com, calum.mackay@oracle.com, kernel-team@fb.com,
+To: ltp@lists.linux.it
+Cc: Petr Vorel <pvorel@suse.cz>,
+	Li Wang <liwang@redhat.com>,
+	Cyril Hrubis <chrubis@suse.cz>,
+	Avinesh Kumar <akumar@suse.de>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Cyril Hrubis <chrubis@suse.cz>, ltp@lists.linux.it
-Subject: Re: [PATCH 6.6.y 00/12] Backport "make svc_stat per-net instead of
- global"
-Message-ID: <20240814074559.GA209695@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240812223604.32592-1-cel@kernel.org>
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	stable@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/1] nfsstat01: Update client RPC calls for kernel 6.9
+Date: Wed, 14 Aug 2024 10:57:21 +0200
+Message-ID: <20240814085721.518800-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240812223604.32592-1-cel@kernel.org>
-X-Spam-Score: -3.71
-X-Rspamd-Queue-Id: 0662B1F7E1
-X-Spamd-Result: default: False [-3.71 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.80
 X-Spam-Level: 
 X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid];
+	RCVD_TLS_ALL(0.00)[]
 
-Hi Chuck,
+6.9 moved client RPC calls to namespace in "Make nfs stats visible in
+network NS" patchet.
 
-> Following up on:
+https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
 
-> https://lore.kernel.org/linux-nfs/d4b235df-4ee5-4824-9d48-e3b3c1f1f4d1@oracle.com/
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+---
+Changes v1->v2:
+* Point out whole patchset, not just single commit
+* Add a comment about the patchset
 
-> Here is a backport series targeting origin/linux-6.6.y that closes
-> the information leak described in the above thread. It passes basic
-> NFSD regression testing.
+Hi all,
 
+could you please ack this so that we have fixed mainline?
 
-Thank you for handling this! The link above mentions that it was already
-backported to 5.4 and indeed I see at least d47151b79e322 ("nfs: expose
-/proc/net/sunrpc/nfs in net namespaces") is backported in 5.4, 5.10, 5.15, 6.1.
-And you're now preparing 6.6. Thus we can expect the behavior changed from
-5.4 kernels.
+FYI Some parts has been backported, e.g.:
+d47151b79e322 ("nfs: expose /proc/net/sunrpc/nfs in net namespaces")
+to all stable/LTS: 5.4.276, 5.10.217, 5.15.159, 6.1.91, 6.6.31.
 
-I wonder if we consider this as a fix, thus expect any kernel newer than 5.4
-should backport all these 12 patches.
+But most of that is not yet (but planned to be backported), e.g.
+93483ac5fec62 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
+see Chuck's patchset for 6.6
+https://lore.kernel.org/linux-nfs/20240812223604.32592-1-cel@kernel.org/
 
-Or, whether we should relax and just check if version is higher than the one
-which got it in stable/LTS (e.g. >= 5.4.276 || >= 5.10.217 ...). The question is
-also if enterprise distros will take this patchset.
-
-BTW We have in LTP functionality which points as a hint to kernel fixes. But
-it's usually a single commit. I might need to list all.
+Once all kernels up to 5.4 fixed we should update the version.
 
 Kind regards,
 Petr
 
-> Review comments welcome.   
+ testcases/network/nfs/nfsstat01/nfsstat01.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-> Chuck Lever (2):
->   NFSD: Rewrite synopsis of nfsd_percpu_counters_init()
->   NFSD: Fix frame size warning in svc_export_parse()
+diff --git a/testcases/network/nfs/nfsstat01/nfsstat01.sh b/testcases/network/nfs/nfsstat01/nfsstat01.sh
+index c2856eff1f..1beecbec43 100755
+--- a/testcases/network/nfs/nfsstat01/nfsstat01.sh
++++ b/testcases/network/nfs/nfsstat01/nfsstat01.sh
+@@ -15,7 +15,14 @@ get_calls()
+ 	local calls opt
+ 
+ 	[ "$name" = "rpc" ] && opt="r" || opt="n"
+-	! tst_net_use_netns && [ "$nfs_f" != "nfs" ] && type="rhost"
++
++	if tst_net_use_netns; then
++		# "Make nfs stats visible in network NS" patchet
++		# https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
++		tst_kvcmp -ge "6.9" && [ "$nfs_f" = "nfs" ] && type="rhost"
++	else
++		[ "$nfs_f" != "nfs" ] && type="rhost"
++	fi
+ 
+ 	if [ "$type" = "lhost" ]; then
+ 		calls="$(grep $name /proc/net/rpc/$nfs_f | cut -d' ' -f$field)"
+-- 
+2.45.2
 
-> Josef Bacik (10):
->   sunrpc: don't change ->sv_stats if it doesn't exist
->   nfsd: stop setting ->pg_stats for unused stats
->   sunrpc: pass in the sv_stats struct through svc_create_pooled
->   sunrpc: remove ->pg_stats from svc_program
->   sunrpc: use the struct net as the svc proc private
->   nfsd: rename NFSD_NET_* to NFSD_STATS_*
->   nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
->   nfsd: make all of the nfsd stats per-network namespace
->   nfsd: remove nfsd_stats, make th_cnt a global counter
->   nfsd: make svc_stat per-network namespace instead of global
-
->  fs/lockd/svc.c             |  3 --
->  fs/nfs/callback.c          |  3 --
->  fs/nfsd/cache.h            |  2 -
->  fs/nfsd/export.c           | 32 ++++++++++----
->  fs/nfsd/export.h           |  4 +-
->  fs/nfsd/netns.h            | 25 +++++++++--
->  fs/nfsd/nfs4proc.c         |  6 +--
->  fs/nfsd/nfs4state.c        |  3 +-
->  fs/nfsd/nfscache.c         | 40 ++++-------------
->  fs/nfsd/nfsctl.c           | 16 +++----
->  fs/nfsd/nfsd.h             |  1 +
->  fs/nfsd/nfsfh.c            |  3 +-
->  fs/nfsd/nfssvc.c           | 14 +++---
->  fs/nfsd/stats.c            | 54 ++++++++++-------------
->  fs/nfsd/stats.h            | 88 ++++++++++++++------------------------
->  fs/nfsd/vfs.c              |  6 ++-
->  include/linux/sunrpc/svc.h |  5 ++-
->  net/sunrpc/stats.c         |  2 +-
->  net/sunrpc/svc.c           | 39 +++++++++++------
->  19 files changed, 163 insertions(+), 183 deletions(-)
 
