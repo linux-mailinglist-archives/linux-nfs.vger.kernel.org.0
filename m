@@ -1,185 +1,110 @@
-Return-Path: <linux-nfs+bounces-5347-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5349-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ACA09517BB
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:30:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C1A99517D2
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20B4A288BEF
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 09:30:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7201F225EC
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 09:39:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94EA3524B4;
-	Wed, 14 Aug 2024 09:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61838165EE6;
+	Wed, 14 Aug 2024 09:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2eS6Momk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QN1h9ri2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p+MAbl7y";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mbarUnHn"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v4Y2e37U"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9734C2901;
-	Wed, 14 Aug 2024 09:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3964C15FD13
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 09:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723627848; cv=none; b=D4QyWWFa21PTTG3RaA4HzpZEsv/oJJJMPA9hEDZ6ePSCo+1+v3yB2ts7wVDEo9cxOrPlXo6EFiqMS+LEqCgZ1xSfcQ2b1CvaplrS+FXn6CzAi8VkxzFFDCL62qQdrq9hPiWczmLtWu1bB2jdaCL1iB3HVYUuYjuKXPbs++6k6cY=
+	t=1723628367; cv=none; b=Vsc2nDCn57Im41rsiqpL1Z4sf08YpnnbGh0xN5T4zv5FkGUK7I/LfNGRFpq3PsC5Ncn6zkQ+r5x4UX/CHqGFOItT5oP8zDXAMpsxadYY1OFULn9KB8hOLN+Sgh+GrSSf1TQj++8BBIY9Y03Zk/FGTQMu2dVvaPU9MCgeM6ceTAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723627848; c=relaxed/simple;
-	bh=fp2DiLXDVIBLtdEcoTbUEUC5EL91r8yBBT/D8zigVFE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VGTLS/sehjODjj559WKG0klbjP0QULWUMww+2Z04uXvZl3JrVsEEFdOH/2pYtCBxS5H079ECS//6EGxSR1OHgPwIEUzWDCLkOxPUcfkHrQ1T+liJysQzsOJ9SxIAegKUEXjIaB+16w0b1wCOutsh7hwxFeQvnsvhXLa5gxSQdX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2eS6Momk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QN1h9ri2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p+MAbl7y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mbarUnHn; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EC77D22602;
-	Wed, 14 Aug 2024 09:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1723627839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Yga4M1mNXJchflFXJg1b9krtecdss7Lnsqhjx8zSJPI=;
-	b=2eS6MomkNcEHLS3M6CHoYD1Y+zvXCBfm4YPJKOrKBTh8dScxaDE9Zqyx6SW3U5kYx1wtJh
-	1usAjrioeCKMW0NU7nG2EaAhdNjflMGKJfVa09MS7iOUe/Gh2NA3UnSIuvx7qafGCHF35d
-	BSmAnC8k1O3nB62njKwmwUP1ODfoN7c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1723627839;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Yga4M1mNXJchflFXJg1b9krtecdss7Lnsqhjx8zSJPI=;
-	b=QN1h9ri2Gi/0DEeAFh2lLnXo/ib7lbOqiplbKiYhIw+0pXTQie7JgFpNEy67tM0NXbVgQJ
-	CFLET2l4JSAbVNCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1723627838; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Yga4M1mNXJchflFXJg1b9krtecdss7Lnsqhjx8zSJPI=;
-	b=p+MAbl7yIu+yRdOiJX3zkt7KvJjfFj+JG1R1t1mKjj5lcGT4bU7kmcUnrfuzaIHcXwwRos
-	F7F43FCZpnqzmDGsN3elbx95/oc9IOKbN1Vm4bXNtxmdotvmUKHrFMvI4XRoHIPbrnra8I
-	4Ra9v2JvTel4k6V2lgmS2xFnV+d5HTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1723627838;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Yga4M1mNXJchflFXJg1b9krtecdss7Lnsqhjx8zSJPI=;
-	b=mbarUnHn2z4Xez2iu4qveIa5m7Th/Ed5ZF7cQGDAWGV7N6K5zGIObDoM51hWIiHrKOrjaw
-	c+6b46dJ45P9T9Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 600C31348F;
-	Wed, 14 Aug 2024 09:30:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vkRgFT15vGZfdQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 14 Aug 2024 09:30:37 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: ltp@lists.linux.it
-Cc: Petr Vorel <pvorel@suse.cz>,
-	Li Wang <liwang@redhat.com>,
-	Cyril Hrubis <chrubis@suse.cz>,
-	Avinesh Kumar <akumar@suse.de>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	NeilBrown <neilb@suse.de>,
-	stable@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH RESEND v2 1/1] nfsstat01: Update client RPC calls for kernel 6.9
-Date: Wed, 14 Aug 2024 11:30:22 +0200
-Message-ID: <20240814093022.522534-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1723628367; c=relaxed/simple;
+	bh=IeVoT4yufyi68TEdosJy9nI6F36XVIhz0YvYLr4IBtg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=P/rsTkKRXy7gEzNj8eLkHOovLfh4ypnGTwK/E3HxlZ9LzY6Zp1IJ2QokApeo1lPLl9sZekgMt95RZ4pYoSyPGKrQquwi3Vj+sLnhMQzxhZoomRqbyyYs5wnfziHT40g/5iMqYL/zUgA0NRdi2G6a8Di0jE9owVnGqyEPMVAxgTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v4Y2e37U; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1723628362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hoKMraIxGqJRJoyIgsLh26ViCmZSqFx8f5iMTWHsaVA=;
+	b=v4Y2e37UaQtwY6/Q1oaRXC+wnuUESSf5FkHv3sDpYrYhh1/pKZqidItOKmJxgEIhp5EmXn
+	QJQ7lR1nlN6SsjSRX1NvfOo5jAF3cYwOGRQX0EWA/EKBCRRHD4CT06EAba8BT3ziVO2mG7
+	i0znJzkmjg9Okh/Gc3tvcNm0Cbe/+/8=
+From: kunwu.chan@linux.dev
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] SUNRPC: Fix -Wformat-truncation warning
+Date: Wed, 14 Aug 2024 17:38:53 +0800
+Message-Id: <20240814093853.48657-1-kunwu.chan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Score: -2.80
+X-Migadu-Flow: FLOW_OUT
 
-[ I'm sorry for the noise if you get this patch 2x ]
+From: Kunwu Chan <chentao@kylinos.cn>
 
-6.9 moved client RPC calls to namespace in "Make nfs stats visible in
-network NS" patchet.
+Increase size of the servername array to avoid truncated output warning.
 
-https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
+net/sunrpc/clnt.c:582:75: error：‘%s’ directive output may be truncated
+writing up to 107 bytes into a region of size 48
+[-Werror=format-truncation=]
+  582 |                   snprintf(servername, sizeof(servername), "%s",
+      |                                                             ^~
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
+net/sunrpc/clnt.c:582:33: note:‘snprintf’ output
+between 1 and 108 bytes into a destination of size 48
+  582 |                     snprintf(servername, sizeof(servername), "%s",
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  583 |                                          sun->sun_path);
+
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 ---
-Changes v1->v2:
-* Point out whole patchset, not just single commit
-* Add a comment about the patchset
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi all,
-
-could you please ack this so that we have fixed mainline?
-
-FYI Some parts has been backported, e.g.:
-d47151b79e322 ("nfs: expose /proc/net/sunrpc/nfs in net namespaces")
-to all stable/LTS: 5.4.276, 5.10.217, 5.15.159, 6.1.91, 6.6.31.
-
-But most of that is not yet (but planned to be backported), e.g.
-93483ac5fec62 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
-see Chuck's patchset for 6.6
-https://lore.kernel.org/linux-nfs/20240812223604.32592-1-cel@kernel.org/
-
-Once all kernels up to 5.4 fixed we should update the version.
-
-Kind regards,
-Petr
-
- testcases/network/nfs/nfsstat01/nfsstat01.sh | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/testcases/network/nfs/nfsstat01/nfsstat01.sh b/testcases/network/nfs/nfsstat01/nfsstat01.sh
-index c2856eff1f..1beecbec43 100755
---- a/testcases/network/nfs/nfsstat01/nfsstat01.sh
-+++ b/testcases/network/nfs/nfsstat01/nfsstat01.sh
-@@ -15,7 +15,14 @@ get_calls()
- 	local calls opt
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 09f29a95f2bc..874085f3ed50 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -546,7 +546,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
+ 		.connect_timeout = args->connect_timeout,
+ 		.reconnect_timeout = args->reconnect_timeout,
+ 	};
+-	char servername[48];
++	char servername[108];
+ 	struct rpc_clnt *clnt;
+ 	int i;
  
- 	[ "$name" = "rpc" ] && opt="r" || opt="n"
--	! tst_net_use_netns && [ "$nfs_f" != "nfs" ] && type="rhost"
-+
-+	if tst_net_use_netns; then
-+		# "Make nfs stats visible in network NS" patchet
-+		# https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
-+		tst_kvcmp -ge "6.9" && [ "$nfs_f" = "nfs" ] && type="rhost"
-+	else
-+		[ "$nfs_f" != "nfs" ] && type="rhost"
-+	fi
- 
- 	if [ "$type" = "lhost" ]; then
- 		calls="$(grep $name /proc/net/rpc/$nfs_f | cut -d' ' -f$field)"
 -- 
-2.45.2
+2.40.1
 
 
