@@ -1,198 +1,113 @@
-Return-Path: <linux-nfs+bounces-5352-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5353-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EDA79518C7
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 12:28:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F44A9519F7
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 13:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1F631C21152
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 10:28:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53DDF28134A
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:33:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152B41AE04A;
-	Wed, 14 Aug 2024 10:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CKsDS5dD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="csqgW91B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CKsDS5dD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="csqgW91B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA641AED53;
+	Wed, 14 Aug 2024 11:33:27 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2037713635F;
-	Wed, 14 Aug 2024 10:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720F51AED2F;
+	Wed, 14 Aug 2024 11:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723631328; cv=none; b=Pnf9FTCsX5fme1iO5AU1TIlkISLoOx9HOspcd9c1H9oOmVlW6thGvtE9ezZCzi28nzFhVXkW1K00vfFe/HlNyc2+papGc23gPdnTot2o+koXBSGUloq8JjQpwvTW5fKmDthgHbdkMCQrE4jiJlQnrQbSLuW40vhWqGGo5y3AnWg=
+	t=1723635207; cv=none; b=eCMD1++5/DFqbsAvUvooLrlr1NJ2ljjS//LFF76YkH9HxhD1DiZuT2uEtwfb3ndeNpwiPN0HeBQ1zy2HRyxxwpB4DQORSPqXuRrU1VJ6RzWN1kUWFA02C0blSbnMpcX6hMw6ge0rkPUbaa1NIiKIYFqH2i5XMUHF0uRaJIWHQ6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723631328; c=relaxed/simple;
-	bh=IhehC/m3ET+Njr7CyOTbwSeI65VBnzy+/iEVyCTefWQ=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=M4gyExTFrJUkRzOTrz8nveF2GFsm23zaS+x5eKpQ6/EMCMhOKkKSG79HDYtL47sF8FUC2Jp5urN0Cy2l2uW/j6YD/Zo+gPjJWRBIEkPite47ljgbbRmBxqEr5cPUySv2GFfTZW1ULA87tv+a65zt5h02TnEBDBeL//+RuQcK/n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CKsDS5dD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=csqgW91B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CKsDS5dD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=csqgW91B; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 350B71FBF1;
-	Wed, 14 Aug 2024 10:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723631325; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3SZTtbe4bVgebO2AFHOr1hr9qtp9UGF8qY/wS1mhXQ=;
-	b=CKsDS5dDGKzfUU27tFWr0EkiYF/saFUiX+T2mfAb5bvFbguo2ji8p5ew9zzEMymJRVDBEA
-	zs8gKbCCTjoKzK12SCXXG/48PWXZQdRc6QTC5PZSPP1VDASINRWJWsz5bu8ku9OhPVmKRZ
-	DfzUTmcmrF2ZgOPaPJ2g6B94KkFG5Hk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723631325;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3SZTtbe4bVgebO2AFHOr1hr9qtp9UGF8qY/wS1mhXQ=;
-	b=csqgW91BMi9Q/Zm7cGw6lF1WUOi/tHlVWQo3W+hMQtvB1gsiCLszkGqsFQwmKdtbuFof3A
-	HZ6lKSVDRnyhM6Ag==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723631325; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3SZTtbe4bVgebO2AFHOr1hr9qtp9UGF8qY/wS1mhXQ=;
-	b=CKsDS5dDGKzfUU27tFWr0EkiYF/saFUiX+T2mfAb5bvFbguo2ji8p5ew9zzEMymJRVDBEA
-	zs8gKbCCTjoKzK12SCXXG/48PWXZQdRc6QTC5PZSPP1VDASINRWJWsz5bu8ku9OhPVmKRZ
-	DfzUTmcmrF2ZgOPaPJ2g6B94KkFG5Hk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723631325;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3SZTtbe4bVgebO2AFHOr1hr9qtp9UGF8qY/wS1mhXQ=;
-	b=csqgW91BMi9Q/Zm7cGw6lF1WUOi/tHlVWQo3W+hMQtvB1gsiCLszkGqsFQwmKdtbuFof3A
-	HZ6lKSVDRnyhM6Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2580A139B9;
-	Wed, 14 Aug 2024 10:28:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vHwNM9eGvGabCAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 14 Aug 2024 10:28:39 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1723635207; c=relaxed/simple;
+	bh=DMomTvwQxLY5tBqwf1GAIJ2j7UEKVaj+p1Vp8ym+RJ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D5FlFeYypm6wwdXgRcxO7q7b3F6ovx2c68oaDLxJJ/nsB7vKkqD9vGTxpONrC4cVQkxIGFuaIsRqCdLpsdxbIWXDKoJK9kwjvK+qSF5waU3t9q0kzOfRvrOBN60MhO+ekV0F4k+1GdsDbnNJrw/xemLBARGuczXDqdqFLJxCfjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WkR2b07s6z4f3kKn;
+	Wed, 14 Aug 2024 19:33:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5B6121A12CC;
+	Wed, 14 Aug 2024 19:33:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBXzIL_lbxmhuyrBg--.22017S4;
+	Wed, 14 Aug 2024 19:33:20 +0800 (CST)
+From: Li Lingfeng <lilingfeng@huaweicloud.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yukuai1@huaweicloud.com,
+	houtao1@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	lilingfeng@huaweicloud.com,
+	lilingfeng3@huawei.com
+Subject: [PATCH] NFSD: remove redundant assignment operation
+Date: Wed, 14 Aug 2024 19:29:07 +0800
+Message-Id: <20240814112907.904426-1-lilingfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: kunwu.chan@linux.dev
-Cc: trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.com,
- jlayton@kernel.org, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Kunwu Chan" <chentao@kylinos.cn>
-Subject: Re: [PATCH] SUNRPC: Fix -Wformat-truncation warning
-In-reply-to: <20240814093853.48657-1-kunwu.chan@linux.dev>
-References: <20240814093853.48657-1-kunwu.chan@linux.dev>
-Date: Wed, 14 Aug 2024 20:28:31 +1000
-Message-id: <172363131189.6062.4199842989565550209@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXzIL_lbxmhuyrBg--.22017S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWkCr43CFWftr18CrWUtwb_yoWDZrb_X3
+	W8Gw18GF45Ww47Was3Ar10yrWrCrZ7Jr18W39IqFZFka93tF95uws7Xw4Yka45GFsIqF45
+	J3WrWr1ak3W5tjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VU13ku3UUUUU==
+X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-On Wed, 14 Aug 2024, kunwu.chan@linux.dev wrote:
-> From: Kunwu Chan <chentao@kylinos.cn>
->=20
-> Increase size of the servername array to avoid truncated output warning.
->=20
-> net/sunrpc/clnt.c:582:75: error=EF=BC=9A=E2=80=98%s=E2=80=99 directive outp=
-ut may be truncated
-> writing up to 107 bytes into a region of size 48
-> [-Werror=3Dformat-truncation=3D]
->   582 |                   snprintf(servername, sizeof(servername), "%s",
->       |                                                             ^~
->=20
-> net/sunrpc/clnt.c:582:33: note:=E2=80=98snprintf=E2=80=99 output
-> between 1 and 108 bytes into a destination of size 48
->   582 |                     snprintf(servername, sizeof(servername), "%s",
->       |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   583 |                                          sun->sun_path);
->=20
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-> ---
->  net/sunrpc/clnt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 09f29a95f2bc..874085f3ed50 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -546,7 +546,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *arg=
-s)
->  		.connect_timeout =3D args->connect_timeout,
->  		.reconnect_timeout =3D args->reconnect_timeout,
->  	};
-> -	char servername[48];
-> +	char servername[108];
+From: Li Lingfeng <lilingfeng3@huawei.com>
 
-If we choose this approach to removing the warning, then we should use
-UNIX_PATH_MAX rather than 108.
+Commit 5826e09bf3dd ("NFSD: OP_CB_RECALL_ANY should recall both read and
+write delegations") added a new assignment statement to add
+RCA4_TYPE_MASK_WDATA_DLG to ra_bmval bitmask of OP_CB_RECALL_ANY. So the
+old one should be removed.
 
-However the longest server name copied in here will in practice be
-   /var/run/rpcbind.sock
+Fixes: 5826e09bf3dd ("NFSD: OP_CB_RECALL_ANY should recall both read and write delegations")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfsd/nfs4state.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-so the extra 60 bytes on the stack is wasted ...  maybe that doesn't
-matter.
-
-The string is only used by xprt_create_transport() which requires it to
-be less than RPC_MAXNETNAMELEN - which is 256.
-So maybe that would be a better value to use for the array size ....  if
-we assume that stack space isn't a problem.
-
-What ever number we use, I'd rather it was a defined constant, and not
-an apparently arbitrary number.
-
-Thanks,
-NeilBrown
-
-
->  	struct rpc_clnt *clnt;
->  	int i;
-> =20
-> --=20
-> 2.40.1
->=20
->=20
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a20c2c9d7d45..693f7813a49c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6644,7 +6644,6 @@ deleg_reaper(struct nfsd_net *nn)
+ 					cl_ra_cblist);
+ 		list_del_init(&clp->cl_ra_cblist);
+ 		clp->cl_ra->ra_keep = 0;
+-		clp->cl_ra->ra_bmval[0] = BIT(RCA4_TYPE_MASK_RDATA_DLG);
+ 		clp->cl_ra->ra_bmval[0] = BIT(RCA4_TYPE_MASK_RDATA_DLG) |
+ 						BIT(RCA4_TYPE_MASK_WDATA_DLG);
+ 		trace_nfsd_cb_recall_any(clp->cl_ra);
+-- 
+2.31.1
 
 
