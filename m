@@ -1,55 +1,57 @@
-Return-Path: <linux-nfs+bounces-5354-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5355-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51596951A67
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 13:52:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45A54951A6D
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 13:55:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 760011C213F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:52:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69F4A1C21F11
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:55:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0EA519EEAF;
-	Wed, 14 Aug 2024 11:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9101ABED7;
+	Wed, 14 Aug 2024 11:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueV+D/ur"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbUS0Siy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB44E33D8
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 11:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328481420A8;
+	Wed, 14 Aug 2024 11:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723636369; cv=none; b=uabiEIl/1LTr5GivuKaunTlP8A9E74y++ek5rYSgJyPSzRARM17RddDEHWxmgFFogYRcslht7jZOTxcxFwkzjhfLXs4BP7raq8lEnbgKZUdbAuhzlZgZH+mdx8SO5i1ou4DWguHYvlttyWwIeCF9bBDGd0GuPva8q88SkUTqgDk=
+	t=1723636547; cv=none; b=suH4F/new3sAEvQws/1ls84lbVbr2gV5T3sDsrNHTX9000v2wN6PlFBd/Y/yLor27r5zh2q1YdGtBrVHehBY0fa+NAduYJjbslkt2wKLSerE5pUDcsFBhkd5aTdDW7L+Tz7kRKUXxhmp1vA/H/1DK4DyqMHqwMcwSQ4xGJR0kRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723636369; c=relaxed/simple;
-	bh=XLITBdH5cp7fw0a64c2AFW6rlC6QG9TY4Kgw2JhWtwQ=;
+	s=arc-20240116; t=1723636547; c=relaxed/simple;
+	bh=PVAR11+AyWejHlvNVELPznjZ3BSz0+Zjox8GncPXt5Y=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OxP2DS0gORnCeQ19vXvjaKb6KZasnwm3HL2qkEBHXLTjhMIlAimLvZ2ZCPsqAPJeK7nkuIc+CtsfX9TuMHJGqJP7V/0s3falLwbKPyN8I4kXnO2PgrzixJRfKMaWyBv923k1/aBgMl5nciRX3y+sMNOgpRWD+ELy+e6zReTXlUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueV+D/ur; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46F2C32786;
-	Wed, 14 Aug 2024 11:52:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=S02Lxsx7D4h8SrhV9hC19hVu1NNMvvL/PoTVCwluXGyOPljMioIn38AsedwXZ0tTFwTAeHNQzR1N0StrnXj93FSIoKaImYvb0QZ7kptVRhXgcYME8P8ulOsVXMD6Jzm9fN0Cvg8uNtB+pKI3n03fCftyZ+5VUxQiRGfzBxDP52o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbUS0Siy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB1FC32786;
+	Wed, 14 Aug 2024 11:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723636369;
-	bh=XLITBdH5cp7fw0a64c2AFW6rlC6QG9TY4Kgw2JhWtwQ=;
+	s=k20201202; t=1723636546;
+	bh=PVAR11+AyWejHlvNVELPznjZ3BSz0+Zjox8GncPXt5Y=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ueV+D/urNcVHdajfcvzDP2jUTktQ/loBaQG8MTRGJmpK26i7Ezztz5V1wdobtSXd9
-	 LWS4NY8dLdP29wdsBq5g4Y78uHMthJgXU/u6LX9L4+jSZYPy7L6YphDlP3ueWETM9Y
-	 05ruzDEkzv88O9VFGxs3EcVa9TixN3l13JCPOzuUhg3Xrz/JMxj8W19QE412s/efTC
-	 NQ5XuDFza/hU4a0jCJrNwxmr/i5iMYmVhdCUeGTlqLkyhyQvScZdl3rFHYVaqmeI8V
-	 tfbY1vhlE6UAX06P06qBBnObzQfwPMgNKyQHw6v++1is4UDJscuUrxjE1bLN2+J+XQ
-	 VYZGqiNWlfePw==
-Message-ID: <092702c0783b6b97b2d39b8c847556c478e58207.camel@kernel.org>
-Subject: Re: [PATCH v2] SQUASH: nfsd: move error choice for incorrect object
- types to version-specific code.
+	b=jbUS0Siy55deITS64UObqT0lfUzCXOtJbryAvZCYxIq9/2FreF1B3z/huzJkqSK/i
+	 C1dzmvBlDPLkSVlt0EfbE6jaLeEXamLc3Li5AscBnlyw84lOtwiCjcdUjh0ggUuZWG
+	 9aRzN2XiHcjfNAUwr4ZQ8PAZQlrrjTyPbZhyzqAd+Rlym2/wSWUhtEPYHrlJmG5vzp
+	 +VBZSwpFRx1CFzEN05ZULhB9LXhz63h+pGxLEeizoukTYca3cgUMED/fg4DIycMyn5
+	 o6roKmbqQOr8gEFFRrio2SOML6xTScsv/X8NeJnB/enLa0jo4Z+PnpX486Dgw4nuUd
+	 +jWGH9ckPa3Zw==
+Message-ID: <ad047447edfe6944949225b73bb4c05a91a9449d.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: remove redundant assignment operation
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Wed, 14 Aug 2024 07:52:47 -0400
-In-Reply-To: <172361193894.6062.4098495640528994632@noble.neil.brown.name>
-References: <172361193894.6062.4098495640528994632@noble.neil.brown.name>
+To: Li Lingfeng <lilingfeng@huaweicloud.com>, chuck.lever@oracle.com, 
+	neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng3@huawei.com
+Date: Wed, 14 Aug 2024 07:55:44 -0400
+In-Reply-To: <20240814112907.904426-1-lilingfeng@huaweicloud.com>
+References: <20240814112907.904426-1-lilingfeng@huaweicloud.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,172 +136,35 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-08-14 at 15:05 +1000, NeilBrown wrote:
-> [This should be squashed into the existing patch for the same name,
-> with this commit message used instead of the current one.  It addresses
-> the pynfs failures that Jeff found]
+On Wed, 2024-08-14 at 19:29 +0800, Li Lingfeng wrote:
+> From: Li Lingfeng <lilingfeng3@huawei.com>
 >=20
-> If an NFS operation expects a particular sort of object (file, dir, link,
-> etc) but gets a file handle for a different sort of object, it must
-> return an error.  The actual error varies among NFS version in non-trivia=
-l
-> ways.
+> Commit 5826e09bf3dd ("NFSD: OP_CB_RECALL_ANY should recall both read and
+> write delegations") added a new assignment statement to add
+> RCA4_TYPE_MASK_WDATA_DLG to ra_bmval bitmask of OP_CB_RECALL_ANY. So the
+> old one should be removed.
 >=20
-> For v2 and v3 there are ISDIR and NOTDIR errors and, for NFSv4 only,
-> INVAL is suitable.
->=20
-> For v4.0 there is also NFS4ERR_SYMLINK which should be used if a SYMLINK
-> was found when not expected.  This take precedence over NOTDIR.
->=20
-> For v4.1+ there is also NFS4ERR_WRONG_TYPE which should be used in
-> preference to EINVAL when none of the specific error codes apply.
->=20
-> When nfsd_mode_check() finds a symlink where it expected a directory it
-> needs to return an error code that can be converted to NOTDIR for v2 or
-> v3 but will be SYMLINK for v4.  It must be different from the error
-> code returns when it finds a symlink but expects a regular file - that
-> must be converted to EINVAL or SYMLINK.
->=20
-> So we introduce an internal error code nfserr_symlink_not_dir which each
-> version converts as appropriate.
->=20
-> nfsd_check_obj_isreg() is similar to nfsd_mode_check() except that it is
-> only used by NFSv4 and only for OPEN.  NFSERR_INVAL is never a suitable
-> error if the object is the wrong time.  For v4.0 we use nfserr_symlink
-> for non-dirs even if not a symlink.  For v4.1 we have nfserr_wrong_type.
-> We handling this difference in-place in nfsd_check_obj_isreg() as there
-> is nothing to be gained by delaying the choice to nfsd4_map_status().
->=20
-> As a result of these changes, nfsd_mode_check() doesn't need an rqstp
-> arg any more.
->=20
-> Note that NFSv4 operations are actually performed in the xdr code(!!!)
-> so to the only place that we can map the status code successfully is in
-> nfsd4_encode_operation().
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Fixes: 5826e09bf3dd ("NFSD: OP_CB_RECALL_ANY should recall both read and =
+write delegations")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 > ---
->  fs/nfsd/nfs4proc.c | 31 +++++++++----------------------
->  fs/nfsd/nfs4xdr.c  | 19 +++++++++++++++++++
->  2 files changed, 28 insertions(+), 22 deletions(-)
+>  fs/nfsd/nfs4state.c | 1 -
+>  1 file changed, 1 deletion(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 2e355085e443..fc68af757080 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -158,7 +158,7 @@ do_open_permission(struct svc_rqst *rqstp, struct svc=
-_fh *current_fh, struct nfs
->  	return fh_verify(rqstp, current_fh, S_IFREG, accmode);
->  }
-> =20
-> -static __be32 nfsd_check_obj_isreg(struct svc_fh *fh)
-> +static __be32 nfsd_check_obj_isreg(struct svc_fh *fh, u32 minor_version)
->  {
->  	umode_t mode =3D d_inode(fh->fh_dentry)->i_mode;
-> =20
-> @@ -168,7 +168,13 @@ static __be32 nfsd_check_obj_isreg(struct svc_fh *fh=
-)
->  		return nfserr_isdir;
->  	if (S_ISLNK(mode))
->  		return nfserr_symlink;
-> -	return nfserr_wrong_type;
-> +
-> +	/* RFC 7530 - 16.16.6 */
-> +	if (minor_version =3D=3D 0)
-> +		return nfserr_symlink;
-> +	else
-> +		return nfserr_wrong_type;
-> +
->  }
-> =20
->  static void nfsd4_set_open_owner_reply_cache(struct nfsd4_compound_state=
- *cstate, struct nfsd4_open *open, struct svc_fh *resfh)
-> @@ -179,23 +185,6 @@ static void nfsd4_set_open_owner_reply_cache(struct =
-nfsd4_compound_state *cstate
->  			&resfh->fh_handle);
->  }
-> =20
-> -static __be32 nfsd4_map_status(__be32 status, u32 minor)
-> -{
-> -	switch (status) {
-> -	case nfs_ok:
-> -		break;
-> -	case nfserr_wrong_type:
-> -		/* RFC 8881 - 15.1.2.9 */
-> -		if (minor =3D=3D 0)
-> -			status =3D nfserr_inval;
-> -		break;
-> -	case nfserr_symlink_not_dir:
-> -		status =3D nfserr_symlink;
-> -		break;
-> -	}
-> -	return status;
-> -}
-> -
->  static inline bool nfsd4_create_is_exclusive(int createmode)
->  {
->  	return createmode =3D=3D NFS4_CREATE_EXCLUSIVE ||
-> @@ -478,7 +467,7 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate, stru
->  	}
->  	if (status)
->  		goto out;
-> -	status =3D nfsd_check_obj_isreg(*resfh);
-> +	status =3D nfsd_check_obj_isreg(*resfh, cstate->minorversion);
->  	if (status)
->  		goto out;
-> =20
-> @@ -2815,8 +2804,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  			nfsd4_encode_replay(resp->xdr, op);
->  			status =3D op->status =3D op->replay->rp_status;
->  		} else {
-> -			op->status =3D nfsd4_map_status(op->status,
-> -						      cstate->minorversion);
->  			nfsd4_encode_operation(resp, op);
->  			status =3D op->status;
->  		}
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 42b41d55d4ed..1c3067f46be7 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -5729,6 +5729,23 @@ __be32 nfsd4_check_resp_size(struct nfsd4_compound=
-res *resp, u32 respsize)
->  	return nfserr_rep_too_big;
->  }
-> =20
-> +static __be32 nfsd4_map_status(__be32 status, u32 minor)
-> +{
-> +	switch (status) {
-> +	case nfs_ok:
-> +		break;
-> +	case nfserr_wrong_type:
-> +		/* RFC 8881 - 15.1.2.9 */
-> +		if (minor =3D=3D 0)
-> +			status =3D nfserr_inval;
-> +		break;
-> +	case nfserr_symlink_not_dir:
-> +		status =3D nfserr_symlink;
-> +		break;
-> +	}
-> +	return status;
-> +}
-> +
->  void
->  nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *=
-op)
->  {
-> @@ -5796,6 +5813,8 @@ nfsd4_encode_operation(struct nfsd4_compoundres *re=
-sp, struct nfsd4_op *op)
->  						so->so_replay.rp_buf, len);
->  	}
->  status:
-> +	op->status =3D nfsd4_map_status(op->status,
-> +				      resp->cstate.minorversion);
->  	*p =3D op->status;
->  release:
->  	if (opdesc && opdesc->op_release)
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a20c2c9d7d45..693f7813a49c 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -6644,7 +6644,6 @@ deleg_reaper(struct nfsd_net *nn)
+>  					cl_ra_cblist);
+>  		list_del_init(&clp->cl_ra_cblist);
+>  		clp->cl_ra->ra_keep =3D 0;
+> -		clp->cl_ra->ra_bmval[0] =3D BIT(RCA4_TYPE_MASK_RDATA_DLG);
+>  		clp->cl_ra->ra_bmval[0] =3D BIT(RCA4_TYPE_MASK_RDATA_DLG) |
+>  						BIT(RCA4_TYPE_MASK_WDATA_DLG);
+>  		trace_nfsd_cb_recall_any(clp->cl_ra);
 
-LGTM
+Good catch!
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
