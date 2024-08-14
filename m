@@ -1,110 +1,133 @@
-Return-Path: <linux-nfs+bounces-5349-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5350-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C1A99517D2
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 11:39:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A84F495183D
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 12:03:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7201F225EC
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 09:39:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69AB6284AF7
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Aug 2024 10:03:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61838165EE6;
-	Wed, 14 Aug 2024 09:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D140C1AD9C6;
+	Wed, 14 Aug 2024 10:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v4Y2e37U"
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="iguUNddu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3964C15FD13
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 09:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2554019FA8F
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 10:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723628367; cv=none; b=Vsc2nDCn57Im41rsiqpL1Z4sf08YpnnbGh0xN5T4zv5FkGUK7I/LfNGRFpq3PsC5Ncn6zkQ+r5x4UX/CHqGFOItT5oP8zDXAMpsxadYY1OFULn9KB8hOLN+Sgh+GrSSf1TQj++8BBIY9Y03Zk/FGTQMu2dVvaPU9MCgeM6ceTAg=
+	t=1723629749; cv=none; b=Mptrll70MrKOqRvfGBR26/W0IfDulYoU+A+YmJIHb8mQ1qWaxXr8HmOvcwWqpaS4PO2HaVlaEjf3J5t+31MwguemkzKtP16t1Kx4u7eikBPlLYyEGzusZC+0crngSX2yZvZB51r3y64B+HpMHMoDLXYv0GQNqAwGH+G8/Tmnqmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723628367; c=relaxed/simple;
-	bh=IeVoT4yufyi68TEdosJy9nI6F36XVIhz0YvYLr4IBtg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=P/rsTkKRXy7gEzNj8eLkHOovLfh4ypnGTwK/E3HxlZ9LzY6Zp1IJ2QokApeo1lPLl9sZekgMt95RZ4pYoSyPGKrQquwi3Vj+sLnhMQzxhZoomRqbyyYs5wnfziHT40g/5iMqYL/zUgA0NRdi2G6a8Di0jE9owVnGqyEPMVAxgTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v4Y2e37U; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1723628362;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hoKMraIxGqJRJoyIgsLh26ViCmZSqFx8f5iMTWHsaVA=;
-	b=v4Y2e37UaQtwY6/Q1oaRXC+wnuUESSf5FkHv3sDpYrYhh1/pKZqidItOKmJxgEIhp5EmXn
-	QJQ7lR1nlN6SsjSRX1NvfOo5jAF3cYwOGRQX0EWA/EKBCRRHD4CT06EAba8BT3ziVO2mG7
-	i0znJzkmjg9Okh/Gc3tvcNm0Cbe/+/8=
-From: kunwu.chan@linux.dev
+	s=arc-20240116; t=1723629749; c=relaxed/simple;
+	bh=B9chU9/0IqlL3225+x+s8qqL6sC8onowYFoFyMPszRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KBCHkJ2AnYv9+fqQtq+lm9WoNVNnu9JYBNi+3iPDXtqC2lRMsMQuAXXTRAArt4mYTX+Gk9ceSc2RAz+Tgap2vJfnfF+Pc7YMp7aP4dSXBHStHPjxMQYxp/qngaq6lSnnm+a//QK3peKTWtSe/KkFShTpiupO2qnFwkIZ6xz2xuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=iguUNddu; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52f01b8738dso5691530e87.1
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Aug 2024 03:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723629746; x=1724234546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AUYn6IRli+oEs6D+KJzXe5DntEafYq0okHoLDQr377w=;
+        b=iguUNddubuTOcADFjRDMjmhqiIw4byzMdL8EOCNRL+UNfDJdON15yEDyY/QOtQW9LK
+         AXCq53MJyUt5AjMGgUZK9xZYjyqr+OQc/5p5X8HWWR41FnyM4AknLAJNHsFfKUAYb1Xh
+         KflmdPFguxbfYcAi8j3B9Pwo12KqfMqKWotwhikq/ev8B3AbKk9WSLShgYM7U7WoziOl
+         PmlLDB9cGvsVK+BpP5NEQnJ2I9xDzkRu2L1k9Bb1Y8PWDqqemOeU/KulnzTWAq3jgQ9o
+         UscD9n27g5NEewmy29r0I1ME8ZaEhn5oQ5GMdTjxM7ZYmq+xmR4qZ0J8v05Qc4VRyqcE
+         63Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723629746; x=1724234546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AUYn6IRli+oEs6D+KJzXe5DntEafYq0okHoLDQr377w=;
+        b=FgWAxXt22n+j2AXTuj2bFHNxsIsxALLkZZY94C3jM5v3wSlSp7tQgyB0y7hSmYHBKb
+         gLaIWQx9H3smfUPlyKs3fHh+Yiz2PM/NrKNrjJBGn6OGmnuLE4rzvF+JIwnYkfirCKdZ
+         65ZWBpRQ94eHK4tVIjRz5v979iY7jyD731+d6MepJtN9YXuO/qXtWojCEEbGT7i72Ert
+         DOpV8yUIkZj4N4l/Fs/LkxK07EKitpc7TO8q6QPNNhY6p5lw1dY5SGjoEoQQDoJHsASw
+         tWXPGez4WBGi1Mwt763DOGNOw98fSeUVR+nhwpfHi1bat3E0thJWqG6S0be8gcWXsK8A
+         jEtA==
+X-Gm-Message-State: AOJu0YzLEUYgT7duiLMtKvnyp2fJJA9wu4GwY5wPl6sajPMNIYTsQKjc
+	0k03Sqe1kDseEyInl0w4KVz4KoU/mtW9Xa4LTEcHz7eJzdiVhoa4JNCuWZM+eG8=
+X-Google-Smtp-Source: AGHT+IHFhOyBeGlUxBjzud5WmiYxl1tBaGcj9uLfsenvP9y/8nDQ71mcGv06eIx0V5n8Cud7drQVcQ==
+X-Received: by 2002:a05:6512:3195:b0:52e:a699:2c8c with SMTP id 2adb3069b0e04-532edbad9c8mr1393454e87.45.1723629745529;
+        Wed, 14 Aug 2024 03:02:25 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-163.dynamic.mnet-online.de. [62.216.208.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4ebd3631sm12364660f8f.110.2024.08.14.03.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 03:02:25 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
 To: trondmy@kernel.org,
 	anna@kernel.org,
-	chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
+	kees@kernel.org,
+	gustavoars@kernel.org
 Cc: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] SUNRPC: Fix -Wformat-truncation warning
-Date: Wed, 14 Aug 2024 17:38:53 +0800
-Message-Id: <20240814093853.48657-1-kunwu.chan@linux.dev>
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] nfs: Annotate struct nfs_cache_array with __counted_by()
+Date: Wed, 14 Aug 2024 12:01:28 +0200
+Message-ID: <20240814100128.157057-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Kunwu Chan <chentao@kylinos.cn>
+Add the __counted_by compiler attribute to the flexible array member
+array to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Increase size of the servername array to avoid truncated output warning.
+Increment size before adding a new struct to the array.
 
-net/sunrpc/clnt.c:582:75: error：‘%s’ directive output may be truncated
-writing up to 107 bytes into a region of size 48
-[-Werror=format-truncation=]
-  582 |                   snprintf(servername, sizeof(servername), "%s",
-      |                                                             ^~
-
-net/sunrpc/clnt.c:582:33: note:‘snprintf’ output
-between 1 and 108 bytes into a destination of size 48
-  582 |                     snprintf(servername, sizeof(servername), "%s",
-      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  583 |                                          sun->sun_path);
-
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- net/sunrpc/clnt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/dir.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 09f29a95f2bc..874085f3ed50 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -546,7 +546,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		.connect_timeout = args->connect_timeout,
- 		.reconnect_timeout = args->reconnect_timeout,
- 	};
--	char servername[48];
-+	char servername[108];
- 	struct rpc_clnt *clnt;
- 	int i;
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 4cb97ef41350..492cffd9d3d8 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -151,7 +151,7 @@ struct nfs_cache_array {
+ 	unsigned char folio_full : 1,
+ 		      folio_is_eof : 1,
+ 		      cookies_are_ordered : 1;
+-	struct nfs_cache_array_entry array[];
++	struct nfs_cache_array_entry array[] __counted_by(size);
+ };
  
+ struct nfs_readdir_descriptor {
+@@ -328,7 +328,8 @@ static int nfs_readdir_folio_array_append(struct folio *folio,
+ 		goto out;
+ 	}
+ 
+-	cache_entry = &array->array[array->size];
++	array->size++;
++	cache_entry = &array->array[array->size - 1];
+ 	cache_entry->cookie = array->last_cookie;
+ 	cache_entry->ino = entry->ino;
+ 	cache_entry->d_type = entry->d_type;
+@@ -337,7 +338,6 @@ static int nfs_readdir_folio_array_append(struct folio *folio,
+ 	array->last_cookie = entry->cookie;
+ 	if (array->last_cookie <= cache_entry->cookie)
+ 		array->cookies_are_ordered = 0;
+-	array->size++;
+ 	if (entry->eof != 0)
+ 		nfs_readdir_array_set_eof(array);
+ out:
 -- 
-2.40.1
+2.46.0
 
 
