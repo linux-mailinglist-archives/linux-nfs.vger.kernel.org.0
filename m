@@ -1,238 +1,147 @@
-Return-Path: <linux-nfs+bounces-5413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CF8B9548FC
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 14:43:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1865A954B63
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 15:49:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A225F1C24035
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 12:43:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 976D9B23E32
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 13:49:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7BB1B8E85;
-	Fri, 16 Aug 2024 12:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E286819D8BA;
+	Fri, 16 Aug 2024 13:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7TvqmQK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Key158rz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DCC1B86FB;
-	Fri, 16 Aug 2024 12:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFE819644B
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Aug 2024 13:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723812157; cv=none; b=FQe3roroq8kU9ZFLaQSnVH5Rl7yKS5vaXY6BhkcOkDQsSBUu3edk+XgC4E9EIbw3D+EJRnxyh4q0oYg9gvrG4mMvGFYxl20S4T5hdwv7+Fb90p3o0M+W5Kt6uHWTk/XJcm6AVikdbAaQCUCsQqN30bNPITa7tF16SbxbgSNHrZ8=
+	t=1723816183; cv=none; b=Xts3gituaXgB+Pg7Fm2obZVfnhoCPe6yd+Xa86CEBWNN60J1zGKhMifYe30E59OR4XYwnQixzc8dzoDivLZX+H6vvsA1ZOH/xs8YVuLoevDdQkGa/yCWXMjPJn+TWgkeqrq3yXU4x2t+KCpl6Wj1uwC5LDnVkhq2IRMeswsmCxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723812157; c=relaxed/simple;
-	bh=2Rn+7obbQILo75kJbV/0b2zIBmSLl5DIxT28qY2BWXU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fydi5HcCYnyps4OalFtZdxwtgQ7Nnb89z4Yzrw2nXRI5aBKnpY3+8D4zM96aJTfnuKdj43t4lIRsEsecGu5ib2t/7Z4ZKTwvge2lzBa6fp51b4ewvUJnh0jBbDW8sIgOlsN6U9utp9JPkMpSkwLCHxyxi2ucNH9s2XudxGTTZsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7TvqmQK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1253BC32782;
-	Fri, 16 Aug 2024 12:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723812157;
-	bh=2Rn+7obbQILo75kJbV/0b2zIBmSLl5DIxT28qY2BWXU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=A7TvqmQKvEqghTYmZSsxs8PX1YQTz2iorX6Y0k8t2jXQzqIzGAzPEJaWjyuqKqpkp
-	 jRtd7rLV6DK67O8qai3l32IIZkQsYydxmm+V9rQ7azHzS6CFMxZMOorZuTbX9WTuIQ
-	 M+5fEU0mFUurpRKBZUQclG50M0NfPP+5oMiFTUNr4A7SXRptXC/GkvYDT/kBTJvdPX
-	 LPisENFRshMAtbdfmmiEWG+SQQ/OM+U2T57n8yHnZ03mTQ5LYpTsSggq6KcIrrHUrj
-	 3SLS2HAXjI/53Eaw6o9JfMwT3iXFQOXuk+GO05GZADs7IDKFa2BP3jCJp2LSLdIdaS
-	 5a0XyY7hjYzow==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 16 Aug 2024 08:42:09 -0400
-Subject: [PATCH 3/3] nfsd: implement
- OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+	s=arc-20240116; t=1723816183; c=relaxed/simple;
+	bh=bk6ihrsPAJF7eTiBdcJ1bswP2epDJW779Ta31CKSh4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aDSsfhV7QhqLNaic6QQC99SdqM1yKZmzlqeTL3c3CixE9zH5/JxlD7MiDyOSHviIYJaBHW07ujywO3I6cQvGgXJfJJVLyHcDbVmWJC7B68Vx50eGFd07dFEa0QFuEruXRSylNTfrmQiBzVpD+IBkAFSztsajaKRujRiJqhR4HsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Key158rz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723816180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VNVsfDSCQ35Otb+d4cQrc4kpMU3VCRIAftynBpvO9/U=;
+	b=Key158rz4BmuoRoQxmMD2qscBqEXCA3dJRpGD9D4SQ0W9b/3b3XAqX0HyYNTyKxF4JYk06
+	6EV2tAxnQ8TB9kxrCsY41pgZ9CBenDxweteQGcJP0tey2ISbGoZ4wOr1QtO1o6X5HKvVXy
+	gRWWHZpsbKydkHBMjfE4RSDsH59pE30=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-533-EimSA9SyNleGhztPM4uUKQ-1; Fri, 16 Aug 2024 09:49:39 -0400
+X-MC-Unique: EimSA9SyNleGhztPM4uUKQ-1
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3db3874fe0fso298764b6e.3
+        for <linux-nfs@vger.kernel.org>; Fri, 16 Aug 2024 06:49:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723816178; x=1724420978;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VNVsfDSCQ35Otb+d4cQrc4kpMU3VCRIAftynBpvO9/U=;
+        b=SmXSc0FV5h/hhC71holPBpdiVd3C0A6TrqfpSXoAouLhDIeRB9yP4KKFEGLH67YjfK
+         1CX7pDrvFU4kZJ1iZOX0V5Po0Oj0seGpfcaUo4GNdwzDfE8y2xcAzOEyM5AsIqinx8o8
+         4ty6b7JOPnUVuo7bocAGZG9NeftEN2KJOilTYkI0lWPyRXSZDIK+sx8yXccedVKiYHbc
+         OTAgYNJY/6lbm22RJtDQEcNGBD/NHSt5GYGXYD1DhwhEyia6oRpklW6OpfWwiqiZliUL
+         3+3HmNOvt8LpmxjdwxGDaZ8VVUOu6KxwN5nKEay4bGC1ME1RQzYmfpB2R9RH2+3tVK50
+         fm4g==
+X-Gm-Message-State: AOJu0YyBePPiI4vXkgw63PINdtrSBxKSv60LwpOF13Tlwoyo5hI5aLn5
+	eB3nm4PlNL18+dzYH/ks5Y+F75EKVVxrFVvn4NIP1Na80cfDMuH5Uik7YgeSrnfzq7XEZSLwb/V
+	hACn3jwnO06X74ogrMmVLdgvem2mbjSoaVzuiyL02NpsvhNhHUrd+233zMA==
+X-Received: by 2002:a05:6830:4423:b0:708:b80a:de0b with SMTP id 46e09a7af769-70cac904251mr1666682a34.4.1723816178234;
+        Fri, 16 Aug 2024 06:49:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6u9owD1wO/1HiVNVVEzrZkmV0AKLOLEZJIfQT+D9h+zCL53YD528sFHS2OhoMbubhg+JAUQ==
+X-Received: by 2002:a05:6830:4423:b0:708:b80a:de0b with SMTP id 46e09a7af769-70cac904251mr1666666a34.4.1723816177829;
+        Fri, 16 Aug 2024 06:49:37 -0700 (PDT)
+Received: from ?IPV6:2603:6000:d605:db00:165d:3a00:4ce9:ee1f? ([2603:6000:d605:db00:165d:3a00:4ce9:ee1f])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4536a0851a7sm16485041cf.96.2024.08.16.06.49.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2024 06:49:37 -0700 (PDT)
+Message-ID: <85a4e925-64f9-4160-bce8-54318ac27aef@redhat.com>
+Date: Fri, 16 Aug 2024 09:49:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] rpcdebug: fix memory allocation size
+To: Olga Kornievskaia <aglo@umich.edu>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>
+References: <20240814210109.15427-1-okorniev@redhat.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20240814210109.15427-1-okorniev@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240816-delstid-v1-3-c221c3dc14cd@kernel.org>
-References: <20240816-delstid-v1-0-c221c3dc14cd@kernel.org>
-In-Reply-To: <20240816-delstid-v1-0-c221c3dc14cd@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>
-Cc: Tom Haynes <loghyr@gmail.com>, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5770; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=2Rn+7obbQILo75kJbV/0b2zIBmSLl5DIxT28qY2BWXU=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmv0k4OSAyuXEt4tdH+4tnp4U6uVekWYFeDvkph
- VC5Vc2vPEiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZr9JOAAKCRAADmhBGVaC
- FfrqD/4u58lJLNqhuJn0g+OhIMScCoQw5x8/UOS3b9Fsxp4xkdlewMUw9P+k7t0oazQvB6QKICW
- y94PQKDi9dMezICQJI+h7qnf28tFciP4hUMc6c+rRY2QGouoXycilp8LoX59i+yWtxbrK/ArOnv
- woiMSSyIht4CPVTfPOCeGPT+VD5RCe+muaqfJB8fL/ivMjiZdmk98sYsy8ve3rRb2ARKQh1gVEs
- sM0U2/rLsH8/iFaPdgp/SEO5HuGhKIk0cjmnI4qnmyGsw9aVx2nJX5LeEcTelguVhKsmePgmmjt
- C+srLNpj14stn12u7Yp0heVdwC3ffJScRZkLQaV1bdvkGZImOEWD39jnUUimJdIlY8wWX6BczO+
- 3a4UpG4Ynnogty/SuisPRtJJ3IOSddOKUUm+PpC2WU1oK7H81I9vTXs/kitlWhYutt8BMbmxFp3
- HZrPGs6feBApBrHmg6Qykw9+whOtfiUP7CBTwxbbh9Z7+irEWnO2NyIFPqL+AEi21brOV54uaCt
- 0bS3JtRerhGHUrXik1fsM6N//YT+8ghc5LEdppeo6kbx9o4zxOIf23MtGXx/na9TiBVjrAeo1Y9
- YncdobMaQJNJnV12Y34f22Fpt2I+QLG/nBhwzvO3nYRcgktdY1jcqqhZNFGXD+OZm0s3xxMl6Ss
- d8by10kunM5lwpA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Allow clients to request getting a delegation xor an open stateid if a
-delegation isn't available. This allows the client to avoid sending a
-final CLOSE for the (useless) open stateid, when it is granted a
-delegation.
 
-This is done by moving the increment of the open stateid and unlocking
-of the st_mutex until after we acquire a delegation. If we get a
-delegation, we zero out the op_stateid field and set the NO_OPEN_STATEID
-flag. If the open stateid was brand new, then unhash it too in this case
-since it won't be needed.
 
-If we can't get a delegation or the new flag wasn't requested, then just
-increment and copy the open stateid as usual.
+On 8/14/24 5:01 PM, Olga Kornievskaia wrote:
+> Memory isn't allocated enough to hold the null terminator.
+> 
+> Valgring complains about invalid memory access:
+> 
+> [aglo@localhost rpcdebug]$ valgrind ./rpcdebug
+> ==222602== Memcheck, a memory error detector
+> ==222602== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+> ==222602== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+> ==222602== Command: ./rpcdebug
+> ==222602==
+> ==222602== Invalid write of size 1
+> ==222602==    at 0x4871218: strcpy (vg_replace_strmem.c:564)
+> ==222602==    by 0x400CA3: main (rpcdebug.c:62)
+> ==222602==  Address 0x4a89048 is 0 bytes after a block of size 8 alloc'd
+> ==222602==    at 0x4868388: malloc (vg_replace_malloc.c:446)
+> ==222602==    by 0x400C77: main (rpcdebug.c:57)
+> ==222602==
+> ==222602== Invalid read of size 1
+> ==222602==    at 0x48710E4: __GI_strlen (vg_replace_strmem.c:506)
+> ==222602==    by 0x492FA7F: __vfprintf_internal (vfprintf-internal.c:1647)
+> ==222602==    by 0x49302F3: buffered_vfprintf (vfprintf-internal.c:2296)
+> ==222602==    by 0x492F21F: __vfprintf_internal (vfprintf-internal.c:1377)
+> ==222602==    by 0x491BC93: fprintf (fprintf.c:32)
+> ==222602==    by 0x40103F: main (rpcdebug.c:100)
+> ==222602==  Address 0x4a89048 is 0 bytes after a block of size 8 alloc'd
+> ==222602==    at 0x4868388: malloc (vg_replace_malloc.c:446)
+> 
+> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+Committed...
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c       | 29 +++++++++++++++++++++++++----
- fs/nfsd/nfs4xdr.c         |  5 +++--
- include/uapi/linux/nfs4.h |  7 +++++--
- 3 files changed, 33 insertions(+), 8 deletions(-)
+steved.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b67f151837c1..9d209cbd95cd 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -56,6 +56,7 @@
- #include "pnfs.h"
- #include "filecache.h"
- #include "trace.h"
-+#include "delstid_xdr.h"
- 
- #define NFSDDBG_FACILITY                NFSDDBG_PROC
- 
-@@ -6029,6 +6030,17 @@ static void nfsd4_deleg_xgrade_none_ext(struct nfsd4_open *open,
- 	 */
- }
- 
-+/* Are we only returning a delegation stateid? */
-+static bool open_xor_delegation(struct nfsd4_open *open)
-+{
-+	if (!(open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION))
-+		return false;
-+	if (open->op_delegate_type != NFS4_OPEN_DELEGATE_READ &&
-+	    open->op_delegate_type != NFS4_OPEN_DELEGATE_WRITE)
-+		return false;
-+	return true;
-+}
-+
- /**
-  * nfsd4_process_open2 - finish open processing
-  * @rqstp: the RPC transaction being executed
-@@ -6051,6 +6063,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	struct nfs4_delegation *dp = NULL;
- 	__be32 status;
- 	bool new_stp = false;
-+	bool deleg_only = false;
- 
- 	/*
- 	 * Lookup file; if found, lookup stateid and check open request,
-@@ -6105,9 +6118,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 			open->op_odstate = NULL;
- 	}
- 
--	nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
--	mutex_unlock(&stp->st_mutex);
--
- 	if (nfsd4_has_session(&resp->cstate)) {
- 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
- 			open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE_EXT;
-@@ -6121,7 +6131,18 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	* OPEN succeeds even if we fail.
- 	*/
- 	nfs4_open_delegation(open, stp, &resp->cstate.current_fh);
-+	deleg_only = open_xor_delegation(open);
- nodeleg:
-+	if (deleg_only) {
-+		memcpy(&open->op_stateid, &zero_stateid, sizeof(open->op_stateid));
-+		open->op_rflags |= OPEN4_RESULT_NO_OPEN_STATEID;
-+		if (new_stp)
-+			release_open_stateid(stp);
-+	} else {
-+		nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
-+	}
-+	mutex_unlock(&stp->st_mutex);
-+
- 	status = nfs_ok;
- 	trace_nfsd_open(&stp->st_stid.sc_stateid);
- out:
-@@ -6137,7 +6158,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	/*
- 	* To finish the open response, we just need to set the rflags.
- 	*/
--	open->op_rflags = NFS4_OPEN_RESULT_LOCKTYPE_POSIX;
-+	open->op_rflags |= NFS4_OPEN_RESULT_LOCKTYPE_POSIX;
- 	if (nfsd4_has_session(&resp->cstate))
- 		open->op_rflags |= NFS4_OPEN_RESULT_MAY_NOTIFY_LOCK;
- 	else if (!(open->op_openowner->oo_flags & NFS4_OO_CONFIRMED))
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index dbaadb0ad980..ecc9ddf4c28d 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -1067,7 +1067,7 @@ static __be32 nfsd4_decode_share_access(struct nfsd4_compoundargs *argp, u32 *sh
- 		return nfs_ok;
- 	if (!argp->minorversion)
- 		return nfserr_bad_xdr;
--	switch (w & NFS4_SHARE_WANT_MASK) {
-+	switch (w & NFS4_SHARE_WANT_TYPE_MASK) {
- 	case NFS4_SHARE_WANT_NO_PREFERENCE:
- 	case NFS4_SHARE_WANT_READ_DELEG:
- 	case NFS4_SHARE_WANT_WRITE_DELEG:
-@@ -3411,7 +3411,8 @@ static __be32 nfsd4_encode_fattr4_xattr_support(struct xdr_stream *xdr,
- 
- #define NFSD_OA_SHARE_ACCESS_WANT	(BIT(OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG)		| \
- 					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG)		| \
--					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL))
-+					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL)		| \
-+					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION))
- 
- #define NFSD_OA_OPEN_CLAIM	(BIT(OPEN_ARGS_OPEN_CLAIM_NULL)		| \
- 				 BIT(OPEN_ARGS_OPEN_CLAIM_PREVIOUS)	| \
-diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
-index caf4db2fcbb9..4273e0249fcb 100644
---- a/include/uapi/linux/nfs4.h
-+++ b/include/uapi/linux/nfs4.h
-@@ -58,7 +58,7 @@
- #define NFS4_SHARE_DENY_BOTH	0x0003
- 
- /* nfs41 */
--#define NFS4_SHARE_WANT_MASK		0xFF00
-+#define NFS4_SHARE_WANT_TYPE_MASK	0xFF00
- #define NFS4_SHARE_WANT_NO_PREFERENCE	0x0000
- #define NFS4_SHARE_WANT_READ_DELEG	0x0100
- #define NFS4_SHARE_WANT_WRITE_DELEG	0x0200
-@@ -66,13 +66,16 @@
- #define NFS4_SHARE_WANT_NO_DELEG	0x0400
- #define NFS4_SHARE_WANT_CANCEL		0x0500
- 
--#define NFS4_SHARE_WHEN_MASK		0xF0000
-+#define NFS4_SHARE_WHEN_MASK				0xF0000
- #define NFS4_SHARE_SIGNAL_DELEG_WHEN_RESRC_AVAIL	0x10000
- #define NFS4_SHARE_PUSH_DELEG_WHEN_UNCONTENDED		0x20000
- 
-+#define NFS4_SHARE_WANT_MOD_MASK			0xF00000
- #define NFS4_SHARE_WANT_DELEG_TIMESTAMPS		0x100000
- #define NFS4_SHARE_WANT_OPEN_XOR_DELEGATION		0x200000
- 
-+#define NFS4_SHARE_WANT_MASK	(NFS4_SHARE_WANT_TYPE_MASK | NFS4_SHARE_WANT_MOD_MASK)
-+
- #define NFS4_CDFC4_FORE	0x1
- #define NFS4_CDFC4_BACK 0x2
- #define NFS4_CDFC4_BOTH 0x3
-
--- 
-2.46.0
+> ---
+>   tools/rpcdebug/rpcdebug.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/rpcdebug/rpcdebug.c b/tools/rpcdebug/rpcdebug.c
+> index ec05179e..1f935223 100644
+> --- a/tools/rpcdebug/rpcdebug.c
+> +++ b/tools/rpcdebug/rpcdebug.c
+> @@ -54,7 +54,7 @@ main(int argc, char **argv)
+>   	char *		module = NULL;
+>   	int		c;
+>   
+> -	cdename = malloc(strlen(basename(argv[0])));
+> +	cdename = malloc(strlen(basename(argv[0])) + 1);
+>   	if (cdename == NULL) {
+>   	  fprintf(stderr, "failed in malloc\n");
+>   	  exit(1);
 
 
