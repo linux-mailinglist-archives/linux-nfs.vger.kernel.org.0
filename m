@@ -1,201 +1,124 @@
-Return-Path: <linux-nfs+bounces-5409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5410-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F06F4954851
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 13:55:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D0E89548F5
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 14:42:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 625021F21CF4
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 11:55:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0D6A1F2515C
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Aug 2024 12:42:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3B9E1ABEB4;
-	Fri, 16 Aug 2024 11:55:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025AF192B93;
+	Fri, 16 Aug 2024 12:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kidgWAr1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C25919412A;
-	Fri, 16 Aug 2024 11:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF47416F839;
+	Fri, 16 Aug 2024 12:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723809325; cv=none; b=SBz5f1AjTLn+ya60kIA4MZV82UYDJro9QCHGZAqiTQyqUP6zP91LfkSYCsJFctNa5mcqpnuTlFAO1XBW4+/HdcbBHri1EbZP2xokk2ucBHEePhP9zsnQDUyP1USYom4cIABE0urntFxBMLYhOEBqWYSfVJgvtN9QTgAQtxW/XGM=
+	t=1723812153; cv=none; b=q9EYCy52aBoq3hV+wff9njk0A5OsTC4OkTSVV/GYyF62oKqxMx44fF1vDJ6YQCjnmYeiiJMqG3G+X6f2VJBI/LTRaxlQH5e51nyVJhhRyoHhg5+MmqffKy+QT/t2Ehx5C81E/GgoY8shUvM9oq4LkcWoAdwaoPtXhg8knMiKilw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723809325; c=relaxed/simple;
-	bh=crRBTb++01BV7AbQhw0YhRZpdM4dL/fl/FxhwOGEdTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AEtXk/Fltlcbm1JNxKZJzcgwQQMz4DJIpseD/Lyu1tCguBEzzm3CCkt20fYlZCiTfaQRHHCU4/+BimIH2zfYaKAM3YnCXKmdyTDsb5qGaEVeHNMZSVt0e8gtbNsGFw6JByP/oF3Hn6iAs+xz1bDUWc9+Hc5s5yLNrMVhDAAeS8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WlgKt6jK6zQpvH;
-	Fri, 16 Aug 2024 19:50:42 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 879EA1403D5;
-	Fri, 16 Aug 2024 19:55:19 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 16 Aug 2024 19:55:18 +0800
-Message-ID: <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
-Date: Fri, 16 Aug 2024 19:55:18 +0800
+	s=arc-20240116; t=1723812153; c=relaxed/simple;
+	bh=+ru+RPAUuulu0jmH4Fzkx3GT7ksvWqMG2TKyXNLGXl0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=As5Trd+UUBi4UhDaCYKn3lrPgMAkT6Rqz1hfhRHyGJOHEBtmWhUSLAZF9vFK9CVMNXG7X6FR5IxVQTjMPaZECCvs3JOr23ElWWazY69KeDrBMo9G0FwHWjq14Hk4lt/8qkv4soqBkbZlzuapocvK2NN7EDtyHL34J/CldgV/7Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kidgWAr1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F3BC32782;
+	Fri, 16 Aug 2024 12:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723812153;
+	bh=+ru+RPAUuulu0jmH4Fzkx3GT7ksvWqMG2TKyXNLGXl0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=kidgWAr178BPZRQ3uDwHDL0LAPNMVtMp1nXk9eYJElM0TmHMEEcMr7bDgEBbK6FkD
+	 kka7U7AFeguJFWaONmbREMcB73s8gMSc6/FVGrgCrTSZ6grC5H45OE4T7KJZGnpCPZ
+	 q0JWS5yzdiOo5qv49VV0Ya0HrFSdM8Z44yLy2nRKCcbtv9XBYGYqRMN/6aujIQgUTz
+	 EE6fdVEbfEclsiLhtDqsoxHyvYLE1XpT1sWkAYehQ1OJJ/NZJq/gobw8WQ5Ne1PvjP
+	 hHVqtSlwWTkRk6zkyPUePNxGKZ17JWvoJKdZ0EiwiNBTE+Hk2LfKfGpNdoIXWX4CkN
+	 v6Bmx+QhaFArg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/3] nfsd: implement OPEN_XOR_DELEGATION part of delstid
+ draft
+Date: Fri, 16 Aug 2024 08:42:06 -0400
+Message-Id: <20240816-delstid-v1-0-c221c3dc14cd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v13 04/14] mm: page_frag: add '_va' suffix to
- page_frag API
-To: Alexander Duyck <alexander.duyck@gmail.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Subbaraya Sundeep
-	<sbhatta@marvell.com>, Chuck Lever <chuck.lever@oracle.com>, Sagi Grimberg
-	<sagi@grimberg.me>, Jeroen de Borst <jeroendb@google.com>, Praveen
- Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>,
-	Eric Dumazet <edumazet@google.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Sunil Goutham
-	<sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>, hariprasad
-	<hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, Sean Wang
-	<sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo
- Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith
- Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig
-	<hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>, "Michael S. Tsirkin"
-	<mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-nvme@lists.infradead.org>,
-	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <bpf@vger.kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20240808123714.462740-1-linyunsheng@huawei.com>
- <20240808123714.462740-5-linyunsheng@huawei.com>
- <d1a23116d054e2ebb00067227f0cffecefe33e11.camel@gmail.com>
- <676a2a15-d390-48a7-a8d7-6e491c89e200@huawei.com>
- <CAKgT0Uct5ptfs9ZEoe-9u-fOVz4HLf+5MS-YidKV+xELCBHKNw@mail.gmail.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <CAKgT0Uct5ptfs9ZEoe-9u-fOVz4HLf+5MS-YidKV+xELCBHKNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB5Jv2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDC0NT3ZTUnOKSzBRdS2MjSwMzS8PEFENDJaDqgqLUtMwKsEnRsbW1AAi
+ 8iMVZAAAA
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>
+Cc: Tom Haynes <loghyr@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1589; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=+ru+RPAUuulu0jmH4Fzkx3GT7ksvWqMG2TKyXNLGXl0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmv0kxTqKDXRkAwNjz4U90vjAQTVHNwkLYzx60F
+ OJTOP0f65qJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZr9JMQAKCRAADmhBGVaC
+ FbVaEAC/J2GP5mWAENPl5N/rrAjiHhtfb+rd/7hmMYHTXZ3o66u0LLXtR18yTWVrbGmdBa4Dhlk
+ qgiShaG/2eOyszCyTEn7mIJ0BJgIX+6kSXe2wzZ+S8kZxKqO4EkAshPd52t2wVTIEH/BfRZiUGc
+ u57syd+MLbgsdEKZKkZCEAErCkibdnsYZFhMgMZMQmAccHMxPy+YOh8UnWmq8q1nQ9Ik3UpwWRJ
+ T1HCzqR4PI/SWQYGo3M/Rai2c9CROjnStYMYQcWq2XhBk9ttPUdALWViXlaaljF6vCMpBzDtHyX
+ 8uZ5XWunp4SyN9jj/fWKkV6vyTTDQAq3Y1GT/saosMbhHNeQxqQiEoEYoRLgqB4EETFofkscpOP
+ Jf0kAm84w4/7mJsGI3ZaonTfiPnivsaE+RyPu9s3GVT/UHc2bWCXRos4RODLUt7wpSqY8BzXs/c
+ K2rqh/ew+73Qa1Oo/Dcjaalicp7dyzi7pp5U+NPzPj3o25SXNXWYZeHNsbxx2YnZgbkerq9vbfA
+ SAdY830EbnVTyH+EmlKaS1c3fcgnvhjm/zTsTA3vDGeWUjXbeVkW48WyNkUSi9MDc+Vozuqgugj
+ AzUE+zt91RBGUdDDHkZOn9o9UOq/YWChxnLmFDXWKvtY9/YM5dR6XFVSop7+NisNXVF4ZfuJtse
+ Ug9x/DkOrcQpGmA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On 2024/8/15 23:00, Alexander Duyck wrote:
-> On Wed, Aug 14, 2024 at 8:00 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2024/8/14 23:49, Alexander H Duyck wrote:
->>> On Thu, 2024-08-08 at 20:37 +0800, Yunsheng Lin wrote:
->>>> Currently the page_frag API is returning 'virtual address'
->>>> or 'va' when allocing and expecting 'virtual address' or
->>>> 'va' as input when freeing.
->>>>
->>>> As we are about to support new use cases that the caller
->>>> need to deal with 'struct page' or need to deal with both
->>>> 'va' and 'struct page'. In order to differentiate the API
->>>> handling between 'va' and 'struct page', add '_va' suffix
->>>> to the corresponding API mirroring the page_pool_alloc_va()
->>>> API of the page_pool. So that callers expecting to deal with
->>>> va, page or both va and page may call page_frag_alloc_va*,
->>>> page_frag_alloc_pg*, or page_frag_alloc* API accordingly.
->>>>
->>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>> Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
->>>> Acked-by: Chuck Lever <chuck.lever@oracle.com>
->>>> Acked-by: Sagi Grimberg <sagi@grimberg.me>
->>>> ---
->>>>  drivers/net/ethernet/google/gve/gve_rx.c      |  4 ++--
->>>>  drivers/net/ethernet/intel/ice/ice_txrx.c     |  2 +-
->>>>  drivers/net/ethernet/intel/ice/ice_txrx.h     |  2 +-
->>>>  drivers/net/ethernet/intel/ice/ice_txrx_lib.c |  2 +-
->>>>  .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |  4 ++--
->>>>  .../marvell/octeontx2/nic/otx2_common.c       |  2 +-
->>>>  drivers/net/ethernet/mediatek/mtk_wed_wo.c    |  4 ++--
->>>>  drivers/nvme/host/tcp.c                       |  8 +++----
->>>>  drivers/nvme/target/tcp.c                     | 22 +++++++++----------
->>>>  drivers/vhost/net.c                           |  6 ++---
->>>>  include/linux/page_frag_cache.h               | 21 +++++++++---------
->>>>  include/linux/skbuff.h                        |  2 +-
->>>>  kernel/bpf/cpumap.c                           |  2 +-
->>>>  mm/page_frag_cache.c                          | 12 +++++-----
->>>>  net/core/skbuff.c                             | 16 +++++++-------
->>>>  net/core/xdp.c                                |  2 +-
->>>>  net/rxrpc/txbuf.c                             | 15 +++++++------
->>>>  net/sunrpc/svcsock.c                          |  6 ++---
->>>>  .../selftests/mm/page_frag/page_frag_test.c   | 13 ++++++-----
->>>>  19 files changed, 75 insertions(+), 70 deletions(-)
->>>>
->>>
->>> I still say no to this patch. It is an unnecessary name change and adds
->>> no value. If you insist on this patch I will reject the set every time.
->>>
->>> The fact is it is polluting the git history and just makes things
->>> harder to maintain without adding any value as you aren't changing what
->>> the function does and there is no need for this. In addition it just
->>
->> I guess I have to disagree with the above 'no need for this' part for
->> now, as mentioned in [1]:
->>
->> "There are three types of API as proposed in this patchset instead of
->> two types of API:
->> 1. page_frag_alloc_va() returns [va].
->> 2. page_frag_alloc_pg() returns [page, offset].
->> 3. page_frag_alloc() returns [va] & [page, offset].
->>
->> You seemed to miss that we need a third naming for the type 3 API.
->> Do you see type 3 API as a valid API? if yes, what naming are you
->> suggesting for it? if no, why it is not a valid API?"
-> 
-> I didn't. I just don't see the point in pushing out the existing API
-> to support that. In reality 2 and 3 are redundant. You probably only
-> need 3. Like I mentioned earlier you can essentially just pass a
+This adds support for part of the "delstid" draft:
 
-If the caller just expect [page, offset], do you expect the caller also
-type 3 API, which return both [va] and [page, offset]?
+    https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/05/
 
-I am not sure if I understand why you think 2 and 3 are redundant here?
-If you think 2 and 3 are redundant here, aren't 1 and 3 also redundant
-as the similar agrument?
+Specifically, this adds support for the OPEN_XOR_DELEGATION part of the
+draft. That allows the client to avoid issuing CLOSE compounds when it
+holds a delegation.
 
-> page_frag via pointer to the function. With that you could also look
-> at just returning a virtual address as well if you insist on having
-> something that returns all of the above. No point in having 2 and 3 be
-> seperate functions.
+For the XDR handling, I used Chuck's new lkxdrgen tool to generate the
+relevant boilerplate, and then hand tweaked it in places to work around
+bugs in the decoder, naming conflicts, etc.
 
-Let's be more specific about what are your suggestion here: which way
-is the prefer way to return the virtual address. It seems there are two
-options:
+I've left the encoders and decoders for the delegated timestamp handling
+in the XDR patch, but I'm still studying that piece and it isn't
+implemented yet. That may require some timestamp handling surgery at the
+VFS layer. I think it's doable and may actually be simpler to implement
+on top of the multigrain work.
 
-1. Return the virtual address by function returning as below:
-void *page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio);
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (3):
+      nfsd: bring in support for delstid draft XDR encoding
+      nfsd: add support for FATTR4_OPEN_ARGUMENTS
+      nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
 
-2. Return the virtual address by double pointer as below:
-int page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio,
-		        void **va);
+ fs/nfsd/Makefile          |   2 +-
+ fs/nfsd/delstid_xdr.c     | 464 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/delstid_xdr.h     | 105 +++++++++++
+ fs/nfsd/nfs4state.c       |  29 ++-
+ fs/nfsd/nfs4xdr.c         |  57 +++++-
+ fs/nfsd/nfsd.h            |   3 +-
+ include/uapi/linux/nfs4.h |   7 +-
+ 7 files changed, 658 insertions(+), 9 deletions(-)
+---
+base-commit: 6d0cd2727ed2cf725b1f20dc4e2d0d138c1cf117
+change-id: 20240815-delstid-93290691ad11
 
-If the above options is what you have in mind, please be more specific
-which one is the prefer option, and why it is the prefer option.
-If the above options is not what you have in mind, please list out the
-declaration of API in your mind.
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-> 
-> I am going to nack this patch set if you insist on this pointless
-> renaming. The fact is it is just adding noise that adds no value.
 
