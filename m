@@ -1,331 +1,236 @@
-Return-Path: <linux-nfs+bounces-5441-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5442-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C28956DB0
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 16:42:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F5F3956F53
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 17:55:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E811C1C23E61
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 14:42:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17C411C22FFD
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 15:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C34D3188014;
-	Mon, 19 Aug 2024 14:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0916713698B;
+	Mon, 19 Aug 2024 15:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SHdnZUkn";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="y5oZqzhL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEGegQAg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D45186E2E;
-	Mon, 19 Aug 2024 14:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724078426; cv=fail; b=Z4qKE14/QZ5b4CgDnte4b+lvaZKK2tnmftRIkN/2RV+BeeA8bNg1lgY1al3DfP6MEEOd4zmmV3clYZNE538kQMpzRFhB5IUKrr1vbpE0nrRWrL2gzbaFr/jqkBrEMjTTioIACiUt41IcrGSv+xqkQ52Jk00YJ2CrTwglcMkuXsw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724078426; c=relaxed/simple;
-	bh=KI5NjDP9WRfbSOczziaztsPAZkwSSG/f+bPItzylbBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LuMKjTyfDE/Qh3/A9pdQ4K412hLnDOq+ey5o7+58Ypvyn/GE9T+0P0ePAREKQNnJXIBHWmVtla1CURwBSlyJY23WNYhoCfVlkGi9xSahBkbHGm/5BjMJKN/KxSV8MdYQGmhkY5W3XPIVNG7Ax0OBCy+fXjW9TYNS/jKHjwcjGUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SHdnZUkn; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=y5oZqzhL; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47JD6sfp003551;
-	Mon, 19 Aug 2024 14:40:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=B7vAQM6oLv/uaWE
-	PdCedTgxTOzIKi0HcpUR98HPJMPk=; b=SHdnZUknvOpqhZtVuu1d2Wv0ShKIwqe
-	7p1QS49D5TWsecYh5A+LS9e79+YoJCBLrxm9ZygOs9I4g15I7qN/veIdZK6z/Thy
-	7VihEkF7v5qJC/wERJT8HCwZNJCOhC1tKP2sjh5nIRpyueqXvBUjiuxe9EJpAnEN
-	otyVS/y9H4L67cZ3nO+4pwuFnmd1NjzLRqKpy0cqhpcH85dOtB669MiXr4I8jjUt
-	nm91+83CWn7oELJ+qIkBoL8TC/jEiONy6rK84htIUR9Shz2NHu0OSV3teLGag3xR
-	UvzXhwBeFmwKANmNCmWTInpBRDxqrDlo6IuXUSSbrGzByawOQIwG2lA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 412m4uts5f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Aug 2024 14:40:09 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47JEbHB5003084;
-	Mon, 19 Aug 2024 14:40:07 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 413h8qnwbp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Aug 2024 14:40:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vxFmm6WhiKuR63HwMGf4lVHHBeijJrCMDXhcSGn+SpsnqoYDdVIE0+rKHVprpotzUmX2EzsHs5WUvMOANLDE+kuAV9bn8ueMXZbjpL8621O2NHUGghC0i54Y0YPRzdjKyy3PL8SBhOesepTRjY+k3BBfeOSNlzE4qStKrrSN4rAwLv0CEETVMv4P3q163Ya2rjKGJx8D7ly898ONt2sc1cF5F+Tc38kQNb8pd7H7K3fkbH48KYMUKlqzRZvdtJ081W+SmH0d5FcBfA6QI+I43BKukQmOHl46OCkgHZipk3Kt3E0edwkWvZE4Dh4y2ME8EfIyjwg3/Ltmq1LPPvFWFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B7vAQM6oLv/uaWEPdCedTgxTOzIKi0HcpUR98HPJMPk=;
- b=MZCPpcmfVWvNNhOgWt51Y88tbhMXJ2xAMRdMbHN3pkW0XuKjeSyvdZFupQn9V+SRuJ+ScuxsoCNlNg35/0SFaG+FdbwIbMGYOXfNq/Cqz8AYRcM8KKbed0i1ksq2zNaPZmNsrv+x6SvcJkz2h3ZowGKg7o7w5xeCIWle/QjzCtjQcP5NWN3dBsR446jBkrdmWP1NJodoZeOI5v8onNSzNEtvGEa4ZUiM66jzoo4qxaDRINVzWDATzKuTu3HtHn7r/UMcyqIl/7Yw3B8x0yshOWWzs6ttTZmfq5s3JE3yv6Pt3X9r5eNXB0fOzcC1sjv4FohCMOk6pHgouQBShXaQMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142484964D;
+	Mon, 19 Aug 2024 15:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724082912; cv=none; b=nrHb105v5HG7Kugz4zoh4mXI0rIARR079rgQApmQTxJL1WCz5WtxyTGoOof91IgHjeoFz8eANNM7tJVMkDhW1qFICAnqLaZwHJQ/u+Yc4WAOBihLhSov1zXXzH77ItgMv/ZqMPAG0jHgS5e3O7x1BCwYrrLqV3hx1VCesACMtfw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724082912; c=relaxed/simple;
+	bh=nDiEC+oucoZKIe0++x2SH+xHDpiER8lsQQj93ua/syg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YLkdOW3EvwK+HPmX65F1gJ2POxOhkIR88Lo9i9g7iMHH1sTQWRJhKg4uWouCx2/X7Fapml4rBAVfIXjZHGzATN83PfcN9I5Q2UQIj1WuML+1Yb6lHfQlD2yA1ff+PX0IhWvUlIZJfQYrVT9aHm+B0/c7c0AZWk9EARIIAcLA+5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEGegQAg; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36d2a601c31so2625315f8f.0;
+        Mon, 19 Aug 2024 08:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B7vAQM6oLv/uaWEPdCedTgxTOzIKi0HcpUR98HPJMPk=;
- b=y5oZqzhLJ+z0sVSHdknv5zHvJRpGgJJNacEqOhAeQOF6/dH/q8kuqa2dr5h62Gm6OO1a43DyGnUyZ1GE6O8fr/mPl5cru77A0J6/FXkV4sQC5q47gFzfQpsITkZ6BYYpGxtPIiaz/jWhfUsbQwBpf2qk+AnnoWTZ6lsj//D44Gk=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH4PR10MB8146.namprd10.prod.outlook.com (2603:10b6:610:245::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.13; Mon, 19 Aug
- 2024 14:40:05 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7897.010; Mon, 19 Aug 2024
- 14:40:05 +0000
-Date: Mon, 19 Aug 2024 10:40:01 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: andrii.polianytsia@globallogic.com, sj1557.seo@samsung.com,
-        zach.malinowski@garmin.com, artem.dombrovskyi@globallogic.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        brauner@kernel.org,
-        Sergii Boryshchenko <sergii.boryshchenko@globallogic.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] fs/exfat: add NFS export support
-Message-ID: <ZsNZQRajNoZmllBU@tissot.1015granger.net>
-References: <20240819121528.70149-1-andrii.polianytsia@globallogic.com>
- <ZsNJNJE/bIWqsXl1@tissot.1015granger.net>
- <CAKYAXd98C6t2+h7Q8UC-p3fCTYtKCwmWvd4jCn1br_crc48KLw@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKYAXd98C6t2+h7Q8UC-p3fCTYtKCwmWvd4jCn1br_crc48KLw@mail.gmail.com>
-X-ClientProxiedBy: CH0PR04CA0002.namprd04.prod.outlook.com
- (2603:10b6:610:76::7) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1724082909; x=1724687709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sIOAt7qcIh7yk+Ak6kXM6rwImTNnnUyR1orHAIYs4r4=;
+        b=LEGegQAgR/u/Pdp8PHauHk2xrJgMCZAbSXg17MdTqhvhkGgiQdwVs+BDXZfl/oDM5M
+         7zLRwRBxSRU+perNXuitonz8pw70SpMKJRela/GbT657vXPopPBF6TaDRE3l71jImLWw
+         8ptBH+DdAjJhAt51xQFHL+6lfAGg6Nn07Nc6N6edT3195VpQHQVxerLHp1NSmZJIYk/E
+         4UED7clX/gQXBJXE/Mhn+FHzXOEuFDseYH0Osvta3jQKkXD8OGwyn0GFTEX6Twt2Ndr4
+         4NUukM3NHw2g494hm8Q+5JIbs7DzznV55WawzgRdHs7Uptw7rgWGVyqdSUWCJUvwjqtI
+         9ziA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724082909; x=1724687709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sIOAt7qcIh7yk+Ak6kXM6rwImTNnnUyR1orHAIYs4r4=;
+        b=jJbF0X1dNiYKEr0DOtmmG/c/Bb/mSFTsxpubTiPs9/tStOFpSoxMggxn0Y65ZWE363
+         I0h6TsMImik1slPgI5ilvJmByTFCyzaZVQtcgMcTGBpYzwfB5dYBa1tZj62kADnP+b7n
+         QoiuEV2DuCdw6/pVSXiqDvQbvjNdeCiNKug8pLqgK+ozfTQjyVPcA96IqaW1ZRuCPP/M
+         mdplU9G9cd9rRxg4ISOxznjenM1YoYEz522IEFatY5qDOvMjuat4gUG1Z4mH3CpqN0Ke
+         YpdNII8ForTiC2N7p58fhrfKN95QHo/MwxTynE9bljvjdP7pmXBAZLsZY3/CWaq0x9nU
+         gKeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4l25kHT4WUCl1V+AytZ8wIUMhh5x1+x3sfav6L1rY62eT5RBgVQV4DmGr44Y+PfRraLvYcB09za4JFvNiiMmpjonyHb6Ne+k6/zRT5Q41q/MJR4FaXqDde8ZI9kU2ljbXACIt1HiLCFg/JNoO84ZMVS4x4PJGnrQTGyM3EWRRC4xY9OGl5YfauVn9wG4ihvulFVhtGG755rt4rS49LjAA1JiqYHkgX0aPR95FUbDNiihKDrg+cc20oGzRDQIp8Z7VrNeUQgzivr6F
+X-Gm-Message-State: AOJu0YyGvTGb7qmSz1y0QmIWJEO2ASdPnMsyEEx0ynD4iX/20ceqcObh
+	VxvVJ+QlzXKJD/5bxsc2t6OfHtkXMFZrpWtH0IlsJD43woSKXk2soXxxU7iIm2h9+zIYg2pI6Y+
+	xLINBffQmn8Gt+Y/KB7QM0U8aVag=
+X-Google-Smtp-Source: AGHT+IH+5SdMMmvczHHbCQS3d2lV+42NHIBp97s6EuIfp9v1lsrp5Tb1uRlaaTz2L+/Rjsor4cGm4qQ4+md5bQzOvmo=
+X-Received: by 2002:a05:6000:1006:b0:371:8eaf:3c49 with SMTP id
+ ffacd0b85a97d-371946a32a9mr7016301f8f.40.1724082909035; Mon, 19 Aug 2024
+ 08:55:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH4PR10MB8146:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9ca4474-5981-4f3f-85c1-08dcc05cd0b3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jO20fcJodtAmbiu5iFZZisF0HAyn6OQkOsRsQw5Z+SMwf6gwM/q9GPMQoeJq?=
- =?us-ascii?Q?RqnQiI3GExxdBr5SbPBWoxlZRFC9SvkMmwNkbsLYJYMJgVRKr9DCDh4yceY8?=
- =?us-ascii?Q?fw9DrT2E70CFGIjyeKdQ8fN5VUZm0Hj5oUvm0bvX2onJZYe42+MgVGKCG+n/?=
- =?us-ascii?Q?33GOkxgksQDGiGlFFlpHUnSVSLOA4gRTnOQiG9JEsxoeFL203KaFTitA88z2?=
- =?us-ascii?Q?FV/3KRbl9Z9Sw5CtVGjsscp3qmrTLHfINvbUIuYY49QcCgu/cD4bfW7LC5hT?=
- =?us-ascii?Q?14cloblzGSHMevW8MYrCqQEupy488+FsqBAX97iNdE8uFfyLHC8z3SATrKtE?=
- =?us-ascii?Q?qUNHWx52hO9UlpbeO0u8DB876THuqTvC3XoFHhSteWYxzjCyUETXPprnTDGp?=
- =?us-ascii?Q?DU59j3mhBeIVHCDrvQBSl979Dg9FhEgoB9edIOTMBuTcVcRgamG1TfRzHBuB?=
- =?us-ascii?Q?MspvWS/M6in/wzPiD/DNMOHavG9iWwnQ43RocLCO3oWr+kkuyvromKmEK4p/?=
- =?us-ascii?Q?5T2/C9YR91soJSPDjEXiONNCxdTzcxaRhkMLK6H/MX+AeRU33dC+drHp3rWb?=
- =?us-ascii?Q?3S+1zzOezJRg8dmvmImJeZVHvyn9BGUzQpfEQ7G3HobmZRo9CTYkQlSNG5OP?=
- =?us-ascii?Q?sw9S4LKnoXnMPaJ/shSu1VlJhJn2i1ZJPGazriJfA3Dgu7P/LcyzqLn5uHYN?=
- =?us-ascii?Q?rX3XvrcphYNDFrCs+FBhScM4WOx19lPJlc/guPXlJKBsDUCjPHWW8b6we5Z+?=
- =?us-ascii?Q?nuQ2sOtS3Jr+5LwsgxFJnj+2yAt8yBVFNv+ibC0ZkL2TmdggWIArd6rZpUnp?=
- =?us-ascii?Q?XVfUmQ1pZE7NHxu+IvCoF7CU0E8gMog4NLjI1eyRm7wX+HMRRo7fFXtgfFdI?=
- =?us-ascii?Q?qgEFVRSP211GKBLe19CYNHy/1Al1NLnXpw2OKnE9Zf1SFntFF7H52VvLh7oP?=
- =?us-ascii?Q?rQ0thL5ZRrqVmEBVpu0I3r1nhQI52B0+TyI5GsbWN3HpLQQKOR6WI9PkF8yJ?=
- =?us-ascii?Q?MemVOVyrCWCGuSt7xYKXl4BnaC6KFGbXq4tZQc3lHsoYUpXVpoRIfD6vHAVr?=
- =?us-ascii?Q?CJA+W1t7zPkQCfpHwP9CdGofzVkxaIjKZ4leWPiIKcfI4yi9wHNA1CXjyrF5?=
- =?us-ascii?Q?fz5KpdJ+76s7mpaZwPQhrN6k7cfNthS0w8KGbv1a8lTv3RpbtK51n7DSv5lg?=
- =?us-ascii?Q?i5uimzoHByc8A75Y+r5gtv2OZGy/vm8Oa12k9AkWyh1ZkEjYvLUzq8v1rgzk?=
- =?us-ascii?Q?l5F57FEGEqw3Qg7ir2BHyN2ZtvYRf26lTGmZrXCohH2RR/qV3TTHjnwD7kfm?=
- =?us-ascii?Q?jn1cMVWS9eD8v0XPWCH8E3FCbuVxv3W9xVPUP3i3fKLT2w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UqJ+qWkX88oFL7tZypY9KlWs6lnDYgBH1xmumjeuCWXsZgRgArMHfH3fle8v?=
- =?us-ascii?Q?9qQ1aFv9tGstC/vH+/2ifoZPQTJ0pkQZea1j3p+jrRfQUORjQXjc6zqD5LtO?=
- =?us-ascii?Q?rPX8NSxO6PnAf4silEv2RYb7/iqr5sEc7Cjx9yhcdAuG07cyiEXqYalj1sbT?=
- =?us-ascii?Q?SHKKfCRzo9NbOehrlE2vim6GZBuUaOJ4j+clJpod71PRRgyRXXPdmJuSdNV/?=
- =?us-ascii?Q?okC14wP2kY6EEaO4YrfQfJRhbhI2wd5HPhHXCxe0d/70co6cHWVPAxQwtmxX?=
- =?us-ascii?Q?cUQsFRfrWljkwrvA/6al1iGTdai96iniNNB9PMMIyCyDCbEKtYi1+tWukAFG?=
- =?us-ascii?Q?ZifVarEy53uU1xQGCxD7+fX+/5ldugbBhtU4vAkV+I8E9BeTgVt7st3TnAnR?=
- =?us-ascii?Q?dwXD67bZutAMER0sGt+qhTEVAH2W9Sh3Z2rC18Rs4UHR6do+bt+gfucIXw+9?=
- =?us-ascii?Q?rtb8W53A3QnAA2TxKWCaH3n8SNXBLY/o67+f0ym5rlhkonUXkQR9GX8UVmnU?=
- =?us-ascii?Q?XV054edWRofiSNsueSyuMqra+Ezdfr+AcJ5CRQExz9jjzvhl8VkO1jcTwnzn?=
- =?us-ascii?Q?f4/tV1su8MYspYyxopFwTln+7vEEqLSC2rKdWWbRonfZ+f+8k9KnUti2MG3S?=
- =?us-ascii?Q?eqxfW92taKcElHsc/hT+twSLAVFuk9AtyHEglgKkpkswplHa7TM5P5s5GS+/?=
- =?us-ascii?Q?L/PMg3lB3oA8oyejlE/2GGIQTb1zP9/uo0/ZaCYmgSiSYuEM6tIVV3ekLqrK?=
- =?us-ascii?Q?8rUCMB5hGwS9hNXvAFPXu3QGoC4xtqDXapA9VhIQT8HgXbV9nMJYsQiK02QH?=
- =?us-ascii?Q?GXYo+ahSdWLp978ZYSAYTuVfmO691MbCplzo7GRVoq7pfQwuIoq1Yu8hr0Mk?=
- =?us-ascii?Q?jRv+7vLslGCwbNPKkXb4JedyDMgdDTapf0Td6PYE18b+LilUS4GVBwdgUidd?=
- =?us-ascii?Q?rf0a7Qb2md1e96fUGKbVb/9Tm0ZlEEnH0S7F29/9sfDvIztGbsFbXhZDVQ76?=
- =?us-ascii?Q?PS12FLee4ACkofaLWGlLxQyrtr1S6+Uni/+rtjhO6HXX1JQ1+PJajn0z1w5j?=
- =?us-ascii?Q?+X48suQ8/blHzzrKTK8C/VdDLjWcRGqxuFNkjMmzFs3D0XFBdkfIpw3nvvIn?=
- =?us-ascii?Q?JDZ9ikS847grm+QwTS6lgXLdH1TWB7h//ZURs69izq+BZPw4iwP4qxwuqGj0?=
- =?us-ascii?Q?hB4tY61qzSE/OA4uvsr/0vBap93UGEVKTyNZ7UblgvtJHxW5ePa1ejRtC4MR?=
- =?us-ascii?Q?5T58fZKZpJIR+5B17G2jlSyBHmRyEYHSwppujN+2ZCODCG2bzbQu/dvpJPoC?=
- =?us-ascii?Q?md5K0CTCwRmuI6cVxEB3XVf530hPw4mQpzNOBBP5cPkJe69Dz++LPX4XSPu0?=
- =?us-ascii?Q?CsmPyqwNmA+xnEUTKiCg55IfAi4n/e46kT0vbw9/DO/0RMt6O636+q4rUSOA?=
- =?us-ascii?Q?iouzwfzPclN6rAaOJ2IG4YIkZP9rEhCMeGRGmiKHPmFBpDgZSCdlYjfBLb2J?=
- =?us-ascii?Q?4E2Yww2qSuo2Es5zp/Fh2Bc9fJt14p4bXJoNRQJZWB8CF455/tpWOjHOiIi5?=
- =?us-ascii?Q?z0E6tNS2mHwCUNv5CjNMqx6SVNmC9JvqzfVCwkqW?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	XUDBhgtyVtlrSDHI2BixaOj62Iysn9LBEy0cprIFqk9UtdjXoilzl/HSOUlJdXiV3LzIB1R5AIsq20SNNocB74RJ3SmAnSx2RlLWTEdJ4TfSuxEgP8Lnzys6tEx23G7tyI5IKVq1+lPK51LPLQ/tZmfeZPsMGDjSM6cMutoUzla9YKSeceDqzJQRiXqOmJHIo0/sLRfhUoo3adQ4S9FREVME0vccJDgnYlEEB9KN/w5YYxPWr4l5p0hKgpyStMDq62g5wuU5psH6mH/Hj+S49BuxuRb997ercQsEDApzLot62triksdAQknm+Ev1uZCAW61zn44fkaOFDjLnGP++gspmkZZfRYY9FIvp52fTO2waor6eHuklvMvYu8sWDK7H71nfCfeFteXCmN9Bb/lm3pYvE0uOm5zLEy5TF+8iV+a7b5zte4iv4pLk/ltp8yecSekFQklTKh01QHdiYKNlH/AJ719TdB0H8uthhterscLnGoHSOhS31lDPP1/AI9689Q84dtsvIVElq8TdMylWS9vxwPEGVrqbJcPJn7pCAxkHJaZr1WM6aySCR5ndjw7E7/r8lCYk/V5Vdc24HREqNR3ld15K1pvl5aynhyBKAds=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9ca4474-5981-4f3f-85c1-08dcc05cd0b3
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2024 14:40:05.2158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Bbc27vOxMUt81/H+8o5S2FhvH5dNo/9IVhDMkEcEgIDTQipMi7mj/m9kS0Jlgtc96zcz43SGK6go/NWKofOw+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR10MB8146
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-19_13,2024-08-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408190097
-X-Proofpoint-ORIG-GUID: O5EgPSkor67TRCgLc0Lujn4tilT4Hro9
-X-Proofpoint-GUID: O5EgPSkor67TRCgLc0Lujn4tilT4Hro9
+References: <20240808123714.462740-1-linyunsheng@huawei.com>
+ <20240808123714.462740-5-linyunsheng@huawei.com> <d1a23116d054e2ebb00067227f0cffecefe33e11.camel@gmail.com>
+ <676a2a15-d390-48a7-a8d7-6e491c89e200@huawei.com> <CAKgT0Uct5ptfs9ZEoe-9u-fOVz4HLf+5MS-YidKV+xELCBHKNw@mail.gmail.com>
+ <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
+In-Reply-To: <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Mon, 19 Aug 2024 08:54:32 -0700
+Message-ID: <CAKgT0UcDDFeMqD_eRe1-2Og0GEEFyNP90E9SDxDjskdgtMe0Uw@mail.gmail.com>
+Subject: Re: [PATCH net-next v13 04/14] mm: page_frag: add '_va' suffix to
+ page_frag API
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Subbaraya Sundeep <sbhatta@marvell.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Sagi Grimberg <sagi@grimberg.me>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>, 
+	Eric Dumazet <edumazet@google.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Sunil Goutham <sgoutham@marvell.com>, 
+	Geetha sowjanya <gakula@marvell.com>, hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, 
+	Sean Wang <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
+	bpf@vger.kernel.org, linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 19, 2024 at 11:21:05PM +0900, Namjae Jeon wrote:
+On Fri, Aug 16, 2024 at 4:55=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.co=
+m> wrote:
+>
+> On 2024/8/15 23:00, Alexander Duyck wrote:
+> > On Wed, Aug 14, 2024 at 8:00=E2=80=AFPM Yunsheng Lin <linyunsheng@huawe=
+i.com> wrote:
+> >>
+> >> On 2024/8/14 23:49, Alexander H Duyck wrote:
+> >>> On Thu, 2024-08-08 at 20:37 +0800, Yunsheng Lin wrote:
+> >>>> Currently the page_frag API is returning 'virtual address'
+> >>>> or 'va' when allocing and expecting 'virtual address' or
+> >>>> 'va' as input when freeing.
+> >>>>
+> >>>> As we are about to support new use cases that the caller
+> >>>> need to deal with 'struct page' or need to deal with both
+> >>>> 'va' and 'struct page'. In order to differentiate the API
+> >>>> handling between 'va' and 'struct page', add '_va' suffix
+> >>>> to the corresponding API mirroring the page_pool_alloc_va()
+> >>>> API of the page_pool. So that callers expecting to deal with
+> >>>> va, page or both va and page may call page_frag_alloc_va*,
+> >>>> page_frag_alloc_pg*, or page_frag_alloc* API accordingly.
+> >>>>
+> >>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> >>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> >>>> Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> >>>> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> >>>> Acked-by: Sagi Grimberg <sagi@grimberg.me>
+> >>>> ---
+> >>>>  drivers/net/ethernet/google/gve/gve_rx.c      |  4 ++--
+> >>>>  drivers/net/ethernet/intel/ice/ice_txrx.c     |  2 +-
+> >>>>  drivers/net/ethernet/intel/ice/ice_txrx.h     |  2 +-
+> >>>>  drivers/net/ethernet/intel/ice/ice_txrx_lib.c |  2 +-
+> >>>>  .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |  4 ++--
+> >>>>  .../marvell/octeontx2/nic/otx2_common.c       |  2 +-
+> >>>>  drivers/net/ethernet/mediatek/mtk_wed_wo.c    |  4 ++--
+> >>>>  drivers/nvme/host/tcp.c                       |  8 +++----
+> >>>>  drivers/nvme/target/tcp.c                     | 22 +++++++++-------=
+---
+> >>>>  drivers/vhost/net.c                           |  6 ++---
+> >>>>  include/linux/page_frag_cache.h               | 21 +++++++++-------=
+--
+> >>>>  include/linux/skbuff.h                        |  2 +-
+> >>>>  kernel/bpf/cpumap.c                           |  2 +-
+> >>>>  mm/page_frag_cache.c                          | 12 +++++-----
+> >>>>  net/core/skbuff.c                             | 16 +++++++-------
+> >>>>  net/core/xdp.c                                |  2 +-
+> >>>>  net/rxrpc/txbuf.c                             | 15 +++++++------
+> >>>>  net/sunrpc/svcsock.c                          |  6 ++---
+> >>>>  .../selftests/mm/page_frag/page_frag_test.c   | 13 ++++++-----
+> >>>>  19 files changed, 75 insertions(+), 70 deletions(-)
+> >>>>
+> >>>
+> >>> I still say no to this patch. It is an unnecessary name change and ad=
+ds
+> >>> no value. If you insist on this patch I will reject the set every tim=
+e.
+> >>>
+> >>> The fact is it is polluting the git history and just makes things
+> >>> harder to maintain without adding any value as you aren't changing wh=
+at
+> >>> the function does and there is no need for this. In addition it just
+> >>
+> >> I guess I have to disagree with the above 'no need for this' part for
+> >> now, as mentioned in [1]:
+> >>
+> >> "There are three types of API as proposed in this patchset instead of
+> >> two types of API:
+> >> 1. page_frag_alloc_va() returns [va].
+> >> 2. page_frag_alloc_pg() returns [page, offset].
+> >> 3. page_frag_alloc() returns [va] & [page, offset].
+> >>
+> >> You seemed to miss that we need a third naming for the type 3 API.
+> >> Do you see type 3 API as a valid API? if yes, what naming are you
+> >> suggesting for it? if no, why it is not a valid API?"
 > >
-> > [ ... adding linux-nfs@vger.kernel.org ]
-> >
-> > On Mon, Aug 19, 2024 at 03:15:28PM +0300, andrii.polianytsia@globallogic.com wrote:
-> > > Add NFS export support to the exFAT filesystem by implementing
-> > > the necessary export operations in fs/exfat/super.c. Enable
-> > > exFAT filesystems to be exported and accessed over NFS, enhancing
-> > > their utility in networked environments.
-> > >
-> > > Introduce the exfat_export_ops structure, which includes
-> > > functions to handle file handles and inode lookups necessary for NFS
-> > > operations.
-> >
-> > My memory is dim, but I think the reason that exporting exfat isn't
-> > supported already is because it's file handles aren't persistent.
-> Yes, and fat is the same but it supports nfs.
-> They seem to want to support it even considering the -ESTALE result by eviction.
-> This patch seems to refer to /fs/fat/nfs.c code which has the same issue.
+> > I didn't. I just don't see the point in pushing out the existing API
+> > to support that. In reality 2 and 3 are redundant. You probably only
+> > need 3. Like I mentioned earlier you can essentially just pass a
+>
+> If the caller just expect [page, offset], do you expect the caller also
+> type 3 API, which return both [va] and [page, offset]?
+>
+> I am not sure if I understand why you think 2 and 3 are redundant here?
+> If you think 2 and 3 are redundant here, aren't 1 and 3 also redundant
+> as the similar agrument?
 
-Fair enough. I don't see a reference to fs/fat/nfs.c, so may I
-request that this added context be included in the patch description
-before this patch is merged?
+The big difference is the need to return page and offset. Basically to
+support returning page and offset you need to pass at least one value
+as a pointer so you can store the return there.
 
-Out of curiosity, is any CI testing done on fat exported via NFS? At
-the moment I don't happen to include it in NFSD's CI matrix.
+The reason why 3 is just a redundant form of 2 is that you will
+normally just be converting from a va to a page and offset so the va
+should already be easily accessible.
 
+> > page_frag via pointer to the function. With that you could also look
+> > at just returning a virtual address as well if you insist on having
+> > something that returns all of the above. No point in having 2 and 3 be
+> > seperate functions.
+>
+> Let's be more specific about what are your suggestion here: which way
+> is the prefer way to return the virtual address. It seems there are two
+> options:
+>
+> 1. Return the virtual address by function returning as below:
+> void *page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio=
+);
+>
+> 2. Return the virtual address by double pointer as below:
+> int page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio,
+>                         void **va);
 
-> > NFS requires that file handles remain the same across server
-> > restarts or umount/mount cycles of the exported file system.
-> >
-> >
-> > > Signed-off-by: Sergii Boryshchenko <sergii.boryshchenko@globallogic.com>
-> > > Signed-off-by: Andrii Polianytsia <andrii.polianytsia@globallogic.com>
-> > > ---
-> > >  fs/exfat/super.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 65 insertions(+)
-> > >
-> > > diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-> > > index 323ecebe6f0e..cb6dcafc3007 100644
-> > > --- a/fs/exfat/super.c
-> > > +++ b/fs/exfat/super.c
-> > > @@ -18,6 +18,7 @@
-> > >  #include <linux/nls.h>
-> > >  #include <linux/buffer_head.h>
-> > >  #include <linux/magic.h>
-> > > +#include <linux/exportfs.h>
-> > >
-> > >  #include "exfat_raw.h"
-> > >  #include "exfat_fs.h"
-> > > @@ -195,6 +196,69 @@ static const struct super_operations exfat_sops = {
-> > >       .show_options   = exfat_show_options,
-> > >  };
-> > >
-> > > +/**
-> > > + * exfat_export_get_inode - Get inode for export operations
-> > > + * @sb: Superblock pointer
-> > > + * @ino: Inode number
-> > > + * @generation: Generation number
-> > > + *
-> > > + * Returns pointer to inode or error pointer in case of an error.
-> > > + */
-> > > +static struct inode *exfat_export_get_inode(struct super_block *sb, u64 ino,
-> > > +     u32 generation)
-> > > +{
-> > > +     struct inode *inode = NULL;
-> > > +
-> > > +     if (ino == 0)
-> > > +             return ERR_PTR(-ESTALE);
-> > > +
-> > > +     inode = ilookup(sb, ino);
-> > > +     if (inode && generation && inode->i_generation != generation) {
-> > > +             iput(inode);
-> > > +             return ERR_PTR(-ESTALE);
-> > > +     }
-> > > +
-> > > +     return inode;
-> > > +}
-> > > +
-> > > +/**
-> > > + * exfat_fh_to_dentry - Convert file handle to dentry
-> > > + * @sb: Superblock pointer
-> > > + * @fid: File identifier
-> > > + * @fh_len: Length of the file handle
-> > > + * @fh_type: Type of the file handle
-> > > + *
-> > > + * Returns dentry corresponding to the file handle.
-> > > + */
-> > > +static struct dentry *exfat_fh_to_dentry(struct super_block *sb,
-> > > +     struct fid *fid, int fh_len, int fh_type)
-> > > +{
-> > > +     return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
-> > > +             exfat_export_get_inode);
-> > > +}
-> > > +
-> > > +/**
-> > > + * exfat_fh_to_parent - Convert file handle to parent dentry
-> > > + * @sb: Superblock pointer
-> > > + * @fid: File identifier
-> > > + * @fh_len: Length of the file handle
-> > > + * @fh_type: Type of the file handle
-> > > + *
-> > > + * Returns parent dentry corresponding to the file handle.
-> > > + */
-> > > +static struct dentry *exfat_fh_to_parent(struct super_block *sb,
-> > > +     struct fid *fid, int fh_len, int fh_type)
-> > > +{
-> > > +     return generic_fh_to_parent(sb, fid, fh_len, fh_type,
-> > > +             exfat_export_get_inode);
-> > > +}
-> > > +
-> > > +static const struct export_operations exfat_export_ops = {
-> > > +     .encode_fh = generic_encode_ino32_fh,
-> > > +     .fh_to_dentry = exfat_fh_to_dentry,
-> > > +     .fh_to_parent = exfat_fh_to_parent,
-> > > +};
-> > > +
-> > >  enum {
-> > >       Opt_uid,
-> > >       Opt_gid,
-> > > @@ -633,6 +697,7 @@ static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
-> > >       sb->s_flags |= SB_NODIRATIME;
-> > >       sb->s_magic = EXFAT_SUPER_MAGIC;
-> > >       sb->s_op = &exfat_sops;
-> > > +     sb->s_export_op = &exfat_export_ops;
-> > >
-> > >       sb->s_time_gran = 10 * NSEC_PER_MSEC;
-> > >       sb->s_time_min = EXFAT_MIN_TIMESTAMP_SECS;
-> > > --
-> > > 2.25.1
-> > >
-> > >
-> >
-> > --
-> > Chuck Lever
-
--- 
-Chuck Lever
+I was thinking more of option 1. Basically this is a superset of
+page_frag_alloc_va that is also returning the page and offset via a
+page frag. However instead of bio_vec I would be good with "struct
+page_frag *" being the value passed to the function to play the role
+of container. Basically the big difference between 1 and 2/3 if I am
+not mistaken is the fact that for 1 you pass the size, whereas with
+2/3 you are peeling off the page frag from the larger page frag cache
+after the fact via a commit type action.
 
