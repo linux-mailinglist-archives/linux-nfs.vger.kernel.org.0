@@ -1,236 +1,237 @@
-Return-Path: <linux-nfs+bounces-5442-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5443-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F5F3956F53
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 17:55:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFAE6956F74
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 17:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17C411C22FFD
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 15:55:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F5CC1C2031A
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 15:59:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0916713698B;
-	Mon, 19 Aug 2024 15:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48FD613698F;
+	Mon, 19 Aug 2024 15:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEGegQAg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hWdFhSAK";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pGVjMseb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142484964D;
-	Mon, 19 Aug 2024 15:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724082912; cv=none; b=nrHb105v5HG7Kugz4zoh4mXI0rIARR079rgQApmQTxJL1WCz5WtxyTGoOof91IgHjeoFz8eANNM7tJVMkDhW1qFICAnqLaZwHJQ/u+Yc4WAOBihLhSov1zXXzH77ItgMv/ZqMPAG0jHgS5e3O7x1BCwYrrLqV3hx1VCesACMtfw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724082912; c=relaxed/simple;
-	bh=nDiEC+oucoZKIe0++x2SH+xHDpiER8lsQQj93ua/syg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YLkdOW3EvwK+HPmX65F1gJ2POxOhkIR88Lo9i9g7iMHH1sTQWRJhKg4uWouCx2/X7Fapml4rBAVfIXjZHGzATN83PfcN9I5Q2UQIj1WuML+1Yb6lHfQlD2yA1ff+PX0IhWvUlIZJfQYrVT9aHm+B0/c7c0AZWk9EARIIAcLA+5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEGegQAg; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36d2a601c31so2625315f8f.0;
-        Mon, 19 Aug 2024 08:55:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D92D045;
+	Mon, 19 Aug 2024 15:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724083160; cv=fail; b=jpoJ0b1DV9+sTJqBuH6fFi3Z8cLDFJgIIsXEmbikxaz1wO7aGcxLlrzkaDeougrrNU59AdxR4QEZLrIlE/VVjket0f5Z2YdAIVUGwc7BjiNVtmjmVbJjfXCepulah7FCMpbXQ5uoeCNARX9vm7BU3QJUGNbcG96iamy295A9gC4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724083160; c=relaxed/simple;
+	bh=rFB1ujjvXQd2mqo2FUgWRcXz4P/O9OAJYMkR/AZ+1yo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dw2br49xVKcDyzBDVEqg8+w/9j1dCS9Yz8qn+kUXGj6Cs8N3WvDO0djmatBAff2EJt+5YYSJNTF9sjQ9ByTrrIYv9A1J7Hp2c0UzVSnmCdZvd2g/+eBKHFQ6s/VPYETZp3yg5w/qFSGqqooavdml/8DcY9z6Oqxha70ygp08mGM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hWdFhSAK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=pGVjMseb; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47JD6so0013190;
+	Mon, 19 Aug 2024 15:59:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=corp-2023-11-20; bh=QqAIR2V86dsPL/
+	5hjufp6H4anoJk1+69Uu+D7oyYFJ4=; b=hWdFhSAKV3fls0e3k5SeV4hp2JE0D7
+	1I0L6xqpO6RsS2KF1UWnDjpuukLbjvS/Ilvq/mgrX2tqb0dQHdwCi6btTnntIM4I
+	d0Bd+Tm6JBA8zUXg9E6G9GoeMFqLnb3WJwshsdD4uliH9qDfFr6BXGSQhId2P6T3
+	ngKyNNaN+GlDXNALLh92GrRbd4e/AkjqoA/6l8sWJIoA9SnLWUFrydXAqzXoP8PF
+	akrdMtXs5klJia/oiTZ/GLFhbo7V8hHWhB+JLba4qj60L30Mg69pbaqMAVinpmsK
+	NQz9hNmj4mlMfiOvvC0eUZz3FbesZSEUJY1EGeUwLHxxgipiGz+BjoxA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 412m67axp4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Aug 2024 15:59:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47JEbHjD018969;
+	Mon, 19 Aug 2024 15:59:08 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2049.outbound.protection.outlook.com [104.47.55.49])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 413h428msb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Aug 2024 15:59:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gwd9GARb+2dAlYAa+PGs0GtDHhWpxpD1P0we2LrShEtlP5wQ3mniFHlkhU3vRMaZgJ2nEz6cYfaoIcTaTOfqdi+HUS5pkZzm1GAMlRxi0TEyfKBcDZcWJrQBr2U6QmP66QU1coCuXuxeB6tswvWGQnow/fkUQ2kQ9njTuKGJa5Dwh4kw1d4e6iwVJ8PPgfGiaKrbQPOLaUjSkBaPlXgXHHx15TxFPAdJj/7l3gb8p3e8AABPa5t2GYe5QlPgL6uiuGXCvVAc0cpmGcmR7kuIwcU6M5fVOtMgZ/OpgChdglZRvTINIy0ne1VoF7H9+30z3zoesZQ3bOavhTI7kwcEFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QqAIR2V86dsPL/5hjufp6H4anoJk1+69Uu+D7oyYFJ4=;
+ b=a3aFMXXHJNnSlH1KzuMLuOZSFdFffCaLxbnGk1PGgLRVBUoqKMgQo2AxN9s6IXTl9ZMpt6RTt7lPGXknnicLqe5wxaTBnbrwkcdWcknd32uiA+8kkJ/GPdoAg7Dx4u3vzpB/GXRZbqGlHqnNx7UPwIRUM4oHbSO/pSKcog9xYpzE7kTAdNDT2KNSo6pxffbHdXQRfS34uXOT7crZAYgYHz6pbMadcUmz674fBcNtMdbRjTiJLywWL2flTptnHFVj8hb8M4c9dR6GhWpwinae6GgnS7aIQohAaT2QVMptjPn5jDGvX7ZcS3m+3giRfsrEsM2mvG4NZElLbQjQv/pqig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724082909; x=1724687709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sIOAt7qcIh7yk+Ak6kXM6rwImTNnnUyR1orHAIYs4r4=;
-        b=LEGegQAgR/u/Pdp8PHauHk2xrJgMCZAbSXg17MdTqhvhkGgiQdwVs+BDXZfl/oDM5M
-         7zLRwRBxSRU+perNXuitonz8pw70SpMKJRela/GbT657vXPopPBF6TaDRE3l71jImLWw
-         8ptBH+DdAjJhAt51xQFHL+6lfAGg6Nn07Nc6N6edT3195VpQHQVxerLHp1NSmZJIYk/E
-         4UED7clX/gQXBJXE/Mhn+FHzXOEuFDseYH0Osvta3jQKkXD8OGwyn0GFTEX6Twt2Ndr4
-         4NUukM3NHw2g494hm8Q+5JIbs7DzznV55WawzgRdHs7Uptw7rgWGVyqdSUWCJUvwjqtI
-         9ziA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724082909; x=1724687709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sIOAt7qcIh7yk+Ak6kXM6rwImTNnnUyR1orHAIYs4r4=;
-        b=jJbF0X1dNiYKEr0DOtmmG/c/Bb/mSFTsxpubTiPs9/tStOFpSoxMggxn0Y65ZWE363
-         I0h6TsMImik1slPgI5ilvJmByTFCyzaZVQtcgMcTGBpYzwfB5dYBa1tZj62kADnP+b7n
-         QoiuEV2DuCdw6/pVSXiqDvQbvjNdeCiNKug8pLqgK+ozfTQjyVPcA96IqaW1ZRuCPP/M
-         mdplU9G9cd9rRxg4ISOxznjenM1YoYEz522IEFatY5qDOvMjuat4gUG1Z4mH3CpqN0Ke
-         YpdNII8ForTiC2N7p58fhrfKN95QHo/MwxTynE9bljvjdP7pmXBAZLsZY3/CWaq0x9nU
-         gKeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4l25kHT4WUCl1V+AytZ8wIUMhh5x1+x3sfav6L1rY62eT5RBgVQV4DmGr44Y+PfRraLvYcB09za4JFvNiiMmpjonyHb6Ne+k6/zRT5Q41q/MJR4FaXqDde8ZI9kU2ljbXACIt1HiLCFg/JNoO84ZMVS4x4PJGnrQTGyM3EWRRC4xY9OGl5YfauVn9wG4ihvulFVhtGG755rt4rS49LjAA1JiqYHkgX0aPR95FUbDNiihKDrg+cc20oGzRDQIp8Z7VrNeUQgzivr6F
-X-Gm-Message-State: AOJu0YyGvTGb7qmSz1y0QmIWJEO2ASdPnMsyEEx0ynD4iX/20ceqcObh
-	VxvVJ+QlzXKJD/5bxsc2t6OfHtkXMFZrpWtH0IlsJD43woSKXk2soXxxU7iIm2h9+zIYg2pI6Y+
-	xLINBffQmn8Gt+Y/KB7QM0U8aVag=
-X-Google-Smtp-Source: AGHT+IH+5SdMMmvczHHbCQS3d2lV+42NHIBp97s6EuIfp9v1lsrp5Tb1uRlaaTz2L+/Rjsor4cGm4qQ4+md5bQzOvmo=
-X-Received: by 2002:a05:6000:1006:b0:371:8eaf:3c49 with SMTP id
- ffacd0b85a97d-371946a32a9mr7016301f8f.40.1724082909035; Mon, 19 Aug 2024
- 08:55:09 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QqAIR2V86dsPL/5hjufp6H4anoJk1+69Uu+D7oyYFJ4=;
+ b=pGVjMsebK+9TCepmOEXxbtp8YIL94XwBycjHpptp1smhW8RpPH2QNjdzin2XKWMgwDDi87Lq22gjX62FoQNuYwJ270DTsMDvZLAQqjMVRfSvS4UyI6QkDXuLO4pIasjH75icFLhDVZb/6WoTHiGlIB9s5At2ih/avdAlMbzzVxU=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by CO6PR10MB5635.namprd10.prod.outlook.com (2603:10b6:303:14a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.13; Mon, 19 Aug
+ 2024 15:59:05 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%4]) with mapi id 15.20.7897.010; Mon, 19 Aug 2024
+ 15:59:05 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Tom Talpey <tom@talpey.com>,
+        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Olga Kornievskaia <kolga@netapp.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2] SUNRPC: convert RPC_TASK_* constants to enum
+Date: Mon, 19 Aug 2024 08:58:59 -0700
+Message-ID: <20240819155901.416560-1-stephen.s.brennan@oracle.com>
+X-Mailer: git-send-email 2.43.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO2P265CA0447.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:e::27) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808123714.462740-1-linyunsheng@huawei.com>
- <20240808123714.462740-5-linyunsheng@huawei.com> <d1a23116d054e2ebb00067227f0cffecefe33e11.camel@gmail.com>
- <676a2a15-d390-48a7-a8d7-6e491c89e200@huawei.com> <CAKgT0Uct5ptfs9ZEoe-9u-fOVz4HLf+5MS-YidKV+xELCBHKNw@mail.gmail.com>
- <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
-In-Reply-To: <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
-From: Alexander Duyck <alexander.duyck@gmail.com>
-Date: Mon, 19 Aug 2024 08:54:32 -0700
-Message-ID: <CAKgT0UcDDFeMqD_eRe1-2Og0GEEFyNP90E9SDxDjskdgtMe0Uw@mail.gmail.com>
-Subject: Re: [PATCH net-next v13 04/14] mm: page_frag: add '_va' suffix to
- page_frag API
-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Subbaraya Sundeep <sbhatta@marvell.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Sagi Grimberg <sagi@grimberg.me>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>, 
-	Eric Dumazet <edumazet@google.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Sunil Goutham <sgoutham@marvell.com>, 
-	Geetha sowjanya <gakula@marvell.com>, hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, 
-	Sean Wang <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith Busch <kbusch@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-nvme@lists.infradead.org, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
-	bpf@vger.kernel.org, linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|CO6PR10MB5635:EE_
+X-MS-Office365-Filtering-Correlation-Id: 683fb584-b44d-4c47-df92-08dcc067da39
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fy1xlJGe+VjMTa7HoVa9Vds2x9JhBQMeW7WRqBFPEf1/BThvdgyeZT/KbyAI?=
+ =?us-ascii?Q?Jg4bXpGkIAaVXrG/PClWs4QngXtKaHDZgfV52KmWoK0OLsV/Bb+McUnWITRT?=
+ =?us-ascii?Q?E5sPfW2spzA4AuSKaCUwGUJ+nodakVdftrl+7HZPhsVCmSOJ6A2617bdz1q0?=
+ =?us-ascii?Q?VbO+q+hJcyvOBp6/ZqAPyoeHIOF7z9Uy8JOPHhvmqpk3AfsYMfVx2pF1iJrQ?=
+ =?us-ascii?Q?NVUjfwTfx/qb428N4wpq6/3RJMwPiUnJkws/wN3PebYfMdUyj7f1XF2ICKiK?=
+ =?us-ascii?Q?0/yFSb8v9qSFJFPqGc7n7Bl/LN5Wc5bLa9tI3P/hPbMEii3OXTiA1z/llUp+?=
+ =?us-ascii?Q?16hlnCmNqyJrkZofObAWiitv72OljcDh6dreCM/68VaGXqJhnudV0Jh/Ag0x?=
+ =?us-ascii?Q?pANbDUJXwPm6ytE3QPHuzXTUJEhS2eb4hVGK1EqluZe1hoh4KwFSG/TfCJ1A?=
+ =?us-ascii?Q?wt5d1l+ZbSCHCmAKr5prlCWKZQXMil13QCkBKGgF7ozz3Yt0YL6VThMUU4os?=
+ =?us-ascii?Q?EXbQMKHXB5cB5UMjDPiECF+2vwBO4QBlWGdfJ0JFyh7Uy7JjT+pOGZdn7saF?=
+ =?us-ascii?Q?PWJThWUYB2Zfj99uCaKMnNYUDfD6S2FvppC991xfoVi5PmbbFg9zU9Yfxj8i?=
+ =?us-ascii?Q?boRKvwbYRCBlE0gOUy35tP8Dm6hjRGl8F8GXFfDRRY1XqPdNk51g/AgnodHs?=
+ =?us-ascii?Q?VREYpIvnmncYVwPtsz0w44TXUutQY877d23BL77YSf5LYxefEXcPVBlWWwSI?=
+ =?us-ascii?Q?uxntp+bFD/2TsUcpce+TMP3YaTJ9iToIIYvOUnE8u1YprznmrVCOS0m7vkYb?=
+ =?us-ascii?Q?SBP+HLovLA8RmxZjE++if0erTSsXAylMujdO4+wjrLHRAVCjpOVRCZ8hoG89?=
+ =?us-ascii?Q?mzrj1H84BLCoF88wsvFuuVSHmWmG5CiMzlImFM291bbR1Bgw8RlJw33MAK5f?=
+ =?us-ascii?Q?6bK+qjVQDHboV1dDJXFBLA3Pk1NfqzYR8ng+I4CjcD3ZnWKSA9GO8pKseIb+?=
+ =?us-ascii?Q?3Vi2pHwu346J2D7ZrSHcOxfxoeVQ028x0aS11yaCGDrOf8eXPcxvxa/F77TH?=
+ =?us-ascii?Q?9CUPvoyFf5Wutz4rlQcn1wk3lVYACG0DkP7OQBNhpRJ9JRmM09rjnM58PlSC?=
+ =?us-ascii?Q?J7FyyqSQjDVtNQxalvD8eoJDzkbFAzEmSm7s2Ra4s1EupD8i+xJCWaaAUPkE?=
+ =?us-ascii?Q?P0SE1uZaJaBGumCiQJX0MngSvLi8KSDhE5EzPWV5DfsXQ7ilzjakmjASd7Dd?=
+ =?us-ascii?Q?YADdFfGpdRAOmXQvmfQdx6RlQKByAvd4EYW0AIKiH1vgQNQ3rTzsel9T/MVv?=
+ =?us-ascii?Q?kCs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?O8P9fOUabWfBXlJoxNo5/rEg2mc+rKZe7mUIh5p1Ai4ZLHVwgrapBfgPiwo0?=
+ =?us-ascii?Q?FbQSxoWEcutoxnKGwsC+pINx4uotpHKNrLcZgMUL074cdZeeBjbV5yBzIq/d?=
+ =?us-ascii?Q?2dUUI8gNB/0LNLWX+WSTkLYxHDcQUvonidWc9SQSBlVjgZqyEEbfkADgygbe?=
+ =?us-ascii?Q?w914++r1ssyWNgasrtQ8j+g4Xc1GNAWvYKif+ZKdDGaM1azvreO9lmYBW6oC?=
+ =?us-ascii?Q?nmKzVB2IDLTxICF5iDTyX+iZS6tNL3gTHTdnwKHJPKYK6FosQFxwe0lGyGAP?=
+ =?us-ascii?Q?EUW9fwORab7IrSQUAb+fQC8DVtEwnBNUA6NJIOUjyjEHXK6/govrq5uA2552?=
+ =?us-ascii?Q?1VwVs7l+PgaouwXj25kBlQGZ+F//QH4Q6dGfi1Qb4FKwHMTacgB1CohUVpPp?=
+ =?us-ascii?Q?eyIHMu+j8tRdrD0Lb2WOvEG3ZBXO4qMdp4i2ojq2c17iuWEPzzqxtKS3UbTJ?=
+ =?us-ascii?Q?RgyJM6ax52OKVboxktztrC1QN54cRi96dH0EhvbK0H6VBZnNziDCSl3GkHKS?=
+ =?us-ascii?Q?495kJ0jrD1UubhP98RQeyU+iaKy1m2IOQyr2Egm32OcPAiJlKRAFtsy0f9ss?=
+ =?us-ascii?Q?knqcKa+Vf/k4GO8ev3HrcKCBUfuxoup0LKaIuynSWbnxnC8kgK8zSbak3W5Z?=
+ =?us-ascii?Q?HQZzst+c7TsmDj8f5nWvTRaG/jJnkbE7Go6iRxOFIaxo5b1aS3AxQ7vmTCXg?=
+ =?us-ascii?Q?f2JOIMwcVEyL16H4NLWxLtJSyqqa7/DQZDO+uJxm5qkOco3atackZPgrawgV?=
+ =?us-ascii?Q?2wyw88bBY2QWPWQCG+PvyT2EbJiO91WgzdlaIRXqrUey/1YNrjiVKGg/knxV?=
+ =?us-ascii?Q?Sun+iGiath7ubgRFsvWGK+3fSXSdw6V3heH6Mw2ZLXBvd5jP3yMqskNzlGcc?=
+ =?us-ascii?Q?BEv6bKNOt8plkduNnaz6NlwAV7bA/JO+j3kS/RoHPE0U0HLqgShlWVE8bLkG?=
+ =?us-ascii?Q?6fNIMF/6RPVBLPBBRS0jZvsppw0KXzxhC5909oOXYOiPScXbHeMUAGvYpath?=
+ =?us-ascii?Q?woPJ0rz23mP9RA05rK9B5jgnH1SnsfZYSE7YNhX3qJSKzdFcPuOxWIqHQs9a?=
+ =?us-ascii?Q?7b0vwzYFYYf9GmbKqGoQ9qhscekW0kFr7sUWEGx32Snt9g9wowhUKYEVwmeM?=
+ =?us-ascii?Q?/mOAeEFetK60ztVVR0vmYWriNXDFqSTT7/LTVFKTd4Zjp03SXgMuMADPxAKd?=
+ =?us-ascii?Q?5FFKrFZiyVGNqGt3LiHz0SKPW/qIU1Q2cYfri7tL7p1Z6JTCYGmrL7vsQWtC?=
+ =?us-ascii?Q?2G1PBqGv0T6u1MiF42UvgIZonYC+H3Jx8+aktxz005BG4cHSJR5cnsh0+jpp?=
+ =?us-ascii?Q?inl5tHXYN11GpZQ3eSGB2PnyuvFbhwTmyEAFbK0TZGftYpXyEH1txISbRujM?=
+ =?us-ascii?Q?DzfJGUSMjC20ghYMoYXF4WehzvVzcDW04hPzKQsExjaDLP2bh8RSB4qwZkPf?=
+ =?us-ascii?Q?CPE6UTLytod1kz36oPb5rRoDNmXTVRFam1BOH7yYzyiOP8Skl3nIn9Yzh6It?=
+ =?us-ascii?Q?4Iz/ydCpSHPAwO8ZcRck4Bk8cWNorzCoTYCW/2BvQwu99VYbuO0ZK5bw+Qq1?=
+ =?us-ascii?Q?mO1h7brBCOuwjs6OffJv9xlY0fBFhXYXXwcPQy1UWNDvf/GT4BL9kE5vBw99?=
+ =?us-ascii?Q?sA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	FsqSK4lRxpuw+V/IyRFZpfB/CmhwXL/UcLnl7wkhrEC/9EtmkBC7MtZLeIRzmFGDfCS+zevaJ2+pZX6sovxzqVEnRbmRNi5RB22+mSutF2n9H/nzYRaW0APsg4ca3izBX0c+D7yHbgVF5ugUoNg2CA2R1pO1wxpf7mWSXCN9VEsWFtseGYE3pT5FlLEq8C2JjW5TKQI8wH60ETN4krZiStrZ1rh3ZEyfSMgs2mg4sFvrr5OTvjR/3krt3XslQQ9dczCgwnE8oHUUryWvtTOFRozq8k7dxm8emMnEFiybNgMCCu0jqQepvTyZxPl0tZfOF+3fqv5q/1v5X/4WmUjSqDd3tDUKv4vgAQL+64FTgio2RrApeMn/unk65pskoeSBbTKF4eMMRekjKhUIiRYkLhH6tU++K8tnVP0aR7s3vSihko2i4xXa97W9WnTPeQ/lvqKPy9dDJmU60ksIf7RXmG2lRVJjgXTqr7NvQPC7YxK6nUHtwU5goGBXeZnmGHqSrWZry+7FOwDGOAlxma3a0avpHHEi7OgoYEHTpnMCVEtQoxfGRFDIELq74X1oxv6NV9rdL8AiHPxQFjLWzlIhQczAU/NrRrVaSQK5Ux5W1RQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 683fb584-b44d-4c47-df92-08dcc067da39
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2024 15:59:05.7988
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f8wG2Q4urqechZgmFsbniWdn71vSXoLbH+fQ900aL2v+fQoB2WvozxNRAUYC8+aLe7JxxrtZhOLNzOkUhgNWg/vQviS+zAA0h2k/1ZJ200Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5635
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-19_13,2024-08-19_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2407110000 definitions=main-2408190107
+X-Proofpoint-ORIG-GUID: hfHFqGLb0AM9xBBV0FfsjE-CJsdDM9HD
+X-Proofpoint-GUID: hfHFqGLb0AM9xBBV0FfsjE-CJsdDM9HD
 
-On Fri, Aug 16, 2024 at 4:55=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.co=
-m> wrote:
->
-> On 2024/8/15 23:00, Alexander Duyck wrote:
-> > On Wed, Aug 14, 2024 at 8:00=E2=80=AFPM Yunsheng Lin <linyunsheng@huawe=
-i.com> wrote:
-> >>
-> >> On 2024/8/14 23:49, Alexander H Duyck wrote:
-> >>> On Thu, 2024-08-08 at 20:37 +0800, Yunsheng Lin wrote:
-> >>>> Currently the page_frag API is returning 'virtual address'
-> >>>> or 'va' when allocing and expecting 'virtual address' or
-> >>>> 'va' as input when freeing.
-> >>>>
-> >>>> As we are about to support new use cases that the caller
-> >>>> need to deal with 'struct page' or need to deal with both
-> >>>> 'va' and 'struct page'. In order to differentiate the API
-> >>>> handling between 'va' and 'struct page', add '_va' suffix
-> >>>> to the corresponding API mirroring the page_pool_alloc_va()
-> >>>> API of the page_pool. So that callers expecting to deal with
-> >>>> va, page or both va and page may call page_frag_alloc_va*,
-> >>>> page_frag_alloc_pg*, or page_frag_alloc* API accordingly.
-> >>>>
-> >>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> >>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> >>>> Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
-> >>>> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> >>>> Acked-by: Sagi Grimberg <sagi@grimberg.me>
-> >>>> ---
-> >>>>  drivers/net/ethernet/google/gve/gve_rx.c      |  4 ++--
-> >>>>  drivers/net/ethernet/intel/ice/ice_txrx.c     |  2 +-
-> >>>>  drivers/net/ethernet/intel/ice/ice_txrx.h     |  2 +-
-> >>>>  drivers/net/ethernet/intel/ice/ice_txrx_lib.c |  2 +-
-> >>>>  .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |  4 ++--
-> >>>>  .../marvell/octeontx2/nic/otx2_common.c       |  2 +-
-> >>>>  drivers/net/ethernet/mediatek/mtk_wed_wo.c    |  4 ++--
-> >>>>  drivers/nvme/host/tcp.c                       |  8 +++----
-> >>>>  drivers/nvme/target/tcp.c                     | 22 +++++++++-------=
+The RPC_TASK_* constants are defined as macros, which means that most
+kernel builds will not contain their definitions in the debuginfo.
+However, it's quite useful for debuggers to be able to view the task
+state constant and interpret it correctly. Conversion to an enum will
+ensure the constants are present in debuginfo and can be interpreted by
+debuggers without needing to hard-code them and track their changes.
+
+Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 ---
-> >>>>  drivers/vhost/net.c                           |  6 ++---
-> >>>>  include/linux/page_frag_cache.h               | 21 +++++++++-------=
---
-> >>>>  include/linux/skbuff.h                        |  2 +-
-> >>>>  kernel/bpf/cpumap.c                           |  2 +-
-> >>>>  mm/page_frag_cache.c                          | 12 +++++-----
-> >>>>  net/core/skbuff.c                             | 16 +++++++-------
-> >>>>  net/core/xdp.c                                |  2 +-
-> >>>>  net/rxrpc/txbuf.c                             | 15 +++++++------
-> >>>>  net/sunrpc/svcsock.c                          |  6 ++---
-> >>>>  .../selftests/mm/page_frag/page_frag_test.c   | 13 ++++++-----
-> >>>>  19 files changed, 75 insertions(+), 70 deletions(-)
-> >>>>
-> >>>
-> >>> I still say no to this patch. It is an unnecessary name change and ad=
-ds
-> >>> no value. If you insist on this patch I will reject the set every tim=
-e.
-> >>>
-> >>> The fact is it is polluting the git history and just makes things
-> >>> harder to maintain without adding any value as you aren't changing wh=
-at
-> >>> the function does and there is no need for this. In addition it just
-> >>
-> >> I guess I have to disagree with the above 'no need for this' part for
-> >> now, as mentioned in [1]:
-> >>
-> >> "There are three types of API as proposed in this patchset instead of
-> >> two types of API:
-> >> 1. page_frag_alloc_va() returns [va].
-> >> 2. page_frag_alloc_pg() returns [page, offset].
-> >> 3. page_frag_alloc() returns [va] & [page, offset].
-> >>
-> >> You seemed to miss that we need a third naming for the type 3 API.
-> >> Do you see type 3 API as a valid API? if yes, what naming are you
-> >> suggesting for it? if no, why it is not a valid API?"
-> >
-> > I didn't. I just don't see the point in pushing out the existing API
-> > to support that. In reality 2 and 3 are redundant. You probably only
-> > need 3. Like I mentioned earlier you can essentially just pass a
->
-> If the caller just expect [page, offset], do you expect the caller also
-> type 3 API, which return both [va] and [page, offset]?
->
-> I am not sure if I understand why you think 2 and 3 are redundant here?
-> If you think 2 and 3 are redundant here, aren't 1 and 3 also redundant
-> as the similar agrument?
 
-The big difference is the need to return page and offset. Basically to
-support returning page and offset you need to pass at least one value
-as a pointer so you can store the return there.
+Hi all,
 
-The reason why 3 is just a redundant form of 2 is that you will
-normally just be converting from a va to a page and offset so the va
-should already be easily accessible.
+For context, please see v1:
+https://lore.kernel.org/linux-nfs/20240816220604.2688389-1-stephen.s.brennan@oracle.com/
 
-> > page_frag via pointer to the function. With that you could also look
-> > at just returning a virtual address as well if you insist on having
-> > something that returns all of the above. No point in having 2 and 3 be
-> > seperate functions.
->
-> Let's be more specific about what are your suggestion here: which way
-> is the prefer way to return the virtual address. It seems there are two
-> options:
->
-> 1. Return the virtual address by function returning as below:
-> void *page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio=
-);
->
-> 2. Return the virtual address by double pointer as below:
-> int page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio,
->                         void **va);
+ include/linux/sunrpc/sched.h | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-I was thinking more of option 1. Basically this is a superset of
-page_frag_alloc_va that is also returning the page and offset via a
-page frag. However instead of bio_vec I would be good with "struct
-page_frag *" being the value passed to the function to play the role
-of container. Basically the big difference between 1 and 2/3 if I am
-not mistaken is the fact that for 1 you pass the size, whereas with
-2/3 you are peeling off the page frag from the larger page frag cache
-after the fact via a commit type action.
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index 0c77ba488bbae..fec1e8a1570c3 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -151,13 +151,15 @@ struct rpc_task_setup {
+ #define RPC_WAS_SENT(t)		((t)->tk_flags & RPC_TASK_SENT)
+ #define RPC_IS_MOVEABLE(t)	((t)->tk_flags & RPC_TASK_MOVEABLE)
+ 
+-#define RPC_TASK_RUNNING	0
+-#define RPC_TASK_QUEUED		1
+-#define RPC_TASK_ACTIVE		2
+-#define RPC_TASK_NEED_XMIT	3
+-#define RPC_TASK_NEED_RECV	4
+-#define RPC_TASK_MSG_PIN_WAIT	5
+-#define RPC_TASK_SIGNALLED	6
++enum {
++	RPC_TASK_RUNNING,
++	RPC_TASK_QUEUED,
++	RPC_TASK_ACTIVE,
++	RPC_TASK_NEED_XMIT,
++	RPC_TASK_NEED_RECV,
++	RPC_TASK_MSG_PIN_WAIT,
++	RPC_TASK_SIGNALLED,
++};
+ 
+ #define rpc_test_and_set_running(t) \
+ 				test_and_set_bit(RPC_TASK_RUNNING, &(t)->tk_runstate)
+-- 
+2.43.5
+
 
