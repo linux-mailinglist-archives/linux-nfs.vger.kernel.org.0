@@ -1,158 +1,168 @@
-Return-Path: <linux-nfs+bounces-5432-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5433-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ACC59559D1
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Aug 2024 23:17:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D07295604B
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 02:04:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C0A11C20CEC
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Aug 2024 21:17:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B4F01F21E0B
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Aug 2024 00:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7048A155391;
-	Sat, 17 Aug 2024 21:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B8BB322A;
+	Mon, 19 Aug 2024 00:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="lppJQWCP"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n3GZf9+4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eh7ett96";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n3GZf9+4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eh7ett96"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715927BB0A
-	for <linux-nfs@vger.kernel.org>; Sat, 17 Aug 2024 21:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C242F32;
+	Mon, 19 Aug 2024 00:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723929459; cv=none; b=bGf4FjDAuIiRjIUmkN517H2DaBjJwIthZpqzcxYXgjC2oe1kMFMjkRzX7o3Y9ZsILAoNfRFchUtFkFQGZCnH+lelNQwXpKzyZp5AvY9CxWIjaYDTxKh04/tQy621Ncid/f8d9tVKBiF8ihSYpWghgIqB0elSD1ASCLKdegMXoa4=
+	t=1724025871; cv=none; b=DlGK1vZWEyFuCMSr2X+5Y7qFqanwljHe83/mejhoXaoIvvQwp7uUbog9/MtsjrwJR1ydd21w/qhovGvzfNigo3PnvHxDPKAR/4FwX3yimo3zM1io5ybnTRMpt+B2maOCk2Kh0jAA4HQIcZNG1aCXQdYuWOCQvR44TTgKHXuLBEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723929459; c=relaxed/simple;
-	bh=t3rvDnO7fX+n5iehy8S2ishviq6i/2esDfQRovIDAKs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=PBZj1dzYVfvO/ynNQtvE1c9WsD+ZNh3TkspIVYJfgUuc8x52TLbzx2vwOnwgAQKchwNDalIOCid/Gw9IFs3xtpH1hnVRQwPe86PeCjdNJY7GSvc/tmmVITG1fJJEH3wSOwkhPq28GDjBT6s/HEe/x/gCQZ+2tAQF7S+UNQdrumE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=lppJQWCP; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-428163f7635so25712295e9.2
-        for <linux-nfs@vger.kernel.org>; Sat, 17 Aug 2024 14:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723929455; x=1724534255; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mlOuZvyYI02m8rApw3+B2vEhpdkz/PwxBJHifhLBStE=;
-        b=lppJQWCPcpshq8T0IPKt72NiJo83JBrecdIvYWDtnjlm+mtpJdjO4rch460/vVOjvM
-         rCEBFmpuyXzblyTxa8ihuVD28jXyt7YVuxKdftHrDETdT2olTOljiCwWwVziDzHK41wn
-         XMNGwDUwFRasujlXJQH3c6Ww5PqM6Uf2SJ2jzIzHnJ9eLicH6fg1vrUpAg6X/QDvGLD1
-         auf8CsRZrFRa1G6xXQdL3r790HHitLjFdgBpYCuq9r+o4rLpCr2Vg2oArMRZveD4Q03o
-         K4TSue/KaoldoGtni9nrxBUjSJ1gbIwV+dbxQAc+lrjbBoftvv7YLBOnXjxLkt5MjF/h
-         YqGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723929455; x=1724534255;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mlOuZvyYI02m8rApw3+B2vEhpdkz/PwxBJHifhLBStE=;
-        b=an7ia09yP4Y7plxQGmOFc9my8LteSwewx/zqI6ACelalc+9/ANr5VkF8ZPT1ok7PLw
-         lON/d99h+phZvnNB595/FODaIf6wVm8Likr9eVHsA7XfFwhI6DI6s1hi2oJHDtPvHOQU
-         qXDVfOy6Q+M8e9CfWQoxapgE19Gb76pTmZkAlY5T5pmbYkT1LfdKiNyjXXqBx0iTl7Jl
-         2FV6QmHveqPLR0MWuy5XJT/O4QkwPkbReGL4yGlV0+BGrEgkyWXERG0G1rehUn+5L27e
-         wDgpu1A0p2lGqTCZ0HsLMAS5dQ2wU5lKrKdwlIwkMiAu54CJM3Yg7mWy+Ii9erB/NqXw
-         zkRA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/3HNQWie8EURj79YApkw0dpinYp+8f518KY904Ltm3EnxMT2zMac6xqGjCt6dcd784Y0dkpoX4b2nP3+xJKsO062NT7B3T8SI
-X-Gm-Message-State: AOJu0Yya/fMZ8sgCH7ec4ELVjaWLq7wNt3BEmzgnGc26QR/+NIgTJHp5
-	Lv0eJJKHAchBiLg6Qv4NUPkR29mOor5cQpvSeqHKorkp6GoldcGz/fhLAL/NJkM=
-X-Google-Smtp-Source: AGHT+IGiQ+Tmiu5bRgdWvEF5qWEJRLGyLG8pqr96rQC5WW+Azb9B81qMu6p9UUbdzuVdRqrgE+JkBg==
-X-Received: by 2002:adf:ed01:0:b0:368:68d3:32b3 with SMTP id ffacd0b85a97d-37194649a85mr4611119f8f.26.1723929453528;
-        Sat, 17 Aug 2024 14:17:33 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:a92:ee01:29b1:1427:611b:84f2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37189897128sm6607098f8f.81.2024.08.17.14.17.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 17 Aug 2024 14:17:33 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	s=arc-20240116; t=1724025871; c=relaxed/simple;
+	bh=9dIz3PEXhxqykFdhXh3S8uAB/PSD7Khb4HXhPZOh0vw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=IaBhpeQb1w+o+9b3fWBTuA8vzpRrYiJ9YOTLF1068xMoPLIV1LCk8aKANIrV2FSTfZGp5S/mzfczXZu/zz8O3TgXTNb2ZnzZW+V1/Cv2uLZ9BkDiCLT+QNu9JlclbbuguvQ9cZmqCx59C+SMrvTruZXIV60e4UqPI+aszM2bPDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n3GZf9+4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eh7ett96; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n3GZf9+4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eh7ett96; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4224C21FBD;
+	Mon, 19 Aug 2024 00:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1724025862; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/zSJxp2oq5IQB53rRJrkxa4bNDT6Gvj6hdUfVbYtss=;
+	b=n3GZf9+4PJuyPNoesjoc13H2M2tVGUs94gt05nQCDSDCyVfy9prlY/ifoOCs2dHa2vRvmy
+	HqMxQg481i736ByGdj2gMjKbf27d/zwzgnC5uAasxZs4oTPEjshIMODVWeIA6rshdkR08B
+	Gz1Dzh3pAVI0ONIhqS5fB1hoX/1RH+Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1724025862;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/zSJxp2oq5IQB53rRJrkxa4bNDT6Gvj6hdUfVbYtss=;
+	b=eh7ett96/mJjeF7ALmbbcmJyMhSC3rgoOYUlMoAsdjncxhAhdVvcwgEcFSdnRVJRsCBPTr
+	0SgKBiGPCV1QwkDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=n3GZf9+4;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eh7ett96
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1724025862; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/zSJxp2oq5IQB53rRJrkxa4bNDT6Gvj6hdUfVbYtss=;
+	b=n3GZf9+4PJuyPNoesjoc13H2M2tVGUs94gt05nQCDSDCyVfy9prlY/ifoOCs2dHa2vRvmy
+	HqMxQg481i736ByGdj2gMjKbf27d/zwzgnC5uAasxZs4oTPEjshIMODVWeIA6rshdkR08B
+	Gz1Dzh3pAVI0ONIhqS5fB1hoX/1RH+Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1724025862;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/zSJxp2oq5IQB53rRJrkxa4bNDT6Gvj6hdUfVbYtss=;
+	b=eh7ett96/mJjeF7ALmbbcmJyMhSC3rgoOYUlMoAsdjncxhAhdVvcwgEcFSdnRVJRsCBPTr
+	0SgKBiGPCV1QwkDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE21C139DE;
+	Mon, 19 Aug 2024 00:04:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nAorKAKMwmaoGQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 19 Aug 2024 00:04:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH] NFS/flexfiles: Replace one-element array with
- flexible-array member
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <20690564a768f4c7e6ff9c3a7a520b9f36abef1d.camel@hammerspace.com>
-Date: Sat, 17 Aug 2024 23:17:21 +0200
-Cc: "kees@kernel.org" <kees@kernel.org>,
- "bcodding@redhat.com" <bcodding@redhat.com>,
- "anna@kernel.org" <anna@kernel.org>,
- "josef@toxicpanda.com" <josef@toxicpanda.com>,
- "jlayton@kernel.org" <jlayton@kernel.org>,
- "kolga@netapp.com" <kolga@netapp.com>,
- "gustavoars@kernel.org" <gustavoars@kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <4CB2BE7E-5979-4424-A331-A5162190A102@toblux.com>
-References: <20240817142022.68411-2-thorsten.blum@toblux.com>
- <20690564a768f4c7e6ff9c3a7a520b9f36abef1d.camel@hammerspace.com>
-To: Trond Myklebust <trondmy@hammerspace.com>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Tom Haynes" <loghyr@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject: Re: [PATCH 1/3] nfsd: bring in support for delstid draft XDR encoding
+In-reply-to: <20240816-delstid-v1-1-c221c3dc14cd@kernel.org>
+References: <20240816-delstid-v1-0-c221c3dc14cd@kernel.org>,
+ <20240816-delstid-v1-1-c221c3dc14cd@kernel.org>
+Date: Mon, 19 Aug 2024 10:04:00 +1000
+Message-id: <172402584064.6062.2891331764461009092@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 4224C21FBD
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,netapp.com,talpey.com,kernel.org,gmail.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
 
-On 17. Aug 2024, at 22:40, Trond Myklebust <trondmy@hammerspace.com> wrote:
-> On Sat, 2024-08-17 at 16:20 +0200, Thorsten Blum wrote:
->> Replace the deprecated one-element array with a modern flexible-array
->> member in the struct nfs4_flexfile_layoutreturn_args.
->> 
->> Adjust the struct size accordingly.
->> 
->> There are no binary differences after this conversion.
->> 
->> Link: https://github.com/KSPP/linux/issues/79
->> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
->> ---
->> fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
->> fs/nfs/flexfilelayout/flexfilelayout.h | 2 +-
->> 2 files changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c
->> b/fs/nfs/flexfilelayout/flexfilelayout.c
->> index 39ba9f4208aa..fc698fa9aaea 100644
->> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
->> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
->> @@ -2224,7 +2224,7 @@ ff_layout_prepare_layoutreturn(struct
->> nfs4_layoutreturn_args *args)
->>  struct nfs4_flexfile_layoutreturn_args *ff_args;
->>  struct nfs4_flexfile_layout *ff_layout =
->> FF_LAYOUT_FROM_HDR(args->layout);
->> 
->> - ff_args = kmalloc(sizeof(*ff_args), nfs_io_gfp_mask());
->> + ff_args = kmalloc(struct_size(ff_args, pages, 1),
->> nfs_io_gfp_mask());
->>  if (!ff_args)
->>  goto out_nomem;
->>  ff_args->pages[0] = alloc_page(nfs_io_gfp_mask());
->> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h
->> b/fs/nfs/flexfilelayout/flexfilelayout.h
->> index f84b3fb0dddd..a269753f9a46 100644
->> --- a/fs/nfs/flexfilelayout/flexfilelayout.h
->> +++ b/fs/nfs/flexfilelayout/flexfilelayout.h
->> @@ -115,7 +115,7 @@ struct nfs4_flexfile_layoutreturn_args {
->>  struct nfs42_layoutstat_devinfo
->> devinfo[FF_LAYOUTSTATS_MAXDEV];
->>  unsigned int num_errors;
->>  unsigned int num_dev;
->> - struct page *pages[1];
->> + struct page *pages[];
->> };
->> 
->> static inline struct nfs4_flexfile_layout *
-> 
-> NACK. There is no advantage to using a flexible array here. Indeed,
-> you're replacing something that is correctly dimensioned (we only ever
-> use 1 page), and that can be easily bounds checked by the compiler with
-> something that has neither property.
+On Fri, 16 Aug 2024, Jeff Layton wrote:
 
-I see. Why is it an array then and not just a pointer to a struct?
+> +// Generated by lkxdrgen, with hand-edits.
+
+I *really* don't like having code in the kernel that is partly
+tool-generated and partly human-generated, and where the boundary isn't
+obvious (like separate files).
+
+If we cannot use tool-generated code as-is, then let's fix the tool.
+If we cannot fix the tool, then include the raw output and a
+human-generated patch which the makefile combines.
+
+Ideally the tool should be in tools/, the .x file should be in fs/nfsd/
+and the makefile should apply the one to the other.  We are going to
+want to do that eventually and I think it should be priority.  The tool
+doesn't have to be bug-free before it lands (nothing is).
+
+A particular reason for this is that I cannot review tool-generated
+hand-editted code.  It is too noisy and I don't know which parts are
+worth closer inspection etc.
 
 Thanks,
-Thorsten
+NeilBrown
 
