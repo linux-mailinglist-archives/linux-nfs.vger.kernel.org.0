@@ -1,192 +1,203 @@
-Return-Path: <linux-nfs+bounces-5478-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5479-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D326395878A
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2024 15:03:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28285958796
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2024 15:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53D011F21FDA
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2024 13:03:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CD581C21C82
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Aug 2024 13:08:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8403D19005F;
-	Tue, 20 Aug 2024 13:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Po9U1cDj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9284A19066E;
+	Tue, 20 Aug 2024 13:07:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B551D18E34F;
-	Tue, 20 Aug 2024 13:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C74A190667;
+	Tue, 20 Aug 2024 13:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724159029; cv=none; b=IlV5rdBmHZR8sNiKufFJFl9PpquS86VEuOzvhQXh4XuPBfkde10KkF9+1h/kJb9nXgL82x9zQK51ontFD3dm6Yy3s1S4MEx3bGgWDcf2fZ1KclK1l4/LaO2AnAeiaRp23AdX2hy8Kv04yfAbTdDphxfM7+QB6wh983FfY439CoQ=
+	t=1724159260; cv=none; b=iy4iBbDpfxEuy5OT+AadfaZIrgNeJrvZyo5Dhgd2C0ZcJVjSvwPSDFUUznrGvzljHSMedo+WErM4aKsggLj1c8AMFNKs9kyv3BJbeX2OZhfNOwUq3QoeSxU8CefdPe9OJLOz5RlTrakLbTMaGx7m+0gomgsBDbtQu0jOFH5iCdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724159029; c=relaxed/simple;
-	bh=w6hRjDJ3yafIcbZnpdNQYFv3oHEqNh6DZlxKaKdRU8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bzZYTRpkBNNJKG3hXhwc86nbLngoquE/bo9usZD4Hy8xUqERyCCG94AqPNpDzu9WyRXUH2IyUfbV1SUHx8p7IlhYk6M81J8VnZWkni21fBy4pbrKmLLDkED6h2ALKVMXU27HvtZv4hP5neIYakBgiM31ipOJoxcCuLW8zoc02Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Po9U1cDj; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-530e22878cfso5704263e87.2;
-        Tue, 20 Aug 2024 06:03:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724159026; x=1724763826; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awAU/8j1nfeNdkyYYcksFXZ+w3rbcsEiJfjnpMbgCt4=;
-        b=Po9U1cDjswuxsZx03IRvxbl+F5i9zbNLkkmVjpTiZmxaDwwp5ueHQy98S0CnY1VQoe
-         6iULQ05FwM6SqATPpCusFK4gdQWMUot27TYP0Df67lK+iNoduK/fPuRg4JWCWOr3+26I
-         mTjqqDxDmLjebTB1siCQLPrtonxQlBsdw7Ajjs1NzHay4fL3wEBx52bcxNVsvQoEMroz
-         xXDxthnWqunF7tsfwYPU3/NKEEI7yxUfPH3a5qlRB/ohYHyTqyn76AhEZ2h5Zzx4ha4y
-         ffm3lUTyYUsZwE6UGkqmyJBcmmltT3Jqs1hKaowblfQ5FpGEtg9e8sLHsGHVX01UUbeb
-         y50g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724159026; x=1724763826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awAU/8j1nfeNdkyYYcksFXZ+w3rbcsEiJfjnpMbgCt4=;
-        b=eqkKGXiildETj6cOTtfgrfOZxnfd5lNvf184qQuD78FxF7+jyRGvVEEAN8vWPw/HNh
-         JxVgDmucQ6GrkS4qmtupK8tBnjT6RSYgNzVtjfmdZaBWWXJiTr1DW+O5ISlv+MTXOxDH
-         Wysju6ha+bEJpGVaWbgmtVfEeYOUW77g6js8rirmOS1xed6P2L3AVGYk/DZQzpWOFq04
-         cq0Twz3emSDiSy+BRXs7rjd9SZ50GPfdg0rUf5iYamGTbT1ZEo1tlHeukLQg+Acae0a8
-         8sEeJx1WgfRYYKE0tQS+k1HNmJV/KQnaK6BTCUDZsmqumsZOj2J8/mPYAykLmsBmrJq/
-         TeNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDI1ge+LoJbthvLthUY6gypHzCDz+O5YgtdtRVhbsaYodU+pX+ykyk9kGU2+uloWLavT9H3Nqa5aa4ubI0Jw==@vger.kernel.org, AJvYcCVPUC5puTnmXHx3hHdCUYEBEYy5H0O8yNTVT6r+yvPCVUcs7sszqk4npfbWAygQR9O0TPrkkCDASaRT+w==@vger.kernel.org, AJvYcCVzl4QcvXb1ck61G4HJPjKQszmRW2J+kAdW13SnvDEnLPVcQUwfWHJaynr9xvAlHXdxvjVhKkj5dGXMc2je@vger.kernel.org, AJvYcCW+V+ri5X2OEL0owqBHmAS+yPNv5AFlk6pHk80TKAEo0JdPQ3ydc9SfFzAiuRgVfSrEZwdRcEPSOdrz@vger.kernel.org, AJvYcCWpP2RjxjptRAXxbhoUmVfA2OKmhB7N7GhqcPqZKB7MF9BT+QSioHEdCwwt3anqmYRCFpoUlD5Ip/N0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYjb5VTWdBi63udsdAINoNaDxg0b3HX1wP6HpD/PraAvCFmnJY
-	sheiv+g2+tLI5wI+L21WIgrtb4ypSXoDwTRRkhCcsrkoB/NE/AMtSOM0kx6fO5ScXl7AFlMqLc/
-	RdRE4HZKtizs5WXuJLbUSRQryUY0=
-X-Google-Smtp-Source: AGHT+IE5G7lBUkb59Tw6MSWX1/GxCWDgjFEGErERFXVC5Rbunu+hdmsvVYYihhwM4SHPcVX7CL91YlwOrwKcBjYHKFM=
-X-Received: by 2002:a05:6512:6ce:b0:52f:d0f0:e37e with SMTP id
- 2adb3069b0e04-5331c6dca58mr9000627e87.42.1724159025365; Tue, 20 Aug 2024
- 06:03:45 -0700 (PDT)
+	s=arc-20240116; t=1724159260; c=relaxed/simple;
+	bh=JO6RWeMlWaObYRyseZlU/Pqn9dKedWmcF4CIwKnCdJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cefnfAjJhBxTY1m1MB72uu65BizHBw/Ya3a+QbCstsNJaMBUxheG2dvc1mijVq8gAMxNiaXOwDIj3RyYDXmDu/QDwuWEJcpYglY4SibiIiVtDwmvTDibBnTgH5LYbvXLhR9j9xIqzDec5EsHewqXAntNMBGsrT/5SXjhsWl1otQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wp8lF0HMDzQptG;
+	Tue, 20 Aug 2024 21:02:49 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1EF6B140138;
+	Tue, 20 Aug 2024 21:07:30 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 20 Aug 2024 21:07:29 +0800
+Message-ID: <98ceade3-8d60-45bf-a419-ff3982a96101@huawei.com>
+Date: Tue, 20 Aug 2024 21:07:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202408201441.9e7177d2-oliver.sang@intel.com>
-In-Reply-To: <202408201441.9e7177d2-oliver.sang@intel.com>
-From: Steve French <smfrench@gmail.com>
-Date: Tue, 20 Aug 2024 08:03:34 -0500
-Message-ID: <CAH2r5ms-jpA5-h2EtgLb82D1hYboaKU3P4W=7_22zRd_gQK_Cw@mail.gmail.com>
-Subject: Re: [linus:master] [9p] e3786b29c5: xfstests.generic.465.fail
-To: kernel test robot <oliver.sang@intel.com>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, v9fs@lists.linux.dev, 
-	linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v13 04/14] mm: page_frag: add '_va' suffix to
+ page_frag API
+To: Alexander Duyck <alexander.duyck@gmail.com>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Subbaraya Sundeep
+	<sbhatta@marvell.com>, Chuck Lever <chuck.lever@oracle.com>, Sagi Grimberg
+	<sagi@grimberg.me>, Jeroen de Borst <jeroendb@google.com>, Praveen
+ Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>,
+	Eric Dumazet <edumazet@google.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Sunil Goutham
+	<sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>, hariprasad
+	<hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, Sean Wang
+	<sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo
+ Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Keith
+ Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig
+	<hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>, "Michael S. Tsirkin"
+	<mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko
+	<andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+	<tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-nvme@lists.infradead.org>,
+	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-mm@kvack.org>, <bpf@vger.kernel.org>, <linux-afs@lists.infradead.org>,
+	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+References: <20240808123714.462740-1-linyunsheng@huawei.com>
+ <20240808123714.462740-5-linyunsheng@huawei.com>
+ <d1a23116d054e2ebb00067227f0cffecefe33e11.camel@gmail.com>
+ <676a2a15-d390-48a7-a8d7-6e491c89e200@huawei.com>
+ <CAKgT0Uct5ptfs9ZEoe-9u-fOVz4HLf+5MS-YidKV+xELCBHKNw@mail.gmail.com>
+ <3e069c81-a728-4d72-a5bb-3be00d182107@huawei.com>
+ <CAKgT0UcDDFeMqD_eRe1-2Og0GEEFyNP90E9SDxDjskdgtMe0Uw@mail.gmail.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <CAKgT0UcDDFeMqD_eRe1-2Og0GEEFyNP90E9SDxDjskdgtMe0Uw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-Yes - I can also reproduce this regression on generic/465 and at least
-two other xfstests (works with that patch removed)
+On 2024/8/19 23:54, Alexander Duyck wrote:
 
-On Tue, Aug 20, 2024 at 2:08=E2=80=AFAM kernel test robot <oliver.sang@inte=
-l.com> wrote:
->
->
->
-> Hello,
->
-> kernel test robot noticed "xfstests.generic.465.fail" on:
->
-> commit: e3786b29c54cdae3490b07180a54e2461f42144c ("9p: Fix DIO read throu=
-gh netfs")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> in testcase: xfstests
-> version: xfstests-x86_64-f5ada754-1_20240812
-> with following parameters:
->
->         disk: 4HDD
->         fs: ext4
->         fs2: smbv3
->         test: generic-465
->
->
->
-> compiler: gcc-12
-> test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake)=
- with 32G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202408201441.9e7177d2-oliver.san=
-g@intel.com
->
-> 2024-08-17 02:14:44 mount /dev/sda1 /fs/sda1
-> 2024-08-17 02:14:44 mkdir -p /smbv3//cifs/sda1
-> 2024-08-17 02:14:44 export FSTYP=3Dcifs
-> 2024-08-17 02:14:44 export TEST_DEV=3D//localhost/fs/sda1
-> 2024-08-17 02:14:44 export TEST_DIR=3D/smbv3//cifs/sda1
-> 2024-08-17 02:14:44 export CIFS_MOUNT_OPTIONS=3D-ousername=3Droot,passwor=
-d=3Dpass,noperm,vers=3D3.0,mfsymlinks,actimeo=3D0
-> 2024-08-17 02:14:44 echo generic/465
-> 2024-08-17 02:14:44 ./check -E tests/cifs/exclude.incompatible-smb3.txt -=
-E tests/cifs/exclude.very-slow.txt generic/465
-> FSTYP         -- cifs
-> PLATFORM      -- Linux/x86_64 lkp-skl-d05 6.11.0-rc1-00012-ge3786b29c54c =
-#1 SMP PREEMPT_DYNAMIC Fri Aug 16 01:36:30 CST 2024
->
-> generic/465       - output mismatch (see /lkp/benchmarks/xfstests/results=
-//generic/465.out.bad)
->     --- tests/generic/465.out   2024-08-12 20:11:27.000000000 +0000
->     +++ /lkp/benchmarks/xfstests/results//generic/465.out.bad   2024-08-1=
-7 02:15:42.471144932 +0000
->     @@ -1,3 +1,597 @@
->      QA output created by 465
->      non-aio dio test
->     +read file: No data available
->     +read file: Invalid argument
->     +read file: No data available
->     +read file: Invalid argument
->     +read file: No data available
->     ...
->     (Run 'diff -u /lkp/benchmarks/xfstests/tests/generic/465.out /lkp/ben=
-chmarks/xfstests/results//generic/465.out.bad'  to see the entire diff)
-> Ran: generic/465
-> Failures: generic/465
-> Failed 1 of 1 tests
->
->
->
->
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20240820/202408201441.9e7177d2-ol=
-iver.sang@intel.com
->
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
->
+...
 
+>>>>
+>>>> "There are three types of API as proposed in this patchset instead of
+>>>> two types of API:
+>>>> 1. page_frag_alloc_va() returns [va].
+>>>> 2. page_frag_alloc_pg() returns [page, offset].
+>>>> 3. page_frag_alloc() returns [va] & [page, offset].
+>>>>
+>>>> You seemed to miss that we need a third naming for the type 3 API.
+>>>> Do you see type 3 API as a valid API? if yes, what naming are you
+>>>> suggesting for it? if no, why it is not a valid API?"
+>>>
+>>> I didn't. I just don't see the point in pushing out the existing API
+>>> to support that. In reality 2 and 3 are redundant. You probably only
+>>> need 3. Like I mentioned earlier you can essentially just pass a
+>>
+>> If the caller just expect [page, offset], do you expect the caller also
+>> type 3 API, which return both [va] and [page, offset]?
+>>
+>> I am not sure if I understand why you think 2 and 3 are redundant here?
+>> If you think 2 and 3 are redundant here, aren't 1 and 3 also redundant
+>> as the similar agrument?
+> 
+> The big difference is the need to return page and offset. Basically to
+> support returning page and offset you need to pass at least one value
+> as a pointer so you can store the return there.
+> 
+> The reason why 3 is just a redundant form of 2 is that you will
+> normally just be converting from a va to a page and offset so the va
+> should already be easily accessible.
 
---=20
-Thanks,
+I am assuming that by 'easily accessible', you meant the 'va' can be
+calculated as below, right?
 
-Steve
+va = encoded_page_address(encoded_va) +
+		(page_frag_cache_page_size(encoded_va) - remaining);
+
+I guess it is easily accessible, but it is not without some overhead
+to calculate the 'va' here.
+
+> 
+>>> page_frag via pointer to the function. With that you could also look
+>>> at just returning a virtual address as well if you insist on having
+>>> something that returns all of the above. No point in having 2 and 3 be
+>>> seperate functions.
+>>
+>> Let's be more specific about what are your suggestion here: which way
+>> is the prefer way to return the virtual address. It seems there are two
+>> options:
+>>
+>> 1. Return the virtual address by function returning as below:
+>> void *page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio);
+>>
+>> 2. Return the virtual address by double pointer as below:
+>> int page_frag_alloc_bio(struct page_frag_cache *nc, struct bio_vec *bio,
+>>                         void **va);
+> 
+> I was thinking more of option 1. Basically this is a superset of
+> page_frag_alloc_va that is also returning the page and offset via a
+> page frag. However instead of bio_vec I would be good with "struct
+> page_frag *" being the value passed to the function to play the role
+> of container. Basically the big difference between 1 and 2/3 if I am
+> not mistaken is the fact that for 1 you pass the size, whereas with
+> 2/3 you are peeling off the page frag from the larger page frag cache
+
+Let's be clear here: The callers just expecting [page, offset] also need
+to call type 3 API, which return both [va] and [page, offset]? and it
+is ok to ignore the overhead of calculating the 'va' for those kinds
+of callers just because we don't want to do the renaming for a existing
+API and can't come up with good naming for that?
+
+> after the fact via a commit type action.
+
+Just be clear here, there is no commit type action for some subtype of
+type 2/3 API.
+
+For example, for type 2 API in this patchset, it has below subtypes:
+
+subtype 1: it does not need a commit type action, it just return
+           [page, offset] instead of page_frag_alloc_va() returning [va],
+           and it does not return the allocated fragsz back to the caller
+           as page_frag_alloc_va() does not too:
+struct page *page_frag_alloc_pg(struct page_frag_cache *nc,
+                                unsigned int *offset, unsigned int fragsz,
+                                gfp_t gfp)
+
+subtype 2: it does need a commit type action, and @fragsz is returned to
+           the caller and caller used that to commit how much fragsz to
+           commit.
+struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
+                                        unsigned int *offset,
+                                        unsigned int *fragsz, gfp_t gfp)
+
+Do you see subtype 1 as valid API? If no, why?
+If yes, do you also expect the caller to use "struct page_frag *" as the
+container? If yes, what is the caller expected to do with the size field in
+"struct page_frag *" from API perspective? Just ignore it?
+
 
