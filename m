@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-5544-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6342295A4E7
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 20:50:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD0A695A4F7
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 21:03:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3A0BB20FF3
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 18:50:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E71B91C202F5
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 19:03:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA2516D4FB;
-	Wed, 21 Aug 2024 18:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C618214EC61;
+	Wed, 21 Aug 2024 19:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xr+6UeEv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0uyQJMx"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20CD1D131A;
-	Wed, 21 Aug 2024 18:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A63A14D2B5;
+	Wed, 21 Aug 2024 19:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724266227; cv=none; b=Yv2e45Zk9XooeBNAG9VGKMMRdDxlbQnBCzeU5gPkXvsqzyzBgLOae3JS8uJTQ+xoBtlW65ork8F2fN+qfzK4kXGGYNUA1jI1BGGqk0n+h44Q1ah/DjRyyXuYmMK76Yqxg2PkITjo+tYkbq7lp4Ofr7p8K1OCcUFXQ5KUWHCrI2Q=
+	t=1724266989; cv=none; b=dY91vhpJpc17oMNvSLDaSJ0F+ScVhOn6pkVjgz2gGz4GooRYYfPgSAIxQ6mAhN7jao8vPYK22LRza8wmmMJdnVYhpXHiI6NX19XlHjEXOesAYZCm68ASEnRFTxGjiq0+5k46d5kEj23hBply0E14aFvM1EaV5CDS0HQkWRtyM+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724266227; c=relaxed/simple;
-	bh=YgMtYK0sRL2dmfM1r4U4cZeaLinRFKkn2BjE6sDjG/c=;
+	s=arc-20240116; t=1724266989; c=relaxed/simple;
+	bh=aVndDEUZQBS3oS1ccDgfyxAB006j9n8NaXzpjCXEQEw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jjy2iC8DeHpf++/dSupSAdmwSPqJK9WE1kxE/AUoktJI/wYBCQQXdiqoySTyXuLA0n4rgfEji1kGJqwj7YkhcMCbR9HYbDHpU8EdqILtPNXTrH09J2wxnNfq7grEXSJ6EtPqm8hN6F35EEq1yoF+eaP91n55e+NMudLl6es6hcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xr+6UeEv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C0AC32781;
-	Wed, 21 Aug 2024 18:50:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=X0rqiH1dazRPSQrNg+83qwSiWJE3Sz6L+lK+bZ0n/26nwHY2SZUvy0XqVo0z5kusNBlFI+xP8dzx++3sJ/Zqc9YuNCI1jmeN+iPlXuznh/QSFyutnhkCFwLVZnS8d1Nc1dT7XtYNj1clytUIx7PnAozKv6klybbHxPE9bpTV8u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0uyQJMx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7945BC32781;
+	Wed, 21 Aug 2024 19:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724266227;
-	bh=YgMtYK0sRL2dmfM1r4U4cZeaLinRFKkn2BjE6sDjG/c=;
+	s=k20201202; t=1724266989;
+	bh=aVndDEUZQBS3oS1ccDgfyxAB006j9n8NaXzpjCXEQEw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Xr+6UeEv3tlp+oHlTD0dFKrGiA1srB6DNwx8PRSqDqd+0E4ism0oyjMvpkA4MTdGN
-	 1qrAyhrbOq5s3nlKPkQ7y7vum6qkoa4cKsjz9qRsYMBkHYeCvwbz61+37HDbQybPrl
-	 +njkTvzrtK8KYRuOjC4MZEilgpIdYAmyH3OW7gwcduC6DAMefj6Y2LdmQO7NGhuWFF
-	 O+nzS7NOkmaAdhK4px8XknfOkcNRjSPPyQMUk6tPfEUhDkfKIBfZltU0HqhjAf36Ks
-	 MwCfrsU3echD1CgxDQqj4W6fe5rL1kfk5kyQu4d51h1buUwls7FBNZLSWDOZTEF+SQ
-	 eD9L2CgZXZoCQ==
-Message-ID: <5bb9611676a73ae5341c0cb18714d7fdb5bce0b6.camel@kernel.org>
-Subject: Re: [PATCH v12 22/24] nfs: push localio nfsd_file_put call out to
- client
+	b=B0uyQJMx8ni15ShOIXWZmjiRE4rLibUV34QSvaT8mxAw3TOHqCYeJLjFeIrKE94bN
+	 B8QuzAUboVESwSs82LVSB4++vGZxO5uzW+twZTe1afpLC+9gdcC38EySwpjveVifj2
+	 hOD3NOyRk+D5cgf8IbY8Kjp4GoKrHHrMW15sE2gMYy2uqnoPXfQD4G6KHOo/eGrLyL
+	 kb0B3FiR/PPVDCe//OpsgoqUWBDVCAwenNCwkJTZoR9JNr84OzJqlYExFum0s4A9ER
+	 J00IhKBWp2fbhW8+0i8x5uBOvw5qTMfeXFbvBXTbNVfMe8FTxJberf38GUWJGb/EGc
+	 PlTPm0DMTvy8A==
+Message-ID: <115f7c93d81d080ce6aac64eaa4e8616a5fe0cdd.camel@kernel.org>
+Subject: Re: [PATCH v12 24/24] nfs: add FAQ section to
+ Documentation/filesystems/nfs/localio.rst
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
 Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>, 
  Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
  linux-fsdevel@vger.kernel.org
-Date: Wed, 21 Aug 2024 14:50:25 -0400
-In-Reply-To: <20240819181750.70570-23-snitzer@kernel.org>
+Date: Wed, 21 Aug 2024 15:03:07 -0400
+In-Reply-To: <20240819181750.70570-25-snitzer@kernel.org>
 References: <20240819181750.70570-1-snitzer@kernel.org>
-	 <20240819181750.70570-23-snitzer@kernel.org>
+	 <20240819181750.70570-25-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,173 +138,153 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2024-08-19 at 14:17 -0400, Mike Snitzer wrote:
-> Change nfsd_open_local_fh() to return an nfsd_file, instead of file,
-> and move associated reference counting to the nfs client's
-> nfs_local_open_fh().
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> This is the first step in allowing proper use of nfsd_file for localio
-> (such that the benefits of nfsd's filecache can be realized).
+> Add a FAQ section to give answers to questions that have been raised
+> during review of the localio feature.
 >=20
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Co-developed-by: Mike Snitzer <snitzer@kernel.org>
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
-> =C2=A0fs/nfs/localio.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 7 +++++--
-> =C2=A0fs/nfs_common/nfslocalio.c |=C2=A0 2 +-
-> =C2=A0fs/nfsd/localio.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 11 ++++-------
-> =C2=A0fs/nfsd/vfs.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A0include/linux/nfslocalio.h |=C2=A0 2 +-
-> =C2=A05 files changed, 12 insertions(+), 12 deletions(-)
+> =C2=A0Documentation/filesystems/nfs/localio.rst | 77 ++++++++++++++++++++=
++++
+> =C2=A01 file changed, 77 insertions(+)
 >=20
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 38303427e0b3..7d63d7e34643 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -237,13 +237,14 @@ nfs_local_open_fh(struct nfs_client *clp, const str=
-uct cred *cred,
-> =C2=A0		=C2=A0 struct nfs_fh *fh, const fmode_t mode)
-> =C2=A0{
-> =C2=A0	struct file *filp;
-> +	struct nfsd_file *nf;
-> =C2=A0	int status;
+> diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/fi=
+lesystems/nfs/localio.rst
+> index d8bdab88f1db..acd8f3e5d87a 100644
+> --- a/Documentation/filesystems/nfs/localio.rst
+> +++ b/Documentation/filesystems/nfs/localio.rst
+> @@ -40,6 +40,83 @@ fio for 20 secs with 24 libaio threads, 128k directio =
+reads, qd of 8,
+> =C2=A0- Without LOCALIO:
+> =C2=A0=C2=A0 read: IOPS=3D12.0k, BW=3D1495MiB/s (1568MB/s)(29.2GiB/20015m=
+sec)
 > =C2=A0
-> =C2=A0	if (mode & ~(FMODE_READ | FMODE_WRITE))
-> =C2=A0		return ERR_PTR(-EINVAL);
+> +FAQ
+> +=3D=3D=3D
+> +
+> +1. What are the use cases for LOCALIO?
+> +
+> +=C2=A0=C2=A0 a. Workloads where the NFS client and server are on the sam=
+e host
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 realize improved IO performance. In parti=
+cular, it is common when
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 running containerised workloads for jobs =
+to find themselves
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 running on the same host as the knfsd ser=
+ver being used for
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 storage.
+> +
+> +2. What are the requirements for LOCALIO?
+> +
+> +=C2=A0=C2=A0 a. Bypass use of the network RPC protocol as much as possib=
+le. This
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 includes bypassing XDR and RPC for open, =
+read, write and commit
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 operations.
+> +=C2=A0=C2=A0 b. Allow client and server to autonomously discover if they=
+ are
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 running local to each other without makin=
+g any assumptions about
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the local network topology.
+> +=C2=A0=C2=A0 c. Support the use of containers by being compatible with r=
+elevant
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 namespaces (e.g. network, user, mount).
+> +=C2=A0=C2=A0 d. Support all versions of NFS. NFSv3 is of particular impo=
+rtance
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 because it has wide enterprise usage and =
+pNFS flexfiles makes use
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 of it for the data path.
+> +
+> +3. Why doesn=E2=80=99t LOCALIO just compare IP addresses or hostnames wh=
+en
+> +=C2=A0=C2=A0 deciding if the NFS client and server are co-located on the=
+ same
+> +=C2=A0=C2=A0 host?
+> +
+> +=C2=A0=C2=A0 Since one of the main use cases is containerised workloads,=
+ we cannot
+> +=C2=A0=C2=A0 assume that IP addresses will be shared between the client =
+and
+> +=C2=A0=C2=A0 server. This sets up a requirement for a handshake protocol=
+ that
+> +=C2=A0=C2=A0 needs to go over the same connection as the NFS traffic in =
+order to
+> +=C2=A0=C2=A0 identify that the client and the server really are running =
+on the
+> +=C2=A0=C2=A0 same host. The handshake uses a secret that is sent over th=
+e wire,
+> +=C2=A0=C2=A0 and can be verified by both parties by comparing with a val=
+ue stored
+> +=C2=A0=C2=A0 in shared kernel memory if they are truly co-located.
+> +
+> +4. Does LOCALIO improve pNFS flexfiles?
+> +
+> +=C2=A0=C2=A0 Yes, LOCALIO complements pNFS flexfiles by allowing it to t=
+ake
+> +=C2=A0=C2=A0 advantage of NFS client and server locality.=C2=A0 Policy t=
+hat initiates
+> +=C2=A0=C2=A0 client IO as closely to the server where the data is stored=
+ naturally
+> +=C2=A0=C2=A0 benefits from the data path optimization LOCALIO provides.
+> +
+> +5. Why not develop a new pNFS layout to enable LOCALIO?
+> +
+> +=C2=A0=C2=A0 A new pNFS layout could be developed, but doing so would pu=
+t the
+> +=C2=A0=C2=A0 onus on the server to somehow discover that the client is c=
+o-located
+> +=C2=A0=C2=A0 when deciding to hand out the layout.
+> +=C2=A0=C2=A0 There is value in a simpler approach (as provided by LOCALI=
+O) that
+> +=C2=A0=C2=A0 allows the NFS client to negotiate and leverage locality wi=
+thout
+> +=C2=A0=C2=A0 requiring more elaborate modeling and discovery of such loc=
+ality in a
+> +=C2=A0=C2=A0 more centralized manner.
+> +
+> +6. Why is having the client perform a server-side file OPEN, without
+> +=C2=A0=C2=A0 using RPC, beneficial?=C2=A0 Is the benefit pNFS specific?
+> +
+> +=C2=A0=C2=A0 Avoiding the use of XDR and RPC for file opens is beneficia=
+l to
+> +=C2=A0=C2=A0 performance regardless of whether pNFS is used. However add=
+ing a
+> +=C2=A0=C2=A0 requirement to go over the wire to do an open and/or close =
+ends up
+> +=C2=A0=C2=A0 negating any benefit of avoiding the wire for doing the I/O=
+ itself
+> +=C2=A0=C2=A0 when we=E2=80=99re dealing with small files. There is no be=
+nefit to replacing
+> +=C2=A0=C2=A0 the READ or WRITE with a new open and/or close operation th=
+at still
+> +=C2=A0=C2=A0 needs to go over the wire.
+> +
+> +7. Why is LOCALIO only supported with UNIX Authentication (AUTH_UNIX)?
+> +
+> +=C2=A0=C2=A0 Strong authentication is usually tied to the connection its=
+elf. It
+> +=C2=A0=C2=A0 works by establishing a context that is cached by the serve=
+r, and
+> +=C2=A0=C2=A0 that acts as the key for discovering the authorisation toke=
+n, which
+> +=C2=A0=C2=A0 can then be passed to rpc.mountd to complete the authentica=
+tion
+> +=C2=A0=C2=A0 process. On the other hand, in the case of AUTH_UNIX, the c=
+redential
+> +=C2=A0=C2=A0 that was passed over the wire is used directly as the key i=
+n the
+> +=C2=A0=C2=A0 upcall to rpc.mountd. This simplifies the authentication pr=
+ocess, and
+> +=C2=A0=C2=A0 so makes AUTH_UNIX easier to support.
+> +
+> =C2=A0RPC
+> =C2=A0=3D=3D=3D
 > =C2=A0
-> =C2=A0	status =3D nfs_to.nfsd_open_local_fh(clp->cl_nfssvc_net, clp->cl_n=
-fssvc_dom,
-> -					=C2=A0=C2=A0 clp->cl_rpcclient, cred, fh, mode, &filp);
-> +					=C2=A0=C2=A0 clp->cl_rpcclient, cred, fh, mode, &nf);
-> =C2=A0	if (status < 0) {
-> =C2=A0		trace_nfs_local_open_fh(fh, mode, status);
-> =C2=A0		switch (status) {
-> @@ -255,8 +256,10 @@ nfs_local_open_fh(struct nfs_client *clp, const stru=
-ct cred *cred,
-> =C2=A0		case -ETIMEDOUT:
-> =C2=A0			status =3D -EAGAIN;
-> =C2=A0		}
-> -		filp =3D ERR_PTR(status);
-> +		return ERR_PTR(status);
-> =C2=A0	}
-> +	filp =3D get_file(nfs_to.nfsd_file_file(nf));
-> +	nfs_to.nfsd_file_put(nf);
-> =C2=A0	return filp;
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL_GPL(nfs_local_open_fh);
-> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-> index 087649911b52..f59167e596d3 100644
-> --- a/fs/nfs_common/nfslocalio.c
-> +++ b/fs/nfs_common/nfslocalio.c
-> @@ -98,7 +98,7 @@ static void put_##NFSD_SYMBOL(void)			\
-> =C2=A0/* The nfs localio code needs to call into nfsd to map filehandle -=
-> struct nfsd_file */
-> =C2=A0extern int nfsd_open_local_fh(struct net *, struct auth_domain *, s=
-truct rpc_clnt *,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct cred *, const struct=
- nfs_fh *,
-> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const fmode_t, struct file **);
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const fmode_t, struct nfsd_file **);
-> =C2=A0DEFINE_NFS_TO_NFSD_SYMBOL(nfsd_open_local_fh);
-> =C2=A0
-> =C2=A0/* The nfs localio code needs to call into nfsd to acquire the nfsd=
-_file */
-> diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-> index 008b935a3a6c..2ceab49f3cb6 100644
-> --- a/fs/nfsd/localio.c
-> +++ b/fs/nfsd/localio.c
-> @@ -32,13 +32,13 @@
-> =C2=A0 * @cred: cred that the client established
-> =C2=A0 * @nfs_fh: filehandle to lookup
-> =C2=A0 * @fmode: fmode_t to use for open
-> - * @pfilp: returned file pointer that maps to @nfs_fh
-> + * @pnf: returned nfsd_file pointer that maps to @nfs_fh
-> =C2=A0 *
-> =C2=A0 * This function maps a local fh to a path on a local filesystem.
-> =C2=A0 * This is useful when the nfs client has the local server mounted =
-- it can
-> =C2=A0 * avoid all the NFS overhead with reads, writes and commits.
-> =C2=A0 *
-> - * On successful return, caller is responsible for calling path_put. Als=
-o
-> + * On successful return, caller is responsible for calling nfsd_file_put=
-. Also
-> =C2=A0 * note that this is called from nfs.ko via find_symbol() to avoid =
-an explicit
-> =C2=A0 * dependency on knfsd. So, there is no forward declaration in a he=
-ader file
-> =C2=A0 * for it that is shared with the client.
-> @@ -49,7 +49,7 @@ int nfsd_open_local_fh(struct net *cl_nfssvc_net,
-> =C2=A0			 const struct cred *cred,
-> =C2=A0			 const struct nfs_fh *nfs_fh,
-> =C2=A0			 const fmode_t fmode,
-> -			 struct file **pfilp)
-> +			 struct nfsd_file **pnf)
 
-I think I'd prefer to see this change made earlier in the series, when
-nfsd_open_local_fh is first introduced (patch #10), and then just adapt
-the later patches to deal with the change.
-
-> =C2=A0{
-> =C2=A0	int mayflags =3D NFSD_MAY_LOCALIO;
-> =C2=A0	int status =3D 0;
-> @@ -57,7 +57,6 @@ int nfsd_open_local_fh(struct net *cl_nfssvc_net,
-> =C2=A0	const struct cred *save_cred;
-> =C2=A0	struct svc_cred rq_cred;
-> =C2=A0	struct svc_fh fh;
-> -	struct nfsd_file *nf;
-> =C2=A0	__be32 beres;
-> =C2=A0
-> =C2=A0	if (nfs_fh->size > NFS4_FHSIZE)
-> @@ -91,13 +90,11 @@ int nfsd_open_local_fh(struct net *cl_nfssvc_net,
-> =C2=A0	rpcauth_map_clnt_to_svc_cred_local(rpc_clnt, cred, &rq_cred);
-> =C2=A0
-> =C2=A0	beres =3D nfsd_file_acquire_local(cl_nfssvc_net, &rq_cred, rpc_cln=
-t->cl_vers,
-> -					cl_nfssvc_dom, &fh, mayflags, &nf);
-> +					cl_nfssvc_dom, &fh, mayflags, pnf);
-> =C2=A0	if (beres) {
-> =C2=A0		status =3D nfs_stat_to_errno(be32_to_cpu(beres));
-> =C2=A0		goto out_fh_put;
-> =C2=A0	}
-> -	*pfilp =3D get_file(nf->nf_file);
-> -	nfsd_file_put(nf);
-
-I do like eliminating the unnecessary refcount shuffle here. Much
-simpler.
-
-> =C2=A0out_fh_put:
-> =C2=A0	fh_put(&fh);
-> =C2=A0	if (rq_cred.cr_group_info)
-> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> index 9720951c49a0..ec8a8aae540b 100644
-> --- a/fs/nfsd/vfs.h
-> +++ b/fs/nfsd/vfs.h
-> @@ -166,7 +166,7 @@ int		nfsd_open_local_fh(struct net *net,
-> =C2=A0				=C2=A0=C2=A0 const struct cred *cred,
-> =C2=A0				=C2=A0=C2=A0 const struct nfs_fh *nfs_fh,
-> =C2=A0				=C2=A0=C2=A0 const fmode_t fmode,
-> -				=C2=A0=C2=A0 struct file **pfilp);
-> +				=C2=A0=C2=A0 struct nfsd_file **pnf);
-> =C2=A0
-> =C2=A0static inline int fh_want_write(struct svc_fh *fh)
-> =C2=A0{
-> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-> index 6302d36f9112..7e09ff621d93 100644
-> --- a/include/linux/nfslocalio.h
-> +++ b/include/linux/nfslocalio.h
-> @@ -35,7 +35,7 @@ struct nfsd_file;
-> =C2=A0typedef int (*nfs_to_nfsd_open_local_fh_t)(struct net *, struct aut=
-h_domain *,
-> =C2=A0				struct rpc_clnt *, const struct cred *,
-> =C2=A0				const struct nfs_fh *, const fmode_t,
-> -				struct file **);
-> +				struct nfsd_file **);
-> =C2=A0typedef struct nfsd_file * (*nfs_to_nfsd_file_get_t)(struct nfsd_fi=
-le *);
-> =C2=A0typedef void (*nfs_to_nfsd_file_put_t)(struct nfsd_file *);
-> =C2=A0typedef struct file * (*nfs_to_nfsd_file_file_t)(struct nfsd_file *=
-);
+I'd just squash this into patch #19.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
