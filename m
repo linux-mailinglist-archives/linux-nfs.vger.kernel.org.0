@@ -1,108 +1,116 @@
-Return-Path: <linux-nfs+bounces-5490-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5491-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C21B29594F2
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 08:46:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C28AA959B7F
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:16:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F50C28967E
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 06:46:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 017B01C21742
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 12:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417721D4167;
-	Wed, 21 Aug 2024 06:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5221531E7;
+	Wed, 21 Aug 2024 12:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUJtzSbY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D1C1D4149
-	for <linux-nfs@vger.kernel.org>; Wed, 21 Aug 2024 06:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331711D131E;
+	Wed, 21 Aug 2024 12:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724222762; cv=none; b=aXy+YNJtzgKtuFm4Brqpyo9poSiNGkbmdzP6BJP83cI/bsa0IzDFJlwKP1hGudP+XvQeod6TowIs5xKZXrFDFZ5bnLrPeFm+u7U3Gr4kyfr6dXEZckKskiNdy9vY+JNPC/FPCIkJeqZ1S6Cmc+s8rcI/u4xnU/SpTNftpDnRA5Y=
+	t=1724242593; cv=none; b=o4V493Dx2aUggMXedFNAQzAF/xQXva6nFsjTovgAfnkP75Uru9y503jCyN2lo2yWPm99NnNFpSGgS+7UHM9+7c4fpI9brNiRRGYFsRoreV7RnTuOwyo5kblNIAopMedwmIFJqa6jyT/RmA8YgC/62ZMESXIwz+GnkyIiIP3JISI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724222762; c=relaxed/simple;
-	bh=u+fZMPqUbGga5gwaYZr9ARoeoukbCXw0BPleZd/6X7U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VIOXyfzsJhrmoXfFTgeIm9ybirBZernNdSJcACoaKAxjW5Z/3figd5hZWomOipkg6WXctDRS7+tcYPTQBZE4ma0up6AmoRFeAQSrsakZgtfxS2Pl/B4iMtgyXQqHNCplhzt7abTSUzbz/MSC8K7lsDEDKfIugRy8VppQ1Zok3Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WpcKv3jZSz2CmwZ;
-	Wed, 21 Aug 2024 14:45:55 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9BC3A1A0188;
-	Wed, 21 Aug 2024 14:45:57 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 Aug
- 2024 14:45:57 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<kolga@netapp.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>
-CC: <lihongbo22@huawei.com>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH -next] nfsd: use LIST_HEAD() to simplify code
-Date: Wed, 21 Aug 2024 14:53:26 +0800
-Message-ID: <20240821065326.2293988-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1724242593; c=relaxed/simple;
+	bh=2mU8ioxVN/5wGjGdS99fbZED3sKqLT8/LSb5k5ZqHnA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FEn70/DO//bxdhOZQU8IQahtLt7B8NrbPYIlUlAwYy9lP5pyVBtdYMqyCeDtG60dHyCFOsqC3B2+7gZSHG7Czay6nitUHho7w5KgKi4WP2q0N42aXPXyrol5zSXLKoNsR2tZkvNr/wG0lcH621AfTOpdjmWFFqJk5iBRX6leNAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUJtzSbY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25113C32782;
+	Wed, 21 Aug 2024 12:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724242592;
+	bh=2mU8ioxVN/5wGjGdS99fbZED3sKqLT8/LSb5k5ZqHnA=;
+	h=From:Date:Subject:To:Cc:From;
+	b=sUJtzSbYTQCCYDq/EPfUshAiZ9CzdW2MnkI3kl4YparDktsa3wOAYYrU7bN82WN81
+	 BsIph4PlpT6ONxeTutO5nyxEPy/35mm1/Gq+kkNa/mxx2tP4Cw3ac/qmeK7QsBZz3W
+	 BFzrAoNzp4CRGtUbNKbLcNrqJIzrcOpc+lNPFgw+agrGu9RkkUY1mxJ3s7MVodNRh3
+	 tKTRjJzdewuwIu7MHboqJsEPevguI5k1Q23+zms2xsTSbj3XpJK5zXp1b8CdXfbqGi
+	 DFt5QiYyOFBaaAXeVff4boFgdgAhgEzE0xqNlxQSp+sHCZkxRhv/9gB6ecRYEIcnwn
+	 p8FFyh6vhSbKg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 21 Aug 2024 08:16:16 -0400
+Subject: [PATCH] nfs: fix bitmap decoder to handle a 3rd word
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240821-nfs-6-11-v1-1-ce61f5fc7587@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAI/axWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDCyND3by0Yl0zXUNDXUMLi6Qkk1TDNMOUFCWg8oKi1LTMCrBR0bG1tQA
+ OSpSSWgAAAA==
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Lance Shelton <lance.shelton@hammerspace.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1075; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=2mU8ioxVN/5wGjGdS99fbZED3sKqLT8/LSb5k5ZqHnA=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmxdqZGZFnWcvfNESeb2efxuFh+7bVAj1gXg4I+
+ T1jFRDDXGiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZsXamQAKCRAADmhBGVaC
+ Fe2HD/0aKPevZVsgbuTceWeJL7hTWSodMeAQNtJS8WGGl26wep1IddzsP0DS4qxf2U8KkU4FWFR
+ LVbF4ABjB6RMcFiM20mg03M8AuhyALLrlDG/2FOgOWy+upLBSdzeCU+FM+YjhZXLskXXKGSXHdI
+ XEWBv3Nj2Ct+AvP2BFmZoq7+gWKvBQoIrl6FMHflL/C5kLLIIGkjJGKJ6nYQ2Y11rmD+/anHvqj
+ QyxUlDjPqSojn7r2D39LTHxniOfaB6Zq2LQuqfqhCBEqZsFuPi3fSIRxUtGtYwD5eeL9aaKdgJi
+ Mccd2MlsIls3lGyjeGeUUB8gLKzSnoUJ38+RqW67foVWmxLgzOJWEdOHDY5+O178g7Qc7gP6jCK
+ UvD/kC2ZGfc7eGcvW/xRDykly7NHMC94RGWnrwoZKYEgc5zdw/Wb8U7jHH/V/pHG0sTnIOnnZlI
+ SQWxtdg2XV/vfTZt4DANB+hxn1wqQQ7GkysTCELb/CNiMRlsOAB+EmR6CeIp3IA/OoSWrwNQfxL
+ tahIsRJMWtYvmd7Yq/qgeDlMM5mvo9SYWOuMbaSFIoy3brTofM24Q3HHGMeoDbUNlLw08z84ADq
+ HnBpmoFCK49DLtNL+AHycQqP363YBFR117tb8m/hwF2IvpmgRDjweV4jGVFE1QA+as/+B0huvBT
+ L+Md2ABT8yVpHwA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-list_head can be initialized automatically with LIST_HEAD()
-instead of calling INIT_LIST_HEAD().
+It only decodes the first two words at this point. Have it decode the
+third word as well. Without this, the client doesn't send delegated
+timestamps in the CB_GETATTR response.
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+Fixes: 43df7110f4a9 ("NFSv4: Add CB_GETATTR support for delegated attributes")
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Found this while working on the delstid patches for nfsd.
+---
+ fs/nfs/callback_xdr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a20c2c9d7d45..ee852719d07d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1663,9 +1663,7 @@ static void release_openowner(struct nfs4_openowner *oo)
- {
- 	struct nfs4_ol_stateid *stp;
- 	struct nfs4_client *clp = oo->oo_owner.so_client;
--	struct list_head reaplist;
--
--	INIT_LIST_HEAD(&reaplist);
-+	LIST_HEAD(reaplist);
+diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+index 29c49a7e5fe1..246470306172 100644
+--- a/fs/nfs/callback_xdr.c
++++ b/fs/nfs/callback_xdr.c
+@@ -118,7 +118,9 @@ static __be32 decode_bitmap(struct xdr_stream *xdr, uint32_t *bitmap)
+ 	if (likely(attrlen > 0))
+ 		bitmap[0] = ntohl(*p++);
+ 	if (attrlen > 1)
+-		bitmap[1] = ntohl(*p);
++		bitmap[1] = ntohl(*p++);
++	if (attrlen > 2)
++		bitmap[2] = ntohl(*p);
+ 	return 0;
+ }
  
- 	spin_lock(&clp->cl_lock);
- 	unhash_openowner_locked(oo);
-@@ -2369,9 +2367,8 @@ __destroy_client(struct nfs4_client *clp)
- 	int i;
- 	struct nfs4_openowner *oo;
- 	struct nfs4_delegation *dp;
--	struct list_head reaplist;
-+	LIST_HEAD(reaplist);
- 
--	INIT_LIST_HEAD(&reaplist);
- 	spin_lock(&state_lock);
- 	while (!list_empty(&clp->cl_delegations)) {
- 		dp = list_entry(clp->cl_delegations.next, struct nfs4_delegation, dl_perclnt);
-@@ -6616,9 +6613,8 @@ deleg_reaper(struct nfsd_net *nn)
- {
- 	struct list_head *pos, *next;
- 	struct nfs4_client *clp;
--	struct list_head cblist;
-+	LIST_HEAD(cblist);
- 
--	INIT_LIST_HEAD(&cblist);
- 	spin_lock(&nn->client_lock);
- 	list_for_each_safe(pos, next, &nn->client_lru) {
- 		clp = list_entry(pos, struct nfs4_client, cl_lru);
+
+---
+base-commit: b311c1b497e51a628aa89e7cb954481e5f9dced2
+change-id: 20240821-nfs-6-11-188bb4e1f1dd
+
+Best regards,
 -- 
-2.34.1
+Jeff Layton <jlayton@kernel.org>
 
 
