@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-5512-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5513-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CBBD95A0A4
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:57:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0FD95A0A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AB912874B8
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:57:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2730AB210F5
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 816D71B2528;
-	Wed, 21 Aug 2024 14:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD4B1B1D4E;
+	Wed, 21 Aug 2024 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNl45btV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cb9hb7UT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EB21D12EB;
-	Wed, 21 Aug 2024 14:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728761D12EB;
+	Wed, 21 Aug 2024 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724252205; cv=none; b=ZrI3CmerTiN9ZYc6OgS8Eb1/ancJYfYQ7l+2DELoRTg/K+QKuX36syeZnASz0rcJZf/Oenk22wWUaHwGyi6dre+yPalV+9dtLQaHS3jZdAv970dEk5HV67+oieSC8Bnyap0kgY24vSSKmjLGQ7g8R6dWfhxlOX1835Zlk2LVjNE=
+	t=1724252207; cv=none; b=REFbxgGC+QNZU687z34eO8FqZ710S7AIppOkRS16Sb+HDN+e3JmipqOuMxf766H86BJFEv3uTo7lKeclFUbOjm0vuJ7WCyieaNHsgtXpN35anGiAY+8ploTEF3y1y5/K79Bpjkl/YAS9rY16ZCGReNE9qm8YgaXOlHOW2B7BAok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724252205; c=relaxed/simple;
-	bh=wKem2yUs0AoriM8D++AZ/JkvgHvFjBKZX/gEJHMq4zQ=;
+	s=arc-20240116; t=1724252207; c=relaxed/simple;
+	bh=h4s8RmktF6CmgmiH3UaFCF6tImHhJIn4Y2nvhERRQBk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cbHiD//4Suewz6EJRH0Hl3sV2lhe8XTztU1j0TA9z9p+fzdqPf35NSu0T1OcGWpCG2w72sGML6GKIt7zliVE1uYkBVONKNakhpmp5o4eYHWtGaZ07IjkBTWxSckUQucMSNjVDwwGgjReuM/BcSXI2/fYjmxhsLn3ZWZcZU1CEkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNl45btV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E59FC32781;
-	Wed, 21 Aug 2024 14:56:43 +0000 (UTC)
+	 MIME-Version; b=bNHCUPipjwb5NlhSwDE5RU2QQfE+zrYuPPIaVQH5b0SlJlO0kLWEwJFFb3jQ9QxO6LWpu3KOoTSgTkY3sHZ6yLKAOTnpcMKmH9qKhzFmdnHdBxN65znSoGcsLn/BELUfN7La/OsEiO+dx8jtSitoWDzRsXuCYTJj47beQePC8Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cb9hb7UT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58487C32781;
+	Wed, 21 Aug 2024 14:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724252204;
-	bh=wKem2yUs0AoriM8D++AZ/JkvgHvFjBKZX/gEJHMq4zQ=;
+	s=k20201202; t=1724252207;
+	bh=h4s8RmktF6CmgmiH3UaFCF6tImHhJIn4Y2nvhERRQBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GNl45btVv+buq+2whBCVZgHHOuc6v025ZgEMQqafhRJ1ukdDAEyWOLSJS8WoKEUCQ
-	 Z5Ax7+dq/jgzed5ngdhbR2FxE7RzZwfjMKCEV3VmJ86DdMu3xHkFsEyAVbo9KD5/6l
-	 ym+2WCLQVAqLCJ38MHNocDx3yvdMQU9vujFu+wp66ciKHVLMJtqT7c7cgBFME/0IMv
-	 uTjQkRT+IDCXSWORLnrZuwL+i1R1uiqqiMtgnH+ajqn/gwttfxkKe6Iy2Frloqgqpd
-	 ZRXo85Bk6R2aHmGpgzYdd+o89C+Jk1tfA1rOsOUFTdP1f9NZZdHE2nCTSo4sN+/z4a
-	 WWpsAc6bKU2Qw==
+	b=Cb9hb7UTNJB3KxxyITMUH1R3w5vXwjDqvzYwL7Vz7nSXOFs0wABwcBKRL/K8JqRKt
+	 jgDR08jdN5erqNdn8rTSSnFuIhhWzbHhc69y/26vpPgaBXnSlaPf2bqMVvOPxVWeZP
+	 K63jW7KVCT6b+EMYyw/HGNlyP73EybWMomTwxvPEFo2KasWrFj0ULjFpdGM+ZKkGzm
+	 Rga5/uDPasPgyGR40Y2h8uW1e0oigoVSBjPxLj5bE9yjuO8reiSsQ6rt4CcOcMH1K2
+	 cat6rPu4iyDkFBnCbMyvc82T31yK2VE1l39PqUBGNLwmivTCnNk4b+pyRsF0odFlNu
+	 1Bs+B+qzazTzA==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc: <linux-nfs@vger.kernel.org>,
 	kernel-team@fb.com,
 	Josef Bacik <josef@toxicpanda.com>,
 	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 5.15.y 10/18] nfsd: stop setting ->pg_stats for unused stats
-Date: Wed, 21 Aug 2024 10:55:40 -0400
-Message-ID: <20240821145548.25700-11-cel@kernel.org>
+Subject: [PATCH 5.15.y 11/18] sunrpc: pass in the sv_stats struct through svc_create_pooled
+Date: Wed, 21 Aug 2024 10:55:41 -0400
+Message-ID: <20240821145548.25700-12-cel@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240821145548.25700-1-cel@kernel.org>
 References: <20240821145548.25700-1-cel@kernel.org>
@@ -66,90 +66,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit a2214ed588fb3c5b9824a21cff870482510372bb ]
+[ Upstream commit f094323867668d50124886ad884b665de7319537 ]
 
-A lot of places are setting a blank svc_stats in ->pg_stats and never
-utilizing these stats.  Remove all of these extra structs as we're not
-reporting these stats anywhere.
+Since only one service actually reports the rpc stats there's not much
+of a reason to have a pointer to it in the svc_program struct.  Adjust
+the svc_create_pooled function to take the sv_stats as an argument and
+pass the struct through there as desired instead of getting it from the
+svc_program->pg_stats.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
+[ cel: adjusted to apply to v5.15.y ]
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc.c    | 3 ---
- fs/nfs/callback.c | 3 ---
- fs/nfsd/nfssvc.c  | 5 -----
- 3 files changed, 11 deletions(-)
+ fs/nfsd/nfssvc.c           |  3 ++-
+ include/linux/sunrpc/svc.h |  4 +++-
+ net/sunrpc/svc.c           | 12 +++++++-----
+ 3 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 5579e67da17d..c33f78513f00 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -759,8 +759,6 @@ static const struct svc_version *nlmsvc_version[] = {
- #endif
- };
- 
--static struct svc_stat		nlmsvc_stats;
--
- #define NLM_NRVERS	ARRAY_SIZE(nlmsvc_version)
- static struct svc_program	nlmsvc_program = {
- 	.pg_prog		= NLM_PROGRAM,		/* program number */
-@@ -768,7 +766,6 @@ static struct svc_program	nlmsvc_program = {
- 	.pg_vers		= nlmsvc_version,	/* version table */
- 	.pg_name		= "lockd",		/* service name */
- 	.pg_class		= "nfsd",		/* share authentication with nfsd */
--	.pg_stats		= &nlmsvc_stats,	/* stats table */
- 	.pg_authenticate	= &lockd_authenticate,	/* export authentication */
- 	.pg_init_request	= svc_generic_init_request,
- 	.pg_rpcbind_set		= svc_generic_rpcbind_set,
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 8fe143cad4a2..f00fff3633f6 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -407,15 +407,12 @@ static const struct svc_version *nfs4_callback_version[] = {
- 	[4] = &nfs4_callback_version4,
- };
- 
--static struct svc_stat nfs4_callback_stats;
--
- static struct svc_program nfs4_callback_program = {
- 	.pg_prog = NFS4_CALLBACK,			/* RPC service number */
- 	.pg_nvers = ARRAY_SIZE(nfs4_callback_version),	/* Number of entries */
- 	.pg_vers = nfs4_callback_version,		/* version table */
- 	.pg_name = "NFSv4 callback",			/* service name */
- 	.pg_class = "nfs",				/* authentication class */
--	.pg_stats = &nfs4_callback_stats,
- 	.pg_authenticate = nfs_callback_authenticate,
- 	.pg_init_request = svc_generic_init_request,
- 	.pg_rpcbind_set	= svc_generic_rpcbind_set,
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index a68e9904224a..8f1c8cbd1101 100644
+index 8f1c8cbd1101..f5d6924905bf 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -89,7 +89,6 @@ unsigned long	nfsd_drc_max_mem;
- unsigned long	nfsd_drc_mem_used;
+@@ -665,7 +665,8 @@ int nfsd_create_serv(struct net *net)
+ 	if (nfsd_max_blksize == 0)
+ 		nfsd_max_blksize = nfsd_get_default_max_blksize();
+ 	nfsd_reset_versions(nn);
+-	serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize, nfsd);
++	serv = svc_create_pooled(&nfsd_program, &nfsd_svcstats,
++				 nfsd_max_blksize, nfsd);
+ 	if (serv == NULL)
+ 		return -ENOMEM;
  
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
--static struct svc_stat	nfsd_acl_svcstats;
- static const struct svc_version *nfsd_acl_version[] = {
- # if defined(CONFIG_NFSD_V2_ACL)
- 	[2] = &nfsd_acl_version2,
-@@ -108,15 +107,11 @@ static struct svc_program	nfsd_acl_program = {
- 	.pg_vers		= nfsd_acl_version,
- 	.pg_name		= "nfsacl",
- 	.pg_class		= "nfsd",
--	.pg_stats		= &nfsd_acl_svcstats,
- 	.pg_authenticate	= &svc_set_client,
- 	.pg_init_request	= nfsd_acl_init_request,
- 	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
- };
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 6e48c1c88f1b..ff8235e6acc3 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -483,7 +483,9 @@ void		   svc_rqst_replace_page(struct svc_rqst *rqstp,
+ 					 struct page *page);
+ void		   svc_rqst_free(struct svc_rqst *);
+ void		   svc_exit_thread(struct svc_rqst *);
+-struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
++struct svc_serv *  svc_create_pooled(struct svc_program *prog,
++				     struct svc_stat *stats,
++				     unsigned int bufsize,
+ 				     int (*threadfn)(void *data));
+ int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
+ int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 447f515d445b..92d88aac2adf 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -447,8 +447,8 @@ __svc_init_bc(struct svc_serv *serv)
+  * Create an RPC service
+  */
+ static struct svc_serv *
+-__svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+-	     int (*threadfn)(void *data))
++__svc_create(struct svc_program *prog, struct svc_stat *stats,
++	     unsigned int bufsize, int npools, int (*threadfn)(void *data))
+ {
+ 	struct svc_serv	*serv;
+ 	unsigned int vers;
+@@ -460,7 +460,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 	serv->sv_name      = prog->pg_name;
+ 	serv->sv_program   = prog;
+ 	kref_init(&serv->sv_refcnt);
+-	serv->sv_stats     = prog->pg_stats;
++	serv->sv_stats     = stats;
+ 	if (bufsize > RPCSVC_MAXPAYLOAD)
+ 		bufsize = RPCSVC_MAXPAYLOAD;
+ 	serv->sv_max_payload = bufsize? bufsize : 4096;
+@@ -522,26 +522,28 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ struct svc_serv *svc_create(struct svc_program *prog, unsigned int bufsize,
+ 			    int (*threadfn)(void *data))
+ {
+-	return __svc_create(prog, bufsize, 1, threadfn);
++	return __svc_create(prog, NULL, bufsize, 1, threadfn);
+ }
+ EXPORT_SYMBOL_GPL(svc_create);
  
--static struct svc_stat	nfsd_acl_svcstats = {
--	.program	= &nfsd_acl_program,
--};
- #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
+ /**
+  * svc_create_pooled - Create an RPC service with pooled threads
+  * @prog: the RPC program the new service will handle
++ * @stats: the stats struct if desired
+  * @bufsize: maximum message size for @prog
+  * @threadfn: a function to service RPC requests for @prog
+  *
+  * Returns an instantiated struct svc_serv object or NULL.
+  */
+ struct svc_serv *svc_create_pooled(struct svc_program *prog,
++				   struct svc_stat *stats,
+ 				   unsigned int bufsize,
+ 				   int (*threadfn)(void *data))
+ {
+ 	struct svc_serv *serv;
+ 	unsigned int npools = svc_pool_map_get();
  
- static const struct svc_version *nfsd_version[] = {
+-	serv = __svc_create(prog, bufsize, npools, threadfn);
++	serv = __svc_create(prog, stats, bufsize, npools, threadfn);
+ 	if (!serv)
+ 		goto out_err;
+ 	return serv;
 -- 
 2.45.2
 
