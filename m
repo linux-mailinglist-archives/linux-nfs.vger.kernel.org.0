@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-5535-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5536-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C064995A3F5
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 19:35:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DC6E95A420
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 19:46:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77433282721
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 17:35:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5E8B281483
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 17:46:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 526EC16C685;
-	Wed, 21 Aug 2024 17:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82F1B14AD2D;
+	Wed, 21 Aug 2024 17:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2qBJbhH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gN8GhA2Y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA1D13BAC2
-	for <linux-nfs@vger.kernel.org>; Wed, 21 Aug 2024 17:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E3A4206B;
+	Wed, 21 Aug 2024 17:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724261697; cv=none; b=EfC5+QKRMu/2JDu5cU3XUBCn+E7pDeOuF80tszktT5988WLEiZwkL1mXPhLWKNar1R7dKJISlNReHtl0dgrSDjBE7IUsXWL4LVGV/+Z50zUoqNJKMy4vf/q+V7KvDwQ58ceokfMCPq+2cbLdIkw2VxrT/tfWAS7UbDUoidY3bKo=
+	t=1724262364; cv=none; b=ZZ8+sWRtcXtjVrqEtKU8Q6rExuSG5PDYQp2WHEQRRq5bvrWJaSZEXTE3JRutweeHMqXOtdCN9aEulU/hik2IbsPj4HdYVYITqqbNx8fG3OkeOn3Au2okeqYz7U1N6ZZgIHhC9TwREadC1PJAneVFofifnd7sPRf/bda5jf6XPF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724261697; c=relaxed/simple;
-	bh=Vt/VPr4qsOMZ7f6KMUn9UQJdm76IwV2y/XU1w/2FQA4=;
+	s=arc-20240116; t=1724262364; c=relaxed/simple;
+	bh=1BK99sTFr7816wkAtISZpPlUAsnYjks7tComubUaZyo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RxabWDdALEFT0Dm8tCoSVKWg6hk4AKpLi76Nv6kXGy/BsIifzwI9ETpYu8wTcbr/TsxKlApLdY1JLtZnW8E6Hr/0wpdNIklGrfSQgel7ty/q52KGL5w+JzldfasTEtZ7xadiG4zOKfXd5hQLPycoEX7EGjhySxBMMUPVPJcoZLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2qBJbhH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7DBC32781;
-	Wed, 21 Aug 2024 17:34:56 +0000 (UTC)
+	 Content-Type:MIME-Version; b=bdXjXpPsLASILT5vmlufFPlVFBTqRnwrxCITtHuJP0cFkHxcwr/9eUink5w6kczup8JZEDAclDWlWRwq1zjumY5SIYB9IeDWGd4eRDUmB5IZ4rxLmPaEApy3JTF32EMjqo4slunEsGe55ZBoKjhyeuz6hIUOmZBtCBKLTcJTpZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gN8GhA2Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87860C32781;
+	Wed, 21 Aug 2024 17:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724261697;
-	bh=Vt/VPr4qsOMZ7f6KMUn9UQJdm76IwV2y/XU1w/2FQA4=;
+	s=k20201202; t=1724262364;
+	bh=1BK99sTFr7816wkAtISZpPlUAsnYjks7tComubUaZyo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=u2qBJbhHk3RbC7wXqgyGgcPwP3AZrL0lAQXBzrxPUXungXZrHSMJBQ2Y+sM6UvGlN
-	 7cxJRfvDFOxs4txewDb5W91wsC3CDpFMDxibFxvn2FCPOknMhAxxRIzVRumr4GbAGb
-	 fJlSkpPB9OVdT24ad+IqcEKMsgzE90UzPNx/b1mRyeMOMBedTdMHO9aAPs46m8JXQP
-	 QWVCFjGOB+Fv0tYuXnFvGc3/3BY2DxytUUNjYnPDMrpWueF1ufdKHse8CQhD++9qAY
-	 SOJeQ8fOEkgxeBDURpRq8aPLWxDZ2SjAfAcLi7u0wzAYt99hxk/k52LJ2O7E0up01w
-	 m0b8t6P4fL7zQ==
-Message-ID: <3deb19e0da3ab3f31e8e3dd0e1f7549d27b299b6.camel@kernel.org>
-Subject: Re: [RFC PATCH 2/2] NFSD: Create an initial nfs4_1.x file
+	b=gN8GhA2YOiwOCqdnusrke2P48jlw5jg0jJLt1aXJpWJvrn949d/LYwgD3okCnF7FN
+	 p2KwdwMShlYvfXVNKNPLBXwXiccUTFi5Yto8/jjLyx8TrYi/l9CFshtMED1TFGVdYT
+	 JzFm/JOx47mqM+PuH/VGZ8tRkGymPqNghil8uxm7DhqeYmFpTOaI8tTw587/2NS6pB
+	 MUtzjygSHzcN3o4F0hyva/CgEPRSXTqIIV+c8L7M4vHNsuImSp94eMq1+w9E3ugaNJ
+	 p2EC0D7CMM9/TZV8jIe96EMSyIpXcRSDO4KbLO+j4V3DXlmC0E9uPYgIo9V8h/aqj1
+	 UOcmgxneMa5AQ==
+Message-ID: <4ab36f95604da25d8c5b419c927d85d362bca2e8.camel@kernel.org>
+Subject: Re: [PATCH v12 05/24] nfsd: fix nfsfh tracepoints to properly
+ handle NULL rqstp
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: cel@kernel.org, linux-nfs@vger.kernel.org, Trond Myklebust
-	 <trondmy@hammerspace.com>, Anna Schumaker <anna@kernel.org>
-Date: Wed, 21 Aug 2024 13:34:55 -0400
-In-Reply-To: <ZsYd99w9wWbjI54J@tissot.1015granger.net>
-References: <20240820144600.189744-1-cel@kernel.org>
-	 <20240820144600.189744-3-cel@kernel.org>
-	 <6a3d9288fdeb6409dca7c2ceedf249d3b40a7d97.camel@kernel.org>
-	 <ZsX79e6NPi/4/rxC@tissot.1015granger.net>
-	 <590b91607e15f1fecd563781a0c5390ff02da5b2.camel@kernel.org>
-	 <ZsYd99w9wWbjI54J@tissot.1015granger.net>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>, 
+ Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+ linux-fsdevel@vger.kernel.org
+Date: Wed, 21 Aug 2024 13:46:02 -0400
+In-Reply-To: <20240819181750.70570-6-snitzer@kernel.org>
+References: <20240819181750.70570-1-snitzer@kernel.org>
+	 <20240819181750.70570-6-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,153 +137,180 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-08-21 at 13:03 -0400, Chuck Lever wrote:
-> On Wed, Aug 21, 2024 at 12:51:51PM -0400, Jeff Layton wrote:
-> > On Wed, 2024-08-21 at 10:38 -0400, Chuck Lever wrote:
-> > > On Wed, Aug 21, 2024 at 10:22:15AM -0400, Jeff Layton wrote:
-> > > > On Tue, 2024-08-20 at 10:46 -0400, cel@kernel.org=C2=A0wrote:
-> > > > > From: Chuck Lever <chuck.lever@oracle.com>
-> > > > >=20
-> > > > > Build an NFSv4 protocol snippet to support the delstid
-> > > > > extensions.
-> > > > > The new fs/nfsd/nfs4_1.x file can be added to over time as
-> > > > > other
-> > > > > parts of NFSD's XDR functions are converted to machine-
-> > > > > generated
-> > > > > code.
-> > > > >=20
-> > > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > > > ---
-> > > > > =C2=A0fs/nfsd/nfs4_1.x=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 164 ++++++=
-+++++++++++++++++++++++
-> > > > > =C2=A0fs/nfsd/nfs4xdr_gen.c | 236
-> > > > > ++++++++++++++++++++++++++++++++++++++++++
-> > > > > =C2=A0fs/nfsd/nfs4xdr_gen.h | 113 ++++++++++++++++++++
-> > > > > =C2=A03 files changed, 513 insertions(+)
-> > > > > =C2=A0create mode 100644 fs/nfsd/nfs4_1.x
-> > > > > =C2=A0create mode 100644 fs/nfsd/nfs4xdr_gen.c
-> > > > > =C2=A0create mode 100644 fs/nfsd/nfs4xdr_gen.h
-> > > > >=20
-> > > >=20
-> > > > I see the patches in your lkxdrgen branch. I gave this a try
-> > > > and
-> > > > started rebasing my delstid work on top of it, but I hit the
-> > > > same
-> > > > symbol conflicts I hit before once I started trying to include
-> > > > the
-> > > > full-blown nfs4xdr_gen.h header:
-> > > >=20
-> > > > ------------------------8<---------------------------
-> > > > In file included from fs/nfsd/nfs4xdr.c:58:
-> > > > fs/nfsd/nfs4xdr_gen.h:86:9: error: redeclaration of enumerator
-> > > > =E2=80=98FATTR4_OPEN_ARGUMENTS=E2=80=99
-> > > > =C2=A0=C2=A0 86 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 F=
-ATTR4_OPEN_ARGUMENTS =3D 86
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~
-> > > > In file included from fs/nfsd/nfsfh.h:15,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from fs/nfsd/state.h:41,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from fs/nfsd/xdr4.h:40,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from fs/nfsd/nfs4xdr.c:51:
-> > > > ./include/linux/nfs4.h:518:9: note: previous definition of
-> > > > =E2=80=98FATTR4_OPEN_ARGUMENTS=E2=80=99 with type =E2=80=98enum <an=
-onymous>=E2=80=99
-> > > > =C2=A0 518 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4=
-_OPEN_ARGUMENTS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- =3D 86,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~
-> > > > fs/nfsd/nfs4xdr_gen.h:102:9: error: redeclaration of enumerator
-> > > > =E2=80=98FATTR4_TIME_DELEG_ACCESS=E2=80=99
-> > > > =C2=A0 102 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4=
-_TIME_DELEG_ACCESS =3D 84
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~
-> > > > ./include/linux/nfs4.h:516:9: note: previous definition of
-> > > > =E2=80=98FATTR4_TIME_DELEG_ACCESS=E2=80=99 with type =E2=80=98enum =
-<anonymous>=E2=80=99
-> > > > =C2=A0 516 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4=
-_TIME_DELEG_ACCESS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D 84,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~
-> > > > fs/nfsd/nfs4xdr_gen.h:106:9: error: redeclaration of enumerator
-> > > > =E2=80=98FATTR4_TIME_DELEG_MODIFY=E2=80=99
-> > > > =C2=A0 106 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4=
-_TIME_DELEG_MODIFY =3D 85
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~
-> > > > ./include/linux/nfs4.h:517:9: note: previous definition of
-> > > > =E2=80=98FATTR4_TIME_DELEG_MODIFY=E2=80=99 with type =E2=80=98enum =
-<anonymous>=E2=80=99
-> > > > =C2=A0 517 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4=
-_TIME_DELEG_MODIFY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D 85,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~
-> > > > ------------------------8<---------------------------
-> > > >=20
-> > > > I'm not sure of the best way to work around this, unless we
-> > > > want to
-> > > > try
-> > > > to split up nfs4.h.
-> > >=20
-> > > That header is shared with the client, so I consider it immutable
-> > > for our purposes here.
-> > >=20
-> > >=20
-> > > One option would be to namespace the generated data items. Eg,
-> > > name
-> > > them:
-> > >=20
-> > > 	XG_FATTR4_TIME_DELEG_ACCESS
-> > > 	XG_FATTR4_TIME_DELEG_MODIFY
-> > >=20
-> > > That way they don't conflict with existing definitions.
-> > >=20
-> >=20
-> > I'd rather avoid that if we can. Having things named exactly the
-> > same
-> > as in the spec makes the code easier to read and understand.
+On Mon, 2024-08-19 at 14:17 -0400, Mike Snitzer wrote:
+> Fixes stop-gap used in previous commit where caller avoided using
+> tracepoint if rqstp is NULL.=C2=A0 Instead, have each tracepoint avoid
+> dereferencing NULL rqstp.
 >=20
-> Agreed, matching names is one of the reasons I started this work.
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+> =C2=A0fs/nfsd/nfsfh.c | 12 ++++--------
+> =C2=A0fs/nfsd/trace.h | 36 +++++++++++++++++++++---------------
+> =C2=A02 files changed, 25 insertions(+), 23 deletions(-)
 >=20
-> My thought was that the prefixed names could be fixed eventually
-> after the hand-rolled code has been replaced.
->=20
->=20
-> > What might be best is to autogenerate a header from a (combined)
-> > nfs4.x, and then have the old nfs4.h file include it. Then we'd
-> > just
-> > have to eliminate anything from nfs4.h that conflicts with the
-> > autogenerated symbols.
-> >=20
-> > That's definitely not treating include/linux/nfs4.h as immutable,
-> > but
-> > we might still be able to avoid a lot of changes to the client code
-> > that way.
->=20
-> Include the current nfs4xdr_gen.h in nfs4.h, and then remove from
-> nfs4.h anything that has a naming conflict?
->=20
-> The downside of that is that approach mixes generated and
-> hand-rolled code. Not an objection from me, but it was something
-> that made Neil uncomfortable.
->=20
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 19e173187ab9..bae727e65214 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -195,8 +195,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst
+> *rqstp, struct net *net,
+> =C2=A0
+> =C2=A0	error =3D nfserr_stale;
+> =C2=A0	if (IS_ERR(exp)) {
+> -		if (rqstp)
+> -			trace_nfsd_set_fh_dentry_badexport(rqstp,
+> fhp, PTR_ERR(exp));
+> +		trace_nfsd_set_fh_dentry_badexport(rqstp, fhp,
+> PTR_ERR(exp));
+> =C2=A0
+> =C2=A0		if (PTR_ERR(exp) =3D=3D -ENOENT)
+> =C2=A0			return error;
+> @@ -244,8 +243,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst
+> *rqstp, struct net *net,
+> =C2=A0						data_left,
+> fileid_type, 0,
+> =C2=A0						nfsd_acceptable,
+> exp);
+> =C2=A0		if (IS_ERR_OR_NULL(dentry)) {
+> -			if (rqstp)
+> -
+> 				trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
+> +			trace_nfsd_set_fh_dentry_badhandle(rqstp,
+> fhp,
+> =C2=A0					dentry ?=C2=A0 PTR_ERR(dentry) :
+> -ESTALE);
+> =C2=A0			switch (PTR_ERR(dentry)) {
+> =C2=A0			case -ENOMEM:
+> @@ -321,8 +319,7 @@ __fh_verify(struct svc_rqst *rqstp,
+> =C2=A0	dentry =3D fhp->fh_dentry;
+> =C2=A0	exp =3D fhp->fh_export;
+> =C2=A0
+> -	if (rqstp)
+> -		trace_nfsd_fh_verify(rqstp, fhp, type, access);
+> +	trace_nfsd_fh_verify(net, rqstp, fhp, type, access);
+> =C2=A0
+> =C2=A0	/*
+> =C2=A0	 * We still have to do all these permission checks, even
+> when
+> @@ -376,8 +373,7 @@ __fh_verify(struct svc_rqst *rqstp,
+> =C2=A0	/* Finally, check access permissions. */
+> =C2=A0	error =3D nfsd_permission(cred, exp, dentry, access);
+> =C2=A0out:
+> -	if (rqstp)
+> -		trace_nfsd_fh_verify_err(rqstp, fhp, type, access,
+> error);
+> +	trace_nfsd_fh_verify_err(net, rqstp, fhp, type, access,
+> error);
+> =C2=A0	if (error =3D=3D nfserr_stale)
+> =C2=A0		nfsd_stats_fh_stale_inc(nn, exp);
+> =C2=A0	return error;
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 77bbd23aa150..d49b3c1e3ba9 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -195,12 +195,13 @@ TRACE_EVENT(nfsd_compound_encode_err,
+> =C2=A0
+> =C2=A0TRACE_EVENT(nfsd_fh_verify,
+> =C2=A0	TP_PROTO(
+> +		const struct net *net,
+> =C2=A0		const struct svc_rqst *rqstp,
+> =C2=A0		const struct svc_fh *fhp,
+> =C2=A0		umode_t type,
+> =C2=A0		int access
+> =C2=A0	),
+> -	TP_ARGS(rqstp, fhp, type, access),
+> +	TP_ARGS(net, rqstp, fhp, type, access),
+> =C2=A0	TP_STRUCT__entry(
+> =C2=A0		__field(unsigned int, netns_ino)
+> =C2=A0		__sockaddr(server, rqstp->rq_xprt->xpt_remotelen)
+> @@ -212,12 +213,14 @@ TRACE_EVENT(nfsd_fh_verify,
+> =C2=A0		__field(unsigned long, access)
+> =C2=A0	),
+> =C2=A0	TP_fast_assign(
+> -		__entry->netns_ino =3D SVC_NET(rqstp)->ns.inum;
+> -		__assign_sockaddr(server, &rqstp->rq_xprt-
+> >xpt_local,
+> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rqstp->rq_xprt->xpt_locallen);
+> -		__assign_sockaddr(client, &rqstp->rq_xprt-
+> >xpt_remote,
+> -				=C2=A0 rqstp->rq_xprt->xpt_remotelen);
+> -		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+> +		__entry->netns_ino =3D net->ns.inum;
+> +		if (rqstp) {
+> +			__assign_sockaddr(server, &rqstp->rq_xprt-
+> >xpt_local,
+> +					=C2=A0 rqstp->rq_xprt-
+> >xpt_locallen);
+> +			__assign_sockaddr(client, &rqstp->rq_xprt-
+> >xpt_remote,
+> +					=C2=A0 rqstp->rq_xprt-
+> >xpt_remotelen);
+> +		}
 
-Not exactly. The hand-rolled code would become dependent on the
-generated headers, but we shouldn't need make changes to the generated
-headers themselves.
+Does this need an else branch to set these values to something when
+rqstp is NULL, or are we guaranteed that they are already zeroed out
+when they aren't assigned?
 
->=20
-> > We'd need Trond and Anna to buy in on that though.
->=20
-> Or the client can continue to use include/linux/nfs4.h and the
-> server can start using its own copy of that header.
->=20
+> +		__entry->xid =3D rqstp ? be32_to_cpu(rqstp->rq_xid) :
+> 0;
+> =C2=A0		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> =C2=A0		__entry->inode =3D d_inode(fhp->fh_dentry);
+> =C2=A0		__entry->type =3D type;
+> @@ -232,13 +235,14 @@ TRACE_EVENT(nfsd_fh_verify,
+> =C2=A0
+> =C2=A0TRACE_EVENT_CONDITION(nfsd_fh_verify_err,
+> =C2=A0	TP_PROTO(
+> +		const struct net *net,
+> =C2=A0		const struct svc_rqst *rqstp,
+> =C2=A0		const struct svc_fh *fhp,
+> =C2=A0		umode_t type,
+> =C2=A0		int access,
+> =C2=A0		__be32 error
+> =C2=A0	),
+> -	TP_ARGS(rqstp, fhp, type, access, error),
+> +	TP_ARGS(net, rqstp, fhp, type, access, error),
+> =C2=A0	TP_CONDITION(error),
+> =C2=A0	TP_STRUCT__entry(
+> =C2=A0		__field(unsigned int, netns_ino)
+> @@ -252,12 +256,14 @@ TRACE_EVENT_CONDITION(nfsd_fh_verify_err,
+> =C2=A0		__field(int, error)
+> =C2=A0	),
+> =C2=A0	TP_fast_assign(
+> -		__entry->netns_ino =3D SVC_NET(rqstp)->ns.inum;
+> -		__assign_sockaddr(server, &rqstp->rq_xprt-
+> >xpt_local,
+> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rqstp->rq_xprt->xpt_locallen);
+> -		__assign_sockaddr(client, &rqstp->rq_xprt-
+> >xpt_remote,
+> -				=C2=A0 rqstp->rq_xprt->xpt_remotelen);
+> -		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+> +		__entry->netns_ino =3D net->ns.inum;
+> +		if (rqstp) {
+> +			__assign_sockaddr(server, &rqstp->rq_xprt-
+> >xpt_local,
+> +					=C2=A0 rqstp->rq_xprt-
+> >xpt_locallen);
+> +			__assign_sockaddr(client, &rqstp->rq_xprt-
+> >xpt_remote,
+> +					=C2=A0 rqstp->rq_xprt-
+> >xpt_remotelen);
+> +		}
+> +		__entry->xid =3D rqstp ? be32_to_cpu(rqstp->rq_xid) :
+> 0;
+> =C2=A0		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> =C2=A0		if (fhp->fh_dentry)
+> =C2=A0			__entry->inode =3D d_inode(fhp->fh_dentry);
+> @@ -286,7 +292,7 @@ DECLARE_EVENT_CLASS(nfsd_fh_err_class,
+> =C2=A0		__field(int, status)
+> =C2=A0	),
+> =C2=A0	TP_fast_assign(
+> -		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+> +		__entry->xid =3D rqstp ? be32_to_cpu(rqstp->rq_xid) :
+> 0;
+> =C2=A0		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> =C2=A0		__entry->status =3D status;
+> =C2=A0	),
 
-Sure, that would work too.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
