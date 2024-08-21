@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-5514-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5515-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A595495A0A7
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:57:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90E9C95A0AB
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:57:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6392F287732
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:57:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 464A01F218B7
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:57:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CFB1B2EC9;
-	Wed, 21 Aug 2024 14:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6C51B2EF9;
+	Wed, 21 Aug 2024 14:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqtLfrd2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYduwhyk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6741B2EC8;
-	Wed, 21 Aug 2024 14:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9460D1B2EF6;
+	Wed, 21 Aug 2024 14:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724252209; cv=none; b=K8vZFWUUHOrZVr/kfVoCRxQqxam8In/eV3EfaQw/VF0Xu0ZjZyLsDRlmZr10xSrgFUYKOwSpJPPpCab8Ae4mLl2RySfJDwA8HRp+xyHGKTefHGTnmec/2EruCPWD/I8JTtDBWSKIQVn4wnd5gr9xMX1dd8Y47xPnW0ScfRZN86M=
+	t=1724252211; cv=none; b=enILXpt5p30ZCrf0nZxfzaPm+W2vbcf0i3iv3LiWKVp7wU/If6WSgtP+3jpg9sUTsy3QWCpk2sDH9NGSOGqW/Bdulu9O2YoJ3wLW9+nTX+3Ns9rNSLadi/RWnhcs1fFohxYjgpMM/hx88i0cEPGRelqGwgtrpHoBDSxTyMuuVnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724252209; c=relaxed/simple;
-	bh=yCznjqq+MJmj5zm8CN6rZgNRFsI5NdBXJfIMezKrz7s=;
+	s=arc-20240116; t=1724252211; c=relaxed/simple;
+	bh=DFrpZZ2NPQLLVDIJ8ns+Q2FkuW2fBXVGphkUeZbgVzc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mX3IYNl3Iz4dF1pjB8thbm8iW7gJZI1VsEGNoIUMAcLyvZY6FR3OOPP2hWUOHpWf77n7KytQbYnn5LRQiW/SzQaTqJ16s64fL2XjAns9iLA+2yGKrMHdl9PcIY2PZ1fLT+NHS3/NmAFUM6O0nBYXG7a+ZcuJOcqZvC0N1C7vh5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqtLfrd2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDFEC32781;
-	Wed, 21 Aug 2024 14:56:48 +0000 (UTC)
+	 MIME-Version; b=CetAlk/faUWLEhTeEQpkEaQOOMNfwEVodHkP9g99a9iTXICRr0SHeGOUEJoZkZnvynR86D/q6V6N329k1YjU4mLoYLdbLYZWDJsZ4avGr/RzxDJfsslb9+gw+8cuACQiFcJGhrDfiugNXw/92970+my/XC2/i1duEWjax8dVc1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYduwhyk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8168C32786;
+	Wed, 21 Aug 2024 14:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724252209;
-	bh=yCznjqq+MJmj5zm8CN6rZgNRFsI5NdBXJfIMezKrz7s=;
+	s=k20201202; t=1724252211;
+	bh=DFrpZZ2NPQLLVDIJ8ns+Q2FkuW2fBXVGphkUeZbgVzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NqtLfrd2EqgvxE5FPWqi0MlaE31UldVm/pW6vR4ZaTg7bB8RRW8D0mjRQKSpJYZUG
-	 fa8YZ88iSqkkmAXCFwh2HuERsFId0biAhtN1L8A4zRKLK1HpbP1fFZG/w1X9TfIocn
-	 xc1QeXzP1oQHtqp0u9h8Jk4bjftEOu78u95DTTLkL/cb8+epPBcNJF1beP27dZc0HZ
-	 MyuS6rdRB93VynFoDmhX8/JRE1tun+GmL5b+Jub/GsOR84vyN419OLvaeqlRN3IFa5
-	 SyMRcigQf1d32rYQ5FF0BVPFx3dqwG1fsSjUZO47ma0jheFK/uGJ83D2SRWRTbJ0fL
-	 d0iG7zOrVTMTw==
+	b=tYduwhykrJamOsbq4FF7Tm9jXm/YK5ejCSYB/A5AkR5IeuIzjTVAApUByHCfWVLDO
+	 e3ctC5fTTDQHBSZanwuLKCLTJilS87nYoXMCyH8f/M7+BLwAGeZQ6WtRVx9T9s6YRg
+	 r0K9/XpzllY1PqHOpz1NyGsa4lALX17KrfoiZv/SktZt2t8Sk9xJqqB/6oB2jPL08c
+	 dI6GF9SvsXw5tVBQm1QTyi4KCVQmkMyfE1vAbf1r3805mCxXGdsoKY7y7IyEM7O2L8
+	 mTzmYtDR6EgvUazg962Y+1Yj6RU1WmF92Crl6RG+i5e29knwj7ijassfUzBf15Z5Xr
+	 gTTi8k9NCPCNQ==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc: <linux-nfs@vger.kernel.org>,
 	kernel-team@fb.com,
 	Josef Bacik <josef@toxicpanda.com>,
 	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 5.15.y 12/18] sunrpc: remove ->pg_stats from svc_program
-Date: Wed, 21 Aug 2024 10:55:42 -0400
-Message-ID: <20240821145548.25700-13-cel@kernel.org>
+Subject: [PATCH 5.15.y 13/18] sunrpc: use the struct net as the svc proc private
+Date: Wed, 21 Aug 2024 10:55:43 -0400
+Message-ID: <20240821145548.25700-14-cel@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240821145548.25700-1-cel@kernel.org>
 References: <20240821145548.25700-1-cel@kernel.org>
@@ -66,43 +66,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 3f6ef182f144dcc9a4d942f97b6a8ed969f13c95 ]
+[ Upstream commit 418b9687dece5bd763c09b5c27a801a7e3387be9 ]
 
-Now that this isn't used anywhere, remove it.
+nfsd is the only thing using this helper, and it doesn't use the private
+currently.  When we switch to per-network namespace stats we will need
+the struct net * in order to get to the nfsd_net.  Use the net as the
+proc private so we can utilize this when we make the switch over.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
-[ cel: adjusted to apply to v5.15.y ]
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfssvc.c           | 1 -
- include/linux/sunrpc/svc.h | 1 -
- 2 files changed, 2 deletions(-)
+ net/sunrpc/stats.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index f5d6924905bf..74d21d2c5396 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -136,7 +136,6 @@ struct svc_program		nfsd_program = {
- 	.pg_vers		= nfsd_version,		/* version table */
- 	.pg_name		= "nfsd",		/* program name */
- 	.pg_class		= "nfsd",		/* authentication class */
--	.pg_stats		= &nfsd_svcstats,	/* version table */
- 	.pg_authenticate	= &svc_set_client,	/* export authentication */
- 	.pg_init_request	= nfsd_init_request,
- 	.pg_rpcbind_set		= nfsd_rpcbind_set,
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index ff8235e6acc3..57e0d9b7553b 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -409,7 +409,6 @@ struct svc_program {
- 	const struct svc_version **pg_vers;	/* version array */
- 	char *			pg_name;	/* service name */
- 	char *			pg_class;	/* class name: services sharing authentication */
--	struct svc_stat *	pg_stats;	/* rpc statistics */
- 	int			(*pg_authenticate)(struct svc_rqst *);
- 	__be32			(*pg_init_request)(struct svc_rqst *,
- 						   const struct svc_program *,
+diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
+index c964b48eaaba..a004c3ef35c0 100644
+--- a/net/sunrpc/stats.c
++++ b/net/sunrpc/stats.c
+@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(rpc_proc_unregister);
+ struct proc_dir_entry *
+ svc_proc_register(struct net *net, struct svc_stat *statp, const struct proc_ops *proc_ops)
+ {
+-	return do_register(net, statp->program->pg_name, statp, proc_ops);
++	return do_register(net, statp->program->pg_name, net, proc_ops);
+ }
+ EXPORT_SYMBOL_GPL(svc_proc_register);
+ 
 -- 
 2.45.2
 
