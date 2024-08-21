@@ -1,768 +1,292 @@
-Return-Path: <linux-nfs+bounces-5500-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5501-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3D95959FA6
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:22:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84F6395A01B
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 16:39:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B566283207
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:22:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA0181C2223F
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Aug 2024 14:39:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BF9196D90;
-	Wed, 21 Aug 2024 14:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197571AF4ED;
+	Wed, 21 Aug 2024 14:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IurXzo0l"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nD/dWSnV";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xGeH1Cma"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E767F18C348
-	for <linux-nfs@vger.kernel.org>; Wed, 21 Aug 2024 14:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724250137; cv=none; b=t79rQslKxlrnPg2li1pZVOp9ZOajhoDGiCxuRqSGh8REo12GubRFdqMCz28kwlwGNGjqhRW9EilAwmnm8gR1Ug4Gx8IS/NmgmpRLcwJ+on2dplFU0lDEQVbsPSu9xQZFd+yFtkrWEAOI+p21KoTNtDNQ4+VvqW8Rk9GyNs5ku98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724250137; c=relaxed/simple;
-	bh=7kP9LA9W657BLbsWkQImsusa8JZ37EqVFGWDJo9lz/Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AW6ihjuYUNQ/kd214VIjms5ibusixx1YEZdc73IvjBNNJ4bkO2ivMZ15ZHpNzlP3osR0t3AMUF4wlauOMDC/P4qpaCijt0UcweHthWSMGCixXL8XjA7mu9SR0Qxc1wxNV7Ot0hFKJuQFhtidd5Q3uxMOtmBcqSjl/lyOeZiPHhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IurXzo0l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2091EC32781;
-	Wed, 21 Aug 2024 14:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724250136;
-	bh=7kP9LA9W657BLbsWkQImsusa8JZ37EqVFGWDJo9lz/Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IurXzo0lcA3mu9t0f2YLJPK+mS/56wfEcd0tSwrCCR9V053kCG6kZAdfzMfR/rsHR
-	 QhX8e3bCGxnoI7OMFNBS4W6dsmhGAVT0cETcpex8AR1w42k/qXB2zB6wOMj0BvIdVY
-	 SLM51OYFHBE/mt7Pz2B0uf+v625p9L5Z1VtsLubcrLnWcZQIcw4Uo2fmoNZPocGnkp
-	 PVKFevuj5RTh4XsXm9/Uj1GORUYBrJn+IbuMQElWgrCHZA53s/3qR9qKY8xj/S1Fek
-	 qun07ehIWEsdMgSg8yuc4iGKSyksKmy8n+s8VOuBv+tRm3vp78QBfCJtwPFB8FpACy
-	 V/Wukm/6rRelw==
-Message-ID: <6a3d9288fdeb6409dca7c2ceedf249d3b40a7d97.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A141D1B2529
+	for <linux-nfs@vger.kernel.org>; Wed, 21 Aug 2024 14:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724251139; cv=fail; b=NPWSizn9lpUtohjL4ABzb+MBA55FxEoT+ObsyHqKBKVqFM9fiy7cgiSIpb7HX9kxeTKCYCju9Ho7ya7WyRLkyj1HMs9R0UJWzcp7NuSyTjalZQXdiUOwYfFNIOARTKJ+nPQ/urGlXXU2B/xlEHV28s3s9ghfc4c4M/PdilSWfHE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724251139; c=relaxed/simple;
+	bh=NT3d1rT8K1/ifUL3KW98gaiDMBfpYmMuJMAddT03+e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MufkGtqwfc3zrrQfnkhZTskQ7XkS8fR3GOKmw4LB0bJ+ovP+bBpFK3Mb8nulgjcbnGl0ByMq0DqCHKYdfb1andSSosCHicOf5qG+fI5geJEFHJ+DzSSee8qW6bY5HqjqhZj20EGD88hcEbAz/0XHedG0uQKBspIVegP+xY3ooEU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nD/dWSnV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xGeH1Cma; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47LDIYK5013730;
+	Wed, 21 Aug 2024 14:38:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:content-transfer-encoding:in-reply-to:mime-version; s=
+	corp-2023-11-20; bh=9598CtoeFVoS6mVkYhgDGLELdmqZ4Gm+wXZBgITUOiU=; b=
+	nD/dWSnV9l5exNiVLsspJcszUezVhEeCG3+RSk2oRt7jiQHLF3JAbunlS7N47AAQ
+	B3Do1uH3eXm9ti+FFIF7oscnFznOPY0CmR3fJ6qGjf8J3XxeldtBlb4j9hKQ0N0T
+	PPPeBAGlctfwYPWTklHyodPDNNlsjCVP7gJRb5OKHId5CY/o9RHqqYPP+CJrvJXe
+	PW1VQPRrFbNxoSoA+/+SlBNzprzeKvBjH+YQY1hAPAsaZh5XbS6hjc1FVJz4/PHu
+	byZJgxc37K/iP9ItmiP2h9eVVbS6dxVn1lMfYhEF36z8zrVxXHLVKYnsf2nLKB4Y
+	2M5NLTccwYcuu8cXshFtyA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 412m6gfrhg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Aug 2024 14:38:52 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47LE46qB019381;
+	Wed, 21 Aug 2024 14:38:51 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 415hp39p32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Aug 2024 14:38:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=urd6jDUGYnXkVN1xdmtObELgF4FJk9GyPGGU18QvZpiPgPOGyyIZwxCAjAu/TUhzdbqDgiK5S++dJ+Tu77QZ/CW2EmOpVwbcsfvwTAmnoirJby2UHu3Wy2tlBxXd8+mGdnXDV91cbcqFBlA75T6o0PhF3IFYm9UZffh1++040oRxCz83sU6ZizEMoyyjEiD/sqvfF3+seyOT+KYXK82Pt4xeeUorbOW6l6p8cxWvjcoZz7UORT/Qvug65WN22X+JSrKRzBqqfSSI3M9FiezKnDhxzEDCySSZ418uBPm4VgUrmWhyERk1hG3EZlJTdUFB6HEaVH1jPJ6iVwB8y/JnnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9598CtoeFVoS6mVkYhgDGLELdmqZ4Gm+wXZBgITUOiU=;
+ b=yIfVDP0ybSBQDpvb9PATKt5xbdaH9S/LuAnW/Vka8wHWyPHwjt1HzkTN/Fyt0om74pvT1kaDNF5o4eD9SRKa5Ugq6g0xobd+unIkV3Id8JWpbyI0VKpXU9nwBhsgFdU5ThkelqcJmf2jMG1Wnl00CHYVsahx4WuZCG28n/oFVoUgjm/ZTVTafYDvrs4bUsKL3/fkBJcl30bvUfKKm6Nc9knrAk/PXGsTfaXnuMRfOsf9WWK6wTKuaJ/SprrwKMOASKGQURpajQBvG2pBKnWyYKIRLf1Sj/bAbToG7Jd5cxSVI6a+QY2PsWUINB+0NnmT6ZTQGFJS1qukKkenkIXjpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9598CtoeFVoS6mVkYhgDGLELdmqZ4Gm+wXZBgITUOiU=;
+ b=xGeH1Cma2DapdNmwaGkY3U8wY3uciEqE5t3oX3vIPMxDGj0Om4z78yus2FqZXV69xENS7qHTyy1XhRySaqYvDLr1sPMt7stTOKqKuFP+HMjDgFoX2wjbGoOr1n1sLat9BM4TvRGMzRbm/7IaBi9Ycfgtr5TKibbo1uH+QbsbygU=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB6566.namprd10.prod.outlook.com (2603:10b6:806:2bf::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.11; Wed, 21 Aug
+ 2024 14:38:48 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7897.014; Wed, 21 Aug 2024
+ 14:38:48 +0000
+Date: Wed, 21 Aug 2024 10:38:45 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: cel@kernel.org, linux-nfs@vger.kernel.org
 Subject: Re: [RFC PATCH 2/2] NFSD: Create an initial nfs4_1.x file
-From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 21 Aug 2024 10:22:15 -0400
-In-Reply-To: <20240820144600.189744-3-cel@kernel.org>
+Message-ID: <ZsX79e6NPi/4/rxC@tissot.1015granger.net>
 References: <20240820144600.189744-1-cel@kernel.org>
-	 <20240820144600.189744-3-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40app2) 
+ <20240820144600.189744-3-cel@kernel.org>
+ <6a3d9288fdeb6409dca7c2ceedf249d3b40a7d97.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6a3d9288fdeb6409dca7c2ceedf249d3b40a7d97.camel@kernel.org>
+X-ClientProxiedBy: CH0PR03CA0375.namprd03.prod.outlook.com
+ (2603:10b6:610:119::25) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB6566:EE_
+X-MS-Office365-Filtering-Correlation-Id: afa414f3-fc6e-4334-4e6c-08dcc1eef7ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGt1WDVzbVNaK1JLYjlERnBCdVh0a3BlNXdsN2FXSVVLZjRlNVFoQS8yNFZN?=
+ =?utf-8?B?bnRSRFdDVEZSV0svUGFrK2lZaWRsb25ORit5WklvWDYvTzU5Z0hpL1N2S2kw?=
+ =?utf-8?B?MUpUT0pjY2VlYklyMUtTLy9xWi9hd2J4dDd0TnBadVI3NDJtS3RvbXFtRE1K?=
+ =?utf-8?B?ZVBXNllLdktabWJPZ2lXa09oR0g2dzlIVDdHNlJ2QVJOYVBJYjdGMkxMU3lB?=
+ =?utf-8?B?anhMbHpvUStwVXNiN2xRMFJEWlRKQUhKRjZzT3hEZlJHWHpPSUM0V3pCV2JM?=
+ =?utf-8?B?RFF3VW0yL0daN2xIbFZ4TVh3Wkp2bThWNXB4WVhic1dYSE9WWHpqNG43NHUv?=
+ =?utf-8?B?akRFMTdJejRaM0w2Z0RtT3RXaTg4NFVpbEJQa3dqdERJeXFEWVRCM3l4Zkgv?=
+ =?utf-8?B?SDc2MVdnb3pzT2RzSWFlWWZOWDBZemxFT1BZZjd5dVRxSEYyOHdCNUg1ZWht?=
+ =?utf-8?B?S2Z2UHpsc2hRMEFnMjd4SStYSzBNTitKUUhoSW14SW1NWjhIY0kzUWFtc213?=
+ =?utf-8?B?Wm41TmJKT0Y2UWVDVHhnVVpSYTBJUjZnVXVXcldQdnhFZ3U4U2lyc3owdnRD?=
+ =?utf-8?B?RU9HZVQ1cExtbDRtTzdwWUtRVkFsaTZBVGIwRE51Q3ljaGFNUEQvTWhCbXRK?=
+ =?utf-8?B?RGdTbHErKzlBTHhaVENVS3B0WE9abGtzQWlCbDZteVk5NVZIZEtNMnhuYlJO?=
+ =?utf-8?B?MytmRnllSXZQU2NIR1VPOVRDVzcrS2tMejhNVGdlSndBTitQOUsrbE55MW1i?=
+ =?utf-8?B?ZThHcE1hOWNHWDhLSlU1OCtYQlJuSDBRT0R5UGg3Q1duYUo1K2ppVGF6R3dk?=
+ =?utf-8?B?Q1c5Q2xESURYZ0Nrc2xkUWF6QmpPMTlITVlzMnlERW44aGk2L29Dd0xHVnEw?=
+ =?utf-8?B?ZllTMDdlWHNqWlh4SHpnbUVaUHRKUFQ5SnVIdDUxSzc2SmxBMG5PT2JlaWh4?=
+ =?utf-8?B?M2RWZ1VObXBadFpEanB5bk9rNktndzg3MDY4VUVnS1lkbngvOGM4VEJMdlJ4?=
+ =?utf-8?B?SXpxUWJzSURaM2JBRGJwYko4bHlUMjJzV1M3SXpvaU44UlJwR1JGaXhWT3Fl?=
+ =?utf-8?B?dTVyb3N4QlY2amRUNnF0VW5MeXZHdldSaytSSUtyODBpbzRxRkNxK3VYTFU1?=
+ =?utf-8?B?RHVPZndtTkJHV2I2bTlxV1RxelZpWkFFTWNQTTRXbzR1ajBicU51R2g2RTIz?=
+ =?utf-8?B?SHMrcjVUVGFuMkh1NWhiSkM4U1hPZnZyakRWTEU0NWY5M1pPZVlzWnZoZ0c1?=
+ =?utf-8?B?SDFmckUyVjAxSDZKZzlnL0hwdXZESG4vVkNRZkMrWEhpT3ZIendmNU1pUE1R?=
+ =?utf-8?B?M0pqSlJMazlKUGVyRVZDZVlHU3VVSTNNSXZOSHNpUkRMWXZCSWVNTGRMR01m?=
+ =?utf-8?B?WXQvL1hXa2NOK09VZjZXT3N4MXFRTWpHQkFUSE1JVVJFRmNqTDhJQ3F5cklJ?=
+ =?utf-8?B?WHVhSFR0OWdtRG1BZ21GbWRSc3JzNDB4aU9yUzlFTHNmTGNPSVRiUzdaZzZ2?=
+ =?utf-8?B?T2hLeTNrMmhPTXh2b3hWMUZtbmE5RVVpQ0lNb2lzQ25BbmY0RytVM0g5WXRX?=
+ =?utf-8?B?TFpzdkVXa0lCVGJKdTdIYW51U3JMT2Q2Sk9KU3BSSTUyNGdIVGlBdTg4ZzJu?=
+ =?utf-8?B?bkZlaUVPcldtMDZtUEd1Qi85RjlGY0ZLMnB6Y05ZZWdGK0ljSkJ0eG5YeHhx?=
+ =?utf-8?B?d3NvWFZrZVRDTG5YMUJxN040b2MxbTJwTi94TXlkeHBCYWNHMkVQNnZhTWMy?=
+ =?utf-8?B?Q3BteE1JeXhLQ3FqZEszWFMrZU5GejZYRCt6NkY2REFiUUdMSXgzcExHZ2sx?=
+ =?utf-8?B?VlNYM0NGcXVmU1ROS2UxQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aWhEOXVCYllZSU9QbWNwaHh4TWNMRUVJZDdrSmlrNEJVRjNLOGxiL1ZZT2VE?=
+ =?utf-8?B?d3RDQTFaaVpzUXBHYndxRkJLMUtoTzYwcHl4VStFTGtidHkxUlRGTE5hczVF?=
+ =?utf-8?B?SFB6L0JoUXg2cVlzK0NjTmdWU2NmSVhqUHFrdE1wVXcrZ3VuR1dCdXkrTWFs?=
+ =?utf-8?B?Vmc0cllVMlhONlZwNW5MTmw3Tm5iTTI4bmxlc0xrVStrT0R0d0ZqRTFTT1BF?=
+ =?utf-8?B?bE9ucFIrMm9NVTR5akhjenFjTzY5eUk0ZUc1TlprSVJZbDJkZmxpc09hUFlj?=
+ =?utf-8?B?SEhRSEEvMVVhRDZTQnBncE16ZitTenNTWG56Rjl4MHNQc1BDTDZFa0ZnS3BZ?=
+ =?utf-8?B?TGUvOXJrZFZpdnh3bkFpZzhEck9qTDE0SnUydks3L0NTUjNIL3NkcXRMOWU3?=
+ =?utf-8?B?R0R3d1JpNXliQ24rOUdwdFBlZUwzZnF0aUdzcmtlYXQ3WWRCZkNqdVBIUzlk?=
+ =?utf-8?B?TmJ6M1BYYXBMbGlMbkIrN1QwekxSa1JsVUZLcFZSYXp6MUZ4TWR5ZzFUbEs3?=
+ =?utf-8?B?bkZXdkgxaTFGTXRSZmNDTFo2Rm9ma3I4UFlpclhVeDNhU3lXd3BDYnVoekk1?=
+ =?utf-8?B?dTV2ckNjMmVTcjA0MkVqQncwcVRLZXVxNEgySVA1MTUra2VCVFdjTE9MRXRm?=
+ =?utf-8?B?VjZmU0hSN1FES29UNEhSVFNaSTlwSk5iQ1pOUmwzZk8yZ0NQejFtaUdxMEp0?=
+ =?utf-8?B?R2ZoRGp4VENzRW44cmx3SXdIMlN1YnhKSnpFWEljK0xNTVJKSkQxeldOWm0r?=
+ =?utf-8?B?Z2hkUXBsMU1NS3FMSVdaVjRrM0wyaW8wRnBtTEFTV2hpWldqcGpjV0V4SFg5?=
+ =?utf-8?B?TGZvR1k4NjE3QWFxQUljdXl1RzIzZFlEaUdERi85bmZjOVpuK2prOVNMM01D?=
+ =?utf-8?B?eHc4QkRpcCtJdTk1emlheVlad2ZpdmRhZms0VWNpN0h1SXFRVDBuQ3IzRktk?=
+ =?utf-8?B?cGdTUjYwaHhCVlU0WUhBVTdLS3pvOTBPWkxPQ2xSMEMyVDVVcGdWaUwwSUx2?=
+ =?utf-8?B?T1Vqck1MQkZMZHRzbm4wdVBQNTM4bGo4WlZIMUtkVnlzVXIzSDNqU2ZwWXRZ?=
+ =?utf-8?B?ZDdOb2ZHS1B3ODFvZEUrSjhkK2w3ajlTM0pWV2NuV1B0SGNoTEt1ejhkNjdh?=
+ =?utf-8?B?ZGVGdlYySitPZG42L2d1WTJVeWFNdlBpalUxdlBGQ0pucmY5WlUxTEM4NEh2?=
+ =?utf-8?B?c3VGYXdIV0JZL3FrRTFLY1ZOSzZNb0VRQlJ0bllBVFJnVXhIL0IyT2cwVm5R?=
+ =?utf-8?B?L25UUlpEc2pHallYelNjSktFUEJSTEdxOG1yeG9oMHdYRjVCMm5VOVJFQWZW?=
+ =?utf-8?B?L0k2K1hSVlhqQmN0RFlwVTVVbmRKb3hDSVR5NHJFNEo5YmFRNVhLZUFNY1NW?=
+ =?utf-8?B?WGNuUjNMWGw2UHJ2d2lReVM4bU1QelBFeDhpeTgvTVJMU3puZml5aVdFUUxB?=
+ =?utf-8?B?TFVoQXFjYit0eWdQcUlMWFhuZGdaNG5OaTJ4amhSNmZjNWhXWEdSQjE1OGFC?=
+ =?utf-8?B?QnlNSG5XM3JlMndmT3JpNXV5Y2tPTmE3NGgwVi9VTlEzUnlCc0JLZGY5Tm1k?=
+ =?utf-8?B?K2xIaERjQzBGdlBUdFpYVlBwVVNFTDZFWGJBb29iTkMrZFVZMG1DMGw5OXln?=
+ =?utf-8?B?RjJqdm0vNWJpMUJaMExhbWFlNkpNWW4zNndaQ2Rzb1lVcEhjWFJvcGp6dHRm?=
+ =?utf-8?B?c2xnUDFXbDlyQWcwcjAxZy9OK1N6OXdSTDJ1THRVVWM4TFFuMlZRMXJpeWlK?=
+ =?utf-8?B?b3RuWTd5Mmovcjl0NEVBK1NHb3dJM2c2dDNtZE5DQjM3NzNEYWRoUGV6d0o0?=
+ =?utf-8?B?M1MrcWEwbHowc1NIdXZxZEV2SWV6eTRrcnVtRFZUTitRZEZneTM5RVdmc3or?=
+ =?utf-8?B?M1BUeC9wbGJvZEVuRHBMUjAxdTRwVHRhcXM3S3FyUDRpdHFNSCtXOXpYUjR3?=
+ =?utf-8?B?WXdWdHF0UHMyemc2cWFTcDh2V1pRSVlOR0RnNWEwWXpVMG92UHF1Y0JoTUJr?=
+ =?utf-8?B?ck9BRWdQbU9UOEIwOHJYTnhPMGJFK05Mdk5kdTdZcGVQNzErV1pHN21NNUp6?=
+ =?utf-8?B?QUZXTXo4NGZyMTdaTjRGNWZRRkJ0VFpFM2F6TE9wRmNBT0NJVU9odnNmYjJ1?=
+ =?utf-8?Q?WGgZDoEQHJc5IkKHfwcohkpuh?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	YLhYiK3Cz+l/1gEnJ7mOJjr2J/e6ep9X7/hFPQU4AvxVgS3pDCnGmRfr+X53Uo3nguKafqgAfCP0TTdLfKegjQWyGpKMMPQdRAxfbDdG7Y/GbPQnaypuvc2mmTP/zrbqyRvA3DQIkvKD+sb/IHAMbdzkPmB3It/pcaADRjfYgUPvyZh82hXKbRlgA10cLWBJhbx5VjHmmRzsCcAukGupEIQE2n1NodJ9A8gHpJ4hox7G500FfUorQY1ve66EcrmYQXiAK2ai24fo8REtmsSh5PiJMN1uK6gN1NPT+ebcDtVKTQvdm8rgfPrcVbRlohNjWKWr+1i9RPJSAM7Qh0m5DmXpmQ1/aCoCL+qgWI3AZS8HxWxunAaIB+uoi1lz5MMcf2zr9X+D9xUdHeG0XuCykNRB0ehReD4vbfsswuprtXPxfvLCs/fv6MUT8CyZWHLxj8y0CDM364R4McPqnLv1Oe600RT11ifU3zBpbrA8h7wkhK+S7eu5VcBs49D7Gy2hkZp2wccoHVWS31KVSdhVDyzXPezraj5Yx3Lda1eQox1Palx0WZLvhR2WtsjUSMc04DUmJjfmnJsFSd3oOSg9QDMnKnAqdrkLso8lEz370m0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afa414f3-fc6e-4334-4e6c-08dcc1eef7ac
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2024 14:38:48.2630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zuVTc65r5He2a4JPCWki2GBiD52ENWvlKsKiv6YcHYo3o+7V1iVyBBWYN7TCep79nyJ66nc/WCXiJhLFkCDFyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6566
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-21_11,2024-08-19_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408210106
+X-Proofpoint-ORIG-GUID: vErrLS2m1AtpkwZ8vNaPnJ4P9sIqrvMY
+X-Proofpoint-GUID: vErrLS2m1AtpkwZ8vNaPnJ4P9sIqrvMY
 
-On Tue, 2024-08-20 at 10:46 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> Build an NFSv4 protocol snippet to support the delstid extensions.
-> The new fs/nfsd/nfs4_1.x file can be added to over time as other
-> parts of NFSD's XDR functions are converted to machine-generated
-> code.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4_1.x      | 164 +++++++++++++++++++++++++++++
->  fs/nfsd/nfs4xdr_gen.c | 236 ++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/nfs4xdr_gen.h | 113 ++++++++++++++++++++
->  3 files changed, 513 insertions(+)
->  create mode 100644 fs/nfsd/nfs4_1.x
->  create mode 100644 fs/nfsd/nfs4xdr_gen.c
->  create mode 100644 fs/nfsd/nfs4xdr_gen.h
->=20
+On Wed, Aug 21, 2024 at 10:22:15AM -0400, Jeff Layton wrote:
+> On Tue, 2024-08-20 at 10:46 -0400, cel@kernel.org wrote:
+> > From: Chuck Lever <chuck.lever@oracle.com>
+> > 
+> > Build an NFSv4 protocol snippet to support the delstid extensions.
+> > The new fs/nfsd/nfs4_1.x file can be added to over time as other
+> > parts of NFSD's XDR functions are converted to machine-generated
+> > code.
+> > 
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > ---
+> >  fs/nfsd/nfs4_1.x      | 164 +++++++++++++++++++++++++++++
+> >  fs/nfsd/nfs4xdr_gen.c | 236 ++++++++++++++++++++++++++++++++++++++++++
+> >  fs/nfsd/nfs4xdr_gen.h | 113 ++++++++++++++++++++
+> >  3 files changed, 513 insertions(+)
+> >  create mode 100644 fs/nfsd/nfs4_1.x
+> >  create mode 100644 fs/nfsd/nfs4xdr_gen.c
+> >  create mode 100644 fs/nfsd/nfs4xdr_gen.h
+> > 
+> 
+> I see the patches in your lkxdrgen branch. I gave this a try and
+> started rebasing my delstid work on top of it, but I hit the same
+> symbol conflicts I hit before once I started trying to include the
+> full-blown nfs4xdr_gen.h header:
+> 
+> ------------------------8<---------------------------
+> In file included from fs/nfsd/nfs4xdr.c:58:
+> fs/nfsd/nfs4xdr_gen.h:86:9: error: redeclaration of enumerator ‘FATTR4_OPEN_ARGUMENTS’
+>    86 |         FATTR4_OPEN_ARGUMENTS = 86
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+> In file included from fs/nfsd/nfsfh.h:15,
+>                  from fs/nfsd/state.h:41,
+>                  from fs/nfsd/xdr4.h:40,
+>                  from fs/nfsd/nfs4xdr.c:51:
+> ./include/linux/nfs4.h:518:9: note: previous definition of ‘FATTR4_OPEN_ARGUMENTS’ with type ‘enum <anonymous>’
+>   518 |         FATTR4_OPEN_ARGUMENTS           = 86,
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+> fs/nfsd/nfs4xdr_gen.h:102:9: error: redeclaration of enumerator ‘FATTR4_TIME_DELEG_ACCESS’
+>   102 |         FATTR4_TIME_DELEG_ACCESS = 84
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/linux/nfs4.h:516:9: note: previous definition of ‘FATTR4_TIME_DELEG_ACCESS’ with type ‘enum <anonymous>’
+>   516 |         FATTR4_TIME_DELEG_ACCESS        = 84,
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> fs/nfsd/nfs4xdr_gen.h:106:9: error: redeclaration of enumerator ‘FATTR4_TIME_DELEG_MODIFY’
+>   106 |         FATTR4_TIME_DELEG_MODIFY = 85
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/linux/nfs4.h:517:9: note: previous definition of ‘FATTR4_TIME_DELEG_MODIFY’ with type ‘enum <anonymous>’
+>   517 |         FATTR4_TIME_DELEG_MODIFY        = 85,
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> ------------------------8<---------------------------
+> 
+> I'm not sure of the best way to work around this, unless we want to try
+> to split up nfs4.h.
 
-I see the patches in your lkxdrgen branch. I gave this a try and
-started rebasing my delstid work on top of it, but I hit the same
-symbol conflicts I hit before once I started trying to include the
-full-blown nfs4xdr_gen.h header:
+That header is shared with the client, so I consider it immutable
+for our purposes here.
 
-------------------------8<---------------------------
-In file included from fs/nfsd/nfs4xdr.c:58:
-fs/nfsd/nfs4xdr_gen.h:86:9: error: redeclaration of enumerator =E2=80=98FAT=
-TR4_OPEN_ARGUMENTS=E2=80=99
-   86 |         FATTR4_OPEN_ARGUMENTS =3D 86
-      |         ^~~~~~~~~~~~~~~~~~~~~
-In file included from fs/nfsd/nfsfh.h:15,
-                 from fs/nfsd/state.h:41,
-                 from fs/nfsd/xdr4.h:40,
-                 from fs/nfsd/nfs4xdr.c:51:
-./include/linux/nfs4.h:518:9: note: previous definition of =E2=80=98FATTR4_=
-OPEN_ARGUMENTS=E2=80=99 with type =E2=80=98enum <anonymous>=E2=80=99
-  518 |         FATTR4_OPEN_ARGUMENTS           =3D 86,
-      |         ^~~~~~~~~~~~~~~~~~~~~
-fs/nfsd/nfs4xdr_gen.h:102:9: error: redeclaration of enumerator =E2=80=98FA=
-TTR4_TIME_DELEG_ACCESS=E2=80=99
-  102 |         FATTR4_TIME_DELEG_ACCESS =3D 84
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/nfs4.h:516:9: note: previous definition of =E2=80=98FATTR4_=
-TIME_DELEG_ACCESS=E2=80=99 with type =E2=80=98enum <anonymous>=E2=80=99
-  516 |         FATTR4_TIME_DELEG_ACCESS        =3D 84,
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-fs/nfsd/nfs4xdr_gen.h:106:9: error: redeclaration of enumerator =E2=80=98FA=
-TTR4_TIME_DELEG_MODIFY=E2=80=99
-  106 |         FATTR4_TIME_DELEG_MODIFY =3D 85
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/nfs4.h:517:9: note: previous definition of =E2=80=98FATTR4_=
-TIME_DELEG_MODIFY=E2=80=99 with type =E2=80=98enum <anonymous>=E2=80=99
-  517 |         FATTR4_TIME_DELEG_MODIFY        =3D 85,
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-------------------------8<---------------------------
+One option would be to namespace the generated data items. Eg, name
+them:
 
-I'm not sure of the best way to work around this, unless we want to try
-to split up nfs4.h.
+	XG_FATTR4_TIME_DELEG_ACCESS
+	XG_FATTR4_TIME_DELEG_MODIFY
 
-Also, as a side note:
-
-fs/nfsd/nfs4xdr.c: In function =E2=80=98nfsd4_encode_fattr4_open_arguments=
-=E2=80=99:
-fs/nfsd/nfs4xdr.c:3446:55: error: incompatible type for argument 2 of =E2=
-=80=98xdrgen_encode_fattr4_open_arguments=E2=80=99
- 3446 |         if (!xdrgen_encode_fattr4_open_arguments(xdr, &nfsd_open_ar=
-guments))
+That way they don't conflict with existing definitions.
 
 
-OPEN_ARGUMENTS4 is a large structure with 5 different bitmaps in it. We
-probably don't want to pass that by value. When the tool is dealing
-with a struct, we should have it generate functions that take a pointer
-instead (IMO).
+> Also, as a side note:
+> 
+> fs/nfsd/nfs4xdr.c: In function ‘nfsd4_encode_fattr4_open_arguments’:
+> fs/nfsd/nfs4xdr.c:3446:55: error: incompatible type for argument 2 of ‘xdrgen_encode_fattr4_open_arguments’
+>  3446 |         if (!xdrgen_encode_fattr4_open_arguments(xdr, &nfsd_open_arguments))
+> 
+> 
+> OPEN_ARGUMENTS4 is a large structure with 5 different bitmaps in it. We
+> probably don't want to pass that by value. When the tool is dealing
+> with a struct, we should have it generate functions that take a pointer
+> instead (IMO).
 
-> diff --git a/fs/nfsd/nfs4_1.x b/fs/nfsd/nfs4_1.x
-> new file mode 100644
-> index 000000000000..d2fde450de5e
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4_1.x
-> @@ -0,0 +1,164 @@
-> +/*
-> + * Copyright (c) 2010 IETF Trust and the persons identified
-> + * as the document authors.  All rights reserved.
-> + *
-> + * The document authors are identified in RFC 3530 and
-> + * RFC 5661.
-> + *
-> + * Redistribution and use in source and binary forms, with
-> + * or without modification, are permitted provided that the
-> + * following conditions are met:
-> + *
-> + * - Redistributions of source code must retain the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer.
-> + *
-> + * - Redistributions in binary form must reproduce the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer in the documentation and/or other
-> + *   materials provided with the distribution.
-> + *
-> + * - Neither the name of Internet Society, IETF or IETF
-> + *   Trust, nor the names of specific contributors, may be
-> + *   used to endorse or promote products derived from this
-> + *   software without specific prior written permission.
-> + *
-> + *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
-> + *   AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-> + *   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> + *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-> + *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
-> + *   EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-> + *   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-> + *   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + *   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-> + *   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> + *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-> + *   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-> + *   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-> + *   IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-> + *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +pragma header nfs4;
-> +
-> +/*
-> + * Basic typedefs for RFC 1832 data type definitions
-> + */
-> +typedef hyper		int64_t;
-> +typedef unsigned int	uint32_t;
-> +
-> +/*
-> + * Basic data types
-> + */
-> +typedef uint32_t	bitmap4<>;
-> +
-> +/*
-> + * Timeval
-> + */
-> +struct nfstime4 {
-> +	int64_t		seconds;
-> +	uint32_t	nseconds;
-> +};
-> +
-> +
-> +/*
-> + * The following content was extracted from draft-ietf-nfsv4-delstid
-> + */
-> +
-> +typedef bool            fattr4_offline;
-> +
-> +
-> +const FATTR4_OFFLINE            =3D 83;
-> +
-> +
-> +struct open_arguments4 {
-> +  bitmap4  oa_share_access;
-> +  bitmap4  oa_share_deny;
-> +  bitmap4  oa_share_access_want;
-> +  bitmap4  oa_open_claim;
-> +  bitmap4  oa_create_mode;
-> +};
-> +
-> +
-> +enum open_args_share_access4 {
-> +   OPEN_ARGS_SHARE_ACCESS_READ  =3D 1,
-> +   OPEN_ARGS_SHARE_ACCESS_WRITE =3D 2,
-> +   OPEN_ARGS_SHARE_ACCESS_BOTH  =3D 3
-> +};
-> +
-> +
-> +enum open_args_share_deny4 {
-> +   OPEN_ARGS_SHARE_DENY_NONE  =3D 0,
-> +   OPEN_ARGS_SHARE_DENY_READ  =3D 1,
-> +   OPEN_ARGS_SHARE_DENY_WRITE =3D 2,
-> +   OPEN_ARGS_SHARE_DENY_BOTH  =3D 3
-> +};
-> +
-> +
-> +enum open_args_share_access_want4 {
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           =3D 3,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            =3D 4,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              =3D 5,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
-> +                                                   =3D 17,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
-> +                                                   =3D 18,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    =3D 20,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 21
-> +};
-> +
-> +
-> +enum open_args_open_claim4 {
-> +   OPEN_ARGS_OPEN_CLAIM_NULL          =3D 0,
-> +   OPEN_ARGS_OPEN_CLAIM_PREVIOUS      =3D 1,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR  =3D 2,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV =3D 3,
-> +   OPEN_ARGS_OPEN_CLAIM_FH            =3D 4,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH  =3D 5,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH =3D 6
-> +};
-> +
-> +
-> +enum open_args_createmode4 {
-> +   OPEN_ARGS_CREATEMODE_UNCHECKED4     =3D 0,
-> +   OPEN_ARGS_CREATE_MODE_GUARDED       =3D 1,
-> +   OPEN_ARGS_CREATEMODE_EXCLUSIVE4     =3D 2,
-> +   OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  =3D 3
-> +};
-> +
-> +
-> +typedef open_arguments4 fattr4_open_arguments;
-> +pragma public fattr4_open_arguments;
-> +
-> +
-> +%/*
-> +% * Determine what OPEN supports.
-> +% */
-> +const FATTR4_OPEN_ARGUMENTS     =3D 86;
-> +
-> +
-> +const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 0x200000;
-> +
-> +
-> +const OPEN4_RESULT_NO_OPEN_STATEID =3D 0x00000010;
-> +
-> +
-> +/*
-> + * attributes for the delegation times being
-> + * cached and served by the "client"
-> + */
-> +typedef nfstime4        fattr4_time_deleg_access;
-> +typedef nfstime4        fattr4_time_deleg_modify;
-> +
-> +
-> +%/*
-> +% * New RECOMMENDED Attribute for
-> +% * delegation caching of times
-> +% */
-> +const FATTR4_TIME_DELEG_ACCESS  =3D 84;
-> +const FATTR4_TIME_DELEG_MODIFY  =3D 85;
-> +
-> +
-> +const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 0x100000;
-> +
-> diff --git a/fs/nfsd/nfs4xdr_gen.c b/fs/nfsd/nfs4xdr_gen.c
-> new file mode 100644
-> index 000000000000..bb714859d6c6
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4xdr_gen.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Generated by xdrgen. Manual edits will be lost.
-> +// XDR specification modification time: Mon Aug 19 23:28:23 2024
-> +
-> +#include "nfs4xdr_gen.h"
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_int64_t(struct xdr_stream *xdr, int64_t *ptr)
-> +{
-> +	return xdrgen_decode_hyper(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_uint32_t(struct xdr_stream *xdr, uint32_t *ptr)
-> +{
-> +	return xdrgen_decode_unsigned_int(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
-> +{
-> +	if (xdr_stream_decode_u32(xdr, &ptr->count) < 0)
-> +		return false;
-> +	for (u32 i =3D 0; i < ptr->count; i++)
-> +		if (!xdrgen_decode_uint32_t(xdr, &ptr->element[i]))
-> +			return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
-> +{
-> +	if (!xdrgen_decode_int64_t(xdr, &ptr->seconds))
-> +		return false;
-> +	if (!xdrgen_decode_uint32_t(xdr, &ptr->nseconds))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_offline(struct xdr_stream *xdr, fattr4_offline *ptr=
-)
-> +{
-> +	return xdrgen_decode_bool(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_arguments4(struct xdr_stream *xdr, struct open_argume=
-nts4 *ptr)
-> +{
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_access))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_deny))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_access_want))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_open_claim))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_create_mode))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_access4(struct xdr_stream *xdr, enum open_=
-args_share_access4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_deny4(struct xdr_stream *xdr, enum open_ar=
-gs_share_deny4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_access_want4(struct xdr_stream *xdr, enum =
-open_args_share_access_want4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_open_claim4(struct xdr_stream *xdr, enum open_ar=
-gs_open_claim4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_createmode4(struct xdr_stream *xdr, enum open_ar=
-gs_createmode4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +bool
-> +xdrgen_decode_fattr4_open_arguments(struct xdr_stream *xdr, fattr4_open_=
-arguments *ptr)
-> +{
-> +	return xdrgen_decode_open_arguments4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_time_deleg_access(struct xdr_stream *xdr, fattr4_ti=
-me_deleg_access *ptr)
-> +{
-> +	return xdrgen_decode_nfstime4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_time_deleg_modify(struct xdr_stream *xdr, fattr4_ti=
-me_deleg_modify *ptr)
-> +{
-> +	return xdrgen_decode_nfstime4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_int64_t(struct xdr_stream *xdr, const int64_t value)
-> +{
-> +	return xdrgen_encode_hyper(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_uint32_t(struct xdr_stream *xdr, const uint32_t value)
-> +{
-> +	return xdrgen_encode_unsigned_int(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
-> +{
-> +	if (xdr_stream_encode_u32(xdr, value.count) !=3D XDR_UNIT)
-> +		return false;
-> +	for (u32 i =3D 0; i < value.count; i++)
-> +		if (!xdrgen_encode_uint32_t(xdr, value.element[i]))
-> +			return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *va=
-lue)
-> +{
-> +	if (!xdrgen_encode_int64_t(xdr, value->seconds))
-> +		return false;
-> +	if (!xdrgen_encode_uint32_t(xdr, value->nseconds))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_offline(struct xdr_stream *xdr, const fattr4_offlin=
-e value)
-> +{
-> +	return xdrgen_encode_bool(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_arguments4(struct xdr_stream *xdr, const struct open_=
-arguments4 *value)
-> +{
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_access))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_deny))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_access_want))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_open_claim))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_create_mode))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_access4(struct xdr_stream *xdr, enum open_=
-args_share_access4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_deny4(struct xdr_stream *xdr, enum open_ar=
-gs_share_deny4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_access_want4(struct xdr_stream *xdr, enum =
-open_args_share_access_want4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_open_claim4(struct xdr_stream *xdr, enum open_ar=
-gs_open_claim4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_createmode4(struct xdr_stream *xdr, enum open_ar=
-gs_createmode4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +bool
-> +xdrgen_encode_fattr4_open_arguments(struct xdr_stream *xdr, const fattr4=
-_open_arguments value)
-> +{
-> +	return xdrgen_encode_open_arguments4(xdr, &value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_time_deleg_access(struct xdr_stream *xdr, const fat=
-tr4_time_deleg_access value)
-> +{
-> +	return xdrgen_encode_nfstime4(xdr, &value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_time_deleg_modify(struct xdr_stream *xdr, const fat=
-tr4_time_deleg_modify value)
-> +{
-> +	return xdrgen_encode_nfstime4(xdr, &value);
-> +};
-> diff --git a/fs/nfsd/nfs4xdr_gen.h b/fs/nfsd/nfs4xdr_gen.h
-> new file mode 100644
-> index 000000000000..27c601b36580
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4xdr_gen.h
-> @@ -0,0 +1,113 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Generated by xdrgen. Manual edits will be lost. */
-> +/* XDR specification modification time: Mon Aug 19 23:28:23 2024 */
-> +
-> +#ifndef _LINUX_NFS4_XDRGEN_H
-> +#define _LINUX_NFS4_XDRGEN_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/sunrpc/svc.h>
-> +
-> +#include <linux/sunrpc/xdrgen-builtins.h>
-> +
-> +typedef s64 int64_t;
-> +
-> +typedef u32 uint32_t;
-> +
-> +typedef struct {
-> +	u32 count;
-> +	uint32_t *element;
-> +} bitmap4;
-> +
-> +struct nfstime4 {
-> +	int64_t seconds;
-> +	uint32_t nseconds;
-> +};
-> +
-> +typedef bool fattr4_offline;
-> +
-> +enum {
-> +	FATTR4_OFFLINE =3D 83
-> +};
-> +
-> +struct open_arguments4 {
-> +	bitmap4 oa_share_access;
-> +	bitmap4 oa_share_deny;
-> +	bitmap4 oa_share_access_want;
-> +	bitmap4 oa_open_claim;
-> +	bitmap4 oa_create_mode;
-> +};
-> +
-> +enum open_args_share_access4 {
-> +	OPEN_ARGS_SHARE_ACCESS_READ =3D 1,
-> +	OPEN_ARGS_SHARE_ACCESS_WRITE =3D 2,
-> +	OPEN_ARGS_SHARE_ACCESS_BOTH =3D 3,
-> +};
-> +
-> +enum open_args_share_deny4 {
-> +	OPEN_ARGS_SHARE_DENY_NONE =3D 0,
-> +	OPEN_ARGS_SHARE_DENY_READ =3D 1,
-> +	OPEN_ARGS_SHARE_DENY_WRITE =3D 2,
-> +	OPEN_ARGS_SHARE_DENY_BOTH =3D 3,
-> +};
-> +
-> +enum open_args_share_access_want4 {
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG =3D 3,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG =3D 4,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL =3D 5,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL =3D 17,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED =3D 18,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 20,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 21,
-> +};
-> +
-> +enum open_args_open_claim4 {
-> +	OPEN_ARGS_OPEN_CLAIM_NULL =3D 0,
-> +	OPEN_ARGS_OPEN_CLAIM_PREVIOUS =3D 1,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR =3D 2,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV =3D 3,
-> +	OPEN_ARGS_OPEN_CLAIM_FH =3D 4,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH =3D 5,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH =3D 6,
-> +};
-> +
-> +enum open_args_createmode4 {
-> +	OPEN_ARGS_CREATEMODE_UNCHECKED4 =3D 0,
-> +	OPEN_ARGS_CREATE_MODE_GUARDED =3D 1,
-> +	OPEN_ARGS_CREATEMODE_EXCLUSIVE4 =3D 2,
-> +	OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1 =3D 3,
-> +};
-> +
-> +typedef struct open_arguments4 fattr4_open_arguments;
-> +bool xdrgen_decode_fattr4_open_arguments(struct xdr_stream *xdr, fattr4_=
-open_arguments *ptr);
-> +bool xdrgen_encode_fattr4_open_arguments(struct xdr_stream *xdr, const f=
-attr4_open_arguments value);
-> +
-> +enum {
-> +	FATTR4_OPEN_ARGUMENTS =3D 86
-> +};
-> +
-> +enum {
-> +	OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 0x200000
-> +};
-> +
-> +enum {
-> +	OPEN4_RESULT_NO_OPEN_STATEID =3D 0x00000010
-> +};
-> +
-> +typedef struct nfstime4 fattr4_time_deleg_access;
-> +
-> +typedef struct nfstime4 fattr4_time_deleg_modify;
-> +
-> +enum {
-> +	FATTR4_TIME_DELEG_ACCESS =3D 84
-> +};
-> +
-> +enum {
-> +	FATTR4_TIME_DELEG_MODIFY =3D 85
-> +};
-> +
-> +enum {
-> +	OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 0x100000
-> +};
-> +
-> +#endif /* _LINUX_NFS4_XDRGEN_H */
+The decoders are passed structs by reference already, fwiw. I had
+been considering the same for the encoder functions, for efficiency.
+I can give it a try.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+
+-- 
+Chuck Lever
 
