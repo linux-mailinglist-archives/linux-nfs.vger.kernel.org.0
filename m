@@ -1,56 +1,57 @@
-Return-Path: <linux-nfs+bounces-5564-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5565-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50D2D95B462
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 13:58:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ED6595B4A9
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 14:08:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08E80282612
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 11:58:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CBD41F21765
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 12:08:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5480E1C93C9;
-	Thu, 22 Aug 2024 11:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19AA1C9445;
+	Thu, 22 Aug 2024 12:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMoHKOVG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6Ydy/8B"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB413A244
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Aug 2024 11:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7F81C9446
+	for <linux-nfs@vger.kernel.org>; Thu, 22 Aug 2024 12:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724327888; cv=none; b=P4UpNzem0ZB4p15SYIdaEtz0meOuijypInBylBXnYWWfWzzBvdT4WjuMZMZPvIsbE4WWGe2SLVf1d6dQKtGrz7awhYZePU0gkSRLzCX38wC1L2OlqdjBJH7FMxolXUscMsg1/uBxUpmL8yiLWimXwiJ0G1oDycyG2DFomS9bCig=
+	t=1724328465; cv=none; b=cKyaa+BHnVUc9w9FVNS9SZGyrn6TTyMpMuZNJFnx5moQ33W6mCR7xAwQtKTR4ZCdNObBGHPRjChdLVX2cOV1r9q5ToEqH+NmDu+wNyU9d4tILBIx+DphL2RblyZ3DvW2+WMjpgTjWeUPaj499QH2FTd/ZmDHTbUkYyOsQ0tQhss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724327888; c=relaxed/simple;
-	bh=0yKkUG5sd2hexvhRn3Xkqy8lfJOIfzXxT7E4ew4wd18=;
+	s=arc-20240116; t=1724328465; c=relaxed/simple;
+	bh=xZwga1jOKQUANzZ0Ol/kNeM1gnKUMcuETFUnQPIZldI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t55ykeQ9Mn+SUG3KgTjfq3ffa4vI0QTF2YZ9mB9SAxXKrgMOK4FwdZ/rG/omy9m/41RZ9effR/trVXve+smgngGWgKvBNueVuI4B+4xV7ZRvVC2piFn4xx6+R2NBYXwBA6lNf2xf5DulCXZtckv3JRPCDFUt7OY0Ukeci60BWdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMoHKOVG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D525C32782;
-	Thu, 22 Aug 2024 11:58:07 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BeWgxHEI9cJFGZKgqO1odMbicQ5FX4I6VnvhGUx24mMD4UwSd/IkWJCOtEgeuauLPYGTpn2q5A/O8mdve0L+IDMMuAV7rH/XudMNocjUKKZX3dls2KlREu8GoIJvr8LaRTQ/0OPOw1Fjl3q8IYy90+epHffT7LGkvA/t0d/ncAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6Ydy/8B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E406FC32782;
+	Thu, 22 Aug 2024 12:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724327887;
-	bh=0yKkUG5sd2hexvhRn3Xkqy8lfJOIfzXxT7E4ew4wd18=;
+	s=k20201202; t=1724328465;
+	bh=xZwga1jOKQUANzZ0Ol/kNeM1gnKUMcuETFUnQPIZldI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tMoHKOVGt7wUJFfM7/wXsT9zjXYuV7y+COSs0L+ltpb/Fqq+PVCRYvnGItRSHewgr
-	 DtGq4aiTZEoI/N3LoyDz6xz/sttnJRMy96D43iLJg8KoxuUd9jTfn8TZsqKQ2Rc/UO
-	 arn6uI/GLu9gg7pNvlrhbTmBn9R2VWcQBCeKGxJHIfL7vRLKwpUv9/P/mPmo2yqU6q
-	 hbKVQS4DWct9BTnASQ1MrfKsMppmSai8iGQql3l+Jvyu83sAth9t2OH/E1HuS/tA3e
-	 oz3Bke9J8a0tNh9S2fSVjk1HFGjnyADg0wCAT/JMBVusR/UY6Yf3mFH2X6a2egdY5S
-	 VuRLbXhJmy09w==
-Message-ID: <3708f0de0ee181d16da7fa6ef0a1422c31965541.camel@kernel.org>
-Subject: Re: [PATCH 1/3] NFSv4: Add missing rescheduling points in
- nfs_client_return_marked_delegations
+	b=Q6Ydy/8BQKPk67RNRmJDnXu5S3T62RXOgY52/rhk5yDAkX5ncKU7lnn8zNOOmuSwb
+	 v8lgYKLn6WU77J2aVXu8VyI7CWUDXiHtdQiDsGVN5qMSJ0CqHKYUpbRcs3tRHgA4+u
+	 fOPQ9IPXErw9Egjlj/tez1oeBpu1ZOniT7Wx2uRkGm3N8fprdGVVo2ABNakb/caH6D
+	 RYx/XAGKb/bJdnDuSgC92EzYyldrfbEj5nu8PW+xj4+cgWMioE0d7mu1lg5roy6cc1
+	 /FdkF8lH0QuecpKXemFSaOiSGpWSLibRMsq9SphJ77oDsUorLkJz4lF8uw2WXcdn2V
+	 27plRteAEj7gA==
+Message-ID: <0b6143e4d2f7508f874f238355f2cc74031d1958.camel@kernel.org>
+Subject: Re: [PATCH 2/3] NFSv4: Fix clearing of layout segments in
+ layoutreturn
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 22 Aug 2024 07:58:06 -0400
-In-Reply-To: <ae213806d1188320ec55b730582705133b51dd22.1724263426.git.trond.myklebust@hammerspace.com>
+Date: Thu, 22 Aug 2024 08:07:43 -0400
+In-Reply-To: <219bcbc91166e476ef996901ae8f3ddb2278d166.1724263426.git.trond.myklebust@hammerspace.com>
 References: 
 	<ae213806d1188320ec55b730582705133b51dd22.1724263426.git.trond.myklebust@hammerspace.com>
+	 <219bcbc91166e476ef996901ae8f3ddb2278d166.1724263426.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,36 +139,67 @@ MIME-Version: 1.0
 On Wed, 2024-08-21 at 14:05 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> We're seeing reports of soft lockups when iterating through the
-> loops,
-> so let's add rescheduling points.
+> Make sure that we clear the layout segments in cases where we see a
+> fatal error, and also in the case where the layout is invalid.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
-> =C2=A0fs/nfs/super.c | 2 ++
-> =C2=A01 file changed, 2 insertions(+)
+> =C2=A0fs/nfs/nfs4proc.c | 9 ++++++---
+> =C2=A0fs/nfs/pnfs.c=C2=A0=C2=A0=C2=A0=C2=A0 | 5 ++---
+> =C2=A02 files changed, 8 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> index cbbd4866b0b7..97b386032b71 100644
-> --- a/fs/nfs/super.c
-> +++ b/fs/nfs/super.c
-> @@ -47,6 +47,7 @@
-> =C2=A0#include <linux/vfs.h>
-> =C2=A0#include <linux/inet.h>
-> =C2=A0#include <linux/in6.h>
-> +#include <linux/sched.h>
-> =C2=A0#include <linux/slab.h>
-> =C2=A0#include <net/ipv6.h>
-> =C2=A0#include <linux/netdevice.h>
-> @@ -228,6 +229,7 @@ static int __nfs_list_for_each_server(struct
-> list_head *head,
-> =C2=A0		ret =3D fn(server, data);
-> =C2=A0		if (ret)
-> =C2=A0			goto out;
-> +		cond_resched();
-> =C2=A0		rcu_read_lock();
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 8883016c551c..daba7d89a0cf 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -9997,6 +9997,7 @@ static void nfs4_layoutreturn_done(struct
+> rpc_task *task, void *calldata)
+> =C2=A0		fallthrough;
+> =C2=A0	default:
+> =C2=A0		task->tk_status =3D 0;
+> +		lrp->res.lrs_present =3D 0;
+> =C2=A0		fallthrough;
+> =C2=A0	case 0:
+> =C2=A0		break;
+> @@ -10010,9 +10011,11 @@ static void nfs4_layoutreturn_done(struct
+> rpc_task *task, void *calldata)
+> =C2=A0		task->tk_status =3D 0;
+> =C2=A0		break;
+> =C2=A0	case -NFS4ERR_DELAY:
+> -		if (nfs4_async_handle_error(task, server, NULL,
+> NULL) !=3D -EAGAIN)
+> -			break;
+> -		goto out_restart;
+> +		if (nfs4_async_handle_error(task, server, NULL,
+> NULL) =3D=3D
+> +		=C2=A0=C2=A0=C2=A0 -EAGAIN)
+> +			goto out_restart;
+> +		lrp->res.lrs_present =3D 0;
+> +		break;
 > =C2=A0	}
-> =C2=A0	rcu_read_unlock();
+> =C2=A0	return;
+> =C2=A0out_restart:
+> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+> index aa698481bec8..0d16b383a452 100644
+> --- a/fs/nfs/pnfs.c
+> +++ b/fs/nfs/pnfs.c
+> @@ -1284,10 +1284,9 @@ void pnfs_layoutreturn_free_lsegs(struct
+> pnfs_layout_hdr *lo,
+> =C2=A0	LIST_HEAD(freeme);
+> =C2=A0
+> =C2=A0	spin_lock(&inode->i_lock);
+> -	if (!pnfs_layout_is_valid(lo) ||
+> -	=C2=A0=C2=A0=C2=A0 !nfs4_stateid_match_other(&lo->plh_stateid,
+> arg_stateid))
+> +	if (!nfs4_stateid_match_other(&lo->plh_stateid,
+> arg_stateid))
+> =C2=A0		goto out_unlock;
+> -	if (stateid) {
+> +	if (stateid && pnfs_layout_is_valid(lo)) {
+> =C2=A0		u32 seq =3D be32_to_cpu(arg_stateid->seqid);
+> =C2=A0
+> =C2=A0		pnfs_mark_matching_lsegs_invalid(lo, &freeme, range,
+> seq);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
