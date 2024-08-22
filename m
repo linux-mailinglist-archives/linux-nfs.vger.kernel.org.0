@@ -1,55 +1,61 @@
-Return-Path: <linux-nfs+bounces-5585-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5586-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3CA795BC08
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 18:35:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A94F095BCC7
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 19:08:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3791A1F25DB4
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 16:35:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CDA41F243D7
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 17:08:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96DE31CDA20;
-	Thu, 22 Aug 2024 16:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C33A1CEAC0;
+	Thu, 22 Aug 2024 17:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVvqIpQS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ND0NkgFL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7191A1CDA0F
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Aug 2024 16:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F6E1CEABD;
+	Thu, 22 Aug 2024 17:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724344494; cv=none; b=Vl+2rmvZ384ud0hbtJFIocLbaZ8Zv8emy7y8pAZcJY+caCnS2NhBBBgtNeXJXmI8P5r/aUcngNklMYXwyT4fqCbbcQD/lpKt8G8z4l0v8dZg5nRQnjvoqIi5lA1HjcF0xS3QTnXfIRkUk77WUArbRW119RnvcoZDX2nq93FyJ+U=
+	t=1724346451; cv=none; b=HwRL+mMtXfVVpVK5obYsYA/bkVWuiPLmsGcGJ1davnIAcIktAfldDw2GpK/qXNnfUup6kZAUmNP0vZ+fwGJSwrwpNfTEbsDUez2ltIyAv2L+FLfmuXqrHuLBwcrYdJOauFPCw5+Cazyjr8mkzJifOFd/jDumImDd8MnFeYx2HWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724344494; c=relaxed/simple;
-	bh=U5wSvTeKsZGpxWcH+lzkllyejlYI205tB5pRnksS6zE=;
+	s=arc-20240116; t=1724346451; c=relaxed/simple;
+	bh=hyZ17YMYo2nHdX12LVZVi6QKQwQp3oYS+0PDTpKNHRQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hRgjQ7vxO1qhUcItHUFjDkTMOgQt9s6V1cJ9Y8ALfqg3dkhLXz9dW9bH1b22JJ4gwuvQYEHWbn28UDLiSsBsVveU8LW0Z1R37AvksxIUhN/gDsWrEChetum7IYsgEIQotz0KqHt2OYFfik5AjX0e31xuVUwlqQmJ8umvqiqAJzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVvqIpQS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81C54C32782;
-	Thu, 22 Aug 2024 16:34:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WjJW0P+U23qq20R0TYKd7sDTPXlRxtkaKhmKKS/KXqaakPkZflK64KxYTY/uztx4BQESY2eBwdIaUoDB3CwgNDK8SmiwatGyCqoILL2nrDeNVdalI0mpb1LU66SRwNDEdNJq1zMI3RiuYa5uIJ4L9f6HerGIHXxjEyQMEu9cUsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ND0NkgFL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31FE9C32782;
+	Thu, 22 Aug 2024 17:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724344493;
-	bh=U5wSvTeKsZGpxWcH+lzkllyejlYI205tB5pRnksS6zE=;
+	s=k20201202; t=1724346450;
+	bh=hyZ17YMYo2nHdX12LVZVi6QKQwQp3oYS+0PDTpKNHRQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mVvqIpQScWv0beAOgJYNib7AS+dB9UexvqE2F/eYtDzNLHi/Lfk3eXsyvDghAE85X
-	 /n2B+mePoRpjWBb1f+lL4AOnmCGEhmtnVPcZ13nS8zE63btTsIKCfUCEhAlB5mCprl
-	 GRncLxPi5BNnOAazMQh9Rds2sqnIA1E6f1PAbIOspAAeIAUsZ5Rp3d8PSNBpOIvhsu
-	 beKwDw3PsjM7Vg1JTHTxz+eHcU2AsAk2rpNb/SidrsfRhcS6Z2knUgOM4S813yda6y
-	 qKHGm85T04tcn0AGrIYDUCjWxYU+B5rJUsCDPA60SSYawI2cZymqxQax4/D/W8zMi+
-	 AZrtPNEt683NA==
-Message-ID: <dfe79cbc14abb36faa4e453c5baa67f0d0c12264.camel@kernel.org>
-Subject: Re: [RFC PATCH 2/2] NFSD: Create an initial nfs4_1.x file
+	b=ND0NkgFLEsWxbcGOKSmZ2IFyrgdVi42xFqsdUYT/Nr06w3PW3DC0Z/3CmY1YxBgET
+	 1IjlnJRQl6WfeC1M8xERPPwVdbk4sJgSkD4J+UWQtpbxnQdTSLUenWwpuMOCGrRdwv
+	 9elgfXXXgM9jKVVCbZgY7Sc7G2JJpXHr5u/YEx5LCFgYXyfEiV9S0lFyiUf8KGRbSE
+	 Vkee3MTnSVVCxnKJgOUEZlK2yLxi2PGqRyRM0TUq3RcuavecUvtxom9QYNgMVR32Jb
+	 FxaSizlRqzb0ZmoWC1pQ8lToqlXAf0gmXhSD+521QCwITtw/XBekpqC7MWZEqnxFZT
+	 SsQog3YIrB3QQ==
+Message-ID: <b6cee2822295de115681d9f26f0a473e9d69e2c4.camel@kernel.org>
+Subject: Re: [PATCH v12 05/24] nfsd: fix nfsfh tracepoints to properly
+ handle NULL rqstp
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Date: Thu, 22 Aug 2024 12:34:52 -0400
-In-Reply-To: <20240820144600.189744-3-cel@kernel.org>
-References: <20240820144600.189744-1-cel@kernel.org>
-	 <20240820144600.189744-3-cel@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Anna Schumaker <anna@kernel.org>, Trond
+ Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+ linux-fsdevel@vger.kernel.org
+Date: Thu, 22 Aug 2024 13:07:29 -0400
+In-Reply-To: <ZsdhhIY8WQCPWete@kernel.org>
+References: <20240819181750.70570-1-snitzer@kernel.org>
+	 <20240819181750.70570-6-snitzer@kernel.org>
+	 <4ab36f95604da25d8c5b419c927d85d362bca2e8.camel@kernel.org>
+	 <ZsZa7PX0QtZKWt_R@kernel.org> <ZsdUQ1t4L8dfB0BF@tissot.1015granger.net>
+	 <ZsdhhIY8WQCPWete@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,588 +140,200 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2024-08-20 at 10:46 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 2024-08-22 at 12:04 -0400, Mike Snitzer wrote:
+> On Thu, Aug 22, 2024 at 11:07:47AM -0400, Chuck Lever wrote:
+> > On Wed, Aug 21, 2024 at 05:23:56PM -0400, Mike Snitzer wrote:
+> > > On Wed, Aug 21, 2024 at 01:46:02PM -0400, Jeff Layton wrote:
+> > > > On Mon, 2024-08-19 at 14:17 -0400, Mike Snitzer wrote:
+> > > > > Fixes stop-gap used in previous commit where caller avoided using
+> > > > > tracepoint if rqstp is NULL.=C2=A0 Instead, have each tracepoint =
+avoid
+> > > > > dereferencing NULL rqstp.
+> > > > >=20
+> > > > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > > > > ---
+> > > > > =C2=A0fs/nfsd/nfsfh.c | 12 ++++--------
+> > > > > =C2=A0fs/nfsd/trace.h | 36 +++++++++++++++++++++---------------
+> > > > > =C2=A02 files changed, 25 insertions(+), 23 deletions(-)
+> > > > >=20
+> > > > > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> > > > > index 19e173187ab9..bae727e65214 100644
+> > > > > --- a/fs/nfsd/nfsfh.c
+> > > > > +++ b/fs/nfsd/nfsfh.c
+> > > > > @@ -195,8 +195,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_r=
+qst
+> > > > > *rqstp, struct net *net,
+> > > > > =C2=A0
+> > > > > =C2=A0	error =3D nfserr_stale;
+> > > > > =C2=A0	if (IS_ERR(exp)) {
+> > > > > -		if (rqstp)
+> > > > > -			trace_nfsd_set_fh_dentry_badexport(rqstp,
+> > > > > fhp, PTR_ERR(exp));
+> > > > > +		trace_nfsd_set_fh_dentry_badexport(rqstp, fhp,
+> > > > > PTR_ERR(exp));
+> > > > > =C2=A0
+> > > > > =C2=A0		if (PTR_ERR(exp) =3D=3D -ENOENT)
+> > > > > =C2=A0			return error;
+> > > > > @@ -244,8 +243,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_r=
+qst
+> > > > > *rqstp, struct net *net,
+> > > > > =C2=A0						data_left,
+> > > > > fileid_type, 0,
+> > > > > =C2=A0						nfsd_acceptable,
+> > > > > exp);
+> > > > > =C2=A0		if (IS_ERR_OR_NULL(dentry)) {
+> > > > > -			if (rqstp)
+> > > > > -
+> > > > > 				trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
+> > > > > +			trace_nfsd_set_fh_dentry_badhandle(rqstp,
+> > > > > fhp,
+> > > > > =C2=A0					dentry ?=C2=A0 PTR_ERR(dentry) :
+> > > > > -ESTALE);
+> > > > > =C2=A0			switch (PTR_ERR(dentry)) {
+> > > > > =C2=A0			case -ENOMEM:
+> > > > > @@ -321,8 +319,7 @@ __fh_verify(struct svc_rqst *rqstp,
+> > > > > =C2=A0	dentry =3D fhp->fh_dentry;
+> > > > > =C2=A0	exp =3D fhp->fh_export;
+> > > > > =C2=A0
+> > > > > -	if (rqstp)
+> > > > > -		trace_nfsd_fh_verify(rqstp, fhp, type, access);
+> > > > > +	trace_nfsd_fh_verify(net, rqstp, fhp, type, access);
+> > > > > =C2=A0
+> > > > > =C2=A0	/*
+> > > > > =C2=A0	 * We still have to do all these permission checks, even
+> > > > > when
+> > > > > @@ -376,8 +373,7 @@ __fh_verify(struct svc_rqst *rqstp,
+> > > > > =C2=A0	/* Finally, check access permissions. */
+> > > > > =C2=A0	error =3D nfsd_permission(cred, exp, dentry, access);
+> > > > > =C2=A0out:
+> > > > > -	if (rqstp)
+> > > > > -		trace_nfsd_fh_verify_err(rqstp, fhp, type, access,
+> > > > > error);
+> > > > > +	trace_nfsd_fh_verify_err(net, rqstp, fhp, type, access,
+> > > > > error);
+> > > > > =C2=A0	if (error =3D=3D nfserr_stale)
+> > > > > =C2=A0		nfsd_stats_fh_stale_inc(nn, exp);
+> > > > > =C2=A0	return error;
+> > > > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > > > > index 77bbd23aa150..d49b3c1e3ba9 100644
+> > > > > --- a/fs/nfsd/trace.h
+> > > > > +++ b/fs/nfsd/trace.h
+> > > > > @@ -195,12 +195,13 @@ TRACE_EVENT(nfsd_compound_encode_err,
+> > > > > =C2=A0
+> > > > > =C2=A0TRACE_EVENT(nfsd_fh_verify,
+> > > > > =C2=A0	TP_PROTO(
+> > > > > +		const struct net *net,
+> > > > > =C2=A0		const struct svc_rqst *rqstp,
+> > > > > =C2=A0		const struct svc_fh *fhp,
+> > > > > =C2=A0		umode_t type,
+> > > > > =C2=A0		int access
+> > > > > =C2=A0	),
+> > > > > -	TP_ARGS(rqstp, fhp, type, access),
+> > > > > +	TP_ARGS(net, rqstp, fhp, type, access),
+> > > > > =C2=A0	TP_STRUCT__entry(
+> > > > > =C2=A0		__field(unsigned int, netns_ino)
+> > > > > =C2=A0		__sockaddr(server, rqstp->rq_xprt->xpt_remotelen)
+> > > > > @@ -212,12 +213,14 @@ TRACE_EVENT(nfsd_fh_verify,
+> > > > > =C2=A0		__field(unsigned long, access)
+> > > > > =C2=A0	),
+> > > > > =C2=A0	TP_fast_assign(
+> > > > > -		__entry->netns_ino =3D SVC_NET(rqstp)->ns.inum;
+> > > > > -		__assign_sockaddr(server, &rqstp->rq_xprt-
+> > > > > > xpt_local,
+> > > > > -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rqstp->rq_xprt->xpt_local=
+len);
+> > > > > -		__assign_sockaddr(client, &rqstp->rq_xprt-
+> > > > > > xpt_remote,
+> > > > > -				=C2=A0 rqstp->rq_xprt->xpt_remotelen);
+> > > > > -		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+> > > > > +		__entry->netns_ino =3D net->ns.inum;
+> > > > > +		if (rqstp) {
+> > > > > +			__assign_sockaddr(server, &rqstp->rq_xprt-
+> > > > > > xpt_local,
+> > > > > +					=C2=A0 rqstp->rq_xprt-
+> > > > > > xpt_locallen);
+> > > > > +			__assign_sockaddr(client, &rqstp->rq_xprt-
+> > > > > > xpt_remote,
+> > > > > +					=C2=A0 rqstp->rq_xprt-
+> > > > > > xpt_remotelen);
+> > > > > +		}
+> > > >=20
+> > > > Does this need an else branch to set these values to something when
+> > > > rqstp is NULL, or are we guaranteed that they are already zeroed ou=
+t
+> > > > when they aren't assigned?
+> > >=20
+> > > I'm not sure.  It isn't immediately clear what is actually using thes=
+e.
+> > >=20
+> > > But I did just notice an inconsistency, these entry members are defin=
+ed:
+> > >=20
+> > >                 __sockaddr(server, rqstp->rq_xprt->xpt_remotelen)
+> > >                 __sockaddr(client, rqstp->rq_xprt->xpt_remotelen)
+> > >=20
+> > > Yet they go on to use rqstp->rq_xprt->xpt_locallen and
+> > > rqstp->rq_xprt->xpt_remotelen respectively.
+> > >=20
+> > > Chuck, would welcome your feedback on how to properly fix these
+> > > tracepoints to handle rqstp being NULL.  And the inconsistency I just
+> > > noted is something extra.
+> >=20
+> > First, a comment about patch ordering: I think you can preserve
+> > attribution but make these a little easier to digest if you reverse
+> > 4/ and 5/. Fix the problem before it becomes a problem, as it were.
+> >=20
+> > As a general remark, I would prefer to retain the trace points and
+> > even the address information in the local I/O case: the client
+> > address is an important part of the decision to permit or deny
+> > access to the FH in question. The issue is how to make that
+> > happen...
+> >=20
+> > The __sockaddr() macros I think will trigger an oops if
+> > rqstp =3D=3D NULL. The second argument determines the size of a
+> > variable-length trace field IIRC. One way to avoid that is to use a
+> > fixed size field for the addresses (big enough to store an IPv6
+> > address?  or an abstract address? those can get pretty big)
+> >=20
+> > I need to study 4/ more closely; perhaps it is doing too much in a
+> > single patch. (ie, the code ends up in a better place, but the
+> > details of the transition are obscured by being lumped together into
+> > one patch).
+> >=20
+> > So, can you or Neil answer: what would appear as the client address
+> > for local I/O ?
 >=20
-> Build an NFSv4 protocol snippet to support the delstid extensions.
-> The new fs/nfsd/nfs4_1.x file can be added to over time as other
-> parts of NFSD's XDR functions are converted to machine-generated
-> code.
+> Before when there was the "fake" svc_rqst it was initialized with:
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4_1.x      | 164 +++++++++++++++++++++++++++++
->  fs/nfsd/nfs4xdr_gen.c | 236 ++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/nfs4xdr_gen.h | 113 ++++++++++++++++++++
->  3 files changed, 513 insertions(+)
->  create mode 100644 fs/nfsd/nfs4_1.x
->  create mode 100644 fs/nfsd/nfs4xdr_gen.c
->  create mode 100644 fs/nfsd/nfs4xdr_gen.h
+>        /* Note: we're connecting to ourself, so source addr =3D=3D peer a=
+ddr */
+>        rqstp->rq_addrlen =3D rpc_peeraddr(rpc_clnt,
+>                        (struct sockaddr *)&rqstp->rq_addr,
+>                        sizeof(rqstp->rq_addr));
 >=20
-> diff --git a/fs/nfsd/nfs4_1.x b/fs/nfsd/nfs4_1.x
-> new file mode 100644
-> index 000000000000..d2fde450de5e
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4_1.x
-> @@ -0,0 +1,164 @@
-> +/*
-> + * Copyright (c) 2010 IETF Trust and the persons identified
-> + * as the document authors.  All rights reserved.
-> + *
-> + * The document authors are identified in RFC 3530 and
-> + * RFC 5661.
-> + *
-> + * Redistribution and use in source and binary forms, with
-> + * or without modification, are permitted provided that the
-> + * following conditions are met:
-> + *
-> + * - Redistributions of source code must retain the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer.
-> + *
-> + * - Redistributions in binary form must reproduce the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer in the documentation and/or other
-> + *   materials provided with the distribution.
-> + *
-> + * - Neither the name of Internet Society, IETF or IETF
-> + *   Trust, nor the names of specific contributors, may be
-> + *   used to endorse or promote products derived from this
-> + *   software without specific prior written permission.
-> + *
-> + *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
-> + *   AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-> + *   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> + *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-> + *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
-> + *   EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-> + *   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-> + *   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + *   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-> + *   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> + *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-> + *   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-> + *   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-> + *   IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-> + *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +pragma header nfs4;
-> +
-> +/*
-> + * Basic typedefs for RFC 1832 data type definitions
-> + */
-> +typedef hyper		int64_t;
-> +typedef unsigned int	uint32_t;
-> +
-> +/*
-> + * Basic data types
-> + */
-> +typedef uint32_t	bitmap4<>;
-> +
-> +/*
-> + * Timeval
-> + */
-> +struct nfstime4 {
-> +	int64_t		seconds;
-> +	uint32_t	nseconds;
-> +};
-> +
-> +
-> +/*
-> + * The following content was extracted from draft-ietf-nfsv4-delstid
-> + */
-> +
-> +typedef bool            fattr4_offline;
-> +
-> +
-> +const FATTR4_OFFLINE            =3D 83;
-> +
-> +
-> +struct open_arguments4 {
-> +  bitmap4  oa_share_access;
-> +  bitmap4  oa_share_deny;
-> +  bitmap4  oa_share_access_want;
-> +  bitmap4  oa_open_claim;
-> +  bitmap4  oa_create_mode;
-> +};
-> +
-> +
-> +enum open_args_share_access4 {
-> +   OPEN_ARGS_SHARE_ACCESS_READ  =3D 1,
-> +   OPEN_ARGS_SHARE_ACCESS_WRITE =3D 2,
-> +   OPEN_ARGS_SHARE_ACCESS_BOTH  =3D 3
-> +};
-> +
-> +
-> +enum open_args_share_deny4 {
-> +   OPEN_ARGS_SHARE_DENY_NONE  =3D 0,
-> +   OPEN_ARGS_SHARE_DENY_READ  =3D 1,
-> +   OPEN_ARGS_SHARE_DENY_WRITE =3D 2,
-> +   OPEN_ARGS_SHARE_DENY_BOTH  =3D 3
-> +};
-> +
-> +
-> +enum open_args_share_access_want4 {
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           =3D 3,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            =3D 4,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              =3D 5,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
-> +                                                   =3D 17,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
-> +                                                   =3D 18,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    =3D 20,
-> +   OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 21
-> +};
-> +
-> +
-> +enum open_args_open_claim4 {
-> +   OPEN_ARGS_OPEN_CLAIM_NULL          =3D 0,
-> +   OPEN_ARGS_OPEN_CLAIM_PREVIOUS      =3D 1,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR  =3D 2,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV =3D 3,
-> +   OPEN_ARGS_OPEN_CLAIM_FH            =3D 4,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH  =3D 5,
-> +   OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH =3D 6
-> +};
-> +
-> +
-> +enum open_args_createmode4 {
-> +   OPEN_ARGS_CREATEMODE_UNCHECKED4     =3D 0,
-> +   OPEN_ARGS_CREATE_MODE_GUARDED       =3D 1,
-> +   OPEN_ARGS_CREATEMODE_EXCLUSIVE4     =3D 2,
-> +   OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  =3D 3
-> +};
-> +
-> +
-> +typedef open_arguments4 fattr4_open_arguments;
-> +pragma public fattr4_open_arguments;
-> +
-> +
-> +%/*
-> +% * Determine what OPEN supports.
-> +% */
-> +const FATTR4_OPEN_ARGUMENTS     =3D 86;
-> +
-> +
-> +const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 0x200000;
-> +
-> +
-> +const OPEN4_RESULT_NO_OPEN_STATEID =3D 0x00000010;
-> +
-> +
-> +/*
-> + * attributes for the delegation times being
-> + * cached and served by the "client"
-> + */
-> +typedef nfstime4        fattr4_time_deleg_access;
-> +typedef nfstime4        fattr4_time_deleg_modify;
-> +
-> +
-> +%/*
-> +% * New RECOMMENDED Attribute for
-> +% * delegation caching of times
-> +% */
-> +const FATTR4_TIME_DELEG_ACCESS  =3D 84;
-> +const FATTR4_TIME_DELEG_MODIFY  =3D 85;
-> +
-> +
-> +const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 0x100000;
-> +
-> diff --git a/fs/nfsd/nfs4xdr_gen.c b/fs/nfsd/nfs4xdr_gen.c
-> new file mode 100644
-> index 000000000000..bb714859d6c6
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4xdr_gen.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Generated by xdrgen. Manual edits will be lost.
-> +// XDR specification modification time: Mon Aug 19 23:28:23 2024
-> +
-> +#include "nfs4xdr_gen.h"
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_int64_t(struct xdr_stream *xdr, int64_t *ptr)
-> +{
-> +	return xdrgen_decode_hyper(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_uint32_t(struct xdr_stream *xdr, uint32_t *ptr)
-> +{
-> +	return xdrgen_decode_unsigned_int(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
-> +{
-> +	if (xdr_stream_decode_u32(xdr, &ptr->count) < 0)
-> +		return false;
-> +	for (u32 i =3D 0; i < ptr->count; i++)
-> +		if (!xdrgen_decode_uint32_t(xdr, &ptr->element[i]))
-> +			return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
-> +{
-> +	if (!xdrgen_decode_int64_t(xdr, &ptr->seconds))
-> +		return false;
-> +	if (!xdrgen_decode_uint32_t(xdr, &ptr->nseconds))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_offline(struct xdr_stream *xdr, fattr4_offline *ptr=
-)
-> +{
-> +	return xdrgen_decode_bool(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_arguments4(struct xdr_stream *xdr, struct open_argume=
-nts4 *ptr)
-> +{
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_access))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_deny))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_share_access_want))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_open_claim))
-> +		return false;
-> +	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_create_mode))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_access4(struct xdr_stream *xdr, enum open_=
-args_share_access4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_deny4(struct xdr_stream *xdr, enum open_ar=
-gs_share_deny4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_share_access_want4(struct xdr_stream *xdr, enum =
-open_args_share_access_want4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_open_claim4(struct xdr_stream *xdr, enum open_ar=
-gs_open_claim4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_open_args_createmode4(struct xdr_stream *xdr, enum open_ar=
-gs_createmode4 *ptr)
-> +{
-> +	u32 val;
-> +
-> +	if (xdr_stream_decode_u32(xdr, &val) < 0)
-> +		return false;
-> +	*ptr =3D val;
-> +	return true;
-> +}
-> +
-> +bool
-> +xdrgen_decode_fattr4_open_arguments(struct xdr_stream *xdr, fattr4_open_=
-arguments *ptr)
-> +{
-> +	return xdrgen_decode_open_arguments4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_time_deleg_access(struct xdr_stream *xdr, fattr4_ti=
-me_deleg_access *ptr)
-> +{
-> +	return xdrgen_decode_nfstime4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_decode_fattr4_time_deleg_modify(struct xdr_stream *xdr, fattr4_ti=
-me_deleg_modify *ptr)
-> +{
-> +	return xdrgen_decode_nfstime4(xdr, ptr);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_int64_t(struct xdr_stream *xdr, const int64_t value)
-> +{
-> +	return xdrgen_encode_hyper(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_uint32_t(struct xdr_stream *xdr, const uint32_t value)
-> +{
-> +	return xdrgen_encode_unsigned_int(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
-> +{
-> +	if (xdr_stream_encode_u32(xdr, value.count) !=3D XDR_UNIT)
-> +		return false;
-> +	for (u32 i =3D 0; i < value.count; i++)
-> +		if (!xdrgen_encode_uint32_t(xdr, value.element[i]))
-> +			return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *va=
-lue)
-> +{
-> +	if (!xdrgen_encode_int64_t(xdr, value->seconds))
-> +		return false;
-> +	if (!xdrgen_encode_uint32_t(xdr, value->nseconds))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_offline(struct xdr_stream *xdr, const fattr4_offlin=
-e value)
-> +{
-> +	return xdrgen_encode_bool(xdr, value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_arguments4(struct xdr_stream *xdr, const struct open_=
-arguments4 *value)
-> +{
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_access))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_deny))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_share_access_want))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_open_claim))
-> +		return false;
-> +	if (!xdrgen_encode_bitmap4(xdr, value->oa_create_mode))
-> +		return false;
-> +	return true;
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_access4(struct xdr_stream *xdr, enum open_=
-args_share_access4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_deny4(struct xdr_stream *xdr, enum open_ar=
-gs_share_deny4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_share_access_want4(struct xdr_stream *xdr, enum =
-open_args_share_access_want4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_open_claim4(struct xdr_stream *xdr, enum open_ar=
-gs_open_claim4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_open_args_createmode4(struct xdr_stream *xdr, enum open_ar=
-gs_createmode4 value)
-> +{
-> +	return xdr_stream_encode_u32(xdr, value) =3D=3D XDR_UNIT;
-> +}
-> +
-> +bool
-> +xdrgen_encode_fattr4_open_arguments(struct xdr_stream *xdr, const fattr4=
-_open_arguments value)
-> +{
-> +	return xdrgen_encode_open_arguments4(xdr, &value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_time_deleg_access(struct xdr_stream *xdr, const fat=
-tr4_time_deleg_access value)
-> +{
-> +	return xdrgen_encode_nfstime4(xdr, &value);
-> +};
-> +
-> +static bool __maybe_unused
-> +xdrgen_encode_fattr4_time_deleg_modify(struct xdr_stream *xdr, const fat=
-tr4_time_deleg_modify value)
-> +{
-> +	return xdrgen_encode_nfstime4(xdr, &value);
-> +};
-> diff --git a/fs/nfsd/nfs4xdr_gen.h b/fs/nfsd/nfs4xdr_gen.h
-> new file mode 100644
-> index 000000000000..27c601b36580
-> --- /dev/null
-> +++ b/fs/nfsd/nfs4xdr_gen.h
-> @@ -0,0 +1,113 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Generated by xdrgen. Manual edits will be lost. */
-> +/* XDR specification modification time: Mon Aug 19 23:28:23 2024 */
-> +
-> +#ifndef _LINUX_NFS4_XDRGEN_H
-> +#define _LINUX_NFS4_XDRGEN_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/sunrpc/svc.h>
-> +
-> +#include <linux/sunrpc/xdrgen-builtins.h>
-> +
-> +typedef s64 int64_t;
-> +
-> +typedef u32 uint32_t;
-> +
-> +typedef struct {
-> +	u32 count;
-> +	uint32_t *element;
-> +} bitmap4;
-> +
-> +struct nfstime4 {
-> +	int64_t seconds;
-> +	uint32_t nseconds;
-> +};
-> +
-> +typedef bool fattr4_offline;
-> +
-> +enum {
-> +	FATTR4_OFFLINE =3D 83
-> +};
-> +
-> +struct open_arguments4 {
-> +	bitmap4 oa_share_access;
-> +	bitmap4 oa_share_deny;
-> +	bitmap4 oa_share_access_want;
-> +	bitmap4 oa_open_claim;
-> +	bitmap4 oa_create_mode;
-> +};
-> +
-> +enum open_args_share_access4 {
-> +	OPEN_ARGS_SHARE_ACCESS_READ =3D 1,
-> +	OPEN_ARGS_SHARE_ACCESS_WRITE =3D 2,
-> +	OPEN_ARGS_SHARE_ACCESS_BOTH =3D 3,
-> +};
-> +
-> +enum open_args_share_deny4 {
-> +	OPEN_ARGS_SHARE_DENY_NONE =3D 0,
-> +	OPEN_ARGS_SHARE_DENY_READ =3D 1,
-> +	OPEN_ARGS_SHARE_DENY_WRITE =3D 2,
-> +	OPEN_ARGS_SHARE_DENY_BOTH =3D 3,
-> +};
-> +
-> +enum open_args_share_access_want4 {
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG =3D 3,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG =3D 4,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL =3D 5,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL =3D 17,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED =3D 18,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 20,
-> +	OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 21,
-> +};
-> +
-> +enum open_args_open_claim4 {
-> +	OPEN_ARGS_OPEN_CLAIM_NULL =3D 0,
-> +	OPEN_ARGS_OPEN_CLAIM_PREVIOUS =3D 1,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR =3D 2,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV =3D 3,
-> +	OPEN_ARGS_OPEN_CLAIM_FH =3D 4,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH =3D 5,
-> +	OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH =3D 6,
-> +};
-> +
-> +enum open_args_createmode4 {
-> +	OPEN_ARGS_CREATEMODE_UNCHECKED4 =3D 0,
-> +	OPEN_ARGS_CREATE_MODE_GUARDED =3D 1,
-> +	OPEN_ARGS_CREATEMODE_EXCLUSIVE4 =3D 2,
-> +	OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1 =3D 3,
-> +};
-> +
-> +typedef struct open_arguments4 fattr4_open_arguments;
-> +bool xdrgen_decode_fattr4_open_arguments(struct xdr_stream *xdr, fattr4_=
-open_arguments *ptr);
-> +bool xdrgen_encode_fattr4_open_arguments(struct xdr_stream *xdr, const f=
-attr4_open_arguments value);
+> Anyway, as the code is also now: the rpc_clnt passed to
+> nfsd_open_local_fh() will reflect the same address as the server.
+>=20
+> My thinking was that for localio there doesn't need to be any explicit
+> listing of the address info in the tracepoints (but that'd be more
+> convincing if we at least logged localio by looking for and logging
+> NFSD_MAY_LOCALIO in mayflags passed to nfsd_file_acquire_local).
+>=20
+> But I agree it'd be nice to have tracepoints log matching 127.0.0.1 or
+> ::1, etc -- just don't think it strictly necessary.
+>=20
+> Open to whatever you think best.
 >=20
 
-Question: why does xdrgen generate the above prototype functions for
-the encoder and decoder for that typedef, but no corresponding
-prototypes for the nfstime4 ones below?
+The client is likely to be coming from a different container in many
+cases and so won't be coming in via the loopback interface. Presenting
+a loopback address in that case seems wrong.
 
->=20
-> +
-> +enum {
-> +	FATTR4_OPEN_ARGUMENTS =3D 86
-> +};
-> +
-> +enum {
-> +	OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION =3D 0x200000
-> +};
-> +
-> +enum {
-> +	OPEN4_RESULT_NO_OPEN_STATEID =3D 0x00000010
-> +};
-> +
-> +typedef struct nfstime4 fattr4_time_deleg_access;
-> +
-> +typedef struct nfstime4 fattr4_time_deleg_modify;
-> +
-> +enum {
-> +	FATTR4_TIME_DELEG_ACCESS =3D 84
-> +};
-> +
-> +enum {
-> +	FATTR4_TIME_DELEG_MODIFY =3D 85
-> +};
-> +
-> +enum {
-> +	OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS =3D 0x100000
-> +};
-> +
-> +#endif /* _LINUX_NFS4_XDRGEN_H */
-
---=20
-Jeff Layton <jlayton@poochiereds.net>
+What would be ideal IMO would be to still display the addresses from
+the rpc_clnt and just display a flag or something that shows that this
+is a localio request. Having to pass that as an additional arg to
+__fh_verify would be pretty ugly though (and may be a layering
+violation).
 
 --=20
 Jeff Layton <jlayton@kernel.org>
