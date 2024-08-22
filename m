@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-5565-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5566-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ED6595B4A9
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 14:08:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 342BF95B4DD
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 14:19:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CBD41F21765
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 12:08:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC1B51F2210B
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Aug 2024 12:19:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19AA1C9445;
-	Thu, 22 Aug 2024 12:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2101326AF6;
+	Thu, 22 Aug 2024 12:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6Ydy/8B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mU+CemTh"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7F81C9446
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Aug 2024 12:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E1D16A940
+	for <linux-nfs@vger.kernel.org>; Thu, 22 Aug 2024 12:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724328465; cv=none; b=cKyaa+BHnVUc9w9FVNS9SZGyrn6TTyMpMuZNJFnx5moQ33W6mCR7xAwQtKTR4ZCdNObBGHPRjChdLVX2cOV1r9q5ToEqH+NmDu+wNyU9d4tILBIx+DphL2RblyZ3DvW2+WMjpgTjWeUPaj499QH2FTd/ZmDHTbUkYyOsQ0tQhss=
+	t=1724329190; cv=none; b=CRuPQNf2IL/pswl9qHENMFPXooruBPNlCqUWymV10vG1w9pO2l6MXBTq+29PVQ4Q42dKUTjDWDDtrK8HGb1JqfMHyCEkSgRlRmTKjnOiTEWGjKlPIxWW1+D71UK4nPZBWSRcxRW76AA3Jtp0i3iebctWUU1N3AMhbncB17DI99s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724328465; c=relaxed/simple;
-	bh=xZwga1jOKQUANzZ0Ol/kNeM1gnKUMcuETFUnQPIZldI=;
+	s=arc-20240116; t=1724329190; c=relaxed/simple;
+	bh=jgXJf/qGM8xU+6BjQk/C47L7SEUIE/gV7fGDNk2hMdk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BeWgxHEI9cJFGZKgqO1odMbicQ5FX4I6VnvhGUx24mMD4UwSd/IkWJCOtEgeuauLPYGTpn2q5A/O8mdve0L+IDMMuAV7rH/XudMNocjUKKZX3dls2KlREu8GoIJvr8LaRTQ/0OPOw1Fjl3q8IYy90+epHffT7LGkvA/t0d/ncAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6Ydy/8B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E406FC32782;
-	Thu, 22 Aug 2024 12:07:44 +0000 (UTC)
+	 Content-Type:MIME-Version; b=kqFCTcR+3JV4YgakgomzocyoLBYUhBeIEIRNOLP/n7HRHv5crlzS16GLiwfIIHdPT8zqNP8bpPwsWRGe+bE+cdiXlsEut9S52/OlzE9LFmXmEyGEqT40UyjVTm8Ehf7/7boUq1IPV2Y3bga4cKqk784pMRQoaiN2DA9G011vZ20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mU+CemTh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E11C32782;
+	Thu, 22 Aug 2024 12:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724328465;
-	bh=xZwga1jOKQUANzZ0Ol/kNeM1gnKUMcuETFUnQPIZldI=;
+	s=k20201202; t=1724329189;
+	bh=jgXJf/qGM8xU+6BjQk/C47L7SEUIE/gV7fGDNk2hMdk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q6Ydy/8BQKPk67RNRmJDnXu5S3T62RXOgY52/rhk5yDAkX5ncKU7lnn8zNOOmuSwb
-	 v8lgYKLn6WU77J2aVXu8VyI7CWUDXiHtdQiDsGVN5qMSJ0CqHKYUpbRcs3tRHgA4+u
-	 fOPQ9IPXErw9Egjlj/tez1oeBpu1ZOniT7Wx2uRkGm3N8fprdGVVo2ABNakb/caH6D
-	 RYx/XAGKb/bJdnDuSgC92EzYyldrfbEj5nu8PW+xj4+cgWMioE0d7mu1lg5roy6cc1
-	 /FdkF8lH0QuecpKXemFSaOiSGpWSLibRMsq9SphJ77oDsUorLkJz4lF8uw2WXcdn2V
-	 27plRteAEj7gA==
-Message-ID: <0b6143e4d2f7508f874f238355f2cc74031d1958.camel@kernel.org>
-Subject: Re: [PATCH 2/3] NFSv4: Fix clearing of layout segments in
- layoutreturn
+	b=mU+CemThn2GCT8lb+8LiAWYUvsU1Le1OihiVnoiBCWloibZREjpHPlLmRyO/Tvxp5
+	 FA4SVxPx9WN2W0lhZqW55U2Xa1nZ1uW+RUWAA40MG377SBauMjItS2S99coxqaleVU
+	 oo3ijQI161fKLCuBwrstoGzk8hG3+4Nh9TkG4sAe0gflwxibikHIXGtsLMbYLJfx3h
+	 k/gAwUKj9U/K7yQneJiSoB5vunk3t1TS9iCLhr7aiWQkYXrH2XWaZtT/ZKpuFQoH7I
+	 XYlZjwPoWdDz6AUfAWxvhvk5OoCPDKrk+LjLfsihkybFrW6TBhfIJcAqrRI8D59pB7
+	 bBKb5u0N8ntzw==
+Message-ID: <3d0ecd19625f99ca2b52ab4a059564bb56e2cd4b.camel@kernel.org>
+Subject: Re: [PATCH 3/3] NFS: Avoid unnecessary rescanning of the per-server
+ delegation list
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 22 Aug 2024 08:07:43 -0400
-In-Reply-To: <219bcbc91166e476ef996901ae8f3ddb2278d166.1724263426.git.trond.myklebust@hammerspace.com>
+Date: Thu, 22 Aug 2024 08:19:48 -0400
+In-Reply-To: <3fe20b13641fe569107f1474d17befd8caa0b076.1724263426.git.trond.myklebust@hammerspace.com>
 References: 
 	<ae213806d1188320ec55b730582705133b51dd22.1724263426.git.trond.myklebust@hammerspace.com>
-	 <219bcbc91166e476ef996901ae8f3ddb2278d166.1724263426.git.trond.myklebust@hammerspace.com>
+	 <3fe20b13641fe569107f1474d17befd8caa0b076.1724263426.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,67 +139,83 @@ MIME-Version: 1.0
 On Wed, 2024-08-21 at 14:05 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> Make sure that we clear the layout segments in cases where we see a
-> fatal error, and also in the case where the layout is invalid.
+> If the call to nfs_delegation_grab_inode() fails, we will not have
+> dropped any locks that require us to rescan the list.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
-> =C2=A0fs/nfs/nfs4proc.c | 9 ++++++---
-> =C2=A0fs/nfs/pnfs.c=C2=A0=C2=A0=C2=A0=C2=A0 | 5 ++---
-> =C2=A02 files changed, 8 insertions(+), 6 deletions(-)
+> =C2=A0fs/nfs/delegation.c | 15 +++++----------
+> =C2=A01 file changed, 5 insertions(+), 10 deletions(-)
 >=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 8883016c551c..daba7d89a0cf 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -9997,6 +9997,7 @@ static void nfs4_layoutreturn_done(struct
-> rpc_task *task, void *calldata)
-> =C2=A0		fallthrough;
-> =C2=A0	default:
-> =C2=A0		task->tk_status =3D 0;
-> +		lrp->res.lrs_present =3D 0;
-> =C2=A0		fallthrough;
-> =C2=A0	case 0:
-> =C2=A0		break;
-> @@ -10010,9 +10011,11 @@ static void nfs4_layoutreturn_done(struct
-> rpc_task *task, void *calldata)
-> =C2=A0		task->tk_status =3D 0;
-> =C2=A0		break;
-> =C2=A0	case -NFS4ERR_DELAY:
-> -		if (nfs4_async_handle_error(task, server, NULL,
-> NULL) !=3D -EAGAIN)
-> -			break;
-> -		goto out_restart;
-> +		if (nfs4_async_handle_error(task, server, NULL,
-> NULL) =3D=3D
-> +		=C2=A0=C2=A0=C2=A0 -EAGAIN)
-> +			goto out_restart;
-> +		lrp->res.lrs_present =3D 0;
-> +		break;
-> =C2=A0	}
-> =C2=A0	return;
-> =C2=A0out_restart:
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index aa698481bec8..0d16b383a452 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -1284,10 +1284,9 @@ void pnfs_layoutreturn_free_lsegs(struct
-> pnfs_layout_hdr *lo,
-> =C2=A0	LIST_HEAD(freeme);
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> index d5edb3b3eeef..20cb2008f9e4 100644
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
+> @@ -647,6 +647,9 @@ static int nfs_server_return_marked_delegations(struc=
+t nfs_server *server,
+> =C2=A0				prev =3D delegation;
+> =C2=A0			continue;
+> =C2=A0		}
+> +		inode =3D nfs_delegation_grab_inode(delegation);
+> +		if (inode =3D=3D NULL)
+> +			continue;
 > =C2=A0
-> =C2=A0	spin_lock(&inode->i_lock);
-> -	if (!pnfs_layout_is_valid(lo) ||
-> -	=C2=A0=C2=A0=C2=A0 !nfs4_stateid_match_other(&lo->plh_stateid,
-> arg_stateid))
-> +	if (!nfs4_stateid_match_other(&lo->plh_stateid,
-> arg_stateid))
-> =C2=A0		goto out_unlock;
-> -	if (stateid) {
-> +	if (stateid && pnfs_layout_is_valid(lo)) {
-> =C2=A0		u32 seq =3D be32_to_cpu(arg_stateid->seqid);
+> =C2=A0		if (prev) {
+> =C2=A0			struct inode *tmp =3D nfs_delegation_grab_inode(prev);
+> @@ -657,12 +660,6 @@ static int nfs_server_return_marked_delegations(stru=
+ct nfs_server *server,
+> =C2=A0			}
+> =C2=A0		}
 > =C2=A0
-> =C2=A0		pnfs_mark_matching_lsegs_invalid(lo, &freeme, range,
-> seq);
+> -		inode =3D nfs_delegation_grab_inode(delegation);
+> -		if (inode =3D=3D NULL) {
+> -			rcu_read_unlock();
+> -			iput(to_put);
+> -			goto restart;
+> -		}
+> =C2=A0		delegation =3D nfs_start_delegation_return_locked(NFS_I(inode));
+> =C2=A0		rcu_read_unlock();
+> =C2=A0
+> @@ -1184,7 +1181,6 @@ static int nfs_server_reap_unclaimed_delegations(st=
+ruct nfs_server *server,
+> =C2=A0	struct inode *inode;
+> =C2=A0restart:
+> =C2=A0	rcu_read_lock();
+> -restart_locked:
+> =C2=A0	list_for_each_entry_rcu(delegation, &server->delegations, super_li=
+st) {
+> =C2=A0		if (test_bit(NFS_DELEGATION_INODE_FREEING,
+> =C2=A0					&delegation->flags) ||
+> @@ -1195,7 +1191,7 @@ static int nfs_server_reap_unclaimed_delegations(st=
+ruct nfs_server *server,
+> =C2=A0			continue;
+> =C2=A0		inode =3D nfs_delegation_grab_inode(delegation);
+> =C2=A0		if (inode =3D=3D NULL)
+> -			goto restart_locked;
+> +			continue;
+> =C2=A0		delegation =3D nfs_start_delegation_return_locked(NFS_I(inode));
+> =C2=A0		rcu_read_unlock();
+> =C2=A0		if (delegation !=3D NULL) {
+> @@ -1318,7 +1314,6 @@ static int nfs_server_reap_expired_delegations(stru=
+ct nfs_server *server,
+> =C2=A0
+> =C2=A0restart:
+> =C2=A0	rcu_read_lock();
+> -restart_locked:
+> =C2=A0	list_for_each_entry_rcu(delegation, &server->delegations, super_li=
+st) {
+> =C2=A0		if (test_bit(NFS_DELEGATION_INODE_FREEING,
+> =C2=A0					&delegation->flags) ||
+> @@ -1330,7 +1325,7 @@ static int nfs_server_reap_expired_delegations(stru=
+ct nfs_server *server,
+> =C2=A0			continue;
+> =C2=A0		inode =3D nfs_delegation_grab_inode(delegation);
+> =C2=A0		if (inode =3D=3D NULL)
+> -			goto restart_locked;
+> +			continue;
+> =C2=A0		spin_lock(&delegation->lock);
+> =C2=A0		cred =3D get_cred_rcu(delegation->cred);
+> =C2=A0		nfs4_stateid_copy(&stateid, &delegation->stateid);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
