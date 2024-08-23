@@ -1,225 +1,152 @@
-Return-Path: <linux-nfs+bounces-5620-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5618-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E2E595D0FB
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 17:08:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA4CB95D0BA
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 17:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 429851C21143
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 15:08:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DD811F22C80
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 15:03:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9158C1891A3;
-	Fri, 23 Aug 2024 15:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9F018A94F;
+	Fri, 23 Aug 2024 15:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="AxH80s9W"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502FA1311B6;
-	Fri, 23 Aug 2024 15:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3462188A1D
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 15:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724425609; cv=none; b=u8/2UPFWLnnHkpjt8y4Yyv6DmgWFikdrzPo9zlhX5SZKclsc6R6yjeqRzYcpgyVf25afK0XXcnuLOBS1hEgDoMbT+VCS826zkXBNPxH+Ok+iSuIfW3okAvxkn0rc+nxXd4doXcegZMYrgIUgLYRI3iARDvDZD0jF+Bgwok3uOlA=
+	t=1724425275; cv=none; b=P2kenrZpv3wru1ah5hHfQMcCUBMNZKDj7os5UF8CdPMyObs5dr52Mprk7PcuhjZWQ58O0zF/MsAFhhM7MDvSZvhEkNkMOo4yUQ7oV/aYCUX47jeaKBRz30/zkScoigIivlMXnE4euayRgE7Fu6rXizF8VPYju8F3YK+guVHOzhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724425609; c=relaxed/simple;
-	bh=bSOzhYcU3dZLKkQCeSXSnbR4qCSxR+F5RuTBZJHVpyo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u5zj+Sv//lU7wY+IQ0QIYB3KxyOkCrOE3vTlA6w8wElB7lEgvYjdGjrIkXg5Timhjamql1mtHxZS1bYJDnCrd+uPyRZfiC1US6sSoMPAAMSL4KNFDFLY1v06gKFYzUAsytPMgzGV9T8Xo6/3PP01IYo73m6whflRkRzp6WJAmYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wr3FM5gwqzQqQb;
-	Fri, 23 Aug 2024 23:01:59 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 44ECD140390;
-	Fri, 23 Aug 2024 23:06:44 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 Aug 2024 23:06:43 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
-	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
- Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Jeff Layton <jlayton@kernel.org>, Neil
- Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
-	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Shuah Khan
-	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH net-next v14 04/11] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Fri, 23 Aug 2024 23:00:32 +0800
-Message-ID: <20240823150040.1567062-5-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240823150040.1567062-1-linyunsheng@huawei.com>
-References: <20240823150040.1567062-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1724425275; c=relaxed/simple;
+	bh=PMDdzrlYnf1XJ/yJu+sdQtD1cvMXZkl11yoAmdRDkGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WlvKdouFtWWKeQqa+PPMYEi+RbAGot78Rjjwp+3ole6SkCxbxykzAnqudmkZGP/+RPLi0mOfIT53NY/n1c6yebXRzLJbJZOrQ03WSYI086doo3YyVlNdy/A2sEtxXrxxOfpry36E3rWeYuA6GdOHrOkjqOUW7Q+VgkLFOs+/LrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=AxH80s9W; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f4f2868783so13176951fa.2
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 08:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1724425272; x=1725030072; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaMiNX7ZdAf2AXIvFUv2nR5LNkkkuvqqBexf4O8yoSY=;
+        b=AxH80s9W0P7Pn4Z6Mx4IVzkuJEFl4i3XqXQb6zA2W6OQmaNPBUFPr5P3bS18OKJIkE
+         5n7NYElURhO9yT0mo2yNS7pJyJ/SgyhPGxz511b4EjGPADIuDFWPrCLgpgjQeC8iUJkg
+         HCEtOnDpQ3D8USHP5mzlYazdVUtgRyJtNyMeDiRSpEzChmMsZWrUzxg2k4Dn4L2PR91b
+         mtkq6pGUHeu9EbjZ0IwotcHlBNwteZNhe4A+3rDho0SN7ZQ4+rypMzzRfzdRrr4gwTPZ
+         gaTnoGPvFHzaf9ZkGH6zEYw8Tbt1/+xucLRsqdEphyIE1yQKNiKhejkNs/JRU6RFG4sd
+         eNvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724425272; x=1725030072;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RaMiNX7ZdAf2AXIvFUv2nR5LNkkkuvqqBexf4O8yoSY=;
+        b=ihxr/J+kUGMT28+2ZOBPEDv8n6eBX+GKTKPKWHxG9hmz6OFNAZ8HaPJH1a39738I/r
+         ajiN8KZltc9LkI+nSweu3YfjvkPvyukQ4mT/IQofLY1KhyyU0NXY5zKqGxzaw59KaHEo
+         KRBLbmSWUc0xNSBmKOlI8+/eaC1v5GJx96DcJs/JkQvk8+AqdIKzD+60KQpha7X2cUpe
+         DcXh58BXU3YFZT2+SVutr8B2KpBc7j8D8WddJY4eApR1/S46wO/ZLOfLSiEpWvxis2/3
+         +bkb8F1FD6X+RhyuRtRi0/04jw2KogqHGfknhxurIlsnrfNNwpQmC2SSDw7t1rmvHm+n
+         cNdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAI0NNHsXBXv+fMHbCi5ZTIOx4EGZf5Fojw6Gdaj8TlV/p8oAkt1Wwf4HDUqjEMsQtMjl0lT2Hy6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaaQpuzIeQbHe4QdAw49pbfP+DQ1Te7+aAWhflzGF8bPnI0SH5
+	vDPQYx1r7qhFlYF/5Bf3LUPEHd99jpltgKVqB1rwKad8qz41X0SYSrXNFlprR6WOEMoD7ePUPzo
+	N8Wl++K2UvuoJNZlYeTRh0K8WK6o=
+X-Google-Smtp-Source: AGHT+IF0ycmrO+QC81c6UQTTYtMxnJHe/XJk92BeOwp6M8Ihuai5U/P4KaEtWUo6MBpv5JUobFZer3dV63afNvnzg/4=
+X-Received: by 2002:a05:651c:542:b0:2ef:296d:1dda with SMTP id
+ 38308e7fff4ca-2f4f48f0f44mr21051631fa.1.1724425271014; Fri, 23 Aug 2024
+ 08:01:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+References: <20240823141401.71740-1-okorniev@redhat.com> <c02d3cc6561b5c06c2c51df70c6c4de19d2f9d28.camel@kernel.org>
+In-Reply-To: <c02d3cc6561b5c06c2c51df70c6c4de19d2f9d28.camel@kernel.org>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Fri, 23 Aug 2024 11:00:59 -0400
+Message-ID: <CAN-5tyFWxiva70G9sWgBrmqoY2LKtwDYogEO-mdN+Ays_h=p5g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] nfsd: prevent states_show() from using invalid stateids
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+On Fri, Aug 23, 2024 at 10:40=E2=80=AFAM Jeff Layton <jlayton@kernel.org> w=
+rote:
+>
+> On Fri, 2024-08-23 at 10:14 -0400, Olga Kornievskaia wrote:
+> > states_show() relied on sc_type field to be of valid type
+> > before calling into a subfunction to show content of a
+> > particular stateid. But from commit 3f29cc82a84c we
+> > split the validity of the stateid into sc_status and no longer
+> > changed sc_type to 0 while unhashing the stateid. This
+> > resulted in kernel oopsing as something like
+> > nfs4_show_open() would derefence sc_file which was NULL.
+> >
+> > To reproduce: mount the server with 4.0, read and close
+> > a file and then on the server cat /proc/fs/nfsd/clients/2/states
+> >
+> > [  513.590804] Call trace:
+> > [  513.590925]  _raw_spin_lock+0xcc/0x160
+> > [  513.591119]  nfs4_show_open+0x78/0x2c0 [nfsd]
+> > [  513.591412]  states_show+0x44c/0x488 [nfsd]
+> > [  513.591681]  seq_read_iter+0x5d8/0x760
+> > [  513.591896]  seq_read+0x188/0x208
+> > [  513.592075]  vfs_read+0x148/0x470
+> > [  513.592241]  ksys_read+0xcc/0x178
+> >
+> > Fixes: 3f29cc82a84c ("nfsd: split sc_status out of sc_type")
+> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > ---
+> >  fs/nfsd/nfs4state.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index c3def49074a4..8351724b8a43 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -2907,6 +2907,9 @@ static int states_show(struct seq_file *s, void *=
+v)
+> >  {
+> >       struct nfs4_stid *st =3D v;
+> >
+> > +     if (!st->sc_file)
+> > +             return 0;
+> > +
+> >       switch (st->sc_type) {
+> >       case SC_TYPE_OPEN:
+> >               return nfs4_show_open(s, st);
+>
+> OPEN stateids are the only ones that stick around for a while after
+> we've closed them out (and that's only for v4.0, IIRC). The others all
+> only release the file after unhashing.
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
----
- drivers/vhost/net.c                                   |  2 +-
- include/linux/page_frag_cache.h                       | 10 ++++++++++
- net/core/skbuff.c                                     |  6 +++---
- net/rxrpc/conn_object.c                               |  4 +---
- net/rxrpc/local_object.c                              |  4 +---
- net/sunrpc/svcsock.c                                  |  6 ++----
- tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
- 7 files changed, 19 insertions(+), 15 deletions(-)
+That's good to know. I had a reproducer for the open but the locking
+stateid seem to be not affected by it (and I dont know yet how to
+setup a pnfs server).  If only nfs4_show_open() needs to be fixed, I
+can do that.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index f16279351db5..9ad37c012189 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 67ac8626ed9b..0a52f7a179c8 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/mm_types_task.h>
- #include <linux/types.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_align(struct page_frag_cache *nc, unsigned int fragsz,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index de2a044cc665..969e345b0f9c 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -752,14 +752,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -849,7 +849,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 6b3f01beb294..dcfd84cf0694 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
-diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-index 4a009122991e..c52598eaf7e7 100644
---- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
-+++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-@@ -117,7 +117,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
--- 
-2.33.0
+> I think it'd be better to still display that stateid, and just not do
+> any of the bits in nfs4_show_open that require ->sc_file. We have the
+> "admin-revoked" string that we display now when SC_STATUS_ADMIN_REVOKED
+> is set. Maybe we can display "closed" or something in this case?
 
+I'll do as you suggest and then add "closed" if sc_file is null.
+
+Thank you.
+
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
 
