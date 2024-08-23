@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-5609-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5610-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7244195CC05
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 14:06:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1412C95CC0E
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 14:07:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95A801C21361
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 12:06:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B36AB20946
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 12:07:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1680D184559;
-	Fri, 23 Aug 2024 12:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F3C18455A;
+	Fri, 23 Aug 2024 12:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uv1dKB83"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bX/s5cR9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE76469D;
-	Fri, 23 Aug 2024 12:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8FF16D33F;
+	Fri, 23 Aug 2024 12:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724414784; cv=none; b=CfKu3iv7U3NSRS3fEBA/tMHcADQYvVVJ3SoD2r9wtQRrOw5D5g8SVc4XAUSumoGzxIpa246iWwNYzYzvxw8hiZThy8ZZ1Nfvje4c/4MAJOkqTmeC2oqvtgl00YFlpmafu57Pu2UFBKRXga8ELZgpbWSnnYsIKOXDoN420Dy20Jo=
+	t=1724414848; cv=none; b=pVkJxgoSyscRR53p1lqNFjQL9Tq8dHu+FR5nsdjO7xZwRqBWgDwHx8agZDSi/biKOPJIY+3ZLeWPpFWQ76X5cDfZlhtJJ9MJ8e6w28egAZHMRZ5HRyekmhzbSsOclEMvC7orGEmn2NK+vAlnE+9AopWpL0LHoqVE7k1cO9EiLAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724414784; c=relaxed/simple;
-	bh=3RLh6J/3dP/sEYtnDgGRagT7Iqy5YRkug6d9uZabfT4=;
+	s=arc-20240116; t=1724414848; c=relaxed/simple;
+	bh=lsDvpENCHV9yZDe5H1pBwwwa+mv68HZprokF3C5UVhg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lLUmnyQ2sZqOgP9oeVR27xNp6/LGRIbtlcSihoX8CjkSX5WTiJbM7fZpIkzNECQAGEGlxwV5WXMcMki+fnSg2WEQMCAPiZFTVmApggtutIYCuyH3pmCZhLu12KuzTxj9iVSZswMhBANmb+V+DiLbiAOZ4qxIvy43kBRIAkQGHtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uv1dKB83; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB33C32786;
-	Fri, 23 Aug 2024 12:06:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=i1kTEwBuu7p5igyoI6PRJt3uMTxW8Y8CmDhzMrGPALlxnIy0eoEdgvmYA3SD/hdn8hUsmPXBqglhn1ABRpNgjmb6YqA0QxeJaN0eXqSISTNKzC2PNfC38IhNgn2C/wOIkAUQ7yLzk7GY/pr4enSiQO5O5hWUycU3P2OfolFJTOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bX/s5cR9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7964C32786;
+	Fri, 23 Aug 2024 12:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724414783;
-	bh=3RLh6J/3dP/sEYtnDgGRagT7Iqy5YRkug6d9uZabfT4=;
+	s=k20201202; t=1724414848;
+	bh=lsDvpENCHV9yZDe5H1pBwwwa+mv68HZprokF3C5UVhg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=uv1dKB83MEnvm7w3YflQYPkz8r/EDp/yBD2wHrsLBYagMrfSJE5AAfKwn9JaeKtF0
-	 hHoVGrE8glpSebuqmU3ZHu+/gJbQb5rl2D4vcvPrxee5kJbaC9Jp6VZVFgMKhCgpll
-	 TCcwzkY96nclMdROrAsh9xq3ep93/NbboqgFA5IPDwBxDbGfBsiYcVdyXzpk9MRRG+
-	 oSEgR0Y2gMILWchh6Xcfxaf+DUYuDhr8jXFEcjS3RareUv/j4CtGbxeFOIN3K+TepP
-	 /ARQ0qxBDcMfZTyBQnUwvlRBYBefoFKsZK8SEq0uOmsEQ7y5zcensuHW0uXB2zhRz9
-	 t3JNUJZ1o1+EA==
-Message-ID: <dbc462ac55944c3ae82b07937b194673e61df626.camel@kernel.org>
-Subject: Re: [PATCH 1/4] nfsd: fix the comment of nfs_get_root
+	b=bX/s5cR9rnBKjx7T/viA8ZT3xZEEZGHQHwuCk/zHGs3PjcrdgZk316XqU80r/651S
+	 KsxxAFbYZ7UTKvJvggjoYRfa7qMk9kJJSLQnQovOJPYHH1ysgR3KZ+pjqrBaPO0njz
+	 ATn7L37Q97Y/YsLiId9p9SdiTWkIUWcr6ElGvOZ21EtjMcBk1PF6L3Y0Q7GXRcj/g8
+	 mxGkoJeFUhI495bJ2yy1An+4G2Qrm6Ud9LOqk8GksPvpfj7n6a/xwBBYTAuikIFGW/
+	 OmVGIZ4cCvYNgFBiNIJY+2nLzj70LfrXHMaUV4Aq7an4LBQSUgzdeYAHvH79wV5YcO
+	 2BJGDFG1+BiSA==
+Message-ID: <f27ca56a2b7de7ebb97a4170222047da56eb8eb7.camel@kernel.org>
+Subject: Re: [PATCH 2/4] nfsd: fix some spelling errors in comments
 From: Jeff Layton <jlayton@kernel.org>
 To: Li Lingfeng <lilingfeng3@huawei.com>, trondmy@kernel.org,
  anna@kernel.org,  chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
@@ -50,10 +50,10 @@ To: Li Lingfeng <lilingfeng3@huawei.com>, trondmy@kernel.org,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
 	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Fri, 23 Aug 2024 08:06:20 -0400
-In-Reply-To: <20240823070049.3499625-2-lilingfeng3@huawei.com>
+Date: Fri, 23 Aug 2024 08:07:26 -0400
+In-Reply-To: <20240823070049.3499625-3-lilingfeng3@huawei.com>
 References: <20240823070049.3499625-1-lilingfeng3@huawei.com>
-	 <20240823070049.3499625-2-lilingfeng3@huawei.com>
+	 <20240823070049.3499625-3-lilingfeng3@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,48 +139,46 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Fri, 2024-08-23 at 15:00 +0800, Li Lingfeng wrote:
-> The comment for nfs_get_root() needs to be updated as it would also be
-> used by NFS4 as follows:
-> @x[
->     nfs_get_root+1
->     nfs_get_tree_common+1819
->     nfs_get_tree+2594
->     vfs_get_tree+73
->     fc_mount+23
->     do_nfs4_mount+498
->     nfs4_try_get_tree+134
->     nfs_get_tree+2562
->     vfs_get_tree+73
->     path_mount+2776
->     do_mount+226
->     __se_sys_mount+343
->     __x64_sys_mount+106
->     do_syscall_64+69
->     entry_SYSCALL_64_after_hwframe+97
-> , mount.nfs4]: 1
+> Fix spelling errors in comments of nfsd4_release_lockowner and
+> nfs4_set_delegation.
 >=20
 > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 > ---
->  fs/nfs/getroot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/nfsd/nfs4state.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
-> index 11ff2b2e060f..f13d25d95b85 100644
-> --- a/fs/nfs/getroot.c
-> +++ b/fs/nfs/getroot.c
-> @@ -62,7 +62,7 @@ static int nfs_superblock_set_dummy_root(struct super_b=
-lock *sb, struct inode *i
->  }
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a20c2c9d7d45..66a0c76850f3 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5856,7 +5856,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct=
+ nfs4_ol_stateid *stp,
 > =20
->  /*
-> - * get an NFS2/NFS3 root dentry from the root filehandle
-> + * get a root dentry from the root filehandle
->   */
->  int nfs_get_root(struct super_block *s, struct fs_context *fc)
->  {
+>  	/*
+>  	 * Now that the deleg is set, check again to ensure that nothing
+> -	 * raced in and changed the mode while we weren't lookng.
+> +	 * raced in and changed the mode while we weren't looking.
+>  	 */
+>  	status =3D nfsd4_verify_setuid_write(open, fp->fi_deleg_file);
+>  	if (status)
+> @@ -8335,7 +8335,7 @@ check_for_locks(struct nfs4_file *fp, struct nfs4_l=
+ockowner *lowner)
+>   * @cstate: NFSv4 COMPOUND state
+>   * @u: RELEASE_LOCKOWNER arguments
+>   *
+> - * Check if theree are any locks still held and if not - free the lockow=
+ner
+> + * Check if there are any locks still held and if not - free the lockown=
+er
 
-Note that this is a NFS client patch, not a nfsd patch like the title
-suggests.
+This is probably better grammatically:
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+    Check if there are any locks still held and if not, free the lockowner
+
+>   * and any lock state that is owned.
+>   *
+>   * Return values:
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
