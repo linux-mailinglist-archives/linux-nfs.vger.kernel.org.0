@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-5661-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5662-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CEA995D783
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BBB995D787
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:19:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D76F1F2133A
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 20:18:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40E011F2197A
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 20:19:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5BF19ADB6;
-	Fri, 23 Aug 2024 20:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF6A19D078;
+	Fri, 23 Aug 2024 20:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNMY5rA6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRqrrNXR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A00019ADBE
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 20:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C7919CD0E
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 20:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724443746; cv=none; b=q2EKE28rR59W8yZnCOuGC+WoI9t9Y4+Fj1r59ATh2X1pDBTqAZaUW2TZNrgvc7anGHwSeW2h3AdMLXhANhh6DLyX5tUUDEij9brkrmw+UEp4xmvzyjVecamPeHDy2NKhmohpyavFzdEXFxiCrAL+5axW8AYeu+D++xw+YeKdg7Y=
+	t=1724443750; cv=none; b=A6McFtne0ZHTXwXJ0CJDhPC7HRxh5HtJ4KxTFkLQLZ1HwmfHSAzz8WjDsCr5wBz3XjbgYp6ZRgp0X921t2kY7P6vp+x4TA71f5bLHZPdI6zY9pu9q8COsjKbY/8t92V1DLDEb5YFvbXrfb5GQyDW5QjK9yBaGGYygP9AbWDyYDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724443746; c=relaxed/simple;
-	bh=tpadh5ijkCCOsa7M3OJjST6sL5scalK1OFyRewofsGo=;
+	s=arc-20240116; t=1724443750; c=relaxed/simple;
+	bh=dV0yMgVpUeD9LIPv0bn9kwX9cbvQXt+5EkW+SQzU0O4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VMEy8VugwW5/8BqONU5RJHrrcb5SEcFyFof8RUHEwWS8Etp7+5U89Crgufrzaz8V77n06AwNjnJiw2t/7lh9TUekCXOU2sb1JfkPpHBb9OP7tTPmIL1N+zapZAVPVg7Djbl5XaBCo9npO8Gj5LIOvQ+BZTRtxd9SdH/JnO57D4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hNMY5rA6; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=aceK+Xl4yndvl6jGuKbrQjGJL+b2NKaceZd6oLQPIQTyuHosgHVZHrUk8qV77Uy7xKP71JRnDE/yHKGbE8SmaOJrzMQ6p0a7wSuOhvI8SaDA96s2/UVN9nTtkeIuNUqETBRUsJ5eGFT89wAKGqQ1TaPEhnLvMSgQ7+qXGYb8who=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRqrrNXR; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724443743;
+	s=mimecast20190719; t=1724443748;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9pcRiiH/lYTDVoni9WSyylXIzj+0iyqYBGBDYoCG5zI=;
-	b=hNMY5rA6Uw10630qBjBF61dkUnxTy5GJ1DxNnzhM3fEUvmU/qJ+fe/Ix3SYWDeL5LFX83W
-	mBb4zqq7gX/ZMcQCjGKSBVBW2lEL/eTP2u+JcWyrnaYjJ9T8w0KskQnMMTTfoqa5X0xttz
-	fDPEWs1qhdRNvNZBE+g1PJNS9oyUR4w=
+	bh=J+Q2VjHdhruKVNJRsL+DNuwA1V8DkjXpTij4fAf/kXM=;
+	b=HRqrrNXRrp+SLYocZfNsyzDqQEmoOuFMaPw9P6IMz+vnMWPOLo7KTH9Rleh7LAJJrFf4Mh
+	aV7frG0+vOH1kHU8GAxcS2I3e/qlDoimU4/l6vqJ3o6fqWu0MyqKB97Nw7V3CKFPWDWjky
+	5WVvSIMfUcM86f2zZUkvrbcOTYiJTas=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-461-Sz3wsQBWNzSGl0B-Sn23dQ-1; Fri,
- 23 Aug 2024 16:08:56 -0400
-X-MC-Unique: Sz3wsQBWNzSGl0B-Sn23dQ-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-iX0mBMvkOMy-sMazWAhTNw-1; Fri,
+ 23 Aug 2024 16:09:01 -0400
+X-MC-Unique: iX0mBMvkOMy-sMazWAhTNw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EEA41955BED;
-	Fri, 23 Aug 2024 20:08:53 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6A0991955D48;
+	Fri, 23 Aug 2024 20:08:59 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5B0903001FE5;
-	Fri, 23 Aug 2024 20:08:48 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 90C0319560AE;
+	Fri, 23 Aug 2024 20:08:54 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <sfrench@samba.org>
@@ -73,11 +73,10 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Marc Dionne <marc.dionne@auristor.com>
-Subject: [PATCH 4/9] netfs: Fix trimming of streaming-write folios in netfs_inval_folio()
-Date: Fri, 23 Aug 2024 21:08:12 +0100
-Message-ID: <20240823200819.532106-5-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5/9] netfs: Fix missing iterator reset on retry of short read
+Date: Fri, 23 Aug 2024 21:08:13 +0100
+Message-ID: <20240823200819.532106-6-dhowells@redhat.com>
 In-Reply-To: <20240823200819.532106-1-dhowells@redhat.com>
 References: <20240823200819.532106-1-dhowells@redhat.com>
 Precedence: bulk
@@ -87,127 +86,34 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-When netfslib writes to a folio that it doesn't have data for, but that
-data exists on the server, it will make a 'streaming write' whereby it
-stores data in a folio that is marked dirty, but not uptodate.  When it
-does this, it attaches a record to folio->private to track the dirty
-region.
+Fix netfs_rreq_perform_resubmissions() to reset before retrying a short
+read, otherwise the wrong part of the output buffer will be used.
 
-When truncate() or fallocate() wants to invalidate part of such a folio, it
-will call into ->invalidate_folio(), specifying the part of the folio that
-is to be invalidated.  netfs_invalidate_folio(), on behalf of the
-filesystem, must then determine how to trim the streaming write record.  In
-a couple of cases, however, it does this incorrectly (the reduce-length and
-move-start cases are switched over and don't, in any case, calculate the
-value correctly).
-
-Fix this by making the logic tree more obvious and fixing the cases.
-
-Fixes: 9ebff83e6481 ("netfs: Prep to use folio->private for write grouping and streaming write")
+Fixes: 92b6cc5d1e7c ("netfs: Add iov_iters to (sub)requests to describe various buffers")
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-cc: Pankaj Raghav <p.raghav@samsung.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
 cc: Jeff Layton <jlayton@kernel.org>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
 cc: netfs@lists.linux.dev
-cc: linux-mm@kvack.org
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/misc.c | 50 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 15 deletions(-)
+ fs/netfs/io.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 69324761fcf7..c1f321cf5999 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -97,10 +97,20 @@ EXPORT_SYMBOL(netfs_clear_inode_writeback);
- void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
- {
- 	struct netfs_folio *finfo;
-+	struct netfs_inode *ctx = netfs_inode(folio_inode(folio));
- 	size_t flen = folio_size(folio);
- 
- 	_enter("{%lx},%zx,%zx", folio->index, offset, length);
- 
-+	if (offset == 0 && length == flen) {
-+		unsigned long long i_size = i_size_read(&ctx->inode);
-+		unsigned long long fpos = folio_pos(folio), end;
-+
-+		end = umin(fpos + flen, i_size);
-+		if (fpos < i_size && end > ctx->zero_point)
-+			ctx->zero_point = end;
-+	}
-+
- 	folio_wait_private_2(folio); /* [DEPRECATED] */
- 
- 	if (!folio_test_private(folio))
-@@ -115,18 +125,34 @@ void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
- 		/* We have a partially uptodate page from a streaming write. */
- 		unsigned int fstart = finfo->dirty_offset;
- 		unsigned int fend = fstart + finfo->dirty_len;
--		unsigned int end = offset + length;
-+		unsigned int iend = offset + length;
- 
- 		if (offset >= fend)
- 			return;
--		if (end <= fstart)
-+		if (iend <= fstart)
-+			return;
-+
-+		/* The invalidation region overlaps the data.  If the region
-+		 * covers the start of the data, we either move along the start
-+		 * or just erase the data entirely.
-+		 */
-+		if (offset <= fstart) {
-+			if (iend >= fend)
-+				goto erase_completely;
-+			/* Move the start of the data. */
-+			finfo->dirty_len = fend - iend;
-+			finfo->dirty_offset = offset;
-+			return;
-+		}
-+
-+		/* Reduce the length of the data if the invalidation region
-+		 * covers the tail part.
-+		 */
-+		if (iend >= fend) {
-+			finfo->dirty_len = offset - fstart;
- 			return;
--		if (offset <= fstart && end >= fend)
--			goto erase_completely;
--		if (offset <= fstart && end > fstart)
--			goto reduce_len;
--		if (offset > fstart && end >= fend)
--			goto move_start;
-+		}
-+
- 		/* A partial write was split.  The caller has already zeroed
- 		 * it, so just absorb the hole.
- 		 */
-@@ -139,12 +165,6 @@ void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
- 	folio_clear_uptodate(folio);
- 	kfree(finfo);
- 	return;
--reduce_len:
--	finfo->dirty_len = offset + length - finfo->dirty_offset;
--	return;
--move_start:
--	finfo->dirty_len -= offset - finfo->dirty_offset;
--	finfo->dirty_offset = offset;
- }
- EXPORT_SYMBOL(netfs_invalidate_folio);
- 
-@@ -164,7 +184,7 @@ bool netfs_release_folio(struct folio *folio, gfp_t gfp)
- 	if (folio_test_dirty(folio))
- 		return false;
- 
--	end = folio_pos(folio) + folio_size(folio);
-+	end = umin(folio_pos(folio) + folio_size(folio), i_size_read(&ctx->inode));
- 	if (end > ctx->zero_point)
- 		ctx->zero_point = end;
- 
+diff --git a/fs/netfs/io.c b/fs/netfs/io.c
+index 5367caf3fa28..4da0a494e860 100644
+--- a/fs/netfs/io.c
++++ b/fs/netfs/io.c
+@@ -313,6 +313,7 @@ static bool netfs_rreq_perform_resubmissions(struct netfs_io_request *rreq)
+ 			netfs_reset_subreq_iter(rreq, subreq);
+ 			netfs_read_from_server(rreq, subreq);
+ 		} else if (test_bit(NETFS_SREQ_SHORT_IO, &subreq->flags)) {
++			netfs_reset_subreq_iter(rreq, subreq);
+ 			netfs_rreq_short_read(rreq, subreq);
+ 		}
+ 	}
 
 
