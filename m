@@ -1,92 +1,188 @@
-Return-Path: <linux-nfs+bounces-5667-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5668-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80ABF95D7A4
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:21:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C998B95D7DF
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:33:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8460B22F29
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 20:21:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0800D1C227DF
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 20:33:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9045C199243;
-	Fri, 23 Aug 2024 20:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c2cL3/nI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DD3B1C7B97;
+	Fri, 23 Aug 2024 20:33:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B58193406;
-	Fri, 23 Aug 2024 20:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152DD18CC0F
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 20:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724443979; cv=none; b=IzBHqMFhvMAov+x50gPba8tWJSFxJOpvdA0UGunBKyRWKVCRGb3ZQUhSR2q1Nq712cyBEeQR7gtZPOGe1vBKTcwEgj9Qgo9viSOc4sfcGM6xTEOy6EtXmmHa3FslG80OApKF1uz5JF0e5IH3jC2d5cDuynHTZsaHQfpG466dghY=
+	t=1724445210; cv=none; b=s1uSG2jLsTu7bf5zY9sJJjayA7oGRfom7iSwP1KQGtSYaMlo5BTn8Bi82hagRXnxI1OejNW65ZLk76UP+gHDGtu9B+BVXNogLY3Z/GLbdAylHaLTI0tAjEOzVjsOYLZX/aumGUkVtLcRJpvMOTnM/rS188q7YXw+m3vr1LpWfoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724443979; c=relaxed/simple;
-	bh=e5lS3vPzKsBpQRZEa76gnk065x/jmm7jG3irunJlXX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N3662/dCUBjUkHqDAfNkZ/EtTEl7vJ9vPVZ8OkpyND7IRQQAt7Y1k3wDUqjC4h8a3c1bZJTkRttXOHle0ZhgLzC5Yp7OnrQORiQHIF4XFt8Bkh8/UgyZzVJXmZpD0z4C8k3FVfR3zGWydrmqXN380ONz1dwpUtVxpHOgHn/37zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c2cL3/nI; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JsVlpGeKYbg4pM/Q7waOkd0NZPoyLhoXi4BOdIXNLpY=; b=c2cL3/nIR787l++dJM5LnaWXeW
-	5dJMUyI901WBryZBvo6lRG2cxhxydHjFy3QTpizCQwEC/54YFz67jxnF/I5qszT9dqo0dsCCv4bhA
-	dEMDmoaTGmh5pW4lvMOjCT91apPyQE4b24ZkMYKZ/FNipFwrhETEx8OgNkQFTi5jLsCgTVFQ3QDbd
-	FM2OqcrPBsmNW/FsNsoGQn3qZNhtl0oRKzR3YOuY8XFJb2NKoje+ZfRlO+UrdlPKSiBRRywGoWFES
-	NA0RleWtfD87vB2hp7AObXu6t74Rjpsc6agZ6/B/bIYAzbDXZ0pQnzK28mFgU+JbZqvvFGoQCjhP0
-	r9Y6Rv8Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1shaeH-0000000C8f0-18u9;
-	Fri, 23 Aug 2024 20:12:41 +0000
-Date: Fri, 23 Aug 2024 21:12:41 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>,
-	Steve French <sfrench@samba.org>,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Jeff Layton <jlayton@kernel.org>, netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Marc Dionne <marc.dionne@auristor.com>
-Subject: Re: [PATCH 1/9] mm: Fix missing folio invalidation calls during
- truncation
-Message-ID: <ZsjtOVMD2dxRw68H@casper.infradead.org>
-References: <20240823200819.532106-1-dhowells@redhat.com>
- <20240823200819.532106-2-dhowells@redhat.com>
+	s=arc-20240116; t=1724445210; c=relaxed/simple;
+	bh=6Trj7J+4EndIG/4ReUSbD7O1zUrDXY2d10BT0DTj8YE=;
+	h=From:Subject:To:Message-ID:Date:MIME-Version:Content-Type; b=jQt+vgJEY+TB18B6g2Y86iLk0kQ2fMxyakOMZwylY17/st8+tHpcLmqQwLCQQt31FJd6DmeevrAGM3QrwcZWILt7/RikLteCSsrPJyZDZRjjLgjdT4orWcoAaoCXzcnxRdgJhL15hiVHqfqBoZKeK3i1FtoKwZ4hT0KSIO93uNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (31.173.82.175) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 23 Aug
+ 2024 23:32:59 +0300
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH] NFSv4: prevent integer overflow while calling
+ nfs4_set_lease_period()
+To: <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>
+Organization: Open Mobile Platform
+Message-ID: <4904f32e-a392-803b-9766-4aa2d5cee12b@omp.ru>
+Date: Fri, 23 Aug 2024 23:32:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240823200819.532106-2-dhowells@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 08/23/2024 20:17:57
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 187274 [Aug 23 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 27 0.3.27
+ 71302da218a62dcd84ac43314e19b5cc6b38e0b6
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.82.175
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 08/23/2024 20:25:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 8/23/2024 7:17:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Fri, Aug 23, 2024 at 09:08:09PM +0100, David Howells wrote:
-> When AS_RELEASE_ALWAYS is set on a mapping, the ->release_folio() and
-> ->invalidate_folio() calls should be invoked even if PG_private and
-> PG_private_2 aren't set.  This is used by netfslib to keep track of the
-> point above which reads can be skipped in favour of just zeroing pagecache
-> locally.
-> 
-> There are a couple of places in truncation in which invalidation is only
-> called when folio_has_private() is true.  Fix these to check
-> folio_needs_release() instead.
+The nfs_client::cl_lease_time field (as well as the jiffies variable it's
+used with) is declared as *unsigned long*, which is 32-bit type on 32-bit
+arches and 64-bit type on 64-bit arches. When nfs4_set_lease_period() that
+sets nfs_client::cl_lease_time is called, 32-bit nfs_fsinfo::lease_time
+field is multiplied by HZ -- that might overflow *unsigned long* on 32-bit
+arches.  Actually, there's no need to multiply by HZ at all the call sites
+of nfs4_set_lease_period() -- it makes more sense to do that once, inside
+that function (using mul_u32_u32(), as it produces a better code on 32-bit
+x86 arch), also checking for an overflow there and returning -ERANGE if it
+does happen (we're also making that function *int* instead of *void* and
+adding the result checks to its callers)...
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
-I think we also want to change the folio_has_private() call in
-mapping_evict_folio() to folio_test_private().  Same for the one
-in migrate_vma_check_page().
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: stable@vger.kernel.org
+
+---
+This patch is against the master branch of Trond Myklebust's linux-nfs.git repo.
+
+ fs/nfs/nfs4_fs.h    |    3 +--
+ fs/nfs/nfs4proc.c   |    3 ++-
+ fs/nfs/nfs4renewd.c |   13 ++++++++++---
+ fs/nfs/nfs4state.c  |    4 +++-
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
+Index: linux-nfs/fs/nfs/nfs4_fs.h
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4_fs.h
++++ linux-nfs/fs/nfs/nfs4_fs.h
+@@ -464,8 +464,7 @@ struct nfs_client *nfs4_alloc_client(con
+ extern void nfs4_schedule_state_renewal(struct nfs_client *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
+-
++extern int nfs4_set_lease_period(struct nfs_client *clp, u32 period);
+ 
+ /* nfs4state.c */
+ extern const nfs4_stateid current_stateid;
+Index: linux-nfs/fs/nfs/nfs4proc.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4proc.c
++++ linux-nfs/fs/nfs/nfs4proc.c
+@@ -5403,7 +5403,8 @@ static int nfs4_do_fsinfo(struct nfs_ser
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
++			err = nfs4_set_lease_period(server->nfs_client,
++						    fsinfo->lease_time);
+ 			break;
+ 		}
+ 		err = nfs4_handle_exception(server, err, &exception);
+Index: linux-nfs/fs/nfs/nfs4renewd.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4renewd.c
++++ linux-nfs/fs/nfs/nfs4renewd.c
+@@ -137,15 +137,22 @@ nfs4_kill_renewd(struct nfs_client *clp)
+  * nfs4_set_lease_period - Sets the lease period on a nfs_client
+  *
+  * @clp: pointer to nfs_client
+- * @lease: new value for lease period
++ * @period: new value for lease period (in seconds)
+  */
+-void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease)
++int nfs4_set_lease_period(struct nfs_client *clp, u32 period)
+ {
++	u64 result = mul_u32_u32(period, HZ);
++	unsigned long lease = result;
++
++	/* First see if period * HZ actually fits into unsigned long... */
++	if (result > ULONG_MAX)
++		return -ERANGE;
++
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+ 	spin_unlock(&clp->cl_lock);
+ 
+ 	/* Cap maximum reconnect timeout at 1/2 lease period */
+ 	rpc_set_connect_timeout(clp->cl_rpcclient, lease, lease >> 1);
++	return 0;
+ }
+Index: linux-nfs/fs/nfs/nfs4state.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4state.c
++++ linux-nfs/fs/nfs/nfs4state.c
+@@ -103,7 +103,9 @@ static int nfs4_setup_state_renewal(stru
+ 
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
++		status = nfs4_set_lease_period(clp, fsinfo.lease_time);
++		if (status)
++			return status;
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
 
