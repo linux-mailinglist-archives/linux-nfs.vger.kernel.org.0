@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-5618-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5619-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA4CB95D0BA
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 17:03:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A80F95D0EC
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 17:05:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DD811F22C80
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 15:03:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CB7D1C2280E
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 15:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9F018A94F;
-	Fri, 23 Aug 2024 15:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B1E18952D;
+	Fri, 23 Aug 2024 15:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="AxH80s9W"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="i/g0oN7d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3462188A1D
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 15:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3822188A10
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 15:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724425275; cv=none; b=P2kenrZpv3wru1ah5hHfQMcCUBMNZKDj7os5UF8CdPMyObs5dr52Mprk7PcuhjZWQ58O0zF/MsAFhhM7MDvSZvhEkNkMOo4yUQ7oV/aYCUX47jeaKBRz30/zkScoigIivlMXnE4euayRgE7Fu6rXizF8VPYju8F3YK+guVHOzhs=
+	t=1724425414; cv=none; b=tPzhy9DIpnSKUnFlP9TsefcyzAeQh2yufEWUgATWH+490Q3LsDnyBOKk/OQYrXbLEhMxDzMc5BYvKKdX8DGfwjj0Ccobc2EE5DBqqHVRfGTLpcwQmsUbQUXdgILcBa4q/6N+f51m9Q5Njl0rkMvZWavlj67aJGxxm3WtXZfIfso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724425275; c=relaxed/simple;
-	bh=PMDdzrlYnf1XJ/yJu+sdQtD1cvMXZkl11yoAmdRDkGA=;
+	s=arc-20240116; t=1724425414; c=relaxed/simple;
+	bh=DYwnk58CFAPfYu9VcUvQquCkN7cH/h7SLkSx7kIGfm4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WlvKdouFtWWKeQqa+PPMYEi+RbAGot78Rjjwp+3ole6SkCxbxykzAnqudmkZGP/+RPLi0mOfIT53NY/n1c6yebXRzLJbJZOrQ03WSYI086doo3YyVlNdy/A2sEtxXrxxOfpry36E3rWeYuA6GdOHrOkjqOUW7Q+VgkLFOs+/LrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=AxH80s9W; arc=none smtp.client-ip=209.85.208.179
+	 To:Cc:Content-Type; b=Yaf2wwtNcN2CaVDYlFawdymekj7us+yU+CsajirGT2pw59jPwDlFzU8MlalPAqukqS9BNn6SFcb1GhwMmnRWFFPtUkIVY72ddZ7H5ehMu72yHEU4vEnOTMdonByW6yUoZVmJPXjd4kcxgLNvgDIq5JGkMZ6lnfw0QhWGcY5Ae10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=i/g0oN7d; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f4f2868783so13176951fa.2
-        for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 08:01:13 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ef27bfd15bso19730361fa.2
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Aug 2024 08:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1724425272; x=1725030072; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1724425410; x=1725030210; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RaMiNX7ZdAf2AXIvFUv2nR5LNkkkuvqqBexf4O8yoSY=;
-        b=AxH80s9W0P7Pn4Z6Mx4IVzkuJEFl4i3XqXQb6zA2W6OQmaNPBUFPr5P3bS18OKJIkE
-         5n7NYElURhO9yT0mo2yNS7pJyJ/SgyhPGxz511b4EjGPADIuDFWPrCLgpgjQeC8iUJkg
-         HCEtOnDpQ3D8USHP5mzlYazdVUtgRyJtNyMeDiRSpEzChmMsZWrUzxg2k4Dn4L2PR91b
-         mtkq6pGUHeu9EbjZ0IwotcHlBNwteZNhe4A+3rDho0SN7ZQ4+rypMzzRfzdRrr4gwTPZ
-         gaTnoGPvFHzaf9ZkGH6zEYw8Tbt1/+xucLRsqdEphyIE1yQKNiKhejkNs/JRU6RFG4sd
-         eNvw==
+        bh=PzkeH7Z3xwIhDijYWVxr4oEJ7WIQRTE0RIPu/OveZbc=;
+        b=i/g0oN7dJBo2OfCOivvSHrho7ndODZCegTvTsdpnDMxhw4LuLU2stj3qEug2q3JciE
+         8pV647tyv0p7aPyFxJnr5PvFdBYDMjnCZlpsi2SIxSu95TeydiR4W65n8FaeHpYdFd6s
+         pqiL9edBiHgyMyDCUZqcsUSGqjjuFwvM0MT48C9eAtay2AuT0Eyf8qf68ikWrdBhShZY
+         k6jew7hJ5LM2LnbhBH8/9W9HNyNouHU2Oxe+V9T6MEzLlIQPs1Zy8qK/wkaoSfGH81eK
+         Km5N4RzFZZTyF0Y+rb/Z+OUS6lRvioAZPoFx0BSqi1BImF1wDyZq4h8RvHJqOmLQ/owa
+         ikmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724425272; x=1725030072;
+        d=1e100.net; s=20230601; t=1724425410; x=1725030210;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RaMiNX7ZdAf2AXIvFUv2nR5LNkkkuvqqBexf4O8yoSY=;
-        b=ihxr/J+kUGMT28+2ZOBPEDv8n6eBX+GKTKPKWHxG9hmz6OFNAZ8HaPJH1a39738I/r
-         ajiN8KZltc9LkI+nSweu3YfjvkPvyukQ4mT/IQofLY1KhyyU0NXY5zKqGxzaw59KaHEo
-         KRBLbmSWUc0xNSBmKOlI8+/eaC1v5GJx96DcJs/JkQvk8+AqdIKzD+60KQpha7X2cUpe
-         DcXh58BXU3YFZT2+SVutr8B2KpBc7j8D8WddJY4eApR1/S46wO/ZLOfLSiEpWvxis2/3
-         +bkb8F1FD6X+RhyuRtRi0/04jw2KogqHGfknhxurIlsnrfNNwpQmC2SSDw7t1rmvHm+n
-         cNdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAI0NNHsXBXv+fMHbCi5ZTIOx4EGZf5Fojw6Gdaj8TlV/p8oAkt1Wwf4HDUqjEMsQtMjl0lT2Hy6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaaQpuzIeQbHe4QdAw49pbfP+DQ1Te7+aAWhflzGF8bPnI0SH5
-	vDPQYx1r7qhFlYF/5Bf3LUPEHd99jpltgKVqB1rwKad8qz41X0SYSrXNFlprR6WOEMoD7ePUPzo
-	N8Wl++K2UvuoJNZlYeTRh0K8WK6o=
-X-Google-Smtp-Source: AGHT+IF0ycmrO+QC81c6UQTTYtMxnJHe/XJk92BeOwp6M8Ihuai5U/P4KaEtWUo6MBpv5JUobFZer3dV63afNvnzg/4=
-X-Received: by 2002:a05:651c:542:b0:2ef:296d:1dda with SMTP id
- 38308e7fff4ca-2f4f48f0f44mr21051631fa.1.1724425271014; Fri, 23 Aug 2024
- 08:01:11 -0700 (PDT)
+        bh=PzkeH7Z3xwIhDijYWVxr4oEJ7WIQRTE0RIPu/OveZbc=;
+        b=eYknjYi516LXOzNuj45F76hmDM0+cBb2DxXVzLW13iHWBML4O2PkUUoClQ3TORthIe
+         sW72wnuGFkuZCAomcj4vQ/lrj5mInb/0Y7m+vBmQe3fQMbgmeKGfQR0XpZ9cYSYvkdmD
+         E1LMWZG3Wb4gHydWTg8qmQdLH9GGx1EsTyg5gvjXxogYoNCFtbxuw1BzWrtUC++Dxpem
+         ELFrLBw8K6f1wC9ifCQmEpdzXTZZ/BTnSRc2ONK4qnQUNKYsXebEfhw739Z/oXSHqhGb
+         1kjtgM3qD2XbktSE3HyhfsCnhbyPDnjKvfGBPqKCf0LgviVEbu52KIVsYHOE4RNb2SXT
+         jv5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ/R0kw25C3Y6Gtd3NIZ5TG17hTbXI8hML5yZ+DhSyLZBDMB8McTfWcYYbgERuYNYKGbaxvOoHwpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/2COvCrdf6lPtGSmKrJEqLitm8tBxGbmNxD4oukCRvNkw1WuE
+	1ckK/crusSdSTuzKabW5Exm8aBGGkHOceAe+KykeH9yYR/hja9Cp62GkevXJMwyj3uxlSI5tOEC
+	/eCbssKrystZybxwD+3lK4SU9z7A=
+X-Google-Smtp-Source: AGHT+IGx7OK977m0HTcn+jv+FdthwpDsqWdVVw79mR5En2nNIWYNP6k+7WvMVAGOt8lo+sP4HebpZsLvTzu2nHk2iD4=
+X-Received: by 2002:a05:651c:1027:b0:2f3:f6fa:cfd2 with SMTP id
+ 38308e7fff4ca-2f4f49142e8mr15439981fa.25.1724425409352; Fri, 23 Aug 2024
+ 08:03:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240823141401.71740-1-okorniev@redhat.com> <c02d3cc6561b5c06c2c51df70c6c4de19d2f9d28.camel@kernel.org>
-In-Reply-To: <c02d3cc6561b5c06c2c51df70c6c4de19d2f9d28.camel@kernel.org>
+References: <20240823141401.71740-1-okorniev@redhat.com> <Zsif6pDBfVm1sUiV@tissot.1015granger.net>
+In-Reply-To: <Zsif6pDBfVm1sUiV@tissot.1015granger.net>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Fri, 23 Aug 2024 11:00:59 -0400
-Message-ID: <CAN-5tyFWxiva70G9sWgBrmqoY2LKtwDYogEO-mdN+Ays_h=p5g@mail.gmail.com>
+Date: Fri, 23 Aug 2024 11:03:17 -0400
+Message-ID: <CAN-5tyHENMDTeyESPA9ceCA=RaPMMW9ORh3NXu9RnbFiLZHRYg@mail.gmail.com>
 Subject: Re: [PATCH 1/1] nfsd: prevent states_show() from using invalid stateids
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, jlayton@kernel.org, linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 23, 2024 at 10:40=E2=80=AFAM Jeff Layton <jlayton@kernel.org> w=
-rote:
+On Fri, Aug 23, 2024 at 10:44=E2=80=AFAM Chuck Lever <chuck.lever@oracle.co=
+m> wrote:
 >
-> On Fri, 2024-08-23 at 10:14 -0400, Olga Kornievskaia wrote:
+> On Fri, Aug 23, 2024 at 10:14:01AM -0400, Olga Kornievskaia wrote:
 > > states_show() relied on sc_type field to be of valid type
 > > before calling into a subfunction to show content of a
 > > particular stateid. But from commit 3f29cc82a84c we
@@ -127,26 +127,29 @@ v)
 > >       switch (st->sc_type) {
 > >       case SC_TYPE_OPEN:
 > >               return nfs4_show_open(s, st);
+> > --
+> > 2.43.5
+> >
 >
-> OPEN stateids are the only ones that stick around for a while after
-> we've closed them out (and that's only for v4.0, IIRC). The others all
-> only release the file after unhashing.
+> I'll wait for Neil/Jeff's Reviewed-by, but the root cause analysis
+> seems plausible to me, and I'll plan to apply it for v6.11-rc.
+>
+> Btw, I noticed this at the tail of states_show():
+>
+>         /* XXX: copy stateids? */
+>
+> I'm not really sure, but those won't ever have an sc_file, will
+> they? Are COPY callback stateids something we want the server to
+> display in this code? Just musing aloud: maybe the NULL sc_file
+> check wants to be moved into the show helpers.
 
-That's good to know. I had a reproducer for the open but the locking
-stateid seem to be not affected by it (and I dont know yet how to
-setup a pnfs server).  If only nfs4_show_open() needs to be fixed, I
-can do that.
+I can see that the copy stateids still have type NFS4_COPY_STID so
+they are not converted to the new type of SC_TYPE. But it just means
+we are not displaying them. I'm not sure what happens to sc_file for
+copy stateid, I'd need to check.
 
-> I think it'd be better to still display that stateid, and just not do
-> any of the bits in nfs4_show_open that require ->sc_file. We have the
-> "admin-revoked" string that we display now when SC_STATUS_ADMIN_REVOKED
-> is set. Maybe we can display "closed" or something in this case?
-
-I'll do as you suggest and then add "closed" if sc_file is null.
-
-Thank you.
-
+>
 > --
-> Jeff Layton <jlayton@kernel.org>
+> Chuck Lever
 >
 
