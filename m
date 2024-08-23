@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-5671-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5672-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5034895D93E
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 00:28:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07AEA95D940
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 00:28:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 828381C22029
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:28:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8D5C284782
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Aug 2024 22:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE091C8FCD;
-	Fri, 23 Aug 2024 22:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1005F1C93A4;
+	Fri, 23 Aug 2024 22:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hxo9J0fD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGuTFlup"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328821C8FBF;
-	Fri, 23 Aug 2024 22:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA17C1C8FDF;
+	Fri, 23 Aug 2024 22:27:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724452070; cv=none; b=BKQlM1tcGl3eIp9/IQdrWOBe9eZHd6YOqk5DcQPWgEXUp9Bwy24It2alxqtiW6aKEKcS0oujwRoo5nV6zi37Ltc0Ut78F0K2OMX00lITGAXzHvHxExrPNoqTZ4tipME/NUtSpjr9k0AgudgtPdHo/1idUcLq6ei5xeW+HE0RLPc=
+	t=1724452071; cv=none; b=EY9Gq/dm83Rhj9C9Sljf/PzdJupZA1FTVDNNm6Rpgz55SVmxdbqXOKVEcULSTRx5iI48BuQS4IHI/6FujWq8zdWLFZKLc5WZeSGb808OG02bXnYhgvlrK1NQPe/4LUqSYucv86zUVxPU5rcXwKB7Q9y5r5A85BnLUZVXB5QMGp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724452070; c=relaxed/simple;
-	bh=kty5DiXOElIaYiIXEHSyHcwD+de4TPi2RfaJ5UVWk2o=;
+	s=arc-20240116; t=1724452071; c=relaxed/simple;
+	bh=VaOIE8fAcxFiczViQtCEfu9n7BmxyyuHGJb1i2Aqdfk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZOr38H+75LHD1b7eERj1xBZ4P0eC/zN5SbGf1VQ1UOROdVDsLhdTdJ4FURWjRITVcq9tHr28LakxgdW5eH2mPibVtelIPv8biavXslro1jKvHbst2668sznc8AE8k8zTMHSMyWuLe8FUqkbqqkl/ficfq7F4+8cUdO7J1ZNuhh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hxo9J0fD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6A9C4AF0C;
-	Fri, 23 Aug 2024 22:27:48 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=dK3DHokZSCZJYU2MPVR6WVdIQ4YCxAWULuMLFILDdLTrH1MLaYu4b2qsSq77hjLczR7ELQe9RaXQu/fYQnI9ucc9azcjwtg0JHX4JzbA/wi7iJi2nGbzgXCaYRRjKv0YoMxhSi+S5LNBggzydRJH1Xs/kd3qDPzef3UwS88UnoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGuTFlup; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C1DC4AF0F;
+	Fri, 23 Aug 2024 22:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724452069;
-	bh=kty5DiXOElIaYiIXEHSyHcwD+de4TPi2RfaJ5UVWk2o=;
+	s=k20201202; t=1724452070;
+	bh=VaOIE8fAcxFiczViQtCEfu9n7BmxyyuHGJb1i2Aqdfk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Hxo9J0fDznkohDDBQTu5zIQLTPOkD6KaEXU9SN9xffU3U80MTtpD5xicLxAHpPqUp
-	 t/9vDrwE7UDHfuW45+mwhKcxGL7FifsQeoMVPmM24EtYWu0OXTJL/uvTftXS2HyMMU
-	 qFdkGVUsxNXNEQp1Zp/KvXwVpGNWPG6z8rNK1+i0N44TfzyZ1f6hFYqkgKqLHzGpkK
-	 CbWm4hYl26Nqlt/3V7sEaKHgs7F4uuN2cbY5a4TCnT3XYEYEJmUMtGXpfhrr4FrbLG
-	 DfTX+MwIYW236KSry8g5rOfiemVoYBdfCFXTDTO55D7Hsa4VNe5mVcqv5swvBGbNtv
-	 52i5EPJJOTxTA==
+	b=nGuTFlupgrAsOVWzT/6ptT+SMthuouMfc+4QG/nUUJzueQhEH6bVjEXNg6eNqVeOp
+	 LouPb04To0pGMUkPNWDV0RZM1Oz9QGd1IkJ/fIfiljWp7W90RJQjVdtITPmYoQhZWF
+	 TeN/PSxDZ2+k6Jdc/9Rd0SnmZvVhVw3vkh+IKSbZy+oP7XofYrPf5d9pnCdZls4T2B
+	 ZUQ57q+avlWaDJ60k0rzSfCEIX8xIz3QLKtxcXZPyjw7w+ZaRd8tCVGVEgBaImBE+t
+	 3bDasLFMQ3HlLTrUkw1d9puF9mBi2GC6yEEg+mHAvDGaU4CR5aAEVt6s4qpX4OTq6+
+	 UTD4AxVH9ZTXg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 23 Aug 2024 18:27:38 -0400
-Subject: [PATCH 1/2] nfsd: hold reference to delegation when updating it
- for cb_getattr
+Date: Fri, 23 Aug 2024 18:27:39 -0400
+Subject: [PATCH 2/2] nfsd: fix potential UAF in nfsd4_cb_getattr_release
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240823-nfsd-fixes-v1-1-fc99aa16f6a0@kernel.org>
+Message-Id: <20240823-nfsd-fixes-v1-2-fc99aa16f6a0@kernel.org>
 References: <20240823-nfsd-fixes-v1-0-fc99aa16f6a0@kernel.org>
 In-Reply-To: <20240823-nfsd-fixes-v1-0-fc99aa16f6a0@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,84 +61,47 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2367; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=kty5DiXOElIaYiIXEHSyHcwD+de4TPi2RfaJ5UVWk2o=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmyQzjBnwB9eOMq5fTWSqE/ZJyaFskXXMxxgDq1
- XgZam9B4BaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZskM4wAKCRAADmhBGVaC
- FfH9D/0Xe/CjxhYhH24GOKbcmutKn6HSRfrk/hvyfWg822GhZp5NOIosmotyXs5RNa4zVEz/8eR
- Rsz9sM5Mf799NWX85M+fqICdRaaYRgpTHpetWoCQ9y4+CS9W/2AULqNhDQ396IHJfy/gb0eCDT4
- 1Nk0lizzQjKL2F+bCZD6QbN1a8U7ifb56sw2VPsRjo8JB+ymGQ7ifX6kYAjkvXi59woHxVidm0H
- c2tulhCDD8xVYS5oAcX6h6B1ApDhQAL8agAx8W/CcoPyafVTwhksIdbFuIb4gpKxnnLqXwVkKjt
- 2MbcKM+7pK4MIgCwAiLIdHKxhYWWZXX0gpdPykeYvUJemdwoAoQPRKfpzri/Cos9nNHSbjA3q/a
- WWvNaTAiS23wuOf2SdSp4taKSd0SdLshhUfERsbmrxUI/Tu+GhmvvHW4CATT4MKoAl0l9JBmQ5d
- weZd6RX7c/gWLpMZQqKiC/645N8CsNjhdnLHEI3JPI1XxHOUSh+gZohJyjIURvTYZE4Y0d5Ir2O
- 5H68BCL0fadeRE0yFBF50R618CaKRAUSriQTY8NKnE2ah+KMAfk/c8TAAdKo1ElqLYWXRqYIfd5
- uJ1ybswJLrbTP5B2MO9HsOY4eTHMqj/yUTiwmcaFjPOYbBvqwAFdVoUuzFBwpwGeGYXxKmsBaYg
- W/vwOnGgDxOBjXA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=904; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=VaOIE8fAcxFiczViQtCEfu9n7BmxyyuHGJb1i2Aqdfk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmyQzjFpG9bEY8TZ4FBmIcK5SjwoLJXW++RYY1L
+ WMZqSEbQXKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZskM4wAKCRAADmhBGVaC
+ Ff3LEACvewz1XG84JaG7EVxUdev3vyc44A353Cr00OuqQXMv2pTqnxyAW2ygOwNSH0Fai4zwXMr
+ Dhu2RBCwSSGQ1IyIBKcXZnm3Bvdfv1rgsGDG/k+5azv4I+TMBHwqDCaJn8c1alNsCxmllk39QN+
+ Vh4JQz5qmZ2u14iJfZXihs0spypMldkgIDQLwnCzEsmXMk0pDZ2kohnzxQ511aArJGnE1sgP7h4
+ /6mOeqJiJmy6LgEJvQsBkHKdanFU2LHtvJWFH4LJzlkkiKK3u8v7CH7ChuPL0bHY3jitD/6gm1X
+ HfThI81qTGDtCoOnB0Gyu8SxfQv0mlGR2CigRVxYHbQNkQP94xkk4fwDNWuhw4SueUc9m0hmh8w
+ j3ECt/on/WNhLfcBntJpzr+Zxm4GbPaLIej1wO3KIwnD1VbPxfrRRgvo3DXiyKU0dxXeba7Cn/H
+ 4C1EqsxMt7FdVzRvYC1Ymyh5tHuww5ckAv7hYQ8cBIo8aK2dqpAKNMoPCdDQih8j86R+0WIzIXH
+ sfCP6sOdhxjh5B3G2Je7/F2kIB8UD9J37Grs3IKasHBdv6Ikmd9okSxI8fAZt3m+nH9axjv8uP6
+ dMOMmMCSa0WSrHGVZUU4k1iLctF8FktGMZOwydMufFnkNCo3/7VUqocM2jzwG5Jddel/vMEDdAQ
+ y0gw4hDmoueOrzw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Once we've dropped the flc_lock, there is nothing that ensures that the
-delegation that was found will still be around later. Take a reference
-to it while holding the lock and then drop it when we've finished with
-the delegation.
+Once we drop the delegation reference, the fields embedded in it are no
+longer safe to access. Do that last.
 
 Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index dafff707e23a..19d39872be32 100644
+index 19d39872be32..02d43f95146e 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -8837,7 +8837,6 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
- 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
- 	struct file_lock_context *ctx;
- 	struct file_lease *fl;
--	struct nfs4_delegation *dp;
- 	struct iattr attrs;
- 	struct nfs4_cb_fattr *ncf;
+@@ -3078,9 +3078,9 @@ nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
+ 	struct nfs4_delegation *dp =
+ 			container_of(ncf, struct nfs4_delegation, dl_cb_fattr);
  
-@@ -8862,7 +8861,8 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
- 			goto break_lease;
- 		}
- 		if (type == F_WRLCK) {
--			dp = fl->c.flc_owner;
-+			struct nfs4_delegation *dp = fl->c.flc_owner;
-+
- 			if (dp->dl_recall.cb_clp == *(rqstp->rq_lease_breaker)) {
- 				spin_unlock(&ctx->flc_lock);
- 				return 0;
-@@ -8870,6 +8870,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
- break_lease:
- 			nfsd_stats_wdeleg_getattr_inc(nn);
- 			dp = fl->c.flc_owner;
-+			refcount_inc(&dp->dl_stid.sc_count);
- 			ncf = &dp->dl_cb_fattr;
- 			nfs4_cb_getattr(&dp->dl_cb_fattr);
- 			spin_unlock(&ctx->flc_lock);
-@@ -8879,8 +8880,10 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
- 				/* Recall delegation only if client didn't respond */
- 				status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
- 				if (status != nfserr_jukebox ||
--						!nfsd_wait_for_delegreturn(rqstp, inode))
-+						!nfsd_wait_for_delegreturn(rqstp, inode)) {
-+					nfs4_put_stid(&dp->dl_stid);
- 					return status;
-+				}
- 			}
- 			if (!ncf->ncf_file_modified &&
- 					(ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
-@@ -8900,6 +8903,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
- 				*size = ncf->ncf_cur_fsize;
- 				*modified = true;
- 			}
-+			nfs4_put_stid(&dp->dl_stid);
- 			return 0;
- 		}
- 		break;
+-	nfs4_put_stid(&dp->dl_stid);
+ 	clear_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags);
+ 	wake_up_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY);
++	nfs4_put_stid(&dp->dl_stid);
+ }
+ 
+ static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
 
 -- 
 2.46.0
