@@ -1,145 +1,235 @@
-Return-Path: <linux-nfs+bounces-5682-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36DB795DDA7
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 13:57:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BA7995DDE8
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 14:46:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAAD91F22350
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 11:57:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07D7F1F22149
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Aug 2024 12:46:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 588581714BD;
-	Sat, 24 Aug 2024 11:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1661C15573A;
+	Sat, 24 Aug 2024 12:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CA5Ku8Vz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrydaYVR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D5B15746B
-	for <linux-nfs@vger.kernel.org>; Sat, 24 Aug 2024 11:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B5DC13B;
+	Sat, 24 Aug 2024 12:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724500629; cv=none; b=i3tbeVnDVW+OQBGHWLynvQ6yXqNEAuVeoHSq+BhJKbaSdkBdhJCcv9Be9blrGI7X876C//ZWi/uBoZ2sSsdIo1caOzQ6LZzH8vUNaa8RbSg87naWhuFRNrAFVOeuH8devsjpKySIPyF/+oyEUNeKcGyfZpCgpQjp0KYU+6Xkxr4=
+	t=1724503586; cv=none; b=rdmZqdYHHURVaT5nr46WL/M65qXfY2xRktl8EwAczGAvxmIYIEhHgx2xxQsfnzV3qs30KX7HKTgG2gkPs5D2dd0N2fMYCtLpq3KmK1y0O/S8p8R/bllQUuiQcU0x83ZCBne/CsX/5kxqi5Ygmbd+4h3oON0WBvgVzQCpb+XVXmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724500629; c=relaxed/simple;
-	bh=IMUjvNv1A8WNE3OqnOHhUAD1EEtgyW1G59Xb24cgceQ=;
-	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
-	 Date:Message-ID; b=Zah6eot4C7yRfixqNdJDT0khP/8tSmE6cxu04GcBZ5LwWDtK/3lD2u921/TI7U/dwk4I1AEI/C/hrxZ+6fuZjTh1yB/oWRFC92N32kmgd5+Q/pwzbhirsPDDxXzbcQQ8xx11W6fl6CNxCgIzoTeAM+CQC6G/pOKNdKkYtkk0yn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CA5Ku8Vz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724500625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7MlSZRgX4NtPTJfbL1OG/C/fCyXDm1yZsFhC7WYkkOo=;
-	b=CA5Ku8Vzelh8UWL9LSgUv+MDFrR87Is44u0lTT0cJxyXidhVK+OwJJWPPD2bc7LDdJfvDK
-	5EO1UsOin1XfWJNSWLJGt362NAxuJ68NExpY1lyMvb+jU8g211rvs+BjbbRveutRr6/OF5
-	hjoBE/W/iM+YKmbhrMwNR9MMkVZ3vDc=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-dsco4DIKOqS_7UEUarFQjQ-1; Sat,
- 24 Aug 2024 07:57:03 -0400
-X-MC-Unique: dsco4DIKOqS_7UEUarFQjQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A55D61955F43;
-	Sat, 24 Aug 2024 11:56:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C96919560AA;
-	Sat, 24 Aug 2024 11:56:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240823200819.532106-1-dhowells@redhat.com>
-References: <20240823200819.532106-1-dhowells@redhat.com>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Steve French <sfrench@samba.org>,
-    Pankaj Raghav <p.raghav@samsung.com>,
-    Paulo Alcantara <pc@manguebit.com>, Jeff Layton <jlayton@kernel.org>,
-    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH 10/9] netfs: Fix interaction of streaming writes with zero-point tracker
+	s=arc-20240116; t=1724503586; c=relaxed/simple;
+	bh=QgFlSSZj3jODyO8ZZSAuohBWNbyJSMb2BzhYeBlbvvk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Pq0HnzScISLoDbAnIdRGN3b8Xiz22DAz+DsxWC/iRr6QDoLKKV3YXOxbkgiNv2qzkBMWFeaHt2S6eendM2dbhejv7/teospXH+ZDVpHq15qPENUDdOFeIum0LUt0lIkhk24+dL/xKYc8VguDjtNuwWbjrJ8M7GEp5UVBJR0isvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrydaYVR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52426C32781;
+	Sat, 24 Aug 2024 12:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724503585;
+	bh=QgFlSSZj3jODyO8ZZSAuohBWNbyJSMb2BzhYeBlbvvk=;
+	h=From:Date:Subject:To:Cc:From;
+	b=TrydaYVRBlRbsrCEmvbVse8EwC6wq3ejO+G4CbDIcwbNg7+oNB7TMZSde4s1xn0ui
+	 ODZwggAZurAatuo9+PHBFIhEgJLjAK8SdLWPIfe8ZP+YSE+xlMnmTufRAGZoiCKEFL
+	 piPaYdjU8nLR3TMxNKpQ2Kbbmg5aauaRarb1Nt/oajMYLe/8zSZkiG67nYCdJav6LY
+	 HWd5Zhz3Dae3xn37VsMQyh+/LaVKvUA0mZ3akR7V5sBsymjDC3WuWWHZoDAqglP3YW
+	 aOfEVRf0MFMNzctgfO6RJSxjXlZee9QgO9zQW3uhxfsZhQZZYWmGEsZJ2Lwn3mtaDy
+	 Ga+7j/i9jnuKg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Sat, 24 Aug 2024 08:46:18 -0400
+Subject: [PATCH] fs/nfsd: fix update of inode attrs in CB_GETATTR
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <563285.1724500613.1@warthog.procyon.org.uk>
-Date: Sat, 24 Aug 2024 12:56:53 +0100
-Message-ID: <563286.1724500613@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240824-nfsd-fixes-v1-1-c7208502492e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIABnWyWYC/22MTQ7CIBBGr9LM2jEMWmxdeQ/TBYGhJRpowBBNw
+ 93Frl2+7+dtkDl5znDtNkhcfPYxNKBDB2bRYWb0tjFIIc9ikCcMLlt0/s0ZFTlhLkNvSfbQDmv
+ ivWj7+9R48fkV02d3F/qlfzWFUKAz46g1Kae0uD04BX4eY5phqrV+AUwqnVqlAAAA
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5768; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=QgFlSSZj3jODyO8ZZSAuohBWNbyJSMb2BzhYeBlbvvk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmydYgUhcilDBaLvpOPeFK2MjGjsOnQuLM3/NZn
+ 3Zc2DMNJryJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZsnWIAAKCRAADmhBGVaC
+ FZB3EACqHsC2pjSLEHXi7mJEyZ27yu/Lgl75KhwrN9SNkz7RrAY3v9sOiHHkX/g0zvuk+l/nALm
+ /77pY7lgOhyb1Z9elR+piL2Cmb8voJMOvRXyx9UdgZP3xOzrmj01G0XS4f08pa6t5Bwi1rGCYit
+ BDVWBgfjS+AE1PTD+Xq3WXECzkYA4UBXrAgNjZjamA6mp29A0w6M3DUE5KZihZ5eAEW+EZJjMp2
+ Z7quaRDd5G6ABG8Fc6toPec8mwr9wrdntqOcdRG6Adtc375YdL0TxG+Xb6zJHZCxekjWDk0se9f
+ OzrUnWOFZ3jq28zCwx/4oH204gfysqBv8D+RW7jaUEs97nH/7iwaIYNoWyeF20UeeVH4NpW9Dvj
+ AMtdSb4nYtOjV62OkwO0ciZuneVAsLJjRJ12h/zzaBjvjnxxICaBlEjWxl3A2ip7WnPyT2L11e1
+ plk5itJqZcjX1/wnqgMN+32P4DtdHC4wO648rQTiz4K5cGT3e1nayiCQNC7x/Z/kmSd39tCbPmx
+ dEAuLdV7C6kS4Pl+75K8KhN9xRrytWFaCYdEazn+w3+STjY38Tmoc81UxgMyTCwlMZGZKkqCNgG
+ OmL8Su9+sI4fbltIW/SJ3zXEGRRZAGMdp7lQclLOB04xy6ScmtzsNZRhZDA1l4H/VAiXEKrCEqj
+ 3Js48ZX9QT3L/kg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-    
-When a folio that is marked for streaming write (dirty, but not uptodate,
-with partial content specified in the private data) is written back, the
-folio is effectively switched to the blank state upon completion of the
-write.  This means that if we want to read it in future, we need to reread
-the whole folio.
+Currently, we copy the mtime and ctime to the in-core inode and then
+mark the inode dirty. This is fine for certain types of filesystems, but
+not all. Some require a real setattr to properly change these values
+(e.g. ceph or reexported NFS).
 
-However, if the folio is above the zero_point position, when it is read
-back, it will just be cleared and the read skipped, leading to apparent
-local corruption.
+Fix this code to call notify_change() instead, which is the proper way
+to effect a setattr. There is one problem though:
 
-Fix this by increasing the zero_point to the end of the dirty data in the
-folio when clearing the folio state after writeback.  This is analogous to
-the folio having ->release_folio() called upon it.
+In this case, the client is holding a write delegation and has sent us
+attributes to update our cache. We don't want to break the delegation
+for this since that would defeat the purpose. Add a new ATTR_DELEG flag
+that makes notify_change bypass the try_break_deleg call.
 
-This was causing the config.log generated by configuring a cpython tree on
-a cifs share to get corrupted because the scripts involved were appending
-text to the file in small pieces.
-
-Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
+Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/netfs/write_collect.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+One more CB_GETATTR fix. This one involves a little change at the VFS
+layer to avoid breaking the delegation.
 
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 426cf87aaf2e..ae7a2043f670 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -33,6 +33,7 @@
- int netfs_folio_written_back(struct folio *folio)
+Christian, unless you have objections, this should probably go in
+via Chuck's tree as this patch depends on a nfsd patch [1] that I sent
+yesterday. An A-b or R-b would be welcome though.
+
+[1]: https://lore.kernel.org/linux-nfs/20240823-nfsd-fixes-v1-1-fc99aa16f6a0@kernel.org/T/#u
+---
+ fs/attr.c           |  9 ++++++---
+ fs/nfsd/nfs4state.c | 18 +++++++++++++-----
+ fs/nfsd/nfs4xdr.c   |  2 +-
+ fs/nfsd/state.h     |  2 +-
+ include/linux/fs.h  |  1 +
+ 5 files changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/fs/attr.c b/fs/attr.c
+index 960a310581eb..a40a2fb406f0 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -489,9 +489,12 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	error = security_inode_setattr(idmap, dentry, attr);
+ 	if (error)
+ 		return error;
+-	error = try_break_deleg(inode, delegated_inode);
+-	if (error)
+-		return error;
++
++	if (!(ia_valid & ATTR_DELEG)) {
++		error = try_break_deleg(inode, delegated_inode);
++		if (error)
++			return error;
++	}
+ 
+ 	if (inode->i_op->setattr)
+ 		error = inode->i_op->setattr(idmap, dentry, attr);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index dafff707e23a..e0e3d3ca0d45 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -8815,7 +8815,7 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+ /**
+  * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
+  * @rqstp: RPC transaction context
+- * @inode: file to be checked for a conflict
++ * @dentry: dentry of inode to be checked for a conflict
+  * @modified: return true if file was modified
+  * @size: new size of file if modified is true
+  *
+@@ -8830,7 +8830,7 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+  * code is returned.
+  */
+ __be32
+-nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
++nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+ 				bool *modified, u64 *size)
  {
- 	enum netfs_folio_trace why = netfs_folio_trace_clear;
-+	struct netfs_inode *ictx = netfs_inode(folio->mapping->host);
- 	struct netfs_folio *finfo;
- 	struct netfs_group *group = NULL;
- 	int gcount = 0;
-@@ -41,6 +42,12 @@ int netfs_folio_written_back(struct folio *folio)
- 		/* Streaming writes cannot be redirtied whilst under writeback,
- 		 * so discard the streaming record.
- 		 */
-+		unsigned long long fend;
+ 	__be32 status;
+@@ -8840,6 +8840,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
+ 	struct nfs4_delegation *dp;
+ 	struct iattr attrs;
+ 	struct nfs4_cb_fattr *ncf;
++	struct inode *inode = d_inode(dentry);
+ 
+ 	*modified = false;
+ 	ctx = locks_inode_context(inode);
+@@ -8887,15 +8888,22 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
+ 					ncf->ncf_cur_fsize != ncf->ncf_cb_fsize))
+ 				ncf->ncf_file_modified = true;
+ 			if (ncf->ncf_file_modified) {
++				int err;
 +
-+		fend = folio_pos(folio) + finfo->dirty_offset + finfo->dirty_len;
-+		if (fend > ictx->zero_point)
-+			ictx->zero_point = fend;
-+
- 		folio_detach_private(folio);
- 		group = finfo->netfs_group;
- 		gcount++;
+ 				/*
+ 				 * Per section 10.4.3 of RFC 8881, the server would
+ 				 * not update the file's metadata with the client's
+ 				 * modified size
+ 				 */
+ 				attrs.ia_mtime = attrs.ia_ctime = current_time(inode);
+-				attrs.ia_valid = ATTR_MTIME | ATTR_CTIME;
+-				setattr_copy(&nop_mnt_idmap, inode, &attrs);
+-				mark_inode_dirty(inode);
++				attrs.ia_valid = ATTR_MTIME | ATTR_CTIME | ATTR_DELEG;
++				inode_lock(inode);
++				err = notify_change(&nop_mnt_idmap, dentry, &attrs, NULL);
++				inode_unlock(inode);
++				if (err) {
++					nfs4_put_stid(&dp->dl_stid);
++					return nfserrno(err);
++				}
+ 				ncf->ncf_cur_fsize = ncf->ncf_cb_fsize;
+ 				*size = ncf->ncf_cur_fsize;
+ 				*modified = true;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 43ccf6119cf1..97f583777972 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3565,7 +3565,7 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	}
+ 	args.size = 0;
+ 	if (attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
+-		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry),
++		status = nfsd4_deleg_getattr_conflict(rqstp, dentry,
+ 					&file_modified, &size);
+ 		if (status)
+ 			goto out;
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index ffc217099d19..ec4559ecd193 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -781,5 +781,5 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+ }
+ 
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+-		struct inode *inode, bool *file_modified, u64 *size);
++		struct dentry *dentry, bool *file_modified, u64 *size);
+ #endif   /* NFSD4_STATE_H */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 0283cf366c2a..3fe289c74869 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -208,6 +208,7 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ #define ATTR_OPEN	(1 << 15) /* Truncating from open(O_TRUNC) */
+ #define ATTR_TIMES_SET	(1 << 16)
+ #define ATTR_TOUCH	(1 << 17)
++#define ATTR_DELEG	(1 << 18) /* Delegated attrs (don't break) */
+ 
+ /*
+  * Whiteout is represented by a char device.  The following constants define the
+
+---
+base-commit: a204501e1743d695ca2930ed25a2be9f8ced96d3
+change-id: 20240823-nfsd-fixes-61f0c785d125
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
