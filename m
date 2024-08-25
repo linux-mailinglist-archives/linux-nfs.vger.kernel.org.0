@@ -1,145 +1,125 @@
-Return-Path: <linux-nfs+bounces-5708-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5709-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AD6995E44F
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Aug 2024 18:21:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA45195E5A5
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 01:13:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A77661F214BC
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Aug 2024 16:21:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59B871F214E9
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Aug 2024 23:13:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E0B224DC;
-	Sun, 25 Aug 2024 16:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001917407A;
+	Sun, 25 Aug 2024 23:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/Vgo3/S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLYe/Uv3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12719B640;
-	Sun, 25 Aug 2024 16:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCBF2D60C
+	for <linux-nfs@vger.kernel.org>; Sun, 25 Aug 2024 23:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724602913; cv=none; b=uEN5FA0fslB7bYvuKK0+uWoQwEfRRR8+YKMF9rPZlDRkzGqhFIhSKopeCCsO3qPxq+kKMD6EcZrHS7IpYjlPvUsIn/8KNx5L3UqvmrgkWJiOdJFhNMKGyniBWWpHpxQdJO5aY/OZmRv4Zyc7LuUrnpmGbdJwTOQh/6xANgbhZTo=
+	t=1724627580; cv=none; b=Y0vPXMG3ovgjVilRWDChVrsks1UVv1i/ejUPZJh238KGkQYGzSAgwLOzw8Uy4nnAb+gM8IjPRg7PI5dM7YMSQ7wMPKIfkNQ2o7Nsa+b9i/oB9jxvGSi1/JwyHBjjJ/MeuGw4XOExGMP9HqJhgWrjT9GbDwoFjui/Y2GAkyYunnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724602913; c=relaxed/simple;
-	bh=dWB2f/oL7+pEVHKGY7Tsr/C7Wkcs7H5vxCPM5F9D6JI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=icDPJwKSUogm0MH1cEqu7tWw0+hfoQUJeQkV0lWaJGvaXWCG9C2PJd4/VN/FJcCBWXeG1ukWvtE+Z8XUDvFiBGGP4ZaakJBclBP1Q2VrGi0vrayJVFi9mV157Vn7KyANDXQwyPXRBY0YT37NAJzOUxCyQF57K0a/rVIcxkCYNIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C/Vgo3/S; arc=none smtp.client-ip=209.85.160.42
+	s=arc-20240116; t=1724627580; c=relaxed/simple;
+	bh=s4yUets6fisgIV3mhcuWx9Hgv4TYlqVIkEdFFD/VYhc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=DL9Fy1OCIN83lnFg3PJ3jSBzEJwIvzYT2Gf9BDD5u75sqJgQGdH43COGao5yUtkeOf6f0Yz6388Oqz1NBbeo2NkDcEacUzAOvdEcZe3S/+JLjVl1h25zdlSarT+4tOqWBRx0IRGZQv1xgyGjGJwrDPGQdLDFxpOgkPSYFReLK4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jLYe/Uv3; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2705d31a35cso3253992fac.0;
-        Sun, 25 Aug 2024 09:21:51 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2025031eb60so31422585ad.3
+        for <linux-nfs@vger.kernel.org>; Sun, 25 Aug 2024 16:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724602911; x=1725207711; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e3MYbKUNBkklBtjfHinAe6ZFvBjUzpMm2egDh20Y7Rk=;
-        b=C/Vgo3/SXGmII+NH6kaNHIUuDuT3MHWEY7lTxIPuQTX80wDS1BDo4IbMIs+x1F24pW
-         906GNQeC8qmJkWyNi7g+K1olJTj06GcU6wDGwcPQtrH/udj5ApIyMWiuFrN/TCWr3tMK
-         2sVAl503r/DQAPh1H/AgtsrYoYVZu3uoAOg206QYhioHvtZs2LzgJeQuk8UkEdD7168/
-         uYxzqiQczbrQyhPDQ1rVjoqlOUPaBoKh7xZcUStyMDeLyd36O1sUjgFlW0RBB7BMDuiN
-         yKTqfjI0FJ4wUKd+LiLm26nvTYuRAFfCfi2IOS3ktDgk9Qxvlz32Q8svEU6+z4sgbNgo
-         k91Q==
+        d=gmail.com; s=20230601; t=1724627579; x=1725232379; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zdvUF3uw6CPf+ICAv8wO0cvl5KJHpMSgSTrYBO2vbnk=;
+        b=jLYe/Uv3rGGEfYpoPa7CJ8TTOOZFdfmmHLABoVnOvXEGmbsj3X7l2gsSnwrv+89scZ
+         5Ikl6qI4J/oo6t+rldJNg66/ZF9HgyT9WjjleIcSLpXiyCpmu0buYUEYnbbtgi4UeU3S
+         I0NkRBRDJq+z6SwBr0IvHbn/4yfgPGeHowtT8gy7REGt020kMOksv7H3gNmeLV4PGkBh
+         mSltGLSZqkreCEZTlTbPgQtcPeTWS6g6QvwrA1uHjEqLKjjpUTc8piftvCOyyzYyh3vg
+         4cIsCHKVah+sPWjjfKRC7kLSdlzzn9Gi3IrbPVK8kIZee6U6GwnHkCzeFL3al5uIfouO
+         oVEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724602911; x=1725207711;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e3MYbKUNBkklBtjfHinAe6ZFvBjUzpMm2egDh20Y7Rk=;
-        b=ZKkMddgzliOtD36LqAry6ftcHwOIdZvLp5Xdcrsvrx0SDnJcUItx/4yYHMYxenNls7
-         BpmlEYDkEpzoiqPJPZgxZziz5KFH7ccLleCDgOe0f8pM6KnKl9i+rGhaK56Sp+IWEWln
-         saFhcwZ++ewDQlyFl3AjkzOO8eu7O9eLm4HP172GhFXrOiRgb7Eoter6FJ6wUQxqHiY+
-         zhcCcXQiciJ3XJjR/ZwBAwYzWu46IJ6kwuiGxNz45ndPYJyVb9a8BlzHGNOlEkX3hCzn
-         uQsebZeMFCT2lEBocKopTqp54p8gCsWxbkjzee0LvUr8qxryKoIwzjDsrwxqqddNADTu
-         n+6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUDtz9OOlM8gHCen5P6yp701QTG2v1L9/rpPnuQOIfmFbSw4nMQ5/45xnbURQLzkTE4dwrViQgP1Egm@vger.kernel.org, AJvYcCVuucZHoNIqUQk/ZAFKGEg+YbLOI/QQ0I0naHKMSl//Cb8sCjTCL5PH0Frc/fYF21h2C3N653NP3p1kof9GnHo3@vger.kernel.org, AJvYcCW6AnHZboEjMHEA3d66icpGaz7ruMu9Zth8lojWssHqorkCrTqxpTjpaVvmbSgDNos3R9D6XWsnO1rM@vger.kernel.org, AJvYcCWsHONvmnvrlrDKUstssb5RT20+aQbU8dklto4mrRAtBLKC7WBDkP9CS4DFg7WAA641bF+QO1Kx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF4/dHmYByGbQ0YZZmWpD+KLr3nrf50Uf56Ts2NjatuA0mkFvc
-	rpR2Ur0o1HnWPjYksUFc04UwIdFG36iITNVFo8ov07Qy0gvr8xgO8irzErPTehPVumiwZpeYE4/
-	N/QArfO8dQfkRtnfRHFqzozv2+eQ=
-X-Google-Smtp-Source: AGHT+IFJ1RD5dDjMQQRiar8HJ7qdHi6IpI1gPYQoCTKg0oJn7Cj2gFNVkJIC9ojaLBUStkUleMxty6SOP948bmoHP9A=
-X-Received: by 2002:a05:6870:2051:b0:270:1884:9db1 with SMTP id
- 586e51a60fabf-273e63f0a0bmr8312619fac.7.1724602910950; Sun, 25 Aug 2024
- 09:21:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724627579; x=1725232379;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zdvUF3uw6CPf+ICAv8wO0cvl5KJHpMSgSTrYBO2vbnk=;
+        b=MP7eJEtzoHmHQmKjx7GMgO9rHBGKu7cKRs6oDptmVNsehOn4Jmw6SXpO4Fnezs4wUC
+         vkFuw8X+lHOyW9klP0tCbIuKHFg52VY8lGildEnqDOGgkGbVEb851RJxO6LFbgcH7xdT
+         ZzRo5qG7RdSi03uA/Ll3SiLg2B375I69CB7J4R2ARkAlOaC3T+89RrRSmZqglTAt3aJ8
+         esJkfpiKXLNSM8BDFNk4jCjdHpR9cQgqfa249sMFqdA1hMpQwt76nLb0ohd2RSG9V6is
+         6Hga11AmEtxSgrVBlWtXtXDgh9p8JSrolgAUs459Xa70ljR0oTq7xChv139AwwIaTbDZ
+         Aphw==
+X-Gm-Message-State: AOJu0Yw02IpfNFX11mVGCW94yEZpYBUA3kcyhW8JH4h4EA479bNObvOd
+	L9xwTI6XAazj0ZxjhrFc7yvIhE1QhU/LU1jzbrc/DYJCAhQBFPBRh9lPSuN0U8q8nJFNjIh4EX4
+	omWb6+mImc9CZHWcbWk/AlUiwsyMY3u8=
+X-Google-Smtp-Source: AGHT+IFNbHmBDh620vI9SAbD/eRC9JU2GDCVH5174n7UVdto/A4C9RUvzjCM/QuCn9mjrjo8WgUu7yzcVBpdWXdiFWc=
+X-Received: by 2002:a17:903:32cf:b0:1fd:927e:7d1e with SMTP id
+ d9443c01a7336-2039e48936emr85216555ad.26.1724627578564; Sun, 25 Aug 2024
+ 16:12:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240822133908.1042240-1-lizetao1@huawei.com> <20240822133908.1042240-5-lizetao1@huawei.com>
- <20240824181209.GR2164@kernel.org>
-In-Reply-To: <20240824181209.GR2164@kernel.org>
-From: Ilya Dryomov <idryomov@gmail.com>
-Date: Sun, 25 Aug 2024 18:21:38 +0200
-Message-ID: <CAOi1vP98rmMKKH-ik4dshO1A9chrfsPqiWDY6Wk4EfQNTeNe8Q@mail.gmail.com>
-Subject: Re: [PATCH net-next 4/8] libceph: use min() to simplify the code
-To: Simon Horman <horms@kernel.org>
-Cc: Li Zetao <lizetao1@huawei.com>, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, marcel@holtmann.org, 
-	johan.hedberg@gmail.com, luiz.dentz@gmail.com, xiubli@redhat.com, 
-	dsahern@kernel.org, trondmy@kernel.org, anna@kernel.org, 
-	chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, jmaloy@redhat.com, 
-	ying.xue@windriver.com, linux@treblig.org, jacob.e.keller@intel.com, 
-	willemb@google.com, kuniyu@amazon.com, wuyun.abel@bytedance.com, 
-	quic_abchauha@quicinc.com, gouhao@uniontech.com, netdev@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Sun, 25 Aug 2024 16:12:48 -0700
+Message-ID: <CAM5tNy4jHFikM7O2UcZxk_1z9F11=-c31cxhMqbvheLfCi9q=w@mail.gmail.com>
+Subject: Linux NFSv4 client patch for testing of the POSIX ACL extension
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 24, 2024 at 8:12=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
-te:
->
-> On Thu, Aug 22, 2024 at 09:39:04PM +0800, Li Zetao wrote:
-> > When resolving name in ceph_dns_resolve_name(), the end address of name
-> > is determined by the minimum value of delim_p and colon_p. So using min=
-()
-> > here is more in line with the context.
-> >
-> > Signed-off-by: Li Zetao <lizetao1@huawei.com>
-> > ---
-> >  net/ceph/messenger.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-> > index 3c8b78d9c4d1..d1b5705dc0c6 100644
-> > --- a/net/ceph/messenger.c
-> > +++ b/net/ceph/messenger.c
-> > @@ -1254,7 +1254,7 @@ static int ceph_dns_resolve_name(const char *name=
-, size_t namelen,
-> >       colon_p =3D memchr(name, ':', namelen);
-> >
-> >       if (delim_p && colon_p)
-> > -             end =3D delim_p < colon_p ? delim_p : colon_p;
-> > +             end =3D min(delim_p, colon_p);
->
-> Both delim_p, and colon_p are char *, so this seems correct to me.
->
-> And the code being replaced does appear to be a min() operation in
-> both form and function.
->
-> Reviewed-by: Simon Horman <horms@kernel.org>
->
-> However, I don't believe libceph changes usually don't go through next-ne=
-xt.
-> So I think this either needs to be reposted or get some acks from
-> one of the maintainers.
->
-> Ilya, Xiubo, perhaps you can offer some guidance here?
+Here is a crude patch for the NFS client that can be used for testing the
+POSIX ACL extension to NFSv4.2 described in draft-rmacklem-nfsv4-posix-acls.
+It is done against a linux-6.3 kernel, but hopefully can be applied
+to newer sources fairly easily.
 
-Hi Simon,
+For now, the patch is here:
+https://people.freebsd.org/~rmacklem/linux-posixacl.patch
 
-I'm OK with this being taken through net-next.
+I am hoping this patch will encourage someone to do testing during
+the late Oct. NFSv4 Bakeathon.
 
-Acked-by: Ilya Dryomov <idryomov@gmail.com>
+Since I am not familiar with the Linux NFS client code, there is a
+lot left to clean up before it would be useful for more than testing.
+Here's a few items:
+- The NFSACL protocol code pre-allocates pages for large ACLs. I do not do that.
+  Unlike NFSACL (which puts uids/gids on the wire), the NFSv4 extension
+  uses "who" strings, which can be up to 128 bytes (IDMAP_NAMESZ).
+  As such, a maximum size POSIX ACL with 1024 ACEs can end up over
+  140Kbytes on the wire.
+  I currently use xdr_stream_XXX() functions to fill out the encoded xdr,
+  which seems to work?
+  Thought needs to be put into how to handle large POSIX ACLs.
+  - I haven't even tested large ACLs yet.
+- When I needed functions that were in nfs3acl.c or in nfs_common/nfsacl.c
+  but "static", I just copied them into nfs4proc.c.
+  (I think they could go in nfs_common/nfsacl.c as non-static and then
+   be used by both nfs3 and nfs4 code, but I wasn't sure what the Linux
+   tradition was?)
+- There's a bunch of dprintk()s in the code I used for debugging.
+  Most of them should go away once the code solidifies.
+  (Most start at the left margin of the line.)
+  --> I don't know how the trace stuff works.  That needs to be added.
+- The GETATTR for the POSIX draft ACLs also acquires the acl_trueform
+  attribute.  If that attribute is not set to ACL_MODEL_POSIX_DRAFT,
+  a -EOPNOTSUPP is returned.  I think that will make getfacl(1) return
+  a POSIX draft ACL based on mode, but I am not sure?
+- I probably put stuff in the wrong places for a NFSv4.2 extension?
+- There doesn't appear to be any bits left for NFS_CAP_xxx, so I
+  just used the NFS_CAP_ACLS one. (There probably should be a separate one,
+  but this might work ok?)
 
-Thanks,
+This one may only be a configuration problem, but even though I think
+I have the uid<->name mapping working, nfs_map_uid_to_name() always
+returns the "number in the string".
+--> To get setfacl to work, I have to configure my test server to use
+    "numbers in strings". (nfs_map_name_to_uid() does seem to work?)
 
-                Ilya
+Have fun with it, if you have the chance to look at it, rick
 
