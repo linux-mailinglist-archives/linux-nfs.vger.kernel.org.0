@@ -1,69 +1,59 @@
-Return-Path: <linux-nfs+bounces-5782-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5783-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13B0B95FA2F
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 21:57:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61CC795FA47
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 22:03:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4999284A71
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 19:57:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FB891F21194
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 20:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3BC1993A3;
-	Mon, 26 Aug 2024 19:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10AA199E9F;
+	Mon, 26 Aug 2024 20:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qw2/c6PW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRL2t5PV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34E1991B8;
-	Mon, 26 Aug 2024 19:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB64199E9E;
+	Mon, 26 Aug 2024 20:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724702272; cv=none; b=RvOS4RLZy+mO21mXJHQyw8ozlyPsQDHP/3PyHlko4sHJ6CUn4lpryihEXO5qV2y5bhjZH0L7B4OjQif7gPD4UDPQzgCv7hBHwY4UxutWo4XCNIGmv1x8tdq+ZhTmiN90Vt1r7Ec4bo6mSIo5spV3jTT7q5tKwWDw6UjkxsChmH4=
+	t=1724702585; cv=none; b=uaqfyVJbEiUY2QdAwqxu+tVrv8AVlM8KwhDuAVQ94S1QS2RhSjCPr/oM4MYvW98BnARB7cgj4CuxZrcaA8W0T5ym03AMV5PBbHU9YYyezDl4Co21EUq2FphvOeem1ps9IeIddgZsNma3sb9gYPf3nZMadccfMo6DHlWfkYvL870=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724702272; c=relaxed/simple;
-	bh=sPVlnRIjMywyzyc6nAw1h/13Pzxm7ZopyfCDSI2DgEI=;
+	s=arc-20240116; t=1724702585; c=relaxed/simple;
+	bh=NoPy+nbGyqCPtTKiGxyENba+IyOrf06MnqP6QYxHy1s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CSCezf5xTQrqaUMbni64Uv6AVVtKUxtPgLa0rZgLnSSa/IBlZuPluTOOepToqu8I7KpyrN4ZcsMWK0VH96aiL6w2mMClBTwxyx9kmpg/c/PtjMOjqO+Yz8wYdcNrYcP8+B+zs3Q5dA+1SWhkE/AG8tTY5Ol8WwQ8TJyaCtjQJGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qw2/c6PW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C40DC8B7A3;
-	Mon, 26 Aug 2024 19:57:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiG4fo/ZXOJGGMb1b8V2fIL4xvZ99gmXsBjkRVbjPGFpIrecqLLrJj6iCuNRjV2meStPDcvoMw2TyLJ3kzf1y1n/Vc6ZOWdeLaQFz1sWzsypdQJsZmaBi3Ary77oNXLkAAesFufZjMv72xfoB7iOPbEH1IbFq7cnfoyHlYY/cJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRL2t5PV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB03C4DDF3;
+	Mon, 26 Aug 2024 20:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724702272;
-	bh=sPVlnRIjMywyzyc6nAw1h/13Pzxm7ZopyfCDSI2DgEI=;
+	s=k20201202; t=1724702585;
+	bh=NoPy+nbGyqCPtTKiGxyENba+IyOrf06MnqP6QYxHy1s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qw2/c6PWFMQtdt9h+tSsbv4+Vi56P1zxnVprcFt1WEa3mG9PdBDs/4t8/GmNqyxHz
-	 ScPSUGwnB2FqJdAu2Vd/S6Hu8U1rujDxX6R49424wEmFdCGs69w1FnwewxRC21zGAe
-	 uw4pJPQifspkEqaSXmVCNVqQAA5sf1wPZ/knl9I6E9wBS2iXJHZ4458KwjOPJa5Dwf
-	 9SqOvB1tsldDBHOGPestBQ//HXs6JTQhc3j4+dRxzbl78ub5gHWrd0l7aHBHJcswvf
-	 gX9kDhCMXqvPGpUo9WkMJ4iPsPPsa1vnXNFYoZZwXCoPvloXkWKDsHj0pd0QkpjCTS
-	 8z1bZVBiLx+8A==
-Date: Mon, 26 Aug 2024 12:57:51 -0700
-From: Kees Cook <kees@kernel.org>
-To: Kaixiong Yu <yukaixiong@huawei.com>
-Cc: akpm@linux-foundation.org, mcgrof@kernel.org,
-	ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, luto@kernel.org, tglx@linutronix.de,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	j.granados@samsung.com, willy@infradead.org,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com,
-	trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.com,
-	jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	paul@paul-moore.com, jmorris@namei.org, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
-	wangkefeng.wang@huawei.com
-Subject: Re: [PATCH -next 00/15] sysctl: move sysctls from vm_table into its
- own files
-Message-ID: <202408261256.ACC5E323B2@keescook>
-References: <20240826120449.1666461-1-yukaixiong@huawei.com>
+	b=uRL2t5PVvNQXYSB4naqq5QoK95m6VIgVYpuopW7xnUNVQdfNjDzwo0ISRHqhepF6O
+	 RBq2hR/ERq7j6tebTp8mPZmU/so4hJbq5XpQXWq8kRaSUKnxwz0mhPLK8tXASr0nyq
+	 RoKhFyfwoyCl1nCBVk0L0mtzDFDv+qfTYujqpgzTIcXqoE3/avjqw6RGJvLNwwxiK0
+	 Ey2/LqKa78HzvtM8G5QyVCCNe6L/ToEdmN6QuP8mqUCx0Pv5sW5hzLmgC5vbxngaDv
+	 BcD4728lvAsxn7tCZrL5Kg3lGXwadfzZWgT+phl4iwM0be76LLAlCU10dQE4VEAwSq
+	 R70PR0aLyvzVQ==
+Date: Mon, 26 Aug 2024 16:03:03 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v13 10/19] nfsd: add localio support
+Message-ID: <Zszfd9FSg3NWohN0@kernel.org>
+References: <20240823181423.20458-1-snitzer@kernel.org>
+ <20240823181423.20458-11-snitzer@kernel.org>
+ <172463360544.6062.2165398603066803638@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,19 +62,58 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240826120449.1666461-1-yukaixiong@huawei.com>
+In-Reply-To: <172463360544.6062.2165398603066803638@noble.neil.brown.name>
 
-On Mon, Aug 26, 2024 at 08:04:34PM +0800, Kaixiong Yu wrote:
-> This patch series moves sysctls of vm_table in kernel/sysctl.c to
-> places where they actually belong, and do some related code clean-ups.
-> After this patch series, all sysctls in vm_table have been moved into its
-> own files, meanwhile, delete vm_table.
+On Mon, Aug 26, 2024 at 10:53:25AM +1000, NeilBrown wrote:
+> On Sat, 24 Aug 2024, Mike Snitzer wrote:
+> > +
+> > +	/* Save client creds before calling nfsd_file_acquire_local which calls nfsd_setuser */
+> > +	save_cred = get_current_cred();
+> 
+> I don't think this belongs here.  I would rather than
+> nfsd_file_acquire_local() saved and restored the cred so it could be
+> called without concern for internal implementation details.
 
-This is really nice! Thanks for doing this migration. I sent a note
-about the "fs: dcache: ..." patch that I don't think will be a problem.
+OK, will fix.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+> > +
+> > +	/* nfs_fh -> svc_fh */
+> > +	fh_init(&fh, NFS4_FHSIZE);
+> > +	fh.fh_handle.fh_size = nfs_fh->size;
+> > +	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
+> > +
+> > +	if (fmode & FMODE_READ)
+> > +		mayflags |= NFSD_MAY_READ;
+> > +	if (fmode & FMODE_WRITE)
+> > +		mayflags |= NFSD_MAY_WRITE;
+> > +
+> > +	rpcauth_map_clnt_to_svc_cred_local(rpc_clnt, cred, &rq_cred);
+> > +
+> > +	beres = nfsd_file_acquire_local(cl_nfssvc_net, &rq_cred, rpc_clnt->cl_vers,
+> > +					cl_nfssvc_dom, &fh, mayflags, pnf);
+> > +	if (beres) {
+> > +		status = nfs_stat_to_errno(be32_to_cpu(beres));
+> > +		goto out_fh_put;
+> > +	}
+> > +out_fh_put:
+> > +	fh_put(&fh);
+> > +	if (rq_cred.cr_group_info)
+> > +		put_group_info(rq_cred.cr_group_info);
+> > +	revert_creds(save_cred);
+> > +	nfsd_serv_put(nn);
+> 
+> I think this is too early to be calling nfsd_serv_put().
+> I think it should be called when the IO completes - when 
+> nfs_to.nfsd_file_put() is called.
+> 
+> nfs_to.nfsd_open_local_fh() and nfs_to.nfsd_file_get() should each get a ref to the
+> server.
+> nfsd_to.nfsd_file_put() should drop the ref.
+> 
+> Note that nfs_do.nfsd_file_get() would not exactly be nfsd_file_get.  So
+> maybe a different name would suit.
 
--- 
-Kees Cook
+Yes, you're right.  I'll get it fixed.
+
+Thanks!
 
