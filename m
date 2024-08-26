@@ -1,225 +1,176 @@
-Return-Path: <linux-nfs+bounces-5743-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5744-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A07D95F1C8
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 14:47:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D077395F1D6
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 14:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5AD5283725
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 12:47:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00F631C22781
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 12:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365721885A9;
-	Mon, 26 Aug 2024 12:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D588E17C989;
+	Mon, 26 Aug 2024 12:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ps9uclU9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB0B186298;
-	Mon, 26 Aug 2024 12:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CCE17C990;
+	Mon, 26 Aug 2024 12:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724676381; cv=none; b=OdUogBMF4SZkhru2cXUqcgoK5F9wAvSIIdpPZLrwSAUtYikM5RmoW5xidN0Hwh7wJJLoU+af3yoHLYEkph5NZcPyjwb03ZVA5pJq61O9dIVb2x70A38jwtGP1QDb1K7J/da7z3dibKstIpo7d4mQNvtoHz1DLraIW3vuZBcEFzA=
+	t=1724676397; cv=none; b=QmluDQH011bZLCVHDFcKm8QEJYWzu74ZFC3FuQmNwK7jX9f/22Uo9EwHIIhwUJuUuUsXLyHg2vjyDVY0+RhBdefE5yc71b2TrVo7GFVECBUAhMt/XqY9mSWRq0XIEDDqiURy2hmb2d2z+Ugm2MLXQ1n3weiOo4BFJOD/oHevWJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724676381; c=relaxed/simple;
-	bh=O/DobHs4cYQFtolMYJAHtrh6UhI7iy5XA2iTj6BBe74=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=syxW87QQ6z7mItMw3LO58UFinUekQgmbEJ08eDfXKRWElda75e7kyI6hxfERwq88moNLo1BWdFDqAPeeFSyfMzVT9DAiCXIHUaSv7iCV7pGdUOzK0d2oRxpv3DeoQt6mojAZriXi9X0b9lEj17+V1qHYWJx71GjYanrQjaqCHog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Wsr304ZsSzfZ36;
-	Mon, 26 Aug 2024 20:44:12 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 976E81800A5;
-	Mon, 26 Aug 2024 20:46:15 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 26 Aug 2024 20:46:15 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
-	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
- Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Shuah Khan
-	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH net-next v15 04/13] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Mon, 26 Aug 2024 20:40:11 +0800
-Message-ID: <20240826124021.2635705-5-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240826124021.2635705-1-linyunsheng@huawei.com>
-References: <20240826124021.2635705-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1724676397; c=relaxed/simple;
+	bh=Mqa5mLhpZY/ltSyNSZZhMBfJFukWo5ccxg5oGNVYVKs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HrJ3YQFVeIVnyvEE76cfblOg4g1AT/Qjtp8Rv8S/cEJ9LeFdAmdYcmgsord4BQoB6aYcj7sXKysCbt1kK4vDRRXjQeATLNzzDgE6CmXtYUVZjHOzWGAR8xxnllJ8zBnSAw7GsD31OQ63R3rXo5f+z4GD1gPmr3lfLD7dPn17EmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ps9uclU9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7364C581A8;
+	Mon, 26 Aug 2024 12:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724676397;
+	bh=Mqa5mLhpZY/ltSyNSZZhMBfJFukWo5ccxg5oGNVYVKs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ps9uclU9vmsyZRIuCMx9HeJBP1eF4frm1kuhfPPZ1IxtxVt9nnjT2IhsEq19cguZS
+	 z6f+FGwT4lP1di7aHYi+K80lJCxRnXa6vVEdwKHEilIcKpZ+CTrFhl7dlf5VxpEi7c
+	 TclzY5HPwAHrmIkJ4KI1be6ykI+kHGeNa0ynzfrgkiuYOeRNfp+UKPUSgpCCTbAcxO
+	 /aHjxi3ja6EieBSZbNPwtgjQXYnOVrKbsB7cHC58PWJ9Vc4LCMEKKmgeszAT63IVOE
+	 EoPYZRXbhgy+RIOCGuSGRXv/rivgsB94HyBOFJNXriO+EwopeUluHpMVj8WJ1llBF7
+	 p7u+R7T5tK6mg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/7] nfsd: implement the "delstid" draft
+Date: Mon, 26 Aug 2024 08:46:10 -0400
+Message-Id: <20240826-delstid-v2-0-e8ab5c0e39cc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABJ5zGYC/z3MQQrCMBCF4auUWRvJTGsxrryHdFGSsR0siSQlK
+ CV3NxZ0+T8e3waJo3CCS7NB5CxJgq9BhwbsPPqJlbjaQJo6fcaTcrykVZwyLRndGxwdItT3M/J
+ dXrt0G2rPktYQ3zuc8bv+jP5vZFRaWSK0rbPYWXd9cPS8HEOcYCilfAAUqwsInwAAAA==
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Tom Haynes <loghyr@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4176; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Mqa5mLhpZY/ltSyNSZZhMBfJFukWo5ccxg5oGNVYVKs=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmzHklNB/3H06JSbOJk7KWW01IPnZ3Ngolievad
+ ZKp6iEEYB2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZsx5JQAKCRAADmhBGVaC
+ FeqfD/9/LZnJu/iWR1fcTiBn4raT4I6PpMydkZ64EwU6NnAUGAz/14Cp1ja9MkUrT/M7+RoKkXv
+ uHNkyiqHdYozP9mhZadUmy7rFhS/If6y8qVP78JjobU3ghzpvq9pgFBCGCrFErWDC02IYaKdGbV
+ EOWuFo0CIIBhADLdnsD2/O9rH0GxvGwJJutog25GZN9AqzciSOzsOs/GZndWKCFaxnmztBYDY8n
+ SdzyV/hCTinE3ANhB8aJrowKfnvZkjcJKF71kIeUxDRIZoO+gQnctagtLRfBFxgiq4PCTx6EELc
+ OVW9eVhvrbn3GlpjKOMCV3f1QF/W4gXkvE5Tlyc9gnKifIA5yjxSqVnGTXPfybcGajMIeL/sCVe
+ s/xqsx+Jg47166qsHhHnOwODivVqs84KjLv5MW4hpG/PG8Igiqeah7qpPK+NLxtysUseg7fsmdF
+ rsfN9D18daTBBytJHBBDz2HohjmXuP1etBwl5kfTDyBhTjK5uPfD3DiIgfZt3XFzzjlLQ5j9v5U
+ 5kY2YnXQS1QDCXNrJomIJnlymuWHYXBDX7K2W6pmICV6EYXuYFmDtTdwUCNO5xEpNCsjnmmoPFN
+ 3wWzBhvOT88hRV4zWOsXDkrLVwGZE4czesL8l674F+glKSLfUHjf5fvg4SDOE1/2igzVac6HVNl
+ LkseKZHxMrjs+8g==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+This adds support for most of the "delstid" draft:
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+    https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/06/
+
+This includes a number of new features around the OPEN call:
+
+- support for FATTR4_OPEN_ARGUMENTS: A new way for clients to discover
+  what OPEN features the server supports at mount time.
+
+- support for OPEN_XOR_DELEGATION: The server can send only a delegation
+  stateid in response to an OPEN (avoiding the useless open stateid in
+  that case).
+
+- support for delegated timestamps: when the client holds a write
+  delegation, it can send an updated atime and mtime in the CB_GETATTR
+  response
+
+FATTR4_OFFLINE is not implemented, since we don't have a way to
+designate that under Linux. [1]
+
+This patchset depends on a number of patchsets still in flight:
+- the multigrain timestamp series [2] (in Christian's vfs.mgtime branch)
+- the nfsd CB_GETATTR fixes [3][4] (in Chuck's nfsd-fixes branch)
+- Chuck's xdrgen patches [5] (in Chuck's lkxdrgen branch)
+
+If you want to test this functionality, you'll also need client-side
+patches that went into v6.11-rc5 [6][7].
+
+I should make special mention of patch #2, which starts integrating the
+xdrgenerated header. That will affect both the client and server, so I
+want to make sure everyone (Trond and Anna, in particular) is on board
+with this scheme before we merge it.
+
+For now, that patch just moves the header from where it was in Chuck's
+tree, but it'd probably be better to add a new "make xdrgen" target for
+that, long term.
+
+[1]: We could add a STATX_ATTR_OFFLINE flag for this, but the userland
+     use-cases are not 100% clear to me.
+[2]: https://lore.kernel.org/linux-fsdevel/20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org/
+[3]: https://lore.kernel.org/linux-nfs/Zsoe%2FD24xvLfKClT@tissot.1015granger.net/T/#t
+[4]: https://lore.kernel.org/linux-nfs/ZsofUUJeB1wbONyi@tissot.1015granger.net/T/#t
+[5]: https://lore.kernel.org/linux-nfs/20240820144600.189744-1-cel@kernel.org/T/#me0207d0b18c19ddbf1cf698acff7e591bb4b100c
+[6]: https://lore.kernel.org/linux-nfs/20240815141841.29620-1-jlayton@kernel.org/
+[7]: https://lore.kernel.org/linux-nfs/20240821-nfs-6-11-v2-1-44478efe1650@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- drivers/vhost/net.c                                   |  2 +-
- include/linux/page_frag_cache.h                       | 10 ++++++++++
- net/core/skbuff.c                                     |  6 +++---
- net/rxrpc/conn_object.c                               |  4 +---
- net/rxrpc/local_object.c                              |  4 +---
- net/sunrpc/svcsock.c                                  |  6 ++----
- tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
- 7 files changed, 19 insertions(+), 15 deletions(-)
+Changes in v2:
+- rebase onto Chuck's lkxdrgen branch, and reworked how autogenerated
+  code is included
+- declare nfsd_open_arguments as a global, so it doesn't have to be
+  set up on the stack each time
+- delegated timestamp support has been added
+- Link to v1: https://lore.kernel.org/r/20240816-delstid-v1-0-c221c3dc14cd@kernel.org
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index f16279351db5..9ad37c012189 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 67ac8626ed9b..0a52f7a179c8 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/mm_types_task.h>
- #include <linux/types.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_align(struct page_frag_cache *nc, unsigned int fragsz,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 1748673e1fe0..9352fcf8cda3 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -752,14 +752,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -849,7 +849,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 6b3f01beb294..dcfd84cf0694 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
-diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-index 4a009122991e..c52598eaf7e7 100644
---- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
-+++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-@@ -117,7 +117,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
+---
+Jeff Layton (7):
+      nfsd: add pragma public to delegated timestamp types
+      nfs_common: make nfs4.h include generated nfs4_1.h
+      nfsd: add support for FATTR4_OPEN_ARGUMENTS
+      nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+      fs: add an ATTR_CTIME_DLG flag
+      nfsd: drop the ncf_cb_bmap field
+      nfsd: add support for delegated timestamps
+
+ {fs/nfsd => Documentation/sunrpc/xdr}/nfs4_1.x     |   2 +
+ fs/attr.c                                          |  10 +-
+ fs/nfsd/Makefile                                   |   2 +-
+ fs/nfsd/nfs4callback.c                             |  43 +++++++-
+ fs/nfsd/nfs4state.c                                | 115 +++++++++++++++++++--
+ fs/nfsd/nfs4xdr.c                                  |  53 +++++++++-
+ fs/nfsd/nfs4xdr_gen.c                              |  12 +--
+ fs/nfsd/nfsd.h                                     |   6 +-
+ fs/nfsd/state.h                                    |   4 +-
+ fs/nfsd/xdr4cb.h                                   |  10 +-
+ include/linux/fs.h                                 |   1 +
+ include/linux/nfs4.h                               |   7 +-
+ include/linux/nfs_xdr.h                            |   5 -
+ .../linux/sunrpc/xdrgen/nfs4_1.h                   |  14 ++-
+ include/uapi/linux/nfs4.h                          |   7 +-
+ 15 files changed, 244 insertions(+), 47 deletions(-)
+---
+base-commit: 55f9aa30de14b6ec52940adeb4790c15247fed40
+change-id: 20240815-delstid-93290691ad11
+
+Best regards,
 -- 
-2.33.0
+Jeff Layton <jlayton@kernel.org>
 
 
