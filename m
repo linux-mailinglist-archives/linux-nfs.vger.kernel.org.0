@@ -1,161 +1,83 @@
-Return-Path: <linux-nfs+bounces-5717-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5718-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D15FF95E68E
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 03:59:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 038BE95E744
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 05:22:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F85FB20BB9
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 01:59:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 332C21C20BF8
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 03:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B785256;
-	Mon, 26 Aug 2024 01:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mkv2xkKI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kG22H8OY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mkv2xkKI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kG22H8OY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18862BE6F;
+	Mon, 26 Aug 2024 03:22:03 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397B12CA7;
-	Mon, 26 Aug 2024 01:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83801F5FE
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2024 03:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724637585; cv=none; b=fk9l09XQ8WDn227JSCJogBLo54rCcl+aCzwpqyKUxQyHOoB8uLPtlHkkWn+R6tOhsY8+FvC9Twvqqlkq0J+vgi18CIsOn65gMvdC7AodRvlRdIotfuDWhoKsl7/F7l146p7DGlJ4e3dpoGvsOEfXezfjbz8wK835Sxzfnys7E5A=
+	t=1724642523; cv=none; b=mAcTAuE0G/IHx2VcOZ8Rdt/Zp/4XqZZxt6R1VRQdIfR7E4LxYMriWZ9IMVYY6IK1KAsqjjwDGaDIgMbOwzTi4HpFUNGI2W+YIgUW3GjObnGbzJ4UbpNp8EbVotcmqWkQql52TiAte3h9XS0GucZQ0YzeLEu5paskrv78lzucKV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724637585; c=relaxed/simple;
-	bh=mIjynFn6513XTbHU2QyVSXOoRFujeE+M7Y+ZrKfm/mo=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=nu3iVGvraTTTOP3tMi/W382dhxIJX8D90va5hzq0nBrNwrIq4svv+j5gng61dtKFCOBUegKAtyH13Ds42PNiIT8X9G4Q9FSZNsD7FSihLqP02ofuUrozWQeJMgy2QyhIaFfirx1rC3dNRYVTEcr6zhFdFWqCwb1RVHzDtlJkk6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mkv2xkKI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kG22H8OY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mkv2xkKI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kG22H8OY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 70B3A1F804;
-	Mon, 26 Aug 2024 01:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724637582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kvypKpQsM9sWZoV1lEGB9aUktFBmWCBgtlesvBDZzCk=;
-	b=Mkv2xkKIcra4qgnAj8O20QjEF1xtkykfBnYwIOZODYo0FKQIbYogcHDgL6dKaYX8oZE4Yf
-	HeY8sHn6NdEgruO36x/h2snMbqvpC5bHyVjUairHrLrBBvXpvlYfu9fkaAL1N0A4SR8Ruh
-	JS1H41PMYQX3J1amTnWaE2jhQuBwrmY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724637582;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kvypKpQsM9sWZoV1lEGB9aUktFBmWCBgtlesvBDZzCk=;
-	b=kG22H8OY7cRQv3djrWnE44xyScAUj4YtjUcN491ppO8xswH1RxqTGy14nGWjelO2HrmOhe
-	betFsqLessD8ogAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Mkv2xkKI;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=kG22H8OY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724637582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kvypKpQsM9sWZoV1lEGB9aUktFBmWCBgtlesvBDZzCk=;
-	b=Mkv2xkKIcra4qgnAj8O20QjEF1xtkykfBnYwIOZODYo0FKQIbYogcHDgL6dKaYX8oZE4Yf
-	HeY8sHn6NdEgruO36x/h2snMbqvpC5bHyVjUairHrLrBBvXpvlYfu9fkaAL1N0A4SR8Ruh
-	JS1H41PMYQX3J1amTnWaE2jhQuBwrmY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724637582;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kvypKpQsM9sWZoV1lEGB9aUktFBmWCBgtlesvBDZzCk=;
-	b=kG22H8OY7cRQv3djrWnE44xyScAUj4YtjUcN491ppO8xswH1RxqTGy14nGWjelO2HrmOhe
-	betFsqLessD8ogAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0FC44139DE;
-	Mon, 26 Aug 2024 01:59:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 957WLYvhy2ZXcgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 26 Aug 2024 01:59:39 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1724642523; c=relaxed/simple;
+	bh=ZcN5sH30cCRPKD8DjTTe2Szofa2kcgMbvhHhMnWVA0A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hJPJCfD1eEPGx1DDUWvhYW4uyfMqoii9AbUCMKTFb00ZxoIj3SkSTg2BcWpdwmoBb4FKeZOk2DDWZwz6pVmByQw1GnEvgKbrYcvNml5GTOy8wm+x6Kl/ugdSRxoN9Dycq7/Z3L7Im4k+OgNbIZ3M5ddvwwzzvr4LZ5M2aD/O7Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WsbSl2xNxz20mfr;
+	Mon, 26 Aug 2024 11:17:11 +0800 (CST)
+Received: from kwepemd200011.china.huawei.com (unknown [7.221.188.251])
+	by mail.maildlp.com (Postfix) with ESMTPS id 36D3C180043;
+	Mon, 26 Aug 2024 11:21:58 +0800 (CST)
+Received: from cgs.huawei.com (10.244.148.83) by
+ kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 26 Aug 2024 11:21:57 +0800
+From: Gaosheng Cui <cuigaosheng1@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <cuigaosheng1@huawei.com>
+CC: <linux-nfs@vger.kernel.org>
+Subject: [PATCH -next] nfs: Remove obsoleted declaration for nfs_read_prepare
+Date: Mon, 26 Aug 2024 11:21:57 +0800
+Message-ID: <20240826032157.4011241-1-cuigaosheng1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v13 00/19] nfs/nfsd: add support for localio
-In-reply-to: <20240823181423.20458-1-snitzer@kernel.org>
-References: <20240823181423.20458-1-snitzer@kernel.org>
-Date: Mon, 26 Aug 2024 11:59:37 +1000
-Message-id: <172463757705.6062.17876074269050148095@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 70B3A1F804
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd200011.china.huawei.com (7.221.188.251)
 
-On Sat, 24 Aug 2024, Mike Snitzer wrote:
-> These latest changes are available in my git tree here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=3D=
-nfs-localio-for-next
->=20
-> Changes since v12:
-> - Rebased to rearrange code to avoid "churn" that Jeff Layton felt
->   distracting (biggest improvement came from folding switch from
->   struct file to nfsd_file changes in from the start of the series)
-> - Updated relevant patch headers accordingly.
-> - Updated localio.rst to provide more performance data.
-> - Dropped v12's buggy "nfsd: fix nfsfh tracepoints to properly handle
->   NULL rqstp" patch -- fixing localio to support fh_verify tracepoints
->   will need more think-time and discussion, but they aren't of
->   critical importance so fixing them doesn't need to hold things up.
+The nfs_read_prepare() have been removed since
+commit a4cdda59111f ("NFS: Create a common pgio_rpc_prepare function"),
+and now it is useless, so remove it.
 
-Thanks for continuing to revise this.  While I think there are still
-issues that need addressing, they are much smaller than some of the
-things we had to address in the past.  It is certainly getting closer.
+Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+---
+ fs/nfs/internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-NeilBrown
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 5902a9beca1f..b3dc7c84eef9 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -505,7 +505,6 @@ extern int nfs_read_add_folio(struct nfs_pageio_descriptor *pgio,
+ 			       struct nfs_open_context *ctx,
+ 			       struct folio *folio);
+ extern void nfs_pageio_complete_read(struct nfs_pageio_descriptor *pgio);
+-extern void nfs_read_prepare(struct rpc_task *task, void *calldata);
+ extern void nfs_pageio_reset_read_mds(struct nfs_pageio_descriptor *pgio);
+ 
+ /* super.c */
+-- 
+2.25.1
+
 
