@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-5752-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5753-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8399795F216
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 14:53:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4582995F218
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 14:53:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7929B2324F
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 12:53:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 016E7283FD8
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 12:53:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1C7189B9B;
-	Mon, 26 Aug 2024 12:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FF718BBAC;
+	Mon, 26 Aug 2024 12:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI1vchag"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrLEccks"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A4217C9AD;
-	Mon, 26 Aug 2024 12:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F7718BB97;
+	Mon, 26 Aug 2024 12:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724676614; cv=none; b=lRnAUEaYYiCTpBDkVf+9aWJvUwti6sgv3hTPqs91Z1HoLlWczMxmtYjzRogrSd6+rlUo5e5WYNO3TB3JFIN3INl/FMsdeX9tNnljoXlbThtxSoh72Omrix4FtLW2q0BIu3bQR4EoC2FGYmhwej9XlNjPvDWIn/dhhX7BNQbeMSk=
+	t=1724676615; cv=none; b=jGQMuhCWdeoWKPoQmxPNtaEnV8wOYazXG4T4FNxghj4iinRRRUomqNt8ma3xBOpw9DhQXV5XLAdQDPgzxSyDOpWMoPi/9ZiD5LkFRkOR+u2U4CtYh/C+Zk6+5nDjBpd/AX8HlLfR+6wNYrnetGgQaRgWaCvYSOv+WFLABA6K674=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724676614; c=relaxed/simple;
-	bh=prYIWJaLE5/Qq2KKOubfaUeUSPV4xft6OYJnGcbmNsE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NMy9L4NqGMI9KYQc3kOLpS+rQGFZefQnE50kGY4dQfk9zXyvCOmqB6/fIGnqwQQOz06WrxfDKahGONuJ8g3DVODRbOQLenS6MEm4rdFIqBEjQS9ZdzBdploOVYdHRShf4fMf6sj6TdElyHO4OM3Yz88MxX06szbMasch1g8Snd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI1vchag; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D35DC4FEEB;
-	Mon, 26 Aug 2024 12:50:13 +0000 (UTC)
+	s=arc-20240116; t=1724676615; c=relaxed/simple;
+	bh=uX/vVKUZWx7C0IhR59T1sW5G6FbuARVCQ2QSeOWChrA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Oi5vDSH9fgpYgSefpVQuXtE7ieMp8vGzdYr/l9SbcOadrymoE7DN7n8LL6a5iUV9jhaVPIUKjvU1881w+BeffiZ3LZtH7wH56yJbjCWfENgnuZMxjxjBTi4e0PU/PzNYO483pYHEOEEV42LAZvG4lS80CscikTDtBq/3Ssu3p6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrLEccks; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80FFCC4FEF0;
+	Mon, 26 Aug 2024 12:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724676614;
-	bh=prYIWJaLE5/Qq2KKOubfaUeUSPV4xft6OYJnGcbmNsE=;
-	h=From:Subject:Date:To:Cc:From;
-	b=BI1vchagXe2NjQOkTPPylHDYKbSLbLCprOCDm6/auZ7cLhlh1erYmIUM+p/nI8N2K
-	 5QxUzSuQEx5LZk2ukxFeTtgbHHnW68MCNOASqRcCHhXthINogv/ipaAYehR4NC6PlQ
-	 Pc3k/RiZ+UORizn10QMM2AvuypUdCwkdkjz8hjCU4VzqQ5lDIm6tqYPExxxIqdi0lp
-	 hbqaM+b/8x7FOCeHctcxc9qQAOHy2eKy9NA6IKx4eBk3S9+9Hp6QrTg7Rcf0Yk6HRP
-	 6c/7azGm9dcPQmX36tk+0RepOdGOnK2WbMiNY4KjO59l3x+JLEZovd7Anx+7MgHBWW
-	 yjU+p69/O4Ipw==
+	s=k20201202; t=1724676615;
+	bh=uX/vVKUZWx7C0IhR59T1sW5G6FbuARVCQ2QSeOWChrA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=OrLEccksyqdhhi69bEerGQ6cSSpYqm7eyreWBeuo+LhEurso51M4OP7wGFaH/l+iM
+	 Th8eujaI4goDs6kzgoef+a21p9z+wLGITMBJMjUwFxiDbQi2pV03+RRZW24ehofbTs
+	 gn59HVUJwj4Iu4QrsDMviRhXB6GxnsCYtK1RItT5ES1lVQUso3X/HxEbZih24DXZZ5
+	 TQ09Z0mOq0vdjIpHB4bGYJsa8kp6Frt0CxLMDrmhZxOvHBsT4pEQk5MzT9lt1wIctG
+	 n1M6ocYKMA+ig4x/MqvQ3vJzJm8/IIkG2qzY2LdeRTSTVHQuGtn5gLvxWqNw3qov+p
+	 qqp+4T9pZKJIA==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 0/3] nfsd: callback debugging improvements
-Date: Mon, 26 Aug 2024 08:50:10 -0400
-Message-Id: <20240826-nfsd-cb-v1-0-82d3a4e5913b@kernel.org>
+Date: Mon, 26 Aug 2024 08:50:11 -0400
+Subject: [PATCH 1/3] nfsd: add more info to WARN_ON_ONCE on failed
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,56 +53,56 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAJ6zGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDCyNT3by04hTd5CRdw6REY3PzxJREM6MUJaDqgqLUtMwKsEnRsbW1AB/
- p01ZZAAAA
+Message-Id: <20240826-nfsd-cb-v1-1-82d3a4e5913b@kernel.org>
+References: <20240826-nfsd-cb-v1-0-82d3a4e5913b@kernel.org>
+In-Reply-To: <20240826-nfsd-cb-v1-0-82d3a4e5913b@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=858; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=prYIWJaLE5/Qq2KKOubfaUeUSPV4xft6OYJnGcbmNsE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmzHoEpi55/jV7Q/eiJNQ6rnRi68MNdc0sWYTig
- Gm7rq/mulqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZsx6BAAKCRAADmhBGVaC
- FW8uD/4rKw8iRtvNj3zEoGbk4vD/Je2XDtwT0Uh5PVOMFgKmRydxpynxrgrDQvlsH9+83mb30fO
- oZXfmgFecfKZET4XL+luWweHGUj3cRjvLG62eBQKDZK/sSEGLbGenz1kDqfuBFev/w67g9q/xhw
- pcpm3L9IpXEq8EYc2lxnUHWcV1y/CID5b8FNHJDLgXTPs8mGxySvCQOap8iig7k01YDu9cLzPiq
- 0MuxX6s6R8FlE1yaQ/80MJSHZS5UeKLL19ewWhpp7+s+hxbWeL0MNkxQXT86KhqUkbHxoruCfWk
- GWZFTJXxzgVwoEF3jeV8EPky/RsJtvgpGHLaoU5Fe+sBuyu4gbuxdrkeB/P7OabmFkSlyEaC02n
- 8PidHtK8c+ON0RW8TE7XJv3A8c1e159cxI7AHzyoXHqcZCsV7KJEoK8CuxJLp4OlpjkvNsooOfz
- /dUpJmWAdf3vPQR5+DGnsiPMyfBYfNl4sD3mHYgqM6PTpcpKUlNYjKp8bXAWZsKufeml5IZFw8n
- jz+7GUqLW2/S+RT17sgsE/R2lRCKf4tj7YOtVYHKrN+XhkvlhAYu4amN+Ow3cTUzajKyZvZpdPb
- 4+APnW6VqpoQhVNksWbQQMQoG2lR12DpU8Kl+ANs4fWwL9/o5Kik+SJZyh5dd+H+QvZVlmWRtKh
- uPOGcLuM7WHTRmw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=743; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=uX/vVKUZWx7C0IhR59T1sW5G6FbuARVCQ2QSeOWChrA=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmzHoFDZVH1tpRPHbaIdVGOIdT5qpP/tPk5SDWx
+ +GdrT5eJqOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZsx6BQAKCRAADmhBGVaC
+ FWh5D/9+CM/Y3KA63VAgrlPq7Hv+Dh5GfwT6xbX0uQDetwXlgXCm8S2boR+tZ765rLtBpZ4y1y8
+ NfhOm13EsRaI3vMWRl2OV+R4J7xjWcOHDoUTMmuuZ3ivFyRWoaDM8nknO7vI6V3A+/EO0hPZeph
+ jIEpC9M1iSa55tP2W7kVzNmhRiCquh/ThACzAVMgPFbthw5xJxt8O3ERtEbMXstqWphe/XiuWID
+ CxyroemAqArBwDovo2oY+bqtZIi7j1Ih7mtfSeRXDcfwGLSIc1jUEokZImsQ2pSfobw8Xl+4AaY
+ L9X3HyZ8E//7aBB3gWEFmnRyNxYmpRSy6OWh/6QKQIhlAzpGWEYiWsCqMHS7wnzOeVbDW2X0RL7
+ 8kH8v9ZxzEFkVC9tb+FSdC+vV8mkbzXqMQ/QNB/RNPLgXZ1yG2l/icG4pHxT355wX4cT93lQTUd
+ mkBSk4ND4sshtxGEnaLjD1XZXGGYJiPlRiNP4E5cei5mlEk50/yUNTtzWpJxfpTIW9jS/uJf1CF
+ AzGtrgDnoVIU+4UrE9pRZbEXSOjE8Y5W1nFd6mBL1UCiA9R27bm4inB3K5JUdEmZjviKvr8Eoi0
+ R+B35gV4ObmHWn7k8Xi5b9sG76Z6UTG8uIzASWAKUK6MLFTCubNwuFqdZafvdAIz1QZjA/OdbU9
+ UK4YVl5mceLL8eA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-While working on the delstid patches, I had a couple of bugs that caused
-problems during the callback handling. They're now fixed, but these
-patches helped me sort out the problems.
+Currently, you get the warning and stack trace, but nothing is printed
+about the relevant error codes. Add that in.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (3):
-      nfsd: add more info to WARN_ON_ONCE on failed callbacks
-      nfsd: track the main opcode for callbacks
-      nfsd: add more nfsd_cb tracepoints
+ fs/nfsd/nfs4callback.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- fs/nfsd/nfs4callback.c |  8 +++++++-
- fs/nfsd/nfs4layouts.c  |  1 +
- fs/nfsd/nfs4proc.c     |  3 ++-
- fs/nfsd/nfs4state.c    |  7 +++++++
- fs/nfsd/state.h        |  1 +
- fs/nfsd/trace.h        | 27 +++++++++++++++++++++++----
- 6 files changed, 41 insertions(+), 6 deletions(-)
----
-base-commit: 5be63fc19fcaa4c236b307420483578a56986a37
-change-id: 20240825-nfsd-cb-1ba377ada62d
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index d756f443fc44..dee9477cc5b5 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1333,7 +1333,8 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
+ 		return;
+ 
+ 	if (cb->cb_status) {
+-		WARN_ON_ONCE(task->tk_status);
++		WARN_ONCE(task->tk_status, "cb_status=%d tk_status=%d",
++			  cb->cb_status, task->tk_status);
+ 		task->tk_status = cb->cb_status;
+ 	}
+ 
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.46.0
 
 
