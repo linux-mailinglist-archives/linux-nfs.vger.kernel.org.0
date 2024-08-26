@@ -1,77 +1,84 @@
-Return-Path: <linux-nfs+bounces-5720-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5721-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 997EE95ECD3
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 11:13:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2846E95ED7F
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 11:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E9FC281D1B
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 09:13:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C51961F21995
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 09:39:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E482213DDB6;
-	Mon, 26 Aug 2024 09:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D00C71448E4;
+	Mon, 26 Aug 2024 09:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YMqQu3GE"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="1D6h97nm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0A13F441;
-	Mon, 26 Aug 2024 09:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DCA13D630
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2024 09:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724663600; cv=none; b=eO1or5xvMkMNQB3lRBIDA2PfQMeBhhh5+F0mf78SpERKIuyxDLqkQlsytsBxpda7WdYCn82RKZDonTtnvAreJz2ZaHUEnpvl+c/6axVynH5BsT5CIsw3PmSrOl9Ky/BNVDDWaaD+mT5Hre6oqNYuStQDt/urhG8hLghRB7mARS8=
+	t=1724665148; cv=none; b=Gr8YcF9Zolg+Tue6arLjdF79N7770uwohXLYl6B+b9LUExvPyslhLhUl4uMlp6L1dTxnI3l0qbRPiYC5eFzYXWA9wWyHB/E9psaURa8ZHnRXzpLog3wWfKU4ZWorhwfWo1EHfpUFVJvWySVPdavoD19bsRsou3C09Z0AwNoR1Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724663600; c=relaxed/simple;
-	bh=4nA4jNEDm6SLdH7kYlQhANzKqtqdhCy8HMruQkw4a38=;
+	s=arc-20240116; t=1724665148; c=relaxed/simple;
+	bh=q5NKpvpQmHFhkVuhB1yf1UaD8tdgXAOJImWQRQKU2yU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPXOn8HRfCZgXmZkH5qoTjpYeX+arC8QZcMmhoCZsTZ57DHSSwt1dgGp1q3paWrkO7CE4kYNvR0OBYmaxrFJ6etbG3Tv/VFISjlysMwQRwR+qJkJctwUKirLugQswXZDAXpobIi4U8J+wKxGaqvCRMAXg7b4zptfo78C72DJa0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YMqQu3GE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724663599; x=1756199599;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4nA4jNEDm6SLdH7kYlQhANzKqtqdhCy8HMruQkw4a38=;
-  b=YMqQu3GE+SO+wcb5Rr20FBi1LawGEh2sWdvNzJFXpg7hDS2FH+Qe6U+H
-   tY3aDZi2FZ9z1Wb3EPcyyBYzOaTUMYk3vP02A5aN3Yqa6ZrRyEVsUwNXP
-   gVSvvCVEeVxulB7e8Hy8GIB2QHcrwCvBV0gJdn/cTNePyf6EKh+mXK0FG
-   ewE145e13oaOoWz9CI1R0EqnhMDfn4NcIWamYRY3xzjRnJJzrNmDoXBVE
-   H1F0yXTcmR1PN6puiK/sz76GavwDsdxsLzsoFwgr5d0AhfDn2Q3oH6dBp
-   LRCqr6Sst7OZnkV+t8FbHE4m33Vk/T8uFQzjgyFiYQuSQVGjCvoNN2+cV
-   w==;
-X-CSE-ConnectionGUID: VDTinndkQ+a7Czynw8oB4Q==
-X-CSE-MsgGUID: pe2uhRrUQSO2qFDj3THYKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11175"; a="40544221"
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="40544221"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:12:53 -0700
-X-CSE-ConnectionGUID: Nox2pa3eRfOZXOnsj0pspg==
-X-CSE-MsgGUID: yZyvcUs2SMG63Lg3QNqQZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="62288980"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 26 Aug 2024 02:12:51 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1siVmK-000GoG-1W;
-	Mon, 26 Aug 2024 09:12:48 +0000
-Date: Mon, 26 Aug 2024 17:12:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: sergii.boryshchenko@globallogic.com, dushistov@mail.ru
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sergii Boryshchenko <sergii.boryshchenko@globallogic.com>
-Subject: Re: [PATCH] ufs: Remove redundant inode number check from
- ufs_nfs_get_inode
-Message-ID: <202408261605.ARxTA9jX-lkp@intel.com>
-References: <20240822142610.129668-1-sergii.boryshchenko@globallogic.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iRGFOL20BU2DifwXLc0FgX58SRi/Qk7NVSK9Oga4Gf2Ra5N4YYZm7dfLuY4mJYL7yR38FrKwSx8vcfUwEC54XoSvCOjKvQLDN5P+JqaOq8wjdNYnwS4TzDH2pzyxTY0dxUU4dUuR4p3lBOyycDBs8X7hRpGV6Knt/1Ye+Cf6Hi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=1D6h97nm; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a867a564911so492654266b.2
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2024 02:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1724665145; x=1725269945; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7x/Iy4WGMT/angdlokuIQnh2/Lh8TylG6czBnlIKoXY=;
+        b=1D6h97nm5Ehb4XrmamqBRFsGGI4VTACwW5KzkGYoWzxvaeUmHozj6BtajzISbxCpgz
+         H/jAgTB0nuveezaz3/Sh6KKHXNHRYhvb94OnDQadgsTBjs8C2kWJE+Nejv8qx38cTBhb
+         CF9/ZFB8m8xW8JgXOBtr6jkmu3F/6M1R/gksdDEts1F8jTA+8FHfZ9OkAkfegQmJ3Nja
+         ct75JrG6DKKUm1OonPHCoztYMZrlciw85g5ycWeqWUJFAdm69WTyk/woPlV/zXGh5YE9
+         IQek1fNvIOsjQbqoGK0nArOw88D27kagz3L7LXzRo4wslz8QBgEKzfP0hI7q7JVAA0DJ
+         Y2QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724665145; x=1725269945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7x/Iy4WGMT/angdlokuIQnh2/Lh8TylG6czBnlIKoXY=;
+        b=PVqCfcxnx6UJI03FMf2O8Mbi6QBrOjUuD62+G5NfOQYw8aBhI8IlqxjjkVtEr1wD2M
+         nqQzdW1oTuDrwTwHtPahcTRGUJUZtnzpXRddrlFMeJk81y50nZevKWyw1DRKK/2ErxoR
+         zJqipEf7V0Tnzlv+dU9IozYZV/z+fhmDqQl/UEvCyZ7Ds12yzA3Nq89u+sbUg25izSmk
+         y5QrkPoITrfWjwDysF8LH+yOp0cZ9lRTqr1HlaQLwODuqw8YlFS8YIiHD+Liy7RsFjbn
+         Fv9FOS5BNIIbWGAxHF508JzlqNaM/AAIg2FpxnGsg9e2zDgZJg15NJWgjuxwHI+abwVH
+         4uIw==
+X-Forwarded-Encrypted: i=1; AJvYcCU39OPjW02YZwV5cxwa97sozAsGphXyr79jxooUIJFIlbIjhICosDX/imoOzCFnFkA5uZjpfeVs0pQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOH73rY+WoX01zTqLlvzpICIop8BskU0TFQ7J3fquUzjbYorHT
+	qIfxXHVpqDcWBVyYaICptSRB6mQNk6Hpq5hnO1tqT94ya3uXx1dq4cAfigQw5Kg=
+X-Google-Smtp-Source: AGHT+IFpRjFOKt+B50Fc+4D5fJb5MlFKXArq0SrGZwNTFTrYVvRDghIi0mHC4rGnYSH+FWm20Km7cg==
+X-Received: by 2002:a17:907:f702:b0:a86:a3a6:c143 with SMTP id a640c23a62f3a-a86a52c1b29mr619779866b.31.1724665145123;
+        Mon, 26 Aug 2024 02:39:05 -0700 (PDT)
+Received: from localhost (37-48-50-18.nat.epc.tmcz.cz. [37.48.50.18])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f4360c0sm640406166b.108.2024.08.26.02.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2024 02:39:04 -0700 (PDT)
+Date: Mon, 26 Aug 2024 11:39:03 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Yan Zhen <yanzhen@vivo.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, trondmy@kernel.org,
+	anna@kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, neilb@suse.de,
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+Subject: Re: [PATCH v1] net: sunrpc: Fix error checking for
+ d_hash_and_lookup()
+Message-ID: <ZsxNN-CmxarJi9ns@nanopsycho.orion>
+References: <20240826070659.2287801-1-yanzhen@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -80,59 +87,47 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822142610.129668-1-sergii.boryshchenko@globallogic.com>
+In-Reply-To: <20240826070659.2287801-1-yanzhen@vivo.com>
 
-Hi,
+Mon, Aug 26, 2024 at 09:06:59AM CEST, yanzhen@vivo.com wrote:
+>The d_hash_and_lookup() function returns either an error pointer or NULL.
+>
+>It might be more appropriate to check error using IS_ERR_OR_NULL().
+>
+>Signed-off-by: Yan Zhen <yanzhen@vivo.com>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on viro-vfs/for-next v6.11-rc5 next-20240823]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/sergii-boryshchenko-globallogic-com/ufs-Remove-redundant-inode-number-check-from-ufs_nfs_get_inode/20240826-120030
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240822142610.129668-1-sergii.boryshchenko%40globallogic.com
-patch subject: [PATCH] ufs: Remove redundant inode number check from ufs_nfs_get_inode
-config: arc-randconfig-001-20240826 (https://download.01.org/0day-ci/archive/20240826/202408261605.ARxTA9jX-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240826/202408261605.ARxTA9jX-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408261605.ARxTA9jX-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   fs/ufs/super.c: In function 'ufs_nfs_get_inode':
->> fs/ufs/super.c:101:37: warning: unused variable 'uspi' [-Wunused-variable]
-     101 |         struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
-         |                                     ^~~~
+You need to provide a "fixes" tag blaming the commit that introduced the
+bug.
 
 
-vim +/uspi +101 fs/ufs/super.c
-
-^1da177e4c3f41 Linus Torvalds  2005-04-16   98  
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15   99  static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 generation)
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  100  {
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15 @101  	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  102  	struct inode *inode;
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  103  
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  104  	inode = ufs_iget(sb, ino);
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  105  	if (IS_ERR(inode))
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  106  		return ERR_CAST(inode);
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  107  	if (generation && inode->i_generation != generation) {
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  108  		iput(inode);
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  109  		return ERR_PTR(-ESTALE);
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  110  	}
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  111  	return inode;
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  112  }
-f3e2a520f5fb1a Alexey Dobriyan 2009-12-15  113  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>---
+> net/sunrpc/rpc_pipe.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+>index 910a5d850d04..fd03dd46b1f2 100644
+>--- a/net/sunrpc/rpc_pipe.c
+>+++ b/net/sunrpc/rpc_pipe.c
+>@@ -1306,7 +1306,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+> 
+> 	/* We should never get this far if "gssd" doesn't exist */
+> 	gssd_dentry = d_hash_and_lookup(root, &q);
+>-	if (!gssd_dentry)
+>+	if (IS_ERR_OR_NULL(gssd_dentry))
+> 		return ERR_PTR(-ENOENT);
+> 
+> 	ret = rpc_populate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1, NULL);
+>@@ -1318,7 +1318,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+> 	q.name = gssd_dummy_clnt_dir[0].name;
+> 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
+> 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
+>-	if (!clnt_dentry) {
+>+	if (IS_ERR_OR_NULL(clnt_dentry)) {
+> 		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+> 		pipe_dentry = ERR_PTR(-ENOENT);
+> 		goto out;
+>-- 
+>2.34.1
+>
+>
 
