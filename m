@@ -1,119 +1,89 @@
-Return-Path: <linux-nfs+bounces-5783-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5784-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CC795FA47
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 22:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7945F95FCDA
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 00:39:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FB891F21194
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 20:03:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ED151F21B03
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Aug 2024 22:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10AA199E9F;
-	Mon, 26 Aug 2024 20:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBBF519B5B2;
+	Mon, 26 Aug 2024 22:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRL2t5PV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU8GyZMz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB64199E9E;
-	Mon, 26 Aug 2024 20:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C34319B3D8
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2024 22:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724702585; cv=none; b=uaqfyVJbEiUY2QdAwqxu+tVrv8AVlM8KwhDuAVQ94S1QS2RhSjCPr/oM4MYvW98BnARB7cgj4CuxZrcaA8W0T5ym03AMV5PBbHU9YYyezDl4Co21EUq2FphvOeem1ps9IeIddgZsNma3sb9gYPf3nZMadccfMo6DHlWfkYvL870=
+	t=1724711956; cv=none; b=SDUN4iH8Wbwnwe98L4hoviRA6cxKSDL9wFwcIuICBfBBq5SXlgDSmdF3Oz46AQHg78MSU6EH3B2V4/FalsmvrPtm2OL+01/q8/KPDDrcCjzGCr3sFjKo++wweidQnHurxHVEnzr4kUE4/o79IvVM8fR0izXhnrx0mAXQa6/seCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724702585; c=relaxed/simple;
-	bh=NoPy+nbGyqCPtTKiGxyENba+IyOrf06MnqP6QYxHy1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PiG4fo/ZXOJGGMb1b8V2fIL4xvZ99gmXsBjkRVbjPGFpIrecqLLrJj6iCuNRjV2meStPDcvoMw2TyLJ3kzf1y1n/Vc6ZOWdeLaQFz1sWzsypdQJsZmaBi3Ary77oNXLkAAesFufZjMv72xfoB7iOPbEH1IbFq7cnfoyHlYY/cJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRL2t5PV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB03C4DDF3;
-	Mon, 26 Aug 2024 20:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724702585;
-	bh=NoPy+nbGyqCPtTKiGxyENba+IyOrf06MnqP6QYxHy1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uRL2t5PVvNQXYSB4naqq5QoK95m6VIgVYpuopW7xnUNVQdfNjDzwo0ISRHqhepF6O
-	 RBq2hR/ERq7j6tebTp8mPZmU/so4hJbq5XpQXWq8kRaSUKnxwz0mhPLK8tXASr0nyq
-	 RoKhFyfwoyCl1nCBVk0L0mtzDFDv+qfTYujqpgzTIcXqoE3/avjqw6RGJvLNwwxiK0
-	 Ey2/LqKa78HzvtM8G5QyVCCNe6L/ToEdmN6QuP8mqUCx0Pv5sW5hzLmgC5vbxngaDv
-	 BcD4728lvAsxn7tCZrL5Kg3lGXwadfzZWgT+phl4iwM0be76LLAlCU10dQE4VEAwSq
-	 R70PR0aLyvzVQ==
-Date: Mon, 26 Aug 2024 16:03:03 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v13 10/19] nfsd: add localio support
-Message-ID: <Zszfd9FSg3NWohN0@kernel.org>
-References: <20240823181423.20458-1-snitzer@kernel.org>
- <20240823181423.20458-11-snitzer@kernel.org>
- <172463360544.6062.2165398603066803638@noble.neil.brown.name>
+	s=arc-20240116; t=1724711956; c=relaxed/simple;
+	bh=r+wvwsO22rxqeLloLfFI/vptKVbtbY0a8E4Z6rqqO/0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HuAJfiUTKCoEgsLKDUkTF3euJK1vn0NhGlCnEFfzM1heakilubOdwYKOf/FInBBoCp5hBI6qMdNMZtste+891CncIeu/gXD+ivspUWbCTs7gwtbg7yYko2wnQhDKIorkAfiPzW/kc+ULvHMh2FaMqOiyxCPuyM7NMuwZkAXeMZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eU8GyZMz; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7c3d8f260easo2854896a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Aug 2024 15:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724711955; x=1725316755; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SGPBGJaXZMF7RfGVt9KC7TCYX2RmJBbr6TPfh1PNcRg=;
+        b=eU8GyZMz4xIw2+68P6XN+oaO15Oo1pGohySvcqPtTaq5Q1DGJSFw2gc7k9iawO+N2h
+         3NeBpUhMQ2xVAFW0roeb+Y4xWWEYLeL+nWHLP5undTJxXbcTS69OkRn6H99VQMpGgUfe
+         Ubvr8UT8TXjib7NvWBSukG+laBEwvVKZk6kdknBH1hEp9XWaFEqTSlaz/bz7ToXORq4B
+         rQ338AQrwHJOAwEBRHINFH6UcLV0LDjSqcsz/SydS9eaDo3PM/Fo1X3tn1Qvs/C30Jq/
+         84i6SVE2JDRdyXz/4ySXCGhp38MFNmLXbkmy+apt6H7O45M95Rq7fp5v3mCLUxTyNRxo
+         DIkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724711955; x=1725316755;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SGPBGJaXZMF7RfGVt9KC7TCYX2RmJBbr6TPfh1PNcRg=;
+        b=IuUwDNLXtBH5Wedj7I4jRlJoNMKIrarFKxRN+gxYa8od5nk5LWnQuSNv29ad2OKwT6
+         vyxIeFG/f3tJecaKQKn4RlTn36FFNs0QWxTpctA4Uxej6F8W1JEa86zjA23kVUxKSC8C
+         wDh7lkHGMAHmAXgobrZVkwexXqeQ+itAa43dPV8zY4BsohkPEX//8+a4AZn/8eBfMcGq
+         6r4DsPG1MnRt94f77avh//90viOile9k8Pb+QbQ3yNUduE82hwRkSv1d4dwvIcR8edCe
+         QAkB0OYIttTUBXvzKOVUOvAzsTWcJ9nn242TBYQOovUDPvvg3drvkgcAsyEEyEbn9y5x
+         /AoQ==
+X-Gm-Message-State: AOJu0YzGIax85fEuI3i3OfnCm8NNmiHDi9HdJcke8PR/tXk2ExPWwS+H
+	B+GCKGxkf7OB5UznKlzKwhcq/ll3XDqPHWaHLjhLyVt3IfIXO6H2r/XlbYGvCv5GxJV9XchZdU0
+	DiY7rYxv52u/Hv4SQEw9tkTnu4Al/ze8=
+X-Google-Smtp-Source: AGHT+IFUjRWkIs54pnU+XAUPZdV6LTCjKN2g0aM3UJ7L2+4OESd245Gk/qvB5aicJZRha8DrRCbiXy0VriU5bSa7ODs=
+X-Received: by 2002:a17:902:d2cc:b0:202:11ab:ccf4 with SMTP id
+ d9443c01a7336-2039e442d21mr120235825ad.6.1724711954557; Mon, 26 Aug 2024
+ 15:39:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172463360544.6062.2165398603066803638@noble.neil.brown.name>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Mon, 26 Aug 2024 15:39:04 -0700
+Message-ID: <CAM5tNy4YpKiV0oLkS8o8Pj7-swV0xXX+JnyF4o9A9Q0dB29Biw@mail.gmail.com>
+Subject: Re: Linux NFSv4 client patch for testing of the POSIX ACL extension
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Aug 26, 2024 at 10:53:25AM +1000, NeilBrown wrote:
-> On Sat, 24 Aug 2024, Mike Snitzer wrote:
-> > +
-> > +	/* Save client creds before calling nfsd_file_acquire_local which calls nfsd_setuser */
-> > +	save_cred = get_current_cred();
-> 
-> I don't think this belongs here.  I would rather than
-> nfsd_file_acquire_local() saved and restored the cred so it could be
-> called without concern for internal implementation details.
+> This one may only be a configuration problem, but even though I think
+> I have the uid<->name mapping working, nfs_map_uid_to_name() always
+> returns the "number in the string".
+> --> To get setfacl to work, I have to configure my test server to use
+>     "numbers in strings". (nfs_map_name_to_uid() does seem to work?)
+Btw, this one turned out to be a bug in my experimental server. It replied
+NFS4ERR_INVAL instead of NFS4ERR_BADOWNER when the "digits in string"
+was sent in the POSIX ACL's "who" for a SETATTR.  Once the server was fixed,
+it works ok. (The NFS_CAP_UIDGID_NOMAP bit gets cleared and it works via
+a retry.)
 
-OK, will fix.
-
-> > +
-> > +	/* nfs_fh -> svc_fh */
-> > +	fh_init(&fh, NFS4_FHSIZE);
-> > +	fh.fh_handle.fh_size = nfs_fh->size;
-> > +	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
-> > +
-> > +	if (fmode & FMODE_READ)
-> > +		mayflags |= NFSD_MAY_READ;
-> > +	if (fmode & FMODE_WRITE)
-> > +		mayflags |= NFSD_MAY_WRITE;
-> > +
-> > +	rpcauth_map_clnt_to_svc_cred_local(rpc_clnt, cred, &rq_cred);
-> > +
-> > +	beres = nfsd_file_acquire_local(cl_nfssvc_net, &rq_cred, rpc_clnt->cl_vers,
-> > +					cl_nfssvc_dom, &fh, mayflags, pnf);
-> > +	if (beres) {
-> > +		status = nfs_stat_to_errno(be32_to_cpu(beres));
-> > +		goto out_fh_put;
-> > +	}
-> > +out_fh_put:
-> > +	fh_put(&fh);
-> > +	if (rq_cred.cr_group_info)
-> > +		put_group_info(rq_cred.cr_group_info);
-> > +	revert_creds(save_cred);
-> > +	nfsd_serv_put(nn);
-> 
-> I think this is too early to be calling nfsd_serv_put().
-> I think it should be called when the IO completes - when 
-> nfs_to.nfsd_file_put() is called.
-> 
-> nfs_to.nfsd_open_local_fh() and nfs_to.nfsd_file_get() should each get a ref to the
-> server.
-> nfsd_to.nfsd_file_put() should drop the ref.
-> 
-> Note that nfs_do.nfsd_file_get() would not exactly be nfsd_file_get.  So
-> maybe a different name would suit.
-
-Yes, you're right.  I'll get it fixed.
-
-Thanks!
+rick
 
