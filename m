@@ -1,221 +1,93 @@
-Return-Path: <linux-nfs+bounces-5826-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5827-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A9D7961AB9
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 01:41:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B199961ABB
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 01:42:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 338EF284A76
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 23:41:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 417F91F240B3
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 23:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90FD41D4153;
-	Tue, 27 Aug 2024 23:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527C81D4611;
+	Tue, 27 Aug 2024 23:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SBAT3tAe";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5AgJLDqf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SBAT3tAe";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5AgJLDqf"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="O5JA68mO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DC019EEBB;
-	Tue, 27 Aug 2024 23:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2241D19EEBB;
+	Tue, 27 Aug 2024 23:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724802075; cv=none; b=i088kYQD2pdAPBwgMJ0KmbCTN88xlDBlvY/NZrOqByivbY3inQoA8JfYVkrJG7/RepgG/ssXOeQxVm/ZDb9Mh/LTUFeqTvxdL0v9cV370KTydyC6iRs0bmtoq9aTjvvRb6jjDPFdiS8+59923YtCpuYqfptSaqHkuqR+hYicCoU=
+	t=1724802140; cv=none; b=Lhpvz7nUc2FKunDRLcZXUJ02nH4WiLj40fEyz3WxcyzlAqUh0NdYl8UMM3YCRP6N0X7wUI+lr+WE8lSRbZTqC1sgg2b5WZwAhs9KkN2PHGVFou5/8Ve8UT+aMm5+Nb54pzYTtod/kBs0fyoRXfBWpRwWKkGCMbxofUiW2V5CgyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724802075; c=relaxed/simple;
-	bh=LYdJv23YyA0CZ22xRz/04LCVm+2iaiZliB2Hi+43aSw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=DtFnPnvCB8LvF8BBmQ1junhiKiibNXSb2TuzAnCjjETzABgg6xE2+c0d3xbhY6SHAtXLASsY4L5sv0wshjYFq2hKlpIZXKevJEK/QWVro8p0EvF30lQFLQ1XOdA+lkSsU3yP2gRq35as4aPDLEBkz5gZN0SIhTTR4C93ZvHHQg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SBAT3tAe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5AgJLDqf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SBAT3tAe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5AgJLDqf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8D9DF21A95;
-	Tue, 27 Aug 2024 23:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724802071; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aeCtlCGJTU+AITpIO4mVFzyCmwUAFHhxGTbK9lG6m98=;
-	b=SBAT3tAeMk+WKtm/vWhhJc81Rzk7Lj0GZaUAsxdoBQ4cMFVZrQshGifnH9VzFWpDOLaesQ
-	FcaPWpQ5kgvUT5N9M8gRMz5Udh72EMaN8T+J+wrMgFBxVyMPDg7UckmRTo8+7ccfELCUrp
-	yZIzmoFB37exXIsx3kAvh8jtzirVWwY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724802071;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aeCtlCGJTU+AITpIO4mVFzyCmwUAFHhxGTbK9lG6m98=;
-	b=5AgJLDqfzyNJz2C+YpOKC6JSeNHJD9wIE1nIpjdd3bT5dYSmhagzEdEwuMtMDo3+Vdiozw
-	i70ur8axmdofuIAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SBAT3tAe;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5AgJLDqf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724802071; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aeCtlCGJTU+AITpIO4mVFzyCmwUAFHhxGTbK9lG6m98=;
-	b=SBAT3tAeMk+WKtm/vWhhJc81Rzk7Lj0GZaUAsxdoBQ4cMFVZrQshGifnH9VzFWpDOLaesQ
-	FcaPWpQ5kgvUT5N9M8gRMz5Udh72EMaN8T+J+wrMgFBxVyMPDg7UckmRTo8+7ccfELCUrp
-	yZIzmoFB37exXIsx3kAvh8jtzirVWwY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724802071;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aeCtlCGJTU+AITpIO4mVFzyCmwUAFHhxGTbK9lG6m98=;
-	b=5AgJLDqfzyNJz2C+YpOKC6JSeNHJD9wIE1nIpjdd3bT5dYSmhagzEdEwuMtMDo3+Vdiozw
-	i70ur8axmdofuIAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CEF613724;
-	Tue, 27 Aug 2024 23:41:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id R9efNBRkzmbkNgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 27 Aug 2024 23:41:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1724802140; c=relaxed/simple;
+	bh=PkPinK6GtuRFl5Q/O1ftstgZgoYWTnwkOR/Zk5lgJT4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bDnsbOMwCM8/9+bEpF27dKgP8hsbdegS7yYrOPeI1Qk2aQ9lekZdjuE5KYF89WukJOcc78ne9QaKT2uS1Rb/pgi5EGuZWE6Ym5tc1n9CJq5RzobULlp1485eQ0C/rlTiNDyzteAg7w84PlITJZfYmGnsIdfC2o05UaRQ99FnCNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=O5JA68mO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4747CC4AF60;
+	Tue, 27 Aug 2024 23:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724802139;
+	bh=PkPinK6GtuRFl5Q/O1ftstgZgoYWTnwkOR/Zk5lgJT4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O5JA68mOh4xXaS8Xhw6ckkzQc60NQgcKn7WQEr3fM/rULfLqVGY4j118Oo9uxvstD
+	 fyPG6pST8mdkoAnisnwfYqOv9HBPyZ05BgYh/1SpFlfUJzo59ms0gddgLSg6r7HDS7
+	 Q3cnwodv45q3v75x3gd9iDLPESS0MCtXF37FZqTg=
+Date: Tue, 27 Aug 2024 16:42:18 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+ <anna@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+Message-Id: <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+In-Reply-To: <20240827024517.914100-2-lihongbo22@huawei.com>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+	<20240827024517.914100-2-lihongbo22@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Trond Myklebust" <trondmy@hammerspace.com>
-Cc: "anna@kernel.org" <anna@kernel.org>,
- "snitzer@kernel.org" <snitzer@kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "jlayton@kernel.org" <jlayton@kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v13 19/19] nfs: add FAQ section to
- Documentation/filesystems/nfs/localio.rst
-In-reply-to: <aec659a886f7da3beded2b0ecce452e1599f9adc.camel@hammerspace.com>
-References:
- <>, <aec659a886f7da3beded2b0ecce452e1599f9adc.camel@hammerspace.com>
-Date: Wed, 28 Aug 2024 09:41:05 +1000
-Message-id: <172480206591.4433.15677232468943767302@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 8D9DF21A95
-X-Spam-Score: -6.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 28 Aug 2024, Trond Myklebust wrote:
-> On Wed, 2024-08-28 at 07:49 +1000, NeilBrown wrote:
-> > On Tue, 27 Aug 2024, Trond Myklebust wrote:
-> > > > 
-> > > > 
-> > > > > On Aug 25, 2024, at 9:56 PM, NeilBrown <neilb@suse.de> wrote:
-> > > > > 
-> > > > > While I'm not advocating for an over-the-wire request to map a
-> > > > > filehandle to a struct nfsd_file*, I don't think you can
-> > > > > convincingly
-> > > > > argue against it without concrete performance measurements.
-> > > > 
-> > > 
-> > > What is the value of doing an open over the wire? What are you
-> > > trying
-> > > to accomplish that can't be accomplished without going over the
-> > > wire?
-> > 
-> > The advantage of going over the wire is avoiding code duplication.
-> > The cost is latency.  Obviously the goal of LOCALIO is to find those
-> > points where the latency saving justifies the code duplication.
-> > 
-> > When opening with AUTH_UNIX the code duplication to determine the
-> > correct credential is small and easy to review.  If we ever wanted to
-> > support KRB5 or TLS I would be a lot less comfortable about reviewing
-> > the code duplication.
-> > 
-> > So I think it is worth considering whether an over-the-wire open is
-> > really all that costly.  As I noted we already have an over-the-wire
-> > request at open time.  We could conceivably send the LOCALIO-OPEN
-> > request at the same time so as not to add latency.  We could receive
-> > the
-> > reply through the in-kernel backchannel so there is no RPC reply.
-> > 
-> > That might all be too complex and might not be justified.  My point
-> > is
-> > that I think the trade-offs are subtle and I think the FAQ answer
-> > cuts
-> > off an avenue that hasn't really been explored.
-> > 
+On Tue, 27 Aug 2024 10:45:15 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
+
+> Add str_true_false()/str_false_true() helper to return "true" or
+> "false" string literal.
 > 
-> So, your argument is that if there was a hypothetical situation where
-> we wanted to add krb5 or TLS support, then we'd have more code to
-> review?
-> 
-> The counter-argument would be that we've already established the right
-> of the client to do I/O to the file. This will already have been done
-> by an over-the-wire call to OPEN (NFSv4), ACCESS (NFSv3/NFSv4) or
-> CREATE (NFSv3). Those calls will have used krb5 and/or TLS to
-> authenticate the user. All that remains to be done is perform the I/O
-> that was authorised by those calls.
+> ...
+>
+> --- a/include/linux/string_choices.h
+> +++ b/include/linux/string_choices.h
+> @@ -48,6 +48,12 @@ static inline const char *str_up_down(bool v)
+>  }
+>  #define str_down_up(v)		str_up_down(!(v))
+>  
+> +static inline const char *str_true_false(bool v)
+> +{
+> +	return v ? "true" : "false";
+> +}
+> +#define str_false_true(v)		str_true_false(!(v))
+> +
+>  /**
+>   * str_plural - Return the simple pluralization based on English counts
+>   * @num: Number used for deciding pluralization
 
-The other thing that remains is to get the correct 'struct cred *' to
-store in ->f_cred (or to use for lookup in the nfsd filecache).
+This might result in copies of the strings "true" and "false" being
+generated for every .c file which uses this function, resulting in
+unnecessary bloat.
 
-> 
-> Furthermore, we'd already have established that the client and the
-> knfsd instance are running in the same kernel space on the same
-> hardware (whether real or virtualised). There is no chance for a bad
-> actor to compromise the one without also compromising the other.
-> However, let's assume that somehow is possible: How does throwing in an
-> on-the-wire protocol that is initiated by the one and interpreted by
-> the other going to help, given that both have access to the exact same
-> RPCSEC_GSS/TLS session and shared secret information via shared kernel
-> memory?
-> 
-> So again, what problem are you trying to fix?
-
-Conversely:  what exactly is this FAQ entry trying to argue against?
-
-My current immediate goal is for the FAQ to be useful.  It mostly is,
-but this one question/answer isn't clear to me.
-
-Thanks,
-NeilBrown
+It's possible that the compiler/linker can eliminate this duplication. 
+If not, I suggest that every function in string_choices.h be uninlined.
 
