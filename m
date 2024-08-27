@@ -1,104 +1,113 @@
-Return-Path: <linux-nfs+bounces-5808-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5807-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE0E9612D3
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 17:35:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 157CA961243
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 17:29:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15CE6281738
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 15:35:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0E122811F7
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 15:29:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797DF1C57AF;
-	Tue, 27 Aug 2024 15:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7681C3F17;
+	Tue, 27 Aug 2024 15:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="hjAz/mTr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VuP9xHwv"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="o+dYyyKx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bgprGjwO";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="o+dYyyKx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bgprGjwO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AAE1C5792;
-	Tue, 27 Aug 2024 15:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C141BC073;
+	Tue, 27 Aug 2024 15:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724772829; cv=none; b=BhAHyFq7Gg8QD5/K8/FVb5i10098oZGmAgT/Za7U6aTJn83AGiagMY1VSDl9+g0HTdA6Mbqt6azwyDh3yVPIDoKsjTQ72XT0/PK6JglUiwgtTL94PU6rTX8q58T9WEi4ZcoJGLbyEsA9s6AWXFVcEeNzXm1tjuJlrZfL4gSe4BQ=
+	t=1724772434; cv=none; b=MDKjWyz/73eVkpnAWpxUHBiBapjfizEzzWLkUYogfFC0VpoLZkwpVc9u04rmu+YT0b3A8mKgyeTimYuQlCs1lqI7CzjWU9XSfIsSjMkUZPAalU9+RTUyAztH1KtgLtZ7biqJHhcopg093829yCQVD1zy/3BUdvDVpAr6PC2f7go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724772829; c=relaxed/simple;
-	bh=PqW3LaLdaIXUKRv7ae1w6/zjG46YRxp+ySlwBpNlSDA=;
+	s=arc-20240116; t=1724772434; c=relaxed/simple;
+	bh=Rkd112+cL0uRYtV9jUWbMqRMP2d4qZA0DESvv5WzZoE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvoeT+QCDbTOAMUiAuFwsqGS4bnBRs7z+dwcDRl7JU086+tWEF8SB/angXi5AkLgaEKjcal9mHsbKxn97KbIBerGHoM+AVXJS25KwoBqPAt+8xVrHhCLJYZigbNCnoFsInMpiJdfWlS+79+CKiFA6ImFG/4Ri7q644nUbH+X04E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=hjAz/mTr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VuP9xHwv; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
-Received: from phl-compute-05.internal (phl-compute-05.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 761F41151B29;
-	Tue, 27 Aug 2024 11:33:46 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 27 Aug 2024 11:33:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1724772826;
-	 x=1724859226; bh=9uGAv2l5IKc9PnaG89xszMBC4k6+LpWKy1GRqAd95vM=; b=
-	hjAz/mTrH+BLHWsTj+xoouDhwLjLgPYmztWxfWsb5c8eawFjoR2zYN9ap9kt33XQ
-	GU4q+V6Yldpm4N5emTM/r/95AFzKE147uR6NSevaPxhubp6k6Mbe38/NpyKt36IK
-	Yi90k5R/t+ANLicDm85Qq0K0fkYJxW2VeYy0wKQP5AFsb8WJyiF+lvJ3klqpnmQp
-	ZgPq19SW/2eKN7weOChp3sLMdqCXltoEMkcWZfkAJSmCl0Ae5I0n02PpyuuLWhnN
-	D7knO7bRh/QaojLeDdrzkeAUeixxOcsaR+5DwiaGl85ePgpmlwbmkOcw7/fl91xR
-	zxjQJlhOXs2Raj09nui9Ow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1724772826; x=
-	1724859226; bh=9uGAv2l5IKc9PnaG89xszMBC4k6+LpWKy1GRqAd95vM=; b=V
-	uP9xHwvimD1XOGUWIMnqMLs8z3QV5g3x4pG2hdqnvJ66w20G5pHAGvuXo1mUmtXb
-	2qKp/Fe2RpNR8tUzMG5VXUK7ck4MqWfknl3tRH45YVGu34c/2nznCDdi3x3grGge
-	nD20dliZvuk0UaOm9JhY+RA/MPC+QLNiFJyMSbVHBLJ3Y/fYB/Eyv0lWU7VHz/X6
-	EwTRhVh6qmIEPBON9qq2lzag5ZeO720gsOdg1YjPOaaJNzm9XJa5UXdo2WXHf83T
-	NdFebojTxwrp048grzdeue2weJGnNIxH5V1sAlgzZyluy+6h7KiLvlHFxDMQAOTj
-	IiE00zjJOSXKBDtPHIvtw==
-X-ME-Sender: <xms:2fHNZpM3m46PK3zB6LAp_x9KFftUh-rmoVjeT_Y6olZ_LZQ93G8daA>
-    <xme:2fHNZr_XfinGtvRpiAAxDcfsutbi6gaYb4EnBqNmZIh11AsJCZBZdpKD1SRz-5ccx
-    cZ24Q9KjVAx1Q>
-X-ME-Received: <xmr:2fHNZoTOSx6o9cu6ITeWAa3Fb5D8bn9fxA13OIoP8_zinPA_w4ShsW4MrqKsTydWIj8h3wcrFtu-98PXMWUSiVjeUjhRPQN1pP0jPg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeftddgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
-    frrghtthgvrhhnpefgkeffieefieevkeelteejvdetvddtledugfdvhfetjeejieduledt
-    fefffedvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepudegpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtg
-    homhdprhgtphhtthhopegtvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgr
-    sghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfh
-    hssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhilhhinhhgfhgvnhhg
-    feeshhhurgifvghirdgtohhmpdhrtghpthhtohepnhgvihhlsgesshhushgvrdguvgdprh
-    gtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:2vHNZlvyZCCN5sAkb1cEvxFlTuX6OaXaV_PCYmI4wvxXnKn6fUIlTQ>
-    <xmx:2vHNZhe34A6nRC1KvTZzYcrJeu84ijWUZXJxY9JipVRvLZO0Oy9P4Q>
-    <xmx:2vHNZh07R3aq0Gi5aeHUPfr1_X83ca_ENszluGC_ydeQww5rRm3Jbw>
-    <xmx:2vHNZt_KyXJLj0mUa9smfexmv7P4uI8IM5W-PT4ovqYSskkbkBpcBw>
-    <xmx:2vHNZs1tgptKVrCeCmVPzuufnMcWE0LAwoMnRnU8hT2YtK30al1gIs78>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 27 Aug 2024 11:33:45 -0400 (EDT)
-Date: Tue, 27 Aug 2024 16:40:54 +0200
-From: Greg KH <greg@kroah.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyLIurDiSTJ52rApgArBTiDl8/MmdP1CHiDMEmwDxZHm/QIzXBkOmO/Ziv8daZP0OeJzPjNKnY3oexnlj18+9VxG7tdAe8e+/augWV3lvVEqyu1MKaYj37pxie2aheKRPvmubz0inpNg/aXH0uVHZQnfBoyGIS1opW6Ir4Hn3Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=o+dYyyKx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bgprGjwO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=o+dYyyKx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bgprGjwO; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0163121B0E;
+	Tue, 27 Aug 2024 15:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1724772430;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DiRuT6KS5xm/a1uK/VGs5u1puvYNGTCyQqWHx/rE3bo=;
+	b=o+dYyyKxYYk97NirY9aGv5IfKvHrHrqFWWqd9hJ+rwZaiV4IMrT9fYnxGt86PR0jNIoMJV
+	6l92S7RFOOAUCK1SjpiOfDcCmedGKugqzx9JI6yMoBCg3KhOvtw4+eed8G9Pgjf6WcAUET
+	Jh3kYsoBPntmoJJxkX3N0PRNUtT/vQU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1724772430;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DiRuT6KS5xm/a1uK/VGs5u1puvYNGTCyQqWHx/rE3bo=;
+	b=bgprGjwOLEXZUcFTaD/4uIXDLmpzKCJ5Gjx7/8DrVfnaXTc6U7kK8itUTGzddff1AbSyGw
+	+B2JIMwaO0HJFuBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=o+dYyyKx;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=bgprGjwO
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1724772430;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DiRuT6KS5xm/a1uK/VGs5u1puvYNGTCyQqWHx/rE3bo=;
+	b=o+dYyyKxYYk97NirY9aGv5IfKvHrHrqFWWqd9hJ+rwZaiV4IMrT9fYnxGt86PR0jNIoMJV
+	6l92S7RFOOAUCK1SjpiOfDcCmedGKugqzx9JI6yMoBCg3KhOvtw4+eed8G9Pgjf6WcAUET
+	Jh3kYsoBPntmoJJxkX3N0PRNUtT/vQU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1724772430;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DiRuT6KS5xm/a1uK/VGs5u1puvYNGTCyQqWHx/rE3bo=;
+	b=bgprGjwOLEXZUcFTaD/4uIXDLmpzKCJ5Gjx7/8DrVfnaXTc6U7kK8itUTGzddff1AbSyGw
+	+B2JIMwaO0HJFuBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A5FE113724;
+	Tue, 27 Aug 2024 15:27:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hmVCJ03wzWbUJAAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Tue, 27 Aug 2024 15:27:09 +0000
+Date: Tue, 27 Aug 2024 17:27:02 +0200
+From: Petr Vorel <pvorel@suse.cz>
 To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Chuck Lever <cel@kernel.org>, linux-stable <stable@vger.kernel.org>,
+Cc: Martin Doucha <mdoucha@suse.cz>, Neil Brown <neilb@suse.de>,
 	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Li Lingfeng <lilingfeng3@huawei.com>, Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH 6.6.y] NFSD: simplify error paths in nfsd_svc()
-Message-ID: <2024082749-goldfish-handwoven-09b3@gregkh>
-References: <20240824162137.2157-1-cel@kernel.org>
- <2024082712-haiku-take-ef45@gregkh>
- <3C709C8F-8708-4434-8E64-41931DC5C753@oracle.com>
+	Josef Bacik <josef@toxicpanda.com>,
+	linux-stable <stable@vger.kernel.org>,
+	"ltp@lists.linux.it" <ltp@lists.linux.it>
+Subject: Re: [LTP] [PATCH v2 1/1] nfsstat01: Update client RPC calls for
+ kernel 6.9
+Message-ID: <20240827152702.GA1634061@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20240823064640.GA1217451@pevik>
+ <172445038410.6062.6091007925280806767@noble.neil.brown.name>
+ <9afef16d-52b2-435d-902a-7ccfa5824968@suse.cz>
+ <20240827132242.GA1627011@pevik>
+ <44DF7F99-3FDA-46C0-BC93-B6679F04B7AB@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -108,56 +117,110 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3C709C8F-8708-4434-8E64-41931DC5C753@oracle.com>
+In-Reply-To: <44DF7F99-3FDA-46C0-BC93-B6679F04B7AB@oracle.com>
+X-Rspamd-Queue-Id: 0163121B0E
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.71 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.71
+X-Spam-Flag: NO
 
-On Tue, Aug 27, 2024 at 02:25:03PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Aug 27, 2024, at 8:46 AM, Greg KH <greg@kroah.com> wrote:
-> > 
-> > On Sat, Aug 24, 2024 at 12:21:37PM -0400, cel@kernel.org wrote:
-> >> From: NeilBrown <neilb@suse.de>
-> >> 
-> >> [ Upstream commit bf32075256e9dd9c6b736859e2c5813981339908 ]
-> >> 
-> >> The error paths in nfsd_svc() are needlessly complex and can result in a
-> >> final call to svc_put() without nfsd_last_thread() being called.  This
-> >> results in the listening sockets not being closed properly.
-> >> 
-> >> The per-netns setup provided by nfsd_startup_new() and removed by
-> >> nfsd_shutdown_net() is needed precisely when there are running threads.
-> >> So we don't need nfsd_up_before.  We don't need to know if it *was* up.
-> >> We only need to know if any threads are left.  If none are, then we must
-> >> call nfsd_shutdown_net().  But we don't need to do that explicitly as
-> >> nfsd_last_thread() does that for us.
-> >> 
-> >> So simply call nfsd_last_thread() before the last svc_put() if there are
-> >> no running threads.  That will always do the right thing.
-> >> 
-> >> Also discard:
-> >> pr_info("nfsd: last server has exited, flushing export cache\n");
-> >> It may not be true if an attempt to start the first server failed, and
-> >> it isn't particularly helpful and it simply reports normal behaviour.
-> >> 
-> >> Signed-off-by: NeilBrown <neilb@suse.de>
-> >> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >> fs/nfsd/nfssvc.c | 14 ++++----------
-> >> 1 file changed, 4 insertions(+), 10 deletions(-)
-> >> 
-> >> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-> >> Suggested-by: Li Lingfeng <lilingfeng3@huawei.com>
-> >> Tested-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > 
-> > Odd placement of these :)
-> 
-> Wasn't sure I was supposed to add them to the actual
-> patch description because they weren't part of the
-> original upstream commit.
-> 
-> But if that's OK to do for stable patches, I will
-> add them in the usual spot next time.
+Hi all,
 
-Yes please, thanks!
+> > On Aug 27, 2024, at 9:22 AM, Petr Vorel <pvorel@suse.cz> wrote:
+
+> > Hi all,
+
+> >> On 23. 08. 24 23:59, NeilBrown wrote:
+> >>> On Fri, 23 Aug 2024, Petr Vorel wrote:
+> >>>> We discussed in v1 how to fix tests.  Neil suggested to fix the test the way so
+> >>>> that it works on all kernels. As I note [1]
+
+> >>>> 1) either we give up on checking the new functionality still works (if we
+> >>>> fallback to old behavior)
+
+> >>> I don't understand.  What exactly do you mean by "the new
+> >>> functionality".
+> >>> As I understand it there is no new functionality.  All there was was and
+> >>> information leak between network namespaces, and we stopped the leak.
+> >>> Do you consider that to be new functionality?
+
+> > Thanks Martin for jumping in. I hoped I was clear, but obviously not.
+
+> > Following are the questions for kernel maintainers and developers. I put my
+> > opinion, but it's really up to you what you want to have tested.
+
+> >> The new functionality is that the patches add a new file to network
+> >> namespaces: /proc/net/rpc/nfs. This file did not exist outside the root
+> >> network namespace at least on some of the kernels where we still need to run
+> >> this test. So the question is: How aggressively do we want to enforce
+> >> backporting of these NFS patches into distros with older kernels?
+
+> >> We have 3 options how to fix the test depending on the answer:
+> >> 1) Don't enforce at all. We'll check whether /proc/net/rpc/nfs exists in the
+> >> client namespace and read it only if it does. Otherwise we'll fall back on
+> >> the global file.
+
+> > 1) is IMHO the worst case because it's not testing patch gets reverted.
+
+> >> 2) Enforce aggressively. We'll hardcode a minimal kernel version into the
+> >> test (e.g. v5.4) and if the procfile doesn't exist on any newer kernel, it's
+> >> a bug.
+
+> > I would prefer 2), which is the usual LTP approach (do not hide bugs, we even
+> > fail on upstream kernel WONTFIX [1], why we should refuse the policy here?).
+
+> 2) makes sense to me.
+
+Thanks for your opinion. I'll send another version (+ still wait for others input).
+
+Kind regards,
+Petr
+
+> > Whichever older LTS upstream kernel gets fixed would drive the line where new
+> > functionality is requested (currently v5.14, I suppose at least 5.10 will also
+> > be fixed). LTP also has a way to specify enterprise distro kernel version if
+> > older enterprise kernel also gets fixed (this should not be needed, but it'd be
+> > possible).
+
+> >> 3) Enforce on new kernels only. We'll set a hard requirement for kernel
+> >> v6.9+ as in option 2) and check for existence of the procfile on any older
+> >> kernels as in option 1).
+
+> > Due way to specify enterprise distro kernel version and upstream kernel testing
+> > expecting people update to the latest stable/LTS we should not worry much about
+> > people with older kernels.
+
+> > Kind regards,
+> > Petr
+
+> > [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/ustat/ustat01.c#L48-L49
 
