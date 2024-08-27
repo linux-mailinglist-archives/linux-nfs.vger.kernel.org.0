@@ -1,130 +1,190 @@
-Return-Path: <linux-nfs+bounces-5814-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5815-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7962F9615B2
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 19:45:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26535961732
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 20:46:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 269B11F2174D
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 17:45:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C3B8B211BE
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Aug 2024 18:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0759C1C7B63;
-	Tue, 27 Aug 2024 17:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA79B6EB64;
+	Tue, 27 Aug 2024 18:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmwVJHbA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OgXeyN/J"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10981C6885;
-	Tue, 27 Aug 2024 17:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4345024
+	for <linux-nfs@vger.kernel.org>; Tue, 27 Aug 2024 18:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724780753; cv=none; b=elabwE/14QEjR0MWkGMjLrpZh0NrqM7OMr8owhakqts7rjkkNK5BD+F17dTTI1LtMt9AiL/9kQsJFt10YASJXb4Db9q981ANzA46v31LqdJJ089CJFMsEXcXeyTi52qC7v+gov3OQHYrf4fR/rq01tdNrG+zq3z1+Mixt9Zs8is=
+	t=1724784391; cv=none; b=gjrTvC063Bq/jxgTpKXd2ow3EhWC27T9B2I/uRnlmy62YtgP6kPCr/JkLy7sFyC9Gy0iM5NunnVXk/KsUG6eFrUT2ksqzwnrZu9pTvTLkTzwBT07C0R4R/ZISZ+GcoISqqtkflHcE5348mQsKK11GbpCa9Z9GjhgV/+dsB/ZNjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724780753; c=relaxed/simple;
-	bh=O6kkepmtbXWG69F82jx7uGfAfErWYr3SzzcU865GlgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kdBdyIXpm7WUgAtB3ANKhJAnAqNjzdh5rdYXMEDCN5RmUGPpRo9dkE+xjwyBCCb+gPdY7eEbdEPC0hzeqXsErQJFx3B6GVrDMGYI4A0Cb5nDqsSiOhbUC7Q9AwFxIHTPkV/JCOFcxpp5G95USDpscZ7zQODq8KD84oC2gMvDr0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmwVJHbA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256C0C58295;
-	Tue, 27 Aug 2024 17:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724780753;
-	bh=O6kkepmtbXWG69F82jx7uGfAfErWYr3SzzcU865GlgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dmwVJHbA4PNdmhvarNo/MxWNroRldSXG3vFPbj+CYm9zIdSeBWDbxaVAmdkmVLJbz
-	 i8RoSFD6VszEkWxJMLeHy3yRmwbwf9tTxLyrNDXesrzYje0L/nTMoabkk9+zI3PdnQ
-	 05+9F2XRBu60yMnqicR13QJ7lb6HL3up0UkBtdTtR/IMiyKUQQcWe2J487hI8q/vwk
-	 5U5JavTNK5NRw+msYBuzhZM3GYGFCZeEY/MFLkgzsqtHwNdvh6KYg/VcOyoaVFKDpM
-	 JvcMiU+VdEVMNEm4EsSd+opW/i33JqiCcvSkU85T807oCbUyooTE55zpZzFCS8N5/4
-	 kOImCcE8EKVcw==
-Date: Tue, 27 Aug 2024 13:45:52 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v13 09/19] nfs_common: add NFS LOCALIO auxiliary protocol
- enablement
-Message-ID: <Zs4Q0FqoHEKUjrDj@kernel.org>
-References: <20240823181423.20458-1-snitzer@kernel.org>
- <20240823181423.20458-10-snitzer@kernel.org>
- <172463235065.6062.5648288713828077276@noble.neil.brown.name>
+	s=arc-20240116; t=1724784391; c=relaxed/simple;
+	bh=qI6QeDbvyL06N+tCBmpgxx2r4EngHONsWaaVXwL/ids=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TGHtqPxoPvCNVI6BZ1rUWTd1RZpLu3AROqvJtTl1N4OGJNBaqfa5BwlmZnbhP21eTYYmoXobA+ZFd4gbAeMgf1j892PYdRQCHJk9CNoccGqHn2LVDJqxOY8/dpE4YmUeLM1wo0iMbRFsy2Dxws+kucpPIfx/gabRR/86IvqjUfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OgXeyN/J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724784388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j/FbElSZ5BkXgthxGyIDaiqbfuodvx2jdz11r1Jzzqs=;
+	b=OgXeyN/JIw+Iji7FZuqqs3aAzfNVUzwR//wFG4ezM17pEiaCmaE5KLMTpXgyqb5v1KTRSh
+	+xiiG8JAzqGTYEm+xmpxSOdXIGgCdZEFS6Y1ZZdgMKLS2jIRZn1t3u0cYnL0qmF0k6+Ho0
+	EWKQdku4J6Z5WGbzAgR6Bhvo2MDcIg8=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-_iP6XdMANay6iPkyj1t_4Q-1; Tue, 27 Aug 2024 14:46:27 -0400
+X-MC-Unique: _iP6XdMANay6iPkyj1t_4Q-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-53350003ef9so5707612e87.1
+        for <linux-nfs@vger.kernel.org>; Tue, 27 Aug 2024 11:46:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724784385; x=1725389185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j/FbElSZ5BkXgthxGyIDaiqbfuodvx2jdz11r1Jzzqs=;
+        b=cM4IIAbjRgNqg7Q0d1YYDLU7zx3Yxbd2X3ABR/8n/7fD7VvxC2LA2SuCR0X9n4KioA
+         bVciyvvpGu37U83IHX/kfC+h0LKyRImgidyP2fzyS9VWTtcrlLve6pRBuIqsfwfa3oj8
+         K8t6kKSVSDwJUxhPFh/cFSdmOtWED0p3m6ZME7nw1VNhdSp8yrx2c5Ef7VMhiCGktcwN
+         VlkxXudu71K8z+evoLdO+zpSjEZ33QQOFF/5yG+OVPMme4fIKlRInN9BM4K5SXHzmJX8
+         H2SYmTdSjIxhwg6y+4/70ilWKUuuKONIAmgK7hyQdbtn50npZzk8qpUpvI518l1CnMta
+         z34w==
+X-Forwarded-Encrypted: i=1; AJvYcCWdOcStSpmz3phWijncjcvwStrOObDOGTaNPfPuE3kz9GF7DQnsRqZcxkI96Yb68ecOQs4yMpHZ7DI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuin5aQO9FHn5lrqTZ9psp1P9PYH2HqwWO3Rmuehv5KpxjBRPg
+	SPtdmbxuMONgDQDOiNH4fxwDwofRsUbDOLX6OunNEAYfSQOsGklaQ6BUxOEtBS6jDoixXGLdNZF
+	WF5EVsbKckA/UIFel2QFdqa0ODPcNk4+P/O15QeQ4VJmFmV/+0KYa1QqP284cDRB7lBM8qFNS3F
+	2yjaklPcV5FcaIucxf0EcOO7OBdz4QTH+s
+X-Received: by 2002:a05:651c:b11:b0:2f3:b078:84bc with SMTP id 38308e7fff4ca-2f514a12d95mr26684431fa.4.1724784385381;
+        Tue, 27 Aug 2024 11:46:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYAGQ9a7sKVjHdnZ5p4d0TtxUj+HnMHlkM449FugNMjYeRDFixGoGeYnp3wBfpAAsj+rLyAMl8mpX/6nsYXSE=
+X-Received: by 2002:a05:651c:b11:b0:2f3:b078:84bc with SMTP id
+ 38308e7fff4ca-2f514a12d95mr26684211fa.4.1724784384820; Tue, 27 Aug 2024
+ 11:46:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172463235065.6062.5648288713828077276@noble.neil.brown.name>
+References: <20240823141401.71740-1-okorniev@redhat.com> <Zsif6pDBfVm1sUiV@tissot.1015granger.net>
+ <CAN-5tyHENMDTeyESPA9ceCA=RaPMMW9ORh3NXu9RnbFiLZHRYg@mail.gmail.com> <5DEAACE7-8A92-49C5-A153-1A51452B3D32@oracle.com>
+In-Reply-To: <5DEAACE7-8A92-49C5-A153-1A51452B3D32@oracle.com>
+From: Olga Kornievskaia <okorniev@redhat.com>
+Date: Tue, 27 Aug 2024 14:46:13 -0400
+Message-ID: <CACSpFtANDfuyuRfayfc_PRe6Lhom30BwT4cA4VbuQJoOCC9hEg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] nfsd: prevent states_show() from using invalid stateids
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <aglo@umich.edu>, Jeff Layton <jlayton@kernel.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 26, 2024 at 10:32:30AM +1000, NeilBrown wrote:
-> On Sat, 24 Aug 2024, Mike Snitzer wrote:
-> > 
-> > Also, expose localio's required nfsd symbols to NFS client:
-> > - Cache nfsd_open_local_fh symbol (defined in next commit) and other
-> >   required nfsd symbols in a globally accessible 'nfs_to'
-> >   nfs_to_nfsd_t struct.
-> 
-> I'm not thrilled with the mechanism for getting these symbols.
-> 
-> I'd rather nfsd passed the symbols to nfs_uuid_is_local(), and it stored
-> them somewhere that nfs can see them.  No need for reference counting
-> etc.  If nfs/localio holds an auth_domain, then it implicitly holds a
-> reference to the nfsd module and the functions cannot disappear.
+On Fri, Aug 23, 2024 at 11:10=E2=80=AFAM Chuck Lever III <chuck.lever@oracl=
+e.com> wrote:
 >
-> I would created an 'nfs_localio_operations' structure which is defined
-> in nfsd as a constant.
-> The address of this is passed to nfs_uud_is_local() and that address
-> is stored in nfs_to if it doesn't already have the correct value.
-> 
-> So no need for symbol_request() or symbol_put().
+>
+>
+> > On Aug 23, 2024, at 11:03=E2=80=AFAM, Olga Kornievskaia <aglo@umich.edu=
+> wrote:
+> >
+> > On Fri, Aug 23, 2024 at 10:44=E2=80=AFAM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>
+> >> On Fri, Aug 23, 2024 at 10:14:01AM -0400, Olga Kornievskaia wrote:
+> >>> states_show() relied on sc_type field to be of valid type
+> >>> before calling into a subfunction to show content of a
+> >>> particular stateid. But from commit 3f29cc82a84c we
+> >>> split the validity of the stateid into sc_status and no longer
+> >>> changed sc_type to 0 while unhashing the stateid. This
+> >>> resulted in kernel oopsing as something like
+> >>> nfs4_show_open() would derefence sc_file which was NULL.
+> >>>
+> >>> To reproduce: mount the server with 4.0, read and close
+> >>> a file and then on the server cat /proc/fs/nfsd/clients/2/states
+> >>>
+> >>> [  513.590804] Call trace:
+> >>> [  513.590925]  _raw_spin_lock+0xcc/0x160
+> >>> [  513.591119]  nfs4_show_open+0x78/0x2c0 [nfsd]
+> >>> [  513.591412]  states_show+0x44c/0x488 [nfsd]
+> >>> [  513.591681]  seq_read_iter+0x5d8/0x760
+> >>> [  513.591896]  seq_read+0x188/0x208
+> >>> [  513.592075]  vfs_read+0x148/0x470
+> >>> [  513.592241]  ksys_read+0xcc/0x178
+> >>>
+> >>> Fixes: 3f29cc82a84c ("nfsd: split sc_status out of sc_type")
+> >>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> >>> ---
+> >>> fs/nfsd/nfs4state.c | 3 +++
+> >>> 1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> >>> index c3def49074a4..8351724b8a43 100644
+> >>> --- a/fs/nfsd/nfs4state.c
+> >>> +++ b/fs/nfsd/nfs4state.c
+> >>> @@ -2907,6 +2907,9 @@ static int states_show(struct seq_file *s, void=
+ *v)
+> >>> {
+> >>>      struct nfs4_stid *st =3D v;
+> >>>
+> >>> +     if (!st->sc_file)
+> >>> +             return 0;
+> >>> +
+> >>>      switch (st->sc_type) {
+> >>>      case SC_TYPE_OPEN:
+> >>>              return nfs4_show_open(s, st);
+> >>> --
+> >>> 2.43.5
+> >>>
+> >>
+> >> I'll wait for Neil/Jeff's Reviewed-by, but the root cause analysis
+> >> seems plausible to me, and I'll plan to apply it for v6.11-rc.
+> >>
+> >> Btw, I noticed this at the tail of states_show():
+> >>
+> >>        /* XXX: copy stateids? */
+> >>
+> >> I'm not really sure, but those won't ever have an sc_file, will
+> >> they? Are COPY callback stateids something we want the server to
+> >> display in this code? Just musing aloud: maybe the NULL sc_file
+> >> check wants to be moved into the show helpers.
+> >
+> > I can see that the copy stateids still have type NFS4_COPY_STID so
+> > they are not converted to the new type of SC_TYPE. But it just means
+> > we are not displaying them. I'm not sure what happens to sc_file for
+> > copy stateid, I'd need to check.
+>
+> If you're already going to move the sc_file check into
+> nfs4_show_open(), you can defer looking at adding specific
+> support for callback stateids. We'll add it to the to-do
+> list.
 
-I'm not seeing why we'd want to actively engineer some even more
-bespoke way to access nfsd symbols.  The symbol refcounting is only
-done when the client first connects as part of the LOCALIO handshake
-(or when client is destroyed and LOCALIO enabled), so it isn't getting
-in the way.
+Now that I've looked at some copy code and also got more familiar with
+this walking the stateids in proc, I'd like to note that proc only
+walks the stateids that are store in clp->cl_stateids but the copy
+stateid that we keep around (and those are the copy stateids in the
+source server) are stored under the nfsd_net (namespace). Not to say
+we shouldn't modify states_show() not to add walking a different list
+but wanted to raise it. Also on the destination server, we stop async
+copy stateid under the clp->async_copies list and they only live for
+the lifetime of the copy. I know this bordes on a different discussion
+of keeping copy stateids...
 
-Happy to revisit this but I'd really prefer to use standard convention
-(symbol_request and symbol_put) to establish nfs's dependency on
-nfsd's symbols.
+>
+>
+> --
+> Chuck Lever
+>
+>
 
-> > +
-> > +DEFINE_MUTEX(nfs_uuid_mutex);
-> 
-> This doesn't need to be a mutex - a spinlock is sufficient.
-
-Fixed, thanks.
-
-> > +
-> > +bool nfs_uuid_is_local(const uuid_t *uuid, struct net *net, struct auth_domain *dom)
-> > +{
-> > +	bool is_local = false;
-> > +	nfs_uuid_t *nfs_uuid;
-> > +
-> > +	rcu_read_lock();
-> > +	nfs_uuid = nfs_uuid_lookup(uuid);
-> > +	if (nfs_uuid) {
-> > +		is_local = true;
-> > +		nfs_uuid->net = net;
-> 
-> It looks odd that you don't take a reference to the net.
-> It is probably correct but a comment explaining why would help.
-> Is it that the dom implies a reference to the net?
-
-No, I just made the code tolerate the net having been torn down
-(see: fs/nfsd/localio.c:nfsd_open_local_fh), but it'd be safer to take
-a proper reference here.
-
-I'll work through it once more and update accordingly.
-
-Thanks!
 
