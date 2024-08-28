@@ -1,101 +1,181 @@
-Return-Path: <linux-nfs+bounces-5842-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5843-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 160D0961D31
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 05:51:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292CA961D94
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 06:26:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C807B285A58
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 03:51:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7B091F22765
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 04:26:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FDD6156669;
-	Wed, 28 Aug 2024 03:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0D1433AD;
+	Wed, 28 Aug 2024 04:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ev0B8fFT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF23155A3C;
-	Wed, 28 Aug 2024 03:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C9D18030;
+	Wed, 28 Aug 2024 04:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724817003; cv=none; b=e7Wp377bW09TRgle1PIdFFbBPBEGCLkyDXne0+GKWYa4xXErWmi8tVK8VxE5hBiJNQlxw3T/FDCAYfvWWjn0SGrIe/xagiXpNrmGmAzHGp8QFTzpr6m1U8pfl/PkM+NWqjrZnc19Bz5Q4MmrwXJT0DnG/ugFwW1ZnVAL03jqyC4=
+	t=1724819207; cv=none; b=M+PGkzsTsFJs1vX0auGamhZuWBEEoAo6/iKHyvEpXgn5dYqHcS802AD9JgbvP5GtPz39kMgpOGDJ2pRYpUxXhPI8hd7w8IRXAtzqbz2eR8Kup5AMI9K7hm5Y9ihKipNaYivcKyDlDNnetoVK637o2U2q3P2C+JrsGQ+LYdHwGvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724817003; c=relaxed/simple;
-	bh=jm7xy+AGoi+VAQ4u2cKqfYbNkBRpmU1dCkK7xzWqccQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mGo7FWTTREr0fcuRJWqo17f0JC76hKc0rzl2zQpDrYxkkaAzxVcONtxXSbwwpf6N6VTQkBF/QCq6fFu4+tHe1zPaicX3wMJkpYh1N4b1XvaJHms94vrR1fQ1AheCFVHs4ttQgcbE+IWnpAN3o7FGPBom4xaa4X1874HAZHFpQW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wtr1h2qmyz1HHFX;
-	Wed, 28 Aug 2024 11:46:32 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id D1CAA140135;
-	Wed, 28 Aug 2024 11:49:51 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 28 Aug 2024 11:49:51 +0800
-Message-ID: <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
-Date: Wed, 28 Aug 2024 11:49:51 +0800
+	s=arc-20240116; t=1724819207; c=relaxed/simple;
+	bh=QEbprjT5kmehF6XMhE7a7sFNC3wff46vJzh3QMdQjwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rb7EIS85WUEIBCIOuCZ1XP41PDTOjpzvZFmIssqEA2woQxJYIgbkB70ds59YgDv0o0EpuvqdBaCD/a9E7RAr7W3Tw/A9HAvanaCUVZs0FPlYa1ViA/GvkT1poZBybWGaxDnacvQLgL0QzoepWhranT6LWedRmM1JIjpos+TUN6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ev0B8fFT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C42DC4FF03;
+	Wed, 28 Aug 2024 04:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724819207;
+	bh=QEbprjT5kmehF6XMhE7a7sFNC3wff46vJzh3QMdQjwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ev0B8fFTBp/hMV8o4x5LL1I+vByFH9QfYx5ZC18U/xObPIQp1BJb0g8fX2HDqLhBP
+	 Z09S0UKXraXayOIIBJIQYI9wX5pb8xoxf46hDk8FBJaLDWbY+/mOi0OnrPJn5h+A5V
+	 5DKWiBUtjOgvJUFotzih6RgDyIZ8zexq4XSbioKduep4SBMHWf2jj5pLKHfw7eDzeF
+	 1MoUJymIxPCp5XK5wo7YFP481mM3keo3RB7FNYMzq3jLC3l4xjn3orHeh8rFbU7szC
+	 qmDeZJW9+bvcxmshDEwg6/uqTUbucwygdCHAVSrjo8p0CfXrLRIHvlL6KDLkMyAHkZ
+	 BnQqC3ruxN5iA==
+Date: Wed, 28 Aug 2024 00:26:46 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Trond Myklebust <trondmy@hammerspace.com>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"jlayton@kernel.org" <jlayton@kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v13 19/19] nfs: add FAQ section to
+ Documentation/filesystems/nfs/localio.rst
+Message-ID: <Zs6nBhV6I_OnwkJy@kernel.org>
+References: <>
+ <aec659a886f7da3beded2b0ecce452e1599f9adc.camel@hammerspace.com>
+ <172480206591.4433.15677232468943767302@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
- str_true_false()/str_false_true() helper
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
-	<anna@kernel.org>, <gregkh@linuxfoundation.org>,
-	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-nfs@vger.kernel.org>
-References: <20240827024517.914100-1-lihongbo22@huawei.com>
- <20240827024517.914100-2-lihongbo22@huawei.com>
- <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
- <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
- <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <172480206591.4433.15677232468943767302@noble.neil.brown.name>
 
-
-
-On 2024/8/28 11:22, Andrew Morton wrote:
-> On Wed, 28 Aug 2024 09:48:21 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
+On Wed, Aug 28, 2024 at 09:41:05AM +1000, NeilBrown wrote:
+> On Wed, 28 Aug 2024, Trond Myklebust wrote:
+> > On Wed, 2024-08-28 at 07:49 +1000, NeilBrown wrote:
+> > > On Tue, 27 Aug 2024, Trond Myklebust wrote:
+> > > > > 
+> > > > > 
+> > > > > > On Aug 25, 2024, at 9:56 PM, NeilBrown <neilb@suse.de> wrote:
+> > > > > > 
+> > > > > > While I'm not advocating for an over-the-wire request to map a
+> > > > > > filehandle to a struct nfsd_file*, I don't think you can
+> > > > > > convincingly
+> > > > > > argue against it without concrete performance measurements.
+> > > > > 
+> > > > 
+> > > > What is the value of doing an open over the wire? What are you
+> > > > trying
+> > > > to accomplish that can't be accomplished without going over the
+> > > > wire?
+> > > 
+> > > The advantage of going over the wire is avoiding code duplication.
+> > > The cost is latency.  Obviously the goal of LOCALIO is to find those
+> > > points where the latency saving justifies the code duplication.
+> > > 
+> > > When opening with AUTH_UNIX the code duplication to determine the
+> > > correct credential is small and easy to review.  If we ever wanted to
+> > > support KRB5 or TLS I would be a lot less comfortable about reviewing
+> > > the code duplication.
+> > > 
+> > > So I think it is worth considering whether an over-the-wire open is
+> > > really all that costly.  As I noted we already have an over-the-wire
+> > > request at open time.  We could conceivably send the LOCALIO-OPEN
+> > > request at the same time so as not to add latency.  We could receive
+> > > the
+> > > reply through the in-kernel backchannel so there is no RPC reply.
+> > > 
+> > > That might all be too complex and might not be justified.  My point
+> > > is
+> > > that I think the trade-offs are subtle and I think the FAQ answer
+> > > cuts
+> > > off an avenue that hasn't really been explored.
+> > > 
+> > 
+> > So, your argument is that if there was a hypothetical situation where
+> > we wanted to add krb5 or TLS support, then we'd have more code to
+> > review?
+> > 
+> > The counter-argument would be that we've already established the right
+> > of the client to do I/O to the file. This will already have been done
+> > by an over-the-wire call to OPEN (NFSv4), ACCESS (NFSv3/NFSv4) or
+> > CREATE (NFSv3). Those calls will have used krb5 and/or TLS to
+> > authenticate the user. All that remains to be done is perform the I/O
+> > that was authorised by those calls.
 > 
->>> This might result in copies of the strings "true" and "false" being
->>> generated for every .c file which uses this function, resulting in
->>> unnecessary bloat.
->>>
->>> It's possible that the compiler/linker can eliminate this duplication.
->>> If not, I suggest that every function in string_choices.h be uninlined.
->> The inline function is in header file, it will cause code expansion. It
->> should avoid the the copies of the strings.
+> The other thing that remains is to get the correct 'struct cred *' to
+> store in ->f_cred (or to use for lookup in the nfsd filecache).
 > 
-> Sorry, I don't understand your reply.
+> > 
+> > Furthermore, we'd already have established that the client and the
+> > knfsd instance are running in the same kernel space on the same
+> > hardware (whether real or virtualised). There is no chance for a bad
+> > actor to compromise the one without also compromising the other.
+> > However, let's assume that somehow is possible: How does throwing in an
+> > on-the-wire protocol that is initiated by the one and interpreted by
+> > the other going to help, given that both have access to the exact same
+> > RPCSEC_GSS/TLS session and shared secret information via shared kernel
+> > memory?
+> > 
+> > So again, what problem are you trying to fix?
 > 
-I mean this is a inline function (and tiny enough), the compiler will do 
-the code expansion and some optimizations.
-> Anything which is calling these functions is not performance-sensitive,
-> so optimizing for space is preferred.  An out-of-line function which
-> returns a const char * will achieve this?
-I think this helper can achieve this. Because it is tiny enough, the 
-compiler will handle this like #define macro (do the replacement) 
-without allocating extra functional stack. On the contrary, if it is 
-implemented as a non-inline function, it will cause extra functional 
-stack when it was called every time. And it also should be implemented 
-in a source file (.c file), not in header file(.h file).
+> Conversely:  what exactly is this FAQ entry trying to argue against?
+>
+> My current immediate goal is for the FAQ to be useful.  It mostly is,
+> but this one question/answer isn't clear to me.
 
-Thanks,
-Hongbo
+The current answer to question 6 isn't meant to be dealing in
+absolutes, nor does it have to (but I agree that "negating any
+benefit" should be softened given we don't _know_ how it'd play out
+without implementing open-over-the-wire entirely to benchmark).
+
+We just need to give context for what motivated the current
+implementation: network protocol avoidance where possible.
+
+Given everything, do you have a suggestion for how to improve the
+answer to question 6?  Happy to revise it however you like.
+
+Here is the incremental patch I just came up with. Any better?
+
+diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/filesystems/nfs/localio.rst
+index 4b6d63246479..5d652f637a97 100644
+--- a/Documentation/filesystems/nfs/localio.rst
++++ b/Documentation/filesystems/nfs/localio.rst
+@@ -120,12 +120,13 @@ FAQ
+    using RPC, beneficial?  Is the benefit pNFS specific?
+ 
+    Avoiding the use of XDR and RPC for file opens is beneficial to
+-   performance regardless of whether pNFS is used. However adding a
+-   requirement to go over the wire to do an open and/or close ends up
+-   negating any benefit of avoiding the wire for doing the I/O itself
+-   when we’re dealing with small files. There is no benefit to replacing
+-   the READ or WRITE with a new open and/or close operation that still
+-   needs to go over the wire.
++   performance regardless of whether pNFS is used. Especially when
++   dealing with small files its best to avoid going over the wire
++   whenever possible, otherwise it could reduce or even negate the
++   benefits of avoiding the wire for doing the small file I/O itself.
++   Given LOCALIO's requirements the current approach of having the
++   client perform a server-side file open, without using RPC, is ideal.
++   If in the future requirements change then we can adapt accordingly.
+ 
+ 7. Why is LOCALIO only supported with UNIX Authentication (AUTH_UNIX)?
+ 
 
