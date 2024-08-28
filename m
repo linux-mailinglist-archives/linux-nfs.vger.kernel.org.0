@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-5868-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5869-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BEED962EAB
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 347E8962EAA
 	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 19:40:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A77F6B213AC
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 17:40:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6289281A60
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 17:40:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F7981A704B;
-	Wed, 28 Aug 2024 17:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FCBD1A7068;
+	Wed, 28 Aug 2024 17:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSf5Lsk/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzX6bDGR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E5E1A4F15;
-	Wed, 28 Aug 2024 17:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B58F1A4F15
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 17:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724866816; cv=none; b=caVhhtAMLJUDLcSG51JNju79hUivK2dhz78v1RoTwgA2bEskqqj9A9wCa/mrfFQXy16Shss3Vv6PwX0MAFqaRinzGYpuk5NSZ3et02GaWNriXcW2k5Qrf/3v5bNcz52pORjVt3m1xWH5UKzLR1m9Stw5IGSKgadsQ4r8m8cVYeE=
+	t=1724866817; cv=none; b=LibHlWDmvJqNF06nrm/W4Y8ps9AdaIhv4eTglH+zpIyG95Bf4npTtP1LVNwiXb54FMCi4h3hKCylQQKgrFejypNAo9tYGBAIigbPrvuPCquJedTnLX1KuLVW5JpGaWtysPWTHa/A+H6bLIKSQIGwOjincXfgab2zfp5FiUcgBko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724866816; c=relaxed/simple;
-	bh=+orhpqbhYE73syn3xRae0ko0GUimh1gok3+JeXs6uDg=;
+	s=arc-20240116; t=1724866817; c=relaxed/simple;
+	bh=oKbO+JltJlOnXD4peAa6mLTPzL9OzrmLezFkCPts63g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QECQga8Fqhxn+gG+qtyIsYGQW4dLiYPNS5QG+vcDcmXjAdOf49Z8o9/syptedGuMywZB8sDswPq6z7Kj37/eIehLryXA0drhL2pHiWOew1DKzKuC9eWgi0TXjb+BkzfdVR3M1sTlKT/x8JjX2GTlHq4l43rGJe/IfIAhNn6iegU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSf5Lsk/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67F7C4CEC0;
-	Wed, 28 Aug 2024 17:40:15 +0000 (UTC)
+	 MIME-Version; b=EDNi8/bGhPYxlBccPb1t96hB8zHGs+UXh2lHi8jUV7lMt07Y8ERzZGmV9zyubi3J6o/2cocq/l+KPgyxKL0dwX1pbjHefwFnTygKgdHctWUujicrQ9i9o4IlpaF0O9qFCpkT6T4kWhusNGhx3CkIU7uf60kThR7TApWBlhS1+gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzX6bDGR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9280EC4CEC2;
+	Wed, 28 Aug 2024 17:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724866816;
-	bh=+orhpqbhYE73syn3xRae0ko0GUimh1gok3+JeXs6uDg=;
+	s=k20201202; t=1724866817;
+	bh=oKbO+JltJlOnXD4peAa6mLTPzL9OzrmLezFkCPts63g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aSf5Lsk/HF8PJlGzIT13stZDjoRppbHnyg67V3Vw1VahRPiZ3lzaMarZBZJGNbRvf
-	 vgGs9SbpgCPFa0nTvhAQWanawZewQo+/VnC5bL8FqoomKMHNaLSn14B2ZpCGlgLRTM
-	 thvKUOKUyTY7TtVdnlShiIQmInoqXk4qdGJkPKA2jWjEzycgWjBdo5RiMirYXdu3ol
-	 P7G5GxvJQKRj0CBINKFWyeR2AlxaxO6elOK5vU4Vtbp48K4sHAckuOvNcz38uYjYZA
-	 w2SqM/a0yr/qmT6mo3SQJ6q/3dJjh7erFK/OGHpOk4qrbfUdczlk9ZnimjR36en3RH
-	 W+G1yWek8dMTg==
+	b=kzX6bDGRq3zLEbY7LbnB8R8FA0NgpRL0T0mGdadA/A8LV3Eh+Eb4oVfG5ra6qQBRZ
+	 SfiCtSQvZYFUptGLp3T9hGTrj08BQIOhM1TILxG0hSEo15QkeJdmHuFOFsrXQSN5Ai
+	 k/eSf3wJl/ucKWB0pSA04qQfoJKiBNWSqGijsNjvuFNSDEK7zcNfUVKxf4gfFzYlsj
+	 8+UATAuuOnOHXpPD28q42B0QnZFl1Qxq/m6UKOOGo3rCPXeKwDovGvJzOI5kbmiuEB
+	 4ngMGnhjSI5hQ26Xq3lPNxTjVkR6hFi0Mo5oBDd+AbmGdmSVTsG8lqrDya+TnCzv3z
+	 4IrFm1QRXtW9w==
 From: cel@kernel.org
 To: <linux-nfs@vger.kernel.org>
 Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	stable@vger.kernel.org
-Subject: [RFC PATCH 2/7] NFSD: Limit the number of concurrent async COPY operations
-Date: Wed, 28 Aug 2024 13:40:04 -0400
-Message-ID: <20240828174001.322745-11-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 3/7] NFSD: Display copy stateids with conventional print formatting
+Date: Wed, 28 Aug 2024 13:40:05 -0400
+Message-ID: <20240828174001.322745-12-cel@kernel.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240828174001.322745-9-cel@kernel.org>
 References: <20240828174001.322745-9-cel@kernel.org>
@@ -60,114 +59,46 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3621; i=chuck.lever@oracle.com; h=from:subject; bh=VEBWKnuVul4SKhnXBt8l9TWqaWgmVvsUzjYpWA+H0Ig=; b=kA0DAAgBM2qzM29mf5cByyZiAGbPYPqglbuRPJal4DFBuKhVlkGJYND5XDEQ0m42OIf14G4d+ 4kCMwQAAQgAHRYhBCiy5bASht8kPPI+/jNqszNvZn+XBQJmz2D6AAoJEDNqszNvZn+XEyEQAKlS vVcXhCSvVdM3Fp2oHwWJ0bOHDKsN1dSUFg6ZQ+OjmxKP9boLlTYofM8+YC8IVQTa/2IB4Ud03eE 9YxhLDldW5Jncdy2C4z6Z9xr4woSvcJkFaJDOoM6zdGpqCrLjcnce7pgReESP/+T5mKNftngnYR pD0U2gsbx3bRxjWDQmNaEtTeJlghYdvwsBOMiT7uGI+hBvzIgUgzEz1bZG93eL5gd5oQcoDvUQz v7+E8e+I3Ss2fvZKI1/fBUA1PndyQ9pxNEJxjzSLrVAY7onVFi7+xmg21oGfANj2DcF5u/Voscs uBdgnKjvX2ftxCNCAYh+GzhvRHbgSeDT1O/abY8iQ62tLQLoFiWxLaNwsUY6bR2LAx8pbBvd4TH KXy8lPJwxbGHVt99lvG+o3h5NR3kQi9zaPxPTZuy17ygaWk4fm+fJaLzPJBOJdqs+nDufjpy5SG iNo9qJP29SkcWVXbMe8CoJ7JYMiKwbgRBBEJm/ZAOIZxP/EuoIyH4DN6XxV9b+fJU7EqRMNKHd2 7BsM+b+bby0XT3QxQHwUe1PIDB8PlzHsEfVGujBNEAPXarVrdX5XMzBq1L8cYji6K/B2K2a2YDF pMOZk+JorjC69CCtRTIFghhgQ/EntzXvM1BeJMWJswSMYbv07mIR3dGKXrkwv3c4D1H0ywh6jr0 GgfN8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1421; i=chuck.lever@oracle.com; h=from:subject; bh=/y9b7DgVsvjf36gzPBQSIiSN73wExXN0lZK9iTtABsc=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBmz2D67dZmsuz44/APgh8zvzLvEBaiELbr4E2Kr nSHc2wWng+JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZs9g+gAKCRAzarMzb2Z/ l2MWD/0VtT6mx6mk01vQR+xvYLl2snL0L/ATQbSkKIiFhj4xdamY0qE7koyoMSi9TaeFhEENRgk AUaGouCXS+WCZfNHGfXhOFPMV2avop7sJ95vNkHed3WPRX/6dI5xND1c2fpWcFzG52V9ePWToz3 ClxtCZoAvjrFhNyNtaNZXIovAwkkTHkXegvgMW+yNWWmGFFykfPWL2xIg62qut/xfZiadeKEcJN fRU3PNSLWet72AexMW/mypWHxMhyU3S0PJeb5dJ0hwxGeF7BZ8tOJS1PROqkfjawlvVBz1eul52 rvj3yjnlShkP+GOPdNTpqCUDQNdeojbdXKLeP5wusoBs1fQ/6Eye8HTTSe7/4PD6V4dRfxhZglG VrrOeAWGI9UL5MDmL4mit3D1pk1t9vQf9v5P+PZd/urDsoU2nJCcG/+CyzSnOTWHsx+rJlvOAiv klDz0oWOx123qMyq3ihkeUgc2NPqxXsXxfvF1Al6U0wjWHXxGI/sudHFE+MjI+ZRpDzzuAYK0Pe igmYtUQDOgNVmMDoztZeU736ccQtVIetvdUtfR+BFKKI5Ji9gQvkdzXqkWM/chJxmRsG7ninFPb ccY3KNFFX6RQHiJrboomQ2YHSpNq5iKXQ7j/yg6siDWGWWw2RemQVoO3sHV3cpR/Wxq7DABHFTj meIDgyIhxR1pttg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Nothing appears to limit the number of concurrent async COPY
-operations that clients can start. In addition, AFAICT each async
-COPY can copy an unlimited number of 4MB chunks, so can run for a
-long time. Thus IMO async COPY can become a DoS vector.
+Make it easier to grep for s2s COPY stateids in trace logs: Use the
+same display format in nfsd_copy_class as is used to display other
+stateids.
 
-Add a restriction mechanism that bounds the number of concurrent
-background COPY operations. Start simple and try to be fair -- this
-patch implements a per-namespace limit.
-
-An async COPY request that occurs while this limit is exceeded gets
-NFS4ERR_DELAY. The requesting client can choose to send the request
-again after a delay or fall back to a traditional read/write style
-copy.
-
-If there is need to make the mechanism more sophisticated, we can
-visit that in future patches.
-
-Cc: stable@vger.kernel.org
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/netns.h     |  1 +
- fs/nfsd/nfs4proc.c  | 12 ++++++++++--
- fs/nfsd/nfs4state.c |  1 +
- fs/nfsd/xdr4.h      |  1 +
- 4 files changed, 13 insertions(+), 2 deletions(-)
+ fs/nfsd/trace.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 14ec15656320..5cae26917436 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -148,6 +148,7 @@ struct nfsd_net {
- 	u32		s2s_cp_cl_id;
- 	struct idr	s2s_cp_stateids;
- 	spinlock_t	s2s_cp_lock;
-+	atomic_t	pending_async_copies;
- 
- 	/*
- 	 * Version information
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 60c526adc27c..27f7eceb3b00 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1279,6 +1279,7 @@ static void nfs4_put_copy(struct nfsd4_copy *copy)
- {
- 	if (!refcount_dec_and_test(&copy->refcount))
- 		return;
-+	atomic_dec(&copy->cp_nn->pending_async_copies);
- 	kfree(copy->cp_src);
- 	kfree(copy);
- }
-@@ -1833,10 +1834,17 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	memcpy(&copy->fh, &cstate->current_fh.fh_handle,
- 		sizeof(struct knfsd_fh));
- 	if (nfsd4_copy_is_async(copy)) {
--		status = nfserrno(-ENOMEM);
-+		/* Arbitrary cap on number of pending async copy operations */
-+		int nrthreads = atomic_read(&rqstp->rq_pool->sp_nrthreads);
-+
- 		async_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
- 		if (!async_copy)
- 			goto out_err;
-+		async_copy->cp_nn = nn;
-+		if (atomic_inc_return(&nn->pending_async_copies) > nrthreads) {
-+			atomic_dec(&nn->pending_async_copies);
-+			goto out_err;
-+		}
- 		INIT_LIST_HEAD(&async_copy->copies);
- 		refcount_set(&async_copy->refcount, 1);
- 		async_copy->cp_src = kmalloc(sizeof(*async_copy->cp_src), GFP_KERNEL);
-@@ -1876,7 +1884,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	}
- 	if (async_copy)
- 		cleanup_async_copy(async_copy);
--	status = nfserrno(-ENOMEM);
-+	status = nfserr_jukebox;
- 	goto out;
- }
- 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a20c2c9d7d45..aaebc60cc77c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -8554,6 +8554,7 @@ static int nfs4_state_create_net(struct net *net)
- 	spin_lock_init(&nn->client_lock);
- 	spin_lock_init(&nn->s2s_cp_lock);
- 	idr_init(&nn->s2s_cp_stateids);
-+	atomic_set(&nn->pending_async_copies, 0);
- 
- 	spin_lock_init(&nn->blocked_locks_lock);
- 	INIT_LIST_HEAD(&nn->blocked_locks_lru);
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index fbdd42cde1fa..2a21a7662e03 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -713,6 +713,7 @@ struct nfsd4_copy {
- 	struct nfsd4_ssc_umount_item *ss_nsui;
- 	struct nfs_fh		c_fh;
- 	nfs4_stateid		stateid;
-+	struct nfsd_net		*cp_nn;
- };
- 
- static inline void nfsd4_copy_set_sync(struct nfsd4_copy *copy, bool sync)
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 77bbd23aa150..e61109d97b4e 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -2153,14 +2153,14 @@ DECLARE_EVENT_CLASS(nfsd_copy_class,
+ 				sizeof(struct sockaddr_in6));
+ 	),
+ 	TP_printk("client=%pISpc intra=%d async=%d "
+-		"src_stateid[si_generation:0x%x cl_boot:0x%x cl_id:0x%x so_id:0x%x] "
+-		"dst_stateid[si_generation:0x%x cl_boot:0x%x cl_id:0x%x so_id:0x%x] "
++		"src_client %08x:%08x src_stateid %08x:%08x "
++		"dst_client %08x:%08x dst_stateid %08x:%08x "
+ 		"cp_src_pos=%llu cp_dst_pos=%llu cp_count=%llu",
+ 		__get_sockaddr(addr), __entry->intra, __entry->async,
+-		__entry->src_si_generation, __entry->src_cl_boot,
+-		__entry->src_cl_id, __entry->src_so_id,
+-		__entry->dst_si_generation, __entry->dst_cl_boot,
+-		__entry->dst_cl_id, __entry->dst_so_id,
++		__entry->src_cl_boot, __entry->src_cl_id,
++		__entry->src_so_id, __entry->src_si_generation,
++		__entry->dst_cl_boot, __entry->dst_cl_id,
++		__entry->dst_so_id, __entry->dst_si_generation,
+ 		__entry->src_cp_pos, __entry->dst_cp_pos, __entry->cp_count
+ 	)
+ );
 -- 
 2.46.0
 
