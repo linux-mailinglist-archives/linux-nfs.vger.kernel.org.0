@@ -1,183 +1,137 @@
-Return-Path: <linux-nfs+bounces-5895-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5896-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1C6896352C
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:06:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA929963532
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:09:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD9261C21320
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:06:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6946628608E
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:09:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380CC1AC45F;
-	Wed, 28 Aug 2024 23:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A379158DCD;
+	Wed, 28 Aug 2024 23:09:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YzmMHZAZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K8hONYFH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YzmMHZAZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K8hONYFH"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="LnH1ZQv0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79656158DCD
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 23:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2D51AD9D3
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 23:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724886398; cv=none; b=Tg0xhLfx/9SXBaKdnxdOogixI9vYv1xjPp9wGhFBxgdwOspeCOHAoonopFmYc4S4ZFMt8sD8bL3PIbwZcpTlm4lh52dR823j4XJVeqKL3ZYeBK3bY0JpKswmQGYya2g2JDmrmXqGBNk/RlyMWPh1o6wftw0/KEGFIfsYCDYQUnw=
+	t=1724886542; cv=none; b=tfyZ56CHrG+jpexWAsrOFSGiJPkLIhAmJMVkzs0FLKm4ZKG/F9GpX17JifcQPOMetfqZO3QOqXWbKnjLRg+AXUHLjxgUZTedzMY0jUqFY85kR/uhrxXvm5Cb6RQhit70q6P2lvosZaCw5SQ6PFQ/sMYbwy8aGjad9z8fmeIqhY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724886398; c=relaxed/simple;
-	bh=xM3gXQnLFAlr0l/Aw1U4Bisez0AM6cSB20fAGYPDn0o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=quwXmBl0yJnHUvn/7yD+f8C9IYWoUeqcQTz5C7PQEIcueEgo9xmZoh2/ntzIYdnJWyfzRtNeNLsRoMCFhlHD7bwp/7qq+KWbqazt6O0gJad82qGiCEYHHWOy1g+YvFirSZKcTsvln2eFkGLjZwcvFZFolGzXCs9ZygYHCWHD7jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YzmMHZAZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K8hONYFH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YzmMHZAZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K8hONYFH; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 96D181FCE7;
-	Wed, 28 Aug 2024 23:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724886394; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dTYcB/owmi2yQXYEj3eH4cZFRJZRUhLWVxsyue1hRjc=;
-	b=YzmMHZAZKuoJDvS6LySeC+aVGzm86I0vd7SnHaMBUqZMa6x9OiyDYw2tdLA37wC4XtalEd
-	wuX6a2q2oLr41SCSAYE+WoCZIVZIMBAdPiNzt3thD7brgAiXx0hMzDAf4cNt1NBeYDnzln
-	uxNGWGF2Hxk8dhgZbd2diRvUmHgwYHk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724886394;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dTYcB/owmi2yQXYEj3eH4cZFRJZRUhLWVxsyue1hRjc=;
-	b=K8hONYFHbI8BFUdWng10CJvCL+P9VZAVIAaij5NF69bb5r53FmQV4JNWZseFhfMAeJrmYP
-	h/lT7FjHviaY+FCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YzmMHZAZ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=K8hONYFH
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724886394; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dTYcB/owmi2yQXYEj3eH4cZFRJZRUhLWVxsyue1hRjc=;
-	b=YzmMHZAZKuoJDvS6LySeC+aVGzm86I0vd7SnHaMBUqZMa6x9OiyDYw2tdLA37wC4XtalEd
-	wuX6a2q2oLr41SCSAYE+WoCZIVZIMBAdPiNzt3thD7brgAiXx0hMzDAf4cNt1NBeYDnzln
-	uxNGWGF2Hxk8dhgZbd2diRvUmHgwYHk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724886394;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dTYcB/owmi2yQXYEj3eH4cZFRJZRUhLWVxsyue1hRjc=;
-	b=K8hONYFHbI8BFUdWng10CJvCL+P9VZAVIAaij5NF69bb5r53FmQV4JNWZseFhfMAeJrmYP
-	h/lT7FjHviaY+FCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 110261398F;
-	Wed, 28 Aug 2024 23:06:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id u+AhLnitz2Z9TwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 28 Aug 2024 23:06:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1724886542; c=relaxed/simple;
+	bh=S6khVv2K3zqenjuZaXHlbsGEquUo21R2DNwX+2TYioE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KsKpClNmhWI+XV90rXNYuONJr9OOFoLdTYMQuzrW57Wm683M9hMl5fE38T65QnU1meymE89tXtZQm0CjTIQZJIj99dlXuirllQaOtGPUkJKdJF0e4TocIOM7KM7cKXRkBwhIG9wrYM7MTLQ3d4JoMJba2Em56j/PwyV+Ixu3AgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=LnH1ZQv0; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e05f25fb96eso57724276.1
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 16:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1724886539; x=1725491339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+rnWaW1Wi74NhhYke8yxwRLmARuCVrhloji7XbjFHLI=;
+        b=LnH1ZQv0ZHuja0G36rmHXCT8JSxeoSsmb2yhdq7+qHPq55Vlgal5H0kmiSZb5MR3K7
+         O/UT9AYDEtST5/OTsxlPml2JBUYsKFA5N6/a3KyDT8qwxUKbfkXzsqZJ0Xg6hRjYC0zI
+         4wHAovacb9n0+Ya+QlAgN2/4kb9QyrLukXFpseHy6oEVmdT/s6KWxA7C0dVfcmutSh3t
+         6sfZMM4IukDUqy43xog9rqOG5fI3ILOv2tyNHJ6/55HyZP3w08oKtAfG+XiRWt/2YvQ9
+         lj6aHf7yBuv1kYYESooMUVZhFsZ2J8RYzW8WZ+NqaLJsSDNZrHEiZVlDnxeQ2h91sPFs
+         f3kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724886539; x=1725491339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+rnWaW1Wi74NhhYke8yxwRLmARuCVrhloji7XbjFHLI=;
+        b=TeD+ub1EInZfkW6dN1W3WhlYBOPV1hPCXBFKjnm2vDeu2PhACMQWoPdtpPexGl7kg4
+         D6N248c5iP5FoIpZw29WptxzzDiDfj4F4vy/kiI9wpB1+Xzqb4t8jIXHFvQ4foJXd+kk
+         RBY//DE+5iM80Y0QexHm/ihbVOqPneatcn8Cvg6hmhbpXhqpr9B35awPzeJ83jCwiA4J
+         yYpADNC/sUMpuTgIlRapV2mekpHLCs+x6zwQ0Q8yDJ7f8nd0lZubEq0XiP3hL/EaEje1
+         z2WMbMelIfpk3t/cP2bs6P/qejjFaoJhAzd6H0QVCUQuob5/Ud67HuZ5wbrtYlBQlXHR
+         0A0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9QnBp3Q0nOtpOvVGaKtGeDVR2VE43d4JoH8BzciOJ5EnFOZS6ayjgh2wUGnhchEInnTA76RzGyd4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxNBDhQPZ0po4XC7ybjADidQdFSgc4KkF6ZHZJzrxjfQoTBvLI
+	XDI/n4I8k109LZHdlpV7EOWjuJeY4wi1jXGzf2FZrEeh4frZUiwRr+VWXC4wJEWnr1PD/oQEphP
+	tF1jxhNhZh/wstsP0nuIqVJMlVyz0JI9f1fkE
+X-Google-Smtp-Source: AGHT+IGGXa0V8oGxUH3v22rH7vhuHhw9UfTo9cOdvs7DK/8DvFvDweL505TqKuvwIrMUiZgtV173ulYyn2z+iRorJiU=
+X-Received: by 2002:a05:690c:6512:b0:64a:4728:ef8 with SMTP id
+ 00721157ae682-6d277f51e62mr11216887b3.44.1724886539569; Wed, 28 Aug 2024
+ 16:08:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Dai Ngo <Dai.Ngo@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH nfsd-fixes] nfsd: fix nfsd4_deleg_getattr_conflict in presence
- of third party lease
-Date: Thu, 29 Aug 2024 09:06:28 +1000
-Message-id: <172488638886.4433.12153470259536099118@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 96D181FCE7
-X-Spam-Level: 
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -6.51
-X-Spam-Flag: NO
+References: <20240828195129.223395-1-smayhew@redhat.com> <20240828195129.223395-2-smayhew@redhat.com>
+ <CAHC9VhTCpm0=QrvBq_rHaRXNqu7iRcW7kqxjL8Jq9g=ZypfzsQ@mail.gmail.com> <70639b16-d48c-4465-80f5-4192c9d86b36@schaufler-ca.com>
+In-Reply-To: <70639b16-d48c-4465-80f5-4192c9d86b36@schaufler-ca.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 28 Aug 2024 19:08:48 -0400
+Message-ID: <CAHC9VhRDD76EnuXAbK1wPVCP5X-Fu9AytxC2bD3vvApLjzak6g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
+ inode_setsecctx hook
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: Scott Mayhew <smayhew@redhat.com>, stephen.smalley.work@gmail.com, 
+	chuck.lever@oracle.com, marek.gresko@protonmail.com, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Aug 28, 2024 at 5:29=E2=80=AFPM Casey Schaufler <casey@schaufler-ca=
+.com> wrote:
+> On 8/28/2024 2:05 PM, Paul Moore wrote:
+> > On Wed, Aug 28, 2024 at 3:51=E2=80=AFPM Scott Mayhew <smayhew@redhat.co=
+m> wrote:
+> >> Marek Gresko reports that the root user on an NFS client is able to
+> >> change the security labels on files on an NFS filesystem that is
+> >> exported with root squashing enabled.
+> >>
+> >> The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
+> >>
+> >>  *  This function requires the caller to lock the inode's i_mutex befo=
+re it
+> >>  *  is executed. It also assumes that the caller will make the appropr=
+iate
+> >>  *  permission checks.
+> >>
+> >> nfsd_setattr() does do permissions checking via fh_verify() and
+> >> nfsd_permission(), but those don't do all the same permissions checks
+> >> that are done by security_inode_setxattr() and its related LSM hooks d=
+o.
+> >>
+> >> Since nfsd_setattr() is the only consumer of security_inode_setsecctx(=
+),
+> >> simplest solution appears to be to replace the call to
+> >> __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
+> >> fixes the above issue and has the added benefit of causing nfsd to
+> >> recall conflicting delegations on a file when a client tries to change
+> >> its security label.
+> >>
+> >> Reported-by: Marek Gresko <marek.gresko@protonmail.com>
+> >> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
+> >> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> >> ---
+> >>  security/selinux/hooks.c   | 4 ++--
+> >>  security/smack/smack_lsm.c | 4 ++--
+> >>  2 files changed, 4 insertions(+), 4 deletions(-)
+> > Thanks Scott, this looks good to me, but since it touches Smack too
+> > I'd also like to get Casey's ACK on this patch;
+>
+> Testing labeled NFS has always been a challenge for the somewhat
+> limited resources available to the Smack project. I'll Ack the patch,
+> but won't claim to have tested it.
 
-It is not safe to dereference fl->c.flc_owner without first confirming
-fl->fl_lmops is the expected manager.  nfsd4_deleg_getattr_conflict()
-tests fl_lmops but largely ignores the result and assumes that flc_owner
-is an nfs4_delegation anyway.  This is wrong.
+Understood, thanks for the quick reply.
 
-With this patch we restore the "!=3D &nfsd_lease_mng_ops" case to behave
-as it did before the changed mentioned below.  This the same as the
-current code, but without any reference to a possible delegation.
-
-Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4state.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 07f2496850c4..f6a67ef27435 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -8859,7 +8859,15 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, s=
-truct dentry *dentry,
- 			 */
- 			if (type =3D=3D F_RDLCK)
- 				break;
--			goto break_lease;
-+
-+			nfsd_stats_wdeleg_getattr_inc(nn);
-+			spin_unlock(&ctx->flc_lock);
-+
-+			status =3D nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
-+			if (status !=3D nfserr_jukebox ||
-+			    !nfsd_wait_for_delegreturn(rqstp, inode))
-+					return status;
-+			return 0;
- 		}
- 		if (type =3D=3D F_WRLCK) {
- 			struct nfs4_delegation *dp =3D fl->c.flc_owner;
-@@ -8868,7 +8876,6 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, st=
-ruct dentry *dentry,
- 				spin_unlock(&ctx->flc_lock);
- 				return 0;
- 			}
--break_lease:
- 			nfsd_stats_wdeleg_getattr_inc(nn);
- 			dp =3D fl->c.flc_owner;
- 			refcount_inc(&dp->dl_stid.sc_count);
 --=20
-2.44.0
-
+paul-moore.com
 
