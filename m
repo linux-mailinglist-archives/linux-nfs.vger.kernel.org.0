@@ -1,124 +1,82 @@
-Return-Path: <linux-nfs+bounces-5840-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5841-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FA8D961C6E
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 05:00:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F216F961CFD
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 05:22:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC4F7B210D5
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 03:00:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD6E328606D
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 03:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC3F288D1;
-	Wed, 28 Aug 2024 03:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE3571304BF;
+	Wed, 28 Aug 2024 03:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWP4t0PL"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VDLLivFs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56743288B1
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 03:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08264A;
+	Wed, 28 Aug 2024 03:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724814022; cv=none; b=l9glSUZV9Ae4yZWQkEOrbQdHo9Fg1dgT0WSx87eJuwsKU25/9C50p7NuakpVc4ZMGjNLMnjJutMVdMmWa1h/JiW4dHSHSOBq62isczelPabQKMSOuIE6eVe737Ejhpr9Q4kMUv2w/YaFzZ3zFhxLqDbHRTjkn43UPysDvcc2nEg=
+	t=1724815325; cv=none; b=HiihKJ0jQcblyyz/uDmhsH5Ofma3HhdjQryTO6Pu9ms3ITMAkqYNli+zfO8sYftLZ/BbrVES+GyeGRxE6jJCR2BEShYpoiI5Gpdj0xVfrD2NVoc8QOzhSu3PPt//lCXgd7FTBFtTwZbbha5BJOF7A+9JJQ2X+uaFw1oj1NgPBJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724814022; c=relaxed/simple;
-	bh=x9Th5t55BfK0FLs+SFSYEWomuqk2VYx3zDleSLEw/sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVXPOZULaU1sOrg+GHieN93g0u2y/KJPRuTd2y3jmNfM9k59AklPc6oN26cUyWYhDvzIFxILKtABSWO5fym3Is2m7IvXBcXOkU0oe2dwqIbrDrU5WTmYJZVjlpWmp4mZR3xwjl17qPt+YZtGwPmpbinLocVAg7UtvYDsVI4Lp+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWP4t0PL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A6CC4DE12;
-	Wed, 28 Aug 2024 03:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724814021;
-	bh=x9Th5t55BfK0FLs+SFSYEWomuqk2VYx3zDleSLEw/sY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bWP4t0PLQ/yEmMWIVx/+6GtzQDFTyu41EZ6IQzgIV6JczXciM5MqkTK8fhO+XHBR1
-	 XSYKPUXxYlumsC5tsdUm8OAe9m7AUlObPU5bn+V+ZHpmPVT7SVZ9TJxzWgow6PoSle
-	 BRKKEHWrtBO+Sfe9fOMvoi8nkHGJkfhyrz6x2aOSH4jzuPaxVgwnLlocyYGTbuzB/B
-	 np5M1eh7OepsOgF8NuqSqicrfPKZ9y3jJ5CZG54gCepAj3GU54lON5EKD+oXp5u5/J
-	 /3Ms1w/P+RFY3n0kg6NHHFNgri0+8/EekhCHZ7d8xQPjFn3v46OYH1pjLv4bDiDEx1
-	 7kKd/QeqK7nhw==
-Date: Tue, 27 Aug 2024 23:00:20 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: cel@kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH 1/6] NFSD: Handle @rqstp == NULL in
- check_nfsd_access()
-Message-ID: <Zs6SxCUgv8yl9aqg@kernel.org>
-References: <20240828004445.22634-1-cel@kernel.org>
- <20240828004445.22634-2-cel@kernel.org>
- <172480752028.4433.11727348270307536121@noble.neil.brown.name>
+	s=arc-20240116; t=1724815325; c=relaxed/simple;
+	bh=fHlyJ35eZVClM0QqaCWAspv3ePgLlC9CUj+DFPnZ10o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=E/S/8lY7vKjYxHpCZ9paXLPVV2fw7wGGvAzKM3POCVM7FoODsfmkPyRtbvEJ7MVL/tEatwAf0dFgLANoX1KyIdemcEZB8+4aqrXCOUhh43B1rYzXdYqvfndiZe71l9LEvOd38DDygLATQRV6p3RLREtoioAbSH2Q14DiVZDNwsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VDLLivFs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C0E6C4AF0F;
+	Wed, 28 Aug 2024 03:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724815324;
+	bh=fHlyJ35eZVClM0QqaCWAspv3ePgLlC9CUj+DFPnZ10o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VDLLivFsVLVyHuaPTqL7XSbOAh8R1qdmYIA5oCA71qf1zrjWwgfwMDY0cOnLC+4Mo
+	 XrlkuR70OeBoI3b+2E1+afWj0JQkSEECIMSkxW2OZ/ZFNZqNVC85UMTQEQqUfRU5IZ
+	 iQ7lFQKzsg8G0p7QJNTua/Gv4Hs3mDBxgav9YqRs=
+Date: Tue, 27 Aug 2024 20:22:04 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+ <anna@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+Message-Id: <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
+In-Reply-To: <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+	<20240827024517.914100-2-lihongbo22@huawei.com>
+	<20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+	<8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172480752028.4433.11727348270307536121@noble.neil.brown.name>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 28, 2024 at 11:12:00AM +1000, NeilBrown wrote:
-> On Wed, 28 Aug 2024, cel@kernel.org wrote:
-> > From: NeilBrown <neilb@suse.de>
-> > 
-> > LOCALIO-initiated open operations are not running in an nfsd thread
-> > and thus do not have an associated svc_rqst context.
-> > 
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > Co-developed-by: Mike Snitzer <snitzer@kernel.org>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > ---
-> >  fs/nfsd/export.c | 29 ++++++++++++++++++++++++-----
-> >  1 file changed, 24 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> > index 7bb4f2075ac5..46a4d989c850 100644
-> > --- a/fs/nfsd/export.c
-> > +++ b/fs/nfsd/export.c
-> > @@ -1074,10 +1074,29 @@ static struct svc_export *exp_find(struct cache_detail *cd,
-> >  	return exp;
-> >  }
-> >  
-> > +/**
-> > + * check_nfsd_access - check if access to export is allowed.
-> > + * @exp: svc_export that is being accessed.
-> > + * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-> > + *
-> > + * Return values:
-> > + *   %nfs_ok if access is granted, or
-> > + *   %nfserr_wrongsec if access is denied
-> > + */
-> >  __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
-> >  {
-> >  	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
-> > -	struct svc_xprt *xprt = rqstp->rq_xprt;
-> > +	struct svc_xprt *xprt;
-> > +
-> > +	/*
-> > +	 * The target use case for rqstp being NULL is LOCALIO, which
-> > +	 * currently only supports AUTH_UNIX. The behavior for LOCALIO
-> > +	 * is therefore the same as the AUTH_UNIX check below.
-> 
-> The "AUTH_UNIX check below" only applies if exp->ex_flavours == 0.
-> To make "rqstp == NULL" mean "treat like AUTH_UNIX" I think we need
-> to confirm that 
->   exp->ex_xprtsec_mods & NFSEXP_XPRTSEC_NONE
-> and either
->   exp->ex_nflavours == 0
-> or
->   one for the exp->ex_flavors->pseudoflavor values is RPC_AUTH_UNIX
-> 
-> I'm not sure that is all really necessary, but if not then we probably
-> need a better comment...
+On Wed, 28 Aug 2024 09:48:21 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
 
-Think extra checks aren't needed (unless you think a NULL rqstp
-_without_ the use of LOCALIO possible?  which could trigger a false
-positive granting of access? seems unlikely but...)
+> > This might result in copies of the strings "true" and "false" being
+> > generated for every .c file which uses this function, resulting in
+> > unnecessary bloat.
+> > 
+> > It's possible that the compiler/linker can eliminate this duplication.
+> > If not, I suggest that every function in string_choices.h be uninlined.
+> The inline function is in header file, it will cause code expansion. It 
+> should avoid the the copies of the strings.
 
-Mike
+Sorry, I don't understand your reply.
+
+Anything which is calling these functions is not performance-sensitive,
+so optimizing for space is preferred.  An out-of-line function which
+returns a const char * will achieve this?
 
