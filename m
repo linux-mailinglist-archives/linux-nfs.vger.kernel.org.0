@@ -1,152 +1,131 @@
-Return-Path: <linux-nfs+bounces-5885-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5886-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D893963384
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:05:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D17196338E
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:06:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06A10B240F7
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 21:05:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A39151C21BA4
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 21:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 608201AF4E3;
-	Wed, 28 Aug 2024 21:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D421AE023;
+	Wed, 28 Aug 2024 21:05:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H84WH5+U"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Nxh6ztjH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB611AED59
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 21:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813421AD9FC
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 21:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724879031; cv=none; b=cpS1JC67NGLX12ts2BC/gDzzFIMtQerYzQ5xjobszxto7rwSlIwbws7U6BXbxsguDunZO7MC+m3ggmk5yWzO3fW+PwsagVFbzxq3hjU6wW5DQu4icmWsaZWxQu+m96R4C83YxrZyUxqYuz7wgUr7LmK7NnWlE/Vz6nFxddrPMII=
+	t=1724879134; cv=none; b=qpLveCRJR/d42yiiMLEkbO7Wx8CHWzDMXCUfiRV9mpX9fwos1pyhR+auFMLdd+OE8bUaqwolB1I774NXfCG06GygzNZ0N9Hz+lZUYQ5hKgvhu1s6N3u8hrlQS5n41Z0OFgdSsoAIP3gUDzCMQZDXGAgMdf0z6bqK8MFj/S282Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724879031; c=relaxed/simple;
-	bh=dZLD/JcsA3bm8Cz88EokWnyb6qwNyJsN5B2wjUVoB8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LN4MtQTEjgwZV2/An9cnj0Jo/GSWHZFDvNRD936c4Qzc3w5wwfRSMnb3Y3VamuvC8JW3HWQPwgrwOXf9usQe/NPswmcem/F4f+6RuSNTWrmQ+8ZYwbgUAzPAcAeZgKXYOX3lzATW7AvYBd2/7nUZBlYY6i9Ah/wlNAYzNd83Gs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H84WH5+U; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724879028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HnRbucMY226i4IUYHJiuv+7kBNxjZEs05bItUy7sjXs=;
-	b=H84WH5+UL8UxRRVnpf9p0V5mVablrgZRKX406GqAboL5SOin45CuNKCcuFozUU0bEwRyec
-	qjP2uVZ1VVWKany/0WmjH6KWnSDFP0Vlh/VP0Qsa8NxmknjEhinTRBRoZts5gj88ABxVzg
-	8NGDYgEtsEK62SYEr0xLuu+d+w+flSo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-iAIpNcUkPheyG0CeJjFQ_w-1; Wed,
- 28 Aug 2024 17:03:45 -0400
-X-MC-Unique: iAIpNcUkPheyG0CeJjFQ_w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 010F11955BF1;
-	Wed, 28 Aug 2024 21:03:43 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5B35C1955BF2;
-	Wed, 28 Aug 2024 21:03:38 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <sfrench@samba.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] netfs, cifs: Improve some debugging bits
-Date: Wed, 28 Aug 2024 22:02:47 +0100
-Message-ID: <20240828210249.1078637-7-dhowells@redhat.com>
-In-Reply-To: <20240828210249.1078637-1-dhowells@redhat.com>
-References: <20240828210249.1078637-1-dhowells@redhat.com>
+	s=arc-20240116; t=1724879134; c=relaxed/simple;
+	bh=YkFFzt10FeRHRuYn4BTPENvDBVqrvdETzu5ZljVqWPk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K1XG50Fqf6GPKGTRZ2vET1t+4o6ygh7EYUrPFTdF9YoS0YZwrTOiFZWJDbfRPpvXYJ4Stzq66xBPYvxytTRuk7PfXTeOvPybxdPTqiuRim4KvRfXFjZhnW5QOoHm8s9YVKT1AP6Iocy3u4TTZNunrCZL5ssheWgSq8lHaiVd0qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Nxh6ztjH; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e116a5c3922so6956120276.1
+        for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 14:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1724879130; x=1725483930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7wL2mXtPHo9Bukf4HhYOY4xrUEL3mq1g3DGDrYTrepE=;
+        b=Nxh6ztjHrkP/YyMLW7x88YgppYUNibc9+OY1T+6LG1H2zgOSBp+aw6NjrXRxKbiIEd
+         NtOJwU8f3dlsYzXUyXs/YnC5PEqtUeiuoxJnuxL7NO4VrpQw05J1w5hVcstn2ypzbX3f
+         AVqnmj+HLmK/CpmC8h9Zeir1ZOgd3PM/cswPJmYuSP6BXiN5KeTouXmb0X0tC7cXU7CN
+         5o8pVu43/rxyAP0ry5+YGnwJ7QQk4P6G2uiTggIejUHEU+T7EuoQmCy7bm1iDQNwr9MU
+         +us9ecddB6u5kjXWQz1zNzauwai70LZixo+k527MPOa37xgEzskHHle6hI7OLA9+4Gvl
+         YwcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724879130; x=1725483930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7wL2mXtPHo9Bukf4HhYOY4xrUEL3mq1g3DGDrYTrepE=;
+        b=JMfNwIYXZeyE62nxXRu6ELbnfLRMp6JpyIRM7GzxXDSsM474fEcAxXvDtPX3PMBrBl
+         QtNG/cniSVxsr8q31fCP7Vs6BUAAyWWG1gipE3ABcAsNnyziPHaRAmLTPaNQpXZ3URRs
+         6hT/t0bZfk21AP9ql8T6YPYuaCZAmiTP+qcQDvoifTR127SYskAv9Luz4YeLjJLL2Cla
+         ZZ6ShjFoIJ+v3VT4aOupXiIkQzsRGGmpipnm3Tb90Wh9q7xKoMkFYix/Rz3+4ggOBPnG
+         AfricnHERn+UPfwNJVrsk+ted17LHW5Hv0PmSr0jZP4iadGtCr7CLXnATEcSA939x7hS
+         C8tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgETBK3MIrlNtPv2BuVhqmQ/btDOhB0HqDAIJAMh0P5pngmefd3tvtkU32fkgdXCjOFkRA2vcxm88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfTbsUrQ7qEHCja83TpFP1trwH7Qf0mkk9MIR1kR+kXL5hdJal
+	xxEzEb9rRxIy3W/YuX0jLxBog0Y/ZzETgIotqWBUqaixArDGSw75s1VJ3CPs9nN+uFjFml0Fpmf
+	kuwlaXj3rc0TJznT9EhTl2TyzIppHKH2wLppq
+X-Google-Smtp-Source: AGHT+IEIyYng4v70mcuJouYb30fO+4gyzftvumKtAVxTh1vagwdm2yPBUr2X42XT4oZUyT7+ext0tcufIahHxizXGA4=
+X-Received: by 2002:a05:690c:e1d:b0:65f:8209:3ede with SMTP id
+ 00721157ae682-6d278333eb9mr8422387b3.44.1724879130242; Wed, 28 Aug 2024
+ 14:05:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20240828195129.223395-1-smayhew@redhat.com> <20240828195129.223395-2-smayhew@redhat.com>
+In-Reply-To: <20240828195129.223395-2-smayhew@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 28 Aug 2024 17:05:19 -0400
+Message-ID: <CAHC9VhTCpm0=QrvBq_rHaRXNqu7iRcW7kqxjL8Jq9g=ZypfzsQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
+ inode_setsecctx hook
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: stephen.smalley.work@gmail.com, casey@schaufler-ca.com, 
+	chuck.lever@oracle.com, marek.gresko@protonmail.com, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Improve some debugging bits:
+On Wed, Aug 28, 2024 at 3:51=E2=80=AFPM Scott Mayhew <smayhew@redhat.com> w=
+rote:
+>
+> Marek Gresko reports that the root user on an NFS client is able to
+> change the security labels on files on an NFS filesystem that is
+> exported with root squashing enabled.
+>
+> The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
+>
+>  *  This function requires the caller to lock the inode's i_mutex before =
+it
+>  *  is executed. It also assumes that the caller will make the appropriat=
+e
+>  *  permission checks.
+>
+> nfsd_setattr() does do permissions checking via fh_verify() and
+> nfsd_permission(), but those don't do all the same permissions checks
+> that are done by security_inode_setxattr() and its related LSM hooks do.
+>
+> Since nfsd_setattr() is the only consumer of security_inode_setsecctx(),
+> simplest solution appears to be to replace the call to
+> __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
+> fixes the above issue and has the added benefit of causing nfsd to
+> recall conflicting delegations on a file when a client tries to change
+> its security label.
+>
+> Reported-by: Marek Gresko <marek.gresko@protonmail.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  security/selinux/hooks.c   | 4 ++--
+>  security/smack/smack_lsm.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
- (1) The netfslib _debug() macro doesn't need a newline in its format
-     string.
+Thanks Scott, this looks good to me, but since it touches Smack too
+I'd also like to get Casey's ACK on this patch; if for some reason we
+don't hear from Casey after a bit I'll go ahead and merge it.
+Speaking of merging, since this touches both SELinux and Smack I'll
+likely pull this in via the LSM tree, with a marking for the stable
+kernels, if anyone has any objections to that please let me know.
 
- (2) Display the request debug ID and subrequest index in messages emitted
-     in smb2_adjust_credits() to make it easier to reference in traces.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/io.c           | 2 +-
- fs/smb/client/smb2ops.c | 8 +++++---
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-index 943128507af5..d6ada4eba744 100644
---- a/fs/netfs/io.c
-+++ b/fs/netfs/io.c
-@@ -270,7 +270,7 @@ static void netfs_reset_subreq_iter(struct netfs_io_request *rreq,
- 	if (count == remaining)
- 		return;
- 
--	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x\n",
-+	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x",
- 	       rreq->debug_id, subreq->debug_index,
- 	       iov_iter_count(&subreq->io_iter), subreq->transferred,
- 	       subreq->len, rreq->i_size,
-diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-index 4df84ebe8dbe..e6540072ffb0 100644
---- a/fs/smb/client/smb2ops.c
-+++ b/fs/smb/client/smb2ops.c
-@@ -316,7 +316,8 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 				      cifs_trace_rw_credits_no_adjust_up);
- 		trace_smb3_too_many_credits(server->CurrentMid,
- 				server->conn_id, server->hostname, 0, credits->value - new_val, 0);
--		cifs_server_dbg(VFS, "request has less credits (%d) than required (%d)",
-+		cifs_server_dbg(VFS, "R=%x[%x] request has less credits (%d) than required (%d)",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
- 				credits->value, new_val);
- 
- 		return -EOPNOTSUPP;
-@@ -338,8 +339,9 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 		trace_smb3_reconnect_detected(server->CurrentMid,
- 			server->conn_id, server->hostname, scredits,
- 			credits->value - new_val, in_flight);
--		cifs_server_dbg(VFS, "trying to return %d credits to old session\n",
--			 credits->value - new_val);
-+		cifs_server_dbg(VFS, "R=%x[%x] trying to return %d credits to old session\n",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
-+				credits->value - new_val);
- 		return -EAGAIN;
- 	}
- 
-
+--=20
+paul-moore.com
 
