@@ -1,145 +1,221 @@
-Return-Path: <linux-nfs+bounces-5891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74C32963414
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:43:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6904963413
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:43:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFAB51C216C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 21:43:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 567251F22E95
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 21:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E971ABEC3;
-	Wed, 28 Aug 2024 21:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489E016A949;
+	Wed, 28 Aug 2024 21:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vfWXKgX+"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JSLZaVdo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4rSptgwe";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JSLZaVdo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4rSptgwe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0AE1A76B5
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 21:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C3015ADB3
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 21:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724881428; cv=none; b=IyeAOJ7WiU+F3Mmz//meCJlxKdJdYiXlvIrH86bnL6TTgMHfHeseH5GXw0xo9XNkKD0ve0LJGmtwDf1aH2H+ysUy9ilpnBHRVHxM05coJq7L1Gv5xtZwRmeGzevXSRVaOcW2b5mqYTw5HQFjpZk0JEKnF3VL8ecoj0yfqmeiL50=
+	t=1724881421; cv=none; b=grPwo3HItyAZHO4eTBBfRqebCwLKzvHt1DPrpzXRgw+wpU/nLNZ5WVksu8PcH8jURl1RhpTpLo11pkS78+MxJrGI7TiRI2gCx0Fto7sRsy1FTta6O9WsKaO8N9rsQjZqkKi51vLdJfPuSh/6+xuoTPEL8KoYzngyMtoH/ZvzfDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724881428; c=relaxed/simple;
-	bh=Ow2Oa4aH4/GHsxj85ciXs/uy/FkW9Ju27sF6MW2bpcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gu+EQli3mVUd/WokgJ0vcJZ3ANhLc9eN/QcIDVfa89jL7sYVBHu0fie03IeZeD+R6g+cDlt/BPC91fyn+MDSRbfczA6C4kUjw5ckoepjUOdWcv4AUQ7pSKhhI2hWIvl5vdNrkau05dxoh2VlLJrUaWOnU/MOqa9V//A1lnex5vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vfWXKgX+; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5bec67709easo1062588a12.1
-        for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 14:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724881425; x=1725486225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BgIVeN+hwaa3Zj0bf1QjMz6FtGwxuk1uApKAVTuU21M=;
-        b=vfWXKgX+2K5KPbnS608WoYeqWciqY8iHwgd8Xu7QlXUmoIOt0jH294T7jtaxn19/NO
-         x59rv06Pzh6QwE7b5ZvxOqjBiuRRksNMUucoSO4OqkTTrBv5CfHmE8cnJ6MoWUk/4VN3
-         5PXgQxxw30aT8rD1mAi7t4sRmPgElGmjqL5DHe7NE1iBzYikRCxG0NKq4DY+IyaMXlmW
-         68VWITSE/RglbUljesTD3Eo+G8/UMpxGSNjXAhLZdwrKUMc9r6xhVWMhO8GH3kLfbnn/
-         RoaQ5mXXyn3CgucplE5wvRHngmen+AMjH0rw11wbjy5XxUYpTd+/UK7smVh2dWLrYwtF
-         m6PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724881425; x=1725486225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BgIVeN+hwaa3Zj0bf1QjMz6FtGwxuk1uApKAVTuU21M=;
-        b=VaSW9Wn0odq94W56dcGFPTE6xb/sU2zwVyy2qlVRNgfWfuUMZxjz8kXp7EHtRYlPdN
-         5qx00vUWRcaUbYCgzHq74dq30VU+6BgbKnYmeZ4uDS+k4mn8C/Stl4JHaAfF6CflAQXL
-         5RmdzVvotT7R6oDNvUcCtEBbXNT+Ped4OdeCn/HniFts7kti3smXaknAxTXwf1bL1vsA
-         yhLTIJp84QIqy9s5K9BnHRh5e3GWYELBOcIO0d6TW8xf9pR7HQ8wJXJcduO7zWW8V52f
-         B/Kc4fQG6OO1XvqBS+lcBHhX/+ul4fG4as5wB42cq0i4r6Ooxnjw8OGjQUmHdFvsBQN5
-         1H8w==
-X-Gm-Message-State: AOJu0Yz9pbk5wA0ShJSEDCqYEjaLBnHpejVqh0u+XnXA9RfkumCNsVlh
-	31FSbrerpKlCXv0Vj3WeZmk6O8yhtXHxz2QvjtX00MqbvJP3x6NBIbVZvyPluRg=
-X-Google-Smtp-Source: AGHT+IGDaFnNlopk9OtBsTjpt60u8SdH1IppPU/d0oIAgCIrSzY8jx0IxHyYFQ2PotXqk9B0nC9M4g==
-X-Received: by 2002:a05:6402:4314:b0:5be:9bc5:f698 with SMTP id 4fb4d7f45d1cf-5c21ec639e9mr406264a12.0.1724881425416;
-        Wed, 28 Aug 2024 14:43:45 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-228.dynamic.mnet-online.de. [82.135.80.228])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb21399bsm2739670a12.50.2024.08.28.14.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 14:43:45 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with __counted_by()
-Date: Wed, 28 Aug 2024 23:42:55 +0200
-Message-ID: <20240828214254.2407-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1724881421; c=relaxed/simple;
+	bh=9mURhRE0OD1Q5sFYGgLGCaIErn9fgjr0crRiRPOu+p4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IeTp9ejVT/eySbg9F42ZsKV4j9T0BA3aY9spMfpkIJVbwb/4JvnVn5Wcv6OYGrGLE8iStR2+Bj4Z8wmOLp6jSRxhh/gxZogyv9KAYlDgRdbMwtqEnio3FH22HqSfYz0DU8pQaJ13ZDoyU3IHOyPKZpLi5vLZZZxCjLYVMDOkfGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JSLZaVdo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4rSptgwe; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JSLZaVdo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4rSptgwe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E73621B73;
+	Wed, 28 Aug 2024 21:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1724881417;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ei45DXpITIz72d5Nu8E6fFiyTn03IKK4P9lAYJLE6g=;
+	b=JSLZaVdoJDwhncU5gw+uyhIF5kdVJSsuhFvIPfE/Ac6XtqlyE8VHKQacW+6TgKIySzBCxe
+	pBo53n8LYe3TDFYsoA4EQRgG5LIRuJMjMjIshqVPfRtdjgTUfj2st8j0nn3WtkJEWbL3ji
+	fOtuKAvwA6VcTn+2G34316F+yB8H6PA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1724881417;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ei45DXpITIz72d5Nu8E6fFiyTn03IKK4P9lAYJLE6g=;
+	b=4rSptgwefAuq/oJ1uOLjMutD6X/jchTvfU5F8IHXU2Pu1RhcJ7EYaAk7yKwV5Ui9NF3vuT
+	u0vXZtSPNT5MISDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1724881417;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ei45DXpITIz72d5Nu8E6fFiyTn03IKK4P9lAYJLE6g=;
+	b=JSLZaVdoJDwhncU5gw+uyhIF5kdVJSsuhFvIPfE/Ac6XtqlyE8VHKQacW+6TgKIySzBCxe
+	pBo53n8LYe3TDFYsoA4EQRgG5LIRuJMjMjIshqVPfRtdjgTUfj2st8j0nn3WtkJEWbL3ji
+	fOtuKAvwA6VcTn+2G34316F+yB8H6PA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1724881417;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ei45DXpITIz72d5Nu8E6fFiyTn03IKK4P9lAYJLE6g=;
+	b=4rSptgwefAuq/oJ1uOLjMutD6X/jchTvfU5F8IHXU2Pu1RhcJ7EYaAk7yKwV5Ui9NF3vuT
+	u0vXZtSPNT5MISDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EEE86138D2;
+	Wed, 28 Aug 2024 21:43:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id k++5OAiaz2avOwAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Wed, 28 Aug 2024 21:43:36 +0000
+Date: Wed, 28 Aug 2024 23:43:27 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: ltp@lists.linux.it
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH] nfsstat01: Read client stats from netns rhost
+Message-ID: <20240828214327.GA1767403@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20240828132325.23111-1-mdoucha@suse.cz>
+ <172487956651.4433.5156438688517075305@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172487956651.4433.5156438688517075305@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:replyto];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Spam-Score: -3.50
+X-Spam-Flag: NO
 
-Add the __counted_by compiler attribute to the flexible array member
-volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+Hi all,
 
-Use struct_size() instead of manually calculating the number of bytes to
-allocate for a pnfs_block_deviceaddr with a single volume.
+> On Wed, 28 Aug 2024, Martin Doucha wrote:
+> > On newer kernels, network namespaces have separate NFS stats. Detect
+> > support for per-NS files and read stats from the correct NS.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- fs/nfsd/blocklayout.c    | 6 ++----
- fs/nfsd/blocklayoutxdr.h | 2 +-
- 2 files changed, 3 insertions(+), 5 deletions(-)
+> > Signed-off-by: Martin Doucha <mdoucha@suse.cz>
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index 3c040c81c77d..08a20e5bcf7f 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -147,8 +147,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
- 	struct pnfs_block_deviceaddr *dev;
- 	struct pnfs_block_volume *b;
- 
--	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
--		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
-+	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
- 	gdp->gd_device = dev;
-@@ -255,8 +254,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
- 	const struct pr_ops *ops;
- 	int ret;
- 
--	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
--		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
-+	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
- 	gdp->gd_device = dev;
-diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
-index b0361e8aa9a7..4e28ac8f1127 100644
---- a/fs/nfsd/blocklayoutxdr.h
-+++ b/fs/nfsd/blocklayoutxdr.h
-@@ -47,7 +47,7 @@ struct pnfs_block_volume {
- 
- struct pnfs_block_deviceaddr {
- 	u32				nr_volumes;
--	struct pnfs_block_volume	volumes[];
-+	struct pnfs_block_volume	volumes[] __counted_by(nr_volumes);
- };
- 
- __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
--- 
-2.46.0
+> Thanks for doing this Martin.  I very much prefer this approach.
+
+> NeilBrown
+
+FYI patch merged. Thanks all for your time.
+
+Kind regards,
+Petr
+
+
+> > ---
+
+> > The /proc/net/rpc/nfs file did not exist in nested network namespaces
+> > on older kernels. The per-NS stats patchset adds it so we need to check
+> > for its presence to read the correct stats on kernels where it was
+> > backported.
+
+> > Kernel devs have also asked for a test that'll ensure the patchset doesn't
+> > get accidentaly reverted. Since this test uses namespaces only when
+> > the server and client run on the same machine, it'll be better to create
+> > a separate test for that. I'll send it later.
+
+> >  testcases/network/nfs/nfsstat01/nfsstat01.sh | 24 +++++++++++++++++---
+> >  1 file changed, 21 insertions(+), 3 deletions(-)
+
+> > diff --git a/testcases/network/nfs/nfsstat01/nfsstat01.sh b/testcases/network/nfs/nfsstat01/nfsstat01.sh
+> > index c2856eff1..8d7202cf3 100755
+> > --- a/testcases/network/nfs/nfsstat01/nfsstat01.sh
+> > +++ b/testcases/network/nfs/nfsstat01/nfsstat01.sh
+> > @@ -3,8 +3,19 @@
+> >  # Copyright (c) 2016-2018 Oracle and/or its affiliates. All Rights Reserved.
+> >  # Copyright (c) International Business Machines  Corp., 2001
+
+> > +TST_SETUP="nfsstat_setup"
+> >  TST_TESTFUNC="do_test"
+> >  TST_NEEDS_CMDS="nfsstat"
+> > +NS_STAT_RHOST=0
+> > +
+> > +nfsstat_setup()
+> > +{
+> > +	nfs_setup
+> > +
+> > +	if tst_net_use_netns && [ -z "$LTP_NFS_NETNS_USE_LO" ]; then
+> > +		tst_rhost_run -c "test -r /proc/net/rpc/nfs" && NS_STAT_RHOST=1
+> > +	fi
+> > +}
+
+> >  get_calls()
+> >  {
+> > @@ -15,15 +26,22 @@ get_calls()
+> >  	local calls opt
+
+> >  	[ "$name" = "rpc" ] && opt="r" || opt="n"
+> > -	! tst_net_use_netns && [ "$nfs_f" != "nfs" ] && type="rhost"
+> > +	[ "$nfs_f" = "nfsd" ] && opt="-s$opt" || opt="-c$opt"
+> > +
+> > +	if tst_net_use_netns; then
+> > +		# In netns setup, rhost is the client
+> > +		[ "$nfs_f" = "nfs" ] && [ $NS_STAT_RHOST -ne 0 ] && type="rhost"
+> > +	else
+> > +		[ "$nfs_f" != "nfs" ] && type="rhost"
+> > +	fi
+
+> >  	if [ "$type" = "lhost" ]; then
+> >  		calls="$(grep $name /proc/net/rpc/$nfs_f | cut -d' ' -f$field)"
+> > -		ROD nfsstat -c$opt | grep -q "$calls"
+> > +		ROD nfsstat $opt | grep -q "$calls"
+> >  	else
+> >  		calls=$(tst_rhost_run -c "grep $name /proc/net/rpc/$nfs_f" | \
+> >  			cut -d' ' -f$field)
+> > -		tst_rhost_run -s -c "nfsstat -s$opt" | grep -q "$calls"
+> > +		tst_rhost_run -s -c "nfsstat $opt" | grep -q "$calls"
+> >  	fi
+
+> >  	if ! tst_is_int "$calls"; then
+> > -- 
+> > 2.46.0
+
+
 
 
