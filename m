@@ -1,140 +1,168 @@
-Return-Path: <linux-nfs+bounces-5898-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5899-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E94D2963550
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:20:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3BB9963683
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:59:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF92F286A14
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:20:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFAB71C21147
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:59:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DA11AC8AC;
-	Wed, 28 Aug 2024 23:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007741AC433;
+	Wed, 28 Aug 2024 23:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Wkg3O8/j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xFvgCuNI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECDB146A63
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 23:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24756647
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 23:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724887207; cv=none; b=XXEmjeIgZPImFIy8GHPqmtsj7yOxsyA4EzkPASLZzjVI8spI0aP0tFdojL5TLzMQIkVBUQ2apT8sHy6Lx+JKiKIOThz5vRwDUXrBOueCegEbcCM7lnsGkVagegCra2DyV3SCjZAhPaTiM4XEnpusD06FyTTyG1A2WO8X1Cv3bXs=
+	t=1724889548; cv=none; b=nEk2hvspzIeN/61K+iFEzQCeoVz0OXnJSpeOnfckItSnc/JGWClPFlJAHlB+rZJep663bV96qpkBfEzz4HAB6d/H9p8eejYD29iZQD8/MCiimT1mJ7zzhSA1jEFgvC7zjdB8V2H6oa7LPglal0hQZbVlMm091q7fNtNQ77Kru+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724887207; c=relaxed/simple;
-	bh=kn0vkO6V0PAPRFVsWe6I8iEFogeh2x764hmLrJ6swXw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HyO9lDnTOPtNd2ZY7iX9X3mYPjvbNSj5nCy/uSpUNSgL9IrnK77QIib9Hcnix4XlLJx0T8+kNfukIhS2spKEMqPcLI7SbdfDYszY6QAZS6wd6NewamHeIMZk3m1oyC36Yx4rjR9LZm4ti9kf1raqBFz489uWyZAC2QW/AVoCsoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Wkg3O8/j; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e04196b7603so89038276.0
-        for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 16:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1724887203; x=1725492003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4FQJFjR5hrgZrSv5sKul5TVDs0oQUVlu7JZ5n/2LwSc=;
-        b=Wkg3O8/j8AxsWaKecwx23DCVzLYelvCEErdKR4gyiUE0R1DrQsAwAYHAfl0us2sBVz
-         pGcQoJi7ePZUxFHRjLLCHXP6QEFNrCE5dnjCNar17mm5Uq5F/HcCyVpvviFTEh180/FU
-         mjso8uGjH4aOP0rwG+b6f0jZohI9TA/OkBlA/YZ1vLp5X1MVdCUkFhPJ6tUd5HzecsIM
-         8qulXL2oSOvW+afWmThXHsTEh0PM0S7K9ehx1QpNBr9pTx8f8bkUjBHcA8s6OnGRwvvU
-         UvyCiZ+5+f+2Dhzmj2+5Zwb4jRhg3p4ubWcyWy23LQoW1BASw7YzE9F0Dea0w3yR3iXb
-         1u3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724887203; x=1725492003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4FQJFjR5hrgZrSv5sKul5TVDs0oQUVlu7JZ5n/2LwSc=;
-        b=pKznL0U0os6rkgaG0NefahCpF8LSPtq1nFswceHhgig8/oquctwTFEQaRpekmfnipG
-         DqHNRcjER8QQ/2Lf5X8S5M832hWHj4685nt67YnYglcB5hC1uqHLK1dWo0IhNhLdfl/V
-         KVXaC3eMU5os4cDXhcG4ZGswV8+JyAaQeTzTfrCDZmcqMiBFNmBNtAfNpPsvEVE3yNsV
-         /YqD/gE+LMsh+6fHxxyyzs2wWfr2qO+hlxH/6pfBggnCDC/Gq8v86+Tx+9GNgby0WSzE
-         Bb27x6kbXjRNjNSLB3wiGeOG6Ih/aI4ZblhRkVO71/d9v6zd6BPJ8JEtphH/BvtYUA5X
-         2Ptg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI870C0ZTkocFupC6rVXRgY1Z6iY98tBAGI0FPH/vagYEDCl2QNE6GBhSyxWdyyvm1spas3tFG3bY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/IXdtKsXQMUtH6f+paDpbThJntnp2wSjMtUJpSi5YRj+50iZY
-	6Rh8QlqIVC2lMswf8RXJxBx0dQpFg/KBZJxplU2X0MD2zgoSk4f0ya/8y8HRElB2/gfZ6EtUMNU
-	9mlT2Vr9T67y5PGq+gsFUB/PnOge1ZCQ0rgvB
-X-Google-Smtp-Source: AGHT+IFTYOW5VOGD9GZcL5lo+hU1JqOamlTTFi1bkFvo5uclhKL5TqbrY6TwGw8Lq/BKnuNDGUftuQSoC+tKeGjga1g=
-X-Received: by 2002:a05:6902:10cb:b0:e13:cef0:2b7e with SMTP id
- 3f1490d57ef6-e1a5af18173mr1127421276.54.1724887203338; Wed, 28 Aug 2024
- 16:20:03 -0700 (PDT)
+	s=arc-20240116; t=1724889548; c=relaxed/simple;
+	bh=HMYfC/hI9S7Sen9hqERBXwkm2HY3AHiQThzMVQy+2nA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BtazsNwnURLGHp6ATyDLyfVTf7ZuqB6X83tlMAQQ8eZXIP8MWOPy5SdnpxK/RJ3GXylHknt6Kqp50vKHiM36Ao7d1Vf8Lg7fZSYjTlyI8OgK25iY+WV95Hsj3TOl2mA76N6a4UxJEcp2HgW9Ugbd+Xs2Fk0bVimh3NdZENcVQ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=xFvgCuNI; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id jNaTsado6qvuojSZ2sh5nv; Wed, 28 Aug 2024 23:59:00 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id jSZ0szNXRX56wjSZ1sA2F2; Wed, 28 Aug 2024 23:58:59 +0000
+X-Authority-Analysis: v=2.4 cv=MY6nuI/f c=1 sm=1 tr=0 ts=66cfb9c3
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10 a=ZI_cG6RJAAAA:8
+ a=VwQbUJbxAAAA:8 a=G7Ig5-h-x50up4Ig-zsA:9 a=QEXdDO2ut3YA:10
+ a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gwdyghKD5k5c4CmERZykpZYJC0ag0Sw3dcYPpvLrdIM=; b=xFvgCuNIWC/Sg1fvGEywaCv1mi
+	iYaQCsEvOtKAzDiYAKtDkWBpKYp7CnJ4+4d4TTDo4I+alED8eaP9S2hrhlI4Ovgw+Snq40TPCLCy8
+	nBv2gnEtiXixU4AfjYjLRo6YEqkRRr3X0WJtVl9beaU/rCH4iG+UOsWy5rLMCGjiQC0mX+k5/9W2u
+	tLQoeq7Es0zmm/qtkcdXxPX5BvDOucjJvQM+cE1J+TKrAq/w6Fm3USeZ0roXQvd87rnzjblrpOsM5
+	5XFMQteyzyX2aZG733D7NRsmHE/g8vU/PPeslFlm/bqOz82QHa/956dNNgyF/NPXah5IZnNA4IELL
+	bm7NNutw==;
+Received: from [201.172.173.139] (port=35262 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sjSZ0-003R6C-0Z;
+	Wed, 28 Aug 2024 18:58:58 -0500
+Message-ID: <bde519c9-c95d-4275-a89b-50e628446206@embeddedor.com>
+Date: Wed, 28 Aug 2024 17:58:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828195129.223395-1-smayhew@redhat.com> <20240828195129.223395-2-smayhew@redhat.com>
- <CAHC9VhTCpm0=QrvBq_rHaRXNqu7iRcW7kqxjL8Jq9g=ZypfzsQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhTCpm0=QrvBq_rHaRXNqu7iRcW7kqxjL8Jq9g=ZypfzsQ@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 28 Aug 2024 19:19:52 -0400
-Message-ID: <CAHC9VhS3yhOxZYD1gZ-HF5XkGq0Qr8h4n+XrttUBsHL4cg0Xww@mail.gmail.com>
-Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
- inode_setsecctx hook
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: stephen.smalley.work@gmail.com, casey@schaufler-ca.com, 
-	chuck.lever@oracle.com, marek.gresko@protonmail.com, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with
+ __counted_by()
+To: Thorsten Blum <thorsten.blum@toblux.com>, chuck.lever@oracle.com,
+ jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com,
+ tom@talpey.com, kees@kernel.org, gustavoars@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240828214254.2407-2-thorsten.blum@toblux.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240828214254.2407-2-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sjSZ0-003R6C-0Z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:35262
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfI0EJFYgr739tznYI7zLNClq0EzSgAm5HXUDqUiZSsc5RAu1+DflNGWIn+sTb/q32wC6ZTrq/TEQGy752RV7YhcV1CsmHSUSmjllfXwmJqEsqlzIFFuI
+ cYwTt0jYsPB0Af8cTYxEzRQMt6BU0erEPuyQn1xlhDc+s1ymztQ5YgeoJB0xotSEjEtflZ5yGKURrcHFezDnmAoovyhic/VC180=
 
-On Wed, Aug 28, 2024 at 5:05=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
-ote:
-> On Wed, Aug 28, 2024 at 3:51=E2=80=AFPM Scott Mayhew <smayhew@redhat.com>=
- wrote:
-> >
-> > Marek Gresko reports that the root user on an NFS client is able to
-> > change the security labels on files on an NFS filesystem that is
-> > exported with root squashing enabled.
-> >
-> > The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
-> >
-> >  *  This function requires the caller to lock the inode's i_mutex befor=
-e it
-> >  *  is executed. It also assumes that the caller will make the appropri=
-ate
-> >  *  permission checks.
-> >
-> > nfsd_setattr() does do permissions checking via fh_verify() and
-> > nfsd_permission(), but those don't do all the same permissions checks
-> > that are done by security_inode_setxattr() and its related LSM hooks do=
-.
-> >
-> > Since nfsd_setattr() is the only consumer of security_inode_setsecctx()=
-,
-> > simplest solution appears to be to replace the call to
-> > __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
-> > fixes the above issue and has the added benefit of causing nfsd to
-> > recall conflicting delegations on a file when a client tries to change
-> > its security label.
-> >
-> > Reported-by: Marek Gresko <marek.gresko@protonmail.com>
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
-> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > ---
-> >  security/selinux/hooks.c   | 4 ++--
-> >  security/smack/smack_lsm.c | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> Thanks Scott, this looks good to me, but since it touches Smack too
-> I'd also like to get Casey's ACK on this patch; if for some reason we
-> don't hear from Casey after a bit I'll go ahead and merge it.
-> Speaking of merging, since this touches both SELinux and Smack I'll
-> likely pull this in via the LSM tree, with a marking for the stable
-> kernels, if anyone has any objections to that please let me know.
 
-Merged into lsm/stable-6.11 so we can get this into linux-next and the
-automated SELinux testing, assuming all goes we'll I'll send this up
-to Linus later this week.  Thanks all!
 
---=20
-paul-moore.com
+On 28/08/24 15:42, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Use struct_size() instead of manually calculating the number of bytes to
+> allocate for a pnfs_block_deviceaddr with a single volume.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+
+Looks good --`nr_volumes` is updated just before accessing `volumes[]`.
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
+> ---
+>   fs/nfsd/blocklayout.c    | 6 ++----
+>   fs/nfsd/blocklayoutxdr.h | 2 +-
+>   2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index 3c040c81c77d..08a20e5bcf7f 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -147,8 +147,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
+>   	struct pnfs_block_deviceaddr *dev;
+>   	struct pnfs_block_volume *b;
+>   
+> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
+> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>   	if (!dev)
+>   		return -ENOMEM;
+>   	gdp->gd_device = dev;
+> @@ -255,8 +254,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>   	const struct pr_ops *ops;
+>   	int ret;
+>   
+> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
+> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>   	if (!dev)
+>   		return -ENOMEM;
+>   	gdp->gd_device = dev;
+> diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+> index b0361e8aa9a7..4e28ac8f1127 100644
+> --- a/fs/nfsd/blocklayoutxdr.h
+> +++ b/fs/nfsd/blocklayoutxdr.h
+> @@ -47,7 +47,7 @@ struct pnfs_block_volume {
+>   
+>   struct pnfs_block_deviceaddr {
+>   	u32				nr_volumes;
+> -	struct pnfs_block_volume	volumes[];
+> +	struct pnfs_block_volume	volumes[] __counted_by(nr_volumes);
+>   };
+>   
+>   __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
 
