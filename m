@@ -1,59 +1,54 @@
-Return-Path: <linux-nfs+bounces-5938-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5939-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04DD99642D3
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:16:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 062609642F0
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:26:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A2E51C21BC5
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 11:16:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5007CB23E45
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 11:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B52D18E36B;
-	Thu, 29 Aug 2024 11:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9682191F7B;
+	Thu, 29 Aug 2024 11:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5yPD5AQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgAm3xVO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3952B9CD;
-	Thu, 29 Aug 2024 11:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933B9191F77
+	for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 11:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724930156; cv=none; b=Y4nLci9nolVyoNl5dhccL/YyiRS7uhV/TaN3TVR/NCC3jVDQ3vLLZ/wpQJjf5efxhDr8U7C1NA00hlJETdqT/POZ+wntTT2codsvyWfjEyQwV2PUQdbCEHhm6XlcUo+9zIXsTWuBNkCOjxIXMcmQDAvDzWnH9JMcGUuAhkNbX7U=
+	t=1724930793; cv=none; b=aAH5tMS8R1FTgy6hKmK/d1Kt14YnvJ181PLyqvTcwrSYzgUhAF0COEmHmI7sMCVEyIt8Sr4QR0gFwPE8aMU6t82PNPXORMDzRUKIrE/U8C/aPC2582EbJjl2noiCT7jpSdaqHCLeR5epISWPAYFVAqmmUS2139lwYDxKTQ6x2Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724930156; c=relaxed/simple;
-	bh=igEnUuCxXb9v3oxdYia9z6wvBDc2KL2+bHFWtjrRWB4=;
+	s=arc-20240116; t=1724930793; c=relaxed/simple;
+	bh=n+Hnq1vHA8HTfch6CMZ+KInEo5nzwoyDARkIjJ6d10Y=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QqMGRMndsIWd7PrvcqpLU51TcVRuKxhCPSwFP9gZV737u23a7r2LAMZZRv1BsH7sWuGN54+X914KFR/KOkLHZV8ZqEZcyOkni7I+NUoxosfUHzj8ZWOk6HuJQmGJ2qsAvYtmtYdY0WCYcbXGg88ooIb5/WKt4DevlDPsD/3vgSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5yPD5AQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C06C4CEC3;
-	Thu, 29 Aug 2024 11:15:55 +0000 (UTC)
+	 Content-Type:MIME-Version; b=k7M2KK2mo+A+eeA2jT8QnHiczajGF+j9mo/UhRr8UYMXqftVs24Tfa+lWpo6lfg1z+ja7JqRmNTaqmyCpMSqCkLZAPGYZVEp85Vkt3ij9N0hh63KBsfGJ76Jiixvh3K3o5CLeldNbQ5DA3rYROT5tjtsRYLxy5MttgEOlY/DW4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgAm3xVO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF97AC4CEC8;
+	Thu, 29 Aug 2024 11:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724930156;
-	bh=igEnUuCxXb9v3oxdYia9z6wvBDc2KL2+bHFWtjrRWB4=;
+	s=k20201202; t=1724930793;
+	bh=n+Hnq1vHA8HTfch6CMZ+KInEo5nzwoyDARkIjJ6d10Y=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=O5yPD5AQWU7mkU7mBLVZk7q0rgHo171tC9K0bTbJ8mUeHoKuE09Q+t8w07yyMea/T
-	 bnhqzkVmKojTR0ISEanC3jPZfwy0Bm/Tv5TQs6/ju6OXlgEfKWH7Ti895OnQmBGNk+
-	 ZB3/OkHPWOMkRkxAE5LNAlQVnCyPLKOYMjW8StM+9ShWmpWLBYmmzucqdTfdFY+loJ
-	 q65UFB4IoF1Sh2z1nx1o3Ta6q+EdFThiEIOd/bH8G3qK2z22B45IawWPXrs6rpL5JB
-	 ftubyj7cvr7NCRs2+9CEBCOQjdlfaFAydunqlnqaUq+Y+PndKpuI9XpcSqy7lhReLS
-	 Cb4tctruen9BQ==
-Message-ID: <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
-Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
- inode_setsecctx hook
+	b=bgAm3xVOfgQu35bkqQhdQ84YJFg+rhsbVGS3xVvoBZqj4o8oN0UIsC5U/Vt6dG0ZI
+	 ThdTOmA6Zf5FiApUaKoddIpP5JC5advvU0KicsY4tTHPZOjiDKSiw6V/in1uXodgsB
+	 XW9al2kPKVOQNVckxKVI75AutdRpvTvhClDrwbUcO88is7vtnUnuWMmV1Uu+VbZUDF
+	 RZalUc2LmS6djgvze3AKi2QAt5ISpXMw/HRUIJobx63mMzAG3dvbyDs9VzRaj4th92
+	 WH6JnOkgjhY5A6i1m2jz3LZtoiSQCGM1cGOBaTpEaCXCvrZVWC3bZTmSxRRJ4bbP38
+	 msl+iJuV+wGiQ==
+Message-ID: <4df488607c5d64e44962a696d05d8246164571a5.camel@kernel.org>
+Subject: Re: [PATCH v2 0/2] xdrgen tool
 From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>, paul@paul-moore.com, 
-	stephen.smalley.work@gmail.com, casey@schaufler-ca.com
-Cc: chuck.lever@oracle.com, marek.gresko@protonmail.com, 
-	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Date: Thu, 29 Aug 2024 07:15:54 -0400
-In-Reply-To: <20240828195129.223395-2-smayhew@redhat.com>
-References: <20240828195129.223395-1-smayhew@redhat.com>
-	 <20240828195129.223395-2-smayhew@redhat.com>
+To: cel@kernel.org, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Date: Thu, 29 Aug 2024 07:26:31 -0400
+In-Reply-To: <20240827162718.42342-1-cel@kernel.org>
+References: <20240827162718.42342-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,76 +133,421 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-08-28 at 15:51 -0400, Scott Mayhew wrote:
-> Marek Gresko reports that the root user on an NFS client is able to
-> change the security labels on files on an NFS filesystem that is
-> exported with root squashing enabled.
+On Tue, 2024-08-27 at 12:27 -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
+> Update of the xdrgen tool.
 >=20
->  *  This function requires the caller to lock the inode's i_mutex before =
-it
->  *  is executed. It also assumes that the caller will make the appropriat=
-e
->  *  permission checks.
+> I don't know what the merge criteria are for a tool like this, but
+> Jeff's delstid work depends on getting this merged first. I could
+> just pop it onto the nfsd-next stack, if folks think that's OK.
 >=20
-> nfsd_setattr() does do permissions checking via fh_verify() and
-> nfsd_permission(), but those don't do all the same permissions checks
-> that are done by security_inode_setxattr() and its related LSM hooks do.
+> Changes include:
+> - Added some support for generating files for client side (not complete)
+> - Added a single SourceGenerator class, all others now inherit from that
+> - Split XDR pointers (optional data) into a separate class and generator
+> - Added Python type hints
+> - Lots of other minor cleanup
 >=20
-> Since nfsd_setattr() is the only consumer of security_inode_setsecctx(),
-> simplest solution appears to be to replace the call to
-> __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
-> fixes the above issue and has the added benefit of causing nfsd to
-> recall conflicting delegations on a file when a client tries to change
-> its security label.
+> Original posting:
 >=20
-> Reported-by: Marek Gresko <marek.gresko@protonmail.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  security/selinux/hooks.c   | 4 ++--
->  security/smack/smack_lsm.c | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> https://lore.kernel.org/linux-nfs/20240820144600.189744-1-cel@kernel.org/
 >=20
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index bfa61e005aac..400eca4ad0fb 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -6660,8 +6660,8 @@ static int selinux_inode_notifysecctx(struct inode =
-*inode, void *ctx, u32 ctxlen
->   */
->  static int selinux_inode_setsecctx(struct dentry *dentry, void *ctx, u32=
- ctxlen)
->  {
-> -	return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_SELINUX=
-,
-> -				     ctx, ctxlen, 0);
-> +	return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_SELINUX=
-,
-> +				     ctx, ctxlen, 0, NULL);
->  }
-> =20
->  static int selinux_inode_getsecctx(struct inode *inode, void **ctx, u32 =
-*ctxlen)
-> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> index 4164699cd4f6..002a1b9ed83a 100644
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
-> @@ -4880,8 +4880,8 @@ static int smack_inode_notifysecctx(struct inode *i=
-node, void *ctx, u32 ctxlen)
-> =20
->  static int smack_inode_setsecctx(struct dentry *dentry, void *ctx, u32 c=
-txlen)
->  {
-> -	return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_SMACK,
-> -				     ctx, ctxlen, 0);
-> +	return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_SMACK,
-> +				     ctx, ctxlen, 0, NULL);
->  }
-> =20
->  static int smack_inode_getsecctx(struct inode *inode, void **ctx, u32 *c=
-txlen)
+> Chuck Lever (2):
+>   tools: Add xdrgen
+>   NFSD: Create an initial nfs4_1.x file
+>=20
+>  fs/nfsd/nfs4_1.x                              | 164 ++++++
+>  fs/nfsd/nfs4xdr_gen.c                         | 236 +++++++++
+>  fs/nfsd/nfs4xdr_gen.h                         | 100 ++++
+>  include/linux/sunrpc/xdrgen-builtins.h        | 256 +++++++++
+>  tools/net/sunrpc/xdrgen/.gitignore            |   2 +
+>  tools/net/sunrpc/xdrgen/README                | 249 +++++++++
+>  tools/net/sunrpc/xdrgen/__init__.py           |   2 +
+>  .../net/sunrpc/xdrgen/generators/__init__.py  |  49 ++
+>  .../sunrpc/xdrgen/generators/boilerplate.py   |  58 +++
+>  .../net/sunrpc/xdrgen/generators/constant.py  |  20 +
+>  tools/net/sunrpc/xdrgen/generators/enum.py    |  41 ++
+>  tools/net/sunrpc/xdrgen/generators/pointer.py | 283 ++++++++++
+>  tools/net/sunrpc/xdrgen/generators/program.py | 141 +++++
+>  tools/net/sunrpc/xdrgen/generators/struct.py  | 283 ++++++++++
+>  tools/net/sunrpc/xdrgen/generators/typedef.py | 225 ++++++++
+>  tools/net/sunrpc/xdrgen/generators/union.py   | 238 +++++++++
+>  tools/net/sunrpc/xdrgen/grammars/xdr.lark     | 119 +++++
+>  tools/net/sunrpc/xdrgen/subcmds/__init__.py   |   2 +
+>  tools/net/sunrpc/xdrgen/subcmds/header.py     |  88 ++++
+>  tools/net/sunrpc/xdrgen/subcmds/lint.py       |  33 ++
+>  tools/net/sunrpc/xdrgen/subcmds/source.py     | 121 +++++
+>  .../templates/C/boilerplate/header_bottom.j2  |   3 +
+>  .../templates/C/boilerplate/header_top.j2     |  11 +
+>  .../templates/C/boilerplate/source_top.j2     |   5 +
+>  .../templates/C/constants/definition.j2       |   3 +
+>  .../xdrgen/templates/C/enum/decoder/enum.j2   |  19 +
+>  .../templates/C/enum/definition/close.j2      |   7 +
+>  .../templates/C/enum/definition/enumerator.j2 |   2 +
+>  .../templates/C/enum/definition/open.j2       |   3 +
+>  .../xdrgen/templates/C/enum/encoder/enum.j2   |  14 +
+>  .../templates/C/pointer/decoder/basic.j2      |   6 +
+>  .../templates/C/pointer/decoder/close.j2      |   3 +
+>  .../C/pointer/decoder/fixed_length_array.j2   |   8 +
+>  .../C/pointer/decoder/fixed_length_opaque.j2  |   6 +
+>  .../templates/C/pointer/decoder/open.j2       |  22 +
+>  .../C/pointer/decoder/optional_data.j2        |   6 +
+>  .../pointer/decoder/variable_length_array.j2  |  13 +
+>  .../pointer/decoder/variable_length_opaque.j2 |   6 +
+>  .../pointer/decoder/variable_length_string.j2 |   6 +
+>  .../templates/C/pointer/definition/basic.j2   |   5 +
+>  .../templates/C/pointer/definition/close.j2   |   7 +
+>  .../pointer/definition/fixed_length_array.j2  |   5 +
+>  .../pointer/definition/fixed_length_opaque.j2 |   5 +
+>  .../templates/C/pointer/definition/open.j2    |   6 +
+>  .../C/pointer/definition/optional_data.j2     |   5 +
+>  .../definition/variable_length_array.j2       |   8 +
+>  .../definition/variable_length_opaque.j2      |   5 +
+>  .../definition/variable_length_string.j2      |   5 +
+>  .../templates/C/pointer/encoder/basic.j2      |  10 +
+>  .../templates/C/pointer/encoder/close.j2      |   3 +
+>  .../C/pointer/encoder/fixed_length_array.j2   |  12 +
+>  .../C/pointer/encoder/fixed_length_opaque.j2  |   6 +
+>  .../templates/C/pointer/encoder/open.j2       |  20 +
+>  .../C/pointer/encoder/optional_data.j2        |   6 +
+>  .../pointer/encoder/variable_length_array.j2  |  15 +
+>  .../pointer/encoder/variable_length_opaque.j2 |   8 +
+>  .../pointer/encoder/variable_length_string.j2 |   8 +
+>  .../C/program/declaration/argument.j2         |   2 +
+>  .../templates/C/program/declaration/result.j2 |   2 +
+>  .../templates/C/program/decoder/argument.j2   |  21 +
+>  .../templates/C/program/decoder/result.j2     |  22 +
+>  .../templates/C/program/encoder/argument.j2   |  16 +
+>  .../templates/C/program/encoder/result.j2     |  21 +
+>  .../templates/C/struct/decoder/basic.j2       |   6 +
+>  .../templates/C/struct/decoder/close.j2       |   3 +
+>  .../C/struct/decoder/fixed_length_array.j2    |   8 +
+>  .../C/struct/decoder/fixed_length_opaque.j2   |   6 +
+>  .../xdrgen/templates/C/struct/decoder/open.j2 |  12 +
+>  .../C/struct/decoder/optional_data.j2         |   6 +
+>  .../C/struct/decoder/variable_length_array.j2 |  13 +
+>  .../struct/decoder/variable_length_opaque.j2  |   6 +
+>  .../struct/decoder/variable_length_string.j2  |   6 +
+>  .../templates/C/struct/definition/basic.j2    |   5 +
+>  .../templates/C/struct/definition/close.j2    |   7 +
+>  .../C/struct/definition/fixed_length_array.j2 |   5 +
+>  .../struct/definition/fixed_length_opaque.j2  |   5 +
+>  .../templates/C/struct/definition/open.j2     |   6 +
+>  .../C/struct/definition/optional_data.j2      |   5 +
+>  .../definition/variable_length_array.j2       |   8 +
+>  .../definition/variable_length_opaque.j2      |   5 +
+>  .../definition/variable_length_string.j2      |   5 +
+>  .../templates/C/struct/encoder/basic.j2       |  10 +
+>  .../templates/C/struct/encoder/close.j2       |   3 +
+>  .../C/struct/encoder/fixed_length_array.j2    |  12 +
+>  .../C/struct/encoder/fixed_length_opaque.j2   |   6 +
+>  .../xdrgen/templates/C/struct/encoder/open.j2 |  12 +
+>  .../C/struct/encoder/optional_data.j2         |   6 +
+>  .../C/struct/encoder/variable_length_array.j2 |  15 +
+>  .../struct/encoder/variable_length_opaque.j2  |   8 +
+>  .../struct/encoder/variable_length_string.j2  |   8 +
+>  .../templates/C/typedef/decoder/basic.j2      |  17 +
+>  .../C/typedef/decoder/fixed_length_array.j2   |  25 +
+>  .../C/typedef/decoder/fixed_length_opaque.j2  |  17 +
+>  .../typedef/decoder/variable_length_array.j2  |  26 +
+>  .../typedef/decoder/variable_length_opaque.j2 |  17 +
+>  .../typedef/decoder/variable_length_string.j2 |  17 +
+>  .../templates/C/typedef/definition/basic.j2   |  15 +
+>  .../typedef/definition/fixed_length_array.j2  |  11 +
+>  .../typedef/definition/fixed_length_opaque.j2 |  11 +
+>  .../definition/variable_length_array.j2       |  14 +
+>  .../definition/variable_length_opaque.j2      |  11 +
+>  .../definition/variable_length_string.j2      |  11 +
+>  .../templates/C/typedef/encoder/basic.j2      |  21 +
+>  .../C/typedef/encoder/fixed_length_array.j2   |  25 +
+>  .../C/typedef/encoder/fixed_length_opaque.j2  |  17 +
+>  .../typedef/encoder/variable_length_array.j2  |  30 ++
+>  .../typedef/encoder/variable_length_opaque.j2 |  17 +
+>  .../typedef/encoder/variable_length_string.j2 |  17 +
+>  .../xdrgen/templates/C/union/decoder/basic.j2 |   6 +
+>  .../xdrgen/templates/C/union/decoder/break.j2 |   2 +
+>  .../templates/C/union/decoder/case_spec.j2    |   2 +
+>  .../xdrgen/templates/C/union/decoder/close.j2 |   4 +
+>  .../templates/C/union/decoder/default_spec.j2 |   2 +
+>  .../xdrgen/templates/C/union/decoder/open.j2  |  12 +
+>  .../C/union/decoder/optional_data.j2          |   6 +
+>  .../templates/C/union/decoder/switch_spec.j2  |   7 +
+>  .../C/union/decoder/variable_length_array.j2  |  13 +
+>  .../C/union/decoder/variable_length_opaque.j2 |   6 +
+>  .../C/union/decoder/variable_length_string.j2 |   6 +
+>  .../xdrgen/templates/C/union/decoder/void.j2  |   3 +
+>  .../templates/C/union/definition/case_spec.j2 |   2 +
+>  .../templates/C/union/definition/close.j2     |   8 +
+>  .../C/union/definition/default_spec.j2        |   2 +
+>  .../templates/C/union/definition/open.j2      |   6 +
+>  .../C/union/definition/switch_spec.j2         |   3 +
+>  .../xdrgen/templates/C/union/encoder/basic.j2 |  10 +
+>  .../xdrgen/templates/C/union/encoder/break.j2 |   2 +
+>  .../templates/C/union/encoder/case_spec.j2    |   2 +
+>  .../xdrgen/templates/C/union/encoder/close.j2 |   4 +
+>  .../templates/C/union/encoder/default_spec.j2 |   2 +
+>  .../xdrgen/templates/C/union/encoder/open.j2  |  12 +
+>  .../templates/C/union/encoder/switch_spec.j2  |   7 +
+>  .../xdrgen/templates/C/union/encoder/void.j2  |   3 +
+>  tools/net/sunrpc/xdrgen/tests/test.x          |  36 ++
+>  tools/net/sunrpc/xdrgen/xdr_ast.py            | 485 ++++++++++++++++++
+>  tools/net/sunrpc/xdrgen/xdr_parse.py          |  36 ++
+>  tools/net/sunrpc/xdrgen/xdrgen                | 111 ++++
+>  137 files changed, 4392 insertions(+)
+>  create mode 100644 fs/nfsd/nfs4_1.x
+>  create mode 100644 fs/nfsd/nfs4xdr_gen.c
+>  create mode 100644 fs/nfsd/nfs4xdr_gen.h
+>  create mode 100644 include/linux/sunrpc/xdrgen-builtins.h
+>  create mode 100644 tools/net/sunrpc/xdrgen/.gitignore
+>  create mode 100644 tools/net/sunrpc/xdrgen/README
+>  create mode 100644 tools/net/sunrpc/xdrgen/__init__.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/__init__.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/boilerplate.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/constant.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/enum.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/pointer.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/program.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/struct.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/typedef.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/generators/union.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/grammars/xdr.lark
+>  create mode 100644 tools/net/sunrpc/xdrgen/subcmds/__init__.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/subcmds/header.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/subcmds/lint.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/subcmds/source.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/boilerplate/heade=
+r_bottom.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/boilerplate/heade=
+r_top.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/boilerplate/sourc=
+e_top.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/constants/definit=
+ion.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum=
+.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/definition/c=
+lose.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/definition/e=
+numerator.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/definition/o=
+pen.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/encoder/enum=
+.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/b=
+asic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/c=
+lose.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/f=
+ixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/f=
+ixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/o=
+pen.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/o=
+ptional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/v=
+ariable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/v=
+ariable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/v=
+ariable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/basic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/close.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/fixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/fixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/open.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/optional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/variable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/variable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/definitio=
+n/variable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/b=
+asic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/c=
+lose.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/f=
+ixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/f=
+ixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/o=
+pen.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/o=
+ptional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/v=
+ariable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/v=
+ariable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/v=
+ariable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/declarati=
+on/argument.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/declarati=
+on/result.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/decoder/a=
+rgument.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/decoder/r=
+esult.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/encoder/a=
+rgument.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/encoder/r=
+esult.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/ba=
+sic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/cl=
+ose.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/fi=
+xed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/fi=
+xed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/op=
+en.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/op=
+tional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/va=
+riable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/va=
+riable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/decoder/va=
+riable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/basic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/close.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/fixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/fixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/open.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/optional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/variable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/variable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/definition=
+/variable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/ba=
+sic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/cl=
+ose.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/fi=
+xed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/fi=
+xed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/op=
+en.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/op=
+tional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/va=
+riable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/va=
+riable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/encoder/va=
+riable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/b=
+asic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/f=
+ixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/f=
+ixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/v=
+ariable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/v=
+ariable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/v=
+ariable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/basic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/fixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/fixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/variable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/variable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/definitio=
+n/variable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/b=
+asic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/f=
+ixed_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/f=
+ixed_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/v=
+ariable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/v=
+ariable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/v=
+ariable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/bas=
+ic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/bre=
+ak.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/cas=
+e_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/clo=
+se.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/def=
+ault_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/ope=
+n.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/opt=
+ional_data.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/swi=
+tch_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/var=
+iable_length_array.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/var=
+iable_length_opaque.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/var=
+iable_length_string.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/voi=
+d.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/definition/=
+case_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/definition/=
+close.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/definition/=
+default_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/definition/=
+open.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/definition/=
+switch_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/bas=
+ic.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/bre=
+ak.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/cas=
+e_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/clo=
+se.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/def=
+ault_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/ope=
+n.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/swi=
+tch_spec.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/voi=
+d.j2
+>  create mode 100644 tools/net/sunrpc/xdrgen/tests/test.x
+>  create mode 100644 tools/net/sunrpc/xdrgen/xdr_ast.py
+>  create mode 100644 tools/net/sunrpc/xdrgen/xdr_parse.py
+>  create mode 100755 tools/net/sunrpc/xdrgen/xdrgen
+>=20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I'm no python expert, but I've been using this while working on the
+delstid and dir-deleg patches.
+
+Tested-by: Jeff Layton <jlayton@kernel.org>
 
