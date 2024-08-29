@@ -1,208 +1,339 @@
-Return-Path: <linux-nfs+bounces-5976-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5977-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D04799648A7
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:37:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 592B79648B4
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:39:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 578AC1F28101
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 14:37:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BFEE1C22D60
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 14:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1C21B011F;
-	Thu, 29 Aug 2024 14:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3911ABEAD;
+	Thu, 29 Aug 2024 14:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P8ehvSpN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rr2/oucE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebVYy2rp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EFC1ABECB;
-	Thu, 29 Aug 2024 14:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724942245; cv=fail; b=lFR0EWpYq6OoIcEdMsqLL4QBrbYiVQNtN50EgF8WJsVLteuW05kVfCglUHSm7lh0v+7TOwEHILUSn0/v/Swiact3uLf0U7UVA6Vyji4gbMt9AeLduO52hZ5btPDKGfWLWPDLPPKpZOgVKeZdQ8ir8A6zVhCrglIKRd9aoaJb9lA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724942245; c=relaxed/simple;
-	bh=Y82rcOTtN95RfIz/bI68TeO9XVqzievkaNRuYdeP8qg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Z/nXLHZqqhPyrysVl4RzQksDo7w43IZacDFk1cL5iVkk/znzLRKSkSnyNXI8BIdYV2agSgbBxwhxoezV+95LkBNY3Ue+yFpM4Mq3OjmHug6bkfTzzVawKTfLZG7bFPUlXd+hJtVatw7VudeREHcxrapPk7Vjb4ElQrnEitEYioQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=P8ehvSpN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rr2/oucE; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47TCaDKN012332;
-	Thu, 29 Aug 2024 14:37:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=O89NSeKYcTmx8Mf
-	8wQIOM8T0x/NloovgYl26y4mNoCc=; b=P8ehvSpNAUaegtSpnu7DS9n8mpNaYKB
-	47AksNoKwb7dmATR6cT/03/A3Q67dFXoIRdh/sIaiaoo/4nUIeh34uRdhqhw28QV
-	mCLQJvCgknh28umd0/W8K6AmTdx1t7aKbICBrwf+gvo3Txe5+zs8usHNqevKXuhY
-	QatlhudOVX2eew8uZO0ggL4C2m0d9/nDXS7vxTSanhpgqCBEf7OOsFNtCTqIJeQT
-	SVTZv6dAQBInNUFfj+H/2s26sEJW1E7qY8YALcpfFnzCqtfAWtLIOwoqWdPCvl8v
-	Kqh3KcURK/LrE1ey/erzCCgFXBFD0yn/pN+1HrkXEQJg55HiV5vyDag==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 419pukm8q9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 14:37:16 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47TDDciC020095;
-	Thu, 29 Aug 2024 14:37:15 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 418j8qhy7a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 14:37:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IacY/koWNBcdi7YRpTbwmMN1+Fgpdv/XZYuUOfWJ4gEeoy+X3AxWjv6qFEguDOH8hl7HJmUxVNF6NqeuTZTf7MrQOVMy9lRPuEBrP2fiEFoPuYJEGwJaZU5mYbUM0fl/LPHdXzM/Pst/RbXhkAeviFy+uWIZ+tvOEe93D0eoqldyiEjmQIp6Gv1zktU8qeyuSRki/KEKDjYcJXwp4h+f1gRnElisRUbfVMm4j5Yp1ke5vtimYtkt2QLFGLGcvOgmrQhp1l9aVkxspPfuWMMDibs5idCMGTFkQhmlcAffB63h1NAzbMaZAoKujQUpFQcDQbcMwhsqn4BHBewTpFvz/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O89NSeKYcTmx8Mf8wQIOM8T0x/NloovgYl26y4mNoCc=;
- b=Z0+uFDH2I1FrCBYRBgfNQQw8rRCYh0/rzifmFhvutS8PVpBx0jWDIFt0uTCJzjrOkw1nQ8NiV5ygDLcP9bsfw1t42n3yqmDmxX2q+7nYnUx2Hz6PmRlWThNTnK/fZYbbVme33dki7oZVkM1oQGH2Qo3ROw3DGk4ZRxaQQbHxDu0I3lna2o94bCMN0FahyWWERv0pV9RRs0N7TFvfBHlWgqgeEpFm4z4Ni3PnGflV8ChDU4XtzKGvIIaZBKGD/fjFxeLA/buMdxe2TctQ6hkOpKOd2B86qp0bqg4AmXDqr0bMrX3BZOtX9gWQlm11vqJLgG96n9jJutGQhwvV0h7TDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O89NSeKYcTmx8Mf8wQIOM8T0x/NloovgYl26y4mNoCc=;
- b=rr2/oucELp3wzQpF/lRDgTwzbGM7OWc9cVTzny8CqR4izQsvfBzrtvlgFOVI6wM6g0Ed7jAjmafchTKRbKl7d4OFTgjfoJpBlNJjYIMMFT5JqFSfQ2KBZOxfhha5H91OeG0FPf4LweBn8xwXM7m9RYh5OiqU1C8KqlbwP49Rbfs=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MW4PR10MB6420.namprd10.prod.outlook.com (2603:10b6:303:20e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.17; Thu, 29 Aug
- 2024 14:37:12 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7918.017; Thu, 29 Aug 2024
- 14:37:12 +0000
-Date: Thu, 29 Aug 2024 10:37:09 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com,
-        tom@talpey.com, kees@kernel.org, gustavoars@kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with
- __counted_by()
-Message-ID: <ZtCHlVZSea/M7oHT@tissot.1015granger.net>
-References: <20240828214254.2407-2-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828214254.2407-2-thorsten.blum@toblux.com>
-X-ClientProxiedBy: CH0PR03CA0052.namprd03.prod.outlook.com
- (2603:10b6:610:b3::27) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C7B19049D;
+	Thu, 29 Aug 2024 14:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724942376; cv=none; b=VmAk0f9wqyQVpTtHON0bkKzStidDBeyynwoXOXjiNbT+lyxiagDR778y9iK1qlPiwyBTEsWvGLlqAxXGp81AlKFqJy5iEpYl9fACEIE9G4gBZ/9cTxroM/vW5l6tt4B9N6fBW0+CRuiOI9J598wdCkryjVaSZEMlw0ZjaGf9wrk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724942376; c=relaxed/simple;
+	bh=p1qoXZpaW+FhF17jy99cY4YeL9te/bL8/jkPp+7Yt/4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sGWsLa90N3LOfkPlp4P2EqJwmWTafkjKsQ81yssfsm1qgBDercrl/gT8EYIw0xJHqq2WCWuTzlBgLK356jR0uBntlwK1lpe9uFlZYXIVAgvRnJaukBp+ybGG6RVTj3FM70UdH86Ccx7iYiZRVNUAqLx6c9Tu5xnPAxvzJjcukTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebVYy2rp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8BCDC4CEC1;
+	Thu, 29 Aug 2024 14:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724942375;
+	bh=p1qoXZpaW+FhF17jy99cY4YeL9te/bL8/jkPp+7Yt/4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ebVYy2rpUkULO7q5YfxuHQNjNoDbezlaSBgk031Rai3mB43I/lNpfUa3xLd+eXy/7
+	 FG++NDJqwmJ+dh6KhJl9Zk/UAW5YL0g6QSI1wLCrtVYUi9jCgSu0dzyek+O90zbqLH
+	 DxJ33pqyc5XaLnq5Mwb2KjEH17FDdU+NQC9ott+KNiIqJxxCpngumOHmz4Me01+O4F
+	 8CbRCSvMOkg4sFoQirlWJo10lf5ohu7nb+T8ebPGTFh6ZshO15cXNmIbBSbuGecOtf
+	 NZbvacw/53RVl6y0PJ45JlfW0MG7iXPq4ZgROifjzdcurnl/1IhmUYQrU0vGXus/K+
+	 DAJj0rrV/f12A==
+Message-ID: <1dbdcefe983509154cb32b4cbce088b6b78c300a.camel@kernel.org>
+Subject: Re: [PATCH v14 08/25] nfsd: factor out __fh_verify to allow NULL
+ rqstp to be passed
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>, 
+ Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+ linux-fsdevel@vger.kernel.org
+Date: Thu, 29 Aug 2024 10:39:33 -0400
+In-Reply-To: <20240829010424.83693-9-snitzer@kernel.org>
+References: <20240829010424.83693-1-snitzer@kernel.org>
+	 <20240829010424.83693-9-snitzer@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MW4PR10MB6420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8bae3ddd-b6a2-4348-6b4b-08dcc8381214
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4uUcRmUPIkzVk4q/IfXQbFBmG4TIvkmNwix2UvE9zlzESzzZyOlWNefP5Cmx?=
- =?us-ascii?Q?eanHweQZnOIj1EMLPxuGSqLxNi4h0lGMgrbblwG3mNVzgCeuaToXwWG0wYXC?=
- =?us-ascii?Q?HpJMD1S0mR34WSSG8a/dyz9xjzPmpd88Syqt4O/WFKCTxFx1XZ17sDaZG4LA?=
- =?us-ascii?Q?wPj/wJ5GS3DZvgjbyXs8aAmbTMDvZJlIBnX1vMwkDedT4GJPGLPBYJ6xCoJ5?=
- =?us-ascii?Q?3ooGkMYd5zkYkduYPmjNzRp7SE7O8tJKY43f5EQpuT3S6bNmhOciaMLHUv3r?=
- =?us-ascii?Q?r/NoYqolxUup+OiIPcMN+4NPn9XCEGbKEorRk7a0f2cOnqW/4J+FmiqClG3O?=
- =?us-ascii?Q?I/V9nZMLZn0R9OJbofH3WFChaqVZXh+icFl4wJtbtUPHaLQtIENyDgu4beL5?=
- =?us-ascii?Q?YIUO0oTrB77RVtKeKuBvfG0UxNS5UVKVFelbCRpPv6OD3xX9hQYO7GTzewIp?=
- =?us-ascii?Q?Iz15BmAOG0IhSBY7ZPl3v7U6a174vIb4uaBL7s2RHTBd7R0YhL//DnKg6N3P?=
- =?us-ascii?Q?CB3Z7ZXkumsS2icsyyyVwMqW+eeg+FuenWtDznPXYMQzX2S2S2g+e7numfKn?=
- =?us-ascii?Q?3Y9+NaRdhtvSjUC9OCvV33FXnBCzeInbm95n7kFmfB3yzL81v8NPdrvr6K3m?=
- =?us-ascii?Q?pRvcG/veEz1/RT5xlRaoJwky4HHCIt42WubmH8LjEwN/zEH2hN6lZfoqdF85?=
- =?us-ascii?Q?llmTjzRScBOqaymXsHqQ/8y+qGsw9JP2R6z8HwkgE7Yv7hqeRsFyd0biRHYw?=
- =?us-ascii?Q?U848vrHXM7IZFFdHV2QpQPZrmn3nEQxoSaa9K3OznvnPywCxUHDJDBR0giJX?=
- =?us-ascii?Q?HHflqQOgFf4mi9g7C44sHWF8YxWfonH4Any4dZ88uX9+CMPowf7QvtLjZpSQ?=
- =?us-ascii?Q?nKku+klriDDIt0x9p/rw/f0vY4UldH/XLLrvw2V/5tKTCLWS5WEHPPD+7t8Z?=
- =?us-ascii?Q?jLIyrgyzKUce+qDcCqGhZp/xt0PSThCH6ad5QHZy6D3scgztka3HZYKvEgFV?=
- =?us-ascii?Q?tH+64aKXrgMx2lKIJ0mPwwj+lb/Pr8KGTNojodm7Fm9H9Oeeyb6GsQd/PPaC?=
- =?us-ascii?Q?dfX3amGgSTNsJ4auNTJFhlHmhSqLU0TKBNLeIza1YegeFjeVAYCc2AYZB4q9?=
- =?us-ascii?Q?fiZJEdMfGS8y0PJYxoFlEor3GQ2jNQ6NaQ5LuYuujjiwlwqRux+XOtivRwYe?=
- =?us-ascii?Q?PZKfz6TmjqMV046k1AA5KecKqYFJ1bXWi9QKJ0XaKLdly6NkzkvTP0xbZ2px?=
- =?us-ascii?Q?Jq66d81JaU622ksxFHdX9/FWnpsFSebs7ObzPwdS7HNMBad6C3YYJonEhDQI?=
- =?us-ascii?Q?AV7U3i+lf7GI/Q9dWs6OZLwvbgX9Bwr+yEEhtudCE3F5dw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kK7T7L990TUuKEWiE/zVB4kI5KFaEKpyAfYj+3NuuAXcs4f+CF+t2vVCWD7k?=
- =?us-ascii?Q?BA86xx3irZ9el+cwoonsaDu7I0EDXehEXqojaE385LoplFH63qHTTMXmCmEq?=
- =?us-ascii?Q?ZgQ3bPxgFWy3oUxOOMQa4iCgwxgWWuEnHLhUC2cjOq5v1Ml8+fwVbJVuI7HA?=
- =?us-ascii?Q?yb4luFp0LTiCWlKLpIWymimXJwhwz25sYWp5YS3EDzWv6b1JOhRGSwPawh5j?=
- =?us-ascii?Q?vBrHgSZpoNUxIGWg8tgMGaEl/fD3KC2rSKtLNqmphFGO51muEEJxSDlZxsXi?=
- =?us-ascii?Q?kIkqvmCEZC2EnzHk4Jtrex6n03QSU7qKCDfD8Z+G5CkH6Opuco1pQE/Qz6e4?=
- =?us-ascii?Q?9vVXcJb8A0PefJHbYgvq1M0BQeo5PBuQhNq1BvbjrlHvMBFcXKxRkQCMsXUB?=
- =?us-ascii?Q?jtudoz78xxeAXYBMJY2HLNLBHBHBe/V8Ge9VA5osHGTotEpo5oupp4jp1/Ci?=
- =?us-ascii?Q?Juaj6AijDQkmdz3gcBlbHDbIPxHIycwPEJq3VGi/vNkjFlVO7w6UUpJ8QG/a?=
- =?us-ascii?Q?JieD9m6r5XaKzbdA38xcXDpxuPlkwG6RUzqhEFh4IOOAjUB/93Jp7lLdLp9m?=
- =?us-ascii?Q?PBEBBau2NqXNZrRCj4SnrYMGxpsNCgg/F0wojbN42+WfmYZzel1i8+Gh9Rl5?=
- =?us-ascii?Q?RVtSbN80wuzoNMe7V0dhsZfRNPXieWJtnRHYfhmIDimQlOb8E7U0RjTNqemD?=
- =?us-ascii?Q?V5VtIviD4xyV7g+RITRCSGO37ghRwtXY2xXTTr67Thi1lIAZW1m2AiJ24+96?=
- =?us-ascii?Q?lHa4vDq9WQIiQuFSNr5Hpo5whBg/oHY1xR5KLJFvencjzhuEXqsD7Y3nMaiy?=
- =?us-ascii?Q?ZIZ1GSIawhu4CbV/we6sG36/Zg27b6kYJiFev327h63OJFVE2IGkE0LMZgoT?=
- =?us-ascii?Q?gIdrskDXjVT0Lj08rRW0oqru+PGa+MmOyff42fqZNoZcntII/jD+PmaTr9WZ?=
- =?us-ascii?Q?1BhnAi4Ov8bR19UdsapHgG20eCqvrJEQNObik4S4861SOjwnj/aUx8BJ/H6H?=
- =?us-ascii?Q?mSaD+vZH3GKS9ZSCEIz535oRVCz9QQUtsTbHwvWlvVEjUuo51Bfk6d+CD3Fn?=
- =?us-ascii?Q?+d7jDh+ixYMcwd6UnaPVTL5HSxsHd74a711Aszoe8sVH1vbObfIjy+7QOxdy?=
- =?us-ascii?Q?qNZvMkoHGnwdTZbRdX8fjmMajkcooAH8kVjuk8QUfMO4v3Qdqz5g8/fD7mfU?=
- =?us-ascii?Q?Edx0EwtpFxprfNkNFA86vG2TbrYT9LZ3ThU8mDb+6do3O26qUnj3lO4HZJol?=
- =?us-ascii?Q?ndrZZAjIyRQWfdtsGiAWW6FPGMMDunENKBYo6nX7XbcDT7G8mdkvk3CNv2FQ?=
- =?us-ascii?Q?zEPqMDNcaXHmCLjce+tIh4R51iuCtE+Gs5cpO34klb/aoX2YV/puXiUrvJvl?=
- =?us-ascii?Q?lkc8Yoa6yO+bq2UVAXotfZ/C3Ku2y0ChzbJfcixePkgjVZ1yUIz9kGCrykqn?=
- =?us-ascii?Q?vvQKhlvsKh3qGvg5rTylOYVk8FIPW9X0t+5eoH0kfY7u0rzfqLQ+w8Lr11FG?=
- =?us-ascii?Q?UIOYnoM0ZlVVzQEXS3s6QE68Bijmzh2EwensA5rN0g1USj1OHu21k60ovnAt?=
- =?us-ascii?Q?xT4ZgI4qOzcbBUSGFf33pwXUCXDAdy5hPnAYrZRvqkJini1PvtW0JN3sRLYN?=
- =?us-ascii?Q?DA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	pVCJ9AaN9JesJ1cGyea2SdHu2Jmt4UURubQo90Z2nY5gygoG0rUhwDuFghBdQyKodw/FDpSjop9ngdrRr2cQlSRK/RtqL2s0GXsIt4qFGyVgRXvQx/Jv24944fpMVVCVQuN8FrM0UqBIVKj53vl8Z9Iij7mQzobago38eEjeua+tcVvLyFeFQPXQTviHqk+Exd8/wOkjQtY0R6F9Uu4gQKpPsD2antAeJvluq1SJYSmCjzaT2aHiT3RlrBtl0oHBaUXfwYDlB4AnEt03XFclra6U5Pow+xrvoFSxKTAS4uPKVxrhn7u1DINoV0nGEO2F59AQlKB/tZ6qw+Oakk4rZ8XiFjQzcHQpFM8ulOB55Wvg4S2NYGHlezEn2l641uKMEDJw8AOjfGQB0ijF4JPwVuau0V8ZpqgUG1WRRpw9Wg2VQaJmDkKT5ZwO7fcaLKS+GndPaZB0ky55x+JTf7MUuh3uApRDq50uvRnMOfhbS0wqfwYH9cg5bKoeRqkao1YwpcXenq4P5l91nidL7fGypYIIkPlBBozTb/fMbKbuoZxFih+qXgHjp9XH3g2II9NI+RycDR0PcGjiXzzbYsxeL3uT0Z74RqDtOgnTIQhmeQo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bae3ddd-b6a2-4348-6b4b-08dcc8381214
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 14:37:12.7568
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LF0y3xkQn6Ot+xRDxW01yrOqblK04qJxQo178PlJ/zwq9wrR6T9QrMTFj0DGzWcKA80XcDNhqyF8Wx0cCxdjbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6420
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-29_03,2024-08-29_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 spamscore=0 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2407110000 definitions=main-2408290101
-X-Proofpoint-GUID: Ug945decQLARO0Fh2RiRDgkb12TRSvqy
-X-Proofpoint-ORIG-GUID: Ug945decQLARO0Fh2RiRDgkb12TRSvqy
 
-On Wed, 28 Aug 2024 23:42:55 +0200, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Use struct_size() instead of manually calculating the number of bytes to
-> allocate for a pnfs_block_deviceaddr with a single volume.
-> 
-> [...]
+On Wed, 2024-08-28 at 21:04 -0400, Mike Snitzer wrote:
+> From: NeilBrown <neilb@suse.de>
+>=20
+> __fh_verify() offers an interface like fh_verify() but doesn't require
+> a struct svc_rqst *, instead it also takes the specific parts as
+> explicit required arguments.  So it is safe to call __fh_verify() with
+> a NULL rqstp, but the net, cred, and client args must not be NULL.
+>=20
+> __fh_verify() does not use SVC_NET(), nor does the functions it calls.
+>=20
+> Rather than using rqstp->rq_client pass the client and gssclient
+> explicitly to __fh_verify and then to nfsd_set_fh_dentry().
+>=20
+> Lastly, 4 associated tracepoints are only used if rqstp is not NULL
+> (this is a stop-gap that should be properly fixed so localio also
+> benefits from the utility these tracepoints provide when debugging
+> fh_verify issues).
+>=20
 
-Applied to nfsd-next for v6.12, thanks!
+nit: this last paragraph doesn't apply anymore with the inclusion of
+the previous patch
 
-[1/1] NFSD: Annotate struct pnfs_block_deviceaddr with __counted_by()
-      commit: 7dd2311b21ef121d0ce9f9b2e56d3e42b2534991
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> Co-developed-by: Mike Snitzer <snitzer@kernel.org>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfsfh.c | 90 +++++++++++++++++++++++++++++--------------------
+>  1 file changed, 53 insertions(+), 37 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 77acc26e8b02..80c06e170e9a 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -142,7 +142,11 @@ static inline __be32 check_pseudo_root(struct dentry=
+ *dentry,
+>   * dentry.  On success, the results are used to set fh_export and
+>   * fh_dentry.
+>   */
+> -static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *=
+fhp)
+> +static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net=
+,
+> +				 struct svc_cred *cred,
+> +				 struct auth_domain *client,
+> +				 struct auth_domain *gssclient,
+> +				 struct svc_fh *fhp)
+>  {
+>  	struct knfsd_fh	*fh =3D &fhp->fh_handle;
+>  	struct fid *fid =3D NULL;
+> @@ -184,8 +188,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
+tp, struct svc_fh *fhp)
+>  	data_left -=3D len;
+>  	if (data_left < 0)
+>  		return error;
+> -	exp =3D rqst_exp_find(&rqstp->rq_chandle, SVC_NET(rqstp),
+> -			    rqstp->rq_client, rqstp->rq_gssclient,
+> +	exp =3D rqst_exp_find(rqstp ? &rqstp->rq_chandle : NULL,
+> +			    net, client, gssclient,
+>  			    fh->fh_fsid_type, fh->fh_fsid);
+>  	fid =3D (struct fid *)(fh->fh_fsid + len);
+> =20
+> @@ -220,7 +224,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
+tp, struct svc_fh *fhp)
+>  		put_cred(override_creds(new));
+>  		put_cred(new);
+>  	} else {
+> -		error =3D nfsd_setuser_and_check_port(rqstp, &rqstp->rq_cred, exp);
+> +		error =3D nfsd_setuser_and_check_port(rqstp, cred, exp);
+>  		if (error)
+>  			goto out;
+>  	}
+> @@ -297,43 +301,21 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *r=
+qstp, struct svc_fh *fhp)
+>  	return error;
+>  }
+> =20
+> -/**
+> - * fh_verify - filehandle lookup and access checking
+> - * @rqstp: pointer to current rpc request
+> - * @fhp: filehandle to be verified
+> - * @type: expected type of object pointed to by filehandle
+> - * @access: type of access needed to object
+> - *
+> - * Look up a dentry from the on-the-wire filehandle, check the client's
+> - * access to the export, and set the current task's credentials.
+> - *
+> - * Regardless of success or failure of fh_verify(), fh_put() should be
+> - * called on @fhp when the caller is finished with the filehandle.
+> - *
+> - * fh_verify() may be called multiple times on a given filehandle, for
+> - * example, when processing an NFSv4 compound.  The first call will look
+> - * up a dentry using the on-the-wire filehandle.  Subsequent calls will
+> - * skip the lookup and just perform the other checks and possibly change
+> - * the current task's credentials.
+> - *
+> - * @type specifies the type of object expected using one of the S_IF*
+> - * constants defined in include/linux/stat.h.  The caller may use zero
+> - * to indicate that it doesn't care, or a negative integer to indicate
+> - * that it expects something not of the given type.
+> - *
+> - * @access is formed from the NFSD_MAY_* constants defined in
+> - * fs/nfsd/vfs.h.
+> - */
+> -__be32
+> -fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int =
+access)
+> +static __be32
+> +__fh_verify(struct svc_rqst *rqstp,
+> +	    struct net *net, struct svc_cred *cred,
+> +	    struct auth_domain *client,
+> +	    struct auth_domain *gssclient,
+> +	    struct svc_fh *fhp, umode_t type, int access)
 
--- 
-Chuck Lever
+I don't consider is a show-stopper, but it might be good to have a
+kerneldoc header on this, just because it has so many parameters.
+Having them clearly spelled out, and the rules around what must be set
+when rqstp is NULL would make it less likely we'll break those
+assumptions in the future.
+
+>  {
+> -	struct nfsd_net *nn =3D net_generic(SVC_NET(rqstp), nfsd_net_id);
+> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>  	struct svc_export *exp =3D NULL;
+>  	struct dentry	*dentry;
+>  	__be32		error;
+> =20
+>  	if (!fhp->fh_dentry) {
+> -		error =3D nfsd_set_fh_dentry(rqstp, fhp);
+> +		error =3D nfsd_set_fh_dentry(rqstp, net, cred, client,
+> +					   gssclient, fhp);
+>  		if (error)
+>  			goto out;
+>  	}
+> @@ -362,7 +344,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp,=
+ umode_t type, int access)
+>  	if (error)
+>  		goto out;
+> =20
+> -	error =3D nfsd_setuser_and_check_port(rqstp, &rqstp->rq_cred, exp);
+> +	error =3D nfsd_setuser_and_check_port(rqstp, cred, exp);
+>  	if (error)
+>  		goto out;
+> =20
+> @@ -392,7 +374,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp,=
+ umode_t type, int access)
+> =20
+>  skip_pseudoflavor_check:
+>  	/* Finally, check access permissions. */
+> -	error =3D nfsd_permission(&rqstp->rq_cred, exp, dentry, access);
+> +	error =3D nfsd_permission(cred, exp, dentry, access);
+>  out:
+>  	trace_nfsd_fh_verify_err(rqstp, fhp, type, access, error);
+>  	if (error =3D=3D nfserr_stale)
+> @@ -400,6 +382,40 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp=
+, umode_t type, int access)
+>  	return error;
+>  }
+> =20
+> +/**
+> + * fh_verify - filehandle lookup and access checking
+> + * @rqstp: pointer to current rpc request
+> + * @fhp: filehandle to be verified
+> + * @type: expected type of object pointed to by filehandle
+> + * @access: type of access needed to object
+> + *
+> + * Look up a dentry from the on-the-wire filehandle, check the client's
+> + * access to the export, and set the current task's credentials.
+> + *
+> + * Regardless of success or failure of fh_verify(), fh_put() should be
+> + * called on @fhp when the caller is finished with the filehandle.
+> + *
+> + * fh_verify() may be called multiple times on a given filehandle, for
+> + * example, when processing an NFSv4 compound.  The first call will look
+> + * up a dentry using the on-the-wire filehandle.  Subsequent calls will
+> + * skip the lookup and just perform the other checks and possibly change
+> + * the current task's credentials.
+> + *
+> + * @type specifies the type of object expected using one of the S_IF*
+> + * constants defined in include/linux/stat.h.  The caller may use zero
+> + * to indicate that it doesn't care, or a negative integer to indicate
+> + * that it expects something not of the given type.
+> + *
+> + * @access is formed from the NFSD_MAY_* constants defined in
+> + * fs/nfsd/vfs.h.
+> + */
+> +__be32
+> +fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int =
+access)
+> +{
+> +	return __fh_verify(rqstp, SVC_NET(rqstp), &rqstp->rq_cred,
+> +			   rqstp->rq_client, rqstp->rq_gssclient,
+> +			   fhp, type, access);
+> +}
+> =20
+>  /*
+>   * Compose a file handle for an NFS reply.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
