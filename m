@@ -1,178 +1,149 @@
-Return-Path: <linux-nfs+bounces-5934-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5935-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46B42963858
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 04:48:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA62A963B22
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 08:18:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E84B4285EB2
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 02:48:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6F3628540D
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 06:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6085A3F9CC;
-	Thu, 29 Aug 2024 02:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D16F145341;
+	Thu, 29 Aug 2024 06:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNk856kS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHWJ/27z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FB317547;
-	Thu, 29 Aug 2024 02:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0674437F;
+	Thu, 29 Aug 2024 06:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724899679; cv=none; b=pnL5uFModQRhC2wenvCJ4aEHFiOis32CNfWnksgjAXTG9UAAV6Be+VklzdLlISjkAtP0p8JsSir0RJ6WyLY9So0/ThaytBsfZF+Kuzq4EymuxLlZAuKkoCP397mM6jxZ6lYEVD3uHcYPlDJqb0Kw2fCaC8JEf0QKAe2vhJ8j+9o=
+	t=1724912318; cv=none; b=ddYFQFADoum7Zh8iOhXqsfP8SoJCMCaQKAnVYh9dIoQan58PfRWIcuw0WT+/0GBh5yz7gR9J6e15wMVoL4j61pMPMCDDhKWANEq/QLSbig3mSMaWPoAcVw30xKF8pt3kAeHsfwJ5LuDzhKdgQo0NCe/yAcl+4HK7HCs4SjnQCl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724899679; c=relaxed/simple;
-	bh=yZBj6yB+vdP8EWPB8Ad9fGdRR9EORM7UbpU9Y+Lq7WQ=;
+	s=arc-20240116; t=1724912318; c=relaxed/simple;
+	bh=nX0HdDC/uQiK0Vp22kqAwQTn65WiarvUFMKVqY5Qk38=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=acGFilNVWQ0uWQ11M9jEl13zbPzu5bd/Glm3GU+TuM+OlkE6ged7HljzojZZV4dfqpSnpaLson/P6dKjm+WQO9bQCx54+lf10tmAiV7oOqJ+UAiQFllDB3bXwMfyugBDQGsQksFHQW1XFuLBqSwj777mp0DiW9tlCexrmLaYjNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNk856kS; arc=none smtp.client-ip=209.85.167.44
+	 To:Cc:Content-Type; b=T6Fq0JzVsM7n8pLjEOuVFZ6JEDGSD3z+4Xh9kUPkCHkOVm97+iPaoIaFaRE52XOVdLR7HwVDCG8G06ftOBvjP7buVLZIGGk1BxTIULYmxAFiX/biF2cGP8j1wrjgGgLNnGJ1fs1WxWlglNtTzmuautdvRz0WpWUW4Y7e3EshLNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hHWJ/27z; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-533488ffaf7so195667e87.0;
-        Wed, 28 Aug 2024 19:47:57 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f402830d19so505721fa.0;
+        Wed, 28 Aug 2024 23:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724899676; x=1725504476; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724912314; x=1725517114; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
-        b=RNk856kSNr0UJNH8EuG4F17C99rG2v2JlTzf+KYLBBIn+UBwjQgo6gkqUgy/dSQMGb
-         qcCD+wRNwUzYbYgONf5aFvvbOAU2gPfWOi5VnVgEcZrzVmtqkvKLF6WmZ8z978CyNEVW
-         vE0ldU8FCz8ncYSM7WCWwFhU+ma6G5+O/GGiIK4FSzVSlz9pGNY7TgCxOnFgQfOe4kQ1
-         aZyQbdims+DyKgWwyr5qFIA6cQFI/58VCo3mAjkGyVIyKM4XXhj3tHYgUwTvIDdGURrg
-         mcaDIZvl2KNE9RJ+29nLr4jYdTAfMsoIIY+F5QT81BsTsEdyBADbPphlVsoGvEc0s/2k
-         QKlA==
+        bh=9nHJ6TD3Hkojd6/sQ9pUfWKbBCkq1P2BzxNIm4ViVAw=;
+        b=hHWJ/27zz1pPDOgsy3RsIWeV4C0P4zKwljFd7mXwWgVCJELYGw5UfUlSbkfMmccgdY
+         CpAkWZQJEd0xX/XL+aIdVCgN49s8QTa2XPzU0ZHKiGZZF2o9yvejtcM1QRkjHRnNkd5T
+         WJL0S0D88nJ4Yg0RW+CcbSCQZ/AQflWCqst3k5+KK1wwaMh0+1RUAnCvVoNyos8bBiY2
+         txSgrXporMWcNinsywegyQ1BluF++olE7EVXp68jTbtZo5DPFn8XGQEcRgBrJ/0dvYyE
+         Z9Gs5sMjzCo65DM9gai1L+c4DDiqFl8jt64V61zfMkb1U7ZK3BD94/aJBYgd8Qgld8CF
+         wVSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724899676; x=1725504476;
+        d=1e100.net; s=20230601; t=1724912314; x=1725517114;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
-        b=liUM0NmQ9+yCZtLxuxiz7zab7LfqhopEgXmb3DLhuJcjWL1s1s4G40WytKQDrA9QwT
-         z+xb8+mMvNcJmXzNK7DAldFk01TxKfb5JTM9qPilo8lO6xtkmwz91cJdHTqkmFJ2Xu0b
-         iKN3Wka+/OIxAfPZheexzwrniWpDX2wxnY6N0SahhotiwNbYkBRTL4dGk3BY8uz4B1A3
-         5qFlbCyGqqm2CoFcRYwmVEGVFGqfxKUtvl5MbOPbBrIQLPjpnhBgXoaY+PSr2UvlWpwf
-         u0SCfdRaxTWpb88hHOE36dpB/Ig3eDuu0rqTcrR8dpibO3Nri/e/B1raSzXnEEbYWbvA
-         4Cmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPIHQdIaHoWNuuq0EPaOwcp/KvXGqoiEoTnY3LD+K/lwpK8ueUQUPd9/ZYiOLwQOIxIHWBdcBkPDW1@vger.kernel.org, AJvYcCUsjjNhO1w/RUHToWno4H3m3l+X2iQsEk4fFjn7w66mSHB9aa++HI+A29r80XjqXu+Ik9hN4juBVOsHUA==@vger.kernel.org, AJvYcCUwP9xfvVf37ySrVxxX2HOSAUPoR7tyvMc9/nkacWLmwKumekrJIM0jSeTjd7TaRkdHz/kvox0F5LOdPMLZ@vger.kernel.org, AJvYcCX1flbjSSdym0P3Fzj4O3hFVIUBh6qyTe/ABm3JAM+JO08lzkGEs0oEAoTtm455dZFmAlNS6QVwC3aB@vger.kernel.org, AJvYcCXswY0/Vi9Jbh9uPAjdJmoXENs/wZY59iYOFWF41xYuwfVVKOgtlbBZCczsXYw/N7mL+JL7Gs7h5EpfLbDEbQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGW0k00L+Rdj1xUhPnKmGVG3OeZk2VaXhAGDSeRHMkRSIDeuvu
-	AP/SWG6gir1wXUKcwMmsyQaHHhLlfIdy0vtWguwFWFUJ1sTV3MoUyAatB3vh3ylIGAz4ImdOBYe
-	E6r9Zey2grnnueePGHNMyMpPMVok=
-X-Google-Smtp-Source: AGHT+IFw6YFPE4uQg6imkFHXMbxtDADWvwTRJd5bZLVgOFxAE0atjLaGwN/Y3Vs2U2TCttK/XyhsIPdmUPLmGEsItEg=
-X-Received: by 2002:a05:6512:1055:b0:52c:db0a:a550 with SMTP id
- 2adb3069b0e04-5353e5aae01mr710771e87.42.1724899675197; Wed, 28 Aug 2024
- 19:47:55 -0700 (PDT)
+        bh=9nHJ6TD3Hkojd6/sQ9pUfWKbBCkq1P2BzxNIm4ViVAw=;
+        b=vtk6/OEGVTekKWa8MaHLCm80b5e92txzq9sUoaa/28ur9sTx5rk2l/SzcKGvD0ilq0
+         j+BcdFTsLcSCliHA3Tzoet9grKr2s4FMS2woDWmQIUwOnDWHvLehWl9g+xCKBT1tKezx
+         lLLYeXdmKRNLoIkL4WMdRYo9ZnJFUES+yGMUbtifnGeixuncoWMnTbTHQPaRzOiKvse9
+         bG4SNxNb94qh2dFU08Pgj+JojWk5zclOVa8G3cJII3rHG2UekqmweK1/zwguL/4nh/mM
+         sQEDG9CDAPBFIY7UPrG9aSgLXUB9j6RIrUwnH1A0S83S976v96eX/btN0IAitLYr2has
+         ZI3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNaR4zhcU1tRrEvXJ9UYK9Og9gHBzNY3zvTgwjcxlDLiDbx2O5l22WEuRnw2QxiVGxnsdzm0yhUhpfOwk=@vger.kernel.org, AJvYcCVepKl15CcotcEo6B2e4K+NsVQZ8fj6WgY3wBp2A8N4vztaI+6enjqiQ9W8GIajTbgZcIvq9+6HUykf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxVi+4PbYphFGuysKoqNIDdpmBE2cAebnJOUFjTLSC7yldnncE
+	2jPmGQKQthDb/GVHDjzUZz0YXckIZIo439D4SD5W/MeyCaDK4bUH24sQ06vacsLG//ADvgxaiZ7
+	SihPsMqv63C9fBqwqCZAMNqlyEu0=
+X-Google-Smtp-Source: AGHT+IF62ZTjqKm/rwssN6sSk7oumea/sPsrzyuCuz60SNaoq70+NJL/sZth5fGoRfUTkBdGlwNDnIVkTcndlJ9k8yE=
+X-Received: by 2002:a05:651c:220a:b0:2ef:17df:6314 with SMTP id
+ 38308e7fff4ca-2f610889e07mr7364661fa.4.1724912313252; Wed, 28 Aug 2024
+ 23:18:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828210249.1078637-1-dhowells@redhat.com>
-In-Reply-To: <20240828210249.1078637-1-dhowells@redhat.com>
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 28 Aug 2024 21:47:43 -0500
-Message-ID: <CAH2r5muvO8+Es4Y8d=VtWEp-vcC62TYEZc3W1Y0r+6ro6d9yxQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] mm, netfs, cifs: Miscellaneous fixes
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>, 
-	Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, linux-afs@lists.infradead.org, 
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
-	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240828072901.1017792-1-zhaoyang.huang@unisoc.com>
+In-Reply-To: <20240828072901.1017792-1-zhaoyang.huang@unisoc.com>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Thu, 29 Aug 2024 14:18:22 +0800
+Message-ID: <CAGWkznEcqq-ZU6AuCZvyscdCpvR47L_9t+Z8Bb=QrxyL4VAaKg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] fs: nfs: replace folio_set_private by folio_attach_private
+To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Christoph Hellwig <hch@infradead.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, steve.kang@unisoc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-testing is going fine so far with David's series ontop of current mainline
+loop more
 
-(I see one possible intermittent server bug failure - on test
-generic/728 - but no red flags testing so far)
-
-http://smb311-linux-testing.southcentralus.cloudapp.azure.com/#/builders/3/=
-builds/207
-
-On Wed, Aug 28, 2024 at 4:03=E2=80=AFPM David Howells <dhowells@redhat.com>=
- wrote:
+On Wed, Aug 28, 2024 at 3:29=E2=80=AFPM zhaoyang.huang
+<zhaoyang.huang@unisoc.com> wrote:
 >
-> Hi Christian, Steve,
+> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 >
-> Firstly, here are some fixes to DIO read handling and the retrying of
-> reads, particularly in relation to cifs:
+> This patch is inspired by a code review of fs codes which aims at
+> folio's extra refcnt that could introduce unwanted behavious when
+> judging refcnt, such as[1]. The change relys on the policy as the
+> LRU page with private data should take one corresponding refcnt.
 >
->  (1) Fix the missing credit renegotiation in cifs on the retrying of read=
-s.
->      The credits we had ended with the original read (or the last retry)
->      and to perform a new read we need more credits otherwise the server
->      can reject our read with EINVAL.
+> [1]
+> long mapping_evict_folio(struct address_space *mapping, struct folio *fol=
+io)
+> {
+> ...
+> //current code will misjudge here if there is one pte on the folio which
+> is be deemed as the one as folio's private
+>         if (folio_ref_count(folio) >
+>                         folio_nr_pages(folio) + folio_has_private(folio) =
++ 1)
+>                 return 0;
+>         if (!filemap_release_folio(folio, 0))
+>                 return 0;
 >
->  (2) Fix the handling of short DIO reads to avoid ENODATA when the read
->      retry tries to access a portion of the file after the EOF.
+>         return remove_mapping(mapping, folio);
+> }
 >
-> Secondly, some patches fixing cifs copy and zero offload:
+> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> ---
+>  fs/nfs/write.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
->  (3) Fix cifs_file_copychunk_range() to not try to partially invalidate
->      folios that are only partly covered by the range, but rather flush
->      them back and invalidate them.
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index d074d0ceb4f0..80c6ded5f74c 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -772,8 +772,7 @@ static void nfs_inode_add_request(struct nfs_page *re=
+q)
+>         nfs_lock_request(req);
+>         spin_lock(&mapping->i_private_lock);
+>         set_bit(PG_MAPPED, &req->wb_flags);
+> -       folio_set_private(folio);
+> -       folio->private =3D req;
+> +       folio_attach_private(folio, req);
+>         spin_unlock(&mapping->i_private_lock);
+>         atomic_long_inc(&nfsi->nrequests);
+>         /* this a head request for a page group - mark it as having an
+> @@ -797,8 +796,7 @@ static void nfs_inode_remove_request(struct nfs_page =
+*req)
 >
->  (4) Fix filemap_invalidate_inode() to use the correct invalidation
->      function so that it doesn't leave partially invalidated folios hangi=
-ng
->      around (which may hide part of the result of an offloaded copy).
+>                 spin_lock(&mapping->i_private_lock);
+>                 if (likely(folio)) {
+> -                       folio->private =3D NULL;
+> -                       folio_clear_private(folio);
+> +                       folio_detach_private(folio);
+>                         clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
+>                 }
+>                 spin_unlock(&mapping->i_private_lock);
+> --
+> 2.25.1
 >
->  (5) Fix smb3_zero_data() to correctly handle zeroing of data that's
->      buffered locally but not yet written back and with the EOF position =
-on
->      the server short of the local EOF position.
->
->      Note that this will also affect afs and 9p, particularly with regard
->      to direct I/O writes.
->
-> And finally, here's an adjustment to debugging statements:
->
->  (6) Adjust three debugging output statements.  Not strictly a fix, so
->      could be dropped.  Including the subreq ID in some extra debug lines
->      helps a bit, though.
->
-> The patches can also be found here:
->
->         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
-.git/log/?h=3Dnetfs-fixes
->
-> Thanks,
-> David
->
-> David Howells (6):
->   cifs: Fix lack of credit renegotiation on read retry
->   netfs, cifs: Fix handling of short DIO read
->   cifs: Fix copy offload to flush destination region
->   mm: Fix filemap_invalidate_inode() to use
->     invalidate_inode_pages2_range()
->   cifs: Fix FALLOC_FL_ZERO_RANGE to preflush buffered part of target
->     region
->   netfs, cifs: Improve some debugging bits
->
->  fs/netfs/io.c            | 21 +++++++++++++-------
->  fs/smb/client/cifsfs.c   | 21 ++++----------------
->  fs/smb/client/cifsglob.h |  1 +
->  fs/smb/client/file.c     | 37 ++++++++++++++++++++++++++++++++----
->  fs/smb/client/smb2ops.c  | 26 +++++++++++++++++++------
->  fs/smb/client/smb2pdu.c  | 41 +++++++++++++++++++++++++---------------
->  fs/smb/client/trace.h    |  1 +
->  include/linux/netfs.h    |  1 +
->  mm/filemap.c             |  2 +-
->  9 files changed, 101 insertions(+), 50 deletions(-)
->
->
-
-
---=20
-Thanks,
-
-Steve
 
