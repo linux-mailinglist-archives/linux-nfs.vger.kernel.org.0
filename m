@@ -1,271 +1,712 @@
-Return-Path: <linux-nfs+bounces-5966-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5967-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53C849647CD
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:17:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7842F9647D3
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:18:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2EB1B28672
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 14:17:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECF941F24235
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 14:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C7D91AD418;
-	Thu, 29 Aug 2024 14:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6EC1A76C1;
+	Thu, 29 Aug 2024 14:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j+m2zrs8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="CuGOssQq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKcFMsvV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795BA19005B;
-	Thu, 29 Aug 2024 14:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724941010; cv=fail; b=uWh0IGbWKJZzw8KnNmTODgbit33RHuD/qoFjb6Vh0iU4RvW76F2jeeaby4GhGUrYPqCxhZZEngMa/ZU7nycqohKyeuwhGjSpFJxoxEB29te8bMjk3/IPFhE9yOKIUOeEKsk7JHXBvTRkQWwD8MSJMpu1l58iCJdLaNomDol3Ij4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724941010; c=relaxed/simple;
-	bh=X8pqS9mXEjiBvElklt0uX6iF9A+3Lip1MAJFQDTtkbk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=k/Ckvly1XpCm03mhNM+uQbNPOdpYiKxoDytq9Ode1M/40qIcms4NGGbLyE5sNNpXh12fpZ9cccoDdFEPrZvcseKyayYjYS4BiCcIo++yRg2xwmwikoZE8ozuI/jMwiSpc+zB+lachEys+kLbh91DQeLdpaPcVAw/2xOYhxS+VhQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=j+m2zrs8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=CuGOssQq; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47TC6AoV030195;
-	Thu, 29 Aug 2024 14:16:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-id:content-transfer-encoding:mime-version;
-	 s=corp-2023-11-20; bh=X8pqS9mXEjiBvElklt0uX6iF9A+3Lip1MAJFQDTtk
-	bk=; b=j+m2zrs8K+OjCzKnZmv9w71nu+McmYbe+Zi+qlZF2qBMtUqqHXVOLtZ30
-	B56cXtCiXgSlbnQBXrW7OAoqiLmPzlGJnnwPbM2GriSdjWWMHAGZMGHJSTfGzpeG
-	hOnRw4WJVVyV/IZbtHuALSwYpPdWGBWrm1uOseZKWkr+Ggbf9uT2fwEW7mDYhFEH
-	UOnA5CZt2+dl1XJ0NsN1OrxOEtWtvT6ZL/Ai2stZfXHTbO2FZLebwKiCZ1bS1GA+
-	Bxsfi/V+O3v/4dkmQXpU252ulqPDVK7LdoNT+JFW0V4N7IgoI5uBBPX+gSltm/wT
-	h0czCoNJnal7eqUE0u+C9bfNcF4dA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 419pup4eap-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 14:16:38 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47TDcZWm034741;
-	Thu, 29 Aug 2024 14:16:38 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2048.outbound.protection.outlook.com [104.47.70.48])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4189sw1xmk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 14:16:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WDiPE4nkeFWhO4h2KkXe9Emr8iUkCo/kowB2T8znRIi6Jqub/RneSnQfNwpZQ0Z7fQXtB7CrkVVq7GLuu9A4GdFyAIAoyqRnlDF6lhQgF9o7Y0eZSsuVPY0qL5zIDVzhAZhbFpshQB14BLRVPxUTESmM57XFafD5XoBqma8d60cacdB5Xgh1TCm0HO6Fi7MtVwv1wc8Wy3MyjQPnbObZQh8AMYaquF6Cs1hap1y7mQug8s1nApEG4OWUtpC5Oc/8Dt9dg78QVYHnX107Y3VxGv2QMZtrXf8rs0vUgF+bqEQ++mJ44Gzu2I0EGNxZM7Jp4fOCMLh5GBPMBWZaF/IXmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X8pqS9mXEjiBvElklt0uX6iF9A+3Lip1MAJFQDTtkbk=;
- b=EmliXrzvCSY+NOuzs1z8echo+cefBy/4lIexIqPPnPhq8SSePUUPVjphW8A3q1usvjWwGZCfT/1M6vbe1fdSynJRLeMaU7FR8hiY6/rUWh0pPqoQxdnEzVHukfS3FnTHAIxbnR4P2GxfPbpDbsetyg1XbcanKnaAluj4v9si9a+Pf57wQKrlmCEdgcbwWh8BGOUXVZ6oRx5wGF+DgkdzF9jMF+K98Xj05VXfDOU6h+boy4a1b9WNMAkdZTwEda7r4Yaqs/u8jgavbFj95Z6cXNTgmiMVg/awPCh+c6rWJy1oZ9+F6bZsggUXs9WT9H4X/x1nuWOrIqlmDsNsLgn1Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X8pqS9mXEjiBvElklt0uX6iF9A+3Lip1MAJFQDTtkbk=;
- b=CuGOssQqJhAm6UAXMVF5kOpKkmR4TFr7qtpk1U8eHqeqj9uk5ea+PyrOVMddApjvR2i6HU7UcUe/5EIUNMRNxSka/EQQXmYt/yeAsIklip3v9WxUkldPBUsnWzQOIsIcOWFfgAoOX6Ycu7JegZK0NVvRTOzsOCpjtaoZKeP64z0=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by IA1PR10MB7336.namprd10.prod.outlook.com (2603:10b6:208:3ff::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.20; Thu, 29 Aug
- 2024 14:16:34 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7918.017; Thu, 29 Aug 2024
- 14:16:30 +0000
-From: Chuck Lever III <chuck.lever@oracle.com>
-To: Paul Moore <paul@paul-moore.com>
-CC: Scott Mayhew <smayhew@redhat.com>,
-        Stephen Smalley
-	<stephen.smalley.work@gmail.com>,
-        "casey@schaufler-ca.com"
-	<casey@schaufler-ca.com>,
-        "marek.gresko@protonmail.com"
-	<marek.gresko@protonmail.com>,
-        "selinux@vger.kernel.org"
-	<selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>,
-        Linux NFS Mailing List
-	<linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
- inode_setsecctx hook
-Thread-Topic: [PATCH 1/1] selinux,smack: don't bypass permissions check in
- inode_setsecctx hook
-Thread-Index: AQHa+YO+FiYn2JkgXUygpbjdsmqOW7I9KPKAgAAlmACAAPp4AA==
-Date: Thu, 29 Aug 2024 14:16:30 +0000
-Message-ID: <288CD342-1534-4FF3-9B2D-7E824FF4AA20@oracle.com>
-References: <20240828195129.223395-1-smayhew@redhat.com>
- <20240828195129.223395-2-smayhew@redhat.com>
- <CAHC9VhTCpm0=QrvBq_rHaRXNqu7iRcW7kqxjL8Jq9g=ZypfzsQ@mail.gmail.com>
- <CAHC9VhS3yhOxZYD1gZ-HF5XkGq0Qr8h4n+XrttUBsHL4cg0Xww@mail.gmail.com>
-In-Reply-To:
- <CAHC9VhS3yhOxZYD1gZ-HF5XkGq0Qr8h4n+XrttUBsHL4cg0Xww@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: Apple Mail (2.3776.700.51)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|IA1PR10MB7336:EE_
-x-ms-office365-filtering-correlation-id: 147f88d7-f26d-405c-5bb7-08dcc8352db8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?eFhyZis5VTViRVdqTGpyUzEvd1pMWEZzZVJYc1lzSW9MOGxFeStYcTZuS2Rj?=
- =?utf-8?B?UW9rRHlRalZESFRwanJzYVZNS2xXWVozTTZFR0NHNEYzaVhGUnlaVFgvZC83?=
- =?utf-8?B?T2Zxc0dJV2xXQlF5OTlWL2hOeUVDSVppSWhpQ3BJelZ4WGNaSi93V2dHZjl0?=
- =?utf-8?B?NnJjTUlyODVRbGNRVnBlaTNGenpqUjJJL3pwb3pvWUpPOHVSN1cvWmEyN0dF?=
- =?utf-8?B?OEhES3lsUWJYZHVab0dDMkZ2R05rdnV5TEdKdlBNcjFmblhRZlVvY1FXOUQ2?=
- =?utf-8?B?WnJVZ01yam5HZ2tSakVHOTdabkN5UHNEZFdNWW85dWl4RnNqSkVJaWI1QTJt?=
- =?utf-8?B?elVxRE9qZHBPK0xHbzJ0bUxXUVQ4UTNsQmJXTGhpVXRVUGRrZW9nUGhVMTBH?=
- =?utf-8?B?UThKUDQwUlMvVVEvcnMzUjFNWFBpd09FTkdVVnMyc0NwbS9Da3RXUHUyWmox?=
- =?utf-8?B?L1ZYaFNIZCtMZDBueFh4eGE2WVA3UEhScENML1JoWUozSjBzc3hUV1VRZUlv?=
- =?utf-8?B?WjBpcCtMS0F3NUY3YnJ0UVNNRW1NVS9vd00vTFFYcDV3RDd2QmplemFPNUJ4?=
- =?utf-8?B?ZW12VGxHc3JMYitDU2M4RWlQeDd5QkppTUlqSG1NUWN4cU1ZdzB3WkI4bHN1?=
- =?utf-8?B?QjNZRGw3aWtGaFNOdHFkcENHdVVlU2ViMER4TmtNR21RN1ZoZ1NUbDN5WkJ3?=
- =?utf-8?B?ejl6NEFkR1VUcnBzUUtQa0M1Uzd2K1hSaDNmNFQxWDBINDFkZEp4Tkw3cGFJ?=
- =?utf-8?B?NU4vSkpjWkxzbnJNNUlCcm9pTFhtTWZua0M4U05vVU1ZaW9BWThVVE52V2ZB?=
- =?utf-8?B?U3lvL3VBUjhhOWFwbEdvSVlkWDM1UUdnYUJ2anZDN050VjNhYWpUblRKT0NO?=
- =?utf-8?B?aXNXcis1a0w0SzF3R01uS25WMW1mVTJrcWdtSTdXL002NitHakRCS2s0M1ZC?=
- =?utf-8?B?TUFlMlc0MlBNQlU3WHY2YTVVZjFzNENUdTltMWZoRkptUGZlc3FVc2hUQVAw?=
- =?utf-8?B?ZytDd296YWd1S0kxSHdNdUtiTkJ3WFFFeDJ0cXBGRXl6RTBKNlpiVUZ6L2wx?=
- =?utf-8?B?UExzN3o4WXZ6aTFxR3NEYVVJUTJuMVdVYU5lZUQ3UXBqYW1ocktGZm5vMU80?=
- =?utf-8?B?YytJMERFdXdoQXdvbU9RaUtrbE9WWjNWSHZYT1F3KzhONmRaWllNeWxlYVFM?=
- =?utf-8?B?OEl1VWViSUNsWVdpTm9wL0QvVUlYN1hpKytsMnIwdE9qQjZHZk5FU1FxR2kv?=
- =?utf-8?B?aVVzMWplNU1uLzVibXpKYyt1a1RNY01QamFOZ1Q3N2Y1NXpYaG5zZnN5MTha?=
- =?utf-8?B?M2Fxd01tVHAvQ2FDT05QQjlQUVlBdE5MTUgvaWc0dXVLUDhUWWx1dmhqQUxH?=
- =?utf-8?B?UWlPdHRrVVZPTm1ZaFExaUQwM2p2MlF0VkNKZXAxTnRWanJEVVBKQkN5YXV5?=
- =?utf-8?B?UXBMQkw1SXdXbXl2Tkh0eGptWGNKdDFxQXhhR3IzNm0rdHJKZzBzcDNybkJD?=
- =?utf-8?B?TzJIUnVQREZQRzI3cmtNT0dOME5EU0JOK1N0UzZKajdGZW5jOFQvb2tVbG1E?=
- =?utf-8?B?RDBPWlRYWk9kaWFiNkZYeXliYXpTTFhSeW5RSWk5UkxkUk1wdVRieExTMk5J?=
- =?utf-8?B?QzVxdlBMUmJCazNNWHk0RFJ6STdYZXhYU0QrZnBGLzBQUjFnYUY1emxHNEVR?=
- =?utf-8?B?K1dCMjNXTThBbkdWS1VkYXA2ZUhLVWVrQlBza25SV1R6ZzhWYkRjemN4RnhX?=
- =?utf-8?B?djBVUDNxYUM5a3I4QVNvUmZzVkp2Wm1EYUlucUpPbmFtSE9DSGIzRmt2N1pT?=
- =?utf-8?B?SHoxRElnOWpkREE2bGpENGkybHFLSnJFeDhpUStZVjNLMlFCNzNRUjF4ZmVW?=
- =?utf-8?B?RHUwaFRxbFlJVndmMy9rTGVLS3pjcllkbXY1SzJweXhJMkE9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Vi9KYncwc0c3MkVkYmxiWGgwL1QzQUpENHMrMjBJQlhMVWVPREIxYlkzZzBr?=
- =?utf-8?B?SHc4eEZPeUwwck8xeEduUmExaWVsUnBtTURQNmpNNjNRcERPbnlGRFo2eHJV?=
- =?utf-8?B?Sm1XcVZ0QmI0OGJ3WGc2TUIwai84VUpaSVZ6bGdNNFFnVnVoc0NibmtxNjIz?=
- =?utf-8?B?WWphR093ZCt2V2E5Ync1VU90b0RhVnJHZUcxeWdHN215UTRpTFFwRFViTHM2?=
- =?utf-8?B?bmxqODdYQ1BRM1FEN2JuWi9hSEg4YnUyZUJOR2h0RE0wa09TUURrb2RsSlVB?=
- =?utf-8?B?VzB6a3Y1akV2NWhnVGY2MEhQZVRlUnE4TUxqZWpMMUJaZDlqWEpPZnMwK0cv?=
- =?utf-8?B?UklRLzk0K1AwUlFBS2tqUG5sWnl3TXcyU0xzU3d1WGtkMm9sazFDRGtpMndH?=
- =?utf-8?B?WklUVFZGazBaTktUY1lwb3ZBbzg0amNuUk5JTTdvS28yRFRTV1ZDSEgwZ1FO?=
- =?utf-8?B?L0M0eHQ0ZGdIM1dzZENid2hrNEI1QXJRL1hEWTJjME11YWN1Qk5PSVo5RC90?=
- =?utf-8?B?eDZycDNNeGZRbFhiL2x1MG1vNTJLZzU3U0tCZzRTWmo0dzhxWnB4Zm5CaWhq?=
- =?utf-8?B?ejJGYldENG9lbFZzTEQxNk9aQkU3bWlQcjE4NkZ0R1BHc2hqQ0FLWWE4My83?=
- =?utf-8?B?eFpYUDlVR3lZbW8yaEp4WUJWUGp4TnZXZSs3c3ptWkFGR3FkV1JoTEdDVmxJ?=
- =?utf-8?B?ZnREZ3pYaEVReDZFblVWdFRTeFJFRU1zc1dkdE9BQ2Y1Sk9Gem9yazF1MUcv?=
- =?utf-8?B?QXJNVFhxQWkvN0RaRlhhY0JrcVdBZUlwdCtkK1JCUTFGVi9IT3o2cFB6RUh4?=
- =?utf-8?B?cjIyQzFCOVZ1eXM1SVN3NnkwWG5xZXBOZVhaNlkzaHFlUitoZnVOclpuajQv?=
- =?utf-8?B?WHNpemJKQzJqL1Mzbjh0L25ER1hoeVlvOHFhekJwekwxWFN4U1VqVks1TkN3?=
- =?utf-8?B?S2dCaVk1OTBHSlNSOGJxUWl2VVFsWXRjK2d4ZFdDemw2WkwvaTFrYkVzMWVU?=
- =?utf-8?B?V2UzakFpSURQN3FtaFhJNjVidEdOZ2NtZ1ErM2V4SXJHWS9aZW16TkJ2VG1R?=
- =?utf-8?B?NjZ3V000bnVuQ3hQU2dFZGEwTGd0Q21kVjhzUkJXRTJ2WTlqTksrSDlPU3Mr?=
- =?utf-8?B?TmlNUERPUVNMS0JvalVaNHVKekI2SkFVM0ROVFFGb0tEVmVTOVBPV3ZjbDUx?=
- =?utf-8?B?ejl4b0pEQTdpaXBnUGdrOW1zOVJuN1prWmZBOVJzZ2UzU2NKV2Z0UFlNN3ll?=
- =?utf-8?B?aUFqN3pXMGpLekw0TjdpelFFQWNhR05ONExkWlIxU0VkbEtqU2l5Q090ZFha?=
- =?utf-8?B?VUY5TjFzd0JLWmszNnlRbTJidjUyeXhheXNRZ2Q2RW1ManpWeEdOMEUyREl1?=
- =?utf-8?B?Zy9LVy96TnR2cmVKcWUwTjg5SlovckJMcUx2dzFab2RjNEUyZnRQaGlJRHp6?=
- =?utf-8?B?ZVBDWmFYT1NsYktZSUtlUGpQNEpLUjZwK0Y4S3VFN2ZqSWtzOXBRNmEvaTc1?=
- =?utf-8?B?MmYrS3RLd2M4RkVYYUhzb1dMaEV3NjBhUFQ4bUVWMGxFekRBc3FBc3hXSzB6?=
- =?utf-8?B?R1piYW5YY2lCaitmdzNRQWJtd1NxdzlUb1Z0cGZteFdUc2trUUM5Wmo0ZlJZ?=
- =?utf-8?B?aTVCSXY0QkJ1SE5Gb0xacGhsQzlrSWZnQXFoV1dyZitXdDFEWEVvM1BzL2lR?=
- =?utf-8?B?M216U1E1R1BaNDZUd0tlUHJrNU5oVkRCMVRsWFhjenNtVVZhcFF5SHR1OHFa?=
- =?utf-8?B?ejlwOEsxdHhPNDhDUGVWN1F5NjB5QkFmbHdkanZ0Z2kyQTVJQjlHRWRrL01Z?=
- =?utf-8?B?aWhJUXlZd2hqbHZBSGh2d3gvNW93L0lqd2NYUUVTaFhpazVld1NQN2NpTkRS?=
- =?utf-8?B?T3VRRTROWm5ZWHM1Zm1KZTh5L04zNVNEQzNNVDNmYXppUFAwQ1FIVXMrTEFo?=
- =?utf-8?B?Y0Z3R1ZUSnZ0Yk44YUUza3NWSFFyTndaVDA5ekZoQ2lSOTFrUlQ3blVabm5v?=
- =?utf-8?B?aWRRYkRrSDR6STI5dWxPT0ROeHF1TGZMZVBKRFJPc3g3TXFDN2R4YlpuYTJL?=
- =?utf-8?B?empna3Q3ZUpEeXpUdkxObi93NnFoVzBpaWFPOWsxR2h4UGUzWUlzUXM0elIv?=
- =?utf-8?B?VXNHSksyUTJkdzdUWS9zNjliMFBFVXIxLzl3VkZTdDJ1Q2VieHZuR1BRT29a?=
- =?utf-8?B?VXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <440567C7018ED84EB3BA9B3BBB9D46F9@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDD619005B;
+	Thu, 29 Aug 2024 14:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724941050; cv=none; b=UHH/bu08iwAD361oDVuJAxvK9FJM7N3ZhNo1Xty/vcHK397YscKG4pqR7H9s72K4RTFreAQ7fLqKN5gNqP52TgWBP0JhdujC62QTJcqmV7Po7RPqDdo7LvJOQ6JUixozJV+JQ/QS5PPh6n+zJDCAjqJP0KKEyqF48jDAXVSws2I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724941050; c=relaxed/simple;
+	bh=5EyLkg9TpPjpz1PDESP9BtotD+VvKSRmodNygGhY3O0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TOG0EfcHXz8kiJywdX4cQrT4nYrueEUoux9kkOskZJrgaGk1nAIje1oxGbeL8kQLZPgOpSxOhC5QAJV55GgWq1PefAySxNaiUQ18PBBjqWkJ0swrLuU9EKOZUCvPb5xvxFqe+b/FfZSLxuzg5z8mvv1BIKAaFFy06vZTIDf5WPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKcFMsvV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8C6C4CEC1;
+	Thu, 29 Aug 2024 14:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724941049;
+	bh=5EyLkg9TpPjpz1PDESP9BtotD+VvKSRmodNygGhY3O0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=HKcFMsvVkX0m455U3kKDhovoFiD5JF/LtScB1lnD708xiVexEjPxCbGrWlHatxwIF
+	 3FJRTz/Mu1PJV1dh1qhYU9kOsaOIoFib/D8NLT3kpfpFHm5tUDlil5Dr9LXqyjLziN
+	 idLcD4IZZgmGRCy3QbcozlZYdWYU+M6P77YrfmA9zXfnTTfJ6naCSHi5H20+EzckOB
+	 Ud0+O5MgUcZYP//wf2mZ3yEnmsNeTMc3zMpWmLRVza1T8rccKLRJ8keXmpIxNSbbdc
+	 pY6VwoJEhxMorr3ei6uIoxrA29p2d8kgalZ1QWuYi6tm81CSWEbWCG/OzjLLOY+7fZ
+	 Y1MivXIK/PGvA==
+Message-ID: <251afa885bf38e0d819d64f8fc24fbddfd7b57ec.camel@kernel.org>
+Subject: Re: [PATCH v14 01/25] nfs_common: factor out nfs_errtbl and
+ nfs_stat_to_errno
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>, 
+ Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+ linux-fsdevel@vger.kernel.org
+Date: Thu, 29 Aug 2024 10:17:27 -0400
+In-Reply-To: <20240829010424.83693-2-snitzer@kernel.org>
+References: <20240829010424.83693-1-snitzer@kernel.org>
+	 <20240829010424.83693-2-snitzer@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	yfHs9pQIRDZg6pvOGgpGgHat98e6PbACovAYIuX/DkdPUDbLDZYthT34WgMeHVrLNqQLpmu+OJ+QuQcOXXtUNHe+4eFFCy803fh8TPg7SEeTHwEDyYJRllHMSvyW70x2wjRr3cxHFr9IQ4FDPdeXJXB2l6k4uLAsnBO8cjFdX4FRqFbu5zHUscyrYsODgPYoJJxhR+eNToQnqf6vNrssyjkhld5hKTqhzq55dt8KjIkUTXXLG2fOtZshF418Z45ZJ2He4qFT21fdR5hFT/bFLSqB7W/0aglnGgTL1J6/6pV/Wbz37QTAgCVF/vUR4rQLgrpIkzjiUUL8kCUA9+cvp3Nrpg/J7uadsXIzOPAYCgR18mPWHMiBH/JtABOaWhLoBxe3NjrUMK9dhYRlucQB/3eFKWKDJaNEyer3+pwmbZvTkeb2LA2ggzIGiBCK9hoUeSdzbxLo+6X7yBW7KJhnvyc7Pz+gYrNMVkRxVKfGwV/ezuNAJ32kzJqVHTwpW55T2v1IpaKNReZom74tEzXGHJhzS83MJRQJJWFrrRKjIzKZOGEjrm1Fs0M4S/X2oZ8qEKE+H4EtrKFc3/rGlU/nliZtC3QfpHYTlTd8emHGgow=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 147f88d7-f26d-405c-5bb7-08dcc8352db8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2024 14:16:30.5210
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3BsGbRp22PAb0Er3mn1RbXWw44gv5IgpGEVYIG8YXbpFqZPO/G05NBGw6ALDRDKzS6txHTIpw5a/5cHwSnjGdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7336
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-29_02,2024-08-29_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408290098
-X-Proofpoint-ORIG-GUID: GXi16zoE2GiNww4VDU13GGiR4O7AFX1s
-X-Proofpoint-GUID: GXi16zoE2GiNww4VDU13GGiR4O7AFX1s
 
-DQoNCj4gT24gQXVnIDI4LCAyMDI0LCBhdCA3OjE54oCvUE0sIFBhdWwgTW9vcmUgPHBhdWxAcGF1
-bC1tb29yZS5jb20+IHdyb3RlOg0KPiANCj4gT24gV2VkLCBBdWcgMjgsIDIwMjQgYXQgNTowNeKA
-r1BNIFBhdWwgTW9vcmUgPHBhdWxAcGF1bC1tb29yZS5jb20+IHdyb3RlOg0KPj4gT24gV2VkLCBB
-dWcgMjgsIDIwMjQgYXQgMzo1MeKAr1BNIFNjb3R0IE1heWhldyA8c21heWhld0ByZWRoYXQuY29t
-PiB3cm90ZToNCj4+PiANCj4+PiBNYXJlayBHcmVza28gcmVwb3J0cyB0aGF0IHRoZSByb290IHVz
-ZXIgb24gYW4gTkZTIGNsaWVudCBpcyBhYmxlIHRvDQo+Pj4gY2hhbmdlIHRoZSBzZWN1cml0eSBs
-YWJlbHMgb24gZmlsZXMgb24gYW4gTkZTIGZpbGVzeXN0ZW0gdGhhdCBpcw0KPj4+IGV4cG9ydGVk
-IHdpdGggcm9vdCBzcXVhc2hpbmcgZW5hYmxlZC4NCj4+PiANCj4+PiBUaGUgZW5kIG9mIHRoZSBr
-ZXJuZWxkb2MgY29tbWVudCBmb3IgX192ZnNfc2V0eGF0dHJfbm9wZXJtKCkgc3RhdGVzOg0KPj4+
-IA0KPj4+ICogIFRoaXMgZnVuY3Rpb24gcmVxdWlyZXMgdGhlIGNhbGxlciB0byBsb2NrIHRoZSBp
-bm9kZSdzIGlfbXV0ZXggYmVmb3JlIGl0DQo+Pj4gKiAgaXMgZXhlY3V0ZWQuIEl0IGFsc28gYXNz
-dW1lcyB0aGF0IHRoZSBjYWxsZXIgd2lsbCBtYWtlIHRoZSBhcHByb3ByaWF0ZQ0KPj4+ICogIHBl
-cm1pc3Npb24gY2hlY2tzLg0KPj4+IA0KPj4+IG5mc2Rfc2V0YXR0cigpIGRvZXMgZG8gcGVybWlz
-c2lvbnMgY2hlY2tpbmcgdmlhIGZoX3ZlcmlmeSgpIGFuZA0KPj4+IG5mc2RfcGVybWlzc2lvbigp
-LCBidXQgdGhvc2UgZG9uJ3QgZG8gYWxsIHRoZSBzYW1lIHBlcm1pc3Npb25zIGNoZWNrcw0KPj4+
-IHRoYXQgYXJlIGRvbmUgYnkgc2VjdXJpdHlfaW5vZGVfc2V0eGF0dHIoKSBhbmQgaXRzIHJlbGF0
-ZWQgTFNNIGhvb2tzIGRvLg0KPj4+IA0KPj4+IFNpbmNlIG5mc2Rfc2V0YXR0cigpIGlzIHRoZSBv
-bmx5IGNvbnN1bWVyIG9mIHNlY3VyaXR5X2lub2RlX3NldHNlY2N0eCgpLA0KPj4+IHNpbXBsZXN0
-IHNvbHV0aW9uIGFwcGVhcnMgdG8gYmUgdG8gcmVwbGFjZSB0aGUgY2FsbCB0bw0KPj4+IF9fdmZz
-X3NldHhhdHRyX25vcGVybSgpIHdpdGggYSBjYWxsIHRvIF9fdmZzX3NldHhhdHRyX2xvY2tlZCgp
-LiAgVGhpcw0KPj4+IGZpeGVzIHRoZSBhYm92ZSBpc3N1ZSBhbmQgaGFzIHRoZSBhZGRlZCBiZW5l
-Zml0IG9mIGNhdXNpbmcgbmZzZCB0bw0KPj4+IHJlY2FsbCBjb25mbGljdGluZyBkZWxlZ2F0aW9u
-cyBvbiBhIGZpbGUgd2hlbiBhIGNsaWVudCB0cmllcyB0byBjaGFuZ2UNCj4+PiBpdHMgc2VjdXJp
-dHkgbGFiZWwuDQo+Pj4gDQo+Pj4gUmVwb3J0ZWQtYnk6IE1hcmVrIEdyZXNrbyA8bWFyZWsuZ3Jl
-c2tvQHByb3Rvbm1haWwuY29tPg0KPj4+IExpbms6IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9y
-Zy9zaG93X2J1Zy5jZ2k/aWQ9MjE4ODA5DQo+Pj4gU2lnbmVkLW9mZi1ieTogU2NvdHQgTWF5aGV3
-IDxzbWF5aGV3QHJlZGhhdC5jb20+DQo+Pj4gLS0tDQo+Pj4gc2VjdXJpdHkvc2VsaW51eC9ob29r
-cy5jICAgfCA0ICsrLS0NCj4+PiBzZWN1cml0eS9zbWFjay9zbWFja19sc20uYyB8IDQgKystLQ0K
-Pj4+IDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPj4g
-DQo+PiBUaGFua3MgU2NvdHQsIHRoaXMgbG9va3MgZ29vZCB0byBtZSwgYnV0IHNpbmNlIGl0IHRv
-dWNoZXMgU21hY2sgdG9vDQo+PiBJJ2QgYWxzbyBsaWtlIHRvIGdldCBDYXNleSdzIEFDSyBvbiB0
-aGlzIHBhdGNoOyBpZiBmb3Igc29tZSByZWFzb24gd2UNCj4+IGRvbid0IGhlYXIgZnJvbSBDYXNl
-eSBhZnRlciBhIGJpdCBJJ2xsIGdvIGFoZWFkIGFuZCBtZXJnZSBpdC4NCj4+IFNwZWFraW5nIG9m
-IG1lcmdpbmcsIHNpbmNlIHRoaXMgdG91Y2hlcyBib3RoIFNFTGludXggYW5kIFNtYWNrIEknbGwN
-Cj4+IGxpa2VseSBwdWxsIHRoaXMgaW4gdmlhIHRoZSBMU00gdHJlZSwgd2l0aCBhIG1hcmtpbmcg
-Zm9yIHRoZSBzdGFibGUNCj4+IGtlcm5lbHMsIGlmIGFueW9uZSBoYXMgYW55IG9iamVjdGlvbnMg
-dG8gdGhhdCBwbGVhc2UgbGV0IG1lIGtub3cuDQo+IA0KPiBNZXJnZWQgaW50byBsc20vc3RhYmxl
-LTYuMTEgc28gd2UgY2FuIGdldCB0aGlzIGludG8gbGludXgtbmV4dCBhbmQgdGhlDQo+IGF1dG9t
-YXRlZCBTRUxpbnV4IHRlc3RpbmcsIGFzc3VtaW5nIGFsbCBnb2VzIHdlJ2xsIEknbGwgc2VuZCB0
-aGlzIHVwDQo+IHRvIExpbnVzIGxhdGVyIHRoaXMgd2Vlay4gIFRoYW5rcyBhbGwhDQoNClBhdWws
-IG1heSBJIHJlY29tbWVuZCBhZGRpbmcgQ2M6IHN0YWJsZSBvbmNlIHlvdXIgdGVzdGluZyBwYXNz
-ZXM/DQoNCg0KLS0NCkNodWNrIExldmVyDQoNCg0K
+On Wed, 2024-08-28 at 21:03 -0400, Mike Snitzer wrote:
+> Common nfs_stat_to_errno() is used by both fs/nfs/nfs2xdr.c and
+> fs/nfs/nfs3xdr.c
+>=20
+> Will also be used by fs/nfsd/localio.c
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+> =C2=A0fs/nfs/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0fs/nfs/nfs2xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 70 +-----------------------
+> =C2=A0fs/nfs/nfs3xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 108 +++++++----------------------------
+> --
+> =C2=A0fs/nfs/nfs4xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+> =C2=A0fs/nfs_common/Makefile=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> =C2=A0fs/nfs_common/common.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 67 +++++++++=
+++++++++++++++
+> =C2=A0fs/nfsd/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0include/linux/nfs_common.h |=C2=A0 16 ++++++
+> =C2=A08 files changed, 109 insertions(+), 160 deletions(-)
+> =C2=A0create mode 100644 fs/nfs_common/common.c
+> =C2=A0create mode 100644 include/linux/nfs_common.h
+>=20
+> diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+> index 57249f040dfc..0eb20012792f 100644
+> --- a/fs/nfs/Kconfig
+> +++ b/fs/nfs/Kconfig
+> @@ -4,6 +4,7 @@ config NFS_FS
+> =C2=A0	depends on INET && FILE_LOCKING && MULTIUSER
+> =C2=A0	select LOCKD
+> =C2=A0	select SUNRPC
+> +	select NFS_COMMON
+> =C2=A0	select NFS_ACL_SUPPORT if NFS_V3_ACL
+> =C2=A0	help
+> =C2=A0	=C2=A0 Choose Y here if you want to access files residing on
+> other
+> diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
+> index c19093814296..6e75c6c2d234 100644
+> --- a/fs/nfs/nfs2xdr.c
+> +++ b/fs/nfs/nfs2xdr.c
+> @@ -22,14 +22,12 @@
+> =C2=A0#include <linux/nfs.h>
+> =C2=A0#include <linux/nfs2.h>
+> =C2=A0#include <linux/nfs_fs.h>
+> +#include <linux/nfs_common.h>
+> =C2=A0#include "nfstrace.h"
+> =C2=A0#include "internal.h"
+> =C2=A0
+> =C2=A0#define NFSDBG_FACILITY		NFSDBG_XDR
+> =C2=A0
+> -/* Mapping from NFS error code to "errno" error code. */
+> -#define errno_NFSERR_IO		EIO
+> -
+> =C2=A0/*
+> =C2=A0 * Declare the space requirements for NFS arguments and replies as
+> =C2=A0 * number of 32bit-words
+> @@ -64,8 +62,6 @@
+> =C2=A0#define NFS_readdirres_sz	(1+NFS_pagepad_sz)
+> =C2=A0#define NFS_statfsres_sz	(1+NFS_info_sz)
+> =C2=A0
+> -static int nfs_stat_to_errno(enum nfs_stat);
+> -
+> =C2=A0/*
+> =C2=A0 * Encode/decode NFSv2 basic data types
+> =C2=A0 *
+> @@ -1054,70 +1050,6 @@ static int nfs2_xdr_dec_statfsres(struct
+> rpc_rqst *req, struct xdr_stream *xdr,
+> =C2=A0	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> -
+> -/*
+> - * We need to translate between nfs status return values and
+> - * the local errno values which may not be the same.
+> - */
+> -static const struct {
+> -	int stat;
+> -	int errno;
+> -} nfs_errtbl[] =3D {
+> -	{ NFS_OK,		0		},
+> -	{ NFSERR_PERM,		-EPERM		},
+> -	{ NFSERR_NOENT,		-ENOENT		},
+> -	{ NFSERR_IO,		-errno_NFSERR_IO},
+> -	{ NFSERR_NXIO,		-ENXIO		},
+> -/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> -	{ NFSERR_ACCES,		-EACCES		},
+> -	{ NFSERR_EXIST,		-EEXIST		},
+> -	{ NFSERR_XDEV,		-EXDEV		},
+> -	{ NFSERR_NODEV,		-ENODEV		},
+> -	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> -	{ NFSERR_ISDIR,		-EISDIR		},
+> -	{ NFSERR_INVAL,		-EINVAL		},
+> -	{ NFSERR_FBIG,		-EFBIG		},
+> -	{ NFSERR_NOSPC,		-ENOSPC		},
+> -	{ NFSERR_ROFS,		-EROFS		},
+> -	{ NFSERR_MLINK,		-EMLINK		},
+> -	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> -	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> -	{ NFSERR_DQUOT,		-EDQUOT		},
+> -	{ NFSERR_STALE,		-ESTALE		},
+> -	{ NFSERR_REMOTE,	-EREMOTE	},
+> -#ifdef EWFLUSH
+> -	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> -#endif
+> -	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> -	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> -	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> -	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> -	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> -	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> -	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> -	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> -	{ -1,			-EIO		}
+> -};
+> -
+> -/**
+> - * nfs_stat_to_errno - convert an NFS status code to a local errno
+> - * @status: NFS status code to convert
+> - *
+> - * Returns a local errno value, or -EIO if the NFS status code is
+> - * not recognized.=C2=A0 This function is used jointly by NFSv2 and
+> NFSv3.
+> - */
+> -static int nfs_stat_to_errno(enum nfs_stat status)
+> -{
+> -	int i;
+> -
+> -	for (i =3D 0; nfs_errtbl[i].stat !=3D -1; i++) {
+> -		if (nfs_errtbl[i].stat =3D=3D (int)status)
+> -			return nfs_errtbl[i].errno;
+> -	}
+> -	dprintk("NFS: Unrecognized nfs status value: %u\n", status);
+> -	return nfs_errtbl[i].errno;
+> -}
+> -
+> =C2=A0#define PROC(proc, argtype, restype,
+> timer)				\
+> =C2=A0[NFSPROC_##proc] =3D
+> {							\
+> =C2=A0	.p_proc	=C2=A0=C2=A0=C2=A0 =3D=C2=A0
+> NFSPROC_##proc,					\
+> diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+> index 60f032be805a..4ae01c10b7e2 100644
+> --- a/fs/nfs/nfs3xdr.c
+> +++ b/fs/nfs/nfs3xdr.c
+> @@ -21,14 +21,13 @@
+> =C2=A0#include <linux/nfs3.h>
+> =C2=A0#include <linux/nfs_fs.h>
+> =C2=A0#include <linux/nfsacl.h>
+> +#include <linux/nfs_common.h>
+> +
+> =C2=A0#include "nfstrace.h"
+> =C2=A0#include "internal.h"
+> =C2=A0
+> =C2=A0#define NFSDBG_FACILITY		NFSDBG_XDR
+> =C2=A0
+> -/* Mapping from NFS error code to "errno" error code. */
+> -#define errno_NFSERR_IO		EIO
+> -
+> =C2=A0/*
+> =C2=A0 * Declare the space requirements for NFS arguments and replies as
+> =C2=A0 * number of 32bit-words
+> @@ -91,8 +90,6 @@
+> =C2=A0				NFS3_pagepad_sz)
+> =C2=A0#define ACL3_setaclres_sz	(1+NFS3_post_op_attr_sz)
+> =C2=A0
+> -static int nfs3_stat_to_errno(enum nfs_stat);
+> -
+> =C2=A0/*
+> =C2=A0 * Map file type to S_IFMT bits
+> =C2=A0 */
+> @@ -1406,7 +1403,7 @@ static int nfs3_xdr_dec_getattr3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_default:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1445,7 +1442,7 @@ static int nfs3_xdr_dec_setattr3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1495,7 +1492,7 @@ static int nfs3_xdr_dec_lookup3res(struct
+> rpc_rqst *req,
+> =C2=A0	error =3D decode_post_op_attr(xdr, result->dir_attr, userns);
+> =C2=A0	if (unlikely(error))
+> =C2=A0		goto out;
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1537,7 +1534,7 @@ static int nfs3_xdr_dec_access3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_default:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1578,7 +1575,7 @@ static int nfs3_xdr_dec_readlink3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_default:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1658,7 +1655,7 @@ static int nfs3_xdr_dec_read3res(struct
+> rpc_rqst *req, struct xdr_stream *xdr,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1728,7 +1725,7 @@ static int nfs3_xdr_dec_write3res(struct
+> rpc_rqst *req, struct xdr_stream *xdr,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1795,7 +1792,7 @@ static int nfs3_xdr_dec_create3res(struct
+> rpc_rqst *req,
+> =C2=A0	error =3D decode_wcc_data(xdr, result->dir_attr, userns);
+> =C2=A0	if (unlikely(error))
+> =C2=A0		goto out;
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1835,7 +1832,7 @@ static int nfs3_xdr_dec_remove3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1881,7 +1878,7 @@ static int nfs3_xdr_dec_rename3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -1926,7 +1923,7 @@ static int nfs3_xdr_dec_link3res(struct
+> rpc_rqst *req, struct xdr_stream *xdr,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/**
+> @@ -2101,7 +2098,7 @@ static int nfs3_xdr_dec_readdir3res(struct
+> rpc_rqst *req,
+> =C2=A0	error =3D decode_post_op_attr(xdr, result->dir_attr,
+> rpc_rqst_userns(req));
+> =C2=A0	if (unlikely(error))
+> =C2=A0		goto out;
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -2167,7 +2164,7 @@ static int nfs3_xdr_dec_fsstat3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -2243,7 +2240,7 @@ static int nfs3_xdr_dec_fsinfo3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -2304,7 +2301,7 @@ static int nfs3_xdr_dec_pathconf3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> @@ -2350,7 +2347,7 @@ static int nfs3_xdr_dec_commit3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_status:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0#ifdef CONFIG_NFS_V3_ACL
+> @@ -2416,7 +2413,7 @@ static int nfs3_xdr_dec_getacl3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_default:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static int nfs3_xdr_dec_setacl3res(struct rpc_rqst *req,
+> @@ -2435,76 +2432,11 @@ static int nfs3_xdr_dec_setacl3res(struct
+> rpc_rqst *req,
+> =C2=A0out:
+> =C2=A0	return error;
+> =C2=A0out_default:
+> -	return nfs3_stat_to_errno(status);
+> +	return nfs_stat_to_errno(status);
+> =C2=A0}
+> =C2=A0
+> =C2=A0#endif=C2=A0 /* CONFIG_NFS_V3_ACL */
+> =C2=A0
+> -
+> -/*
+> - * We need to translate between nfs status return values and
+> - * the local errno values which may not be the same.
+> - */
+> -static const struct {
+> -	int stat;
+> -	int errno;
+> -} nfs_errtbl[] =3D {
+> -	{ NFS_OK,		0		},
+> -	{ NFSERR_PERM,		-EPERM		},
+> -	{ NFSERR_NOENT,		-ENOENT		},
+> -	{ NFSERR_IO,		-errno_NFSERR_IO},
+> -	{ NFSERR_NXIO,		-ENXIO		},
+> -/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> -	{ NFSERR_ACCES,		-EACCES		},
+> -	{ NFSERR_EXIST,		-EEXIST		},
+> -	{ NFSERR_XDEV,		-EXDEV		},
+> -	{ NFSERR_NODEV,		-ENODEV		},
+> -	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> -	{ NFSERR_ISDIR,		-EISDIR		},
+> -	{ NFSERR_INVAL,		-EINVAL		},
+> -	{ NFSERR_FBIG,		-EFBIG		},
+> -	{ NFSERR_NOSPC,		-ENOSPC		},
+> -	{ NFSERR_ROFS,		-EROFS		},
+> -	{ NFSERR_MLINK,		-EMLINK		},
+> -	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> -	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> -	{ NFSERR_DQUOT,		-EDQUOT		},
+> -	{ NFSERR_STALE,		-ESTALE		},
+> -	{ NFSERR_REMOTE,	-EREMOTE	},
+> -#ifdef EWFLUSH
+> -	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> -#endif
+> -	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> -	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> -	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> -	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> -	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> -	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> -	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> -	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> -	{ -1,			-EIO		}
+> -};
+> -
+> -/**
+> - * nfs3_stat_to_errno - convert an NFS status code to a local errno
+> - * @status: NFS status code to convert
+> - *
+> - * Returns a local errno value, or -EIO if the NFS status code is
+> - * not recognized.=C2=A0 This function is used jointly by NFSv2 and
+> NFSv3.
+> - */
+> -static int nfs3_stat_to_errno(enum nfs_stat status)
+> -{
+> -	int i;
+> -
+> -	for (i =3D 0; nfs_errtbl[i].stat !=3D -1; i++) {
+> -		if (nfs_errtbl[i].stat =3D=3D (int)status)
+> -			return nfs_errtbl[i].errno;
+> -	}
+> -	dprintk("NFS: Unrecognized nfs status value: %u\n", status);
+> -	return nfs_errtbl[i].errno;
+> -}
+> -
+> -
+> =C2=A0#define PROC(proc, argtype, restype,
+> timer)				\
+> =C2=A0[NFS3PROC_##proc] =3D
+> {							\
+> =C2=A0	.p_proc=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D
+> NFS3PROC_##proc,					\
+> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+> index 7704a4509676..b4091af1a60d 100644
+> --- a/fs/nfs/nfs4xdr.c
+> +++ b/fs/nfs/nfs4xdr.c
+> @@ -52,6 +52,7 @@
+> =C2=A0#include <linux/nfs.h>
+> =C2=A0#include <linux/nfs4.h>
+> =C2=A0#include <linux/nfs_fs.h>
+> +#include <linux/nfs_common.h>
+> =C2=A0
+> =C2=A0#include "nfs4_fs.h"
+> =C2=A0#include "nfs4trace.h"
+> @@ -63,9 +64,6 @@
+> =C2=A0
+> =C2=A0#define NFSDBG_FACILITY		NFSDBG_XDR
+> =C2=A0
+> -/* Mapping from NFS error code to "errno" error code. */
+> -#define errno_NFSERR_IO		EIO
+> -
+> =C2=A0struct compound_hdr;
+> =C2=A0static int nfs4_stat_to_errno(int);
+> =C2=A0static void encode_layoutget(struct xdr_stream *xdr,
+> diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+> index 119c75ab9fd0..e58b01bb8dda 100644
+> --- a/fs/nfs_common/Makefile
+> +++ b/fs/nfs_common/Makefile
+> @@ -8,3 +8,5 @@ nfs_acl-objs :=3D nfsacl.o
+> =C2=A0
+> =C2=A0obj-$(CONFIG_GRACE_PERIOD) +=3D grace.o
+> =C2=A0obj-$(CONFIG_NFS_V4_2_SSC_HELPER) +=3D nfs_ssc.o
+> +
+> +obj-$(CONFIG_NFS_COMMON) +=3D common.o
+> diff --git a/fs/nfs_common/common.c b/fs/nfs_common/common.c
+> new file mode 100644
+> index 000000000000..a4ee95da2174
+> --- /dev/null
+> +++ b/fs/nfs_common/common.c
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/module.h>
+> +#include <linux/nfs_common.h>
+> +
+> +/*
+> + * We need to translate between nfs status return values and
+> + * the local errno values which may not be the same.
+> + */
+> +static const struct {
+> +	int stat;
+> +	int errno;
+> +} nfs_errtbl[] =3D {
+> +	{ NFS_OK,		0		},
+> +	{ NFSERR_PERM,		-EPERM		},
+> +	{ NFSERR_NOENT,		-ENOENT		},
+> +	{ NFSERR_IO,		-errno_NFSERR_IO},
+> +	{ NFSERR_NXIO,		-ENXIO		},
+> +/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+> +	{ NFSERR_ACCES,		-EACCES		},
+> +	{ NFSERR_EXIST,		-EEXIST		},
+> +	{ NFSERR_XDEV,		-EXDEV		},
+> +	{ NFSERR_NODEV,		-ENODEV		},
+> +	{ NFSERR_NOTDIR,	-ENOTDIR	},
+> +	{ NFSERR_ISDIR,		-EISDIR		},
+> +	{ NFSERR_INVAL,		-EINVAL		},
+> +	{ NFSERR_FBIG,		-EFBIG		},
+> +	{ NFSERR_NOSPC,		-ENOSPC		},
+> +	{ NFSERR_ROFS,		-EROFS		},
+> +	{ NFSERR_MLINK,		-EMLINK		},
+> +	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+> +	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+> +	{ NFSERR_DQUOT,		-EDQUOT		},
+> +	{ NFSERR_STALE,		-ESTALE		},
+> +	{ NFSERR_REMOTE,	-EREMOTE	},
+> +#ifdef EWFLUSH
+> +	{ NFSERR_WFLUSH,	-EWFLUSH	},
+> +#endif
+> +	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+> +	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+> +	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+> +	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+> +	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+> +	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+> +	{ NFSERR_BADTYPE,	-EBADTYPE	},
+> +	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+> +	{ -1,			-EIO		}
+> +};
+> +
+> +/**
+> + * nfs_stat_to_errno - convert an NFS status code to a local errno
+> + * @status: NFS status code to convert
+> + *
+> + * Returns a local errno value, or -EIO if the NFS status code is
+> + * not recognized.=C2=A0 This function is used jointly by NFSv2 and
+> NFSv3.
+> + */
+> +int nfs_stat_to_errno(enum nfs_stat status)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; nfs_errtbl[i].stat !=3D -1; i++) {
+> +		if (nfs_errtbl[i].stat =3D=3D (int)status)
+> +			return nfs_errtbl[i].errno;
+> +	}
+> +	return nfs_errtbl[i].errno;
+> +}
+> +EXPORT_SYMBOL_GPL(nfs_stat_to_errno);
+> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> index ec2ab6429e00..c0bd1509ccd4 100644
+> --- a/fs/nfsd/Kconfig
+> +++ b/fs/nfsd/Kconfig
+> @@ -7,6 +7,7 @@ config NFSD
+> =C2=A0	select LOCKD
+> =C2=A0	select SUNRPC
+> =C2=A0	select EXPORTFS
+> +	select NFS_COMMON
+> =C2=A0	select NFS_ACL_SUPPORT if NFSD_V2_ACL
+> =C2=A0	select NFS_ACL_SUPPORT if NFSD_V3_ACL
+> =C2=A0	depends on MULTIUSER
+> diff --git a/include/linux/nfs_common.h b/include/linux/nfs_common.h
+> new file mode 100644
+> index 000000000000..3395c4a4d372
+> --- /dev/null
+> +++ b/include/linux/nfs_common.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This file contains constants and methods used by both NFS client
+> and server.
+> + */
+> +#ifndef _LINUX_NFS_COMMON_H
+> +#define _LINUX_NFS_COMMON_H
+> +
+> +#include <linux/errno.h>
+> +#include <uapi/linux/nfs.h>
+> +
+> +/* Mapping from NFS error code to "errno" error code. */
+> +#define errno_NFSERR_IO EIO
+> +
+> +int nfs_stat_to_errno(enum nfs_stat status);
+> +
+> +#endif /* _LINUX_NFS_COMMON_H */
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
