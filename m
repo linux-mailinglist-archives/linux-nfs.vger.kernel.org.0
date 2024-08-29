@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-5991-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5992-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B771964AC2
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 17:57:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA114964AD3
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 17:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65BE0B2107F
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 15:57:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62D2C1F259B5
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 15:59:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754151B29B7;
-	Thu, 29 Aug 2024 15:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC91A1B4C33;
+	Thu, 29 Aug 2024 15:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMuF2IjL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbruGaWY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1FB4643B;
-	Thu, 29 Aug 2024 15:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8356D1B4C2B;
+	Thu, 29 Aug 2024 15:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724947042; cv=none; b=U3F/3Gs9B7Vjvhbo9mkGVBTVzW4ZpmHdbW7rx/frGly1zkYhqKpsIo+7ZTOkSYhS30edeLGASyGpRQlYdwPbWnza1MZV79Q1TKgpG49jJeoenSBlEqmVT1lzlf7bNAjxG/4KUEnZbv4IEZuEwiO6HPEALpgikrYvGHb6VQKvuH8=
+	t=1724947139; cv=none; b=QI/Y98YPCjoE5nwXupVIjtW5ifUqXRPm46/ZVgWK69od6J6F5Q+8kQKX2X6D3za0tB0yMopfnhCwOUZ+IMG3SSkN88yB/MvDgII32MzOz1WFZ+IpSdmsLG8lv5JekpyEznfgb4srFtWYdDQ+OA5slK/4xcyomxdC4vmuppR6PCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724947042; c=relaxed/simple;
-	bh=LJd0jHIEaNxZoyzDaX6HJ+DTbVw1yW6OLy+5gnImZjM=;
+	s=arc-20240116; t=1724947139; c=relaxed/simple;
+	bh=5F3VlPPDFiZBkIII6q8b74UWoZzG0WHxmio11Fo94+8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=q+clV6qjkkXtTWBvTHuQZPa3YH9DZPGE4zxeJJWduA5yccwgWzmnAaGDXFfuEwkxgLyAFK73wiNss4w1iPjYC5IjO6RwQWguG1MpV52h59Eipy9Tn3LYdJPlFXd3ndLJ/Y4QTIfX3U7vOYufpcTFZ89UyNAGnSF9IQp5ZQON5fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMuF2IjL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DDAC4CEC1;
-	Thu, 29 Aug 2024 15:57:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HxA7jTJoICgUhisIAmnubCjsD212K0+CBG9izNyFLRMfl7buBnh7cRuhCA4L/NRQHynZk9GHPiO2mDGSRS75zhQ0+KAmP3OnWJfhTguDJkQC5+L7kLYFtK6ZIxowgqACCTiyGi+03QphzfQwqEfKo+qzb0Az/eC4GRJMCHZOzUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbruGaWY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A01EC4CEC5;
+	Thu, 29 Aug 2024 15:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724947041;
-	bh=LJd0jHIEaNxZoyzDaX6HJ+DTbVw1yW6OLy+5gnImZjM=;
+	s=k20201202; t=1724947139;
+	bh=5F3VlPPDFiZBkIII6q8b74UWoZzG0WHxmio11Fo94+8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TMuF2IjL+0xqn6LxmyRtZjk29PFPXMSIjmp/9G4oI4LNcsnR95SRiSzTyrhp3t9Xz
-	 GjuG+sXHenUNREcpC1WhZCDmkQ+rpkPQyhueDTcJrdnxFDLFzHYP4M1LafHv9ZeCka
-	 ywzNYEbBkUjBb2pJMFhZgYfBkSAV220UjXTKau0ra/LILkM/8wt2ewvIILV1Prbydz
-	 EQzPei0eN9rXCz/nI5cqPYthaxdkq/QM9xSSOJ0DBpX7sjIhBjby3uhBrNejpzAp+h
-	 ahOrBWpyVVfPX4tq8EzSdr2IsFk/YrIw1RKm7BisCacJCfJ6/wIFgEtlByD7GBqNpk
-	 +a6IBrnyN6MRQ==
-Message-ID: <d51eb15966a1b879c295d1933b8d9585a6acf3c4.camel@kernel.org>
-Subject: Re: [PATCH v14 10/25] nfsd: add nfsd_serv_try_get and nfsd_serv_put
+	b=lbruGaWYyq5vwTcR+Jwviqo79nzuoBbmsONJbvBHQdReazirgfA3rAQm5bNUCeLWY
+	 alejI5jfuNazAgkFSLuDir4m+PSX17rvVvqQ8mAZ/UZ34DMOmRwVNDtFbhtlgBWXUY
+	 jyXfPiWUtU9J+MNw9wFowUkZdndrqaPO4UgpMv05OsDvEUH3Ps6FdoGPP1X9PbGtDb
+	 fF1ABDuQFl7l3wSvNCWyXAomziSArPfIRaL3NtBtF61li23+1/NuZDX83RfxA9j8D5
+	 Nz1vpJwGqGcOBnPN55uAWpgHtblfB2yi2QYqrSjDItcX/uuGshAvoffr59xfjvC7zg
+	 O4coeH/5nrvLA==
+Message-ID: <4e9d205e6042b00e24b608b8a4baa8289b962190.camel@kernel.org>
+Subject: Re: [PATCH v14 11/25] SUNRPC: remove call_allocate() BUG_ONs
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
 Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>, 
  Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
  linux-fsdevel@vger.kernel.org
-Date: Thu, 29 Aug 2024 11:57:20 -0400
-In-Reply-To: <20240829010424.83693-11-snitzer@kernel.org>
+Date: Thu, 29 Aug 2024 11:58:57 -0400
+In-Reply-To: <20240829010424.83693-12-snitzer@kernel.org>
 References: <20240829010424.83693-1-snitzer@kernel.org>
-	 <20240829010424.83693-11-snitzer@kernel.org>
+	 <20240829010424.83693-12-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,132 +137,73 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2024-08-28 at 21:04 -0400, Mike Snitzer wrote:
-> Introduce nfsd_serv_try_get and nfsd_serv_put and update the nfsd code
-> to prevent nfsd_destroy_serv from destroying nn->nfsd_serv until any
-> caller of nfsd_serv_try_get releases their reference using nfsd_serv_put.
+> Remove BUG_ON if p_arglen=3D0 to allow RPC with void arg.
+> Remove BUG_ON if p_replen=3D0 to allow RPC with void return.
 >=20
-> A percpu_ref is used to implement the interlock between
-> nfsd_destroy_serv and any caller of nfsd_serv_try_get.
+> The former was needed for the first revision of the LOCALIO protocol
+> which had an RPC that took a void arg:
 >=20
-> This interlock is needed to properly wait for the completion of client
-> initiated localio calls to nfsd (that are _not_ in the context of nfsd).
+>     /* raw RFC 9562 UUID */
+>     typedef u8 uuid_t<UUID_SIZE>;
 >=20
+>     program NFS_LOCALIO_PROGRAM {
+>         version LOCALIO_V1 {
+>             void
+>                 NULL(void) =3D 0;
+>=20
+>             uuid_t
+>                 GETUUID(void) =3D 1;
+>         } =3D 1;
+>     } =3D 400122;
+>=20
+> The latter is needed for the final revision of the LOCALIO protocol
+> which has a UUID_IS_LOCAL RPC which returns a void:
+>=20
+>     /* raw RFC 9562 UUID */
+>     typedef u8 uuid_t<UUID_SIZE>;
+>=20
+>     program NFS_LOCALIO_PROGRAM {
+>         version LOCALIO_V1 {
+>             void
+>                 NULL(void) =3D 0;
+>=20
+>             void
+>                 UUID_IS_LOCAL(uuid_t) =3D 1;
+>         } =3D 1;
+>     } =3D 400122;
+>=20
+> There is really no value in triggering a BUG_ON in response to either
+> of these previously unsupported conditions.
+>=20
+> NeilBrown would like the entire 'if (proc->p_proc !=3D 0)' branch
+> removed (not just the one BUG_ON that must be removed for LOCALIO's
+> immediate needs of returning void).
+>=20
+> Reviewed-by: NeilBrown <neilb@suse.de>
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/netns.h  |  8 +++++++-
->  fs/nfsd/nfssvc.c | 39 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 1 deletion(-)
+>  net/sunrpc/clnt.c | 6 ------
+>  1 file changed, 6 deletions(-)
 >=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 238fc4e56e53..e2d953f21dde 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -13,6 +13,7 @@
->  #include <linux/filelock.h>
->  #include <linux/nfs4.h>
->  #include <linux/percpu_counter.h>
-> +#include <linux/percpu-refcount.h>
->  #include <linux/siphash.h>
->  #include <linux/sunrpc/stats.h>
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index 09f29a95f2bc..00fe6df11ab7 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -1893,12 +1893,6 @@ call_allocate(struct rpc_task *task)
+>  	if (req->rq_buffer)
+>  		return;
 > =20
-> @@ -139,7 +140,9 @@ struct nfsd_net {
-> =20
->  	struct svc_info nfsd_info;
->  #define nfsd_serv nfsd_info.serv
+> -	if (proc->p_proc !=3D 0) {
+> -		BUG_ON(proc->p_arglen =3D=3D 0);
+> -		if (proc->p_decode !=3D NULL)
+> -			BUG_ON(proc->p_replen =3D=3D 0);
+> -	}
 > -
-> +	struct percpu_ref nfsd_serv_ref;
-> +	struct completion nfsd_serv_confirm_done;
-> +	struct completion nfsd_serv_free_done;
-> =20
 >  	/*
->  	 * clientid and stateid data for construction of net unique COPY
-> @@ -221,6 +224,9 @@ struct nfsd_net {
->  extern bool nfsd_support_version(int vers);
->  extern unsigned int nfsd_net_id;
-> =20
-> +bool nfsd_serv_try_get(struct nfsd_net *nn);
-> +void nfsd_serv_put(struct nfsd_net *nn);
-> +
->  void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn);
->  void nfsd_reset_write_verifier(struct nfsd_net *nn);
->  #endif /* __NFSD_NETNS_H__ */
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index defc430f912f..e43d440f9f0a 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -193,6 +193,30 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 minor=
-version, enum vers_op change
->  	return 0;
->  }
-> =20
-> +bool nfsd_serv_try_get(struct nfsd_net *nn)
-> +{
-> +	return percpu_ref_tryget_live(&nn->nfsd_serv_ref);
-> +}
-> +
-> +void nfsd_serv_put(struct nfsd_net *nn)
-> +{
-> +	percpu_ref_put(&nn->nfsd_serv_ref);
-> +}
-> +
-> +static void nfsd_serv_done(struct percpu_ref *ref)
-> +{
-> +	struct nfsd_net *nn =3D container_of(ref, struct nfsd_net, nfsd_serv_re=
-f);
-> +
-> +	complete(&nn->nfsd_serv_confirm_done);
-> +}
-> +
-> +static void nfsd_serv_free(struct percpu_ref *ref)
-> +{
-> +	struct nfsd_net *nn =3D container_of(ref, struct nfsd_net, nfsd_serv_re=
-f);
-> +
-> +	complete(&nn->nfsd_serv_free_done);
-> +}
-> +
->  /*
->   * Maximum number of nfsd processes
->   */
-> @@ -392,6 +416,7 @@ static void nfsd_shutdown_net(struct net *net)
->  		lockd_down(net);
->  		nn->lockd_up =3D false;
->  	}
-> +	percpu_ref_exit(&nn->nfsd_serv_ref);
->  	nn->nfsd_net_up =3D false;
->  	nfsd_shutdown_generic();
->  }
-> @@ -471,6 +496,13 @@ void nfsd_destroy_serv(struct net *net)
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
->  	struct svc_serv *serv =3D nn->nfsd_serv;
-> =20
-> +	lockdep_assert_held(&nfsd_mutex);
-> +
-> +	percpu_ref_kill_and_confirm(&nn->nfsd_serv_ref, nfsd_serv_done);
-> +	wait_for_completion(&nn->nfsd_serv_confirm_done);
-> +	wait_for_completion(&nn->nfsd_serv_free_done);
-> +	/* percpu_ref_exit is called in nfsd_shutdown_net */
-> +
->  	spin_lock(&nfsd_notifier_lock);
->  	nn->nfsd_serv =3D NULL;
->  	spin_unlock(&nfsd_notifier_lock);
-> @@ -595,6 +627,13 @@ int nfsd_create_serv(struct net *net)
->  	if (nn->nfsd_serv)
->  		return 0;
-> =20
-> +	error =3D percpu_ref_init(&nn->nfsd_serv_ref, nfsd_serv_free,
-> +				0, GFP_KERNEL);
-> +	if (error)
-> +		return error;
-> +	init_completion(&nn->nfsd_serv_free_done);
-> +	init_completion(&nn->nfsd_serv_confirm_done);
-> +
->  	if (nfsd_max_blksize =3D=3D 0)
->  		nfsd_max_blksize =3D nfsd_get_default_max_blksize();
->  	nfsd_reset_versions(nn);
+>  	 * Calculate the size (in quads) of the RPC call
+>  	 * and reply headers, and convert both values
 
-A little hard to review this one at this point in the series, as there
-are no callers of get/put yet, but the concept seems reasonable.
+Yay! More unneeded BUG_ONs gone.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
