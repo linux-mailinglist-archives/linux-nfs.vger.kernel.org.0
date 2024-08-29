@@ -1,58 +1,59 @@
-Return-Path: <linux-nfs+bounces-6000-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6001-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEDD0964B5F
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 18:18:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5AEE964B92
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 18:22:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94F2028207B
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:18:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA5C31C21B00
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 16:22:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAEB11B3F1F;
-	Thu, 29 Aug 2024 16:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8873B1B29D9;
+	Thu, 29 Aug 2024 16:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzInbD61"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNvmlwvP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EC81B0132;
-	Thu, 29 Aug 2024 16:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E27C195FD5;
+	Thu, 29 Aug 2024 16:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724948158; cv=none; b=CZhtpicQWNGmZvQKfmPvu8HjrLuDZusaOp0H9WuA2vdXbSJa1td6JCppyVFt3Ui6tIrmqLstngL4cKsH0z+X8KW7RkOpPvKckVlUUhwnY6s2lt51iwFJZsJw0+vUlejyzcAfKy8On6gXESoLxWwlrss6i6zmp2Ag72Vw/4z5oiE=
+	t=1724948528; cv=none; b=QbnVPG5mvicIdROXq2mR33svZYkv0eYSpnehm1qC6gXLJ9/xY539zGkU23UMwjDbEgsNsaPcSIdhPUKP18VwJmhEDjavmIQwnbUdydsD0Y1THHU3WoD898bEgy4CrRVSGISwj7BkDeFM80nNOqdE0I1aK19IA4Zwo1J0bNP0KCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724948158; c=relaxed/simple;
-	bh=JNe1ki+/vqtDoa5+lYHhEHCq8biuJ2u3Ys7KPm6Xstk=;
+	s=arc-20240116; t=1724948528; c=relaxed/simple;
+	bh=Q0Owz95Y13iUYjfu3dmujKQngYspzij/0DjXNE3KPU0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fD1BdfhV8Xla5Sc/EcXCp+s2WsxU5kl+vtzgD+5+6M4hgMwyzu8rc5hmje0krywzDDfsghikzAcsCRHWcACCffqeyKmBpXZ7uWNj8+fw2KYxbClhPD6XxAaZyl/KA9nSAw0SXkh2GgZkFuVt5sizkKlEECY9ppD0GpYhuorc5d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzInbD61; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39661C4CEC1;
-	Thu, 29 Aug 2024 16:15:58 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vb97nvYAl/UTCR2TtwUKkEmH2i/QF6xwGpDhhQq80DAezpTRQEp/owy3jfo+b5MHpokN28P+hTZd2nC7vSoO44c9XR/gLZz9hDbYUPNJQiOBG2gVh1/4UCY1l6ozzCw74/fujxLK8LqdHJqBlEIBIAFTIIRyH1wzyUZWHr95IPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNvmlwvP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926E2C4CEC1;
+	Thu, 29 Aug 2024 16:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724948158;
-	bh=JNe1ki+/vqtDoa5+lYHhEHCq8biuJ2u3Ys7KPm6Xstk=;
+	s=k20201202; t=1724948527;
+	bh=Q0Owz95Y13iUYjfu3dmujKQngYspzij/0DjXNE3KPU0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RzInbD61kLd3WJN2Kn+5OrQX9/MDjYToppl5g0eGYbOtjoU2weKeWPpxOmtMw5gyM
-	 0HMc9JE885aKLbtZJprK+HkhVSY2pPQlKOod3dEIB9yv4agVzXTl3gSDtOg5wKE6tP
-	 jhG0nOtNvh/kNPXO1uoSRoytEiJfRuSPqNxouKUZn1z0EoALQNVKQMCZlQZGEfAC9U
-	 Q0EMFbgTVMEefrMGIaPgvwDxq9boaNGlD1mqPVOintT8w0lfexVUtwTjrQOEPLvHEA
-	 R66pxgBHL6SA2o9pWE6MUBKBChvlIgCQ3l447xyU0YOFI50cGgm3NBwqo1dCgIHDhh
-	 lyW2KZrKwMMrw==
-Date: Thu, 29 Aug 2024 12:15:57 -0400
+	b=ZNvmlwvPris7BDZ7I0YiuLufSn8cJeF3Ah0VjzqO7QHZfLhrBeefZtVK9wMp9j7p4
+	 GMv6fncJ0yl86HLdKfEzgkGxYm6GeHnOpjEc6L7ZIrxRrZq5yVwha80eL71FHXD+nO
+	 o1KO7uEWmHJFifQEDoZepGlCvIl8zlaJ9Lfup0B2F67LJrP91T1IAPNMOyayobsGQd
+	 jJpTQNoK+dG1RRncSLY+62L0UzEmKMzNJlSWKsfOiwktGbuwvhP0F75WdlnoUs88W0
+	 PX0M+NY4I6eg3eDjLM5hZwupcoK03YCXpCd+f0qhOC9aheUDOPPJoVVP8dz0wI+ge9
+	 OScwSQ8QT74ig==
+Date: Thu, 29 Aug 2024 12:22:06 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v14 16/25] nfsd: add localio support
-Message-ID: <ZtCevQGIoJZIhsMg@kernel.org>
+Subject: Re: [PATCH v14 14/25] nfs_common: add NFS LOCALIO auxiliary protocol
+ enablement
+Message-ID: <ZtCgLvrUfz9VzyL3@kernel.org>
 References: <20240829010424.83693-1-snitzer@kernel.org>
- <20240829010424.83693-17-snitzer@kernel.org>
- <ZtCbZtHG3iKqWIkF@tissot.1015granger.net>
+ <20240829010424.83693-15-snitzer@kernel.org>
+ <6ecd19ff0c70d6d93e473d958a210dd131b665c0.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,304 +62,171 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZtCbZtHG3iKqWIkF@tissot.1015granger.net>
+In-Reply-To: <6ecd19ff0c70d6d93e473d958a210dd131b665c0.camel@kernel.org>
 
-On Thu, Aug 29, 2024 at 12:01:42PM -0400, Chuck Lever wrote:
-> On Wed, Aug 28, 2024 at 09:04:11PM -0400, Mike Snitzer wrote:
-> > From: Weston Andros Adamson <dros@primarydata.com>
+On Thu, Aug 29, 2024 at 12:07:06PM -0400, Jeff Layton wrote:
+> On Wed, 2024-08-28 at 21:04 -0400, Mike Snitzer wrote:
+> > fs/nfs_common/nfslocalio.c provides interfaces that enable an NFS
+> > client to generate a nonce (single-use UUID) and associated
+> > short-lived nfs_uuid_t struct, register it with nfs_common for
+> > subsequent lookup and verification by the NFS server and if matched
+> > the NFS server populates members in the nfs_uuid_t struct.
 > > 
-> > Add server support for bypassing NFS for localhost reads, writes, and
-> > commits. This is only useful when both the client and server are
-> > running on the same host.
+> > nfs_common's nfs_uuids list is the basis for localio enablement, as
+> > such it has members that point to nfsd memory for direct use by the
+> > client (e.g. 'net' is the server's network namespace, through it the
+> > client can access nn->nfsd_serv with proper rcu read access).
 > > 
-> > If nfsd_open_local_fh() fails then the NFS client will both retry and
-> > fallback to normal network-based read, write and commit operations if
-> > localio is no longer supported.
-> > 
-> > Care is taken to ensure the same NFS security mechanisms are used
-> > (authentication, etc) regardless of whether localio or regular NFS
-> > access is used.  The auth_domain established as part of the traditional
-> > NFS client access to the NFS server is also used for localio.  Store
-> > auth_domain for localio in nfsd_uuid_t and transfer it to the client
-> > if it is local to the server.
-> > 
-> > Relative to containers, localio gives the client access to the network
-> > namespace the server has.  This is required to allow the client to
-> > access the server's per-namespace nfsd_net struct.
-> > 
-> > CONFIG_NFSD_LOCALIO controls the server enablement for localio.
-> > A later commit will add CONFIG_NFS_LOCALIO to allow the client
-> > enablement.
-> > 
-> > This commit also introduces the use of nfsd's percpu_ref to interlock
-> > nfsd_destroy_serv and nfsd_open_local_fh, to ensure nn->nfsd_serv is
-> > not destroyed while in use by nfsd_open_local_fh, and warrants a more
-> > detailed explanation:
-> > 
-> > nfsd_open_local_fh uses nfsd_serv_try_get before opening its file
-> > handle and then the reference must be dropped by the caller using
-> > nfsd_serv_put (via nfs_localio_ctx_free).
-> > 
-> > This "interlock" working relies heavily on nfsd_open_local_fh()'s
-> > maybe_get_net() safely dealing with the possibility that the struct
-> > net (and nfsd_net by association) may have been destroyed by
-> > nfsd_destroy_serv() via nfsd_shutdown_net().
-> > 
-> > Verified to fix an easy to hit crash that would occur if an nfsd
-> > instance running in a container, with a localio client mounted, is
-> > shutdown. Upon restart of the container and associated nfsd the client
-> > would go on to crash due to NULL pointer dereference that occuured due
-> > to the nfs client's localio attempting to nfsd_open_local_fh(), using
-> > nn->nfsd_serv, without having a proper reference on nn->nfsd_serv.
-> > 
-> > Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > Co-developed-by: Mike Snitzer <snitzer@kernel.org>
 > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > > ---
-> >  fs/Kconfig          |   3 ++
-> >  fs/nfsd/Kconfig     |  16 +++++++
-> >  fs/nfsd/Makefile    |   1 +
-> >  fs/nfsd/filecache.c |   2 +-
-> >  fs/nfsd/localio.c   | 105 ++++++++++++++++++++++++++++++++++++++++++++
-> >  fs/nfsd/trace.h     |   3 +-
-> >  fs/nfsd/vfs.h       |   7 +++
-> >  7 files changed, 135 insertions(+), 2 deletions(-)
-> >  create mode 100644 fs/nfsd/localio.c
+> >  fs/nfs_common/Makefile     |  3 ++
+> >  fs/nfs_common/nfslocalio.c | 74 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/nfslocalio.h | 31 ++++++++++++++++
+> >  3 files changed, 108 insertions(+)
+> >  create mode 100644 fs/nfs_common/nfslocalio.c
+> >  create mode 100644 include/linux/nfslocalio.h
 > > 
-> > diff --git a/fs/Kconfig b/fs/Kconfig
-> > index a46b0cbc4d8f..1b8a5edbddff 100644
-> > --- a/fs/Kconfig
-> > +++ b/fs/Kconfig
-> > @@ -377,6 +377,9 @@ config NFS_ACL_SUPPORT
-> >  	tristate
-> >  	select FS_POSIX_ACL
+> > diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+> > index e58b01bb8dda..a5e54809701e 100644
+> > --- a/fs/nfs_common/Makefile
+> > +++ b/fs/nfs_common/Makefile
+> > @@ -6,6 +6,9 @@
+> >  obj-$(CONFIG_NFS_ACL_SUPPORT) += nfs_acl.o
+> >  nfs_acl-objs := nfsacl.o
 > >  
-> > +config NFS_COMMON_LOCALIO_SUPPORT
-> > +	bool
+> > +obj-$(CONFIG_NFS_COMMON_LOCALIO_SUPPORT) += nfs_localio.o
+> > +nfs_localio-objs := nfslocalio.o
 > > +
-> >  config NFS_COMMON
-> >  	bool
-> >  	depends on NFSD || NFS_FS || LOCKD
-> > diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-> > index c0bd1509ccd4..e6fa7eaa1db0 100644
-> > --- a/fs/nfsd/Kconfig
-> > +++ b/fs/nfsd/Kconfig
-> > @@ -90,6 +90,22 @@ config NFSD_V4
+> >  obj-$(CONFIG_GRACE_PERIOD) += grace.o
+> >  obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
 > >  
-> >  	  If unsure, say N.
-> >  
-> > +config NFSD_LOCALIO
-> > +	bool "NFS server support for the LOCALIO auxiliary protocol"
-> > +	depends on NFSD
-> > +	select NFS_COMMON_LOCALIO_SUPPORT
-> > +	default n
-> > +	help
-> > +	  Some NFS servers support an auxiliary NFS LOCALIO protocol
-> > +	  that is not an official part of the NFS protocol.
-> > +
-> > +	  This option enables support for the LOCALIO protocol in the
-> > +	  kernel's NFS server.  Enable this to permit local NFS clients
-> > +	  to bypass the network when issuing reads and writes to the
-> > +	  local NFS server.
-> > +
-> > +	  If unsure, say N.
-> > +
-> >  config NFSD_PNFS
-> >  	bool
-> >  
-> > diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-> > index b8736a82e57c..78b421778a79 100644
-> > --- a/fs/nfsd/Makefile
-> > +++ b/fs/nfsd/Makefile
-> > @@ -23,3 +23,4 @@ nfsd-$(CONFIG_NFSD_PNFS) += nfs4layouts.o
-> >  nfsd-$(CONFIG_NFSD_BLOCKLAYOUT) += blocklayout.o blocklayoutxdr.o
-> >  nfsd-$(CONFIG_NFSD_SCSILAYOUT) += blocklayout.o blocklayoutxdr.o
-> >  nfsd-$(CONFIG_NFSD_FLEXFILELAYOUT) += flexfilelayout.o flexfilelayoutxdr.o
-> > +nfsd-$(CONFIG_NFSD_LOCALIO) += localio.o
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index a83d469bca6b..49f4aab3208a 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -53,7 +53,7 @@
-> >  #define NFSD_FILE_CACHE_UP		     (0)
-> >  
-> >  /* We only care about NFSD_MAY_READ/WRITE for this cache */
-> > -#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE)
-> > +#define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE|NFSD_MAY_LOCALIO)
-> >  
-> >  static DEFINE_PER_CPU(unsigned long, nfsd_file_cache_hits);
-> >  static DEFINE_PER_CPU(unsigned long, nfsd_file_acquisitions);
-> > diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> > diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
 > > new file mode 100644
-> > index 000000000000..4b65c66be129
+> > index 000000000000..1a35a4a6dbe0
 > > --- /dev/null
-> > +++ b/fs/nfsd/localio.c
-> > @@ -0,0 +1,105 @@
+> > +++ b/fs/nfs_common/nfslocalio.c
+> > @@ -0,0 +1,74 @@
 > > +// SPDX-License-Identifier: GPL-2.0-only
 > > +/*
-> > + * NFS server support for local clients to bypass network stack
-> > + *
-> > + * Copyright (C) 2014 Weston Andros Adamson <dros@primarydata.com>
-> > + * Copyright (C) 2019 Trond Myklebust <trond.myklebust@hammerspace.com>
 > > + * Copyright (C) 2024 Mike Snitzer <snitzer@hammerspace.com>
 > > + */
 > > +
-> > +#include <linux/exportfs.h>
-> > +#include <linux/sunrpc/svcauth.h>
-> > +#include <linux/sunrpc/clnt.h>
-> > +#include <linux/nfs.h>
-> > +#include <linux/nfs_common.h>
+> > +#include <linux/module.h>
+> > +#include <linux/rculist.h>
 > > +#include <linux/nfslocalio.h>
-> > +#include <linux/string.h>
+> > +#include <net/netns/generic.h>
 > > +
-> > +#include "nfsd.h"
-> > +#include "vfs.h"
-> > +#include "netns.h"
-> > +#include "filecache.h"
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_DESCRIPTION("NFS localio protocol bypass support");
 > > +
-> > +/**
-> > + * nfsd_open_local_fh - lookup a local filehandle @nfs_fh and map to nfsd_file
-> > + *
-> > + * @cl_nfssvc_net: the 'struct net' to use to get the proper nfsd_net
-> > + * @cl_nfssvc_dom: the 'struct auth_domain' required for localio access
-> > + * @rpc_clnt: rpc_clnt that the client established, used for sockaddr and cred
-> > + * @cred: cred that the client established
-> > + * @nfs_fh: filehandle to lookup
-> > + * @fmode: fmode_t to use for open
-> > + *
-> > + * This function maps a local fh to a path on a local filesystem.
-> > + * This is useful when the nfs client has the local server mounted - it can
-> > + * avoid all the NFS overhead with reads, writes and commits.
-> > + *
-> > + * On successful return, returned nfs_localio_ctx will have its nfsd_file and
-> > + * nfsd_net members set. Caller is responsible for calling nfsd_file_put and
-> > + * nfsd_serv_put (via nfs_localio_ctx_free).
+> > +DEFINE_MUTEX(nfs_uuid_mutex);
+> 
+> Why a mutex here? AFAICT, you're just using this to protect the list. A
+> spinlock would probably be more efficient.
+
+Yeah, will do, I meant to revisit (when Neil suggested the same for
+the lock that is added in 15/25).
+
+Thanks.
+
+> > +
+> > +/*
+> > + * Global list of nfs_uuid_t instances, add/remove
+> > + * is protected by nfs_uuid_mutex.
+> > + * Reads are protected by RCU read lock (see below).
 > > + */
-> > +struct nfs_localio_ctx *
-> > +nfsd_open_local_fh(struct net *cl_nfssvc_net, struct auth_domain *cl_nfssvc_dom,
-> > +		   struct rpc_clnt *rpc_clnt, const struct cred *cred,
-> > +		   const struct nfs_fh *nfs_fh, const fmode_t fmode)
+> > +LIST_HEAD(nfs_uuids);
+> > +
+> > +void nfs_uuid_begin(nfs_uuid_t *nfs_uuid)
 > > +{
-> > +	int mayflags = NFSD_MAY_LOCALIO;
-> > +	int status = 0;
-> > +	struct nfsd_net *nn;
-> > +	struct svc_cred rq_cred;
-> > +	struct svc_fh fh;
-> > +	struct nfs_localio_ctx *localio;
-> > +	__be32 beres;
+> > +	nfs_uuid->net = NULL;
+> > +	nfs_uuid->dom = NULL;
+> > +	uuid_gen(&nfs_uuid->uuid);
 > > +
-> > +	if (nfs_fh->size > NFS4_FHSIZE)
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	localio = nfs_localio_ctx_alloc();
-> > +	if (!localio)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	/*
-> > +	 * Not running in nfsd context, so must safely get reference on nfsd_serv.
-> > +	 * But the server may already be shutting down, if so disallow new localio.
-> > +	 */
-> > +	nn = net_generic(cl_nfssvc_net, nfsd_net_id);
-> > +	if (unlikely(!nfsd_serv_try_get(nn))) {
-> > +		status = -ENXIO;
-> > +		goto out_nfsd_serv;
-> > +	}
-> > +
-> > +	/* nfs_fh -> svc_fh */
-> > +	fh_init(&fh, NFS4_FHSIZE);
-> > +	fh.fh_handle.fh_size = nfs_fh->size;
-> > +	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
-> > +
-> > +	if (fmode & FMODE_READ)
-> > +		mayflags |= NFSD_MAY_READ;
-> > +	if (fmode & FMODE_WRITE)
-> > +		mayflags |= NFSD_MAY_WRITE;
-> > +
-> > +	svcauth_map_clnt_to_svc_cred_local(rpc_clnt, cred, &rq_cred);
-> > +
-> > +	beres = nfsd_file_acquire_local(cl_nfssvc_net, &rq_cred, cl_nfssvc_dom,
-> > +					&fh, mayflags, &localio->nf);
-> > +	if (beres) {
-> > +		status = nfs_stat_to_errno(be32_to_cpu(beres));
-> > +		goto out_fh_put;
-> > +	}
-> > +	localio->nn = nn;
-> > +
-> > +out_fh_put:
-> > +	fh_put(&fh);
-> > +	if (rq_cred.cr_group_info)
-> > +		put_group_info(rq_cred.cr_group_info);
-> > +out_nfsd_serv:
-> > +	if (status) {
-> > +		nfs_localio_ctx_free(localio);
-> > +		return ERR_PTR(status);
-> > +	}
-> > +	return localio;
+> > +	mutex_lock(&nfs_uuid_mutex);
+> > +	list_add_tail_rcu(&nfs_uuid->list, &nfs_uuids);
+> > +	mutex_unlock(&nfs_uuid_mutex);
 > > +}
-> > +EXPORT_SYMBOL_GPL(nfsd_open_local_fh);
+> > +EXPORT_SYMBOL_GPL(nfs_uuid_begin);
 > > +
-> > +/* Compile time type checking, not used by anything */
-> > +static nfs_to_nfsd_open_local_fh_t __maybe_unused nfsd_open_local_fh_typecheck = nfsd_open_local_fh;
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > index d22027e23761..82bcefcd1f21 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -86,7 +86,8 @@ DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
-> >  		{ NFSD_MAY_NOT_BREAK_LEASE,	"NOT_BREAK_LEASE" },	\
-> >  		{ NFSD_MAY_BYPASS_GSS,		"BYPASS_GSS" },		\
-> >  		{ NFSD_MAY_READ_IF_EXEC,	"READ_IF_EXEC" },	\
-> > -		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" })
-> > +		{ NFSD_MAY_64BIT_COOKIE,	"64BIT_COOKIE" },	\
-> > +		{ NFSD_MAY_LOCALIO,		"LOCALIO" })
-> >  
-> >  TRACE_EVENT(nfsd_compound,
-> >  	TP_PROTO(
-> > diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> > index 01947561d375..e12310dd5f4c 100644
-> > --- a/fs/nfsd/vfs.h
-> > +++ b/fs/nfsd/vfs.h
-> > @@ -33,6 +33,8 @@
-> >  
-> >  #define NFSD_MAY_64BIT_COOKIE		0x1000 /* 64 bit readdir cookies for >= NFSv3 */
-> >  
-> > +#define NFSD_MAY_LOCALIO		0x2000 /* for tracing, reflects when localio used */
+> > +void nfs_uuid_end(nfs_uuid_t *nfs_uuid)
+> > +{
+> > +	mutex_lock(&nfs_uuid_mutex);
+> > +	list_del_rcu(&nfs_uuid->list);
+> > +	mutex_unlock(&nfs_uuid_mutex);
+> > +}
+> > +EXPORT_SYMBOL_GPL(nfs_uuid_end);
 > > +
-> >  #define NFSD_MAY_CREATE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE)
-> >  #define NFSD_MAY_REMOVE		(NFSD_MAY_EXEC|NFSD_MAY_WRITE|NFSD_MAY_TRUNC)
-> >  
-> > @@ -158,6 +160,11 @@ __be32		nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
-> >  
-> >  void		nfsd_filp_close(struct file *fp);
-> >  
-> > +struct nfs_localio_ctx *
-> > +nfsd_open_local_fh(struct net *, struct auth_domain *,
-> > +		   struct rpc_clnt *, const struct cred *,
-> > +		   const struct nfs_fh *, const fmode_t);
+> > +/* Must be called with RCU read lock held. */
+> > +static nfs_uuid_t * nfs_uuid_lookup(const uuid_t *uuid)
+> > +{
+> > +	nfs_uuid_t *nfs_uuid;
 > > +
-> >  static inline int fh_want_write(struct svc_fh *fh)
-> >  {
-> >  	int ret;
-> > -- 
-> > 2.44.0
-> > 
+> > +	list_for_each_entry_rcu(nfs_uuid, &nfs_uuids, list)
+> > +		if (uuid_equal(&nfs_uuid->uuid, uuid))
+> > +			return nfs_uuid;
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +bool nfs_uuid_is_local(const uuid_t *uuid, struct net *net, struct auth_domain *dom)
+> > +{
+> > +	bool is_local = false;
+> > +	nfs_uuid_t *nfs_uuid;
+> > +
+> > +	rcu_read_lock();
+> > +	nfs_uuid = nfs_uuid_lookup(uuid);
+> > +	if (nfs_uuid) {
+> > +		nfs_uuid->net = maybe_get_net(net);
+> > +		if (nfs_uuid->net) {
+> > +			is_local = true;
+> > +			kref_get(&dom->ref);
+> > +			nfs_uuid->dom = dom;
+> > +		}
+> > +	}
+> > +	rcu_read_unlock();
+> > +
+> > +	return is_local;
+> > +}
+> > +EXPORT_SYMBOL_GPL(nfs_uuid_is_local);
+> > diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+> > new file mode 100644
+> > index 000000000000..9735ae8d3e5e
+> > --- /dev/null
+> > +++ b/include/linux/nfslocalio.h
+> > @@ -0,0 +1,31 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2024 Mike Snitzer <snitzer@hammerspace.com>
+> > + */
+> > +#ifndef __LINUX_NFSLOCALIO_H
+> > +#define __LINUX_NFSLOCALIO_H
+> > +
+> > +#include <linux/list.h>
+> > +#include <linux/uuid.h>
+> > +#include <linux/sunrpc/svcauth.h>
+> > +#include <linux/nfs.h>
+> > +#include <net/net_namespace.h>
+> > +
+> > +/*
+> > + * Useful to allow a client to negotiate if localio
+> > + * possible with its server.
+> > + *
+> > + * See Documentation/filesystems/nfs/localio.rst for more detail.
+> > + */
+> > +typedef struct {
+> > +	uuid_t uuid;
+> > +	struct list_head list;
+> > +	struct net *net; /* nfsd's network namespace */
+> > +	struct auth_domain *dom; /* auth_domain for localio */
+> > +} nfs_uuid_t;
+> > +
+> > +void nfs_uuid_begin(nfs_uuid_t *);
+> > +void nfs_uuid_end(nfs_uuid_t *);
+> > +bool nfs_uuid_is_local(const uuid_t *, struct net *, struct auth_domain *);
+> > +
+> > +#endif  /* __LINUX_NFSLOCALIO_H */
 > 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> 
-> I think I've looked at all the server-side changes now. I don't see
-> any issues that block merging this series.
-
-OK, thanks!
-
-> Two follow-ups:
-> 
-> I haven't heard an answer to my question about how export options
-> that translate RPC user IDs might behave for LOCALIO operations
-> (eg. root_squash, all_squash). Test results, design points,
-> NEEDS_WORK, etc.
-> 
-> Someone should try out the trace points that we neutered in
-> fh_verify() before this set gets applied.
-
-I'll work on both as a prereq for posting the final.
+> -- 
+> Jeff Layton <jlayton@kernel.org>
 
