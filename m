@@ -1,88 +1,178 @@
-Return-Path: <linux-nfs+bounces-5933-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5934-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5550F9637FC
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 03:50:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46B42963858
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 04:48:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87B631C21B12
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:50:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E84B4285EB2
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 02:48:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E612415AC4;
-	Thu, 29 Aug 2024 01:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6085A3F9CC;
+	Thu, 29 Aug 2024 02:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq7ZobjL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNk856kS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5B48814;
-	Thu, 29 Aug 2024 01:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FB317547;
+	Thu, 29 Aug 2024 02:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724896208; cv=none; b=OoyTbtfVzKFIOBTuSx9ztn6tTV7z6wpgUnf64ImW5aiDV2t6jBauntgtBB4cMn7UbyG1FYN2uNWl7Po4XJX6eBMAQVnexR9cjzt0rn5RT3gXcYoI3G9ACiSQlHeOcKrNR11MqDEndJlzLGgqgOcYdo4dHrf/NukkknWi284dQGk=
+	t=1724899679; cv=none; b=pnL5uFModQRhC2wenvCJ4aEHFiOis32CNfWnksgjAXTG9UAAV6Be+VklzdLlISjkAtP0p8JsSir0RJ6WyLY9So0/ThaytBsfZF+Kuzq4EymuxLlZAuKkoCP397mM6jxZ6lYEVD3uHcYPlDJqb0Kw2fCaC8JEf0QKAe2vhJ8j+9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724896208; c=relaxed/simple;
-	bh=hZniCH1MxHuvSisxY/q7sI9AWrbv8tOE6flx81Xn5XQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=geiY58Skmu1Xgl/bivYw3k15uSUeoUCekgx8wf18FtYX2Y2yZCEY2OZJGXAXu13RKWNJEWO3LY4lgfvRyYPmxOwQOTunEx3feBGQ4G+YTDONb5RpMJ8uWSM3QQGVGVQHbYASpDyxCq8y+Wi55aaneidrSWU+0uSzb/aqEV1X61E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq7ZobjL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C21FC4CEC0;
-	Thu, 29 Aug 2024 01:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724896208;
-	bh=hZniCH1MxHuvSisxY/q7sI9AWrbv8tOE6flx81Xn5XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gq7ZobjLqeW1NxnH7vowre3lrBsdngmjhA9mKZb71Jt8WCl4rvcshwg288GPRPmVA
-	 Sj4VyGh8VxyyrKc9BdIDCEMIoaaKad/mrxPu8RZLMFK5Hr9+38WhMIRKTWl+UOSFWC
-	 n8D4AFWb9mW6LdYoI1opUKlyFYREOJ9FcLbo3v/T1FoLLAoiah/4gG0W5r7wxngGTq
-	 IOC22WEE9b76RI6JYRIzGfewelVzlkNGhC4NN3osEWWGJ4J4TlbKCxql/cKfaqh8RX
-	 5yw40UfxMGWJswkC41VQNfqoJ0qFl625NYOVdurLseZhcfmad8mCpi6fHsHurM+w0m
-	 9uppqZPmLnbzg==
-Date: Wed, 28 Aug 2024 21:50:07 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v14 00/25] nfs/nfsd: add support for LOCALIO
-Message-ID: <Zs_Tz34B3I0SGglp@kernel.org>
-References: <20240829010424.83693-1-snitzer@kernel.org>
- <Zs_SHZXnn0xyVQYY@kernel.org>
+	s=arc-20240116; t=1724899679; c=relaxed/simple;
+	bh=yZBj6yB+vdP8EWPB8Ad9fGdRR9EORM7UbpU9Y+Lq7WQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=acGFilNVWQ0uWQ11M9jEl13zbPzu5bd/Glm3GU+TuM+OlkE6ged7HljzojZZV4dfqpSnpaLson/P6dKjm+WQO9bQCx54+lf10tmAiV7oOqJ+UAiQFllDB3bXwMfyugBDQGsQksFHQW1XFuLBqSwj777mp0DiW9tlCexrmLaYjNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNk856kS; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-533488ffaf7so195667e87.0;
+        Wed, 28 Aug 2024 19:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724899676; x=1725504476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
+        b=RNk856kSNr0UJNH8EuG4F17C99rG2v2JlTzf+KYLBBIn+UBwjQgo6gkqUgy/dSQMGb
+         qcCD+wRNwUzYbYgONf5aFvvbOAU2gPfWOi5VnVgEcZrzVmtqkvKLF6WmZ8z978CyNEVW
+         vE0ldU8FCz8ncYSM7WCWwFhU+ma6G5+O/GGiIK4FSzVSlz9pGNY7TgCxOnFgQfOe4kQ1
+         aZyQbdims+DyKgWwyr5qFIA6cQFI/58VCo3mAjkGyVIyKM4XXhj3tHYgUwTvIDdGURrg
+         mcaDIZvl2KNE9RJ+29nLr4jYdTAfMsoIIY+F5QT81BsTsEdyBADbPphlVsoGvEc0s/2k
+         QKlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724899676; x=1725504476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
+        b=liUM0NmQ9+yCZtLxuxiz7zab7LfqhopEgXmb3DLhuJcjWL1s1s4G40WytKQDrA9QwT
+         z+xb8+mMvNcJmXzNK7DAldFk01TxKfb5JTM9qPilo8lO6xtkmwz91cJdHTqkmFJ2Xu0b
+         iKN3Wka+/OIxAfPZheexzwrniWpDX2wxnY6N0SahhotiwNbYkBRTL4dGk3BY8uz4B1A3
+         5qFlbCyGqqm2CoFcRYwmVEGVFGqfxKUtvl5MbOPbBrIQLPjpnhBgXoaY+PSr2UvlWpwf
+         u0SCfdRaxTWpb88hHOE36dpB/Ig3eDuu0rqTcrR8dpibO3Nri/e/B1raSzXnEEbYWbvA
+         4Cmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPIHQdIaHoWNuuq0EPaOwcp/KvXGqoiEoTnY3LD+K/lwpK8ueUQUPd9/ZYiOLwQOIxIHWBdcBkPDW1@vger.kernel.org, AJvYcCUsjjNhO1w/RUHToWno4H3m3l+X2iQsEk4fFjn7w66mSHB9aa++HI+A29r80XjqXu+Ik9hN4juBVOsHUA==@vger.kernel.org, AJvYcCUwP9xfvVf37ySrVxxX2HOSAUPoR7tyvMc9/nkacWLmwKumekrJIM0jSeTjd7TaRkdHz/kvox0F5LOdPMLZ@vger.kernel.org, AJvYcCX1flbjSSdym0P3Fzj4O3hFVIUBh6qyTe/ABm3JAM+JO08lzkGEs0oEAoTtm455dZFmAlNS6QVwC3aB@vger.kernel.org, AJvYcCXswY0/Vi9Jbh9uPAjdJmoXENs/wZY59iYOFWF41xYuwfVVKOgtlbBZCczsXYw/N7mL+JL7Gs7h5EpfLbDEbQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGW0k00L+Rdj1xUhPnKmGVG3OeZk2VaXhAGDSeRHMkRSIDeuvu
+	AP/SWG6gir1wXUKcwMmsyQaHHhLlfIdy0vtWguwFWFUJ1sTV3MoUyAatB3vh3ylIGAz4ImdOBYe
+	E6r9Zey2grnnueePGHNMyMpPMVok=
+X-Google-Smtp-Source: AGHT+IFw6YFPE4uQg6imkFHXMbxtDADWvwTRJd5bZLVgOFxAE0atjLaGwN/Y3Vs2U2TCttK/XyhsIPdmUPLmGEsItEg=
+X-Received: by 2002:a05:6512:1055:b0:52c:db0a:a550 with SMTP id
+ 2adb3069b0e04-5353e5aae01mr710771e87.42.1724899675197; Wed, 28 Aug 2024
+ 19:47:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zs_SHZXnn0xyVQYY@kernel.org>
+References: <20240828210249.1078637-1-dhowells@redhat.com>
+In-Reply-To: <20240828210249.1078637-1-dhowells@redhat.com>
+From: Steve French <smfrench@gmail.com>
+Date: Wed, 28 Aug 2024 21:47:43 -0500
+Message-ID: <CAH2r5muvO8+Es4Y8d=VtWEp-vcC62TYEZc3W1Y0r+6ro6d9yxQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] mm, netfs, cifs: Miscellaneous fixes
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>, 
+	Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2024 at 09:42:53PM -0400, Mike Snitzer wrote:
-> On Wed, Aug 28, 2024 at 09:03:55PM -0400, Mike Snitzer wrote:
-> > These latest changes are available in my git tree here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
-> > 
-> > I _think_ I addressed all of v13's very helpful review comments.
-> > Special thanks to Neil and Chuck for their time and help!
-> > 
-> > And hopefully I didn't miss anything in the changelog below.
-> 
-> As it happens, a last minute rebase that I did just before sending out
-> v14 caused me to send out 2 stale patches:
+testing is going fine so far with David's series ontop of current mainline
 
-I meant these were stale:
+(I see one possible intermittent server bug failure - on test
+generic/728 - but no red flags testing so far)
 
-[PATCH v14 06/25] NFSD: Avoid using rqstp->rq_vers in nfsd_set_fh_dentry()
-[PATCH v14 25/25] nfs: add FAQ section to Documentation/filesystems/nfs/localio.rst
+http://smb311-linux-testing.southcentralus.cloudapp.azure.com/#/builders/3/=
+builds/207
 
-But I've now sent v14.5 to fix each...
+On Wed, Aug 28, 2024 at 4:03=E2=80=AFPM David Howells <dhowells@redhat.com>=
+ wrote:
+>
+> Hi Christian, Steve,
+>
+> Firstly, here are some fixes to DIO read handling and the retrying of
+> reads, particularly in relation to cifs:
+>
+>  (1) Fix the missing credit renegotiation in cifs on the retrying of read=
+s.
+>      The credits we had ended with the original read (or the last retry)
+>      and to perform a new read we need more credits otherwise the server
+>      can reject our read with EINVAL.
+>
+>  (2) Fix the handling of short DIO reads to avoid ENODATA when the read
+>      retry tries to access a portion of the file after the EOF.
+>
+> Secondly, some patches fixing cifs copy and zero offload:
+>
+>  (3) Fix cifs_file_copychunk_range() to not try to partially invalidate
+>      folios that are only partly covered by the range, but rather flush
+>      them back and invalidate them.
+>
+>  (4) Fix filemap_invalidate_inode() to use the correct invalidation
+>      function so that it doesn't leave partially invalidated folios hangi=
+ng
+>      around (which may hide part of the result of an offloaded copy).
+>
+>  (5) Fix smb3_zero_data() to correctly handle zeroing of data that's
+>      buffered locally but not yet written back and with the EOF position =
+on
+>      the server short of the local EOF position.
+>
+>      Note that this will also affect afs and 9p, particularly with regard
+>      to direct I/O writes.
+>
+> And finally, here's an adjustment to debugging statements:
+>
+>  (6) Adjust three debugging output statements.  Not strictly a fix, so
+>      could be dropped.  Including the subreq ID in some extra debug lines
+>      helps a bit, though.
+>
+> The patches can also be found here:
+>
+>         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
+.git/log/?h=3Dnetfs-fixes
+>
+> Thanks,
+> David
+>
+> David Howells (6):
+>   cifs: Fix lack of credit renegotiation on read retry
+>   netfs, cifs: Fix handling of short DIO read
+>   cifs: Fix copy offload to flush destination region
+>   mm: Fix filemap_invalidate_inode() to use
+>     invalidate_inode_pages2_range()
+>   cifs: Fix FALLOC_FL_ZERO_RANGE to preflush buffered part of target
+>     region
+>   netfs, cifs: Improve some debugging bits
+>
+>  fs/netfs/io.c            | 21 +++++++++++++-------
+>  fs/smb/client/cifsfs.c   | 21 ++++----------------
+>  fs/smb/client/cifsglob.h |  1 +
+>  fs/smb/client/file.c     | 37 ++++++++++++++++++++++++++++++++----
+>  fs/smb/client/smb2ops.c  | 26 +++++++++++++++++++------
+>  fs/smb/client/smb2pdu.c  | 41 +++++++++++++++++++++++++---------------
+>  fs/smb/client/trace.h    |  1 +
+>  include/linux/netfs.h    |  1 +
+>  mm/filemap.c             |  2 +-
+>  9 files changed, 101 insertions(+), 50 deletions(-)
+>
+>
 
-> Sorry for the confusion.
 
-Again ;)
+--=20
+Thanks,
+
+Steve
 
