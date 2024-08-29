@@ -1,168 +1,103 @@
-Return-Path: <linux-nfs+bounces-5899-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5900-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3BB9963683
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:59:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B769E9636E3
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 02:27:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFAB71C21147
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Aug 2024 23:59:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 459B7B20B74
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 00:27:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007741AC433;
-	Wed, 28 Aug 2024 23:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 304EFDDA6;
+	Thu, 29 Aug 2024 00:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xFvgCuNI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ac8ASh6H"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24756647
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Aug 2024 23:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B93EDDA1
+	for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 00:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724889548; cv=none; b=nEk2hvspzIeN/61K+iFEzQCeoVz0OXnJSpeOnfckItSnc/JGWClPFlJAHlB+rZJep663bV96qpkBfEzz4HAB6d/H9p8eejYD29iZQD8/MCiimT1mJ7zzhSA1jEFgvC7zjdB8V2H6oa7LPglal0hQZbVlMm091q7fNtNQ77Kru+g=
+	t=1724891222; cv=none; b=ecvUMmjVaWxJ0/FaDzG1OQCvxVXwd3cM79zJYKZ2N8109gey5iWtgqX6JjYh1dbzXOupJD1fco1xhQPe+B00WarRIII1ACfQYoDR1CJu5NtGLWMwHm9Du7mo200mRTyyJj04c4qmQeMVlNsUIJokZYEKs9wT5V638gqbr91s2es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724889548; c=relaxed/simple;
-	bh=HMYfC/hI9S7Sen9hqERBXwkm2HY3AHiQThzMVQy+2nA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BtazsNwnURLGHp6ATyDLyfVTf7ZuqB6X83tlMAQQ8eZXIP8MWOPy5SdnpxK/RJ3GXylHknt6Kqp50vKHiM36Ao7d1Vf8Lg7fZSYjTlyI8OgK25iY+WV95Hsj3TOl2mA76N6a4UxJEcp2HgW9Ugbd+Xs2Fk0bVimh3NdZENcVQ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=xFvgCuNI; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id jNaTsado6qvuojSZ2sh5nv; Wed, 28 Aug 2024 23:59:00 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id jSZ0szNXRX56wjSZ1sA2F2; Wed, 28 Aug 2024 23:58:59 +0000
-X-Authority-Analysis: v=2.4 cv=MY6nuI/f c=1 sm=1 tr=0 ts=66cfb9c3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10 a=ZI_cG6RJAAAA:8
- a=VwQbUJbxAAAA:8 a=G7Ig5-h-x50up4Ig-zsA:9 a=QEXdDO2ut3YA:10
- a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gwdyghKD5k5c4CmERZykpZYJC0ag0Sw3dcYPpvLrdIM=; b=xFvgCuNIWC/Sg1fvGEywaCv1mi
-	iYaQCsEvOtKAzDiYAKtDkWBpKYp7CnJ4+4d4TTDo4I+alED8eaP9S2hrhlI4Ovgw+Snq40TPCLCy8
-	nBv2gnEtiXixU4AfjYjLRo6YEqkRRr3X0WJtVl9beaU/rCH4iG+UOsWy5rLMCGjiQC0mX+k5/9W2u
-	tLQoeq7Es0zmm/qtkcdXxPX5BvDOucjJvQM+cE1J+TKrAq/w6Fm3USeZ0roXQvd87rnzjblrpOsM5
-	5XFMQteyzyX2aZG733D7NRsmHE/g8vU/PPeslFlm/bqOz82QHa/956dNNgyF/NPXah5IZnNA4IELL
-	bm7NNutw==;
-Received: from [201.172.173.139] (port=35262 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sjSZ0-003R6C-0Z;
-	Wed, 28 Aug 2024 18:58:58 -0500
-Message-ID: <bde519c9-c95d-4275-a89b-50e628446206@embeddedor.com>
-Date: Wed, 28 Aug 2024 17:58:56 -0600
+	s=arc-20240116; t=1724891222; c=relaxed/simple;
+	bh=pxzeuDQz4BBSJRJAqX0XP06GyF19F1S130kHNFIw1lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XzhRUZk6Eb5RGkfHWzq2B/2QfEEv5vXFBZdBnQphn7LTClUJ1OWTjcBuyNrHAJgySbpHMzavyRDlz8eQeZrdcGadst9B6m0KBTPDpaLlALdRflDA4f7fntJKrUx/qNLnAxbkpl83S54bijiz504j3dTlGyAVgbHBMp7C7tEvv38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ac8ASh6H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94CFC4CEC0;
+	Thu, 29 Aug 2024 00:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724891221;
+	bh=pxzeuDQz4BBSJRJAqX0XP06GyF19F1S130kHNFIw1lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ac8ASh6HoNkJnx42cdmNc4R0CFlIkzpYvHVH5MBqT2A60XtnTAchI63aW0kGQdmw9
+	 4/rHnGt/hx791iw5/voZ5kvWGdc2B8NXR5E06QF7iDBe43sGyWzLsz20btxPZG89Tp
+	 DDdR7AG6U3nuk1G6Bc3K218hFRvXXzQS1KjGk6f2cO7jNptphDjZGkaTqBSgmIltrQ
+	 MysalTeD1Lj+dDRyjUyM6CTYCHUkLOgLyT+TP6Hrizuz3WpTCNNrzai/KxWJzwAAbT
+	 BVkyyPPQFQIwSA+JTAVf/4+l3w2DhDhGgpo2k5/0G0a4TwPRtn6CFwYD0EOJRDRk7s
+	 2rSmrnL0dS6fA==
+Date: Wed, 28 Aug 2024 20:27:00 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: cel@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [RFC PATCH 1/6] NFSD: Handle @rqstp == NULL in
+ check_nfsd_access()
+Message-ID: <Zs_AVOZ3n8CXu9NA@kernel.org>
+References: <>
+ <Zs8p6ej4K0CLcmt0@kernel.org>
+ <172487914501.4433.5035812857573545333@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with
- __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>, chuck.lever@oracle.com,
- jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com,
- tom@talpey.com, kees@kernel.org, gustavoars@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240828214254.2407-2-thorsten.blum@toblux.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240828214254.2407-2-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sjSZ0-003R6C-0Z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:35262
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI0EJFYgr739tznYI7zLNClq0EzSgAm5HXUDqUiZSsc5RAu1+DflNGWIn+sTb/q32wC6ZTrq/TEQGy752RV7YhcV1CsmHSUSmjllfXwmJqEsqlzIFFuI
- cYwTt0jYsPB0Af8cTYxEzRQMt6BU0erEPuyQn1xlhDc+s1ymztQ5YgeoJB0xotSEjEtflZ5yGKURrcHFezDnmAoovyhic/VC180=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172487914501.4433.5035812857573545333@noble.neil.brown.name>
 
-
-
-On 28/08/24 15:42, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+On Thu, Aug 29, 2024 at 07:05:45AM +1000, NeilBrown wrote:
+> On Wed, 28 Aug 2024, Mike Snitzer wrote:
+> > 
+> > So I honestly feel like Chuck's latest revision is perfectly fine.
+> > I disagree that "The behavior for LOCALIO is therefore the same as
+> > the AUTH_UNIX check below." is inaccurate.  The precondition from the
+> > client (used to establish localio and cause rqstp to be NULL in
+> > check_nfsd_access) is effectively comparable no?
+> > 
 > 
-> Use struct_size() instead of manually calculating the number of bytes to
-> allocate for a pnfs_block_deviceaddr with a single volume.
+> I don't think the correctness of the code is at all related to
+> AUTH_UNIX.
+> Suppose we did add support for krb5 somehow - would we really need a
+> different test?  I think not.
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-
-Looks good --`nr_volumes` is updated just before accessing `volumes[]`.
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->   fs/nfsd/blocklayout.c    | 6 ++----
->   fs/nfsd/blocklayoutxdr.h | 2 +-
->   2 files changed, 3 insertions(+), 5 deletions(-)
+> I think that the reason the code is correct and safe is that we trust
+> the client.  We *know* the client will only present an filehandle which
+> it has received over the wire and which it verified - with the
+> accompanying credential - it was allowed to access.
 > 
-> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index 3c040c81c77d..08a20e5bcf7f 100644
-> --- a/fs/nfsd/blocklayout.c
-> +++ b/fs/nfsd/blocklayout.c
-> @@ -147,8 +147,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
->   	struct pnfs_block_deviceaddr *dev;
->   	struct pnfs_block_volume *b;
->   
-> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
-> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
-> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
->   	if (!dev)
->   		return -ENOMEM;
->   	gdp->gd_device = dev;
-> @@ -255,8 +254,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
->   	const struct pr_ops *ops;
->   	int ret;
->   
-> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
-> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
-> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
->   	if (!dev)
->   		return -ENOMEM;
->   	gdp->gd_device = dev;
-> diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
-> index b0361e8aa9a7..4e28ac8f1127 100644
-> --- a/fs/nfsd/blocklayoutxdr.h
-> +++ b/fs/nfsd/blocklayoutxdr.h
-> @@ -47,7 +47,7 @@ struct pnfs_block_volume {
->   
->   struct pnfs_block_deviceaddr {
->   	u32				nr_volumes;
-> -	struct pnfs_block_volume	volumes[];
-> +	struct pnfs_block_volume	volumes[] __counted_by(nr_volumes);
->   };
->   
->   __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+> Maybe that is what you meant by "The precondition from the client".  I
+> agree that does give us sufficient safety.  I don't think AUTH_UNIX is
+> relevant.
+> 
+> /*
+>  * If rqstp is NULL, this is a LOCALIO request which will only ever use
+>  * filehandle/credential pair for which access has been affirmed (by
+>  * ACCESS or OPEN NFS requests) over the wire.  So there is no need for
+>  * further checks here.
+>  */
+
+Makes sense, and thanks!
+
+> (It wasn't quite this clear to me when I wrote previously - but I always
+>  seems to think more clearly in the mornings!)
+
+I haven't been sleeping enough.. tonight, tonight I will!!! ;)
+
+Mike
 
