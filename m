@@ -1,175 +1,204 @@
-Return-Path: <linux-nfs+bounces-5946-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5947-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 481659645B2
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 15:03:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FB6B9645BE
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 15:05:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBBB828400A
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:03:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A377B25CAB
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4AA196DA4;
-	Thu, 29 Aug 2024 13:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082901A2C3C;
+	Thu, 29 Aug 2024 13:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAep5L+M"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="jlLpbFs+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2084.outbound.protection.outlook.com [40.107.215.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B8D22339;
-	Thu, 29 Aug 2024 13:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724936621; cv=none; b=Q/TD3pAc0JMXnMCLF8kN3CtFLdOKkyFZ153imr2am4KP/+a+dfJzoGJ0jp8MAUT879Scszq0QlaVIWwSp2fnnTbNrZTtAcUmjItqD33ZCV9iaoT3zQeII0ZcY2Z+R7xkTYK1WLp2kRcBBRDIzwSKEh0M97lBS8KPEh95v49U1ek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724936621; c=relaxed/simple;
-	bh=ywBHh/JxTt6YtGlc4uMSl9mEGuK+/Sv7BhGHLqH9AWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7w89MzcB/6Y+Ei2xsDbym6yr8egUyi0aCS+PXiUtCBKb8SqdUHmri9cON/OoZpgs56rM29fShIuLM5k9NlearTYvc24e/PXjuNFF0iX0uc9L1dom9cno/Y+AGW2HmofOu3wRDnCOu9I9XvnZC4Pxxvrdm/HAIbPMM1RruuDoTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAep5L+M; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5dfa315ffbdso221593eaf.3;
-        Thu, 29 Aug 2024 06:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724936619; x=1725541419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XgPkNNrjHTsfiVhNKwoTvKC+dngWh8S1qXD5HQVi94w=;
-        b=JAep5L+Mks8rZEsURm2GZColXYle//QVttVl8ZJ6fp9MTfVfxa4D24tUKNYs7EpDEk
-         Jnw5L9JOjwOCVeGov26e1bAwXOwnEksCJ7XH1aTCwOwRhJSGpFbjjRUo3Mk/2GHENk38
-         xk2oSnLnig5WbzBfBupFikwTexJftl+yj6pCsJVSy+qhxYW1NyDVtZJPugYXThpKo4jI
-         rYsY7toZb65QJx8Bw7XLgrgeMxMnnVu2hny06SlDFGJ3VCWpxeeYI5D4NufyRMjS4GgF
-         uus0RAs2MYlyjUqNDnUqSQZYvzmeWfh7fpIafTcWf3ag7kSnN0rXZnQNN3TjUC9m8eaT
-         n4nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724936619; x=1725541419;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XgPkNNrjHTsfiVhNKwoTvKC+dngWh8S1qXD5HQVi94w=;
-        b=YFEGugqxmtkPqT1erEuWtPsijjl0OHQa49ReJo9cE/ihGmkIm7ycu/OQewR8GEQRH0
-         z1nYJGBTlkl/gEzmSN4jxO81tkbOdPyZRTUaxISxEckm8QXQmKcID90In+5hPJmyG4rR
-         LGvhiyuB24nKBt6A6amh/Rt5VWlfX85HXvdIitjlKamNouEqRnC7YjcgWYveq18m6Yjp
-         LA85SAbR3Xmb4FgNLtaqZJZSn0XYnYkShsUruNm/FLc7oEWSzLeeMEa7TUDRI8EQcbJw
-         o2o6aJ0W7MdAQleOYMS4/OZ0E1RAmBe+v+JTQI9gxDM4NYxxwDrRo/Xw/m7A33JyXMD3
-         FnKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsDlcENBvxmvK0G8G56xPMxRH5paKeCpe3H6LQqlYGp4/+H6ypxhdj4AHDBk+wy7PiohWlfHvhmtGI3bxUx7VGzAw2mj/0@vger.kernel.org, AJvYcCVjFK5X4aDPPbXXFBazUKZEA/O3jabG9WgEFabqzmHN9iTcye2J1k1xV2hNsnDru7PAkelDc6ufJg==@vger.kernel.org, AJvYcCXDwPJBfYfo8OcFDE5W6QA6DUS7tH9oGrWAyyI9s49ybThfGJmkB4pFkbkvu1telLkwBQZu6ikgsk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKGUH76oMYdSZFYiEW4T683uqlSMFYYCCqa/681wOP0DlFBONC
-	eKI4BRwklC0Jz1+QpQ65T4LSR+MClC9gzNZMeG6VZVK3pg25oIHJhhc6IDRN/eG6SKwKmC8fJUC
-	biCCFStJTzjZH29pKphk63sIRlAs=
-X-Google-Smtp-Source: AGHT+IGS245lP9KZgpIxgJhwvHOxjn1YcH7WR7eVns7BHxRAJv4FhnyTZpanlEUZI1VaqEQ1vrmMfq53yo3lxpxdhp8=
-X-Received: by 2002:a05:6358:7253:b0:1b1:a803:d9f7 with SMTP id
- e5c5f4694b2df-1b603c2024fmr359532355d.7.1724936618733; Thu, 29 Aug 2024
- 06:03:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109CC1990B5;
+	Thu, 29 Aug 2024 13:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724936731; cv=fail; b=pUvGRTLhcKbgxtwIYoRrOL/5KyfKyWHeJCFxh4OOdUg4OC+cna6dZw33LcnHNWf74XdpcvAB4qqpLSfQbb65y7JWOL8uEJc1ewyufnvJnigV7V7xOYdo/xaSwu/t+obj893L0iAhfpladfsGa0bQccLBD/Nwydjle8FFvKxWTIY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724936731; c=relaxed/simple;
+	bh=o0y8ihTfbGEl22MwuIzeUvD8LKfoRdtCY027cC3lXQU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Qj5Q6ovFNB3Ew/eoy+WapGgWkRFFI4x/eYprBBtn9WfPFR6mGka/VoXIW/agiz0ZqgVGakCf/Zfdm2wW6J5s+byj20WarRXjEHzCwt67zKe0vQmJEEjCQhRDtJwNDpapxY/TmhWQDWOT9l1ZO4XNN2Po3Dkqag3bH4QK4At4COo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=jlLpbFs+; arc=fail smtp.client-ip=40.107.215.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bt4pOnwmzmK6n0rE8fYLwOZgxouBVN3NNduZZTmsgHOd0eXrD/OqUltbhA8vPEidHSa81MTwZLigOMSnB7KBRfe5Y+QHgVOWT75O6vsJzNuOklgnR+tVXJwyleO1FjltELTv9E5GQYC0edfERrJ8BG4dyAsFXKDpVX2SYtq9PcxDkhQrgrJVEHEBPeFeSREDpc7HsLqzjQNe/23HP68MYBWUAq4D+e7kzG3HQ7TLrFt4iDIiyEhWW2Ww6MucVobdHeyrknLkvbb6Lgu/U1Tn7WX+9GoG+J8P4gAAKNXziJp5YlgO3ilyClhuBF17W4hMNZ6Cl6IxcMwL9SXQvalaiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D/cQNXmoWE8mYnCLOiBiWfMNomNO2KehMhJm3T+Tqns=;
+ b=QEIboG0zBpYujhhf+6IXC8YM0oqSoHoG2Ab8o6J/kBgSZiZgLkgbzo0x13Mgx99oXEX7KgbfejWbuI6NdM3ng1AWeaiBnmGrW/7B/mhFPgfKN9OwAkX6NjiJoD5pWLmCXWWI1nLsZcZhlD0tvyWU4O06yF1hGqW60fcFyF2f1esikSKBJSTLjdd9muiYOK4D2y6xCKrHKtq26nnbzATHMvYhA7oyaCA1FxK4cJeuH0suQXZo9jLbgS9EWBE0YXwioyPfi7YnkLH1GdSKR8sa+n/zh0n6q/OW2fiHzoqeZ93gtsZkHkAtTtGPVbx4iDcUiQ7ff9fXCsslaaKOJQJrJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D/cQNXmoWE8mYnCLOiBiWfMNomNO2KehMhJm3T+Tqns=;
+ b=jlLpbFs+N+lYcr2iiIfZ1SNYZdXgHqMD0ahYYSeKoMUjpsh6kt9rN+xu0ZinlK9Eut//uMg7peIOB/kBFX4DmQsT0yrSOikEukUWrKT0T6RDZkitNVXFhAFrdcRE4yUqOx1B8UCE4btJE9ITOavf4tm1DzGq7ZfdEsJLTb9uKfCQjNeeWEEpqf47q52cCEbaKC5kFm5R03EpOUT8U8X8Fiz/Q8+KK5Y6NT1m3uXnYcQ/pdW7dgEkgSUMrCGbhDlcU6pYb3pu4VL/jmiN/C3Lu7NKD2yChxrnIQ3Q0DYGEiguhjfqqbaP9CNPgi+zeaRksiFbgBJXxN/t+IZihd3t2g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR0601MB4113.apcprd06.prod.outlook.com (2603:1096:820:31::7)
+ by SI2PR06MB5193.apcprd06.prod.outlook.com (2603:1096:4:1bd::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.28; Thu, 29 Aug
+ 2024 13:05:19 +0000
+Received: from KL1PR0601MB4113.apcprd06.prod.outlook.com
+ ([fe80::7e85:dad0:3f7:78a1]) by KL1PR0601MB4113.apcprd06.prod.outlook.com
+ ([fe80::7e85:dad0:3f7:78a1%4]) with mapi id 15.20.7897.027; Thu, 29 Aug 2024
+ 13:05:19 +0000
+From: Yan Zhen <yanzhen@vivo.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	tom@talpey.com,
+	Dai.Ngo@oracle.com,
+	Yan Zhen <yanzhen@vivo.com>
+Subject: [PATCH net-next v1] sunrpc: Use ERR_CAST() to return
+Date: Thu, 29 Aug 2024 21:04:34 +0800
+Message-Id: <20240829130434.3335629-1-yanzhen@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYAPR01CA0230.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::26) To KL1PR0601MB4113.apcprd06.prod.outlook.com
+ (2603:1096:820:31::7)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828195129.223395-1-smayhew@redhat.com> <20240828195129.223395-2-smayhew@redhat.com>
- <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
-In-Reply-To: <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Thu, 29 Aug 2024 09:03:25 -0400
-Message-ID: <CAEjxPJ49pt9QMXt=Ssf83kcJ5r3tF6_Hp4sVn_5OT=uNVkCy3g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
- inode_setsecctx hook
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Scott Mayhew <smayhew@redhat.com>, paul@paul-moore.com, casey@schaufler-ca.com, 
-	chuck.lever@oracle.com, marek.gresko@protonmail.com, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR0601MB4113:EE_|SI2PR06MB5193:EE_
+X-MS-Office365-Filtering-Correlation-Id: af1905d2-1397-4a71-33b5-08dcc82b3b99
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?b3IBxfrmVDnl3klp7W8jjcLEtl5DnVx2EnBeoerfSr95m7CITo/nVFD7XZem?=
+ =?us-ascii?Q?eT7YAa03EHCIoGksNvoUPPfX07rZbiyFtc1PBw37oS6mBxupZSyhAVgV589a?=
+ =?us-ascii?Q?RCbb4vZ7Egz+BSFJYhrNsndtsfkI6aPIW751vbMMpp08f6TkAw08K68w2gEz?=
+ =?us-ascii?Q?U63TKSUab+fh16z1UQqGQ7X/TrwXZ5znNZcRXqo8DMTtT5RGPk83OX9J6PBx?=
+ =?us-ascii?Q?qThhSgRYBxYw01kcQUWn6C0htorlSMKkeBYoqJcXre4jIMIYBOwdYo8ogtpr?=
+ =?us-ascii?Q?Hggxt3ocpjtTXyqC6HTfTamZMKHur09CHehsczSsO47B2EHrLbD1p7oMHgqc?=
+ =?us-ascii?Q?jks1/P063uPSStyPdZPwhNjelegf0+PZ6ll7yb7trMnLdGL1GEjzIM8l1e42?=
+ =?us-ascii?Q?lumWA+s9oMGk7rRzN4pQ0D+sYBvsZUGq2RTiYeQpOonoejhT8/Ov746XXxjF?=
+ =?us-ascii?Q?IuS9+Z3Voz8B862vga+N7OxXzOi5UyDz3QOorkmJvd59Y/Bq9f3H6QeVPbcU?=
+ =?us-ascii?Q?cji6uYKusnAv5kFgte6EJInmm7G8EsqAVEc+oMqMjuvZQChDxVkxFHLhOuWV?=
+ =?us-ascii?Q?/rc+csWAHb2blkqE5yLSexTMpbcQ04BcU1iRL/aFsJuXDWUb/GBf1J4Nhkjf?=
+ =?us-ascii?Q?oAqLJkhE/tU2PktLxlPZr5JiVIcOy78rhKawfck9/GVKA8Nhq/MgD+vJDdBc?=
+ =?us-ascii?Q?Yjt2WMQAFZd/edaN5Pd/GDrCREDEUqDLJ/pdGMCO8FXGkrp5R2XIPHHemAvg?=
+ =?us-ascii?Q?gs7YaKpuX1ZEEFTEabUCO1yOfaY4AdbC6Xaq7c5Fts7CzVawQ5Yf3N07B34C?=
+ =?us-ascii?Q?eDBd9Uv5nyyRH8olfjbmQyraBkoFunkH+lJtX6VkAMtRDkN+r/pNTciTpQ/M?=
+ =?us-ascii?Q?wocU/AJt8ViCS+lQ8QMVIKYkrbci+osorUoiz/AHOePYaJwidQrWVwHWM+Ww?=
+ =?us-ascii?Q?7NSOy4ed74pWzmbJY8Aa7BB0yjoD0OuDhVic4z5QrARn0BLXhE9tHeJtaF1d?=
+ =?us-ascii?Q?PYtzIR7GQGyzsA52V9fShE/BTJeIIJXU/NZ0zEzbXzHTdSVEkraOL9nRF7Tz?=
+ =?us-ascii?Q?jCTVa+22mpuLywI3SR2qBrsjdSuI/2TCa7MDL7Tfm356XGqJxGhxbhodhnom?=
+ =?us-ascii?Q?3Bnt+HOQmIMLK3JKvtwmC0Aaxpu6p3MvsWpdCms8K4gFNQtVIZnfa+bWMZfR?=
+ =?us-ascii?Q?cyo2UgDwKYq+06t1S7E6zgDEExNso2h9ZH3rwkCICxvEa88GWp8OzajJUWcD?=
+ =?us-ascii?Q?fGuzJdU/vJsk0dBTPcazSpLsQWBFHuyBa2PgemHw/ze8duDL1k1Vf9RRE/92?=
+ =?us-ascii?Q?O7relNLJQfmsTE5Z45ESbWx8WjJTN9q3GrtvKC+s+i59mNpKSpQRfF+t+tRR?=
+ =?us-ascii?Q?uXtTvqjhsodsAukht+HegtxaArC3gqGLrt7dlovq4LZPOAIrRw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0601MB4113.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3VnW54JGwn3qLJ11hUCEVqUOqZkCMbvL0+B7GirSBDA8PJG1+j0k6xwW1/eI?=
+ =?us-ascii?Q?+54+aOgfVN32zwvQN5xUV/GsvCPzaK0Z7CwnkzC4U994nisHYwS8QLRkBp6n?=
+ =?us-ascii?Q?RXhVNXNof8BufZvBCZR43fyQ/mws3/e9BcIwPYqVHVJgtZgydh+P0HzD1EP0?=
+ =?us-ascii?Q?R4eXkkKhLJcilO40BOCvChV/B5zedF9VSLGGedQ37xcllUbEvc4LxFehIrCm?=
+ =?us-ascii?Q?KYeKzIymoZK+eYusdVtC/45OJIG1VDo2/q82rJhQ/W/QQFcCkJA7yPUJCGyN?=
+ =?us-ascii?Q?y+1NVSovVb6ync/ZIh9lk5c9l/lY9szRaJGFlvvIYbw1Te/Mb/j9/90rkuYq?=
+ =?us-ascii?Q?kudn8EEgQJZKb8bOkIx3Nc/vN74pbVVnD6jfaUUSIUDld1iK1MtvCOSllqsD?=
+ =?us-ascii?Q?+tIq9GsBX0/MstV1fthQbK7J6wfPMTF+TrH8ppa3qaCa4WyB+VoqcpgWg9d3?=
+ =?us-ascii?Q?/CWrm8dblfSKJWK7PtQmp4Tyv86sWIqqcdLa1xqYndWmhEHcMh7GbLOxXHQo?=
+ =?us-ascii?Q?6vGXWWDV6Y1a7QPYm5O//zVUtvyezK/5Q7PhJs7h2fef7aYQiH4b7J3p2rG9?=
+ =?us-ascii?Q?pi/h+waD7oHFEAq9qquOHflKCqNUNjjeXQ+wAmPPJ7FeZtYMdsSywV7jhJw4?=
+ =?us-ascii?Q?HvdQTva+adcpGoU01OgnV5GYA6kI07HlvZv6jNZV1xqx1HHR24u6z9FOUPFL?=
+ =?us-ascii?Q?U0yTCbWXSyppUNt15fkNwJuzTMrYghQvL+giYGZ64pLqVyX+YjcT96SnTqZa?=
+ =?us-ascii?Q?ugJ5Au8uAwlfMHW98G84Vb4yjMkgjFad7BWIUbDSAowwyYG+4f6vTbf4tUrN?=
+ =?us-ascii?Q?Yq7je5uoLqTF1UjkZsEUxc4Dqw2Te+ZzsA1eBZx+KSMNR84vjxkX2bEHZ/Uw?=
+ =?us-ascii?Q?2dHqxIfs3/cTLNoJHvFJDGewmQsWJI37N32YODlcrQ2RWtGaHsuDIE2bEkGz?=
+ =?us-ascii?Q?yKVX3g2ISpuxZcJUw2Uc2PKsAQEECKHIrzCbZnvYMYeuP6j2xKecN7AssBQV?=
+ =?us-ascii?Q?69emOMhBAn6DMFYz9xm3lZa1q0H/zuYy/wJrWEzStj++ObwFrvmbASKPRlgD?=
+ =?us-ascii?Q?XZuwWacCX24k3LEY6x6FVcCuaTKrwUB/DFT3af/s9N6fWlTqq77YcRLI7Up6?=
+ =?us-ascii?Q?h92CYv3vCujx7ud48eDYXPp1R07uUFtHDofkSCZFkg+Q1TsMXSHj9VikyXgX?=
+ =?us-ascii?Q?FwjDJZ2rEzTgaCYowQibdr+xK4/dpnrWoVDIEDa9bNBAyxMe0fVeHYvN0r4k?=
+ =?us-ascii?Q?0c1d+ql+4yxz9LlLngZUi8+ozdeYEsbNDjgfjOlJggYvTP5XtP9igzTt7RpI?=
+ =?us-ascii?Q?Na8fDc3T0zLL7nnnBFKACBaIrv7rx4yt2SStX3IwDlmWIXwnqrxPIr1Cc0R7?=
+ =?us-ascii?Q?V8njlJBE4ckJawkyNwptC0pA/rSH1BlOHtG5XKnmRKCWsFssXZxmn57euHvt?=
+ =?us-ascii?Q?LDAMhOHS65clbgFaceyxJH0R2ltb53IM/uFh3YBjetDY1vwEiwO64NWOAtOS?=
+ =?us-ascii?Q?5E5jPMsyCB3gku+scnkcXIjhxaTRTCxmiFtdWkSfxZByqcP7XWLCWL0Zo6vE?=
+ =?us-ascii?Q?eVuSDd5Owq6f5fLo/47L0VO5je5KT/1PNdIb+FFs?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af1905d2-1397-4a71-33b5-08dcc82b3b99
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR0601MB4113.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 13:05:19.0765
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gAKI5WlHFw0DjijJ+j0Pixk8URFR12StOMpOTNMPAZIzgDX8MS+h4Lz76YnjjInnt7KKIQdr/5e0GC/92fpJgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5193
 
-On Thu, Aug 29, 2024 at 7:15=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Wed, 2024-08-28 at 15:51 -0400, Scott Mayhew wrote:
-> > Marek Gresko reports that the root user on an NFS client is able to
-> > change the security labels on files on an NFS filesystem that is
-> > exported with root squashing enabled.
-> >
-> > The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
-> >
-> >  *  This function requires the caller to lock the inode's i_mutex befor=
-e it
-> >  *  is executed. It also assumes that the caller will make the appropri=
-ate
-> >  *  permission checks.
-> >
-> > nfsd_setattr() does do permissions checking via fh_verify() and
-> > nfsd_permission(), but those don't do all the same permissions checks
-> > that are done by security_inode_setxattr() and its related LSM hooks do=
-.
-> >
-> > Since nfsd_setattr() is the only consumer of security_inode_setsecctx()=
-,
-> > simplest solution appears to be to replace the call to
-> > __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
-> > fixes the above issue and has the added benefit of causing nfsd to
-> > recall conflicting delegations on a file when a client tries to change
-> > its security label.
-> >
-> > Reported-by: Marek Gresko <marek.gresko@protonmail.com>
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
-> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > ---
-> >  security/selinux/hooks.c   | 4 ++--
-> >  security/smack/smack_lsm.c | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index bfa61e005aac..400eca4ad0fb 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -6660,8 +6660,8 @@ static int selinux_inode_notifysecctx(struct inod=
-e *inode, void *ctx, u32 ctxlen
-> >   */
-> >  static int selinux_inode_setsecctx(struct dentry *dentry, void *ctx, u=
-32 ctxlen)
-> >  {
-> > -     return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_S=
-ELINUX,
-> > -                                  ctx, ctxlen, 0);
-> > +     return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_S=
-ELINUX,
-> > +                                  ctx, ctxlen, 0, NULL);
-> >  }
-> >
-> >  static int selinux_inode_getsecctx(struct inode *inode, void **ctx, u3=
-2 *ctxlen)
-> > diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> > index 4164699cd4f6..002a1b9ed83a 100644
-> > --- a/security/smack/smack_lsm.c
-> > +++ b/security/smack/smack_lsm.c
-> > @@ -4880,8 +4880,8 @@ static int smack_inode_notifysecctx(struct inode =
-*inode, void *ctx, u32 ctxlen)
-> >
-> >  static int smack_inode_setsecctx(struct dentry *dentry, void *ctx, u32=
- ctxlen)
-> >  {
-> > -     return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_S=
-MACK,
-> > -                                  ctx, ctxlen, 0);
-> > +     return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_S=
-MACK,
-> > +                                  ctx, ctxlen, 0, NULL);
-> >  }
-> >
-> >  static int smack_inode_getsecctx(struct inode *inode, void **ctx, u32 =
-*ctxlen)
->
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Using ERR_CAST() is more reasonable and safer, When it is necessary
+to convert the type of an error pointer and return it.
 
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Tested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Yan Zhen <yanzhen@vivo.com>
+---
+ net/sunrpc/clnt.c                        | 2 +-
+ net/sunrpc/xprtrdma/svc_rdma_transport.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Passes all the NFS tests in the selinux-testsuite, and also correctly
-denies root the ability to relabel a file on a root_squash mount but
-allows a normal user to do so (as expected).
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 09f29a95f2bc..8ee87311b348 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -603,7 +603,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
+ 
+ 	xprt = xprt_create_transport(&xprtargs);
+ 	if (IS_ERR(xprt))
+-		return (struct rpc_clnt *)xprt;
++		return ERR_CAST(xprt);
+ 
+ 	/*
+ 	 * By default, kernel RPC client connects from a reserved port.
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 581cc5ed7c0c..c3fbf0779d4a 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -369,7 +369,7 @@ static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
+ 	listen_id = svc_rdma_create_listen_id(net, sa, cma_xprt);
+ 	if (IS_ERR(listen_id)) {
+ 		kfree(cma_xprt);
+-		return (struct svc_xprt *)listen_id;
++		return ERR_CAST(listen_id);
+ 	}
+ 	cma_xprt->sc_cm_id = listen_id;
+ 
+-- 
+2.34.1
+
 
