@@ -1,151 +1,175 @@
-Return-Path: <linux-nfs+bounces-5945-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5946-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C15F0964597
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 14:57:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 481659645B2
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 15:03:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39E13B21A90
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 12:57:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBBB828400A
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:03:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5267D194137;
-	Thu, 29 Aug 2024 12:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4AA196DA4;
+	Thu, 29 Aug 2024 13:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tj4FuTWK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAep5L+M"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B430018E021
-	for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 12:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B8D22339;
+	Thu, 29 Aug 2024 13:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724936137; cv=none; b=dWAvlaxcXM+qg6Zye/tjR2GkuZtNF+r2OamLt0mEh2/PXX21OueSstptQVw/2jGoUIJSQZE96MRUVdAiBk3kac2pRljBB20b0515s4g7y4c8lyLv21IJEcdPXD1M1fjqQxyIBHoWPuQiS8ODVp76OjaED0iyYyBbrJo7gozpRsk=
+	t=1724936621; cv=none; b=Q/TD3pAc0JMXnMCLF8kN3CtFLdOKkyFZ153imr2am4KP/+a+dfJzoGJ0jp8MAUT879Scszq0QlaVIWwSp2fnnTbNrZTtAcUmjItqD33ZCV9iaoT3zQeII0ZcY2Z+R7xkTYK1WLp2kRcBBRDIzwSKEh0M97lBS8KPEh95v49U1ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724936137; c=relaxed/simple;
-	bh=ha/pnp/S6mDTDbA7P2bkoV2oG65rG6WFYc7amEYc7ck=;
+	s=arc-20240116; t=1724936621; c=relaxed/simple;
+	bh=ywBHh/JxTt6YtGlc4uMSl9mEGuK+/Sv7BhGHLqH9AWM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FpDIlPXKHPoM8LwLjAXlvDnXibo0POQ1Zg5xzWIpbfPOwPGeC1Tmo5AkUmvFDWkESdZnAs+0Z0e41ZHhz2mg8dePmY7ejujqb/ynruXKWDOk8zRmaRc3B5wgrDt89tmqWU4+RZTDxJHeVbrTNTNMkvQahEKONQuf2v8AaQXwTHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tj4FuTWK; arc=none smtp.client-ip=209.85.219.49
+	 To:Cc:Content-Type; b=g7w89MzcB/6Y+Ei2xsDbym6yr8egUyi0aCS+PXiUtCBKb8SqdUHmri9cON/OoZpgs56rM29fShIuLM5k9NlearTYvc24e/PXjuNFF0iX0uc9L1dom9cno/Y+AGW2HmofOu3wRDnCOu9I9XvnZC4Pxxvrdm/HAIbPMM1RruuDoTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAep5L+M; arc=none smtp.client-ip=209.85.161.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6bf90d52e79so3673786d6.3
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 05:55:35 -0700 (PDT)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5dfa315ffbdso221593eaf.3;
+        Thu, 29 Aug 2024 06:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724936134; x=1725540934; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724936619; x=1725541419; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XjLya3FBADkBiVLvBI+fAieJllJJw2pltbhOjsjZXzg=;
-        b=Tj4FuTWKVdd42oC6WIgl0Etij0Si0vwrzy8VooGa343wFZ/jHitkRma2dE3/U7WYUA
-         WfJoYAeC5N8XpxpD2qE/6mBdCRpDbTqXEbugVKJQdiQ8QtD+SiTP0BCtS6CPaBem/L9P
-         WOhSag+cWhRqY9BklJACO3BziBtZ2kQkgz7GnkUNMFbdqEiSOEApRKO3kH84SHwdSupN
-         idlrfpdGFSKXO/rYklSRa8b69tvOllSOasL8GXwSP8eD9U28G1Y4qhyRw1cV9bXaGGi1
-         8X903z66nXE3YAlWOKkxvYevn+zY5Fb1AshJ2lMEPFRZMUTIWUnnd6JEVakq7UcZ0sAJ
-         EoLw==
+        bh=XgPkNNrjHTsfiVhNKwoTvKC+dngWh8S1qXD5HQVi94w=;
+        b=JAep5L+Mks8rZEsURm2GZColXYle//QVttVl8ZJ6fp9MTfVfxa4D24tUKNYs7EpDEk
+         Jnw5L9JOjwOCVeGov26e1bAwXOwnEksCJ7XH1aTCwOwRhJSGpFbjjRUo3Mk/2GHENk38
+         xk2oSnLnig5WbzBfBupFikwTexJftl+yj6pCsJVSy+qhxYW1NyDVtZJPugYXThpKo4jI
+         rYsY7toZb65QJx8Bw7XLgrgeMxMnnVu2hny06SlDFGJ3VCWpxeeYI5D4NufyRMjS4GgF
+         uus0RAs2MYlyjUqNDnUqSQZYvzmeWfh7fpIafTcWf3ag7kSnN0rXZnQNN3TjUC9m8eaT
+         n4nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724936134; x=1725540934;
+        d=1e100.net; s=20230601; t=1724936619; x=1725541419;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XjLya3FBADkBiVLvBI+fAieJllJJw2pltbhOjsjZXzg=;
-        b=kIe5DaNgbUJ3ZwU3u3kj6/rgICdg34CLD8+5FYGs07ghEvjwfEme6FgKJgkw+FQOWH
-         bvg9sAlhDlpXyvOgOp5Zn7v48AQuO055m9Oxr9/O6jMkrOPaEBP+/Wi7S+jrddHP0aiu
-         QGEjOPVNjWx4mNMrV/c7ZyQ8qloq8p9F209aO27vGDtNidiZUjX3WmdUBjYprMx0wPd/
-         IS5zMOEZBKdgU9rZkQGqM9XmWzaj7gyzr6t4mcfXm17fhy3RUNIBSvfcWVmea0jZ01sn
-         1XHpjHF+8IEN/iyGRdby/1zgQjLGGjSn6TGTtijF+HWu/CggTzrmWaN5tOR/KeH9nhOc
-         ngOA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3oASL56NqpEIWqvYLA+bI5fzwb3weQ29PcHi+BMXadydYaxSS7fVM1qIMI/u72UcbURQCxRCakek=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw/CugBIertiaL7trGGJihRPHAWIW0vZpfaEgunjISOui8d7j5
-	g2imMYh3EQQ/CLVU1J2+J5CLgdbhEHy57rXUIMEJsnZ1Zwmnl1OyqGeR2ufhQCyaOvj7a0QMlh2
-	KSXhParPtHjRBWtbwy67jkCaxs88=
-X-Google-Smtp-Source: AGHT+IGeDEP7C+qkZWhql4AgndDl1IEwOham3tFfA/5KH2Mz8FY78HMZP7KUqt2UVGRbPVIjU0P134WsrkpUae0wsTA=
-X-Received: by 2002:a05:6214:460f:b0:6bf:7a04:f23e with SMTP id
- 6a1803df08f44-6c33e61736bmr36408916d6.23.1724936134314; Thu, 29 Aug 2024
- 05:55:34 -0700 (PDT)
+        bh=XgPkNNrjHTsfiVhNKwoTvKC+dngWh8S1qXD5HQVi94w=;
+        b=YFEGugqxmtkPqT1erEuWtPsijjl0OHQa49ReJo9cE/ihGmkIm7ycu/OQewR8GEQRH0
+         z1nYJGBTlkl/gEzmSN4jxO81tkbOdPyZRTUaxISxEckm8QXQmKcID90In+5hPJmyG4rR
+         LGvhiyuB24nKBt6A6amh/Rt5VWlfX85HXvdIitjlKamNouEqRnC7YjcgWYveq18m6Yjp
+         LA85SAbR3Xmb4FgNLtaqZJZSn0XYnYkShsUruNm/FLc7oEWSzLeeMEa7TUDRI8EQcbJw
+         o2o6aJ0W7MdAQleOYMS4/OZ0E1RAmBe+v+JTQI9gxDM4NYxxwDrRo/Xw/m7A33JyXMD3
+         FnKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsDlcENBvxmvK0G8G56xPMxRH5paKeCpe3H6LQqlYGp4/+H6ypxhdj4AHDBk+wy7PiohWlfHvhmtGI3bxUx7VGzAw2mj/0@vger.kernel.org, AJvYcCVjFK5X4aDPPbXXFBazUKZEA/O3jabG9WgEFabqzmHN9iTcye2J1k1xV2hNsnDru7PAkelDc6ufJg==@vger.kernel.org, AJvYcCXDwPJBfYfo8OcFDE5W6QA6DUS7tH9oGrWAyyI9s49ybThfGJmkB4pFkbkvu1telLkwBQZu6ikgsk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKGUH76oMYdSZFYiEW4T683uqlSMFYYCCqa/681wOP0DlFBONC
+	eKI4BRwklC0Jz1+QpQ65T4LSR+MClC9gzNZMeG6VZVK3pg25oIHJhhc6IDRN/eG6SKwKmC8fJUC
+	biCCFStJTzjZH29pKphk63sIRlAs=
+X-Google-Smtp-Source: AGHT+IGS245lP9KZgpIxgJhwvHOxjn1YcH7WR7eVns7BHxRAJv4FhnyTZpanlEUZI1VaqEQ1vrmMfq53yo3lxpxdhp8=
+X-Received: by 2002:a05:6358:7253:b0:1b1:a803:d9f7 with SMTP id
+ e5c5f4694b2df-1b603c2024fmr359532355d.7.1724936618733; Thu, 29 Aug 2024
+ 06:03:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240829091340.2043-1-laoar.shao@gmail.com> <D27B60B1-E44E-4A89-BB2E-EF01526CB432@redhat.com>
-In-Reply-To: <D27B60B1-E44E-4A89-BB2E-EF01526CB432@redhat.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Thu, 29 Aug 2024 20:54:55 +0800
-Message-ID: <CALOAHbDuThEW=osQudcxGQtFQqePaHzbG3MJyzGi=fLGbUqmKg@mail.gmail.com>
-Subject: Re: [RFC PATCH] NFS: Fix missing files in `ls` command output
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
+References: <20240828195129.223395-1-smayhew@redhat.com> <20240828195129.223395-2-smayhew@redhat.com>
+ <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
+In-Reply-To: <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 29 Aug 2024 09:03:25 -0400
+Message-ID: <CAEjxPJ49pt9QMXt=Ssf83kcJ5r3tF6_Hp4sVn_5OT=uNVkCy3g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
+ inode_setsecctx hook
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Scott Mayhew <smayhew@redhat.com>, paul@paul-moore.com, casey@schaufler-ca.com, 
+	chuck.lever@oracle.com, marek.gresko@protonmail.com, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2024 at 8:44=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
+On Thu, Aug 29, 2024 at 7:15=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
 >
-> On 29 Aug 2024, at 5:13, Yafang Shao wrote:
+> On Wed, 2024-08-28 at 15:51 -0400, Scott Mayhew wrote:
+> > Marek Gresko reports that the root user on an NFS client is able to
+> > change the security labels on files on an NFS filesystem that is
+> > exported with root squashing enabled.
+> >
+> > The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
+> >
+> >  *  This function requires the caller to lock the inode's i_mutex befor=
+e it
+> >  *  is executed. It also assumes that the caller will make the appropri=
+ate
+> >  *  permission checks.
+> >
+> > nfsd_setattr() does do permissions checking via fh_verify() and
+> > nfsd_permission(), but those don't do all the same permissions checks
+> > that are done by security_inode_setxattr() and its related LSM hooks do=
+.
+> >
+> > Since nfsd_setattr() is the only consumer of security_inode_setsecctx()=
+,
+> > simplest solution appears to be to replace the call to
+> > __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
+> > fixes the above issue and has the added benefit of causing nfsd to
+> > recall conflicting delegations on a file when a client tries to change
+> > its security label.
+> >
+> > Reported-by: Marek Gresko <marek.gresko@protonmail.com>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  security/selinux/hooks.c   | 4 ++--
+> >  security/smack/smack_lsm.c | 4 ++--
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > index bfa61e005aac..400eca4ad0fb 100644
+> > --- a/security/selinux/hooks.c
+> > +++ b/security/selinux/hooks.c
+> > @@ -6660,8 +6660,8 @@ static int selinux_inode_notifysecctx(struct inod=
+e *inode, void *ctx, u32 ctxlen
+> >   */
+> >  static int selinux_inode_setsecctx(struct dentry *dentry, void *ctx, u=
+32 ctxlen)
+> >  {
+> > -     return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_S=
+ELINUX,
+> > -                                  ctx, ctxlen, 0);
+> > +     return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_S=
+ELINUX,
+> > +                                  ctx, ctxlen, 0, NULL);
+> >  }
+> >
+> >  static int selinux_inode_getsecctx(struct inode *inode, void **ctx, u3=
+2 *ctxlen)
+> > diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> > index 4164699cd4f6..002a1b9ed83a 100644
+> > --- a/security/smack/smack_lsm.c
+> > +++ b/security/smack/smack_lsm.c
+> > @@ -4880,8 +4880,8 @@ static int smack_inode_notifysecctx(struct inode =
+*inode, void *ctx, u32 ctxlen)
+> >
+> >  static int smack_inode_setsecctx(struct dentry *dentry, void *ctx, u32=
+ ctxlen)
+> >  {
+> > -     return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_S=
+MACK,
+> > -                                  ctx, ctxlen, 0);
+> > +     return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_S=
+MACK,
+> > +                                  ctx, ctxlen, 0, NULL);
+> >  }
+> >
+> >  static int smack_inode_getsecctx(struct inode *inode, void **ctx, u32 =
+*ctxlen)
 >
-> > In our production environment, we noticed that some files are missing w=
-hen
-> > running the ls command in an NFS directory. However, we can still
-> > successfully cd into the missing directories. This issue can be illustr=
-ated
-> > as follows:
-> >
-> >   $ cd nfs
-> >   $ ls
-> >   a b c e f            <<<< 'd' is missing
-> >   $ cd d               <<<< success
-> >
-> > I verified the issue with the latest upstream kernel, and it still
-> > persists. Further analysis reveals that files go missing when the dtsiz=
-e is
-> > expanded. The default dtsize was reduced from 1MB to 4KB in commit
-> > 580f236737d1 ("NFS: Adjust the amount of readahead performed by NFS rea=
-ddir").
-> > After restoring the default size to 1MB, the issue disappears. I also t=
-ried
-> > setting the default size to 8KB, and the issue similarly disappears.
-> >
-> > Upon further analysis, it appears that there is a bad entry being decod=
-ed
-> > in nfs_readdir_entry_decode(). When a bad entry is encountered, the
-> > decoding process breaks without handling the error. We should revert th=
-e
-> > bad entry in such cases. After implementing this change, the issue is
-> > resolved.
->
-> It seems like you're trying to handle a server bug of some sort.  Have yo=
-u
-> been able to look at a wire capture to determine why there's a bad entry?
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-I've used tcpdump to analyze the packets but didn't find anything
-suspicious. Do you have any suggestions?
+Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Tested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-Interestingly, when we increase the dtsize, the issue goes away. This
-suggests that the problem might not be with the server itself, but
-rather with the NFS readdir operation. The change in dtsize is as
-follows,
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 56a8aee..39847e1 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -81,7 +81,7 @@
-        ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL_ACCOUNT);
-        if (ctx !=3D NULL) {
-                ctx->attr_gencount =3D nfsi->attr_gencount;
--               ctx->dtsize =3D NFS_INIT_DTSIZE;
-+               ctx->dtsize =3D 2 * NFS_INIT_DTSIZE; // 8K
-                spin_lock(&dir->i_lock);
-                if (list_empty(&nfsi->open_files) &&
-                    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
-
-
-
---
-Regards
-Yafang
+Passes all the NFS tests in the selinux-testsuite, and also correctly
+denies root the ability to relabel a file on a root_squash mount but
+allows a normal user to do so (as expected).
 
