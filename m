@@ -1,179 +1,213 @@
-Return-Path: <linux-nfs+bounces-5937-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5938-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32098964085
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 11:49:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04DD99642D3
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 13:16:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD08C1F22EE9
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 09:49:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A2E51C21BC5
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 11:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C2518DF87;
-	Thu, 29 Aug 2024 09:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B52D18E36B;
+	Thu, 29 Aug 2024 11:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mwL6pv6i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5yPD5AQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775FC18DF73
-	for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 09:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3952B9CD;
+	Thu, 29 Aug 2024 11:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724924994; cv=none; b=awEai0Ve2gCxvrBgBqQIvYFYRt9LL3trgS8aSq4kp1jc/Fbvlij+A17+Ia489rawi/tdGnyzkca7xa9HYhICK436PAjs+f30fXDYmDyDrEtNp9Lg6ggg3IdL4l5Ve74P7SC6yohV/gy7bVv4mgPJIehEfLyIr6xnW4aSvh0e6MM=
+	t=1724930156; cv=none; b=Y4nLci9nolVyoNl5dhccL/YyiRS7uhV/TaN3TVR/NCC3jVDQ3vLLZ/wpQJjf5efxhDr8U7C1NA00hlJETdqT/POZ+wntTT2codsvyWfjEyQwV2PUQdbCEHhm6XlcUo+9zIXsTWuBNkCOjxIXMcmQDAvDzWnH9JMcGUuAhkNbX7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724924994; c=relaxed/simple;
-	bh=7Gh5rIZZaUQp/+KXCB7wUzIP4BFWrquNWB5FRNG0+Y0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nBmG3T0MENs0S//vEoQ1HoF//i1WFx0XFDVQrGjSwbxyM80oEcmOqvEZsQknSjZwhSwwiug8AU1VRHawIDK+xPOFhhfMo8aqqzL8kMXpuh5W5q8Fhc8kYLdzJ/3OcS8HoezOjeQljzXnUcNhwhF3YjaMdgyrRjXxtjLiR6YGCnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mwL6pv6i; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a86b46c4831so43754666b.1
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 02:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724924991; x=1725529791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ijbc1FBmZqLQmOrVie/CTDt0zfKTwvY0WB9RmnQpeQ=;
-        b=mwL6pv6iu7qpALKWlu4I4pRtLCBede1mtX62LeZOOsPXO8xSPyVGMKtMw1kiwIXpNj
-         q9KlbYMBDyz2uWFD/Ghg0zhzQFTDl0DBmw8KxbN2DZf4xC+uN2CHqJYQRItXPwUQktuA
-         c9OaAGvh1kjgJTZ12xAiCV8Nafr+GrAU3nsDSYUgJJXGSoIvNAeoRk4Z7VI0jXFB16M5
-         a39YfPhn4gtm5DbBHhQxn4QJy4a3Ahu9fKWiY2gQiBJ3Fy2JQjQ+BQcWVf5ItUH1qavc
-         kGbPSyfUbJh60HYv1oEl7bKHeqN9B1HiaNdGbq8yHnrB/SBX/VW15v+tBJW4gICV8wRu
-         ye7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724924991; x=1725529791;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5ijbc1FBmZqLQmOrVie/CTDt0zfKTwvY0WB9RmnQpeQ=;
-        b=Iu81c2SdoLMSf4PWfQ3V/MyCqOAVWNn1xjAHaUXrZUD/inSpMNRANciojVZxz99SLv
-         K5aze9GQy9rNdXrMLElm+WxTn5zW7BJBe1L3u7LIK+iTF2xGiKATU5P5Snt/9eYtaneO
-         1fuJN70Ua2pIZdMKZHRprNgoFbrYTwp6WgOKDppgbi2bqtJ9QiQpjYf3abHIhY2xBdJt
-         Ny+di70PHGCYtd6eHZovoTqrP1zbeOEEFqahs+rKrRzG4/sKF00rLyXnn3/cbkJn9Oz0
-         lF8vwIkzVh02NeVDPzfmiR1KAlDMFzm4LQpEImhCSrmwKQlqKFZYJnuOru6xrWPEtmHJ
-         7vOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXL+JGntRMgkh/gb2q1x8507ESkXSX9qJfOEwYrB/jNEiAACchHja0hufo5XrHPOPQifsh3WSIg4Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTbb1r3iTPOEyNoFEVgxozOGHwvOt0XDHimpRYgcSLDkc8aIrD
-	Za+EVbgWbEDJ3ty9leXc3XsK9FZSNTMyGKNF3W1GjwyVk5Z8g/C1eNEk/tKJKG8=
-X-Google-Smtp-Source: AGHT+IGqCHgwIkeJ3Y2sXZ8IUAgugHtlAhdcUpgiEZufWlSzBa0418AQyUq1POIX2NuOp3xuZSwusA==
-X-Received: by 2002:a17:906:6a1b:b0:a86:f960:411d with SMTP id a640c23a62f3a-a897f7832dcmr182989366b.2.1724924990682;
-        Thu, 29 Aug 2024 02:49:50 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898908f62bsm56746466b.91.2024.08.29.02.49.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 02:49:50 -0700 (PDT)
-Date: Thu, 29 Aug 2024 12:49:46 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Yan Zhen <yanzhen@vivo.com>,
-	davem@davemloft.net, chuck.lever@oracle.com, jlayton@kernel.org,
-	trondmy@kernel.org, anna@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, neilb@suse.de,
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
-	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-	Yan Zhen <yanzhen@vivo.com>
-Subject: Re: [PATCH v3] sunrpc: Fix error checking for d_hash_and_lookup()
-Message-ID: <a8cb00eb-8b39-49ab-a9d8-a68a7d7f4423@stanley.mountain>
+	s=arc-20240116; t=1724930156; c=relaxed/simple;
+	bh=igEnUuCxXb9v3oxdYia9z6wvBDc2KL2+bHFWtjrRWB4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QqMGRMndsIWd7PrvcqpLU51TcVRuKxhCPSwFP9gZV737u23a7r2LAMZZRv1BsH7sWuGN54+X914KFR/KOkLHZV8ZqEZcyOkni7I+NUoxosfUHzj8ZWOk6HuJQmGJ2qsAvYtmtYdY0WCYcbXGg88ooIb5/WKt4DevlDPsD/3vgSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5yPD5AQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C06C4CEC3;
+	Thu, 29 Aug 2024 11:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724930156;
+	bh=igEnUuCxXb9v3oxdYia9z6wvBDc2KL2+bHFWtjrRWB4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=O5yPD5AQWU7mkU7mBLVZk7q0rgHo171tC9K0bTbJ8mUeHoKuE09Q+t8w07yyMea/T
+	 bnhqzkVmKojTR0ISEanC3jPZfwy0Bm/Tv5TQs6/ju6OXlgEfKWH7Ti895OnQmBGNk+
+	 ZB3/OkHPWOMkRkxAE5LNAlQVnCyPLKOYMjW8StM+9ShWmpWLBYmmzucqdTfdFY+loJ
+	 q65UFB4IoF1Sh2z1nx1o3Ta6q+EdFThiEIOd/bH8G3qK2z22B45IawWPXrs6rpL5JB
+	 ftubyj7cvr7NCRs2+9CEBCOQjdlfaFAydunqlnqaUq+Y+PndKpuI9XpcSqy7lhReLS
+	 Cb4tctruen9BQ==
+Message-ID: <3647023f1f4c1326ba3d67ff04c5b84b4896c1bc.camel@kernel.org>
+Subject: Re: [PATCH 1/1] selinux,smack: don't bypass permissions check in
+ inode_setsecctx hook
+From: Jeff Layton <jlayton@kernel.org>
+To: Scott Mayhew <smayhew@redhat.com>, paul@paul-moore.com, 
+	stephen.smalley.work@gmail.com, casey@schaufler-ca.com
+Cc: chuck.lever@oracle.com, marek.gresko@protonmail.com, 
+	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Date: Thu, 29 Aug 2024 07:15:54 -0400
+In-Reply-To: <20240828195129.223395-2-smayhew@redhat.com>
+References: <20240828195129.223395-1-smayhew@redhat.com>
+	 <20240828195129.223395-2-smayhew@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828044355.590260-1-yanzhen@vivo.com>
 
-Hi Yan,
+On Wed, 2024-08-28 at 15:51 -0400, Scott Mayhew wrote:
+> Marek Gresko reports that the root user on an NFS client is able to
+> change the security labels on files on an NFS filesystem that is
+> exported with root squashing enabled.
+>=20
+> The end of the kerneldoc comment for __vfs_setxattr_noperm() states:
+>=20
+>  *  This function requires the caller to lock the inode's i_mutex before =
+it
+>  *  is executed. It also assumes that the caller will make the appropriat=
+e
+>  *  permission checks.
+>=20
+> nfsd_setattr() does do permissions checking via fh_verify() and
+> nfsd_permission(), but those don't do all the same permissions checks
+> that are done by security_inode_setxattr() and its related LSM hooks do.
+>=20
+> Since nfsd_setattr() is the only consumer of security_inode_setsecctx(),
+> simplest solution appears to be to replace the call to
+> __vfs_setxattr_noperm() with a call to __vfs_setxattr_locked().  This
+> fixes the above issue and has the added benefit of causing nfsd to
+> recall conflicting delegations on a file when a client tries to change
+> its security label.
+>=20
+> Reported-by: Marek Gresko <marek.gresko@protonmail.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218809
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  security/selinux/hooks.c   | 4 ++--
+>  security/smack/smack_lsm.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index bfa61e005aac..400eca4ad0fb 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -6660,8 +6660,8 @@ static int selinux_inode_notifysecctx(struct inode =
+*inode, void *ctx, u32 ctxlen
+>   */
+>  static int selinux_inode_setsecctx(struct dentry *dentry, void *ctx, u32=
+ ctxlen)
+>  {
+> -	return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_SELINUX=
+,
+> -				     ctx, ctxlen, 0);
+> +	return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_SELINUX=
+,
+> +				     ctx, ctxlen, 0, NULL);
+>  }
+> =20
+>  static int selinux_inode_getsecctx(struct inode *inode, void **ctx, u32 =
+*ctxlen)
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 4164699cd4f6..002a1b9ed83a 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -4880,8 +4880,8 @@ static int smack_inode_notifysecctx(struct inode *i=
+node, void *ctx, u32 ctxlen)
+> =20
+>  static int smack_inode_setsecctx(struct dentry *dentry, void *ctx, u32 c=
+txlen)
+>  {
+> -	return __vfs_setxattr_noperm(&nop_mnt_idmap, dentry, XATTR_NAME_SMACK,
+> -				     ctx, ctxlen, 0);
+> +	return __vfs_setxattr_locked(&nop_mnt_idmap, dentry, XATTR_NAME_SMACK,
+> +				     ctx, ctxlen, 0, NULL);
+>  }
+> =20
+>  static int smack_inode_getsecctx(struct inode *inode, void **ctx, u32 *c=
+txlen)
 
-kernel test robot noticed the following build warnings:
-
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Yan-Zhen/sunrpc-Fix-error-checking-for-d_hash_and_lookup/20240828-124615
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20240828044355.590260-1-yanzhen%40vivo.com
-patch subject: [PATCH v3] sunrpc: Fix error checking for d_hash_and_lookup()
-config: i386-randconfig-141-20240829 (https://download.01.org/0day-ci/archive/20240829/202408290616.Ke1JxTcE-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202408290616.Ke1JxTcE-lkp@intel.com/
-
-smatch warnings:
-net/sunrpc/rpc_pipe.c:1310 rpc_gssd_dummy_populate() warn: passing zero to 'ERR_CAST'
-
-vim +/ERR_CAST +1310 net/sunrpc/rpc_pipe.c
-
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1297  static struct dentry *
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1298  rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1299  {
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1300  	int ret = 0;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1301  	struct dentry *gssd_dentry;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1302  	struct dentry *clnt_dentry = NULL;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1303  	struct dentry *pipe_dentry = NULL;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1304  	struct qstr q = QSTR_INIT(files[RPCAUTH_gssd].name,
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1305  				  strlen(files[RPCAUTH_gssd].name));
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1306  
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1307  	/* We should never get this far if "gssd" doesn't exist */
-                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1308  	gssd_dentry = d_hash_and_lookup(root, &q);
-cf4564e657c6275 Yan Zhen      2024-08-28  1309  	if (IS_ERR_OR_NULL(gssd_dentry))
-cf4564e657c6275 Yan Zhen      2024-08-28 @1310  		return ERR_CAST(gssd_dentry);
-
-The callers are not expecting a NULL return from rpc_gssd_dummy_populate() so
-this will lead to a crash.
-
-The comments to d_hash_and_lookup() say it returns NULL if the file doesn't
-exist and the error pointers if the filename is invalid.  Neither one should be
-possible here according to the comments on line 1307.  So we're debating about
-how to handle impossible situations.
-
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1311  
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1312  	ret = rpc_populate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1, NULL);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1313  	if (ret) {
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1314  		pipe_dentry = ERR_PTR(ret);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1315  		goto out;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1316  	}
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1317  
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1318  	q.name = gssd_dummy_clnt_dir[0].name;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1319  	q.len = strlen(gssd_dummy_clnt_dir[0].name);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1320  	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
-cf4564e657c6275 Yan Zhen      2024-08-28  1321  	if (IS_ERR_OR_NULL(clnt_dentry)) {
-b7ade38165ca000 Vasily Averin 2020-06-01  1322  		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1323  		pipe_dentry = ERR_PTR(-ENOENT);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1324  		goto out;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1325  	}
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1326  
-e2f0c83a9de331d Jeff Layton   2013-12-05  1327  	ret = rpc_populate(clnt_dentry, gssd_dummy_info_file, 0, 1, NULL);
-e2f0c83a9de331d Jeff Layton   2013-12-05  1328  	if (ret) {
-e2f0c83a9de331d Jeff Layton   2013-12-05  1329  		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
-e2f0c83a9de331d Jeff Layton   2013-12-05  1330  		pipe_dentry = ERR_PTR(ret);
-e2f0c83a9de331d Jeff Layton   2013-12-05  1331  		goto out;
-e2f0c83a9de331d Jeff Layton   2013-12-05  1332  	}
-e2f0c83a9de331d Jeff Layton   2013-12-05  1333  
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1334  	pipe_dentry = rpc_mkpipe_dentry(clnt_dentry, "gssd", NULL, pipe_data);
-e2f0c83a9de331d Jeff Layton   2013-12-05  1335  	if (IS_ERR(pipe_dentry)) {
-e2f0c83a9de331d Jeff Layton   2013-12-05  1336  		__rpc_depopulate(clnt_dentry, gssd_dummy_info_file, 0, 1);
-3396f92f8be606e Jeff Layton   2013-12-05  1337  		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
-e2f0c83a9de331d Jeff Layton   2013-12-05  1338  	}
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1339  out:
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1340  	dput(clnt_dentry);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1341  	dput(gssd_dentry);
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1342  	return pipe_dentry;
-4b9a445e3eeb8bd Jeff Layton   2013-11-14  1343  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
