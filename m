@@ -1,170 +1,167 @@
-Return-Path: <linux-nfs+bounces-5928-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-5929-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0048963780
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 03:07:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD4C4963786
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 03:12:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EC38B212B5
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:07:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F5211F239F0
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 01:12:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C61414A619;
-	Thu, 29 Aug 2024 01:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3vwm91+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E31E12B8B;
+	Thu, 29 Aug 2024 01:12:53 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2C14A0A3;
-	Thu, 29 Aug 2024 01:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85D2134D1;
+	Thu, 29 Aug 2024 01:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724893500; cv=none; b=ToF3qa5OlI0DKNZ8ICI3vLwUsCCCeC3FcYz2sziiyc6vTGtVDg0uXv+qTTrnOUnmvtDqL9IIFilcTSejKPu3RK788hm25hjxca/bmmj2sK2VvRaAb+6YjDElbPPxzAqq0QQHFRphZUIzo4lMMzO6evdATnKoZNUUL59W0EyqlN4=
+	t=1724893973; cv=none; b=XyeQYJWeRI8IZbKnkMk/Nwxbzh8cR0KaajeYqlfN8irK8I+Z6wGWuRn89KJN/wLPLSdb3qutC3IgAKKDBysegpTcjg/Advswuag9sUjaKZINFvIxI66efvecJAiQcgYZQPD9w11NGstvhSNaSrH1ZVdwMqZU+yrK9fg2/krmKT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724893500; c=relaxed/simple;
-	bh=xB08nBAPl61OofPOGvwFRENxEZD1qCG61thY+k7r1kw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gejoCKZaZOcW1sPP+Nrs6s5GjjtypJoXxcC3VvlWI32nKqKTK5JFb+3l+T0qiS5GYHFkw1htbmyUyFX9q+20P7t85YHJZfbwVJdzMRdWsjesGgpscsj7mtxvhJT5zLW4EZfeYx7emZJCtyYObv5nV8dhtYtpj5VpckT6SiNf+3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3vwm91+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6000AC4CEC0;
-	Thu, 29 Aug 2024 01:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724893499;
-	bh=xB08nBAPl61OofPOGvwFRENxEZD1qCG61thY+k7r1kw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J3vwm91+pfep6ywXjzulH491xDiAOp5OVtzGRsCJMR+hUMxZNRbWW/UnDvtjocpUl
-	 ts63Laz/L0JoQiMykPsFJq4FmCMMM/aAgLtzQl9ERbwkpqgToIUCx8bgX74+LU2cdh
-	 CN7+rVCEKsHzi4GebiGIHRQzuK8x2nNKBMZhXlHx31+2hZ+S/OJGfj6hWVqX436Wvx
-	 zcutbDrczOkayBpA7oVOASTflKfL/BS0dkcatZCzEIeKhlml5rFsun8/4ESbFGCz+O
-	 k3/zeVKM0CTPltTsRAoG5kFwHg+R3V17y83KdNYCdZcvXCVXDY232bSkaJc/ABPYE3
-	 1r96VKwjCeidw==
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v14 25/25] nfs: add FAQ section to Documentation/filesystems/nfs/localio.rst
-Date: Wed, 28 Aug 2024 21:04:20 -0400
-Message-ID: <20240829010424.83693-26-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240829010424.83693-1-snitzer@kernel.org>
-References: <20240829010424.83693-1-snitzer@kernel.org>
+	s=arc-20240116; t=1724893973; c=relaxed/simple;
+	bh=EBah3YTcsWvYHErDqJV7akZ4qINwmKVAArOHjcuwmsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EDT4GkNQdDONWGYYV5R6izGLUYhAqrtn4Sp+PJWH0ObiobZ5M3Pb3p2zWdFP0RoMZB6qPk/ORvx5nNMBvcX0mJi1Sbh818OOwebRKVKObqvdiHIalPQC8YtuQjAUro3wT8P2woESGAu9TUJwFNaJs8Ifz/pcbrr8cEY7ZNxu030=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WvNSD0H7Rz20mvZ;
+	Thu, 29 Aug 2024 09:07:56 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0FB5F140257;
+	Thu, 29 Aug 2024 09:12:46 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 29 Aug 2024 09:12:45 +0800
+Message-ID: <3f40ff3c-0f66-49cc-806f-1cab6c8a8c50@huawei.com>
+Date: Thu, 29 Aug 2024 09:12:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+	<anna@kernel.org>, <gregkh@linuxfoundation.org>,
+	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-nfs@vger.kernel.org>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+ <20240827024517.914100-2-lihongbo22@huawei.com>
+ <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+ <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+ <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
+ <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
+ <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Add a FAQ section to give answers to questions that have been raised
-during review of the localio feature.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Co-developed-by: Mike Snitzer <snitzer@kernel.org>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- Documentation/filesystems/nfs/localio.rst | 77 +++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+On 2024/8/29 4:25, Andrew Morton wrote:
+> On Wed, 28 Aug 2024 11:49:51 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
+> 
+>>> Anything which is calling these functions is not performance-sensitive,
+>>> so optimizing for space is preferred.  An out-of-line function which
+>>> returns a const char * will achieve this?
+>> I think this helper can achieve this. Because it is tiny enough, the
+>> compiler will handle this like #define macro (do the replacement)
+>> without allocating extra functional stack. On the contrary, if it is
+>> implemented as a non-inline function, it will cause extra functional
+>> stack when it was called every time. And it also should be implemented
+>> in a source file (.c file), not in header file(.h file).
+> 
+> No, my concern is that if, for example, str_high_low() gets used in 100
+> .c files then we get 100 copies of the strings "high" and "low" in
+> vmlinux.  Making str_high_low() uninlined would fix this.
 
-diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/filesystems/nfs/localio.rst
-index 8cceb3db386a..4b6d63246479 100644
---- a/Documentation/filesystems/nfs/localio.rst
-+++ b/Documentation/filesystems/nfs/localio.rst
-@@ -61,6 +61,83 @@ fio for 20 secs with directio, qd of 8, 1 libaio thread:
-   128K read:  IOPS=24.4k, BW=3050MiB/s (3198MB/s)(59.6GiB/20001msec)
-   128K write: IOPS=11.4k, BW=1430MiB/s (1500MB/s)(27.9GiB/20001msec)
- 
-+FAQ
-+===
-+
-+1. What are the use cases for LOCALIO?
-+
-+   a. Workloads where the NFS client and server are on the same host
-+      realize improved IO performance. In particular, it is common when
-+      running containerised workloads for jobs to find themselves
-+      running on the same host as the knfsd server being used for
-+      storage.
-+
-+2. What are the requirements for LOCALIO?
-+
-+   a. Bypass use of the network RPC protocol as much as possible. This
-+      includes bypassing XDR and RPC for open, read, write and commit
-+      operations.
-+   b. Allow client and server to autonomously discover if they are
-+      running local to each other without making any assumptions about
-+      the local network topology.
-+   c. Support the use of containers by being compatible with relevant
-+      namespaces (e.g. network, user, mount).
-+   d. Support all versions of NFS. NFSv3 is of particular importance
-+      because it has wide enterprise usage and pNFS flexfiles makes use
-+      of it for the data path.
-+
-+3. Why doesn’t LOCALIO just compare IP addresses or hostnames when
-+   deciding if the NFS client and server are co-located on the same
-+   host?
-+
-+   Since one of the main use cases is containerised workloads, we cannot
-+   assume that IP addresses will be shared between the client and
-+   server. This sets up a requirement for a handshake protocol that
-+   needs to go over the same connection as the NFS traffic in order to
-+   identify that the client and the server really are running on the
-+   same host. The handshake uses a secret that is sent over the wire,
-+   and can be verified by both parties by comparing with a value stored
-+   in shared kernel memory if they are truly co-located.
-+
-+4. Does LOCALIO improve pNFS flexfiles?
-+
-+   Yes, LOCALIO complements pNFS flexfiles by allowing it to take
-+   advantage of NFS client and server locality.  Policy that initiates
-+   client IO as closely to the server where the data is stored naturally
-+   benefits from the data path optimization LOCALIO provides.
-+
-+5. Why not develop a new pNFS layout to enable LOCALIO?
-+
-+   A new pNFS layout could be developed, but doing so would put the
-+   onus on the server to somehow discover that the client is co-located
-+   when deciding to hand out the layout.
-+   There is value in a simpler approach (as provided by LOCALIO) that
-+   allows the NFS client to negotiate and leverage locality without
-+   requiring more elaborate modeling and discovery of such locality in a
-+   more centralized manner.
-+
-+6. Why is having the client perform a server-side file OPEN, without
-+   using RPC, beneficial?  Is the benefit pNFS specific?
-+
-+   Avoiding the use of XDR and RPC for file opens is beneficial to
-+   performance regardless of whether pNFS is used. However adding a
-+   requirement to go over the wire to do an open and/or close ends up
-+   negating any benefit of avoiding the wire for doing the I/O itself
-+   when we’re dealing with small files. There is no benefit to replacing
-+   the READ or WRITE with a new open and/or close operation that still
-+   needs to go over the wire.
-+
-+7. Why is LOCALIO only supported with UNIX Authentication (AUTH_UNIX)?
-+
-+   Strong authentication is usually tied to the connection itself. It
-+   works by establishing a context that is cached by the server, and
-+   that acts as the key for discovering the authorisation token, which
-+   can then be passed to rpc.mountd to complete the authentication
-+   process. On the other hand, in the case of AUTH_UNIX, the credential
-+   that was passed over the wire is used directly as the key in the
-+   upcall to rpc.mountd. This simplifies the authentication process, and
-+   so makes AUTH_UNIX easier to support.
-+
- RPC
- ===
- 
--- 
-2.44.0
+At first, I didn't consider these aspects.
 
+> 
+> However a quick experiment tells me that the compiler and linker are
+> indeed able to perform this cross-object-file optimization:
+> 
+That's very good!
+
+Thanks,
+Hongbo
+
+> --- a/fs/open.c~a
+> +++ a/fs/open.c
+> @@ -34,6 +34,8 @@
+>   #include <linux/mnt_idmapping.h>
+>   #include <linux/filelock.h>
+>   
+> +#include <linux/string_choices.h>
+> +
+>   #include "internal.h"
+>   
+>   int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+> @@ -42,6 +44,8 @@ int do_truncate(struct mnt_idmap *idmap,
+>   	int ret;
+>   	struct iattr newattrs;
+>   
+> +	printk("%s\n", frozzle(dentry == NULL));
+> +
+>   	/* Not pretty: "inode->i_size" shouldn't really be signed. But it is. */
+>   	if (length < 0)
+>   		return -EINVAL;
+> --- a/fs/inode.c~a
+> +++ a/fs/inode.c
+> @@ -22,6 +22,9 @@
+>   #include <linux/iversion.h>
+>   #include <linux/rw_hint.h>
+>   #include <trace/events/writeback.h>
+> +
+> +#include <linux/string_helpers.h>
+> +
+>   #include "internal.h"
+>   
+>   /*
+> @@ -110,6 +113,8 @@ static struct inodes_stat_t inodes_stat;
+>   static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer,
+>   			  size_t *lenp, loff_t *ppos)
+>   {
+> +	printk("%s\n", frozzle(table == NULL));
+> +
+>   	inodes_stat.nr_inodes = get_nr_inodes();
+>   	inodes_stat.nr_unused = get_nr_inodes_unused();
+>   	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+> --- a/include/linux/string_choices.h~a
+> +++ a/include/linux/string_choices.h
+> @@ -4,6 +4,11 @@
+>   
+>   #include <linux/types.h>
+>   
+> +static inline const char *frozzle(bool v)
+> +{
+> +	return v ? "frizzle" : "frazzle";
+> +}
+> +
+>   static inline const char *str_enable_disable(bool v)
+>   {
+>   	return v ? "enable" : "disable";
+> _
+> 
+> 
+> x1:/usr/src/25> strings vmlinux|grep frazzle
+> frazzle
+> x1:/usr/src/25>
+> 
+> See, only one copy!
+> 
 
