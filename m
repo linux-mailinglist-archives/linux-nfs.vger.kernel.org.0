@@ -1,168 +1,99 @@
-Return-Path: <linux-nfs+bounces-6014-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6015-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C45196538C
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 01:39:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B65DD9653F1
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 02:19:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A1101F23B41
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Aug 2024 23:39:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D2D32837EC
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 00:19:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C64218EFD4;
-	Thu, 29 Aug 2024 23:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB3D21D1310;
+	Fri, 30 Aug 2024 00:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UcRCZy1c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6Xuq9z9s";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UcRCZy1c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6Xuq9z9s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPLMUp/C"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC994187843;
-	Thu, 29 Aug 2024 23:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B56380
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 00:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724974763; cv=none; b=XXdjJLELGsFxWrTRluP5BDVR8TND0QjeuBjY7gf4I1D+3gNwq8nCX8/rEqj/Hsb1bhrRWXe9LgPOn3QJoJfFNJEpmjcgyLs+898BO4UpD7wa2fgorP27ohmDfQCDhdVPEqdm2lHMrHigAAs2ncN7JksjuRl3ABgszQB7aOQ4oHU=
+	t=1724977174; cv=none; b=QfYFwnYV5hp5Jxb30Rd5L1IoZam7b4t5ON7epWy4XTTpLIcaDvXitlk98Yi3V0tKjtpoal77ghrPaX69c5blMhUuy4xaoQ9aHhXfheg/qW9eZZ6paoJH9L07nWR4YC/E42ARsP/Ws+Bs6hYewnmgDo2xrNbSB+GLgpP2QJB0igM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724974763; c=relaxed/simple;
-	bh=LRaKIqDoRDPDZ8NKeNexQ95zEmfySlzu7wUO4rfvlWA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pMm31pduSwuRuuNu4AIGP3qalUkcXLhsu6WOP7tOixokSSNRd5E47ptk/Hkx4d3rCgbtglgYwPpqppsWmMaoPj2LtvxhV2I2zM5VBQns7HMu+CBOlEpggVgewgZYQWL+HYokf7xukBofbIPl3HyXsfZEcgF4j5JXBR3TQoJ8zmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UcRCZy1c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6Xuq9z9s; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UcRCZy1c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6Xuq9z9s; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E04601F787;
-	Thu, 29 Aug 2024 23:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724974759; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e9ME5gDooW2WAf1bctjtnxLbFxwn+6oro4LBqf1xTw4=;
-	b=UcRCZy1ciYD8k1/ZzlEpa3pycoMRp3wogZ/s6u5ABXCg3Pco6fvJhjR1qIVBROv4KeJK+6
-	CgnYbwgXXtoIp/fLkywegvF16rLUb7EqCwWhcXR2okjRavIXgJVI/pPstWbwJQZ2jTzhGs
-	OmhBC+8PY+nWO/diFWTjZp2RoUI/VGA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724974759;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e9ME5gDooW2WAf1bctjtnxLbFxwn+6oro4LBqf1xTw4=;
-	b=6Xuq9z9sG5kVKuDbC9aRwUeE4jNlgClenqNlZf8JgfSAoCrTu+/qZQzwJupiS6AGymkGah
-	1/+hqiJcq/Z1UnBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724974759; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e9ME5gDooW2WAf1bctjtnxLbFxwn+6oro4LBqf1xTw4=;
-	b=UcRCZy1ciYD8k1/ZzlEpa3pycoMRp3wogZ/s6u5ABXCg3Pco6fvJhjR1qIVBROv4KeJK+6
-	CgnYbwgXXtoIp/fLkywegvF16rLUb7EqCwWhcXR2okjRavIXgJVI/pPstWbwJQZ2jTzhGs
-	OmhBC+8PY+nWO/diFWTjZp2RoUI/VGA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724974759;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e9ME5gDooW2WAf1bctjtnxLbFxwn+6oro4LBqf1xTw4=;
-	b=6Xuq9z9sG5kVKuDbC9aRwUeE4jNlgClenqNlZf8JgfSAoCrTu+/qZQzwJupiS6AGymkGah
-	1/+hqiJcq/Z1UnBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7C913139B0;
-	Thu, 29 Aug 2024 23:39:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BUE4DKUG0Wa7aQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 29 Aug 2024 23:39:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1724977174; c=relaxed/simple;
+	bh=f2Q6XDbaOzm2+44nx42xxpECcPALsdIxZkdR0cR4kQQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=eyg/rkHsi9IUJrtZj677thjfm+oAvuZgVnnDpA6duo0/PYzB1gr/i1OckRFjM3+JpC7T1oJpUpd78BrtZM4JCRcxaC4yLoNu+ZvwGsWT03gRyRGzQ4cE6ICan3J2NfFLfZ/sn0liXwAQCWOY+/Yh8f13vSIOcooQiXgPwaZYw8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPLMUp/C; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20230059241so11498295ad.3
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 17:19:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724977172; x=1725581972; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wN1oYdA5coySZGOlqQ10F3+BI9FgrY6NogqoBEGr/vc=;
+        b=dPLMUp/CO+9PMoPYbFoKuBckOID1suQdf3EQfWzv6jTHd2bDOQ1RqMuAR3kjyjSdT0
+         GJV5L+ylB2mmvJTe8bO4WUTGpbEalFcIkad0BXIj3cnOYqQMAcJb1ij9qa5yB4iJ3Xmv
+         Frh2pB3kSuPZI70SGa9QQ4CeIV4t905yrzEhAqpJXukv7DbUPnaZpZkzoLC1iorqG22f
+         N1/+1yVvLEmj/W9/dhTFxtV/h43wqj6LLhjp0jHOrTCONxmZ5P6yOr7kIRjPn+o2INZW
+         aYZ2EtZuOogD9cF3SurDFzxGDR2c3VeahMrKOS4RADfPrV0oVZHLPSiTSFqOdwbZ5Duo
+         VN3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724977172; x=1725581972;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wN1oYdA5coySZGOlqQ10F3+BI9FgrY6NogqoBEGr/vc=;
+        b=auWeRTlG4vyifKaQDA6w0KYotJZEBfNWOwIiZBH+B46ZgBS11NmNjMGkr0qLFAtnUS
+         uqS+CviLk/0fVlyg1hUD00CHgdorzjd2q0FReoNNW3UnsqljeRkmJGiGNqU1Iy4b5dA/
+         vw2hS8tBgjrN1bQxjlC2j6KD+N8z+OlNzSPWNSMAkz6M2FFM0LniD8u2/VRsmskti/r4
+         RhuhxwDp61T05h9fnnL8izqoFraSD1JWM1KdPB1nAGyTSgNWd8amXpEnEOUSA1ZStIUQ
+         zoCTBw1IQuoEplxDpWiNVe8YPj8PJLc+Ddf3H8TJ3SDDIUj9hxFCeC7Ut2p58f5a4etR
+         Qnhg==
+X-Gm-Message-State: AOJu0Yz+GmqF/SOnOVToaA0DuW2bUTTjPBpw43DO90lq0/Cm5Yvk6osD
+	/qamrS0KaMh57jSSE374H8B4uuCvt4K2nCu9r8QfoxgxQ/VuZi0xlLDemiktyR0A/a2Fo99Mf1y
+	h3rG0W/VQVsAmclvrbnoGZw0LtlyC
+X-Google-Smtp-Source: AGHT+IEAPAGrbACvVWrWYeMhSUduMyYFb4zkUD7cWnT4k0DErDrUU52wW9ixvEVSl06XgGsv7/ISXv1UVoLAqKBJZrI=
+X-Received: by 2002:a17:902:e845:b0:1fb:90e1:c8c5 with SMTP id
+ d9443c01a7336-2050c429e62mr53930555ad.33.1724977172250; Thu, 29 Aug 2024
+ 17:19:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v14 14/25] nfs_common: add NFS LOCALIO auxiliary protocol
- enablement
-In-reply-to: <20240829010424.83693-15-snitzer@kernel.org>
-References: <20240829010424.83693-1-snitzer@kernel.org>,
- <20240829010424.83693-15-snitzer@kernel.org>
-Date: Fri, 30 Aug 2024 09:39:10 +1000
-Message-id: <172497475053.4433.8625349705350143756@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Thu, 29 Aug 2024 17:19:21 -0700
+Message-ID: <CAM5tNy6UmWngTqzy=YVQ_2x61+AdZp2uW90N8oGB1V73O-vDMA@mail.gmail.com>
+Subject: Any idea how best to handle potentially large POSIX ACLs for getfacl?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 29 Aug 2024, Mike Snitzer wrote:
+Hi,
 
-> +
-> +bool nfs_uuid_is_local(const uuid_t *uuid, struct net *net, struct auth_do=
-main *dom)
-> +{
-> +	bool is_local =3D false;
-> +	nfs_uuid_t *nfs_uuid;
-> +
-> +	rcu_read_lock();
-> +	nfs_uuid =3D nfs_uuid_lookup(uuid);
-> +	if (nfs_uuid) {
-> +		nfs_uuid->net =3D maybe_get_net(net);
+I have a rather crude patch that does the POSIX draft ACL attributes
+that my draft is suggesting for NFSv4.2 for the Linux client.
+- It is working ok for small ACLs, but...
 
-I know I said it looked wrong to be getting a ref for the domain but not
-the net - and it did.  But that doesn't mean the fix was to get a ref
-for the net and to hold it indefinitely.
+The hassle is that the on-the-wire ACEs have a "who" field that can
+be up to 128bytes (IDMAP_NAMESZ).
 
-This ref is now held until the client happens to notice that localio
-doesn't work any more (because nfsd_serv_try_get() fails).  So the
-shutdown of a net namespace will be delayed indefinitely if the NFS
-filesystem isn't being actively used.
+I think I have figured out the SETATTR side, which isn't too bad because
+it knows how many ACEs. (It does roughly what the NFSv3 NFSACL code
+did, which is allocate some pages for the large ones.)
 
-I would prefer that there were a way for the net namespace to reach back
-into the client and disconnect itself.  Probably this would be a
-linked-list in struct nfsd_net which linked list_heads in struct
-nfs_client.  This list would need to be protected by a spinlock -
-probably global in nfs_common so client could remove itself and server
-could remove all clients after clearing their net pointers.
+However, the getfacl side doesn't know how bug the ACL will be in
+the reply. The NFSACL code allocates pages (7 of them) to handle the
+largest possible ACL. Unfortunately, for these NFSv4 attributes, they
+could be roughly 140Kbytes (140bytes assuming the largest "who" times
+1024 ACEs).
+--> Anyone have a better suggestion than just allocating 35pages each time
+    (when 99.99% of them will fit in a fraction of a page)?
 
-It is probably best if I explain all of what I am thinking as a patch.
-
-Stay tuned.
-
-NeilBrown
+Thanks for any suggestions, rick
 
