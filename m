@@ -1,211 +1,155 @@
-Return-Path: <linux-nfs+bounces-6016-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6017-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66245965405
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 02:34:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D22CA9654B9
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 03:32:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0768283E2B
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 00:34:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D268B1C20DA9
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 01:32:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1D691D1318;
-	Fri, 30 Aug 2024 00:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9633725569;
+	Fri, 30 Aug 2024 01:32:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="G6T4QxkM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVgqc2ni"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2102.outbound.protection.outlook.com [40.107.220.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AB81D1317
-	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 00:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724978025; cv=fail; b=M1MnRo2uopwBRy7H1vw8Dr1FCsoimCUNmyZEK9imhZBIsy3Ow6bGaxiGYne4HrIxmgxWKx5KCclpj6lEjT3UCcUZX71fSdAy5gu5dF+x+0CxWKDI45Z5Rhr3QNNE6LYvXXZHUeyjQTbzuVxreVXgioD23fcaHG2cJdHtO4pnLgM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724978025; c=relaxed/simple;
-	bh=7VDlNr3Q/c4e5VeYounKGgx7vLgqWFoEQbcA5s5R+nY=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QLoru/HdvmVVueR7Sx45+py8vHYRYRj4H6Yb7EcipVAI0XMKSZYHjVXC2Cme+ojTObbDCN332ZXurNJSlirb9zuKYz0LZFpS1UtKp08+a801zUNa0KuyyyVSLdbcyCccj3842HogAQJH1L/Ijge4eLLUpydZinv9uVeDX/nDlJ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=G6T4QxkM; arc=fail smtp.client-ip=40.107.220.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Wvc+L7tBWC4K3x2thzc7vpw1Wff5ERmtkNteH0mU1lzk1GI5Q8Rwh6wHGeLEgyACvDd9wRiUrrJ/R+bpQ7s68Kxq5IDJSuLFreaHYBLQGI/SjLYXbmfL92dwXbk+8Edr+9xEbUP1EYMBZNBS6fTQnzNxqOLrdQnwD9T5ISTVyrIih1U/qrwECBhygSiblvNboRizO3jcv6hqaA8SZNTDLYnaNv3jp67QcEaNCJ1NHwr52g3eeakh/GIz+cNPP35XkiEcfbuYRHEeg1gnIIaHax58KwccOJby28vfJgqnCcvWYzhrBYEi7Id0vY9N9SaJeB++T+U7WbQSqmAkYKsvYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7VDlNr3Q/c4e5VeYounKGgx7vLgqWFoEQbcA5s5R+nY=;
- b=VFErB8Y+e4WfD3E7q30wiDNFva6oiZ6GwVZhOh+x6SHGoGsK+ZaPJ7GYU91FRnmQiuhjIY3Jmah/otKaSYfp9BlvhBfKNuHabUL+9S+D8pwsaQ4qq80hh1N+L/pwfkMorAFDfR9/ST8hY4tMw3zU/3QQcK58MLqUsjCqEiwzwMxKmuO1ee4NZEhWXsPau166btOu3cg1Vl/6MAXx2RWOoyQGTDzOZFmWj3tDoDPt2CUBV6ZRPqJUsslSG4GGZlw82SQJ/3nxFOO7Blr+K2XJRMH5sbfTOwOLevfqntHhw4y377wlE9cnG5Hd0oD537IZhWH5Eq43TPt3c4id5bGjcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7VDlNr3Q/c4e5VeYounKGgx7vLgqWFoEQbcA5s5R+nY=;
- b=G6T4QxkMxkkMf6y0XyPnkG6K5tAtiNwQKQ+VU5LvovPjfQW0sgvkRDz8YgWetNkMl7FxJQFufzGiFc/vQKR6H1TF5krQLDT4+BNKPljBpTXVIZ+GvH6oosDkysRGVArAFeix7/98Ix5ja7Z+Odpte0Rvsck0rg0KHjQfqGr44OU=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by PH7PR13MB5504.namprd13.prod.outlook.com (2603:10b6:510:131::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.24; Fri, 30 Aug
- 2024 00:33:39 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb%4]) with mapi id 15.20.7918.019; Fri, 30 Aug 2024
- 00:33:38 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "rick.macklem@gmail.com" <rick.macklem@gmail.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Any idea how best to handle potentially large POSIX ACLs for
- getfacl?
-Thread-Topic: Any idea how best to handle potentially large POSIX ACLs for
- getfacl?
-Thread-Index: AQHa+nJPlVDQq4zD5USzay9O8vT3u7I+85yA
-Date: Fri, 30 Aug 2024 00:33:38 +0000
-Message-ID: <babb9c0643d56a7aeee80bca7ec78f557f965081.camel@hammerspace.com>
-References:
- <CAM5tNy6UmWngTqzy=YVQ_2x61+AdZp2uW90N8oGB1V73O-vDMA@mail.gmail.com>
-In-Reply-To:
- <CAM5tNy6UmWngTqzy=YVQ_2x61+AdZp2uW90N8oGB1V73O-vDMA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|PH7PR13MB5504:EE_
-x-ms-office365-filtering-correlation-id: e6200536-850b-42ba-1cc6-08dcc88b642c
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?bHpGemVLbSszcXIrc2Yyazh5NUsrK1dnL281V0tWQkJBbG9rakJNdkVIRVlJ?=
- =?utf-8?B?M3IxNG5aUjBXdWdwTWlOSXUzZzQ1V2E4dW9QREhHQWpsN2VJUGxXYmlMc1dO?=
- =?utf-8?B?aUF4NnpudFFTODFaOStITlBVQ3hQN3NxOXdCV0ZyTTNzYmc1c3ZKNFRmSFRt?=
- =?utf-8?B?VWZaQVFkNHU2K2FueFpFV0w0L0V0RTRlZGxXd1lLaU5adTNZYTRwMDFrdFV6?=
- =?utf-8?B?NmVyUUo2RlZwZ2w1VE9TaEZhMUdUL2p6RWRIdUhtcGpSR1hKbmNYaFlBZldo?=
- =?utf-8?B?T2FoYXhDN3FENDVJMkVwelg5aXdEaElzUldTYnpoUFRZZ0s0TmovdDgrR2o4?=
- =?utf-8?B?dm1CQjhSZkhRZGdON2lDaUxsWmpPZS9kNlJKZEl3SzZBNk9TREpDV2UzQ3Jo?=
- =?utf-8?B?MWNXQS9ZWmFxTlhHc2JKRDVSWk0xNStDRVRHMDc2Y3pPQnBIMVVWclBHTDQx?=
- =?utf-8?B?Y05HMFBTYVJ0MkNzMXBMWDA1VC9JRGRoZHFtT1c4SDlteDFxdTlTaVNhVzZH?=
- =?utf-8?B?SEtkUGJCSnowb1ZUR2ZnN2JoaUZTQURtUXhpWFJzYkVpOTBIclRIVUtLS1pL?=
- =?utf-8?B?NzNreFN4SWhBWThPR0dvQzlPUktmWEllVEVmclVLMm40KzRMcVVheHZlM3dF?=
- =?utf-8?B?LytMa3NYOUZnVm8rUGJpSndFNjZFSmJBR0pVclNJbXAzYVJnMVFuRkRWVE9v?=
- =?utf-8?B?MDYrNnA5aWpCZWhXanFMdEhBTHNjbWpPNldoaHpJNFA1cGVwWi9jYzJJd1lT?=
- =?utf-8?B?VmV5d0Z0cTloY24yc2pSQUFJTWR6ZkZIcGJiYkNPdlllRnFydklJVnJxN3M5?=
- =?utf-8?B?d09qZDFwanN0bVVwbDNIWU5Ya3p0QUlmSi8xdkp0dzh4Y0U2Z25CL3BUSllX?=
- =?utf-8?B?Wm1rbUJ5WGdiWDIxa21JQTlSbWRnTStVSEU1UUtEVXpsbGVXMnA1SDhzT040?=
- =?utf-8?B?OFRYNitISnk5bnZ1R3lZYjBnSzhibW9xa01xV2U4VldiMDh0S09WTC9KQnhB?=
- =?utf-8?B?alFhbnJaYmxNVW1xd2k2c096K2RkWThhZ25Uc1k5K3ZSU2FSMFQ2aGhRbWwz?=
- =?utf-8?B?amRMbm82aW9RMWFaS3ZENUFJMWdGZkpqODJXWHVZejltSXdrQnA0YkhUTHFM?=
- =?utf-8?B?SldLMFFkejZpUFhtLzh0T3RkZTRMV1duYWU3Tm1nNlUyekZ3YmxiNmNrTFI5?=
- =?utf-8?B?RVErRGJNRm9mMTMzeHhjTTdacXdtOVpRdXN1WGhGSnIxRmYwaEU3a1lna0g1?=
- =?utf-8?B?SWcvQzVMWGJzSENSdGNxTUE5c0Z4UjBhZThzRXNZY1NDei9tMWZSOXZ3VDk3?=
- =?utf-8?B?RUVkczc4a0U0Z3Z1TTFaV0N5YzY0MHkvSEQyOUhVOFYxTC9OSTI5MU4rV1c5?=
- =?utf-8?B?UzBLUW1FRkdIbzNVTkJ1NWkvc0pmV2lKaklOUHhNaTVNdWtNSXpIT0o3MGN0?=
- =?utf-8?B?NE1HYU11b1cxRXg3SCtsQ1RlQ0ZDSStZL0FRWFgyYi9PNzJmVXFBaXVWZ1Nt?=
- =?utf-8?B?a2pOTnQ2Zm9xbmlpdXJxMGQ4ck1jc3YzOWtRQTc0ZUh4ak5FM2w3QzA2OVNQ?=
- =?utf-8?B?WmM3YmVUZnR3SS9HSlJvVWlDdTNTSXo2VHZ2Nitxc0JCNWZnc2YwRG1wcS9T?=
- =?utf-8?B?QXZ0WXNTVzFEQnVPelRCTHFOT2kwZnBlRUpJK3QrT2gzYzVINUQ2YUMwZ2xm?=
- =?utf-8?B?NS96em9FL2dUdm5RaW5SOXJYL2JsTTA2TnVCc1g4dFQwakU3bGQ1VlJDNmRx?=
- =?utf-8?B?cXNselgyWXNEUzJRanJWbEFTelRmUTRjbmxxUlNiZGhPdXZ6cmk2UHNiT1ZE?=
- =?utf-8?B?RkEyZkVBczZTRTFDeXc0R3UrSzVqMXNpdWJIMlFaaWVOTkY2WUR3NnNEV3JL?=
- =?utf-8?B?RG4vZ2pxNlNYNlFCdnB3WjFqNytmaDdpeFhRSmMrUkx4YVE9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cjJhZWR0ZzJ1TlgzeXYvbXNJS0RVMHBsc1U3ZnpMYklaMW5sT0RReEYxY2Ir?=
- =?utf-8?B?NWJ1QVN5SnV0aWp1dWpBVFNaTE5iSU02RUFoMlk5OGJHTUhidUM3YXdpVkV2?=
- =?utf-8?B?MzR0cDVibVVxTVpXb092a0RvaldnYm1RQUo3R3dGT1NUcGJWQXJ3cm9Jb3Zj?=
- =?utf-8?B?eDlsbi9lYTdaaVVrTmtrSldqSDFVUHc1V0srV0lRQlRGVmNtY2ZlQmpZR0pw?=
- =?utf-8?B?OGxjWXhsTHJuay9OU2N0UUNCeU14cXpvSW91and2VUFDOTRtRWxYMzhuWnJt?=
- =?utf-8?B?azBLNytWVyt5Q0U4c2FHR0JxT1pvT3pneE95UXZ3Um9scVRTYm91QjlvdStq?=
- =?utf-8?B?dlFDUUpUcVc4MWZ4bzJXSm03SzB5OHU3MFFiT045ZWpnYk9VeUwrbXJqSm9M?=
- =?utf-8?B?VVRITEJHN0Uzc0lkcFRURkpWVnNPOUcrTCtYVjhxMUhoK21TME5Na2h3dUM5?=
- =?utf-8?B?bGlNN1cxWWhWOWlVZTRtaWI1U1gwSW9hS1IzcUo2b25ZUlVtZm5OcTcvbE9B?=
- =?utf-8?B?WGJRcUh5VVkyZGxRaGJuYmRRMXYyZlROeEg5aU1hRHlUQlFiYkRTM3YxT3RM?=
- =?utf-8?B?eDMzSVFEN3VHeU50LzVuY0trQWxUTDlCRXdSeVFhd1hLaFlFSWxpNzlCTTdz?=
- =?utf-8?B?aElsQXlzbkRVWmdMMjRmKzNCMDEzcjlTN3dZcEUyUzY3TjBoYzhZc2phUSt0?=
- =?utf-8?B?M3VXMXJGVnlKaU1oRHVuamdBVUV3cVFWcWlBdk03WUZmNVlJU0VNb1JWMnNS?=
- =?utf-8?B?YkxYZE9XOUVwOGU0cEpNUVRpOEZJN2g0ak1sK1lFTkdYaGp6MWFtczRHTmZi?=
- =?utf-8?B?TUZmOEdiWmYrd2JvTkhTdjRkUzJZUTZYTWViQlpJZ1RMUTZMYzdxZ0gzMG1k?=
- =?utf-8?B?Y3J0N2tFSHozTWdaVE41WjNsNUs1MkZMYUVSNTAwUzRCYTJJd0I2Qkxycm43?=
- =?utf-8?B?R0Vpa3gyVlNKU0p1Zjc2ODFmVWgyNzZUWnB2UmlFaGg4Qm9QWGlLNE9HUUs5?=
- =?utf-8?B?UXVTZ3ZSOUVWbmhiWHlBTFVxeE9kUlJKT2hSNkJrV2orb0xlam9WWG4yeDFL?=
- =?utf-8?B?bE0zeFVTYXlMcnRFK245WmRlbjFEY1MwQW1sekRITFZxbEVSV2xIQU8zOHVx?=
- =?utf-8?B?akVtOFVZR1k1OVMzOEZvZktOdEZpenhJT1JEb1FnSS9hcTY5eE9MYmpnMXdI?=
- =?utf-8?B?Y2JKMHZVencrWk8xcXplMjZYakFVa1h3a1hOREVrY3c2YzJQcWU0VGFraUs0?=
- =?utf-8?B?QkFoK3RQdlhzbnBFUVJuWHZOREM4K3lsRXE1NS9BS3h1ZzNTRkkxdFRERE9r?=
- =?utf-8?B?Q3FKZ3dOZmczbTNRMWFXS3YzWHV2a2tNYnRUZ1czMzRMSVQ1bDRHOWFhWXlI?=
- =?utf-8?B?ZzlNZVhvUm1DWGk2Y3ZLZ2N3MkVVOEZGSllENldTR2Q1ZG1QMzhCNFdtVStE?=
- =?utf-8?B?SkwzNXVGTlVhNzZCT01pc0grViszN0FMOE9EelBqR05RMGZORERNU1RVOWRi?=
- =?utf-8?B?L2ZxbzRIVTdTNTFIZ0ZhbVJVK3lBakc5YU9zRXdXWktzUDc3bGJqQk1vSWlz?=
- =?utf-8?B?bisyY1dHL1g2eWV3Mm1rZzFpUStpNnh1V2xDcThNa3FHZklERUo2LzVZK3lQ?=
- =?utf-8?B?R0hxcjBqUzEyeVJVZ1ZwWkMveW1acnJYTEFlYUtOdHN0ck4zUDdYM0hvbyti?=
- =?utf-8?B?bjRMRVdNb2xnTTBRLzErSGxGaElhbmw0aHBZdjUxMVdHN2ZxL3BXc1F5cEZY?=
- =?utf-8?B?M2hFNUN0S2xXZXRhWDE0c1RqNU1xNW9HekZldm5hUnJoVWpObzBTMWNNSVF3?=
- =?utf-8?B?N2x1dStBZzRoc0g0c1pjQWduTVdTeFloQ2RGdE1TZnRnSlA3SFErcE1pcHIw?=
- =?utf-8?B?Z2d1aEtTZi9Yd0NzS3o2ZThFTUgrb0dGTnNlWlQ5YXUvVWJKc21pd043ODMv?=
- =?utf-8?B?UTJQVGs4T0d6QTBHbUduR1lOdDhzL0FpMi94L1NkY1doL1RYR3YxMlJMTXdT?=
- =?utf-8?B?bEgzUWtjLzZSQW9EcGlmWmlXdzhQdXRXNFhDNVJ0aVlIOU8yR2t3SHpWWmhv?=
- =?utf-8?B?UVZUdXVoTzB1MHdUdTVxZEFnSTVkR3VOSE5wQ1VpdE5nalFOV3plYW1CbkYv?=
- =?utf-8?B?RTFCYjVCMXlla1JYZyttVWlsQUhIZFZmMWpCaGpkQWdyV0ZyREdIRUg0K3lI?=
- =?utf-8?B?MWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <567E1987EAC16A4FB7A4A4E95D4758AC@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198201D131C
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 01:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724981558; cv=none; b=niZ6+OTBn5K38fmjfpaS8334lguidlpkijTp8Q+EmscMX3/aNPwoYop3ok+5hVTl7SiaqyQkRzTCotoq7mNingZfEaFs5F9Fq62Fa5aLumN9Hzh7zjuNnOls+N9aXIP54V2MMc95dNmEn+trdmPGIVEeOrBtg4AIkp3+8N0T47Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724981558; c=relaxed/simple;
+	bh=kF9R2aFokB3ygLlac6NUJ4aXYR3R1NKA6Q2ht4Ku96A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R7KGVz8wHOBrPBHYlruTauKuwnhsW5l0BE06JSyB5INM6BH1NvGJDekv96EM78tRtx/HDVayw7L7/nvw96p1QAEdXlRy+0oulbNbRWW4qDPURojTOcupSvRg6iIgNpnAWAlJ5B4p+RrcfZtzYns3Y4l2koumnwG1wHnUKmXwYR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVgqc2ni; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7cf5e179b68so842208a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Aug 2024 18:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724981556; x=1725586356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZYtOleRP6BX+Cy4F2ru65/6XU2YC6jFpX6Mi6xHZrPE=;
+        b=mVgqc2ni+MXPQ6SC9voDzEouwBQDkGoPCKbRXx2j3/bDSoD7uLo0RJ72UNevg8O7C9
+         pk77XmgvoeAXEmpUm5PyUvHMKhQQIgx5vvEcPiRSjHUyO/yovpHjXNktwuQPOhlp8K1E
+         JfTz6KNOMyjcsmuzqjkiiUU6757ZUeQt31Q9nIRIwofEff4RIo8L6CiFcywYByvLZFsw
+         m/YPRA0DxOB1vBFklWQjy70XDZY6QKsIVL6Gdypk0Jte5Zqq3NA3OUcsuM5v49i1oIK9
+         GOe8zBiRp+/HGS7/wlNxuqtyUk7KixVY91gUklXba5piBufeW7LIuqMUVtpFQVBH62R5
+         IY2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724981556; x=1725586356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZYtOleRP6BX+Cy4F2ru65/6XU2YC6jFpX6Mi6xHZrPE=;
+        b=nHa4aYYl1qwvkwDqRVuxxOVjLcM90u7d2a531oumBvaJ1BjczTDS2ELC7slNY1PvFz
+         QGuC1/+d6MDN+qp+jTjIOPKQO/Not6PI9QWwF/rOdfGe+1GALyrnNJlrdlmrPC5MQPWA
+         8WZtUiLSuaXma8gGvQVRd033i4AAUDfqKgqn3GYT3JMjaclG8lXaeOzCfGbl/tQiS2rP
+         R1UyLoc92p4a7QtzXrRdoN/fO5UB7pNU48/FPHFKVsJiD5ANqQGotQJr4GeILNLhhGkJ
+         Lqv2sbpLkQ5G4Refj6FewJBEHZ2+SKvsttMrVo4GlDuUYS0tpjOmdhuf53gNThqJA9Pr
+         a4Yw==
+X-Gm-Message-State: AOJu0YwW8QaKlaL12B40By3BJyQ2qhvHMbX0QqEfKhIDyS4Z4tvHA+P9
+	/1dyN0qsw8m4A5+wz5eGFpYJB4pVRcVtq8xS180b8VvfaTmkMmQu5QeXd2hvBEtgTBMxra0jMdp
+	HwH9fu/rhDnOsj9cO/qegWfGr7EJI
+X-Google-Smtp-Source: AGHT+IH52KMI5p8QP5xqOXCdFfrmEksj73K0JMXGGut1OHMlawVgkwy0WPc4Hnt+MvMKlbTsfNLFPpf5xrZdI3GkiFk=
+X-Received: by 2002:a17:90b:4387:b0:2d4:27de:dc39 with SMTP id
+ 98e67ed59e1d1-2d856a5f271mr6123468a91.6.1724981556025; Thu, 29 Aug 2024
+ 18:32:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6200536-850b-42ba-1cc6-08dcc88b642c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2024 00:33:38.6315
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: psHlxn5OoQbKdIJndS49fmc9WIrPilRoPUH2cBZmy0ADOEpFN5yFsgsWEzHt7OoTUdiOF+4NSaSqbw6syJ+4JA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR13MB5504
+References: <CAM5tNy6UmWngTqzy=YVQ_2x61+AdZp2uW90N8oGB1V73O-vDMA@mail.gmail.com>
+ <babb9c0643d56a7aeee80bca7ec78f557f965081.camel@hammerspace.com>
+In-Reply-To: <babb9c0643d56a7aeee80bca7ec78f557f965081.camel@hammerspace.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Thu, 29 Aug 2024 18:32:25 -0700
+Message-ID: <CAM5tNy7_gv_Gp17X+rZmZ4t_UTKWSX=+zGHGKPuhtF+--xOp-w@mail.gmail.com>
+Subject: Re: Any idea how best to handle potentially large POSIX ACLs for getfacl?
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVGh1LCAyMDI0LTA4LTI5IGF0IDE3OjE5IC0wNzAwLCBSaWNrIE1hY2tsZW0gd3JvdGU6DQo+
-IEhpLA0KPiANCj4gSSBoYXZlIGEgcmF0aGVyIGNydWRlIHBhdGNoIHRoYXQgZG9lcyB0aGUgUE9T
-SVggZHJhZnQgQUNMIGF0dHJpYnV0ZXMNCj4gdGhhdCBteSBkcmFmdCBpcyBzdWdnZXN0aW5nIGZv
-ciBORlN2NC4yIGZvciB0aGUgTGludXggY2xpZW50Lg0KPiAtIEl0IGlzIHdvcmtpbmcgb2sgZm9y
-IHNtYWxsIEFDTHMsIGJ1dC4uLg0KPiANCj4gVGhlIGhhc3NsZSBpcyB0aGF0IHRoZSBvbi10aGUt
-d2lyZSBBQ0VzIGhhdmUgYSAid2hvIiBmaWVsZCB0aGF0IGNhbg0KPiBiZSB1cCB0byAxMjhieXRl
-cyAoSURNQVBfTkFNRVNaKS4NCj4gDQo+IEkgdGhpbmsgSSBoYXZlIGZpZ3VyZWQgb3V0IHRoZSBT
-RVRBVFRSIHNpZGUsIHdoaWNoIGlzbid0IHRvbyBiYWQNCj4gYmVjYXVzZQ0KPiBpdCBrbm93cyBo
-b3cgbWFueSBBQ0VzLiAoSXQgZG9lcyByb3VnaGx5IHdoYXQgdGhlIE5GU3YzIE5GU0FDTCBjb2Rl
-DQo+IGRpZCwgd2hpY2ggaXMgYWxsb2NhdGUgc29tZSBwYWdlcyBmb3IgdGhlIGxhcmdlIG9uZXMu
-KQ0KPiANCj4gSG93ZXZlciwgdGhlIGdldGZhY2wgc2lkZSBkb2Vzbid0IGtub3cgaG93IGJ1ZyB0
-aGUgQUNMIHdpbGwgYmUgaW4NCj4gdGhlIHJlcGx5LiBUaGUgTkZTQUNMIGNvZGUgYWxsb2NhdGVz
-IHBhZ2VzICg3IG9mIHRoZW0pIHRvIGhhbmRsZSB0aGUNCj4gbGFyZ2VzdCBwb3NzaWJsZSBBQ0wu
-IFVuZm9ydHVuYXRlbHksIGZvciB0aGVzZSBORlN2NCBhdHRyaWJ1dGVzLCB0aGV5DQo+IGNvdWxk
-IGJlIHJvdWdobHkgMTQwS2J5dGVzICgxNDBieXRlcyBhc3N1bWluZyB0aGUgbGFyZ2VzdCAid2hv
-IiB0aW1lcw0KPiAxMDI0IEFDRXMpLg0KPiAtLT4gQW55b25lIGhhdmUgYSBiZXR0ZXIgc3VnZ2Vz
-dGlvbiB0aGFuIGp1c3QgYWxsb2NhdGluZyAzNXBhZ2VzIGVhY2gNCj4gdGltZQ0KPiDCoMKgwqAg
-KHdoZW4gOTkuOTklIG9mIHRoZW0gd2lsbCBmaXQgaW4gYSBmcmFjdGlvbiBvZiBhIHBhZ2UpPw0K
-PiANCj4gVGhhbmtzIGZvciBhbnkgc3VnZ2VzdGlvbnMsIHJpY2sNCj4gDQoNClNlZSB0aGUgTkZT
-djMgcG9zaXggYWNsIGNsaWVudCBjb2RlLg0KDQpJdCBhbGxvY2F0ZXMgdGhlICdwYWdlc1tdJyBh
-cnJheSBvZiBwb2ludGVycyB0byB0aGUgcGFnZSBidWZmZXJzIHRvIGJlDQpvZiBsZW5ndGggTkZT
-QUNMX01BWFBBR0VTLCBidXQgb25seSBhbGxvY2F0ZXMgdGhlIGZpcnN0IGVudHJ5LCBhbmQNCmxl
-YXZlcyB0aGUgcmVzdCBOVUxMLg0KVGhlbiBpbiB0aGUgWERSIGVuY29kZXIgIm5mczNfeGRyX2Vu
-Y19nZXRhY2wzYXJncygpIiB3aGVyZSBpdCBkZWNsYXJlcw0KdGhlIGxlbmd0aCBvZiB0aGF0IGFy
-cmF5LCBpdCBzZXRzIHRoZSBmbGFnIFhEUkJVRl9TUEFSU0VfUEFHRVMgb24gdGhlDQpyZXBseSBi
-dWZmZXIuDQoNClRoYXQgdGVsbHMgdGhlIFJQQyBsYXllciB0aGF0IGlmIHRoZSBpbmNvbWluZyBS
-UEMgcmVwbHkgbmVlZHMgdG8gZmlsbA0KaW4gbW9yZSBkYXRhIHRoYW4gd2lsbCBmaXQgaW50byB0
-aGF0IHNpbmdsZSBwYWdlLCB0aGVuIGl0IHNob3VsZA0KYWxsb2NhdGUgZXh0cmEgcGFnZXMgYW5k
-IGFkZCB0aGVtIHRvIHRoZSAncGFnZXMnIGFycmF5Lg0KDQotLSANClRyb25kIE15a2xlYnVzdA0K
-TGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0
-QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Thu, Aug 29, 2024 at 5:33=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
+>
+> On Thu, 2024-08-29 at 17:19 -0700, Rick Macklem wrote:
+> > Hi,
+> >
+> > I have a rather crude patch that does the POSIX draft ACL attributes
+> > that my draft is suggesting for NFSv4.2 for the Linux client.
+> > - It is working ok for small ACLs, but...
+> >
+> > The hassle is that the on-the-wire ACEs have a "who" field that can
+> > be up to 128bytes (IDMAP_NAMESZ).
+> >
+> > I think I have figured out the SETATTR side, which isn't too bad
+> > because
+> > it knows how many ACEs. (It does roughly what the NFSv3 NFSACL code
+> > did, which is allocate some pages for the large ones.)
+> >
+> > However, the getfacl side doesn't know how bug the ACL will be in
+> > the reply. The NFSACL code allocates pages (7 of them) to handle the
+> > largest possible ACL. Unfortunately, for these NFSv4 attributes, they
+> > could be roughly 140Kbytes (140bytes assuming the largest "who" times
+> > 1024 ACEs).
+> > --> Anyone have a better suggestion than just allocating 35pages each
+> > time
+> >     (when 99.99% of them will fit in a fraction of a page)?
+> >
+> > Thanks for any suggestions, rick
+> >
+>
+> See the NFSv3 posix acl client code.
+>
+> It allocates the 'pages[]' array of pointers to the page buffers to be
+> of length NFSACL_MAXPAGES, but only allocates the first entry, and
+> leaves the rest NULL.
+> Then in the XDR encoder "nfs3_xdr_enc_getacl3args()" where it declares
+> the length of that array, it sets the flag XDRBUF_SPARSE_PAGES on the
+> reply buffer.
+>
+> That tells the RPC layer that if the incoming RPC reply needs to fill
+> in more data than will fit into that single page, then it should
+> allocate extra pages and add them to the 'pages' array.
+Oh, ok thanks for the explanation.
+It doesn't sound like a problem then.
+
+I'll just code things the same way.
+
+Maybe I can ask one more question??
+There are a large # of XXX_decode_XXX functions. Are there any that
+should/should not be used for the above case?
+For example, there are:
+- Ones that take a "struct xdr_stream *xdr" (usually with _stream_ in the n=
+ame)
+vs
+- Ones that take a "struct xdr_buf *buf" argument.
+  (I ended up using these for the encode side and this looks like what
+   nfsacl_decode() uses, as well.)
+
+(I'll admit I have been wading around in the code, but haven't really
+gotten to the point of understanding which ones should be used.)
+
+Thanks, rick
+
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
