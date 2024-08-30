@@ -1,193 +1,160 @@
-Return-Path: <linux-nfs+bounces-6043-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6044-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 486E5965814
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 09:07:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37BF6965909
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 09:47:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D0231C22423
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 07:07:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C773F1F267E3
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 07:47:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0F4214C5A4;
-	Fri, 30 Aug 2024 07:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A12E15855F;
+	Fri, 30 Aug 2024 07:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="of2lln6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Po/ACOgJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="of2lln6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Po/ACOgJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSpHUVcS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4037015217F
-	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 07:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001ED158544
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 07:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725001649; cv=none; b=dH+vFlp5IhramIssq/y8ybUpnnhnysfim7ynd2t9zquxR5H+TO1vYXMx4A+a9JyWyUP4CsR41gRdJgGOzD91j+wAGCek6Nv49XU7KlrKD9RjGqweQl1U4CSGKoWod1+/ei4uYKH3ESpPd31cwh3fPMrmWg8eKpKZ8dUKaoMyYZI=
+	t=1725004053; cv=none; b=YwrYxiOgDm1M4IvCWnQNXbQDBdQdtmEuoLnluZsEU3GtyqxzPK/JLeb4Eqk0snqdDSaKCANBWIu+6gU4SgMBdRF3LDSIM+gfrJNBww+x3edq/JVitMd6/06OAhchOmSCfC0L5SSDxHUnE48J4EnxP/MlaSBQLiPaX+MQoibkWLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725001649; c=relaxed/simple;
-	bh=PBUTJen2Q4DVHp52PjELVYdcjX5lCDjY+VBSg9ydpwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ts67FccsCvH6XTYS+amnbAICo4//nRH6FkKC85/UCI9CFcAw44/D84OxIv/EmRZ1p6hmx+zoHepfDh+J5g/dfGSzdktrLKmF3LyZbpArm07xxiWt+Vez6RvXvtV/++scDuS+tK6U4tjTlq2eLyEJrgHQ2RgoaMEiV+Hrrau3jw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=of2lln6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Po/ACOgJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=of2lln6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Po/ACOgJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 635FF1F7A6;
-	Fri, 30 Aug 2024 07:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725001646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xP6QlC6xdlKSppJOB39Ms9+EaaX+eN2/jBiAoAOlUxA=;
-	b=of2lln6OnQowBH1EIlVg/MzkBuPeeUzB3ZomlMC9fQnomgrRugEn40lN5GgFBQGIP7Vi4T
-	pSaTMWdfxKUaqxSHwrXV7Xxh5/tASQ6rY+PqYtuVtx7UMPagvQuQxbqiVxwTWdvrOiSdKr
-	on1XEln99EgFTl36uM1km3gWg7ov3qQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725001646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xP6QlC6xdlKSppJOB39Ms9+EaaX+eN2/jBiAoAOlUxA=;
-	b=Po/ACOgJ/nIB69rfhZR0ZmmYy0lZ/vFTAz6oNi9MLB/8TIJ/J7KZS9sZvXRXg5RQX/4WUO
-	rY6+Jmx4u0AoytBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=of2lln6O;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="Po/ACOgJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725001646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xP6QlC6xdlKSppJOB39Ms9+EaaX+eN2/jBiAoAOlUxA=;
-	b=of2lln6OnQowBH1EIlVg/MzkBuPeeUzB3ZomlMC9fQnomgrRugEn40lN5GgFBQGIP7Vi4T
-	pSaTMWdfxKUaqxSHwrXV7Xxh5/tASQ6rY+PqYtuVtx7UMPagvQuQxbqiVxwTWdvrOiSdKr
-	on1XEln99EgFTl36uM1km3gWg7ov3qQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725001646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xP6QlC6xdlKSppJOB39Ms9+EaaX+eN2/jBiAoAOlUxA=;
-	b=Po/ACOgJ/nIB69rfhZR0ZmmYy0lZ/vFTAz6oNi9MLB/8TIJ/J7KZS9sZvXRXg5RQX/4WUO
-	rY6+Jmx4u0AoytBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 307DE13A44;
-	Fri, 30 Aug 2024 07:07:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WRDYNaxv0WaFXAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 30 Aug 2024 07:07:24 +0000
-From: NeilBrown <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] nfsd: avoid races with wake_up_var()
-Date: Fri, 30 Aug 2024 17:03:17 +1000
-Message-ID: <20240830070653.7326-3-neilb@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240830070653.7326-1-neilb@suse.de>
-References: <20240830070653.7326-1-neilb@suse.de>
+	s=arc-20240116; t=1725004053; c=relaxed/simple;
+	bh=Z5IWmCaGTWNR5JErDN0LUlfl9zkBsCNjOw4HKOxIXug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bp3far+8qLEpZ7lrMxFo7Z7cCrYcqCAcVsva7V6AQCxsLa8EYM+ZQgTrui8bhFA6A1HUT8qQlys9XB7s2n1N1GUVRO8LKISqz9xZ6yh/M5Or6HI+xH46/E1Ref4FeMAj575tq5QLkEOGm+xJCldnKI+8gMl8spNXNfz2ZHU0Yjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSpHUVcS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE84C4CEC2;
+	Fri, 30 Aug 2024 07:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725004052;
+	bh=Z5IWmCaGTWNR5JErDN0LUlfl9zkBsCNjOw4HKOxIXug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mSpHUVcSlVqefGIs+Yr5Kv13NLXKAWqx7CVc/OWcPDu/Y7RQcBEJT7baNTQM6+NiS
+	 mEpgN4rb9958KaeyMk+7IOdSnvgAw9ps7d4BvRGeFENBEdI5zsKqawpPjTWFO2SIuB
+	 ojyYstRhvolaTs0fsQr62O9iC6CgyYfhAkMIkcRNTBNAsOenzuF+zBintrYiPOZlXh
+	 wH87PtYWeFj9FFn/FHH0c+b5PPP/TWn4UoyTO/RepP//NZgwDlylCP1PxKJ3azQAze
+	 hsFKoE8v5soGf20FW/OCMlGU4JUrcYwYSMZrXWMZTTIB8KEsYNxZwKSSfMItEbBUZJ
+	 P2Z0LmbsVaRbg==
+Date: Fri, 30 Aug 2024 03:47:31 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v14-plus 00/25] Address netns refcount issues for localio
+Message-ID: <ZtF5E5H53tkNurR3@kernel.org>
+References: <20240830023531.29421-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 635FF1F7A6
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -5.01
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240830023531.29421-1-neilb@suse.de>
 
-wake_up_var() needs a barrier after the important change is made in the
-var and before wake_up_var() is called, else it is possible that a wake
-up won't be sent when it should.
+On Fri, Aug 30, 2024 at 12:20:13PM +1000, NeilBrown wrote:
+> Following are revised versions of 6 patches from the v14 localio series.
+> 
+> The issue addressed is net namespace refcounting.
+> 
+> We don't want to keep a long-term counted reference in the client
+> because that prevents a server container from completely shutting down.
+> 
+> So we avoid taking a reference at all and rely on the per-cpu reference
+> to the server being sufficient to keep the net-ns active.  This involves
+> allowing the net-ns exit code to iterate all active clients and clear
+> their ->net pointers (which they need to find the per-cpu-refcount for
+> the nfs_serv).
+> 
+> So:
+>  - embed nfs_uuid_t in nfs_client.  This provides a list_head that can
+>    be used to find the client.  It does add the actual uuid to nfs_client
+>    so it is bigger than needed.  If that is really a problem we can find
+>    a fix.
+> 
+>  - When the nfs server confirms that the uuid is local, it moves the
+>    nfs_uuid_t onto a per-net-ns list.
+> 
+>  - When the net-ns is shutting down - in a "pre_exit" handler, all these
+>    nfS_uuid_t have their ->net cleared.  There is an rcu_synchronize()
+>    call between pre_exit() handlers and exit() handlers so and caller
+>    that sees ->net as not NULL can safely check the ->counter
+> 
+>  - We now pass the nfs_uuid_t to nfsd_open_local_fh() so it can safely
+>    look at ->net in a private rcu_read_lock() section.
+> 
+> I have compile tested this code but nothing more.
+> 
+> Thanks,
+> NeilBrown
+> 
+>  [PATCH 14/25] nfs_common: add NFS LOCALIO auxiliary protocol
+>  [PATCH 15/25] nfs_common: introduce nfs_localio_ctx struct and
+>  [PATCH 16/25] nfsd: add localio support
+>  [PATCH 17/25] nfsd: implement server support for NFS_LOCALIO_PROGRAM
+>  [PATCH 19/25] nfs: add localio support
+>  [PATCH 23/25] nfs: implement client support for NFS_LOCALIO_PROGRAM
 
-In each case here the var is changed in an "atomic" manner, so
-smb_mb__after_atomic() is sufficient.
+Hey Neil,
 
-In one case the important change (removing the lease) is performed
-*after* the wake_up, which is backwards.  The code survives in part
-because the wait_var_event is given a timeout.
+I attempted to test the kernel with your changes but it crashed with:
 
-This patch adds the required barriers and calls destroy_delegation()
-*before* waking any threads waiting for the delegation to be destroyed.
+[   55.422564] list_add corruption. next is NULL.
+[   55.423523] ------------[ cut here ]------------
+[   55.424423] kernel BUG at lib/list_debug.c:27!
+[   55.425291] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+[   55.426367] CPU: 29 UID: 0 PID: 5251 Comm: nfsd Kdump: loaded Not tainted 6.11.0-rc4.snitm+ #147
+[   55.427991] Hardware name: Red Hat KVM/RHEL-AV, BIOS 1.16.0-4.module+el8.9.0+19570+14a90618 04/01/2014
+[   55.429697] RIP: 0010:__list_add_valid_or_report+0x55/0xa0
+[   55.430741] Code: 4c 39 cf 74 4f b8 01 00 00 00 5d c3 cc cc cc cc 48 c7 c7 98 1d a5 82 e8 d9 6d 93 ff 0f 0b 48 c7 c7 c0 1d a5 82 e8 cb 6d 93 ff <0f> 0b 4c 89 c1 48 c7 c7 e8 1d a5 82 e8 ba 6d 93 ff 0f 0b 48 89 d1
+[   55.434167] RSP: 0018:ffff8881441a7d50 EFLAGS: 00010296
+[   55.435141] RAX: 0000000000000022 RBX: ffff888107b50370 RCX: 0000000000000000
+[   55.436455] RDX: ffff888473caf800 RSI: ffff888473ca18c0 RDI: ffff888473ca18c0
+[   55.437770] RBP: ffff8881441a7d50 R08: 0000000000000022 R09: ffff8881441a7be8
+[   55.439098] R10: ffff8881441a7be0 R11: ffffffff8333f328 R12: ffff888107b50380
+[   55.440419] R13: ffff888103b15080 R14: ffff888107bb5d00 R15: 0000000000000000
+[   55.441737] FS:  0000000000000000(0000) GS:ffff888473c80000(0000) knlGS:0000000000000000
+[   55.443228] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   55.444297] CR2: 000055958fab3488 CR3: 000000010615e000 CR4: 0000000000350ef0
+[   55.445615] Call Trace:
+[   55.446090]  <TASK>
+[   55.446498]  ? show_regs+0x6d/0x80
+[   55.447149]  ? die+0x3c/0xa0
+[   55.447698]  ? do_trap+0xcf/0xf0
+[   55.448316]  ? do_error_trap+0x75/0xa0
+[   55.449026]  ? __list_add_valid_or_report+0x55/0xa0
+[   55.449938]  ? exc_invalid_op+0x57/0x80
+[   55.450660]  ? __list_add_valid_or_report+0x55/0xa0
+[   55.451646]  ? asm_exc_invalid_op+0x1f/0x30
+[   55.452438]  ? __list_add_valid_or_report+0x55/0xa0
+[   55.453355]  nfs_uuid_is_local+0xba/0x110
+[   55.454115]  localio_proc_uuid_is_local+0x64/0x80 [nfsd]
+[   55.455145]  nfsd_dispatch+0xc2/0x210 [nfsd]
+[   55.455977]  svc_process_common+0x2e6/0x6e0
+[   55.456761]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
+[   55.457697]  svc_process+0x13e/0x1e0
+[   55.458377]  svc_recv+0x89e/0xa70
+[   55.459012]  ? __pfx_nfsd+0x10/0x10 [nfsd]
+[   55.459806]  nfsd+0xa5/0x100 [nfsd]
+[   55.460486]  kthread+0xe5/0x120
+[   55.461090]  ? __pfx_kthread+0x10/0x10
+[   55.461801]  ret_from_fork+0x3d/0x60
+[   55.462476]  ? __pfx_kthread+0x10/0x10
+[   55.463184]  ret_from_fork_asm+0x1a/0x30
+[   55.463923]  </TASK>
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4state.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I'll triple check my melding of your changes and mine in ~7 hours.. I
+may have missed something.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 3f85575ee0db..10e3a46289a1 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4700,6 +4700,7 @@ void nfsd4_cstate_clear_replay(struct nfsd4_compound_state *cstate)
- 	if (so != NULL) {
- 		cstate->replay_owner = NULL;
- 		atomic_set(&so->so_replay.rp_locked, RP_UNLOCKED);
-+		smb_mb__after_atomic();
- 		wake_up_var(&so->so_replay.rp_locked);
- 		nfs4_put_stateowner(so);
- 	}
-@@ -5000,6 +5001,7 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
- 	 * so tell them to stop waiting.
- 	 */
- 	atomic_set(&oo->oo_owner.so_replay.rp_locked, RP_UNHASHED);
-+	smb_mb__after_atomic();
- 	wake_up_var(&oo->oo_owner.so_replay.rp_locked);
- 	wait_event(close_wq, refcount_read(&s->st_stid.sc_count) == 2);
- 
-@@ -7469,8 +7471,9 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		goto put_stateid;
- 
- 	trace_nfsd_deleg_return(stateid);
--	wake_up_var(d_inode(cstate->current_fh.fh_dentry));
- 	destroy_delegation(dp);
-+	smb_mb__after_atomic();
-+	wake_up_var(d_inode(cstate->current_fh.fh_dentry));
- put_stateid:
- 	nfs4_put_stid(&dp->dl_stid);
- out:
--- 
-2.44.0
+Note this is _not_ with your other incremental patch (that uses
+__module_get) -- only because I didn't get to that yet.
 
+Mike
 
