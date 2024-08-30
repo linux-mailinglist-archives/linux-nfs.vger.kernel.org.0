@@ -1,225 +1,172 @@
-Return-Path: <linux-nfs+bounces-6046-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6047-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0935E966095
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 13:25:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CCC09660D3
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 13:33:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89ABB1F24E36
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 11:25:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F4C51C22DCF
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 11:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E34819ABDE;
-	Fri, 30 Aug 2024 11:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4AEE185B51;
+	Fri, 30 Aug 2024 11:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQY58qj7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g7exihHt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQY58qj7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g7exihHt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6496D19ABAA;
-	Fri, 30 Aug 2024 11:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398E016D32D
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 11:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725017090; cv=none; b=EP4ou34j93SysxiQVQYdW4ioBcG1x36yDf0HoPC6jsGO7+wrVxyx1BvIrimi6C+JFx6WcJAc+MyucphbJO92UOnrtNzu47k1ux5EUbxEgy0RMSPFO4iorz770nxAsbixfgyVCj7lyiXU6uGg0+R5p8mN+WIwa5t1LHwy53mjGKY=
+	t=1725017589; cv=none; b=aZH28KeWrUKhxgivC5le+Ri5FXjoEzKirUthoMHZrNhTMzA0RdXB2h15lEXJm3waKfu5TDonQVgAwbTOq+ZEY6WqM5LAhpYZj4HLxL1UajUqLcjJTcKTB6tLHVoX9D+g3f8RoSo0a5ysyzITeXTt8LS2Fd+sQMzODa+6CnoP+A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725017090; c=relaxed/simple;
-	bh=qLSGLZUnDd6GdH4JlvlGrFmExuekapfRrfZbBG2UtcI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ePRAPZMiaieel8K9+lrxUXSvOHY9ELVcK78DXNdwK5jSNd6V45ASO4Mx6VawkdnveTtulJOK8wnt1Q4iO4xZKXxo4I7rtx5YKtZ03OMF1WxTk0jtefi2w596NdXWPDIB0AtlP9mNu1yBCcKBP5VgDXdT54B7xrLvbIE8I/qZCDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WwG3S505QzpTtx;
-	Fri, 30 Aug 2024 19:23:00 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id C54F1140360;
-	Fri, 30 Aug 2024 19:24:45 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 30 Aug 2024 19:24:45 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
-	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
- Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Shuah Khan
-	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH net-next v16 04/14] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Fri, 30 Aug 2024 19:18:34 +0800
-Message-ID: <20240830111845.1593542-5-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240830111845.1593542-1-linyunsheng@huawei.com>
-References: <20240830111845.1593542-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1725017589; c=relaxed/simple;
+	bh=S/TBowJScCvAfvlOOv7XMuBun0Id/0WA7TZXH0bkh6M=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=LNjniGZzOJnwe5tpR0zu/m2XBjMt+tRSEaVzDR38P1qenLnEENSwx9mvNsMxeovhL6IvTWwn7sVp6llbFNT9mDv1Tx76fj52CCRbNOA+E5Ca4J0dcH9qnA8rL9CelAI7JFChRU9AXk8tLZm7IQS5Q1ig4PDmHTb9JKJQPBUMN2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQY58qj7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g7exihHt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQY58qj7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g7exihHt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 41DFF1F7CA;
+	Fri, 30 Aug 2024 11:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725017586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CxWZlO5dgdNKc3T4YFHMeSR2zggm4Ht2P/HNbKpCS4Y=;
+	b=CQY58qj7RseMuVmfffPtXMyejIdURx0hUpCSJtBPHNW0eWhf6vhg7Tfonj8PtsGxQIMNDC
+	ti1SfqKz9NlzV5QAQF52mJmw0eBE4oWobyviN4ItZra7cgXCLaQbqGSIUoiZzycI81psOx
+	5tGhdEuFg06rpcvkitLl4nVS8a7RzxA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725017586;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CxWZlO5dgdNKc3T4YFHMeSR2zggm4Ht2P/HNbKpCS4Y=;
+	b=g7exihHty6+yA1a7OVAQwcrjIJAPIp7MnBiotATVrRLtaMUv0OHZtNm/Yvfj35ZBvOJc7u
+	PFzwHR5Oyrq/OiCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725017586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CxWZlO5dgdNKc3T4YFHMeSR2zggm4Ht2P/HNbKpCS4Y=;
+	b=CQY58qj7RseMuVmfffPtXMyejIdURx0hUpCSJtBPHNW0eWhf6vhg7Tfonj8PtsGxQIMNDC
+	ti1SfqKz9NlzV5QAQF52mJmw0eBE4oWobyviN4ItZra7cgXCLaQbqGSIUoiZzycI81psOx
+	5tGhdEuFg06rpcvkitLl4nVS8a7RzxA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725017586;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CxWZlO5dgdNKc3T4YFHMeSR2zggm4Ht2P/HNbKpCS4Y=;
+	b=g7exihHty6+yA1a7OVAQwcrjIJAPIp7MnBiotATVrRLtaMUv0OHZtNm/Yvfj35ZBvOJc7u
+	PFzwHR5Oyrq/OiCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9E5F213A44;
+	Fri, 30 Aug 2024 11:33:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oBC1E/Ct0WaqMQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 30 Aug 2024 11:33:04 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+From: "NeilBrown" <neilb@suse.de>
+To: "Santosh Pradhan" <santosh.pradhan@gmail.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 0/2] nfsd: improvements for wake_up_bit/var
+In-reply-to:
+ <CAOuNp5m9zencvTnEsE6ovq__A_pyVo4omjUJAhoT7RQHTnXkhQ@mail.gmail.com>
+References: <20240830070653.7326-1-neilb@suse.de>,
+ <CAOuNp5m9zencvTnEsE6ovq__A_pyVo4omjUJAhoT7RQHTnXkhQ@mail.gmail.com>
+Date: Fri, 30 Aug 2024 21:32:56 +1000
+Message-id: <172501757611.4433.3843686586666002708@noble.neil.brown.name>
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+On Fri, 30 Aug 2024, Santosh Pradhan wrote:
+> Hi Neil,
+> Do we need a barrier in nfs4_disable_swap() as well ?
+> 
+> 10830         set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> 10831         clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+> >>> HERE>>>>
+> 10832         wake_up_var(&clp->cl_state);
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
----
- drivers/vhost/net.c                                   |  2 +-
- include/linux/page_frag_cache.h                       | 10 ++++++++++
- net/core/skbuff.c                                     |  6 +++---
- net/rxrpc/conn_object.c                               |  4 +---
- net/rxrpc/local_object.c                              |  4 +---
- net/sunrpc/svcsock.c                                  |  6 ++----
- tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
- 7 files changed, 19 insertions(+), 15 deletions(-)
+Probably but that is in fs/nfs/, not fs/nfsd/.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index f16279351db5..9ad37c012189 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 67ac8626ed9b..0a52f7a179c8 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/mm_types_task.h>
- #include <linux/types.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
-+
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_align(struct page_frag_cache *nc, unsigned int fragsz,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index a52638363ea5..a5f8e4e0c649 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -752,14 +752,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -849,7 +849,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 6b3f01beb294..dcfd84cf0694 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
-diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-index 72a3861c2de1..e21a22b1d70b 100644
---- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
-+++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-@@ -117,7 +117,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_nc.va = NULL;
-+	page_frag_cache_init(&test_nc);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
--- 
-2.33.0
+Thanks,
+NeilBrown
+
+
+> 
+> Regards,
+> Santosh
+> 
+> On Fri, Aug 30, 2024 at 12:37 PM NeilBrown <neilb@suse.de> wrote:
+> >
+> > I've been digging into wake_up_bit and wake_up_var recently.  There are
+> > a lot of places where the required barriers aren't quite right.
+> >
+> > This patch fixes them up for nfsd.  The bugs are mostly minor, though
+> > the rp_locked on might be a credible problem on weakly ordered hosts
+> > (e.g.  power64).
+> >
+> > NeilBrown
+> >
+> >  [PATCH 1/2] nfsd: use clear_and_wake_up_bit()
+> >  [PATCH 2/2] nfsd: avoid races with wake_up_var()
+> >
+> 
 
 
