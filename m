@@ -1,167 +1,227 @@
-Return-Path: <linux-nfs+bounces-6063-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6064-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5CE796683E
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 19:43:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3BA396685F
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 19:48:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FEE51F21E67
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 17:43:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 233641F245AA
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 17:48:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FB061B78E8;
-	Fri, 30 Aug 2024 17:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673861BB6A4;
+	Fri, 30 Aug 2024 17:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sY5kazTe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eX3m9FGB";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sY5kazTe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eX3m9FGB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxbq0vGA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7312B1C6A5
-	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 17:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360C514A4EA;
+	Fri, 30 Aug 2024 17:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725039837; cv=none; b=X+YUAJAIgyzctynRfQ0v4VfeZQOI3Q1xJt2FHw67PJHyFTI7AT34po0IwlgF57gI/64gkJQOcFAODl0DqmXDRh5V2ttdtbNa893lOXltNtTDtUBZNbgEfNx8urQUCwZrXWcEGMDfXK+xKud1pLqQbf0FD8fKv/BiCQFXZiGgwks=
+	t=1725040117; cv=none; b=Ph9K40y3Oe2UIH6CgEKYjxtSbeU2ZQj2cTgpcDN0kx3gOhhlnS40eRdQW/HeH98EqWeMYaAku99lTbO55ycmPbFfuv53IHWrXVXJ7ipyOYPFE2r4baSzitylHEM+kRmzdFeJXkGWS+ThfIFjoExGM9TG+JmMNWRq8mZPvxfCD+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725039837; c=relaxed/simple;
-	bh=9xP1E2e9Oy5jW847QH7ONfxuYm1lQq2FDk9LGduRG/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SI9IckuacmZ/PMMcXvob5JhSuewbeGOdBw27YI4L833EQJvMP4ybMcWbKuRLkMbrsbCZvtr95QTyh3m/hP3JvwoTP15KTp+JLDwgN82bBdTNPkkGxNtG++O9U6FythLTdKgzHT75WxFrzUIZlkl2Oqrd3k6bJOgMEutgU6/9+IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sY5kazTe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eX3m9FGB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sY5kazTe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eX3m9FGB; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5E58C21A32;
-	Fri, 30 Aug 2024 17:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725039833; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8+WMN03hZfGW5WYlB4kFNIgfvfchV9MMIzgzWecs2js=;
-	b=sY5kazTez3dX3jYxDlUfC3is+OjcdzPsTCpq78TZzNerC2jQP1eNLSGgjxGMhW1biHLeTA
-	EMniCDmw0mhlQ0VgqCbRIeLkSsqcsrtsVVzwU6EM7ehjfHRbKBG1FaSa8qM6KLmHZvo38z
-	yBZYLiPeMQZD5MdVRx39HRZJnccJy+g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725039833;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8+WMN03hZfGW5WYlB4kFNIgfvfchV9MMIzgzWecs2js=;
-	b=eX3m9FGBhswJBUwU9j0jfva/vHXgAR5h3e+MFeFOP/Ash9MhyMqG+dcKMtED/lidFvuTgn
-	r2YV6rsnEhXMpOAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=sY5kazTe;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=eX3m9FGB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725039833; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8+WMN03hZfGW5WYlB4kFNIgfvfchV9MMIzgzWecs2js=;
-	b=sY5kazTez3dX3jYxDlUfC3is+OjcdzPsTCpq78TZzNerC2jQP1eNLSGgjxGMhW1biHLeTA
-	EMniCDmw0mhlQ0VgqCbRIeLkSsqcsrtsVVzwU6EM7ehjfHRbKBG1FaSa8qM6KLmHZvo38z
-	yBZYLiPeMQZD5MdVRx39HRZJnccJy+g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725039833;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8+WMN03hZfGW5WYlB4kFNIgfvfchV9MMIzgzWecs2js=;
-	b=eX3m9FGBhswJBUwU9j0jfva/vHXgAR5h3e+MFeFOP/Ash9MhyMqG+dcKMtED/lidFvuTgn
-	r2YV6rsnEhXMpOAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1F96513A3D;
-	Fri, 30 Aug 2024 17:43:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id d6VFBtkE0mb7IgAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Fri, 30 Aug 2024 17:43:53 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-nfs@vger.kernel.org
-Cc: libtirpc-devel@lists.sourceforge.net,
-	Petr Vorel <pvorel@suse.cz>,
-	Steve Dickson <SteveD@RedHat.com>,
-	Josue Ortega <josue@debian.org>,
-	NeilBrown <neilb@suse.de>,
-	Thomas Blume <Thomas.Blume@suse.com>,
-	Yann Leprince <yann.leprince@ylep.fr>
-Subject: [PATCH libtirpc 1/1] Move rpcbind.sock to /run
-Date: Fri, 30 Aug 2024 19:43:35 +0200
-Message-ID: <20240830174335.89678-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1725040117; c=relaxed/simple;
+	bh=sEQ3blEPA3moCOQUP3LiilvkFZh5Pn5/pVtfhvFgI1A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X9KQ/kbI9t+Wkziv7UaH9QQt3aQeGXthdXCeWdy2P/1xpaC3PFxqxvM2vBnWq0U4F095dD/8gpspqhxVNaUmZjL7pqirbzsgRRtu+CSW0sDQOmPblMPEHfrSJf5achu2sO8Mb+ykEKMmcOQ2QPHhzF+g766HtiEpKTL8NhEaI9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxbq0vGA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E998C4CEC2;
+	Fri, 30 Aug 2024 17:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725040117;
+	bh=sEQ3blEPA3moCOQUP3LiilvkFZh5Pn5/pVtfhvFgI1A=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sxbq0vGA4CPc1ZyOqW2c8apiYG0Tr3VNJE4MojYl2vvzFKPAw+GTPzxJIxRV5J1gq
+	 nfjVUI3s1hgsQ2dAHKQv0pJZd9CJpy4LRpw34q2vdkTQu+6jlz+8ISv/zOLKu+jOeU
+	 FzybEOtzrsydGp9kOxxhWgfjD7Bjvs31iPyGkUCd30wVuyzz370tgfsYCmbsDvP7UQ
+	 gAQDpX/JSF1YeR3Xao52/MZvqSJhOJDMPh4DJ5iY0s19i/BGAPTrGG+k+sygxFW9mM
+	 M1RNsPNVbpRDNvpEXlm+L+iRRfEz0co1KeR+RiBCepnxdjjPk7OcLHcA53A7vtO2ic
+	 iUwqNexLi5lmw==
+Message-ID: <364fb7ef013dd6aae28ed367b7b4b0fd64ff56ee.camel@kernel.org>
+Subject: Re: [PATCH v3 08/13] nfs_common: make nfs4.h include generated
+ nfs4_1.h
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
+ Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Olga Kornievskaia
+ <okorniev@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jonathan Corbet
+ <corbet@lwn.net>,  Tom Haynes <loghyr@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux NFS Mailing List
+ <linux-nfs@vger.kernel.org>, Linux FS Devel
+ <linux-fsdevel@vger.kernel.org>,  "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>
+Date: Fri, 30 Aug 2024 13:48:34 -0400
+In-Reply-To: <4cbe50b597c30650665f5f76d88e67be26f3c360.camel@kernel.org>
+References: <20240829-delstid-v3-0-271c60806c5d@kernel.org>
+	 <20240829-delstid-v3-8-271c60806c5d@kernel.org>
+	 <ZtCQLVAaotGRxLN2@tissot.1015granger.net>
+	 <14302177e5fd485a9f72879e7c5366ffc31f4e1d.camel@kernel.org>
+	 <62C8CA0E-6013-487D-A3F0-C6069B854BCB@oracle.com>
+	 <4cbe50b597c30650665f5f76d88e67be26f3c360.camel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5E58C21A32
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-Most of the distros have /var/run as symlink to /run.
+On Fri, 2024-08-30 at 11:44 -0400, Jeff Layton wrote:
+> On Fri, 2024-08-30 at 14:48 +0000, Chuck Lever III wrote:
+> >=20
+> > > On Aug 29, 2024, at 2:26=E2=80=AFPM, Jeff Layton <jlayton@kernel.org>=
+ wrote:
+> > >=20
+> > > On Thu, 2024-08-29 at 11:13 -0400, Chuck Lever wrote:
+> > > > On Thu, Aug 29, 2024 at 09:26:46AM -0400, Jeff Layton wrote:
+> > > > >=20
+> > > > > index 6833d0ad35a8..00e803781c87 100644
+> > > > > --- a/fs/nfsd/nfs4xdr_gen.c
+> > > > > +++ b/fs/nfsd/nfs4xdr_gen.c
+> > > > > @@ -2,7 +2,7 @@
+> > > > > // Generated by xdrgen. Manual edits will be lost.
+> > > > > // XDR specification modification time: Wed Aug 28 09:57:28 2024
+> > > > >=20
+> > > > > -#include "nfs4xdr_gen.h"
+> > > > > +#include <linux/sunrpc/xdrgen/nfs4_1.h>
+> > > >=20
+> > > > Please don't hand-edit these files. That makes it impossible to jus=
+t
+> > > > run the xdrgen tool and get a new version, which is the real goal.
+> > > >=20
+> > > > If you need different generated content, change the tool to generat=
+e
+> > > > what you need (or feel free to ask me to get out my whittling
+> > > > knife).
+> > >=20
+> > > No problem. This part is a Q&D hack job to get everything working wit=
+h
+> > > minimal changes. Changing the tool to generate the right thing would =
+be
+> > > a better long-term solution (once we settle on where these files will
+> > > go, etc.)
+> >=20
+> > OK, that makes sense.
+> >=20
+> > Going forward I will watch for such Q&D edits in the generated
+> > files and try to address those in xdrgen. I would like to avoid
+> > actually /committing/ such edits, though, because IMO we are
+> > pretty active here right now and can get the "long term" fix
+> > done quickly.
+> >=20
+>=20
+> Sorry I wasn't clear about that. That part is really just a PoC. The
+> goal would be to autogenerate those files.
+>=20
+> Once we settle on locations, we can add a "make xdrgen" target that
+> runs xdrgen over all of the files in Documentation/sunrpc/xdr and
+> regenerates all of the headers and source files.
+>=20
+> Then we can edit the .x files, do a "make xdrgen" and then commit the
+> resulting updates.
+>=20
+> > Meanwhile, I've updated the xdrgen patches in nfsd-next to
+> > address many (or maybe all) of your requests from yesterday.
+> >=20
+> > The header file is now split between
+> >=20
+> >   include/linux/sunrpc/xdrgen/nfs4.h (protocol definitions)
+> >=20
+> > and
+> >=20
+> >   fs/nfsd/nfs4xdr_gen.h (function declarations)
+> >=20
+>=20
+> Excellent. I'll rebase onto that later today.
 
-Because /var may be a separate partition, and could even be mounted via
-NFS, having to look directly to /run help to avoid issues rpcbind
-startup early in boot when /var might not be available.
+...and on that note, I pushed a rebased version of this into my
+"delstid" branch.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-Follow up for rpcbind patch which touches rpcbind.lock location.
-
-Kind regards,
-Petr
-
- tirpc/rpc/rpcb_prot.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tirpc/rpc/rpcb_prot.h b/tirpc/rpc/rpcb_prot.h
-index eb3a0c4..06138bc 100644
---- a/tirpc/rpc/rpcb_prot.h
-+++ b/tirpc/rpc/rpcb_prot.h
-@@ -476,8 +476,8 @@ extern bool_t xdr_netbuf(XDR *, struct netbuf *);
- #define RPCBVERS_3 RPCBVERS
- #define RPCBVERS_4 RPCBVERS4
- 
--#define _PATH_RPCBINDSOCK "/var/run/rpcbind.sock"
--#define _PATH_RPCBINDSOCK_ABSTRACT "\0/run/rpcbind.sock"
-+#define _PATH_RPCBINDSOCK "/run/rpcbind.sock"
-+#define _PATH_RPCBINDSOCK_ABSTRACT "\0" _PATH_RPCBINDSOCK
- 
- #else /* ndef _KERNEL */
- #ifdef __cplusplus
--- 
-2.45.2
-
+I won't bother reposting it just yet, since it's fundamentally the same
+code. The only real difference is in the patch that adapts nfs4.h to
+include the autogenerated header.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
