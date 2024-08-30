@@ -1,237 +1,209 @@
-Return-Path: <linux-nfs+bounces-6065-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6066-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F10299669DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 21:34:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2ACC966A38
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 22:09:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8D7A28298B
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 19:34:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69DE2280E71
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Aug 2024 20:09:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29F901BDAA3;
-	Fri, 30 Aug 2024 19:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9A014E2D7;
+	Fri, 30 Aug 2024 20:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RGK5FmiX";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="L6WrGN2K"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="C99P5Nys";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="27NsEIWX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="C99P5Nys";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="27NsEIWX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1487233CD1
-	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 19:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725046317; cv=fail; b=If7AtktN6Xv/YL1J4gWu3jGD1ZdpiSbJtOxZQ77UDXwuhzrEeutkhv1ufmd2kIkEK08XgA9Btd0HcQ8wJrywHz40vXWTyp3gT5qYDJOwOWSFFWhGiiK8XXj4YHACuGn37e0i0IWlI6Ujs8/XGqFJyzCKUj9SE+ClxCp1xwxgo9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725046317; c=relaxed/simple;
-	bh=LnGisyOlxB0hZUKoqTAm/RVIdEzkvAktM754dSFRdyU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jw6uJAdJKjARvdMvmjbSM4eR4H8VB8HCStrX+H4QNZdkPqCso2WosmILbekpNmXzfo2oCDVDsLq6TgIwYS0uckkHfaixi0PY5zhD1lrO0IdRwNoKD9evTsiHOqubKdPmrgLQTjtsrWjRtxmMFhpcdAkMNoiZ/Kz4FgzfXrmyuAE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RGK5FmiX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=L6WrGN2K; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47UInOqV007936;
-	Fri, 30 Aug 2024 19:31:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-id:content-transfer-encoding:mime-version;
-	 s=corp-2023-11-20; bh=LnGisyOlxB0hZUKoqTAm/RVIdEzkvAktM754dSFRd
-	yU=; b=RGK5FmiXdojeAVOrpfA5vj+wj/VsIox31zuRFVnwqtzvwWI7LiF7rRPuz
-	yqcsHDySY0silMZDUhdAQ8XYjk5s5Q1vnubCrdoTZsXg7MKZA9Gkaj+mU0jy9gdI
-	9VPF4M1l5aa4RCHmEprDrC/hPGVWO3qZcSDK6nb8xLnjbETn/CnPf7HF0hmBj57y
-	pulgf+mMPtBZx+COAnWSK+7pNopibubvLWpv3LluPevb6g7f9cLgjKYM2+F0adtK
-	7myM/NApYpq+pLp5KarptlbJHqvjQcEX7+say3qEXX7krWnXxSTiXzHYuxEogocd
-	XEvcuQjMsa5a8SwlFapEJx0ay2scw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41bkcr834a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 30 Aug 2024 19:31:50 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47UJQkhK034765;
-	Fri, 30 Aug 2024 19:31:49 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4189sxsu7m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 30 Aug 2024 19:31:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CK+bpDPabH9EIdBRvWPPvrv8z5RrOm55e0xKNmdMNl9fD+QQulkgRf7KSbArEZUHGO+GCVH59fo+vsbsuANdD4U7FUePKuTW1UPhBhfSpeyaWqR1qYi7QfrTkdClngpKVQHCtB4LiVcOKbqcO5C/hhqcoC4MVI7GN0T2lY3mNBf0Gxf+Dufq15FqTwUzJRX2YgcQYW2iPYefPETB9+9DTI4jGblXQMKacRJACib0iW0u87UEYVDglbtprqux+jrCgEohcmUvlO5IJ2C+dM1zV79R9xdS+zmNEmpehKdZBjRuOnu0Am/304PkMO8bxDU/RuQI0jciMb999UcsP5hUOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LnGisyOlxB0hZUKoqTAm/RVIdEzkvAktM754dSFRdyU=;
- b=n+fkSmCp4OgHcRGJ0/JHf3mSfuDrxu/14JbWSg2Ty9hqHAYjdXWrZ7g4Mj20vrA/jSZa2EaM8dvrcvOa85t/sgpVA+ajf/uI92vIYOfsl/qJiBs5PmY0PYQklF3R6zcIc1TlGAofCSevsLId0Zalm0Cubn13Ha1Mq70SBwfBIvUX9uejhBzbo8hTt1QRvVRjdDHMAzwNs/Mb/2jtAjh7DsG8VxS858bUnEaLS+cRjbtU6inEm8X1O8juMOOxMP/ueUYe0Y41bfkoIgu1IeS4vx2wg4f9XP97CV7EvxM601lVtOZq6LdSIBz+fo+cfYg+mehENnWnhwh7qCq8KYtYjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnGisyOlxB0hZUKoqTAm/RVIdEzkvAktM754dSFRdyU=;
- b=L6WrGN2Krw7rq+BS/tpkqh6hU2sDUjEf+gV1OGj6wjFc7cSvTjFAIPwX7C33cBNEiYwLpaf6xwKNJ2Z90nchRDQI1LKa5OTXKF4lswwsJxL4Ag+zInz+F15Bbu7+Cu/dztBrNeTEwEDWU73jBBI9gpo0WPsMvXyREpV8b5Gwy18=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY8PR10MB6492.namprd10.prod.outlook.com (2603:10b6:930:5c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.19; Fri, 30 Aug
- 2024 19:31:47 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7918.017; Fri, 30 Aug 2024
- 19:31:47 +0000
-From: Chuck Lever III <chuck.lever@oracle.com>
-To: Chuck Lever <cel@kernel.org>
-CC: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia
-	<okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
-        Jeff Layton
-	<jlayton@kernel.org>
-Subject: Re: [RFC PATCH 0/7] Possible NFSD COPY clean-ups
-Thread-Topic: [RFC PATCH 0/7] Possible NFSD COPY clean-ups
-Thread-Index: AQHa+XFfbzGBtAnNjEurX0F1iSdENrJAM5CA
-Date: Fri, 30 Aug 2024 19:31:46 +0000
-Message-ID: <27D5507C-654D-44A5-9C15-356234B33CE6@oracle.com>
-References: <20240828174001.322745-9-cel@kernel.org>
-In-Reply-To: <20240828174001.322745-9-cel@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: Apple Mail (2.3776.700.51)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CY8PR10MB6492:EE_
-x-ms-office365-filtering-correlation-id: 7662ea8f-2b0c-409c-c153-08dcc92a6335
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?VzcycVRlZit3RGplK1BJUDM3RGpQWEg1QVowSi9FSjBjbzB0dSt3Z05Hc2x1?=
- =?utf-8?B?b3AxcW4rWmpKcFdUcmJOZnhrUnFDVmVNQnhJdTRDYTFwUUM0dzdUZXZwcW9I?=
- =?utf-8?B?VWhxRzFjY3F1bEJtSjhMOThnMGxSME9YaWdtbExLNlZQQkhtaUMvTnkxQUR3?=
- =?utf-8?B?cGRCOWEvOEpGWFFzM0ErakhaRmJudkV2OU05aEpoK1UxditWb3hhZGM1aldz?=
- =?utf-8?B?Nkc2a2dsQWFPTS81MktLZVpLb09tYUkwejl6R2VKZ2VLRHcvZmIrRmtPMERw?=
- =?utf-8?B?MUFudjBIenFPcTlLVTE4N2hDRUZ2c0xtbmlCVFFxV0hFY0orK0llNUFtUmI5?=
- =?utf-8?B?VWR0dVBuT3pobDk4WXRnakNKQk4xZ2FaamRpUlBEcjNZK2dsVHNWalVKVTE3?=
- =?utf-8?B?UWJSaEh6MUV5eHc3Qm5hZlF1L3ZicUNBdVF6ZTBDc053WEJYM2tWRmxMWDAr?=
- =?utf-8?B?dFFGZ0JJbWlCTDZUU1JULzJFemFSQnRuYTI2emExYWxoT1hPbkY0ZVNkT0JJ?=
- =?utf-8?B?cXo4NG5UYTg5ZnRPZTI1dnFod0Rnb28wZm8ySXF2VkRzN21MVyt1ZExrZkNL?=
- =?utf-8?B?bTRpTy9tL1htTTljN2hVRlRoZkNraEhwdHBJNkszbXlqYVZWQlN5RDhZVzFK?=
- =?utf-8?B?L1I5dC9jZmJPQ1h1aDA3Y3lPdDg0bjBjeFFzWjFVTGdzTm0xZEdCQURoazl6?=
- =?utf-8?B?UkNPNXo5bDNIRGVPTVc0SzgrZ0Z0QU51UU9ibHZsQ05Jekh2cEZWVjJ6T2t4?=
- =?utf-8?B?eDJuOFFURFZUT0tnOTR4b0V5REkvUHI2OHBRaHJhUTZNQit2R3VtbnhKYkJo?=
- =?utf-8?B?N1EzYkJBYjUwV3F1MG9tVlNPeHd4TjI2UVRBZGtUNXF5cFZINW5hZ1dTRVF6?=
- =?utf-8?B?Z2RYZkpvdjRKaG45bkRzdW10UUV5MjJBZTMvS1VTMjJBOTlabEtQVnFlb0Qy?=
- =?utf-8?B?RkVCaGxlN0VXanp2Ynp4QlJuWGVyWkhlcUhyWTlDZEpXdWZPYXY0dEpnYWN0?=
- =?utf-8?B?S21PeFl2Mys3NVFjYTdXRjhPeHNrT3FhMTc3dFQ5ZEpGc24rdGpld29tbk5N?=
- =?utf-8?B?WVcxbDNsN0ZBQ1VMKzdUdVhja0RRUXV2b0w5OHFJRDFrcTVOMENrcXhObk9z?=
- =?utf-8?B?YlBKQnIwbDQ4SGtGZ2xYUEVMNUhDYkV0dmxFeW0yN3U3b2E1ZWVJYnF3QTlk?=
- =?utf-8?B?TnNSeGowaGNReWxoeHg3ZENhWUJxU1dDakxoaVhMb29IclhKZUhCbGxOQzJY?=
- =?utf-8?B?c09FNWJVR0V2SGJ2OHJsbDluVU9ibEsrdE5VYWp0SjVtWDB2M3I4d0FEek9m?=
- =?utf-8?B?NzlNYmRnYlRWeUFYSWtWVjE2bEdVdVlhU3ZtTWFEUEtlTXdHSFQyOXVkV0xM?=
- =?utf-8?B?bEUyNURHYkRzQnJuRHdsNEhMVjJMWFB5bURhSldwRnllOXQwWmtiWmp0NVZw?=
- =?utf-8?B?b2tGcURXWVZEU25GeUJuSDhDUG43Z3IrdWtJM0tXOHhPSzZqM29oUEJHbEhx?=
- =?utf-8?B?NjVnTzVycmY0WS9sak9vY0lOTTZqMWFDa3RObDd6cWVoU2JuVGk0ejBBMUpl?=
- =?utf-8?B?am9zT3FleCtQQ21CbWgrK2xGbi9XRHNJaTFEU1dzaXY2eE1zbG1hbHowMm8v?=
- =?utf-8?B?RFdpZE01bUd6RmgxZ01LdVVvVU1HUTZMejhnVzhHUGI0T3Rlb1JKZmlPZG0v?=
- =?utf-8?B?WnNKSU1qTTcvWFcyeDFRUHpaQThPcnhDZE5vT2pVbkJGL0tqa05UTHpmWXVv?=
- =?utf-8?B?K0V2SlpsOWVWVnplMzNsYmxQY1FZdWlUSzczR2l1ZlM0YUZJZHFlb2hEWGdr?=
- =?utf-8?B?MU03NlpWekc2L0M3ZWEvWmV5SHZ3Mk5BQmFMKzdzOUtZNEMrekNPdVNuYjg2?=
- =?utf-8?B?QTlpS1M3cWZIdC85WXk0MVFtM3ByU2FIZkhxc1NWY25Ja2c9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZjFTdjYwL0g2ZjB2ay9oNXZ5WXJzaWtSVkpSbVhXSVZUVzVMcDVmNG1zNVBq?=
- =?utf-8?B?SzMwajFndU01dzlDTzJxYlJIa2lrbkZ2dlFtWEZuM21WaGNSS2RKZi9tS25X?=
- =?utf-8?B?aDBZUzJRQ0FGRm03K0lmNnRGc3hEWVJ2Mzkxc2tmSWFxNmZuUFgwWkJ2Qjdn?=
- =?utf-8?B?dk9HTVN2QkxtWU5ETFdFV0RSRkVDbkZ3czFpZGEwbjJBbkRYTnpyRTZYZVI5?=
- =?utf-8?B?RVFrUWNvMk5EbG95c0JwSG1EcjQ1Szl2ay9ZQ09TRUJkY0tsRUFraVZhZStB?=
- =?utf-8?B?clVYcWsvYVRDZFlnbUhDU1J4NDUwRzA2bkNVcTczQmEvVDZkWFBRMFRtK0Vo?=
- =?utf-8?B?emQ1YXFYalUxSVhtcUVTTGRTSFdZVFArbERXdWlScFBqYUJjSWRqUEJoZ1dx?=
- =?utf-8?B?WGllM1AzQnpUMDZuN0hxVmc2Q3pqVE80Ym5oM2k4YkR2bzhUNUZ4bGduWVAz?=
- =?utf-8?B?S25zS3dDRXVCa3cvMElXeXNIL293bmpPdkxoaE9PQXoybzk2UnlsVEFIcUM0?=
- =?utf-8?B?aFVSWmhsdUxWVHJMYzNZSmVxSXBteUh5NlJ3SU5xM3F2NE5SdGdJaHdLWUdF?=
- =?utf-8?B?VDJIYi9OcjJuVGUzSU0xWHkrZU9ZNGJkY0JZaTk2bENmbjQ0NGtQSnRXRnRD?=
- =?utf-8?B?Mzg1WFoycnV4Y3FueHRHcEdKU3d1eWVuZDh5dmtUbjRZSjNZTFJod1doaUVn?=
- =?utf-8?B?ZFJnVVJiQUg5RGF6U0g0bVBTNEZDa3ZqRGFrUGx2QUNzcVVBYVYySDZDc0ZP?=
- =?utf-8?B?czY2cHUrV0ZpN3YyZWM2bjE3bVpHQjVHMlhDeVgxTEFqV3QxcWdxcytIcXlw?=
- =?utf-8?B?MDVDdTZaQjkwK0R3T1RZS1FoQ3hwQ0hBMDVCQnBmVE5HVm50ZVR4enpWL1FP?=
- =?utf-8?B?V00xQnozV21GREg0OFNFeHdNOVlUYWcwdEwwdjgydU53YW5QRDlqVjJtV0V3?=
- =?utf-8?B?Y2g2NGNYL0dMUVFXRU1yZWFzWTNwN25CUTh5d3IzMTU2TDdjMWlaZnAwTGs4?=
- =?utf-8?B?Z3I1NExnOEVPbTFLVnFmUXdrcU5sK0pUM203WlZRR2ZhR0tQWjV1R2kraW10?=
- =?utf-8?B?cTN2SGNMaXNwd0Y2WWlVYWZYV1Z0ZkZqMG1YWnlEbXZIZTEveWlOWkJSSUFZ?=
- =?utf-8?B?NEpMZTFoRG1nU1ZvWDU0OVh3VU1kaHhWMnNyQVcydHgxL1dnRHBCTVFRL0Mr?=
- =?utf-8?B?cFZWQkVrZVdCL0dJZXM2Z09CTDFkeUFEZnJnaE51QVEybTNsRHo3QlVxeStO?=
- =?utf-8?B?N2RBcjJncEhUM3dqaGl2YjNVNUFjQUVsL29nNERuaDc2ckEzZ2FNYURLMzhL?=
- =?utf-8?B?TGFIQWpqejI2NGZwQ0RkS09QMU5JZjBhenYvTFVZaWtnNmNST1R5K0lTSkxT?=
- =?utf-8?B?TEVIaFVwOE16ZzZnd3BCNHgzeHVPYXhRbFl3a2FPVnVYc2I2UFdXakgrYmVV?=
- =?utf-8?B?MlI1dGx4MEwxMncxRnpIWkxXSUM0YlMwMUphcHRvelZxbW5hT20ySVhHVDQ3?=
- =?utf-8?B?KzFUV1NnWXduOWFMamZEYzZTRHhJOVp3aDFKNm1NT2IzU21IeUllRlhYUW5W?=
- =?utf-8?B?Wng0ZVZyZTFXc2lxbTVGYXlyZUNRWnV2MjhkUnZTRENwajFHVk4zUUtnT0Ey?=
- =?utf-8?B?UW94WTErengrM2pscGxJN016OGI2SG5DM2R1M2psbG9kZVZ5eGprUVpyQ3lZ?=
- =?utf-8?B?a3g0RTNBSWx6SytEZmFXOUlCd2JkRkJFVUFFdGlESGpqUE1hOWhUcVFWV3pW?=
- =?utf-8?B?QkgxRURwc0phOHN4eDlsbjVsT0RRU1liM0xSYkgvQzRYaTlySW5IMG9zL2Ji?=
- =?utf-8?B?VTRxcG5xTWk3elZ2RGJOV2s1a2ZidEtZNDl1RFFhcmtLT3kvRVpkd2RzS0dk?=
- =?utf-8?B?b1pEcTZDanJTdEdyWFladFlHUTB4SFgvL01vQ1hYZExJTXAzb0FkYkdlQVgv?=
- =?utf-8?B?bzhvM1JBbEE2RnBkYlorSzY3NjhjMUNrNnJSencyNGZ3VTM0V1hXQUwyNWJB?=
- =?utf-8?B?WFZiNFg1MWhaVWdzNXp4QjlVaG1OSVJjMnhvMmRpT05uTExHQVUzL0NybHkw?=
- =?utf-8?B?ZUMvbXBYY1NGeXhxM1Q3MnV5VGhNM3F0ME02Tk9hN281MmdESW5XNjdLYWYy?=
- =?utf-8?B?SUhzamJwanpSSkdtWms1Ly94dWhsb1VhdnQ4R3Zka2tjSlpJc05kVDhuYkov?=
- =?utf-8?B?Rnc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6FC57B0024E8E64C9C01BC077555AE7A@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AA445016
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Aug 2024 20:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725048580; cv=none; b=WmsJJd3YT/BBTUfcqiceuf73PyHQo5dhyHpZbSKFPr7LPudOFJNEtNoYYveIFjCGNjBLuGllK8rcpXp608NER/RWbKjBk+HVqASMpgPBn2eVygdJn/sqpsRTiGEskjHqWVswoY17sPB5mjJIQb4p4ySM2sCQU21Ax8/GNroBOZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725048580; c=relaxed/simple;
+	bh=r1nXxHcjr8skPUCcv4NScjkrqPn/MTRei0m19xaHb5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A55jdjRAEQVACfMeIxUW/BVnwTI5AnLk9pfzpiagjCWvGM2um/SyVNKZvLWVeUKgVB+iKB8bN8PJTczQcDu6oU5IZXUPrUEEcQYkVKHxY6In7uhFqrakQu6JcRxF8YhHQx2/UWY0GZq9+ajco/tSqewRKVb662C7w2WvEmtQOhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=C99P5Nys; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=27NsEIWX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=C99P5Nys; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=27NsEIWX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A62341F7EC;
+	Fri, 30 Aug 2024 20:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1725048575;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K1ARkpOFSn5d1lnuZ+mIekVsBU58nOZjWyGJRRUtUKE=;
+	b=C99P5NysomTG7TRdf5U7mp62/Y9jzfehGe1Oox2GUZKcOknIFzZC+UVSulNzkpuxGOC7VE
+	hA9xCu4yKk2FfQ2g/MVheGiuLuwYhKS1wLFkSwHos+X4NUk5LKegxYWDMzPg6KhYsaGJ0v
+	DTjSM0C+MF/kOc5vuAEsQh1pABjHg0w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1725048575;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K1ARkpOFSn5d1lnuZ+mIekVsBU58nOZjWyGJRRUtUKE=;
+	b=27NsEIWXkMh5H4nP6nzulccw51uHxLgkqzSyaP7muVc4UGFtCU22M8eYiPCCrZUrfPaVVE
+	g3zLD7xBMrkqxoAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1725048575;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K1ARkpOFSn5d1lnuZ+mIekVsBU58nOZjWyGJRRUtUKE=;
+	b=C99P5NysomTG7TRdf5U7mp62/Y9jzfehGe1Oox2GUZKcOknIFzZC+UVSulNzkpuxGOC7VE
+	hA9xCu4yKk2FfQ2g/MVheGiuLuwYhKS1wLFkSwHos+X4NUk5LKegxYWDMzPg6KhYsaGJ0v
+	DTjSM0C+MF/kOc5vuAEsQh1pABjHg0w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1725048575;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K1ARkpOFSn5d1lnuZ+mIekVsBU58nOZjWyGJRRUtUKE=;
+	b=27NsEIWXkMh5H4nP6nzulccw51uHxLgkqzSyaP7muVc4UGFtCU22M8eYiPCCrZUrfPaVVE
+	g3zLD7xBMrkqxoAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4866613A3D;
+	Fri, 30 Aug 2024 20:09:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /Q2aDv8m0ma5SAAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Fri, 30 Aug 2024 20:09:35 +0000
+Date: Fri, 30 Aug 2024 22:09:33 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: Martin Doucha <mdoucha@suse.cz>
+Cc: NeilBrown <neilb@suse.de>, Chuck Lever III <chuck.lever@oracle.com>,
+	ltp@lists.linux.it, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] Add test for per-NS NFS client statistics
+Message-ID: <20240830200933.GB90470@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20240830141453.28379-1-mdoucha@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	zY8lAN9fguswTMIx1190yVc1QG6Kdaix66c8M6ZeKKlEgVCLUOVQ36/5l+Thfen132JWOgOgOmfCBok24h2FoaRzOF/Fm8pmjK4Ma4rYErkgRVl27K0xOwc2kFSIBp5YB711zdJMcG6lEuVQedF/smo0wpzHHsxHDIFn2OLtjjzqE4vsVOX6dJwmdMgDbg7RwvmtaTjdfxXSuIowIHIJUZgOrOHlbhAWcpUsr11XEQCOEp+svOEx2jmzvq6eUU5WO2r2x3pNN8xoOm8Twr5xA4H7fjmpcyXgMkUyLI4i31Wzh2VLXQpgBxVCeM/4/5meGZ7qOddv+w5idfcgQBGmSJaHrLgYE/SCZGovvbRSI1F2vuIK7Auq6AXX+8wSatSzHsp6LIUIYg2cMpXJ5+k6Ol3fCQWhv6A5QKrGzVRJsTXti7MQJ/HctHcErdP0KD2MWQk4yZeEZgLdoyIyJVXn2okhIyGTF3pXONcBzczj3lSZWRL9EMu4byUqW7wkyYqCxRHtaJ4c/jC5lMw8YUG/sj/EeTSJqxCiLpvV/T5vee3TdWtblM1o+Ai2S6pyHCLlvCypRkZXJqhe8WKBow1RtPzytWjb31pT1vD4NDj6jQY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7662ea8f-2b0c-409c-c153-08dcc92a6335
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2024 19:31:46.9420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WAAwL17cDvlTuHztEQyQ5B90xfxF68We2kLWS5pJM5ktv5N6l1XWJ++EMgHwvsbhrlzSIWzMRCBaT/p5eYYHsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6492
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-30_10,2024-08-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408300150
-X-Proofpoint-GUID: 63yozt2cZ1-85aBDzLqifn7QkgSPNRvS
-X-Proofpoint-ORIG-GUID: 63yozt2cZ1-85aBDzLqifn7QkgSPNRvS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240830141453.28379-1-mdoucha@suse.cz>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-7.50 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:replyto];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Spam-Score: -7.50
+X-Spam-Flag: NO
 
-DQoNCj4gT24gQXVnIDI4LCAyMDI0LCBhdCAxOjQw4oCvUE0sIGNlbEBrZXJuZWwub3JnIHdyb3Rl
-Og0KPiANCj4gRnJvbTogQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+DQo+IA0K
-PiBXaGlsZSB3b3JraW5nIG9uIE9GRkxPQURfU1RBVFVTIGFuZCBvdGhlciBwb3RlbnRpYWwgaW1w
-cm92ZW1lbnRzIHRvDQo+IExpbnV4IE5GUydzIENPUFkgb2ZmbG9hZCBpbXBsZW1lbnRhdGlvbiwg
-SSd2ZSBjb21lIHVwIHdpdGggYSBmZXcNCj4gc2VydmVyLXNpZGUgb2JzZXJ2YWJpbGl0eSBlbmhh
-bmNlbWVudHMgYW5kIG9uZSBvciB0d28gcG9zc2libGUgYnVnDQo+IGZpeGVzLiBUaGVzZSBhcmUg
-Y2FuZGlkYXRlcyB0byBtZXJnZSBmb3IgdjYuMTIuDQo+IA0KPiBDb21tZW50cyB3ZWxjb21lLg0K
-PiANCj4gQ2h1Y2sgTGV2ZXIgKDcpOg0KPiAgTkZTRDogQXN5bmMgQ09QWSByZXN1bHQgbmVlZHMg
-dG8gcmV0dXJuIGEgd3JpdGUgdmVyaWZpZXINCj4gIE5GU0Q6IExpbWl0IHRoZSBudW1iZXIgb2Yg
-Y29uY3VycmVudCBhc3luYyBDT1BZIG9wZXJhdGlvbnMNCj4gIE5GU0Q6IERpc3BsYXkgY29weSBz
-dGF0ZWlkcyB3aXRoIGNvbnZlbnRpb25hbCBwcmludCBmb3JtYXR0aW5nDQo+ICBORlNEOiBSZWNv
-cmQgdGhlIGNhbGxiYWNrIHN0YXRlaWQgaW4gY29weSB0cmFjZXBvaW50cw0KPiAgTkZTRDogQ2xl
-YW4gdXAgZXh0cmEgd2hpdGVzcGFjZSBpbiB0cmFjZV9uZnNkX2NvcHlfZG9uZQ0KPiAgTkZTRDog
-RG9jdW1lbnQgY2FsbGJhY2sgc3RhdGVpZCBsYXVuZGVyaW5nDQo+ICBORlNEOiBXcmFwIGFzeW5j
-IGNvcHkgb3BlcmF0aW9ucyB3aXRoIHRyYWNlIHBvaW50cw0KPiANCj4gZnMvbmZzZC9uZXRucy5o
-ICAgICB8ICAxICsNCj4gZnMvbmZzZC9uZnM0cHJvYy5jICB8IDM4ICsrKysrKysrKy0tLS0tLS0t
-LQ0KPiBmcy9uZnNkL25mczRzdGF0ZS5jIHwgMzcgKysrKysrKysrKysrLS0tLS0NCj4gZnMvbmZz
-ZC90cmFjZS5oICAgICB8IDk3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrLS0tLQ0KPiBmcy9uZnNkL3hkcjQuaCAgICAgIHwgIDEgKw0KPiA1IGZpbGVzIGNoYW5nZWQs
-IDEzNyBpbnNlcnRpb25zKCspLCAzNyBkZWxldGlvbnMoLSkNCj4gDQo+IC0tIA0KPiAyLjQ2LjAN
-Cg0KSSd2ZSBhcHBsaWVkIGFsbCBidXQgIk5GU0Q6IERvY3VtZW50IGNhbGxiYWNrIHN0YXRlaWQg
-bGF1bmRlcmluZyINCnRvIG5mc2QtbmV4dC4NCg0KLS0NCkNodWNrIExldmVyDQoNCg0K
+Hi Martin,
+
+> Check that /proc/net/rpc/nfs file exists in nested network namespaces.
+
+> Signed-off-by: Martin Doucha <mdoucha@suse.cz>
+> ---
+
+> Only do the minimal check here. If the file exists in namespaces,
+> nfsstat01.sh will take care of functional testing.
+
+>  runtest/net.nfs                              |  2 ++
+>  testcases/network/nfs/nfsstat01/nfsstat02.sh | 23 ++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+>  create mode 100755 testcases/network/nfs/nfsstat01/nfsstat02.sh
+
+> diff --git a/runtest/net.nfs b/runtest/net.nfs
+> index 929868a7b..7f84457bc 100644
+> --- a/runtest/net.nfs
+> +++ b/runtest/net.nfs
+> @@ -116,6 +116,8 @@ nfsstat01_v40_ip6t nfsstat01.sh -6 -v 4 -t tcp
+>  nfsstat01_v41_ip6t nfsstat01.sh -6 -v 4.1 -t tcp
+>  nfsstat01_v42_ip6t nfsstat01.sh -6 -v 4.2 -t tcp
+
+> +nfsstat02 nfsstat02.sh
+> +
+>  fsx_v30_ip4u fsx.sh -v 3 -t udp
+>  fsx_v30_ip4t fsx.sh -v 3 -t tcp
+>  fsx_v40_ip4t fsx.sh -v 4 -t tcp
+> diff --git a/testcases/network/nfs/nfsstat01/nfsstat02.sh b/testcases/network/nfs/nfsstat01/nfsstat02.sh
+> new file mode 100755
+> index 000000000..1e1bebe97
+> --- /dev/null
+> +++ b/testcases/network/nfs/nfsstat01/nfsstat02.sh
+> @@ -0,0 +1,23 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright (c) 2024 SUSE LLC <mdoucha@suse.cz>
+> +
+> +TST_TESTFUNC="do_test"
+> +
+> +# PURPOSE:  Check that /proc/net/rpc/nfs exists in nested network namespaces
+I would point here a commit which added it or a patchset.
+
+Shell API does not have functionality to point out missing kernel git commit,
+but that might change. But even without it a comment is useful.
+
+Maybe point out d47151b79e32 ("nfs: expose /proc/net/sunrpc/nfs in net namespaces")
+and whole patchset
+https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
+
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Tested on 6.8 and 6.11 mainline
+Tested-by: Petr Vorel <pvorel@suse.cz>
+
+Thanks for this test!
+
+Kind regards,
+Petr
+
+> +do_test()
+> +{
+> +	local procfile="/proc/net/rpc/nfs"
+> +
+> +	if tst_rhost_run -c "test -e '$procfile'"; then
+> +		tst_res TPASS "$procfile exists in net namespaces"
+> +	else
+> +		tst_res TFAIL "$procfile missing in net namespaces"
+> +	fi
+> +}
+> +
+> +# Force use of nested net namespace
+> +unset RHOST
+> +
+> +. nfs_lib.sh
+> +tst_run
 
