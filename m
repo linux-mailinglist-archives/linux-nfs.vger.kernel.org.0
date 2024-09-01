@@ -1,176 +1,153 @@
-Return-Path: <linux-nfs+bounces-6103-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6104-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47E909673CD
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Sep 2024 00:40:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8E80967523
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Sep 2024 07:53:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 509881C20E49
-	for <lists+linux-nfs@lfdr.de>; Sat, 31 Aug 2024 22:40:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F4721C20F30
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Sep 2024 05:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3394199FAD;
-	Sat, 31 Aug 2024 22:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E712837D;
+	Sun,  1 Sep 2024 05:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1j9Q7pd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3Q4A8rM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB400199FA6;
-	Sat, 31 Aug 2024 22:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CACF4A01
+	for <linux-nfs@vger.kernel.org>; Sun,  1 Sep 2024 05:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725143911; cv=none; b=cPrE6DkZ7uq72vkoXyltfS81kTsJxnOH8XohNiZyV9XN8ablv6utg93b28hR2fmcmH3gwfGp5hu8xzZhLxnt7fPW7272XnTW+opJpOzacrXRppYuyV4WeK53tnU4e1Evv99s7jRgZT7LJMotJASpWM2gDhM/LP80etdGqeoJwr4=
+	t=1725169998; cv=none; b=pt+Nl2XnyvkpYBn85e+GYQd/S5AK5OHhxn06Lur1nMWnWvq0oZD6oRQ4YYKPRymuxHRMkHsrIbtgLYQl4PE1wAv92zXgLu8scVlkvnz4Fg88JEK93Ook48+zB6eRfABm8gxtJfUzFKTf/Yb0GTBSuN/NHE2Or4+PxS85FyvxzNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725143911; c=relaxed/simple;
-	bh=5gYKaNb9YNOgingbnDs/WOnab5e9XeuNx3JaLfoNfDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DCfSw302DFJ0TZ6/raKKlyrAXDc5Ayxh295aIK6lcu+SwAS2TpK2d630RqSjlcpXbMfj6OkDrVyuM6jkxSTaaoRFOX+4+z1z5fpFK5BxbhAVyajIsGK0KfZH1F17vktxg+P+UIVz9IfOqkvEI88lbJil8sm8/cOIl6zyaKbiaTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1j9Q7pd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CFE1C4CEC0;
-	Sat, 31 Aug 2024 22:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725143911;
-	bh=5gYKaNb9YNOgingbnDs/WOnab5e9XeuNx3JaLfoNfDU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H1j9Q7pdQanl6xrrG+0drXqhcATJpPuN7ytuhgNwlzgbuk3G++oNtkY9v+qz7QJct
-	 IZt1ACF/V7l7ACFiVYHR/7XywZ9cNqOzJtIlBmjTzsa8Q/BwBv4Pazz0EK2B39ei80
-	 0PE7ej7zGVxHfK6zssm+k4mSj8DKypW8vmzSFxz+amDEN0OCKkXqxgqKYiqWn4ZD5t
-	 a4xD2j1MHGnoy1jMX+ZUaoCnKlGXn7XAKMmNEKtiY3cLoW4HpbRmMC7OBiSAIoVTxo
-	 CJhwzM5hByKkRlmVCz6jZ4EwvEUuUFrjbOwRBhKg8kpPcdOj8Zy0G6xkaMCrCPo4O5
-	 e3MLONBn7Uj2w==
-From: Mike Snitzer <snitzer@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v15 26/26] nfs: add "NFS Client and Server Interlock" section to localio.rst
-Date: Sat, 31 Aug 2024 18:37:46 -0400
-Message-ID: <20240831223755.8569-27-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240831223755.8569-1-snitzer@kernel.org>
-References: <20240831223755.8569-1-snitzer@kernel.org>
+	s=arc-20240116; t=1725169998; c=relaxed/simple;
+	bh=gnX3SEVgg0H1+Eun0YFZHnO3q58bzPpHpC8bspxo7B0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mxjcWHkUAbS+Ugjg5xqdluL2kDQdmjkfBdVaFrDL5IO9VlNiKF0pthabZONdIWR7FNPIX1RK1+uGRHX1Y7wQ7KyF/vBH2lYtVFLdfqNV2ymKG6VqDJFZE3emAqWQhsWUZxek3q/pcjB/FmpDA0MyBlrlpxXSYC7EfieaaOFmjsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3Q4A8rM; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6bf92f96f83so16887426d6.3
+        for <linux-nfs@vger.kernel.org>; Sat, 31 Aug 2024 22:53:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725169995; x=1725774795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YDHXPFtyASnKqG4EN2AQ9N3kHn70urcD/Ag9CUhQEoc=;
+        b=e3Q4A8rMpuIiQDg8aRXRUwIuFdIxXZjDnuzKmqpm8U3H9da3iB1ZULBQRIdTNzk3N0
+         n/yDf60wZsjEuSmjW7PMvCNSFRSHVU3GSyEV+tCvrwggOSh6pTaszmB0eeMzsUlmEJ33
+         KLpk1zEuVLjzXbZb7SAVAdRAo3+VWiffcrfrv4mIONZMd7oZozAMewKjYOvipElabpon
+         teN8xfVVUeZj27XbzRI2mMCq4Oa0X+EFjQJ/rHwlfKc7z5KlEirHTgfkI0iwZZb89rlo
+         Grp3lsoAAZicc4oUXGqXxc8AiDQg1c6dqbb6M8oqQkKRUG+USc2IvwPCddn2ffvDqQd7
+         mYNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725169995; x=1725774795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YDHXPFtyASnKqG4EN2AQ9N3kHn70urcD/Ag9CUhQEoc=;
+        b=DHganh+Kx15tFBl4AIQgHtBcmt51xPYz6eUsuBskf0gC8zLw9fZppL0QZGFOO+v4OB
+         ptqayGM0pxNlKw3BeI2TuEv/CyZrwMI58RsLkCuagWKSwVXC5DXSg2RnNJiPrPfsk214
+         ly1Yu4B0F/LrE/FVv1OZEQUIub4jzXvb3TuArLclQF4MfLqjveLCJPbtp3Kb2ZmL7Dnz
+         WEkbiplvs5Bfv6z8nDWAMUXWmANIj4WA+rFtDZQWgQoHvBsPfjzIGulsKYp0a9kBWcWF
+         qYrqGWryN9Phxm/EzSi1H+6LY747DBRwkzuTDEh4CFXQ1CnDk5UhXGiSzJWbrx+z9RWM
+         yfnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXr3tGQ3Rv0Sa1IoR37NY6lxB8hVM1B4nGoI2jQINaWIiU0NyDhbTXvrznc6u23iycX3H93DO/IbH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAK2azhoqttIQwSP0+vLl9KlXtie72DuwoELwGFWPps9AehMce
+	iJdF42A+BcJVZhxA6CslYVGC7ivlDqInye99qx1wTPbm5XMnF34ZiUIiYxGjHKoqx92nxdqx2pY
+	VXYpCNQ3Gh7xL0PrgYWDSbk/VcPR1ppvGrlM=
+X-Google-Smtp-Source: AGHT+IHNdBpxD+2Ja85wmScshJIx3NYO/D9jL60uDS9+r15BNAri+Dqkc5kllKafeMZ/VkauvGMs7e48qhcqf8v00iY=
+X-Received: by 2002:a05:6214:4b0b:b0:6c3:5f00:8cbc with SMTP id
+ 6a1803df08f44-6c35f008de5mr18975926d6.28.1725169995205; Sat, 31 Aug 2024
+ 22:53:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240829091340.2043-1-laoar.shao@gmail.com> <D27B60B1-E44E-4A89-BB2E-EF01526CB432@redhat.com>
+ <CALOAHbDuThEW=osQudcxGQtFQqePaHzbG3MJyzGi=fLGbUqmKg@mail.gmail.com> <6B62A228-6C9C-4CDD-8334-E26C11DB51A1@redhat.com>
+In-Reply-To: <6B62A228-6C9C-4CDD-8334-E26C11DB51A1@redhat.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 1 Sep 2024 13:52:39 +0800
+Message-ID: <CALOAHbDjROAvnq+Bp6P_MEWRcAM9cVVdAHivOMWrxd8VmO3gJw@mail.gmail.com>
+Subject: Re: [RFC PATCH] NFS: Fix missing files in `ls` command output
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This section answers a new FAQ entry:
+On Fri, Aug 30, 2024 at 1:57=E2=80=AFAM Benjamin Coddington <bcodding@redha=
+t.com> wrote:
+>
+> On 29 Aug 2024, at 8:54, Yafang Shao wrote:
+>
+> > On Thu, Aug 29, 2024 at 8:44=E2=80=AFPM Benjamin Coddington <bcodding@r=
+edhat.com> wrote:
+> >>
+> >> On 29 Aug 2024, at 5:13, Yafang Shao wrote:
+> >>
+> >>> In our production environment, we noticed that some files are missing=
+ when
+> >>> running the ls command in an NFS directory. However, we can still
+> >>> successfully cd into the missing directories. This issue can be illus=
+trated
+> >>> as follows:
+> >>>
+> >>>   $ cd nfs
+> >>>   $ ls
+> >>>   a b c e f            <<<< 'd' is missing
+> >>>   $ cd d               <<<< success
+> >>>
+> >>> I verified the issue with the latest upstream kernel, and it still
+> >>> persists. Further analysis reveals that files go missing when the dts=
+ize is
+> >>> expanded. The default dtsize was reduced from 1MB to 4KB in commit
+> >>> 580f236737d1 ("NFS: Adjust the amount of readahead performed by NFS r=
+eaddir").
+> >>> After restoring the default size to 1MB, the issue disappears. I also=
+ tried
+> >>> setting the default size to 8KB, and the issue similarly disappears.
+> >>>
+> >>> Upon further analysis, it appears that there is a bad entry being dec=
+oded
+> >>> in nfs_readdir_entry_decode(). When a bad entry is encountered, the
+> >>> decoding process breaks without handling the error. We should revert =
+the
+> >>> bad entry in such cases. After implementing this change, the issue is
+> >>> resolved.
+> >>
+> >> It seems like you're trying to handle a server bug of some sort.  Have=
+ you
+> >> been able to look at a wire capture to determine why there's a bad ent=
+ry?
+> >
+> > I've used tcpdump to analyze the packets but didn't find anything
+> > suspicious. Do you have any suggestions?
+>
+> I'd check to make sure the server isn't overrunning the READDIR request's
+> dircount and maxcount (they should be the same for the linux client).  If
+> the server isn't exceeding them, then there's a likely client bug.
 
-9. How does LOCALIO make certain that object lifetimes are managed
-   properly given NFSD and NFS operate in different contexts?
+Thank you for the suggestion. I have captured and analyzed the NFS RPC
+traffic using Wireshark. I noticed that the ls command is being split
+into two NFS READDIR operations. In the first READDIR request, both
+the dircount and maxcount parameters are set to 4008. In the
+subsequent READDIR request, both dircount and maxcount are set to
+8192.
 
-   See the detailed "NFS Client and Server Interlock" section below.
+Interestingly, when I increase the value of ctx->dtsize to 8192, the
+ls command now generates only a single NFS READDIR RPC call. In this
+case, both the dircount and maxcount parameters are set to 8104. This
+issue disappears as well.
 
-The first half of the section details NeilBrown's elegant design
-for LOCALIO's nfs_uuid_t based interlock and is heavily based on
-Neil's "net namespace refcounting" description here:
-  https://marc.info/?l=linux-nfs&m=172498546024767&w=2
-
-The second half of the section details the per-cpu-refcount introduced
-to ensure NFSD's nfsd_serv isn't destroyed while in use by a LOCALIO
-client.
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- Documentation/filesystems/nfs/localio.rst | 68 +++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/filesystems/nfs/localio.rst
-index ef3851d48133..4637c0b34753 100644
---- a/Documentation/filesystems/nfs/localio.rst
-+++ b/Documentation/filesystems/nfs/localio.rst
-@@ -150,6 +150,11 @@ FAQ
-    __fh_verify().  So they get handled exactly the same way for LOCALIO
-    as they do for non-LOCALIO.
- 
-+9. How does LOCALIO make certain that object lifetimes are managed
-+   properly given NFSD and NFS operate in different contexts?
-+
-+   See the detailed "NFS Client and Server Interlock" section below.
-+
- RPC
- ===
- 
-@@ -209,6 +214,69 @@ objects to span from the host kernel's nfsd to per-container knfsd
- instances that are connected to nfs client's running on the same local
- host.
- 
-+NFS Client and Server Interlock
-+===============================
-+
-+LOCALIO provides the nfs_uuid_t object and associated interfaces to
-+allow proper network namespace (net-ns) and NFSD object refcounting:
-+
-+    We don't want to keep a long-term counted reference on each NFSD's
-+    net-ns in the client because that prevents a server container from
-+    completely shutting down.
-+
-+    So we avoid taking a reference at all and rely on the per-cpu
-+    reference to the server (detailed below) being sufficient to keep
-+    the net-ns active. This involves allowing the NFSD's net-ns exit
-+    code to iterate all active clients and clear their ->net pointers
-+    (which are needed to find the per-cpu-refcount for the nfsd_serv).
-+
-+    Details:
-+
-+     - Embed nfs_uuid_t in nfs_client. nfs_uuid_t provides a list_head
-+       that can be used to find the client. It does add the 16-byte
-+       uuid_t to nfs_client so it is bigger than needed (given that
-+       uuid_t is only used during the initial NFS client and server
-+       LOCALIO handshake to determine if they are local to each other).
-+       If that is really a problem we can find a fix.
-+
-+     - When the nfs server confirms that the uuid_t is local, it moves
-+       the nfs_uuid_t onto a per-net-ns list in NFSD's nfsd_net.
-+
-+     - When each server's net-ns is shutting down - in a "pre_exit"
-+       handler, all these nfs_uuid_t have their ->net cleared. There is
-+       an rcu_synchronize() call between pre_exit() handlers and exit()
-+       handlers so any caller that sees nfs_uuid_t ->net as not NULL can
-+       safely manage the per-cpu-refcount for nfsd_serv.
-+
-+     - The client's nfs_uuid_t is passed to nfsd_open_local_fh() so it
-+       can safely dereference ->net in a private rcu_read_lock() section
-+       to allow safe access to the associated nfsd_net and nfsd_serv.
-+
-+So LOCALIO required the introduction and use of NFSD's percpu_ref to
-+interlock nfsd_destroy_serv() and nfsd_open_local_fh(), to ensure each
-+nn->nfsd_serv is not destroyed while in use by nfsd_open_local_fh(), and
-+warrants a more detailed explanation:
-+
-+    nfsd_open_local_fh() uses nfsd_serv_try_get() before opening its
-+    nfsd_file handle and then the caller (NFS client) must drop the
-+    reference for the nfsd_file and associated nn->nfsd_serv using
-+    nfs_file_put_local() once it has completed its IO.
-+
-+    This interlock working relies heavily on nfsd_open_local_fh() being
-+    afforded the ability to safely deal with the possibility that the
-+    NFSD's net-ns (and nfsd_net by association) may have been destroyed
-+    by nfsd_destroy_serv() via nfsd_shutdown_net() -- which is only
-+    possible given the nfs_uuid_t ->net pointer managemenet detailed
-+    above.
-+
-+All told, this elaborate interlock of the NFS client and server has been
-+verified to fix an easy to hit crash that would occur if an NFSD
-+instance running in a container, with a LOCALIO client mounted, is
-+shutdown. Upon restart of the container and associated NFSD the client
-+would go on to crash due to NULL pointer dereference that occurred due
-+to the LOCALIO client's attempting to nfsd_open_local_fh(), using
-+nn->nfsd_serv, without having a proper reference on nn->nfsd_serv.
-+
- NFS Client issues IO instead of Server
- ======================================
- 
--- 
-2.44.0
-
+--
+Regards
+Yafang
 
