@@ -1,155 +1,203 @@
-Return-Path: <linux-nfs+bounces-6120-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6121-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CE8596868C
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 13:48:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DF549686B0
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 13:52:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D9D81F23C57
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 11:48:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F7DB1C20892
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 11:51:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 406B61D6C6B;
-	Mon,  2 Sep 2024 11:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527C117F394;
+	Mon,  2 Sep 2024 11:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgfRAEdk"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wafNvgmo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qVzEGv7M";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y67vX62j";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="t9KL86iP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73F11D67A1
-	for <linux-nfs@vger.kernel.org>; Mon,  2 Sep 2024 11:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE271D6C73
+	for <linux-nfs@vger.kernel.org>; Mon,  2 Sep 2024 11:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725277653; cv=none; b=YFbcNQg0j8UhSQ+opyXPx5KHXWXLodewxaZEyzrWHB3VlUZfXaK3r2bIPriLOREttn5rHGqIae0elJP5eLy3n7dexE4IrwNDRQZGkxZ5On1i973jT351pL5TlXy24yBVA4z/+0rsAyrqHIdrACEZpK/91JOdn0Lnd4ybOzc5ATE=
+	t=1725277915; cv=none; b=R5zqNugaB79+MlgsGHNFJ2vQyWN1z4CdNMk0IE5DNEFp7fuGFbvjJU8LRJh7LThb7B07FfSqTyp914RcnNtrLLFxxIGDTxj9TuooAeBVvZZDF000BduN8nGfq6OC/5Pug4goq0DR+xAUMU2zgQOwfdFRfFnuIBi3JfpipZLY38M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725277653; c=relaxed/simple;
-	bh=zYrr5M3OeFB9TBshgCL9T2S4hXf9cS1NBRc9t+YUNEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=icLLgfCGOzzlfFfAs/a/gwHwncL7LJRldOSgquk8XiTnSX1kXxvow/lzNB7HwZ9si2Po/ngKfCoDT1eC3DMJ4EOk6VWq3t7rMRuglA8TWSwW9AqR9S+lP/LqI6BChDYHU/x0v+1L4Q9ZpbCJ/ou9sdIcQ8TmjrOLC9NfMh72KGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XgfRAEdk; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-456774a0fe7so22630781cf.0
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Sep 2024 04:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725277650; x=1725882450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hmkdnwlSerOnz16nfYv4J9q25exICbOT5rjg2+Kj6lo=;
-        b=XgfRAEdkD6tEwYxQZvFwyam9bTBba6c5BoOdcqHT3raqnOfqNiTaSMBnhKNKdzBCnL
-         Marm9FH7meZSJizlvUzsVfCFTR7HZRb1llBiXgsnbb2kxQRlKAvZRTshXZldI5X5kNdj
-         b3dry102tEL8sO23gSPygjl1V3G6dZ/nde39YhYvXARN6vy59UCo4aKUb+OnYmFVHCj/
-         UNHKjVRDo7b45BqhyLizE1QFxE2nfkdDoO0YGd3PRDBles08PZuhSeM6xe7yEfBxwYez
-         imFrhkKJvGDGpF+rqC1AQM5cQAqMu+reIy5uUB7z9Q7EzhWhKt1Fov9RjhEhKaeL3YMc
-         wGSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725277650; x=1725882450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hmkdnwlSerOnz16nfYv4J9q25exICbOT5rjg2+Kj6lo=;
-        b=W39gRq3oGKGQCQ+iYsFbnyabDhC5YjAoQGyATSTotqxH3I8BBdVfbUaWcdCJCZSzgi
-         uYWhNGKHAQaEC4VCQMgpbK6udhZEgyBJ3zUI+AnVwFK8S17ChPMKc/W8NDkFXIHvH8gy
-         CqH0doYKsqUl26Fy28wbMtHcCiSNuZG0pOJjqWPNFuDHGw9aSJ+dCYeLhQrdTjvgmY0z
-         jfKlIn8Dzyh+XESBcJILzdx2toeRQPfnbWEjMXK1+Nb/1mUBsyxh9ZYU3e+trl01JUk+
-         Db7FdOoWfjKt5Tq4EnRhM0xKLL/YqHw8pl3a8LtL+U0XKOT+3g1xh7f0xZ91ticEZQRj
-         qS6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWUdVr6NIxJqWEN2IZXyl52uZ4fhnmnAFyTvdvPja1cJEIqVhFPjcZMM1ptQwuZKTyDJDk0l6HhMWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy51V/pkJMH3bS2/j7mnDIY0opjYP2mEjaCh5nmJXA7AntLRIRJ
-	bpRMCcjJJJDyFhCIsfby+nEA2YV/eBFvVDTMJ/lnXsIuHGoUvtctIPeDE6Lzup+8VXEaidGXEi2
-	5TMuD6le2hVZuPYaAJddrJDKSOa5Hiqj+mI1geA==
-X-Google-Smtp-Source: AGHT+IFIsSARMtKU0g5FSaa9UWlCgiZOvixsNCAnWK4GqMpNsF2Hke0PDXVDoJo1TWxigk4xdQQ1MRBQYR2Omld/J10=
-X-Received: by 2002:a05:6214:2d4a:b0:6bf:9eff:55e5 with SMTP id
- 6a1803df08f44-6c33e6b1c93mr167696616d6.41.1725277650302; Mon, 02 Sep 2024
- 04:47:30 -0700 (PDT)
+	s=arc-20240116; t=1725277915; c=relaxed/simple;
+	bh=G8ycq0WczwjJJimX4DKoW6Uw11L/rhjQxOpr2oWvQDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hIAunuo+CsO24f3mge97FrodhRSUriYZFxeC4nGQDbt/akZWIWQ+3FdNXyCK/jXMV5FM+vcFcrxoiCuuzGLSgzK5Dqu9fZm3lB6u6N4xad7J3tOMrKdRY1z6WZwYHODyX/8i0wl0l0g9V6DZBmitifOzr7JzAb2shdHUWXZh9PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wafNvgmo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qVzEGv7M; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y67vX62j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=t9KL86iP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2D7AF1FBAB;
+	Mon,  2 Sep 2024 11:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1725277911; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DuUf9ZYGQnQ07mqGb3FZd8XyxxtXb4/zWlgGPHfkbxw=;
+	b=wafNvgmo858hgQs2ma/vmCZdIOndcXakt/lvzxQNj25zk5ELWa0htvWkTOTRFM3Glsnna1
+	JdgjU3RR+TJw9lXEpb+dmGEp9ZSU0vcVC7Mi+u8fDak4FoEqNvOUqf1wWpOdsojKFD/HMk
+	PDdxKQZObnZcnx92qEKsRJKL7UxVUc8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1725277911;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DuUf9ZYGQnQ07mqGb3FZd8XyxxtXb4/zWlgGPHfkbxw=;
+	b=qVzEGv7MQfT9po4LWJG3Zxcn8fQoOWgyxnR437ugaLp5Z+I8Fxu388ogHOHUSsS8jg4ICo
+	xWpZ5javH2Df9EBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1725277910; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DuUf9ZYGQnQ07mqGb3FZd8XyxxtXb4/zWlgGPHfkbxw=;
+	b=Y67vX62jTwGS2mnpVk1L+J0bF5BB0dKUBS+s16sToehgXmMjCTRQsAWCJIU1uCbC+/0Mq8
+	2J/EGYKCRwWA7gzJIdMify8k2rMdr8oF5CiUI3ppgw8YpyHzhxfL+tL7vftUCDLtoaI4on
+	dMc+4nDJSYfLmSNlXCweQpjvPcQzaI4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1725277910;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DuUf9ZYGQnQ07mqGb3FZd8XyxxtXb4/zWlgGPHfkbxw=;
+	b=t9KL86iPiq37XGedNMxvWBFtJt02AwdNXhRXeJ6Kst4a+HAGqvB7uiiNWrZsQFRxppbUOT
+	qS1kcbHaMKwO5mCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1DC5413A7C;
+	Mon,  2 Sep 2024 11:51:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s/TyBtam1WaaAwAAD6G6ig
+	(envelope-from <mdoucha@suse.cz>); Mon, 02 Sep 2024 11:51:50 +0000
+Message-ID: <34425a20-466b-4a18-8353-ad71cfb9fef6@suse.cz>
+Date: Mon, 2 Sep 2024 13:51:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240829091340.2043-1-laoar.shao@gmail.com> <D27B60B1-E44E-4A89-BB2E-EF01526CB432@redhat.com>
- <CALOAHbDuThEW=osQudcxGQtFQqePaHzbG3MJyzGi=fLGbUqmKg@mail.gmail.com> <6B62A228-6C9C-4CDD-8334-E26C11DB51A1@redhat.com>
-In-Reply-To: <6B62A228-6C9C-4CDD-8334-E26C11DB51A1@redhat.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 2 Sep 2024 19:46:53 +0800
-Message-ID: <CALOAHbD0vhRypzEJDKJgCzYTzrhoiofzRZWF4rgr304NMXTjBw@mail.gmail.com>
-Subject: Re: [RFC PATCH] NFS: Fix missing files in `ls` command output
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] Add test for per-NS NFS client statistics
+To: Petr Vorel <pvorel@suse.cz>
+Cc: NeilBrown <neilb@suse.de>, Chuck Lever III <chuck.lever@oracle.com>,
+ ltp@lists.linux.it, linux-nfs@vger.kernel.org
+References: <20240830141453.28379-1-mdoucha@suse.cz>
+ <20240830200933.GB90470@pevik>
+Content-Language: en-US
+From: Martin Doucha <mdoucha@suse.cz>
+Autocrypt: addr=mdoucha@suse.cz; keydata=
+ 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 ag==
+In-Reply-To: <20240830200933.GB90470@pevik>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, Aug 30, 2024 at 1:57=E2=80=AFAM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> On 29 Aug 2024, at 8:54, Yafang Shao wrote:
->
-> > On Thu, Aug 29, 2024 at 8:44=E2=80=AFPM Benjamin Coddington <bcodding@r=
-edhat.com> wrote:
-> >>
-> >> On 29 Aug 2024, at 5:13, Yafang Shao wrote:
-> >>
-> >>> In our production environment, we noticed that some files are missing=
- when
-> >>> running the ls command in an NFS directory. However, we can still
-> >>> successfully cd into the missing directories. This issue can be illus=
-trated
-> >>> as follows:
-> >>>
-> >>>   $ cd nfs
-> >>>   $ ls
-> >>>   a b c e f            <<<< 'd' is missing
-> >>>   $ cd d               <<<< success
-> >>>
-> >>> I verified the issue with the latest upstream kernel, and it still
-> >>> persists. Further analysis reveals that files go missing when the dts=
-ize is
-> >>> expanded. The default dtsize was reduced from 1MB to 4KB in commit
-> >>> 580f236737d1 ("NFS: Adjust the amount of readahead performed by NFS r=
-eaddir").
-> >>> After restoring the default size to 1MB, the issue disappears. I also=
- tried
-> >>> setting the default size to 8KB, and the issue similarly disappears.
-> >>>
-> >>> Upon further analysis, it appears that there is a bad entry being dec=
-oded
-> >>> in nfs_readdir_entry_decode(). When a bad entry is encountered, the
-> >>> decoding process breaks without handling the error. We should revert =
-the
-> >>> bad entry in such cases. After implementing this change, the issue is
-> >>> resolved.
-> >>
-> >> It seems like you're trying to handle a server bug of some sort.  Have=
- you
-> >> been able to look at a wire capture to determine why there's a bad ent=
-ry?
-> >
-> > I've used tcpdump to analyze the packets but didn't find anything
-> > suspicious. Do you have any suggestions?
->
-> I'd check to make sure the server isn't overrunning the READDIR request's
-> dircount and maxcount (they should be the same for the linux client).  If
-> the server isn't exceeding them, then there's a likely client bug.
->
-> Ben
->
+Hi,
 
-Hello Ben,
+On 30. 08. 24 22:09, Petr Vorel wrote:
+> Hi Martin,
+> 
+>> +# PURPOSE:  Check that /proc/net/rpc/nfs exists in nested network namespaces
+> I would point here a commit which added it or a patchset.
+> 
+> Shell API does not have functionality to point out missing kernel git commit,
+> but that might change. But even without it a comment is useful.
+> 
+> Maybe point out d47151b79e32 ("nfs: expose /proc/net/sunrpc/nfs in net namespaces")
+> and whole patchset
+> https://lore.kernel.org/linux-nfs/cover.1708026931.git.josef@toxicpanda.com/
 
-Upon thorough examination, we have identified the root cause of the
-issue to lie within the NFS server, specifically its behavior of
-truncating file listings to match the client's READDIR RPC args->size
-parameter without appropriately adjusting the cookie value. After
-implementing a fix on the server side, the issue has been resolved.
-However, to enhance resilience and mitigate future server-side
-vulnerabilities, it may be prudent to implement client-side handling
-mechanisms for such issues. What do you think?
+Feel free to add the comment during merge.
 
---=20
-Regards
-Yafang
+-- 
+Martin Doucha   mdoucha@suse.cz
+SW Quality Engineer
+SUSE LINUX, s.r.o.
+CORSO IIa
+Krizikova 148/34
+186 00 Prague 8
+Czech Republic
+
 
