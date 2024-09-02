@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-6112-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6113-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57C08967CD4
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 01:53:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79130967D12
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 02:51:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4B43280DF7
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Sep 2024 23:53:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEF4D1F2159F
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 00:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F79D13A3ED;
-	Sun,  1 Sep 2024 23:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56212CA5;
+	Mon,  2 Sep 2024 00:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sv6KiahB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="75vcbQMZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P/wfWp3d";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ft+Mzkx4"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OsMHk54z";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5yuFEIe9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JtBGAxJH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BnThm87a"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD0EF4EB;
-	Sun,  1 Sep 2024 23:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D7BA47
+	for <linux-nfs@vger.kernel.org>; Mon,  2 Sep 2024 00:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725234798; cv=none; b=hzvtpmB//5nZ5jQ1vSFUtq/7JdIf0xNFBXFTY2kyA7+DLbSscapQjBLoyE5PcVqQ9gbnUUMnP7CK/qgCxbW7j7QodJ0bjTI1Z3vM+gkwzpnefn0ABkgQYynEkfwaqN+FG/qfix1IM5eq9BQmnVNHVFpwRWXGWxmdpOR1ruGZZNo=
+	t=1725238279; cv=none; b=uz/hrMxYCkX253xjC5ZH/WkMtWulH65kNdAJ3Uug+bLLalWHzRty3UQpEt+7jwBtvXCidM9RtrXOr+KIgNJrmeJA+LZvv/BOHwKumAKkk8m6Qjn/TV8dmqILFMbcwnu4koRGx91iarjd7hym1sYdLl3vfHwqfL+11HnD7pXGuPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725234798; c=relaxed/simple;
-	bh=1hWs7Xakpjnz1f+3A2PP3awmKEWSZUZlHmp4cKqDz+w=;
+	s=arc-20240116; t=1725238279; c=relaxed/simple;
+	bh=whNgsQ6uviH1b7KOphda2K6rjuSJI7ZxDnr8k6mc9fE=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=hT4a2iEtpXOG76mvo90ldorZqlhWddbYE8/zslalnXOeNb/cRhMwVmqwFcveX+nWluqY+0tqim9K3K34QjUNubmFSa+UnDfgJp9+6owLJPVtms5ZK2HlaS90tKFqTldZ6npGdWKkWkALMbv5IKWU8cEngAqGY1JHWmaTQPykHDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sv6KiahB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=75vcbQMZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P/wfWp3d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ft+Mzkx4; arc=none smtp.client-ip=195.135.223.130
+	 References:Date:Message-id; b=j2CPnPL6bFBZM1k4sWYvr0UXlOfht1zGGTEyRezU1nCX3SkaljGBYifYvN8P0sKCu8i45cqfFS5kc6F0+T0eTZllopHlMD4jTGhlqEu6Gf+71ywjATgyjAlZHi8b6DR8v12iXX7kojGTJRKt4jAg+tggT+7kZ8KWNRdvSUfJhQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OsMHk54z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5yuFEIe9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JtBGAxJH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BnThm87a; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ECA2F219D2;
-	Sun,  1 Sep 2024 23:53:14 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 78C7721B0C;
+	Mon,  2 Sep 2024 00:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725234795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1725238276; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BZc4JStUPmZHb+mbJjBbmHlsiM3ok5bXfNP1dDG7tc0=;
-	b=sv6KiahBGB3o+OcW4gfodH3V5N9EmGugqOnfonCq/wJ9LrVTwS1rtNeLyHVIIbQ7eoPZFL
-	iIgPq1XgsOQfr0AJrvJYIYsyaSbh+8qY3tCWdJeEpPF84wK/ZdNXYutV6YBftYcohCDsKd
-	8bZjE0ZM+qxRm86H4Dm4PRga67XTh3Q=
+	bh=lhKqk0KLZ6IaXyyxMnWYJVaAHrCLnOK7b7vetKeDieM=;
+	b=OsMHk54ziRldeNPlyLjyyfcQsk3fAQjsregnucOL3rLZDApI1KyFSn6cpM59D69n+vGwx+
+	coYK8+yqTWhQVG4bcCbyz8rcrmtRrRGIszaLsHMwkilDqPjtV6Ig3a6kvF2GHxk1R4zURl
+	f1D6QMmQo8xOlV9NjKaTBmezja/NZqs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725234795;
+	s=susede2_ed25519; t=1725238276;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BZc4JStUPmZHb+mbJjBbmHlsiM3ok5bXfNP1dDG7tc0=;
-	b=75vcbQMZUdxFcKjJWO4eQRU7MccqsTc0xwF62yIXNGnsCkOExVGmfHyLBiqhQkkVhVhUqI
-	gq41PJ9P2X+gfdCw==
+	bh=lhKqk0KLZ6IaXyyxMnWYJVaAHrCLnOK7b7vetKeDieM=;
+	b=5yuFEIe9hOEe6f8WGtlE77Dzz4J6cabppRqESYEmuRfE1wxe2URZ41B9khnjnZpjt/gdjE
+	jxo5ZSvIDanT0sAQ==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725234794; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1725238275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BZc4JStUPmZHb+mbJjBbmHlsiM3ok5bXfNP1dDG7tc0=;
-	b=P/wfWp3dP7d6OJDRyNBJWsN2t3eJg+SpDUZaRnqyyGwbIuk0KzL3f3TcFhpy8ZID0iW6Bd
-	2vGP4M8KDQ3HHXaF/DSS0xuy58+CdcXEz3I8hZFggmbEG8l8CWbfYe1lYuWSJtE3jL8pG8
-	/qnZ572ibB90JOH0ditJwsfylfnaBYI=
+	bh=lhKqk0KLZ6IaXyyxMnWYJVaAHrCLnOK7b7vetKeDieM=;
+	b=JtBGAxJHau+wRxX/zTV7snKXfHwSA23FtmzxYvhTCK9tLG8p0OwWiKZE519qE4XHgOrMT7
+	saGY3psBu0+NzquL6Phs5gsabtqtxwb3L6JdZm/FeXt2In5rdduQEpTXBYGSPGouSiCIGS
+	KazFUssAH7FOHrMNEH26SLI28Ex2VKA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725234794;
+	s=susede2_ed25519; t=1725238275;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BZc4JStUPmZHb+mbJjBbmHlsiM3ok5bXfNP1dDG7tc0=;
-	b=ft+Mzkx42oONCoHuCLWhDUapKny2qIx3uKqTcr0LVKWCs0CUVty+8RTZZw/VP/5Wg0tlUn
-	Z2gcouQjwYTx5ZCw==
+	bh=lhKqk0KLZ6IaXyyxMnWYJVaAHrCLnOK7b7vetKeDieM=;
+	b=BnThm87auYC93LdjcPRqHSNhVAhrS5qUgBQqa+zflabqxZBFdF/fcLK3G4TTcXkSe2A1W5
+	7I5hDL77KClEMGDw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8AF331373A;
-	Sun,  1 Sep 2024 23:53:12 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 36FEC1397F;
+	Mon,  2 Sep 2024 00:51:13 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id trPLD2j+1GaiMgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 01 Sep 2024 23:53:12 +0000
+	id vg5LNwEM1WbMQAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 02 Sep 2024 00:51:13 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -97,26 +97,24 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v15 00/26] nfs/nfsd: add support for LOCALIO
-In-reply-to: <20240831223755.8569-1-snitzer@kernel.org>
-References: <20240831223755.8569-1-snitzer@kernel.org>
-Date: Mon, 02 Sep 2024 09:52:54 +1000
-Message-id: <172523477460.4433.8873238976467311263@noble.neil.brown.name>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 0/2] nfsd: improvements for wake_up_bit/var
+In-reply-to: <ZtHZa+ww1Ec3nkxg@tissot.1015granger.net>
+References: <20240830070653.7326-1-neilb@suse.de>,
+ <ZtHZa+ww1Ec3nkxg@tissot.1015granger.net>
+Date: Mon, 02 Sep 2024 10:51:02 +1000
+Message-id: <172523826289.4433.3121429979430193675@noble.neil.brown.name>
 X-Spam-Score: -4.30
 X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[99.99%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
 	MIME_GOOD(-0.10)[text/plain];
 	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_TLS_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
@@ -125,34 +123,47 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+	RCPT_COUNT_THREE(0.00)[3]
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-On Sun, 01 Sep 2024, Mike Snitzer wrote:
-> Hi,
+On Sat, 31 Aug 2024, Chuck Lever wrote:
+> On Fri, 30 Aug 2024 17:03:15 +1000, NeilBrown wrote:
+> > I've been digging into wake_up_bit and wake_up_var recently.  There are
+> > a lot of places where the required barriers aren't quite right.
+> > 
+> > This patch fixes them up for nfsd.  The bugs are mostly minor, though
+> > the rp_locked on might be a credible problem on weakly ordered hosts
+> > (e.g.  power64).
+> > 
+> > [...]
 > 
-> Happy Labor Day weekend (US holiday on Monday)!  Seems apropos to send
-> what I hope the final LOCALIO patchset this weekend: its my birthday
-> this coming Tuesday, so _if_ LOCALIO were to get merged for 6.12
-> inclusion sometime next week: best b-day gift in a while! ;)
+> Applied to nfsd-next for v6.12, thanks!
 > 
-> Anyway, I've been busy incorporating all the review feedback from v14
-> _and_ working closely with NeilBrown to address some lingering net-ns
-> refcounting and nfsd modules refcounting issues, and more (Chnagelog
-> below):
+> [1/2] nfsd: use clear_and_wake_up_bit()
+>       commit: 2b9a19d16beda1b2ca5edab47d74b73d4d958b12
+> [2/2] nfsd: avoid races with wake_up_var()
+>       commit: a2bf7d13821603fb90c3f6e695bd5fb4ee19de71
+> 
+> Both of these patches threw compilation errors. I corrected those
+> issues before applying. Please check my work.
 
-I think this is close enough to land.  There are a number of
-imperfections but those that I can see are minor and can be fixed up
-later.  They would be easier to review and discuss after landing, rather
-then trying to find the changes in a v16 and review them amid all the
-noise.
+Thanks for that ...  I really shouldn't post patches in the afternoon -
+I'm not thinking as clearly :-(
 
-So feel free to add:
-  Reviewed-by: NeilBrown <neilb@suse.de>
+> 
+> checkpatch.pl complained about the lack of comment on the added
+> barriers. I felt the code was self-explanatory so made no change.
+> 
 
-to any patch that doesn't already have it.
+I'd really like a wake_up_var_after_atomic() but Linus wasn't keen on
+going in that direction.
 
-Thanks,
+if/when my improvements land
+  https://lore.kernel.org/all/20240826063659.15327-1-neilb@suse.de/
+we could change rp_locked to an "int" and use
+   store_release_wake_up()
+which includes that required barrier.
+
 NeilBrown
 
