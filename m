@@ -1,339 +1,121 @@
-Return-Path: <linux-nfs+bounces-6125-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6126-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EA569688A1
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 15:22:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF1789689A5
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 16:16:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F3CE1F22C89
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 13:22:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8592B1F23999
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Sep 2024 14:16:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72ED201262;
-	Mon,  2 Sep 2024 13:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340F519F13C;
+	Mon,  2 Sep 2024 14:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1oJF3DT0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7dP0lJSF";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1oJF3DT0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7dP0lJSF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9ii7mo0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FFF13E8A5;
-	Mon,  2 Sep 2024 13:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E356AEC4;
+	Mon,  2 Sep 2024 14:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725283371; cv=none; b=tMeirWCw1+dnx0b0kL2aXCq8Jiwn6yQfdCECcBxEHvtkCBJcsJ3YSh8PyoJSYto26n5K1kJ/DM0KBQt7xQudTfe/zaAJEvM2tG9wTDXnZhRGyzhoairnakBu/QRvb0HBGksyQ1pXopMW0vMd2thYIejxFCuryzGebY94QHzyBSE=
+	t=1725286605; cv=none; b=Um5/ZWmJoY2actpYkUp0lbNubhtDbht+ej3eJFZyRCeIt8uCrJVFs3MeIItui/3deRBqUJWyMVg/pzAPSH2qxSxKFvObFrRuS1omij9Km8K9B0uzUBYd9r4sqoFcdKqsBYocJAdiRnyFv58v6WQHusxbwMgDng50LvmXOS8Q3HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725283371; c=relaxed/simple;
-	bh=YnCwNQx7TKvbzrgN+Hy9VQiHnLlbt2oyWQ6b7LX2hWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2m9VoVP+52ZozOvLD5vF3coRrJ5zIZOB9W0XaRI+ZW61wCKmldwgNwhzniQirVMVSx/SoZzi6A7u02hNzwhcIjrlnbVKWlqX6TmvAB/MEkFwJBmSEIMnnUPitLvGbUcsdZ39xwXedo2zQ6SiN52bcrEIWd+urrr0wVx64sJG2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1oJF3DT0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7dP0lJSF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1oJF3DT0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7dP0lJSF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 554F221B4F;
-	Mon,  2 Sep 2024 13:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725283367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2rPewlUTCLHFU77P7SyUEMQn7mEnc4uHPNt62pP4RE4=;
-	b=1oJF3DT0giQJmLP3bX0+t4q2163U5ZHSJh++EIPMIB0hIOg0TTmZ0rCJsdBhmplQs+Fd7y
-	OZVtlN8++IscoCDV2vtCd2Sys3WrgPOncWJPy31jkpUR45qMXNpYyPaO0DMajvqHosWr8+
-	olRTpqeHgCjCSHykaGfhgG6u67PQ7/Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725283367;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2rPewlUTCLHFU77P7SyUEMQn7mEnc4uHPNt62pP4RE4=;
-	b=7dP0lJSFtnB/59XKeRj0hXRPYT7dpx/Iz2gNpbD9a5jJL+lYcncciFRqEupvLg4RiBaM4R
-	jzg+//I0EoX5GXBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1oJF3DT0;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=7dP0lJSF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725283367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2rPewlUTCLHFU77P7SyUEMQn7mEnc4uHPNt62pP4RE4=;
-	b=1oJF3DT0giQJmLP3bX0+t4q2163U5ZHSJh++EIPMIB0hIOg0TTmZ0rCJsdBhmplQs+Fd7y
-	OZVtlN8++IscoCDV2vtCd2Sys3WrgPOncWJPy31jkpUR45qMXNpYyPaO0DMajvqHosWr8+
-	olRTpqeHgCjCSHykaGfhgG6u67PQ7/Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725283367;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2rPewlUTCLHFU77P7SyUEMQn7mEnc4uHPNt62pP4RE4=;
-	b=7dP0lJSFtnB/59XKeRj0hXRPYT7dpx/Iz2gNpbD9a5jJL+lYcncciFRqEupvLg4RiBaM4R
-	jzg+//I0EoX5GXBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44ECC13A7C;
-	Mon,  2 Sep 2024 13:22:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wAnNECe81Wa9IAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 02 Sep 2024 13:22:47 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id F09FEA0965; Mon,  2 Sep 2024 15:22:46 +0200 (CEST)
-Date: Mon, 2 Sep 2024 15:22:46 +0200
-From: Jan Kara <jack@suse.cz>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
+	s=arc-20240116; t=1725286605; c=relaxed/simple;
+	bh=pZJKuEon2kw+wY+aGvN7XrGtdhq0gfM6kzmz3gvUazs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZPWgDSDgKgHBDtT4QgVuDeaUhMjYxbQh1Tpy/qSKBPpneE6deDpqlZkXU4bZQ9InM5G76I7lVfOfAKGYWXwNqJdorl/RH9o512G0TZjd0HCy1wz3Iv85esGmNLJVEvM2E1jy4Gc2wLOvrS4GZqI3AMBnCiLxvj7qonDhbGxndyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9ii7mo0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D79C4CEC2;
+	Mon,  2 Sep 2024 14:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725286604;
+	bh=pZJKuEon2kw+wY+aGvN7XrGtdhq0gfM6kzmz3gvUazs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=R9ii7mo0bwkh9Tff/Ayvgd4ezPg4AdPdHFqzl5k/LyQX+7xGG9YC/4HzH5Yka6hh8
+	 zfwmEjNt6bCuxfsTEj/SpPmpCoPNM5MR24kKyejKV3x5ibhjireFoqEWPg3/ICePwG
+	 1mH2Ckn8PzplJvzqgmsKTGpCzQuxqqFxzzlj5x9KGTzH2yUwqw+XcA7NwDrrc/Va74
+	 HCBImnOz0lIgGyvL2YuHgPwFEySUg27jZNBrf9EngUpvAMD+i4iV7xwxj4r0MkI+3j
+	 PrD+qUjpPInBSqhj9EsCBnFA5r6aeLKvY0S745jGoY8YEGAOogZtBXGcGAChfcn8Qs
+	 beJjOa2d/rGnQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Jonathan Corbet <corbet@lwn.net>, Tom Haynes <loghyr@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 11/13] fs: handle delegated timestamps in
- setattr_copy_mgtime
-Message-ID: <20240902132246.zorbw3filqh73dms@quack3>
-References: <20240829-delstid-v3-0-271c60806c5d@kernel.org>
- <20240829-delstid-v3-11-271c60806c5d@kernel.org>
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH RESEND v3 0/2] fhandle: expose u64 mount id to name_to_handle_at(2)
+Date: Mon,  2 Sep 2024 16:16:31 +0200
+Message-ID: <20240902-klargemacht-hellt-2afa8847aed6@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
+References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240829-delstid-v3-11-271c60806c5d@kernel.org>
-X-Rspamd-Queue-Id: 554F221B4F
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,suse.de,netapp.com,talpey.com,kernel.org,redhat.com,zeniv.linux.org.uk,suse.cz,lwn.net,gmail.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim,suse.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1692; i=brauner@kernel.org; h=from:subject:message-id; bh=pZJKuEon2kw+wY+aGvN7XrGtdhq0gfM6kzmz3gvUazs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRdPXFgQtSmpg2qx3b9dLtXr+Zk8GnWfmcrqS3Sfil+r Wd1wlOudJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExk7XaG/0mrl3DkrU3d+yPs R4nwPc7U1fF7OybmvzPx6e1geHN+ojHD/8j4+2mGtkd7r6t0vOzfOkXdY2ZopV5DSCnbsuiASHl HJgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Thu 29-08-24 09:26:49, Jeff Layton wrote:
-> When updating the ctime on an inode for a SETATTR with a multigrain
-> filesystem, we usually want to take the latest time we can get for the
-> ctime. The exception to this rule is when there is a nfsd write
-> delegation and the server is proxying timestamps from the client.
+On Wed, 28 Aug 2024 20:19:41 +1000, Aleksa Sarai wrote:
+> Now that we provide a unique 64-bit mount ID interface in statx(2), we
+> can now provide a race-free way for name_to_handle_at(2) to provide a
+> file handle and corresponding mount without needing to worry about
+> racing with /proc/mountinfo parsing or having to open a file just to do
+> statx(2).
 > 
-> When nfsd gets a CB_GETATTR response, we want to update the timestamp
-> value in the inode to the values that the client is tracking. The client
-> doesn't send a ctime value (since that's always determined by the
-> exported filesystem), but it can send a mtime value. In the case where
-> it does, then we may need to update the ctime to a value commensurate
-> with that instead of the current time.
+> While this is not necessary if you are using AT_EMPTY_PATH and don't
+> care about an extra statx(2) call, users that pass full paths into
+> name_to_handle_at(2) need to know which mount the file handle comes from
+> (to make sure they don't try to open_by_handle_at a file handle from a
+> different filesystem) and switching to AT_EMPTY_PATH would require
+> allocating a file for every name_to_handle_at(2) call, turning
 > 
-> If ATTR_DELEG is set, then use ia_ctime value instead of setting the
-> timestamp to the current time.
-> 
-> With the addition of delegated timestamps we can also receive a request
-> to update only the atime, but we may not need to set the ctime. Trust
-> the ATTR_CTIME flag in the update and only update the ctime when it's
-> set.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> [...]
 
-Looks good to me. Feel free to add:
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-								Honza
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-> ---
->  fs/attr.c          | 28 +++++++++++++--------
->  fs/inode.c         | 74 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fs.h |  2 ++
->  3 files changed, 94 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/attr.c b/fs/attr.c
-> index 3bcbc45708a3..392eb62aa609 100644
-> --- a/fs/attr.c
-> +++ b/fs/attr.c
-> @@ -286,16 +286,20 @@ static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
->  	unsigned int ia_valid = attr->ia_valid;
->  	struct timespec64 now;
->  
-> -	/*
-> -	 * If the ctime isn't being updated then nothing else should be
-> -	 * either.
-> -	 */
-> -	if (!(ia_valid & ATTR_CTIME)) {
-> -		WARN_ON_ONCE(ia_valid & (ATTR_ATIME|ATTR_MTIME));
-> -		return;
-> +	if (ia_valid & ATTR_CTIME) {
-> +		/*
-> +		 * In the case of an update for a write delegation, we must respect
-> +		 * the value in ia_ctime and not use the current time.
-> +		 */
-> +		if (ia_valid & ATTR_DELEG)
-> +			now = inode_set_ctime_deleg(inode, attr->ia_ctime);
-> +		else
-> +			now = inode_set_ctime_current(inode);
-> +	} else {
-> +		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
-> +		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
->  	}
->  
-> -	now = inode_set_ctime_current(inode);
->  	if (ia_valid & ATTR_ATIME_SET)
->  		inode_set_atime_to_ts(inode, attr->ia_atime);
->  	else if (ia_valid & ATTR_ATIME)
-> @@ -354,8 +358,12 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
->  		inode_set_atime_to_ts(inode, attr->ia_atime);
->  	if (ia_valid & ATTR_MTIME)
->  		inode_set_mtime_to_ts(inode, attr->ia_mtime);
-> -	if (ia_valid & ATTR_CTIME)
-> -		inode_set_ctime_to_ts(inode, attr->ia_ctime);
-> +	if (ia_valid & ATTR_CTIME) {
-> +		if (ia_valid & ATTR_DELEG)
-> +			inode_set_ctime_deleg(inode, attr->ia_ctime);
-> +		else
-> +			inode_set_ctime_to_ts(inode, attr->ia_ctime);
-> +	}
->  }
->  EXPORT_SYMBOL(setattr_copy);
->  
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 01f7df1973bd..f0fbfd470d8e 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -2835,6 +2835,80 @@ struct timespec64 inode_set_ctime_current(struct inode *inode)
->  }
->  EXPORT_SYMBOL(inode_set_ctime_current);
->  
-> +/**
-> + * inode_set_ctime_deleg - try to update the ctime on a delegated inode
-> + * @inode: inode to update
-> + * @update: timespec64 to set the ctime
-> + *
-> + * Attempt to atomically update the ctime on behalf of a delegation holder.
-> + *
-> + * The nfs server can call back the holder of a delegation to get updated
-> + * inode attributes, including the mtime. When updating the mtime we may
-> + * need to update the ctime to a value at least equal to that.
-> + *
-> + * This can race with concurrent updates to the inode, in which
-> + * case we just don't do the update.
-> + *
-> + * Note that this works even when multigrain timestamps are not enabled,
-> + * so use it in either case.
-> + */
-> +struct timespec64 inode_set_ctime_deleg(struct inode *inode, struct timespec64 update)
-> +{
-> +	ktime_t now, floor = atomic64_read(&ctime_floor);
-> +	struct timespec64 now_ts, cur_ts;
-> +	u32 cur, old;
-> +
-> +	/* pairs with try_cmpxchg below */
-> +	cur = smp_load_acquire(&inode->i_ctime_nsec);
-> +	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
-> +	cur_ts.tv_sec = inode->i_ctime_sec;
-> +
-> +	/* If the update is older than the existing value, skip it. */
-> +	if (timespec64_compare(&update, &cur_ts) <= 0)
-> +		return cur_ts;
-> +
-> +	now = coarse_ctime(floor);
-> +	now_ts = ktime_to_timespec64(now);
-> +
-> +	/* Clamp the update to "now" if it's in the future */
-> +	if (timespec64_compare(&update, &now_ts) > 0)
-> +		update = now_ts;
-> +
-> +	update = timestamp_truncate(update, inode);
-> +
-> +	/* No need to update if the values are already the same */
-> +	if (timespec64_equal(&update, &cur_ts))
-> +		return cur_ts;
-> +
-> +	/*
-> +	 * Try to swap the nsec value into place. If it fails, that means
-> +	 * we raced with an update due to a write or similar activity. That
-> +	 * stamp takes precedence, so just skip the update.
-> +	 */
-> +retry:
-> +	old = cur;
-> +	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, update.tv_nsec)) {
-> +		inode->i_ctime_sec = update.tv_sec;
-> +		mgtime_counter_inc(mg_ctime_swaps);
-> +		return update;
-> +	}
-> +
-> +	/*
-> +	 * Was the change due to someone marking the old ctime QUERIED?
-> +	 * If so then retry the swap. This can only happen once since
-> +	 * the only way to clear I_CTIME_QUERIED is to stamp the inode
-> +	 * with a new ctime.
-> +	 */
-> +	if (!(old & I_CTIME_QUERIED) && (cur == (old | I_CTIME_QUERIED)))
-> +		goto retry;
-> +
-> +	/* Otherwise, it was a new timestamp. */
-> +	cur_ts.tv_sec = inode->i_ctime_sec;
-> +	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
-> +	return cur_ts;
-> +}
-> +EXPORT_SYMBOL(inode_set_ctime_deleg);
-> +
->  /**
->   * in_group_or_capable - check whether caller is CAP_FSETID privileged
->   * @idmap:	idmap of the mount @inode was found from
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index eff688e75f2f..ea7ed437d2b1 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1544,6 +1544,8 @@ static inline bool fsuidgid_has_mapping(struct super_block *sb,
->  
->  struct timespec64 current_time(struct inode *inode);
->  struct timespec64 inode_set_ctime_current(struct inode *inode);
-> +struct timespec64 inode_set_ctime_deleg(struct inode *inode,
-> +					struct timespec64 update);
->  
->  static inline time64_t inode_get_atime_sec(const struct inode *inode)
->  {
-> 
-> -- 
-> 2.46.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/2] uapi: explain how per-syscall AT_* flags should be allocated
+      https://git.kernel.org/vfs/vfs/c/34cf40849654
+[2/2] fhandle: expose u64 mount id to name_to_handle_at(2)
+      https://git.kernel.org/vfs/vfs/c/9cde4ebc6f4f
 
