@@ -1,232 +1,143 @@
-Return-Path: <linux-nfs+bounces-6153-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6154-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD26096985F
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 11:11:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AF97969B1B
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 13:05:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D3BC281DDC
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 09:11:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E6031C23A0E
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 11:05:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 448AF19F43B;
-	Tue,  3 Sep 2024 09:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="ZBZAXABY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC061A42B4;
+	Tue,  3 Sep 2024 11:05:05 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905031C7669;
-	Tue,  3 Sep 2024 09:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536031A42AA;
+	Tue,  3 Sep 2024 11:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725354705; cv=none; b=P6CnQzMLM5M7aT6FB6hQjjdTwwYSzeT+GmP7xaZeg1n+3zP1MVt4OX541t/oVUb3t/UR/yNfoAIg5Pw67zHHZByzffpzATFx4sXkn132sQc3VKpUaDg8/BmxGl8rOyxYqbmMVw4GY3SnYtxDkXm8GufC5mu1AH2icFP5fF+1NBw=
+	t=1725361505; cv=none; b=MVorOex3gxA36Kul81nTG+zs+dV+AzlcO51zTopEDVLQzmtQ0l36Sar4bxxSbA0FL/sY3P3jbvOKt363l3+M4SAr5JucGxWmIdYYALberFhMwVg3O3HjG15AAdUUSEV0BdSzjEcpi43Pntc5cT8s1JdKpVtsOgvgOLTEfqO4o1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725354705; c=relaxed/simple;
-	bh=vTXnBN7RkGqWdbB/SBRPMbiet1ycfG5/HgtzTsoYtfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuA24i9cFzUPbACXt0VaKnYmzaEYYbWOdIH/ovr3b2NVnimEioVd+vIKgHyzbH0diWHNeflU1Db4bb57Hjt/UHjzJkgnRTlKPxd7vFDScEKSlBeKrJk9HB5dg1rfISu/5CR+jgwUKNhLxIJ1vdirRnutUYDglOoZ6ezVD+J2VV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=ZBZAXABY; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Wyfy23z0Tz9tCJ;
-	Tue,  3 Sep 2024 11:11:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1725354698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPzW6zq/WcQ/WiA0gxrcLJjcmAKmM8AZOEgUBVGohqU=;
-	b=ZBZAXABYVG2geXwbPM3S25PkgrHwvEQKgFi6QrCVNgQFuXfmqoT55sUlP9C4u26sOWaUR2
-	Ak9EVSIGIWcE+x1lwyaKkwHd3CjUehNN1jOSWo3Q71adbymmg82h7I3vGEtvaGjc5ddRUF
-	jojEcwx4S274kwzQ3ytsoYnnnTSheNseaHZSovzFZk3D2mxSWTur14Kfo8WMM4g6U/ge4m
-	7VfdButVk4vNzkBZtkFkRYfuu+2vwIrSL+tF3qAI9sXdSOkjkl9D6GLTvNLYboTfizO+gX
-	lTZbz/SPjZD+lGSMHlHWSINaZ7syGXUrJjwtdcMOY4gie+xQm5G2syNxCVEFVQ==
-Date: Tue, 3 Sep 2024 19:11:14 +1000
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Christoph Hellwig <hch@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount
- ID
-Message-ID: <20240903.084814-meek.porthole.lonely.employer-6kt9HpTqtbg4@cyphar.com>
-References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
- <20240902164554.928371-1-cyphar@cyphar.com>
- <20240902164554.928371-2-cyphar@cyphar.com>
- <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
+	s=arc-20240116; t=1725361505; c=relaxed/simple;
+	bh=hB6fcwq6XdKfTlxxS89U8hmHpeWw82yFyWLpkJ8m8B8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dcDg/vkp0KkO0Wl9TcmGZPXtKm953Tj6nK8M0a6R4KUBsoBtD4T0zglTNwK2KdzwYf7elVzH74Yb+7qiNNA8NPKtgoNBf01HF6iV283X++K3LU35caQ/YgIHBqvYFNvVr5n4EfQ1S9wEsb9wHfgr5AffjLlgHYCh5/mHB3VPK0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WyjM72jLBz20nDG;
+	Tue,  3 Sep 2024 19:00:03 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5ADC0140137;
+	Tue,  3 Sep 2024 19:04:59 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Sep
+ 2024 19:04:58 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
+	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH] nfsd: return -EINVAL when namelen is 0
+Date: Tue, 3 Sep 2024 19:14:46 +0800
+Message-ID: <20240903111446.659884-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ctvs2l4bgcgrysaf"
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
-X-Rspamd-Queue-Id: 4Wyfy23z0Tz9tCJ
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
+When we have a corrupted main.sqlite in /var/lib/nfs/nfsdcld/, it may
+result in namelen being 0, which will cause memdup_user() to return
+ZERO_SIZE_PTR.
+When we access the name.data that has been assigned the value of
+ZERO_SIZE_PTR in nfs4_client_to_reclaim(), null pointer dereference is
+triggered.
 
---ctvs2l4bgcgrysaf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ T1205] ==================================================================
+[ T1205] BUG: KASAN: null-ptr-deref in nfs4_client_to_reclaim+0xe9/0x260
+[ T1205] Read of size 1 at addr 0000000000000010 by task nfsdcld/1205
+[ T1205]
+[ T1205] CPU: 11 PID: 1205 Comm: nfsdcld Not tainted 5.10.0-00003-g2c1423731b8d #406
+[ T1205] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+[ T1205] Call Trace:
+[ T1205]  dump_stack+0x9a/0xd0
+[ T1205]  ? nfs4_client_to_reclaim+0xe9/0x260
+[ T1205]  __kasan_report.cold+0x34/0x84
+[ T1205]  ? nfs4_client_to_reclaim+0xe9/0x260
+[ T1205]  kasan_report+0x3a/0x50
+[ T1205]  nfs4_client_to_reclaim+0xe9/0x260
+[ T1205]  ? nfsd4_release_lockowner+0x410/0x410
+[ T1205]  cld_pipe_downcall+0x5ca/0x760
+[ T1205]  ? nfsd4_cld_tracking_exit+0x1d0/0x1d0
+[ T1205]  ? down_write_killable_nested+0x170/0x170
+[ T1205]  ? avc_policy_seqno+0x28/0x40
+[ T1205]  ? selinux_file_permission+0x1b4/0x1e0
+[ T1205]  rpc_pipe_write+0x84/0xb0
+[ T1205]  vfs_write+0x143/0x520
+[ T1205]  ksys_write+0xc9/0x170
+[ T1205]  ? __ia32_sys_read+0x50/0x50
+[ T1205]  ? ktime_get_coarse_real_ts64+0xfe/0x110
+[ T1205]  ? ktime_get_coarse_real_ts64+0xa2/0x110
+[ T1205]  do_syscall_64+0x33/0x40
+[ T1205]  entry_SYSCALL_64_after_hwframe+0x67/0xd1
+[ T1205] RIP: 0033:0x7fdbdb761bc7
+[ T1205] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 514
+[ T1205] RSP: 002b:00007fff8c4b7248 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[ T1205] RAX: ffffffffffffffda RBX: 000000000000042b RCX: 00007fdbdb761bc7
+[ T1205] RDX: 000000000000042b RSI: 00007fff8c4b75f0 RDI: 0000000000000008
+[ T1205] RBP: 00007fdbdb761bb0 R08: 0000000000000000 R09: 0000000000000001
+[ T1205] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000042b
+[ T1205] R13: 0000000000000008 R14: 00007fff8c4b75f0 R15: 0000000000000000
+[ T1205] ==================================================================
 
-On 2024-09-03, Amir Goldstein <amir73il@gmail.com> wrote:
-> On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
-rote:
-> >
-> > Now that open_by_handle_at(2) can return u64 mount IDs, do some tests to
-> > make sure they match properly as part of the regular open_by_handle
-> > tests.
-> >
-> > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0-1=
-0c2c4c16708@cyphar.com/
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> > v2:
-> > - Remove -M argument and always do the mount ID tests. [Amir Goldstein]
-> > - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
-> >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
-> > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cyph=
-ar.com/>
-> >
-> >  src/open_by_handle.c | 128 +++++++++++++++++++++++++++++++++----------
-> >  1 file changed, 99 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/src/open_by_handle.c b/src/open_by_handle.c
-> > index d9c802ca9bd1..0ad591da632e 100644
-> > --- a/src/open_by_handle.c
-> > +++ b/src/open_by_handle.c
-> > @@ -86,10 +86,16 @@ Examples:
-> >  #include <errno.h>
-> >  #include <linux/limits.h>
-> >  #include <libgen.h>
-> > +#include <stdint.h>
-> > +#include <stdbool.h>
-> >
-> >  #include <sys/stat.h>
-> >  #include "statx.h"
-> >
-> > +#ifndef AT_HANDLE_MNT_ID_UNIQUE
-> > +#      define AT_HANDLE_MNT_ID_UNIQUE 0x001
-> > +#endif
-> > +
-> >  #define MAXFILES 1024
-> >
-> >  struct handle {
-> > @@ -120,6 +126,94 @@ void usage(void)
-> >         exit(EXIT_FAILURE);
-> >  }
-> >
-> > +int do_name_to_handle_at(const char *fname, struct file_handle *fh, in=
-t bufsz)
-> > +{
-> > +       int ret;
-> > +       int mntid_short;
-> > +
-> > +       static bool skip_mntid_unique;
-> > +
-> > +       uint64_t statx_mntid_short =3D 0, statx_mntid_unique =3D 0;
-> > +       struct statx statxbuf;
-> > +
-> > +       /* Get both the short and unique mount id. */
-> > +       if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID, &statxbuf) < 0) {
->=20
-> This fails build on top of latest for-next branch with commit
-> 873e36c9 - statx.h: update to latest kernel UAPI
->=20
-> It can be fixed by changing to use the private xfstests_statx()
-> implementation, same as in stat_test.c.
->=20
-> I am not sure how elegant this is, but that's the easy fix.
+Fix it by checking namelen.
 
-Ah, I was using master as the base. Sorry about that...
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfsd/nfs4recover.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> > +               fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n", fname);
-> > +               return EXIT_FAILURE;
-> > +       }
-> > +       if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
-> > +               fprintf(stderr, "%s: no STATX_MNT_ID in stx_mask\n", fn=
-ame);
-> > +               return EXIT_FAILURE;
-> > +       }
-> > +       statx_mntid_short =3D statxbuf.stx_mnt_id;
-> > +
-> > +       if (!skip_mntid_unique) {
-> > +               if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID_UNIQUE, &sta=
-txbuf) < 0) {
-> > +                       fprintf(stderr, "%s: statx(STATX_MNT_ID_UNIQUE)=
-: %m\n", fname);
-> > +                       return EXIT_FAILURE;
-> > +               }
-> > +               /*
-> > +                * STATX_MNT_ID_UNIQUE was added fairly recently in Lin=
-ux 6.8, so if the
-> > +                * kernel doesn't give us a unique mount ID just skip i=
-t.
-> > +                */
-> > +               if ((skip_mntid_unique |=3D !(statxbuf.stx_mask & STATX=
-_MNT_ID_UNIQUE)))
-> > +                       printf("statx(STATX_MNT_ID_UNIQUE) not supporte=
-d by running kernel -- skipping unique mount ID test\n");
->=20
-> This verbose print breaks all existing "exportfs" tests which do not
-> expect it in the golden output.
->=20
-> I understand that silently ignoring the failure is not good, but I also
-> would like to add this test coverage to all the existing tests.
->=20
-> One solution is to resurrect the command line option -M from v1,
-> but instead of meaning "test unique mount id" let it mean
-> "do not allow to skip unique mount id" test.
->=20
-> Then you can add a new test that runs open_by_handle -M, but also
-> implement a helper _require_unique_mntid similar to _require_btime
-> which is needed for the new test to run only on new kernels.
->=20
-> I'm sorry for this complication, but fstest is a testsuite that runs on
-> disto and stable kernels as well and we need to allow test coverage
-> of new features along with stability of the test env.
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index 67d8673a9391..69a3a84e159e 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -809,6 +809,10 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 __user *cmsg,
+ 			ci = &cmsg->cm_u.cm_clntinfo;
+ 			if (get_user(namelen, &ci->cc_name.cn_len))
+ 				return -EFAULT;
++			if (!namelen) {
++				dprintk("%s: namelen should not be zero", __func__);
++				return -EINVAL;
++			}
+ 			name.data = memdup_user(&ci->cc_name.cn_id, namelen);
+ 			if (IS_ERR(name.data))
+ 				return PTR_ERR(name.data);
+@@ -831,6 +835,10 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 __user *cmsg,
+ 			cnm = &cmsg->cm_u.cm_name;
+ 			if (get_user(namelen, &cnm->cn_len))
+ 				return -EFAULT;
++			if (!namelen) {
++				dprintk("%s: namelen should not be zero", __func__);
++				return -EINVAL;
++			}
+ 			name.data = memdup_user(&cnm->cn_id, namelen);
+ 			if (IS_ERR(name.data))
+ 				return PTR_ERR(name.data);
+-- 
+2.31.1
 
-No worries, I'll write it up. I'm not familiar with the exact
-requirements of xfstests, sorry for the noise! (^_^")
-
->=20
-> Thanks,
-> Amir.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ctvs2l4bgcgrysaf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZtbSsgAKCRAol/rSt+lE
-bwxGAQDiAoDf52s+LenWo4ttMhBeDkXrmdgs1mOXMqJLRHnbwQD+PRJRjDKv6qU4
-BM1xu+Z4CvaDhwgbzw8kVRLkpAlSago=
-=VcBz
------END PGP SIGNATURE-----
-
---ctvs2l4bgcgrysaf--
 
