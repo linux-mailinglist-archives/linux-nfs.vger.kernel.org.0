@@ -1,70 +1,70 @@
-Return-Path: <linux-nfs+bounces-6151-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6152-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6721F969634
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 09:54:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DCF6969850
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 11:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4C3EB264B9
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 07:54:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4248E1C21005
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 09:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1221DAC76;
-	Tue,  3 Sep 2024 07:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D70C19CC33;
+	Tue,  3 Sep 2024 09:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hP4JbxC5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaGvgWX7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94441CCEF9;
-	Tue,  3 Sep 2024 07:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F791C7668;
+	Tue,  3 Sep 2024 09:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725350076; cv=none; b=ujysdYb+kZqlqGWg+wQz2h5fMwS9aUVUkxCtM59s0uyJ6ZL6vHOgizCPIdxY5aJ24u2v+5z+U6a82ptVTCcPR8T4MwA6hE8/7cyNM8BAi7S77j+4DyS5ZC3Vohrcrb1ZN1NB2+R+e5cfehP/yuqOO1PHlxEh5xcdldYqUO1uRA0=
+	t=1725354535; cv=none; b=jHJTYXcGD82D8TBN2o1nLbH5DkfekcATUzoHhEGIPi2OYw8JTZjj3QcEhepnvS5vhTrWx3kLePv+r+7f1vpfZsIxj8dU0lNABAm0177rPLwbG9O2up9qiLgEYpPAOzM3d9KsU3P9ptxjGcOMQfWAY5vcNMFp3ZWFeOqn8K5pMG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725350076; c=relaxed/simple;
-	bh=8d5alI3TLhOYwnx2NrP9LQS/Df3yxkjn+fz4hxc7LrI=;
+	s=arc-20240116; t=1725354535; c=relaxed/simple;
+	bh=yXsteYTYHdjmkVWZSfy+ZgdcoEsEZ5Blm2+Q2trApDk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R/7opzf6ntf6mKBp1Sem8B0e2wPFZ1gerZ6HXREOSv71EW8t25SxOuFuNnLACqWL2wnFCf7YGb04JIlBmJieMcUxMNkq7EyPip0R5IVGzwF6+HFXhE9tnrKYwkBV4szocWwcavUmgE6y12YyCn6CrOQ1gaNQ3W/RmZXKqErQrwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hP4JbxC5; arc=none smtp.client-ip=209.85.219.46
+	 To:Cc:Content-Type; b=Et88qLaHa8PNtLRrmuAV8hb3co1BhA9/p3PCp2U/OXUPuSC6qU9LMlFT8srnUS/tC8EYenBMVs/JrGzgXUZyUC3dyUdmZyqKNRzJ8CaPQkesXDdap9wjJwWolV0agbiI+FO8ZdXkWA81lm1raDMURf+0wE+vt/3Fr1+HurC/aho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaGvgWX7; arc=none smtp.client-ip=209.85.219.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6c35b545b41so18137166d6.1;
-        Tue, 03 Sep 2024 00:54:32 -0700 (PDT)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6c35ac3a7e6so13523646d6.1;
+        Tue, 03 Sep 2024 02:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725350072; x=1725954872; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725354532; x=1725959332; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fomXVmXiFKhcu/vzfVM0LdMGqu50I/F26QA2OqSH32Y=;
-        b=hP4JbxC5Ycq1GVbDjVrWoXIx6z/HIdIH3T8XX3OZ+jDGivCfVE/vm3miUz0Hi6S9WC
-         M79M4wAmb4E9ZDOKMs9hR/hqhhd3Xd91HfhcEfX2mSx0Y9l5E/TucXcxLnVwsfP0WMxz
-         CAZxmVGfmt3IezhnURkR2nH4zGp+wvC2AOgUnBmtbQb2qjnVgpCxVPdknFIiUc6GGhqd
-         S4vpwLTh1/wJHke+dL8dSxwA7iQUsZidUZbNc8q9gn3Pzoq7tvGD9+k9Y1lDF1uAsEQd
-         6NCGD9WNRwHTdbI5KHky31eAdKROfv6pE70NX95mcbIS8UQX6ATGDnxJpz5GmRZzgllR
-         M7aQ==
+        bh=RNSUaAuCT1hhn3yR4/PJ6F5Hry7OaS+mwt0V2W/ErFM=;
+        b=jaGvgWX7lWVjeXIzlw+KCB6mCYYwj+RahLH0KTZ1GrLs0Eyeu2rHb+xz7T6jntNOPn
+         dNOfiZ6ePBynmh/OwcpgEjl3UvY00NypsEy1nCG3dKCB3/NZDp8VT39lxFASIXFJ2LMp
+         UzL1wK833hf7dPJi6gNTZdRO+bQKfvfVG57ro6nOdL3xJrgQgIfvmYQQ0G8VjDKEneHr
+         HPP7BFPZ3+YHWBz7f7yOmOCzLiIUPE1mwriTt8iTRo5sJciWxtrV3/+qt5kXxdB1t7jl
+         AkguWTNPWV+hQEghwkL67z1k1T7qbPYrgfX2RsJwOZy4y5ZLUoLLuz8HH9bU9sbdGjQY
+         Fsvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725350072; x=1725954872;
+        d=1e100.net; s=20230601; t=1725354532; x=1725959332;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fomXVmXiFKhcu/vzfVM0LdMGqu50I/F26QA2OqSH32Y=;
-        b=HDnntTG/yWYpjTSC7hlqsiiupF+CZnDSY+oz+d+Ih3SWmw/4CPhiviDk6Wyru+SHOg
-         JeEOH77UNVIqZYxFQ79i0riWiCWqNkmlCXw4njxkrF08yOFtO/j5BiUVGqHQ5bHDcdD4
-         tK+hmrkpVbLYFNznZEiXNSNk0wNZ7eFDFk9sDZyyH0Avz6lK+7L6+8sW+068E/IgY4L8
-         wWoJ0xjv//TTOQxNVB4zoC617VBGEPc7wEMWagS6g8H90Z60AHB0fY5VE8O0mm7aUMAF
-         E8k6NKfcA/aphbMsmjoEgxjnXff8gq44lNnG6zdqKz1SB6py0IIh3FurtyXrEVal2Se4
-         JprA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5/HXY9px2xuBMniqB8Pfm5SKV3VHUt6lm97aZrG45obrrik+Nqyh5tfwqFxynWbJecTZ81SqLBNfsraPgMA==@vger.kernel.org, AJvYcCVc+6fo1TOu++Forq8dtgeKTgNeMMOSQ/+jX6+VGkaLaVD5kDsSyuX3+yVJCSWqU8V1ya3bhZU1hYk=@vger.kernel.org, AJvYcCWJJ1VRZVJK0EO3Ohq/hDTjHbQ/xqSMZjhe6pAOSESQ61L45Tj8aA9R4oJcFgdVDpMXwxuWJigUbKm/@vger.kernel.org, AJvYcCWR5G/TtVtp6yXZjgp+Tv4RZxxkOsM+qMezAlqrPxDEpOzEdXnVHrPHjh6z1rnK6fc4Eg8xuV8aWTb0uZDmV4FnOg==@vger.kernel.org, AJvYcCWhT6mf63TYwxuNe9Uf7sskPJQzoMOnAkZ8wb5Goh67d2Zrouvf1eJa2nzcVIM7rylv02vwGdw/zCQR8qhZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhG6nfVwp6EjlifJX0gmN8Nm8VICRogGI3LF5pxO2ooOCjEsNs
-	nxSjzwHA3RxrJKJPAlTqhwDwk9h7GS4s5Fylv0Okq3f5fsSJLM+3MOgWcBg8LmkP3jFyFV6GkEs
-	5jXs81FvZU2od7HlcdZYETkesHyYWYIfYqQOiLw==
-X-Google-Smtp-Source: AGHT+IGzXLsIEHDbgMyGT+A08yC4JUWzWxGh88B25wAb1Ou+JNdpZ2wR9VfJec6imJMUOtwHITpi+KkYncaNWiMSjmY=
-X-Received: by 2002:a05:6214:4a81:b0:6c3:6b35:ac73 with SMTP id
- 6a1803df08f44-6c36b35ad26mr91108986d6.11.1725350071854; Tue, 03 Sep 2024
- 00:54:31 -0700 (PDT)
+        bh=RNSUaAuCT1hhn3yR4/PJ6F5Hry7OaS+mwt0V2W/ErFM=;
+        b=hE2/xUC5i+ucO+KCP9DA2uHjGSeGMU0J8RsyG7w6PUj/Y3LphDr8/u2k69pApK9G4n
+         M8cCnD4w+lMUJfKyLyf34aLXwIEocqkhggYlNsbU/FkHlhR4uRBlV6YuJj1fhhfM/rcu
+         1mGVWPEjRWgdWxFxRaD94tYQXCgorawKCUOmvF0SR24OgqXfQAIj09wQ0+H+gzIKJm6E
+         WxxBZUwqTXUEXuwKoAIa1zVbHzPP1fJJ0UgPpKIEiDzytAbnF7S5JSkPQRBI11HjjQbE
+         msR4MFP98Qqjc9ETWfhbiTy1RbWlh2MEEXqco+4AeXUIvESxYiRm3FT14WtnUSCPfzUe
+         WaJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcgDh0jfpR50TVkqDfNJHnjBq1TrdMCwHgGa0HhOmZ256Wmo2s+Dq8s2SYRVdFANGHzzak1xvzfgllRmqk@vger.kernel.org, AJvYcCWT+RDJ5aGSGRfNMkG9qEE09wiwek+VGTX+rH3hCDscmcQaJSnJUbotX7PrkQTeV9cwJb8HSrhCEMD4@vger.kernel.org, AJvYcCXG9YTT4+uoorvpsHxSDKxEcxgPhgBlcR3hbfioV32CX42mnrXJrls7or1Us9jMA14Zs2G20hZckU4yl+mx5g==@vger.kernel.org, AJvYcCXhr/8L83IYcjEE5dsJhig2i2G9hEBC+2vgEA3PMe6gykFXm6zu/ZWjCZuYIVfSxdnB04ZuSqv6ifN/lsea7IBjIw==@vger.kernel.org, AJvYcCXsYm/Vv3z6FyvnVK8LwKckkUHVCKb1TzJ/1M0qM6ecj/ixkMjYCVWIulTbKAK/Mg84demY3cm53g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZs20h4OLQgKEGBRD1KGT35Qi8KE1+a3uWeZkk3CqCkQgzs6W/
+	Ew9RgtyKHdH7wyw9yxR1F1n6TWzhqzrMP6livaZ50AXl6Y82cywzuDQndfAncLU1jxsVKfL0aIx
+	/W1+tJ2mWhoV+0qaLazEQAH8g0is=
+X-Google-Smtp-Source: AGHT+IEue1Qt36L3+EfoJIWpUvc4YTUfQcRxk5QLj8xifrUj4YYSFty/txvVnZIkWcK44hKqb/xh7JAqfqX+IIFtem8=
+X-Received: by 2002:a05:6214:5b0f:b0:6c1:6c23:8eaa with SMTP id
+ 6a1803df08f44-6c3551c9af2mr137265166d6.10.1725354532384; Tue, 03 Sep 2024
+ 02:08:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,10 +73,11 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
  <20240902164554.928371-1-cyphar@cyphar.com> <20240902164554.928371-2-cyphar@cyphar.com>
-In-Reply-To: <20240902164554.928371-2-cyphar@cyphar.com>
+ <CAOQ4uxgS6DvsbUsEoM1Vr2wcd_7Bj=xFXMAy4z9PphTu+G6RaQ@mail.gmail.com> <20240903.044647-some.sprint.silent.snacks-jdKnAVp7XuBZ@cyphar.com>
+In-Reply-To: <20240903.044647-some.sprint.silent.snacks-jdKnAVp7XuBZ@cyphar.com>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 3 Sep 2024 09:54:20 +0200
-Message-ID: <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
+Date: Tue, 3 Sep 2024 11:08:40 +0200
+Message-ID: <CAOQ4uxhXa-1Xjd58p8oGd9Q4hgfDtGnae1YrmDWwQp3t5uGHeg@mail.gmail.com>
 Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount ID
 To: Aleksa Sarai <cyphar@cyphar.com>
 Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -94,118 +95,56 @@ Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> wro=
+On Tue, Sep 3, 2024 at 8:41=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> wro=
 te:
 >
-> Now that open_by_handle_at(2) can return u64 mount IDs, do some tests to
-> make sure they match properly as part of the regular open_by_handle
-> tests.
+> On 2024-09-02, Amir Goldstein <amir73il@gmail.com> wrote:
+> > On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com>=
+ wrote:
+> > >
+> > > Now that open_by_handle_at(2) can return u64 mount IDs, do some tests=
+ to
+> > > make sure they match properly as part of the regular open_by_handle
+> > > tests.
+> > >
+> > > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0=
+-10c2c4c16708@cyphar.com/
+> > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > ---
+> > > v2:
+> > > - Remove -M argument and always do the mount ID tests. [Amir Goldstei=
+n]
+> > > - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
+> > >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
+> > > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cy=
+phar.com/>
+> >
+> > Looks good.
+> >
+> > You may add:
+> >
+> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> >
+> > It'd be nice to get a verification that this is indeed tested on the la=
+test
+> > upstream and does not regress the tests that run the open_by_handle pro=
+gram.
 >
-> Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0-10c=
-2c4c16708@cyphar.com/
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
-> v2:
-> - Remove -M argument and always do the mount ID tests. [Amir Goldstein]
-> - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
->   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
-> - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cyphar=
-.com/>
->
->  src/open_by_handle.c | 128 +++++++++++++++++++++++++++++++++----------
->  1 file changed, 99 insertions(+), 29 deletions(-)
->
-> diff --git a/src/open_by_handle.c b/src/open_by_handle.c
-> index d9c802ca9bd1..0ad591da632e 100644
-> --- a/src/open_by_handle.c
-> +++ b/src/open_by_handle.c
-> @@ -86,10 +86,16 @@ Examples:
->  #include <errno.h>
->  #include <linux/limits.h>
->  #include <libgen.h>
-> +#include <stdint.h>
-> +#include <stdbool.h>
->
->  #include <sys/stat.h>
->  #include "statx.h"
->
-> +#ifndef AT_HANDLE_MNT_ID_UNIQUE
-> +#      define AT_HANDLE_MNT_ID_UNIQUE 0x001
-> +#endif
-> +
->  #define MAXFILES 1024
->
->  struct handle {
-> @@ -120,6 +126,94 @@ void usage(void)
->         exit(EXIT_FAILURE);
->  }
->
-> +int do_name_to_handle_at(const char *fname, struct file_handle *fh, int =
-bufsz)
-> +{
-> +       int ret;
-> +       int mntid_short;
-> +
-> +       static bool skip_mntid_unique;
-> +
-> +       uint64_t statx_mntid_short =3D 0, statx_mntid_unique =3D 0;
-> +       struct statx statxbuf;
-> +
-> +       /* Get both the short and unique mount id. */
-> +       if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID, &statxbuf) < 0) {
+> I've tested that the fallback works on mainline and correctly does the
+> test on patched kernels (by running open_by_handle directly) but I
+> haven't run the suite yet (still getting my mkosi testing setup working
+> to run fstests...).
 
-This fails build on top of latest for-next branch with commit
-873e36c9 - statx.h: update to latest kernel UAPI
+I am afraid this has to be tested.
+I started testing myself and found that it breaks existing tests.
+Even if you make the test completely opt-in as in v1 it need to be
+tested and _notrun on old kernels.
 
-It can be fixed by changing to use the private xfstests_statx()
-implementation, same as in stat_test.c.
-
-I am not sure how elegant this is, but that's the easy fix.
-
-> +               fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n", fname);
-> +               return EXIT_FAILURE;
-> +       }
-> +       if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
-> +               fprintf(stderr, "%s: no STATX_MNT_ID in stx_mask\n", fnam=
-e);
-> +               return EXIT_FAILURE;
-> +       }
-> +       statx_mntid_short =3D statxbuf.stx_mnt_id;
-> +
-> +       if (!skip_mntid_unique) {
-> +               if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID_UNIQUE, &statx=
-buf) < 0) {
-> +                       fprintf(stderr, "%s: statx(STATX_MNT_ID_UNIQUE): =
-%m\n", fname);
-> +                       return EXIT_FAILURE;
-> +               }
-> +               /*
-> +                * STATX_MNT_ID_UNIQUE was added fairly recently in Linux=
- 6.8, so if the
-> +                * kernel doesn't give us a unique mount ID just skip it.
-> +                */
-> +               if ((skip_mntid_unique |=3D !(statxbuf.stx_mask & STATX_M=
-NT_ID_UNIQUE)))
-> +                       printf("statx(STATX_MNT_ID_UNIQUE) not supported =
-by running kernel -- skipping unique mount ID test\n");
-
-This verbose print breaks all existing "exportfs" tests which do not
-expect it in the golden output.
-
-I understand that silently ignoring the failure is not good, but I also
-would like to add this test coverage to all the existing tests.
-
-One solution is to resurrect the command line option -M from v1,
-but instead of meaning "test unique mount id" let it mean
-"do not allow to skip unique mount id" test.
-
-Then you can add a new test that runs open_by_handle -M, but also
-implement a helper _require_unique_mntid similar to _require_btime
-which is needed for the new test to run only on new kernels.
-
-I'm sorry for this complication, but fstest is a testsuite that runs on
-disto and stable kernels as well and we need to allow test coverage
-of new features along with stability of the test env.
+If you have a new version, I can test it until you get your fstests setup
+ready, because anyway I would want to check that your test also
+works with overlayfs which has some specialized exportfs tests.
+Test by running ./check -overlay -g exportfs, but I can also do that for yo=
+u.
 
 Thanks,
 Amir.
