@@ -1,127 +1,81 @@
-Return-Path: <linux-nfs+bounces-6170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E55896A466
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 18:31:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCCC596A473
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 18:33:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF0B92863BB
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 16:31:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C0E71C22BA6
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 16:33:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD65C1420DD;
-	Tue,  3 Sep 2024 16:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E26C18BBB0;
+	Tue,  3 Sep 2024 16:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PaylS3z9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKtRjpwM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC418BB98
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Sep 2024 16:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABB418BBAB;
+	Tue,  3 Sep 2024 16:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725381114; cv=none; b=IyNaitnFQFC4CzxIzc7mzr1Sd1y1Ds51NHfkqlYYqDhSi3ycWW5DzToLsmwfbLrh+7d4Lx377GgTZgrsxjfwEATdH5lBmD2XRqYbKG/31IFWGov9aeedZ5cqc+Z0W7IE7EwLfEBCI9X/CndaLzum43wA86Ds1yKkw77R9tg456s=
+	t=1725381189; cv=none; b=QUuVXvOQWTih+ZrcrWZsnfzJKe3UddWs2oJBE8+ZAqSHDF7uEz4T1KwDFhjiRFmBwbXwQ5XnHLQeFxxa7m52vCgMD16ruJQO+z3+H09eOP8mWamwqp14Oj9uf/97uIwpjtUn6fTv+imH/OS33GsB2l4BKOA8URMiGF4YfGGhugU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725381114; c=relaxed/simple;
-	bh=+tNNtHhNx6ArmzbBGY7E+qH27+MluekkW/2efa04Y1w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DOzEk8yOjAQo13XZM9pqt5E1VPenkxdH0BxuFOlXjPuisndyruuNKLSf5O4WuIwo87qVLedPlUOytZnJVc9AWoaZ/O8u70gd1x66FGCbiWrAc8sWIrM8zN7xySxgm1dJZQDug+mvKIYP8gUHiAX80rlDbTN/cgFqzhMsYspMshc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=PaylS3z9; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6d9f0cf5ae3so19474937b3.0
-        for <linux-nfs@vger.kernel.org>; Tue, 03 Sep 2024 09:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1725381112; x=1725985912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cA4f6/Q14LkYipHi4xW5E3QoTzXbTWUwWtLbC9c1AmY=;
-        b=PaylS3z9BxeToyzg3LOdf1bKGdTfNepyKZS1f0kifDeBnHWWISTnn8s0NlbOxXIoib
-         pQMSHxjV9CZOB97vROZQavyIBo/j0NaQ0Xu1sXV2/KuJwLB5zox9OyVGLDVZO3XKqFR5
-         Ks6fuqZws2omNYw6fdIYRuU9LpF5/OWo9+KzxtdGnJr0+djv/yAbAjhEW5g8+DLXfwHL
-         XaN2G5DueYEYsmz9CUqo6+pwqYeJieGE7f0xz+oCkeRCwjYWrcs2sAD1R0y9y7x0YO02
-         fvgeiFoLKI3+8BluF3+7AO+YgHYtRsLuDpMG6Huw8IpAccyMUp/cp9xa/SftWFUbocfj
-         mYww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725381112; x=1725985912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cA4f6/Q14LkYipHi4xW5E3QoTzXbTWUwWtLbC9c1AmY=;
-        b=cDko2XvNi9/hKHtasAab0vpRjh5azwdrZUuUg4l3Y6zqMCBDHUG1uS35uMzVSVYxQW
-         xIBKskIVDaDkH7szImZKmjbSgenxt/Yi03BueyT91qzJBp+HvRmcYZu/bSkJXNy6Vpd5
-         G4JnhxyHTNJKUKuzXlJTkXsSqfWjqf5Nx1RuOooZPSktP0OWEQ1dDrORca36D3pwKEv4
-         QsBM20t7wfajdxi9MigrxQUD9w9GQ5QYH89A7xuQWnNsvnxtgDsNF44sSB1y/ArBqdIK
-         YSou1fXj/jUq5308EYLaTOsRRJrZcQRbVGJiXPhIi532LNNT3E6BldTcXeydQpNE9bFY
-         fiug==
-X-Forwarded-Encrypted: i=1; AJvYcCU+3+eA+3/OfxaRjDDfT8bQp3cQGv73gftV+Pp3HiZx+Kkd255cX8VuyFEpZQYQraI1/ZNp8NcSYSg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRQgxK6jws1KfkE9keQt1DYPwQVyfQ+7W1J3RIYBj6mEl+EtOx
-	FjSOTzpuc0ooUh+teuj+Y6ilQ8aQ9QZCIarSrVzMOa9fuaeXAYvTSWJzIUReGjR3ydMGzpSKHab
-	viPzZgIDuNGrbipFrIDiO1uVk7uNCNCPyZiOV
-X-Google-Smtp-Source: AGHT+IHa/01qoE/GHcK9QfmQSjlJsmOjJNv/+Qv5fA4SkJmS+bKSV6Q2r3LgScHAw7u0DobQXFY/bSjBLHtbXnRken8=
-X-Received: by 2002:a05:690c:650f:b0:6c8:1e30:5136 with SMTP id
- 00721157ae682-6d40f14e2a3mr154433887b3.16.1725381111978; Tue, 03 Sep 2024
- 09:31:51 -0700 (PDT)
+	s=arc-20240116; t=1725381189; c=relaxed/simple;
+	bh=FiTlMgbD0v2nfsBDtR03sU4PhfzNksMw9X1+r29cOqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MN9VSvJ//vsXi732JOl+Kmi2WHnw+oPvTOp2WBV1VwkTAtfcREQoL4VpEqoSGl+3Sqgb7A2RhsBLCaE2eLqeAk64x/gDbEDLkVk3M+oAXWKhy/5DBmMVjKvLg8NKfj8Q1O+OLv9ajL47xINvsDFn7NzfJyO1aJy0puOYZvntwJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKtRjpwM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80445C4CEC4;
+	Tue,  3 Sep 2024 16:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725381189;
+	bh=FiTlMgbD0v2nfsBDtR03sU4PhfzNksMw9X1+r29cOqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WKtRjpwMckbUlzKhgdD3e95nSBTyuKDaYEtddA/9oR+znmCjLSrdmnqjlMVKsrqGz
+	 JYwaOOTCgkjj2XoE4R4vuIlrXya8ipHp+57BusbLefIDvOyD51rYlWxtRuGZa3kdiO
+	 vREqoOQStdVeCeeQBqCYIm2ZDSrOOfdgyHbBFBRTmZxhmXUCb7vdA110gT7zqo1kIZ
+	 19hTmvug1ASbI2SRe44j3nl0u8RYBQwC6JYBV+CdzCsrlGXSudewQALvZKRxx9IEJ5
+	 mskwCf3o6xSUxzz2B7qi9ARW0lacs8lLt0l9BTAnOfYWVzD/5de5W1I35gPruey3jP
+	 kI/y/RjRLZkBA==
+Date: Tue, 3 Sep 2024 12:33:08 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v15 14/26] nfs_common: add NFS LOCALIO auxiliary protocol
+ enablement
+Message-ID: <Ztc6ROzJ_Q6XFJ0B@kernel.org>
+References: <20240831223755.8569-1-snitzer@kernel.org>
+ <20240831223755.8569-15-snitzer@kernel.org>
+ <172523315282.4433.12624168004076761213@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240903033011.2870608-1-yukaixiong@huawei.com> <20240903033011.2870608-8-yukaixiong@huawei.com>
-In-Reply-To: <20240903033011.2870608-8-yukaixiong@huawei.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 3 Sep 2024 12:31:41 -0400
-Message-ID: <CAHC9VhTJXCSduz2R-LOxTQOb40BmE-=wR3HJafzstERX6MpNUg@mail.gmail.com>
-Subject: Re: [PATCH v2 -next 07/15] security: min_addr: move sysctl into its
- own file
-To: Kaixiong Yu <yukaixiong@huawei.com>
-Cc: akpm@linux-foundation.org, mcgrof@kernel.org, ysato@users.sourceforge.jp, 
-	dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, kees@kernel.org, 
-	j.granados@samsung.com, willy@infradead.org, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
-	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, jmorris@namei.org, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	wangkefeng.wang@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172523315282.4433.12624168004076761213@noble.neil.brown.name>
 
-On Mon, Sep 2, 2024 at 11:31=E2=80=AFPM Kaixiong Yu <yukaixiong@huawei.com>=
- wrote:
->
-> The dac_mmap_min_addr belongs to min_addr.c, move it into
-> its own file from /kernel/sysctl.c. In the previous Linux kernel
-> boot process, sysctl_init_bases needs to be executed before
-> init_mmap_min_addr, So, register_sysctl_init should be executed
-> before update_mmap_min_addr in init_mmap_min_addr. And according
-> to the compilation condition in security/Makefile:
->
->       obj-$(CONFIG_MMU)            +=3D min_addr.o
->
-> if CONFIG_MMU is not defined, min_addr.c would not be included in the
-> compilation process. So, drop the CONFIG_MMU check.
->
-> Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> ---
-> v2:
->  - update the changelog to explain why drop CONFIG_MMU check.
-> ---
->  kernel/sysctl.c     |  9 ---------
->  security/min_addr.c | 11 +++++++++++
->  2 files changed, 11 insertions(+), 9 deletions(-)
+On Mon, Sep 02, 2024 at 09:25:52AM +1000, NeilBrown wrote:
+> On Sun, 01 Sep 2024, Mike Snitzer wrote:
+> > fs/nfs_common/nfslocalio.c provides interfaces that enable an NFS
+> > client to generate a nonce (single-use UUID) and associated
+> > short-lived nfs_uuid_t struct, register it with nfs_common for
+> > subsequent lookup and verification by the NFS server and if matched
+> > the NFS server populates members in the nfs_uuid_t struct.
+> 
+> The nfs_uuid_t isn't short-lived any more.  It will be embedded in the
+> struct nfs_client.  I think I revised that comment in one of the patches
+> I sent...
 
-Acked-by: Paul Moore <paul@paul-moore.com>
-
---=20
-paul-moore.com
+Thanks, fixed.
 
