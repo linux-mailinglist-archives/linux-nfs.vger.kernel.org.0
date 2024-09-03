@@ -1,223 +1,148 @@
-Return-Path: <linux-nfs+bounces-6131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38FBB96909C
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 02:17:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 160EE969166
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 04:21:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D55B1C227D3
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 00:17:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 790CEB226DA
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 02:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7109D63D5;
-	Tue,  3 Sep 2024 00:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6971A3AAE;
+	Tue,  3 Sep 2024 02:20:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrbDR4gN"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Sd7GYykZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C836A63CB
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Sep 2024 00:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B145213D8B2;
+	Tue,  3 Sep 2024 02:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725322625; cv=none; b=IZKn13BmYg+L2jPMAqwaJEEzO9fvF1hTYlZ/KERWpFE5A9+27taYXU+wMVEmFnEIwZuXZvRuaO/3Z4pddHBNBjL5txR+h4E3F+uMYRwMuUQ/vxVC66G+CrgFPAbx0tTSENbFR6x8JwuhixtaDV02cWNlETUshdg4B6PvSpnOfVY=
+	t=1725330044; cv=none; b=gdCyYxRyh6KquKBtFKXYURqqrO0FVbyWv2rmw1RsFiIixMGqM9PTgt8PIoglJHcBpjzA6fr3oH23uU40n51uHba+Zf5qRRdqbw3ZYVq4RLvJ74UNdRvf41AZmG0nS5L4+mc9KsFFqqthIMg6C/9or/qhyPx7XgcfV+cvqWgeooQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725322625; c=relaxed/simple;
-	bh=p7/Q1BM8xoZdy0pdmfWJsaGG6s3vmWGTyst6Lr+1tu8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=le6LZ1rWA5uACmsqFy/1sejRATWpmcoIs21T7KW9olsU1VCTYVLNFzA3UZxs3Jc9zbiPdyab/ZHIiUi3mQCirgPrVkzdRlcEG/OytEFIhQDFGgjGOLOy8cOkXyRg1u2PYQmQZeBs+QaZ4XnYwxRmm7hvVmDbZLGQ+cfMdSiHJ3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrbDR4gN; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2068a7c9286so6111165ad.1
-        for <linux-nfs@vger.kernel.org>; Mon, 02 Sep 2024 17:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725322623; x=1725927423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZhDf8On6iGb8cqnM3gcLtNKr0NFWADF8t6W9hqvv1YA=;
-        b=YrbDR4gNXLdaaBF20wcnIdn4CW+VsPhgIKnwNzYoSfTewQbfIQ/ogDVYk5UV5Ky3Of
-         2XviH5UGrO3gtURmvrWu4GaIyMu2AUdQUOHPf7tcpOZUeHPBLKY4eMHKR3T4UTHEOV8k
-         oFgG9Q8ltbHgd5kHzlNsVNmzUvhnt0ZY6d4BvEhy3+hpnC+jc2L1PDac0ykzVOx76cEc
-         R0zKJXdwlAVpX7411qFd/EHmG3PsIwnfTrGu15jztxY1ItYbrdojqaK2YMWtcTTE95G3
-         mbWtasVayJ/kIP/wr06is4mmcoK7cbz/FhHtCSewEIX/DhQnt13rjf68q+cPuZGJaM+b
-         Ynjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725322623; x=1725927423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZhDf8On6iGb8cqnM3gcLtNKr0NFWADF8t6W9hqvv1YA=;
-        b=rmuFaLBsBlOIHP7128ZE8IKjzwZchA/pwHfMxYLloxdf95eUydcyvm5JQqVNSQoscs
-         1HVuh203Z7lspFzo5YXuNx+APraId/33aaogl5EN2dBjhbNCRB014fpbuuWHvVAf5JBG
-         O/dbFw+0FabQRKAULbt8E2p7TACVvxKShwN21iEEHPLUt1oidyVLvBo0XpHPtrY+ax6O
-         0yuFFgOiFc7kqjxW2QWbq15AvWkY7D+7ia3X4np0qfrSuX3q1spw/EcwL7PQ/hMSMdGd
-         JdVuYid51vLmk5MFPZqwsZxohVGuozssXpUApuVO1fjPvOgwjXASkQEKpwCYG7UPeShI
-         dyZw==
-X-Gm-Message-State: AOJu0Yw6SkmUpT3tE1sH3Gq5YGRCJgR46rwfx03sCCQxWVj4DXWNa7fX
-	iUfDtW6e6Q+q+WLw4YV13XISxoX/dEYa9Qsdqz3xOeO/qkVixD1n4cBzehHFLxibSBslt9NjCDC
-	ULLsoVa97iZPPsdtiDA1wy+s4O2riLzY=
-X-Google-Smtp-Source: AGHT+IGFfzVn3Cu+AU5a+45mcfWPlKGfunYXDeRvNJ2/V2C8DpnbINqN0N+/7piWnawtrK6DwSeM+rtb7Zq8i9MTyXU=
-X-Received: by 2002:a17:903:2306:b0:203:bbc9:2b93 with SMTP id
- d9443c01a7336-2058417b234mr45012155ad.1.1725322622683; Mon, 02 Sep 2024
- 17:17:02 -0700 (PDT)
+	s=arc-20240116; t=1725330044; c=relaxed/simple;
+	bh=yuPHtis7CJ7jgf9ECOLC4vtELlpTMDGof3D4qz9m/PU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h3p7QRpkoZq2XDTPhimJsV3e2ALODnG6Avn7iHE+m+x81XUj4fIkVvxXpPXHA8+HW6QuyeBdhr3hX9o3QsIho9liCeEwtHUWF4G+/o2noQPE4LWI88NhlYjmmuqCoClPFw4mcbed+BVxTMhewgd2uXV4QtE1PiSEp6q2Tu4+4m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Sd7GYykZ; arc=none smtp.client-ip=68.232.139.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1725330042; x=1756866042;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yuPHtis7CJ7jgf9ECOLC4vtELlpTMDGof3D4qz9m/PU=;
+  b=Sd7GYykZGrbJIbrO6Cf8rgZ2x4Db6mnL4OYwHa+He1G6bFfrLsalcm/s
+   WINsZTW1Ns9LlZmBVtq/+MHaJIS39KxhY9O+ocsM4bGS9dDOC5tUHhl8J
+   2PipY6ato8RgtGQXaU7ujjQJVZuzHDwMXCSAoRZE+OGqr7bVSR31bBNOC
+   nHPXGQuvZCNO9BIhKjZSksut1/IL5zkl5E3dQoLzR8obTC1pvZBXU2e7F
+   W6ohczOOK0teIwYzN/y9CpD1A2XAa+JwZo2lUR8R5msEBTbyX7lxJZo3H
+   BzZu+FEeEm7AJR/yAScJbRecS2Mkve9S8osV7hXkQkWu/jkddHi/RCYYa
+   Q==;
+X-CSE-ConnectionGUID: P7GXPCNIRLCgmwPWQwyZkQ==
+X-CSE-MsgGUID: PTirvS0MQqqlaZpXXOVZ1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="174525965"
+X-IronPort-AV: E=Sophos;i="6.10,197,1719846000"; 
+   d="scan'208";a="174525965"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 11:19:29 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id E4480D7AD2;
+	Tue,  3 Sep 2024 11:19:26 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 3016CD8B8F;
+	Tue,  3 Sep 2024 11:19:26 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id B03466BD57;
+	Tue,  3 Sep 2024 11:19:25 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.135.89])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 3F5751A0002;
+	Tue,  3 Sep 2024 10:19:25 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: fstests@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [xfstests PATCH] generic/362: skip test on NFS mount
+Date: Tue,  3 Sep 2024 10:18:09 +0800
+Message-ID: <20240903021918.2491-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.45.2.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy6UmWngTqzy=YVQ_2x61+AdZp2uW90N8oGB1V73O-vDMA@mail.gmail.com>
- <babb9c0643d56a7aeee80bca7ec78f557f965081.camel@hammerspace.com>
- <CAM5tNy7_gv_Gp17X+rZmZ4t_UTKWSX=+zGHGKPuhtF+--xOp-w@mail.gmail.com> <0c4d1a086b2d453cfa9e62b88bc28c0cc5720d20.camel@hammerspace.com>
-In-Reply-To: <0c4d1a086b2d453cfa9e62b88bc28c0cc5720d20.camel@hammerspace.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Mon, 2 Sep 2024 17:16:51 -0700
-Message-ID: <CAM5tNy5xXd2d8CZXEsUUFh-OjMnME92ce7YxCT3P7MAdutCFFg@mail.gmail.com>
-Subject: Re: Any idea how best to handle potentially large POSIX ACLs for getfacl?
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28638.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28638.004
+X-TMASE-Result: 10--4.446100-10.000000
+X-TMASE-MatchedRID: xI3RMDI2TqqXC3sMAGu+nyZm6wdY+F8Kh6nwisY6+c3ssozRObR7SwED
+	/uSVdVZa5/gG8CUYdiud6Lv9qI8wHwH3QVwvWrgwxi///JpaHQMjoYO/ya1mOgbxceezd6S1sqh
+	SzMv5Wabg8q4Y37zKTaau4JLYI3mtpdSzuQPv1Taqm5TddPf7vphqxsBO7lrLLEzDQUyQGVlzIc
+	rfc0JQo2GEv7zMAMZrgDLqnrRlXrZ8nn9tnqel2MZW5ai5WKlyVQtMKTIrBwvv/BHIrck6yd7di
+	4MEmwNPzNU6oUVjyvBgMEaqaCqEWratQ/iTpZoCAtCfevCRwJtADb4T7dccHJiCRWqMnRAuEWW0
+	bEJOTAVAdUD6vW8Z1mZAMQMIyK6zB8/x9JIi8hKhgLRzA45JPQ==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On Thu, Aug 29, 2024 at 6:41=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
-e.com> wrote:
->
-> On Thu, 2024-08-29 at 18:32 -0700, Rick Macklem wrote:
-> > On Thu, Aug 29, 2024 at 5:33=E2=80=AFPM Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Thu, 2024-08-29 at 17:19 -0700, Rick Macklem wrote:
-> > > > Hi,
-> > > >
-> > > > I have a rather crude patch that does the POSIX draft ACL
-> > > > attributes
-> > > > that my draft is suggesting for NFSv4.2 for the Linux client.
-> > > > - It is working ok for small ACLs, but...
-> > > >
-> > > > The hassle is that the on-the-wire ACEs have a "who" field that
-> > > > can
-> > > > be up to 128bytes (IDMAP_NAMESZ).
-> > > >
-> > > > I think I have figured out the SETATTR side, which isn't too bad
-> > > > because
-> > > > it knows how many ACEs. (It does roughly what the NFSv3 NFSACL
-> > > > code
-> > > > did, which is allocate some pages for the large ones.)
-> > > >
-> > > > However, the getfacl side doesn't know how bug the ACL will be in
-> > > > the reply. The NFSACL code allocates pages (7 of them) to handle
-> > > > the
-> > > > largest possible ACL. Unfortunately, for these NFSv4 attributes,
-> > > > they
-> > > > could be roughly 140Kbytes (140bytes assuming the largest "who"
-> > > > times
-> > > > 1024 ACEs).
-> > > > --> Anyone have a better suggestion than just allocating 35pages
-> > > > each
-> > > > time
-> > > >     (when 99.99% of them will fit in a fraction of a page)?
-> > > >
-> > > > Thanks for any suggestions, rick
-> > > >
-> > >
-> > > See the NFSv3 posix acl client code.
-> > >
-> > > It allocates the 'pages[]' array of pointers to the page buffers to
-> > > be
-> > > of length NFSACL_MAXPAGES, but only allocates the first entry, and
-> > > leaves the rest NULL.
-> > > Then in the XDR encoder "nfs3_xdr_enc_getacl3args()" where it
-> > > declares
-> > > the length of that array, it sets the flag XDRBUF_SPARSE_PAGES on
-> > > the
-> > > reply buffer.
-> > >
-> > > That tells the RPC layer that if the incoming RPC reply needs to
-> > > fill
-> > > in more data than will fit into that single page, then it should
-> > > allocate extra pages and add them to the 'pages' array.
-> > Oh, ok thanks for the explanation.
-> > It doesn't sound like a problem then.
-> >
-> > I'll just code things the same way.
-> >
-> > Maybe I can ask one more question??
-> > There are a large # of XXX_decode_XXX functions. Are there any that
-> > should/should not be used for the above case?
-> > For example, there are:
-> > - Ones that take a "struct xdr_stream *xdr" (usually with _stream_ in
-> > the name)
-> > vs
-> > - Ones that take a "struct xdr_buf *buf" argument.
-> >   (I ended up using these for the encode side and this looks like
-> > what
-> >    nfsacl_decode() uses, as well.)
-> >
-> > (I'll admit I have been wading around in the code, but haven't really
-> > gotten to the point of understanding which ones should be used.)
-> >
->
-> The "struct xdr_stream' based code is the 'newer' way of doing things,
-> and allows you to write code that abstracts away some of the ugliness
-> in the RPC layer, particularly when you need to mix regular buffers and
-> page data.
-> That said, there is definitely legacy code out there that works quite
-> well and is not worth a lot of effort to convert.
->
-> I'd recommend trying to use the xdr_stream if possible, just because of
-> the better abstraction, but if you have to fall back to manipulating
-> the xdr_buf directly, then that API is there, and is still supported.
-I haven't been able to figure out how to use the xdr_stream... stuff
-when the attributes get large enough that they need pages.
+xfstests complains:
 
-What I currently have (that seems to work) is...
-For GETATTR, XDRBUF_SPARSE_PAGES is set, and then, once it
-gets to the actual ACL (which can be pretty big), I use
-   xdr_decode_word() and read_bytes_from_xdr_buf() to decode it
-   (The stream calls worked until the ACL got too big for the non-page
-    part, which I think is 2Kbytes?)
-   - Maybe there is some trick I don't know to get the big ones to work
-     with the xdr_stream_XXX() decode calls?
+# ./check -d generic/362
+FSTYP         -- nfs
+PLATFORM      -- Linux/x86_64 r95b-1 5.14.0-496.el9.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Aug 12 18:50:44 EDT 2024
+MKFS_OPTIONS  -- 192.168.122.42:/nfsscratch
+MOUNT_OPTIONS -- -o vers=4.2 192.168.122.42:/nfsscratch /mnt/scratch
 
-For SETATTR, it seemed to be similar. I actually have two ways that
-seem to work:
-(A) - Allocates the max # of pages (assuming 128byte who fields) and
-        then in the enc function specified in PROC(xxx), it does a
-         - xdr_write_pages()
-         - fills the data in with xdr_encode_word() and write_bytes_to_xdr_=
-buf()
-         - trims the size to the correct (not maximum) length by setting
-           xdr->buf->len and xdr->buf->page_len
-         --> I don't like this one because it typically allocates more page=
-s
-               than needed and requires the len to be trimmed.
-(B) - I wrote a couple of simple functions (I couldn't find ones that alrea=
-dy
-         did this) which encode the ACLs before the RPC call
-(nfs4_do_call_sync())
-         allocating page(s) as required. Then all the enc function in PROC(=
-...)
-         does is a xdr_write_pages().
-I prefer (B), but they both seem to work. Small ACLs don't do (A) or (B) an=
-d
-are just encoded with the xdr_stream_XXX() functions.
+generic/362       QA output created by 362
+Failed to open/create file: Invalid argument
+Silence is golden
+- output mismatch (see /var/lib/xfstests/results//generic/362.out.bad)
+    --- tests/generic/362.out   2024-09-02 14:27:09.162636093 -0400
+    +++ /var/lib/xfstests/results//generic/362.out.bad  2024-09-02 14:33:36.167636093 -0400
+    @@ -1,2 +1,3 @@
+     QA output created by 362
+    +Failed to open/create file: Invalid argument
+     Silence is golden
+    ...
+    (Run 'diff -u /var/lib/xfstests/tests/generic/362.out /var/lib/xfstests/results//generic/362.out.bad'  to see the entire diff)
+Ran: generic/362
+Failures: generic/362
+Failed 1 of 1 tests
 
-Anyhow, if there are better ways to handle the big (up to 2 * 140Kbytes) AC=
-Ls,
-please let me know.
-In the meantime, the above seems to be working.
+NFS commit 9597c13b forbade open with O_APPEND|O_DIRECT
 
-Thanks for your comments, rick
+strace show that dio-append-buf-fault use (O_APPEND|O_DIRECT):
 
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+ mount -o vers=4.2 192.168.122.42:/nfstest /mnt/scratch/
+ strace ./src/dio-append-buf-fault /mnt/scratch/111
+..
+  openat(AT_FDCWD, "/mnt/scratch/111", O_WRONLY|O_CREAT|O_TRUNC|O_APPEND|O_DIRECT, 0666) = 3
+
+So skip generic/362 on NFS
+
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+---
+ tests/generic/362 | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/generic/362 b/tests/generic/362
+index f5b4ed06..d7bb0125 100755
+--- a/tests/generic/362
++++ b/tests/generic/362
+@@ -18,6 +18,8 @@ _require_test_program dio-append-buf-fault
+ 	_fixed_by_kernel_commit 939b656bc8ab \
+ 	"btrfs: fix corruption after buffer fault in during direct IO append write"
+ 
++test $FSTYP == "nfs"  && _notrun "NFS forbade open with O_APPEND|O_DIRECT"
++
+ # On error the test program writes messages to stderr, causing a golden output
+ # mismatch and making the test fail.
+ $here/src/dio-append-buf-fault $TEST_DIR/dio-append-buf-fault
+-- 
+2.43.5
+
 
