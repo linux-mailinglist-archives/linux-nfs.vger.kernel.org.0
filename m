@@ -1,83 +1,83 @@
-Return-Path: <linux-nfs+bounces-6150-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6151-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 919B9969421
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 08:50:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6721F969634
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 09:54:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DCEB1F22920
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 06:50:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4C3EB264B9
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Sep 2024 07:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 209791D61BF;
-	Tue,  3 Sep 2024 06:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1221DAC76;
+	Tue,  3 Sep 2024 07:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RS62UGoE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hP4JbxC5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0481D61A6;
-	Tue,  3 Sep 2024 06:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94441CCEF9;
+	Tue,  3 Sep 2024 07:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725346186; cv=none; b=ei1GrxWUwlOSQiYaUbNvqUY3VNo4g7XrUGiZ4Se8Yt+m96wcmtPKgP0IDCiZBDFIB9pH5kHwyW0dTF4ifPWDpyUMhxWtaFrblrNKaZ+H//bEtvByfmBIGpdNAAoUF5cxiid/6keZ1hl3Umw7TiZMJVZDRAlAdQod1NMcXZGnW/w=
+	t=1725350076; cv=none; b=ujysdYb+kZqlqGWg+wQz2h5fMwS9aUVUkxCtM59s0uyJ6ZL6vHOgizCPIdxY5aJ24u2v+5z+U6a82ptVTCcPR8T4MwA6hE8/7cyNM8BAi7S77j+4DyS5ZC3Vohrcrb1ZN1NB2+R+e5cfehP/yuqOO1PHlxEh5xcdldYqUO1uRA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725346186; c=relaxed/simple;
-	bh=r6cxBevIDpBm4tvmRIUZoK81w/uMXlM7aBkxassD7EQ=;
+	s=arc-20240116; t=1725350076; c=relaxed/simple;
+	bh=8d5alI3TLhOYwnx2NrP9LQS/Df3yxkjn+fz4hxc7LrI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EAjdqM7MD+PeHiHQFBrqlSZgNDGLW5rddA8u4SxkFU66gzTBrpK1nKSMnrfj6opYjKGLh3AGovYu/ZOs1OcSPH+u/tN6EKZxOsEqliqFZcSw6sIctk50YUWdJTZCT6bXmLOmIHRZEzVEdSiG3GhCLgOD9fCGS78oSqIqD6qpaOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RS62UGoE; arc=none smtp.client-ip=209.85.221.174
+	 To:Cc:Content-Type; b=R/7opzf6ntf6mKBp1Sem8B0e2wPFZ1gerZ6HXREOSv71EW8t25SxOuFuNnLACqWL2wnFCf7YGb04JIlBmJieMcUxMNkq7EyPip0R5IVGzwF6+HFXhE9tnrKYwkBV4szocWwcavUmgE6y12YyCn6CrOQ1gaNQ3W/RmZXKqErQrwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hP4JbxC5; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4fcfcdcb4acso1653348e0c.0;
-        Mon, 02 Sep 2024 23:49:44 -0700 (PDT)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6c35b545b41so18137166d6.1;
+        Tue, 03 Sep 2024 00:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725346183; x=1725950983; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725350072; x=1725954872; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jABLFheZ43ik7Qd1Q4D+4/nbyOp1VA6ToPIDpMFWTe4=;
-        b=RS62UGoESXHAsx3qPHUiNKLecfMdiEuuJaJqm2FfETCK3bgAEgVNwRnLt82fKBPGQQ
-         PSGjc+dPojRCmo5T4MiBSTSMTgMjraN1L2kcwLHQBzYhhEkh3bYR93r0G8baRFBbU1uW
-         TZw3GeVFKsz+CYNFmqK1oqTYM8nwSLNios1/ujE1g1tRuPPa7ZPpEGeXao8AmfpFZSwQ
-         t10vrrNhQ0K/32phY8G3dzjV/Rq9SymADJqfQQo675jsifJsZPP0iwFRGarFT8qety2g
-         1rfrzXg1FPC49ytnoh4qmwxGO0bNgGaxcNmVxPCqCZz6U4AIvIOpQAOF5L+LiIRM0fiO
-         +aVw==
+        bh=fomXVmXiFKhcu/vzfVM0LdMGqu50I/F26QA2OqSH32Y=;
+        b=hP4JbxC5Ycq1GVbDjVrWoXIx6z/HIdIH3T8XX3OZ+jDGivCfVE/vm3miUz0Hi6S9WC
+         M79M4wAmb4E9ZDOKMs9hR/hqhhd3Xd91HfhcEfX2mSx0Y9l5E/TucXcxLnVwsfP0WMxz
+         CAZxmVGfmt3IezhnURkR2nH4zGp+wvC2AOgUnBmtbQb2qjnVgpCxVPdknFIiUc6GGhqd
+         S4vpwLTh1/wJHke+dL8dSxwA7iQUsZidUZbNc8q9gn3Pzoq7tvGD9+k9Y1lDF1uAsEQd
+         6NCGD9WNRwHTdbI5KHky31eAdKROfv6pE70NX95mcbIS8UQX6ATGDnxJpz5GmRZzgllR
+         M7aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725346183; x=1725950983;
+        d=1e100.net; s=20230601; t=1725350072; x=1725954872;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jABLFheZ43ik7Qd1Q4D+4/nbyOp1VA6ToPIDpMFWTe4=;
-        b=BG5c88LD7uT7Uqn9CmDgpd+wN9+SR0fCaRX8skGElMjFLtCQPDpUGM8Vb8zaSOpxy4
-         8VU2gH68o+NEehU5Pq2zgDYaiC6LEM4Si82d05W9IfDUp6iQXO7tRdFuGuoMm98LL+Zr
-         55MuROBzlOaDAez+KhWdsnYHRnvfKJ9facaqEhx+Fdrfed7RcA19TfQqmdaAFPSOLgl0
-         sf6ie6chC4EcKWoonjcCc04sOIvoR54bVjwHK5TBBU/BVY/RUrIfQp07o0MC+0dyajsp
-         FiWbLbM+BRH5RvWdYnvjHIS/zAVqkY+4zY5FaaJlOCwOK/mO5y8IHkG68C2G5PwxZmkg
-         jk6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUrVXxannH5La292SOcEwpbLgmu8CEYqEQP+xZgNRjES+iuSQJStwHCE1vmQTTbw9kq0UyYN7gw8rvtYEYY/YFKGg==@vger.kernel.org, AJvYcCV7tOHn/AOqJ28V+iBfZRq4ZYhrdfUh+xoCnjv5rygVy6lZv+A9FP8VOe87DQ3oLRx+4ANB6wXOpiKB@vger.kernel.org, AJvYcCW2BI1oCo2dw5CgGlfJhK8cxFDCibAKETTAkZCmRMbUd5Q2nec+Gz7zNUAbLtJCMbMOaimLkvYuMJc4sE26@vger.kernel.org, AJvYcCX4Nhds8cLH7OI88xDzy344ONyIOYeorwdquw1aBawt3fPIKLD7s/CeqW/cF2VBP0jzFQ43PwcsGBc=@vger.kernel.org, AJvYcCXSINubhNmrRtqt86LZjygV+Xwby77PZBugR3LWZ7O3Lgdklf0JFIpvBHHg7G9m5S9FHUXfhxe5CxoF6wQZhA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrrbhU1PzVuRoJSpFz6JQSm+/xOAIE1rcE7bgX1Yu3x73/HT5B
-	p4m0PNUl4Y63JZ43jsbvLubV3Pq389uYPzqkkpvohICeaIHw97UDosNmUOABWtdciSwGgLR6fSv
-	gjWq5w97eA06R9HHg6DFRjDWlEvM=
-X-Google-Smtp-Source: AGHT+IEjSi1Nhm40ZmIKTSGp1qO/Ql+telosUq7bdIzgliWrGKdPuR061Ro5l4hZctY1PB+wjGgyCzdZ7coDdylCNvM=
-X-Received: by 2002:a05:6122:2218:b0:4fd:762:8649 with SMTP id
- 71dfb90a1353d-500de453969mr1158684e0c.12.1725346183294; Mon, 02 Sep 2024
- 23:49:43 -0700 (PDT)
+        bh=fomXVmXiFKhcu/vzfVM0LdMGqu50I/F26QA2OqSH32Y=;
+        b=HDnntTG/yWYpjTSC7hlqsiiupF+CZnDSY+oz+d+Ih3SWmw/4CPhiviDk6Wyru+SHOg
+         JeEOH77UNVIqZYxFQ79i0riWiCWqNkmlCXw4njxkrF08yOFtO/j5BiUVGqHQ5bHDcdD4
+         tK+hmrkpVbLYFNznZEiXNSNk0wNZ7eFDFk9sDZyyH0Avz6lK+7L6+8sW+068E/IgY4L8
+         wWoJ0xjv//TTOQxNVB4zoC617VBGEPc7wEMWagS6g8H90Z60AHB0fY5VE8O0mm7aUMAF
+         E8k6NKfcA/aphbMsmjoEgxjnXff8gq44lNnG6zdqKz1SB6py0IIh3FurtyXrEVal2Se4
+         JprA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5/HXY9px2xuBMniqB8Pfm5SKV3VHUt6lm97aZrG45obrrik+Nqyh5tfwqFxynWbJecTZ81SqLBNfsraPgMA==@vger.kernel.org, AJvYcCVc+6fo1TOu++Forq8dtgeKTgNeMMOSQ/+jX6+VGkaLaVD5kDsSyuX3+yVJCSWqU8V1ya3bhZU1hYk=@vger.kernel.org, AJvYcCWJJ1VRZVJK0EO3Ohq/hDTjHbQ/xqSMZjhe6pAOSESQ61L45Tj8aA9R4oJcFgdVDpMXwxuWJigUbKm/@vger.kernel.org, AJvYcCWR5G/TtVtp6yXZjgp+Tv4RZxxkOsM+qMezAlqrPxDEpOzEdXnVHrPHjh6z1rnK6fc4Eg8xuV8aWTb0uZDmV4FnOg==@vger.kernel.org, AJvYcCWhT6mf63TYwxuNe9Uf7sskPJQzoMOnAkZ8wb5Goh67d2Zrouvf1eJa2nzcVIM7rylv02vwGdw/zCQR8qhZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhG6nfVwp6EjlifJX0gmN8Nm8VICRogGI3LF5pxO2ooOCjEsNs
+	nxSjzwHA3RxrJKJPAlTqhwDwk9h7GS4s5Fylv0Okq3f5fsSJLM+3MOgWcBg8LmkP3jFyFV6GkEs
+	5jXs81FvZU2od7HlcdZYETkesHyYWYIfYqQOiLw==
+X-Google-Smtp-Source: AGHT+IGzXLsIEHDbgMyGT+A08yC4JUWzWxGh88B25wAb1Ou+JNdpZ2wR9VfJec6imJMUOtwHITpi+KkYncaNWiMSjmY=
+X-Received: by 2002:a05:6214:4a81:b0:6c3:6b35:ac73 with SMTP id
+ 6a1803df08f44-6c36b35ad26mr91108986d6.11.1725350071854; Tue, 03 Sep 2024
+ 00:54:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com> <20240902164554.928371-1-cyphar@cyphar.com>
-In-Reply-To: <20240902164554.928371-1-cyphar@cyphar.com>
+References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
+ <20240902164554.928371-1-cyphar@cyphar.com> <20240902164554.928371-2-cyphar@cyphar.com>
+In-Reply-To: <20240902164554.928371-2-cyphar@cyphar.com>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 3 Sep 2024 08:49:32 +0200
-Message-ID: <CAOQ4uxhw+WMUQtaBZ1v863p-DGLbkip7p59_DM54BB=DCjJ-Gg@mail.gmail.com>
-Subject: Re: [PATCH xfstests v2 1/2] statx: update headers to include newer
- statx fields
+Date: Tue, 3 Sep 2024 09:54:20 +0200
+Message-ID: <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
+Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount ID
 To: Aleksa Sarai <cyphar@cyphar.com>
 Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
 	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
@@ -97,39 +97,115 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> wro=
 te:
 >
-> These come from Linux v6.11-rc5.
+> Now that open_by_handle_at(2) can return u64 mount IDs, do some tests to
+> make sure they match properly as part of the regular open_by_handle
+> tests.
 >
+> Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0-10c=
+2c4c16708@cyphar.com/
 > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
 > ---
->  src/open_by_handle.c |  4 +++-
->  src/statx.h          | 22 ++++++++++++++++++++--
->  2 files changed, 23 insertions(+), 3 deletions(-)
+> v2:
+> - Remove -M argument and always do the mount ID tests. [Amir Goldstein]
+> - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
+>   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
+> - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cyphar=
+.com/>
 >
-
-This patch conflicts with commit
-873e36c9 - statx.h: update to latest kernel UAPI
-already in for-next branch (this is the branch to base patches on)
-
+>  src/open_by_handle.c | 128 +++++++++++++++++++++++++++++++++----------
+>  1 file changed, 99 insertions(+), 29 deletions(-)
+>
 > diff --git a/src/open_by_handle.c b/src/open_by_handle.c
-> index 0f74ed08b1f0..d9c802ca9bd1 100644
+> index d9c802ca9bd1..0ad591da632e 100644
 > --- a/src/open_by_handle.c
 > +++ b/src/open_by_handle.c
-> @@ -82,12 +82,14 @@ Examples:
->  #include <string.h>
->  #include <fcntl.h>
->  #include <unistd.h>
-> -#include <sys/stat.h>
->  #include <sys/types.h>
+> @@ -86,10 +86,16 @@ Examples:
 >  #include <errno.h>
 >  #include <linux/limits.h>
 >  #include <libgen.h>
+> +#include <stdint.h>
+> +#include <stdbool.h>
 >
-> +#include <sys/stat.h>
-> +#include "statx.h"
+>  #include <sys/stat.h>
+>  #include "statx.h"
+>
+> +#ifndef AT_HANDLE_MNT_ID_UNIQUE
+> +#      define AT_HANDLE_MNT_ID_UNIQUE 0x001
+> +#endif
 > +
+>  #define MAXFILES 1024
+>
+>  struct handle {
+> @@ -120,6 +126,94 @@ void usage(void)
+>         exit(EXIT_FAILURE);
+>  }
+>
+> +int do_name_to_handle_at(const char *fname, struct file_handle *fh, int =
+bufsz)
+> +{
+> +       int ret;
+> +       int mntid_short;
+> +
+> +       static bool skip_mntid_unique;
+> +
+> +       uint64_t statx_mntid_short =3D 0, statx_mntid_unique =3D 0;
+> +       struct statx statxbuf;
+> +
+> +       /* Get both the short and unique mount id. */
+> +       if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID, &statxbuf) < 0) {
 
-So probably best to squash this one liner into the 2nd patch.
-I guess Zorro can do it on commit if needed.
+This fails build on top of latest for-next branch with commit
+873e36c9 - statx.h: update to latest kernel UAPI
+
+It can be fixed by changing to use the private xfstests_statx()
+implementation, same as in stat_test.c.
+
+I am not sure how elegant this is, but that's the easy fix.
+
+> +               fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n", fname);
+> +               return EXIT_FAILURE;
+> +       }
+> +       if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
+> +               fprintf(stderr, "%s: no STATX_MNT_ID in stx_mask\n", fnam=
+e);
+> +               return EXIT_FAILURE;
+> +       }
+> +       statx_mntid_short =3D statxbuf.stx_mnt_id;
+> +
+> +       if (!skip_mntid_unique) {
+> +               if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID_UNIQUE, &statx=
+buf) < 0) {
+> +                       fprintf(stderr, "%s: statx(STATX_MNT_ID_UNIQUE): =
+%m\n", fname);
+> +                       return EXIT_FAILURE;
+> +               }
+> +               /*
+> +                * STATX_MNT_ID_UNIQUE was added fairly recently in Linux=
+ 6.8, so if the
+> +                * kernel doesn't give us a unique mount ID just skip it.
+> +                */
+> +               if ((skip_mntid_unique |=3D !(statxbuf.stx_mask & STATX_M=
+NT_ID_UNIQUE)))
+> +                       printf("statx(STATX_MNT_ID_UNIQUE) not supported =
+by running kernel -- skipping unique mount ID test\n");
+
+This verbose print breaks all existing "exportfs" tests which do not
+expect it in the golden output.
+
+I understand that silently ignoring the failure is not good, but I also
+would like to add this test coverage to all the existing tests.
+
+One solution is to resurrect the command line option -M from v1,
+but instead of meaning "test unique mount id" let it mean
+"do not allow to skip unique mount id" test.
+
+Then you can add a new test that runs open_by_handle -M, but also
+implement a helper _require_unique_mntid similar to _require_btime
+which is needed for the new test to run only on new kernels.
+
+I'm sorry for this complication, but fstest is a testsuite that runs on
+disto and stable kernels as well and we need to allow test coverage
+of new features along with stability of the test env.
 
 Thanks,
 Amir.
