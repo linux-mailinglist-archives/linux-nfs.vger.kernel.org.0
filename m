@@ -1,217 +1,265 @@
-Return-Path: <linux-nfs+bounces-6193-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6194-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D40696C453
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 18:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E8B6F96C488
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 18:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA22B28418A
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 16:45:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EBB4287432
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 16:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90B6D1E0B78;
-	Wed,  4 Sep 2024 16:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD681E0B8C;
+	Wed,  4 Sep 2024 16:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IR1369uG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMuXSDQl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67411E0B79;
-	Wed,  4 Sep 2024 16:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063F91DA312;
+	Wed,  4 Sep 2024 16:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725468309; cv=none; b=M9unZloHLuHy24u+9+JUECtqWI7i6yXc1/lY/JdzYv4p8Y5RzRObq5J6LcU05WQ6+hZ5oO1LRh/7Hh3Oiy2mdYC4JI2C07gXdb+AAvMJKA2TaaX4MzUHcS475RnYhwMLw0bAriEtfQqAZ4XVBPgmpa/8TeuyFIVpI41ACWz+IB4=
+	t=1725469122; cv=none; b=movD9x1o504cBLvY+UZaRy5xJwzZ8QAFQMjBF1qQTTUsAznbLY9MdqP9UtBcY9jKL1Zq13S1r1lmanZb3OxF3kSYblHyuCDgGdcjYYsfEfriQY/6K9us8IRgSRMOZhcGEQawjm6YT7IcdtdtRYnhuDtCQgdItkBFM4+HspPEyEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725468309; c=relaxed/simple;
-	bh=sZq5Sl4k2Ja4Iix3tKV1PrlAHf29Z7WsTqEoXj5tVQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u+HwOzlYGRh3C9q3M4d0jkXo+5HlqrtAEHl5rJptspQD7GUetJf+4cy/9IC0eBjgHHUGJwKY8UeiWs7TjE19sOprUeMKoOaUNAE2PN/9XTy+LkNhwNqKOSi8XzpUmgarQGT9SfVd2VAnn3B+j9jEihAyDo0GIKL5t4u7UjgqNXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IR1369uG; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7a966f0a985so229488385a.3;
-        Wed, 04 Sep 2024 09:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725468307; x=1726073107; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+97pJzC0UZCf1ZhPCVqbpyHvcwl1EJo2MBdOEN/H1ic=;
-        b=IR1369uGtBbt9dKcMhpmWAUuZp+guqPjlL51piSQ8AZLwTFStz0om/XwsW05chB1lq
-         RCnqHkIjX84iiZKirnNBb442JSheoxuXk8fHTwXTMwcVFd3tAAzl9oZ4Xn+Ha5MrsEL6
-         UneKlC4UOICUccxSeBqe8W6FdeNP4hwN0n0b2fWY+DEo7wGSXFRY8MMu2JMCfi4b8uc6
-         /KY8/DcrbJxDou0f7QMbU6H/hMF8G3Vdge90l2RxFc38v+j2vQhMHG1lbXrHsB9uOb8E
-         b9NsMMYiCan/c5fPaRbNae1X356AK7Qwip2WSmHdGmXfNCgKz1CA/QyRM0qXdTiFN4Pd
-         YLkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725468307; x=1726073107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+97pJzC0UZCf1ZhPCVqbpyHvcwl1EJo2MBdOEN/H1ic=;
-        b=rUrYoq7lY0FOjcMXa6ws/yxw/+Iu8IAPXDEFjw6+XFfqXJl/DFYrFVhN/Ll3S1FYxl
-         u9M6yxe9GN8ch/tLyIn699ZX4rdLREijSfY1ofxl5IEDSBKN7eSCa/Lgp1q/15e/e5Gk
-         nTc7aEWSaU6cRqob4nrs7aQujWVw7L4BUsUlZyhsVVESp1tDOG2Svmf21fHFM1Y4sXaG
-         RLCJ1vxXLP1XNyh5qoWMWrcPfi1sC7RAZmxFUqdu4Hu2uO3uh1yxrrZ6i1UYBhru/h2z
-         zVVZhRiH9fwG/bLoSjOpoxayDhdn4GZO6uNhMzNkmerUpsVoReUs6WCgW/lWCiu1I09h
-         fqEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMuKbbzHp9S8VxqXCWj68JvMYIIlBsS7a5nB993bK4qwk5To5jEskcCJ/Xdvw3U8itCl1tliEw0aSvV9Q@vger.kernel.org, AJvYcCWEZujhdhuaz7/2fco5Kgv9miHfTE5QJuYkh5rEvpAywqDDHCBw3FeA6YX1zubhhQb+3tM12A7F/xwnsEZ0QQ==@vger.kernel.org, AJvYcCWT6LSKJkYzdbatc8CSbgHOhyXUKYKuZ3+rwHE9BU/vYm751vHIMeevFBB95K5nWB5Ei9a1qunkU53oBjEym9hz/w==@vger.kernel.org, AJvYcCXg2sHBzf3AtNT5la8Qk5kF/BXJteJqqjaPJXAbCcOEZIFKQGAA5HVzJLPVP6oN002Hri/Q1z4c2UTj@vger.kernel.org, AJvYcCXobRTOdMhT1l3AhY96W6st+wGMvJKLiXkap8Ci+RxlPi0Rqtpq0L4mNw9XgP0qjCUEL+FtVlHzJMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3aIP2hDpu5pAwOYV4odlpGEMgxgWx7/r1RDDoxEYoIQiLRAg5
-	3XNonhUxezmhRBZYEFvrXNfFjILYbbYk18EXyY/IB4LIE/O6kluy5lrN+cCmtvrX+LdN5aCF57R
-	IfCdOb3RJQoW2FeaqYFz9BcvSkYQ=
-X-Google-Smtp-Source: AGHT+IHD6Iid1+jIY94q827mn0wAxNIGb4Ddfn+R1FjJ3Lmqs8Ms1ALLX6rxYcRkKbf8M3uW4zlsaVK9UmneTxAURK0=
-X-Received: by 2002:a05:620a:4708:b0:79f:4f3:88f5 with SMTP id
- af79cd13be357-7a97bc78e88mr707414585a.15.1725468306494; Wed, 04 Sep 2024
- 09:45:06 -0700 (PDT)
+	s=arc-20240116; t=1725469122; c=relaxed/simple;
+	bh=bCwGrc2028pSjBdRCl46T+rh8AQRhNz5pAwTue343Y4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H60aP/dp2sdwh4sYyfl65Tr5HNiFz9MDuEVASzpBbj90oDC51pyZsDy+ENhn+MfXOELM4NZpupNMxvJmzEIcJv8VUYvHYYCbWarelvmte8yTnGgg/OwlR7SZFu7WRJWHvkY7Nf1ryBjIDAvW4S9MsM4xQpBjoQWdTOsmyvzK/t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMuXSDQl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BF84C4CEC2;
+	Wed,  4 Sep 2024 16:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725469121;
+	bh=bCwGrc2028pSjBdRCl46T+rh8AQRhNz5pAwTue343Y4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jMuXSDQlbFbG8LZbLKcRVWTUn6mMdSeXvEC+1dHPGFjn7Lp1qIGdo9WtClVU/WEDs
+	 9rrwpjydxHxpQsI+WIi894/JVqq6QZqcYGZSVOCzTAtI7kqbC5RJFC6EMP3ebSjuGh
+	 KHluHLWPGT7qnIOG3pARLOjkHiO9R4U6DjblqlzrgJz5IIbe0O2fuIXgo1NZ6mGKst
+	 QafmNyZFKHBJhRaPmm1Sc+pW5VrruOrZ4qIKHBwus8cihaw4g2wtLpBS3ZuVaDqkmx
+	 yDmGndn4kRCDEWU3poQPfz1sFBHfoagX5JezNlyJlH8AmXr4+BRjyc7hn5XUJHvsmQ
+	 fNkTxtLpoYIxQ==
+Message-ID: <82b17019fb334973a74adf88e3eb255df4091f12.camel@kernel.org>
+Subject: Re: [PATCH v3 03/13] nfsd: drop the ncf_cb_bmap field
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Olga Kornievskaia
+ <okorniev@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jonathan Corbet
+ <corbet@lwn.net>, Tom Haynes <loghyr@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org
+Date: Wed, 04 Sep 2024 12:58:38 -0400
+In-Reply-To: <Zth6oPq1GV2iiypL@tissot.1015granger.net>
+References: <20240829-delstid-v3-0-271c60806c5d@kernel.org>
+	 <20240829-delstid-v3-3-271c60806c5d@kernel.org>
+	 <Zth6oPq1GV2iiypL@tissot.1015granger.net>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
- <20240902164554.928371-1-cyphar@cyphar.com> <20240902164554.928371-2-cyphar@cyphar.com>
- <CAOQ4uxgS6DvsbUsEoM1Vr2wcd_7Bj=xFXMAy4z9PphTu+G6RaQ@mail.gmail.com>
- <20240903.044647-some.sprint.silent.snacks-jdKnAVp7XuBZ@cyphar.com>
- <CAOQ4uxhXa-1Xjd58p8oGd9Q4hgfDtGnae1YrmDWwQp3t5uGHeg@mail.gmail.com> <20240904.162424-novel.fangs.vital.nursery-BQvjXGlIi7vb@cyphar.com>
-In-Reply-To: <20240904.162424-novel.fangs.vital.nursery-BQvjXGlIi7vb@cyphar.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 4 Sep 2024 18:44:54 +0200
-Message-ID: <CAOQ4uxg7EgOH5s_RZz27XpVSwgWu9bROT9JRzTycxi8D2_3d3A@mail.gmail.com>
-Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount ID
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Christoph Hellwig <hch@infradead.org>, 
-	Josef Bacik <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 4, 2024 at 6:31=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> wro=
-te:
->
-> On 2024-09-03, Amir Goldstein <amir73il@gmail.com> wrote:
-> > On Tue, Sep 3, 2024 at 8:41=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com>=
- wrote:
-> > >
-> > > On 2024-09-02, Amir Goldstein <amir73il@gmail.com> wrote:
-> > > > On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.=
-com> wrote:
-> > > > >
-> > > > > Now that open_by_handle_at(2) can return u64 mount IDs, do some t=
-ests to
-> > > > > make sure they match properly as part of the regular open_by_hand=
-le
-> > > > > tests.
-> > > > >
-> > > > > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-=
-v3-0-10c2c4c16708@cyphar.com/
-> > > > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > > > ---
-> > > > > v2:
-> > > > > - Remove -M argument and always do the mount ID tests. [Amir Gold=
-stein]
-> > > > > - Do not error out if the kernel doesn't support STATX_MNT_ID_UNI=
-QUE
-> > > > >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
-> > > > > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cypha=
-r@cyphar.com/>
-> > > >
-> > > > Looks good.
-> > > >
-> > > > You may add:
-> > > >
-> > > > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > > >
-> > > > It'd be nice to get a verification that this is indeed tested on th=
-e latest
-> > > > upstream and does not regress the tests that run the open_by_handle=
- program.
-> > >
-> > > I've tested that the fallback works on mainline and correctly does th=
-e
-> > > test on patched kernels (by running open_by_handle directly) but I
-> > > haven't run the suite yet (still getting my mkosi testing setup worki=
-ng
-> > > to run fstests...).
-> >
-> > I am afraid this has to be tested.
-> > I started testing myself and found that it breaks existing tests.
-> > Even if you make the test completely opt-in as in v1 it need to be
-> > tested and _notrun on old kernels.
-> >
-> > If you have a new version, I can test it until you get your fstests set=
-up
-> > ready, because anyway I would want to check that your test also
-> > works with overlayfs which has some specialized exportfs tests.
-> > Test by running ./check -overlay -g exportfs, but I can also do that fo=
-r you.
->
-> I managed to get fstests running, sorry about that...
->
-> For the v3 I have ready (which includes a new test using -M), the
-> following runs work in my VM:
->
->  - ./check -g exportfs
->  - ./check -overlay -g exportfs
->
-> Should I check anything else before sending it?
->
+On Wed, 2024-09-04 at 11:20 -0400, Chuck Lever wrote:
+> On Thu, Aug 29, 2024 at 09:26:41AM -0400, Jeff Layton wrote:
+> > This is always the same value, and in a later patch we're going to need
+> > to set bits in WORD2. We can simplify this code and save a little space
+> > in the delegation too. Just hardcode the bitmap in the callback encode
+> > function.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>=20
+> OK, lurching forward on this ;-)
+>=20
+>  - The first patch in v3 was applied to v6.11-rc.
+>  - The second patch is now in nfsd-next.
+>  - I've squashed the sixth and eighth patches into nfsd-next.
+>=20
+> I'm replying to this patch because this one seems like a step
+> backwards to me: the bitmap values are implementation-dependent,
+> and this code will eventually be automatically generated based only
+> on the protocol, not the local implementation. IMO, architecturally,
+> bitmap values should be set at the proc layer, not in the encoders.
+>=20
+> I've gone back and forth on whether to just go with it for now, but
+> I thought I'd mention it here to see if this change is truly
+> necessary for what follows. If it can't be replaced, I will suck it
+> up and fix it up later when this encoder is converted to an xdrgen-
+> manufactured one.
 
-That should be enough.
-So you have one new test that does not run on upstream kernel
-and runs and passes on patched kernel?
+It's not truly necessary, but I don't see why it's important that we
+keep a record of the full-blown bitmap here. The ncf_cb_bmap field is a
+field in the delegation record, and it has to be carried around in
+perpetuity. This value is always set by the server and there are only a
+few legit bit combinations that can be set in it.
 
-> Also, when running the tests I think I may have found a bug? Using
-> overlayfs+xfs leads to the following error when doing ./check -overlay
-> if the scratch device is XFS:
->
->   ./common/rc: line 299: _xfs_has_feature: command not found
->     not run: upper fs needs to support d_type
->
-> The fix I applied was simply:
->
-> diff --git a/common/rc b/common/rc
-> index 0beaf2ff1126..e6af1b16918f 100644
-> --- a/common/rc
-> +++ b/common/rc
-> @@ -296,6 +296,7 @@ _supports_filetype()
->         local fstyp=3D`$DF_PROG $dir | tail -1 | $AWK_PROG '{print $2}'`
->         case "$fstyp" in
->         xfs)
-> +               . common/xfs
->                 _xfs_has_feature $dir ftype
->                 ;;
->         ext2|ext3|ext4)
->
-> Should I include this patch as well, or did I make a mistake somewhere?
-> (I could add the import to the top instead if you'd prefer that.)
+We certainly can keep this bitmap around, but as I said in the
+description, the delstid draft grows this bitmap to 3 words, and if we
+want to be a purists about storing a bitmap, then that will also
+require us to keep the bitmap size (in another 32-bit word), since we
+don't always want to set anything in the third word. That's already 24
+extra bits per delegation, and we'll be adding new fields for the
+timestamps in a later patch.
 
-This should already be handled by
-if [ -n "$OVL_BASE_FSTYP" ];then
-        _source_specific_fs $OVL_BASE_FSTYP
-fi
+I don't see the benefit here.
 
-in common/overlay
+> I've tried to apply a few of the following patches in this series,
+> but by 9/13, things stop compiling. So I will let you rebase your
+> work on the current nfsd-next and redrive it, and we can go from
+> there.
+>=20
 
-I think what you are missing is to
-export FSTYP=3Dxfs
-as README.overlay suggests.
+Great. I'll rebase and re-test.
 
-It's true that ./check does not *require* defining FSTYP
-and can auto detect the test filesystem, but for running -overlay
-is it a requirement to define the base FSTYP.
+PS: I'm working on a couple of pynfs tests for CB_GETATTR as well. I'll
+post them once I have them working. I've also found nfsd bugs in how we
+currently proxy the attrs. I'll have patches for that in the next
+posting (once my question on the IETF list is answered).
 
-Thanks,
-Amir.
+>=20
+> > ---
+> >  fs/nfsd/nfs4callback.c | 5 ++++-
+> >  fs/nfsd/nfs4state.c    | 1 -
+> >  fs/nfsd/state.h        | 1 -
+> >  3 files changed, 4 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > index b5b3ab9d719a..0c49e31d4350 100644
+> > --- a/fs/nfsd/nfs4callback.c
+> > +++ b/fs/nfsd/nfs4callback.c
+> > @@ -364,10 +364,13 @@ encode_cb_getattr4args(struct xdr_stream *xdr, st=
+ruct nfs4_cb_compound_hdr *hdr,
+> >  	struct nfs4_delegation *dp =3D
+> >  		container_of(fattr, struct nfs4_delegation, dl_cb_fattr);
+> >  	struct knfsd_fh *fh =3D &dp->dl_stid.sc_file->fi_fhandle;
+> > +	u32 bmap[1];
+> > +
+> > +	bmap[0] =3D FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE;
+> > =20
+> >  	encode_nfs_cb_opnum4(xdr, OP_CB_GETATTR);
+> >  	encode_nfs_fh4(xdr, fh);
+> > -	encode_bitmap4(xdr, fattr->ncf_cb_bmap, ARRAY_SIZE(fattr->ncf_cb_bmap=
+));
+> > +	encode_bitmap4(xdr, bmap, ARRAY_SIZE(bmap));
+> >  	hdr->nops++;
+> >  }
+> > =20
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 8835930ecee6..6844ae9ea350 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -1183,7 +1183,6 @@ alloc_init_deleg(struct nfs4_client *clp, struct =
+nfs4_file *fp,
+> >  	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
+> >  			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
+> >  	dp->dl_cb_fattr.ncf_file_modified =3D false;
+> > -	dp->dl_cb_fattr.ncf_cb_bmap[0] =3D FATTR4_WORD0_CHANGE | FATTR4_WORD0=
+_SIZE;
+> >  	get_nfs4_file(fp);
+> >  	dp->dl_stid.sc_file =3D fp;
+> >  	return dp;
+> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > index 79c743c01a47..ac3a29224806 100644
+> > --- a/fs/nfsd/state.h
+> > +++ b/fs/nfsd/state.h
+> > @@ -138,7 +138,6 @@ struct nfs4_cpntf_state {
+> >  struct nfs4_cb_fattr {
+> >  	struct nfsd4_callback ncf_getattr;
+> >  	u32 ncf_cb_status;
+> > -	u32 ncf_cb_bmap[1];
+> > =20
+> >  	/* from CB_GETATTR reply */
+> >  	u64 ncf_cb_change;
+> >=20
+> > --=20
+> > 2.46.0
+> >=20
+>=20
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
