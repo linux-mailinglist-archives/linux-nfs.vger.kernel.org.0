@@ -1,124 +1,121 @@
-Return-Path: <linux-nfs+bounces-6209-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6210-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BE6696C837
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 22:16:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5710196C83A
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 22:17:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B2A31F23E55
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 20:16:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 908A01C22741
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Sep 2024 20:17:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA3A84A35;
-	Wed,  4 Sep 2024 20:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FFA6BFA3;
+	Wed,  4 Sep 2024 20:17:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1iVsWb0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esnClwNT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FE76BFA3;
-	Wed,  4 Sep 2024 20:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D657C84A35
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Sep 2024 20:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725480967; cv=none; b=qLgcJewrp3FLTjY7Uj4jwHRL78N0whmtekS93GnpvSd8i+5pjUga7EchyVnkkxDWT9vx4yHp9WgzS2XcGJgoYOXAez208bu3ZxQDnXbjV19kTcgEXdphbzDyHKX0D4TAxX9o9f4imsjEyxwKuu4PLl7dFJjGMuJXXQ75fxhmtp8=
+	t=1725481047; cv=none; b=pgeX8oNEUcWiqRtK05UiVMSwDyq4ceu2l8eFBmKKXR8B7FIHFCqmVZbMskYJ2qeejjPFOJZSH+8aRjH60OLAvbOjv34QuTLjWqnI/MwMrs70LHSaOAKSrChV/BtNfuwvQyGCszzpP5T8U/SRD7PgC2Lv1OZTnNzXMoThQ8z87Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725480967; c=relaxed/simple;
-	bh=N9pEA7Omn6xP3UqC/M2aQeukxkjLg/8s7NVCzR4woc4=;
+	s=arc-20240116; t=1725481047; c=relaxed/simple;
+	bh=kN77uES7krIHceZJXFUO3VsplbgbcwVzi4vHeN3M96s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8e+eY45mCaVNKyM1KBxw+9U5V2P2aJ4fwyc0AxQIXQZ+jy5mhXRXoBnrKol7hd1di1lrnX75Fi/g/fQD8w11RSK04eGaNXbBrscru/3qhGMl3T9DwSyMFfYaPgKPhj/strQvlqae+XULv01s4l/7hUlnz7Vup+BzNK3bsm2SHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1iVsWb0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51F3C4CEC2;
-	Wed,  4 Sep 2024 20:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725480966;
-	bh=N9pEA7Omn6xP3UqC/M2aQeukxkjLg/8s7NVCzR4woc4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s1iVsWb03xy1SzhXsCEyZ3YniDoDs+DCJItrTdsq22KQqmDkdvzw9OTRyoTjMJoPl
-	 aXh+vCsVxxFhFQGr3l8xkvoePP7jD7D9uio69m02OcpLuZs82xDqAb5Fgo2WyUHEao
-	 OKTfEsq81xAtJStJVPkOBrXDP7hFfm8L/Ml7X4w2oZ44SThQeBuFHo2b4TeDlgQ4iC
-	 M+ZM41fBMaAPoZTJkReTKhoAnCwTw4OdCOKehT5d6LXyMlhqhY2k3CHEKsWGmFvg1j
-	 iMayOlZWdygbNZDA4YNn4jHGiTfTYhrdcamIbGs0/eXXtb8vKJwuy5oqsP2UBpYfqZ
-	 fiRmageTeoZAA==
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-45681098bbdso239501cf.1;
-        Wed, 04 Sep 2024 13:16:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYc0nDvykesBLgo6C/upl5D1jYlGOGBIFV6JxH436izZOYvxJ3Aqp6/iWwbZq0WAjbSuUWIRt749jA@vger.kernel.org, AJvYcCWNJhm4HaT/54L4MDPzE/QyNNlK600ahANML/8RM87GYuBUCt8M66cpe76t8QU2u1e33ZdW7VeDRsAGoCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp987cJ+cVuNgm8tNMawDwcqAN3PabXwUDGadGmqU5nIFuGwo8
-	aHFZP+CB7ZrFFhlUeHQG28i6wC9nATTWguuPzgsi14SLDJiaeEdzE23W75fq3zGp18osc60NIMj
-	SzoZ0q9KD0dMgBLTvy07tXnWaT+g=
-X-Google-Smtp-Source: AGHT+IHr9Y6Dg9eP7sZxeH4HR9kNRElZ+3rzRfHghMYSGXfaAS6jENfgVVWuG+czF9mVb9LPkv13YNhOLMpns0EWjXI=
-X-Received: by 2002:a05:622a:4c05:b0:457:d550:db86 with SMTP id
- d75a77b69052e-457f8c589b3mr64256671cf.26.1725480966267; Wed, 04 Sep 2024
- 13:16:06 -0700 (PDT)
+	 To:Cc:Content-Type; b=YUOlK1cjVaFM2y9ZFNXSdzchmSt6xhlq/A+EpQ0MMTp6yC1/SFsN14a6/YwVw7cLb0Tkd5v8UxLMXW9stjIUCcm6tkf5Pf6WVUO+yGYQI62rzePE+dbLSZ9MavSsGcqpjVpYhC6fecULUqa3lVii+63b/cXHGAXFg3RFdyNEWtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esnClwNT; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2054e22ce3fso325935ad.2
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Sep 2024 13:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725481045; x=1726085845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HR+FFiZQgpD/Sziha5QpXEtjEu4jMsVet8t1zQDRXJw=;
+        b=esnClwNT1C+iBvtv6wwyIuxo0Jn5BGDaFo0Ydac1tCjPCaVjelzP9IId5CIZu4ARKz
+         2XIGvDqyqmS4NGG2nbAsdJFARnSW9qGYZlH7A3R2UEBul1wiii8oOOrJX/MqGO+Gh5HM
+         seyrN/1InsDGi9sLjlsxLqxLUYjQ9S/WXMkbLb42m6Jkr2hqHwlRQIP+iDzUrpTAZnB6
+         +IyErTCiQo3Q0uBf4MG7vur/+LFekQsuuPO5c/4pundtw4NRnDpa8UQEgBAtPt7oDvfa
+         yvtWHbxOv/8WoPl8CXEblblymo1IK6KwYpmANSlrVP99ZoR+xdcwcNbWFkVat08E5ZSq
+         5anQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725481045; x=1726085845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HR+FFiZQgpD/Sziha5QpXEtjEu4jMsVet8t1zQDRXJw=;
+        b=hJcICk2nFjBiRMs6gaAYP/1vQM4q4y3/Dg/zO/5SYVYQdc2vXhDlFx4XBuZb+1nvIq
+         szMZDKPKr2FqWEjqaE2shuiInu9Z+jutVmO6x0TPWoYmY71+BLYTFl+FHip/1FKqkBNv
+         HIFtH4bEc8cG81ZlbLeRpsgCNrz4AbXK49YwQqNih7yVK2yCGRhdp0mRk7Ww3i6VTvvS
+         XNF6F1hOVuGGbkj5ZEWL8fogahlyyarUyTVjadNhCcGI+9wtr65jg6TR7GyviZ8DLELY
+         2lvfjDRhksWuxWcWmEs/SDuV/Vyy3TWvqgjB8Qja1ZsY41WH0ycr5gTgVYVAMZ4jffSb
+         MQRQ==
+X-Gm-Message-State: AOJu0Ywb3wsZSCccKEr+9/Qj4pwU4nlHISlDrMbIRcqE9/1Bqf5kSoCx
+	mzTADjG1bB6SX1hF+aDEvovYn6Hw5Esx4jCTiHCmjgVz5RzSweVG9XvVcaazIdpCGvlEEQ5Ugyh
+	m+5+dwiRHizMa5k5A10h5Q8zXkA==
+X-Google-Smtp-Source: AGHT+IEV49E4jSwUTFkkQSZnfFInWx3nggePWe2f31WFJGYhUjBMVSsnDGMNAQKdBfqNH6R5TO9Tj5eo90RWiAKfzCc=
+X-Received: by 2002:a17:902:d4cf:b0:206:8d6e:cff9 with SMTP id
+ d9443c01a7336-20699acb75amr65550145ad.4.1725481044865; Wed, 04 Sep 2024
+ 13:17:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240904123457.3027627-1-lilingfeng3@huawei.com> <8ee4ce7c4eb56ec80365492407b76ee3dc4b6347.camel@kernel.org>
-In-Reply-To: <8ee4ce7c4eb56ec80365492407b76ee3dc4b6347.camel@kernel.org>
-From: Anna Schumaker <anna@kernel.org>
-Date: Wed, 4 Sep 2024 16:15:49 -0400
-X-Gmail-Original-Message-ID: <CAFX2Jf=H=ia5Cq6nk3zK_Z22H=5ehDC+NPE8TRyAB1QY4eKV9g@mail.gmail.com>
-Message-ID: <CAFX2Jf=H=ia5Cq6nk3zK_Z22H=5ehDC+NPE8TRyAB1QY4eKV9g@mail.gmail.com>
-Subject: Re: [PATCH] nfs: fix memory leak in error path of nfs4_do_reclaim
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Li Lingfeng <lilingfeng3@huawei.com>, jlayton@kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com, houtao1@huawei.com, 
-	yi.zhang@huawei.com, yangerkun@huawei.com, lilingfeng@huaweicloud.com
+References: <CAM5tNy7SQuiAb7ieDsJ2vNGb5mw=zvMYaeu+Q14cJf-YZgrD_g@mail.gmail.com>
+ <bd4dfaa2b92ee75818405db70f34fd99aa617f7b.camel@kernel.org>
+In-Reply-To: <bd4dfaa2b92ee75818405db70f34fd99aa617f7b.camel@kernel.org>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Wed, 4 Sep 2024 13:17:14 -0700
+Message-ID: <CAM5tNy7Aq87on6QbpFrGsK7e-sap1jP97ekC==etRYdfAH7_6g@mail.gmail.com>
+Subject: Re: How big can an array be on a kernel stack?
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 4, 2024 at 10:39=E2=80=AFAM Trond Myklebust <trondmy@kernel.org=
-> wrote:
+On Wed, Sep 4, 2024 at 3:26=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wro=
+te:
 >
-> On Wed, 2024-09-04 at 20:34 +0800, Li Lingfeng wrote:
-> > Commit c77e22834ae9 ("NFSv4: Fix a potential sleep while atomic in
-> > nfs4_do_reclaim()") separate out the freeing of the state owners from
-> > nfs4_purge_state_owners() and finish it outside the rcu lock.
-> > However, the error path is omitted. As a result, the state owners in
-> > "freeme" will not be released.
-> > Fix it by adding freeing in the error path.
+> On Tue, 2024-09-03 at 13:32 -0700, Rick Macklem wrote:
+> > Hi,
 > >
-> > Fixes: c77e22834ae9 ("NFSv4: Fix a potential sleep while atomic in
-> > nfs4_do_reclaim()")
-> > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > ---
-> >  fs/nfs/nfs4state.c | 1 +
-> >  1 file changed, 1 insertion(+)
+> > Subject line says it all. As a newbie to the Linux
+> > kernel, I am wondering if an array of 70 pointers
+> > is too big for the kernel stack?
+> > (I assumed it is and kmalloc_array()d it, but thought
+> > I'd check.)
 > >
-> > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> > index 877f682b45f2..30aba1dedaba 100644
-> > --- a/fs/nfs/nfs4state.c
-> > +++ b/fs/nfs/nfs4state.c
-> > @@ -1957,6 +1957,7 @@ static int nfs4_do_reclaim(struct nfs_client
-> > *clp, const struct nfs4_state_recov
-> >                               set_bit(ops->owner_flag_bit, &sp-
-> > >so_flags);
-> >                               nfs4_put_state_owner(sp);
-> >                               status =3D
-> > nfs4_recovery_handle_error(clp, status);
-> > +                             nfs4_free_state_owners(&freeme);
-> >                               return (status !=3D 0) ? status : -
-> > EAGAIN;
-> >                       }
+> > Thanks for any comments, rick
 > >
 >
-> Nice catch! Yes, that leak has been there for quite a while. Thanks for
-> finding it.
-
-Looks good to me, too. I've applied this for v6.12 (with a cc stable
-so it gets backported)
-
-Anna
-
+> In the old days, we had 4k stacks and it was quite easy to blow it out
+> putting big stuff there. These days, stacks are 16k (on most arches) so
+> you're probably fine with a 560 byte array there in most cases.
 >
+> Still, with something that large, I usually do a kmalloc, just to be
+> sure.
+Yea, I was thinking the same thing. And then I came across this comment
+in the NFSv3 acl code...
+/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+* invoked in contexts where a memory allocation failure is
+* fatal.  Fortunately this fake ACL is small enough to
+* construct on the stack. */
+
+So, now I have the array on the stack and it seems to work.
+(Mind you, I am testing on 32bit, so I'm not sure what will happen for
+others. Yea, believe it or not, my only Linux box is i686.;-(
+
+Thanks for the help, rick
+
 > --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+> Jeff Layton <jlayton@kernel.org>
 
