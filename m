@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6276-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB8496E2D7
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 802F696E2D6
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8237B25C72
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CEF41C22CF1
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D5118D642;
-	Thu,  5 Sep 2024 19:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8FA17C9B5;
+	Thu,  5 Sep 2024 19:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdq6C/gv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J62Th0fF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632BF18C342
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BDD18D656
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725563436; cv=none; b=AUk49UjATZBuFZMYb0OCTBiLovdC9dquiqYgVkf5PjWrTLWRy+r1oKYizd29ew80BHDf3A9cFa9psyUlqhvUIky8ItPCLVVTo4bj22ow/BP7iC5JTmsYU2i8mGfze+EQWJsr7XdPLl702Zn5wCFUTB7CA3Y0FQ3mnbHS6mUsSOU=
+	t=1725563437; cv=none; b=CejQr54M5ajTAATK7TqE8D8As/Fi0N0zal4sx7p0OfjXpXpoPESe+DBQ1YViDDOLr1TA5owmyVjzTAWf+YdsttnNRjXcwk9ClNS1h4XxKhl9txShOTBBSKuBX+kKodgO0fYbSqg/PzhDD57PW54r1guxAk4gRNkndyROrcjaPxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725563436; c=relaxed/simple;
-	bh=XdfBc/kjjQygw6iV9S29lPGKScykszV9IcxfQNfJ7IU=;
+	s=arc-20240116; t=1725563437; c=relaxed/simple;
+	bh=2gAVtznpoGuOiX67gErk5Xn53SvVGPTbZPGk7uJI0+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dp6u68Ufqa8O3DQ1m/wAIoIWKUTznEwqqfSe5xbGxblnE3gdgqoMw88OPba0C5OCBhLkVmWeMroLh/dyAFxdGa4jebC1d8K7obVRrLkECMaidd5xQXwpVzsx1fpIlDCx4XZva2XP3RUk3Hr572XObZhN+S1vsJpYUxmVJXLSGzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdq6C/gv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A521DC4CEC3;
-	Thu,  5 Sep 2024 19:10:35 +0000 (UTC)
+	 MIME-Version; b=V/8rEw2CB1ufzXNrEtAS9obHwAJOFQrAI8e+Tt/pv3/8S8xW4ujEP13uyxmYKhCXmAsH2SeVXS3u9/Gez0N/Hy3eG0sL5hFi07e3Ao5VmcWnfXO5p68nW+Ow9binfi2ddI7eJXYSJEvPMA9jjPr/UQFrv90CMHh+CC5UMRicy1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J62Th0fF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD08C4CEC6;
+	Thu,  5 Sep 2024 19:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725563435;
-	bh=XdfBc/kjjQygw6iV9S29lPGKScykszV9IcxfQNfJ7IU=;
+	s=k20201202; t=1725563437;
+	bh=2gAVtznpoGuOiX67gErk5Xn53SvVGPTbZPGk7uJI0+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mdq6C/gvHOqdF5Iib0u1OpM9JGtc4M2hA5utQXnGITlrnwEDqjMPoA22VSmbgRJ0D
-	 YBtAxIFI4F49By1yPqv4g6FKYtpspbox7I4QfYV+wgG+mLLuVMwtDh4Zis2mI8O/3h
-	 0DqkSGqpw2BTVSC4xo3015bp+FponEQc9IxAXyxy/vXnVXKOW7Hx1v7O0eLa1HVw72
-	 GVJ3wYnvaE44Xg7kWv4lB4Y+Jm4dtfn2sSySFG0bly8svPT9yRClmB6RTqGhvYxxUQ
-	 cfnGkZ+SwBILiBt0EmvXJYVI+83m0SaXNLz8b0FBOhirGXNZwOieYNz3PEzeYKKVY1
-	 hE5MIPXWxSlLQ==
+	b=J62Th0fFReqy9ZRAzHU42e0s40uwzV84YQuIOXgr+D0NDgXNDhKE3JDAsANhGnviJ
+	 fB4Bnvllv0byNwq4HgtKmdXo3cZmPmfbyatu4sgXLkRH9YH//6SjGcYDHDIfJZMedn
+	 0Afg8cwBAY5AYfp9mZ3LliJpeHsWLK4hKNVVYfKdV28yKhKAaCwp6e9lQQO65gFZUi
+	 mCzKzvj5ocuyJ034ATLjC/7zhQ9tsjrzC55GRBnGzTMOkyhL8gpcIkkTWm04IGK+47
+	 ARMljPw7Yu74DQxFXLALp47GrBtMS9kZz9zpLv4oynyWqbnpJBpnn/0M2iXxuzNhJM
+	 j0ZTjbJVYr0ww==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>
-Subject: [PATCH v16 17/26] nfsd: implement server support for NFS_LOCALIO_PROGRAM
-Date: Thu,  5 Sep 2024 15:09:51 -0400
-Message-ID: <20240905191011.41650-18-snitzer@kernel.org>
+Subject: [PATCH v16 18/26] nfs: pass struct nfsd_file to nfs_init_pgio and nfs_init_commit
+Date: Thu,  5 Sep 2024 15:09:52 -0400
+Message-ID: <20240905191011.41650-19-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240905191011.41650-1-snitzer@kernel.org>
 References: <20240905191011.41650-1-snitzer@kernel.org>
@@ -62,216 +62,202 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The LOCALIO auxiliary RPC protocol consists of a single "UUID_IS_LOCAL"
-RPC method that allows the Linux NFS client to verify the local Linux
-NFS server can see the nonce (single-use UUID) the client generated and
-made available in nfs_common.  The server expects this protocol to use
-the same transport as NFS and NFSACL for its RPCs.  This protocol
-isn't part of an IETF standard, nor does it need to be considering it
-is Linux-to-Linux auxiliary RPC protocol that amounts to an
-implementation detail.
+The nfsd_file will be passed, in future commits, by callers
+that enable LOCALIO support (for both regular NFS and pNFS IO).
 
-The UUID_IS_LOCAL method encodes the client generated uuid_t in terms of
-the fixed UUID_SIZE (16 bytes).  The fixed size opaque encode and decode
-XDR methods are used instead of the less efficient variable sized
-methods.
-
-The RPC program number for the NFS_LOCALIO_PROGRAM is 400122 (as assigned
-by IANA, see https://www.iana.org/assignments/rpc-program-numbers/ ):
-Linux Kernel Organization       400122  nfslocalio
+[Derived from patch authored by Weston Andros Adamson, but switched
+ from passing struct file to struct nfsd_file]
 
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-[neilb: factored out and simplified single localio protocol]
-Co-developed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: NeilBrown <neilb@suse.de>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: NeilBrown <neilb@suse.de>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/localio.c   | 77 +++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfsd.h      |  4 +++
- fs/nfsd/nfssvc.c    | 23 +++++++++++++-
- include/linux/nfs.h |  7 +++++
- 4 files changed, 110 insertions(+), 1 deletion(-)
+ fs/nfs/filelayout/filelayout.c         | 6 +++---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 6 +++---
+ fs/nfs/internal.h                      | 7 +++++--
+ fs/nfs/pagelist.c                      | 6 ++++--
+ fs/nfs/pnfs_nfs.c                      | 2 +-
+ fs/nfs/write.c                         | 5 +++--
+ include/linux/nfslocalio.h             | 5 +++--
+ 7 files changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-index 9fa10a80b2da..291e9c69cae4 100644
---- a/fs/nfsd/localio.c
-+++ b/fs/nfsd/localio.c
-@@ -14,12 +14,15 @@
- #include <linux/nfs.h>
- #include <linux/nfs_common.h>
- #include <linux/nfslocalio.h>
-+#include <linux/nfs_fs.h>
-+#include <linux/nfs_xdr.h>
- #include <linux/string.h>
- 
- #include "nfsd.h"
- #include "vfs.h"
- #include "netns.h"
- #include "filecache.h"
-+#include "cache.h"
- 
- static const struct nfsd_localio_operations nfsd_localio_ops = {
- 	.nfsd_serv_try_get  = nfsd_serv_try_get,
-@@ -90,3 +93,77 @@ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
- 	return localio;
- }
- EXPORT_SYMBOL_GPL(nfsd_open_local_fh);
-+
-+/*
-+ * UUID_IS_LOCAL XDR functions
-+ */
-+
-+static __be32 localio_proc_null(struct svc_rqst *rqstp)
-+{
-+	return rpc_success;
-+}
-+
-+struct localio_uuidarg {
-+	uuid_t			uuid;
-+};
-+
-+static __be32 localio_proc_uuid_is_local(struct svc_rqst *rqstp)
-+{
-+	struct localio_uuidarg *argp = rqstp->rq_argp;
-+	struct net *net = SVC_NET(rqstp);
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+
-+	nfs_uuid_is_local(&argp->uuid, &nn->local_clients,
-+			  net, rqstp->rq_client, THIS_MODULE);
-+
-+	return rpc_success;
-+}
-+
-+static bool localio_decode_uuidarg(struct svc_rqst *rqstp,
-+				   struct xdr_stream *xdr)
-+{
-+	struct localio_uuidarg *argp = rqstp->rq_argp;
-+	u8 uuid[UUID_SIZE];
-+
-+	if (decode_opaque_fixed(xdr, uuid, UUID_SIZE))
-+		return false;
-+	import_uuid(&argp->uuid, uuid);
-+
-+	return true;
-+}
-+
-+static const struct svc_procedure localio_procedures1[] = {
-+	[LOCALIOPROC_NULL] = {
-+		.pc_func = localio_proc_null,
-+		.pc_decode = nfssvc_decode_voidarg,
-+		.pc_encode = nfssvc_encode_voidres,
-+		.pc_argsize = sizeof(struct nfsd_voidargs),
-+		.pc_ressize = sizeof(struct nfsd_voidres),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_xdrressize = 0,
-+		.pc_name = "NULL",
-+	},
-+	[LOCALIOPROC_UUID_IS_LOCAL] = {
-+		.pc_func = localio_proc_uuid_is_local,
-+		.pc_decode = localio_decode_uuidarg,
-+		.pc_encode = nfssvc_encode_voidres,
-+		.pc_argsize = sizeof(struct localio_uuidarg),
-+		.pc_argzero = sizeof(struct localio_uuidarg),
-+		.pc_ressize = sizeof(struct nfsd_voidres),
-+		.pc_cachetype = RC_NOCACHE,
-+		.pc_name = "UUID_IS_LOCAL",
-+	},
-+};
-+
-+#define LOCALIO_NR_PROCEDURES ARRAY_SIZE(localio_procedures1)
-+static DEFINE_PER_CPU_ALIGNED(unsigned long,
-+			      localio_count[LOCALIO_NR_PROCEDURES]);
-+const struct svc_version localio_version1 = {
-+	.vs_vers	= 1,
-+	.vs_nproc	= LOCALIO_NR_PROCEDURES,
-+	.vs_proc	= localio_procedures1,
-+	.vs_dispatch	= nfsd_dispatch,
-+	.vs_count	= localio_count,
-+	.vs_xdrsize	= XDR_QUADLEN(UUID_SIZE),
-+	.vs_hidden	= true,
-+};
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index b0d3e82d6dcd..4b56ba1e8e48 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -146,6 +146,10 @@ extern const struct svc_version nfsd_acl_version3;
- #endif
- #endif
- 
-+#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-+extern const struct svc_version localio_version1;
-+#endif
-+
- struct nfsd_net;
- 
- enum vers_op {NFSD_SET, NFSD_CLEAR, NFSD_TEST, NFSD_AVAIL };
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index f9a6d888ac9d..e236135ddc63 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -80,6 +80,15 @@ DEFINE_SPINLOCK(nfsd_drc_lock);
- unsigned long	nfsd_drc_max_mem;
- unsigned long	nfsd_drc_mem_used;
- 
-+#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-+static const struct svc_version *localio_versions[] = {
-+	[1] = &localio_version1,
-+};
-+
-+#define NFSD_LOCALIO_NRVERS		ARRAY_SIZE(localio_versions)
-+
-+#endif /* CONFIG_NFS_LOCALIO */
-+
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- static const struct svc_version *nfsd_acl_version[] = {
- # if defined(CONFIG_NFSD_V2_ACL)
-@@ -128,6 +137,18 @@ struct svc_program		nfsd_programs[] = {
- 	.pg_rpcbind_set		= nfsd_acl_rpcbind_set,
- 	},
- #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
-+#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-+	{
-+	.pg_prog		= NFS_LOCALIO_PROGRAM,
-+	.pg_nvers		= NFSD_LOCALIO_NRVERS,
-+	.pg_vers		= localio_versions,
-+	.pg_name		= "nfslocalio",
-+	.pg_class		= "nfsd",
-+	.pg_authenticate	= svc_set_client,
-+	.pg_init_request	= svc_generic_init_request,
-+	.pg_rpcbind_set		= svc_generic_rpcbind_set,
-+	}
-+#endif /* CONFIG_NFS_LOCALIO */
- };
- 
- bool nfsd_support_version(int vers)
-@@ -949,7 +970,7 @@ nfsd(void *vrqstp)
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index b6e9aeaf4ce2..d39a1f58e18d 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -488,7 +488,7 @@ filelayout_read_pagelist(struct nfs_pgio_header *hdr)
+ 	/* Perform an asynchronous read to ds */
+ 	nfs_initiate_pgio(ds_clnt, hdr, hdr->cred,
+ 			  NFS_PROTO(hdr->inode), &filelayout_read_call_ops,
+-			  0, RPC_TASK_SOFTCONN);
++			  0, RPC_TASK_SOFTCONN, NULL);
+ 	return PNFS_ATTEMPTED;
  }
  
- /**
-- * nfsd_dispatch - Process an NFS or NFSACL Request
-+ * nfsd_dispatch - Process an NFS or NFSACL or LOCALIO Request
-  * @rqstp: incoming request
-  *
-  * This RPC dispatcher integrates the NFS server's duplicate reply cache.
-diff --git a/include/linux/nfs.h b/include/linux/nfs.h
-index ceb70a926b95..73da75908d95 100644
---- a/include/linux/nfs.h
-+++ b/include/linux/nfs.h
-@@ -13,6 +13,13 @@
+@@ -530,7 +530,7 @@ filelayout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
+ 	/* Perform an asynchronous write */
+ 	nfs_initiate_pgio(ds_clnt, hdr, hdr->cred,
+ 			  NFS_PROTO(hdr->inode), &filelayout_write_call_ops,
+-			  sync, RPC_TASK_SOFTCONN);
++			  sync, RPC_TASK_SOFTCONN, NULL);
+ 	return PNFS_ATTEMPTED;
+ }
+ 
+@@ -1011,7 +1011,7 @@ static int filelayout_initiate_commit(struct nfs_commit_data *data, int how)
+ 		data->args.fh = fh;
+ 	return nfs_initiate_commit(ds_clnt, data, NFS_PROTO(data->inode),
+ 				   &filelayout_commit_call_ops, how,
+-				   RPC_TASK_SOFTCONN);
++				   RPC_TASK_SOFTCONN, NULL);
+ out_err:
+ 	pnfs_generic_prepare_to_resend_writes(data);
+ 	pnfs_generic_commit_release(data);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index d4d551ffea7b..01ee52551a63 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1806,7 +1806,7 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
+ 	nfs_initiate_pgio(ds_clnt, hdr, ds_cred, ds->ds_clp->rpc_ops,
+ 			  vers == 3 ? &ff_layout_read_call_ops_v3 :
+ 				      &ff_layout_read_call_ops_v4,
+-			  0, RPC_TASK_SOFTCONN);
++			  0, RPC_TASK_SOFTCONN, NULL);
+ 	put_cred(ds_cred);
+ 	return PNFS_ATTEMPTED;
+ 
+@@ -1874,7 +1874,7 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
+ 	nfs_initiate_pgio(ds_clnt, hdr, ds_cred, ds->ds_clp->rpc_ops,
+ 			  vers == 3 ? &ff_layout_write_call_ops_v3 :
+ 				      &ff_layout_write_call_ops_v4,
+-			  sync, RPC_TASK_SOFTCONN);
++			  sync, RPC_TASK_SOFTCONN, NULL);
+ 	put_cred(ds_cred);
+ 	return PNFS_ATTEMPTED;
+ 
+@@ -1949,7 +1949,7 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
+ 	ret = nfs_initiate_commit(ds_clnt, data, ds->ds_clp->rpc_ops,
+ 				   vers == 3 ? &ff_layout_commit_call_ops_v3 :
+ 					       &ff_layout_commit_call_ops_v4,
+-				   how, RPC_TASK_SOFTCONN);
++				   how, RPC_TASK_SOFTCONN, NULL);
+ 	put_cred(ds_cred);
+ 	return ret;
+ out_err:
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 5902a9beca1f..9b89294fb2ad 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -9,6 +9,7 @@
  #include <linux/crc32.h>
- #include <uapi/linux/nfs.h>
+ #include <linux/sunrpc/addr.h>
+ #include <linux/nfs_page.h>
++#include <linux/nfslocalio.h>
+ #include <linux/wait_bit.h>
  
-+/* The LOCALIO program is entirely private to Linux and is
-+ * NOT part of the uapi.
-+ */
-+#define NFS_LOCALIO_PROGRAM		400122
-+#define LOCALIOPROC_NULL		0
-+#define LOCALIOPROC_UUID_IS_LOCAL	1
-+
+ #define NFS_SB_MASK (SB_RDONLY|SB_NOSUID|SB_NODEV|SB_NOEXEC|SB_SYNCHRONOUS)
+@@ -308,7 +309,8 @@ void nfs_pgio_header_free(struct nfs_pgio_header *);
+ int nfs_generic_pgio(struct nfs_pageio_descriptor *, struct nfs_pgio_header *);
+ int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+ 		      const struct cred *cred, const struct nfs_rpc_ops *rpc_ops,
+-		      const struct rpc_call_ops *call_ops, int how, int flags);
++		      const struct rpc_call_ops *call_ops, int how, int flags,
++		      struct nfsd_file *localio);
+ void nfs_free_request(struct nfs_page *req);
+ struct nfs_pgio_mirror *
+ nfs_pgio_current_mirror(struct nfs_pageio_descriptor *desc);
+@@ -528,7 +530,8 @@ extern int nfs_initiate_commit(struct rpc_clnt *clnt,
+ 			       struct nfs_commit_data *data,
+ 			       const struct nfs_rpc_ops *nfs_ops,
+ 			       const struct rpc_call_ops *call_ops,
+-			       int how, int flags);
++			       int how, int flags,
++			       struct nfsd_file *localio);
+ extern void nfs_init_commit(struct nfs_commit_data *data,
+ 			    struct list_head *head,
+ 			    struct pnfs_layout_segment *lseg,
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 04124f226665..50f3d6c9ac2a 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -731,7 +731,8 @@ static void nfs_pgio_prepare(struct rpc_task *task, void *calldata)
+ 
+ int nfs_initiate_pgio(struct rpc_clnt *clnt, struct nfs_pgio_header *hdr,
+ 		      const struct cred *cred, const struct nfs_rpc_ops *rpc_ops,
+-		      const struct rpc_call_ops *call_ops, int how, int flags)
++		      const struct rpc_call_ops *call_ops, int how, int flags,
++		      struct nfsd_file *localio)
+ {
+ 	struct rpc_task *task;
+ 	struct rpc_message msg = {
+@@ -961,7 +962,8 @@ static int nfs_generic_pg_pgios(struct nfs_pageio_descriptor *desc)
+ 					NFS_PROTO(hdr->inode),
+ 					desc->pg_rpc_callops,
+ 					desc->pg_ioflags,
+-					RPC_TASK_CRED_NOREF | task_flags);
++					RPC_TASK_CRED_NOREF | task_flags,
++					NULL);
+ 	}
+ 	return ret;
+ }
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index a74ee69a2fa6..dbef837e871a 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -490,7 +490,7 @@ pnfs_generic_commit_pagelist(struct inode *inode, struct list_head *mds_pages,
+ 			nfs_initiate_commit(NFS_CLIENT(inode), data,
+ 					    NFS_PROTO(data->inode),
+ 					    data->mds_ops, how,
+-					    RPC_TASK_CRED_NOREF);
++					    RPC_TASK_CRED_NOREF, NULL);
+ 		} else {
+ 			nfs_init_commit(data, NULL, data->lseg, cinfo);
+ 			initiate_commit(data, how);
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index d074d0ceb4f0..04d0b5b95f4f 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1663,7 +1663,8 @@ EXPORT_SYMBOL_GPL(nfs_commitdata_release);
+ int nfs_initiate_commit(struct rpc_clnt *clnt, struct nfs_commit_data *data,
+ 			const struct nfs_rpc_ops *nfs_ops,
+ 			const struct rpc_call_ops *call_ops,
+-			int how, int flags)
++			int how, int flags,
++			struct nfsd_file *localio)
+ {
+ 	struct rpc_task *task;
+ 	int priority = flush_task_priority(how);
+@@ -1809,7 +1810,7 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 		task_flags = RPC_TASK_MOVEABLE;
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+ 				   data->mds_ops, how,
+-				   RPC_TASK_CRED_NOREF | task_flags);
++				   RPC_TASK_CRED_NOREF | task_flags, NULL);
+ }
+ 
  /*
-  * This is the kernel NFS client file handle representation
-  */
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index 546f46b4e46f..2c4e0fd9da6b 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -6,6 +6,9 @@
+ #ifndef __LINUX_NFSLOCALIO_H
+ #define __LINUX_NFSLOCALIO_H
+ 
++/* nfsd_file structure is purposely kept opaque to NFS client */
++struct nfsd_file;
++
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ 
+ #include <linux/module.h>
+@@ -36,8 +39,6 @@ void nfs_uuid_is_local(const uuid_t *, struct list_head *,
+ void nfs_uuid_invalidate_clients(struct list_head *list);
+ void nfs_uuid_invalidate_one_client(nfs_uuid_t *nfs_uuid);
+ 
+-struct nfsd_file;
+-
+ /* localio needs to map filehandle -> struct nfsd_file */
+ extern struct nfsd_file *
+ nfsd_open_local_fh(struct net *, struct auth_domain *, struct rpc_clnt *,
 -- 
 2.44.0
 
