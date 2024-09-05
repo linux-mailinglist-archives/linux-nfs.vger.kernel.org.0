@@ -1,61 +1,63 @@
-Return-Path: <linux-nfs+bounces-6253-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6254-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D654896E13F
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:37:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA36196E154
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:46:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 066561C202EB
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 17:37:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63B8928818E
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 17:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030E319C579;
-	Thu,  5 Sep 2024 17:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34BFE148FF3;
+	Thu,  5 Sep 2024 17:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYCKTIwy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkuhJ5dE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D6019D06D;
-	Thu,  5 Sep 2024 17:37:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D3B1C2E;
+	Thu,  5 Sep 2024 17:46:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725557837; cv=none; b=Cx8TKVVD6grjS8qOjZwlMrdrmBDKvbiPP46krc7l54LkiTOSpMnwKSPV2bKqqF1wUoCx0rnU3e9exehC4kxAqg+MRwE8R96QNjK3qLbPZPJ+AQX66JwVra6UPU9OnzKlSkGz8cn/7gkAJNxJ7VFL2lgK81/9UbbotaeWGystp1U=
+	t=1725558377; cv=none; b=qVQ058oJfDdoRHEqsKIL1JNd6ahAsdc5ihjWgtbgwqBg3uLfQafdzX5dBR62mXs0K6GjhncQJVvOJ09SZ9M+MIvrkVDu0ZmZ3pv3sP37tR5Pd3spizCbdd7TD41gUIDOSCeACOGd0mOOe3tBPSYN2eH/WTyVHRNRhAMvILawPsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725557837; c=relaxed/simple;
-	bh=bejJ4vSToGwBdPP8dH2azGOUII6BnjtpEd9Ic6/LbEE=;
+	s=arc-20240116; t=1725558377; c=relaxed/simple;
+	bh=OuKJvkHhw4bBeupAGb2gNMqTJ9MxH6quUMlr3VCYPF0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sv+jLrqgcCJ/vHmhx8/zhauMa/H3Pt4yEmrI5NUjUrv7roJrYeqJf8J38GZjxG4kFd+pQgTe6mFpnvqWM1UxuGAgF7unUul9cJXPjCovHISBqAJLJmTCncooADFmLGI81h6Qt02mm5LNjOQBhUKuGpOUVaSChosN5qpm5DZkS7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYCKTIwy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2171CC4CEC3;
-	Thu,  5 Sep 2024 17:37:16 +0000 (UTC)
+	 Content-Type:MIME-Version; b=VKfJwWTvwynNY7A9Ubo9aZS7e0Pkr9adk4EQ5tQsJmHo6QnOyRuFADo6oJrmR/ls8m2Lxe/DvfNo4hmVD6UEWQbGO4i83RZYllQAJ1dz+wEu+dZquXLyOnZyHcaK0J4XyxhRg6hLl8K7PTFqlVQiNYZxDqpj5b8MHy4c3ACnMFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZkuhJ5dE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 200B9C4CEC6;
+	Thu,  5 Sep 2024 17:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725557837;
-	bh=bejJ4vSToGwBdPP8dH2azGOUII6BnjtpEd9Ic6/LbEE=;
+	s=k20201202; t=1725558376;
+	bh=OuKJvkHhw4bBeupAGb2gNMqTJ9MxH6quUMlr3VCYPF0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VYCKTIwyqscaxTc1ajExtddNpa2GT5qTMu76DGZQNsEwXkXb31bCXQ7N9HfkeWndK
-	 2mKI4m3QBuUkZScUqcuj86w4Ht61hX/6w0XUWU49279BT2pNhzJz2EF9uvqBL+5i+8
-	 k35I/6egVaRNmZ96DvE11C872FpxH7KLbsWdkaIO8vw0T5L5P70hPzvV9gA4dyXXQT
-	 NQN4uk0tsvdTCXzjtNtTmV9vv3CB7hc1nJsGP31EM6TW/VOTsnh96HF1jhj4x+5MDC
-	 HgwhZPsQaOfhrUq4RbC3o7ELyY0473CwHpErqKpqV3U1Z3ylN1bO6zzIpiWptAbDUE
-	 Du7NI9QLw/HaQ==
-Message-ID: <ee7462f74ecb1bc2148d45758d2410533651072c.camel@kernel.org>
-Subject: Re: [PATCH v4 01/11] nfsd: fix initial getattr on write delegation
+	b=ZkuhJ5dEjieQpnnBMmLjY4CKuuQZcG+TntuQjyG8uU/jEBk5IA8orjjYgTQy37Ow8
+	 tGdPfAH8kvI66vN/RTqBA/8MyswWakUcijtj3J93WPPGqVt1+vVkv6DcyrixOGftsx
+	 YrsC9vX5H31QDQ3vE8RBiDZSj42F8vXaCYksqeexEaSeVMVXpPs6XJ4HndV8goUIzF
+	 c1VVXUQnOV/JUHysPmVzHEYxVxQTX9T1fc/qFI0X2SZpmnVdlNPRJKR/APzTjoGodJ
+	 +xzH5p9oDpNyolv+mu88wEwAw9cy3pdeskJZowYuL86AYtsfggBl6yQ5BfTemB2ADr
+	 74gMCjCTc9NIA==
+Message-ID: <c955b19c00026a2237c9224c8224f1ac6f249d4c.camel@kernel.org>
+Subject: Re: [PATCH v4 09/11] fs: handle delegated timestamps in
+ setattr_copy_mgtime
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
+To: Chuck Lever <chuck.lever@oracle.com>, Christian Brauner
+ <brauner@kernel.org>
 Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
  <trondmy@kernel.org>,  Anna Schumaker <anna@kernel.org>, Alexander Viro
  <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
  <jack@suse.cz>, Tom Haynes <loghyr@gmail.com>,  linux-nfs@vger.kernel.org,
  linux-kernel@vger.kernel.org,  linux-fsdevel@vger.kernel.org
-Date: Thu, 05 Sep 2024 13:37:14 -0400
-In-Reply-To: <ZtnSUWai8kB8gZIO@tissot.1015granger.net>
+Date: Thu, 05 Sep 2024 13:46:14 -0400
+In-Reply-To: <ZtnR7x6pYz1x7LvK@tissot.1015granger.net>
 References: <20240905-delstid-v4-0-d3e5fd34d107@kernel.org>
-	 <20240905-delstid-v4-1-d3e5fd34d107@kernel.org>
-	 <ZtnSUWai8kB8gZIO@tissot.1015granger.net>
+	 <20240905-delstid-v4-9-d3e5fd34d107@kernel.org>
+	 <ZtnR7x6pYz1x7LvK@tissot.1015granger.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,96 +142,215 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-09-05 at 11:46 -0400, Chuck Lever wrote:
-> On Thu, Sep 05, 2024 at 08:41:45AM -0400, Jeff Layton wrote:
-> > At this point in compound processing, currentfh refers to the parent of
-> > the file, not the file itself. Get the correct dentry from the delegati=
-on
-> > stateid instead.
+On Thu, 2024-09-05 at 11:44 -0400, Chuck Lever wrote:
+> On Thu, Sep 05, 2024 at 08:41:53AM -0400, Jeff Layton wrote:
+> > When updating the ctime on an inode for a SETATTR with a multigrain
+> > filesystem, we usually want to take the latest time we can get for the
+> > ctime. The exception to this rule is when there is a nfsd write
+> > delegation and the server is proxying timestamps from the client.
+> >=20
+> > When nfsd gets a CB_GETATTR response, we want to update the timestamp
+> > value in the inode to the values that the client is tracking. The clien=
+t
+> > doesn't send a ctime value (since that's always determined by the
+> > exported filesystem), but it can send a mtime value. In the case where
+> > it does, then we may need to update the ctime to a value commensurate
+> > with that instead of the current time.
+> >=20
+> > If ATTR_DELEG is set, then use ia_ctime value instead of setting the
+> > timestamp to the current time.
+> >=20
+> > With the addition of delegated timestamps we can also receive a request
+> > to update only the atime, but we may not need to set the ctime. Trust
+> > the ATTR_CTIME flag in the update and only update the ctime when it's
+> > set.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> Subject says "fixes ..." so IMO a Fixes: tag is warranted.
-> Suggestions welcome.
->=20
->=20
-
-Yes, sorry. I think we want:
-
-Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
-
 > > ---
-> >  fs/nfsd/nfs4state.c | 31 +++++++++++++++++++++++--------
-> >  1 file changed, 23 insertions(+), 8 deletions(-)
+> >  fs/attr.c          | 28 +++++++++++++--------
+> >  fs/inode.c         | 74 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/fs.h |  2 ++
+> >  3 files changed, 94 insertions(+), 10 deletions(-)
 > >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index df69dc6af467..db90677fc016 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -5914,6 +5914,26 @@ static void nfsd4_open_deleg_none_ext(struct nfs=
-d4_open *open, int status)
+> > diff --git a/fs/attr.c b/fs/attr.c
+> > index 3bcbc45708a3..392eb62aa609 100644
+> > --- a/fs/attr.c
+> > +++ b/fs/attr.c
+> > @@ -286,16 +286,20 @@ static void setattr_copy_mgtime(struct inode *ino=
+de, const struct iattr *attr)
+> >  	unsigned int ia_valid =3D attr->ia_valid;
+> >  	struct timespec64 now;
+> > =20
+> > -	/*
+> > -	 * If the ctime isn't being updated then nothing else should be
+> > -	 * either.
+> > -	 */
+> > -	if (!(ia_valid & ATTR_CTIME)) {
+> > -		WARN_ON_ONCE(ia_valid & (ATTR_ATIME|ATTR_MTIME));
+> > -		return;
+> > +	if (ia_valid & ATTR_CTIME) {
+> > +		/*
+> > +		 * In the case of an update for a write delegation, we must respect
+> > +		 * the value in ia_ctime and not use the current time.
+> > +		 */
+> > +		if (ia_valid & ATTR_DELEG)
+> > +			now =3D inode_set_ctime_deleg(inode, attr->ia_ctime);
+> > +		else
+> > +			now =3D inode_set_ctime_current(inode);
+> > +	} else {
+> > +		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
+> > +		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
 > >  	}
+> > =20
+> > -	now =3D inode_set_ctime_current(inode);
+> >  	if (ia_valid & ATTR_ATIME_SET)
+> >  		inode_set_atime_to_ts(inode, attr->ia_atime);
+> >  	else if (ia_valid & ATTR_ATIME)
+> > @@ -354,8 +358,12 @@ void setattr_copy(struct mnt_idmap *idmap, struct =
+inode *inode,
+> >  		inode_set_atime_to_ts(inode, attr->ia_atime);
+> >  	if (ia_valid & ATTR_MTIME)
+> >  		inode_set_mtime_to_ts(inode, attr->ia_mtime);
+> > -	if (ia_valid & ATTR_CTIME)
+> > -		inode_set_ctime_to_ts(inode, attr->ia_ctime);
+> > +	if (ia_valid & ATTR_CTIME) {
+> > +		if (ia_valid & ATTR_DELEG)
+> > +			inode_set_ctime_deleg(inode, attr->ia_ctime);
+> > +		else
+> > +			inode_set_ctime_to_ts(inode, attr->ia_ctime);
+> > +	}
 > >  }
+> >  EXPORT_SYMBOL(setattr_copy);
 > > =20
-> > +static bool
-> > +nfs4_delegation_stat(struct nfs4_delegation *dp, struct svc_fh *curren=
-tfh,
-> > +		     struct kstat *stat)
+>=20
+> This patch fails to apply cleanly to my copy of nfsd-next:
+>=20
+>   error: `git apply --index`: error: patch failed: fs/attr.c:286
+>   error: fs/attr.c: patch does not apply
+>=20
+> Before I try jiggling this to get it to apply, is there anything
+> I should know? I worry about a potential merge conflict here,
+> hopefully it will be no more complicated than that.
+>=20
+>=20
+
+This is based on a combo of your nfsd-next branch and Christian's
+vfs.mgtime branch. This patch in particular depends on the multigrain
+patches in his tree.
+
+I think we can just drop this patch from the series in your tree, and
+I'll get Christian to pick it up in his tree. The ctime setting will be
+a bit racy without it but everything should still work.
+
+Sound ok? Christian, are you OK with picking this up in vfs.mgtime?
+
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index 01f7df1973bd..f0fbfd470d8e 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -2835,6 +2835,80 @@ struct timespec64 inode_set_ctime_current(struct=
+ inode *inode)
+> >  }
+> >  EXPORT_SYMBOL(inode_set_ctime_current);
+> > =20
+> > +/**
+> > + * inode_set_ctime_deleg - try to update the ctime on a delegated inod=
+e
+> > + * @inode: inode to update
+> > + * @update: timespec64 to set the ctime
+> > + *
+> > + * Attempt to atomically update the ctime on behalf of a delegation ho=
+lder.
+> > + *
+> > + * The nfs server can call back the holder of a delegation to get upda=
+ted
+> > + * inode attributes, including the mtime. When updating the mtime we m=
+ay
+> > + * need to update the ctime to a value at least equal to that.
+> > + *
+> > + * This can race with concurrent updates to the inode, in which
+> > + * case we just don't do the update.
+> > + *
+> > + * Note that this works even when multigrain timestamps are not enable=
+d,
+> > + * so use it in either case.
+> > + */
+> > +struct timespec64 inode_set_ctime_deleg(struct inode *inode, struct ti=
+mespec64 update)
 > > +{
-> > +	struct nfsd_file *nf =3D find_rw_file(dp->dl_stid.sc_file);
-> > +	struct path path;
+> > +	ktime_t now, floor =3D atomic64_read(&ctime_floor);
+> > +	struct timespec64 now_ts, cur_ts;
+> > +	u32 cur, old;
 > > +
-> > +	if (!nf)
-> > +		return false;
+> > +	/* pairs with try_cmpxchg below */
+> > +	cur =3D smp_load_acquire(&inode->i_ctime_nsec);
+> > +	cur_ts.tv_nsec =3D cur & ~I_CTIME_QUERIED;
+> > +	cur_ts.tv_sec =3D inode->i_ctime_sec;
 > > +
-> > +	path.mnt =3D currentfh->fh_export->ex_path.mnt;
-> > +	path.dentry =3D file_dentry(nf->nf_file);
+> > +	/* If the update is older than the existing value, skip it. */
+> > +	if (timespec64_compare(&update, &cur_ts) <=3D 0)
+> > +		return cur_ts;
 > > +
-> > +	if (vfs_getattr(&path, stat,
-> > +			(STATX_INO | STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
-> > +			AT_STATX_SYNC_AS_STAT))
-> > +		return false;
-> > +	return true;
+> > +	now =3D coarse_ctime(floor);
+> > +	now_ts =3D ktime_to_timespec64(now);
+> > +
+> > +	/* Clamp the update to "now" if it's in the future */
+> > +	if (timespec64_compare(&update, &now_ts) > 0)
+> > +		update =3D now_ts;
+> > +
+> > +	update =3D timestamp_truncate(update, inode);
+> > +
+> > +	/* No need to update if the values are already the same */
+> > +	if (timespec64_equal(&update, &cur_ts))
+> > +		return cur_ts;
+> > +
+> > +	/*
+> > +	 * Try to swap the nsec value into place. If it fails, that means
+> > +	 * we raced with an update due to a write or similar activity. That
+> > +	 * stamp takes precedence, so just skip the update.
+> > +	 */
+> > +retry:
+> > +	old =3D cur;
+> > +	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, update.tv_nsec)) {
+> > +		inode->i_ctime_sec =3D update.tv_sec;
+> > +		mgtime_counter_inc(mg_ctime_swaps);
+> > +		return update;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Was the change due to someone marking the old ctime QUERIED?
+> > +	 * If so then retry the swap. This can only happen once since
+> > +	 * the only way to clear I_CTIME_QUERIED is to stamp the inode
+> > +	 * with a new ctime.
+> > +	 */
+> > +	if (!(old & I_CTIME_QUERIED) && (cur =3D=3D (old | I_CTIME_QUERIED)))
+> > +		goto retry;
+> > +
+> > +	/* Otherwise, it was a new timestamp. */
+> > +	cur_ts.tv_sec =3D inode->i_ctime_sec;
+> > +	cur_ts.tv_nsec =3D cur & ~I_CTIME_QUERIED;
+> > +	return cur_ts;
 > > +}
+> > +EXPORT_SYMBOL(inode_set_ctime_deleg);
 > > +
-> >  /*
-> >   * The Linux NFS server does not offer write delegations to NFSv4.0
-> >   * clients in order to avoid conflicts between write delegations and
-> > @@ -5949,7 +5969,6 @@ nfs4_open_delegation(struct nfsd4_open *open, str=
-uct nfs4_ol_stateid *stp,
-> >  	int cb_up;
-> >  	int status =3D 0;
-> >  	struct kstat stat;
-> > -	struct path path;
+> >  /**
+> >   * in_group_or_capable - check whether caller is CAP_FSETID privileged
+> >   * @idmap:	idmap of the mount @inode was found from
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index eff688e75f2f..ea7ed437d2b1 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -1544,6 +1544,8 @@ static inline bool fsuidgid_has_mapping(struct su=
+per_block *sb,
 > > =20
-> >  	cb_up =3D nfsd4_cb_channel_good(oo->oo_owner.so_client);
-> >  	open->op_recall =3D false;
-> > @@ -5985,20 +6004,16 @@ nfs4_open_delegation(struct nfsd4_open *open, s=
-truct nfs4_ol_stateid *stp,
-> >  	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp=
-->dl_stid.sc_stateid));
+> >  struct timespec64 current_time(struct inode *inode);
+> >  struct timespec64 inode_set_ctime_current(struct inode *inode);
+> > +struct timespec64 inode_set_ctime_deleg(struct inode *inode,
+> > +					struct timespec64 update);
 > > =20
-> >  	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-> > -		open->op_delegate_type =3D NFS4_OPEN_DELEGATE_WRITE;
-> > -		trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
-> > -		path.mnt =3D currentfh->fh_export->ex_path.mnt;
-> > -		path.dentry =3D currentfh->fh_dentry;
-> > -		if (vfs_getattr(&path, &stat,
-> > -				(STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
-> > -				AT_STATX_SYNC_AS_STAT)) {
-> > +		if (!nfs4_delegation_stat(dp, currentfh, &stat)) {
-> >  			nfs4_put_stid(&dp->dl_stid);
-> >  			destroy_delegation(dp);
-> >  			goto out_no_deleg;
-> >  		}
-> > +		open->op_delegate_type =3D NFS4_OPEN_DELEGATE_WRITE;
-> >  		dp->dl_cb_fattr.ncf_cur_fsize =3D stat.size;
-> >  		dp->dl_cb_fattr.ncf_initial_cinfo =3D
-> >  			nfsd4_change_attribute(&stat, d_inode(currentfh->fh_dentry));
-> > +		trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
-> >  	} else {
-> >  		open->op_delegate_type =3D NFS4_OPEN_DELEGATE_READ;
-> >  		trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
+> >  static inline time64_t inode_get_atime_sec(const struct inode *inode)
+> >  {
 > >=20
 > > --=20
 > > 2.46.0
