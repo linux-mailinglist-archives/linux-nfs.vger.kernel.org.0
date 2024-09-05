@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6263-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6264-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 947DA96E2C9
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDA7796E2CA
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C51F1F21A82
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 242391C2336C
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D5118CC0A;
-	Thu,  5 Sep 2024 19:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DB7018C342;
+	Thu,  5 Sep 2024 19:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzHAREJV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M98hPArf"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0D018BC31
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6971818BC31
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725563418; cv=none; b=QFfYMXZWcY0tA+eG7MZZaoKugTK/dIXtPCNEf0r/XyLneqp8oznXyo3cuq7gBuMtCXavp+ZQ6WMPgX/ywiL5NZlUscUS7VbYqh+2g4evjN8oP8jFsWGiwJM7lpta0Gi7kBnkxJB2PgxEFaq6Vjg/XM/Nrj+vavXy1Aksh/1eFpY=
+	t=1725563420; cv=none; b=sJ89eIGsfLTM5pwS7i6tVSEdDX/y9HROAPIC8XYLwVkFiwwdvcv4rRqbZ0c2QiS+k4e3KvjYHwU+VhaBbya5f3lciaU032fSKqbjJ/TvRsNNn9fD9RYInBKsudsZWOivrReVcDOkVwjxey4KNr3VvfDC2lQuGB5d4Jn0tJtrm7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725563418; c=relaxed/simple;
-	bh=iUatsXEnTmL3rn9cQJVw/n3/YwziO1sK8/B0fwSrp1Q=;
+	s=arc-20240116; t=1725563420; c=relaxed/simple;
+	bh=7ydj7uFNVevw/icsB23/X3dzVXLeH84MRGvl2kgrFcc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XiH5vrtL6ruWdleJ8y57A5v+MfIfsGKySZ8gTLuw388qd6SeVF6LMvynRW95fojnYJ81xfPfNpn7jbcQ8PKYbj6BgU+Rz6WJvS/AHoEin6v7TXyrPkPSfEdX2y31+ZkbEBY61P35syjyUWIsca85imsJGAbTiaQun2uoBKS0faY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzHAREJV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6062FC4CEC3;
-	Thu,  5 Sep 2024 19:10:18 +0000 (UTC)
+	 MIME-Version; b=J0BaH8GbwKGtIogNvDwug3WBDjF+KRe8WuNnKfPyMqANiulaW5qGEQ4eP+GiUG8dAMeDYwQlxxrOuwgEX6amCf5IGN2AszKd7K21o9jecnJoNQEZJD13toGFSHF+gSfcgsbEowV2S1BCcuBpb5Qx0lyq5UlKAt/2ECZ2XuXAatg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M98hPArf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9538C4CEC3;
+	Thu,  5 Sep 2024 19:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725563418;
-	bh=iUatsXEnTmL3rn9cQJVw/n3/YwziO1sK8/B0fwSrp1Q=;
+	s=k20201202; t=1725563419;
+	bh=7ydj7uFNVevw/icsB23/X3dzVXLeH84MRGvl2kgrFcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KzHAREJVfpfUn6YaMWik76imQSz63uvrGK6u19tDX4k9/Rd6WsB35BzefsFmN7RqW
-	 +jlfLzhmdSl1RQMdj8/4EjlN5TIfmwCWgXr98FG8sioD9+Q+9jDTyIBft6H9p1cKBs
-	 JlprbTL+k3aG1h30z5bE6hAsOpyEtpK2MPfEnlUrlBndz0YzViucVhyyyKjsHf5s0F
-	 ApVHn12yGW5wO9Bayxodpr/CegxspRxi0FhuXfOsusrTf7z8oVkiP7D0HxBEqDwP+9
-	 KoEcBmoBO9nxuWBdsmoZ7W/tz0F1Xd69T4w62eFZDLhbneQ8s83kMhMBl3kDV6PASR
-	 r1AxqwId0dzLA==
+	b=M98hPArfyC+MGbgziXk9SUG9GesyFSCSrZmv5bHV+pFiTHLw1pq01zd1N4U6qnclF
+	 6lqbRrzu3vfMj2XwYjgKQJOqJCM8CyLKQpsc71xbswnEhh+IklPxcp06QoD4Sk57/Q
+	 pk/kSdykPzC3GRASkR7OmKbkl3W3mW7ykutwyBooQiasH4cRTtQIeNavvlRlY84QR0
+	 Z+b6SB/JoM9oEkISMeeVgsYzYL++FlKsVLXAq43uYkJz9R4Ymo7D4llsf4WGPcvkSk
+	 296YNfDGWsSvjZJggorygwkXVFosyA6c5P2w43onqyQjZDoEPyApErHma6oVa2naNU
+	 fsylsGtS8xEdw==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>
-Subject: [PATCH v16 04/26] NFSD: Handle @rqstp == NULL in check_nfsd_access()
-Date: Thu,  5 Sep 2024 15:09:38 -0400
-Message-ID: <20240905191011.41650-5-snitzer@kernel.org>
+Subject: [PATCH v16 05/26] NFSD: Refactor nfsd_setuser_and_check_port()
+Date: Thu,  5 Sep 2024 15:09:39 -0400
+Message-ID: <20240905191011.41650-6-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240905191011.41650-1-snitzer@kernel.org>
 References: <20240905191011.41650-1-snitzer@kernel.org>
@@ -64,8 +64,12 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neilb@suse.de>
 
-LOCALIO-initiated open operations are not running in an nfsd thread
-and thus do not have an associated svc_rqst context.
+There are several places where __fh_verify unconditionally dereferences
+rqstp to check that the connection is suitably secure.  They look at
+rqstp->rq_xprt which is not meaningful in the target use case of
+"localio" NFS in which the client talks directly to the local server.
+
+Prepare these to always succeed when rqstp is NULL.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 Co-developed-by: Mike Snitzer <snitzer@kernel.org>
@@ -73,75 +77,71 @@ Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/export.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ fs/nfsd/nfsfh.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 7bb4f2075ac5..c82d8e3e0d4f 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1074,10 +1074,30 @@ static struct svc_export *exp_find(struct cache_detail *cd,
- 	return exp;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 50d23d56f403..4b964a71a504 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -87,23 +87,24 @@ nfsd_mode_check(struct dentry *dentry, umode_t requested)
+ 	return nfserr_wrong_type;
  }
  
-+/**
-+ * check_nfsd_access - check if access to export is allowed.
-+ * @exp: svc_export that is being accessed.
-+ * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-+ *
-+ * Return values:
-+ *   %nfs_ok if access is granted, or
-+ *   %nfserr_wrongsec if access is denied
-+ */
- __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
+-static bool nfsd_originating_port_ok(struct svc_rqst *rqstp, int flags)
++static bool nfsd_originating_port_ok(struct svc_rqst *rqstp,
++				     struct svc_cred *cred,
++				     struct svc_export *exp)
  {
- 	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
--	struct svc_xprt *xprt = rqstp->rq_xprt;
-+	struct svc_xprt *xprt;
-+
-+	/*
-+	 * If rqstp is NULL, this is a LOCALIO request which will only
-+	 * ever use a filehandle/credential pair for which access has
-+	 * been affirmed (by ACCESS or OPEN NFS requests) over the
-+	 * wire. So there is no need for further checks here.
-+	 */
-+	if (!rqstp)
-+		return nfs_ok;
-+
-+	xprt = rqstp->rq_xprt;
+-	if (flags & NFSEXP_INSECURE_PORT)
++	if (nfsexp_flags(cred, exp) & NFSEXP_INSECURE_PORT)
+ 		return true;
+ 	/* We don't require gss requests to use low ports: */
+-	if (rqstp->rq_cred.cr_flavor >= RPC_AUTH_GSS)
++	if (cred->cr_flavor >= RPC_AUTH_GSS)
+ 		return true;
+ 	return test_bit(RQ_SECURE, &rqstp->rq_flags);
+ }
  
- 	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
- 		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
-@@ -1098,17 +1118,17 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
- ok:
- 	/* legacy gss-only clients are always OK: */
- 	if (exp->ex_client == rqstp->rq_gssclient)
--		return 0;
-+		return nfs_ok;
- 	/* ip-address based client; check sec= export option: */
- 	for (f = exp->ex_flavors; f < end; f++) {
- 		if (f->pseudoflavor == rqstp->rq_cred.cr_flavor)
--			return 0;
-+			return nfs_ok;
- 	}
- 	/* defaults in absence of sec= options: */
- 	if (exp->ex_nflavors == 0) {
- 		if (rqstp->rq_cred.cr_flavor == RPC_AUTH_NULL ||
- 		    rqstp->rq_cred.cr_flavor == RPC_AUTH_UNIX)
--			return 0;
-+			return nfs_ok;
+ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
++					  struct svc_cred *cred,
+ 					  struct svc_export *exp)
+ {
+-	int flags = nfsexp_flags(&rqstp->rq_cred, exp);
+-
+ 	/* Check if the request originated from a secure port. */
+-	if (!nfsd_originating_port_ok(rqstp, flags)) {
++	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+ 		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+ 		dprintk("nfsd: request from insecure port %s!\n",
+ 		        svc_print_addr(rqstp, buf, sizeof(buf)));
+@@ -111,7 +112,7 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
  	}
  
- 	/* If the compound op contains a spo_must_allowed op,
-@@ -1118,7 +1138,7 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
- 	 */
+ 	/* Set user creds for this exportpoint */
+-	return nfserrno(nfsd_setuser(&rqstp->rq_cred, exp));
++	return nfserrno(nfsd_setuser(cred, exp));
+ }
  
- 	if (nfsd4_spo_must_allow(rqstp))
--		return 0;
-+		return nfs_ok;
+ static inline __be32 check_pseudo_root(struct dentry *dentry,
+@@ -219,7 +220,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+ 		put_cred(override_creds(new));
+ 		put_cred(new);
+ 	} else {
+-		error = nfsd_setuser_and_check_port(rqstp, exp);
++		error = nfsd_setuser_and_check_port(rqstp, &rqstp->rq_cred, exp);
+ 		if (error)
+ 			goto out;
+ 	}
+@@ -358,7 +359,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	if (error)
+ 		goto out;
  
- denied:
- 	return nfserr_wrongsec;
+-	error = nfsd_setuser_and_check_port(rqstp, exp);
++	error = nfsd_setuser_and_check_port(rqstp, &rqstp->rq_cred, exp);
+ 	if (error)
+ 		goto out;
+ 
 -- 
 2.44.0
 
