@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-6256-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6257-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7103A96E1BD
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 20:17:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EFF796E1BE
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 20:17:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 243CC28400A
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 18:17:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 065CE1F25B55
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 18:17:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7A11803D;
-	Thu,  5 Sep 2024 18:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F46317BA5;
+	Thu,  5 Sep 2024 18:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqmbpcOb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MLRaoF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A1517BA5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE63B158D66
 	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 18:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725560223; cv=none; b=U+MVoJy/RtAzlO0scDX+By3PLleIgdp5ncxVdl1/j3vng/JFjgXE2TpvjOOzA6X8I75xzyLCFFfAKdLu06+hoSizJIT43JdVtxdAewuvITu71JW3wcvDYuQaSYtVCxJ6/L+stSPcsBZgheLZULsIdCPEelsxxbqzXR0SwS6RHRo=
+	t=1725560224; cv=none; b=PanZFMJjBlnxO4/JGZpeCgwlVvsZyn0++QqjjWGfvr29Rp3bOVwHlmYW1f7aXdrASoup30/uVk+5pK0d1slBrfPb7MGG743V032OdY/AYU+rlDs+v+aXfOYDlzL8ujsTULrKmjM7IpM7iktjkNqhocMBJ7YYpPGNDE2T9qK2iHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725560223; c=relaxed/simple;
-	bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qIxI1VtZE8j3lVm2UvFUt+bMaFtwJVzydxBwtZ43uw6qJCTDUiYky/h/DWgbtMKPr+Er7mm+we4FW8ICqQlFs8lonAmq3Mnvb5iCsE652rlS7D1g12bcQL0nA1V4AIvbNe0CRpzCa/X8H5WyhbNpdvty7aZgTowzg8I+VhBUKKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqmbpcOb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC67C4CEC3;
-	Thu,  5 Sep 2024 18:17:02 +0000 (UTC)
+	s=arc-20240116; t=1725560224; c=relaxed/simple;
+	bh=fpGlx19LirBoyfvbhwbh+Lxynm7wPL1Pt5mWQ2uLvMI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bjm2gYBZbx4i4Nj+jAAlohJsxuGlVmxXKFtJJeelz+brXbBX5a+rxWOnKNuEbCGp1A/UbfOYEZmc7N+2wY/9EukYUieR+0o5rZhbpFk7ZBzRNhOc4zRkLldt2hYMazpJ2OzBGtH0wqnDjm7F/GAp9VRX1maq8VoidQiGhavwvAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MLRaoF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37745C4CEC6;
+	Thu,  5 Sep 2024 18:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1725560223;
-	bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
-	h=From:Subject:Date:To:Cc:From;
-	b=rqmbpcObhgdXZjODjVIcMjguo2h03u8wOaDZdM0Y1OaO6iZokiYtuADkbC3rBG39A
-	 taUyhzAzqNIiRahSgH1fpLkkivvltSUmrWxAkWV/PqDGUN8nzLGQnfTh3jmxLbgiPr
-	 nekpGJ4sbEmCUbppFX7UA95ESFQrdn23JhNIV1c6PCrOg1fw69ER+SgGTE+ddQTLKl
-	 NPG0BTQrFOddyNBRRiWeiEa0ucsTNUrSm6CpXLP9slTnb8Jta7aHbENIKzjYwAmMq5
-	 IzfjpJCjNgf2YT0fsOYR3f1W0zUUPWbz7xjfOiK17nWvkI2OAn0YN0fYD/0WOfvuWI
-	 OJulQZAwHnLrA==
+	bh=fpGlx19LirBoyfvbhwbh+Lxynm7wPL1Pt5mWQ2uLvMI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=o1MLRaoFQy3NRQ7dVv1kqLIizGQSBZXbZUZaJY+uRBEE/ieizTx50B7stZvLA8U2Q
+	 v4ABsnLDu2suGPSWJq+/8VxxlOfulAU1/SmancdEJxFRR6NyQJ9pwNcGDG5Ka9T/df
+	 7xkxIqyyjMDEMz0aNZXg2uoCQYYlXWCGf9pRMkLuspAXMgRpk7vmNEzfbjbyKPU8OK
+	 59a5aFnuYWJ+MxqgGRUjty58u+Jrr1h0ce+X/jB+SAY/Z7U6FYU/1XPaHyFcCFvSVb
+	 NhJ2kdEKyrpsaXePBiYrs4Y8ao2fQpXQEJXi0fBuGE3UPSRqFwcDDkYnByFUdH3SSO
+	 LqQJIZpqd3mkQ==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH pynfs 0/2] pynfs: add CB_GETATTR tests
-Date: Thu, 05 Sep 2024 14:16:56 -0400
-Message-Id: <20240905-cb_getattr-v1-0-0af05c68234f@kernel.org>
+Date: Thu, 05 Sep 2024 14:16:57 -0400
+Subject: [PATCH pynfs 1/2] pynfs: update maintainer info
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,51 +52,61 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJj12WYC/x3MQQqAIBBA0avErBM0DKyrRITWaLMxUYlCvHvS8
- i3+L5AwEiaYuwIRb0p0+QbRd7Cf2jtkdDTDwAfJJz6y3WwOs845MnUYoaQejTQWWhAiWnr+2QL
- h9TbBWusH0Hzhz2MAAAA=
+Message-Id: <20240905-cb_getattr-v1-1-0af05c68234f@kernel.org>
+References: <20240905-cb_getattr-v1-0-0af05c68234f@kernel.org>
+In-Reply-To: <20240905-cb_getattr-v1-0-0af05c68234f@kernel.org>
 To: Calum Mackay <calum.mackay@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=839; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm2fWe34X9P6FzqO23v52X1GmpEHy4mou2JknYH
- px75gQNgPWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZtn1ngAKCRAADmhBGVaC
- FcFAEADESUJGAJmFQpO85VXw4O00mNt8mTrVc+Me2ls2gxFxgNTnXnetXCR0Ij8htKuehsodx5t
- 5IZOMVIYqE+nd27qOSWyICMIEqZp5t0AV3QftKrlyZ4knQZhnTqe3mFhWW53f9GYZT331i3lPh+
- dlCpbuVKKBnzF1QajSJrk5FfdgA2gdWr3Yfe6FaA7xdd1APmE5tLpv/Lva9s+LmC10+EIia6GnX
- RHul7RgSdbUk9Halz+rEKT8hk7ia+UBMj/iLKy7+BnRP0AenGcWOs+hyPIdrXNIphxllnQJmbSU
- xdLNb7EFtN7zuwOSDzKRhXgccAXldKLoZ+rj2g1dA0jg3E3c9zbJGB1Qv+giLDSxWi/ASCY7jzw
- NEk5/dkcenlxQqDGvd0zAFQPOFhsaYG+YMEp4j0wo6liL2Ewf7oAmujfp4UeheEN7ytdWIOpUUA
- BHDtcPtTBY/kpzepGaCkq8PDSQGO23H/eDX7eDzQl17JjtUheuxEvaVo1L/kO1MqrfOPYWzXG/z
- 5l58lBiuLoN5Grrhu0s9uKGeF9Iu+1AqSMzx2tA5i2cl5h06kWzKfKGxbSg4q5usdtrknyuvsHB
- 6Y+1BGQdf4T8VwGPLS2iL1S4q+68mee+kunxyjEPEnhNV7gfbktc+cH85LLtrDDwUxBP42+iEiq
- WBoDLF+xXKcSU2Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1074; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=fpGlx19LirBoyfvbhwbh+Lxynm7wPL1Pt5mWQ2uLvMI=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm2fWeiORqubDnUR/H78zAiEEc7Z7Tq9Ut/7wql
+ a0mLaRP1SeJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZtn1ngAKCRAADmhBGVaC
+ FWUDD/4ziV5cglae2p6lpiRbnRpQOwnaTVS8bB4E/zQweRrLBc3m8cIr9x27IE1i7IznS96L0KL
+ o36wMX7iF9FgI5CBCLwgP32T/PJ+Ka274a7Z6cUKE16a20jW7fzMSaKIsJY4sgOIIcRGdwKf4GG
+ FQON4+Dtg235NAa/AbJ9mUxW/IzetlmkvqKsJpzU+uUSa1ojrsjaJtakQq7hRWLdk9lhs2J/Do/
+ m6KsM7qyjRLpOshXKLdBCk2xdUzuCK9U8ngq/5iMLIt09wl/PvEj+ReQ8Q3swgSGzYFiF2ab/1h
+ ee/2PKW02EfmdzfJrVzCsVCV0C+I59QF2S1dv4XaTrcxVyjHBafNTrnuQjfu67atoKC7Cncct/3
+ E1VXci78iL2xhrQ9T+gM/WuNj6Zm84q6zPbytmxXiBWdR92va4GYzoEZJxKFJ+Id7/ga33N3hU2
+ 1UkuzSnCA79oVGxSv5ElXM2zcr6C6/qP7EgGws+HA6Amo1aZTLBqKBGqWUzoBaT6GdXa1RhOXl2
+ f0idLm9jS71zTL2RZ6PmWaSiKmcnt3Wn5uurn8LPt34FcKc5N4G1BynvQWXuOq09F9it3PtYRe0
+ NMvWJlgBZ5NG6OtuLAFHSI1l5T2k1xHsa/FawXJK4s2n7ZYZ2FsPLVsROBKGOwGKmJ5/bDDuHpe
+ 8+kjgh51A99YOfw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Just a patch to add a couple of tests for CB_GETATTR support, and
-another to update the CONTRIBUTING document. I've also taken a stab at
-adding support for the delstid draft to pynfs, but I'm having trouble
-getting the xdr changes to build properly. I'll send a separate email
-about that.
+Calum is the new maintainer. Update the CONTRIBUTING doc.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (2):
-      pynfs: update maintainer info
-      nfs4.1: add two CB_GETATTR tests
+ CONTRIBUTING | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- CONTRIBUTING                          |  6 +--
- nfs4.1/nfs4client.py                  |  6 +++
- nfs4.1/server41tests/st_delegation.py | 72 ++++++++++++++++++++++++++++++++++-
- 3 files changed, 80 insertions(+), 4 deletions(-)
----
-base-commit: 08ffc1747800760c57f8db4eb02e62ece267591f
-change-id: 20240905-cb_getattr-8db184a5b4bf
+diff --git a/CONTRIBUTING b/CONTRIBUTING
+index 220b3e0629aa..d15b2b827879 100644
+--- a/CONTRIBUTING
++++ b/CONTRIBUTING
+@@ -1,15 +1,15 @@
+ Check out the latest source code from
+ 
+-	git://git.linux-nfs.org/projects/bfields/pynfs.git
++	git://git.linux-nfs.org/projects/cdmackay/pynfs.git
+ 
+ Commit your changes.  Please make sure each commit is individually
+ correct and does only one thing.
+ 
+-When you're done, send the resulting patches to bfields@fieldses.org and
++When you're done, send the resulting patches to calum.mackay@oracle.com and
+ cc the linux-nfs@vger.kernel.org mailing list, using something like:
+ 
+ 	git format-patch origin..
+-	git send-email --to="bfields@fieldses.org" \
++	git send-email --to="calum.mackay@oracle.com" \
+ 			--cc="linux-nfs@vger.kernel.org 0*
+ 
+ We generally follow similar processes to the Linux kernel, so
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.46.0
 
 
