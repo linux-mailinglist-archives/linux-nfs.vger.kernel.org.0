@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6270-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6271-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B86F96E2CF
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35D8F96E2D2
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16DE81F2235A
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CF78B25D96
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4AF190045;
-	Thu,  5 Sep 2024 19:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F3F19307F;
+	Thu,  5 Sep 2024 19:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kh+WOa18"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6Uv6oHq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E737818FC7C
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB20192D67
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725563428; cv=none; b=feakzc8HAwUU5JmKZUP2YLZ/IYxCdYIwbKgbSSoKeqxZ10krfHgyeTXPae7uSZy6XNlGdgfojSxeKKowV0YANq980d5eBO7KMU6T8OXJRSwOvf/opaCIWNCM1PV5ykfxubAxizQzrg4bcv78OEEpW2u3mSprFuzQTmryWPlYGpI=
+	t=1725563429; cv=none; b=Grkd8d3KA2/qSpxeFPE0RJBCBPvh/QJK2Vop/WrDHpSw7qacvS0gqelJByXBXmbyDFecknoNFSgdGlidyDw5eSMCJRHjEE4i9aIySV+yF36KClLFB4rGHfu9Uf+lRXY3zdyPeXsx3VDbcwZuHRdlJAC97Y5zM+owInPnQbkYIcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725563428; c=relaxed/simple;
-	bh=v6Kr4aZMTqmzIOXKWJ8riLtR4R1j9G1RaF8LPR4sBk8=;
+	s=arc-20240116; t=1725563429; c=relaxed/simple;
+	bh=ZnBUJMvIl6K36j7Td/qZmqvGMMP9p+j21OE7Alw9ttU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PcF9IC2LAilFee9iBDYvsWlO6yCBEjtJ+Jkx6PCT3bHWmklAOY2gcaTqNzr6lnmkRRQqmSqGlA7rd25vv32UyyFtPWOdiApx/V4i/yO+A8EV0N/UJInD+Fih3K13Dt+Rrb0ru/X6BFovW7OYkv3cEXrwkp+d+f5GuK2tLafr+IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kh+WOa18; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90CDDC4CEC6;
-	Thu,  5 Sep 2024 19:10:27 +0000 (UTC)
+	 MIME-Version; b=m30n8afzB9Bnsv/frY29wrpNMyYx3K8jsjJqb1L3th3k7Yl2z0KRmVobrBN/NAq5ZAqhsOIOLDpYYTG1jBgQiLdeh+Vbgf8l8sKikh0LWbDHOssvEzcLbfdzz9/+lvVnUWzyiWCBMWMhWWYH0LELZBTblT6diN0SBSRcM8bO360=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6Uv6oHq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8CEC4CEC3;
+	Thu,  5 Sep 2024 19:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725563427;
-	bh=v6Kr4aZMTqmzIOXKWJ8riLtR4R1j9G1RaF8LPR4sBk8=;
+	s=k20201202; t=1725563429;
+	bh=ZnBUJMvIl6K36j7Td/qZmqvGMMP9p+j21OE7Alw9ttU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kh+WOa18kOBZZM9FdF5xoqi6TFelazBVi0d5H/qHEoR4bwq+BYXlQRWaHnmrb9uGt
-	 dVicAeFoq730RfZC+qnZSHcE70l3eR7NXoyHiz5if4hRaSsNroW2b7Ri9hS1gw4GJC
-	 HsJp0ekcEd4G4XE8n+rYK9O+FF9Zn5qhBy+fUlsJ2LXaZpilohwpfmYBYrov098jr9
-	 aEsguWuM3th6iCUg5wd2W/DADFreYVpBBWXp6rHvV3wn+/IpCRZ8USXbnShWLzpbex
-	 q2vRQXxaCq7bBefqR9RSdgfvK0jlrG3d51Wy1j2/UL4ZbdlaWM1PX/HVWNh6I+ABmL
-	 0g6d6bfDUy14A==
+	b=D6Uv6oHqCjbZE6VFRvRFyGocmOAARzqb9O+fd+9kz7f6Lgam56sPk9hJ8JP5tWtVb
+	 N2NWutb729l0KOzXc9IlsVa6OE7nQyGvyE+VlEVncckzIxVmS0c0iK1jmtLSfXPKuU
+	 1pDacxhjTHfyxnSD0j99XgeUT7ESl61NHc+tzSyOxl/NGAkrBB7l1VOHqu1/gb1esN
+	 McoDdFBGt7SyxO/wqpzSvXscAIZvn5OZDRq94gMmjcH9RnmeDZUxH++UF56CwKQFcv
+	 OcrJUHRuIbCnWwXTJYZaYPbTI7skfKcPrgKd3BJo4vL40RBOpcICJ0IihMI45oAg8e
+	 PmBQuybJtVikg==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>
-Subject: [PATCH v16 11/26] SUNRPC: remove call_allocate() BUG_ONs
-Date: Thu,  5 Sep 2024 15:09:45 -0400
-Message-ID: <20240905191011.41650-12-snitzer@kernel.org>
+Subject: [PATCH v16 12/26] SUNRPC: add svcauth_map_clnt_to_svc_cred_local
+Date: Thu,  5 Sep 2024 15:09:46 -0400
+Message-ID: <20240905191011.41650-13-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240905191011.41650-1-snitzer@kernel.org>
 References: <20240905191011.41650-1-snitzer@kernel.org>
@@ -62,72 +62,105 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove BUG_ON if p_arglen=0 to allow RPC with void arg.
-Remove BUG_ON if p_replen=0 to allow RPC with void return.
+From: Weston Andros Adamson <dros@primarydata.com>
 
-The former was needed for the first revision of the LOCALIO protocol
-which had an RPC that took a void arg:
+Add new funtion svcauth_map_clnt_to_svc_cred_local which maps a
+generic cred to a svc_cred suitable for use in nfsd.
 
-    /* raw RFC 9562 UUID */
-    typedef u8 uuid_t<UUID_SIZE>;
+This is needed by the localio code to map nfs client creds to nfs
+server credentials.
 
-    program NFS_LOCALIO_PROGRAM {
-        version LOCALIO_V1 {
-            void
-                NULL(void) = 0;
+Following from net/sunrpc/auth_unix.c:unx_marshal() it is clear that
+->fsuid and ->fsgid must be used (rather than ->uid and ->gid).  In
+addition, these uid and gid must be translated with from_kuid_munged()
+so local client uses correct uid and gid when acting as local server.
 
-            uuid_t
-                GETUUID(void) = 1;
-        } = 1;
-    } = 400122;
+Jeff Layton noted:
+  This is where the magic happens. Since we're working in
+  kuid_t/kgid_t, we don't need to worry about further idmapping.
 
-The latter is needed for the final revision of the LOCALIO protocol
-which has a UUID_IS_LOCAL RPC which returns a void:
-
-    /* raw RFC 9562 UUID */
-    typedef u8 uuid_t<UUID_SIZE>;
-
-    program NFS_LOCALIO_PROGRAM {
-        version LOCALIO_V1 {
-            void
-                NULL(void) = 0;
-
-            void
-                UUID_IS_LOCAL(uuid_t) = 1;
-        } = 1;
-    } = 400122;
-
-There is really no value in triggering a BUG_ON in response to either
-of these previously unsupported conditions.
-
-NeilBrown would like the entire 'if (proc->p_proc != 0)' branch
-removed (not just the one BUG_ON that must be removed for LOCALIO's
-immediate needs of returning void).
-
+Suggested-by: NeilBrown <neilb@suse.de> # to approximate unx_marshal()
+Signed-off-by: Weston Andros Adamson <dros@primarydata.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Co-developed-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Reviewed-by: NeilBrown <neilb@suse.de>
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/clnt.c | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/sunrpc/svcauth.h |  5 +++++
+ net/sunrpc/svcauth.c           | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 09f29a95f2bc..00fe6df11ab7 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1893,12 +1893,6 @@ call_allocate(struct rpc_task *task)
- 	if (req->rq_buffer)
- 		return;
+diff --git a/include/linux/sunrpc/svcauth.h b/include/linux/sunrpc/svcauth.h
+index 63cf6fb26dcc..2e111153f7cd 100644
+--- a/include/linux/sunrpc/svcauth.h
++++ b/include/linux/sunrpc/svcauth.h
+@@ -14,6 +14,7 @@
+ #include <linux/sunrpc/msg_prot.h>
+ #include <linux/sunrpc/cache.h>
+ #include <linux/sunrpc/gss_api.h>
++#include <linux/sunrpc/clnt.h>
+ #include <linux/hash.h>
+ #include <linux/stringhash.h>
+ #include <linux/cred.h>
+@@ -157,6 +158,10 @@ extern enum svc_auth_status svc_set_client(struct svc_rqst *rqstp);
+ extern int	svc_auth_register(rpc_authflavor_t flavor, struct auth_ops *aops);
+ extern void	svc_auth_unregister(rpc_authflavor_t flavor);
  
--	if (proc->p_proc != 0) {
--		BUG_ON(proc->p_arglen == 0);
--		if (proc->p_decode != NULL)
--			BUG_ON(proc->p_replen == 0);
--	}
--
- 	/*
- 	 * Calculate the size (in quads) of the RPC call
- 	 * and reply headers, and convert both values
++extern void	svcauth_map_clnt_to_svc_cred_local(struct rpc_clnt *clnt,
++						   const struct cred *,
++						   struct svc_cred *);
++
+ extern struct auth_domain *unix_domain_find(char *name);
+ extern void auth_domain_put(struct auth_domain *item);
+ extern struct auth_domain *auth_domain_lookup(char *name, struct auth_domain *new);
+diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
+index 93d9e949e265..55b4d2874188 100644
+--- a/net/sunrpc/svcauth.c
++++ b/net/sunrpc/svcauth.c
+@@ -18,6 +18,7 @@
+ #include <linux/sunrpc/svcauth.h>
+ #include <linux/err.h>
+ #include <linux/hash.h>
++#include <linux/user_namespace.h>
+ 
+ #include <trace/events/sunrpc.h>
+ 
+@@ -175,6 +176,33 @@ rpc_authflavor_t svc_auth_flavor(struct svc_rqst *rqstp)
+ }
+ EXPORT_SYMBOL_GPL(svc_auth_flavor);
+ 
++/**
++ * svcauth_map_clnt_to_svc_cred_local - maps a generic cred
++ * to a svc_cred suitable for use in nfsd.
++ * @clnt: rpc_clnt associated with nfs client
++ * @cred: generic cred associated with nfs client
++ * @svc: returned svc_cred that is suitable for use in nfsd
++ */
++void svcauth_map_clnt_to_svc_cred_local(struct rpc_clnt *clnt,
++					const struct cred *cred,
++					struct svc_cred *svc)
++{
++	struct user_namespace *userns = clnt->cl_cred ?
++		clnt->cl_cred->user_ns : &init_user_ns;
++
++	memset(svc, 0, sizeof(struct svc_cred));
++
++	svc->cr_uid = KUIDT_INIT(from_kuid_munged(userns, cred->fsuid));
++	svc->cr_gid = KGIDT_INIT(from_kgid_munged(userns, cred->fsgid));
++	svc->cr_flavor = clnt->cl_auth->au_flavor;
++	if (cred->group_info)
++		svc->cr_group_info = get_group_info(cred->group_info);
++	/* These aren't relevant for local (network is bypassed) */
++	svc->cr_principal = NULL;
++	svc->cr_gss_mech = NULL;
++}
++EXPORT_SYMBOL_GPL(svcauth_map_clnt_to_svc_cred_local);
++
+ /**************************************************
+  * 'auth_domains' are stored in a hash table indexed by name.
+  * When the last reference to an 'auth_domain' is dropped,
 -- 
 2.44.0
 
