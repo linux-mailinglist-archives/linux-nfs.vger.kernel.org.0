@@ -1,149 +1,274 @@
-Return-Path: <linux-nfs+bounces-6288-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6289-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE3D696E34F
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:38:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9D3D96E658
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 01:34:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F2411F26C99
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:38:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 566F3284FAA
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 23:34:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DAF118D621;
-	Thu,  5 Sep 2024 19:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09278181CE1;
+	Thu,  5 Sep 2024 23:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bzyzhkte"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="are+cdk1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nytqWQPO";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xya2GHjB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RcqNl/50"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747FF18A6B0;
-	Thu,  5 Sep 2024 19:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58655381B;
+	Thu,  5 Sep 2024 23:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725565083; cv=none; b=V1/hXLm2FwqEakd32GSoprYoIEygz7jhJgdQrnW4Vl74BRWiSEEeunuYi5fnZJPel/2hT84aIPW5n7T106YIoZfdB57Dcl1fB9FSIXCjeI1PDAytwCtKTQHtetMb6gX+XAI0Ymt1gmAPNN/YLkiNJ7ZEi9KYVf1bLlVTt8kcjCs=
+	t=1725579273; cv=none; b=RorMlaVQIDcL2k1datCkneTNefRRtZDJBdNt++2SKKWbmITwT23CbIH33FGlzPS4JcK3Op9oSPOHxAB0GW3/Lszy27ZUYdnYJLWbINitAW6YybS4+AyA56AZl91cu9peHwNKhAkl1eFKFHClZTgRiqUjvMC9/GUSahHhOZMPB7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725565083; c=relaxed/simple;
-	bh=lVx2FJzKGyCjMvdz8i5WRQMWkAvE1xq/AnkA2cTn4nU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i+QxJenP/bk0LqvFfgR6JGtna5TZxuYIOl4wwA+Z/ZoOr3wBpWb+EC5E+wuxaPb712MD1X+gs7KRm1JcpjwCGg2zw668AraRw+ybwTeUQOLkYMFvvjgu70LiqyKHjoeMMUHUTLF7OBdEbGYVwHNlFo37FlUzU1jmFDnMeLvFQCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bzyzhkte; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE9AC4CEC3;
-	Thu,  5 Sep 2024 19:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725565083;
-	bh=lVx2FJzKGyCjMvdz8i5WRQMWkAvE1xq/AnkA2cTn4nU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bzyzhktefi/fppyPGoJRwD/yFYBzCDvaNf/zgFK3Gldq4o8uiWDErOe9twJ2ORFrz
-	 nCjpx0EC8/cSq4xybK7DL2xeQvy59PEOKcnXIJ5/tvVM5Qlj7fCD949z+9BPwC/RKV
-	 IhseQNph/Ieq3gGS3lwxnpf5X/yQtIiZgHjzDZBeGSMb5p3JYOEweqz2pR8Sjkgpbl
-	 lTD11lKuVvIVhSzxx0+ZLnT1atS0b9Tpp387ibTEn69Cvi7jBzwoCw7yOuYmbkG0Nv
-	 Xfx1lvyV3MleMKsaVTzxCEcGNPSbL5+2GJOJKqQoe2e9BmEem7pJcvKZtevjp/BOZX
-	 5CVaQlPHKfRRQ==
-Date: Thu, 5 Sep 2024 15:38:01 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v15 14/26] nfs_common: add NFS LOCALIO auxiliary protocol
- enablement
-Message-ID: <ZtoImdAHDdm6PQ-v@kernel.org>
-References: <20240831223755.8569-1-snitzer@kernel.org>
- <20240831223755.8569-15-snitzer@kernel.org>
- <CAFX2Jf=chLdC-eip0JFbtjE+2pDq7G1vbRunB4OD2ZRd2=sDVQ@mail.gmail.com>
+	s=arc-20240116; t=1725579273; c=relaxed/simple;
+	bh=Zfl/iSHMNbykgamPzLSOcwQDKFZqxn/Pr4gEIA7gFK0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=XGPSqEuKCfUDocxkKtak7zsjU2zKcCOMkbF2KEEMcA3vzU8uJdpC6xcLpKd6RUPaZSQYiT7hOs1etyd2BATVI7fdAtKqdEoHYLei8qVPc3eJm1fDHn0XFihzSC7EMPxGqKKogKO71hkCyeKcR94O45cuEz2igSxtrTNQrd6GTfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=are+cdk1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nytqWQPO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xya2GHjB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RcqNl/50; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E90DF1F844;
+	Thu,  5 Sep 2024 23:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725579269; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/mPa4Al51mRDna1hBB3yArxBj7SBia8l3F7869RViAc=;
+	b=are+cdk1xeS0F2IIPyLFJLX9TAbr5rS3v1MJ4ICAjLL5d6kAfDG0HqhxMCrfsdzzLePDFM
+	ASie4xkZgzWr/ZbUg6LkAh/mt8rT8fGpbiPpfqjI/ZOB0sNjMXlDQvOS2zxNcXbWgrWy1k
+	EfWgS7RrtJzJKG4ClOrdNlirDxDX5XI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725579269;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/mPa4Al51mRDna1hBB3yArxBj7SBia8l3F7869RViAc=;
+	b=nytqWQPOTMQcwKFX1zcZ8Q6Bq1XP8flpzAhOSeFOvTxdi+HO8bf6Oy1gC1TMzdCqKOlzoI
+	ZbN4KKVpv401w1CA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725579268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/mPa4Al51mRDna1hBB3yArxBj7SBia8l3F7869RViAc=;
+	b=xya2GHjBULU9tVkuA0R5IYghJf+vRkv6norCJ+VfBU9vFDC4bDhZUPymrircGHgvDQLQq8
+	gI7hlnxlAmAI61jr3ln+VR7+SF+VAvPkUX5snFd2lvacRw6JF3S18iG6gVMaWcRHYZL/Qb
+	fn4HeeRu6NkiTVekjahKTu7jRNdiuVU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725579268;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/mPa4Al51mRDna1hBB3yArxBj7SBia8l3F7869RViAc=;
+	b=RcqNl/50blCApKhaJylBr7MjnWzCjjrJOkuEVaaYJ7zOxSWM/JZpQ2GO4NVRAyuQtbHq25
+	k0KKqxNg9KP5ZsDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A6C013419;
+	Thu,  5 Sep 2024 23:34:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id urs2DAJA2mY/LQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 05 Sep 2024 23:34:26 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFX2Jf=chLdC-eip0JFbtjE+2pDq7G1vbRunB4OD2ZRd2=sDVQ@mail.gmail.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Mike Snitzer" <snitzer@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Trond Myklebust" <trondmy@hammerspace.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
+In-reply-to: <Ztm-TbSdXOkx3IHn@kernel.org>
+References: <>, <Ztm-TbSdXOkx3IHn@kernel.org>
+Date: Fri, 06 Sep 2024 09:34:08 +1000
+Message-id: <172557924809.4433.12586767127138915683@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Thu, Sep 05, 2024 at 03:24:06PM -0400, Anna Schumaker wrote:
-> On Sat, Aug 31, 2024 at 6:38 PM Mike Snitzer <snitzer@kernel.org> wrote:
-> >
-> > fs/nfs_common/nfslocalio.c provides interfaces that enable an NFS
-> > client to generate a nonce (single-use UUID) and associated
-> > short-lived nfs_uuid_t struct, register it with nfs_common for
-> > subsequent lookup and verification by the NFS server and if matched
-> > the NFS server populates members in the nfs_uuid_t struct.
-> >
-> > nfs_common's nfs_uuids list is the basis for localio enablement, as
-> > such it has members that point to nfsd memory for direct use by the
-> > client (e.g. 'net' is the server's network namespace, through it the
-> > client can access nn->nfsd_serv).
-> >
-> > This commit also provides the base nfs_uuid_t interfaces to allow
-> > proper net namespace refcounting for the LOCALIO use case.
-> >
-> > CONFIG_NFS_LOCALIO controls the nfs_common, NFS server and NFS client
-> > enablement for LOCALIO. If both NFS_FS=m and NFSD=m then
-> > NFS_COMMON_LOCALIO_SUPPORT=m and nfs_localio.ko is built (and provides
-> > nfs_common's LOCALIO support).
-> >
-> >   # lsmod | grep nfs_localio
-> >   nfs_localio            12288  2 nfsd,nfs
-> >   sunrpc                745472  35 nfs_localio,nfsd,auth_rpcgss,lockd,nfsv3,nfs
-> >
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > Co-developed-by: NeilBrown <neilb@suse.de>
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/Kconfig                 |  23 ++++++++
-> >  fs/nfs_common/Makefile     |   3 +
-> >  fs/nfs_common/nfslocalio.c | 116 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/nfslocalio.h |  36 ++++++++++++
-> >  4 files changed, 178 insertions(+)
-> >  create mode 100644 fs/nfs_common/nfslocalio.c
-> >  create mode 100644 include/linux/nfslocalio.h
-> >
-> > diff --git a/fs/Kconfig b/fs/Kconfig
-> > index a46b0cbc4d8f..24d4e4b419d1 100644
-> > --- a/fs/Kconfig
-> > +++ b/fs/Kconfig
-> > @@ -382,6 +382,29 @@ config NFS_COMMON
-> >         depends on NFSD || NFS_FS || LOCKD
-> >         default y
-> >
-> > +config NFS_COMMON_LOCALIO_SUPPORT
-> > +       tristate
-> > +       default n
-> > +       default y if NFSD=y || NFS_FS=y
-> > +       default m if NFSD=m && NFS_FS=m
-> > +       select SUNRPC
-> > +
-> > +config NFS_LOCALIO
-> > +       bool "NFS client and server support for LOCALIO auxiliary protocol"
-> > +       depends on NFSD && NFS_FS
-> > +       select NFS_COMMON_LOCALIO_SUPPORT
-> > +       default n
-> > +       help
-> > +         Some NFS servers support an auxiliary NFS LOCALIO protocol
-> > +         that is not an official part of the NFS protocol.
-> > +
-> > +         This option enables support for the LOCALIO protocol in the
-> > +         kernel's NFS server and client. Enable this to permit local
-> > +         NFS clients to bypass the network when issuing reads and
-> > +         writes to the local NFS server.
-> > +
-> > +         If unsure, say N.
-> > +
-> 
-> I'm wondering if it would make sense to create a fs/nfs_common/Kconfig
-> file at some point (not as part of this patchset!) to hold this group
-> of nfs_common options and to tidy up this section of the fs/Kconfig
-> file.
-> 
-> Thoughts?
-> Anna
+On Fri, 06 Sep 2024, Mike Snitzer wrote:
+> On Wed, Sep 04, 2024 at 09:47:07AM -0400, Chuck Lever wrote:
+> > On Wed, Sep 04, 2024 at 03:01:46PM +1000, NeilBrown wrote:
+> > > On Wed, 04 Sep 2024, NeilBrown wrote:
+> > > >=20
+> > > > I agree that dropping and reclaiming a lock is an anti-pattern and in
+> > > > best avoided in general.  I cannot see a better alternative in this
+> > > > case.
+> > >=20
+> > > It occurred to me what I should spell out the alternate that I DO see so
+> > > you have the option of disagreeing with my assessment that it isn't
+> > > "better".
+> > >=20
+> > > We need RCU to call into nfsd, we need a per-cpu ref on the net (which
+> > > we can only get inside nfsd) and NOT RCU to call
+> > > nfsd_file_acquire_local().
+> > >=20
+> > > The current code combines these (because they are only used together)
+> > > and so the need to drop rcu.=20
+> > >=20
+> > > I thought briefly that it could simply drop rcu and leave it dropped
+> > > (__releases(rcu)) but not only do I generally like that LESS than
+> > > dropping and reclaiming, I think it would be buggy.  While in the nfsd
+> > > module code we need to be holding either rcu or a ref on the server else
+> > > the code could disappear out from under the CPU.  So if we exit without
+> > > a ref on the server - which we do if nfsd_file_acquire_local() fails -
+> > > then we need to reclaim RCU *before* dropping the ref.  So the current
+> > > code is slightly buggy.
+> > >=20
+> > > We could instead split the combined call into multiple nfs_to
+> > > interfaces.
+> > >=20
+> > > So nfs_open_local_fh() in nfs_common/nfslocalio.c would be something
+> > > like:
+> > >=20
+> > >  rcu_read_lock();
+> > >  net =3D READ_ONCE(uuid->net);
+> > >  if (!net || !nfs_to.get_net(net)) {
+> > >        rcu_read_unlock();
+> > >        return ERR_PTR(-ENXIO);
+> > >  }
+> > >  rcu_read_unlock();
+> > >  localio =3D nfs_to.nfsd_open_local_fh(....);
+> > >  if (IS_ERR(localio))
+> > >        nfs_to.put_net(net);
+> > >  return localio;
+> > >=20
+> > > So we have 3 interfaces instead of 1, but no hidden unlock/lock.
+> >=20
+> > Splitting up the function call occurred to me as well, but I didn't
+> > come up with a specific bit of surgery. Thanks for the suggestion.
+> >=20
+> > At this point, my concern is that we will lose your cogent
+> > explanation of why the release/lock is done. Having it in email is
+> > great, but email is more ephemeral than actually putting it in the
+> > code.
+> >=20
+> >=20
+> > > As I said, I don't think this is a net win, but reasonable people might
+> > > disagree with me.
+> >=20
+> > The "win" here is that it makes this code self-documenting and
+> > somewhat less likely to be broken down the road by changes in and
+> > around this area. Since I'm more forgetful these days I lean towards
+> > the more obvious kinds of coding solutions. ;-)
+> >=20
+> > Mike, how do you feel about the 3-interface suggestion?
+>=20
+> I dislike expanding from 1 indirect function call to 2 in rapid
+> succession (3 for the error path, not a problem, just being precise.
+> But I otherwise like it.. maybe.. heh.
+>=20
+> FYI, I did run with the suggestion to make nfs_to a pointer that just
+> needs a simple assignment rather than memcpy to initialize.  So Neil's
+> above code becames:
+>=20
+>         rcu_read_lock();
+>         net =3D rcu_dereference(uuid->net);
+>         if (!net || !nfs_to->nfsd_serv_try_get(net)) {
+>                 rcu_read_unlock();
+>                 return ERR_PTR(-ENXIO);
+>         }
+>         rcu_read_unlock();
+>         /* We have an implied reference to net thanks to nfsd_serv_try_get =
+*/
+>         localio =3D nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
+>                                              cred, nfs_fh, fmode);
+>         if (IS_ERR(localio))
+>                 nfs_to->nfsd_serv_put(net);
+>         return localio;
+>=20
+> I do think it cleans the code up... full patch is here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=
+=3Dnfs-localio-for-next.v15-with-fixups&id=3De85306941878a87070176702de687f27=
+79436061
+>=20
+> But I'm still on the fence.. someone help push me over!
 
-Yes, I think that makes sense.
+I think the new code is unquestionable clearer, and not taking this
+approach would be a micro-optimisation which would need to be
+numerically justified.  So I'm pushing for the three-interface version
+(despite what I said before).
 
-Mike
+Unfortunately the new code is not bug-free - not quite.
+As soon as nfs_to->nfsd_serv_put() calls percpu_ref_put() the nfsd
+module can be unloaded, and the "return" instruction might not be
+present.  For this to go wrong would require a lot of bad luck, but if
+the CPU took an interrupt at the wrong time were would be room.
+
+[Ever since module_put_and_exit() was added (now ..and_kthread_exit)
+ I've been sensitive to dropping the ref to a module in code running in
+ the module]
+
+So I think nfsd_serv_put (and nfsd_serv_try_get() __must_hold(RCU) and
+nfs_open_local_fh() needs rcu_read_lock() before calling
+nfs_to->nfsd_serv_put(net).
+
+
+
+>=20
+> Tangent, but in the related business of "what are next steps?":
+>=20
+> I updated headers with various provided Reviewed-by:s and Acked-by:s,
+> fixed at least 1 commit header, fixed some sparse issues, various
+> fixes to nfs_to patch (removed EXPORT_SYMBOL_GPL, switched to using
+> pointer, updated nfs_to callers). Etc...
+>=20
+> But if I fold those changes in I compromise the provided Reviewed-by
+> and Acked-by.. so I'm leaning toward posting a v16 that has
+> these incremental fixes/improvements, see the 3 topmost commits here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=3D=
+nfs-localio-for-next.v15-with-fixups
+>=20
+> Or if you can review the incremental patches I can fold them in and
+> preserve the various Reviewed-by and Acked-by...
+
+I have reviewed the incremental patches and I'm happy for all my tags to
+apply to the new versions of the patches.
+
+NeilBrown
 
