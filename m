@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-6229-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6230-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7880596DE3B
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 17:31:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 232A796DE3D
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 17:31:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB19B1C25D7F
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 15:31:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6D4A28A9A4
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 15:31:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B68084D3E;
-	Thu,  5 Sep 2024 15:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CFA19DF60;
+	Thu,  5 Sep 2024 15:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8y70zvh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYjBvAI+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BEC7F7FC;
-	Thu,  5 Sep 2024 15:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D761990DB;
+	Thu,  5 Sep 2024 15:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725550277; cv=none; b=b5gHWQNCddItLjff6ZAvb19VelIjuum8h6jPqo4r1SkVLac0paKWNNswIQM5HJsiTDL7POm56T4w2pD4cs4U2x36ExG2xnZEzbYvkyycC9lOP/wCUF1j40B1kQP05zBHrv9VIiBXWQ1kIW5whK9WMbM1DMSqitlwhGLY0ituIWM=
+	t=1725550278; cv=none; b=bpA5v0zIFgrXjg2W8/qFVkVSAVr3wQfDvlEhgiHhVwokfSYr7x3HD4Q8+3tFljN8n7q0A9O0ZeRKiB4iEShvz2AEfdMnST7Xhtouwj5H2ulhAwe8K2D9litUJd5dN/qOSUqn4MGnrZGvOg06FupeyA+ertt0eL7CRHeZmAvCHJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725550277; c=relaxed/simple;
-	bh=s06Fd52zaQ6YeE4FvigUbNXvSQgkkN8aStazVLYd8hE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pGr7iroKa89ysKJLy/WW1kCnmlT6Pdvb0HGK+3tj/O1BUG8XwE8ZjYfnqJL7ZVW7QwwGhSm4vryCUxVyvA/XbFy6KgpReLaqFFSPcFcjOKuXWbRq1mwyKFGNqIMmgk7D0Cos3Znm0r+TdiFHti3vxrGG3LYdHD8md3NEhuFtKoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8y70zvh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FAB7C4CEC3;
-	Thu,  5 Sep 2024 15:31:16 +0000 (UTC)
+	s=arc-20240116; t=1725550278; c=relaxed/simple;
+	bh=dMKiKukO1PYUxmEU2utXwHp9VuTrFUzqcOaZ9BE33Ro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cv5U4L9M6HDacAE0t52fJQL8doc1xlM2f6hTBd+l9R0qwRTAjjMo47NGIg15r2lkkWuBoqCIblUASL8Lc4dgJiH7r1L3xTxp0LH6lgwHkZnDYZN8uR8idVVLagWZ8Ms5bXizhRxvAOsjljRTpdaX49zRDUzVS9XjzDgLRTqtCfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYjBvAI+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A075C4CEC7;
+	Thu,  5 Sep 2024 15:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725550277;
-	bh=s06Fd52zaQ6YeE4FvigUbNXvSQgkkN8aStazVLYd8hE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U8y70zvhXHCgJ7rn8lb1kbMdLJhu3OoIBTdgbKvncubgPkAu4UDXdiqQ2yP3Gvmqc
-	 wyhc3xibPHrCQiTLzKtM0kpq4xsc6EEodOS+qJK3jOk2mndsLPniMK3NxOJN//T6Eu
-	 byUTmyVeXZZDmPhbppcWhBNhyYpBrqnmRuYax7hR0y/puu7XdquUODNdZjxUrfMuIW
-	 eA4pKbScA70M46TVsYg5R1NMsFiJaGPBofGSR1apJ3TI9Aelw26Ls5WUB9PYB6/jHu
-	 sYpusIdj++gjBM1ZS+pVGbjuioU1zm5gVUxLCjsZIH60JdCfwDFs3/wENK80fcKAaP
-	 6iV4G9503zwCw==
+	s=k20201202; t=1725550278;
+	bh=dMKiKukO1PYUxmEU2utXwHp9VuTrFUzqcOaZ9BE33Ro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GYjBvAI+vyg+bUbW/9yiDLQVSvz/rAGa51aWxRbYWoeLDhNnk8iPhvsoFl0Y2k9jg
+	 mdGTffEDSHt59lGqnLirWGJtPzO1234D4RDw8PxV5P0GJSROY7W9tSZjvPOn3E/iXL
+	 YdoEYLZIi9t8W23BJjQ5a6AP37YsZNcBHdg+lGcZnM9usvIeuzNZCU4Tm/NQ10Y5GA
+	 q6jqtO7q8XtdlQgi6dbZAuTjDwFww1nOmlOwtIpJDKtDtO0K4IeWKqNPj0s5/5qUJP
+	 yT2oFYD8NX5Okcx8PEbetvfyqHkMOn/oIlVHvWA0ciM2ZpW8X2rG9JpAxGIWw6Jj7d
+	 AGWPq26/1Naiw==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
@@ -47,80 +48,109 @@ Cc: <linux-nfs@vger.kernel.org>,
 	sherry.yang@oracle.com,
 	calum.mackay@oracle.com,
 	kernel-team@fb.com,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 5.10.y 00/19] Backport "make svc_stat per-net instead of global"
-Date: Thu,  5 Sep 2024 11:30:42 -0400
-Message-ID: <20240905153101.59927-1-cel@kernel.org>
+	Jeff Layton <jlayton@kernel.org>,
+	Dai Ngo <dai.ngo@oracle.com>
+Subject: [PATCH 5.10.y 01/19] nfsd: move reply cache initialization into nfsd startup
+Date: Thu,  5 Sep 2024 11:30:43 -0400
+Message-ID: <20240905153101.59927-2-cel@kernel.org>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240905153101.59927-1-cel@kernel.org>
+References: <20240905153101.59927-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-Following up on
+[ Upstream commit f5f9d4a314da88c0a5faa6d168bf69081b7a25ae ]
 
-https://lore.kernel.org/linux-nfs/d4b235df-4ee5-4824-9d48-e3b3c1f1f4d1@oracle.com/
+There's no need to start the reply cache before nfsd is up and running,
+and doing so means that we register a shrinker for every net namespace
+instead of just the ones where nfsd is running.
 
-Here is a backport series targeting origin/linux-5.10.y that closes
-the information leak described in the above thread.
+Move it to the per-net nfsd startup instead.
 
-Review comments welcome.
+Reported-by: Dai Ngo <dai.ngo@oracle.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Stable-dep-of: ed9ab7346e90 ("nfsd: move init of percpu reply_cache_stats counters back to nfsd_init_net")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfsctl.c |  8 --------
+ fs/nfsd/nfssvc.c | 10 +++++++++-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-
-Chuck Lever (6):
-  NFSD: Refactor nfsd_reply_cache_free_locked()
-  NFSD: Rename nfsd_reply_cache_alloc()
-  NFSD: Replace nfsd_prune_bucket()
-  NFSD: Refactor the duplicate reply cache shrinker
-  NFSD: Rewrite synopsis of nfsd_percpu_counters_init()
-  NFSD: Fix frame size warning in svc_export_parse()
-
-Jeff Layton (2):
-  nfsd: move reply cache initialization into nfsd startup
-  nfsd: move init of percpu reply_cache_stats counters back to
-    nfsd_init_net
-
-Josef Bacik (10):
-  sunrpc: don't change ->sv_stats if it doesn't exist
-  nfsd: stop setting ->pg_stats for unused stats
-  sunrpc: pass in the sv_stats struct through svc_create_pooled
-  sunrpc: remove ->pg_stats from svc_program
-  sunrpc: use the struct net as the svc proc private
-  nfsd: rename NFSD_NET_* to NFSD_STATS_*
-  nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
-  nfsd: make all of the nfsd stats per-network namespace
-  nfsd: remove nfsd_stats, make th_cnt a global counter
-  nfsd: make svc_stat per-network namespace instead of global
-
-NeilBrown (1):
-  NFSD: simplify error paths in nfsd_svc()
-
- fs/lockd/svc.c             |   3 -
- fs/nfs/callback.c          |   3 -
- fs/nfsd/export.c           |  32 ++++--
- fs/nfsd/export.h           |   4 +-
- fs/nfsd/netns.h            |  25 ++++-
- fs/nfsd/nfs4proc.c         |   6 +-
- fs/nfsd/nfscache.c         | 202 ++++++++++++++++++++++---------------
- fs/nfsd/nfsctl.c           |  24 ++---
- fs/nfsd/nfsd.h             |   1 +
- fs/nfsd/nfsfh.c            |   3 +-
- fs/nfsd/nfssvc.c           |  38 ++++---
- fs/nfsd/stats.c            |  52 ++++------
- fs/nfsd/stats.h            |  83 ++++++---------
- fs/nfsd/trace.h            |  22 ++++
- fs/nfsd/vfs.c              |   6 +-
- include/linux/sunrpc/svc.h |   5 +-
- net/sunrpc/stats.c         |   2 +-
- net/sunrpc/svc.c           |  36 ++++---
- 18 files changed, 306 insertions(+), 241 deletions(-)
-
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index f77f00c93172..1c39a4e6294d 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1461,16 +1461,11 @@ static __net_init int nfsd_init_net(struct net *net)
+ 	nn->nfsd_versions = NULL;
+ 	nn->nfsd4_minorversions = NULL;
+ 	nfsd4_init_leases_net(nn);
+-	retval = nfsd_reply_cache_init(nn);
+-	if (retval)
+-		goto out_cache_error;
+ 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+ 	seqlock_init(&nn->writeverf_lock);
+ 
+ 	return 0;
+ 
+-out_cache_error:
+-	nfsd_idmap_shutdown(net);
+ out_idmap_error:
+ 	nfsd_export_shutdown(net);
+ out_export_error:
+@@ -1479,9 +1474,6 @@ static __net_init int nfsd_init_net(struct net *net)
+ 
+ static __net_exit void nfsd_exit_net(struct net *net)
+ {
+-	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+-
+-	nfsd_reply_cache_shutdown(nn);
+ 	nfsd_idmap_shutdown(net);
+ 	nfsd_export_shutdown(net);
+ 	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 3d4fd40c987b..a68e9904224a 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -427,16 +427,23 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
+ 	ret = nfsd_file_cache_start_net(net);
+ 	if (ret)
+ 		goto out_lockd;
+-	ret = nfs4_state_start_net(net);
++
++	ret = nfsd_reply_cache_init(nn);
+ 	if (ret)
+ 		goto out_filecache;
+ 
++	ret = nfs4_state_start_net(net);
++	if (ret)
++		goto out_reply_cache;
++
+ #ifdef CONFIG_NFSD_V4_2_INTER_SSC
+ 	nfsd4_ssc_init_umount_work(nn);
+ #endif
+ 	nn->nfsd_net_up = true;
+ 	return 0;
+ 
++out_reply_cache:
++	nfsd_reply_cache_shutdown(nn);
+ out_filecache:
+ 	nfsd_file_cache_shutdown_net(net);
+ out_lockd:
+@@ -454,6 +461,7 @@ static void nfsd_shutdown_net(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+ 	nfs4_state_shutdown_net(net);
++	nfsd_reply_cache_shutdown(nn);
+ 	nfsd_file_cache_shutdown_net(net);
+ 	if (nn->lockd_up) {
+ 		lockd_down(net);
 -- 
 2.45.1
 
