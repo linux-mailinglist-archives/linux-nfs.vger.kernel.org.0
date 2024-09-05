@@ -1,121 +1,269 @@
-Return-Path: <linux-nfs+bounces-6290-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6291-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1C0996E65B
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 01:35:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 094C196E662
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 01:39:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 049871C236C2
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 23:35:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CF921F23533
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 23:39:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4411A727D;
-	Thu,  5 Sep 2024 23:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A092B1A727D;
+	Thu,  5 Sep 2024 23:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1jajGzU"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU1QrnwV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MJoSVTgt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU1QrnwV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MJoSVTgt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4D254F87;
-	Thu,  5 Sep 2024 23:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C65F5381B
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 23:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725579343; cv=none; b=IPlnunm+2A24eGcsu5zF+a/6fKftA7p0e5XKn3UzFauj2Lp2VY0yRfX/HWesBuwRz+Meu1lHrYvJJJq3isQB/dY4p44MgDx8JeemQn+jAVJpSxAEfbroj2eCpek/OF2GseDNh1ykytcMnlQHWfTtQQijchhK6jTzt8MwJwuiujQ=
+	t=1725579548; cv=none; b=Rx2TlQL4956/OydfOUAdTJcIN2cFronsSkA/PJz0tKT7WO+OW/b00ux+sm7qXKwLgqkEm1g7SsHmeSH7zJvpHk7xDmv6f90wEJKpdYHl/hhTqsoJV2bmCcYMSbNfe9jfp8H3wI5tHZIwWgGa0zuEOd6CrIJhVl0C8qmzYSCwqSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725579343; c=relaxed/simple;
-	bh=kdJBJm07vSWsMujAWNUkpnWYrq/ajC+MWp90UGPtRbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LhR4+1na9d3O6CmLLwVwyXG/8tMDKLAgXP1pr46bwkB9XDLcgPCdXIMlu2Onl1eGnc8CiRUMwzzvXPucu15nIffBVyL2rNIC5DnyDuHCDZXw4HeaC8rh5B7pQ8Jkye91bcwRO1IJxRk0jp1J5RHRKSPv1KE8Lkg/T90JSkTUcEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1jajGzU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3FA6C4CEC3;
-	Thu,  5 Sep 2024 23:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725579343;
-	bh=kdJBJm07vSWsMujAWNUkpnWYrq/ajC+MWp90UGPtRbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U1jajGzUrXBq4LkcyHu9Gawoocw7falpk/v+3iLXUWwe0zfR6FB9ddMFQ5lHxbzVF
-	 NybCr2auPZbMJ6AjlNFbPuH4I3ustsyovf4+UZ3UAG9X9IDlYgdsDMfjYLcIeDTikx
-	 UVGePWLQ/7mJo7Yn8EVL6x0o7GEXLQ5/weIy4GYj4pLoAZEw9J0Bqc+mFKuKq2lAl2
-	 gwN3KPjfat0dhVFHYjpyMusXWkyxxwEsXjJG7cdCuC8hGG4lJZpSoJZHw6v8FQpPfQ
-	 uKgv07v5u1309uNVSwj6OJLDH0hBmcQt+VeofpTBj0l4uENtngmrt7fwBpheI3NQ5d
-	 17hw0avXtMsmQ==
-Date: Thu, 5 Sep 2024 19:35:41 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
-	Alasdair Kergon <agk@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Sami Tolvanen <samitolvanen@google.com>, linux-nfs@vger.kernel.org
-Subject: sharing rescuer threads when WQ_MEM_RECLAIM needed? [was: Re: dm
- verity: don't use WQ_MEM_RECLAIM]
-Message-ID: <ZtpATbuopBFAzl89@kernel.org>
-References: <20240904040444.56070-1-ebiggers@kernel.org>
- <086a76c4-98da-d9d1-9f2f-6249c3d55fe9@redhat.com>
- <20240905223555.GA1512@sol.localdomain>
+	s=arc-20240116; t=1725579548; c=relaxed/simple;
+	bh=7TGUXNl5ocxe1CmO4vMNBdycJ2RY2Ga8vA9ThNTKgfs=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=mZnD8IOZWCdmEkKVT0Yq1SkAvGqYW17bU1PRq9ktPO+P8CiZkX9dAeEqn5frCnbhq7mqlojnIFPddKg47lhmHacmwI96LN7yBOHCERYktd5kfxlBjm0oNQjYK12SNEvX/vj73w4CqDIES9KVjOCpotWRtqdU0w50Ryi5OfyK4X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU1QrnwV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MJoSVTgt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU1QrnwV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MJoSVTgt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 96DD21F844;
+	Thu,  5 Sep 2024 23:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725579544; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TpNyxKo+hwSp00e6SNsMpWfPwilCEIxEXyF1Ktmmos=;
+	b=tU1QrnwVUmP5GHAtdFwPztpz5biM/qDKuPG1xoLih9ChrpFdd6jnvTmLSRXUVL2aA5oH1d
+	dirvG6b5tzQhcfGNEBHdQj9YG7airBWDaUGyxY4vXSmBbNWcbqrfNxm98KqJDfiWIjay6k
+	j4F6yUVN3LCpF+F4Oyd9EBHbzG+YxO0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725579544;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TpNyxKo+hwSp00e6SNsMpWfPwilCEIxEXyF1Ktmmos=;
+	b=MJoSVTgtrM1P1YTS2X+IOZhe8SOzsDQD02LWjoeFl82fiTmtfKoU+Z2cms2r7T5e9/Svp8
+	Wyv37ot8NthAq3DA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tU1QrnwV;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MJoSVTgt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725579544; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TpNyxKo+hwSp00e6SNsMpWfPwilCEIxEXyF1Ktmmos=;
+	b=tU1QrnwVUmP5GHAtdFwPztpz5biM/qDKuPG1xoLih9ChrpFdd6jnvTmLSRXUVL2aA5oH1d
+	dirvG6b5tzQhcfGNEBHdQj9YG7airBWDaUGyxY4vXSmBbNWcbqrfNxm98KqJDfiWIjay6k
+	j4F6yUVN3LCpF+F4Oyd9EBHbzG+YxO0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725579544;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TpNyxKo+hwSp00e6SNsMpWfPwilCEIxEXyF1Ktmmos=;
+	b=MJoSVTgtrM1P1YTS2X+IOZhe8SOzsDQD02LWjoeFl82fiTmtfKoU+Z2cms2r7T5e9/Svp8
+	Wyv37ot8NthAq3DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7408813419;
+	Thu,  5 Sep 2024 23:39:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AHv+CRZB2mZ7LgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 05 Sep 2024 23:39:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905223555.GA1512@sol.localdomain>
+From: "NeilBrown" <neilb@suse.de>
+To: "Mike Snitzer" <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Anna Schumaker" <anna@kernel.org>,
+ "Trond Myklebust" <trondmy@hammerspace.com>
+Subject: Re: [PATCH v16 26/26] nfs: add "NFS Client and Server Interlock"
+ section to localio.rst
+In-reply-to: <20240905191011.41650-27-snitzer@kernel.org>
+References: <20240905191011.41650-1-snitzer@kernel.org>,
+ <20240905191011.41650-27-snitzer@kernel.org>
+Date: Fri, 06 Sep 2024 09:38:55 +1000
+Message-id: <172557953536.4433.10240425539464458018@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 96DD21F844
+X-Spam-Score: -6.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Sep 05, 2024 at 03:35:55PM -0700, Eric Biggers wrote:
-> On Thu, Sep 05, 2024 at 08:21:46PM +0200, Mikulas Patocka wrote:
-> > 
-> > 
-> > On Tue, 3 Sep 2024, Eric Biggers wrote:
-> > 
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > Since dm-verity doesn't support writes, the kernel's memory reclaim code
-> > > will never wait on dm-verity work.  That makes the use of WQ_MEM_RECLAIM
-> > > in dm-verity unnecessary.  WQ_MEM_RECLAIM has been present from the
-> > > beginning of dm-verity, but I could not find a justification for it;
-> > > I suspect it was just copied from dm-crypt which does support writes.
-> > > 
-> > > Therefore, remove WQ_MEM_RECLAIM from dm-verity.  This eliminates the
-> > > creation of an unnecessary rescuer thread per dm-verity device.
-> > > 
-> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > 
-> > Hmm. I can think about a case where you have read-only dm-verity device, 
-> > on the top of that you have dm-snapshot device and on the top of that you 
-> > have a writable filesystem.
-> > 
-> > When the filesystem needs to write data, it submits some write bios. When 
-> > dm-snapshot receives these write bios, it will read from the dm-verity 
-> > device and write to the snapshot's exception store device. So, dm-verity 
-> > needs WQ_MEM_RECLAIM in this case.
-> > 
-> > Mikulas
-> > 
-> 
-> Yes, unfortunately that sounds correct.
-> 
-> This means that any workqueue involved in fulfilling block device I/O,
-> regardless of whether that I/O is read or write, has to use WQ_MEM_RECLAIM.
-> 
-> I wonder if there's any way to safely share the rescuer threads.
+On Fri, 06 Sep 2024, Mike Snitzer wrote:
+> This section answers a new FAQ entry:
+>=20
+> 9. How does LOCALIO make certain that object lifetimes are managed
+>    properly given NFSD and NFS operate in different contexts?
+>=20
+>    See the detailed "NFS Client and Server Interlock" section below.
+>=20
+> The first half of the section details NeilBrown's elegant design
+> for LOCALIO's nfs_uuid_t based interlock and is heavily based on
+> Neil's "net namespace refcounting" description here:
+>   https://marc.info/?l=3Dlinux-nfs&m=3D172498546024767&w=3D2
+>=20
+> The second half of the section details the per-cpu-refcount introduced
+> to ensure NFSD's nfsd_serv isn't destroyed while in use by a LOCALIO
+> client.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Reviewed-by: NeilBrown <neilb@suse.de>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  Documentation/filesystems/nfs/localio.rst | 68 +++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>=20
+> diff --git a/Documentation/filesystems/nfs/localio.rst b/Documentation/file=
+systems/nfs/localio.rst
+> index ef3851d48133..4637c0b34753 100644
+> --- a/Documentation/filesystems/nfs/localio.rst
+> +++ b/Documentation/filesystems/nfs/localio.rst
+> @@ -150,6 +150,11 @@ FAQ
+>     __fh_verify().  So they get handled exactly the same way for LOCALIO
+>     as they do for non-LOCALIO.
+> =20
+> +9. How does LOCALIO make certain that object lifetimes are managed
+> +   properly given NFSD and NFS operate in different contexts?
+> +
+> +   See the detailed "NFS Client and Server Interlock" section below.
+> +
+>  RPC
+>  =3D=3D=3D
+> =20
+> @@ -209,6 +214,69 @@ objects to span from the host kernel's nfsd to per-con=
+tainer knfsd
+>  instances that are connected to nfs client's running on the same local
+>  host.
+> =20
+> +NFS Client and Server Interlock
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> +
+> +LOCALIO provides the nfs_uuid_t object and associated interfaces to
+> +allow proper network namespace (net-ns) and NFSD object refcounting:
+> +
+> +    We don't want to keep a long-term counted reference on each NFSD's
+> +    net-ns in the client because that prevents a server container from
+> +    completely shutting down.
+> +
+> +    So we avoid taking a reference at all and rely on the per-cpu
+> +    reference to the server (detailed below) being sufficient to keep
+> +    the net-ns active. This involves allowing the NFSD's net-ns exit
+> +    code to iterate all active clients and clear their ->net pointers
+> +    (which are needed to find the per-cpu-refcount for the nfsd_serv).
+> +
+> +    Details:
+> +
+> +     - Embed nfs_uuid_t in nfs_client. nfs_uuid_t provides a list_head
+> +       that can be used to find the client. It does add the 16-byte
+> +       uuid_t to nfs_client so it is bigger than needed (given that
+> +       uuid_t is only used during the initial NFS client and server
+> +       LOCALIO handshake to determine if they are local to each other).
+> +       If that is really a problem we can find a fix.
+> +
+> +     - When the nfs server confirms that the uuid_t is local, it moves
+> +       the nfs_uuid_t onto a per-net-ns list in NFSD's nfsd_net.
+> +
+> +     - When each server's net-ns is shutting down - in a "pre_exit"
+> +       handler, all these nfs_uuid_t have their ->net cleared. There is
+> +       an rcu_synchronize() call between pre_exit() handlers and exit()
+> +       handlers so any caller that sees nfs_uuid_t ->net as not NULL can
+> +       safely manage the per-cpu-refcount for nfsd_serv.
+> +
+> +     - The client's nfs_uuid_t is passed to nfsd_open_local_fh() so it
+> +       can safely dereference ->net in a private rcu_read_lock() section
+> +       to allow safe access to the associated nfsd_net and nfsd_serv.
+> +
 
-Oh, I like that idea, yes please! (would be surprised if it exists,
-but I love being surprised!).  Like Mikulas pointed out, we have had
-to deal with fundamental deadlocks due to resource sharing in DM.
-Hence the need for guaranteed forward progress that only
-WQ_MEM_RECLAIM can provide.
+Can we add to the list of "things to clean up after the code lands" a
+note that this documentation isn't quite up-to-date and needs to be
+revisited?
 
-All said, I'd like the same for NFS LOCALIO, we unfortunately have to
-enable WQ_MEM_RECLAIM for LOCALIO writes:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next&id=85cdb98067c1c784c2744a6624608efea2b561e7
+NeilBrown
 
-But in general LOCALIO's write path is a prime candidate for further
-optimization -- I look forward to continue that line of development
-once LOCALIO lands upstream.
 
-Mike
+> +So LOCALIO required the introduction and use of NFSD's percpu_ref to
+> +interlock nfsd_destroy_serv() and nfsd_open_local_fh(), to ensure each
+> +nn->nfsd_serv is not destroyed while in use by nfsd_open_local_fh(), and
+> +warrants a more detailed explanation:
+> +
+> +    nfsd_open_local_fh() uses nfsd_serv_try_get() before opening its
+> +    nfsd_file handle and then the caller (NFS client) must drop the
+> +    reference for the nfsd_file and associated nn->nfsd_serv using
+> +    nfs_file_put_local() once it has completed its IO.
+> +
+> +    This interlock working relies heavily on nfsd_open_local_fh() being
+> +    afforded the ability to safely deal with the possibility that the
+> +    NFSD's net-ns (and nfsd_net by association) may have been destroyed
+> +    by nfsd_destroy_serv() via nfsd_shutdown_net() -- which is only
+> +    possible given the nfs_uuid_t ->net pointer managemenet detailed
+> +    above.
+> +
+> +All told, this elaborate interlock of the NFS client and server has been
+> +verified to fix an easy to hit crash that would occur if an NFSD
+> +instance running in a container, with a LOCALIO client mounted, is
+> +shutdown. Upon restart of the container and associated NFSD the client
+> +would go on to crash due to NULL pointer dereference that occurred due
+> +to the LOCALIO client's attempting to nfsd_open_local_fh(), using
+> +nn->nfsd_serv, without having a proper reference on nn->nfsd_serv.
+> +
+>  NFS Client issues IO instead of Server
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> --=20
+> 2.44.0
+>=20
+>=20
+
 
