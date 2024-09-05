@@ -1,68 +1,49 @@
-Return-Path: <linux-nfs+bounces-6255-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6256-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C8DD96E1A3
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 20:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7103A96E1BD
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 20:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCF7F28BAE7
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 18:10:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 243CC28400A
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 18:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124E617A599;
-	Thu,  5 Sep 2024 18:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7A11803D;
+	Thu,  5 Sep 2024 18:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgwqGNo7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqmbpcOb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96971C2E;
-	Thu,  5 Sep 2024 18:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A1517BA5
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 18:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725559805; cv=none; b=tn9YC28/gCWjKhU7wCdeVx09se2njBihJHOwqxoPuPP+PZQnKNHsHlOQ/1USS/3KSSpONZm6O4rQmfYbhZ1QT+oe6zO9FrErNIxD2n1BixBbweDWhSduk5QwLAYzAC2ml3xsvP1aLEeAt6sshxwtmkiqDbrpKxutzJVF2PbTwB0=
+	t=1725560223; cv=none; b=U+MVoJy/RtAzlO0scDX+By3PLleIgdp5ncxVdl1/j3vng/JFjgXE2TpvjOOzA6X8I75xzyLCFFfAKdLu06+hoSizJIT43JdVtxdAewuvITu71JW3wcvDYuQaSYtVCxJ6/L+stSPcsBZgheLZULsIdCPEelsxxbqzXR0SwS6RHRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725559805; c=relaxed/simple;
-	bh=u8nKmNx9UeqvI8DbS4RLTw4lZnLX0PsOy6Bt6p6ccYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c1hH+VxfATQwLn+WVocz+lSRzrhAILElvvNCyLh+lMiKliXuLsmsH1uqtS+VhPP02rB8ThZfzhRIR2hnsV0Q2Ff7TiVzSwXcwxQJZuz/Fhs/Ey0obEobruqFxJl8sgEGfjlykjr+gRoiU4Mhd0kiXjZ2jhk9V+5PgY+aABhx+dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgwqGNo7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582FEC4CEC3;
-	Thu,  5 Sep 2024 18:10:03 +0000 (UTC)
+	s=arc-20240116; t=1725560223; c=relaxed/simple;
+	bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qIxI1VtZE8j3lVm2UvFUt+bMaFtwJVzydxBwtZ43uw6qJCTDUiYky/h/DWgbtMKPr+Er7mm+we4FW8ICqQlFs8lonAmq3Mnvb5iCsE652rlS7D1g12bcQL0nA1V4AIvbNe0CRpzCa/X8H5WyhbNpdvty7aZgTowzg8I+VhBUKKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqmbpcOb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC67C4CEC3;
+	Thu,  5 Sep 2024 18:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725559804;
-	bh=u8nKmNx9UeqvI8DbS4RLTw4lZnLX0PsOy6Bt6p6ccYg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PgwqGNo7dnG3LvlwzFk49NWeQQCsRqr7SELJibe4/uwfHd5iepMZJDgY4FiHE346D
-	 IgDoqYXlOVCRlzwoZc59YYOU7bK0ocD1LkoeKD1LUvPgTbZ4bdVhu2YVzpwMASSU4U
-	 xaHnYIGXlpFwIF3kGYc+ptaf5/4V6DTybqU01rnHiwWR8hbAYb6NOTp4t81mK5m+ZJ
-	 xxWANAYCMp9s11UzMI3Fz8C1/V1zzb/oTOG/dAbL3eJnoV6MMtOHxYvMoW5nxR446A
-	 ilVxN5c4pHZ9D5vkW1FOWszReiGw5tojue9KaVMGwvVIE6Zy4hAcT7VXt7rtvgyYAZ
-	 gajtaLAeoO9XA==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Tom Haynes <loghyr@gmail.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 00/11] nfsd: implement the "delstid" draft
-Date: Thu,  5 Sep 2024 14:09:43 -0400
-Message-ID: <172555970052.5799.3415374189768431807.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240905-delstid-v4-0-d3e5fd34d107@kernel.org>
-References: <20240905-delstid-v4-0-d3e5fd34d107@kernel.org>
+	s=k20201202; t=1725560223;
+	bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=rqmbpcObhgdXZjODjVIcMjguo2h03u8wOaDZdM0Y1OaO6iZokiYtuADkbC3rBG39A
+	 taUyhzAzqNIiRahSgH1fpLkkivvltSUmrWxAkWV/PqDGUN8nzLGQnfTh3jmxLbgiPr
+	 nekpGJ4sbEmCUbppFX7UA95ESFQrdn23JhNIV1c6PCrOg1fw69ER+SgGTE+ddQTLKl
+	 NPG0BTQrFOddyNBRRiWeiEa0ucsTNUrSm6CpXLP9slTnb8Jta7aHbENIKzjYwAmMq5
+	 IzfjpJCjNgf2YT0fsOYR3f1W0zUUPWbz7xjfOiK17nWvkI2OAn0YN0fYD/0WOfvuWI
+	 OJulQZAwHnLrA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH pynfs 0/2] pynfs: add CB_GETATTR tests
+Date: Thu, 05 Sep 2024 14:16:56 -0400
+Message-Id: <20240905-cb_getattr-v1-0-0af05c68234f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,46 +51,52 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJj12WYC/x3MQQqAIBBA0avErBM0DKyrRITWaLMxUYlCvHvS8
+ i3+L5AwEiaYuwIRb0p0+QbRd7Cf2jtkdDTDwAfJJz6y3WwOs845MnUYoaQejTQWWhAiWnr+2QL
+ h9TbBWusH0Hzhz2MAAAA=
+To: Calum Mackay <calum.mackay@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=839; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=PDxwStz2B6l2FgK+uI8VljfYUciXVxsKnsNywRmRrwk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm2fWe34X9P6FzqO23v52X1GmpEHy4mou2JknYH
+ px75gQNgPWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZtn1ngAKCRAADmhBGVaC
+ FcFAEADESUJGAJmFQpO85VXw4O00mNt8mTrVc+Me2ls2gxFxgNTnXnetXCR0Ij8htKuehsodx5t
+ 5IZOMVIYqE+nd27qOSWyICMIEqZp5t0AV3QftKrlyZ4knQZhnTqe3mFhWW53f9GYZT331i3lPh+
+ dlCpbuVKKBnzF1QajSJrk5FfdgA2gdWr3Yfe6FaA7xdd1APmE5tLpv/Lva9s+LmC10+EIia6GnX
+ RHul7RgSdbUk9Halz+rEKT8hk7ia+UBMj/iLKy7+BnRP0AenGcWOs+hyPIdrXNIphxllnQJmbSU
+ xdLNb7EFtN7zuwOSDzKRhXgccAXldKLoZ+rj2g1dA0jg3E3c9zbJGB1Qv+giLDSxWi/ASCY7jzw
+ NEk5/dkcenlxQqDGvd0zAFQPOFhsaYG+YMEp4j0wo6liL2Ewf7oAmujfp4UeheEN7ytdWIOpUUA
+ BHDtcPtTBY/kpzepGaCkq8PDSQGO23H/eDX7eDzQl17JjtUheuxEvaVo1L/kO1MqrfOPYWzXG/z
+ 5l58lBiuLoN5Grrhu0s9uKGeF9Iu+1AqSMzx2tA5i2cl5h06kWzKfKGxbSg4q5usdtrknyuvsHB
+ 6Y+1BGQdf4T8VwGPLS2iL1S4q+68mee+kunxyjEPEnhNV7gfbktc+cH85LLtrDDwUxBP42+iEiq
+ WBoDLF+xXKcSU2Q==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Just a patch to add a couple of tests for CB_GETATTR support, and
+another to update the CONTRIBUTING document. I've also taken a stab at
+adding support for the delstid draft to pynfs, but I'm having trouble
+getting the xdr changes to build properly. I'll send a separate email
+about that.
 
-On Thu, 05 Sep 2024 08:41:44 -0400, Jeff Layton wrote:                                              
-> Sorry this has taken me a bit to re-post. I've been working on some
-> pynfs testcases for CB_GETATTR, and have found more bugs in our
-> implementation.
-> 
-> This repost is based on top of Chuck's nfsd-next branch. The first two
-> patches fix a couple of different bugs in how we handle the change attr.
-> 
-> [...]                                                                        
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (2):
+      pynfs: update maintainer info
+      nfs4.1: add two CB_GETATTR tests
 
-Dropped 9/11, applied the rest to nfsd-next for v6.12, thanks!                                                                
+ CONTRIBUTING                          |  6 +--
+ nfs4.1/nfs4client.py                  |  6 +++
+ nfs4.1/server41tests/st_delegation.py | 72 ++++++++++++++++++++++++++++++++++-
+ 3 files changed, 80 insertions(+), 4 deletions(-)
+---
+base-commit: 08ffc1747800760c57f8db4eb02e62ece267591f
+change-id: 20240905-cb_getattr-8db184a5b4bf
 
-[01/11] nfsd: fix initial getattr on write delegation
-        commit: 51158790589f1ed3a98f2d590b071ea76bd0b19d
-[02/11] nfsd: drop the ncf_cb_bmap field
-        commit: 95cc4b27389630394dd42a5d7e12dfc92e82e49d
-[03/11] nfsd: don't request change attr in CB_GETATTR once file is modified
-        commit: 4374695a6b0ffdce0c9dce1d7833f87d5cc622b4
-[04/11] nfsd: drop the nfsd4_fattr_args "size" field
-        commit: 6cb6bcdbdf416ad24dcf430f8b88d7c38810efc2
-[05/11] nfsd: have nfsd4_deleg_getattr_conflict pass back write deleg pointer
-        commit: eecc86f5e5390c64e5f85241b8872f081dd7c520
-[06/11] nfs_common: make include/linux/nfs4.h include generated nfs4.h
-        commit: 4443c4f509e74bb91e059123eb8b42ad6fd666fd
-[07/11] nfsd: add support for FATTR4_OPEN_ARGUMENTS
-        commit: 9d0b846784f084479c5beeb61458f0d38ac16f1e
-[08/11] nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
-        commit: 91556251507771f943c2f04b2ffbf517908bbb48
-[09/11] fs: handle delegated timestamps in setattr_copy_mgtime
-        (no commit info)
-[10/11] nfsd: add support for delegated timestamps
-        commit: 921347aabef19b4df68d25d4327091b4a0554bac
-[11/11] nfsd: handle delegated timestamps in SETATTR
-        commit: 8dd7cf087ba772634cba60ab922febae0b756271                                                                      
-
---                                                                              
-Chuck Lever
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
