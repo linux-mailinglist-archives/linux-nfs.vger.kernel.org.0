@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-6259-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6260-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B9D796E2C5
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B18796E2C6
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 21:10:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B348287308
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35DEB287309
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Sep 2024 19:10:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C332D18BC31;
-	Thu,  5 Sep 2024 19:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD77218C354;
+	Thu,  5 Sep 2024 19:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGwv2eVL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5SyJ82p"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F975158DC8
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E5F18A6B0
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Sep 2024 19:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725563413; cv=none; b=p2JWpGkFj/f+KCFD4ICVvUssmqMF8b4GpWvbCh1KvxEu4ExpDtqvtxq5KG7b30is49AC4yT1HpDwAGfUcD0rL5c//WhJ/5lvPO1MZ3Do4hFUoX/wT+k1jDDWXxFmUCtHGFAp0bKu8k70Ym31d+4OCPmGjasGvBG1mfs4fkl1DRI=
+	t=1725563414; cv=none; b=qYoUFDbN3KJhItBLnJiapjEgP8m6STBWpI9T7af7akXOtEl4pcgq2BqNAEo5g8oh5ajWPnsDI1e/0AMFJ1h1c9oJ4/TsbtEavEaIKhpA5WzlHQe/HqnNnjeXRPZL6t6sUU/9SohSMupEuytH3XcdooHVo87W7h6iq+omT26nlYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725563413; c=relaxed/simple;
-	bh=e6QQgInlWJ3IMMqy/mPD2ZKdbHs3YnGwwD1ByaKWhIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mo4L4vwT+kZFOhW1tuiuKia2CKao8E7k3wUgT933JTG8zeEXjaTIJOCOok3f/J7a6UJTo2yZL/+JhI3pHNdtT5A7Jz/7ULuHkPLFQtplKCB869yCrSjYqXfwi0ayxrCEfkiX5t8kLgxV5oeCp4ePZ0jccKJLvTMNJCqvGWl0bqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGwv2eVL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF30C4CEC3;
-	Thu,  5 Sep 2024 19:10:12 +0000 (UTC)
+	s=arc-20240116; t=1725563414; c=relaxed/simple;
+	bh=kPfWYcPcB0kb/R9PUyxXkIokFotnwFlsZTOkQc+UwkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RFIXP2KsoYPiNJHnxpL0ppWvLJizs1JVKYuSOQCz4QzskglWxYBklPbG7l9al3rC7bKsS1xRgYsn0SN8sA1tCIJoiGms1OHYSu3QKA7meHD0pVOqt5t4C2vbrO+Glq2EjjIZl0Qi5Ewd/YzB+X2TWxgoHCVDP5+RXnTIA44w8UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5SyJ82p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421A6C4CEC9;
+	Thu,  5 Sep 2024 19:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725563413;
-	bh=e6QQgInlWJ3IMMqy/mPD2ZKdbHs3YnGwwD1ByaKWhIM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hGwv2eVLE8nTNK92VGHvEa8kQJvalAB+SsBnKNM+20fVOY3BbGCbs0BqdCjavWpcu
-	 vTBFguH6z5UftUJ4tAOQe3+WfqnqJ/3eQxI1S4dRGoK3fEHFpzJ3Qs2Cfnn4khTZhy
-	 hP0f6KTLH5IfwyxsCxVA3TGBdMsyfJ8wbuCq7QtM/nHNmDQSt5LEx2E62Y1TFwtCDD
-	 hdzXMh4/fijV+zoS1nz1dbuaRTXRUJegmJ0LCiDX1HpbcE5LOEmKVJThl8yCGVhH3n
-	 jXxbTxbB7OqR4akCCk7/gEibot+IUtomXN3i1fz/mj5l16cCvqJhGpA/V4Ho3p19p2
-	 /OhykXko8SrQA==
+	s=k20201202; t=1725563414;
+	bh=kPfWYcPcB0kb/R9PUyxXkIokFotnwFlsZTOkQc+UwkQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V5SyJ82pHVyxPv1GzcLUGWvM4EzCHR6fBeHcootDI9w2DdnTvxtGa70nCL6bHL0Xk
+	 MCmaIBj6U2RM5wHK24lcIbSVOI0qcwxLNf1p3Xs9JO8IpZe9ku44m/H7t5zVgKLfFJ
+	 Jymi106oKHaLD9lWl0RfB/J29EDjbERj8ZUacYmwNQoSyZchJNsIl0HNtWOqTo06FY
+	 3x7r9d+xGFTtYDEJWAudCwFXS00mLWXT+x+/vc6Mf5ItXeJ9APSDj5wkhQzLChkNyC
+	 B4BgxOKLtz981+jmjxn1yZSze9sNxZHgtpAoKA68F7CYSFhB3l6/FYLHkEwziPkLGi
+	 LXSSiFQDsDxkg==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -47,10 +48,12 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	NeilBrown <neilb@suse.de>
-Subject: [PATCH v16 00/26] nfs/nfsd: add support for LOCALIO
-Date: Thu,  5 Sep 2024 15:09:34 -0400
-Message-ID: <20240905191011.41650-1-snitzer@kernel.org>
+Subject: [PATCH v16 01/26] nfs_common: factor out nfs_errtbl and nfs_stat_to_errno
+Date: Thu,  5 Sep 2024 15:09:35 -0400
+Message-ID: <20240905191011.41650-2-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240905191011.41650-1-snitzer@kernel.org>
+References: <20240905191011.41650-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,133 +62,539 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Common nfs_stat_to_errno() is used by both fs/nfs/nfs2xdr.c and
+fs/nfs/nfs3xdr.c
 
-These latest changes are available in my git tree here:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
+Will also be used by fs/nfsd/localio.c
 
-The NFSD changes have all settled with this v16.  This is the natural
-pivot point for NFS client review to be completed (my understanding
-from Trond is that Anna will be taking a close look).
-
-Changes since v15, which are reflected in the top 3 commits on this
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next.v15-with-fixups
-
-- Fixes to nfs_to to follow normal operations table pattern
-  Switch 'nfs_to' to a proper pointer that just needs a simple
-  assignment rather than memcpy() to initialize.  Updated all 'nfs_to'
-  callers accordingly.  Removed the associated 'nfs_to_<nfsd_func>_t'
-  function pointer typedefs that really weren't helpful.
-
-- Removed EXPORT_SYMBOL_GPL for nfsd_serv_put, nfsd_file_put_local
-  and nfsd_file_file (these symbols are only used directly in nfsd, but
-  they are exposed to nfs via 'nfs_to' operations table).
-
-- A few sparse fixes dealing primarily with rcu usage.
-
-- nfs_common: push nfsd_open_local_fh rcu requirements to caller.
-  Now nfs_open_local_fh safely gets reference to nfsd_serv and then
-  drops rcu before its call to nfs_to->nfsd_open_local_fh.  If that
-  call fails then nfs_to->nfsd_serv_put is needed.  This cleans up the
-  awkward rcu bouncing that was in nfsd_open_local_fh but introduces
-  the need for both nfs_to->nfsd_serv_try_get and nfs_to->nfsd_serv_put.
-
-All review appreciated, thanks!
-Mike
-
-Chuck Lever (2):
-  NFSD: Avoid using rqstp->rq_vers in nfsd_set_fh_dentry()
-  NFSD: Short-circuit fh_verify tracepoints for LOCALIO
-
-Mike Snitzer (12):
-  nfs_common: factor out nfs_errtbl and nfs_stat_to_errno
-  nfs_common: factor out nfs4_errtbl and nfs4_stat_to_errno
-  nfs: factor out {encode,decode}_opaque_fixed to nfs_xdr.h
-  nfsd: add nfsd_serv_try_get and nfsd_serv_put
-  SUNRPC: remove call_allocate() BUG_ONs
-  nfs_common: add NFS LOCALIO auxiliary protocol enablement
-  nfs_common: prepare for the NFS client to use nfsd_file for LOCALIO
-  nfsd: implement server support for NFS_LOCALIO_PROGRAM
-  nfs: pass struct nfsd_file to nfs_init_pgio and nfs_init_commit
-  nfs: implement client support for NFS_LOCALIO_PROGRAM
-  nfs: add Documentation/filesystems/nfs/localio.rst
-  nfs: add "NFS Client and Server Interlock" section to localio.rst
-
-NeilBrown (5):
-  NFSD: Handle @rqstp == NULL in check_nfsd_access()
-  NFSD: Refactor nfsd_setuser_and_check_port()
-  nfsd: factor out __fh_verify to allow NULL rqstp to be passed
-  nfsd: add nfsd_file_acquire_local()
-  SUNRPC: replace program list with program array
-
-Trond Myklebust (4):
-  nfs: enable localio for non-pNFS IO
-  pnfs/flexfiles: enable localio support
-  nfs/localio: use dedicated workqueues for filesystem read and write
-  nfs: add FAQ section to Documentation/filesystems/nfs/localio.rst
-
-Weston Andros Adamson (3):
-  SUNRPC: add svcauth_map_clnt_to_svc_cred_local
-  nfsd: add LOCALIO support
-  nfs: add LOCALIO support
-
- Documentation/filesystems/nfs/localio.rst | 357 ++++++++++
- fs/Kconfig                                |  23 +
- fs/nfs/Kconfig                            |   1 +
- fs/nfs/Makefile                           |   1 +
- fs/nfs/client.c                           |  15 +-
- fs/nfs/filelayout/filelayout.c            |   6 +-
- fs/nfs/flexfilelayout/flexfilelayout.c    |  56 +-
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
- fs/nfs/inode.c                            |  57 +-
- fs/nfs/internal.h                         |  53 +-
- fs/nfs/localio.c                          | 757 ++++++++++++++++++++++
- fs/nfs/nfs2xdr.c                          |  70 +-
- fs/nfs/nfs3xdr.c                          | 108 +--
- fs/nfs/nfs4xdr.c                          |  84 +--
- fs/nfs/nfstrace.h                         |  61 ++
- fs/nfs/pagelist.c                         |  16 +-
- fs/nfs/pnfs_nfs.c                         |   2 +-
- fs/nfs/write.c                            |  12 +-
- fs/nfs_common/Makefile                    |   5 +
- fs/nfs_common/common.c                    | 134 ++++
- fs/nfs_common/nfslocalio.c                | 172 +++++
- fs/nfsd/Kconfig                           |   1 +
- fs/nfsd/Makefile                          |   1 +
- fs/nfsd/export.c                          |  30 +-
- fs/nfsd/filecache.c                       | 101 ++-
- fs/nfsd/filecache.h                       |   5 +
- fs/nfsd/localio.c                         | 169 +++++
- fs/nfsd/netns.h                           |  12 +-
- fs/nfsd/nfsctl.c                          |  27 +-
- fs/nfsd/nfsd.h                            |   6 +-
- fs/nfsd/nfsfh.c                           | 137 ++--
- fs/nfsd/nfsfh.h                           |   2 +
- fs/nfsd/nfssvc.c                          | 105 ++-
- fs/nfsd/trace.h                           |  21 +-
- fs/nfsd/vfs.h                             |   2 +
- include/linux/nfs.h                       |   9 +
- include/linux/nfs_common.h                |  17 +
- include/linux/nfs_fs_sb.h                 |   9 +
- include/linux/nfs_xdr.h                   |  20 +-
- include/linux/nfslocalio.h                |  74 +++
- include/linux/sunrpc/svc.h                |   7 +-
- include/linux/sunrpc/svcauth.h            |   5 +
- net/sunrpc/clnt.c                         |   6 -
- net/sunrpc/svc.c                          |  68 +-
- net/sunrpc/svc_xprt.c                     |   2 +-
- net/sunrpc/svcauth.c                      |  28 +
- net/sunrpc/svcauth_unix.c                 |   3 +-
- 47 files changed, 2454 insertions(+), 409 deletions(-)
- create mode 100644 Documentation/filesystems/nfs/localio.rst
- create mode 100644 fs/nfs/localio.c
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfs/Kconfig             |   1 +
+ fs/nfs/nfs2xdr.c           |  70 +-----------------------
+ fs/nfs/nfs3xdr.c           | 108 +++++++------------------------------
+ fs/nfs/nfs4xdr.c           |   4 +-
+ fs/nfs_common/Makefile     |   2 +
+ fs/nfs_common/common.c     |  67 +++++++++++++++++++++++
+ fs/nfsd/Kconfig            |   1 +
+ include/linux/nfs_common.h |  16 ++++++
+ 8 files changed, 109 insertions(+), 160 deletions(-)
  create mode 100644 fs/nfs_common/common.c
- create mode 100644 fs/nfs_common/nfslocalio.c
- create mode 100644 fs/nfsd/localio.c
  create mode 100644 include/linux/nfs_common.h
- create mode 100644 include/linux/nfslocalio.h
 
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 57249f040dfc..0eb20012792f 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -4,6 +4,7 @@ config NFS_FS
+ 	depends on INET && FILE_LOCKING && MULTIUSER
+ 	select LOCKD
+ 	select SUNRPC
++	select NFS_COMMON
+ 	select NFS_ACL_SUPPORT if NFS_V3_ACL
+ 	help
+ 	  Choose Y here if you want to access files residing on other
+diff --git a/fs/nfs/nfs2xdr.c b/fs/nfs/nfs2xdr.c
+index c19093814296..6e75c6c2d234 100644
+--- a/fs/nfs/nfs2xdr.c
++++ b/fs/nfs/nfs2xdr.c
+@@ -22,14 +22,12 @@
+ #include <linux/nfs.h>
+ #include <linux/nfs2.h>
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_common.h>
+ #include "nfstrace.h"
+ #include "internal.h"
+ 
+ #define NFSDBG_FACILITY		NFSDBG_XDR
+ 
+-/* Mapping from NFS error code to "errno" error code. */
+-#define errno_NFSERR_IO		EIO
+-
+ /*
+  * Declare the space requirements for NFS arguments and replies as
+  * number of 32bit-words
+@@ -64,8 +62,6 @@
+ #define NFS_readdirres_sz	(1+NFS_pagepad_sz)
+ #define NFS_statfsres_sz	(1+NFS_info_sz)
+ 
+-static int nfs_stat_to_errno(enum nfs_stat);
+-
+ /*
+  * Encode/decode NFSv2 basic data types
+  *
+@@ -1054,70 +1050,6 @@ static int nfs2_xdr_dec_statfsres(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	return nfs_stat_to_errno(status);
+ }
+ 
+-
+-/*
+- * We need to translate between nfs status return values and
+- * the local errno values which may not be the same.
+- */
+-static const struct {
+-	int stat;
+-	int errno;
+-} nfs_errtbl[] = {
+-	{ NFS_OK,		0		},
+-	{ NFSERR_PERM,		-EPERM		},
+-	{ NFSERR_NOENT,		-ENOENT		},
+-	{ NFSERR_IO,		-errno_NFSERR_IO},
+-	{ NFSERR_NXIO,		-ENXIO		},
+-/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+-	{ NFSERR_ACCES,		-EACCES		},
+-	{ NFSERR_EXIST,		-EEXIST		},
+-	{ NFSERR_XDEV,		-EXDEV		},
+-	{ NFSERR_NODEV,		-ENODEV		},
+-	{ NFSERR_NOTDIR,	-ENOTDIR	},
+-	{ NFSERR_ISDIR,		-EISDIR		},
+-	{ NFSERR_INVAL,		-EINVAL		},
+-	{ NFSERR_FBIG,		-EFBIG		},
+-	{ NFSERR_NOSPC,		-ENOSPC		},
+-	{ NFSERR_ROFS,		-EROFS		},
+-	{ NFSERR_MLINK,		-EMLINK		},
+-	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+-	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+-	{ NFSERR_DQUOT,		-EDQUOT		},
+-	{ NFSERR_STALE,		-ESTALE		},
+-	{ NFSERR_REMOTE,	-EREMOTE	},
+-#ifdef EWFLUSH
+-	{ NFSERR_WFLUSH,	-EWFLUSH	},
+-#endif
+-	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+-	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+-	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+-	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+-	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+-	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+-	{ NFSERR_BADTYPE,	-EBADTYPE	},
+-	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+-	{ -1,			-EIO		}
+-};
+-
+-/**
+- * nfs_stat_to_errno - convert an NFS status code to a local errno
+- * @status: NFS status code to convert
+- *
+- * Returns a local errno value, or -EIO if the NFS status code is
+- * not recognized.  This function is used jointly by NFSv2 and NFSv3.
+- */
+-static int nfs_stat_to_errno(enum nfs_stat status)
+-{
+-	int i;
+-
+-	for (i = 0; nfs_errtbl[i].stat != -1; i++) {
+-		if (nfs_errtbl[i].stat == (int)status)
+-			return nfs_errtbl[i].errno;
+-	}
+-	dprintk("NFS: Unrecognized nfs status value: %u\n", status);
+-	return nfs_errtbl[i].errno;
+-}
+-
+ #define PROC(proc, argtype, restype, timer)				\
+ [NFSPROC_##proc] = {							\
+ 	.p_proc	    =  NFSPROC_##proc,					\
+diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+index 60f032be805a..4ae01c10b7e2 100644
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -21,14 +21,13 @@
+ #include <linux/nfs3.h>
+ #include <linux/nfs_fs.h>
+ #include <linux/nfsacl.h>
++#include <linux/nfs_common.h>
++
+ #include "nfstrace.h"
+ #include "internal.h"
+ 
+ #define NFSDBG_FACILITY		NFSDBG_XDR
+ 
+-/* Mapping from NFS error code to "errno" error code. */
+-#define errno_NFSERR_IO		EIO
+-
+ /*
+  * Declare the space requirements for NFS arguments and replies as
+  * number of 32bit-words
+@@ -91,8 +90,6 @@
+ 				NFS3_pagepad_sz)
+ #define ACL3_setaclres_sz	(1+NFS3_post_op_attr_sz)
+ 
+-static int nfs3_stat_to_errno(enum nfs_stat);
+-
+ /*
+  * Map file type to S_IFMT bits
+  */
+@@ -1406,7 +1403,7 @@ static int nfs3_xdr_dec_getattr3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_default:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1445,7 +1442,7 @@ static int nfs3_xdr_dec_setattr3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1495,7 +1492,7 @@ static int nfs3_xdr_dec_lookup3res(struct rpc_rqst *req,
+ 	error = decode_post_op_attr(xdr, result->dir_attr, userns);
+ 	if (unlikely(error))
+ 		goto out;
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1537,7 +1534,7 @@ static int nfs3_xdr_dec_access3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_default:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1578,7 +1575,7 @@ static int nfs3_xdr_dec_readlink3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_default:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1658,7 +1655,7 @@ static int nfs3_xdr_dec_read3res(struct rpc_rqst *req, struct xdr_stream *xdr,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1728,7 +1725,7 @@ static int nfs3_xdr_dec_write3res(struct rpc_rqst *req, struct xdr_stream *xdr,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1795,7 +1792,7 @@ static int nfs3_xdr_dec_create3res(struct rpc_rqst *req,
+ 	error = decode_wcc_data(xdr, result->dir_attr, userns);
+ 	if (unlikely(error))
+ 		goto out;
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1835,7 +1832,7 @@ static int nfs3_xdr_dec_remove3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1881,7 +1878,7 @@ static int nfs3_xdr_dec_rename3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -1926,7 +1923,7 @@ static int nfs3_xdr_dec_link3res(struct rpc_rqst *req, struct xdr_stream *xdr,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /**
+@@ -2101,7 +2098,7 @@ static int nfs3_xdr_dec_readdir3res(struct rpc_rqst *req,
+ 	error = decode_post_op_attr(xdr, result->dir_attr, rpc_rqst_userns(req));
+ 	if (unlikely(error))
+ 		goto out;
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -2167,7 +2164,7 @@ static int nfs3_xdr_dec_fsstat3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -2243,7 +2240,7 @@ static int nfs3_xdr_dec_fsinfo3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -2304,7 +2301,7 @@ static int nfs3_xdr_dec_pathconf3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ /*
+@@ -2350,7 +2347,7 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_status:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ #ifdef CONFIG_NFS_V3_ACL
+@@ -2416,7 +2413,7 @@ static int nfs3_xdr_dec_getacl3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_default:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ static int nfs3_xdr_dec_setacl3res(struct rpc_rqst *req,
+@@ -2435,76 +2432,11 @@ static int nfs3_xdr_dec_setacl3res(struct rpc_rqst *req,
+ out:
+ 	return error;
+ out_default:
+-	return nfs3_stat_to_errno(status);
++	return nfs_stat_to_errno(status);
+ }
+ 
+ #endif  /* CONFIG_NFS_V3_ACL */
+ 
+-
+-/*
+- * We need to translate between nfs status return values and
+- * the local errno values which may not be the same.
+- */
+-static const struct {
+-	int stat;
+-	int errno;
+-} nfs_errtbl[] = {
+-	{ NFS_OK,		0		},
+-	{ NFSERR_PERM,		-EPERM		},
+-	{ NFSERR_NOENT,		-ENOENT		},
+-	{ NFSERR_IO,		-errno_NFSERR_IO},
+-	{ NFSERR_NXIO,		-ENXIO		},
+-/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
+-	{ NFSERR_ACCES,		-EACCES		},
+-	{ NFSERR_EXIST,		-EEXIST		},
+-	{ NFSERR_XDEV,		-EXDEV		},
+-	{ NFSERR_NODEV,		-ENODEV		},
+-	{ NFSERR_NOTDIR,	-ENOTDIR	},
+-	{ NFSERR_ISDIR,		-EISDIR		},
+-	{ NFSERR_INVAL,		-EINVAL		},
+-	{ NFSERR_FBIG,		-EFBIG		},
+-	{ NFSERR_NOSPC,		-ENOSPC		},
+-	{ NFSERR_ROFS,		-EROFS		},
+-	{ NFSERR_MLINK,		-EMLINK		},
+-	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
+-	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
+-	{ NFSERR_DQUOT,		-EDQUOT		},
+-	{ NFSERR_STALE,		-ESTALE		},
+-	{ NFSERR_REMOTE,	-EREMOTE	},
+-#ifdef EWFLUSH
+-	{ NFSERR_WFLUSH,	-EWFLUSH	},
+-#endif
+-	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
+-	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
+-	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
+-	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
+-	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
+-	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
+-	{ NFSERR_BADTYPE,	-EBADTYPE	},
+-	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
+-	{ -1,			-EIO		}
+-};
+-
+-/**
+- * nfs3_stat_to_errno - convert an NFS status code to a local errno
+- * @status: NFS status code to convert
+- *
+- * Returns a local errno value, or -EIO if the NFS status code is
+- * not recognized.  This function is used jointly by NFSv2 and NFSv3.
+- */
+-static int nfs3_stat_to_errno(enum nfs_stat status)
+-{
+-	int i;
+-
+-	for (i = 0; nfs_errtbl[i].stat != -1; i++) {
+-		if (nfs_errtbl[i].stat == (int)status)
+-			return nfs_errtbl[i].errno;
+-	}
+-	dprintk("NFS: Unrecognized nfs status value: %u\n", status);
+-	return nfs_errtbl[i].errno;
+-}
+-
+-
+ #define PROC(proc, argtype, restype, timer)				\
+ [NFS3PROC_##proc] = {							\
+ 	.p_proc      = NFS3PROC_##proc,					\
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 7704a4509676..b4091af1a60d 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -52,6 +52,7 @@
+ #include <linux/nfs.h>
+ #include <linux/nfs4.h>
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_common.h>
+ 
+ #include "nfs4_fs.h"
+ #include "nfs4trace.h"
+@@ -63,9 +64,6 @@
+ 
+ #define NFSDBG_FACILITY		NFSDBG_XDR
+ 
+-/* Mapping from NFS error code to "errno" error code. */
+-#define errno_NFSERR_IO		EIO
+-
+ struct compound_hdr;
+ static int nfs4_stat_to_errno(int);
+ static void encode_layoutget(struct xdr_stream *xdr,
+diff --git a/fs/nfs_common/Makefile b/fs/nfs_common/Makefile
+index 119c75ab9fd0..e58b01bb8dda 100644
+--- a/fs/nfs_common/Makefile
++++ b/fs/nfs_common/Makefile
+@@ -8,3 +8,5 @@ nfs_acl-objs := nfsacl.o
+ 
+ obj-$(CONFIG_GRACE_PERIOD) += grace.o
+ obj-$(CONFIG_NFS_V4_2_SSC_HELPER) += nfs_ssc.o
++
++obj-$(CONFIG_NFS_COMMON) += common.o
+diff --git a/fs/nfs_common/common.c b/fs/nfs_common/common.c
+new file mode 100644
+index 000000000000..a4ee95da2174
+--- /dev/null
++++ b/fs/nfs_common/common.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/module.h>
++#include <linux/nfs_common.h>
++
++/*
++ * We need to translate between nfs status return values and
++ * the local errno values which may not be the same.
++ */
++static const struct {
++	int stat;
++	int errno;
++} nfs_errtbl[] = {
++	{ NFS_OK,		0		},
++	{ NFSERR_PERM,		-EPERM		},
++	{ NFSERR_NOENT,		-ENOENT		},
++	{ NFSERR_IO,		-errno_NFSERR_IO},
++	{ NFSERR_NXIO,		-ENXIO		},
++/*	{ NFSERR_EAGAIN,	-EAGAIN		}, */
++	{ NFSERR_ACCES,		-EACCES		},
++	{ NFSERR_EXIST,		-EEXIST		},
++	{ NFSERR_XDEV,		-EXDEV		},
++	{ NFSERR_NODEV,		-ENODEV		},
++	{ NFSERR_NOTDIR,	-ENOTDIR	},
++	{ NFSERR_ISDIR,		-EISDIR		},
++	{ NFSERR_INVAL,		-EINVAL		},
++	{ NFSERR_FBIG,		-EFBIG		},
++	{ NFSERR_NOSPC,		-ENOSPC		},
++	{ NFSERR_ROFS,		-EROFS		},
++	{ NFSERR_MLINK,		-EMLINK		},
++	{ NFSERR_NAMETOOLONG,	-ENAMETOOLONG	},
++	{ NFSERR_NOTEMPTY,	-ENOTEMPTY	},
++	{ NFSERR_DQUOT,		-EDQUOT		},
++	{ NFSERR_STALE,		-ESTALE		},
++	{ NFSERR_REMOTE,	-EREMOTE	},
++#ifdef EWFLUSH
++	{ NFSERR_WFLUSH,	-EWFLUSH	},
++#endif
++	{ NFSERR_BADHANDLE,	-EBADHANDLE	},
++	{ NFSERR_NOT_SYNC,	-ENOTSYNC	},
++	{ NFSERR_BAD_COOKIE,	-EBADCOOKIE	},
++	{ NFSERR_NOTSUPP,	-ENOTSUPP	},
++	{ NFSERR_TOOSMALL,	-ETOOSMALL	},
++	{ NFSERR_SERVERFAULT,	-EREMOTEIO	},
++	{ NFSERR_BADTYPE,	-EBADTYPE	},
++	{ NFSERR_JUKEBOX,	-EJUKEBOX	},
++	{ -1,			-EIO		}
++};
++
++/**
++ * nfs_stat_to_errno - convert an NFS status code to a local errno
++ * @status: NFS status code to convert
++ *
++ * Returns a local errno value, or -EIO if the NFS status code is
++ * not recognized.  This function is used jointly by NFSv2 and NFSv3.
++ */
++int nfs_stat_to_errno(enum nfs_stat status)
++{
++	int i;
++
++	for (i = 0; nfs_errtbl[i].stat != -1; i++) {
++		if (nfs_errtbl[i].stat == (int)status)
++			return nfs_errtbl[i].errno;
++	}
++	return nfs_errtbl[i].errno;
++}
++EXPORT_SYMBOL_GPL(nfs_stat_to_errno);
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index ec2ab6429e00..c0bd1509ccd4 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -7,6 +7,7 @@ config NFSD
+ 	select LOCKD
+ 	select SUNRPC
+ 	select EXPORTFS
++	select NFS_COMMON
+ 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
+ 	select NFS_ACL_SUPPORT if NFSD_V3_ACL
+ 	depends on MULTIUSER
+diff --git a/include/linux/nfs_common.h b/include/linux/nfs_common.h
+new file mode 100644
+index 000000000000..3395c4a4d372
+--- /dev/null
++++ b/include/linux/nfs_common.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This file contains constants and methods used by both NFS client and server.
++ */
++#ifndef _LINUX_NFS_COMMON_H
++#define _LINUX_NFS_COMMON_H
++
++#include <linux/errno.h>
++#include <uapi/linux/nfs.h>
++
++/* Mapping from NFS error code to "errno" error code. */
++#define errno_NFSERR_IO EIO
++
++int nfs_stat_to_errno(enum nfs_stat status);
++
++#endif /* _LINUX_NFS_COMMON_H */
 -- 
 2.44.0
 
