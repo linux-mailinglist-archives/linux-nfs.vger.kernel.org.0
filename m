@@ -1,417 +1,507 @@
-Return-Path: <linux-nfs+bounces-6303-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6304-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E53FA96FA73
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 20:08:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C94E396FC2D
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 21:32:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98A8D287086
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 18:08:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF9B41F25129
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 19:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D4C1D86F7;
-	Fri,  6 Sep 2024 18:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2027613C3F2;
+	Fri,  6 Sep 2024 19:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pg0YZWHv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K28p+rBT";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="MF4DoOJm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C201D86F4;
-	Fri,  6 Sep 2024 18:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725646051; cv=none; b=ogCiFTZJ88hCB6UoK511prUAbabCel+s/7RGh4sEi2hS4ULJG5nJvohNTfHr1n12kplKMFy5xBJDUPrPr4NLxbzb06Pc/HKezlaIhkJMQ1Hj6xs4x7dZ/cUFXPKyTSz0pJLBL6uXGGdVm0We/pZwl3O5W0QMgLQKzpU4Mcvs/v8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725646051; c=relaxed/simple;
-	bh=tl5dmsN9C4YuIhY60C/p286cQGp5ZSrQnUtg1in09fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RYfqDXgdY8mJBdlPh2aVxhJwinMu3qFPGWfL9UgwhSNLDlXGtpiOH3LKsx1m6EibdB+NSPmGSMshHXeda2hLzNQspt/J5QVQd14hv6len7oVEPuZdvj2HKObf0iVt1hsKm0Gu0TETvGqfBWyk2CpHry9nKWPOUrPYpfg1MWsrE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pg0YZWHv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B2DC4CECD;
-	Fri,  6 Sep 2024 18:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725646050;
-	bh=tl5dmsN9C4YuIhY60C/p286cQGp5ZSrQnUtg1in09fA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pg0YZWHv9jwBBocNi8NDvJSNK2S/z6E/aoEOo0T0dCi9O5TPFNlgs46vRtKRGBfNi
-	 gBkC5xbCO4Qsj6IeoYVVZG3OjkvJ6aJpzlF6nc2/7PYjP/ecssJou02Ar+q+9Y0bUV
-	 3bOfER++lQFX7389i/iwg1hErhevc+F5N5iLR5qh3AqGpqzH9nuP7TZ2tsL9vf4BS+
-	 COiQQa/ZQxkjuOVzWa8MiNcvr4P3274GwrDdM1bKDZ4ZH0tQeinvRs3DmqaUa6bGcK
-	 kuNAwLapEOVzX6K6n3EzNhGx58772qzL8UttTyijCg2tKwtno4lmzCelu06fPEmsG+
-	 tILgxhNhwtotg==
-Date: Fri, 6 Sep 2024 14:07:28 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
-Message-ID: <ZttE4DKrqqVa0ACn@kernel.org>
-References: <>
- <Ztm-TbSdXOkx3IHn@kernel.org>
- <172557924809.4433.12586767127138915683@noble.neil.brown.name>
- <ZtsZ8IEoV-DyqAzj@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EBC1B85EA;
+	Fri,  6 Sep 2024 19:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725651130; cv=fail; b=eWdMdp0qjES1GhYj+xs6dM2lTgIhK0Iwjs6fkSHHrYt5UFiDIKmCtGVTl+bdneFdmwl0IYH3NB4dgQe445jsCW5ngjxicaFf3JS6T2OnocZSm1bph8REgQzxMruPhVkHxx+jIjuBt/sUEwsgmT4fyhVdjrlhN3QDa0iozeBPd7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725651130; c=relaxed/simple;
+	bh=T+YFSQldoN9qyp0zUPo+bjyXNMZy7VWKnzv+CSKsxRs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=csTaBSgbiBxBSHrgVyfE4rDRGHEn56h7XsoZrj8/YrJ8isn/BN7U2lFjBLdtLryXWqpqomgsEkSVRP2fMPtEP6zTQLZB8Ety0NbybOcgRDqhVrdq9po0J+KRdjQx2nOp1kUfX9vYmedeFEbQ/MZZcyVlt5KPOPLtwytu4yQM35Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=K28p+rBT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=MF4DoOJm; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 486FtYUc007093;
+	Fri, 6 Sep 2024 19:31:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=cM5G8JqBsVQfPcm/SfaFmL3N0PgnQxYuucVdJxkTTMw=; b=
+	K28p+rBTNkG59MEhgjXEmU3jK9DgMe9C1C6iRtztLHNlB41ddHMNapjs/V/Eq/1b
+	4hMXu0gmzE1jYKdukQ2a1lAKDHIFewKDVCcX19yssDhieijv8phQmu7h97oPJkSe
+	cF0fvtHGQU0bfh2KhyvaUOyQqKgw5Qak7y5icGdE8HyChncQ6z/WQ4fK9Jko+K1o
+	LeB06xaaXWCgdQltuoYAkAjqNiDUOz0xJ5DQIPdX95AkcanJKAzAif3mS4Yns3m6
+	n5aKD2DBWKCgL+C5yTkpJ9KbBm4eWMUpLCmtdmXhBupzd5LaX5wHTPGQhJUp25qB
+	VP2hvIKl8CYKD68iK7G/pQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41fhwkaeqh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 06 Sep 2024 19:31:48 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 486HpUup040889;
+	Fri, 6 Sep 2024 19:31:47 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41fhycc4jx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 06 Sep 2024 19:31:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NqlfZanV8qSblN9Lpf5hk0bzJRUIFGS4c90oR9Coqk+IeltgZGkFhnx95lB3ghDCfugh+ty+9uqdUHCgVC6Pzlar1OiJMKsXCrO3owOxa/PGAaNROLbR0eDr8Vk9GiDgXlxR6jerJ8u9KfDA0wrwVmigfgZbssg25cUMio+dWmzENDDDyYvUohgkUMcZ6kBvlPvI+VN+swceW8QDC4RGnFxUJwFqqAYLf94df/BAnDpFLLWA1HPjrl4luYflOmEpWf7qExpwVPsz04sSg3ANOHWo8Fh03dvHcKMAw3MjcWWZH5mEdumOjNd+WBTQWp1wzl/P30Bi/DASaSM8I5a5Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cM5G8JqBsVQfPcm/SfaFmL3N0PgnQxYuucVdJxkTTMw=;
+ b=aFFEH1Tw10T2VLcghWN/Ph6w5mDK9H6KXSOYB6EeN85O01YDa/qgDl6frbYrlixBufD9JC8VnEM009WKvK45R0GTBUrdyvOwjwwJJRqUfrXq2VELTy2tYmuoADQoxcp3yCNLBjz4nDDzN0Rql2/+pVQ6xkQ9cNr/ghJ4m2656ZFn29/2hiQpCydjcjcQho1lMHhiNfbjC9gxdt1cjH+Kh0pOVKbvYzw6Zh6LHzYfGZhhQEyEHwI/CuGq4T7V+OXg3lHOLZTKYD2LMUs/COuauBMdbB4BB+fCrWVpt1/omCAMkp5x1PTqyv1yxoK7/3TnmDZl0LvtLNtSHzlmF+nAtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cM5G8JqBsVQfPcm/SfaFmL3N0PgnQxYuucVdJxkTTMw=;
+ b=MF4DoOJmCdwPQ6yeZtu/+NfhEtI4pJ3g8tPiD407cp09YK1HGnufNBnMSRwOtoZIZLxQoroH3FgqccGXu26j7X4S+ooLuqepK8MQ8f8IEYHcNukqgdsd47+e0v0b/9kGEfplxOTCgbcuTBiskakfY5QNOf/QeTLEkjlEr+YiK50=
+Received: from SN6PR10MB2958.namprd10.prod.outlook.com (2603:10b6:805:db::31)
+ by SJ2PR10MB7013.namprd10.prod.outlook.com (2603:10b6:a03:4c6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.14; Fri, 6 Sep
+ 2024 19:31:44 +0000
+Received: from SN6PR10MB2958.namprd10.prod.outlook.com
+ ([fe80::1aa6:4097:e5c6:932]) by SN6PR10MB2958.namprd10.prod.outlook.com
+ ([fe80::1aa6:4097:e5c6:932%4]) with mapi id 15.20.7918.020; Fri, 6 Sep 2024
+ 19:31:44 +0000
+Message-ID: <66ab4e72-2d6e-4b78-a0ea-168e1617c049@oracle.com>
+Date: Fri, 6 Sep 2024 15:31:41 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 00/26] nfs/nfsd: add support for LOCALIO
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>,
+        linux-fsdevel@vger.kernel.org
+References: <20240831223755.8569-1-snitzer@kernel.org>
+Content-Language: en-US
+From: Anna Schumaker <anna.schumaker@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240831223755.8569-1-snitzer@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: CH0PR03CA0433.namprd03.prod.outlook.com
+ (2603:10b6:610:10e::18) To SN6PR10MB2958.namprd10.prod.outlook.com
+ (2603:10b6:805:db::31)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZtsZ8IEoV-DyqAzj@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR10MB2958:EE_|SJ2PR10MB7013:EE_
+X-MS-Office365-Filtering-Correlation-Id: cdda491a-1346-4d77-7450-08dcceaa8a47
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TExNNG1qT0Zhay9NWVpJbkJXQTVibExtdkQrckxnWUF3d2hDcWFDMC9Lb1NG?=
+ =?utf-8?B?SFlEYzJ3a3N6TCt3VG82czhuZmpYaFhneXlJZnRDblo3cVB6SjRvVmQwbWVs?=
+ =?utf-8?B?cmRPdmM0RDFQR0lnMm91eVlSMUhLWmg1RVowRm8zbkV1bWk3ckJpQUxHc3Rr?=
+ =?utf-8?B?OTRaS1lrMWgvQlVXaG94Wm55SFlVMmYxMXE5VWtobG5rZFo2S3pma3dkL0FC?=
+ =?utf-8?B?ZnZ0TkZ1YWdyU1RyOVc1UU82eWZVWDZWd2VTbExrNy91QW5vRStQSi9mOFpk?=
+ =?utf-8?B?YU9aMXNVWXF5cVhIcUViSXNzUXRCODFNOTFRR0o5RVFsQ3BlNGE2NjBjYnMz?=
+ =?utf-8?B?Zng2ZS9XVTcyVFFXRmhTdlBvNjZkT0RsREJXeUh5YThaQm9FVjRXTWFZWFhs?=
+ =?utf-8?B?bUNlSFVmcEhnaHhndHJyS00zVkZzSnJPNGhyRHdleWFJSXltNVdkZHVjV3lP?=
+ =?utf-8?B?ZHRRS2hKRlZOemF4dGlsbTMvVFpYZExORHhlc0dBeUdlZmx5eXVrV296Ulhk?=
+ =?utf-8?B?SWNOdG9EUHBWVUFaREU0RTZPRm40UU5xWnh6YlpEU3JpMjdBSDhFdVdnVUhJ?=
+ =?utf-8?B?a05nMFhNRFF5Q000SzhsRTBKcXkzYlRvTU1QV0EwZ2ZheUxrd214R3A1UTVj?=
+ =?utf-8?B?ZFpKeDIwN3hKb3BRY3F3bmF3bUZDdlprSW5NQ29yczFXMSs5b0Q0aEZtMWdG?=
+ =?utf-8?B?RHM3Z25OTjl3UVhNYWQveXBRSzBmUFVXTXluVE16ZzRGMHRDSDNyR0FwOTZ6?=
+ =?utf-8?B?MC9jZ1dESUdLVHBtM1FoaDluL3EyUTd5UjdFSURqQ0k1MWk2MysydDJScnF6?=
+ =?utf-8?B?a21qc2FaVklWQzRIejB3UHl3aytyY2tQdEx2ODhwU3ZndGVxR2x5SzJta3la?=
+ =?utf-8?B?L0VqOVppVWRMQmdYRjRCZXBQT2RYREVIb250K1A4WDZJd3ZHemVEZ2pRSEFG?=
+ =?utf-8?B?WUxqWUV2dkhRMUFDY3prWHUxZFZBMDF5bXJMNVlyMm1pajMzZzd0YUNCRGhm?=
+ =?utf-8?B?ZEsxOXU4MVMrVFFXZUtVL2Vwd29heHNIUE5FS0kxYWJrQXZEc0p4THdLd1R1?=
+ =?utf-8?B?VzFUWHlnSEw5MnlqcmxEVVEyYjVGZ3I1VEpZMGFRb3FKaUhHWWY3RHEzSncv?=
+ =?utf-8?B?eEtCQXlWK3BFaDErN05oamo3VEN2TU9XRGJKWnBud3ROK3FiYTg1OXExTlJv?=
+ =?utf-8?B?djlJZUpTWW90Zkw5Zng5TktaNHBZcGxoaWdOekdXUTZjMzhUVFoybmFRUEpl?=
+ =?utf-8?B?b1pWRENMU01uWFBqRG9xck9OUGFqTzFhSGZ3Y3JtZjFXTDV1SGlQT2MyNlVU?=
+ =?utf-8?B?RVFKMityQlJTL3RXVnZpZDRlZmJTdXBIUkYyamxSbVhTdXorU0FRcy9mZ0xX?=
+ =?utf-8?B?Q3RGZjc4TnFSaXBxSkNrRkppS0d6NW9ScE9oQWNEWWkvK2k0Kzh1WllsYnZG?=
+ =?utf-8?B?TVFoNHd2RDhZbjJxWjZNRGVPVytKenBuZDFMSSsrOENHN1NrbGZPK0svNjNw?=
+ =?utf-8?B?WGNKSitXeENzVmxzSXVEaFRiTVdaaUhqd2FNRW9CM2hkSmR3bW5BZk1rczFI?=
+ =?utf-8?B?MjdLYUJwanR3SE9sYlM4eGNuOXpWTGtKNUVlbVpIeTFuRTU1MkI0K0RJYjIr?=
+ =?utf-8?B?amZvZGhYSzAwOU84dUhvc01lamVmbGRxZFhTaFNEZnhaUzhVOFhESXZEMDJJ?=
+ =?utf-8?B?Tk9IYVpMS1hpYVBxWHRKcHJXdWF6WHRUNTRMbWFPWmRabkx5VjRZQlBXdWlE?=
+ =?utf-8?Q?v/DVQvyc9CmTdUL4gg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB2958.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UkhKaERmRm0xY3V0ZEpsWTFHN3gveHlYZENreEozWTZHTzExOHpXb1VhUmRk?=
+ =?utf-8?B?V2ptVm1ITXk3eGRZdldWTkg3QVZ1czhCMm9XQ3BJdzJJRkliYWJYZS9KcE43?=
+ =?utf-8?B?bmFqdEZBVkNVUnVqQ0FlSEJldU9UY2lDSE5hQkhETG5maUJkdURnMGRhY1pr?=
+ =?utf-8?B?Y2N2YmpSdFIyVGU2ZDJDaG9veHkzNG9VMldVL2VKajhJYmtmTXRaUExWMFhM?=
+ =?utf-8?B?R3IyYTRsZE9UVFJLNzYrMzhHTU15MThCeFE4b0NWaXd4Ukx5SlAvM3dRZ0s4?=
+ =?utf-8?B?OFAvUlRrUHJKN09Bc3FGdFM0OVZnSWpER05NS3RKV2FtTzdHV2MraHdJYkZH?=
+ =?utf-8?B?ZDMxcDFQYVg0K1N2cHA0cHZLL2ZNSDBDYUdyYjRtUXMwTUYyUzRYWk9WYWJI?=
+ =?utf-8?B?dE45VC9RZ0VxVDJsK1BpbU1vTE1VbjIrMnZrY2JiV1JDRXNnSlRpSDBSSE91?=
+ =?utf-8?B?R3F4M1dGYzN5U24rVGs1aTFEVGRBQTJEcE5Pay9rbkM0dzNXZkIzQ0ZMNXU5?=
+ =?utf-8?B?VGtSVGdMMVdqU1NreFo0Y3k3TTBBQWZvbkJsT1ZaWXhkSXplQUFpK2dEWVlx?=
+ =?utf-8?B?VEVEZmpCZFRNRjN3UzAxampsWDVjTFR0OUs1Y3J4S2t2c0U4L041aGJEQVR1?=
+ =?utf-8?B?c0p0YTl3bVBuc3V3K1czWTJxNnNXemVkMEF4amZmOFVPTkR5TjJHdDhySlR2?=
+ =?utf-8?B?cHkxeUE0UTNHdnNRZDdhUzBCVmxZbEtlVWZITWZTRy82SysxaW1YaUtGblNn?=
+ =?utf-8?B?Q0xLSis2K2wxWXhoNldIMnBUZ0tYMVJHaDRjeXhkN3JOSXJZOXN4S2F3dzE4?=
+ =?utf-8?B?TzRUd2xqbFpsQzRha3F5Zm1kRHFNcG5ZSHpkQWdTVmtMUGZCMEZ0RkdUOExl?=
+ =?utf-8?B?MUVibDU4aXFORkNJN2FRK3NDdEQ1THN3U1pUei9wbTEwUWE2b2tZYm5HbXJ5?=
+ =?utf-8?B?V1Nra2hEbldKSkFHYTQ2Ky9GaWpvV2hWbEkyTzBHZkVtSVlqUmg2d0FTWmxq?=
+ =?utf-8?B?N0x3c2IxY28vWlJFeTFMT3Y1TUdhWWd6c29QVUFHdml3UUpUMDYrOVFaOEhx?=
+ =?utf-8?B?dTAyNXd2eHIzbjc1OWdkUkpzZGRXQkNNZmUzbkJwWklvWjNDbEdiNFpYTmx3?=
+ =?utf-8?B?RGhPQnIyLy9BU3VIanR3eTFMMFhkRk1UQ1QvRE1sdmxGc0FaM0hCcHVDVkk5?=
+ =?utf-8?B?aVQ1RzVubG5tSDNjYytLSlpXLy9iRmJPbmNFaHRtWUN2QXpDTE5TWEwyMkRP?=
+ =?utf-8?B?cTlYSUpCK0FoWmUzNEpRYWE1WlhhR1RVK3FFN1hBbUJDM1d4TnFlUDlYcnNK?=
+ =?utf-8?B?dW1XOWg3RUcrY2RFZGZHQTdaSEVSUVRMOTRhVWpGN0t1MGkxT0JFT2MyU0Fn?=
+ =?utf-8?B?M05zQVJ6NjF6YnNCRTYwTmJ0a040TlhBNnN4elhqM0dSZkJvcCtaZkdleUtS?=
+ =?utf-8?B?WFBCSkppOGlXemNBUE51SXRsTUlOaEs0cGhrM2dReU81V0dTYmQ4R080c29s?=
+ =?utf-8?B?YWpIbk1qakdUNzFkaytXM0dtYnIvV3NkZ3EwYlVOUmx5K2RENjZSV3ErN291?=
+ =?utf-8?B?Ui81RlF4RXozZDh6dDJRQytyc3l3aG0zN1l5MVZQdksybzNWUklVTDBramNz?=
+ =?utf-8?B?YmRQOGJETWZEUHMzVlF5U3puSDVUWnVEeXJqdVZhaytQc1VEaEpmZi9HelU2?=
+ =?utf-8?B?dDQvdDRnYktCVmU1Wjgxb0w2cUxadm14Z3ppT1ZNV1NxMHVMUzBtbUdrdEVw?=
+ =?utf-8?B?cHA5b3R4Y21aVkZJa2l5dWRMNnF2NlpqOHV0U3VNZjJVeXRXcG44bEFlQTdL?=
+ =?utf-8?B?OFBycTEzTmFiT0lZR3JZM1kvNzhLWkpZcm4rNzgveUo4SW9mSFJBNnRtdFp6?=
+ =?utf-8?B?R3I2eTREcDRhK3MvYVVMWWd2dm9BdWNlRmlya0UxV05yUmkzckE3MlBJSW9i?=
+ =?utf-8?B?SHh4N3BNanBqTkdkWjNKcXpsNDNmdGxYdUtnMXptQkRuR0VMNWd2d0NhTVI3?=
+ =?utf-8?B?bmE3RytReUJWWG1yVHd5YmxKejRZemRsdE5aNjZJcXRSS05hMXJjUjNSMWpu?=
+ =?utf-8?B?QnJhOE9lQkRTVDFESWgxYnYwYW5kWjNmdTFZSlFrdzNYNTY0TGwxcnpad3Zv?=
+ =?utf-8?B?bUQvejRqNmpOR2RudXdBSXZZOUkwTTF0aHZFOXQrNTFYOUVPdU9oTnNYU01t?=
+ =?utf-8?B?U3c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	DfFs4KTCwEaaGcf95Dch17cOPiGbR4hmJ0y0JA7b8zb37dFZi5cFCmGHwoVBW1xaIQ53QiY2dHK7u5klPqqeGw1I00ql5bqcoTrsGGDLViY37M5ITLseObNP+I0KSctK9fKAUR70wPMptoAfDFmL/NwBGOoil0atSaSQnmrJQMoqMC5AhTdOgPIFTQtCWgP+pHQ32IoyUnPLiCJf83QyTD6KsMPwhtNx5SVpTmYsDCQbByJ40pMKC0G/OIrBNWrxPe4T+h010LcVyGMboiaJQ+MCTxZkQueQ0OJW9cPn7un7nAZU/jEJHQN1ie7aFABH4E9GHXiunmPKuNG5W/0U11367/WSqBq1008SU99AvTZ3TPdDuor5KF048PiWp2PBPwNkBZgMIsQZJarH7leAFq/ww0e/gKB3oxggqYNIxtp3JpYtBT4a4ntUkcPKa9xBurPj82EHftGOyc3iv+27EVbjnnftSgxcHsYlozteG0CgLkjW1ELw1ju27TGE71FXdJui1yxugx2Ls2BjC0eSmUeEkE2B9VfeXUnU8IQX5uExwciEExY+e0GJ6Lw+LsHmMpEIdBOWoxENGyntrlVyCaOnFZvOzt61CrZawfF9SlY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdda491a-1346-4d77-7450-08dcceaa8a47
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB2958.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 19:31:44.0877
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LQvdPB5a69kULwSersYlKACb3qZA9wKG0RQ+Ok5opy9wg+erV42smjqlVaE5JmFMpSPwDEu1Zlxo7+CXiFtfSDYSJcdK+/UZxFlVwyXIVf8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR10MB7013
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_05,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2408220000 definitions=main-2409060144
+X-Proofpoint-ORIG-GUID: zgqbuhjpNT5NIZdaqNJXRZVhUd3pBbAD
+X-Proofpoint-GUID: zgqbuhjpNT5NIZdaqNJXRZVhUd3pBbAD
 
-On Fri, Sep 06, 2024 at 11:04:16AM -0400, Mike Snitzer wrote:
-> On Fri, Sep 06, 2024 at 09:34:08AM +1000, NeilBrown wrote:
-> > On Fri, 06 Sep 2024, Mike Snitzer wrote:
-> > > On Wed, Sep 04, 2024 at 09:47:07AM -0400, Chuck Lever wrote:
-> > > > On Wed, Sep 04, 2024 at 03:01:46PM +1000, NeilBrown wrote:
-> > > > > On Wed, 04 Sep 2024, NeilBrown wrote:
-> > > > > > 
-> > > > > > I agree that dropping and reclaiming a lock is an anti-pattern and in
-> > > > > > best avoided in general.  I cannot see a better alternative in this
-> > > > > > case.
-> > > > > 
-> > > > > It occurred to me what I should spell out the alternate that I DO see so
-> > > > > you have the option of disagreeing with my assessment that it isn't
-> > > > > "better".
-> > > > > 
-> > > > > We need RCU to call into nfsd, we need a per-cpu ref on the net (which
-> > > > > we can only get inside nfsd) and NOT RCU to call
-> > > > > nfsd_file_acquire_local().
-> > > > > 
-> > > > > The current code combines these (because they are only used together)
-> > > > > and so the need to drop rcu. 
-> > > > > 
-> > > > > I thought briefly that it could simply drop rcu and leave it dropped
-> > > > > (__releases(rcu)) but not only do I generally like that LESS than
-> > > > > dropping and reclaiming, I think it would be buggy.  While in the nfsd
-> > > > > module code we need to be holding either rcu or a ref on the server else
-> > > > > the code could disappear out from under the CPU.  So if we exit without
-> > > > > a ref on the server - which we do if nfsd_file_acquire_local() fails -
-> > > > > then we need to reclaim RCU *before* dropping the ref.  So the current
-> > > > > code is slightly buggy.
-> > > > > 
-> > > > > We could instead split the combined call into multiple nfs_to
-> > > > > interfaces.
-> > > > > 
-> > > > > So nfs_open_local_fh() in nfs_common/nfslocalio.c would be something
-> > > > > like:
-> > > > > 
-> > > > >  rcu_read_lock();
-> > > > >  net = READ_ONCE(uuid->net);
-> > > > >  if (!net || !nfs_to.get_net(net)) {
-> > > > >        rcu_read_unlock();
-> > > > >        return ERR_PTR(-ENXIO);
-> > > > >  }
-> > > > >  rcu_read_unlock();
-> > > > >  localio = nfs_to.nfsd_open_local_fh(....);
-> > > > >  if (IS_ERR(localio))
-> > > > >        nfs_to.put_net(net);
-> > > > >  return localio;
-> > > > > 
-> > > > > So we have 3 interfaces instead of 1, but no hidden unlock/lock.
-> > > > 
-> > > > Splitting up the function call occurred to me as well, but I didn't
-> > > > come up with a specific bit of surgery. Thanks for the suggestion.
-> > > > 
-> > > > At this point, my concern is that we will lose your cogent
-> > > > explanation of why the release/lock is done. Having it in email is
-> > > > great, but email is more ephemeral than actually putting it in the
-> > > > code.
-> > > > 
-> > > > 
-> > > > > As I said, I don't think this is a net win, but reasonable people might
-> > > > > disagree with me.
-> > > > 
-> > > > The "win" here is that it makes this code self-documenting and
-> > > > somewhat less likely to be broken down the road by changes in and
-> > > > around this area. Since I'm more forgetful these days I lean towards
-> > > > the more obvious kinds of coding solutions. ;-)
-> > > > 
-> > > > Mike, how do you feel about the 3-interface suggestion?
-> > > 
-> > > I dislike expanding from 1 indirect function call to 2 in rapid
-> > > succession (3 for the error path, not a problem, just being precise.
-> > > But I otherwise like it.. maybe.. heh.
-> > > 
-> > > FYI, I did run with the suggestion to make nfs_to a pointer that just
-> > > needs a simple assignment rather than memcpy to initialize.  So Neil's
-> > > above code becames:
-> > > 
-> > >         rcu_read_lock();
-> > >         net = rcu_dereference(uuid->net);
-> > >         if (!net || !nfs_to->nfsd_serv_try_get(net)) {
-> > >                 rcu_read_unlock();
-> > >                 return ERR_PTR(-ENXIO);
-> > >         }
-> > >         rcu_read_unlock();
-> > >         /* We have an implied reference to net thanks to nfsd_serv_try_get */
-> > >         localio = nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
-> > >                                              cred, nfs_fh, fmode);
-> > >         if (IS_ERR(localio))
-> > >                 nfs_to->nfsd_serv_put(net);
-> > >         return localio;
-> > > 
-> > > I do think it cleans the code up... full patch is here:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next.v15-with-fixups&id=e85306941878a87070176702de687f2779436061
-> > > 
-> > > But I'm still on the fence.. someone help push me over!
-> > 
-> > I think the new code is unquestionable clearer, and not taking this
-> > approach would be a micro-optimisation which would need to be
-> > numerically justified.  So I'm pushing for the three-interface version
-> > (despite what I said before).
-> > 
-> > Unfortunately the new code is not bug-free - not quite.
-> > As soon as nfs_to->nfsd_serv_put() calls percpu_ref_put() the nfsd
-> > module can be unloaded, and the "return" instruction might not be
-> > present.  For this to go wrong would require a lot of bad luck, but if
-> > the CPU took an interrupt at the wrong time were would be room.
-> > 
-> > [Ever since module_put_and_exit() was added (now ..and_kthread_exit)
-> >  I've been sensitive to dropping the ref to a module in code running in
-> >  the module]
-> > 
-> > So I think nfsd_serv_put (and nfsd_serv_try_get() __must_hold(RCU) and
-> > nfs_open_local_fh() needs rcu_read_lock() before calling
-> > nfs_to->nfsd_serv_put(net).
-> 
-> OK, yes I can see that, I implemented what you suggested at the end of
-> your reply (see inline patch below)...
-> 
-> But I'd just like to point out that something like the below patch
-> wouldn't be needed if we kept my "heavy" approach (nfs reference on
-> nfsd modules via nfs_common using request_symbol):
-> https://marc.info/?l=linux-nfs&m=172499445027800&w=2
-> (that patch has stuff I since cleaned up, e.g. removed typedefs and
-> EXPORT_SYMBOL_GPLs..)
-> 
-> I knew we were going to pay for being too cute with how nfs took its
-> reference on nfsd.
-> 
-> So here we are, needing fiddly incremental fixes like this to close a
-> really-small-yet-will-be-deadly race:
+Hi Mike,
 
-<snip required delicate rcu re-locking requirements patch>
+On 8/31/24 6:37 PM, Mike Snitzer wrote:
+> Hi,
+>=20
+> Happy Labor Day weekend (US holiday on Monday)!  Seems apropos to send
+> what I hope the final LOCALIO patchset this weekend: its my birthday
+> this coming Tuesday, so _if_ LOCALIO were to get merged for 6.12
+> inclusion sometime next week: best b-day gift in a while! ;)
+>=20
+> Anyway, I've been busy incorporating all the review feedback from v14
+> _and_ working closely with NeilBrown to address some lingering net-ns
+> refcounting and nfsd modules refcounting issues, and more (Chnagelog
+> below):
+>=20
 
-I prefer this incremental re-implementation of my symbol_request patch
-that eliminates all concerns about the validity of 'nfs_to' calls:
+I've been running tests on localio this afternoon after finishing up going =
+through v15 of the patches (I was most of the way through when you posted v=
+16, so I haven't updated yet!). Cthon tests passed on all NFS versions, and=
+ xfstests passed on NFS v4.x. However, I saw this crash from xfstests with =
+NFS v3:
 
----
- fs/nfs/localio.c           |  5 +++
- fs/nfs_common/nfslocalio.c | 84 +++++++++++++++++++++++++++++++-------
- fs/nfsd/localio.c          |  2 +-
- include/linux/nfslocalio.h |  7 +++-
- 4 files changed, 80 insertions(+), 18 deletions(-)
+[ 1502.440896] run fstests generic/633 at 2024-09-06 14:04:17
+[ 1502.694356] process 'vfstest' launched '/dev/fd/4/file1' with NULL argv:=
+ empty string added
+[ 1502.699514] Oops: general protection fault, probably for non-canonical a=
+ddress 0x6c616e69665f6140: 0000 [#1] PREEMPT SMP NOPTI
+[ 1502.700970] CPU: 3 UID: 0 PID: 513 Comm: nfsd Not tainted 6.11.0-rc6-g0c=
+79a48cd64d-dirty+ #42323 70d41673e6cbf8e3437eb227e0a9c3c46ed3b289
+[ 1502.702506] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unk=
+nown 2/2/2022
+[ 1502.703593] RIP: 0010:nfsd_cache_lookup+0x2b3/0x840 [nfsd]
+[ 1502.704474] Code: 8d bb 30 02 00 00 bb 01 00 00 00 eb 12 49 8d 46 10 48 =
+8b 08 ff c3 48 85 c9 0f 84 9c 00 00 00 49 89 ce 4c 8d 61 c8 41 8b 45 00 <3b=
+> 41 c8 75 1f 41 8b 45 04 41 3b 46 cc 74 15 8b 15 2c c6 b8 f2 be
+[ 1502.706931] RSP: 0018:ffffc27ac0a2fd18 EFLAGS: 00010206
+[ 1502.707547] RAX: 00000000b95691f7 RBX: 0000000000000002 RCX: 6c616e69665=
+f6178
+[ 1502.708311] RDX: 0000000000000034 RSI: ffffa0f8a652a780 RDI: ffffa0f8c04=
+cfb00
+[ 1502.709055] RBP: ffffa0f8827b2ba0 R08: 0000000000000000 R09: ffffa0f8c04=
+cfb00
+[ 1502.709728] R10: 000000000000009c R11: ffffffffc0c77ef0 R12: 6c616e69665=
+f6140
+[ 1502.710382] R13: ffffa0f8c04cfb00 R14: 6c616e69665f6178 R15: ffffa0f883d=
+4e230
+[ 1502.710982] FS:  0000000000000000(0000) GS:ffffa0f8fbd80000(0000) knlGS:=
+0000000000000000
+[ 1502.711645] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1502.712087] CR2: 00007f2c4d1ed640 CR3: 0000000117a1e000 CR4: 00000000007=
+50ef0
+[ 1502.712615] PKRU: 55555554
+[ 1502.712804] Call Trace:
+[ 1502.712979]  <TASK>
+[ 1502.713131]  ? __die_body+0x6a/0xb0
+[ 1502.713372]  ? die_addr+0xa4/0xd0
+[ 1502.713583]  ? exc_general_protection+0x16c/0x210
+[ 1502.713880]  ? asm_exc_general_protection+0x26/0x30
+[ 1502.714164]  ? __pfx_nfs3svc_decode_sattrargs+0x10/0x10 [nfsd a9c12e0cc9=
+647b021c55f7745e60fc1cbe54674a]
+[ 1502.714700]  ? nfsd_cache_lookup+0x2b3/0x840 [nfsd a9c12e0cc9647b021c55f=
+7745e60fc1cbe54674a]
+[ 1502.715156]  ? nfsd_cache_lookup+0x2e7/0x840 [nfsd a9c12e0cc9647b021c55f=
+7745e60fc1cbe54674a]
+[ 1502.715590]  nfsd_dispatch+0x93/0x210 [nfsd a9c12e0cc9647b021c55f7745e60=
+fc1cbe54674a]
+[ 1502.715997]  svc_process_common+0x324/0x680 [sunrpc 2f7328527f188558dea7=
+880294960ba75bb09c81]
+[ 1502.716439]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd a9c12e0cc9647b021c55f=
+7745e60fc1cbe54674a]
+[ 1502.716873]  svc_process+0x117/0x1c0 [sunrpc 2f7328527f188558dea78802949=
+60ba75bb09c81]
+[ 1502.717276]  svc_recv+0xabf/0xc00 [sunrpc 2f7328527f188558dea7880294960b=
+a75bb09c81]
+[ 1502.717674]  nfsd+0xc5/0x100 [nfsd a9c12e0cc9647b021c55f7745e60fc1cbe546=
+74a]
+[ 1502.718225]  ? __pfx_nfsd+0x10/0x10 [nfsd a9c12e0cc9647b021c55f7745e60fc=
+1cbe54674a]
+[ 1502.718641]  kthread+0xe9/0x110
+[ 1502.718798]  ? __pfx_kthread+0x10/0x10
+[ 1502.718979]  ret_from_fork+0x37/0x50
+[ 1502.719154]  ? __pfx_kthread+0x10/0x10
+[ 1502.719335]  ret_from_fork_asm+0x1a/0x30
+[ 1502.719525]  </TASK>
+[ 1502.719636] Modules linked in: nfsv3 overlay cbc cts rpcsec_gss_krb5 nfs=
+v4 nfs rpcrdma rdma_cm iw_cm ib_cm cfg80211 ib_core rfkill 8021q garp stp m=
+rp llc vfat fat intel_rapl_msr intel_rapl_common intel_uncore_frequency_com=
+mon intel_pmc_core intel_vsec pmt_telemetry pmt_class kvm_intel kvm snd_hda=
+_codec_generic snd_hda_intel snd_intel_dspcfg crct10dif_pclmul crc32_pclmul=
+ snd_hda_codec polyval_clmulni polyval_generic ghash_clmulni_intel snd_hwde=
+p sha512_ssse3 snd_hda_core sha256_ssse3 sha1_ssse3 iTCO_wdt snd_pcm intel_=
+pmc_bxt iTCO_vendor_support aesni_intel snd_timer gf128mul snd psmouse cryp=
+to_simd i2c_i801 cryptd joydev pcspkr rapl lpc_ich i2c_smbus soundcore mous=
+edev mac_hid nfsd nfs_acl lockd auth_rpcgss grace nfs_localio sunrpc usbip_=
+host dm_mod usbip_core loop nfnetlink vsock_loopback vmw_vsock_virtio_trans=
+port_common vmw_vsock_vmci_transport vmw_vmci vsock qemu_fw_cfg ip_tables x=
+_tables hid_generic usbhid xfs libcrc32c crc32c_generic serio_raw atkbd lib=
+ps2 virtio_net vivaldi_fmap virtio_gpu virtio_console
+[ 1502.719684]  net_failover virtio_blk crc32c_intel i8042 failover virtio_=
+rng xhci_pci intel_agp virtio_balloon xhci_pci_renesas virtio_dma_buf serio=
+ intel_gtt
+[ 1502.724436] ---[ end trace 0000000000000000 ]---
 
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index c29cdf51c458..43520ac0fde8 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -124,6 +124,10 @@ const struct rpc_program nfslocalio_program = {
- static void nfs_local_enable(struct nfs_client *clp)
- {
- 	spin_lock(&clp->cl_localio_lock);
-+	if (!nfs_to_nfsd_localio_ops_get()) {
-+		spin_unlock(&clp->cl_localio_lock);
-+		return;
-+	}
- 	set_bit(NFS_CS_LOCAL_IO, &clp->cl_flags);
- 	trace_nfs_local_enable(clp);
- 	spin_unlock(&clp->cl_localio_lock);
-@@ -138,6 +142,7 @@ void nfs_local_disable(struct nfs_client *clp)
- 	if (test_and_clear_bit(NFS_CS_LOCAL_IO, &clp->cl_flags)) {
- 		trace_nfs_local_disable(clp);
- 		nfs_uuid_invalidate_one_client(&clp->cl_uuid);
-+		nfs_to_nfsd_localio_ops_put();
- 	}
- 	spin_unlock(&clp->cl_localio_lock);
- }
-diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-index 42b479b9191f..9039e0f1afa3 100644
---- a/fs/nfs_common/nfslocalio.c
-+++ b/fs/nfs_common/nfslocalio.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/rculist.h>
- #include <linux/nfslocalio.h>
-+#include <linux/refcount.h>
- #include <net/netns/generic.h>
- 
- MODULE_LICENSE("GPL");
-@@ -53,11 +54,8 @@ static nfs_uuid_t * nfs_uuid_lookup_locked(const uuid_t *uuid)
- 	return NULL;
- }
- 
--static struct module *nfsd_mod;
--
- void nfs_uuid_is_local(const uuid_t *uuid, struct list_head *list,
--		       struct net *net, struct auth_domain *dom,
--		       struct module *mod)
-+		       struct net *net, struct auth_domain *dom)
- {
- 	nfs_uuid_t *nfs_uuid;
- 
-@@ -73,9 +71,6 @@ void nfs_uuid_is_local(const uuid_t *uuid, struct list_head *list,
- 		 */
- 		list_move(&nfs_uuid->list, list);
- 		rcu_assign_pointer(nfs_uuid->net, net);
--
--		__module_get(mod);
--		nfsd_mod = mod;
- 	}
- 	spin_unlock(&nfs_uuid_lock);
- }
-@@ -83,10 +78,8 @@ EXPORT_SYMBOL_GPL(nfs_uuid_is_local);
- 
- static void nfs_uuid_put_locked(nfs_uuid_t *nfs_uuid)
- {
--	if (nfs_uuid->net) {
--		module_put(nfsd_mod);
--		nfs_uuid->net = NULL;
--	}
-+	if (nfs_uuid->net)
-+		RCU_INIT_POINTER(nfs_uuid->net, NULL);
- 	if (nfs_uuid->dom) {
- 		auth_domain_put(nfs_uuid->dom);
- 		nfs_uuid->dom = NULL;
-@@ -123,14 +116,14 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid,
- 	struct nfsd_file *localio;
- 
- 	/*
--	 * Not running in nfsd context, so must safely get reference on nfsd_serv.
-+	 * NFS has a reference to NFSD and can safely make 'nfs_to' calls.
-+	 *
-+	 * But not running in NFSD context, so must safely get reference to nfsd_serv.
- 	 * But the server may already be shutting down, if so disallow new localio.
-+	 *
- 	 * uuid->net is NOT a counted reference, but rcu_read_lock() ensures that
- 	 * if uuid->net is not NULL, then calling nfsd_serv_try_get() is safe
- 	 * and if it succeeds we will have an implied reference to the net.
--	 *
--	 * Otherwise NFS may not have ref on NFSD and therefore cannot safely
--	 * make 'nfs_to' calls.
- 	 */
- 	rcu_read_lock();
- 	net = rcu_dereference(uuid->net);
-@@ -153,6 +146,7 @@ EXPORT_SYMBOL_GPL(nfs_open_local_fh);
-  * but cannot be statically linked, because that will make the NFS
-  * module always depend on the NFSD module.
-  *
-+ * [FIXME: must adjust following 2 paragraphs]
-  * 'nfs_to' provides NFS access to NFSD functions needed for LOCALIO,
-  * its lifetime is tightly coupled to the NFSD module and will always
-  * be available to NFS LOCALIO because any successful client<->server
-@@ -170,3 +164,63 @@ EXPORT_SYMBOL_GPL(nfs_open_local_fh);
-  */
- const struct nfsd_localio_operations *nfs_to;
- EXPORT_SYMBOL_GPL(nfs_to);
-+
-+static DEFINE_SPINLOCK(nfs_to_nfsd_lock);
-+static refcount_t nfs_to_ref;
-+
-+bool nfs_to_nfsd_localio_ops_get(void)
-+{
-+	spin_lock(&nfs_to_nfsd_lock);
-+
-+	/* Only get nfsd_localio_operations on first reference */
-+	if (refcount_read(&nfs_to_ref) == 0) {
-+		refcount_set(&nfs_to_ref, 1);
-+		/* fallthru */
-+	} else {
-+		refcount_inc(&nfs_to_ref);
-+		spin_unlock(&nfs_to_nfsd_lock);
-+		return true;
-+	}
-+
-+	/* Must drop spinlock before call to symbol_request */
-+	spin_unlock(&nfs_to_nfsd_lock);
-+
-+	/*
-+	 * If NFSD isn't available LOCALIO isn't possible.
-+	 * Use nfsd_open_local_fh symbol as the bellwether, if
-+	 * available then nfs_common has NFSD module reference
-+	 * on NFS's behalf and can safely call 'nfs_to' functions.
-+	 */
-+	if (!symbol_request(nfsd_open_local_fh))
-+		return false;
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(nfs_to_nfsd_localio_ops_get);
-+
-+void nfs_to_nfsd_localio_ops_put(void)
-+{
-+	spin_lock(&nfs_to_nfsd_lock);
-+
-+	if (!refcount_dec_and_test(&nfs_to_ref))
-+		goto out;
-+
-+	symbol_put(nfsd_open_local_fh);
-+	nfs_to = NULL;
-+out:
-+	spin_unlock(&nfs_to_nfsd_lock);
-+}
-+EXPORT_SYMBOL_GPL(nfs_to_nfsd_localio_ops_put);
-+
-+static int __init nfslocalio_init(void)
-+{
-+	refcount_set(&nfs_to_ref, 0);
-+
-+	return 0;
-+}
-+
-+static void __exit nfslocalio_exit(void)
-+{
-+}
-+
-+module_init(nfslocalio_init);
-+module_exit(nfslocalio_exit);
-diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-index 291e9c69cae4..291ad916d67a 100644
---- a/fs/nfsd/localio.c
-+++ b/fs/nfsd/localio.c
-@@ -114,7 +114,7 @@ static __be32 localio_proc_uuid_is_local(struct svc_rqst *rqstp)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	nfs_uuid_is_local(&argp->uuid, &nn->local_clients,
--			  net, rqstp->rq_client, THIS_MODULE);
-+			  net, rqstp->rq_client);
- 
- 	return rpc_success;
- }
-diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-index b353abe00357..2e6b9107a7d1 100644
---- a/include/linux/nfslocalio.h
-+++ b/include/linux/nfslocalio.h
-@@ -35,7 +35,7 @@ typedef struct {
- void nfs_uuid_begin(nfs_uuid_t *);
- void nfs_uuid_end(nfs_uuid_t *);
- void nfs_uuid_is_local(const uuid_t *, struct list_head *,
--		       struct net *, struct auth_domain *, struct module *);
-+		       struct net *, struct auth_domain *);
- void nfs_uuid_invalidate_clients(struct list_head *list);
- void nfs_uuid_invalidate_one_client(nfs_uuid_t *nfs_uuid);
- 
-@@ -58,9 +58,12 @@ struct nfsd_localio_operations {
- 	struct file *(*nfsd_file_file)(struct nfsd_file *);
- } ____cacheline_aligned;
- 
--extern void nfsd_localio_ops_init(void);
- extern const struct nfsd_localio_operations *nfs_to;
- 
-+extern void nfsd_localio_ops_init(void);
-+bool nfs_to_nfsd_localio_ops_get(void);
-+void nfs_to_nfsd_localio_ops_put(void);
-+
- struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *,
- 		   struct rpc_clnt *, const struct cred *,
- 		   const struct nfs_fh *, const fmode_t);
--- 
-2.39.3
+Please let me know if there are any other details you need about my setup t=
+o help debug this!
 
+Thanks,
+Anna
+
+
+> git diff snitzer/nfs-localio-for-next.v14 snitzer/nfs-localio-for-next.v1=
+5 | diffstat
+>  Documentation/filesystems/nfs/localio.rst |  106 +++++++++--
+>  fs/Kconfig                                |   26 ++
+>  fs/nfs/Kconfig                            |   16 -
+>  fs/nfs/client.c                           |    4
+>  fs/nfs/flexfilelayout/flexfilelayout.c    |    8
+>  fs/nfs/internal.h                         |   24 +-
+>  fs/nfs/localio.c                          |   92 +++------
+>  fs/nfs/pagelist.c                         |    4
+>  fs/nfs/write.c                            |    4
+>  fs/nfs_common/nfslocalio.c                |  287 +++++++++++------------=
+-------
+>  fs/nfsd/Kconfig                           |   16 -
+>  fs/nfsd/Makefile                          |    2
+>  fs/nfsd/filecache.c                       |   27 +-
+>  fs/nfsd/filecache.h                       |    1
+>  fs/nfsd/localio.c                         |   79 ++++----
+>  fs/nfsd/netns.h                           |    4
+>  fs/nfsd/nfsctl.c                          |   25 ++
+>  fs/nfsd/nfsd.h                            |    2
+>  fs/nfsd/nfsfh.c                           |    3
+>  fs/nfsd/nfssvc.c                          |   11 -
+>  fs/nfsd/vfs.h                             |    5
+>  include/linux/nfs.h                       |    2
+>  include/linux/nfs_fs_sb.h                 |    3
+>  include/linux/nfslocalio.h                |   64 +++---
+>  24 files changed, 410 insertions(+), 405 deletions(-)
+>=20
+> These latest changes are available in my git tree here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=
+=3Dnfs-localio-for-next
+>=20
+> Chuck and Jeff, 2 patches have respective Not-Acked-by and
+> Not-Reviewed-by as placeholders because there were enough changes in
+> v15 that you'll need to revalidate your provided tags:
+> [PATCH v15 16/26] nfsd: add LOCALIO support
+> [PATCH v15 17/26] nfsd: implement server support for NFS_LOCALIO_PROGRAM
+>=20
+> Otherwise, I did add the tags you provided from your review of v14.
+> Hopefully I didn't miss any.
+>=20
+> Changes since v14 (Thursday):
+>=20
+> - Reviewed, tested, fixed and incorporated NeilBrown's really nice
+>   solution for addressing net-ns refcounting issues he identified
+>   (first I didn't have adequate protection on net-ns then I had too
+>   heavy), see Neil's 6 replacement patches:
+>   https://marc.info/?l=3Dlinux-nfs&m=3D172498546024767&w=3D2
+>=20
+> - Reviewed, tested and incorporated NeilBrown's __module_get
+>   improvements that build on his net-ns changes, see:
+>   https://marc.info/?l=3Dlinux-nfs&m=3D172499598828454&w=3D2 =20
+>=20
+> - Added NeilBrown to the Copyright headers of 4 LOCALIO source files,
+>   warranted thanks to his contributions.
+>=20
+> - Switched back from using 'struct nfs_localio_ctx' to 'struct
+>   nfsd_file' thanks to NeilBrown's suggestion, much cleaner:
+>   https://marc.info/?l=3Dlinux-nfs&m=3D172499732628938&w=3D2
+>   - added nfsd_file_put_local() to achieve this.
+>=20
+> - Cleaned up and refactored nfsd_open_local_fh().
+>=20
+> - Removed the more elaborate symbol_request()+symbol_put() code from
+>   nfs_common/nfslocalio.c in favor of having init_nfsd() copy its
+>   nfsd_localio_operations table to 'nfs_to'.
+>=20
+> - Fixed the Kconfig to only need a single CONFIG_NFS_LOCALIO (which
+>   still selects NFS_COMMON_LOCALIO_SUPPORT to control how to build
+>   nfs_common's nfs_local enablement, support nfs_localio.ko).
+>=20
+> - Verified all commits are bisect-clean both with and without
+>   CONFIG_NFS_LOCALIO set.
+>   - required adding some missing #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>=20
+> - Added various Reviewed-by and Acked-by tags from Chuck and Jeff.
+>   But again, left Not-<tag> placeholders in nfsd patches 16 and 17.
+>=20
+> - Reviwed and updated all patch headers as needed to reflect the above
+>   changes.
+>=20
+> - Updated localio.rst to reflect all changes above and improved
+>   readability after another pass of proofreading.
+>=20
+> - Added FAQ 8 to localio.rst (Chuck's question and Neil's answer about
+>   export options and LOCALIO.
+>=20
+> - Moved verbose patch header content about the 2 major interlocking
+>   strategies used in LOCALIO to a new "NFS Client and Server
+>   Interlock" section in localio.rst (tied it to a new FAQ 9).
+>=20
+> All review appreciated, thanks!
+> Mike
+>=20
+> Chuck Lever (2):
+>   NFSD: Avoid using rqstp->rq_vers in nfsd_set_fh_dentry()
+>   NFSD: Short-circuit fh_verify tracepoints for LOCALIO
+>=20
+> Mike Snitzer (12):
+>   nfs_common: factor out nfs_errtbl and nfs_stat_to_errno
+>   nfs_common: factor out nfs4_errtbl and nfs4_stat_to_errno
+>   nfs: factor out {encode,decode}_opaque_fixed to nfs_xdr.h
+>   nfsd: add nfsd_serv_try_get and nfsd_serv_put
+>   SUNRPC: remove call_allocate() BUG_ONs
+>   nfs_common: add NFS LOCALIO auxiliary protocol enablement
+>   nfs_common: prepare for the NFS client to use nfsd_file for LOCALIO
+>   nfsd: implement server support for NFS_LOCALIO_PROGRAM
+>   nfs: pass struct nfsd_file to nfs_init_pgio and nfs_init_commit
+>   nfs: implement client support for NFS_LOCALIO_PROGRAM
+>   nfs: add Documentation/filesystems/nfs/localio.rst
+>   nfs: add "NFS Client and Server Interlock" section to localio.rst
+>=20
+> NeilBrown (5):
+>   NFSD: Handle @rqstp =3D=3D NULL in check_nfsd_access()
+>   NFSD: Refactor nfsd_setuser_and_check_port()
+>   nfsd: factor out __fh_verify to allow NULL rqstp to be passed
+>   nfsd: add nfsd_file_acquire_local()
+>   SUNRPC: replace program list with program array
+>=20
+> Trond Myklebust (4):
+>   nfs: enable localio for non-pNFS IO
+>   pnfs/flexfiles: enable localio support
+>   nfs/localio: use dedicated workqueues for filesystem read and write
+>   nfs: add FAQ section to Documentation/filesystems/nfs/localio.rst
+>=20
+> Weston Andros Adamson (3):
+>   SUNRPC: add svcauth_map_clnt_to_svc_cred_local
+>   nfsd: add LOCALIO support
+>   nfs: add LOCALIO support
+>=20
+>  Documentation/filesystems/nfs/localio.rst | 357 ++++++++++
+>  fs/Kconfig                                |  23 +
+>  fs/nfs/Kconfig                            |   1 +
+>  fs/nfs/Makefile                           |   1 +
+>  fs/nfs/client.c                           |  15 +-
+>  fs/nfs/filelayout/filelayout.c            |   6 +-
+>  fs/nfs/flexfilelayout/flexfilelayout.c    |  56 +-
+>  fs/nfs/flexfilelayout/flexfilelayoutdev.c |   6 +
+>  fs/nfs/inode.c                            |  57 +-
+>  fs/nfs/internal.h                         |  53 +-
+>  fs/nfs/localio.c                          | 757 ++++++++++++++++++++++
+>  fs/nfs/nfs2xdr.c                          |  70 +-
+>  fs/nfs/nfs3xdr.c                          | 108 +--
+>  fs/nfs/nfs4xdr.c                          |  84 +--
+>  fs/nfs/nfstrace.h                         |  61 ++
+>  fs/nfs/pagelist.c                         |  16 +-
+>  fs/nfs/pnfs_nfs.c                         |   2 +-
+>  fs/nfs/write.c                            |  12 +-
+>  fs/nfs_common/Makefile                    |   5 +
+>  fs/nfs_common/common.c                    | 134 ++++
+>  fs/nfs_common/nfslocalio.c                | 162 +++++
+>  fs/nfsd/Kconfig                           |   1 +
+>  fs/nfsd/Makefile                          |   1 +
+>  fs/nfsd/export.c                          |  30 +-
+>  fs/nfsd/filecache.c                       | 103 ++-
+>  fs/nfsd/filecache.h                       |   5 +
+>  fs/nfsd/localio.c                         | 189 ++++++
+>  fs/nfsd/netns.h                           |  12 +-
+>  fs/nfsd/nfsctl.c                          |  27 +-
+>  fs/nfsd/nfsd.h                            |   6 +-
+>  fs/nfsd/nfsfh.c                           | 137 ++--
+>  fs/nfsd/nfsfh.h                           |   2 +
+>  fs/nfsd/nfssvc.c                          | 102 ++-
+>  fs/nfsd/trace.h                           |  21 +-
+>  fs/nfsd/vfs.h                             |   2 +
+>  include/linux/nfs.h                       |   9 +
+>  include/linux/nfs_common.h                |  17 +
+>  include/linux/nfs_fs_sb.h                 |   9 +
+>  include/linux/nfs_xdr.h                   |  20 +-
+>  include/linux/nfslocalio.h                |  79 +++
+>  include/linux/sunrpc/svc.h                |   7 +-
+>  include/linux/sunrpc/svcauth.h            |   5 +
+>  net/sunrpc/clnt.c                         |   6 -
+>  net/sunrpc/svc.c                          |  68 +-
+>  net/sunrpc/svc_xprt.c                     |   2 +-
+>  net/sunrpc/svcauth.c                      |  28 +
+>  net/sunrpc/svcauth_unix.c                 |   3 +-
+>  47 files changed, 2468 insertions(+), 409 deletions(-)
+>  create mode 100644 Documentation/filesystems/nfs/localio.rst
+>  create mode 100644 fs/nfs/localio.c
+>  create mode 100644 fs/nfs_common/common.c
+>  create mode 100644 fs/nfs_common/nfslocalio.c
+>  create mode 100644 fs/nfsd/localio.c
+>  create mode 100644 include/linux/nfs_common.h
+>  create mode 100644 include/linux/nfslocalio.h
+>=20
 
