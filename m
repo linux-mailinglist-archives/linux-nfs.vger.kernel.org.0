@@ -1,230 +1,345 @@
-Return-Path: <linux-nfs+bounces-6301-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6302-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A785C96F707
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 16:37:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9974896F7C3
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 17:05:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40B141F25AC2
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 14:37:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7EFF1C24A7E
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 15:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79EAF1D1F72;
-	Fri,  6 Sep 2024 14:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06E81D415D;
+	Fri,  6 Sep 2024 15:04:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fnguzOGr";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GoQ0ryLQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQAOhGT6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBDB1CEAC9;
-	Fri,  6 Sep 2024 14:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725633425; cv=fail; b=G0+y2LRm9vM3/az2cPJEeBPnT7g5mJIiF2zHr90M2/7w30QjRt+fNDzW6ntZm3Zj6RxESW/Lnjt4Xyldren5G1U8tICPfxpkTqZbfA8+PSccuuyXphMqKw/JXVCyfFpamvhJayv/87gnPjDbKLMWxYxZbSpwhBIbCmOlLCSAFOs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725633425; c=relaxed/simple;
-	bh=p+MC9DfEh83cSNsU/OkIiYyaqD5+WDbz/0lOilwCYPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lDJH1i8DCkmRRZXcw2HFO4/gi9b0qDVMYhDkq53lI/T26zvw0XuCRyeMtdWXcc0RcUuInhaK9zU3/FCSB42OauBn3Tn91hw5AH6joR1p1N9UeEcKSRu+y5qGCuj+at/yc8JyMW4ZwW6reHmtyj4nrUi7JIdwidyjxEkNUN+9ORY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fnguzOGr; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GoQ0ryLQ; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 486Cs5nm012991;
-	Fri, 6 Sep 2024 14:36:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=/gi6Z1MNJwP8AHt
-	BYN/JM5R9jgHYDXmC4wqe03TyEhQ=; b=fnguzOGrw1NwwfOg+ZuWzPJuqyLcm2z
-	rOt3keKW/jPzYl988uaq1OUbr/BIOPnM0lg2mg1ng662W/gIzSzBXUPkaeJV0/wH
-	KcHZoLDKeQVcdzFLw+UxvD2zxgHRQin0JlQ/QkmuigRYa3kmxd4pqgUv4ydEfNEI
-	4jPZdOB29nBwoLNc7qO1F2IIVy+ZKBBQ9cFYifMk5LmI1ecM7rLeVLQ/TDfahRga
-	fn8Lp5cSctERsjbKyrcdJIUOo5m6nH+iA88jHU4B+oH4Z3hu3gh49VolZMJ2WBwz
-	Ll7xCkwXk5ViXp9bVlIEZQcwGzk04RLvOA/ybhs1djtOhskDlyWvYXQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41fhwhhsqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Sep 2024 14:36:51 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 486EXpa7036884;
-	Fri, 6 Sep 2024 14:36:50 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2047.outbound.protection.outlook.com [104.47.70.47])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41fhyg0yke-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Sep 2024 14:36:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m3hH38PPaYIrSbqJktqgEcTcSgkrG5oG76GtXaXMJKA9hlYbYxW9mCoIVqyN+GCqSdQqWWgl9vjDm4+zRs9Tvf6e751DPwB2ac6gvNPp7ZniUrdpNMhNvtPY8kZcfiRYsTaz7PbotPcVcKsi7nmkDsgLWtn3bEkDvL5JQqhoMOUfEkA9hb9qtAmYHI7JDwIpVUw2QdQPkJHdY4BUY+OYoHvER54wRhQp669uuLHesc0F4o0HB/pagU8GvsenCt5DAeF5q62cu0XX1hBJezKHhXJyF36VNnf9ywqPM+Pe3xTEg5ftOs0roohsEqcHLLo71TfKeUajRPqzfAVbxPtNDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/gi6Z1MNJwP8AHtBYN/JM5R9jgHYDXmC4wqe03TyEhQ=;
- b=trUP0Pz+2PU2Q07w4Pe8mNTY2F9NiffQ++8Kde9rocGHygD6xgVYqcFw2NVf3WngoPSan8fhGOO4i3o/974fbS+yQSVVByew9Drz04pi+Gc6vaHUMnF2oHtvKshMzle/Vqz6Bd9M9491fdljBcY5UHFo05xTiheCDv9rxLdk4EQi3YvMhf38XmuvIOmqZZ2LLQCTYQp2FWIxpVffh2/kSVFSzUKlHrjX6OyYTqx+oBKqnggTWzyhFxTiHnXrWhblwQCHwDucGIu61/5yjjcJs5gQRimS5OaURZBAaEyF+CccdLo5GCUtyuYTkIqy+2dJBlacwhSoMbswIHiwrcWzAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/gi6Z1MNJwP8AHtBYN/JM5R9jgHYDXmC4wqe03TyEhQ=;
- b=GoQ0ryLQt2rctMP7nU7pvSwyDi7UNKEal7wqrMGCmnCywSTW0sWQTHSxSy6WhMDr6mdP/wk2X46d/mVXJ+JFODVqDfJQECsIyXtPHG2HMCk1Ko1cIxKOKpa1tK7Ao9QFTmNvwpLbJ1j3thdmgilnJUGL5qJJtVS1LWVplqs4B2I=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB5686.namprd10.prod.outlook.com (2603:10b6:806:236::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.14; Fri, 6 Sep
- 2024 14:36:47 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.7939.010; Fri, 6 Sep 2024
- 14:36:47 +0000
-Date: Fri, 6 Sep 2024 10:36:43 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] nfsd: fix initial getattr on write delegation
-Message-ID: <ZtsTe1Cv7B3uLpVm@tissot.1015granger.net>
-References: <20240905-delstid-v4-0-d3e5fd34d107@kernel.org>
- <20240905-delstid-v4-1-d3e5fd34d107@kernel.org>
- <f20e49db181de1152ffb1b102450963937b4ec4f.camel@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f20e49db181de1152ffb1b102450963937b4ec4f.camel@kernel.org>
-X-ClientProxiedBy: CH2PR14CA0048.namprd14.prod.outlook.com
- (2603:10b6:610:56::28) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E3E1D2F78;
+	Fri,  6 Sep 2024 15:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725635057; cv=none; b=En6NPRPLg89bdgCCpVAL80qP3gxNFmw7USc8G9F8uShDVaS/536MtBAEejKvvj1OxfpcBTHHOjdENPikID8gDVv7nY/ooZUw6s7iU2rXfTer9AKZ2CsBL8rtLIFYPdkksKu9tbQ8pvqfalZBmgUtkeEDFj0nv0hoUfGdJ5+ANBI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725635057; c=relaxed/simple;
+	bh=YhCFGAb5WC3vk773YhEinYlmUParKn+DvJYWuMeX/XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mRt41CUV8NtjF/dGSFcwXjzzn3JZ33/Letvi7a/dZmfClPgONgxkeAeKlZyaGY4vzkGzK7Gi8oLn0heKTRlYgTpanId92PJ3O90UzhzbJCpGsxr+BCxyRZnyqahgwoy7dapKJ3CmLSbVI9ilk429htUX1S9cMEqOVkPsBGN1qpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQAOhGT6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E5FC4CEC6;
+	Fri,  6 Sep 2024 15:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725635057;
+	bh=YhCFGAb5WC3vk773YhEinYlmUParKn+DvJYWuMeX/XU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jQAOhGT6Cc4QknaOQqtydtNxLpTv/XuhqxkHoZX8udgOtD0y+uxCeFSI2XtAqIZPU
+	 y2h4MA1EBNaDqFZNjMoEcfvrsbRh0/17R/uVLbmt1lmO+9fAHzVmHoqAXIpQgq4FK6
+	 g/FGUdZ5pJPcNujfTf/dtvaA05xckxGfxT61sEJsKmy6u4Ql059Bw2Ox2py6SP+wvC
+	 UUoDjApPOyBQJzSF4gGLKDFswRX2fhJd8yMOZkX5qSkh1ADwK4wGOUsR4u9Jsdhx+x
+	 KRinhVlUq+S0fiuAyXskTzczN0hKUSfyvcrvjNDskbrYDPKmzwCsTxGbC9XrjzaqKj
+	 dScqxlRQ/ODBw==
+Date: Fri, 6 Sep 2024 11:04:16 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
+Message-ID: <ZtsZ8IEoV-DyqAzj@kernel.org>
+References: <>
+ <Ztm-TbSdXOkx3IHn@kernel.org>
+ <172557924809.4433.12586767127138915683@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB5686:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4ec9340-e8b6-4434-bba7-08dcce815642
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FBpxCdmI74aqzQ4lWT+Ru2TY7mLKCEKugYwTMHwgyyvV22yuijwkHLedvcme?=
- =?us-ascii?Q?p63n/e81CeFgflWRwMAMVkADtke96hvdnk6+jszfw+wNc2VRaVAKhNCve1Go?=
- =?us-ascii?Q?xphzuCKzsFOSshusrnVLisd67otihpb9kos1/2hb/pShZZGaGdCRei332Wm2?=
- =?us-ascii?Q?H1vJlDTb1aKTa/p9jJDJWHGSOsX7wEUayBSJ+KV4A2TWq+Qeh70RUUW5fkiq?=
- =?us-ascii?Q?iC2sm95I4vqzCPPRBA//lFG9QfLsHDfbLkrfGK3utwcANLyoobTgfnN/Jwcc?=
- =?us-ascii?Q?S0V0PPEtQs1oG7w8khQfgSTIKWH3itLCCtm6AdEO3Q6CAuZrkpGeftuvYxIf?=
- =?us-ascii?Q?/r0c8esvHSb7w4+0kJ3Z2U06ejywLeAGGHBSFvb7rceRif9khlChFQ53kZe6?=
- =?us-ascii?Q?iIhYNFtsh6jNmfZMLZEpZejkb5uS7z/F/TczisnTzywPA9IuXXnnPNsXLp3N?=
- =?us-ascii?Q?uTI8kgIPGnzDOTZLP+XUii9HtUX5VJ+aqG+mJebhdn/AVxR4nM48bJGTeR1g?=
- =?us-ascii?Q?vbx7/miGHPlFnAc11YtAWabuWW5ywZ+uRxgX8QxiDd6oUwfGqMuP+N0HrETN?=
- =?us-ascii?Q?kXdaJoZJ+cnNfSsCa+Eeh0WjJv6XB26k494sfxC7LiJ2AretDzytQuKqI7Zu?=
- =?us-ascii?Q?SFN4l7vIn7G7hCqohq/3mdgW3vg7KVsAJfS5FGYh4Y4OlwvfXaAa6FbFmGUP?=
- =?us-ascii?Q?55NNY5ATt7quWnpp0kOTuLvbrIp4Gfqgjd8P/h46RDN5SIUkMX8RSiYcVzeH?=
- =?us-ascii?Q?vPZwHL3Fc2duVCnUjREZjmS/4GWKNoiJ6xD+M5LCQ8cO21A52k47yltiP5tq?=
- =?us-ascii?Q?6qkpFRTM6T7QtyDNUT/o0vT5i0an1bviKLzTr6zsbatb/0K5NJRRbSRnWc/j?=
- =?us-ascii?Q?ZuR2eteHQ2e+Ght7IS3H/HDmTEDKi2sf9a63UPhWyoAAo9CPY2fGbdCsYoE3?=
- =?us-ascii?Q?n+fg7Ykt/4SaHN8gCbuarM/Gt52dKwafHdRZzZ4W0F7MZl5A8ZRH5EwA+JbS?=
- =?us-ascii?Q?2DL0Iqx8VOqiSO80EaYHpItmY3bgjt9UYWuJVpOfk21Kn0pVL15PxlRkysm/?=
- =?us-ascii?Q?ck95yKmXuh8AuQwAOLBaVUFjAgmqNOE+aN8q9jFutkcbaYQbD0yfbghvZtQ3?=
- =?us-ascii?Q?FtIgvqyNlCLL4/K2j5KFdCJI+EamP0bUWb62nqXik+tzYOA3soMXW9AXg4Jz?=
- =?us-ascii?Q?7FMhulmvN+KTxD931E5yJQUg5tOLE5X/eiZS5puJp1dYoh6cy2GLXJUXRRE0?=
- =?us-ascii?Q?o2EvGb9eFlt/WFo8fPx3YTpdkUpRUNG1su2OmmNEd2pW9cxcKtZ+2AKOJhj6?=
- =?us-ascii?Q?MveJGT0Wu/QxDfDknuGrLA12p9r0SWnIWarPkawRH64/8A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cQfDadSw2n4ARljRwjGCtC+GTNc5jq2j9L4nGa09qqNuiFiBY80sZ91YI+iK?=
- =?us-ascii?Q?pb1FsNoOqxbZSWC/36jm/1oLVxfWB0INhL8Q3MKZ12pRvfoKWILueo+yPTpI?=
- =?us-ascii?Q?DmpnMsaBtXo5aoD7ZkL6ARFK9slLd54rMzfB/cnge6n9Zp118ebZpM9aeYou?=
- =?us-ascii?Q?srEMNYY5hSF0r8Q+QZndTghl8KfQdXcH1tBeKtJOOzYcxdqOYwu4bcjdV1ge?=
- =?us-ascii?Q?+BSg3ametNfg0c/rBADcRr5lZHAsR+nfwcWAS0eyK/ltTJRryQqTDDetibrO?=
- =?us-ascii?Q?CJ33K3RW3rea0lf62wQbKPqH77gs6msUbEqt/nASvxkCeeFBZswaWcYC18vK?=
- =?us-ascii?Q?HHxKa1AsS20x7uzJcJizbtKmuy3ZXDKsmGcD7HNVfcgMfKn4rGNVqkjQj1Kk?=
- =?us-ascii?Q?q+0POyua/jYBEsj4vnpkT3ikpDr3KiHCKrCf50YRkebP9oxtqeSoBIkBoDlL?=
- =?us-ascii?Q?phnVBAKVpaMCtHaxqYb6vaVBjmYR4GKWv/fXmE8AhczhMhDomx7FV2b73+za?=
- =?us-ascii?Q?zQftK00hyPhiU+XNyMJsewkHfctvflMZ6Ez9TE02HwGC5dqGAqse74IiMM69?=
- =?us-ascii?Q?rdgLPv+DTVRZmEMuDNtL4++MfFVhw3IHsvi97uKy0r6C0aAFboB5QzTkHFeb?=
- =?us-ascii?Q?XbwfCgWbr4F2zpCNaHiya0jQzL7vnPCchUirm3JsINImrxs/66dC/62nkhoG?=
- =?us-ascii?Q?RTfToxJQDoAaEWXB6kmCKBYjYv6N15KcQBDllugs0BQyCqapv3/StRxjxZlL?=
- =?us-ascii?Q?41Sns3RpZUHbxe/KAqd2Z5uZn0aEO4Y2+BnDTkofZGhzYN8TzewDIMvo432l?=
- =?us-ascii?Q?W72HeLQrCDQ5l9a7AX+Po2OS+RWHlY5Gj1vaCHFfm/1AMWqQNTI4Sr9pO7xi?=
- =?us-ascii?Q?uxM85X4RIva2ESgPSql8ablnc4FHhGcmfq+6eJvg9J9QJgTZnkkrRCsT/p0L?=
- =?us-ascii?Q?kuj515QfJ+9Is6MKeWZtqzkPv1b1UwtrP41uiyBHNfzbuEBhcH2TsCoi48KI?=
- =?us-ascii?Q?vbcu7ODcb5/1nlEbK8y27zunVU0wvw3ZwUA3p4BeE4sQhUqiyWOsNxTzKQej?=
- =?us-ascii?Q?zcpe45h2hAlSmqnDuo2cMWeeYEWb9t5vOL1sCZttZ0i053jBKoomloHL8yza?=
- =?us-ascii?Q?HvCyfunFimThNdfRILXPiQeFxoLS/+uXJLak39iZOU9OAp/yoMV3F5XR+Zd3?=
- =?us-ascii?Q?C3ldBvQGzbYUkXHqYpufC2wfn7/d88doTXUoaQuBbrk3FM+SRhqi+awPD/Mj?=
- =?us-ascii?Q?YMFWqO5jiOIZLYFCA2PzstMvU8V+xOzKb82t2f2uqfgkHsjD9D8UM8xv0ZvL?=
- =?us-ascii?Q?AJJhwFGG7bVxPeKAUSagF3OSSrerYCfLXy2K69UHuBbj1Sagnjkh66Fg2Hwr?=
- =?us-ascii?Q?B6Dpro8Oe/ABsZPtS8tOuxz4Nkx+P3EwXqE8/Fh0NTdROWEne6c8iltVIXcT?=
- =?us-ascii?Q?RoCWPBsW/X4j6nYhlhvFmgRfbetSGeYyAI5O9Z7cGXunHC4vAzQCRTdROl7r?=
- =?us-ascii?Q?IC4eyEsLsuqTcVvA6LmqzGVNCeBQq1IjcgESn5sIYNpPflP8YMMX1x+xrdfm?=
- =?us-ascii?Q?GbIJLLyMLYWxnVgRxgvgdSfIOPAyPAs+qCRdj79e?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Ci5OFamx0ED3N16zUZQsLJ8SaIeoNQyhemh48J43AIuKOUZkcWG5YweRLyS+Dh3qL7Yf3TvY5l/ilYSIARKYYcB9JvihaoO2ciEiHSMIc17b6ouROTPgeLXpqNfy5K5t2bpGyqsIU2Jucjc827bFSfxlzP0LzaM4N20cH4Z13akThEfO1eBUPaOE/CgqycZM4IAHBfo+w0kafZwcGBohx6B63VurWsahh7YN7IVSKsNXlxvrXbkOMr8cgM77dYZ/cp/iGRbiKSyPlpIVJO5ONRykIGc7mJc6yuO3mHC4xzOdmHGZiAHlBoW+AruyXrMcNv+qWcJ67lY6A6klQHvGtDt0R0UpZ8fWCk9jmmqFAUX4fEA+y8DX/kds7IQzv6ckoUSwZ1ShQYqvhK1tAisiXnfxek4sMImmXmErZx//+k9aTQrL7uaY5I6/573SpxBub4N1V199pPSrVZLRck6ZYhLtK7SltX5OTLIbNpl3QTcTPRZ+XgxY1Q84c/JXiTsX9E5d5hqoz5ASwSub302Tf2wO+N1jOoKs6Q4m2cQg2TDZ1bg6bmhxOnhVx9Oq/nx8g/0lyxom/Wi4UFLNrAfJ3dmaqNbWMb0JceNEq5+Ici8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4ec9340-e8b6-4434-bba7-08dcce815642
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 14:36:47.4686
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9kLclcNCpHl7YfHwEkmrKvLukQylrXkJkx9LFCLMgZh/XXOprh1QwTdMVFDsa17zICxJjjg8Aa7CHdRhGf8SpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5686
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_03,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2408220000
- definitions=main-2409060107
-X-Proofpoint-ORIG-GUID: 9r25i5PXN80_q_CSB7ly6Zzgzc11ZWgE
-X-Proofpoint-GUID: 9r25i5PXN80_q_CSB7ly6Zzgzc11ZWgE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172557924809.4433.12586767127138915683@noble.neil.brown.name>
 
-On Fri, Sep 06, 2024 at 10:08:29AM -0400, Jeff Layton wrote:
-> On Thu, 2024-09-05 at 08:41 -0400, Jeff Layton wrote:
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index df69dc6af467..db90677fc016 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -5914,6 +5914,26 @@ static void nfsd4_open_deleg_none_ext(struct nfsd4_open *open, int status)
-> >  	}
-> >  }
-> >  
-> > +static bool
-> > +nfs4_delegation_stat(struct nfs4_delegation *dp, struct svc_fh *currentfh,
-> > +		     struct kstat *stat)
-> > +{
-> > +	struct nfsd_file *nf = find_rw_file(dp->dl_stid.sc_file);
-> > +	struct path path;
-> > +
-> > +	if (!nf)
-> > +		return false;
-> > +
-> > +	path.mnt = currentfh->fh_export->ex_path.mnt;
-> > +	path.dentry = file_dentry(nf->nf_file);
-> > +
-> > +	if (vfs_getattr(&path, stat,
-> > +			(STATX_INO | STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
+On Fri, Sep 06, 2024 at 09:34:08AM +1000, NeilBrown wrote:
+> On Fri, 06 Sep 2024, Mike Snitzer wrote:
+> > On Wed, Sep 04, 2024 at 09:47:07AM -0400, Chuck Lever wrote:
+> > > On Wed, Sep 04, 2024 at 03:01:46PM +1000, NeilBrown wrote:
+> > > > On Wed, 04 Sep 2024, NeilBrown wrote:
+> > > > > 
+> > > > > I agree that dropping and reclaiming a lock is an anti-pattern and in
+> > > > > best avoided in general.  I cannot see a better alternative in this
+> > > > > case.
+> > > > 
+> > > > It occurred to me what I should spell out the alternate that I DO see so
+> > > > you have the option of disagreeing with my assessment that it isn't
+> > > > "better".
+> > > > 
+> > > > We need RCU to call into nfsd, we need a per-cpu ref on the net (which
+> > > > we can only get inside nfsd) and NOT RCU to call
+> > > > nfsd_file_acquire_local().
+> > > > 
+> > > > The current code combines these (because they are only used together)
+> > > > and so the need to drop rcu. 
+> > > > 
+> > > > I thought briefly that it could simply drop rcu and leave it dropped
+> > > > (__releases(rcu)) but not only do I generally like that LESS than
+> > > > dropping and reclaiming, I think it would be buggy.  While in the nfsd
+> > > > module code we need to be holding either rcu or a ref on the server else
+> > > > the code could disappear out from under the CPU.  So if we exit without
+> > > > a ref on the server - which we do if nfsd_file_acquire_local() fails -
+> > > > then we need to reclaim RCU *before* dropping the ref.  So the current
+> > > > code is slightly buggy.
+> > > > 
+> > > > We could instead split the combined call into multiple nfs_to
+> > > > interfaces.
+> > > > 
+> > > > So nfs_open_local_fh() in nfs_common/nfslocalio.c would be something
+> > > > like:
+> > > > 
+> > > >  rcu_read_lock();
+> > > >  net = READ_ONCE(uuid->net);
+> > > >  if (!net || !nfs_to.get_net(net)) {
+> > > >        rcu_read_unlock();
+> > > >        return ERR_PTR(-ENXIO);
+> > > >  }
+> > > >  rcu_read_unlock();
+> > > >  localio = nfs_to.nfsd_open_local_fh(....);
+> > > >  if (IS_ERR(localio))
+> > > >        nfs_to.put_net(net);
+> > > >  return localio;
+> > > > 
+> > > > So we have 3 interfaces instead of 1, but no hidden unlock/lock.
+> > > 
+> > > Splitting up the function call occurred to me as well, but I didn't
+> > > come up with a specific bit of surgery. Thanks for the suggestion.
+> > > 
+> > > At this point, my concern is that we will lose your cogent
+> > > explanation of why the release/lock is done. Having it in email is
+> > > great, but email is more ephemeral than actually putting it in the
+> > > code.
+> > > 
+> > > 
+> > > > As I said, I don't think this is a net win, but reasonable people might
+> > > > disagree with me.
+> > > 
+> > > The "win" here is that it makes this code self-documenting and
+> > > somewhat less likely to be broken down the road by changes in and
+> > > around this area. Since I'm more forgetful these days I lean towards
+> > > the more obvious kinds of coding solutions. ;-)
+> > > 
+> > > Mike, how do you feel about the 3-interface suggestion?
+> > 
+> > I dislike expanding from 1 indirect function call to 2 in rapid
+> > succession (3 for the error path, not a problem, just being precise.
+> > But I otherwise like it.. maybe.. heh.
+> > 
+> > FYI, I did run with the suggestion to make nfs_to a pointer that just
+> > needs a simple assignment rather than memcpy to initialize.  So Neil's
+> > above code becames:
+> > 
+> >         rcu_read_lock();
+> >         net = rcu_dereference(uuid->net);
+> >         if (!net || !nfs_to->nfsd_serv_try_get(net)) {
+> >                 rcu_read_unlock();
+> >                 return ERR_PTR(-ENXIO);
+> >         }
+> >         rcu_read_unlock();
+> >         /* We have an implied reference to net thanks to nfsd_serv_try_get */
+> >         localio = nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
+> >                                              cred, nfs_fh, fmode);
+> >         if (IS_ERR(localio))
+> >                 nfs_to->nfsd_serv_put(net);
+> >         return localio;
+> > 
+> > I do think it cleans the code up... full patch is here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=nfs-localio-for-next.v15-with-fixups&id=e85306941878a87070176702de687f2779436061
+> > 
+> > But I'm still on the fence.. someone help push me over!
 > 
-> Minor oversight here.
+> I think the new code is unquestionable clearer, and not taking this
+> approach would be a micro-optimisation which would need to be
+> numerically justified.  So I'm pushing for the three-interface version
+> (despite what I said before).
 > 
-> I added STATX_INO when I was debugging, but we don't need it here. We
-> should probably drop that flag (though it's mostly harmless). Chuck,
-> would you be ok with fixing that up?
+> Unfortunately the new code is not bug-free - not quite.
+> As soon as nfs_to->nfsd_serv_put() calls percpu_ref_put() the nfsd
+> module can be unloaded, and the "return" instruction might not be
+> present.  For this to go wrong would require a lot of bad luck, but if
+> the CPU took an interrupt at the wrong time were would be room.
+> 
+> [Ever since module_put_and_exit() was added (now ..and_kthread_exit)
+>  I've been sensitive to dropping the ref to a module in code running in
+>  the module]
+> 
+> So I think nfsd_serv_put (and nfsd_serv_try_get() __must_hold(RCU) and
+> nfs_open_local_fh() needs rcu_read_lock() before calling
+> nfs_to->nfsd_serv_put(net).
 
-Fixed and squashed into nfsd-next.
+OK, yes I can see that, I implemented what you suggested at the end of
+your reply (see inline patch below)...
 
--- 
-Chuck Lever
+But I'd just like to point out that something like the below patch
+wouldn't be needed if we kept my "heavy" approach (nfs reference on
+nfsd modules via nfs_common using request_symbol):
+https://marc.info/?l=linux-nfs&m=172499445027800&w=2
+(that patch has stuff I since cleaned up, e.g. removed typedefs and
+EXPORT_SYMBOL_GPLs..)
+
+I knew we were going to pay for being too cute with how nfs took its
+reference on nfsd.
+
+So here we are, needing fiddly incremental fixes like this to close a
+really-small-yet-will-be-deadly race:
+
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index c29cdf51c458..d124c265b8fd 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -341,7 +341,7 @@ nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
+ {
+ 	struct nfs_pgio_header *hdr = iocb->hdr;
+ 
+-	nfs_to->nfsd_file_put_local(iocb->localio);
++	nfs_to_nfsd_file_put_local(iocb->localio);
+ 	nfs_local_iocb_free(iocb);
+ 	nfs_local_hdr_release(hdr, hdr->task.tk_ops);
+ }
+@@ -622,7 +622,7 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
+ 	}
+ out:
+ 	if (status != 0) {
+-		nfs_to->nfsd_file_put_local(localio);
++		nfs_to_nfsd_file_put_local(localio);
+ 		hdr->task.tk_status = status;
+ 		nfs_local_hdr_release(hdr, call_ops);
+ 	}
+@@ -673,7 +673,7 @@ nfs_local_release_commit_data(struct nfsd_file *localio,
+ 		struct nfs_commit_data *data,
+ 		const struct rpc_call_ops *call_ops)
+ {
+-	nfs_to->nfsd_file_put_local(localio);
++	nfs_to_nfsd_file_put_local(localio);
+ 	call_ops->rpc_call_done(&data->task, data);
+ 	call_ops->rpc_release(data);
+ }
+diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+index 42b479b9191f..5c8ce5066c16 100644
+--- a/fs/nfs_common/nfslocalio.c
++++ b/fs/nfs_common/nfslocalio.c
+@@ -142,8 +142,11 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid,
+ 	/* We have an implied reference to net thanks to nfsd_serv_try_get */
+ 	localio = nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
+ 					     cred, nfs_fh, fmode);
+-	if (IS_ERR(localio))
++	if (IS_ERR(localio)) {
++		rcu_read_lock();
+ 		nfs_to->nfsd_serv_put(net);
++		rcu_read_unlock();
++	}
+ 	return localio;
+ }
+ EXPORT_SYMBOL_GPL(nfs_open_local_fh);
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 7ff477b40bcd..0d389051d08d 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -398,7 +398,7 @@ nfsd_file_put(struct nfsd_file *nf)
+  * reference to the associated nn->nfsd_serv.
+  */
+ void
+-nfsd_file_put_local(struct nfsd_file *nf)
++nfsd_file_put_local(struct nfsd_file *nf) __must_hold(rcu)
+ {
+ 	struct net *net = nf->nf_net;
+ 
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index 291e9c69cae4..f441cb9f74d5 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -53,7 +53,7 @@ void nfsd_localio_ops_init(void)
+  *
+  * On successful return, returned nfsd_file will have its nf_net member
+  * set. Caller (NFS client) is responsible for calling nfsd_serv_put and
+- * nfsd_file_put (via nfs_to->nfsd_file_put_local).
++ * nfsd_file_put (via nfs_to_nfsd_file_put_local).
+  */
+ struct nfsd_file *
+ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index e236135ddc63..47172b407be8 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -214,14 +214,14 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change
+ 	return 0;
+ }
+ 
+-bool nfsd_serv_try_get(struct net *net)
++bool nfsd_serv_try_get(struct net *net) __must_hold(rcu)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+ 	return (nn && percpu_ref_tryget_live(&nn->nfsd_serv_ref));
+ }
+ 
+-void nfsd_serv_put(struct net *net)
++void nfsd_serv_put(struct net *net) __must_hold(rcu)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index b353abe00357..b0dd9b1eef4f 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -65,10 +65,25 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *,
+ 		   struct rpc_clnt *, const struct cred *,
+ 		   const struct nfs_fh *, const fmode_t);
+ 
++static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
++{
++	/*
++	 * Once reference to nfsd_serv is dropped, NFSD could be
++	 * unloaded, so ensure safe return from nfsd_file_put_local()
++	 * by always taking RCU.
++	 */
++	rcu_read_lock();
++	nfs_to->nfsd_file_put_local(localio);
++	rcu_read_unlock();
++}
++
+ #else   /* CONFIG_NFS_LOCALIO */
+ static inline void nfsd_localio_ops_init(void)
+ {
+ }
++static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
++{
++}
+ #endif  /* CONFIG_NFS_LOCALIO */
+ 
+ #endif  /* __LINUX_NFSLOCALIO_H */
+
+> > 
+> > Tangent, but in the related business of "what are next steps?":
+> > 
+> > I updated headers with various provided Reviewed-by:s and Acked-by:s,
+> > fixed at least 1 commit header, fixed some sparse issues, various
+> > fixes to nfs_to patch (removed EXPORT_SYMBOL_GPL, switched to using
+> > pointer, updated nfs_to callers). Etc...
+> > 
+> > But if I fold those changes in I compromise the provided Reviewed-by
+> > and Acked-by.. so I'm leaning toward posting a v16 that has
+> > these incremental fixes/improvements, see the 3 topmost commits here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next.v15-with-fixups
+> > 
+> > Or if you can review the incremental patches I can fold them in and
+> > preserve the various Reviewed-by and Acked-by...
+> 
+> I have reviewed the incremental patches and I'm happy for all my tags to
+> apply to the new versions of the patches.
+
+Thanks!
+Mike
 
