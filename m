@@ -1,115 +1,157 @@
-Return-Path: <linux-nfs+bounces-6295-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6296-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB37096E7C2
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 04:35:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 417D896E833
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 05:27:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85D5D1F23B91
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 02:35:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC386B232D8
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 03:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BF120309;
-	Fri,  6 Sep 2024 02:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA621E521;
+	Fri,  6 Sep 2024 03:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRGtGNWC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8886A182B3;
-	Fri,  6 Sep 2024 02:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4002B381B1
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Sep 2024 03:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725590117; cv=none; b=mBdT4a9iojyV4aoTMLplwqnCKtk1ohE+R3gTr22gVSqryZQanJNlKo0ZzK6XTT636kY2Psw8N/6xEgptC9ArXrZRJVtM7IKd70kBPMi6lZLFgh6ca+uoMC2mAkVEYfslZzn1S5Bi1GWbRxdc1efuqmVCV4I7x6/TEExVpMnYOR8=
+	t=1725593216; cv=none; b=nWfCbcehr7zl7NpKYwQmahpm3YncFX6Wou/TxbaBzAmvVBFL7rWCamI95yz7cJAdjlQfQcyefKX1dYSYWeatFsYxaju+q3wcawnY5CLbzTu6Xt+/+j92zkdqB18/Ivnssoxnzs3VAZUo8BPWXGGWoMG7QBCYYL3QV+eWoZfoqjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725590117; c=relaxed/simple;
-	bh=WhQeqFtAGTX6XYbCEXQ9ZmWwEhxISb8ziXHJQ0oDfDI=;
-	h=Subject:References:CC:From:To:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Z23a5oZw5yw94Bs4ksokfXcDl8RFKaRdswhgnULjC7vXUppsggfeIRGO14vda3uV3P0+te43405sNxjH3pFs9N4XEta0zx5FB7V6EmBq8QsvsnuCnMPWq/REn7YUX7NPtXhq6thhzfL8gb278jyWpFMCIIuasifaVUXWfRYTDCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4X0KvS2Qykz69Wr;
-	Fri,  6 Sep 2024 10:30:12 +0800 (CST)
-Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id A052E1800F2;
-	Fri,  6 Sep 2024 10:35:11 +0800 (CST)
-Received: from [10.174.178.75] (10.174.178.75) by
- kwepemh100016.china.huawei.com (7.202.181.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 6 Sep 2024 10:35:09 +0800
-Subject: Re: [PATCH v2 -next 00/15] sysctl: move sysctls from vm_table into
- its own files
-References: <CGME20240903033105eucas1p2b9d0b874da268fecb49905d90340de09@eucas1p2.samsung.com>
- <20240903033011.2870608-1-yukaixiong@huawei.com>
- <20240903203837.cbzs3ziuh6eq4kvo@joelS2.panther.com>
-CC: <guohanjun@huawei.com>, <ysato@users.osdn.me>, <dalias@libc.org>,
-	<glaubitz@physik.fu-berlin.de>, <luto@kernel.org>, <tglx@linutronix.de>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
-	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <jack@suse.cz>,
-	<kees@kernel.org>, <willy@infradead.org>, <Liam.Howlett@oracle.com>,
-	<vbabka@suse.cz>, <lorenzo.stoakes@oracle.com>, <trondmy@kernel.org>,
-	<anna@kernel.org>, <chuck.lever@oracle.com>, <jlayton@kernel.org>,
-	<neilb@suse.de>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <paul@paul-moore.com>,
-	<jmorris@namei.org>, <linux-sh@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>, <wangkefeng.wang@huawei.com>
-From: yukaixiong <yukaixiong@huawei.com>
-To:
-	<"wangkefeng.wang@huawei.com liushixin2@huawei.com liuyongqiang13@huawei.com tongtiangen@huawei.com sunnanyong@huawei.com mawupeng1@huawei.com zuoze1@huawei.com zhangpeng362@huawei.com tujinjiang@huawei.com yaolulu5"@huawei.com>
-Message-ID: <0a12953b-0d11-00d2-ef0e-454d0e3d98f3@huawei.com>
-Date: Fri, 6 Sep 2024 10:35:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1725593216; c=relaxed/simple;
+	bh=e1aJctxIKGKtQd3vXaa+PDx1/NWlaFWvZglOIlx1Ips=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=spSQCgd8aZe4cAI8EG0U/e3uSisUiI/Hgsz2bZawir0tuv1tQ/FukC0cWAzwswhjXZQXUaFHY4ZvKRihB3xVhX1DSIxROrzigExHt6XWKc+NyC4g1nuqFC4Hoanm4ebL+dxVvMD0+RjMP7nw7OmaW/vxJEfKwf8mOF8K9guZduk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ovt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mRGtGNWC; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ovt.bounces.google.com
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6d5dd6d28c2so58172657b3.0
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Sep 2024 20:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1725593213; x=1726198013; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WJjdg+pyOSRf+cJpzdpWgscOblysr8CkyzUw7sQ8Bkw=;
+        b=mRGtGNWC5edpehaZKlKyk1muU1A4Mc5UuFynvwuRcnLK6z1XaY0IhxKuu2lejitFjl
+         Ui9rWVSF33o6ePptLaqIBDHImLUMSjolG7rYWHUR01SRP3ADijyA/sCeWe2c735laRAH
+         Eayvi8cm1LGmBoSCzUklSEPMUW9GjOw+6nZml7dbeMDQ3CtKG9u4Gw4vepAsEFWyaQEq
+         urNhGOoq8SJS7+TVOmEMPmgzoOzzpqGgb1tNfPu0e/VR/LpMItsnm+N23yagwqYgSQat
+         pE7pbe0TiEX/lj6xqttQWyU2TjLFKPrV1bAv46VTNy8hHgFCMq5umCWPodL+AuzEU5PL
+         8KDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725593213; x=1726198013;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WJjdg+pyOSRf+cJpzdpWgscOblysr8CkyzUw7sQ8Bkw=;
+        b=a/ekG8zgOLBEKAuAgHEmaCbXHGEqZh0RONhdQVvDmkYZJevZ4SIOiZb6bt3rJZgg8K
+         yDlpMxd3ud1xusN9Utk1j1OkcuywwhXDqi50VfpJGP6e2F25Ct5YhP0a3/m/JEJ6pGft
+         H4pNmgTKnenHRUZ4ZgvwG1YfE+jgQcElwLn48NasqNZllhLkpBIb0L1OE+mopJn3WxRY
+         aN+nHwJGHqaLIINBy4xTh/SwqA6roH9pT/6arpxBpMnmhNqLBs0SpwO+kKm2UrIf73LA
+         shIFn1vium5LhTxzL3QsJ3gpzYYMFc+r7l5AvpMrZOj+Lrr1pQSptCV6Dsz+/KfipMuF
+         qacg==
+X-Gm-Message-State: AOJu0YxkeQ3XikhQgBy31wiuP6LOHTSCuAA4BhrPkqNfodDunW4OG8Sx
+	9/8Vc7fkMRKQOjX9N16pUnVX6rqQAE4pb97cUyWesIaVTgfG36x8HnMXkdExKwIqxQ==
+X-Google-Smtp-Source: AGHT+IEU9DFh6NFxoy50K1tQGvlzknueV8lu18ifJiHlFFADPfu5hB7sUvLI6yn7RDZDfNyTt6Td9tU=
+X-Received: from hmarynka.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:1148])
+ (user=ovt job=sendgmr) by 2002:a05:690c:308:b0:6ad:4eda:ca25 with SMTP id
+ 00721157ae682-6db44d5d0eamr833287b3.2.1725593213271; Thu, 05 Sep 2024
+ 20:26:53 -0700 (PDT)
+Date: Fri, 06 Sep 2024 03:26:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20240903203837.cbzs3ziuh6eq4kvo@joelS2.panther.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggpeml100009.china.huawei.com (7.185.36.95) To
- kwepemh100016.china.huawei.com (7.202.181.102)
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHN22mYC/4WNTQ6CMBBGr0Jm7ZiWHwOuvIdhUdspNEKHtEg0p
+ He3cgGX7yXf+3aIFBxFuBY7BNpcdOwzlKcC9Kj8QOhMZihFWYtOXNDbiDO//IqGlJlYP9G6Nza
+ NlvWjakm0LeTxEijrI3zvM48urhw+x88mf/ZvcpMokZRUZJuqsp2+DczDRGfNM/QppS88ZyZSv QAAAA==
+X-Developer-Key: i=ovt@google.com; a=ed25519; pk=HTpF23xI+jZf9amJE+xfTRAPYN+VnG6QbPd+8nM0Fps=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1725593211; l=2227;
+ i=ovt@google.com; s=20240521; h=from:subject:message-id; bh=e1aJctxIKGKtQd3vXaa+PDx1/NWlaFWvZglOIlx1Ips=;
+ b=a5jVYpQMni+eXPxfWv6Gr5Sv43ncNITdPCdZ4uHU6rIVr4VhvNNXt/JbLcVntdWN1yTvdVhwB wHm1MKT8vYUAfvaO+9KvkaV5TsFQgHqymdkYTvNBSQC/8WJCYmj2O81
+X-Mailer: b4 0.13.0
+Message-ID: <20240906-nfs-mount-deadlock-fix-v2-1-d3b81d6962f2@google.com>
+Subject: [PATCH v2] NFSv4: fix a mount deadlock in NFS v4.1 client
+From: Oleksandr Tymoshenko <ovt@google.com>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, jbongio@google.com, stable@vger.kernel.org, 
+	Oleksandr Tymoshenko <ovt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
+nfs41_init_clientid does not signal a failure condition from
+nfs4_proc_exchange_id and nfs4_proc_create_session to a client which may
+lead to mount syscall indefinitely blocked in the following stack trace:
+  nfs_wait_client_init_complete
+  nfs41_discover_server_trunking
+  nfs4_discover_server_trunking
+  nfs4_init_client
+  nfs4_set_client
+  nfs4_create_server
+  nfs4_try_get_tree
+  vfs_get_tree
+  do_new_mount
+  __se_sys_mount
 
+and the client stuck in uninitialized state.
 
-On 2024/9/4 4:38, Joel Granados wrote:
-> On Tue, Sep 03, 2024 at 11:29:56AM +0800, Kaixiong Yu wrote:
->> This patch series moves sysctls of vm_table in kernel/sysctl.c to
->> places where they actually belong, and do some related code clean-ups.
->> After this patch series, all sysctls in vm_table have been moved into its
->> own files, meanwhile, delete vm_table.
->>
->> All the modifications of this patch series base on
->> linux-next(tags/next-20240902). To test this patch series, the code was
->> compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
->> x86_64 architectures. After this patch series is applied, all files
->> under /proc/sys/vm can be read or written normally.
-> This move make a lot of sense. The question with these multi-subsystem
-> patchsets is how do they go into mainline. For now I have added this to
-> sysctl-testing to see if it needs more work. I can push this through the
-> sysctl subsystem, but you need to get reviewed-by for all of the commits
-> in different subsystems. I'm also fine with this going in through some
-> other subsys if anyone wants to take it?
->
-> Best
->
+In addition to this all subsequent mount calls would also get blocked in
+nfs_match_client waiting for the uninitialized client to finish
+initialization:
+  nfs_wait_client_init_complete
+  nfs_match_client
+  nfs_get_client
+  nfs4_set_client
+  nfs4_create_server
+  nfs4_try_get_tree
+  vfs_get_tree
+  do_new_mount
+  __se_sys_mount
 
-Thx，Joel!:-)
+To avoid this situation propagate error condition to the mount thread
+and let mount syscall fail properly.
 
-Hello，everyone!
+To: Trond Myklebust <trondmy@kernel.org>
+To: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Cc: jbongio@google.com
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/stable/20240906-nfs-mount-deadlock-fix-v1-1-ea1aef533f9c%40google.com
+Signed-off-by: Oleksandr Tymoshenko <ovt@google.com>
+---
+Changes in v2:
+- Added correct To/Cc entries to the commit message
+- Link to v1: https://lore.kernel.org/r/20240906-nfs-mount-deadlock-fix-v1-1-ea1aef533f9c@google.com
+---
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch series has been reviewed by Kees, Jan Kara, Christian 
-Brauner, and acked
-by Anna Schumaker, Paul Moore. As Joel said, this patch series need to 
-get reviewed-by
-for all of the commits in different subsystems. I would appreciate it if 
-you could review
-this patch series as soon as possible !:-)
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 877f682b45f2..54ad3440ad2b 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -335,8 +335,8 @@ int nfs41_init_clientid(struct nfs_client *clp, const struct cred *cred)
+ 	if (!(clp->cl_exchange_flags & EXCHGID4_FLAG_CONFIRMED_R))
+ 		nfs4_state_start_reclaim_reboot(clp);
+ 	nfs41_finish_session_reset(clp);
+-	nfs_mark_client_ready(clp, NFS_CS_READY);
+ out:
++	nfs_mark_client_ready(clp, status == 0 ? NFS_CS_READY : status);
+ 	return status;
+ }
+ 
+
+---
+base-commit: ad618736883b8970f66af799e34007475fe33a68
+change-id: 20240906-nfs-mount-deadlock-fix-55c14b38e088
+
+Best regards,
+-- 
+Oleksandr Tymoshenko <ovt@google.com>
+
 
