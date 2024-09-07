@@ -1,109 +1,129 @@
-Return-Path: <linux-nfs+bounces-6314-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6315-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADFE59701AC
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 12:23:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41D7F9702E3
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 17:17:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D938E1C21B88
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 10:23:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E2EE1C21842
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 15:17:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A817F3D3B3;
-	Sat,  7 Sep 2024 10:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC291E4AE;
+	Sat,  7 Sep 2024 15:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P76BHhcr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APICZSoo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AD61B85DC;
-	Sat,  7 Sep 2024 10:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7259018C08;
+	Sat,  7 Sep 2024 15:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725704576; cv=none; b=urpD0Wlponq7BMm5aAy2DvUoS9KFkrMlWuJE70RNFuRchQwm6sLnaGQx51woRx2LS50HUVvDrQUnsO2EmoA9n8HF6JLXCJkf/Uxx9WnMq2xxmg/wA2uufl95fjpOfnO7X6glO4HLoGBWAlQYnpCesYcWn3N4JPxnNKykOC0s2Tg=
+	t=1725722253; cv=none; b=qyJR8PFT7lB20EZ5LIXv0ICRY5EloFcp9Co2o+ByW31im3PU+cVL8JTEHrHXV0pf2Yho41kK28dnKX7SXykWgjZOXXY+ugJ0RW01HCjbib32OnSYs1cwBLjyR79vXL4RYpM8Gx0WLXvsshpfF3V/fZL7+5xvlHdhDykSLwNdFF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725704576; c=relaxed/simple;
-	bh=Q1pvLsvFqUeg52B5Bl4NZbvGj4evUD5AIy6A5sOYoQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YFZlrOf0XsW3trzIfyLSPwXLP4Rcq4VSBuKQbLTGDbk9XBzpvBLZNhz1fSUO0j/84RN19lKxJjzJugaOL1gtocxvwCBGd54eplHIglbOLomayyJwV3neBs4Ed8X6ZIS8v/5D/BwUJzwaMaywTEcUu5/Tg7Xz0Nv3NyFn5ultSY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P76BHhcr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FCCEC4CEC2;
-	Sat,  7 Sep 2024 10:22:52 +0000 (UTC)
+	s=arc-20240116; t=1725722253; c=relaxed/simple;
+	bh=Ku4bjARC68Ga+X0eQe+xkycEzMKcH7T/GMNhH8k/Z90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YOgQA/XV35lQChJCnXnqP0NOVNWi6i0qwKXWV/Sitff/6D5SRbU63esPSlq1uPCZkKvPCBqYr1KG396KAsU9T6/BWleQmlNpdfh31owOgGXp92EybWxQ7cxtXjDag1QdbetaFa26Dc8wYDI7HX8hJo0yfHUOTNEO8pQ0Exxjh1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APICZSoo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1951C4CEC2;
+	Sat,  7 Sep 2024 15:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725704576;
-	bh=Q1pvLsvFqUeg52B5Bl4NZbvGj4evUD5AIy6A5sOYoQw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P76BHhcrHVkM6n1eEyLPfK5/BCXlNrYBqhCOxAhoDUNsaJdeiiXTFFOrhOpP96km/
-	 HKEbenXJ7kMhQAF+N5lBmZxJuPAAd7K+elZr+SdBs77R3wdIixGLcF7s/LOtizY4Eu
-	 1WXhqShQzVB3l/zHv3hHup50bAH6eHO11spprLv+PcQu7ut/Rl5Rp53dHiNjxkBWFt
-	 eLHc+TVsonNopAQfQllekbe2oNAj7SK+Zhk6MSKVkwJ8V+cWix3Y2DZuucq+LVL7Us
-	 OFFLnbpVfp+dLWmMttOWtETyPdDzAujAnw+IfPw7SC3MZ/J83m7CdtfLhqWIYS5S4j
-	 0+TS/eoMtQhiw==
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Tom Haynes <loghyr@gmail.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
+	s=k20201202; t=1725722253;
+	bh=Ku4bjARC68Ga+X0eQe+xkycEzMKcH7T/GMNhH8k/Z90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=APICZSooHLLev2AZZPDi6+Eg9H0YRveEQhFsc8/oB3IZorsWUfDjYuT/J7D4OmU4D
+	 JxCkXJhaPbT+7bU8ox65qe61UogWTfgX2p3Rs+0ppqxiS8tIsgjqyFQT8PaO9LYLVZ
+	 //3xBAACTvm1XlrLxNQR0+R+EYqERgoXcLezsW4hXs+/Mvn0+pZsIO6obRfHdPIC6I
+	 KHEgJnvcGAUsbBzPwAq5IgZNQaI/FL3QD7lAAG4SscBzn3EVtl3aQ5gES0PmVZm+MO
+	 mfSX+Xnw3EXwOGTFYIPfPc7YV9340zwXvesz8zYhYBhLv00TnSZqVQ/ACKiSnVif+m
+	 lPRVWeOwbV5jg==
+Date: Sat, 7 Sep 2024 11:17:31 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever III <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: (subset) [PATCH v4 09/11] fs: handle delegated timestamps in setattr_copy_mgtime
-Date: Sat,  7 Sep 2024 12:22:47 +0200
-Message-ID: <20240907-zumindest-knallen-d3f7cede5ab7@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240905-delstid-v4-9-d3e5fd34d107@kernel.org>
-References: <20240905-delstid-v4-0-d3e5fd34d107@kernel.org> <20240905-delstid-v4-9-d3e5fd34d107@kernel.org>
+	Trond Myklebust <trondmy@hammerspace.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
+Message-ID: <Ztxui0j8-naLrbhV@kernel.org>
+References: <>
+ <2D4C95CA-3398-4962-AF14-672DEBADD3EE@oracle.com>
+ <172566449714.4433.8514131910352531236@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1537; i=brauner@kernel.org; h=from:subject:message-id; bh=Q1pvLsvFqUeg52B5Bl4NZbvGj4evUD5AIy6A5sOYoQw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTd0ax4H2xRNt3j98wP/cKx62LjTsef4xBkcd8/M0Jjg bvnsflhHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPRf8rI0Pfd8+vGR2KRK2zK zGelxRjMyDp7Oay1lctRfxpPtGjFB4b/dapiqyb7TF6qof1n85mId9ZcVxdN6LhmWdfZmxwxc48 yPwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <172566449714.4433.8514131910352531236@noble.neil.brown.name>
 
-On Thu, 05 Sep 2024 08:41:53 -0400, Jeff Layton wrote:
-> When updating the ctime on an inode for a SETATTR with a multigrain
-> filesystem, we usually want to take the latest time we can get for the
-> ctime. The exception to this rule is when there is a nfsd write
-> delegation and the server is proxying timestamps from the client.
+On Sat, Sep 07, 2024 at 09:14:57AM +1000, NeilBrown wrote:
+> On Sat, 07 Sep 2024, Chuck Lever III wrote:
+> > 
+> > 
+> > > On Sep 6, 2024, at 5:56 PM, NeilBrown <neilb@suse.de> wrote:
+> > > 
+> > > We could achieve the same effect without using symbol_request() (which
+> > > hardly anyone uses) if we did a __module_get (or try_module_get) at the
+> > > same place you are calling symbol_request(), and module_put() where you
+> > > do symbol_put().
+> > > 
+> > > This would mean that once NFS LOCALIO had detected a path to the local
+> > > server, it would hold the nfsd module until the nfs server were shutdown
+> > > and the nfs client noticed.  So you wouldn't be able to unmount the nfsd
+> > > module immediately after stopping all nfsd servers.
+> > > 
+> > > Maybe that doesn't matter.  I think it is important to be able to
+> > > completely shut down the NFS server at any time.  I think it is
+> > > important to be able to completely shutdown a network namespace at any
+> > > time.  I am less concerned about being able to rmmod the nfsd module
+> > > after all obvious users have been disabled.
+> > > 
+> > > So if others think that the improvements in code maintainability are
+> > > worth the loss of being able to rmmod nfsd without (potentially) having
+> > > to unmount all NFS filesystems, then I won't argue against it.  But I
+> > > really would want it to be get/put of the module, not of some symbol.
+> > 
+> > The client and server are potentially in separate containers,
+> > administered independently. An NFS mount should not pin either
+> > the NFS server's running status, its ability to unexport a
+> > shared file system, the ability for the NFS server's
+> > administrator to rmmod nfsd.ko, the ability for the
+> > administrator to rmmod a network device that is in use by the
+> > NFS server, or the ability to destroy the NFS server's
+> > namespace once NFSD has shut down.
 > 
-> When nfsd gets a CB_GETATTR response, we want to update the timestamp
-> value in the inode to the values that the client is tracking. The client
-> doesn't send a ctime value (since that's always determined by the
-> exported filesystem), but it can send a mtime value. In the case where
-> it does, then we may need to update the ctime to a value commensurate
-> with that instead of the current time.
-> 
-> [...]
+> While I mostly agree, I should point out that nfsd.ko is a global
+> resource across all containers.  So if the client and server are
+> administer separately, there is no certainty that the server
+> administrator is at all related to the global moderator who controls
+> when nfsd.ko might be unloaded.  So preventing the unload of nfsd.ko is
+> quite a different class of problem to preventing the shutdown of the
+> nfsd service or of the container that it runs in.
 
-Applied to the vfs.mgtime branch of the vfs/vfs.git tree.
-Patches in the vfs.mgtime branch should appear in linux-next soon.
+Right, and in practice LOCALIO doesn't prevent any expected NFS client
+or server shutdown within containers.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Proper refcounting of required resources from host is needed, new
+requirement for LOCALIO is that nfsd be properly refcounted until
+consuming nfs client code exits.  But if LOCALIO client is connected
+to a server, if/when that server shuts down it isn't blocked from
+doing so simply because a LOCALIO client is active.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Rather than have general concern for LOCALIO doing something wrong,
+we'd do well to make sure there is proper test coverage for required
+shutdown sequences (completely indepent of LOCALIO, maybe that already
+exists?).  I'm 99.99% sure LOCALIO will pass all of that testing
+(informed by manual testing I have done with container shutdown, etc).
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.mgtime
-
-[09/11] fs: handle delegated timestamps in setattr_copy_mgtime
-        https://git.kernel.org/vfs/vfs/c/b0d5ea249d88
+Mike
 
