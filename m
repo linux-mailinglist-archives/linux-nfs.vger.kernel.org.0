@@ -1,208 +1,121 @@
-Return-Path: <linux-nfs+bounces-6311-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6312-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7216596FE55
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 01:15:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5522D96FEB2
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 02:23:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95B6A1C2216D
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Sep 2024 23:15:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E30CD1F2334C
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 00:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6F9715B0E0;
-	Fri,  6 Sep 2024 23:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A741870;
+	Sat,  7 Sep 2024 00:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="t0J1pBHL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wCVMRFcv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oPsilf3m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0jc9mi8J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz/1JqsZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEE515A86A;
-	Fri,  6 Sep 2024 23:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769C24A18
+	for <linux-nfs@vger.kernel.org>; Sat,  7 Sep 2024 00:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725664507; cv=none; b=BCBGnR54pK1y90GEZsLRgS/SPfKdx+f3B4Bg7C8uNPrQqmIbZiqXklwi0K1jfKWFXOOeHXJOUPAQw/40cl9wrCpDf/AFXI/S8TByCvO9p6wU8toCjSOY9CtSFoC3aaA5OXz5hsn/91D1aDNAmoTNtwmyDgHivOB//5nDOg+BrG0=
+	t=1725668616; cv=none; b=LfTB/M5US1shdEr6mpn52tR2VUCkYemXOWuQQaRnlKM8ZRBooZmP3jBeuJS7fik/S9aUnAcqwjqRaIgMwERNDbC4IblsDWnerWjmYuPzUCQR5b3HHNdXLAIxziQtMuEuWKl9+i8Gwu6wnlqguD1GrYP6k8jNmaZoE5X9GJvs/Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725664507; c=relaxed/simple;
-	bh=gpbGCNtdu3NDnI8JQG08CjJ4n9MF45pTmdTxPHCwhQo=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=XZAiynthsRKxBcxO3XtHJPs6Ia0XqWeFSRAMYHHzn4ma1sa604QnqaQt4Rqzu1nOg3LnjoP56cVjZLWFe9PZz2tZGXAJQ5OfQn+FDeHdru8OBpWs4qII5+qLKaKwLmIPVIbwMZBmn8YT2KmakHedP3mYe/mkacBpzYKGLU1MZ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=t0J1pBHL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wCVMRFcv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oPsilf3m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0jc9mi8J; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D2BB91FB4C;
-	Fri,  6 Sep 2024 23:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725664504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D8zOcUGrulkPZeRN4x1CwFyxmiy/XfPDmzoAQ74LPOA=;
-	b=t0J1pBHLl/svt9eL5uzVlkIBYTq7TuMdGXOKEYKhWVsiFks2DFEltKUuMCHgOM57MAeqsM
-	qQXFP9BkMFxKXQ5OB0hoIJn0Jzg2A1Tbb1jtVtNfyG1yUFP2SsD2crEgf7AHs0+7epfNvD
-	wE13xQPCQs8rgx7lDgosVdibNkFtz74=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725664504;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D8zOcUGrulkPZeRN4x1CwFyxmiy/XfPDmzoAQ74LPOA=;
-	b=wCVMRFcv63rMSdUZe1cx/Zf8aauCb0V26zKKYuYSYIw6J5i8KmbAp1oFBfSlUAUAzDMSlf
-	B+r53eba9gqj1eCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=oPsilf3m;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0jc9mi8J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725664502; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D8zOcUGrulkPZeRN4x1CwFyxmiy/XfPDmzoAQ74LPOA=;
-	b=oPsilf3mGj2xcYi3dwjd0oSrnZHzR6ICfgYxBs/EXmv95mi7KIG/5RQ/d6C4a/tlALKW4q
-	VVTh9pudtDrgiGRra9LcO9VuIDeb5fQELi4SICyNiHv+FLaHT+iTUkb1cuy26xN0+4T9N1
-	NRz5OoFE0/l728XSxWNvRIzGQcBRM8Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725664502;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D8zOcUGrulkPZeRN4x1CwFyxmiy/XfPDmzoAQ74LPOA=;
-	b=0jc9mi8JN+UXSiSWAojl1oeRefrT9ldIhReRR51QgGJmn8PmrleWXsbzCBFcui4WOZ0Lsp
-	LYqjITOnATClT8Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6810B136A8;
-	Fri,  6 Sep 2024 23:15:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2da+BvSM22a0OQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 06 Sep 2024 23:15:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1725668616; c=relaxed/simple;
+	bh=N8w0gHkefs2G7iN52rDGKjFaYRLLMKl9/T/5kMHSPJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NoSirPTss1ZnPLSDhyT+eOkmW/5laflnfY7ZWV6I+5ixCqKkv9I3jaw+Z8vfeSeOJW8x6HszvPUdD5ameIZ679sz3DcnVXMpUvSumiij5Zo21ztgGDJuffswAPQoXu39EAqDeHKcpjZ6JVj+WmbOuXmuAfnu/uvpXMwJB08Ytv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jz/1JqsZ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2053f6b8201so24146115ad.2
+        for <linux-nfs@vger.kernel.org>; Fri, 06 Sep 2024 17:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725668615; x=1726273415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yjSU66S/f+8RiSnLys5xZd1fAKQ8KFLn6Xv8kRdnvyQ=;
+        b=Jz/1JqsZZLEGPdfF/8okkNol0gQnHuDHRMbHdvQZ4PK5WU95HgeDaxAfQKvWpeci3r
+         +R1f4HgyedxXNCh8JP4vxeZYAX4rUIwfJ5IUyPftGGZC6LbHycJOpNIhMtv1dEJvVXuH
+         dXDOliAwlPFNdYeVUM8vB/+KzkczjtAmrkSecT12dwtc9VKKzq6/JM/aPRmPerhuHK22
+         Ss2LdPw//5JWNx2Qbhir3TsSB1LfYRJkUrssfw1pqlPxuskoNnd7JcP0vf3O9+IX66JR
+         YgpYymJhjm+SYe1/VWVBiHiiwTjBZcqXeBhEStqkom2VyJK25LCMQYn01AbLoqSNaDOk
+         jbAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725668615; x=1726273415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yjSU66S/f+8RiSnLys5xZd1fAKQ8KFLn6Xv8kRdnvyQ=;
+        b=GVYfAJv4d0sQgqIX7JTR7jP9GwPzqw1lF0IkVocmLDJ5t0Uj9hyU9fziW26hQ3wjse
+         IRvvnsZpa++R1gEShB47GkEgUg76UVh0IudB83Cm5NTQm/9EXX4FEafwdW1q49kPXMAG
+         k/wHWZ5sbXtEL2jrR8ykTcsyPo/VTqaoOcDiyIN3ZZWaa5YXEIHM1ZF9kbQtsjrUrJgX
+         Ixo8w0wo+Vj7TqAg4chXpw78Rcq9b8ta4LWMULOHIfb1I4yxMz9NFwrqwP+0xTtYB9EP
+         JVwwQPSkt4F18LgeLf6fNIkywOL4b2DhqQIr2khcUNkKQcr7e/84FkKmscVvxxVA7GrK
+         aLJA==
+X-Gm-Message-State: AOJu0YzmVmgEn9ra/gfG4MwGzayUVACTTKNyNdkXkTAiDmq8pM0bh1hq
+	L5P9F+zkb9xqQw587uzWq3CZfCYOhJYGNAQRYVlEr63rVKw1V8Fp8Cvt1hFmEElZd2qI49KqLQ+
+	4aTmEKf94nIDVPlU1+czn5pDn6w==
+X-Google-Smtp-Source: AGHT+IGyMM4QKRvP/2JPOcy3NjBJy6bR304KXsjARlZe6np2F0XkE4e04e8Wu1GiIWK3J1HzqWOoGCL1qHYPrcwO7DI=
+X-Received: by 2002:a17:902:e806:b0:207:6d2:45ef with SMTP id
+ d9443c01a7336-20706d24737mr23963525ad.37.1725668614673; Fri, 06 Sep 2024
+ 17:23:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever III" <chuck.lever@oracle.com>
-Cc: "Mike Snitzer" <snitzer@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
- "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
-In-reply-to: <2D4C95CA-3398-4962-AF14-672DEBADD3EE@oracle.com>
-References: <>, <2D4C95CA-3398-4962-AF14-672DEBADD3EE@oracle.com>
-Date: Sat, 07 Sep 2024 09:14:57 +1000
-Message-id: <172566449714.4433.8514131910352531236@noble.neil.brown.name>
-X-Rspamd-Queue-Id: D2BB91FB4C
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,noble.neil.brown.name:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <CAM5tNy7VdgPaiKGtVg8de7HXcv3Nu8fibhhae9vp=pWgrX-EVA@mail.gmail.com>
+ <fca5699d-0c25-4b1a-8280-e559641f7cf4@oracle.com>
+In-Reply-To: <fca5699d-0c25-4b1a-8280-e559641f7cf4@oracle.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Fri, 6 Sep 2024 17:23:24 -0700
+Message-ID: <CAM5tNy73dq2hjcD5pvKS+vFk=718_WgeR2AmzvsQnc2t+gJSpg@mail.gmail.com>
+Subject: Re: Yet another newbie question w.r.t. kernel patching
+To: Anna Schumaker <anna.schumaker@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 07 Sep 2024, Chuck Lever III wrote:
-> 
-> 
-> > On Sep 6, 2024, at 5:56 PM, NeilBrown <neilb@suse.de> wrote:
-> > 
-> > We could achieve the same effect without using symbol_request() (which
-> > hardly anyone uses) if we did a __module_get (or try_module_get) at the
-> > same place you are calling symbol_request(), and module_put() where you
-> > do symbol_put().
-> > 
-> > This would mean that once NFS LOCALIO had detected a path to the local
-> > server, it would hold the nfsd module until the nfs server were shutdown
-> > and the nfs client noticed.  So you wouldn't be able to unmount the nfsd
-> > module immediately after stopping all nfsd servers.
-> > 
-> > Maybe that doesn't matter.  I think it is important to be able to
-> > completely shut down the NFS server at any time.  I think it is
-> > important to be able to completely shutdown a network namespace at any
-> > time.  I am less concerned about being able to rmmod the nfsd module
-> > after all obvious users have been disabled.
-> > 
-> > So if others think that the improvements in code maintainability are
-> > worth the loss of being able to rmmod nfsd without (potentially) having
-> > to unmount all NFS filesystems, then I won't argue against it.  But I
-> > really would want it to be get/put of the module, not of some symbol.
-> 
-> The client and server are potentially in separate containers,
-> administered independently. An NFS mount should not pin either
-> the NFS server's running status, its ability to unexport a
-> shared file system, the ability for the NFS server's
-> administrator to rmmod nfsd.ko, the ability for the
-> administrator to rmmod a network device that is in use by the
-> NFS server, or the ability to destroy the NFS server's
-> namespace once NFSD has shut down.
+On Fri, Sep 6, 2024 at 1:52=E2=80=AFPM Anna Schumaker <anna.schumaker@oracl=
+e.com> wrote:
+>
+> Hi Rick,
+>
+> On 9/6/24 3:55 PM, Rick Macklem wrote:
+> > Hi,
+> >
+> > Another newbie question that hopefully someone won't mind answering....
+> > There are a few functions in fs/nfs/nfs3acl.c (nfs3_prepare_get_acl(),.=
+..)
+> > that my patch uses for NFSv4. I just copied them into nfs42proc.c to ge=
+t
+> > things to build, but that obviously is just a hack.
+> >
+> > So, the question is...what should I do with functions chared between th=
+e
+> > NFSv3 and NFSv4 clients?
+> > - Put them in some new file in fs/nfs_common, maybe?
+>
+> Since they're shared between client modules, and not the server, you coul=
+d probably put this in a new file under fs/nfs/. Maybe fs/nfs/acl.c?
+Sounds good. Thanks, rick
 
-While I mostly agree, I should point out that nfsd.ko is a global
-resource across all containers.  So if the client and server are
-administer separately, there is no certainty that the server
-administrator is at all related to the global moderator who controls
-when nfsd.ko might be unloaded.  So preventing the unload of nfsd.ko is
-quite a different class of problem to preventing the shutdown of the
-nfsd service or of the container that it runs in.
-
-NeilBrown
-
-
-> 
-> I don't feel that this is a code maintainability issue, but
-> rather this is a usability and security mandate. Remote NFS
-> mounts don't (or, are not supposed to) pin NFSD's resources
-> in any way. That is the behavioral standard, and if we find
-> that is not the case, we treat it as a bug.
-> 
-> TL;DR: it does matter. LOCALIO NFS mounts should not
-> indefinitely pin NFSD or its resources.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-
+>
+> >
+> > Thanks in advance for your help, rick
+> > ps: If you create a new file, do you just update the Makefile or is the=
+re
+> >        more trickery involved?
+> >
+>
+> Yeah, you should just need to update the Makefile.
+>
+> I hope this helps,
+> Anna
 
