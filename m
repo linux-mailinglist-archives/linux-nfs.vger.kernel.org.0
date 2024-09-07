@@ -1,129 +1,152 @@
-Return-Path: <linux-nfs+bounces-6315-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6316-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41D7F9702E3
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 17:17:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A46E97030A
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 17:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E2EE1C21842
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 15:17:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD1A2283B6D
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Sep 2024 15:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC291E4AE;
-	Sat,  7 Sep 2024 15:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B20415B559;
+	Sat,  7 Sep 2024 15:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APICZSoo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekRciZr5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7259018C08;
-	Sat,  7 Sep 2024 15:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63521A93D;
+	Sat,  7 Sep 2024 15:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725722253; cv=none; b=qyJR8PFT7lB20EZ5LIXv0ICRY5EloFcp9Co2o+ByW31im3PU+cVL8JTEHrHXV0pf2Yho41kK28dnKX7SXykWgjZOXXY+ugJ0RW01HCjbib32OnSYs1cwBLjyR79vXL4RYpM8Gx0WLXvsshpfF3V/fZL7+5xvlHdhDykSLwNdFF8=
+	t=1725724324; cv=none; b=e5BZjaABtq+J1DuC69p50z5kktuFMex6mmkuyrxOC/CMPANHDG8w8NpjDAgf9zt/qX2dLfrUllcejTDRxEQd9JFJbAIRLXgwOKAeQTbW+BxtOT+e7lR20SlucbMrdqaHoRQ4p7wGm3iybJqrouHKzyiXqpBI1Hy1tXvlIk1MCuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725722253; c=relaxed/simple;
-	bh=Ku4bjARC68Ga+X0eQe+xkycEzMKcH7T/GMNhH8k/Z90=;
+	s=arc-20240116; t=1725724324; c=relaxed/simple;
+	bh=smkRxt5hdjY4bCFqIyeboIgwO0HKMJqQXLXBaHMaMs8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOgQA/XV35lQChJCnXnqP0NOVNWi6i0qwKXWV/Sitff/6D5SRbU63esPSlq1uPCZkKvPCBqYr1KG396KAsU9T6/BWleQmlNpdfh31owOgGXp92EybWxQ7cxtXjDag1QdbetaFa26Dc8wYDI7HX8hJo0yfHUOTNEO8pQ0Exxjh1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APICZSoo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1951C4CEC2;
-	Sat,  7 Sep 2024 15:17:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnSNOnh9hInydF0dHDJ3LgoWfeq/K6Om3RoJ1TDk6gHtxUYM3JDV0OqCltNQf03dcLOtBZ2wIvewcMBBfVMhB3KP5vGUTF7pXQR/bkHWmnI/YrL/UTcyZ95Dx0obv3vEggCAupgNXuVtyxOOZkYZjcZSEiKdvwea4UuXUnCGkRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekRciZr5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDCCC4CEC4;
+	Sat,  7 Sep 2024 15:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725722253;
-	bh=Ku4bjARC68Ga+X0eQe+xkycEzMKcH7T/GMNhH8k/Z90=;
+	s=k20201202; t=1725724324;
+	bh=smkRxt5hdjY4bCFqIyeboIgwO0HKMJqQXLXBaHMaMs8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=APICZSooHLLev2AZZPDi6+Eg9H0YRveEQhFsc8/oB3IZorsWUfDjYuT/J7D4OmU4D
-	 JxCkXJhaPbT+7bU8ox65qe61UogWTfgX2p3Rs+0ppqxiS8tIsgjqyFQT8PaO9LYLVZ
-	 //3xBAACTvm1XlrLxNQR0+R+EYqERgoXcLezsW4hXs+/Mvn0+pZsIO6obRfHdPIC6I
-	 KHEgJnvcGAUsbBzPwAq5IgZNQaI/FL3QD7lAAG4SscBzn3EVtl3aQ5gES0PmVZm+MO
-	 mfSX+Xnw3EXwOGTFYIPfPc7YV9340zwXvesz8zYhYBhLv00TnSZqVQ/ACKiSnVif+m
-	 lPRVWeOwbV5jg==
-Date: Sat, 7 Sep 2024 11:17:31 -0400
+	b=ekRciZr5Gh9sD5WCTrTd4Dis6k4/mskj0JrHHCEbAqhcOGgqEhY7QBtNiaKM1AnGc
+	 erjwDXw9vK2ZMLI7Ow0JNidmjdfbQlW3aqwVrq9anmRDk8l6R8DX8c/8z6ixm35cJX
+	 1OIJKrOeq4UfumaFYY856RyS4iW/9+eofPIHGQDmlCvyIVUtZBLJE0ZjcbPHjh5ktH
+	 8Bw8Vv/W0FmB7TGbgBFq/5Vym85cr/F58V9anWhgaRMcPvrZXoAip5AhDWy5gg92bt
+	 r5izTumtbkXuRwGvQwTM/FZwIuRkz9gAhpZwK4pLHKhOEIWkLaiG8m0TDKmQFHFlGU
+	 Ho7Y51DedpC+A==
+Date: Sat, 7 Sep 2024 11:52:03 -0400
 From: Mike Snitzer <snitzer@kernel.org>
 To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
 	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
 	Anna Schumaker <anna@kernel.org>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 Subject: Re: [PATCH v15 16/26] nfsd: add LOCALIO support
-Message-ID: <Ztxui0j8-naLrbhV@kernel.org>
+Message-ID: <Ztx2o7jCnbeVm5f7@kernel.org>
 References: <>
- <2D4C95CA-3398-4962-AF14-672DEBADD3EE@oracle.com>
- <172566449714.4433.8514131910352531236@noble.neil.brown.name>
+ <ZttE4DKrqqVa0ACn@kernel.org>
+ <172565980778.4433.7347554942573335142@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <172566449714.4433.8514131910352531236@noble.neil.brown.name>
+In-Reply-To: <172565980778.4433.7347554942573335142@noble.neil.brown.name>
 
-On Sat, Sep 07, 2024 at 09:14:57AM +1000, NeilBrown wrote:
-> On Sat, 07 Sep 2024, Chuck Lever III wrote:
-> > 
-> > 
-> > > On Sep 6, 2024, at 5:56 PM, NeilBrown <neilb@suse.de> wrote:
-> > > 
-> > > We could achieve the same effect without using symbol_request() (which
-> > > hardly anyone uses) if we did a __module_get (or try_module_get) at the
-> > > same place you are calling symbol_request(), and module_put() where you
-> > > do symbol_put().
-> > > 
-> > > This would mean that once NFS LOCALIO had detected a path to the local
-> > > server, it would hold the nfsd module until the nfs server were shutdown
-> > > and the nfs client noticed.  So you wouldn't be able to unmount the nfsd
-> > > module immediately after stopping all nfsd servers.
-> > > 
-> > > Maybe that doesn't matter.  I think it is important to be able to
-> > > completely shut down the NFS server at any time.  I think it is
-> > > important to be able to completely shutdown a network namespace at any
-> > > time.  I am less concerned about being able to rmmod the nfsd module
-> > > after all obvious users have been disabled.
-> > > 
-> > > So if others think that the improvements in code maintainability are
-> > > worth the loss of being able to rmmod nfsd without (potentially) having
-> > > to unmount all NFS filesystems, then I won't argue against it.  But I
-> > > really would want it to be get/put of the module, not of some symbol.
-> > 
-> > The client and server are potentially in separate containers,
-> > administered independently. An NFS mount should not pin either
-> > the NFS server's running status, its ability to unexport a
-> > shared file system, the ability for the NFS server's
-> > administrator to rmmod nfsd.ko, the ability for the
-> > administrator to rmmod a network device that is in use by the
-> > NFS server, or the ability to destroy the NFS server's
-> > namespace once NFSD has shut down.
+On Sat, Sep 07, 2024 at 07:56:47AM +1000, NeilBrown wrote:
+> On Sat, 07 Sep 2024, Mike Snitzer wrote:
 > 
-> While I mostly agree, I should point out that nfsd.ko is a global
-> resource across all containers.  So if the client and server are
-> administer separately, there is no certainty that the server
-> administrator is at all related to the global moderator who controls
-> when nfsd.ko might be unloaded.  So preventing the unload of nfsd.ko is
-> quite a different class of problem to preventing the shutdown of the
-> nfsd service or of the container that it runs in.
+> > > But I'd just like to point out that something like the below patch
+> > > wouldn't be needed if we kept my "heavy" approach (nfs reference on
+> > > nfsd modules via nfs_common using symbol_request):
+> > > https://marc.info/?l=linux-nfs&m=172499445027800&w=2
+> > > (that patch has stuff I since cleaned up, e.g. removed typedefs and
+> > > EXPORT_SYMBOL_GPLs..)
+> > > 
+> > > I knew we were going to pay for being too cute with how nfs took its
+> > > reference on nfsd.
+> > > 
+> > > So here we are, needing fiddly incremental fixes like this to close a
+> > > really-small-yet-will-be-deadly race:
+> > 
+> > <snip required delicate rcu re-locking requirements patch>
+> > 
+> > I prefer this incremental re-implementation of my symbol_request patch
+> > that eliminates all concerns about the validity of 'nfs_to' calls:
+> 
+> We could achieve the same effect without using symbol_request() (which
+> hardly anyone uses) if we did a __module_get (or try_module_get) at the
+> same place you are calling symbol_request(), and module_put() where you
+> do symbol_put().
+> 
+> This would mean that once NFS LOCALIO had detected a path to the local
+> server, it would hold the nfsd module until the nfs server were shutdown
+> and the nfs client noticed.  So you wouldn't be able to unmount the nfsd
+> module immediately after stopping all nfsd servers.
 
-Right, and in practice LOCALIO doesn't prevent any expected NFS client
-or server shutdown within containers.
+s/unmount the nfsd module/remove the nfsd module/
 
-Proper refcounting of required resources from host is needed, new
-requirement for LOCALIO is that nfsd be properly refcounted until
-consuming nfs client code exits.  But if LOCALIO client is connected
-to a server, if/when that server shuts down it isn't blocked from
-doing so simply because a LOCALIO client is active.
+Right, the nfsd module wouldn't be able to be unloaded if LOCALIO
+client is still active (on host or within some container) with a mount
+from an export the now shutdown server hosted.
 
-Rather than have general concern for LOCALIO doing something wrong,
-we'd do well to make sure there is proper test coverage for required
-shutdown sequences (completely indepent of LOCALIO, maybe that already
-exists?).  I'm 99.99% sure LOCALIO will pass all of that testing
-(informed by manual testing I have done with container shutdown, etc).
+With LOCALIO the client has extended the footprint of its kernel code
+to include portions of the nfsd module (indirectly via nfs_common).
 
+That said, we can preserve the fine-grained rcu-based locking dances
+that I reinforced with the first patch (call it "option 1") I shared
+in this sub-thread ;)
+
+> Maybe that doesn't matter.  I think it is important to be able to
+> completely shut down the NFS server at any time.  I think it is
+> important to be able to completely shutdown a network namespace at any
+> time.  I am less concerned about being able to rmmod the nfsd module
+> after all obvious users have been disabled.
+
+Yes, and even the last case: if all obvious users have been disabled
+and unmounted then LOCALIO nfs client would have no cause to be
+holding a reference for nfsd.
+
+> So if others think that the improvements in code maintainability are
+> worth the loss of being able to rmmod nfsd without (potentially) having
+> to unmount all NFS filesystems, then I won't argue against it.  But I
+> really would want it to be get/put of the module, not of some symbol.
+
+I can do that.
+ 
+> .... BTW you probably wanted to use symbol_get(), not symbol_request(). 
+> The latter tries to load the module if it isn't already loaded.  Using
+> symbol_get() does have the benefit that you don't need any locking dance
+> to prevent the module unloading while we get the ref.  So if we really
+> want to go for less tricky locking that might be a justification - but
+> you don't need much locking for try_module_get()...
+
+Yes that was the entire reason I did it this way (call it "option 2",
+nicely avoids the bouncing of the rcu locking while putting nfsd_serv
+ref in nfs_open_local_fh's error path).
+
+Will look at switching to try_module_get().
+
+Whichever way we go with fixing nfs_open_local_fh's narrow race with
+putting the nfsd_serv ref, thankfully this is a pretty minor point
+that we can quickly fix once Anna and Trond are comfortable with
+LOCALIO being merged.
+
+option 2's coarser nfs reference for nfsd via try_module_get would
+reduce think-time if/when we make LOCALIO changes in future.  But I'd
+be fine with either fix.
+
+Thanks,
 Mike
 
