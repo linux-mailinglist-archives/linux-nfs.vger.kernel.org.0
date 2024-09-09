@@ -1,110 +1,130 @@
-Return-Path: <linux-nfs+bounces-6351-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6352-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41735971F5A
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 18:36:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 95BAA97205F
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 19:24:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8F601F2288F
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 16:36:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C3691F245A2
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 17:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B57F0165F02;
-	Mon,  9 Sep 2024 16:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A52117556B;
+	Mon,  9 Sep 2024 17:24:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OvGITP94"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="Sv8zAjiU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539161758F
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 16:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DD41865C;
+	Mon,  9 Sep 2024 17:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725899774; cv=none; b=R0GVe3nhKafdlC/QpP7K27v4er61fI0A5TVFT9jPgsT9n2y64KwOqITse48Jogi+oHulgHkPPfBq/FZ/6PzThy7KKgrbRh9ItJnI68HL8gik5ZX75C3YGUWhkockXA/kHeA68tSfMpAXJzqlHnIX/qRyfchmLCD9dbNH/sQZgXw=
+	t=1725902643; cv=none; b=A0yOXWgF/Xwhi/kgz7AcU3ujcU1Tfl/D9vUj3NriozMma+g85/ZhiQCAJx/ImLAAAZFs2kaRs8heBTNHDKWDMmUTsRlJuyUAdx0sHT6glrQ95p13W9stOuYMcIxJeu4qc6J0s3BC/6YHh4xnGM+vUDxFTZgjeMQkW3UWtmsRJa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725899774; c=relaxed/simple;
-	bh=33cazwN30Yiov+9LORxIDEGL/1eJRw4eNqKauKt9neQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=d9Ieqg9CLKOXsVdIipoXrC2chXZ9ncxw5zn2prjpiobQBSZbsqPor3b/hOY0ccGkcM0gfH1Bxu7pkEyT+PY2XZiQw82gMmRqQw4jONnZaJjYJn1N1a0tZ1+A7e3ZSCTDF5UrfN0foXUlWYobvtWtD1DzTqJoY5WZ+m8qd6J2Q88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ovt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OvGITP94; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ovt.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2daa02872c1so4763731a91.3
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2024 09:36:13 -0700 (PDT)
+	s=arc-20240116; t=1725902643; c=relaxed/simple;
+	bh=5qMUKIBrpr+qfmua466C+pCDFtS1UV+POsM6DOPF2S4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nwFTedGa+zKUa7DyUeZIwCY3Z9a4L2E9gNs5BZkdr1pE8Sy7Kuwd01xjKOuk3uraWstw3Y4zEFNnJwmSKIXZxVXidcGG3Azh7IU+zOmVJkIQzlVPm1z2J6WybpON8Wy2mX6uE0ZKkzwQm9LP/UYOEoywZ/Z1zuZodSDjhC+jNd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=Sv8zAjiU; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2f760f7e25bso17700501fa.2;
+        Mon, 09 Sep 2024 10:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725899773; x=1726504573; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DPorGTNYErNbol15iOxscjB/66VKQ2zh/DvzC2fMNYI=;
-        b=OvGITP94vAwYlvfU8BW8PxWlvw4LDA+4Kl5JX8Gkc/klL+q61ryws6ObQToIAfxIpU
-         I9v3EY2A51YvxnprxLQb1EMIJc3WGp11oNFelFnG0CZ/ix+Bsn95BCv9Eu/OWlMOYr3s
-         NySZWY6gbltSE1M67JejcGZKoQ+imSXHZuuJXcB2tk8D+d+UdwlA4HFdTjRzlWjOttra
-         OChUHya6vRzZHMamRP0ItaIxtFsKfuwUG8Kuh2Ypqo5EemfREq5v63jXEU5/j1e3AtYd
-         B1E8sbLpe0qj+43qJBRdnkWgjG1a0Xv8Ac2oPyiFjNXngOtsZT//QY5I9mnIP0aYI7a/
-         o9Wg==
+        d=umich.edu; s=google-2016-06-03; t=1725902640; x=1726507440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x50KnwCqfXWFW8bmwgvpdcdT/VQCHrCJ+7RAYLNl1Jc=;
+        b=Sv8zAjiUBMDrdhvPpZCgpNWM46qFn4vLNk2NC0UmgLhl43+jJzaa0/0hDDtXGf3kp/
+         QBMM/6eIBveHvoNVNku1Kiya02EEizpGUWzej2YpITgw8Ks5Ni9zytT+8nAZpftgMAno
+         mXUxNaFh3HFCIgKCKw4OEetllm0sYtj36Cc/ulugkpPKO8tEjqPcobg5nmHSpoM2DcyK
+         q6VbaJCWNe8gvKF/lUOmCBupn2ireowUYYVP0u1+fHT+8pmt4BnkjLlGHF4Az82DYB97
+         TjalQKb/lYV6x2ZdqLgk0QdbslUFSWGlYIcAUNJXUSYMKWMrRE95hKp07aFNtkCHY0SA
+         cupA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725899773; x=1726504573;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DPorGTNYErNbol15iOxscjB/66VKQ2zh/DvzC2fMNYI=;
-        b=hD/BFS5IsAGfeNtK+GKY7ghxGn/QKTK+jKnfHfs2xhJQycf1zzh9y053RwxQSEeOy/
-         /AAiQqirSeAHoK0ct88NqvBABRCi2kmQMyHHYhAYAsxbSBkGJl7heZyu4rKRkAmESuwZ
-         kqXOziazEnwK/t+Es/S1sELHZK/9ZOIMRy0cjSJj10+uSjXXBYfsnp2XUk/H6WRDvzQB
-         DLX55Q2EKkmu4JdrlgS38KTQuKxgybI1P9ClcUznVBHu5RanaeR0VfD3kjGCWmzg9Nou
-         FK8IN6hxfV1EceOkaqb4bjBs7kDIcFK2dXvB98mldf65yD/02v1uoFOJ8kkJeId/OXIa
-         6qsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUd3ODwY1OJHggSQT5hYazOxVAXjWb0C7l3myWue+JAmi1rHNk2hlnnXkwoDw+iydDz/VHDGhXDr0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp4ce97Iz9BQsOh2jtvP13S05QrkeJ53HUgIIW5+v68cIqx3NU
-	HSbU1SGNhloZyZn/yGX26klE7K5kjFGaUiLpkyxpKywkx1gUOYjFjFWdYqV5Bn5MtQ==
-X-Google-Smtp-Source: AGHT+IFmuNtX925WryPi1G6qyYRiFaxKnHHSmfHgSM3gFnnRykz3bujjigujUbo43Go3eHSC7MJAD6o=
-X-Received: from hmarynka.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:1148])
- (user=ovt job=sendgmr) by 2002:a17:90b:1481:b0:2d8:bd72:c5e5 with SMTP id
- 98e67ed59e1d1-2dad4b82644mr27240a91.0.1725899772201; Mon, 09 Sep 2024
- 09:36:12 -0700 (PDT)
-Date: Mon,  9 Sep 2024 16:36:10 +0000
-In-Reply-To: <8f2e20f2fc894398da371517c6c8111aba072fb1.camel@kernel.org>
+        d=1e100.net; s=20230601; t=1725902640; x=1726507440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x50KnwCqfXWFW8bmwgvpdcdT/VQCHrCJ+7RAYLNl1Jc=;
+        b=Q5IUIKn9u4I/L6ah+colBqzFIenvTOe8o+nRratGH6hyW24C+HPfey+as9MxXN0at7
+         Yw6/raeYIPZqgvC/LXo/QALe8kijv0m50mTf86d/vnSweqAGUV2UFQTZhAwGuHZwn/68
+         ME9dYrsK2AtJektCgkVmlsscVxa5p6fhhJPLgLMBHR+Tice21OmcLqyHZ5GfiIbzBwwE
+         TnthHQtGxcfvTtwmhogiLNFhpOT+xcfMAi5ioqW0z129/wZLIWjMXuLrMtA1QKsGJI/G
+         P7GGoqU5ednxSWt18Dk3v5m4NKT3jPDqdKS7PLgEGVPZ9TTxxyECxT7ZKlMGCN4o1BRT
+         svOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViEfeDLxfSAa8e3nSTUfBC+N8geGLjx5WGqUcmevlsQ/rpRHOatbUS1MZ906XE5PLYZI1XT4ZB6x096z8=@vger.kernel.org, AJvYcCWM8+9sicCxhPNNJ3XAMsW7kbixRHU/iIPYePZVv5RDtJDNB9ejI8xdG+Aomb8BB2nvkQKitNnRWvhn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJCgdUOAK2sAS2AYhovdeECgUiiwT6i9IWTbrd4BOehjlJES6T
+	BF5VlE+6DNXxzm3d6hqAqNn6+zQqBg/kPyUQgSDxx8L4BMW9jEdsb0R71RHgqiuIIXySzTQEj0j
+	VycspMaNVoODepFb+H1vPgS1rjgM=
+X-Google-Smtp-Source: AGHT+IE6rCV/4aF114iDIj1kkIzkyn9wNoEOeAL2BBd+QL1ZEEYMwzMvVt2ZxZGLQfYfPoR9MpZQ5Xg9XLgqcD44um0=
+X-Received: by 2002:a2e:f0a:0:b0:2f3:a06a:4c5 with SMTP id 38308e7fff4ca-2f754a6b7cbmr47255071fa.29.1725902639166;
+ Mon, 09 Sep 2024 10:23:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <8f2e20f2fc894398da371517c6c8111aba072fb1.camel@kernel.org>
-X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Message-ID: <20240909163610.2148932-1-ovt@google.com>
-Subject: [PATCH 6.1.y] net: tls: handle backlogging of crypto requests
-From: Oleksandr Tymoshenko <ovt@google.com>
-To: trondmy@kernel.org
-Cc: anna@kernel.org, jbongio@google.com, linux-nfs@vger.kernel.org, 
-	ovt@google.com, stable@vger.kernel.org
+MIME-Version: 1.0
+References: <20240826-nfsd-cb-v1-0-82d3a4e5913b@kernel.org> <20240826-nfsd-cb-v1-1-82d3a4e5913b@kernel.org>
+In-Reply-To: <20240826-nfsd-cb-v1-1-82d3a4e5913b@kernel.org>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Mon, 9 Sep 2024 13:23:47 -0400
+Message-ID: <CAN-5tyFQ9sdb-L8YQXiGsUXDbVR9QbdNNK7QOi5XVJaggnVFBg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] nfsd: add more info to WARN_ON_ONCE on failed callbacks
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> nfs41_init_clientid does not signal a failure condition from
->> nfs4_proc_exchange_id and nfs4_proc_create_session to a client which
->> may
->> lead to mount syscall indefinitely blocked in the following stack
+On Mon, Aug 26, 2024 at 8:54=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Currently, you get the warning and stack trace, but nothing is printed
+> about the relevant error codes. Add that in.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfsd/nfs4callback.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index d756f443fc44..dee9477cc5b5 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -1333,7 +1333,8 @@ static void nfsd4_cb_done(struct rpc_task *task, vo=
+id *calldata)
+>                 return;
+>
+>         if (cb->cb_status) {
+> -               WARN_ON_ONCE(task->tk_status);
+> +               WARN_ONCE(task->tk_status, "cb_status=3D%d tk_status=3D%d=
+",
+> +                         cb->cb_status, task->tk_status);
+>                 task->tk_status =3D cb->cb_status;
+>         }
 
-> NACK. This will break all sorts of recovery scenarios, because it
-> doesn't distinguish between an initial 'mount' and a server reboot
-> recovery situation.
-> Even in the case where we are in the initial mount, it also doesn't
-> distinguish between transient errors such as NFS4ERR_DELAY or reboot
-> errors such as NFS4ERR_STALE_CLIENTID, etc.
+Educational question: why is this warning there in the first place? I
+can appreciate the value of information. Does knfsd expect that a
+callback should never fail with an error and thus tries to always
+catch it? A tracepoint can log an rpc tasks status but I realize that
+it doesn't capture attention like a WARN_ON.
 
-> Exactly what is the scenario that is causing your hang? Let's try to
-> address that with a more targeted fix.
+I have a report with this warn_on which I'm trying to figure out why
+is happening but I was surprised to find nfsd cares so much about the
+callback status.
 
-The scenario is as follows: there are several NFS servers and several
-production machines with multiple NFS mounts. This is a containerized
-multi-tennant workflow so every tennant gets its own NFS mount to access their
-data. At some point nfs41_init_clientid fails in the initial mount.nfs call
-and all subsequent mount.nfs calls just hang in nfs_wait_client_init_complete
-until the original one, where nfs4_proc_exchange_id has failed, is killed.
-
-The cause of the nfs41_init_clientid failure in the production case is a timeout.
-The following error message is observed in logs:
-  NFS: state manager: lease expired failed on NFSv4 server <ip> with error 110
-
+Thank you.
+>
+>
+> --
+> 2.46.0
+>
+>
 
