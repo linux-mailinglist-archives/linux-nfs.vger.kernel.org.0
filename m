@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-6339-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6340-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B53109718F6
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:10:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24D0F971944
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:24:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FABD1F22CF0
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 12:10:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D14C0281840
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 12:24:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D4D1B652C;
-	Mon,  9 Sep 2024 12:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530FC1B3F1E;
+	Mon,  9 Sep 2024 12:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz3inGux"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJXtu1tA"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133A01B533A
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 12:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E49E1779B8
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 12:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725883825; cv=none; b=ZnOKqhzeThcemK3hggXpuaqAxcrEJg3AZhUZFzSbVoA/7oV9fZp0PTBqNHMDmHTOJ1B98kCmMZPR/1zI4SeR4JU+MxwmxMk9YBwltsUiLCkhYQU59NWNMQ5bdtGwj0TA8cHrlcpgCm+srjJde+dtLE1TEwznqD4DffEHyw6rbq0=
+	t=1725884693; cv=none; b=lKTb8FgghvYQ4qgSWAe3pDx8Mc0Ei5E2dTD2zBeUR4944mVyok611STcDXXw7Oq8cuag1K4W+qq5lMhTAKTz7sXmBr8edkKV3f+zTE8+IDRmqQseGmvoFmXW8lAaJ/vx+XNv3+vm7bTkR6TVT3F8ylH5PcohsemFivX7/W5Pt5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725883825; c=relaxed/simple;
-	bh=fAxMqNLt2XM5zS9zloGN5FC1jsyaqbq0RmiQ85NZGZU=;
+	s=arc-20240116; t=1725884693; c=relaxed/simple;
+	bh=PZuLaAkIx6OhlgwBMygnzfOCwN7asOMmDQLtoEYzc9g=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bZ6fQyb7MJA//BAVX4x/pZalIJMSswVIKKBgkFPwEv30ngeCiBKjkB3mymxYwKoGN2Llct+UyprpHufUhYIUix7Ce6h/OhPrPb8bdgqsYYBWh3k8C7mo1FEw6Kas/JFC95BHpdhjVmdtqMigkAw5DB6V7hLE1piXCrL8dDszgb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pz3inGux; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34465C4CEC5;
-	Mon,  9 Sep 2024 12:10:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=t9dTOriTqrxNUvC+EfS7+SwBchzrvcio8JOzoUVymK7f1+S6dh3C0M3SwJPuBpyh8vZVNEcGXicBG8VjCDwO1EKeemgqA0+o7YdQqHdOkS3mblpNeLKgqV9oN9fY+9NVj45wwV1DwSdGLt8/IUVq2+h5xK12gnAz2HAsRbUEGAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJXtu1tA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA2EC4CEC5;
+	Mon,  9 Sep 2024 12:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725883823;
-	bh=fAxMqNLt2XM5zS9zloGN5FC1jsyaqbq0RmiQ85NZGZU=;
+	s=k20201202; t=1725884692;
+	bh=PZuLaAkIx6OhlgwBMygnzfOCwN7asOMmDQLtoEYzc9g=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Pz3inGuxJ+WVsMCikUqFFu11g8VR3N8qUf/9phs8XbIGLT2DD1Tczilj9vMhID3/q
-	 Qml4csnm50bedr0S51rBeTkZcENy6Ry1Fu9w4MtWyPmhVf22J7x1rYk1gZD3XJ/q9q
-	 s1g+JK0wnqHD1qswjZRs79PtWmaOiXm3/5BExXeupcAGzjTwQu+qbp58EIVwNZ+lGG
-	 i/lhGgYqhy4MEm1/plgk1/7GFGV+0YX1uGUguJADZD9qw28soJx4oKKlYdABMNhBaH
-	 jdLEay6WMQwS+prDIl6RVUF8e52D+396XZb9agAtrH7MvZGo4TqE3y7toHWItP33b4
-	 NeLubI9XGq7hQ==
-Message-ID: <20f6bcdf6e206974a877799678124d3887c97154.camel@kernel.org>
+	b=gJXtu1tAzHOQTpw81bpDdvcF+VRuSapx0Jg+w2aAh/uMh3mY6xBrsbr6k5ZcJtasW
+	 qioCalk+9M3L1c/zoWE+F/KNKWTuAK7/X2QXJreEDgxk1yhZTWSiAkypsF9YtFY8PM
+	 xr9ufceN0ageF6LSH0N7nXdWkMv0WQZlcM7BsHaBM9MyAc7vP4AuzXpx39p9tzQ80h
+	 7OeQszLG2gVwyHvkK6OCetF/d9MHlKqSuA5SPntnexQEiPyA95mumYDgX1xtqaVh4l
+	 wFvDz39urW91rBPj5haB2Fg80SI6D8ckkZAtYYcqoGKb//oBPa32qFkGN5srrlkESy
+	 PJcOV9Pi4q/NA==
+Message-ID: <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
 Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for
  at least 30 seconds
 From: Jeff Layton <jlayton@kernel.org>
@@ -49,7 +49,7 @@ To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>, Olga
  Kornievskaia <okorniev@redhat.com>
 Cc: Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
 	linux-nfs@vger.kernel.org
-Date: Mon, 09 Sep 2024 08:10:22 -0400
+Date: Mon, 09 Sep 2024 08:24:51 -0400
 In-Reply-To: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
 References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
@@ -143,6 +143,15 @@ On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
 > be switch to the "old" bit set between 0 and 30 seconds later, and it
 > would remain as the "old" bit set for 30 seconds.
 >=20
+
+Since we're on the subject...
+
+60s seems like an awfully long time to block delegations on an inode.
+Recalls generally don't take more than a few seconds when things are
+functioning properly.
+
+Should we swap the bloom filters more often?
+
 > Unfortunately the code intended to clear the old bit set once it reached
 > 30 seconds old, preparing it to be the next new bit set, instead cleared
 > the *new* bit set before switching it to be the old bit set.  This means
@@ -187,7 +196,6 @@ er recalling them.")
 >  		}
 >  		spin_unlock(&blocked_delegations_lock);
 
-Nice catch!
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
