@@ -1,127 +1,130 @@
-Return-Path: <linux-nfs+bounces-6334-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6335-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72E78970DBC
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 08:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 96D86971551
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 12:28:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28AF228280B
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 06:05:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B76283E91
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 10:28:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0C6101E2;
-	Mon,  9 Sep 2024 06:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038161B2ED8;
+	Mon,  9 Sep 2024 10:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="FfD+3DTC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLGwouhy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569734C8D
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 06:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4C01B5309
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 10:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725861917; cv=none; b=fIglaqdsZ7CAp+KxL8jwLEYxcdwHk/MDkRVvIlkdrsCve7T6taETrzFdEndG2qmW/I+QUWKF8+VrEAZbrjFsZWT/KnIkFgmfi9R3mIFA40CfshnQDWRlW8Rwm8s3dFnD7Q1JiIdLEesp3QqTxwtJCoGurOqZ4wwNsqb9cfFYSXM=
+	t=1725877718; cv=none; b=RCo5bDS73EqT4qcrOAHrBo07LPj9mF36fnH+Ilty5lef6JP+f5hqXWauzBOJgHnivr4a35eqrh7imYjWUN52VHqeBzAWOPthy4kqtUhXmu0MUZZ/NYbtxKTdN8PFI1YFfLw2+cW9puGFmMGZG4Cz9CensRpI6hK/wuvEE10fP+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725861917; c=relaxed/simple;
-	bh=uWG3UQ6Yz+jGJTmFmZNvfWc6Odjx5yZo+vEUV6wuzJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F8flBi8VxEam0quqidkgs7TM6pO8SoZEEE9YX/jKifcbYcrGoltUhRKhw1A1ybLajHuTaLManFtsxDxlMvzfSlQCUw5Fplu4poWK1rh8nVEiY84nkE2NYp8oKzo4HU9ap1xWz7H/XvqpIETtdpzFfKh7xBGZCS1XOA7I/1ymca4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=FfD+3DTC; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a86e9db75b9so502289266b.1
-        for <linux-nfs@vger.kernel.org>; Sun, 08 Sep 2024 23:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google; t=1725861913; x=1726466713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4WNrtdbvXBoP/zdwr/qRDD0itLSIUcwjbrJN9ZpxJc=;
-        b=FfD+3DTCcmuV+NMG9b2HDGmQUwuG31cfnJM/oP/ifbybi++HFdddrSeZwG4ubg8H2l
-         YqFfgUJ0/y27On6MVfSacIE3QZs8VyE2lFQX/6Lna7YEWqI72jUz4ABNIRXAc/Z3GBvd
-         cHhnnFtb3nWJmCjzDAC6hz0VkpclLyUqIxZ40QkBzRDtDDHXKRYdTfaI19CWUm9Jwwb4
-         9b78G8fkswi3c1kWl+yQhfMzwU1NYncJAZFp9p2LX9uH7ECdemBT/bZU0y26TSkT4mis
-         dmpTxaoMjqIVfh1jfUnjgokAVumXYQLZdtPOYHaNXx7jMxasYqVXTlID9RT3IxuG9cxL
-         oIow==
+	s=arc-20240116; t=1725877718; c=relaxed/simple;
+	bh=nc52E6d/62fnrheUEb914pIdp7dhzBTVx/SnLCnTRic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GattXGtSf22U4I0GdHqYlbbRbPeV1MvP440eIOhRGxdjgX2mfldTIZ9SfMf61NeoSbForVa3XoZQBtMkqrWZcU4pn4p0d+u6vfwuVICIPxtUrEeGJXgIg/9y+8n76FlWt2gLN+Jy0cqzHgZSS5PCASrcFmePNGfIsoNKieKY4G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RLGwouhy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725877715;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g+Kb6vXmYy0XoChq2v5I1X9XJKRuTAq/LYmh1VxR2As=;
+	b=RLGwouhynzYOnsOy1FHjc7M4SZgXW5wC4ol2xRA6fCHavikxnEB5+hKbqyHxEiwecNZDef
+	oWrgXCzRJ43ZcFWeIPdZCKWgsggT2nfKY6546va9P+aKdhoQT2bvZVJ0+0WzX53BeCAKGf
+	W9RT1r7I9i9eTfkDNQ4is0KIRIlfruQ=
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
+ [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-o2DxlG7IMQijO1nNSPya2Q-1; Mon, 09 Sep 2024 06:28:34 -0400
+X-MC-Unique: o2DxlG7IMQijO1nNSPya2Q-1
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-49bcd872a85so1894739137.3
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2024 03:28:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725861913; x=1726466713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W4WNrtdbvXBoP/zdwr/qRDD0itLSIUcwjbrJN9ZpxJc=;
-        b=OhcMagOyaSgTIzNfJCcgkWbiygcDHjm7CO7X6jaPiqb9EMvGzGOE8TdlKt5NF1KI7W
-         ZcyjffiDyPMR2qDPUVgMDF4Wfr+G09eaPntxneGH0NZEjl9yILqvp7AqQlJHaIAP9K4A
-         OUfGg09nWUKTG6LxPb2kG6VNSmXNUwhp1Lrjo4GLIJ+Q6Fe9XvWLIAwMxGDx1XS6bn3i
-         sW6tjzmuDxf0lWQQbjpjimagSxCkSj6EHuyR7117j3Cz7lBhsrE+qYJboo8q9PkFSckJ
-         QZZRzGwxi80BB9aYkvYXEhYkpK1Vbg+aBiNkdfaXeQsOhJ4XH2tk7RaB68y2AHpPV+Dg
-         p4IQ==
-X-Gm-Message-State: AOJu0YxUuCpOlqNfn5Z0ryQGU9AxeUZWUNwWRjo3CxBWZfYdn4WxjIiD
-	PUnRiUr1tVPL1teFb9RGy0Ngf24YuFceTSBVjqtJTYn0yixm/WPzrUPHqbwqz7in6snAUlMdU96
-	YsD0X21kvkhr76PJ9Q3Hn6FDCFfHZ/ijRMlqZjw==
-X-Google-Smtp-Source: AGHT+IHzWOAKvmKopVMiK1br8VvWK6bpCSYuRpaDjNnypsUriCVRoBpKyJ0lj/7Xp1Z+ljBGfU/b0z8iBJlPzDITK3E=
-X-Received: by 2002:a17:907:801:b0:a83:94bd:d913 with SMTP id
- a640c23a62f3a-a8a885c0116mr807901666b.10.1725861912573; Sun, 08 Sep 2024
- 23:05:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725877714; x=1726482514;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g+Kb6vXmYy0XoChq2v5I1X9XJKRuTAq/LYmh1VxR2As=;
+        b=WCcxLURsudXp2psUoVE+TUdpz5H7hWRsuBy8AgcMezobRn6r21X+VqB3USVTP70h6g
+         3+1AwWWToOdLoY5fISkKRJvEI/Fj0l+dRu96oxKS4qB1/wUXmeKCvD7i6aGgUm4kh5M3
+         /Dlotzot/nd4kDtFWU6ZVQs+Fy30bmrQA6LwLr1B+WWmV90m0aLXj9NVDYbkzUDd1Yfx
+         wZLI450KmJ6LtevTCCm6KBQvcDkHZDCFVB2VqJi940Lf1zvtY/8VTssZhLTlDnewds1y
+         Rfght8NnZc/kx7XvVzQ1P/w1DH7sw6S3A+/jqPJ/7QNUKq2P8pXjIUkxToxPZnYQvEBG
+         GdzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVbnK656K4ENtKU1YPG0IOUz2JYn4WqgDjgfJVeSE/4FhKJk/5r7Q7X6eiGF3/iB8EMpueFceGx6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPo9sdHBnMuaEP6vs1xv2lhPk3siQZJJwvbfV0rZo4SRMeYqsY
+	eYMz+46i0FK/9iRVhuWG+z6LdGtmqUl1+D1FbhjzoBlDdX5gCDA3R8jfEOaYzwvYZ0fVEDkb0O9
+	u8iVVa+DNlKxeJCpxuFnh4ac0C3abxFIWsmHaBtoweAMAwA7hoMWLd8JPIQ==
+X-Received: by 2002:a67:ec4d:0:b0:49b:fe4d:20e4 with SMTP id ada2fe7eead31-49bfe4d2327mr3361992137.28.1725877713966;
+        Mon, 09 Sep 2024 03:28:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFodfmNB4DOlVPT3Sq0iNwylTzftTLTsDQNtv4tzZxj8wpfXDkJUdbIyM0d+7NvHM2yqBtrmg==
+X-Received: by 2002:a67:ec4d:0:b0:49b:fe4d:20e4 with SMTP id ada2fe7eead31-49bfe4d2327mr3361981137.28.1725877713595;
+        Mon, 09 Sep 2024 03:28:33 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.152.176])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c53474d787sm19441396d6.97.2024.09.09.03.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2024 03:28:32 -0700 (PDT)
+Message-ID: <8ba8176e-d37f-44b3-a4cc-1d0f04181770@redhat.com>
+Date: Mon, 9 Sep 2024 06:28:31 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAF3mN6VbfgBV-o5yiSRn=PHAMO1be7G5H5wYRSsasYJ0Pvwv9w@mail.gmail.com>
- <48295036a03cf9806eb5a42f890af2e43d9980a6.camel@hammerspace.com>
-In-Reply-To: <48295036a03cf9806eb5a42f890af2e43d9980a6.camel@hammerspace.com>
-From: Roi Azarzar <roi.azarzar@vastdata.com>
-Date: Mon, 9 Sep 2024 09:05:01 +0300
-Message-ID: <CAF3mN6WsrQioFW09MSxjgdGsG_VG87JhW=1Y5geErfEHWW+CZQ@mail.gmail.com>
-Subject: Re: Suggested patch for fixing NFS_CAP_DELEGTIME capability
- indication in the client side
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "jlayton@kernel.org" <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Isn't the following clearer?
-               if ((res.attr_bitmask[2] &
-FATTR4_WORD2_TIME_DELEG_MODIFY) &&
-(res.open_caps.oa_share_access_want[0] &
-NFS4_SHARE_WANT_DELEG_TIMESTAMPS))
-                      server->caps |=3D NFS_CAP_DELEGTIME;
-
-What about TIME_DELEG_ACCESS? shouldn't we add it to the above
-condition in the same manner ?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH rpcbind 1/1] rpcb_prot.x: Update _PATH_RPCBINDSOCK
+To: Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org
+Cc: libtirpc-devel@lists.sourceforge.net
+References: <20240901120609.197824-1-pvorel@suse.cz>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20240901120609.197824-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-On Sun, Sep 8, 2024 at 7:55=E2=80=AFPM Trond Myklebust <trondmy@hammerspace=
-.com> wrote:
->
-> On Sun, 2024-09-08 at 17:34 +0300, Roi Azarzar wrote:
-> > Hi,
-> >
-> > as discussed with @Jeff Layton sending a suggested patch that aims to
-> > fix NFS_CAP_DELEGTIME capability indication in the client side by
-> > setting it according to FATTR4_OPEN_ARGUMENTS response (and not
-> > according to TIME_DELEG_MODIFY) support as draft-ietf-nfsv4-delstid-
-> > 02
-> >  suggested.
-> >
->
-> NACK. I agree that we should turn off NFS_CAP_DELEGTIME if the open
-> arguments don't support it, but we should not turn it on unless the
-> server has indicated that it supports the attribute.
->
-> i.e. the correct change here is
->
-> +               if (!(res.open_caps.oa_share_access_want[0] &
-> +                     NFS4_SHARE_WANT_DELEG_TIMESTAMPS))
-> +                       server->caps &=3D ~NFS_CAP_DELEGTIME;
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+
+On 9/1/24 8:06 AM, Petr Vorel wrote:
+> 2f9ce0c updated rpcb_prot.h, but rpcb_prot.x must be updated as well.
+> 
+> Fixes: 2f9ce0c ("Move rpcbind.sock to /run")
+> Signed-off-by: Petr Vorel<pvorel@suse.cz>
+Committed... (tag: libtirpc-1-3-6-rc2)
+
+steved.
+> ---
+> Actually, tirpc/rpc/rpcb_prot.h should be generated by rpcgen, but I
+> just updated the header.
+> 
+>   tirpc/rpc/rpcb_prot.x | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tirpc/rpc/rpcb_prot.x b/tirpc/rpc/rpcb_prot.x
+> index 472c11f..e0e6031 100644
+> --- a/tirpc/rpc/rpcb_prot.x
+> +++ b/tirpc/rpc/rpcb_prot.x
+> @@ -410,8 +410,8 @@ program RPCBPROG {
+>   %#define	RPCBVERS_3		RPCBVERS
+>   %#define	RPCBVERS_4		RPCBVERS4
+>   %
+> -%#define	_PATH_RPCBINDSOCK	"/var/run/rpcbind.sock"
+> -%#define	_PATH_RPCBINDSOCK_ABSTRACT "\0/run/rpcbind.sock"
+> +%#define	_PATH_RPCBINDSOCK	"/run/rpcbind.sock"
+> +%#define	_PATH_RPCBINDSOCK_ABSTRACT "\0" _PATH_RPCBINDSOCK
+>   %
+>   %#else		/* ndef _KERNEL */
+>   %#ifdef __cplusplus
+> -- 2.45.2
+> 
+
 
