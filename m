@@ -1,130 +1,182 @@
-Return-Path: <linux-nfs+bounces-6335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96D86971551
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 12:28:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80B609716BF
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 13:25:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B76283E91
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 10:28:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A955283FCA
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 11:25:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038161B2ED8;
-	Mon,  9 Sep 2024 10:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48FB31B5EA4;
+	Mon,  9 Sep 2024 11:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLGwouhy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xk7R8wx8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4C01B5309
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 10:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596CF1B3740
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 11:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725877718; cv=none; b=RCo5bDS73EqT4qcrOAHrBo07LPj9mF36fnH+Ilty5lef6JP+f5hqXWauzBOJgHnivr4a35eqrh7imYjWUN52VHqeBzAWOPthy4kqtUhXmu0MUZZ/NYbtxKTdN8PFI1YFfLw2+cW9puGFmMGZG4Cz9CensRpI6hK/wuvEE10fP+o=
+	t=1725881065; cv=none; b=VnkBC2gvefJMI5PwbpijzKBuO+7We2PBmZ3zy7hs5GwyhkAtI0sWtCWcicaPqhyhZUUxI9Mp+wsETcqXQ3e+KAxdel5XL8wcduhUTraS5qlbgbGLb0Y1U+sTqU4SsfV8XwBYTtweeo+mpQvXOF2kptub4iiIIFOZO3n+XW/QgUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725877718; c=relaxed/simple;
-	bh=nc52E6d/62fnrheUEb914pIdp7dhzBTVx/SnLCnTRic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GattXGtSf22U4I0GdHqYlbbRbPeV1MvP440eIOhRGxdjgX2mfldTIZ9SfMf61NeoSbForVa3XoZQBtMkqrWZcU4pn4p0d+u6vfwuVICIPxtUrEeGJXgIg/9y+8n76FlWt2gLN+Jy0cqzHgZSS5PCASrcFmePNGfIsoNKieKY4G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RLGwouhy; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1725881065; c=relaxed/simple;
+	bh=wd6Nk7S+2T3/Atm+VQX4FwDBMc4gtF4Iy1UQRcnPkmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZx5Ff5ks/K0pvt5aSY8Z0J/jXcTTBwkW1NDXVCr1ANogYfnClWcHMfh3u+KCEZcmSt4RgE0zVRUcOB6lqTPUXlpkUUrk07aBlwUzXo0MDY31HUu/GYH7b4XIMIiuLye3lureYGkDyoyq8x6rqnOYLSrp6BJje9PvQP2eIEUdRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xk7R8wx8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725877715;
+	s=mimecast20190719; t=1725881062;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g+Kb6vXmYy0XoChq2v5I1X9XJKRuTAq/LYmh1VxR2As=;
-	b=RLGwouhynzYOnsOy1FHjc7M4SZgXW5wC4ol2xRA6fCHavikxnEB5+hKbqyHxEiwecNZDef
-	oWrgXCzRJ43ZcFWeIPdZCKWgsggT2nfKY6546va9P+aKdhoQT2bvZVJ0+0WzX53BeCAKGf
-	W9RT1r7I9i9eTfkDNQ4is0KIRIlfruQ=
-Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
- [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-o2DxlG7IMQijO1nNSPya2Q-1; Mon, 09 Sep 2024 06:28:34 -0400
-X-MC-Unique: o2DxlG7IMQijO1nNSPya2Q-1
-Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-49bcd872a85so1894739137.3
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2024 03:28:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725877714; x=1726482514;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+Kb6vXmYy0XoChq2v5I1X9XJKRuTAq/LYmh1VxR2As=;
-        b=WCcxLURsudXp2psUoVE+TUdpz5H7hWRsuBy8AgcMezobRn6r21X+VqB3USVTP70h6g
-         3+1AwWWToOdLoY5fISkKRJvEI/Fj0l+dRu96oxKS4qB1/wUXmeKCvD7i6aGgUm4kh5M3
-         /Dlotzot/nd4kDtFWU6ZVQs+Fy30bmrQA6LwLr1B+WWmV90m0aLXj9NVDYbkzUDd1Yfx
-         wZLI450KmJ6LtevTCCm6KBQvcDkHZDCFVB2VqJi940Lf1zvtY/8VTssZhLTlDnewds1y
-         Rfght8NnZc/kx7XvVzQ1P/w1DH7sw6S3A+/jqPJ/7QNUKq2P8pXjIUkxToxPZnYQvEBG
-         GdzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVbnK656K4ENtKU1YPG0IOUz2JYn4WqgDjgfJVeSE/4FhKJk/5r7Q7X6eiGF3/iB8EMpueFceGx6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPo9sdHBnMuaEP6vs1xv2lhPk3siQZJJwvbfV0rZo4SRMeYqsY
-	eYMz+46i0FK/9iRVhuWG+z6LdGtmqUl1+D1FbhjzoBlDdX5gCDA3R8jfEOaYzwvYZ0fVEDkb0O9
-	u8iVVa+DNlKxeJCpxuFnh4ac0C3abxFIWsmHaBtoweAMAwA7hoMWLd8JPIQ==
-X-Received: by 2002:a67:ec4d:0:b0:49b:fe4d:20e4 with SMTP id ada2fe7eead31-49bfe4d2327mr3361992137.28.1725877713966;
-        Mon, 09 Sep 2024 03:28:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFodfmNB4DOlVPT3Sq0iNwylTzftTLTsDQNtv4tzZxj8wpfXDkJUdbIyM0d+7NvHM2yqBtrmg==
-X-Received: by 2002:a67:ec4d:0:b0:49b:fe4d:20e4 with SMTP id ada2fe7eead31-49bfe4d2327mr3361981137.28.1725877713595;
-        Mon, 09 Sep 2024 03:28:33 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.152.176])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c53474d787sm19441396d6.97.2024.09.09.03.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2024 03:28:32 -0700 (PDT)
-Message-ID: <8ba8176e-d37f-44b3-a4cc-1d0f04181770@redhat.com>
-Date: Mon, 9 Sep 2024 06:28:31 -0400
+	bh=G7iY+WqYMudiSPSlxZTFwaK/Tqzc2dsg6fefulIkGrE=;
+	b=Xk7R8wx8XNbldrF+jwGD9192wrKfD5Epb10udQOk+CrMf9mEPXLnu+2TSk6i5orWdnPlIS
+	ES0A7J+fGie/3fq6oTranVe4Eas1xRpuOgxEdRxMr3Q5YKhlnRDwaon7Q6yNxob5a1RsOv
+	E2fDA0F4+B0EEWUD//T79sEqx2Vsw9c=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-407-IMh2R6-RNMirn25-ihum-Q-1; Mon,
+ 09 Sep 2024 07:24:16 -0400
+X-MC-Unique: IMh2R6-RNMirn25-ihum-Q-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF9961956088;
+	Mon,  9 Sep 2024 11:24:13 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.64.160])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8124A1956086;
+	Mon,  9 Sep 2024 11:24:11 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id 7EB011F1B27; Mon,  9 Sep 2024 07:24:09 -0400 (EDT)
+Date: Mon, 9 Sep 2024 07:24:09 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: David Laight <David.Laight@aculab.com>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>,
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+	"jlayton@kernel.org" <jlayton@kernel.org>,
+	"neilb@suse.de" <neilb@suse.de>,
+	"okorniev@redhat.com" <okorniev@redhat.com>,
+	"Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
+	"tom@talpey.com" <tom@talpey.com>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"yukuai1@huaweicloud.com" <yukuai1@huaweicloud.com>,
+	"houtao1@huawei.com" <houtao1@huawei.com>,
+	"yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+	"yangerkun@huawei.com" <yangerkun@huawei.com>,
+	"lilingfeng@huaweicloud.com" <lilingfeng@huaweicloud.com>
+Subject: Re: [PATCH] nfsd: return -EINVAL when namelen is 0
+Message-ID: <Zt7a2XO-ze1aAM-d@aion>
+References: <20240903111446.659884-1-lilingfeng3@huawei.com>
+ <ZthzJiKF6TY0Nv32@aion>
+ <cccdc13066204448af7f0fd550f34586@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rpcbind 1/1] rpcb_prot.x: Update _PATH_RPCBINDSOCK
-To: Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org
-Cc: libtirpc-devel@lists.sourceforge.net
-References: <20240901120609.197824-1-pvorel@suse.cz>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20240901120609.197824-1-pvorel@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cccdc13066204448af7f0fd550f34586@AcuMS.aculab.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
+On Sun, 08 Sep 2024, David Laight wrote:
 
-
-On 9/1/24 8:06 AM, Petr Vorel wrote:
-> 2f9ce0c updated rpcb_prot.h, but rpcb_prot.x must be updated as well.
+> From: Scott Mayhew 
+> > Sent: 04 September 2024 15:48
+> > 
+> > On Tue, 03 Sep 2024, Li Lingfeng wrote:
+> > 
+> > > When we have a corrupted main.sqlite in /var/lib/nfs/nfsdcld/, it may
+> > > result in namelen being 0, which will cause memdup_user() to return
+> > > ZERO_SIZE_PTR.
+> > > When we access the name.data that has been assigned the value of
+> > > ZERO_SIZE_PTR in nfs4_client_to_reclaim(), null pointer dereference is
+> > > triggered.
+> > >
+> > > [ T1205] ==================================================================
+> > > [ T1205] BUG: KASAN: null-ptr-deref in nfs4_client_to_reclaim+0xe9/0x260
+> > > [ T1205] Read of size 1 at addr 0000000000000010 by task nfsdcld/1205
+> > > [ T1205]
+> > > [ T1205] CPU: 11 PID: 1205 Comm: nfsdcld Not tainted 5.10.0-00003-g2c1423731b8d #406
+> > > [ T1205] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-
+> > ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+> > > [ T1205] Call Trace:
+> > > [ T1205]  dump_stack+0x9a/0xd0
+> > > [ T1205]  ? nfs4_client_to_reclaim+0xe9/0x260
+> > > [ T1205]  __kasan_report.cold+0x34/0x84
+> > > [ T1205]  ? nfs4_client_to_reclaim+0xe9/0x260
+> > > [ T1205]  kasan_report+0x3a/0x50
+> > > [ T1205]  nfs4_client_to_reclaim+0xe9/0x260
+> > > [ T1205]  ? nfsd4_release_lockowner+0x410/0x410
+> > > [ T1205]  cld_pipe_downcall+0x5ca/0x760
+> > > [ T1205]  ? nfsd4_cld_tracking_exit+0x1d0/0x1d0
+> > > [ T1205]  ? down_write_killable_nested+0x170/0x170
+> > > [ T1205]  ? avc_policy_seqno+0x28/0x40
+> > > [ T1205]  ? selinux_file_permission+0x1b4/0x1e0
+> > > [ T1205]  rpc_pipe_write+0x84/0xb0
+> > > [ T1205]  vfs_write+0x143/0x520
+> > > [ T1205]  ksys_write+0xc9/0x170
+> > > [ T1205]  ? __ia32_sys_read+0x50/0x50
+> > > [ T1205]  ? ktime_get_coarse_real_ts64+0xfe/0x110
+> > > [ T1205]  ? ktime_get_coarse_real_ts64+0xa2/0x110
+> > > [ T1205]  do_syscall_64+0x33/0x40
+> > > [ T1205]  entry_SYSCALL_64_after_hwframe+0x67/0xd1
+> > > [ T1205] RIP: 0033:0x7fdbdb761bc7
+> > > [ T1205] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18
+> > 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 514
+> > > [ T1205] RSP: 002b:00007fff8c4b7248 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> > > [ T1205] RAX: ffffffffffffffda RBX: 000000000000042b RCX: 00007fdbdb761bc7
+> > > [ T1205] RDX: 000000000000042b RSI: 00007fff8c4b75f0 RDI: 0000000000000008
+> > > [ T1205] RBP: 00007fdbdb761bb0 R08: 0000000000000000 R09: 0000000000000001
+> > > [ T1205] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000042b
+> > > [ T1205] R13: 0000000000000008 R14: 00007fff8c4b75f0 R15: 0000000000000000
+> > > [ T1205] ==================================================================
+> > >
+> > > Fix it by checking namelen.
+> > >
+> > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > > ---
+> > >  fs/nfsd/nfs4recover.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> > > index 67d8673a9391..69a3a84e159e 100644
+> > > --- a/fs/nfsd/nfs4recover.c
+> > > +++ b/fs/nfsd/nfs4recover.c
+> > > @@ -809,6 +809,10 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 __user *cmsg,
+> > >  			ci = &cmsg->cm_u.cm_clntinfo;
+> > >  			if (get_user(namelen, &ci->cc_name.cn_len))
+> > >  				return -EFAULT;
+> > > +			if (!namelen) {
+> > > +				dprintk("%s: namelen should not be zero", __func__);
+> > > +				return -EINVAL;
+> > > +			}
+> > >  			name.data = memdup_user(&ci->cc_name.cn_id, namelen);
 > 
-> Fixes: 2f9ce0c ("Move rpcbind.sock to /run")
-> Signed-off-by: Petr Vorel<pvorel@suse.cz>
-Committed... (tag: libtirpc-1-3-6-rc2)
+> Don't you also want an upper bound sanity check?
+> (or is cn_len only 8 bit?)
 
-steved.
-> ---
-> Actually, tirpc/rpc/rpcb_prot.h should be generated by rpcgen, but I
-> just updated the header.
+Yeah, actually it should probably be checking for namelen >
+NFS4_OPAQUE_LIMIT.
+
+-Scott
 > 
->   tirpc/rpc/rpcb_prot.x | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> 	David
 > 
-> diff --git a/tirpc/rpc/rpcb_prot.x b/tirpc/rpc/rpcb_prot.x
-> index 472c11f..e0e6031 100644
-> --- a/tirpc/rpc/rpcb_prot.x
-> +++ b/tirpc/rpc/rpcb_prot.x
-> @@ -410,8 +410,8 @@ program RPCBPROG {
->   %#define	RPCBVERS_3		RPCBVERS
->   %#define	RPCBVERS_4		RPCBVERS4
->   %
-> -%#define	_PATH_RPCBINDSOCK	"/var/run/rpcbind.sock"
-> -%#define	_PATH_RPCBINDSOCK_ABSTRACT "\0/run/rpcbind.sock"
-> +%#define	_PATH_RPCBINDSOCK	"/run/rpcbind.sock"
-> +%#define	_PATH_RPCBINDSOCK_ABSTRACT "\0" _PATH_RPCBINDSOCK
->   %
->   %#else		/* ndef _KERNEL */
->   %#ifdef __cplusplus
-> -- 2.45.2
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
 > 
 
 
