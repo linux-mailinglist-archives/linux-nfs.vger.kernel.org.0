@@ -1,179 +1,127 @@
-Return-Path: <linux-nfs+bounces-6333-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6334-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8973F970CD3
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 07:06:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72E78970DBC
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 08:05:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C24B1C217DA
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 05:06:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28AF228280B
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 06:05:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D619461;
-	Mon,  9 Sep 2024 05:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0C6101E2;
+	Mon,  9 Sep 2024 06:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RkVBpt7J";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wkRtZLwN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MS8XSReu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M+9lQnfn"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="FfD+3DTC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49BC3D8E
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 05:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569734C8D
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 06:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725858415; cv=none; b=D4Zb2UzBfrYkAEpJsCkbNBnl2adELhtOBUzHy0UULxRntoAt32/tBhNCfPNB2X3fLTu8CpQtiZaKnl3hV9WI3IwLk/u+b/yJdTC34YuQHe7hLOxL5iK3ijQM0OCAjzL6x+OBzVadQfwCTYabWKDSuqvvw4xGpQzWCkgh8P4l2NA=
+	t=1725861917; cv=none; b=fIglaqdsZ7CAp+KxL8jwLEYxcdwHk/MDkRVvIlkdrsCve7T6taETrzFdEndG2qmW/I+QUWKF8+VrEAZbrjFsZWT/KnIkFgmfi9R3mIFA40CfshnQDWRlW8Rwm8s3dFnD7Q1JiIdLEesp3QqTxwtJCoGurOqZ4wwNsqb9cfFYSXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725858415; c=relaxed/simple;
-	bh=2zoDhmspYDYsoiRGdu4p4s81/u52jy5ElmrsrawK+A0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=kDsP5g7jAxENzjdc8NMZPFl/1FPWnQ32WYTbKBopClVhrmqF+jCCeapLHo6RXIhUjN/OvQOeH9Lbz3x14LlvVHhd6aacq1e5+buPs2uSAXW+evC72DV1GaMwkeFGLGMHJ2n3wbGJJ3eM9hCJmW1RrpaaIQmQH/V9lSGWJdR6vk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RkVBpt7J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wkRtZLwN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MS8XSReu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M+9lQnfn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E8C521F789;
-	Mon,  9 Sep 2024 05:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725858406; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OLy5CvJNo6vPmA3ns4ZbfblSCDOmcjHrnyZEQ61RvQo=;
-	b=RkVBpt7JG5KwRdQutdLuS0BvYBfRvJhTBf7Eo+Ze+Rp0jcOcE02koojK3X/IwglqlGQoJS
-	IPHFJEREpDMij1UpGN2u1I9+KwS6QVKQMzRzLNc61glFEscQb5sIG2YM5QWY4peRkG9hcc
-	q7UAy6CyohyK2VkIelC4VdUoiij4VgA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725858406;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OLy5CvJNo6vPmA3ns4ZbfblSCDOmcjHrnyZEQ61RvQo=;
-	b=wkRtZLwNybEhxmFUuAnDaXCEH8xnICwPeIdS4/Hic7ADzSmKTtLUNfiioGy8XdCB/h+mb5
-	mxDDzE7UfLAGRYAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725858405; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OLy5CvJNo6vPmA3ns4ZbfblSCDOmcjHrnyZEQ61RvQo=;
-	b=MS8XSReu+FBLT/4kN7uv+gAYWJzojb4NTlJ30GU7BB/iPKTia8tU9OEPTq/hQQbkFwPFSu
-	r5gyASPdN6XiNvwfDvmGNqHoA5ym7k7Gvj/ZuZQSDegeKD3Rl8cCIDrfwP+k2bCUNGJddL
-	bdHGSH+gE7yyk8+qISPVzdF+Vczhyi8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725858405;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OLy5CvJNo6vPmA3ns4ZbfblSCDOmcjHrnyZEQ61RvQo=;
-	b=M+9lQnfnpwmYo5qIPFYjt09Rp2mksdvrDkMmEG1YFPz1wyPDF2jH/SsqZNbOsvlEL208kS
-	5Vv109xPbzyetLDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D446413A3A;
-	Mon,  9 Sep 2024 05:06:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LZEKImOC3mbFNQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 09 Sep 2024 05:06:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1725861917; c=relaxed/simple;
+	bh=uWG3UQ6Yz+jGJTmFmZNvfWc6Odjx5yZo+vEUV6wuzJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F8flBi8VxEam0quqidkgs7TM6pO8SoZEEE9YX/jKifcbYcrGoltUhRKhw1A1ybLajHuTaLManFtsxDxlMvzfSlQCUw5Fplu4poWK1rh8nVEiY84nkE2NYp8oKzo4HU9ap1xWz7H/XvqpIETtdpzFfKh7xBGZCS1XOA7I/1ymca4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=FfD+3DTC; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a86e9db75b9so502289266b.1
+        for <linux-nfs@vger.kernel.org>; Sun, 08 Sep 2024 23:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1725861913; x=1726466713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4WNrtdbvXBoP/zdwr/qRDD0itLSIUcwjbrJN9ZpxJc=;
+        b=FfD+3DTCcmuV+NMG9b2HDGmQUwuG31cfnJM/oP/ifbybi++HFdddrSeZwG4ubg8H2l
+         YqFfgUJ0/y27On6MVfSacIE3QZs8VyE2lFQX/6Lna7YEWqI72jUz4ABNIRXAc/Z3GBvd
+         cHhnnFtb3nWJmCjzDAC6hz0VkpclLyUqIxZ40QkBzRDtDDHXKRYdTfaI19CWUm9Jwwb4
+         9b78G8fkswi3c1kWl+yQhfMzwU1NYncJAZFp9p2LX9uH7ECdemBT/bZU0y26TSkT4mis
+         dmpTxaoMjqIVfh1jfUnjgokAVumXYQLZdtPOYHaNXx7jMxasYqVXTlID9RT3IxuG9cxL
+         oIow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725861913; x=1726466713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W4WNrtdbvXBoP/zdwr/qRDD0itLSIUcwjbrJN9ZpxJc=;
+        b=OhcMagOyaSgTIzNfJCcgkWbiygcDHjm7CO7X6jaPiqb9EMvGzGOE8TdlKt5NF1KI7W
+         ZcyjffiDyPMR2qDPUVgMDF4Wfr+G09eaPntxneGH0NZEjl9yILqvp7AqQlJHaIAP9K4A
+         OUfGg09nWUKTG6LxPb2kG6VNSmXNUwhp1Lrjo4GLIJ+Q6Fe9XvWLIAwMxGDx1XS6bn3i
+         sW6tjzmuDxf0lWQQbjpjimagSxCkSj6EHuyR7117j3Cz7lBhsrE+qYJboo8q9PkFSckJ
+         QZZRzGwxi80BB9aYkvYXEhYkpK1Vbg+aBiNkdfaXeQsOhJ4XH2tk7RaB68y2AHpPV+Dg
+         p4IQ==
+X-Gm-Message-State: AOJu0YxUuCpOlqNfn5Z0ryQGU9AxeUZWUNwWRjo3CxBWZfYdn4WxjIiD
+	PUnRiUr1tVPL1teFb9RGy0Ngf24YuFceTSBVjqtJTYn0yixm/WPzrUPHqbwqz7in6snAUlMdU96
+	YsD0X21kvkhr76PJ9Q3Hn6FDCFfHZ/ijRMlqZjw==
+X-Google-Smtp-Source: AGHT+IHzWOAKvmKopVMiK1br8VvWK6bpCSYuRpaDjNnypsUriCVRoBpKyJ0lj/7Xp1Z+ljBGfU/b0z8iBJlPzDITK3E=
+X-Received: by 2002:a17:907:801:b0:a83:94bd:d913 with SMTP id
+ a640c23a62f3a-a8a885c0116mr807901666b.10.1725861912573; Sun, 08 Sep 2024
+ 23:05:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>
-Cc: Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
- least 30 seconds
-Date: Mon, 09 Sep 2024 15:06:36 +1000
-Message-id: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+References: <CAF3mN6VbfgBV-o5yiSRn=PHAMO1be7G5H5wYRSsasYJ0Pvwv9w@mail.gmail.com>
+ <48295036a03cf9806eb5a42f890af2e43d9980a6.camel@hammerspace.com>
+In-Reply-To: <48295036a03cf9806eb5a42f890af2e43d9980a6.camel@hammerspace.com>
+From: Roi Azarzar <roi.azarzar@vastdata.com>
+Date: Mon, 9 Sep 2024 09:05:01 +0300
+Message-ID: <CAF3mN6WsrQioFW09MSxjgdGsG_VG87JhW=1Y5geErfEHWW+CZQ@mail.gmail.com>
+Subject: Re: Suggested patch for fixing NFS_CAP_DELEGTIME capability
+ indication in the client side
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "jlayton@kernel.org" <jlayton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Isn't the following clearer?
+               if ((res.attr_bitmask[2] &
+FATTR4_WORD2_TIME_DELEG_MODIFY) &&
+(res.open_caps.oa_share_access_want[0] &
+NFS4_SHARE_WANT_DELEG_TIMESTAMPS))
+                      server->caps |=3D NFS_CAP_DELEGTIME;
+
+What about TIME_DELEG_ACCESS? shouldn't we add it to the above
+condition in the same manner ?
 
 
-The pair of bloom filtered used by delegation_blocked() was intended to
-block delegations on given filehandles for between 30 and 60 seconds.  A
-new filehandle would be recorded in the "new" bit set.  That would then
-be switch to the "old" bit set between 0 and 30 seconds later, and it
-would remain as the "old" bit set for 30 seconds.
-
-Unfortunately the code intended to clear the old bit set once it reached
-30 seconds old, preparing it to be the next new bit set, instead cleared
-the *new* bit set before switching it to be the old bit set.  This means
-that the "old" bit set is always empty and delegations are blocked
-between 0 and 30 seconds.
-
-This patch updates bd->new before clearing the set with that index,
-instead of afterwards.
-
-Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 seconds after r=
-ecalling them.")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4state.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 4313addbe756..6f18c1a7af2e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_stid *stid)
-  * When a delegation is recalled, the filehandle is stored in the "new"
-  * filter.
-  * Every 30 seconds we swap the filters and clear the "new" one,
-- * unless both are empty of course.
-+ * unless both are empty of course.  This results in delegations for a
-+ * given filehandle being blocked for between 30 and 60 seconds.
-  *
-  * Each filter is 256 bits.  We hash the filehandle to 32bit and use the
-  * low 3 bytes as hash-table indices.
-@@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfsd_fh *fh)
- 		if (ktime_get_seconds() - bd->swap_time > 30) {
- 			bd->entries -=3D bd->old_entries;
- 			bd->old_entries =3D bd->entries;
-+			bd->new =3D 1-bd->new;
- 			memset(bd->set[bd->new], 0,
- 			       sizeof(bd->set[0]));
--			bd->new =3D 1-bd->new;
- 			bd->swap_time =3D ktime_get_seconds();
- 		}
- 		spin_unlock(&blocked_delegations_lock);
---=20
-2.44.0
-
+On Sun, Sep 8, 2024 at 7:55=E2=80=AFPM Trond Myklebust <trondmy@hammerspace=
+.com> wrote:
+>
+> On Sun, 2024-09-08 at 17:34 +0300, Roi Azarzar wrote:
+> > Hi,
+> >
+> > as discussed with @Jeff Layton sending a suggested patch that aims to
+> > fix NFS_CAP_DELEGTIME capability indication in the client side by
+> > setting it according to FATTR4_OPEN_ARGUMENTS response (and not
+> > according to TIME_DELEG_MODIFY) support as draft-ietf-nfsv4-delstid-
+> > 02
+> >  suggested.
+> >
+>
+> NACK. I agree that we should turn off NFS_CAP_DELEGTIME if the open
+> arguments don't support it, but we should not turn it on unless the
+> server has indicated that it supports the attribute.
+>
+> i.e. the correct change here is
+>
+> +               if (!(res.open_caps.oa_share_access_want[0] &
+> +                     NFS4_SHARE_WANT_DELEG_TIMESTAMPS))
+> +                       server->caps &=3D ~NFS_CAP_DELEGTIME;
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
