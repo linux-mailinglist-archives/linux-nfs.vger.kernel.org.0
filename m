@@ -1,54 +1,58 @@
-Return-Path: <linux-nfs+bounces-6344-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6345-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38118971C69
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 16:23:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2254971C7F
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 16:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE28B1F24FBC
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:23:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02FF11C2225D
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:28:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8538E1B9B50;
-	Mon,  9 Sep 2024 14:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790021BA27B;
+	Mon,  9 Sep 2024 14:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITw1UWYf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyrhOUtw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609591BA278
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 14:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CA61BA26F
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 14:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725891818; cv=none; b=LwZjuF2UD21IV6e08d8dbCiJyA4oZMUN8KQXxWwyutDkJBj9S53XdwIUjfAx3w8Kxt7v3T0qE000GaWJjJPyeVXmow3HXi6tUm00P/NHej+WR1ubo5ZuFsxVOKkyo/TquxcYkchIuwHE/bXshGM5sZvZdpRcbmxsH1nxMc8rlKI=
+	t=1725892085; cv=none; b=BZoXNJ93m39xXm5o8wOVYzwGwMtg3AkD1uQzIT1zswLgTkSyZzjsPxs4xolNG6IOE1w6KmwGDfJ6QUZA6nNnvfOOft0qn8aZIPLXlvet/alm2wpvB/1fW9fUorgwNjyuqXPOVEA7/7Hpo6wzEFt2eFcB6Iu2aPcI171VeoEkToc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725891818; c=relaxed/simple;
-	bh=elA5R+Jh9fkG2ke0ZbgOo+wJmuDggyVSmTcxlMjYVa0=;
+	s=arc-20240116; t=1725892085; c=relaxed/simple;
+	bh=UEGt6Zj/DWqvguKO51E/P6fIcKPrpcKNRqM3j6pMGvg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UA/7tjuhlQ0T5NqD3w8QYprPBi01hpjLRHchAvar9HAMZjtoIH6we8zi4uUyJqiLyXErkW60uHdqNxVhM1QcHNTOwxmd7uQ6wdw/gVn9ja/KlMWVbJD7jnuZbhYuQU3OVWArn8Dlq688WxJ5u+MeRSje2V010UtQJjCX0HRSixY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITw1UWYf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA78C4CEC6;
-	Mon,  9 Sep 2024 14:23:37 +0000 (UTC)
+	 Content-Type:MIME-Version; b=c+nyEI4Yvycev9HGe5m9yI9MLHU+8YS+DiFkA772cNP1ggvI1dUpCJeoHsgPnhZJRfLyLQa7lm6MJFIjKfdN99MTN6CBRRCftlnsn4ERvXKzTygaxpNnj4ExY8lbaSneq92E762DZayHU8+9mA8sK4u4TKNluBIgenm3d6j4N5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyrhOUtw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EF9C4CEC5;
+	Mon,  9 Sep 2024 14:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725891818;
-	bh=elA5R+Jh9fkG2ke0ZbgOo+wJmuDggyVSmTcxlMjYVa0=;
+	s=k20201202; t=1725892084;
+	bh=UEGt6Zj/DWqvguKO51E/P6fIcKPrpcKNRqM3j6pMGvg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ITw1UWYf4v/Gw/HaOValtHHPdQRCNHY73/869+I8FcapRtUAzenThK382XUBz4uon
-	 PcLHtsaz3sEkuDw2Kh7Pk+AYcYQja8CfWzXBZJBgcm/JighuV9YDNFk2Ntc6iBLbIw
-	 IzZri8Igiqa9SYsEYEF43lqfvRljHsjImXLD1UifqoB92v5/o7i9exSQbDjnri5lRB
-	 xji+EBqi+dMINNSxNP46NOhiRoMPAExFQiZ3j5JavwicGiNCs8/42qowELutRr/pGQ
-	 +SPGaLxxns4RvAJdKg1cpqGpTllzLGKHPMFIKMz3rY2r+jDimMsT6E8TePVJb29Iiq
-	 xqa3xemjK9KIg==
-Message-ID: <3a71bfeff42f34aba53545a9f5d965642082a522.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: Fix nfs4_delegation_stat()
+	b=UyrhOUtwlrChwK/Cq1Jp56BAdxTOrC6f2oVnY8o/2i74OL55ulLy2/fi/zS1n3uRC
+	 D04xf3ylZQzUgMWnTZYZ89qbe73cEZRLbJfD2QooD1pjpje2j7NVtV5AOexo3toiDa
+	 twXvY3zxOxhkKIe80svG+KgabzrVjXlFgMsWmyKRRCf1UXHbWgKpO+/EKJRiW4Wvy7
+	 10Ca/iUPWAyHKpIlhFqP9QKW+/0p5XVTwKuZkdDgw3ibMhbwFMbBc7X85uIy7ENipI
+	 qfVF7AkXkKwlVfcOcvT13TNWu4PG5MZFueAq1A/q/pgMtfZm+r0yKJCaiO56hCubsR
+	 g7gHP75rJLYyg==
+Message-ID: <46b511a50ca23a80e40b1890932a1249a9839cca.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for
+ at least 30 seconds
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 09 Sep 2024 10:23:36 -0400
-In-Reply-To: <20240909141516.64363-1-cel@kernel.org>
-References: <20240909141516.64363-1-cel@kernel.org>
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Date: Mon, 09 Sep 2024 10:28:03 -0400
+In-Reply-To: <CACSpFtBYpQpAKVOmHLPUOr5LvoYq0-ea_NFMctqhMYSamUL_ZQ@mail.gmail.com>
+References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
+	 <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
+	 <CACSpFtBYpQpAKVOmHLPUOr5LvoYq0-ea_NFMctqhMYSamUL_ZQ@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,65 +137,99 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-09-09 at 10:15 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2024-09-09 at 10:17 -0400, Olga Kornievskaia wrote:
+> On Mon, Sep 9, 2024 at 8:24=E2=80=AFAM Jeff Layton <jlayton@kernel.org> w=
+rote:
+> >=20
+> > On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
+> > > The pair of bloom filtered used by delegation_blocked() was intended =
+to
+> > > block delegations on given filehandles for between 30 and 60 seconds.=
+  A
+> > > new filehandle would be recorded in the "new" bit set.  That would th=
+en
+> > > be switch to the "old" bit set between 0 and 30 seconds later, and it
+> > > would remain as the "old" bit set for 30 seconds.
+> > >=20
+> >=20
+> > Since we're on the subject...
+> >=20
+> > 60s seems like an awfully long time to block delegations on an inode.
+> > Recalls generally don't take more than a few seconds when things are
+> > functioning properly.
+> >=20
+> > Should we swap the bloom filters more often?
 >=20
-> The xfstests workflow on NFSv4.2 exhausts the capacity of both the
-> main and scratch devices (backed by xfs) about half-way through
-> each test run.
+> I was also thinking that perhaps we can do 15-30s perhaps? Another
+> thought was should this be a configurable value (with some
+> non-negotiable min and max)?
 >=20
-> Deleting all visible files on both devices frees only a little bit
-> of space. The test exports can be unshared but not unmounted
-> (EBUSY). Looks like unlinked but still open files, maybe.
->=20
-> Bisected to commit c495f65ad2ff ("nfsd: fix initial getattr on write
-> delegation")
->=20
-> Ensure nfsd_file objects acquired by find_rw_file() are released.
->=20
-> Fixes: c495f65ad2ff ("nfsd: fix initial getattr on write delegation")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->=20
-> Tested, problem no longer reproducible. I intend to squash this into
-> c495f65ad2ff.
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 252297b98a2e..cb5a9ab451c5 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5920,6 +5920,7 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, st=
-ruct svc_fh *currentfh,
->  {
->  	struct nfsd_file *nf =3D find_rw_file(dp->dl_stid.sc_file);
->  	struct path path;
-> +	int rc;
-> =20
->  	if (!nf)
->  		return false;
-> @@ -5927,11 +5928,12 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, =
-struct svc_fh *currentfh,
->  	path.mnt =3D currentfh->fh_export->ex_path.mnt;
->  	path.dentry =3D file_dentry(nf->nf_file);
-> =20
-> -	if (vfs_getattr(&path, stat,
-> -			(STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
-> -			AT_STATX_SYNC_AS_STAT))
-> -		return false;
-> -	return true;
-> +	rc =3D vfs_getattr(&path, stat,
-> +			 (STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
-> +			 AT_STATX_SYNC_AS_STAT);
-> +
-> +	nfsd_file_put(nf);
-> +	return rc =3D=3D 0;
->  }
-> =20
->  /*
 
-Mea culpa!
+Even 15-30s sounds like a lot, but that would probably be better. While
+I'm not a huge fan of tunables, it's hard to know what the "right"
+interval is here without some experimentation.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Maybe we should start with some metrics. For example, how often does
+the bloom filter block a delegation vs. allow it to pass? That kind of
+thing would be good to know.
+
+> > > Unfortunately the code intended to clear the old bit set once it reac=
+hed
+> > > 30 seconds old, preparing it to be the next new bit set, instead clea=
+red
+> > > the *new* bit set before switching it to be the old bit set.  This me=
+ans
+> > > that the "old" bit set is always empty and delegations are blocked
+> > > between 0 and 30 seconds.
+> > >=20
+> > > This patch updates bd->new before clearing the set with that index,
+> > > instead of afterwards.
+> > >=20
+> > > Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 seconds=
+ after recalling them.")
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/nfsd/nfs4state.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > index 4313addbe756..6f18c1a7af2e 100644
+> > > --- a/fs/nfsd/nfs4state.c
+> > > +++ b/fs/nfsd/nfs4state.c
+> > > @@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_stid *s=
+tid)
+> > >   * When a delegation is recalled, the filehandle is stored in the "n=
+ew"
+> > >   * filter.
+> > >   * Every 30 seconds we swap the filters and clear the "new" one,
+> > > - * unless both are empty of course.
+> > > + * unless both are empty of course.  This results in delegations for=
+ a
+> > > + * given filehandle being blocked for between 30 and 60 seconds.
+> > >   *
+> > >   * Each filter is 256 bits.  We hash the filehandle to 32bit and use=
+ the
+> > >   * low 3 bytes as hash-table indices.
+> > > @@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfsd_fh *=
+fh)
+> > >               if (ktime_get_seconds() - bd->swap_time > 30) {
+> > >                       bd->entries -=3D bd->old_entries;
+> > >                       bd->old_entries =3D bd->entries;
+> > > +                     bd->new =3D 1-bd->new;
+> > >                       memset(bd->set[bd->new], 0,
+> > >                              sizeof(bd->set[0]));
+> > > -                     bd->new =3D 1-bd->new;
+> > >                       bd->swap_time =3D ktime_get_seconds();
+> > >               }
+> > >               spin_unlock(&blocked_delegations_lock);
+> >=20
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
