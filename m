@@ -1,172 +1,197 @@
-Return-Path: <linux-nfs+bounces-6343-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6344-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61C01971C49
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 16:18:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38118971C69
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 16:23:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A9BC1C21A4E
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:18:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE28B1F24FBC
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01DF41B582D;
-	Mon,  9 Sep 2024 14:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8538E1B9B50;
+	Mon,  9 Sep 2024 14:23:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INyZA4qu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITw1UWYf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E68B1BA26D
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 14:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609591BA278
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 14:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725891478; cv=none; b=YbdtqtBBWlR/1GHpVmElj+C1m4XgfKHeRKpV1EqaUcboXkMJvGrXBE2x/gonT8tGJvnPckD5G1BHvC7b0QnODr9Qj1lCEPgX+vb4oyXPbp5JhH6Emq5PYqxQ53R3zzU6JwHMHVj2+NmBIGtd7pOYu10/lrNgX2a6sQNLQ+0kdqc=
+	t=1725891818; cv=none; b=LwZjuF2UD21IV6e08d8dbCiJyA4oZMUN8KQXxWwyutDkJBj9S53XdwIUjfAx3w8Kxt7v3T0qE000GaWJjJPyeVXmow3HXi6tUm00P/NHej+WR1ubo5ZuFsxVOKkyo/TquxcYkchIuwHE/bXshGM5sZvZdpRcbmxsH1nxMc8rlKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725891478; c=relaxed/simple;
-	bh=hgb4P8rMk4LONlediDaLNb9YiGkTQ7Zo10No55YYTe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yeg2+LdAr/0NQFvUJM/5J41h0hd+8ai7KvEwRZFT9FMSUCG1JNi/q4oNL7cDUMgZ/0Mr2e4e5TCJTZyjk9nVyT9nuSY3Hf71gSqipq8PBs/O93SmB1IbfCbI7OpaVph+O38EDP8HiekaG21WsVxShwFG1W1iaZSrOODI+PCGSrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=INyZA4qu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725891476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H2ELdgTpBeSeGcqEPJeGqv0laCURtzIMOFd+sK4gIKo=;
-	b=INyZA4qu8TnMJEgqbjv8REQ4L4j+cfYQDrd/8D+OaV6i1RpcSAnEIEVUELclFEn6tA2Q5+
-	6ti7gBj3vuyOXtYI9QsNo8/cw9X7UMVWJVajoHkwi3RUKSl41B31/LEUeiv0IpbX93c3I6
-	cfaUs7lKcPROMl4lJirZlM2vszzGRzE=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-61-y9g59cOiNg2hn0EbySfwfw-1; Mon, 09 Sep 2024 10:17:54 -0400
-X-MC-Unique: y9g59cOiNg2hn0EbySfwfw-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5c247f815b3so3225273a12.3
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Sep 2024 07:17:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725891473; x=1726496273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H2ELdgTpBeSeGcqEPJeGqv0laCURtzIMOFd+sK4gIKo=;
-        b=UpisE33t89hpHsBTUoaGYNJQeY8eS2YoZtT32G4z7U6DLV4TWFIUa7Xak21iKaS7Vw
-         BVH4Rg0vsXh6KjBhWAk/0bJ+BQE1tfD6qxDrMTd3eIOa90EzBjC7X6y795Y6ygIxu3st
-         A1HswU9Ct+dATZrq1cNZZFow1y4p7Kj2qS9/UcljZJUWqU7B0ZxN3S79G7cshsvnpyXU
-         HBgO116/m/xTOFVmnEt470rX2ONZReXmy2TAsq8CIY06fbO2WbN+k2Ce4ZKmqXOirNmW
-         ptIaPEMv5dGN4WFnR08YxgYEYcy+HV+6G+w1dJ+mzmyrxFEHfg1Jxa0JHPxG8oua7l/F
-         xV6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVHcV5Hj/LrDL9Lss1NVgPLgTrhVVKSR1ubVlrSTkgDMj76M0Vi2Ny1bmjzz4RJtH7QAoUzcTn+rnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrwkCli1kfhlralm6KTA6pKIkwantXMdGe2MvheO4W2oP9FQFS
-	RQeC6rg6DicQGFgRwwxG/7lTeqw5Jt5Gs4Rlv+vuQv5bEdKRjyMVJpGoauS6cRH5m2a3HeBH5G9
-	zPBefntJ8I1hIph2bty7kNCK3ZDBo1V2hFnC9yOvYlBP5OcO5Y3lKuCVX6sWwUqF/aMaXSL77aV
-	6hXWQDErr4YrsSXkoWXZmRSXSSzj0M/bIu
-X-Received: by 2002:a05:6402:90d:b0:5bf:2577:32b8 with SMTP id 4fb4d7f45d1cf-5c3dc78d21emr9013919a12.9.1725891473561;
-        Mon, 09 Sep 2024 07:17:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHl9u7TJK2ngZix1Lvb9i7CGe2+vit/sLzy76sjpmZeKKbnJi5aJ0N0/h9fXzLnfSvLSCKMq8Gtwx4PyCgxm1c=
-X-Received: by 2002:a05:6402:90d:b0:5bf:2577:32b8 with SMTP id
- 4fb4d7f45d1cf-5c3dc78d21emr9013889a12.9.1725891472980; Mon, 09 Sep 2024
- 07:17:52 -0700 (PDT)
+	s=arc-20240116; t=1725891818; c=relaxed/simple;
+	bh=elA5R+Jh9fkG2ke0ZbgOo+wJmuDggyVSmTcxlMjYVa0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UA/7tjuhlQ0T5NqD3w8QYprPBi01hpjLRHchAvar9HAMZjtoIH6we8zi4uUyJqiLyXErkW60uHdqNxVhM1QcHNTOwxmd7uQ6wdw/gVn9ja/KlMWVbJD7jnuZbhYuQU3OVWArn8Dlq688WxJ5u+MeRSje2V010UtQJjCX0HRSixY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITw1UWYf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA78C4CEC6;
+	Mon,  9 Sep 2024 14:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725891818;
+	bh=elA5R+Jh9fkG2ke0ZbgOo+wJmuDggyVSmTcxlMjYVa0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ITw1UWYf4v/Gw/HaOValtHHPdQRCNHY73/869+I8FcapRtUAzenThK382XUBz4uon
+	 PcLHtsaz3sEkuDw2Kh7Pk+AYcYQja8CfWzXBZJBgcm/JighuV9YDNFk2Ntc6iBLbIw
+	 IzZri8Igiqa9SYsEYEF43lqfvRljHsjImXLD1UifqoB92v5/o7i9exSQbDjnri5lRB
+	 xji+EBqi+dMINNSxNP46NOhiRoMPAExFQiZ3j5JavwicGiNCs8/42qowELutRr/pGQ
+	 +SPGaLxxns4RvAJdKg1cpqGpTllzLGKHPMFIKMz3rY2r+jDimMsT6E8TePVJb29Iiq
+	 xqa3xemjK9KIg==
+Message-ID: <3a71bfeff42f34aba53545a9f5d965642082a522.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Fix nfs4_delegation_stat()
+From: Jeff Layton <jlayton@kernel.org>
+To: cel@kernel.org
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 09 Sep 2024 10:23:36 -0400
+In-Reply-To: <20240909141516.64363-1-cel@kernel.org>
+References: <20240909141516.64363-1-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <172585839640.4433.13337900639103448371@noble.neil.brown.name> <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
-In-Reply-To: <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Mon, 9 Sep 2024 10:17:42 -0400
-Message-ID: <CACSpFtBYpQpAKVOmHLPUOr5LvoYq0-ea_NFMctqhMYSamUL_ZQ@mail.gmail.com>
-Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
- least 30 seconds
-To: Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 9, 2024 at 8:24=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wro=
-te:
->
-> On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
-> > The pair of bloom filtered used by delegation_blocked() was intended to
-> > block delegations on given filehandles for between 30 and 60 seconds.  =
-A
-> > new filehandle would be recorded in the "new" bit set.  That would then
-> > be switch to the "old" bit set between 0 and 30 seconds later, and it
-> > would remain as the "old" bit set for 30 seconds.
-> >
->
-> Since we're on the subject...
->
-> 60s seems like an awfully long time to block delegations on an inode.
-> Recalls generally don't take more than a few seconds when things are
-> functioning properly.
->
-> Should we swap the bloom filters more often?
+On Mon, 2024-09-09 at 10:15 -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> The xfstests workflow on NFSv4.2 exhausts the capacity of both the
+> main and scratch devices (backed by xfs) about half-way through
+> each test run.
+>=20
+> Deleting all visible files on both devices frees only a little bit
+> of space. The test exports can be unshared but not unmounted
+> (EBUSY). Looks like unlinked but still open files, maybe.
+>=20
+> Bisected to commit c495f65ad2ff ("nfsd: fix initial getattr on write
+> delegation")
+>=20
+> Ensure nfsd_file objects acquired by find_rw_file() are released.
+>=20
+> Fixes: c495f65ad2ff ("nfsd: fix initial getattr on write delegation")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>=20
+> Tested, problem no longer reproducible. I intend to squash this into
+> c495f65ad2ff.
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 252297b98a2e..cb5a9ab451c5 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5920,6 +5920,7 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, st=
+ruct svc_fh *currentfh,
+>  {
+>  	struct nfsd_file *nf =3D find_rw_file(dp->dl_stid.sc_file);
+>  	struct path path;
+> +	int rc;
+> =20
+>  	if (!nf)
+>  		return false;
+> @@ -5927,11 +5928,12 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, =
+struct svc_fh *currentfh,
+>  	path.mnt =3D currentfh->fh_export->ex_path.mnt;
+>  	path.dentry =3D file_dentry(nf->nf_file);
+> =20
+> -	if (vfs_getattr(&path, stat,
+> -			(STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
+> -			AT_STATX_SYNC_AS_STAT))
+> -		return false;
+> -	return true;
+> +	rc =3D vfs_getattr(&path, stat,
+> +			 (STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
+> +			 AT_STATX_SYNC_AS_STAT);
+> +
+> +	nfsd_file_put(nf);
+> +	return rc =3D=3D 0;
+>  }
+> =20
+>  /*
 
-I was also thinking that perhaps we can do 15-30s perhaps? Another
-thought was should this be a configurable value (with some
-non-negotiable min and max)?
+Mea culpa!
 
-> > Unfortunately the code intended to clear the old bit set once it reache=
-d
-> > 30 seconds old, preparing it to be the next new bit set, instead cleare=
-d
-> > the *new* bit set before switching it to be the old bit set.  This mean=
-s
-> > that the "old" bit set is always empty and delegations are blocked
-> > between 0 and 30 seconds.
-> >
-> > This patch updates bd->new before clearing the set with that index,
-> > instead of afterwards.
-> >
-> > Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-> > Cc: stable@vger.kernel.org
-> > Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 seconds a=
-fter recalling them.")
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfsd/nfs4state.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 4313addbe756..6f18c1a7af2e 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_stid *sti=
-d)
-> >   * When a delegation is recalled, the filehandle is stored in the "new=
-"
-> >   * filter.
-> >   * Every 30 seconds we swap the filters and clear the "new" one,
-> > - * unless both are empty of course.
-> > + * unless both are empty of course.  This results in delegations for a
-> > + * given filehandle being blocked for between 30 and 60 seconds.
-> >   *
-> >   * Each filter is 256 bits.  We hash the filehandle to 32bit and use t=
-he
-> >   * low 3 bytes as hash-table indices.
-> > @@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfsd_fh *fh=
-)
-> >               if (ktime_get_seconds() - bd->swap_time > 30) {
-> >                       bd->entries -=3D bd->old_entries;
-> >                       bd->old_entries =3D bd->entries;
-> > +                     bd->new =3D 1-bd->new;
-> >                       memset(bd->set[bd->new], 0,
-> >                              sizeof(bd->set[0]));
-> > -                     bd->new =3D 1-bd->new;
-> >                       bd->swap_time =3D ktime_get_seconds();
-> >               }
-> >               spin_unlock(&blocked_delegations_lock);
->
-> --
-> Jeff Layton <jlayton@kernel.org>
->
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
