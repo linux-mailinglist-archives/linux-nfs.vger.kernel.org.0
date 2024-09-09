@@ -1,116 +1,151 @@
-Return-Path: <linux-nfs+bounces-6337-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6338-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C5359716F8
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 13:34:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 467769718F3
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 14:09:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 984121C217CE
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 11:34:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B7B2847B6
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Sep 2024 12:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB6A1B3725;
-	Mon,  9 Sep 2024 11:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125DC1B6535;
+	Mon,  9 Sep 2024 12:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwT7QUBg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BB11B1D7A
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 11:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62371B5EDE
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Sep 2024 12:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725881643; cv=none; b=OpT71oLATS4pe3+c2gkZIbYelHouJQaSSxj7TYtZ3jntr+7I3GjjVYWbrcIAJwPpRT7LYFkcRW1Anv0e8m1En27UaN0zh2sMgn0mho8n7fe5marzXPPpN7t61FOaulScesuYy+0dWXreFTIJWuTEufuLAwxTQpcm5+d9Ga3Gex0=
+	t=1725883774; cv=none; b=CbhWuNP0cr9/02UT0UjcyfJA7CoImhkOKEEi/61y+FGF9aDILLbB71POOROtdfjC5oithB2cJbFVQKTT5YYAXkLFb8t1t8G8NFVVrS/Kv1RPVtX8DeY+tSvzZXFIhxUwfcjkuSQrjC1SXWCP05rJ4+5V/rMALmWGXDgBpvEPel0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725881643; c=relaxed/simple;
-	bh=R1nya6Eo+iPzdodCYDnS0daVSwPndrpQ5/s2bM2RmuE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=dQAhxRunuC37DWpfGGrpkK8ZoKxludrtzEqS1jw5yn7oLgspwCI+aJetZO7QCjPEtyH1WzLIzAAF1Tpjrcgx9cXnp9jwoVQXjRjLFbB40Nx6jestNlSHOONN08icAwXTJ7PQVnpS9a2/ah0iNhKuNbksLWDQDhMArogzba+asJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-277-H4Bn3nZzNZ6V0rqbRnoiOA-1; Mon, 09 Sep 2024 12:33:58 +0100
-X-MC-Unique: H4Bn3nZzNZ6V0rqbRnoiOA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 9 Sep
- 2024 12:33:04 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 9 Sep 2024 12:33:04 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Scott Mayhew' <smayhew@redhat.com>
-CC: Li Lingfeng <lilingfeng3@huawei.com>, "chuck.lever@oracle.com"
-	<chuck.lever@oracle.com>, "jlayton@kernel.org" <jlayton@kernel.org>,
-	"neilb@suse.de" <neilb@suse.de>, "okorniev@redhat.com" <okorniev@redhat.com>,
-	"Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>, "tom@talpey.com" <tom@talpey.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yukuai1@huaweicloud.com" <yukuai1@huaweicloud.com>, "houtao1@huawei.com"
-	<houtao1@huawei.com>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
-	"yangerkun@huawei.com" <yangerkun@huawei.com>, "lilingfeng@huaweicloud.com"
-	<lilingfeng@huaweicloud.com>
-Subject: RE: [PATCH] nfsd: return -EINVAL when namelen is 0
-Thread-Topic: [PATCH] nfsd: return -EINVAL when namelen is 0
-Thread-Index: AQHa/tltH5fpypZKDEqICq9omYVD5rJOXHzAgADqoYCAABJ2gA==
-Date: Mon, 9 Sep 2024 11:33:04 +0000
-Message-ID: <674f0d570dc241bf86294a9c8141a0b4@AcuMS.aculab.com>
-References: <20240903111446.659884-1-lilingfeng3@huawei.com>
- <ZthzJiKF6TY0Nv32@aion> <cccdc13066204448af7f0fd550f34586@AcuMS.aculab.com>
- <Zt7a2XO-ze1aAM-d@aion>
-In-Reply-To: <Zt7a2XO-ze1aAM-d@aion>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1725883774; c=relaxed/simple;
+	bh=mH1Zw3WAHBvBpu1cTPslgFGbiTI5j3Uh1QGFmBSuJyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HasBmfwZ16eeQ5lkEYopBjOhHYPmrI/DqERRKNvGJlfb57mefawvdGx6PbM7B4PsjY/rnyyoeLVfBsNZw1K8tiI+f+3cwAjlWac6NmN7pA/dcqtdrh7qjaliZiIFohfUr17pOeEOIbRG5SgkR7HsozTnMGLOhQvWVtMIa3XLjS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GwT7QUBg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725883770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=psmam9kl/beoi/zbMm+1O+FG1FefFxaekU8ekwD/aYI=;
+	b=GwT7QUBgnzzLcVJv6Rrz8jqfbxrSBSvfiu/MWKQjau9pX1iF5QSO49B0z7SUeGZyrCOy3L
+	iUTuzXfHM48OKH4eGTy+QeagscjV+uf12lbC6ptkWtCT79kKDshQH0aec2LNWg83P3R0g1
+	YLRr4DRTZcwJ3J4yzg9hOiUUhYn7n7A=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-480-hz77Xpi7P1S7TaJVGZwVIg-1; Mon,
+ 09 Sep 2024 08:09:27 -0400
+X-MC-Unique: hz77Xpi7P1S7TaJVGZwVIg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 827C51953956;
+	Mon,  9 Sep 2024 12:09:25 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.50.5])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C107830001A1;
+	Mon,  9 Sep 2024 12:09:22 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
+ least 30 seconds
+Date: Mon, 09 Sep 2024 08:09:20 -0400
+Message-ID: <5A662EF6-D836-4751-8D8C-AFF68DBBC7C5@redhat.com>
+In-Reply-To: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
+References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Scott Mayhew
-> Sent: 09 September 2024 12:24
-...
-> > > > diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> > > > index 67d8673a9391..69a3a84e159e 100644
-> > > > --- a/fs/nfsd/nfs4recover.c
-> > > > +++ b/fs/nfsd/nfs4recover.c
-> > > > @@ -809,6 +809,10 @@ __cld_pipe_inprogress_downcall(const struct cl=
-d_msg_v2 __user *cmsg,
-> > > >  =09=09=09ci =3D &cmsg->cm_u.cm_clntinfo;
-> > > >  =09=09=09if (get_user(namelen, &ci->cc_name.cn_len))
-> > > >  =09=09=09=09return -EFAULT;
-> > > > +=09=09=09if (!namelen) {
-> > > > +=09=09=09=09dprintk("%s: namelen should not be zero", __func__);
-> > > > +=09=09=09=09return -EINVAL;
-> > > > +=09=09=09}
-> > > >  =09=09=09name.data =3D memdup_user(&ci->cc_name.cn_id, namelen);
-> >
-> > Don't you also want an upper bound sanity check?
-> > (or is cn_len only 8 bit?)
->=20
-> Yeah, actually it should probably be checking for namelen >
-> NFS4_OPAQUE_LIMIT.
+On 9 Sep 2024, at 1:06, NeilBrown wrote:
 
-I suspect memdup_user() itself should have a third 'maxlen' argument.
-And probably one that is required to be a compile-time constant.
+> The pair of bloom filtered used by delegation_blocked() was intended to=
 
-Oh, and is dprintk() rate-limited?
-Not that the message looks very helpful.
+> block delegations on given filehandles for between 30 and 60 seconds.  =
+A
+> new filehandle would be recorded in the "new" bit set.  That would then=
 
-=09David
+> be switch to the "old" bit set between 0 and 30 seconds later, and it
+> would remain as the "old" bit set for 30 seconds.
+>
+> Unfortunately the code intended to clear the old bit set once it reache=
+d
+> 30 seconds old, preparing it to be the next new bit set, instead cleare=
+d
+> the *new* bit set before switching it to be the old bit set.  This mean=
+s
+> that the "old" bit set is always empty and delegations are blocked
+> between 0 and 30 seconds.
+>
+> This patch updates bd->new before clearing the set with that index,
+> instead of afterwards.
+>
+> Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 seconds a=
+fter recalling them.")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfsd/nfs4state.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 4313addbe756..6f18c1a7af2e 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_stid *sti=
+d)
+>   * When a delegation is recalled, the filehandle is stored in the "new=
+"
+>   * filter.
+>   * Every 30 seconds we swap the filters and clear the "new" one,
+> - * unless both are empty of course.
+> + * unless both are empty of course.  This results in delegations for a=
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+> + * given filehandle being blocked for between 30 and 60 seconds.
+>   *
+>   * Each filter is 256 bits.  We hash the filehandle to 32bit and use t=
+he
+>   * low 3 bytes as hash-table indices.
+> @@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfsd_fh *fh=
+)
+>  		if (ktime_get_seconds() - bd->swap_time > 30) {
+>  			bd->entries -=3D bd->old_entries;
+>  			bd->old_entries =3D bd->entries;
+> +			bd->new =3D 1-bd->new;
+>  			memset(bd->set[bd->new], 0,
+>  			       sizeof(bd->set[0]));
+> -			bd->new =3D 1-bd->new;
+>  			bd->swap_time =3D ktime_get_seconds();
+>  		}
+>  		spin_unlock(&blocked_delegations_lock);
+
+I stared at this code a long time without seeing the problem, but now it'=
+s
+obvious.  Thanks very much Neil!
+
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+
+Ben
 
 
