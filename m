@@ -1,641 +1,299 @@
-Return-Path: <linux-nfs+bounces-6366-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6367-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BEF19737EB
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 14:50:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 530EF973810
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 14:53:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 107161F25CA8
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 12:50:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C837286D9B
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 12:53:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3990D191F70;
-	Tue, 10 Sep 2024 12:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7729C191F97;
+	Tue, 10 Sep 2024 12:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCy1nmnt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvLSN6hB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16E818CBE0
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2024 12:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C1A1917FA
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2024 12:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725972582; cv=none; b=a4J1YgfdpbwgO60OjE4HG3bEoDzUYOF2RBv8onMm9nCe38jBBC2AGkPGLYuCaymv6IwUKqthd6jTVFfEk/kiNoebCxxREzqIvOs3htZPaDpv7sFrr8CJdNdmoTmCmSKnKJSxMTItGrwPFFJJwNIdEd17FiGlxD6Yu/9vfElf3iQ=
+	t=1725972726; cv=none; b=q1fThDkcrOw1exriiE64KtZ9Ns0ua0JZQDAXB6OzzOhFd+6c7vELYhIB09DVPd1DgVuAXXpOCdEXXuQBhHyOfDfCsiZ3oKN5jOcWzJRvq/9Y4VLnf6+LkHonQKymzdNzHh7V0/FzgWGFc2MHxp/C4wHNCKmU49PPfzlVQmUXCfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725972582; c=relaxed/simple;
-	bh=DavIKgin+tgFVWmWtY+wFb49+4tsWPpG5bA8lbK8G1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=U/9Nh6FNizKzKknL73lkjsTDyLRCd6riDbasuwVPvHQYEz+/v2cVlsFq8WnyTPjS+F3QlT9rlqgOMYn1QYJvcOOkiGKTdt51D99hSuH7g8CTuL8S8nl4426ZbchLagcqnOElTNhSxYNu5SZ5PMISv4OosgxprLzLbNR4paMiEZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCy1nmnt; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c241feb80dso12478964a12.0
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2024 05:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725972578; x=1726577378; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=951j/CUb+BV5Zzz7pAkc2XhUYqBeIT/zvraE8XDE8iE=;
-        b=UCy1nmntVYhOQYGvvk2S3xrMfrWmOhxrpKWPU6QjNe2byQAAkzYJMJp3/qlixAC0MI
-         +vuy+kjBo7BcgV8RXw9lj6y/qC0zDgKPKom2HuiOpgQI1McivRZZp0Xc62w58OohDXzk
-         2elUIQe8Vk66t5owWDWQ/RSrdKO/fTPcz/cqKzBh+iBRmZG6KTxW+f2QK8fEeL+YDGK/
-         VAorMyym/ViBBCU+WuSeUsKzFVX6WS4HmgIk5fYcbRtBDk35g19cvjXo5CXKvg2qfz/O
-         QCwU5d54HBwchV4zqG1MU/O3v/TKXcIS4GNsVG+jXdMOTnppZxsY2ydZQQfQdT+WUlTu
-         gzYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725972578; x=1726577378;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=951j/CUb+BV5Zzz7pAkc2XhUYqBeIT/zvraE8XDE8iE=;
-        b=wS/WlRhKhmLv9iEgqmC4a48zvRZ94DuuLLCSvHcEtQFVRh6LR99U99uehOvQ2qllnn
-         R4xiIAdErl/22wMYiaoQfqIh8AeZHJ/Pd9xTw0idAUXA1dVowC+gfJJCmndfIjZ09Z5F
-         4mfPIJ6pP0A/0LRGKc5yR9xs6ysQC0rxrUCDhsOKictgVKc8d7Q+yvtYziIEnsJGAl1H
-         75AZlrnim3dW+Fu4dmyCkR7X/s1YIfHQPZEti0p3XJkhkFyzstx2hlyoJuuZxI4b6pMz
-         kLtrEou3ZMUfqIRYNzSTRarAbSQ5WRCojl4jh4St0vLGxE9nLFzOR1yGfAbtu693mwXB
-         h0Jw==
-X-Gm-Message-State: AOJu0YwAVEjVhge73PIuXqL8vvq2zWhRLgEr7HvLwXXi73VvAYj0UaEE
-	GALQBQuSY3SyLQLOyS6gm2bJYx92C3H2hszrxP4YoVx6zjvUbphbDI3RQIFRMlpzfuP/FFTzw3F
-	UzIsS5M56t64ChiKzh0Np8uapl7BYFJ/Y
-X-Google-Smtp-Source: AGHT+IEn0SCYl/I05dCbNTfC8akfErBgZInq5N3kgW44LMjmvf9H3hnbC8CGuKV/ovoec6YPTGl1ZUeOzdxB+tGzpMw=
-X-Received: by 2002:a05:6402:2347:b0:5c2:751c:64ef with SMTP id
- 4fb4d7f45d1cf-5c4015eefb3mr3477438a12.13.1725972577243; Tue, 10 Sep 2024
- 05:49:37 -0700 (PDT)
+	s=arc-20240116; t=1725972726; c=relaxed/simple;
+	bh=jPKCZgr92hVekWicb7VW8tZKTVP+SkPDo/iNZFbGal8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LTA2oBzpa7SMacZKQ9qjt+RS/zXs/AtSt7WH3eIZllMAypd+4d1UW6Xmmm/eEj+SR8+Nh8lxKdtQaTWdIpyxLRKGgaMzD7G4uS7x/Xekprn3yD9wFO8cymtsZqGUwUBJsDWyBk5qIoapuJ0MbmUb2hD1ETTyPCnKwbGQNkI07K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvLSN6hB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B53EC4CEC6;
+	Tue, 10 Sep 2024 12:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725972725;
+	bh=jPKCZgr92hVekWicb7VW8tZKTVP+SkPDo/iNZFbGal8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rvLSN6hBE5CxQLsZUDwaVWZc5bub1zK2Xa0XOytwMelsmunq3Tjxgcj+BA/ngtCLc
+	 udzx4ijRlbP4nx0yLrSbyKQs9QapIUni+IXguUAqrtxeyOSJttdJtxMvlUEeHLcXKl
+	 vIOBIs8jiYq1y7O5hpMxMpLCde6CVknDM5jDTI0t/uSXHAHW71porppezXuHe6qenA
+	 /fceHlzOgmk92FCCC0VfVkvRbPWMFGALhlUyVUAHm42GjNo1AkBEkpV/zUo01DQRRe
+	 jwJZL3jU+YGX20ZIqN473e9tZ+e467w4qV4LSmtpUQMPyaBrigxXpUeeuZkfS7n55S
+	 DbaFra+GEZprA==
+Message-ID: <8e02bafe8027b060b38d38ebbd3092d2beb35206.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for
+ at least 30 seconds
+From: Jeff Layton <jlayton@kernel.org>
+To: Tom Talpey <tom@talpey.com>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neilb@suse.de>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	linux-nfs@vger.kernel.org
+Date: Tue, 10 Sep 2024 08:52:04 -0400
+In-Reply-To: <727023c4-416d-43ba-a82a-3fbd0a831f49@talpey.com>
+References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
+	 <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
+	 <CACSpFtBYpQpAKVOmHLPUOr5LvoYq0-ea_NFMctqhMYSamUL_ZQ@mail.gmail.com>
+	 <Zt8IOQUF/VEkCPgO@tissot.1015granger.net>
+	 <CACSpFtCD-yBiO3Oe9m8k9q6Wug6MqgNQmjoT9K8DRAmc3bGLfg@mail.gmail.com>
+	 <727023c4-416d-43ba-a82a-3fbd0a831f49@talpey.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQk6pL-jWQORNomrPgUgR4O3Ca3G4s_DSHZT7e4FxLyCNA@mail.gmail.com>
-In-Reply-To: <CAKAoaQk6pL-jWQORNomrPgUgR4O3Ca3G4s_DSHZT7e4FxLyCNA@mail.gmail.com>
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Tue, 10 Sep 2024 14:48:00 +0200
-Message-ID: <CANH4o6MRFXH+SfWy9EJUGB55KQ-0e0t7=6NncZp=Ap3Xo1WtMw@mail.gmail.com>
-Subject: Fwd: [Ms-nfs41-client-devel] ANN: NFSv4.1 filesystem client Windows
- driver binaries for Windows 10/11 for testing, 2024-09-09 ...
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-Please test the binaries. The client is for Windows 10/11 AMD64+x86
-(ARM64 support is in development), but interoperability feedback for
-Linux 6.6 LTS and 6.10+ would be great.
-
-News:
-- Machine-wide mounts useable by all users (if mounted by user
-SYSTEM), e.g. DOS device letter H: can refer to /home, and then
-H:\mwege is the same as /home/mwege/
-- new Windows/Cygwin /sbin/cygwinaccount2nfs4account tool to convert
-the Win32 account information of the (current) user SID+groups SIDs to
-a small POSIX/bash script for the NFSv4 server to set-up these
-accounts on the server side (assuming no ActiveDirectory/LDAP setup).
-Currently Linux only, but support for FreeBSD+Solaris/Illumos is
-coming soon
-- More work has been done to deal with Linux nfsd ACL bugs+workarounds for =
-those
-- Many fixes for winsg.exe (which runs Windows applications with a
-different group, akin /bin/newgrp or /bin/sg (Linux))
-- Fixes for Win32 32bit applications on Windows 64bit kernels
-
-Thanks,
-Martin
-
----------- Forwarded message ---------
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Mon, Sep 9, 2024 at 1:10=E2=80=AFPM
-Subject: [Ms-nfs41-client-devel] ANN: NFSv4.1 filesystem client
-Windows driver binaries for Windows 10/11 for testing, 2024-09-09 ...
-To: <ms-nfs41-client-devel@lists.sourceforge.net>
-
-
-Hi!
-
-----
-
-I've created a set of test binaries for the NFSv4.1 filesystem client
-driver for Windows 10/11, based on
-https://github.com/kofemann/ms-nfs41-client (commit id
-#c1a12a4e0d145c1d1f674ba3ac020f2779eed255, git bundle in tarball), for
-testing and feedback (download URL in "Download" section below).
-
-Please send comments, bugs, test reports, complaints etc. to the
-MailMan mailing list at
-https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-deve=
-l
-
-# 1. What is this ?
-NFSv4.1 client and filesystem driver for Windows 10/11
-
-# 2. Features:
-- Full NFSv4.1 protocol support
-- idmapper (mapping usernames and uid/gid values between server and
-    client)
-- Support for custom ports (NFSv4 defaults to TCP port 2049, this
-    client can use different ports per mount)
-- Support for nfs://-URLs
-    * Why ? nfs://-URLs are crossplatform, portable and Character-Encoding
-      independent descriptions of NFSv4 server resources (exports).
-    - including custom ports and raw IPv6 addresses
-    - nfs://-URL conversion utility (/usr/bin/nfsurlconv) to convert
-        URLs, including non-ASCII/Unicode characters in mount path
-- Support ssh forwarding, e.g. mounting NFSv4 filesystems via ssh
-    tunnel
-- Support for long paths (up to 4096 bytes), no Windows MAXPATH limit
-- Unicode support
-    - File names can use any Unicode character supported by
-      the NFS server's filesystem.
-    - nfs://-URLs can be used to mount filesystems with non-ASCII
-      characters in the mount path, independent of current locale.
-- UNC paths
-    - IPv6 support in UNC paths
-    - /sbin/nfs_mount prints UNC paths in Win32+Cygwin formats
-    - Cygwin bash+ksh93 support UNC paths, e.g.
-      cd //derfwnb4966@2049/nfs4/bigdisk/mysqldb4/
-- IPv6 support
-    - IPv6 address within '[', ']'
-      (will be converted to *.ipv6-literal.net)
-- Windows ACLs <---> NFSv4 ACL translation
-    - Win32 C:\Windows\system32\icacls.exe
-    - Cygwin /usr/bin/setfacl+/usr/bin/getfacl
-    - Windows Explorer ACL dialog
-- Support for NFSv4 public mounts (i.e. use the NFSv4 public file handle
-    lookup protocol via $ nfs_mount -o public ... #)
-- SFU/Cygwin support, including:
-    - uid/gid
-    - Cygwin symlinks
-- Custom primary group support
-    - Supports primary group changes in the calling process/thread
-      (via |SetTokenInformation(..., TokenPrimaryGroup,...)|), e.g.
-      if the calling process/threads switches the primary group
-      in its access token then the NFSv4.1 client will use that
-      group as GID for file creation.
-    - newgrp(1)/sg(1)-style "winsg" utilty to run cmd.exe with
-      different primary group, e.g.
-      $ winsg [-] -g group [-c command | /C command] #
-- Software compatibility:
-    - Any NFSv4.1 server (Linux, Solaris, Illumos, FreeBSD, nfs4j,
-        ...)
-    - All tools from Cygwin/MinGW
-    - Visual Studio
-    - VMware Workstation (can use VMs hosted on NFSv4.1 filesystem)
-
-# 3. Requirements:
-- Windows 10 (32bit or 64bit) or Windows 11
-- Cygwin:
-    - Cygwin versions:
-        - 64bit: >=3D 3.5.3 (or 3.6.x-devel)
-        - 32bit: >=3D 3.3.6
-    - Packages (required):
-        cygwin
-        cygwin-devel
-        cygrunsrv
-        cygutils
-        cygutils-extra
-        bash
-        bzip2
-        coreutils
-        getent
-        gdb
-        grep
-        hostname
-        less
-        libiconv
-        libiconv2
-        pax
-        pbzip2
-        procps-ng
-        sed
-        tar
-        time
-        util-linux
-        wget
-    - Packages (recommended):
-        libnfs-utils (for /usr/bin/nfs-ls)
-        make
-        bmake
-        git
-        gcc-core
-        gcc-g++
-        clang
-        mingw64-i686-clang
-        mingw64-x86_64-clang
-        dos2unix
-        unzip
-        bison
-        cygport
-        libiconv-devel
-
-# 4. Download and install Cygwin (if not installed yet):
-# Windows 32bit-vs.-64bit can be tested from Windows cmd.exe console:
-# Run this command:
-# ---- snip ----
-echo %PROCESSOR_ARCHITECTURE%
-# ---- snip ----
-# If this returns "AMD64" then you have a Windows 64bit kernel, and
-# if it returns "x86" then you have Windows 32bit kernel.
-# If you get any other value then this is a (documentation) bug.
-
-- Cygwin 64bit can be installed like this:
-# ---- snip ----
-# Install Cygwin 64bit on Windows 64bit with packages required by
-"ms-nfs41-client"
-# (Windows NFSv4.1 client):
-# 1. Get installer from https://cygwin.com/setup-x86_64.exe
-curl --remote-name "https://www.cygwin.com/setup-x86_64.exe"
-# 2. Run installer with these arguments:
-setup-x86_64.exe -q --site
-"https://mirrors.kernel.org/sourceware/cygwin" -P
-cygwin,cygwin-devel,cygrunsrv,cygutils,cygutils-extra,bash,bzip2,coreutils,=
-getent,gdb,grep,hostname,less,libiconv,libiconv2,pax,pbzip2,procps-ng,sed,t=
-ar,time,util-linux,wget,libnfs-utils,make,bmake,git,dos2unix,unzip
-# ---- snip ----
-
-- Cygwin 32bit can be installed like this:
-# ---- snip ----
-# Install Cygwin 32bit on Windows 32bit with packages required by
-"ms-nfs41-client"
-# (Windows NFSv4.1 client):
-# 1. Get installer from https://www.cygwin.com/setup-x86.exe
-curl --remote-name "https://www.cygwin.com/setup-x86.exe"
-# 2. Run installer with these arguments:
-setup-x86.exe --allow-unsupported-windows -q --no-verify --site
-"http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/2022/11/23/06=
-3457"
--P cygwin,cygwin-devel,cygrunsrv,cygutils,cygutils-extra,bash,bzip2,coreuti=
-ls,getent,gdb,grep,hostname,less,libiconv,libiconv2,pax,pbzip2,procps-ng,se=
-d,tar,time,util-linux,wget,libnfs-utils,make,bmake,git,dos2unix,unzip
-# ---- snip ----
-
-# 5. Download "ms-nfs41-client" installation tarball:
-# (from a Cygwin terminal)
-$ mkdir -p ~/download
-$ cd ~/download
-$ wget 'http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/t=
-esting/msnfs41client_cygwin_binaries_20240909_12h18m_gitc1a12a4.tar.bz2'
-$ openssl sha256
-"msnfs41client_cygwin_binaries_20240909_12h18m_gitc1a12a4.tar.bz2"
-SHA2-256(msnfs41client_cygwin_binaries_20240909_12h18m_gitc1a12a4.tar.bz2)=
-=3D
-1718cfbb370276856520ddb0a33447a5193f40077e64a39a3f129877b856ff29
-
-# 6. Installation (as "Administrator"):
-$ (cd / && tar -xf
-~/download/msnfs41client_cygwin_binaries_20240909_12h18m_gitc1a12a4.tar.bz2
-)
-$ /sbin/msnfs41client install
-<REBOOT>
-
-# 7. Deinstallation:
-$ (set -o xtrace ; cd / && tar -tf
-~/download/msnfs41client_cygwin_binaries_20240909_12h18m_gitc1a12a4.tar.bz2
-| while read i ; do [[ -f "$i" ]] && rm "$i" ; done)
-<REBOOT>
-
-# 8. Usage:
-
-# Option a)
-# * Start NFSv4 client daemon as Windows service (requires
-# "Adminstrator" account):
-
-$ sc start ms-nfs41-client-service
-
-# * Notes:
-# - requires "Adminstrator" account, and one nfsd client daemon is
-#   used for all users on a machine.
-# - The "ms-nfs41-client-service" service is installed by default as
-#   "disabled" and therefore always requires a "manual" start (e.g.
-#   $ sc start ms-nfs41-client-service #)
-# - note that DOS devices are virtualised per LSA Logon, so each Logon
-#   needs to do a separare nfs_mount.exe to mount a NFSv4 share.
-#   The exception are mounts created by user "SYSTEM", such mounts
-#   are available to all users/logons.
-#   (see PsExec or function "su_system" in msnfs41client.bash how
-#   to run a process as user "SYSTEM")
-# - nfsd_debug.exe will run as user "SYSTEM", but will do user
-#   impersonation for each request
-# - stopping the service will NOT unmount filesystems, and due to a
-#   bug a reboot is required to restart and mount any NFSv4
-#   filesystems again
-
-# * Administration:
-# - Follow new log messages:
-$ tail -f '/var/log/ms-nfs41-client-service.log'
-# - Query service status:
-$ sc queryex ms-nfs41-client-service
-# - Query service config:
-$ sc qc ms-nfs41-client-service
-# - Start service automatically:
-# (nfsd_debug.exe will be started automagically, but mounts are
-# not restored):
-$ sc config ms-nfs41-client-service start=3Dauto
-# - Start service manually (default):
-$ sc config ms-nfs41-client-service start=3Ddisabled
-
-
-# Option b)
-# Run the NFSv4 client daemon manually:
-#
-# - run this preferably as "Administrator", but this is not a requirement
-# - requires separate terminal
-$ /sbin/msnfs41client run_daemon
-
-# Mount a filesystem and use it
-$ /sbin/nfs_mount -o rw N 10.49.20.110:/net_tmpfs2
-Successfully mounted '10.49.20.110@2049' to drive 'N:'
-$ cd /cygdrive/n/
-$ ls -la
-total 4
-drwxrwxrwt 5 Unix_User+0      Unix_Group+0      100 Dec  7 14:17 .
-dr-xr-xr-x 1 roland_mainz     Kein                0 Dec 14 13:48 ..
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  80 Dec 12 16:24 10492030
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec 13 17:58 directory_=
-t
-drwxr-xr-x 3 Unix_User+197608 Unix_Group+197121  60 Dec  7 11:01 test2
-
-# Unmount filesystem:
-$ cd ~ && /sbin/nfs_umount N:
-# OR
-$ cd ~
-$ net use N: /delete
-
-# List mounted NFSv4.1 filesystems:
-$ /sbin/nfs_mount
-
-# 9. Notes:
-- Idmapping (including uid/gid mapping) between NFSv4 client and
-  NFSv4 server works via /lib/msnfs41client/cygwin_idmapper.ksh,
-  which either uses builtin static data, or /usr/bin/getent passwd
-  and /usr/bin/getent group.
-  As getent uses the configured name services it should work with
-  LDAP too.
-  This is still work-in-progress, with the goal that both NFSv4
-  client and server can use different uid/gid numeric values for
-  client and server side.
-
-- UNC paths are supported, after successful mounting /sbin/nfs_mount
-  will list the paths in Cygwin UNC format.
-
-- SIDs work, users with valid Windows accounts (see Cygwin idmapping
-  above get their SIDs, unknown users with valid uid/gid values get
-  Unix_User+id/Unix_Group+id SIDs, and all others are mapped
-  to nobody/nogroup SIDs.
-
-- Workflow for nfs://-URLs:
-  - Create nfs://-URLs with nfsurlconv, read $ nfsurlconv --man # for usage
-  - pass URL to nfs_mount.exe like this:
-    $ nfs_mount -o sec=3Dsys,rw 'L' nfs://derfwnb4966_ipv4//bigdisk #
-
-- Cygwin symlinks are supported, but might require
-  $ fsutil behavior set SymlinkEvaluation L2L:1 R2R:1 L2R:1 R2L:1 #.
-  This includes symlinks to UNC paths, e.g. as Admin
-  $ cmd /c 'mklink /d c:\home\rmainz
-\\derfwpc5131_ipv6@2049\nfs4\export\home2\rmainz' #
-  and then $ cd /cygdrive/c/home/rmainz/ # should work
-
-- performance: All binaries are build without any optimisation, so
-  the filesystem is much slower than it could be.
-
-- bad performance due to Windows Defender AntiVirus:
-  Option 1:
-  # disable Windows defender realtime monitoring
-  # (requires Admin shell)
-  powershell -Command 'Set-MpPreference -DisableRealtimeMonitoring 1'
-  Option 2:
-  Add "nfsd.exe", "nfsd_debug.exe", "ksh93.exe", "bash.exe",
-  "git.exe" and other offending commands to the process name
-  whitelist.
-
-- performance: Use vmxnet3 in VMware to improve performance
-
-- ACLs are supported via the normal Windows ACL tools, but on
-  Linux require the nfs4_getfacl/nfs4_setfacl utilities to see the
-  data.
-  * Example 1 (assuming that Windows, Linux NFSv4 client and NFSv4
-  server have a user "siegfried_wulsch"):
-  - On Windows on a NFSv4 filesystem:
-  $ icacls myhorribledata.txt /grant "siegfried_wulsch:WD" #
-  - On Linux NFSv4 clients you will then see this:
-  # ---- snip ----
-  $ nfs4_getfacl myhorribledata.txt
-  A::OWNER@:rwatTcCy
-  A::siegfried_wulsch@global.loc:rwatcy
-  A::GROUP@:rtcy
-  A::EVERYONE@:rtcy
-  # ---- snip ----
-
-  * Example 2 (assuming that Windows, Linux NFSv4 client and NFSv4
-  server have a group "cygwingrp2"):
-  - On Windows on a NFSv4 filesystem:
-  $ icacls myhorribledata.txt /grant "cygwingrp2:(WDAC)" /t /c #
-  - On Linux NFSv4 clients you will then see this:
-  # ---- snip ----
-  $ nfs4_getfacl myhorribledata.txt
-  A::OWNER@:rwatTcCy
-  A::GROUP@:rtcy
-  A:g:cygwingrp2@global.loc:rtcy
-  A::EVERYONE@:rtcy
-  # ---- snip ----
-
-- nfs_mount.exe vs. reserved ports:
-  By default the NFSv4 server on Solaris, Illumos, Linux
-  etc. only accepts connections if the NFSv4 client uses a
-  "privileged (TCP) port", i.e. using a TCP port number < 1024.
-  If nfsd.exe/nfsd_debug.exe is started without the Windows priviledge
-  to use reserved ports, then a mount attempt can fail.
-  This can be worked around on the NFSv4 server side - on Linux using
-  the "insecure" export option in /etc/exports and on Solaris/Illumos
-  using export option "resvport" (see nfs(5)).
-
-- Accessing mounts from a VMware/QEMU/VirtualBox VM using NAT requires
-  the the "insecure" export option in /etc/exports and on
-  Solaris/Illumos using export option "resvport" (see nfs(5)), as the
-  NFSv4 client source TCP port will be >=3D 1024.
-
-- Install: Adding Windows accounts+groups to the NFSv4 server:
-  ms-nfs41-client comes with /sbin/cygwinaccount2nfs4account to
-  convert the Win32/Cygwin account information of the (current)
-  user+groups to a small script for the NFSv4 server to set-up
-  these accounts on the server side.
-
-#
-# 10. Known issues:
-#
-- The kernel driver ("nfs41_driver.sys") does not yet have a
-  cryptographic signature for SecureBoot - which means it will only
-  work if SecureBoot is turned off (otherwise
-  $ /sbin/msnfs41client install # will FAIL!)
-
-- If nfsd_debug.exe crashes or gets killed, the only safe way
-  to run it again requires a reboot
-
-- LDAP support does not work yet
-
-- Attribute caching is too aggressive
-
-- Caching in the kernel does not always work. For example
-  $ tail -f ... # does not not see new data.
-  Workaround: Use GNU tail'S $ tail --follow=3Dname ... #
-  Working theory is that this is related to FCB caching, see
-  |FCB_STATE_FILESIZECACHEING_ENABLED|, as the nfs41_driver.sys
-  kernel module does not see the |stat()| syscalls. But $ tail -f ... #
-  always works for a momemnt if something else opens the same file.
-
-- Unmounting and then mounting the same filesystem causes issues
-  as the name cache in nfsd*.exe is not flushed on umount, including
-  leftover delegations.
-
-- krb5p security with AES keys do not work against the linux server,
-  as it does not support gss krb5 v2 tokens with rotated data.
-
-- When recovering opens and locks outside of the server's grace
-  period, client does not check whether the file has been modified
-  by another client.
-
-- If nfsd.exe is restarted while a drive is mapped, that drive needs
-  to be remounted before further use.
-
-- Does not allow renaming a file on top of an existing open file.
-  Connectathon's special test op_ren has been commented out.
-
-- File access timestamps might be wrong for delegations.
-
-- Extended attributes are supported with some limitations:
-  a) the server must support NFS Named Attributes,
-  b) the order of listings cannot be guaranteed by NFS, and
-  c) the EaSize field cannot be reported for directory queries of
-  FileBothDirInformation, FileFullDirInfo, or FileIdFullDirInfo.
-
-- Win10/32bit-only: $ net use H: /delete # does not work,
-  use $ nfs_umount 'H' instead #
-
-- Bug: Subversion checkout can fail with
-  "sqlite[S11]: database disk image is malformed" like this:
-  # ---- snip ----
-  $ svn --version
-  svn, version 1.14.2 (r1899510)
-    compiled May 20 2023, 11:51:30 on x86_64-pc-cygwin
-  $ svn checkout https://svn.FreeBSD.org/base/head/share/man
-  A    man/man4
-  A    man/man4/tcp.4
-  A    man/man4/ndis.4
-  A    man/man4/Makefile
-  A    man/man4/altq.4
-  A    man/man4/miibus.4
-  A    man/man4/vlan.4
-  A    man/man4/ng_macfilter.4
-  A    man/man4/mn.4
-  A    man/man4/ossl.4
-  A    man/man4/ktls.4
-  A    man/man4/ftwd.4
-  A    man/man4/inet6.4
-  A    man/man4/crypto.4
-  A    man/man4/rtsx.4
-  A    man/man4/isp.4
-  svn: E200030: sqlite[S11]: database disk image is malformed
-  svn: E200042: Additional errors:
-  svn: E200030: sqlite[S11]: database disk image is malformed
-  svn: E200030: sqlite[S11]: database disk image is malformed
-  svn: E200030: sqlite[S11]: database disk image is malformed
-  # ---- snip ----
-  Workaround is to mount the NFS filesystem with the "writethru"
-  option, e.g.
-  $ /sbin/nfs_mount -o rw,writethru 'j' derfwpc5131:/export/home/rmainz #
-
-- Windows event log can list errors like "MUP 0xc0000222"
-  (|STATUS_LOST_WRITEBEHIND_DATA|) in case the disk on the NFSv4 server
-  is full and outstanding writes from a memory-mapped file fail.
-  Example:
-  ---- snip ----
-  {Fehler beim verzoegerten Schreibvorgang} Nicht alle Daten fuer die
-  Datei "\\34.159.25.153@2049\nfs4\export\nfs4export\gcc\lto-dump.exe"
-  konnten gespeichert werden. Daten gingen verloren.
-  Dieser Fehler wurde von dem Server zurueckgegeben, auf dem sich die
-  Datei befindet. Versuchen Sie, die Datei woanders zu speichern.
-  ---- snip ----
-
-- Bug: Native Windows git (NOT cygwin /usr/bin/git) clone fails
-  like this:
-  # ---- snip ----
-  $ '/cygdrive/c/Program Files/Git/cmd/git' --version
-  git version 2.45.2.windows.1
-  $ '/cygdrive/c/Program Files/Git/cmd/git' clone
-https://github.com/kofemann/ms-nfs41-client.git
-  Cloning into 'ms-nfs41-client'...
-  remote: Enumerating objects: 6558, done.
-  remote: Counting objects: 100% (318/318), done.
-  remote: Compressing objects: 100% (172/172), done.
-  remote: Total 6558 (delta 191), reused 233 (delta 141), pack-reused
-6240 (from 1)
-  Receiving objects: 100% (6558/6558), 2.43 MiB | 4.66 MiB/s, done.
-  fatal: premature end of pack file, 655 bytes missing
-  warning: die() called many times. Recursion error or racy threaded death!
-  fatal: fetch-pack: invalid index-pack output
-  # ---- snip ----
-  Workaround is to mount the NFS filesystem with the "writethru"
-  OR "nocache" option, e.g.
-  $ /sbin/nfs_mount -o rw,writethru 'j' derfwpc5131:/export/home/rmainz #
-
-# 11. Notes for troubleshooting && finding bugs/debugging:
-- nfsd_debug.exe has the -d option to set a level for debug
-  output.
-  Edit /sbin/msnfs41client to set the "-d" option.
-
-- The "msnfs41client" script has the option "watch_kernel_debuglog"
-  to get the debug output of the kernel module.
-
-  Run as Admin: $ /sbin/msnfs41client watch_kernel_debuglog #
-
-  Currently requires DebugView
-  (https://learn.microsoft.com/en-gb/sysinternals/downloads/debugview)
-  to be installed.
-
-- Watching network traffic:
-  WireShark has a command line tool called "tshark", which can be used
-  to see NFSv4 traffic. As NFSv4 uses RPC you have to filter for RPC,
-  and the RPC filter automatically identifies NFSv4 traffic on it's RPC
-  id.
-  Example for Windows:
-  (for NFSv4 default TCP port "2049", replace "2049" with the
-  desired port if you use a custom port ; use "ipconfig" to find the
-  correct interface name, in this case "Ethernet0"):
-  # ---- snip ----
-  $ nfsv4port=3D2049 ; /cygdrive/c/Program\ Files/Wireshark/tshark \
-    -f "port $nfsv4port" -d "tcp.port=3D=3D${nfsv4port},rpc" -i Ethernet0
-  # ---- snip ----
-
-  If you are running inside a VMware VM on a Linux host it
-  might require $ chmod a+rw /dev/vmnet0 # on VMware host, so that
-  the VM can use "Promiscuous Mode".
-
-# 12. Source code:
-- Source code can be obtained from https://github.com/kofemann/ms-nfs41-cli=
-ent
-
-- Build instructions can be found at
-https://github.com/kofemann/ms-nfs41-client/tree/master/cygwin
-
-# EOF.
-
-----
-
-Bye,
-Roland
---
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /=3D=3D\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
-
-
-_______________________________________________
-Ms-nfs41-client-devel mailing list
-Ms-nfs41-client-devel@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
+On Tue, 2024-09-10 at 08:32 -0400, Tom Talpey wrote:
+> On 9/9/2024 11:02 AM, Olga Kornievskaia wrote:
+> > On Mon, Sep 9, 2024 at 10:38=E2=80=AFAM Chuck Lever <chuck.lever@oracle=
+.com> wrote:
+> > >=20
+> > > On Mon, Sep 09, 2024 at 10:17:42AM -0400, Olga Kornievskaia wrote:
+> > > > On Mon, Sep 9, 2024 at 8:24=E2=80=AFAM Jeff Layton <jlayton@kernel.=
+org> wrote:
+> > > > >=20
+> > > > > On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
+> > > > > > The pair of bloom filtered used by delegation_blocked() was int=
+ended to
+> > > > > > block delegations on given filehandles for between 30 and 60 se=
+conds.  A
+> > > > > > new filehandle would be recorded in the "new" bit set.  That wo=
+uld then
+> > > > > > be switch to the "old" bit set between 0 and 30 seconds later, =
+and it
+> > > > > > would remain as the "old" bit set for 30 seconds.
+> > > > > >=20
+> > > > >=20
+> > > > > Since we're on the subject...
+> > > > >=20
+> > > > > 60s seems like an awfully long time to block delegations on an in=
+ode.
+> > > > > Recalls generally don't take more than a few seconds when things =
+are
+> > > > > functioning properly.
+> > > > >=20
+> > > > > Should we swap the bloom filters more often?
+> > > >=20
+> > > > I was also thinking that perhaps we can do 15-30s perhaps? Another
+> > > > thought was should this be a configurable value (with some
+> > > > non-negotiable min and max)?
+> > >=20
+> > > If it needs to be configurable, then we haven't done our jobs as
+> > > system architects. Temporarily blocking delegation ought to be
+> > > effective without human intervention IMHO.
+> > >=20
+> > > At least let's get some specific usage scenarios that demonstrate a
+> > > palpable need for enabling an admin to adjust this behavior (ie, a
+> > > need that is not simply an implementation bug), then design for
+> > > those specific cases.
+> > >=20
+> > > Does NFSD have metrics in this area, for example?
+> > >=20
+> > > Generally speaking, though, I'm not opposed to finessing the behavior
+> > > of the Bloom filter. I'd like to apply the patch below for v6.12,
+> >=20
+> > 100% agreed that we need this patch to go in now. The configuration
+> > was just a thought for after which I should have stated explicitly. I
+> > guess I'm not a big fan of hard coded numbers in the code and naively
+> > thinking that it's always better to have a config over a hardcoded
+> > value.
+>=20
+> No constant is ever correct in networking, especially timeouts. So yes,
+> it should be adjustable. But even then, choosing a number here is
+> fundamentally difficult.
+>=20
+> Delegations can block for perfectly valid long periods, right? Say it
+> takes a long time to flush a write delegation, or if the network is
+> partitioned to the (other) client being recalled. 30 seconds to data
+> corruption is quite the guillotine.
+>=20
+
+I don't think this is danger of data corruption here. The bloom filter
+is there to keep the server from handing out a new delegation too
+quickly after having to recall one. Allowing no delegations for 30-60s
+seems a bit too cautious, IMO.=20
+
+Ideally it seems like we'd want this to be some function of the delay
+between the server issuing the CB_RECALL, and the client doing the
+DELEGRETURN.
+
+That value is obviously highly variable, but it would be an interesting
+statistic to collect, and might help inform what the bloom filter delay
+should be.
+
+> > > preserving the Cc: stable, but handle the behavioral finessing via
+> > > a subsequent patch targeting v6.13 so that can be appropriately
+> > > reviewed and tested. Ja?
+> > >=20
+> > > BTW, nice catch!
+> > >=20
+> > >=20
+> > > > > > Unfortunately the code intended to clear the old bit set once i=
+t reached
+> > > > > > 30 seconds old, preparing it to be the next new bit set, instea=
+d cleared
+> > > > > > the *new* bit set before switching it to be the old bit set.  T=
+his means
+> > > > > > that the "old" bit set is always empty and delegations are bloc=
+ked
+> > > > > > between 0 and 30 seconds.
+> > > > > >=20
+> > > > > > This patch updates bd->new before clearing the set with that in=
+dex,
+> > > > > > instead of afterwards.
+> > > > > >=20
+> > > > > > Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > > > > Cc: stable@vger.kernel.org
+> > > > > > Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 s=
+econds after recalling them.")
+> > > > > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > > > > ---
+> > > > > >   fs/nfsd/nfs4state.c | 5 +++--
+> > > > > >   1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > > > index 4313addbe756..6f18c1a7af2e 100644
+> > > > > > --- a/fs/nfsd/nfs4state.c
+> > > > > > +++ b/fs/nfsd/nfs4state.c
+> > > > > > @@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_s=
+tid *stid)
+> > > > > >    * When a delegation is recalled, the filehandle is stored in=
+ the "new"
+> > > > > >    * filter.
+> > > > > >    * Every 30 seconds we swap the filters and clear the "new" o=
+ne,
+> > > > > > - * unless both are empty of course.
+> > > > > > + * unless both are empty of course.  This results in delegatio=
+ns for a
+> > > > > > + * given filehandle being blocked for between 30 and 60 second=
+s.
+> > > > > >    *
+> > > > > >    * Each filter is 256 bits.  We hash the filehandle to 32bit =
+and use the
+> > > > > >    * low 3 bytes as hash-table indices.
+> > > > > > @@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfs=
+d_fh *fh)
+> > > > > >                if (ktime_get_seconds() - bd->swap_time > 30) {
+> > > > > >                        bd->entries -=3D bd->old_entries;
+> > > > > >                        bd->old_entries =3D bd->entries;
+> > > > > > +                     bd->new =3D 1-bd->new;
+> > > > > >                        memset(bd->set[bd->new], 0,
+> > > > > >                               sizeof(bd->set[0]));
+> > > > > > -                     bd->new =3D 1-bd->new;
+> > > > > >                        bd->swap_time =3D ktime_get_seconds();
+> > > > > >                }
+> > > > > >                spin_unlock(&blocked_delegations_lock);
+> > > > >=20
+> > > > > --
+> > > > > Jeff Layton <jlayton@kernel.org>
+> > > > >=20
+> > > >=20
+> > >=20
+> > > --
+> > > Chuck Lever
+> > >=20
+> >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
