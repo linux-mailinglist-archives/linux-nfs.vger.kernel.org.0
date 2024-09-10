@@ -1,169 +1,288 @@
-Return-Path: <linux-nfs+bounces-6364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9481C973672
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 13:49:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A80FA97376A
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 14:32:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2090A1F25A47
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 11:49:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6624B25B85
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 12:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85ACA18FC80;
-	Tue, 10 Sep 2024 11:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLu62AHV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DFAC1862B8;
+	Tue, 10 Sep 2024 12:32:19 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2138.outbound.protection.outlook.com [40.107.220.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B03218C003;
-	Tue, 10 Sep 2024 11:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725968935; cv=none; b=TgQbN96nkeGcFMRlZOVKNkpZ9o5qaE83o32EN+y2vWPpcsZcIRwPd4FjU4XkHRcMxpy+phQsdWHxn9nCjyzoIS4cVW9Fdop2fwh5ZeLxAAwGVzjRRjUItvSH2yyWCZsv8cFsewSLr5fYvwuM0NMSQZ4yHwgLcfrV7D1p4cZE3qM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725968935; c=relaxed/simple;
-	bh=n7KVhPZZSJMzGLVgL1/N72U94knCJtNLNOPaJ0F8DnY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JQSkG2kJyM7S21aSyHI8NOv9jI5iBB64/0aERBkcQGpsz2XjH4WeZtDx7fArBsfEt2KcVPvx//IJxdHf4IBM++Dify2szsAQ+J2+J858bLlSfNSBLRH2Pw2pza4otr3mwDVP7BbKiCWg/SRmUaRWesgt+gqWLjl68JrkXkybT2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLu62AHV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B5F1C4CEC3;
-	Tue, 10 Sep 2024 11:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725968934;
-	bh=n7KVhPZZSJMzGLVgL1/N72U94knCJtNLNOPaJ0F8DnY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pLu62AHV6Dpe+OzLlVuDXb2KvIkhhpheh2RqqxN4s2VhjKAjplifYGcuEADjqUg7a
-	 D9TuFAgsX4d4Qpl9M9/0C7Caw4klLOTgbZntWp+Mi+EkXS95ssFmpCj13hq8Oz1BfR
-	 oTEFjlP3wgtN1w3ilWsylf4NsyYg9n0r4ZsixGdVMFo3HjY0ETxuf3gYP+gsk5E73r
-	 8fdGGVHOCUQiOx79s0At+SXcjajBWPxVN7si86oosHqJ9xrk1TELboefHNwx+G1Gc3
-	 fu8WJqC6nDfUmSpvZrmjUn+DpxfRN7vi0nbHxEiinlEJ0DCrJNTTG4L1u470zFQ4IN
-	 U+hUzQBXOXhhg==
-Message-ID: <d9f643b8a56f870dc757ad9727bf0d543bc2ff99.camel@kernel.org>
-Subject: Re: [RESEND PATCH] nfs: Remove unnecessary NULL check before kfree()
-From: Jeff Layton <jlayton@kernel.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>, trondmy@kernel.org, 
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin
- Coddington <bcodding@redhat.com>
-Date: Tue, 10 Sep 2024 07:48:47 -0400
-In-Reply-To: <20240910104208.4536-2-thorsten.blum@toblux.com>
-References: <20240910104208.4536-2-thorsten.blum@toblux.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EF218FDAF
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Sep 2024 12:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725971539; cv=fail; b=YhkOnrlfhMCrHYGtaJaaSgXS+6Z97YAzv4WXOoDprK2Q2XVRoE6HgATE6oK4Z0VrCYl3n4Uz4jjmCpaO8ie92XLLgBzcMrwJY/grqrSsHW4Lson2pHn4wMBHnMIM9rCFHLDUbzVhY6KeYE0l+I8LamnW71rRcjwAJxznR53jHO8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725971539; c=relaxed/simple;
+	bh=LWUl4elE5KqwUmP0AvlJTSRQ48LS1wcPKCmcZU735H8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rcVu7c1DczpbhVJkAZZwiULcp8J1PvptCISILsqxj3BYvuq2U5+Dm+/Ir/B4EbSdEkvBlXNhkvKO9cc9tDjWNnBZrpZf5nZMltCmCmdM0qHRrjV/0ZNt/fqxYvOFhfKXGvzCGGg0EVUziRkpiqy/hjHOwJRFQyKMOFsBRSu5lUQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.220.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CxS1Olt19sLnZEIrSB8ntTLdrlTOm4vaqS2kLptlZ3xET83d/RH7n4JTLrRF1udv3bRb6sPFjUm1UT/ia6lBMFSKQaUDvOG02GQ/ET3OiBSYyFSBi37+jCXI1Oq0l0Ndo/NxseUjgzCJBSo4DJWnYUeHuftv4F5iLMFg91XPP/huwNY9cmXXC12h0rmhXQvSk6hw7J9OuQqqMwrvyM6o5eTh7WU9gJz2GFCzntMUdGOEV0a7HLPqsZbRPek1mUzT543bxJxZlZweD2pDRFLMH/K2jTExBtNQzCplJoD/FgoCOhLGNbm1/JJ8GoRWyBgPg5gYwvGDRsxV737PzSza2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FplrkW6h1Y+EuwTMR47FoK9IkwVkncDCQMamuuv2DiA=;
+ b=DoVi5ShbOCL/7V/TlKYqYsW03yhSMEWuGy/yyPjt6DaAEc9efwai+fTVhlGmhHVWdMj2KojMjBAnN7ljnpUfpuqBNp86bP39tlEdRb13eRR1wq37jt5gVMGRCudHhE64pmneklbcl+8kqP2IsNQvDmtJSM+sGzZSMNbEeJoi7ZBoCXKaB8SP8f8TIs6DlqmfiXxiU2hiw5VMu6tM5B/SX2dZQH+jxr1qsh8s0VrpADBpdmb8NoAWD/bBmty+S66jAXArnir56mBepE+UzGS8rwdxhKK7hIdNhoxGvYhH4YCQuVjVICWHMocz72KRON/+7FzZ1pkWgNhGvs15eAZf5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from BL1PR01MB7721.prod.exchangelabs.com (2603:10b6:208:395::9) by
+ SA6PR01MB8701.prod.exchangelabs.com (2603:10b6:806:402::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7939.24; Tue, 10 Sep 2024 12:32:15 +0000
+Received: from BL1PR01MB7721.prod.exchangelabs.com
+ ([fe80::d33d:8437:f7d:568e]) by BL1PR01MB7721.prod.exchangelabs.com
+ ([fe80::d33d:8437:f7d:568e%6]) with mapi id 15.20.7939.022; Tue, 10 Sep 2024
+ 12:32:15 +0000
+Message-ID: <727023c4-416d-43ba-a82a-3fbd0a831f49@talpey.com>
+Date: Tue, 10 Sep 2024 08:32:12 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
+ least 30 seconds
+To: Olga Kornievskaia <okorniev@redhat.com>,
+ Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
+ Dai Ngo <Dai.Ngo@oracle.com>, linux-nfs@vger.kernel.org
+References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>
+ <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
+ <CACSpFtBYpQpAKVOmHLPUOr5LvoYq0-ea_NFMctqhMYSamUL_ZQ@mail.gmail.com>
+ <Zt8IOQUF/VEkCPgO@tissot.1015granger.net>
+ <CACSpFtCD-yBiO3Oe9m8k9q6Wug6MqgNQmjoT9K8DRAmc3bGLfg@mail.gmail.com>
+Content-Language: en-US
+From: Tom Talpey <tom@talpey.com>
+In-Reply-To: <CACSpFtCD-yBiO3Oe9m8k9q6Wug6MqgNQmjoT9K8DRAmc3bGLfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0154.namprd13.prod.outlook.com
+ (2603:10b6:208:2bd::9) To BL1PR01MB7721.prod.exchangelabs.com
+ (2603:10b6:208:395::9)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR01MB7721:EE_|SA6PR01MB8701:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31c24f56-9293-4b38-36ea-08dcd1949a0c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dEU2aVJJUmdXVjEzM0tJRTIzQUJUZFhmQlFrZEZRWTA3dHBaMFRreGhxcTZl?=
+ =?utf-8?B?YXBqcnorWmlhejBqSTE3YmtSbE9DejhoK0dCZmtpZEpPaS9IVnlxQ1lUVHFE?=
+ =?utf-8?B?eXZld1ZVejkzclpNdXRtdjZUY1ZZRFR5V256THlqdmVYeUxIRCtSSitYdmNs?=
+ =?utf-8?B?ZW9ZSnhheVlUWW5NNFVXN1ZDbFJ6MkpwdVUwZUNBR1FjUStnSmc5WWhlQUk2?=
+ =?utf-8?B?S3NLbzJtbGsxSGlqaFVkY21OVVFiOTk4djhJMGlYOXhIRy93Q3hMcXFRdnhj?=
+ =?utf-8?B?cGlvVGRhVm1vZ1dVcllPZ1RlR1VGR09hTTlvNmQxekhMeEF6UlNHVllaUUVT?=
+ =?utf-8?B?eUx6N2t3WUoydndTbnBHWWZHUk9FSmx6dzdIYm56MnVOM0ZxWU5XcTBKYmJS?=
+ =?utf-8?B?d0l0WDdBbmdTT3Y3S21uQXBVTkpueE1SS2ZReGlrR1Npc0FObUZnaVZGZlRa?=
+ =?utf-8?B?RGNtbCtrZEk2aEdUZnNkSFBSSFdvOUtBc3VNY2lON0trSHBEejF1SU1lbEs0?=
+ =?utf-8?B?Z1RaZFRkTm1QTlVCa1V4TFpNY2pZUk1vc0xlVEpkelF6bGJwckJoRkhvYWxx?=
+ =?utf-8?B?RlA3Nk1xZXMvTUhPd1RqUHk3WWpxMkY2R3hCV0FJWFQ1RlZqZTVWV3JZWTFj?=
+ =?utf-8?B?eW5Lc1I5d2V3eElscThUWVBBWTB2NjdDL0pZdFdhbWVSUWNNZU9TU3lNQ0F6?=
+ =?utf-8?B?YzZIQzVkUnlzdFVwWHVGbzUzYzFLclVSSVkxcnBGRWZsUjZWK0lKdlEybGNi?=
+ =?utf-8?B?c1RTbnBmMWxzSjhLZFNvZFBmemh3SGtMZmc2WTNzZTNxd2tvOU9PNlJpT2cr?=
+ =?utf-8?B?eUkxUkhiaEZHVFlBZlk3bXdHeXgrTTVZL3VXRzd4L3FFOE9Pa1pTVXgzU2FH?=
+ =?utf-8?B?VVhGc1lBTk9aZDJkYVFCd3k0c3ZWd0tiVUdObGwrOWVmTmNWeDZ2bkNsSldp?=
+ =?utf-8?B?ejBOdnRTVFZad01YQVJqQjhBVzA1cXlYbU5xQlI3eTdCSEtGdUxINzBlRjhW?=
+ =?utf-8?B?clZHMy9Wc0lpdVFjaCthVWVFeTVSc0prNHloNStSdW5ySnoyalJRYkhhcE5N?=
+ =?utf-8?B?Ti9HRXVJbHVDTUg0elpnRXJaQTBrYmhYM0VSMjI3MFNaclQ2V2NRdzgvVVJo?=
+ =?utf-8?B?UE52OW1HOVcxWVUwVVNxU2YvUzlPQWREeFNiNXgyYjZ4L2lWUURPOTJOd3pa?=
+ =?utf-8?B?Q2FtYmlBaW1OdTlBK3FjWkNFbVZidWJLUXJRQTRXNzdzNTFDQVhNTmdGaDE4?=
+ =?utf-8?B?Y1ZacXZSVVRnTU1haFp1VkhXOE1nY3RBNWN1OXN2NFdDWDBpdUZ4RHd4R1Rl?=
+ =?utf-8?B?bzduWDhjbzZ3RG5QRG45b2tZdkhrOTZLT3orSUNJdytnUFFSMHZzbjdmMHFt?=
+ =?utf-8?B?QmNBWWhsUU5idmNNeUlyVWxZYlpraHBTUS9FR2xTNXlsYzFobEFBL0hjZFlX?=
+ =?utf-8?B?a2JNbDVKRk5OTXJMRjc5bmFzbkN4RGloSm5rS0t6VTNaODROOEpPZXB4em11?=
+ =?utf-8?B?WGVtMDNiTmY1UXJNSnhoNUozamJYZW90Q3hQOHhsdHl5TFNaeVNldHh0WjNq?=
+ =?utf-8?B?RUFUQTU2ZkdUbmJQZWZWL2pIdTgyT2Eydm12b09jK0lXNVp5bEVxZTVkQzdq?=
+ =?utf-8?B?RG9pN1c3bmZDYzBrdDZBZEZ1U2N5eFM0ci9SS29VUDd0ZGtUTE8raEpCSVRl?=
+ =?utf-8?B?cS9TQjNrUnNBUjkyWWR2eFRLdXVlMFFQSjZyUWNYeWtialEybjBBWmlHVnZn?=
+ =?utf-8?B?d3JuV3p4TmEwandLTjdaUWJ6RFRCUjEzZ29JbHlBMVJmSmdpaGpnM1FhdDds?=
+ =?utf-8?B?a0hlR3NudnFsSXE2SHlrZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR01MB7721.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WTMyNGNQNmwwN3ZUMmhXOExLMWxURGNQWFVMbWNPV05YOVhUS2Rhd3pqZjZj?=
+ =?utf-8?B?OVFnYUg1RXFNMnYreWRjUzhZWUhQa09UOEU2elc1dHY4S3VhaU5iVyt0elpz?=
+ =?utf-8?B?ZzJJN0g2ejN3eVJiMG82UEVFdGNSd281YTY0c2xFaHFDbE1EWDQ1YUI4VHRV?=
+ =?utf-8?B?RWYzNFN3VnNoaEhaYkZKcFNjeEUxUDlLNWFsNUtHMXAxcGZQQkttc1JvQytB?=
+ =?utf-8?B?eVJtNFEzRGhJa1lPRlhtK3Y1aS8zdEdVV21Yajltdy9VU2tiOVZIT2hzbjhj?=
+ =?utf-8?B?b2w5NklodkdWa2RQUlpRZGVtbGw2ZEJjQWlEYkFOK29TNnZnQlM5eXk4MDRv?=
+ =?utf-8?B?SU9OdUZteVh6MURwQjc5SHVJQzFWZDBURnhlWjhUWlRBakZmZmsvWVZ1Mith?=
+ =?utf-8?B?d2dZMzBETWpoR2hwRnVhYkNLSjJDS1hzaFI3VDF5VlFSVk1aZlcyQi9kTk0w?=
+ =?utf-8?B?TTlzM1NOeTRVWWlwOCs3OWIyNjhrTlJVZjZ1blhlcTcxd1lHbUtQbGpvOTM4?=
+ =?utf-8?B?Z1UxL2M2WGFaQVRWV2RtZFFRb2YrYU9GR2RraUdnZWt4S2loT08rOGwxNFJX?=
+ =?utf-8?B?RFN5bkRSanZIOFBEYnFSbWQxS0s0Q1pYZXllOTFRUDVtY3ZxcFVXYUhQV0Jq?=
+ =?utf-8?B?dWdBcDdtZUVtbVdzMGFpa2FMVmh2MVdJTDlDcjh5YXdXZ3djdGtIU3pxOVNG?=
+ =?utf-8?B?NlNuc0RUaUlXOEE1MGRwZUFnWmlISnl6MWF5dmZiKzA3N2FXaVcvbit0OG4y?=
+ =?utf-8?B?Q1VTQ3pWVmZJSEZtTTRuOFdhSWFWZDBjZW94d2Q4eGJSSEJrcGdpUVgwbUc3?=
+ =?utf-8?B?RzQ0UVZtWmpwZERReWZ0eEYyU2Zja1FQVnkrK0JPc1M4THd4c0xmam9vc2Vz?=
+ =?utf-8?B?QXlibDRLYlBwa2JVS3B2OGtyc3owK3RCejlvYndYYUpwbDJ1WGF2N2VXZGw3?=
+ =?utf-8?B?WEFBTXZxWlpoOUwyaTJQUGpSQ09oTDlPWGJ1YTlNYVRsMWN6azJkNzhiT1ls?=
+ =?utf-8?B?OUhyMVdNSFRTTk83ZlRsUEZ2aEMvaWxYT2MxYW0rRmUzM2ZNaS92RDNRK2RO?=
+ =?utf-8?B?dUVVQkU1Rm9QeEFETVdudkNFTUs4TEptRkZlU2pMZFBLS0dFdmFPMlhOaUdR?=
+ =?utf-8?B?eUU5dXdwbXUwWlNJdVV4S3FCN2FVNTFscFJzdGJYMWJaN0wrT0xzNFZrWDM2?=
+ =?utf-8?B?YkFwOWV2OERxbU9QK3c1c2p2UUdEc0tQOWt3b3JxUDR2VWFYSE1VSERZVUlE?=
+ =?utf-8?B?bElzbUZJVVpmYjE4KzM2a3RnZ3UvUlVDUXZqQXA1Y1Y3Y2x5RlkzUjBjY1V2?=
+ =?utf-8?B?NjFOcmxLekIwR1lscnN2N3JrRjNRa0F1RWpqVmtNL2VPZ2o2SWp1eVZweTNp?=
+ =?utf-8?B?WDhiOHlKQWZHK2lqcWdMTTlMTTI5SU5CLzRwQTBxQ0tlRXlCVldwaG9obklh?=
+ =?utf-8?B?ZTVNZXJ4Z1FPUk1pM0lTcnUvOExhb2xKMnVnWHg1YWxnT2QzSGxhSGE4aS8v?=
+ =?utf-8?B?RitNR3EvMUxnRnFZZWtJdlUvdHg2MWpXRWZObzFFYi9YMG1tMFloZHR1c1Q4?=
+ =?utf-8?B?WFc5SzNka1ZMc3JacnM3Z2hVOXlMSkM1ZjBWQ0hZRlhJT2pmSFpqdFFJVFFZ?=
+ =?utf-8?B?OVZDWE53ZDFLY0J4RkNQYjRtQlhzcVdxU253c2F5SE14SjBZbmIyTzRjTXhE?=
+ =?utf-8?B?VllVZURKbmRic3dwVGplQzYrT0s3dVhqMnJwNUk4ZDMrV1JVdXhwc01xamJK?=
+ =?utf-8?B?cGVtK2RZc3FjMWRTWHpCNDZkNENSTHgzQXltdlZrVHk2TWo2MlZuODJtaG5w?=
+ =?utf-8?B?emcrUVBCN0NvSE5va014TEtDdUhWeUtNalUwU2tOUFI3WE5YZzhFV3lwRTEy?=
+ =?utf-8?B?WTl1WFUrVG5SMEE0a0V1Y1YrcFdkVk1pcmdDcUxVTmhWK25aZ2hkalhqY3ds?=
+ =?utf-8?B?SGZWeEZvL29kNmh5M2gwWkxMcmx0ZnMyZFQ4aXpuZ2Zrc0s0RWRqS2NFRmhM?=
+ =?utf-8?B?TTA5R0RNSzczYUZ5T1dOTngwWXYramkrTWtLNm1vN1lFRFcyWEdhQ2ZoVzkz?=
+ =?utf-8?B?SnFyTWkvSElLQS9CazZndDdaQ0l1SkNPMmVrWGV6NTZPdXpMSm9PR3JSa256?=
+ =?utf-8?Q?fW4Y=3D?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31c24f56-9293-4b38-36ea-08dcd1949a0c
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR01MB7721.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 12:32:15.0743
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iHvRiBzLArgK39ca8HyO5mV+PuGiDcmNE4s2uHTDyB0b1JScoyKjOjDNCKh5g1JA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR01MB8701
 
-On Tue, 2024-09-10 at 12:42 +0200, Thorsten Blum wrote:
-> Since kfree() already checks if its argument is NULL, an additional
-> check before calling kfree() is unnecessary and can be removed.
->=20
-> Remove it and thus also the following Coccinelle/coccicheck warning
-> reported by ifnullfree.cocci:
->=20
->   WARNING: NULL check before some freeing functions is not needed
->=20
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  fs/nfs/read.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-> index a6103333b666..81bd1b9aba17 100644
-> --- a/fs/nfs/read.c
-> +++ b/fs/nfs/read.c
-> @@ -48,8 +48,7 @@ static struct nfs_pgio_header *nfs_readhdr_alloc(void)
-> =20
->  static void nfs_readhdr_free(struct nfs_pgio_header *rhdr)
->  {
-> -	if (rhdr->res.scratch !=3D NULL)
-> -		kfree(rhdr->res.scratch);
-> +	kfree(rhdr->res.scratch);
->  	kmem_cache_free(nfs_rdata_cachep, rhdr);
->  }
-> =20
+On 9/9/2024 11:02 AM, Olga Kornievskaia wrote:
+> On Mon, Sep 9, 2024 at 10:38 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>
+>> On Mon, Sep 09, 2024 at 10:17:42AM -0400, Olga Kornievskaia wrote:
+>>> On Mon, Sep 9, 2024 at 8:24 AM Jeff Layton <jlayton@kernel.org> wrote:
+>>>>
+>>>> On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
+>>>>> The pair of bloom filtered used by delegation_blocked() was intended to
+>>>>> block delegations on given filehandles for between 30 and 60 seconds.  A
+>>>>> new filehandle would be recorded in the "new" bit set.  That would then
+>>>>> be switch to the "old" bit set between 0 and 30 seconds later, and it
+>>>>> would remain as the "old" bit set for 30 seconds.
+>>>>>
+>>>>
+>>>> Since we're on the subject...
+>>>>
+>>>> 60s seems like an awfully long time to block delegations on an inode.
+>>>> Recalls generally don't take more than a few seconds when things are
+>>>> functioning properly.
+>>>>
+>>>> Should we swap the bloom filters more often?
+>>>
+>>> I was also thinking that perhaps we can do 15-30s perhaps? Another
+>>> thought was should this be a configurable value (with some
+>>> non-negotiable min and max)?
+>>
+>> If it needs to be configurable, then we haven't done our jobs as
+>> system architects. Temporarily blocking delegation ought to be
+>> effective without human intervention IMHO.
+>>
+>> At least let's get some specific usage scenarios that demonstrate a
+>> palpable need for enabling an admin to adjust this behavior (ie, a
+>> need that is not simply an implementation bug), then design for
+>> those specific cases.
+>>
+>> Does NFSD have metrics in this area, for example?
+>>
+>> Generally speaking, though, I'm not opposed to finessing the behavior
+>> of the Bloom filter. I'd like to apply the patch below for v6.12,
+> 
+> 100% agreed that we need this patch to go in now. The configuration
+> was just a thought for after which I should have stated explicitly. I
+> guess I'm not a big fan of hard coded numbers in the code and naively
+> thinking that it's always better to have a config over a hardcoded
+> value.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+No constant is ever correct in networking, especially timeouts. So yes,
+it should be adjustable. But even then, choosing a number here is
+fundamentally difficult.
+
+Delegations can block for perfectly valid long periods, right? Say it
+takes a long time to flush a write delegation, or if the network is
+partitioned to the (other) client being recalled. 30 seconds to data
+corruption is quite the guillotine.
+
+Tom.
+
+>> preserving the Cc: stable, but handle the behavioral finessing via
+>> a subsequent patch targeting v6.13 so that can be appropriately
+>> reviewed and tested. Ja?
+>>
+>> BTW, nice catch!
+>>
+>>
+>>>>> Unfortunately the code intended to clear the old bit set once it reached
+>>>>> 30 seconds old, preparing it to be the next new bit set, instead cleared
+>>>>> the *new* bit set before switching it to be the old bit set.  This means
+>>>>> that the "old" bit set is always empty and delegations are blocked
+>>>>> between 0 and 30 seconds.
+>>>>>
+>>>>> This patch updates bd->new before clearing the set with that index,
+>>>>> instead of afterwards.
+>>>>>
+>>>>> Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Fixes: 6282cd565553 ("NFSD: Don't hand out delegations for 30 seconds after recalling them.")
+>>>>> Signed-off-by: NeilBrown <neilb@suse.de>
+>>>>> ---
+>>>>>   fs/nfsd/nfs4state.c | 5 +++--
+>>>>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>>> index 4313addbe756..6f18c1a7af2e 100644
+>>>>> --- a/fs/nfsd/nfs4state.c
+>>>>> +++ b/fs/nfsd/nfs4state.c
+>>>>> @@ -1078,7 +1078,8 @@ static void nfs4_free_deleg(struct nfs4_stid *stid)
+>>>>>    * When a delegation is recalled, the filehandle is stored in the "new"
+>>>>>    * filter.
+>>>>>    * Every 30 seconds we swap the filters and clear the "new" one,
+>>>>> - * unless both are empty of course.
+>>>>> + * unless both are empty of course.  This results in delegations for a
+>>>>> + * given filehandle being blocked for between 30 and 60 seconds.
+>>>>>    *
+>>>>>    * Each filter is 256 bits.  We hash the filehandle to 32bit and use the
+>>>>>    * low 3 bytes as hash-table indices.
+>>>>> @@ -1107,9 +1108,9 @@ static int delegation_blocked(struct knfsd_fh *fh)
+>>>>>                if (ktime_get_seconds() - bd->swap_time > 30) {
+>>>>>                        bd->entries -= bd->old_entries;
+>>>>>                        bd->old_entries = bd->entries;
+>>>>> +                     bd->new = 1-bd->new;
+>>>>>                        memset(bd->set[bd->new], 0,
+>>>>>                               sizeof(bd->set[0]));
+>>>>> -                     bd->new = 1-bd->new;
+>>>>>                        bd->swap_time = ktime_get_seconds();
+>>>>>                }
+>>>>>                spin_unlock(&blocked_delegations_lock);
+>>>>
+>>>> --
+>>>> Jeff Layton <jlayton@kernel.org>
+>>>>
+>>>
+>>
+>> --
+>> Chuck Lever
+>>
+> 
+> 
+
 
