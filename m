@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-6394-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6395-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32F8B975AF6
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 21:43:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAB59975AFA
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 21:44:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E91F728425A
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 19:43:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D9BE1F24422
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 19:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4821BBBC3;
-	Wed, 11 Sep 2024 19:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102E81BC06C;
+	Wed, 11 Sep 2024 19:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LdlQ1gCF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h46ZnwhA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583921BB6A4
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Sep 2024 19:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A141BBBFA
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Sep 2024 19:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726083807; cv=none; b=Bqg9J1gYhUL/xq9pL+cuXKtGB5WNqQtoAuHXuh0nKhJI3m3X/tKuh736h23UMt3lBH4QMekuXQ4lvA9qXfO/agM/SCIfkFutRkes7Rag14+eMNVgOEsw6i/cEz5oRkdksHbeADcv9i9yms98dR98WE9nqG1X0YmEQLkPIIDZso8=
+	t=1726083813; cv=none; b=O7OEa/9ivlXpdQ37JGEpxgpfUj3fSdGij96je5QkcvyvrTyk+0NaPyql+D9vdKItlAnV/6aIvpB7cddk2Gkk2XaGXoJKMAnGu5yuqJ00VGxmRlhbbBqpq4Wp3R3pKzvXnZvHEavdu4mX09ZLkmhb/vHgOdfaYG0b4WEn0s+k3Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726083807; c=relaxed/simple;
-	bh=b0DIzDjefkkxIZVUa0LCGDeo2ORRu3b4jeXiOOM3Qbo=;
+	s=arc-20240116; t=1726083813; c=relaxed/simple;
+	bh=ePfUocyP7grZ5CDYVXoBDNFKwP41bxMPDU//9kt//Gw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KerzjIG9UQcwJqr967xp50q8b18d/0GF53RXwHTnCOGCSx9IQSM/94WqIfoieRoSVMw5/0/rgZv7F6bA9JdOjJkqGt57unP01aNSarWTuAoIPlQnwt4SlmbAaM6HVZK5RX7h3si3p4Q57MM6g6XDScBmxYqM6wtAL+Bt+QCavvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LdlQ1gCF; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=SMxtBRWOn5xxrGPRCyGQTsSR9fmN/dk9lryD06vP8musOcexZutdKpl5c7304cTNjKtKTPswdnTcdoi+cn62o4WCT/UlAJ9yJXykaKEFdgMe40zagHtEx4bYbCnjkvnfNYVLzNTw/e7NZ4jtYtJUrD4mEkoenh7aVZ92Ylm/9bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h46ZnwhA; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726083805;
+	s=mimecast20190719; t=1726083810;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U+XcdzScwVO/r6qG4M59lsPhXqd4i/rpYxME40qGAug=;
-	b=LdlQ1gCFWOxoH/HCBTQ8aWv7ISOv9VyEeeEz1SqKsLkj0GknDzqBO10zeEV5/C3fBIzlfe
-	blaEjyzbbRm05SOKaAQD45TXOxFUBD3v4CaQfcUKLK8T7//RZJ3ZxgYY+PpXKo52Z0UBHX
-	y1WhGg4q0F6kzWvwFuFS7jdi0O7HJDc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=/RZ3edwXcia6MZkZjPsBRO16l+GEAsyaTjIaabh2Mx0=;
+	b=h46ZnwhALQTKIm4alqmJ849CzEfETfwwG2i0YcVMDO1FF5rNRtOxGbViZ3juRuKHKeoek+
+	S2wSiSJkFKgvV1aVprdDkhXvktIEz2ADnf6q2Vm3X7O5teGw4cM2A6+aoHIJafc3/XNMuF
+	NYp/lacJt+eALPUNblC/1udOUfNmq/w=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-351-HAkiu9dPMEqc1DtdfAwQzA-1; Wed,
- 11 Sep 2024 15:43:24 -0400
-X-MC-Unique: HAkiu9dPMEqc1DtdfAwQzA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-Vl4PSZm0M46c4jBtI8fjnw-1; Wed,
+ 11 Sep 2024 15:43:29 -0400
+X-MC-Unique: Vl4PSZm0M46c4jBtI8fjnw-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB20C1956083;
-	Wed, 11 Sep 2024 19:43:21 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 861721956089;
+	Wed, 11 Sep 2024 19:43:26 +0000 (UTC)
 Received: from bcodding.csb.redhat.com (unknown [10.22.48.7])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 27DC81956096;
-	Wed, 11 Sep 2024 19:43:17 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 16B8B1956086;
+	Wed, 11 Sep 2024 19:43:21 +0000 (UTC)
 From: Benjamin Coddington <bcodding@redhat.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -78,9 +78,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	gfs2@lists.linux.dev,
 	ocfs2-devel@lists.linux.dev
-Subject: [PATCH v1 3/4] NLM/NFSD: Fix lock notifications for async-capable filesystems
-Date: Wed, 11 Sep 2024 15:42:59 -0400
-Message-ID: <865c40da44af67939e8eb560d17a26c9c50f23e0.1726083391.git.bcodding@redhat.com>
+Subject: [PATCH v1 4/4] exportfs: Remove EXPORT_OP_ASYNC_LOCK
+Date: Wed, 11 Sep 2024 15:43:00 -0400
+Message-ID: <0a114db814fec3086f937ae3d44a086f13b8de26.1726083391.git.bcodding@redhat.com>
 In-Reply-To: <cover.1726083391.git.bcodding@redhat.com>
 References: <cover.1726083391.git.bcodding@redhat.com>
 Precedence: bulk
@@ -92,90 +92,78 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Instead of checking just the exportfs flag, use the new
-locks_can_async_lock() helper which allows NLM and NFSD to once again
-support lock notifications for all filesystems which use posix_lock_file().
+Now that GFS2 and OCFS2 are signalling async ->lock() support with
+FOP_ASYNC_LOCK and checks for support are converted, we can remove
+EXPORT_OP_ASYNC_LOCK.
 
 Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- fs/lockd/svclock.c  |  5 ++---
- fs/nfsd/nfs4state.c | 19 ++++---------------
- 2 files changed, 6 insertions(+), 18 deletions(-)
+ Documentation/filesystems/nfs/exporting.rst |  7 -------
+ fs/gfs2/export.c                            |  1 -
+ fs/ocfs2/export.c                           |  1 -
+ include/linux/exportfs.h                    | 13 -------------
+ 4 files changed, 22 deletions(-)
 
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 1f2149db10f2..cbb87455a66d 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -30,7 +30,6 @@
- #include <linux/sunrpc/svc_xprt.h>
- #include <linux/lockd/nlm.h>
- #include <linux/lockd/lockd.h>
--#include <linux/exportfs.h>
+diff --git a/Documentation/filesystems/nfs/exporting.rst b/Documentation/filesystems/nfs/exporting.rst
+index f04ce1215a03..de64d2d002a2 100644
+--- a/Documentation/filesystems/nfs/exporting.rst
++++ b/Documentation/filesystems/nfs/exporting.rst
+@@ -238,10 +238,3 @@ following flags are defined:
+     all of an inode's dirty data on last close. Exports that behave this
+     way should set EXPORT_OP_FLUSH_ON_CLOSE so that NFSD knows to skip
+     waiting for writeback when closing such files.
+-
+-  EXPORT_OP_ASYNC_LOCK - Indicates a capable filesystem to do async lock
+-    requests from lockd. Only set EXPORT_OP_ASYNC_LOCK if the filesystem has
+-    it's own ->lock() functionality as core posix_lock_file() implementation
+-    has no async lock request handling yet. For more information about how to
+-    indicate an async lock request from a ->lock() file_operations struct, see
+-    fs/locks.c and comment for the function vfs_lock_file().
+diff --git a/fs/gfs2/export.c b/fs/gfs2/export.c
+index d418d8b5367f..3334c394ce9c 100644
+--- a/fs/gfs2/export.c
++++ b/fs/gfs2/export.c
+@@ -190,6 +190,5 @@ const struct export_operations gfs2_export_ops = {
+ 	.fh_to_parent = gfs2_fh_to_parent,
+ 	.get_name = gfs2_get_name,
+ 	.get_parent = gfs2_get_parent,
+-	.flags = EXPORT_OP_ASYNC_LOCK,
+ };
  
- #define NLMDBG_FACILITY		NLMDBG_SVCLOCK
+diff --git a/fs/ocfs2/export.c b/fs/ocfs2/export.c
+index 96b684763b39..b95724b767e1 100644
+--- a/fs/ocfs2/export.c
++++ b/fs/ocfs2/export.c
+@@ -280,5 +280,4 @@ const struct export_operations ocfs2_export_ops = {
+ 	.fh_to_dentry	= ocfs2_fh_to_dentry,
+ 	.fh_to_parent	= ocfs2_fh_to_parent,
+ 	.get_parent	= ocfs2_get_parent,
+-	.flags		= EXPORT_OP_ASYNC_LOCK,
+ };
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index 893a1d21dc1c..1ab165c2939f 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -250,19 +250,6 @@ struct export_operations {
+ 	unsigned long	flags;
+ };
  
-@@ -496,7 +495,7 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
- 				(long long)lock->fl.fl_end,
- 				wait);
- 
--	if (!exportfs_lock_op_is_async(inode->i_sb->s_export_op)) {
-+	if (!locks_can_async_lock(nlmsvc_file_file(file)->f_op)) {
- 		async_block = wait;
- 		wait = 0;
- 	}
-@@ -550,7 +549,7 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
- 	 * requests on the underlaying ->lock() implementation but
- 	 * only one nlm_block to being granted by lm_grant().
- 	 */
--	if (exportfs_lock_op_is_async(inode->i_sb->s_export_op) &&
-+	if (locks_can_async_lock(nlmsvc_file_file(file)->f_op) &&
- 	    !list_empty(&block->b_list)) {
- 		spin_unlock(&nlm_blocked_lock);
- 		ret = nlm_lck_blocked;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a366fb1c1b9b..a061987abee3 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7953,9 +7953,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	fp = lock_stp->st_stid.sc_file;
- 	switch (lock->lk_type) {
- 		case NFS4_READW_LT:
--			if (nfsd4_has_session(cstate) ||
--			    exportfs_lock_op_is_async(sb->s_export_op))
--				flags |= FL_SLEEP;
- 			fallthrough;
- 		case NFS4_READ_LT:
- 			spin_lock(&fp->fi_lock);
-@@ -7966,9 +7963,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			type = F_RDLCK;
- 			break;
- 		case NFS4_WRITEW_LT:
--			if (nfsd4_has_session(cstate) ||
--			    exportfs_lock_op_is_async(sb->s_export_op))
--				flags |= FL_SLEEP;
- 			fallthrough;
- 		case NFS4_WRITE_LT:
- 			spin_lock(&fp->fi_lock);
-@@ -7988,15 +7982,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		goto out;
- 	}
- 
--	/*
--	 * Most filesystems with their own ->lock operations will block
--	 * the nfsd thread waiting to acquire the lock.  That leads to
--	 * deadlocks (we don't want every nfsd thread tied up waiting
--	 * for file locks), so don't attempt blocking lock notifications
--	 * on those filesystems:
--	 */
--	if (!exportfs_lock_op_is_async(sb->s_export_op))
--		flags &= ~FL_SLEEP;
-+	if (lock->lk_type & (NFS4_READW_LT | NFS4_WRITEW_LT) &&
-+		nfsd4_has_session(cstate) &&
-+		locks_can_async_lock(nf->nf_file->f_op))
-+			flags |= FL_SLEEP;
- 
- 	nbl = find_or_allocate_block(lock_sop, &fp->fi_fhandle, nn);
- 	if (!nbl) {
+-/**
+- * exportfs_lock_op_is_async() - export op supports async lock operation
+- * @export_ops:	the nfs export operations to check
+- *
+- * Returns true if the nfs export_operations structure has
+- * EXPORT_OP_ASYNC_LOCK in their flags set
+- */
+-static inline bool
+-exportfs_lock_op_is_async(const struct export_operations *export_ops)
+-{
+-	return export_ops->flags & EXPORT_OP_ASYNC_LOCK;
+-}
+-
+ extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
+ 				    int *max_len, struct inode *parent,
+ 				    int flags);
 -- 
 2.44.0
 
