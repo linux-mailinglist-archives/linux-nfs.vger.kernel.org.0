@@ -1,135 +1,203 @@
-Return-Path: <linux-nfs+bounces-6380-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6381-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD38497456B
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 00:11:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEF3B974710
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 02:00:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DD021F261C2
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Sep 2024 22:11:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6755B287601
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Sep 2024 00:00:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E661AB535;
-	Tue, 10 Sep 2024 22:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749413D9E;
+	Wed, 11 Sep 2024 00:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqhNnRUl"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aUhYd7Q7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jVrzjyOC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iKWWAxRB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HURj2lWP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D317A924;
-	Tue, 10 Sep 2024 22:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2A10E5
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Sep 2024 00:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726006312; cv=none; b=Q5an5SzM6PXDhoqElpSIR/9i93mgmNOG25UKhNqs4w8ogn7LPjJfhRG3MY556YIsP0f1ar7RK4QTpeWvBhS6ons1Hm6r5FOr5W/1nNba8ZC6L8I/4mrVaDxeirO5itnfFBCPAgNe1f4oFj+AdOMun1jkaVpGxt8F81zl5JMrC+k=
+	t=1726012821; cv=none; b=s9qZNNjcGzlmhqwvJ5zrsGxhZSekTUOWKEUfP2s4uWzYw9GVYztBU81/06AF7YC71FdvxgZM/cJCHwKQagO0EiG0VcWdYkE2u2bBwqXT7lL++jFpr0TcezCfZ2KtSSN488+A2tKh2U58JNc3yJzsBY4DE9g2IOpl6bjILtnvkxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726006312; c=relaxed/simple;
-	bh=vVpp7uHZT4xapYNNyP7BWdaAt7X4JVfow4RERTcPSLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRiNPD7BAx13oFiVhUuoQqbIZiwXcJHhX6cTkPLu84ma9ZrbBJi3rxHiMOzVzN+AjnAOAy/4TfvKp+8MMUg6slkBEzLzqrIRNIBjz4oJb2PIJSfweKwPEWjjLIhb7M/QBj4Nbv2E8yPclxu1spUDtWUQQIyTf3K9lqKm9VI3Ws4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqhNnRUl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A6CC4CEC3;
-	Tue, 10 Sep 2024 22:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726006312;
-	bh=vVpp7uHZT4xapYNNyP7BWdaAt7X4JVfow4RERTcPSLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qqhNnRUl5HScrLvQ8lR0VtPDI1EFxIU1VThQ+7DDe4xRw1n9FR0b2JlmLa/Cz/x1I
-	 6JcMTQgC/Dfwdx5voMaGOnJzI4WPL1nPmVyUbKTZ0Wj8DXgDUQaqFK65GUsQmmOa8p
-	 AQVtqflZHPdy4AoZoUzxl6K1IqYWAP5MFUEtHO9iTfG4dNRVdHnwL7GHCKDVRb+BaM
-	 +1fiGzTjXV9FJJ9AHGlfZYyseQXo4H5VCsUYzRh7ZjA4J7W9QAFHUmjMzX0baY41Ma
-	 Zx9fgNy03MkfxK3hjom4xPQQ52Ul8hUorLh3X3ulNHSvo4ltoRc2sJaAECKG64U6p7
-	 iPx5KaqabzAxQ==
-Date: Tue, 10 Sep 2024 18:11:50 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v15 00/26] nfs/nfsd: add support for LOCALIO
-Message-ID: <ZuDEJukUYv3yVSQM@kernel.org>
-References: <20240831223755.8569-1-snitzer@kernel.org>
- <66ab4e72-2d6e-4b78-a0ea-168e1617c049@oracle.com>
- <ZttnSndjMaU1oObp@kernel.org>
- <ZuB3l71L_Gu1Xsrn@kernel.org>
- <ZuCasKhlB4-eGyg0@kernel.org>
- <686b4118-0505-4ea5-a2bb-2b16acc33c51@oracle.com>
+	s=arc-20240116; t=1726012821; c=relaxed/simple;
+	bh=teJ35dSU53w4cKQCCSIQ2neQI0hqMjLo7coFTkqwJPY=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=jLjzOR30oJ5I8c3aol3nCfJnQ6RKRehHp39NIe2Zcra9TMdMC9Y+fKCShAvKtApNqhpMX8QKFJDF1yuRT4wL0CS8B9EU9Ij69s1j1vLg4AlLGpQoZwetKZX6t0GE+tBnW+PoQ6Xa7O35fsp6KECRrRDZUH3aioAVNaibL3z206c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aUhYd7Q7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jVrzjyOC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iKWWAxRB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HURj2lWP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 98F8B1F83F;
+	Wed, 11 Sep 2024 00:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726012817; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8dTrjNlNIFOSU7HRxPvbN6QTmUKYc0rNNLxqGoTT6Pk=;
+	b=aUhYd7Q7wUwD30xWXSZAs9iUAxOXi12iCzOHrzHFohVDWOcXorNE3V/03NtCUmcJIvpV7R
+	kJ+lMANErW9frwVIzhP7eOIYY5mXsrMAQCOV9QOksPQLJLjdCW+2uvSZXUTuKqKkmeDIvd
+	MlXwW1N1GJaP/obLWqsJziZSpgPA1TU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726012817;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8dTrjNlNIFOSU7HRxPvbN6QTmUKYc0rNNLxqGoTT6Pk=;
+	b=jVrzjyOCsXuQI/NyPVEjDbt+osIJzM6eIA6wT3Vra1oYzPAvaN89GrdZoGdOvgAhV3VHIP
+	puvT7b3vcRC1zABw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726012816; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8dTrjNlNIFOSU7HRxPvbN6QTmUKYc0rNNLxqGoTT6Pk=;
+	b=iKWWAxRBoT1glF0pouFMFzazT68Td8zG8HRhOydnx+kptHsXRy699M7broTEUqIUM/QLKm
+	fi64ZQf+Ogz4nPGJ0b4Fb7iKjFY/G8jnsVvywJy4H32uOQNg6xMXG/x+pqElbMDf1YtrJz
+	a3UFZdT0OUPrH6nquf/4NrjBc7qT4ko=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726012816;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8dTrjNlNIFOSU7HRxPvbN6QTmUKYc0rNNLxqGoTT6Pk=;
+	b=HURj2lWPlY3jmM8bRHhQ99jTqqycIS2lQMkilEIgCoSuPwn0MZ4URPyOsmsu8+dDCC4zup
+	8vxXa31UOkL5OlBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 85C3313A73;
+	Wed, 11 Sep 2024 00:00:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Dc6hDo7d4Gb2UgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 11 Sep 2024 00:00:14 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <686b4118-0505-4ea5-a2bb-2b16acc33c51@oracle.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
+ least 30 seconds
+In-reply-to: <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
+References: <172585839640.4433.13337900639103448371@noble.neil.brown.name>,
+ <adadfa97e30bc4d827df194814e4e05aa26b8266.camel@kernel.org>
+Date: Wed, 11 Sep 2024 10:00:06 +1000
+Message-id: <172601280603.4433.1920807234970803580@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Sep 10, 2024 at 04:31:23PM -0400, Anna Schumaker wrote:
-> Hi Mike,
-> 
-> On 9/10/24 3:14 PM, Mike Snitzer wrote:
-> > On Tue, Sep 10, 2024 at 12:45:11PM -0400, Mike Snitzer wrote:
-> >> On Fri, Sep 06, 2024 at 04:34:18PM -0400, Mike Snitzer wrote:
-> >>> On Fri, Sep 06, 2024 at 03:31:41PM -0400, Anna Schumaker wrote:
-> >>>> Hi Mike,
-> >>>>
-> >>>> I've been running tests on localio this afternoon after finishing up going through v15 of the patches (I was most of the way through when you posted v16, so I haven't updated yet!). Cthon tests passed on all NFS versions, and xfstests passed on NFS v4.x. However, I saw this crash from xfstests with NFS v3:
-> >>>>
-> >>>> [ 1502.440896] run fstests generic/633 at 2024-09-06 14:04:17
-> >>>> [ 1502.694356] process 'vfstest' launched '/dev/fd/4/file1' with NULL argv: empty string added
-> >>>> [ 1502.699514] Oops: general protection fault, probably for non-canonical address 0x6c616e69665f6140: 0000 [#1] PREEMPT SMP NOPTI
-> >>>> [ 1502.700970] CPU: 3 UID: 0 PID: 513 Comm: nfsd Not tainted 6.11.0-rc6-g0c79a48cd64d-dirty+ #42323 70d41673e6cbf8e3437eb227e0a9c3c46ed3b289
-> >>>> [ 1502.702506] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
-> >>>> [ 1502.703593] RIP: 0010:nfsd_cache_lookup+0x2b3/0x840 [nfsd]
+On Mon, 09 Sep 2024, Jeff Layton wrote:
+> On Mon, 2024-09-09 at 15:06 +1000, NeilBrown wrote:
+> > The pair of bloom filtered used by delegation_blocked() was intended to
+> > block delegations on given filehandles for between 30 and 60 seconds.  A
+> > new filehandle would be recorded in the "new" bit set.  That would then
+> > be switch to the "old" bit set between 0 and 30 seconds later, and it
+> > would remain as the "old" bit set for 30 seconds.
 > > 
-> > <snip>
-> > 
-> >>>>
-> >>>> Please let me know if there are any other details you need about my setup to help debug this!
-> >>>
-> >>> Hmm, I haven't seen this issue, my runs of xfstests with LOCALIO
-> >>> enabled look solid:
-> >>> https://evilpiepirate.org/~testdashboard/ci?user=snitzer&branch=snitm-nfs-next&test=^fs.nfs.fstests.generic.633$
-> >>>
-> >>> And I know Chuck has been testing xfstests and more with the patches
-> >>> applied but LOCALIO disabled in his kernel config.
-> >>>
-> >>> The stack seems to indicate nfsd is just handling a request (so it
-> >>> isn't using LOCALIO, at least not for this op).
-> >>>
-> >>> Probably best if you do try v16.  v15 has issues v16 addressed.  If
-> >>> you can reproduce with v16 please share your kernel .config and
-> >>> xfstests config. 
-> >>>
-> >>> Note that I've only really tested my changes against v6.11-rc4.  But I
-> >>> can rebase on v6.11-rc6 if you find v16 still fails for you.
-> >>
-> >> Hi Anna,
-> >>
-> >> Just checking back, how is LOCALIO for you at this point?  Anything
-> >> you're continuing to see as an issue or need from me?
-> > 
-> > In case it helps, I did just rebase LOCALIO (v16 + 1 fix) ontop of
-> > cel/nfsd-next (v6.11-rc6 based), and I've pushed the result here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
 > 
-> I'm seeing the same hang on generic/525 with your latest branch.
+> Since we're on the subject...
 > 
-> Anna
+> 60s seems like an awfully long time to block delegations on an inode.
+> Recalls generally don't take more than a few seconds when things are
+> functioning properly.
+> 
+> Should we swap the bloom filters more often?
 
-Interesting, I just looked at ktest and it shows the regression point
-to be this commit:
-   nfs: implement client support for NFS_LOCALIO_PROGRAM
+Or should we take a completely different approach?  Or both?
+I'm bothered by the fact that this bug in a heuristic caused rename to
+misbehave this way.  So I did some exploration.
 
-See:
-https://evilpiepirate.org/~testdashboard/ci?user=snitzer&branch=snitm-nfs-next&test=^fs.nfs.fstests.generic.525$
+try_break_deleg / break_deleg_wait are called:
 
-I think 525 has been like this for a while, really not sure why I
-ignored it... will dig deeper!
+ - notify_change() - chmod_common, chown_common, and vfs_utimes  waits
+ - vfs_unlink() - do_unlinkat waits for the delegation to be broken
+ - vfs_link() - do_linkat waits
+ - vfs_rename() - do_renameat2 waits
+ - vfs_set_acl() - waits itself
+ - vfs_remove_acl() - ditto
+ - __vfs_setxattr_locked() - vfs_setxattr waits
+ - __vfs_removexattr_locked() - vfs_removexattr waits
 
-Thanks,
-Mike
+I would argue that *none* of these justify delaying further delegations
+once the operation itself has completed.  They aren't the sort of things
+that suggest on-going cross-client "sharing" which delegations interfere
+with.
+
+I imagine try_break_lease would increment some counter in ->i_flctx
+which prevents further leases being taken, and some new call near where
+break_deleg_wait() is called will decrement that counter.  If waiting
+for a lease to break, call break_deleg_wait() and retry, else
+break_deleg_done().
+
+Delegations are also broken by calls break_lease() which comes from
+nfsd_open_break_lease() for conflicting nfsd opens.  I think there *are*
+indicitive of shares and *should* result in the filehandle being recorded
+in the bloom filter.
+Maybe if break_lease() in nfsd_open_break_lease() returns -EWOULDBLOCK,
+then the filehandle could be added to the bloom filter at that point.
+
+do_dentry_open also calls break_lease() but we still want the filehandle
+to go in the bloom-filter in that case ....  maybe the lm_break callback
+could check i_writecount and i_readcount and use those to determine if
+delaying delegations is appropriate.
+
+wrt the time to block delegation for, I'm not sure that it matters much.
+Once we focus the delay on files that are concurrently opened from
+multiple clients (not both read-only) I think there are some files
+(most) that are never shared, and some files that are often shared.  We
+probably don't want delegations for often shared files at all.  So I'd
+be comfortable blocking delegations on often-shared files for quite a
+while.
+
+I wouldn't advocate for *longer* than 30 seconds because I don't want
+the bloom filters to fill up - that significantly reduced their
+usefulness.  So maybe we could also swap filters when the 'new' one
+becomes 50% full....
+
+NeilBrown
+
 
