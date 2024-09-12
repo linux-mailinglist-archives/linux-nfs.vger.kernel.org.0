@@ -1,63 +1,54 @@
-Return-Path: <linux-nfs+bounces-6398-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6399-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8607F97672D
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 13:08:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD45D9767CF
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 13:27:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C9C11F21D7B
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 11:08:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D29D51C20FDB
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 11:27:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA6C1A0BD7;
-	Thu, 12 Sep 2024 11:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291721A3AB5;
+	Thu, 12 Sep 2024 11:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHfnTu53"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUIXWrqt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6781A0BCA;
-	Thu, 12 Sep 2024 11:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0201C1A3AAC
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Sep 2024 11:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726139292; cv=none; b=mn4tFVC/u4g3mR7nbPy1HJcsTMOSklcioG27L3wRDEyxkMF9KFEx2jorW1NXgA6X/oGGOy/vgjp9/2FZFv8d/BWp3DPvb2/RXIFVx7XDUB1ZUTGPfWKqHZvgn7h2GhTwf/nnJ0Ta0Ufrbf9yjmZWweRYIR96XaOnnLxKz+Io0e4=
+	t=1726139972; cv=none; b=MvDlRZUmy4Xc30IbLQEmiS0+Hglbu3du8Ty+jTJBbKfZSOm8fW3a9IjOcf01T35RASFXUP9I4djrH3xJ/tHvNXVz6NAS8qpZWmVzadEUzYqKckp5fxf2J12YirD3MejeLRwMkAvKIXGElju0VdSpOOilbTWVl9G5zgQxVy9OZAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726139292; c=relaxed/simple;
-	bh=GbxUJ4J25O2ocZfy3OfLzH7S3aVFRnG3v9CiZA2JkeA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TilitmI9WILMtv9siN0QM5iWAJc0eVc/svZoKo8WseVJ8aVag4bGc84ioa9bqAfOyZ61vLwpTsXMjWodZFXWGrjrQrjz4evX+/ZHgnM52Wckb0a3ijqQLJwnGnEiWd2L5FygrND0zbTP2MH6FD6PWxW4hYzw0+AxExXYDK1AXh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHfnTu53; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C721C4CEC3;
-	Thu, 12 Sep 2024 11:08:09 +0000 (UTC)
+	s=arc-20240116; t=1726139972; c=relaxed/simple;
+	bh=5DFNkdbKjIsrasqksCAwv1asfjc3QYazitZze03Li70=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FdCaXGy2QAY2guqXqkEy6Kyh2/ibH1mye1uBqBBpIIY8cvrQqMuWUKyKmyPLWR8ESPa3zQigC7xO1STPOJd0f5Lamd2AVLCwuPUoJStKxcaMYCYOt7UAyDp7K4TX3rF/Olc4SFQub6gvEZlSl1gttVI2vgSYXuJ1NXN+S35NNZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUIXWrqt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28A3C4CEC4;
+	Thu, 12 Sep 2024 11:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726139291;
-	bh=GbxUJ4J25O2ocZfy3OfLzH7S3aVFRnG3v9CiZA2JkeA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dHfnTu531Ihq75RxEH3OVvbYqzWjWbrqlzHVnGkNOG9zq8LTkJ2MfpGGBVLYCcV91
-	 A8sHyofeY8dg+QSUT2ahN+/WBUFSXaCWy+xovU4TtZFlj8DLN5ohJLF50iWELad2Jl
-	 BTxKkWwliGXs6r1WgOD7NDrQ3htuaDDZ+edo0tokI6cdbUe2uPwHFh6dq4V+jwPKEe
-	 NduaSH/D4lFdPz430svLf1nf98WYok7jT7goIKMIpvFjpHpNrzrbMkVW2EV9jZ6d2X
-	 uW1eT9KaQRQx4aTuWV4xxf197TFy2QO3Ua1z3t9/tvXnFAmd0HeW+Y6ysdc5bXgXK5
-	 pq5jtIENQ+pkA==
-Message-ID: <f798d5225cc52ec227b4458f3313f1908c471984.camel@kernel.org>
-Subject: Re: [PATCH v1 0/4] Fixup NLM and kNFSD file lock callbacks
+	s=k20201202; t=1726139971;
+	bh=5DFNkdbKjIsrasqksCAwv1asfjc3QYazitZze03Li70=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=iUIXWrqts6iOZnHdf+xfAblPLgmXWRP37M7nwHeQ/Sc0jJr8pwyPFG9QMhQk6SWRh
+	 DajnVobjXTzvAW+UT27KiKsCgJIUOZduKdFljplcNzN2A9YdLV6FWL2Ri6J1RrB83R
+	 mhVuM/uFuWNZnckhc3TNvh5FjYeVRal5WZd07wkjFm3/3ioDVxuRsQxdVVRWOuOGuW
+	 pnP/ZfVoXrbixVHUSTKEhx/oW+rsaX4jGPj/mKkbu8M231fGYJAPMPJmjVAjwGpTcl
+	 KLRcSBrqddgHAXBt8GWK3a5naLu0dUPdbPPYXDu7XBllEnAH51uXxhMC/yQuh+QKsF
+	 z+FmzWfwf0z0w==
+Message-ID: <f96bb4acd7f1721052f14be3072401ccd5a019ae.camel@kernel.org>
+Subject: Re: [PATCH] NFSv4.2: Fix detection of "Proxying of Times" server
+ support
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>, Chuck Lever
- <chuck.lever@oracle.com>, Amir Goldstein <amir73il@gmail.com>, Neil Brown
- <neilb@suse.de>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
- <anna@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andreas Gruenbacher
- <agruenba@redhat.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker
- <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>, Alexander Ahring Oder Aring <aahringo@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- gfs2@lists.linux.dev,  ocfs2-devel@lists.linux.dev
-Date: Thu, 12 Sep 2024 07:08:07 -0400
-In-Reply-To: <cover.1726083391.git.bcodding@redhat.com>
-References: <cover.1726083391.git.bcodding@redhat.com>
+To: Roi Azarzar <roi.azarzar@vastdata.com>, linux-nfs@vger.kernel.org
+Date: Thu, 12 Sep 2024 07:19:29 -0400
+In-Reply-To: <20240912074130.4861-1-roi.azarzar@vastdata.com>
+References: <20240912074130.4861-1-roi.azarzar@vastdata.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -142,68 +133,77 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-09-11 at 15:42 -0400, Benjamin Coddington wrote:
-> Last year both GFS2 and OCFS2 had some work done to make their locking mo=
-re
-> robust when exported over NFS.  Unfortunately, part of that work caused b=
-oth
-> NLM (for NFS v3 exports) and kNFSD (for NFSv4.1+ exports) to no longer se=
-nd
-> lock notifications to clients.
+On Thu, 2024-09-12 at 07:41 +0000, Roi Azarzar wrote:
+> Set time delegation capability according to relevant supported attrs
 >=20
-> This in itself is not a huge problem because most NFS clients will still
-> poll the server in order to acquire a conflicted lock, but now that I've
-> noticed it I can't help but try to fix it because there are big advantage=
-s
-> for setups that might depend on timely lock notifications, and we've
-> supported that as a feature for a long time.
+> According to draft-ietf-nfsv4-delstid-07:
+>    If a server informs the client via the fattr4_open_arguments
+>    attribute that it supports
+>    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS and it returns a valid
+>    delegation stateid for an OPEN operation which sets the
+>    OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag, then it MUST query the
+>    client via a CB_GETATTR for the fattr4_time_deleg_access (see
+>    Section 5.2) attribute and fattr4_time_deleg_modify attribute (see
+>    Section 5.2).
 >=20
-> Its important for NLM and kNFSD that they do not block their kernel threa=
-ds
-> inside filesystem's file_lock implementations because that can produce
-> deadlocks.  We used to make sure of this by only trusting that
-> posix_lock_file() can correctly handle blocking lock calls asynchronously=
-,
-> so the lock managers would only setup their file_lock requests for async
-> callbacks if the filesystem did not define its own lock() file operation.
+> We want to be extra pedantic and continue to check that FATTR4_TIME_DELEG=
+_ACCESS
+> and FATTR4_TIME_DELEG_MODIFY are set
 >=20
-> However, when GFS2 and OCFS2 grew the capability to correctly
-> handle blocking lock requests asynchronously, they started signalling thi=
-s
-> behavior with EXPORT_OP_ASYNC_LOCK, and the check for also trusting
-> posix_lock_file() was inadvertently dropped, so now most filesystems no
-> longer produce lock notifications when exported over NFS.
+> the server should inform the client that it supports
+> OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS via FATTR4_OPEN_ARGUMENTS at=
+tribute
+> using GETATTR call, which the client should determine the server capabili=
+ty accordingly.
+> In addition, the server should support TIME_DELEG_MODIFY and TIME_DELEG_A=
+CCESS as well.
 >=20
-> I tried to fix this by simply including the old check for lock(), but the
-> resulting include mess and layering violations was more than I could acce=
-pt.
-> There's a much cleaner way presented here using an fop_flag, which while
-> potentially flag-greedy, greatly simplifies the problem and grooms the
-> way for future uses by both filesystems and lock managers alike.
+> Signed-off-by: Roi Azarzar <roi.azarzar@vastdata.com>
+> ---
+>  fs/nfs/nfs4proc.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 >=20
-> Criticism welcomed,
-> Ben
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index b8ffbe52ba15..ba20197d0226 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -3982,8 +3982,6 @@ static int _nfs4_server_capabilities(struct nfs_ser=
+ver *server, struct nfs_fh *f
+>  #endif
+>  		if (res.attr_bitmask[0] & FATTR4_WORD0_FS_LOCATIONS)
+>  			server->caps |=3D NFS_CAP_FS_LOCATIONS;
+> -		if (res.attr_bitmask[2] & FATTR4_WORD2_TIME_DELEG_MODIFY)
+> -			server->caps |=3D NFS_CAP_DELEGTIME;
+>  		if (!(res.attr_bitmask[0] & FATTR4_WORD0_FILEID))
+>  			server->fattr_valid &=3D ~NFS_ATTR_FATTR_FILEID;
+>  		if (!(res.attr_bitmask[1] & FATTR4_WORD1_MODE))
+> @@ -4011,6 +4009,11 @@ static int _nfs4_server_capabilities(struct nfs_se=
+rver *server, struct nfs_fh *f
+>  		if (res.open_caps.oa_share_access_want[0] &
+>  		    NFS4_SHARE_WANT_OPEN_XOR_DELEGATION)
+>  			server->caps |=3D NFS_CAP_OPEN_XOR;
+> +		if ((res.open_caps.oa_share_access_want[0] &
+> +		     NFS4_SHARE_WANT_DELEG_TIMESTAMPS) &&
+> +		    (res.attr_bitmask[2] & FATTR4_WORD2_TIME_DELEG_MODIFY) &&
+> +		    (res.attr_bitmask[2] & FATTR4_WORD2_TIME_DELEG_ACCESS))
+> +			server->caps |=3D NFS_CAP_DELEGTIME;
 >=20
-> Benjamin Coddington (4):
->   fs: Introduce FOP_ASYNC_LOCK
->   gfs2/ocfs2: set FOP_ASYNC_LOCK
->   NLM/NFSD: Fix lock notifications for async-capable filesystems
->   exportfs: Remove EXPORT_OP_ASYNC_LOCK
 >=20
->  Documentation/filesystems/nfs/exporting.rst |  7 -------
->  fs/gfs2/export.c                            |  1 -
->  fs/gfs2/file.c                              |  2 ++
->  fs/lockd/svclock.c                          |  5 ++---
->  fs/nfsd/nfs4state.c                         | 19 ++++---------------
->  fs/ocfs2/export.c                           |  1 -
->  fs/ocfs2/file.c                             |  2 ++
->  include/linux/exportfs.h                    | 13 -------------
->  include/linux/filelock.h                    |  5 +++++
->  include/linux/fs.h                          |  2 ++
->  10 files changed, 17 insertions(+), 40 deletions(-)
->=20
+It's more efficient to just do the & once:
 
-Thanks for fixing this up, Ben!
+	res.attr_bitmask[2] & (FATTR4_WORD2_TIME_DELEG_MODIFY|FATTR4_WORD2_TIME_DE=
+LEG_ACCESS) =3D=3D
+				(FATTR4_WORD2_TIME_DELEG_MODIFY|FATTR4_WORD2_TIME_DELEG_ACCESS)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+That's all getting a bit hard to read though, so it might be nice to
+make a little static helper to check these.
+
+> =20
+>  		memcpy(server->cache_consistency_bitmask, res.attr_bitmask, sizeof(ser=
+ver->cache_consistency_bitmask));
+>  		server->cache_consistency_bitmask[0] &=3D FATTR4_WORD0_CHANGE|FATTR4_W=
+ORD0_SIZE;
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
