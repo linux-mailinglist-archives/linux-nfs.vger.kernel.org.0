@@ -1,237 +1,194 @@
-Return-Path: <linux-nfs+bounces-6424-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6425-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05D697743E
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 00:20:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A37AB97744C
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 00:26:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9436C2865E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 22:20:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2667D1F23738
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 22:26:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE252191499;
-	Thu, 12 Sep 2024 22:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535DC1C2DC8;
+	Thu, 12 Sep 2024 22:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kK/OzA+n"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g+DGzlab";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YmH7APkT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ziYsZbo2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HI/jfDLi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0DF18EFED;
-	Thu, 12 Sep 2024 22:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7081C2437;
+	Thu, 12 Sep 2024 22:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726179620; cv=none; b=P4baKAOh2SbrOvrtVL4HyRyZ4I8EIREjhM0JY6e50xp15iaXutkW4v51BB5trUPVQw/RPSg9kYVsGHVYmTUQ0DIa4VSJiJ4r0YkeYrHDfLmEViDDQY3P/nwN15tciVifJjNXPa4u1Izt/VLlR7etoxinRSHhyj5/gk8PYDN/vpk=
+	t=1726179974; cv=none; b=UE6mRR1YGuiQGcRm+PGQPGPCzJWI4Vzv/G6bWi5tJnJuKL/hsL9nQ8IO+QUIMCcekXi0DFBXAhxZXfF5GfTgYoymk6InDUjOLvQKB2CNm52G0QAQuYEEuyEdrGxtjGyeAGYtY3aNuLKVxigPc4YJSEmdtImHzVn78D19BbmG/FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726179620; c=relaxed/simple;
-	bh=nj9fV5kOVzpzl9DstAMQLd8D+jcdOATomopimDXm1ww=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Xtt3rPNJ1aWQzj5CyFV0VpuiYIjBfnantfhCkspjOv1lnaBLDrWpSojULkAQpLGbrn4hRUTqLjLRt62RhXitpNry9nugGAuVryARAvnIqmm+zMyjBFxcsj7NSLVrcTss47uWEE2IhiID9uhcRGiTKYdi2v5vCJy1Z9INCHWNifo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kK/OzA+n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A76C4CEC3;
-	Thu, 12 Sep 2024 22:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726179620;
-	bh=nj9fV5kOVzpzl9DstAMQLd8D+jcdOATomopimDXm1ww=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kK/OzA+nauT1/FdtJCLjvkypJ6WJw0pRAmWoAoJc3H0kyOBUf2/Xrc0hmD5ET/Cgj
-	 6lX/JNF92ihjRRKipMXlS5LLPWJmkUiQPuE94I7MHCeb1lh9Sxa7IjC7ZiUXwP/7AN
-	 rNu3lINp2wqy6EEuRT7EyuCiUmonnphYAsVgjODRANsHO5giVHRe3WXAhPodFdWmmE
-	 a7JF3AkQI+T1RgnUWSNDNBQT8mGiHQeNt7RsjI/eTkKx7Z1RLZsF4aAVP90RCWcAza
-	 TeIwNRJ3nRSHGwZFUqianhlOCDMVM6YxI9GPf8eFiMIEJG+vrSNRqFSS/qgcw51vvQ
-	 aCfUD3VcgzZTQ==
-Received: by pali.im (Postfix)
-	id 43A0D5E9; Fri, 13 Sep 2024 00:20:15 +0200 (CEST)
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nfsd: Fix NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT
-Date: Fri, 13 Sep 2024 00:19:17 +0200
-Message-Id: <20240912221917.23802-1-pali@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1726179974; c=relaxed/simple;
+	bh=ctItJRVpw82jXmQuDbKx6+6962Ka9QmWJ+Es9knwK/4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=eeGpZVfX9n8loHopw8LiIJe+HIO8JzNM6lvM+cuHlKIzYxYKX9o6E4an+nH3yqAiZJiAcaCDm6V/0VEdIguCzJoNe0vk8uWiLIaBL/8JQ9rhrRMLatOiYhb+dogERh7fTark/sVfHwyzsVerJd2bkgkpOqm0S4SjR9nLcspYGXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g+DGzlab; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YmH7APkT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ziYsZbo2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HI/jfDLi; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 372A51F7A9;
+	Thu, 12 Sep 2024 22:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726179970; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zl+cjXWbhkIbqfDOxo3tas/VXwicE3s/17bB24vRjKk=;
+	b=g+DGzlabXqd6KWY1Dt91L7hQYs01OaNVoUx6oFYSQiZLT38tPaVd9iGGa4JAOzn0WJCLOg
+	lVSODa1oeRTMjMeRmqE3sG4yjzSPpsuYmCUKxmEJaRh4b5BAfWpZinZxw0UYNq3afMIgLu
+	7ml1HG0dKGTuTLJDWLwswqV73K3DaTc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726179970;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zl+cjXWbhkIbqfDOxo3tas/VXwicE3s/17bB24vRjKk=;
+	b=YmH7APkTbkErtqTlXU/5WZBTc3FH7hklDzh1zabTihzph8mi81Tgph4J0QutpCpnTZON6o
+	IZ0vE6s2vJ8edjAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726179969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zl+cjXWbhkIbqfDOxo3tas/VXwicE3s/17bB24vRjKk=;
+	b=ziYsZbo2rQ4wh5JA4+cKJPA4FnvmkxMVE6DfOQXpKUcpzDp6V7+4PxsK7A8QBmJ1nZw71N
+	1YCXvRzmWxAxWRQY4ulw0cnNlWShcZwUcHMaGftCswoUQjKe71mQrSHwX0i1+m0u4cagni
+	2uxabQAJAmdxVtlP5wqk/u6eT8mxkB8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726179969;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zl+cjXWbhkIbqfDOxo3tas/VXwicE3s/17bB24vRjKk=;
+	b=HI/jfDLi4OeXSAGV1dwXa1aOD9G8c9lQec/WA1XoELzFJjGKqSR/Q8ZVVw8QWbBDzM9Phf
+	47TruksacWfhnbBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8553413A73;
+	Thu, 12 Sep 2024 22:26:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RAfwDn5q42bHEgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 12 Sep 2024 22:26:06 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neilb@suse.de>
+To: Pali =?utf-8?q?Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Fix nfs4_disable_idmapping option
+In-reply-to: <20240912220659.23336-1-pali@kernel.org>
+References: <20240912220659.23336-1-pali@kernel.org>
+Date: Fri, 13 Sep 2024 08:26:02 +1000
+Message-id: <172617996236.17050.1069184645717662362@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Currently NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT do not bypass
-only GSS, but bypass any authentication method. This is problem specially
-for NFS3 AUTH_NULL-only exports.
+On Fri, 13 Sep 2024, Pali Roh=C3=A1r wrote:
+> NFSv4 server option nfs4_disable_idmapping says that it turn off server's
+> NFSv4 idmapping when using 'sec=3Dsys'. But it also turns idmapping off also
+> for 'sec=3Dnone'.
+>=20
+> NFSv4 client option nfs4_disable_idmapping says same thing and really it
+> turns the NFSv4 idmapping only for 'sec=3Dsys'.
+>=20
+> Fix the NFSv4 server option nfs4_disable_idmapping to turn off idmapping
+> only for 'sec=3Dsys'. This aligns the server nfs4_disable_idmapping option
+> with its description and also aligns behavior with the client option.
 
-The purpose of NFSD_MAY_BYPASS_GSS_ON_ROOT is described in RFC 2623,
-section 2.3.2, to allow mounting NFS2/3 GSS-only export without
-authentication. So few procedures which do not expose security risk used
-during mount time can be called also with AUTH_NONE or AUTH_SYS, to allow
-client mount operation to finish successfully.
+Why do you think this is the right approach?
+If the documentation says "turn off when sec=3Dsys" and the implementation
+does "turn off when sec=3Dsys or sec=3Dnone" then I agree that something
+needs to be fixed.  I would suggest that the documentation should be
+fixed.
 
-The problem with current implementation is that for AUTH_NULL-only exports,
-the NFSD_MAY_BYPASS_GSS_ON_ROOT is active also for NFS3 AUTH_UNIX mount
-attempts which confuse NFS3 clients, and make them think that AUTH_UNIX is
-enabled and is working. Linux NFS3 client never switches from AUTH_UNIX to
-AUTH_NONE on active mount, which makes the mount inaccessible.
+From the perspective of id mapping, sec=3Dnone is similar to sec=3Dsys.
 
-Fix the NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT implementation
-and really allow to bypass only exports which have some GSS auth flavor
-enabled.
+NeilBrown
 
-The result would be: For AUTH_NULL-only export if client attempts to do
-mount with AUTH_UNIX flavor then it will receive access errors, which
-instruct client that AUTH_UNIX flavor is not usable and will either try
-other auth flavor (AUTH_NULL if enabled) or fails mount procedure.
 
-This should fix problems with AUTH_NULL-only or AUTH_UNIX-only exports if
-client attempts to mount it with other auth flavor (e.g. with AUTH_NULL for
-AUTH_UNIX-only export, or with AUTH_UNIX for AUTH_NULL-only export).
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- fs/nfsd/export.c   | 19 ++++++++++++++++++-
- fs/nfsd/export.h   |  2 +-
- fs/nfsd/nfs4proc.c |  2 +-
- fs/nfsd/nfs4xdr.c  |  2 +-
- fs/nfsd/nfsfh.c    | 12 +++++++++---
- fs/nfsd/vfs.c      |  2 +-
- 6 files changed, 31 insertions(+), 8 deletions(-)
-
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 50b3135d07ac..eb11d3fdffe1 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1074,7 +1074,7 @@ static struct svc_export *exp_find(struct cache_detail *cd,
- 	return exp;
- }
- 
--__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
-+__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp, bool may_bypass_gss)
- {
- 	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
- 	struct svc_xprt *xprt = rqstp->rq_xprt;
-@@ -1120,6 +1120,23 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
- 	if (nfsd4_spo_must_allow(rqstp))
- 		return 0;
- 
-+	/* Some calls may be processed without authentication
-+	 * on GSS exports. For example NFS2/3 calls on root
-+	 * directory, see section 2.3.2 of rfc 2623.
-+	 * For "may_bypass_gss" check that export has really
-+	 * enabled some GSS flavor and also check that the
-+	 * used auth flavor is without auth (none or sys).
-+	 */
-+	if (may_bypass_gss && (
-+	     rqstp->rq_cred.cr_flavor == RPC_AUTH_NULL ||
-+	     rqstp->rq_cred.cr_flavor == RPC_AUTH_UNIX)) {
-+		for (f = exp->ex_flavors; f < end; f++) {
-+			if (f->pseudoflavor == RPC_AUTH_GSS ||
-+			    f->pseudoflavor >= RPC_AUTH_GSS_KRB5)
-+				return 0;
-+		}
-+	}
-+
- denied:
- 	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
- }
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index ca9dc230ae3d..dc7cf4f6ac53 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -100,7 +100,7 @@ struct svc_expkey {
- #define EX_WGATHER(exp)		((exp)->ex_flags & NFSEXP_GATHERED_WRITES)
- 
- int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp);
--__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp);
-+__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp, bool may_bypass_gss);
- 
- /*
-  * Function declarations
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 2e39cf2e502a..0f67f4a7b8b2 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2791,7 +2791,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 
- 			if (current_fh->fh_export &&
- 					need_wrongsec_check(rqstp))
--				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
-+				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
- 		}
- encode_op:
- 		if (op->status == nfserr_replay_me) {
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 97f583777972..b45ea5757652 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3775,7 +3775,7 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
- 			nfserr = nfserrno(err);
- 			goto out_put;
- 		}
--		nfserr = check_nfsd_access(exp, cd->rd_rqstp);
-+		nfserr = check_nfsd_access(exp, cd->rd_rqstp, false);
- 		if (nfserr)
- 			goto out_put;
- 
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index dd4e11a703aa..ed0eabfa3cb0 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -329,6 +329,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
- {
- 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
- 	struct svc_export *exp = NULL;
-+	bool may_bypass_gss = false;
- 	struct dentry	*dentry;
- 	__be32		error;
- 
-@@ -375,8 +376,13 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
- 	 * which clients virtually always use auth_sys for,
- 	 * even while using RPCSEC_GSS for NFS.
- 	 */
--	if (access & NFSD_MAY_LOCK || access & NFSD_MAY_BYPASS_GSS)
-+	if (access & NFSD_MAY_LOCK)
- 		goto skip_pseudoflavor_check;
-+	/*
-+	 * NFS4 PUTFH may bypass GSS (see nfsd4_putfh() in nfs4proc.c).
-+	 */
-+	if (access & NFSD_MAY_BYPASS_GSS)
-+		may_bypass_gss = true;
- 	/*
- 	 * Clients may expect to be able to use auth_sys during mount,
- 	 * even if they use gss for everything else; see section 2.3.2
-@@ -384,9 +390,9 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
- 	 */
- 	if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT
- 			&& exp->ex_path.dentry == dentry)
--		goto skip_pseudoflavor_check;
-+		may_bypass_gss = true;
- 
--	error = check_nfsd_access(exp, rqstp);
-+	error = check_nfsd_access(exp, rqstp, may_bypass_gss);
- 	if (error)
- 		goto out;
- 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 29b1f3613800..b2f5ea7c2187 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -320,7 +320,7 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
- 	err = nfsd_lookup_dentry(rqstp, fhp, name, len, &exp, &dentry);
- 	if (err)
- 		return err;
--	err = check_nfsd_access(exp, rqstp);
-+	err = check_nfsd_access(exp, rqstp, false);
- 	if (err)
- 		goto out;
- 	/*
--- 
-2.20.1
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  fs/nfsd/nfs4idmap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+> index 7a806ac13e31..641293711f53 100644
+> --- a/fs/nfsd/nfs4idmap.c
+> +++ b/fs/nfsd/nfs4idmap.c
+> @@ -620,7 +620,7 @@ numeric_name_to_id(struct svc_rqst *rqstp, int type, co=
+nst char *name, u32 namel
+>  static __be32
+>  do_name_to_id(struct svc_rqst *rqstp, int type, const char *name, u32 name=
+len, u32 *id)
+>  {
+> -	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor < RPC_AUTH_GSS)
+> +	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_UN=
+IX)
+>  		if (numeric_name_to_id(rqstp, type, name, namelen, id))
+>  			return 0;
+>  		/*
+> @@ -633,7 +633,7 @@ do_name_to_id(struct svc_rqst *rqstp, int type, const c=
+har *name, u32 namelen, u
+>  static __be32 encode_name_from_id(struct xdr_stream *xdr,
+>  				  struct svc_rqst *rqstp, int type, u32 id)
+>  {
+> -	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor < RPC_AUTH_GSS)
+> +	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_UN=
+IX)
+>  		return encode_ascii_id(xdr, id);
+>  	return idmap_id_to_name(xdr, rqstp, type, id);
+>  }
+> --=20
+> 2.20.1
+>=20
+>=20
 
 
