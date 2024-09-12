@@ -1,65 +1,109 @@
-Return-Path: <linux-nfs+bounces-6420-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6421-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D150A9773BC
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 23:44:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAA15977416
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 00:07:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D8F91C23D24
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 21:44:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BF5A1F251E3
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Sep 2024 22:07:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2481BDA94;
-	Thu, 12 Sep 2024 21:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590891C1AC8;
+	Thu, 12 Sep 2024 22:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dvFtScBp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkOQmnzU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112A22C80
-	for <linux-nfs@vger.kernel.org>; Thu, 12 Sep 2024 21:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB40192D89;
+	Thu, 12 Sep 2024 22:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726177456; cv=none; b=Y+9svTG3gGFm1PMiC7lY3OKWKzmPXjubD+oy6eju/iFy6xOjg0ZFci8aws2/j44fPdwTQug3SbuYPMpCypJFIc1DOL8W/z7zHaSUd4VE/i7Eqr8URrPTdG3yUdyHXSgJTEhF+GAJAY4fabLVChbM63wJTyu+trlWoSSZvlSuz+Y=
+	t=1726178848; cv=none; b=UQ8d1xiURj2aAG4i57RMYLsJ1uV67rb0rWOzGmgbNO6VLN1YeX55wyzQT9pdtphe/Lf0KeRLMTzjQI4RB8ShK0SBxcBKp5TGTucfEjeQqa0aph3XAS3ha2/bskuD9AGNEqLlOd48y+qyb5V8ew4+pO92isdy4oXuMIqfGCJsJxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726177456; c=relaxed/simple;
-	bh=NQZS7vdk2eMiIotW3tW4W6R/pN0x2R4QMmqapBdBJIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rc8gC1SkerDzyQBOcn7YITqIL1ga7XvnA69zrHDKeQp5aXYwyTqXEwBR8VuepvkTmcLAosh3D+L/LxoeFeyyPEYuppewAIpcG0PwerhQJgH5hgHrAfyUfAawak1+dmxD1eAKDKSOnnSzWHhchzm0xQKnsFz+IyCVNluO6zguvmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dvFtScBp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BDF5C4CEC3;
-	Thu, 12 Sep 2024 21:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1726177454;
-	bh=NQZS7vdk2eMiIotW3tW4W6R/pN0x2R4QMmqapBdBJIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dvFtScBp6Qn8F53QZppiIXC/CaYtedXmGf3NKAxTU9t5X/kv6cYHhIpvyUdKK/azj
-	 vaM69FYCXy69ULjZq3pGlT4CUwWJ6hbyEv0SGe/Jfcx20JaQZyID9n0avKKeihTj9P
-	 XOC7P+Y0z0D5z/Pp+c24CB7UiWNLPWsBQioFX74s=
-Date: Thu, 12 Sep 2024 17:44:13 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Bugspray Bot <bugbot@kernel.org>
-Cc: anna@kernel.org, linux-nfs@vger.kernel.org, jlayton@kernel.org, 
-	trondmy@kernel.org, cel@kernel.org
-Subject: Re: New bug in the File System/NFSD component
-Message-ID: <20240912-silky-cuckoo-from-venus-e74de4@lemur>
-References: <20240912-b219268c0-341707066a14@bugzilla.kernel.org>
+	s=arc-20240116; t=1726178848; c=relaxed/simple;
+	bh=GnDMqcTsTtZ+P4FfCR5hKRgnRo1g1o6vSBp86Dqdo80=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lShhG8So07VrgF+4q7Y33p84MuLnkiD7kHCiMtiU6viKhlD7iKCml9JU63fm7N23vw+tVsrODjPRK39ZWCdsFK8DVb/ZsGWm+HchwutfdMdtCHo7etXByvc64AlTGYudWwy9onV6cqTnUQgW6NwESJ0LMC9zQZ6TYddr1Y+OTCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkOQmnzU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95592C4CEC3;
+	Thu, 12 Sep 2024 22:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726178847;
+	bh=GnDMqcTsTtZ+P4FfCR5hKRgnRo1g1o6vSBp86Dqdo80=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rkOQmnzUzBcAYhawpuIFLhFjb4PpBUEFTPqHni7dnw7AeNFNKxK6/6v4l9VPW64Ny
+	 uH2YHRk6d+3wYGfZ7F5aK/Jn+QZy/Fd3HZllYrhZhOxpvx/KZMB1LGxg13YchNVewi
+	 e7+JEkUWS1IUE0NFw3eET+N/ZF3zHkoxJJFgGuotogoSacv3nTQiOLRxJvyanV0xi6
+	 WQatc/TEv51hybf+W9R+cLp8vr1Gu1aEeFF0LQmW3KQH1sQWxfyZj7oxhhpWUVBUPb
+	 vZvm1PCoDK0NosvVJn7gIKyIwbROt6cE0CaOQ0BY0UQOUN8L9wVEJAz6glYBsTijhA
+	 Mpf/010FERUqw==
+Received: by pali.im (Postfix)
+	id A9F035E9; Fri, 13 Sep 2024 00:07:22 +0200 (CEST)
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: Fix nfs4_disable_idmapping option
+Date: Fri, 13 Sep 2024 00:06:59 +0200
+Message-Id: <20240912220659.23336-1-pali@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240912-b219268c0-341707066a14@bugzilla.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 12, 2024 at 09:41:44PM GMT, Bugspray Bot wrote:
-> Please ignore, testing mailing list integration with the new "File System/NFSD" bugzilla component.
+NFSv4 server option nfs4_disable_idmapping says that it turn off server's
+NFSv4 idmapping when using 'sec=sys'. But it also turns idmapping off also
+for 'sec=none'.
 
-Testing mailing list bridge write-back to the bug.
+NFSv4 client option nfs4_disable_idmapping says same thing and really it
+turns the NFSv4 idmapping only for 'sec=sys'.
 
--K
+Fix the NFSv4 server option nfs4_disable_idmapping to turn off idmapping
+only for 'sec=sys'. This aligns the server nfs4_disable_idmapping option
+with its description and also aligns behavior with the client option.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ fs/nfsd/nfs4idmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index 7a806ac13e31..641293711f53 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -620,7 +620,7 @@ numeric_name_to_id(struct svc_rqst *rqstp, int type, const char *name, u32 namel
+ static __be32
+ do_name_to_id(struct svc_rqst *rqstp, int type, const char *name, u32 namelen, u32 *id)
+ {
+-	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor < RPC_AUTH_GSS)
++	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor == RPC_AUTH_UNIX)
+ 		if (numeric_name_to_id(rqstp, type, name, namelen, id))
+ 			return 0;
+ 		/*
+@@ -633,7 +633,7 @@ do_name_to_id(struct svc_rqst *rqstp, int type, const char *name, u32 namelen, u
+ static __be32 encode_name_from_id(struct xdr_stream *xdr,
+ 				  struct svc_rqst *rqstp, int type, u32 id)
+ {
+-	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor < RPC_AUTH_GSS)
++	if (nfs4_disable_idmapping && rqstp->rq_cred.cr_flavor == RPC_AUTH_UNIX)
+ 		return encode_ascii_id(xdr, id);
+ 	return idmap_id_to_name(xdr, rqstp, type, id);
+ }
+-- 
+2.20.1
+
 
