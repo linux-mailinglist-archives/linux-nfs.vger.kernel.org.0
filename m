@@ -1,144 +1,93 @@
-Return-Path: <linux-nfs+bounces-6459-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6460-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA848978614
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 18:46:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 494B5978758
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 19:59:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7750B285E94
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 16:46:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E78402817A4
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 17:59:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5794C6F31E;
-	Fri, 13 Sep 2024 16:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5B0126BFE;
+	Fri, 13 Sep 2024 17:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTUfcXtB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3D4ZF0j"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63C061FEA
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Sep 2024 16:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BD643152;
+	Fri, 13 Sep 2024 17:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726246005; cv=none; b=ePpaK8ZFMCZrRIAOH1BitfX283OBOHwOFrNC86V5NuzYqjObdvSbKBcI5f0R9MreyZL3oUdSQS0xwDC/lapYnDI4mCJUy1XPwwumc6oRlZVeaeMym86zCORGvYlcBTnAObsghdfLZLVBFLDqj04pbsCfdqEjIYE8wIpQ336zHos=
+	t=1726250356; cv=none; b=t8hvaTvq7ieqYV/SEBGdIe2sJtTxWoAL9AZ8N86o9n/+JFF9MaEQjAGNqpZzf+fo2p6cgHH0Foxdrd54GQVCraYOMg58j9Gk9K4/RNlJ02kA/Bx8NkCDs166XH5FtwypWEE03jPm3J5IeumLjWTrfeOBiK4nZJIYKzg7howUZD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726246005; c=relaxed/simple;
-	bh=OJKqARipj/oxwvrTvmkFqz+PdjfqjhkPfWpLDGOGSjM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjF0ErXjc+XxrJzm/eHIeZP0qUgLuZfjUqjEfjHxVXq5N41Si2eBHF38YW6BCKW9ipsc+7R3cvVopIzwzqMz3eSnoH/v518rIpxvkyiJ5984MpHh0Xmoesiuttn7WUQ6U7YjrCeedANq2lzES559TGnU6qVRc+ZqOdhnyoFQiak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTUfcXtB; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-27051f63018so544791fac.3
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Sep 2024 09:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726246003; x=1726850803; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IU4O8I2n6kotUzY6WTsG20TZvv1d/Kh+LUWKJV0igEk=;
-        b=nTUfcXtBewU/PRDodarTnVBrUXHH6xop6CoU6zelo/Jv+5+vbBYCtYq5he7uTiGd4r
-         ABJEB91ta/Jxj//IJQLm9krmdNT8hMkGWNICQOeyo+qAbKpvFeUE389AQx114+gnyzfc
-         zELCSulliAXenvj2nogz2nOdu0zBqe+DgA+arZvY/LWM/dkxyJfNZooyaSVN/LWSHMsy
-         W7K1bz24AQLdjK/pU5DU5AKHXrvNPkprn6Qo3ntL/Qf0ANAzi1Mj4pMFdFyOJh300omU
-         BITcmMIykNQf29aUR7rb2OYJHpFZVVHFxzDh+7pKU6YfY2Phij6n7+gqCuNlu8Im0fWE
-         RhkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726246003; x=1726850803;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IU4O8I2n6kotUzY6WTsG20TZvv1d/Kh+LUWKJV0igEk=;
-        b=kigfVohsl9PRmpm4aWEC8iB0hWewOZ73HdktBGTi082diWfYgjp4U5hyP7Fi+irz6y
-         J4QWw99e9RRBT750EVUxXYspBN3+N3F7nNQCZPbw81Dh9Ce7XO669mMOxjAohEalLI7+
-         R+eqCGBYYqUjPOOHBqo2ERrBShifcg3aHzPTHyBbCXLsyctI7zEjep1XINw3xmc3nYmk
-         xrNlfHO+thI7HqS3T3VYRk6VVJHg9dXn7BRZy8S1TG1+Gp1Pb4o6eYiqu8PSrgjrc5Vv
-         u5qiepN0xsH9UZcJwP1n+8+CqZYbOpDtx8GoLGhvn7uhRwtvJewH9EW4p0oKJPlc5PkH
-         ePBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7IP99ob/rZDj/38gl6dEU5u5iW199SoKI2w7wDAQqPrNZsM15y2f+6XhiUrvDPfn4st66+QPRAOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCrUc5w927s/i3tybfUHjTjeZsJXDv1iwA6qVcGDu5x58Etjm
-	XpykT2qMiBKsV7n2T9pmKhgtGFlY7RWK4P61/cJlnDwBEwk9uVbi
-X-Google-Smtp-Source: AGHT+IHQ4iNJ6k7MkuEuC8CpiOlMGzUf2j2BM301CdIubGsHsrIMcqjiDz3XS9wFva2dK4XU/mAgsg==
-X-Received: by 2002:a05:687c:2c2a:b0:260:ebf7:d0e7 with SMTP id 586e51a60fabf-27c68955c20mr2425375fac.15.1726246002783;
-        Fri, 13 Sep 2024 09:46:42 -0700 (PDT)
-Received: from ?IPV6:2620:1f7:948:3000::df8? ([2620:1f7:948:3000::df8])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-27ba410a0fbsm3690892fac.52.2024.09.13.09.46.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2024 09:46:42 -0700 (PDT)
-Message-ID: <c40a1ed3-0989-44d8-ab3a-9c90f0a9dbad@gmail.com>
-Date: Fri, 13 Sep 2024 09:46:40 -0700
+	s=arc-20240116; t=1726250356; c=relaxed/simple;
+	bh=ReMu8uUce17SN9AEOfc2Sg0uemsEQKc6Yf3l3DFQMUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=da2IfnEgQQyALR6OymhegfJVGkR6Q8E+8VJnKc8Z85WbM5dfUaZQHvBLBzSzeJstK1FgscNLX8inynvPYxkuKtEhREn7wemaJS1LxODbWMBgflLWfbbcuToz1O/gB936aMtP9PmOMg0lnjU0NbXMBYxGbAAwlUulvJAgYCT1ySQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3D4ZF0j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B26C4CEC7;
+	Fri, 13 Sep 2024 17:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726250356;
+	bh=ReMu8uUce17SN9AEOfc2Sg0uemsEQKc6Yf3l3DFQMUQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k3D4ZF0jmfUGfE2hzdxCegRqxR0rgg5/iHPCwpYfwlXnzz1GhFcrym9ogl9jM72ms
+	 lt7ryJ88hmdxZ6VXVXdVa59RM5UpXbRvlE8Gr2f6eEFUgqtHjwixXt1G2ApKSa01fd
+	 p6hs7QXkSy00KZqvaB3R+QrR4ZkSndz/DBvoTXpUrLjg2FHMNhj70FJ5wyN+Dmo0ov
+	 CEgIF1oiU/0+dOWxAOQYQuOFItOSX3QeZLfjT3guaQeS5A+0xQZ3tyVKDAXy0O8qYs
+	 jq/UBE5ulk04FFa+9XB9K8+2C9w05RxHt9ecznuvyTfHFL3x7oEgBhoJwWJMDBwDpA
+	 D23vqJCFKmQsg==
+From: trondmy@kernel.org
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Mike Snitzer <snitzer@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] filemap: Fix bounds checking in filemap_read()
+Date: Fri, 13 Sep 2024 13:57:04 -0400
+Message-ID: <c6f35a86fe9ae6aa33b2fd3983b4023c2f4f9c13.1726250071.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: pNFS client is not using the stripe value
-Content-Language: en-US
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Olga Kornievskaia <aglo@umich.edu>,
- schumaker anna <schumaker.anna@gmail.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
- Trond Myklebust <trondmy@hammerspace.com>,
- "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-References: <CAN-5tyHXg8=Sv8MS7vJUwG+=Av8oL6Bk_ZDDfwjEf3-R0KT=dg@mail.gmail.com>
- <685478263.45656552.1723405271880.JavaMail.zimbra@z-mbx-2>
- <b717d82f-7eb4-475b-bd7b-e376172a2b42@gmail.com>
- <2102290340.59910889.1725952999821.JavaMail.zimbra@desy.de>
-From: marc eshel <eshel.marc@gmail.com>
-In-Reply-To: <2102290340.59910889.1725952999821.JavaMail.zimbra@desy.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-This trace on the client shows that it was requested to use *nfl_util 
-0x400000*
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-filelayout_decode_layout: set_layout_map Begin
+If the caller supplies an iocb->ki_pos value that is close to the
+filesystem upper limit, and an iterator with a count that causes us to
+overflow that limit, then filemap_read() enters an infinite loop.
 
-Sep 13 09:20:10 svl-marcrh-node-1 kernel: nfs4_print_deviceid: device 
-id= [3000035a0b38c07df0465]
+This behaviour was discovered when testing xfstests generic/525 with the
+"localio" optimisation for loopback NFS mounts.
 
-Sep 13 09:20:10 svl-marcrh-node-1 kernel: filelayout_decode_layout: 
-*nfl_util 0x400000* num_fh 1 fsi 0 po 0
+Reported-by: Mike Snitzer <snitzer@kernel.org>
+Fixes: c2a9737f45e2 ("vfs,mm: fix a dead loop in truncate_inode_pages_range()")
+Tested-by: Mike Snitzer <snitzer@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sep 13 09:20:10 svl-marcrh-node-1 kernel: DEBUG: 
-filelayout_decode_layout: fh len 61
-
-Sep 13 09:20:10 svl-marcrh-node-1 kernel: --> filelayout_check_layout
-
-Sep 13 09:20:10 svl-marcrh-node-1 kernel: --> filelayout_check_layout 
-returns 0
-
-This trace on the DS show that it reads 0x48000 before skipping to 0x880000
-
-So it is skipping *0x400000 *but way was the first chuck 0x48000
-
-Also way some read are 1048576 and most are 524288
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0C47878B0 
-vinfoP 0xFFFF91F81352FA30 off 0 len 1048576
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0C47878B0 
-vinfoP 0xFFFF91F81352FA30 off 1048576 len 524288
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0CA01F8B0 
-vinfoP 0xFFFF91F81352FA30 off 1572864 len 1048576
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0CA5FB8B0 
-vinfoP 0xFFFF91F81352FA30 off 2621440 len 524288
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0CA01F8B0 
-vinfoP 0xFFFF91F81352FA30 off 3145728 len 524288
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0C47878B0 
-vinfoP 0xFFFF91F81352FA30 off 3670016 len 1048576
-
-gpfsRead enter: gnP 0xFFFF91F810942688 flags 0x1 uioP 0xFFFFAED0CA01F8B0 
-vinfoP 0xFFFF91F81352FA30 off 8912896 len 524288
-
-Thanks, Marc.
+diff --git a/mm/filemap.c b/mm/filemap.c
+index d62150418b91..c69227ccdabb 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2605,7 +2605,7 @@ ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *iter,
+ 	if (unlikely(!iov_iter_count(iter)))
+ 		return 0;
+ 
+-	iov_iter_truncate(iter, inode->i_sb->s_maxbytes);
++	iov_iter_truncate(iter, inode->i_sb->s_maxbytes - iocb->ki_pos);
+ 	folio_batch_init(&fbatch);
+ 
+ 	do {
+-- 
+2.46.0
 
 
