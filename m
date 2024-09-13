@@ -1,370 +1,420 @@
-Return-Path: <linux-nfs+bounces-6452-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6453-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A6ED978224
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 16:04:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B06B09784B4
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 17:23:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09A44B22878
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 14:04:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F3AEB2466B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Sep 2024 15:23:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F6E1DB95B;
-	Fri, 13 Sep 2024 14:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ACB138DFC;
+	Fri, 13 Sep 2024 15:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYkIZXRT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W00IbQ7Q";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="F6Dpx34E"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3F01DB95A;
-	Fri, 13 Sep 2024 14:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726236157; cv=none; b=Y6JfOYpwScAfAH/8YOjMwxcS8MTH3v5PXt17px21ZNYUTE2WuZOnjHpRr4rgxi5wPPIs0KhlZHU2WV5l/YlJtkQbowhOXpbBOr5LPFRAaWkzqhZjliIiqaZymspj0jh52mewWWWdPQokXDq6prKKwdD0+TuRKEXGMofQfNrago4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726236157; c=relaxed/simple;
-	bh=t2Ui/SX4AxPA+ilhCL7nQu41U9EfcHzmNFaUUk1q8Is=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qdApsv+OKDuOuHYlu46rao/5Wkq2pCp2LVAp9KDYbnCNrPkhX0dNpuSpyicSkUYzSZNvHVCviqKDWkA2RfxgYP/HbxUTX1wGKpq5DVf/QfC2lhdFpyhY4KqddYzF6yZ+y9yRjwE5T/5BMBx3svlVl2sQ0Ap+KIfnWHZAIRexLFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYkIZXRT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167E9C4CEC0;
-	Fri, 13 Sep 2024 14:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726236156;
-	bh=t2Ui/SX4AxPA+ilhCL7nQu41U9EfcHzmNFaUUk1q8Is=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OYkIZXRTi49O5Zq64sitpXZgQwX0h94kLimMQ8lorTxH+cTU0HEeN5ghRmpBLz8hM
-	 ukRc7I+HdO+g0dPxSxCnkqO1kHJoPgQ66Brl4Djx8cZuj0bC1PmFW+pl//7g6iDAB+
-	 KxnIlS+wEfr745xM44VQRFH2YsExJezUgMiMwuqYALSNjuOoqfjKuX1+7V/kcT6JU0
-	 AjGJ91nkgLsnmzOcNJVYpQg59SkOHukaylhRRhDdDpTJY/0U4bIkPvSs8uF5jQDSEy
-	 4LPMCJ8oI0wal4EUN2fpwMlwL4TdJJIGPE7DlHKqtejXGy1WSeqrD21LX1WxJLLZUA
-	 D/irB37RwbSQg==
-Message-ID: <de5a3a21ceb5fa59de64443807e3bafa1a003a13.camel@kernel.org>
-Subject: Re: [PATCH v7 05/11] fs: tracepoints around multigrain timestamp
- events
-From: Jeff Layton <jlayton@kernel.org>
-To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
- <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
- Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
- <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Date: Fri, 13 Sep 2024 10:02:32 -0400
-In-Reply-To: <20240913-mgtime-v7-5-92d4020e3b00@kernel.org>
-References: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org>
-	 <20240913-mgtime-v7-5-92d4020e3b00@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB526AED;
+	Fri, 13 Sep 2024 15:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726240786; cv=fail; b=WBCgngRzZD3r8G9BAbOrdHrDWixBZrLbsocf1QBR63DjqhMBEGpgW+J8sWhkIUwOqo3CsuMZAes9id6C3KhhqXRfRN6W+8AXZ5krawgSGK2lkS+/JGEHu5cuXLfzeMeozQBkzwGKfN9HuZ3xpHXLg3E+Xpeo1Y4BTA+ROpwpKcc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726240786; c=relaxed/simple;
+	bh=7Hr1VPk7KhGEv1a1Tg0v7JhRCYd7dMEfExLilQasSWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jMZvBAgtWI/9Y7X3q8pOJa6PuzZthe9AhkEr3ctukmR4M0USXhsSG7u4ruMEUMNrHeXH1RekOrZoOI00p8cqmglqsG0GZ12aVyYBqKF7Zy0r902lagxnN27Hnjaw0WL4oYNST3/HhraOUU6k38aFpgowpDRjdu3B+5FDCuzmop8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=W00IbQ7Q; dkim=fail (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=F6Dpx34E reason="signature verification failed"; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48D9YMvd012331;
+	Fri, 13 Sep 2024 15:19:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:content-transfer-encoding:in-reply-to:mime-version; s=
+	corp-2023-11-20; bh=JFANI+rYN9M+3mn3NhadyOSaXOqnEAhRq2VcYphfUc4=; b=
+	W00IbQ7QC33M4JHp0vtLyJQPVE1B6YNEd2WmR6Q/DSSFz4w9VlwbQcJH7vEYkCed
+	92qI48J8IS78ioDGfBixdKVHiF4DviFTDVzrZQgNgtvHBD5FQfYGQj1/y2KZw2/U
+	o3LrLaaDaeR8+wh1X7p+B/5zn2JLjU9owJ2NC71W3KbAy2988Xc3oG8qnwGHsbA4
+	5ZAk2AAXvj4Pt7Dh+LWq2s3ayrc/bbMsvq/hj5B8d7JjCVgLQWgKsmCjUCLSsPpp
+	DzGpBpe0TtPniLlogtcWEtt81q98mA9AyDnv894wUFSeDyLmxDhDek/chzU6+Z3h
+	99WaFa0SYXV3mYzOZjpzOA==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41gfctnvvr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Sep 2024 15:19:32 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48DFGweZ033599;
+	Fri, 13 Sep 2024 15:19:32 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2049.outbound.protection.outlook.com [104.47.74.49])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9csj2d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Sep 2024 15:19:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VcyG1SUIt5C03Do705JKYtWAAkZRQNsGU9Y2na4q0Oks7iRhXaoOTdBRu/MfU0ses+xAWX8+26XFPIXKVMZvWf5GczsbyvIVQozsjBkP8N0vl5oyV5T9RkX3niH0mLjIMHYzU5V46IAGwlNiq6RKQ/wxk4d2akUGdQnwOB8Njv3n/66wDjcCEh2lhwHKXFSOi8YsoVe0HrzyXvw+mmQeUOU2TqEDtIvnUqDALf5iZJDdDzD3OqMzHu4maeAPWIgSz+pZbjlygOdj5G3ksoBS/bC5xnZ7M4glFHmN4aJAZ1SJovePn5P3GLRlq6xdqjDOBAFT5EO/dlQfx8jLZTY9oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bb4ck7pob0OxIn9Bv5iaW+77WOnmbYgHh/Z598d163o=;
+ b=Qakp7pHF/g88e+nG6gyv/UCwDKO67F594/5GgEdgTczCh3UEQP1cvGebLx0jc7BJtjBwMRGW+0ZtOJBuxYJhI7FzhCEWI606BogpZOlAedzcF1thYspSCNUWlfHZc9Np0co5Z4JuiGj/nmuCOBY8ZPUcBNGHKbeAvAFCsI2aIBN2XyDAiA55uO0woZIC8zQlPIwdUeg6CMNGDyZwBQJFCU1YTyHzGR1OIMkS7OS4E+wif4OnrU0pFt1Jk7bjT79GuhHtJBsRgobb44Qh93dEKmVK7UeaYbFzp7A3XZTf6kbb6CLYsi8zh6BZdRgcCZVqAR1MqDwAdM+iG/XpbhcPwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bb4ck7pob0OxIn9Bv5iaW+77WOnmbYgHh/Z598d163o=;
+ b=F6Dpx34ECiTr1EDVKxQurCBdXW8cdfZ6pZJTN9y1rPqkmjyIQrepgAQ1RSUq3tHBSYozPX/idKz8m3LyfhIW+dbyl60netnFs3ryZz8ecGTnMIwggBs9deRfpBEgrjqPaO+VFO/G3S1CjpcViw9x0++mMmM06y6KjFNb4QEqd/c=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by LV3PR10MB8034.namprd10.prod.outlook.com (2603:10b6:408:28e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.7; Fri, 13 Sep
+ 2024 15:19:29 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.7982.008; Fri, 13 Sep 2024
+ 15:19:29 +0000
+Date: Fri, 13 Sep 2024 11:19:25 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Fill NFSv4.1 server implementation fields in
+ OP_EXCHANGE_ID response
+Message-ID: <ZuRX/QfG+OLm9fTR@tissot.1015granger.net>
+References: <20240912220919.23449-1-pali@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240912220919.23449-1-pali@kernel.org>
+X-ClientProxiedBy: CH0P221CA0040.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::20) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|LV3PR10MB8034:EE_
+X-MS-Office365-Filtering-Correlation-Id: cdc068ad-c573-44f7-6541-08dcd40775fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?2GzKgMJ1GZ80el/XTpb655aGT0wcWHW/6CvVjk+doAZGX7o9DfZ1Pc3UEI?=
+ =?iso-8859-1?Q?kYYKMygtsCqiF/O8UkTLscp9IduYpysJPwlT0OQimf8cv/3mgzlYF8KY3F?=
+ =?iso-8859-1?Q?Vakp9x7jRsbN4syXRWG8Vqi270yH9M4dMIQtz71CpKrFVknnUDJxyew3I0?=
+ =?iso-8859-1?Q?b+zRv0J8J0pQ9t1acfdzRCEdi1EBl9BcDYSYv4JVKmTwVXPKeg31xWhbH/?=
+ =?iso-8859-1?Q?HF98staKPkAJrQZpNXuBZM6Bp3URDyvHK3OxgieIwJvrj2S6OTzNoWuZdd?=
+ =?iso-8859-1?Q?NAHCgT0GRDvVzMl3VJsT4NzryAR151pP3smp8JwpQJVxtIwZD13Aegcgj6?=
+ =?iso-8859-1?Q?ZNuHmkHH9c9rakWNepujkjS2w98lFCkwtf+vO4Q6OV1QHQkSHiqrIBBuDK?=
+ =?iso-8859-1?Q?AFtPsvq6R8QJN8alqKouIEc6vHXh75tR/Rvaj2uV/zjrtFL/k/Ffn9NSJk?=
+ =?iso-8859-1?Q?TTnmoKzH7S+itPtkHDlvWnGx3aK87uA7QGUNBoVUr+2TcEm7UEKJ66oGdm?=
+ =?iso-8859-1?Q?tfLWiy8JPSVYoR76fAWE/R/ygl0K/4LVaHvE7PZJc0Gw923XKL6Nd5wUHB?=
+ =?iso-8859-1?Q?apxL2uk9ZOq0pQPle9npv5RWuMxSq6rIa/+bSUhKo79C53iXWcU4xcB8Sw?=
+ =?iso-8859-1?Q?MFjENbuK/13Y29Wog77H4Ja7rQso3llWXw8QdnlLBEvQP3W7lz5gk0bqFA?=
+ =?iso-8859-1?Q?3AvUnrihEYo7Q6U157TsQgbxfUiS+OKWkUiI/OA7rmL/agcLkWc0RzQk/0?=
+ =?iso-8859-1?Q?gCucvr1lKL8XTxsTEMLBOqKpysVAj7E0J2ar54Bzgo+SVmqKI2UUtpv2me?=
+ =?iso-8859-1?Q?+R0FZ6ZJg+8dFg8E7jyh6S7teqjX+oow50B2Mwm3fn1iZ5N7vdK/XE8FB5?=
+ =?iso-8859-1?Q?Gu0MSxW/1Bncf5SPMn87JnEOxA/diaa5C/JI1M9NjDD8+WSfe3Ks5t0Zw2?=
+ =?iso-8859-1?Q?1jQsxIFK/Jn2Zac+fcxfU+y5fcJbkpBnTfosx7zXOj66B30RUYgxAerWxd?=
+ =?iso-8859-1?Q?p+6oilAF97m3an+yRCyySgNMm+zBJzRZWVAHm4pNVi32wbuzwsh0xwDFqV?=
+ =?iso-8859-1?Q?5DyyE/+L+5PavT41Mjssbs9icQOR8mCuTFwQrQ2q6Vd8QGjfgA7BHH9qPe?=
+ =?iso-8859-1?Q?CuVLf+/2JXTykFZiC1V90Ayekt0Hisom0xQDmxJDHJW1eCWpP6BgKHQs7Q?=
+ =?iso-8859-1?Q?kbbcUSwNxQQPCn7vZ/9OTAMCa4EYxxBpc6g6WW3tRoY3rUtjh+J5oSs+zI?=
+ =?iso-8859-1?Q?QVW3FwDQiuCqANmIedcpB5e8PnOPOU1oqlzZAxS7DbCbT5w23fKAai6bCj?=
+ =?iso-8859-1?Q?0Ksz4m3TBStQ6aiBKlYMAGOuEDfIPiNGWnilOD9RegALt/H6RQl6jKMgMI?=
+ =?iso-8859-1?Q?ts9Lcgg1pK763Kji7vaKAsOJIqHs1Rxw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?37NUEujbljyN7o9/CIPf77+YG/JNqC/zOuQy99m3I1QRDW7iXHDRLko9nO?=
+ =?iso-8859-1?Q?QvkSbRrXcNvCbJ16Oc+UxsoKk9iwBnnPPs9dpgcFqSAX/dDMkK8Q9YNAQF?=
+ =?iso-8859-1?Q?xcQscKEw4TMQUw7od0HdE8HEaPIl5H0n+w8hbEK/VzXeKj/a8lKPBqEt9o?=
+ =?iso-8859-1?Q?pfg48DIiMnf1IU7H1eTSl4o4aSaQHDBD8o6BBQd0kMGLuvFq9YwA++sjpA?=
+ =?iso-8859-1?Q?1htZRHvmuOBky5P/P/pnJVGL6/wKbn/T9GtEk+ZNZpnP3nhVU+hC+DPI2z?=
+ =?iso-8859-1?Q?5/8odn+r/REiNeNNPykwGqxuaPooBnJkGkqAshKp1WFWSna6b4IIcbe76V?=
+ =?iso-8859-1?Q?tSaqxw9CaGS20fe3WUZZn5LzIcEJWQhTuLDZ8+BG9iCJ6v2bScjaLvj9yu?=
+ =?iso-8859-1?Q?C17MXr0nGXP59+/9hpAk/8S/eCeuPVeyNtO/qy5mlHqFQR6/4/3V2zJHX0?=
+ =?iso-8859-1?Q?/vRa8eMpq0xt1hfnjiUa0F6sHksheSiDb2zo0kcFBdxRKtBVadPRB9CQH+?=
+ =?iso-8859-1?Q?bwBvXcaS4EKyG1rFs5OKadFMIaXsy++Be7UXZbIqqOAw2baIwVacVTkIB1?=
+ =?iso-8859-1?Q?5RSeyjb7y+A+vE2zZLsaSaNgXw9065tF3oraWPn7UN+Ydi1ePhEHYZl5lT?=
+ =?iso-8859-1?Q?jbMVQd37XK2x4xI0e2z/nV70fBEojlnK+h0smzmRt3JNbjDGt2SoJ2J4se?=
+ =?iso-8859-1?Q?yrwUI3mLpBVyPPYe1q80wyVvairMED/MRUy5PtQ3huYTXDmE9Xdw1fpgVr?=
+ =?iso-8859-1?Q?xCizbI1m7zavZuLVNI1YFuiwTbHlB9oHfcSbC3FAHKo6CitFHFv30lWp35?=
+ =?iso-8859-1?Q?JyUrdWhOYXay+9tuoUahyy/CqAl+5otkzY7ddjDg6gWmksqc4Bk2OH1JI6?=
+ =?iso-8859-1?Q?oQDyhFDsHYM5AAoqWb1UxAtphLyghDzLOJqsFk+060Carwkjzjr1AEaDOu?=
+ =?iso-8859-1?Q?prGbB7EIBgrDYHm/FzEi4//zSlVx5Sq2acoQrs1LG4yb2rrOyY0TeWP+Lb?=
+ =?iso-8859-1?Q?feqT+0rZ5SS+1jwKHGXtLW2eB9fObtFMrnzn3K0bMZxRS0XxZy6yVa8gSt?=
+ =?iso-8859-1?Q?LN9xzq3J959iAY2TyWqhiw0owby+O408HWnrprWkaqxtvZx6UqXBwdZFu8?=
+ =?iso-8859-1?Q?a61SR8fQLN6sRECy4rtFqJMr3czz61j7LvIQ9mPbyyDrv0CA5YUng3pmDJ?=
+ =?iso-8859-1?Q?JEZl0a5jLc8SK9t9n3VuodHdusz7Ruwv1bpS7sXVCzkVw5IulfvyJZEKsu?=
+ =?iso-8859-1?Q?eso7a2wKQ3/tcVAgI4GKydEVvZbSENw6IdYmdAffgKPzavYbYbUdJFEmsO?=
+ =?iso-8859-1?Q?lV4D9evOcrckd/at+LNbst/rsP3+pf+Ux/HfFqaRVAsuSY1Mpx8xw4yrLf?=
+ =?iso-8859-1?Q?+yky47fLJLSS/+f9hDuMKKvJkKhJT29g3fO8DVzwoPo1bb1t+inufu2kC0?=
+ =?iso-8859-1?Q?4b85ogRYun2EDNPOCsX4FSqcv7WUwtRJaHrxm/MPd7aZXO88meuD9eN8tE?=
+ =?iso-8859-1?Q?d1z88EKAs9X1wHktOL/wVt9g17kdDWTFiI8EdIz+x0PoCZ5EYEKDyuXhb2?=
+ =?iso-8859-1?Q?PeQ7Rhql3heYCa6hbKjNuFpEMkOtyZL+Hb9EZiBsFLmuZYRXwAkqTKE7NB?=
+ =?iso-8859-1?Q?2Ge+vCL4ynXacPbeH441LX9w1Wd2qdNVEG?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	MkdDImQmYfMfOxaYMB5SJB/Wz8xbyl0FbS7xsfYpUKuEumRj9D1gcSCOvnW/0BV00POQmEz8grDDjEWpq5n2DTCa0D8fxkozSytjKyuyQ2Ak0IIj1NxKd8NZh+tWEPchIyqqlv3wXwMjv2SDoDPzej1Slt/K4pSBsFG6XWYe/R1fEJwCnjHokxQcDsuzgclTeXjx6vLQEiiOqQVjlAjLHc4MAYDCxHC03qM7Y26V34voTH4CZgN+cMyvg7OeoTRQbsJwZEFKjlZt7zyTGMuax+yOq1osZ7miig8hhi3Fksl6798ghp9t2FCrYngHPdU1MjtLdiGsjSYC/XkQSFeGk8j1fI93A6K+Bstwh4itWDMx5IsEmkFDTek+zh0dcg2saB4W4Zsd4vbZ9ijCPSyGW4YHkFFIJqLXH9VFEft9axpiOLuU0+en3cXUBcuAKThLj8fo85bEE/zrcVgC4fHl9u5TTyZycS0Ej3bqsJcrOdTSwXncPPArUSyGBDyyks1tncRNNXxZe92aIZ3DiOvnx5cQkMLiRkxdv5eTl2sBhFqhZBShOOKM7OhE08BF5QPP3Hu8gfn3BfuFC/ibXOo7USCCiG2dp0nZa7EbUURWri4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdc068ad-c573-44f7-6541-08dcd40775fd
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2024 15:19:29.1034
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0N651ugAYvBVUI2hiYLiuVKnkbnzhU+NH3/QQMCs8kcnbTIDCPwIKffNbIxQa72gq0rSEJAIgWkrFCMzRajMhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8034
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2408220000
+ definitions=main-2409130107
+X-Proofpoint-GUID: shuLGwHLv9XloQTrEIas8L8pczXtVhRt
+X-Proofpoint-ORIG-GUID: shuLGwHLv9XloQTrEIas8L8pczXtVhRt
 
-On Fri, 2024-09-13 at 09:54 -0400, Jeff Layton wrote:
-> Add some tracepoints around various multigrain timestamp events.
->=20
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Fri, Sep 13, 2024 at 12:09:19AM +0200, Pali Rohár wrote:
+> NFSv4.1 OP_EXCHANGE_ID response from server may contain server
+> implementation details (domain, name and build time) in optional
+> nfs_impl_id4 field. Currently nfsd does not fill this field.
+> 
+> NFSv4.1 OP_EXCHANGE_ID call request from client may contain client
+> implementation details and Linux NFSv4.1 client is already filling these
+> information based on runtime module param "nfs.send_implementation_id" and
+> build time Kconfig option "NFS_V4_1_IMPLEMENTATION_ID_DOMAIN". Module param
+> send_implementation_id specify whether to fill implementation fields and
+> Kconfig option "NFS_V4_1_IMPLEMENTATION_ID_DOMAIN" specify the domain
+> string.
+> 
+> Do same in nfsd, introduce new runtime param "nfsd.send_implementation_id"
+> and build time Kconfig option "NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN" and
+> based on them fill NFSv4.1 server implementation details in OP_EXCHANGE_ID
+> response. Logic in nfsd is exactly same as in nfs.
+> 
+> This aligns Linux NFSv4.1 server logic with Linux NFSv4.1 client logic.
+> 
+> NFSv4.1 client and server implementation fields are useful for statistic
+> purposes or for identifying type of clients and servers.
+
+NFSD has gotten along for more than a decade without returning this
+information. The patch description should explain the use case in a
+little more detail, IMO.
+
+As a general comment, I recognize that you copied the client code
+for EXCHANGE_ID to construct this patch. The client and server code
+bases are somewhat different and have different coding conventions.
+Most of the comments below have to do with those differences.
+
+
+> Signed-off-by: Pali Rohár <pali@kernel.org>
 > ---
->  fs/inode.c                       |   6 ++
->  fs/stat.c                        |   3 +
->  include/trace/events/timestamp.h | 124 +++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 133 insertions(+)
->=20
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 260a8a1c1096..d19f70422a5d 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -22,6 +22,9 @@
->  #include <linux/iversion.h>
->  #include <linux/rw_hint.h>
->  #include <trace/events/writeback.h>
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/timestamp.h>
-> +
->  #include "internal.h"
-> =20
->  /*
-> @@ -2598,6 +2601,7 @@ EXPORT_SYMBOL(inode_nohighmem);
-> =20
->  struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct time=
-spec64 ts)
->  {
-> +	trace_inode_set_ctime_to_ts(inode, &ts);
->  	set_normalized_timespec64(&ts, ts.tv_sec, ts.tv_nsec);
->  	inode->i_ctime_sec =3D ts.tv_sec;
->  	inode->i_ctime_nsec =3D ts.tv_nsec;
-> @@ -2683,6 +2687,7 @@ struct timespec64 inode_set_ctime_current(struct in=
-ode *inode)
-> =20
->  	/* No need to cmpxchg if it's exactly the same */
->  	if (cns =3D=3D now.tv_nsec && inode->i_ctime_sec =3D=3D now.tv_sec)
-> +		trace_ctime_xchg_skip(inode, &now);
->  		goto out;
+>  fs/nfsd/Kconfig   | 12 +++++++++++
+>  fs/nfsd/nfs4xdr.c | 55 +++++++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 65 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> index ec2ab6429e00..70067c29316e 100644
+> --- a/fs/nfsd/Kconfig
+> +++ b/fs/nfsd/Kconfig
+> @@ -136,6 +136,18 @@ config NFSD_FLEXFILELAYOUT
+>  
+>  	  If unsure, say N.
+>  
+> +config NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN
+> +	string "NFSv4.1 Implementation ID Domain"
+> +	depends on NFSD_V4
+> +	default "kernel.org"
+> +	help
+> +	  This option defines the domain portion of the implementation ID that
+> +	  may be sent in the NFS exchange_id operation.  The value must be in
 
-I just realized I sent out an earlier version that has the above bug in
-it (missing curly braces). The version I tested, and the version in my
-public tree have this bug fixed.
+Nit: "that the server returns in its NFSv4 EXCHANGE_ID response."
 
->  	cur =3D cns;
->  retry:
-> @@ -2690,6 +2695,7 @@ struct timespec64 inode_set_ctime_current(struct in=
-ode *inode)
->  	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, now.tv_nsec)) {
->  		/* If swap occurred, then we're (mostly) done */
->  		inode->i_ctime_sec =3D now.tv_sec;
-> +		trace_ctime_ns_xchg(inode, cns, now.tv_nsec, cur);
->  	} else {
->  		/*
->  		 * Was the change due to someone marking the old ctime QUERIED?
-> diff --git a/fs/stat.c b/fs/stat.c
-> index a449626fd460..9eb6d9b2d010 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -23,6 +23,8 @@
->  #include <linux/uaccess.h>
->  #include <asm/unistd.h>
-> =20
-> +#include <trace/events/timestamp.h>
+
+> +	  the format of a DNS domain name and should be set to the DNS domain
+> +	  name of the distribution.
+
+Perhaps add: "See the description of the nii_domain field in Section
+3.3.21 of RFC 8881 for details."
+
+But honestly, I'm not sure why nii_domain is parametrized at all, on
+the client. Why not /always/ return "kernel.org" ?
+
+What checking should be done to ensure that the value of this
+setting is a valid DNS label?
+
+
+> +	  If the NFS server is unchanged from the upstream kernel, this
+> +	  option should be set to the default "kernel.org".
 > +
->  #include "internal.h"
->  #include "mount.h"
-> =20
-> @@ -52,6 +54,7 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mas=
-k, struct inode *inode)
->  	if (!(stat->ctime.tv_nsec & I_CTIME_QUERIED))
->  		stat->ctime.tv_nsec =3D ((u32)atomic_fetch_or(I_CTIME_QUERIED, pcn));
->  	stat->ctime.tv_nsec &=3D ~I_CTIME_QUERIED;
-> +	trace_fill_mg_cmtime(inode, &stat->ctime, &stat->mtime);
+>  config NFSD_V4_2_INTER_SSC
+>  	bool "NFSv4.2 inter server to server COPY"
+>  	depends on NFSD_V4 && NFS_V4_2
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index b45ea5757652..5e89f999d4c7 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -62,6 +62,9 @@
+>  #include <linux/security.h>
+>  #endif
+>  
+> +static bool send_implementation_id = true;
+> +module_param(send_implementation_id, bool, 0644);
+> +MODULE_PARM_DESC(send_implementation_id, "Send implementation ID with NFSv4.1 exchange_id");
+
+I'd rather not add a module parameter if we don't have to. Can you
+explain why this new parameter is necessary? For instance, is there
+a reason why an administrator who runs NFSD on a stock distro kernel
+would want to change this setting to "false" ?
+
+If it turns out that the parameter is valuable, is there admin
+documentation to go with it?
+
+
+>  #define NFSDDBG_FACILITY		NFSDDBG_XDR
+>  
+> @@ -4833,6 +4836,53 @@ nfsd4_encode_server_owner4(struct xdr_stream *xdr, struct svc_rqst *rqstp)
+>  	return nfsd4_encode_opaque(xdr, nn->nfsd_name, strlen(nn->nfsd_name));
 >  }
->  EXPORT_SYMBOL(fill_mg_cmtime);
-> =20
-> diff --git a/include/trace/events/timestamp.h b/include/trace/events/time=
-stamp.h
-> new file mode 100644
-> index 000000000000..c9e5ec930054
-> --- /dev/null
-> +++ b/include/trace/events/timestamp.h
-> @@ -0,0 +1,124 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM timestamp
+>  
+> +#define IMPL_NAME_LIMIT (sizeof(utsname()->sysname) + sizeof(utsname()->release) + \
+> +			 sizeof(utsname()->version) + sizeof(utsname()->machine) + 8)
 > +
-> +#if !defined(_TRACE_TIMESTAMP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_TIMESTAMP_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/fs.h>
-> +
-> +#define CTIME_QUERIED_FLAGS \
-> +	{ I_CTIME_QUERIED, "Q" }
-> +
-> +DECLARE_EVENT_CLASS(ctime,
-> +	TP_PROTO(struct inode *inode,
-> +		 struct timespec64 *ctime),
-> +
-> +	TP_ARGS(inode, ctime),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(dev_t,		dev)
-> +		__field(ino_t,		ino)
-> +		__field(time64_t,	ctime_s)
-> +		__field(u32,		ctime_ns)
-> +		__field(u32,		gen)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev		=3D inode->i_sb->s_dev;
-> +		__entry->ino		=3D inode->i_ino;
-> +		__entry->gen		=3D inode->i_generation;
-> +		__entry->ctime_s	=3D ctime->tv_sec;
-> +		__entry->ctime_ns	=3D ctime->tv_nsec;
-> +	),
-> +
-> +	TP_printk("ino=3D%d:%d:%ld:%u ctime=3D%lld.%u",
-> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
-> +		__entry->ctime_s, __entry->ctime_ns
-> +	)
-> +);
-> +
-> +DEFINE_EVENT(ctime, inode_set_ctime_to_ts,
-> +		TP_PROTO(struct inode *inode,
-> +			 struct timespec64 *ctime),
-> +		TP_ARGS(inode, ctime));
-> +
-> +DEFINE_EVENT(ctime, ctime_xchg_skip,
-> +		TP_PROTO(struct inode *inode,
-> +			 struct timespec64 *ctime),
-> +		TP_ARGS(inode, ctime));
-> +
-> +TRACE_EVENT(ctime_ns_xchg,
-> +	TP_PROTO(struct inode *inode,
-> +		 u32 old,
-> +		 u32 new,
-> +		 u32 cur),
-> +
-> +	TP_ARGS(inode, old, new, cur),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(dev_t,		dev)
-> +		__field(ino_t,		ino)
-> +		__field(u32,		gen)
-> +		__field(u32,		old)
-> +		__field(u32,		new)
-> +		__field(u32,		cur)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev		=3D inode->i_sb->s_dev;
-> +		__entry->ino		=3D inode->i_ino;
-> +		__entry->gen		=3D inode->i_generation;
-> +		__entry->old		=3D old;
-> +		__entry->new		=3D new;
-> +		__entry->cur		=3D cur;
-> +	),
-> +
-> +	TP_printk("ino=3D%d:%d:%ld:%u old=3D%u:%s new=3D%u cur=3D%u:%s",
-> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
-> +		__entry->old & ~I_CTIME_QUERIED,
-> +		__print_flags(__entry->old & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS=
-),
-> +		__entry->new,
-> +		__entry->cur & ~I_CTIME_QUERIED,
-> +		__print_flags(__entry->cur & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS=
-)
-> +	)
-> +);
-> +
-> +TRACE_EVENT(fill_mg_cmtime,
-> +	TP_PROTO(struct inode *inode,
-> +		 struct timespec64 *ctime,
-> +		 struct timespec64 *mtime),
-> +
-> +	TP_ARGS(inode, ctime, mtime),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(dev_t,		dev)
-> +		__field(ino_t,		ino)
-> +		__field(time64_t,	ctime_s)
-> +		__field(time64_t,	mtime_s)
-> +		__field(u32,		ctime_ns)
-> +		__field(u32,		mtime_ns)
-> +		__field(u32,		gen)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->dev		=3D inode->i_sb->s_dev;
-> +		__entry->ino		=3D inode->i_ino;
-> +		__entry->gen		=3D inode->i_generation;
-> +		__entry->ctime_s	=3D ctime->tv_sec;
-> +		__entry->mtime_s	=3D mtime->tv_sec;
-> +		__entry->ctime_ns	=3D ctime->tv_nsec;
-> +		__entry->mtime_ns	=3D mtime->tv_nsec;
-> +	),
-> +
-> +	TP_printk("ino=3D%d:%d:%ld:%u ctime=3D%lld.%u mtime=3D%lld.%u",
-> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
-> +		__entry->ctime_s, __entry->ctime_ns,
-> +		__entry->mtime_s, __entry->mtime_ns
-> +	)
-> +);
-> +#endif /* _TRACE_TIMESTAMP_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
->=20
+> +static __be32
+> +nfsd4_encode_server_impl_id(struct xdr_stream *xdr)
+> +{
 
---=20
-Jeff Layton <jlayton@kernel.org>
+The matching XDR decoder in fs/nfsd/nfs4xdr.c is:
+
+   static __be32 nfsd4_decode_nfs_impl_id4( ... )
+
+The function name matches the name of the XDR type in the spec. So
+let's call this function nfsd4_encode_nfs_impl_id4().
+
+
+> +	char impl_name[IMPL_NAME_LIMIT];
+> +	int impl_name_len;
+> +	__be32 *p;
+> +
+> +	impl_name_len = 0;
+> +	if (send_implementation_id &&
+> +	    sizeof(CONFIG_NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN) > 1 &&
+> +	    sizeof(CONFIG_NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN) <= NFS4_OPAQUE_LIMIT)
+> +		impl_name_len = snprintf(impl_name, sizeof(impl_name), "%s %s %s %s",
+> +			       utsname()->sysname, utsname()->release,
+> +			       utsname()->version, utsname()->machine);
+> +
+> +	if (impl_name_len <= 0) {
+> +		if (xdr_stream_encode_u32(xdr, 0) != XDR_UNIT)
+> +			return nfserr_resource;
+> +		return nfs_ok;
+> +	}
+
+IMPL_NAME_LIMIT looks like it could be hundreds of bytes. Probably
+not good to put a character array that size on the stack.
+
+I prefer that the construction and checking is done in
+nfsd4_exchange_id() instead, and the content of these fields passed
+to this encoder via struct nfsd4_exchange_id.
+
+As a guideline, the XDR layer should be concerned solely with
+marshaling and unmarshalling data types. The content of the
+marshaled data fields should be handled by NFSD's proc layer
+(fs/nfsd/nfs4proc.c).
+
+
+> +
+> +	if (xdr_stream_encode_u32(xdr, 1) != XDR_UNIT)
+> +		return nfserr_resource;
+
+A brief comment would help remind readers that what is encoded here
+is an array item count, and not a string length or a "value follows"
+boolean.
+
+Nit: In fact, this value isn't really a part of the base
+nfs_impl_id4 data type. Maybe better to do this bit of logic in the
+caller nfsd4_encode_exchange_id().
+
+
+> +
+> +	p = xdr_reserve_space(xdr,
+> +		4 /* nii_domain.len */ +
+> +		(XDR_QUADLEN(sizeof(CONFIG_NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN) - 1) * 4) +
+> +		4 /* nii_name.len */ +
+> +		(XDR_QUADLEN(impl_name_len) * 4) +
+> +		8 /* nii_time.tv_sec */ +
+> +		4 /* nii_time.tv_nsec */);
+> +	if (!p)
+> +		return nfserr_resource;
+> +
+> +	p = xdr_encode_opaque(p, CONFIG_NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN,
+> +				sizeof(CONFIG_NFSD_V4_1_IMPLEMENTATION_ID_DOMAIN) - 1);
+> +	p = xdr_encode_opaque(p, impl_name, impl_name_len);
+> +	/* just send zeros for nii_date - the date is in nii_name */
+> +	p = xdr_encode_hyper(p, 0); /* tv_sec */
+> +	*p++ = cpu_to_be32(0); /* tv_nsec */
+
+We no longer write raw encoders like this in NFSD code. This is
+especially unnecessary because EXCHANGE_ID is not a hot path.
+
+Instead, use the XDR utility functions to spell out the field names
+and data types, for easier auditing. For instance, something like
+this:
+
+	status = nfsd4_encode_opaque(xdr, exid->nii_domain.data,
+				     exid->nii_domain.len);        
+	if (status != nfs_ok)
+		return status;
+	status = nfsd4_encode_opaque(xdr, exid->nii_name.data,
+				     exid->nii_name.len);        
+	return nfsd4_encode_nfstime4(xdr, &exid->nii_date);
+
+Regarding the content of these fields: I don't mind filling in
+nii_date, duplicating what might appear in the nii_name field, if
+that is not a bother.
+
+
+> +
+> +	return nfs_ok;
+> +}
+> +
+>  static __be32
+>  nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  			 union nfsd4_op_u *u)
+> @@ -4867,8 +4917,9 @@ nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
+>  	if (nfserr != nfs_ok)
+>  		return nfserr;
+>  	/* eir_server_impl_id<1> */
+> -	if (xdr_stream_encode_u32(xdr, 0) != XDR_UNIT)
+> -		return nfserr_resource;
+> +	nfserr = nfsd4_encode_server_impl_id(xdr);
+> +	if (nfserr != nfs_ok)
+> +		return nfserr;
+>  
+>  	return nfs_ok;
+>  }
+> -- 
+> 2.20.1
+> 
+
+-- 
+Chuck Lever
 
