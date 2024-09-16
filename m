@@ -1,514 +1,301 @@
-Return-Path: <linux-nfs+bounces-6503-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6504-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E96F3979A65
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2024 06:35:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1386979D0F
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2024 10:42:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B82C428351E
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2024 04:35:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2A3D1C22BD0
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Sep 2024 08:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C971C6A1;
-	Mon, 16 Sep 2024 04:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160695336B;
+	Mon, 16 Sep 2024 08:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oVbOUF4E";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e/b2wQGG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mt54R6LP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1sstr+PJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AG4QBRe7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014771BC58;
-	Mon, 16 Sep 2024 04:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726461318; cv=none; b=nSCPOJdy47qWaEWcYRnyEn9MoAu+4/SW4aETt4yboHE1795FK5Oxw5OsWzP1KJGxNZ6NaFHaHIjx/o44m836LRB37d0Zj3JVaIOt7d8a3PcUtdzfcdHK/29HfrIhFQ6xECkViSA8BRBRXo/cTIhQ347iJud0EZ7bKKRSaHug93Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726461318; c=relaxed/simple;
-	bh=nHoLAyX4zZSezM+zjEdPKxZ4oHcVClEoTmbW8cA53h8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=cCt4SZpAA9F811mjyyqlURUFSMb+u0JuJT/BrBuMvrBPyDHKXiFKfzmt169pWHhxEozsXQlEdZyMTC6lvLJoJ/4oF4qud6UJix0wJDvzr5QefDexf1K49hxcQdzF3t5kkJ7an1BSyGh12bJ/uMWBFQv1ZwWxknz5UeA5hWdHvOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oVbOUF4E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e/b2wQGG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mt54R6LP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1sstr+PJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E3EFF1F84E;
-	Mon, 16 Sep 2024 04:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1726461314; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7dNuTHXZ4WIWGC0E564ffqTTPBBbVw3MMz+tbSK1doI=;
-	b=oVbOUF4E9TReDIRPt8Xw8bNtrQlEoC9scr9TNUutzgxP0Kwk9agtmFepZPOrpDvIiddAgY
-	2vVZ3dLPXn4AX3W3Upu9cQZJX8K1OmUINZymOkxpi9N6yGcKfUXselC3NOC9itpdTguXYp
-	RCyhEpniTWkZzbEZxkqABntlwJ2epFg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1726461314;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7dNuTHXZ4WIWGC0E564ffqTTPBBbVw3MMz+tbSK1doI=;
-	b=e/b2wQGG+nPQQJsyswA8NrxWQ4WmXvVTX2xT6oVy9l+JABzsB/cQMiAfqn4j05P8o756/x
-	dvZ/Oo6SX2H80jCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Mt54R6LP;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=1sstr+PJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1726461313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7dNuTHXZ4WIWGC0E564ffqTTPBBbVw3MMz+tbSK1doI=;
-	b=Mt54R6LPC42wWf51g7FUEjvdjjuQVcCmiyAdanSH1xtk7XgNhk+vZayM7cdOZ0Lo/1CVT/
-	d/CNHEof0C4v2HsVG1doRZjb4wTMjcM5DMmEJEmbpadV1FcNrCj3YY2whERw7S0LqcJ268
-	6st5/v76eGw0iAVnzoZtnLKDonWbJLU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1726461313;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7dNuTHXZ4WIWGC0E564ffqTTPBBbVw3MMz+tbSK1doI=;
-	b=1sstr+PJnCMNxnBjAyuaD+Y4fhA4C1Ml538fEnrBJzJGFkSj3+n1WfPnEiOIIYMwtsNhBS
-	7R0jOhJMQvUf90Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3A1AF139CE;
-	Mon, 16 Sep 2024 04:35:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2AweOH6152YbfAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 16 Sep 2024 04:35:10 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C153487A7
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Sep 2024 08:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726476111; cv=fail; b=LFM+vxtcw6tgDQRdp32h7pUSCqpDxVjnseiDOvctVeP53BYW9ZTANnOZCK9DaeYzlGSK1Rpj7z4fqfYn6d+dk6lYi4acs84azpscotY2HgmDXcq3vj0zn2YkdGdx3uztXU9CnhD26bh0xiQDXVgnwnm6EViONnXmwcEHhiaOSOg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726476111; c=relaxed/simple;
+	bh=lmaFNeNV0oXZgpZQvgPfVrD3y44w1Pv0tRXxDVueGsA=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=Q95Lf7ymxkFeXjwCd364ycp9LACjdRL+uNJ5z8MuZM4JrTQlDSvl1xMZ5RH3L5RSST2xY7SNmB+IHyHmWmrgmdfKYlCJyZoQ57651b17j5C121EozeP+tGt1NruEo9kEcCl8i6HoHfp+wloqj495dpyJIULqT71fnMyI6/zr3do=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AG4QBRe7; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726476109; x=1758012109;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=lmaFNeNV0oXZgpZQvgPfVrD3y44w1Pv0tRXxDVueGsA=;
+  b=AG4QBRe7V3aONTpkcq1Y4duV+kIC5jhyF0fYYbOGuqTwzuGnBTEd2N8u
+   3nM+A6Wz7UB2DlIsgFyeJ7u4a4lfR6CV8+EoWYC5ZpjOUdXsOYE5LYHOW
+   xpOkmr9eK3weyIwZ6U9cAhQ0U9pX6RiBo63FA2L5A/eRQyJ5aU2AY+0j0
+   Apys0Fhr4eytGQU+Ea9JC+TRV2r3GLZSSHgOZDG9vTkgoeAHwGqF8YhfX
+   P30dFdvGYA1jcbbS92yQmrpXJNr8tGZ7nc23yCYdYyLEerZoYpklnULiI
+   dyQwmTU80Cp45Tnx2V5ZtSNMtLYwKh9xaYukuYWWt/9E48mdBHYZnF0wb
+   Q==;
+X-CSE-ConnectionGUID: FukVQicxSnGDhTmyEguW1A==
+X-CSE-MsgGUID: pMc93hbdQdiQrDNlqBdnsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11196"; a="50710172"
+X-IronPort-AV: E=Sophos;i="6.10,232,1719903600"; 
+   d="scan'208";a="50710172"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 01:41:48 -0700
+X-CSE-ConnectionGUID: QnmbtahdS6KogmZ63p9Fbw==
+X-CSE-MsgGUID: uQbvLk0dQCmkQ85IbgSQPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,232,1719903600"; 
+   d="scan'208";a="69051607"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Sep 2024 01:41:48 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 16 Sep 2024 01:41:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 16 Sep 2024 01:41:47 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 16 Sep 2024 01:41:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kMBugFXQMSev+awggS8DLmIsTNSPr6W0HMZHnn9G6pr0trdl6tB5gAingltLuyqP/IzA902woPfHtCXfaOL0tmx+IOK5Nj2iAcXjm6zKsiYQjgdb9Yz0wjJ5b6MvFw/OM75tvbPKkcO1chFswTXOJxz3jekqVNNTWAsmDVo3P+tPueb7R/SzjARfCM/cV7DiQJOsAStf+MZ2rEljdJxdJ4NLteWxQjk8weIlC0AblQ/Sj2LEDLlO+HQMURl+XMj7rfxOS3YiD7KT4gF0BLb+2mLTaU6cR+NDFhL0A/drnCl0AmwWfYMi969zHA1IiVgGdQTvGEjXLqqMlrfe7LxVTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5bNy4gLw86kGvoef5uX+m7dL2IksaFuj3bhFJEbYWdM=;
+ b=aHEPxB8xhaGVrkRMA09wA+Fg7jtciI3p9IB/E69HpJlx1GacIegzYk2gc2b2iPWncWGsMQ5xli5huPJ7iQDrcpDgXOK3ixZPRpVhJo2IRlyPVVH3XGGdMU0JlTb6Y4uGwkk4rvJ9g4rYrwfGM+XEsS6JRz2qoVVViYJg83iiGryAWiDZi8oRzl5bkGgH2jRMuvUMlMcdQXWoNROcNEt+BhvqvEJ0Jkt9QCBMgTdCZq+EYzDhTRTzhIOqXL9N12pq8DjGe6FYxNPtCb3QoYzyu0xeGO2efHNCpUBSUJbyLwTdmgvjIx37cUC0xdT+OT0LSXS2ZGleHcCOOro1ym9cPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by LV8PR11MB8721.namprd11.prod.outlook.com (2603:10b6:408:203::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.24; Mon, 16 Sep
+ 2024 08:41:45 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.7962.022; Mon, 16 Sep 2024
+ 08:41:45 +0000
+Date: Mon, 16 Sep 2024 16:41:35 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Jeff Layton <jlayton@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Linux Memory Management List
+	<linux-mm@kvack.org>, Chuck Lever <chuck.lever@oracle.com>,
+	<linux-nfs@vger.kernel.org>, <ying.huang@intel.com>, <feng.tang@intel.com>,
+	<fengwei.yin@intel.com>, <oliver.sang@intel.com>
+Subject: [linux-next:master] [nfsd]  8cb33389f6:  fsmark.app_overhead 81.6%
+ regression
+Message-ID: <202409161645.d44bced5-oliver.sang@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2P153CA0020.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::19) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
-Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
- Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>,
- linux-nfs@vger.kernel.org
-Subject: [PATCH - RFC] VFS: disable new delegations during delegation-breaking
- operations
-Date: Mon, 16 Sep 2024 14:34:59 +1000
-Message-id: <172646129988.17050.4729474250083101679@noble.neil.brown.name>
-X-Rspamd-Queue-Id: E3EFF1F84E
-X-Spam-Level: 
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -6.51
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|LV8PR11MB8721:EE_
+X-MS-Office365-Filtering-Correlation-Id: 049ce292-6045-417b-6ff8-08dcd62b653a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?mUbAGqWNQA/kD78wbl9mc9TA141TYL6ZGhJ8BtfwhuE769wYFCDsms2hYu?=
+ =?iso-8859-1?Q?R6TSadLsRu6t1Tb9uTpYS2irnpbk1ImrT9W1+TMKHbXXiMGMYeqFovjnqA?=
+ =?iso-8859-1?Q?EwgMcgqvbinP6Fse2ieMB7EjNvR+80IRr7VPMB9GSQSdR107XcnciDWp86?=
+ =?iso-8859-1?Q?KMahO8j6nG8KxKSBUWtXSZSKPHm8vTX0qBqUPdYhIQyp72N5X9X/DZywOd?=
+ =?iso-8859-1?Q?M3eaBPHbNObFEBvy2lRLogJ+x3zLYx5SjmhlTBAYu5rkbRokXGI5sHYeoc?=
+ =?iso-8859-1?Q?Mp6hTKIEd69ygEHEC5eCyKqpSYsmYhrlRoyHlmNY4yYMgvtdXAEW/SuGuy?=
+ =?iso-8859-1?Q?OMXnhLvsNhhiFWg8FgjLqpceWjbvYq7YGxy9gcyBaw503cgI7kOeLUOmAB?=
+ =?iso-8859-1?Q?tN/+GSm3Fko4HtjoYf4gnuBznrt1Hi1Vr3iI+hWjLypI3gYRlqV6/XZVfD?=
+ =?iso-8859-1?Q?JbnKnE7Jb1GjPJ4GUvw0o7KXpYerrSKVgbeEUy7C3fBGIY5HWYgQBWN0LH?=
+ =?iso-8859-1?Q?VhUnZMsH1zU1x1uC6MvWx3NCNxggk0G5IHVkxIfhwMwZ7od9GkyO+L45z+?=
+ =?iso-8859-1?Q?lvGCEdBHknw/6sewnup78ADUcEVJaoKWydnOw2jvZFLZd5tiiQmAw10Szi?=
+ =?iso-8859-1?Q?ytaXcS/pmXbSztHsWYWpYO4KpLtCgg16RwF2tWba09psgFLU/358mBxDyX?=
+ =?iso-8859-1?Q?zkRqpnXmbz89nzPXn39xc5ejTgZJ0Id6tIW/E//oA24NISRLwN3yRbPt0V?=
+ =?iso-8859-1?Q?r7Plh2y351JAOhyQc9Bhx/MeaBKqALT3cFezMod0ImlUmCLTKGrNMpvvdP?=
+ =?iso-8859-1?Q?Lc7NVYCOHdGBVgN2Uxq5D4EmqXEeOWngfS3RDMQedxanqV5/foEv93BpzF?=
+ =?iso-8859-1?Q?zJK4Jr//IOQkmGb2Q/qjoMwwhzZE33t/v8An0AQmy5v4uIhJVzWge4riB7?=
+ =?iso-8859-1?Q?JATeJ7RQYlBi7Dvaawi3Yw6Uw9klK/PD8XksDh8FTyKqk6IHZ1UJm2ozf3?=
+ =?iso-8859-1?Q?mJxTXmsUFEPcXJIVej6JwhPcEW6YiVsqNyP4yk/efn8sjeA8qO4YcUdJMj?=
+ =?iso-8859-1?Q?mNDyXtTmnHaFRZUCdz1yur6JfLOpzcZofnxrRneXIQEmChGa5XYkx5KI17?=
+ =?iso-8859-1?Q?008S4sumaTwDkq5TcvLCIhe0pougx2RW0eIQCDJ4iaKE+55VEWGhW0OY0Q?=
+ =?iso-8859-1?Q?WL/nzgBb2I/Xn3XmPrNuEFW1K28vNhO+Jyl8KnW5WuurYESVFT3AE05FQw?=
+ =?iso-8859-1?Q?iL/RVNguOiZ52oaZvLL2R0nl3g5HQXybAD8AQZ8G7Xg9j3rnl3+7NTjYWW?=
+ =?iso-8859-1?Q?CyCrXpDWlwQVE9y9CM7kV8hQURirIT+ZEk1kWYQ1lcwuHd2LRndcLvUJNe?=
+ =?iso-8859-1?Q?EAo7bIStYussxVMlejCTw8GC8QbzYabox57x6jLR2zLIK/r/ObCVc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?RbrQ2LSRAR5CHI5o9Pg6Izpelxf+/UIhxd/PNcK8h1TvMCftKbGbjdktFw?=
+ =?iso-8859-1?Q?nkZol9IZIAnAeRV9ZiKokFbILxdW6Qg79hUr2fWLG9UXlqivFeiZGs/2ML?=
+ =?iso-8859-1?Q?YuzZQcRzV3ufkBGfOAN4gjdinNmYREilsNL4L5Anmn7EePgmqoOxF5jH8K?=
+ =?iso-8859-1?Q?fIW/Y5Bm4wNt25x4/aGoG/mWkhceIWH1CuULepAdFsE4vWCiOB3gyjRwdS?=
+ =?iso-8859-1?Q?pMIYSBCBdSu/AVM2bmzxBPdwIuTnmYPyaidBf35yVBqkenhxBD1Hfgh1Aa?=
+ =?iso-8859-1?Q?AT851DDCWmfAS+L1rnUo6KoJ8heN8VfxTfi1Pu/tFF/iYcCwZaBaC11+T+?=
+ =?iso-8859-1?Q?7zlkuH2Lr4/srD8GmckdpugH8dwvx+eKYrnwhwunt2+mqdcLaTEJvrk0gn?=
+ =?iso-8859-1?Q?vARGVnlG0FTStvK0Gl4seaVUbw1AqBS4DtaLN22aCVPUMVgOs6Hci5Oh0a?=
+ =?iso-8859-1?Q?V6nfTiWvQLRSHttvliGekeM8q1Ht9IS2FZaB2SMWwtHVyBGF63LBLShYix?=
+ =?iso-8859-1?Q?//Jl08gMq2q/Z5Hl6W4NtxqXZBdS6tL9D9uwLiPtlV4qpj4IqpOHfXeiVr?=
+ =?iso-8859-1?Q?rjSGE/ZveS5PFlV74YFgccv+uRbDZIhlkc4fPmrHBPEqX4+oBqyj1dKDgw?=
+ =?iso-8859-1?Q?x1MaK5lhvnK7Uy4Huxegp1YIswNlkGOXH+kVjNqu456ZplowSaa+YCzody?=
+ =?iso-8859-1?Q?wYz7WbKd54tOhBa1+Ehoh7osTTrn+z0txH7/wWAN7EGpsphCmwlHd4D9cH?=
+ =?iso-8859-1?Q?Mbsol1fehY9uz4lqslGZmJzPJl0qwLIhSLHWAdBr63+2DImo+LDyGCvO8T?=
+ =?iso-8859-1?Q?Zay3Gufacu4VpSeu/+JNPQTaaLoEjnpZ7MsynNNun9KnWksMWellrjob/3?=
+ =?iso-8859-1?Q?2sYxAmrD6JFVp1qqLxnUc5P/wzsVZ4rs7dx6XFrOz2Qm08QSpPh3ELAC+j?=
+ =?iso-8859-1?Q?NvAgRJELht95QKL69zl8xAuVft43ztyWVWlh2VQkwh20mFTRmQOlAaKy6J?=
+ =?iso-8859-1?Q?ZxEKKl8nwIkGi8i+M+usOg4O3K0xb5tcrxeqMw2nWGz3ksbi187wErf7lm?=
+ =?iso-8859-1?Q?qbhF1KIB0lq33egTVtXmGU/iGCbFW6pCdN1RJPPFZLJQ8ADelFGn0/322A?=
+ =?iso-8859-1?Q?Ywbs8W7gsFx9+dAdq+i6eLIKEvwnbCwVF38nbhxS+Sdk7+dEFiSh37g/Jn?=
+ =?iso-8859-1?Q?FfntU03DzqkWwmdSEQmDT8eYIXP4N2AbEB+dzdeD/xZk6tnZ4zlOOYwYn/?=
+ =?iso-8859-1?Q?0H2ifzDjgT3yt+4fMx1k28cDO2uOXiG+nW8R0eVi2Kb/hsY1vlHHrcM6z/?=
+ =?iso-8859-1?Q?gaU8cmuBJ4bChNRn/IwfU3HUNl7xc+IwnAl8dCbkl2jQO0BOAf32KUHlr8?=
+ =?iso-8859-1?Q?i7B+1qcAPBCxoumxEv1BH5NRCPxvQaTjO1FcBhlU9nQGfl6tWRusNCe0i1?=
+ =?iso-8859-1?Q?nbKfGWGnUnRZa0S9QAvdbFLMl9DBOaLYoHinVE3sCw54Je8ZSgm23+Atzh?=
+ =?iso-8859-1?Q?MdcXTaY8O8HhYrd2CHQRqk2bh6tEQ542b535HsyYSqO5e7yXCQXSncx1JH?=
+ =?iso-8859-1?Q?CLweFWTYls7GC7ofSxaT2Qmmh9fvaqYobgESCdVq3aZWKYTRyWhg4iLOzp?=
+ =?iso-8859-1?Q?1dyDghC++rTMCJDwSo+n3Nw4JH/xYG+foiiydE3wfJbRmiEsIJrSIRrw?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 049ce292-6045-417b-6ff8-08dcd62b653a
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2024 08:41:45.3112
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Nx6w8mhDEsn6cNY6EX4M58mAIGjpwr6dow7SFY8AjZd+e+Z66RSj+2P8l5e8LPaypxA1bECISgXoRUauYuG5bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8721
+X-OriginatorOrg: intel.com
 
 
-Various operations such as rename and unlink must break any delegations
-before they proceed.
-do_dentry_open() and vfs_truncate(), which use break_lease(), increment
-i_writecount and/or i_readcount which blocks delegations until the
-counter is decremented, but the various callers of try_break_deleg() do
-not impose any such barrier.  They hold the inode lock while performing
-the operation which blocks delegations, but must drop it while waiting
-for a delegation to be broken, which leaves an opportunity for a new
-delegation to be added.
 
-nfsd - the only current user of delegations - records any files on which
-it is called to break a delegation in a manner which blocks further
-delegations for 30-60 seconds.  This is normally sufficient.  However
-there is talk of reducing the timeout and it would be best if operations
-that needed delegations to be blocked used something more definitive
-than a timer.
+Hello,
 
-This patch adds that definitive blocking by adding a counter to struct
-file_lock_context of the number of concurrent operations which require
-delegations to be blocked.  check_conflicting_open() checks that counter
-when a delegation is requested and denies the delegation if the counter
-is elevated.
+kernel test robot noticed a 81.6% regression of fsmark.app_overhead on:
 
-try_break_deleg() now increments that counter when it records the inode
-as a 'delegated_inode'.
 
-break_deleg_wait() now leaves the inode pointer in *delegated_inode when
-it signals that the operation should be retried, and then clears it -
-decrementing the new counter - when the operation has completed, whether
-successfully or not.  To achieve this we now pass the current error
-status in to break_deleg_wait().
+commit: 8cb33389f66441dc4e54b28fe0d9bd4bcd9b796d ("nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION")
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-vfs_rename() now uses two delegated_inode pointers, one for the
-source and one for the destination in the case of replacement.  This is
-needed as it may be necessary to block further delegations to both
-inodes while the rename completes.
+testcase: fsmark
+test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz (Ice Lake) with 128G memory
+parameters:
 
-The net result is that we no longer depend on the delay that nfsd
-imposes on new delegation in order for various functions that break
-delegations to be sure that new delegations won't be added while they wait
-with the inode unlocked.  This gives more freedom to nfsd to make more
-subtle choices about when and for how long to block delegations when
-there is no active contention.
+	iterations: 1x
+	nr_threads: 1t
+	disk: 1HDD
+	fs: btrfs
+	fs2: nfsv4
+	filesize: 4K
+	test_size: 40M
+	sync_method: fsyncBeforeClose
+	nr_files_per_directory: 1fpd
+	cpufreq_governor: performance
 
-try_break_deleg() is possibly now large enough that it shouldn't be
-inline.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/locks.c               | 12 ++++++++++--
- fs/namei.c               | 32 ++++++++++++++++++++------------
- fs/open.c                |  8 ++++----
- fs/posix_acl.c           |  8 ++++----
- fs/utimes.c              |  4 ++--
- fs/xattr.c               |  8 ++++----
- include/linux/filelock.h | 31 ++++++++++++++++++++++++-------
- include/linux/fs.h       |  3 ++-
- 8 files changed, 70 insertions(+), 36 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index e45cad40f8b6..171628094daa 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -191,6 +191,7 @@ locks_get_lock_context(struct inode *inode, int type)
- 	INIT_LIST_HEAD(&ctx->flc_flock);
- 	INIT_LIST_HEAD(&ctx->flc_posix);
- 	INIT_LIST_HEAD(&ctx->flc_lease);
-+	atomic_set(&ctx->flc_deleg_blockers, 0);
-=20
- 	/*
- 	 * Assign the pointer if it's not already assigned. If it is, then
-@@ -255,6 +256,7 @@ locks_free_lock_context(struct inode *inode)
- 	struct file_lock_context *ctx =3D locks_inode_context(inode);
-=20
- 	if (unlikely(ctx)) {
-+		WARN_ON(atomic_read(&ctx->flc_deleg_blockers) !=3D 0);
- 		locks_check_ctx_lists(inode);
- 		kmem_cache_free(flctx_cache, ctx);
- 	}
-@@ -1743,9 +1745,15 @@ check_conflicting_open(struct file *filp, const int ar=
-g, int flags)
-=20
- 	if (flags & FL_LAYOUT)
- 		return 0;
--	if (flags & FL_DELEG)
--		/* We leave these checks to the caller */
-+	if (flags & FL_DELEG) {
-+		struct file_lock_context *ctx =3D locks_inode_context(inode);
-+
-+		if (ctx && atomic_read(&ctx->flc_deleg_blockers) > 0)
-+			return -EAGAIN;
-+
-+		/* We leave the remaining checks to the caller */
- 		return 0;
-+	}
-=20
- 	if (arg =3D=3D F_RDLCK)
- 		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-diff --git a/fs/namei.c b/fs/namei.c
-index 5512cb10fa89..3054da90276b 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -4493,8 +4493,8 @@ int do_unlinkat(int dfd, struct filename *name)
- 		iput(inode);	/* truncate the inode here */
- 	inode =3D NULL;
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
- 	mnt_drop_write(path.mnt);
-@@ -4764,8 +4764,8 @@ int do_linkat(int olddfd, struct filename *old, int new=
-dfd,
- out_dput:
- 	done_path_create(&new_path, new_dentry);
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error) {
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK) {
- 			path_put(&old_path);
- 			goto retry;
- 		}
-@@ -4848,7 +4848,8 @@ int vfs_rename(struct renamedata *rd)
- 	struct inode *old_dir =3D rd->old_dir, *new_dir =3D rd->new_dir;
- 	struct dentry *old_dentry =3D rd->old_dentry;
- 	struct dentry *new_dentry =3D rd->new_dentry;
--	struct inode **delegated_inode =3D rd->delegated_inode;
-+	struct inode **delegated_inode_old =3D rd->delegated_inode_old;
-+	struct inode **delegated_inode_new =3D rd->delegated_inode_new;
- 	unsigned int flags =3D rd->flags;
- 	bool is_dir =3D d_is_dir(old_dentry);
- 	struct inode *source =3D old_dentry->d_inode;
-@@ -4954,12 +4955,12 @@ int vfs_rename(struct renamedata *rd)
- 			goto out;
- 	}
- 	if (!is_dir) {
--		error =3D try_break_deleg(source, delegated_inode);
-+		error =3D try_break_deleg(source, delegated_inode_old);
- 		if (error)
- 			goto out;
- 	}
- 	if (target && !new_is_dir) {
--		error =3D try_break_deleg(target, delegated_inode);
-+		error =3D try_break_deleg(target, delegated_inode_new);
- 		if (error)
- 			goto out;
- 	}
-@@ -5011,7 +5012,8 @@ int do_renameat2(int olddfd, struct filename *from, int=
- newdfd,
- 	struct path old_path, new_path;
- 	struct qstr old_last, new_last;
- 	int old_type, new_type;
--	struct inode *delegated_inode =3D NULL;
-+	struct inode *delegated_inode_old =3D NULL;
-+	struct inode *delegated_inode_new =3D NULL;
- 	unsigned int lookup_flags =3D 0, target_flags =3D LOOKUP_RENAME_TARGET;
- 	bool should_retry =3D false;
- 	int error =3D -EINVAL;
-@@ -5118,7 +5120,8 @@ int do_renameat2(int olddfd, struct filename *from, int=
- newdfd,
- 	rd.new_dir	   =3D new_path.dentry->d_inode;
- 	rd.new_dentry	   =3D new_dentry;
- 	rd.new_mnt_idmap   =3D mnt_idmap(new_path.mnt);
--	rd.delegated_inode =3D &delegated_inode;
-+	rd.delegated_inode_old =3D &delegated_inode_old;
-+	rd.delegated_inode_new =3D &delegated_inode_new;
- 	rd.flags	   =3D flags;
- 	error =3D vfs_rename(&rd);
- exit5:
-@@ -5128,9 +5131,14 @@ int do_renameat2(int olddfd, struct filename *from, in=
-t newdfd,
- exit3:
- 	unlock_rename(new_path.dentry, old_path.dentry);
- exit_lock_rename:
--	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+	if (delegated_inode_old) {
-+		error =3D break_deleg_wait(&delegated_inode_old, error);
-+		if (error =3D=3D -EWOULDBLOCK)
-+			goto retry_deleg;
-+	}
-+	if (delegated_inode_new) {
-+		error =3D break_deleg_wait(&delegated_inode_new, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
- 	mnt_drop_write(old_path.mnt);
-diff --git a/fs/open.c b/fs/open.c
-index 22adbef7ecc2..6b6d20a68dd8 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -656,8 +656,8 @@ int chmod_common(const struct path *path, umode_t mode)
- out_unlock:
- 	inode_unlock(inode);
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
- 	mnt_drop_write(path->mnt);
-@@ -795,8 +795,8 @@ int chown_common(const struct path *path, uid_t user, gid=
-_t group)
- 				      &delegated_inode);
- 	inode_unlock(inode);
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
- 	return error;
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index 3f87297dbfdb..5eb3635d1067 100644
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -1143,8 +1143,8 @@ int vfs_set_acl(struct mnt_idmap *idmap, struct dentry =
-*dentry,
- 	inode_unlock(inode);
-=20
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
-=20
-@@ -1251,8 +1251,8 @@ int vfs_remove_acl(struct mnt_idmap *idmap, struct dent=
-ry *dentry,
- 	inode_unlock(inode);
-=20
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
-=20
-diff --git a/fs/utimes.c b/fs/utimes.c
-index 3701b3946f88..21b7605551dc 100644
---- a/fs/utimes.c
-+++ b/fs/utimes.c
-@@ -67,8 +67,8 @@ int vfs_utimes(const struct path *path, struct timespec64 *=
-times)
- 			      &delegated_inode);
- 	inode_unlock(inode);
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
-=20
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 7672ce5486c5..63e0b067dab9 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -323,8 +323,8 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dent=
-ry,
- 	inode_unlock(inode);
-=20
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
- 	if (value !=3D orig_value)
-@@ -577,8 +577,8 @@ vfs_removexattr(struct mnt_idmap *idmap, struct dentry *d=
-entry,
- 	inode_unlock(inode);
-=20
- 	if (delegated_inode) {
--		error =3D break_deleg_wait(&delegated_inode);
--		if (!error)
-+		error =3D break_deleg_wait(&delegated_inode, error);
-+		if (error =3D=3D -EWOULDBLOCK)
- 			goto retry_deleg;
- 	}
-=20
-diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index daee999d05f3..66470ba9658c 100644
---- a/include/linux/filelock.h
-+++ b/include/linux/filelock.h
-@@ -144,6 +144,7 @@ struct file_lock_context {
- 	struct list_head	flc_flock;
- 	struct list_head	flc_posix;
- 	struct list_head	flc_lease;
-+	atomic_t		flc_deleg_blockers;
- };
-=20
- #ifdef CONFIG_FILE_LOCKING
-@@ -450,21 +451,37 @@ static inline int try_break_deleg(struct inode *inode, =
-struct inode **delegated_
- {
- 	int ret;
-=20
-+	if (delegated_inode && *delegated_inode) {
-+		if (*delegated_inode =3D=3D inode)
-+			/* Don't need to count this */
-+			return break_deleg(inode, O_WRONLY|O_NONBLOCK);
-+
-+		/* inode changed, forget the old one */
-+		atomic_dec(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
-+		iput(*delegated_inode);
-+		*delegated_inode =3D NULL;
-+	}
- 	ret =3D break_deleg(inode, O_WRONLY|O_NONBLOCK);
- 	if (ret =3D=3D -EWOULDBLOCK && delegated_inode) {
- 		*delegated_inode =3D inode;
-+		atomic_inc(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
- 		ihold(inode);
- 	}
- 	return ret;
- }
-=20
--static inline int break_deleg_wait(struct inode **delegated_inode)
-+static inline int break_deleg_wait(struct inode **delegated_inode, int ret)
- {
--	int ret;
--
--	ret =3D break_deleg(*delegated_inode, O_WRONLY);
--	iput(*delegated_inode);
--	*delegated_inode =3D NULL;
-+	if (ret =3D=3D -EWOULDBLOCK) {
-+		ret =3D break_deleg(*delegated_inode, O_WRONLY);
-+		if (ret =3D=3D 0)
-+			ret =3D -EWOULDBLOCK;
-+	}
-+	if (ret !=3D -EWOULDBLOCK) {
-+		atomic_dec(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
-+		iput(*delegated_inode);
-+		*delegated_inode =3D NULL;
-+	}
- 	return ret;
- }
-=20
-@@ -494,7 +511,7 @@ static inline int try_break_deleg(struct inode *inode, st=
-ruct inode **delegated_
- 	return 0;
- }
-=20
--static inline int break_deleg_wait(struct inode **delegated_inode)
-+static inline int break_deleg_wait(struct inode **delegated_inode, int ret)
- {
- 	BUG();
- 	return 0;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 6ca11e241a24..50957d9e1c2b 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1902,7 +1902,8 @@ struct renamedata {
- 	struct mnt_idmap *new_mnt_idmap;
- 	struct inode *new_dir;
- 	struct dentry *new_dentry;
--	struct inode **delegated_inode;
-+	struct inode **delegated_inode_old;
-+	struct inode **delegated_inode_new;
- 	unsigned int flags;
- } __randomize_layout;
-=20
 
-base-commit: 98f7e32f20d28ec452afb208f9cffc08448a2652
---=20
-2.46.0
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202409161645.d44bced5-oliver.sang@intel.com
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240916/202409161645.d44bced5-oliver.sang@intel.com
+
+=========================================================================================
+compiler/cpufreq_governor/disk/filesize/fs2/fs/iterations/kconfig/nr_files_per_directory/nr_threads/rootfs/sync_method/tbox_group/test_size/testcase:
+  gcc-12/performance/1HDD/4K/nfsv4/btrfs/1x/x86_64-rhel-8.3/1fpd/1t/debian-12-x86_64-20240206.cgz/fsyncBeforeClose/lkp-icl-2sp6/40M/fsmark
+
+commit: 
+  e29c78a693 ("nfsd: add support for FATTR4_OPEN_ARGUMENTS")
+  8cb33389f6 ("nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION")
+
+e29c78a6936e7422 8cb33389f66441dc4e54b28fe0d 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+     24388 ± 20%     -32.8%      16400 ± 18%  numa-vmstat.node0.nr_slab_reclaimable
+     61.50 ±  4%     -10.6%      55.00 ±  6%  perf-c2c.HITM.local
+      0.20 ±  3%     +23.0%       0.24 ± 13%  perf-sched.sch_delay.max.ms.__cond_resched.__wait_for_common.affine_move_task.__set_cpus_allowed_ptr.__sched_setaffinity
+      2977            -6.1%       2796        vmstat.system.cs
+   2132466 ±  2%     +81.6%    3871852        fsmark.app_overhead
+     53442           -17.3%      44172        fsmark.time.voluntary_context_switches
+      2907            -5.7%       2742        perf-stat.i.context-switches
+      2902            -5.7%       2737        perf-stat.ps.context-switches
+   1724787            -1.0%    1706808        proc-vmstat.numa_hit
+   1592345            -1.1%    1574310        proc-vmstat.numa_local
+     24.87 ± 33%     -38.9%      15.20 ± 12%  sched_debug.cpu.nr_uninterruptible.max
+      4.36 ±  9%     -17.1%       3.61 ± 10%  sched_debug.cpu.nr_uninterruptible.stddev
+     97541 ± 20%     -32.7%      65610 ± 18%  numa-meminfo.node0.KReclaimable
+     97541 ± 20%     -32.7%      65610 ± 18%  numa-meminfo.node0.SReclaimable
+    256796 ±  9%     -18.7%     208805 ± 13%  numa-meminfo.node0.Slab
+   2307911 ± 52%     +68.5%    3888971 ±  5%  numa-meminfo.node1.MemUsed
+    193326 ± 12%     +24.7%     241049 ± 12%  numa-meminfo.node1.Slab
+      0.90 ± 27%      -0.5        0.36 ±103%  perf-profile.calltrace.cycles-pp.evsel__read_counter.read_counters.process_interval.dispatch_events.cmd_stat
+      0.36 ± 70%      +0.2        0.58 ±  3%  perf-profile.calltrace.cycles-pp.btrfs_commit_transaction.btrfs_sync_file.btrfs_do_write_iter.do_iter_readv_writev.vfs_iter_write
+      0.52 ± 47%      +0.3        0.78 ±  8%  perf-profile.calltrace.cycles-pp.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
+      1.62 ± 12%      +0.3        1.93 ±  9%  perf-profile.calltrace.cycles-pp.__handle_mm_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault.asm_exc_page_fault
+      1.22 ± 21%      -0.3        0.89 ± 10%  perf-profile.children.cycles-pp.readn
+      0.46 ± 32%      -0.2        0.24 ± 34%  perf-profile.children.cycles-pp.__close
+      0.45 ± 32%      -0.2        0.22 ± 15%  perf-profile.children.cycles-pp.__x64_sys_close
+      0.40 ± 29%      -0.2        0.18 ± 38%  perf-profile.children.cycles-pp.__fput
+      0.31 ± 23%      -0.2        0.16 ± 33%  perf-profile.children.cycles-pp.irq_work_tick
+      0.17 ± 51%      -0.1        0.03 ±111%  perf-profile.children.cycles-pp.nfs_file_release
+      0.16 ± 43%      -0.1        0.03 ±111%  perf-profile.children.cycles-pp.__put_nfs_open_context
+      0.26 ± 18%      -0.1        0.15 ± 34%  perf-profile.children.cycles-pp.perf_event_task_tick
+      0.15 ± 41%      -0.1        0.03 ±108%  perf-profile.children.cycles-pp.get_free_pages_noprof
+      0.18 ± 55%      -0.1        0.06 ± 32%  perf-profile.children.cycles-pp.native_apic_mem_eoi
+      0.18 ± 32%      -0.1        0.07 ± 81%  perf-profile.children.cycles-pp.flush_end_io
+      0.17 ± 41%      -0.1        0.07 ± 93%  perf-profile.children.cycles-pp.mas_store_gfp
+      0.52 ±  5%      +0.1        0.58 ±  3%  perf-profile.children.cycles-pp.btrfs_commit_transaction
+      0.02 ±141%      +0.1        0.08 ± 42%  perf-profile.children.cycles-pp.uptime_proc_show
+      0.02 ±141%      +0.1        0.08 ± 44%  perf-profile.children.cycles-pp.get_zeroed_page_noprof
+      0.02 ±141%      +0.1        0.09 ± 35%  perf-profile.children.cycles-pp.__rmqueue_pcplist
+      0.14 ± 12%      +0.1        0.28 ± 29%  perf-profile.children.cycles-pp.hrtimer_next_event_without
+      0.47 ± 27%      +0.2        0.67 ± 19%  perf-profile.children.cycles-pp.__mmap
+      0.70 ± 21%      +0.2        0.91 ±  7%  perf-profile.children.cycles-pp.vfs_write
+      0.74 ± 20%      +0.2        0.96 ±  9%  perf-profile.children.cycles-pp.ksys_write
+      0.73 ± 21%      +0.3        1.00 ±  7%  perf-profile.children.cycles-pp.copy_process
+      1.05 ± 13%      +0.3        1.38 ± 10%  perf-profile.children.cycles-pp.kernel_clone
+      0.28 ± 22%      -0.1        0.13 ± 35%  perf-profile.self.cycles-pp.irq_work_tick
+      0.18 ± 55%      -0.1        0.06 ± 32%  perf-profile.self.cycles-pp.native_apic_mem_eoi
+
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
