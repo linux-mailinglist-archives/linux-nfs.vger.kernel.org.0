@@ -1,85 +1,77 @@
-Return-Path: <linux-nfs+bounces-6556-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6557-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEB7F97CABC
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 16:06:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B3AF97CB62
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 17:11:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B3521F21C2C
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 14:06:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF2821F27897
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 15:11:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A34719F438;
-	Thu, 19 Sep 2024 14:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DE41A256C;
+	Thu, 19 Sep 2024 15:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWs0D8W5"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="VWc5dKzE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ED019FA8C;
-	Thu, 19 Sep 2024 14:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F161A286D
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 15:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726754785; cv=none; b=mYvbowcaXRjvmm2ZGjbUq91us4ubTCTIM5foPsH/uoOm5u38pFBHk3/Qu+Gr1C/hbbzs3mjeJYvNu3GpxmdMfDTWfbpQUsrBX+nel12c3eKVAQpS/jiTC22+PyXLtKUB2/8E6XZag+XIzK74Z4KtvTBncdFeyelTGiRgJyplDmo=
+	t=1726758672; cv=none; b=EFrr5eD7trQYdqyni+3V9XcCX8zv7vR/iqN3vHffdw813Jj651Wl0KB7b79ZYDkm4xBDBg4z6IonXZA03seem1XlzT7f+tAy49jtrt7Hk4dGKYj5abR9f5On+ZqKPccgpjw9O9LQjurTJKY0p3uEPJamkJx+EO5Vps9AxlY8z04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726754785; c=relaxed/simple;
-	bh=+xo4QouCGQEXsiBSHU5dsvdiemZw73K9CLdh9XdR2sY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pea0YHi7liLali9A5ggY75xJwfVAfPNPzOIdMmtQJfS7WkLE06Ig5VB3VdV4UBr1TmWoAUHtno3yL+MpJLN6lfFWvA3PqK7/LvHBF3yA6hfkhB4UwJFQFBVsTSPEE6WfRe3bfPFmFS4Yk34Isney7jwbYZVg9j9PWCZFucNS4T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWs0D8W5; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a8a7cdfdd80so115737266b.0;
-        Thu, 19 Sep 2024 07:06:23 -0700 (PDT)
+	s=arc-20240116; t=1726758672; c=relaxed/simple;
+	bh=X9gSmsKJ/fusKmXc8SA0fTXefuPiHV9nYRpBPmDJTP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ThJ06cnClDP/jaxdkB1HJYCSw/PKUyqUaEnLackno2YJjSdiOqRcDnctdZOdQ4BzNaC8EOchshoFCiLmoonnZ0YV8dc5KnK4V7KmX0V8Y/9LjWYm/OWX/WIzZJ3ZxzzmfJqEdhFhRS9Bm4Sr2yi7gyMvCH5yCBM1aSlsF3FoNnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=VWc5dKzE; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42cb2191107so7831045e9.1
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 08:10:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726754782; x=1727359582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XUnDyBgoHRg3B4M6pmpbrK0J6zwK3/f7HDaqme+W9a4=;
-        b=VWs0D8W5jDQ5pCSwOWk/xmoBNSQU8Gb5JaJg0XYQqFP5LAkbNLOmlcDYdIyvZJqVQ+
-         q6HWX0+qhgf2kOwF5zl9b0JMBtSBK9xIHE+FBBEfsIUKqHinh2Fw+GXA6JdToSJxHGco
-         TtfZN/oeA5hQbrP2D1Gx4hbyfD/8eMtOp5emABn5quOgz7ZifcpjHMJaoCy6RD5OturN
-         GfFzUczjgpgwxWo0Ag/n/7WoEhp+3zTI5mEcOQ12RVS57sBbz1nlMr9WhaaMGTrBxISM
-         KjSzGzLrdsRbHOziwvow7cGQHE/MgkHMXkRLtN7FKFjs6cuK8aYvn+3SGNU4+hvJj6Tq
-         dDPA==
+        d=vastdata.com; s=google; t=1726758619; x=1727363419; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjlgF2xmJoIF9XScTq5TmINqj5rhq6DzsZNldDLx9vY=;
+        b=VWc5dKzE/trCT50Mabivx/otAxFGc4q4GmxsUKoZUUZRYF9uDCxkgyUhkezQ4X+a19
+         3hzyQGFzXrXSQGqZHEl7npGK989Z7impVnNfM8AjwaFfl9ZG4CozQOq1MxrBUS5ZaXLu
+         8Glgs/JhJc44wHeG4FFV+vsCqe/97jBFiQCJEFnCQvIHvrb6sgJwnemPLXL7bnT8Ldq1
+         7rZZfxIKXHPiVIPCQBBQ6y9sek81OdPYqT4IyVW8Z1iSz2tD44RwybtPCwtLLuxJm81t
+         gwMupodfPy2WqZf+obDguyImpajHPnxBxJyP4NpunYbsrcQjGrR40Np+ecT+U3l5aF+M
+         5Q3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726754782; x=1727359582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XUnDyBgoHRg3B4M6pmpbrK0J6zwK3/f7HDaqme+W9a4=;
-        b=MeelPQwRfiUJV41814vbO7yZ1De4ZA3kC55WfA7SKBx9R7RfU+xMVxIuundMJsnfZK
-         xnsMSeL89yZfH6x/xk+lhCfh+dhtrxLtPIGvaDlTX5P9Sn99mVEMZl67NleNKrDjjkaA
-         7kLZZnHkE7Lro8emcXQhndVliqgNc7T/vk/Wdk9JkvD1VssHqcW8w1yHnPnNVmIf9QTY
-         ++eaZ9zodGHkxdpfqJ/dwKOyvYsf0dRkBFJLplpkVnR1oduRU0ZuVGNbXkwuWZHDwP+v
-         0Q+XtmGIaHwoRY1CHleQbnG/b3Gtc62fuQLCEvZGqTG15uiZeyR3bUK682KM2BwztOLv
-         gyPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcJ+v649nmX5fhJGaKhL7SFBqq1jvUzIT3nuVLTjAow0qtRwbKZRNri9kY+ZINkliUwQyTc3P26OFV@vger.kernel.org, AJvYcCWF4n3/qNcEmGShW+XqfHRn+yO4Nu8puG2Q6oFvaxLfgfu81etjaFauOzUEJsFHV2WrR4gl8hVd1em277ne@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNLtWHTre9YabfePq5n0D08eFoY9wyshApy7I4h059NWbbaC/g
-	xJpK1f7A42Hf4WozxjQXPdcEStnVOLHJfBzhMJ7qaULE13r0d6uI
-X-Google-Smtp-Source: AGHT+IF6/Qb1dLqyVL46HmJF14+d93NYlTJRKZFhAQCAVHYhgmPEt3qgX1bOGbyHIXr0M5ieO3hF6A==
-X-Received: by 2002:a17:907:7f20:b0:a86:7514:e649 with SMTP id a640c23a62f3a-a9048108f9fmr2095117066b.52.1726754779993;
-        Thu, 19 Sep 2024 07:06:19 -0700 (PDT)
-Received: from amir-ThinkPad-T480.arnhem.chello.nl (92-109-99-123.cable.dynamic.v4.ziggo.nl. [92.109.99.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9061330c1fsm719503266b.206.2024.09.19.07.06.18
+        d=1e100.net; s=20230601; t=1726758619; x=1727363419;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CjlgF2xmJoIF9XScTq5TmINqj5rhq6DzsZNldDLx9vY=;
+        b=agda3ib1bvNU5NTeg0O8PBFrphs8V8wM9o24m0jL73QooEutfTJjiNdhyXTVzYdH19
+         gQ5+cqWy8P9Rnl3ceyJ2GcUIZlgy/SpzHzox9ASgQ1cK1meOnwLxvWLUF3d3GZgVhgtz
+         xLDTsemhDD9NMo/u7uv2Bvp8TP9PoPytS88C42Ehpi3M89dxpLikA0+HCRpPSgtBOktC
+         ++gVSjMIY4W+WHp5BLE84kxLTYDc5dkSpeHUgU8io3uRDewx2dbQOPxS+o9/YDzeZYiC
+         oXae2jgzDOcXsOI9poN6H6TeySUQ7RGYTEqLKYUI5o2CJQQDlcFPTT/u7WRWOPEOgAFo
+         fuuw==
+X-Gm-Message-State: AOJu0YzTIp6VX3fM0Ilg9C5EtbF9B0CSqeISzEG1t7j+HiibONJW9N7G
+	Q7IkgcnOpwnN6IKAbowDQCtJ0Pr1QMvQ7lH23SoB5b+1I9qe3/y2m/4MNYxcwNoC3M164lZfXYt
+	O
+X-Google-Smtp-Source: AGHT+IFgLvWMRnCLABK9zfCMJSem32dn2tJRkHsoTs85RbQeGBPVW5fOzIPqZjH+59QqOAGEueOWdw==
+X-Received: by 2002:a05:600c:1550:b0:42c:a8cb:6a96 with SMTP id 5b1f17b1804b1-42cdb5721eamr177973485e9.31.1726758618943;
+        Thu, 19 Sep 2024 08:10:18 -0700 (PDT)
+Received: from jupiter.vstd.int ([176.230.79.245])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e7544506asm24118715e9.27.2024.09.19.08.10.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2024 07:06:18 -0700 (PDT)
-From: Amir Goldstein <amir73il@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 2/2] fs: open_by_handle_at() support for decoding connectable file handles
-Date: Thu, 19 Sep 2024 16:06:11 +0200
-Message-Id: <20240919140611.1771651-3-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240919140611.1771651-1-amir73il@gmail.com>
-References: <20240919140611.1771651-1-amir73il@gmail.com>
+        Thu, 19 Sep 2024 08:10:17 -0700 (PDT)
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] mount.nfs: improve EPROTO error message for RDMA mounts
+Date: Thu, 19 Sep 2024 18:10:15 +0300
+Message-ID: <20240919151015.536917-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,149 +80,195 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow using an O_PATH fd as mount fd argument of open_by_handle_at(2).
-This was not allowed before, so we use it to enable a new API for
-decoding "connectable" file handles that were created using the
-AT_HANDLE_CONNECTABLE flag to name_to_handle_at(2).
+When mounting NFS shares using RDMA, users may encounter this rather
+unclear error message:
 
-When mount fd is an O_PATH fd and decoding an O_PATH fd is requested,
-use that as a hint to try to decode a "connected" fd with known path,
-which is accessible (to capable user) from mount fd path.
+    mount.nfs: Protocol error
 
-Note that this does not check if the path is accessible to the calling
-user, just that it is accessible wrt the mount namesapce, so if there
-is no "connected" alias, or if parts of the path are hidden in the
-mount namespace, open_by_handle_at(2) will return -ESTALE.
+Often there are either no RDMA interfaces existing, or that routing is
+being done via other interfaces. This patch enhances the `mount_error`
+function to provide a more informative message in such cases.
 
-Note that the file handles used to decode a "connected" fd do not have
-to be encoded with the AT_HANDLE_CONNECTABLE flag.  Specifically,
-directory file handles are always "connectable", regardless of using
-the AT_HANDLE_CONNECTABLE flag.
-
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
 ---
- fs/fhandle.c | 61 +++++++++++++++++++++++++++++++---------------------
- 1 file changed, 37 insertions(+), 24 deletions(-)
+ utils/mount/error.c     | 12 +++++++++++-
+ utils/mount/error.h     |  4 +++-
+ utils/mount/network.c   |  2 +-
+ utils/mount/network.h   |  2 ++
+ utils/mount/nfs4mount.c |  2 +-
+ utils/mount/nfsmount.c  |  2 +-
+ utils/mount/stropts.c   |  8 ++++----
+ utils/mount/utils.c     |  6 +++---
+ 8 files changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 956d9b25d4f7..1fabfb79fd55 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -146,37 +146,45 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
- 	return err;
- }
+diff --git a/utils/mount/error.c b/utils/mount/error.c
+index 9ddbcc096f72..d6cbdea1933b 100644
+--- a/utils/mount/error.c
++++ b/utils/mount/error.c
+@@ -40,6 +40,7 @@
+ #include "nls.h"
+ #include "mount.h"
+ #include "error.h"
++#include "network.h"
  
--static int get_path_from_fd(int fd, struct path *root)
-+enum handle_to_path_flags {
-+	HANDLE_CHECK_PERMS   = (1 << 0),
-+	HANDLE_CHECK_SUBTREE = (1 << 1),
-+};
-+
-+struct handle_to_path_ctx {
-+	struct path root;
-+	enum handle_to_path_flags flags;
-+	unsigned int fh_flags;
-+	unsigned int o_flags;
-+};
-+
-+static int get_path_from_fd(int fd, struct handle_to_path_ctx *ctx)
- {
- 	if (fd == AT_FDCWD) {
- 		struct fs_struct *fs = current->fs;
- 		spin_lock(&fs->lock);
--		*root = fs->pwd;
--		path_get(root);
-+		ctx->root = fs->pwd;
-+		path_get(&ctx->root);
- 		spin_unlock(&fs->lock);
- 	} else {
--		struct fd f = fdget(fd);
-+		struct fd f = fdget_raw(fd);
- 		if (!f.file)
- 			return -EBADF;
--		*root = f.file->f_path;
--		path_get(root);
-+		ctx->root = f.file->f_path;
-+		path_get(&ctx->root);
-+		/*
-+		 * Use O_PATH mount fd and requested O_PATH fd as a hint for
-+		 * decoding an fd with connected path, that is accessible from
-+		 * the mount fd path.
-+		 */
-+		if (ctx->o_flags & O_PATH && f.file->f_mode & FMODE_PATH)
-+			ctx->flags |= HANDLE_CHECK_SUBTREE;
- 		fdput(f);
- 	}
- 
- 	return 0;
- }
- 
--enum handle_to_path_flags {
--	HANDLE_CHECK_PERMS   = (1 << 0),
--	HANDLE_CHECK_SUBTREE = (1 << 1),
--};
--
--struct handle_to_path_ctx {
--	struct path root;
--	enum handle_to_path_flags flags;
--	unsigned int fh_flags;
--};
--
- static int vfs_dentry_acceptable(void *context, struct dentry *dentry)
- {
- 	struct handle_to_path_ctx *ctx = context;
-@@ -224,7 +232,13 @@ static int vfs_dentry_acceptable(void *context, struct dentry *dentry)
- 
- 	if (!(ctx->flags & HANDLE_CHECK_SUBTREE) || d == root)
- 		retval = 1;
--	WARN_ON_ONCE(d != root && d != root->d_sb->s_root);
-+	/*
-+	 * exportfs_decode_fh_raw() does not call acceptable() callback with
-+	 * a disconnected directory dentry, so we should have reached either
-+	 * mount fd directory or sb root.
-+	 */
-+	if (ctx->fh_flags & EXPORT_FH_DIR_ONLY)
-+		WARN_ON_ONCE(d != root && d != root->d_sb->s_root);
- 	dput(d);
- 	return retval;
- }
-@@ -265,8 +279,7 @@ static int do_handle_to_path(struct file_handle *handle, struct path *path,
-  * filesystem but that only applies to procfs and sysfs neither of which
-  * support decoding file handles.
+ #ifdef HAVE_RPCSVC_NFS_PROT_H
+ #include <rpcsvc/nfs_prot.h>
+@@ -199,7 +200,8 @@ void sys_mount_errors(char *server, int error, int will_retry, int bg)
+  * @error: errno value to report
+  *
   */
--static inline bool may_decode_fh(struct handle_to_path_ctx *ctx,
--				 unsigned int o_flags)
-+static inline bool may_decode_fh(struct handle_to_path_ctx *ctx)
+-void mount_error(const char *spec, const char *mount_point, int error)
++void mount_error(const char *spec, const char *mount_point, int error,
++		 struct mount_options *options)
  {
- 	struct path *root = &ctx->root;
+ 	switch(error) {
+ 	case EACCES:
+@@ -250,6 +252,14 @@ void mount_error(const char *spec, const char *mount_point, int error)
+ 	case EALREADY:
+ 		/* Error message has already been provided */
+ 		break;
++	case EPROTO:
++		if (options && po_rightmost(options, nfs_transport_opttbl) == 2)
++			nfs_error(_("%s: %s: is routing being done via an interface supporting RDMA?"),
++				  progname, strerror(error));
++		else
++			nfs_error(_("%s: %s"),
++				  progname, strerror(error));
++		break;
+ 	default:
+ 		nfs_error(_("%s: %s for %s on %s"),
+ 			  progname, strerror(error), spec, mount_point);
+diff --git a/utils/mount/error.h b/utils/mount/error.h
+index ef80fd079b48..f9f282233563 100644
+--- a/utils/mount/error.h
++++ b/utils/mount/error.h
+@@ -24,9 +24,11 @@
+ #ifndef _NFS_UTILS_MOUNT_ERROR_H
+ #define _NFS_UTILS_MOUNT_ERROR_H
  
-@@ -276,7 +289,7 @@ static inline bool may_decode_fh(struct handle_to_path_ctx *ctx,
- 	 *
- 	 * There's only one dentry for each directory inode (VFS rule)...
- 	 */
--	if (!(o_flags & O_DIRECTORY))
-+	if (!(ctx->o_flags & O_DIRECTORY))
- 		return false;
++#include "parse_opt.h"
++
+ char *nfs_strerror(unsigned int);
  
- 	if (ns_capable(root->mnt->mnt_sb->s_user_ns, CAP_SYS_ADMIN))
-@@ -303,13 +316,13 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
- 	int retval = 0;
- 	struct file_handle f_handle;
- 	struct file_handle *handle = NULL;
--	struct handle_to_path_ctx ctx = {};
-+	struct handle_to_path_ctx ctx = { .o_flags = o_flags };
+-void mount_error(const char *, const char *, int);
++void mount_error(const char *, const char *, int, struct mount_options *);
+ void rpc_mount_errors(char *, int, int);
+ void sys_mount_errors(char *, int, int, int);
  
--	retval = get_path_from_fd(mountdirfd, &ctx.root);
-+	retval = get_path_from_fd(mountdirfd, &ctx);
- 	if (retval)
- 		goto out_err;
+diff --git a/utils/mount/network.c b/utils/mount/network.c
+index 01ead49f0008..64293f6f8d51 100644
+--- a/utils/mount/network.c
++++ b/utils/mount/network.c
+@@ -88,7 +88,7 @@ static const char *nfs_nfs_pgmtbl[] = {
+ 	NULL,
+ };
  
--	if (!capable(CAP_DAC_READ_SEARCH) && !may_decode_fh(&ctx, o_flags)) {
-+	if (!capable(CAP_DAC_READ_SEARCH) && !may_decode_fh(&ctx)) {
- 		retval = -EPERM;
- 		goto out_path;
+-static const char *nfs_transport_opttbl[] = {
++const char *nfs_transport_opttbl[] = {
+ 	"udp",
+ 	"tcp",
+ 	"rdma",
+diff --git a/utils/mount/network.h b/utils/mount/network.h
+index 0fc98acd4bcb..26f4eec775df 100644
+--- a/utils/mount/network.h
++++ b/utils/mount/network.h
+@@ -93,4 +93,6 @@ void mnt_closeclnt(CLIENT *, int);
+ int nfs_umount_do_umnt(struct mount_options *options,
+ 		       char **hostname, char **dirname);
+ 
++extern const char *nfs_transport_opttbl[];
++
+ #endif	/* _NFS_UTILS_MOUNT_NETWORK_H */
+diff --git a/utils/mount/nfs4mount.c b/utils/mount/nfs4mount.c
+index 3e4f1e255ca7..0fe142a7843e 100644
+--- a/utils/mount/nfs4mount.c
++++ b/utils/mount/nfs4mount.c
+@@ -469,7 +469,7 @@ int nfs4mount(const char *spec, const char *node, int flags,
+ 	if (!fake) {
+ 		if (mount(spec, node, "nfs4",
+ 				flags & ~(MS_USER|MS_USERS), &data)) {
+-			mount_error(spec, node, errno);
++			mount_error(spec, node, errno, NULL);
+ 			goto fail;
+ 		}
  	}
+diff --git a/utils/mount/nfsmount.c b/utils/mount/nfsmount.c
+index 3d95da9456de..a1c92fe83fa0 100644
+--- a/utils/mount/nfsmount.c
++++ b/utils/mount/nfsmount.c
+@@ -858,7 +858,7 @@ noauth_flavors:
+ 	if (!fake) {
+ 		if (mount(spec, node, "nfs",
+ 				flags & ~(MS_USER|MS_USERS), &data)) {
+-			mount_error(spec, node, errno);
++			mount_error(spec, node, errno, NULL);
+ 			goto fail;
+ 		}
+ 	}
+diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+index a92c420011a4..2d5fa1f2e86e 100644
+--- a/utils/mount/stropts.c
++++ b/utils/mount/stropts.c
+@@ -1143,7 +1143,7 @@ static int nfsmount_fg(struct nfsmount_info *mi)
+ 		}
+ 	}
+ 
+-	mount_error(mi->spec, mi->node, errno);
++	mount_error(mi->spec, mi->node, errno, mi->options);
+ 	return EX_FAIL;
+ }
+ 
+@@ -1160,7 +1160,7 @@ static int nfsmount_parent(struct nfsmount_info *mi)
+ 		return EX_SUCCESS;
+ 
+ 	if (nfs_is_permanent_error(errno)) {
+-		mount_error(mi->spec, mi->node, errno);
++		mount_error(mi->spec, mi->node, errno, mi->options);
+ 		return EX_FAIL;
+ 	}
+ 
+@@ -1237,7 +1237,7 @@ static int nfs_remount(struct nfsmount_info *mi)
+ {
+ 	if (nfs_sys_mount(mi, mi->options))
+ 		return EX_SUCCESS;
+-	mount_error(mi->spec, mi->node, errno);
++	mount_error(mi->spec, mi->node, errno, mi->options);
+ 	return EX_FAIL;
+ }
+ 
+@@ -1261,7 +1261,7 @@ static int nfsmount_start(struct nfsmount_info *mi)
+ 	 * NFS v2 has been deprecated
+ 	 */
+ 	if (mi->version.major == 2) {
+-		mount_error(mi->spec, mi->node, EOPNOTSUPP);
++		mount_error(mi->spec, mi->node, EOPNOTSUPP, mi->options);
+ 		return EX_FAIL;
+ 	}
+ 
+diff --git a/utils/mount/utils.c b/utils/mount/utils.c
+index 865a4a05f3fc..b7562a474f88 100644
+--- a/utils/mount/utils.c
++++ b/utils/mount/utils.c
+@@ -123,15 +123,15 @@ int chk_mountpoint(const char *mount_point)
+ 	struct stat sb;
+ 
+ 	if (stat(mount_point, &sb) < 0){
+-		mount_error(NULL, mount_point, errno);
++		mount_error(NULL, mount_point, errno, NULL);
+ 		return 1;
+ 	}
+ 	if (S_ISDIR(sb.st_mode) == 0){
+-		mount_error(NULL, mount_point, ENOTDIR);
++		mount_error(NULL, mount_point, ENOTDIR, NULL);
+ 		return 1;
+ 	}
+ 	if (getuid() != 0 && geteuid() != 0 && access(mount_point, X_OK) < 0) {
+-		mount_error(NULL, mount_point, errno);
++		mount_error(NULL, mount_point, errno, NULL);
+ 		return 1;
+ 	}
+ 
 -- 
-2.34.1
+2.43.5
 
 
