@@ -1,114 +1,146 @@
-Return-Path: <linux-nfs+bounces-6550-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6551-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13B1197C637
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 10:50:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EC3697C982
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 14:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B436A1F26081
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 08:50:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4506B228F6
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Sep 2024 12:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F4A719882F;
-	Thu, 19 Sep 2024 08:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE10219D8BB;
+	Thu, 19 Sep 2024 12:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LQAuY8fW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRahBlhY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6280C1922D6
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 08:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBA119EEBD
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 12:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726735841; cv=none; b=EbCnuUnAMmcphj0DbOHdUAc28FW8mpAu7qkat+coM7xWZOVuDQWxYfM1rYSXce5wmGNOs1pup0mtxCptguWI5pR4toK4LQtSsJE4nxDqjSsXhd0wb00iJD4sv/uHAf2LKkpFEzI7GRoJlr5iSkGlwX/LySCRc64adY5+nF/dItA=
+	t=1726750247; cv=none; b=KVKZQOOZs9ePSS/hi6zmG9mu8FEf2pFQSt+vwz62vtu68f2+RRV6wplk2dz/xzoGDJOsFdETzB0k2Uy5qNuxe9MJ039ciPSbSRGo2xK7C7zFCnpJn0cZua4vI1J9F2kRKD5SYm9L96bTDectlA6OfNkPCmJh375MBs0A9rBo8wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726735841; c=relaxed/simple;
-	bh=LrJw1AhJz7sTYbKD7COLqvtv/WahjF0UZSPF3n8L1AQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=m+XTVfYnvG/eVrHIJ7AW17Cfq1JKrkIDwuk/QJE6bzSTqMU/G98FN505Z0LY0zEkfpV8WOQ2922a+a6YynBjQCNZbsOzQNnf02aS1SsQXsq6TnsWydgzMCDzs+Uipj9e8YQ8aacXgLnr/GU+eTru5612YZz0HciF4I5xIG/uW8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LQAuY8fW; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5366fd6fdf1so769081e87.0
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 01:50:39 -0700 (PDT)
+	s=arc-20240116; t=1726750247; c=relaxed/simple;
+	bh=rn1b1N+sqmeh50lmxKgle8XRZU8t5NmfGALSQ1zoWI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WRmXN0mYZE6QItsnvis4VN6K0tLJZinAc5SXSusWOfqJ8IlkJjVJ58ay9VAuS98h+PqAFT6lE9kG7IX2DDghf2KDVzFKXOXU4avStpiyqKs6x0d645Qt5OHznVHH6W7Ah19FiXpcaA6X+gLOsnDZPkeEYyvzAnjMnnQa+mQTxkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRahBlhY; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5c3ed267a7bso1039448a12.3
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Sep 2024 05:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726735837; x=1727340637; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5aXfImNByrHCJYvhykUtqf/Cf9grdz1yZdroYSEnzd0=;
-        b=LQAuY8fW4NCyS1obfBddcWXm5q8x9UBkqWcTcNuq39VQ8DvPzDRgXGepireJAxFcZb
-         v1HbwpN7ruzLIsRW09u3lo2knxxJ7PRZ5kMdC/FH/GOJMv3MGnBYY+eQ7jf1TpXbBqcJ
-         T9AS8XOPIQnk2LVF37fDiEjldh+c/oBO27fvXVynZPIYx8CWceuIFQfHQTuWMyaNTPUB
-         UlFQ7y8Z/WD/qtJYvQSV7VeBKUn84c7W6aKdp6hDLi6ig3u+yrMYkq262AfSVj3mrVqn
-         NuIiAC5zxUHg3WRXc6nY4kc3gago+0/XPPNZKBWcsnGYFTbHCm0Wlf+eqVN6QSRAnOWW
-         oLEw==
+        d=gmail.com; s=20230601; t=1726750245; x=1727355045; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUszBk09m+acU4PcYnDvcpY3szYDX1CxA6maKBwrVas=;
+        b=GRahBlhYxw5R3rotR1TWa1M0iPG5EZkv+Fkx6Aonoc5b7mrRfmgzJSa9sH57oEGG3e
+         i3vV3KcA+FSoCWQ/dDzVf7Rs9Y848c4F6K/Ijh9ACU1SG+J15jQFfcX2I8Sp+nx5ck1h
+         15RjBENAjRyUCy2jV/tjSTqm9T7tywz5lr3QwboUG9YcWhOzraKB7zEspBlLR733qFZM
+         +IYzPenimGfTuOmYXu3udpseztjyJKo56HkRIc2t3BVf7fvZzfagC0bklxfe760POANb
+         WWGPW39bbFI+Ag6Wg8ZYWjBMM+Rir0gdYvlwqqr9wAZb6x1/G/fRrDLrW+Okas5HGxu5
+         T2Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726735837; x=1727340637;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5aXfImNByrHCJYvhykUtqf/Cf9grdz1yZdroYSEnzd0=;
-        b=boJRmKlPjUDQzRt3Lg/J+n5KJ7CDLzdb8WQ3Qd8KCVhLaynv/rM2Vp8tm4rkFUAxcn
-         E4/LtlkoLxMof4bN6R+Kuy6vGwYDWA27fVYcaORkBVMQ9cby0cR9d6xVBnk6Rn6RjluO
-         yxqtvxaSrijDDV3tgcUxIag9To463gOctahS1O10GV7XvYMQcq9I498Bn/w1EvKItFj/
-         03Zb9pqHQPm6RG1NQh5hhJ31xGE1NzjZhtroM6IaX7QyV/Ni/NQxYHQmuMqQ+aflCZXK
-         6EL6gSp+Yb+jN3Ru7WWx/cYOehZ3nHD+FxyHwp3UyPc7OpnsmgNGmGTuoIeTb2OqkenL
-         fUlA==
-X-Forwarded-Encrypted: i=1; AJvYcCX84xo4CYE3hLPYFKz6TIXvyd34JEjwi7OPVGT/X6HslUFxSAaEubX796pK4QDyD0555X55a64bzgM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbG6MZw9APJkiYqrVr4ejJHd4Gd3IwPQaHKycrZicl8NA9jnzp
-	8oKWuA1I0Ry2lnjiL/zf6nMOAJMkVMG14fZ4LEm32/hYvNc9hPjP/LFCkViQE2Q=
-X-Google-Smtp-Source: AGHT+IHSchKP46mdULrhq3wm2RZ+wk7t1utwjuIcumCt9aQiICck+yHRyOAOwRnLE0p5ES06sz5eOQ==
-X-Received: by 2002:a05:6512:1194:b0:530:dab8:7dd6 with SMTP id 2adb3069b0e04-53678ff48d5mr12195614e87.50.1726735837431;
-        Thu, 19 Sep 2024 01:50:37 -0700 (PDT)
-Received: from localhost ([83.68.141.146])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c42bb533besm5833278a12.26.2024.09.19.01.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2024 01:50:36 -0700 (PDT)
-Date: Thu, 19 Sep 2024 11:50:33 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, Benny Halevy <bhalevy@panasas.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] SUNRPC: Fix integer overflow in decode_rc_list()
-Message-ID: <a13af2ba-5f33-4e9c-905c-0e0369daea6c@suswa.mountain>
+        d=1e100.net; s=20230601; t=1726750245; x=1727355045;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IUszBk09m+acU4PcYnDvcpY3szYDX1CxA6maKBwrVas=;
+        b=v7aVhhh7BH3I5Yvt3zlPOt07BsIMnkTghD0Djy+y+HNWRLQan9nin4Jioxxu6MkNkv
+         Td62hf6EMjGI7qc+7zerQzFcZXWCWS3YVNf4W3jxe9Wg+Siw08ABYLYYledtA7CwDakj
+         UzOSFO4HkX+3OOQLMyQJHDZsgdO1ET9EdvbMBPH2I0rGhzJ2vHdlq97YRfw1UhjvaFWz
+         aWg+5aC82/NR667p78yYcb2GIRgWTELKFQEFq8s1Yu+hU2XHiRdrRjIE98Ylkm3P+nvK
+         bZspW6csygpgqp/a1Yd1kRHs27MwBMXi6PQd+woS1zTozc4v3MDvcQHMRY5FVYL3S8yP
+         HHFg==
+X-Gm-Message-State: AOJu0YzAZ98uZnv6656YRMRxCOZeEXH2OuAVN+J7HLv1h73C9yr04iOs
+	kiqBqgoDcsC4O/G6apcuaEEJdEJRf4Xx5M34OX50AqtGsk6HVrHdY77xC7+Yh3sL15gfiIpP6cW
+	8/+unLcWb78nqqQ/E37BL+CDyYj8=
+X-Google-Smtp-Source: AGHT+IFyUclM+jMvBeAYvftC3+Xe6bYBlUD7bCP9gnZAzr8Ixoh7eA8KLPIUosWLXM0Pk2IUUDYM9tI/cDUGaulXiS4=
+X-Received: by 2002:a05:6402:2746:b0:5c4:9e2:a21d with SMTP id
+ 4fb4d7f45d1cf-5c413e14171mr23077131a12.12.1726750244486; Thu, 19 Sep 2024
+ 05:50:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20240811172607.7804-1-cel@kernel.org>
+In-Reply-To: <20240811172607.7804-1-cel@kernel.org>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Thu, 19 Sep 2024 14:50:08 +0200
+Message-ID: <CALXu0UfkjJWrzQo0Ovb-RNBJ08xBDZbKUBPmx8J8FXMVpLCAmQ@mail.gmail.com>
+Subject: Re: [PATCH] NFSD: Fix NFSv4's PUTPUBFH operation
+To: cel@kernel.org
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
+	Dan Shelton <dan.f.shelton@gmail.com>, Roland Mainz <roland.mainz@nrubsig.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The math in "rc_list->rcl_nrefcalls * 2 * sizeof(uint32_t)" could have an
-integer overflow.  Add bounds checking on rc_list->rcl_nrefcalls to fix
-that.
+Could this bugfix please be added to the Linux 6.6 LTS branch too?
 
-Fixes: 4aece6a19cf7 ("nfs41: cb_sequence xdr implementation")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-From static analysis.
+Ced
 
- fs/nfs/callback_xdr.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Sun, 11 Aug 2024 at 19:26, <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> According to RFC 8881, all minor versions of NFSv4 support PUTPUBFH.
+>
+> Replace the XDR decoder for PUTPUBFH with a "noop" since we no
+> longer want the minorversion check, and PUTPUBFH has no arguments to
+> decode. (Ideally nfsd4_decode_noop should really be called
+> nfsd4_decode_void).
+>
+> PUTPUBFH should now behave just like PUTROOTFH.
+>
+> Reported-by: Cedric Blancher <cedric.blancher@gmail.com>
+> Fixes: e1a90ebd8b23 ("NFSD: Combine decode operations for v4 and v4.1")
+> Cc: Dan Shelton <dan.f.shelton@gmail.com>
+> Cc: Roland Mainz <roland.mainz@nrubsig.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 42b41d55d4ed..adfafe48b947 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -1245,14 +1245,6 @@ nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+>         return nfs_ok;
+>  }
+>
+> -static __be32
+> -nfsd4_decode_putpubfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *p)
+> -{
+> -       if (argp->minorversion == 0)
+> -               return nfs_ok;
+> -       return nfserr_notsupp;
+> -}
+> -
+>  static __be32
+>  nfsd4_decode_read(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+>  {
+> @@ -2374,7 +2366,7 @@ static const nfsd4_dec nfsd4_dec_ops[] = {
+>         [OP_OPEN_CONFIRM]       = nfsd4_decode_open_confirm,
+>         [OP_OPEN_DOWNGRADE]     = nfsd4_decode_open_downgrade,
+>         [OP_PUTFH]              = nfsd4_decode_putfh,
+> -       [OP_PUTPUBFH]           = nfsd4_decode_putpubfh,
+> +       [OP_PUTPUBFH]           = nfsd4_decode_noop,
+>         [OP_PUTROOTFH]          = nfsd4_decode_noop,
+>         [OP_READ]               = nfsd4_decode_read,
+>         [OP_READDIR]            = nfsd4_decode_readdir,
+> --
+> 2.45.2
+>
 
-diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-index 6df77f008d3f..fdeb0b34a3d3 100644
---- a/fs/nfs/callback_xdr.c
-+++ b/fs/nfs/callback_xdr.c
-@@ -375,6 +375,8 @@ static __be32 decode_rc_list(struct xdr_stream *xdr,
- 
- 	rc_list->rcl_nrefcalls = ntohl(*p++);
- 	if (rc_list->rcl_nrefcalls) {
-+		if (unlikely(rc_list->rcl_nrefcalls > xdr->buf->len))
-+			goto out;
- 		p = xdr_inline_decode(xdr,
- 			     rc_list->rcl_nrefcalls * 2 * sizeof(uint32_t));
- 		if (unlikely(p == NULL))
+
 -- 
-2.34.1
-
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
