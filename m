@@ -1,176 +1,146 @@
-Return-Path: <linux-nfs+bounces-6564-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6565-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B67D697D2E3
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 10:40:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3828897D491
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 13:10:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF048B2080C
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 08:40:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F189C285B99
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 11:10:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BB34C62B;
-	Fri, 20 Sep 2024 08:40:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF9213C67A;
+	Fri, 20 Sep 2024 11:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAUSxmJp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDfdLhjd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915F17DA73;
-	Fri, 20 Sep 2024 08:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE5613D897
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2024 11:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726821615; cv=none; b=nChBRatQz3/zmaRL3euXSUoqe2s2+HE2T7NLOhhU4/JcLrVzZO0BUN+U34rgcexVbtI8FjlOgLQj7BtdabenNpV+TR3K0Xuja6GJR+LaLbhLH/MbHkMMp2avtqpnU6qPJyl7vp4qJYeiKqIVzI0TRVBNgHYmSjS+qTwRELsEmSw=
+	t=1726830608; cv=none; b=cfJ7nMUYAPxKJPUcFw3GDpfgYTM/Kk0CiDgbyeId139DZ4YHyvQGEq5IgJdzIKBdGCVGdAjyEzP2bW8nIIIHrJ77qmncgtTRMv6CibOXH3T1lMvpZ9uU9o37OWeaLMfyjO8vEJqHN71lh2DaBx4/U7d+TN2n1IJblJoU9kOykSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726821615; c=relaxed/simple;
-	bh=AxUg6QefsabFNqLGqyUOTnYsid3/1r9Y7B2steSm9jw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZwseQZs9GamTsCkkdVHqHGUniHC9KYzf3gzNE7taNGVeSxJeG4WmnyZi6A+ULg9KA/PuGWtPKppge84lErNgyV1+srK+7Gpv50pil6rqxdHLQy5Al5DFaHDgP7z7nvsakwWgf65cN7OY0DMpyey/r7rxrfk7+DWKi3UEXYLku5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAUSxmJp; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4582760b79cso9599001cf.2;
-        Fri, 20 Sep 2024 01:40:13 -0700 (PDT)
+	s=arc-20240116; t=1726830608; c=relaxed/simple;
+	bh=SP8iz223UYOSo5BzrpVFkVxPNjsWT3Y4xNAfrH2OA8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eDysdoauGR9fPM0fjwlCJAzUWjC/4HRkvxivPHGIsNAHpN+mTbAR+q7MhEkAj0wuip9za5orn6KCLrew6cdwUVR3rcGEqD05jWLkDxM/FAFDkueNFKKJXUX7YaEYXBwkBDfS8L+btnoRcGzfzctblOonyvkeIYngIL/nTuXgr/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kDfdLhjd; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f029e9c9cfso21685191fa.2
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2024 04:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726821612; x=1727426412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9E6JgcYFVVNW1/1pRJtZzP4w4R7pr9GW6NjH0nmdKeo=;
-        b=GAUSxmJpgIYhQJPlONK/T9wRKYL7/dnrpUC504EJxt0a6ld28BFn8ZCwTWwoFV0kBD
-         O8/gzwOGH2gePI2NFaCByCRnJYnndnwiXo4uxaF7e+BymbKH82Hyal87KDoZwmUL4lLc
-         NB5O+Js5lN6fvIV/MaylfZpOgiy6B4zhQqqJ2DNdmZeaMVsOA7fPRCtgZ7ZFUjRMpa6r
-         mhHIse5HyrER2M7UI6QCsj/h+9nmrekMyC4VAb9v5FblIZwhcioAH4oAh4t9wRFjQMI2
-         TLx/aI2/lzywUEh1VvIdvDuvIFZQY/uyDpI36xZANCHLRcU6T6rTZOnmJUH3Nt0rYbMN
-         DUxw==
+        d=linaro.org; s=google; t=1726830605; x=1727435405; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5EHjGRXCWgZwp1krkmlisCOVeWPEKWd2TIUOSRIDt8I=;
+        b=kDfdLhjdBeOydgV97U6nK5UAgSczZtr7yRru4NBKNrF6QwqmYVduDpJwyIQ+FPo3AO
+         9uIr95jJCMAa4OETbEt8/g7g3aoxigVNKYiB+xp214OMOjURWy9D5C2KqtJO9dOLtbyH
+         yfweLpkd4nRIXHz7ZjtxzO8EOGKh0+zXYXwYw03BAlFbS1dba5WnD/JNWcwyFLsuW3zp
+         Rr4sFS93+2Z8sFpaJBn4fM+ClwbLtRFgSJAGsJ3y2H2WpHh5gAKZgHkJUA93TQrqBOYM
+         vjcP4OZGnWoIe+SkMtmnuB9U3DkFhTGeMnQdjfRWMe9IWFxbG1QHwg3ZTNjYGjpOBOMu
+         kUBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726821612; x=1727426412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9E6JgcYFVVNW1/1pRJtZzP4w4R7pr9GW6NjH0nmdKeo=;
-        b=tZjK3e9VTTJGUrkcKhlMVXuW6JdGkp56FKSb9knm8YgqS1Ehm4HIzvyIQWyDOjJio1
-         5wrVeBFf4eDTF+GvebT/5WswHGoxdj7nq/vCV3gTZwEqRDIjMSGzP1fTurh+1f02p3Bj
-         oB24LfDZX7y1fIDQ0nhG7meZavqonEtXYMXqGRVRWTNYcXGuGUxqx6RdlnzrJIwE8GbY
-         Qq+9BtYnjGbmWVLtNH/dmH72Ciuix2PvuXTS/rPsgHMd8VAbtCdYXAXUHaumhImhnRjI
-         PKNNNWuKvS8UPmosxCJK+EyvKqFN41N4oBkiqOTqoUJHErm3wko08LVpYnMjlclogYLl
-         JHpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXH2vOzyclXoMSca3ul/GNZQfhA2mNCr0/A/On9318XpTtk/m597ApRzpvOkcvL0dRUHRqIUVxgQgeM@vger.kernel.org, AJvYcCXv1KITd++geh97nAAcMDy/okhO+NCY6p1ch7mRPfy55N4Fh+Xczj58+PNXX0UktP7ON9p79NlSFrOI8su1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHyvI6bZHg9YkyCmSCuQ5q70HsVs09ECgtsyBHR6cK9iXT9vJs
-	+qI71YIPgYD7kC2O2ls08XwgviQr2kVwimiIpp+9RNOl0aN4pzt/IxOQEjNR7fLH/VhZ+6KuYXL
-	Y+c96/TXc987YpyysQ1DtMeykoB0=
-X-Google-Smtp-Source: AGHT+IH5d4jmLlXQ/0NAkUKfgjrMIvTe1uTRVX20M4bbYX1s8cyhGRLHvCYeLx6j674oEAu43POQ3CvdGifG+YgxU80=
-X-Received: by 2002:a05:622a:1a1c:b0:458:2b7b:c453 with SMTP id
- d75a77b69052e-45b226afd9emr19153471cf.4.1726821612176; Fri, 20 Sep 2024
- 01:40:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726830605; x=1727435405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5EHjGRXCWgZwp1krkmlisCOVeWPEKWd2TIUOSRIDt8I=;
+        b=cAnwirP4gpJPGWb16DuHFeESy0bwkCdr+DsN6tCdbDkxb08MvWoqTh8siR9XHEla5L
+         SEMXQ3O0vGmFOlW+gBK2KIN5H687OCmX0yIvkiQoFFSG1IyU1DQc2+mEQDtLLHzb3kW2
+         H0S8ll6IcnNk6BbtUOdyyqXIR6Um28qQdq8BdrNcdanZINUaM+uEBnOp8CaIurBB9EfH
+         x14pCGUOnrR5hA/hdfW2A9PREdi/Nd2QECAF+xonBhYXCk5PD2Jao/Rkj9zzPyE+H774
+         jrGqKtjvV17yHKCD55t6cwNjy5CEVV2awRnvsstjBghyt6bAEfnP+Rhhz7WQIJhPiNGv
+         ZGUw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Wvx0rJXtHTgyCUWRwfiJcCf9OnUNHQmy01FR3CR1QBxrRb3QK+SaiIvOaOPeBmvWhUBU9SS/Tsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqqIdHkBLY/MXFKWF0Y1OubnRKVsJhrYzFB6IHA++/ByhixVlu
+	p+eZvO1SFOMU3z0OB/Ido2fOm8lsQa0Vx54snDze+nv2/+oSutgcJItgCo4xvX4=
+X-Google-Smtp-Source: AGHT+IFNGKP6ElDwKV6SnNuyGO0cfMJ44eZrIuCs6c8/FaQcThhnYhR3j4iMkCX5GmVhPiPCfnOd3A==
+X-Received: by 2002:a05:6512:39c4:b0:536:a4f1:d214 with SMTP id 2adb3069b0e04-536ac2e705bmr2027275e87.19.1726830604714;
+        Fri, 20 Sep 2024 04:10:04 -0700 (PDT)
+Received: from localhost ([83.68.141.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9061096762sm835762266b.37.2024.09.20.04.10.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2024 04:10:03 -0700 (PDT)
+Date: Fri, 20 Sep 2024 14:10:02 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: prevent integer overflow in
+ decode_cb_compound4res()
+Message-ID: <183154d2-cb65-4161-a737-394aba9c1d43@suswa.mountain>
+References: <ed14a180-56c8-40f2-acf7-26a787eb3769@suswa.mountain>
+ <C185CD71-0AF6-4D83-AEE5-F8C87EEDE86B@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240919140611.1771651-1-amir73il@gmail.com> <20240919140611.1771651-2-amir73il@gmail.com>
- <9ab958370d5210394e5e6beaad0e788d71c42834.camel@kernel.org> <1f8eb177bf7aa09db96c32451a14a8cdb7e31649.camel@kernel.org>
-In-Reply-To: <1f8eb177bf7aa09db96c32451a14a8cdb7e31649.camel@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 20 Sep 2024 10:40:00 +0200
-Message-ID: <CAOQ4uxj5c13VzDOPyZV0nkd7cqCPfXVqv_sRB5Qvi1da+qGv8Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] fs: name_to_handle_at() support for connectable
- file handles
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C185CD71-0AF6-4D83-AEE5-F8C87EEDE86B@oracle.com>
 
-On Fri, Sep 20, 2024 at 9:36=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Fri, 2024-09-20 at 09:13 +0200, Jeff Layton wrote:
-> > On Thu, 2024-09-19 at 16:06 +0200, Amir Goldstein wrote:
-> > > nfsd encodes "connectable" file handles for the subtree_check feature=
-.
-> > > So far, userspace nfs server could not make use of this functionality=
-.
-> > >
-> > > Introduce a new flag AT_HANDLE_CONNECTABLE to name_to_handle_at(2).
-> > > When used, the encoded file handle is "connectable".
-> > >
-> > > Note that decoding a "connectable" file handle with open_by_handle_at=
-(2)
-> > > is not guarandteed to return a "connected" fd (i.e. fd with known pat=
-h).
-> > > A new opt-in API would be needed to guarantee a "connected" fd.
-> > >
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > ---
-> > >  fs/fhandle.c               | 24 ++++++++++++++++++++----
-> > >  include/uapi/linux/fcntl.h |  1 +
-> > >  2 files changed, 21 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> > > index 8cb665629f4a..956d9b25d4f7 100644
-> > > --- a/fs/fhandle.c
-> > > +++ b/fs/fhandle.c
-> > > @@ -31,6 +31,11 @@ static long do_sys_name_to_handle(const struct pat=
-h *path,
-> > >     if (!exportfs_can_encode_fh(path->dentry->d_sb->s_export_op, fh_f=
-lags))
-> > >             return -EOPNOTSUPP;
-> > >
-> > > +   /* Do not encode a connectable handle for a disconnected dentry *=
-/
-> > > +   if (fh_flags & EXPORT_FH_CONNECTABLE &&
-> > > +       path->dentry->d_flags & DCACHE_DISCONNECTED)
-> > > +           return -EACCES;
-> > > +
-> >
-> > I'm not sure about EACCES here. That implies that if you had the right
-> > creds then this would work. DCACHE_DISCONNECTED has nothing to do with
-> > permissions though. Maybe -EINVAL instead since getting a disconnected
-> > dentry here would imply that @path is somehow bogus?
-> >
-> > Given how this function is used, will we ever see a disconnected dentry
-> > here? The path comes from userland in this case, so I don't think it
-> > can ever be disconnected. Maybe a WARN_ON_ONCE or pr_warn would be
-> > appropriate in this case too?
-> >
+On Thu, Sep 19, 2024 at 02:02:19PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Sep 19, 2024, at 1:12 AM, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > 
+> > If "length" is >= U32_MAX - 3 then the "length + 4" addition can result
+> > in an integer overflow.  The impact of this bug is not totally clear to
+> > me, but it's safer to not allow the integer overflow.
+> > 
+> > Check that "length" is valid right away before doing any math.
+> > 
+> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > v2: Check that "len" is valid instead of just checking for integer
+> >    overflows.
+> > 
+> > fs/nfsd/nfs4callback.c | 2 ++
+> > 1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > index 43b8320c8255..0f5b7b6fba74 100644
+> > --- a/fs/nfsd/nfs4callback.c
+> > +++ b/fs/nfsd/nfs4callback.c
+> > @@ -317,6 +317,8 @@ static int decode_cb_compound4res(struct xdr_stream *xdr,
+> > hdr->status = be32_to_cpup(p++);
+> > /* Ignore the tag */
+> > length = be32_to_cpup(p++);
+> > + if (unlikely(length > xdr->buf->len))
+> > + goto out_overflow;
+> > p = xdr_inline_decode(xdr, length + 4);
+> > if (unlikely(p == NULL))
+> > goto out_overflow;
+> > -- 
+> > 2.34.1
+> > 
+> 
+> Hi Dan, I've already gone with
+> 
+> https://lore.kernel.org/linux-nfs/172658972371.2454.15715383792386404543.stgit@oracle-102.chuck.lever.oracle.com.nfsv4.dev/T/#u
+> 
+> Let me know if that doesn't make sense.
 
-Yes, I agree (with some additions below...)
+Oh, sorry, I got mixed up which things were patched.  That looks good.
+The truth is I always prefer when people give me a reported by tag so I
+don't have to write a v2 patch.  It just saves a back and forth.
+Thanks!
 
->
-> Oh, I guess you can get a disconnected dentry here.
->
-> You could call open_by_handle_at() for a directory fh, and then pass
-> that into name_to_handle_at().
+regards,
+dan carpenter
 
-Aha, but a disconnected directory dentry is fine, because it is
-still "connectable", so we should not fail on it.
-
->
-> Either way, this API scares me since it seems like it can just randomly
-> fail, depending on the state of the dcache. That's the worst-case
-> scenario for an API.
->
-> If you want to go through with this, you'll need to carefully document
-> what's required to make this work properly, as this has some
-> significant footguns.
->
-
-Agreed.
-
-The correct statement is that we should not get a disconnected
-non-dir dentry, as long as we do not allow AT_EMPTY_PATH,
-so if we return EINVAL for the flag combination
-AT_EMPTY_PATH | AT_HANDLE_CONNECTABLE
-we should be back to a deterministic API.
-
-As you wrote in the first email, we should never expect to
-resolve a path to a dentry that is not "connectable". Right?
-
-Thanks,
-Amir.
 
