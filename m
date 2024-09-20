@@ -1,267 +1,176 @@
-Return-Path: <linux-nfs+bounces-6563-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6564-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C0ED97D1CF
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 09:36:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B67D697D2E3
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 10:40:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF7F5284AF0
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 07:36:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF048B2080C
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 08:40:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72654D8BC;
-	Fri, 20 Sep 2024 07:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BB34C62B;
+	Fri, 20 Sep 2024 08:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PK4pXoJU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAUSxmJp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2F6487AE;
-	Fri, 20 Sep 2024 07:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915F17DA73;
+	Fri, 20 Sep 2024 08:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726817781; cv=none; b=bwvz1ax7scFotuFGl47MhmMgDNNCLpsSz0bmOgFR5IOIl0hbbTZN/uwkTM6qIzeefoPv52Jpaw41wOGKFByg+NcQvW/zFUTkSZXz9fDkCvpmd8rfiCKOIPx8M1X3okprN/Qm1tP70kozMf1pKIDCsA62QnpThKQ67lutt3RR2LY=
+	t=1726821615; cv=none; b=nChBRatQz3/zmaRL3euXSUoqe2s2+HE2T7NLOhhU4/JcLrVzZO0BUN+U34rgcexVbtI8FjlOgLQj7BtdabenNpV+TR3K0Xuja6GJR+LaLbhLH/MbHkMMp2avtqpnU6qPJyl7vp4qJYeiKqIVzI0TRVBNgHYmSjS+qTwRELsEmSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726817781; c=relaxed/simple;
-	bh=YR4pg03NL6nuT25LbAgeqe2zAdZqfsEW0BQtT7LLfmQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LaP2B0QdNVbwY8PdCXUwKFoqVQ90zNYF/Rt16+jPkr5KXcmsviE1/a5qS6J+UzkqDaSg6LV5AlOA6tQRInSEjvnkJgIj/EWsqt6ROZbSw60/ZUZxx7rCyyFSe5nJbSIgmqNYSzfeu35mFcNnSqrVl2B23SZo2UpQf+TxNrTIh5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PK4pXoJU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1258C4CECE;
-	Fri, 20 Sep 2024 07:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726817781;
-	bh=YR4pg03NL6nuT25LbAgeqe2zAdZqfsEW0BQtT7LLfmQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PK4pXoJUuP7ySmWf5MBjht0Cxo+vA+llDPcP0uGjaCM2DhewitF+yDemx+/zwkVBM
-	 v8p4gjGqofOgHO2pvlKEtzKXgi9HPq8qUtsJm98DZckY1zb51d7HkZmAGJrqnHBLsQ
-	 pwHqP3tLTO2TRD96e8q43XKafVnQufbAp3HxY1CrD0+wmbEZ/KHnxwK5Ci9MORxANK
-	 yseN1gUaTdAWg3ZeClQv91lnuOWSFbQAeFE1A94BPHbzJLSb9cL+oGRk3BxJ0i3c3x
-	 f5uYzlVsj39szDztqtLpElH819YlLk2HUkSoHIGsG4hdCWISlikeeKkjP1eObKjfXO
-	 pkIufvNDs1eyg==
-Message-ID: <1f8eb177bf7aa09db96c32451a14a8cdb7e31649.camel@kernel.org>
-Subject: Re: [RFC PATCH 1/2] fs: name_to_handle_at() support for connectable
- file handles
-From: Jeff Layton <jlayton@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Aleksa Sarai
- <cyphar@cyphar.com>,  Chuck Lever <chuck.lever@oracle.com>,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Fri, 20 Sep 2024 09:36:17 +0200
-In-Reply-To: <9ab958370d5210394e5e6beaad0e788d71c42834.camel@kernel.org>
-References: <20240919140611.1771651-1-amir73il@gmail.com>
-	 <20240919140611.1771651-2-amir73il@gmail.com>
-	 <9ab958370d5210394e5e6beaad0e788d71c42834.camel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1726821615; c=relaxed/simple;
+	bh=AxUg6QefsabFNqLGqyUOTnYsid3/1r9Y7B2steSm9jw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZwseQZs9GamTsCkkdVHqHGUniHC9KYzf3gzNE7taNGVeSxJeG4WmnyZi6A+ULg9KA/PuGWtPKppge84lErNgyV1+srK+7Gpv50pil6rqxdHLQy5Al5DFaHDgP7z7nvsakwWgf65cN7OY0DMpyey/r7rxrfk7+DWKi3UEXYLku5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAUSxmJp; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4582760b79cso9599001cf.2;
+        Fri, 20 Sep 2024 01:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726821612; x=1727426412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9E6JgcYFVVNW1/1pRJtZzP4w4R7pr9GW6NjH0nmdKeo=;
+        b=GAUSxmJpgIYhQJPlONK/T9wRKYL7/dnrpUC504EJxt0a6ld28BFn8ZCwTWwoFV0kBD
+         O8/gzwOGH2gePI2NFaCByCRnJYnndnwiXo4uxaF7e+BymbKH82Hyal87KDoZwmUL4lLc
+         NB5O+Js5lN6fvIV/MaylfZpOgiy6B4zhQqqJ2DNdmZeaMVsOA7fPRCtgZ7ZFUjRMpa6r
+         mhHIse5HyrER2M7UI6QCsj/h+9nmrekMyC4VAb9v5FblIZwhcioAH4oAh4t9wRFjQMI2
+         TLx/aI2/lzywUEh1VvIdvDuvIFZQY/uyDpI36xZANCHLRcU6T6rTZOnmJUH3Nt0rYbMN
+         DUxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726821612; x=1727426412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9E6JgcYFVVNW1/1pRJtZzP4w4R7pr9GW6NjH0nmdKeo=;
+        b=tZjK3e9VTTJGUrkcKhlMVXuW6JdGkp56FKSb9knm8YgqS1Ehm4HIzvyIQWyDOjJio1
+         5wrVeBFf4eDTF+GvebT/5WswHGoxdj7nq/vCV3gTZwEqRDIjMSGzP1fTurh+1f02p3Bj
+         oB24LfDZX7y1fIDQ0nhG7meZavqonEtXYMXqGRVRWTNYcXGuGUxqx6RdlnzrJIwE8GbY
+         Qq+9BtYnjGbmWVLtNH/dmH72Ciuix2PvuXTS/rPsgHMd8VAbtCdYXAXUHaumhImhnRjI
+         PKNNNWuKvS8UPmosxCJK+EyvKqFN41N4oBkiqOTqoUJHErm3wko08LVpYnMjlclogYLl
+         JHpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXH2vOzyclXoMSca3ul/GNZQfhA2mNCr0/A/On9318XpTtk/m597ApRzpvOkcvL0dRUHRqIUVxgQgeM@vger.kernel.org, AJvYcCXv1KITd++geh97nAAcMDy/okhO+NCY6p1ch7mRPfy55N4Fh+Xczj58+PNXX0UktP7ON9p79NlSFrOI8su1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHyvI6bZHg9YkyCmSCuQ5q70HsVs09ECgtsyBHR6cK9iXT9vJs
+	+qI71YIPgYD7kC2O2ls08XwgviQr2kVwimiIpp+9RNOl0aN4pzt/IxOQEjNR7fLH/VhZ+6KuYXL
+	Y+c96/TXc987YpyysQ1DtMeykoB0=
+X-Google-Smtp-Source: AGHT+IH5d4jmLlXQ/0NAkUKfgjrMIvTe1uTRVX20M4bbYX1s8cyhGRLHvCYeLx6j674oEAu43POQ3CvdGifG+YgxU80=
+X-Received: by 2002:a05:622a:1a1c:b0:458:2b7b:c453 with SMTP id
+ d75a77b69052e-45b226afd9emr19153471cf.4.1726821612176; Fri, 20 Sep 2024
+ 01:40:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240919140611.1771651-1-amir73il@gmail.com> <20240919140611.1771651-2-amir73il@gmail.com>
+ <9ab958370d5210394e5e6beaad0e788d71c42834.camel@kernel.org> <1f8eb177bf7aa09db96c32451a14a8cdb7e31649.camel@kernel.org>
+In-Reply-To: <1f8eb177bf7aa09db96c32451a14a8cdb7e31649.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 20 Sep 2024 10:40:00 +0200
+Message-ID: <CAOQ4uxj5c13VzDOPyZV0nkd7cqCPfXVqv_sRB5Qvi1da+qGv8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] fs: name_to_handle_at() support for connectable
+ file handles
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-09-20 at 09:13 +0200, Jeff Layton wrote:
-> On Thu, 2024-09-19 at 16:06 +0200, Amir Goldstein wrote:
-> > nfsd encodes "connectable" file handles for the subtree_check feature.
-> > So far, userspace nfs server could not make use of this functionality.
-> >=20
-> > Introduce a new flag AT_HANDLE_CONNECTABLE to name_to_handle_at(2).
-> > When used, the encoded file handle is "connectable".
-> >=20
-> > Note that decoding a "connectable" file handle with open_by_handle_at(2=
-)
-> > is not guarandteed to return a "connected" fd (i.e. fd with known path)=
+On Fri, Sep 20, 2024 at 9:36=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> On Fri, 2024-09-20 at 09:13 +0200, Jeff Layton wrote:
+> > On Thu, 2024-09-19 at 16:06 +0200, Amir Goldstein wrote:
+> > > nfsd encodes "connectable" file handles for the subtree_check feature=
 .
-> > A new opt-in API would be needed to guarantee a "connected" fd.
-> >=20
-> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > ---
-> >  fs/fhandle.c               | 24 ++++++++++++++++++++----
-> >  include/uapi/linux/fcntl.h |  1 +
-> >  2 files changed, 21 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> > index 8cb665629f4a..956d9b25d4f7 100644
-> > --- a/fs/fhandle.c
-> > +++ b/fs/fhandle.c
-> > @@ -31,6 +31,11 @@ static long do_sys_name_to_handle(const struct path =
-*path,
-> >  	if (!exportfs_can_encode_fh(path->dentry->d_sb->s_export_op, fh_flags=
-))
-> >  		return -EOPNOTSUPP;
-> > =20
-> > +	/* Do not encode a connectable handle for a disconnected dentry */
-> > +	if (fh_flags & EXPORT_FH_CONNECTABLE &&
-> > +	    path->dentry->d_flags & DCACHE_DISCONNECTED)
-> > +		return -EACCES;
-> > +
->=20
-> I'm not sure about EACCES here. That implies that if you had the right
-> creds then this would work. DCACHE_DISCONNECTED has nothing to do with
-> permissions though. Maybe -EINVAL instead since getting a disconnected
-> dentry here would imply that @path is somehow bogus?
->=20
-> Given how this function is used, will we ever see a disconnected dentry
-> here? The path comes from userland in this case, so I don't think it
-> can ever be disconnected. Maybe a WARN_ON_ONCE or pr_warn would be
-> appropriate in this case too?
->=20
+> > > So far, userspace nfs server could not make use of this functionality=
+.
+> > >
+> > > Introduce a new flag AT_HANDLE_CONNECTABLE to name_to_handle_at(2).
+> > > When used, the encoded file handle is "connectable".
+> > >
+> > > Note that decoding a "connectable" file handle with open_by_handle_at=
+(2)
+> > > is not guarandteed to return a "connected" fd (i.e. fd with known pat=
+h).
+> > > A new opt-in API would be needed to guarantee a "connected" fd.
+> > >
+> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > ---
+> > >  fs/fhandle.c               | 24 ++++++++++++++++++++----
+> > >  include/uapi/linux/fcntl.h |  1 +
+> > >  2 files changed, 21 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/fs/fhandle.c b/fs/fhandle.c
+> > > index 8cb665629f4a..956d9b25d4f7 100644
+> > > --- a/fs/fhandle.c
+> > > +++ b/fs/fhandle.c
+> > > @@ -31,6 +31,11 @@ static long do_sys_name_to_handle(const struct pat=
+h *path,
+> > >     if (!exportfs_can_encode_fh(path->dentry->d_sb->s_export_op, fh_f=
+lags))
+> > >             return -EOPNOTSUPP;
+> > >
+> > > +   /* Do not encode a connectable handle for a disconnected dentry *=
+/
+> > > +   if (fh_flags & EXPORT_FH_CONNECTABLE &&
+> > > +       path->dentry->d_flags & DCACHE_DISCONNECTED)
+> > > +           return -EACCES;
+> > > +
+> >
+> > I'm not sure about EACCES here. That implies that if you had the right
+> > creds then this would work. DCACHE_DISCONNECTED has nothing to do with
+> > permissions though. Maybe -EINVAL instead since getting a disconnected
+> > dentry here would imply that @path is somehow bogus?
+> >
+> > Given how this function is used, will we ever see a disconnected dentry
+> > here? The path comes from userland in this case, so I don't think it
+> > can ever be disconnected. Maybe a WARN_ON_ONCE or pr_warn would be
+> > appropriate in this case too?
+> >
 
-Oh, I guess you can get a disconnected dentry here.
+Yes, I agree (with some additions below...)
 
-You could call open_by_handle_at() for a directory fh, and then pass
-that into name_to_handle_at().
+>
+> Oh, I guess you can get a disconnected dentry here.
+>
+> You could call open_by_handle_at() for a directory fh, and then pass
+> that into name_to_handle_at().
 
-Either way, this API scares me since it seems like it can just randomly
-fail, depending on the state of the dcache. That's the worst-case
-scenario for an API.
+Aha, but a disconnected directory dentry is fine, because it is
+still "connectable", so we should not fail on it.
 
-If you want to go through with this, you'll need to carefully document
-what's required to make this work properly, as this has some
-significant footguns.
+>
+> Either way, this API scares me since it seems like it can just randomly
+> fail, depending on the state of the dcache. That's the worst-case
+> scenario for an API.
+>
+> If you want to go through with this, you'll need to carefully document
+> what's required to make this work properly, as this has some
+> significant footguns.
+>
 
-=20
-> >  	if (copy_from_user(&f_handle, ufh, sizeof(struct file_handle)))
-> >  		return -EFAULT;
-> > =20
-> > @@ -45,7 +50,7 @@ static long do_sys_name_to_handle(const struct path *=
-path,
-> >  	/* convert handle size to multiple of sizeof(u32) */
-> >  	handle_dwords =3D f_handle.handle_bytes >> 2;
-> > =20
-> > -	/* we ask for a non connectable maybe decodeable file handle */
-> > +	/* Encode a possibly decodeable/connectable file handle */
-> >  	retval =3D exportfs_encode_fh(path->dentry,
-> >  				    (struct fid *)handle->f_handle,
-> >  				    &handle_dwords, fh_flags);
-> > @@ -109,15 +114,26 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, cons=
-t char __user *, name,
-> >  {
-> >  	struct path path;
-> >  	int lookup_flags;
-> > -	int fh_flags;
-> > +	int fh_flags =3D 0;
-> >  	int err;
-> > =20
-> >  	if (flag & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH | AT_HANDLE_FID |
-> > -		     AT_HANDLE_MNT_ID_UNIQUE))
-> > +		     AT_HANDLE_MNT_ID_UNIQUE | AT_HANDLE_CONNECTABLE))
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * AT_HANDLE_FID means there is no intention to decode file handle
-> > +	 * AT_HANDLE_CONNECTABLE means there is an intention to decode a
-> > +	 * connected fd (with known path), so these flags are conflicting.
-> > +	 */
-> > +	if (flag & AT_HANDLE_CONNECTABLE && flag & AT_HANDLE_FID)
-> >  		return -EINVAL;
-> > +	else if (flag & AT_HANDLE_FID)
-> > +		fh_flags |=3D EXPORT_FH_FID;
-> > +	else if (flag & AT_HANDLE_CONNECTABLE)
-> > +		fh_flags |=3D EXPORT_FH_CONNECTABLE;
-> > =20
-> >  	lookup_flags =3D (flag & AT_SYMLINK_FOLLOW) ? LOOKUP_FOLLOW : 0;
-> > -	fh_flags =3D (flag & AT_HANDLE_FID) ? EXPORT_FH_FID : 0;
-> >  	if (flag & AT_EMPTY_PATH)
-> >  		lookup_flags |=3D LOOKUP_EMPTY;
-> >  	err =3D user_path_at(dfd, name, lookup_flags, &path);
-> > diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> > index 87e2dec79fea..56ff2100e021 100644
-> > --- a/include/uapi/linux/fcntl.h
-> > +++ b/include/uapi/linux/fcntl.h
-> > @@ -153,6 +153,7 @@
-> >  					   object identity and may not be
-> >  					   usable with open_by_handle_at(2). */
-> >  #define AT_HANDLE_MNT_ID_UNIQUE	0x001	/* Return the u64 unique mount I=
-D. */
-> > +#define AT_HANDLE_CONNECTABLE	0x002	/* Request a connectable file hand=
-le */
-> > =20
-> >  #if defined(__KERNEL__)
-> >  #define AT_GETATTR_NOSEC	0x80000000
->=20
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
+Agreed.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+The correct statement is that we should not get a disconnected
+non-dir dentry, as long as we do not allow AT_EMPTY_PATH,
+so if we return EINVAL for the flag combination
+AT_EMPTY_PATH | AT_HANDLE_CONNECTABLE
+we should be back to a deterministic API.
+
+As you wrote in the first email, we should never expect to
+resolve a path to a dentry that is not "connectable". Right?
+
+Thanks,
+Amir.
 
