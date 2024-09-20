@@ -1,59 +1,63 @@
-Return-Path: <linux-nfs+bounces-6578-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6579-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B79ED97D9C4
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 21:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AD6997D9C5
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 21:13:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C5A0283736
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 19:12:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B9A0283708
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Sep 2024 19:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094693FB3B;
-	Fri, 20 Sep 2024 19:12:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4566013D26B;
+	Fri, 20 Sep 2024 19:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gqei/Ung"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggAS5iCO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686A224CC
-	for <linux-nfs@vger.kernel.org>; Fri, 20 Sep 2024 19:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105A5224CC;
+	Fri, 20 Sep 2024 19:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726859519; cv=none; b=m4VoKocoW74+VuvnYzRjWV0eunydXeeO/GG/qpDTzQ1KUjL5kyUmZtKrjQ7yt7skO3KomOOXDpQge5FyvED2aVwPI+QSI/e29oRu4yc/ZTc/kKZlsMS8+pKNYSBpNPZS+aQu59AP29PPDg99VwtpVhBQmeNkhTgwi67d10tP68o=
+	t=1726859616; cv=none; b=YbBiTnjMWkST1HQkpUpI6mCbjK4Y7keKa1JhCoVK692TkvMUx1Jz5hucu5yTQlcnXFGhLXPK90Ex1TJU9bONDukjBnSLrrcf7wMFiWRgt0PZaG1eDoIYPN115nQb8vwLDII7Y1bzOeSpwmul+M7+tGqk4aGFbP/xAX4n5h4YAIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726859519; c=relaxed/simple;
-	bh=DikCxhvFzsC1LFUqnZdgg+ZhWeiqqBKHzLtQwJP74u0=;
+	s=arc-20240116; t=1726859616; c=relaxed/simple;
+	bh=dmrBVZBub6z8m6i4sdtUOc56DzJE9mt3FneIdi6cMMM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KTsuuSyMBsVQdNY5NOUy/JuOW1IQuLfnObeHWH0hO73ujL2aF19UKywsbwaXguFa9Ubp7DD/Yopd6eX8avoCuAXhVx4tgAbzaL59r6o0aopkd57MJDG6O23ow1T4L1Px2visMoU32c2MnGJy7ZYwDNnhuGTrs0snZW+ecC98Grg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gqei/Ung; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77ECBC4CEC3;
-	Fri, 20 Sep 2024 19:11:58 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ObsbSmG+Kw0OpKYls8PLYgK7qYXE95Tb/4RUec+H50b6qmVza3hVd7oRFS4QayOOG+GARTllU750kmlq7EHeyve8ldnMpKzAzCkT5xgVm+QcEVMBSbdYYTIpHQX1LWGZuGED38Sqgir7uO+Y142NtLGXQn+VZ30PdA/zfamZcPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggAS5iCO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4BEC4CEC3;
+	Fri, 20 Sep 2024 19:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726859519;
-	bh=DikCxhvFzsC1LFUqnZdgg+ZhWeiqqBKHzLtQwJP74u0=;
+	s=k20201202; t=1726859615;
+	bh=dmrBVZBub6z8m6i4sdtUOc56DzJE9mt3FneIdi6cMMM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Gqei/Ung/thrVqsUqKittIUz9HCJbQtFei2kXyVhrv01GLRFNpJw974vusjp0tabc
-	 O5x9554XxhbH9Liy2HSvMKQS8bmETe7gmg8AoT2X8+Gf6JJQe5IthRTc1VCPFFVxg6
-	 o6jEX6XIR9Q+YmZYHREfZjn4EZ06vaPbqfEtDVhqjT0xIvWSrq4La2BmoBHlLW/Nru
-	 BnOiHOhJdlWOix4tJrIyf3qJZYd/Haf6ZGFjpGVuwHW9Ja12i/sOvIPsi3KvcwtUuq
-	 XMqGzIOBxliHyfpDH9oErxS4eWigVhgJJSENZ0WvzeQFUcVD4afBmJKgOdhas5xnl0
-	 5kPNfW4XJ7lbQ==
-Message-ID: <868dbd525c9b8c742de568ab0b2d3a29e7a86888.camel@kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: fix handling of WANT_DELEG_TIMESTAMPS on open
+	b=ggAS5iCOQ+vIpEBcVeClmrjs9locHEr7cMOHiRN9SEexikCdtBAhqxjmsjAzQG6OO
+	 2roQT4Dg0KlpdLRJHilaW49aIomA0Oe9FzNcbYpV94NeHqH0WaAXZFf7iEZf20b+o4
+	 FIbP6IUfMcc2N+mXR8/M8iP3LwtglGB807ow3C6/2QVOZEYa84wssIruKrO1OhSUZp
+	 33U1yQzNw4+9uh7bfOjkCXKz3eKggroV5H177oQGrBTaJT2AV2I4g2+ux3L1Ngm1/E
+	 08KCGJfZOEBh5KlC/q6LKAQyuOCMEyy8ujBxe9Ik0fJQ8OR2eh++RNDJMfjhiQWAFK
+	 DDWwLuxE/4KJw==
+Message-ID: <e5d19ed12bffaac5d6ac41d54836451b87b8fc2a.camel@kernel.org>
+Subject: Re: [syzbot] [nfs?] KASAN: slab-use-after-free Read in
+ rhashtable_walk_enter
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Linux NFS Mailing List
-	 <linux-nfs@vger.kernel.org>
-Date: Fri, 20 Sep 2024 21:11:55 +0200
-In-Reply-To: <2B9EA862-208A-4327-AFE5-4C24B3C6C56F@oracle.com>
-References: <20240920160551.52759-1-okorniev@redhat.com>
-	 <995712d148b21cd238c9604c58f42fe7a4b1581a.camel@kernel.org>
-	 <FA97862C-82C5-4879-B9AE-F5F5B813150B@oracle.com>
-	 <1b1135a9a2388df5aa9eabe85b85a8a624b87fe6.camel@kernel.org>
-	 <2B9EA862-208A-4327-AFE5-4C24B3C6C56F@oracle.com>
+To: Chuck Lever III <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>
+Cc: syzbot <syzbot+24cd636199753ac5e0ca@syzkaller.appspotmail.com>, Dai Ngo
+ <dai.ngo@oracle.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>,  Linux NFS Mailing List
+ <linux-nfs@vger.kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>, Tom
+ Talpey <tom@talpey.com>
+Date: Fri, 20 Sep 2024 21:13:31 +0200
+In-Reply-To: <96DE704B-2EB0-43D5-B34C-3323840F1BB2@oracle.com>
+References: <66eaf3f1.050a0220.252d9a.0019.GAE@google.com>
+	 <18e1d9caf56a56fadabd6abb82c63e0ba0c3dc34.camel@kernel.org>
+	 <172680104122.17050.16032356795670302194@noble.neil.brown.name>
+	 <96DE704B-2EB0-43D5-B34C-3323840F1BB2@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,96 +142,322 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-09-20 at 18:18 +0000, Chuck Lever III wrote:
+On Fri, 2024-09-20 at 18:51 +0000, Chuck Lever III wrote:
 >=20
-> > On Sep 20, 2024, at 12:34=E2=80=AFPM, Jeff Layton <jlayton@kernel.org> =
-wrote:
+> > On Sep 19, 2024, at 10:57=E2=80=AFPM, NeilBrown <neilb@suse.de> wrote:
 > >=20
-> > On Fri, 2024-09-20 at 16:30 +0000, Chuck Lever III wrote:
+> > On Thu, 19 Sep 2024, Jeff Layton wrote:
+> > > On Wed, 2024-09-18 at 08:38 -0700, syzbot wrote:
+> > > > Hello,
+> > > >=20
+> > > > syzbot found the following issue on:
+> > > >=20
+> > > > HEAD commit:    a430d95c5efa Merge tag 'lsm-pr-20240911' of git://g=
+it.kern..
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D17c7469=
+f980000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da69c66e=
+868285a9d
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D24cd63619=
+9753ac5e0ca
+> > > > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils=
+ for Debian) 2.40
+> > > >=20
+> > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > >=20
+> > > > Downloadable assets:
+> > > > disk image: https://storage.googleapis.com/syzbot-assets/7f3aff905e=
+91/disk-a430d95c.raw.xz
+> > > > vmlinux: https://storage.googleapis.com/syzbot-assets/a468ce8431f0/=
+vmlinux-a430d95c.xz
+> > > > kernel image: https://storage.googleapis.com/syzbot-assets/80d4f115=
+0155/bzImage-a430d95c.xz
+> > > >=20
+> > > > IMPORTANT: if you fix the issue, please add the following tag to th=
+e commit:
+> > > > Reported-by: syzbot+24cd636199753ac5e0ca@syzkaller.appspotmail.com
+> > > >=20
+> > > > svc: failed to register nfsdv3 RPC service (errno 111).
+> > > > svc: failed to register nfsaclv3 RPC service (errno 111).
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > BUG: KASAN: slab-use-after-free in list_add include/linux/list.h:16=
+9 [inline]
+> > > > BUG: KASAN: slab-use-after-free in rhashtable_walk_enter+0x333/0x37=
+0 lib/rhashtable.c:684
+> > > > Read of size 8 at addr ffff8880773fa010 by task syz.2.11924/9970
+> > > >=20
+> > > > CPU: 0 UID: 0 PID: 9970 Comm: syz.2.11924 Not tainted 6.11.0-syzkal=
+ler-02574-ga430d95c5efa #0
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, =
+BIOS Google 08/06/2024
+> > > > Call Trace:
+> > > > <TASK>
+> > > > __dump_stack lib/dump_stack.c:93 [inline]
+> > > > dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:119
+> > > > print_address_description mm/kasan/report.c:377 [inline]
+> > > > print_report+0xc3/0x620 mm/kasan/report.c:488
+> > > > kasan_report+0xd9/0x110 mm/kasan/report.c:601
+> > > > list_add include/linux/list.h:169 [inline]
+> > > > rhashtable_walk_enter+0x333/0x370 lib/rhashtable.c:684
+> > > > rhltable_walk_enter include/linux/rhashtable.h:1262 [inline]
+> > > > __nfsd_file_cache_purge+0xad/0x490 fs/nfsd/filecache.c:805
+> > > > nfsd_file_cache_shutdown+0xcf/0x480 fs/nfsd/filecache.c:897
+> > > > nfsd_shutdown_generic fs/nfsd/nfssvc.c:329 [inline]
+> > > > nfsd_shutdown_generic fs/nfsd/nfssvc.c:323 [inline]
+> > > > nfsd_startup_net fs/nfsd/nfssvc.c:444 [inline]
+> > > > nfsd_svc+0x6d4/0x970 fs/nfsd/nfssvc.c:817
+> > > > nfsd_nl_threads_set_doit+0x52c/0xbc0 fs/nfsd/nfsctl.c:1714
+> > > > genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+> > > > genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+> > > > genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+> > > > netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2550
+> > > > genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+> > > > netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+> > > > netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
+> > > > netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
+> > > > sock_sendmsg_nosec net/socket.c:730 [inline]
+> > > > __sock_sendmsg net/socket.c:745 [inline]
+> > > > ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2603
+> > > > ___sys_sendmsg+0x135/0x1e0 net/socket.c:2657
+> > > > __sys_sendmsg+0x117/0x1f0 net/socket.c:2686
+> > > > do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > > > do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> > > > entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > RIP: 0033:0x7fd947f7def9
+> > > > Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 4=
+8 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01=
+ f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> > > > RSP: 002b:00007fd948e38038 EFLAGS: 00000246 ORIG_RAX: 0000000000000=
+02e
+> > > > RAX: ffffffffffffffda RBX: 00007fd948135f80 RCX: 00007fd947f7def9
+> > > > RDX: 0000000000000004 RSI: 0000000020000280 RDI: 0000000000000003
+> > > > RBP: 00007fd947ff0b76 R08: 0000000000000000 R09: 0000000000000000
+> > > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> > > > R13: 0000000000000000 R14: 00007fd948135f80 R15: 00007ffc6cab9d78
+> > > > </TASK>
+> > > >=20
+> > > > Allocated by task 8716:
+> > > > kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+> > > > kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+> > > > poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+> > > > __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:387
+> > > > kasan_kmalloc include/linux/kasan.h:211 [inline]
+> > > > __do_kmalloc_node mm/slub.c:4159 [inline]
+> > > > __kmalloc_node_track_caller_noprof+0x20f/0x440 mm/slub.c:4178
+> > > > kmalloc_reserve+0xef/0x2c0 net/core/skbuff.c:609
+> > > > __alloc_skb+0x164/0x380 net/core/skbuff.c:678
+> > > > alloc_skb include/linux/skbuff.h:1322 [inline]
+> > > > nsim_dev_trap_skb_build drivers/net/netdevsim/dev.c:748 [inline]
+> > > > nsim_dev_trap_report drivers/net/netdevsim/dev.c:805 [inline]
+> > > > nsim_dev_trap_report_work+0x2a4/0xc80 drivers/net/netdevsim/dev.c:8=
+50
+> > > > process_one_work+0x958/0x1ad0 kernel/workqueue.c:3231
+> > > > process_scheduled_works kernel/workqueue.c:3312 [inline]
+> > > > worker_thread+0x6c8/0xf00 kernel/workqueue.c:3393
+> > > > kthread+0x2c1/0x3a0 kernel/kthread.c:389
+> > > > ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> > > > ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> > > >=20
+> > > > Freed by task 8716:
+> > > > kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+> > > > kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+> > > > kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+> > > > poison_slab_object+0xf7/0x160 mm/kasan/common.c:240
+> > > > __kasan_slab_free+0x32/0x50 mm/kasan/common.c:256
+> > > > kasan_slab_free include/linux/kasan.h:184 [inline]
+> > > > slab_free_hook mm/slub.c:2250 [inline]
+> > > > slab_free mm/slub.c:4474 [inline]
+> > > > kfree+0x12a/0x3b0 mm/slub.c:4595
+> > > > skb_kfree_head net/core/skbuff.c:1086 [inline]
+> > > > skb_free_head+0x108/0x1d0 net/core/skbuff.c:1098
+> > > > skb_release_data+0x75d/0x990 net/core/skbuff.c:1125
+> > > > skb_release_all net/core/skbuff.c:1190 [inline]
+> > > > __kfree_skb net/core/skbuff.c:1204 [inline]
+> > > > consume_skb net/core/skbuff.c:1436 [inline]
+> > > > consume_skb+0xbf/0x100 net/core/skbuff.c:1430
+> > > > nsim_dev_trap_report drivers/net/netdevsim/dev.c:821 [inline]
+> > > > nsim_dev_trap_report_work+0x878/0xc80 drivers/net/netdevsim/dev.c:8=
+50
+> > > > process_one_work+0x958/0x1ad0 kernel/workqueue.c:3231
+> > > > process_scheduled_works kernel/workqueue.c:3312 [inline]
+> > > > worker_thread+0x6c8/0xf00 kernel/workqueue.c:3393
+> > > > kthread+0x2c1/0x3a0 kernel/kthread.c:389
+> > > > ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> > > > ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> > > >=20
+> > > > The buggy address belongs to the object at ffff8880773fa000
+> > > > which belongs to the cache kmalloc-4k of size 4096
+> > > > The buggy address is located 16 bytes inside of
+> > > > freed 4096-byte region [ffff8880773fa000, ffff8880773fb000)
+> > > >=20
+> > > > The buggy address belongs to the physical page:
+> > > > page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:=
+0x773f8
+> > > > head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincou=
+nt:0
+> > > > flags: 0xfff00000000040(head|node=3D0|zone=3D1|lastcpupid=3D0x7ff)
+> > > > page_type: 0xfdffffff(slab)
+> > > > raw: 00fff00000000040 ffff88801ac42140 ffffea0001e63600 dead0000000=
+00002
+> > > > raw: 0000000000000000 0000000000040004 00000001fdffffff 00000000000=
+00000
+> > > > head: 00fff00000000040 ffff88801ac42140 ffffea0001e63600 dead000000=
+000002
+> > > > head: 0000000000000000 0000000000040004 00000001fdffffff 0000000000=
+000000
+> > > > head: 00fff00000000003 ffffea0001dcfe01 ffffffffffffffff 0000000000=
+000000
+> > > > head: 0000000700000008 0000000000000000 00000000ffffffff 0000000000=
+000000
+> > > > page dumped because: kasan: bad access detected
+> > > > page_owner tracks the page as allocated
+> > > > page last allocated via order 3, migratetype Unmovable, gfp_mask 0x=
+d2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid=
+ 5240, tgid 5240 (syz-executor), ts 74499202771, free_ts 74134964798
+> > > > set_page_owner include/linux/page_owner.h:32 [inline]
+> > > > post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1500
+> > > > prep_new_page mm/page_alloc.c:1508 [inline]
+> > > > get_page_from_freelist+0x1351/0x2e50 mm/page_alloc.c:3446
+> > > > __alloc_pages_noprof+0x22b/0x2460 mm/page_alloc.c:4702
+> > > > __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+> > > > alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+> > > > alloc_slab_page+0x4e/0xf0 mm/slub.c:2319
+> > > > allocate_slab mm/slub.c:2482 [inline]
+> > > > new_slab+0x84/0x260 mm/slub.c:2535
+> > > > ___slab_alloc+0xdac/0x1870 mm/slub.c:3721
+> > > > __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3811
+> > > > __slab_alloc_node mm/slub.c:3864 [inline]
+> > > > slab_alloc_node mm/slub.c:4026 [inline]
+> > > > __do_kmalloc_node mm/slub.c:4158 [inline]
+> > > > __kmalloc_noprof+0x379/0x410 mm/slub.c:4171
+> > > > kmalloc_noprof include/linux/slab.h:694 [inline]
+> > > > tomoyo_realpath_from_path+0xbf/0x710 security/tomoyo/realpath.c:251
+> > > > tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+> > > > tomoyo_path_number_perm+0x245/0x5b0 security/tomoyo/file.c:723
+> > > > security_file_ioctl+0x9b/0x240 security/security.c:2908
+> > > > __do_sys_ioctl fs/ioctl.c:901 [inline]
+> > > > __se_sys_ioctl fs/ioctl.c:893 [inline]
+> > > > __x64_sys_ioctl+0xbb/0x210 fs/ioctl.c:893
+> > > > do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > > > do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> > > > entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > page last free pid 5233 tgid 5233 stack trace:
+> > > > reset_page_owner include/linux/page_owner.h:25 [inline]
+> > > > free_pages_prepare mm/page_alloc.c:1101 [inline]
+> > > > free_unref_folios+0x9e9/0x1390 mm/page_alloc.c:2667
+> > > > folios_put_refs+0x560/0x760 mm/swap.c:1039
+> > > > free_pages_and_swap_cache+0x36d/0x510 mm/swap_state.c:332
+> > > > __tlb_batch_free_encoded_pages+0xf9/0x290 mm/mmu_gather.c:136
+> > > > tlb_batch_pages_flush mm/mmu_gather.c:149 [inline]
+> > > > tlb_flush_mmu_free mm/mmu_gather.c:366 [inline]
+> > > > tlb_flush_mmu mm/mmu_gather.c:373 [inline]
+> > > > tlb_finish_mmu+0x168/0x7b0 mm/mmu_gather.c:465
+> > > > unmap_region+0x342/0x420 mm/mmap.c:2441
+> > > > do_vmi_align_munmap+0x1107/0x19c0 mm/mmap.c:2754
+> > > > do_vmi_munmap+0x231/0x410 mm/mmap.c:2830
+> > > > __vm_munmap+0x142/0x330 mm/mmap.c:3109
+> > > > __do_sys_munmap mm/mmap.c:3126 [inline]
+> > > > __se_sys_munmap mm/mmap.c:3123 [inline]
+> > > > __x64_sys_munmap+0x61/0x90 mm/mmap.c:3123
+> > > > do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > > > do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> > > > entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > >=20
+> > > > Memory state around the buggy address:
+> > > > ffff8880773f9f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > > > ffff8880773f9f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > > > > ffff8880773fa000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > > >                         ^
+> > > > ffff8880773fa080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > > > ffff8880773fa100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >=20
+> > > >=20
+> > > > ---
+> > > > This report is generated by a bot. It may contain errors.
+> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > >=20
+> > > > syzbot will keep track of this issue. See:
+> > > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > >=20
+> > > > If the report is already addressed, let syzbot know by replying wit=
+h:
+> > > > #syz fix: exact-commit-title
+> > > >=20
+> > > > If you want to overwrite report's subsystems, reply with:
+> > > > #syz set subsystems: new-subsystem
+> > > > (See the list of subsystem names on the web dashboard)
+> > > >=20
+> > > > If the report is a duplicate of another one, reply with:
+> > > > #syz dup: exact-subject-of-another-report
+> > > >=20
+> > > > If you want to undo deduplication, reply with:
+> > > > #syz undup
 > > >=20
-> > > > On Sep 20, 2024, at 12:24=E2=80=AFPM, Jeff Layton <jlayton@kernel.o=
-rg> wrote:
-> > > >=20
-> > > > On Fri, 2024-09-20 at 12:05 -0400, Olga Kornievskaia wrote:
-> > > > > Current, the server returns that it supports NFS4_SHARE_WANT_DELE=
-G_TIMESTAMPS
-> > > > > but when the client sends that on the open, knfsd returns back wi=
-th
-> > > > > bad_xdr error.
-> > > > >=20
-> > > > > Fixes: d0eab73d48a0 ("nfsd: add support for delegated timestamps"=
-)
-> > > > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > > > ---
-> > > > > fs/nfsd/nfs4xdr.c | 1 +
-> > > > > 1 file changed, 1 insertion(+)
-> > > > >=20
-> > > > > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > > > > index c0bad580ab6d..adda8b489175 100644
-> > > > > --- a/fs/nfsd/nfs4xdr.c
-> > > > > +++ b/fs/nfsd/nfs4xdr.c
-> > > > > @@ -1109,6 +1109,7 @@ static __be32 nfsd4_decode_share_access(str=
-uct nfsd4_compoundargs *argp, u32 *sh
-> > > > > case NFS4_SHARE_PUSH_DELEG_WHEN_UNCONTENDED:
-> > > > > case (NFS4_SHARE_SIGNAL_DELEG_WHEN_RESRC_AVAIL |
-> > > > >      NFS4_SHARE_PUSH_DELEG_WHEN_UNCONTENDED):
-> > > > > + case NFS4_SHARE_WANT_DELEG_TIMESTAMPS:
-> > > > > return nfs_ok;
-> > > > > }
-> > > > > return nfserr_bad_xdr;
-> > > >=20
-> > > > Ouch.
-> > > >=20
-> > > > The problem here is that we had to drop the patch that added
-> > > > OPEN_XOR_DELEGATION support. That patch reworked the flag handling =
-in
-> > > > this function in a way that allowed the new delstid flags to be
-> > > > properly supported.
-> > > >=20
-> > > > I think we probably want to resurrect the parts of this patch that
-> > > > alter nfsd4_decode_share_access:
-> > > >=20
-> > > > https://lore.kernel.org/linux-nfs/20240905-delstid-v4-8-d3e5fd34d10=
-7@kernel.org/
-> > > >=20
-> > > > Olga, would you be OK with that approach instead?
+> > > So we're tearing down the server and cleaning out the nfsd_file hash,
+> > > and we hit a UAF. That probably means that we freed a nfsd_file witho=
+ut
+> > > removing it from the hash? Maybe we should add a WARN_ON() in
+> > > nfsd_file_slab_free that checks whether the item is still hashed?
 > > >=20
-> > > At this point, I'd like to consider postponing the delstid patches
-> > > until v6.13. They haven't gotten enough testing in their current
-> > > form...
+> > > It is strange though. struct nfsd_file is 112 bytes on my machine, bu=
+t
+> > > the warning is about a 4k allocation. I guess that just means that th=
+e
+> > > page got recycled into a different slabcache.
 > >=20
-> > It's your call, but that seems like an extreme reaction to a flag
-> > handling fix, given that we have several weeks of -rc's ahead of us.
+> > The code that is crashing hasn't come close to touching anything that i=
+s
+> > thought to be an nfsd_file.
+> > The error is detected in the list_add() in rhashtable_walk_enter() when
+> > the new on-stack iterator is being attached to the bucket_table that is=
+ being
+> > iterated.  So that bucket_table must (now) be an invalid address.
+> >=20
+> > The handling of NFSD_FILE_CACHE_UP is strange.  nfsd_file_cache_init()
+> > sets it, but doesn't clear it on failure.  So if nfsd_file_cache_init()
+> > fails for some reason, nfsd_file_cache_shutdown() would still try to
+> > clean up if it was called.
+> >=20
+> > So suppose nfsd_startup_generic() is called.  It increments nfsd_users
+> > from 0 so continues to nfsd_file_cache_init() which fails for some
+> > reason after initialising nfsd_file_rhltable and then destroying it.
+> > This will leave nfsd_file_rhltable.tbl as a pointer to a large
+> > allocation which has been freed.  nfsd_startup_generic() will then
+> > decrement nfsd_users back to zero, but NFSD_FILE_CACHE_UP will still be
+> > set.
+> >=20
+> > When nfsd_startup_generic() is called again, nfsd_file_cache_init() wil=
+l
+> > skip initialisation because NFSD_FILE_CACHE_UP is set.  When
+> > nfsd_file_cache_shutdown() is then called it will clean up an rhltable
+> > that has already been destroyed.  We get exactly the reported symptom.
+> >=20
+> > I *think* nfsd_file_cache_init() can only fail with -ENOMEM and I would
+> > expect to see a warning when that happened.  In any case
+> > nfsd_file_cache_init() uses pr_err() for any failure except
+> > rhltable_init(), and that only fails if the params are inconsistent.
+> >=20
+> > So I think there are problems with NFSD_FILE_CACHE_UP settings and I
+> > think they could trigger this bug if a kmalloc failed, but I don't thin=
+k
+> > that a kmalloc failed and I think there must be some other explanation
+> > here.
 >=20
-> It's not just this small problem that worries me.
->=20
-> I pulled in v4 of the delstid patches pretty much at the last
-> moment for v6.12 development. So far, there's been an 80%
-> performance regression, and the surgery to work around that
-> issue introduced another bug that invalidates all NFSv4.2 test
-> results since that surgery, just a week ago.
->=20
-> The delstid patches impact an already heavily-used code path
-> (OPEN). You've already found one or two bugs in the client
-> side as well. This isn't something the can be disabled by
-> distros until it is ready -- it's baked into a popular code
-> path as soon as it goes upstream, and NFSv4.2 is the current
-> default.
->=20
-> So I can't say with confidence that this code is stable and
-> ready to merge. If we had another week or two before v6.11
-> final, there wouldn't be a question, but it's already a week
-> into the v6.12 merge window, and I need to submit a pull
-> request in the next few days. A 6.11-rc8 would have been
-> extremely helpful, but we didn't get one.
->=20
-> Exposing this change set to the cauldron that is bake-a-thon
-> would be valuable, IMO, for both the client and the server.
+> Also, the FILE_CACHE_UP logic has been around for several releases.
+> Why is this UAF showing up only now? The "unable to register"
+> messages suggest a possible reason.
 >=20
 
-Fair enough. These are not features that anyone is particularly
-clamoring for, so dropping them for now is fine. I'll plan to spin up a
-new set once I'm back from travel (another week or so).
+Good point. I didn't notice those. 111 is ECONNREFUSED, so it sounds
+like rpcbind isn't up in this situation. Maybe that's a hint toward a
+reproducer?
 
 --=20
 Jeff Layton <jlayton@kernel.org>
