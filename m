@@ -1,150 +1,227 @@
-Return-Path: <linux-nfs+bounces-6618-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6619-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B652C97F1A4
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 22:21:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B64F297F1D0
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 22:57:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C350F1C217B9
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 20:21:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54887282913
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 20:57:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82AD17BD6;
-	Mon, 23 Sep 2024 20:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5F9770FD;
+	Mon, 23 Sep 2024 20:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnKk/sCu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k83CYbry"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902C197A77;
-	Mon, 23 Sep 2024 20:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0553B8C06;
+	Mon, 23 Sep 2024 20:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727122862; cv=none; b=gqwzkS65tgp1qb0Hhr8UPvTrNrPg2mcU9RcNGwjsZsGMGwJ+NaFuKAxjP/OJuT08DXtnw2gpbsis9ap5ouo6gILTwVVkonhQKyDv7W70EG7xz4CMfps7g24DR589u2BHvObFXwM9qCHh4E5COH9VeB7maEzlcLPFtXVMpwjLttw=
+	t=1727125050; cv=none; b=FgJBB+NbR+isHpRbvz8WsecIhhuY0DzvKro1PqsiGh7SakBkn90WEMAt1tYAqRoQFLpLMo78dkv4souMDQ7gBNYBsz5zbbvuuxRmE/HLwm1GoUK4vabzfnhLPhyiC+gLb7yM33/mIWfe8ZZB7/QsS+jOt6XnH1AUo9ZuZnSis+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727122862; c=relaxed/simple;
-	bh=DsCb6qpLdEgMJ5yT5bmM7oaMBnnki7ouT3XEgyQdChw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jK+D+x3EGcQpidD4loIxGb7IL/pg7YlvuFxH8lp4obQNcfl42PQ3wX4+CevoCbBMrnLgMZSltHyvYweN7nvmeSM6TLwZ70GlV2juC8vksSFkjMzFod8sUgm7TBFzzzB1D8DqW3kM1LhNSLTH+XERPVlOfDxlUF2ocHv8cvK5an4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnKk/sCu; arc=none smtp.client-ip=209.85.167.53
+	s=arc-20240116; t=1727125050; c=relaxed/simple;
+	bh=1rbLgj0nXxiDnUlApLjxVsJoEy+kGptOdgB947HjKyU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YBFPqi+0B/VCUj+qVTWbBI82C5CQM+iwYzoUCnP8O/bsztP+IeTYgVK6aIdL3UaWcw2KodFa91VhPcl17B54YeAtqIAo4LwnDP/nD1GItWe7WTJztfkD5mi+k+iRxHBhzOhoCVDEzX0DV3V1CFsBE6vMn5+zfolJqRD0vsIj+a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k83CYbry; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53653ee23adso4311597e87.3;
-        Mon, 23 Sep 2024 13:21:00 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-374ba74e9b6so3960090f8f.0;
+        Mon, 23 Sep 2024 13:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727122859; x=1727727659; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NleUZATndt1acwKzBa7y/6tS+SaA3XdbIXpdmDlWmuM=;
-        b=TnKk/sCuLv5vkgPYiYZINQrsq61aMi24rCYxVeETwQm6zi5mSGlsbh1uT5Ttj6/rb5
-         vJwEy4Z0ix3MwEmSSI4aEGS1L81JOvRT+8vkVRSIRBf7eLt8Xq4bI91pwDNZVSrLnOIn
-         E6WSdUquC9OYz9OleyGMrM4/nFRMVxTpQ5Wzu9ZBL2WZCGT2SDqLUr/cLuqjT7Hb5vWx
-         xZuipdCxVsny87xpXfqS/GR0Hmf+wa3QpBYVOUlWMif32d42fOOA2raOEZP6VJSYPr+2
-         u6IaKIVs8vN+Cf/1nFpHnm8YusG+5TF7eYVjZ0RuguabFHMAEVntGLT0Z530sqtGfb6u
-         8ZrA==
+        d=gmail.com; s=20230601; t=1727125047; x=1727729847; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mCGay+ux/isYrKjVJrEaEY3rQ4NkeGWnKhmqM2Kr0wo=;
+        b=k83CYbrytGCcivu5BpCbGgSN7DO+994tI/HAdSYvBy0KlEqzBOLoQhnXRHsbU7zIiq
+         mZ5Q0ngE99S3nHKrkUVrDhvA+PuO/TJPpIaK6fo6EB1PINghIAVKA9nCZwJ+lZMtokqT
+         I+bLvO9LDBTyiPDMtla1CqmFfePVwOUV6fDqO28ngK0jRW1S1mW13mgT83XqYuEjcarW
+         KLYq1HTPnOmQGKRfwIIX7pC9+czAvFiB8ixV25KeWkiX2ayZVTfjIJZtx2IJPYqkd5S+
+         cDngPDA6ayt5l3KakonnYhqeWWlwTYH75S8ap+SNRTnE5X9Y3DG3+83GAMzBY5cPVJ6a
+         4Hww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727122859; x=1727727659;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NleUZATndt1acwKzBa7y/6tS+SaA3XdbIXpdmDlWmuM=;
-        b=g19eWJvP2pAiJ5C/yo0EYCoB9ZfhTHfwE7Jq84hcvEY2XpI9/r/sBONR/Ozc0igv9q
-         9ciSgrUIVv4r5AkBXEk+R4zXJTRamnOMncxueYZPsBikBeAgyzMzr7/Bztvwf8L0Rf2V
-         lFAccz/SdInJesRMWH/ejUfiB4UrwjeAnaAbES5wLGr7mA7BNiF2hQOE2eQEM7qMMYJc
-         EPWIp58vwIP9HNtjOVcd934Qx8jBHp4gT7ZIL/AdkDHxSXMICkSr+NqBgJ0iYT2dJN6M
-         45M1wPomBH9yshGeNIsyBpI/4QTEcwHLsROIHipACpd51zlXsn31e59vdFvwv4KXS1bj
-         kunQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFzGF6omiZV+XWIybbIzrpuhJ9yb1Avrq8IxpLNNcrhp4GBSzV2rT81t8MSYXsycmSGsxUcnaVWf29@vger.kernel.org, AJvYcCVN8VQkaPLHZ+kLFlKDv3YDkS1NkkUbFmZnazji9hk9dbESY4yoJ9pwUDRYhSw8egnDzpX9HG166LT7@vger.kernel.org, AJvYcCVvVBW7hCEAnwmSWOhihuAR3nV3obE0JI9YC5czL5m1hDqMC9q0FvQYklJVl+B7HV3jMQanJy0d8YB8Pg==@vger.kernel.org, AJvYcCWTLJS3OZkmslimGd/MFJIcNi7CoILaN3P1JTFPoIMLOzwUSSv7EWHaXN/jvSQKBJf724bXEzCleWeMbeAgZg==@vger.kernel.org, AJvYcCX5C0zXtntRXDvPbIL6qaZKYDqH7n/xpeiKv6ryIQ1dAyeLbxGXtZzRXiCAqnG5QNYoyqXkcgH2Z74cwp/V@vger.kernel.org, AJvYcCXH2KTM/zFdk5lfgcw66Htl13FFO/dN0LWIoiOJKyYGDkaJJ6Cm6/oUd791wRXT6Sg13c2CBHuJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6tkieRY34dcDCKB/NymGv3VXpJcpFyv1VUIFrmK0b55hxXqAj
-	bpGewHMFwgorkDwmlmaQDVKpdIeaIXqqntufm+8Tl8u20+fqKBwLNGUVaxPgtJJyZoY0vGMzzXq
-	L6canLMMny7ar9TEEOeamrcJgmcs=
-X-Google-Smtp-Source: AGHT+IFe6pzcf17Wh1gjew0V8YTIVeE9hLlPHLiePqr1rh/borgYiDBhQWNwMIzi8TlRjg6PaEMoWqREOxcDUAURZmM=
-X-Received: by 2002:a05:6512:6c3:b0:535:63a3:c7d1 with SMTP id
- 2adb3069b0e04-536ad3b7f23mr6933488e87.48.1727122858742; Mon, 23 Sep 2024
- 13:20:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727125047; x=1727729847;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mCGay+ux/isYrKjVJrEaEY3rQ4NkeGWnKhmqM2Kr0wo=;
+        b=BK5QEf+F7v6P6Rs+i1Ia6ioLLU9PzS3dLydRMkgr8O0auYmCnJ9oHt6eftootHcaZ1
+         bQdymX7X+0WuEjbGJfbubXZRuLPoKmUuMiPQjZCMh1lRfz0eSaUb8++4XoGz+PUS4JUQ
+         21S0QGnEp5liNu1fLO2+rrUgh/84BVw3osOIQl9UM/7evyse6771VLwQdr0ESM3eKDmj
+         mLFH4ZegI7qOpnDeXy/ONxrcxaocKx2Z51S8bX/dQMLftWriuRVr+n4vYZfgVkM0jLLe
+         7Xzo5VTcmQ054a7zC0OsUPwQ7Hj9rRHy8D1238vTpNV50ppEkcLnikhmGty5fCWOaJHZ
+         TgVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrrUrQ+UjEC0gNaW/FfVCQ2dNKQtY2cL4Z7kvymnPVQQehr9pyZNJYfCl7yg699UDef+FgoETf@vger.kernel.org, AJvYcCXvBepRlDHeQOrnNZ3In5KCo2Qgt6PMFulwaGty0dGZotm6vjsxQjW9PDdmmHcEyJhSqcE3J+va2G/0cZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFbxz6QN5wRUKhj7dFohyzrjb75oZ1wz3GFTLur2r1CFnyfd45
+	qeeKvD1gAmgXLykxAbVTwLGWdHXLz/CcDncYSUZBBfzrIZcJ9KwlcVmIiw==
+X-Google-Smtp-Source: AGHT+IFxIZoaozYQcoDyzpI/OA0rt/U65Yr7E+wku1TjxLBaj7ted4ufB5Rw3g0qfi76pYAPu7EKtA==
+X-Received: by 2002:a5d:4804:0:b0:374:c6af:1658 with SMTP id ffacd0b85a97d-37a422535a5mr11951426f8f.1.1727125046415;
+        Mon, 23 Sep 2024 13:57:26 -0700 (PDT)
+Received: from localhost (dh207-41-185.xnet.hr. [88.207.41.185])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90612df579sm1278930366b.164.2024.09.23.13.57.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2024 13:57:25 -0700 (PDT)
+From: Mirsad Todorovac <mtodorovac69@gmail.com>
+To: linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>
+Subject: [PATCH v1 1/1] SUNRPC: Make enough room in servername[] for AF_UNIX addresses
+Date: Mon, 23 Sep 2024 22:55:46 +0200
+Message-ID: <20240923205545.1488448-2-mtodorovac69@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240814203850.2240469-20-dhowells@redhat.com>
- <20240923183432.1876750-1-chantr4@gmail.com> <912766.1727120313@warthog.procyon.org.uk>
-In-Reply-To: <912766.1727120313@warthog.procyon.org.uk>
-From: Manu Bretelle <chantr4@gmail.com>
-Date: Mon, 23 Sep 2024 13:20:47 -0700
-Message-ID: <CAArYzrL0+tiPRhW6Z5fDp4WJgxVBeMg90A44rA=htXku0Q99eQ@mail.gmail.com>
-Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
-To: David Howells <dhowells@redhat.com>
-Cc: asmadeus@codewreck.org, ceph-devel@vger.kernel.org, christian@brauner.io, 
-	ericvh@kernel.org, hsiangkao@linux.alibaba.com, idryomov@gmail.com, 
-	jlayton@kernel.org, linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	marc.dionne@auristor.com, netdev@vger.kernel.org, netfs@lists.linux.dev, 
-	pc@manguebit.com, smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
-	v9fs@lists.linux.dev, willy@infradead.org, eddyz87@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 23, 2024 at 12:38=E2=80=AFPM David Howells <dhowells@redhat.com=
-> wrote:
->
-> Hi Manu,
->
-> Are you using any other network filesystem than 9p, or just 9p?
+GCC 13.2.0 reported with W=1 build option the following warning:
 
-Should be 9p only.
+net/sunrpc/clnt.c: In function ‘rpc_create’:
+net/sunrpc/clnt.c:582:75: warning: ‘%s’ directive output may be truncated writing up to 107 bytes into \
+					a region of size 48 [-Wformat-truncation=]
+  582 |                                 snprintf(servername, sizeof(servername), "%s",
+      |                                                                           ^~
+net/sunrpc/clnt.c:582:33: note: ‘snprintf’ output between 1 and 108 bytes into a destination of size 48
+  582 |                                 snprintf(servername, sizeof(servername), "%s",
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  583 |                                          sun->sun_path);
+      |                                          ~~~~~~~~~~~~~~
 
-We ended up reverting the whole merge with
-https://patch-diff.githubusercontent.com/raw/kernel-patches/vmtest/pull/288=
-.patch
-as my initial commit revert happened to work because of the left over
-cached .o.
+   548         };
+ → 549         char servername[48];
+   550         struct rpc_clnt *clnt;
+   551         int i;
+   552
+   553         if (args->bc_xprt) {
+   554                 WARN_ON_ONCE(!(args->protocol & XPRT_TRANSPORT_BC));
+   555                 xprt = args->bc_xprt->xpt_bc_xprt;
+   556                 if (xprt) {
+   557                         xprt_get(xprt);
+   558                         return rpc_create_xprt(args, xprt);
+   559                 }
+   560         }
+   561
+   562         if (args->flags & RPC_CLNT_CREATE_INFINITE_SLOTS)
+   563                 xprtargs.flags |= XPRT_CREATE_INFINITE_SLOTS;
+   564         if (args->flags & RPC_CLNT_CREATE_NO_IDLE_TIMEOUT)
+   565                 xprtargs.flags |= XPRT_CREATE_NO_IDLE_TIMEOUT;
+   566         /*
+   567          * If the caller chooses not to specify a hostname, whip
+   568          * up a string representation of the passed-in address.
+   569          */
+   570         if (xprtargs.servername == NULL) {
+   571                 struct sockaddr_un *sun =
+   572                                 (struct sockaddr_un *)args->address;
+   573                 struct sockaddr_in *sin =
+   574                                 (struct sockaddr_in *)args->address;
+   575                 struct sockaddr_in6 *sin6 =
+   576                                 (struct sockaddr_in6 *)args->address;
+   577
+   578                 servername[0] = '\0';
+   579                 switch (args->address->sa_family) {
+ → 580                 case AF_LOCAL:
+ → 581                         if (sun->sun_path[0])
+ → 582                                 snprintf(servername, sizeof(servername), "%s",
+ → 583                                          sun->sun_path);
+ → 584                         else
+ → 585                                 snprintf(servername, sizeof(servername), "@%s",
+ → 586                                          sun->sun_path+1);
+ → 587                         break;
+   588                 case AF_INET:
+   589                         snprintf(servername, sizeof(servername), "%pI4",
+   590                                  &sin->sin_addr.s_addr);
+   591                         break;
+   592                 case AF_INET6:
+   593                         snprintf(servername, sizeof(servername), "%pI6",
+   594                                  &sin6->sin6_addr);
+   595                         break;
+   596                 default:
+   597                         /* caller wants default server name, but
+   598                          * address family isn't recognized. */
+   599                         return ERR_PTR(-EINVAL);
+   600                 }
+   601                 xprtargs.servername = servername;
+   602         }
+   603
+   604         xprt = xprt_create_transport(&xprtargs);
+   605         if (IS_ERR(xprt))
+   606                 return (struct rpc_clnt *)xprt;
 
-FWIW, I quickly checked and virtiofs is not affected. e.g is I was to
-apply https://github.com/danobi/vmtest/pull/88 to vmtest and recompile
-the kernel with:
-  CONFIG_FUSE_FS=3Dy
-  CONFIG_VIRTIO_FS=3Dy
-  CONFIG_FUSE_PASSTHROUGH=3Dy
+After the address family AF_LOCAL was added in the commit 176e21ee2ec89, the old hard-coded
+size for servername of char servername[48] no longer fits. The maximum AF_UNIX address size
+has now grown to UNIX_PATH_MAX defined as 108 in "include/uapi/linux/un.h" .
 
-qemu-system-x86_64 "-nodefaults" "-display" "none" \
-  "-serial" "mon:stdio" "-enable-kvm" "-cpu" "host" \
-  "-qmp" "unix:/tmp/qmp-895732.sock,server=3Don,wait=3Doff" \
-  "-chardev" "socket,path=3D/tmp/qga-733184.sock,server=3Don,wait=3Doff,id=
-=3Dqga0" \
-  "-device" "virtio-serial" \
-  "-device" "virtserialport,chardev=3Dqga0,name=3Dorg.qemu.guest_agent.0" \
-  "-object" "memory-backend-memfd,id=3Dmem,share=3Don,size=3D4G" "-numa"
-"node,memdev=3Dmem" \
-  "-device" "virtio-serial" "-chardev"
-"socket,path=3D/tmp/cmdout-713466.sock,server=3Don,wait=3Doff,id=3Dcmdout" =
-\
-  "-device" "virtserialport,chardev=3Dcmdout,name=3Dorg.qemu.virtio_serial.=
-0" \
-  "-chardev" "socket,id=3Droot,path=3D/tmp/virtiofsd-807478.sock" \
-  "-device" "vhost-user-fs-pci,queue-size=3D1024,chardev=3Droot,tag=3Drootf=
-s" \
-  "-kernel" "/data/users/chantra/linux/arch/x86/boot/bzImage" \
-  "-no-reboot" "-append" "rootfstype=3Dvirtiofs root=3Drootfs rw
-earlyprintk=3Dserial,0,115200 printk.devkmsg=3Don console=3D0,115200
-loglevel=3D7 raid=3Dnoautodetect init=3D/tmp/vmtest-initBdg4J.sh panic=3D-1=
-" \
-  "-chardev" "socket,id=3Dshared,path=3D/tmp/virtiofsd-992342.sock" \
-  "-device" "vhost-user-fs-pci,queue-size=3D1024,chardev=3Dshared,tag=3Dvmt=
-est-shared"
-\
-  "-smp" "2" "-m" "4G"
+The lines 580-587 were added later, addressing the leading zero byte '\0', but did not fix
+the hard-coded servername limit.
 
-would work.
+The AF_UNIX address was truncated to 47 bytes + terminating null byte. This patch will fix the
+servername in AF_UNIX family to the maximum permitted by the system:
 
-Manu
+   548         };
+ → 549         char servername[UNIX_PATH_MAX];
+   550         struct rpc_clnt *clnt;
 
->
-> David
->
+Fixes: 4388ce05fa38b ("SUNRPC: support abstract unix socket addresses")
+Fixes: 510deb0d7035d ("SUNRPC: rpc_create() default hostname should support AF_INET6 addresses")
+Fixes: 176e21ee2ec89 ("SUNRPC: Support for RPC over AF_LOCAL transports")
+Cc: Neil Brown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Trond Myklebust <trondmy@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>
+Cc: Dai Ngo <Dai.Ngo@oracle.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+---
+ v1:
+	initial version.
+
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 09f29a95f2bc..67099719893e 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -546,7 +546,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
+ 		.connect_timeout = args->connect_timeout,
+ 		.reconnect_timeout = args->reconnect_timeout,
+ 	};
+-	char servername[48];
++	char servername[UNIX_PATH_MAX];
+ 	struct rpc_clnt *clnt;
+ 	int i;
+ 
+-- 
+2.43.0
+
 
