@@ -1,219 +1,150 @@
-Return-Path: <linux-nfs+bounces-6617-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6618-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1638197F194
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 22:15:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B652C97F1A4
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 22:21:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 77DEAB210C1
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 20:15:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C350F1C217B9
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 20:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 811C41A0716;
-	Mon, 23 Sep 2024 20:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82AD17BD6;
+	Mon, 23 Sep 2024 20:21:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0BaoH5OZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnKk/sCu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B236126
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 20:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902C197A77;
+	Mon, 23 Sep 2024 20:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727122533; cv=none; b=C54yjQHaU5POX+ad3YFLLkxPgDE6bdT7SRicwux0SIkDAHGCuW3GvLx/+k0V+cBL/Ks1K6N65l2x1hPYHivuZODDMqx/DuP7Xszhp13BtwZpeLximL0KGHLgB/iY4BBv+rLhIx8/zmjGbMwtmOWmbahG+XVQ+AQo7pYDQ2wvm6U=
+	t=1727122862; cv=none; b=gqwzkS65tgp1qb0Hhr8UPvTrNrPg2mcU9RcNGwjsZsGMGwJ+NaFuKAxjP/OJuT08DXtnw2gpbsis9ap5ouo6gILTwVVkonhQKyDv7W70EG7xz4CMfps7g24DR589u2BHvObFXwM9qCHh4E5COH9VeB7maEzlcLPFtXVMpwjLttw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727122533; c=relaxed/simple;
-	bh=0H6ENbvlTQSEZxIo+1obedDkpsYcANjKsRp/QdY+1z8=;
+	s=arc-20240116; t=1727122862; c=relaxed/simple;
+	bh=DsCb6qpLdEgMJ5yT5bmM7oaMBnnki7ouT3XEgyQdChw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mxJJjBcdkgu9QSvQnLdSFeavmFEtzVvPfhKBaoQdIzrP6tRbWNbIyiJXuS9e5PodZDhNwiQmAn186hAQBTlUg9Qf6xprrx80mRen4+irD1+n8bql9kO8j3yRSpsGMUYDvtInFLqq8HBTD7ovXaVZGufeoCYfXysFfpZw+Moaxj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0BaoH5OZ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2056aa5cefcso42175ad.0
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 13:15:31 -0700 (PDT)
+	 To:Cc:Content-Type; b=jK+D+x3EGcQpidD4loIxGb7IL/pg7YlvuFxH8lp4obQNcfl42PQ3wX4+CevoCbBMrnLgMZSltHyvYweN7nvmeSM6TLwZ70GlV2juC8vksSFkjMzFod8sUgm7TBFzzzB1D8DqW3kM1LhNSLTH+XERPVlOfDxlUF2ocHv8cvK5an4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnKk/sCu; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53653ee23adso4311597e87.3;
+        Mon, 23 Sep 2024 13:21:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727122531; x=1727727331; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1727122859; x=1727727659; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cTuhI0jObA1thj5wXELvo1EktSlaWbvDYhEVGakUX6o=;
-        b=0BaoH5OZaK4t3V4lrtsS2DV8XUo2gRRQgruZ4DypyHtgdt/HWfyvY9MIPsDkN8Mqbj
-         BhQDjsZClnq5SkrY4VaoMyeRPtJMEt1jJgh3nSuo3R6dOhOc7eotz26DFdJfXeHQXqeJ
-         xzuLmpn7BBvMbSTodgrv5Xhdh8AfGFgkIVQbl9Nc3vBy7xkZrBeyG7ZhkHFzQiRCsm8h
-         brM+5LEoKINm24sbHM0VAMQG8814fOqfskHZtjMKpDHK/DJWUNvQYN87jJGL/Uxw6Lmq
-         HSl4n0mtrpkuIehgiqoiBvcxXDIkxRSXlrQDU5YH1L+WDKM0P4UjZsE8GMVcvsEyJ4Il
-         Lsvg==
+        bh=NleUZATndt1acwKzBa7y/6tS+SaA3XdbIXpdmDlWmuM=;
+        b=TnKk/sCuLv5vkgPYiYZINQrsq61aMi24rCYxVeETwQm6zi5mSGlsbh1uT5Ttj6/rb5
+         vJwEy4Z0ix3MwEmSSI4aEGS1L81JOvRT+8vkVRSIRBf7eLt8Xq4bI91pwDNZVSrLnOIn
+         E6WSdUquC9OYz9OleyGMrM4/nFRMVxTpQ5Wzu9ZBL2WZCGT2SDqLUr/cLuqjT7Hb5vWx
+         xZuipdCxVsny87xpXfqS/GR0Hmf+wa3QpBYVOUlWMif32d42fOOA2raOEZP6VJSYPr+2
+         u6IaKIVs8vN+Cf/1nFpHnm8YusG+5TF7eYVjZ0RuguabFHMAEVntGLT0Z530sqtGfb6u
+         8ZrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727122531; x=1727727331;
+        d=1e100.net; s=20230601; t=1727122859; x=1727727659;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cTuhI0jObA1thj5wXELvo1EktSlaWbvDYhEVGakUX6o=;
-        b=sxkCbZpniN1E3AULsYsPziAbkHj5PU4ngQ21mhSflcJ5iQaV0iHz4BO81A+j1QTZJj
-         wjLQUlPcQclVPnvM4SEHp0opUn8tIue2p6x5etcf9o4aHbyfd4vBYScRRP5sg7yeNiQb
-         BfoXzjZlt8c3921plSmihgedLisiSDe1YvCHSKUrC6Sk6jgj+9Tz+FFs131QBVXue8w8
-         MoVJN0OxHEe2SXNCtZCA7sxLxSw7dOWSxxxsLw9woorqGviPOUtDlKf7SbMS3bP8dbDq
-         jl2DdvZQ3j/7Bm+dsrFhD96gqa2/lmeHZ9XNDxdQasecKogaMaACwzqXSdqfGo5zRb4d
-         27kw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7IaLPJSv1CLWJ+FGC7r2iXq6Le06SpXGMTfHhuoJAx6+qX2HSdOndQi+OsrUyXWIvuJUykd6Xkas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMzV4u6VL47fSrtPBC2ILOzP8jM5Atvlg2wzLtcOPqq/cFANIA
-	IOrEIH5V6De0T/Iwaekc9gcR+Gb35Hx6KL3cR6oa31pfngogaAhe9a9a/zFCeOtpwKb1/2qaOkc
-	by4MAfD9swqybCWbARdCe67/sO6FrIDxM7pa/Ry05QDEFYpAOtw==
-X-Google-Smtp-Source: AGHT+IHmh02yXm9i2/a395bH2npymCVb0LAxjXgYhMK0kTeo0IfylvI3/ai3urygr3mdT8sWUE48LgPgqLYcSWrvHyE=
-X-Received: by 2002:a17:903:24d:b0:206:d6a4:e13a with SMTP id
- d9443c01a7336-20aeedf40b3mr625565ad.26.1727122530929; Mon, 23 Sep 2024
- 13:15:30 -0700 (PDT)
+        bh=NleUZATndt1acwKzBa7y/6tS+SaA3XdbIXpdmDlWmuM=;
+        b=g19eWJvP2pAiJ5C/yo0EYCoB9ZfhTHfwE7Jq84hcvEY2XpI9/r/sBONR/Ozc0igv9q
+         9ciSgrUIVv4r5AkBXEk+R4zXJTRamnOMncxueYZPsBikBeAgyzMzr7/Bztvwf8L0Rf2V
+         lFAccz/SdInJesRMWH/ejUfiB4UrwjeAnaAbES5wLGr7mA7BNiF2hQOE2eQEM7qMMYJc
+         EPWIp58vwIP9HNtjOVcd934Qx8jBHp4gT7ZIL/AdkDHxSXMICkSr+NqBgJ0iYT2dJN6M
+         45M1wPomBH9yshGeNIsyBpI/4QTEcwHLsROIHipACpd51zlXsn31e59vdFvwv4KXS1bj
+         kunQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFzGF6omiZV+XWIybbIzrpuhJ9yb1Avrq8IxpLNNcrhp4GBSzV2rT81t8MSYXsycmSGsxUcnaVWf29@vger.kernel.org, AJvYcCVN8VQkaPLHZ+kLFlKDv3YDkS1NkkUbFmZnazji9hk9dbESY4yoJ9pwUDRYhSw8egnDzpX9HG166LT7@vger.kernel.org, AJvYcCVvVBW7hCEAnwmSWOhihuAR3nV3obE0JI9YC5czL5m1hDqMC9q0FvQYklJVl+B7HV3jMQanJy0d8YB8Pg==@vger.kernel.org, AJvYcCWTLJS3OZkmslimGd/MFJIcNi7CoILaN3P1JTFPoIMLOzwUSSv7EWHaXN/jvSQKBJf724bXEzCleWeMbeAgZg==@vger.kernel.org, AJvYcCX5C0zXtntRXDvPbIL6qaZKYDqH7n/xpeiKv6ryIQ1dAyeLbxGXtZzRXiCAqnG5QNYoyqXkcgH2Z74cwp/V@vger.kernel.org, AJvYcCXH2KTM/zFdk5lfgcw66Htl13FFO/dN0LWIoiOJKyYGDkaJJ6Cm6/oUd791wRXT6Sg13c2CBHuJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6tkieRY34dcDCKB/NymGv3VXpJcpFyv1VUIFrmK0b55hxXqAj
+	bpGewHMFwgorkDwmlmaQDVKpdIeaIXqqntufm+8Tl8u20+fqKBwLNGUVaxPgtJJyZoY0vGMzzXq
+	L6canLMMny7ar9TEEOeamrcJgmcs=
+X-Google-Smtp-Source: AGHT+IFe6pzcf17Wh1gjew0V8YTIVeE9hLlPHLiePqr1rh/borgYiDBhQWNwMIzi8TlRjg6PaEMoWqREOxcDUAURZmM=
+X-Received: by 2002:a05:6512:6c3:b0:535:63a3:c7d1 with SMTP id
+ 2adb3069b0e04-536ad3b7f23mr6933488e87.48.1727122858742; Mon, 23 Sep 2024
+ 13:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8f2e20f2fc894398da371517c6c8111aba072fb1.camel@kernel.org>
- <20240909163610.2148932-1-ovt@google.com> <84f2415b4d5bb42dc7e26518983f53a997647130.camel@hammerspace.com>
- <CACGj0ChtssX4hCCEnD9hah+-ioxmAB8SzFjJR3Uk1FEWMizv-A@mail.gmail.com>
- <8d95e5334c664d10a751e5791c8291959217524e.camel@hammerspace.com> <CACGj0CgobBUv9CgpAhw+XWFwJY7+A0MryOTyukXz8Jsoc9hdQw@mail.gmail.com>
-In-Reply-To: <CACGj0CgobBUv9CgpAhw+XWFwJY7+A0MryOTyukXz8Jsoc9hdQw@mail.gmail.com>
-From: Oleksandr Tymoshenko <ovt@google.com>
-Date: Mon, 23 Sep 2024 13:15:17 -0700
-Message-ID: <CACGj0ChbuJ=p6WT62rYWarB=E6Uf3Cs_rz7icDPo5uH3GgVpmQ@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: fix a mount deadlock in NFS v4.1 client
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "anna@kernel.org" <anna@kernel.org>, "jbongio@google.com" <jbongio@google.com>, 
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20240814203850.2240469-20-dhowells@redhat.com>
+ <20240923183432.1876750-1-chantr4@gmail.com> <912766.1727120313@warthog.procyon.org.uk>
+In-Reply-To: <912766.1727120313@warthog.procyon.org.uk>
+From: Manu Bretelle <chantr4@gmail.com>
+Date: Mon, 23 Sep 2024 13:20:47 -0700
+Message-ID: <CAArYzrL0+tiPRhW6Z5fDp4WJgxVBeMg90A44rA=htXku0Q99eQ@mail.gmail.com>
+Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
+To: David Howells <dhowells@redhat.com>
+Cc: asmadeus@codewreck.org, ceph-devel@vger.kernel.org, christian@brauner.io, 
+	ericvh@kernel.org, hsiangkao@linux.alibaba.com, idryomov@gmail.com, 
+	jlayton@kernel.org, linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	marc.dionne@auristor.com, netdev@vger.kernel.org, netfs@lists.linux.dev, 
+	pc@manguebit.com, smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
+	v9fs@lists.linux.dev, willy@infradead.org, eddyz87@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Trond,
-
-Following up on this: do you have plans to submit the patch you proposed
-or do you want me to rework my submission along the lines you proposed?
-
-On Tue, Sep 10, 2024 at 2:08=E2=80=AFPM Oleksandr Tymoshenko <ovt@google.co=
-m> wrote:
+On Mon, Sep 23, 2024 at 12:38=E2=80=AFPM David Howells <dhowells@redhat.com=
+> wrote:
 >
-> On Mon, Sep 9, 2024 at 5:22=E2=80=AFPM Trond Myklebust <trondmy@hammerspa=
-ce.com> wrote:
-> >
-> > On Mon, 2024-09-09 at 16:06 -0700, Oleksandr Tymoshenko wrote:
-> > > On Mon, Sep 9, 2024 at 10:56=E2=80=AFAM Trond Myklebust
-> > > <trondmy@hammerspace.com> wrote:
-> > > >
-> > > > On Mon, 2024-09-09 at 16:36 +0000, Oleksandr Tymoshenko wrote:
-> > > > > > > nfs41_init_clientid does not signal a failure condition from
-> > > > > > > nfs4_proc_exchange_id and nfs4_proc_create_session to a
-> > > > > > > client
-> > > > > > > which
-> > > > > > > may
-> > > > > > > lead to mount syscall indefinitely blocked in the following
-> > > > > > > stack
-> > > > >
-> > > > > > NACK. This will break all sorts of recovery scenarios, because
-> > > > > > it
-> > > > > > doesn't distinguish between an initial 'mount' and a server
-> > > > > > reboot
-> > > > > > recovery situation.
-> > > > > > Even in the case where we are in the initial mount, it also
-> > > > > > doesn't
-> > > > > > distinguish between transient errors such as NFS4ERR_DELAY or
-> > > > > > reboot
-> > > > > > errors such as NFS4ERR_STALE_CLIENTID, etc.
-> > > > >
-> > > > > > Exactly what is the scenario that is causing your hang? Let's
-> > > > > > try
-> > > > > > to
-> > > > > > address that with a more targeted fix.
-> > > > >
-> > > > > The scenario is as follows: there are several NFS servers and
-> > > > > several
-> > > > > production machines with multiple NFS mounts. This is a
-> > > > > containerized
-> > > > > multi-tennant workflow so every tennant gets its own NFS mount to
-> > > > > access their
-> > > > > data. At some point nfs41_init_clientid fails in the initial
-> > > > > mount.nfs call
-> > > > > and all subsequent mount.nfs calls just hang in
-> > > > > nfs_wait_client_init_complete
-> > > > > until the original one, where nfs4_proc_exchange_id has failed,
-> > > > > is
-> > > > > killed.
-> > > > >
-> > > > > The cause of the nfs41_init_clientid failure in the production
-> > > > > case
-> > > > > is a timeout.
-> > > > > The following error message is observed in logs:
-> > > > >   NFS: state manager: lease expired failed on NFSv4 server <ip>
-> > > > > with
-> > > > > error 110
-> > > > >
-> > > >
-> > > > How about something like the following fix then?
-> > > > 8<-----------------------------------------------
-> > > > From eb402b489bb0d0ada1a3dd9101d4d7e193402e46 Mon Sep 17 00:00:00
-> > > > 2001
-> > > > Message-ID:
-> > > > <eb402b489bb0d0ada1a3dd9101d4d7e193402e46.1725904471.git.trond.mykl
-> > > > ebust@hammerspace.com>
-> > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > Date: Mon, 9 Sep 2024 13:47:07 -0400
-> > > > Subject: [PATCH] NFSv4: Fail mounts if the lease setup times out
-> > > >
-> > > > If the server is down when the client is trying to mount, so that
-> > > > the
-> > > > calls to exchange_id or create_session fail, then we should allow
-> > > > the
-> > > > mount system call to fail rather than hang and block other
-> > > > mount/umount
-> > > > calls.
-> > > >
-> > > > Reported-by: Oleksandr Tymoshenko <ovt@google.com>
-> > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > ---
-> > > >  fs/nfs/nfs4state.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >
-> > > > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> > > > index 30aba1dedaba..59dcdf9bc7b4 100644
-> > > > --- a/fs/nfs/nfs4state.c
-> > > > +++ b/fs/nfs/nfs4state.c
-> > > > @@ -2024,6 +2024,12 @@ static int
-> > > > nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
-> > > >                 nfs_mark_client_ready(clp, -EPERM);
-> > > >                 clear_bit(NFS4CLNT_LEASE_CONFIRM, &clp->cl_state);
-> > > >                 return -EPERM;
-> > > > +       case -ETIMEDOUT:
-> > > > +               if (clp->cl_cons_state =3D=3D NFS_CS_SESSION_INITIN=
-G) {
-> > > > +                       nfs_mark_client_ready(clp, -EIO);
-> > > > +                       return -EIO;
-> > > > +               }
-> > > > +               fallthrough;
-> > > >         case -EACCES:
-> > > >         case -NFS4ERR_DELAY:
-> > > >         case -EAGAIN:
-> > > > --
-> > >
-> > > This patch fixes the issue in my simulated environment. ETIMEDOUT is
-> > > the error code that
-> > > was observed in the production env but I guess it's not the only
-> > > possible one. Would it make
-> > > sense to handle all error conditions in the NFS_CS_SESSION_INITING
-> > > state or are there
-> > > some others that are recoverable?
-> > >
-> >
-> > The only other one that I'm thinking might want to be treated similarly
-> > is the above EACCES error. That's because that is only returned if
-> > there is a problem with your RPCSEC_GSS/krb5 credential. I was thinking
-> > of changing that one too in the same patch, but came to the conclusion
-> > it would be better to treat the two issues with separate fixes.
-> >
-> > The other error conditions are all supposed to be transient NFS level
-> > errors. They should not be treated as fatal.
+> Hi Manu,
 >
-> Sounds good. Will you submit this patch to the mainline kernel? If so
-> please add me to Cc. Thanks for looking into this.
+> Are you using any other network filesystem than 9p, or just 9p?
+
+Should be 9p only.
+
+We ended up reverting the whole merge with
+https://patch-diff.githubusercontent.com/raw/kernel-patches/vmtest/pull/288=
+.patch
+as my initial commit revert happened to work because of the left over
+cached .o.
+
+FWIW, I quickly checked and virtiofs is not affected. e.g is I was to
+apply https://github.com/danobi/vmtest/pull/88 to vmtest and recompile
+the kernel with:
+  CONFIG_FUSE_FS=3Dy
+  CONFIG_VIRTIO_FS=3Dy
+  CONFIG_FUSE_PASSTHROUGH=3Dy
+
+qemu-system-x86_64 "-nodefaults" "-display" "none" \
+  "-serial" "mon:stdio" "-enable-kvm" "-cpu" "host" \
+  "-qmp" "unix:/tmp/qmp-895732.sock,server=3Don,wait=3Doff" \
+  "-chardev" "socket,path=3D/tmp/qga-733184.sock,server=3Don,wait=3Doff,id=
+=3Dqga0" \
+  "-device" "virtio-serial" \
+  "-device" "virtserialport,chardev=3Dqga0,name=3Dorg.qemu.guest_agent.0" \
+  "-object" "memory-backend-memfd,id=3Dmem,share=3Don,size=3D4G" "-numa"
+"node,memdev=3Dmem" \
+  "-device" "virtio-serial" "-chardev"
+"socket,path=3D/tmp/cmdout-713466.sock,server=3Don,wait=3Doff,id=3Dcmdout" =
+\
+  "-device" "virtserialport,chardev=3Dcmdout,name=3Dorg.qemu.virtio_serial.=
+0" \
+  "-chardev" "socket,id=3Droot,path=3D/tmp/virtiofsd-807478.sock" \
+  "-device" "vhost-user-fs-pci,queue-size=3D1024,chardev=3Droot,tag=3Drootf=
+s" \
+  "-kernel" "/data/users/chantra/linux/arch/x86/boot/bzImage" \
+  "-no-reboot" "-append" "rootfstype=3Dvirtiofs root=3Drootfs rw
+earlyprintk=3Dserial,0,115200 printk.devkmsg=3Don console=3D0,115200
+loglevel=3D7 raid=3Dnoautodetect init=3D/tmp/vmtest-initBdg4J.sh panic=3D-1=
+" \
+  "-chardev" "socket,id=3Dshared,path=3D/tmp/virtiofsd-992342.sock" \
+  "-device" "vhost-user-fs-pci,queue-size=3D1024,chardev=3Dshared,tag=3Dvmt=
+est-shared"
+\
+  "-smp" "2" "-m" "4G"
+
+would work.
+
+Manu
+
+>
+> David
+>
 
