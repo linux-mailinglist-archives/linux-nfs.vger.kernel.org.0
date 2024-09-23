@@ -1,152 +1,93 @@
-Return-Path: <linux-nfs+bounces-6597-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6598-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9336297E787
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 10:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BE41A97EB84
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 14:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C49441C21039
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 08:28:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF6AA1C210B6
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 12:28:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE6219409C;
-	Mon, 23 Sep 2024 08:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1d+rmBW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21201974FA;
+	Mon, 23 Sep 2024 12:28:24 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx02-out.cloud.vadesecure.com (mx02-out.cloud.vadesecure.com [109.197.246.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD9B5F873;
-	Mon, 23 Sep 2024 08:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C7433D6
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 12:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.197.246.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727080119; cv=none; b=Qm2GXaGLlyJlrBS6wE4dupri2unGH9ruqkmp3EYf03aCfOAWr7+XMSgFm/gsa+pVCOUPqqoF567U50j8Qp1b64EPJikahTu1uJVUNBYGgPBnmoEpzlWpPOd6WCiJWpl3op7POMkoyttLEdlBacB06QG1YbqUb2B9U0jC4aoVBc4=
+	t=1727094504; cv=none; b=Y5lHexSrBo5naibiO5BLZUEXWa90AkgYfC1hZYb+Z1gYjo4urioKGAYGRhKVtJTb7VWqEtbMXwHrZaJZ+16CzcMV732gCTHEUqYkuZuHlHmm4xmOuZ6y2IU3RVwdedvUX+uwNB2fkugYF/G1xWYhUuWoaHK52FsVNZRtv1ycrKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727080119; c=relaxed/simple;
-	bh=/Sa7lQaX9/x3svQU8zx0hWvczjR7gWzw8ZBmgZHFzaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U2C3wbMGM3U25Yg+qGF57J6Y0Y5kg+7mS4TzEGORP9fXUFWdvcPz0byCdcpAxw73q4IKXRs0g+GV1/CkbOq0tMmVaHutC+L2zum5+wtRFtjKhOvRauC0iiakrgUD8XJYsAc2skXPdhxktWVGF93PwUPEQ9DeVuiEmqEKv2NlMis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j1d+rmBW; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a8d60e23b33so543599966b.0;
-        Mon, 23 Sep 2024 01:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727080116; x=1727684916; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AJPMWZh8qR0z0ZmaykiUTlKaa8/iEazwFZpeOOK2vlA=;
-        b=j1d+rmBW3UG/jXYWDkQUcQyVzPHcvhiiU/GIBO9nfM3lnvwGgIvAong8kt0gy4RMO7
-         mJALv0/dmc/s9XjxdMqd2YSxFbrjn6WE7ZBdgugEUVDsaBjex9TkLpxlqvFMf9SRIzxz
-         xKTl/+g4vqDC7gW0UN8A7E8iM5mTL92K+cBVKfBSnE+fEaLrcckT3UgwHd83jyy3DY0Y
-         5HbrMfrdrGGLvwwo4RtIncDrRhd/tvFwafxxfiBz8WgDeDhcDD3atOlmukdAfHtjM0oH
-         1CMN/SPnChArisK/M/T93uvQamc/8agGRwwsZ5UzTd88H7wu9T/qxB2M9F2iKhUfgULV
-         v+Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727080116; x=1727684916;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AJPMWZh8qR0z0ZmaykiUTlKaa8/iEazwFZpeOOK2vlA=;
-        b=Mzt1Xu2hWLKz7jzuc7Zi6P0kAu+LZrYZgSBNY3nKUcGG4bJFZVVrKozj8iK9qg+OZc
-         iF6b2b+KIsVyIdyKUKjrfCV0dj2yJTct6Ab9WR1hdKZRRem4tMnW37I1O+RI8jV4Hem4
-         0AV4IX4LO+P5nRL6PQ/KA4Ag3zMhrA5+veHog/rLidHLrKor1ro2TixrJ/MsWW8//037
-         +pFX6Fik5S1A+nDTWGa0zq+zgWpjOM2LKjW2XRFXJp5B/u/RcpYAoyxNWoz5sspkKb5j
-         3a316BNx1A681XvnyOezdUEqfhRPv7Wz3XES/wnnkFFm8+BEIGEzY+O4WOcCKl5NAFO6
-         wfQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjH8Vtt1jJH0uJybGwPptBDl1eloaZoCxtYB0rEoqQFTOjgquFp08j7bsSkkGpLzvfRx5/1/GYs/nX39hA@vger.kernel.org, AJvYcCWRg303sWR+/aQ4RSKjgt1jdGcr4UJDWWHk2FW2zPhsOkL0hkXFmm0/HSrQBKipBURPCR46MbavNN5S@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoUd45SX0HL8WRDg9KUhh7hzJV8aIsxnOLRV9VaJAdYgix5644
-	STdO6FkLOdHuLNjXdfBppnDRbLm4MH1gmJZj+sv5n1WIZdXmO6BF
-X-Google-Smtp-Source: AGHT+IFn3I9YYRP2xW2azjbkHDromLeH1J87KFzkMTlXTajuQbBe19JVLq0GPg/T+aMDgZX/cp0qQw==
-X-Received: by 2002:a17:907:d85b:b0:a8d:2d2e:90e6 with SMTP id a640c23a62f3a-a90d5839345mr946358166b.60.1727080115709;
-        Mon, 23 Sep 2024 01:28:35 -0700 (PDT)
-Received: from amir-ThinkPad-T480.arnhem.chello.nl (92-109-99-123.cable.dynamic.v4.ziggo.nl. [92.109.99.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90cbc7122esm512948866b.124.2024.09.23.01.28.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 01:28:35 -0700 (PDT)
-From: Amir Goldstein <amir73il@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/2] fs: open_by_handle_at() support for decoding "explicit connectable" file handles
-Date: Mon, 23 Sep 2024 10:28:29 +0200
-Message-Id: <20240923082829.1910210-3-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240923082829.1910210-1-amir73il@gmail.com>
-References: <20240923082829.1910210-1-amir73il@gmail.com>
+	s=arc-20240116; t=1727094504; c=relaxed/simple;
+	bh=qqnqQ30HoG/XM1h0NhjiYkpfo6f9D9dAvp09gOW3/uw=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=Q03MnarcfqzwNM2BWAHO3fbATITbFNysIAqaQ0KUiAPsgxpn0OQ9IDDl2a2HDVRFzg1W4sfDq3rVRYt0jw/LxQnrpZDboZ5i86+iMVS1vvamKY5Da8mKbN21ffPEAuFVtbmkYZ8+MdtSR+2F3YqgSHeC9ttmalUiAVX+2i9h8/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu; spf=pass smtp.mailfrom=minesparis.psl.eu; arc=none smtp.client-ip=109.197.246.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minesparis.psl.eu
+Received: from smtp-out-1.mines-paristech.fr (smtp-out-1.mines-paristech.fr [77.158.173.156])
+	by mx02-out.cloud.vadesecure.com (vcfr1mtao02p) with ESMTP id 4XC2C00Kndz1tgT
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 14:20:44 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
+	by smtp-out-1.mines-paristech.fr (Postfix) with ESMTP id CF69CC0BDC
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 14:20:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id C3F851C00DE
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 14:20:43 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id wdorPcRfcYeo for <linux-nfs@vger.kernel.org>;
+	Mon, 23 Sep 2024 14:20:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 419CD1C00FA
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 14:20:43 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr 419CD1C00FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=minesparis.psl.eu;
+	s=9f5ccecf-24a0-4eb3-a015-b6ac3b07c299; t=1727094043;
+	bh=qqnqQ30HoG/XM1h0NhjiYkpfo6f9D9dAvp09gOW3/uw=;
+	h=Message-ID:From:To:Date:MIME-Version;
+	b=evtr9y7aqHrEKw+47z4jtxXSSLVHqmz5Qiu0B+Sx3kRdgx7rPfb1/D1tu/KzmpNLA
+	 fKkg7EvvJVmMN4sXUu0Int6BJUruBpLKirYnAbOjmx+8Jw5la+VFKriSewRJS7V6JN
+	 2hjzA1juzZxzFSwUspCUFOhSE5jgCARICTRF5M2Zlz+yxLsVZWz8WCWC8kzizjq3zf
+	 8I/ANE8ZmFMlzS5XAT7yyMHFjb/tgQhKWrhX6TvsVSKqlc47SMPczw4VfR5Ddp60oH
+	 hR7yrrP5rdpqX1cmHReoWE/FPB85CsCt1QgUpY3OVK7h8V1x1cPxdKr9/tcXoJB14C
+	 hbXzIPUzQuplw==
+X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YFBNF29WPYN2 for <linux-nfs@vger.kernel.org>;
+	Mon, 23 Sep 2024 14:20:43 +0200 (CEST)
+Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id 09B7A1C00DE
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 14:20:42 +0200 (CEST)
+Message-ID: <29d539955368d357750e17bd615e2ae5f10e826a.camel@minesparis.psl.eu>
+Subject: nfsd endlessly in uninterruptible sleep (D state)
+From: =?ISO-8859-1?Q?Beno=EEt?= Gschwind <benoit.gschwind@minesparis.psl.eu>
+To: linux-nfs@vger.kernel.org
+Date: Mon, 23 Sep 2024 14:20:42 +0200
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-VRC-SPAM-STATUS: 0,0,gggruggvucftvghtrhhoucdtuddrgeeftddrudelledgheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftvedpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefkuffhvffftgfgfgggsehtqhertddtreejnecuhfhrohhmpeeuvghnohpfthcuifhstghhfihinhguuceosggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshhprghrihhsrdhpshhlrdgvuheqnecuggftrfgrthhtvghrnheptefhveeviefggffhuedtvdegieffvdehgffhgedvhefftdfgheduueevtdehuedvnecukfhppeejjedrudehkedrudejfedrudehiedpjeejrdduheekrddukedurddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdpmhgrgihmshhgshhiiigvpedutdegkeehjeeipdhinhgvthepjeejrdduheekrddujeefrdduheeipdhhvghlohepshhmthhpqdhouhhtqddurdhmihhnvghsqdhprghrihhsthgvtghhrdhfrhdpmhgrihhlfhhrohhmpegsvghnohhithdrghhstghhfihinhgusehmihhnvghsphgrrhhishdrphhslhdrvghupdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-VRC-SPAM-STATE: legit
+X-VRC-POLICY-STATUS: t=1,a=1,l=0
 
-Teach open_by_handle_at(2) about the type format of "explicit connectable"
-file handles that were created using the AT_HANDLE_CONNECTABLE flag to
-name_to_handle_at(2).
+Hello,
 
-When decoding an "explicit connectable" file handles, name_to_handle_at(2)
-should fail if it cannot open a "connected" fd with known path, which is
-accessible (to capable user) from mount fd path.
+In some workload on the server side I get nfsd in uninterruptible sleep
+and never leave this state. The client is blocked endlessly, until I
+reboot the server.
 
-Note that this does not check if the path is accessible to the calling
-user, just that it is accessible wrt the mount namesapce, so if there
-is no "connected" alias, or if parts of the path are hidden in the
-mount namespace, open_by_handle_at(2) will return -ESTALE.
+How can I diagnose/analyze the issue ?
 
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
- fs/fhandle.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 6c87f1764235..68e59141f67b 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -247,7 +247,13 @@ static int vfs_dentry_acceptable(void *context, struct dentry *dentry)
- 
- 	if (!(ctx->flags & HANDLE_CHECK_SUBTREE) || d == root)
- 		retval = 1;
--	WARN_ON_ONCE(d != root && d != root->d_sb->s_root);
-+	/*
-+	 * exportfs_decode_fh_raw() does not call acceptable() callback with
-+	 * a disconnected directory dentry, so we should have reached either
-+	 * mount fd directory or sb root.
-+	 */
-+	if (ctx->fh_flags & EXPORT_FH_DIR_ONLY)
-+		WARN_ON_ONCE(d != root && d != root->d_sb->s_root);
- 	dput(d);
- 	return retval;
- }
-@@ -346,10 +352,19 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
- 		retval = -EINVAL;
- 		goto out_path;
- 	}
--	if (f_handle.handle_flags) {
-+	if (f_handle.handle_flags & ~EXPORT_FH_USER_FLAGS) {
- 		retval = -EINVAL;
- 		goto out_path;
- 	}
-+	/*
-+	 * If handle was encoded with AT_HANDLE_CONNECTABLE, verify that we
-+	 * are decoding an fd with connected path, which is accessible from
-+	 * the mount fd path.
-+	 */
-+	ctx.fh_flags |= f_handle.handle_flags;
-+	if (ctx.fh_flags & EXPORT_FH_CONNECTABLE)
-+		ctx.flags |= HANDLE_CHECK_SUBTREE;
-+
- 	handle = kmalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
- 			 GFP_KERNEL);
- 	if (!handle) {
--- 
-2.34.1
-
+Best regards
 
