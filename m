@@ -1,309 +1,161 @@
-Return-Path: <linux-nfs+bounces-6620-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6621-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4676983912
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 23:24:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A86EF98394B
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 23:56:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD4C91F21BAC
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 21:24:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AEE5CB20DBB
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 21:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0C31839F4;
-	Mon, 23 Sep 2024 21:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC6C85931;
+	Mon, 23 Sep 2024 21:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BiVPcTPV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RthMSAos";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BiVPcTPV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RthMSAos"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFhvXU9j"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9420E7F7DB;
-	Mon, 23 Sep 2024 21:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B19084A32;
+	Mon, 23 Sep 2024 21:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727126670; cv=none; b=m8DZIyqk0j9A78EHb95SQtA7DOEmUkwX4Ui61kdV96FgzXbbJZMAJKq2H6o7AHDAxY3yqH4mJtbi8WqCJiNHxsbD5gtGwQZ1JCbGNMvCAwg6dw4hhZFX6z2Ism404Hf1FHOnE9jYqDCff4xanElC9cJAxtz5IPAVL8YSBonJIKM=
+	t=1727128569; cv=none; b=ZQdK7VxSLZDw/uMeflHfKtq1DsFkS4iXhMSncUTckfWCefYctYlcby/3PKj1wy6hsLP2Owfogc7q2ky34jwvmI657bQdPQ2qbdyhQXCjryQRHlw9Yh9B8qK3rHSSM2a2In3pMGeX3WvM8nggNJztgqp/+9EyTLwRXLnHLYCIL9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727126670; c=relaxed/simple;
-	bh=DWT9LTgTwgl3oI2zR0kqC0LrGcG2j48l8BSn+c9QYPw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=HJoYNeKIhrv3WzQgOIVh3KR4tTNMkAqPUYTg8SV0Xl7C8lMh5JHKZ/4LyJX13T9WW55iPFMHbyUFqyD4RTnWVxZyGN9sKWdCt5JaRv5Li1BjjcYvzgxGTQOJ5h0yt8C15AbaefsfLK4Hcd6gkg1pWfdNL1OiZrX4F6QVE+i0oGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BiVPcTPV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RthMSAos; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BiVPcTPV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RthMSAos; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A88F421CAC;
-	Mon, 23 Sep 2024 21:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1727126666; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r6jB3NjLBHp1Hb3SCVME9sYqKJRwKArJJM5yKt3AWpM=;
-	b=BiVPcTPVQQOXadtEkCT6qpOsPvatJsvHeHJGVFZGRFRwU2qceGX9Yge1cBgUxEaI9WXnzd
-	ZZgoiHBRr2Z6DlnKdhYroQCZ459mSFYnoTq4wtN3q4g4A90d+Iv3AYOgUHNvD+x6Sq2XoD
-	i1A1/nu3HKTiXC76YqB18jXM/yeHCuk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1727126666;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r6jB3NjLBHp1Hb3SCVME9sYqKJRwKArJJM5yKt3AWpM=;
-	b=RthMSAoskmprqIuYzWJ0v2jTh7zRz6HFj8WbgEEo3NdElLavWk5mHRDUoD06JTlUzZ3F7E
-	qY1/qrXn6ICjawCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BiVPcTPV;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RthMSAos
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1727126666; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r6jB3NjLBHp1Hb3SCVME9sYqKJRwKArJJM5yKt3AWpM=;
-	b=BiVPcTPVQQOXadtEkCT6qpOsPvatJsvHeHJGVFZGRFRwU2qceGX9Yge1cBgUxEaI9WXnzd
-	ZZgoiHBRr2Z6DlnKdhYroQCZ459mSFYnoTq4wtN3q4g4A90d+Iv3AYOgUHNvD+x6Sq2XoD
-	i1A1/nu3HKTiXC76YqB18jXM/yeHCuk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1727126666;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r6jB3NjLBHp1Hb3SCVME9sYqKJRwKArJJM5yKt3AWpM=;
-	b=RthMSAoskmprqIuYzWJ0v2jTh7zRz6HFj8WbgEEo3NdElLavWk5mHRDUoD06JTlUzZ3F7E
-	qY1/qrXn6ICjawCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4C671347F;
-	Mon, 23 Sep 2024 21:24:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HHOTIYXc8WYCUwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 23 Sep 2024 21:24:21 +0000
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1727128569; c=relaxed/simple;
+	bh=0MkE1EZsDQcuj7jFg9i94IepmQpIfftjB4itHJtXX2k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kRxobIit9BVsKjzSaQpqmUu6HesfuqvaQ7csdSW/ECBnaoNdI53mVxgog4DE4A3Op2wQ17h0lgDgxgaBMZZ/IipGlneHjpsCsP+gq5+jA4lVIhlAXFvgiHfOlZTRbFt2fmk/6oR8Sh8FCNrQ5x5Cnz9nGB9ZwAEghZ1Ysoa0q/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFhvXU9j; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7cf5e179b68so3962800a12.1;
+        Mon, 23 Sep 2024 14:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727128567; x=1727733367; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/8+/Agj95n5lwYDiAPqDI5W15t31UBn8yUoG9/0FMeE=;
+        b=gFhvXU9j2rzXQCQXT9K8tCnS8DBUvopCkM8NvgoyMLZ4Sr1Ebx9OUqdEOKWpqyHFWu
+         VAGj0f4cnnZeLEbGQfSksZPyrpf2Vrj/w64jxhfxDHiZQTXg4O9hybj4vEWDfWFdLlCk
+         oqvvOMcRRDNiFTufx8ICs7hWLhjPPBmjYpUzcbHY728BzmpB5HyNFXNUf3Uz+DD2vvEM
+         UzUl4ZhRPlJoNWKtHEJfXgpQuDgC4oc7yLz+CVIXiES10l539fnsi88hMSlD3aGcbQAU
+         d9WaCB5zrwrK3y6YKq70HG5b7qGX9J9td3/iFfwhh88vUalE3bkA94FvjdHgGAMXu16M
+         3QyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727128567; x=1727733367;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/8+/Agj95n5lwYDiAPqDI5W15t31UBn8yUoG9/0FMeE=;
+        b=GDw4IZQX2SWnuLyR+lAgc5fqu3lKTkpGrHTudXJ1sW8/pb4yfT9AxASkmuWO2o70oM
+         GYKT/02dkW855KCeObL64ZeRfA12pKkiNffaYSQVkKviNMk8qrOi49MNWhBqmN2kT7hg
+         5AeO73jPMal03afPpoci3GQtYEwIwlGpiVx8tVdorUadVZa6eo572FntSrvfgWU1f9Cd
+         XN5B+uSteAn5TVP9Ee97rmHzFtZWDTxkDu6GA4wB4nq62x8/oRoun0YRtP9705BqwUfF
+         o8ZR8sGCJ7jR5cccrWt7KKM2E11HHY2a8MB69woo4TeBGOgwWjSNGVcR/4RPq4HmwNjO
+         K0wA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZk1FN+WbmPtA8LgxtOyWooun1HYvV0UWnaJ5s2irXkBQvmAlwGIML5nIUmZLiHCzNeZm8xwgUGM+bwNpxvQ==@vger.kernel.org, AJvYcCVNDJ/sQky9StX6hrlCNnYbwSEj2iN5nZ1QFXns0fSLMM0CMoWhst3fckohuiOhUlJcdqbQVciboqxW0w==@vger.kernel.org, AJvYcCW8rpEEKbXaJ1vCbtKt9VpzoaKqV5bGmKnSMOArCX4PoOTe6uhtiDGkVqOF5DPm4UYUqSFIEHpO@vger.kernel.org, AJvYcCWdZKqvA4sFd+qUVvMGpR7K2MWdrW5Q2y63pB0rtvbTWJHVNnG9ie+D2Plfxs88dJdUOlAxnhK6wJShrq/u@vger.kernel.org, AJvYcCX/Emn1nUILRk4DrafCdLnCDzz3JnHlQ/+/iU4yWZi9SqG4Oo/zRu4xDuYuOyGo64VD7XtNnntUd74s@vger.kernel.org, AJvYcCXxOmHXdIcAB3Cxi3TYncHf0rlH+kKDj48jGPNq6fbNzfxAnWfCSgOTaKM6nV3yBp+Me1f0agx4MfiC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjVb379gUmgqSg4vvAUOF2HM5lYNsvY5kZ+8B+bbUmkURJdINz
+	soPHsrqZKbZNJm5tTb0RsDw7DwMChhO5p+T1dAT/+KoaOteZEJCM
+X-Google-Smtp-Source: AGHT+IEOWgP+NQYRnWmQn7Tzm3qkB8mabtnbmT8Onpp+Lt2mGQXJbIgQdAxRKso0U9c6JGKqTdiPZA==
+X-Received: by 2002:a05:6a21:3983:b0:1d2:e90a:f4aa with SMTP id adf61e73a8af0-1d343c5913dmr1421967637.13.1727128567376;
+        Mon, 23 Sep 2024 14:56:07 -0700 (PDT)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71afc97c102sm80715b3a.154.2024.09.23.14.56.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2024 14:56:06 -0700 (PDT)
+Message-ID: <0f6afef57196cb308aa90be5b06a64793aa24682.camel@gmail.com>
+Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Manu Bretelle <chantr4@gmail.com>, dhowells@redhat.com
+Cc: asmadeus@codewreck.org, ceph-devel@vger.kernel.org,
+ christian@brauner.io,  ericvh@kernel.org, hsiangkao@linux.alibaba.com,
+ idryomov@gmail.com,  jlayton@kernel.org, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org,  linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-nfs@vger.kernel.org,  marc.dionne@auristor.com,
+ netdev@vger.kernel.org, netfs@lists.linux.dev,  pc@manguebit.com,
+ smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
+ v9fs@lists.linux.dev, willy@infradead.org
+Date: Mon, 23 Sep 2024 14:56:01 -0700
+In-Reply-To: <670794146059f85a30efd7cf9d6650375d987077.camel@gmail.com>
+References: <20240814203850.2240469-20-dhowells@redhat.com>
+	 <20240923183432.1876750-1-chantr4@gmail.com>
+	 <670794146059f85a30efd7cf9d6650375d987077.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mirsad Todorovac" <mtodorovac69@gmail.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Mirsad Todorovac" <mtodorovac69@gmail.com>
-Subject: Re: [PATCH v1 1/1] SUNRPC: Make enough room in servername[] for
- AF_UNIX addresses
-In-reply-to: <20240923205545.1488448-2-mtodorovac69@gmail.com>
-References: <20240923205545.1488448-2-mtodorovac69@gmail.com>
-Date: Tue, 24 Sep 2024 07:24:10 +1000
-Message-id: <172712665050.17050.14126694149839508223@noble.neil.brown.name>
-X-Rspamd-Queue-Id: A88F421CAC
-X-Spam-Score: -6.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,oracle.com,kernel.org,redhat.com,talpey.com,davemloft.net,google.com,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,davemloft.net:email,talpey.com:email,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On Tue, 24 Sep 2024, Mirsad Todorovac wrote:
-> GCC 13.2.0 reported with W=3D1 build option the following warning:
-
-See
-  https://lore.kernel.org/all/20240814093853.48657-1-kunwu.chan@linux.dev/
-
-I don't think anyone really cares about this one.
-
-NeilBrown
-
-
+On Mon, 2024-09-23 at 11:43 -0700, Eduard Zingerman wrote:
+> On Mon, 2024-09-23 at 11:34 -0700, Manu Bretelle wrote:
 >=20
-> net/sunrpc/clnt.c: In function =E2=80=98rpc_create=E2=80=99:
-> net/sunrpc/clnt.c:582:75: warning: =E2=80=98%s=E2=80=99 directive output ma=
-y be truncated writing up to 107 bytes into \
-> 					a region of size 48 [-Wformat-truncation=3D]
->   582 |                                 snprintf(servername, sizeof(servern=
-ame), "%s",
->       |                                                                    =
-       ^~
-> net/sunrpc/clnt.c:582:33: note: =E2=80=98snprintf=E2=80=99 output between 1=
- and 108 bytes into a destination of size 48
->   582 |                                 snprintf(servername, sizeof(servern=
-ame), "%s",
->       |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~
->   583 |                                          sun->sun_path);
->       |                                          ~~~~~~~~~~~~~~
+> [...]
 >=20
->    548         };
->  =E2=86=92 549         char servername[48];
->    550         struct rpc_clnt *clnt;
->    551         int i;
->    552
->    553         if (args->bc_xprt) {
->    554                 WARN_ON_ONCE(!(args->protocol & XPRT_TRANSPORT_BC));
->    555                 xprt =3D args->bc_xprt->xpt_bc_xprt;
->    556                 if (xprt) {
->    557                         xprt_get(xprt);
->    558                         return rpc_create_xprt(args, xprt);
->    559                 }
->    560         }
->    561
->    562         if (args->flags & RPC_CLNT_CREATE_INFINITE_SLOTS)
->    563                 xprtargs.flags |=3D XPRT_CREATE_INFINITE_SLOTS;
->    564         if (args->flags & RPC_CLNT_CREATE_NO_IDLE_TIMEOUT)
->    565                 xprtargs.flags |=3D XPRT_CREATE_NO_IDLE_TIMEOUT;
->    566         /*
->    567          * If the caller chooses not to specify a hostname, whip
->    568          * up a string representation of the passed-in address.
->    569          */
->    570         if (xprtargs.servername =3D=3D NULL) {
->    571                 struct sockaddr_un *sun =3D
->    572                                 (struct sockaddr_un *)args->address;
->    573                 struct sockaddr_in *sin =3D
->    574                                 (struct sockaddr_in *)args->address;
->    575                 struct sockaddr_in6 *sin6 =3D
->    576                                 (struct sockaddr_in6 *)args->address;
->    577
->    578                 servername[0] =3D '\0';
->    579                 switch (args->address->sa_family) {
->  =E2=86=92 580                 case AF_LOCAL:
->  =E2=86=92 581                         if (sun->sun_path[0])
->  =E2=86=92 582                                 snprintf(servername, sizeof(=
-servername), "%s",
->  =E2=86=92 583                                          sun->sun_path);
->  =E2=86=92 584                         else
->  =E2=86=92 585                                 snprintf(servername, sizeof(=
-servername), "@%s",
->  =E2=86=92 586                                          sun->sun_path+1);
->  =E2=86=92 587                         break;
->    588                 case AF_INET:
->    589                         snprintf(servername, sizeof(servername), "%p=
-I4",
->    590                                  &sin->sin_addr.s_addr);
->    591                         break;
->    592                 case AF_INET6:
->    593                         snprintf(servername, sizeof(servername), "%p=
-I6",
->    594                                  &sin6->sin6_addr);
->    595                         break;
->    596                 default:
->    597                         /* caller wants default server name, but
->    598                          * address family isn't recognized. */
->    599                         return ERR_PTR(-EINVAL);
->    600                 }
->    601                 xprtargs.servername =3D servername;
->    602         }
->    603
->    604         xprt =3D xprt_create_transport(&xprtargs);
->    605         if (IS_ERR(xprt))
->    606                 return (struct rpc_clnt *)xprt;
+> > The qemu command invoked by vmtest is:
+> >=20
+> > qemu-system-x86_64 "-nodefaults" "-display" "none" "-serial" "mon:stdio=
+" \
+> >   "-enable-kvm" "-cpu" "host" "-qmp" "unix:/tmp/qmp-971717.sock,server=
+=3Don,wait=3Doff" \
+> >   "-chardev" "socket,path=3D/tmp/qga-888301.sock,server=3Don,wait=3Doff=
+,id=3Dqga0" \
+> >   "-device" "virtio-serial" \
+> >   "-device" "virtserialport,chardev=3Dqga0,name=3Dorg.qemu.guest_agent.=
+0" \
+> >   "--device" "virtio-serial" \
+> >   "-chardev" "socket,path=3D/tmp/cmdout-508724.sock,server=3Don,wait=3D=
+off,id=3Dcmdout" \
+> >   "--device" "virtserialport,chardev=3Dcmdout,name=3Dorg.qemu.virtio_se=
+rial.0" \
+> >   "-virtfs" "local,id=3Droot,path=3D/,mount_tag=3D/dev/root,security_mo=
+del=3Dnone,multidevs=3Dremap" \
+> >   "-kernel" "/data/users/chantra/linux/arch/x86/boot/bzImage" \
+> >   "-no-reboot" "-append" "rootfstype=3D9p rootflags=3Dtrans=3Dvirtio,ca=
+che=3Dmmap,msize=3D1048576 rw earlyprintk=3Dserial,0,115200 printk.devkmsg=
+=3Don console=3D0,115200 loglevel=3D7 raid=3Dnoautodetect init=3D/tmp/vmtes=
+t-init4PdCA.sh panic=3D-1" \
+> >   "-virtfs" "local,id=3Dshared,path=3D/data/users/chantra/linux,mount_t=
+ag=3Dvmtest-shared,security_model=3Dnone,multidevs=3Dremap" \
+> >   "-smp" "2" "-m" "4G"
 >=20
-> After the address family AF_LOCAL was added in the commit 176e21ee2ec89, th=
-e old hard-coded
-> size for servername of char servername[48] no longer fits. The maximum AF_U=
-NIX address size
-> has now grown to UNIX_PATH_MAX defined as 108 in "include/uapi/linux/un.h" .
->=20
-> The lines 580-587 were added later, addressing the leading zero byte '\0', =
-but did not fix
-> the hard-coded servername limit.
->=20
-> The AF_UNIX address was truncated to 47 bytes + terminating null byte. This=
- patch will fix the
-> servername in AF_UNIX family to the maximum permitted by the system:
->=20
->    548         };
->  =E2=86=92 549         char servername[UNIX_PATH_MAX];
->    550         struct rpc_clnt *clnt;
->=20
-> Fixes: 4388ce05fa38b ("SUNRPC: support abstract unix socket addresses")
-> Fixes: 510deb0d7035d ("SUNRPC: rpc_create() default hostname should support=
- AF_INET6 addresses")
-> Fixes: 176e21ee2ec89 ("SUNRPC: Support for RPC over AF_LOCAL transports")
-> Cc: Neil Brown <neilb@suse.de>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Trond Myklebust <trondmy@kernel.org>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Olga Kornievskaia <okorniev@redhat.com>
-> Cc: Dai Ngo <Dai.Ngo@oracle.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: linux-nfs@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Mirsad Todorovac <mtodorovac69@gmail.com>
-> ---
->  v1:
-> 	initial version.
->=20
->  net/sunrpc/clnt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 09f29a95f2bc..67099719893e 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -546,7 +546,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *arg=
-s)
->  		.connect_timeout =3D args->connect_timeout,
->  		.reconnect_timeout =3D args->reconnect_timeout,
->  	};
-> -	char servername[48];
-> +	char servername[UNIX_PATH_MAX];
->  	struct rpc_clnt *clnt;
->  	int i;
-> =20
-> --=20
-> 2.43.0
->=20
+> fwiw: removing "cache=3Dmmap" from "rootflags" allows VM to boot and run =
+tests.
 >=20
 
+A few more details:
+- error could be reproduced with KASAN enabled, log after
+  scripts/decode_stacktrace.sh post-processing is in [1];
+  (KASAN reports use-after-free followed by null-ptr-deref);
+- null-ptr-deref is triggered by access to page->pcp_list.next
+  when list_del() is called from page_alloc.c:__rmqueue_pcplist(),
+  e.g. the following warning is triggered if added:
+
+  --- a/mm/page_alloc.c
+  +++ b/mm/page_alloc.c
+  @@ -2990,6 +2990,7 @@ struct page *__rmqueue_pcplist(struct zone *zone, u=
+nsigned int order,
+                  }
+=20
+                  page =3D list_first_entry(list, struct page, pcp_list);
+  +               WARN_ONCE(!page->pcp_list.next, "!!!!! page->pcp_list.nex=
+t is NULL\n");
+                  list_del(&page->pcp_list);
+                  pcp->count -=3D 1 << order;
+          } while (check_new_pages(page, order));
+- config used for testing is [2];
+- kernel used for testing is [3];
+
+[1] https://gist.github.com/eddyz87/e638d67454558508451331754f946f41
+[2] https://gist.github.com/eddyz87/f2c9c267db20ee53a6eb350aba0d2182
+[3] de5cb0dcb74c ("Merge branch 'address-masking'")
+    https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
 
