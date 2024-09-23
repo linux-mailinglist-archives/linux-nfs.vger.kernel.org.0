@@ -1,226 +1,122 @@
-Return-Path: <linux-nfs+bounces-6610-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6611-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CB6997EDCC
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 17:11:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7EB697EDF5
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 17:17:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F2DC1C21465
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 15:11:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 64070B21940
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Sep 2024 15:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138511A08B0;
-	Mon, 23 Sep 2024 15:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e3HqVdBO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02113145B01;
+	Mon, 23 Sep 2024 15:17:10 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mta05-relay.cloud.vadesecure.com (mta05-relay.cloud.vadesecure.com [195.154.80.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B761A01BF
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 15:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C066480C0C
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Sep 2024 15:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.80.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727104149; cv=none; b=XLrUHq7CUCNIYcFJ+olHviEFAVfRemSg9RVHxYefDy5KZ47Zni1u7fgqeUbxbPOQszGFX4bj0lwHWnyMBZF9rdYCqZNls55cONCb1NHB1oynLwjXo1+wtYYjOIYAX4XRvGTUTm2YZji9H4bXCKgBjA2PR3py6VMM2jiSx00hKO8=
+	t=1727104629; cv=none; b=PM06XtXhUMFpgng2b8M002PTbKSeDfU3fRTpgkcgxLaWepcl+U/CgTy5l7POF7rP5wRqAn0yaMMhTJAcHS6KJtKU7xKBvtKe10fKqosdOxpSFx9pJ004DSaysADhsDjSfptcH/qRDgL/lp1MHVHenGXVIpJs+5KlEls8yZLMsTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727104149; c=relaxed/simple;
-	bh=YdgTs3NXTVXKytM4MZ9ekQvYiCfKyHWyGYaMPKC/AYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s87UDtri5CSGbn2R6T9ARt/hHcHDH4KIhVkMDVwNM942ghZOAQe32xhc7ozs6WrgnkU1/PVHBzHAIXnzqjSyoTE1c0PnRd3XwdJsFE1sTYWwKoYHDFB3kqgSxKAkzP//7EsOqjcUgRUnJh+oIck7feKaaVsNSfLrrvb0zEoBgAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e3HqVdBO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727104145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h43zAABX1+Y84szWbuf6Y3zUUIJDGkYGOYZIeY5MUOA=;
-	b=e3HqVdBOeUT2XysHFnpi3ubvIzrWLdUsOWNwB/sPxfqfJVb6dxOZlNDcDHq5+DScL/Hynd
-	8B+F67q7uabSYxiT8HmyHcsD63+/WdMRyWAXkyKbxy+epyRhT/ArFel8kGqJ2jcDVXYi49
-	KJpww5qq1u1VaJuX+aCCg00WhmoBYcM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-iresh_brOiyWhufnlrfLWA-1; Mon,
- 23 Sep 2024 11:09:02 -0400
-X-MC-Unique: iresh_brOiyWhufnlrfLWA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E0E2718BC2C9;
-	Mon, 23 Sep 2024 15:08:52 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.145])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8B0E21955D87;
-	Mon, 23 Sep 2024 15:08:48 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <sfrench@samba.org>,
-	Marc Dionne <marc.dionne@auristor.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <stfrench@microsoft.com>
-Subject: [PATCH 8/8] cifs: Make the write_{enter,done,err} tracepoints display netfs info
-Date: Mon, 23 Sep 2024 16:07:52 +0100
-Message-ID: <20240923150756.902363-9-dhowells@redhat.com>
-In-Reply-To: <20240923150756.902363-1-dhowells@redhat.com>
-References: <20240923150756.902363-1-dhowells@redhat.com>
+	s=arc-20240116; t=1727104629; c=relaxed/simple;
+	bh=QopnpuAJYyZFrti3to9ikLu+Yd6buu8gy3QFtjLUtoY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BKYz5cFbLoZJVyi57sfUSnS+m+49zN9ksSrZjqnMIHp9hKUaXheR4zN1X+CYGofyrzJ22tcfKzpKffR9m/6JOmu2ckSel+fXzusSeW8p59ax6E0svhK0qIVbCqL6VzutvrIspJGRfYF8M5hNRkHs0QM9JAXIu5YnV5vk3WZq69Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu; spf=pass smtp.mailfrom=minesparis.psl.eu; arc=none smtp.client-ip=195.154.80.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minesparis.psl.eu
+Received: from smtp-out-1.mines-paristech.fr (smtp-out-1.mines-paristech.fr [77.158.173.156])
+	by mta05-relay.cloud.vadesecure.com (vceu3mtao01p) with ESMTP id 4XC5yj0XHKz7Qy5;
+	Mon, 23 Sep 2024 17:10:21 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
+	by smtp-out-1.mines-paristech.fr (Postfix) with ESMTP id 01FECC0BDE;
+	Mon, 23 Sep 2024 17:10:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id EEF541C00EE;
+	Mon, 23 Sep 2024 17:10:20 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id LjONW1vVkJrc; Mon, 23 Sep 2024 17:10:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 90FC21C00F4;
+	Mon, 23 Sep 2024 17:10:20 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr 90FC21C00F4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=minesparis.psl.eu;
+	s=9f5ccecf-24a0-4eb3-a015-b6ac3b07c299; t=1727104220;
+	bh=QopnpuAJYyZFrti3to9ikLu+Yd6buu8gy3QFtjLUtoY=;
+	h=Message-ID:From:To:Date:MIME-Version;
+	b=b38M8FVu/Jk617PJCcdqiWW9eP6BkS4Skq2noPl7IhNpnJYQYP1KRqabMrJKjiPve
+	 wHsdPBvafBwJg7BsEwvLD1d4yRdfI8K+ufyzlOhMucS6E+JHJ3N9+mKFAtt9RiLxJH
+	 tktMR7Eun/M9E8zU3YuyR66UK+D0m8XlVHX/Y040vKxVFj8GuHVCwWtEU6JJHIErl6
+	 80ECJDANDh8b+M1AwTCc/jYhAu6/mL/uhhaRx1C9M2wXZzYacBvhv18PEJmDochW77
+	 ia6ZJms/EK3CftiSBG8HnntxDW0/or2P0ySkcGsXPXzS18peWx6C0RlimekRb+YANC
+	 ai+YoLmemtojQ==
+X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rKF1jSjwFDTq; Mon, 23 Sep 2024 17:10:20 +0200 (CEST)
+Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id 58D6A1C00EE;
+	Mon, 23 Sep 2024 17:10:20 +0200 (CEST)
+Message-ID: <97b895a1955bfe8b6377edde714a70511a79c153.camel@minesparis.psl.eu>
+Subject: Re: nfsd endlessly in uninterruptible sleep (D state)
+From: =?ISO-8859-1?Q?Beno=EEt?= Gschwind <benoit.gschwind@minesparis.psl.eu>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date: Mon, 23 Sep 2024 17:10:20 +0200
+In-Reply-To: <F7F4ADA9-9EEC-4607-A695-BB953FF91C8B@oracle.com>
+References: 
+	<29d539955368d357750e17bd615e2ae5f10e826a.camel@minesparis.psl.eu>
+	 <F7F4ADA9-9EEC-4607-A695-BB953FF91C8B@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-VRC-SPAM-STATUS: 0,-100,gggruggvucftvghtrhhoucdtuddrgeeftddrudelledgkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftvedpqfgfvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpeeuvghnohpfthcuifhstghhfihinhguuceosggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshhprghrihhsrdhpshhlrdgvuheqnecuggftrfgrthhtvghrnhepkedugfegueeljeejffeiheeuleeufeefleevkeffuddukefhfeevheettdefgffgnecukfhppeejjedrudehkedrudejfedrudehiedpjeejrdduheekrddukedurddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdpmhgrgihmshhgshhiiigvpedutdegkeehjeeipdhinhgvthepjeejrdduheekrddujeefrdduheeipdhhvghlohepshhmthhpqdhouhhtqddurdhmihhnvghsqdhprghrihhsthgvtghhrdhfrhdpmhgrihhlfhhrohhmpegsvghnohhithdrghhstghhfihinhgusehmihhnvghsphgrrhhishdrphhslhdrvghupdhnsggprhgtphhtthhopedvpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-VRC-SPAM-STATE: legit
+X-VRC-POLICY-STATUS: t=1,a=1,l=0
 
-Make the write RPC tracepoints use the same trace macro complexes as the
-read tracepoints and display the netfs request and subrequest IDs where
-available (see commit 519be989717c ("cifs: Add a tracepoint to track
-credits involved in R/W requests")).
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <stfrench@microsoft.com>
-cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/smb/client/smb2pdu.c | 22 +++++++++++++++-------
- fs/smb/client/trace.h   |  6 +++---
- 2 files changed, 18 insertions(+), 10 deletions(-)
+Thanks I will have a look
 
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index 0b63608aeecb..9afc3baba27b 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -4858,7 +4858,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
- #endif
- 	if (result) {
- 		cifs_stats_fail_inc(tcon, SMB2_WRITE_HE);
--		trace_smb3_write_err(wdata->xid,
-+		trace_smb3_write_err(wdata->rreq->debug_id,
-+				     wdata->subreq.debug_index,
-+				     wdata->xid,
- 				     wdata->req->cfile->fid.persistent_fid,
- 				     tcon->tid, tcon->ses->Suid, wdata->subreq.start,
- 				     wdata->subreq.len, wdata->result);
-@@ -4866,7 +4868,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
- 			pr_warn_once("Out of space writing to %s\n",
- 				     tcon->tree_name);
- 	} else
--		trace_smb3_write_done(0 /* no xid */,
-+		trace_smb3_write_done(wdata->rreq->debug_id,
-+				      wdata->subreq.debug_index,
-+				      wdata->xid,
- 				      wdata->req->cfile->fid.persistent_fid,
- 				      tcon->tid, tcon->ses->Suid,
- 				      wdata->subreq.start, wdata->subreq.len);
-@@ -4944,7 +4948,9 @@ smb2_async_writev(struct cifs_io_subrequest *wdata)
- 				offsetof(struct smb2_write_req, Buffer));
- 	req->RemainingBytes = 0;
- 
--	trace_smb3_write_enter(wdata->xid,
-+	trace_smb3_write_enter(wdata->rreq->debug_id,
-+			       wdata->subreq.debug_index,
-+			       wdata->xid,
- 			       io_parms->persistent_fid,
- 			       io_parms->tcon->tid,
- 			       io_parms->tcon->ses->Suid,
-@@ -5024,7 +5030,9 @@ smb2_async_writev(struct cifs_io_subrequest *wdata)
- 			     wdata, flags, &wdata->credits);
- 	/* Can't touch wdata if rc == 0 */
- 	if (rc) {
--		trace_smb3_write_err(xid,
-+		trace_smb3_write_err(wdata->rreq->debug_id,
-+				     wdata->subreq.debug_index,
-+				     xid,
- 				     io_parms->persistent_fid,
- 				     io_parms->tcon->tid,
- 				     io_parms->tcon->ses->Suid,
-@@ -5104,7 +5112,7 @@ SMB2_write(const unsigned int xid, struct cifs_io_parms *io_parms,
- 				offsetof(struct smb2_write_req, Buffer));
- 	req->RemainingBytes = 0;
- 
--	trace_smb3_write_enter(xid, io_parms->persistent_fid,
-+	trace_smb3_write_enter(0, 0, xid, io_parms->persistent_fid,
- 		io_parms->tcon->tid, io_parms->tcon->ses->Suid,
- 		io_parms->offset, io_parms->length);
- 
-@@ -5125,7 +5133,7 @@ SMB2_write(const unsigned int xid, struct cifs_io_parms *io_parms,
- 	rsp = (struct smb2_write_rsp *)rsp_iov.iov_base;
- 
- 	if (rc) {
--		trace_smb3_write_err(xid,
-+		trace_smb3_write_err(0, 0, xid,
- 				     req->PersistentFileId,
- 				     io_parms->tcon->tid,
- 				     io_parms->tcon->ses->Suid,
-@@ -5134,7 +5142,7 @@ SMB2_write(const unsigned int xid, struct cifs_io_parms *io_parms,
- 		cifs_dbg(VFS, "Send error in write = %d\n", rc);
- 	} else {
- 		*nbytes = le32_to_cpu(rsp->DataLength);
--		trace_smb3_write_done(xid,
-+		trace_smb3_write_done(0, 0, xid,
- 				      req->PersistentFileId,
- 				      io_parms->tcon->tid,
- 				      io_parms->tcon->ses->Suid,
-diff --git a/fs/smb/client/trace.h b/fs/smb/client/trace.h
-index 8e9964001e2a..0b52d22a91a0 100644
---- a/fs/smb/client/trace.h
-+++ b/fs/smb/client/trace.h
-@@ -157,6 +157,7 @@ DEFINE_EVENT(smb3_rw_err_class, smb3_##name,    \
- 	TP_ARGS(rreq_debug_id, rreq_debug_index, xid, fid, tid, sesid, offset, len, rc))
- 
- DEFINE_SMB3_RW_ERR_EVENT(read_err);
-+DEFINE_SMB3_RW_ERR_EVENT(write_err);
- 
- /* For logging errors in other file I/O ops */
- DECLARE_EVENT_CLASS(smb3_other_err_class,
-@@ -202,7 +203,6 @@ DEFINE_EVENT(smb3_other_err_class, smb3_##name, \
- 		int	rc),			\
- 	TP_ARGS(xid, fid, tid, sesid, offset, len, rc))
- 
--DEFINE_SMB3_OTHER_ERR_EVENT(write_err);
- DEFINE_SMB3_OTHER_ERR_EVENT(query_dir_err);
- DEFINE_SMB3_OTHER_ERR_EVENT(zero_err);
- DEFINE_SMB3_OTHER_ERR_EVENT(falloc_err);
-@@ -370,6 +370,8 @@ DEFINE_EVENT(smb3_rw_done_class, smb3_##name,   \
- 
- DEFINE_SMB3_RW_DONE_EVENT(read_enter);
- DEFINE_SMB3_RW_DONE_EVENT(read_done);
-+DEFINE_SMB3_RW_DONE_EVENT(write_enter);
-+DEFINE_SMB3_RW_DONE_EVENT(write_done);
- 
- /* For logging successful other op */
- DECLARE_EVENT_CLASS(smb3_other_done_class,
-@@ -411,11 +413,9 @@ DEFINE_EVENT(smb3_other_done_class, smb3_##name,   \
- 		__u32	len),			\
- 	TP_ARGS(xid, fid, tid, sesid, offset, len))
- 
--DEFINE_SMB3_OTHER_DONE_EVENT(write_enter);
- DEFINE_SMB3_OTHER_DONE_EVENT(query_dir_enter);
- DEFINE_SMB3_OTHER_DONE_EVENT(zero_enter);
- DEFINE_SMB3_OTHER_DONE_EVENT(falloc_enter);
--DEFINE_SMB3_OTHER_DONE_EVENT(write_done);
- DEFINE_SMB3_OTHER_DONE_EVENT(query_dir_done);
- DEFINE_SMB3_OTHER_DONE_EVENT(zero_done);
- DEFINE_SMB3_OTHER_DONE_EVENT(falloc_done);
+Le lundi 23 septembre 2024 =C3=A0 13:22 +0000, Chuck Lever III a =C3=A9crit=
+=C2=A0:
+>=20
+>=20
+> > On Sep 23, 2024, at 8:20=E2=80=AFAM, Beno=C3=AEt Gschwind
+> > <benoit.gschwind@minesparis.psl.eu> wrote:
+> >=20
+> > Hello,
+> >=20
+> > In some workload on the server side I get nfsd in uninterruptible
+> > sleep
+> > and never leave this state. The client is blocked endlessly, until
+> > I
+> > reboot the server.
+> >=20
+> > How can I diagnose/analyze the issue ?
+>=20
+> When NFSD gets into this state:
+>=20
+> =C2=A0$ sudo echo t > /proc/sysrq-trigger
+>=20
+> Then examine the kernel log to find the back trace
+> of the blocked process. If the cause isn't immediately
+> obvious, then post the back trace here on this
+> mailing list.
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
 
