@@ -1,57 +1,55 @@
-Return-Path: <linux-nfs+bounces-6639-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6640-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 987669855EE
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Sep 2024 10:56:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 921BC985629
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Sep 2024 11:14:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2731B1F260E5
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Sep 2024 08:56:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE10B1C23506
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Sep 2024 09:14:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE8B15ADA7;
-	Wed, 25 Sep 2024 08:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A8215FA7E;
+	Wed, 25 Sep 2024 09:14:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5uVQK7Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNOLF2Hw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0372C139579;
-	Wed, 25 Sep 2024 08:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA66015F330;
+	Wed, 25 Sep 2024 09:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727254587; cv=none; b=TF84SX/Dg02RqzEudVI0KdPphO3F/7iHBp+dEwKKvTYaIVkR68W9exYEE+AfA2ijTi/ujQHNjFC6RkPjubVsXYYjWr4h7pldrgYR/ZUW6SXXduq/DaS+3i0PqQdR1KX+9rKqLEUth+fzvg+Jwp8T+1AiUICq7Nnhg+bwaNPydWU=
+	t=1727255644; cv=none; b=eUUozVI5aLD2ju+31cOn8sttZoppiC7ZgoeOjJkuAnSy20hrWuAfxUb42GNJx096ZwfSIc/Ojural3Rf5t9c2pEAcxvp8K7cnCcD4J8Ry7sqZuUAmnqUO2cDgz+oNLvbLxFH49RExr0vJxQDXAj5XGIrlomMNan58riD19qJtbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727254587; c=relaxed/simple;
-	bh=TLBQhEag6OZdHj5pIrkL8iAWtnJuTrqP8RyYnODCY1k=;
+	s=arc-20240116; t=1727255644; c=relaxed/simple;
+	bh=Glx4C8r3synfg89xbVV4Cc4uhGlDMDHKIlpfjZsQ+us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKIHKgE741gfhf1+wbniYbPBQPVo9FInezbEHMndgHdeJQcLrnz3TynF37KZLIUlQCbadfaSXEM0qtTwrhyVVd0WhVynrkNK5TwFAlr9ywclmhTTYXfAq0hvT7YkYiBZ+y98XVCBGO99JLIEeRiAgDan+MtA75ik9CHq3dJQJNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5uVQK7Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C32C4CECD;
-	Wed, 25 Sep 2024 08:56:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TniPqug6g132bTPhvVJBFe9/cYhpRDV1+JdcdlQOnEy3sqrrox31D5i0aILTa5AH9hvqxczZFDOfTLYRfp8MoqtFW+Vu7I09+/a71cLDM2vvC1aRe75O9U6fuQOZBnmxqts2tQiDxBPn9EJQQlHq6BY1HhoTmM3sv2FTOm0kOns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNOLF2Hw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBCDC4CEC7;
+	Wed, 25 Sep 2024 09:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727254586;
-	bh=TLBQhEag6OZdHj5pIrkL8iAWtnJuTrqP8RyYnODCY1k=;
+	s=k20201202; t=1727255642;
+	bh=Glx4C8r3synfg89xbVV4Cc4uhGlDMDHKIlpfjZsQ+us=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f5uVQK7ZEloIemva9jvzfuhuyYadYmUpN+7vJx3Ohx1+8XA0zjIauI/8R24Guzd6B
-	 ZPDm8CDI63n+mjeGQHUoCqVT2fHbq42iB/UdGrnDCoHt8Uxtqvx/vP5P/Bvn7oHLPB
-	 2WuytlPfWaTuqYKCH1Cj5mF2ty1zh/6sqY97vgIq0e+ONdMcw2pTXWCrlGmJ+VaLS0
-	 GfojpAr7xrg0euorHnMrxWnMLMSChIBCWqgAcOYKVAWOTDDd5Rt7iyVLaxb1ES2jNk
-	 lzYCaY2/49fGud0Its524/8R5qm7JCkKIWWaKHoy0V9P9umFIfQfjp602VJNQr2++B
-	 YzTEb4NCnlWTA==
-Date: Wed, 25 Sep 2024 10:56:22 +0200
+	b=RNOLF2HwgUh1uCxRdEcRPhwIbXFDFI00dTgdqkQwKH3Jb8QpZ8zVKMrEiyovlcAVe
+	 ujwnwIcpj6OSY2PU7PBYIJLp9hlv+TZfmFESTQYg482V/q5g1YTMS8MQoNZ2m7Dno6
+	 pHDL57JsKMYgu2WCr8vUmPe8YM9MrQ2SyjPqG0TbKK78CEtgjVLxusGv+nF2clRMSO
+	 j6Ved13ECjA5aC+7v89W5HmdBB0joJp5ghoEimY9TiZY+rAC9O3SzGX2gdJ/ZfJlae
+	 ddYZYDAgOLN3r5V5bxszaxoM4KR/WgMyZOhmzhJGVLFhhT5lcMCUGV1Il2EonTSzBN
+	 XGkZ5xGpRex3A==
+Date: Wed, 25 Sep 2024 11:13:58 +0200
 From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Jeff Layton <jlayton@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH - RFC] VFS: disable new delegations during
- delegation-breaking operations
-Message-ID: <20240925-gegriffen-lerngruppen-c173f1fd884e@brauner>
-References: <172646129988.17050.4729474250083101679@noble.neil.brown.name>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to
+ userspace
+Message-ID: <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
+References: <20240923082829.1910210-1-amir73il@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,384 +58,12 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <172646129988.17050.4729474250083101679@noble.neil.brown.name>
+In-Reply-To: <20240923082829.1910210-1-amir73il@gmail.com>
 
-On Mon, Sep 16, 2024 at 02:34:59PM GMT, NeilBrown wrote:
-> 
-> Various operations such as rename and unlink must break any delegations
-> before they proceed.
-> do_dentry_open() and vfs_truncate(), which use break_lease(), increment
-> i_writecount and/or i_readcount which blocks delegations until the
-> counter is decremented, but the various callers of try_break_deleg() do
-> not impose any such barrier.  They hold the inode lock while performing
-> the operation which blocks delegations, but must drop it while waiting
-> for a delegation to be broken, which leaves an opportunity for a new
-> delegation to be added.
-> 
-> nfsd - the only current user of delegations - records any files on which
-> it is called to break a delegation in a manner which blocks further
-> delegations for 30-60 seconds.  This is normally sufficient.  However
-> there is talk of reducing the timeout and it would be best if operations
-> that needed delegations to be blocked used something more definitive
-> than a timer.
-> 
-> This patch adds that definitive blocking by adding a counter to struct
-> file_lock_context of the number of concurrent operations which require
-> delegations to be blocked.  check_conflicting_open() checks that counter
-> when a delegation is requested and denies the delegation if the counter
-> is elevated.
-> 
-> try_break_deleg() now increments that counter when it records the inode
-> as a 'delegated_inode'.
-> 
-> break_deleg_wait() now leaves the inode pointer in *delegated_inode when
-> it signals that the operation should be retried, and then clears it -
-> decrementing the new counter - when the operation has completed, whether
-> successfully or not.  To achieve this we now pass the current error
-> status in to break_deleg_wait().
-> 
-> vfs_rename() now uses two delegated_inode pointers, one for the
-> source and one for the destination in the case of replacement.  This is
-> needed as it may be necessary to block further delegations to both
-> inodes while the rename completes.
+> open_by_handle_at(2) does not have AT_ flags argument, but also, I find
+> it more useful API that encoding a connectable file handle can mandate
+> the resolving of a connected fd, without having to opt-in for a
+> connected fd independently.
 
-I'm not intimiately familiar with delegations but the reasoning seems
-sound to me and I don't spot anything obvious in the code. I will defer
-to Jeff for a decision.
-
-Is there any potential for deadlocks due to ordering issues when calling
-__break_lease() on source and target?
-
-> 
-> The net result is that we no longer depend on the delay that nfsd
-> imposes on new delegation in order for various functions that break
-> delegations to be sure that new delegations won't be added while they wait
-> with the inode unlocked.  This gives more freedom to nfsd to make more
-> subtle choices about when and for how long to block delegations when
-> there is no active contention.
-> 
-> try_break_deleg() is possibly now large enough that it shouldn't be
-> inline.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
-
-I looked a bit for broader documentation on delegations/leases and it
-seems we don't have any. It would be nice if we could add something
-to Documentation/filesystems/.
-
->  fs/locks.c               | 12 ++++++++++--
->  fs/namei.c               | 32 ++++++++++++++++++++------------
->  fs/open.c                |  8 ++++----
->  fs/posix_acl.c           |  8 ++++----
->  fs/utimes.c              |  4 ++--
->  fs/xattr.c               |  8 ++++----
->  include/linux/filelock.h | 31 ++++++++++++++++++++++++-------
->  include/linux/fs.h       |  3 ++-
->  8 files changed, 70 insertions(+), 36 deletions(-)
-> 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index e45cad40f8b6..171628094daa 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -191,6 +191,7 @@ locks_get_lock_context(struct inode *inode, int type)
->  	INIT_LIST_HEAD(&ctx->flc_flock);
->  	INIT_LIST_HEAD(&ctx->flc_posix);
->  	INIT_LIST_HEAD(&ctx->flc_lease);
-> +	atomic_set(&ctx->flc_deleg_blockers, 0);
->  
->  	/*
->  	 * Assign the pointer if it's not already assigned. If it is, then
-> @@ -255,6 +256,7 @@ locks_free_lock_context(struct inode *inode)
->  	struct file_lock_context *ctx = locks_inode_context(inode);
->  
->  	if (unlikely(ctx)) {
-> +		WARN_ON(atomic_read(&ctx->flc_deleg_blockers) != 0);
->  		locks_check_ctx_lists(inode);
->  		kmem_cache_free(flctx_cache, ctx);
->  	}
-> @@ -1743,9 +1745,15 @@ check_conflicting_open(struct file *filp, const int arg, int flags)
->  
->  	if (flags & FL_LAYOUT)
->  		return 0;
-> -	if (flags & FL_DELEG)
-> -		/* We leave these checks to the caller */
-> +	if (flags & FL_DELEG) {
-> +		struct file_lock_context *ctx = locks_inode_context(inode);
-> +
-> +		if (ctx && atomic_read(&ctx->flc_deleg_blockers) > 0)
-> +			return -EAGAIN;
-> +
-> +		/* We leave the remaining checks to the caller */
->  		return 0;
-> +	}
->  
->  	if (arg == F_RDLCK)
->  		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 5512cb10fa89..3054da90276b 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -4493,8 +4493,8 @@ int do_unlinkat(int dfd, struct filename *name)
->  		iput(inode);	/* truncate the inode here */
->  	inode = NULL;
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  	mnt_drop_write(path.mnt);
-> @@ -4764,8 +4764,8 @@ int do_linkat(int olddfd, struct filename *old, int newdfd,
->  out_dput:
->  	done_path_create(&new_path, new_dentry);
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error) {
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK) {
->  			path_put(&old_path);
->  			goto retry;
->  		}
-> @@ -4848,7 +4848,8 @@ int vfs_rename(struct renamedata *rd)
->  	struct inode *old_dir = rd->old_dir, *new_dir = rd->new_dir;
->  	struct dentry *old_dentry = rd->old_dentry;
->  	struct dentry *new_dentry = rd->new_dentry;
-> -	struct inode **delegated_inode = rd->delegated_inode;
-> +	struct inode **delegated_inode_old = rd->delegated_inode_old;
-> +	struct inode **delegated_inode_new = rd->delegated_inode_new;
->  	unsigned int flags = rd->flags;
->  	bool is_dir = d_is_dir(old_dentry);
->  	struct inode *source = old_dentry->d_inode;
-> @@ -4954,12 +4955,12 @@ int vfs_rename(struct renamedata *rd)
->  			goto out;
->  	}
->  	if (!is_dir) {
-> -		error = try_break_deleg(source, delegated_inode);
-> +		error = try_break_deleg(source, delegated_inode_old);
->  		if (error)
->  			goto out;
->  	}
->  	if (target && !new_is_dir) {
-> -		error = try_break_deleg(target, delegated_inode);
-> +		error = try_break_deleg(target, delegated_inode_new);
->  		if (error)
->  			goto out;
->  	}
-> @@ -5011,7 +5012,8 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
->  	struct path old_path, new_path;
->  	struct qstr old_last, new_last;
->  	int old_type, new_type;
-> -	struct inode *delegated_inode = NULL;
-> +	struct inode *delegated_inode_old = NULL;
-> +	struct inode *delegated_inode_new = NULL;
->  	unsigned int lookup_flags = 0, target_flags = LOOKUP_RENAME_TARGET;
->  	bool should_retry = false;
->  	int error = -EINVAL;
-> @@ -5118,7 +5120,8 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
->  	rd.new_dir	   = new_path.dentry->d_inode;
->  	rd.new_dentry	   = new_dentry;
->  	rd.new_mnt_idmap   = mnt_idmap(new_path.mnt);
-> -	rd.delegated_inode = &delegated_inode;
-> +	rd.delegated_inode_old = &delegated_inode_old;
-> +	rd.delegated_inode_new = &delegated_inode_new;
->  	rd.flags	   = flags;
->  	error = vfs_rename(&rd);
->  exit5:
-> @@ -5128,9 +5131,14 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
->  exit3:
->  	unlock_rename(new_path.dentry, old_path.dentry);
->  exit_lock_rename:
-> -	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +	if (delegated_inode_old) {
-> +		error = break_deleg_wait(&delegated_inode_old, error);
-> +		if (error == -EWOULDBLOCK)
-> +			goto retry_deleg;
-> +	}
-> +	if (delegated_inode_new) {
-> +		error = break_deleg_wait(&delegated_inode_new, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  	mnt_drop_write(old_path.mnt);
-> diff --git a/fs/open.c b/fs/open.c
-> index 22adbef7ecc2..6b6d20a68dd8 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -656,8 +656,8 @@ int chmod_common(const struct path *path, umode_t mode)
->  out_unlock:
->  	inode_unlock(inode);
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  	mnt_drop_write(path->mnt);
-> @@ -795,8 +795,8 @@ int chown_common(const struct path *path, uid_t user, gid_t group)
->  				      &delegated_inode);
->  	inode_unlock(inode);
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  	return error;
-> diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-> index 3f87297dbfdb..5eb3635d1067 100644
-> --- a/fs/posix_acl.c
-> +++ b/fs/posix_acl.c
-> @@ -1143,8 +1143,8 @@ int vfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
->  	inode_unlock(inode);
->  
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  
-> @@ -1251,8 +1251,8 @@ int vfs_remove_acl(struct mnt_idmap *idmap, struct dentry *dentry,
->  	inode_unlock(inode);
->  
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  
-> diff --git a/fs/utimes.c b/fs/utimes.c
-> index 3701b3946f88..21b7605551dc 100644
-> --- a/fs/utimes.c
-> +++ b/fs/utimes.c
-> @@ -67,8 +67,8 @@ int vfs_utimes(const struct path *path, struct timespec64 *times)
->  			      &delegated_inode);
->  	inode_unlock(inode);
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 7672ce5486c5..63e0b067dab9 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -323,8 +323,8 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  	inode_unlock(inode);
->  
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  	if (value != orig_value)
-> @@ -577,8 +577,8 @@ vfs_removexattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  	inode_unlock(inode);
->  
->  	if (delegated_inode) {
-> -		error = break_deleg_wait(&delegated_inode);
-> -		if (!error)
-> +		error = break_deleg_wait(&delegated_inode, error);
-> +		if (error == -EWOULDBLOCK)
->  			goto retry_deleg;
->  	}
->  
-> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> index daee999d05f3..66470ba9658c 100644
-> --- a/include/linux/filelock.h
-> +++ b/include/linux/filelock.h
-> @@ -144,6 +144,7 @@ struct file_lock_context {
->  	struct list_head	flc_flock;
->  	struct list_head	flc_posix;
->  	struct list_head	flc_lease;
-> +	atomic_t		flc_deleg_blockers;
->  };
->  
->  #ifdef CONFIG_FILE_LOCKING
-> @@ -450,21 +451,37 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
->  {
->  	int ret;
->  
-> +	if (delegated_inode && *delegated_inode) {
-> +		if (*delegated_inode == inode)
-> +			/* Don't need to count this */
-> +			return break_deleg(inode, O_WRONLY|O_NONBLOCK);
-> +
-> +		/* inode changed, forget the old one */
-> +		atomic_dec(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
-> +		iput(*delegated_inode);
-> +		*delegated_inode = NULL;
-> +	}
->  	ret = break_deleg(inode, O_WRONLY|O_NONBLOCK);
->  	if (ret == -EWOULDBLOCK && delegated_inode) {
->  		*delegated_inode = inode;
-> +		atomic_inc(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
->  		ihold(inode);
->  	}
->  	return ret;
->  }
->  
-> -static inline int break_deleg_wait(struct inode **delegated_inode)
-> +static inline int break_deleg_wait(struct inode **delegated_inode, int ret)
->  {
-> -	int ret;
-> -
-> -	ret = break_deleg(*delegated_inode, O_WRONLY);
-> -	iput(*delegated_inode);
-> -	*delegated_inode = NULL;
-> +	if (ret == -EWOULDBLOCK) {
-> +		ret = break_deleg(*delegated_inode, O_WRONLY);
-> +		if (ret == 0)
-> +			ret = -EWOULDBLOCK;
-> +	}
-> +	if (ret != -EWOULDBLOCK) {
-> +		atomic_dec(&(*delegated_inode)->i_flctx->flc_deleg_blockers);
-> +		iput(*delegated_inode);
-> +		*delegated_inode = NULL;
-> +	}
->  	return ret;
->  }
->  
-> @@ -494,7 +511,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
->  	return 0;
->  }
->  
-> -static inline int break_deleg_wait(struct inode **delegated_inode)
-> +static inline int break_deleg_wait(struct inode **delegated_inode, int ret)
->  {
->  	BUG();
->  	return 0;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 6ca11e241a24..50957d9e1c2b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1902,7 +1902,8 @@ struct renamedata {
->  	struct mnt_idmap *new_mnt_idmap;
->  	struct inode *new_dir;
->  	struct dentry *new_dentry;
-> -	struct inode **delegated_inode;
-> +	struct inode **delegated_inode_old;
-> +	struct inode **delegated_inode_new;
->  	unsigned int flags;
->  } __randomize_layout;
->  
-> 
-> base-commit: 98f7e32f20d28ec452afb208f9cffc08448a2652
-> -- 
-> 2.46.0
-> 
+This seems the best option to me too if this api is to be added.
 
