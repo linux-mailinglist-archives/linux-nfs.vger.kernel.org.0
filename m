@@ -1,146 +1,118 @@
-Return-Path: <linux-nfs+bounces-6664-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6665-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 992DD987804
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2024 19:00:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD2C09879E3
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2024 21:58:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3890C1C226B5
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2024 17:00:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFC171F280A1
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Sep 2024 19:58:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF1515C133;
-	Thu, 26 Sep 2024 16:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EBFF17C987;
+	Thu, 26 Sep 2024 19:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OyPAll4O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1JSDDF2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67831157E61;
-	Thu, 26 Sep 2024 16:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373C170A3E
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Sep 2024 19:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727369988; cv=none; b=KFZqSsudVxjUOnB/wp+EfxywikuXBeE8mdaTfQHbAfkgrDzUzZbovkJcKcgG+UsQDjRYSQzd5DAD+8Upt2RWhXNr0SD5LQ2aFp9JdFqjxxmVMao4sWuVt6b6pCd4NFOI0+U+OZSNXRV4cY8O5LFcVyzd8Hzx5Qw3h7Fp0oXmy4I=
+	t=1727380674; cv=none; b=OJKb9iS94lL/x0HF/BCMoL/DCFVJacrd/LRp8c2r0LYT5Ih/h67vHpXzuyk+5mVBQa4ECz6lANrhs0AOxuvImINg6jDT1S1DIaeHln0tOUdsoZrxV+lkcfr/pMJoexD/L6/VeqC4F5SeU5tguLBF8xcFJgqv9wQVJjjpdBnXFP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727369988; c=relaxed/simple;
-	bh=FvyFBt+Vd5UF2A+sqhYijCe2ynDIwnVNWV+evOwSXP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1SiIdFW46NHrhcKA1/acXKyGIfdRGzUO6oJuUKaO7IE995Z9i8dJ/BGNLPEXukuznYmuKMF8u2++mxYIMAZf1zO4VUmYKPWbE0C+E9tQSWDzm1kWYne+2qbSMhCE2v2YiytYXjJQE03FGKxmPteJxz7JnSgnr0CgGvlulVFyuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OyPAll4O; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=vZZTa11CAK73ciRtK/MoLNusDFg6dIj6Gmywiet9pEk=; b=OyPAll4OChxKP8zrcRtGRnwDsS
-	zgKDZwCOCsLmEc3+M7QxVMRw982AGTIfUzIiE0r3n23a11U3UDZEMxLYNM618gxtGhCmRWJP9IslZ
-	9+fiZSZkbwBnKX2dlUHKkc3YWMFduEcnt37crCl9ejx+ykHfIKIsY2xu7mT6c09KLkFB6Nj2shRI/
-	b9o0cncTZMvy1eY9nrSfrqswutAzEmxTAPzp6LD6L9+WM7TNgOssSkIjNUWpwRnM5fRfscLCL093N
-	0O2bR8GyaCgxQdhUQxbDRrz9hy5l7wu9KZI/IeAiNOYxC27i+h5n/x1QgIcty/TPcFVrW1NPOWxWe
-	lyN231og==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1strpz-000000078sX-1WvG;
-	Thu, 26 Sep 2024 16:59:32 +0000
-Message-ID: <fadc1ea2-fb43-41e2-af8c-8a93cf9e7865@infradead.org>
-Date: Thu, 26 Sep 2024 09:59:21 -0700
+	s=arc-20240116; t=1727380674; c=relaxed/simple;
+	bh=F+EmlPk/Paq3vwXpBLzTJSeSEfcznO1Im6jSFmg7SjQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Krm0yB6CZ0daY7P5p+2UzAr3UEKlKSkPBOWN4UxihpcFuoSppMyjM1Wn1DMzYCQo1h11h/8kNoAHEQ0GXMb3MJeWEk/QciHcn5+qNg/U4ki07Z6JDN5EvzR3SPXHJOf3YvbXAm/w2GKrUUalbDwBd674/w/OtM4EML6pY7z5Q3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1JSDDF2; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-82cf3286261so61310739f.0
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Sep 2024 12:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727380672; x=1727985472; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WXyOGpmlpzQQORZBc2iZD8+meuBM7ykVM8SzLjd0JTQ=;
+        b=E1JSDDF2wJoTlFBYMHdlNAnyQnzbC4Wq8FOyMSon7DtJU2jKWFlCCeNNf01WAhaTxx
+         I8/w4PSm8iCT3NYa+bxTkLTe0PDWTDvvV6ZsDJiBJCVhrJt7r4JuXRqp2vCODzNS469l
+         4A41/Hcj8RuPPPTrOTbYuJElRGyZP1qjFSMEVr5DVSU6iSIUNAk4wl/B1NCIpi9GYd/Y
+         MpSfnHPsEc5Vxas2SmCGaYmZ/WUrv0b9CIs/hTcvnC4n/Khn9IG2UwmW/+3ZpF7hI2dX
+         B/TbcLElCLtBw8rvvASI5eR41qYVDBt8dIbdRaAo84tcoABOSdy7CZogkv4yEy2RWUoA
+         Hwug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727380672; x=1727985472;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WXyOGpmlpzQQORZBc2iZD8+meuBM7ykVM8SzLjd0JTQ=;
+        b=gAj/2a8R9XuZW5ROvkSw7TQEaWUd9tADWanSzj1udx9yOaHkrkNP2PfjxIgojTFwE2
+         12fuzY9vp48ipjrTSi6hyd0+kSa2/fHOkbepPFNckovG1gD3bGzmaA9HHESrdCfgpRAj
+         sFyHpH2BSizoEcG/mBCqVZFtiynLwG7cPbfbnarjdf50/HHwkuD/1bGG/6Zyrzex/XWv
+         a7oHPzeiFriBm/jC7SCV5OqtMB+p/8UiSWbhN8Wv54OuUOS8Wk2mvDmIN6DIXi8N4Q1W
+         Iw9QCqKS8tJ6zbcvtDj+FT26ZJx8AYle1CNkxqPC3fJQwqXXFx9v7HeaBmBEsANu4L9a
+         HH9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXtFj4qQsK9XufUutBCZkLbADw5aX//+B6vgb2fHMucZHKmj3z6E0gvq+R1/bmSk2lmiMYhy13GUCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlgHknJ84c27Ncy59mgFSnGPCPl69eZYPGt08GbN9dc3ShM3TJ
+	p27pCdX8nedtVX4xou6jcTPgphTBI9ecpe2lazk2mp+jvuD/RMyzQBR8
+X-Google-Smtp-Source: AGHT+IGVla9MAXjt9vGvad2f7eti2QAmF4uOkjLa9Lz3h8LKQEYgwVVIGsCsIK3myfTuHEym+W2Yjw==
+X-Received: by 2002:a05:6e02:1a82:b0:3a0:a3f0:ff57 with SMTP id e9e14a558f8ab-3a34517c867mr6685985ab.15.1727380671826;
+        Thu, 26 Sep 2024 12:57:51 -0700 (PDT)
+Received: from leira.trondhjem.org.localdomain (104-63-89-173.lightspeed.livnmi.sbcglobal.net. [104.63.89.173])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4d888835151sm107200173.34.2024.09.26.12.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2024 12:57:51 -0700 (PDT)
+From: trondmy@gmail.com
+X-Google-Original-From: trond.myklebust@hammerspace.com
+To: Anna Schumaker <Anna.Schumaker@oracle.com>
+Cc: Oleksandr Tymoshenko <ovt@google.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Fail mounts if the lease setup times out
+Date: Thu, 26 Sep 2024 15:55:39 -0400
+Message-ID: <eb402b489bb0d0ada1a3dd9101d4d7e193402e46.1725904471.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/11] fs: multigrain timestamp redux
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
- Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>,
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Chuck Lever <chuck.lever@oracle.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jeff,
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-On 9/14/24 10:07 AM, Jeff Layton wrote:
-> This is a fairly small update to the v7 set. It seems to pass all of my
-> testing. Again, most of the changes are in the first two patches, but
-> there are some differences in the patch that adds percpu counters as
-> well.
-> 
-> Since the report of a performance regression came just before the merge
-> window, it looks like we're going to have to wait for yet another
-> release, so consider this version v6.13 material.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
+If the server is down when the client is trying to mount, so that the
+calls to exchange_id or create_session fail, then we should allow the
+mount system call to fail rather than hang and block other mount/umount
+calls.
 
-> ---
-> Jeff Layton (11):
->       timekeeping: move multigrain timestamp floor handling into timekeeper
->       fs: add infrastructure for multigrain timestamps
->       fs: have setattr_copy handle multigrain timestamps appropriately
->       fs: handle delegated timestamps in setattr_copy_mgtime
->       fs: tracepoints around multigrain timestamp events
->       fs: add percpu counters for significant multigrain timestamp events
->       Documentation: add a new file documenting multigrain timestamps
->       xfs: switch to multigrain timestamps
->       ext4: switch to multigrain timestamps
->       btrfs: convert to multigrain timestamps
->       tmpfs: add support for multigrain timestamps
-> 
->  Documentation/filesystems/index.rst         |   1 +
->  Documentation/filesystems/multigrain-ts.rst | 121 ++++++++++++
->  fs/attr.c                                   |  60 +++++-
->  fs/btrfs/file.c                             |  25 +--
->  fs/btrfs/super.c                            |   3 +-
->  fs/ext4/super.c                             |   2 +-
->  fs/inode.c                                  | 278 +++++++++++++++++++++++++---
->  fs/stat.c                                   |  42 ++++-
->  fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
->  fs/xfs/xfs_iops.c                           |  10 +-
->  fs/xfs/xfs_super.c                          |   2 +-
->  include/linux/fs.h                          |  36 +++-
->  include/linux/timekeeping.h                 |   5 +
->  include/trace/events/timestamp.h            | 124 +++++++++++++
->  kernel/time/timekeeping.c                   |  83 +++++++++
->  kernel/time/timekeeping_debug.c             |  12 ++
->  kernel/time/timekeeping_internal.h          |   3 +
->  mm/shmem.c                                  |   2 +-
->  18 files changed, 742 insertions(+), 73 deletions(-)
-> ---
-> base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+Reported-by: Oleksandr Tymoshenko <ovt@google.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4state.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-IME it would be better to make this series apply to linux-next-($latest)
-instead of base mainline Linux. for integration reasons.
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 30aba1dedaba..59dcdf9bc7b4 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2024,6 +2024,12 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
+ 		nfs_mark_client_ready(clp, -EPERM);
+ 		clear_bit(NFS4CLNT_LEASE_CONFIRM, &clp->cl_state);
+ 		return -EPERM;
++	case -ETIMEDOUT:
++		if (clp->cl_cons_state == NFS_CS_SESSION_INITING) {
++			nfs_mark_client_ready(clp, -EIO);
++			return -EIO;
++		}
++		fallthrough;
+ 	case -EACCES:
+ 	case -NFS4ERR_DELAY:
+ 	case -EAGAIN:
+-- 
+2.46.0
 
-You can add
-
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # documentation bits
-
-for all patches if you want to.
-
-
-> change-id: 20240913-mgtime-20c98bcda88e
-> 
-> Best regards,
 
