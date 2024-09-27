@@ -1,187 +1,109 @@
-Return-Path: <linux-nfs+bounces-6670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B4B7987EA7
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 08:49:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4B0C987FF9
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 10:06:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F3C3B23DD7
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 06:49:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58694B251A0
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 08:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CA115E5C8;
-	Fri, 27 Sep 2024 06:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38413189527;
+	Fri, 27 Sep 2024 08:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J1nFSF6u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CznP8pxa";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J1nFSF6u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CznP8pxa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HaAIXMic"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2501515D5C1
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Sep 2024 06:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A4F188CB7;
+	Fri, 27 Sep 2024 08:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727419754; cv=none; b=HIMxPx/KhFmkI23gRTDIWjxlSouZVruCk5cLmTPfKA9yNQR2Cr60Y7XKzHoCwiow+9q8p3DJhx7D9+LlvQNHpUHTTWllicqwpY+WDvjMNtMMXfatbGufnPK0f05LeFuKPu0h8NPtN0wgVkkEQtaUh5+tqjmqS5hGfjWgUh2QLsw=
+	t=1727424365; cv=none; b=qPCl7zYfDTxdMNqYt5TiXbxOnhNiU1leP+L5ANK9L0RnhVhpFIgZMM+0aBnuzO4KndZ4baX+B5d4Blz3agLsNofS6ywPaI8j10TSVtG7FZJlGSdE0ES3mE8c6yfqD3kAxYT3SxTa1xCxcxp7qJwDsFfZzy1NPxavpu4BQMnGxlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727419754; c=relaxed/simple;
-	bh=VYft8UjDBcmKK5qxVZt2dOwEYV/5CWlseKPL2Cl/zDM=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=iHHv3LHzkU7qdi+QWzK9oJqrpfwAIibt4cfCPbaQCJvJr4qJPdpGhycF2d6PkXKFmfKf2Q+rZ2CVm3W7bJKh8jsAyoTp0rjNxulxIYJ6xShj0MlQKKrCmmePSKM+cpB2ezAhQEf/b913Dt3wXjMW6p7de7EuDgHBcJf/40EkPFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J1nFSF6u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CznP8pxa; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J1nFSF6u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CznP8pxa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2705D219AE;
-	Fri, 27 Sep 2024 06:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1727419750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=plfEbB+2T87iSmqqclqUg3X9yjRrfddD2jPJwVitxrE=;
-	b=J1nFSF6uwLF/4Y4LJUltSd5ytgcfP0q9lb4aCUGSW9h9y0vr8Wc11o+kEipLvQqhz5NWEx
-	fdTFUBevYwvixJaaBIlCdct6QAzh0j3L6g1RIS3jDcigyDKtYZFhjnfCll5mjAYE0NZSOu
-	K+RrcGyRtsW7/Uepkfj4f9fb/zvGGs4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1727419750;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=plfEbB+2T87iSmqqclqUg3X9yjRrfddD2jPJwVitxrE=;
-	b=CznP8pxamcl9UYGyOIwv/mkA4WH9wvzYBPnRuMFyy+uSlUvYuOLWeiVH0QKLt+0U57U2Qi
-	LDEY4RC+G9sJ4ACg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=J1nFSF6u;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CznP8pxa
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1727419750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=plfEbB+2T87iSmqqclqUg3X9yjRrfddD2jPJwVitxrE=;
-	b=J1nFSF6uwLF/4Y4LJUltSd5ytgcfP0q9lb4aCUGSW9h9y0vr8Wc11o+kEipLvQqhz5NWEx
-	fdTFUBevYwvixJaaBIlCdct6QAzh0j3L6g1RIS3jDcigyDKtYZFhjnfCll5mjAYE0NZSOu
-	K+RrcGyRtsW7/Uepkfj4f9fb/zvGGs4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1727419750;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=plfEbB+2T87iSmqqclqUg3X9yjRrfddD2jPJwVitxrE=;
-	b=CznP8pxamcl9UYGyOIwv/mkA4WH9wvzYBPnRuMFyy+uSlUvYuOLWeiVH0QKLt+0U57U2Qi
-	LDEY4RC+G9sJ4ACg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9BFC31386E;
-	Fri, 27 Sep 2024 06:49:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LhwEFGRV9mYAFgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 27 Sep 2024 06:49:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1727424365; c=relaxed/simple;
+	bh=KjsjOpufVwVtvtG9C4bCus2/XmKmDXOmFJWmSRq/BY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sVECCzO6ZT6P5v8TGkhZAg9Lv4sJKFjSsN6wTrxv98//XX39N3/DR6pvlNvDxzDea0KVrkjtrDZM+qDlf9hw0F1HXCXjOWVh2JfEVbu6YNLZJjEf5KmUNs93NwGgLiy+pzb2+v1gzNm9x9eBcUIEJrgsQpfkJ1fcJ0RObzps/iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HaAIXMic; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8945C4CEC4;
+	Fri, 27 Sep 2024 08:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727424364;
+	bh=KjsjOpufVwVtvtG9C4bCus2/XmKmDXOmFJWmSRq/BY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HaAIXMict1VrTe7i8TwVZ5W3EQ/WTegi8/OHOEkwPr173UnrLezn4mPejbmDGj2Va
+	 JzClZWAAEFXfx5vFVFkjx+3Bkn30tc+SssdrENLR5FslHOsVouXCdLzMO+adoH9tnc
+	 zkXNylEWRwKw5LUIOdH0peE5GHb2oq7StB/T/R1ZqX2rjLg3gyt73TQdT9CGlK1e1y
+	 +0R1PmoplUYpYy45bYv/DHBqbVebHLvqJ+Zj3yrLJO2EGsPMgBdMR6uK6DZ+/mXWG2
+	 BnuUyJDVL64zGvygjtGlvBwmLB3O/DZn15DHVuse1YXw/gPPN/DLf8Erpw19GuMUJ6
+	 BIWbB7FwYdy7Q==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Steve French <sfrench@samba.org>,
+	Marc Dionne <marc.dionne@auristor.com>
+Subject: Re: (subset) [PATCH 5/8] afs: Fix possible infinite loop with unresponsive servers
+Date: Fri, 27 Sep 2024 10:05:44 +0200
+Message-ID: <20240927-raunt-gekrochen-aa4fd2c2e59b@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240923150756.902363-6-dhowells@redhat.com>
+References: <20240923150756.902363-1-dhowells@redhat.com> <20240923150756.902363-6-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Anna Schumaker <anna@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH] sunrpc: fix prog selection loop in svc_process_common
-Date: Fri, 27 Sep 2024 16:49:01 +1000
-Message-id: <172741974136.470955.11402099885897272884@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 2705D219AE
-X-Spam-Level: 
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,suse.de:dkim,suse.de:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -6.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1319; i=brauner@kernel.org; h=from:subject:message-id; bh=KjsjOpufVwVtvtG9C4bCus2/XmKmDXOmFJWmSRq/BY0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9S0+55/AnN86X/6qh8Jnw2/fN3txs/vdb88Csxor51 h0HFWpKOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbCv4SR4f4hM23PS4ZOM4SW /uIJzdp91vHK3XmrQzc7J2s8lPYT0GT4Z2t0NERa9/mHUpZlb9KM7mza0TV9pafR+8KMuYvUDR4 GMAEA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+On Mon, 23 Sep 2024 16:07:49 +0100, David Howells wrote:
+> A return code of 0 from afs_wait_for_one_fs_probe is an indication
+> that the endpoint state attached to the operation is stale and has
+> been superseded.  In that case the iteration needs to be restarted
+> so that the newer probe result state gets used.
+> 
+> Failure to do so can result in an tight infinite loop around the
+> iterate_address label, where all addresses are thought to be responsive
+> and have been tried, with nothing to refresh the endpoint state.
+> 
+> [...]
 
-If the rq_prog is not in the list of programs, then we use the last
-program in the list and we don't get the expected rpc_prog_unavail error
-as the subsequent tests on 'progp' being NULL are ineffective.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-We should only assign progp when we find the right program, and we
-should initialize it to NULL
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Fixes: 86ab08beb3f0 ("SUNRPC: replace program list with program array")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Hi Anna,
- could you take this please - a fix to a patch in your latest pull
- request to Linus.
-Thanks,
-NeilBrown
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
- net/sunrpc/svc.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 7e7f4e0390c7..79879b7d39cb 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1321,7 +1321,7 @@ static int
- svc_process_common(struct svc_rqst *rqstp)
- {
- 	struct xdr_stream	*xdr = &rqstp->rq_res_stream;
--	struct svc_program	*progp;
-+	struct svc_program	*progp = NULL;
- 	const struct svc_procedure *procp = NULL;
- 	struct svc_serv		*serv = rqstp->rq_server;
- 	struct svc_process_info process;
-@@ -1351,12 +1351,9 @@ svc_process_common(struct svc_rqst *rqstp)
- 	rqstp->rq_vers = be32_to_cpup(p++);
- 	rqstp->rq_proc = be32_to_cpup(p);
- 
--	for (pr = 0; pr < serv->sv_nprogs; pr++) {
--		progp = &serv->sv_programs[pr];
--
--		if (rqstp->rq_prog == progp->pg_prog)
--			break;
--	}
-+	for (pr = 0; pr < serv->sv_nprogs; pr++)
-+		if (rqstp->rq_prog == serv->sv_programs[pr].pg_prog)
-+			progp = &serv->sv_programs[pr];
- 
- 	/*
- 	 * Decode auth data, and add verifier to reply buffer.
--- 
-2.46.0
-
+[5/8] afs: Fix possible infinite loop with unresponsive servers
+      https://git.kernel.org/vfs/vfs/c/6e45740867ee
 
