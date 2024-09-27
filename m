@@ -1,108 +1,128 @@
-Return-Path: <linux-nfs+bounces-6673-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6674-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ECD7988007
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 10:08:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 932A19881D5
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 11:50:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A40C1C22279
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 08:08:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3EA891F22B37
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 09:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0901898E1;
-	Fri, 27 Sep 2024 08:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24DF1BAEC0;
+	Fri, 27 Sep 2024 09:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Outd2lB0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OBsiSQPx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E20188CB7;
-	Fri, 27 Sep 2024 08:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D72B1BA886
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Sep 2024 09:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727424494; cv=none; b=Px+BW4IHy/7b8vy2AYidIiT2gS9szfsk8SCOkLHr9YqBu/RtmNH2feZ2FrQ+fflUGULxdLYjPzzBxHRtxxoaEmHwBHTpDE07AF4158lqUzeTd5idVjW5NRH33q/MVzXJw/OEHe90olKideTM+L1s4k6fpCHW90hDmnYVEVEjiOw=
+	t=1727430611; cv=none; b=eLGypE0jP9Fbr0hYnk7pT3A/ZzeyOUzqFz/1XJGCaJGUy09mHLfw4SW1ZxQzrqdJaT/jWjf2Y0+1tX0i/6EYE1h6EOkm8Wjx/f8EmNeRNf8qqWh0N3HDtOGaVvHFNqt7bulcpj66lFwnpEiTd6UeO8Q4bB+nOzUovpZm2yBkik8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727424494; c=relaxed/simple;
-	bh=qrr8F6mhp37/8goTelXVcSv72h5Emk8kpcyLOVTI7nQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A0fgcehOzCbX08qFwbCZgqOR6hShXMABfS6r2jjw1WQ5SJUh4na295JbGoH4piX/OB5u9dQhzCqamOzeGXw8g1A6UFGieziwtQYiwZlqOZUzncG7YbegeS9AP3T5/48+edaDAiS9GMoPwyqgjxmQxyxP4ILiWdN6BrGet/NVCPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Outd2lB0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C4DC4CEC4;
-	Fri, 27 Sep 2024 08:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727424494;
-	bh=qrr8F6mhp37/8goTelXVcSv72h5Emk8kpcyLOVTI7nQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Outd2lB01VOTLYDOGeswQwueKzlm+EOifqdxlQ4wB/8MrqP6mZtqn6n+rKIoTqc1e
-	 kiisilHVnZCIEJvalKnA3qR2YHOkwk+HzZxQYLedHYLRTpBSFEheAsUMMOVVXFYRgj
-	 oZNhoNHLcUvthQxoFMAThjmuiGgHXqnMfBJJboyDD3j6cY2fyYQxHOwaNlAfY9ESKo
-	 grEtBzrVEHlyEpt136/mYVhFyRdz36/t+JDZSXA5Mge9d5fwWXYM2cDL4KIrNMeMd8
-	 WUGeJbN6K897pM3Cb8O2g8BA94c0wF4P33q9OSZrB7Mfqe5Ls744JoZHQWmwTx2/kE
-	 UOLO55iVty1Fw==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>,
-	Marc Dionne <marc.dionne@auristor.com>
-Subject: Re: (subset) [PATCH 6/8] afs: Fix the setting of the server responding flag
-Date: Fri, 27 Sep 2024 10:07:59 +0200
-Message-ID: <20240927-inklusive-erfunden-8a9df201244e@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240923150756.902363-7-dhowells@redhat.com>
-References: <20240923150756.902363-1-dhowells@redhat.com> <20240923150756.902363-7-dhowells@redhat.com>
+	s=arc-20240116; t=1727430611; c=relaxed/simple;
+	bh=aDhR9Rxa9gOGP7VnzHLInSo//OZOLYAu6YB3IWE/LKk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=EL9cVxckVuipO4uQf2X4D4kdQDFatq9TEGpKLnz2VXvJTs2OqiGHE+b4GKptqNvncDD11LCOtECtp2hHXl10eS7xHq/IZK4+PKHusIh2dfiGKoZrb9wlGRbX5H8bzJj0VcWe2G43mwTpG3y+BGqxuYFiJxNayTNQNEm6Y8qTla8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OBsiSQPx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727430609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aTj7rn5EllJczJVua73nSsgSRQ2asRdlXbguIEEHyh0=;
+	b=OBsiSQPx8KiFMFyol4/q1ab5kcQm45nI5qiwwtGQu6VV3edx2R8LHd72iVb9+HIB505rj9
+	UbEJTGw+jFZ7/czyt7XwoLwOGPjP6zwig5Y+CVt+jG7qHIuf0ypDM0Yo0khnoNTCYljuz9
+	uaYubxx2/FUjVD3DAtVH1HKGyK6I/lE=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-184-8t-Tk97hP4izl8yVSdGmOA-1; Fri, 27 Sep 2024 05:50:07 -0400
+X-MC-Unique: 8t-Tk97hP4izl8yVSdGmOA-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7acbed1c88dso408591985a.2
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Sep 2024 02:50:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727430602; x=1728035402;
+        h=content-transfer-encoding:content-language:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aTj7rn5EllJczJVua73nSsgSRQ2asRdlXbguIEEHyh0=;
+        b=E8J7HK2ja35za9Uc2rBFrI6H2Rmno6asyb5AbEZPbIk8U8YCwrig/VPowxkNAFqM8i
+         f43SoIWDhjlgGxc+uVwNQHxCILrj1kt6WkFFD+IkXVyjcEPRKgTpDGwnhF1MWqDziYrL
+         49ABbI7FyyvRskhTfggeMlNf3JxHppsM8qTcTqvEmH5gpwgowcPU5qSyfsK1EpU98LAB
+         dHrqELFhIYku3Yvm0w3etuGDO4/vJojPseixlFmuEmOrSlFgkNaJ+WFNN/CNLfNMu2vW
+         Q0o1TPhFIjuXjL9Hiqciehb6xKiBn4f1x/I5hCTATJ4l8/9CCGd86vtaY8TKscna6Zza
+         Zbjw==
+X-Gm-Message-State: AOJu0Yx2AuHzg2AzsAN7RifahvcfSqq8z5ByTd5nym7MQNfu9CEGufRC
+	Snc76qmLHTHUf24CFDfvSvw7jH/60cLZOfw1J71KzgCBiakTcKCpxjCR+4kN0Zhivryphz+bnVh
+	5TScEbwlCWgK9HsQ5vCyUnKOmTDkK+uKU6B7orJ5/dyLReZ3lllHU2YaH5qXo+9EN1JK1OEyhhR
+	g1gSMFg0y50n6k6jeu7vxkrveeTf7oVuJFTJA62yIi/w==
+X-Received: by 2002:a05:6214:5f09:b0:6b0:75bd:7fb with SMTP id 6a1803df08f44-6cb3b68598fmr43193716d6.40.1727430602013;
+        Fri, 27 Sep 2024 02:50:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkdVGOwSJtOFJkDrTbqaZ8D6KOLCBzdCZK0oNZpc9xoxX+l9ufzmWCUi8MzJRYYcgZn9h4cQ==
+X-Received: by 2002:a05:6214:5f09:b0:6b0:75bd:7fb with SMTP id 6a1803df08f44-6cb3b68598fmr43193476d6.40.1727430601610;
+        Fri, 27 Sep 2024 02:50:01 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.132.241])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cb3b62d520sm7129176d6.67.2024.09.27.02.49.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Sep 2024 02:50:00 -0700 (PDT)
+Message-ID: <0a951a33-5cf2-49f9-b779-6595fa1355c4@redhat.com>
+Date: Fri, 27 Sep 2024 05:49:58 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1300; i=brauner@kernel.org; h=from:subject:message-id; bh=qrr8F6mhp37/8goTelXVcSv72h5Emk8kpcyLOVTI7nQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9S3928A/vY47APBNFzaQswV4+Pw8Hlu3a9bd+cD9uO Frlc/JtRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwETyLzMyTNTnfr5xfcZix1xr Tj7JEPepAnKn+FvmbAnf0rfRyop5DsP/gIP2Vf3Nm3a29nDoVNhIl9UaHjpdV197f2eb0M+i678 5AQ==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Steve Dickson <steved@redhat.com>
+Subject: Reminder: the Fall 2024 Bakeathon
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>, NFSv4 <nfsv4@ietf.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Sep 2024 16:07:50 +0100, David Howells wrote:
-> In afs_wait_for_operation(), we set transcribe the call responded flag to
-> the server record that we used after doing the fileserver iteration loop -
-> but it's possible to exit the loop having had a response from the server
-> that we've discarded (e.g. it returned an abort or we started receiving
-> data, but the call didn't complete).
-> 
-> This means that op->server might be NULL, but we don't check that before
-> attempting to set the server flag.
-> 
-> [...]
+[Just another quick reminder about the upcoming Bake-a-thon]
+[Hotel blocks were extended... costs nothing to cancel ]
+[The google links are below to sign up locally or remotely ]
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Hello,
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Red Hat is pleased to announce that we'll be hosting the
+Fall 2024 Bakeathon at our Westford office in Massachusetts, US.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+The event will be F2F as well as virtual. Hoping to
+draw as many participants as possible.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
+Details, event registration, network info and hotel info are here [1].
 
-[6/8] afs: Fix the setting of the server responding flag
-      https://git.kernel.org/vfs/vfs/c/830c1b2c1c28
+Date: Mon Oct 21 to Fri Oct 25
+Address: Red Hat, 314 Littleton Rd, Westford, MA
+Event Registration: [2]
+
+We have "talks at 2" (EST) [3]  everyday... Please feel
+free sign up for a talk if you want to present a topic
+the to the community... They are very informal...
+Definitely feel free to attended!
+
+Any questions please send them to bakeathon-contact@googlegroups.com
+
+I hope to see you there... One way or the other!
+
+steved.
+
+[1] http://www.nfsv4bat.org/Events/2024/Oct/BAT/index.html
+
+[2] 
+https://docs.google.com/spreadsheets/d/1kJfCNeKyQhVRaV8p3X_2THsERegsgTOpkkdgv3X_-Ys/edit?gid=0#gid=0
+
+[3] 
+https://docs.google.com/spreadsheets/d/1kJfCNeKyQhVRaV8p3X_2THsERegsgTOpkkdgv3X_-Ys/edit?gid=0#gid=0
+
 
