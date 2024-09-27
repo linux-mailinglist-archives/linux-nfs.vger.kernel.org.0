@@ -1,72 +1,68 @@
-Return-Path: <linux-nfs+bounces-6675-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6676-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29D4A98856B
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 14:45:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75A0D988650
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 15:33:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5748C1C24BCA
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 12:45:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2255B1F22459
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Sep 2024 13:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1066718D621;
-	Fri, 27 Sep 2024 12:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4756D183CAF;
+	Fri, 27 Sep 2024 13:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CX7Mm7mb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J57tBXc7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144AC18C90F
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Sep 2024 12:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3437C282FA
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Sep 2024 13:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727441055; cv=none; b=VYDPn2gOTHBoP4MjXOG6XZVwjLHR5HzMTHmdQ7i1pzt9CK2lpF+77t5usQhiNVmJoFPU7CsfiAP9/IfGeqswzL4mwhhdWo7O+uSNUcYiGsP/uw9fSGkNFq8JbgxwAmBQ+DWfQO60XPB+cYhPdmCsM3s66pfE41x7mZFCsO9tu7U=
+	t=1727443991; cv=none; b=k3pP22lzXac8EKhwmSLym7JduKk9GvXnXoy041A0bjuUZ5tTwBiwjuN9XkxXMay/K7n8MeU/ylfAJNc+EKFkr0D73yckb49eZZ66RKDdedwWRvIGFF9Pw0mb+6Bl9ONr5C+u+L70uTaDumR6eAl1fNxMrSacFz9e+OcTmU2OCNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727441055; c=relaxed/simple;
-	bh=mOi+QVnVecw+smLdF9Kes4AGgPx9G/MOtBZOC7yoslg=;
+	s=arc-20240116; t=1727443991; c=relaxed/simple;
+	bh=+P58Gbna7t7AVL4V4Tf0rpBycNuw7Mm1yDc4T8Vns4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lO4eQATz8XhtjueNcFFci0Xrvh0SAsvtAOhNKeCGuwLTif1wLGjAdyil4ZwCpRbHQX2JNaioPOhhrzVKFoEZaAgP/IExq2qUvxJbkUbryvXqMYnWNZhC4EFY2Vzgu1HCoavC3TOgGYI8d/Avg2OaIkOzXdskF4x6PCQkteQkt6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CX7Mm7mb; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=T/38TPSR5C/Jkfnbqc8YMWmPLj3NfgVpUIGQ9EJTuiI/ryFLz93duvt4Cn9rQkvSoy/bwf1iWEKto1EMGWuDK9FVaEGARgmB9CAYZNyRfRm0cWUBgll/Eix0kkNQkmb2EDtOr5SH+TCZwIesSLgtE0dmMPthtNPPN7E9iWHEVxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J57tBXc7; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727441051;
+	s=mimecast20190719; t=1727443988;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fprYQELYW86um0EMrG5RiK9/nL4dPOc6NN3Oq433snw=;
-	b=CX7Mm7mb0ecvIvaDpPRf/rQ1QCnR1jffcUHDF/8ZQyCdzDaDIKe+xvcI0AepAVWy66EG2x
-	FnPKdAooknep/k+l7KBq3edpK7VXuQi8aFwEpaX9iseaJjVMVtwNi608d9NdRr4OhtxgOo
-	d4CTnfYNTZBSxI79UxzUyEeX7gJE06Q=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=EncI7J940LvYmxfYJuDAU0XrxnEWNF751y8/Pb64660=;
+	b=J57tBXc7uTy1EF2zmORg0UZuSxc2BThgrD4wWnV6MHZ/GC6gLV2NLMvdE3tsZuncr/Xb4U
+	OFhaTXH7/Nz9AUMIp4pQ4aDnw4usMLz6JOQpPFbRD47kWT9Ew5aHRNX2oZio19lf158XJb
+	tdtkaVYK+GrHRXxNTx1OdvdxLH/Bcsc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-68-gnt3wwD9NC-DGD1nMR4pUQ-1; Fri,
- 27 Sep 2024 08:44:10 -0400
-X-MC-Unique: gnt3wwD9NC-DGD1nMR4pUQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-522-1zsCL-wsNNKpZytve0sySw-1; Fri,
+ 27 Sep 2024 09:33:05 -0400
+X-MC-Unique: 1zsCL-wsNNKpZytve0sySw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 21B101903097;
-	Fri, 27 Sep 2024 12:44:08 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD27718FDEDC;
+	Fri, 27 Sep 2024 13:33:04 +0000 (UTC)
 Received: from [192.168.37.1] (unknown [10.22.48.10])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF77C1954B0E;
-	Fri, 27 Sep 2024 12:44:05 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3166D1955DCB;
+	Fri, 27 Sep 2024 13:33:04 +0000 (UTC)
 From: Benjamin Coddington <bcodding@redhat.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Jeff Layton <jlayton@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix delegation_blocked() to block correctly for at
- least 30 seconds
-Date: Fri, 27 Sep 2024 08:44:03 -0400
-Message-ID: <565B02C5-8711-4B3D-90E8-08E39D7E337D@redhat.com>
-In-Reply-To: <172644946897.17050.6911884875937617912@noble.neil.brown.name>
-References: <CACSpFtDNpOMfRt1Msbo4XNaja5_Nuhxd5Vs51UvjCap5Z9-wLg@mail.gmail.com>
- <172644946897.17050.6911884875937617912@noble.neil.brown.name>
+To: Daniel Herman Shmulyan <danielhsh@gmail.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: 2 bugs in blkmap service
+Date: Fri, 27 Sep 2024 09:33:02 -0400
+Message-ID: <BB16B360-44D6-4848-95E9-A636C5CF8346@redhat.com>
+In-Reply-To: <CAF+Si_qgqccM-BNKhya=_1G0dOb0YZc-94+OLWD3Z1D9kBJ8rQ@mail.gmail.com>
+References: <CAF+Si_qgqccM-BNKhya=_1G0dOb0YZc-94+OLWD3Z1D9kBJ8rQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -74,57 +70,72 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 15 Sep 2024, at 21:17, NeilBrown wrote:
+On 26 Sep 2024, at 2:35, Daniel Herman Shmulyan wrote:
 
-> On Thu, 12 Sep 2024, Olga Kornievskaia wrote:
->
->> I wouldn't discount these operations (at least not rename) from being
->> an operation that can't represent "sharing" of files. An example
->> workload is where a file gets generated, created, written/read over
->> the NFS, but then locally then transferred to another filesystem. I
->> can imagine a pipeline, where then file gets filled up and the
->> generated data moved to be worked on elsewhere and the same file gets
->> filled up again. I think this bug was discovered because of an setup
->> where there was a heavy use of these operations (on various files) and
->> some got blocked causing problems. For such workload, if we are not
->> going to block giving out a delegation do we cause too many
->> cb_recalls?
->
-> A pipeline as you describe seem to be a case of serial sharing.
-> Different applications use the same file, but only at different times.
-> This sort of sharing isn't hurt by delegations.
->
-> The sort of sharing the might trigger excessive cb_recalls if
-> delegations weren't blocked would almost certainly involve file locking
-> and an expectation that two separate applications would sometimes access
-> the file concurrently.  When this is happening, neither should get a
-> delegation.
->
-> The problem you saw was really caused by a delegation being given out
-> while the rename was still happening.
-> i.e.:
->   - the rename starts
->   - the delegation is detected and broken
->   - the cb_recall is sent.
->   - the client opens the file prior to returning the delegation
->   - the client gets a new delegation as part of this open
->   - the client returns the original delegation
->   - the rename loops around and finds a new delegation which it needs
->     to break.
->
-> The should only loop once unless the recall takes more than 30 seconds.
-> So I'm a bit perplexed that it blocked lock enough to be noticed.  So
-> maybe there is more going on here than I can see.  Or maybe the recall
-> is really slow.
+> Hello and Good day
 
-When the server's local rename process calls __break_lease(), it only calls
-fl_lmpops->lm_break() once and sets FL_UNLOCK_PENDING.  After that it will
-sleep and wake to check, but never again call ->lm_break() (which will cause
-knfsd to recall the delegation).
+Hi Daniel,
 
-The check for leases_conflict() is not stateful.
+> My name is Daniel, I was experimenting with pNFS block layout, and
+> found 2 bugs  in blkmap utility.
+> The source is here: https://git.linux-nfs.org/?p=steved/nfs-utils.git;
+>
+> I am not related to linux development community, so I am sending the
+> email directly, hopefully it reaches the right people
+>
+> Bug1:
+> Some block devices attach not directly under /dev/ but under sub dir
+> like /dev/nvmesh/
+> Example: /dev/nvmesh/disk00
+> under /proc/partitions: this disk appears as nvmesh/disk00, but under
+> /sys/block it appears as nvmesh!disk00. See Kernel function
+> kobject_set_name_vargs().
+> blkmapd does not call it and fails to detect block devices under
+> subdir of /dev/ (because string matching of / and ! fails).
+> Result: pNFS cannot detect and do IO to disks which with 'lsblk'
+> appear under subdir.
+>
+> Bug2:
+> Due to support for old kernels blockmapd incorrectly detects the minor
+> version of a block device. It uses only 8 smallest bits for the minor
+> version.
+> This actually caused data corruption.
+> I have two block devices (major:minor) of 252:257 and 252:1,
+> The pNFS signature is found by blkmapd on disk 252:257 but pnfs IO
+> actually goes to disk 252:1
+>
+> This is disastrous as some block device drivers deliberately reserve
+> lower bits for partitions of disks, Which causes this issue to be
+> critical.
+> one vendor actually used 8 lowest bits to support 256 partitions,
+> which means that his virtual disks are attached as (major:minor):
+> 252:0
+> 252:256
+> 252:512 ...
+>
+> And pNFS IO always goes to only to the first disk
+>
+> Thanks
+>
+> I am not familiar with the procedure of opening a bug report to the
+> kernel community, and I am very sorry if my direct Email is rude
+> etiquette.
+> I had the best intentions.
+
+We have https://bugzilla.linux-nfs.org/ for nfs-utils bug reporting, but
+also writing to the list about bugs is considered a good approach.
+
+I don't think there's been much work on blkmapd recently, so you might need
+to attempt to resolve these bugs on your own.  If you're serious about using
+block-type NFS layouts, you might consider instead moving to SCSI layouts if
+you can, as they are a more robust way to identify devices and
+protect/fence.
+
+Additionally there's been work over the years to extend SCSI layouts to NVMe
+over fabric as well.   TLDR - block layouts are moving away from needing
+blkmapd.
 
 Ben
 
