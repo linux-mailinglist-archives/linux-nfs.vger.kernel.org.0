@@ -1,118 +1,190 @@
-Return-Path: <linux-nfs+bounces-6693-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6694-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44377989493
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Sep 2024 11:37:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26F4E9894A8
+	for <lists+linux-nfs@lfdr.de>; Sun, 29 Sep 2024 12:00:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F1C11C21C0A
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Sep 2024 09:37:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330211C21CF4
+	for <lists+linux-nfs@lfdr.de>; Sun, 29 Sep 2024 10:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A490A143C77;
-	Sun, 29 Sep 2024 09:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E3914A093;
+	Sun, 29 Sep 2024 10:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgsuDCWR"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X/FeR2+p";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VRi+rOXF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Nms3yLIJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1vTvuysg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B33D18641;
-	Sun, 29 Sep 2024 09:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D827214D6E6
+	for <linux-nfs@vger.kernel.org>; Sun, 29 Sep 2024 10:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727602672; cv=none; b=A1l9bJE56LP5+s4cpzc/cynKEBd5AVUv0sA4l9vyT+Erv+tZ+FoE5sYFY9b1jqT2L8hw22sifNTWN+hfYyLI4SMl+3pvkyVhn88sjjIrANyWg5sXrirBfkGT2vGNOjXFKyxvkEFbLc9whJ1nOpCbbX0G9xPFCVFdjfGiK8b3FXk=
+	t=1727604005; cv=none; b=ONBfULDiXGXZq2LGGAwDQB9Dh0DdUxXkpBp8jPLLQ7xCMY5mO/jWaxjcv4j6QW7KqFJs5hRO6lsGAabnWqdO5QdoXK791sLMysodBW5SICyzB8+4tf8Lk1rAqExN4pot+pRmt409w7vJtJ0mYqIMNyv+dHtIajgqcSTvjyRNV+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727602672; c=relaxed/simple;
-	bh=JhnlrgiwaYgmf+C4P4rH3Grzmw0UD30oyedNJem4K74=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cItpCZg5EOJ57iJXgpjLs3yjfsNU3IK6P+b/DXWQYXK+KAEcgphVCzvyF0Gbh102ekbQtl4AR4wkdrso/VMIyhLBxDUe9Z+LuT/vpFBiTKqPSg1/iQrYP17KudXkNdA4HPthf569YR1ItqYQ4DH2/m7euVeaIK+Ydyl7p20rRNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MgsuDCWR; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7db0fb03df5so2634578a12.3;
-        Sun, 29 Sep 2024 02:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727602670; x=1728207470; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UI3JnvNxoordn6WEYDEb5d80WQsWt5pSs8xiHh3j060=;
-        b=MgsuDCWR8KS9gbixT/tLGdkM3TJRDqVlvShmApWlOfS4jUpXn+PB50Y3/+bLj6eZ12
-         ek4n3Mb7Eeh73IL3xFlR+bqsvIcz+9jeZqNhZNOpjd+sFt9jWrTMqwxmRmP6gYugmsmz
-         vmmQIcfWEXgIF1MIqNJMtAHDbPQWrvmNI5dLEXfNhe0Q8uLoCNVTLjD4X1Q7EE5qtmEO
-         T007P/YbEsRt1QQPd/HI5gEIynQGYyMUD2rGj78lFVUoohFUAUdkHs3XAiVb0xey8df+
-         lO9pNYmaQx294pMY6c4vgMz4d9tzxCMkp/5t+IE293lL9ExnSbwWHGacUUU2ru1TWrCc
-         FQlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727602670; x=1728207470;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UI3JnvNxoordn6WEYDEb5d80WQsWt5pSs8xiHh3j060=;
-        b=tX13EjWJgTdP3jwYazUPJMZczzyEliquuenuNFTXeZOx7ZVdcpqc9MzGmaVTRDSFH/
-         m3i1hwG9qt6AmLS+g+IUvZYvsonT5hGBk8Rh0UkzmPc28b0xyQUiUolkr0NxAGyGleXZ
-         FdpnuuAvUT66F/pKgjheO/M8982to0wU+dPjSlETlZo4beYM40iSii6q+yAqsZImxFpP
-         g9c6ktu+AByTINYQDpE6yJ19C9xmy0MHm6BnE/l7m/+Dj8+Y0lMw6wgxac9Tf8ttrejz
-         IeKAlky5p/glxeGWN0hLcgEzMllen6pOd2XT/ytwIkBhoUHcbIjO9HqINvAf/4hjUirV
-         JjdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8NYMf0I+qiXcUhfDXnYJ6IlbiJ1P+YeTEKg6OiPh3WX+5rKb2JNDVcjgxZk2jamrI7iv5Vix1CixfIu2qVA==@vger.kernel.org, AJvYcCUhh6Jl2n4s0pSEn0qI/tunOhdffgMf+8L0/auhvevJ03bBX7MrUnY7i86/9mluRx47NNSIjJKa@vger.kernel.org, AJvYcCUo6qRcaCU2NUUenC6riT57fZuWi7OMt8v3sBFwuhwR1hCm5wRHFPp27I2h+OiLTDuuEABToyYbas+StA3G@vger.kernel.org, AJvYcCVRK9RKPYvWIhMuhvfOMLZMIElioCvWjVTSnCq+6FppQgbXkZowEJB2YpoVbAUOJM1CwOzWdysGQtz2@vger.kernel.org, AJvYcCVhUr4tL85Efse0OOckcguoa/Iq6b45PQ6mCthJXQseGuqY1gnhREcYwwLIxACXByBA2gdisXozA0F6TA==@vger.kernel.org, AJvYcCWdedSoRDcrjNPlq+YvVwqBuwoq0HddTec/00Elyjb3C7/tvAgXFUore5dg4AGVMEg0s4nQ1SJ8eR+t@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeEkW7ejp3yU19eteePTK+9l+mYTSdY1uRCsRTehmozZR6EP3k
-	kfLV5W7dErl40USelOVZk6nRVG/+a1fwi1oSNnjuVy2mg7YUrXNP
-X-Google-Smtp-Source: AGHT+IGlIri+CO3nO7SHxYS35QDjVZ1ed/TCsk0eNd1dMV/4gMLjT42I+WIsw+2rLAY8Xe2G636KQA==
-X-Received: by 2002:a05:6a20:cf8b:b0:1d2:e81c:adc0 with SMTP id adf61e73a8af0-1d4fa7b53bemr13375412637.46.1727602670436;
-        Sun, 29 Sep 2024 02:37:50 -0700 (PDT)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71b264bebedsm4292766b3a.85.2024.09.29.02.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Sep 2024 02:37:49 -0700 (PDT)
-Message-ID: <c688c115af578e6b6ae18d0eabe4aded9db2aad9.camel@gmail.com>
-Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: David Howells <dhowells@redhat.com>, Leon Romanovsky <leon@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Manu Bretelle
- <chantr4@gmail.com>,  asmadeus@codewreck.org, ceph-devel@vger.kernel.org,
- christian@brauner.io,  ericvh@kernel.org, hsiangkao@linux.alibaba.com,
- idryomov@gmail.com,  jlayton@kernel.org, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org,  linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-nfs@vger.kernel.org,  marc.dionne@auristor.com,
- netdev@vger.kernel.org, netfs@lists.linux.dev,  pc@manguebit.com,
- smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
- v9fs@lists.linux.dev, willy@infradead.org
-Date: Sun, 29 Sep 2024 02:37:44 -0700
-In-Reply-To: <2808175.1727601153@warthog.procyon.org.uk>
-References: <20240925103118.GE967758@unreal>
-	 <20240923183432.1876750-1-chantr4@gmail.com>
-	 <20240814203850.2240469-20-dhowells@redhat.com>
-	 <1279816.1727220013@warthog.procyon.org.uk>
-	 <4b5621958a758da830c1cf09c6f6893aed371f9d.camel@gmail.com>
-	 <2808175.1727601153@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1727604005; c=relaxed/simple;
+	bh=uur9WwY/rmfTVzs8abWmZA7YEe76LOUxmah9ShNRrRY=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=I4u65xMKZN17nnZTvxKhF1uh9LXEUeSugp48A0vg19xvvKQaeoz5xw7uCEX/n76fUywbhfj8iYih07Po97P+EjNeBeGNVlSb6xIuoinE4jVMwcJQ1BhEYi0ehN1Wem8s1jTUcKYGXYYZVPghlA5RX/dYWHlingFQPoUFyJ1XUjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X/FeR2+p; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VRi+rOXF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Nms3yLIJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1vTvuysg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9BEE421A79;
+	Sun, 29 Sep 2024 09:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727604000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XCeTNcBDUKXgqPLehLflaocAG6qDG+EONJj21nDYZEQ=;
+	b=X/FeR2+pmDcKC2gI+pQHkiNaoZ4jMpHIM78BkTcenp3IneOXUlEVXrSD5QY0NE1oG/2csw
+	aLNHh32Vi/MEGONG31MvtqMUCMImYvZZguSiPjWUry+/pa/ZzLQWATkJouh3F4+hKwSBIi
+	Z2GdBuZOoo2zcsGKIxUQxCk1FTVJ55U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727604000;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XCeTNcBDUKXgqPLehLflaocAG6qDG+EONJj21nDYZEQ=;
+	b=VRi+rOXF4DZaFsuV3llOprP23wxWpU9SEW4d3pb4iMvBCpr55EpWb6oaEXBASaTqyJMRQY
+	ViWllqgz6bsQ4hBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Nms3yLIJ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=1vTvuysg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727603999; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XCeTNcBDUKXgqPLehLflaocAG6qDG+EONJj21nDYZEQ=;
+	b=Nms3yLIJvPUGr9bnNan0TCj7YhAx7oJAxggNyr4o5og+VA44Ql8OdaSTA/uu6IntHKZ0ym
+	Ltz0vyKuIztiIHpJRDSoQ8Bi7D9Nqn7xrDdyDNkYEqje5E6qDBptiPUR/K4PnNyB7L0WlB
+	ElAfZSRp3P6sjJtKw5V9xESm32nKZEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727603999;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XCeTNcBDUKXgqPLehLflaocAG6qDG+EONJj21nDYZEQ=;
+	b=1vTvuysgbHuQ0QS98+a4ecLIDOA54xjFXyeY9Q+6O/FyxNrzm/lSmAHpv7a4EH07+gwhCj
+	Pap/ezi5bp796XBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9041E136CB;
+	Sun, 29 Sep 2024 09:59:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kGQ9ERwl+WYSTAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Sun, 29 Sep 2024 09:59:56 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Harald Dunkel" <harri@afaics.de>
+Cc: "syzbot" <syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com>,
+ "Jeff Layton" <jlayton@kernel.org>, Dai.Ngo@oracle.com,
+ chuck.lever@oracle.com, kolga@netapp.com, linux-nfs@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com, tom@talpey.com
+Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_umount
+In-reply-to: <90750d21-61fa-4243-8c6b-dbf6fa185ae4@afaics.de>
+References: <>, <90750d21-61fa-4243-8c6b-dbf6fa185ae4@afaics.de>
+Date: Sun, 29 Sep 2024 19:59:36 +1000
+Message-id: <172760397625.470955.13033558054733497181@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 9BEE421A79
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,noble.neil.brown.name:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TAGGED_RCPT(0.00)[b568ba42c85a332a88ee];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Sun, 2024-09-29 at 10:12 +0100, David Howells wrote:
-> Can you try the attached?  I've also put it on my branch here:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
-/?h=3Dnetfs-fixes
+On Sun, 29 Sep 2024, Harald Dunkel wrote:
+> Hi Neil,
+> 
+> On 2024-09-29 00:23:18, NeilBrown wrote:
+> > 
+> > Thanks for the logs.  The point to flush_workqueue() being a problem,
+> > presumably from nfsd4_probe_callback_sync(), though I'm not 100% sure of
+> > that.  Maybe some deadlock in the callback code.  I'm not very familiar
+> > with that code and nothing immediately jumps out.
+> > 
+> > I had thought that hung_task_all_cpu_backtrace would show a backtrace of
+> > *all* tasks - I missed the "cpu" in there.
+> > If if it happens again and if you can
+> >    echo t > /proc/sysrq-trigger
+> > to get stack traces of everything, that might help.  Maybe it won't be
+> > necessary if I or someone else can spot a deadlock with
+> > flush_workqueue().
+> > 
+> 
+> I just learned that kernel.hung_task_panic = 1 should have been set, too.
+> Sorry for that. Currently I have
+> 
+> 	kernel.hung_task_panic = 1
+> 	kernel.hung_task_all_cpu_backtrace = 1
+> 
+> Please confirm.
 
-Used your branch:
-fc22830c5a07 ("9p: Don't revert the I/O iterator after reading")
+You DON'T want hung_task_panic in this case.  If the system panics, it
+might do so before the watchdog you mention below fires.  We really need
+the sysrq-trigger output and the panic might interfere with that.
 
-dmesg is here:
-https://gist.github.com/eddyz87/4cd50c2cf01323641999dc386e2d41eb
+Thanks,
+NeilBrown
 
-Still see null-ptr-deref.
 
-[...]
+> 
+> I have set a watchdog to run the sysrq trigger on the NFS server if df
+> on an NFS client doesn't respond.
+> 
+> 
+> Regards
+> Harri
+> 
 
 
