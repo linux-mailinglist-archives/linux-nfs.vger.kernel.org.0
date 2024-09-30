@@ -1,105 +1,154 @@
-Return-Path: <linux-nfs+bounces-6713-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6714-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF4D398A07B
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 13:27:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D461598A354
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 14:47:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E11C71C243F1
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 11:27:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAA5C1C210AB
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 12:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F54218E03B;
-	Mon, 30 Sep 2024 11:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA50E191F70;
+	Mon, 30 Sep 2024 12:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="HpmzvhmZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UIgGF5iO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5B61957F4;
-	Mon, 30 Sep 2024 11:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3B418E775
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 12:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727695316; cv=none; b=lUpWqlInMUHFDEpbJYhCyBSAZF2xDpGpuD5pUnmq70FcvnS+hxHgJm0XXhNXjy+IVy4hfNMpVIhvibSEkr76h2fgNqcj8P/4hu52S9YOEeIjEyDFGCnOkm49rIJzr2chpumD7xj1jT8EzcsjtAsF2ACXXV+Sy7oeVZRTV+QSpIE=
+	t=1727700287; cv=none; b=c24yV6l1m0WyYbA3hDmD7zyfFrFRHWEjl9Wl4f6rLq1FiibpptQ9G46wRfvS93+QgxvD2DXgE8JGMhocC8CYZz0BzHuPWlqVTIEflKpuEeepGzV/QnKw9hHItIgOFAG/GiYzjMqic1nt07YD+1gqn2RFttlW1dkmnjGD1dLb8UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727695316; c=relaxed/simple;
-	bh=cbKZFVxD8vKFKjYfmXBm/w08xlle6y2Pu4DuJ3uL0EA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jlLF8bC3GPESElQ265SMaaHlORsjtNU9CmqxvM6NGoyCmXbZFx8w1OGMv24AxxfFUEY9is4aDO8yR2XxEHUlm1/oUR/lf1lKgy9S0bkmhptTmSlTqPz1ykVZnD5cQtKCb9+WtrYZEJAX/DPO0e20cUr2zUCCb+Qoc05JNjdx2xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=HpmzvhmZ; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=k7bOPAFANWhA0Ui7wz343CvWa6yOufJZVnn75o1MDXU=;
-  b=HpmzvhmZWC2nifwxAkGqF5zn2ddWpZTd4Jm6XdJsfTfdDk4Xy54BJ8aA
-   HC095yAgkdAWThCfCejCAoVSe44Av8xZfTRLjbHChvcp11KNRzMMH/Rr3
-   peeeFJwrxfFz+dlCVLg60S2pZK/IDFL433lk0UrHQYzw93SUiA+nuJ9wR
-   U=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.11,165,1725314400"; 
-   d="scan'208";a="185956900"
-Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 13:21:27 +0200
-From: Julia Lawall <Julia.Lawall@inria.fr>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: kernel-janitors@vger.kernel.org,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 23/35] SUNRPC: Reorganize kerneldoc parameter names
-Date: Mon, 30 Sep 2024 13:21:09 +0200
-Message-Id: <20240930112121.95324-24-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240930112121.95324-1-Julia.Lawall@inria.fr>
-References: <20240930112121.95324-1-Julia.Lawall@inria.fr>
+	s=arc-20240116; t=1727700287; c=relaxed/simple;
+	bh=6vUuZ2dmjzVrkKIoa9FfLBuOBd8yL0AJKjCVHkJVKs0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=rVmuEEAShaPydf/VP1MHIYSSYQUZ3u1/4u/MTqRKqBJBts4q9ILwlZIwMK1kzY4CZcK5eMoIpd2H7VX6KlLrF6wHoMsdA+8VkGZLSgjlwshwoF4NG0ipRTquuJBIs6Qv0smhqJdl9wpShJqR16dBQusoZOzzZ26ov/8Ox6Vyb2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UIgGF5iO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727700285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6bVDH90pWvwnLUcopy8GzWW9f5uyvFXFYBMlGFlIsT8=;
+	b=UIgGF5iODXBz21Kb2pmzR1v/InJ0gQV+myoa1dkyhgJRIT4A9T+bidavy8LDbhQL8brFG9
+	ZWDPWWoRdna91Gy8DLcGivLLBkwK8j0TK2wwYr7XsilEySIk6zCr54ASn7249luydtqVIc
+	l6wtp4ciWXZTnO4sSTY4Jh1s8Dke7MI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-401-q9x6f1A7NQmqo91dzCKIUg-1; Mon,
+ 30 Sep 2024 08:44:41 -0400
+X-MC-Unique: q9x6f1A7NQmqo91dzCKIUg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 722E31944DDB;
+	Mon, 30 Sep 2024 12:44:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.145])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3243E1979060;
+	Mon, 30 Sep 2024 12:44:31 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240925103118.GE967758@unreal>
+References: <20240925103118.GE967758@unreal> <20240923183432.1876750-1-chantr4@gmail.com> <20240814203850.2240469-20-dhowells@redhat.com> <1279816.1727220013@warthog.procyon.org.uk> <4b5621958a758da830c1cf09c6f6893aed371f9d.camel@gmail.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: dhowells@redhat.com, Eduard Zingerman <eddyz87@gmail.com>,
+    Christian Brauner <brauner@kernel.org>,
+    Manu Bretelle <chantr4@gmail.com>, asmadeus@codewreck.org,
+    ceph-devel@vger.kernel.org, christian@brauner.io, ericvh@kernel.org,
+    hsiangkao@linux.alibaba.com, idryomov@gmail.com, jlayton@kernel.org,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+    linux-nfs@vger.kernel.org, marc.dionne@auristor.com,
+    netdev@vger.kernel.org, netfs@lists.linux.dev, pc@manguebit.com,
+    smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com,
+    v9fs@lists.linux.dev, willy@infradead.org
+Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2968939.1727700270.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 30 Sep 2024 13:44:30 +0100
+Message-ID: <2968940.1727700270@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Reorganize kerneldoc parameter names to match the parameter
-order in the function header.
+Okay, let's try something a little more drastic.  See if we can at least g=
+et
+it booting to the point we can read the tracelog.  If you can apply the
+attached patch?  It won't release any folio_queue struct or put the refs o=
+n
+any pages, so it will quickly run out of memory - but if you have sufficie=
+nt
+menory, it might be enough to boot.
 
-Problems identified using Coccinelle.
-
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-
+David
 ---
- net/sunrpc/xprt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+9p: [DEBUGGING] Don't release pages or folioq structs
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 09f245cda526..59ac26423f2e 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -255,8 +255,8 @@ static void xprt_clear_locked(struct rpc_xprt *xprt)
- 
- /**
-  * xprt_reserve_xprt - serialize write access to transports
-- * @task: task that is requesting access to the transport
-  * @xprt: pointer to the target transport
-+ * @task: task that is requesting access to the transport
-  *
-  * This prevents mixing the payload of separate requests, and prevents
-  * transport connects from colliding with writes.  No congestion control
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index af46a598f4d7..702286484176 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -84,8 +84,8 @@ static size_t netfs_load_buffer_from_ra(struct netfs_io_=
+request *rreq,
+ 		folioq->orders[i] =3D order;
+ 		size +=3D PAGE_SIZE << order;
+ =
+
+-		if (!folio_batch_add(put_batch, folio))
+-			folio_batch_release(put_batch);
++		//if (!folio_batch_add(put_batch, folio))
++		//	folio_batch_release(put_batch);
+ 	}
+ =
+
+ 	for (int i =3D nr; i < folioq_nr_slots(folioq); i++)
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 63280791de3b..cec55b7eb5bc 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -88,7 +88,7 @@ struct folio_queue *netfs_delete_buffer_head(struct netf=
+s_io_request *wreq)
+ 	if (next)
+ 		next->prev =3D NULL;
+ 	netfs_stat_d(&netfs_n_folioq);
+-	kfree(head);
++	//kfree(head);
+ 	wreq->buffer =3D next;
+ 	return next;
+ }
+@@ -108,11 +108,11 @@ void netfs_clear_buffer(struct netfs_io_request *rre=
+q)
+ 				continue;
+ 			if (folioq_is_marked(p, slot)) {
+ 				trace_netfs_folio(folio, netfs_folio_trace_put);
+-				folio_put(folio);
++				//folio_put(folio);
+ 			}
+ 		}
+ 		netfs_stat_d(&netfs_n_folioq);
+-		kfree(p);
++		//kfree(p);
+ 	}
+ }
+ =
 
 
