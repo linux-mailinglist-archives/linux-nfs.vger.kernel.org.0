@@ -1,133 +1,188 @@
-Return-Path: <linux-nfs+bounces-6721-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01FB098AA3E
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 18:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A96F398AA44
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 18:51:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D482F282653
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 16:49:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A79A2838CF
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 16:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011391953AB;
-	Mon, 30 Sep 2024 16:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJHYfrs9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E07A5195FD1;
+	Mon, 30 Sep 2024 16:47:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9681946AA;
-	Mon, 30 Sep 2024 16:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA5C1925B8
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 16:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727714804; cv=none; b=ik1EqUmQWvcFXq8/m/mn+1syl6nBg0RrWwUJv5KYHq86M5UccLO55ZxVGSDjPaSSSktILhyYNMYVLkCUnJ8JDAhRCPQSUXGk6wTHwbRA6X5AfG2djAyYhiqhi7nh9did/zWUV0oIgC4Jh7N10Svs0ND5XUaKmMIOJzMOm7ZL35g=
+	t=1727714820; cv=none; b=EFeqQ/w7HjbCdzAEOlpTYfzU4iOZr0VtHVugUL/rtcRiknX23tubk7tYsfqilpN6aERdWgQ6MCQeofYHl+ET0yXX71/ue4iZxTV9KNtMZo7job/FpCSSmZ/gEvyHNTOfqa8vJX1ecNxeSVFPmloQbawTusFiiJ4I2KzXsWFOLAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727714804; c=relaxed/simple;
-	bh=1rGJ3ml+BkufanYBiG4ElBjkODsCW83l25J2SX/Nfmc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZaUPklMNsKYNvD+Mjh4I/wDxnu0iEmmQP00eS6gJ3B8I/VAYDDFspb3GP1Bu7N9nc0m7urHGcn9Z7ZbzgeZDFcUHPncRdaOmtS2Cni4jEb3CQhE3rv8cxO6wWdC8OQgpRhFhzVNGHzFU/2jfIIzo/53seHYuI6KgW2i8AXmE7Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJHYfrs9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20ba6b39a78so3168215ad.3;
-        Mon, 30 Sep 2024 09:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727714803; x=1728319603; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oFMgdLn7hB0TMtt+qsWxpUh5i8iT0KYc/LM27VmdFOA=;
-        b=YJHYfrs9rpOwz+to2j6Ewri3t9bulRdMja1hdfA+4zSyelhdRwvxLUkdTp82IwFElq
-         BXql3ebOzd+EZ0dI+c/vxh92LxBsv9Uu0qtdFrEU4cdBRdB9vcwMT8j84b2iQr0c/I9A
-         Lk4sv7eUnDmCKfx3B+Zjov7D3gkzu9ix3sdZH0SCEM6ycWlOsEhlpjy3ZMEJcY535nHL
-         YTy+KGU7pGeMAulxfv1eP+Qn1UYOMGlLZQERGvfj3gPXht7XdBVZPUVc+FWh57rV6xFY
-         YtpVY/TNPtuFOqg5RQcoY0VWJdXuriWGMzazx01WzMDFGdPVwV/af2iMJmBFfh1E2LHH
-         nlaQ==
+	s=arc-20240116; t=1727714820; c=relaxed/simple;
+	bh=g4o1E9ZHJpVvV8UBqlxcay2i9cSQlVEOIAKY8yV+YOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Er9eoN6non19uTQnDnM2sIg1z8tD+DQx8lGjkDw01LwNoPhvYXgqAhucHNb8ftEQTJDWj6tKi/AhDdJEz7xYblUYgwUFeDdTg6fds8xa+5+Ol4xpiI1XjA+44rU26w1pVnHO+iTdqjcI6gsIPODQBumYAimCu+26FmJs+CaBW3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5e5a0519d00so1967388eaf.3
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 09:46:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727714803; x=1728319603;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oFMgdLn7hB0TMtt+qsWxpUh5i8iT0KYc/LM27VmdFOA=;
-        b=uwT7KMhsGPy75Myyn0ejoae+y/DdljZCiYXdhyNo1eRQORxrbLAg0zoPc8uukkoMcf
-         lNNI5ZevBVCQeaL5IIJIKkyoyi/HRPVDzr1Ns08t4UZC7lb0iT5/w3Kvs3JDvRRP8VlC
-         7/aHmwbKKV5kkOL/Kv48g59Bh1tvjKqwTDmG3Y88dshYZgk6Vy7u5pU/WVhVFKFHHZRp
-         IbAWtHfJV0CXM62lu2IcWH/bWKJlDghNZOWxutPaoDAbcwGjdKW8njvEYmIj+pZOgx4q
-         e3vfZFUzsl0d928g5ENWK+KsbzJc3Mq2Wb/kpbdbcAxYA7/3cPTZxNRi3hsTpUZgejjA
-         FgAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUurJcBxE+Jf1VdErf8gnsQNhLUa5tet9/FhHqD7rfQRH4uwXWdzJKIbUuj8IAj/dz5Yg1nhGsl1cIX@vger.kernel.org, AJvYcCV3yGyHlJ9hE7W3Y5aXSnhEJgjTMMG+kHRCsHys5Uobv1haaRmLgRyg5fct3ByPWuMBkNchMfy/zOhdXg==@vger.kernel.org, AJvYcCV4sbMorniZ3KfQc0Rih4TZ9ZWlJgcBgpSZqePsWlFe7ubS/caetrCgOeKzGpM0d8Jydpoc50ULZtuwypTt@vger.kernel.org, AJvYcCVb6pIf1TbZjzsiLKYVxRS7TPzolRyG6Vy2elsiHFh45x8RHqahw2Gl3UKV5UDr6j84a3kA+b1Z@vger.kernel.org, AJvYcCXXL5UV8hH0YeVMWh/DvPd0jDv7VgJEHYqfd1T0sQ61PzVZkubiSl1pz9sp+Hg83uPa5nUFH9Su+Qde@vger.kernel.org, AJvYcCXrkyUnt7g+t5QYVU2eJU1ZynbB40QkddROShZ4HQNURiGCf532IpTCrfO3XdxT9LPMgJA72U21Lwu9vQFQrg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJME94YiV0877LQk+iWJrD6qCwVVUJF/LlFnYLHIY6PB22WCxp
-	mO7zjjtLd0Aj4HsCgnFZf1mOTrO71GLznNYhQH0bSZ+s9IXisZiy
-X-Google-Smtp-Source: AGHT+IFZC3EJ0qzaaUHzbstF3Ibe+95zgKik8WWlYGIZbkQX0EKejoD/dNihbdBEqG2pUNucAQRStA==
-X-Received: by 2002:a17:90a:bf03:b0:2e0:a28a:ef88 with SMTP id 98e67ed59e1d1-2e0b8eeebe9mr12068969a91.41.1727714802654;
-        Mon, 30 Sep 2024 09:46:42 -0700 (PDT)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e0b6c9d354sm8211290a91.25.2024.09.30.09.46.40
+        d=1e100.net; s=20230601; t=1727714816; x=1728319616;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AuxEtvCgukHFh6jS8SFvx09qDMSBGl7szdlF1CL/XHs=;
+        b=TpdrSEheoaHMQO0KP2tZwQjv+OWUK+oulrktMmmNkYjgBpZYbwaeZ8jkGObVBSJidJ
+         JaA5yG8zddNmVWF+uXOCyqJsL3wCROeZpV+re3p716+qAG+/vJcTuS0F6T+0i1WBkFUG
+         ckiv/Adow3zOCCtglbmIus+40I1D6ojhWOLnTq/9ZvQZ3mOUsLaEpcpNZ9jcAYG1mNmu
+         BBxDfHI9IlMpDeoGUeyLZD86pPU+yC5yq3jNPSfrnuUY2XN2V94EGHTCgcUDQ+tFcyNd
+         HgqQqakY0UaNe8tQxbx0isU5sF2Vem+57VGQs0hYuiSVcOP1mYZ90WAdO0iQyPeGF5Ll
+         hqIQ==
+X-Gm-Message-State: AOJu0YxuyWnLUa8RI08lszGfcbpKseJ4mTLF/g1yGkYVUQiM34eDhntC
+	GFzBKB5SkGDhvPYGEIH0zSAfCWiRqIgtbcXB2dnRa8j/CFL4LXoUdsC12AGfDFtzO+pPceLZMrn
+	h9HhFexJ+v8ERHiihW+8o7O7410FBS56x03l94FRsoz+SPOVocz2QvWBt5zSv3LauP5z4JlR0gX
+	A5YLWBLgcPvwZDZqsklpcWcR3IlWpkg2yEWHtj4ZM=
+X-Google-Smtp-Source: AGHT+IHWaD5jRZjbNuRnDtyZMrwEEULCWIT/oUkQp8k4yLe4yh7H5HeDalrNszt9N8t2foTJKEXyVQ==
+X-Received: by 2002:a05:6358:54a6:b0:1af:7e6e:4bbc with SMTP id e5c5f4694b2df-1becbb67813mr354913355d.10.1727714816112;
+        Mon, 30 Sep 2024 09:46:56 -0700 (PDT)
+Received: from localhost (pool-68-160-145-92.bstnma.fios.verizon.net. [68.160.145.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45c9f2b6dabsm37745051cf.27.2024.09.30.09.46.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 09:46:42 -0700 (PDT)
-Message-ID: <423fbd9101dab18ba772f24db4ab2fecf5de2261.camel@gmail.com>
-Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: David Howells <dhowells@redhat.com>, Leon Romanovsky <leon@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Manu Bretelle
- <chantr4@gmail.com>,  asmadeus@codewreck.org, ceph-devel@vger.kernel.org,
- christian@brauner.io,  ericvh@kernel.org, hsiangkao@linux.alibaba.com,
- idryomov@gmail.com,  jlayton@kernel.org, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org,  linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-nfs@vger.kernel.org,  marc.dionne@auristor.com,
- netdev@vger.kernel.org, netfs@lists.linux.dev,  pc@manguebit.com,
- smfrench@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
- v9fs@lists.linux.dev, willy@infradead.org
-Date: Mon, 30 Sep 2024 09:46:36 -0700
-In-Reply-To: <2969660.1727700717@warthog.procyon.org.uk>
-References: <2968940.1727700270@warthog.procyon.org.uk>
-	 <20240925103118.GE967758@unreal>
-	 <20240923183432.1876750-1-chantr4@gmail.com>
-	 <20240814203850.2240469-20-dhowells@redhat.com>
-	 <1279816.1727220013@warthog.procyon.org.uk>
-	 <4b5621958a758da830c1cf09c6f6893aed371f9d.camel@gmail.com>
-	 <2969660.1727700717@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        Mon, 30 Sep 2024 09:46:54 -0700 (PDT)
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [6.12-rc2 PATCH 4/5] nfs/localio: remove extra indirect nfs_to call to check {read,write}_iter
+Date: Mon, 30 Sep 2024 12:46:36 -0400
+Message-ID: <20240930164637.8300-5-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240930164637.8300-1-snitzer@kernel.org>
+References: <20240930164637.8300-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-09-30 at 13:51 +0100, David Howells wrote:
-> David Howells <dhowells@redhat.com> wrote:
->=20
-> > Okay, let's try something a little more drastic.  See if we can at leas=
-t get
-> > it booting to the point we can read the tracelog.  If you can apply the
-> > attached patch?
->=20
-> It's also on my branch:
->=20
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/lo=
-g/?h=3Dnetfs-fixes
->=20
-> along with another one that clears the folio pointer after unlocking.
+Push the read_iter and write_iter availability checks down to
+nfs_do_local_read and nfs_do_local_write respectively.
 
-Hi David,
+This eliminates a redundant nfs_to->nfsd_file_file() call.
 
-dmesg is here:
-https://gist.github.com/eddyz87/3a5f2a7ae9ba6803fc46f06223a501fc
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ fs/nfs/localio.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-Used the following commit from your branch:
-ba1659e0f147 ("9p: [DEBUGGING] Don't release pages or folioq structs")
-
-Still does not boot, unfortunately.
-Are there any hacks possible to printout tracelog before complete boot some=
-how?
-
-Thanks,
-Eduard
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index 2f302b03b253..12d3e200156c 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -273,7 +273,7 @@ nfs_local_iocb_free(struct nfs_local_kiocb *iocb)
+ 
+ static struct nfs_local_kiocb *
+ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
+-		     struct nfsd_file *localio, gfp_t flags)
++		     struct file *file, gfp_t flags)
+ {
+ 	struct nfs_local_kiocb *iocb;
+ 
+@@ -286,9 +286,8 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
+ 		kfree(iocb);
+ 		return NULL;
+ 	}
+-	init_sync_kiocb(&iocb->kiocb, nfs_to->nfsd_file_file(localio));
++	init_sync_kiocb(&iocb->kiocb, file);
+ 	iocb->kiocb.ki_pos = hdr->args.offset;
+-	iocb->localio = localio;
+ 	iocb->hdr = hdr;
+ 	iocb->kiocb.ki_flags &= ~IOCB_APPEND;
+ 	return iocb;
+@@ -389,13 +388,19 @@ nfs_do_local_read(struct nfs_pgio_header *hdr,
+ 		  const struct rpc_call_ops *call_ops)
+ {
+ 	struct nfs_local_kiocb *iocb;
++	struct file *file = nfs_to->nfsd_file_file(localio);
++
++	/* Don't support filesystems without read_iter */
++	if (!file->f_op->read_iter)
++		return -EAGAIN;
+ 
+ 	dprintk("%s: vfs_read count=%u pos=%llu\n",
+ 		__func__, hdr->args.count, hdr->args.offset);
+ 
+-	iocb = nfs_local_iocb_alloc(hdr, localio, GFP_KERNEL);
++	iocb = nfs_local_iocb_alloc(hdr, file, GFP_KERNEL);
+ 	if (iocb == NULL)
+ 		return -ENOMEM;
++	iocb->localio = localio;
+ 
+ 	nfs_local_pgio_init(hdr, call_ops);
+ 	hdr->res.eof = false;
+@@ -558,14 +563,20 @@ nfs_do_local_write(struct nfs_pgio_header *hdr,
+ 		   const struct rpc_call_ops *call_ops)
+ {
+ 	struct nfs_local_kiocb *iocb;
++	struct file *file = nfs_to->nfsd_file_file(localio);
++
++	/* Don't support filesystems without write_iter */
++	if (!file->f_op->write_iter)
++		return -EAGAIN;
+ 
+ 	dprintk("%s: vfs_write count=%u pos=%llu %s\n",
+ 		__func__, hdr->args.count, hdr->args.offset,
+ 		(hdr->args.stable == NFS_UNSTABLE) ?  "unstable" : "stable");
+ 
+-	iocb = nfs_local_iocb_alloc(hdr, localio, GFP_NOIO);
++	iocb = nfs_local_iocb_alloc(hdr, file, GFP_NOIO);
+ 	if (iocb == NULL)
+ 		return -ENOMEM;
++	iocb->localio = localio;
+ 
+ 	switch (hdr->args.stable) {
+ 	default:
+@@ -591,16 +602,9 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
+ 		   const struct rpc_call_ops *call_ops)
+ {
+ 	int status = 0;
+-	struct file *filp = nfs_to->nfsd_file_file(localio);
+ 
+ 	if (!hdr->args.count)
+ 		return 0;
+-	/* Don't support filesystems without read_iter/write_iter */
+-	if (!filp->f_op->read_iter || !filp->f_op->write_iter) {
+-		nfs_local_disable(clp);
+-		status = -EAGAIN;
+-		goto out;
+-	}
+ 
+ 	switch (hdr->rw_mode) {
+ 	case FMODE_READ:
+@@ -614,8 +618,10 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
+ 			hdr->rw_mode);
+ 		status = -EINVAL;
+ 	}
+-out:
++
+ 	if (status != 0) {
++		if (status == -EAGAIN)
++			nfs_local_disable(clp);
+ 		nfs_to_nfsd_file_put_local(localio);
+ 		hdr->task.tk_status = status;
+ 		nfs_local_hdr_release(hdr, call_ops);
+-- 
+2.44.0
 
 
