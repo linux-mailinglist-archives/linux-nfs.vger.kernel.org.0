@@ -1,116 +1,208 @@
-Return-Path: <linux-nfs+bounces-6718-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6719-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5EF598A7FE
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 16:59:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B20D98A918
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 17:52:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A23A91F23B00
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 14:59:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EB551C20C13
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 15:52:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E35A1CFA9;
-	Mon, 30 Sep 2024 14:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62691917F1;
+	Mon, 30 Sep 2024 15:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJxi1lW1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qW2RQthl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ED51917F1
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 14:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B5190667
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 15:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727708355; cv=none; b=KmtyQSxvEx6Oqy+gQWrIdRYDg3weBXpwX5cdzer83llm6teudlRoh+wbmt7A+Z0z7nSdnrCIknnV/IWehVo+xU3EB9xB6f+jFw3QvaBfh+V76CCLEyf7RPJCeMTIj+u5k9MyHLVYiQk7vfr8fvx5Q9As7q2lPFBG0ixZyMtKez8=
+	t=1727711532; cv=none; b=fXPHsLvTFDMQHv/sTB91ufi6TdXKbIiUWf8jEp8ef0NlIqjeTvD3Y7tKjZPpkwg6wm6osldYxHlooXP3kpZvxXs49iV5qkne1AuNGsyEnQGje3bSDpuxV4eSL1Y/m1nMIKFS+CJ8WurPm8a/iwoteFngxvO0CNyVZFi10CPFNpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727708355; c=relaxed/simple;
-	bh=ZfQkGCjUln+EcAuKuxCpSwOfB5fOUpB5TIT974EeBWE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=pEqg7H03RO8uDS3b/nphvjoXAI9CM/NXznxaokUXPx/ENb9MeZHRJI13C9RsQzLkxTxEP6Msa+b+quyuBQMSzoULCG+SGecyjILYAxO7vjG6UQqk2Ub8zMx0SpshRuUoUq+cLta2etHU1lIxzKbAcZAufJBiQMi9TL9caQWUE4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJxi1lW1; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e0b9bca173so2423858a91.0
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 07:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727708353; x=1728313153; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vibjlxSrSbNlTZ4zAeOYjSz8ObC+ep3Qj3FWp7PSPMI=;
-        b=CJxi1lW1pm0drNx5RmEL1MRtE34pyPzRPOQjVta5Irch0oYeZfuJRlXJ6PM8oPGHh/
-         6lTUl3+2ltca3enLBIFJtHpqGxmOmpD2xNhNL2BKuaU6ZYWvpZbp2c+BAgYDMNeP0AFC
-         juIOfMOj++Vus1hjTu5tBOUIq2v/9VSpiYE49IylNIesdjTzyTnQMC2EX3IiurWsm8Gm
-         xkQoONP3CcTjaRLv+Mm57i77sHHjpW2drpXKkeGtr4TMDHNBIc92fUBbJx39lWDrjEGb
-         CvwjaiKkClBrn/6YZODk4nxpDM8s1aGM2F/b+4mMR94w1Lt1YHQTIOSOVRi1AX56XvCi
-         Q1EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727708353; x=1728313153;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vibjlxSrSbNlTZ4zAeOYjSz8ObC+ep3Qj3FWp7PSPMI=;
-        b=YHo5aJLer2xuKeRjpJNNOK1v7eUfhYjFbkr/mhsJ4b2t5xXXLxvzeaG238k2XNKHbF
-         3RN+SSFR+VSCDwrUuZktjL9hzlwAF7WjOMnvxNUiuonoSA965qE3o9Za0qFhV66zcWFF
-         2x5KCznl/P65blavozYAowJ/bOT9MOc3/5Ce7tykhMMYVDleqB+PxqVOI83sjaBKvB9o
-         JiW7kxdBwNr/kVEypouq3bud7ybuPmBCk6xhF/LFP2CIDEB9JdhEcnsdrJv4BYrQJecl
-         9nmFq+W+CDVRUCcbiry3IzgaiLaoxty6YmsKF3W6IHrTTU+nnVUPPVWHV5Fae1IiAo9O
-         F7xQ==
-X-Gm-Message-State: AOJu0Yx7Ssm31Q+JVVOPZeapm0FtIpMKemdcNKTYnROzKNoocR2JcVjV
-	VG6UXJnIDP7ZFWWT3zueXL6+6qviNNKWj5OSQuQtZ4i7csxNN4kaTZzIbT4gjY57qrtLJhqgyEP
-	eqk/RCxLzs1q3OTJ7+5beRh1rQ29NkW89
-X-Google-Smtp-Source: AGHT+IGMSWair+Rq+mDscF7NEizt0zAzN9c4RKjjyJXACsrwfTN1yUHaviESBwSU6CwUaLuSnuiQXv/90XmvZiZeSGg=
-X-Received: by 2002:a17:90a:cb09:b0:2e0:8095:98d9 with SMTP id
- 98e67ed59e1d1-2e0b89e2240mr13968351a91.11.1727708353041; Mon, 30 Sep 2024
- 07:59:13 -0700 (PDT)
+	s=arc-20240116; t=1727711532; c=relaxed/simple;
+	bh=608SB3EAQZyWOZI7a+jLjGjPA7ECF2oP8yslvhBqD40=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fZ+wyeud02Z9nFFHLEemHm2zRoNaJLoLreVfE78QXxm0g5TIRoAT1dpOPUY/Hw7ymfxZYlgFtkEZg1APc4iJ97WZZKuo2t6rsjZLdBaOvhRcnvnsKx645D+DXTt62UsrjvLi+CPzN6cP6M7UEb/Gk1KjsecKZGunrmEPW3OtIEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qW2RQthl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66891C4CEC7;
+	Mon, 30 Sep 2024 15:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727711532;
+	bh=608SB3EAQZyWOZI7a+jLjGjPA7ECF2oP8yslvhBqD40=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=qW2RQthlC21+Pd9/FiD5BbiOB0/xhuSxtdT8VL96p3npOn4UGdD/LBcSzx9VQlqOo
+	 +rUUegE33toA97i98k7oNfuJdcP2aus9p1yK32NoT8N4NvRtoBqQ6eMSk6u2NCvEEG
+	 Lj0G3DoS/smXBHobpbjSzyab3JLOIq0KDpPE9CYeMVSdiIkm/EL72cnVutvrWnCrVv
+	 bbp9H+MWJLKz6ihCfPo9BCgquBKQJHbgLP86j4gUyyqDNpOoP5n1RQa0qFLxDyLfcu
+	 G87FRo60q9FsJAHpoA88bwh9PfI/6JyHjE0a34AiMqab97TEIyUOOOPGX0O6JNKSfh
+	 WfrtsMceTWg6Q==
+Message-ID: <3a2dfa30aa812394021cc582e9303194e9979cbd.camel@kernel.org>
+Subject: Re: [PATCH nfs-utils v6 0/3] nfsdctl: add a new nfsdctl tool to
+ nfs-utils
+From: Jeff Layton <jlayton@kernel.org>
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Chuck Lever <chuck.lever@oracle.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>
+Date: Mon, 30 Sep 2024 11:52:10 -0400
+In-Reply-To: <20240722-nfsdctl-v6-0-1b9d63710eb5@kernel.org>
+References: <20240722-nfsdctl-v6-0-1b9d63710eb5@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN0SSYyAf51Vdeg9yVGD7isZfT+PcvbC8RcUGzgkH9MUB1QjgQ@mail.gmail.com>
-In-Reply-To: <CAN0SSYyAf51Vdeg9yVGD7isZfT+PcvbC8RcUGzgkH9MUB1QjgQ@mail.gmail.com>
-From: Mark Liam Brown <brownmarkliam@gmail.com>
-Date: Mon, 30 Sep 2024 16:58:00 +0200
-Message-ID: <CAN0SSYxVUiiupuu-8DPq1tMRrOBuO49bwaLik0KmoQ3r2pqnxg@mail.gmail.com>
-Subject: Re: IPV6 localhost (::1) in /etc/exports?
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 3, 2024 at 1:16=E2=80=AFPM Mark Liam Brown <brownmarkliam@gmail=
-.com> wrote:
->
-> Greetings!
->
-> How can I add IPV6 localhost to /etc/export, to access a nfs4 share
-> via ssh? I tried, but in wireshark I get this error:
->     1 0.000000000          ::1 =E2=86=92 ::1          NFS 278 V4 Call loo=
-kup
-> LOOKUP test14
->    2 0.000076041          ::1 =E2=86=92 ::1          NFS 214 V4 Reply (Ca=
-ll In
-> 1) lookup PUTROOTFH | GETATTR Status: NFS4ERR_PERM
->
-> for this entry in /etc/exports:
-> /test14 ::1/64(rw,async,insecure,no_subtree_check,no_root_squash)
->
-> The same mount attempt works if I replace the entry in /etc/exports with =
-this:
-> /test14 *(rw,async,insecure,no_subtree_check,no_root_squash)
+On Mon, 2024-07-22 at 13:01 -0400, Jeff Layton wrote:
+> Hi Steve,
+>=20
+> Here's an squashed version of the nfsdctl patches, that represents
+> the latest changes. Let me know if you run into any other problems,
+> and thanks for helping to test this!
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v6:
+> - make the default number of threads 16 in autostart
+> - doc updates
+>=20
+> Changes in v5:
+> - add support for pool-mode setting
+> - fix up the handling of nfsd_netlink.h in autoconf
+> - Link to v4: https://lore.kernel.org/r/20240604-nfsdctl-v4-0-a2941f782e4=
+c@kernel.org
+>=20
+> Changes in v4:
+> - add ability to specify an array of pool thread counts in nfs.conf
+> - Link to v3: https://lore.kernel.org/r/20240423-nfsdctl-v3-0-9e68181c846=
+d@kernel.org
+>=20
+> Changes in v3:
+> - split nfsdctl.h so we can include the UAPI header as-is
+> - squash the patches together that added Lorenzo's version and convert
+>   it to the new interface
+> - adapt to latest version of netlink interface changes
+>   + have THREADS_SET/GET report an array of thread counts (one per pool)
+>   + pass scope in as a string to THREADS_SET instead of using unshare() t=
+rick
+>=20
+> Changes in v2:
+> - Adapt to latest kernel netlink interface changes (in particular, send
+>   the leastime and gracetime when they are set in the config).
+> - More help text for different subcommands
+> - New nfsdctl(8) manpage
+> - Patch to make systemd preferentially use nfsdctl instead of rpc.nfsd
+> - Link to v1: https://lore.kernel.org/r/20240412-nfsdctl-v1-0-efd6dcebcc0=
+4@kernel.org
+>=20
+> ---
+> Jeff Layton (3):
+>       nfsdctl: add the nfsdctl utility to nfs-utils
+>       nfsdctl: asciidoc source for the manpage
+>       systemd: use nfsdctl to start and stop the nfs server
+>=20
+>  configure.ac                 |   19 +
+>  systemd/nfs-server.service   |    4 +-
+>  utils/Makefile.am            |    4 +
+>  utils/nfsdctl/Makefile.am    |   13 +
+>  utils/nfsdctl/nfsd_netlink.h |   96 +++
+>  utils/nfsdctl/nfsdctl.8      |  304 ++++++++
+>  utils/nfsdctl/nfsdctl.adoc   |  158 +++++
+>  utils/nfsdctl/nfsdctl.c      | 1570 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  utils/nfsdctl/nfsdctl.h      |   93 +++
+>  9 files changed, 2259 insertions(+), 2 deletions(-)
+> ---
+> base-commit: b76dbaa48f7c239accb0c2d1e1d51ddd73f4d6be
+> change-id: 20240412-nfsdctl-fa8bd8430cfd
+>=20
+> Best regards,
 
-So far "::1/128", "::1/64", "::1" do not work, which makes me wonder
-if there is a BUG in nfsd which prevents the use of ::1 at all.
-
-Also, our IT department made it clear that the "total
-underdocumenation" of IPv6 in exports(5) is "literally worth a CVE",
-as many people use IPv6 masks which make exports world-wide
-accessible.
-
-Mark
+Ping?
 --=20
-IT Infrastructure Consultant
-Windows, Linux
+Jeff Layton <jlayton@kernel.org>
 
