@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-6701-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6702-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A64EE9898AA
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 02:50:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 745F29898AC
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 02:50:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AB8AB226C5
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 00:50:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6AD2B2278E
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Sep 2024 00:50:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4754D2904;
-	Mon, 30 Sep 2024 00:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7ECF3C39;
+	Mon, 30 Sep 2024 00:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFTZszSx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQ/BMjEY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213D3257D
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 00:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834A23C38
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Sep 2024 00:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727657424; cv=none; b=XT1Vc2E97h/1aL61spPTUHkFFbAxIUfCTFT+Wc/8qh7zW5U+z7EqgdMO6US1ZlKP5u/e61qv/0z7Pul7ET0dl/gWNdegPyBkTdspHzt8J9nQcQMJdezuvm5v4Mgey+mkEluU0GqmCIcvo1juxZjziwDxQHNPNqvzyfVjRYdxQ8I=
+	t=1727657426; cv=none; b=ek5fsqlClUdyLGTiIyy/FpcXK38riCpW0MRT5qEq5s5RLT3LxHM9OTZKDdaO+Wx6FkJ6AXPLRfdAyB9YgJ6d8IKZgMIP9UD4LKA89J5SIcKVfEdYmj0PkPwvtbg60hWletonZLeiHCoxVM52wXk7yaPk2F1J42cpVe5HIL8RNlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727657424; c=relaxed/simple;
-	bh=RjOH5PM8GrPsIht3iyKGlHURGNc10EqhW17V++2wTjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RV5mMpNbXyVBELBHwXSLKRSTZL1zbpPIbge5hOCryfAHvS5xGGbpLgJIY7pIJSN3YBjhb7Gnfm2tJTf7y4Ld0VoLlvJ6iQYgu2fSzRl5AY95qgtiw25bg23h/pJ5xOutpx+NkscGjCMtbZzN6rP9LKuj3GCV3SVMsC/duc8Dwgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFTZszSx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C5AC4CEC5;
-	Mon, 30 Sep 2024 00:50:22 +0000 (UTC)
+	s=arc-20240116; t=1727657426; c=relaxed/simple;
+	bh=5KtTnpQev6xhIQxVCcHFFjBd75qG9m+gybMvSg8152g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aJZw1mE1vAYQtv+AZnB9KRF8woJTeYyr7MHx3W+ILZfS4e7hkUztcaCsbvG6N5cq+Y0jUGfsW8cPNmVro3if2HvQg7dFFYfF+1ePVdtaHGeac4gBqNNR83Do1ts0E04ZlDJKZd8l8wAolVf2VMNUN/jxiDAkFcCeLNu5ocDkFrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQ/BMjEY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E003C4CEC6;
+	Mon, 30 Sep 2024 00:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727657423;
-	bh=RjOH5PM8GrPsIht3iyKGlHURGNc10EqhW17V++2wTjI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CFTZszSxXpdCNjQJXK3SqGQVUDVk+6LsDBJTvsZHIfyGRDbSpP8aOvIoPJKieixj7
-	 RNVXcbk3dzfVMh7N4OCIdxVo07d4e4TWlT6mv4Esowu2tfOZJUx8ie9C8tRVdCponP
-	 FBk1qr1gTqc9JiKnPHs/p+ABV6uax+uGIeAXdYMaD6TFZ8KgUcP7nFxtL2l3U5frYI
-	 f4b0raPVi0BETtkm48H5LJXQjsiPTa/sl57GpjiWU7Q1b/mXeZboeaMgVnULtsnE1J
-	 2+6TBbvdzI1lbJY+3wbe1b9lfI4aKYtvtzy4PeqPf5q7KzcCbBisPLO5A69KHqxv3r
-	 JMzEUVXVWl8wA==
+	s=k20201202; t=1727657426;
+	bh=5KtTnpQev6xhIQxVCcHFFjBd75qG9m+gybMvSg8152g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CQ/BMjEYPv/HA0CKIxFvZg69dt7NQ6Hq9PtuB6kol0JlR09yHNB6HA+i9ZUdDIR03
+	 gegj680ZYjWMlbja5v2PMmC37Io3wEFijb45wFpOPKpoNfk2VvD08KW+/qhjTTFncE
+	 yXHJ2oSjflaIIF+2z8COgb8RBopO6eOlC64Gq0oRVNomdiMMytBGbViqatllEfYYtl
+	 IlC+gu1Yb2oc+35NJIp4Q4IbWNI1/BbJHUwp5kZPninKKzIOVaL1b8ZEq+PdIf/tNB
+	 EjRcFE1NthL3MepqVBBifjYgRakrBNN7nPYB0Uw/derftNQEYtRYvoenJPeCyORtEk
+	 yZJU8F6eTR2sw==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,10 +49,12 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 0/6] Continued work on xdrgen
-Date: Sun, 29 Sep 2024 20:50:09 -0400
-Message-ID: <20240930005016.13374-1-cel@kernel.org>
+Subject: [PATCH] NFSD: Remove unused function parameter
+Date: Sun, 29 Sep 2024 20:50:10 -0400
+Message-ID: <20240930005016.13374-2-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
+In-Reply-To: <20240930005016.13374-1-cel@kernel.org>
+References: <20240930005016.13374-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,86 +65,91 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-This series (intended for v6.13) contains some clean-ups and new
-features for the xdrgen tool.
+Clean up: Commit 65294c1f2c5e ("nfsd: add a new struct file caching
+facility to nfsd") moved the fh_verify() call site out of
+nfsd_open(). That was the only user of nfsd_open's @rqstp parameter,
+so that parameter can be removed.
 
-The "Exit status should be zero ..." patch is needed so that "make"
-co-operates properly with xdrgen. I've prototyped some Makefile
-stanzas that can generate encoder and decoder functions to ensure
-this is working correctly (to appear in a later series).
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/filecache.c |  3 +--
+ fs/nfsd/vfs.c       | 11 ++++-------
+ fs/nfsd/vfs.h       |  4 ++--
+ 3 files changed, 7 insertions(+), 11 deletions(-)
 
-"enum" types are now generated as C typedefs, without the "enum"
-classifier. This is to enable the same type name to be used to
-represent either an enum (CPU-endian) or a __be32 (network-endian).
-
-So, instead of generating, say, "enum nfsstat3 {};" xdrgen now
-generates "nfsstat3" which can be either an enum or a __be32,
-depending on a new pragma directive. The goal is to handle the
-special case where the upper layer prefers to use __be32
-discriminant values for XDR union types.
-
-Comments are welcome.
-
-
-Chuck Lever (6):
-  xdrgen: Exit status should be zero on success
-  xdrgen: Clean up type_specifier
-  xdrgen: Rename "variable-length strings"
-  xdrgen: Rename enum's declaration Jinja2 template
-  xdrgen: Rename "enum yada" types as just "yada"
-  xdrgen: Implement big-endian enums
-
- include/linux/sunrpc/xdr.h                    | 21 ++++++++++++
- tools/net/sunrpc/xdrgen/README                | 17 ++++++++++
- tools/net/sunrpc/xdrgen/generators/enum.py    | 19 ++++++++---
- tools/net/sunrpc/xdrgen/generators/pointer.py |  8 ++---
- tools/net/sunrpc/xdrgen/generators/struct.py  |  8 ++---
- tools/net/sunrpc/xdrgen/generators/typedef.py | 10 +++---
- tools/net/sunrpc/xdrgen/generators/union.py   | 34 ++++++++++++++-----
- tools/net/sunrpc/xdrgen/grammars/xdr.lark     |  6 ++--
- .../templates/C/enum/declaration/close.j2     |  4 ---
- .../templates/C/enum/declaration/enum.j2      |  4 +++
- .../xdrgen/templates/C/enum/decoder/enum.j2   |  2 +-
- .../{encoder/enum.j2 => decoder/enum_be.j2}   |  6 ++--
- .../templates/C/enum/definition/close.j2      |  1 +
- .../enum/definition/{close.j2 => close_be.j2} |  1 +
- .../xdrgen/templates/C/enum/encoder/enum.j2   |  2 +-
- .../C/enum/encoder/{enum.j2 => enum_be.j2}    |  6 ++--
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../{variable_length_string.j2 => string.j2}  |  0
- .../templates/C/union/decoder/case_spec_be.j2 |  2 ++
- .../{variable_length_string.j2 => string.j2}  |  0
- .../templates/C/union/encoder/case_spec_be.j2 |  2 ++
- tools/net/sunrpc/xdrgen/xdr_ast.py            | 21 ++++++------
- tools/net/sunrpc/xdrgen/xdrgen                |  4 ++-
- 31 files changed, 125 insertions(+), 53 deletions(-)
- delete mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/declaration/close.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/declaration/enum.j2
- copy tools/net/sunrpc/xdrgen/templates/C/enum/{encoder/enum.j2 => decoder/enum_be.j2} (51%)
- copy tools/net/sunrpc/xdrgen/templates/C/enum/definition/{close.j2 => close_be.j2} (60%)
- copy tools/net/sunrpc/xdrgen/templates/C/enum/encoder/{enum.j2 => enum_be.j2} (50%)
- rename tools/net/sunrpc/xdrgen/templates/C/pointer/decoder/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/pointer/definition/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/pointer/encoder/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/struct/decoder/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/struct/definition/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/struct/encoder/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/typedef/declaration/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/typedef/decoder/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/typedef/definition/{variable_length_string.j2 => string.j2} (100%)
- rename tools/net/sunrpc/xdrgen/templates/C/typedef/encoder/{variable_length_string.j2 => string.j2} (100%)
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/case_spec_be.j2
- rename tools/net/sunrpc/xdrgen/templates/C/union/decoder/{variable_length_string.j2 => string.j2} (100%)
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/case_spec_be.j2
-
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 19bb88c7eebd..8158406bac18 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -1121,8 +1121,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
+ 			status = nfs_ok;
+ 			trace_nfsd_file_opened(nf, status);
+ 		} else {
+-			ret = nfsd_open_verified(rqstp, fhp, may_flags,
+-						 &nf->nf_file);
++			ret = nfsd_open_verified(fhp, may_flags, &nf->nf_file);
+ 			if (ret == -EOPENSTALE && stale_retry) {
+ 				stale_retry = false;
+ 				nfsd_file_unhash(nf);
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 22325b590e17..d0bf4ffa5543 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -861,8 +861,7 @@ int nfsd_open_break_lease(struct inode *inode, int access)
+  * N.B. After this call fhp needs an fh_put
+  */
+ static int
+-__nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+-			int may_flags, struct file **filp)
++__nfsd_open(struct svc_fh *fhp, umode_t type, int may_flags, struct file **filp)
+ {
+ 	struct path	path;
+ 	struct inode	*inode;
+@@ -937,7 +936,7 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+ retry:
+ 	err = fh_verify(rqstp, fhp, type, may_flags);
+ 	if (!err) {
+-		host_err = __nfsd_open(rqstp, fhp, type, may_flags, filp);
++		host_err = __nfsd_open(fhp, type, may_flags, filp);
+ 		if (host_err == -EOPENSTALE && !retried) {
+ 			retried = true;
+ 			fh_put(fhp);
+@@ -950,7 +949,6 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+ 
+ /**
+  * nfsd_open_verified - Open a regular file for the filecache
+- * @rqstp: RPC request
+  * @fhp: NFS filehandle of the file to open
+  * @may_flags: internal permission flags
+  * @filp: OUT: open "struct file *"
+@@ -958,10 +956,9 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+  * Returns zero on success, or a negative errno value.
+  */
+ int
+-nfsd_open_verified(struct svc_rqst *rqstp, struct svc_fh *fhp, int may_flags,
+-		   struct file **filp)
++nfsd_open_verified(struct svc_fh *fhp, int may_flags, struct file **filp)
+ {
+-	return __nfsd_open(rqstp, fhp, S_IFREG, may_flags, filp);
++	return __nfsd_open(fhp, S_IFREG, may_flags, filp);
+ }
+ 
+ /*
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index 3ff146522556..854fb95dfdca 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -114,8 +114,8 @@ __be32		nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ int 		nfsd_open_break_lease(struct inode *, int);
+ __be32		nfsd_open(struct svc_rqst *, struct svc_fh *, umode_t,
+ 				int, struct file **);
+-int		nfsd_open_verified(struct svc_rqst *rqstp, struct svc_fh *fhp,
+-				   int may_flags, struct file **filp);
++int		nfsd_open_verified(struct svc_fh *fhp, int may_flags,
++				struct file **filp);
+ __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				struct file *file, loff_t offset,
+ 				unsigned long *count,
 -- 
 2.46.2
 
