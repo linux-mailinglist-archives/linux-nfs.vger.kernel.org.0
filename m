@@ -1,270 +1,210 @@
-Return-Path: <linux-nfs+bounces-6747-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6748-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC09B98B737
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 10:40:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DE1498B892
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 11:45:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1244A1C2267A
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 08:40:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7487CB25CB6
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 09:45:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5FD8199FD2;
-	Tue,  1 Oct 2024 08:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7793219C576;
+	Tue,  1 Oct 2024 09:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YimjnlNs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.cecloud.com (unknown [1.203.97.246])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69AD019CC01;
-	Tue,  1 Oct 2024 08:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C8913C682;
+	Tue,  1 Oct 2024 09:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727771978; cv=none; b=IbihIZCRwJDwmKp7dS7znbEaBaDYWj6k7STYEwL52f+73mfsHSS0UE6uuFmo178IoUWJbgAtpquhy0KAefoQRp0dGKr+VQiVpyfBDV7kSFb+wXaT8o5y51l/iBqjTMQ04TvEQDMvpy5tgHeIPjsDcZDdu6ADE4NucO6F7fmyr5Y=
+	t=1727775945; cv=none; b=SJUX0k79UnuZyMg83PZWrt4cjARlvB+2aOr3U2B7WdxgmX2We530aczYIi1h4UAKwUzofHSaQYf4EmCBJ+E7LnDqK+/08u034NNy1yltJ7zSBj3t0rKRWIrMZciZ0KQlXu1xuWctHsQdHI8vnoLgDfeyKuvvU72EH/Ky1HUww0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727771978; c=relaxed/simple;
-	bh=zHM+W4s9A6oJwA2GU3etawg+o43qnScIh5mZpZYVt20=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QtVed/jIpNoLVu1DDgiTyGUSPkrHXXr75JNxpSCbWUZHH89BWeR2xeemDg+Zgf5y/bGhPeRAZsNeUuytKutVUm6hV72yIMru38ltCiqop5c+ogERbAF0DTA9CyfdjNuqzsll9TsBXMp8QGMtd66VAVbIhRpUKdq+hHk4nf8Rat8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id 4E4DF7C0112;
-	Tue,  1 Oct 2024 16:39:32 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-SKE-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from localhost.localdomain.localdomain (unknown [115.193.80.205])
-	by smtp.cecloud.com (postfix) whith ESMTP id P880592T281472074117488S1727771971456888_;
-	Tue, 01 Oct 2024 16:39:32 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:zhangyanjun@cestc.cn
-X-SENDER:zhangyanjun@cestc.cn
-X-LOGIN-NAME:zhangyanjun@cestc.cn
-X-FST-TO:trondmy@kernel.org
-X-RCPT-COUNT:7
-X-LOCAL-RCPT-COUNT:1
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:115.193.80.205
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<99d6e27a6069553bb23252b767ea8fb7>
-X-System-Flag:0
-From: zhangyanjun@cestc.cn
-To: trondmy@kernel.org,
-	anna@kernel.org,
-	Markus.Elfring@web.de
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yanjun Zhang <zhangyanjun@cestc.cn>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH v6] NFSv4: Prevent NULL-pointer dereference in nfs42_complete_copies()
-Date: Tue,  1 Oct 2024 16:39:30 +0800
-Message-Id: <20241001083930.4043-1-zhangyanjun@cestc.cn>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1727775945; c=relaxed/simple;
+	bh=+jcP5yLhP1NM6kgCPjuo0quGVE/rR7eFO5oFd2THZFc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n5aQ0+4nvAhHwa8pDFDhVh6W2ewWmu+YDiB6SlePZWRkBSDYDQfQplCBfNcIbmJfTWOg+W6+6JPe5cICc80/tCQpvlmY+d/KvgP+diyiTtwYy6CtTBt3m63hN430KCuYXn3dLnlp+MU1Zi1As9DucsABYkXkuap7XcAGM1pJlSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YimjnlNs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B9EFC4CECD;
+	Tue,  1 Oct 2024 09:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727775945;
+	bh=+jcP5yLhP1NM6kgCPjuo0quGVE/rR7eFO5oFd2THZFc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=YimjnlNsf/ItXtqD+W88OAyzOC2MGuUbEs23Vr/c4FimHq8DvVc9bzGFpjsqJgdnF
+	 4u8qYmXMCyqLRkiu6H0pTNGCMJA7plEc0DJkA8zGeG4/rOPl564jaDmtlN43F450jo
+	 XvUbi00HS1pzr7FD1w2xsyv94L6zV3sfw8cWiG3zUZaco7wnJiGG8mwiRFv9nLosIk
+	 X3oKMFi7IUH5SteEVsK9vrTMt5JEa2nwAQFnU+NbEkBEvzjVvqZ6fAfQpd5h5wc3B0
+	 UK9NCu8Dj5m2cGsgidvb0CoOLu0/meJhQMJgvPqgX7GKOTllYXBqxkCnqDrWV7lY2V
+	 3+n4JU8/up/Ow==
+Message-ID: <4aa41dcb6f4be736355506dd500c4d255e008764.camel@kernel.org>
+Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
+ handling into timekeeper
+From: Jeff Layton <jlayton@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+ <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
+ Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
+ <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org,  linux-btrfs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Date: Tue, 01 Oct 2024 05:45:41 -0400
+In-Reply-To: <87plokzuy6.ffs@tglx>
+References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
+	 <20240914-mgtime-v8-1-5bd872330bed@kernel.org> <87a5g79aag.ffs@tglx>
+	 <874j6f99dg.ffs@tglx>
+	 <b300fec8b6f611662195e0339f290d473a41607c.camel@kernel.org>
+	 <878qv90x6w.ffs@tglx>
+	 <4933075b1023f466edb516e86608e0938de28c1d.camel@kernel.org>
+	 <87y138zyfu.ffs@tglx>
+	 <79a32ab9308d6e63e066aa17c5c2492b51b55850.camel@kernel.org>
+	 <87plokzuy6.ffs@tglx>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-From: Yanjun Zhang <zhangyanjun@cestc.cn>
+On Mon, 2024-09-30 at 23:35 +0200, Thomas Gleixner wrote:
+> On Mon, Sep 30 2024 at 16:53, Jeff Layton wrote:
+> > On Mon, 2024-09-30 at 22:19 +0200, Thomas Gleixner wrote:
+> > > On Mon, Sep 30 2024 at 15:37, Jeff Layton wrote:
+> > > > If however, two threads have racing syscalls that overlap in time, =
+then there                      =20
+> > > > is no such guarantee, and the second file may appear to have been m=
+odified                         =20
+> > > > before, after or at the same time as the first, regardless of which=
+ one was                        =20
+> > > > submitted first.
+> > >=20
+> > > That makes me ask a question. Are the timestamps always taken in thre=
+ad
+> > > (syscall) context or can they be taken in other contexts (worker,
+> > > [soft]interrupt, etc.) too?
+> > >=20
+> >=20
+> > That's a good question.
+> >=20
+> > The main place we do this is inode_set_ctime_current(). That is mostly
+> > called in the context of a syscall or similar sort of operation
+> > (io_uring, nfsd RPC request, etc.).
+> >=20
+> > I certainly wouldn't rule out a workqueue job calling that function,
+> > but this is something we do while dirtying an inode, and that's not
+> > typically done in interrupt context.
+>=20
+> The reason I'm asking is that if it's always syscall context,
+> i.e. write() or io_uring()/RPC request etc., then you can avoid the
+> whole global floor value dance and make it strictly per thread, which
+> simplifies the exercise significantly.
+>=20
 
-On the node of an NFS client, some files saved in the mountpoint of the
-NFS server were copied to another location of the same NFS server.
-Accidentally, the nfs42_complete_copies() got a NULL-pointer dereference=20
-crash with the following syslog:
+I'm not sure I follow what you're proposing here.
 
-[232064.838881] NFSv4: state recovery failed for open file nfs/pvc-12b5200d=
--cd0f-46a3-b9f0-af8f4fe0ef64.qcow2, error =3D -116
-[232064.839360] NFSv4: state recovery failed for open file nfs/pvc-12b5200d=
--cd0f-46a3-b9f0-af8f4fe0ef64.qcow2, error =3D -116
-[232066.588183] Unable to handle kernel NULL pointer dereference at virtual=
- address 0000000000000058
-[232066.588586] Mem abort info:
-[232066.588701]   ESR =3D 0x0000000096000007
-[232066.588862]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-[232066.589084]   SET =3D 0, FnV =3D 0
-[232066.589216]   EA =3D 0, S1PTW =3D 0
-[232066.589340]   FSC =3D 0x07: level 3 translation fault
-[232066.589559] Data abort info:
-[232066.589683]   ISV =3D 0, ISS =3D 0x00000007
-[232066.589842]   CM =3D 0, WnR =3D 0
-[232066.589967] user pgtable: 64k pages, 48-bit VAs, pgdp=3D00002000956ff400
-[232066.590231] [0000000000000058] pgd=3D08001100ae100003, p4d=3D08001100ae=
-100003, pud=3D08001100ae100003, pmd=3D08001100b3c00003, pte=3D0000000000000=
-000
-[232066.590757] Internal error: Oops: 96000007 [#1] SMP
-[232066.590958] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_re=
-solver nfs lockd grace fscache netfs ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm=
- vhost_net vhost vhost_iotlb tap tun ipt_rpfilter xt_multiport ip_set_hash_=
-ip ip_set_hash_net xfrm_interface xfrm6_tunnel tunnel4 tunnel6 esp4 ah4 wir=
-eguard libcurve25519_generic veth xt_addrtype xt_set nf_conntrack_netlink i=
-p_set_hash_ipportnet ip_set_hash_ipportip ip_set_bitmap_port ip_set_hash_ip=
-port dummy ip_set ip_vs_sh ip_vs_wrr ip_vs_rr ip_vs iptable_filter sch_ingr=
-ess nfnetlink_cttimeout vport_gre ip_gre ip_tunnel gre vport_geneve geneve =
-vport_vxlan vxlan ip6_udp_tunnel udp_tunnel openvswitch nf_conncount dm_rou=
-nd_robin dm_service_time dm_multipath xt_nat xt_MASQUERADE nft_chain_nat nf=
-_nat xt_mark xt_conntrack xt_comment nft_compat nft_counter nf_tables nfnet=
-link ocfs2 ocfs2_nodemanager ocfs2_stackglue iscsi_tcp libiscsi_tcp libiscs=
-i scsi_transport_iscsi ipmi_ssif nbd overlay 8021q garp mrp bonding tls rfk=
-ill sunrpc ext4 mbcache jbd2
-[232066.591052]  vfat fat cas_cache cas_disk ses enclosure scsi_transport_s=
-as sg acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler ip_tables vfio_pci vfi=
-o_pci_core vfio_virqfd vfio_iommu_type1 vfio dm_mirror dm_region_hash dm_lo=
-g dm_mod nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 br_netfilter bridge stp=
- llc fuse xfs libcrc32c ast drm_vram_helper qla2xxx drm_kms_helper syscopya=
-rea crct10dif_ce sysfillrect ghash_ce sysimgblt sha2_ce fb_sys_fops cec sha=
-256_arm64 sha1_ce drm_ttm_helper ttm nvme_fc igb sbsa_gwdt nvme_fabrics drm=
- nvme_core i2c_algo_bit i40e scsi_transport_fc megaraid_sas aes_neon_bs
-[232066.596953] CPU: 6 PID: 4124696 Comm: 10.253.166.125- Kdump: loaded Not=
- tainted 5.15.131-9.cl9_ocfs2.aarch64 #1
-[232066.597356] Hardware name: Great Wall .\x93\x8e...RF6260 V5/GWMSSE2GL1T=
-, BIOS T656FBE_V3.0.18 2024-01-06
-[232066.597721] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[232066.598034] pc : nfs4_reclaim_open_state+0x220/0x800 [nfsv4]
-[232066.598327] lr : nfs4_reclaim_open_state+0x12c/0x800 [nfsv4]
-[232066.598595] sp : ffff8000f568fc70
-[232066.598731] x29: ffff8000f568fc70 x28: 0000000000001000 x27: ffff21003d=
-b33000
-[232066.599030] x26: ffff800005521ae0 x25: ffff0100f98fa3f0 x24: 0000000000=
-000001
-[232066.599319] x23: ffff800009920008 x22: ffff21003db33040 x21: ffff21003d=
-b33050
-[232066.599628] x20: ffff410172fe9e40 x19: ffff410172fe9e00 x18: 0000000000=
-000000
-[232066.599914] x17: 0000000000000000 x16: 0000000000000004 x15: 0000000000=
-000000
-[232066.600195] x14: 0000000000000000 x13: ffff800008e685a8 x12: 00000000ea=
-c0c6e6
-[232066.600498] x11: 0000000000000000 x10: 0000000000000008 x9 : ffff800005=
-4e5828
-[232066.600784] x8 : 00000000ffffffbf x7 : 0000000000000001 x6 : 000000000a=
-9eb14a
-[232066.601062] x5 : 0000000000000000 x4 : ffff70ff8a14a800 x3 : 0000000000=
-000058
-[232066.601348] x2 : 0000000000000001 x1 : 54dce46366daa6c6 x0 : 0000000000=
-000000
-[232066.601636] Call trace:
-[232066.601749]  nfs4_reclaim_open_state+0x220/0x800 [nfsv4]
-[232066.601998]  nfs4_do_reclaim+0x1b8/0x28c [nfsv4]
-[232066.602218]  nfs4_state_manager+0x928/0x10f0 [nfsv4]
-[232066.602455]  nfs4_run_state_manager+0x78/0x1b0 [nfsv4]
-[232066.602690]  kthread+0x110/0x114
-[232066.602830]  ret_from_fork+0x10/0x20
-[232066.602985] Code: 1400000d f9403f20 f9402e61 91016003 (f9402c00)
-[232066.603284] SMP: stopping secondary CPUs
-[232066.606936] Starting crashdump kernel...
-[232066.607146] Bye!
+Consider two threads doing writes serially to different files. IOW, the
+second thread enters the write() syscall after the first thread returns
+from its write(). In that situation, the second timestamp mustn't
+appear to be earlier than the first (assuming no backward clock jump,
+of course).
 
-Analysing the vmcore, we know that nfs4_copy_state listed by destination
-nfs_server->ss_copies was added by the field copies in handle_async_copy(),
-and we found a waiting copy process with the stack as:
-PID: 3511963  TASK: ffff710028b47e00  CPU: 0   COMMAND: "cp"
- #0 [ffff8001116ef740] __switch_to at ffff8000081b92f4
- #1 [ffff8001116ef760] __schedule at ffff800008dd0650
- #2 [ffff8001116ef7c0] schedule at ffff800008dd0a00
- #3 [ffff8001116ef7e0] schedule_timeout at ffff800008dd6aa0
- #4 [ffff8001116ef860] __wait_for_common at ffff800008dd166c
- #5 [ffff8001116ef8e0] wait_for_completion_interruptible at ffff800008dd1898
- #6 [ffff8001116ef8f0] handle_async_copy at ffff8000055142f4 [nfsv4]
- #7 [ffff8001116ef970] _nfs42_proc_copy at ffff8000055147c8 [nfsv4]
- #8 [ffff8001116efa80] nfs42_proc_copy at ffff800005514cf0 [nfsv4]
- #9 [ffff8001116efc50] __nfs4_copy_file_range.constprop.0 at ffff8000054ed6=
-94 [nfsv4]
+How would we ensure that with only per-thread structures?
 
-The NULL-pointer dereference was due to nfs42_complete_copies() listed
-the nfs_server->ss_copies by the field ss_copies of nfs4_copy_state.
-So the nfs4_copy_state address ffff0100f98fa3f0 was offset by 0x10 and
-the data accessed through this pointer was also incorrect. Generally,
-the ordered list nfs4_state_owner->so_states indicate open(O_RDWR) or
-open(O_WRITE) states are reclaimed firstly by nfs4_reclaim_open_state().
-When destination state reclaim is failed with NFS_STATE_RECOVERY_FAILED
-and copies are not deleted in nfs_server->ss_copies, the source state
-may be passed to the nfs42_complete_copies() process earlier, resulting
-in this crash scene finally. To solve this issue, we add a list_head
-nfs_server->ss_src_copies for a server-to-server copy specially.
+> But even if it's not syscall/thread context then the worker or io_uring
+> state machine might just require to serialize against itself and not
+> coordinate with something else. But what do I know.
 
-Fixes: 0e65a32c8a56 ("NFS: handle source server reboot")
-Signed-off-by: Yanjun Zhang <zhangyanjun@cestc.cn>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
-v2:
-- add an initialiser for the new list in nfs_alloc_server().
-- change the new list name from ds_copies to ss_src_copies.
-v3:
-- correct the commit ID of Fixes tags.
-- append parentheses to any function names.
-- modify the title and text to get smaller line lengths.
-v4:
-- add Reviewed-by tags and patch changelogs.
-- adjust the patch description more accurately.
-v5:
-- modify the title and correct spelling errors.
-v6:
-- modify the patch description.
 
- fs/nfs/client.c           | 1 +
- fs/nfs/nfs42proc.c        | 2 +-
- fs/nfs/nfs4state.c        | 2 +-
- include/linux/nfs_fs_sb.h | 1 +
- 4 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 8286edd60..c49d5cce5 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -983,6 +983,7 @@ struct nfs_server *nfs_alloc_server(void)
- 	INIT_LIST_HEAD(&server->layouts);
- 	INIT_LIST_HEAD(&server->state_owners_lru);
- 	INIT_LIST_HEAD(&server->ss_copies);
-+	INIT_LIST_HEAD(&server->ss_src_copies);
-=20
- 	atomic_set(&server->active, 0);
-=20
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 28704f924..531c9c20e 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -218,7 +218,7 @@ static int handle_async_copy(struct nfs42_copy_res *res,
-=20
- 	if (dst_server !=3D src_server) {
- 		spin_lock(&src_server->nfs_client->cl_lock);
--		list_add_tail(&copy->src_copies, &src_server->ss_copies);
-+		list_add_tail(&copy->src_copies, &src_server->ss_src_copies);
- 		spin_unlock(&src_server->nfs_client->cl_lock);
- 	}
-=20
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 877f682b4..00516982b 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1596,7 +1596,7 @@ static void nfs42_complete_copies(struct nfs4_state_o=
-wner *sp, struct nfs4_state
- 			complete(&copy->completion);
- 		}
- 	}
--	list_for_each_entry(copy, &sp->so_server->ss_copies, src_copies) {
-+	list_for_each_entry(copy, &sp->so_server->ss_src_copies, src_copies) {
- 		if ((test_bit(NFS_CLNT_SRC_SSC_COPY_STATE, &state->flags) &&
- 				!nfs4_stateid_match_other(&state->stateid,
- 				&copy->parent_src_state->stateid)))
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 1df86ab98..793a4a610 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -240,6 +240,7 @@ struct nfs_server {
- 	struct list_head	layouts;
- 	struct list_head	delegations;
- 	struct list_head	ss_copies;
-+	struct list_head	ss_src_copies;
-=20
- 	unsigned long		delegation_gen;
- 	unsigned long		mig_gen;
 --=20
-2.31.1
-
-
-
+Jeff Layton <jlayton@kernel.org>
 
