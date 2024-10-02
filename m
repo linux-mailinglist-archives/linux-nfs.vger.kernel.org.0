@@ -1,159 +1,205 @@
-Return-Path: <linux-nfs+bounces-6774-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6775-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9DC298C6DD
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 22:34:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8531F98CFDB
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Oct 2024 11:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 41E99B2219D
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Oct 2024 20:34:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45BBE28DFC0
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Oct 2024 09:14:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68491CDA08;
-	Tue,  1 Oct 2024 20:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDFA0197A67;
+	Wed,  2 Oct 2024 09:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atePX4dL"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KVecqr+N";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBYEfZoW";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KVecqr+N";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBYEfZoW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D601CCEF2
-	for <linux-nfs@vger.kernel.org>; Tue,  1 Oct 2024 20:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8842519752C;
+	Wed,  2 Oct 2024 09:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727814841; cv=none; b=QVxqlPr6TE8MIebLeAoA5jZ/s1ap8x+ImoRFJCV+oD0ZlNY7XgkRG5fqUMsLf9kf8UW67Xm5mxHVhduy17pvZXxn5jzC/tIYJJ0gNzren3R18oscCDTKRzly7IEUeNC5KlhUu0sIQCGiq88aTl989gTPUQi2DurPo8XJtmBW9Kc=
+	t=1727860455; cv=none; b=qnqavttWXH8ESa47458m1Ua9CtA+d9S7Mh7D2849lw9AxMno7VDeGJT5zpg0DlgafA2l6sJucAqZuhukicdAUB7e6y6IWlf5ZJIfPaUVSnKWD+1b+ACihmUWOn6c9KkwhSCN0BbFw0UfrX0U1i6XBNQTcqI/sA8+xjCDIuN3Vu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727814841; c=relaxed/simple;
-	bh=4kyehUr49bd1l6Y38JTbt9Fz18jQ8I3oUMl4DAnEgKo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lMaFOVmazXrVFEHNsU8ZKVA3bVcUq4kzPtJAaSXaDOMo6tS0oWdLVaytPdopMByYZ0+pDZL+iNLZaIEyyD8jDfTqCkjUTJKmtYKMz92UeoEF1K/dSwDPk8F2QC0n+USpZBBpBILdUIwD0lSzzsScVrHTJvnfcJ2fYipR/0UuaLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atePX4dL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197EAC4CED1;
-	Tue,  1 Oct 2024 20:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727814841;
-	bh=4kyehUr49bd1l6Y38JTbt9Fz18jQ8I3oUMl4DAnEgKo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=atePX4dLYhMiEae/7SnCw0ndro64WwIGd+tZqLYmmJEi/SOZaqAYSb6ZGx59nAuhx
-	 g1u9SaLUZKzWW6wiSIYC2tQfnNAp4S/1oYyOeKdmT20DgAiesz8hGgZDx/fiy3WCQk
-	 drm8+GgJG5NMFH9kZFJrwuQcnnyGZ23R5FT4jM78itm+caCfRA6POp+DLzEEa35M0d
-	 Hr+jy2PIhcYO0lgX+fvCcYJUwiEKXXjoqqCwL8EitzEZXaZhkmpfe5zLE9DxFlRlg0
-	 EHewLEl65vf6md61RvlzGi7fDTdGE9B6KdmQXy8rOWf2Xnr66laNpaz5KK42PDFo/Q
-	 Zhu0o06YD33WA==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH 5/5] NFS: Implement get_nfs_version()
-Date: Tue,  1 Oct 2024 16:33:44 -0400
-Message-ID: <20241001203344.327044-6-anna@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241001203344.327044-1-anna@kernel.org>
-References: <20241001203344.327044-1-anna@kernel.org>
+	s=arc-20240116; t=1727860455; c=relaxed/simple;
+	bh=CrBCKdgiMa08UPFj6MZxE0JaOv9NlkupQgNyP+8YPHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cvQ1gwix5LEVonisx8PYPUjv6rX+6KHit2BKYMz0dSISxGuUA5r0rTqxe+n2XG0WrW9DzSwFIoN7kO2iRtiejUdc2O+O5TDo/FhGFlGnhLvpRmoWIutOu5EqLIdh5vpNFBRe3wMUVl2ODHAggbhVetOImaZWJalqizUiVoUTh7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KVecqr+N; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBYEfZoW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KVecqr+N; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBYEfZoW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3042721B70;
+	Wed,  2 Oct 2024 09:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1727860446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ciY4s211AtNsmLMEFppWW09ynC9Vd3xoRhyo0YMhjdc=;
+	b=KVecqr+NBI1yiYx1BRcvKKnoyXIivh15+piF+YZyiWfrDIRo6SsuQJrxd8RL6jhFpnJG3g
+	bXyd/69TLuagh7zkintkdg6FnyOvc8kIouzsWt4Uad7lwiaHv6mwQM+0iwyXWjl4MXpXU1
+	4xUac63Ufy/zn/WHxi5yMhRCoLEzkNw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1727860446;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ciY4s211AtNsmLMEFppWW09ynC9Vd3xoRhyo0YMhjdc=;
+	b=vBYEfZoWDP05pmDCLOTbylMr+FqLkg7Ki23XcVZOBFd4msaAsoqBKQbkafeu2FG7KWktRV
+	3NqfRi0Nn6eFECAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1727860446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ciY4s211AtNsmLMEFppWW09ynC9Vd3xoRhyo0YMhjdc=;
+	b=KVecqr+NBI1yiYx1BRcvKKnoyXIivh15+piF+YZyiWfrDIRo6SsuQJrxd8RL6jhFpnJG3g
+	bXyd/69TLuagh7zkintkdg6FnyOvc8kIouzsWt4Uad7lwiaHv6mwQM+0iwyXWjl4MXpXU1
+	4xUac63Ufy/zn/WHxi5yMhRCoLEzkNw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1727860446;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ciY4s211AtNsmLMEFppWW09ynC9Vd3xoRhyo0YMhjdc=;
+	b=vBYEfZoWDP05pmDCLOTbylMr+FqLkg7Ki23XcVZOBFd4msaAsoqBKQbkafeu2FG7KWktRV
+	3NqfRi0Nn6eFECAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1FA9613A6E;
+	Wed,  2 Oct 2024 09:14:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4XuwB94O/WYUSwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 02 Oct 2024 09:14:06 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8280EA08CB; Wed,  2 Oct 2024 11:14:05 +0200 (CEST)
+Date: Wed, 2 Oct 2024 11:14:05 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v8 02/12] fs: add infrastructure for multigrain timestamps
+Message-ID: <20241002091405.7b2s4qvoaqrn3l4f@quack3>
+References: <20241001-mgtime-v8-0-903343d91bc3@kernel.org>
+ <20241001-mgtime-v8-2-903343d91bc3@kernel.org>
+ <20241001132027.ynzp4sahjek5umbb@quack3>
+ <7761de29d15df87a29575de57554b56a91ae55a0.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7761de29d15df87a29575de57554b56a91ae55a0.camel@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLy4jt9zmnbk4oncb1qwahh5jo)];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-From: Anna Schumaker <anna.schumaker@oracle.com>
+On Tue 01-10-24 09:34:18, Jeff Layton wrote:
+> On Tue, 2024-10-01 at 15:20 +0200, Jan Kara wrote:
+> > > diff --git a/fs/stat.c b/fs/stat.c
+> > > index 41e598376d7e..381926fb405f 100644
+> > > --- a/fs/stat.c
+> > > +++ b/fs/stat.c
+> > > @@ -26,6 +26,35 @@
+> > >  #include "internal.h"
+> > >  #include "mount.h"
+> > >  
+> > > +/**
+> > > + * fill_mg_cmtime - Fill in the mtime and ctime and flag ctime as QUERIED
+> > > + * @stat: where to store the resulting values
+> > > + * @request_mask: STATX_* values requested
+> > > + * @inode: inode from which to grab the c/mtime
+> > > + *
+> > > + * Given @inode, grab the ctime and mtime out if it and store the result
+> > 						 ^^ of
+> > 
+> > > + * in @stat. When fetching the value, flag it as QUERIED (if not already)
+> > > + * so the next write will record a distinct timestamp.
+> > > + */
+> > > +void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
+> > > +{
+> > 
+> > Given how things worked out in the end, it seems this function doesn't need
+> > to handle mtime at all and we can move mtime handling back to shared generic
+> > code?
+> > 
+> 
+> I don't think we can. The mtime is effectively derived from the ctime.
+> 
+> If I query only the mtime, I think it's reasonable to expect that it
+> will change if there is another write, even if I don't query the ctime.
+> We won't get that unless we can also set the flag in the ctime when
+> only the mtime is requested.
 
-This is a pair for put_nfs_version(), and is used for incrementing the
-reference count on the nfs version module. I also updated the callers I
-could find who had this hardcoded up until now.
+Aha, right. I already forgot about this :). Can you please add to the
+comment the above explanation so that we remember next time somebody wants
+to "clean this up" like me ;)? Thanks!
 
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
----
- fs/nfs/client.c     | 10 ++++++++--
- fs/nfs/fs_context.c |  4 ++--
- fs/nfs/namespace.c  |  2 +-
- fs/nfs/nfs.h        |  1 +
- 4 files changed, 12 insertions(+), 5 deletions(-)
+Also feel free to add:
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 4fe5a635f329..68a88f29a1d6 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -100,12 +100,18 @@ struct nfs_subversion *find_nfs_version(unsigned int version)
- 	if (!nfs)
- 		return ERR_PTR(-EPROTONOSUPPORT);
- 
--	if (!try_module_get(nfs->owner))
-+	if (!get_nfs_version(nfs))
- 		return ERR_PTR(-EAGAIN);
- 
- 	return nfs;
- }
- 
-+int get_nfs_version(struct nfs_subversion *nfs)
-+{
-+	return try_module_get(nfs->owner);
-+}
-+EXPORT_SYMBOL_GPL(get_nfs_version);
-+
- void put_nfs_version(struct nfs_subversion *nfs)
- {
- 	module_put(nfs->owner);
-@@ -149,7 +155,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 
- 	clp->cl_minorversion = cl_init->minorversion;
- 	clp->cl_nfs_mod = cl_init->nfs_mod;
--	if (!try_module_get(clp->cl_nfs_mod->owner))
-+	if (!get_nfs_version(clp->cl_nfs_mod))
- 		goto error_dealloc;
- 
- 	clp->rpc_ops = clp->cl_nfs_mod->rpc_ops;
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index d553daa4c09c..b069385eea17 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1541,7 +1541,7 @@ static int nfs_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
- 	}
- 	nfs_copy_fh(ctx->mntfh, src->mntfh);
- 
--	__module_get(ctx->nfs_mod->owner);
-+	get_nfs_version(ctx->nfs_mod);
- 	ctx->client_address		= NULL;
- 	ctx->mount_server.hostname	= NULL;
- 	ctx->nfs_server.export_path	= NULL;
-@@ -1633,7 +1633,7 @@ static int nfs_init_fs_context(struct fs_context *fc)
- 		}
- 
- 		ctx->nfs_mod = nfss->nfs_client->cl_nfs_mod;
--		__module_get(ctx->nfs_mod->owner);
-+		get_nfs_version(ctx->nfs_mod);
- 	} else {
- 		/* defaults */
- 		ctx->timeo		= NFS_UNSPEC_TIMEO;
-diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index e7494cdd957e..2d53574da605 100644
---- a/fs/nfs/namespace.c
-+++ b/fs/nfs/namespace.c
-@@ -182,7 +182,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
- 	ctx->version		= client->rpc_ops->version;
- 	ctx->minorversion	= client->cl_minorversion;
- 	ctx->nfs_mod		= client->cl_nfs_mod;
--	__module_get(ctx->nfs_mod->owner);
-+	get_nfs_version(ctx->nfs_mod);
- 
- 	ret = client->rpc_ops->submount(fc, server);
- 	if (ret < 0) {
-diff --git a/fs/nfs/nfs.h b/fs/nfs/nfs.h
-index a30bf8ef79d7..8a5f51be013a 100644
---- a/fs/nfs/nfs.h
-+++ b/fs/nfs/nfs.h
-@@ -22,6 +22,7 @@ struct nfs_subversion {
- };
- 
- struct nfs_subversion *find_nfs_version(unsigned int);
-+int get_nfs_version(struct nfs_subversion *);
- void put_nfs_version(struct nfs_subversion *);
- void register_nfs_version(struct nfs_subversion *);
- void unregister_nfs_version(struct nfs_subversion *);
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
 -- 
-2.46.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
