@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-6825-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6826-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9EE998F694
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA2A898F695
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2756F1C22CD9
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CFD02824CB
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A0D01AB6DD;
-	Thu,  3 Oct 2024 18:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB7F1AB6D8;
+	Thu,  3 Oct 2024 18:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4HPBAN0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHpK8Wqk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539851AB6C3
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979F51AB6C3
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981700; cv=none; b=MWGv43WMg0Ro7Z9FVSEKNKcvOhxh+5eqEvuTpAQ14a2gS9HMQkwsvrJeO6yY9jl5FR2kdoK1By04+y0QnuM6b5Fy7UyFmvTED1nR+j+0ps4TtnIMaTJiTrAfKyE83gaoVNG5AtLlLYM70gSXN72stIAcR0eVkSqU0t2ICuEtx0U=
+	t=1727981718; cv=none; b=XUkSF/ujhnbkxdiLChXXhf2S5D2YNhOxppq3WuKfUOAn8607UBvb1X9RRnMBFXDotm7e2CtPRcXn6EIrgwfL13bxESLNrfZbVdrvZP6AqG/MF8ksjAcmGYMCSze0CdVXVVRzsLD1iO0aVtbNA4k4qfaYnIrK0+k4k8kV8I3zCgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981700; c=relaxed/simple;
-	bh=0ZaLW82Z4hhv4olbY3SzXyBGU124DODtGWXPKKfQjb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LCNJbs+98w7DP6PdSbnLs9PYy6jjPBUV59VhAwG0+WNZ+5k3+pb5RDdNj6ct5nfOc6q38rTcFiF+yVcQN73X0uA5kW0W2tiAfuqrJMRtpXPUdX9efFw3763na3hCdoySpfNb7bwyA/C+l/kFGSG0dhrgAmbk1hv4VOC6xoObTYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4HPBAN0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D157C4CEC5;
-	Thu,  3 Oct 2024 18:54:59 +0000 (UTC)
+	s=arc-20240116; t=1727981718; c=relaxed/simple;
+	bh=gRs3qK/pMAHS5JndlfkrrZYNxpjLyrlsQBN+cRdHt40=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MPq2rCxrtk5doz2hF7odg/LfnmiD6bkncWaKlUWlGm0/CPbVysuK5CVqVIjQ04dhsNqgIaH7YLnLsU58JEdOcATxHnLjrsb0UVXXYjUpFoefaTtJ0sHSexOYRq6dA0NyvlDD81nrQiZscalXwV+8ThxiJ/sIiX4TajNYY77N1ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHpK8Wqk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720EAC4CEC5;
+	Thu,  3 Oct 2024 18:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981699;
-	bh=0ZaLW82Z4hhv4olbY3SzXyBGU124DODtGWXPKKfQjb4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=a4HPBAN0meY4nKG61MxXs8xP2VvSBneywTw5yHLW2eydnti5TziNtK8MKBal/q8V+
-	 wPYxQ+Eh/EG1xeDGCZIDexz5KyrGOGY3AWzcE2INUyqKXRkCO+V5pgWMncq5Rjz6Cc
-	 CUoDMf2pu4tu8BBBaGLac9se/ldgs9bqFZ4CxgsCkLcRJtwI2qfRb2nuxIOYMZFiS+
-	 S6MqDDm8NKCBZdRzqvCXF5N2XW6/aj4L15nuIYXOoRzCDW6UCCEXv6ajKuF/qOGNk/
-	 usaMFgZvRA/dhJkfxRHvXseN/qsLZXojkMkNfyWRuNpTQNtNl+xtzDrv39w7cpLklJ
-	 fW2BGZm1ow0Qw==
+	s=k20201202; t=1727981718;
+	bh=gRs3qK/pMAHS5JndlfkrrZYNxpjLyrlsQBN+cRdHt40=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FHpK8WqkW6bICR7lt4hVeJfs1aFaa4asoQ5EEwzqh3L8xGRql23qlIlFZ7cN2c525
+	 3eFV5fBJtNExhb2oRgvbUcD3E4wKqBnMdA1Pm2qq605Jd8JqzGqGX0w+5vioOBNi6M
+	 D+JwYCRG2k+1HKRE8J95mymuvrpWUd3POJ8bzzBdAvNQLD7KhglrtYECBIj16p7QwH
+	 6u/4Lvj9cg84YRjO429fMo4wj3fwgZfFG44ygcciE98pR/w/Ix7d15RXlPoGCcrq14
+	 oQETNuKlUgQEXQgmPwDXnJxXqjIHC96I9CiFYNOO6m0PWe2ayQPRlhza2mw1LGBJU+
+	 d1zntuoWqVuWQ==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,10 +49,12 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 00/16] xdrgen: Emit maxsize macros
-Date: Thu,  3 Oct 2024 14:54:30 -0400
-Message-ID: <20241003185446.82984-1-cel@kernel.org>
+Subject: [PATCH v2 01/16] xdrgen: Refactor transformer arms
+Date: Thu,  3 Oct 2024 14:54:31 -0400
+Message-ID: <20241003185446.82984-2-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
+In-Reply-To: <20241003185446.82984-1-cel@kernel.org>
+References: <20241003185446.82984-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,66 +65,162 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-This series implements the generation of "maxsize" values for each
-XDR data type defined in a specification. These are emitted as C
-pre-processor macros, following the lead of existing XDR functions
-in the kernel. The macros are added to the header file containing
-C type definitions.
+Clean up: Add a __post_init__ function to the data classes that
+need to update the "structs" and "pass_by_reference" sets.
 
-This facility takes xdrgen a step closer to the generation of all
-XDR code needed for each RPC protocol implementation in the kernel.
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ tools/net/sunrpc/xdrgen/xdr_ast.py | 57 +++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-Changes since v1:
-- Resend including all 16 patches (d'oh)
-
-Chuck Lever (16):
-  xdrgen: Refactor transformer arms
-  xdrgen: Track constant values
-  xdrgen: Keep track of on-the-wire data type widths
-  xdrgen: XDR widths for enum types
-  xdrgen: XDR width for fixed-length opaque
-  xdrgen: XDR width for variable-length opaque
-  xdrgen: XDR width for a string
-  xdrgen: XDR width for fixed-length array
-  xdrgen: XDR width for variable-length array
-  xdrgen: XDR width for optional_data type
-  xdrgen: XDR width for typedef
-  xdrgen: XDR width for struct types
-  xdrgen: XDR width for pointer types
-  xdrgen: XDR width for union types
-  xdrgen: Add generator code for XDR width macros
-  xdrgen: emit maxsize macros
-
- include/linux/sunrpc/xdrgen/_defs.h           |   9 +
- .../net/sunrpc/xdrgen/generators/__init__.py  |   4 +
- tools/net/sunrpc/xdrgen/generators/enum.py    |  13 +-
- tools/net/sunrpc/xdrgen/generators/pointer.py |  18 +-
- tools/net/sunrpc/xdrgen/generators/struct.py  |  18 +-
- tools/net/sunrpc/xdrgen/generators/typedef.py |  18 +-
- tools/net/sunrpc/xdrgen/generators/union.py   |  20 +-
- .../net/sunrpc/xdrgen/subcmds/definitions.py  |  24 +-
- tools/net/sunrpc/xdrgen/subcmds/source.py     |   3 +-
- .../xdrgen/templates/C/enum/maxsize/enum.j2   |   2 +
- .../templates/C/pointer/maxsize/pointer.j2    |   3 +
- .../templates/C/struct/maxsize/struct.j2      |   3 +
- .../templates/C/typedef/maxsize/basic.j2      |   3 +
- .../C/typedef/maxsize/fixed_length_opaque.j2  |   2 +
- .../templates/C/typedef/maxsize/string.j2     |   2 +
- .../typedef/maxsize/variable_length_array.j2  |   2 +
- .../typedef/maxsize/variable_length_opaque.j2 |   2 +
- .../xdrgen/templates/C/union/maxsize/union.j2 |   3 +
- tools/net/sunrpc/xdrgen/xdr_ast.py            | 292 ++++++++++++++++--
- 19 files changed, 406 insertions(+), 35 deletions(-)
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/enum/maxsize/enum.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/pointer/maxsize/pointer.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/struct/maxsize/struct.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/maxsize/basic.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/maxsize/fixed_length_opaque.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/maxsize/string.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/maxsize/variable_length_array.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/typedef/maxsize/variable_length_opaque.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/maxsize/union.j2
-
+diff --git a/tools/net/sunrpc/xdrgen/xdr_ast.py b/tools/net/sunrpc/xdrgen/xdr_ast.py
+index d5f0535ec84c..68f09945f2c4 100644
+--- a/tools/net/sunrpc/xdrgen/xdr_ast.py
++++ b/tools/net/sunrpc/xdrgen/xdr_ast.py
+@@ -51,13 +51,17 @@ class _XdrTypeSpecifier(_XdrAst):
+     """Corresponds to 'type_specifier' in the XDR language grammar"""
+ 
+     type_name: str
+-    c_classifier: str
++    c_classifier: str = ""
+ 
+ 
+ @dataclass
+ class _XdrDefinedType(_XdrTypeSpecifier):
+     """Corresponds to a type defined by the input specification"""
+ 
++    def __post_init__(self):
++        if self.type_name in structs:
++            self.c_classifier = "struct "
++
+ 
+ @dataclass
+ class _XdrBuiltInType(_XdrTypeSpecifier):
+@@ -124,6 +128,10 @@ class _XdrOptionalData(_XdrDeclaration):
+     spec: _XdrTypeSpecifier
+     template: str = "optional_data"
+ 
++    def __post_init__(self):
++        structs.add(self.name)
++        pass_by_reference.add(self.name)
++
+ 
+ @dataclass
+ class _XdrBasic(_XdrDeclaration):
+@@ -174,6 +182,10 @@ class _XdrStruct(_XdrAst):
+     name: str
+     fields: List[_XdrDeclaration]
+ 
++    def __post_init__(self):
++        structs.add(self.name)
++        pass_by_reference.add(self.name)
++
+ 
+ @dataclass
+ class _XdrPointer(_XdrAst):
+@@ -182,6 +194,10 @@ class _XdrPointer(_XdrAst):
+     name: str
+     fields: List[_XdrDeclaration]
+ 
++    def __post_init__(self):
++        structs.add(self.name)
++        pass_by_reference.add(self.name)
++
+ 
+ @dataclass
+ class _XdrTypedef(_XdrAst):
+@@ -189,6 +205,15 @@ class _XdrTypedef(_XdrAst):
+ 
+     declaration: _XdrDeclaration
+ 
++    def __post_init__(self):
++        if not isinstance(self.declaration, _XdrBasic):
++            return
++
++        new_type = self.declaration
++        if isinstance(new_type.spec, _XdrDefinedType):
++            if new_type.spec.type_name in pass_by_reference:
++                pass_by_reference.add(new_type.name)
++
+ 
+ @dataclass
+ class _XdrCaseSpec(_XdrAst):
+@@ -216,6 +241,10 @@ class _XdrUnion(_XdrAst):
+     cases: List[_XdrCaseSpec]
+     default: _XdrDeclaration
+ 
++    def __post_init__(self):
++        structs.add(self.name)
++        pass_by_reference.add(self.name)
++
+ 
+ @dataclass
+ class _RpcProcedure(_XdrAst):
+@@ -290,22 +319,13 @@ class ParseToAst(Transformer):
+         return _XdrConstantValue(value)
+ 
+     def type_specifier(self, children):
+-        """Instantiate one type_specifier object"""
+-        c_classifier = ""
++        """Instantiate one _XdrTypeSpecifier object"""
+         if isinstance(children[0], _XdrIdentifier):
+             name = children[0].symbol
+-            if name in structs:
+-                c_classifier = "struct "
+-            return _XdrDefinedType(
+-                type_name=name,
+-                c_classifier=c_classifier,
+-            )
++            return _XdrDefinedType(type_name=name)
+ 
+         name = children[0].data.value
+-        return _XdrBuiltInType(
+-            type_name=name,
+-            c_classifier=c_classifier,
+-        )
++        return _XdrBuiltInType(type_name=name)
+ 
+     def constant_def(self, children):
+         """Instantiate one _XdrConstant object"""
+@@ -380,8 +400,6 @@ class ParseToAst(Transformer):
+         """Instantiate one _XdrOptionalData declaration object"""
+         spec = children[0]
+         name = children[1].symbol
+-        structs.add(name)
+-        pass_by_reference.add(name)
+ 
+         return _XdrOptionalData(name, spec)
+ 
+@@ -400,8 +418,6 @@ class ParseToAst(Transformer):
+     def struct(self, children):
+         """Instantiate one _XdrStruct object"""
+         name = children[0].symbol
+-        structs.add(name)
+-        pass_by_reference.add(name)
+         fields = children[1].children
+ 
+         last_field = fields[-1]
+@@ -416,11 +432,6 @@ class ParseToAst(Transformer):
+     def typedef(self, children):
+         """Instantiate one _XdrTypedef object"""
+         new_type = children[0]
+-        if isinstance(new_type, _XdrBasic) and isinstance(
+-            new_type.spec, _XdrDefinedType
+-        ):
+-            if new_type.spec.type_name in pass_by_reference:
+-                pass_by_reference.add(new_type.name)
+ 
+         return _XdrTypedef(new_type)
+ 
+@@ -442,8 +453,6 @@ class ParseToAst(Transformer):
+     def union(self, children):
+         """Instantiate one _XdrUnion object"""
+         name = children[0].symbol
+-        structs.add(name)
+-        pass_by_reference.add(name)
+ 
+         body = children[1]
+         discriminant = body.children[0].children[0]
 -- 
 2.46.2
 
