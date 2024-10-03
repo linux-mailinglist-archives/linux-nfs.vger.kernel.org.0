@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6848-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6849-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8726A98F717
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC18798F718
 	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 21:35:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5013F282399
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 19:35:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1ADDC1C22025
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 19:35:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08951AC885;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08C01AC8A2;
 	Thu,  3 Oct 2024 19:35:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOcXfJQk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nct6g8xG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D117A1AAE0C
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 19:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25121AC429
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 19:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727984113; cv=none; b=CIfXHb5I4BMqQujUV14Fj2cYTGvh0kM+a0r1PkrP2q8g6Ej+31mD2Esi7yp0/3v8za5flyw5+b7mzmngo61E9ENHMZ17wiTYAQRQSYAEIRrCLyL549RoOir1h9SOg3KTZ65yGKFu4eVkC6sCjanjXMALrlYi6V7HJGN3CcnaWEo=
+	t=1727984115; cv=none; b=hWMqlkKt/W88JfKTR2X2Tn8AC+rXJM0B4MDzQYwTIsZ6HI6sQ4JweKUHzngJAFiDs0UmdIPybYLnsCKDa/L4rMq2lbjMN/hvXQndvtMsehlLSNfiXe+j/Ss/CCdBe0hG0ZSU6rVeIvjDsrU7NBaNeJqA7a+iMgM1+H4SmO2sH18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727984113; c=relaxed/simple;
-	bh=g4o1E9ZHJpVvV8UBqlxcay2i9cSQlVEOIAKY8yV+YOw=;
+	s=arc-20240116; t=1727984115; c=relaxed/simple;
+	bh=wf+uxwVhQ23mgHRQ1/toeoe9veu4h6XUqaiUyiHud5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YxIfoef4mPNuqMti2V89bvkGcsGiUGLwk/rEo0Ii3U+nbV+A98S5F4K6oAxtZIMBCbanV3kNcGi8fw6mHkMuGM0QTNy9YuUg9SVqKS9zig7dzdnoJheLp2QGxE7hHdyvni8sCToPgqysohoFOUY/Qpgl+92yyQrKr2eFyL4D1k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOcXfJQk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583BAC4CEC5;
-	Thu,  3 Oct 2024 19:35:13 +0000 (UTC)
+	 MIME-Version; b=iGdiJ6WvwqsbKZ3YtS//Cat+FzgkyFmD2WF8oU3DllS1m5jxVNl9ZcrPVt6ENUj/+CGuCYm+j1S8tK2erJ9hXkznP89I1na00XXl5sdR8uyBFfPo/Lj6ThiIvz3ah8+YylRYFS7SfV7luyiAcApdBg/huz+b3ldshfuT5kLXJ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nct6g8xG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1538C4CECC;
+	Thu,  3 Oct 2024 19:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727984113;
-	bh=g4o1E9ZHJpVvV8UBqlxcay2i9cSQlVEOIAKY8yV+YOw=;
+	s=k20201202; t=1727984114;
+	bh=wf+uxwVhQ23mgHRQ1/toeoe9veu4h6XUqaiUyiHud5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DOcXfJQkets+DhcYTXeBR/OFX66irKPQUycBGCjhWNw5ixoux8DPPf3bJzr/I1xo2
-	 8CoTEGPFI2ypy3IbEKTl7dT0tDUoTPw9L6rW0bfYV4+7y0uEsugozdey2pQ2hEQHNt
-	 YnbJsCFofXo0/PMN2y+EJIjDKstiQEAZ7GvEkFmxdmOHOgs8d1JDESgCujQZsFnUYK
-	 /MEvI3P/1+rvrvnX/XokKRXtj2sB7qgzIFrj13WeDV2O2dhVXGuwHadgoe7muTAFXP
-	 LSLKuVAKBfuXYDZq1UM/0YAjBXADG7NVC5TOfjXC7ar/xbZiQoqM+/9HH2gF/6Faxc
-	 injEAVczAz86A==
+	b=Nct6g8xGd35mkIc2fqpHaxGsQgNW4ZZUkEOgI5RIdUYSscMjPoM8bLidS0BDDRLDk
+	 nZK1IMd0z0wmrgCqXsof7LdvY2swFBM16SJJBPVVVVHkKQ8e0oax8YQUg4ZAkyCSyx
+	 wHvvX7huXaOEp6yL7PCK/nsMgUowTGbobiLFIY190vQx3dpRpq3mquCFqjozpi/wO3
+	 fwVS3szaS1Vtb+hZwyIbqQA5lJBDiZcFjThLsyyivLeXqn2y1Z2k3d+5Jt81ZCFGxE
+	 lE5oO1jHoGA8gIcOQcjYRrWwE4uUmYDzPn6sujcIhkDdy5HM3vKT+OxOMTc5OaDAze
+	 ONjuCk9vPdz+Q==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	NeilBrown <neilb@suse.de>,
 	Matthew Wilcox <willy@infradead.org>,
 	Christian Brauner <brauner@kernel.org>
-Subject: [6.12-rc2 v2 PATCH 6/7] nfs/localio: remove extra indirect nfs_to call to check {read,write}_iter
-Date: Thu,  3 Oct 2024 15:35:03 -0400
-Message-ID: <20241003193504.34640-7-snitzer@kernel.org>
+Subject: [6.12-rc2 v2 PATCH 7/7] nfs/localio: eliminate need for nfs_local_fsync_work forward declaration
+Date: Thu,  3 Oct 2024 15:35:04 -0400
+Message-ID: <20241003193504.34640-8-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20241003193504.34640-1-snitzer@kernel.org>
 References: <20241003193504.34640-1-snitzer@kernel.org>
@@ -64,112 +64,69 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Push the read_iter and write_iter availability checks down to
-nfs_do_local_read and nfs_do_local_write respectively.
-
-This eliminates a redundant nfs_to->nfsd_file_file() call.
+Move nfs_local_fsync_ctx_alloc() after nfs_local_fsync_work().
 
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfs/localio.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ fs/nfs/localio.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
 diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index 2f302b03b253..12d3e200156c 100644
+index 12d3e200156c..98cd572426b4 100644
 --- a/fs/nfs/localio.c
 +++ b/fs/nfs/localio.c
-@@ -273,7 +273,7 @@ nfs_local_iocb_free(struct nfs_local_kiocb *iocb)
+@@ -45,7 +45,6 @@ struct nfs_local_fsync_ctx {
+ 	struct work_struct	work;
+ 	struct completion	*done;
+ };
+-static void nfs_local_fsync_work(struct work_struct *work);
  
- static struct nfs_local_kiocb *
- nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
--		     struct nfsd_file *localio, gfp_t flags)
-+		     struct file *file, gfp_t flags)
- {
- 	struct nfs_local_kiocb *iocb;
+ static bool localio_enabled __read_mostly = true;
+ module_param(localio_enabled, bool, 0644);
+@@ -678,21 +677,6 @@ nfs_local_release_commit_data(struct nfsd_file *localio,
+ 	call_ops->rpc_release(data);
+ }
  
-@@ -286,9 +286,8 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
- 		kfree(iocb);
- 		return NULL;
- 	}
--	init_sync_kiocb(&iocb->kiocb, nfs_to->nfsd_file_file(localio));
-+	init_sync_kiocb(&iocb->kiocb, file);
- 	iocb->kiocb.ki_pos = hdr->args.offset;
--	iocb->localio = localio;
- 	iocb->hdr = hdr;
- 	iocb->kiocb.ki_flags &= ~IOCB_APPEND;
- 	return iocb;
-@@ -389,13 +388,19 @@ nfs_do_local_read(struct nfs_pgio_header *hdr,
- 		  const struct rpc_call_ops *call_ops)
- {
- 	struct nfs_local_kiocb *iocb;
-+	struct file *file = nfs_to->nfsd_file_file(localio);
-+
-+	/* Don't support filesystems without read_iter */
-+	if (!file->f_op->read_iter)
-+		return -EAGAIN;
- 
- 	dprintk("%s: vfs_read count=%u pos=%llu\n",
- 		__func__, hdr->args.count, hdr->args.offset);
- 
--	iocb = nfs_local_iocb_alloc(hdr, localio, GFP_KERNEL);
-+	iocb = nfs_local_iocb_alloc(hdr, file, GFP_KERNEL);
- 	if (iocb == NULL)
- 		return -ENOMEM;
-+	iocb->localio = localio;
- 
- 	nfs_local_pgio_init(hdr, call_ops);
- 	hdr->res.eof = false;
-@@ -558,14 +563,20 @@ nfs_do_local_write(struct nfs_pgio_header *hdr,
- 		   const struct rpc_call_ops *call_ops)
- {
- 	struct nfs_local_kiocb *iocb;
-+	struct file *file = nfs_to->nfsd_file_file(localio);
-+
-+	/* Don't support filesystems without write_iter */
-+	if (!file->f_op->write_iter)
-+		return -EAGAIN;
- 
- 	dprintk("%s: vfs_write count=%u pos=%llu %s\n",
- 		__func__, hdr->args.count, hdr->args.offset,
- 		(hdr->args.stable == NFS_UNSTABLE) ?  "unstable" : "stable");
- 
--	iocb = nfs_local_iocb_alloc(hdr, localio, GFP_NOIO);
-+	iocb = nfs_local_iocb_alloc(hdr, file, GFP_NOIO);
- 	if (iocb == NULL)
- 		return -ENOMEM;
-+	iocb->localio = localio;
- 
- 	switch (hdr->args.stable) {
- 	default:
-@@ -591,16 +602,9 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
- 		   const struct rpc_call_ops *call_ops)
- {
- 	int status = 0;
--	struct file *filp = nfs_to->nfsd_file_file(localio);
- 
- 	if (!hdr->args.count)
- 		return 0;
--	/* Don't support filesystems without read_iter/write_iter */
--	if (!filp->f_op->read_iter || !filp->f_op->write_iter) {
--		nfs_local_disable(clp);
--		status = -EAGAIN;
--		goto out;
+-static struct nfs_local_fsync_ctx *
+-nfs_local_fsync_ctx_alloc(struct nfs_commit_data *data,
+-			  struct nfsd_file *localio, gfp_t flags)
+-{
+-	struct nfs_local_fsync_ctx *ctx = kmalloc(sizeof(*ctx), flags);
+-
+-	if (ctx != NULL) {
+-		ctx->localio = localio;
+-		ctx->data = data;
+-		INIT_WORK(&ctx->work, nfs_local_fsync_work);
+-		ctx->done = NULL;
 -	}
+-	return ctx;
+-}
+-
+ static void
+ nfs_local_fsync_ctx_free(struct nfs_local_fsync_ctx *ctx)
+ {
+@@ -717,6 +701,21 @@ nfs_local_fsync_work(struct work_struct *work)
+ 	nfs_local_fsync_ctx_free(ctx);
+ }
  
- 	switch (hdr->rw_mode) {
- 	case FMODE_READ:
-@@ -614,8 +618,10 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
- 			hdr->rw_mode);
- 		status = -EINVAL;
- 	}
--out:
++static struct nfs_local_fsync_ctx *
++nfs_local_fsync_ctx_alloc(struct nfs_commit_data *data,
++			  struct nfsd_file *localio, gfp_t flags)
++{
++	struct nfs_local_fsync_ctx *ctx = kmalloc(sizeof(*ctx), flags);
 +
- 	if (status != 0) {
-+		if (status == -EAGAIN)
-+			nfs_local_disable(clp);
- 		nfs_to_nfsd_file_put_local(localio);
- 		hdr->task.tk_status = status;
- 		nfs_local_hdr_release(hdr, call_ops);
++	if (ctx != NULL) {
++		ctx->localio = localio;
++		ctx->data = data;
++		INIT_WORK(&ctx->work, nfs_local_fsync_work);
++		ctx->done = NULL;
++	}
++	return ctx;
++}
++
+ int nfs_local_commit(struct nfsd_file *localio,
+ 		     struct nfs_commit_data *data,
+ 		     const struct rpc_call_ops *call_ops, int how)
 -- 
 2.44.0
 
