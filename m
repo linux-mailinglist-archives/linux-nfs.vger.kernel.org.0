@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6843-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6844-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F5DF98F712
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 21:35:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FA1D98F713
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 21:35:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73A6C1C22690
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 19:35:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6C728337B
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 19:35:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C82D1AC44C;
-	Thu,  3 Oct 2024 19:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27171AC884;
+	Thu,  3 Oct 2024 19:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpjtDnhW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCenL5EZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693261A727F
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 19:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4AE1A727F
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 19:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727984107; cv=none; b=unIQaEJ1l6fsACK6LDOYSgt7mtvBnBcwKkxWEbh2UFEcQtMyzfeXY4uMPw7dFPsQiyTxlYMVLdUeQk+4l7o0ujtfWvKzhIf8DbkV4gTy0YdRiExSiAXGI5NB+GZc24W7XkGRGBSm71JvfjGa2EYvIiLNAsjKjYzGowX2lp6xs7c=
+	t=1727984108; cv=none; b=ZELKyFs9ZwYFuscXqVK3vCLl9vsT6JZG7DopOTTqAVqAXzEylvY2BtsBfnjlB1HpSLcyLiuu4oXOD5Hmpn3QfgxgQmx/KzhX2sXktxv+qpZnE7XaflGtJ4DuuByzfa0N7sKwKZZD7VdKrcxxhNma5FvGNycQamp7OlIc46uP+Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727984107; c=relaxed/simple;
-	bh=Zb7197YfQ1LtCHlCEuSs83CLgWL9vDqTe3kpj30t1aU=;
+	s=arc-20240116; t=1727984108; c=relaxed/simple;
+	bh=XPyoE9dVY62vPXx3WG6hzS+O/HREZFHslty1olFBUd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B6wOaXyYBhyaOgZ8MgBP/hAdbl45rfGqUoihkY7rxU1ArIKRtuWSe9ZLTTUKkzsogm4L/oyKVqjJegZDz2jP8rNXcJuqQYlZ85ua3sX/PqvnKIyT1ts0hbmX7QLtqszRYJGtLCEiewXYd1wRgvS1vY+JEmsTSwBTJdVxBTwIF6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpjtDnhW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1BABC4CEC5;
-	Thu,  3 Oct 2024 19:35:06 +0000 (UTC)
+	 MIME-Version; b=Sapppmdngj2QQ26SdT/VmpiqrfcZhuR2PfGNisVB0mSJ26Qn4VDctFpuWduSUg+MM3luuyeb0C9ScZySuoatgmd/oMHzBZi6ZuzRVGllMYEMakEyS1WHeJoEoEd36O6AVqL0IU6B6TF4/HX9bpSY538vHRMpnImzsYvf8FztUjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCenL5EZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A92C4CEC5;
+	Thu,  3 Oct 2024 19:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727984107;
-	bh=Zb7197YfQ1LtCHlCEuSs83CLgWL9vDqTe3kpj30t1aU=;
+	s=k20201202; t=1727984108;
+	bh=XPyoE9dVY62vPXx3WG6hzS+O/HREZFHslty1olFBUd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fpjtDnhWwYB1aO1vbi5sp3u9+kUtTC3R294aPV6drXdu8FELMWa56XqK9iG1j8Kl5
-	 97+iUosgRwVCI8FfZ5VRvZRksk2hJJ4QFOTtI+5QNA1h6qmlr2+deLoSqtXpzVVCbv
-	 AASgcYDfUgLyLHV/axdNpwfU99x+bHvP2LHJ3U+dvqt2FK3Z3z99ZOCJPTro02SDq4
-	 /kGOsyOPAC5JN1hkLWZZEnXrSQhjTxM2GwVBGqnm9GilinYL5xEzatK+Of7mvIEB3F
-	 dOKqhwRYKxmAS8M9Gqaorx1kkFoaVpT3Oor/vPWtgCN+OsHhQA1KxA/bnaDEW0yNz/
-	 LuKSRGA3TJQyw==
+	b=gCenL5EZMr/nA0+LlZCBKbVw9taIcMw+uF1nwRwJiF7O/XkJqP52IGbIgNZ8KS2/r
+	 mf0/8GH3Vj4QWZITHqPdhgWJWXJrA6ph5yFWrHEd2Sz27VBkPEyLo+EV2iIp1ba0Qr
+	 k7++ZwgvMfyCpvbLQqZtS7vYk6EL20BrbVIxFA+VQYT0bHNQ4MKhhvFjkcXwDek5l5
+	 c1z/JR8cIui9uIjlZ2vZagPuGr0BwHpstjglSgrUiBe3Es0uSmgHUM0YMevvdJaD3j
+	 yjyt6PeXoYkCTRnPL+yk4Tx+bt6N2DNAI2EaKHpGlm7vYmmM5PJf15rqtdLFyY+wuv
+	 qwO/x76w38aKA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	NeilBrown <neilb@suse.de>,
 	Matthew Wilcox <willy@infradead.org>,
 	Christian Brauner <brauner@kernel.org>
-Subject: [6.12-rc2 v2 PATCH 1/7] nfs_common: fix race in NFS calls to nfsd_file_put_local() and nfsd_serv_put()
-Date: Thu,  3 Oct 2024 15:34:58 -0400
-Message-ID: <20241003193504.34640-2-snitzer@kernel.org>
+Subject: [6.12-rc2 v2 PATCH 2/7] nfs_common: fix Kconfig for NFS_COMMON_LOCALIO_SUPPORT
+Date: Thu,  3 Oct 2024 15:34:59 -0400
+Message-ID: <20241003193504.34640-3-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20241003193504.34640-1-snitzer@kernel.org>
 References: <20241003193504.34640-1-snitzer@kernel.org>
@@ -64,154 +64,40 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add nfs_to_nfsd_file_put_local() interface to fix race with nfsd
-module unload.  Similarly, use RCU around nfs_open_local_fh()'s error
-path call to nfs_to->nfsd_serv_put().  Holding RCU ensures that NFS
-will safely _call and return_ from its nfs_to calls into the NFSD
-functions nfsd_file_put_local() and nfsd_serv_put().
+The 'default n' that was in NFS_COMMON_LOCALIO_SUPPORT caused these
+extra defaults to be missed:
+        default y if NFSD=y || NFS_FS=y
+	default m if NFSD=m && NFS_FS=m
 
-Otherwise, if RCU isn't used then there is a narrow window when NFS's
-reference for the nfsd_file and nfsd_serv are dropped and the NFSD
-module could be unloaded, which could result in a crash from the
-return instruction for either nfs_to->nfsd_file_put_local() or
-nfs_to->nfsd_serv_put().
+Remove the 'default n' for NFS_COMMON_LOCALIO_SUPPORT so that the
+correct tristate is selected based on how NFSD and NFS_FS are
+configured.  This fixes the reported case where NFS_FS=y but
+NFS_COMMON_LOCALIO_SUPPORT=m, it is now correctly set to =y.
 
-Reported-by: NeilBrown <neilb@suse.de>
+In addition, add extra 'depends on NFS_LOCALIO' to
+NFS_COMMON_LOCALIO_SUPPORT so that if NFS_LOCALIO isn't set then
+NFS_COMMON_LOCALIO_SUPPORT will not be either.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202410031944.hMCFY9BO-lkp@intel.com/
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfs/localio.c           |  6 +++---
- fs/nfs_common/nfslocalio.c |  5 ++++-
- fs/nfsd/filecache.c        |  2 +-
- fs/nfsd/localio.c          |  2 +-
- fs/nfsd/nfssvc.c           |  4 ++--
- include/linux/nfslocalio.h | 15 +++++++++++++++
- 6 files changed, 26 insertions(+), 8 deletions(-)
+ fs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index c29cdf51c458..d124c265b8fd 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -341,7 +341,7 @@ nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
- {
- 	struct nfs_pgio_header *hdr = iocb->hdr;
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 24d4e4b419d1..da8ad9aba3e9 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -384,7 +384,7 @@ config NFS_COMMON
  
--	nfs_to->nfsd_file_put_local(iocb->localio);
-+	nfs_to_nfsd_file_put_local(iocb->localio);
- 	nfs_local_iocb_free(iocb);
- 	nfs_local_hdr_release(hdr, hdr->task.tk_ops);
- }
-@@ -622,7 +622,7 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
- 	}
- out:
- 	if (status != 0) {
--		nfs_to->nfsd_file_put_local(localio);
-+		nfs_to_nfsd_file_put_local(localio);
- 		hdr->task.tk_status = status;
- 		nfs_local_hdr_release(hdr, call_ops);
- 	}
-@@ -673,7 +673,7 @@ nfs_local_release_commit_data(struct nfsd_file *localio,
- 		struct nfs_commit_data *data,
- 		const struct rpc_call_ops *call_ops)
- {
--	nfs_to->nfsd_file_put_local(localio);
-+	nfs_to_nfsd_file_put_local(localio);
- 	call_ops->rpc_call_done(&data->task, data);
- 	call_ops->rpc_release(data);
- }
-diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-index 42b479b9191f..5c8ce5066c16 100644
---- a/fs/nfs_common/nfslocalio.c
-+++ b/fs/nfs_common/nfslocalio.c
-@@ -142,8 +142,11 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid,
- 	/* We have an implied reference to net thanks to nfsd_serv_try_get */
- 	localio = nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
- 					     cred, nfs_fh, fmode);
--	if (IS_ERR(localio))
-+	if (IS_ERR(localio)) {
-+		rcu_read_lock();
- 		nfs_to->nfsd_serv_put(net);
-+		rcu_read_unlock();
-+	}
- 	return localio;
- }
- EXPORT_SYMBOL_GPL(nfs_open_local_fh);
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 19bb88c7eebd..53070e1de3d9 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -398,7 +398,7 @@ nfsd_file_put(struct nfsd_file *nf)
-  * reference to the associated nn->nfsd_serv.
-  */
- void
--nfsd_file_put_local(struct nfsd_file *nf)
-+nfsd_file_put_local(struct nfsd_file *nf) __must_hold(rcu)
- {
- 	struct net *net = nf->nf_net;
- 
-diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
-index 291e9c69cae4..f441cb9f74d5 100644
---- a/fs/nfsd/localio.c
-+++ b/fs/nfsd/localio.c
-@@ -53,7 +53,7 @@ void nfsd_localio_ops_init(void)
-  *
-  * On successful return, returned nfsd_file will have its nf_net member
-  * set. Caller (NFS client) is responsible for calling nfsd_serv_put and
-- * nfsd_file_put (via nfs_to->nfsd_file_put_local).
-+ * nfsd_file_put (via nfs_to_nfsd_file_put_local).
-  */
- struct nfsd_file *
- nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index e236135ddc63..47172b407be8 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -214,14 +214,14 @@ int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change
- 	return 0;
- }
- 
--bool nfsd_serv_try_get(struct net *net)
-+bool nfsd_serv_try_get(struct net *net) __must_hold(rcu)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	return (nn && percpu_ref_tryget_live(&nn->nfsd_serv_ref));
- }
- 
--void nfsd_serv_put(struct net *net)
-+void nfsd_serv_put(struct net *net) __must_hold(rcu)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
-diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-index b353abe00357..b0dd9b1eef4f 100644
---- a/include/linux/nfslocalio.h
-+++ b/include/linux/nfslocalio.h
-@@ -65,10 +65,25 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *,
- 		   struct rpc_clnt *, const struct cred *,
- 		   const struct nfs_fh *, const fmode_t);
- 
-+static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
-+{
-+	/*
-+	 * Once reference to nfsd_serv is dropped, NFSD could be
-+	 * unloaded, so ensure safe return from nfsd_file_put_local()
-+	 * by always taking RCU.
-+	 */
-+	rcu_read_lock();
-+	nfs_to->nfsd_file_put_local(localio);
-+	rcu_read_unlock();
-+}
-+
- #else   /* CONFIG_NFS_LOCALIO */
- static inline void nfsd_localio_ops_init(void)
- {
- }
-+static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
-+{
-+}
- #endif  /* CONFIG_NFS_LOCALIO */
- 
- #endif  /* __LINUX_NFSLOCALIO_H */
+ config NFS_COMMON_LOCALIO_SUPPORT
+ 	tristate
+-	default n
++	depends on NFS_LOCALIO
+ 	default y if NFSD=y || NFS_FS=y
+ 	default m if NFSD=m && NFS_FS=m
+ 	select SUNRPC
 -- 
 2.44.0
 
