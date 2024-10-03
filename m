@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-6841-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6842-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C728D98F6AB
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:57:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FDF898F711
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 21:35:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C3E92811E2
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:57:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C297E1C22625
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 19:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628751AAE18;
-	Thu,  3 Oct 2024 18:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 506B11AC43D;
+	Thu,  3 Oct 2024 19:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXt/ZCcM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qE/4wFrv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC1322F19
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8511A727F
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 19:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981871; cv=none; b=reqGiJYDmMdfIvb+tKyY+Vyuz36JcKpn9/aUpGpLmZe/5wnAVdb9Vw9YWuD/CSz0REDb8e71uG5+Ibj0vzsXuC5CSxru+7w5RotQBM7T/OIPAsjBsrry1mmyFgazd8LW/cTAFZWdG+UtTiujHX7Q+0Sp1HGsdeHbVNUzbZJX5YI=
+	t=1727984106; cv=none; b=dVCLcQT5BbC8CPVbpI5SYoBRqQMY/ka1Ey4QNpbA1zVD+9JxSN86UWXtFAmbYaxIr7b8S741PTTBGE+iiKKPsEDq9/Pjnx1B90cumt8OrtIgtT9RzCdinDySuRr78c3V7B/Ggo07TnwN1RDt4faZWT24XAI0jgVkVlcWaPDKt2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981871; c=relaxed/simple;
-	bh=H7DStBXojbtO5NqvQ3kmL8wP5q2TC7czGheuTBTyS8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LWj7G1/NPyWxyVmSBEldY4qiU6eJvqCaBMaGadOGelbdF7+kn1FqE/N+0keDGWnLEex9PS0AKyxCPtYJqTFdnhnv1oAiZficTuGOkF/zeW/QjUVLnCOXMV1PZKepV4I4M0NB6ttIP1f350EnKz7kFybLHwp29p1oLUjs+jSZN3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXt/ZCcM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70DC8C4CEC5;
-	Thu,  3 Oct 2024 18:57:50 +0000 (UTC)
+	s=arc-20240116; t=1727984106; c=relaxed/simple;
+	bh=lXnFhatC0gr2S9l+QmlKyrqj7IVkAxRke2ZBrlkLh2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A51QLq1YciLHDzxYI9G3xuLUFI8KhH6vSyjy267pi87XtNOabF8AUq+nrtupZduyipuUlAmejZR/exabUMbjykxunTie6Q18UxQ0LoCqs88GjnIvuSdbk2poACoaDNPAqMe0yOp7GL2kIM08vA2sdaWYGsa8yTDbcpqi8hZ/KFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qE/4wFrv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7908CC4CEC5;
+	Thu,  3 Oct 2024 19:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981871;
-	bh=H7DStBXojbtO5NqvQ3kmL8wP5q2TC7czGheuTBTyS8Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YXt/ZCcMD9Dv5AugEasFYqlDo2tV4DQO/586tkH4o+93V4QdZns+fMYy4MEs7vmDo
-	 eCflKgAa30McgEB2oqKsfeVA2Yj+XZnBYN1cTmGOd+vKhy5qepRFOp0eMMH8kD5yXd
-	 v4mpz+SUuo0RmaqLTFLfpSWrbivs/cVc/k+xhgo7FPcCopE9COw8BQBWcIZc1r/aVM
-	 Wor5UnY7zLh8DyzYzYqZVlsu9F4xvwuZiAc9dPjnba9aMjhUv0eH03peMHVZEg40+A
-	 dLRtqZRWHdg4rNb2EeeKYTUIArowtx2wuF8Rwiss4DDrPJNHbM3ZKSorhp257Ysjiy
-	 bVrLjrTttUojQ==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 16/16] xdrgen: emit maxsize macros
-Date: Thu,  3 Oct 2024 14:54:46 -0400
-Message-ID: <20241003185446.82984-17-cel@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241003185446.82984-1-cel@kernel.org>
-References: <20241003185446.82984-1-cel@kernel.org>
+	s=k20201202; t=1727984105;
+	bh=lXnFhatC0gr2S9l+QmlKyrqj7IVkAxRke2ZBrlkLh2I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qE/4wFrvsi6GiyjLuhfcqA6y3sDUp1GED9JFJyAPPk+FQ8dydJcNAxS9fFFdqIUQR
+	 9P0iOuAjs/JRDTD3EiugUGsu5Q2eEU0NlEHVtdb8at/MBtWWCu364T4Ki/xSWp1QoI
+	 rxGho4WihD4EsXJLGXYfdaz1ZTr9/fRLw947T2pjU3Dz/JvYxJ67AebewECt71A+fL
+	 92JToLqFUUjMxhtnWQoUMrlp7ff2L6ccoJK0/IVccNVaGTm9YHYX7rAsC1J8gf1+3L
+	 l0+ZWtBmu6j/RWFyiDLQ9imCybSSpRWeyKD2NKZV/t4ncEyHrBcNhNdvXPKbuLSDWY
+	 nkC7j8voznAtg==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	NeilBrown <neilb@suse.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Christian Brauner <brauner@kernel.org>
+Subject: [6.12-rc2 v2 PATCH 0/7] NFS LOCALIO: fixes and various cleanups
+Date: Thu,  3 Oct 2024 15:34:57 -0400
+Message-ID: <20241003193504.34640-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -63,81 +61,54 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi,
 
-Add "definitions" subcommand logic to emit maxsize macros in
-generated code.
+The first 3 patches are clear fixes which are needed ASAP (patch 1 is
+the same from v1 of these series, patch 2 and 3 are new fixes).
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- .../net/sunrpc/xdrgen/subcmds/definitions.py  | 24 ++++++++++++++++---
- tools/net/sunrpc/xdrgen/subcmds/source.py     |  3 +--
- 2 files changed, 22 insertions(+), 5 deletions(-)
+The other 4 patches are cleanups that are more subjective (relative to
+them being sent for 6.12-rcX), I'd prefer they go upstream now but I
+can carry them until 6.13 if that is how others would like to proceed.
 
-diff --git a/tools/net/sunrpc/xdrgen/subcmds/definitions.py b/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-index 5cd13d53221f..c956e27f37c0 100644
---- a/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-+++ b/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-@@ -28,9 +28,7 @@ from xdr_parse import xdr_parser, set_xdr_annotate
- logger.setLevel(logging.INFO)
- 
- 
--def emit_header_definitions(
--    root: Specification, language: str, peer: str
--) -> None:
-+def emit_header_definitions(root: Specification, language: str, peer: str) -> None:
-     """Emit header definitions"""
-     for definition in root.definitions:
-         if isinstance(definition.value, _XdrConstant):
-@@ -52,6 +50,25 @@ def emit_header_definitions(
-         gen.emit_definition(definition.value)
- 
- 
-+def emit_header_maxsize(root: Specification, language: str, peer: str) -> None:
-+    """Emit header maxsize macros"""
-+    print("")
-+    for definition in root.definitions:
-+        if isinstance(definition.value, _XdrEnum):
-+            gen = XdrEnumGenerator(language, peer)
-+        elif isinstance(definition.value, _XdrPointer):
-+            gen = XdrPointerGenerator(language, peer)
-+        elif isinstance(definition.value, _XdrTypedef):
-+            gen = XdrTypedefGenerator(language, peer)
-+        elif isinstance(definition.value, _XdrStruct):
-+            gen = XdrStructGenerator(language, peer)
-+        elif isinstance(definition.value, _XdrUnion):
-+            gen = XdrUnionGenerator(language, peer)
-+        else:
-+            continue
-+        gen.emit_maxsize(definition.value)
-+
-+
- def handle_parse_error(e: UnexpectedInput) -> bool:
-     """Simple parse error reporting, no recovery attempted"""
-     print(e)
-@@ -71,6 +88,7 @@ def subcmd(args: Namespace) -> int:
-         gen.emit_definition(args.filename, ast)
- 
-         emit_header_definitions(ast, args.language, args.peer)
-+        emit_header_maxsize(ast, args.language, args.peer)
- 
-         gen = XdrHeaderBottomGenerator(args.language, args.peer)
-         gen.emit_definition(args.filename, ast)
-diff --git a/tools/net/sunrpc/xdrgen/subcmds/source.py b/tools/net/sunrpc/xdrgen/subcmds/source.py
-index 00c04ad15b89..2024954748f0 100644
---- a/tools/net/sunrpc/xdrgen/subcmds/source.py
-+++ b/tools/net/sunrpc/xdrgen/subcmds/source.py
-@@ -83,8 +83,7 @@ def generate_client_source(filename: str, root: Specification, language: str) ->
-     gen = XdrSourceTopGenerator(language, "client")
-     gen.emit_source(filename, root)
- 
--    # cel: todo: client needs XDR size macros
--
-+    print("")
-     for definition in root.definitions:
-         emit_source_encoder(definition.value, language, "client")
-     for definition in root.definitions:
+Please note that there are 3 other LOCALIO related fixes that should
+be merged into 6.12-rcX:
+
+filemap: Fix bounds checking in filemap_read()
+https://lore.kernel.org/all/c6f35a86fe9ae6aa33b2fd3983b4023c2f4f9c13.1726250071.git.trond.myklebust@hammerspace.com/T/
+- still needed, Willy or Christian can you please pick this up?
+
+filemap: filemap_read() should check that the offset is positive or zero
+- Christian has staged this in linux-next via fs-next
+
+sunrpc: fix prog selection loop in svc_process_common
+- Anna has acknowledged the need for this fix but it isn't staged yet
+
+Thanks,
+Mike
+
+Mike Snitzer (7):
+  nfs_common: fix race in NFS calls to nfsd_file_put_local() and
+    nfsd_serv_put()
+  nfs_common: fix Kconfig for NFS_COMMON_LOCALIO_SUPPORT
+  nfsd/localio: fix nfsd_file tracepoints to handle NULL rqstp
+  nfs/localio: remove redundant suid/sgid handling
+  nfs/localio: eliminate unnecessary kref in nfs_local_fsync_ctx
+  nfs/localio: remove extra indirect nfs_to call to check
+    {read,write}_iter
+  nfs/localio: eliminate need for nfs_local_fsync_work forward
+    declaration
+
+ fs/Kconfig                 |  2 +-
+ fs/nfs/localio.c           | 96 ++++++++++++++++----------------------
+ fs/nfs_common/nfslocalio.c |  5 +-
+ fs/nfsd/filecache.c        |  2 +-
+ fs/nfsd/localio.c          |  2 +-
+ fs/nfsd/nfssvc.c           |  4 +-
+ fs/nfsd/trace.h            |  6 +--
+ include/linux/nfslocalio.h | 15 ++++++
+ 8 files changed, 68 insertions(+), 64 deletions(-)
+
 -- 
-2.46.2
+2.44.0
 
 
