@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6826-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6827-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA2A898F695
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBB0098F697
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CFD02824CB
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18BDAB22C6C
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB7F1AB6D8;
-	Thu,  3 Oct 2024 18:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567C61ABEAB;
+	Thu,  3 Oct 2024 18:55:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHpK8Wqk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iafuo+Dt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979F51AB6C3
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303861ABEA6
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981718; cv=none; b=XUkSF/ujhnbkxdiLChXXhf2S5D2YNhOxppq3WuKfUOAn8607UBvb1X9RRnMBFXDotm7e2CtPRcXn6EIrgwfL13bxESLNrfZbVdrvZP6AqG/MF8ksjAcmGYMCSze0CdVXVVRzsLD1iO0aVtbNA4k4qfaYnIrK0+k4k8kV8I3zCgs=
+	t=1727981730; cv=none; b=KNQZEA/e5Zt5Whct7YrFDSCeydW4wKQR48OHjH875HvWZBN4yhsa91APanty0VlkAJ5NlLf2oRyVGcvyRzYnMkvYggccZ6xU/Acr3PE4f+pt4krIxeYlOTC/TvMzBKKNmgPi+jxjTX65QzlAlZMR0yl+vla9BGF8Ycot7XXhlg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981718; c=relaxed/simple;
-	bh=gRs3qK/pMAHS5JndlfkrrZYNxpjLyrlsQBN+cRdHt40=;
+	s=arc-20240116; t=1727981730; c=relaxed/simple;
+	bh=Bk6ELu4MeGgeda4QU7tKlTn/kVW80wjJBNqAYlXaxgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MPq2rCxrtk5doz2hF7odg/LfnmiD6bkncWaKlUWlGm0/CPbVysuK5CVqVIjQ04dhsNqgIaH7YLnLsU58JEdOcATxHnLjrsb0UVXXYjUpFoefaTtJ0sHSexOYRq6dA0NyvlDD81nrQiZscalXwV+8ThxiJ/sIiX4TajNYY77N1ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHpK8Wqk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720EAC4CEC5;
-	Thu,  3 Oct 2024 18:55:17 +0000 (UTC)
+	 MIME-Version; b=AjDxUtJeIyAzQKWL7QggKiL44489/zoo+pAu3pw6Sbbqx2ciyMWTxZY9kd3Kz+F1AM/jjZNc7ZEhXxL5cKMgefq5jVAI+yGf7ICTBILYPefLuJw+3hlgfwnjJWc3DYCkxck6tUqQwmcjN0gLMZzLjw+6Eg5zcJTbe+Qw5fTYC4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iafuo+Dt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0882EC4CEC5;
+	Thu,  3 Oct 2024 18:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981718;
-	bh=gRs3qK/pMAHS5JndlfkrrZYNxpjLyrlsQBN+cRdHt40=;
+	s=k20201202; t=1727981729;
+	bh=Bk6ELu4MeGgeda4QU7tKlTn/kVW80wjJBNqAYlXaxgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FHpK8WqkW6bICR7lt4hVeJfs1aFaa4asoQ5EEwzqh3L8xGRql23qlIlFZ7cN2c525
-	 3eFV5fBJtNExhb2oRgvbUcD3E4wKqBnMdA1Pm2qq605Jd8JqzGqGX0w+5vioOBNi6M
-	 D+JwYCRG2k+1HKRE8J95mymuvrpWUd3POJ8bzzBdAvNQLD7KhglrtYECBIj16p7QwH
-	 6u/4Lvj9cg84YRjO429fMo4wj3fwgZfFG44ygcciE98pR/w/Ix7d15RXlPoGCcrq14
-	 oQETNuKlUgQEXQgmPwDXnJxXqjIHC96I9CiFYNOO6m0PWe2ayQPRlhza2mw1LGBJU+
-	 d1zntuoWqVuWQ==
+	b=iafuo+Dt+avuyOf30PhN8wfz2/TFyJ/JCSUT28IPFJEyVRJw6NFsQIreDV93cJzqY
+	 PRVD4Py4wf2/QurS5Ptq6MRviu162fSR1YENERG4ffaxNwjqeK5cf1TxKgtysS5sJw
+	 oP6vTG67668rWVOjeyFAO3Lyfyf31lNUCIHrXI5w39ovD+TO5TQcLKkZwKLRftiwPn
+	 MfuFY8dv5Pmjpl7FdsrOq6xDGjhbhDzIYP4fzCWEv+jyd6dxfJo7bhmzj22b0p5LCl
+	 6JfXSHQlNViDMhnib/PbLfRoYx3I4hvFTTdSwAbXIry+S9Dk9UcumotfRr++5mTdgu
+	 frKg38heMXHUg==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 01/16] xdrgen: Refactor transformer arms
-Date: Thu,  3 Oct 2024 14:54:31 -0400
-Message-ID: <20241003185446.82984-2-cel@kernel.org>
+Subject: [PATCH v2 02/16] xdrgen: Track constant values
+Date: Thu,  3 Oct 2024 14:54:32 -0400
+Message-ID: <20241003185446.82984-3-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241003185446.82984-1-cel@kernel.org>
 References: <20241003185446.82984-1-cel@kernel.org>
@@ -65,162 +65,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Clean up: Add a __post_init__ function to the data classes that
-need to update the "structs" and "pass_by_reference" sets.
+In order to compute the numeric on-the-wire width of XDR types,
+xdrgen needs to keep track of the numeric value of constants that
+are defined in the input specification so it can perform
+calculations with those values.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- tools/net/sunrpc/xdrgen/xdr_ast.py | 57 +++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 24 deletions(-)
+ tools/net/sunrpc/xdrgen/xdr_ast.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/tools/net/sunrpc/xdrgen/xdr_ast.py b/tools/net/sunrpc/xdrgen/xdr_ast.py
-index d5f0535ec84c..68f09945f2c4 100644
+index 68f09945f2c4..b7df45f47707 100644
 --- a/tools/net/sunrpc/xdrgen/xdr_ast.py
 +++ b/tools/net/sunrpc/xdrgen/xdr_ast.py
-@@ -51,13 +51,17 @@ class _XdrTypeSpecifier(_XdrAst):
-     """Corresponds to 'type_specifier' in the XDR language grammar"""
+@@ -19,6 +19,8 @@ public_apis = []
+ structs = set()
+ pass_by_reference = set()
  
-     type_name: str
--    c_classifier: str
-+    c_classifier: str = ""
- 
- 
- @dataclass
- class _XdrDefinedType(_XdrTypeSpecifier):
-     """Corresponds to a type defined by the input specification"""
- 
-+    def __post_init__(self):
-+        if self.type_name in structs:
-+            self.c_classifier = "struct "
++constants = {}
 +
  
  @dataclass
- class _XdrBuiltInType(_XdrTypeSpecifier):
-@@ -124,6 +128,10 @@ class _XdrOptionalData(_XdrDeclaration):
-     spec: _XdrTypeSpecifier
-     template: str = "optional_data"
- 
-+    def __post_init__(self):
-+        structs.add(self.name)
-+        pass_by_reference.add(self.name)
-+
- 
- @dataclass
- class _XdrBasic(_XdrDeclaration):
-@@ -174,6 +182,10 @@ class _XdrStruct(_XdrAst):
+ class _XdrAst(ast_utils.Ast):
+@@ -156,6 +158,10 @@ class _XdrConstant(_XdrAst):
      name: str
-     fields: List[_XdrDeclaration]
+     value: str
  
 +    def __post_init__(self):
-+        structs.add(self.name)
-+        pass_by_reference.add(self.name)
++        if self.value not in constants:
++            constants[self.name] = int(self.value, 0)
 +
  
  @dataclass
- class _XdrPointer(_XdrAst):
-@@ -182,6 +194,10 @@ class _XdrPointer(_XdrAst):
+ class _XdrEnumerator(_XdrAst):
+@@ -164,6 +170,10 @@ class _XdrEnumerator(_XdrAst):
      name: str
-     fields: List[_XdrDeclaration]
+     value: str
  
 +    def __post_init__(self):
-+        structs.add(self.name)
-+        pass_by_reference.add(self.name)
++        if self.value not in constants:
++            constants[self.name] = int(self.value, 0)
 +
  
  @dataclass
- class _XdrTypedef(_XdrAst):
-@@ -189,6 +205,15 @@ class _XdrTypedef(_XdrAst):
- 
-     declaration: _XdrDeclaration
- 
-+    def __post_init__(self):
-+        if not isinstance(self.declaration, _XdrBasic):
-+            return
-+
-+        new_type = self.declaration
-+        if isinstance(new_type.spec, _XdrDefinedType):
-+            if new_type.spec.type_name in pass_by_reference:
-+                pass_by_reference.add(new_type.name)
-+
- 
- @dataclass
- class _XdrCaseSpec(_XdrAst):
-@@ -216,6 +241,10 @@ class _XdrUnion(_XdrAst):
-     cases: List[_XdrCaseSpec]
-     default: _XdrDeclaration
- 
-+    def __post_init__(self):
-+        structs.add(self.name)
-+        pass_by_reference.add(self.name)
-+
- 
- @dataclass
- class _RpcProcedure(_XdrAst):
-@@ -290,22 +319,13 @@ class ParseToAst(Transformer):
-         return _XdrConstantValue(value)
- 
-     def type_specifier(self, children):
--        """Instantiate one type_specifier object"""
--        c_classifier = ""
-+        """Instantiate one _XdrTypeSpecifier object"""
-         if isinstance(children[0], _XdrIdentifier):
-             name = children[0].symbol
--            if name in structs:
--                c_classifier = "struct "
--            return _XdrDefinedType(
--                type_name=name,
--                c_classifier=c_classifier,
--            )
-+            return _XdrDefinedType(type_name=name)
- 
-         name = children[0].data.value
--        return _XdrBuiltInType(
--            type_name=name,
--            c_classifier=c_classifier,
--        )
-+        return _XdrBuiltInType(type_name=name)
- 
-     def constant_def(self, children):
-         """Instantiate one _XdrConstant object"""
-@@ -380,8 +400,6 @@ class ParseToAst(Transformer):
-         """Instantiate one _XdrOptionalData declaration object"""
-         spec = children[0]
-         name = children[1].symbol
--        structs.add(name)
--        pass_by_reference.add(name)
- 
-         return _XdrOptionalData(name, spec)
- 
-@@ -400,8 +418,6 @@ class ParseToAst(Transformer):
-     def struct(self, children):
-         """Instantiate one _XdrStruct object"""
-         name = children[0].symbol
--        structs.add(name)
--        pass_by_reference.add(name)
-         fields = children[1].children
- 
-         last_field = fields[-1]
-@@ -416,11 +432,6 @@ class ParseToAst(Transformer):
-     def typedef(self, children):
-         """Instantiate one _XdrTypedef object"""
-         new_type = children[0]
--        if isinstance(new_type, _XdrBasic) and isinstance(
--            new_type.spec, _XdrDefinedType
--        ):
--            if new_type.spec.type_name in pass_by_reference:
--                pass_by_reference.add(new_type.name)
- 
-         return _XdrTypedef(new_type)
- 
-@@ -442,8 +453,6 @@ class ParseToAst(Transformer):
-     def union(self, children):
-         """Instantiate one _XdrUnion object"""
-         name = children[0].symbol
--        structs.add(name)
--        pass_by_reference.add(name)
- 
-         body = children[1]
-         discriminant = body.children[0].children[0]
+ class _XdrEnum(_XdrAst):
 -- 
 2.46.2
 
