@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6831-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6832-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A11998F69A
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A360F98F69B
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7BD11C22D8D
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C0BA1F25D0A
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9681AB6C4;
-	Thu,  3 Oct 2024 18:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D561AB506;
+	Thu,  3 Oct 2024 18:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPMgnuvf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wc+ar5Cu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975511AB6D3
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8283F19F134
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981771; cv=none; b=gD3KlcCheZYqtV+er85Qcolh7ZMrgYcT/1ShS1bpC7bLVgI8m6P85/BwpeftIx5q02c4OMmhpBF1SLROmAXCzWKQ4PMyPh/D3dsSMlrpybQIdijPrgRL3lvdJ50McmqoSjeLRCU8GxNYa9dCxq5XtkZFwz5TyAB/GeokxnNZd8k=
+	t=1727981781; cv=none; b=qAe0oZ8a+3oSp3CSrONHBls1Vyzt5eLgSADkjNWuj6XQ2DEH3GModkEWmUHHRJABm3x3ce/21ETYzz/LO5l5MdpywvIitfFLieFNqKUNb9n6g+XfINPmg8AVe/9ov+M0UUJaRmu0n+WV7YYJVd6Nk/VJDztP3iasmt61oCJkqwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981771; c=relaxed/simple;
-	bh=pRnpR6P5t42iIkCEFsBPKe8PwabUnPoOZMinZ/zFYto=;
+	s=arc-20240116; t=1727981781; c=relaxed/simple;
+	bh=B1K+TALLHIEHvj5rQFKCTcCLrKzUGlUJX2BnsjrwRdI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SaI+M8NdMwWKLnwCGnWc5P0oFDlF9RnsczyhIGxZ/rmDMawNXIHymH4WA9/uizx0cPBwbFz6jqY4DZVN8oyCV7dVL2WZOFj5mfim7Z4fRS+QgXkjb9+F1g6/SGvdo/XIQBX8Vsunf43gmZvTfNg5KvcjNx4mF+aTIGNWLZ/Os6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPMgnuvf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B29C4CEC5;
-	Thu,  3 Oct 2024 18:56:10 +0000 (UTC)
+	 MIME-Version; b=EzVy+eQoXIEIEmoShgedJDSFCjS9hnTeY7AULF0PcKhOk0N9fBbqqk+aXAjxa6GZehbmwuqq7ldQ2wdPsICe+r0RLpk/2KQbX1l1V1pj9ErjVpIFG12ItIXqvY+ta/nb1nd/wQB8VDdJ06M81yX76quxtXu660awIUGVi8ssTr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wc+ar5Cu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75906C4CECC;
+	Thu,  3 Oct 2024 18:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981771;
-	bh=pRnpR6P5t42iIkCEFsBPKe8PwabUnPoOZMinZ/zFYto=;
+	s=k20201202; t=1727981781;
+	bh=B1K+TALLHIEHvj5rQFKCTcCLrKzUGlUJX2BnsjrwRdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EPMgnuvfFZiKDOuX8Si4HZcGJLBHjYlO0NdbTTlqLj9Ik8Z67cO/GpoXfttKBgMnE
-	 zOYUN8kt26k+iI9YKTy0KZg2zGO9+aJP6y5RyIC1gCOM7xxjCFdpuLWPX+N9mDzKHp
-	 srjX8ojMzqkbdlL97VLdxDQd46aghFe/kaR1PS2HMA7NXgyl5a9KfwBAbCF4HdiqKh
-	 cs/bN+7jDi0aJHBLnCrD8For0/YKqBicaUtgOC73WzaBL7et95cq53a2dAVc5yzUaM
-	 P8pkH1ekrE75tYWFIyGQL03EphX793szBbc94xijMMhMXrLRdFLrUBVo7UVXXk2IBJ
-	 7cHQNtDNPTXkw==
+	b=Wc+ar5Cu3hcwlWkt3coYM9z4/w/yijoPiKRQlKzWOiSxnSdcEQ75gIpIrk3FuC02e
+	 n5+L2lVzsqKLUQPu0ilYFPUJzeiNFWLO5oPDnaKXbyeQAVIA5uEnlMDWUDfiqia74y
+	 Um5ithdcZI3VmS7DNCvbcnodOdsHVH1hnRzMFk5N6JiL0qlFeg6tduuvvcKt5n/K4v
+	 bAk19PeAAUd+7cW89gwuar0jK8Jwuec2Tmwi3muaLSoCE/UepAKPN1FoYNz/DHoqQ5
+	 InQLag7TucS2vC4hYi1WZwxLKRmQKdw+crvnx8wZhrrXVOAUJ1l/cEpxahnZRLoTiE
+	 dS4iXaFNGdjoQ==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 06/16] xdrgen: XDR width for variable-length opaque
-Date: Thu,  3 Oct 2024 14:54:36 -0400
-Message-ID: <20241003185446.82984-7-cel@kernel.org>
+Subject: [PATCH v2 07/16] xdrgen: XDR width for a string
+Date: Thu,  3 Oct 2024 14:54:37 -0400
+Message-ID: <20241003185446.82984-8-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241003185446.82984-1-cel@kernel.org>
 References: <20241003185446.82984-1-cel@kernel.org>
@@ -65,9 +65,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The byte size of a variable-length opaque is conveyed in an unsigned
-integer. If there is a specified maximum size, that is included in
-the type's widths list.
+A string works like a variable-length opaque. See Section 4.11 of
+RFC 4506.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
@@ -75,12 +74,12 @@ Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
  1 file changed, 15 insertions(+)
 
 diff --git a/tools/net/sunrpc/xdrgen/xdr_ast.py b/tools/net/sunrpc/xdrgen/xdr_ast.py
-index 9fe7fa688caa..94cdcfb36e77 100644
+index 94cdcfb36e77..d5f48c094729 100644
 --- a/tools/net/sunrpc/xdrgen/xdr_ast.py
 +++ b/tools/net/sunrpc/xdrgen/xdr_ast.py
-@@ -148,6 +148,21 @@ class _XdrVariableLengthOpaque(_XdrDeclaration):
+@@ -172,6 +172,21 @@ class _XdrString(_XdrDeclaration):
      maxsize: str
-     template: str = "variable_length_opaque"
+     template: str = "string"
  
 +    def max_width(self) -> int:
 +        """Return width of type in XDR_UNITS"""
@@ -99,7 +98,7 @@ index 9fe7fa688caa..94cdcfb36e77 100644
 +
  
  @dataclass
- class _XdrString(_XdrDeclaration):
+ class _XdrFixedLengthArray(_XdrDeclaration):
 -- 
 2.46.2
 
