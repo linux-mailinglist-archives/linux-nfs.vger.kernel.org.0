@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6834-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6835-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3D1998F69D
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA0AB98F69E
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 20:56:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A5C51F25CF4
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 282A01C20B51
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Oct 2024 18:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5BC51A705E;
-	Thu,  3 Oct 2024 18:56:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3B736EB4A;
+	Thu,  3 Oct 2024 18:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMVb/gHp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEPrtnA6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13176EB4A
-	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1986A33F
+	for <linux-nfs@vger.kernel.org>; Thu,  3 Oct 2024 18:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981802; cv=none; b=Uv1GRrI3ECUxkALL0JHdZcxX4XcN4dNHJKzw1YzS2n5xfiQu7snBRfH3HOuEgzsrAd2SND7OlmPJkR+7tSrM10BzVMi/6Syv0mIgFtqHRt+sKoPknSppoeP2PA+ZIMlHltt8sObcVi4zS0DrgDmmM4DzbVZZfktuA4rVkpDKGEI=
+	t=1727981811; cv=none; b=tA1bt/LlYAX/nam03rMig+KarjcFqcKBje7VicLr3sLfXQ0o5A/4t234p+yzmfH+nxhdLnxKX16/viZtVcU3EeU6vk7ckvLCqQU0qmeFXsSPAbnTR361HINMMNSsOWFpX6qppxxfxKGWV+zsKL4sfdhAn9RclMPHZsDSfseLF3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981802; c=relaxed/simple;
-	bh=0+PUm9bD/Z9aDEFRgodi0+MqUkWZ9gSLz8zL+lzVuG0=;
+	s=arc-20240116; t=1727981811; c=relaxed/simple;
+	bh=VlkWZ5yxXxxeF3BNsOuwrIwljypf4ALEdO+nPNEhZV8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D9FrDQmCxPS6ZDZ1RhZJiuaysOx/fX68AZUJHjmTeXc0rgtjeURr2B8R0zwTnh4AkBIyS/BumLR7rCellwQDylag7EPPNuNGGaMo8M6GcIIVTjsUGPjHqDq3QrWBKZs6kV+CIkOiP11neghdQWerCJGLcME68m+hUwP8Lr7qIDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMVb/gHp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF98C4CEC5;
-	Thu,  3 Oct 2024 18:56:40 +0000 (UTC)
+	 MIME-Version; b=NEBwbgeSqaxbClaOTDLTBUxbXew3XtReNghFvwKZ9AiuVWUTOfrJPj+dBz8/vvxxflttUiF9ySYF2Hd8/nSuQirm1k7XfgSnS2Krd0FJYfU4NYJ0pkDxrYhmIVmZ2X7YwAcYsbWz12jnG2k9gM9okw0NSgaiudU8gSkCAV+Ss6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEPrtnA6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89415C4CEC5;
+	Thu,  3 Oct 2024 18:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981801;
-	bh=0+PUm9bD/Z9aDEFRgodi0+MqUkWZ9gSLz8zL+lzVuG0=;
+	s=k20201202; t=1727981811;
+	bh=VlkWZ5yxXxxeF3BNsOuwrIwljypf4ALEdO+nPNEhZV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HMVb/gHpDoiLn1klLsE+8fWPpFJmLPDebzSTYfEVIBn/aksirfpq42VZ1SGypV3vK
-	 N5rkpwX1XfQ5SGg5HbEnV/f2sGvM98L1E4jdp377zJUm5lAO4U/AP90xdLyp+gcNL0
-	 2Zy+h/QJFBzKiwsQLkktTPOD0OePCpIYQu+8S/yYC5MWu+aNX37uaTG4Y1JSXY9a7G
-	 n65B4DeDpAp5QOqZX515BRElwT6JwuPNV55PAqKGqNn2dnh0iRHISXRYPqs4clmf4v
-	 8tES4uHtZS+Qtow5DBEFTQOcPFR1NFGBGf52t4S9QpXD11vOMHcnd6COgO75cjOAMy
-	 C0E2mFGfHrPFQ==
+	b=bEPrtnA6HF+c0TGS8yeJbvbSgQB6kXIwRInA9h+rw3pxDYe3U5U5do4CUDt2W+Uuy
+	 Bjph0DGU3OvhR0777welzz0MIDUUgkmw77hvjLdFE5uCkQVihKN1pbYSIaAiPOGeWY
+	 bB4F5vKHokKxO/DHxTCed0+rGYsVANJkN9xZ18nY5O5hWfLk2NMEzWwDuzzHyYbzkw
+	 qtmLTU7jD6hG9QYZ25wU3YdBs94ZBkPw1lkdkEEN1N7wyC76r2gHI2YQo1co1Rw3Yl
+	 qHCmH5DjSJQzdNb5DA7U+dh9JVIKJqMEsXGFUEcucujzoj2yX4+kT0AkQOjUD3B81N
+	 YZUTy3NkWqorg==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 09/16] xdrgen: XDR width for variable-length array
-Date: Thu,  3 Oct 2024 14:54:39 -0400
-Message-ID: <20241003185446.82984-10-cel@kernel.org>
+Subject: [PATCH v2 10/16] xdrgen: XDR width for optional_data type
+Date: Thu,  3 Oct 2024 14:54:40 -0400
+Message-ID: <20241003185446.82984-11-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241003185446.82984-1-cel@kernel.org>
 References: <20241003185446.82984-1-cel@kernel.org>
@@ -67,36 +67,33 @@ From: Chuck Lever <chuck.lever@oracle.com>
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- tools/net/sunrpc/xdrgen/xdr_ast.py | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/net/sunrpc/xdrgen/xdr_ast.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/tools/net/sunrpc/xdrgen/xdr_ast.py b/tools/net/sunrpc/xdrgen/xdr_ast.py
-index e9bc81e83b48..cb89d5d9987c 100644
+index cb89d5d9987c..f2ef78654e36 100644
 --- a/tools/net/sunrpc/xdrgen/xdr_ast.py
 +++ b/tools/net/sunrpc/xdrgen/xdr_ast.py
-@@ -220,6 +220,22 @@ class _XdrVariableLengthArray(_XdrDeclaration):
-     maxsize: str
-     template: str = "variable_length_array"
+@@ -245,9 +245,19 @@ class _XdrOptionalData(_XdrDeclaration):
+     spec: _XdrTypeSpecifier
+     template: str = "optional_data"
  
 +    def max_width(self) -> int:
 +        """Return width of type in XDR_UNITS"""
-+        return 1 + (xdr_quadlen(self.maxsize) * max_widths[self.spec.type_name])
++        return 1
 +
 +    def symbolic_width(self) -> List:
 +        """Return list containing XDR width of type's components"""
-+        widths = ["XDR_unsigned_int"]
-+        if self.maxsize != "0":
-+            item_width = " + ".join(symbolic_widths[self.spec.type_name])
-+            widths.append("(" + self.maxsize + " * (" + item_width + "))")
-+        return widths
++        return ["XDR_bool"]
 +
-+    def __post_init__(self):
+     def __post_init__(self):
+         structs.add(self.name)
+         pass_by_reference.add(self.name)
 +        max_widths[self.name] = self.max_width()
 +        symbolic_widths[self.name] = self.symbolic_width()
-+
+ 
  
  @dataclass
- class _XdrOptionalData(_XdrDeclaration):
 -- 
 2.46.2
 
