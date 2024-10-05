@@ -1,71 +1,71 @@
-Return-Path: <linux-nfs+bounces-6874-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6875-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C124B991403
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 04:52:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F629991407
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 04:58:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5191A284F2F
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 02:52:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BCA01C21AF9
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 02:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2504617BD5;
-	Sat,  5 Oct 2024 02:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A300110A18;
+	Sat,  5 Oct 2024 02:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="QXkTDgRe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PDGUoyp8"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="as8dDuC0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PXabLT+z"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C4610A18
-	for <linux-nfs@vger.kernel.org>; Sat,  5 Oct 2024 02:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0C017C8D
+	for <linux-nfs@vger.kernel.org>; Sat,  5 Oct 2024 02:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728096737; cv=none; b=PC40fUl8sA3O7vJHsHG8jruQZHNwUcsje8TLyB7p8Q52nQ9A7NlBk+kI1G6/4XlCpEQ7qEOVYJ0oVEhAZBDReWE3/GmXlb5W9pDODs8ej+T1m+iat59OvO1qGsQ8Re54Vy4Qe+d8wjKiG9fNdtnFWGB8MzRIe5uKJRUbcUyrb7Q=
+	t=1728097101; cv=none; b=oCL3HtQm39XP6nOphdu/UHfwVprTZyqUMGaARFxIZzbbwgwlF1UI0TCsaB/xw/4xvNGQO6ee9bd6HV+emvTVE/j+/P3dHVt00I2pBwG8G2s5cA4OrkuWiufiaeckf7bMA+z6Rz5TJniR5ura+wfOEnhEm1p1iP1dHBTOrc8DeEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728096737; c=relaxed/simple;
-	bh=dE0TRlBSQC33+lFNA6HpU9XHd230T74zs6hwVfeYngw=;
+	s=arc-20240116; t=1728097101; c=relaxed/simple;
+	bh=SQlwTbK5SKrXFBN9/Z/GrEAuXZtndESsdP5L3sjTr7o=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=BkNlA1Gj60FsahJsf+DU6T8nVodxgsrEL3uXC7WZRN7FC0uOFDtW74gwhLwdBO6Nm2jrrdbOqNUZ0z413eUYkec26VdtZum1PkhOzLrxC7wR+736adTFNtDRx1rTOjxsoyuR2nn7Wrb8NvVMpWigpb5Jb7CY8ZwnPUGbEUVMKkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=none smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=QXkTDgRe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PDGUoyp8; arc=none smtp.client-ip=103.168.172.144
+	 In-Reply-To:Content-Type; b=S8nzu+izfvDCIwkm0TL7pV8Tfg8kBC24Dt3utWtomOh734r0RlBihb0O/VXxSihKdD211jR7uQ1ge7r3RofZc+cFuIbXCs5VemFAqEMu99I5/njHMLv8L+zALA/LAhuuGuq5u4Fypx7d4WYeRwVGrXGS1AznEGP2en0JIcU6Bgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=none smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=as8dDuC0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PXabLT+z; arc=none smtp.client-ip=103.168.172.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=themaw.net
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id EAD6B13805E2;
-	Fri,  4 Oct 2024 22:52:13 -0400 (EDT)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 7839D13806F5;
+	Fri,  4 Oct 2024 22:58:18 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Fri, 04 Oct 2024 22:52:13 -0400
+  by phl-compute-09.internal (MEProxy); Fri, 04 Oct 2024 22:58:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
 	:content-transfer-encoding:content-type:content-type:date:date
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1728096733;
-	 x=1728183133; bh=hRz7gOzr/dtzs2GST6e9Dd7M2xwsXMtU69eXI/gvBcs=; b=
-	QXkTDgRenHYBCv72cI+c12KAaloBCYBvO9hDPXqZ6bheFLcRLALbtyQusr1JoZKL
-	gfU4J/84BgqzYMD8Aj6dHuIhmFqbp+6eEzF+gzbPu7sCwNujfwL56q4wrRAf0JGi
-	DC8mXOPaaKUYyGz8rnXG7e3OlExwsCrmXoa+4ktsXtURrwVB+xkdbZJZKPL9Gk7J
-	2CCBxxeibQo7dZdkke0OxprCDIsDflTwWHTqNm6QUxC/6rVpUOmNg2KLtsgpSIcD
-	H5auPrR8ctp2TgXhYpxH37XtH0NoMAZAsPshcOQSV8afojFOhg9iMjyVQBa1JoLd
-	wqFpmQUw3G3IyVQ+xOas8Q==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1728097098;
+	 x=1728183498; bh=s4yRWrVoegPnIlcSg7W2T/j3rBXl4xv/JOXV5IvncVQ=; b=
+	as8dDuC02WVzwprZA72OJaynzBd2ttEfV4Zx4Emrgxk2ylvmfOzWrY5Cx+86n2pk
+	uNeSLcQeYejSbpR3ajQH4TaE/PcRDqbCnxaHhNpQg7tvM25+IXrjTaewfHavvCtk
+	wUuoVQNFNKXZ+MsNW6YxKtKQsIYvcg9Nh/cU3wb9mkjEvIRVFL2xt38ZRcXoUcoQ
+	6zLNlp8A90dE2CoXH97sRehwFYeD5Q1fcEHMj5z+hb7GLGe2L+JAb78FDbLP83QT
+	EudNFnzuyo03QjK/TL39TTLRdYIDAnl8XLheTDwzq0Du3BWOIG3q/xv9+11tzp3y
+	VjzDuz9sqIQFiYc8lWsXsg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:content-type
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728096733; x=
-	1728183133; bh=hRz7gOzr/dtzs2GST6e9Dd7M2xwsXMtU69eXI/gvBcs=; b=P
-	DGUoyp8TxdZLUArMJhADl1QL/8dxGGWZybcPRYzC0lP2oWoQ154vEWeCSxL8TlYa
-	dEXgk30X2J8V/bHDPG94mUlJBskIMT3n1I2QRGgWiUyq+Zwu/qFH9fe8kkIqLBgB
-	QDdzci4GOwSm/+Q5gKOq7yY4dGRQ51VksDo5QQvMc/oHAErAJ63gu2i56Am38gyJ
-	zLUfKReRDlQMdLdPzwcsYEPXBTRGUuJ8ohYOLWFu7bHjesWSqyuIpxzEBWuNj1ON
-	KePsG5546D4p5e6WsAg9BqQQyzTqVBrUy/tq9Cvfz620eVSu0lAmUzsaDWDD/vL0
-	sg9ScWnDWRh7p/IfXMSRw==
-X-ME-Sender: <xms:3akAZxYUMIt2z5rsR85RSJ2k9wcipsGjrMMThWuoSQjLmm3TZ5wE4g>
-    <xme:3akAZ4ZtwlWVN-ZwnS-rsnJzndTgenwN-vJhH7ckkDRpv6_fXgtQotGfs0zgpYExI
-    HNH34Gh-kso>
-X-ME-Received: <xmr:3akAZz9eF1VerZ0S7redFyCvaCumQ9x_dn8I-1utPK9IqZF8QnGWyeHPKXMoWETeqx-yTtz81RLfMzynE_0ZtFF7R3L3OXoxZ7yMCEl_prT2HCPuD7hXJyqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieehucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728097098; x=
+	1728183498; bh=s4yRWrVoegPnIlcSg7W2T/j3rBXl4xv/JOXV5IvncVQ=; b=P
+	XabLT+zbhqOzhB529r+7taCa/RDAteKa6JS90zXvUcoX3/HD6xyUqaEYd4ctcz/t
+	UOjOWSO3ni0ltmgyVp/Ug8ICSLfcDFeHAr/gJzyNuL1WTze9J8itcUum+DYPX6mT
+	kC9ERdwqNvFFa2GjUhOH6AZyS5Rtd+NEQu+Z9ShwY9NlK5OnpCRwSZvwt7MZ/k0t
+	i71sUGFLn1jqyvd1FTDiXbM/WbpT6jXmEY1sveDnzc015LQHxtxgw+o9XMIGj2oI
+	RhODLtiKGvj3I6fAJMMWCxQc2f2OW8zSL8ixSLGKvtHVeKUe4SCKsEXCcJK16GQ8
+	CY3IJcvHUdnRMGQMjZ1aQ==
+X-ME-Sender: <xms:SqsAZ5zlKN2pE_y-we5w0pe-b1OiGqPN70zMUrdmFf_66KVnQi9bGw>
+    <xme:SqsAZ5QHeiSgydTfapPMdW1M-TktyPvdTqWCZY2u2XF2Zj42AQUMCwnKevurR7Tz8
+    yXed_aUQ2a0>
+X-ME-Received: <xmr:SqsAZzWKlHaCqxDh2Di7tii8XJMoffBNq-TehO3Jearg6FTpfX7GNoLBFyoyfDndEOYrZ9KoeDT-G6ya_3BqBXEG2J__2CYjWnAY6ziLQpjIYah7WAn53KFx>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
     htshculddquddttddmnecujfgurhepkfffgggfuffhvfhfjggtgfesthekredttddvjeen
@@ -76,16 +76,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieehucetufdoteggod
     uggvpehsmhhtphhouhhtpdhrtghpthhtohepshhtvghvvggusehrvgguhhgrthdrtghomh
     dprhgtphhtthhopehhvggurhhitghksehruhhtghgvrhhsrdgvughupdhrtghpthhtohep
     lhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:3akAZ_omlwKeBF1ytst7Nkc26kV6kEKKFiQ4lCbxpquK26iXUZKXyQ>
-    <xmx:3akAZ8r4G95dTlrdPRpxy_xQ3b7-q6u8ecMP1cINXxTcLR5O3U-Dhw>
-    <xmx:3akAZ1QGjbpbEmK4Wz_sQuRZ4a5MqqPadwFLTJMbCSkigl2h-U15Xw>
-    <xmx:3akAZ0q7yEHTFLHJS01Gh7drZB_720uDgzRc4DNJm3CaU4pyTc9RDg>
-    <xmx:3akAZz2VHSnGy39Tg8chnxhUdBrMzBWhXE43ms8eOw3mxjI8TQgJiBu9>
+X-ME-Proxy: <xmx:SqsAZ7jiKZWBE4lNNcndZKS7fTQF54qSRlkyUZo6stB6IBg-lk5RlQ>
+    <xmx:SqsAZ7CcavKKGTpZ_fysnKsOKz8fWlU2vOyRnCugHR4ROvwUIz9u-A>
+    <xmx:SqsAZ0JzUZPY7sWitnx2T8J_PkK71XwZKpFUAh34yTE3TfMBObFdUw>
+    <xmx:SqsAZ6DwsNY42B7ooqquCwSnwZ8LlvU_oX7ZdAh2mZfzWcBPd9A9WA>
+    <xmx:SqsAZ-OPSimnG6UIO6MOV9wEC20yU8vanw4FVOyBT8cuq16r877gHwoV>
 Feedback-ID: i31e841b0:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Oct 2024 22:52:12 -0400 (EDT)
-Message-ID: <6ed52868-0743-49e5-a738-acd8063f0751@themaw.net>
-Date: Sat, 5 Oct 2024 10:52:09 +0800
+ 4 Oct 2024 22:58:16 -0400 (EDT)
+Message-ID: <b6744232-7d0b-4278-a71a-b9d744b8372d@themaw.net>
+Date: Sat, 5 Oct 2024 10:58:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -148,12 +148,10 @@ In-Reply-To: <fb80e74f-177f-4ff8-8987-8d4d313286cc@themaw.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Here we go again ...
+
 On 5/10/24 10:47, Ian Kent wrote:
 > Umm, let's try that again ...
-
-Actually that's not quite right.
-
-
 >
 > On 5/10/24 10:41, Ian Kent wrote:
 >> Hi Steve,
@@ -185,112 +183,83 @@ Actually that's not quite right.
 >> could have multiple concurrent callers.
 >>
 >>
->> You could use domething like this ...
->>
->>
->> nfs-utils: use getpwuid_r() and getpwnam_r() in gssd From: Ian Kent 
->> <raven@themaw.net> gssd uses getpwuid(3) and getpwnam(3) in a 
->> pthreads context but these functions are not thread safe. 
->> Signed-off-by: Ian Kent <raven@themaw.net> --- utils/gssd/gssd_proc.c 
->> | 28 +++++++++++++++++++++------- 1 file changed, 21 insertions(+), 7 
->> deletions(-) diff --git a/utils/gssd/gssd_proc.c 
->> b/utils/gssd/gssd_proc.c index 2ad84c59..c718be6f 100644 --- 
->> a/utils/gssd/gssd_proc.c +++ b/utils/gssd/gssd_proc.c @@ -489,7 
->> +489,10 @@ success: static int change_identity(uid_t uid) { - struct 
->> passwd *pw; + struct passwd pw; + struct passwd *ppw; + char *pw_tmp; 
->> + long tmplen; int res; /* drop list of supplimentary groups first */ 
->> @@ -502,15 +505,25 @@ change_identity(uid_t uid) return errno; } + 
->> tmplen = sysconf(_SC_GETPW_R_SIZE_MAX); + if (tmplen < 0) + bufsize = 
->> 16384; + + pw_tmp = malloc(tmplen); + if (!pw_tmp) { + printerr(0, 
->> "WARNING: unable to allocate passwd buffer\n"); + return errno ? 
->> errno : ENOMEM; + } + /* try to get pwent for user */ - pw = 
->> getpwuid(uid); - if (!pw) { + res = getpwuid_r(uid, &pw, pw_tmp, 
->> tmplen, &ppw); + if (!ppw) { /* if that doesn't work, try to get one 
->> for "nobody" */ - errno = 0; - pw = getpwnam("nobody"); - if (!pw) { 
->> + res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw); + if (!ppw) 
->> { printerr(0, "WARNING: unable to determine gid for uid %u\n", uid); 
->> - return errno ? errno : ENOENT; + free(pw_tmp); + return res ? res : 
->> ENOENT; } } @@ -525,6 +538,7 @@ change_identity(uid_t uid) #else res 
->> = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid); #endif 
->> + free(pw_tmp); if (res != 0) { printerr(0, "WARNING: failed to set 
->> gid to %u!\n", pw->pw_gid); return errno;
->>
->>
->
-> You could use something like this ...
->
->
-> nfs-utils: use getpwuid_r() and getpwnam_r() in gssd
->
-> From: Ian Kent <raven@themaw.net>
->
-> gssd uses getpwuid(3) and getpwnam(3) in a pthreads context but
-> these functions are not thread safe.
->
-> Signed-off-by: Ian Kent <raven@themaw.net>
-> ---
->  utils/gssd/gssd_proc.c |   28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
->
-> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-> index 2ad84c59..c718be6f 100644
-> --- a/utils/gssd/gssd_proc.c
-> +++ b/utils/gssd/gssd_proc.c
-> @@ -489,7 +489,10 @@ success:
->  static int
->  change_identity(uid_t uid)
->  {
-> -       struct passwd   *pw;
-> +       struct passwd  pw;
-> +       struct passwd *ppw;
-> +       char *pw_tmp;
-> +       long tmplen;
->         int res;
->
->         /* drop list of supplimentary groups first */
-> @@ -502,15 +505,25 @@ change_identity(uid_t uid)
->                 return errno;
->         }
->
-> +       tmplen = sysconf(_SC_GETPW_R_SIZE_MAX);
-> +       if (tmplen < 0)
-> +               bufsize = 16384;
-> +
-> +       pw_tmp = malloc(tmplen);
-> +       if (!pw_tmp) {
-> +               printerr(0, "WARNING: unable to allocate passwd 
-> buffer\n");
-> +               return errno ? errno : ENOMEM;
-> +       }
-> +
->         /* try to get pwent for user */
-> -       pw = getpwuid(uid);
-> -       if (!pw) {
-> +       res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw);
-> +       if (!ppw) {
->                 /* if that doesn't work, try to get one for "nobody" */
-> -               errno = 0;
-> -               pw = getpwnam("nobody");
-> -               if (!pw) {
-> +               res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw);
-> +               if (!ppw) {
->                         printerr(0, "WARNING: unable to determine gid 
-> for uid %u\n", uid);
-> -                       return errno ? errno : ENOENT;
-> +                       free(pw_tmp);
-> +                       return res ? res : ENOENT;
->                 }
->         }
->
-> @@ -525,6 +538,7 @@ change_identity(uid_t uid)
->  #else
->         res = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid);
->  #endif
-> +       free(pw_tmp);
->         if (res != 0) {
->                 printerr(0, "WARNING: failed to set gid to %u!\n", 
-> pw->pw_gid);
->                 return errno;
->
->
+
+[PATCH} nfs-utils: use getpwuid_r() and getpwnam_r() in gssd
+
+
+gssd uses getpwuid(3) and getpwnam(3) in a pthreads context but
+these functions are not thread safe.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+
+diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
+index 2ad84c59..2a376b8f 100644
+--- a/utils/gssd/gssd_proc.c
++++ b/utils/gssd/gssd_proc.c
+@@ -489,7 +489,10 @@ success:
+  static int
+  change_identity(uid_t uid)
+  {
+-       struct passwd   *pw;
++       struct passwd  pw;
++       struct passwd *ppw;
++       char *pw_tmp;
++       long tmplen;
+         int res;
+
+         /* drop list of supplimentary groups first */
+@@ -502,15 +505,25 @@ change_identity(uid_t uid)
+                 return errno;
+         }
+
++       tmplen = sysconf(_SC_GETPW_R_SIZE_MAX);
++       if (tmplen < 0)
++               bufsize = 16384;
++
++       pw_tmp = malloc(tmplen);
++       if (!pw_tmp) {
++               printerr(0, "WARNING: unable to allocate passwd buffer\n");
++               return errno ? errno : ENOMEM;
++       }
++
+         /* try to get pwent for user */
+-       pw = getpwuid(uid);
+-       if (!pw) {
++       res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw);
++       if (!ppw) {
+                 /* if that doesn't work, try to get one for "nobody" */
+-               errno = 0;
+-               pw = getpwnam("nobody");
+-               if (!pw) {
++               res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw);
++               if (!ppw) {
+                         printerr(0, "WARNING: unable to determine gid 
+for uid %u\n", uid);
+-                       return errno ? errno : ENOENT;
++                       free(pw_tmp);
++                       return res ? res : ENOENT;
+                 }
+         }
+
+@@ -521,12 +534,13 @@ change_identity(uid_t uid)
+          * other threads. To bypass this, we have to call syscall() 
+directly.
+          */
+  #ifdef __NR_setresgid32
+-       res = syscall(SYS_setresgid32, pw->pw_gid, pw->pw_gid, pw->pw_gid);
++       res = syscall(SYS_setresgid32, pw.pw_gid, pw.pw_gid, pw.pw_gid);
+  #else
+-       res = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid);
++       res = syscall(SYS_setresgid, pw.pw_gid, pw.pw_gid, pw.pw_gid);
+  #endif
++       free(pw_tmp);
+         if (res != 0) {
+-               printerr(0, "WARNING: failed to set gid to %u!\n", 
+pw->pw_gid);
++               printerr(0, "WARNING: failed to set gid to %u!\n", 
+pw.pw_gid);
+                 return errno;
+         }
+
+
 
