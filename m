@@ -1,71 +1,71 @@
-Return-Path: <linux-nfs+bounces-6873-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6874-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85FE1991402
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 04:48:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C124B991403
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 04:52:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39412284DFD
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 02:48:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5191A284F2F
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 02:52:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3747B17BD5;
-	Sat,  5 Oct 2024 02:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2504617BD5;
+	Sat,  5 Oct 2024 02:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="O3lu8bAj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aFBocgY5"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="QXkTDgRe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PDGUoyp8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE5710A18
-	for <linux-nfs@vger.kernel.org>; Sat,  5 Oct 2024 02:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C4610A18
+	for <linux-nfs@vger.kernel.org>; Sat,  5 Oct 2024 02:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728096484; cv=none; b=oM28ls7GoMrRtbH87Lm3zvqbZAng7Sdu1s+CoXHfr/NTnOXIcCEipK3UC1sn52/Anm7Q9uas95YIFV6j95dOLHfSzwGjD27J0Fxzpp1govZU3NVT6SqG059gttL3GqC79mB4tB5Opr3E+dlYxRC10DTDEkR81QMzGRUC5a4VAWY=
+	t=1728096737; cv=none; b=PC40fUl8sA3O7vJHsHG8jruQZHNwUcsje8TLyB7p8Q52nQ9A7NlBk+kI1G6/4XlCpEQ7qEOVYJ0oVEhAZBDReWE3/GmXlb5W9pDODs8ej+T1m+iat59OvO1qGsQ8Re54Vy4Qe+d8wjKiG9fNdtnFWGB8MzRIe5uKJRUbcUyrb7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728096484; c=relaxed/simple;
-	bh=WT6bLQqD2moZUrgJgH06hfmIc47S9z6Uuwjypp292fo=;
+	s=arc-20240116; t=1728096737; c=relaxed/simple;
+	bh=dE0TRlBSQC33+lFNA6HpU9XHd230T74zs6hwVfeYngw=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=fp8tUvWmh0Zi60L5oT37/grY9UUsftYuaHQTu00MAiuBPhIpjQ87wKNy5rVLJVzH+hYfOGGYDYPTZqR4VgNSU6c/UBHga3zd5tBQKBSeA+ek6Y+Pa5ULPWS38Ag9ihGsGGZfJj2ybowP3fR0zFsVoF/rPFBDHsrZikpULoYIbFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=none smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=O3lu8bAj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aFBocgY5; arc=none smtp.client-ip=103.168.172.151
+	 In-Reply-To:Content-Type; b=BkNlA1Gj60FsahJsf+DU6T8nVodxgsrEL3uXC7WZRN7FC0uOFDtW74gwhLwdBO6Nm2jrrdbOqNUZ0z413eUYkec26VdtZum1PkhOzLrxC7wR+736adTFNtDRx1rTOjxsoyuR2nn7Wrb8NvVMpWigpb5Jb7CY8ZwnPUGbEUVMKkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=none smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=QXkTDgRe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PDGUoyp8; arc=none smtp.client-ip=103.168.172.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=themaw.net
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id 00CDD13806C7;
-	Fri,  4 Oct 2024 22:48:01 -0400 (EDT)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id EAD6B13805E2;
+	Fri,  4 Oct 2024 22:52:13 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Fri, 04 Oct 2024 22:48:01 -0400
+  by phl-compute-12.internal (MEProxy); Fri, 04 Oct 2024 22:52:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
 	:content-transfer-encoding:content-type:content-type:date:date
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1728096480;
-	 x=1728182880; bh=L0uZa72Z3FxaPKhRY8Ca4GE1e8XlXuBY3J+GAOjMVkA=; b=
-	O3lu8bAjobIQKzDrqINnpacviMFK98Qr26wIM/aWYZePzXKuF0RPSACR3O+q4wMW
-	Mza3M/+A1SuZTrG+JQjQgVVyihvi8mxm/LeqwBaOF/30hSgAomqmZryLTKVSf4/s
-	Cgta6jtDDaMiQQlxOQ7CTXLXEp8MoewkKF9pnT/EE8RGxNNqTh6HQfGjMwMjAwLW
-	u6hKx6d1VDHsHEF0DK8jnZymZdqoNAbTWuFoEIqz9PKtB3VUGqPT0IFRG4GSeMQV
-	TWXHKqdG/4nx8kS7OP5lW6wktPMsZwnWzddFX8RtpnrinDoLs/lHIUOAXFr1/OZF
-	r+8GfTIFl5jL/5JhomNBag==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1728096733;
+	 x=1728183133; bh=hRz7gOzr/dtzs2GST6e9Dd7M2xwsXMtU69eXI/gvBcs=; b=
+	QXkTDgRenHYBCv72cI+c12KAaloBCYBvO9hDPXqZ6bheFLcRLALbtyQusr1JoZKL
+	gfU4J/84BgqzYMD8Aj6dHuIhmFqbp+6eEzF+gzbPu7sCwNujfwL56q4wrRAf0JGi
+	DC8mXOPaaKUYyGz8rnXG7e3OlExwsCrmXoa+4ktsXtURrwVB+xkdbZJZKPL9Gk7J
+	2CCBxxeibQo7dZdkke0OxprCDIsDflTwWHTqNm6QUxC/6rVpUOmNg2KLtsgpSIcD
+	H5auPrR8ctp2TgXhYpxH37XtH0NoMAZAsPshcOQSV8afojFOhg9iMjyVQBa1JoLd
+	wqFpmQUw3G3IyVQ+xOas8Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:content-type
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728096480; x=
-	1728182880; bh=L0uZa72Z3FxaPKhRY8Ca4GE1e8XlXuBY3J+GAOjMVkA=; b=a
-	FBocgY5YrqaTbftd87tTQikoSUZ8Ehw0x3zcJ9EFEkOk6eMgTCZSbs15bZjwc7B6
-	zFxkAdEC7o9xAUyf6jtFbduCDbq1/Pmy/NX8NetDIoo6827EC/H0KvdvUZQk9Q9e
-	8FHZ0J2r6ffb+bEZp87PGq+Nw1KeUbffMBLSncqDo67/sJO6af9r/XqZqkYaQAtG
-	rHSItH+1HJMypA3oMjfrJeezKW1DXQpngvVXPJtrh4lYC8sDxZdz+hoGWAvAbeQX
-	TZFbfhUXSSaH+KuYoYtCaRl5Db24cpCgDURjlqz7irqeLtl+ZGuKLzy5G17RUCOf
-	HF7IDfpBg1rrOX4m3ALKA==
-X-ME-Sender: <xms:4KgAZwojjgEukGo-ekaTPKLIW4kapRiwOlE6oEnFu5jwYmtQp2q9nw>
-    <xme:4KgAZ2oDLp43JHBB0mTn_PU_aQRPCRJJ8APBi2l_vkMqC8Ft6r7-Vg7K4Uiz5Ia_I
-    gEOvlFqthoO>
-X-ME-Received: <xmr:4KgAZ1MIwbmfyZyLS-kWLCmCGao6EsXGEcPcE30x6W_wUKSAC1p8hke99-oudx1iVP2r9uOfaTEFNJEZzQr5UzcxZM7okh0uEEr1j95U8jfous3qQFiCzPZs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieegucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728096733; x=
+	1728183133; bh=hRz7gOzr/dtzs2GST6e9Dd7M2xwsXMtU69eXI/gvBcs=; b=P
+	DGUoyp8TxdZLUArMJhADl1QL/8dxGGWZybcPRYzC0lP2oWoQ154vEWeCSxL8TlYa
+	dEXgk30X2J8V/bHDPG94mUlJBskIMT3n1I2QRGgWiUyq+Zwu/qFH9fe8kkIqLBgB
+	QDdzci4GOwSm/+Q5gKOq7yY4dGRQ51VksDo5QQvMc/oHAErAJ63gu2i56Am38gyJ
+	zLUfKReRDlQMdLdPzwcsYEPXBTRGUuJ8ohYOLWFu7bHjesWSqyuIpxzEBWuNj1ON
+	KePsG5546D4p5e6WsAg9BqQQyzTqVBrUy/tq9Cvfz620eVSu0lAmUzsaDWDD/vL0
+	sg9ScWnDWRh7p/IfXMSRw==
+X-ME-Sender: <xms:3akAZxYUMIt2z5rsR85RSJ2k9wcipsGjrMMThWuoSQjLmm3TZ5wE4g>
+    <xme:3akAZ4ZtwlWVN-ZwnS-rsnJzndTgenwN-vJhH7ckkDRpv6_fXgtQotGfs0zgpYExI
+    HNH34Gh-kso>
+X-ME-Received: <xmr:3akAZz9eF1VerZ0S7redFyCvaCumQ9x_dn8I-1utPK9IqZF8QnGWyeHPKXMoWETeqx-yTtz81RLfMzynE_0ZtFF7R3L3OXoxZ7yMCEl_prT2HCPuD7hXJyqs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
     htshculddquddttddmnecujfgurhepkfffgggfuffhvfhfjggtgfesthekredttddvjeen
@@ -76,16 +76,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgedgieegucetufdoteggod
     uggvpehsmhhtphhouhhtpdhrtghpthhtohepshhtvghvvggusehrvgguhhgrthdrtghomh
     dprhgtphhtthhopehhvggurhhitghksehruhhtghgvrhhsrdgvughupdhrtghpthhtohep
     lhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:4KgAZ36JEnCXaq1ik7jBxAzloszOacj8l2v3sM2TZUop5a93z8l1zA>
-    <xmx:4KgAZ_6C15-wX3SLW9c1qI2NoZgUo6Plr58mzJFtTvsJdUCAxRYPiQ>
-    <xmx:4KgAZ3iWgTVJgPSzPggBeAbEhIkOi779F2TytDF7Um8qgLTd7WFImg>
-    <xmx:4KgAZ55ymm5Zc_w_wE1BfP8H57QTTgI05HBisZEjhQljJZTlh61nDQ>
-    <xmx:4KgAZ_GxpOJ7OK-IFkbgzYVa_0jgp2wYE9UlTKvp8GXmXreWLQPA-88v>
+X-ME-Proxy: <xmx:3akAZ_omlwKeBF1ytst7Nkc26kV6kEKKFiQ4lCbxpquK26iXUZKXyQ>
+    <xmx:3akAZ8r4G95dTlrdPRpxy_xQ3b7-q6u8ecMP1cINXxTcLR5O3U-Dhw>
+    <xmx:3akAZ1QGjbpbEmK4Wz_sQuRZ4a5MqqPadwFLTJMbCSkigl2h-U15Xw>
+    <xmx:3akAZ0q7yEHTFLHJS01Gh7drZB_720uDgzRc4DNJm3CaU4pyTc9RDg>
+    <xmx:3akAZz2VHSnGy39Tg8chnxhUdBrMzBWhXE43ms8eOw3mxjI8TQgJiBu9>
 Feedback-ID: i31e841b0:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 4 Oct 2024 22:47:59 -0400 (EDT)
-Message-ID: <fb80e74f-177f-4ff8-8987-8d4d313286cc@themaw.net>
-Date: Sat, 5 Oct 2024 10:47:56 +0800
+ 4 Oct 2024 22:52:12 -0400 (EDT)
+Message-ID: <6ed52868-0743-49e5-a738-acd8063f0751@themaw.net>
+Date: Sat, 5 Oct 2024 10:52:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -100,6 +100,7 @@ To: Steve Dickson <steved@redhat.com>, Charles Hedrick <hedrick@rutgers.edu>,
 References: <PH0PR14MB5493F5F79BCAE03BF2C25ED6AA722@PH0PR14MB5493.namprd14.prod.outlook.com>
  <0654ecc2-74fa-4e50-8878-bf37f17a5748@redhat.com>
  <209f2590-9bc6-4c01-a14b-87b7575a6f20@themaw.net>
+ <fb80e74f-177f-4ff8-8987-8d4d313286cc@themaw.net>
 Content-Language: en-US
 Autocrypt: addr=raven@themaw.net;
  keydata= xsFNBE6c/ycBEADdYbAI5BKjE+yw+dOE+xucCEYiGyRhOI9JiZLUBh+PDz8cDnNxcCspH44o
@@ -143,146 +144,153 @@ Autocrypt: addr=raven@themaw.net;
  +coCSBkOU1xMiW5Td7QwkNmtXKHyEF6dxCAMK1KHIqxrBaZO27PEDSHaIPHePi7y4KKq9C9U
  8k5V5dFA0mqH/st9Sw6tFbqPkqjvvMLETDPVxOzinpU2VBGhce4wufSIoVLOjQnbIo1FIqWg
  Dx24eHv235mnNuGHrG+EapIh7g/67K0uAzwp17eyUYlE5BMcwRlaHMuKTil6
-In-Reply-To: <209f2590-9bc6-4c01-a14b-87b7575a6f20@themaw.net>
+In-Reply-To: <fb80e74f-177f-4ff8-8987-8d4d313286cc@themaw.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Umm, let's try that again ...
+On 5/10/24 10:47, Ian Kent wrote:
+> Umm, let's try that again ...
 
-On 5/10/24 10:41, Ian Kent wrote:
-> Hi Steve,
+Actually that's not quite right.
+
+
 >
-> On 5/10/24 03:54, Steve Dickson wrote:
->> Hello,
+> On 5/10/24 10:41, Ian Kent wrote:
+>> Hi Steve,
 >>
->> On 10/4/24 2:14 PM, Charles Hedrick wrote:
->>> While looking into a problem that turns out to be somewhere else, I 
->>> noticed that in gssd_proc.c , getpwuid is used. The context is 
->>> threaded, and I verified with strace that the thread is sharing 
->>> memory with other threads. I believe this should be changed to 
->>> getpwuid_r. Similarly the following call to getpwnam.
+>> On 5/10/24 03:54, Steve Dickson wrote:
+>>> Hello,
 >>>
->>> Is this the right place for reports on nfs-utils?
->> Yes... but I'm not a fan of change code, that been around
->> for a while, without fixing a problem... What problem does changing
->> getpwuid to getpwuid_r fix?
+>>> On 10/4/24 2:14 PM, Charles Hedrick wrote:
+>>>> While looking into a problem that turns out to be somewhere else, I 
+>>>> noticed that in gssd_proc.c , getpwuid is used. The context is 
+>>>> threaded, and I verified with strace that the thread is sharing 
+>>>> memory with other threads. I believe this should be changed to 
+>>>> getpwuid_r. Similarly the following call to getpwnam.
+>>>>
+>>>> Is this the right place for reports on nfs-utils?
+>>> Yes... but I'm not a fan of change code, that been around
+>>> for a while, without fixing a problem... What problem does changing
+>>> getpwuid to getpwuid_r fix?
+>>>
+>>> Patches are always welcome!
+>>>
+>>> steved.
+>>>
+>>>
 >>
->> Patches are always welcome!
+>> Yeah, getpwuid(3) and getpwnam() aren't thread safe and presumably 
+>> gssd is a service so it
 >>
->> steved.
+>> could have multiple concurrent callers.
+>>
+>>
+>> You could use domething like this ...
+>>
+>>
+>> nfs-utils: use getpwuid_r() and getpwnam_r() in gssd From: Ian Kent 
+>> <raven@themaw.net> gssd uses getpwuid(3) and getpwnam(3) in a 
+>> pthreads context but these functions are not thread safe. 
+>> Signed-off-by: Ian Kent <raven@themaw.net> --- utils/gssd/gssd_proc.c 
+>> | 28 +++++++++++++++++++++------- 1 file changed, 21 insertions(+), 7 
+>> deletions(-) diff --git a/utils/gssd/gssd_proc.c 
+>> b/utils/gssd/gssd_proc.c index 2ad84c59..c718be6f 100644 --- 
+>> a/utils/gssd/gssd_proc.c +++ b/utils/gssd/gssd_proc.c @@ -489,7 
+>> +489,10 @@ success: static int change_identity(uid_t uid) { - struct 
+>> passwd *pw; + struct passwd pw; + struct passwd *ppw; + char *pw_tmp; 
+>> + long tmplen; int res; /* drop list of supplimentary groups first */ 
+>> @@ -502,15 +505,25 @@ change_identity(uid_t uid) return errno; } + 
+>> tmplen = sysconf(_SC_GETPW_R_SIZE_MAX); + if (tmplen < 0) + bufsize = 
+>> 16384; + + pw_tmp = malloc(tmplen); + if (!pw_tmp) { + printerr(0, 
+>> "WARNING: unable to allocate passwd buffer\n"); + return errno ? 
+>> errno : ENOMEM; + } + /* try to get pwent for user */ - pw = 
+>> getpwuid(uid); - if (!pw) { + res = getpwuid_r(uid, &pw, pw_tmp, 
+>> tmplen, &ppw); + if (!ppw) { /* if that doesn't work, try to get one 
+>> for "nobody" */ - errno = 0; - pw = getpwnam("nobody"); - if (!pw) { 
+>> + res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw); + if (!ppw) 
+>> { printerr(0, "WARNING: unable to determine gid for uid %u\n", uid); 
+>> - return errno ? errno : ENOENT; + free(pw_tmp); + return res ? res : 
+>> ENOENT; } } @@ -525,6 +538,7 @@ change_identity(uid_t uid) #else res 
+>> = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid); #endif 
+>> + free(pw_tmp); if (res != 0) { printerr(0, "WARNING: failed to set 
+>> gid to %u!\n", pw->pw_gid); return errno;
 >>
 >>
 >
-> Yeah, getpwuid(3) and getpwnam() aren't thread safe and presumably 
-> gssd is a service so it
->
-> could have multiple concurrent callers.
+> You could use something like this ...
 >
 >
-> You could use domething like this ...
+> nfs-utils: use getpwuid_r() and getpwnam_r() in gssd
+>
+> From: Ian Kent <raven@themaw.net>
+>
+> gssd uses getpwuid(3) and getpwnam(3) in a pthreads context but
+> these functions are not thread safe.
+>
+> Signed-off-by: Ian Kent <raven@themaw.net>
+> ---
+>  utils/gssd/gssd_proc.c |   28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+>
+> diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
+> index 2ad84c59..c718be6f 100644
+> --- a/utils/gssd/gssd_proc.c
+> +++ b/utils/gssd/gssd_proc.c
+> @@ -489,7 +489,10 @@ success:
+>  static int
+>  change_identity(uid_t uid)
+>  {
+> -       struct passwd   *pw;
+> +       struct passwd  pw;
+> +       struct passwd *ppw;
+> +       char *pw_tmp;
+> +       long tmplen;
+>         int res;
+>
+>         /* drop list of supplimentary groups first */
+> @@ -502,15 +505,25 @@ change_identity(uid_t uid)
+>                 return errno;
+>         }
+>
+> +       tmplen = sysconf(_SC_GETPW_R_SIZE_MAX);
+> +       if (tmplen < 0)
+> +               bufsize = 16384;
+> +
+> +       pw_tmp = malloc(tmplen);
+> +       if (!pw_tmp) {
+> +               printerr(0, "WARNING: unable to allocate passwd 
+> buffer\n");
+> +               return errno ? errno : ENOMEM;
+> +       }
+> +
+>         /* try to get pwent for user */
+> -       pw = getpwuid(uid);
+> -       if (!pw) {
+> +       res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw);
+> +       if (!ppw) {
+>                 /* if that doesn't work, try to get one for "nobody" */
+> -               errno = 0;
+> -               pw = getpwnam("nobody");
+> -               if (!pw) {
+> +               res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw);
+> +               if (!ppw) {
+>                         printerr(0, "WARNING: unable to determine gid 
+> for uid %u\n", uid);
+> -                       return errno ? errno : ENOENT;
+> +                       free(pw_tmp);
+> +                       return res ? res : ENOENT;
+>                 }
+>         }
+>
+> @@ -525,6 +538,7 @@ change_identity(uid_t uid)
+>  #else
+>         res = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid);
+>  #endif
+> +       free(pw_tmp);
+>         if (res != 0) {
+>                 printerr(0, "WARNING: failed to set gid to %u!\n", 
+> pw->pw_gid);
+>                 return errno;
 >
 >
-> nfs-utils: use getpwuid_r() and getpwnam_r() in gssd From: Ian Kent 
-> <raven@themaw.net> gssd uses getpwuid(3) and getpwnam(3) in a pthreads 
-> context but these functions are not thread safe. Signed-off-by: Ian 
-> Kent <raven@themaw.net> --- utils/gssd/gssd_proc.c | 28 
-> +++++++++++++++++++++------- 1 file changed, 21 insertions(+), 7 
-> deletions(-) diff --git a/utils/gssd/gssd_proc.c 
-> b/utils/gssd/gssd_proc.c index 2ad84c59..c718be6f 100644 --- 
-> a/utils/gssd/gssd_proc.c +++ b/utils/gssd/gssd_proc.c @@ -489,7 
-> +489,10 @@ success: static int change_identity(uid_t uid) { - struct 
-> passwd *pw; + struct passwd pw; + struct passwd *ppw; + char *pw_tmp; 
-> + long tmplen; int res; /* drop list of supplimentary groups first */ 
-> @@ -502,15 +505,25 @@ change_identity(uid_t uid) return errno; } + 
-> tmplen = sysconf(_SC_GETPW_R_SIZE_MAX); + if (tmplen < 0) + bufsize = 
-> 16384; + + pw_tmp = malloc(tmplen); + if (!pw_tmp) { + printerr(0, 
-> "WARNING: unable to allocate passwd buffer\n"); + return errno ? errno 
-> : ENOMEM; + } + /* try to get pwent for user */ - pw = getpwuid(uid); 
-> - if (!pw) { + res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw); + if 
-> (!ppw) { /* if that doesn't work, try to get one for "nobody" */ - 
-> errno = 0; - pw = getpwnam("nobody"); - if (!pw) { + res = 
-> getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw); + if (!ppw) { 
-> printerr(0, "WARNING: unable to determine gid for uid %u\n", uid); - 
-> return errno ? errno : ENOENT; + free(pw_tmp); + return res ? res : 
-> ENOENT; } } @@ -525,6 +538,7 @@ change_identity(uid_t uid) #else res = 
-> syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid); #endif + 
-> free(pw_tmp); if (res != 0) { printerr(0, "WARNING: failed to set gid 
-> to %u!\n", pw->pw_gid); return errno;
->
->
-
-You could use something like this ...
-
-
-nfs-utils: use getpwuid_r() and getpwnam_r() in gssd
-
-From: Ian Kent <raven@themaw.net>
-
-gssd uses getpwuid(3) and getpwnam(3) in a pthreads context but
-these functions are not thread safe.
-
-Signed-off-by: Ian Kent <raven@themaw.net>
----
-  utils/gssd/gssd_proc.c |   28 +++++++++++++++++++++-------
-  1 file changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-index 2ad84c59..c718be6f 100644
---- a/utils/gssd/gssd_proc.c
-+++ b/utils/gssd/gssd_proc.c
-@@ -489,7 +489,10 @@ success:
-  static int
-  change_identity(uid_t uid)
-  {
--       struct passwd   *pw;
-+       struct passwd  pw;
-+       struct passwd *ppw;
-+       char *pw_tmp;
-+       long tmplen;
-         int res;
-
-         /* drop list of supplimentary groups first */
-@@ -502,15 +505,25 @@ change_identity(uid_t uid)
-                 return errno;
-         }
-
-+       tmplen = sysconf(_SC_GETPW_R_SIZE_MAX);
-+       if (tmplen < 0)
-+               bufsize = 16384;
-+
-+       pw_tmp = malloc(tmplen);
-+       if (!pw_tmp) {
-+               printerr(0, "WARNING: unable to allocate passwd buffer\n");
-+               return errno ? errno : ENOMEM;
-+       }
-+
-         /* try to get pwent for user */
--       pw = getpwuid(uid);
--       if (!pw) {
-+       res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw);
-+       if (!ppw) {
-                 /* if that doesn't work, try to get one for "nobody" */
--               errno = 0;
--               pw = getpwnam("nobody");
--               if (!pw) {
-+               res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw);
-+               if (!ppw) {
-                         printerr(0, "WARNING: unable to determine gid 
-for uid %u\n", uid);
--                       return errno ? errno : ENOENT;
-+                       free(pw_tmp);
-+                       return res ? res : ENOENT;
-                 }
-         }
-
-@@ -525,6 +538,7 @@ change_identity(uid_t uid)
-  #else
-         res = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid);
-  #endif
-+       free(pw_tmp);
-         if (res != 0) {
-                 printerr(0, "WARNING: failed to set gid to %u!\n", 
-pw->pw_gid);
-                 return errno;
-
 
