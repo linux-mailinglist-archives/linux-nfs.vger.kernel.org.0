@@ -1,204 +1,248 @@
-Return-Path: <linux-nfs+bounces-6884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8A4E991833
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 18:20:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0715B99185C
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 18:41:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D50DF1C2137A
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 16:20:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8244A1F2272F
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Oct 2024 16:41:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653E2155382;
-	Sat,  5 Oct 2024 16:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CB1156F39;
+	Sat,  5 Oct 2024 16:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJEJT57U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7bwzi3c"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8A514E2DA;
-	Sat,  5 Oct 2024 16:20:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED279156C52;
+	Sat,  5 Oct 2024 16:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728145250; cv=none; b=HZwZ/QLnmtCUTcxR2AKmHMqn+UdCtG7sPCwujoWojbasK+7MKY2L/3nEuP1W9NIFElX99jN3fWg+s/6B+U1FEuq329liQ5U32twrLUwVRnCr75r8gXYHEPk6Xt9vh5ARx2wQ6zJQRUTJmzCE5FDlgIilDaFQ/k2xYuGqH0QWJpI=
+	t=1728146501; cv=none; b=HaF/IBKEVvk7BnUBl3hYjZuu8HSH0e/j0xZlT0YNYw/v4Bf6mywGpIVdT0nO/ziBiSHkKaJzdOXuKhmjrt5PSfBaIDs25V3wfZjKZnpLSdUzXZqL/qlnhS+WOEJt62Jtpoc0sq/k0KjLxvPgYoVwF9tCacGWuNQfXKS5zpxs4iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728145250; c=relaxed/simple;
-	bh=4zSG82FHiLfWvZoo2FGvS7tuUZjlDBjb0YhrcTtxqcY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aGCO/9a411g2KRvW/cnPttcqQ4nThxTeqFUuQYTApkIFwwBSCpPM/TG5aNg2JNA7atVY65dKfsJAwD6Paph0J0AYI0QJd9YULRBvXsmOX3y8+aLcaN3mfi9VijmunfNwSn7YDabc3FEGcdYNvXNHZ+vYc6bVFXadIrDx8fUUwvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJEJT57U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CA0C4CEC2;
-	Sat,  5 Oct 2024 16:20:49 +0000 (UTC)
+	s=arc-20240116; t=1728146501; c=relaxed/simple;
+	bh=0GLbD2BI3h0+MjUsQCsdcXZMktjOxuGzHSyFE8XhhVE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CLpaPSqmu3fVNsffGJQXNyDjcjaHF3F3Q4Ukznxa1ZXJdwgDVG/J0DixbWD/KsX/MZl/GEq0wePjWTmQZ25a1V6n6uvZi8CiZV4lGRGgEqFJXvqyMJojs6PKwanoxPv0Ua4U8UT3ZxTpwnuyvy/ZMiIC8jdxzORtDl7hKK0JhEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7bwzi3c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 203DFC4CEC2;
+	Sat,  5 Oct 2024 16:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728145249;
-	bh=4zSG82FHiLfWvZoo2FGvS7tuUZjlDBjb0YhrcTtxqcY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=sJEJT57U9UuQm3VygDJqAqNroXoadymSkSsQ7QeMgKaRhtGGWm6Jdax9Aw0z9I+xq
-	 Da39YZHbcEOp3VzsCBr7h/3XaUKEivRRnLwAF5mF//wJ+aaKDMqkL3pi4LflE3e56k
-	 p8EWpxnesSb1E/jwPUNnNaFI9x3zjKfLOLFN9SBeeT/bH7fs7dX4rVab7oY8xBDswj
-	 GRCpd39gij71pEZmyPyimehKNGQsS/8VdEACbxZ4aVqrAJ7dmkgY855942rIqIr4eu
-	 diQEB4JSaJyn95sylas+FCQw3miutX0gjGkLpa87k99F2f29qkfuqcIkSt5peTXEye
-	 0b5V8nwXNCcvQ==
-Message-ID: <dad98a83996fd40909eedab57b5c050d1b6662a6.camel@kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: fix possible badness in FREE_STATEID
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia
-	 <okorniev@redhat.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
- "stable@vger.kernel.org"
-	 <stable@vger.kernel.org>, neilb@suse.de
-Date: Sat, 05 Oct 2024 12:20:48 -0400
-In-Reply-To: <ZwFS6P3Ni7KdTyJs@tissot.1015granger.net>
-References: <20241004220403.50034-1-okorniev@redhat.com>
-	 <ZwFS6P3Ni7KdTyJs@tissot.1015granger.net>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
+	s=k20201202; t=1728146500;
+	bh=0GLbD2BI3h0+MjUsQCsdcXZMktjOxuGzHSyFE8XhhVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=W7bwzi3cACmzv/9+WRa+s7OHv3JJyfqmNhyEz0/I2qonB1prWFdZKH+qVI+1/3TgX
+	 G5/lNgxkeDH30d5oc024IpxbE/6gTBIljymJQ14nV+TJNItETbLAMcsp45C5Gt894X
+	 Iwjli9k+sxRa6WzQG0pfvTViZ7mepj6BYyT8mhIs0ci1GRnwihbVZ8tIyrLeHonsbd
+	 K0uRS7OPVk6VbesUETBbJXfiaChUHyVVag3VMWDTnz+zn4hfmIlJA2iJK0tcmcSfdz
+	 UhcX/i0kFdyxMRDDOW2G/yszftxXY592dlgKpg66vdtKAypSOHmxwTAdqUWQ/qPqeq
+	 n1R7pjFYh2iiw==
+Received: by pali.im (Postfix)
+	id 8CE53648; Sat,  5 Oct 2024 18:41:33 +0200 (CEST)
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] nfsd: Fix NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT
+Date: Sat,  5 Oct 2024 18:40:39 +0200
+Message-Id: <20241005164039.21255-1-pali@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20240912221917.23802-1-pali@kernel.org>
+References: <20240912221917.23802-1-pali@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2024-10-05 at 10:53 -0400, Chuck Lever wrote:
-> On Fri, Oct 04, 2024 at 06:04:03PM -0400, Olga Kornievskaia wrote:
-> > When multiple FREE_STATEIDs are sent for the same delegation stateid,
-> > it can lead to a possible either use-after-tree or counter refcount
-> > underflow errors.
-> >=20
-> > In nfsd4_free_stateid() under the client lock we find a delegation
-> > stateid, however the code drops the lock before calling nfs4_put_stid()=
-,
-> > that allows another FREE_STATE to find the stateid again. The first one
-> > will proceed to then free the stateid which leads to either
-> > use-after-free or decrementing already zerod counter.
-> >=20
-> > CC: stable@vger.kernel.org
->=20
-> I assume that the broken commit is pretty old, but this fix does not
-> apply before v6.9 (where sc_status is introduced). I can add
-> "# v6.9+" to the Cc: stable tag.
->=20
+Currently NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT do not bypass
+only GSS, but bypass any method. This is a problem specially for NFS3
+AUTH_NULL-only exports.
 
-I don't know. It looks like nfsd4_free_stateid always returned
-NFS4ERR_LOCKS_HELD on a delegation stateid until 3f29cc82a84c.
+The purpose of NFSD_MAY_BYPASS_GSS_ON_ROOT is described in RFC 2623,
+section 2.3.2, to allow mounting NFS2/3 GSS-only export without
+authentication. So few procedures which do not expose security risk used
+during mount time can be called also with AUTH_NONE or AUTH_SYS, to allow
+client mount operation to finish successfully.
 
-> But what do folks think about a Fixes: tag?
->=20
-> Could be e1ca12dfb1be ("NFSD: added FREE_STATEID operation"), but
-> that doesn't have the switch statement, which was added by
-> 2da1cec713bc ("nfsd4: simplify free_stateid").
->=20
->=20
+The problem with current implementation is that for AUTH_NULL-only exports,
+the NFSD_MAY_BYPASS_GSS_ON_ROOT is active also for NFS3 AUTH_UNIX mount
+attempts which confuse NFS3 clients, and make them think that AUTH_UNIX is
+enabled and is working. Linux NFS3 client never switches from AUTH_UNIX to
+AUTH_NONE on active mount, which makes the mount inaccessible.
 
-Maybe this one?
+Fix the NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT implementation
+and really allow to bypass only exports which have enabled some real
+authentication (GSS, TLS, or any other).
 
-    3f29cc82a84c nfsd: split sc_status out of sc_type
+The result would be: For AUTH_NULL-only export if client attempts to do
+mount with AUTH_UNIX flavor then it will receive access errors, which
+instruct client that AUTH_UNIX flavor is not usable and will either try
+other auth flavor (AUTH_NULL if enabled) or fails mount procedure.
+Similarly if client attempt to do mount with AUTH_NULL flavor and only
+AUTH_UNIX flavor is enabled then the client will receive access error.
 
-That particular bit of the code (and the SC_STATUS_CLOSED flag) was
-added in that patch, and I don't think you'd want to apply this patch
-to anything that didn't have it.
+This should fix problems with AUTH_NULL-only or AUTH_UNIX-only exports if
+client attempts to mount it with other auth flavor (e.g. with AUTH_NULL for
+AUTH_UNIX-only export, or with AUTH_UNIX for AUTH_NULL-only export).
 
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > ---
-> >  fs/nfsd/nfs4state.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index ac1859c7cc9d..56b261608af4 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -7154,6 +7154,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct=
- nfsd4_compound_state *cstate,
-> >  	switch (s->sc_type) {
-> >  	case SC_TYPE_DELEG:
-> >  		if (s->sc_status & SC_STATUS_REVOKED) {
-> > +			s->sc_status |=3D SC_STATUS_CLOSED;
-> >  			spin_unlock(&s->sc_lock);
-> >  			dp =3D delegstateid(s);
-> >  			list_del_init(&dp->dl_recall_lru);
-> > --=20
-> > 2.43.5
-> >=20
->=20
+Signed-off-by: Pali Rohár <pali@kernel.org>
 
---=20
-Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+* Apply whole NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT logic not
+  only for GSS, but also for any method with the real authentication
+  (anything except RPC_AUTH_NULL, RPC_AUTH_UNIX and RPC_AUTH_SHORT).
+---
+ fs/nfsd/export.c   | 19 ++++++++++++++++++-
+ fs/nfsd/export.h   |  2 +-
+ fs/nfsd/nfs4proc.c |  2 +-
+ fs/nfsd/nfs4xdr.c  |  2 +-
+ fs/nfsd/nfsfh.c    | 12 +++++++++---
+ fs/nfsd/vfs.c      |  2 +-
+ 6 files changed, 31 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 50b3135d07ac..8a12876b9335 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -1074,7 +1074,7 @@ static struct svc_export *exp_find(struct cache_detail *cd,
+ 	return exp;
+ }
+ 
+-__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
++__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp, bool may_bypass_gss)
+ {
+ 	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
+ 	struct svc_xprt *xprt = rqstp->rq_xprt;
+@@ -1120,6 +1120,23 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
+ 	if (nfsd4_spo_must_allow(rqstp))
+ 		return 0;
+ 
++	/* Some calls may be processed without authentication
++	 * on GSS exports. For example NFS2/3 calls on root
++	 * directory, see section 2.3.2 of rfc 2623.
++	 * For "may_bypass_gss" check that export has really
++	 * enabled some flavor with authentication (GSS or any
++	 * other) and also check that the used auth flavor is
++	 * without authentication (none or sys).
++	 */
++	if (may_bypass_gss && (
++	     rqstp->rq_cred.cr_flavor == RPC_AUTH_NULL ||
++	     rqstp->rq_cred.cr_flavor == RPC_AUTH_UNIX)) {
++		for (f = exp->ex_flavors; f < end; f++) {
++			if (f->pseudoflavor >= RPC_AUTH_DES)
++				return 0;
++		}
++	}
++
+ denied:
+ 	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
+ }
+diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
+index ca9dc230ae3d..dc7cf4f6ac53 100644
+--- a/fs/nfsd/export.h
++++ b/fs/nfsd/export.h
+@@ -100,7 +100,7 @@ struct svc_expkey {
+ #define EX_WGATHER(exp)		((exp)->ex_flags & NFSEXP_GATHERED_WRITES)
+ 
+ int nfsexp_flags(struct svc_rqst *rqstp, struct svc_export *exp);
+-__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp);
++__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp, bool may_bypass_gss);
+ 
+ /*
+  * Function declarations
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 2e39cf2e502a..0f67f4a7b8b2 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2791,7 +2791,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 
+ 			if (current_fh->fh_export &&
+ 					need_wrongsec_check(rqstp))
+-				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
++				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
+ 		}
+ encode_op:
+ 		if (op->status == nfserr_replay_me) {
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 97f583777972..b45ea5757652 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3775,7 +3775,7 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
+ 			nfserr = nfserrno(err);
+ 			goto out_put;
+ 		}
+-		nfserr = check_nfsd_access(exp, cd->rd_rqstp);
++		nfserr = check_nfsd_access(exp, cd->rd_rqstp, false);
+ 		if (nfserr)
+ 			goto out_put;
+ 
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index dd4e11a703aa..ed0eabfa3cb0 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -329,6 +329,7 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ {
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+ 	struct svc_export *exp = NULL;
++	bool may_bypass_gss = false;
+ 	struct dentry	*dentry;
+ 	__be32		error;
+ 
+@@ -375,8 +376,13 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	 * which clients virtually always use auth_sys for,
+ 	 * even while using RPCSEC_GSS for NFS.
+ 	 */
+-	if (access & NFSD_MAY_LOCK || access & NFSD_MAY_BYPASS_GSS)
++	if (access & NFSD_MAY_LOCK)
+ 		goto skip_pseudoflavor_check;
++	/*
++	 * NFS4 PUTFH may bypass GSS (see nfsd4_putfh() in nfs4proc.c).
++	 */
++	if (access & NFSD_MAY_BYPASS_GSS)
++		may_bypass_gss = true;
+ 	/*
+ 	 * Clients may expect to be able to use auth_sys during mount,
+ 	 * even if they use gss for everything else; see section 2.3.2
+@@ -384,9 +390,9 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	 */
+ 	if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT
+ 			&& exp->ex_path.dentry == dentry)
+-		goto skip_pseudoflavor_check;
++		may_bypass_gss = true;
+ 
+-	error = check_nfsd_access(exp, rqstp);
++	error = check_nfsd_access(exp, rqstp, may_bypass_gss);
+ 	if (error)
+ 		goto out;
+ 
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 29b1f3613800..b2f5ea7c2187 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -320,7 +320,7 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
+ 	err = nfsd_lookup_dentry(rqstp, fhp, name, len, &exp, &dentry);
+ 	if (err)
+ 		return err;
+-	err = check_nfsd_access(exp, rqstp);
++	err = check_nfsd_access(exp, rqstp, false);
+ 	if (err)
+ 		goto out;
+ 	/*
+-- 
+2.20.1
+
 
