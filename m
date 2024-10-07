@@ -1,69 +1,145 @@
-Return-Path: <linux-nfs+bounces-6905-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6906-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3D5A992987
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Oct 2024 12:51:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FA109929A3
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Oct 2024 12:59:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E95E7B20BDD
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Oct 2024 10:51:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24C011F22B45
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Oct 2024 10:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 031021C878E;
-	Mon,  7 Oct 2024 10:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DF41D271C;
+	Mon,  7 Oct 2024 10:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xo6a7QoP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from outgoing.selfhost.de (mordac.selfhost.de [82.98.82.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C9918BC29
-	for <linux-nfs@vger.kernel.org>; Mon,  7 Oct 2024 10:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.98.82.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F386315D5C1;
+	Mon,  7 Oct 2024 10:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728298280; cv=none; b=Im6QzHJYeK6akKUwTuY+Y/qkz82Vz9CPfD8hVhcpWqbRM6HmQJpK/fogkzYu1ijBJZHuJTvpX2kTVjdp/2UkNuuce3ZF9+h1DRggBWqjvI3hE6AnLJrsWSx3oyJJIkYip2qqWFbRVIGaySCARgkfxUGy8swACSKXPCu/tEuu9gw=
+	t=1728298714; cv=none; b=jwJnNg5UFPdwvncNbgOHpU3ge8MnLePNH36mNBmYPLDggaqB9IT8bqjihmIFsdr5KXyjsX0mx4uSFYtFuKLPIlKr1f4AwljXKeq8P3ta/lVcf9uPMSUGDYTmmbJLaqkhOQNejJk0wpQTg4am/SD+QuWHtlXUmDGDo0CY65H3Cn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728298280; c=relaxed/simple;
-	bh=1d8JLoQRD61CkcOxLfPwFcsNtrhpCjZRAd3zy6Z9s+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWCuntTjTaR7UiYH8NcBL7kKoCATEqhQ4GzwSnYpgx0mL5XMjIiZ+ia/k/N74bw+iTd83KFh6tXMppDfTC2eUWSM1WKSQcper76HrwMbYUO/c2HAsZPJosANA5Kc0An77oPlvF51xa4oz3Rg1b1pSzSZV5L1pAPJfk7oIgkGSek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=afaics.de; spf=none smtp.mailfrom=afaics.de; arc=none smtp.client-ip=82.98.82.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=afaics.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=afaics.de
-Received: (qmail 19645 invoked from network); 7 Oct 2024 10:51:08 -0000
-Received: from unknown (HELO mailhost.afaics.de) (postmaster@xqrsonfo.mail.selfhost.de@79.192.205.88)
-  by mailout.selfhost.de with ESMTPA; 7 Oct 2024 10:51:08 -0000
-Received: from [IPV6:2003:e3:1f39:3702:68fd:ffff:fe6f:e76] (p200300e31f39370268fdfffffe6f0e76.dip0.t-ipconnect.de [2003:e3:1f39:3702:68fd:ffff:fe6f:e76])
-	by marvin.afaics.de (OpenSMTPD) with ESMTP id 8e62a2f0;
-	Mon, 7 Oct 2024 12:51:08 +0200 (CEST)
-Message-ID: <f1e538b5-fd93-46f7-a8b1-8c0c649f5a11@afaics.de>
-Date: Mon, 7 Oct 2024 12:51:08 +0200
+	s=arc-20240116; t=1728298714; c=relaxed/simple;
+	bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lRDly8FY6G9BuBtQstwR5mm4mJtcBabfECSTlYEtxqE1Uv96++qT8p1FEvkiQLz0f7EEMKYB01BCaCk8Kfrrp7ZhTPc74i6jT5TO5ixuf3VGwXTC8Baf7HvZGQXZ/JOqeEWohuJnTZvMnJSNTd/Ia7oAmWxr9aASZNiiBluOXvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xo6a7QoP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F3CC4CECF;
+	Mon,  7 Oct 2024 10:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728298713;
+	bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Xo6a7QoPaAsdhkEDock0VKt30RgKQGDYB55iSjs8d7YTjilKAWw7i3RESilp0cQmJ
+	 RkjDVaYeEP4FP9Um0SKIfeDcDl7H+Fi+NhKi0FBYdFB987Lxfsc/g9l1JNp8UGKwMc
+	 Fw4+iKLZ4j5+PeS1HlhU82WbFMjMgy9PbJI3nNlnMDRZI+xMrTIf9oliBkKKNKIEUV
+	 3iQt4cjUHMHjHCiQn6OAZh2AOaoIPFY3DYE1VAJSG1MGdziqr64pvzgt8d9LGQCH6l
+	 6Yp4ik5VqzQOvKusiZPsiQyiGE/GDJ+EKPs8F/8xOnQ5XAM59NbuIRCxgjag482bXQ
+	 /nWr7X/hM+SpQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	John Stultz <jstultz@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Subject: Re: (subset) [PATCH v10 00/12] timekeeping/fs: multigrain timestamp redux
+Date: Mon,  7 Oct 2024 12:58:21 +0200
+Message-ID: <20241007-restlaufzeit-birnen-2f412852441e@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241002-mgtime-v10-0-d1c4717f5284@kernel.org>
+References: <20241002-mgtime-v10-0-d1c4717f5284@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_umount
-To: NeilBrown <neilb@suse.de>
-Cc: syzbot <syzbot+b568ba42c85a332a88ee@syzkaller.appspotmail.com>,
- Jeff Layton <jlayton@kernel.org>, Dai.Ngo@oracle.com,
- chuck.lever@oracle.com, kolga@netapp.com, linux-nfs@vger.kernel.org,
- syzkaller-bugs@googlegroups.com, tom@talpey.com
-References: <> <d8e1e97f-997f-4dca-8b3f-0628a3783957@afaics.de>
- <172808507143.1692160.17519936392458356798@noble.neil.brown.name>
-From: Harald Dunkel <harri@afaics.de>
-Content-Language: en-US
-In-Reply-To: <172808507143.1692160.17519936392458356798@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2375; i=brauner@kernel.org; h=from:subject:message-id; bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQz7zt3ROG96vKmhmAJRb2iW0lPrWYvcrN65X025sO3H TIF+Vq3O0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZSuo7hD++GxO7jd4sfeZ2Y e2VOTlbbRvlo2xPWddtPcQQeKVu3dBrDP+O0xuMVC6u2NJnKzzd25XLIvFWufkOs6q/e5LaD4Z3 LWQE=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Neil,
+On Wed, 02 Oct 2024 17:27:15 -0400, Jeff Layton wrote:
+> This is a replacement for the v6 series sitting in Christian's
+> vfs.mgtime branch. The main changes here are to the changelogs,
+> documentation and comments. I've also moved the timekeeping patches to
+> the front of the series, and done some minor cleanups.
+> 
+> The pipe1_threads test shows these averages on my test rig with this
+> series:
+> 
+> [...]
 
-ACK. Debian provided a new kernel version 6.1.112 for Bookworm, anyway.
-May I send you a task dump of the running system (before nfsd getting
-stuck) after the reboot, just for verification?
+I've merged the tag that Thomas provided with the time specific changes and
+pulled the remaining patches - excluding 01/12 and 02/12.
 
-Regards
-Harri
+---
+
+Applied to the vfs.mgtime branch of the vfs/vfs.git tree.
+Patches in the vfs.mgtime branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.mgtime
+
+[03/12] fs: add infrastructure for multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/4e40eff0b573
+[04/12] fs: have setattr_copy handle multigrain timestamps appropriately
+        https://git.kernel.org/vfs/vfs/c/b82f92d5dd1a
+[05/12] fs: handle delegated timestamps in setattr_copy_mgtime
+        https://git.kernel.org/vfs/vfs/c/d8d11298e8a1
+[06/12] fs: tracepoints around multigrain timestamp events
+        https://git.kernel.org/vfs/vfs/c/a80f53809ccc
+[07/12] fs: add percpu counters for significant multigrain timestamp events
+        https://git.kernel.org/vfs/vfs/c/7b1aba010c47
+[08/12] Documentation: add a new file documenting multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/95c6907be544
+[09/12] xfs: switch to multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/0f4865448420
+[10/12] ext4: switch to multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/e44ab3151adc
+[11/12] btrfs: convert to multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/0d4f9f7ad685
+[12/12] tmpfs: add support for multigrain timestamps
+        https://git.kernel.org/vfs/vfs/c/cba2a92eff80
 
