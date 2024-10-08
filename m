@@ -1,135 +1,172 @@
-Return-Path: <linux-nfs+bounces-6920-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6921-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0BBE99451B
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 12:13:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 806589945A9
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 12:43:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 647B2287679
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 10:13:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03D121F257C9
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 10:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0513818FDC9;
-	Tue,  8 Oct 2024 10:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF0C175D59;
+	Tue,  8 Oct 2024 10:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9pPhiyH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmBeJqXi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAB818DF65
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 10:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D271C231E;
+	Tue,  8 Oct 2024 10:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728382385; cv=none; b=LCa5AeOADicXNNEYObA2ldqkUXvmHxOlmaY34s5GPKBASpDNqbLmpRGzIclkY2Apv/HMfspLr/PxQ07aPO5KDUghxTyklhwO7IBwR3IVpkrdNaR7WqZf/9Y2sRuDTCdQgWymPpunUyCeAs4XxTrXVMy8zVBC9LyB2vuwQaJeMvY=
+	t=1728384208; cv=none; b=Vf35sSED2HaheCzsWs27c3tLEU4XnTmuL+DQBWaawizv1upqgftJ33NgXiZ4rief+U7DAsNzoGglXuDXaQhbske8odEzA7rkpiiU4IF51xhkESVfVM8ZVs+OJhJtUQ2i+P3adJn3VFQjMx/lOwmvq2HIvpGw3XKZoPdzNaGwTGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728382385; c=relaxed/simple;
-	bh=up8LL8r/gb7q2HcdSabEI+LPjO2WM9OptcadNzpoLSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r8RrgAH/ps6k3ZxnU429hX5aJdDj+tiUEH++wCLk1z/UM9TlXCh6NZSMKJbS3HigkusesI7UswSA0o2F+h5lb/1LCaH1/2HCNTQJWivN2WYPrCkkhRCHvApjkTP1d2Dm6fdCohSAxavi1yAvJbinDoPygm0gpdvUOdGfJubKbts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q9pPhiyH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728382382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oaeq56OvuUcJMmOVG0lJqXNFtuHXeBSUvSuZJk0QoHM=;
-	b=Q9pPhiyH3NJYtlQFlam8vr0f//cOJKtEMQA/QK0bkNc3b4XpEM3GhJGJWuXsK/0nnI2iWc
-	upUFg7WuKwSNPcN/wZPBnEk6hP7esGBISxHvSX9WnXzblfedtO5MYUc8egA31qzFOgPDXB
-	ABb8lIwuMKxARj7Upmc146u4fx961B8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-pK5GIjsdPtm3_o9Glf3tYw-1; Tue, 08 Oct 2024 06:13:01 -0400
-X-MC-Unique: pK5GIjsdPtm3_o9Glf3tYw-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-458353d3635so101311891cf.0
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Oct 2024 03:13:01 -0700 (PDT)
+	s=arc-20240116; t=1728384208; c=relaxed/simple;
+	bh=WDT04npk/A0Vg2Gn7fQERZ2D5ZV98JKGrtSjDchkzKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cMuq3jD2tqHMDiNPVtOqSHrxcaairrBUWQn9Hk3o/oNyY+A5m+/wN2sVxFNMquDy+OyweosuVB4xBVqX/obZjk903zSS6XvE3pJLPhABTCxeZFdCk6v3/5OFmC1shCRYNGYtQS9JfZqb60aKjm+rpUFaUCgPABOgu66FHuPOc2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmBeJqXi; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7a99e4417c3so453860785a.1;
+        Tue, 08 Oct 2024 03:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728384205; x=1728989005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9oeSMwl58MfmoEEm04Dh6ZMfg2AmumAWMgCTT72MAhI=;
+        b=UmBeJqXiYCgeknnwa+lKGX43hbU3F32ENf4cBRccgRlevbmvW5bFc3vTAKUKGlGdou
+         YjXVR4MehXXty0b64z282SDtbrQkN/op8+Vm5eGdBZal8W232YmTYXubSPAkLF3Ey/eY
+         Z07ehHlH/35jGamP+fD7yamy5YResxq+osDKFRCN5BpzuO3F6Eg29snZFA/eYsVNZ7CB
+         elXB59Nw6SrWyO90tcnmMTd5lk+/ZkhiPYJrMbJIRnSxILb8UCS2fGbQXu4Qm7GG/OcI
+         LrEVCZFg4zMHAE0vSB3jVaOYTsrnERnBEZYbSYPc8c4j1+uKfd1EM2z9RAy/RCyFAI7J
+         /1fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728382381; x=1728987181;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oaeq56OvuUcJMmOVG0lJqXNFtuHXeBSUvSuZJk0QoHM=;
-        b=pPDSXtXan6Yym+dIGuqaZhAQF6ySDBqvcA2w70WCNnGjFSX+e+akZz0hlf0EiZHNzv
-         ZI6mGLWty6Nb6nYp0gkCDDhbGdUd8nygXWsZ2SziiP+8f4iImigBDO3JA3eKneUAJXPR
-         1WGc92JS6GpJ/3IjXAFn2+B2l8emy71Q3kxiyJVVqazg5stzrVyiaq/eux7BqOl22j/D
-         70US07vuFDKGipeqnl9FS7vAOBLAjQNJXAp2Rs3Jz5E9bN9Ut/GaW+BLbTHYuqdhc7ni
-         Pu0oTjDb8E1BLuUB6n+TxzQZ0j6L1KH6Z27SFy8lVzpgevLm3CTFGR5xLArb5Bu6vDEF
-         oSag==
-X-Gm-Message-State: AOJu0YwSPII5GLp2d35uPqe/MSP+KGi3qlkfDhdFDm1Vn845nnzG9Nps
-	l9iv5ruFPuvRaNbmk6KKsI+Q/rVW2h28In0ZDRMU3iCVZEvWeE2nuF1RYlvqOooQ7CvXj6GaAUm
-	M8/lIqJXxVNuOCNIA3GpBnKAwSOOkfjPEO8VzbvNgVqARQ/vjaIibXDhoAg==
-X-Received: by 2002:a05:622a:494:b0:45c:e4f:e026 with SMTP id d75a77b69052e-45dc2640105mr43065521cf.19.1728382381139;
-        Tue, 08 Oct 2024 03:13:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmfXxmnWbdNnd9XZk1fZegHgGHecEO2WqSwJyMShRpcRbQ/X4r/ygdqJqjj93vSs2xnWW0+w==
-X-Received: by 2002:a05:622a:494:b0:45c:e4f:e026 with SMTP id d75a77b69052e-45dc2640105mr43065321cf.19.1728382380738;
-        Tue, 08 Oct 2024 03:13:00 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.132.241])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae7576e9a9sm337902885a.134.2024.10.08.03.12.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2024 03:12:59 -0700 (PDT)
-Message-ID: <e7341203-c53c-4005-9d70-239073352b2b@redhat.com>
-Date: Tue, 8 Oct 2024 06:12:58 -0400
+        d=1e100.net; s=20230601; t=1728384205; x=1728989005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9oeSMwl58MfmoEEm04Dh6ZMfg2AmumAWMgCTT72MAhI=;
+        b=cJZ4MaC4YNVjMu0eTslSJmpRLXaJckJXfD2y/3WJHKXQNuR1kQcs7RLgPZbSINYJ0l
+         G9T7q7z+Xu5JD5t3yuMsrdXZQb+vaMvK+44TneuxbSIwTdLI/nOGHDZvGyN1iVjWIBGm
+         /aw58ip3pe2FH9BstrWyiAqTRr1rFZLjJY2pvP57zR1+e77pjiP5aPyuh/Apfk7eECbN
+         8s4blQgYlTyCOmxvogXQ7O2EKUiwgKtZaULgae8e6Y4C3sQPjhLroKDJnoIcp2W5/aXy
+         bih9uf6Moh63z1l9UvIORvDezhWMsR238b3qfPaaaby3P3SQKQ1mzQ3h4s0KtoXw2b9r
+         HamA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHJOHOtKJR+LCu58KTr4S8EiefcuD5hzM1g4nO1fInUyYimg/hhdYeryrhkgyBrr+QEoaROuelKEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVpyIAk60kSYH+YZ2d2UP8Cn41XDSylfo5uipT1WZPco/ZctaF
+	0GwxjFTfboR+dVsoS83tLs1jssc+fTF4Hm459Dm7B9DUwFsdki2KejS8lFbB6B6z/B1dPKIinka
+	jgeJB+sVYb/bCVeU9SX9pOV2FwRUoGwGo3q4=
+X-Google-Smtp-Source: AGHT+IH6WcJriWJ0sToprFytbx99NuygaxS/QBRM9GHpQYmBJXjRj/KUhWNW10KLel110VkM9FGoE7rDPXae3Xn5Q4Y=
+X-Received: by 2002:a05:620a:29d2:b0:7a9:bf31:dbc7 with SMTP id
+ af79cd13be357-7ae6f493a39mr2504323885a.53.1728384205275; Tue, 08 Oct 2024
+ 03:43:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFSv4 referrals broken when not enabling junction support
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>
-References: <Zv7NRNXeUtzpfbJg@eldamar.lan>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <Zv7NRNXeUtzpfbJg@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240923082829.1910210-1-amir73il@gmail.com> <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
+ <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com> <F27FAEB3-666C-4063-A2AD-C5348146CAEF@oracle.com>
+In-Reply-To: <F27FAEB3-666C-4063-A2AD-C5348146CAEF@oracle.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 8 Oct 2024 12:43:11 +0200
+Message-ID: <CAOQ4uxgj1tmSaZ+swdRG7gJ_1V+mEWzGnEUychEL8HnnV36x_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to userspace
+To: Chuck Lever III <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Aleksa Sarai <cyphar@cyphar.com>
+Cc: Linux FS Devel <linux-fsdevel@vger.kernel.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Oct 7, 2024 at 8:09=E2=80=AFPM Chuck Lever III <chuck.lever@oracle.=
+com> wrote:
+>
+>
+>
+> > On Oct 7, 2024, at 11:26=E2=80=AFAM, Amir Goldstein <amir73il@gmail.com=
+> wrote:
+> >
+> > On Wed, Sep 25, 2024 at 11:14=E2=80=AFAM Christian Brauner <brauner@ker=
+nel.org> wrote:
+> >>
+> >>> open_by_handle_at(2) does not have AT_ flags argument, but also, I fi=
+nd
+> >>> it more useful API that encoding a connectable file handle can mandat=
+e
+> >>> the resolving of a connected fd, without having to opt-in for a
+> >>> connected fd independently.
+> >>
+> >> This seems the best option to me too if this api is to be added.
+> >
+> > Thanks.
+> >
+> > Jeff, Chuck,
+> >
+> > Any thoughts on this?
+>
+> I don't have anything clever to add.
+>
 
+Sometimes that's a good thing ;)
 
-On 10/3/24 12:58 PM, Salvatore Bonaccorso wrote:
-> Hi Steve, hi linux-nfs people,
-> 
-> it got reported twice in Debian that  NFSv4 referrals are broken when
-> junction support is disabled. The two reports are at:
-> 
-> https://bugs.debian.org/1035908
-> https://bugs.debian.org/1083098
-> 
-> While arguably having junction support seems to be the preferred
-> option, the bug (or maybe unintended behaviour) arises when junction
-> support is not enabled (this for instance is the case in the Debian
-> stable/bookworm version, as we cannot simply do such changes in a
-> stable release; note later relases will have it enabled).
-> 
-> The "breakage" seems to be introduced with 15dc0bead10d ("exportd:
-> Moved cache upcalls routines  into libexport.a"), so
-> nfs-utils-2-5-3-rc6 as this will mask behind the #ifdef
-> HAVE_JUNCTION_SUPPORT's code which seems needed to support the refer=
-> in /etc/exports.
-> 
-> I had a quick conversation with Cuck offliste about this, and I can
-> hopefully state with his word, that yes, while nfsref is the direction
-> we want to go, we do not want to actually disable refer= in
-> /etc/exports.
-+1
+FYI, I wrote a draft for the would be man page update to go with the
+proposed flag:
 
-> 
-> Steve, what do you think? I'm not sure on the best patch for this,
-> maybe reverting the parts masking behind #ifdef HAVE_JUNCTION_SUPPORT
-> which are touched in 15dc0bead10d would be enough?
-Yeah there is a lot of change with 15dc0bead10d
+   name_to_handle_at()
+       The name_to_handle_at() system call returns a file handle and a moun=
+t ID
+       corresponding to the file specified by the dirfd and pathname argume=
+nts.
+...
+       When  flags  contain  the  AT_HANDLE_FID (since Linux 6.5) flag,
+       the caller indicates that the returned file_handle is needed to
+identify the filesystem object,
+       and not for opening the file later,
+       so it should be expected that a subsequent call to open_by_handle_at=
+()
+       with the returned file_handle may fail.
 
-Let me look into this... At the up coming Bake-a-ton [1]
++     When flags contain the AT_HANDLE_CONNECTABLE (since Linux 6.x) flag,
++     the caller indicates that the returned file_handle is needed to
+open a file with known path later,
++     so it should be expected that a subsequent call to open_by_handle_at(=
+)
++     with the returned  file_handle may fail if the file was moved,
+but otherwise,
++     the path of the opened file is expected to be visible from the
+/proc/pid/fd/* magic link.
++     This flag can not be used in combination with the flags
+AT_HANDLE_FID, and AT_EMPTY_PATH.
+...
+       ESTALE The specified handle is not valid for opening a file.
+              This error will occur if, for example, the file has been dele=
+ted.
+              This error can also occur if the handle was acquired
+using the AT_HANDLE_FID flag
+              and the filesystem does not support open_by_handle_at().
++            This error can also occur if the handle was acquired
+using the AT_HANDLE_CONNECTABLE
++            flag and the file was moved to a different parent.
+--
 
-steved.
+Apropos man page,
 
-[1] http://www.nfsv4bat.org/Events/2024/Oct/BAT/index.html
+Aleksa,
 
+Are you planning to post a man page patch for AT_HANDLE_MNT_ID_UNIQUE?
+I realize that there is no man page maintainer at the moment, but I myself
+would love to have this patch in my man-page updates queue,
+until a man-page maintainer shows up, because, well, my update to
+AT_HANDLE_CONNECTABLE depends on it and so will my changes to
+fanotify to support mount/unmount events if/when I will get to them.
+
+Thanks,
+Amir.
 
