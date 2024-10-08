@@ -1,117 +1,184 @@
-Return-Path: <linux-nfs+bounces-6960-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6961-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E14B995835
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 22:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D31D99587C
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 22:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFE4A28AB6E
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 20:12:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6021A282EA5
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 20:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85FB42141DA;
-	Tue,  8 Oct 2024 20:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 333FE212EF2;
+	Tue,  8 Oct 2024 20:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJLaElJy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKkILa3m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF10B212644
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 20:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE121E104B;
+	Tue,  8 Oct 2024 20:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728418370; cv=none; b=Db6KW4uZH4jtjHjzJTVxk2tawffsgDx3r8xbNW3+n0uQdyDGNl1EN3u+tA5LtYGopyuoogfPPbyaHXpuCRYF85muJbXOA8B0rGLsoQj0u17QSFs3fliOSxAmYQJeyQRWTqokERIa79jEDyDxstWqiHm5cl8rujSVY9piRgkogX8=
+	t=1728419508; cv=none; b=mEOI2AXcjLrtHpRFirYH6kHQ/kypczHc+8PNPpCwXjg/1wvPvX6OunXugFz86h/BsC9i0hF/cHy1IGCgJ4mK6loeKB3RIvYDOgDAULTk0sDOZtuI/y33NPYnQHaNLSD5BaDHzYRLXzUTf1gzCEkL2obSzrqiYxKmUrO8e/cVn+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728418370; c=relaxed/simple;
-	bh=Mmm1nsgSwusmWQIhbN6dtt9xmktOtOPWg/wMOr5raJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PtAqdLZ+WF69sZ/OtXLlXqs2wf3ojXnGNg3Uazjke52Kmez8DOYQdAQcqO73fuhtADITY57PfKYUYWh2KpFBZnoq8EG4vd/6A5w0w4f45GtkbmK+6J5M8JgcYrZg3vQoRvJZ5xPpdVLJuQzjPM33lukAspPzwYoJK2KTphgaeLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EJLaElJy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728418368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a1XdYdPRRThJf04ZH2f39aR/lmOxVlk4KOGPuZXe+cg=;
-	b=EJLaElJyLNZ6CVrr6VieO1W7bj3T7MeWC/NbmmTJ8Kx6NHGNXu82yKlodLchmwONJUjUpi
-	vV25JCtbaC6Y3PdVWAuO2rSPwbDN0/xqF570GpCahR4GanrfuCWyHhZScs7cfEB+cdiFak
-	SbUr4WVqBGgLQGYBPuFLoiPXf9v/dPU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-l7TOBY8FMUyI7HXYjLT3lA-1; Tue,
- 08 Oct 2024 16:12:44 -0400
-X-MC-Unique: l7TOBY8FMUyI7HXYjLT3lA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5694719560B4;
-	Tue,  8 Oct 2024 20:12:43 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.10])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0ACAE19560A3;
-	Tue,  8 Oct 2024 20:12:40 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Alexander Aring <aahringo@redhat.com>
-Cc: trondmy@kernel.org, anna@kernel.org, gregkh@linuxfoundation.org,
- rafael@kernel.org, akpm@linux-foundation.org, linux-nfs@vger.kernel.org,
- gfs2@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] nfs: kobject: use generic helpers and ownership
-Date: Tue, 08 Oct 2024 16:12:38 -0400
-Message-ID: <A81234BC-0E6D-42AE-BA2B-AF6004DE3C79@redhat.com>
-In-Reply-To: <20241003151435.3753959-1-aahringo@redhat.com>
-References: <20241003151435.3753959-1-aahringo@redhat.com>
+	s=arc-20240116; t=1728419508; c=relaxed/simple;
+	bh=itTu5nGnYHokIYet1xEeFVWP0f4i+WN9ppsfs6Is1ic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j6Ynn/63YNLzuycmmjSmsmr9OGGUjV/JL/dHkDOvWhr3BJNrekY6E4KQLkCsb8u2L3wH/BjA2nNYjbBum1sEVAybs+BftSNPFGfZcQGlAOkE+OFIlS3jhvSFleBIF5DZQltEPWgzD096KUbHtO0YskHjTOMSk9CuFyWduZl5wzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OKkILa3m; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7afc67e9447so16929185a.1;
+        Tue, 08 Oct 2024 13:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728419505; x=1729024305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yz7Hp0fm0hCFBnjhlisUYY5V0Q0cWwyJgq+VR0R10HU=;
+        b=OKkILa3m6X3M/rAGm2DKdLR9CMEYKDZIATnqEZgU0Cwz7KFYM+NJs3XHdmPyRAzcwx
+         vzBwrk3VA/cFfrJ2PQPRSheTrwvlGKtXKbcoDj50bsPKisa3ekZqaiTakVyzBgmA4Ekv
+         eZuqRn4xR7gWd6+cLkVVjS+iy/b5IRG3MQqra727DRpqvacU8YHB7mNeXJ4ZGMGcHhcf
+         F2Tf2uB1KGaOJt75Ws/XMudhsBaaBFFOOkW9J31SkpsMCVQNxVqdGyja764l+XJeYt+z
+         OlydDm3chK100nXMk/ELVUHIRaxe28d7Baqc+NXBattbUmX1iqp8aQeQbUmjUmbcwjMv
+         gxFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728419505; x=1729024305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yz7Hp0fm0hCFBnjhlisUYY5V0Q0cWwyJgq+VR0R10HU=;
+        b=ZKohVY5LQBmeG27jzg6lmLR+9fRDoxbujCzFr3P41guFx5+szioUPpr66eWa1xHHQw
+         H6TkmcJvBOm0B/1lKu9ZTQfB9CSs0x4ssDtTQe0AexCD/9vOeDs1zMEWZzpT16rZ+TmX
+         JcsGeKKlnVMn0xHEwsz6dbG+Yfm1kHdjbHVL5L44Da93WZSppBked8BYpUmPa9mQGexc
+         GDRPgoY4iQlR/WVQxPSZ6Nn0GjouOz/96qF2Mhj/nZGDcreuY3rjJ3Hk3L0QaW3azlrT
+         3FQqGltRnfo4jCRW5AAzcCCf2V1JScb2Z3+nQ9wBC8xOqQMTt90ltiqvP83EX3/QM3Oz
+         XfXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYfwEQds2yAo+fk8ZA7kI2+AnXsCleKqjRuQZaPCdcKu79PxZ66vcPlVTnFoM6QCz3fYcMtubTcU/G@vger.kernel.org, AJvYcCXUalAVEySgDVYbVLfN/sMAn6ZoLZn/A74rScLHsUAKwDdMYoUFvpHitCI9C2OpyvbddaNYptfer4aNFuoV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgBsRaJo24nypjsF1zbXysx5HjRS9gIke6caP8RhNeMST0K+Jr
+	i9H6Vj3C2rezepPZq7ZSlyB0ekcWMRS6BPCxMm3mDGJL8OOgW9nWRT9hvIeA+ahg5Got+jJrKHI
+	HEnh4J2BD676FpbruLVEppWzrh38=
+X-Google-Smtp-Source: AGHT+IG8Oo0yjSX4QxYUj/WXAq2/K4FWF08TPv1AoP4ytyNDqpDFU550LIBLT7aIMOhObvsiBEMMDHvKbDxq9PU32y4=
+X-Received: by 2002:a05:620a:1710:b0:7a9:bf31:dbba with SMTP id
+ af79cd13be357-7affaf940c1mr56237285a.7.1728419505215; Tue, 08 Oct 2024
+ 13:31:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20241008152118.453724-1-amir73il@gmail.com> <20241008152118.453724-2-amir73il@gmail.com>
+ <b2df96ad86950b4b3a790f68be99df845a6a2108.camel@kernel.org>
+In-Reply-To: <b2df96ad86950b4b3a790f68be99df845a6a2108.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 8 Oct 2024 22:31:33 +0200
+Message-ID: <CAOQ4uxj-=9-23HNsc8r8ciJttBN-2zzWAx3X_S7xB1cxY20gFA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] fs: prepare for "explicit connectable" file handles
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3 Oct 2024, at 11:14, Alexander Aring wrote:
+On Tue, Oct 8, 2024 at 8:19=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
+te:
+>
+> On Tue, 2024-10-08 at 17:21 +0200, Amir Goldstein wrote:
+> > We would like to use the high 16bit of the handle_type field to encode
+> > file handle traits, such as "connectable".
+> >
+> > In preparation for this change, make sure that filesystems do not retur=
+n
+> > a handle_type value with upper bits set and that the open_by_handle_at(=
+2)
+> > syscall rejects these handle types.
+> >
+> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > ---
+> >  fs/exportfs/expfs.c      | 14 ++++++++++++--
+> >  fs/fhandle.c             |  6 ++++++
+> >  include/linux/exportfs.h | 14 ++++++++++++++
+> >  3 files changed, 32 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> > index 4f2dd4ab4486..c8eb660fdde4 100644
+> > --- a/fs/exportfs/expfs.c
+> > +++ b/fs/exportfs/expfs.c
+> > @@ -382,14 +382,21 @@ int exportfs_encode_inode_fh(struct inode *inode,=
+ struct fid *fid,
+> >                            int *max_len, struct inode *parent, int flag=
+s)
+> >  {
+> >       const struct export_operations *nop =3D inode->i_sb->s_export_op;
+> > +     enum fid_type type;
+> >
+> >       if (!exportfs_can_encode_fh(nop, flags))
+> >               return -EOPNOTSUPP;
+> >
+> >       if (!nop && (flags & EXPORT_FH_FID))
+> > -             return exportfs_encode_ino64_fid(inode, fid, max_len);
+> > +             type =3D exportfs_encode_ino64_fid(inode, fid, max_len);
+> > +     else
+> > +             type =3D nop->encode_fh(inode, fid->raw, max_len, parent)=
+;
+> > +
+> > +     if (WARN_ON_ONCE(FILEID_USER_FLAGS(type)))
+> > +             return -EINVAL;
+> > +
+>
+> The stack trace won't be very useful here. Rather than a WARN, it might
+> be better to dump out some info about the fstype (and maybe other
+> info?) that returned the bogus type value here. I'm pretty sure most
+> in-kernel fs's don't do this, but who knows what 3rd party fs's might
+> do.
+>
 
-> Hi,
->
-> I currently have pending patches for fs/dlm (Distributed Lock Manager)
-> subsystem to introduce some helpers to udev. However, it seems it takes
-> more time that I can bring those changes upstream. I put those out now
-> and already figured out that nfs can also take advantage of those changes.
->
-> With this patch-series I try to try to reduce my patch-series for DLM
-> and already bring part of it upstream and nfs will be a user of it.
->
-> The ownership callback, I think it should be set as the
-> kset_create_and_add() sets this callback as default. I never had any
-> issues with it, but there might be container corner cases that requires
-> those changes?
->
-> - Alex
->
-> Alexander Aring (4):
->   kobject: add kset_type_create_and_add() helper
->   kobject: export generic helper ops
->   nfs: sysfs: use kset_type_create_and_add()
->   nfs: sysfs: use default get_ownership() callback
->
->  fs/nfs/sysfs.c          | 30 +++----------------
->  include/linux/kobject.h | 10 +++++--
->  lib/kobject.c           | 65 ++++++++++++++++++++++++++++++-----------
->  3 files changed, 60 insertions(+), 45 deletions(-)
->
-> -- 
-> 2.43.0
+Right. I changed to:
 
-These look good to me, though patch 4/4 seems superfluous, I responded there.
+        if (FILEID_USER_FLAGS(type)) {
+                pr_warn_once("%s: unexpected fh type value 0x%x from
+fstype %s.\n",
+                             __func__, type, inode->i_sb->s_type->name);
+                return -EINVAL;
+        }
 
-For the series:
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-Ben
+> > +     return type;
+> >
+> > -     return nop->encode_fh(inode, fid->raw, max_len, parent);
+> >  }
+> >  EXPORT_SYMBOL_GPL(exportfs_encode_inode_fh);
+> >
+> > @@ -436,6 +443,9 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct=
+ fid *fid, int fh_len,
+> >       char nbuf[NAME_MAX+1];
+> >       int err;
+> >
+> > +     if (WARN_ON_ONCE(FILEID_USER_FLAGS(fileid_type)))
+> > +             return -EINVAL;
+> > +
+>
+>
+> This is called from do_handle_to_path() or nfsd_set_fh_dentry(), which
+> means that this fh comes from userland or from an NFS client. I don't
+> think we want to WARN because someone crafted a bogus fh and passed it
+> to us.
+>
 
+Good point, I will remove the WARN and also fix the bug :-/
+
+        if (FILEID_USER_FLAGS(fileid_type))
+                return ERR_PTR(-EINVAL);
+
+Pushed this and othe minor fixes to
+https://github.com/amir73il/linux/commits/connectable-fh/
+until we sort out the rest of your comments and maybe get more feedback.
+
+Thanks for the review!
+Amir.
 
