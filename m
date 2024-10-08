@@ -1,226 +1,138 @@
-Return-Path: <linux-nfs+bounces-6924-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6926-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F48A994E03
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:12:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8C1199502B
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:33:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3124A28541D
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:12:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 062D11C211A2
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:33:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9491DE8A0;
-	Tue,  8 Oct 2024 13:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMjZt5r6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B348D197A65;
+	Tue,  8 Oct 2024 13:32:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out28-63.mail.aliyun.com (out28-63.mail.aliyun.com [115.124.28.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074DA1DE88F;
-	Tue,  8 Oct 2024 13:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335E1E498
+	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 13:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.63
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728393113; cv=none; b=TixkJ9tO5mv4JKjHRyt+RfvXIq7K5mMRShpQvMNtXdn/UkK8RelvL9i5szekUbtoIMLk7JVP6v1UU7QPO04mWXe2h6Q5hE4jbkqTlGr5mPepAVLlgcyFe+ctB07Y1iMH8Ij0nkztV1fb+e5Yd7IyyMmxJZZSVybyQoN1Y96YwEU=
+	t=1728394379; cv=none; b=HJnkJkBSk6feE3a0+t9LHRQOywX7OaVpsiQBQJDXBsjd4ynzbtviiKTAMLwDgoAw9C5hgsd1A1cwpADvLjTyRzdXLrrU/XxSs0NKi2nuBB7qaMG3HEJngHSJ66hC7lxbLuZ1+jbf7joglmCP6kQCHggG2ej1sZOoZ4xEU5308Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728393113; c=relaxed/simple;
-	bh=sctgzteZF0xLIJZeV0v1P46a4lOB3Jen+Szq9MvYebg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oZYnZSkrp9xvqNen4GdDeca+1z5Yq+4KiMWIK8oFflFhefSdL82spHq4YF5Yx5wCX+O87+MO0VjpWNH+Kf5hSrLcOwbMmHRY8N6q1gLlXyi9lBHG006IS6Y/Lclpa0ppCI23n48zPcjVbQH7rGGU5RSVn1mVRb/gsiVuvXeE7Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMjZt5r6; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7a9ae8fc076so610339485a.2;
-        Tue, 08 Oct 2024 06:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728393111; x=1728997911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUhIhCW4EYVtZ1pFGNbZwIrKmPYGAss7TRP+oocEQ7M=;
-        b=WMjZt5r6k08m67d0i3jJ9QlUMw5LXj2ZD/LbPlIBR5CUkxLsY/aN1qLtwvcb8yrsQm
-         7JKAml6Ul+IKC8KTvzUeK++kKb6f590fHfIJ1HHhVpEamtiRJHL3d5sZfIT1D1I2AiEs
-         jHcot0sGVHfIehGcoJPpaKoQekoqntsCU37NyUEFg3rhwMatLLgENXz/nZ/IjfPFLCzf
-         nzJ1uOKcPLNHCL7TJJNuI5YOg7BVRige1IGkEMe0IeZAwD26a06EH4QZsQbFGikunWvv
-         Nbs6ba3h6MdzLKu0O4COseLVG+arvb/WGhhaUQkuTYrKvpMNWaGkWUJ2hlEQqen1CUVg
-         oV8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728393111; x=1728997911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUhIhCW4EYVtZ1pFGNbZwIrKmPYGAss7TRP+oocEQ7M=;
-        b=bUwIi0hpjoQ+Ipm6knEoNf/I0POL6v0rRfz2rUxgzFgKQzyjtlMfz8oCd6L8nMzN4X
-         012CijCXR55k7422/2GMOzbJ9GCvzN4K+mXc46Y+tPdgUwNG1g4G5v3q1bz0FaEN0yaF
-         w0Rgz+nJ6dSoxhJsz0L3axtvu/OZimpmuzHwaKax/I0kSnLO4aLSRSw7UHwAklUEyhnK
-         yQTUH9tItdAp2JY1i38AvqhNg+VGyrn8zSIgdiI/2+jC8dvyElu4P06nijCFjmoHSadP
-         mhosu8kVuRShGdBIBGKiFARogUJ3j5tLfB5u72MNyyAG8l5MWPhMa62I6Uj4ZlRMtJRv
-         rBTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsigYSxfoifbv13PPJhK3F5lrtZiUFODIiIsBpvpRwfbvrrzqsZHNCRpzqWSUzUHRMgozYzF6ojgvsW+IK@vger.kernel.org, AJvYcCW0vEcD5jWeSVOsu1Nfllo+tajR74OQGehdp2YMah68f1QbMWxKFWWMiiwB0XVYfqtfx4+smTLmlza1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSeC/SdbaT0HoqCag6PwC9wHOsxnoOTvCj7O33gCfHR8eIS/3n
-	YN5IWgzVPZ0rRf/zibniYaFtGB5UbCHWqPLguJYg4+IzHNu3ZHAzYtRyBePKWKWaREuUIesumAc
-	+60V6VXhH9Ki25uMzEW3ryAHKBIs=
-X-Google-Smtp-Source: AGHT+IGlbGUYc4Iv0m2kHtGA8QMswKhBWC24wvpxa3c9aagc6ojOjSPwwHKFaT84+xM3iA5ee2GpWYw3USOI7cUl61I=
-X-Received: by 2002:a05:620a:319c:b0:7a9:bcc7:4ff3 with SMTP id
- af79cd13be357-7ae6f48b8cdmr2714719985a.42.1728393110565; Tue, 08 Oct 2024
- 06:11:50 -0700 (PDT)
+	s=arc-20240116; t=1728394379; c=relaxed/simple;
+	bh=jNjlBw3RyJ1RoND1N/YhAXIskyh/dFM7knA5TCtCPmQ=;
+	h=Date:From:To:Subject:Message-Id:MIME-Version:Content-Type; b=UrNT3dqCWoZLK0nvyTFZwzld8dRnzxtfctN9e4t9CD3PMv646zUmYADBVUIexXe0VkBeTuST9U1oPD/yzWEzxf0hVKeo+IfegtgIQXY5IDCxZPrNpH3Ol1UaD+dOi94p/dKw0wE55xz2UM1Gccggs0buYs5F7vxBwQIx24mlaG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com; spf=pass smtp.mailfrom=e16-tech.com; arc=none smtp.client-ip=115.124.28.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=e16-tech.com
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.ZbbR02F_1728394048)
+          by smtp.aliyun-inc.com;
+          Tue, 08 Oct 2024 21:27:29 +0800
+Date: Tue, 08 Oct 2024 21:27:30 +0800
+From: Wang Yugui <wangyugui@e16-tech.com>
+To: linux-nfs@vger.kernel.org
+Subject: nfs client deadloop on 6.6.53
+Message-Id: <20241008212729.0F9A.409509F4@e16-tech.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240923082829.1910210-1-amir73il@gmail.com> <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
- <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com> <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
-In-Reply-To: <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 8 Oct 2024 15:11:39 +0200
-Message-ID: <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to userspace
-To: Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.81.07 [en]
 
-On Tue, Oct 8, 2024 at 1:07=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
->
-> On Mon, 2024-10-07 at 17:26 +0200, Amir Goldstein wrote:
-> > On Wed, Sep 25, 2024 at 11:14=E2=80=AFAM Christian Brauner <brauner@ker=
-nel.org> wrote:
-> > >
-> > > > open_by_handle_at(2) does not have AT_ flags argument, but also, I =
-find
-> > > > it more useful API that encoding a connectable file handle can mand=
-ate
-> > > > the resolving of a connected fd, without having to opt-in for a
-> > > > connected fd independently.
-> > >
-> > > This seems the best option to me too if this api is to be added.
-> >
-> > Thanks.
-> >
-> > Jeff, Chuck,
-> >
-> > Any thoughts on this?
-> >
->
-> Sorry for the delay. I think encoding the new flag into the fh itself
-> is a reasonable approach.
->
+Hi,
 
-Adding Jan.
-Sorry I forgot to CC you on the patches, but struct file_handle is official=
-ly
-a part of fanotify ABI, so your ACK is also needed on this change.
+nfs client deadloop on 6.6.53.
 
-> I'm less thrilled with using bitfields for this, just because I have a
-> general dislike of them, and they aren't implemented the same way on
-> all arches. Would it break ABI if we just turned the handle_type int
-> into two uint16_t's instead?
+[ 9409.381322] sysrq: Show Blocked State
+[ 9409.386146] task:bash            state:D stack:0     pid:2323  ppid:2226   flags:0x00004002
+[ 9409.395225] Call Trace:
+[ 9409.398376]  <TASK>
+[ 9409.401172]  __schedule+0x232/0x5d0
+[ 9409.405370]  schedule+0x5e/0xd0
+[ 9409.409217]  schedule_timeout+0x8c/0x170
+[ 9409.413837]  ? __pfx_process_timeout+0x10/0x10
+[ 9409.418989]  msleep+0x3b/0x50
+[ 9409.422656]  ff_layout_pg_init_read+0x1c1/0x290 [nfs_layout_flexfiles]
+[ 9409.429910]  __nfs_pageio_add_request+0x29b/0x480 [nfs]
+[ 9409.435911]  nfs_pageio_add_request+0x221/0x2a0 [nfs]
+[ 9409.441715]  nfs_read_add_folio+0x1a3/0x280 [nfs]
+[ 9409.447175]  nfs_readahead+0x235/0x2d0 [nfs]
+[ 9409.452193]  read_pages+0x56/0x2c0
+[ 9409.456298]  page_cache_ra_unbounded+0x134/0x1a0
+[ 9409.461626]  filemap_get_pages+0xf5/0x3a0
+[ 9409.466355]  ? __nfs_lookup_revalidate+0x53/0x140 [nfs]
+[ 9409.472325]  filemap_read+0xdc/0x350
+[ 9409.476614]  ? find_idlest_group+0x113/0x530
+[ 9409.481614]  nfs_file_read+0x74/0xc0 [nfs]
+[ 9409.486461]  __kernel_read+0xff/0x2b0
+[ 9409.490838]  search_binary_handler+0x70/0x250
+[ 9409.495908]  exec_binprm+0x50/0x1a0
+[ 9409.500102]  bprm_execve.part.0+0x17d/0x230
+[ 9409.504993]  do_execveat_common.isra.0+0x1a2/0x240
+[ 9409.510489]  __x64_sys_execve+0x37/0x50
+[ 9409.515026]  do_syscall_64+0x5a/0x90
+[ 9409.519298]  ? __count_memcg_events+0x4c/0xa0
+[ 9409.524348]  ? mm_account_fault+0x6c/0x100
+[ 9409.529129]  ? handle_mm_fault+0x154/0x280
+[ 9409.533903]  ? do_user_addr_fault+0x35f/0x680
+[ 9409.538935]  ? exc_page_fault+0x69/0x150
+[ 9409.543537]  entry_SYSCALL_64_after_hwframe+0x78/0xe2
+[ 9409.549277] RIP: 0033:0x7f57378d987b
+[ 9409.553572] RSP: 002b:00007ffdb5978708 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+[ 9409.561847] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f57378d987b
+[ 9409.569690] RDX: 000055d26e403600 RSI: 000055d26e5cdc50 RDI: 000055d26e6ce7f0
+[ 9409.577534] RBP: 000055d26e6ce7f0 R08: 000055d26e5a5b60 R09: 0000000000000000
+[ 9409.585375] R10: 0000000000000008 R11: 0000000000000246 R12: 00000000ffffffff
+[ 9409.593208] R13: 000055d26e5cdc50 R14: 000055d26e403600 R15: 000055d26e6ceb40
+[ 9409.601047]  </TASK>
+[ 9409.603946] task:bash            state:D stack:0     pid:2550  ppid:2462   flags:0x00004002
+[ 9409.613027] Call Trace:
+[ 9409.616185]  <TASK>
+[ 9409.618983]  __schedule+0x232/0x5d0
+[ 9409.623186]  schedule+0x5e/0xd0
+[ 9409.627033]  io_schedule+0x46/0x70
+[ 9409.631140]  folio_wait_bit_common+0x133/0x390
+[ 9409.636294]  ? folio_wait_bit_common+0x100/0x390
+[ 9409.641624]  ? nfs4_do_open+0xcd/0x210 [nfsv4]
+[ 9409.646854]  ? __pfx_wake_page_function+0x10/0x10
+[ 9409.652268]  filemap_update_page+0x2bc/0x300
+[ 9409.657242]  filemap_get_pages+0x21d/0x3a0
+[ 9409.662042]  ? __nfs_lookup_revalidate+0x53/0x140 [nfs]
+[ 9409.668010]  filemap_read+0xdc/0x350
+[ 9409.672299]  nfs_file_read+0x74/0xc0 [nfs]
+[ 9409.677126]  __kernel_read+0xff/0x2b0
+[ 9409.681476]  search_binary_handler+0x70/0x250
+[ 9409.686526]  exec_binprm+0x50/0x1a0
+[ 9409.690702]  bprm_execve.part.0+0x17d/0x230
+[ 9409.695573]  do_execveat_common.isra.0+0x1a2/0x240
+[ 9409.701047]  __x64_sys_execve+0x37/0x50
+[ 9409.705559]  do_syscall_64+0x5a/0x90
+[ 9409.709805]  ? do_user_addr_fault+0x35f/0x680
+[ 9409.714834]  ? exc_page_fault+0x69/0x150
+[ 9409.719414]  entry_SYSCALL_64_after_hwframe+0x78/0xe2
+[ 9409.725126] RIP: 0033:0x7f3c492d987b
+[ 9409.729362] RSP: 002b:00007ffc6413a458 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+[ 9409.737609] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f3c492d987b
+[ 9409.745429] RDX: 000055c6a8f07600 RSI: 000055c6a90e72a0 RDI: 000055c6a90f7890
+[ 9409.753256] RBP: 000055c6a90f7890 R08: 000055c6a90f6250 R09: 0000000000000000
+[ 9409.761078] R10: 0000000000000008 R11: 0000000000000246 R12: 00000000ffffffff
+[ 9409.768904] R13: 000055c6a90e72a0 R14: 000055c6a8f07600 R15: 000055c6a90e1ea0
+[ 9409.776732]  </TASK>
 
-I think it will because this will not be backward compat on LE arch:
+Notice:
+1, nfs server:  kernel 6.6.54
+pnfs optin in the service side /etc/exports.
 
- struct file_handle {
-        __u32 handle_bytes;
--       int handle_type;
-+      __u16 handle_type;
-+      __u16 handle_flags;
-        /* file identifier */
-        unsigned char f_handle[] __counted_by(handle_bytes);
- };
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2024/10/08
 
-But I can also do without the bitfileds, maybe it's better this way.
-See diff from v2:
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 4ce4ffddec62..64d44fc61d43 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -87,9 +87,9 @@ static long do_sys_name_to_handle(const struct path *path=
-,
-                 * decoding connectable non-directory file handles.
-                 */
-                if (fh_flags & EXPORT_FH_CONNECTABLE) {
-+                       handle->handle_type |=3D FILEID_IS_CONNECTABLE;
-                        if (d_is_dir(path->dentry))
--                               fh_flags |=3D EXPORT_FH_DIR_ONLY;
--                       handle->handle_flags =3D fh_flags;
-+                               fh_flags |=3D FILEID_IS_DIR;
-                }
-                retval =3D 0;
-        }
-@@ -352,7 +352,7 @@ static int handle_to_path(int mountdirfd, struct
-file_handle __user *ufh,
-                retval =3D -EINVAL;
-                goto out_path;
-        }
--       if (f_handle.handle_flags & ~EXPORT_FH_USER_FLAGS) {
-+       if (!FILEID_USER_TYPE_IS_VALID(f_handle.handle_type)) {
-                retval =3D -EINVAL;
-                goto out_path;
-        }
-@@ -377,10 +377,14 @@ static int handle_to_path(int mountdirfd, struct
-file_handle __user *ufh,
-         * are decoding an fd with connected path, which is accessible from
-         * the mount fd path.
-         */
--       ctx.fh_flags |=3D f_handle.handle_flags;
--       if (ctx.fh_flags & EXPORT_FH_CONNECTABLE)
-+       if (f_handle.handle_type & FILEID_IS_CONNECTABLE) {
-+               ctx.fh_flags |=3D EXPORT_FH_CONNECTABLE;
-                ctx.flags |=3D HANDLE_CHECK_SUBTREE;
--
-+               if (f_handle.handle_type & FILEID_IS_DIR)
-+                       ctx.fh_flags |=3D EXPORT_FH_DIR_ONLY;
-+       }
-+       /* Filesystem code should not be exposed to user flags */
-+       handle->handle_type &=3D ~FILEID_USER_FLAGS_MASK;
-        retval =3D do_handle_to_path(handle, path, &ctx);
-
- out_handle:
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index 96b62e502f71..3e60bac74fa3 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -159,8 +159,17 @@ struct fid {
- #define EXPORT_FH_CONNECTABLE  0x1 /* Encode file handle with parent */
- #define EXPORT_FH_FID          0x2 /* File handle may be non-decodeable */
- #define EXPORT_FH_DIR_ONLY     0x4 /* Only decode file handle for a
-directory */
--/* Flags allowed in encoded handle_flags that is exported to user */
--#define EXPORT_FH_USER_FLAGS   (EXPORT_FH_CONNECTABLE | EXPORT_FH_DIR_ONLY=
-)
-+
-+/* Flags supported in encoded handle_type that is exported to user */
-+#define FILEID_USER_FLAGS_MASK 0xffff0000
-+#define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
-+
-+#define FILEID_IS_CONNECTABLE  0x10000
-+#define FILEID_IS_DIR          0x40000
-+#define FILEID_VALID_USER_FLAGS        (FILEID_IS_CONNECTABLE | FILEID_IS_=
-DIR)
-+
-+#define FILEID_USER_TYPE_IS_VALID(type) \
-+       (FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS)
-
- /**
-  * struct export_operations - for nfsd to communicate with file systems
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index cca7e575d1f8..6329fec40872 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1071,8 +1071,7 @@ struct file {
-
- struct file_handle {
-        __u32 handle_bytes;
--       int handle_type:16;
--       int handle_flags:16;
-+       int handle_type;
-        /* file identifier */
-        unsigned char f_handle[] __counted_by(handle_bytes);
- };
 
