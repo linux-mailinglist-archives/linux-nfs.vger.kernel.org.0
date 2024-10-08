@@ -1,225 +1,226 @@
-Return-Path: <linux-nfs+bounces-6923-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6924-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 162299946DC
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:28:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F48A994E03
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:12:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5A1D282950
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 11:28:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3124A28541D
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:12:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB0C71DE3AF;
-	Tue,  8 Oct 2024 11:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9491DE8A0;
+	Tue,  8 Oct 2024 13:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMjZt5r6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CA01DD548;
-	Tue,  8 Oct 2024 11:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074DA1DE88F;
+	Tue,  8 Oct 2024 13:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728386831; cv=none; b=pP/FXIXA3W6CawNS6yt9HeqFjn2SY2gS8DZblI5ym5RaiikDIj7ghtHG5jG+F362OH2DfcUJ+hJYc1hm51xuXW+JCHv3EE6DtMGru2Mig0dU6WnvPHm6pmjgJ4Vp1Kwlt3rjSikLaea640NUf5QBdQbZ7lFkiMtgqs1luyxZMR0=
+	t=1728393113; cv=none; b=TixkJ9tO5mv4JKjHRyt+RfvXIq7K5mMRShpQvMNtXdn/UkK8RelvL9i5szekUbtoIMLk7JVP6v1UU7QPO04mWXe2h6Q5hE4jbkqTlGr5mPepAVLlgcyFe+ctB07Y1iMH8Ij0nkztV1fb+e5Yd7IyyMmxJZZSVybyQoN1Y96YwEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728386831; c=relaxed/simple;
-	bh=XoHsQ7qwJruBKKANIQ1jxKeElUiyTS3ggUghVH8t8Qo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FQpASnuT0tlHSkPQL2tMgxAxETQkXAOGe7LooR8p02JCyv5gB2i20V+H71HIXGJnOSSxo2ucKrFK/Z4tUDz68z0gWuj6nyYkkvPyvnsZeM2bA76ojYVCAtmTrDYU0iXZ5PeYQlTWwdXcvFHI2FS6aezcUvSHdrmN4o3KL158/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XNDFQ6x3Xzfd5N;
-	Tue,  8 Oct 2024 19:24:42 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 434271800DE;
-	Tue,  8 Oct 2024 19:27:06 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 8 Oct 2024 19:27:05 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
-	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
- Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Shuah Khan
-	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH net-next v20 04/14] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Tue, 8 Oct 2024 19:20:38 +0800
-Message-ID: <20241008112049.2279307-5-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20241008112049.2279307-1-linyunsheng@huawei.com>
-References: <20241008112049.2279307-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1728393113; c=relaxed/simple;
+	bh=sctgzteZF0xLIJZeV0v1P46a4lOB3Jen+Szq9MvYebg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oZYnZSkrp9xvqNen4GdDeca+1z5Yq+4KiMWIK8oFflFhefSdL82spHq4YF5Yx5wCX+O87+MO0VjpWNH+Kf5hSrLcOwbMmHRY8N6q1gLlXyi9lBHG006IS6Y/Lclpa0ppCI23n48zPcjVbQH7rGGU5RSVn1mVRb/gsiVuvXeE7Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMjZt5r6; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7a9ae8fc076so610339485a.2;
+        Tue, 08 Oct 2024 06:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728393111; x=1728997911; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QUhIhCW4EYVtZ1pFGNbZwIrKmPYGAss7TRP+oocEQ7M=;
+        b=WMjZt5r6k08m67d0i3jJ9QlUMw5LXj2ZD/LbPlIBR5CUkxLsY/aN1qLtwvcb8yrsQm
+         7JKAml6Ul+IKC8KTvzUeK++kKb6f590fHfIJ1HHhVpEamtiRJHL3d5sZfIT1D1I2AiEs
+         jHcot0sGVHfIehGcoJPpaKoQekoqntsCU37NyUEFg3rhwMatLLgENXz/nZ/IjfPFLCzf
+         nzJ1uOKcPLNHCL7TJJNuI5YOg7BVRige1IGkEMe0IeZAwD26a06EH4QZsQbFGikunWvv
+         Nbs6ba3h6MdzLKu0O4COseLVG+arvb/WGhhaUQkuTYrKvpMNWaGkWUJ2hlEQqen1CUVg
+         oV8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728393111; x=1728997911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QUhIhCW4EYVtZ1pFGNbZwIrKmPYGAss7TRP+oocEQ7M=;
+        b=bUwIi0hpjoQ+Ipm6knEoNf/I0POL6v0rRfz2rUxgzFgKQzyjtlMfz8oCd6L8nMzN4X
+         012CijCXR55k7422/2GMOzbJ9GCvzN4K+mXc46Y+tPdgUwNG1g4G5v3q1bz0FaEN0yaF
+         w0Rgz+nJ6dSoxhJsz0L3axtvu/OZimpmuzHwaKax/I0kSnLO4aLSRSw7UHwAklUEyhnK
+         yQTUH9tItdAp2JY1i38AvqhNg+VGyrn8zSIgdiI/2+jC8dvyElu4P06nijCFjmoHSadP
+         mhosu8kVuRShGdBIBGKiFARogUJ3j5tLfB5u72MNyyAG8l5MWPhMa62I6Uj4ZlRMtJRv
+         rBTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsigYSxfoifbv13PPJhK3F5lrtZiUFODIiIsBpvpRwfbvrrzqsZHNCRpzqWSUzUHRMgozYzF6ojgvsW+IK@vger.kernel.org, AJvYcCW0vEcD5jWeSVOsu1Nfllo+tajR74OQGehdp2YMah68f1QbMWxKFWWMiiwB0XVYfqtfx4+smTLmlza1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSeC/SdbaT0HoqCag6PwC9wHOsxnoOTvCj7O33gCfHR8eIS/3n
+	YN5IWgzVPZ0rRf/zibniYaFtGB5UbCHWqPLguJYg4+IzHNu3ZHAzYtRyBePKWKWaREuUIesumAc
+	+60V6VXhH9Ki25uMzEW3ryAHKBIs=
+X-Google-Smtp-Source: AGHT+IGlbGUYc4Iv0m2kHtGA8QMswKhBWC24wvpxa3c9aagc6ojOjSPwwHKFaT84+xM3iA5ee2GpWYw3USOI7cUl61I=
+X-Received: by 2002:a05:620a:319c:b0:7a9:bcc7:4ff3 with SMTP id
+ af79cd13be357-7ae6f48b8cdmr2714719985a.42.1728393110565; Tue, 08 Oct 2024
+ 06:11:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+References: <20240923082829.1910210-1-amir73il@gmail.com> <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
+ <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com> <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
+In-Reply-To: <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 8 Oct 2024 15:11:39 +0200
+Message-ID: <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to userspace
+To: Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+On Tue, Oct 8, 2024 at 1:07=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
+te:
+>
+> On Mon, 2024-10-07 at 17:26 +0200, Amir Goldstein wrote:
+> > On Wed, Sep 25, 2024 at 11:14=E2=80=AFAM Christian Brauner <brauner@ker=
+nel.org> wrote:
+> > >
+> > > > open_by_handle_at(2) does not have AT_ flags argument, but also, I =
+find
+> > > > it more useful API that encoding a connectable file handle can mand=
+ate
+> > > > the resolving of a connected fd, without having to opt-in for a
+> > > > connected fd independently.
+> > >
+> > > This seems the best option to me too if this api is to be added.
+> >
+> > Thanks.
+> >
+> > Jeff, Chuck,
+> >
+> > Any thoughts on this?
+> >
+>
+> Sorry for the delay. I think encoding the new flag into the fh itself
+> is a reasonable approach.
+>
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
----
- drivers/vhost/net.c                                   |  2 +-
- include/linux/page_frag_cache.h                       | 10 ++++++++++
- net/core/skbuff.c                                     |  6 +++---
- net/rxrpc/conn_object.c                               |  4 +---
- net/rxrpc/local_object.c                              |  4 +---
- net/sunrpc/svcsock.c                                  |  6 ++----
- tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
- 7 files changed, 19 insertions(+), 15 deletions(-)
+Adding Jan.
+Sorry I forgot to CC you on the patches, but struct file_handle is official=
+ly
+a part of fanotify ABI, so your ACK is also needed on this change.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index f16279351db5..9ad37c012189 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
- 
- 	return 0;
- }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 67ac8626ed9b..0a52f7a179c8 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -7,6 +7,16 @@
- #include <linux/mm_types_task.h>
- #include <linux/types.h>
- 
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
-+{
-+	nc->va = NULL;
-+}
+> I'm less thrilled with using bitfields for this, just because I have a
+> general dislike of them, and they aren't implemented the same way on
+> all arches. Would it break ABI if we just turned the handle_type int
+> into two uint16_t's instead?
+
+I think it will because this will not be backward compat on LE arch:
+
+ struct file_handle {
+        __u32 handle_bytes;
+-       int handle_type;
++      __u16 handle_type;
++      __u16 handle_flags;
+        /* file identifier */
+        unsigned char f_handle[] __counted_by(handle_bytes);
+ };
+
+But I can also do without the bitfileds, maybe it's better this way.
+See diff from v2:
+
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 4ce4ffddec62..64d44fc61d43 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -87,9 +87,9 @@ static long do_sys_name_to_handle(const struct path *path=
+,
+                 * decoding connectable non-directory file handles.
+                 */
+                if (fh_flags & EXPORT_FH_CONNECTABLE) {
++                       handle->handle_type |=3D FILEID_IS_CONNECTABLE;
+                        if (d_is_dir(path->dentry))
+-                               fh_flags |=3D EXPORT_FH_DIR_ONLY;
+-                       handle->handle_flags =3D fh_flags;
++                               fh_flags |=3D FILEID_IS_DIR;
+                }
+                retval =3D 0;
+        }
+@@ -352,7 +352,7 @@ static int handle_to_path(int mountdirfd, struct
+file_handle __user *ufh,
+                retval =3D -EINVAL;
+                goto out_path;
+        }
+-       if (f_handle.handle_flags & ~EXPORT_FH_USER_FLAGS) {
++       if (!FILEID_USER_TYPE_IS_VALID(f_handle.handle_type)) {
+                retval =3D -EINVAL;
+                goto out_path;
+        }
+@@ -377,10 +377,14 @@ static int handle_to_path(int mountdirfd, struct
+file_handle __user *ufh,
+         * are decoding an fd with connected path, which is accessible from
+         * the mount fd path.
+         */
+-       ctx.fh_flags |=3D f_handle.handle_flags;
+-       if (ctx.fh_flags & EXPORT_FH_CONNECTABLE)
++       if (f_handle.handle_type & FILEID_IS_CONNECTABLE) {
++               ctx.fh_flags |=3D EXPORT_FH_CONNECTABLE;
+                ctx.flags |=3D HANDLE_CHECK_SUBTREE;
+-
++               if (f_handle.handle_type & FILEID_IS_DIR)
++                       ctx.fh_flags |=3D EXPORT_FH_DIR_ONLY;
++       }
++       /* Filesystem code should not be exposed to user flags */
++       handle->handle_type &=3D ~FILEID_USER_FLAGS_MASK;
+        retval =3D do_handle_to_path(handle, path, &ctx);
+
+ out_handle:
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index 96b62e502f71..3e60bac74fa3 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -159,8 +159,17 @@ struct fid {
+ #define EXPORT_FH_CONNECTABLE  0x1 /* Encode file handle with parent */
+ #define EXPORT_FH_FID          0x2 /* File handle may be non-decodeable */
+ #define EXPORT_FH_DIR_ONLY     0x4 /* Only decode file handle for a
+directory */
+-/* Flags allowed in encoded handle_flags that is exported to user */
+-#define EXPORT_FH_USER_FLAGS   (EXPORT_FH_CONNECTABLE | EXPORT_FH_DIR_ONLY=
+)
 +
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
++/* Flags supported in encoded handle_type that is exported to user */
++#define FILEID_USER_FLAGS_MASK 0xffff0000
++#define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
 +
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_align(struct page_frag_cache *nc, unsigned int fragsz,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 74149dc4ee31..ca01880c7ad0 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -753,14 +753,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 
- 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
-@@ -850,7 +850,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 825ec5357691..b785425c3315 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1608,7 +1608,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1618,8 +1617,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
++#define FILEID_IS_CONNECTABLE  0x10000
++#define FILEID_IS_DIR          0x40000
++#define FILEID_VALID_USER_FLAGS        (FILEID_IS_CONNECTABLE | FILEID_IS_=
+DIR)
 +
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
-diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-index fdf204550c9a..36543a129e40 100644
---- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
-+++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
-@@ -117,7 +117,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_nc.va = NULL;
-+	page_frag_cache_init(&test_nc);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
--- 
-2.33.0
++#define FILEID_USER_TYPE_IS_VALID(type) \
++       (FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS)
 
+ /**
+  * struct export_operations - for nfsd to communicate with file systems
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index cca7e575d1f8..6329fec40872 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1071,8 +1071,7 @@ struct file {
+
+ struct file_handle {
+        __u32 handle_bytes;
+-       int handle_type:16;
+-       int handle_flags:16;
++       int handle_type;
+        /* file identifier */
+        unsigned char f_handle[] __counted_by(handle_bytes);
+ };
 
