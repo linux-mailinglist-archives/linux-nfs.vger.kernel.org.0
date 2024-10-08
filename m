@@ -1,138 +1,130 @@
-Return-Path: <linux-nfs+bounces-6947-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6948-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3816199552F
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 18:58:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 082649955CB
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 19:37:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E22A11F27A91
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 16:58:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A36E1C252CF
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 17:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F7281E0DF2;
-	Tue,  8 Oct 2024 16:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A297F13BC2F;
+	Tue,  8 Oct 2024 17:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dv0IWDtN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqS+sJ+X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD80653365
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 16:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDD920A5FF
+	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 17:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728406721; cv=none; b=QZuf/a8Ql9u74101RdcMbiNbQvJqdRc7TfcYuYr0hKFeSZ6TDuoPFHFHwBdUvdw8E0MsN2xO4s2RwyXxwfer3z8a0HIMnG3vd+R2saW/NVfXLSvtmYw8Ocx98HvioDrRvbHftj4vBTx5TabEehMEGjYAiYh0UYIFiEq5Lxn+QAg=
+	t=1728409019; cv=none; b=ZwXImaqgEVq0+52R951T0zsAhj0UdU7DZ/GxzlEAczGEd1FRMGe3gEw/B5OEiUKzPV/2T0kZCcusFSxn3wi6GAA1nQE/ufvSXJsWpxw4boI64uoyUHDAOUWfSYR305ddZ3rDi6/E9+MdYALUNYVI4DHMPv9i4R11W0/eXrNv4bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728406721; c=relaxed/simple;
-	bh=cuvI2mFrGpu/9IW5DNdMshEu05Hifels27/L06aLHlw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=UcvbN1/y2814b1Vza36hqnkzoR+AoqeTIC8tVKqHSfZ/krOobJbF0dzIre3oKWsXXWHA/C2P0UaAHFqAAiVG1F3917pa+D9b3eHV7Y17zIz51x+21o5ClBLSpiNweHNXnsD/mzlvWQKS4CPmW6zWKWuSJpkXruKnHaemVC673r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dv0IWDtN; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 498Dtbi4011432;
-	Tue, 8 Oct 2024 16:58:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=1ozWg0qF
-	186P8KrXrhQjbpqQlOKV9IIZFUKTLrWoSGI=; b=dv0IWDtNAu5MrS1DUTyoRDlR
-	AbXUhvNu1vo5ch7DcGfQa3VOq6n0klQlXmsVAvh637jugOrFUxDMW9P9iLCoshC8
-	EC8rkFvdF4dQ/rTYN6+ndP0UAEovGetZL6Y31hXeo9m/FJb245tCoSZ08II0haPN
-	tHb4NnXpKQXCS/bZo7ib4h0IWcFkl2QgEsxKaBp9Lm3dIzj+SzDQeJXUTWPI5yN1
-	687IqNzNv8zQ02b6huFWRaiz9H4/qMaxkAyD2b/bRTdxSTm17qWL2jaITUcMC2JO
-	LNHx00gay6wm1EQlBAhwz6+WCwK7wYuJOIFaqRQEx2Unq7m/21Vkyu5fi1Y8+g==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 422yyv6cae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 08 Oct 2024 16:58:36 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 498FfOMI022841;
-	Tue, 8 Oct 2024 16:58:35 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422uw7ephx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 08 Oct 2024 16:58:35 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 498GwYLx015854;
-	Tue, 8 Oct 2024 16:58:34 GMT
-Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 422uw7enrx-1;
-	Tue, 08 Oct 2024 16:58:32 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: anna.schumaker@oracle.com, trondmy@hammerspace.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFS: remove revoked delegation from server's delegation list
-Date: Tue,  8 Oct 2024 09:57:58 -0700
-Message-Id: <1728406678-16857-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-08_14,2024-10-08_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 mlxscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410080108
-X-Proofpoint-GUID: PX6WeBOFMruEZ5zQHMgwpimXK3oiDYfy
-X-Proofpoint-ORIG-GUID: PX6WeBOFMruEZ5zQHMgwpimXK3oiDYfy
+	s=arc-20240116; t=1728409019; c=relaxed/simple;
+	bh=MEAowTIs9B6ucEs2WWgxfjYvBWfoswPfIgFCG+Z+mJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jgeakvN0T1QjbMMCkp9EGY93CIXhYt5mPxj7sATV7ta4D1Y7edsxvT5vmJtQNrYZaFlhgcroVC2YBXC5qeaXDbia2j+SmvFYxhEc35K7d12n9L0BEWMnN8S2Jl/GRE4qNhgIuqJ4bFJJBFc2UjyFL5DGOKsROpNGq35JGjuDElM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fqS+sJ+X; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728409017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MEAowTIs9B6ucEs2WWgxfjYvBWfoswPfIgFCG+Z+mJk=;
+	b=fqS+sJ+X7S3dRbkdHrt9KrZ+/BxYM2NgY3ozwzqEQwyRqVXoBeV6BWVvxvkXNaQYkLAOsb
+	KB6QH0dEr+SXOWnVYMsEMZozQ3qICP1x65xO6IDyKxOhtZRFwe+cAXuMOi4PGAaz9eeF5J
+	EGDb3xb3Bu85RvJJKW72+KmEFn87wqU=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-fOwT_T1mMgSmvbzgywlb4w-1; Tue, 08 Oct 2024 13:36:55 -0400
+X-MC-Unique: fOwT_T1mMgSmvbzgywlb4w-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2fabdf87c02so44431231fa.3
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Oct 2024 10:36:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728409014; x=1729013814;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MEAowTIs9B6ucEs2WWgxfjYvBWfoswPfIgFCG+Z+mJk=;
+        b=k+IP84pzu1vo+RGkOnxQFjX0HnceaaliDjMKvDwTQmAEu4BThc5XSxuu6ov4vY/dj8
+         RWscCzfg4iKIw7kwyM3eqjEGNXt2ShoCd5fIhq6e9UChxinN88YRQi56aR7V/Z+F5h+Q
+         1BawI+I1qa0hMVYEMOr09c6+6pW1Qpn6j0CCLWNyLWl8FiiAJqR0i1dUDxdIz2LGWPbh
+         8VaZegN8LSrXWDRq0gdLa/o+Ba4nL+HT6m0aMRD/uRXVfQDXJ6aKyK1hXnFg53vdyOri
+         R/mSjQZOY6nRWf6sx0FfdByl0hv/zr5UyNRqY3uEutBFwUID3OMjs/tRisiV07312/XH
+         SFOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMvscgX4QC7qjDmzTPS9Rr15mSH2DGvGQ/jWPMUJnm2XxaBTfcrjr5PPYXbEfpzL5PPayJnoPuslo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXT8PvKe0zWq8f7Dy4q2Z4N9TCQxg8dTeG+n/ZO+Fp4d9ZHdZf
+	XJAyDox3ZjePSlOSif5oBWBcXEdOxJxn8RmHscMD9lPaw/cpO2HUiw4RwRjBMfjOzniJI1n8kcy
+	1ZmGWzEjGzQ/VaYyvqkmTtMSWF1F4Tn1Wx1qlewihrzABQ6MOd3xvb9uXW8PGrIyVCg39HZ0gKd
+	b6GtubJKZ5ldBFDCSOiS4dcuGRLPAM4TiA
+X-Received: by 2002:a05:651c:4cb:b0:2fb:51a:d22 with SMTP id 38308e7fff4ca-2fb051a0f84mr41785851fa.23.1728409014235;
+        Tue, 08 Oct 2024 10:36:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyxvYUsWDXwuq1qgj9KeuoeJvQZvdLhpB95VL+Hxq4QwXy+WT778qu25XObcmaxbqJ8/S99KWvEgS8Zzxmmi0=
+X-Received: by 2002:a05:651c:4cb:b0:2fb:51a:d22 with SMTP id
+ 38308e7fff4ca-2fb051a0f84mr41785681fa.23.1728409013810; Tue, 08 Oct 2024
+ 10:36:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20241003151435.3753959-1-aahringo@redhat.com>
+In-Reply-To: <20241003151435.3753959-1-aahringo@redhat.com>
+From: Alexander Aring <aahringo@redhat.com>
+Date: Tue, 8 Oct 2024 13:36:42 -0400
+Message-ID: <CAK-6q+imtq3=pcM-gEnAYyyA_uYZsBpPbirCOh5yiDs9fr326Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] nfs: kobject: use generic helpers and ownership
+To: trondmy@kernel.org
+Cc: anna@kernel.org, bcodding@redhat.com, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, akpm@linux-foundation.org, linux-nfs@vger.kernel.org, 
+	gfs2@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After the delegation is returned to the NFS server remove it
-from the server's delegations list to reduce the time it takes
-to scan this list.
+Dear nfs tree maintainers,
 
-Piggyback the state manager's run to return marked delegations
-for this job.
+On Thu, Oct 3, 2024 at 11:15=E2=80=AFAM Alexander Aring <aahringo@redhat.co=
+m> wrote:
+>
+> Hi,
+>
+> I currently have pending patches for fs/dlm (Distributed Lock Manager)
+> subsystem to introduce some helpers to udev. However, it seems it takes
+> more time that I can bring those changes upstream. I put those out now
+> and already figured out that nfs can also take advantage of those changes=
+.
+>
+> With this patch-series I try to try to reduce my patch-series for DLM
+> and already bring part of it upstream and nfs will be a user of it.
+>
+> The ownership callback, I think it should be set as the
+> kset_create_and_add() sets this callback as default. I never had any
+> issues with it, but there might be container corner cases that requires
+> those changes?
+>
+> - Alex
+>
 
-Network trace captured while running the below script shows the
-time taken to service the CB_RECALL increases gradually due to
-the overhead of traversing the delegation list in
-nfs_delegation_find_inode_server. 
+Can we have those patches applied to the nfs tree? According to the
+udev/kobject maintainer it is fine to take this in any tree that it
+needs to go through. [0]
+I made nfs as a first user of these new udev helpers functionality, so
+it should go through the nfs tree if there are no other issues with
+this series?
 
-The NFS server in this test is a Solaris server which issues
-CB_RECALL when receiving the all-zero stateid in the SETATTR.
+Thanks.
 
-#!/bin/sh 
+- Alex
 
-mount=/mnt/data
-for i in $(seq 1 20)
-do
-   echo $i
-   mkdir $mount/testtarfile$i
-   time  tar -C $mount/testtarfile$i -xf 5000_files.tar
-done
-
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfs/delegation.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 20cb2008f9e4..65b10f7ea232 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -642,6 +642,17 @@ static int nfs_server_return_marked_delegations(struct nfs_server *server,
- 
- 		if (test_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags))
- 			continue;
-+		if (test_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
-+			inode = nfs_delegation_grab_inode(delegation);
-+			if (inode) {
-+				rcu_read_unlock();
-+				if (nfs_detach_delegation(NFS_I(inode), delegation, server))
-+					nfs_put_delegation(delegation);
-+				iput(inode);
-+				cond_resched();
-+				goto restart;
-+			}
-+		}
- 		if (!nfs_delegation_need_return(delegation)) {
- 			if (nfs4_is_valid_delegation(delegation, 0))
- 				prev = delegation;
--- 
-2.43.0
+[0] https://lore.kernel.org/gfs2/2024081519-caddy-monstrous-b37d@gregkh/
 
 
