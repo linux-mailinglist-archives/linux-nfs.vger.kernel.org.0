@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-6928-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6929-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 804FB995090
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:47:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3291995091
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:47:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35FBB1F21674
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:47:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBB161C2535E
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:47:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D76A1D1302;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAD841DF279;
 	Tue,  8 Oct 2024 13:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXAplIgg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruDbwBng"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B513959D
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 13:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76D213959D
+	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 13:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728395257; cv=none; b=GTY43tVW5wL7wS2AFL66/qDvrdnP0gbbybAvfsW9bLIomYq10+n981yhBLxWi6NFJpzrgPj24eAXvWdEfmqnobhhTw1VlgojLd7Tr1aM/x7x5seEW/yoS+sltxbO5DCYE3xYAXDo8APRKzEQQAq1Gk94poHyc+kdH720H8AfRLU=
+	t=1728395258; cv=none; b=WFoP279BjNjqC0M1vlR/A1bN17lcGWdGdk9WdIXsWzCW0c0KWALkmfFuwheKTfZlfhFgsAR8fLmjzUak8OSTEceX6RBwLvsvmawlUJOuNjB3W5WWsMcrtq6Rhl5+tZtmCiveGeUWXxFkJM78bYMeZTX1qOebd0mwSS46TvXMcbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728395257; c=relaxed/simple;
-	bh=+e0kH6bCA1Yr7CyTTkq1jxgosWMH+IKZoZMrUHwYlq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eA2QZG04KHXPa4b6HXUGfLlV3LkiNAKMdf8ua3wLZrhIHN8O024sZJXsViGemzHPaPP46ZgxKTiBWid3Q5hRtKlVOJLbm61KdRLitWj+kwMffZHYwwRxWIocwCj11Wu/OIZy6jgm3YuCz1FLMEBoR8tDsOSzEtLCQeKPwDCexCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXAplIgg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B98C4CEC7;
-	Tue,  8 Oct 2024 13:47:36 +0000 (UTC)
+	s=arc-20240116; t=1728395258; c=relaxed/simple;
+	bh=PS+siCOz9OVFuPMJFQAG4sD84t/J1JI/yJ7OfIcJIN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UqkQvH5nBu0K/OJ4+bsh0sBFHJqWdl50jTfvmwwDPk8F0grCQpj3IbM+//CUa+VKPDNdVtYBNvOzKV4Gm6U2pk6kCJTHLFk7/zbSagQ30aL1/A5yUOKRermo42AQW3jgEwZNgvrPTz0JAX57viPQnjqu4IcsAMFS8WQoV+oAVUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruDbwBng; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DDDC4CECE;
+	Tue,  8 Oct 2024 13:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728395257;
-	bh=+e0kH6bCA1Yr7CyTTkq1jxgosWMH+IKZoZMrUHwYlq0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TXAplIggXRRsHFwURnMYhxBdfPLNlIotbABs0rzwVAe4Y/OkKY4ug2IBV+ksuTpmp
-	 LGTTbBYe7Md2tpoajbYRM/X5gGvwyJlYxkX193g7kBOlXq/0ZfetypxhVQG/qvduYp
-	 nCBOEuu8uXE2e4LdI8KjvDYOC98koGmK7VNjXheX3kej2sjkEMZWo8NlNWjPsngN+X
-	 xLgk+rAMs+WY5jutaGjxwD9THeiRsSIXh/fnHlYKnA9XrZ/aDW2vnGjb/qKIrVQIsJ
-	 CYcECQyo13zGA+ZnrzXZIxR5uGGU2dBdPwjabfxsVA3gdDxTx1FDHV/HlWEZ6IlBJ3
-	 9FFSOQgFVnB4A==
+	s=k20201202; t=1728395258;
+	bh=PS+siCOz9OVFuPMJFQAG4sD84t/J1JI/yJ7OfIcJIN8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ruDbwBngukT7wB8omVyUUy0ow/R+Qwoaou74aEr1kjG54m5IKv2nkNCNFsIDEuK7G
+	 dPEiCI9Xwfuh05ENNJPXkMR2mv98xSrWVHPQxzVVcZPa0LJ3FtCMGDEAuO4rouXbFz
+	 FHVfKCaKKIwxjo++vGOnkLqBSEpQfEUhuSUVp0L22sTWVSnyjcVi32YXyrLTh3MSCf
+	 WhmpKWCeBfxoX7qnIAVBbRXL0w4LiqdWBQSuxER8yJAGe/AjwAjD/2kmnHkTg0brbS
+	 QI2DrgB/7nOHAqFEtSFatjV74kWSJgCdhR1FquHQH9TcSf5Lx7wthQkSxzR0pJqAu0
+	 WIFRuabK1S6fg==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,67 +49,48 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 0/9] async COPY fixes
-Date: Tue,  8 Oct 2024 09:47:19 -0400
-Message-ID: <20241008134719.116825-11-cel@kernel.org>
+Subject: [RFC PATCH 1/9] NFS: CB_OFFLOAD can return NFS4ERR_DELAY
+Date: Tue,  8 Oct 2024 09:47:20 -0400
+Message-ID: <20241008134719.116825-12-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
+In-Reply-To: <20241008134719.116825-11-cel@kernel.org>
+References: <20241008134719.116825-11-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1779; i=chuck.lever@oracle.com; h=from:subject; bh=/HCqJc7wrRIpBhO6fseJvFIIbn8kmTn1yYEd6w995kM=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnBTfnsK4cMtQrFtMcGlF0qKvAAqLk8Yjk+ql47 BLoWa3RRVqJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZwU35wAKCRAzarMzb2Z/ lyo6D/9SaAg/Zao3m5no4H1mxuv9LikxHtr5OGxQe9lZDxp+sA2MfHERH8E8HhYs1jtpJHzeBTM wKn8DFJ3CO1H6FFnG6wdondAMPNOKWrFlxsvGAPJKyDg48H4vjzKGgx7p4/vRItw4Ub+XPB/imS GYDWlbBtDV2/b8DvwhXkWFmQozUVGtduiMBfhJL+4edumWJKHYrSh3O0nmnwoLpsl8rXLVrpumH DP1tJ/j+ubdXCBTuFNAmI+JHkAGG1RPUjCmbOVgoPo84e97okYvMYTQ3a9JBvs5+PfKV4sTFMCO 5f6OfogJ32GqFb1dsVzaD5Bee6wUvGtd8ZdCSDi4WhftrDktcqX6wDItb+K9vo99yTQILEyuuRv QdA7zuOzgSn7dlATDPobO4ztlBKh9G9ZmTssaSYJie0gQtae0+nCrCbjaU734+FFCs4JnayA+vU rRNrVgoggn/zMwVoillnsL9yUpSjmJygkbILxmxfdBCgtL0K9ZsVC7GclNUIMLPsoP9l8KWacbO QzHUj70zr+Y7dTZtAVcZ927oV2T4GlwS7tKZhNi6tybALZkjebdaFIr8RwxapR6558b0jByqAMA WA0oKBLobW7ts40SAnqcQwfobLkNJ9YOR8zzqf8yEO9vawCIb7NYplGgPh2y7Gqblcv/hfrNP8g TWTqJ1Chjb5jQcg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=876; i=chuck.lever@oracle.com; h=from:subject; bh=hx9wCizVSEyAIJq+6ZAKF9s0uu1JfMv95X8lImJ0J3g=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnBTfy+tktoJadsbimKKjyY2exwa8tRPGayhfZ8 d/rXBlI41eJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZwU38gAKCRAzarMzb2Z/ l71gD/0bPaAnIj822ciXe4n84gWVUcdty91w9uUr7OY9QaNaClM4L1v81KtG2nkL8q0MZC9U38T TBUfLs3ow8NeCABTpO1CPuo+2aLSwRDHzYCe/WGgWTfuzYxi9S5WDoH9Uwn+upoW20vNg+1Ze4g /WhvtpvRMDtm0MWOURnbTbkHNsdIDFthqDrYE5TSVmI4l1BGjQv4DPGFhARqXiIeS+rBSqdBz/J ++W7XGzc4pxrl1VSTJBifstJ6kYo3yM5xkQ1ZR3QyEjSZjsZdoKpFPJAjUr4qzvxToHozly13e7 GkQXZwngNn6/KjZCSiPiCDOjoNWrz5bVg77Lqq8eEF4qdvUK4VMVfaaDzds3Tsn0/ZgNoErjB4n o8TGQ0rmyS0yD/lGDC5NnjgEAsb6MvXBJ4Pc4FSfu0CVZN//TJOfjRvfR29ad5XTipHg89dvdXA qXdfW47P9qZmgVI8VxyqRHIX/TK0N8ROZ6ZPbRGDIUWVXUunN0MYTqJPiCGlzTyGtCWz2cvV9bv dRGmMnLO/kE987zIKRk7kN8C1bN4viPH1mpCrmdBrHWxXGPqdyTx815XTpsJBSazOR0OHQ6WmCY DJBuW0HLNups9YFFmfXEJS/PJRKfn6nBIiV4/AzRo0941ummuvJNSUi7TSSTCaxD+fHk+EKIHfQ MXIATvPSaXCI1Uw==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Hi -
+RFC 7862 permits the callback service to respond to a CB_OFFLOAD
+operation with NFS4ERR_DELAY. Use that instead of
+NFS4ERR_SERVERFAULT for temporary memory allocation failure, as that
+is more consistent with how other operations report memory
+allocation failure.
 
-There are edge cases on both the Linux NFS server and client that
-can be improved to make notification of COPY completion reliable.
-This series accomplishes two things, primarily:
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfs/callback_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-1. Add support for OFFLOAD_STATUS to the Linux NFS client
-
-2. Modify NFSD to keep the copy state ID around so that
-   OFFLOAD_STATUS can find the completed COPY
-
-That should be enough to make async COPY reliable so that it can be
-enabled again in NFSD. I'd like to shoot for doing that in v6.13.
-
-Due to other bugs and issues, this has unfortunately been somewhat
-of a background task lately, so any independent testing would be
-greatly appreciated.
-
-When we agree that these are ready, I can split them up so they can
-be merged independently via the client and server trees.
-
-Chuck Lever (9):
-  NFS: CB_OFFLOAD can return NFS4ERR_DELAY
-  NFSD: Free async copy information in nfsd4_cb_offload_release()
-  NFSD: Handle an NFS4ERR_DELAY response to CB_OFFLOAD
-  NFS: Fix typo in OFFLOAD_CANCEL comment
-  NFS: Implement NFSv4.2's OFFLOAD_STATUS XDR
-  NFS: Rename struct nfs4_offloadcancel_data
-  NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
-  NFS: Use NFSv4.2's OFFLOAD_STATUS operation
-  NFS: Refactor trace_nfs4_offload_cancel
-
- fs/nfs/callback_proc.c    |   2 +-
- fs/nfs/nfs42proc.c        | 198 +++++++++++++++++++++++++++++++++++---
- fs/nfs/nfs42xdr.c         |  88 ++++++++++++++++-
- fs/nfs/nfs4proc.c         |   3 +-
- fs/nfs/nfs4trace.h        |  11 ++-
- fs/nfs/nfs4xdr.c          |   1 +
- fs/nfsd/nfs4proc.c        |  26 +++--
- fs/nfsd/xdr4.h            |   4 +
- include/linux/nfs4.h      |   1 +
- include/linux/nfs_fs_sb.h |   1 +
- include/linux/nfs_xdr.h   |   5 +-
- 11 files changed, 311 insertions(+), 29 deletions(-)
-
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index 7832fb0369a1..8397c43358bd 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -718,7 +718,7 @@ __be32 nfs4_callback_offload(void *data, void *dummy,
+ 
+ 	copy = kzalloc(sizeof(struct nfs4_copy_state), GFP_KERNEL);
+ 	if (!copy)
+-		return htonl(NFS4ERR_SERVERFAULT);
++		return cpu_to_be32(NFS4ERR_DELAY);
+ 
+ 	spin_lock(&cps->clp->cl_lock);
+ 	rcu_read_lock();
 -- 
 2.46.2
 
