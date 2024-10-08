@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-6931-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6932-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D4AC995094
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 069E3995093
 	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 15:47:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE4F31F25546
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40C141C22483
 	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 13:47:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9E71DF74E;
-	Tue,  8 Oct 2024 13:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833161DF966;
+	Tue,  8 Oct 2024 13:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9mlzSJ6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTSKjgBn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C40113959D
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 13:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F58013959D
+	for <linux-nfs@vger.kernel.org>; Tue,  8 Oct 2024 13:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728395260; cv=none; b=MfYEHfe8MAYlHg7PbstONPLephB/WKAAOdh6kgEHi+lcsSy4Jt/4utH+xTp/zqw97eTJYTOgZ0AOzcjrUa8kqqlVlyz+tFFwnmMzr9y1KPQNKZNRIo8/tTQVu1s3DjvXDi/VYawLziuRIiiH3YUeu1OImo2z9TrBZS3JqUV6e3o=
+	t=1728395261; cv=none; b=Koq5nHK1yTyrQI843+qoxRFkkB92T0sGpAdKb8xoDofS34NT7/MiYGI7aw+opL16wIDPJdWNIwebYEwFFJjN6QP62IH20ZlIkz93o39yJx0nr0jsCWLR17GGa8BwmBLYTn9qkiOpWz5vsrkLLWUp88OfO/tJ+1KipLFGBFk/JHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728395260; c=relaxed/simple;
-	bh=UO3Ijkcb2D6amcPFfIdr+M+0dhnixPQGtn7OVb983mI=;
+	s=arc-20240116; t=1728395261; c=relaxed/simple;
+	bh=qG088IO4r4BEzBy7NMBh4tMUVi3+24fxaKWYm++4hng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FFGCcIv9Q2HPFb5rBuu5MM/1B4+5JnI+HyP/PouH99SV7IJoSiLWfkp8lBnZngyBxr/VyAQshopxQ+Rk7RL2B/LTdJIc4Xxsgg0236Mp0i7vS+itqwdWy3fqdEPMgve7b1qACeZYUQ0zMSv95RQNPm6q1sfa8pg/+VSuYHljhbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9mlzSJ6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FE8C4CECE;
-	Tue,  8 Oct 2024 13:47:39 +0000 (UTC)
+	 MIME-Version; b=RrYWxTy+gMVY796sk/eSIgmSCNmEXDxlFEkMoJ9IDszKdIKV1IVpfv7NhnmrjUyqjk/ZdTlyTRaroi7he8IwGmuaZdPB7hDyEG2Gqdp2rCw4/4FyveZB5dUIdOeOOMPKCXUDYJhGvTZOGGbyOT/kjp63NvUuJOCqUlmDUD+L1EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTSKjgBn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6995BC4CED3;
+	Tue,  8 Oct 2024 13:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728395260;
-	bh=UO3Ijkcb2D6amcPFfIdr+M+0dhnixPQGtn7OVb983mI=;
+	s=k20201202; t=1728395261;
+	bh=qG088IO4r4BEzBy7NMBh4tMUVi3+24fxaKWYm++4hng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j9mlzSJ63dZa5ae1FBol5DZZwm2Z8hdOdSUERklsO/a4OMCPbP0mmTkAwcHkDLBPQ
-	 8/elDlwcUgRVg0rzFtlQzGzmLLNeCl34ylKQYxSbiUCUwKG447q4ZVdmujoO60Iytb
-	 srgPZhrnw1z3i+/rIzp0Yep8j9jPinyLw+igBa4PzlBx8m4ViqIyG2Jr/1QHUpPfpf
-	 EvMzjkCJJLNb5ZuH7gjcFp+q/0RtYkhT1ICkCG1P5xRDfsZJNiYkX0Q3Tw9PoeoVpf
-	 v1FX3f7a0avJrRtfOAy1xuIB6vyM6rJ6+YAj5m9/0b8QSKo5AiLG0VKQbbEmkBT770
-	 4bkMcSB+T1Fxg==
+	b=XTSKjgBndCvpNggci1aJ/HFaFHeUlo9YvCIcxQSaIvfMzU9d+FWua69d6shr7IjG6
+	 m8yz4Ge4VSmALS7vbs9u2XeKDJg83pd7tSr+s3tivAZaD/Xq0hnJHRkwVXO4hMO5kw
+	 FxtVSR8qGqhGX4caqubDIiubpvZwAT50V28M+nj/Z/o3pGH5oN2WubOkrX18masrVL
+	 jjUGP+Y1N9KG6JqTHjA0XxBlFGAaibX+gT9W+H+tWp/GyVly24E+2rIWqZBGh8sUyT
+	 XFTb5FibXcXxaQOW4vQSms+/JIkxvQXDlD7PlbKJLeshBpZRgF2fs92vDUmkD9B3Di
+	 pBTzLc4uGlUGQ==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 3/9] NFSD: Handle an NFS4ERR_DELAY response to CB_OFFLOAD
-Date: Tue,  8 Oct 2024 09:47:22 -0400
-Message-ID: <20241008134719.116825-14-cel@kernel.org>
+Subject: [RFC PATCH 4/9] NFS: Fix typo in OFFLOAD_CANCEL comment
+Date: Tue,  8 Oct 2024 09:47:23 -0400
+Message-ID: <20241008134719.116825-15-cel@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241008134719.116825-11-cel@kernel.org>
 References: <20241008134719.116825-11-cel@kernel.org>
@@ -61,62 +61,30 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1622; i=chuck.lever@oracle.com; h=from:subject; bh=Ka++gHgUIUzafsIgfC4Xq2XQF8GGbX8s118CqdOApNM=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnBTfy3X6McosSqKuvQxLpnn3gQXCxoc1asENae hhxuKzwFiqJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZwU38gAKCRAzarMzb2Z/ l//dEACSrjdU0UUORvOGshj8/MmKlGnowF2vDPs9V85bC6etDNVirtmn/ig9Ib1ItFjLu8DX+Hc IHWQ5P3IFt29olzUZQ99yvcyJM2DfKUO2gNYys/DeEjGbQBi9pyrTYifAuK6gNxgJPz7ptixL5e kRBjrA2ylTjOeM83G90jQvuFtFKV2iWSZyYt/F8DjUTVUSm6Wg6MdBHTp7UiyHIxfYxxKj/YNnK zh6dWXWZpRTtGBLsvF886aAFMHX/APMa6HUr08hq+stt3PDE2SBk9vxZpkN2vBr8cwwJVsAGPpv VaAaMDw/yXrVDTkXdooq0NJ85U6PBQXAmPf+WyZydnsHpvTlMkIKZYv1jafZd2AlLPIoVu7kY4R lggEDb23q6FDqJ+wrD14iJJUHv5FKdh01/E4oLBIPktoCa6U6lsJFtgQRCNUg4LBitZd22ByRiO h2OLXhJKTwekXcQC6sFRKOcZfX37pgCo6kpEU3os46h0OjBTCHxZ72CKkr+L/bYnHuUp1D2lTBu XHvfJKpzr9YhbTJeCWYXeP7OUYRPvlAlrqJyk6qww+Fb4Zs4j61yH8bPFXNTtxE0OJ8FNZT6koC crE7Co/J6PBNu8YzTWfgrdJ9HGKYWoydDh8M3I4i5Bk6M0d0eNjW3kUNYYsGjSz3b1PzJvYWc0Y BXUP00Ex2mosSEw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=546; i=chuck.lever@oracle.com; h=from:subject; bh=eJ3obtcWZiv2MzPuYhGsLc1j6s9O3yd2d/rO9u5uxcI=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnBTfyc59zOK9MZ1+rN5U9n39Z0V1TE00T1lwwp 0SQt3N0KgKJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZwU38gAKCRAzarMzb2Z/ l9xCD/9v9c6OOQpuraxaSU9jVecnFg3McQwEkxU3Te9YfNS2stX8ABbNHbdTTkOP4xUj5sdDlCM QhQpeCup8E8aGQ3YKmXvQImFJI6pnhVIudS1AvnhREzkKRU3XzfPRV6qc5u6rtT54IKcC/nIQuZ FjK0HAqsT0G84MxkwlYW/w3bXxLhu3zYnGh8rPNvsy4znNJTr9kh4eAbVqdosmYNnxD5INj3jDO gZwcp/wKAIybwevt0pCvKbuiynuV1Ls2PSx/Rwnve4BlKRtvF5S6IOmhxq+K2+7XfIkMYg+4vla 52GXId+OFZ2e36lWjeZoQ0y9iKX2Fj81ywDtYUxJlcNb1PlMac82GYIQR7oom3TwWUksXovGdw0 NQn29EJknodFCKx7OU4USdpJOcTc+6XisXMMwtIZZekL852Ie3ovouNNz9Yxqu2x99dUKhnFNuQ 61M3Oaf2RXsj4jS+89iZbhxRgXayE9ehs+Zy6VVRZkqukD9gXvM/cpOwSP4rdFINPrbj58IvlK3 ORPqRYuFwkuQumM+xtqEBf/0xiPzRSRvmBDwQWtpdqEvbP8D+waBruWlf5XUCCm0pfTIs8G9N9K BzTHBem2BafK04xESZPBbJiBkc3S1iDqpWtm9zUYpwqNtQlvGPZXsmy6mWU6okkjtTmEh8ODgN4 0Tf8cnpcjpd9Ewg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-RFC 7862 permits callback services to respond to CB_OFFLOAD with
-NFS4ERR_DELAY. Currently NFSD drops the CB_OFFLOAD in that case.
-
-To improve the reliability of COPY offload, NFSD should rather send
-another CB_OFFLOAD completion notification.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c | 8 ++++++++
- fs/nfsd/xdr4.h     | 1 +
- 2 files changed, 9 insertions(+)
+ fs/nfs/nfs42xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index a3c564a9596c..02e73ebbfe5c 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1613,6 +1613,13 @@ static int nfsd4_cb_offload_done(struct nfsd4_callback *cb,
- 		container_of(cb, struct nfsd4_cb_offload, co_cb);
- 
- 	trace_nfsd_cb_offload_done(&cbo->co_res.cb_stateid, task);
-+	switch (task->tk_status) {
-+	case -NFS4ERR_DELAY:
-+		if (cbo->co_retries--) {
-+			rpc_delay(task, 1 * HZ);
-+			return 0;
-+		}
-+	}
- 	return 1;
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 9e3ae53e2205..ef5730c5e704 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -549,7 +549,7 @@ static void nfs4_xdr_enc_copy(struct rpc_rqst *req,
  }
  
-@@ -1742,6 +1749,7 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
- 	memcpy(&cbo->co_res, &copy->cp_res, sizeof(copy->cp_res));
- 	memcpy(&cbo->co_fh, &copy->fh, sizeof(copy->fh));
- 	cbo->co_nfserr = copy->nfserr;
-+	cbo->co_retries = 5;
- 
- 	nfsd4_init_cb(&cbo->co_cb, copy->cp_clp, &nfsd4_cb_offload_ops,
- 		      NFSPROC4_CLNT_CB_OFFLOAD);
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index dec29afa43f3..cd2bf63651e3 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -675,6 +675,7 @@ struct nfsd4_cb_offload {
- 	struct nfsd4_callback	co_cb;
- 	struct nfsd42_write_res	co_res;
- 	__be32			co_nfserr;
-+	unsigned int		co_retries;
- 	struct knfsd_fh		co_fh;
- };
- 
+ /*
+- * Encode OFFLOAD_CANEL request
++ * Encode OFFLOAD_CANCEL request
+  */
+ static void nfs4_xdr_enc_offload_cancel(struct rpc_rqst *req,
+ 					struct xdr_stream *xdr,
 -- 
 2.46.2
 
