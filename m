@@ -1,303 +1,297 @@
-Return-Path: <linux-nfs+bounces-6917-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6918-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 316A7993C13
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 03:18:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 660EA993C86
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 03:52:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F9F0B216A4
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 01:18:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89A111C2165C
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Oct 2024 01:52:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FC729A5;
-	Tue,  8 Oct 2024 01:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E641863E;
+	Tue,  8 Oct 2024 01:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYGjGjJO"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V/XW6T0n";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Lm4Ej3zR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V/XW6T0n";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Lm4Ej3zR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6307EC4;
-	Tue,  8 Oct 2024 01:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C182117BD9;
+	Tue,  8 Oct 2024 01:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728350295; cv=none; b=g9tdOuLar09OJHIluzKWE8qa3pOH/oRH7e2h7myYuB7OAw8B7pV9hRtR7aZAgSrvhQRl+QjWHsadjb5X3QjxWPvceCgYCenlKJMkQVWXBUIE+vVzS4AdcVF5lBvd6cR4KGPKCigr4s2FzopxuoH/jpHOhge/BY+br+u8LjRch6w=
+	t=1728352349; cv=none; b=mtwQ73zuizsOr4baYtOkoUmAUTb/fZ+9puZGh0xpabWBX+FnjheV2UfD2OMZV3ZlAwVm0ero+eWnqykk9XYFbhoVsh71o2JZwwmfKl+3wobnnoR1JadPv8kpKb+9W8smukQIyy+LwkGxQingJx1WKDPRiEd0aj/Za25EfTTUlgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728350295; c=relaxed/simple;
-	bh=1f3nGRrCB4boZubey7XIg+NBRkGNjN0JZqt+g/JrTTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rgrn0xyfiT9rekdEb1e18s7Y9J59RodjkID0U8gCYDmKZW3PdBPpqP/nFYAmkIAidNthsvzPeBB3KUfDICL5LqFbzR8qOmCJm2CeATlgFpILs6rJxmXbQikTafFOnWLtRudM/ZaA8rxXIRxjaENmsRiFnOZZ9X8gn3PdUBmmHP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYGjGjJO; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2fad0f66d49so75455941fa.3;
-        Mon, 07 Oct 2024 18:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728350292; x=1728955092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Nyh2UooDeyTvEJgeydzupzYKaLiQrarZ3CByd9UGTg=;
-        b=jYGjGjJOnvhGSzWp5ZJI+OQyNrTucgWoY4AMVekZE/64SI8TPDRpAXpE36WiWgbN0o
-         ImWIe1XcrzoCp5z7jX1ht27kEeNLdAiitE++Q/ES4fTJ9NIzLHiF/B20vGmbWMAfOOtw
-         LvYfre8FUfCsva3M9fytoDid0Gj4gfTXMpuCmenKGnKVT0zt3hNk3hXVjFZ0xJkssG1o
-         NTJtZYU41J9xm4Z03hl64fj1q/HwQg/XA1YRelTZyG56Oz1Pm+lBuVxsfRyKon2PdALl
-         32MzHkvn0/17gI6RnenhB7YmLhq7Nz5pkzfdHilj6orD3MknS5TgxcXd/1hGAhVnXQGn
-         4YXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728350292; x=1728955092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Nyh2UooDeyTvEJgeydzupzYKaLiQrarZ3CByd9UGTg=;
-        b=MK4CqhUv2dCqAJByU5WSbzArDHIgiHRUXvqIE1JO52H6wUHQgL5/mttDFiOV92gtjR
-         VH/EzbOfZcwNFoYwqxzGd4Dtj3kmJK47TBVdUl3nysvBexEJHuZLDrO4HmtWOReypGKO
-         QGfxzMZdQNfEA9eSFkBNgcKv1pSX2sZ9l1du9IUAYsniuMspnp/QiRFR58cr7/L1nxEM
-         8YTbnrtabAhE5+Mt+cZdVIDV+RBtNcYHsrtOaYgpyA/YQN0rTY684tusqy+Q8zMRiO1n
-         k8Ar1OMJM0IAJ3/8UN87Rlb03JDOsAkhM16Aw7lOb690qghIQIQd2kOcu/81ufKJ8i6H
-         gTig==
-X-Forwarded-Encrypted: i=1; AJvYcCUgBZ1FtmHkNJTF5rde/E07jksyjIm2ROxgmgRK2iED7IDHufvz0rddJGBurH/6x8k2A5BxOoD/+Lgx0Og=@vger.kernel.org, AJvYcCVTXAwTm7PBooTlA8oKKuWlkiPxutiCiaDS2fPE+ZLHIZ0WNf1Hl1vooAFIULno9wa56uGjMDnPnglD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiLPKx9s0vu6SArYx8P/xWp+rpN6GtAXErh1py89cCOytH5LOf
-	5ZjLu8NLCwrp+Pe2HTbI3vzNEQbFt2TysDpJ7hQVVjbi12mUHyl7SqE+k2HmAEo4BRmWAUtOKvA
-	QpiFsa990DVaR0+U/ge9fl9y6sw==
-X-Google-Smtp-Source: AGHT+IEI91Ye/CsDLs9ZZSrxBVxgyB+7AUO7bG4Ndh7lPNe9TluR0lNqCwwp+LMHn0KbaewrvRkgeUFPd+Ht9/ulKbM=
-X-Received: by 2002:a05:651c:548:b0:2fa:cc64:616c with SMTP id
- 38308e7fff4ca-2faf3c15875mr50535271fa.15.1728350291429; Mon, 07 Oct 2024
- 18:18:11 -0700 (PDT)
+	s=arc-20240116; t=1728352349; c=relaxed/simple;
+	bh=gDDjxlViTUGObdV7i8J2Bjcr6KVDo8g1FCI3rwsPBK4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Lh0iMe0FXIIs6hU9xF0buv/E6uOCMSQcsbiB/w9/WDt3E15FX0ACk/37b7LQl7o2VOUL/3TO1RVwbSnniXSc3M5nfPmKmK0xJbkzZ3AO0aRFrg4JHQ6mZNHnFArTJoxkA5UipJ6FxyYDROELoxgmDVhOK4LORMU51hjnTBNCdag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V/XW6T0n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Lm4Ej3zR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V/XW6T0n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Lm4Ej3zR; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C99CE1F891;
+	Tue,  8 Oct 2024 01:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1728352345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wb0RvxEXP61me5Urhg3Sm0XRzCYDlL5A4Q4WY1FIwLU=;
+	b=V/XW6T0nyuBj5hxvb4HMSvDByXICb3yyhXc4aIAxgJlsTUQ60hNYmuslAp5PYS51mbGy/t
+	pGIvb9BpR7ySsHZk8Z2dRMoMFLQsiWyDPnTXEMAkLtVSHYJyTpB8Vf9j0Nuv2jUGeVGVLt
+	xKV3pwCEh3pPgz2PpjK6sBxMo18UMmc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1728352345;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wb0RvxEXP61me5Urhg3Sm0XRzCYDlL5A4Q4WY1FIwLU=;
+	b=Lm4Ej3zRx2fh2tmFHvic4ZjilBTEHnEKpu2WLS2MDNbfO5YuDarwtxkWSQELTJ6CubVftd
+	iIq68gGSTGZSoRBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1728352345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wb0RvxEXP61me5Urhg3Sm0XRzCYDlL5A4Q4WY1FIwLU=;
+	b=V/XW6T0nyuBj5hxvb4HMSvDByXICb3yyhXc4aIAxgJlsTUQ60hNYmuslAp5PYS51mbGy/t
+	pGIvb9BpR7ySsHZk8Z2dRMoMFLQsiWyDPnTXEMAkLtVSHYJyTpB8Vf9j0Nuv2jUGeVGVLt
+	xKV3pwCEh3pPgz2PpjK6sBxMo18UMmc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1728352345;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wb0RvxEXP61me5Urhg3Sm0XRzCYDlL5A4Q4WY1FIwLU=;
+	b=Lm4Ej3zRx2fh2tmFHvic4ZjilBTEHnEKpu2WLS2MDNbfO5YuDarwtxkWSQELTJ6CubVftd
+	iIq68gGSTGZSoRBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BCAEE13A66;
+	Tue,  8 Oct 2024 01:52:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TJPRHFeQBGcEOQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 08 Oct 2024 01:52:23 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <EEC2DC14-EBE9-4F41-9BBE-47F9DDD110C7@oracle.com>
- <172825777599.1692160.7897699757454912990@noble.neil.brown.name> <A247373D-46F3-46F1-8C8C-996A95B1A49B@oracle.com>
-In-Reply-To: <A247373D-46F3-46F1-8C8C-996A95B1A49B@oracle.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Mon, 7 Oct 2024 18:17:59 -0700
-Message-ID: <CAM5tNy79vTM7v_-Cq9mCvudqL7JfrZ-Bc7dLvpNWQ-MkkxmPOA@mail.gmail.com>
-Subject: Re: [PATCH] nfsd: Fix NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Neil Brown <neilb@suse.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neilb@suse.de>
+To: "Olga Kornievskaia" <aglo@umich.edu>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/1] nfsd: fix possible badness in FREE_STATEID
+In-reply-to:
+ <CAN-5tyE=XkZ9hfGOortUapxCc43_YkgSeN9+7oFf=M8xRFFxTw@mail.gmail.com>
+References:
+ <>, <CAN-5tyE=XkZ9hfGOortUapxCc43_YkgSeN9+7oFf=M8xRFFxTw@mail.gmail.com>
+Date: Tue, 08 Oct 2024 12:52:20 +1100
+Message-id: <172835234057.3184596.16273347722668350379@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Mon, Oct 7, 2024 at 8:51=E2=80=AFAM Chuck Lever III <chuck.lever@oracle.=
-com> wrote:
->
-> CAUTION: This email originated from outside of the University of Guelph. =
-Do not click links or open attachments unless you recognize the sender and =
-know the content is safe. If in doubt, forward suspicious emails to IThelp@=
-uoguelph.ca.
->
->
->
->
-> > On Oct 6, 2024, at 7:36=E2=80=AFPM, NeilBrown <neilb@suse.de> wrote:
+On Tue, 08 Oct 2024, Olga Kornievskaia wrote:
+> On Sat, Oct 5, 2024 at 5:09=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
 > >
-> > On Mon, 07 Oct 2024, Chuck Lever III wrote:
-> >>
-> >>
-> >>> On Oct 6, 2024, at 6:29=E2=80=AFPM, Pali Roh=C3=A1r <pali@kernel.org>=
- wrote:
-> >>>
-> >>> On Monday 07 October 2024 09:13:17 NeilBrown wrote:
-> >>>> On Mon, 07 Oct 2024, Chuck Lever wrote:
-> >>>>> On Fri, Sep 13, 2024 at 08:52:20AM +1000, NeilBrown wrote:
-> >>>>>> On Fri, 13 Sep 2024, Pali Roh=C3=A1r wrote:
-> >>>>>>> Currently NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT do =
-not bypass
-> >>>>>>> only GSS, but bypass any authentication method. This is problem s=
-pecially
-> >>>>>>> for NFS3 AUTH_NULL-only exports.
-> >>>>>>>
-> >>>>>>> The purpose of NFSD_MAY_BYPASS_GSS_ON_ROOT is described in RFC 26=
-23,
-> >>>>>>> section 2.3.2, to allow mounting NFS2/3 GSS-only export without
-> >>>>>>> authentication. So few procedures which do not expose security ri=
-sk used
-> >>>>>>> during mount time can be called also with AUTH_NONE or AUTH_SYS, =
-to allow
-> >>>>>>> client mount operation to finish successfully.
-> >>>>>>>
-> >>>>>>> The problem with current implementation is that for AUTH_NULL-onl=
-y exports,
-> >>>>>>> the NFSD_MAY_BYPASS_GSS_ON_ROOT is active also for NFS3 AUTH_UNIX=
- mount
-> >>>>>>> attempts which confuse NFS3 clients, and make them think that AUT=
-H_UNIX is
-> >>>>>>> enabled and is working. Linux NFS3 client never switches from AUT=
-H_UNIX to
-> >>>>>>> AUTH_NONE on active mount, which makes the mount inaccessible.
-> >>>>>>>
-> >>>>>>> Fix the NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT imple=
-mentation
-> >>>>>>> and really allow to bypass only exports which have some GSS auth =
-flavor
-> >>>>>>> enabled.
-> >>>>>>>
-> >>>>>>> The result would be: For AUTH_NULL-only export if client attempts=
- to do
-> >>>>>>> mount with AUTH_UNIX flavor then it will receive access errors, w=
-hich
-> >>>>>>> instruct client that AUTH_UNIX flavor is not usable and will eith=
-er try
-> >>>>>>> other auth flavor (AUTH_NULL if enabled) or fails mount procedure=
-.
-> >>>>>>>
-> >>>>>>> This should fix problems with AUTH_NULL-only or AUTH_UNIX-only ex=
-ports if
-> >>>>>>> client attempts to mount it with other auth flavor (e.g. with AUT=
-H_NULL for
-> >>>>>>> AUTH_UNIX-only export, or with AUTH_UNIX for AUTH_NULL-only expor=
-t).
-> >>>>>>
-> >>>>>> The MAY_BYPASS_GSS flag currently also bypasses TLS restrictions. =
- With
-> >>>>>> your change it doesn't.  I don't think we want to make that change=
-.
-> >>>>>
-> >>>>> Neil, I'm not seeing this, I must be missing something.
-> >>>>>
-> >>>>> RPC_AUTH_TLS is used only on NULL procedures.
-> >>>>>
-> >>>>> The export's xprtsec=3D setting determines whether a TLS session mu=
-st
-> >>>>> be present to access the files on the export. If the TLS session
-> >>>>> meets the xprtsec=3D policy, then the normal user authentication
-> >>>>> settings apply. In other words, I don't think execution gets close
-> >>>>> to check_nfsd_access() unless the xprtsec policy setting is met.
-> >>>>
-> >>>> check_nfsd_access() is literally the ONLY place that ->ex_xprtsec_mo=
-des
-> >>>> is tested and that seems to be where xprtsec=3D export settings are =
-stored.
-> >>>>
-> >>>>>
-> >>>>> I'm not convinced check_nfsd_access() needs to care about
-> >>>>> RPC_AUTH_TLS. Can you expand a little on your concern?
-> >>>>
-> >>>> Probably it doesn't care about RPC_AUTH_TLS which as you say is only
-> >>>> used on NULL procedures when setting up the TLS connection.
-> >>>>
-> >>>> But it *does* care about NFS_XPRTSEC_MTLS etc.
-> >>>>
-> >>>> But I now see that RPC_AUTH_TLS is never reported by OP_SECINFO as a=
-n
-> >>>> acceptable flavour, so the client cannot dynamically determine that =
-TLS
-> >>>> is required.
-> >>>
-> >>> Why is not RPC_AUTH_TLS announced in NFS4 OP_SECINFO? Should not NFS4
-> >>> OP_SECINFO report all possible auth methods for particular filehandle=
-?
-> >>
-> >> SECINFO reports user authentication flavors and pseudoflavors.
-> >>
-> >> RPC_AUTH_TLS is not a user authentication flavor, it is merely
-> >> a query to see if the server peer supports RPC-with-TLS.
-> >>
-> >> So far the nfsv4 WG has not been able to come to consensus
-> >> about how a server's transport layer security policies should
-> >> be reported to clients. There does not seem to be a clean way
-> >> to do that with existing NFSv4 protocol elements, so a
-> >> protocol extension might be needed.
+> > On Sun, 06 Oct 2024, Chuck Lever wrote:
+> > > On Sat, Oct 05, 2024 at 12:20:48PM -0400, Jeff Layton wrote:
+> > > > On Sat, 2024-10-05 at 10:53 -0400, Chuck Lever wrote:
+> > > > > On Fri, Oct 04, 2024 at 06:04:03PM -0400, Olga Kornievskaia wrote:
+> > > > > > When multiple FREE_STATEIDs are sent for the same delegation stat=
+eid,
+> > > > > > it can lead to a possible either use-after-tree or counter refcou=
+nt
+> > > > > > underflow errors.
+> > > > > >
+> > > > > > In nfsd4_free_stateid() under the client lock we find a delegation
+> > > > > > stateid, however the code drops the lock before calling nfs4_put_=
+stid(),
+> > > > > > that allows another FREE_STATE to find the stateid again. The fir=
+st one
+> > > > > > will proceed to then free the stateid which leads to either
+> > > > > > use-after-free or decrementing already zerod counter.
+> > > > > >
+> > > > > > CC: stable@vger.kernel.org
+> > > > >
+> > > > > I assume that the broken commit is pretty old, but this fix does not
+> > > > > apply before v6.9 (where sc_status is introduced). I can add
+> > > > > "# v6.9+" to the Cc: stable tag.
+> > > > >
+> > > >
+> > > > I don't know. It looks like nfsd4_free_stateid always returned
+> > > > NFS4ERR_LOCKS_HELD on a delegation stateid until 3f29cc82a84c.
+> > > >
+> > > > > But what do folks think about a Fixes: tag?
+> > > > >
+> > > > > Could be e1ca12dfb1be ("NFSD: added FREE_STATEID operation"), but
+> > > > > that doesn't have the switch statement, which was added by
+> > > > > 2da1cec713bc ("nfsd4: simplify free_stateid").
+> > > > >
+> > > > >
+> > > >
+> > > > Maybe this one?
+> > > >
+> > > >     3f29cc82a84c nfsd: split sc_status out of sc_type
+> > > >
+> > > > That particular bit of the code (and the SC_STATUS_CLOSED flag) was
+> > > > added in that patch, and I don't think you'd want to apply this patch
+> > > > to anything that didn't have it.
+> > >
+> > > OK, if we believe that 3f29cc82 is where the misbehavior started,
+> > > then I can replace the "Cc: stable@" with "Fixes: 3f29cc82a84c".
 > >
-> > Interesting...
+> > I believe the misbehaviour started with
+> > Commit: b0fc29d6fcd0 ("nfsd: Ensure stateids remain unique until they are=
+ freed")
+> > in v3.18.
 > >
-> > The distinction between RPC_AUTH_GSS_KRB5I and RPC_AUTH_GSS_KRB5P is no=
-t
-> > about user authentication, it is about transport privacy.
->
-> RPC_AUTH_GSS_KRB5I is Kerberos user authentication plus
-> Kerberos integrity protection.
->
-> RPC_AUTH_GSS_KRB5P is Kerberos user authentication plus
-> Kerberos confidentiality.
->
-> So, both of these pseudoflavors select Kerberos user
-> authentication (versus, say, RPC_AUTH_UNIX, which does
-> not).
-I'd argue they also select on-the-wire protection. It just happens
-that they use the session key for a user credential.
-I'd agree with Neil, in that the 'p' refers to on-the-wire privacy.
->
->
-> > And the distinction between xprtsec=3Dtls and xprtsec=3Dmtls seems to b=
-e
-> > precisely about user authentication.
->
-> No: xprtsec authentication is /peer/ authentication. User
-> authentication is still set via sec=3D . See the final
-> paragraph in Section 4.2 of RFC 9289.
-True, but for krb5[ip] there is a (mis)use of a user principal for the
-client's machine credential. (The user principal that does SetClientID
-or ExchangeID.)
---> I'd argue that this user principal is really a client machine (or peer,
-if you prefer) credential.
---> I think that the host based service principal in the client's keytab
-      is a pita and maybe one of the reasons that krb5[ip] doesn't get
-      used that much.
+> > The bug in the current code is that it assumes that
+> >
+> >         list_del_init(&dp->dl_recall_lru);
+> >
+> > actually removes from the the dl_recall_lru, and so a reference must be
+> > dropped.  But if it wasn't on the list, then that is wrong.
+>=20
+> I've actually been chasing a different problem (a UAF) and Ben noticed
+> a problem with doing a double free (by double free_stateid) which this
+> patch addresses. But, this particular line list_del_init() in
+> nfsd4_free_stateid() has been bothering me as I thought this access
+> should be guarded by the "state_lock"? Though I have to admit I've
+> tried that and it doesn't seem to help my UAF problem. Anyway where
+> I'm going with it perhaps the guard "if
+> (!list_empty(&dp->dl_recall_lru))" is still needed (not for double
+> free_stateid by from other possibilities)?
 
->
->
-> > I would describe the current pseudo flavours as not "a clean way" to
-> > advise the client of security requirements, but they are at least
-> > established practice.
+dl_recall_lru is a bit confusing.
+
+Sometimes it is on nn->del_recall_lru in which case it is protected by
+state_lock.
+Sometimes it is on clp->cl_revoked in which case it is protected by
+clp->cl_lock.
+And sometimes it is on reaplist which doesn't need protection.
+
+So it is important to update the state of the delegation when it is
+moved between lists or removed from a list.  I think we now do thanks to
+your patch, but it wouldn't hurt to audit all accesses again...
+
+NeilBrown
+
+
+>=20
+> I was wondering if the nfsd4_free_stateid() somehow could steal the
+> entries from the list while the laundromat is going thru the
+> revocation process. The problem I believe is that the laundromat
+> thread marks the delegation "revoked" but somehow never ends up
+> calling destroy_delegation() (destoy_delegation is the place that
+> frees the lease -- but instead we are left with a lease on the file
+> which causes a new open to call into break_lease() which ends up doing
+> a UAF on a freed delegation stateid -- which was freed by the
+> free_stateid).
+>=20
+>=20
+> > So a "if (!list_empty(&dp->dl_recall_lru))" guard might also fix the
+> > bug (though adding SC_STATUS_CLOSED is a better fix I think).
 > >
-> > RPC_AUTH_SYS_TLS  seems to me to be an obvious sort of pseudo flavour.
+> > Prior to the above 3.17 commit, the relevant code was
 > >
-> > But I suspect all these arguments and more have already been discussed
-> > within the working group and people can sensibly have different
-> > opinions.
->
-> Yes, these arguments were discussed within the WG, and
-> I even wrote a draft (now expired) that treated the
-> various combinations of TLS and user authentication
-> flavors as unique pseudoflavors. The idea was rejected.
-I'll encourage NeilBrown to make comments related to the D. Noveck
-security draft over on nfsv4@ieft.org. (I'll admit I have great difficulty
-getting around to reading/commenting on these drafts, but I will try to
-get around to the security one one of these days.)
-
-The piece I'd like to see is mtls being accepted as a reasonable
-alternative to krb5i/krb5p for SP4_MACH_CRED.
-
-Personally, I think the pseudo-flavors make sense.
-Maybe I/Neil can illicit further discussion w.r.t. them, rick
-
->
->
-> > Thanks for helping me understand NFS/TLS a bit better.
+> >  static void destroy_revoked_delegation(struct nfs4_delegation *dp)
+> >  {
+> >         list_del_init(&dp->dl_recall_lru);
+> >         remove_stid(&dp->dl_stid);
+> >         nfs4_put_delegation(dp);
+> >  }
+> >
+> > so the revoked delegation would be removed (remove_stid) from the idr
+> > and a subsequent FREE_STATEID request would not find it.
+> > The commit removed the remove_stid() call but didn't do anything to
+> > prevent the free_stateid being repeated.
+> > In that kernel it might have been appropriate to set
+> >   dp->dl_stid.sc_type =3D NFS4_CLOSED_DELEG_STID;
+> > was done to unhash_delegation() in that patch.
+> >
+> > So I think we should declare
+> > Fixes: b0fc29d6fcd0 ("nfsd: Ensure stateids remain unique until they are =
+freed")
+> >
+> > and be prepared to provide alternate patches for older kernels.
 > >
 > > NeilBrown
 > >
+> > >
+> > >
+> > > > > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > > > > ---
+> > > > > >  fs/nfsd/nfs4state.c | 1 +
+> > > > > >  1 file changed, 1 insertion(+)
+> > > > > >
+> > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > > > index ac1859c7cc9d..56b261608af4 100644
+> > > > > > --- a/fs/nfsd/nfs4state.c
+> > > > > > +++ b/fs/nfsd/nfs4state.c
+> > > > > > @@ -7154,6 +7154,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, =
+struct nfsd4_compound_state *cstate,
+> > > > > >         switch (s->sc_type) {
+> > > > > >         case SC_TYPE_DELEG:
+> > > > > >                 if (s->sc_status & SC_STATUS_REVOKED) {
+> > > > > > +                       s->sc_status |=3D SC_STATUS_CLOSED;
+> > > > > >                         spin_unlock(&s->sc_lock);
+> > > > > >                         dp =3D delegstateid(s);
+> > > > > >                         list_del_init(&dp->dl_recall_lru);
+> > > > > > --
+> > > > > > 2.43.5
+> > > > > >
+> > > > >
+> > > >
+> > > > --
+> > > > Jeff Layton <jlayton@kernel.org>
+> > >
+> > > --
+> > > Chuck Lever
+> > >
 > >
 > >
-> >>
-> >>
-> >>>> So there is no value in giving non-tls clients access to
-> >>>> xprtsec=3Dmtls exports so they can discover that for themselves.  Th=
-e
-> >>>> client needs to explicitly mount with tls, or possibly the client ca=
-n
-> >>>> opportunistically try TLS in every case, and call back.
-> >>>>
-> >>>> So the original patch is OK.
-> >>>>
-> >>>> NeilBrown
-> >>
-> >>
-> >> --
-> >> Chuck Lever
->
->
-> --
-> Chuck Lever
->
->
+>=20
+
 
