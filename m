@@ -1,159 +1,154 @@
-Return-Path: <linux-nfs+bounces-6970-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6971-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66D28995EF4
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 07:28:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC4F5996081
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 09:18:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC9111F22E7F
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 05:28:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99F272824BE
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 07:18:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F1883BB48;
-	Wed,  9 Oct 2024 05:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA653158DB2;
+	Wed,  9 Oct 2024 07:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XGd3tDw0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rQKo/g6f";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XGd3tDw0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rQKo/g6f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9TRt2nW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9868E39AEB
-	for <linux-nfs@vger.kernel.org>; Wed,  9 Oct 2024 05:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9251514CC;
+	Wed,  9 Oct 2024 07:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728451694; cv=none; b=tu/mIbwAn+iIsATT46RurmUzMnYNgw3JrPvwmW6eaXGumXKiQrN991Njyae7qVzYUOC5rp33QdktTq7L6sfKKlCc7GV/xjQQbTAWXkerkXP9dg8Zp6yy7yxOacVdptRtqxzDuTffglfFaCViXat4EH1n93/3bW9sXXegVG9BLNo=
+	t=1728458284; cv=none; b=N+8DMJ96NzOV/di/6452ecnAERGUZvfuqe08j8iD9nISmcBoU+TzLwPc5vq5jRinoRNlvgVZ6Fnet2eFg6y8PPU+cfEq9cWhH8SBec5iVgnpeEBBJedWefmUglqM8t9PaIzXZwzfPoF2fDn64cD//MwAqGoicTp3pkCb1dSZ4zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728451694; c=relaxed/simple;
-	bh=XUGcMJ2WQFVt9hL6HszaEj324skh//cxl0WdEjdoEv0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=V2ITiRZZg9cViQ4BJqgt2vQOAqV7Nh0XBowTjFIRJOakvpFFJi2aI0zE1eltqaI9+bHobhOlnPTRMj0jOSKQu2z8l6/WYBP2VdhXbCJUDzBi/U8ai2TG6uEJrDA/Uty01MYh9V2e3yuauXmHmrrs5+66rg/RxM00VswVFEhSbJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XGd3tDw0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rQKo/g6f; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XGd3tDw0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rQKo/g6f; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BB5CC1FB7F;
-	Wed,  9 Oct 2024 05:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728451690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KG8sif21O8kgbsxy9VeFmFjHbp1qMJ9TtkK2sJyaPKg=;
-	b=XGd3tDw0KX+8rr96e068NMqREnbEfUwEyjyTizP4SaZd5POrVOaURjB3jRfrnrZed4nCVE
-	e2DrpV6jOapYBw9y4nToVyF7fACQ7okTlPPQckH9DhBA8uYc9BuRz+jBXJnaTDnNCSpkv/
-	XrZAhhYLfrnMerjOa1ChtNV1+8RPvqE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728451690;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KG8sif21O8kgbsxy9VeFmFjHbp1qMJ9TtkK2sJyaPKg=;
-	b=rQKo/g6f1Z33xnVcQeMPm98uGHY3d0AMe/kUIVlljgjbiAE602d3g0ZRiAm7mOIT3cs2yz
-	E46WsSDjpnWDBZBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728451690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KG8sif21O8kgbsxy9VeFmFjHbp1qMJ9TtkK2sJyaPKg=;
-	b=XGd3tDw0KX+8rr96e068NMqREnbEfUwEyjyTizP4SaZd5POrVOaURjB3jRfrnrZed4nCVE
-	e2DrpV6jOapYBw9y4nToVyF7fACQ7okTlPPQckH9DhBA8uYc9BuRz+jBXJnaTDnNCSpkv/
-	XrZAhhYLfrnMerjOa1ChtNV1+8RPvqE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728451690;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KG8sif21O8kgbsxy9VeFmFjHbp1qMJ9TtkK2sJyaPKg=;
-	b=rQKo/g6f1Z33xnVcQeMPm98uGHY3d0AMe/kUIVlljgjbiAE602d3g0ZRiAm7mOIT3cs2yz
-	E46WsSDjpnWDBZBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87D5A132BD;
-	Wed,  9 Oct 2024 05:28:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cocvD2kUBmf6FwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 09 Oct 2024 05:28:09 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1728458284; c=relaxed/simple;
+	bh=qI9A8zpS9gJKAUmkpID+nfmlpwHXQkv15ZyLgRMU8jk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DPgohGPCdI671hnM3LeUOSkEsSoA/xXlKFmvpxIaCLvPeGB8gMGMFtiELSYWrhwvtyiwqPyNP84RMDu2EbIA0u2qA0D84azu1wsXk4OoMe3hLxAcOE6KvZDESPlgsKkiOXa6jcb92Dbr4JZ+ln6fYRk58fI2F06aV/x/4Ivnq4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U9TRt2nW; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7a9ad15d11bso559356685a.0;
+        Wed, 09 Oct 2024 00:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728458282; x=1729063082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yI48fFY73FdM1lgrPJQsQ6wd/GkN8i8SWdd5uNslinw=;
+        b=U9TRt2nW/IiKBkOqYES/3liyIy4FTycXVkI79Vdex3V/uLIb6SwvCBFTCWnMxtJ0CG
+         eYTX0w2jMBYNlV/DbfDpbd8f5feCH3IVnFNLxwbn6fsdwY2FoCs6K32opVIgLyVaT+ut
+         Dtsl1K+4un1vZa+2tRwN7gFJq1AY19s2KhdBPPSAqm/aMYaUwAMs/9AQ5UqeiUNQZNHm
+         aQUv21qjcnaL4BH2Dk4L+tgrPYmeK2QkPigbd/2ePUIhuuugh/7c9n6W8oNC5HYhPtad
+         OvxRFqkNW7FS5MuJG4KJl8U8jby7/GwbvJ5b5if4WYJNWp9xphe/9jcqvyPbfWsOHFhY
+         N4hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728458282; x=1729063082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yI48fFY73FdM1lgrPJQsQ6wd/GkN8i8SWdd5uNslinw=;
+        b=I/B1F3mWeQGHkGMqnPpZve40hGzRvp3+FkXl4vOHKuaEil+m/UfzIR2L+wm+yRVDSM
+         qweTDohiHfbHLu2yhcrW/jn4zQQwhviUbD7YTJSKVYmxJ6gcay7cQqyxpG7DT4h8vIJU
+         Z3NQ9I8GeCnHqC1Jtnn5S4gp5Fz/PUCami8d2dHRHTY5qpS4dsswjmcY8Smoc5gZ71V0
+         vqzudWRheV+C8NxnMO74nZuzJOz7i4uJgMxpePAEAPzfqFabuJ/pwox0xhK8XaiZGYPz
+         8FFm8yLZdrZTABXJVGg/cxYpx3GXuyLRmHBvV2Yk+MJPYU0LqWDqtVumfPG/046cCuPV
+         IkXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ8oTcOOZ+uiI2X75rS13Qu9l5s+wS8GyUd7uF/4wDJ3gNoGRZa5yUz3Oji3u/eejMIOUpOPZWVt0H@vger.kernel.org, AJvYcCV+HCDHvtF3RwCN+hNHycUXfd3h17HDiSN27ouGosV2IA2zffIG0tiP2FK4/iOXIBP8lwf7jy2TBxNV8Aon@vger.kernel.org
+X-Gm-Message-State: AOJu0YxocGevGfY/sbse1KMfF/IQd71vWu/zlDaN7/pVdLxcT/GnxpUX
+	XP8q8YZQ3SNLSHO1SZV/TzfbA958SNZAXYcDGbnGGQVcRiFTTXsV4QPJkplbL1E6XFs8TTeGE4c
+	q68fLuUCWhZ4EOwI003d9iJQHIEs=
+X-Google-Smtp-Source: AGHT+IGOQMYgvHeVFUazqNLJHvC9erzM33qH3tR5Tp8EUGtEvxdQ1+EBkfj+Zx8VsDV0Izwpjun8GCNdjBLyZ7dUxw0=
+X-Received: by 2002:a05:620a:1a8e:b0:7a9:a991:f6d7 with SMTP id
+ af79cd13be357-7b079547907mr215745785a.48.1728458282073; Wed, 09 Oct 2024
+ 00:18:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] sunrpc: handle -ENOTCONN in xs_tcp_setup_socket()
-Date: Wed, 09 Oct 2024 16:28:06 +1100
-Message-id: <172845168634.444407.8582369591049332159@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.977];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20241008152118.453724-1-amir73il@gmail.com>
+In-Reply-To: <20241008152118.453724-1-amir73il@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 9 Oct 2024 09:17:50 +0200
+Message-ID: <CAOQ4uximqPkreLbWqF46hiymS+DA6GyZ-vAP=9VJieSTrN1Qpw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] API for exporting connectable file handles to userspace
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Oct 8, 2024 at 5:21=E2=80=AFPM Amir Goldstein <amir73il@gmail.com> =
+wrote:
+>
+> Jeff,
+>
+> These patches bring the NFS connectable file handles feature to
+> userspace servers.
+>
+> They rely on Christian's and Aleksa's changes recently merged to v6.12.
+>
+> The API I chose for encoding conenctable file handles is pretty
+> conventional (AT_HANDLE_CONNECTABLE).
+>
+> open_by_handle_at(2) does not have AT_ flags argument, but also, I find
+> it more useful API that encoding a connectable file handle can mandate
+> the resolving of a connected fd, without having to opt-in for a
+> connected fd independently.
+>
+> I chose to implemnent this by using upper bits in the handle type field
+> It may be valid (?) for filesystems to return a handle type with upper
+> bits set, but AFAIK, no in-tree filesystem does that.
+> I added some assertions just in case.
 
-xs_tcp_finish_connecting() can return -ENOTCONN but the switch statement
-in xs_tcp_setup_socket() treats that as an unhandled error.
+FYI, version with softened assertions at:
+https://github.com/amir73il/linux/commits/connectable-fh/
 
-If we treat it as a known error it would propagate back to
-call_connect_status() which does handle that error code.  This appears
-to be the intention of the commit (given below) which added -ENOTCONN as
-a return status for xs_tcp_finish_connecting().
+fstest at:
+https://github.com/amir73il/xfstests/commits/connectable-fh/
 
-So add -ENOTCONN to the switch statement as an error to pass through to
-the caller.
+man-page at:
+https://github.com/amir73il/man-pages/commits/connectable-fh/
 
-Link: https://bugzilla.suse.com/show_bug.cgi?id=3D1231050
-Link: https://access.redhat.com/discussions/3434091
-Fixes: 01d37c428ae0 ("SUNRPC: xprt_connect() don't abort the task if the tran=
-sport isn't bound")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- net/sunrpc/xprtsock.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 0e1691316f42..1326fbf45a34 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2459,6 +2459,7 @@ static void xs_tcp_setup_socket(struct work_struct *wor=
-k)
- 	case -EHOSTUNREACH:
- 	case -EADDRINUSE:
- 	case -ENOBUFS:
-+	case -ENOTCONN:
- 		break;
- 	default:
- 		printk("%s: connect returned unhandled error %d\n",
---=20
-2.46.0
-
+>
+> Thanks,
+> Amir.
+>
+> Changes since v2 [2]:
+> - Use bit arithmetics instead of bitfileds (Jeff)
+> - Add assertions about use of high type bits
+>
+> Changes since v1 [1]:
+> - Assert on encode for disconnected path (Jeff)
+> - Don't allow AT_HANDLE_CONNECTABLE with AT_EMPTY_PATH
+> - Drop the O_PATH mount_fd API hack (Jeff)
+> - Encode an explicit "connectable" flag in handle type
+>
+> [1] https://lore.kernel.org/linux-fsdevel/20240919140611.1771651-1-amir73=
+il@gmail.com/
+> [2] https://lore.kernel.org/linux-fsdevel/20240923082829.1910210-1-amir73=
+il@gmail.com/
+>
+> Amir Goldstein (3):
+>   fs: prepare for "explicit connectable" file handles
+>   fs: name_to_handle_at() support for "explicit connectable" file
+>     handles
+>   fs: open_by_handle_at() support for decoding "explicit connectable"
+>     file handles
+>
+>  fs/exportfs/expfs.c        | 14 ++++++--
+>  fs/fhandle.c               | 74 ++++++++++++++++++++++++++++++++++----
+>  include/linux/exportfs.h   | 16 +++++++++
+>  include/uapi/linux/fcntl.h |  1 +
+>  4 files changed, 97 insertions(+), 8 deletions(-)
+>
+> --
+> 2.34.1
+>
 
