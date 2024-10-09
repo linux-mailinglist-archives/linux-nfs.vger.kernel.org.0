@@ -1,233 +1,106 @@
-Return-Path: <linux-nfs+bounces-6972-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6973-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21AFB9965AC
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 11:40:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 473DD996737
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 12:26:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42FA61C24083
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 09:40:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 049502858A8
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 10:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3607F189520;
-	Wed,  9 Oct 2024 09:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EEE9158DB1;
+	Wed,  9 Oct 2024 10:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYwmvcrX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pTBLoKKU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYwmvcrX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pTBLoKKU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KX560Hkl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE8218BBAE;
-	Wed,  9 Oct 2024 09:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04BB18D650
+	for <linux-nfs@vger.kernel.org>; Wed,  9 Oct 2024 10:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728466839; cv=none; b=OAvSVmW4J6nTpWif4dle0iPdH/X/olLfuWe/iM3tvjXTSP2tECh4CrKK1LZHn7eYORvbw1rBqz0faLs0jfOWc6y5IcqZjJ+IrINGXaI5/03K1lpOcIws8L/2JeTc1bP5hJOr3Nq2FDTZcvOblOcTtRVL7meLwfGjYxSPuQKzOi4=
+	t=1728469575; cv=none; b=iWbLVbLgs4JTlmhibWqFeFGHqPsIaFXRstm0XLaFIhekTACPj6Z8yHINESRcVV4eisHxDxRJ4PC5iMTwe7X0VR62VyU3MzjrfTl3Vqi4h8fYeKTqW0lJUsnqoqRK+vBFV/Jv0fDvfHJXnH3+0/Ss4w4La3SOM8m2/oyEDFCsSPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728466839; c=relaxed/simple;
-	bh=uR8VAP6tl/ILDhGZcdKBR+RZip67KNyv534M0e/6Log=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WpAbA0kjBguOdiB1guJ2PkchiQ0mqHx6Lh9DY7RoWSc4dmRCyyfPuujw2j+vqCssAkl1i1pQrfhkXPNjb08x0Y4LkxIP7GpQWrDQvCZvwFRbbogCtXFm+khcoyw8iOcdYBU+OPXeby1FUAJ4Ecr7+VnnwggkG+kfg20GK4PgWyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYwmvcrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pTBLoKKU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYwmvcrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pTBLoKKU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1728469575; c=relaxed/simple;
+	bh=tdmvAC6jy4k6xbmOBIQPeDFDSxF4CQPxrX8+QDKTgCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VYSiIMlgeXFGO0PHLYlOXceA4uNpHi9naKbifTN8lhwT+8e3yG96/3zMFuJLTlMT+W0FR+YQcn3ZxcwI8kOmqgGel8P6uRqmP1YuARG0tVXhx9xKXOjXx1qXLEKvht/XJMpSd6Bmfk4lWMJAqkDKAe1ZmOn2fWM9XeTcqC7lQJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KX560Hkl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728469572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+bAqRh+9TQwUTklmmkSlDcjLgkUZzuyNoiVkMsvCcu4=;
+	b=KX560HklaB1/57Z2Exn7o9iJyBkS6jPXxYo+A0FZDipa/iVUk3ZcZHpBBItZ74AkFHmlK2
+	xV/Wqyt4bkSk6905Jsy7LzQBNwEhJGTBP7PCQJ5aB2Oa2H337xdvFusRfbgzHNBwxwjiFk
+	LGWIbR6vmkstQMUc5/DF5zWW1jMIWcI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-2-R2pUWn98M5CQmsBDiJQnAA-1; Wed,
+ 09 Oct 2024 06:26:11 -0400
+X-MC-Unique: R2pUWn98M5CQmsBDiJQnAA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 281D621E7F;
-	Wed,  9 Oct 2024 09:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1728466835; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
-	b=iYwmvcrXQtTTmKs/PSHnm5h6uzwWSeYnSjM0QQSBzCCswh+3FEq0j2+6gXlo+5NEzELFle
-	PVnNv3YTYYe1vVXzSbY070j+qzX49j7n/ZtGPinerfFo0j7ILO9Y3Po39iYWammEPAYFQu
-	nEyvBbxn7TtySxCA5+Zw5xBgI9tiX10=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1728466835;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
-	b=pTBLoKKUBJw/QYPdigI4MHxk5Qjy3QGfqVtyCE9R+R8AgsUB2bAsywttlyDq8d38rFXvM/
-	KKE9mDs33kInLqCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=iYwmvcrX;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=pTBLoKKU
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1728466835; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
-	b=iYwmvcrXQtTTmKs/PSHnm5h6uzwWSeYnSjM0QQSBzCCswh+3FEq0j2+6gXlo+5NEzELFle
-	PVnNv3YTYYe1vVXzSbY070j+qzX49j7n/ZtGPinerfFo0j7ILO9Y3Po39iYWammEPAYFQu
-	nEyvBbxn7TtySxCA5+Zw5xBgI9tiX10=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1728466835;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
-	b=pTBLoKKUBJw/QYPdigI4MHxk5Qjy3QGfqVtyCE9R+R8AgsUB2bAsywttlyDq8d38rFXvM/
-	KKE9mDs33kInLqCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 17FE313A58;
-	Wed,  9 Oct 2024 09:40:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4ziVBZNPBmcmZQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 09 Oct 2024 09:40:35 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id AE2BCA0851; Wed,  9 Oct 2024 11:40:34 +0200 (CEST)
-Date: Wed, 9 Oct 2024 11:40:34 +0200
-From: Jan Kara <jack@suse.cz>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to
- userspace
-Message-ID: <20241009094034.xgcw2inu2tun4qrq@quack3>
-References: <20240923082829.1910210-1-amir73il@gmail.com>
- <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
- <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com>
- <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
- <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2E2619560A2;
+	Wed,  9 Oct 2024 10:26:09 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.48.10])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D69F719560A2;
+	Wed,  9 Oct 2024 10:26:08 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] sunrpc: handle -ENOTCONN in xs_tcp_setup_socket()
+Date: Wed, 09 Oct 2024 06:26:06 -0400
+Message-ID: <CB9F2E14-F4E8-46B7-9AE1-669C1DCC605A@redhat.com>
+In-Reply-To: <172845168634.444407.8582369591049332159@noble.neil.brown.name>
+References: <172845168634.444407.8582369591049332159@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
-X-Rspamd-Queue-Id: 281D621E7F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue 08-10-24 15:11:39, Amir Goldstein wrote:
-> On Tue, Oct 8, 2024 at 1:07 PM Jeff Layton <jlayton@kernel.org> wrote:
-> >
-> > On Mon, 2024-10-07 at 17:26 +0200, Amir Goldstein wrote:
-> > > On Wed, Sep 25, 2024 at 11:14 AM Christian Brauner <brauner@kernel.org> wrote:
-> > > >
-> > > > > open_by_handle_at(2) does not have AT_ flags argument, but also, I find
-> > > > > it more useful API that encoding a connectable file handle can mandate
-> > > > > the resolving of a connected fd, without having to opt-in for a
-> > > > > connected fd independently.
-> > > >
-> > > > This seems the best option to me too if this api is to be added.
-> > >
-> > > Thanks.
-> > >
-> > > Jeff, Chuck,
-> > >
-> > > Any thoughts on this?
-> > >
-> >
-> > Sorry for the delay. I think encoding the new flag into the fh itself
-> > is a reasonable approach.
-> >
-> 
-> Adding Jan.
-> Sorry I forgot to CC you on the patches, but struct file_handle is officially
-> a part of fanotify ABI, so your ACK is also needed on this change.
+On 9 Oct 2024, at 1:28, NeilBrown wrote:
 
-Thanks. I've actually seen this series on list, went "eww bitfields, let's
-sleep to this" and never got back to it.
+> xs_tcp_finish_connecting() can return -ENOTCONN but the switch statemen=
+t
+> in xs_tcp_setup_socket() treats that as an unhandled error.
+>
+> If we treat it as a known error it would propagate back to
+> call_connect_status() which does handle that error code.  This appears
+> to be the intention of the commit (given below) which added -ENOTCONN a=
+s
+> a return status for xs_tcp_finish_connecting().
+>
+> So add -ENOTCONN to the switch statement as an error to pass through to=
 
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 96b62e502f71..3e60bac74fa3 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -159,8 +159,17 @@ struct fid {
->  #define EXPORT_FH_CONNECTABLE  0x1 /* Encode file handle with parent */
->  #define EXPORT_FH_FID          0x2 /* File handle may be non-decodeable */
->  #define EXPORT_FH_DIR_ONLY     0x4 /* Only decode file handle for a
-> directory */
-> -/* Flags allowed in encoded handle_flags that is exported to user */
-> -#define EXPORT_FH_USER_FLAGS   (EXPORT_FH_CONNECTABLE | EXPORT_FH_DIR_ONLY)
-> +
-> +/* Flags supported in encoded handle_type that is exported to user */
-> +#define FILEID_USER_FLAGS_MASK 0xffff0000
-> +#define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
-> +
-> +#define FILEID_IS_CONNECTABLE  0x10000
-> +#define FILEID_IS_DIR          0x40000
-> +#define FILEID_VALID_USER_FLAGS        (FILEID_IS_CONNECTABLE | FILEID_IS_DIR)
+> the caller.
+>
+> Link: https://bugzilla.suse.com/show_bug.cgi?id=3D1231050
+> Link: https://access.redhat.com/discussions/3434091
+> Fixes: 01d37c428ae0 ("SUNRPC: xprt_connect() don't abort the task if th=
+e transport isn't bound")
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-FWIW I prefer this variant much over bitfields as their binary format
-depends on the compiler which leads to unpleasant surprises sooner rather
-than later.
+Thanks!  We should have chased this down ages ago..
 
-> +#define FILEID_USER_TYPE_IS_VALID(type) \
-> +       (FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS)
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-The macro name is confusing because it speaks about type but actually
-checks flags. Frankly, I'd just fold this in the single call site to make
-things obvious.
+Ben
 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index cca7e575d1f8..6329fec40872 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1071,8 +1071,7 @@ struct file {
-> 
->  struct file_handle {
->         __u32 handle_bytes;
-> -       int handle_type:16;
-> -       int handle_flags:16;
-> +       int handle_type;
-
-Maybe you want to make handle_type unsigned when you treat it (partially)
-as flags? Otherwise some constructs can lead to surprises with sign
-extension etc...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
 
