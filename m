@@ -1,239 +1,138 @@
-Return-Path: <linux-nfs+bounces-6988-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6989-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1424999760B
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 21:57:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82410997623
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 22:02:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C5B71F219C3
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 19:57:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B3411F22FB4
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 20:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED9021E1A12;
-	Wed,  9 Oct 2024 19:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D681C1A256B;
+	Wed,  9 Oct 2024 20:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CxNbvV9I";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hJuB2gy0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAyyZ0VV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CD81E0DAD;
-	Wed,  9 Oct 2024 19:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728503722; cv=fail; b=c75ZhxD1BIHi/7by0JMjfro6V3cybhz7TbkCxp350GU/JpRn/lOSEEKYoXfqle73qR4IjWhZlHkV0b50Q17YT8IED6TWrUz/kKhMQZthSpmuPNRv2KXEJcbv2VNfhLCExhNtsq4nQfUUVUNknbeue5RDrxN7p+JwCE/cV3l9ZzQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728503722; c=relaxed/simple;
-	bh=h35UCPmqlvPwPKY3OyDAsMH5swsG4Ijhrn9Iz9OrOu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NGbCTyCk2YSWqUp5y82zcrfPwC0GO6Y6hh+Cxf/YvEHcPEuVsHKhsnpeogw4e7Y8FYlQxqfqlGxRW2VwZn2v5Qh+3YBJLuB4oEe5+GKOg2QljsDlDM7MNCRo9xcbhkgvGp+1qOBAE0GoQBr+hcVGF4zdlynvQGpAPa167rUGpkQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CxNbvV9I; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hJuB2gy0; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 499IISGJ023531;
-	Wed, 9 Oct 2024 19:55:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=zB0QuFqZga182GB9Yv
-	8rbfwPlr4P8DOlJEGRQCC4e6A=; b=CxNbvV9IxYpZJz3FZva17KjaXQajAqz20f
-	no6z9tUPDBwgwMzbytsaJKcI1tCJTt/yflJ52/y5k9qvM80m9CWcG4UbqzL6mtYv
-	uWLItdFDM9jFGiPgizEvBQN7XMjlA6b/CvhFTWy4tqvn+JQ1BNP3YyIGyjPad5tf
-	9zvuWwb7WKoZ8V2yT3ye+ok3gu4xINdRxpFQvxL0CkHu/1efsWTC6vh8aqhlLwKq
-	3qaRCByjetnjDppX5gK11jJ6nveOeuedShRC60iptgUocqWzsSaAchzkPslbI4xl
-	lcfsiMsjldv9LZezf5OQ525DIVkhtc9RAIajzUUbscyBXBAQTELQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 422yyv9ade-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 19:55:12 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 499IjMIx011689;
-	Wed, 9 Oct 2024 19:55:11 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2046.outbound.protection.outlook.com [104.47.51.46])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwfe3xu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 19:55:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dxa0WPSDORPzpD9/OT4b2Jy5jHBA0E+lbZH2omuWQSJ6qNcCGRQcw+UZLZEUGswGibquZlNBB0EmQNoLwKl0QrsKCuYOprES0XJVThfLT+wON868/0pTfrASiGplSmli3rvNiPI+BVNjSql1HDclcODku71ZnVDhNkTChYTou/YzVgXs3aNoD/sW3GBULsh+nLnehJ45YSVPCg7aWPq7qXhBZz5+VwDTF91vGIMfVKyPtOcylqmJY9hL5XHNE2Gb9N0JombxBa+SzyGnbHuRML0589xO/CzcY+8mekDK9Cv4ShokC32BCoi409atF3YjV7OvenpakPheKELjjhFm1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zB0QuFqZga182GB9Yv8rbfwPlr4P8DOlJEGRQCC4e6A=;
- b=GFFP6sI4W1+Rn8Rme08iGneIYSjlaXJB1TX2Uk3nK9f1ZPirTBnq3+XisK8a/IpH1nvzRwdDtO+hMQXMaibhM2db8hSwsAruBJ5PTb8yz1/5NZJV0/GcQDZvfDRBP8R2XCUCTZXl8Cej2gFyOvwgSaDDAloAoSRpS9uTyjjNppoo8XImHIkPQzPtVaBHoQXlkIqfK37vb+1uZoTwnsJuUGJbCJnObS+G1zpemMzroYwREFlOqoa02LxPZ+TfT7a9u6vao7MQRIbZ2P94JjQrdxtsqo9Vc/S7eTy23YJfycrvm1S0owTkE4qRTwdr3Y5rm34j2Y6kyMmsyb4q+OGsUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zB0QuFqZga182GB9Yv8rbfwPlr4P8DOlJEGRQCC4e6A=;
- b=hJuB2gy02Gda444pF2bNud7uNRDSdLdZns5iYKJSAUcc2SO8w16EzrJsqtWEPUMwlmJRpDfZGeZ4W6zsJIjIBBBUkmE68+UT5/JRzSreGgmxgZ5Mkn2TmgwOsD4KpW4O7fsXcC2eWKujsCX494M8dmgdgQ3X6XBAybL8dHaL3sU=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB5039.namprd10.prod.outlook.com (2603:10b6:5:3a6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.23; Wed, 9 Oct
- 2024 19:55:09 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8048.013; Wed, 9 Oct 2024
- 19:55:09 +0000
-Date: Wed, 9 Oct 2024 15:55:05 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Fix NFSD_MAY_BYPASS_GSS and
- NFSD_MAY_BYPASS_GSS_ON_ROOT
-Message-ID: <Zwbfmf3L5XphaiGs@tissot.1015granger.net>
-References: <>
- <ZwWArwU0XO8Y+Ctb@tissot.1015granger.net>
- <172842407597.3184596.2141619392088505446@noble.neil.brown.name>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172842407597.3184596.2141619392088505446@noble.neil.brown.name>
-X-ClientProxiedBy: CH2PR03CA0017.namprd03.prod.outlook.com
- (2603:10b6:610:59::27) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E9D173336;
+	Wed,  9 Oct 2024 20:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728504152; cv=none; b=PNn7JSkqnlLBWxprZn5801SDPqQH0v0fg1jBEErEvwXSqcKTi5nrb6iVyusQEtrURBlzp9S1XZiMo1pMTFYJTYXGGU7PEJIvWFcD/GvpJmP76Ea1pH/6C8Gj8IrGMnWcYJqb/k0TAIziqgjzQ/ME3U0UNNe9C2cLX4PvIGkj9+8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728504152; c=relaxed/simple;
+	bh=fgFWJ/oEjnladuvaBsVXpkihxJsAI1TGvExLtbgb5ts=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VtZCrNIi0MpuSJmYWeR0T3KahPw/jo/SBdweD1oHHDVB7yl2dlbnrJFHeHKpKkDMlHDrcOvXgbZ5oA2H0RdKpp8VgOTZTnx40jlHQnmH4eTZF3afiB8FJiLP+uQL38sLco1W87b67ED1m2KJ6gd1ywDIaOQ3T1IFyslnVmgsdLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAyyZ0VV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1C2C4CEC3;
+	Wed,  9 Oct 2024 20:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728504152;
+	bh=fgFWJ/oEjnladuvaBsVXpkihxJsAI1TGvExLtbgb5ts=;
+	h=From:Date:Subject:To:Cc:From;
+	b=WAyyZ0VVAQNVFpEs0S0ZmBeAclishnvxjKFUe8JiVW0wDb/mzu7fATm1+uFfrjCrH
+	 paXDunQcP0B4OEB9g4fzkX31JNSUf0QwJVTNPNVixN/r4O4WrvYGibrZKGM2o0dFrU
+	 O7txuLEI6rEiYcrMnP6onyl/HQhYGgeqioF81qiBEc5XxFY1nkcd5i2uaNC4R0q+VB
+	 8SeGzEFlNqmDq8hI0B9DNn+A2q7RKpm3RX9eaaymzGZ9Y0lhSPnGHu1ro35a4HaWTk
+	 0u+AsT/KYP7csBiksyJ9g9znHzDwEPuN99NIg/N1za6zCRtPXnED+dYqbGTInalw2I
+	 BN8hrnnW5lqVw==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 09 Oct 2024 16:02:21 -0400
+Subject: [PATCH RFC] sunrpc: always set RPC_TASK_SOFTCONN in
+ rpcb_register_call()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB5039:EE_
-X-MS-Office365-Filtering-Correlation-Id: 762a61fe-97b0-4e24-239b-08dce89c4746
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vbnzv3f1kUGmnyPi187FdqsFyxJ6iPEiBUWW/vzIM825KC0mGBm1Ob+Pv2l3?=
- =?us-ascii?Q?3h+//wjXWQItyNTcoqpxHcEUp06i905ZpvmiWiCEaE0HHiG+zNfdsjkKub+X?=
- =?us-ascii?Q?JUQfIF00389PiZe0uq/9GmnliQDhdfOjRjXKCzLO4ktn3ueIldqmgN7KwC4F?=
- =?us-ascii?Q?Zv6/wxzZ6x+VEp5Vx2vT/sNdgetktGMaHNZUob2b8RP0yb+LNkpVltYyTiFe?=
- =?us-ascii?Q?cpJsbd7kHLOiVUu2d3cbNkse/RDyxVC5gKgl5UatkiqpmMxlpxeVCw1YkORO?=
- =?us-ascii?Q?gQCg0GrCMaLAq8rlfaQLJvC6Glua/Y+COPjHulN8EswesAdRHJqvTfjEHbPK?=
- =?us-ascii?Q?qtVmFNomWNpb2aAdh4HtOaUOSPDh2nipAg5HnGVw7co+TheAaTE3a8EB1Q53?=
- =?us-ascii?Q?2E7eOWqbVmKIf5zu3XVFE6rP8HtgzFOm8QWDP8ynzMwC27IEb2XGkYKdBCfq?=
- =?us-ascii?Q?OixPa4Yn7j8vmCUxAjYQp2676LiVy/lS2GCvrxZBoaVs3T0/BGUlnjdbGpG5?=
- =?us-ascii?Q?4zyfUqb6HScUEm2kzXAxSSPfroSQVhodevdzEe2+6tlCKE+ptRRBke/3U1WW?=
- =?us-ascii?Q?fAP3OI4Ju/F4wBfg2vEe20AAQWed5RdVJbW6Rgic32TYH8v88nybKGQly0cc?=
- =?us-ascii?Q?kCHP1grD7CnpL0tPij8iimDEVXPjFdMWjFDKQrVJKsZyguk1eA+Y11ioowXu?=
- =?us-ascii?Q?PrjnTyIM0WOMTWCuVvITIVsf3AdVVjt5uRuDuGW3PCgfJs9q6mUyUD+wIN96?=
- =?us-ascii?Q?J1j/KbcOBlizZYaodBFK2FkaQFR7x2F4ukqeV6Rr9+Pt6k2vDEYKXbmhAkk6?=
- =?us-ascii?Q?AqxHSOs9l1Usc5ehwIbqVEQHh0eCzHBP52h2psd2Lo0j/2UCryRmec5ZsAJX?=
- =?us-ascii?Q?T2YxjVyCxH25HRLPzDztJ6OWiyf++sjq2dX3rr56Pthaqr//ewhwCc7qAkE/?=
- =?us-ascii?Q?m6Mq916bhhaj3Gq+YA+bLd9sHvjVsuDWu7an0C4Mvkqph714SZZE4WTYrhxm?=
- =?us-ascii?Q?56Y3gouAaRAQWzyeWC8IEteSctUxFaXOylzzxYSNS+NSGq/65dUaW8/LmMf3?=
- =?us-ascii?Q?Z/WOfnKmvPcALDWR2PNv8QaizlBoDPHW2B1nXW/y6IDK76I55EXloKGJjw86?=
- =?us-ascii?Q?wxesCpx4PlYXXiseSit253PeeqRL+2554Uijdv3AN4obxtvjA1Zmppd6yuYl?=
- =?us-ascii?Q?M3lbByqWl0HXB6+2rmHlHjheA7utf8FZBEnOEEYrwcfcymxv5k15kmzdBwtZ?=
- =?us-ascii?Q?8TfT1GpjIPO5piSyBAOKChRwTAhVh0Dt0GKIaOFrsQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?AXwM6cXr4bcfcmtz3sf6jQxr1VBIH0fxPYpa08bf4yEMjzpGSFcp9EQ1ok4g?=
- =?us-ascii?Q?Qoj/YxL85/AY2OlJAbCxRQ2OVM0N0HrcqQLDW2iIOBhpOpIBW8kG+FQCUnrU?=
- =?us-ascii?Q?bnNmAXv9jVHnMr+p0qJCcY5Y6ARt7VLKck3rB6veLRnGMvxYnanH3j4R+ycD?=
- =?us-ascii?Q?1s4Y4gcpocHo7nV3BrQAp3dCem2UBMZhTK+Jsg+gG/bqVg2gNe/OZq/zYVWX?=
- =?us-ascii?Q?xpKBkHYElPj3pmClWdVgJKRhatG9awv2cOh2tnsdazIx3NQwOiOsN4o41B+Q?=
- =?us-ascii?Q?/EBglPTJl6U+BisaAIamsr3cX/Orj2YQsuizLLmQ7ro9Rr/cTcpwA0QpTGyB?=
- =?us-ascii?Q?C4+I9/kaTl3gJLVKMPSYRuZc2bngsONCWkHBYNz4aAtcafbgNeIrMeux7paO?=
- =?us-ascii?Q?gqC+BDA11yqMjHFdcJPXbzUc3FlEAQ8geCriHtzcUpJiJHG5jxsuvPqoV/TQ?=
- =?us-ascii?Q?bDLpISyd5N4lIyHPXC4xCxSzx9px/WDXh4E6mAPWuKZb0RkrIrTEKAyHo0Yh?=
- =?us-ascii?Q?Bx009QsMvgKn3vgKAuDrKO6Y29Drr5BYsb4UxnH5n89c0dwmB6Fq7UOz5EiD?=
- =?us-ascii?Q?C5m5CxOBNaTaKbZBKOASfWHuIkGZE+QbIewYQ0DFMVebhjUilihMQHxg89B4?=
- =?us-ascii?Q?OtU7TlKmXx8bR3ovN9xznzRLuiBTyFpMBBxWDzsNWf7m2L1TBOfGqKntdAhW?=
- =?us-ascii?Q?CU6vYBIBS43vZ69j0T7XdO9i9pYgY2fSPwkqqg+zxO2HunEjuT4eSyP1jwEq?=
- =?us-ascii?Q?/9168p8jqWNhAewfFDuHFjdh8fARo5d3sHf034Ggym5ZDrJDBfdPtY3kSRmW?=
- =?us-ascii?Q?mz6vx4vP8x7PQz1jeTFr+lKhfYxc3Q/7NNMiHFR9rh2KFEt1y/X/tkgIr3s/?=
- =?us-ascii?Q?crKtBgztYTHmi/woPipMK3rNepwEy3m4WIhm2KmFsHSLXxsORPVZZgc3nDYU?=
- =?us-ascii?Q?2Ejjev8Q18gYbK4E2dCnJ3cxLP4H/NVJKaij9oLc3eUDA/xkQS5cqe8b1OaW?=
- =?us-ascii?Q?gWVXxwNcG0E2WSij+CecKB0QBlKJ42JCFonvSFOsuawalvAcJG1jkfjHHyMG?=
- =?us-ascii?Q?dv4A9hJ8DknQch4s2kwhIv9FbQT6FPc71WDMIys6YegdRW48g1dE2Mfl3rgR?=
- =?us-ascii?Q?VrytLikpB2IcaDpjmX1j2Fa2TMb1JD0NbhMzaCdC+q6iaWpm9tzbEYLzAz+/?=
- =?us-ascii?Q?ZicsXFMwRChd1OrcIBc7J4ET3+rDhXiQi6AtQG9DeXa1eIEi3NawOFAkYsof?=
- =?us-ascii?Q?mcvp6fG//fP7G7hWxxEo7TZlDQDQw+Nz+v8kNjPX8yA7Bxnjq5O+XFFKuA3l?=
- =?us-ascii?Q?PPCO8QWNdpapY1qecIZswg7TPXKElF18v80bfOqY4w81kLcC2Dyk5hkKF6X5?=
- =?us-ascii?Q?Jhwdk6zKvuTOfBLWyNmapJl7bBcjlCHK4zJ+eJT/3galcO1ziU72lNiEM9LI?=
- =?us-ascii?Q?7OCb4scrv8qVchdIYSfOhrmEdm4PiePASXcnZz8En03MAzvJicQpnS9kW1oI?=
- =?us-ascii?Q?kn2AmPdXyhssgBUCsOR5lQehfZJU8WdDbgT7SSlNUIeK8+qBjHP73SNos5/D?=
- =?us-ascii?Q?O/BQ8xOhbBWiFYCEBpzZdX9jZp8QQgbcGROhMqRk?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	YhH1Mav0YXh32FzpIm7LnU5WMeIIE0pDJr/VQjNmPPP9Ep5O/M2HkZCXa+vCSmowhxgf5OsC3cj6gNmvGNr0YO2GBGMBWAOPEO1trTeRs155i6odnCXHEEaWrRWzL1srGddwRP1FgaBWeclaB+ek06fAaL67ET9Lp4OPz+L1uFWoFol144EXWwpISAtI82lYGPPAF7ZNxUaE/Y6UUcnjg2QXQFqIWQ242kKMp7h99hbUu7TEH5pZJ6PghEFlEkcWkK0yWX0BdN5Dti8ZV/A4XfEuC4sBICKNmLxfRBmK3M0TfgCwWgmCHpoZTmyiUMXzVb6v4YO5FmqSfdaNlu2LB0uEsBtXx87LFjDhJe5PocdhgTR0VgtTOll1Fnv6WU5xJFHcTGGb5TYJ077vsqU0A8ld5lywaEgEAVWJknBV9oZ6wyc6w8ZUn6hFJIfRHn4S5WrSTsNll3iOSrhxGZkyHAJyMUcm2kIHHAP3h1EIJIvY04kckpc35IadNm1fk/by6X9U2yg8Xpx+nYNqjwyjR/OEtWjmAzElm8Fc1jc792oWNwIHHFAImgHziz3oWrUpmErjioFHpiwCfRFnb0exiPawTaMiS0d4MFS5si2hRBs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 762a61fe-97b0-4e24-239b-08dce89c4746
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2024 19:55:09.0599
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8z9cqRWlT66Mi2WtS1hWxbZhzLEBXmXqYBiMNHlywewIwUdtQG4d91TMgZ7u8OESphYmWhSSKvdAFdWGk59DUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5039
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-09_18,2024-10-09_02,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=687
- spamscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2409260000 definitions=main-2410090124
-X-Proofpoint-GUID: UDDJa8ZW3N7ahyXNrhpOyd9f_FHEulNh
-X-Proofpoint-ORIG-GUID: UDDJa8ZW3N7ahyXNrhpOyd9f_FHEulNh
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241009-nfsd-next-v1-1-058496d8960f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAEzhBmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDAwNL3by04hTdvNSKEl0zw8TEJEMjI8MUU0sloPqCotS0zAqwWdFKQW7
+ OSrG1tQCVw6LWYAAAAA==
+X-Change-ID: 20241009-nfsd-next-61aab1221d59
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ syzbot+e7baeb70aa00c22ed45e@syzkaller.appspotmail.com, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1811; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=fgFWJ/oEjnladuvaBsVXpkihxJsAI1TGvExLtbgb5ts=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnBuFWQiWFs+1ydwTEjkd2Zk0m33kf5jdPXA+A9
+ tZjinl55p2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZwbhVgAKCRAADmhBGVaC
+ Fb7rD/sHGYMlrrmpufdLkyBGnJGvGX+cc2SN8ax9hbzpauITPC4Br+y1aCWRi3LKGUNGCrMTL50
+ unoKUCO3VkP5NyK5V508TEuojCl84wPAn+arbcaqgPayeUBOk8Pdze6Gw6gk9wyDKfQbNBNe0oX
+ oDyE4RfGjbZGCWBRjjiqh6L1+eOxjT8abRaT0Aioj+lSLoxNVhLh4RkQU+nxEC30LP8rXwI9lN8
+ 3+RcyfNQUT5mWqPkNZ+Cr7zSqpj25iMR8xEYVlQszJSsHlqUSONTikWG6ZXGsJk8MUq1w1ngAT3
+ K3Vrvswha+uqg+fdiHYdsHq1PTr19euHUgAFL9EXWuHu6gdMVpGA2aVQYi205EKH4f2ZkufMFEF
+ XTp0vd36Hs2RnzW2nmoq/+hYekTDzxaoLfmUEnVXwv9q0Mj+uvu2vguOYQL5lchzKL5sub0BhxI
+ WEYNZbxqArRFxiC5Vz/4vveNV/w5LIhfgzmYabXjIHss1C74FUml4kl2IQH+WbdRqpJTOFZ0k37
+ acOkNhfqndXuv5hRd4mpowwFyXDKEheNtVYhfhfHW/BijF8HlOINtfuJKWjpiSxa4qQcJUTxmuc
+ caVbI0KGUT3TfJAa1kGTyf5IYGVN1IGwUmido4kVdVGvtRJn8ZIIIOMR84PADaTFDSCkR2cc6lE
+ crr00JVlow7hcfQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Oct 08, 2024 at 05:47:55PM -0400, NeilBrown wrote:
-> And NFSD_MAY_LOCK should be discarded, and nlm_fopen() should set
-> NFSD_MAY_BYPASS_SEC.
+We've had a few hung task reports from syzbot fuzzing the nfsd netlink
+control interfaces. We don't have hard evidence of this, but one way
+this could happen is for userland to send down a large number of
+listening sockets and for them all to get stuck dealing with the
+portmapper.
 
-366         /*                                                                      
-367          * pseudoflavor restrictions are not enforced on NLM,                   
+Set RPC_TASK_SOFTCONN unconditionally in rpcb_register_call, instead of
+only doing that on set requests or when rpcbind isn't using an AF_LOCAL
+socket.
 
-Wrt the mention of "NLM", nfsd4_lock() also sets NFSD_MAY_LOCK.
+Reported-by: syzbot+e7baeb70aa00c22ed45e@syzkaller.appspotmail.com
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+This is a bit of a Hail Mary play, as we don't have any firm evidence
+that this is the problem. Still, the scenario seems plausible, and it
+doesn't seem to make much sense using different RPC_TASK flags on
+rpcbind set and unset operations.
+---
+ net/sunrpc/rpcb_clnt.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-368          * which clients virtually always use auth_sys for,                     
-369          * even while using RPCSEC_GSS for NFS.                                 
-370          */                                                                     
-371         if (access & NFSD_MAY_LOCK)                                             
-372                 goto skip_pseudoflavor_check;                                   
-373         if (access & NFSD_MAY_BYPASS_GSS)                                       
-374                 may_bypass_gss = true;
-375         /*                                                                      
-376          * Clients may expect to be able to use auth_sys during mount,          
-377          * even if they use gss for everything else; see section 2.3.2          
-378          * of rfc 2623.                                                         
-379          */                                                                     
-380         if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT                                
-381                         && exp->ex_path.dentry == dentry)                       
-382                 may_bypass_gss = true;                                          
-383                                                                                 
-384         error = check_nfsd_access(exp, rqstp, may_bypass_gss);                  
-385         if (error)                                                              
-386                 goto out;                                                       
-387                                                                                 
-388 skip_pseudoflavor_check:                                                        
-389         /* Finally, check access permissions. */                                
-390         error = nfsd_permission(cred, exp, dentry, access);     
+diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
+index 102c3818bc54d4f9a1fc5f854c3a841289974869..f0cad9bb0752d51f82733b2f7533f2269b4c69c4 100644
+--- a/net/sunrpc/rpcb_clnt.c
++++ b/net/sunrpc/rpcb_clnt.c
+@@ -402,14 +402,10 @@ static struct rpc_clnt *rpcb_create(struct net *net, const char *nodename,
+ 
+ static int rpcb_register_call(struct sunrpc_net *sn, struct rpc_clnt *clnt, struct rpc_message *msg, bool is_set)
+ {
+-	int flags = RPC_TASK_NOCONNECT;
+ 	int error, result = 0;
+ 
+-	if (is_set || !sn->rpcb_is_af_local)
+-		flags = RPC_TASK_SOFTCONN;
+ 	msg->rpc_resp = &result;
+-
+-	error = rpc_call_sync(clnt, msg, flags);
++	error = rpc_call_sync(clnt, msg, RPC_TASK_SOFTCONN);
+ 	if (error < 0)
+ 		return error;
+ 
 
-MAY_LOCK is checked in nfsd_permission() and __fh_verify().
+---
+base-commit: 144cb1225cd863e1bd3ae3d577d86e1531afd932
+change-id: 20241009-nfsd-next-61aab1221d59
 
-But MAY_BYPASS_GSS is set in loads of places that use those two
-functions. How can we be certain that the two flags are equivalent? 
-
-Though I agree, simplifying this hot path would both help
-performance scalability and reduce reader headaches. It might be a
-little nicer to pass the NFSD_MAY flags directly to
-check_nfsd_access(), for example.
-
-
+Best regards,
 -- 
-Chuck Lever
+Jeff Layton <jlayton@kernel.org>
+
 
