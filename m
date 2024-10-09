@@ -1,240 +1,559 @@
-Return-Path: <linux-nfs+bounces-6981-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6982-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DDAF997097
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 18:09:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E02A29972AD
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 19:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 393521F23CEB
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 16:09:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E4D4B21653
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 17:09:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F001E32A7;
-	Wed,  9 Oct 2024 15:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8101D271C;
+	Wed,  9 Oct 2024 17:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBEzhu5Q"
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="P2PqLt2R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0727B197A7E;
-	Wed,  9 Oct 2024 15:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC5C19D89D;
+	Wed,  9 Oct 2024 17:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728488845; cv=none; b=E0oMWDiDLBZq1Pdq6zzfBiVSrzO7qfUCCe4EKVK7eUmxkuC9X/2qmo9aRO7vz/XUbAy6kzmsk3T86pZtIaD6s7BHzKXRQFe3W6Gcor5+qgTmxfhbCqTc3aMwf+GfTGkYvcvDzqb4SbeQiYBxYVmg9KJ3Sz/WiFV7GP08TpdWli0=
+	t=1728493753; cv=none; b=nj4ZP6F/26QrN/P+8VgWOCsf3TjsDn5htW7AO6acnhvFCCz0cXsKwKgYUG7d0VoN23mWe7PwUZlqiy/frc4WcVkROJfsKAj+IQ2G5UwilKUhCXtKUVjth4F1KIrDhTDOMMlhmzFjA/oVbFr74tFlRu8QMrM+Xit3xhe66yKTzUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728488845; c=relaxed/simple;
-	bh=4t3vYaypqAGa71Nycr1GUXmLG9PicTroI6PdaMmQVCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V0LfxrhDbpXsD7Ba5iYnoQ0oSRyvJsZ6UtTVdO/4zp7Fz1CUSua4lbDliRuCpelr6HvLHgVYMh4AaffottgcCuylPouzaFMmyJx7Efp5rUszRzseFNuFUUqhATp6D1tdQqTmwkyeduDg/gl1lD0TKqs8RxEUcctDQlT6MV4AP1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBEzhu5Q; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b02420b600so88550185a.0;
-        Wed, 09 Oct 2024 08:47:23 -0700 (PDT)
+	s=arc-20240116; t=1728493753; c=relaxed/simple;
+	bh=kgixgc+a7mFRlSrMz54ba+jdRY71a0kwT1CdseV36pg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=txycXv40q7mYLGdQQNS5IlDIy1Tr7RzdS3/T/+na3onZ1fpmkG7pnF7ckN1wjN5sfTyUmxJBYcegz0sPAOQpIZxYkf/ETRspwpBRBs+2A8TnEBiJAEN5HOcO7iys8HFn1dWUYKybcAOVNQUru1QhHXxNbVSbGbduRJxJLK1Vo5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=P2PqLt2R; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728488843; x=1729093643; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWdlNRbdJ7C3Il2Chzmz6Q7Ub1gRXXaOQC6li9nz9Dw=;
-        b=cBEzhu5QVKVQWExEGXq9l7KSTk4Aj5PwRwEZJk25OZ4rFIIOmWBmFxPmDLNFZiS+wG
-         nR05JlQxk4PEAqqliNCCuzOQ0ruafAM/OzxkVCpAZ9hEySD2Io7V4GObTBFB0YVWsIzu
-         yc5N34flcalNbUX24ZJ4ibTUaTHrBae/HkiKZglXaBgJTv2ttTOH8sbz4u23o6CSLd3K
-         KXfktDU3OyLFBTz7LBoMHxz572rFVnNUlwumR2TJwZx/86FTASDPrj+Gg4NIXtC6EyrG
-         VnBBWu7334Hl+hmEYBLCAlesQxGeE72iS5fGEeT+D8IY4LEUw3rJX2L0UBbMzx6AfaH0
-         xPqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728488843; x=1729093643;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWdlNRbdJ7C3Il2Chzmz6Q7Ub1gRXXaOQC6li9nz9Dw=;
-        b=Il+l/4fn0owKwnCPXg/6ynzs5oGZ9UgSUOw1znhcv5QeKD1yLOAruNFIOsHW+2tJ7R
-         7olMPhu2MlwsTmnuYTErn51wvArgOk9/+Rvpl8b9nt8nQ6GtNljNVL8m+eChSMSbXyhU
-         Qaz7aS2pPCHjkqyvv0awJG/l+KIi3I3nzLjkKD46gkPDTw2um/L/FAmYD0Lbwvlj4c6T
-         vT4fH5weQvNGW/VwUX6pyKmExieeG5U0bHl7UGCE4aZgyHzR/iJ0ySZ+RLLBK9kYdybR
-         an7nS/CAJS9tyriwToMI8KuuOJRElsDsXZLKbhs7Mo6LGJd6BACwXSEOtkv2HtoSHL8t
-         NLLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIPpCyvkv0BGDz+/iJsoyxmImKQ7w7gti6t+Mb9DoeVwwCCtuWN1PXzVoBFZ0oFj8daTT07WqIc3LqwSfG@vger.kernel.org, AJvYcCXu9K14zao7t36vF/s9t06nOvhuYO6qz5hRaTudR1PH9hdfpuAcleLQJTlZaufhMo82gV+1sLkbR9lz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEWCk1AUIe30yx1qOB4WPOdrg0AKwQLg9knnr6HowjMs84ES0O
-	hicipJ3JlLWVeX9P47Ue0JWCROoUtY8f4FQdRWngflsAmMj8tB1UXBabIJtjdMLNJ8PJERnEbNN
-	oI3Bl8Ww0IN2o65v53SKFRIaHk+U=
-X-Google-Smtp-Source: AGHT+IHQKspLfSLEOI1vDnaB8MqG5mFZCD9oK6x5bMiVB2ZrVA65T4yS8TEbk25uMywr7sMRGm7sAaenSkYMBOwfv44=
-X-Received: by 2002:a05:620a:1926:b0:7b1:123a:2185 with SMTP id
- af79cd13be357-7b1123a21c1mr18609285a.54.1728488842782; Wed, 09 Oct 2024
- 08:47:22 -0700 (PDT)
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Ei5tc3PfylWx64diDodItk/7guQ0rWtWfXKiWLfUtgQ=;
+  b=P2PqLt2RJ+Vn9j341bwlMFTU0FcgGXEDMFVS+UK6LZzeDKmKGXto1w8j
+   K/UPWGc5Oo6GHXmTdg8fStaJMC/k3hx+pSQdL8w3lyFTdpS8OkkG5zDEG
+   Y7Pccq9IONrVVfDA82M2vhDcH9SREB3ieHiHQ3R+Ik67CNB3LEXQoDFz1
+   4=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.11,190,1725314400"; 
+   d="scan'208";a="98667983"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 19:08:59 +0200
+Date: Wed, 9 Oct 2024 19:08:58 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+cc: Vlastimil Babka <vbabka@suse.cz>, Uladzislau Rezki <urezki@gmail.com>, 
+    "Jason A. Donenfeld" <Jason@zx2c4.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org, 
+    kernel-janitors@vger.kernel.org, bridge@lists.linux.dev, 
+    linux-trace-kernel@vger.kernel.org, 
+    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, kvm@vger.kernel.org, 
+    linuxppc-dev@lists.ozlabs.org, 
+    "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org, 
+    wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org, 
+    ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>, 
+    Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+    Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
+    linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>, 
+    netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+    kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+In-Reply-To: <acf7a96b-facb-469b-8079-edbec7770780@paulmck-laptop>
+Message-ID: <2ae9cb0-b16e-58a-693b-7cd927657946@inria.fr>
+References: <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz> <ZnFT1Czb8oRb0SE7@pc636> <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop> <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz> <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
+ <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz> <ZnVInAV8BXhgAjP_@pc636> <df0716ac-c995-498c-83ee-b8c25302f9ed@suse.cz> <b3d9710a-805e-4e37-8295-b5ec1133d15c@paulmck-laptop> <37807ec7-d521-4f01-bcfc-a32650d5de25@suse.cz>
+ <acf7a96b-facb-469b-8079-edbec7770780@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240923082829.1910210-1-amir73il@gmail.com> <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
- <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com>
- <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
- <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
- <20241009094034.xgcw2inu2tun4qrq@quack3> <CAOQ4uxgoZBznM8VsnDoNekuMep8qN7eM8zUsYpS=C4OKC3ZMMg@mail.gmail.com>
-In-Reply-To: <CAOQ4uxgoZBznM8VsnDoNekuMep8qN7eM8zUsYpS=C4OKC3ZMMg@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 9 Oct 2024 17:47:11 +0200
-Message-ID: <CAOQ4uxjG_4TUuJDsK9AwK4AqdF9sb2MPDefUg3yhsCKqv9SBcw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to userspace
-To: Jan Kara <jack@suse.cz>
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Oct 9, 2024 at 5:16=E2=80=AFPM Amir Goldstein <amir73il@gmail.com> =
-wrote:
->
-> On Wed, Oct 9, 2024 at 11:40=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Tue 08-10-24 15:11:39, Amir Goldstein wrote:
-> > > On Tue, Oct 8, 2024 at 1:07=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > > >
-> > > > On Mon, 2024-10-07 at 17:26 +0200, Amir Goldstein wrote:
-> > > > > On Wed, Sep 25, 2024 at 11:14=E2=80=AFAM Christian Brauner <braun=
-er@kernel.org> wrote:
-> > > > > >
-> > > > > > > open_by_handle_at(2) does not have AT_ flags argument, but al=
-so, I find
-> > > > > > > it more useful API that encoding a connectable file handle ca=
-n mandate
-> > > > > > > the resolving of a connected fd, without having to opt-in for=
- a
-> > > > > > > connected fd independently.
-> > > > > >
-> > > > > > This seems the best option to me too if this api is to be added=
-.
-> > > > >
-> > > > > Thanks.
-> > > > >
-> > > > > Jeff, Chuck,
-> > > > >
-> > > > > Any thoughts on this?
-> > > > >
-> > > >
-> > > > Sorry for the delay. I think encoding the new flag into the fh itse=
-lf
-> > > > is a reasonable approach.
-> > > >
-> > >
-> > > Adding Jan.
-> > > Sorry I forgot to CC you on the patches, but struct file_handle is of=
-ficially
-> > > a part of fanotify ABI, so your ACK is also needed on this change.
-> >
-> > Thanks. I've actually seen this series on list, went "eww bitfields, le=
-t's
-> > sleep to this" and never got back to it.
-> >
-> > > diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> > > index 96b62e502f71..3e60bac74fa3 100644
-> > > --- a/include/linux/exportfs.h
-> > > +++ b/include/linux/exportfs.h
-> > > @@ -159,8 +159,17 @@ struct fid {
-> > >  #define EXPORT_FH_CONNECTABLE  0x1 /* Encode file handle with parent=
- */
-> > >  #define EXPORT_FH_FID          0x2 /* File handle may be non-decodea=
-ble */
-> > >  #define EXPORT_FH_DIR_ONLY     0x4 /* Only decode file handle for a
-> > > directory */
-> > > -/* Flags allowed in encoded handle_flags that is exported to user */
-> > > -#define EXPORT_FH_USER_FLAGS   (EXPORT_FH_CONNECTABLE | EXPORT_FH_DI=
-R_ONLY)
-> > > +
-> > > +/* Flags supported in encoded handle_type that is exported to user *=
-/
-> > > +#define FILEID_USER_FLAGS_MASK 0xffff0000
-> > > +#define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
-> > > +
-> > > +#define FILEID_IS_CONNECTABLE  0x10000
-> > > +#define FILEID_IS_DIR          0x40000
-> > > +#define FILEID_VALID_USER_FLAGS        (FILEID_IS_CONNECTABLE | FILE=
-ID_IS_DIR)
-> >
-> > FWIW I prefer this variant much over bitfields as their binary format
-> > depends on the compiler which leads to unpleasant surprises sooner rath=
-er
-> > than later.
-> >mask
-> > > +#define FILEID_USER_TYPE_IS_VALID(type) \
-> > > +       (FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS)
-> >
-> > The macro name is confusing
->
-> Confusing enough to hide the fact that it was negated in v2...
->
-> > because it speaks about type but actually
-> > checks flags. Frankly, I'd just fold this in the single call site to ma=
-ke
-> > things obvious.
->
-> Agree. but see below...
->
-> >
-> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > index cca7e575d1f8..6329fec40872 100644
-> > > --- a/include/linux/fs.h
-> > > +++ b/include/linux/fs.h
-> > > @@ -1071,8 +1071,7 @@ struct file {
-> > >
-> > >  struct file_handle {
-> > >         __u32 handle_bytes;
-> > > -       int handle_type:16;
-> > > -       int handle_flags:16;
-> > > +       int handle_type;
-> >
-> > Maybe you want to make handle_type unsigned when you treat it (partiall=
-y)
-> > as flags? Otherwise some constructs can lead to surprises with sign
-> > extension etc...
->
-> That seems like a good idea, but when I look at:
->
->         /* we ask for a non connectable maybe decodeable file handle */
->         retval =3D exportfs_encode_fh(path->dentry,
->                                     (struct fid *)handle->f_handle,
->                                     &handle_dwords, fh_flags);
->         handle->handle_type =3D retval;
->         /* convert handle size to bytes */
->         handle_bytes =3D handle_dwords * sizeof(u32);
->         handle->handle_bytes =3D handle_bytes;
->         if ((handle->handle_bytes > f_handle.handle_bytes) ||
->             (retval =3D=3D FILEID_INVALID) || (retval < 0)) {
->                 /* As per old exportfs_encode_fh documentation
->                  * we could return ENOSPC to indicate overflow
->                  * But file system returned 255 always. So handle
->                  * both the values
->                  */
->                 if (retval =3D=3D FILEID_INVALID || retval =3D=3D -ENOSPC=
-)
->                         retval =3D -EOVERFLOW;
->                 /*
->
-> I realize that we actually return negative values in handle_type
-> (-ESTALE would be quite common).
->
-> So we probably don't want to make handle_type unsigned now,
-> but maybe we do want a macro:
->
-> #define FILEID_IS_USER_TYPE_VALID(type) \
->              ((type) >=3D 0 && \
->               !(FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS))
->
-> that will be used for the assertions instead of assuming that
-> FILEID_USER_FLAGS_MASK includes the sign bit.
->
-> huh?
+Hello,
 
-Scratch that, the assertions check for any user flags at all.
-I will just open code type < 0 there as well.
+I have rerun the semantic patch that removes call_rcu calls in cases where
+the callback function just does some pointer arithmetic and calls
+kmem_cache_free.  Let me know if this looks ok, and if so, I can make a
+more formal patch submission.
 
-Thanks,
-Amir.
+This is against:
+
+commit 75b607fab38d149f232f01eae5e6392b394dd659 (HEAD -> master, origin/master, origin/HEAD)
+Merge: 5b7c893ed5ed e0ed52154e86
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Oct 8 12:54:04 2024 -0700
+
+    Merge tag 'sched_ext-for-6.12-rc2-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext
+
+
+julia
+
+diff -u -p a/arch/powerpc/kvm/book3s_mmu_hpte.c b/arch/powerpc/kvm/book3s_mmu_hpte.c
+--- a/arch/powerpc/kvm/book3s_mmu_hpte.c
++++ b/arch/powerpc/kvm/book3s_mmu_hpte.c
+@@ -92,12 +92,6 @@ void kvmppc_mmu_hpte_cache_map(struct kv
+ 	spin_unlock(&vcpu3s->mmu_lock);
+ }
+
+-static void free_pte_rcu(struct rcu_head *head)
+-{
+-	struct hpte_cache *pte = container_of(head, struct hpte_cache, rcu_head);
+-	kmem_cache_free(hpte_cache, pte);
+-}
+-
+ static void invalidate_pte(struct kvm_vcpu *vcpu, struct hpte_cache *pte)
+ {
+ 	struct kvmppc_vcpu_book3s *vcpu3s = to_book3s(vcpu);
+@@ -126,7 +120,7 @@ static void invalidate_pte(struct kvm_vc
+
+ 	spin_unlock(&vcpu3s->mmu_lock);
+
+-	call_rcu(&pte->rcu_head, free_pte_rcu);
++	kfree_rcu(pte, rcu_head);
+ }
+
+ static void kvmppc_mmu_pte_flush_all(struct kvm_vcpu *vcpu)
+diff -u -p a/block/blk-ioc.c b/block/blk-ioc.c
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -32,13 +32,6 @@ static void get_io_context(struct io_con
+ 	atomic_long_inc(&ioc->refcount);
+ }
+
+-static void icq_free_icq_rcu(struct rcu_head *head)
+-{
+-	struct io_cq *icq = container_of(head, struct io_cq, __rcu_head);
+-
+-	kmem_cache_free(icq->__rcu_icq_cache, icq);
+-}
+-
+ /*
+  * Exit an icq. Called with ioc locked for blk-mq, and with both ioc
+  * and queue locked for legacy.
+@@ -102,7 +95,7 @@ static void ioc_destroy_icq(struct io_cq
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
+ 	icq->flags |= ICQ_DESTROYED;
+-	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
++	kfree_rcu(icq, __rcu_head);
+ }
+
+ /*
+diff -u -p a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
+--- a/drivers/net/wireguard/allowedips.c
++++ b/drivers/net/wireguard/allowedips.c
+@@ -48,11 +48,6 @@ static void push_rcu(struct allowedips_n
+ 	}
+ }
+
+-static void node_free_rcu(struct rcu_head *rcu)
+-{
+-	kmem_cache_free(node_cache, container_of(rcu, struct allowedips_node, rcu));
+-}
+-
+ static void root_free_rcu(struct rcu_head *rcu)
+ {
+ 	struct allowedips_node *node, *stack[MAX_ALLOWEDIPS_DEPTH] = {
+@@ -330,13 +325,13 @@ void wg_allowedips_remove_by_peer(struct
+ 			child = rcu_dereference_protected(
+ 					parent->bit[!(node->parent_bit_packed & 1)],
+ 					lockdep_is_held(lock));
+-		call_rcu(&node->rcu, node_free_rcu);
++		kfree_rcu(node, rcu);
+ 		if (!free_parent)
+ 			continue;
+ 		if (child)
+ 			child->parent_bit_packed = parent->parent_bit_packed;
+ 		*(struct allowedips_node **)(parent->parent_bit_packed & ~3UL) = child;
+-		call_rcu(&parent->rcu, node_free_rcu);
++		kfree_rcu(parent, rcu);
+ 	}
+ }
+
+diff -u -p a/fs/ecryptfs/dentry.c b/fs/ecryptfs/dentry.c
+--- a/fs/ecryptfs/dentry.c
++++ b/fs/ecryptfs/dentry.c
+@@ -51,12 +51,6 @@ static int ecryptfs_d_revalidate(struct
+
+ struct kmem_cache *ecryptfs_dentry_info_cache;
+
+-static void ecryptfs_dentry_free_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(ecryptfs_dentry_info_cache,
+-		container_of(head, struct ecryptfs_dentry_info, rcu));
+-}
+-
+ /**
+  * ecryptfs_d_release
+  * @dentry: The ecryptfs dentry
+@@ -68,7 +62,7 @@ static void ecryptfs_d_release(struct de
+ 	struct ecryptfs_dentry_info *p = dentry->d_fsdata;
+ 	if (p) {
+ 		path_put(&p->lower_path);
+-		call_rcu(&p->rcu, ecryptfs_dentry_free_rcu);
++		kfree_rcu(p, rcu);
+ 	}
+ }
+
+diff -u -p a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -572,13 +572,6 @@ opaque_hashval(const void *ptr, int nbyt
+ 	return x;
+ }
+
+-static void nfsd4_free_file_rcu(struct rcu_head *rcu)
+-{
+-	struct nfs4_file *fp = container_of(rcu, struct nfs4_file, fi_rcu);
+-
+-	kmem_cache_free(file_slab, fp);
+-}
+-
+ void
+ put_nfs4_file(struct nfs4_file *fi)
+ {
+@@ -586,7 +579,7 @@ put_nfs4_file(struct nfs4_file *fi)
+ 		nfsd4_file_hash_remove(fi);
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
+-		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
++		kfree_rcu(fi, fi_rcu);
+ 	}
+ }
+
+diff -u -p a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -413,18 +413,11 @@ static struct k_itimer * alloc_posix_tim
+ 	return tmr;
+ }
+
+-static void k_itimer_rcu_free(struct rcu_head *head)
+-{
+-	struct k_itimer *tmr = container_of(head, struct k_itimer, rcu);
+-
+-	kmem_cache_free(posix_timers_cache, tmr);
+-}
+-
+ static void posix_timer_free(struct k_itimer *tmr)
+ {
+ 	put_pid(tmr->it_pid);
+ 	sigqueue_free(tmr->sigq);
+-	call_rcu(&tmr->rcu, k_itimer_rcu_free);
++	kfree_rcu(tmr, rcu);
+ }
+
+ static void posix_timer_unhash_and_free(struct k_itimer *tmr)
+diff -u -p a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -408,19 +408,6 @@ static void batadv_tt_global_size_dec(st
+ }
+
+ /**
+- * batadv_tt_orig_list_entry_free_rcu() - free the orig_entry
+- * @rcu: rcu pointer of the orig_entry
+- */
+-static void batadv_tt_orig_list_entry_free_rcu(struct rcu_head *rcu)
+-{
+-	struct batadv_tt_orig_list_entry *orig_entry;
+-
+-	orig_entry = container_of(rcu, struct batadv_tt_orig_list_entry, rcu);
+-
+-	kmem_cache_free(batadv_tt_orig_cache, orig_entry);
+-}
+-
+-/**
+  * batadv_tt_orig_list_entry_release() - release tt orig entry from lists and
+  *  queue for free after rcu grace period
+  * @ref: kref pointer of the tt orig entry
+@@ -433,7 +420,7 @@ static void batadv_tt_orig_list_entry_re
+ 				  refcount);
+
+ 	batadv_orig_node_put(orig_entry->orig_node);
+-	call_rcu(&orig_entry->rcu, batadv_tt_orig_list_entry_free_rcu);
++	kfree_rcu(orig_entry, rcu);
+ }
+
+ /**
+diff -u -p a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
+--- a/net/bridge/br_fdb.c
++++ b/net/bridge/br_fdb.c
+@@ -73,13 +73,6 @@ static inline int has_expired(const stru
+ 	       time_before_eq(fdb->updated + hold_time(br), jiffies);
+ }
+
+-static void fdb_rcu_free(struct rcu_head *head)
+-{
+-	struct net_bridge_fdb_entry *ent
+-		= container_of(head, struct net_bridge_fdb_entry, rcu);
+-	kmem_cache_free(br_fdb_cache, ent);
+-}
+-
+ static int fdb_to_nud(const struct net_bridge *br,
+ 		      const struct net_bridge_fdb_entry *fdb)
+ {
+@@ -329,7 +322,7 @@ static void fdb_delete(struct net_bridge
+ 	if (test_and_clear_bit(BR_FDB_DYNAMIC_LEARNED, &f->flags))
+ 		atomic_dec(&br->fdb_n_learned);
+ 	fdb_notify(br, f, RTM_DELNEIGH, swdev_notify);
+-	call_rcu(&f->rcu, fdb_rcu_free);
++	kfree_rcu(f, rcu);
+ }
+
+ /* Delete a local entry if no other port had the same address.
+diff -u -p a/net/can/gw.c b/net/can/gw.c
+--- a/net/can/gw.c
++++ b/net/can/gw.c
+@@ -577,13 +577,6 @@ static inline void cgw_unregister_filter
+ 			  gwj->ccgw.filter.can_mask, can_can_gw_rcv, gwj);
+ }
+
+-static void cgw_job_free_rcu(struct rcu_head *rcu_head)
+-{
+-	struct cgw_job *gwj = container_of(rcu_head, struct cgw_job, rcu);
+-
+-	kmem_cache_free(cgw_cache, gwj);
+-}
+-
+ static int cgw_notifier(struct notifier_block *nb,
+ 			unsigned long msg, void *ptr)
+ {
+@@ -603,7 +596,7 @@ static int cgw_notifier(struct notifier_
+ 			if (gwj->src.dev == dev || gwj->dst.dev == dev) {
+ 				hlist_del(&gwj->list);
+ 				cgw_unregister_filter(net, gwj);
+-				call_rcu(&gwj->rcu, cgw_job_free_rcu);
++				kfree_rcu(gwj, rcu);
+ 			}
+ 		}
+ 	}
+@@ -1168,7 +1161,7 @@ static void cgw_remove_all_jobs(struct n
+ 	hlist_for_each_entry_safe(gwj, nx, &net->can.cgw_list, list) {
+ 		hlist_del(&gwj->list);
+ 		cgw_unregister_filter(net, gwj);
+-		call_rcu(&gwj->rcu, cgw_job_free_rcu);
++		kfree_rcu(gwj, rcu);
+ 	}
+ }
+
+@@ -1236,7 +1229,7 @@ static int cgw_remove_job(struct sk_buff
+
+ 		hlist_del(&gwj->list);
+ 		cgw_unregister_filter(net, gwj);
+-		call_rcu(&gwj->rcu, cgw_job_free_rcu);
++		kfree_rcu(gwj, rcu);
+ 		err = 0;
+ 		break;
+ 	}
+diff -u -p a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -292,15 +292,9 @@ static const int inflate_threshold = 50;
+ static const int halve_threshold_root = 15;
+ static const int inflate_threshold_root = 30;
+
+-static void __alias_free_mem(struct rcu_head *head)
+-{
+-	struct fib_alias *fa = container_of(head, struct fib_alias, rcu);
+-	kmem_cache_free(fn_alias_kmem, fa);
+-}
+-
+ static inline void alias_free_mem_rcu(struct fib_alias *fa)
+ {
+-	call_rcu(&fa->rcu, __alias_free_mem);
++	kfree_rcu(fa, rcu);
+ }
+
+ #define TNODE_VMALLOC_MAX \
+diff -u -p a/net/ipv4/inetpeer.c b/net/ipv4/inetpeer.c
+--- a/net/ipv4/inetpeer.c
++++ b/net/ipv4/inetpeer.c
+@@ -128,11 +128,6 @@ static struct inet_peer *lookup(const st
+ 	return NULL;
+ }
+
+-static void inetpeer_free_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(peer_cachep, container_of(head, struct inet_peer, rcu));
+-}
+-
+ /* perform garbage collect on all items stacked during a lookup */
+ static void inet_peer_gc(struct inet_peer_base *base,
+ 			 struct inet_peer *gc_stack[],
+@@ -168,7 +163,7 @@ static void inet_peer_gc(struct inet_pee
+ 		if (p) {
+ 			rb_erase(&p->rb_node, &base->rb_root);
+ 			base->total--;
+-			call_rcu(&p->rcu, inetpeer_free_rcu);
++			kfree_rcu(p, rcu);
+ 		}
+ 	}
+ }
+@@ -242,7 +237,7 @@ void inet_putpeer(struct inet_peer *p)
+ 	WRITE_ONCE(p->dtime, (__u32)jiffies);
+
+ 	if (refcount_dec_and_test(&p->refcnt))
+-		call_rcu(&p->rcu, inetpeer_free_rcu);
++		kfree_rcu(p, rcu);
+ }
+ EXPORT_SYMBOL_GPL(inet_putpeer);
+
+diff -u -p a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -198,16 +198,9 @@ static void node_free_immediate(struct n
+ 	net->ipv6.rt6_stats->fib_nodes--;
+ }
+
+-static void node_free_rcu(struct rcu_head *head)
+-{
+-	struct fib6_node *fn = container_of(head, struct fib6_node, rcu);
+-
+-	kmem_cache_free(fib6_node_kmem, fn);
+-}
+-
+ static void node_free(struct net *net, struct fib6_node *fn)
+ {
+-	call_rcu(&fn->rcu, node_free_rcu);
++	kfree_rcu(fn, rcu);
+ 	net->ipv6.rt6_stats->fib_nodes--;
+ }
+
+diff -u -p a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -178,12 +178,6 @@ __be32 xfrm6_tunnel_alloc_spi(struct net
+ }
+ EXPORT_SYMBOL(xfrm6_tunnel_alloc_spi);
+
+-static void x6spi_destroy_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(xfrm6_tunnel_spi_kmem,
+-			container_of(head, struct xfrm6_tunnel_spi, rcu_head));
+-}
+-
+ static void xfrm6_tunnel_free_spi(struct net *net, xfrm_address_t *saddr)
+ {
+ 	struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
+@@ -200,7 +194,7 @@ static void xfrm6_tunnel_free_spi(struct
+ 			if (refcount_dec_and_test(&x6spi->refcnt)) {
+ 				hlist_del_rcu(&x6spi->list_byaddr);
+ 				hlist_del_rcu(&x6spi->list_byspi);
+-				call_rcu(&x6spi->rcu_head, x6spi_destroy_rcu);
++				kfree_rcu(x6spi, rcu_head);
+ 				break;
+ 			}
+ 		}
+diff -u -p a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -1584,14 +1584,6 @@ static int kcm_ioctl(struct socket *sock
+ 	return err;
+ }
+
+-static void free_mux(struct rcu_head *rcu)
+-{
+-	struct kcm_mux *mux = container_of(rcu,
+-	    struct kcm_mux, rcu);
+-
+-	kmem_cache_free(kcm_muxp, mux);
+-}
+-
+ static void release_mux(struct kcm_mux *mux)
+ {
+ 	struct kcm_net *knet = mux->knet;
+@@ -1619,7 +1611,7 @@ static void release_mux(struct kcm_mux *
+ 	knet->count--;
+ 	mutex_unlock(&knet->mutex);
+
+-	call_rcu(&mux->rcu, free_mux);
++	kfree_rcu(mux, rcu);
+ }
+
+ static void kcm_done(struct kcm_sock *kcm)
+diff -u -p a/net/netfilter/nf_conncount.c b/net/netfilter/nf_conncount.c
+--- a/net/netfilter/nf_conncount.c
++++ b/net/netfilter/nf_conncount.c
+@@ -275,14 +275,6 @@ bool nf_conncount_gc_list(struct net *ne
+ }
+ EXPORT_SYMBOL_GPL(nf_conncount_gc_list);
+
+-static void __tree_nodes_free(struct rcu_head *h)
+-{
+-	struct nf_conncount_rb *rbconn;
+-
+-	rbconn = container_of(h, struct nf_conncount_rb, rcu_head);
+-	kmem_cache_free(conncount_rb_cachep, rbconn);
+-}
+-
+ /* caller must hold tree nf_conncount_locks[] lock */
+ static void tree_nodes_free(struct rb_root *root,
+ 			    struct nf_conncount_rb *gc_nodes[],
+@@ -295,7 +287,7 @@ static void tree_nodes_free(struct rb_ro
+ 		spin_lock(&rbconn->list.list_lock);
+ 		if (!rbconn->list.count) {
+ 			rb_erase(&rbconn->node, root);
+-			call_rcu(&rbconn->rcu_head, __tree_nodes_free);
++			kfree_rcu(rbconn, rcu_head);
+ 		}
+ 		spin_unlock(&rbconn->list.list_lock);
+ 	}
+diff -u -p a/net/netfilter/nf_conntrack_expect.c b/net/netfilter/nf_conntrack_expect.c
+--- a/net/netfilter/nf_conntrack_expect.c
++++ b/net/netfilter/nf_conntrack_expect.c
+@@ -367,18 +367,10 @@ void nf_ct_expect_init(struct nf_conntra
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_expect_init);
+
+-static void nf_ct_expect_free_rcu(struct rcu_head *head)
+-{
+-	struct nf_conntrack_expect *exp;
+-
+-	exp = container_of(head, struct nf_conntrack_expect, rcu);
+-	kmem_cache_free(nf_ct_expect_cachep, exp);
+-}
+-
+ void nf_ct_expect_put(struct nf_conntrack_expect *exp)
+ {
+ 	if (refcount_dec_and_test(&exp->use))
+-		call_rcu(&exp->rcu, nf_ct_expect_free_rcu);
++		kfree_rcu(exp, rcu);
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_expect_put);
+
+diff -u -p a/net/netfilter/xt_hashlimit.c b/net/netfilter/xt_hashlimit.c
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -256,18 +256,11 @@ dsthash_alloc_init(struct xt_hashlimit_h
+ 	return ent;
+ }
+
+-static void dsthash_free_rcu(struct rcu_head *head)
+-{
+-	struct dsthash_ent *ent = container_of(head, struct dsthash_ent, rcu);
+-
+-	kmem_cache_free(hashlimit_cachep, ent);
+-}
+-
+ static inline void
+ dsthash_free(struct xt_hashlimit_htable *ht, struct dsthash_ent *ent)
+ {
+ 	hlist_del_rcu(&ent->node);
+-	call_rcu(&ent->rcu, dsthash_free_rcu);
++	kfree_rcu(ent, rcu);
+ 	ht->count--;
+ }
+ static void htable_gc(struct work_struct *work);
 
