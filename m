@@ -1,154 +1,233 @@
-Return-Path: <linux-nfs+bounces-6971-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6972-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC4F5996081
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 09:18:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21AFB9965AC
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 11:40:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99F272824BE
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 07:18:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42FA61C24083
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 09:40:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA653158DB2;
-	Wed,  9 Oct 2024 07:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3607F189520;
+	Wed,  9 Oct 2024 09:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9TRt2nW"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYwmvcrX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pTBLoKKU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iYwmvcrX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pTBLoKKU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9251514CC;
-	Wed,  9 Oct 2024 07:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE8218BBAE;
+	Wed,  9 Oct 2024 09:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728458284; cv=none; b=N+8DMJ96NzOV/di/6452ecnAERGUZvfuqe08j8iD9nISmcBoU+TzLwPc5vq5jRinoRNlvgVZ6Fnet2eFg6y8PPU+cfEq9cWhH8SBec5iVgnpeEBBJedWefmUglqM8t9PaIzXZwzfPoF2fDn64cD//MwAqGoicTp3pkCb1dSZ4zE=
+	t=1728466839; cv=none; b=OAvSVmW4J6nTpWif4dle0iPdH/X/olLfuWe/iM3tvjXTSP2tECh4CrKK1LZHn7eYORvbw1rBqz0faLs0jfOWc6y5IcqZjJ+IrINGXaI5/03K1lpOcIws8L/2JeTc1bP5hJOr3Nq2FDTZcvOblOcTtRVL7meLwfGjYxSPuQKzOi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728458284; c=relaxed/simple;
-	bh=qI9A8zpS9gJKAUmkpID+nfmlpwHXQkv15ZyLgRMU8jk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPgohGPCdI671hnM3LeUOSkEsSoA/xXlKFmvpxIaCLvPeGB8gMGMFtiELSYWrhwvtyiwqPyNP84RMDu2EbIA0u2qA0D84azu1wsXk4OoMe3hLxAcOE6KvZDESPlgsKkiOXa6jcb92Dbr4JZ+ln6fYRk58fI2F06aV/x/4Ivnq4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U9TRt2nW; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7a9ad15d11bso559356685a.0;
-        Wed, 09 Oct 2024 00:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728458282; x=1729063082; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yI48fFY73FdM1lgrPJQsQ6wd/GkN8i8SWdd5uNslinw=;
-        b=U9TRt2nW/IiKBkOqYES/3liyIy4FTycXVkI79Vdex3V/uLIb6SwvCBFTCWnMxtJ0CG
-         eYTX0w2jMBYNlV/DbfDpbd8f5feCH3IVnFNLxwbn6fsdwY2FoCs6K32opVIgLyVaT+ut
-         Dtsl1K+4un1vZa+2tRwN7gFJq1AY19s2KhdBPPSAqm/aMYaUwAMs/9AQ5UqeiUNQZNHm
-         aQUv21qjcnaL4BH2Dk4L+tgrPYmeK2QkPigbd/2ePUIhuuugh/7c9n6W8oNC5HYhPtad
-         OvxRFqkNW7FS5MuJG4KJl8U8jby7/GwbvJ5b5if4WYJNWp9xphe/9jcqvyPbfWsOHFhY
-         N4hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728458282; x=1729063082;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yI48fFY73FdM1lgrPJQsQ6wd/GkN8i8SWdd5uNslinw=;
-        b=I/B1F3mWeQGHkGMqnPpZve40hGzRvp3+FkXl4vOHKuaEil+m/UfzIR2L+wm+yRVDSM
-         qweTDohiHfbHLu2yhcrW/jn4zQQwhviUbD7YTJSKVYmxJ6gcay7cQqyxpG7DT4h8vIJU
-         Z3NQ9I8GeCnHqC1Jtnn5S4gp5Fz/PUCami8d2dHRHTY5qpS4dsswjmcY8Smoc5gZ71V0
-         vqzudWRheV+C8NxnMO74nZuzJOz7i4uJgMxpePAEAPzfqFabuJ/pwox0xhK8XaiZGYPz
-         8FFm8yLZdrZTABXJVGg/cxYpx3GXuyLRmHBvV2Yk+MJPYU0LqWDqtVumfPG/046cCuPV
-         IkXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ8oTcOOZ+uiI2X75rS13Qu9l5s+wS8GyUd7uF/4wDJ3gNoGRZa5yUz3Oji3u/eejMIOUpOPZWVt0H@vger.kernel.org, AJvYcCV+HCDHvtF3RwCN+hNHycUXfd3h17HDiSN27ouGosV2IA2zffIG0tiP2FK4/iOXIBP8lwf7jy2TBxNV8Aon@vger.kernel.org
-X-Gm-Message-State: AOJu0YxocGevGfY/sbse1KMfF/IQd71vWu/zlDaN7/pVdLxcT/GnxpUX
-	XP8q8YZQ3SNLSHO1SZV/TzfbA958SNZAXYcDGbnGGQVcRiFTTXsV4QPJkplbL1E6XFs8TTeGE4c
-	q68fLuUCWhZ4EOwI003d9iJQHIEs=
-X-Google-Smtp-Source: AGHT+IGOQMYgvHeVFUazqNLJHvC9erzM33qH3tR5Tp8EUGtEvxdQ1+EBkfj+Zx8VsDV0Izwpjun8GCNdjBLyZ7dUxw0=
-X-Received: by 2002:a05:620a:1a8e:b0:7a9:a991:f6d7 with SMTP id
- af79cd13be357-7b079547907mr215745785a.48.1728458282073; Wed, 09 Oct 2024
- 00:18:02 -0700 (PDT)
+	s=arc-20240116; t=1728466839; c=relaxed/simple;
+	bh=uR8VAP6tl/ILDhGZcdKBR+RZip67KNyv534M0e/6Log=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpAbA0kjBguOdiB1guJ2PkchiQ0mqHx6Lh9DY7RoWSc4dmRCyyfPuujw2j+vqCssAkl1i1pQrfhkXPNjb08x0Y4LkxIP7GpQWrDQvCZvwFRbbogCtXFm+khcoyw8iOcdYBU+OPXeby1FUAJ4Ecr7+VnnwggkG+kfg20GK4PgWyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYwmvcrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pTBLoKKU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iYwmvcrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pTBLoKKU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 281D621E7F;
+	Wed,  9 Oct 2024 09:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728466835; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
+	b=iYwmvcrXQtTTmKs/PSHnm5h6uzwWSeYnSjM0QQSBzCCswh+3FEq0j2+6gXlo+5NEzELFle
+	PVnNv3YTYYe1vVXzSbY070j+qzX49j7n/ZtGPinerfFo0j7ILO9Y3Po39iYWammEPAYFQu
+	nEyvBbxn7TtySxCA5+Zw5xBgI9tiX10=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728466835;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
+	b=pTBLoKKUBJw/QYPdigI4MHxk5Qjy3QGfqVtyCE9R+R8AgsUB2bAsywttlyDq8d38rFXvM/
+	KKE9mDs33kInLqCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=iYwmvcrX;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=pTBLoKKU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728466835; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
+	b=iYwmvcrXQtTTmKs/PSHnm5h6uzwWSeYnSjM0QQSBzCCswh+3FEq0j2+6gXlo+5NEzELFle
+	PVnNv3YTYYe1vVXzSbY070j+qzX49j7n/ZtGPinerfFo0j7ILO9Y3Po39iYWammEPAYFQu
+	nEyvBbxn7TtySxCA5+Zw5xBgI9tiX10=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728466835;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MC+XGwFr4dz5nS5NDRH+sEXp/J7wjtSsBD/7FC5N+zI=;
+	b=pTBLoKKUBJw/QYPdigI4MHxk5Qjy3QGfqVtyCE9R+R8AgsUB2bAsywttlyDq8d38rFXvM/
+	KKE9mDs33kInLqCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 17FE313A58;
+	Wed,  9 Oct 2024 09:40:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4ziVBZNPBmcmZQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 09 Oct 2024 09:40:35 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id AE2BCA0851; Wed,  9 Oct 2024 11:40:34 +0200 (CEST)
+Date: Wed, 9 Oct 2024 11:40:34 +0200
+From: Jan Kara <jack@suse.cz>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 0/2] API for exporting connectable file handles to
+ userspace
+Message-ID: <20241009094034.xgcw2inu2tun4qrq@quack3>
+References: <20240923082829.1910210-1-amir73il@gmail.com>
+ <20240925-seeufer-atheismus-6f7e6ab4965f@brauner>
+ <CAOQ4uxiBwtEs_weg67MHP4TOsXN7hVi0bDCUe_C7b2tHqohtAQ@mail.gmail.com>
+ <021d3f9acf33ff74bfde7aadd6a9a01a8ee64248.camel@kernel.org>
+ <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241008152118.453724-1-amir73il@gmail.com>
-In-Reply-To: <20241008152118.453724-1-amir73il@gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 9 Oct 2024 09:17:50 +0200
-Message-ID: <CAOQ4uximqPkreLbWqF46hiymS+DA6GyZ-vAP=9VJieSTrN1Qpw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] API for exporting connectable file handles to userspace
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxht3A7Rx5eu=DX=Zn2PNyQnj5BkCLMi36Gftt0ej8KhdA@mail.gmail.com>
+X-Rspamd-Queue-Id: 281D621E7F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Flag: NO
 
-On Tue, Oct 8, 2024 at 5:21=E2=80=AFPM Amir Goldstein <amir73il@gmail.com> =
-wrote:
->
-> Jeff,
->
-> These patches bring the NFS connectable file handles feature to
-> userspace servers.
->
-> They rely on Christian's and Aleksa's changes recently merged to v6.12.
->
-> The API I chose for encoding conenctable file handles is pretty
-> conventional (AT_HANDLE_CONNECTABLE).
->
-> open_by_handle_at(2) does not have AT_ flags argument, but also, I find
-> it more useful API that encoding a connectable file handle can mandate
-> the resolving of a connected fd, without having to opt-in for a
-> connected fd independently.
->
-> I chose to implemnent this by using upper bits in the handle type field
-> It may be valid (?) for filesystems to return a handle type with upper
-> bits set, but AFAIK, no in-tree filesystem does that.
-> I added some assertions just in case.
+On Tue 08-10-24 15:11:39, Amir Goldstein wrote:
+> On Tue, Oct 8, 2024 at 1:07 PM Jeff Layton <jlayton@kernel.org> wrote:
+> >
+> > On Mon, 2024-10-07 at 17:26 +0200, Amir Goldstein wrote:
+> > > On Wed, Sep 25, 2024 at 11:14 AM Christian Brauner <brauner@kernel.org> wrote:
+> > > >
+> > > > > open_by_handle_at(2) does not have AT_ flags argument, but also, I find
+> > > > > it more useful API that encoding a connectable file handle can mandate
+> > > > > the resolving of a connected fd, without having to opt-in for a
+> > > > > connected fd independently.
+> > > >
+> > > > This seems the best option to me too if this api is to be added.
+> > >
+> > > Thanks.
+> > >
+> > > Jeff, Chuck,
+> > >
+> > > Any thoughts on this?
+> > >
+> >
+> > Sorry for the delay. I think encoding the new flag into the fh itself
+> > is a reasonable approach.
+> >
+> 
+> Adding Jan.
+> Sorry I forgot to CC you on the patches, but struct file_handle is officially
+> a part of fanotify ABI, so your ACK is also needed on this change.
 
-FYI, version with softened assertions at:
-https://github.com/amir73il/linux/commits/connectable-fh/
+Thanks. I've actually seen this series on list, went "eww bitfields, let's
+sleep to this" and never got back to it.
 
-fstest at:
-https://github.com/amir73il/xfstests/commits/connectable-fh/
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 96b62e502f71..3e60bac74fa3 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -159,8 +159,17 @@ struct fid {
+>  #define EXPORT_FH_CONNECTABLE  0x1 /* Encode file handle with parent */
+>  #define EXPORT_FH_FID          0x2 /* File handle may be non-decodeable */
+>  #define EXPORT_FH_DIR_ONLY     0x4 /* Only decode file handle for a
+> directory */
+> -/* Flags allowed in encoded handle_flags that is exported to user */
+> -#define EXPORT_FH_USER_FLAGS   (EXPORT_FH_CONNECTABLE | EXPORT_FH_DIR_ONLY)
+> +
+> +/* Flags supported in encoded handle_type that is exported to user */
+> +#define FILEID_USER_FLAGS_MASK 0xffff0000
+> +#define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
+> +
+> +#define FILEID_IS_CONNECTABLE  0x10000
+> +#define FILEID_IS_DIR          0x40000
+> +#define FILEID_VALID_USER_FLAGS        (FILEID_IS_CONNECTABLE | FILEID_IS_DIR)
 
-man-page at:
-https://github.com/amir73il/man-pages/commits/connectable-fh/
+FWIW I prefer this variant much over bitfields as their binary format
+depends on the compiler which leads to unpleasant surprises sooner rather
+than later.
 
->
-> Thanks,
-> Amir.
->
-> Changes since v2 [2]:
-> - Use bit arithmetics instead of bitfileds (Jeff)
-> - Add assertions about use of high type bits
->
-> Changes since v1 [1]:
-> - Assert on encode for disconnected path (Jeff)
-> - Don't allow AT_HANDLE_CONNECTABLE with AT_EMPTY_PATH
-> - Drop the O_PATH mount_fd API hack (Jeff)
-> - Encode an explicit "connectable" flag in handle type
->
-> [1] https://lore.kernel.org/linux-fsdevel/20240919140611.1771651-1-amir73=
-il@gmail.com/
-> [2] https://lore.kernel.org/linux-fsdevel/20240923082829.1910210-1-amir73=
-il@gmail.com/
->
-> Amir Goldstein (3):
->   fs: prepare for "explicit connectable" file handles
->   fs: name_to_handle_at() support for "explicit connectable" file
->     handles
->   fs: open_by_handle_at() support for decoding "explicit connectable"
->     file handles
->
->  fs/exportfs/expfs.c        | 14 ++++++--
->  fs/fhandle.c               | 74 ++++++++++++++++++++++++++++++++++----
->  include/linux/exportfs.h   | 16 +++++++++
->  include/uapi/linux/fcntl.h |  1 +
->  4 files changed, 97 insertions(+), 8 deletions(-)
->
-> --
-> 2.34.1
->
+> +#define FILEID_USER_TYPE_IS_VALID(type) \
+> +       (FILEID_USER_FLAGS(type) & ~FILEID_VALID_USER_FLAGS)
+
+The macro name is confusing because it speaks about type but actually
+checks flags. Frankly, I'd just fold this in the single call site to make
+things obvious.
+
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index cca7e575d1f8..6329fec40872 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1071,8 +1071,7 @@ struct file {
+> 
+>  struct file_handle {
+>         __u32 handle_bytes;
+> -       int handle_type:16;
+> -       int handle_flags:16;
+> +       int handle_type;
+
+Maybe you want to make handle_type unsigned when you treat it (partially)
+as flags? Otherwise some constructs can lead to surprises with sign
+extension etc...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
