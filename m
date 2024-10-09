@@ -1,102 +1,101 @@
-Return-Path: <linux-nfs+bounces-6974-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6975-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F546996D57
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 16:11:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39293996E90
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 16:47:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BA6BB23FC8
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 14:11:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CBBA1C20921
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 14:47:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D617D199926;
-	Wed,  9 Oct 2024 14:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF56199FAF;
+	Wed,  9 Oct 2024 14:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jQtNW6By";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="zMSTKle5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CYHq7b7l";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ldK1n452"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D4B190059
-	for <linux-nfs@vger.kernel.org>; Wed,  9 Oct 2024 14:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34FF196455
+	for <linux-nfs@vger.kernel.org>; Wed,  9 Oct 2024 14:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728483082; cv=fail; b=M67EAH2gxD4YX2FnTdls+t+sigkFfIYjRAU3u8fogn5v88T3QiXMAEgT9DDtAVlTE2/YOidLV/Otb/JuqUcDa8tXeeFfNTHomqqmG02HUamasMzyJnFRUrjCFi9h5fgPMf6wUwKhU/6viqCiMog7XcUrgF5nGCT/YJCJMf7B29w=
+	t=1728485253; cv=fail; b=t8K3v0JTmkd3u0JHq7+WDK3zBeKIHhzfZH049SIGb2dV/2H0sHRpxncnR3VW0fK8dbNgDN4DBwCCN7+MTozBa0W85lOAZMwkdP9uUedCO8/dLWwSly6XveNrs+O+S7uDBjitdQAAt4P0a1VGbk3H9erZZR/5LEaSNpBDK3sqlSA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728483082; c=relaxed/simple;
-	bh=iWppk4mcTXnbApFOg71ltaefBpz5NoZXn+0TtjHhcig=;
+	s=arc-20240116; t=1728485253; c=relaxed/simple;
+	bh=+bBhcGfTpeo+i897Y63edgUkVeNm3lIJ14jsP3EqLnk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qOMz4jU3PJd8c0w9FJYfZohInewe1Wktvj+y4La880DvQ6FtS8NCEyDuO+yj9L4jRIee+J8wQB2mIUhfxqb/hyc904kk1w81UE489OQZ+K/JTGmphYZ5QOELkVlHYMOJgPlF3QRIuuHB/STaP8bt6ZzB0GZHG+Ls3MQqMEKWSYg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jQtNW6By; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=zMSTKle5; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Kcpof60ksYJJJ1oOb0rA47Y8ByqD70D41QAp1EQMTxjJUbxsBqD8gVvyP1ml3fQHhUiekHH90uw8f+QRXESUBQ0q4D6bW/Sbi/dDehiF+0eNX2KzwejJgc0pmFJhJ2/bzRABsI4GCsGfzdhJXuCrrH5dQiXPPYu0MlKvr4LVPH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CYHq7b7l; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ldK1n452; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 499Dfhum022508;
-	Wed, 9 Oct 2024 14:11:07 GMT
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 499DfdeY030015;
+	Wed, 9 Oct 2024 14:47:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=/Fm+RVqqljE1N9mJ38
-	v/ut7DRhJu5NU0v//hcoE26no=; b=jQtNW6Byiw0p2MJ9Pjp4d4BpFqPIRsk2Oi
-	mOT+v+cM4XtgWZwVm3RyZdOqqAw66OnxTgXlD6oZXxzhIn6HCxehFz+II+IuNsrM
-	FFTop8JvD5WlW6xYYTWFW3PHLrSeGlolR6/1UoFg2toBM7N/hFuIo65Do6yXywRo
-	R3vkQm64rwzFpk3Rw5m74Va3hvFjFT1kWElud5yEOFhRMxPYkS2I+m0vmRM10wKT
-	g2IaJZYFheCPqctyoJrSszfXYTM0SykrYEC1wJ7O8qBxPi1Lp1bAwppmDjmsqK4z
-	IVFkWiyM2qt91k2fp81jRApzKmVHruHG5AuKclSiladBOnPF0Piw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42300e0f44-1
+	:references:subject:to; s=corp-2023-11-20; bh=g1iT3j/cjKbXH5JRZV
+	Dq9k5cJn6TLr/VIzTmuU5Isuc=; b=CYHq7b7lDN9f5hR/4iguo9v5c+Nd2EbtDB
+	wWnpD/Jvc2jItZoMOkHrIQs/Ogmt+w5tbFoeCn0+6xnUXlZkmRT4wOVX500vYUPQ
+	QqJzN2ThJY/iVSiHLUNKtlXoxHGUc5bsP8Ab8axdiZOcaXRQmi0G7F3E2ol50C0V
+	6giVwtpUAM6+wBVVRaw8rqci0ahxmsA5EkUnO/VplpwIVpKaiuiQIvdSdBYP+O/Z
+	jXLbH+pA9GwqSahLmnfIFQuwAHnWgfOZIZp9XU/vCaxs8nLkzc4L6tAlqF2kgg7S
+	LSVm/+MfEzGBHOvXC6even1UNfFW0HuEIyn82Y9LmGGeiBJU/e7A==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 423063rejd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 14:11:06 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 499CYSVf022870;
-	Wed, 9 Oct 2024 14:11:05 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2041.outbound.protection.outlook.com [104.47.70.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422uw8mf5b-1
+	Wed, 09 Oct 2024 14:47:21 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 499E1aZi019083;
+	Wed, 9 Oct 2024 14:47:20 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwf06dj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 14:11:05 +0000
+	Wed, 09 Oct 2024 14:47:20 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WI0hOkiEcs17lsBc8mF9G0VyllQwDiq16WVFttDbwM/Lb1H/FnuNNWTqJiMjp52ujJGSUiT5kWRWVJqHXKwJyk6QRAdZ/m8bx4uZfcQw+q1rt9zREUc8CDhfTTjCjQTXZbz7auprfYmIEv8jWxIKQDSMozX5ra2fAG3PjkBgQJDpBhy7+7v8pA29etfxCLQR43kDlM9jFEvwHerMBNHQlU9McQCOI/mT4Jde4nn4TwU8QnPAar5jACraUzK6bph/9bC3dwuDLfM5amEURea1OA/biNN50s4WmgmoysyXYNtXbWOoNXbYFEFy+PYzqJ8VXJoiar3LWUHb5jN/+nMt4A==
+ b=fSl4o0dEK4JbxNwTz/y1Xew27bpsLWIlssB6ceSwwMLxD5JpGZU8T3U6GqpPBmkzI4huPqUtrU45iowvhly4IsK00tPo/E2LQJNvQ7sxon+0Ce0J2sp8OlHNy1IZ+oUDiBiOtuR7psvrANXiiv//rUD5GJdWJx1dIKNS3A/sbv235IJSSqONxHgxkP24oNZTYq98W2s7WX08sNPW4HjbRfrRUGqW9DZnkg5jbMPLABxGu6ClNPdyGKNBdq/0hayV16X+iv6OaYYEmxDcFESgxh4Xy6lEAVgrDEHHqw1yuFfS1UFkirFTEKWprGWDHgveDwkl+y8hZ5gzjhjk/Eu6IQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/Fm+RVqqljE1N9mJ38v/ut7DRhJu5NU0v//hcoE26no=;
- b=IJLvZaEXzeCgYQdBq5rOTIXqUyDIXj/YDPldzQvwarsJ99w/5/TEAH8ZGac7WIpNXX1dqjySPtHoRb+1cQbTMy/VhDLn89ys1GUsewxtlfjkQ3Ns6i3kCi4wL4rbxtJY4teWJNyuF9YK7EsGaCyqDUD/ln9wR1KurSAmrpjD9OOnTh/JFVlJsn2xQ/8JV7xXsxiCnjPvq5CABvwGF6kA+qOzbB7g57Cg5UNJFArnW0p8RVvyBu2pGHjxPsnT+rLhBgiQgq60nVnKfjtKIggskz2ld3ho+MzXLFnvkrWjZ5GxewVvZeLDdLazFc2U0IlKgJG3NFJgVHHcRlkiLcQniQ==
+ bh=g1iT3j/cjKbXH5JRZVDq9k5cJn6TLr/VIzTmuU5Isuc=;
+ b=rMlAClBPz7pL69XLqDzvJnyVHsAetPwrWa4zgG6r08ihHUrCjdtkVDXX9RrUOtGG+VhrJhT6WVfa4gfXO4QAq9FztB5THcpuYb8eSLr21OxQYrGRTqzJj/qAS0DgvlJHqpQsLO1Ev/dVTDn59nfF6o70tUC4K85QA8fmy+h9QBuEgeJxrm6ovsrwYDkF9GCeSYTj0IxTi/vtKtmhl6DcQJFwS94FBGQw3VCdagxPpEgBPdfCupLXBWTzSy7W2VmlGcjNpd2Z1RlnUfnyXGI3nkoKLw+em3xurB4dfvPELx+OWLYkdRQ0K40ilCscS2+MxlrgQhXAI/yWmCuxRdRLbw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Fm+RVqqljE1N9mJ38v/ut7DRhJu5NU0v//hcoE26no=;
- b=zMSTKle5mV9gBSPxgodTIYvLtGGEEqudVyUd6OtRbZt+vHevtcWQu5mq1l5R8WMjvAbmoYXMckvpDct3w7wGWYYPECIL7grfTv5YcXH2vE8VTobICun9cnAqjoLop8Q0qPDahB5NbG9JXNXXs1n8w3PhaVRYVWawdbfRo2oVuGg=
+ bh=g1iT3j/cjKbXH5JRZVDq9k5cJn6TLr/VIzTmuU5Isuc=;
+ b=ldK1n452Ly+3ZOQAzGh596yH06W0jVEa27CS2xLU6XT+dnlZFXChd/p5Z+oSuBUmBLYXmcEPWDyrqOUj0oJDsd2By1CuBE2+QYAs5qVI9DT1EDyAJeAp7hE/IvoOGxEdilJVTshaSnbVdbgie99lY+o3J8v/WgpXNG6dEJFEvzg=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MW4PR10MB6679.namprd10.prod.outlook.com (2603:10b6:303:227::21) with
+ by MW4PR10MB6297.namprd10.prod.outlook.com (2603:10b6:303:1e1::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.24; Wed, 9 Oct
- 2024 14:11:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.16; Wed, 9 Oct
+ 2024 14:47:14 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8048.013; Wed, 9 Oct 2024
- 14:11:02 +0000
-Date: Wed, 9 Oct 2024 10:10:59 -0400
+ 14:47:14 +0000
+Date: Wed, 9 Oct 2024 10:47:11 -0400
 From: Chuck Lever <chuck.lever@oracle.com>
 To: NeilBrown <neilb@suse.de>
 Cc: "cel@kernel.org" <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
         Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
         Tom Talpey <tom@talpey.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/9] NFSD: Handle an NFS4ERR_DELAY response to
- CB_OFFLOAD
-Message-ID: <ZwaO8zsaHrhnUJef@tissot.1015granger.net>
+Subject: Re: [RFC PATCH 7/9] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
+Message-ID: <ZwaXb9JD6Eg6WOIp@tissot.1015granger.net>
 References: <20241008134719.116825-11-cel@kernel.org>
- <20241008134719.116825-14-cel@kernel.org>
- <172842446733.3184596.10111637311114452090@noble.neil.brown.name>
+ <20241008134719.116825-18-cel@kernel.org>
+ <172842535375.3184596.4875014047079014162@noble.neil.brown.name>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <172842446733.3184596.10111637311114452090@noble.neil.brown.name>
-X-ClientProxiedBy: CH2PR14CA0037.namprd14.prod.outlook.com
- (2603:10b6:610:56::17) To BN0PR10MB5128.namprd10.prod.outlook.com
+In-Reply-To: <172842535375.3184596.4875014047079014162@noble.neil.brown.name>
+X-ClientProxiedBy: CH0P220CA0015.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:610:ef::35) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -105,167 +104,285 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MW4PR10MB6679:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf935a14-efda-40b1-db7f-08dce86c34b7
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MW4PR10MB6297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b7b0ed1-db78-43f9-73e7-08dce871437d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hfgM8t2ZR7qemoJa75cqdhT/8b2C/ukdmTLIc9FfdXh6Zgn7UhH7PyglXLRs?=
- =?us-ascii?Q?tfs3sDEeBiSdj5OnHEP64MiqryeDJNS9UgrLNIb/jreeS7lIK/V90/f73tHf?=
- =?us-ascii?Q?IuWQE1Uwldv++WP9goy62865nJeDBJF/WH2bM6kiSo0n1WxPekeM97mwpFli?=
- =?us-ascii?Q?FLXjcD+cFixnLv+ji0tWCofEqhiWAMTjgsQ4h35RlC0nP3Sdmsgtd661sDq1?=
- =?us-ascii?Q?0JOsElC+nWnm8ow6B7Cpg0ZZFMBkfH2f99vcx7W16mEnbeL0P+xW970hReuq?=
- =?us-ascii?Q?xAzwcuL6N4+i9KC+SleenaXcLr0XI+pq8Y4n+XsvCkJrSYZ7Z78zJeoVX4iP?=
- =?us-ascii?Q?QLB82Ei1ci5qw6Zxr8k2Rs1hvMV4lWZyzC2ua484VekicWQ8NddVFt/t4x9d?=
- =?us-ascii?Q?QSqmnq2jEXSZVfhXiUqqVbLoBz761qr/B0Qv7cZYA6DR5UrSt6LjQdpaIiDX?=
- =?us-ascii?Q?nV115bhBBr0iP8FS+eMP+4EQXyUsDPv/JoFlyqwK3N5fuBVLELkPVLv+PxDO?=
- =?us-ascii?Q?uswuxLaVITD9wXe4cEPcsBcQXCteGsA/JYiQaFg7ov22GmzUS/FWjt35oRvd?=
- =?us-ascii?Q?mKcbKMBedZnNb1xHS7YCi1nLbAxPSoyip0K8bCbYPgNvzEQ2+eZd+JcLnDn+?=
- =?us-ascii?Q?JBrBnQF1bmDBGtr6yTvW7P1uG2k/fJSQc2U9PgBnHWbLvDnsSwQ8YYk/wIWI?=
- =?us-ascii?Q?9hKSwyql6F652EZIguV+rf06HfN+7mWycdakkBnegd74K/KPs7hnZYGq+zFh?=
- =?us-ascii?Q?HuPnlmJFokAjq+dNjO5fgVEFeTC6EKES4Yo+Ic46ZiDn92b2ifHTEzFjf3c3?=
- =?us-ascii?Q?8bhW9RIo79oM8xHWssVwAMnY/0ExvT3U8Y9rE+mHQB/ksMIfhyP1M9ozOxdx?=
- =?us-ascii?Q?AP6j7t6vYdfUdXBNrjq55/PHo00ty2SA5JyZZn8/7D5f/qaHZiNC/y6EGJrt?=
- =?us-ascii?Q?O2waypNh5fkEN+oolcUuYu8OZUzCcGPrX7vDcrkeRVlC6HdAefz10x+TSwEu?=
- =?us-ascii?Q?67UX0I+VCHBBfmeT7Y90FX4ZaEOYP2rTIgPWNL9EwwPBPiEe5vyx8j3px3pm?=
- =?us-ascii?Q?HyqpaVKDbWBoR9Tj7Mouj3dDqLcEEpfkjbaG3t9hIHneyR1QLup6c2unorR6?=
- =?us-ascii?Q?P48MYpLWRBqcYGWq5CJvQJx+OEIqoQldUk1SKh9+cc+xQDF4+zUb/mK7a1M4?=
- =?us-ascii?Q?liU+/5afb+4nMtuMp0ZYY8cEX9n+bh6Ct+Iptb1PxY+Pg0AdyG43Y+KbxwZS?=
- =?us-ascii?Q?dKrdu1WE0s5/f0zZ7F7VlkpmMBFSkiZVWng/jgU0jQ=3D=3D?=
+	=?us-ascii?Q?BlL7GNDNkqsiuMqQ1DggjB/+mbd4miGa/t8BKEtOziUAnqvGkYq74dHQeaem?=
+ =?us-ascii?Q?JoH2b4sNfwggPahVUY5z3BXfxnyDlHy4CyD6VVTbwmuazQyZZLG5Kn4Xvjlo?=
+ =?us-ascii?Q?nNBTlSSbnUiIGEXGJck5nvrmFw8znSI1HxTPZjUC/7yI4TkJCNZTVarM835I?=
+ =?us-ascii?Q?d/5S8dAiRSHVt8y32HReU0koN/HbCqdSyGCdwowldFsQnodSkt+HM4dXeaqg?=
+ =?us-ascii?Q?agZwpFzGT2EvrhKbdUfFqmPqMn0GBZMVXTnO4LP5mFEqiV+FijVAA/1z6pbI?=
+ =?us-ascii?Q?w658TG3Srz+ASSW1ZxGpGNri5xaZx1NawUwCo2DH4jY/UTKPTn0jY4kAQa/H?=
+ =?us-ascii?Q?C6JWeb/6c+cKX3DPdKDiNb2YyBieDbHKhsjL2htvo/QaecgdaLPD1DpApIdr?=
+ =?us-ascii?Q?ThpLmoybX6I0znd4/IOndTZd0+DFwSA8uUlpDnpCtc+KEu7Mm0vOWN4q7ZyU?=
+ =?us-ascii?Q?YsMvumZVQDfv2mc9SHSuwo2Vt+t+IRP6TkVr6hr5TVIBL9W1arWlcSAUoLg5?=
+ =?us-ascii?Q?y+HjHN3M4V/wwoVOiqkAz0qaukhnZ35X3/WPzkCiKg0xpKx3UDDLBTBw0t6O?=
+ =?us-ascii?Q?UsPwD+Ibq7T33+9CTp+le5uU/pCSadeucNVWu+Nf9X7sMDXu0FefnSxTATPt?=
+ =?us-ascii?Q?zA3Ta2EZskyCdjqpGhO7SmzzVEuj0f0hbvMzHEhgmcEPBZZ5G0zi4iYQ7H1a?=
+ =?us-ascii?Q?lszTTrU6JYmHLWFbLEkol6MnBypzOG8FSSxrQsF71i0DtSZMPMRiYXgA2Bxn?=
+ =?us-ascii?Q?/wXIwz0M7HbbuaS+zQUKpF22puVfF9z2y2g/FyKZMJrkqMXgOHzUBqK0Rsqj?=
+ =?us-ascii?Q?0DRzKspITYdb+37iPA60BBgVNy21N4iECeRnTt65pjj4+Lv6e4gUXX/+874o?=
+ =?us-ascii?Q?LSL7e85OyNxi6wstm8XirIcDOB8pjMVKs9YvqS6d/R/yY2TmzNOwFQCksTe/?=
+ =?us-ascii?Q?ao5pEG8wJMAhEiCzKb0RPOx19px/ZxpYIc3shksEvywczim9Db5G9yFr2GoU?=
+ =?us-ascii?Q?HJ13tVS8gN9DJGbjz5Fvdj8F9nFZ5pDs/B/58rNKL/NbJu24oCclFLYZ3cdl?=
+ =?us-ascii?Q?M028ek9vxjbgfyZvaWaCq1K+/IAD5/azFYaC1OE/bX7LQdrv15MdKfi8RZor?=
+ =?us-ascii?Q?6neYwOdydDLWFAD3XA3fEyeZUPFGFoxAJtCerM/gGb2Yw9UnMUMwyRZNMbBb?=
+ =?us-ascii?Q?stNdA0PSqgFDqcJqSgBn433g1n+9P+inhTeGIl68F9MMgyKnQEwiY/qpnQ4Y?=
+ =?us-ascii?Q?APHUPH2iY4c929VVIvJkOFFz7HqP4YffuNvRJIRy5A=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RgEY4lsjps2yAgOolMYpro7t+BXhUJ148keRD+JnsuxrALViisjfXpo9UJac?=
- =?us-ascii?Q?TCZ69xYPV/+vtT8boPXKhl/BuZt944AnVnPSoUnMuzSpyEsr9Fs2p7P01MRU?=
- =?us-ascii?Q?6lvu+0kdeMbmVcq1ekgaRmnGteseMjA2Zwh+cotsjd6Kqz6NziVUaW5jNfMJ?=
- =?us-ascii?Q?Fwi6yeAEDJbEI18DI0nI7agAV30j8B7PAF4xLWcMXuAeNdGv3boDu/kYbvpw?=
- =?us-ascii?Q?6F4iA3haIZwlFAiRcBLp21692rgagQRaBDW4l5Lqv3IMdanbZipo/lrDBtIp?=
- =?us-ascii?Q?AHmU+S1LHK949HdGIQm6ewwdwALC0RA36E/gFbyPEyvo59KcMxdEZSqeGlr3?=
- =?us-ascii?Q?4hx9upqVdyN9eIiqck7KRW3Y+uGrPEBzNHpEa+8F9SZ9GZlqg7Au3Ew8eIV1?=
- =?us-ascii?Q?eCZGOkIUnC6YYBdvp3mFkPrCyUy+RWdvJ0+N9LPmaVWKgTd0Lmz0KBw5J2YK?=
- =?us-ascii?Q?OKpA0tbORwx0v8k7fXY6zq4cfyOkMcaEugv81HiV18ciG7BhliQzk+UT4rFy?=
- =?us-ascii?Q?q1BKH7uERnV6HvlCq6iJPepeXsXx9Hzy9MuQ/gRvD9Iel+hqNdhUH/wMLJSV?=
- =?us-ascii?Q?mEgamZu1UQW6z7VJcjxSR1v/1fkcBmmHelONZgh2bzg06DnM8XXXxgQQVxE1?=
- =?us-ascii?Q?B0ii4aLsNWHSmzwfO3LD1qW/cUnGkEsnWaKz02M0syzTiJBwLgjtvTBO2EL8?=
- =?us-ascii?Q?FkwuJn5y8bvlA0wrq23Zpm6Ic2IdaDi0QarzeBkW6MdrZDesj0mT7f2DEYMF?=
- =?us-ascii?Q?d5lpTY6Dw2kqdVxAnAieLUIDSAvXcrKTptlOVZOxQ2bXEpebCBiSiv9JnLAp?=
- =?us-ascii?Q?qqNduniZXPfXEQsmQ/WZm5gSwmlXeRnJyt29YFbiWcTr+S+8k3z+lTAz0NyK?=
- =?us-ascii?Q?8C78q2WPFIicrvInjvzdC0yXAxWh9Av0BoAYF2nHPM+20Fuiq2hOq0oaEes3?=
- =?us-ascii?Q?2mzHwr9i5X5KjDWLwqeez3e0z+GPPTTNsW5rdkPLpHnpSLjlEGTFVLELaQBm?=
- =?us-ascii?Q?gNiQME9wFUulxTggJIMDGDY67Cl7dKf03Cm2NBDdkx0NZklj8mAixwcdW6Zg?=
- =?us-ascii?Q?xdR5odnv5Y1CqnKhRJNcvwLc3grTOuf92M0misjGTib6XSbbnwEEq0pAFtvB?=
- =?us-ascii?Q?vR/hYB/4k0KNpxq1zj9fCux8IZpJoO55misKqvGUrvd09SFw+paqFh/xqKzD?=
- =?us-ascii?Q?YU+GWn2ywgBK/wwzVlayuU3WUTmM500ngH+aItYrABy/cavFpHDLmu3+FrQF?=
- =?us-ascii?Q?/eCUf0o61OdM9or+fEQ83f9TzSY7F4nEuOjXJbY4/XCzb7rgjEk98HmgvmJv?=
- =?us-ascii?Q?0M0iVf2Ji87OeOV0zKglrbc0vB5uzqIdVSTtFlAzAMAsZCkCH1RkTaNMiA5s?=
- =?us-ascii?Q?RvkrDhYQlC9VJcv6Khg/nx1pPXgjn5SVA4n+mmNvcdJYx9NQH27IqoH9ZwQf?=
- =?us-ascii?Q?1nvNV2HYvckSSmUpSPIWy9/MuYRktdoWo324QgUjFISeQ7Ex7w8kgP+96t/B?=
- =?us-ascii?Q?ZtIsB11YVgdpzNW1kx8cIIuu79TqBMm5lqrbgxmqhLbmuzcxsxbTyEHtMkqn?=
- =?us-ascii?Q?fJaDqpjmM8ybTS+zUDQ69fnNH84/Q6brk9G5mj+1?=
+	=?us-ascii?Q?zMVQ6h58OuTlIncBfjLEtyRA2cH46QUt+QNEaANOF8eDpAkLNQmJ10TQ49AM?=
+ =?us-ascii?Q?r52cAbFIskidPLS+sKTMmPecxbu6XbV5p5+zjoTDsPzQirEBF6gWjHqvNxt6?=
+ =?us-ascii?Q?KSN+XKq5jOkGOrUGTeSzBogjzIiymR5oaDMaAke28gh9JQNBkQCukrlgR56W?=
+ =?us-ascii?Q?JBxIL+RYREip8MG3A+kB7uMCvCY3ImdkyJuR557gspWagaxIPscyReRuaNVa?=
+ =?us-ascii?Q?raiFWkwS1SOcVo/SjAuRR6unr0jmWca97i3KUa89rRIBraJmMdQibiBEQavN?=
+ =?us-ascii?Q?8uHBUA6oS+1sSOaiT+yFBPUjFDix56TymanaWNPvHISQgmfH4mRatflaOwoH?=
+ =?us-ascii?Q?4K/4HFsBDpdnWkv6ZRUf7KvbEJ6kZfAfFESLzkIyitOjAdSAnK/EFL80H6g+?=
+ =?us-ascii?Q?+mOgF8Au/XCTY00mDt33ip+q6kcZi2ymgNDtPUAN6plMQ7yPLmOH5yqns62g?=
+ =?us-ascii?Q?jMfs5ADgUhjOUSAMMjyuG2bt9vfTNGCFmbCIyeVw8cKOiqfOzNGM6zsfoFFl?=
+ =?us-ascii?Q?k7wonYIhW+oaRMIdPHXFwPd5ZPFxDnYxxETp1RD+Ys+g8Y44xO6hwtDRpoZZ?=
+ =?us-ascii?Q?O0stFK+ojGhH8JekLaSVcw5hAgb7Mc3GzZ7ZrbeOUrAyNQy2Vneo+tjjPOUU?=
+ =?us-ascii?Q?dvzz19I4uvZ1U5jh7tMXxFOQh21erEXnRSSWykEkuTMyMeVst1j/TE96HsYr?=
+ =?us-ascii?Q?KQlOZOLrO8fnGQ2xvgeLIDAo4NEZnsFSv0NOutbLp4DIzY+BxgcRyo9W9Z3g?=
+ =?us-ascii?Q?Woc5wk/0C+eP/RVcSpwg23DvvegOFnec8p0+AufYDx9y0KanCjL7n7wiC9SU?=
+ =?us-ascii?Q?R6MMT9V0COoPwAvComQTfFO7sba797QnEhWnznV9g8c2Z085RIRctXXj/PJk?=
+ =?us-ascii?Q?Yw7VSivKJswO20/87UFjaeawy0545SEnWbU1bDMwFKIDyKbI9kDHJUPvunSE?=
+ =?us-ascii?Q?AjzZG8WNUv+F5H124F+reHQJYJrYwn6sMhox1A9nsBpp70MzdifaeQX87z6T?=
+ =?us-ascii?Q?b8ZsRjU81Z/NXAf5NgbYacghcmR/3bUQZB8x1mijlCCEzMgQyp5tnltttzVe?=
+ =?us-ascii?Q?9mRHt0NAh/lB+U3D9P70w/PJth7IClgTP0Jn0N+o+qdHRabtOMy1nsVf8u7M?=
+ =?us-ascii?Q?j8TKqjd4rFb4KkIZV1cmPoYO2Md13nXBbCwY0FgX+Gp7xpiMDj1oWxJAxXUT?=
+ =?us-ascii?Q?sXGwvSWvt4WwLcRJXI7uRlEmzAYxCN+eaaz0942uHLrRx2oCRWAOiR2iQ4+v?=
+ =?us-ascii?Q?IPpGBnKwv6dN9yCue2DzUCxfcC2sGrLxJFGKusJvcDOdFQyzm4fRXrgi/2/J?=
+ =?us-ascii?Q?4IlVDLviwsgDizAmK3b2o54TlQ3EekQ7U83p3gKcz9ZvQyVMhmFK3pAHEauO?=
+ =?us-ascii?Q?MCAgZBdSSUQ8VTwYgBPXw4RbVHQgpEMjrg8Ygoom4WaR/1+r5rQnP+gXUr03?=
+ =?us-ascii?Q?ksXFGUK+vUAq2eAQz2+yAhqD5ujm50025ScSyq5wXLswgiUAPbr5F6EQ3C+H?=
+ =?us-ascii?Q?SUKVIjJM+h4oP2RQF/8ZC0L+mSe4s9FDpDGhqyEKCz0VnOixIhpCxOYG/Bl1?=
+ =?us-ascii?Q?HrlZhLouyMqmtp4Iye2iY4h37QSvXY2PbNG5yFcl?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	T6E6E2rhNLwsqxyrrZpY7m259hZSBJj/Zewtmlmz+LJVxOCJdsCP+o1A9VRhpf8b8CQsfYjrbbPEE3PAPg+yIIMgrEyZSYywxASy8inZSSUtMaoSQ2/tHvEf2q1b3PDwXBV2WDV6cJRDcl3QTGspUwKFTKa3TbaEPaN233LGo710je+jR+YdjAKnAWwmSWnA2sPVjnjYiDjknRal6eHtr9wvxSdnph5IfB0oBnpv22toTsZ4skZ9rQigJhgpyu3KFCDI7+bAoT4ijd2XJvBejc6XqxPmTGKkiTBwebOIBC0bg6965tmIi/0EN4Qm7AtREStzKCwZ7XvVC35mg369Zp4y4xXCbPfSZva4ceChTSLiHBHnwkBssjQp7Yrop6wCIofmnCvma47JWTMBgDEYW/j6EId4+aGuv4wBPGLXqaxosMy+XzsvFVttmqcQ/Pfi6+xZnzEyuG/ct2KZgmFF+o/Izv+EqI0DKlTrQPHWHG/5/1j2VhbcZlFgOZaeqKhYv61errlmv6cl/xt31spwqqc0mHDVBUvzZxj49T4ECp5Rh/5n7C1uJbQHRXa6pQJYyeR5YDOXvPTzxzjotP6MnjIAXwW+xrT77VhJO+mrdLs=
+	Xnzf+W45LPEe8AyqNpUi8mfuGJNgPrAPO6Mv11WZuM3SABTRRNnyxUPMBaO7jqGeOAZXTxttYqnTLSXiL2pexotxH9BCqM307xtrhHlxl2iZLireqnQxlEIsyoULdeXnvDsI6SlxIlZ1Tx1GSAaJxxKD9N/6Yuqyq0XYe7OG8x49VGB2yY8W/NgrhsdyzabOTSo3Gb1KKnDLhosntaAiXgqjY2na3gDr43jlwqictXUYkWDXtarW3SYMNlrIY6uj1VBA6MuLZNe7rgkrJ3SxDRRpbrIzF6He4ElIYjWulpQyalEGrHorRGr1hYt9kDfcVVj0nhNnS9YGx1nfmuT5UP47o8tzk6DyeSOn5Qwar0nuJj99gYgI1YfpdbeU/iB1qrIYwFiI3adjBba056jH1NsPFxf/J+jXu10/QbvPXY0CakjN1LVAmp+6cFIds+pENIFlbJzJExZyyrVuFd2b42Dlkz+bRGTqQXFf7anXETmxeSTEDYwrK213zkjDWNSybhKKlBRjdfi7z+GMNrMAoTX5eVGzJYimTjYfFSGRCUbAaSJktWt9H22xfpD6DsHm1Xr+q5qQWHOjasvouvbM9L0+O1v5O4Gb4RaBDu825M4=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf935a14-efda-40b1-db7f-08dce86c34b7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7b0ed1-db78-43f9-73e7-08dce871437d
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2024 14:11:02.2138
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2024 14:47:14.2593
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IRT6p3ewE8erGErvbGcXv6NjQWCUjYfbSxrizL5FsZIDd4OEziQc96V3Q3V+XQcYie3rrA0Wky2fgmDN3PC9Pw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6679
+X-MS-Exchange-CrossTenant-UserPrincipalName: etchg5I00kTk/CZRppIoWQl4Z1GfW8j6Zq3Dt/nF0EZWE/DUa09ZetBppkJohTEk+5JixFbkiYXKqAxk9BDfyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6297
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-09_12,2024-10-09_02,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 mlxscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410090087
-X-Proofpoint-GUID: ytWjUv9DM25oG9yjsRWVLd2XSt77d9-d
-X-Proofpoint-ORIG-GUID: ytWjUv9DM25oG9yjsRWVLd2XSt77d9-d
+ definitions=main-2410090091
+X-Proofpoint-ORIG-GUID: tUeiiqUxp6-EEJZjlB3tp3t-y9DMZOii
+X-Proofpoint-GUID: tUeiiqUxp6-EEJZjlB3tp3t-y9DMZOii
 
-On Tue, Oct 08, 2024 at 05:54:27PM -0400, NeilBrown wrote:
+On Tue, Oct 08, 2024 at 06:09:13PM -0400, NeilBrown wrote:
 > On Wed, 09 Oct 2024, cel@kernel.org wrote:
 > > From: Chuck Lever <chuck.lever@oracle.com>
 > > 
-> > RFC 7862 permits callback services to respond to CB_OFFLOAD with
-> > NFS4ERR_DELAY. Currently NFSD drops the CB_OFFLOAD in that case.
-> > 
-> > To improve the reliability of COPY offload, NFSD should rather send
-> > another CB_OFFLOAD completion notification.
+> > Enable the Linux NFS client to observe the progress of an offloaded
+> > asynchronous COPY operation. This new operation will be put to use
+> > in a subsequent patch.
 > > 
 > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > > ---
-> >  fs/nfsd/nfs4proc.c | 8 ++++++++
-> >  fs/nfsd/xdr4.h     | 1 +
-> >  2 files changed, 9 insertions(+)
+> >  fs/nfs/nfs42proc.c        | 122 ++++++++++++++++++++++++++++++++++++++
+> >  fs/nfs/nfs4proc.c         |   3 +-
+> >  include/linux/nfs_fs_sb.h |   1 +
+> >  3 files changed, 125 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index a3c564a9596c..02e73ebbfe5c 100644
-> > --- a/fs/nfsd/nfs4proc.c
-> > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -1613,6 +1613,13 @@ static int nfsd4_cb_offload_done(struct nfsd4_callback *cb,
-> >  		container_of(cb, struct nfsd4_cb_offload, co_cb);
+> > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> > index 869605a0a9d5..175330843558 100644
+> > --- a/fs/nfs/nfs42proc.c
+> > +++ b/fs/nfs/nfs42proc.c
+> > @@ -21,6 +21,8 @@
 > >  
-> >  	trace_nfsd_cb_offload_done(&cbo->co_res.cb_stateid, task);
+> >  #define NFSDBG_FACILITY NFSDBG_PROC
+> >  static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid *std);
+> > +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *stateid,
+> > +				     u64 *copied);
+> >  
+> >  static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *naddr)
+> >  {
+> > @@ -582,6 +584,126 @@ static int nfs42_do_offload_cancel_async(struct file *dst,
+> >  	return status;
+> >  }
+> >  
+> > +static void nfs42_offload_status_done(struct rpc_task *task, void *calldata)
+> > +{
+> > +	struct nfs42_offload_data *data = calldata;
+> > +
+> > +	if (!nfs4_sequence_done(task, &data->res.osr_seq_res))
+> > +		return;
+> > +
 > > +	switch (task->tk_status) {
+> > +	case 0:
+> > +		return;
 > > +	case -NFS4ERR_DELAY:
-> > +		if (cbo->co_retries--) {
-> > +			rpc_delay(task, 1 * HZ);
-> > +			return 0;
+> > +		if (nfs4_async_handle_error(task, data->seq_server,
+> > +					    NULL, NULL) == -EAGAIN)
+> > +			rpc_restart_call_prepare(task);
+> > +		else
+> > +			task->tk_status = -EIO;
+> > +		break;
+> > +	case -NFS4ERR_GRACE:
+> > +	case -NFS4ERR_ADMIN_REVOKED:
+> > +	case -NFS4ERR_BAD_STATEID:
+> > +	case -NFS4ERR_OLD_STATEID:
+> > +		/*
+> > +		 * Server does not recognize the COPY stateid. CB_OFFLOAD
+> > +		 * could have purged it, or server might have rebooted.
+> > +		 * Since COPY stateids don't have an associated inode,
+> > +		 * avoid triggering state recovery.
+> > +		 */
+> > +		task->tk_status = -EBADF;
+> > +		break;
+> > +	case -NFS4ERR_NOTSUPP:
+> > +	case -ENOTSUPP:
+> > +	case -EOPNOTSUPP:
+> > +		data->seq_server->caps &= ~NFS_CAP_OFFLOAD_STATUS;
+> > +		task->tk_status = -EOPNOTSUPP;
+> > +		break;
+> > +	default:
+> > +		task->tk_status = -EIO;
+> > +	}
+> > +}
+> > +
+> > +static const struct rpc_call_ops nfs42_offload_status_ops = {
+> > +	.rpc_call_prepare = nfs42_offload_prepare,
+> > +	.rpc_call_done = nfs42_offload_status_done,
+> > +	.rpc_release = nfs42_offload_release
+> > +};
+> > +
+> > +/**
+> > + * nfs42_proc_offload_status - Poll completion status of an async copy operation
+> > + * @file: handle of file being copied
+> > + * @stateid: copy stateid (from async COPY result)
+> > + * @copied: OUT: number of bytes copied so far
+> > + *
+> > + * Return values:
+> > + *   %0: Server returned an NFS4_OK completion status
+> > + *   %-EINPROGRESS: Server returned no completion status
+> > + *   %-EREMOTEIO: Server returned an error completion status
+> > + *   %-EBADF: Server did not recognize the copy stateid
+> > + *   %-EOPNOTSUPP: Server does not support OFFLOAD_STATUS
 > 
-> Is 5 tries at 1 second interval really sufficient?
+>  * %-ERESTARTSYS: a signal was received.
+> 
+> I'm wondering why this request is RPC_TASK_ASYNC rather than
+> rpc_call_sync().
 
-It doesn't matter, as long as the client can send an OFFLOAD_STATUS
-when it hasn't seen the expected CB_OFFLOAD. In fact IMO an even
-shorter delay would be better.
-
-This is not a situation where the service endpoint is waiting for a
-slow I/O device. The important part of this logic is the retry, not
-the delay.
-
-
-> It is common to double the delay on each retry failure, so delays of 
-> 1,2,4,8,16 would give at total of 30 seconds for the client to get over
-> whatever congestion is affecting it.  That seems safer.
-
-I didn't find other callback operations in NFSD that implemented
-exponential backoff.
-
-I could compromise and do .1 sec, .2 sec, .4 sec, .8 sec, 1.6 sec.
+I had a prototype that used rpc_call_sync(). It was long enough ago
+that I don't recall exactly why I needed to switch to ASYNC instead.
+I suspect it was because it needs to accomplish certain things via
+callback_ops, and that's not possible with rpc_call_sync().
 
 
 > NeilBrown
 > 
-> > +		}
+> 
+> > + *
+> > + * Other negative errnos indicate the client could not complete the
+> > + * request.
+> > + */
+> > +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *stateid,
+> > +				     u64 *copied)
+> > +{
+> > +	struct nfs_open_context *ctx = nfs_file_open_context(file);
+> > +	struct nfs_server *server = NFS_SERVER(file_inode(file));
+> > +	struct nfs42_offload_data *data = NULL;
+> > +	struct rpc_message msg = {
+> > +		.rpc_proc	= &nfs4_procedures[NFSPROC4_CLNT_OFFLOAD_STATUS],
+> > +		.rpc_cred	= ctx->cred,
+> > +	};
+> > +	struct rpc_task_setup task_setup_data = {
+> > +		.rpc_client	= server->client,
+> > +		.rpc_message	= &msg,
+> > +		.callback_ops	= &nfs42_offload_status_ops,
+> > +		.workqueue	= nfsiod_workqueue,
+> > +		.flags		= RPC_TASK_ASYNC | RPC_TASK_SOFTCONN,
+> > +	};
+> > +	struct rpc_task *task;
+> > +	int status;
+> > +
+> > +	if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	data = kzalloc(sizeof(struct nfs42_offload_data), GFP_KERNEL);
+> > +	if (data == NULL)
+> > +		return -ENOMEM;
+> > +
+> > +	data->seq_server = server;
+> > +	data->args.osa_src_fh = NFS_FH(file_inode(file));
+> > +	memcpy(&data->args.osa_stateid, stateid,
+> > +		sizeof(data->args.osa_stateid));
+> > +	msg.rpc_argp = &data->args;
+> > +	msg.rpc_resp = &data->res;
+> > +	task_setup_data.callback_data = data;
+> > +	nfs4_init_sequence(&data->args.osa_seq_args, &data->res.osr_seq_res,
+> > +			   1, 0);
+> > +	task = rpc_run_task(&task_setup_data);
+> > +	if (IS_ERR(task)) {
+> > +		nfs42_offload_release(data);
+> > +		return PTR_ERR(task);
 > > +	}
-> >  	return 1;
-> >  }
-> >  
-> > @@ -1742,6 +1749,7 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
-> >  	memcpy(&cbo->co_res, &copy->cp_res, sizeof(copy->cp_res));
-> >  	memcpy(&cbo->co_fh, &copy->fh, sizeof(copy->fh));
-> >  	cbo->co_nfserr = copy->nfserr;
-> > +	cbo->co_retries = 5;
-> >  
-> >  	nfsd4_init_cb(&cbo->co_cb, copy->cp_clp, &nfsd4_cb_offload_ops,
-> >  		      NFSPROC4_CLNT_CB_OFFLOAD);
-> > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> > index dec29afa43f3..cd2bf63651e3 100644
-> > --- a/fs/nfsd/xdr4.h
-> > +++ b/fs/nfsd/xdr4.h
-> > @@ -675,6 +675,7 @@ struct nfsd4_cb_offload {
-> >  	struct nfsd4_callback	co_cb;
-> >  	struct nfsd42_write_res	co_res;
-> >  	__be32			co_nfserr;
-> > +	unsigned int		co_retries;
-> >  	struct knfsd_fh		co_fh;
-> >  };
-> >  
+> > +	status = rpc_wait_for_completion_task(task);
+> > +	if (status)
+> > +		goto out;
+> > +
+> > +	*copied = data->res.osr_count;
+> > +	if (task->tk_status)
+> > +		status = task->tk_status;
+> > +	else if (!data->res.complete_count)
+> > +		status = -EINPROGRESS;
+> > +	else if (data->res.osr_complete[0] != NFS_OK)
+> > +		status = -EREMOTEIO;
+> > +
+> > +out:
+> > +	rpc_put_task(task);
+> > +	return status;
+> > +}
+> > +
+> >  static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
+> >  				   struct nfs42_copy_notify_args *args,
+> >  				   struct nfs42_copy_notify_res *res)
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index cd2fbde2e6d7..324e38b70b9f 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -10763,7 +10763,8 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
+> >  		| NFS_CAP_CLONE
+> >  		| NFS_CAP_LAYOUTERROR
+> >  		| NFS_CAP_READ_PLUS
+> > -		| NFS_CAP_MOVEABLE,
+> > +		| NFS_CAP_MOVEABLE
+> > +		| NFS_CAP_OFFLOAD_STATUS,
+> >  	.init_client = nfs41_init_client,
+> >  	.shutdown_client = nfs41_shutdown_client,
+> >  	.match_stateid = nfs41_match_stateid,
+> > diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> > index 853df3fcd4c2..05b8deadd3b1 100644
+> > --- a/include/linux/nfs_fs_sb.h
+> > +++ b/include/linux/nfs_fs_sb.h
+> > @@ -289,6 +289,7 @@ struct nfs_server {
+> >  #define NFS_CAP_CASE_INSENSITIVE	(1U << 6)
+> >  #define NFS_CAP_CASE_PRESERVING	(1U << 7)
+> >  #define NFS_CAP_REBOOT_LAYOUTRETURN	(1U << 8)
+> > +#define NFS_CAP_OFFLOAD_STATUS	(1U << 9)
+> >  #define NFS_CAP_OPEN_XOR	(1U << 12)
+> >  #define NFS_CAP_DELEGTIME	(1U << 13)
+> >  #define NFS_CAP_POSIX_LOCK	(1U << 14)
 > > -- 
 > > 2.46.2
 > > 
