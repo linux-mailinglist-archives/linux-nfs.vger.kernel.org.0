@@ -1,199 +1,176 @@
-Return-Path: <linux-nfs+bounces-7040-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7041-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E461999491
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 23:43:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD5C5999505
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 00:18:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B81B2825F4
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 21:43:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D62A284879
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 22:18:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C6E1E2029;
-	Thu, 10 Oct 2024 21:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F851BC9F3;
+	Thu, 10 Oct 2024 22:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a5JJZfoF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RVWaGtvm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a5JJZfoF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RVWaGtvm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vgulp5UF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9378F6A;
-	Thu, 10 Oct 2024 21:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA94319A2A3
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 22:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728596620; cv=none; b=TIO74AusEzuDDoB9u97YnsFW1JiO6eW4wbildsP1moZyOUAMQQwgodHkuTfwReX4OC/7v1lnVL6hkU1uvbd6O+r5LLMdNxlI2/uu7iD1S8dl+qNfSLJCSiZikQ8L4Mhn5VQw0AqJemI9EVDtugy2YIc+5wLj1FEAUrnb7yiLy50=
+	t=1728598694; cv=none; b=Go44yZnxojjj8hIlvWPyUq/e2mVC5isLBC7AjpAdy+SMkSDCZZzPTD4gw6qc5pxnFT9gbjA4/dmZPpjutvrgmEQKfHrb5Y/7UkUV3Ey6ihKWa8bueBHFfnu0K4/XAXoaJ9DbCDGEQQ4WYrOYy71Uv6+rAOG0h6ydyEnMBUBl8aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728596620; c=relaxed/simple;
-	bh=Oec2XcEHnRVkA96bUDHw8C1REQbckjcVfS0072SQmrI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=B5L7NnZ0dGNXTkEAEIOy3l2QfLlxrCq7f9sCGyJDlrJeixUq4ckeIAT8mBtf/LJPdWsHk7apwqT8a4uwHKAlmiEMq53r6aHBfWYMGCDRdh84eDOfQ5FHMMt4UeRY+RwTsIgww/A+D1EavEJxbou11IUqnz8Q6LgwkRGNexL9eW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a5JJZfoF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RVWaGtvm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a5JJZfoF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RVWaGtvm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1728598694; c=relaxed/simple;
+	bh=phDctVoaQKKmWkHaNwpjsri0tJhHdhRLoqZQvyOpS8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RfOd44nBVB7iAmRixr7Agg3cJ7H2ozCX2unpxM2kYEOLxicf1lEgkv6z7PqCy17/oFAM7sO9lii+bgyPDmJVyCZe7QbZCxqqlFzwTv2SrYxhBS+/Xr7SnYcuBZuMDnamZmKKrwZhv6RRryqzZaDr7qYvJdPHykusQ0uWzczI6ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vgulp5UF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728598692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qwA4fcS+JqUCUJrMfiDWqWg8B+PDm6yXbIYXG90psRA=;
+	b=Vgulp5UFs2fPAnebMAZtI5DMx+0ZFSHYn4gBM24ZRU59H0OJFBh2rdnU1AOGnRLIT4NeVA
+	Hj2EvzrQa3kKEHn7/uxvdiDYXTqpyzR4uGUjAvy4yYKhKj2MFB3JcEP7fv4gtepII2AnOh
+	ReJCpk09l/kUkpwVoZ3usG4Vmzof0Sk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-513-L-rG0HEwOEmneWCC3e2sPg-1; Thu,
+ 10 Oct 2024 18:18:07 -0400
+X-MC-Unique: L-rG0HEwOEmneWCC3e2sPg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9EE701FE77;
-	Thu, 10 Oct 2024 21:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728596616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BLVaQNxwgGS4hs6TdXQIhC+xDJeoNKY0cDCGry5g1U=;
-	b=a5JJZfoFKe+RffAGjiKiKDWGT8xkOirsMEpsysJkAqadTXwun3xEaq+O1DDhmCym/ShUAr
-	bh6o8s+5amzjhUKHJnUM3MjSWDU96GIHeZ5JirpVokB7w49CHI6ce9E5XSIGInUQDMXvIs
-	bKwfMlBCqKX+9eQIEw5/w9q3lx/DeMs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728596616;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BLVaQNxwgGS4hs6TdXQIhC+xDJeoNKY0cDCGry5g1U=;
-	b=RVWaGtvmGJPTmtqJbLqdObnWbVcu3Y0VGtbW3Wku/80a//iKt2toqNptyvNguHWiO4MuUt
-	WI7rq9k5AOyVqwDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728596616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BLVaQNxwgGS4hs6TdXQIhC+xDJeoNKY0cDCGry5g1U=;
-	b=a5JJZfoFKe+RffAGjiKiKDWGT8xkOirsMEpsysJkAqadTXwun3xEaq+O1DDhmCym/ShUAr
-	bh6o8s+5amzjhUKHJnUM3MjSWDU96GIHeZ5JirpVokB7w49CHI6ce9E5XSIGInUQDMXvIs
-	bKwfMlBCqKX+9eQIEw5/w9q3lx/DeMs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728596616;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BLVaQNxwgGS4hs6TdXQIhC+xDJeoNKY0cDCGry5g1U=;
-	b=RVWaGtvmGJPTmtqJbLqdObnWbVcu3Y0VGtbW3Wku/80a//iKt2toqNptyvNguHWiO4MuUt
-	WI7rq9k5AOyVqwDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CE73113A6E;
-	Thu, 10 Oct 2024 21:43:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IPoSIXZKCGeEZwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 10 Oct 2024 21:43:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8253195608B;
+	Thu, 10 Oct 2024 22:18:06 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.17.53])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 647CB19560A2;
+	Thu, 10 Oct 2024 22:18:05 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/1] nfsd: fix race between laundromat and free_stateid
+Date: Thu, 10 Oct 2024 18:18:01 -0400
+Message-Id: <20241010221801.35462-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Kaixiong Yu" <yukaixiong@huawei.com>, akpm@linux-foundation.org,
- mcgrof@kernel.org, ysato@users.sourceforge.jp, dalias@libc.org,
- glaubitz@physik.fu-berlin.de, luto@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, kees@kernel.org,
- j.granados@samsung.com, willy@infradead.org, Liam.Howlett@oracle.com,
- vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org,
- anna@kernel.org, chuck.lever@oracle.com, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, jmorris@namei.org,
- linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
- netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
- dhowells@redhat.com, haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com,
- shikemeng@huaweicloud.com, dchinner@redhat.com, bfoster@redhat.com,
- souravpanda@google.com, hannes@cmpxchg.org, rientjes@google.com,
- pasha.tatashin@soleen.com, david@redhat.com, ryan.roberts@arm.com,
- ying.huang@intel.com, yang@os.amperecomputing.com, zev@bewilderbeest.net,
- serge@hallyn.com, vegard.nossum@oracle.com, wangkefeng.wang@huawei.com,
- sunnanyong@huawei.com
-Subject: Re: [PATCH v3 -next 11/15] sunrpc: use vfs_pressure_ratio() helper
-In-reply-to: <12ec5b63b17b360f2e249a4de0ac7b86e09851a3.camel@kernel.org>
-References: <>, <12ec5b63b17b360f2e249a4de0ac7b86e09851a3.camel@kernel.org>
-Date: Fri, 11 Oct 2024 08:43:15 +1100
-Message-id: <172859659591.444407.1507982523726708908@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_GT_50(0.00)[60];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, 11 Oct 2024, Jeff Layton wrote:
-> On Thu, 2024-10-10 at 23:22 +0800, Kaixiong Yu wrote:
-> > Use vfs_pressure_ratio() to simplify code.
-> >=20
-> > Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
-> > Reviewed-by: Kees Cook <kees@kernel.org>
-> > Acked-by: Anna Schumaker <anna.schumaker@oracle.com>
-> > ---
-> >  net/sunrpc/auth.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
-> > index 04534ea537c8..3d2b51d7e934 100644
-> > --- a/net/sunrpc/auth.c
-> > +++ b/net/sunrpc/auth.c
-> > @@ -489,7 +489,7 @@ static unsigned long
-> >  rpcauth_cache_shrink_count(struct shrinker *shrink, struct shrink_contro=
-l *sc)
-> > =20
-> >  {
-> > -	return number_cred_unused * sysctl_vfs_cache_pressure / 100;
-> > +	return vfs_pressure_ratio(number_cred_unused);
-> >  }
-> > =20
-> >  static void
->=20
-> Acked-by: Jeff Layton <jlayton@kernel.org>
->=20
+There is a race between laundromat handling of revoked delegations
+and a client sending free_stateid operation. Laundromat thread
+finds that delegation has expired and needs to be revoked so it
+marks the delegation stid revoked and it puts it on a reaper list
+but then it unlock the state lock and the actual delegation revocation
+happens without the lock. Once the stid is marked revoked a racing
+free_stateid processing thread does the following (1) it calls
+list_del_init() which removes it from the reaper list and (2) frees
+the delegation stid structure. The laundromat thread ends up not
+calling the revoke_delegation() function for this particular delegation
+but that means it will no release the lock lease that exists on
+the file.
 
-I realise this is a bit of a tangent, and I'm not objecting to this
-patch, but I wonder what the justification is for using
-vfs_cache_pressure here.  The sysctl is documented as
+Now, a new open for this file comes in and ends up finding that
+lease list isn't empty and calls nfsd_breaker_owns_lease() which ends
+up trying to derefence a freed delegation stateid. Leading to the
+followint use-after-free KASAN warning:
 
-   This percentage value controls the tendency of the kernel to reclaim
-   the memory which is used for caching of directory and inode objects.
+kernel: ==================================================================
+kernel: BUG: KASAN: slab-use-after-free in nfsd_breaker_owns_lease+0x140/0x160 [nfsd]
+kernel: Read of size 8 at addr ffff0000e73cd0c8 by task nfsd/6205
+kernel:
+kernel: CPU: 2 UID: 0 PID: 6205 Comm: nfsd Kdump: loaded Not tainted 6.11.0-rc7+ #9
+kernel: Hardware name: Apple Inc. Apple Virtualization Generic Platform, BIOS 2069.0.0.0.0 08/03/2024
+kernel: Call trace:
+kernel: dump_backtrace+0x98/0x120
+kernel: show_stack+0x1c/0x30
+kernel: dump_stack_lvl+0x80/0xe8
+kernel: print_address_description.constprop.0+0x84/0x390
+kernel: print_report+0xa4/0x268
+kernel: kasan_report+0xb4/0xf8
+kernel: __asan_report_load8_noabort+0x1c/0x28
+kernel: nfsd_breaker_owns_lease+0x140/0x160 [nfsd]
+kernel: leases_conflict+0x68/0x370
+kernel: __break_lease+0x204/0xc38
+kernel: nfsd_open_break_lease+0x8c/0xf0 [nfsd]
+kernel: nfsd_file_do_acquire+0xb3c/0x11d0 [nfsd]
+kernel: nfsd_file_acquire_opened+0x84/0x110 [nfsd]
+kernel: nfs4_get_vfs_file+0x634/0x958 [nfsd]
+kernel: nfsd4_process_open2+0xa40/0x1a40 [nfsd]
+kernel: nfsd4_open+0xa08/0xe80 [nfsd]
+kernel: nfsd4_proc_compound+0xb8c/0x2130 [nfsd]
+kernel: nfsd_dispatch+0x22c/0x718 [nfsd]
+kernel: svc_process_common+0x8e8/0x1960 [sunrpc]
+kernel: svc_process+0x3d4/0x7e0 [sunrpc]
+kernel: svc_handle_xprt+0x828/0xe10 [sunrpc]
+kernel: svc_recv+0x2cc/0x6a8 [sunrpc]
+kernel: nfsd+0x270/0x400 [nfsd]
+kernel: kthread+0x288/0x310
+kernel: ret_from_fork+0x10/0x20
 
-So it can sensibly be used for dentries and inode, and for anything
-directly related like the nfs access cache (which is attached to inodes)
-and the nfs xattr cache.
+Proposing to have laundromat thread hold the state_lock over both
+marking thru revoking the delegation as well as making free_stateid
+acquire state_lock before accessing the list. Making sure that
+revoke_delegation() (ie kernel_setlease(unlock)) is called for
+every delegation that was revoked and added to the reaper list.
 
-But the sunrpc cred cache scales with the number of active users, not
-the number of inodes/dentries.
+CC: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
 
-So I think this should simply "return number_cred_unused;".
+--- I can't figure out the Fixes: tag. Laundromat's behaviour has
+been like that forever. But the free_stateid bits wont apply before
+the 1e3577a4521e ("SUNRPC: discard sv_refcnt, and svc_get/svc_put").
+But we used that fixes tag already with a previous fix for a different
+problem.
+---
+ fs/nfsd/nfs4state.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-What do others think?
-
-NeilBrown
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9c2b1d251ab3..c97907d7fb38 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6605,13 +6605,13 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 		unhash_delegation_locked(dp, SC_STATUS_REVOKED);
+ 		list_add(&dp->dl_recall_lru, &reaplist);
+ 	}
+-	spin_unlock(&state_lock);
+ 	while (!list_empty(&reaplist)) {
+ 		dp = list_first_entry(&reaplist, struct nfs4_delegation,
+ 					dl_recall_lru);
+ 		list_del_init(&dp->dl_recall_lru);
+ 		revoke_delegation(dp);
+ 	}
++	spin_unlock(&state_lock);
+ 
+ 	spin_lock(&nn->client_lock);
+ 	while (!list_empty(&nn->close_lru)) {
+@@ -7213,7 +7213,9 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		if (s->sc_status & SC_STATUS_REVOKED) {
+ 			spin_unlock(&s->sc_lock);
+ 			dp = delegstateid(s);
++			spin_lock(&state_lock);
+ 			list_del_init(&dp->dl_recall_lru);
++			spin_unlock(&state_lock);
+ 			spin_unlock(&cl->cl_lock);
+ 			nfs4_put_stid(s);
+ 			ret = nfs_ok;
+-- 
+2.43.5
 
 
