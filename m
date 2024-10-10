@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-7007-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7010-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7F7C998934
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 16:19:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B50C9988FE
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 16:14:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81934B2AF89
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 14:13:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CF901C23B31
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 14:14:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074481CCB26;
-	Thu, 10 Oct 2024 14:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200411CEABC;
+	Thu, 10 Oct 2024 14:11:57 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786D31CC8BB;
-	Thu, 10 Oct 2024 14:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E9C1CDFD9;
+	Thu, 10 Oct 2024 14:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728569505; cv=none; b=IilkoAX45VVy+vOM9+iBsFHubwOn/xog81x+8lzZ9qCKqdntG13id+mC1Y4G7GCWtylbSL2rpcvRD4/IvSbT5xNAL7SL1NVK8YE9i4GPCmDqdI1XKYfiNNtT+T5d8d02MnLkkGfyB0x7yf89Hg7z/Ppw0O6Fb38nKz6V4ataT8I=
+	t=1728569517; cv=none; b=ETZTg2Sshk+S+CUP/MMvdEFLN3LsonZd8AMCYx0xkGrCdT/1GXPgHFHBFkfdkybWaeGMInTVlAVI8aC9xJj/U61L+P3ifif6ebTO+4vyRA8XdASvG/DwwAgZwJkx2iN192IyiP0HJ2i6Mop5asNHhrfJBi0G0jgyehhnZJG9Xfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728569505; c=relaxed/simple;
-	bh=9HnIVvJJlsJgSWHst+FWrkiqo5XC5TruyMNtUEFlJFY=;
+	s=arc-20240116; t=1728569517; c=relaxed/simple;
+	bh=gc/WMk5Rsq9Pt9Io0lgL6DMntiqHczYGSTOA/lN8xhI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dfnIwgf4+bRkP/4M7/891HQJDSASwLDBmK2B3P/sX3h6/SRPPykTGNzrnRxgm2Y7/DueBt9clrynE1YOnRW99KqSV5KA8SyOZhB9cxgeVoWqcCdhYlNwOcaRhuarQJKrinajTfATYcZV8xmbrjCbpjTNq8HOXBFYrtkwv/vlYDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=fDerMb/rNhfERRsErFoqkbQWTPMQKfp0qaDlxcyDuXD+y26LdSm2L9NR1yfcGsO676s9ZInWMoCrygMyDCYqBep+2nNAlszLXOB6f8USepxzTQNgX6kBY/vbHy5E1r6SVOVlAoRmkn/pRmAUU2qtQFu3mz3GtQAgw6jJIUQjfLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XPWqs4mTgz2DdD3;
-	Thu, 10 Oct 2024 22:10:33 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4XPWqK1kbpz1T8N3;
+	Thu, 10 Oct 2024 22:10:05 +0800 (CST)
 Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C4C61400DC;
-	Thu, 10 Oct 2024 22:11:40 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 09BCF1401E9;
+	Thu, 10 Oct 2024 22:11:50 +0800 (CST)
 Received: from huawei.com (10.175.113.32) by kwepemh100016.china.huawei.com
  (7.202.181.102) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Oct
- 2024 22:11:37 +0800
+ 2024 22:11:46 +0800
 From: Kaixiong Yu <yukaixiong@huawei.com>
 To: <akpm@linux-foundation.org>, <mcgrof@kernel.org>
 CC: <ysato@users.sourceforge.jp>, <dalias@libc.org>,
@@ -63,9 +63,9 @@ CC: <ysato@users.sourceforge.jp>, <dalias@libc.org>,
 	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
 	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
 	<wangkefeng.wang@huawei.com>, <sunnanyong@huawei.com>
-Subject: [PATCH v3 -next 03/15] mm: swap: move sysctl to mm/swap.c
-Date: Thu, 10 Oct 2024 23:22:03 +0800
-Message-ID: <20241010152215.3025842-4-yukaixiong@huawei.com>
+Subject: [PATCH v3 -next 06/15] mm: mmap: move sysctl to mm/mmap.c
+Date: Thu, 10 Oct 2024 23:22:06 +0800
+Message-ID: <20241010152215.3025842-7-yukaixiong@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241010152215.3025842-1-yukaixiong@huawei.com>
 References: <20241010152215.3025842-1-yukaixiong@huawei.com>
@@ -80,114 +80,176 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemh100016.china.huawei.com (7.202.181.102)
 
-The page-cluster belongs to mm/swap.c, move it to mm/swap.c .
-Removes the redundant external variable declaration and unneeded
-include(linux/swap.h).
+This moves all mmap related sysctls to mm/mmap.c, as part of the
+kernel/sysctl.c cleaning, also move the variable declaration from
+kernel/sysctl.c into mm/mmap.c.
 
 Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
 Reviewed-by: Kees Cook <kees@kernel.org>
 ---
 v3:
  - change the title
+v2:
+ - fix sysctl_max_map_count undeclared issue in mm/nommu.c
 ---
- include/linux/mm.h |  2 --
- kernel/sysctl.c    | 10 ----------
- mm/swap.c          | 16 +++++++++++++++-
- mm/swap.h          |  1 +
- 4 files changed, 16 insertions(+), 13 deletions(-)
+ kernel/sysctl.c | 50 +--------------------------------------------
+ mm/mmap.c       | 54 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 49 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index a3c3a7d64407..7c46de4290da 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -75,8 +75,6 @@ static inline void totalram_pages_add(long count)
- }
- 
- extern void * high_memory;
--extern int page_cluster;
--extern const int page_cluster_max;
- 
- #ifdef CONFIG_SYSCTL
- extern int sysctl_legacy_va_layout;
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 2a875b739054..9fad501311a1 100644
+index ad3ac6f6c808..41d4afc978e6 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -21,7 +21,6 @@
+@@ -127,12 +127,6 @@ enum sysctl_writes_mode {
  
- #include <linux/module.h>
- #include <linux/mm.h>
--#include <linux/swap.h>
- #include <linux/slab.h>
- #include <linux/sysctl.h>
- #include <linux/bitmap.h>
-@@ -2054,15 +2053,6 @@ static struct ctl_table vm_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= overcommit_kbytes_handler,
+ static enum sysctl_writes_mode sysctl_writes_strict = SYSCTL_WRITES_STRICT;
+ #endif /* CONFIG_PROC_SYSCTL */
+-
+-#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+-    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+-int sysctl_legacy_va_layout;
+-#endif
+-
+ #endif /* CONFIG_SYSCTL */
+ 
+ /*
+@@ -2047,16 +2041,7 @@ static struct ctl_table vm_table[] = {
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= SYSCTL_FOUR,
  	},
+-#ifdef CONFIG_MMU
 -	{
--		.procname	= "page-cluster",
--		.data		= &page_cluster,
--		.maxlen		= sizeof(int),
+-		.procname	= "max_map_count",
+-		.data		= &sysctl_max_map_count,
+-		.maxlen		= sizeof(sysctl_max_map_count),
 -		.mode		= 0644,
 -		.proc_handler	= proc_dointvec_minmax,
 -		.extra1		= SYSCTL_ZERO,
--		.extra2		= (void *)&page_cluster_max,
 -	},
+-#else
++#ifndef CONFIG_MMU
  	{
- 		.procname	= "dirtytime_expire_seconds",
- 		.data		= &dirtytime_expire_interval,
-diff --git a/mm/swap.c b/mm/swap.c
-index 835bdf324b76..2f7d415e66a3 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -45,7 +45,7 @@
+ 		.procname	= "nr_trim_pages",
+ 		.data		= &sysctl_nr_trim_pages,
+@@ -2074,17 +2059,6 @@ static struct ctl_table vm_table[] = {
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= SYSCTL_ZERO,
+ 	},
+-#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+-    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+-	{
+-		.procname	= "legacy_va_layout",
+-		.data		= &sysctl_legacy_va_layout,
+-		.maxlen		= sizeof(sysctl_legacy_va_layout),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-	},
+-#endif
+ #ifdef CONFIG_MMU
+ 	{
+ 		.procname	= "mmap_min_addr",
+@@ -2110,28 +2084,6 @@ static struct ctl_table vm_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 	},
+ #endif
+-#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
+-	{
+-		.procname	= "mmap_rnd_bits",
+-		.data		= &mmap_rnd_bits,
+-		.maxlen		= sizeof(mmap_rnd_bits),
+-		.mode		= 0600,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)&mmap_rnd_bits_min,
+-		.extra2		= (void *)&mmap_rnd_bits_max,
+-	},
+-#endif
+-#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+-	{
+-		.procname	= "mmap_rnd_compat_bits",
+-		.data		= &mmap_rnd_compat_bits,
+-		.maxlen		= sizeof(mmap_rnd_compat_bits),
+-		.mode		= 0600,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)&mmap_rnd_compat_bits_min,
+-		.extra2		= (void *)&mmap_rnd_compat_bits_max,
+-	},
+-#endif
+ };
  
- /* How many pages do we try to swap or page in/out together? As a power of 2 */
- int page_cluster;
--const int page_cluster_max = 31;
-+static const int page_cluster_max = 31;
- 
- struct cpu_fbatches {
- 	/*
-@@ -1089,6 +1089,18 @@ void folio_batch_remove_exceptionals(struct folio_batch *fbatch)
- 	fbatch->nr = j;
+ int __init sysctl_init_bases(void)
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 4ef58ad80a33..6d584e67d045 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2176,6 +2176,57 @@ struct vm_area_struct *_install_special_mapping(
+ 					&special_mapping_vmops);
  }
  
-+static struct ctl_table swap_sysctl_table[] = {
-+	{
-+		.procname	= "page-cluster",
-+		.data		= &page_cluster,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= (void *)&page_cluster_max,
-+	}
++#ifdef CONFIG_SYSCTL
++#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
++		defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
++int sysctl_legacy_va_layout;
++#endif
++
++static struct ctl_table mmap_table[] = {
++		{
++				.procname       = "max_map_count",
++				.data           = &sysctl_max_map_count,
++				.maxlen         = sizeof(sysctl_max_map_count),
++				.mode           = 0644,
++				.proc_handler   = proc_dointvec_minmax,
++				.extra1         = SYSCTL_ZERO,
++		},
++#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
++		defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
++		{
++				.procname       = "legacy_va_layout",
++				.data           = &sysctl_legacy_va_layout,
++				.maxlen         = sizeof(sysctl_legacy_va_layout),
++				.mode           = 0644,
++				.proc_handler   = proc_dointvec_minmax,
++				.extra1         = SYSCTL_ZERO,
++		},
++#endif
++#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
++		{
++				.procname       = "mmap_rnd_bits",
++				.data           = &mmap_rnd_bits,
++				.maxlen         = sizeof(mmap_rnd_bits),
++				.mode           = 0600,
++				.proc_handler   = proc_dointvec_minmax,
++				.extra1         = (void *)&mmap_rnd_bits_min,
++				.extra2         = (void *)&mmap_rnd_bits_max,
++		},
++#endif
++#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
++		{
++				.procname       = "mmap_rnd_compat_bits",
++				.data           = &mmap_rnd_compat_bits,
++				.maxlen         = sizeof(mmap_rnd_compat_bits),
++				.mode           = 0600,
++				.proc_handler   = proc_dointvec_minmax,
++				.extra1         = (void *)&mmap_rnd_compat_bits_min,
++				.extra2         = (void *)&mmap_rnd_compat_bits_max,
++		},
++#endif
 +};
++#endif /* CONFIG_SYSCTL */
 +
  /*
-  * Perform any setup for the swap system
+  * initialise the percpu counter for VM
   */
-@@ -1105,4 +1117,6 @@ void __init swap_setup(void)
- 	 * Right now other parts of the system means that we
- 	 * _really_ don't want to cluster much more
- 	 */
-+
-+	register_sysctl_init("vm", swap_sysctl_table);
+@@ -2185,6 +2236,9 @@ void __init mmap_init(void)
+ 
+ 	ret = percpu_counter_init(&vm_committed_as, 0, GFP_KERNEL);
+ 	VM_BUG_ON(ret);
++#ifdef CONFIG_SYSCTL
++	register_sysctl_init("vm", mmap_table);
++#endif
  }
-diff --git a/mm/swap.h b/mm/swap.h
-index ad2f121de970..274dcc6219a0 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -3,6 +3,7 @@
- #define _MM_SWAP_H
  
- struct mempolicy;
-+extern int page_cluster;
- 
- #ifdef CONFIG_SWAP
- #include <linux/swapops.h> /* for swp_offset */
+ /*
 -- 
 2.34.1
 
