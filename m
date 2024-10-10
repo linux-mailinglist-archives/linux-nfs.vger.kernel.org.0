@@ -1,164 +1,256 @@
-Return-Path: <linux-nfs+bounces-7036-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7037-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B2B999341
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 21:58:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD2AC9993E6
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 22:49:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5462B24583
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 19:57:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 398711F22FCC
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 20:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3BE19DFA2;
-	Thu, 10 Oct 2024 19:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F5E1CF5F1;
+	Thu, 10 Oct 2024 20:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIQw5q6T"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1U47rMnY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="snAXz/cP";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1U47rMnY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="snAXz/cP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A4F1990C1;
-	Thu, 10 Oct 2024 19:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0A01991B8;
+	Thu, 10 Oct 2024 20:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728590230; cv=none; b=NgSrlBVxfS1MFsOUodgTstgOChwOCtHE2E7meQZF2mCD7KHXVszlk0L2ewrLFVSQxvq9jM6KZUmull9Yr5v1jA0C3jttVc99+lyeBrH3kE9Riz/HK+sAbm380LVSFjYH/PL6V3EWpjZqJwZ4ih6QKPeM51yyv8tXkmpB9qTqIAA=
+	t=1728593363; cv=none; b=dnLaVLj2ycXxCXiSP2OX4AcdjIvSYiIbJbE+W6wocXkEQBc/nGT/0F+ePr4uCs/iwhV137LuxsUH8fY5WBHLseBpVa72aB5yzr+NuiT7SfZjDUfuhwn66TZGP3+xlxO9f2lKdPH60gVtw1mSE4vfm0EfOAlMvRa1Kv+k9OGGN0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728590230; c=relaxed/simple;
-	bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=emKoAMw7nOAPN4wiEwZ43OtFw5HxUPM8rJEcG4NrHkVQNcRVsuy7ubacxfm7/c5lXB7yWG9oTS/tuPWSGWEk+NxqD9ooBKCn4pprdRZyzITzun6iXuOQ7haWS4CO42DUA1nz+ToYkLMUcxBzBZSIhdv+QkSTnxYY4Zno4E8C8ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIQw5q6T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A97C4CEC5;
-	Thu, 10 Oct 2024 19:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728590230;
-	bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ZIQw5q6TCBLsIV2ZfkgA1p2lJofWPuOHM6Tt/ejVGH+5/vttDbyuK1tYkqCPOZoZb
-	 rdCYx+6hosSrDLlZFVSxCkcg91CzpdsG0o/qZ+piBwMbVzfGRgFkrKcellgoM0ijU2
-	 xBqUplGCOIferYXtpd1KY6lTtyQORUSLdULX0Lve1W293HbZtFutr9C0K3li3Oz9t+
-	 DfaiSKLNSXgKW3yAYGfF5xD8+slECYPZEKqdbQz7bTNw3T/uW1k5gRFL7mMNmMBz7R
-	 hEhggUb5N0GJrnIDQLatIHq1gLEJmZ3MgqgkpFDCp/ABHFK2/jYV3tXobHINCrSUX7
-	 i0yn/hBvCsAyA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 10 Oct 2024 15:56:55 -0400
-Subject: [PATCH] nfsd: handle OPEN_XOR_DELEGATION outside of st_mutex in
- open codepath
+	s=arc-20240116; t=1728593363; c=relaxed/simple;
+	bh=4WwtzshnrUnW4OWWNGPeLR+yfu/8AIRhKqf10LmJaBc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=p9GSKOHDvVQlMx03mhKUBlPUeWmWnjpyAHBeWMdQQLyPDaNX8FYLIG7DxUmNh2qfLCNOeW91WnCwvZAV+u7zvYvmxc3ZsKa02PpEj179l8tYRqlaP7H2ZSzF8XY+gXfBHDJ6XG/qnf2Yoqu31MKf+KZalL1UxivDrQZOYt1WRVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1U47rMnY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=snAXz/cP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1U47rMnY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=snAXz/cP; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C0DE221DAD;
+	Thu, 10 Oct 2024 20:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1728593359; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JRDEvICaEzdwrIe0rqzexW7NqQ5hp8fC4bwRuxky4Bo=;
+	b=1U47rMnYDDdowt/gTJVQrbf1xE4lPaYP5ofP6yc9uanrNHgMrYNqd5K6s8K1+AV6XBh5ym
+	fohGli5wLRAofGn4JUoG4unwS5VbcxVSms7x9D45OVETFKQ67U7Xm1Et6ZRB0v74Gkb/Nu
+	7av4gRsZkjOPsVwcccsy6h4O5uhHI88=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1728593359;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JRDEvICaEzdwrIe0rqzexW7NqQ5hp8fC4bwRuxky4Bo=;
+	b=snAXz/cPeY0u3NTwDyJJQJOr+AmjIR29yWiZvi0SPzFrIAqljPMGvNQsbeVUiJvqrHsJkF
+	D9/CVjeynuwxOtDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1728593359; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JRDEvICaEzdwrIe0rqzexW7NqQ5hp8fC4bwRuxky4Bo=;
+	b=1U47rMnYDDdowt/gTJVQrbf1xE4lPaYP5ofP6yc9uanrNHgMrYNqd5K6s8K1+AV6XBh5ym
+	fohGli5wLRAofGn4JUoG4unwS5VbcxVSms7x9D45OVETFKQ67U7Xm1Et6ZRB0v74Gkb/Nu
+	7av4gRsZkjOPsVwcccsy6h4O5uhHI88=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1728593359;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JRDEvICaEzdwrIe0rqzexW7NqQ5hp8fC4bwRuxky4Bo=;
+	b=snAXz/cPeY0u3NTwDyJJQJOr+AmjIR29yWiZvi0SPzFrIAqljPMGvNQsbeVUiJvqrHsJkF
+	D9/CVjeynuwxOtDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 22E3D1370C;
+	Thu, 10 Oct 2024 20:49:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id H9XDMsw9CGepWAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 10 Oct 2024 20:49:16 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241010-delstid-v1-1-1e0533c6617b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIYxCGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDA0MD3ZTUnOKSzBTdlCSjREOjNCMTozRjJaDqgqLUtMwKsEnRsbW1AOm
- 3cEdZAAAA
-X-Change-ID: 20241010-delstid-db2a12f242f3
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <oliver.sang@intel.com>, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3225; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnCDGN9sXfc5DauxclktLtMGkCH6tstpA0rcJWp
- Io/YqB/m0mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZwgxjQAKCRAADmhBGVaC
- FXIoEACI2vArBHpYfD5ZRa7SSQE7KeayjUjKJFCIYp+hvqbof7VzPDTU2j7e1lRd/Oj6ieHy3pG
- VLUtC8BIpyidJ03eyaOdNg9uH87WdFDUgvPEfy/yiKgZrZceper/66BDoB+x1+PtgCZ4QEABqMe
- bUDltrvBZfhC/+x2u9QeuEXssUjnPzX2dw3gSxc6L9+qyp+MaMiYhTOyRZXPu1LkhLK20WhUyfV
- NvcpfgKZOVyyxCqIyIjIxtlhZTHh9lZhm6kpk0azlQqrB1C7uX3heceswzAAnbs6alI8AF6vPe1
- XPHzbAptFv9yrWF1Vgd+W/wLiDeNVjmGnO24PzTi/3OD4+z9EtEwVwhmthLkK3VcG78CRBwqffJ
- ZNGzVl0KAD5CidMHhIZqUCozoiuFK2fIyI7bmXJNxpYxA8wbMCZNap8sQwi0WV4cDPr9Pikj+jA
- QPWhfVM1ilgMC+rHo6p4M036V9EFQSBqe9I2WeDg1+/QWe68ravqjtHztQPS6SwUzw4UmwsgIvz
- ucZUba59BSiJbBV4k9o6pABToX5lUEWVKNrQeIkMy7mCEoO9/tBv7eMjlOQ/Gk7Sb9ZdpMVzQXN
- GhU2Vu66xzpvxwDgrXjSTra10N8kwn84qpfb4WIZJZpPkDtK+eksZ2wyROJT0EwOto1Mk480QrD
- uYsF4LZSXGYS+hQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: Pali =?utf-8?q?Roh=C3=A1r?= <pali@kernel.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject:
+ Re: [PATCH] nfsd: Fix NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT
+In-reply-to: <ZwcSC4ZWihv/PyV2@tissot.1015granger.net>
+References: <>, <ZwcSC4ZWihv/PyV2@tissot.1015granger.net>
+Date: Fri, 11 Oct 2024 07:49:13 +1100
+Message-id: <172859335340.444407.11709415196743389823@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-When I originally wrote these patches, I was under the mistaken
-impression that I didn't need to increment the stateid in the case of an
-existing stateid (because we weren't returning it). After some
-discussion upstream, it turns out that the server should ignore the
-WANT_OPEN_XOR_DELEGATION flag if there is an outstanding open stateid.
+On Thu, 10 Oct 2024, Chuck Lever wrote:
+> On Thu, Oct 10, 2024 at 07:14:07AM +1100, NeilBrown wrote:
+> > On Thu, 10 Oct 2024, Chuck Lever wrote:
+> > > On Tue, Oct 08, 2024 at 05:47:55PM -0400, NeilBrown wrote:
+> > > > And NFSD_MAY_LOCK should be discarded, and nlm_fopen() should set
+> > > > NFSD_MAY_BYPASS_SEC.
+> > >=20
+> > > 366         /*                                                         =
+            =20
+> > > 367          * pseudoflavor restrictions are not enforced on NLM,      =
+            =20
+> > >=20
+> > > Wrt the mention of "NLM", nfsd4_lock() also sets NFSD_MAY_LOCK.
+> >=20
+> > True, but it shouldn't.  NFSD_MAY_LOCK is only used to bypass the GSS
+> > requirement.  It must have been copied into nfsd4_lock() without a full
+> > understanding of its purpose.
+>=20
+> nfsd4_lock()'s use of MAY_LOCK goes back before the git era, so it's
+> difficult to say with certainty.
+>=20
+> I would like to keep such subtle changes bisectable. To me, it seems
+> like it would be a basic first step to change the fh_verify() call
+> in nfsd4_lock() to use (NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE)
+> instead of NFSD_MAY_LOCK, as a separate patch.
 
-Given that, there is no need to expand the scope of the st_mutex to
-cover acquiring the delegation. The server may end up bumping the seqid
-in a brand new open stateid that it ends up discarding, but that's not a
-problem.
+Yes, that is sensible ...  though lockd used NFSD_MAY_WRITE for write
+locks.
+So if a process doesn't have read access to a file but does have write
+access, and isn't the owner, then NLM would grant a write lock, but
+NFSv4 would not.  check_fmode_for_setlk() makes the same choice, so a
+local user could also get the lock.  Only NFSv4 would reject it.
 
-This also seems to lower the "App Overhead" on the fs_mark test that
-the kernel test robot reported.
+>=20
+>=20
+> > > 368          * which clients virtually always use auth_sys for,        =
+            =20
+> > > 369          * even while using RPCSEC_GSS for NFS.                    =
+            =20
+> > > 370          */                                                        =
+            =20
+> > > 371         if (access & NFSD_MAY_LOCK)                                =
+            =20
+> > > 372                 goto skip_pseudoflavor_check;                      =
+            =20
+> > > 373         if (access & NFSD_MAY_BYPASS_GSS)                          =
+            =20
+> > > 374                 may_bypass_gss =3D true;
+> > > 375         /*                                                         =
+            =20
+> > > 376          * Clients may expect to be able to use auth_sys during mou=
+nt,         =20
+> > > 377          * even if they use gss for everything else; see section 2.=
+3.2         =20
+> > > 378          * of rfc 2623.                                            =
+            =20
+> > > 379          */                                                        =
+            =20
+> > > 380         if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT                   =
+            =20
+> > > 381                         && exp->ex_path.dentry =3D=3D dentry)      =
+                =20
+> > > 382                 may_bypass_gss =3D true;                           =
+              =20
+> > > 383                                                                    =
+            =20
+> > > 384         error =3D check_nfsd_access(exp, rqstp, may_bypass_gss);   =
+              =20
+> > > 385         if (error)                                                 =
+            =20
+> > > 386                 goto out;                                          =
+            =20
+> > > 387                                                                    =
+            =20
+> > > 388 skip_pseudoflavor_check:                                           =
+            =20
+> > > 389         /* Finally, check access permissions. */                   =
+            =20
+> > > 390         error =3D nfsd_permission(cred, exp, dentry, access);    =20
+> > >=20
+> > > MAY_LOCK is checked in nfsd_permission() and __fh_verify().
+> > >=20
+> > > But MAY_BYPASS_GSS is set in loads of places that use those two
+> > > functions. How can we be certain that the two flags are equivalent?=20
+> >=20
+> > We can be certain by looking at the effect.  Before a recent patch they
+> > both did "goto skip_pseudoflavor_check" and nothing else.
+>=20
+> I'm still not convinced MAY_LOCK and MAY_BYPASS_GSS are 100%
+> equivalent.  nfsd_permission() checks for MAY_LOCK, but does not
+> check for MAY_BYPASS_GSS:
+>=20
+>         if (acc & NFSD_MAY_LOCK) {
+>                 /* If we cannot rely on authentication in NLM requests,
+>                  * just allow locks, otherwise require read permission, or
+>                  * ownership
+>                  */
+>                 if (exp->ex_flags & NFSEXP_NOAUTHNLM)
+>                         return 0;
+>                 else=20
+>                         acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
+>         }=20
+>=20
+> The only consumer of MAY_BYPASS_GSS seems to be OP_PUTFH, now that
+> I'm looking closely for it. But I don't think we want the
+> no_auth_nlm export option to modify the way PUTFH behaves.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202409161645.d44bced5-oliver.sang@intel.com
-Fixes: e816ca3f9ee0 ("nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-We had a report of a performance regression (in the form of higer "App
-Overhead") in fs_mark. After some experimentation, I found that the
-cause seemed to be the change in how the mutex is handled in e816ca3f9ee0.
+Thanks for fact-checking my claim!  I had forgotten about noauthnlm.
 
-This patch restores the App Overhead back to its previous levels (and
-may even improve it a bit -- go figure). Chuck, this should probably be
-squashed into e816ca3f9ee0.
----
- fs/nfsd/nfs4state.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+I'll suggest a patch which might make it all a bit clearer.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9c2b1d251ab31b4e504cf301d1deaa4945bd244f..73c4b983c048c101d16ec146b3f80922bcca3c69 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6120,7 +6120,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	struct nfs4_delegation *dp = NULL;
- 	__be32 status;
- 	bool new_stp = false;
--	bool deleg_only = false;
- 
- 	/*
- 	 * Lookup file; if found, lookup stateid and check open request,
-@@ -6175,6 +6174,9 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 			open->op_odstate = NULL;
- 	}
- 
-+	nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
-+	mutex_unlock(&stp->st_mutex);
-+
- 	if (nfsd4_has_session(&resp->cstate)) {
- 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
- 			open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE_EXT;
-@@ -6194,17 +6196,12 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	 * returned. Only respect WANT_OPEN_XOR_DELEGATION when a new
- 	 * open stateid would have to be created.
- 	 */
--	deleg_only = new_stp && open_xor_delegation(open);
--nodeleg:
--	if (deleg_only) {
-+	if (new_stp && open_xor_delegation(open)) {
- 		memcpy(&open->op_stateid, &zero_stateid, sizeof(open->op_stateid));
- 		open->op_rflags |= OPEN4_RESULT_NO_OPEN_STATEID;
- 		release_open_stateid(stp);
--	} else {
--		nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
- 	}
--	mutex_unlock(&stp->st_mutex);
--
-+nodeleg:
- 	status = nfs_ok;
- 	trace_nfsd_open(&stp->st_stid.sc_stateid);
- out:
+Thanks,
+NeilBrown
 
----
-base-commit: 144cb1225cd863e1bd3ae3d577d86e1531afd932
-change-id: 20241010-delstid-db2a12f242f3
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
+> --=20
+> Chuck Lever
+>=20
 
 
