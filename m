@@ -1,272 +1,319 @@
-Return-Path: <linux-nfs+bounces-6994-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6995-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33882997923
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 01:30:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB10997B70
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 05:45:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36A4E1C21EDA
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Oct 2024 23:30:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 788C71F21713
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 03:45:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A1A18A95A;
-	Wed,  9 Oct 2024 23:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rk4K7BQL";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Dh3KiHPm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 459CC18BBA9;
+	Thu, 10 Oct 2024 03:45:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B584417DE2D;
-	Wed,  9 Oct 2024 23:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728516641; cv=fail; b=eSHTu71yagesvXp2Rd8M/lxBr7r0djd56mPTAozd6R4D+kEbj4E9NMw+IKZU55OSrDm4/s/vYIe4yW9p67k/G6Oe/dEZqdAMTmMfm/AMqwgIuOZPBG/z9JV6dRD1B/MxyGuRgZ3L8Fpe8RBVmRQZcQsrdP2PZQYsunE0a0FI8J8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728516641; c=relaxed/simple;
-	bh=qWp7292p7cPxfXzYRwkn7WLOAc7dxCzjLlLNATRNyH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fm22TzZC9Y9mPRSkbT8Lt3HwGd79xRQ5D2Qbwd5B1e1/9vMdVIEFPWxv9i//wq3Hi4EWbbUixqs/h5SIjTfzwc92SJsM78ARaTFGivUHwyIloTDAGwmnDQxv23JaTIOhn/xF/yLFAXhsHFd58Y+VVHiNB739/k12rN1ulb38g+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Rk4K7BQL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Dh3KiHPm; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 499LtcEo026014;
-	Wed, 9 Oct 2024 23:30:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=Rlk2IebgrwOWpGM0B1
-	X36hjh9OpXNGwh46R3obBvIlc=; b=Rk4K7BQLijhrRrmniTZhbviHLfKNo0Ka2y
-	UVAh0Nax3gkj51JO7j0SLyiAVEOXcQQd8q0G38WxU9RCh3Uf+f7PPo+0ZVYyiCx7
-	Z3h0zznI8VS/MQA2mQ7AaYpCnxByHfjKaI0IGQk7nRL0D1Pl1Y3K0UEgMLZrOkwK
-	MDfQVEfdaDmwptp7OXxSygnRyArkyGHoQxD6G8PPhd88TC+hZ7evbw2bPWViSdtm
-	b00LWDRmcg88DA8XhYAJjcJdkR57Z37g+9ogvqTwXtuY93SdmIL5tA9tAbM96TR1
-	UBQHSWp4BJR1dEoHEVLUogcePlTVEShZA531eSjhn5/0HJecVSwQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42300e1qtr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 23:30:26 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 499NKCMa019072;
-	Wed, 9 Oct 2024 23:30:25 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwfkyhq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Oct 2024 23:30:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gaBDvyPgXL2vpOeteELVxj0FsavorK6I7gkGPoLap3VBqXtuiaRVSyYF3Ofs298ouwyrPnYZ/g/yQtQ0zkw0Gn43tuNc3NeFlRSnagUxUIkZG5GfC5vy3PntLZqVUdmr52+cshNZ7HYTGogMnsEEgci0aQ5Y63luLZDSfUtHHMbjfqF/WYGe+YcGbK51B9VpdMbVxK9kdaWHpbZdxlW+dQnMJiYCSOZHBc3MrMUp9ZRqXQs7LtZzhBWrNtnOpyFsBZSDzle/+FpDRAPAH4lQ12m2aLrPFMtslVZfPn0d/dUiWQkTFPkBbcO1jzbCfkPHYpb3Xo5+n2DKGV0pMeuSjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rlk2IebgrwOWpGM0B1X36hjh9OpXNGwh46R3obBvIlc=;
- b=mJJcPpygYs7FHBdzNT7PuSeC1SjM+VPIB6KIMz9PsMSS3UYAveHKhQzzbkcNj++gWHPqpSp3F2XnUjztMCuxxcGMcCUwza3LNDOvbOowumvCtSgZsCvUi5kCYOl1iyMQ3tfnWUFMqs9pZuMuBloROwCKL3CMsBorQV4RWzMzd5TWfutZtk5AURv2bU//MahVKo/bYSWHMjkDyBfb+I8LermKORbKviWasZmWV+elk592AFx7WxAsHbaD+70SDMDjgglIRyy0ncagk+OSlMPCGWcTaB1aS/sS+2PI5o4na4HfZRq5xdRzQrjqHP6cOpjNdhjCt9WROOBrYzSOgy5apw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rlk2IebgrwOWpGM0B1X36hjh9OpXNGwh46R3obBvIlc=;
- b=Dh3KiHPme+nKJh/q9QtGu4VIfXX3sWrTiF+uhrSiIzmziQSeyJtR9znmds5rBXknEEbc40Ygo62hqAYBZ1JQnJUsUqoYJ0WMUhiEndScxTpnI0UwGLq8q+OppdBaGdDIl/6HDKEtkgHyw7a9JBFDGQO6UkJQNWiENCDeMjsgr8Y=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY8PR10MB6827.namprd10.prod.outlook.com (2603:10b6:930:9e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.16; Wed, 9 Oct
- 2024 23:30:23 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8048.013; Wed, 9 Oct 2024
- 23:30:23 +0000
-Date: Wed, 9 Oct 2024 19:30:19 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Fix NFSD_MAY_BYPASS_GSS and
- NFSD_MAY_BYPASS_GSS_ON_ROOT
-Message-ID: <ZwcSC4ZWihv/PyV2@tissot.1015granger.net>
-References: <>
- <Zwbfmf3L5XphaiGs@tissot.1015granger.net>
- <172850484738.444407.17004521090739639063@noble.neil.brown.name>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172850484738.444407.17004521090739639063@noble.neil.brown.name>
-X-ClientProxiedBy: CH2PR15CA0004.namprd15.prod.outlook.com
- (2603:10b6:610:51::14) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4B1957E4
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 03:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728531920; cv=none; b=Zj6k08s5z2n3vt4Df0YGbJzJMqpfc0mOwkWDVseEC8jjHZSRCJv1ghgCFusj1h2TxC5y2wDlPPlTvjTdZYjRb0pKYVCe0CbUzoCD6HIxcNhkWUIK2pbwFGICz+ceCrXtjE+BaadePWhSybDfBAJ/Shx/wjTOzgzCv81A15y5EuI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728531920; c=relaxed/simple;
+	bh=ewZQPvZ3U61YKSwGfr2LSGK/hAP5Mi5oQ7I+KBj++Ss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ii8CgAGM4fJ3gkECasLHMrSbdRq2nZbkryiaog1dISJjIhLT/2xYnrWO6QwA9rX6H8EJya6Z8uu3pVnqANhwGAzJLQpUZ+97qjxe5BMog9i0lvmJmT6bZ5w3s/Nh1nKW1Av5gulC2q0vJ0FtjX8R6F9eekzp3pmZeE7Dz0NxcVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XPFxz6TRvz4f3jjy
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 11:44:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id AF3E11A08DC
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 11:45:07 +0800 (CST)
+Received: from [10.174.177.210] (unknown [10.174.177.210])
+	by APP4 (Coremail) with SMTP id gCh0CgAnXMjCTQdnSauxDg--.31060S3;
+	Thu, 10 Oct 2024 11:45:07 +0800 (CST)
+Message-ID: <ce018620-221e-1ff5-1230-467be841dc5f@huaweicloud.com>
+Date: Thu, 10 Oct 2024 11:45:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CY8PR10MB6827:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d0e6eb9-54bb-473d-e725-08dce8ba58bf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/B0JM1g5XruFp3kj4zqxzCuoQ9r9rUdISpaYLkm/V0CcqfZAg4y5a4Jc51Mx?=
- =?us-ascii?Q?evG69RXF5movZubbL+DEjhnuejVbVq5oHAV9hX7s/rSwSmKqmD/F3R/vmKx4?=
- =?us-ascii?Q?Zf+MhOoYM+mLxk7QKaLJ/2y8K1Oe3jlJ7VgB2XrFjCO/tOizTGn+QHWx6Lla?=
- =?us-ascii?Q?WIbAnWFs6GY9+QxWyi8vj1gugA84jyNOektyWdg1quEIhQD2mplbUjmcaiIA?=
- =?us-ascii?Q?WUvy9gzZfxyGCP3LrGG/3udMGBAqa/bBMFEQShUHaiImukY0/lKz+3cdDsvq?=
- =?us-ascii?Q?gPfl7EDQGiWO35S7J8ZnIUJkuksERehZ6soR1knmRLrxePS7IMwfBc+addcn?=
- =?us-ascii?Q?78uQ5zMoSqgZ34m/z36LUTYHtzjhTzv9/paWe+etTF4Gre+ZOzKlarprEBQC?=
- =?us-ascii?Q?yXQDoPdSlp+DffWwuSgVHRqBPeAOqvFl8HwuZdG9SEQ0uN9CSddLgUjBIUaL?=
- =?us-ascii?Q?HLTYBSGycWZDXaHgvsG+Dwe2MEMGXt6RG0+pqGlsSE13/6gGscqoP6xP2Tar?=
- =?us-ascii?Q?DzdZTz88jtv3XXm1mrqzBzSFTMkg9eBXDKAgM3S00uSljSzo+sQNhZJpfyRH?=
- =?us-ascii?Q?dIu9olNrOU+bfAfiyLtPbjHslwdvXotpQ6PlZhaV87aVsbEsG4bhfa0p2uVE?=
- =?us-ascii?Q?iHXiCKLsENSZSE8nCqX07ufVotT+QeD7PdwxxFgMkhDQlfFwnwghXlswJDrl?=
- =?us-ascii?Q?M9lilutBshZ3hP9gR6FGtg2jKCGE1TVOx7w+uzhSnz4wdsHpqsbYeKlhQAJO?=
- =?us-ascii?Q?Cd3iJY9nApmvOW2x2xNuZ7Fs96v9MPEHvVodrLtVKyDXLeiZGd9byjjRWwJ8?=
- =?us-ascii?Q?3R+N179M21iQX2jizHLp+CR2kWOP9gkOmiMuRSI+iXEHwcbEIiH3UuRy5nfI?=
- =?us-ascii?Q?FWOxnpcL314kW3034zywlHIP5ScROvtSnmkZMY96CU3Hbmxjk7IJcUzydD2s?=
- =?us-ascii?Q?IXRgKcgZMJf1oTEKiHt4DYgiiWdf7FKz8wizQhYfcr/XpIgeTVxodUXu9jE2?=
- =?us-ascii?Q?xWkKAUwubRvEG6H1YxEZ9LVQlwj8AcN+c6Pe+XTgNL83NljrK0qTdg8P0Izw?=
- =?us-ascii?Q?PKX2l+Fn7/Hef77eOn/GqHmrcIEKNqZfmz4XL4SJwk2SO2ql0AYp5N9F/z8k?=
- =?us-ascii?Q?5AHfsc0JeCaqWU/Z8hugufSkowY5mLyf88BxaSYFIWplTbIjrhYXmSMNbWSI?=
- =?us-ascii?Q?fr4y+PtF874fxSPw4LI5ojxMQaEY0o91HJpYJ1y+gKoa4vqxNJBCyiU4bUEM?=
- =?us-ascii?Q?rmfl0JxFn0GaVzIkVhEwEB3IitHncD9RvQxg3jz79Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r92mntzduRQUL8SapvA1p0XK/l15ArItujx62HKdam/Shmddi2n09Mo9HPN7?=
- =?us-ascii?Q?4/+sZGgnI7kBcAxrWXVx0rY7TWeQ+5+YuiXKU5Z/F/bf89a3EX4BC6MYd2Ya?=
- =?us-ascii?Q?kqXVaBzvCU/mC4nOCnVkvkPSjfYsRmzPHi/8ACgkykNXIGJaXq7uc+XXTJRz?=
- =?us-ascii?Q?vgCGg+jrAYbtKjV4zNIkuUtfJrr+6libZUvs6apyovfNiaXDThE0KZSe7o1Y?=
- =?us-ascii?Q?tGV7US7QsHK8uPbrUE5DC1w6aOl88p9Lg+9r4tQM0sz1x7Ei6CIHsZ1qF92q?=
- =?us-ascii?Q?RZ6WUrcZtu+/X5N7YKUchbkZYehD5wvAPnkG7W9av1z1O6E+rgcUP8t7DFRy?=
- =?us-ascii?Q?1HSFJ7JII1MDYVBTPiyJ9e8dDobv2VzEYoBcBbb4x6Y5G1/mn9jomiSVY/Oi?=
- =?us-ascii?Q?vIXJnMSbyFJuxjWDJvAkajOMe4QUf9sH3LAWJdqgTYV8aWLzuxChnYi5+gha?=
- =?us-ascii?Q?EvnJhnOCFnpnlwgtPXk7cCoVus1FTHETI+VF1D1CrRy48u+aotSoDNyAZV2H?=
- =?us-ascii?Q?iUw3z6aAjgxa8v8Z8T2sH9AnLnX/xpIbN+u+jWtce4DQipLwnfVK/kQuGd4H?=
- =?us-ascii?Q?GGrrw4c+ceYSUN8oJD1QCHnMbNrZkPowiZ9nTX3/XXKVV/nKjqgSyVSV3CRc?=
- =?us-ascii?Q?1EMf0iov7/FtAIYMmICWRt8bEASDPwTqTjgxNLhDfYjzSANjc0/bpCytI04l?=
- =?us-ascii?Q?rd1XTz4eaF6rwXB4Xn6rbLJdpLNH9pzJKFwufJYlieE5uOKkgnNN9x9PLF3X?=
- =?us-ascii?Q?xaC0vPTN7ESmQ3+N+YvJeO0LOylOkFp6n1UMBtokbKNiWSNx9CWLKuQJpKLW?=
- =?us-ascii?Q?mBoYGR+oJvmvEzOG8dxbPBEtNmnho8eVEc8VOiP1oi+hkIRQwcHQ1n1kO+q5?=
- =?us-ascii?Q?aVCXAt7xPyDuSxPWxPD4thA7RzYTjQOJ/VXmH7LvS3uTYzZItnuE5ztdUwqx?=
- =?us-ascii?Q?nQ6CCZia1NHp8OdzW9gR9DIpkxHltsA+FPvQ48aQ60GZ/cAWeDUNExkiW5/c?=
- =?us-ascii?Q?2rmSpb0TnuG1J4ySnaYmUILdK3u25xKg1jKd2t8zDUtrdj6lk4wXk5UbddOv?=
- =?us-ascii?Q?uv/b1trtLHnZK9BMLMCcxe6XzrS+N7igpTRZejzGgnvkrJeRMkMuUYrZ236Q?=
- =?us-ascii?Q?NmaSuSjLsBZHnyfvscXFJgyqBQgo4Er2UkkQtfufx3/6C+h04fqd4VUyKjWx?=
- =?us-ascii?Q?FVlVUVtayZRVJ+6X1VSoF9uGK7/8YjPQo+hR5tfgnAWkC2uEDsl8ZAkIgeue?=
- =?us-ascii?Q?XySNbbR8M6QIFig8JpFb14G1zyXDFjoTyaJJHnXeuyr0x7quLVKndTVDzUDZ?=
- =?us-ascii?Q?VD9+U6q8Nee0er7/hJ8gK6AdxjChZEC7Awz29yiV/Y+Utm+1NLlHZgV2mMc3?=
- =?us-ascii?Q?RJwfukTGxDxLjMK0erVWucT8evxuQWC0zEi6148FMwNk8AMVvqvNhSBfLhuE?=
- =?us-ascii?Q?dnoZQPhPp9qhz7jJOMwo1v9+SPX3ivw71SPkaPh/vH+xfplsG2bE/9A5OmJI?=
- =?us-ascii?Q?td62V9yKwL64q8lxq9WNe5ihNAY184y/Z16zmQVeX1+VKuv6DMgDRvvPmX/A?=
- =?us-ascii?Q?lxgTAnFD9GfuoSREL3Zm1RtWfhYFKJX79nQGNqNSi2VNcOAGvecYSaQWK9fm?=
- =?us-ascii?Q?Hw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	11zOJ+Qd08b00w1sNkWpVGRIH3j5ywcTHqw9kdJnaIH32q33rp93lpClV+JfDwQQ9xwdrDx8JVfUxDYIfXNqpfGjwn6TBcqLUwB0ThCITuySgyWjIknbiMiPHG4ytN3U2TUyM76dySnJXWxYTcS4kAu83Cdg5TcsClLqYdM78XrERkM9UaPOT1pVpHIN+OZsw5AV9UpfZuOXmmXqG5l6Jm6HYqxo3suajj4uTvwJqFYPEYNQniQgOAuRbFq319gma2je2q/fjlsiQvxmXyw3nQbtikHITGQGwCd1p+/XuJ3Y7scBnVrtvlOeDqzOXXEyJixkgQs3yrDiNlXYQP4WBx3hGJNx7lANLwivc+y2dDCnACCTN94WLiiUpGG8DFhJlsJh9HpZzSslg+P7HfLg+TZONbQOBQC4OjwIGtkatjQJyMHo2d1cpuWvnPUh4lSaJDeXWqLIj2xYEhtUfYRnZWyK2YKm+Gb8ba9VZoQH87LDXlbfcdeyk0eSs9MhhaIP1gaDMNHyxUNmeW6AhValwD+0yviEQefQxLY1ZRKyhgf+YM+bmLyILF1VqifpMyUjMVY+yZDNl/aC9wXi3BZmENVjreSlg0JnYq5FWtLBgcw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d0e6eb9-54bb-473d-e725-08dce8ba58bf
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2024 23:30:23.2634
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lBSXV4dAM1F4DAqM+28Jc4WTC34Np/0slLTLaWBs4vLWq29qDnDL+OBd3GsljjJaxzh0lCMfzrtN+lu5ighBGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6827
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-09_20,2024-10-09_02,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=872 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410090145
-X-Proofpoint-GUID: Tthz1jUf05JzJcutLN7E8earoYdiQU4z
-X-Proofpoint-ORIG-GUID: Tthz1jUf05JzJcutLN7E8earoYdiQU4z
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] NFSV4: fix rpc_task use-after-free when open concurrently
+To: Trond Myklebust <trondmy@hammerspace.com>,
+ "anna@kernel.org" <anna@kernel.org>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>,
+ "anna.schumaker@oracle.com" <anna.schumaker@oracle.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+References: <20240926061210.3309559-1-yangerkun@huaweicloud.com>
+ <929c8087-e28b-43e9-8973-71d9f1b821d6@oracle.com>
+ <965aad29-d119-b3bb-1a19-0c52c28fd376@huaweicloud.com>
+ <ec268559-2b29-c7b1-85b8-7a86a4ba228a@huawei.com>
+ <086eb949-6d07-e5af-da65-e4bccf84dd1a@huaweicloud.com>
+ <edd32ea932f9b24fe188ffbadb28bc8bf4e066dd.camel@hammerspace.com>
+From: yangerkun <yangerkun@huaweicloud.com>
+In-Reply-To: <edd32ea932f9b24fe188ffbadb28bc8bf4e066dd.camel@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAnXMjCTQdnSauxDg--.31060S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw1fJr13KFWUAF45CryrCrg_yoWfXr18pr
+	WkJFW2yry5uryktr4jkr1DJF1Utr45Jw1UXr97tryxJFsaqr1rWF1UXr1DWr1UCrs5Cr1U
+	XF15JFnrZr1UXw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
 
-On Thu, Oct 10, 2024 at 07:14:07AM +1100, NeilBrown wrote:
-> On Thu, 10 Oct 2024, Chuck Lever wrote:
-> > On Tue, Oct 08, 2024 at 05:47:55PM -0400, NeilBrown wrote:
-> > > And NFSD_MAY_LOCK should be discarded, and nlm_fopen() should set
-> > > NFSD_MAY_BYPASS_SEC.
-> > 
-> > 366         /*                                                                      
-> > 367          * pseudoflavor restrictions are not enforced on NLM,                   
-> > 
-> > Wrt the mention of "NLM", nfsd4_lock() also sets NFSD_MAY_LOCK.
+
+
+在 2024/10/9 22:54, Trond Myklebust 写道:
+> On Wed, 2024-10-09 at 11:02 +0800, yangerkun wrote:
+>> Hi,
+>>
+>> Ping for this patch...
+>>
+>> 在 2024/9/29 9:45, yangerkun 写道:
+>>>
+>>>
+>>> 在 2024/9/29 9:38, yangerkun 写道:
+>>>>
+>>>>
+>>>> 在 2024/9/28 4:58, Anna Schumaker 写道:
+>>>>> Hi Yang,
+>>>>>
+>>>>> On 9/26/24 2:12 AM, Yang Erkun wrote:
+>>>>>> From: Yang Erkun <yangerkun@huawei.com>
+>>>>>>
+>>>>>> Two threads that work with the same cred try to open
+>>>>>> different files
+>>>>>> concurrently, they will utilize the same nfs4_state_owner.
+>>>>>> And in order
+>>>>>> to sequential open request send to server, the second task
+>>>>>> will fall
+>>>>>> into RPC_TASK_QUEUED in nfs_wait_on_sequence since there is
+>>>>>> already one
+>>>>>> work doing the open operation. Furthermore, the second task
+>>>>>> will wait
+>>>>>> until the first task completes its work, call
+>>>>>> rpc_wake_up_queued_task in
+>>>>>> nfs_release_seqid to wake up the second task, allowing it to
+>>>>>> complete
+>>>>>> the remaining open operation.
+>>>>>>
+>>>>>> The preceding logic does not cause any problems under normal
+>>>>>> circumstances. However, when once we force an unmount using
+>>>>>> `umount
+>>>>>> -f`,
+>>>>>> the function nfs_umount_begin attempts to kill all tasks by
+>>>>>> calling
+>>>>>> rpc_signal_task. This help wake up the second task, but it
+>>>>>> sets the
+>>>>>> status to -ERESTARTSYS. This status prevents
+>>>>>> `nfs4_open_release` from
+>>>>>> calling `nfs4_opendata_to_nfs4_state`. Consequently, while
+>>>>>> the second
+>>>>>> task will be freed, the original tasks will still exist in
+>>>>>> sequence->list(see nfs_release_seqid). Latter, when the first
+>>>>>> thread
+>>>>>> calls nfs_release_seqid and attempts to wake up the second
+>>>>>> task, it
+>>>>>> will
+>>>>>> trigger the uaf.
+>>>>>>
+>>>>>> To resolve this issue, ensure rpc_task will remove it from
+>>>>>> sequence->list by adding nfs_release_seqid in
+>>>>>> nfs4_open_release.
+>>>>>>
+>>>>>> =============================================================
+>>>>>> =====
+>>>>>> BUG: KASAN: slab-use-after-free in
+>>>>>> rpc_wake_up_queued_task+0xbb/0xc0
+>>>>>> Read of size 8 at addr ff11000007639930 by task bash/792
+>>>>>>
+>>>>>> CPU: 0 UID: 0 PID: 792 Comm: bash Tainted: G    B   W
+>>>>>> 6.11.0-09960-gd10b58fe53dc-dirty #10
+>>>>>> Tainted: [B]=BAD_PAGE, [W]=WARN
+>>>>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+>>>>>> 1.16.1-2.fc37 04/01/2014
+>>>>>> Call Trace:
+>>>>>>    <TASK>
+>>>>>>    dump_stack_lvl+0xa3/0x120
+>>>>>>    print_address_description.constprop.0+0x63/0x510
+>>>>>>    print_report+0xf5/0x360
+>>>>>>    kasan_report+0xd9/0x140
+>>>>>>    __asan_report_load8_noabort+0x24/0x40
+>>>>>>    rpc_wake_up_queued_task+0xbb/0xc0
+>>>>>>    nfs_release_seqid+0x1e1/0x2f0
+>>>>>>    nfs_free_seqid+0x1a/0x40
+>>>>>>    nfs4_opendata_free+0xc6/0x3e0
+>>>>>>    _nfs4_do_open.isra.0+0xbe3/0x1380
+>>>>>>    nfs4_do_open+0x28b/0x620
+>>>>>>    nfs4_atomic_open+0x2c6/0x3a0
+>>>>>>    nfs_atomic_open+0x4f8/0x1180
+>>>>>>    atomic_open+0x186/0x4e0
+>>>>>>    lookup_open.isra.0+0x3e7/0x15b0
+>>>>>>    open_last_lookups+0x85d/0x1260
+>>>>>>    path_openat+0x151/0x7b0
+>>>>>>    do_filp_open+0x1e0/0x310
+>>>>>>    do_sys_openat2+0x178/0x1f0
+>>>>>>    do_sys_open+0xa2/0x100
+>>>>>>    __x64_sys_openat+0xa8/0x120
+>>>>>>    x64_sys_call+0x2507/0x4540
+>>>>>>    do_syscall_64+0xa7/0x240
+>>>>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>> Allocated by task 767:
+>>>>>>    kasan_save_stack+0x3b/0x70
+>>>>>>    kasan_save_track+0x1c/0x40
+>>>>>>    kasan_save_alloc_info+0x44/0x70
+>>>>>>    __kasan_slab_alloc+0xaf/0xc0
+>>>>>>    kmem_cache_alloc_noprof+0x1e0/0x4f0
+>>>>>>    rpc_new_task+0xe7/0x220
+>>>>>>    rpc_run_task+0x27/0x7d0
+>>>>>>    nfs4_run_open_task+0x477/0x810
+>>>>>>    _nfs4_proc_open+0xc0/0x6d0
+>>>>>>    _nfs4_open_and_get_state+0x178/0xc50
+>>>>>>    _nfs4_do_open.isra.0+0x47f/0x1380
+>>>>>>    nfs4_do_open+0x28b/0x620
+>>>>>>    nfs4_atomic_open+0x2c6/0x3a0
+>>>>>>    nfs_atomic_open+0x4f8/0x1180
+>>>>>>    atomic_open+0x186/0x4e0
+>>>>>>    lookup_open.isra.0+0x3e7/0x15b0
+>>>>>>    open_last_lookups+0x85d/0x1260
+>>>>>>    path_openat+0x151/0x7b0
+>>>>>>    do_filp_open+0x1e0/0x310
+>>>>>>    do_sys_openat2+0x178/0x1f0
+>>>>>>    do_sys_open+0xa2/0x100
+>>>>>>    __x64_sys_openat+0xa8/0x120
+>>>>>>    x64_sys_call+0x2507/0x4540
+>>>>>>    do_syscall_64+0xa7/0x240
+>>>>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>>>
+>>>>>> Freed by task 767:
+>>>>>>    kasan_save_stack+0x3b/0x70
+>>>>>>    kasan_save_track+0x1c/0x40
+>>>>>>    kasan_save_free_info+0x43/0x80
+>>>>>>    __kasan_slab_free+0x4f/0x90
+>>>>>>    kmem_cache_free+0x199/0x4f0
+>>>>>>    mempool_free_slab+0x1f/0x30
+>>>>>>    mempool_free+0xdf/0x3d0
+>>>>>>    rpc_free_task+0x12d/0x180
+>>>>>>    rpc_final_put_task+0x10e/0x150
+>>>>>>    rpc_do_put_task+0x63/0x80
+>>>>>>    rpc_put_task+0x18/0x30
+>>>>>>    nfs4_run_open_task+0x4f4/0x810
+>>>>>>    _nfs4_proc_open+0xc0/0x6d0
+>>>>>>    _nfs4_open_and_get_state+0x178/0xc50
+>>>>>>    _nfs4_do_open.isra.0+0x47f/0x1380
+>>>>>>    nfs4_do_open+0x28b/0x620
+>>>>>>    nfs4_atomic_open+0x2c6/0x3a0
+>>>>>>    nfs_atomic_open+0x4f8/0x1180
+>>>>>>    atomic_open+0x186/0x4e0
+>>>>>>    lookup_open.isra.0+0x3e7/0x15b0
+>>>>>>    open_last_lookups+0x85d/0x1260
+>>>>>>    path_openat+0x151/0x7b0
+>>>>>>    do_filp_open+0x1e0/0x310
+>>>>>>    do_sys_openat2+0x178/0x1f0
+>>>>>>    do_sys_open+0xa2/0x100
+>>>>>>    __x64_sys_openat+0xa8/0x120
+>>>>>>    x64_sys_call+0x2507/0x4540
+>>>>>>    do_syscall_64+0xa7/0x240
+>>>>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>>
+>>>>> Once I apply this patch I'm seeing my client hang when running
+>>>>> xfstests generic/451 with NFS v4.0. I was wondering if you
+>>>>> could
+>>>>> check if you see the same hang, and please fix it if so?
+>>>>>
+>>>>
+>>>> I have try to reproduce this with kernel commit:
+>>>
+>>> Forget to say, add this patch too...
+>>>
+>>>>
+>>>> commit abf2050f51fdca0fd146388f83cddd95a57a008d
+>>>> Merge: 9ab27b018649 81ee62e8d09e
+>>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>>>> Date:   Mon Sep 23 15:27:58 2024 -0700
+>>>>
+>>>>       Merge tag 'media/v6.12-1' of
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+>>>>
+>>>> And for nfs4.0/nfs4.1, all seems ok now...
+>>>>
+>>>> Can you provide more info about the 'hang' you meet now?
+>>>>
+>>>>
+>>>>> Thanks,
+>>>>> Anna
+>>>>>
+>>>>>>
+>>>>>> Fixes: 24ac23ab88df ("NFSv4: Convert open() into an
+>>>>>> asynchronous RPC
+>>>>>> call")
+>>>>>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+>>>>>> ---
+>>>>>>    fs/nfs/nfs4proc.c | 1 +
+>>>>>>    1 file changed, 1 insertion(+)
+>>>>>>
+>>>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>>>>> index b8ffbe52ba15..4685621ba469 100644
+>>>>>> --- a/fs/nfs/nfs4proc.c
+>>>>>> +++ b/fs/nfs/nfs4proc.c
+>>>>>> @@ -2603,6 +2603,7 @@ static void nfs4_open_release(void
+>>>>>> *calldata)
+>>>>>>        struct nfs4_opendata *data = calldata;
+>>>>>>        struct nfs4_state *state = NULL;
+>>>>>> +    nfs_release_seqid(data->o_arg.seqid);
+>>>>>>        /* If this request hasn't been cancelled, do nothing */
+>>>>>>        if (!data->cancelled)
+>>>>>>            goto out_free;
+>>
 > 
-> True, but it shouldn't.  NFSD_MAY_LOCK is only used to bypass the GSS
-> requirement.  It must have been copied into nfsd4_lock() without a full
-> understanding of its purpose.
+> If the OPEN was successful, but asked us to confirm the sequence id, we
+> can end up releasing the sequence before we've been able to call
+> open_confirm if we do the above. I suspect this is why Anna is seeing > the hang when running xfstests.
 
-nfsd4_lock()'s use of MAY_LOCK goes back before the git era, so it's
-difficult to say with certainty.
+Hi,
 
-I would like to keep such subtle changes bisectable. To me, it seems
-like it would be a basic first step to change the fh_verify() call
-in nfsd4_lock() to use (NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE)
-instead of NFSD_MAY_LOCK, as a separate patch.
+Thanks a lot for your review! Yes, we cannot call nfs_release_seqid for
+this case. Before this patch, two open threads cannot send
+open/open_confirm requests to server concurrently. After this patch, the
+first thread's open_confirm and the second threads open and open_confirm
+requests can be sended to server concurrently.  But I don't quite
+understand why this leads to hung...
 
+Thanks,
+Erkun.
 
-> > 368          * which clients virtually always use auth_sys for,                     
-> > 369          * even while using RPCSEC_GSS for NFS.                                 
-> > 370          */                                                                     
-> > 371         if (access & NFSD_MAY_LOCK)                                             
-> > 372                 goto skip_pseudoflavor_check;                                   
-> > 373         if (access & NFSD_MAY_BYPASS_GSS)                                       
-> > 374                 may_bypass_gss = true;
-> > 375         /*                                                                      
-> > 376          * Clients may expect to be able to use auth_sys during mount,          
-> > 377          * even if they use gss for everything else; see section 2.3.2          
-> > 378          * of rfc 2623.                                                         
-> > 379          */                                                                     
-> > 380         if (access & NFSD_MAY_BYPASS_GSS_ON_ROOT                                
-> > 381                         && exp->ex_path.dentry == dentry)                       
-> > 382                 may_bypass_gss = true;                                          
-> > 383                                                                                 
-> > 384         error = check_nfsd_access(exp, rqstp, may_bypass_gss);                  
-> > 385         if (error)                                                              
-> > 386                 goto out;                                                       
-> > 387                                                                                 
-> > 388 skip_pseudoflavor_check:                                                        
-> > 389         /* Finally, check access permissions. */                                
-> > 390         error = nfsd_permission(cred, exp, dentry, access);     
-> > 
-> > MAY_LOCK is checked in nfsd_permission() and __fh_verify().
-> > 
-> > But MAY_BYPASS_GSS is set in loads of places that use those two
-> > functions. How can we be certain that the two flags are equivalent? 
 > 
-> We can be certain by looking at the effect.  Before a recent patch they
-> both did "goto skip_pseudoflavor_check" and nothing else.
+> I think we rather want to check if (task->tk_status != 0 && !data-
+>> rpc_done) before calling nfs_release_seqid() above, since that might
+> correspond to the case where we interrupted the RPC call before it gets
+> to the front of the list, but will never correspond to the case where
+> we need to confirm the sequence.
+> 
 
-I'm still not convinced MAY_LOCK and MAY_BYPASS_GSS are 100%
-equivalent.  nfsd_permission() checks for MAY_LOCK, but does not
-check for MAY_BYPASS_GSS:
-
-        if (acc & NFSD_MAY_LOCK) {
-                /* If we cannot rely on authentication in NLM requests,
-                 * just allow locks, otherwise require read permission, or
-                 * ownership
-                 */
-                if (exp->ex_flags & NFSEXP_NOAUTHNLM)
-                        return 0;
-                else 
-                        acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
-        } 
-
-The only consumer of MAY_BYPASS_GSS seems to be OP_PUTFH, now that
-I'm looking closely for it. But I don't think we want the
-no_auth_nlm export option to modify the way PUTFH behaves.
-
-
--- 
-Chuck Lever
 
