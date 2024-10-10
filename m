@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-7024-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7025-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BED55998B83
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 17:28:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79614998B85
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 17:28:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8008328F50B
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 15:28:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6551E28F948
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 15:28:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E371CDA3F;
-	Thu, 10 Oct 2024 15:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F04A1CCB2A;
+	Thu, 10 Oct 2024 15:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DQuSc0S/"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="iuF2wfRk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17641CCB54
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 15:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880971CC8A8
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Oct 2024 15:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728574031; cv=none; b=iFMPxUuOiCdsxC3rSb7c8cY6LT26C4I0Ixa8KyQtpjGCxqThhGp63zUn0tf06VWlauhnFmrBVjeXt9GAOGIXE4cCg6BNapBeiNgxPGdFqdg+xDEzRmAjkco6QbEoczgXaUUy37WEuRuJMGziuia4tscRhcwY4c8U3Rys1jTRpho=
+	t=1728574033; cv=none; b=dqbDMnDGZNxo2irQE/TeSZ7Jq07/kzUllkhbfHVwErPYI1dtrR/FCkADtzR8C7RxwgYbWl0ifotZdBq7PYqkWkdY40w3orRxa+YPXHuaVUVGKs9kEsZjntyURJaARn2ZdVe9sOFcFGY0Ri7wI/hi87Ungk9Utnj0Cpd6uG6rjOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728574031; c=relaxed/simple;
-	bh=8mYX1qnXDm7Tyw5nzXRttaxTYfM94c2OY6x8h1WhS4g=;
+	s=arc-20240116; t=1728574033; c=relaxed/simple;
+	bh=ryBbVbP+eCu4Chmt9r8z0TKeMs0QNaJcFFaozpvWy6k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oLKwBInIqCzMjUy62WYH7DhfpFc/KYv4YkIXkEDEz14tURbiArEoQ8EFFfp8ckwcmDj4So/Ipsj/XKikCdQrd/3ZLaJwUpj2ag67LOEoOMWxYrqrcLxHsQh+T8m9xHEvr5bAFBvrfXMusPbpkYI69o1eiv3aEfdhrdMVP4hDK9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DQuSc0S/; arc=none smtp.client-ip=84.16.66.175
+	 MIME-Version:Content-Type; b=I03XqzknEG16NqknwmdHfp0xoMi6bpoG7hUD0yGvcJxByI54fyt/MTLCwCT2arwFnFAwGtuGrdVlkK6RN3hpH91Enlg88yofdMw4uZkr4mXlBV/iZ4kp29uugNNL8XUzyeF4/66JjARjaLuPr4f+TSufAsVNimVIfxHbvGPKt8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=iuF2wfRk; arc=none smtp.client-ip=83.166.143.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XPYX54qCNz66M;
-	Thu, 10 Oct 2024 17:27:01 +0200 (CEST)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XPYX663BxzdR;
+	Thu, 10 Oct 2024 17:27:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1728574021;
-	bh=6EsIR1F1yBU2hfVkY0ZIPc1OPufElDnPGIffuAFYdkA=;
+	s=20191114; t=1728574022;
+	bh=jlq3WMYYb2u2o19lJZDW1kPWSutQrpjLQmd69+bE43M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DQuSc0S/Ny+YDvPYnjRuf8f+8NM9BqlzaFNeWIUkIjw5ZeSdD98cqeYyJ8Zn2NGsz
-	 BwDPqVU8ThHfRRRWUZ5nr7oyBYflHdNeLTiU8NGXveUCHvcmYZUC51B6f/WwErS+cU
-	 Ca8xPxbcxAtqWEPyogCK0JN988I2zgIKcSSgSKjk=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XPYX51gnRzS2C;
-	Thu, 10 Oct 2024 17:27:01 +0200 (CEST)
+	b=iuF2wfRkyeYu6EKOgXoVeneuFDbtn7vCOr2DUIxmztTnlwdAzw1qYYx6TCHkhhtz+
+	 w9V83sXxnKBunWfaL236qRsZeF/csBdfEfSmDTUftqaxv75fPASoJuDE0xQ8t6ngI3
+	 VdJSKx/UT5Bx/W3xeGPkpGItyd2t00BFLDjKYrkw=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4XPYX61YlJzB9y;
+	Thu, 10 Oct 2024 17:27:02 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Paul Moore <paul@paul-moore.com>
@@ -51,10 +51,10 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-nfs@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	audit@vger.kernel.org,
-	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v1 5/7] ipe: Fix inode numbers in audit records
-Date: Thu, 10 Oct 2024 17:26:45 +0200
-Message-ID: <20241010152649.849254-5-mic@digikod.net>
+	Casey Schaufler <casey@schaufler-ca.com>
+Subject: [RFC PATCH v1 6/7] smack: Fix inode numbers in logs
+Date: Thu, 10 Oct 2024 17:26:46 +0200
+Message-ID: <20241010152649.849254-6-mic@digikod.net>
 In-Reply-To: <20241010152649.849254-1-mic@digikod.net>
 References: <20241010152649.849254-1-mic@digikod.net>
 Precedence: bulk
@@ -70,25 +70,85 @@ X-Infomaniak-Routing: alpha
 Use the new inode_get_ino() helper to log the user space's view of
 inode's numbers instead of the private kernel values.
 
-Cc: Fan Wu <wufan@linux.microsoft.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- security/ipe/audit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/smack/smack_lsm.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/security/ipe/audit.c b/security/ipe/audit.c
-index f05f0caa4850..72d3e02c2b5f 100644
---- a/security/ipe/audit.c
-+++ b/security/ipe/audit.c
-@@ -150,7 +150,7 @@ void ipe_audit_match(const struct ipe_eval_ctx *const ctx,
- 		if (inode) {
- 			audit_log_format(ab, " dev=");
- 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
--			audit_log_format(ab, " ino=%lu", inode->i_ino);
-+			audit_log_format(ab, " ino=%llu", inode_get_ino(inode));
- 		} else {
- 			audit_log_format(ab, " dev=? ino=?");
- 		}
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 370fd594da12..0be7e442e70f 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -199,8 +199,8 @@ static int smk_bu_inode(struct inode *inode, int mode, int rc)
+ 	char acc[SMK_NUM_ACCESS_TYPE + 1];
+ 
+ 	if (isp->smk_flags & SMK_INODE_IMPURE)
+-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+-			inode->i_sb->s_id, inode->i_ino, current->comm);
++		pr_info("Smack Unconfined Corruption: inode=(%s %llu) %s\n",
++			inode->i_sb->s_id, inode_get_ino(inode), current->comm);
+ 
+ 	if (rc <= 0)
+ 		return rc;
+@@ -212,9 +212,9 @@ static int smk_bu_inode(struct inode *inode, int mode, int rc)
+ 
+ 	smk_bu_mode(mode, acc);
+ 
+-	pr_info("Smack %s: (%s %s %s) inode=(%s %ld) %s\n", smk_bu_mess[rc],
++	pr_info("Smack %s: (%s %s %s) inode=(%s %llu) %s\n", smk_bu_mess[rc],
+ 		tsp->smk_task->smk_known, isp->smk_inode->smk_known, acc,
+-		inode->i_sb->s_id, inode->i_ino, current->comm);
++		inode->i_sb->s_id, inode_get_ino(inode), current->comm);
+ 	return 0;
+ }
+ #else
+@@ -231,8 +231,8 @@ static int smk_bu_file(struct file *file, int mode, int rc)
+ 	char acc[SMK_NUM_ACCESS_TYPE + 1];
+ 
+ 	if (isp->smk_flags & SMK_INODE_IMPURE)
+-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+-			inode->i_sb->s_id, inode->i_ino, current->comm);
++		pr_info("Smack Unconfined Corruption: inode=(%s %llu) %s\n",
++			inode->i_sb->s_id, inode_get_ino(inode), current->comm);
+ 
+ 	if (rc <= 0)
+ 		return rc;
+@@ -240,9 +240,9 @@ static int smk_bu_file(struct file *file, int mode, int rc)
+ 		rc = 0;
+ 
+ 	smk_bu_mode(mode, acc);
+-	pr_info("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
++	pr_info("Smack %s: (%s %s %s) file=(%s %llu %pD) %s\n", smk_bu_mess[rc],
+ 		sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
+-		inode->i_sb->s_id, inode->i_ino, file,
++		inode->i_sb->s_id, inode_get_ino(inode), file,
+ 		current->comm);
+ 	return 0;
+ }
+@@ -261,8 +261,8 @@ static int smk_bu_credfile(const struct cred *cred, struct file *file,
+ 	char acc[SMK_NUM_ACCESS_TYPE + 1];
+ 
+ 	if (isp->smk_flags & SMK_INODE_IMPURE)
+-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+-			inode->i_sb->s_id, inode->i_ino, current->comm);
++		pr_info("Smack Unconfined Corruption: inode=(%s %llu) %s\n",
++			inode->i_sb->s_id, inode_get_ino(inode), current->comm);
+ 
+ 	if (rc <= 0)
+ 		return rc;
+@@ -270,9 +270,9 @@ static int smk_bu_credfile(const struct cred *cred, struct file *file,
+ 		rc = 0;
+ 
+ 	smk_bu_mode(mode, acc);
+-	pr_info("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
++	pr_info("Smack %s: (%s %s %s) file=(%s %llu %pD) %s\n", smk_bu_mess[rc],
+ 		sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
+-		inode->i_sb->s_id, inode->i_ino, file,
++		inode->i_sb->s_id, inode_get_ino(inode), file,
+ 		current->comm);
+ 	return 0;
+ }
 -- 
 2.46.1
 
