@@ -1,253 +1,164 @@
-Return-Path: <linux-nfs+bounces-7035-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7036-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03819999251
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 21:28:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83B2B999341
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 21:58:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87BE22835A3
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 19:28:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5462B24583
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Oct 2024 19:57:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 330D61A08CB;
-	Thu, 10 Oct 2024 19:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3BE19DFA2;
+	Thu, 10 Oct 2024 19:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIQw5q6T"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAB4198E75;
-	Thu, 10 Oct 2024 19:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A4F1990C1;
+	Thu, 10 Oct 2024 19:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728588527; cv=none; b=AjvmeGXF+rKQB9HN6zxilKhwgmzfxd9DoGQLWhITfSq018le06nUkjtz9g/YQ8IAc/hZj83pDDn7KnEPhdbokluXIl6CxO2+8GGmE13YHv+1R7ggIX8XnlELebX3RS03eeq/I5revTZ+87WAKDRpOtwBrKk12eF959RHyhPoxhA=
+	t=1728590230; cv=none; b=NgSrlBVxfS1MFsOUodgTstgOChwOCtHE2E7meQZF2mCD7KHXVszlk0L2ewrLFVSQxvq9jM6KZUmull9Yr5v1jA0C3jttVc99+lyeBrH3kE9Riz/HK+sAbm380LVSFjYH/PL6V3EWpjZqJwZ4ih6QKPeM51yyv8tXkmpB9qTqIAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728588527; c=relaxed/simple;
-	bh=9f+uPORL3QH6MhLko8f+K1sxyN1ZmCusxqQ3u/NGhLg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=caW758n+NVLgnZt3XAZ54cXHprarFZlFTjdXEj+Iee/yX7gaEuvmXg3kbRP+ziNMEVyFTyIeIptgEceCLh+XLfG6IsmQo+oSEQw1OxyVul3R5gM5uHYz1pTYsGhheJ3yO1EgKQFZkSku2a2yB6uBEEoAAarFg3Mz1AdNpSmFFwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a39cabb9faso4961875ab.3;
-        Thu, 10 Oct 2024 12:28:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728588524; x=1729193324;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wbM2TvxpGTsKXfcUXNXSabUBNZW6OXcwsb89tZuKTqQ=;
-        b=Fk9UYIcIX8snOiLktjQY7iEAwEsJ2urv7d4FT14it9d/+7Kn8dMoASVPEZOvd334ch
-         j8SG0tbrICm6MEvT93QOHSze1DuadoohxlUVe/xIvIlvfHl78eX7DLo4ZewU22GeZj16
-         0TkogYfUaYvqswYMSGbAlJ4ys5lGu1T+ebdqnF8LzCP1VGCEbY4jGboXm6P+zO1DnbH5
-         N7/1/hnbSBPbyw0l1Dtv5w4YYZnP3jiJ+7o376WnvI/dOFcvv0CJfqLeFky1vMKNPiI8
-         i8d2R0VxUNZFiXWkZdWZDzfxEoxOKO45xf6qWlX5xBIzTFRLdmRdlGyI7X6H0EP7XcQ6
-         Qnuw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7KV4bDYGGW0JNhrKW1VEfBHlud+bDeAGO+dYz6OlBJEzM+quNbtZkOdgAY0MCE91/8IyBeZmi5NqgCn2nYOZ2CIVD7zn1@vger.kernel.org, AJvYcCXXPJZWfSebtPZXb+1Ogm8xMLBQGRwr0idXVRoPfwwP5tDb0O7KwRd/ToARsqzTZIrzkwyyp8myrKhO@vger.kernel.org, AJvYcCXqEKxhs6XzE7b5axqZjh6oOZ4CV78pX6V9pWB9OOXrgKM65MUxFrBfL0IXF33CGWYoUavkjw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwduJz+DSiPrbbaCvG/LM08FaTxKm3AYZEfQzpPAZVyStCqC8mn
-	E7Yel2KnV4OqoKH1kOBraUFuqUHI96YzzOxrs7jvs6m5nifO3TE=
-X-Google-Smtp-Source: AGHT+IHwqSeYYNAJcLFr3vXgoAjvi8VpAQ68Ry5qAG/NHW5XsrSYOCBRL0q+478GeLbFRGJljw3mCg==
-X-Received: by 2002:a05:6e02:1986:b0:3a0:9a32:dedc with SMTP id e9e14a558f8ab-3a3b5f863fbmr329185ab.6.1728588524554;
-        Thu, 10 Oct 2024 12:28:44 -0700 (PDT)
-Received: from [192.168.75.138] (104-63-89-173.lightspeed.livnmi.sbcglobal.net. [104.63.89.173])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3a3afde4667sm3837435ab.58.2024.10.10.12.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 12:28:43 -0700 (PDT)
-Message-ID: <fd90d5d173a47732da87d31aed8a955f73ea086e.camel@kernel.org>
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
-From: Trond Myklebust <trondmy@kernel.org>
-To: =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>, Christian Brauner
-	 <brauner@kernel.org>, Paul Moore <paul@paul-moore.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-security-module@vger.kernel.org, audit@vger.kernel.org, Anna
- Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan
- Kara <jack@suse.cz>
-Date: Thu, 10 Oct 2024 15:28:12 -0400
-In-Reply-To: <20241010152649.849254-1-mic@digikod.net>
-References: <20241010152649.849254-1-mic@digikod.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1728590230; c=relaxed/simple;
+	bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=emKoAMw7nOAPN4wiEwZ43OtFw5HxUPM8rJEcG4NrHkVQNcRVsuy7ubacxfm7/c5lXB7yWG9oTS/tuPWSGWEk+NxqD9ooBKCn4pprdRZyzITzun6iXuOQ7haWS4CO42DUA1nz+ToYkLMUcxBzBZSIhdv+QkSTnxYY4Zno4E8C8ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIQw5q6T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A97C4CEC5;
+	Thu, 10 Oct 2024 19:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728590230;
+	bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZIQw5q6TCBLsIV2ZfkgA1p2lJofWPuOHM6Tt/ejVGH+5/vttDbyuK1tYkqCPOZoZb
+	 rdCYx+6hosSrDLlZFVSxCkcg91CzpdsG0o/qZ+piBwMbVzfGRgFkrKcellgoM0ijU2
+	 xBqUplGCOIferYXtpd1KY6lTtyQORUSLdULX0Lve1W293HbZtFutr9C0K3li3Oz9t+
+	 DfaiSKLNSXgKW3yAYGfF5xD8+slECYPZEKqdbQz7bTNw3T/uW1k5gRFL7mMNmMBz7R
+	 hEhggUb5N0GJrnIDQLatIHq1gLEJmZ3MgqgkpFDCp/ABHFK2/jYV3tXobHINCrSUX7
+	 i0yn/hBvCsAyA==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 10 Oct 2024 15:56:55 -0400
+Subject: [PATCH] nfsd: handle OPEN_XOR_DELEGATION outside of st_mutex in
+ open codepath
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241010-delstid-v1-1-1e0533c6617b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAIYxCGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDA0MD3ZTUnOKSzBTdlCSjREOjNCMTozRjJaDqgqLUtMwKsEnRsbW1AOm
+ 3cEdZAAAA
+X-Change-ID: 20241010-delstid-db2a12f242f3
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel test robot <oliver.sang@intel.com>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3225; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=q9Q/osgeAQXVfJAaHOfFlNollpmh1cJYbXNK0esuEbc=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnCDGN9sXfc5DauxclktLtMGkCH6tstpA0rcJWp
+ Io/YqB/m0mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZwgxjQAKCRAADmhBGVaC
+ FXIoEACI2vArBHpYfD5ZRa7SSQE7KeayjUjKJFCIYp+hvqbof7VzPDTU2j7e1lRd/Oj6ieHy3pG
+ VLUtC8BIpyidJ03eyaOdNg9uH87WdFDUgvPEfy/yiKgZrZceper/66BDoB+x1+PtgCZ4QEABqMe
+ bUDltrvBZfhC/+x2u9QeuEXssUjnPzX2dw3gSxc6L9+qyp+MaMiYhTOyRZXPu1LkhLK20WhUyfV
+ NvcpfgKZOVyyxCqIyIjIxtlhZTHh9lZhm6kpk0azlQqrB1C7uX3heceswzAAnbs6alI8AF6vPe1
+ XPHzbAptFv9yrWF1Vgd+W/wLiDeNVjmGnO24PzTi/3OD4+z9EtEwVwhmthLkK3VcG78CRBwqffJ
+ ZNGzVl0KAD5CidMHhIZqUCozoiuFK2fIyI7bmXJNxpYxA8wbMCZNap8sQwi0WV4cDPr9Pikj+jA
+ QPWhfVM1ilgMC+rHo6p4M036V9EFQSBqe9I2WeDg1+/QWe68ravqjtHztQPS6SwUzw4UmwsgIvz
+ ucZUba59BSiJbBV4k9o6pABToX5lUEWVKNrQeIkMy7mCEoO9/tBv7eMjlOQ/Gk7Sb9ZdpMVzQXN
+ GhU2Vu66xzpvxwDgrXjSTra10N8kwn84qpfb4WIZJZpPkDtK+eksZ2wyROJT0EwOto1Mk480QrD
+ uYsF4LZSXGYS+hQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, 2024-10-10 at 17:26 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> When a filesystem manages its own inode numbers, like NFS's fileid
-> shown
-> to user space with getattr(), other part of the kernel may still
-> expose
-> the private inode->ino through kernel logs and audit.
->=20
-> Another issue is on 32-bit architectures, on which ino_t is 32 bits,
-> whereas the user space's view of an inode number can still be 64
-> bits.
->=20
-> Add a new inode_get_ino() helper calling the new struct
-> inode_operations' get_ino() when set, to get the user space's view of
-> an
-> inode number.=C2=A0 inode_get_ino() is called by generic_fillattr().
->=20
-> Implement get_ino() for NFS.
->=20
-> Cc: Trond Myklebust <trondmy@kernel.org>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> ---
->=20
-> I'm not sure about nfs_namespace_getattr(), please review carefully.
->=20
-> I guess there are other filesystems exposing inode numbers different
-> than inode->i_ino, and they should be patched too.
-> ---
-> =C2=A0fs/nfs/inode.c=C2=A0=C2=A0=C2=A0=C2=A0 | 6 ++++--
-> =C2=A0fs/nfs/internal.h=C2=A0 | 1 +
-> =C2=A0fs/nfs/namespace.c | 2 ++
-> =C2=A0fs/stat.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2=
- +-
-> =C2=A0include/linux/fs.h | 9 +++++++++
-> =C2=A05 files changed, 17 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 542c7d97b235..5dfc176b6d92 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -83,18 +83,19 @@ EXPORT_SYMBOL_GPL(nfs_wait_bit_killable);
-> =C2=A0
-> =C2=A0/**
-> =C2=A0 * nfs_compat_user_ino64 - returns the user-visible inode number
-> - * @fileid: 64-bit fileid
-> + * @inode: inode pointer
-> =C2=A0 *
-> =C2=A0 * This function returns a 32-bit inode number if the boot paramete=
-r
-> =C2=A0 * nfs.enable_ino64 is zero.
-> =C2=A0 */
-> -u64 nfs_compat_user_ino64(u64 fileid)
-> +u64 nfs_compat_user_ino64(const struct *inode)
-> =C2=A0{
-> =C2=A0#ifdef CONFIG_COMPAT
-> =C2=A0	compat_ulong_t ino;
-> =C2=A0#else=09
-> =C2=A0	unsigned long ino;
-> =C2=A0#endif
-> +	u64 fileid =3D NFS_FILEID(inode);
-> =C2=A0
-> =C2=A0	if (enable_ino64)
-> =C2=A0		return fileid;
-> @@ -103,6 +104,7 @@ u64 nfs_compat_user_ino64(u64 fileid)
-> =C2=A0		ino ^=3D fileid >> (sizeof(fileid)-sizeof(ino)) * 8;
-> =C2=A0	return ino;
-> =C2=A0}
-> +EXPORT_SYMBOL_GPL(nfs_compat_user_ino64);
-> =C2=A0
-> =C2=A0int nfs_drop_inode(struct inode *inode)
-> =C2=A0{
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 430733e3eff2..f5555a71a733 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -451,6 +451,7 @@ extern void nfs_zap_acl_cache(struct inode
-> *inode);
-> =C2=A0extern void nfs_set_cache_invalid(struct inode *inode, unsigned lon=
-g
-> flags);
-> =C2=A0extern bool nfs_check_cache_invalid(struct inode *, unsigned long);
-> =C2=A0extern int nfs_wait_bit_killable(struct wait_bit_key *key, int
-> mode);
-> +extern u64 nfs_compat_user_ino64(const struct *inode);
-> =C2=A0
-> =C2=A0#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-> =C2=A0/* localio.c */
-> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-> index e7494cdd957e..d9b1e0606833 100644
-> --- a/fs/nfs/namespace.c
-> +++ b/fs/nfs/namespace.c
-> @@ -232,11 +232,13 @@ nfs_namespace_setattr(struct mnt_idmap *idmap,
-> struct dentry *dentry,
-> =C2=A0const struct inode_operations nfs_mountpoint_inode_operations =3D {
-> =C2=A0	.getattr	=3D nfs_getattr,
-> =C2=A0	.setattr	=3D nfs_setattr,
-> +	.get_ino	=3D nfs_compat_user_ino64,
-> =C2=A0};
-> =C2=A0
-> =C2=A0const struct inode_operations nfs_referral_inode_operations =3D {
-> =C2=A0	.getattr	=3D nfs_namespace_getattr,
-> =C2=A0	.setattr	=3D nfs_namespace_setattr,
-> +	.get_ino	=3D nfs_compat_user_ino64,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static void nfs_expire_automounts(struct work_struct *work)
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 41e598376d7e..05636919f94b 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -50,7 +50,7 @@ void generic_fillattr(struct mnt_idmap *idmap, u32
-> request_mask,
-> =C2=A0	vfsgid_t vfsgid =3D i_gid_into_vfsgid(idmap, inode);
-> =C2=A0
-> =C2=A0	stat->dev =3D inode->i_sb->s_dev;
-> -	stat->ino =3D inode->i_ino;
-> +	stat->ino =3D inode_get_ino(inode);
-> =C2=A0	stat->mode =3D inode->i_mode;
-> =C2=A0	stat->nlink =3D inode->i_nlink;
-> =C2=A0	stat->uid =3D vfsuid_into_kuid(vfsuid);
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index e3c603d01337..0eba09a21cf7 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2165,6 +2165,7 @@ struct inode_operations {
-> =C2=A0			=C2=A0=C2=A0=C2=A0 struct dentry *dentry, struct fileattr
-> *fa);
-> =C2=A0	int (*fileattr_get)(struct dentry *dentry, struct fileattr
-> *fa);
-> =C2=A0	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
-> +	u64 (*get_ino)(const struct inode *inode);
-> =C2=A0} ____cacheline_aligned;
-> =C2=A0
-> =C2=A0static inline int call_mmap(struct file *file, struct vm_area_struc=
-t
-> *vma)
-> @@ -2172,6 +2173,14 @@ static inline int call_mmap(struct file *file,
-> struct vm_area_struct *vma)
-> =C2=A0	return file->f_op->mmap(file, vma);
-> =C2=A0}
-> =C2=A0
-> +static inline u64 inode_get_ino(struct inode *inode)
-> +{
-> +	if (unlikely(inode->i_op->get_ino))
-> +		return inode->i_op->get_ino(inode);
-> +
-> +	return inode->i_ino;
-> +}
-> +
-> =C2=A0extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_=
-t
-> *);
-> =C2=A0extern ssize_t vfs_write(struct file *, const char __user *, size_t=
-,
-> loff_t *);
-> =C2=A0extern ssize_t vfs_copy_file_range(struct file *, loff_t , struct
-> file *,
+When I originally wrote these patches, I was under the mistaken
+impression that I didn't need to increment the stateid in the case of an
+existing stateid (because we weren't returning it). After some
+discussion upstream, it turns out that the server should ignore the
+WANT_OPEN_XOR_DELEGATION flag if there is an outstanding open stateid.
 
-There should be no need to add this callback to generic_fillattr().
+Given that, there is no need to expand the scope of the st_mutex to
+cover acquiring the delegation. The server may end up bumping the seqid
+in a brand new open stateid that it ends up discarding, but that's not a
+problem.
 
-generic_fillattr() is a helper function for use by the filesystems
-themselves. It should never be called from any outside functions, as
-the inode number would be far from the only attribute that will be
-incorrect.
+This also seems to lower the "App Overhead" on the fs_mark test that
+the kernel test robot reported.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202409161645.d44bced5-oliver.sang@intel.com
+Fixes: e816ca3f9ee0 ("nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION")
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+We had a report of a performance regression (in the form of higer "App
+Overhead") in fs_mark. After some experimentation, I found that the
+cause seemed to be the change in how the mutex is handled in e816ca3f9ee0.
 
+This patch restores the App Overhead back to its previous levels (and
+may even improve it a bit -- go figure). Chuck, this should probably be
+squashed into e816ca3f9ee0.
+---
+ fs/nfsd/nfs4state.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9c2b1d251ab31b4e504cf301d1deaa4945bd244f..73c4b983c048c101d16ec146b3f80922bcca3c69 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6120,7 +6120,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 	struct nfs4_delegation *dp = NULL;
+ 	__be32 status;
+ 	bool new_stp = false;
+-	bool deleg_only = false;
+ 
+ 	/*
+ 	 * Lookup file; if found, lookup stateid and check open request,
+@@ -6175,6 +6174,9 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 			open->op_odstate = NULL;
+ 	}
+ 
++	nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
++	mutex_unlock(&stp->st_mutex);
++
+ 	if (nfsd4_has_session(&resp->cstate)) {
+ 		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
+ 			open->op_delegate_type = NFS4_OPEN_DELEGATE_NONE_EXT;
+@@ -6194,17 +6196,12 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 	 * returned. Only respect WANT_OPEN_XOR_DELEGATION when a new
+ 	 * open stateid would have to be created.
+ 	 */
+-	deleg_only = new_stp && open_xor_delegation(open);
+-nodeleg:
+-	if (deleg_only) {
++	if (new_stp && open_xor_delegation(open)) {
+ 		memcpy(&open->op_stateid, &zero_stateid, sizeof(open->op_stateid));
+ 		open->op_rflags |= OPEN4_RESULT_NO_OPEN_STATEID;
+ 		release_open_stateid(stp);
+-	} else {
+-		nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
+ 	}
+-	mutex_unlock(&stp->st_mutex);
+-
++nodeleg:
+ 	status = nfs_ok;
+ 	trace_nfsd_open(&stp->st_stid.sc_stateid);
+ out:
+
+---
+base-commit: 144cb1225cd863e1bd3ae3d577d86e1531afd932
+change-id: 20241010-delstid-db2a12f242f3
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
