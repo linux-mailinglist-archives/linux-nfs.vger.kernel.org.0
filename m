@@ -1,380 +1,291 @@
-Return-Path: <linux-nfs+bounces-7105-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7106-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E801399ADDB
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 22:57:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 286A799ADE8
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 22:58:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9069C28B716
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 20:57:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5CCC1F2248B
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 20:58:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B35871D14EE;
-	Fri, 11 Oct 2024 20:57:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2917C1D173A;
+	Fri, 11 Oct 2024 20:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GgqOkX/4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W/5v4tKx";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hQJd1vMX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83F199231
-	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 20:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728680269; cv=none; b=Srm4x6RTQG2VpmBfawWUy+n5xgqV3MyJwH3v0Gdg2B29vA5dY4QhpZM0UPG3xEqlPblEsR57Kqk6+hXvZF7wC+LZ9K0ohXzX+b1O0l2HOiNFNu5eh3s4wJc7xJljBphnm0LR+yZbb8Q1rHhGeP3AGZbcjl6dftAlIOX+udhij1U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728680269; c=relaxed/simple;
-	bh=Duca2ApGRFO0leMnUBqOTVUoqafp8B6nIYcUupqo0hQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b8SHuQVNh/GubD5KPCTv8RG31NKQi0wGDdPIfNtPPsMK1sB307J2FvNXG2Vgzabg7krN/YkMOyo/D4E5S6vJ2CKvsKdcwnzTMst87Rs9ckpCHrPVRQOD28WG/MNgljG1L44YFKSgNQz2TFrXImv9aTbrnNau9Tw6YlMC7nTnsLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GgqOkX/4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728680266;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x8cSXrMYuFIvLefFy+sxpRRQf5IDeJYCMEsBEdtzEs0=;
-	b=GgqOkX/44f4bpgR6PzIfRLgAbaO5GHWtB1ci4gghur8hW63rpi6FZyLK/hB+NgyPYQ+Pyf
-	M8AaL0/pc1Xlep0XpDbEZV2rjgdCE0F/so4BABgtoFbVrf9SvMyf86o8Iqc4hqCl7MrHV5
-	w6h/g193GtB8tS21IPDSfux8CcPqCb8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-XnDhrCvAOvuRe2uDEWe9SQ-1; Fri, 11 Oct 2024 16:57:45 -0400
-X-MC-Unique: XnDhrCvAOvuRe2uDEWe9SQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99d308c147so65195966b.0
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 13:57:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728680264; x=1729285064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x8cSXrMYuFIvLefFy+sxpRRQf5IDeJYCMEsBEdtzEs0=;
-        b=vb86iY7++I8aY7ghC944D0Z9lA1FEyh0CemywMR7XRiSzWASDqTCCaaTlKbrX3pnNy
-         Cjk7Go2xtRvno+nUIoW4/5BBW/Vblr4Ap1XguNjum/haD0twjwtY62qsCPKGwQkF3f4E
-         1DZFqAexY402N6ODqw/MBDzXjVPWlQFtv2NQki13Y1ag6TkCNFK1Pb4HHv9y5BFq0soF
-         n8OP1RSze8F+36Ft4WJveQW2IsmmbjZNr/ODx/Dknvkb+j5qcpyL8DEGMx/l4dZHr8Et
-         HbZypyag8poJwMBcfdHF1ZQ7M1IBTIjjw2u2yieHMhCsRUfjqFYbY6upkmsZrKUsGjmR
-         ghAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6b/leLVnQoLCWENkiw7/b4yiigz7TBT9mLS7L9NA+CDh3gCCzhMlXqJXReL0Ci+GKVW4wtih47E0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxtxa+De6eY6IPReOh3/weD1llBhYHkQab5FJ/RNHd6iielrJ+x
-	BC0nW6nuBzL8vqR6zkV9TdnLlGsdvi+FlYoE9F+OB2HWDTRegaadRpF8p7DUa8NL53lGS+g6a79
-	JYXwHBdl0MI7Vreziwleq01YkJEWkUXK0N1QktMV1yuOkfh1ih9UKAa9vXI7yu1frHB+1j1eA41
-	L1U7BCEzLVNRN5YKIxv23BjOBbMAW0aTLm
-X-Received: by 2002:a17:907:c895:b0:a6f:996f:23ea with SMTP id a640c23a62f3a-a99b885adcfmr372503366b.15.1728680264198;
-        Fri, 11 Oct 2024 13:57:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWfVJvwhbqG/XnX9wiaLy0J2SOuN3b8cXJVnWhMnCJ/eKgKqrz4miqhVNh7h/5SvVc22UKWb+k0F9QtbfRmRU=
-X-Received: by 2002:a17:907:c895:b0:a6f:996f:23ea with SMTP id
- a640c23a62f3a-a99b885adcfmr372502866b.15.1728680263744; Fri, 11 Oct 2024
- 13:57:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C3B1D151E
+	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 20:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728680297; cv=fail; b=X0wTaCgdpzv20TQERQhp5lOTg2bBMMedw3rMoLDZtHNGupu35kWWziJBBfCcCNtinoYhP7Z0E39RU9O1rh+uCjVgXHKMEzRTW984aUWno5aZzsXcJh6830XIb77J9jT/8I3jgC/AImYt1JFyR+OIxE6q+lB2CQnmkxBtlEFezcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728680297; c=relaxed/simple;
+	bh=SnelgHFC4f2BxV3EzT1dQliPbl5Cwxz6jbwrjqMCvzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fIgm0QjtFicG75fi1/mFqa/ko6igIe410K08D4qxVQgSMZ0p9sZwxvwAnZHP364Ex+Rl5HeffLyVi3vsVU4L+xi0DORGawoqghgkywbwittqpWVfAYcJW/So/9HxjPExY8KdOwsmYjtp+InB3R/i5ly2N9A3MW0YbRzNfQLbbcI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=W/5v4tKx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hQJd1vMX; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49BJSNP1007058;
+	Fri, 11 Oct 2024 20:58:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=Il6Cd235EIZOytKhC/
+	q0vl2Glz7Yt/ZsqxNvaLbqzxw=; b=W/5v4tKxFljGj7348cxZ7DneqLRq9sJYyr
+	GF1dHPZ6QJijyoyd+HL1mBG2M4CxpHXcwq+Vz9QekabVTFMzG96VC4AvsAOm1Mu1
+	3KyVPGUp1MdNDjIE7Cuu/IPMlPx1oX87F2PMd8Hb6cfMfl+vNr0OPlOq7euAPe4b
+	l1rZTL3Ufk9/hDiH79QLOdGBi54iWdwBGiXbnzCRveagEjHsPw5ZUTZ3ImYmu8WC
+	Zk0UqV8SKKX+iwLmaiA1adBoXrJr5dr1JfDhCmge0a/lF8mT4KWpvbMcH9cdz2mz
+	Q1JOnqxRm7HZ7mNepraYcNpJfgfOt1PDAyFESaNxARj9mpV3Rt1w==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42303ynt1d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Oct 2024 20:58:06 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49BKYUkF040253;
+	Fri, 11 Oct 2024 20:58:05 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2044.outbound.protection.outlook.com [104.47.74.44])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwj32eu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Oct 2024 20:58:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sxQOFY8pPySWggH0Od2etw8xVEx5y2c0ugGbTpAtOjm+u30K4Mh61yYp7Krx+EIwrrYzkGVgCqaABjot1iKOsmyiszE1kC1LCXSkG+98g5gwAYu0+s6Woyz3AugE2ROn6N/nBELDiCr68UXp+pYRSo7CTYEJ5RrglqXY+SNubRgJPVStwb/nIiZu399vFv1IYVgdPU3RysEYHDNRd2JZsXvg8qPvvu0k/99RUgWIw+LdsRwMtGbce2bJdB61xaYvHNqx6MTvGYqM7vXemPZsUDqlZdx4g4EbJaHMnFTaXBbKn/KGONmfcTUvDe8EN3XKy8EQotsp/VEJmlajvSjNJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Il6Cd235EIZOytKhC/q0vl2Glz7Yt/ZsqxNvaLbqzxw=;
+ b=ffV7PkDvR9BUI+by5ogNvzVX/Q5ndKnPyVbAQ7itOBJnYK8JRdsj+6UybVl2fNfn8Ig/BEegDFv7Bzow2Ar/NAHv8lYm5jeUNlZj4lD9a/lU8EBUmybPFaH9uolINFvP+UbkQ8vE0+vpdBH+xzJpmRJznPzTnuJYdWvjx22EhDPILDwV0Hkfdxs588MiBa8jq5mXvAY9oB/F96LzL7sAmft2c1U2N9K5VOwlqzKrByYwuencqrC+66CeIsPPVnQJ97gK/n/NobDcmEH9sNL9OIeZ7Ypq3NJJhIdCvWGaLs+GoTw3WsNf/ntlJGgzNLJwd5ugrMuWA7NgK+T3YVx6vA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Il6Cd235EIZOytKhC/q0vl2Glz7Yt/ZsqxNvaLbqzxw=;
+ b=hQJd1vMXxLrG09fbr/RBQgHLuE7GT8gB6M3tDfzjCruiO1PxdKh8LTw+7CptP4ZhGbnAtvyst3zdEgIRdu5AJ3thaRvo/CGS4ayxd96U+vJE36RjdQlCwV2HzUeypMSDP15nRsMuv9/Aecr1DG13noEJlyLHpCCgWQtPeAMAxeY=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DS7PR10MB7375.namprd10.prod.outlook.com (2603:10b6:8:d9::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Fri, 11 Oct
+ 2024 20:58:03 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8048.018; Fri, 11 Oct 2024
+ 20:58:03 +0000
+Date: Fri, 11 Oct 2024 16:58:00 -0400
+From: Chuck Lever <chuck.lever@oracle.com>
+To: NeilBrown <neilb@suse.de>
+Cc: cel@kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [RFC PATCH] NFSD: Replace use of NFSD_MAY_LOCK in nfsd4_lock()
+Message-ID: <ZwmRWAmRukgOrFpt@tissot.1015granger.net>
+References: <>
+ <Zwkx54LAxJuuxTWv@tissot.1015granger.net>
+ <172868001492.34603.7415839336713873165@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172868001492.34603.7415839336713873165@noble.neil.brown.name>
+X-ClientProxiedBy: CH5P222CA0001.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:610:1ee::15) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241010221801.35462-1-okorniev@redhat.com> <Zwk4mAhnaoFe43Gy@tissot.1015granger.net>
- <f824c20c2eda23bcd98c75dc5313f0f8da5e6b84.camel@kernel.org>
- <CACSpFtCj5zpLKp_=kbjFkfjK6FOrE_n1oDNC2N20b+07c+Luug@mail.gmail.com> <5eb8f05dbf542c5653f2145d5632c8d0a8a8333a.camel@kernel.org>
-In-Reply-To: <5eb8f05dbf542c5653f2145d5632c8d0a8a8333a.camel@kernel.org>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Fri, 11 Oct 2024 16:57:32 -0400
-Message-ID: <CACSpFtAzRJEc+Shmkuj5Mwaa8CPJ6oo8Ki6F0sJahtk6W5eKgQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] nfsd: fix race between laundromat and free_stateid
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB7375:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74f0f6dc-356b-4ce6-dc8e-08dcea3765b5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ENB23wfzoAJC+IkKfuSjdrvj7wSjmvyVb1C3ZFI8XzYwb1FelGvbN5KGVkEO?=
+ =?us-ascii?Q?GAmOxuLJWJjU5oXZXMwcrRWhDSrT8TruM8v6on36O37Wvy++kf+SoehOZRw1?=
+ =?us-ascii?Q?DaxOxLslIGPdI65yhYuG2lgycXiL3QTGKsomQg8A7BSyukFi1Nfeja0pB1rG?=
+ =?us-ascii?Q?0yq7d47tI+f5SD5H+2JiQmrvoFb/cf4D1nNuDMioTDnjMdgDHjO8rNvBrW8l?=
+ =?us-ascii?Q?lxtXsRzuHd8irNfnTwmfkpE8Qlw0M2ew03OcOrEx88omMwfH15JnCnKSf4YD?=
+ =?us-ascii?Q?pyhq4ABQgf6r7xK2YlWL3IMPByoA/3CnGJEE5j5S5Sl4+lWf7MXiyUQDHmHm?=
+ =?us-ascii?Q?PtyNWsvtUtFFQGojvKII0X7/k2jtNis3dcBcTpo4D2zWgn5quOlHUzJVnuWo?=
+ =?us-ascii?Q?YOl0gqfvXL4l5pgV5t039xE4Nb4vb9hVYGe2Xa1tWM7KfyvuyV/gnaI6jir7?=
+ =?us-ascii?Q?sF+8rQjVMGAFKzkwL4JpWztK3pMmIMDIf8ia8H/97WsSx96PVk/PPTazWEfO?=
+ =?us-ascii?Q?9p9S3LV0y9twklK2w8ObH3ltY8XZngKxhQUgPQpj5Zjnx2iHtnqXQ4U13BOp?=
+ =?us-ascii?Q?ldX4OsqjBdRFDz0Vtj5K1pi9HVsFrDXHGhBtdpOEv4DDQgNe3jHTa4+MhRwr?=
+ =?us-ascii?Q?/6z6e+0kygo73TO3AZGrStoG1DLXLdhUh2wc2Z5nm7mVMKTFqpjLVLlnUuBD?=
+ =?us-ascii?Q?rPpftBKu6L9iuY86HWgEJmVARwL+PIuhElTfvHL7FN/TstBeEgnFyByNh59N?=
+ =?us-ascii?Q?wpaXNG3nXbdmFLBlrIe7MoLUJ3xS/CkBBWv7x+q/b394EVYHGxDHUIHGADyw?=
+ =?us-ascii?Q?bb05ShYxG/DRcfELmjqQHNx3K1ui/PJjaVEdS9r8oG2P9UgjVdPP+rGsZFVE?=
+ =?us-ascii?Q?bCOSv3a26baLmdbfQBRq7rdhP8cdiHkgcsHOpW60eurk0lh0Z0ZtNgqKnOHs?=
+ =?us-ascii?Q?p20XCBghtIA+eVMjaQ+yQgjL8ASGbIG2NR/iJA6ILqTGuGjFWXzqBeOibDYo?=
+ =?us-ascii?Q?t2xpGs+uuFxyMZe4lk/yHzdjWHc6+XuQcVnHLfG8sa2cbD1rLoAG+Qk+Bult?=
+ =?us-ascii?Q?274Q3j9OJHA4bCvvlhP/BPvJDnImJp7m4oUsn/6m0vVs3ONJcKBciZikt9Wm?=
+ =?us-ascii?Q?qAtAFuY2nVTWm9/mA4XqoZGbVCqLESkVKFaV6wi7FilOJp34Et1B8WRmhibv?=
+ =?us-ascii?Q?Kn2oybqIJ+nxGQYFJMt4di9yXj51Oxk/jgKDftXwAbVbCvcaQTKvDOF76cCm?=
+ =?us-ascii?Q?XacTQ0BIDn8Vu+iyu0dozlfH+oN0fL9kYS/mh0J8xQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?01MjJLylVANDJeToexCbBIEzVeJss8Y6svGWYDi8PUw3k7RnmMbIWmWWX+JZ?=
+ =?us-ascii?Q?YFKaG2oawiIJqKShX5oYuScGofmy8hWF+ZRQfHl5j8tQ3DfuL0GhXFuOeS7C?=
+ =?us-ascii?Q?Yhankh/LBwfM2K6Z5RxWOtY9n4GG/vNf75NR+AokrVqWurvXBnpq8yTL5XP1?=
+ =?us-ascii?Q?IUuT+GYhI/ePJ+cp5Qcn0VzllI0hzPBsD0hEXrxAv5Gu+yS1huD55UlC6nay?=
+ =?us-ascii?Q?oG3pw6YTRUzvrqkHY+uI0oppvnPUjTIgBoXRnhxztmAyjVWl7uYQyIqpn5fY?=
+ =?us-ascii?Q?ljRGGGaj1VntZKoIqCqPyjJ379NtKxk2kGjwikq7ecEbp42fjFRKGKhvzL2A?=
+ =?us-ascii?Q?TpDrbcoEXSrv2PtymBqpOiElkPwimhgmRXnVfhtlXpZta5usdKhe5xL68Vg+?=
+ =?us-ascii?Q?spePHLef2QJjZEZYjWhas/Uk4Sr3zDqohyfVJzgxkHTmXKBVPcDGjPMip1gP?=
+ =?us-ascii?Q?oH7IU4aoOnu0QAqAZVDDwCj5jvZ7Y1B+iUwqv6d9fwkP4eGAvxTTCHNK6fRH?=
+ =?us-ascii?Q?vc8ga5i9cSFtYMeZBQx+vPzx9YuYjsUHYlKqOfTBD2OQg3ZTI6qiNUmNME2g?=
+ =?us-ascii?Q?gghTlfqaee8IM2dqJU32vV8OjRY/iR4X4oXz/2Vr5XjRfVze+veBq2wBgsXw?=
+ =?us-ascii?Q?eOmg9MXDf0mTvO+rX0MJdy8W1IPaFs5w8Yqiwf/QkWJDdeWwYg4T1xoHz2EK?=
+ =?us-ascii?Q?0fvlHXl/6aQ2NmfkLot8nbnqyYVoH66OVnv8N72cz/qOTsGN1FPiiFkE1ZIv?=
+ =?us-ascii?Q?NgB8CTXoccviyRfTF3RhAU1cbN2iW2i9Q/ZTVaajexi2KpgFcxEj/Mier3VL?=
+ =?us-ascii?Q?d9l16yegpp+IFL8RUqFjKpkwWWkSOnAFCMbSS/DjVFpx2q0syTOsTs1T1Kzg?=
+ =?us-ascii?Q?9jqETzdlxf9kObiBKByibVTpU5j9ej+phl0FWiP66lZEhad7MxkCtQfKjch1?=
+ =?us-ascii?Q?vGb0gi90iHCsxqFflcR5BHtquvx7uZbYVxdkkwSyjOFI3CAqkNpiiVR+W49d?=
+ =?us-ascii?Q?RW615AjMeVhhXWLgUwuwzLVuBlP8SHCMMI4itnfBY3cnEqALKF6GTSZ0BSt/?=
+ =?us-ascii?Q?7fSsV10C6LYxZ56okCdqoO8ju4U3VJdSTvGF0+bhrjB/z5pkJoPFU+30nNoT?=
+ =?us-ascii?Q?07VPDrovcg+PoEk36RXs9BlwzABDB1FZFvWkmcY4IuhC5EF+coepHk1eJ4Oj?=
+ =?us-ascii?Q?4+Z8sKys6gFeiYGrVA3CtMR5KHpfLeGkHcFdAeAQVNu4Hl1BfhrXWPu0WKCM?=
+ =?us-ascii?Q?g566ByfXoHGxgyk9LKWwscjqBRMlc9QIxyPH1RrgR0UrE10tQGphPNsgnQLO?=
+ =?us-ascii?Q?WZfhsi+iQfRUYlJENxAzVCpze48c2JGl1S4b2LFMjoJ7oklBbROSv9zOUD48?=
+ =?us-ascii?Q?m5BnIBf0IFcaCE8tgX4W29NldTV96n4LwUXHpDr+oHRMFPYr2d7Df4mAfNHr?=
+ =?us-ascii?Q?YvPw046cUesHE3tiXP8UUGnpnAvsD+9lpi1ma2qW1my3uwzaz5T1X60J94Gh?=
+ =?us-ascii?Q?7yICmV/cmp28cLT5BzeHKCQCWrUnylSpzPqnLilYum+YH6DZgv8LeMmqTJGe?=
+ =?us-ascii?Q?6i/CeVld17VML2t+w7vlLZChK+1HGA0JRB1hRZeY?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	r4CJiDAcfKhhXKSf1AuVzFRan9CLEH7R4ngnLEW0Vhz9YsX03MWYYJmXlhJNRhPn9YMsCnKLKe9TiiEhcJWgcKwkMSdksXkKmz3l5FPhxIkEfsHrWnmhRCahON00fUcu0ezyP7X0SZiM6+Cc/GHNzPl/2QKQ1ZNTf3Le/FhLxhNgzxXal2Hgek2j+Oad7wYhCBI2Vuj2jW0te/DL08LMB7/JpjHTsyrODdcnyeS4SBvHh9VUhQEEvMIynU1AujSmV3mHvVfrpeft+Q4wpCgiLJoJThCnGkv0XMG35yF3uIPInlEoEk51HofZ2pHD1HEZBcZTnVE9p0Rmb3+qm2wXVsMDsahTkLk23sOCXNYCgwfwZGdGgPXTHtTZkDicX8a52LZ43Xdu1qi+EhrUp5frH4ixX+iyBX+aIHbuWuXM/5lL2MsenPQpGG4YJffksOe2VL/k95PxMg50FeSdDXsyqLcTbOpIjcozk8fu3HwdxKjhUiM/c+4OYboF/PvBXYhsjTCJOMCGCOczWGD6/w0PxR4S+DInwvzgmVbh/UgEb5yvIy9fyaZizXOVOzbaUrBLLq9iZiw99OQfoqr7hNo9shww5ZM6FPvlyEW50iszRWU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74f0f6dc-356b-4ce6-dc8e-08dcea3765b5
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 20:58:03.1263
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 87Ht3ublR6A+lGbPMkNIQ2/ywaM7zjQoFIPc9/PkQ4Ki0oM7BB+PNoHVFGRmxgsOV7TjqBu25KC1YfUmOeXdoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7375
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-11_18,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2410110146
+X-Proofpoint-ORIG-GUID: XlOZjF8SVScsizmo378hNPUtkMCXKwxA
+X-Proofpoint-GUID: XlOZjF8SVScsizmo378hNPUtkMCXKwxA
 
-On Fri, Oct 11, 2024 at 4:16=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Fri, 2024-10-11 at 16:01 -0400, Olga Kornievskaia wrote:
-> > On Fri, Oct 11, 2024 at 12:17=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > >
-> > > On Fri, 2024-10-11 at 10:39 -0400, Chuck Lever wrote:
-> > > > On Thu, Oct 10, 2024 at 06:18:01PM -0400, Olga Kornievskaia wrote:
-> > > > > There is a race between laundromat handling of revoked delegation=
-s
-> > > > > and a client sending free_stateid operation. Laundromat thread
-> > > > > finds that delegation has expired and needs to be revoked so it
-> > > > > marks the delegation stid revoked and it puts it on a reaper list
-> > > > > but then it unlock the state lock and the actual delegation revoc=
-ation
-> > > > > happens without the lock. Once the stid is marked revoked a racin=
-g
-> > > > > free_stateid processing thread does the following (1) it calls
-> > > > > list_del_init() which removes it from the reaper list and (2) fre=
-es
-> > > > > the delegation stid structure. The laundromat thread ends up not
-> > > > > calling the revoke_delegation() function for this particular dele=
-gation
-> > > > > but that means it will no release the lock lease that exists on
-> > > > > the file.
-> > > > >
-> > > > > Now, a new open for this file comes in and ends up finding that
-> > > > > lease list isn't empty and calls nfsd_breaker_owns_lease() which =
-ends
-> > > > > up trying to derefence a freed delegation stateid. Leading to the
-> > > > > followint use-after-free KASAN warning:
-> > > > >
-> > > > > kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > kernel: BUG: KASAN: slab-use-after-free in nfsd_breaker_owns_leas=
-e+0x140/0x160 [nfsd]
-> > > > > kernel: Read of size 8 at addr ffff0000e73cd0c8 by task nfsd/6205
-> > > > > kernel:
-> > > > > kernel: CPU: 2 UID: 0 PID: 6205 Comm: nfsd Kdump: loaded Not tain=
-ted 6.11.0-rc7+ #9
-> > > > > kernel: Hardware name: Apple Inc. Apple Virtualization Generic Pl=
-atform, BIOS 2069.0.0.0.0 08/03/2024
-> > > > > kernel: Call trace:
-> > > > > kernel: dump_backtrace+0x98/0x120
-> > > > > kernel: show_stack+0x1c/0x30
-> > > > > kernel: dump_stack_lvl+0x80/0xe8
-> > > > > kernel: print_address_description.constprop.0+0x84/0x390
-> > > > > kernel: print_report+0xa4/0x268
-> > > > > kernel: kasan_report+0xb4/0xf8
-> > > > > kernel: __asan_report_load8_noabort+0x1c/0x28
-> > > > > kernel: nfsd_breaker_owns_lease+0x140/0x160 [nfsd]
-> > > > > kernel: leases_conflict+0x68/0x370
-> > > > > kernel: __break_lease+0x204/0xc38
-> > > > > kernel: nfsd_open_break_lease+0x8c/0xf0 [nfsd]
-> > > > > kernel: nfsd_file_do_acquire+0xb3c/0x11d0 [nfsd]
-> > > > > kernel: nfsd_file_acquire_opened+0x84/0x110 [nfsd]
-> > > > > kernel: nfs4_get_vfs_file+0x634/0x958 [nfsd]
-> > > > > kernel: nfsd4_process_open2+0xa40/0x1a40 [nfsd]
-> > > > > kernel: nfsd4_open+0xa08/0xe80 [nfsd]
-> > > > > kernel: nfsd4_proc_compound+0xb8c/0x2130 [nfsd]
-> > > > > kernel: nfsd_dispatch+0x22c/0x718 [nfsd]
-> > > > > kernel: svc_process_common+0x8e8/0x1960 [sunrpc]
-> > > > > kernel: svc_process+0x3d4/0x7e0 [sunrpc]
-> > > > > kernel: svc_handle_xprt+0x828/0xe10 [sunrpc]
-> > > > > kernel: svc_recv+0x2cc/0x6a8 [sunrpc]
-> > > > > kernel: nfsd+0x270/0x400 [nfsd]
-> > > > > kernel: kthread+0x288/0x310
-> > > > > kernel: ret_from_fork+0x10/0x20
-> > > > >
-> > > > > Proposing to have laundromat thread hold the state_lock over both
-> > > > > marking thru revoking the delegation as well as making free_state=
-id
-> > > > > acquire state_lock before accessing the list. Making sure that
-> > > > > revoke_delegation() (ie kernel_setlease(unlock)) is called for
-> > > > > every delegation that was revoked and added to the reaper list.
-> > > > >
-> > > > > CC: stable@vger.kernel.org
-> > > > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > > >
-> > > > > --- I can't figure out the Fixes: tag. Laundromat's behaviour has
-> > > > > been like that forever. But the free_stateid bits wont apply befo=
-re
-> > > > > the 1e3577a4521e ("SUNRPC: discard sv_refcnt, and svc_get/svc_put=
-").
-> > > > > But we used that fixes tag already with a previous fix for a diff=
-erent
-> > > > > problem.
-> > > > > ---
-> > > > >  fs/nfsd/nfs4state.c | 4 +++-
-> > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > > index 9c2b1d251ab3..c97907d7fb38 100644
-> > > > > --- a/fs/nfsd/nfs4state.c
-> > > > > +++ b/fs/nfsd/nfs4state.c
-> > > > > @@ -6605,13 +6605,13 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > > > >             unhash_delegation_locked(dp, SC_STATUS_REVOKED);
-> > > > >             list_add(&dp->dl_recall_lru, &reaplist);
-> > > > >     }
-> > > > > -   spin_unlock(&state_lock);
-> > > > >     while (!list_empty(&reaplist)) {
-> > > > >             dp =3D list_first_entry(&reaplist, struct nfs4_delega=
-tion,
-> > > > >                                     dl_recall_lru);
-> > > > >             list_del_init(&dp->dl_recall_lru);
-> > > > >             revoke_delegation(dp);
-> > > > >     }
-> > > > > +   spin_unlock(&state_lock);
-> > > >
-> > > > Code review suggests revoke_delegation() (and in particular,
-> > > > destroy_unhashed_deleg(), must not be called while holding
-> > > > state_lock().
-> > > >
-> > >
-> > > We'd be calling nfs4_unlock_deleg_lease with a spinlock held, which i=
-s
-> > > sort of gross.
-> > >
-> > > That said, I don't love this fix either.
-> > >
-> > > >
-> > > > >     spin_lock(&nn->client_lock);
-> > > > >     while (!list_empty(&nn->close_lru)) {
-> > > > > @@ -7213,7 +7213,9 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, =
-struct nfsd4_compound_state *cstate,
-> > > > >             if (s->sc_status & SC_STATUS_REVOKED) {
-> > > > >                     spin_unlock(&s->sc_lock);
-> > > > >                     dp =3D delegstateid(s);
-> > > > > +                   spin_lock(&state_lock);
-> > > > >                     list_del_init(&dp->dl_recall_lru);
-> > > > > +                   spin_unlock(&state_lock);
-> > > >
-> > > > Existing code is inconsistent about how manipulation of
-> > > > dl_recall_lru is protected. Most instances do use state_lock for
-> > > > this purpose, but a few, including this one, use cl->cl_lock. Does
-> > > > the other instance using cl_lock need review and correction as well=
-?
-> > > >
-> > > > I'd prefer to see this fix make the protection of dl_recall_lru
-> > > > consistent everywhere.
-> > > >
-> > >
-> > > Agreed. The locking around the delegation handling has been a mess fo=
-r
-> > > a long time. I'd really like to have a way to fix this that didn't
-> > > require having to rework all of this code however.
-> > >
-> > > How about something like this patch instead? Olga, thoughts?
-> >
-> > I think this patch will prevent the UAF but it doesn't work for
-> > another reason (tested it too). As the free_stateid operation can come
-> > in before the freeable flag is set (and so the nfsd4_free_stateid
-> > function would not do anything).
-> >
-> > But it needs to remove this
-> > delegation from cl_revoked which the laundromat puts it on as a part
-> > of revoked_delegation() otherwise the server never clears
-> > recallable_state_revoked. And I think this put_stid() that
-> > free_stateid does is also needed. So what happens is free_stateid
-> > comes and goes and the sequence flag is set and is never cleared.
-> >
->
-> Right. It hasn't been "officially" revoked yet, so if a FREE_STATEID
-> races in while it's REVOKED but not yet FREEABLE, it should just send
-> back NFS4ERR_LOCKS_HELD. Shouldn't the client assume something like
-> this race has occurred and retry it in that case?
+On Sat, Oct 12, 2024 at 07:53:34AM +1100, NeilBrown wrote:
+> On Sat, 12 Oct 2024, Chuck Lever wrote:
+> > On Fri, Oct 11, 2024 at 07:54:12AM +1100, NeilBrown wrote:
+> > > On Fri, 11 Oct 2024, cel@kernel.org wrote:
+> > > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > > 
+> > > > NFSv4 LOCK operations should not avoid the set of authorization
+> > > > checks that apply to all other NFSv4 operations. Also, the
+> > > > "no_auth_nlm" export option should apply only to NLM LOCK requests.
+> > > > It's not necessary or sensible to apply it to NFSv4 LOCK operations.
+> > > > 
+> > > > The replacement MAY bit mask,
+> > > > "NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE", comes from the access
+> > > > bits that are set in nfsd_permission() when the caller has set
+> > > > NFSD_MAY_LOCK.
+> > > > 
+> > > > Reported-by: NeilBrown <neilb@suse.de>
+> > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > ---
+> > > >  fs/nfsd/nfs4state.c | 7 +++----
+> > > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > index 9c2b1d251ab3..3f2c11414390 100644
+> > > > --- a/fs/nfsd/nfs4state.c
+> > > > +++ b/fs/nfsd/nfs4state.c
+> > > > @@ -7967,11 +7967,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+> > > >  	if (check_lock_length(lock->lk_offset, lock->lk_length))
+> > > >  		 return nfserr_inval;
+> > > >  
+> > > > -	if ((status = fh_verify(rqstp, &cstate->current_fh,
+> > > > -				S_IFREG, NFSD_MAY_LOCK))) {
+> > > > -		dprintk("NFSD: nfsd4_lock: permission denied!\n");
+> > > > +	status = fh_verify(rqstp, &cstate->current_fh, S_IFREG,
+> > > > +			   NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE);
+> > > > +	if (status != nfs_ok)
+> > > >  		return status;
+> > > > -	}
+> > > 
+> > > Reviewed-by: NeilBrown <neilb@suse.de>
+> > > 
+> > > though I think we want a follow-on patch which uses NFSD_MAY_WRITE for
+> > > write locks for consistency with check_fmode_for_setlk().
+> > 
+> > I think this patch might introduce a behavior regression, then.
+> > Instead of a follow-on, I need a v2 of this patch.
+> 
+> This is not a regression - it has always been this way (since 2.3.42).
+> And both NLM and v4 suffer - I was wrong about NLM.
+> 
+> If MAY_LOCK is set, then any MAY_READ or MAY_WRITE flag is ignored, and
+> the 'acc' passed to inode_permission() is only MAY_READ |
+> MAY_OWNER_OVERRIDE
 
-Actually this would not be an appropriate error to return I think. I
-think the client sends TEST_STATEID gets revoked (or it got
-err_revoked on the delegreturn). Then it sends FREE_STATEID so it's
-not possible that a valid locking state exists (it would be a broken
-server to return such an error). No reason for the client to retry.
+That's what I thought when I looked at nfsd_permission() again.
 
-> I'm also curious as to why the client is sending a FREE_STATEID so
-> quickly in this case. Hasn't the laundromat just marked this thing
-> REVOKED and now we're already trying to process a FREE_STATEID for it.
 
-The test is as follows. (read) open 10k file (get delegations) and
-hold it open for some time. Locally do write into the filesystem into
-those 10k files. The server starts working on it's 10k cb_recalls.
-Client is working on doing delegreturn. But the lease (is artificially
-set to be short(er) then the server is able to go thru all its
-callbacks and delegreturn). Thus laundromat kicks in declaring
-delegation state expired for all those callbacks. The server then sets
-a flag in the sequence (fails on the delegreturns too with revoked
-error) and client switches to instead send test_stateid/free_stateid.
-I guess client is fast enough in sending the free_stateid before the
-laundromat thread gets to revoking that particular delegation in the
-reaper list.
+> So any locking over nfsd currently requires ownership or READ access to
+> the inode.  This is slightly different behaviour to local filesystems
+> and it might be nice to fix but I don't think it is an important
+> difference.  Importantly your patch doesn't change this behaviour at all.
 
-to restate: a bunch of opens, cb_recalls with delegreturns which are
-switched to test_stateids/free_stateids, then eventually followed by
-closes. Then opens again --> leading to UAF
+nfsd4_lock(), IIUC, thoroughly examines the stateid just after it
+does the fh_verify(). Maybe this would be OK:
 
-> > Laundromat threat when it starts revocation process it either needs to
-> > 'finish it' but it needs to make sure that if free_stateid arrives in
-> > the meanwhile it has to wait but still run. Or I was thinking that
-> > perhaps, we can make free_stateid act like delegreturn. but I wasn't
-> > sure if free_stateid is allowed to act like delegreturn. but this also
-> > fixes the problem if the free_stateid arrives and takes the work away
-> > from the laundromat thread then free_stateid finishes the return just
-> > like a delegreturn (which unlocks the lease). But I'm unclear if there
-> > isn't any races between revoke_delegation and destroy_delegation.
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 56b261608af4..1ef6933b1ccb 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -7159,6 +7159,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp,
-> > struct nfsd4_compound_state *cstate,
-> >                         dp =3D delegstateid(s);
-> >                         list_del_init(&dp->dl_recall_lru);
-> >                         spin_unlock(&cl->cl_lock);
-> > +                       destroy_delegation(dp);
-> >                         nfs4_put_stid(s);
-> >                         ret =3D nfs_ok;
-> >                         goto out;
-> >
-> >
-> >
-> > > [PATCH] nfsd: add new SC_STATUS_FREEABLE to prevent race with  FREE_S=
-TATEID
-> > >
-> > > Olga identified a race between the laundromat and FREE_STATEID handli=
-ng.
-> > > The crux of the problem is that free_stateid can proceed while the
-> > > laundromat is still processing the revocation.
-> > >
-> > > Add a new SC_STATUS_FREEABLE flag that is set once the revocation is
-> > > complete. Have nfsd4_free_stateid only consider delegations that have
-> > > this flag set.
-> > >
-> > > Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  fs/nfsd/nfs4state.c | 3 ++-
-> > >  fs/nfsd/state.h     | 1 +
-> > >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 73c4b983c048..b71a2cc7f2dd 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -1371,6 +1371,7 @@ static void revoke_delegation(struct nfs4_deleg=
-ation *dp)
-> > >                 spin_lock(&clp->cl_lock);
-> > >                 refcount_inc(&dp->dl_stid.sc_count);
-> > >                 list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> > > +               dp->dl_stid.sc_status |=3D SC_STATUS_FREEABLE;
-> > >                 spin_unlock(&clp->cl_lock);
-> > >         }
-> > >         destroy_unhashed_deleg(dp);
-> > > @@ -7207,7 +7208,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, stru=
-ct nfsd4_compound_state *cstate,
-> > >         spin_lock(&s->sc_lock);
-> > >         switch (s->sc_type) {
-> > >         case SC_TYPE_DELEG:
-> > > -               if (s->sc_status & SC_STATUS_REVOKED) {
-> > > +               if (s->sc_status & SC_STATUS_FREEABLE) {
-> > >                         spin_unlock(&s->sc_lock);
-> > >                         dp =3D delegstateid(s);
-> > >                         list_del_init(&dp->dl_recall_lru);
-> > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > > index 874fcab2b183..4f3b941b09d3 100644
-> > > --- a/fs/nfsd/state.h
-> > > +++ b/fs/nfsd/state.h
-> > > @@ -114,6 +114,7 @@ struct nfs4_stid {
-> > >  /* For a deleg stateid kept around only to process free_stateid's: *=
-/
-> > >  #define SC_STATUS_REVOKED      BIT(1)
-> > >  #define SC_STATUS_ADMIN_REVOKED        BIT(2)
-> > > +#define SC_STATUS_FREEABLE     BIT(3)
-> > >         unsigned short          sc_status;
-> > >
-> > >         struct list_head        sc_cp_list;
-> > > --
-> > > 2.47.0
-> > >
-> >
->
-> --
-> Jeff Layton <jlayton@kernel.org>
->
+	status = fh_verify( ... , 0);
 
+This is what the other NFSv4 lock-related operations do.
+
+
+> > > And I'm wondering about NFSD_MAY_OWNER_OVERRIDE ...  that is really an
+> > > NFSv3 thing.  For NFSv4 we should be checking permission at "open" time,
+> > > recording that in the state (both of which we do) and then performing
+> > > permission checks against the state rather than against the inode.
+> > > But that is a whole different can of worms.
+> > 
+> > I see several sites in NFSv4 land that assert OWNER_OVERRIDE. But
+> > point taken on taking the permissions from the state ID instead of
+> > using a fixed mask.
+> > 
+> > 
+> > > Thanks,
+> > > NeilBrown
+> > > 
+> > > 
+> > > >  	sb = cstate->current_fh.fh_dentry->d_sb;
+> > > >  
+> > > >  	if (lock->lk_is_new) {
+> > > > -- 
+> > > > 2.46.2
+> > > > 
+> > > > 
+> > > 
+> > 
+> > -- 
+> > Chuck Lever
+> > 
+> 
+> 
+
+-- 
+Chuck Lever
 
