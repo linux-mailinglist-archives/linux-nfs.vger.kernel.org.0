@@ -1,106 +1,103 @@
-Return-Path: <linux-nfs+bounces-7056-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7057-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3933299A10E
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 12:16:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6CD099A210
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 12:55:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF941285262
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 10:16:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A5A91F22A71
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 10:55:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5AF210C2F;
-	Fri, 11 Oct 2024 10:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="z2LRA7br"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745E1212F13;
+	Fri, 11 Oct 2024 10:55:17 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74471210C0C;
-	Fri, 11 Oct 2024 10:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD4212EE0;
+	Fri, 11 Oct 2024 10:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728641764; cv=none; b=eBMba5udhjJwGLU7oQ9a4vgjfCNi5GVGt/ZJsYXX+N+sum2fT3EvNRHBgG0Pww123+SXu0RUDDBVHpJZXYKDeElu7MwrjE1zLHGoYWyCFoYXvyxuJ7Dal8Ob+TfG1MHm15CWFaLRjbzpjSMgSuJjoHgrFWiUQxxYHzCT6ZOlun8=
+	t=1728644117; cv=none; b=g/Yxj6xihw5tZM6gyiADo4QKKinwtwmqMsBStHfqk6/h0X9KLXj9QI2q3iM9ChbyuD8lEF9gGo8KFP84HBO2l5SJxIKvdum3YvUkfkIHt4V2sNx1AgP7FSQ241smH9X2e7wjyA5I4VA5V4RInhIODD/c/Y++fwqCA1iIT7vnEo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728641764; c=relaxed/simple;
-	bh=zwQ70n0SSlfb/OyoAuBHTRaQ85w0aqqiMni4QYSsldE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RB1ZLf9CuWli9Fw+ciVjc/AdX/Euy/rBzSBNfetEh95gdPGxqEg6FzdVPu9/ozyezz4a40Y90A/eJUpgvwvKbjCh3uLwRt0gmPRR+V0mvoTXHFKFMdcxQmCtQPcFMBHlK4S+IsOJvB1w5LxISLFau1rmkxEnO+seWvTQy0Fs45o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=z2LRA7br; arc=none smtp.client-ip=84.16.66.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XQ2Zl3YX1zKH9;
-	Fri, 11 Oct 2024 12:15:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1728641759;
-	bh=MdL4NDl3ZoA3WJAyXDtnvpK7cAFgEh48Z4dOPu54AiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=z2LRA7brSb1Kk/IXKA1ZMnDCcKUfvGc9rQkT5FlMTCtTTLJAT4ZAwWp8rhnLgStek
-	 LcOTpTeW6zTAfcrjenkFR2lSz9bBRfv9wcaZTgjMTz2JMqAbq3hRF7i3nLQAFtWfv5
-	 wKAux4oujGNGPGkgsqnClYcjvp+6xjf9EpaQX4e8=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XQ2Zk2PGPz8W0;
-	Fri, 11 Oct 2024 12:15:58 +0200 (CEST)
-Date: Fri, 11 Oct 2024 12:15:55 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>
-Subject: Re: [PATCH RFC v1 4/7] integrity: Fix inode numbers in audit records
-Message-ID: <20241011.Eigh6nohChai@digikod.net>
-References: <20241010152649.849254-4-mic@digikod.net>
- <bafd35c50bbcd62ee69e0d3c5f6b112d@paul-moore.com>
+	s=arc-20240116; t=1728644117; c=relaxed/simple;
+	bh=o1UxxF77W2DeqnYVIgmDfhMh70vkM3V+7XbHkdXn5a8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CaOyha9t4KEKrM+UdHXuo+IhVP58dhw9yNXiyRZxT0Yrk9o7VZuXPL8LqaRrjjsQG1AiDxBIkD4kBZgbhjHzoRVkEdDb9Ryi9lJ66i5OLKIVMzNgfw03ETfsf0H+XzrTKnUFEUXdfX31VlzjMbAqhZQ2Ar/Tq1qqVAELPguqEKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 49BAswgL064962;
+	Fri, 11 Oct 2024 19:54:58 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 49BAswn6064959
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 11 Oct 2024 19:54:58 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <a5fb2a24-d109-41fd-b00a-afe5280b6ffc@I-love.SAKURA.ne.jp>
+Date: Fri, 11 Oct 2024 19:54:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
+ get_ino() for NFS
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Christian Brauner <brauner@kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
+References: <20241010152649.849254-1-mic@digikod.net>
+ <70645876-0dfe-449b-9cb6-678ce885a073@I-love.SAKURA.ne.jp>
+Content-Language: en-US
+In-Reply-To: <70645876-0dfe-449b-9cb6-678ce885a073@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bafd35c50bbcd62ee69e0d3c5f6b112d@paul-moore.com>
-X-Infomaniak-Routing: alpha
+X-Anti-Virus-Server: fsav102.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Thu, Oct 10, 2024 at 09:20:52PM -0400, Paul Moore wrote:
-> On Oct 10, 2024 =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net> wrote:
-> > 
-> > Use the new inode_get_ino() helper to log the user space's view of
-> > inode's numbers instead of the private kernel values.
-> > 
-> > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > Cc: Roberto Sassu <roberto.sassu@huawei.com>
-> > Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> > Cc: Eric Snowberg <eric.snowberg@oracle.com>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > ---
-> >  security/integrity/integrity_audit.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On 2024/10/11 19:12, Tetsuo Handa wrote:
+> On 2024/10/11 0:26, Mickaël Salaün wrote:
+>> When a filesystem manages its own inode numbers, like NFS's fileid shown
+>> to user space with getattr(), other part of the kernel may still expose
+>> the private inode->ino through kernel logs and audit.
 > 
-> Should we also need to update the inode value used in hmac_add_misc()?
+> I can't catch what you are trying to do. What is wrong with that?
+> 
+>> Another issue is on 32-bit architectures, on which ino_t is 32 bits,
+>> whereas the user space's view of an inode number can still be 64 bits.
+> 
+> Currently, ino_t is 32bits on 32-bit architectures, isn't it?
+> Why do you need to use 64bits on 32-bit architectures?
 
-I'm not sure what the impact will be wrt backward compatibility. Mimi,
-Roberto?
+Changing from 32bits to 64bits for communicating with userspace programs
+breaks userspace programs using "ino_t" (or "unsigned long") for handling
+inode numbers, doesn't it? Attempt to change from %lu to %llu will not be
+acceptable unless the upper 32bits are guaranteed to be 0 on 32-bit
+architectures.
+
+Since syslogd/auditd are not the only programs that parse kernel logs and
+audit logs, updating only syslogd/auditd is not sufficient. We must not break
+existing userspace programs, and thus we can't change the format string.
 
 > 
-> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-> index 7c06ffd633d2..68ae454e187f 100644
-> --- a/security/integrity/evm/evm_crypto.c
-> +++ b/security/integrity/evm/evm_crypto.c
-> @@ -155,7 +155,7 @@ static void hmac_add_misc(struct shash_desc *desc, struct inode *inode,
->          * signatures
->          */
->         if (type != EVM_XATTR_PORTABLE_DIGSIG) {
-> -               hmac_misc.ino = inode->i_ino;
-> +               hmac_misc.ino = inode_get_ino(inode->i_ino);
->                 hmac_misc.generation = inode->i_generation;
->         }
->         /* The hmac uid and gid must be encoded in the initial user
+>> Add a new inode_get_ino() helper calling the new struct
+>> inode_operations' get_ino() when set, to get the user space's view of an
+>> inode number.  inode_get_ino() is called by generic_fillattr().
 > 
-> --
-> paul-moore.com
+> What does the user space's view of an inode number mean?
+> What does the kernel space's view of an inode number mean?
+> 
+
 
