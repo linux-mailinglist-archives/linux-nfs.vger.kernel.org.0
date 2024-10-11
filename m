@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-7063-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7064-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3129799A3EF
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 14:33:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3DA199A3F7
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 14:35:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 954231F2360B
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 12:33:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFD3CB21AFA
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 12:35:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4EDF209662;
-	Fri, 11 Oct 2024 12:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C7091FB3F1;
+	Fri, 11 Oct 2024 12:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7PuGuoF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pjn11fZ1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF22B1FB3F1
-	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 12:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466F71CDFA6
+	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 12:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728649973; cv=none; b=jCCpUqzFapNaJvukK23prqLYUQhqxAzAGxTa1Q2aoVjhLeaPUWosKKjpWF9seKzC+dRN3DK2EdUh24WifvCryFOJCSpmwXORKq3KFym8pGOY9Pd7uJpe04INJ4cuIgHYk8xBCR7gyv3c735ZxHIcbi7MDytG/H4g8QmbkxmujCo=
+	t=1728650112; cv=none; b=RECFT3LPFeOcpa0km5gl7zeItb0mhOG6Yu45kPyWzSMN/peX8q1R9ZwC5g9EHWVJ3+sse2MERdXzEtmHsyb0gc3n6vKim/yDhN5LvdfVJlk4Q4vdA2mMZx8BPm2G8tsQQuZh8yW2+yGi8HGDJqdDwBAHkVVGWF/EKrBDehfPHNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728649973; c=relaxed/simple;
-	bh=/9QmdonJ0lft5CMUZmyuw+TBr/Rz2UGeQmI2TvEOVSU=;
+	s=arc-20240116; t=1728650112; c=relaxed/simple;
+	bh=vNjAmJyDkp1XacLAhlPA/FkKiOK40qz1wqtt6b/S5+Q=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JccjMFO9+BzNA2Kb0Alc4XnEwz71UuZpLrKVr3cNwXd5mzL5cd3DF4NJwcqt4bApfYwzxy/8FKd9zcYC8FyXlfsXWTRj5cHzhmDWipn8KMR/dMDDZvozC645Q0Z4XOMbkevEu4XBmTNc2rmZtc0ZqgOh1ESb4Z7STePOzxUGyqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7PuGuoF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F41C4CEC3;
-	Fri, 11 Oct 2024 12:32:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=P1ogLzjEHVvs2F0wwWNLFOcDtl0S2gPDAgjtOEuURnqDWcwVcwL9XAIXXB3C7DlfLoy6WqJqBHtO7qNYEYy++N+Gj0DS7HMj4DZ9YZjzH7g+Jku2ojdbbbzoR44dGJbcX04JbDWFWk79WgI+PEVaOSfBz8kel5vwDEbaioaQl4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pjn11fZ1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41875C4CEC3;
+	Fri, 11 Oct 2024 12:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728649973;
-	bh=/9QmdonJ0lft5CMUZmyuw+TBr/Rz2UGeQmI2TvEOVSU=;
+	s=k20201202; t=1728650111;
+	bh=vNjAmJyDkp1XacLAhlPA/FkKiOK40qz1wqtt6b/S5+Q=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=X7PuGuoF9rGaPTeqjv/g9/HpdNMQUtaMbdeg7TlUbWahMOsvgRJLmvbgakjfVb8I9
-	 IO0l2xN0FePWsfm7AxRgRE52O7YlIydyKB3ZTcRHKs3V6jz+av1gUsf12xaWSoulx7
-	 zx5FWswAPulUm9UKi0icm+EcDL0js7lb3yL0sgyBw6ZFFArRJgsb/Q+1m6h/Xwx8fW
-	 9/8HgbTw2pf7HJyA3v6AH63Vdi59c9EPgJToZFFFSXq5K3hdkk7tGUjqZ6EsZuZpwB
-	 g4sf+lpWzyIeUMDH+JzfPTxnRrrCHjkPbZubglXm6D9KVuF3EWYo4zz+KdA+JlRRW7
-	 mdYjJVet1/FaA==
-Message-ID: <dac8ba057c22856485d15882d27dfb697b9f6bea.camel@kernel.org>
-Subject: Re: [RFC PATCH] NFSD: Replace use of NFSD_MAY_LOCK in nfsd4_lock()
+	b=Pjn11fZ1Gc2Ns2TKBiIdfmw7Sifal7QlDHr9TH1x+/R3k8wsEkGJ2/wGFFuSImKa1
+	 8ah0aqBFYfBnhMTpae8lPVYL0DrST7ZHA3EpvW9SFJ3VbJzTehi8cj68nL2i4l/MnU
+	 hPnZom44qIiSx6KCsyEx71nRs6t5sZ63poBWXl5dc0LsAwXh34J21uYGeuS1K+n5R4
+	 qSNBPx9es8NR0+iITJ+jztSu1/ATjYaX8szHA1soXcnoy0zCq5k4y3KzMYEpuyFMST
+	 Mtea+8BNC6+ylWUYCXdj28Gst+vHk2Ph6vGgfFJmUrzucC2hE6Rcyo/glnwg1Vddkc
+	 M1aLvDzdwC4Tg==
+Message-ID: <7ef7885808d58b7a0f557b047184b18fbc941f73.camel@kernel.org>
+Subject: Re: [PATCH nfsd-next] nfsd: refine and rename NFSD_MAY_LOCK
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 11 Oct 2024 08:32:51 -0400
-In-Reply-To: <20241010153331.143845-2-cel@kernel.org>
-References: <20241010153331.143845-2-cel@kernel.org>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Fri, 11 Oct 2024 08:35:10 -0400
+In-Reply-To: <172859586932.444407.11362678410508147927@noble.neil.brown.name>
+References: <172859586932.444407.11362678410508147927@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,48 +135,162 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-10-10 at 11:33 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, 2024-10-11 at 08:31 +1100, NeilBrown wrote:
+> NFSD_MAY_LOCK means a few different things.
+> - it means that GSS is not required.
+> - it means that with NFSEXP_NOAUTHNLM, authentication is not required
+> - it means that OWNER_OVERRIDE is allowed.
 >=20
-> NFSv4 LOCK operations should not avoid the set of authorization
-> checks that apply to all other NFSv4 operations. Also, the
-> "no_auth_nlm" export option should apply only to NLM LOCK requests.
-> It's not necessary or sensible to apply it to NFSv4 LOCK operations.
+> None of these are specific to locking, they are specific to the NLM
+> protocol.
+> So:
+>  - rename to NFSD_MAY_NLM
+>  - set NFSD_MAY_OWNER_OVERRIDE and NFSD_MAY_BYPASS_GSS in nlm_fopen()
+>    so that NFSD_MAY_NLM doesn't need to imply these.
+>  - move the test on NFSEXP_NOAUTHNLM out of nfsd_permission() and
+>    into fh_verify() where other special-case tests on the MAY flags
+>    happen.  nfsd_permission() can be called from other places than
+>    fh_verify(), but none of these will have NFSD_MAY_NLM.
 >=20
-> The replacement MAY bit mask,
-> "NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE", comes from the access
-> bits that are set in nfsd_permission() when the caller has set
-> NFSD_MAY_LOCK.
->=20
-> Reported-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+>  fs/nfsd/lockd.c | 13 +++++++++++--
+>  fs/nfsd/nfsfh.c | 12 ++++--------
+>  fs/nfsd/trace.h |  2 +-
+>  fs/nfsd/vfs.c   | 12 +-----------
+>  fs/nfsd/vfs.h   |  2 +-
+>  5 files changed, 18 insertions(+), 23 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 9c2b1d251ab3..3f2c11414390 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -7967,11 +7967,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
->  	if (check_lock_length(lock->lk_offset, lock->lk_length))
->  		 return nfserr_inval;
+> diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
+> index 46a7f9b813e5..edc9f75dc75c 100644
+> --- a/fs/nfsd/lockd.c
+> +++ b/fs/nfsd/lockd.c
+> @@ -38,11 +38,20 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, s=
+truct file **filp,
+>  	memcpy(&fh.fh_handle.fh_raw, f->data, f->size);
+>  	fh.fh_export =3D NULL;
 > =20
-> -	if ((status =3D fh_verify(rqstp, &cstate->current_fh,
-> -				S_IFREG, NFSD_MAY_LOCK))) {
-> -		dprintk("NFSD: nfsd4_lock: permission denied!\n");
-> +	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG,
-> +			   NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE);
-> +	if (status !=3D nfs_ok)
->  		return status;
+> +	/*
+> +	 * Allow BYPASS_GSS as some client implementations use AUTH_SYS
+> +	 * for NLM even when GSS is used for NFS.
+> +	 * Allow OWNER_OVERRIDE as permission might have been changed
+> +	 * after the file was opened.
+> +	 * Pass MAY_NLM so that authentication can be completely bypassed
+> +	 * if NFSEXP_NOAUTHNLM is set.  Some older clients use AUTH_NULL
+> +	 * for NLM requests.
+> +	 */
+>  	access =3D (mode =3D=3D O_WRONLY) ? NFSD_MAY_WRITE : NFSD_MAY_READ;
+> -	access |=3D NFSD_MAY_LOCK;
+> +	access |=3D NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE | NFSD_MAY_BYPASS_GS=
+S;
+>  	nfserr =3D nfsd_open(rqstp, &fh, S_IFREG, access, filp);
+>  	fh_put(&fh);
+> - 	/* We return nlm error codes as nlm doesn't know
+> +	/* We return nlm error codes as nlm doesn't know
+>  	 * about nfsd, but nfsd does know about nlm..
+>  	 */
+>  	switch (nfserr) {
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 4c5deea0e953..885a58ca33d8 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -363,13 +363,10 @@ __fh_verify(struct svc_rqst *rqstp,
+>  	if (error)
+>  		goto out;From 226d19d36029605a16d837d1a94a6f81b6e06681 Mon Sep 17 00:0=
+0:00 2001
+> From: NeilBrown <neilb@suse.de>
+> Date: Fri, 11 Oct 2024 08:23:08 +1100
+>=20
+^^^
+This patch appears to be mangled.
+
+>=20
+> =20
+> -	/*
+> -	 * pseudoflavor restrictions are not enforced on NLM,
+> -	 * which clients virtually always use auth_sys for,
+> -	 * even while using RPCSEC_GSS for NFS.
+> -	 */
+> -	if (access & NFSD_MAY_LOCK)
+> -		goto skip_pseudoflavor_check;
+> +	if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAUTHNLM))
+> +		/* NLM is allowed to fully bypass authentication */
+> +		goto out;
+> +
+>  	if (access & NFSD_MAY_BYPASS_GSS)
+>  		may_bypass_gss =3D true;
+>  	/*
+> @@ -385,7 +382,6 @@ __fh_verify(struct svc_rqst *rqstp,
+>  	if (error)
+>  		goto out;
+> =20
+> -skip_pseudoflavor_check:
+>  	/* Finally, check access permissions. */
+>  	error =3D nfsd_permission(cred, exp, dentry, access);
+>  out:
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index c625966cfcf3..b7abf1cba9e2 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -79,7 +79,7 @@ DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
+>  		{ NFSD_MAY_READ,		"READ" },		\
+>  		{ NFSD_MAY_SATTR,		"SATTR" },		\
+>  		{ NFSD_MAY_TRUNC,		"TRUNC" },		\
+> -		{ NFSD_MAY_LOCK,		"LOCK" },		\
+> +		{ NFSD_MAY_NLM,			"NLM" },		\
+>  		{ NFSD_MAY_OWNER_OVERRIDE,	"OWNER_OVERRIDE" },	\
+>  		{ NFSD_MAY_LOCAL_ACCESS,	"LOCAL_ACCESS" },	\
+>  		{ NFSD_MAY_BYPASS_GSS_ON_ROOT,	"BYPASS_GSS_ON_ROOT" },	\
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 51f5a0b181f9..2610638f4301 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -2509,7 +2509,7 @@ nfsd_permission(struct svc_cred *cred, struct svc_e=
+xport *exp,
+>  		(acc & NFSD_MAY_EXEC)?	" exec"  : "",
+>  		(acc & NFSD_MAY_SATTR)?	" sattr" : "",
+>  		(acc & NFSD_MAY_TRUNC)?	" trunc" : "",
+> -		(acc & NFSD_MAY_LOCK)?	" lock"  : "",
+> +		(acc & NFSD_MAY_NLM)?	" nlm"  : "",
+>  		(acc & NFSD_MAY_OWNER_OVERRIDE)? " owneroverride" : "",
+>  		inode->i_mode,
+>  		IS_IMMUTABLE(inode)?	" immut" : "",
+> @@ -2534,16 +2534,6 @@ nfsd_permission(struct svc_cred *cred, struct svc_=
+export *exp,
+>  	if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
+>  		return nfserr_perm;
+> =20
+> -	if (acc & NFSD_MAY_LOCK) {
+> -		/* If we cannot rely on authentication in NLM requests,
+> -		 * just allow locks, otherwise require read permission, or
+> -		 * ownership
+> -		 */
+> -		if (exp->ex_flags & NFSEXP_NOAUTHNLM)
+> -			return 0;
+> -		else
+> -			acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
 > -	}
->  	sb =3D cstate->current_fh.fh_dentry->d_sb;
+>  	/*
+>  	 * The file owner always gets access permission for accesses that
+>  	 * would normally be checked at open time. This is to make
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index 854fb95dfdca..f9b09b842856 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -20,7 +20,7 @@
+>  #define NFSD_MAY_READ			0x004 /* =3D=3D MAY_READ */
+>  #define NFSD_MAY_SATTR			0x008
+>  #define NFSD_MAY_TRUNC			0x010
+> -#define NFSD_MAY_LOCK			0x020
+> +#define NFSD_MAY_NLM			0x020 /* request is from lockd */
+>  #define NFSD_MAY_MASK			0x03f
 > =20
->  	if (lock->lk_is_new) {
+>  /* extra hints to permission and open routines: */
+>=20
+> base-commit: 144cb1225cd863e1bd3ae3d577d86e1531afd932
+> prerequisite-patch-id: 7a049ff3732fdc61d6d4ff6f916f35341eddfa04
 
-I would say this warrants a comment as to why you're not using
-NFSD_MAY_LOCK here, but Neil's renaming patch takes care of that.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+The patch itself makes sense though.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
