@@ -1,260 +1,252 @@
-Return-Path: <linux-nfs+bounces-7082-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7083-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D028199A608
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 16:13:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA0D099A612
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 16:15:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1E001C2369D
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 14:13:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 949E6284F5C
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 14:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E08A821A706;
-	Fri, 11 Oct 2024 14:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E87218D91;
+	Fri, 11 Oct 2024 14:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="L7U7GfO7";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NOaZgaFj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUcgNMCN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EAB21D2B9
-	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 14:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728655867; cv=fail; b=HWCGmRFNSgm+ZmId5wiL1FfTP2neeaVF8/CxAxh63Y7LsnKaTAYDHcFJRM/w1U2KryTwDkTvqPLL/hytramlh8tXIjJZHgMIQSQLynp20bYSY1mOY9oRHus6aU7z58KtxP/eWef8aavGFcOcoMaYMHfamwLfv/nYtp/trbmNB+Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728655867; c=relaxed/simple;
-	bh=Y6cwBEVpmoQkhihf/SAiBz8JgWaBLMH0yKx8HBL2q54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nEBGrMgnNzR3n4khUKoQObhqILutos2uIub1ijOGzo4h8FQ6QqFoWNyNy2TQ0y4Oetlt21xvVGKfCegttlorYhk52wX4vpmajuMF9/DpsC1+ggB1Wiok4/e8Zos58JNcizfzCU6VtqaWshw4lpf9Ay3aRRsoJj5H+76XOg38DYw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=L7U7GfO7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NOaZgaFj; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49BCpa5S019539;
-	Fri, 11 Oct 2024 14:10:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=NYdCE5FFl2/U8snIei
-	appg5n74p5X+8+NqafQb8jqi8=; b=L7U7GfO7cJiQ8YQXCH0DdN8PUhH94Tsm+G
-	5c/j/JcRr/jmysjeVgqu1d6L0cEHvdYyL3aRHidQSLqhSr07v5hA7d2lWfPDDNkZ
-	jVE52ljkcty3+OjHSpiYVOhovpd5irO80qGXqZfy21hcyDW0+KnsfsAAcgDF0Upy
-	773Ln/tKIyj6M0XMBS1ca4eqpKNWtu/bGNY3eTlg3fkN4wllJKObyCQanybKsO7+
-	YrnwiXrvgGReAtl94YHOOyhTbk8cyrSFE+Y4E6eNjPd+gegJMwnawmDPp8Trq3+C
-	9Z5gosNzGnRFRTXlaMz6ht9f7YCHTEHR45WU0WpG+y7qwh0o2Wpg==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 422yyvcyra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Oct 2024 14:10:53 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49BE5djj027962;
-	Fri, 11 Oct 2024 14:10:53 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwhnm6m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Oct 2024 14:10:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H7lB6IdM8aTcUNvzhp5GCZpa4fajOqIS0/0LlCE7o6E/3jWLRA0Svr0DFKAR9TU87dc9dEYMQ/TVOFrcSROtgateIDb/02xgSbMdmYZob09Ha5Kk02ZXGTkdc2FXMt6qTACzaz2zNuOYRqGeRAnnd+PRTHOJxrt0RK9rzQOyf6fzOsgY992O+djj588eGvSwtzgRj7cwlg7jbKkCE/2cBhTe6vBLI32ptZPoMXAgeIE+/5lztw2US2G2ZMJCB7XoxPZvnzj3HE+LDTf0ok6Jx1W8M3OarwNEBP6J6H/swph1+JnhKYd3iS+DfRXTKYxK8cXSDuhHK4a/Jxpj/rAwwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NYdCE5FFl2/U8snIeiappg5n74p5X+8+NqafQb8jqi8=;
- b=qdKfm4vNFztqcClx/5WXTt3TN+oOpEe/K1m15PGW+L6hTS5erl6sB3KRwaMMD5uLNocxXBz4j/5BktLLIOJrJy3ft96IxIdpe/vFjtnH6ktqh2rnl1OSpa+cFr4p1mH0+6VBovf1dcL2gwIuoIUFInM6/YcBnKZgxrYAqAFnPyvXEKwN13PchmH5NMpZ4EmMZoSZ1YIQ2RODYujhqofpO8Sr5m0COxlQTlsePt3EiRPTDumkX44fCI5NG7gpruFfxcAOLgLO5XVeltJOifxpH+CbMCDSKmLCzT+2PEjh4bnvmjafOiqs0dqI0vEuvqXWGE2CBqXUYH8NMlmfSrXkDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA53219CB2;
+	Fri, 11 Oct 2024 14:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728656073; cv=none; b=W1YB+Nc3ifnaPfT+IdZXaPIFtUWhAqBcwSmjDmLD+l70eGxV3Uha4rAxHP0VAx0pY8HwBCNhVdylJooOiwggp7gMI3YEdtfWZAVVUpE8xG2+7IWV18sOWOlw0vAXW+m4FuHYMqD90q+G+o+7buwDCcGqcV9KTG6OUT4Admqfujo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728656073; c=relaxed/simple;
+	bh=eEtXQMP9cGBzj4SIUzHV218mOzk8GW4U4/8FSSi8JxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bMR0O0zVCZpqPCX3vo+tsi4Kr/VVM2eEbKsiRwu9teJ//5+NsQ8t3onMXF3NooBa0Wd1ZotW2eqcDsZXwNWgoAj9nKzBdvL9MQG6qhVDgBNLu5D6a3rxjdeG5FsENCs4onkEMMWg/7qK7LCb/hXqYKnAqg1R0Yp3P1lSC4aBHIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jUcgNMCN; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b10e0fadbcso139867985a.2;
+        Fri, 11 Oct 2024 07:14:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NYdCE5FFl2/U8snIeiappg5n74p5X+8+NqafQb8jqi8=;
- b=NOaZgaFj7qzzo8nU+1OCU5aB69L2SlC80TpB2t6mvBxFcB4tJkgVRY1if2cVSWcOyfIOdU+h0CjZPq5TbG592DgsjO+23+VJpH3valgi1D+kk8JkBBh7Q6Nl8OOC/tMKp6717VAr9udKWxb15xodFBXniGNu0MTh+DZqbkdhFRc=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB4863.namprd10.prod.outlook.com (2603:10b6:5:297::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.21; Fri, 11 Oct
- 2024 14:10:51 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8048.018; Fri, 11 Oct 2024
- 14:10:51 +0000
-Date: Fri, 11 Oct 2024 10:10:47 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: cel@kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH] NFSD: Replace use of NFSD_MAY_LOCK in nfsd4_lock()
-Message-ID: <Zwkx54LAxJuuxTWv@tissot.1015granger.net>
-References: <20241010153331.143845-2-cel@kernel.org>
- <172859365233.444407.16539980656364255099@noble.neil.brown.name>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172859365233.444407.16539980656364255099@noble.neil.brown.name>
-X-ClientProxiedBy: CH2PR16CA0002.namprd16.prod.outlook.com
- (2603:10b6:610:50::12) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1728656071; x=1729260871; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jDYzsV+F5Vy8b6juSV/lGuZAE/FncmOOUTRyd4Gy5Fk=;
+        b=jUcgNMCN5Qnj30TqhFz2133PADhaUDQgXCi9VjGQJtXKXcwFhGiRYaugVX6S7KVnOF
+         8eOmSVX/yPfOXU6WUQqeKcf+OGdyGOwLhjapQW6yqmuqybinep62WSlW0KV76DHo4VDQ
+         9k0U8Vw6hG10IasrlzOuY0o+vZ/Unzk4wWwiyQvJBZFMi3hwMsUunxIJwVUR0IAPNfpz
+         TbEMQnLI0HL/0dcZAc7/M7/AEnbud957sfsTksDKfC8KCEQ/sG0x0C0hOXOFOVbH7AUS
+         L6Fbgoo0Ja0UWz9m4qFdGiga0BHQQoRK0nfH2BvQxnOgQgmYDuOz88FAv2xr+0PREQW0
+         YYMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728656071; x=1729260871;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jDYzsV+F5Vy8b6juSV/lGuZAE/FncmOOUTRyd4Gy5Fk=;
+        b=RdHTNHc9G/l0VTtvdetd9Knog0niW/JhBC1Pn8l85fZG5/B1Ey/M44uYAho8Mg1H9W
+         kEL0eaVMvisyusqOKBB81YddVD04ZfzldRNGy1bKY3xP945KoO5mivK3AIMk274CmT4g
+         RJ6qx8NVeRxiVp7Uv6yXUChD1iX7BWm4rQTSHGBXfhUKwApdcv9tnvTXUKX4tQ4nPrO7
+         mD0C2Z63lfr1aBZ5P05nR1O9+V/KvUvK9mNwWzNfASt0+4kKFHcQ+atPAZYWJSTSWQpM
+         tO5EfHQG34nWoCoY/b/m6COzM3CohUQ5QvDZKvfOrWqc5Umsb4HnR1qa6iEYPns/9bqI
+         KkBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/e3FTRzZK1a9HmAFXYiu0vCUkGfo4X/lnEtyAZaSvNlVYunxpTxBZo2TprvueNv43wFJ5t6W59WU1@vger.kernel.org, AJvYcCUMjrJ3xd3gi7wUVhP4+UIKpIGytRfsvgMIZGj1SSCWX9fEJm6dkYVcy+5fSQAoeq8y0NgAtE6nl9Yktaah@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqKqbe2m8MeQ/+zq8QCiEwDGB7bVRErg452jT5YMpt3f+8/PRe
+	aqZWZQT6eIxGaJwNzyzxfFZ7hInAsPLxSGWLS8l/MR0IX4qEQ5mkzKv7lyYEpPIzwav1GSCSUK2
+	UeUtU9XlRVB1JZKWjMSsVD1UwrEI=
+X-Google-Smtp-Source: AGHT+IH7q8RX+laf5xjpHVX8kVKa5dtyiL5M91n5c0WAC6BG0cgxOwx7CEatzTyBQkuXQTGjDkHMF9IXZWjh0GMMbcg=
+X-Received: by 2002:a05:620a:4153:b0:7ac:b1fb:27d3 with SMTP id
+ af79cd13be357-7b11a3ad389mr361155085a.40.1728656070491; Fri, 11 Oct 2024
+ 07:14:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB4863:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e7d279c-b829-459d-85bd-08dce9fe830f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rGCRNsjDUE9g+yMBwYY5Kd7OpSPThItxEfuogtHhNKk/hSQaq8h9Q7G9GVGm?=
- =?us-ascii?Q?pBdiJuK9QA/SL7d+qs4QlOKtDBVwjBj+AjGBYPkQ3YANLc9NK8I3RyPebVoR?=
- =?us-ascii?Q?2jbG0XtcX3gItJF1rYGAxwKfxPKZ4Qd6U7ljvu2yihbJwzSqoc2MyB8xI0nk?=
- =?us-ascii?Q?mhP/5vxNCOzzlywBiDm0ZOeda0re5tx4gus3DdiBRvyULXGDWQslo+ko65dI?=
- =?us-ascii?Q?Ch5n3CyqcRRLgxfOcb+pVabR3Wb4mnX7g4YvYc235Gj37qAT+xHUowhpW42o?=
- =?us-ascii?Q?3hnblWvpsESAsd0CpM05SaIipZBCVKYFoLJKWZeWA5LDgaxvks740G73oYiJ?=
- =?us-ascii?Q?1KIIGDZDnVpDsHwsHPiOcIsTOetnHtFLePTSaSQAkV1EmoKQFLaQf4zSP9oe?=
- =?us-ascii?Q?ZGQSkeh8yF9isYGlhElfHEL9CakdIIrs2iVbyD/8qzgrszrzA9L9k6XG4TmK?=
- =?us-ascii?Q?VuRuc96f+4DSW7ROlAVx8iOCJG0OyL2C7yQYKjqxvpgG8U5/65KlxjCLV60S?=
- =?us-ascii?Q?2yyfdAPiDPNhkIWl2PoIk1SfVi7jbelOL8P0nUBXjZqekyK76V28OpiLfDlb?=
- =?us-ascii?Q?KtAvvQqUxxihE8sF6PBgI1T3D0kVzroohUHHkBoWlWtosy2qGz2dTtc0XHCT?=
- =?us-ascii?Q?NLuM2aMqkdOm/EsCZ4vkeJcQ9ZMRXs8NAte+FLKsAl4trAmCYLWW+F6+iWvR?=
- =?us-ascii?Q?q5Stt5GdEO9GkPt1bw+Sj88FPBja56mH6dnT1y17EtCkP7GA5P3WBUDSOlrC?=
- =?us-ascii?Q?Ee0iEA9uhPG4sPMQj2A4Y+LG9eopg6/tAyPxMgRtshZhEGEDS3B24S56nm81?=
- =?us-ascii?Q?tIhWIoGfZIpjbq3839tPmPIaGvz7pKle3TJly7zH8sjyQcT/HLK9NOqEGddT?=
- =?us-ascii?Q?1wk3vMyCyNFjEL+XYgJ6AxdUwKoMufwav9uT0hVg+WzE9gAzm4QcqdwYfhC/?=
- =?us-ascii?Q?F8+gLF8QeH/A/PMje0Jjk6gutMnlkJP9khK0dCbIhCmkGccEC4/xYmq4uIL9?=
- =?us-ascii?Q?T543N9ZU4u8QXeifctWQDWfQ6GuPAx8OAkx2+8a31kKMyLk2t1oyr/DhAnZW?=
- =?us-ascii?Q?hpoKtGAxAj/w04Okx5RYaiQZ1RPceWdq6zaiAk46I/jj5C6vALdU2XgejcOC?=
- =?us-ascii?Q?VUf5836nu0S1TN6FYB1E4nt9BT56cV09RXJ/2rx4RTL8iS0/JrfTJNNnBMNT?=
- =?us-ascii?Q?1YfaNfNocnTdMRZbTp35/MgxYfnuJBH/Wjt8rOrCGKq9bqsesQIBHmjUMUEI?=
- =?us-ascii?Q?qNGk9gg6iA+fSGKWJ0ndFtXzVYq3LFv/Olm6n1kx+Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OLy4ycNffJnBGY4TBQQY3MnAQXnh8+1O13xU7ky+PyzaoV/Qf/Xe3IFhGO0+?=
- =?us-ascii?Q?/YPhOKWxmKDT3TFKblml98soJOX2nO9Gbjabh4CqVj/gI9ILkd5gyfmTvHTv?=
- =?us-ascii?Q?2c7HW0i01cJlL9C0lEQRSMAC/VcbeLPlUYgGUxvoaaRENhdbUm43DfZ2sKt9?=
- =?us-ascii?Q?MNh5RprxRWqpZ88JdOUOW35sJER9GPVOB7qbI5ZAG6u+ABCJ3Tcm5+G/caqK?=
- =?us-ascii?Q?YbyBBACgT/e55LOGZhDtZWWcA0fMkcDI0hmvSoe+2lmoHuDvV+WqfKvI5E3C?=
- =?us-ascii?Q?4iPX4qThJCkNNt4asehj+9Zh+8uRwLbeiIWvqv0rEOS4WnxtUsI0DPjS+3Ir?=
- =?us-ascii?Q?4fddcu+k2c67+yBFQzJk1ZbhZUW3PlqrYqC/+SarzPME3qGRiku+8a82KTJW?=
- =?us-ascii?Q?XQJNdEl21dl9PVBfi0Vbxx/0+s09Ug1PBOkz8ONguLGL+bZ8LeNgEsFleKWd?=
- =?us-ascii?Q?U0PouUHgotbI5HzHRFGr1iHzExKmUlQ4EKYJvFr05+CiNDFIE4yGt14kqatw?=
- =?us-ascii?Q?pxbXzFoUzlHtoHO+8hkvRAzQWMcMZlDJGHKv2rMyWJ5gmdbboSt/9SVYOXh0?=
- =?us-ascii?Q?hnWmFsIuOY1kuaedWaoSMO42P5UySgd05s+ByKl+Da4OnvBYCaiSNq++Rwuq?=
- =?us-ascii?Q?8GE9mq8QLbj/TJ9qgU/cP8ayJgyz8JG9vk+FoR6q6inDO1d1ns/t0ihpFpq9?=
- =?us-ascii?Q?xXeaR/aveaPWsIuHVoZGhDgzn2rmFGljAO8zPfMOtUICPYbu6K8DagtGB/Re?=
- =?us-ascii?Q?vpoLNyZGx+P+PYgniqQ+QISaGVzez43SK0hxHOk/phyhtMQQ9QcBKajWfIvN?=
- =?us-ascii?Q?cGu99pmnQaGAAMCHvNnLS8VgTkvyMiskZMlIlCkv2UnpqxnhUCg/tf6Xe7Ew?=
- =?us-ascii?Q?SMUCf0qwvd0TfYN2HiKd3PIqQaWmBvNIfnWVz5/OSCOqJtNYwecxZ8/L8+t4?=
- =?us-ascii?Q?KPiqZuR6KCyIXv072OCZ/irve2IRN9czpa50hdDfDd/Mo1ipy0fqRnhRk1lq?=
- =?us-ascii?Q?tza5dDBOWNuYojeghj9HugGFblMt+GGxu9YEp/HNygW7PJVnhLNJE+NoeiuA?=
- =?us-ascii?Q?yMCm4MKnTwOC7cbsqKLdfbgJqiV9J3oQWhRvrG+c0Ql2s3I2gLW8AhygP1Kr?=
- =?us-ascii?Q?TWMRb4h/Fc1xCBbq9+b60ox/bmy3CwBlwQRoWnG4r1SqNof5tC7AI7NYAo+t?=
- =?us-ascii?Q?2Kzz+xt7ZAKqKyfPiwTrUlPKXrAZKoaIHzkAdr465lGs0dnhnD2JGZ3fsE5h?=
- =?us-ascii?Q?6cDmP0gfWJgqfTWAukeOxUUVnJ/Q1HHGoPPe0z3Sbp+cpYzQXVdc8+VxCiXd?=
- =?us-ascii?Q?zlGaXL+YuMV7b57cy89Gb88vaYY1NlFIXfj7FwgU6C9XcR1mWJ6sSEG5ZgL+?=
- =?us-ascii?Q?/C/ZMug29XVmJa4CN+wpy78uS1q9mpZNGRFwiGCIhkpgY6ESZk6lxkrFfK5b?=
- =?us-ascii?Q?fvPknPO9H0aOtCGsCeQX29BerBLvgQIEPdS9BBJITnxrDVT0dW/zViAcgOmt?=
- =?us-ascii?Q?CI91xZ9OqCXTPzf/o/QWqgKNOEOwj654hco0oH/nmPeApssaXTGHUPrGcA3d?=
- =?us-ascii?Q?xnOPyP8AQgGofzwCMeeRoXTRs9kCu93OzqvCoVgz?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	5BRN3OJof6wHqpio5vul0GRNawS8iiEJGsIpvJzbVGoiA1TppV9QENRW3AQ5hJJZICXuiq1Fa3ujMLEqrqiIIn2NXUcIHBPcfs67vHWzvMwypYw0BcDtIMphyW2kg9qLQpSgME8igHtOd48gvfnjVfeMPqnCpnidCRkmxg+r8HzJNQ2a4i26zwAmN01hO00vFfMyVOTBdbAwwVP5rklcEBeOX3Dx1uW1YMC1FC6Iu6M5AMCd99XYnfn3comKi51kIL0hWZljczQlEtvZLUahUaI0dDySzaz2noCO4CbP81wpdHV6TOVcDy6fKXzucoldmNJZvX/FBiWgMeRixkxdVr0f7Jy7YICCAuCxbl9IkU39bydlALWIoH9WTkP73Mve0ogzXuIxhBf/p/CmeVAOPb3/y+bYdRiPkw9C/LDIjG69Mgy9IVr41SGsi7t6tLmzY02+tM5hH2v668Oz4F/bBG6lDhBKzeNlB0c7UGcZv5QCzkSSXhI22ijr6J6glTn3Z0+w4JsOskX3Vee+wZtIKyL9Z+IzSfFB83XPDwg9kS42XP5YZKkdmaFbPoud3X79f090XNRroDG5SFIDEAwf7uafAzU6mQvhuAOYtvocQ9k=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e7d279c-b829-459d-85bd-08dce9fe830f
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 14:10:51.1224
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1sh5UKWdYZHvgazr2vRyMDHRNwg715Sv04ID1tXC98gx+uS9FCJCiL2/X9L5qcWe3WiMVIAHGy+6wDa3nklX8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4863
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-11_11,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410110097
-X-Proofpoint-GUID: LPa-62wU3Qkri9x0i_eHLRjQzLqGco7F
-X-Proofpoint-ORIG-GUID: LPa-62wU3Qkri9x0i_eHLRjQzLqGco7F
+References: <20241011090023.655623-1-amir73il@gmail.com> <20241011090023.655623-3-amir73il@gmail.com>
+ <3fad10839da31f8f8b08fe355612da39a610b111.camel@kernel.org>
+In-Reply-To: <3fad10839da31f8f8b08fe355612da39a610b111.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 11 Oct 2024 16:14:19 +0200
+Message-ID: <CAOQ4uxgO5rNpsctjdKvJyy7Li7Di4x8AaRahVk5F8_tjgx1V=A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] fs: name_to_handle_at() support for "explicit
+ connectable" file handles
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 07:54:12AM +1100, NeilBrown wrote:
-> On Fri, 11 Oct 2024, cel@kernel.org wrote:
-> > From: Chuck Lever <chuck.lever@oracle.com>
-> > 
-> > NFSv4 LOCK operations should not avoid the set of authorization
-> > checks that apply to all other NFSv4 operations. Also, the
-> > "no_auth_nlm" export option should apply only to NLM LOCK requests.
-> > It's not necessary or sensible to apply it to NFSv4 LOCK operations.
-> > 
-> > The replacement MAY bit mask,
-> > "NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE", comes from the access
-> > bits that are set in nfsd_permission() when the caller has set
-> > NFSD_MAY_LOCK.
-> > 
-> > Reported-by: NeilBrown <neilb@suse.de>
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+On Fri, Oct 11, 2024 at 4:00=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> On Fri, 2024-10-11 at 11:00 +0200, Amir Goldstein wrote:
+> > nfsd encodes "connectable" file handles for the subtree_check feature,
+> > which can be resolved to an open file with a connected path.
+> > So far, userspace nfs server could not make use of this functionality.
+> >
+> > Introduce a new flag AT_HANDLE_CONNECTABLE to name_to_handle_at(2).
+> > When used, the encoded file handle is "explicitly connectable".
+> >
+> > The "explicitly connectable" file handle sets bits in the high 16bit of
+> > the handle_type field, so open_by_handle_at(2) will know that it needs
+> > to open a file with a connected path.
+> >
+> > old kernels will now recognize the handle_type with high bits set,
+> > so "explicitly connectable" file handles cannot be decoded by
+> > open_by_handle_at(2) on old kernels.
+> >
+> > The flag AT_HANDLE_CONNECTABLE is not allowed together with either
+> > AT_HANDLE_FID or AT_EMPTY_PATH.
+> >
+> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 > > ---
-> >  fs/nfsd/nfs4state.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 9c2b1d251ab3..3f2c11414390 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -7967,11 +7967,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
-> >  	if (check_lock_length(lock->lk_offset, lock->lk_length))
-> >  		 return nfserr_inval;
-> >  
-> > -	if ((status = fh_verify(rqstp, &cstate->current_fh,
-> > -				S_IFREG, NFSD_MAY_LOCK))) {
-> > -		dprintk("NFSD: nfsd4_lock: permission denied!\n");
-> > +	status = fh_verify(rqstp, &cstate->current_fh, S_IFREG,
-> > +			   NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE);
-> > +	if (status != nfs_ok)
-> >  		return status;
-> > -	}
-> 
-> Reviewed-by: NeilBrown <neilb@suse.de>
-> 
-> though I think we want a follow-on patch which uses NFSD_MAY_WRITE for
-> write locks for consistency with check_fmode_for_setlk().
+> >  fs/fhandle.c               | 48 ++++++++++++++++++++++++++++++++++----
+> >  include/linux/exportfs.h   |  2 ++
+> >  include/uapi/linux/fcntl.h |  1 +
+> >  3 files changed, 46 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/fs/fhandle.c b/fs/fhandle.c
+> > index 218511f38cbb..8339a1041025 100644
+> > --- a/fs/fhandle.c
+> > +++ b/fs/fhandle.c
+> > @@ -31,6 +31,14 @@ static long do_sys_name_to_handle(const struct path =
+*path,
+> >       if (!exportfs_can_encode_fh(path->dentry->d_sb->s_export_op, fh_f=
+lags))
+> >               return -EOPNOTSUPP;
+> >
+> > +     /*
+> > +      * A request to encode a connectable handle for a disconnected de=
+ntry
+> > +      * is unexpected since AT_EMPTY_PATH is not allowed.
+> > +      */
+> > +     if (fh_flags & EXPORT_FH_CONNECTABLE &&
+> > +         WARN_ON(path->dentry->d_flags & DCACHE_DISCONNECTED))
+>
+> Is this even possible? The dentry in this case will have been reached
+> by pathwalk. Oh, but I guess the dfd could point to a disconnected
+> dentry and then you pass in AT_EMPTY_PATH.
 
-I think this patch might introduce a behavior regression, then.
-Instead of a follow-on, I need a v2 of this patch.
+But see comment above "...is unexpected since AT_EMPTY_PATH is not allowed.=
+"
 
+and see below
 
-> And I'm wondering about NFSD_MAY_OWNER_OVERRIDE ...  that is really an
-> NFSv3 thing.  For NFSv4 we should be checking permission at "open" time,
-> recording that in the state (both of which we do) and then performing
-> permission checks against the state rather than against the inode.
-> But that is a whole different can of worms.
++        * AT_EMPTY_PATH could be used along with a dfd that refers to a
++        * disconnected non-directory, which cannot be used to encode a
++        * connectable file handle, because its parent is unknown.
++        */
++       if (flag & AT_HANDLE_CONNECTABLE &&
++           flag & (AT_HANDLE_FID | AT_EMPTY_PATH))
+                return -EINVAL;
 
-I see several sites in NFSv4 land that assert OWNER_OVERRIDE. But
-point taken on taking the permissions from the state ID instead of
-using a fixed mask.
+The code/API should not allow this also for a malicious user,
+unless I missed something, hence, the assertion.
 
+>
+> I'm not sure we want to warn in that case though, since this is a
+> situation that an unprivileged user could be able to arrange. Maybe we
+> should just return a more distinct error code in this case?
+>
+> Since the scenario involves a dfd that is disconnected, how about:
+>
+>     #define EBADFD          77      /* File descriptor in bad state */
+>
 
-> Thanks,
-> NeilBrown
-> 
-> 
-> >  	sb = cstate->current_fh.fh_dentry->d_sb;
-> >  
-> >  	if (lock->lk_is_new) {
-> > -- 
-> > 2.46.2
-> > 
-> > 
-> 
+To me it does not look like a good fit, but let's see what others think.
+In the end, it is a rare condition that should never happen
+(hence assert), so I don't think the error value matters that much?
 
--- 
-Chuck Lever
+> > +             return -EINVAL;
+> > +
+> >       if (copy_from_user(&f_handle, ufh, sizeof(struct file_handle)))
+> >               return -EFAULT;
+> >
+> > @@ -45,7 +53,7 @@ static long do_sys_name_to_handle(const struct path *=
+path,
+> >       /* convert handle size to multiple of sizeof(u32) */
+> >       handle_dwords =3D f_handle.handle_bytes >> 2;
+> >
+> > -     /* we ask for a non connectable maybe decodeable file handle */
+> > +     /* Encode a possibly decodeable/connectable file handle */
+> >       retval =3D exportfs_encode_fh(path->dentry,
+> >                                   (struct fid *)handle->f_handle,
+> >                                   &handle_dwords, fh_flags);
+> > @@ -67,8 +75,23 @@ static long do_sys_name_to_handle(const struct path =
+*path,
+> >                * non variable part of the file_handle
+> >                */
+> >               handle_bytes =3D 0;
+> > -     } else
+> > +     } else {
+> > +             /*
+> > +              * When asked to encode a connectable file handle, encode=
+ this
+> > +              * property in the file handle itself, so that we later k=
+now
+> > +              * how to decode it.
+> > +              * For sanity, also encode in the file handle if the enco=
+ded
+> > +              * object is a directory and verify this during decode, b=
+ecause
+> > +              * decoding directory file handles is quite different tha=
+n
+> > +              * decoding connectable non-directory file handles.
+> > +              */
+> > +             if (fh_flags & EXPORT_FH_CONNECTABLE) {
+> > +                     handle->handle_type |=3D FILEID_IS_CONNECTABLE;
+> > +                     if (d_is_dir(path->dentry))
+> > +                             fh_flags |=3D FILEID_IS_DIR;
+> > +             }
+> >               retval =3D 0;
+> > +     }
+> >       /* copy the mount id */
+> >       if (unique_mntid) {
+> >               if (put_user(real_mount(path->mnt)->mnt_id_unique,
+> > @@ -109,15 +132,30 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, cons=
+t char __user *, name,
+> >  {
+> >       struct path path;
+> >       int lookup_flags;
+> > -     int fh_flags;
+> > +     int fh_flags =3D 0;
+> >       int err;
+> >
+> >       if (flag & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH | AT_HANDLE_FID |
+> > -                  AT_HANDLE_MNT_ID_UNIQUE))
+> > +                  AT_HANDLE_MNT_ID_UNIQUE | AT_HANDLE_CONNECTABLE))
+> > +             return -EINVAL;
+> > +
+> > +     /*
+> > +      * AT_HANDLE_FID means there is no intention to decode file handl=
+e
+> > +      * AT_HANDLE_CONNECTABLE means there is an intention to decode a
+> > +      * connected fd (with known path), so these flags are conflicting=
+.
+> > +      * AT_EMPTY_PATH could be used along with a dfd that refers to a
+> > +      * disconnected non-directory, which cannot be used to encode a
+> > +      * connectable file handle, because its parent is unknown.
+> > +      */
+> > +     if (flag & AT_HANDLE_CONNECTABLE &&
+>
+> nit: might need parenthesis around the above & check.
+>
+> > +         flag & (AT_HANDLE_FID | AT_EMPTY_PATH))
+
+I don't think it is needed, but for readability I don't mind adding them.
+I am having a hard time remembering the operation precedence  myself,
+but this one is clear to me so I don't bother with ().
+
+Thanks,
+Amir.
 
