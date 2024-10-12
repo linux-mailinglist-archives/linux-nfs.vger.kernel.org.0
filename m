@@ -1,79 +1,399 @@
-Return-Path: <linux-nfs+bounces-7111-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7112-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BDEC99AF52
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 01:24:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5AC799B199
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 09:36:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51ED01C26C72
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Oct 2024 23:24:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACCD31C2180E
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 07:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C5F1D130E;
-	Fri, 11 Oct 2024 23:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGZirJTt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42E2139CE9;
+	Sat, 12 Oct 2024 07:36:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820351CFED4
-	for <linux-nfs@vger.kernel.org>; Fri, 11 Oct 2024 23:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19470130E57;
+	Sat, 12 Oct 2024 07:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728689088; cv=none; b=j40QEbjw6CHa7rwx5b65lvGWRQ3ewGnk/mB6EhsyYMZqdP1seU5Ve+19ImTcaXV4OlxU/+suBd5OVF/7IdGFzLmHLGZGYZgN9C2HcPiPrfIK3BE7B209oT2Q3KbuB8FnTxHQIz0eqgYgN93NjE2sXzxMXQ+MFBvU8lpkZHiU5/Y=
+	t=1728718578; cv=none; b=D8qw36Z2UUuQQm4BDcoItaQx+XfWeEe8zOc4HN7OWeRXxbBbaYxl86XYyu3CVTX3aM8vsthygC2ipIGTZ3Gc7t6aFTpjZMqRMRWkEWxWvBERrNStCdjpYSeWXYqSkDTFdCif9lQfGBkf9OhTcpp3/FSy4jB/6PS2YEC3Edfvlqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728689088; c=relaxed/simple;
-	bh=Gtpo/qd0846s4AqkxPLQZstkf0aO23Cv953vkkZqmzo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=s+0RxWOrutMSBD1BdNQc94Ehg+gIDRvK0r55XPEPuuDRz32r+t3cqG2LjfEVIr9Ed4Hlfzp0U2kBJ23H9l90RrLuOD/d1mntoutX1ffUGMDovAQNMvEoY2f71OWDHbFslY4YuIXrONsdFZdyY08NpyJHDPq93F7uGcMRF94UHec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGZirJTt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62673C4CEC3;
-	Fri, 11 Oct 2024 23:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728689088;
-	bh=Gtpo/qd0846s4AqkxPLQZstkf0aO23Cv953vkkZqmzo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=tGZirJTtr5qlwB3HRG7s1/LB9heaxg3u+HCKIo4JjGqhxpu1JRioYXcRcTMcs+DTL
-	 7OloZY90LI3+zO/5XMerJ865BoegayZQAjCU+JWt847ZAT15bwfqzUwM4jGg0NTKyU
-	 TH7+9jaMhhjeXMM17MWs+1m60LkYLN0IAAjQW5YKvWUKbwgz1TY0PtSVteUhtFixXx
-	 7GK7Cj0S1f4eMk67xLVf93Q32mvG05yGbxJATmLlu/wWqygnB1qK+vufyUp5Y968QO
-	 HO8BwVg/TrD2sS6trflcv2Di0DoScK1Nwt6CsBkiukW0dwiWWXVz/KLI8DbQcJzApJ
-	 JO67TQ+fmINtQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3429E38363CB;
-	Fri, 11 Oct 2024 23:24:54 +0000 (UTC)
-Subject: Re: [GIT PULL] Please Pull NFS Client Bugfixes for Linux 6.12-rc
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20241011204628.270296-1-anna@kernel.org>
-References: <20241011204628.270296-1-anna@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20241011204628.270296-1-anna@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.12-2
-X-PR-Tracked-Commit-Id: 7ef60108069b7e3cc66432304e1dd197d5c0a9b5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6254d537277947fc086324954ddfba1188ba8212
-Message-Id: <172868909280.3026331.5580275288390876415.pr-tracker-bot@kernel.org>
-Date: Fri, 11 Oct 2024 23:24:52 +0000
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, torvalds@linux-foundation.org, anna@kernel.org
+	s=arc-20240116; t=1728718578; c=relaxed/simple;
+	bh=FJXM/cxAZr0TrFe6t9doNlbOtmOvU1RY8n/7zRg3FI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L6/xoQiH/eW/17kV+feNb2+gkRbMNb5p5nSOThulQD5fPl51ZTZEkQRiq8S0y20BrUYNepZ+uEdIxaE27Wey1Eln6J0qmFSJdCfMY1HXGQfdsCK/R/1TE5MNezbHXM2IpyP0/K4BhxCSqkNJk9h1Cy28Gillyey4ieHPopXddxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 49C7ZubI012599;
+	Sat, 12 Oct 2024 16:35:56 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 49C7Zu8X012595
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 12 Oct 2024 16:35:56 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <ac5fc4b8-2e7e-4951-9ab4-499bf38bf2af@I-love.SAKURA.ne.jp>
+Date: Sat, 12 Oct 2024 16:35:54 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH] tomoyo: use u64 for handling numeric values
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Christian Brauner <brauner@kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+        Kentaro Takeda <takedakn@nttdata.co.jp>
+References: <20241010152649.849254-1-mic@digikod.net>
+ <20241010152649.849254-7-mic@digikod.net>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20241010152649.849254-7-mic@digikod.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Anti-Virus-Server: fsav303.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-The pull request you sent on Fri, 11 Oct 2024 16:46:28 -0400:
+TOMOYO was using "unsigned long" for handling numeric values because all
+possible value range fits in "unsigned long". Since Mickaël Salaün is
+about to replace "ino_t" with "u64", possible value range no longer fits
+in architecture-dependent "unsigned long". Therefore, replace "unsigned
+long" and "ino_t" with "u64".
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.12-2
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+Please include this patch before your patch.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6254d537277947fc086324954ddfba1188ba8212
+ security/tomoyo/audit.c     | 10 ++++------
+ security/tomoyo/common.c    | 14 +++++++-------
+ security/tomoyo/common.h    | 17 ++++++++---------
+ security/tomoyo/condition.c |  8 ++++----
+ security/tomoyo/file.c      |  6 +++---
+ security/tomoyo/group.c     |  3 +--
+ security/tomoyo/util.c      | 28 ++++++++++++++--------------
+ 7 files changed, 41 insertions(+), 45 deletions(-)
 
-Thank you!
-
+diff --git a/security/tomoyo/audit.c b/security/tomoyo/audit.c
+index 610c1536cf70..36c9e63651b5 100644
+--- a/security/tomoyo/audit.c
++++ b/security/tomoyo/audit.c
+@@ -195,21 +195,19 @@ static char *tomoyo_print_header(struct tomoyo_request_info *r)
+ 		if (i & 1) {
+ 			pos += snprintf(buffer + pos,
+ 					tomoyo_buffer_len - 1 - pos,
+-					" path%u.parent={ uid=%u gid=%u ino=%lu perm=0%o }",
++					" path%u.parent={ uid=%u gid=%u ino=%llu perm=0%o }",
+ 					(i >> 1) + 1,
+ 					from_kuid(&init_user_ns, stat->uid),
+ 					from_kgid(&init_user_ns, stat->gid),
+-					(unsigned long)stat->ino,
+-					stat->mode & S_IALLUGO);
++					stat->ino, stat->mode & S_IALLUGO);
+ 			continue;
+ 		}
+ 		pos += snprintf(buffer + pos, tomoyo_buffer_len - 1 - pos,
+-				" path%u={ uid=%u gid=%u ino=%lu major=%u minor=%u perm=0%o type=%s",
++				" path%u={ uid=%u gid=%u ino=%llu major=%u minor=%u perm=0%o type=%s",
+ 				(i >> 1) + 1,
+ 				from_kuid(&init_user_ns, stat->uid),
+ 				from_kgid(&init_user_ns, stat->gid),
+-				(unsigned long)stat->ino,
+-				MAJOR(dev), MINOR(dev),
++				stat->ino, MAJOR(dev), MINOR(dev),
+ 				mode & S_IALLUGO, tomoyo_filetype(mode));
+ 		if (S_ISCHR(mode) || S_ISBLK(mode)) {
+ 			dev = stat->rdev;
+diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
+index 5c7b059a332a..528b96c917e5 100644
+--- a/security/tomoyo/common.c
++++ b/security/tomoyo/common.c
+@@ -424,8 +424,8 @@ static void tomoyo_print_number_union_nospace
+ 		tomoyo_set_string(head, ptr->group->group_name->name);
+ 	} else {
+ 		int i;
+-		unsigned long min = ptr->values[0];
+-		const unsigned long max = ptr->values[1];
++		u64 min = ptr->values[0];
++		const u64 max = ptr->values[1];
+ 		u8 min_type = ptr->value_type[0];
+ 		const u8 max_type = ptr->value_type[1];
+ 		char buffer[128];
+@@ -435,15 +435,15 @@ static void tomoyo_print_number_union_nospace
+ 			switch (min_type) {
+ 			case TOMOYO_VALUE_TYPE_HEXADECIMAL:
+ 				tomoyo_addprintf(buffer, sizeof(buffer),
+-						 "0x%lX", min);
++						 "0x%llX", min);
+ 				break;
+ 			case TOMOYO_VALUE_TYPE_OCTAL:
+ 				tomoyo_addprintf(buffer, sizeof(buffer),
+-						 "0%lo", min);
++						 "0%llo", min);
+ 				break;
+ 			default:
+-				tomoyo_addprintf(buffer, sizeof(buffer), "%lu",
+-						 min);
++				tomoyo_addprintf(buffer, sizeof(buffer),
++						 "%llu", min);
+ 				break;
+ 			}
+ 			if (min == max && min_type == max_type)
+@@ -1287,7 +1287,7 @@ static bool tomoyo_print_condition(struct tomoyo_io_buffer *head,
+ 				switch (left) {
+ 				case TOMOYO_ARGV_ENTRY:
+ 					tomoyo_io_printf(head,
+-							 "exec.argv[%lu]%s=\"",
++							 "exec.argv[%llu]%s=\"",
+ 							 argv->index, argv->is_not ? "!" : "");
+ 					tomoyo_set_string(head,
+ 							  argv->value->name);
+diff --git a/security/tomoyo/common.h b/security/tomoyo/common.h
+index 0e8e2e959aef..bdbb4f0ae751 100644
+--- a/security/tomoyo/common.h
++++ b/security/tomoyo/common.h
+@@ -524,7 +524,7 @@ struct tomoyo_name_union {
+ 
+ /* Structure for holding a number. */
+ struct tomoyo_number_union {
+-	unsigned long values[2];
++	u64 values[2];
+ 	struct tomoyo_group *group; /* Maybe NULL. */
+ 	/* One of values in "enum tomoyo_value_type". */
+ 	u8 value_type[2];
+@@ -567,7 +567,7 @@ struct tomoyo_address_group {
+ struct tomoyo_mini_stat {
+ 	kuid_t uid;
+ 	kgid_t gid;
+-	ino_t ino;
++	u64 ino;
+ 	umode_t mode;
+ 	dev_t dev;
+ 	dev_t rdev;
+@@ -605,7 +605,7 @@ struct tomoyo_obj_info {
+ 
+ /* Structure for argv[]. */
+ struct tomoyo_argv {
+-	unsigned long index;
++	u64 index;
+ 	const struct tomoyo_path_info *value;
+ 	bool is_not;
+ };
+@@ -926,7 +926,7 @@ struct tomoyo_task {
+ 
+ bool tomoyo_address_matches_group(const bool is_ipv6, const __be32 *address,
+ 				  const struct tomoyo_group *group);
+-bool tomoyo_compare_number_union(const unsigned long value,
++bool tomoyo_compare_number_union(const u64 value,
+ 				 const struct tomoyo_number_union *ptr);
+ bool tomoyo_condition(struct tomoyo_request_info *r,
+ 		      const struct tomoyo_condition *cond);
+@@ -938,8 +938,7 @@ bool tomoyo_domain_quota_is_ok(struct tomoyo_request_info *r);
+ bool tomoyo_dump_page(struct linux_binprm *bprm, unsigned long pos,
+ 		      struct tomoyo_page_dump *dump);
+ bool tomoyo_memory_ok(void *ptr);
+-bool tomoyo_number_matches_group(const unsigned long min,
+-				 const unsigned long max,
++bool tomoyo_number_matches_group(const u64 min, const u64 max,
+ 				 const struct tomoyo_group *group);
+ bool tomoyo_parse_ipaddr_union(struct tomoyo_acl_param *param,
+ 			       struct tomoyo_ipaddr_union *ptr);
+@@ -1037,7 +1036,7 @@ struct tomoyo_policy_namespace *tomoyo_assign_namespace
+ (const char *domainname);
+ struct tomoyo_profile *tomoyo_profile(const struct tomoyo_policy_namespace *ns,
+ 				      const u8 profile);
+-u8 tomoyo_parse_ulong(unsigned long *result, char **str);
++u8 tomoyo_parse_u64(u64 *result, char **str);
+ void *tomoyo_commit_ok(void *data, const unsigned int size);
+ void __init tomoyo_load_builtin_policy(void);
+ void __init tomoyo_mm_init(void);
+@@ -1055,8 +1054,8 @@ void tomoyo_normalize_line(unsigned char *buffer);
+ void tomoyo_notify_gc(struct tomoyo_io_buffer *head, const bool is_register);
+ void tomoyo_print_ip(char *buf, const unsigned int size,
+ 		     const struct tomoyo_ipaddr_union *ptr);
+-void tomoyo_print_ulong(char *buffer, const int buffer_len,
+-			const unsigned long value, const u8 type);
++void tomoyo_print_u64(char *buffer, const int buffer_len,
++		      const u64 value, const u8 type);
+ void tomoyo_put_name_union(struct tomoyo_name_union *ptr);
+ void tomoyo_put_number_union(struct tomoyo_number_union *ptr);
+ void tomoyo_read_log(struct tomoyo_io_buffer *head);
+diff --git a/security/tomoyo/condition.c b/security/tomoyo/condition.c
+index f8bcc083bb0d..4a27fbf4588b 100644
+--- a/security/tomoyo/condition.c
++++ b/security/tomoyo/condition.c
+@@ -299,7 +299,7 @@ static bool tomoyo_parse_name_union_quoted(struct tomoyo_acl_param *param,
+ static bool tomoyo_parse_argv(char *left, char *right,
+ 			      struct tomoyo_argv *argv)
+ {
+-	if (tomoyo_parse_ulong(&argv->index, &left) !=
++	if (tomoyo_parse_u64(&argv->index, &left) !=
+ 	    TOMOYO_VALUE_TYPE_DECIMAL || *left++ != ']' || *left)
+ 		return false;
+ 	argv->value = tomoyo_get_dqword(right);
+@@ -766,8 +766,8 @@ bool tomoyo_condition(struct tomoyo_request_info *r,
+ 		      const struct tomoyo_condition *cond)
+ {
+ 	u32 i;
+-	unsigned long min_v[2] = { 0, 0 };
+-	unsigned long max_v[2] = { 0, 0 };
++	u64 min_v[2] = { 0, 0 };
++	u64 max_v[2] = { 0, 0 };
+ 	const struct tomoyo_condition_element *condp;
+ 	const struct tomoyo_number_union *numbers_p;
+ 	const struct tomoyo_name_union *names_p;
+@@ -834,7 +834,7 @@ bool tomoyo_condition(struct tomoyo_request_info *r,
+ 		/* Check numeric or bit-op expressions. */
+ 		for (j = 0; j < 2; j++) {
+ 			const u8 index = j ? right : left;
+-			unsigned long value = 0;
++			u64 value = 0;
+ 
+ 			switch (index) {
+ 			case TOMOYO_TASK_UID:
+diff --git a/security/tomoyo/file.c b/security/tomoyo/file.c
+index 8f3b90b6e03d..4fa58abf5975 100644
+--- a/security/tomoyo/file.c
++++ b/security/tomoyo/file.c
+@@ -109,7 +109,7 @@ void tomoyo_put_number_union(struct tomoyo_number_union *ptr)
+  *
+  * Returns true if @value matches @ptr, false otherwise.
+  */
+-bool tomoyo_compare_number_union(const unsigned long value,
++bool tomoyo_compare_number_union(const u64 value,
+ 				 const struct tomoyo_number_union *ptr)
+ {
+ 	if (ptr->group)
+@@ -230,8 +230,8 @@ static int tomoyo_audit_path_number_log(struct tomoyo_request_info *r)
+ 		radix = TOMOYO_VALUE_TYPE_DECIMAL;
+ 		break;
+ 	}
+-	tomoyo_print_ulong(buffer, sizeof(buffer), r->param.path_number.number,
+-			   radix);
++	tomoyo_print_u64(buffer, sizeof(buffer), r->param.path_number.number,
++			 radix);
+ 	return tomoyo_supervisor(r, "file %s %s %s\n", tomoyo_mac_keywords
+ 				 [tomoyo_pn2mac[type]],
+ 				 r->param.path_number.filename->name, buffer);
+diff --git a/security/tomoyo/group.c b/security/tomoyo/group.c
+index 1cecdd797597..dc650eaedba3 100644
+--- a/security/tomoyo/group.c
++++ b/security/tomoyo/group.c
+@@ -155,8 +155,7 @@ tomoyo_path_matches_group(const struct tomoyo_path_info *pathname,
+  *
+  * Caller holds tomoyo_read_lock().
+  */
+-bool tomoyo_number_matches_group(const unsigned long min,
+-				 const unsigned long max,
++bool tomoyo_number_matches_group(const u64 min, const u64 max,
+ 				 const struct tomoyo_group *group)
+ {
+ 	struct tomoyo_number_group *member;
+diff --git a/security/tomoyo/util.c b/security/tomoyo/util.c
+index 6799b1122c9d..ac9535b4bdcd 100644
+--- a/security/tomoyo/util.c
++++ b/security/tomoyo/util.c
+@@ -172,9 +172,9 @@ const struct tomoyo_path_info *tomoyo_get_domainname
+ }
+ 
+ /**
+- * tomoyo_parse_ulong - Parse an "unsigned long" value.
++ * tomoyo_parse_u64 - Parse a u64 value.
+  *
+- * @result: Pointer to "unsigned long".
++ * @result: Pointer to u64.
+  * @str:    Pointer to string to parse.
+  *
+  * Returns one of values in "enum tomoyo_value_type".
+@@ -182,7 +182,7 @@ const struct tomoyo_path_info *tomoyo_get_domainname
+  * The @src is updated to point the first character after the value
+  * on success.
+  */
+-u8 tomoyo_parse_ulong(unsigned long *result, char **str)
++u8 tomoyo_parse_u64(u64 *result, char **str)
+ {
+ 	const char *cp = *str;
+ 	char *ep;
+@@ -199,7 +199,7 @@ u8 tomoyo_parse_ulong(unsigned long *result, char **str)
+ 			cp++;
+ 		}
+ 	}
+-	*result = simple_strtoul(cp, &ep, base);
++	*result = (u64) simple_strtoull(cp, &ep, base);
+ 	if (cp == ep)
+ 		return TOMOYO_VALUE_TYPE_INVALID;
+ 	*str = ep;
+@@ -214,24 +214,24 @@ u8 tomoyo_parse_ulong(unsigned long *result, char **str)
+ }
+ 
+ /**
+- * tomoyo_print_ulong - Print an "unsigned long" value.
++ * tomoyo_print_u64 - Print a u64 value.
+  *
+  * @buffer:     Pointer to buffer.
+  * @buffer_len: Size of @buffer.
+- * @value:      An "unsigned long" value.
++ * @value:      A u64 value.
+  * @type:       Type of @value.
+  *
+  * Returns nothing.
+  */
+-void tomoyo_print_ulong(char *buffer, const int buffer_len,
+-			const unsigned long value, const u8 type)
++void tomoyo_print_u64(char *buffer, const int buffer_len,
++		      const u64 value, const u8 type)
+ {
+ 	if (type == TOMOYO_VALUE_TYPE_DECIMAL)
+-		snprintf(buffer, buffer_len, "%lu", value);
++		snprintf(buffer, buffer_len, "%llu", value);
+ 	else if (type == TOMOYO_VALUE_TYPE_OCTAL)
+-		snprintf(buffer, buffer_len, "0%lo", value);
++		snprintf(buffer, buffer_len, "0%llo", value);
+ 	else if (type == TOMOYO_VALUE_TYPE_HEXADECIMAL)
+-		snprintf(buffer, buffer_len, "0x%lX", value);
++		snprintf(buffer, buffer_len, "0x%llX", value);
+ 	else
+ 		snprintf(buffer, buffer_len, "type(%u)", type);
+ }
+@@ -274,7 +274,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
+ {
+ 	char *data;
+ 	u8 type;
+-	unsigned long v;
++	u64 v;
+ 
+ 	memset(ptr, 0, sizeof(*ptr));
+ 	if (param->data[0] == '@') {
+@@ -283,7 +283,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
+ 		return ptr->group != NULL;
+ 	}
+ 	data = tomoyo_read_token(param);
+-	type = tomoyo_parse_ulong(&v, &data);
++	type = tomoyo_parse_u64(&v, &data);
+ 	if (type == TOMOYO_VALUE_TYPE_INVALID)
+ 		return false;
+ 	ptr->values[0] = v;
+@@ -295,7 +295,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
+ 	}
+ 	if (*data++ != '-')
+ 		return false;
+-	type = tomoyo_parse_ulong(&v, &data);
++	type = tomoyo_parse_u64(&v, &data);
+ 	if (type == TOMOYO_VALUE_TYPE_INVALID || *data || ptr->values[0] > v)
+ 		return false;
+ 	ptr->values[1] = v;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.5
+
+
 
