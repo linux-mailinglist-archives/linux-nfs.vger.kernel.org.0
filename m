@@ -1,399 +1,225 @@
-Return-Path: <linux-nfs+bounces-7112-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7113-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5AC799B199
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 09:36:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC39C99B43A
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 13:45:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACCD31C2180E
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 07:36:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A6211C2226E
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Oct 2024 11:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42E2139CE9;
-	Sat, 12 Oct 2024 07:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B821FEFCC;
+	Sat, 12 Oct 2024 11:29:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19470130E57;
-	Sat, 12 Oct 2024 07:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29D71FEFCB;
+	Sat, 12 Oct 2024 11:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728718578; cv=none; b=D8qw36Z2UUuQQm4BDcoItaQx+XfWeEe8zOc4HN7OWeRXxbBbaYxl86XYyu3CVTX3aM8vsthygC2ipIGTZ3Gc7t6aFTpjZMqRMRWkEWxWvBERrNStCdjpYSeWXYqSkDTFdCif9lQfGBkf9OhTcpp3/FSy4jB/6PS2YEC3Edfvlqw=
+	t=1728732586; cv=none; b=Mwl5mLHsjuV4HhMaoyMK4XYQOvE4T1Eyl3X3Rn4WoYvr64O7q8bB4/MUGXVbb+Kjqwd18pXym454PDe9nEimdkJTUcwWI48deiiNOey69+PYvRQVbWwZe705bWMUCgkDAnj+GP8uWFspc8n3wJkhO4fnrUzpv+b1xnFHWdqumG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728718578; c=relaxed/simple;
-	bh=FJXM/cxAZr0TrFe6t9doNlbOtmOvU1RY8n/7zRg3FI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L6/xoQiH/eW/17kV+feNb2+gkRbMNb5p5nSOThulQD5fPl51ZTZEkQRiq8S0y20BrUYNepZ+uEdIxaE27Wey1Eln6J0qmFSJdCfMY1HXGQfdsCK/R/1TE5MNezbHXM2IpyP0/K4BhxCSqkNJk9h1Cy28Gillyey4ieHPopXddxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 49C7ZubI012599;
-	Sat, 12 Oct 2024 16:35:56 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 49C7Zu8X012595
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 12 Oct 2024 16:35:56 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <ac5fc4b8-2e7e-4951-9ab4-499bf38bf2af@I-love.SAKURA.ne.jp>
-Date: Sat, 12 Oct 2024 16:35:54 +0900
+	s=arc-20240116; t=1728732586; c=relaxed/simple;
+	bh=Vtn4ty+DNVttgo/VCotVaihT5LPay8T9vsmHcQZE2Us=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kZd5PkSoFSpaf9jUyLFs7m/2boa0+F3NEO2ryzClktjrBHUrLC1spFyD3+29HfgD0JsQ0rW5TQpm7LUPK7r/SYEyYfQAcwWHP5TL5569A4y6LMQ9PeAYiDgBUUbofDhL99HN4SuD/1Bz9D3G/rCMc/0TgUMBSBgxSzKNhk4TVdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XQh732snczpWct;
+	Sat, 12 Oct 2024 19:27:43 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 91AF9140393;
+	Sat, 12 Oct 2024 19:29:42 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 12 Oct 2024 19:29:42 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
+	Alexander Duyck <alexanderduyck@fb.com>, Chuck Lever
+	<chuck.lever@oracle.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, =?UTF-8?q?Eugenio=20P=C3=A9rez?=
+	<eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Eric
+ Dumazet <edumazet@google.com>, David Howells <dhowells@redhat.com>, Marc
+ Dionne <marc.dionne@auristor.com>, Jeff Layton <jlayton@kernel.org>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
+	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Shuah Khan
+	<shuah@kernel.org>, <kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
+	<linux-nfs@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: [PATCH net-next v21 04/14] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
+Date: Sat, 12 Oct 2024 19:23:10 +0800
+Message-ID: <20241012112320.2503906-5-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20241012112320.2503906-1-linyunsheng@huawei.com>
+References: <20241012112320.2503906-1-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] tomoyo: use u64 for handling numeric values
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Christian Brauner <brauner@kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, audit@vger.kernel.org,
-        Kentaro Takeda <takedakn@nttdata.co.jp>
-References: <20241010152649.849254-1-mic@digikod.net>
- <20241010152649.849254-7-mic@digikod.net>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20241010152649.849254-7-mic@digikod.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Anti-Virus-Server: fsav303.rs.sakura.ne.jp
-X-Virus-Status: clean
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-TOMOYO was using "unsigned long" for handling numeric values because all
-possible value range fits in "unsigned long". Since Mickaël Salaün is
-about to replace "ino_t" with "u64", possible value range no longer fits
-in architecture-dependent "unsigned long". Therefore, replace "unsigned
-long" and "ino_t" with "u64".
+Use appropriate frag_page API instead of caller accessing
+'page_frag_cache' directly.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-Please include this patch before your patch.
+ drivers/vhost/net.c                                   |  2 +-
+ include/linux/page_frag_cache.h                       | 10 ++++++++++
+ net/core/skbuff.c                                     |  6 +++---
+ net/rxrpc/conn_object.c                               |  4 +---
+ net/rxrpc/local_object.c                              |  4 +---
+ net/sunrpc/svcsock.c                                  |  6 ++----
+ tools/testing/selftests/mm/page_frag/page_frag_test.c |  2 +-
+ 7 files changed, 19 insertions(+), 15 deletions(-)
 
- security/tomoyo/audit.c     | 10 ++++------
- security/tomoyo/common.c    | 14 +++++++-------
- security/tomoyo/common.h    | 17 ++++++++---------
- security/tomoyo/condition.c |  8 ++++----
- security/tomoyo/file.c      |  6 +++---
- security/tomoyo/group.c     |  3 +--
- security/tomoyo/util.c      | 28 ++++++++++++++--------------
- 7 files changed, 41 insertions(+), 45 deletions(-)
-
-diff --git a/security/tomoyo/audit.c b/security/tomoyo/audit.c
-index 610c1536cf70..36c9e63651b5 100644
---- a/security/tomoyo/audit.c
-+++ b/security/tomoyo/audit.c
-@@ -195,21 +195,19 @@ static char *tomoyo_print_header(struct tomoyo_request_info *r)
- 		if (i & 1) {
- 			pos += snprintf(buffer + pos,
- 					tomoyo_buffer_len - 1 - pos,
--					" path%u.parent={ uid=%u gid=%u ino=%lu perm=0%o }",
-+					" path%u.parent={ uid=%u gid=%u ino=%llu perm=0%o }",
- 					(i >> 1) + 1,
- 					from_kuid(&init_user_ns, stat->uid),
- 					from_kgid(&init_user_ns, stat->gid),
--					(unsigned long)stat->ino,
--					stat->mode & S_IALLUGO);
-+					stat->ino, stat->mode & S_IALLUGO);
- 			continue;
- 		}
- 		pos += snprintf(buffer + pos, tomoyo_buffer_len - 1 - pos,
--				" path%u={ uid=%u gid=%u ino=%lu major=%u minor=%u perm=0%o type=%s",
-+				" path%u={ uid=%u gid=%u ino=%llu major=%u minor=%u perm=0%o type=%s",
- 				(i >> 1) + 1,
- 				from_kuid(&init_user_ns, stat->uid),
- 				from_kgid(&init_user_ns, stat->gid),
--				(unsigned long)stat->ino,
--				MAJOR(dev), MINOR(dev),
-+				stat->ino, MAJOR(dev), MINOR(dev),
- 				mode & S_IALLUGO, tomoyo_filetype(mode));
- 		if (S_ISCHR(mode) || S_ISBLK(mode)) {
- 			dev = stat->rdev;
-diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
-index 5c7b059a332a..528b96c917e5 100644
---- a/security/tomoyo/common.c
-+++ b/security/tomoyo/common.c
-@@ -424,8 +424,8 @@ static void tomoyo_print_number_union_nospace
- 		tomoyo_set_string(head, ptr->group->group_name->name);
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index f16279351db5..9ad37c012189 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
+ 			vqs[VHOST_NET_VQ_RX]);
+ 
+ 	f->private_data = n;
+-	n->pf_cache.va = NULL;
++	page_frag_cache_init(&n->pf_cache);
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
+index 67ac8626ed9b..0a52f7a179c8 100644
+--- a/include/linux/page_frag_cache.h
++++ b/include/linux/page_frag_cache.h
+@@ -7,6 +7,16 @@
+ #include <linux/mm_types_task.h>
+ #include <linux/types.h>
+ 
++static inline void page_frag_cache_init(struct page_frag_cache *nc)
++{
++	nc->va = NULL;
++}
++
++static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
++{
++	return !!nc->pfmemalloc;
++}
++
+ void page_frag_cache_drain(struct page_frag_cache *nc);
+ void __page_frag_cache_drain(struct page *page, unsigned int count);
+ void *__page_frag_alloc_align(struct page_frag_cache *nc, unsigned int fragsz,
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 00afeb90c23a..6841e61a6bd0 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -753,14 +753,14 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
+ 	if (in_hardirq() || irqs_disabled()) {
+ 		nc = this_cpu_ptr(&netdev_alloc_cache);
+ 		data = page_frag_alloc(nc, len, gfp_mask);
+-		pfmemalloc = nc->pfmemalloc;
++		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
  	} else {
- 		int i;
--		unsigned long min = ptr->values[0];
--		const unsigned long max = ptr->values[1];
-+		u64 min = ptr->values[0];
-+		const u64 max = ptr->values[1];
- 		u8 min_type = ptr->value_type[0];
- 		const u8 max_type = ptr->value_type[1];
- 		char buffer[128];
-@@ -435,15 +435,15 @@ static void tomoyo_print_number_union_nospace
- 			switch (min_type) {
- 			case TOMOYO_VALUE_TYPE_HEXADECIMAL:
- 				tomoyo_addprintf(buffer, sizeof(buffer),
--						 "0x%lX", min);
-+						 "0x%llX", min);
- 				break;
- 			case TOMOYO_VALUE_TYPE_OCTAL:
- 				tomoyo_addprintf(buffer, sizeof(buffer),
--						 "0%lo", min);
-+						 "0%llo", min);
- 				break;
- 			default:
--				tomoyo_addprintf(buffer, sizeof(buffer), "%lu",
--						 min);
-+				tomoyo_addprintf(buffer, sizeof(buffer),
-+						 "%llu", min);
- 				break;
- 			}
- 			if (min == max && min_type == max_type)
-@@ -1287,7 +1287,7 @@ static bool tomoyo_print_condition(struct tomoyo_io_buffer *head,
- 				switch (left) {
- 				case TOMOYO_ARGV_ENTRY:
- 					tomoyo_io_printf(head,
--							 "exec.argv[%lu]%s=\"",
-+							 "exec.argv[%llu]%s=\"",
- 							 argv->index, argv->is_not ? "!" : "");
- 					tomoyo_set_string(head,
- 							  argv->value->name);
-diff --git a/security/tomoyo/common.h b/security/tomoyo/common.h
-index 0e8e2e959aef..bdbb4f0ae751 100644
---- a/security/tomoyo/common.h
-+++ b/security/tomoyo/common.h
-@@ -524,7 +524,7 @@ struct tomoyo_name_union {
+ 		local_bh_disable();
+ 		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
  
- /* Structure for holding a number. */
- struct tomoyo_number_union {
--	unsigned long values[2];
-+	u64 values[2];
- 	struct tomoyo_group *group; /* Maybe NULL. */
- 	/* One of values in "enum tomoyo_value_type". */
- 	u8 value_type[2];
-@@ -567,7 +567,7 @@ struct tomoyo_address_group {
- struct tomoyo_mini_stat {
- 	kuid_t uid;
- 	kgid_t gid;
--	ino_t ino;
-+	u64 ino;
- 	umode_t mode;
- 	dev_t dev;
- 	dev_t rdev;
-@@ -605,7 +605,7 @@ struct tomoyo_obj_info {
+ 		nc = this_cpu_ptr(&napi_alloc_cache.page);
+ 		data = page_frag_alloc(nc, len, gfp_mask);
+-		pfmemalloc = nc->pfmemalloc;
++		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
  
- /* Structure for argv[]. */
- struct tomoyo_argv {
--	unsigned long index;
-+	u64 index;
- 	const struct tomoyo_path_info *value;
- 	bool is_not;
- };
-@@ -926,7 +926,7 @@ struct tomoyo_task {
+ 		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 		local_bh_enable();
+@@ -850,7 +850,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
+ 		len = SKB_HEAD_ALIGN(len);
  
- bool tomoyo_address_matches_group(const bool is_ipv6, const __be32 *address,
- 				  const struct tomoyo_group *group);
--bool tomoyo_compare_number_union(const unsigned long value,
-+bool tomoyo_compare_number_union(const u64 value,
- 				 const struct tomoyo_number_union *ptr);
- bool tomoyo_condition(struct tomoyo_request_info *r,
- 		      const struct tomoyo_condition *cond);
-@@ -938,8 +938,7 @@ bool tomoyo_domain_quota_is_ok(struct tomoyo_request_info *r);
- bool tomoyo_dump_page(struct linux_binprm *bprm, unsigned long pos,
- 		      struct tomoyo_page_dump *dump);
- bool tomoyo_memory_ok(void *ptr);
--bool tomoyo_number_matches_group(const unsigned long min,
--				 const unsigned long max,
-+bool tomoyo_number_matches_group(const u64 min, const u64 max,
- 				 const struct tomoyo_group *group);
- bool tomoyo_parse_ipaddr_union(struct tomoyo_acl_param *param,
- 			       struct tomoyo_ipaddr_union *ptr);
-@@ -1037,7 +1036,7 @@ struct tomoyo_policy_namespace *tomoyo_assign_namespace
- (const char *domainname);
- struct tomoyo_profile *tomoyo_profile(const struct tomoyo_policy_namespace *ns,
- 				      const u8 profile);
--u8 tomoyo_parse_ulong(unsigned long *result, char **str);
-+u8 tomoyo_parse_u64(u64 *result, char **str);
- void *tomoyo_commit_ok(void *data, const unsigned int size);
- void __init tomoyo_load_builtin_policy(void);
- void __init tomoyo_mm_init(void);
-@@ -1055,8 +1054,8 @@ void tomoyo_normalize_line(unsigned char *buffer);
- void tomoyo_notify_gc(struct tomoyo_io_buffer *head, const bool is_register);
- void tomoyo_print_ip(char *buf, const unsigned int size,
- 		     const struct tomoyo_ipaddr_union *ptr);
--void tomoyo_print_ulong(char *buffer, const int buffer_len,
--			const unsigned long value, const u8 type);
-+void tomoyo_print_u64(char *buffer, const int buffer_len,
-+		      const u64 value, const u8 type);
- void tomoyo_put_name_union(struct tomoyo_name_union *ptr);
- void tomoyo_put_number_union(struct tomoyo_number_union *ptr);
- void tomoyo_read_log(struct tomoyo_io_buffer *head);
-diff --git a/security/tomoyo/condition.c b/security/tomoyo/condition.c
-index f8bcc083bb0d..4a27fbf4588b 100644
---- a/security/tomoyo/condition.c
-+++ b/security/tomoyo/condition.c
-@@ -299,7 +299,7 @@ static bool tomoyo_parse_name_union_quoted(struct tomoyo_acl_param *param,
- static bool tomoyo_parse_argv(char *left, char *right,
- 			      struct tomoyo_argv *argv)
- {
--	if (tomoyo_parse_ulong(&argv->index, &left) !=
-+	if (tomoyo_parse_u64(&argv->index, &left) !=
- 	    TOMOYO_VALUE_TYPE_DECIMAL || *left++ != ']' || *left)
- 		return false;
- 	argv->value = tomoyo_get_dqword(right);
-@@ -766,8 +766,8 @@ bool tomoyo_condition(struct tomoyo_request_info *r,
- 		      const struct tomoyo_condition *cond)
- {
- 	u32 i;
--	unsigned long min_v[2] = { 0, 0 };
--	unsigned long max_v[2] = { 0, 0 };
-+	u64 min_v[2] = { 0, 0 };
-+	u64 max_v[2] = { 0, 0 };
- 	const struct tomoyo_condition_element *condp;
- 	const struct tomoyo_number_union *numbers_p;
- 	const struct tomoyo_name_union *names_p;
-@@ -834,7 +834,7 @@ bool tomoyo_condition(struct tomoyo_request_info *r,
- 		/* Check numeric or bit-op expressions. */
- 		for (j = 0; j < 2; j++) {
- 			const u8 index = j ? right : left;
--			unsigned long value = 0;
-+			u64 value = 0;
- 
- 			switch (index) {
- 			case TOMOYO_TASK_UID:
-diff --git a/security/tomoyo/file.c b/security/tomoyo/file.c
-index 8f3b90b6e03d..4fa58abf5975 100644
---- a/security/tomoyo/file.c
-+++ b/security/tomoyo/file.c
-@@ -109,7 +109,7 @@ void tomoyo_put_number_union(struct tomoyo_number_union *ptr)
-  *
-  * Returns true if @value matches @ptr, false otherwise.
-  */
--bool tomoyo_compare_number_union(const unsigned long value,
-+bool tomoyo_compare_number_union(const u64 value,
- 				 const struct tomoyo_number_union *ptr)
- {
- 	if (ptr->group)
-@@ -230,8 +230,8 @@ static int tomoyo_audit_path_number_log(struct tomoyo_request_info *r)
- 		radix = TOMOYO_VALUE_TYPE_DECIMAL;
- 		break;
+ 		data = page_frag_alloc(&nc->page, len, gfp_mask);
+-		pfmemalloc = nc->page.pfmemalloc;
++		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
  	}
--	tomoyo_print_ulong(buffer, sizeof(buffer), r->param.path_number.number,
--			   radix);
-+	tomoyo_print_u64(buffer, sizeof(buffer), r->param.path_number.number,
-+			 radix);
- 	return tomoyo_supervisor(r, "file %s %s %s\n", tomoyo_mac_keywords
- 				 [tomoyo_pn2mac[type]],
- 				 r->param.path_number.filename->name, buffer);
-diff --git a/security/tomoyo/group.c b/security/tomoyo/group.c
-index 1cecdd797597..dc650eaedba3 100644
---- a/security/tomoyo/group.c
-+++ b/security/tomoyo/group.c
-@@ -155,8 +155,7 @@ tomoyo_path_matches_group(const struct tomoyo_path_info *pathname,
-  *
-  * Caller holds tomoyo_read_lock().
-  */
--bool tomoyo_number_matches_group(const unsigned long min,
--				 const unsigned long max,
-+bool tomoyo_number_matches_group(const u64 min, const u64 max,
- 				 const struct tomoyo_group *group)
- {
- 	struct tomoyo_number_group *member;
-diff --git a/security/tomoyo/util.c b/security/tomoyo/util.c
-index 6799b1122c9d..ac9535b4bdcd 100644
---- a/security/tomoyo/util.c
-+++ b/security/tomoyo/util.c
-@@ -172,9 +172,9 @@ const struct tomoyo_path_info *tomoyo_get_domainname
+ 	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 1539d315afe7..694c4df7a1a3 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
+ 	 */
+ 	rxrpc_purge_queue(&conn->rx_queue);
+ 
+-	if (conn->tx_data_alloc.va)
+-		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
+-					conn->tx_data_alloc.pagecnt_bias);
++	page_frag_cache_drain(&conn->tx_data_alloc);
+ 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
  }
  
- /**
-- * tomoyo_parse_ulong - Parse an "unsigned long" value.
-+ * tomoyo_parse_u64 - Parse a u64 value.
-  *
-- * @result: Pointer to "unsigned long".
-+ * @result: Pointer to u64.
-  * @str:    Pointer to string to parse.
-  *
-  * Returns one of values in "enum tomoyo_value_type".
-@@ -182,7 +182,7 @@ const struct tomoyo_path_info *tomoyo_get_domainname
-  * The @src is updated to point the first character after the value
-  * on success.
-  */
--u8 tomoyo_parse_ulong(unsigned long *result, char **str)
-+u8 tomoyo_parse_u64(u64 *result, char **str)
- {
- 	const char *cp = *str;
- 	char *ep;
-@@ -199,7 +199,7 @@ u8 tomoyo_parse_ulong(unsigned long *result, char **str)
- 			cp++;
- 		}
- 	}
--	*result = simple_strtoul(cp, &ep, base);
-+	*result = (u64) simple_strtoull(cp, &ep, base);
- 	if (cp == ep)
- 		return TOMOYO_VALUE_TYPE_INVALID;
- 	*str = ep;
-@@ -214,24 +214,24 @@ u8 tomoyo_parse_ulong(unsigned long *result, char **str)
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index f9623ace2201..2792d2304605 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
+ #endif
+ 	rxrpc_purge_queue(&local->rx_queue);
+ 	rxrpc_purge_client_connections(local);
+-	if (local->tx_alloc.va)
+-		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
+-					local->tx_alloc.pagecnt_bias);
++	page_frag_cache_drain(&local->tx_alloc);
  }
  
- /**
-- * tomoyo_print_ulong - Print an "unsigned long" value.
-+ * tomoyo_print_u64 - Print a u64 value.
-  *
-  * @buffer:     Pointer to buffer.
-  * @buffer_len: Size of @buffer.
-- * @value:      An "unsigned long" value.
-+ * @value:      A u64 value.
-  * @type:       Type of @value.
-  *
-  * Returns nothing.
-  */
--void tomoyo_print_ulong(char *buffer, const int buffer_len,
--			const unsigned long value, const u8 type)
-+void tomoyo_print_u64(char *buffer, const int buffer_len,
-+		      const u64 value, const u8 type)
+ /*
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 825ec5357691..b785425c3315 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1608,7 +1608,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
+ static void svc_sock_free(struct svc_xprt *xprt)
  {
- 	if (type == TOMOYO_VALUE_TYPE_DECIMAL)
--		snprintf(buffer, buffer_len, "%lu", value);
-+		snprintf(buffer, buffer_len, "%llu", value);
- 	else if (type == TOMOYO_VALUE_TYPE_OCTAL)
--		snprintf(buffer, buffer_len, "0%lo", value);
-+		snprintf(buffer, buffer_len, "0%llo", value);
- 	else if (type == TOMOYO_VALUE_TYPE_HEXADECIMAL)
--		snprintf(buffer, buffer_len, "0x%lX", value);
-+		snprintf(buffer, buffer_len, "0x%llX", value);
+ 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
+-	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
+ 	struct socket *sock = svsk->sk_sock;
+ 
+ 	trace_svcsock_free(svsk, sock);
+@@ -1618,8 +1617,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
+ 		sockfd_put(sock);
  	else
- 		snprintf(buffer, buffer_len, "type(%u)", type);
+ 		sock_release(sock);
+-	if (pfc->va)
+-		__page_frag_cache_drain(virt_to_head_page(pfc->va),
+-					pfc->pagecnt_bias);
++
++	page_frag_cache_drain(&svsk->sk_frag_cache);
+ 	kfree(svsk);
  }
-@@ -274,7 +274,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
- {
- 	char *data;
- 	u8 type;
--	unsigned long v;
-+	u64 v;
+diff --git a/tools/testing/selftests/mm/page_frag/page_frag_test.c b/tools/testing/selftests/mm/page_frag/page_frag_test.c
+index 13c44133e009..e806c1866e36 100644
+--- a/tools/testing/selftests/mm/page_frag/page_frag_test.c
++++ b/tools/testing/selftests/mm/page_frag/page_frag_test.c
+@@ -126,7 +126,7 @@ static int __init page_frag_test_init(void)
+ 	u64 duration;
+ 	int ret;
  
- 	memset(ptr, 0, sizeof(*ptr));
- 	if (param->data[0] == '@') {
-@@ -283,7 +283,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
- 		return ptr->group != NULL;
- 	}
- 	data = tomoyo_read_token(param);
--	type = tomoyo_parse_ulong(&v, &data);
-+	type = tomoyo_parse_u64(&v, &data);
- 	if (type == TOMOYO_VALUE_TYPE_INVALID)
- 		return false;
- 	ptr->values[0] = v;
-@@ -295,7 +295,7 @@ bool tomoyo_parse_number_union(struct tomoyo_acl_param *param,
- 	}
- 	if (*data++ != '-')
- 		return false;
--	type = tomoyo_parse_ulong(&v, &data);
-+	type = tomoyo_parse_u64(&v, &data);
- 	if (type == TOMOYO_VALUE_TYPE_INVALID || *data || ptr->values[0] > v)
- 		return false;
- 	ptr->values[1] = v;
+-	test_nc.va = NULL;
++	page_frag_cache_init(&test_nc);
+ 	atomic_set(&nthreads, 2);
+ 	init_completion(&wait);
+ 
 -- 
-2.43.5
-
+2.33.0
 
 
