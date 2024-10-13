@@ -1,78 +1,68 @@
-Return-Path: <linux-nfs+bounces-7116-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7117-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB0F99BB6D
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Oct 2024 22:19:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47C2899BB8C
+	for <lists+linux-nfs@lfdr.de>; Sun, 13 Oct 2024 22:22:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B3921C20D5D
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Oct 2024 20:19:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A6081C20F5A
+	for <lists+linux-nfs@lfdr.de>; Sun, 13 Oct 2024 20:22:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE95C155342;
-	Sun, 13 Oct 2024 20:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC4C1A01BF;
+	Sun, 13 Oct 2024 20:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="exIvs+i/"
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="HhY4jvr6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581047F48C;
-	Sun, 13 Oct 2024 20:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DABB19D07C;
+	Sun, 13 Oct 2024 20:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728850693; cv=none; b=HfBruTqb7LNmJUiO4htNyniHlxe8R8otcYTeado2p2kykbJRcUj6rTMiYNrMd1hmjmna15fcZ3COAuOgexZphAIM8j/a0dKz/0hh0ztfYuo9Q8hdOfVNNlxNoFok5gbsHP/G8dl4f308Vebp9JPjXfzxIXLeAH9a7/Dohv0Cp9w=
+	t=1728850701; cv=none; b=R8DRHUvXVCvNCV8b5JOpE9mDeNJU/V9yu+EPuNirpI8LCR3kPga9QO+1TDn0S8n7ATs+/iOCpvSli8pzA1zuiSttBfTwC7ymY/W9LL6+yOV+AUdnxEe0Dha23PVJ36xT8kZjvPejGKYxR6sIpNkiB+B7m7jZ6MPDy7bOxtRMkfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728850693; c=relaxed/simple;
-	bh=2uXmFeIEmUi172m67TxMp84JNKzsDgsI9o/AeKyM2yc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ResDTWNsgJvHCWHNpBfkWHFiYGyNcQzG3Tvro7hAjRNjYGfZ3YsuWd/s2/77VW3nPiYGPNL/Gkro6wAPWnNtwhxzVsylwhAy3XlRnCHOENMbDolvurAinI2hltmlTOCw/U06xSi5ebtpEy2+LLaXEf4B1ZA1e5qRK3MISLGnkKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=exIvs+i/; arc=none smtp.client-ip=192.134.164.104
+	s=arc-20240116; t=1728850701; c=relaxed/simple;
+	bh=DrJQTO35gURIzMWDA1Xrtl/GnXXrzdIRvR4rdWuMifo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M3+KzDAvIP9vnyyr0MoGbScRG0s2S+te17Ye5j2ruyvlfgNO/1yrzqyafMCypMK1v5LB0SryNDBvE7tyXEEH7Ze3B/Fmutv0BuNebvGc72ylbTZGc425tPlLsAY1eT+FiRbIxipYYGK9CpCmOr/gvAA8DI9ZygfcB8EXtlk6WZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=HhY4jvr6; arc=none smtp.client-ip=192.134.164.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Sja7FWx2J2pFF7H03F4ldwixL8Qb/r4LwdjP0v1pkNc=;
-  b=exIvs+i/vmrrOC1BhG1dWTdYhowcV77JbThYwDdjK0/Wqiaqq9Fr0cce
-   rNzCFJlH0Zl3Gc94qiLI1s9PCSVuCYpsLvZjcvp+ULtzzTXbcfRvMqOYM
-   ncj7g6L1s1poZOa9BL666TBGtZjDcSWk9IcDnPVvWZAmigUTgCebAcAqC
-   Y=;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sv/0c64ZMldzQnp+VPu6f+qECJKfFHacvG3dPrFNe/M=;
+  b=HhY4jvr6wjh9gdw8jNn5cgYZtU5y2f+uR+Ggvyb3tU4hwYuXq24iCpCu
+   v0sPMzF7Y1k0e2wTPtok4giLBGsH8VV6JAlMi1ipC9+Nba+h7x7vLmxtN
+   8cdX7u9E5tGyPF20Oc89Ez/+60ix0I/Lalhj3nC/DRhZ+40/XlMGm79qO
+   M=;
 Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
 X-IronPort-AV: E=Sophos;i="6.11,201,1725314400"; 
-   d="scan'208";a="98968275"
+   d="scan'208";a="98968287"
 Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2024 22:17:57 +0200
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2024 22:18:00 +0200
 From: Julia Lawall <Julia.Lawall@inria.fr>
-To: linux-nfs@vger.kernel.org
+To: Chuck Lever <chuck.lever@oracle.com>
 Cc: kernel-janitors@vger.kernel.org,
 	vbabka@suse.cz,
 	paulmck@kernel.org,
-	Tom Talpey <tom@talpey.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
 	Neil Brown <neilb@suse.de>,
-	linux-can@vger.kernel.org,
-	bridge@lists.linux.dev,
-	b.a.t.m.a.n@lists.open-mesh.org,
-	linux-kernel@vger.kernel.org,
-	wireguard@lists.zx2c4.com,
-	netdev@vger.kernel.org,
-	ecryptfs@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org
-Subject: [PATCH 00/17] replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-Date: Sun, 13 Oct 2024 22:16:47 +0200
-Message-Id: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 12/17] nfsd: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+Date: Sun, 13 Oct 2024 22:16:59 +0200
+Message-Id: <20241013201704.49576-13-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+References: <20241013201704.49576-1-Julia.Lawall@inria.fr>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -86,125 +76,40 @@ commit 6c6c47b063b5 ("mm, slab: call kvfree_rcu_barrier() from kmem_cache_destro
 it is not necessary to use call_rcu when the callback only performs
 kmem_cache_free. Use kfree_rcu() directly.
 
-The changes were done using the following Coccinelle semantic patch.
-This semantic patch is designed to ignore cases where the callback
-function is used in another way.
+The changes were made using Coccinelle.
 
-// <smpl>
-#spatch --all-includes --include-headers
-
-@r@
-expression e;
-local idexpression e2;
-identifier cb,f,g;
-position p;
-@@
-
-(
-call_rcu(...,e2)
-|
-call_rcu(&e->f,cb@p)
-|
-call_rcu(&e->f.g,cb@p)
-)
-
-@r1@
-type T,T1;
-identifier x,r.cb;
-@@
-
- cb(...) {
-(
-   kmem_cache_free(...);
-|
-   T x = ...;
-   kmem_cache_free(...,(T1)x);
-|
-   T x;
-   x = ...;
-   kmem_cache_free(...,(T1)x);
-)
- }
-
-@s depends on r1@
-position p != r.p;
-identifier r.cb;
-@@
-
- cb@p
-
-@script:ocaml@
-cb << r.cb;
-p << s.p;
-@@
-
-Printf.eprintf "Other use of %s at %s:%d\n" cb (List.hd p).file (List.hd p).line
-
-@depends on r1 && !s@
-expression e;
-identifier r.cb,f,g;
-position r.p;
-@@
-
-(
-- call_rcu(&e->f,cb@p)
-+ kfree_rcu(e,f)
-|
-- call_rcu(&e->f.g,cb@p)
-+ kfree_rcu(e,f.g)
-)
-
-@r1a depends on !s@
-type T,T1;
-identifier x,r.cb;
-@@
-
-- cb(...) {
-(
--  kmem_cache_free(...);
-|
--  T x = ...;
--  kmem_cache_free(...,(T1)x);
-|
--  T x;
--  x = ...;
--  kmem_cache_free(...,(T1)x);
-)
-- }
-
-@r2 depends on !r1@
-identifier r.cb;
-@@
-
-cb(...) {
- ...
-}
-
-@script:ocaml depends on !r1 && !r2@
-cb << r.cb;
-@@
-
-Printf.eprintf "need definition for %s\n" cb
-// </smpl>
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
+ fs/nfsd/nfs4state.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
- arch/powerpc/kvm/book3s_mmu_hpte.c  |    8 ------
- block/blk-ioc.c                     |    9 ------
- drivers/net/wireguard/allowedips.c  |    9 +-----
- fs/ecryptfs/dentry.c                |    8 ------
- fs/nfsd/nfs4state.c                 |    9 ------
- kernel/time/posix-timers.c          |    9 ------
- net/batman-adv/translation-table.c  |   47 ++----------------------------------
- net/bridge/br_fdb.c                 |    9 ------
- net/can/gw.c                        |   13 ++-------
- net/ipv4/fib_trie.c                 |    8 ------
- net/ipv4/inetpeer.c                 |    9 +-----
- net/ipv6/ip6_fib.c                  |    9 ------
- net/ipv6/xfrm6_tunnel.c             |    8 ------
- net/kcm/kcmsock.c                   |   10 -------
- net/netfilter/nf_conncount.c        |   10 -------
- net/netfilter/nf_conntrack_expect.c |   10 -------
- net/netfilter/xt_hashlimit.c        |    9 ------
- 17 files changed, 23 insertions(+), 171 deletions(-)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9a3ec916fb14..02adf1d551df 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -572,13 +572,6 @@ opaque_hashval(const void *ptr, int nbytes)
+ 	return x;
+ }
+ 
+-static void nfsd4_free_file_rcu(struct rcu_head *rcu)
+-{
+-	struct nfs4_file *fp = container_of(rcu, struct nfs4_file, fi_rcu);
+-
+-	kmem_cache_free(file_slab, fp);
+-}
+-
+ void
+ put_nfs4_file(struct nfs4_file *fi)
+ {
+@@ -586,7 +579,7 @@ put_nfs4_file(struct nfs4_file *fi)
+ 		nfsd4_file_hash_remove(fi);
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
+-		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
++		kfree_rcu(fi, fi_rcu);
+ 	}
+ }
+ 
+
 
