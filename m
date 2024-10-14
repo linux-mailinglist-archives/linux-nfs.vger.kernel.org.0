@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-7127-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7128-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79B4D99BEF0
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 06:10:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF8BD99BEF8
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 06:11:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 247691F23B04
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 04:10:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B1BC1C215B9
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 04:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930EF1AF4E2;
-	Mon, 14 Oct 2024 03:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354871B86F7;
+	Mon, 14 Oct 2024 03:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KB+1O6qH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5ci9VT8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6811AE01F;
-	Mon, 14 Oct 2024 03:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0527514B94C;
+	Mon, 14 Oct 2024 03:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728878382; cv=none; b=olT4aVU94BAVXh/dXf0WP4kF9uLX/ZnrB6c1CrhQ02/zlGAlMwZ9nYtED/jl5fvhfSyGnU02qGlCQ7V2QrKsAYmGz2N6tVgSIVk7RZMjzdXR0l3Z4lgay0OZ/v3YqR4yNF5tYoYbirN3PEzwfA3Rmyd1imx9NJoJJ8WFwNWv4oQ=
+	t=1728878393; cv=none; b=TEb6Xed5NYZIJJS3CKSidHY4pPIycl9tNbjbh3ztQ8ycwiwY3BmaxRL00IuZw6bmS6ZQ3WFW8FF99/aRSkW7JAx7UHUsBd/ggXm1UYLbcM8nRO+0qqeRZCnmaumZY40Yg3vX2XOYdiJZVoi8dZk75HWUwpzCcccJn+ZAAgKg4mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728878382; c=relaxed/simple;
-	bh=rRcIWR39L/c4VzSiwhFgs1wkLAHR+F62x40Lh9RisjQ=;
+	s=arc-20240116; t=1728878393; c=relaxed/simple;
+	bh=Kv08AcQYawT4zeVOx48O02koGjgfjaQZDebQkt+tZ5A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9tei3d1r2irwiCRK5lpEbgkZktjewy4eZZaRPVNtadTGLNryI/tuc37mqgSCHzYylhDgBqG/K1bMHsbtdsvkyyJzT9bFWUfJYXs5OH3DhOz107G3+Ye8ChXDSJFJkvAElaXELwqPgNdUWG0whKKAAoyGxZVyahF99NULYhaNQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KB+1O6qH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07B2C4CEC3;
-	Mon, 14 Oct 2024 03:59:40 +0000 (UTC)
+	 MIME-Version; b=ROagnGAKRk8X+IPzwbIsdwhZf2cWCJxICwUobDuTv+pr2vxwXC/Mdm8IV/SNZh8zpodZfkmO5Af6Dgqpd57o/HKutejDWfPcx0GcLJT4ltn/bRwy2QNAKAHikcPjjteBsF22MuPJ/UJgM4NaczaGemep7NNHHgybXBIxuRkt/+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5ci9VT8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DF3C4CECF;
+	Mon, 14 Oct 2024 03:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728878382;
-	bh=rRcIWR39L/c4VzSiwhFgs1wkLAHR+F62x40Lh9RisjQ=;
+	s=k20201202; t=1728878392;
+	bh=Kv08AcQYawT4zeVOx48O02koGjgfjaQZDebQkt+tZ5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KB+1O6qHdjWqfeRt0yVdRMlPArQxNeWDKE/xTVwMxjEOZAh/PgKmHJXGVfG0AyGgS
-	 O8NVwbCFTHxBvhRRbSjGUVYdH8XaINiCnkjS7dPi7znHLF9FDD4WeZESPQpuE/J6LN
-	 uaRSoStyJBmgoQoUt+GdKIxfp8xjDVbIBUCjrFB/AGZmcwzt7zxMF934bJoT9AjTzR
-	 WKHWOFF8bVNpMDm2C4kLVY8WYlCjtZ7m6yN7Pu/S2eRSEd0jZRkcDPW6smGGix8b+K
-	 evoWyF0XfybwhODW1yHHBiXhohRpNWhwz6EAlEDZhXQ+ekZKzOmtrH5K5gMUFSClwE
-	 BvbdVF+xcPj0Q==
+	b=X5ci9VT8C/J3cz6itmHAJx9VXShIM9nq+CdrBv7ugk1NrIWaBIO77oeTm7EOH+VnE
+	 /Mx+UsUV/E/EnCeZVwnR4AhZd/SskaJRx4VVAUPwR1KJX9Fgy8y94M0dDBGphS6mpo
+	 fvwYb7cFU3Cju//XJPPwqdWNenn6ZYGyORSCeWxpjq7eZXA791SqK5fXlP3sXEvXvc
+	 PEg1jqDX2oEYAJVX1ypxLX8JCYa73vq7D90kNoI416PPS2Y8vkF7BUtLlq80dd411n
+	 PZlE+s6BaoXtdSWOqe5K+5gKfhX6Rg393ZNm6TWB0DjzRa1ruzhHac9IS/rOOkZeFm
+	 sBOhzGuqlOVLQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -51,12 +51,12 @@ Cc: Dai Ngo <dai.ngo@oracle.com>,
 	trondmy@kernel.org,
 	anna@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 7/8] NFS: remove revoked delegation from server's delegation list
-Date: Sun, 13 Oct 2024 23:59:22 -0400
-Message-ID: <20241014035929.2251266-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 2/3] NFS: remove revoked delegation from server's delegation list
+Date: Sun, 13 Oct 2024 23:59:42 -0400
+Message-ID: <20241014035948.2261641-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241014035929.2251266-1-sashal@kernel.org>
-References: <20241014035929.2251266-1-sashal@kernel.org>
+In-Reply-To: <20241014035948.2261641-1-sashal@kernel.org>
+References: <20241014035948.2261641-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.167
+X-stable-base: Linux 5.10.226
 Content-Transfer-Encoding: 8bit
 
 From: Dai Ngo <dai.ngo@oracle.com>
@@ -101,10 +101,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 6a3ba306c3216..8eb11198ac65c 100644
+index 1eb6c7a142ff0..2354b7d41b468 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -984,6 +984,11 @@ void nfs_delegation_mark_returned(struct inode *inode,
+@@ -963,6 +963,11 @@ void nfs_delegation_mark_returned(struct inode *inode,
  	}
  
  	nfs_mark_delegation_revoked(delegation);
