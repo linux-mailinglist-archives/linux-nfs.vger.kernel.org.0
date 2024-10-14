@@ -1,69 +1,60 @@
-Return-Path: <linux-nfs+bounces-7159-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7160-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B0A99D2D5
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 17:30:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63DDE99D5D9
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 19:51:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD2C7286B33
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 15:30:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0759B231EF
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 17:51:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9669C1CACFD;
-	Mon, 14 Oct 2024 15:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A9A1B85C0;
+	Mon, 14 Oct 2024 17:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="pIS/CYhF"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="iPNSFfdr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E61AC44C
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 15:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8491C3300
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 17:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728919663; cv=none; b=XRQAAqFSZU3+MkmD+0Xhh5z8NI2C9lSU4+VAsfI5WOcXx+GnhBuFaB6Xa22pVLoD71ywgL/g8RXZMGptAq/84PAQC3xXLN086FZeerFK/9dlRo8C81MwNnU0UxhreXiqxE67QfI0BDNZGxayApU64Bl6XqSk684pfwAYPWkO0i4=
+	t=1728928298; cv=none; b=OQ9SeWkelPDz49pUFaNZjh8Ixh2kVCJv2LU5YtqaXmMyVrNWkz1SHV7Ebyxry0mV0YNnMUVWVq5GwgQSD/11c04FuAtlxiYSeQGacYz21BbqD1f49tjLM8SkM3k4mpguSAzRFb5beZVKUaDCMeugF57gDmMxpZEhz+n0cG4WRk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728919663; c=relaxed/simple;
-	bh=ZaL14WUwdi6F3kzXD+mi70gTGNWTgDHFcdA3KEcOryo=;
+	s=arc-20240116; t=1728928298; c=relaxed/simple;
+	bh=YDpK8DElrGggMuygJgQHlKxi+iqaIvRMgS+t8kxYB9Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EX1Il36NZWuVrxb01zQjqP/FvvjdigWx/qEAaWbR+AhuKoHCERaJ86f/Z3gFqNXsojRkZFL+1Zbp2SyAluNznsA5XR3wsqsik+wyZtcMc+gMkZCZsNsaLqX2XacoIEvYFbeVbbQ9G6M0+Hv8IOkMtdRQK/fpriMTbU58voRmiDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=pIS/CYhF; arc=none smtp.client-ip=84.16.66.168
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeO5EqKZ1H9hHpsNh9dndePzGIrfXpf3tW0O0obex9KX9v6Vrt6sqsPXBmgYoTANIAgRMEDCzFVcNY95bl3U4jRXhHJI+VM82fdCBG3P6Y/5Ba4VH42EtEgwVsV6bcckX6cY4jc+x2Z/ojwqUe4OaJwp8XKepS7jw1joZLG2wLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=iPNSFfdr; arc=none smtp.client-ip=84.16.66.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XS1Lx1Chczqx0;
-	Mon, 14 Oct 2024 17:27:37 +0200 (CEST)
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XS4Xt5rf6zM0v;
+	Mon, 14 Oct 2024 19:51:26 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1728919657;
-	bh=OLKb3K8uazK1UPw7MoVio/7qjqTmsfRrQxE/pjnvijA=;
+	s=20191114; t=1728928286;
+	bh=ZefrrTPDl3Jk7cEYA8aBvb4pJxUrCXTEIHSc8TD2YTA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pIS/CYhFQ1TNL/IMdoq69XonPx8/xjFwbZ4RzCnRYMQsVnLGQT09iaeFSZuPUxTXM
-	 z6dT38lGAxDnRRr22vdCYJisHNy6jKSgS8t3FHLSA/V2+3mt03qXWhAsRi5Uo+E6vb
-	 O7TOejl6dLA9eigYLqV9KHisgEPT/YeNo2xTma6A=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XS1Lw1Vj6z73H;
-	Mon, 14 Oct 2024 17:27:36 +0200 (CEST)
-Date: Mon, 14 Oct 2024 17:27:32 +0200
+	b=iPNSFfdrDJ6Ob7LIGnnpWicwhW/cx0Q9NgEsqn3ftTDWrP3c8uqhN9iapVArdi/dX
+	 jCqayCuBnap8qHcgK6wtleiKArAZcAYdSTWIBPQHc8tRsUn2p5ByyyzO0S7LrDVdey
+	 vhXF4oVGdsyRhgnoisRKn+t84Bn7jiKsfwwAhmjw=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XS4Xs6f5Pzh7Z;
+	Mon, 14 Oct 2024 19:51:25 +0200 (CEST)
+Date: Mon, 14 Oct 2024 19:51:21 +0200
 From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, 
-	Christoph Hellwig <hch@infradead.org>, Paul Moore <paul@paul-moore.com>, linux-fsdevel@vger.kernel.org, 
+Cc: Paul Moore <paul@paul-moore.com>, linux-fsdevel@vger.kernel.org, 
 	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
 	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
 	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
 Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
  get_ino() for NFS
-Message-ID: <20241014.Duivaxoo0pae@digikod.net>
-References: <ZwkaVLOFElypvSDX@infradead.org>
- <20241011.ieghie3Aiye4@digikod.net>
- <ZwkgDd1JO2kZBobc@infradead.org>
- <20241011.yai6KiDa7ieg@digikod.net>
- <Zwkm5HADvc5743di@infradead.org>
- <20241011.aetou9haeCah@digikod.net>
- <Zwk4pYzkzydwLRV_@infradead.org>
- <20241011.uu1Bieghaiwu@digikod.net>
- <05cb94c0dda9e1b23fe566c6ecd71b3d1739b95b.camel@kernel.org>
- <20241014-turmbau-ansah-37d96a5fd780@brauner>
+Message-ID: <20241014.ij8ohshuv7Op@digikod.net>
+References: <20241010152649.849254-1-mic@digikod.net>
+ <20241014-bestnote-rundweg-ed234af3b86a@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,54 +64,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241014-turmbau-ansah-37d96a5fd780@brauner>
+In-Reply-To: <20241014-bestnote-rundweg-ed234af3b86a@brauner>
 X-Infomaniak-Routing: alpha
 
-On Mon, Oct 14, 2024 at 04:45:00PM +0200, Christian Brauner wrote:
-> On Sun, Oct 13, 2024 at 06:17:43AM -0400, Jeff Layton wrote:
-> > On Fri, 2024-10-11 at 17:30 +0200, Mickaël Salaün wrote:
-> > > On Fri, Oct 11, 2024 at 07:39:33AM -0700, Christoph Hellwig wrote:
-> > > > On Fri, Oct 11, 2024 at 03:52:42PM +0200, Mickaël Salaün wrote:
-> > > > > > > Yes, but how do you call getattr() without a path?
-> > > > > > 
-> > > > > > You don't because inode numbers are irrelevant without the path.
-> > > > > 
-> > > > > They are for kernel messages and audit logs.  Please take a look at the
-> > > > > use cases with the other patches.
-> > > > 
-> > > > It still is useless.  E.g. btrfs has duplicate inode numbers due to
-> > > > subvolumes.
-> > > 
-> > > At least it reflects what users see.
-> > > 
-> > > > 
-> > > > If you want a better pretty but not useful value just work on making
-> > > > i_ino 64-bits wide, which is long overdue.
-> > > 
-> > > That would require too much work for me, and this would be a pain to
-> > > backport to all stable kernels.
-> > > 
+On Mon, Oct 14, 2024 at 04:47:17PM +0200, Christian Brauner wrote:
+> On Thu, Oct 10, 2024 at 05:26:41PM +0200, Mickaël Salaün wrote:
+> > When a filesystem manages its own inode numbers, like NFS's fileid shown
+> > to user space with getattr(), other part of the kernel may still expose
+> > the private inode->ino through kernel logs and audit.
 > > 
-> > Would it though? Adding this new inode operation seems sub-optimal.
+> > Another issue is on 32-bit architectures, on which ino_t is 32 bits,
+> > whereas the user space's view of an inode number can still be 64 bits.
+> > 
+> > Add a new inode_get_ino() helper calling the new struct
+> > inode_operations' get_ino() when set, to get the user space's view of an
+> > inode number.  inode_get_ino() is called by generic_fillattr().
 > 
-> I agree.
+> I mean, you have to admit that this is a pretty blatant hack and that's
+> not worthy of a separate inode method, let alone the potential
+> performance implication that multiple people already brought up.
 
-Of course it would be better to fix the root of the issue.  Who is up
-for the challenge?
-
-> 
-> > Inode numbers are static information. Once an inode number is set on an
-> > inode it basically never changes.  This patchset will turn all of those
-> > direct inode->i_ino fetches into a pointer chase for the new inode
-> > operation, which will then almost always just result in a direct fetch.
-> 
-> Yup.
-> 
-> > A better solution here would be to make inode->i_ino a u64, and just
-> > fix up all of the places that touch it to expect that. Then, just
-> 
-> I would like us to try and see to make this happen. I really dislike
-> that struct inode is full of non-explicity types.
-
-Also, it would be OK to backport it, right?
+My initial approach was to use u64 for struct inode's i_ino, but I
+realized it had too much implications on potentially all filesystems and
+other parts of the kernel.  I'm sure they are much more legitimate folks
+to handle this transition.  I'd be curious to know how such i_ino type
+change could be backported though.
 
