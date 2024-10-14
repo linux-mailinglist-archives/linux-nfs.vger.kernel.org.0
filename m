@@ -1,132 +1,265 @@
-Return-Path: <linux-nfs+bounces-7130-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7131-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91DE999C395
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 10:40:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE8499C43E
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 10:56:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 426411F23768
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 08:40:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E542B296E7
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 08:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5FF014B07A;
-	Mon, 14 Oct 2024 08:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 509F91531E3;
+	Mon, 14 Oct 2024 08:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iinet.net.au header.i=@iinet.net.au header.b="G9RFdKKJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKZ6nNtC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from omr000.pc5.atmailcloud.com (omr000.pc5.atmailcloud.com [103.150.252.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CBE1474A5;
-	Mon, 14 Oct 2024 08:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.150.252.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8880D1514F8;
+	Mon, 14 Oct 2024 08:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728895243; cv=none; b=FTius6LNppU/O1f6EfzNX/RLxzrZbLz6J8rb8sAVLtdia1F/JATJ02y6xH+OBypL5btppo79L10HrMwEuimXhXpAC/yz8We5xHpZlsp/BKkjiSmdUZGnQkwAHMvFinrS6GmBy8POWf9LiPdZ+6YNTS6ERernHrzC09OoLoGnvDo=
+	t=1728896121; cv=none; b=PHsKPkRcE+CejRlHjcK1+0blfUL7Pdc0gkmu3H/WCvwlaQG4ynbdEsE6rWaRRhfWr5omKEkUdos8snYUr8UR0eEsT/X5ds6JK1vsgwR17D+jKReqn3g9are8Yr1CXRdK/ZMyAfPrT8KduX45WCerpvmte2bHOU0FW5qA4IjWLH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728895243; c=relaxed/simple;
-	bh=mjvTs/Rg1BxKP6CQdxfVJpnbZeiHlJIKmkqRkZJ2euc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BVC2DCt1TrSLz0mpnlUHz390dZtYfXxBuFVqvivjvyjo6S1CzgOir1FI3hgmDNwYWdJpYs0MLsIFsX3tvhStdvU7RZFlQEnUEfU9mwO0Jh2ZK+aCDd7dBDXlRkBEGltniCtvp/qR1gdrad5dBnDqcq73F4zuVQa5BSnv+wky0RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iinet.net.au; spf=pass smtp.mailfrom=iinet.net.au; dkim=pass (2048-bit key) header.d=iinet.net.au header.i=@iinet.net.au header.b=G9RFdKKJ; arc=none smtp.client-ip=103.150.252.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iinet.net.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iinet.net.au
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iinet.net.au; s=202309; h=Content-Type:From:To:Subject:MIME-Version:Date:
-	Message-ID; bh=7kzM5FpMbnXs7iTj1M/pCDaWsEiikl3NuYf4Y5aJL1c=; b=G9RFdKKJBut41n
-	DI0v3wYsLbgsCfLFqnKhfyy77k3s2cDuVMr96V24CecinDP1gydk08FbGeyG524IR3zo9CMhpbD7V
-	1jUX+KMW01QZXO+5K0pGzcTP3Xnu5gUvNqczH5l7vDJuUgaTeFvPpsNzIzZK+4jkjytl52f6a2bHO
-	csi4XdZZakk2xcpO59aZy8WtDGTpUCSkK46myvRHS67VMqpXMP/usSuMt1BtdFn2u8N09tukp28qf
-	Tqlol4EPEZnrZZAlemSwlJmFa1tA2hBLviIyBy2Z0hsBae83H7VS1FjmpS5F8Q8qcYyDAXCvRm8zm
-	r2vx+m1iWweT/6iw0aZg==;
-Received: from CMR-TMC.i-0e96db1614e72c689
-	 by OMR.i-0dfa7ead5d297886b with esmtps
-	(envelope-from <burn.alting@iinet.net.au>)
-	id 1t0Gd4-000000001Yu-2Q2o;
-	Mon, 14 Oct 2024 08:40:38 +0000
-Received: from [121.45.199.178] (helo=[192.168.2.220])
-	 by CMR-TMC.i-0e96db1614e72c689 with esmtpsa
-	(envelope-from <burn.alting@iinet.net.au>)
-	id 1t0Gd4-000000004Lp-11ny;
-	Mon, 14 Oct 2024 08:40:38 +0000
-Message-ID: <0e4e7a6d-09e0-480d-baa9-a2e7522a088a@iinet.net.au>
-Date: Mon, 14 Oct 2024 19:40:37 +1100
+	s=arc-20240116; t=1728896121; c=relaxed/simple;
+	bh=om/tRqBgsXcGLf3tAtcW/TXrx5PGQXAZXl8KC/74rwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3c0x2/83eEcwVdt4FmmMBsfq/zaIGsMW6GvM04qlWwjNR7s8SoInzewajbVEZ/ZsKbGMR2zAzTOi5KezmS6V9NWE1RJEIb4WroEeV/3pWtbQ4hhOYNL3dWmZoOk8N/78C9sCaQ/iyIAx4Q39UBM0JiQeflAyMR1DbZnYzzoMBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hKZ6nNtC; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b10ed5e7cdso475375485a.3;
+        Mon, 14 Oct 2024 01:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728896118; x=1729500918; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fHxU8H8UsoeCoiILOhNNQeR6j+46WsSuvgSbOOVdp38=;
+        b=hKZ6nNtCBDyjwuN1OckYT4FOiwteV9hFrita/Km6aWtaYyNhU739D+qRwDIA1aScix
+         1MlECmLQJG475arKaAnFeB0XhbIfPmurjkrzerT7xKsk9+PwpFsx5YeEd440LIauIL9G
+         0yZgNfYNTTpe4DIYoxz5Lm2ZaLWWWz8RZ17ZRerUwnk1YowFEQ+ffRN9U8Hn+FYVOxpw
+         edPu9Vp/Us0OTYU+30yj/HGGyuS6CFiqjm56oEZHphRPRWXiKz72Cisfv2jV4yrtnVo+
+         pWTc9TOetemAOp94RSaTyBlLM5mMwl2WJdu/PIvGn7pBClGoEc58ScaFWy4lyseZtGUW
+         pUUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728896118; x=1729500918;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHxU8H8UsoeCoiILOhNNQeR6j+46WsSuvgSbOOVdp38=;
+        b=CHcggAm5Jn4TtARu0c5KCXsz8jcwxhFjJY6r7L2u2O0vnanl0f7RGlGZQlxvH5+pww
+         h7fUlBJY05yXaVEW2ppTtXydfDk7XVEDq93UiPKPmTu6DhHMquyxx+kdMBYeP2VjpM6P
+         74TOBYLSGbqLLASbR1+dMh6a7dWsT9VczWUILphHwZSPMAVq1Ljvj5Yfu+Q8ZJJSyXn+
+         fJWhIX6leDvNPUEIzDtREz3CFwB2TAcacu/Jky+/X+i8xfw8h7KzPQmQcFwXzC+zmAgj
+         CTf3rhSL4BtS8KRUescn+g/xdVeg/eVaA5JbAA5Vs1tNUcNKJpC0MiOV5olB+Ys9VxT+
+         mknQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUajwYfA34DLw5uenlu3mwgkzy2bWz8SMwP+OXNjZeSdqqD0QDhGWqA0fkX8mkPCzlZsGAxfyL1+iBJ@vger.kernel.org, AJvYcCVxuR7d4I/Y8NeU4IkIEhNYoZOQ7QiJuKtNaOZ0Yy4XvG11U07VAleQkOIu4P4XEIBXsy5t9hPXrP/7lm53@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt74SzT75kHCjCYQlUjtVWCEZ74Hk8PspchBFXdZRKyNm1pdGn
+	cQOdhZQc8Qt92twvGsg5SFTVVI97F2cHHFsGY+w3f7vGg4kchuA9LH3NPuVRi/h6VSt6ryBUiEW
+	3I3tfX/OLINk4ofcQmqBJstATF/m1WGjONoByzA==
+X-Google-Smtp-Source: AGHT+IHRL7c/m4WvThqTz0DcWBQ0zwMM/JAlU7jR361HxhdEn03+7ssDGFCw6W9itYCTS5nTHeP0WHIVBuyy2jWT2KM=
+X-Received: by 2002:a05:620a:4481:b0:7a9:c0b8:9343 with SMTP id
+ af79cd13be357-7b120fc3e06mr1297497885a.31.1728896118305; Mon, 14 Oct 2024
+ 01:55:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
-To: audit@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20241010152649.849254-1-mic@digikod.net>
- <ZwkaVLOFElypvSDX@infradead.org> <20241011.ieghie3Aiye4@digikod.net>
- <ZwkgDd1JO2kZBobc@infradead.org> <20241011.yai6KiDa7ieg@digikod.net>
- <Zwkm5HADvc5743di@infradead.org> <20241011.aetou9haeCah@digikod.net>
- <Zwk4pYzkzydwLRV_@infradead.org> <20241011.uu1Bieghaiwu@digikod.net>
- <05cb94c0dda9e1b23fe566c6ecd71b3d1739b95b.camel@kernel.org>
-Content-Language: en-US
-From: Burn Alting <burn.alting@iinet.net.au>
-In-Reply-To: <05cb94c0dda9e1b23fe566c6ecd71b3d1739b95b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Atmail-Id: burn.alting@iinet.net.au
-X-atmailcloud-spam-action: no action
-X-Cm-Analysis: v=2.4 cv=JqH3rt4C c=1 sm=1 tr=0 ts=670cd906 a=ad8utJckiWseeaTPZMijYg==:117 a=ad8utJckiWseeaTPZMijYg==:17 a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=x7bEGLp0ZPQA:10 a=q7kHw0SAeLOdz_FGtMwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Cm-Envelope: MS4xfEbwnGFsAduAAbxbbDekDJQvVXVN1BYHo7Jibe90oIHgx/m/xssYzHZkVoG0wp8kegKOzYQOSXZouYTYJBlqJHfl7Q+A7/H/lgwpEUlKCepe1EVRi0Rs jfOwUUcBIC0Deny30eF0GCZrgP/7Ob4GgNjwC/9glHlWQVjOuZiLfI0zZgntb/eDzsiWwo5tL4e99Q==
-X-atmailcloud-route: unknown
+References: <20241011090023.655623-1-amir73il@gmail.com> <A1265158-06E7-40AA-8D61-985557CD9841@oracle.com>
+ <CAOQ4uxgX+PqUeLuqD47S5PxeYqJ3OMs0bfmnUE+D7dcnpr-UNw@mail.gmail.com> <743E221E-6137-4525-9F89-20E06CD404E4@oracle.com>
+In-Reply-To: <743E221E-6137-4525-9F89-20E06CD404E4@oracle.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 14 Oct 2024 10:55:06 +0200
+Message-ID: <CAOQ4uxi+ztQGDNeoWJDL_jawKyDqEdQYbjDvWvJYat73zhuoXg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] API for exporting connectable file handles to userspace
+To: Chuck Lever III <chuck.lever@oracle.com>, Ilya Dryomov <idryomov@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Linux FS Devel <linux-fsdevel@vger.kernel.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Xiubo Li <xiubli@redhat.com>
+Content-Type: multipart/mixed; boundary="000000000000fc6e5206246bfe85"
 
+--000000000000fc6e5206246bfe85
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Oct 11, 2024 at 8:40=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
+>
+>
+>
+> > On Oct 11, 2024, at 2:22=E2=80=AFPM, Amir Goldstein <amir73il@gmail.com=
+> wrote:
+> >
+> > On Fri, Oct 11, 2024 at 4:24=E2=80=AFPM Chuck Lever III <chuck.lever@or=
+acle.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Oct 11, 2024, at 5:00=E2=80=AFAM, Amir Goldstein <amir73il@gmail.c=
+om> wrote:
+> >>>
+> >>> Christian,
+> >>>
+> >>> These patches bring the NFS connectable file handles feature to
+> >>> userspace servers.
+> >>>
+> >>> They rely on your and Aleksa's changes recently merged to v6.12.
+> >>>
+> >>> This v4 incorporates the review comments on Jeff and Jan (thanks!)
+> >>> and there does not seem to be any objection for this new API, so
+> >>> I think it is ready for staging.
+> >>>
+> >>> The API I chose for encoding conenctable file handles is pretty
+> >>> conventional (AT_HANDLE_CONNECTABLE).
+> >>>
+> >>> open_by_handle_at(2) does not have AT_ flags argument, but also, I fi=
+nd
+> >>> it more useful API that encoding a connectable file handle can mandat=
+e
+> >>> the resolving of a connected fd, without having to opt-in for a
+> >>> connected fd independently.
+> >>>
+> >>> I chose to implemnent this by using upper bits in the handle type fie=
+ld
+> >>> It may be that out-of-tree filesystems return a handle type with uppe=
+r
+> >>> bits set, but AFAIK, no in-tree filesystem does that.
+> >>> I added some warnings just in case we encouter that.
+> >>>
+> >>> I have written an fstest [4] and a man page draft [5] for the feature=
+.
+> >>>
+> >>> Thanks,
+> >>> Amir.
+> >>>
+> >>> Changes since v3 [3]:
+> >>> - Relax WARN_ON in decode and replace with pr_warn in encode (Jeff)
+> >>> - Loose the macro FILEID_USER_TYPE_IS_VALID() (Jan)
+> >>> - Add explicit check for negative type values (Jan)
+> >>> - Added fstest and man-page draft
+> >>>
+> >>> Changes since v2 [2]:
+> >>> - Use bit arithmetics instead of bitfileds (Jeff)
+> >>> - Add assertions about use of high type bits
+> >>>
+> >>> Changes since v1 [1]:
+> >>> - Assert on encode for disconnected path (Jeff)
+> >>> - Don't allow AT_HANDLE_CONNECTABLE with AT_EMPTY_PATH
+> >>> - Drop the O_PATH mount_fd API hack (Jeff)
+> >>> - Encode an explicit "connectable" flag in handle type
+> >>>
+> >>> [1] https://lore.kernel.org/linux-fsdevel/20240919140611.1771651-1-am=
+ir73il@gmail.com/
+> >>> [2] https://lore.kernel.org/linux-fsdevel/20240923082829.1910210-1-am=
+ir73il@gmail.com/
+> >>> [3] https://lore.kernel.org/linux-fsdevel/20241008152118.453724-1-ami=
+r73il@gmail.com/
+> >>> [4] https://github.com/amir73il/xfstests/commits/connectable-fh/
+> >>> [5] https://github.com/amir73il/man-pages/commits/connectable-fh/
+> >>>
+> >>> Amir Goldstein (3):
+> >>> fs: prepare for "explicit connectable" file handles
+> >>> fs: name_to_handle_at() support for "explicit connectable" file
+> >>>   handles
+> >>> fs: open_by_handle_at() support for decoding "explicit connectable"
+> >>>   file handles
+> >>>
+> >>> fs/exportfs/expfs.c        | 17 ++++++++-
+> >>> fs/fhandle.c               | 75 +++++++++++++++++++++++++++++++++++--=
+-
+> >>> include/linux/exportfs.h   | 13 +++++++
+> >>> include/uapi/linux/fcntl.h |  1 +
+> >>> 4 files changed, 98 insertions(+), 8 deletions(-)
+> >>>
+> >>> --
+> >>> 2.34.1
+> >>>
+> >>
+> >> Acked-by: Chuck Lever <chuck.lever@oracle.com <mailto:chuck.lever@orac=
+le.com>>
+> >>
+> >> Assuming this is going directly to Christian's tree.
+> >>
+> >> I'm a little concerned about how this new facility might be
+> >> abused to get access to parts of the file system that a user
+> >> is not authorized to access.
+> >
+> > That's exactly the sort of thing I would like to be reviewed,
+> > but what makes you feel concerned?
+> >
+> > Are you concerned about handcrafted file handles?
+>
+> Yes; a user could construct a file handle that could bypass
+> the usual authorization checks when it gets connected. It's
+> a little hare-brained and hand-wavy because this is a new
+> area for me.
+>
 
-On 13/10/24 21:17, Jeff Layton wrote:
-> On Fri, 2024-10-11 at 17:30 +0200, Mickaël Salaün wrote:
->> On Fri, Oct 11, 2024 at 07:39:33AM -0700, Christoph Hellwig wrote:
->>> On Fri, Oct 11, 2024 at 03:52:42PM +0200, Mickaël Salaün wrote:
->>>>>> Yes, but how do you call getattr() without a path?
->>>>>
->>>>> You don't because inode numbers are irrelevant without the path.
->>>>
->>>> They are for kernel messages and audit logs.  Please take a look at the
->>>> use cases with the other patches.
->>>
->>> It still is useless.  E.g. btrfs has duplicate inode numbers due to
->>> subvolumes.
->>
->> At least it reflects what users see.
->>
->>>
->>> If you want a better pretty but not useful value just work on making
->>> i_ino 64-bits wide, which is long overdue.
->>
->> That would require too much work for me, and this would be a pain to
->> backport to all stable kernels.
->>
-> 
-> Would it though? Adding this new inode operation seems sub-optimal.
-> 
-> Inode numbers are static information. Once an inode number is set on an
-> inode it basically never changes.  This patchset will turn all of those
-> direct inode->i_ino fetches into a pointer chase for the new inode
-> operation, which will then almost always just result in a direct fetch.
-> 
-> A better solution here would be to make inode->i_ino a u64, and just
-> fix up all of the places that touch it to expect that. Then, just
-> ensure that all of the filesystems set it properly when instantiating
-> new inodes. Even on 32-bit arch, you likely wouldn't need a seqcount
-> loop or anything to fetch this since the chance of a torn read there is
-> basically zero.
-> 
-> If there are places where we need to convert i_ino down to 32-bits,
-> then we can just use some scheme like nfs_fattr_to_ino_t(), or just
-> cast i_ino to a u32.
-> 
-> Yes, it'd be a larger patchset, but that seems like it would be a
-> better solution.
-As someone who lives in the analytical user space of Linux audit,  I 
-take it that for large (say >200TB) file systems, the inode value 
-reported in audit PATH records is no longer forensically defensible and 
-it's use as a correlation item is of questionable value now?
+A malformed file handle is indeed a concern - it has always been,
+but in order to exploit one, an attacker would actually need to have
+a filesystem exported to nfs (to the attacking client machine).
+
+With commit 620c266f3949 ("fhandle: relax open_by_handle_at()
+permission checks"), attackers that have non-root access to a machine
+could also try to exploit filesystem bugs with malformed file handles.
+
+By adding support for connectable file handles, attackers could try
+to exploit bugs in ->fh_to_parent() implementations - bugs that would
+not have been exploitable so far unless filesystem is exported to nfs with
+subtree_check, which is quite rare IIUC.
+
+So I did an audit of the in-tree ->fh_to_{dentry,parent}() implementations.
+AFAICT all implementations properly check buffer length before trying
+to decode the handle... except for ceph.
+
+It looks to me like __snapfh_to_dentry() does not check buffer length
+before assuming that ceph_nfs_snapfh can be accessed.
+
+Ilya,
+
+Do you agree with my analysis?
+Please see the attached fix patch.
+Let me know if you want me to post it on ceph list or if that is sufficient=
+.
+
+Thanks,
+Amir.
+
+--000000000000fc6e5206246bfe85
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-ceph-fix-bounds-check-for-decoding-fh-of-snapshot-fi.patch"
+Content-Disposition: attachment; 
+	filename="0001-ceph-fix-bounds-check-for-decoding-fh-of-snapshot-fi.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m28rz3th0>
+X-Attachment-Id: f_m28rz3th0
+
+RnJvbSAyMjljMGI2NjYzZWVmNjU0MzYwMzFiNzgyZjg1OGQwMmQ1ZGVjOTM4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBNb24sIDE0IE9jdCAyMDI0IDEwOjQ2OjIwICswMjAwClN1YmplY3Q6IFtQQVRDSF0gY2Vw
+aDogZml4IGJvdW5kcyBjaGVjayBmb3IgZGVjb2RpbmcgZmggb2Ygc25hcHNob3QgZmlsZQoKUHJl
+dmVudCBhdHRhY2tlcnMgZnJvbSB1c2luZyBtYWxmb3JtZWQgY2VwaCBmaWxlIGhhbmRsZSB3aXRo
+IHR5cGUKRklMRUlEX0JUUkZTX1dJVEhfUEFSRU5UIHRvIGNhdXNlIG91dCBvZiBib3VuZHMgYWNj
+ZXNzLgoKRml4ZXM6IDU3MGRmNGU5YzIzZiAoImNlcGg6IHNuYXBzaG90IG5mcyByZS1leHBvcnQi
+KQpTaWduZWQtb2ZmLWJ5OiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgotLS0K
+IGZzL2NlcGgvZXhwb3J0LmMgfCA0ICsrKysKIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykKCmRpZmYgLS1naXQgYS9mcy9jZXBoL2V4cG9ydC5jIGIvZnMvY2VwaC9leHBvcnQuYwppbmRl
+eCA0NDQ1MTc0OWM1NDQuLjRhOGQwMGU5OTEwYSAxMDA2NDQKLS0tIGEvZnMvY2VwaC9leHBvcnQu
+YworKysgYi9mcy9jZXBoL2V4cG9ydC5jCkBAIC0zMDIsNiArMzAyLDggQEAgc3RhdGljIHN0cnVj
+dCBkZW50cnkgKmNlcGhfZmhfdG9fZGVudHJ5KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsCiAKIAlp
+ZiAoZmhfdHlwZSA9PSBGSUxFSURfQlRSRlNfV0lUSF9QQVJFTlQpIHsKIAkJc3RydWN0IGNlcGhf
+bmZzX3NuYXBmaCAqc2ZoID0gKHZvaWQgKilmaWQtPnJhdzsKKwkJaWYgKGZoX2xlbiA8IHNpemVv
+Zigqc2ZoKSAvIDQpCisJCQlyZXR1cm4gTlVMTDsKIAkJcmV0dXJuIF9fc25hcGZoX3RvX2RlbnRy
+eShzYiwgc2ZoLCBmYWxzZSk7CiAJfQogCkBAIC00MjIsNiArNDI0LDggQEAgc3RhdGljIHN0cnVj
+dCBkZW50cnkgKmNlcGhfZmhfdG9fcGFyZW50KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsCiAKIAlp
+ZiAoZmhfdHlwZSA9PSBGSUxFSURfQlRSRlNfV0lUSF9QQVJFTlQpIHsKIAkJc3RydWN0IGNlcGhf
+bmZzX3NuYXBmaCAqc2ZoID0gKHZvaWQgKilmaWQtPnJhdzsKKwkJaWYgKGZoX2xlbiA8IHNpemVv
+Zigqc2ZoKSAvIDQpCisJCQlyZXR1cm4gTlVMTDsKIAkJcmV0dXJuIF9fc25hcGZoX3RvX2RlbnRy
+eShzYiwgc2ZoLCB0cnVlKTsKIAl9CiAKLS0gCjIuMzQuMQoK
+--000000000000fc6e5206246bfe85--
 
