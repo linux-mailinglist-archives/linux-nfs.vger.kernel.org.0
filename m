@@ -1,101 +1,175 @@
-Return-Path: <linux-nfs+bounces-7152-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7153-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E01D299CF7D
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 16:55:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCDCB99D009
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 17:00:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 975911F22FD3
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 14:55:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E00411C234BF
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 15:00:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125BA1AE01C;
-	Mon, 14 Oct 2024 14:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVAcsYcR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59371ADFF9;
+	Mon, 14 Oct 2024 14:58:31 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AC21ABEA1;
-	Mon, 14 Oct 2024 14:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E068C1AC8AE
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 14:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728917547; cv=none; b=Yc0a2P/pYkCOR90LrP3j084FT/fPdbdt6jMuSyB4D3wF0lt5FlU0djRpS2JihhugymLpJV5hrK5KE9s2zBA4x/mVXnn6PmF6v9rKe8Hk+5pf28innIWER1ytvZpMTjIHLTcbYp2aujK4om65QENrJr9ecDMo1klV+KeJSl8vRZQ=
+	t=1728917911; cv=none; b=KWHn/w1QSz0uv2NTNXp2mXEkC3Wj5Vj+428oGqljfJPN/O7/kIGGtcsP4t0QV/v1srgcp3IX/BY2ovz1rv5ewDYntj9coce7tI4qQ/JyaVnEP1oc4PrnoGkbzo1FkQ7GLtyhX+oqi9IS6FhWx3trYSQStTofhUlbkKC26REYYOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728917547; c=relaxed/simple;
-	bh=b3J/8+uVKd506+tG92/OScywiPp2zfEA7v8OVWRBegs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y9CzS56hcqY7HULsgrfYhc2ztxcFTlpPf51sFm2rd5HC1tM4j0KGq6Sw7L0PFTvBU3ADjXRuQMNzToKP6tKsr7PcWGAnxfyCf3GXBvQCPjHkjQSPWD5bgR3AhPt0A5eaYtRlqE+g2znX+UllbLnWRg430RXIWRKNHYFghPGI4qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVAcsYcR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7B78C4CEC7;
-	Mon, 14 Oct 2024 14:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728917546;
-	bh=b3J/8+uVKd506+tG92/OScywiPp2zfEA7v8OVWRBegs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FVAcsYcRTYfTmhs2BJXaqsfU4v5XkfeUN5LmuW/+bjREGILdIYk8K4nnrqX9CFYeN
-	 8XgSS6FGVWZXhOsjpcVa+HdMXgWFzhOZbVRuDPEocduL/vQ2Sp16yiE1QXY/Ey0ckP
-	 SuNjqLV3MIxkOiNVH73UA6B1foRBKJk4YdPAcmS9f2MM0osu6iU9MGJr6KcM+SzBOS
-	 yS3unmmYKD9g81DNbCRHdlviGnhwN/H/n/Melv3xmAH7HkaO9jun2Rz5hyTpncoyoa
-	 NE3Awd3/hT3RbOe1HrlV8fGSmPfHqwzYN8DFeshaY5AlmfJ/7VKSkr+8bMQzfPdjgX
-	 b5bBG/ru7U5SA==
-From: Christian Brauner <brauner@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] API for exporting connectable file handles to userspace
-Date: Mon, 14 Oct 2024 16:52:19 +0200
-Message-ID: <20241014-loswerden-schrubben-3104ed04e382@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241011090023.655623-1-amir73il@gmail.com>
-References: <20241011090023.655623-1-amir73il@gmail.com>
+	s=arc-20240116; t=1728917911; c=relaxed/simple;
+	bh=1wR7YdaWzBIS6u0Cat88ac9y44YTUIqrEdgFxL5/gg0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Pib1P6WOUs7W2QS/ntphz6XONJ0VuFeaz4Q4dVjjFHHpXEGdfvJtjerHsP8axi+52mpttfGHUr/ISyIBTYyM/1yLWMsbYU0828zhRe+mAHS/PjhkzzMYzqyLRUR8qK1qzOsqx3754VAKJMnuaRsN64xVQE2iC+i9f7o/sOb/6JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a3b9c5bcd8so15314725ab.2
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 07:58:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728917909; x=1729522709;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wgtJ2x4yj8vTp/yllpKOmU0ZKxEzoY4DU1ac/XOZFQE=;
+        b=f4hcCwpgRCarvO7o/99RDlugrzI7JwPI1fpHKcGEVdH3S0PQCkvk3DYskWrawO9SeJ
+         OvyLevVN0xg6dGATA/rU0bxTOBCzi+o9LTaTpxNzwybC5vo9wJzovzVrrC64OFSTqZ05
+         DyyGGCx1b2RG5uNRq4/d95QryndltZoX91oKNFph7syI8AVzMJaOE1+X3/4I8Fj5zEHA
+         eggAsVXW1xVx4eXEwTS5LFf1uwCaUF/7e+cLJmMFoBp0jpi7/NXh/fAw/PNnDILGsTlu
+         CejTPJhmfyKCdKHlnZmFti0gOZglOEZQgN4v/DvJpA80GjTIcZqNmhrsNS1PgBtFGrGr
+         UIpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7oHNjfnhoWSJalCKUf0ivYKrixkafjx7IUKDx2sgeWGwlKgBr7HraPtPD+SFt42mKeyuGm3b2cvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/UUsxb9Fo3MyRizhUsldRMB4bS9rJ0ifTi8CJzjS70Ih/St0l
+	EWlqfP046IDEe1sL3gL/ozNKjpZ2K62VS85FfwJ6VdfXp0fjs0XxC7iErRLQ3izWk3/1p0OovkP
+	35JjHSpMoElECZkoIiMe/U3+/qQSw6bOLGBjb7Cy1nr6HenN6JxLE0jg=
+X-Google-Smtp-Source: AGHT+IGhhDnTU50L00P3nzyexwLD+fRWHJDCmc8c8puq1mbo7sDM4/G+CJFyy0SPEQCZRkq+bNgIfjcOE3le0ZdbJWtuyLM0q7P9
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1299; i=brauner@kernel.org; h=from:subject:message-id; bh=b3J/8+uVKd506+tG92/OScywiPp2zfEA7v8OVWRBegs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTzGqjI9V2ZNb/y34yjEbbSW/6dTOleeK94SmCvz+K8b 494mdb+7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjI4ZuMDBN/MJiFnf8de0n3 86qCXnYWgS0Lnl3/ZibMdXQR87LdXx8y/E9Sufun+LVI2d67nddmtkhXcB4L61itLpTM9YDl1v9 T+7gB
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1c88:b0:3a3:b1c4:8176 with SMTP id
+ e9e14a558f8ab-3a3b5fc417amr93003495ab.24.1728917909015; Mon, 14 Oct 2024
+ 07:58:29 -0700 (PDT)
+Date: Mon, 14 Oct 2024 07:58:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <670d3194.050a0220.4cbc0.004c.GAE@google.com>
+Subject: [syzbot] [nfs?] WARNING: ODEBUG bug in __cancel_work (2)
+From: syzbot <syzbot+3e0cda9a4186a611611b@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
+	okorniev@redhat.com, syzkaller-bugs@googlegroups.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 11 Oct 2024 11:00:20 +0200, Amir Goldstein wrote:
-> Christian,
-> 
-> These patches bring the NFS connectable file handles feature to
-> userspace servers.
-> 
-> They rely on your and Aleksa's changes recently merged to v6.12.
-> 
-> [...]
+Hello,
 
-Applied to the vfs.exportfs branch of the vfs/vfs.git tree.
-Patches in the vfs.exportfs branch should appear in linux-next soon.
+syzbot found the following issue on:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+HEAD commit:    e32cde8d2bd7 Merge tag 'sched_ext-for-6.12-rc1-fixes-1' of..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ef139f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1671921cf1ab80dd
+dashboard link: https://syzkaller.appspot.com/bug?extid=3e0cda9a4186a611611b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f8f10daca68e/disk-e32cde8d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2149fcb8bea3/vmlinux-e32cde8d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/394448ca45de/bzImage-e32cde8d.xz
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.exportfs
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3e0cda9a4186a611611b@syzkaller.appspotmail.com
 
-[1/3] fs: prepare for "explicit connectable" file handles
-      https://git.kernel.org/vfs/vfs/c/7f0e6b304c6c
-[2/3] fs: name_to_handle_at() support for "explicit connectable" file handles
-      https://git.kernel.org/vfs/vfs/c/4142418cafc9
-[3/3] fs: open_by_handle_at() support for decoding "explicit connectable" file handles
-      https://git.kernel.org/vfs/vfs/c/81667fcf9b82
+svc: failed to register nfsdv3 RPC service (errno 111).
+svc: failed to register nfsaclv3 RPC service (errno 111).
+------------[ cut here ]------------
+ODEBUG: assert_init not available (active state 0) object: ffffffff9a462b08 object type: timer_list hint: 0x0
+WARNING: CPU: 1 PID: 6772 at lib/debugobjects.c:514 debug_print_object+0x1a3/0x2b0 lib/debugobjects.c:514
+Modules linked in:
+CPU: 1 UID: 0 PID: 6772 Comm: syz.1.278 Not tainted 6.12.0-rc1-syzkaller-00031-ge32cde8d2bd7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:debug_print_object+0x1a3/0x2b0 lib/debugobjects.c:514
+Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 54 48 8b 14 dd 60 32 b1 8b 41 56 4c 89 e6 48 c7 c7 c0 25 b1 8b e8 9e 72 c0 fc 90 <0f> 0b 90 90 58 83 05 ed 42 8f 0b 01 48 83 c4 18 5b 5d 41 5c 41 5d
+RSP: 0018:ffffc90004277158 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: ffffffff814e2a49
+RDX: ffff888026c81e00 RSI: ffffffff814e2a56 RDI: 0000000000000001
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000001 R12: ffffffff8bb12ca0
+R13: ffffffff8b4f6c60 R14: 0000000000000000 R15: ffffc90004277218
+FS:  00007f08550c46c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005555559c1808 CR3: 000000007ff7a000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ debug_object_assert_init+0x249/0x370 lib/debugobjects.c:910
+ debug_timer_assert_init kernel/time/timer.c:846 [inline]
+ debug_assert_init kernel/time/timer.c:891 [inline]
+ __timer_delete+0x81/0x1c0 kernel/time/timer.c:1413
+ del_timer include/linux/timer.h:202 [inline]
+ try_to_grab_pending+0x7d/0x850 kernel/workqueue.c:2064
+ work_grab_pending kernel/workqueue.c:2157 [inline]
+ __cancel_work+0xac/0x370 kernel/workqueue.c:4308
+ __cancel_work_sync+0x1d/0x130 kernel/workqueue.c:4325
+ nfsd_file_cache_shutdown+0xc8/0x4e0 fs/nfsd/filecache.c:928
+ nfsd_shutdown_generic fs/nfsd/nfssvc.c:314 [inline]
+ nfsd_shutdown_generic fs/nfsd/nfssvc.c:308 [inline]
+ nfsd_startup_net fs/nfsd/nfssvc.c:429 [inline]
+ nfsd_svc+0x6a9/0x940 fs/nfsd/nfssvc.c:820
+ nfsd_nl_threads_set_doit+0x535/0xbe0 fs/nfsd/nfsctl.c:1722
+ genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2550
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+ netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
+ sock_sendmsg_nosec net/socket.c:729 [inline]
+ __sock_sendmsg net/socket.c:744 [inline]
+ ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2602
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2656
+ __sys_sendmsg+0x117/0x1f0 net/socket.c:2685
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f085437dff9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f08550c4038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f0854535f80 RCX: 00007f085437dff9
+RDX: 000000002000c014 RSI: 0000000020000140 RDI: 0000000000000004
+RBP: 00007f08543f0296 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f0854535f80 R15: 00007ffe830ff138
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
