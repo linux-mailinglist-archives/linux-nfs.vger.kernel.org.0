@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-7174-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F5E99D880
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 22:50:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E43699D882
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 22:50:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 949461F21949
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 20:50:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 601F01C210DB
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 20:50:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66B541D12E6;
-	Mon, 14 Oct 2024 20:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DDB21D14E9;
+	Mon, 14 Oct 2024 20:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1HEQULa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0ngvPFE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BE41D1318
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5401D1318
 	for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 20:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728939040; cv=none; b=EBlnDzELSkKPnzbSivAJ7RGTVh2O52Y6Yw2TKybv7ZlHZxJgGOW0scdws2Ok348qa01RvhCsootZWQlirvyDOssG3w0SbAZ7olF3Kf2Wc9gHZoHWGAb6XElxDJ5i8IyVToLa6lkUIbaBsSsAcZplgMHAaZG9vLHc/i9pBjnijX4=
+	t=1728939041; cv=none; b=NRrtvSeKCFBu7xRYCZlkXyyT28XDeQxrmABpTrzG8WWflYrymJ5+mnmXsbKG1KkdMm9slQa5G5a+3uq8aRfZyQcyO+zODqTGvjEFVgvMruvEjXtkn0CZg3Lbb45RfLaieLCOW8kH7F4UfyQaYsjhHWuDP/qUqnuL4r5g7T9Ur7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728939040; c=relaxed/simple;
-	bh=HlqGssIt3+GgeWSoa7cHHow5dp3EnztPYYyzAk8xGn8=;
+	s=arc-20240116; t=1728939041; c=relaxed/simple;
+	bh=DcBIxLUMKz9pCB7+oirBDOJg6h1EsTbBogYnuIqyvbo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iGr3HzE6X7FIzPGGjmuS/MeNIg9sPw9TqC+MWEQIPOjZfBwYYKRzBr2J80m2ul2aoWe+6YB+PkET+IGej5tddpa4d6itYzBhzIUHEbyIUYmTrgYUFZKZVY9L6agD8CGsaqWId0At0cgLuSooO3AynylvD13JEyj0fUopsg1TsEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1HEQULa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2642C4CEC6;
-	Mon, 14 Oct 2024 20:50:39 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=pDL62NyR90OpIP2PO5EgOUl1GeCllO3Y6QUXoHLkiN3hfhCKGAUC688EBOXo4XdUz8q5DNLQaAvwn6kb/3oMvyXWi86a0eB/pmGosBtugqXlgUV0jdWeFdlbitFjGBoyyPPq3STrXRWnXY71dr2549EkyWfhgZc4WDJT/sQruaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0ngvPFE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DCEFC4CECF;
+	Mon, 14 Oct 2024 20:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1728939040;
-	bh=HlqGssIt3+GgeWSoa7cHHow5dp3EnztPYYyzAk8xGn8=;
+	bh=DcBIxLUMKz9pCB7+oirBDOJg6h1EsTbBogYnuIqyvbo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=i1HEQULald2ITG7AgFlS84W98rCobBp7W92B4CX7aGhKxn8cjxcdgLVpullrASHrK
-	 8n3aFPK5I6YC4a7zluh5bgPHSoA3mNqlY3l8dIqu3zZllHyuZUHUcHbgchY2Whf1gB
-	 vQtrsLbUvJg1RtCZYPcOywWHNdxgkvUcpP2O0TjpFYZl5iEHK3kdBXwK/1uJk8F5I/
-	 MPqhIueOy6Vyj+UdPGRj1LhJ/Dr5AHqkmO0pfYNd4lX8R2tibeyG61jhFVzzB8alKZ
-	 Cnov8RaRKEW//5tvaaUGV7zCT1wcEzf03iJp4mzzaCxuXA7dzidfvjI7a/aN/jMwN6
-	 sx3oerthUGv8A==
+	b=c0ngvPFEmi81Y+4b/0q4drveD1yETVVeOZV90pJ1MhQE9YVY8a5MZSGoRKGgbBe5z
+	 wNQM2oBK3qPTWfXiGLP6ReNodvWYBuLMwyyFkGMha2hJvy3X1+lLVqsC6rFEjnsXNB
+	 7I1pJnEFJd9uqCb5lHXMWQiKcy4NbPoHIeuYvDN/hmozNaiei5y8EmWVypSt6Sdpcw
+	 Kw3bf80bGDgE5RPVQflDB++Q/PwKK17RN0u3FkQf8wfZPlnBQBrrUTeY6noXSB8yGo
+	 8lQw42Z2mynvopgkjpzOmJgHpBJ92ExqdmatKDEbMNiLsT7VHfi5iNEngiSkyr/wVD
+	 of8mudK1jPUTQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 14 Oct 2024 16:50:26 -0400
-Subject: [PATCH pynfs v2 6/7] nfs4.1: add support for the "delstid" draft
+Date: Mon, 14 Oct 2024 16:50:27 -0400
+Subject: [PATCH pynfs v2 7/7] st_deleg: test delegated timestamps in
+ CB_GETATTR
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,201 +53,111 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241014-cb_getattr-v2-6-3782e0d7c598@kernel.org>
+Message-Id: <20241014-cb_getattr-v2-7-3782e0d7c598@kernel.org>
 References: <20241014-cb_getattr-v2-0-3782e0d7c598@kernel.org>
 In-Reply-To: <20241014-cb_getattr-v2-0-3782e0d7c598@kernel.org>
 To: Calum Mackay <calum.mackay@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5797; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=HlqGssIt3+GgeWSoa7cHHow5dp3EnztPYYyzAk8xGn8=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnDYQcmtS2LOmczu4cDPr2Eik+vMqEhswMFHpGy
- /vX+nyaQ1mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZw2EHAAKCRAADmhBGVaC
- FX+gEACg0v2ntGPhF0CXxhn11bs5dniHJyURKe9a+YyErwD2gj44hlpSMPhfxKT4WKfqWQQ8Ac5
- 6dV2Ic0lyCrveO7OC01i4+k+32ygeWrK7ee15wUBknbgUOMbLdqiI3bqIZwvmhCwGcKiZPnnWY9
- gM3rQgEjjIOX1EkfAA3nNRxEuGTt9AcrKOcubZtrkaktKuat9AWpjprTJFU2BiKFtM01PNLER7v
- yOhspimgN2asgP1SKUoj9kdv4lYcYC2OX2ZsicvzOnF6aQtRhZPvT5uCOOHcoVv3MUoKduKroO6
- jRuT0XtIl69sHHAkOjRwp//HMChxncDpK454SC43v9hEdVr2vIXl9o7C2GW510PkU5Z/0ylToZX
- F/OQ0rVDStSvO1aL6l2SgVDLuZN9QFqCoDOnz+YqXmxu7SSM7BYzwXY2WJgxg0qwpFqDik4YY3d
- 7YB1qTAJRV2X3dUNjhC1lWRj5Uypq1Wr5QVxuPZgpH80Yvbtg+6PKXzTDCNdq2tkuYO5+aFK6Ec
- l5lF01uhDlqHRBgO7yh8fHzMK5zYK1Xv0ijCBYF5rRIJXTrl3GEX0yLcBoHqf0DoFXGYUXIiqcz
- A0jt3n1pyF551p+E+Q6Ve8uhqBu3ds9OpfT8InlI7PKJPSQFBou2LPeJNBa45biYHU1lDCsJOoC
- mKgCMZzZfWzloGg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4470; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=DcBIxLUMKz9pCB7+oirBDOJg6h1EsTbBogYnuIqyvbo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnDYQcr/qCuMdmN/7/J0FYHj5ZUweI2i0uyf5D7
+ WYi7OIPS4OJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZw2EHAAKCRAADmhBGVaC
+ FXLiEACNN+XYwYNIxm009s2yKHZHkJi95e3pVTweMMRl6dxsNMxlkKaRfqyBpx4Qmx8NriUX54o
+ 1O0gPO4iByQjJQDFWy/oCibGaToX//YdOSo6bwAZ2Y2Pa1np5ExXA7y3P4LotmrLiiy/PWfeGUF
+ 8LY4m9eAC0CvruJdZaTLhqB8ZfWN8hJ66F9puibflyT2QQa2iJ5yeVIuKvFdddDsMFubyqkdnvQ
+ 3lI1pTsOGmzF9ZFrVm4IEYIBX6uhw3OJATfBStF0kSazaGPAsIrKzIVvqKP9acZn4pMHm2sj9B0
+ pzaJDVtwIl1Aq5GnAMrO+ISbJfJsw5S9+KXEmBQGaA1aRyztJRN31OGizZrIegI98/0MqoMsSCX
+ Zn9dePJ+Cvso8hEfQ+ksWVE5uMyxN5Npz7EuCm2r0QHjJdZXEG4X/CREqbyS4gklfD3YH26Dicp
+ UeiEzrreB1ajKYEAZCGF5Z4LWRl7zCn2TiRkH0uPzsEukMeFU2xr807aIhcwehNTk5p8oCS3tiI
+ kgV1d3Hk3eKS//OTeAVXqA4X1Qus0lKxsj+dy2RBz/9v0Tr2+aJkLPvW8OiOOFyNISZoJk93sdr
+ Ndsjg5rMXG8ctLu4yf2tA0SZnFuAscee82DC4s5f/O9CADKHhfm0zL0XDP1OvYDPEatl/l0wCPd
+ +neeVEPR2AsoHlA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Add the new .x snippet to nfs4.x, and the necessary info about the new
-attributes.
+First, query the server to get the SUPPORTED_ATTRS and OPEN_ARGUMENTS,
+and determine whether delegated timestamps are supported. If they are,
+request them, and test whether they are as expected.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- nfs4.1/nfs4lib.py                   |   3 +
- nfs4.1/server41tests/environment.py |   3 +
- nfs4.1/xdrdef/nfs4.x                | 111 ++++++++++++++++++++++++++++++++++--
- 3 files changed, 113 insertions(+), 4 deletions(-)
+ nfs4.1/server41tests/st_delegation.py | 42 +++++++++++++++++++++++++++++------
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
-diff --git a/nfs4.1/nfs4lib.py b/nfs4.1/nfs4lib.py
-index b1a247b02f66a529da7f2bd98ec436f168b30873..d3a1550f1ce1e135b124a59fa1518c9ff89fd502 100644
---- a/nfs4.1/nfs4lib.py
-+++ b/nfs4.1/nfs4lib.py
-@@ -731,5 +731,8 @@ attr_info = { FATTR4_SUPPORTED_ATTRS : A("r", "fs"),
-               FATTR4_MODE_SET_MASKED : A("w", "obj"),
-               FATTR4_FS_CHARSET_CAP : A("r", "fs"),
-               FATTR4_XATTR_SUPPORT : A("r", "obj"),
-+              FATTR4_TIME_DELEG_ACCESS : A("w", "obj"),
-+              FATTR4_TIME_DELEG_MODIFY : A("w", "obj"),
-+              FATTR4_OPEN_ARGUMENTS : A("r", "fs"),
-               }
- del A
-diff --git a/nfs4.1/server41tests/environment.py b/nfs4.1/server41tests/environment.py
-index 0b7c976d8582a0e4ef5bd1d21ce34247f26899e4..48284e029634fff60b7690e058cd4131bfea9b08 100644
---- a/nfs4.1/server41tests/environment.py
-+++ b/nfs4.1/server41tests/environment.py
-@@ -108,6 +108,9 @@ class Environment(testmod.Environment):
-         AttrInfo('time_modify_set', 'w', settime4(0)),
-         AttrInfo('mounted_on_fileid', 'r', 0),
-         AttrInfo('xattr_support', 'r', False),
-+        AttrInfo('time_deleg_access', 'r', nfstime4(0, 0)),
-+        AttrInfo('time_deleg_modify', 'r', nfstime4(0, 0)),
-+        AttrInfo('open_arguments', 'r', open_arguments4()),
-         ]
+diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
+index 2aa73ba7acd0bd857a4fd5206b8857f980176d73..fc374e693cb4b9a9adaaf5ff15a64a02573113b0 100644
+--- a/nfs4.1/server41tests/st_delegation.py
++++ b/nfs4.1/server41tests/st_delegation.py
+@@ -301,22 +301,44 @@ def _testCbGetattr(t, env, change=0, size=0):
+     sess1 = env.c1.new_client_session(b"%s_1" % env.testname(t))
+     sess1.client.cb_post_hook(OP_CB_GETATTR, getattr_post_hook)
  
-     home = property(lambda s: use_obj(s.opts.home))
-diff --git a/nfs4.1/xdrdef/nfs4.x b/nfs4.1/xdrdef/nfs4.x
-index 7b4e755369d749c2570a624895c234b1454df0cb..ee3da8aa7a342e4d3829f4b1b1f82543275199c5 100644
---- a/nfs4.1/xdrdef/nfs4.x
-+++ b/nfs4.1/xdrdef/nfs4.x
-@@ -1742,10 +1742,12 @@ const
-  = 0x20000;
+-    fh, deleg = __create_file_with_deleg(sess1, env.testname(t),
+-                                                OPEN4_SHARE_ACCESS_READ  |
+-                                                OPEN4_SHARE_ACCESS_WRITE |
+-                                                OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
++    res = sess1.compound([op.putrootfh(),
++                          op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS,
++                                                          FATTR4_OPEN_ARGUMENTS]))])
++    check(res)
++    caps = res.resarray[-1].obj_attributes
++
++    openmask = (OPEN4_SHARE_ACCESS_READ  |
++                OPEN4_SHARE_ACCESS_WRITE |
++                OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
++
++    if caps[FATTR4_SUPPORTED_ATTRS] & FATTR4_OPEN_ARGUMENTS:
++        if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
++            openmask |= 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
++
++    fh, deleg = __create_file_with_deleg(sess1, env.testname(t), openmask)
+     print("__create_file_with_deleg: ", fh, deleg)
+-    attrs1 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE])
+-    cbattrs = dict(attrs1)
++    attrs1 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE,
++                                        FATTR4_TIME_ACCESS, FATTR4_TIME_MODIFY])
++
++    cbattrs[FATTR4_CHANGE] = attrs1[FATTR4_CHANGE]
++    cbattrs[FATTR4_SIZE] = attrs1[FATTR4_SIZE]
  
- enum open_delegation_type4 {
--        OPEN_DELEGATE_NONE      = 0,
--        OPEN_DELEGATE_READ      = 1,
--        OPEN_DELEGATE_WRITE     = 2,
--        OPEN_DELEGATE_NONE_EXT  = 3 /* new to v4.1 */
-+        OPEN_DELEGATE_NONE              = 0,
-+        OPEN_DELEGATE_READ              = 1,
-+        OPEN_DELEGATE_WRITE             = 2,
-+        OPEN_DELEGATE_NONE_EXT          = 3, /* new to v4.1 */
-+        OPEN_DELEGATE_READ_ATTRS_DELEG  = 4,
-+        OPEN_DELEGATE_WRITE_ATTRS_DELEG = 5
- };
+     if change != 0:
+         cbattrs[FATTR4_CHANGE] += 1
+         if size > 0:
+             cbattrs[FATTR4_SIZE] = size
  
- enum open_claim_type4 {
-@@ -1921,8 +1923,10 @@ switch (open_delegation_type4 delegation_type) {
-         case OPEN_DELEGATE_NONE:
-                 void;
-         case OPEN_DELEGATE_READ:
-+        case OPEN_DELEGATE_READ_ATTRS_DELEG:
-                 open_read_delegation4 read;
-         case OPEN_DELEGATE_WRITE:
-+        case OPEN_DELEGATE_WRITE_ATTRS_DELEG:
-                 open_write_delegation4 write;
-         case OPEN_DELEGATE_NONE_EXT: /* new to v4.1 */
-                 open_none_delegation4 od_whynone;
-@@ -3949,3 +3953,102 @@ program NFS4_CALLBACK {
-                         CB_COMPOUND(CB_COMPOUND4args) = 1;
-         } = 1;
- } = 0x40000000;
++    if openmask & 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
++        cbattrs[FATTR4_TIME_DELEG_ACCESS] = attrs1[FATTR4_TIME_ACCESS]
++        cbattrs[FATTR4_TIME_DELEG_MODIFY] = attrs1[FATTR4_TIME_MODIFY]
++        if change != 0:
++            cbattrs[FATTR4_TIME_DELEG_ACCESS].seconds += 1
++            cbattrs[FATTR4_TIME_DELEG_MODIFY].seconds += 1
 +
-+/*
-+ * The following content was extracted from draft-ietf-nfsv4-delstid
-+ */
-+
-+typedef bool            fattr4_offline;
-+
-+
-+const FATTR4_OFFLINE            = 83;
-+
-+
-+struct open_arguments4 {
-+  bitmap4  oa_share_access;
-+  bitmap4  oa_share_deny;
-+  bitmap4  oa_share_access_want;
-+  bitmap4  oa_open_claim;
-+  bitmap4  oa_create_mode;
-+};
-+
-+
-+enum open_args_share_access4 {
-+   OPEN_ARGS_SHARE_ACCESS_READ  = 1,
-+   OPEN_ARGS_SHARE_ACCESS_WRITE = 2,
-+   OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
-+};
-+
-+
-+enum open_args_share_deny4 {
-+   OPEN_ARGS_SHARE_DENY_NONE  = 0,
-+   OPEN_ARGS_SHARE_DENY_READ  = 1,
-+   OPEN_ARGS_SHARE_DENY_WRITE = 2,
-+   OPEN_ARGS_SHARE_DENY_BOTH  = 3
-+};
-+
-+
-+enum open_args_share_access_want4 {
-+   OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 4,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 5,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
-+                                                   = 17,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
-+                                                   = 18,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 20,
-+   OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
-+};
-+
-+
-+enum open_args_open_claim4 {
-+   OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
-+   OPEN_ARGS_OPEN_CLAIM_PREVIOUS      = 1,
-+   OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR  = 2,
-+   OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV = 3,
-+   OPEN_ARGS_OPEN_CLAIM_FH            = 4,
-+   OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH  = 5,
-+   OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6
-+};
-+
-+
-+enum open_args_createmode4 {
-+   OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
-+   OPEN_ARGS_CREATE_MODE_GUARDED       = 1,
-+   OPEN_ARGS_CREATEMODE_EXCLUSIVE4     = 2,
-+   OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  = 3
-+};
-+
-+
-+typedef open_arguments4 fattr4_open_arguments;
-+
-+
-+%/*
-+% * Determine what OPEN supports.
-+% */
-+const FATTR4_OPEN_ARGUMENTS     = 86;
-+
-+
-+const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
-+
-+
-+const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
-+
-+
-+/*
-+ * attributes for the delegation times being
-+ * cached and served by the "client"
-+ */
-+typedef nfstime4        fattr4_time_deleg_access;
-+typedef nfstime4        fattr4_time_deleg_modify;
-+
-+
-+%/*
-+% * New RECOMMENDED Attribute for
-+% * delegation caching of times
-+% */
-+const FATTR4_TIME_DELEG_ACCESS  = 84;
-+const FATTR4_TIME_DELEG_MODIFY  = 85;
-+
-+
-+const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
+     # create a new client session and do a GETATTR
+     sess2 = env.c1.new_client_session(b"%s_2" % env.testname(t))
+-    slot = sess2.compound_async([op.putfh(fh), op.getattr(1<<FATTR4_CHANGE | 1<<FATTR4_SIZE)])
++    slot = sess2.compound_async([op.putfh(fh), op.getattr(1<<FATTR4_CHANGE | 1<<FATTR4_SIZE |
++                                                          1<<FATTR4_TIME_ACCESS | 1<<FATTR4_TIME_MODIFY)])
+ 
+     # wait for the CB_GETATTR
+     completed = cb.wait(2)
+@@ -343,6 +365,9 @@ def testCbGetattrNoChange(t, env):
+         fail("Bad size: %u != %u" % (attrs1[FATTR4_SIZE], attrs2[FATTR4_SIZE]))
+     if attrs1[FATTR4_CHANGE] != attrs2[FATTR4_CHANGE]:
+         fail("Bad change attribute: %u != %u" % (attrs1[FATTR4_CHANGE], attrs2[FATTR4_CHANGE]))
++    if FATTR4_TIME_DELEG_MODIFY in attrs2:
++        if attrs1[FATTR4_TIME_MODIFY] != attrs2[FATTR4_TIME_DELEG_MODIFY]:
++            fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " != ", attrs2[FATTR4_TIME_DELEG_MODIFY])
+ 
+ def testCbGetattrWithChange(t, env):
+     """Test CB_GETATTR with simulated changes to file
+@@ -359,3 +384,6 @@ def testCbGetattrWithChange(t, env):
+         fail("Bad size: %u != 5" % attrs2[FATTR4_SIZE])
+     if attrs1[FATTR4_CHANGE] == attrs2[FATTR4_CHANGE]:
+         fail("Bad change attribute: %u == %u" % (attrs1[FATTR4_CHANGE], attrs2[FATTR4_CHANGE]))
++    if FATTR4_TIME_DELEG_MODIFY in attrs2:
++        if attrs1[FATTR4_TIME_MODIFY] == attrs2[FATTR4_TIME_DELEG_MODIFY]:
++            fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " == ", attrs2[FATTR4_TIME_DELEG_MODIFY])
 
 -- 
 2.47.0
