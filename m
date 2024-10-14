@@ -1,92 +1,133 @@
-Return-Path: <linux-nfs+bounces-7160-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7161-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63DDE99D5D9
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 19:51:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AB1399D75A
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 21:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0759B231EF
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 17:51:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A828B1C214F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Oct 2024 19:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A9A1B85C0;
-	Mon, 14 Oct 2024 17:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DA591CB330;
+	Mon, 14 Oct 2024 19:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="iPNSFfdr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCwNd6IK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8491C3300
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Oct 2024 17:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F346A7F7FC;
+	Mon, 14 Oct 2024 19:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728928298; cv=none; b=OQ9SeWkelPDz49pUFaNZjh8Ixh2kVCJv2LU5YtqaXmMyVrNWkz1SHV7Ebyxry0mV0YNnMUVWVq5GwgQSD/11c04FuAtlxiYSeQGacYz21BbqD1f49tjLM8SkM3k4mpguSAzRFb5beZVKUaDCMeugF57gDmMxpZEhz+n0cG4WRk4=
+	t=1728934030; cv=none; b=ZPMvwoRXJHjTLp98O7jF9cKhpz12MCEvpNkuz2KVVkU1V2mV5rislY+TYoxygyxX9HbHKN5QFuuU/oWiVa1D3wz8/fmcPEx6Br2R2f8QCZutBoeZ8W/oA9WNYP1jxkMxFO2f+b/swzq/neZzbGkqW+K41KWjU5i1JhA4+Gmd/8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728928298; c=relaxed/simple;
-	bh=YDpK8DElrGggMuygJgQHlKxi+iqaIvRMgS+t8kxYB9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PeO5EqKZ1H9hHpsNh9dndePzGIrfXpf3tW0O0obex9KX9v6Vrt6sqsPXBmgYoTANIAgRMEDCzFVcNY95bl3U4jRXhHJI+VM82fdCBG3P6Y/5Ba4VH42EtEgwVsV6bcckX6cY4jc+x2Z/ojwqUe4OaJwp8XKepS7jw1joZLG2wLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=iPNSFfdr; arc=none smtp.client-ip=84.16.66.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XS4Xt5rf6zM0v;
-	Mon, 14 Oct 2024 19:51:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1728928286;
-	bh=ZefrrTPDl3Jk7cEYA8aBvb4pJxUrCXTEIHSc8TD2YTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPNSFfdrDJ6Ob7LIGnnpWicwhW/cx0Q9NgEsqn3ftTDWrP3c8uqhN9iapVArdi/dX
-	 jCqayCuBnap8qHcgK6wtleiKArAZcAYdSTWIBPQHc8tRsUn2p5ByyyzO0S7LrDVdey
-	 vhXF4oVGdsyRhgnoisRKn+t84Bn7jiKsfwwAhmjw=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XS4Xs6f5Pzh7Z;
-	Mon, 14 Oct 2024 19:51:25 +0200 (CEST)
-Date: Mon, 14 Oct 2024 19:51:21 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
-Message-ID: <20241014.ij8ohshuv7Op@digikod.net>
-References: <20241010152649.849254-1-mic@digikod.net>
- <20241014-bestnote-rundweg-ed234af3b86a@brauner>
+	s=arc-20240116; t=1728934030; c=relaxed/simple;
+	bh=F6vEvPmuUdtzsK0vCJAXI7DtzpOr0J56DU/nlL3w+1c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=b2qf1L/f08ow4+oWuL6lVChXueMIaSLuEUmc+yc4rFC+Nwn3Of4vSJdK6+FkFnhqtF8gAIiZYqC57uN2kLv/nMnz12/8XYKkbOUpZtOaBqaoV9ieSxlmFtdt3DQCVL3FegT+OzTtJ//zVgJDmIOtj7JI7QK3ZTZnUBIEge+82Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCwNd6IK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FABCC4CEC3;
+	Mon, 14 Oct 2024 19:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728934029;
+	bh=F6vEvPmuUdtzsK0vCJAXI7DtzpOr0J56DU/nlL3w+1c=;
+	h=From:Subject:Date:To:Cc:From;
+	b=vCwNd6IKrX3beID6+DUJOEPbN70gTY94qULkF38vHTSbGI73VhAvNkNu3jD6lDoUO
+	 kM6iCy5YNd20/q8PzR9NG7R7duT2ym+cmu7xqh5+mh8Cs5hAazosHi5bt5ONNSlKCb
+	 lT4FUmdgqepPnzjmJB6vunkmpyHW0g3ble3vT7DCmlpCuSd9LT50KEX6z8M1m5D6kr
+	 DIFjXwK4yBXNzWcs5xxqjNx3t65+L09lzAAd2AMPLp4xl9lMgsofFQgBIWy6JklJsn
+	 /+nL9MSQ+qeKwKI39YMamiEFb1LLQ66GbRwUit/mif7BL0Wpf8qSxZHhAsqHx3gzoo
+	 kl5nwSOE2Y++g==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/6] nfsd: update the delstid patches for latest draft
+ changes
+Date: Mon, 14 Oct 2024 15:26:48 -0400
+Message-Id: <20241014-delstid-v1-0-7ce8a2f4dd24@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241014-bestnote-rundweg-ed234af3b86a@brauner>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHlwDWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDA0MT3ZTUnOKSzBTdpDQDUyMjg8QUSxNDJaDqgqLUtMwKsEnRsbW1AAc
+ 6tx9ZAAAA
+X-Change-ID: 20241014-delstid-bf05220ad941
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Thomas Haynes <loghyr@gmail.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2115; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=F6vEvPmuUdtzsK0vCJAXI7DtzpOr0J56DU/nlL3w+1c=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnDXCECmSggnwshJHB1PlHjFbrF/jhRbiBMvOER
+ kEd4/HX9D+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZw1whAAKCRAADmhBGVaC
+ FaxYEACWuq4gR9UPFxChyhw/pKyDLBEtdIotg7syeB7Mj0n/a4/mX1MY/UIPv/qiTccxhNaRNqQ
+ SnQo7zOKWZW6cIwuJVWYwY2vmuzi7vyUG2B0S3KAuj2L2AbCFLrxhASyqmQXHH70zuxE5Z80RmC
+ LiTGzmDN/TUx8wPlEmDsBbpdHwcId3hvGCRv23nM7UYstFjH9TDf6gHWZhVBOwcCujcr8QlmkAl
+ YaMxPxJgL2ekzRB1QCWQABDV4jrce9OJj06zN5YiU3Mc16OrnqAgyib1BotrQUuPEI2dhqp+nYa
+ cvjxveuCxhrs5CqsaOrGAV7TQdK4Dm1RHmSh7agnPkwE5lL7FPmmy0RByRZUpKgAeGBs8DSO31J
+ p31mc8E55ATK3HnLltBRBVPuB2n3iS6bjz9zMJEXR/Ze+Ti3KJjPZqp01zfobiDLec6lj6HrxtP
+ YmygEOTtNxObDpJ1jqJuokt9DrC9OC9HJIwxs9RVNYR6WEaaz6d0L+rZyynAUfGqbeawOsOZCfo
+ Qo6uM5VWf4h02uIsLKh+ptebQ1B7z2VEsrI6uBwPSjqY4y5K3MaN0iIXflaLh5pN99mDAhYdMqA
+ e4/b5vR7u/Kkhype2CLbzPIyIbQcLNZZkk50bT4r4LQWRKHfVODhwntzgmGYRDHbmBoQXxGW30P
+ 6oyF2JYFqmvIs5g==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Mon, Oct 14, 2024 at 04:47:17PM +0200, Christian Brauner wrote:
-> On Thu, Oct 10, 2024 at 05:26:41PM +0200, Mickaël Salaün wrote:
-> > When a filesystem manages its own inode numbers, like NFS's fileid shown
-> > to user space with getattr(), other part of the kernel may still expose
-> > the private inode->ino through kernel logs and audit.
-> > 
-> > Another issue is on 32-bit architectures, on which ino_t is 32 bits,
-> > whereas the user space's view of an inode number can still be 64 bits.
-> > 
-> > Add a new inode_get_ino() helper calling the new struct
-> > inode_operations' get_ino() when set, to get the user space's view of an
-> > inode number.  inode_get_ino() is called by generic_fillattr().
-> 
-> I mean, you have to admit that this is a pretty blatant hack and that's
-> not worthy of a separate inode method, let alone the potential
-> performance implication that multiple people already brought up.
+This patchset is an update to the delstid patches that went into Chuck's
+nfsd-next branch recently. The original versions of the spec left out
+OPEN_DELEGATE_READ_ATTRS_DELEG and OPEN_DELEGATE_WRITE_ATTRS_DELEG. This
+set adds proper support for them.
 
-My initial approach was to use u64 for struct inode's i_ino, but I
-realized it had too much implications on potentially all filesystems and
-other parts of the kernel.  I'm sure they are much more legitimate folks
-to handle this transition.  I'd be curious to know how such i_ino type
-change could be backported though.
+My suggestion is to drop these two patches from nfsd-next:
+
+    544c67cc0f26 nfsd: handle delegated timestamps in SETATTR
+    eee2c04ca5c1 nfsd: add support for delegated timestamps
+
+...and then apply this set on top of the remaining pile. The resulting
+set is a bit larger than the original, as I took the liberty of adding
+some more symbols to the autogenerated part of the spec.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (6):
+      nfsd: drop inode parameter from nfsd4_change_attribute()
+      nfsd: switch to autogenerated definitions for open_delegation_type4
+      nfsd: rename NFS4_SHARE_WANT_* constants to OPEN4_SHARE_ACCESS_WANT_*
+      nfsd: prepare delegation code for handing out *_ATTRS_DELEG delegations
+      nfsd: add support for delegated timestamps
+      nfsd: handle delegated timestamps in SETATTR
+
+ Documentation/sunrpc/xdr/nfs4_1.x    |  22 ++++-
+ fs/nfsd/nfs4callback.c               |  42 ++++++++-
+ fs/nfsd/nfs4proc.c                   |  26 ++++-
+ fs/nfsd/nfs4state.c                  | 178 ++++++++++++++++++++++++++---------
+ fs/nfsd/nfs4xdr.c                    |  57 ++++++++---
+ fs/nfsd/nfs4xdr_gen.c                |  19 +++-
+ fs/nfsd/nfs4xdr_gen.h                |   2 +-
+ fs/nfsd/nfsd.h                       |   2 +
+ fs/nfsd/nfsfh.c                      |  11 +--
+ fs/nfsd/nfsfh.h                      |   3 +-
+ fs/nfsd/state.h                      |  18 ++++
+ fs/nfsd/xdr4cb.h                     |  10 +-
+ include/linux/nfs4.h                 |   2 +-
+ include/linux/sunrpc/xdrgen/nfs4_1.h |  35 ++++++-
+ include/linux/time64.h               |   5 +
+ 15 files changed, 348 insertions(+), 84 deletions(-)
+---
+base-commit: 9f8009c5be9367d01cd1627d6a379b4c642d8a28
+change-id: 20241014-delstid-bf05220ad941
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
