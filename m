@@ -1,83 +1,123 @@
-Return-Path: <linux-nfs+bounces-7179-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7180-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17C0799E072
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 10:10:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED6C99EE06
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 15:42:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B99841F21075
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 08:10:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 233F11F258F2
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 13:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D341BFDF4;
-	Tue, 15 Oct 2024 08:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0CA1C07F6;
+	Tue, 15 Oct 2024 13:40:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTG0LUgW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uX00nqRb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44161BF804
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Oct 2024 08:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5D1C07CC;
+	Tue, 15 Oct 2024 13:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728979803; cv=none; b=k0z0IJYhTEn9HyTG/BG418Dbj3VlcRydjwg4I64CyFOz72HLHWCSQzvZoQdOex8hnEt5/jkqdOzYTCKFOzxdsiW3wGjfNQMRR5ffcBs3cBRd0f2Mq4Nf0A9E0X5MMaNFOBCtKYalUVm9J72S3sxm5P3LfHE5qHZHMt8YdE92k0I=
+	t=1728999628; cv=none; b=CRPqQgcXYko0uyCHqUOnDYOa6q3AlpeIJM6t/cIKbSmBCUwI4ZQ+TXN9VbTdGsdoihjYFg6mb/e+pYgF83I03wF9IXvYGIoZTSnoVhRy8hxYJhOxJwBWa0Kox316+ZHHuZs/1KvhCwJrwI8EYaoLddNxnf8XJky6IPSafrlS8C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728979803; c=relaxed/simple;
-	bh=tyQn3xQ8ksNn65iW1j3yeuUc/ELtRO1a9iqrm3kwu1I=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=FAQ9Q7bF+0ObbxFO6QrSQXUQAKVZwZLq2Rj4r0QnWnvPgcJF9TjE1PgC2YJ4WOHifUmfRB2FTyvDx4MtfZNV6e1yKmepnmciUN/xyBptEtCsLyqpFBXulv4HD4jQiJS1hyDKpHoaSuwV/cpzJ31Nx9rnshFMoDG2SpLlMmSdXVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTG0LUgW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46379C4CEC7;
-	Tue, 15 Oct 2024 08:10:03 +0000 (UTC)
+	s=arc-20240116; t=1728999628; c=relaxed/simple;
+	bh=+eg5Ogets9SiLlYwP2uE1cyuHarfu0eMJpCc1LNOyZk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ug4MgT8fgB7kMq9hVseVE0EAWTXXezthk4GuhW0dcHjEoxnkLzY9RRTsKpoyfXf+6y4CbmDdFdnsdJ3+Ydizvu4VqhbFM6nlobQVoUO3lTsdULFp1bdrbcGGFtxlV2vm83tT/Iq/RhDT5Eu1hrDnVpRLuvgIyWIraeoWWUSSLQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uX00nqRb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D07C4CEC6;
+	Tue, 15 Oct 2024 13:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728979803;
-	bh=tyQn3xQ8ksNn65iW1j3yeuUc/ELtRO1a9iqrm3kwu1I=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=sTG0LUgWt7gy+678Kcp8Psv6vAs64nZkU39ixyLYvJ5eXXSm4q43u2PbVi8wQn2Gr
-	 oeg2J2AFnciurW8lQxGkG5B2XkGKHH87mNJRf3jiHwgnIjcSQ+PTD5x9TNjzSU8lGH
-	 FXIkapI727J4RyVHibEx09DYjySxRAk+tyWjik/Cm+VFhQmSoOH9TEV895KzuOdvXo
-	 knsJywnq4ziQKNDaLq94H0eYUTJqk82qsinqRAULC822tKV6D4oNYGPxlQBxaihtgX
-	 ui+8xqAezjnWjqxIyP0/yLo6yov4rxJhpLnDF+7xo/iWiQ2y20GmFp2pcK/1FG2VUH
-	 TtfXE21SOLjSQ==
+	s=k20201202; t=1728999626;
+	bh=+eg5Ogets9SiLlYwP2uE1cyuHarfu0eMJpCc1LNOyZk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uX00nqRbj0TEG1Tz8shbGOT2WxuN/MzsJ0/O8D6fMk7nTY7nynwkrPoV5Izq1912G
+	 MCNxilzGTiCcfUAS5pjSXwW6q3cRG/BW6D6YbtnmlO0q+fhZtWAV8iW5Tl912r9gZP
+	 jE929Z//XzSjfIYVBdbbV+yN6bRsMcoaXu9P5SmP/HpGUsX8oWRvpS3y/CHIagsxmZ
+	 wSs02+S5+DmmcEkoZwbxu00ArbFRTvF91bDqH9pPk66sN6FjSlgd1oE0CGyqAvnLq/
+	 xoAmzPiMCVa7yA7fqt68pGzpMEomnxnAVW+/H1RaLmsld8vRk3GlFiM5j84R4We9bm
+	 NTYamxloL6Fqw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 764823809A8A;
-	Tue, 15 Oct 2024 08:10:09 +0000 (UTC)
-From: Jan via Bugspray Bot <bugbot@kernel.org>
-Date: Tue, 15 Oct 2024 08:10:06 +0000
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B943809A8A;
+	Tue, 15 Oct 2024 13:40:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: cel@kernel.org, trondmy@kernel.org, anna@kernel.org, jlayton@kernel.org, 
- linux-nfs@vger.kernel.org
-Message-ID: <20241015-b219278c2-f2ca1dbdb546@bugzilla.kernel.org>
-In-Reply-To: <20240914-b219278c0-d3a919d16eb1@bugzilla.kernel.org>
-References: <20240914-b219278c0-d3a919d16eb1@bugzilla.kernel.org>
-Subject: Re: >=linux-6.6.0: Resource temporarily unavailable when reading
- file attributes the first time
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/17] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172899963173.1165800.13282848624565322990.git-patchwork-notify@kernel.org>
+Date: Tue, 15 Oct 2024 13:40:31 +0000
+References: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+In-Reply-To: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ vbabka@suse.cz, paulmck@kernel.org, tom@talpey.com, Dai.Ngo@oracle.com,
+ okorniev@redhat.com, neilb@suse.de, linux-can@vger.kernel.org,
+ bridge@lists.linux.dev, b.a.t.m.a.n@lists.open-mesh.org,
+ linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com,
+ netdev@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-block@vger.kernel.org, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ naveen@kernel.org, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
 
-Jan writes via Kernel.org Bugzilla:
+Hello:
 
-A workaroud is to force version 4.0 in fstab like this
+This series was applied to netdev/net-next.git (main)
+by Simon Wunderlich <sw@simonwunderlich.de>:
 
-/etc/fstab
----------------------------------------------------------------------
-localhost:/mnt/test/local   /mnt/test/shared  nfs   rw,noatime,vers=4.0   0 0
----------------------------------------------------------------------
+On Sun, 13 Oct 2024 22:16:47 +0200 you wrote:
+> Since SLOB was removed and since
+> commit 6c6c47b063b5 ("mm, slab: call kvfree_rcu_barrier() from kmem_cache_destroy()"),
+> it is not necessary to use call_rcu when the callback only performs
+> kmem_cache_free. Use kfree_rcu() directly.
+> 
+> The changes were done using the following Coccinelle semantic patch.
+> This semantic patch is designed to ignore cases where the callback
+> function is used in another way.
+> 
+> [...]
 
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219278#c2
-You can reply to this message to join the discussion.
+Here is the summary with links:
+  - [01/17] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [02/17] ipv4: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [03/17] inetpeer: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [04/17] ipv6: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [05/17] xfrm6_tunnel: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [06/17] batman-adv: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    https://git.kernel.org/netdev/net-next/c/356c81b6c494
+  - [08/17] net: bridge: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [10/17] can: gw: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [14/17] kcm: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [15/17] netfilter: nf_conncount: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [16/17] netfilter: expect: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+  - [17/17] netfilter: xt_hashlimit: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+    (no matching commit)
+
+You are awesome, thank you!
 -- 
 Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
