@@ -1,119 +1,120 @@
-Return-Path: <linux-nfs+bounces-7191-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7192-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D582999FCFC
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 02:16:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3B4C99FD20
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 02:29:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A205286B22
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 00:16:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 313261C242D4
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 00:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D3BA945;
-	Wed, 16 Oct 2024 00:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5844B673;
+	Wed, 16 Oct 2024 00:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dGDehaZp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmV1IpK7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AA5524F
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 00:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86AFB641;
+	Wed, 16 Oct 2024 00:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729037770; cv=none; b=iah2fsW0gVx4rwajnnG1K9tj/iBECua7mLi3D7I9l5CSd9nCtD3V8TTnvzHaknQ1SMkoLZ018xCcDq1sLtNtUWRPR2cieW5FF/a2IHIhzWRUgfxv1TxyMeiqxvJR2knebvJK/qLQUEwbZi+XUGDwRQmX/GsadRz9C6N74HYVfAo=
+	t=1729038575; cv=none; b=dysIJ5vBtnyMYO0S50FKDc6IFEEYVrrAlRWQWwhZ0CL2UwRhQYJj5dVW0FrvUAYWE787eMEHSz+xGbzIFE+eVHNZ+Gvh1k9SnCnh14ec5+ed72rL9s9+Xa+fq3P3YWR1M9CyJbMcf6UvyG4LTlX0hQmDtjieQSHKnNNs210fSGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729037770; c=relaxed/simple;
-	bh=0RR+M6O+iq8XIjRHinrWxf3DoFEOcB1Lx9Es2nZTe7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WcXwJUChUskcsPOo84nWkXka9D2t2l7kk7fN6PDs/DcG1C0W5Aogeb8yZ7PrjyCM5Y+9v5zfvhnVrrM6MBvlLhyywkSVhGRFAvwjN53TFvw3j268q+3vCaSrEWiQR9xgOv5d94P/z8xsk6xIwyL3pgLEaa9zasOtlC3RwyYelN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dGDehaZp; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e29715835ceso1187631276.3
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Oct 2024 17:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1729037767; x=1729642567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VwIVXsv+0K/tRmuz74E0Mk7+OGVGSOJtC2LxGockSrQ=;
-        b=dGDehaZpDW550MqhEsubuL0aypwzrX+ohNp1JqHP0Hs+rHzC4CpkSSKRsfZRBvPO8a
-         ERfYEh4QNBihDwgaASzOEhV5vbi/OiluvS6YRM9iURxg2dEET4bQwOUnXT9N8qIz2HbF
-         Nbho2eXwGJBggUJYqhvi+W06qM5lqkOpo5KTGQ31gI1NUgU2dsC1g/orSbwv+Cgaa3Zc
-         WW4vwAvsdn+gg1Vaii/eU4In/QbMrCXhEXDouaJhpW+tSmpzwn8CXxbR86q5vg2V2prR
-         yS8I3d+5o5pG9m2HdnyLWnF4jQDeEieodCU+/uWQKn/nfBD3zLVvnV7/MrI36nCOIa8f
-         /Euw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729037767; x=1729642567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VwIVXsv+0K/tRmuz74E0Mk7+OGVGSOJtC2LxGockSrQ=;
-        b=v5N7Aus1yONme8rd+i1hBDC8to3cY3ej0cnM8uEhY1mnVqA1VWOnbZaVFGxtuvU+5m
-         eEdCueqsn7L6ODXr6xfevKDt7co9LOPbcOVYUcFDP5l9g0RsWUql3dTJ77r1DdG2FNpX
-         3V3jKVfL5B9pxL68nmCawTg54DdhJfZydwV/HZcxfkE3lGj1kXLCerWGJVfoBpo1VjKp
-         K7GEUb/cBqbvDCVw7QfGqLrOs4fOhFWeJ75wkm88/Qb0/RmQUQiiJIIVWyZPUM020HIG
-         ayqGbebNHh1VINRob0CqDmdoJuZe/ba5EJ191nuQVlCthvCun8yMxD/5N8F3SJTPOOPT
-         bIyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmIPF0q7T7GG/eKJwZE0wuNXharVjvPcHURKalwAg5PCXtyrwZdg6Tg97YumFZZnEddHWRXVuMu5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOwZlRn687emnJrCkU/UVyOFZ/R0girYVystgYmxYn3jamUkbK
-	cW6S+CWMQfVMqbwj+GeO0iUyz30pvVgkr8SVyLZYHp7OiOuvEEDajU/CWp5VZSHUciIZYqJefIF
-	563lN1Ox/hqt8gz4A3ef24I0aQElHgXkcAoQ9
-X-Google-Smtp-Source: AGHT+IESf3Jz8ORecE7b8c1bkUbZCtOoJ2cisSrtY1CixXa6d/r44qsu/muJ6kPqg3NbhmLKJVsXrujBGNQ70iaASHI=
-X-Received: by 2002:a05:690c:5719:b0:6e2:50a:f43b with SMTP id
- 00721157ae682-6e347b368c0mr95998737b3.35.1729037767509; Tue, 15 Oct 2024
- 17:16:07 -0700 (PDT)
+	s=arc-20240116; t=1729038575; c=relaxed/simple;
+	bh=UX50Uuxyl6KpeCZ9V3FN/RT0FMfn23uteQZUQF7qX3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eCbl8wwZ4DJIt9O0wO54bplr2uwVm0km/XznQfFmmyWC7LzmjrUENRUCAwZUK0zIZohI12dHg7N8CG6gD5oBirb89Ul8J+48/CCABgsiCJCkJIevCpj82SQft7FDm5TG6PuF9r61Vf/LT+RfxbmMdvE5jnyu6rHY52fTgPNT24Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmV1IpK7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1550C4CEC6;
+	Wed, 16 Oct 2024 00:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729038575;
+	bh=UX50Uuxyl6KpeCZ9V3FN/RT0FMfn23uteQZUQF7qX3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rmV1IpK7eC0ZkRA9iAfkT4ehVfQmWr/FMidbJ6A0Ua6XWquSP1/uz2h4etMyqXMXU
+	 CJc6ms0TTFw5KgWfNb/Ou8cMEDodCNEejrvib/NL+AfLYZQVyZ+FFg/kvJne0hiCtB
+	 bSw5AmObtOsM31cU47axeglWnUnWfk1EQcaWImPrl3cqkOjKfa/hhzvFTms586Z/zT
+	 JdTTgIinlVvliFxvIdEIfidTA9NVb82pVBB5omfCoVBBp/Qn4z9jlhv9W071EG3xE/
+	 svnhpuPwU+QIDpBhHr9dryqi9xIkT/xjxp1toZ0//rJRyc8oDN9PpxQEVZCUB7pBdk
+	 YHMNaKt5SoZ3g==
+Date: Tue, 15 Oct 2024 18:29:31 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH 2/5][next] nfsd: avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <9a04f3f766b2f8438887f6a003cf288d0f366fb8.1729037131.git.gustavoars@kernel.org>
+References: <cover.1729037131.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241010152649.849254-1-mic@digikod.net> <ZwkaVLOFElypvSDX@infradead.org>
- <20241011.ieghie3Aiye4@digikod.net> <ZwkgDd1JO2kZBobc@infradead.org>
- <20241011.yai6KiDa7ieg@digikod.net> <Zwkm5HADvc5743di@infradead.org>
- <20241011.aetou9haeCah@digikod.net> <Zwk4pYzkzydwLRV_@infradead.org>
- <20241011.uu1Bieghaiwu@digikod.net> <05cb94c0dda9e1b23fe566c6ecd71b3d1739b95b.camel@kernel.org>
- <20241014-turmbau-ansah-37d96a5fd780@brauner>
-In-Reply-To: <20241014-turmbau-ansah-37d96a5fd780@brauner>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 15 Oct 2024 20:15:56 -0400
-Message-ID: <CAHC9VhRdkByXa7SA9LqNrRyU6EfhezHENdrToQxYJCakPS-YcA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Christoph Hellwig <hch@infradead.org>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	audit@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1729037131.git.gustavoars@kernel.org>
 
-On Mon, Oct 14, 2024 at 10:45=E2=80=AFAM Christian Brauner <brauner@kernel.=
-org> wrote:
-> On Sun, Oct 13, 2024 at 06:17:43AM -0400, Jeff Layton wrote:
-> > On Fri, 2024-10-11 at 17:30 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> > > On Fri, Oct 11, 2024 at 07:39:33AM -0700, Christoph Hellwig wrote:
-> > > > On Fri, Oct 11, 2024 at 03:52:42PM +0200, Micka=C3=ABl Sala=C3=BCn =
-wrote:
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-...
+Address the following warnings by changing the type of the middle struct
+members in `struct nfsd_genl_rqstp`, which are currently causing trouble,
+from `struct sockaddr` to `struct sockaddr_legacy`. Note that the latter
+struct doesn't contain a flexible-array member.
 
-> > A better solution here would be to make inode->i_ino a u64, and just
-> > fix up all of the places that touch it to expect that. Then, just
->
-> I would like us to try and see to make this happen. I really dislike
-> that struct inode is full of non-explicity types.
+fs/nfsd/nfsd.h:74:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/nfsd.h:75:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Presumably this would include moving all of the filesystems to use
-inode->i_ino instead of their own private file ID number, e.g. the NFS
-issue pointed out in the original patch?  If not, I think most of us
-in the LSM/audit space still have a need for a filesystem agnostic way
-to determine the inode number from an inode struct.
+Also, update some related code, accordingly.
 
---=20
-paul-moore.com
+No binary differences are present after these changes.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/nfsd/nfsctl.c | 4 ++--
+ fs/nfsd/nfsd.h   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 3adbc05ebaac..884bfdc7a255 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1599,9 +1599,9 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+ 			genl_rqstp.rq_stime = rqstp->rq_stime;
+ 			genl_rqstp.rq_opcnt = 0;
+ 			memcpy(&genl_rqstp.rq_daddr, svc_daddr(rqstp),
+-			       sizeof(struct sockaddr));
++			       sizeof(struct sockaddr_legacy));
+ 			memcpy(&genl_rqstp.rq_saddr, svc_addr(rqstp),
+-			       sizeof(struct sockaddr));
++			       sizeof(struct sockaddr_legacy));
+ 
+ #ifdef CONFIG_NFSD_V4
+ 			if (rqstp->rq_vers == NFS4_VERSION &&
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 004415651295..44be32510595 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -71,8 +71,8 @@ struct readdir_cd {
+ #define NFSD_MAX_OPS_PER_COMPOUND	50
+ 
+ struct nfsd_genl_rqstp {
+-	struct sockaddr		rq_daddr;
+-	struct sockaddr		rq_saddr;
++	struct sockaddr_legacy	rq_daddr;
++	struct sockaddr_legacy	rq_saddr;
+ 	unsigned long		rq_flags;
+ 	ktime_t			rq_stime;
+ 	__be32			rq_xid;
+-- 
+2.34.1
+
 
