@@ -1,222 +1,166 @@
-Return-Path: <linux-nfs+bounces-7201-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7202-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDF449A0C87
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 16:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ED519A0D09
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 16:42:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C5B41F22FA4
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 14:23:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA5351F24CC2
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 14:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5EDB209F29;
-	Wed, 16 Oct 2024 14:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSZUiYyT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28F3B20C032;
+	Wed, 16 Oct 2024 14:42:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8803D502BE;
-	Wed, 16 Oct 2024 14:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A10B20E005;
+	Wed, 16 Oct 2024 14:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729088587; cv=none; b=D3Jc98cSqFuqLI44TiW0uLczwHPvwA/1Cc0nzxezf7P8OO3qOo7BrMvMinBNbYoYVgOc04t+yBpM1PWgF6aSocVi3Sjs5N3YfRxM1kmKnFYLBPzmMONEKMyw/EWRRilEo1JIwbak34BC6wjeEBjMf5C7vCiHXns7d7slpXM9nGI=
+	t=1729089740; cv=none; b=oMB6U1W+GpW/r8q1FDjFzd9Hpx7SIdsJvWEBOHp8ZAA22GrRbHhAtx95o6mM7d1ZIrf5IRIH5xhIWJLPzwHxwB1SAotY9BN+JVQRVbncM5o2wWxTWpTRVEr7ZN7C3B58afWWsho36vJLarqirnIWJwa7DygQWTMngU9pWpSgAPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729088587; c=relaxed/simple;
-	bh=jD6ZYgj249WXE3YgGo+kGl7esi6CCSX0C5qgagYAYIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hV8x5xkPXHfxbr1mLs/gJ0DM+V66GgVPCjy0AOE1ZAI/fiykx8MbPr89SRugMUECVEJCYjr/ouj0VvWWFrJJdhONOt+Au7aTRhoiYGC7Y9gHTWnQD3WDAptHtN3OIb6SssdTXGxPraF7idjN0M5yq69J9tiHHReLWnrD13yYnCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSZUiYyT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9EE4C4CEC7;
-	Wed, 16 Oct 2024 14:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729088587;
-	bh=jD6ZYgj249WXE3YgGo+kGl7esi6CCSX0C5qgagYAYIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gSZUiYyTGbnxwEtnXpQe7swluYTRtTMbhW0Zo9YwBJuSp/DaIhpNLAdDnxcDAltWI
-	 Ighd5wfWR+JZAu5k+bSd+q9HiFRNIhJbbLjt5QqEfM4e3i3S29WpLUL3pf6TmzojCd
-	 zaeDtDtcuKzewuvWJ1cJvDK9Id0M0JbsHlTwZ21cF9wEFvwAj0nebZR6CtCDxbTH57
-	 9v4/gu1I8tWE71TcxHwad0OuFHrD3oCti7JZ928lDsIy3rPmCfHsWHnym3Jx3QrUVl
-	 obej86Qtl1vQ97Qd55tqiWmpjwDQqJe6JFx/uwE18Jy7blZSq5htHsulKc9IPoHDTd
-	 KIg2+5Ycqyzqw==
-Date: Wed, 16 Oct 2024 16:23:02 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Paul Moore <paul@paul-moore.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
-Message-ID: <20241016-mitdenken-bankdaten-afb403982468@brauner>
-References: <20241010152649.849254-1-mic@digikod.net>
+	s=arc-20240116; t=1729089740; c=relaxed/simple;
+	bh=SWTaoC0L1qQu11TduACpr1Kb1+hqD35dRCgOFWwVj10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qrj2S0GmMgxEkgn9m+i/aXdSm90fFxXJ+Z81Y5Pg3cvqj/f0O/HPOpj1joEOq5iaxGuAkfRZUVXbHJ8xuqQqyH451QSKL/BL9c1Iu6YrP16108Yej+CevYrs5rOv5VahsUuWr14gNhQv6uZEIJ3UTizl1w/dBGSEoNIA0NrIuiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FB231007;
+	Wed, 16 Oct 2024 07:42:46 -0700 (PDT)
+Received: from [10.1.28.177] (XHFQ2J9959.cambridge.arm.com [10.1.28.177])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 047503F71E;
+	Wed, 16 Oct 2024 07:42:13 -0700 (PDT)
+Message-ID: <bee3f66f-cc22-4b3e-be07-23ce4c90df20@arm.com>
+Date: Wed, 16 Oct 2024 15:42:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241010152649.849254-1-mic@digikod.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 21/57] sunrpc: Remove PAGE_SIZE compile-time
+ constant assumption
+Content-Language: en-GB
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Anna Schumaker <anna@kernel.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ David Hildenbrand <david@redhat.com>, Greg Marsden
+ <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
+ Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>,
+ Miroslav Benes <mbenes@suse.cz>, Trond Myklebust <trondmy@kernel.org>,
+ Will Deacon <will@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-nfs@vger.kernel.org
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-21-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241014105912.3207374-21-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 10, 2024 at 05:26:41PM +0200, Mickaël Salaün wrote:
-> When a filesystem manages its own inode numbers, like NFS's fileid shown
-> to user space with getattr(), other part of the kernel may still expose
-> the private inode->ino through kernel logs and audit.
++ Chuck Lever, Jeff Layton
+
+This was a rather tricky series to get the recipients correct for and my script
+did not realize that "supporter" was a pseudonym for "maintainer" so you were
+missed off the original post. Appologies!
+
+More context in cover letter:
+https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+
+
+On 14/10/2024 11:58, Ryan Roberts wrote:
+> To prepare for supporting boot-time page size selection, refactor code
+> to remove assumptions about PAGE_SIZE being compile-time constant. Code
+> intended to be equivalent when compile-time page size is active.
 > 
-> Another issue is on 32-bit architectures, on which ino_t is 32 bits,
-> whereas the user space's view of an inode number can still be 64 bits.
+> Updated array sizes in various structs to contain enough entries for the
+> smallest supported page size.
 > 
-> Add a new inode_get_ino() helper calling the new struct
-> inode_operations' get_ino() when set, to get the user space's view of an
-> inode number.  inode_get_ino() is called by generic_fillattr().
-> 
-> Implement get_ino() for NFS.
-> 
-> Cc: Trond Myklebust <trondmy@kernel.org>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 > ---
 > 
-> I'm not sure about nfs_namespace_getattr(), please review carefully.
+> ***NOTE***
+> Any confused maintainers may want to read the cover note here for context:
+> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
 > 
-> I guess there are other filesystems exposing inode numbers different
-> than inode->i_ino, and they should be patched too.
-
-What are the other filesystems that are presumably affected by this that
-would need an inode accessor?
-
-If this is just about NFS then just add a helper function that audit and
-whatever can call if they need to know the real inode number without
-forcing a new get_inode() method onto struct inode_operations.
-
-I'm against adding a new inode_operations method unless we really have
-to because it means that we grow a nasty interface that filesystem can
-start using and we absolutely don't want them to.
-
-And I don't buy that is suddenly rush hour for this. Seemingly no one
-noticed this in the past idk how many years.
-
-> ---
->  fs/nfs/inode.c     | 6 ++++--
->  fs/nfs/internal.h  | 1 +
->  fs/nfs/namespace.c | 2 ++
->  fs/stat.c          | 2 +-
->  include/linux/fs.h | 9 +++++++++
->  5 files changed, 17 insertions(+), 3 deletions(-)
+>  include/linux/sunrpc/svc.h      | 8 +++++---
+>  include/linux/sunrpc/svc_rdma.h | 4 ++--
+>  include/linux/sunrpc/svcsock.h  | 2 +-
+>  3 files changed, 8 insertions(+), 6 deletions(-)
 > 
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 542c7d97b235..5dfc176b6d92 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -83,18 +83,19 @@ EXPORT_SYMBOL_GPL(nfs_wait_bit_killable);
->  
->  /**
->   * nfs_compat_user_ino64 - returns the user-visible inode number
-> - * @fileid: 64-bit fileid
-> + * @inode: inode pointer
->   *
->   * This function returns a 32-bit inode number if the boot parameter
->   * nfs.enable_ino64 is zero.
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index a7d0406b9ef59..dda44018b8f36 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -160,6 +160,8 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
 >   */
-> -u64 nfs_compat_user_ino64(u64 fileid)
-> +u64 nfs_compat_user_ino64(const struct *inode)
->  {
->  #ifdef CONFIG_COMPAT
->  	compat_ulong_t ino;
->  #else	
->  	unsigned long ino;
->  #endif
-> +	u64 fileid = NFS_FILEID(inode);
+>  #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
+>  				+ 2 + 1)
+> +#define RPCSVC_MAXPAGES_MAX	((RPCSVC_MAXPAYLOAD+PAGE_SIZE_MIN-1)/PAGE_SIZE_MIN \
+> +				+ 2 + 1)
 >  
->  	if (enable_ino64)
->  		return fileid;
-> @@ -103,6 +104,7 @@ u64 nfs_compat_user_ino64(u64 fileid)
->  		ino ^= fileid >> (sizeof(fileid)-sizeof(ino)) * 8;
->  	return ino;
->  }
-> +EXPORT_SYMBOL_GPL(nfs_compat_user_ino64);
+>  /*
+>   * The context of a single thread, including the request currently being
+> @@ -190,14 +192,14 @@ struct svc_rqst {
+>  	struct xdr_stream	rq_res_stream;
+>  	struct page		*rq_scratch_page;
+>  	struct xdr_buf		rq_res;
+> -	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
+> +	struct page		*rq_pages[RPCSVC_MAXPAGES_MAX + 1];
+>  	struct page *		*rq_respages;	/* points into rq_pages */
+>  	struct page *		*rq_next_page; /* next reply page to use */
+>  	struct page *		*rq_page_end;  /* one past the last page */
 >  
->  int nfs_drop_inode(struct inode *inode)
->  {
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 430733e3eff2..f5555a71a733 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -451,6 +451,7 @@ extern void nfs_zap_acl_cache(struct inode *inode);
->  extern void nfs_set_cache_invalid(struct inode *inode, unsigned long flags);
->  extern bool nfs_check_cache_invalid(struct inode *, unsigned long);
->  extern int nfs_wait_bit_killable(struct wait_bit_key *key, int mode);
-> +extern u64 nfs_compat_user_ino64(const struct *inode);
+>  	struct folio_batch	rq_fbatch;
+> -	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
+> -	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
+> +	struct kvec		rq_vec[RPCSVC_MAXPAGES_MAX]; /* generally useful.. */
+> +	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES_MAX];
 >  
->  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
->  /* localio.c */
-> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-> index e7494cdd957e..d9b1e0606833 100644
-> --- a/fs/nfs/namespace.c
-> +++ b/fs/nfs/namespace.c
-> @@ -232,11 +232,13 @@ nfs_namespace_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  const struct inode_operations nfs_mountpoint_inode_operations = {
->  	.getattr	= nfs_getattr,
->  	.setattr	= nfs_setattr,
-> +	.get_ino	= nfs_compat_user_ino64,
+>  	__be32			rq_xid;		/* transmission id */
+>  	u32			rq_prog;	/* program number */
+> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+> index d33bab33099ab..7c6441e8d6f7a 100644
+> --- a/include/linux/sunrpc/svc_rdma.h
+> +++ b/include/linux/sunrpc/svc_rdma.h
+> @@ -200,7 +200,7 @@ struct svc_rdma_recv_ctxt {
+>  	struct svc_rdma_pcl	rc_reply_pcl;
+>  
+>  	unsigned int		rc_page_count;
+> -	struct page		*rc_pages[RPCSVC_MAXPAGES];
+> +	struct page		*rc_pages[RPCSVC_MAXPAGES_MAX];
 >  };
 >  
->  const struct inode_operations nfs_referral_inode_operations = {
->  	.getattr	= nfs_namespace_getattr,
->  	.setattr	= nfs_namespace_setattr,
-> +	.get_ino	= nfs_compat_user_ino64,
+>  /*
+> @@ -242,7 +242,7 @@ struct svc_rdma_send_ctxt {
+>  	void			*sc_xprt_buf;
+>  	int			sc_page_count;
+>  	int			sc_cur_sge_no;
+> -	struct page		*sc_pages[RPCSVC_MAXPAGES];
+> +	struct page		*sc_pages[RPCSVC_MAXPAGES_MAX];
+>  	struct ib_sge		sc_sges[];
 >  };
 >  
->  static void nfs_expire_automounts(struct work_struct *work)
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 41e598376d7e..05636919f94b 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -50,7 +50,7 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
->  	vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
+> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
+> index 7c78ec6356b92..6c6bcc82685a3 100644
+> --- a/include/linux/sunrpc/svcsock.h
+> +++ b/include/linux/sunrpc/svcsock.h
+> @@ -40,7 +40,7 @@ struct svc_sock {
 >  
->  	stat->dev = inode->i_sb->s_dev;
-> -	stat->ino = inode->i_ino;
-> +	stat->ino = inode_get_ino(inode);
->  	stat->mode = inode->i_mode;
->  	stat->nlink = inode->i_nlink;
->  	stat->uid = vfsuid_into_kuid(vfsuid);
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index e3c603d01337..0eba09a21cf7 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2165,6 +2165,7 @@ struct inode_operations {
->  			    struct dentry *dentry, struct fileattr *fa);
->  	int (*fileattr_get)(struct dentry *dentry, struct fileattr *fa);
->  	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
-> +	u64 (*get_ino)(const struct inode *inode);
->  } ____cacheline_aligned;
+>  	struct completion	sk_handshake_done;
 >  
->  static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
-> @@ -2172,6 +2173,14 @@ static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
->  	return file->f_op->mmap(file, vma);
->  }
+> -	struct page *		sk_pages[RPCSVC_MAXPAGES];	/* received data */
+> +	struct page *		sk_pages[RPCSVC_MAXPAGES_MAX];	/* received data */
+>  };
 >  
-> +static inline u64 inode_get_ino(struct inode *inode)
-> +{
-> +	if (unlikely(inode->i_op->get_ino))
-> +		return inode->i_op->get_ino(inode);
-> +
-> +	return inode->i_ino;
-> +}
-> +
->  extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
->  extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
->  extern ssize_t vfs_copy_file_range(struct file *, loff_t , struct file *,
-> -- 
-> 2.46.1
-> 
+>  static inline u32 svc_sock_reclen(struct svc_sock *svsk)
+
 
