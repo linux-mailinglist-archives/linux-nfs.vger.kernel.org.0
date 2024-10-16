@@ -1,204 +1,130 @@
-Return-Path: <linux-nfs+bounces-7209-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7210-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A89F89A0DAA
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 17:09:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0BC09A0FAF
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 18:29:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC6861C22802
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 15:09:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9479C2862A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 16:29:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E06820E022;
-	Wed, 16 Oct 2024 15:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70CC7210C2E;
+	Wed, 16 Oct 2024 16:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K3JW8dT9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0098C20B1EE;
-	Wed, 16 Oct 2024 15:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22F02101A8
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 16:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729091367; cv=none; b=kkqDR5cKdQrKvo9Ar3e7+tkOZHk/pkFfo9+okXJHCDlRIl9e9Ij0eupqMmHokmPkqaWaQWPJxNlMPHTw937Zc1MMKR5quVEqcCvH1t8HO7ymx0FyBwgF6isJwrDyJYhhCxqvEZxlcgk8dW/WZZmYX016MjosU+Y8EJUjrU4Pvic=
+	t=1729096127; cv=none; b=YBrVOECL2Ukrb0hSN9MiSkJ5VuW6+U+6KfzS4Sxg7oDQgLfZ0CA/xs/M7L4XxPA6oERo3aGoQGG1lDovEg/GLpEQnIb8DZStSJFcHJgZNt8uoIUjCDJCltJut5p2T1G4jbfbjjox8MHvgrxPSKZqriuJtpetjDf9Eg2+nejr3sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729091367; c=relaxed/simple;
-	bh=gRPb5P1k9UfY8ZGiYWYsNqS7y22Jny7V3mVzeUcEEe8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i5GhRh/SN59ycN8pRuR1Djwk6Jp59TrZMuMZweCuBIhXRwFd/dNWg48tjWJxfyHPrpElopY+gYzAOtBzSnOz2GwwksUuyj1eYwAEAJoW9R6jB2Jy6HuOovJlFjpt6u4SXQ1A7G9unsaxt96ZCQ4MHEOhWym7aU5LiCf6gKORL3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1651FEC;
-	Wed, 16 Oct 2024 08:09:53 -0700 (PDT)
-Received: from [10.1.28.177] (XHFQ2J9959.cambridge.arm.com [10.1.28.177])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C8003F528;
-	Wed, 16 Oct 2024 08:09:20 -0700 (PDT)
-Message-ID: <d3643b60-0c67-462b-b8c4-95854d2983b0@arm.com>
-Date: Wed, 16 Oct 2024 16:09:19 +0100
+	s=arc-20240116; t=1729096127; c=relaxed/simple;
+	bh=l8A3AThTq+ezAyEa6ZdEacg08ACdKh98w19rNnepIiU=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=GcG6aZD1nu+n0WoQXnTZ/AimYuV0McLr0mJbxuQ2Brf6E1tbEvVwmRWsjXI+c1TbcJm0Cvt/48LN4aGRLs+dv5wofd/yXIls4awbQXG6cz8+U7h+9RDH5Vpcl+l/glSBpMIvQW5c9KL8G+YIw4sfsnS9SumnlvT8t/ATEo+YsrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K3JW8dT9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729096124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=73sRhC/MVUgLr8wQOAXRbG/9ryOP4YoRdbzww8lNz4M=;
+	b=K3JW8dT9FugY+/KoiLamKDfpIze4TGzT8NW4zQAY9tYvA0OxGhqyruTyGkH+7ZBt3ev0Tk
+	0mqkk1oMbAcMyPkqD3CANZQjd8zjnRtsRUXHbgvVWjiDg5+Tvhci1IrgmbtELWpWZRaPok
+	af01BG3Zq0N8qesQhkOM6MEVadEkA98=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-acA3QZC1NvWB9lBdONbJig-1; Wed,
+ 16 Oct 2024 12:28:39 -0400
+X-MC-Unique: acA3QZC1NvWB9lBdONbJig-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0BC619560A1;
+	Wed, 16 Oct 2024 16:28:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 02B621956086;
+	Wed, 16 Oct 2024 16:28:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <brauner@kernel.org>,
+    Steve French <sfrench@samba.org>
+cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.com>,
+    Trond Myklebust <trondmy@kernel.org>,
+    Jeff Layton <jlayton@kernel.org>, netfs@lists.linux.dev,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfs: Downgrade i_rwsem for a buffered write
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 21/57] sunrpc: Remove PAGE_SIZE compile-time
- constant assumption
-Content-Language: en-GB
-To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Anna Schumaker <anna@kernel.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- David Hildenbrand <david@redhat.com>, Greg Marsden
- <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
- Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, Trond Myklebust <trondmy@kernel.org>,
- Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org
-References: <20241014105514.3206191-1-ryan.roberts@arm.com>
- <20241014105912.3207374-1-ryan.roberts@arm.com>
- <20241014105912.3207374-21-ryan.roberts@arm.com>
- <bee3f66f-cc22-4b3e-be07-23ce4c90df20@arm.com>
- <Zw/SE9+AMYmzBprS@tissot.1015granger.net>
- <33a6cc271475b0fc520b8fc20ed0b4f7742a2560.camel@kernel.org>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <33a6cc271475b0fc520b8fc20ed0b4f7742a2560.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1317957.1729096113.1@warthog.procyon.org.uk>
+Date: Wed, 16 Oct 2024 17:28:33 +0100
+Message-ID: <1317958.1729096113@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 16/10/2024 15:54, Jeff Layton wrote:
-> On Wed, 2024-10-16 at 10:47 -0400, Chuck Lever wrote:
->> On Wed, Oct 16, 2024 at 03:42:12PM +0100, Ryan Roberts wrote:
->>> + Chuck Lever, Jeff Layton
->>>
->>> This was a rather tricky series to get the recipients correct for and my script
->>> did not realize that "supporter" was a pseudonym for "maintainer" so you were
->>> missed off the original post. Appologies!
->>>
->>> More context in cover letter:
->>> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
->>>
->>>
->>> On 14/10/2024 11:58, Ryan Roberts wrote:
->>>> To prepare for supporting boot-time page size selection, refactor code
->>>> to remove assumptions about PAGE_SIZE being compile-time constant. Code
->>>> intended to be equivalent when compile-time page size is active.
->>>>
->>>> Updated array sizes in various structs to contain enough entries for the
->>>> smallest supported page size.
->>>>
->>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->>>> ---
->>>>
->>>> ***NOTE***
->>>> Any confused maintainers may want to read the cover note here for context:
->>>> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
->>>>
->>>>  include/linux/sunrpc/svc.h      | 8 +++++---
->>>>  include/linux/sunrpc/svc_rdma.h | 4 ++--
->>>>  include/linux/sunrpc/svcsock.h  | 2 +-
->>>>  3 files changed, 8 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
->>>> index a7d0406b9ef59..dda44018b8f36 100644
->>>> --- a/include/linux/sunrpc/svc.h
->>>> +++ b/include/linux/sunrpc/svc.h
->>>> @@ -160,6 +160,8 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
->>>>   */
->>>>  #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
->>>>  				+ 2 + 1)
->>>> +#define RPCSVC_MAXPAGES_MAX	((RPCSVC_MAXPAYLOAD+PAGE_SIZE_MIN-1)/PAGE_SIZE_MIN \
->>>> +				+ 2 + 1)
->>
->> There is already a "MAX" in the name, so adding this new macro seems
->> superfluous to me. Can we get away with simply updating the
->> "RPCSVC_MAXPAGES" macro, instead of adding this new one?
->>
-> 
-> +1 that was my thinking too. This is mostly just used to size arrays,
-> so we might as well just change the existing macro.
+In the I/O locking code borrowed from NFS into netfslib, i_rwsem is held
+locked across a buffered write - but this causes a performance regression
+in cifs as it excludes buffered reads for the duration (cifs didn't use any
+locking for buffered reads).
 
-I agree, its not the prettiest. I was (incorrectly) assuming you would want to
-continue to limit the number of actual pages at runtime based on the in-use page
-size. That said, looking again at the code, RPCSVC_MAXPAGES never actually gets
-used to dynamically allocate any memory. So I propose to just do the following:
+Mitigate this somewhat by downgrading the i_rwsem to a read lock across the
+buffered write.  This at least allows parallel reads to occur whilst
+excluding other writes, DIO, truncate and setattr.
 
-#define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE_MIN-1)/
-						PAGE_SIZE_MIN + 2 + 1)
+Note that this shouldn't be a problem for a buffered write as a read
+through an mmap can circumvent i_rwsem anyway.
 
-That will be 259 in practice (assuming PAGE_SIZE_MIN=4K).
+Also note that we might want to make this change in NFS also.
 
-> 
-> With 64k pages we probably wouldn't need arrays as long as these will
-> be. Fixing those array sizes to be settable at runtime though is not a
-> trivial project though.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Trond Myklebust <trondmy@kernel.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-cifs@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/locking.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Indeed. Hopefully the above is sufficient.
-
-Thanks for the review!
-Ryan
-
-> 
->>
->>>>  /*
->>>>   * The context of a single thread, including the request currently being
->>>> @@ -190,14 +192,14 @@ struct svc_rqst {
->>>>  	struct xdr_stream	rq_res_stream;
->>>>  	struct page		*rq_scratch_page;
->>>>  	struct xdr_buf		rq_res;
->>>> -	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
->>>> +	struct page		*rq_pages[RPCSVC_MAXPAGES_MAX + 1];
->>>>  	struct page *		*rq_respages;	/* points into rq_pages */
->>>>  	struct page *		*rq_next_page; /* next reply page to use */
->>>>  	struct page *		*rq_page_end;  /* one past the last page */
->>>>  
->>>>  	struct folio_batch	rq_fbatch;
->>>> -	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
->>>> -	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
->>>> +	struct kvec		rq_vec[RPCSVC_MAXPAGES_MAX]; /* generally useful.. */
->>>> +	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES_MAX];
->>>>  
->>>>  	__be32			rq_xid;		/* transmission id */
->>>>  	u32			rq_prog;	/* program number */
->>>> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
->>>> index d33bab33099ab..7c6441e8d6f7a 100644
->>>> --- a/include/linux/sunrpc/svc_rdma.h
->>>> +++ b/include/linux/sunrpc/svc_rdma.h
->>>> @@ -200,7 +200,7 @@ struct svc_rdma_recv_ctxt {
->>>>  	struct svc_rdma_pcl	rc_reply_pcl;
->>>>  
->>>>  	unsigned int		rc_page_count;
->>>> -	struct page		*rc_pages[RPCSVC_MAXPAGES];
->>>> +	struct page		*rc_pages[RPCSVC_MAXPAGES_MAX];
->>>>  };
->>>>  
->>>>  /*
->>>> @@ -242,7 +242,7 @@ struct svc_rdma_send_ctxt {
->>>>  	void			*sc_xprt_buf;
->>>>  	int			sc_page_count;
->>>>  	int			sc_cur_sge_no;
->>>> -	struct page		*sc_pages[RPCSVC_MAXPAGES];
->>>> +	struct page		*sc_pages[RPCSVC_MAXPAGES_MAX];
->>>>  	struct ib_sge		sc_sges[];
->>>>  };
->>>>  
->>>> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
->>>> index 7c78ec6356b92..6c6bcc82685a3 100644
->>>> --- a/include/linux/sunrpc/svcsock.h
->>>> +++ b/include/linux/sunrpc/svcsock.h
->>>> @@ -40,7 +40,7 @@ struct svc_sock {
->>>>  
->>>>  	struct completion	sk_handshake_done;
->>>>  
->>>> -	struct page *		sk_pages[RPCSVC_MAXPAGES];	/* received data */
->>>> +	struct page *		sk_pages[RPCSVC_MAXPAGES_MAX];	/* received data */
->>>>  };
->>>>  
->>>>  static inline u32 svc_sock_reclen(struct svc_sock *svsk)
->>>
->>
-> 
+diff --git a/fs/netfs/locking.c b/fs/netfs/locking.c
+index 21eab56ee2f9..2249ecd09d0a 100644
+--- a/fs/netfs/locking.c
++++ b/fs/netfs/locking.c
+@@ -109,6 +109,7 @@ int netfs_start_io_write(struct inode *inode)
+ 		up_write(&inode->i_rwsem);
+ 		return -ERESTARTSYS;
+ 	}
++	downgrade_write(&inode->i_rwsem);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(netfs_start_io_write);
+@@ -123,7 +124,7 @@ EXPORT_SYMBOL(netfs_start_io_write);
+ void netfs_end_io_write(struct inode *inode)
+ 	__releases(inode->i_rwsem)
+ {
+-	up_write(&inode->i_rwsem);
++	up_read(&inode->i_rwsem);
+ }
+ EXPORT_SYMBOL(netfs_end_io_write);
+ 
 
 
