@@ -1,68 +1,60 @@
-Return-Path: <linux-nfs+bounces-7207-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7208-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 545129A0D70
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 16:55:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5A3F9A0D8E
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 17:02:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDCEA1F26959
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 14:55:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD0AD1C23A87
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 15:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6429E20E001;
-	Wed, 16 Oct 2024 14:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCAF620F5A2;
+	Wed, 16 Oct 2024 15:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HdFVqPDZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBBEbWxp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C248208D95;
-	Wed, 16 Oct 2024 14:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AB220E01E
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 15:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729090485; cv=none; b=K/HaysHcswYVWc1+vDmbN4hlQcKCMCb+poyoHlybdyHNb4WDvyGonq4UrfcNzk46843DswSMH1a5air2RKUy6B1iAUkDFNDfoBTcDEH3OCGH0+MV+c0oPh5uwuT7r76xGnCi9IRvgsHtodanP19k5JHuUXzZFpQMbulpUszTILw=
+	t=1729090929; cv=none; b=be8lQsJGgVZEXjAwbRrsnh6Q1+6EE4RM9A0jyIIZTJjlz96kRXBjfF5eR/ncOoLFU0T8FWvl22rEXVgOrWF4liPtxz+se85v/ybwHhLJS38H0VImh3NgJ+WXZKsGrw88+qieVy1YiCNkpvMa0bl4/BznL0wYWc5ftw8nn2NJzpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729090485; c=relaxed/simple;
-	bh=3BCgHcirtEbH3leNmUBYC0xGCArqCYUFgQpSEkV/Le4=;
+	s=arc-20240116; t=1729090929; c=relaxed/simple;
+	bh=U4j23nUXmsBm2v6JY28IAmH8iETPmNpEYsh7SK49r4M=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=STA2br+A3M+vokaIt0G52gjeljLM1ub7TMWIfhD1nZQft3p19GNC0fu9iNGv28opZWiwQ/79T+BRdmNuKaxY+LZVCU/jdXlVNebpUOvOUb2rpdC4WECv+3l8q0DuLpeoGIal1uAjQgQSfmLTH7fCDZYvXnG0ipw8JrS41JdXhYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HdFVqPDZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044B5C4CEC5;
-	Wed, 16 Oct 2024 14:54:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AaIXACsMi3r46MVMLkeTvOA1t1a6BkR3Dfks77cpEtwqaeuK+aOmSfIlVTfoaxP+UBzKT4+Z5xclTYtzu+IXNxCtGyh404trV9MKzLS5YEx5KXmqZmDHhS7e0KDlI7Fp0aObj3TAbCXB+2cg2ndDRL8q5HsG7lBjMtTeHQ3QJJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBBEbWxp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 562F4C4CEC7;
+	Wed, 16 Oct 2024 15:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729090483;
-	bh=3BCgHcirtEbH3leNmUBYC0xGCArqCYUFgQpSEkV/Le4=;
+	s=k20201202; t=1729090929;
+	bh=U4j23nUXmsBm2v6JY28IAmH8iETPmNpEYsh7SK49r4M=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HdFVqPDZP5Kj1wIQuq9y5eThgwvA80RXU9qhQW24GoDFCHFe1FZ9VCFML+ktYqLnX
-	 kHFd2Xxxd5jLVpLqUlN7Y3Bj+XdStljiEsJYiytc1X45Iqe7ucDUpRw+TKjSRd6FK1
-	 dKvvpdjtjOLUTRTlqh9M+KbAkKukvm6M32Cg0tdlmtUevNdKXCA/zBULZSULQ6PoYJ
-	 4GI2RV0OutiLzzsDtv9X+7GMPzB7ZeTbTDMy79T8nePVqfI6Z2KmUjjnnX7fn0vuAQ
-	 q/SbzWZFiL5t6U+tX7s5sQaXpcb7F1VqBWHigjIugCm43AUSA/qSS5QTJMydevZIvc
-	 K7gugRQQCQbbA==
-Message-ID: <33a6cc271475b0fc520b8fc20ed0b4f7742a2560.camel@kernel.org>
-Subject: Re: [RFC PATCH v1 21/57] sunrpc: Remove PAGE_SIZE compile-time
- constant assumption
+	b=RBBEbWxp0OrQeRSVK8fQmwikNzT04POKbA+2UgJLS/9srbLzY7HvVETOSaUk1ui6O
+	 93cv8vDIr1KFvqtTFk1NFCd6mwEXsh7MrXcdUZLIX2lnJR9P//m/NzdaH8Tata3a7p
+	 2JGeRlEO9rN/7Y26L/Gm7MlCvD9Gy/CNgUh6bB8+lMlvntmXO4Zi7ybVuOhK1M+IOr
+	 iwdoWmWrfmzvJZlJ2d6P3mez8PvxNY2GZTVsG9Tk+1eq9GTqs/JFnhMVBmRQX+BmGM
+	 QbPPcPbF2ld7sAEJKdDpfSJKPpKIZIkIXASgZFK8Bjxek0UioRgiJ7xb6UidW9pKDJ
+	 0uWtaWvtd+XlA==
+Message-ID: <a407f770289b79d0b7f3f4f9fa9eaccf9a1a26a8.camel@kernel.org>
+Subject: Re: [PATCH nfs-utils v6 0/3] nfsdctl: add a new nfsdctl tool to
+ nfs-utils
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Anna Schumaker
- <anna@kernel.org>,  Anshuman Khandual <anshuman.khandual@arm.com>, Ard
- Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- David Hildenbrand <david@redhat.com>, Greg Marsden
- <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>, Kalesh Singh
- <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>, Miroslav
- Benes <mbenes@suse.cz>, Trond Myklebust <trondmy@kernel.org>, Will Deacon
- <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Date: Wed, 16 Oct 2024 10:54:40 -0400
-In-Reply-To: <Zw/SE9+AMYmzBprS@tissot.1015granger.net>
-References: <20241014105514.3206191-1-ryan.roberts@arm.com>
-	 <20241014105912.3207374-1-ryan.roberts@arm.com>
-	 <20241014105912.3207374-21-ryan.roberts@arm.com>
-	 <bee3f66f-cc22-4b3e-be07-23ce4c90df20@arm.com>
-	 <Zw/SE9+AMYmzBprS@tissot.1015granger.net>
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Chuck Lever <chuck.lever@oracle.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>
+Date: Wed, 16 Oct 2024 11:02:07 -0400
+In-Reply-To: <7ba9c281-4f0c-412a-ab86-2bfb3b280c96@redhat.com>
+References: <20240722-nfsdctl-v6-0-1b9d63710eb5@kernel.org>
+	 <3a2dfa30aa812394021cc582e9303194e9979cbd.camel@kernel.org>
+	 <7ba9c281-4f0c-412a-ab86-2bfb3b280c96@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -147,134 +139,90 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-10-16 at 10:47 -0400, Chuck Lever wrote:
-> On Wed, Oct 16, 2024 at 03:42:12PM +0100, Ryan Roberts wrote:
-> > + Chuck Lever, Jeff Layton
-> >=20
-> > This was a rather tricky series to get the recipients correct for and m=
-y script
-> > did not realize that "supporter" was a pseudonym for "maintainer" so yo=
-u were
-> > missed off the original post. Appologies!
-> >=20
-> > More context in cover letter:
-> > https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.c=
-om/
-> >=20
-> >=20
-> > On 14/10/2024 11:58, Ryan Roberts wrote:
-> > > To prepare for supporting boot-time page size selection, refactor cod=
-e
-> > > to remove assumptions about PAGE_SIZE being compile-time constant. Co=
-de
-> > > intended to be equivalent when compile-time page size is active.
+On Mon, 2024-09-30 at 12:16 -0400, Steve Dickson wrote:
+>=20
+> On 9/30/24 11:52 AM, Jeff Layton wrote:
+> > On Mon, 2024-07-22 at 13:01 -0400, Jeff Layton wrote:
+> > > Hi Steve,
 > > >=20
-> > > Updated array sizes in various structs to contain enough entries for =
-the
-> > > smallest supported page size.
+> > > Here's an squashed version of the nfsdctl patches, that represents
+> > > the latest changes. Let me know if you run into any other problems,
+> > > and thanks for helping to test this!
 > > >=20
-> > > Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > > ---
+> > > Changes in v6:
+> > > - make the default number of threads 16 in autostart
+> > > - doc updates
 > > >=20
-> > > ***NOTE***
-> > > Any confused maintainers may want to read the cover note here for con=
-text:
-> > > https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm=
-.com/
+> > > Changes in v5:
+> > > - add support for pool-mode setting
+> > > - fix up the handling of nfsd_netlink.h in autoconf
+> > > - Link to v4: https://lore.kernel.org/r/20240604-nfsdctl-v4-0-a2941f7=
+82e4c@kernel.org
 > > >=20
-> > >  include/linux/sunrpc/svc.h      | 8 +++++---
-> > >  include/linux/sunrpc/svc_rdma.h | 4 ++--
-> > >  include/linux/sunrpc/svcsock.h  | 2 +-
-> > >  3 files changed, 8 insertions(+), 6 deletions(-)
+> > > Changes in v4:
+> > > - add ability to specify an array of pool thread counts in nfs.conf
+> > > - Link to v3: https://lore.kernel.org/r/20240423-nfsdctl-v3-0-9e68181=
+c846d@kernel.org
 > > >=20
-> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > > index a7d0406b9ef59..dda44018b8f36 100644
-> > > --- a/include/linux/sunrpc/svc.h
-> > > +++ b/include/linux/sunrpc/svc.h
-> > > @@ -160,6 +160,8 @@ extern u32 svc_max_payload(const struct svc_rqst =
-*rqstp);
-> > >   */
-> > >  #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE =
-\
-> > >  				+ 2 + 1)
-> > > +#define RPCSVC_MAXPAGES_MAX	((RPCSVC_MAXPAYLOAD+PAGE_SIZE_MIN-1)/PAG=
-E_SIZE_MIN \
-> > > +				+ 2 + 1)
->=20
-> There is already a "MAX" in the name, so adding this new macro seems
-> superfluous to me. Can we get away with simply updating the
-> "RPCSVC_MAXPAGES" macro, instead of adding this new one?
->=20
-
-+1 that was my thinking too. This is mostly just used to size arrays,
-so we might as well just change the existing macro.
-
-With 64k pages we probably wouldn't need arrays as long as these will
-be. Fixing those array sizes to be settable at runtime though is not a
-trivial project though.
-
->=20
-> > >  /*
-> > >   * The context of a single thread, including the request currently b=
-eing
-> > > @@ -190,14 +192,14 @@ struct svc_rqst {
-> > >  	struct xdr_stream	rq_res_stream;
-> > >  	struct page		*rq_scratch_page;
-> > >  	struct xdr_buf		rq_res;
-> > > -	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
-> > > +	struct page		*rq_pages[RPCSVC_MAXPAGES_MAX + 1];
-> > >  	struct page *		*rq_respages;	/* points into rq_pages */
-> > >  	struct page *		*rq_next_page; /* next reply page to use */
-> > >  	struct page *		*rq_page_end;  /* one past the last page */
-> > > =20
-> > >  	struct folio_batch	rq_fbatch;
-> > > -	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
-> > > -	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
-> > > +	struct kvec		rq_vec[RPCSVC_MAXPAGES_MAX]; /* generally useful.. */
-> > > +	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES_MAX];
-> > > =20
-> > >  	__be32			rq_xid;		/* transmission id */
-> > >  	u32			rq_prog;	/* program number */
-> > > diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/s=
-vc_rdma.h
-> > > index d33bab33099ab..7c6441e8d6f7a 100644
-> > > --- a/include/linux/sunrpc/svc_rdma.h
-> > > +++ b/include/linux/sunrpc/svc_rdma.h
-> > > @@ -200,7 +200,7 @@ struct svc_rdma_recv_ctxt {
-> > >  	struct svc_rdma_pcl	rc_reply_pcl;
-> > > =20
-> > >  	unsigned int		rc_page_count;
-> > > -	struct page		*rc_pages[RPCSVC_MAXPAGES];
-> > > +	struct page		*rc_pages[RPCSVC_MAXPAGES_MAX];
-> > >  };
-> > > =20
-> > >  /*
-> > > @@ -242,7 +242,7 @@ struct svc_rdma_send_ctxt {
-> > >  	void			*sc_xprt_buf;
-> > >  	int			sc_page_count;
-> > >  	int			sc_cur_sge_no;
-> > > -	struct page		*sc_pages[RPCSVC_MAXPAGES];
-> > > +	struct page		*sc_pages[RPCSVC_MAXPAGES_MAX];
-> > >  	struct ib_sge		sc_sges[];
-> > >  };
-> > > =20
-> > > diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/sv=
-csock.h
-> > > index 7c78ec6356b92..6c6bcc82685a3 100644
-> > > --- a/include/linux/sunrpc/svcsock.h
-> > > +++ b/include/linux/sunrpc/svcsock.h
-> > > @@ -40,7 +40,7 @@ struct svc_sock {
-> > > =20
-> > >  	struct completion	sk_handshake_done;
-> > > =20
-> > > -	struct page *		sk_pages[RPCSVC_MAXPAGES];	/* received data */
-> > > +	struct page *		sk_pages[RPCSVC_MAXPAGES_MAX];	/* received data */
-> > >  };
-> > > =20
-> > >  static inline u32 svc_sock_reclen(struct svc_sock *svsk)
+> > > Changes in v3:
+> > > - split nfsdctl.h so we can include the UAPI header as-is
+> > > - squash the patches together that added Lorenzo's version and conver=
+t
+> > >    it to the new interface
+> > > - adapt to latest version of netlink interface changes
+> > >    + have THREADS_SET/GET report an array of thread counts (one per p=
+ool)
+> > >    + pass scope in as a string to THREADS_SET instead of using unshar=
+e() trick
+> > >=20
+> > > Changes in v2:
+> > > - Adapt to latest kernel netlink interface changes (in particular, se=
+nd
+> > >    the leastime and gracetime when they are set in the config).
+> > > - More help text for different subcommands
+> > > - New nfsdctl(8) manpage
+> > > - Patch to make systemd preferentially use nfsdctl instead of rpc.nfs=
+d
+> > > - Link to v1: https://lore.kernel.org/r/20240412-nfsdctl-v1-0-efd6dce=
+bcc04@kernel.org
+> > >=20
+> > > ---
+> > > Jeff Layton (3):
+> > >        nfsdctl: add the nfsdctl utility to nfs-utils
+> > >        nfsdctl: asciidoc source for the manpage
+> > >        systemd: use nfsdctl to start and stop the nfs server
+> > >=20
+> > >   configure.ac                 |   19 +
+> > >   systemd/nfs-server.service   |    4 +-
+> > >   utils/Makefile.am            |    4 +
+> > >   utils/nfsdctl/Makefile.am    |   13 +
+> > >   utils/nfsdctl/nfsd_netlink.h |   96 +++
+> > >   utils/nfsdctl/nfsdctl.8      |  304 ++++++++
+> > >   utils/nfsdctl/nfsdctl.adoc   |  158 +++++
+> > >   utils/nfsdctl/nfsdctl.c      | 1570 +++++++++++++++++++++++++++++++=
++++++++++++
+> > >   utils/nfsdctl/nfsdctl.h      |   93 +++
+> > >   9 files changed, 2259 insertions(+), 2 deletions(-)
+> > > ---
+> > > base-commit: b76dbaa48f7c239accb0c2d1e1d51ddd73f4d6be
+> > > change-id: 20240412-nfsdctl-fa8bd8430cfd
+> > >=20
+> > > Best regards,
 > >=20
+> > Ping?
+> I'm keeping my eye on it.... I have the bits on
+> a private branch... I just don't want to break
+> v3... when the distros get to 6.11... I'll
+> make it happen
 >=20
 
+Previously, you said you would merge it once rawhide had a sufficient
+kernel, which it has had for months. Fedora 40 is now shipping a v6.11
+kernel. Can we get this in now?
+
+Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
