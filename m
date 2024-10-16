@@ -1,120 +1,133 @@
-Return-Path: <linux-nfs+bounces-7192-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7193-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3B4C99FD20
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 02:29:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 117A69A08A1
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 13:48:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 313261C242D4
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 00:29:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08AEA1C2118E
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 11:48:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5844B673;
-	Wed, 16 Oct 2024 00:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34495204F9E;
+	Wed, 16 Oct 2024 11:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmV1IpK7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIzDdrDd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86AFB641;
-	Wed, 16 Oct 2024 00:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A7206059
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 11:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729038575; cv=none; b=dysIJ5vBtnyMYO0S50FKDc6IFEEYVrrAlRWQWwhZ0CL2UwRhQYJj5dVW0FrvUAYWE787eMEHSz+xGbzIFE+eVHNZ+Gvh1k9SnCnh14ec5+ed72rL9s9+Xa+fq3P3YWR1M9CyJbMcf6UvyG4LTlX0hQmDtjieQSHKnNNs210fSGk=
+	t=1729079302; cv=none; b=Er29FIdSaTT3mrgavILnpdQGs3kJCcuAElbjAz2FT+n4CDXvp4N6ITzpD4HoXNjiiWhO/NRgfwZqdbtsN0T6xboX/YNamb6xtyGrLndEqDr+OpAem38p6jPpj8P8k2Bhu2R+NRXRYN/ywcUBKYWpjS3OS2+07kLDbL7p7IAbsrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729038575; c=relaxed/simple;
-	bh=UX50Uuxyl6KpeCZ9V3FN/RT0FMfn23uteQZUQF7qX3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eCbl8wwZ4DJIt9O0wO54bplr2uwVm0km/XznQfFmmyWC7LzmjrUENRUCAwZUK0zIZohI12dHg7N8CG6gD5oBirb89Ul8J+48/CCABgsiCJCkJIevCpj82SQft7FDm5TG6PuF9r61Vf/LT+RfxbmMdvE5jnyu6rHY52fTgPNT24Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmV1IpK7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1550C4CEC6;
-	Wed, 16 Oct 2024 00:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729038575;
-	bh=UX50Uuxyl6KpeCZ9V3FN/RT0FMfn23uteQZUQF7qX3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rmV1IpK7eC0ZkRA9iAfkT4ehVfQmWr/FMidbJ6A0Ua6XWquSP1/uz2h4etMyqXMXU
-	 CJc6ms0TTFw5KgWfNb/Ou8cMEDodCNEejrvib/NL+AfLYZQVyZ+FFg/kvJne0hiCtB
-	 bSw5AmObtOsM31cU47axeglWnUnWfk1EQcaWImPrl3cqkOjKfa/hhzvFTms586Z/zT
-	 JdTTgIinlVvliFxvIdEIfidTA9NVb82pVBB5omfCoVBBp/Qn4z9jlhv9W071EG3xE/
-	 svnhpuPwU+QIDpBhHr9dryqi9xIkT/xjxp1toZ0//rJRyc8oDN9PpxQEVZCUB7pBdk
-	 YHMNaKt5SoZ3g==
-Date: Tue, 15 Oct 2024 18:29:31 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH 2/5][next] nfsd: avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <9a04f3f766b2f8438887f6a003cf288d0f366fb8.1729037131.git.gustavoars@kernel.org>
-References: <cover.1729037131.git.gustavoars@kernel.org>
+	s=arc-20240116; t=1729079302; c=relaxed/simple;
+	bh=qbvn7cMfkO2c4uTl7WuppgSTQF4OowjoHeHTqoTItGA=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=NF3LW3iItVlVlwbULfIOC2gthe0PARbN+p0Ama+MGPbnqLS1UjQz7GQw7YRjH5eNwzWJeAYrZlU0l2s3w4fz5zWUG2ZtyDfLgbjW/K6vmK2ZxNXMD3HSgYg7jajKuMY9zVqxR/BFhiy+F2zLKnB9JApJ3A/tf66h6OKWyCKcu8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lIzDdrDd; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4311d972e3eso40458705e9.3
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 04:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729079299; x=1729684099; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uSNgr1NTdLrTqc2CXS2Ctb0rZHZP76JOVZbaS2bCQSQ=;
+        b=lIzDdrDd5Ue4W6WdyU8p+DfpcZtcdvJLmG6RfxCqrjiS11XsMW/wiwrm8Abz6E8k8S
+         rj5Sr+HnpOuHVmNe5L9xcSMtLips6f96Evz/8bWLLWTLc4WLtKDUyKBfctKJgQ67zGCL
+         SC4HZM6l/8jn3EwX3XGFQ3H8oWAFqwtGE0iEqoSANe/hM3vdkkVfdkptncUZCA0nPz2j
+         YVpjbp3J4Smq+smFxAkxYbBeNeKVWBtL43ZphHgaQratXeGSE7L3hypT6rcbhM5x/sEh
+         /W1Dw8+g9BUxsv3k6KdcEuko+uPEkFuIONyD2mLQVKaZk9NmbIkbsVVT+k5dKpZc+LN8
+         YDqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729079299; x=1729684099;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uSNgr1NTdLrTqc2CXS2Ctb0rZHZP76JOVZbaS2bCQSQ=;
+        b=qAE37cZrx4cLwnpPq3mYBJEOjGl874BVac3RjWTFRM2URR4n3vlGhA/BHaC7GneSVP
+         eiDZ0FRhvqogIxbGPanSwrA8SSiECmJT9xnpCz9jGjhEdsu6hn7OOfIKGGKp7BJ8XAE8
+         DmKVi8VZ50RDPYQo+q+BqyF+K/CHBKeoMDzIsmWfsJoVjWWpZq3GuaoByUqlDw7PNHWT
+         7Esg+eHvHPQ4Q+0IzjBiVaOOltyCnkcUfctqTGgCbOlES3UtwF7ibUJ0DndD9SXDDYNF
+         HR2frD6SxI2YJ9TgVXKlSAk/UGYKI+KcszCmSNxMKinF+NSY97p6xhwsUbAlnxX9tVWD
+         psDg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Y378aSQHb5Ij9K5Dj5VSRHnNG8UKV4DprXAMx6qREdtDu7RjL+fJ72Xfl+hi0mjKlnAzdBT9KhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXYTBsYD8Sdhu6tBmOU8iM800FwBI7NKGaPJ+TevoRWh671mj9
+	CwEzPvhIHBdaqOwwd+QVpSa4dIg5U1uGUxh+XczZf9HVuF4B6qsY
+X-Google-Smtp-Source: AGHT+IH0Ufz61rrGsLzM2DBMnTNPuqutjmEPLL4DJoExm6xXpRlKzUNk39EePHSw2ktrkqKuAjbDYQ==
+X-Received: by 2002:a05:600c:190f:b0:430:53f8:38bc with SMTP id 5b1f17b1804b1-431255dcb76mr115860775e9.12.1729079298559;
+        Wed, 16 Oct 2024 04:48:18 -0700 (PDT)
+Received: from [0.0.0.0] ([95.179.233.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc445fesm4109430f8f.113.2024.10.16.04.48.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2024 04:48:18 -0700 (PDT)
+Message-ID: <f48015df-9b1b-43f4-82a1-a47664a7c994@gmail.com>
+Date: Wed, 16 Oct 2024 19:48:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1729037131.git.gustavoars@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-US
+To: Trond Myklebust <trondmy@hammerspace.com>,
+ Chuck Lever <chuck.lever@oracle.com>
+From: Kinglong Mee <kinglongmee@gmail.com>
+Subject: [RFC PATCH 1/5] SUNRPC: reserve space before encode gid
+Cc: kinglongmee@gmail.com, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Reserve space must be done before gid encoding.
 
-Address the following warnings by changing the type of the middle struct
-members in `struct nfsd_genl_rqstp`, which are currently causing trouble,
-from `struct sockaddr` to `struct sockaddr_legacy`. Note that the latter
-struct doesn't contain a flexible-array member.
-
-fs/nfsd/nfsd.h:74:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/nfsd.h:75:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Also, update some related code, accordingly.
-
-No binary differences are present after these changes.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Kinglong Mee <kinglongmee@gmail.com>
 ---
- fs/nfsd/nfsctl.c | 4 ++--
- fs/nfsd/nfsd.h   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/sunrpc/auth_unix.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 3adbc05ebaac..884bfdc7a255 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1599,9 +1599,9 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
- 			genl_rqstp.rq_stime = rqstp->rq_stime;
- 			genl_rqstp.rq_opcnt = 0;
- 			memcpy(&genl_rqstp.rq_daddr, svc_daddr(rqstp),
--			       sizeof(struct sockaddr));
-+			       sizeof(struct sockaddr_legacy));
- 			memcpy(&genl_rqstp.rq_saddr, svc_addr(rqstp),
--			       sizeof(struct sockaddr));
-+			       sizeof(struct sockaddr_legacy));
+diff --git a/net/sunrpc/auth_unix.c b/net/sunrpc/auth_unix.c
+index 1e091d3fa607..9ef3025682bf 100644
+--- a/net/sunrpc/auth_unix.c
++++ b/net/sunrpc/auth_unix.c
+@@ -113,7 +113,7 @@ unx_marshal(struct rpc_task *task, struct xdr_stream *xdr)
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 	struct rpc_cred	*cred = task->tk_rqstp->rq_cred;
+ 	__be32		*p, *cred_len, *gidarr_len;
+-	int		i;
++	int		i, ngroups;
+ 	struct group_info *gi = cred->cr_cred->group_info;
+ 	struct user_namespace *userns = clnt->cl_cred ?
+ 		clnt->cl_cred->user_ns : &init_user_ns;
+@@ -136,14 +136,17 @@ unx_marshal(struct rpc_task *task, struct xdr_stream *xdr)
+ 	*p++ = cpu_to_be32(from_kgid_munged(userns, cred->cr_cred->fsgid));
  
- #ifdef CONFIG_NFSD_V4
- 			if (rqstp->rq_vers == NFS4_VERSION &&
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 004415651295..44be32510595 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -71,8 +71,8 @@ struct readdir_cd {
- #define NFSD_MAX_OPS_PER_COMPOUND	50
+ 	gidarr_len = p++;
+-	if (gi)
+-		for (i = 0; i < UNX_NGROUPS && i < gi->ngroups; i++)
++	if (gi && gi->ngroups) {
++		ngroups = min(UNX_NGROUPS, gi->ngroups);
++		p = xdr_reserve_space(xdr, ngroups * sizeof(*p));
++		if (!p)
++			goto marshal_failed;
++		for (i = 0; i < ngroups; i++)
+ 			*p++ = cpu_to_be32(from_kgid_munged(userns, gi->gid[i]));
++	}
++
+ 	*gidarr_len = cpu_to_be32(p - gidarr_len - 1);
+ 	*cred_len = cpu_to_be32((p - cred_len - 1) << 2);
+-	p = xdr_reserve_space(xdr, (p - gidarr_len - 1) << 2);
+-	if (!p)
+-		goto marshal_failed;
  
- struct nfsd_genl_rqstp {
--	struct sockaddr		rq_daddr;
--	struct sockaddr		rq_saddr;
-+	struct sockaddr_legacy	rq_daddr;
-+	struct sockaddr_legacy	rq_saddr;
- 	unsigned long		rq_flags;
- 	ktime_t			rq_stime;
- 	__be32			rq_xid;
+ 	/* Verifier */
+ 
 -- 
-2.34.1
+2.47.0
 
 
