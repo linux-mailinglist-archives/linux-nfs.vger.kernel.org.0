@@ -1,91 +1,119 @@
-Return-Path: <linux-nfs+bounces-7190-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7191-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B40299F815
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 22:28:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D582999FCFC
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 02:16:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC5571C21A27
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Oct 2024 20:28:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A205286B22
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 00:16:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E641F818B;
-	Tue, 15 Oct 2024 20:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D3BA945;
+	Wed, 16 Oct 2024 00:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DPdt0vNJ"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dGDehaZp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF048176228;
-	Tue, 15 Oct 2024 20:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AA5524F
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 00:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729024100; cv=none; b=NbO0QEq7upQaiaicVCODU85wPGbHSB/hgnkcO2CdRrYmqnZdx0/3KZm3mhMx7032oewBTE6Gy3JDCtVxRgFWNP5+EoR4WgJmU6geBnij5RgdfC0X7yngCOGTPkSo4a3pbpNwi33V8xs55+0SwLvgW9BBw0dlLrvV4L9DAGBrOZQ=
+	t=1729037770; cv=none; b=iah2fsW0gVx4rwajnnG1K9tj/iBECua7mLi3D7I9l5CSd9nCtD3V8TTnvzHaknQ1SMkoLZ018xCcDq1sLtNtUWRPR2cieW5FF/a2IHIhzWRUgfxv1TxyMeiqxvJR2knebvJK/qLQUEwbZi+XUGDwRQmX/GsadRz9C6N74HYVfAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729024100; c=relaxed/simple;
-	bh=Sdy3ffOIi7k8Sjn9zIVT7VcbkCSMRxGWs0fyYz9MKkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b7oglDOgvEaxA9l07RsYu8bkWwC0NnWUqkivQ0jPBHRAZ4hCcCJavcZ49ThwVQoR2feXtz5NhjxuQmGFZ+M3A7YWr4flqEmC21cFSFqI3OXL+64xxjjsaGEuppDG2VLHrp2jrcC7ojT32qcYUGm8m74U/mqJl9/U3HIVZFPqusE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DPdt0vNJ; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1729024096;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KFE8a5vA6V3Hg5gG1lNgnbGvgCy1xfGED61Xl0i9E8U=;
-	b=DPdt0vNJZKSNbkv4TgnfylArPxdK7eEEicgPqq6lJs8Y/VT+pzCx+ZGBkHWYh7sRgIXb1q
-	JPdlsGweOa2edtvO1/Edy6vJ+QwJ537JkZrAbIVqopL+uVjSFLsTllzUF1hXDb/bv0eyF5
-	UiH1iz4/cken6ql7w+P9PnwMfJxI6h8=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH] nfs: Annotate struct pnfs_commit_array with __counted_by()
-Date: Tue, 15 Oct 2024 22:27:31 +0200
-Message-ID: <20241015202731.2638-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1729037770; c=relaxed/simple;
+	bh=0RR+M6O+iq8XIjRHinrWxf3DoFEOcB1Lx9Es2nZTe7Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WcXwJUChUskcsPOo84nWkXka9D2t2l7kk7fN6PDs/DcG1C0W5Aogeb8yZ7PrjyCM5Y+9v5zfvhnVrrM6MBvlLhyywkSVhGRFAvwjN53TFvw3j268q+3vCaSrEWiQR9xgOv5d94P/z8xsk6xIwyL3pgLEaa9zasOtlC3RwyYelN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dGDehaZp; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e29715835ceso1187631276.3
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Oct 2024 17:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1729037767; x=1729642567; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VwIVXsv+0K/tRmuz74E0Mk7+OGVGSOJtC2LxGockSrQ=;
+        b=dGDehaZpDW550MqhEsubuL0aypwzrX+ohNp1JqHP0Hs+rHzC4CpkSSKRsfZRBvPO8a
+         ERfYEh4QNBihDwgaASzOEhV5vbi/OiluvS6YRM9iURxg2dEET4bQwOUnXT9N8qIz2HbF
+         Nbho2eXwGJBggUJYqhvi+W06qM5lqkOpo5KTGQ31gI1NUgU2dsC1g/orSbwv+Cgaa3Zc
+         WW4vwAvsdn+gg1Vaii/eU4In/QbMrCXhEXDouaJhpW+tSmpzwn8CXxbR86q5vg2V2prR
+         yS8I3d+5o5pG9m2HdnyLWnF4jQDeEieodCU+/uWQKn/nfBD3zLVvnV7/MrI36nCOIa8f
+         /Euw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729037767; x=1729642567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VwIVXsv+0K/tRmuz74E0Mk7+OGVGSOJtC2LxGockSrQ=;
+        b=v5N7Aus1yONme8rd+i1hBDC8to3cY3ej0cnM8uEhY1mnVqA1VWOnbZaVFGxtuvU+5m
+         eEdCueqsn7L6ODXr6xfevKDt7co9LOPbcOVYUcFDP5l9g0RsWUql3dTJ77r1DdG2FNpX
+         3V3jKVfL5B9pxL68nmCawTg54DdhJfZydwV/HZcxfkE3lGj1kXLCerWGJVfoBpo1VjKp
+         K7GEUb/cBqbvDCVw7QfGqLrOs4fOhFWeJ75wkm88/Qb0/RmQUQiiJIIVWyZPUM020HIG
+         ayqGbebNHh1VINRob0CqDmdoJuZe/ba5EJ191nuQVlCthvCun8yMxD/5N8F3SJTPOOPT
+         bIyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmIPF0q7T7GG/eKJwZE0wuNXharVjvPcHURKalwAg5PCXtyrwZdg6Tg97YumFZZnEddHWRXVuMu5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOwZlRn687emnJrCkU/UVyOFZ/R0girYVystgYmxYn3jamUkbK
+	cW6S+CWMQfVMqbwj+GeO0iUyz30pvVgkr8SVyLZYHp7OiOuvEEDajU/CWp5VZSHUciIZYqJefIF
+	563lN1Ox/hqt8gz4A3ef24I0aQElHgXkcAoQ9
+X-Google-Smtp-Source: AGHT+IESf3Jz8ORecE7b8c1bkUbZCtOoJ2cisSrtY1CixXa6d/r44qsu/muJ6kPqg3NbhmLKJVsXrujBGNQ70iaASHI=
+X-Received: by 2002:a05:690c:5719:b0:6e2:50a:f43b with SMTP id
+ 00721157ae682-6e347b368c0mr95998737b3.35.1729037767509; Tue, 15 Oct 2024
+ 17:16:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20241010152649.849254-1-mic@digikod.net> <ZwkaVLOFElypvSDX@infradead.org>
+ <20241011.ieghie3Aiye4@digikod.net> <ZwkgDd1JO2kZBobc@infradead.org>
+ <20241011.yai6KiDa7ieg@digikod.net> <Zwkm5HADvc5743di@infradead.org>
+ <20241011.aetou9haeCah@digikod.net> <Zwk4pYzkzydwLRV_@infradead.org>
+ <20241011.uu1Bieghaiwu@digikod.net> <05cb94c0dda9e1b23fe566c6ecd71b3d1739b95b.camel@kernel.org>
+ <20241014-turmbau-ansah-37d96a5fd780@brauner>
+In-Reply-To: <20241014-turmbau-ansah-37d96a5fd780@brauner>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 15 Oct 2024 20:15:56 -0400
+Message-ID: <CAHC9VhRdkByXa7SA9LqNrRyU6EfhezHENdrToQxYJCakPS-YcA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
+ get_ino() for NFS
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Christoph Hellwig <hch@infradead.org>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	audit@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the __counted_by compiler attribute to the flexible array member
-buckets to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Mon, Oct 14, 2024 at 10:45=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+> On Sun, Oct 13, 2024 at 06:17:43AM -0400, Jeff Layton wrote:
+> > On Fri, 2024-10-11 at 17:30 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+> > > On Fri, Oct 11, 2024 at 07:39:33AM -0700, Christoph Hellwig wrote:
+> > > > On Fri, Oct 11, 2024 at 03:52:42PM +0200, Micka=C3=ABl Sala=C3=BCn =
+wrote:
 
-Compile-tested only.
+...
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- include/linux/nfs_xdr.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > A better solution here would be to make inode->i_ino a u64, and just
+> > fix up all of the places that touch it to expect that. Then, just
+>
+> I would like us to try and see to make this happen. I really dislike
+> that struct inode is full of non-explicity types.
 
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 12d8e47bc5a3..559273a0f16d 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1336,7 +1336,7 @@ struct pnfs_commit_array {
- 	struct rcu_head rcu;
- 	refcount_t refcount;
- 	unsigned int nbuckets;
--	struct pnfs_commit_bucket buckets[];
-+	struct pnfs_commit_bucket buckets[] __counted_by(nbuckets);
- };
- 
- struct pnfs_ds_commit_info {
--- 
-2.47.0
+Presumably this would include moving all of the filesystems to use
+inode->i_ino instead of their own private file ID number, e.g. the NFS
+issue pointed out in the original patch?  If not, I think most of us
+in the LSM/audit space still have a need for a filesystem agnostic way
+to determine the inode number from an inode struct.
 
+--=20
+paul-moore.com
 
