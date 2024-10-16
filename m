@@ -1,130 +1,212 @@
-Return-Path: <linux-nfs+bounces-7210-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7211-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0BC09A0FAF
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 18:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4041F9A10F4
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 19:51:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9479C2862A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 16:29:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 049EB285AD4
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Oct 2024 17:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70CC7210C2E;
-	Wed, 16 Oct 2024 16:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB3620F5C6;
+	Wed, 16 Oct 2024 17:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K3JW8dT9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WHFzFcXP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22F02101A8
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 16:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DE118BC23
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Oct 2024 17:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729096127; cv=none; b=YBrVOECL2Ukrb0hSN9MiSkJ5VuW6+U+6KfzS4Sxg7oDQgLfZ0CA/xs/M7L4XxPA6oERo3aGoQGG1lDovEg/GLpEQnIb8DZStSJFcHJgZNt8uoIUjCDJCltJut5p2T1G4jbfbjjox8MHvgrxPSKZqriuJtpetjDf9Eg2+nejr3sc=
+	t=1729101091; cv=none; b=eMzK8xci7+ZURJh0168O3x99an+0lxAqCj6YyTWgna5PNs+SPtjzayUMchW8ObvCyq6h3gvhEc/wjlLcLD+nwVDB3F+jjpQlyr0HhC9NdmoNepPOjPGMKODppOnSLcUc9AQ2vp13FMzTIOCCW0s9uoapJo5iZP3/wHr09ohQktY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729096127; c=relaxed/simple;
-	bh=l8A3AThTq+ezAyEa6ZdEacg08ACdKh98w19rNnepIiU=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=GcG6aZD1nu+n0WoQXnTZ/AimYuV0McLr0mJbxuQ2Brf6E1tbEvVwmRWsjXI+c1TbcJm0Cvt/48LN4aGRLs+dv5wofd/yXIls4awbQXG6cz8+U7h+9RDH5Vpcl+l/glSBpMIvQW5c9KL8G+YIw4sfsnS9SumnlvT8t/ATEo+YsrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K3JW8dT9; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1729101091; c=relaxed/simple;
+	bh=huz6mul38ZnYS7rHkuaQsVhVXBXZPsjEcMwBnKWclAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fgo1wBIXgRvtTiNgtNO+KW/tF86HOZMAZzoZG1fH0tAjdUHtUAoGiBuc4gLoMpixmz+oZvsDSP50aErQBdEgmGdjnjuR0Tz2sMvCvOoRC0HceXka6F0AFNEVEd0f8+N7oGkaTr4Jb/G3CopnVjqErfYBQJlfvth+hSfVDwD8g2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WHFzFcXP; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729096124;
+	s=mimecast20190719; t=1729101088;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=73sRhC/MVUgLr8wQOAXRbG/9ryOP4YoRdbzww8lNz4M=;
-	b=K3JW8dT9FugY+/KoiLamKDfpIze4TGzT8NW4zQAY9tYvA0OxGhqyruTyGkH+7ZBt3ev0Tk
-	0mqkk1oMbAcMyPkqD3CANZQjd8zjnRtsRUXHbgvVWjiDg5+Tvhci1IrgmbtELWpWZRaPok
-	af01BG3Zq0N8qesQhkOM6MEVadEkA98=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l/1/Thx3W/Mo/C+jR0SOsYyZfYxBfxmy+o+NRETtE6o=;
+	b=WHFzFcXP4cgtcCc57wTitTyJW/T3qAiNOXz1vKQFafofIExeAwIwnoJTRicdEI7BXT7DOp
+	XWoX7tmm/BMs39u1QN0Wot5eUBQzCENK+cW57XgBUBoBBZTa5m7Zx+8y0nckpGRTR25KLO
+	BGirNdYlOWNnBe3zjdspG2rXSpVeVYw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-acA3QZC1NvWB9lBdONbJig-1; Wed,
- 16 Oct 2024 12:28:39 -0400
-X-MC-Unique: acA3QZC1NvWB9lBdONbJig-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-UG85GRUlMqeVULO9ZiSSqA-1; Wed,
+ 16 Oct 2024 13:51:24 -0400
+X-MC-Unique: UG85GRUlMqeVULO9ZiSSqA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0BC619560A1;
-	Wed, 16 Oct 2024 16:28:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 02B621956086;
-	Wed, 16 Oct 2024 16:28:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <brauner@kernel.org>,
-    Steve French <sfrench@samba.org>
-cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.com>,
-    Trond Myklebust <trondmy@kernel.org>,
-    Jeff Layton <jlayton@kernel.org>, netfs@lists.linux.dev,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfs: Downgrade i_rwsem for a buffered write
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 34AF119560AD;
+	Wed, 16 Oct 2024 17:51:23 +0000 (UTC)
+Received: from bighat.boston.devel.redhat.com (unknown [10.22.89.39])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 79BC01955F41;
+	Wed, 16 Oct 2024 17:51:22 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] configure.ac: Using autoupdate updated to the latest autoconf macros
+Date: Wed, 16 Oct 2024 13:51:21 -0400
+Message-ID: <20241016175121.85450-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1317957.1729096113.1@warthog.procyon.org.uk>
-Date: Wed, 16 Oct 2024 17:28:33 +0100
-Message-ID: <1317958.1729096113@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-In the I/O locking code borrowed from NFS into netfslib, i_rwsem is held
-locked across a buffered write - but this causes a performance regression
-in cifs as it excludes buffered reads for the duration (cifs didn't use any
-locking for buffered reads).
-
-Mitigate this somewhat by downgrading the i_rwsem to a read lock across the
-buffered write.  This at least allows parallel reads to occur whilst
-excluding other writes, DIO, truncate and setattr.
-
-Note that this shouldn't be a problem for a buffered write as a read
-through an mmap can circumvent i_rwsem anyway.
-
-Also note that we might want to make this change in NFS also.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Trond Myklebust <trondmy@kernel.org>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-cifs@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- fs/netfs/locking.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ configure.ac | 54 +++++++++++++++++++---------------------------------
+ 1 file changed, 20 insertions(+), 34 deletions(-)
 
-diff --git a/fs/netfs/locking.c b/fs/netfs/locking.c
-index 21eab56ee2f9..2249ecd09d0a 100644
---- a/fs/netfs/locking.c
-+++ b/fs/netfs/locking.c
-@@ -109,6 +109,7 @@ int netfs_start_io_write(struct inode *inode)
- 		up_write(&inode->i_rwsem);
- 		return -ERESTARTSYS;
- 	}
-+	downgrade_write(&inode->i_rwsem);
- 	return 0;
- }
- EXPORT_SYMBOL(netfs_start_io_write);
-@@ -123,7 +124,7 @@ EXPORT_SYMBOL(netfs_start_io_write);
- void netfs_end_io_write(struct inode *inode)
- 	__releases(inode->i_rwsem)
- {
--	up_write(&inode->i_rwsem);
-+	up_read(&inode->i_rwsem);
- }
- EXPORT_SYMBOL(netfs_end_io_write);
+diff --git a/configure.ac b/configure.ac
+index ee2433f..bd099ff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,4 +1,4 @@
+-AC_INIT(libtirpc, 1.3.5)
++AC_INIT([libtirpc],[1.3.5])
+ AM_INIT_AUTOMAKE([silent-rules])
+ AM_SILENT_RULES([yes])
+ AC_CONFIG_SRCDIR([src/auth_des.c])
+@@ -35,7 +35,7 @@ AC_SUBST([LT_VERSION_INFO])
+ AC_CHECK_HEADER([gssapi/gssapi.h], [HAVE_GSSAPI_H=yes], [HAVE_GSSAPI_H=no])
  
+ AC_ARG_ENABLE(gssapi,
+-	[AC_HELP_STRING([--disable-gssapi], [Disable GSSAPI support @<:@default=no@:>@])],
++	[AS_HELP_STRING([--disable-gssapi],[Disable GSSAPI support @<:@default=no@:>@])],
+       [],[enable_gssapi=yes])
+ AM_CONDITIONAL(GSS, test "x$enable_gssapi" = xyes)
+ 
+@@ -62,7 +62,7 @@ if test "x$enable_gssapi" = xyes; then
+ fi
+ 
+ AC_ARG_ENABLE(authdes,
+-	[AC_HELP_STRING([--enable-authdes], [Enable AUTH_DES support @<:@default=no@:>@])],
++	[AS_HELP_STRING([--enable-authdes],[Enable AUTH_DES support @<:@default=no@:>@])],
+       [],[enable_authdes=no])
+ AM_CONDITIONAL(AUTHDES, test "x$enable_authdes" = xyes)
+ if test "x$enable_authdes" != xno; then
+@@ -70,7 +70,7 @@ if test "x$enable_authdes" != xno; then
+ fi
+ 
+ AC_ARG_ENABLE(ipv6,
+-	[AC_HELP_STRING([--disable-ipv6], [Disable IPv6 support @<:@default=no@:>@])],
++	[AS_HELP_STRING([--disable-ipv6],[Disable IPv6 support @<:@default=no@:>@])],
+ 	[],[enable_ipv6=yes])
+ AM_CONDITIONAL(INET6, test "x$enable_ipv6" != xno)
+ if test "x$enable_ipv6" != xno; then
+@@ -78,7 +78,7 @@ if test "x$enable_ipv6" != xno; then
+ fi
+ 
+ AC_ARG_ENABLE(symvers,
+-	[AC_HELP_STRING([--disable-symvers], [Disable symbol versioning @<:@default=no@:>@])],
++	[AS_HELP_STRING([--disable-symvers],[Disable symbol versioning @<:@default=no@:>@])],
+       [],[enable_symvers=maybe])
+ 
+ if test "x$enable_symvers" = xmaybe; then
+@@ -113,63 +113,48 @@ esac
+ 
+ 
+ AC_MSG_CHECKING(for SOL_IP)
+-AC_TRY_COMPILE([#include <netdb.h>], [
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <netdb.h>]], [[
+     int ipproto = SOL_IP;
+-], [
++]])],[
+     AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_SOL_IP, 1, [Have SOL_IP])
+-], [
++],[
+     AC_MSG_RESULT(no)
+ ])
+ 
+ AC_MSG_CHECKING(for SOL_IPV6)
+-AC_TRY_COMPILE([#include <netdb.h>], [
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <netdb.h>]], [[
+     int ipproto = SOL_IPV6;
+-], [
++]])],[
+     AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_SOL_IPV6, 1, [Have SOL_IPV6])
+-], [
++],[
+     AC_MSG_RESULT(no)
+ ])
+ 
+ AC_MSG_CHECKING(for IPPROTO_IP)
+-AC_TRY_COMPILE([#include <netinet/in.h>], [
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <netinet/in.h>]], [[
+     int ipproto = IPPROTO_IP;
+-], [
++]])],[
+     AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_IPPROTO_IP, 1, [Have IPPROTO_IP])
+-], [
++],[
+     AC_MSG_RESULT(no)
+ ])
+ 
+ AC_MSG_CHECKING(for IPPROTO_IPV6)
+-AC_TRY_COMPILE([#include <netinet/in.h>], [
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <netinet/in.h>]], [[
+     int ipproto = IPPROTO_IPV6;
+-], [
++]])],[
+     AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_IPPROTO_IPV6, 1, [Have IPPROTO_IPV6])
+-], [
++],[
+     AC_MSG_RESULT(no)
+ ])
+ AC_MSG_CHECKING([for IPV6_PKTINFO])
+-AC_TRY_COMPILE([#include <netdb.h>], [
+-  int opt = IPV6_PKTINFO;
+-], [
+-  AC_MSG_RESULT([yes])
+-], [
+-AC_TRY_COMPILE([#define __APPLE_USE_RFC_3542
+-            #include <netdb.h>], [
+-  int opt = IPV6_PKTINFO;
+-], [
+-  AC_MSG_RESULT([yes with __APPLE_USE_RFC_3542])
+-  AC_DEFINE([__APPLE_USE_RFC_3542], [1], [show IPV6_PKTINFO internals on macos])
+-], [
+-  AC_MSG_RESULT([no])
+-])
+-])
+ 
+ AC_CONFIG_HEADERS([config.h])
+-AC_PROG_LIBTOOL
++LT_INIT
+ AC_HEADER_DIRENT
+ AC_PREFIX_DEFAULT(/usr)
+ AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h limits.h locale.h
+@@ -182,6 +167,7 @@ AC_CHECK_FUNCS([getpeereid getrpcbyname getrpcbynumber setrpcent endrpcent getrp
+ AC_CHECK_TYPES(struct rpcent,,, [
+       #include <netdb.h>])
+ AC_CONFIG_FILES([Makefile src/Makefile man/Makefile doc/Makefile])
+-AC_OUTPUT(libtirpc.pc)
++AC_CONFIG_FILES([libtirpc.pc])
++AC_OUTPUT
+ 
+ 
+-- 
+2.46.2
 
 
