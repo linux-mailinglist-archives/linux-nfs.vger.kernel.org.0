@@ -1,53 +1,95 @@
-Return-Path: <linux-nfs+bounces-7245-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7246-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84B299A2681
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:25:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 823D09A2949
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 18:44:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1796BB27B53
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 15:25:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11BE11F278AE
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 16:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 972E11DE3DA;
-	Thu, 17 Oct 2024 15:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 645081DF755;
+	Thu, 17 Oct 2024 16:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D0Ctp9E7"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FluGkwtr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I2enq7ie";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FluGkwtr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I2enq7ie"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEE51386B4;
-	Thu, 17 Oct 2024 15:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A031DF725;
+	Thu, 17 Oct 2024 16:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729178723; cv=none; b=all8cSUQJkrlkoZQhV7jKTvcX6Q0tyAP4nBp3lPUJ6BWACKk54GvzS24PI+SpjASsYd9/LeJo/b+WK0K4AjFfXeOK5WYO71vFert3nW/UtrL1T9CfK4SNSREGS02ZxhclVI4yDMIKzyBAteo8+JaDtA1yvxIIeMqJVUMUY74aBc=
+	t=1729183426; cv=none; b=uR/ly2/30oLToEFaHO8EzBbWn5CL8o8V4CMrYGeeljv3nCeunP2Os/hpirR6Ex6XfSk9M7q9UKMpB4r0oANdqfg6uuv+3ZXaW8x2aBQ6HaDltl6/GinreiNa44DIFfaXTHL72U2KncrA00RvgzZvlzAjfl5y8cqy6kJRb9oXpOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729178723; c=relaxed/simple;
-	bh=e14vARFRPXFqWE5D+9wUOfggw9iDjwOHiJ15L5WX/GE=;
+	s=arc-20240116; t=1729183426; c=relaxed/simple;
+	bh=/pQEMDJ0tWR7jUox6Yx2LARbpKT7SWzP+nFAD8Q2vuQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRbU4rfUC6JQVR0g+GaDoC7VwKJU17q3ujNBPwdMec+ttrqZfPBqsmga2Xf0Ziw/AscMSK7C5SrphnzJwWD9g0FQO2uce30PbYvXxk7Vs/UYu7lGW/rXuYEF062Qx+C1Kg8UTqhxInUi0EmSKTC0cfogyBcpAzX1HkO0Ayk9nO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D0Ctp9E7; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7rcG0T4e0Ytb++3vrNQWHwgqkLkV3jBFMznndDC1Hgc=; b=D0Ctp9E7JuGeTLONn5TGkYrXJ9
-	SpqvU04G9Z+qn7DS13eNCU3QnkRVgOdb2j5PgtGfB87YO/k1szrTsjLzOBO78UAuTV4jr6NsYDFxv
-	J9eimeMjhybUptkAXiRGe6NVfFIz3kbbndWoAahIcpHb3DgC7xkNfIxt/1UAH3h9xJI85a+edmx2u
-	ujjM25KFJyhptmrJxb/yL+bqmsgPK21dONbYkRoOw+7tEZVMS/1w3Pli25pTWYBZN78LyWL8VHuDp
-	vINKm9XAuJmLK0ZRSgNTD9uiuW3s/DwhIUyzDXsWKsN1GL2FhjJwZ0xB+8tYycrvKI039CbK+n3N3
-	pI2eZssA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1SNL-0000000FH85-3cSF;
-	Thu, 17 Oct 2024 15:25:19 +0000
-Date: Thu, 17 Oct 2024 08:25:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=iTrbkappnuflaY3ZmMkhtAwrJRzzng39AF9EQ5lO9l95iWLYJtjadcjU0JAO0NfItRdHf/DkXth3jMMMVrVwjcs8mzqQuIymH40wgvstMbb+1qDeoa5MZR9rDbuYGfaJnns5wBsQ0k9lKgeri2kvcyUf4+5RqrFlXLyXmyRiz6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FluGkwtr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I2enq7ie; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FluGkwtr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I2enq7ie; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3638E21BF8;
+	Thu, 17 Oct 2024 16:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729183419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
+	b=FluGkwtrRKy60QaI1LMHY67ZariTniApGobBoTrbo4a2C/Z1vPWLrSHbhrp76Ldm7sizhg
+	HPqXqmgKMEslAYCboQDJW5xHO9aIMv34sB56AvtLJFrgkF1KnDoe5QSISh6a0PwG/gSSX3
+	thlnso7Tu38RXlTvNjEjRN038OlKghw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729183419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
+	b=I2enq7ier/T/vWsGFt0/dEBGVAqWRooRjvoyzdg41lMbRf9lRC6a/Yrn8AzaY9vpvhYBGE
+	27Nvha6TKK612iCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729183419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
+	b=FluGkwtrRKy60QaI1LMHY67ZariTniApGobBoTrbo4a2C/Z1vPWLrSHbhrp76Ldm7sizhg
+	HPqXqmgKMEslAYCboQDJW5xHO9aIMv34sB56AvtLJFrgkF1KnDoe5QSISh6a0PwG/gSSX3
+	thlnso7Tu38RXlTvNjEjRN038OlKghw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729183419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
+	b=I2enq7ier/T/vWsGFt0/dEBGVAqWRooRjvoyzdg41lMbRf9lRC6a/Yrn8AzaY9vpvhYBGE
+	27Nvha6TKK612iCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2674F13A42;
+	Thu, 17 Oct 2024 16:43:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AvcVCbs+EWf+TgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 17 Oct 2024 16:43:39 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id D2CC2A080A; Thu, 17 Oct 2024 18:43:38 +0200 (CEST)
+Date: Thu, 17 Oct 2024 18:43:38 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Paul Moore <paul@paul-moore.com>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	"brauner@kernel.org" <brauner@kernel.org>,
 	"jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>,
@@ -59,7 +101,7 @@ Cc: Christoph Hellwig <hch@infradead.org>,
 	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
 Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
  get_ino() for NFS
-Message-ID: <ZxEsX9aAtqN2CbAj@infradead.org>
+Message-ID: <20241017164338.kzl7uotdyvhu5wv5@quack3>
 References: <20241010152649.849254-1-mic@digikod.net>
  <20241016-mitdenken-bankdaten-afb403982468@brauner>
  <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
@@ -67,6 +109,7 @@ References: <20241010152649.849254-1-mic@digikod.net>
  <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
  <ZxEmDbIClGM1F7e6@infradead.org>
  <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
+ <ZxEsX9aAtqN2CbAj@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -75,18 +118,49 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <ZxEsX9aAtqN2CbAj@infradead.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-On Thu, Oct 17, 2024 at 11:15:49AM -0400, Paul Moore wrote:
-> Also good to know, thanks.  However, at this point the lack of a clear
-> answer is making me wonder a bit more about inode numbers in the view
-> of VFS developers; do you folks care about inode numbers?
+On Thu 17-10-24 08:25:19, Christoph Hellwig wrote:
+> On Thu, Oct 17, 2024 at 11:15:49AM -0400, Paul Moore wrote:
+> > Also good to know, thanks.  However, at this point the lack of a clear
+> > answer is making me wonder a bit more about inode numbers in the view
+> > of VFS developers; do you folks care about inode numbers?
+> 
+> The VFS itself does not care much about inode numbers.  The Posix API
+> does, although btrfs ignores that and seems to get away with that
+> (mostly because applications put in btrfs-specific hacks).
 
-The VFS itself does not care much about inode numbers.  The Posix API
-does, although btrfs ignores that and seems to get away with that
-(mostly because applications put in btrfs-specific hacks).  Various
-other non-native file systems that don't support real inodes numbers
-also get away with that, but usually the applications used on those
-file systems are very limited.
+Well, btrfs plays tricks with *device* numbers, right? Exactly so that
+st_ino + st_dev actually stay unique for each file. Whether it matters for
+audit I don't dare to say :). Bcachefs does not care and returns non-unique
+inode numbers.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
