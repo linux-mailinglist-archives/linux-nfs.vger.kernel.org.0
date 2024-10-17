@@ -1,166 +1,202 @@
-Return-Path: <linux-nfs+bounces-7246-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7247-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 823D09A2949
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 18:44:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08C289A2A53
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 19:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11BE11F278AE
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 16:44:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 236551C212D9
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 645081DF755;
-	Thu, 17 Oct 2024 16:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8931E0B74;
+	Thu, 17 Oct 2024 17:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FluGkwtr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I2enq7ie";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FluGkwtr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I2enq7ie"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqR+SY3Y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A031DF725;
-	Thu, 17 Oct 2024 16:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3942D1E0B70;
+	Thu, 17 Oct 2024 17:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729183426; cv=none; b=uR/ly2/30oLToEFaHO8EzBbWn5CL8o8V4CMrYGeeljv3nCeunP2Os/hpirR6Ex6XfSk9M7q9UKMpB4r0oANdqfg6uuv+3ZXaW8x2aBQ6HaDltl6/GinreiNa44DIFfaXTHL72U2KncrA00RvgzZvlzAjfl5y8cqy6kJRb9oXpOE=
+	t=1729184757; cv=none; b=badJLBQ3Mwz0wx2dfL6Oluk0EcFFfRjy8cow9pjtru5krtS/W9zx0HVIHS0aCVxETXAVlSgyiA6GGiAodYZ5KhxEbe12v5UiKD5gklxaZniEk0zR49l8MABXC2KiNf+HM0wXy4cDxl3fUInTFT59TfLpQNBQfVl/+Sg1dTRB9hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729183426; c=relaxed/simple;
-	bh=/pQEMDJ0tWR7jUox6Yx2LARbpKT7SWzP+nFAD8Q2vuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iTrbkappnuflaY3ZmMkhtAwrJRzzng39AF9EQ5lO9l95iWLYJtjadcjU0JAO0NfItRdHf/DkXth3jMMMVrVwjcs8mzqQuIymH40wgvstMbb+1qDeoa5MZR9rDbuYGfaJnns5wBsQ0k9lKgeri2kvcyUf4+5RqrFlXLyXmyRiz6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FluGkwtr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I2enq7ie; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FluGkwtr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I2enq7ie; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3638E21BF8;
-	Thu, 17 Oct 2024 16:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729183419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
-	b=FluGkwtrRKy60QaI1LMHY67ZariTniApGobBoTrbo4a2C/Z1vPWLrSHbhrp76Ldm7sizhg
-	HPqXqmgKMEslAYCboQDJW5xHO9aIMv34sB56AvtLJFrgkF1KnDoe5QSISh6a0PwG/gSSX3
-	thlnso7Tu38RXlTvNjEjRN038OlKghw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729183419;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
-	b=I2enq7ier/T/vWsGFt0/dEBGVAqWRooRjvoyzdg41lMbRf9lRC6a/Yrn8AzaY9vpvhYBGE
-	27Nvha6TKK612iCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729183419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
-	b=FluGkwtrRKy60QaI1LMHY67ZariTniApGobBoTrbo4a2C/Z1vPWLrSHbhrp76Ldm7sizhg
-	HPqXqmgKMEslAYCboQDJW5xHO9aIMv34sB56AvtLJFrgkF1KnDoe5QSISh6a0PwG/gSSX3
-	thlnso7Tu38RXlTvNjEjRN038OlKghw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729183419;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qzoLvV5xDvJpzHY2wUEs/zXT/O6qP6LnxqIrn7QVrlY=;
-	b=I2enq7ier/T/vWsGFt0/dEBGVAqWRooRjvoyzdg41lMbRf9lRC6a/Yrn8AzaY9vpvhYBGE
-	27Nvha6TKK612iCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2674F13A42;
-	Thu, 17 Oct 2024 16:43:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AvcVCbs+EWf+TgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 17 Oct 2024 16:43:39 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id D2CC2A080A; Thu, 17 Oct 2024 18:43:38 +0200 (CEST)
-Date: Thu, 17 Oct 2024 18:43:38 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Paul Moore <paul@paul-moore.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"anna@kernel.org" <anna@kernel.org>,
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,
-	"audit@vger.kernel.org" <audit@vger.kernel.org>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+	s=arc-20240116; t=1729184757; c=relaxed/simple;
+	bh=Hi6D8KVRTUMeLAnvMukvPh1ulybVUJ8y+rk+DUP+VPc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=anTg7gaSDRGlcPcTl4LB0r3wSENwmjbZR3cL1bfh5Nbcc9vC4M9ZhePfqFlk1Em/qb3+i3x2EEOhrmCT+tUe6p1jVtQlsZ3/WstvEA30cOnXAyl6P/QL3ekyE0a6ALWgwykxFem/IalsLAhPU/wMT7WSysRrArHxrcLf6Zk/ddQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqR+SY3Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB147C4AF0F;
+	Thu, 17 Oct 2024 17:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729184756;
+	bh=Hi6D8KVRTUMeLAnvMukvPh1ulybVUJ8y+rk+DUP+VPc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EqR+SY3YKbAH7x5UhQdz1sEp5ImzYJXcJQ2ZN2/+ywXAi4c1+QrwFpHfJ0rLBDE2K
+	 ZMLDcuNQa38guer1hl+0/2Qn71065nHoKHFOejD3r96zGkCgDJTvmzYn42cZNQslfA
+	 25m7hSd5y32Wv2wiir2xlDgKSdZgN3I8Btg4Z8pJCAy7WKRlLJ83Wtsrr+kbDIszDH
+	 vJdZfRTMR2PW7L8MRo8foqPQpngxB+94VTpMwrKPj9+hpeRZ4WYW2o8ANtBLxl9KJf
+	 BJUT0hek6+Hul/goYhlx7fwM/HIRUYUbnFltuVSSYgynUHsXXl/JnVQL+u/EgOXktw
+	 Vu/+Ig3Dj4GUA==
+Message-ID: <5a5cfe8cb8155c2bb91780cc75816751213e28d7.camel@kernel.org>
 Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
  get_ino() for NFS
-Message-ID: <20241017164338.kzl7uotdyvhu5wv5@quack3>
+From: Jeff Layton <jlayton@kernel.org>
+To: Paul Moore <paul@paul-moore.com>, Christoph Hellwig <hch@infradead.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, "brauner@kernel.org"
+ <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>, "mic@digikod.net"
+ <mic@digikod.net>, "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>, "anna@kernel.org" <anna@kernel.org>, 
+ "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>, "audit@vger.kernel.org"
+ <audit@vger.kernel.org>, "linux-nfs@vger.kernel.org"
+ <linux-nfs@vger.kernel.org>,  "viro@zeniv.linux.org.uk"
+ <viro@zeniv.linux.org.uk>
+Date: Thu, 17 Oct 2024 13:05:54 -0400
+In-Reply-To: <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
 References: <20241010152649.849254-1-mic@digikod.net>
- <20241016-mitdenken-bankdaten-afb403982468@brauner>
- <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
- <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
- <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
- <ZxEmDbIClGM1F7e6@infradead.org>
- <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
- <ZxEsX9aAtqN2CbAj@infradead.org>
+	 <20241016-mitdenken-bankdaten-afb403982468@brauner>
+	 <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
+	 <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
+	 <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
+	 <ZxEmDbIClGM1F7e6@infradead.org>
+	 <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZxEsX9aAtqN2CbAj@infradead.org>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
 
-On Thu 17-10-24 08:25:19, Christoph Hellwig wrote:
-> On Thu, Oct 17, 2024 at 11:15:49AM -0400, Paul Moore wrote:
-> > Also good to know, thanks.  However, at this point the lack of a clear
-> > answer is making me wonder a bit more about inode numbers in the view
-> > of VFS developers; do you folks care about inode numbers?
-> 
-> The VFS itself does not care much about inode numbers.  The Posix API
-> does, although btrfs ignores that and seems to get away with that
-> (mostly because applications put in btrfs-specific hacks).
+On Thu, 2024-10-17 at 11:15 -0400, Paul Moore wrote:
+> On Thu, Oct 17, 2024 at 10:58=E2=80=AFAM Christoph Hellwig <hch@infradead=
+.org> wrote:
+> > On Thu, Oct 17, 2024 at 10:54:12AM -0400, Paul Moore wrote:
+> > > Okay, good to know, but I was hoping that there we could come up with
+> > > an explicit list of filesystems that maintain their own private inode
+> > > numbers outside of inode-i_ino.
+> >=20
+> > Anything using iget5_locked is a good start.  Add to that file systems
+> > implementing their own inode cache (at least xfs and bcachefs).
+>=20
+> Also good to know, thanks.  However, at this point the lack of a clear
+> answer is making me wonder a bit more about inode numbers in the view
+> of VFS developers; do you folks care about inode numbers?  I'm not
+> asking to start an argument, it's a genuine question so I can get a
+> better understanding about the durability and sustainability of
+> inode->i_no.  If all of you (the VFS folks) aren't concerned about
+> inode numbers, I suspect we are going to have similar issues in the
+> future and we (the LSM folks) likely need to move away from reporting
+> inode numbers as they aren't reliably maintained by the VFS layer.
+>=20
 
-Well, btrfs plays tricks with *device* numbers, right? Exactly so that
-st_ino + st_dev actually stay unique for each file. Whether it matters for
-audit I don't dare to say :). Bcachefs does not care and returns non-unique
-inode numbers.
+Like Christoph said, the kernel doesn't care much about inode numbers.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+People care about them though, and sometimes we have things in the
+kernel that report them in some fashion (tracepoints, procfiles, audit
+events, etc.). Having those match what the userland stat() st_ino field
+tells you is ideal, and for the most part that's the way it works.
+
+The main exception is when people use 32-bit interfaces (somewhat rare
+these days), or they have a 32-bit kernel with a filesystem that has a
+64-bit inode number space (NFS being one of those). The NFS client has
+basically hacked around this for years by tracking its own fileid field
+in its inode. That's really a waste though. That could be converted
+over to use i_ino instead if it were always wide enough.
+
+It'd be better to stop with these sort of hacks and just fix this the
+right way once and for all, by making i_ino 64 bits everywhere.
+
+A lot of the changes can probably be automated via coccinelle. I'd
+probably start by turning all of the direct i_ino accesses into static
+inline wrapper function calls. The hard part will be parceling out that
+work into digestable chunks. If you can avoid "flag day" changes, then
+that's ideal.  You'd want a patch per subsystem so you can collect
+ACKs.=20
+
+The hardest part will probably be the format string changes. I'm not
+sure you can easily use coccinelle for that, so that may need to be
+done by hand or scripted with python or something.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
