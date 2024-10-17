@@ -1,71 +1,58 @@
-Return-Path: <linux-nfs+bounces-7249-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7250-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2ED79A2B90
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 19:59:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D010F9A2D86
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 21:13:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1527BB27111
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:59:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4EECFB275F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 19:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E5A1DFDAD;
-	Thu, 17 Oct 2024 17:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7BC21C160;
+	Thu, 17 Oct 2024 19:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyV++luL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueBNHB/k"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD05A1D95BE;
-	Thu, 17 Oct 2024 17:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881C321BAFA
+	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 19:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729187959; cv=none; b=l9HYnxAcHrPoh52PDCUDa9iZaKqWjNfdZew5SOOCDDLSMSY1vSZF7NvbJf7deTqgZMKpayBEyzjxEuPnkJq5vT7bQepdO3lv51HHw+5XXeJ9nfmlD9kq1u9igtcqi4jj7vWiX4P2jN0CjxvYvjTeNihb1LfNp20CNVLXY5imWzY=
+	t=1729192398; cv=none; b=mMPWY2SUpOPDrB0BWnSE8veiW+86qbwFur6JKlE1JaWRF+DnVCxwr7TmcXVz0Dzwp9u6afIMzwMPxBxKbQ9delCLr1a/22j7Ew35nrPaqaQhltmKfo9J9ZqIYe4fJR7Gcl2Mqq0U3lIZS+VJF6IqnLpVgjPKDEhVkLtT3ruAZ/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729187959; c=relaxed/simple;
-	bh=IFN5MdE4uK+Jux0W6IuQsmdwdMhDoqx7/GGC9IpNSW4=;
+	s=arc-20240116; t=1729192398; c=relaxed/simple;
+	bh=P2YCdO1U42QSmdXbZCVLCfVxB4HY20/pnrdUziHL2mE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qEtl5OjB3lq+vLyFNfowBo7wx5WL4g1ysAtF2FChc5ERRPZK+PsQjTlQidg2ItokupynmefGaBdbllkrmY8fCVIAmmUjng01gAYX4wgG58EbMdpuJND1GrdO9TuRw+1qFSLmxavMnomcVCQhZ17HqgjHh4HdWbY5dluxZ8dO4bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyV++luL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DC66C4CEC3;
-	Thu, 17 Oct 2024 17:59:18 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fQJlTc6Tza1/JPJGHfG/R3npPCApO3SHm2BGQ9CXuFClmRK2YBtbkixOI8YvwMWC36GZRjnc7EJpjNJWqnfQu95lJm6ysRmTDLNdKAze48W4InnnR+6Tfxn1nmbLGqXqnAkAkAMakcrVHjpsixBRwQFL6NxZJhFTiRrRUdBL0Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueBNHB/k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7562EC4CEC3;
+	Thu, 17 Oct 2024 19:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729187959;
-	bh=IFN5MdE4uK+Jux0W6IuQsmdwdMhDoqx7/GGC9IpNSW4=;
+	s=k20201202; t=1729192398;
+	bh=P2YCdO1U42QSmdXbZCVLCfVxB4HY20/pnrdUziHL2mE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cyV++luLAbqHk8xbQqAmlgNxU2vJ1sL39jhKKrlCLk2mivYU/v+KF9Mh6GXxFITva
-	 ooHlKfOD2rEyhJldK+Oun8RJNVIt5zdGbydOG9PnAN1VfHh8meMFYX2lEW0Csy8X04
-	 nq0eX4NfAE905PZuGWDA+QIOupvy2r0/lw/nNozljCWSX6o8NEnKBqTUs0XvVrRaq7
-	 /TQhKIsHADCTc77iAxS+Jg4RUkypPWH0+cw0cAI+yGObNDSjljKkEOklV6LV7pjG21
-	 YyedfUV+CegBbmLvelriRv/6QMELehNSTRlgQtnf8zdyt4sRnVP1z4MMO+twQvrP2h
-	 /if0gj9ZiYAwQ==
-Message-ID: <5d7da19b803316e543c4ed7deb1b431c98f2f94b.camel@kernel.org>
-Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
- get_ino() for NFS
+	b=ueBNHB/k//1VWKliOzaqVhs3fpCrpNGq7N9Dc55BRYy11sMCN6eAk005bSRKOa2Ye
+	 FGr6mSHlTXxQEkj20DHg6/FQBOFHRRNagHK+WSkuUm0B38y70WBUYQzqoEckDz2zyQ
+	 SeX6me6RIQ+DheG0Bz4M+d5y7yJEhSKF1jGCHT6Z1nmscGXfd/ph1guidwa0ZKfmSM
+	 IDapX2xMy7sOUzhh1Uofj4X7GiFS4WmNC6gyZ1U2NUsYs3+Dw3VgkOvEoHHO3A6qTn
+	 9kto6CdPUqz2W2Ul+lJUd3BtMZDC9JQUifPoXD+k5VAENdCfm1YAGR0BAppAVthDsS
+	 etiElxunlBdQg==
+Message-ID: <830d2ed641c0a789c0c3d51633f138c0f9f0e81b.camel@kernel.org>
+Subject: Re: [PATCH 5/5] lockd: Remove unneeded initialization of
+ file_lock::c.flc_flags
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>, "hch@infradead.org"
-	 <hch@infradead.org>, "paul@paul-moore.com" <paul@paul-moore.com>
-Cc: "jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>, 
- "brauner@kernel.org" <brauner@kernel.org>, "linux-fsdevel@vger.kernel.org"
- <linux-fsdevel@vger.kernel.org>, "anna@kernel.org" <anna@kernel.org>, 
- "linux-security-module@vger.kernel.org"
- <linux-security-module@vger.kernel.org>, "audit@vger.kernel.org"
- <audit@vger.kernel.org>, "linux-nfs@vger.kernel.org"
- <linux-nfs@vger.kernel.org>,  "viro@zeniv.linux.org.uk"
- <viro@zeniv.linux.org.uk>
-Date: Thu, 17 Oct 2024 13:59:16 -0400
-In-Reply-To: <8d9ebbb8201c642bd06818a1ca1051c5b1077aea.camel@hammerspace.com>
-References: <20241010152649.849254-1-mic@digikod.net>
-	 <20241016-mitdenken-bankdaten-afb403982468@brauner>
-	 <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
-	 <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
-	 <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
-	 <ZxEmDbIClGM1F7e6@infradead.org>
-	 <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
-	 <5a5cfe8cb8155c2bb91780cc75816751213e28d7.camel@kernel.org>
-	 <8d9ebbb8201c642bd06818a1ca1051c5b1077aea.camel@hammerspace.com>
+To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Thu, 17 Oct 2024 15:13:16 -0400
+In-Reply-To: <20241017133631.213274-6-cel@kernel.org>
+References: <20241017133631.213274-1-cel@kernel.org>
+	 <20241017133631.213274-6-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -150,73 +137,100 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-10-17 at 17:09 +0000, Trond Myklebust wrote:
-> On Thu, 2024-10-17 at 13:05 -0400, Jeff Layton wrote:
-> > On Thu, 2024-10-17 at 11:15 -0400, Paul Moore wrote:
-> > > On Thu, Oct 17, 2024 at 10:58=E2=80=AFAM Christoph Hellwig
-> > > <hch@infradead.org> wrote:
-> > > > On Thu, Oct 17, 2024 at 10:54:12AM -0400, Paul Moore wrote:
-> > > > > Okay, good to know, but I was hoping that there we could come
-> > > > > up with
-> > > > > an explicit list of filesystems that maintain their own private
-> > > > > inode
-> > > > > numbers outside of inode-i_ino.
-> > > >=20
-> > > > Anything using iget5_locked is a good start.=C2=A0 Add to that file
-> > > > systems
-> > > > implementing their own inode cache (at least xfs and bcachefs).
-> > >=20
-> > > Also good to know, thanks.=C2=A0 However, at this point the lack of a
-> > > clear
-> > > answer is making me wonder a bit more about inode numbers in the
-> > > view
-> > > of VFS developers; do you folks care about inode numbers?=C2=A0 I'm n=
-ot
-> > > asking to start an argument, it's a genuine question so I can get a
-> > > better understanding about the durability and sustainability of
-> > > inode->i_no.=C2=A0 If all of you (the VFS folks) aren't concerned abo=
-ut
-> > > inode numbers, I suspect we are going to have similar issues in the
-> > > future and we (the LSM folks) likely need to move away from
-> > > reporting
-> > > inode numbers as they aren't reliably maintained by the VFS layer.
-> > >=20
-> >=20
-> > Like Christoph said, the kernel doesn't care much about inode
-> > numbers.
-> >=20
-> > People care about them though, and sometimes we have things in the
-> > kernel that report them in some fashion (tracepoints, procfiles,
-> > audit
-> > events, etc.). Having those match what the userland stat() st_ino
-> > field
-> > tells you is ideal, and for the most part that's the way it works.
-> >=20
-> > The main exception is when people use 32-bit interfaces (somewhat
-> > rare
-> > these days), or they have a 32-bit kernel with a filesystem that has
-> > a
-> > 64-bit inode number space (NFS being one of those). The NFS client
-> > has
-> > basically hacked around this for years by tracking its own fileid
-> > field
-> > in its inode. That's really a waste though. That could be converted
-> > over to use i_ino instead if it were always wide enough.
-> >=20
-> > It'd be better to stop with these sort of hacks and just fix this the
-> > right way once and for all, by making i_ino 64 bits everywhere.
+On Thu, 2024-10-17 at 09:36 -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Nope.
+> Since commit 75c7940d2a86 ("lockd: set missing fl_flags field when
+> retrieving args"), nlmsvc_retrieve_args() initializes the flc_flags
+> field. svcxdr_decode_lock() no longer needs to do this.
 >=20
-> That won't fix glibc, which is the main problem NFS has to work around.
+> This clean up removes one dependency on the nlm_lock:fl field. No
+> behavior change is expected.
 >=20
+> Analysis:
+>=20
+> svcxdr_decode_lock() is called by:
+>=20
+> nlm4svc_decode_testargs()
+> nlm4svc_decode_lockargs()
+> nlm4svc_decode_cancargs()
+> nlm4svc_decode_unlockargs()
+>=20
+> nlm4svc_decode_testargs() is used by:
+> - NLMPROC4_TEST and NLMPROC4_TEST_MSG, which call nlmsvc_retrieve_args()
+> - NLMPROC4_GRANTED and NLMPROC4_GRANTED_MSG, which don't pass the
+>   lock's file_lock to the generic lock API
+>=20
+> nlm4svc_decode_lockargs() is used by:
+> - NLMPROC4_LOCK and NLM4PROC4_LOCK_MSG, which call nlmsvc_retrieve_args()
+> - NLMPROC4_UNLOCK and NLM4PROC4_UNLOCK_MSG, which call nlmsvc_retrieve_ar=
+gs()
+> - NLMPROC4_NM_LOCK, which calls nlmsvc_retrieve_args()
+>=20
+> nlm4svc_decode_cancargs() is used by:
+> - NLMPROC4_CANCEL and NLMPROC4_CANCEL_MSG, which call nlmsvc_retrieve_arg=
+s()
+>=20
+> nlm4svc_decode_unlockargs() is used by:
+> - NLMPROC4_UNLOCK and NLMPROC4_UNLOCK_MSG, which call nlmsvc_retrieve_arg=
+s()
+>=20
+> All callers except GRANTED/GRANTED_MSG eventually call
+> nlmsvc_retrieve_args() before using nlm_lock::fl.c.flc_flags. Thus
+> this change is safe.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/lockd/svc4proc.c | 5 +++--
+>  fs/lockd/xdr4.c     | 1 -
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 2cb603013111..109e5caae8c7 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -46,14 +46,15 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct =
+nlm_args *argp,
+>  	if (filp !=3D NULL) {
+>  		int mode =3D lock_to_openmode(&lock->fl);
+> =20
+> +		lock->fl.c.flc_flags =3D FL_POSIX;
+> +
+>  		error =3D nlm_lookup_file(rqstp, &file, lock);
+>  		if (error)
+>  			goto no_locks;
+>  		*filp =3D file;
+> =20
+>  		/* Set up the missing parts of the file_lock structure */
+> -		lock->fl.c.flc_flags =3D FL_POSIX;
+> -		lock->fl.c.flc_file  =3D file->f_file[mode];
+> +		lock->fl.c.flc_file =3D file->f_file[mode];
+>  		lock->fl.c.flc_pid =3D current->tgid;
+>  		lock->fl.fl_start =3D (loff_t)lock->lock_start;
+>  		lock->fl.fl_end =3D lock->lock_len ?
+> diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
+> index 60466b8bac58..e343c820301f 100644
+> --- a/fs/lockd/xdr4.c
+> +++ b/fs/lockd/xdr4.c
+> @@ -89,7 +89,6 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_l=
+ock *lock)
+>  		return false;
+> =20
+>  	locks_init_lock(fl);
+> -	fl->c.flc_flags =3D FL_POSIX;
+>  	fl->c.flc_type  =3D F_RDLCK;
+>  	nlm4svc_set_file_lock_range(fl, lock->lock_start, lock->lock_len);
+>  	return true;
 
-True, but that's really a separate problem.
+1-4 look fine. You can add my R-b to those.
 
-It also doesn't inform how we track inode numbers inside the kernel.
-Inode numbers have been 64 bits for years on "real" filesystems. If we
-were designing this today, i_ino would be a u64, and we'd only hash
-that down to 32 bits when necessary.
---=20
+For this one, I think I'd rather see this go the other way, and just
+eliminate the setting of flc_flags in nlm4svc_retrieve_args. We only
+deal with FL_POSIX locks in svc lockd, and that does it right after
+locks_init_lock, so I think that means it'll be done earlier, no?
+
+Also, I think the same duplication is in nlmsvc_retrieve_args and the
+nlmv3 version of svcxdr_decode_lock.
+--
 Jeff Layton <jlayton@kernel.org>
 
