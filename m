@@ -1,63 +1,69 @@
-Return-Path: <linux-nfs+bounces-7233-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7234-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F04EE9A25B0
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 16:57:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5299A25C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 16:58:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B499F2842D0
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 14:57:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC34428416E
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 14:58:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA6E1DED5F;
-	Thu, 17 Oct 2024 14:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6547B1DED48;
+	Thu, 17 Oct 2024 14:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wKPSXeYZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ldTjZuWk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D251DED50;
-	Thu, 17 Oct 2024 14:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A781DE8BC;
+	Thu, 17 Oct 2024 14:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729177003; cv=none; b=lMTbzqqsAftGv43SYya5iH1/+4mg34apCizcbasl6yRn36mJfKHoA4fUDi4XUVUw/KFl9JM3V0LqOMNxyGX7aJMe7MMsDN5vbqm5yaGO/tbh03C8gV1bAb0PIS19W8EkptyCPaMq213JMtUaQXIpLNIlrDBcB1hKKeA82yGrG4I=
+	t=1729177104; cv=none; b=cpcPzJQrmQztUv4Opy4Wy0BPu+kmYSeE9dDJ+e6xh9RiWcYDV6xEgXchA9ZpBxK918DuB0/QrmV4ZN18vbqZBvUY3egiXVRJhRerUFI81SB/9euyVCwJnOECR6mMIlf00kNGzHg4rUcFmVxXt8st9SMYEjZ2xokUlegUQo+Yi/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729177003; c=relaxed/simple;
-	bh=pkDvb2i0d20PFLp3Rjf0qgjkmuMhOea+f/7Uy9aB2gQ=;
+	s=arc-20240116; t=1729177104; c=relaxed/simple;
+	bh=NTIyRLzQ+LVTBiqT2V3ffBmtxOZeoP4TrXSEXAZjlfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l1qCiQzpDkQeUw1+IcuJsxLwsCFkKbKJqdLZAwxg9r2nC8G3ZgiGNVfGhnStLEdhUq6mHITWX85vTCLykzFyXz4hOj53+gSp5bcsllVl7pQCj4Efo3a99ewhSw5igQumjJ9lWhNv4hPFVUg2qxthEfBMxudTzMNYq/M/dO8A9Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wKPSXeYZ; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcjH5luKX7wwMW98vBAyJH62KuwR6zrp6pquFIk1TOr6d4Tm6SEMIBKQRlUTHg7rqCZLR9mMEbup7AIkCLMGfO97GWJyfMic83peRnYhSr9SMelr6iisfc/I4a6U+vpO5cMcISbgJTYhvYN+AFlHGY8d+PBxEPruA3JIN7C9HgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ldTjZuWk; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pkDvb2i0d20PFLp3Rjf0qgjkmuMhOea+f/7Uy9aB2gQ=; b=wKPSXeYZdIAVlnORnuwA8PzuGq
-	IVvm6rsUMkgWJt7Z99kq7s+mH96o9VE/7LyfEQhfS68EPZ/stjaCVVW5fj1UKFHSTL86SqPigsilx
-	UoEE7LAwl+M7rEmAL5vG2PWg1SkV2hvu9YMNRZqHjWtBJPjnA7fQ0Pxp1t6VTNrC2vsxzThp9A8jV
-	8P/W/6GgpYs0FgXkrEByMdQhTUow2Ym3WoK2394f3T/Aza4NWzKqBIVsVPyQQFPNvPWQHZzn6fDsm
-	OYrBHSmjOAevhbeQcd3vMrVSUaGVoxP4/+8OJhaSmaflznKNNOA/CNANHLiOjt8Da5bJ/vUd1sWlM
-	X5jPQStA==;
+	bh=0zVNP1Ptk3y2T2obANnHpfuDWaPH+KHZ/+LIWbdf/3s=; b=ldTjZuWk7H5wSxzdvq4d3ZehNk
+	gWYbq2z7UIXQsHPimnJnKcBnVPFLc2mbw4igMIpW15i87RCeRPVh3tcE+k+Fsir4MHyn/GzzNgaoW
+	Z4Z1pB0CXGNAa0HfCFbezWZn+AL2a+oVL9zrkrNGyQy44V+r91RHf6hknXmsxKIwDVV4AVycwBxsK
+	oTpT6lE6eNVb8z9TAcC3YdbJetVCtzn5XrxVTEZxJx4Tmcz17EoLgDHhA29QZXHkLdbaFvSdXKe1S
+	kDmaGpd9Ybfk3zKOthTT5+yf2b9ap10aAo/wqC4pDKTphFu/J30hPMo5KTUnb8uJXlgaNStNWD9MW
+	ZrGpfMLw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1Rvc-0000000FBr4-1Zj0;
-	Thu, 17 Oct 2024 14:56:40 +0000
-Date: Thu, 17 Oct 2024 07:56:40 -0700
+	id 1t1RxF-0000000FC7l-0ggJ;
+	Thu, 17 Oct 2024 14:58:21 +0000
+Date: Thu, 17 Oct 2024 07:58:21 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Paul Moore <paul@paul-moore.com>, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,
+	"audit@vger.kernel.org" <audit@vger.kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
 Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
  get_ino() for NFS
-Message-ID: <ZxElqOWfbRR2FRg-@infradead.org>
+Message-ID: <ZxEmDbIClGM1F7e6@infradead.org>
 References: <20241010152649.849254-1-mic@digikod.net>
  <20241016-mitdenken-bankdaten-afb403982468@brauner>
+ <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
+ <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
+ <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -66,14 +72,15 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241016-mitdenken-bankdaten-afb403982468@brauner>
+In-Reply-To: <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Oct 16, 2024 at 04:23:02PM +0200, Christian Brauner wrote:
-> And I don't buy that is suddenly rush hour for this. Seemingly no one
-> noticed this in the past idk how many years.
+On Thu, Oct 17, 2024 at 10:54:12AM -0400, Paul Moore wrote:
+> Okay, good to know, but I was hoping that there we could come up with
+> an explicit list of filesystems that maintain their own private inode
+> numbers outside of inode-i_ino.
 
-Asuming this showed up with the initial import of kernel/audit.c that
-would be more than 20 years.
+Anything using iget5_locked is a good start.  Add to that file systems
+implementing their own inode cache (at least xfs and bcachefs).
 
 
