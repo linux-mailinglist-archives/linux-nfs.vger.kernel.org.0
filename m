@@ -1,56 +1,59 @@
-Return-Path: <linux-nfs+bounces-7243-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7244-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D58D29A263D
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:16:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1228C9A2671
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:22:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A89F282413
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 15:16:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3510A1C21FBE
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 15:22:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0328B1CBE8A;
-	Thu, 17 Oct 2024 15:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC32A1DE4DF;
+	Thu, 17 Oct 2024 15:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuNlcvVl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="if9Db6R3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B245FDA7
-	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 15:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74381D517F
+	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 15:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729178180; cv=none; b=IPAVmQmeyGhX67qve58MXADQg6RIgoZ6er0IXyOwYN2E3h+Hif0H1VZeL7OK23LuxzddjvGYbTfwDrOP4PVxKC6OuKzxkUJECLJrxlwSUf35VkLPPRenEyrSXsTUUNpIx7GVzdlCQrwtdbZO6kk5KLylI4MPffrnmQto/xr80fk=
+	t=1729178552; cv=none; b=pgmMbXAkVpvneh5Vp1uEBiPAD/FMF48DUYEgya6xOqOECW+Fdw7GVjgfEXupThZJ5Jjwef4WTs7/s3IyOcMyfoNQ0wFEwWb8GyWbO4G63ULAvQR1u4tNShNWvPhv+i0Y0vTvQTr0aJQLGfkFEZrkLTeYw1oCnyYlRr20esE1ROc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729178180; c=relaxed/simple;
-	bh=BjpKFJoKoCaqfVeL/Lus9wyc7BuXppOCojtPxYlAJ7M=;
+	s=arc-20240116; t=1729178552; c=relaxed/simple;
+	bh=r9KY4GAhHAsIsyGuUOdrZZAKCyfi4gl/LDK65JelyZk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C/5Kft63UPdAUqvFLYfrpA9diFiQohOK7HFTCZNrfydbw603NdaXUmfk4CPcS7X9+JNsn8p0SFoXVoOLrVxrZIgso3MANPiO+imVa9M3wXwOgMgeIZ02VOxSei3KlZIjEIKgE1pZ7eEKx5VLac5OESu8xYXiE3amKeBcU349jKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuNlcvVl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF71EC4CEC3;
-	Thu, 17 Oct 2024 15:16:19 +0000 (UTC)
+	 Content-Type:MIME-Version; b=J0VV0xpeDqg+4oD1tZfOj6Y0oOzdNpPTQDSfdfyrzwnf9sJQYPBcek3U4+rc5xqSWtuPIfTIyG7+XiGxdAEUjX/IIesdgaExzhBOM5oG6G+G4e7kkH0LWIJx1jaDk7qgUeiyNkXaEfSZyOIOhhDMwLTUte7bxABZijeA1enEwmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=if9Db6R3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE095C4CEC3;
+	Thu, 17 Oct 2024 15:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729178180;
-	bh=BjpKFJoKoCaqfVeL/Lus9wyc7BuXppOCojtPxYlAJ7M=;
+	s=k20201202; t=1729178552;
+	bh=r9KY4GAhHAsIsyGuUOdrZZAKCyfi4gl/LDK65JelyZk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tuNlcvVlxLpRZnKI5abnGrTNYUO8QwNMMmYB0LSMioSVpxMR+jjkqiP+UaIfu+dp2
-	 yvL0ITgV1oW38Fqi1Om1mu4P4a6s5P8QOPV88Ekg/A4Y8Bky9HkWY406M4eVWqsl/V
-	 /rbeDUjNTHiavWj8OhfPztNUfxewV+bKxbDD06/XuqkmLQKxDTrfF4dplV+fql5Z4d
-	 QaDl+i5dIOChlGPxK0VtClK4CGUZsrHVGVBBoq/RqR7L9TgmPFZJymDA5e7hiJiqyR
-	 XLbkCClhOMrMMvGr1f1+OJUbijpiSXDfkW1UuJMWnOxsJkcA49Ft8NbagqsGxr+VWr
-	 FXaeA5w+3ibUg==
-Message-ID: <ae3b16fb71ae50d7689d62718c98a2886eeb0eda.camel@kernel.org>
-Subject: Re: [RFC PATCH 0/6] Fix nits found by static analysis
+	b=if9Db6R3F5iA4FMKW69ektSs3fwHa2vJAOVeVVG3L7ELZjBvjdC0FoeuQa2vXLvFS
+	 2ajdcVFJ4S1RZufpe787rQnhnttLi3ujypISvNN3le6846Rki9hanbLzNMX6NwEEUh
+	 9x0vx0nrnjaSAaZ5QmY633+Sc0BjZLgSzgxDAOLTqx0wck3ak59OSkFFDqFrBHG9rl
+	 huVr+eJl3Y0+jzZZ0MBR1Fkxf9u1+Q7PBg+Hecg8me4vGkVGrd2lvoWKozFPa27aZE
+	 SwMbroEj9s/fhAnbNNwEfDnP54KiJ7YKIEpwbb9U7CplTPQQfZqMKR7Eta3+LfAQg9
+	 68MrcJA1UMzhw==
+Message-ID: <667e64db1ec556bde001e1c085a259226e6807f3.camel@kernel.org>
+Subject: Re: [PATCH nfs-utils v6 0/3] nfsdctl: add a new nfsdctl tool to
+ nfs-utils
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Thu, 17 Oct 2024 11:16:18 -0400
-In-Reply-To: <20241017150349.216096-8-cel@kernel.org>
-References: <20241017150349.216096-8-cel@kernel.org>
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Chuck Lever <chuck.lever@oracle.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>
+Date: Thu, 17 Oct 2024 11:22:30 -0400
+In-Reply-To: <7181e0bd-0fdf-4826-856e-6230f190614f@redhat.com>
+References: <20240722-nfsdctl-v6-0-1b9d63710eb5@kernel.org>
+	 <7181e0bd-0fdf-4826-856e-6230f190614f@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,30 +138,89 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-10-17 at 11:03 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 2024-10-17 at 07:40 -0400, Steve Dickson wrote:
 >=20
-> Here are a handful of fixes for issues found by static analysis.
-> These are the ones I understood enough to address immediately. There
-> are others that will take some time to analyze and address.
+> On 7/22/24 1:01 PM, Jeff Layton wrote:
+> > Hi Steve,
+> >=20
+> > Here's an squashed version of the nfsdctl patches, that represents
+> > the latest changes. Let me know if you run into any other problems,
+> > and thanks for helping to test this!
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > Changes in v6:
+> > - make the default number of threads 16 in autostart
+> > - doc updates
+> >=20
+> > Changes in v5:
+> > - add support for pool-mode setting
+> > - fix up the handling of nfsd_netlink.h in autoconf
+> > - Link to v4: https://lore.kernel.org/r/20240604-nfsdctl-v4-0-a2941f782=
+e4c@kernel.org
+> >=20
+> > Changes in v4:
+> > - add ability to specify an array of pool thread counts in nfs.conf
+> > - Link to v3: https://lore.kernel.org/r/20240423-nfsdctl-v3-0-9e68181c8=
+46d@kernel.org
+> >=20
+> > Changes in v3:
+> > - split nfsdctl.h so we can include the UAPI header as-is
+> > - squash the patches together that added Lorenzo's version and convert
+> >    it to the new interface
+> > - adapt to latest version of netlink interface changes
+> >    + have THREADS_SET/GET report an array of thread counts (one per poo=
+l)
+> >    + pass scope in as a string to THREADS_SET instead of using unshare(=
+) trick
+> >=20
+> > Changes in v2:
+> > - Adapt to latest kernel netlink interface changes (in particular, send
+> >    the leastime and gracetime when they are set in the config).
+> > - More help text for different subcommands
+> > - New nfsdctl(8) manpage
+> > - Patch to make systemd preferentially use nfsdctl instead of rpc.nfsd
+> > - Link to v1: https://lore.kernel.org/r/20240412-nfsdctl-v1-0-efd6dcebc=
+c04@kernel.org
+> >=20
+> > ---
+> > Jeff Layton (3):
+> >        nfsdctl: add the nfsdctl utility to nfs-utils
+> >        nfsdctl: asciidoc source for the manpage
+> >        systemd: use nfsdctl to start and stop the nfs server
+> >=20
+> >   configure.ac                 |   19 +
+> >   systemd/nfs-server.service   |    4 +-
+> >   utils/Makefile.am            |    4 +
+> >   utils/nfsdctl/Makefile.am    |   13 +
+> >   utils/nfsdctl/nfsd_netlink.h |   96 +++
+> >   utils/nfsdctl/nfsdctl.8      |  304 ++++++++
+> >   utils/nfsdctl/nfsdctl.adoc   |  158 +++++
+> >   utils/nfsdctl/nfsdctl.c      | 1570 +++++++++++++++++++++++++++++++++=
++++++++++
+> >   utils/nfsdctl/nfsdctl.h      |   93 +++
+> >   9 files changed, 2259 insertions(+), 2 deletions(-)
+> > ---
+> > base-commit: b76dbaa48f7c239accb0c2d1e1d51ddd73f4d6be
+> > change-id: 20240412-nfsdctl-fa8bd8430cfd
+> >=20
+> > Best regards,
+> Committed... (tag: nfs-utils-2-7-2-rc2)
 >=20
-> Chuck Lever (6):
->   NFSD: Remove dead code in nfsd4_create_session()
->   NFSD: Remove a never-true comparison
->   NFSD: Prevent NULL dereference in nfsd4_process_cb_update()
->   NFSD: Remove unused results in nfsd4_encode_pathname4()
->   NFSD: Remove unused values from nfsd4_encode_components_esc()
->   NFSD: Cap the number of bytes copied by nfs4_reset_recoverydir()
->=20
->  fs/nfsd/nfs4callback.c |  2 ++
->  fs/nfsd/nfs4recover.c  |  3 ++-
->  fs/nfsd/nfs4state.c    |  3 ---
->  fs/nfsd/nfs4xdr.c      | 23 +++++++----------------
->  fs/nfsd/nfsfh.c        |  2 +-
->  5 files changed, 12 insertions(+), 21 deletions(-)
+> Note: These changes need a v6.11 kernel for V3 to
+> come up properly
 >=20
 
-This all looks fine.
+Thanks! To be clear:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+The "v3 problem" you're referring to was fixed in mainline by:
+
+    91da337e5d50 nfsd: don't set SVC_SOCK_ANONYMOUS when creating nfsd sock=
+ets
+
+That patch also went into v6.10.5 (as 04c2c4d836ff) as well. Earlier
+kernels don't need it since they lack the relevant netlink interfaces
+altogether.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
