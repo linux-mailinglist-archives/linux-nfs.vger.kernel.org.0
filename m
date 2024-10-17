@@ -1,96 +1,117 @@
-Return-Path: <linux-nfs+bounces-7241-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7242-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC3B89A2604
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:04:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 940509A263B
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 17:16:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8384F1F25F72
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 15:04:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5A231C2160A
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 15:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D8641DE4D8;
-	Thu, 17 Oct 2024 15:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FEB1DE4E8;
+	Thu, 17 Oct 2024 15:16:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePMTC+1B"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="eT6TuZJ8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A231BFE18
-	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 15:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1C51CBE8A
+	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 15:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729177445; cv=none; b=lCL6PZov+dEfqDX4Z+lYsuhXBjOk++50rqSVeKlpoBgpPvI1IvtjrcrLT6PNM3+GFcJ3ZcvXvzWNcOfnwIYmxl2FzpuGcvq3J6AGDeW11z7pMD9GDJUwsNZJzgG7Jd4LkGS2Eebk+BWsmpJ6aem6YEIDDhbrhkUcYO34OOYUA0o=
+	t=1729178166; cv=none; b=oZyOesKfWxpCrTmtTB/f24fkDMJoP7tsWTO4pIrxYmb4M4FYsrFlLIH3iZuqC1k4oufwOwPDzXa++SjbUk3cN3F6SEKLaKSBTjPz9nTM14RtQ+LyBPfeEaGsEmS1w9/LPTni6BV+5PqwmIZZjOZXCr/lJUSSlvcT7JxzCrd55fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729177445; c=relaxed/simple;
-	bh=dS1Tu/sC6dRXFOkz4tYFtIN4FQBV3436rhwTvzdFNNk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jRenbsnyLy8bRVz48NG5zMvpgsftXuV8JY1CPY5gIfomHf4m4CMwvfN1iRTTmP4hny33Gql+/8UvVjNdiHGnTj46QG3inziFH8t5S0zem90ZlFq3Qpu/YLHAOmbFd3QjhS9ZN4K+lghg5prOcCp5DKDt9AmgxibGE4yXMoGJgHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePMTC+1B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11128C4CEC3;
-	Thu, 17 Oct 2024 15:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729177444;
-	bh=dS1Tu/sC6dRXFOkz4tYFtIN4FQBV3436rhwTvzdFNNk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ePMTC+1B6D1gXMvfAKJ5FNPz5qd7luDk9FvUZpFSjMD14wfhpzpKN71ZWXou2EGAX
-	 EvsZlTiZzIzZ2Y8VlwM7f+DVCTjjDLOgZaRErFQGJRBXWpiKK+fHZpiIT6PS2NgRJ+
-	 8o5TB4X4UexNY8S1XNMpOiSXHObh4U4MzeEKQ0VkqkdQccZfqHx9rpiypoBFhl+6tg
-	 NKUDu4Eb3A7dUU3eHq6Y/BoqstgKPFWEcInGDMMcRZSIOjTu0hX7o611KAf1FqhU/F
-	 eJyXHkgJhg+cb3iALAOH1Sv1Vx4PH/VhDUeqawXG/atPU+7QubuK17OptPG7tO597/
-	 C8Q8VRooKmv+g==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 6/6] NFSD: Cap the number of bytes copied by nfs4_reset_recoverydir()
-Date: Thu, 17 Oct 2024 11:03:56 -0400
-Message-ID: <20241017150349.216096-14-cel@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241017150349.216096-8-cel@kernel.org>
-References: <20241017150349.216096-8-cel@kernel.org>
+	s=arc-20240116; t=1729178166; c=relaxed/simple;
+	bh=ilKsvk3bdbOxk7tshNk5blrflPsFv+4Wo29i4YrrjG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JmSArmromHukwAqV3dK5e8O6M6kFTNQ34wsYo0ywojoykr2umab6D42sc8j+jt7pcN0bKBoIMc85BECfv6rxoE6DS2+DRvAE0nqlN7B8FkkTXi1uK3r2fvus4INeaialG/Tm9lJsGg5O+9aRtwPEUYpxbby+rN3edf24rRztXz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=eT6TuZJ8; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e28fe3b02ffso1045580276.3
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 08:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1729178160; x=1729782960; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5GdE6eTDGyaNw5M2W3MzymeJfSSH0mPrAR2SroJEoBg=;
+        b=eT6TuZJ8rdFpB5U/mm1JBj6OOo5Wtn+gZ+g1SxOEaQTa+KLZIXnljUR7rcpX6+CTMr
+         iKKc2RGc4I3IKb4Cp9RLFD2SfZ4Nmnpc3q8+PExXfmj2yM0rf0epjNUhDlo2XduBIhwI
+         X34ZtQQz6nZR8EwwW2kb+s7ml1fIHCfX0XN/eCWKdWjLq4pnEugazKaAlYXytNlG5Z7P
+         WykVmrupm1Fs9/VbPf6jGrCJmKFBQKjPtu0G9jjYZ2xiw9rvRSovEK1V1nZ9Vy7Lbhf3
+         3iMz9nnGEfJa7sdmb4RYNqHMKoD4fs1+pXrvS6yQF4UfiHwYi7a/XyPdSfOzMr+CL7Yn
+         MmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729178160; x=1729782960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5GdE6eTDGyaNw5M2W3MzymeJfSSH0mPrAR2SroJEoBg=;
+        b=bLbYWz/v8/A8np9SGnM9DpLLTEGLBjyN7e8EcxJI/xspbHZtPyUFSBBi3mYP2XRkev
+         bbfouPn7KGLW8JqzlNQcwXxtdtnIKTr+ksC3KYTeWMTJLjCLmSA3g2zjXWphIGA54uqw
+         c+Cg0DeNZLiq7m9MTVTW+geg565RrJ/uTp+RX4TCZk4S2sKGKdBhAmSsNXjfJXXXEAFb
+         mlfc0T0m5KQvP1of61+dfcPJJXuAXGMsTlLg1/XTBsxlDr0Ia6iSpXFdHyAjEChleOpH
+         3QGhqnQoFgRkXQMMpY5rZToVgqlynJI090NBkWzzc98yXvjIYkdyKgeXs07REBO0uqVF
+         bWng==
+X-Forwarded-Encrypted: i=1; AJvYcCWu9I642Q3qLY/xcYs0u/4W+5MHOBQPd31V2rhOTBW2jTbvVg9Puze7SRW0YRU1VktdrNKLuwj6akg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeQLTR881ZiegjESGEbW5mMTXLlpSUDuw1zRCbTs1VTjlZ/cl6
+	9X0PSmK36eDxRLyoQ86ma7UJbuDngNLkw9hVkXpHD0qwnptE02/JlCyyOA1qlVBT84xxRcDqrvY
+	tz2Qo1ucI5YiAYXqwTtu7+2S1oqobA1Vd+jY6
+X-Google-Smtp-Source: AGHT+IEbjoCbzHbsLdZDEuUv9h5xDfQJd0zNjesQoMMZNIJjdQDsgALaaqqdPXxo2sDraVO4AHzq8qH2zBoKPszhXps=
+X-Received: by 2002:a05:690c:2913:b0:6e5:625c:5ad8 with SMTP id
+ 00721157ae682-6e5625c6e42mr38775387b3.37.1729178160115; Thu, 17 Oct 2024
+ 08:16:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=755; i=chuck.lever@oracle.com; h=from:subject; bh=rX5d4jWyedyE07RaWCkcii2QPArsQrZ8xrqRtPEaTlI=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnESdcTZhtogTD4MVBbuFY/42pvGBSEp4Pj59x7 WEM0bhu5wKJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZxEnXAAKCRAzarMzb2Z/ l1qQD/44sQQG9QvFQ5n1c5rfE3Z7BsPpuaVXuWPQ49hI0lBRo79RvRHR5D/QT5oKoLE5Rn9FF0A 9hQXm1Fhp/EFGM5wyzQ5134y3OX+MWsV8FpeIX5rnibFyJUq9wOUO0yy97yS6o2tcnWSIaAWq14 6umMpqWadifTxMOblsaZcZXUrWdYU5AeVXmfs1svjYfIEFOWwH4tAGdMsSGvEkNd6mXDjhXC1kq rQPgnJ1uWvd+8aeM2vc/9q6twS5xjAGCPXcW6ICtMfRCmXm9wHCdArflpDovKCcK026nqEnjjAI pmlny2Pk/vQyjQlG3/gXy109odooRXL7tEd4bWDIC9PvG86TK0lxopDXYk56POc+RZwCkr1H/kI po/zFiKVVn/6pWnbafpEgK2p4MiwP+TWPbrzYWAjxtkvvs87piu9u3BUJ715Z1t5SAInxNZ/2v/ BlGMwzOVQ4rS6rwrrNL+DX5kYiALIh/KSTFzzDxa4n80selDNFJB1zfDwCs6OUG3yVimiOHopL1 tKDv6S0Mhihh1IdkUm2sUmDOoiC5Qy6vIQYgGr65fFiKCGuB3RdYfbUU0w7DSXoVgId8m9t7CIM MvkGzJjdCCHmmJMmNEeKQofyYy7rIjAWYbHnOY1rWu7whLP7pIV6HszFHgTt128u13SuEFNg42r YO5E0+yCWC0xJtQ==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+References: <20241010152649.849254-1-mic@digikod.net> <20241016-mitdenken-bankdaten-afb403982468@brauner>
+ <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
+ <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
+ <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com> <ZxEmDbIClGM1F7e6@infradead.org>
+In-Reply-To: <ZxEmDbIClGM1F7e6@infradead.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 17 Oct 2024 11:15:49 -0400
+Message-ID: <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
+ get_ino() for NFS
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, "brauner@kernel.org" <brauner@kernel.org>, 
+	"jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "anna@kernel.org" <anna@kernel.org>, 
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, 
+	"audit@vger.kernel.org" <audit@vger.kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, Oct 17, 2024 at 10:58=E2=80=AFAM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+> On Thu, Oct 17, 2024 at 10:54:12AM -0400, Paul Moore wrote:
+> > Okay, good to know, but I was hoping that there we could come up with
+> > an explicit list of filesystems that maintain their own private inode
+> > numbers outside of inode-i_ino.
+>
+> Anything using iget5_locked is a good start.  Add to that file systems
+> implementing their own inode cache (at least xfs and bcachefs).
 
-It's only current caller already length-checks the string, but let's
-be safe.
+Also good to know, thanks.  However, at this point the lack of a clear
+answer is making me wonder a bit more about inode numbers in the view
+of VFS developers; do you folks care about inode numbers?  I'm not
+asking to start an argument, it's a genuine question so I can get a
+better understanding about the durability and sustainability of
+inode->i_no.  If all of you (the VFS folks) aren't concerned about
+inode numbers, I suspect we are going to have similar issues in the
+future and we (the LSM folks) likely need to move away from reporting
+inode numbers as they aren't reliably maintained by the VFS layer.
 
-Fixes: 0964a3d3f1aa ("[PATCH] knfsd: nfsd4 reboot dirname fix")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4recover.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index b7d61eb8afe9..4a765555bf84 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -659,7 +659,8 @@ nfs4_reset_recoverydir(char *recdir)
- 		return status;
- 	status = -ENOTDIR;
- 	if (d_is_dir(path.dentry)) {
--		strcpy(user_recovery_dirname, recdir);
-+		strscpy(user_recovery_dirname, recdir,
-+			sizeof(user_recovery_dirname));
- 		status = 0;
- 	}
- 	path_put(&path);
--- 
-2.46.2
-
+--=20
+paul-moore.com
 
