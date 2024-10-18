@@ -1,123 +1,97 @@
-Return-Path: <linux-nfs+bounces-7294-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7295-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03B019A4767
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 21:49:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B2629A4817
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 22:34:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B909A287DAB
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 19:49:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD46F1C22319
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 20:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E9F204036;
-	Fri, 18 Oct 2024 19:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05578208D8A;
+	Fri, 18 Oct 2024 20:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZWdSsXQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8N3LvTk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114AA20262E
-	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 19:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFC32071FB;
+	Fri, 18 Oct 2024 20:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729280992; cv=none; b=FrCRbERFL0ArAwZ6BrEa9aqxvfTLH6b/RjIemUXOySZ+PyXIA9Occm3357paiXDVHemxqAGE/T+IUx5Ls8dMT37vWp7aLwfy6ChsniUMlHz+tcQ/+RzfXAMPIJjQj1FrJ5eAHxnS/2iak/g8p1bUfO25LyIRZoAZuKT1VsVqrVU=
+	t=1729283570; cv=none; b=b0gAHYYVEXpqQZYWLzuaLfcosk7PFI6nzpZBINZRZYD3Y0aMFFfCNMsQJpo/OXRffyOaHq9RMEpu0w350zs5yrwEAECm7mNP5VWZbP7+VdhXDg7miG6qjUcCsGVNUJR1Tw264/KYfUZ/NA7wHPx3nMJEe3W3hza7evrTki9KOZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729280992; c=relaxed/simple;
-	bh=gL8hX7MkSWc1JvnWml2WhlaqVZz1JOi7TXeOBK09AaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cl2Ldq8WXnaD3bWW1VJ/bO0IkoN64husqsKL0LgSSKjlYJWL5m3C0b9M/Zo2qPemlgivihQs7cTDyoUHmGEVXCVsDGmwO13zpIwo7w32ePVpOsNs4ydKuMD8gN+Juq9Jn/dsrKfh4WXmZLAa5WR31donUNGPktCskuD1ZYID828=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZWdSsXQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CAF3C4CEC3;
-	Fri, 18 Oct 2024 19:49:51 +0000 (UTC)
+	s=arc-20240116; t=1729283570; c=relaxed/simple;
+	bh=/8iGQEwctRbj5LryMm16Z9kbZqOisZbj5aZS1YOqAT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m32eYNStgycuaCDZbP2XiSKDhw7J6ZU3bnxfzUn8iY7fVbtrJiZfXbO0TSQx8eiwr1Y59tixbaPvvdL4tLyq72o2IFlcYRgEMhCf+Os426ToTebeUJMphJwdTougcwq9APeJtemiXWVsPp/ENAiETCcUxyyZ6dwEN+1n6VvRvB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8N3LvTk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92025C4CEC5;
+	Fri, 18 Oct 2024 20:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729280991;
-	bh=gL8hX7MkSWc1JvnWml2WhlaqVZz1JOi7TXeOBK09AaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SZWdSsXQPj/cOFeXLKqytY7yjjYfXAUiZbSg5YeA+ijvEv3FyyWVdy6uO+Pbw4yVR
-	 bqY0VLL4pzkN/hCu5U3xsCewqHBaFJ4g4+qVqvb3lOq9KQjMAGMNglUrUNMnVDHHuc
-	 fym/fe1ytQ/Yk8geNhKp2ewYCbbzl6n2LzToX+06FYCPbl87S9V0Nh+nDygyQ+e+P/
-	 m3qUSrNDlNDU3glw4LSZfUKjsNVWH9w6xMDD/8pv4untycRNmoMtACVWrEd5lwvLcU
-	 FvdQ10zDAUtj2nCgYr57eaem0lFEUKFvVHveGR6qohcuCpfVLLLjYzCAM5wsByh88P
-	 3M1eKLVe8lFHQ==
-Date: Fri, 18 Oct 2024 15:49:50 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>
-Subject: Re: nfs: avoid i_lock contention in nfs_clear_invalid_mapping
-Message-ID: <ZxK73l2yAOcLe_jl@kernel.org>
-References: <20241018170335.41427-1-snitzer@kernel.org>
- <e25a451540d8eb63f35b82652e197b6e207d4317.camel@kernel.org>
+	s=k20201202; t=1729283570;
+	bh=/8iGQEwctRbj5LryMm16Z9kbZqOisZbj5aZS1YOqAT4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I8N3LvTkwCgzIRROb62/aBr3XKu/xKXmK8RP3tOnyFYWrVZZt23JaMvF14Y+IhuOr
+	 mYh+dkS9DCusPhkTRCuPFPvNTFScKyghXc0qfR9prTHFgNGGACxSqP9rCdT3OHaBOB
+	 cooJXJyRyMcFhLj5TxruTBl8Y9/ObJkoVwS3Y/evNHm7gDcYclQajjUA9qT4/nvc0r
+	 UTIEf+kdrhgYnsgF5TjdP4lZEieuyrOznrshN3ZwKh5Bp0ppMgNIwtloXK7YcbXRQJ
+	 Ga60K+00ycHWai04Np6/oFSw9yyephW5Bmc9kpF4lHuXDskZk4O46LQ3/A2uAUOphl
+	 lStTSVhmYEsSA==
+From: cel@kernel.org
+To: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Olga Kornievskaia <aglo@umich.edu>
+Subject: Re: [PATCH 0/3] nfsd: fix final setattr on delegated timestamps
+Date: Fri, 18 Oct 2024 16:32:40 -0400
+Message-ID: <172928353196.235979.12559359835670760311.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.46.2
+In-Reply-To: <20241018-delstid-v1-0-c6021b75ff3e@kernel.org>
+References: <20241018-delstid-v1-0-c6021b75ff3e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e25a451540d8eb63f35b82652e197b6e207d4317.camel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1222; i=chuck.lever@oracle.com; h=from:subject:message-id; bh=HoB1+4k0Mz470vdco9+MxfcZbzkY2wnDFRSI7g9Zdzo=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnEsXpiS3y8xkbFY1xgsf6DYDoniHKpPGI3HvSI 4qvHkNBYlyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZxLF6QAKCRAzarMzb2Z/ lxOcD/9ZP/INhvdYHOxCCQaFQvxOWOUjP8kohdfU4jR6FdhYVdxc4M4sD0s/nTKDrqcmz3asMKB 6pLyEyNPSD5DCEAQE/h+ejGhD6yvb1SkSW18Lzqd1qfXhDEhhlsEfxAcMA/yAW75Lj6tYj/mqgk iv0TaW8Po2AFE3CnThDz+tusbEF7C0Nvt5LLQwhccD02AbsngEbUYCvVmGQQJ/K292cpnxToi5B /gCJXwAwKdKZf756E7mE9HHpPB/NFjP9UZCxx9XvcGgE6jxzoEb3PVOHZu34Nf7KkvC8ns1gqS2 H3hXJ9R7OnOi6UIPaO17AFeKEqhKaPR14va/ERSIelCiadY9rv/Z1LJWox4e2ti6UK0zenRiDDG hHZc4P0WzQ0jDAnlkvT0NPPVhjnwUDFNKkS5615jkeGNw1lRpb7LTvI1lo8N9TLue09EnGrd/63 IIlgVoDtlTGpYc9eBSU5hyiovLU/mm4644gpNm8jzPj1Idu4d279DnDNmUjOTacjYSpg0+ZXr5t NY2fquK2ywP/YvMa5wfmlgvau0w8hze5cDLyzDVor1K98jnb5qcCzVidAwoH/JacEg0IQwfq2hx rQmEBi6ebiLvTAlG++bLoueTObkNoQnoJEu3lENfIellFnwXXP1Pir6aioeYe9MYR6VPc+gF6AU 1NJKhX
+ GxP6d87qA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 18, 2024 at 03:39:13PM -0400, Jeff Layton wrote:
-> On Fri, 2024-10-18 at 13:03 -0400, Mike Snitzer wrote:
-> > Multi-threaded buffered reads to the same file exposed significant
-> > inode spinlock contention in nfs_clear_invalid_mapping().
-> > 
-> > Eliminate this spinlock contention by checking flags without locking,
-> > instead using smp_rmb and smp_load_acquire accordingly, but then take
-> > spinlock and double-check these inode flags.
-> > 
-> > Also refactor nfs_set_cache_invalid() slightly to use
-> > smp_store_release() to pair with nfs_clear_invalid_mapping()'s
-> > smp_load_acquire().
-> > 
-> > While this fix is beneficial for all multi-threaded buffered reads
-> > issued by an NFS client, this issue was identified in the context of
-> > surprisingly low LOCALIO performance with 4K multi-threaded buffered
-> > read IO.  This fix dramatically speeds up LOCALIO performance:
-> > 
-> > before: read: IOPS=1583k, BW=6182MiB/s (6482MB/s)(121GiB/20002msec)
-> > after:  read: IOPS=3046k, BW=11.6GiB/s (12.5GB/s)(232GiB/20001msec)
-> > 
-> > Fixes: 17dfeb911339 ("NFS: Fix races in nfs_revalidate_mapping")
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfs/inode.c | 19 ++++++++++++++-----
-> >  1 file changed, 14 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > index 542c7d97b235..130d7226b12a 100644
-> > --- a/fs/nfs/inode.c
-> > +++ b/fs/nfs/inode.c
-> > @@ -205,12 +205,14 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
-> >  		nfs_fscache_invalidate(inode, 0);
-> >  	flags &= ~NFS_INO_REVAL_FORCED;
-> >  
-> > -	nfsi->cache_validity |= flags;
-> > +	if (inode->i_mapping->nrpages == 0)
-> > +		flags &= ~NFS_INO_INVALID_DATA;
-> >  
-> > -	if (inode->i_mapping->nrpages == 0) {
-> > -		nfsi->cache_validity &= ~NFS_INO_INVALID_DATA;
-> > -		nfs_ooo_clear(nfsi);
-> > -	} else if (nfsi->cache_validity & NFS_INO_INVALID_DATA) {
-> > +	/* pairs with nfs_clear_invalid_mapping()'s smp_load_acquire() */
-> > +	smp_store_release(&nfsi->cache_validity, flags);
-> > +
+From: Chuck Lever <chuck.lever@oracle.com>
+
+On Fri, 18 Oct 2024 14:44:58 -0400, Jeff Layton wrote:                                              
+> Olga reported seeing a NFS4ERR_INVAL return on the final SETATTR before
+> a DELEGRETURN to set the timestamps. The first patch fixes that by
+> simply ensuring they are declared writeable. The second patch fixes a
+> related bug in the stateid handling in that same SETATTR. The last patch
+> adds a new tracepoint that I found useful for tracking this down.
 > 
-> I don't know this code that well, but it used to do an |= of flags into
-> cache_validity. Now you're replacing cache_validity wholesale with
-> flags. Maybe that should do something like this?
+> It might be best to squash the first two patches into this one:
 > 
->     flags |= nfsi->cache_validity;
->     smp_store_release(&nfsi->cache_validity, flags);
+> [...]                                                                        
 
-Ah good catch, sorry about that, will fix.
+Applied to nfsd-next for v6.13, thanks!                                                                
 
-This will allow further cleanup too, will let v2 speak to that.
+[1/3] nfsd: add TIME_DELEG_ACCESS and TIME_DELEG_MODIFY to writeable attrs
+      (no commit info)
+[2/3] nfsd: allow SETATTR to provide a READ deleg for updating time_access
+      (no commit info)
+[3/3] nfsd: new tracepoint for after op_func in compound processing
+      commit: ba6b3220066fdbd38063230cfc7951b728f15464                                                                      
 
-Thanks!
-Mike
+--                                                                              
+Chuck Lever
+
 
