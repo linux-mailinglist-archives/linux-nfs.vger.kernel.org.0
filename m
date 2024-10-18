@@ -1,226 +1,230 @@
-Return-Path: <linux-nfs+bounces-7268-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7269-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68929A3D36
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 13:22:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B789A3DCE
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 14:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E5B91F2136F
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 11:22:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C0A51F21933
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 12:05:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81A9E18628F;
-	Fri, 18 Oct 2024 11:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF1E617578;
+	Fri, 18 Oct 2024 12:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="sWXm4/CI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3y1fBM+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa7.fujitsucc.c3s2.iphmx.com (esa7.fujitsucc.c3s2.iphmx.com [68.232.159.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E834715CD74
-	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 11:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729250552; cv=fail; b=qrcLmAv+D+1up5dN+oPRRjbS2TJ2iFiwbL9RkO5bPWR69pERXL9Ba0r96gzURAdqPUoVPgV18c8mP/39wf/wXL2MKFp9x9pS8+HduUvUrnqhn2hKGUTw1bRSrwCZWPIbqqJ7/Wqmb7AZhIPAN3njcqQ2x5+0FMDT/aS/PZEcheQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729250552; c=relaxed/simple;
-	bh=kcp+rqTAJnlVnIKewd+st0W43cl2U51wmeVLSkSzFZc=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=rxpJB3elj2TFXAoHzepr9+wVgrZK6ppxDswuIZpLkC9bZcODLfDTKVbXm0W9+ZxOvkLaXZqWZap/cMpGRRJ5bF/5dhMC/MLaUMlysaGyzJNnjd9nXZw3hxHXWFCfx/xMr+iVoQ1wNdn15vnlk1BL28wCwIcrseFCCYSbQd9AjA8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=sWXm4/CI; arc=fail smtp.client-ip=68.232.159.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1729250550; x=1760786550;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=kcp+rqTAJnlVnIKewd+st0W43cl2U51wmeVLSkSzFZc=;
-  b=sWXm4/CITnbW6pfBiHUjDI18+NvZeo2kGHtShJgO6WDVgXDJN0yb4bZi
-   NS4fgFPHT4QYzKgLbhiyfiODqI7rtebvAdYc6QpW1CAOpOxX4T0ma2Iou
-   0eyBbGI3zYLs/cw6eA5oyiO3jSkuulIiHE2YQe9Y+6TjRHnSfk77Wd01k
-   ZW1e/OZYqrtNmbZl3pXYYC55uDceNyHF+eR7Nf2XLQZYfe1CTJGtDGO1x
-   k1cxT34faYRhhWiTFQQRCC6VdlsW+irCRir6v10T5rd5uz+MppIpIl4BQ
-   oKbh1XFl+1X7Lti2RH5ilfkLGddgQhf+LKPbtwzvaMaS5k0AOC2710KoP
-   g==;
-X-CSE-ConnectionGUID: KP2gbyQaShiH7Lj9xurPjQ==
-X-CSE-MsgGUID: Ra8/6zWTTHSAOvBQeprMnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11228"; a="134015545"
-X-IronPort-AV: E=Sophos;i="6.11,213,1725289200"; 
-   d="scan'208";a="134015545"
-Received: from mail-japanwestazlp17010002.outbound.protection.outlook.com (HELO OS0P286CU011.outbound.protection.outlook.com) ([40.93.130.2])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 20:21:18 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QlVBPbx74TLsHNosUgOg07sOuHBB+16X6KFvVAjwMlve97Q6oIIuuOUSHam2bTU0XHB8UUsYMGsLxw/ILjEwtKitiY5Pj1Zjhk1DQi9xfUn5BBfGvau/d2l+SDaqJHp9ZDrCXztMM8xI2/AHo4sWxTXZ9LE/oOEwpeKgUYTFuLVpF8U6mdf1Itjp/EOJIUoq9iDeu/ZfSaOlRCrL2c1WJqggyY7tQ0QXK+OMdRnuayommeCZkC/uodXvuRATqdRtsim3BzbizcbW8TS0T/UU/e9Nz9+97pgPlX3KMWls/y1Kse5DhV4PPnR5wK42U3nZvT2By1x49aHKzvtMgrpXsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JilQ5fqkb3y849ckIvDb01cYGOgKP4KjHI/5kaBcbUY=;
- b=gxZfZ6JFOGyMgloMcrZpIYZ7fCVkgo2r7S4yoCMfo4f2DbLjBBA+9vxn+3lpRnz8c+Sn2leulu3nmnuEHHDOLj/OZ7IRK4Hw0Fhoxi4vENXYryHdu9HvAlF6Y7f6/NDwcS7bweNm6H0KVWRrjtUB44LRdN3shrviSHSeANiOQ1CHGwPbfDinCUi7E//QAeSi/CtznHard1meOF2ELNWQ2nkUIDlisUhwKdTMjAI+/TSK53vUdKPaWfR26HJK7aD9Bs0qLevCyvHD9+qEbavKQPKZbLiGus2ZOXs6eoBw7TlaPF5PL2Esa+MOV9c0eB3IwpTfB2ex93Zper/SkUQ0jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSZPR01MB7772.jpnprd01.prod.outlook.com (2603:1096:604:1b4::7)
- by OS3PR01MB6376.jpnprd01.prod.outlook.com (2603:1096:604:e1::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.23; Fri, 18 Oct
- 2024 11:21:15 +0000
-Received: from OSZPR01MB7772.jpnprd01.prod.outlook.com
- ([fe80::df28:316e:ef65:39a9]) by OSZPR01MB7772.jpnprd01.prod.outlook.com
- ([fe80::df28:316e:ef65:39a9%7]) with mapi id 15.20.8069.016; Fri, 18 Oct 2024
- 11:21:15 +0000
-From: "Seiichi Ikarashi (Fujitsu)" <s.ikarashi@fujitsu.com>
-To: "'steved@redhat.com'" <steved@redhat.com>
-CC: "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>,
-	"'sorenson@redhat.com'" <sorenson@redhat.com>
-Subject: [PATCH] Retry NFSv3 mount after NFSv4 failure in auto negotiation
-Thread-Topic: [PATCH] Retry NFSv3 mount after NFSv4 failure in auto
- negotiation
-Thread-Index: AdshT3pHAdh8JNDrTLS/dtZP1FOkEw==
-Date: Fri, 18 Oct 2024 11:21:15 +0000
-Message-ID:
- <OSZPR01MB777260693E426F03068BC6E688402@OSZPR01MB7772.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=87ed64dd-f8fa-4579-bbb8-baf1a3c21b8e;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2024-10-18T10:47:20Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSZPR01MB7772:EE_|OS3PR01MB6376:EE_
-x-ms-office365-filtering-correlation-id: 7cbf51bb-a0e9-4dfe-5802-08dcef66fab0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?WnRZSkpIMXZXTlFUcldhQnJUZjVvWTRGSTUvSHZ0Y0RaWmJhK01MRldR?=
- =?iso-2022-jp?B?MDJUeFJ6YVphRnc5ZGNNNWN6M1J6b2w0QzU0RUcxQUpKUC9nS3FVbE4w?=
- =?iso-2022-jp?B?QUtxZmhCZTVhVEFqbzJCWEVoYXduRkN6RGNVRW5wWUcxT0hkRE1Hdk5x?=
- =?iso-2022-jp?B?K2plVC9jb1JJdU13OTU3VGtDRWs5SWZGMXBlUWRSTGp1OTl3T2FPdmpv?=
- =?iso-2022-jp?B?TEs3ZXJWUWo4a0h4MTd6ZDMwRURuL0V2WnJDNWE5b3pLRTAxdGZnRTl2?=
- =?iso-2022-jp?B?QzZQa3pJRmRnU29UOG0xVldCN1l5clpwZlovNVd5SEc2RDZjalpWVjNS?=
- =?iso-2022-jp?B?T1FlbWNIZDBqRThINVkyc2xjUE00RzUrQ1F5dk1ZSnZIejVWVitYNnYw?=
- =?iso-2022-jp?B?S0trcjZEWmNsN0NCQmY1YXhnYUpXZGJ4YnhJbW1mU3Q1SGJkQ0I0VkFP?=
- =?iso-2022-jp?B?THlCcFJTanpJVFpFdHFVcWt0UnNtV0thYzN3aWRBR1ZFc1RBRUdxMHVq?=
- =?iso-2022-jp?B?RGQ5OXM0Yno5eHFVV0hiSFU4Y0p3Y1Nab1g0N1JUQ0xBQk5hWXRJa1N5?=
- =?iso-2022-jp?B?dGNJZC9meVVBVzFTNkZnT3lSK2x1L1VJaWRrZWlBdWNwaFlWbktORmM0?=
- =?iso-2022-jp?B?NWpmR0k5eSsydm8rNzJLQUtONUpBbmRCQjR4MGFDaHpJOHNlY2dyL05p?=
- =?iso-2022-jp?B?MHpTWGpKRW9PRGZ0cnpIcGNUOStNSi9aR1QxYkI4WENYbWlKUkU2bUtT?=
- =?iso-2022-jp?B?K3hYUjhyRUlFRlhHMzJWN3pIV3lvaTE3dzA5dTVia01mNVJ0R3FsSWxz?=
- =?iso-2022-jp?B?K21IVXZ6NnZIR0Fldkx4SWNqWjY3bEErUm00YVp5cmp3eWFyM3JmTksw?=
- =?iso-2022-jp?B?ZjJjeGlMMmtWOThzalJRd0dxUWJqN01LdHNzbVo3d3hFVEVDTWt0bmhJ?=
- =?iso-2022-jp?B?YzkxazVMcjQxWGlXeDJuV2JKdnZ3dllSSmgwMlNuWkg3YlpTR2FWRGU3?=
- =?iso-2022-jp?B?TlU0ei9yTGJtaTE5bUQzaGVlYVRKdkkySTJsV0I2akZ1T2VGZGZacjJD?=
- =?iso-2022-jp?B?ejhxYXN4UFNKa3pGdm5KQVRXcU5lSFhrdFpnZUE4WUg5aWkwdzNUVWgv?=
- =?iso-2022-jp?B?b3hiQmM3bXFsemwwcGpOYlhObkw1UTJORDFPOEM0T3RNU1N3M2oxQTd0?=
- =?iso-2022-jp?B?YktiMHU5OWZQa1UydDJrNzdTNDBZVXluTWJ3U3Znck5MMlJkMkJ5cmti?=
- =?iso-2022-jp?B?RjluZVR2T2VkL2tHKytjMlJ6NHZMWkw1OGRlamxRN3M1QlRVTWxheDJK?=
- =?iso-2022-jp?B?VmZYbVBvQnFCS2ZLbU5KM2wzUENBWHdwYW94R0VFcjllOGcvZ1BIZ3NR?=
- =?iso-2022-jp?B?U2VrVEtBNWkrZ2Y2d2J3NVVnS1FWYUxWUkk3bnpMZXJCOU5PODgyRlFj?=
- =?iso-2022-jp?B?WXl4MEIzZkpRNTl4alNQaU1PZDhmbXE0dUZURTdWVVprVUhuampFbEJi?=
- =?iso-2022-jp?B?WFJPUUphRldxeTRadEJoTzRqaFFHb0p5ckEyL29UL0hIRGhTNTFzcmo1?=
- =?iso-2022-jp?B?NTdWcGxES0VTS3lqakFYS3R6WVRDck4xM096YWEvTkpVOHZjaklqWktp?=
- =?iso-2022-jp?B?RlczWk42QUdoQTNXdVF2bnkvWEVkRnRLYm0vOEZYZVNtblE0cGNQLzBE?=
- =?iso-2022-jp?B?YTNHQ0lSQXJFYkwrbTZlc0ROcDNQMDdpa0ZRNjdZais1dUFYL1BxMUJK?=
- =?iso-2022-jp?B?N2NiczFqb0lZK0dvOHhueE5nbGk2ZXBzaWhqRzlrZnU4aHFGUWVkU0Nn?=
- =?iso-2022-jp?B?Vmh1cTI0RlZXTEh3ODE3OGdNM2twOW9vUGpuZlRYbWYrTkhKSFBpb3FV?=
- =?iso-2022-jp?B?QnNxZmFDbnl1aWlkV20vVUYzaTdPSHhGUFJUeHNNWEFjcjBUQmFpL3VB?=
- =?iso-2022-jp?B?eTlZUVcvRS85MVdwV1V3TEpza01qeWNrbUlPYkMwNmFRYTdNSHRFZmZi?=
- =?iso-2022-jp?B?b2ExU3BHUHhic25mMzdPZHIxeTN3UVZobkdFSVdJRHI0ck9oMmdjTFVQ?=
- =?iso-2022-jp?B?amc9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB7772.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?bDBvWldGK0Nicko0aTM2ZFArVHZ5QlEzamJ0dkRCZ0U3a0gxVFIzNVBq?=
- =?iso-2022-jp?B?ekpvRVBEbVNNZGViajRMZkovR0lMK2h6UFFDVjVmSndmdHlVbkF2T2ZE?=
- =?iso-2022-jp?B?MHhTSHNYQ2hXblVuSFV1SFVIQ291bytLYUtNc0RpYm9mU3grY3pPUm9H?=
- =?iso-2022-jp?B?QVFFUnBvYkcrSlJNZHl0SzBpZHZsM2x0TDM5cjVNK25kTmw0RWh6Y1Zh?=
- =?iso-2022-jp?B?eS8rTjBla1hLdzQxbUpINE13WVJNbEJla2MzZXBURnhxY0ZqQzd2YW9M?=
- =?iso-2022-jp?B?dHZqT3hoUDFYNFU5VXEwTWpwVjh4ZlJMbVJHQlpXbHc5eW4yOUswaE8y?=
- =?iso-2022-jp?B?dFpYVGxRbzBsaVN1eDBKRDhYTFVTNnFOMWlBeWRKMUxWOHFjZlJ0RmNB?=
- =?iso-2022-jp?B?ajAzSld6VlZLWDRxMFhDRUJvUTZuRzBacm56SnV5QW45amxqTnRuSHQ1?=
- =?iso-2022-jp?B?ZW54VzA2NWlReGdXa1NIQnJVSGFibVF1R24vYmJ4UUQ5ZFZ5M3p6U3U5?=
- =?iso-2022-jp?B?azZNc3d6ZXQ3bnJlVmw0Z3RhOEQ0Y01LalVDa0lqTElhNjduVDA5eGpG?=
- =?iso-2022-jp?B?WWp4bE0vVTgrZGk0YVNoaGtjNThteEpMM3FueDZ1MGp2eFIxYnY4ZTly?=
- =?iso-2022-jp?B?UmtLMTAvNUoyVDg3Q2NBajRpWVN5eHdNbytXMUNXc0NxeXRsMDB3b0Vl?=
- =?iso-2022-jp?B?c3lBVER3WlE4SzR4UVBsRnRSNVBhZnIvMDd4SnhJSEM4aXp0dUNtampJ?=
- =?iso-2022-jp?B?dEVCcXZnVUlJYUpITCszYVo1dHRkeUNZOEdTTk52UWpzVmc3RlJVRFk2?=
- =?iso-2022-jp?B?SDZ6RWlPUUNudm0zQVJHNm9qenFsdlZMTTRvZmFFbUVNZm1tTnh1SUJY?=
- =?iso-2022-jp?B?ZVAyd2RFSEQvZWQwdThOWmgzRUhEdGFjVy84VUZxTUQ0MWYvNExwWG8w?=
- =?iso-2022-jp?B?bmFzWi9WMzdNS2g3TUFsMU1FYmNKVnh1TXdTd3NVUjhIeUJZMk5SaWln?=
- =?iso-2022-jp?B?VHZldUJUY2oreWM1MWQvdVRwMXQ2OFNCNDRUeVdoNmlEeTZPWGNJNG4r?=
- =?iso-2022-jp?B?TmVZOXFzTG5mTUNyK3ZMSXpXWS85N1hsaGF6OHJXMGNwUmZ3OVI4enlO?=
- =?iso-2022-jp?B?eEt6NTRuVldVT3YvM1N1UjRvYnpFTmQxdDl1WUdSUmEyd0NTT0Z0RHc2?=
- =?iso-2022-jp?B?SDlQWXJoMk4xR3krSXZNb3JHMzU0aStMTnM3VTU5bkxwMThneWtyZ0sw?=
- =?iso-2022-jp?B?UkRUNzVmS1MxdXpjV0ZTdFVsazhJSWlZcVIwTFJxK2J2ZzFnSHAyN1Nv?=
- =?iso-2022-jp?B?a1M0SVpCR0JVbkliSDllbmJSREFTc3BjNDlGdDB4SzlmZG5qZkhlQkJX?=
- =?iso-2022-jp?B?blg4OThITC9xSkx1ekdNSnBnaXhLRjZzcmg3aHIwU0ZhVDMwOU5lSmRJ?=
- =?iso-2022-jp?B?anNvQUVMR2l3WTY3Rm1rUW02RlZ6RFRCZzBCK1QyRHJzQnB1cUVCK2Za?=
- =?iso-2022-jp?B?Q0NLN2k3Yjh0WWYxb0xreVVRamdjN1hIdnY4aWhuK0Z3Q0Z2SDc3YWs2?=
- =?iso-2022-jp?B?VmJhRnNMeGNhUzY0eEROS2VhblRkTFJMTmZuaWlxS2x1eXUrbmVaSGlT?=
- =?iso-2022-jp?B?ZHdsbkxjWXRaTGJ3dDlDVFd2bUQxMjZFaHMxWTdFYzNUQVRYUG5ibFZN?=
- =?iso-2022-jp?B?Tkw5L1dPZG1ZRTN6ZllpS1FvYjh2NytwZFE1ZEFEUXJmTFhEUC9jQ3pi?=
- =?iso-2022-jp?B?UUVlaGZLOG41eVpBTVFCYXcyR2NBeVVVdmlFbmxFa1FERjhIS2VISjlk?=
- =?iso-2022-jp?B?T1UvWTNLRTNxWGRlM253VmNUbi9yNTNFai9oa1A1TXo5VkpRc3lRRlBh?=
- =?iso-2022-jp?B?d1dBbXlWWXhVNjkvUC9OZVd2WGptWjUzd0swc3hNUXl4SmJUL2UyaVlz?=
- =?iso-2022-jp?B?SjljUWYvVTlQeXp0cFEvZE83MmhtV2t0aG1QZ1FHV2Zkbm12QXQzUUdz?=
- =?iso-2022-jp?B?eVFhYUx0bUkvSXdvZzhYNkY4WldEUmFlWUJEcDRZN3RjSDlNMzJCS0Jr?=
- =?iso-2022-jp?B?Zzg4M3dwN08zd0FJNTZKQXFuNytlN05zakFoT2pKV3JqeE5kSjU1dDVL?=
- =?iso-2022-jp?B?d21KcHREVHAzcms3WFZLM0NQakVmVHhXRmtuWW9aSWY1bVFUdWlFOE1u?=
- =?iso-2022-jp?B?bkRjNGNsQUpad1dlVEZxRVBBb1VabmFDMjFvS1ZrRGM3a0dEYTNUWjRZ?=
- =?iso-2022-jp?B?VmRuSzB2NHZBV1VqeUtHbUFUem0rUmw1cDlab3NmcmUweEQxeEpGWHJX?=
- =?iso-2022-jp?B?NkxHTTN0eGVtdERRMmZWSDdNdjl0TU1zUEE9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81046E555;
+	Fri, 18 Oct 2024 12:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729253125; cv=none; b=RpXuWa/l4x7lN+rxvN4rjRm03XflWV1cdMYgpIHW52xswHwhRfF7H+ztq3SGmTH+x5U2BUMFPmDxeRkgWU4AkRn3n1xNXbAWwZ0lmDWjNa70i/4nOKtGUDo3AnXpjOZIX2O6qo6VUqJ/RQEXyNL6AjVeAVE11Oc/i2gK8bmm4tw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729253125; c=relaxed/simple;
+	bh=9mQ1F+VIqnWPlvM54TelqSqxN4ITH/c6dqxPDvxNFJw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YtNLm6nWbJJCwNrF/RqlRnz2QK9WhUUARBlCsteMesRusAvI5Ob+ejyjEB5ykIvqfTcj58wHyr1/A8Wzbqr/I9BHG2f+AdjCRWaKjSkzudx5QvtonzBvY7i7mxtHriD3BE9aMGFrtj5iQcqsjnTCV4s4Q8yK6e4r6HZNuM/ZD9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3y1fBM+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BE4C4CEC7;
+	Fri, 18 Oct 2024 12:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729253125;
+	bh=9mQ1F+VIqnWPlvM54TelqSqxN4ITH/c6dqxPDvxNFJw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=W3y1fBM+WdYOfqO6V/PectKYxNHnFN0WxUNy6Onvgx0TuA48/HdBO7OlFkF0Y14Kf
+	 /7GnlLHvu3+yDBmwNVPRWGWwb+328xlsjIwd2xpIECYiuwbM/JGZBuCeQ9UN58Y9Wk
+	 3aRNsS7wLwNhNiwcOWqLYPujn1oR+Z/8/9tp37BETdIKMwArMxjrcQOnFktJT3aXXo
+	 nDsHJFTOFkrUJvfXnxie0I5VCaVaGisjHVPTEc5W69lqop2fk85uv2ys12EckLruRl
+	 hausqoh5er4s7BOOs8hL3ZqhWLHNN3nwIyKoQifHc5MqtkPeqElLlOL0jpfcRAw0at
+	 2+wAMrRSMDO6w==
+Message-ID: <2ed155300b60cb12758322628919c9c631744243.camel@kernel.org>
+Subject: Re: [PATCH 0/6] nfsd: update the delstid patches for latest draft
+ changes
+From: Jeff Layton <jlayton@kernel.org>
+To: Olga Kornievskaia <aglo@umich.edu>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Jonathan Corbet <corbet@lwn.net>, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,  Thomas Haynes
+ <loghyr@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org
+Date: Fri, 18 Oct 2024 08:05:22 -0400
+In-Reply-To: <CAN-5tyF4=JC4gmFvb2tF-k+15=gzB7-gkW6mHuaA_8Gzr4dSrA@mail.gmail.com>
+References: <20241014-delstid-v1-0-7ce8a2f4dd24@kernel.org>
+	 <CAN-5tyF4=JC4gmFvb2tF-k+15=gzB7-gkW6mHuaA_8Gzr4dSrA@mail.gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	DcgpMQF82+0b74a11me6lRsZtaewo/rvqzEIRLCaZjRDf807ykXSeVsAD4t8dx+GeMh5h0afi3C1deNRuC9k8cFcz2TwFiyVKABV/25shOZERn0/+yW7aElbw/fCNhdZb7ywBX37+oL+9x0kH6tbdZW7AHjuA1oRV7s0SOkkjnChfkCTI+Y2Ial0vE2xgBqgFfVGsqb5sHXfiaWlIHrWZdAQ05UqebLuPcrQFJMINt709tkHdaQ1t7zZMB+UBorJAzPA+SLWFNB3vtGxPbe7ANjLF9K4KR4V11N7m5gVMI+bqHPGCkSC2b6lu+CuRyvgzi44NJVKFYX/ZG/OCvoAAZfsV+FSNOY9JKN+JQKpKONm39croY6m43mtaPJnc4UBUbSxWPQu0+JWqYHaDHXWXbAx3YesAvssTwPTo7KTYFmJlq83vetiO3jHSC73wcL1Mn4COgM3skSQVavGksqAVSZ02/JC+O57EaT+OTR/Nlffroo1PgoPFf+FvWnDv2V1uoD5xk/SiomC1zjTsUF8zn8S5BzDpwrq9cZofAaPAA6+fa1dkd4boVcJq3R3yZ4swmmch8CJiKCof00qxZNxVCy3c58un+vZ+D0SxEEgj7DdfXVb3Rj3SmoPt8uUGj+S
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB7772.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cbf51bb-a0e9-4dfe-5802-08dcef66fab0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2024 11:21:15.1248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M5sHSN60xTuFHwXXQSu1u/lZIP3gAGZWFuwUCMSvdMy0t+Zwyj3hizAngGd6WLohbu0w3MC0fcYIXTyhy7LP39Dk1mNsSSCW15F+mAzSndQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB6376
 
-The problem happens when a v3 mount fails with ETIMEDOUT after
-the v4 mount failed with EPROTONOSUPPORT, in mount auto negotiation.
-It immediately breaks from the "for" loop in nfsmount_fg()
-or nfsmount_child() due to EPROTONOSUPPORT, never doing the expected
-retries until timeout.
+On Thu, 2024-10-17 at 18:39 -0400, Olga Kornievskaia wrote:
+> Seeing strangeness in a network trace with this patch series where
+> SETATTR is sent with time_deleg_access and server is returning with
+> EINVAL. Test is open() with read delegation, triggering a cb_recall
+> via a local access. I can see that the client has changed from sending
+> just a delegreturn to sending a setattr+delegreturn. Is there no
+> server support and this is normal to return EINVAL.
+>=20
 
-Let's retry in v3, too.
+No, that's a server bug. I think it's this in nfsd4_setattr:
 
-Signed-off-by: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
----
- utils/mount/stropts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+        if (deleg_attrs || (setattr->sa_iattr.ia_valid & ATTR_SIZE)) {
+                status =3D nfs4_preprocess_stateid_op(rqstp, cstate,
+                                &cstate->current_fh, &setattr->sa_stateid,
+                                WR_STATE, NULL, &st);
+                if (status)
+                        return status;
+        }
 
-diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-index a92c420..103c41f 100644
---- a/utils/mount/stropts.c
-+++ b/utils/mount/stropts.c
-@@ -981,7 +981,7 @@ fall_back:
-        if ((result =3D nfs_try_mount_v3v2(mi, FALSE)))
-                return result;
-=20
--       if (errno !=3D EBUSY && errno !=3D EACCES)
-+       if (errno !=3D EBUSY && errno !=3D EACCES && errno !=3D ETIMEDOUT)
-                errno =3D olderrno;
-=20
-        return result;
+We're asking for a WR_STATE in the nfs4_preprocess_stateid_op, but
+there isn't one. There is only a read delegation, so we get back
+BAD_STATEID and that eventually runs into -EINVAL. I'll need to look
+over this and figure out how to fix it properly.
+
+Thanks for the bug report.
+
+> On Mon, Oct 14, 2024 at 3:27=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >=20
+> > This patchset is an update to the delstid patches that went into Chuck'=
+s
+> > nfsd-next branch recently. The original versions of the spec left out
+> > OPEN_DELEGATE_READ_ATTRS_DELEG and OPEN_DELEGATE_WRITE_ATTRS_DELEG. Thi=
+s
+> > set adds proper support for them.
+> >=20
+> > My suggestion is to drop these two patches from nfsd-next:
+> >=20
+> >     544c67cc0f26 nfsd: handle delegated timestamps in SETATTR
+> >     eee2c04ca5c1 nfsd: add support for delegated timestamps
+> >=20
+> > ...and then apply this set on top of the remaining pile. The resulting
+> > set is a bit larger than the original, as I took the liberty of adding
+> > some more symbols to the autogenerated part of the spec.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > Jeff Layton (6):
+> >       nfsd: drop inode parameter from nfsd4_change_attribute()
+> >       nfsd: switch to autogenerated definitions for open_delegation_typ=
+e4
+> >       nfsd: rename NFS4_SHARE_WANT_* constants to OPEN4_SHARE_ACCESS_WA=
+NT_*
+> >       nfsd: prepare delegation code for handing out *_ATTRS_DELEG deleg=
+ations
+> >       nfsd: add support for delegated timestamps
+> >       nfsd: handle delegated timestamps in SETATTR
+> >=20
+> >  Documentation/sunrpc/xdr/nfs4_1.x    |  22 ++++-
+> >  fs/nfsd/nfs4callback.c               |  42 ++++++++-
+> >  fs/nfsd/nfs4proc.c                   |  26 ++++-
+> >  fs/nfsd/nfs4state.c                  | 178 ++++++++++++++++++++++++++-=
+--------
+> >  fs/nfsd/nfs4xdr.c                    |  57 ++++++++---
+> >  fs/nfsd/nfs4xdr_gen.c                |  19 +++-
+> >  fs/nfsd/nfs4xdr_gen.h                |   2 +-
+> >  fs/nfsd/nfsd.h                       |   2 +
+> >  fs/nfsd/nfsfh.c                      |  11 +--
+> >  fs/nfsd/nfsfh.h                      |   3 +-
+> >  fs/nfsd/state.h                      |  18 ++++
+> >  fs/nfsd/xdr4cb.h                     |  10 +-
+> >  include/linux/nfs4.h                 |   2 +-
+> >  include/linux/sunrpc/xdrgen/nfs4_1.h |  35 ++++++-
+> >  include/linux/time64.h               |   5 +
+> >  15 files changed, 348 insertions(+), 84 deletions(-)
+> > ---
+> > base-commit: 9f8009c5be9367d01cd1627d6a379b4c642d8a28
+> > change-id: 20241014-delstid-bf05220ad941
+> >=20
+> > Best regards,
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
+> >=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
