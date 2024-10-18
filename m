@@ -1,99 +1,170 @@
-Return-Path: <linux-nfs+bounces-7279-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7280-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 490FF9A402F
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 15:43:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94CB19A4046
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 15:45:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E1C91C2441E
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 13:43:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04763B23732
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 13:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF8F71D88A6;
-	Fri, 18 Oct 2024 13:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720E3433B5;
+	Fri, 18 Oct 2024 13:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlBBWD5E"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QSWIJdaJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2bSOmqV3";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wTL9+pqp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nkc0ROqd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77DE1D54D6
-	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 13:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66C72C182
+	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 13:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729258779; cv=none; b=P+eh3mQSJ+4Qr2P5h+Se03BaSGfsemPNSvu4/Npdx53o3KkAyiIUos1z1LG7pLsKmB7KF9wrJq2xmUeKbvX94UL/B8ht8wdrnBIRwKrj3C+D/XvXD4HlCGmk+LA0BdjiHwo+mSpKnJcTzcR2BYnaPTpNXfUmSpz4JLyoLJPR9ZU=
+	t=1729258987; cv=none; b=A9Ww3Tu4dkHrULSCq5pTE4bUNaRbvKrRdEjwLT7ARBhT4GvRgO6+5xKyzLNkktjfwAn7EfwBrtvYeFB+beHKgOb3lmsQQGARmhswCqDR7PHQiYZeEW0j3BdIproyhIz83Adh2o70KZcn3lAT9ZFNjo+uOvzBvrI4hQgtOBQaFK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729258779; c=relaxed/simple;
-	bh=Nc0QOSj4baQrHeIjPEUf0BfkWx72J87aOIPwStI/ea8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qnQLlmAlvVkBhz6cnC1i8deAw/y1UmAp86YlTs8Igr+E9J+9lNfr01Ms/dBQkp++Fnh4EF+IclJ+l9oJvTVmcQ8sbq9saSC6BN6EoiVq6RoYSon96PLyresWDVtBX7rm3Lh1fXjzOnJNBjTAqluTsj/p31pNEpJ3u+IBxRZOPyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlBBWD5E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCFF0C4CEC3;
-	Fri, 18 Oct 2024 13:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729258779;
-	bh=Nc0QOSj4baQrHeIjPEUf0BfkWx72J87aOIPwStI/ea8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LlBBWD5E2fCNIgYXjSI1G7i1fbas2V4nWwVEGfx+9Xovr16TaC0tTFcUIVMA+PWKZ
-	 9rDk68xM9nAo4PQ6cs9pAqjvSjEO4hKQ36ZYzC7V/9g6pFXGq1jIiAujmxaeKouvN5
-	 GPIENnoYAZexjlPsqbXoJyuNnEqPPES+76PsqBdifhC7ziXcwmpi2+sjOedLVTwtgK
-	 zYP/2GAVQD39i2Ghe07rLOB9VNHiGSmtJXi2i5OG6LHFeNuoR50q0AEMNZkAJRSePe
-	 vG+Cswf6SJnjtEXdI56rDYZLrA2B2ROuxQJayVQyRqQJhtblMZFRQOq0LvYmkIkM8w
-	 tljPkZNlQ9zmA==
-From: cel@kernel.org
-To: Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfsd: refine and rename NFSD_MAY_LOCK
-Date: Fri, 18 Oct 2024 09:39:35 -0400
-Message-ID: <172925875846.230036.8190047848574023818.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <172920135149.81717.3501259644641160631@noble.neil.brown.name>
-References: <172920135149.81717.3501259644641160631@noble.neil.brown.name>
+	s=arc-20240116; t=1729258987; c=relaxed/simple;
+	bh=Bw18Z/jN+e+paFOsusyVwVrMmSiBSkJTpsFeG2yJJBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qfGtXmfOdkxfLGnNDleh/AlToYCAFWdQnvzPSekSNpee6cHvK4KqUnXFvZcY14fCpjO7gaQQWlXZkYs9dPJNDelCXADWJf1Ez9E4Y+15pY6LL1iNIeQ6Ift5D8f7Bvn1SrsSqvTEP8x+LdapiVlxwUiVzMIFi+1gKAyEB7R3fTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QSWIJdaJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2bSOmqV3; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wTL9+pqp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nkc0ROqd; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E11B11F7CE;
+	Fri, 18 Oct 2024 13:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729258983;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bw18Z/jN+e+paFOsusyVwVrMmSiBSkJTpsFeG2yJJBs=;
+	b=QSWIJdaJ6UaEsAi+GyiNaLM4yQlJlH8xGxHEe4YUbr9QSzeTgRlbdtPjLHady7/+j2LhIl
+	kPnnpgoO7iRUMWh/xtkNW9ErqjT9RkohdtPiMiwWxWqdlnTlNBUvuNCQowZowFY/ssejTX
+	snH71yM0sfocvVSr1i2bFGoQUi5XmfY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729258983;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bw18Z/jN+e+paFOsusyVwVrMmSiBSkJTpsFeG2yJJBs=;
+	b=2bSOmqV3SNycic19emJ9zwZ7ca3gXmXhMgdDkLmM5KJMDA27Iv4rkBAlm2CCz8dIqqmRD9
+	HpAOYZmxTeAIlVBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729258982;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bw18Z/jN+e+paFOsusyVwVrMmSiBSkJTpsFeG2yJJBs=;
+	b=wTL9+pqppGSwFvQ8lM1/5rn8bcNwM+XSbGk/CYUaX25zPImjwEXy3FHvCPgvyK1Lnlhjjz
+	LsC8lY4v2P+AeQ3rKfjxPqvvz+ti2OrFU6CI2o70K9eZWY62sTSl/a9vULheEuRnTdhaS7
+	napZdcLSRbRFBz/Ywj9x4DZP/5/OrqM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729258982;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bw18Z/jN+e+paFOsusyVwVrMmSiBSkJTpsFeG2yJJBs=;
+	b=nkc0ROqdbo1+jJtBEq2LoHu1107ydHS9rDHS27X5VbxEa9RILTjvz/avib3whDtlIyqeJ4
+	ZjjIzL5PWugWwKAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A776113680;
+	Fri, 18 Oct 2024 13:43:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5DPmJuZlEmdXKQAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Fri, 18 Oct 2024 13:43:02 +0000
+Date: Fri, 18 Oct 2024 15:43:01 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: Steve Dickson <steved@redhat.com>
+Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>,
+	linux-nfs@vger.kernel.org, Richard Weinberger <richard@nod.at>
+Subject: Re: [nfs-utils 1/2] Fix build failure due to glibc <= 2.24 and check
+ for Linux 3.17+
+Message-ID: <20241018134301.GA310040@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20231026114522.567140-1-giulio.benetti@benettiengineering.com>
+ <20231026194712.615384-1-pvorel@suse.cz>
+ <622276d1-0566-4b6e-90bc-c6ec3e1da47a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1290; i=chuck.lever@oracle.com; h=from:subject:message-id; bh=EwONOgrorlS7KLDqLXZX1QPzTwlclq6DxrYnM4Kgklo=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnEmUYu7R0n09n264S5xMNru9w6VEsAt94Mdsyf cm/iKuD4FGJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZxJlGAAKCRAzarMzb2Z/ l3yuD/9s3UGLszvgGAt9wD35j1KAdOUtxi8D83MlmgPmY9KsO7VddoW+P79RoSImXxTmXGZWRKz 9113k6wO4p3YoQVJBvrFUrpGoygSkZF/r11o3LYEwmjRvAUiTmL8/h+lgZ5WD2ifVEOtBUrHf41 uejzMDfAayOweAFf2D+RoflI+h7l6g3gmCzKb5V6RDWef1ujwGLa9nhVLOrAKmeZd6sTgpCaaEZ OivX7NUnayt1szurt2jhoh5lQ/A05IbMlbU+nGX8cP4wXBYf4zrzXJ8QLB4iWr2/NsBJB1o0ebo i4/A09X4ZSOHwB9wRCzsKft2ByUM/jXM/af9gyB1BdGc9pUSFxwYkbsE9/cz2x5V+O63sjhTkNW zM/ag4e2wA+Mz0fI4wL2qgJauBYGL6j2KsOIFPH+2TflwCovEGsV7ah4oRNIc3N5zUvjIn0XlPm Y2j5Dywy/YbhfxD2YZLUV0zIgMUn8y/O++ZszObR8658fOZZCQhbOFKUL4Na3I7rbI4E+vljAHB zjOaU2L8P+38zlVbepZMe6DJZxRFMpIZOOcGq5zepjiZDCLVCVQLC5ocJ9EGB5AzNzyEzjgULMb flGsvABdeo5QXNwdTt91MD1XFQJiDElDWnmKEYhQ+q2D0V0LcfJQentusf5asoYPWE9QgRZu+Y5 zEgKDj
- gMoEU+Yog==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <622276d1-0566-4b6e-90bc-c6ec3e1da47a@redhat.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.50 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Spam-Score: -3.50
+X-Spam-Flag: NO
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Steve, Giulio, Richard,
 
-On Fri, 18 Oct 2024 08:42:31 +1100, NeilBrown wrote:                                              
-> NFSD_MAY_LOCK means a few different things.
-> - it means that GSS is not required.
-> - it means that with NFSEXP_NOAUTHNLM, authentication is not required
-> - it means that OWNER_OVERRIDE is allowed.
-> 
-> None of these are specific to locking, they are specific to the NLM
-> protocol.
-> So:
->  - rename to NFSD_MAY_NLM
->  - set NFSD_MAY_OWNER_OVERRIDE and NFSD_MAY_BYPASS_GSS in nlm_fopen()
->    so that NFSD_MAY_NLM doesn't need to imply these.
->  - move the test on NFSEXP_NOAUTHNLM out of nfsd_permission() and
->    into fh_verify where other special-case tests on the MAY flags
->    happen.  nfsd_permission() can be called from other places than
->    fh_verify(), but none of these will have NFSD_MAY_NLM.
-> 
-> [...]                                                                        
+> Hello,
 
-Applied to nfsd-next for v6.13, thanks!                                                                
+> On 10/26/23 3:47 PM, Petr Vorel wrote:
+> > interesting, I yesterday sent patch [1] solving the same problem (although it
+> > might not be that obvious from the patchset name). Let's see which one will be
+> > taken.
 
-[1/1] nfsd: refine and rename NFSD_MAY_LOCK
-      commit: f94d4ca4e9862261a77dcfc8b567a563452add41                                                                      
+> > Kind regards,
+> > Petr
 
---                                                                              
-Chuck Lever
+> > [1] https://lore.kernel.org/linux-nfs/20231025205720.GB460410@pevik/T/#m4c02286afae09318f6b95ff837750708d5065cd5
+> There are a number of patches in the above link
+> Could you please post, in the usual format, that
+> fixes the issue.
 
+@Steve IMHO all build failures on glibc <= 2.24 and Linux 3.17+ has been fixed
+in f92fd6ca ("support/backend_sqlite.c: Add getrandom() fallback") [1].
+
+I don't see any new issue in the thread which is from 2023.
+Are you just double checking if any patch was left on ML?
+Or do I miss something (it's Friday maybe I'm just tired)?
+
+@Giulio @Richard feel free to correct me.
+
+Kind regards,
+Petr
+
+> tia,
+
+> steved.
+
+[1] https://git.linux-nfs.org/?p=steved/nfs-utils.git;a=commit;h=f92fd6ca815025c435dabf45da28472ac0aa04a4
 
