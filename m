@@ -1,230 +1,237 @@
-Return-Path: <linux-nfs+bounces-7269-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7270-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8B789A3DCE
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 14:05:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1B579A3E4E
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 14:26:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C0A51F21933
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 12:05:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63C69285713
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 12:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF1E617578;
-	Fri, 18 Oct 2024 12:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB4717736;
+	Fri, 18 Oct 2024 12:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3y1fBM+"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Kh4caILb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kOIhd72p";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Kh4caILb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kOIhd72p"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81046E555;
-	Fri, 18 Oct 2024 12:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E9B8F6B;
+	Fri, 18 Oct 2024 12:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729253125; cv=none; b=RpXuWa/l4x7lN+rxvN4rjRm03XflWV1cdMYgpIHW52xswHwhRfF7H+ztq3SGmTH+x5U2BUMFPmDxeRkgWU4AkRn3n1xNXbAWwZ0lmDWjNa70i/4nOKtGUDo3AnXpjOZIX2O6qo6VUqJ/RQEXyNL6AjVeAVE11Oc/i2gK8bmm4tw=
+	t=1729254351; cv=none; b=KrqPrGPiR2pO37mmM6f2cAM/1mdNX6g98AK3v6cPic8vWvAK/slDvR2VTHR35o+5/l6j+7WjzGpiOYHIMfbf9jbT/kvP+nCaBNfeHADAPpEvnbpFeciWGotcK/lV6k8hCuDeNy363IYSCwo9n1Y3R7n+SEsPCf1s4CHWocrRxqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729253125; c=relaxed/simple;
-	bh=9mQ1F+VIqnWPlvM54TelqSqxN4ITH/c6dqxPDvxNFJw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YtNLm6nWbJJCwNrF/RqlRnz2QK9WhUUARBlCsteMesRusAvI5Ob+ejyjEB5ykIvqfTcj58wHyr1/A8Wzbqr/I9BHG2f+AdjCRWaKjSkzudx5QvtonzBvY7i7mxtHriD3BE9aMGFrtj5iQcqsjnTCV4s4Q8yK6e4r6HZNuM/ZD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3y1fBM+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BE4C4CEC7;
-	Fri, 18 Oct 2024 12:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729253125;
-	bh=9mQ1F+VIqnWPlvM54TelqSqxN4ITH/c6dqxPDvxNFJw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=W3y1fBM+WdYOfqO6V/PectKYxNHnFN0WxUNy6Onvgx0TuA48/HdBO7OlFkF0Y14Kf
-	 /7GnlLHvu3+yDBmwNVPRWGWwb+328xlsjIwd2xpIECYiuwbM/JGZBuCeQ9UN58Y9Wk
-	 3aRNsS7wLwNhNiwcOWqLYPujn1oR+Z/8/9tp37BETdIKMwArMxjrcQOnFktJT3aXXo
-	 nDsHJFTOFkrUJvfXnxie0I5VCaVaGisjHVPTEc5W69lqop2fk85uv2ys12EckLruRl
-	 hausqoh5er4s7BOOs8hL3ZqhWLHNN3nwIyKoQifHc5MqtkPeqElLlOL0jpfcRAw0at
-	 2+wAMrRSMDO6w==
-Message-ID: <2ed155300b60cb12758322628919c9c631744243.camel@kernel.org>
-Subject: Re: [PATCH 0/6] nfsd: update the delstid patches for latest draft
- changes
-From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Jonathan Corbet <corbet@lwn.net>, Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,  Thomas Haynes
- <loghyr@gmail.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org
-Date: Fri, 18 Oct 2024 08:05:22 -0400
-In-Reply-To: <CAN-5tyF4=JC4gmFvb2tF-k+15=gzB7-gkW6mHuaA_8Gzr4dSrA@mail.gmail.com>
-References: <20241014-delstid-v1-0-7ce8a2f4dd24@kernel.org>
-	 <CAN-5tyF4=JC4gmFvb2tF-k+15=gzB7-gkW6mHuaA_8Gzr4dSrA@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
+	s=arc-20240116; t=1729254351; c=relaxed/simple;
+	bh=vC1SX+wQnWxFmlQXkUP9yy/5qcQeEuByw8RrPHIZU4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HJG7hSGUd048ZTeMUgPdO/hpMI/rAzdStd4fEqewn3bsXRo40jeVoXhexQTscBudfwKHoZ9Dt5Jf0RgCHcRq7srEHcE3ZiGC6bSDtTvtDCslJN9WIivlU99xlKd+YF3LcFJJZSHSRadcTPR5i/Wz4oyyEzXChrkh13lFlRS+okQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Kh4caILb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kOIhd72p; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Kh4caILb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kOIhd72p; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A85771FDCC;
+	Fri, 18 Oct 2024 12:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729254347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v9iA959EP4BEcv5e0iqenlfp8hBxwbKWSp7/y27GQG0=;
+	b=Kh4caILb21FroSrjSfslzo7L1cIJsZXI/iUVt5zKaWqTPHHslBvq3KBcBpiqxFuBYti31o
+	Tja/3GkrVl9czOmtnpNlDZq5x59MKOQO6dI4Nu/3w6DyXzYmZUi4+OHERpYSBbUlLfy1PP
+	xZCDC1vyxxqX4UurZ05DhFvn7ogwhZU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729254347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v9iA959EP4BEcv5e0iqenlfp8hBxwbKWSp7/y27GQG0=;
+	b=kOIhd72poBPwiAFQalmin4nWTsOL9OmmWECpnFVb30gl9DIEWmFeWt8KxbfYmgvLbuKGJ/
+	gu4E/b49ygg+9sCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Kh4caILb;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kOIhd72p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729254347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v9iA959EP4BEcv5e0iqenlfp8hBxwbKWSp7/y27GQG0=;
+	b=Kh4caILb21FroSrjSfslzo7L1cIJsZXI/iUVt5zKaWqTPHHslBvq3KBcBpiqxFuBYti31o
+	Tja/3GkrVl9czOmtnpNlDZq5x59MKOQO6dI4Nu/3w6DyXzYmZUi4+OHERpYSBbUlLfy1PP
+	xZCDC1vyxxqX4UurZ05DhFvn7ogwhZU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729254347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v9iA959EP4BEcv5e0iqenlfp8hBxwbKWSp7/y27GQG0=;
+	b=kOIhd72poBPwiAFQalmin4nWTsOL9OmmWECpnFVb30gl9DIEWmFeWt8KxbfYmgvLbuKGJ/
+	gu4E/b49ygg+9sCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 99C2513433;
+	Fri, 18 Oct 2024 12:25:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id M12CJctTEmcAEgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 18 Oct 2024 12:25:47 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 51C59A080A; Fri, 18 Oct 2024 14:25:43 +0200 (CEST)
+Date: Fri, 18 Oct 2024 14:25:43 +0200
+From: Jan Kara <jack@suse.cz>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jack@suse.cz" <jack@suse.cz>, "mic@digikod.net" <mic@digikod.net>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,
+	"audit@vger.kernel.org" <audit@vger.kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
+ get_ino() for NFS
+Message-ID: <20241018122543.cxbbtsmeksegoeh3@quack3>
+References: <20241010152649.849254-1-mic@digikod.net>
+ <20241016-mitdenken-bankdaten-afb403982468@brauner>
+ <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
+ <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
+ <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
+ <ZxEmDbIClGM1F7e6@infradead.org>
+ <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
+ <5a5cfe8cb8155c2bb91780cc75816751213e28d7.camel@kernel.org>
+ <CAHC9VhR=-MMA3JoUABhwdqkraDp_vvsK2k7Nh0NA4yomtn855w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhR=-MMA3JoUABhwdqkraDp_vvsK2k7Nh0NA4yomtn855w@mail.gmail.com>
+X-Rspamd-Queue-Id: A85771FDCC
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Flag: NO
 
-On Thu, 2024-10-17 at 18:39 -0400, Olga Kornievskaia wrote:
-> Seeing strangeness in a network trace with this patch series where
-> SETATTR is sent with time_deleg_access and server is returning with
-> EINVAL. Test is open() with read delegation, triggering a cb_recall
-> via a local access. I can see that the client has changed from sending
-> just a delegreturn to sending a setattr+delegreturn. Is there no
-> server support and this is normal to return EINVAL.
->=20
+On Thu 17-10-24 16:21:34, Paul Moore wrote:
+> On Thu, Oct 17, 2024 at 1:05 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > On Thu, 2024-10-17 at 11:15 -0400, Paul Moore wrote:
+> > > On Thu, Oct 17, 2024 at 10:58 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > > > On Thu, Oct 17, 2024 at 10:54:12AM -0400, Paul Moore wrote:
+> > > > > Okay, good to know, but I was hoping that there we could come up with
+> > > > > an explicit list of filesystems that maintain their own private inode
+> > > > > numbers outside of inode-i_ino.
+> > > >
+> > > > Anything using iget5_locked is a good start.  Add to that file systems
+> > > > implementing their own inode cache (at least xfs and bcachefs).
+> > >
+> > > Also good to know, thanks.  However, at this point the lack of a clear
+> > > answer is making me wonder a bit more about inode numbers in the view
+> > > of VFS developers; do you folks care about inode numbers?  I'm not
+> > > asking to start an argument, it's a genuine question so I can get a
+> > > better understanding about the durability and sustainability of
+> > > inode->i_no.  If all of you (the VFS folks) aren't concerned about
+> > > inode numbers, I suspect we are going to have similar issues in the
+> > > future and we (the LSM folks) likely need to move away from reporting
+> > > inode numbers as they aren't reliably maintained by the VFS layer.
+> > >
+> >
+> > Like Christoph said, the kernel doesn't care much about inode numbers.
+> >
+> > People care about them though, and sometimes we have things in the
+> > kernel that report them in some fashion (tracepoints, procfiles, audit
+> > events, etc.). Having those match what the userland stat() st_ino field
+> > tells you is ideal, and for the most part that's the way it works.
+> >
+> > The main exception is when people use 32-bit interfaces (somewhat rare
+> > these days), or they have a 32-bit kernel with a filesystem that has a
+> > 64-bit inode number space (NFS being one of those). The NFS client has
+> > basically hacked around this for years by tracking its own fileid field
+> > in its inode.
+> 
+> When I asked if the VFS dev cared about inode numbers this is more of
+> what I was wondering about.  Regardless of if the kernel itself uses
+> inode numbers for anything, it does appear that users do care about
+> inode numbers to some extent, and I wanted to know if the VFS devs
+> viewed the inode numbers as a first order UAPI interface/thing, or if
+> it was of lesser importance and not something the kernel was going to
+> provide much of a guarantee around.  Once again, I'm not asking this
+> to start a war, I'm just trying to get some perspective from the VFS
+> dev side of things.
 
-No, that's a server bug. I think it's this in nfsd4_setattr:
+Well, we do care to not break our users. So our opinion about "first order
+UAPI" doesn't matter that much. If userspace is using it, we have to
+avoid breaking it. And there definitely is userspace depending on st_ino +
+st_dev being unique identifier of a file / directory so we want to maintain
+that as much as possible (at least as long as there's userspace depending
+on it which I don't see changing in the near future).
 
-        if (deleg_attrs || (setattr->sa_iattr.ia_valid & ATTR_SIZE)) {
-                status =3D nfs4_preprocess_stateid_op(rqstp, cstate,
-                                &cstate->current_fh, &setattr->sa_stateid,
-                                WR_STATE, NULL, &st);
-                if (status)
-                        return status;
-        }
+That being said historically people have learned NFS has its quirks,
+similarly as btrfs needing occasionally a special treatment and adapted to
+it, bcachefs is new enough that userspace didn't notice yet, that's going
+to be interesting.
 
-We're asking for a WR_STATE in the nfs4_preprocess_stateid_op, but
-there isn't one. There is only a read delegation, so we get back
-BAD_STATEID and that eventually runs into -EINVAL. I'll need to look
-over this and figure out how to fix it properly.
+There's another aspect that even 64-bits start to be expensive to pack
+things into for some filesystems (either due to external protocol
+constraints such as for AFS or due to the combination of features such as
+subvolumes, snapshotting, etc.). Going to 128-bits for everybody seems
+like a waste so at last LSF summit we've discussed about starting to push
+file handles (output of name_to_handle_at(2)) as a replacement of st_ino
+for file/dir identifier in a filesystem. For the kernel this would be
+convenient because each filesystem can pack there what it needs. But
+userspace guys were not thrilled by this (mainly due to the complexities of
+dynamically sized identifier and passing it around). So this transition
+isn't currently getting much traction and we'll see how things evolve.
 
-Thanks for the bug report.
-
-> On Mon, Oct 14, 2024 at 3:27=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
-wrote:
-> >=20
-> > This patchset is an update to the delstid patches that went into Chuck'=
-s
-> > nfsd-next branch recently. The original versions of the spec left out
-> > OPEN_DELEGATE_READ_ATTRS_DELEG and OPEN_DELEGATE_WRITE_ATTRS_DELEG. Thi=
-s
-> > set adds proper support for them.
-> >=20
-> > My suggestion is to drop these two patches from nfsd-next:
-> >=20
-> >     544c67cc0f26 nfsd: handle delegated timestamps in SETATTR
-> >     eee2c04ca5c1 nfsd: add support for delegated timestamps
-> >=20
-> > ...and then apply this set on top of the remaining pile. The resulting
-> > set is a bit larger than the original, as I took the liberty of adding
-> > some more symbols to the autogenerated part of the spec.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > Jeff Layton (6):
-> >       nfsd: drop inode parameter from nfsd4_change_attribute()
-> >       nfsd: switch to autogenerated definitions for open_delegation_typ=
-e4
-> >       nfsd: rename NFS4_SHARE_WANT_* constants to OPEN4_SHARE_ACCESS_WA=
-NT_*
-> >       nfsd: prepare delegation code for handing out *_ATTRS_DELEG deleg=
-ations
-> >       nfsd: add support for delegated timestamps
-> >       nfsd: handle delegated timestamps in SETATTR
-> >=20
-> >  Documentation/sunrpc/xdr/nfs4_1.x    |  22 ++++-
-> >  fs/nfsd/nfs4callback.c               |  42 ++++++++-
-> >  fs/nfsd/nfs4proc.c                   |  26 ++++-
-> >  fs/nfsd/nfs4state.c                  | 178 ++++++++++++++++++++++++++-=
---------
-> >  fs/nfsd/nfs4xdr.c                    |  57 ++++++++---
-> >  fs/nfsd/nfs4xdr_gen.c                |  19 +++-
-> >  fs/nfsd/nfs4xdr_gen.h                |   2 +-
-> >  fs/nfsd/nfsd.h                       |   2 +
-> >  fs/nfsd/nfsfh.c                      |  11 +--
-> >  fs/nfsd/nfsfh.h                      |   3 +-
-> >  fs/nfsd/state.h                      |  18 ++++
-> >  fs/nfsd/xdr4cb.h                     |  10 +-
-> >  include/linux/nfs4.h                 |   2 +-
-> >  include/linux/sunrpc/xdrgen/nfs4_1.h |  35 ++++++-
-> >  include/linux/time64.h               |   5 +
-> >  15 files changed, 348 insertions(+), 84 deletions(-)
-> > ---
-> > base-commit: 9f8009c5be9367d01cd1627d6a379b4c642d8a28
-> > change-id: 20241014-delstid-bf05220ad941
-> >=20
-> > Best regards,
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
