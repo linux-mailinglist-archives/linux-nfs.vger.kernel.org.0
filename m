@@ -1,407 +1,233 @@
-Return-Path: <linux-nfs+bounces-7265-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7266-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10FD99A39E5
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 11:23:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9E539A3BE8
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 12:47:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91B111F2729C
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 09:23:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 14C55B20A42
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 10:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83951EF95C;
-	Fri, 18 Oct 2024 09:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA883201023;
+	Fri, 18 Oct 2024 10:47:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="an/6QKia"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="QTwWqYcT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.fujitsucc.c3s2.iphmx.com (esa6.fujitsucc.c3s2.iphmx.com [68.232.159.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC212192B94;
-	Fri, 18 Oct 2024 09:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729243420; cv=none; b=FoL2Dwl29cV9hc7QHMuvrSoe+I4QQ2c9jpNnTiIsNXZ4j1ZakwZj8p8qj093h+DlNjPFE03FTxkwjk28Oj/hskXwxOAGhkIRiVWtQLQRsE329bSeVscAkypofdmhL43WDeZLeuKCRfUbZhiSKPsnL87uZiOqW3+uw1T0A8PtmjU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729243420; c=relaxed/simple;
-	bh=XBgsysFiWxjIcrTa7+BvZ7SjeoAfI7waehEEknFZsAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LqWP90oM/RIrRbq7WGu7Hi/uCHJVHxgdSKHa9ezzi3E9Dv+jvACMO/ENuWlgMDBH2uU8YKGazwmzocZ2A0udd/NbPqZ2wcJ7WPY3B3DI249f07g+EeTygbo2LbQGiVIb7f/rVuJ4uOuxpNlUjYH53paBxaKQMwWZdDq/nTHwAbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=an/6QKia; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-431481433bdso19075465e9.3;
-        Fri, 18 Oct 2024 02:23:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729243417; x=1729848217; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8i9TOmXHFPJppsA6DPvnN0VQVdHM4wmI36dIvbrDxh4=;
-        b=an/6QKiaQAhnFVaMwzIWgOtzoWGPrDgycDmIcqz0BiV8J96CgTeP8gEy4qNQokl8S9
-         6sM6kwBiP2J/tzXoo+fJp2BuR3yYlTReY+y0R9rnONyPhZ/xtizqB+LhmaiT4JF/8vpu
-         MjPNDC8YcYYnQXgdNdIKk8in0B7ocnGduP8ws9C4C1SLdZsyahRDXgIN4MNBvLsYH6nu
-         BPA67Jll67H2EEGAWnNUoarMHRjhK4kL+4mSyTKCaoLsF780cDuIseZBDPw1/nCwvUGY
-         mPFirYMMWm0YHfZljWgl+evsyen/VnxUiadAjMreOCsv8IL3qUqAdoJFNtbunmKJc287
-         H+vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729243417; x=1729848217;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8i9TOmXHFPJppsA6DPvnN0VQVdHM4wmI36dIvbrDxh4=;
-        b=VB2OYSb8S+4HYdDWaOSQCEivtWOdW0qSj+DHx7MFFTb2+pOdsC6I9x8zBu8c7sBIPd
-         AauwXXEMTqXzqtAWlGxZHq7EhkM7B5lO+SjgH9KkGYbG1/bTR6kqC41P0rxpgtf5bSQM
-         9uBVoSDUPcSvKmDufWGMNRZgDGTpDoCcRnLkEjr8rNURctA8m8zbcNgWvGbDNXPjMzqw
-         aJTww4HqrAm6ms254EyItWu7CE3Y5noDtAXvSyM0ZOm6QifzhiCpZaF4cgB0LT0wyBwN
-         nXRQdSdsX6GDvZZUesp7frUQ0SDO+OCPpOzckES5zb2EswRfyJPDN4hsUarPQkLNHHYB
-         i2lg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9TsS9BRIjqlyoxZJ37SjBmentVOOY0AjdGdsN5OP2CzoeJv4bkRX26Oftx5X1TPNt/0HF+t5GlivZtA==@vger.kernel.org, AJvYcCVoe0X6uA1oRqMHKzyiiNt+INPEPDnsQXHKH1abzEN+UV5HWtR7bkImYh9Q2hapcILU2cqtx/NQJKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBCC7dAFFb9NnaNUmoNxHa2Kw+ftizmUw32fnjzwgduOe6dZmG
-	DybzF+5gmrHXBKViTDxwTmVFOpaMWN/nELO/stvMMtsvc18HSdjE1/SdEQ==
-X-Google-Smtp-Source: AGHT+IFJ7Gxdf1ZnrmO+mn3m+8skLU7E4OudUEkboMhHMiL2aInOKyopnFbHYMnvvXRLhrInqFdd4w==
-X-Received: by 2002:a05:600c:45c3:b0:42c:de34:34c1 with SMTP id 5b1f17b1804b1-4316161f356mr13232615e9.2.1729243416695;
-        Fri, 18 Oct 2024 02:23:36 -0700 (PDT)
-Received: from [0.0.0.0] ([95.179.233.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43160dfacfbsm18743125e9.21.2024.10.18.02.23.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2024 02:23:36 -0700 (PDT)
-Message-ID: <c04e7270-1415-4c6a-8bca-a77cc0403287@gmail.com>
-Date: Fri, 18 Oct 2024 17:23:29 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5578820102B
+	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 10:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729248445; cv=fail; b=cf67DrmX6qK1WcCHzaT9oSQKuGorHFc79V+yMIw4tHH6fq4dFkrqnMz1uaJZBfheKlCkrha4uYBmNqUsRSyRXOubHVNxc7jP1YFuI8NMSATaXbSuDLiy/IKbZPfKmgaqaY5u5upsTvCZoFhwqAfFfmydGo18YWpUrEtyuKGsfTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729248445; c=relaxed/simple;
+	bh=EMmaIdFRFzAyO7Mu62bJlOUP8w9G8UaPNfTHOHlOhwA=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nr2qNOv1H8kmrCqon+HUMfmdoS80jMc6IC/r4Bg0kpaWjHv5qMhe2+JK4sSW0s0+eAiYNACe5yEyk8ldQueSj26zPC0IUBmYuyd6Ol7MaRYDFKifIbDOHJUCxJ+rRsZacnv0c2q5N8i9RFhmxgywrJfz3zpXdNoCkPtlUCpPC34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=QTwWqYcT; arc=fail smtp.client-ip=68.232.159.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1729248443; x=1760784443;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=EMmaIdFRFzAyO7Mu62bJlOUP8w9G8UaPNfTHOHlOhwA=;
+  b=QTwWqYcTPTJo7XL+yHatwu9uNzmabhUEnlNUISDHWecLpxPgzAKFDhiC
+   VwK0GgAsjNzYPF3IKIe23d9sSwD3wzwJH/I9atawjGdNfQMel2eE6xI6O
+   DyiW+69FSfVwkAYjvClNelRbxqK1FBDY1Z8J2AqkJZOX0Ss3TtXJQlVu/
+   Do5PpqbiIsP6dVXmz9qIFtL7A49pCE02scl6bjjIi921+DxJwQDLvcKnb
+   n66aYpmpnzJIx8t7ntkw72hIjL+4hLx3Cti0FgmfnMYoi/EB4mTrFfSPo
+   GMXIc3cjWbfVaUAcFwSw4bcuhGBrEZr9jXWl0qCDuVNHT0+kzFOmwTeps
+   A==;
+X-CSE-ConnectionGUID: 4Zd8PGnyRB2lQQUQH+wr7A==
+X-CSE-MsgGUID: WJXzKf58Ske8nM7vPHFrIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11228"; a="134108067"
+X-IronPort-AV: E=Sophos;i="6.11,213,1725289200"; 
+   d="scan'208";a="134108067"
+Received: from mail-japanwestazlp17011031.outbound.protection.outlook.com (HELO OS0P286CU010.outbound.protection.outlook.com) ([40.93.130.31])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 19:47:14 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q/QaNKHbaf5k7EeOQnHFsIgAyQ5HGPMs46tsF2jPbRh88ByBM5eqeKu+wUEDKOrSYIbprOel9U5hc4Hv/eM7jnoR9OGLetu0jnSCRF3N8YIkEn3Rpbn/AQTZbivMH/8CiDhOwsBc6YUL64+BPduWDC9jnAKQda1lJSmcTB0GB3oaVl0mNBClbAOtMBNgPVDaT4ejg069qZSflNly3h15hId3nnvn+qpbcPt7qXOw0p2oBITbJMJIoA/vzcmeA0DZeddlNSidelecHuqpSoJbDsR5+hE5vInum6Mzgz6EayS9wYT0xn1faY5tBAEFD3AFvflbT93JNpe7/b7uAIRXYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qvNvo+SzHRTJcJ/n1npKX1nlxqDa5fPDralJqDjVC2A=;
+ b=q7f2a+pFA2tOJxUB5WaCl02OsqwQdhXG/Mush9ixRFXhDk7XcOTxudDrxYibQfL80xlHC1al46L+FyrUx626jBJKhZNgzzGJ4X2AIB5zfHvRvrML/q6vfIjyCWNv9G5ECPx+XWUzsUc7Z9wBMcsS7REXil6+g1iGzXwTxC5LOZMRiC+Jfe48e27jduV8nOANEv4Onde8MrmHwOEvZ01MLpIfjMECpCYzdR4PbxS2khfb1GZwomOXwnlvVBAxGuitySktM2IcCD+CrmzKBq8rF+Bf7DOsDkVhAlEeZbR3K/pXz5FHOdeED9NNo6iXl7KFOUS6WyTwcMpeZ8+DgxGaKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSZPR01MB7772.jpnprd01.prod.outlook.com (2603:1096:604:1b4::7)
+ by TYCPR01MB9417.jpnprd01.prod.outlook.com (2603:1096:400:196::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.20; Fri, 18 Oct
+ 2024 10:47:11 +0000
+Received: from OSZPR01MB7772.jpnprd01.prod.outlook.com
+ ([fe80::df28:316e:ef65:39a9]) by OSZPR01MB7772.jpnprd01.prod.outlook.com
+ ([fe80::df28:316e:ef65:39a9%7]) with mapi id 15.20.8069.016; Fri, 18 Oct 2024
+ 10:47:11 +0000
+From: "Seiichi Ikarashi (Fujitsu)" <s.ikarashi@fujitsu.com>
+To: "'steved@redhat.com'" <steved@redhat.com>
+CC: "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
+Subject: [PATCH] nfsdcld: prevent from accessing /var/lib/nfs/nfsdcld in
+ read-only file system during boot
+Thread-Topic: [PATCH] nfsdcld: prevent from accessing /var/lib/nfs/nfsdcld in
+ read-only file system during boot
+Thread-Index: AdshSv3QJTApk0+OQxOKVhDvmjUSKA==
+Date: Fri, 18 Oct 2024 10:47:11 +0000
+Message-ID:
+ <OSZPR01MB7772A2EBF4EE02460E546CDB88402@OSZPR01MB7772.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=ca6ba484-3d98-445d-94ca-feeabab53b7e;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2024-10-18T10:34:07Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSZPR01MB7772:EE_|TYCPR01MB9417:EE_
+x-ms-office365-filtering-correlation-id: 9acecbbf-cdb8-40af-2127-08dcef623872
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|1580799027|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?S3FTUmFVRHR0Y21YZkpOei9RMS9hcXJvMmhrRmVvYkY3Z2wxeCtJSVE1?=
+ =?iso-2022-jp?B?S2NqUUVIam5aeVRjYmtleXkvelI2YXV0ZCtDeFdTVEJXM1I0V290SFlC?=
+ =?iso-2022-jp?B?MWZmNEdVNjRDWXQxKzlyWitUZGFRdGUrWUdSNWNSd1c0Z3JoYWplb3RX?=
+ =?iso-2022-jp?B?WUlCUVh0TDVwUy9malpvbXQyVmN1WlBmelJrdDhobnZqQkNIb1NjUHVy?=
+ =?iso-2022-jp?B?bVdOMTFhMmVqaWNXMG9PQzRXQzFSUlhBVU40TU1sUnNTQU9hbUxzYmRM?=
+ =?iso-2022-jp?B?T29YWm1TTjZ4UjRqSHZZd1QzbEo5QjZPdFRpZkJPVTZJSGJ6UGJBSWRm?=
+ =?iso-2022-jp?B?cVVjUDhiTGpjQjNVWlBQeVhsLzJKZ2JGcDJpUS8zV2szc1MxUUdvZjhX?=
+ =?iso-2022-jp?B?ZFNUcWpLU2tFN1k1VmRyUHN2WmFManFqcjBRUHFSanhVUFpVSjJZUlp4?=
+ =?iso-2022-jp?B?ZXpWWmtERmZuelFzRTlyU0RYRTIyek81Vm0rSmRReGxXYitmNmp0cS9q?=
+ =?iso-2022-jp?B?SWVqcGpZNzIrYVNseEJKbzFkWVp0OHArenVZTDRidDUrT1hwdW4vS29a?=
+ =?iso-2022-jp?B?RVZQd255R2NuOTRmUW94SERRdi9qYzVYNjhLaDA0dFRqZmFtMTBUSTZo?=
+ =?iso-2022-jp?B?QWROM05ocGVlNWc1MTN2SHJrcjhkMEpjVEtMUmRVWHJhY3hYZlpzZGJ3?=
+ =?iso-2022-jp?B?WVBqUURvMVppdHZGVGJiVzZZNVZKM3lJaXZUSE1rWFFPRFVJeFEwMTJp?=
+ =?iso-2022-jp?B?QmVCdkpnaGxMMmFFeWs4WEF4K0cvVzk3cmNNS2x3TWREdnQ3MUo1U09q?=
+ =?iso-2022-jp?B?SmZISENwNkQ4NFFlc3J2VXdiVEdmMW9DL0dLMmp1YXg0UUsxbVdtM3Nr?=
+ =?iso-2022-jp?B?ZElhYVFndkN4V1FzV0xwakkxdm1vSDQ3UkhvRDJBdWpJTXF2REVsS013?=
+ =?iso-2022-jp?B?ZGxHMFlYaUFhOGNzSi9qNjlNbGVzaHd5UGphcU9mYUxpMXVIa3FEOEZS?=
+ =?iso-2022-jp?B?bFFBRUVQUWpiOE5ISmNEZXhpZkRuZk1Xb0pQdG1XSUNzN2dBbzNmQkxl?=
+ =?iso-2022-jp?B?dS9NU0I0aFd0a0tnN1Y0dzVkYTB6d1J3Wkc2QkIzelVzSXplK3hiWFZp?=
+ =?iso-2022-jp?B?NUtVZ2xWRW50b3hhOTRlamdFalFmbU9Pam52dzhQclNNTzVkK3J1MzlY?=
+ =?iso-2022-jp?B?c3VETnpMSVFRWkZzOWExUWJDM3NaRXJxUDBpV2VVRVVEUXA1ODZ6R1FM?=
+ =?iso-2022-jp?B?QmI4aDlPSEJhMUJXZE5YcklrOEFZaGgxSWtFYXM0T3Z4aFVhazdDSlNX?=
+ =?iso-2022-jp?B?ZGNOYkwvNjBlZWIvVjJDZE1KdHZkODE5RjdudnZsaTVsdVZuTVFrajFN?=
+ =?iso-2022-jp?B?OUxZWTE1ZGxnTWIyeHVsKzZXTmtOTUhaT2xRNFBZR0cyQW5FbGhYY25u?=
+ =?iso-2022-jp?B?NTdwR0llWG9RTHVhei82bFVSdlRQL0hlQXBJSDV2VHFFYTgyaFVFVWIy?=
+ =?iso-2022-jp?B?cFVFeUxzcGMrQUNIS1JTYldqK1JZZmpRVHU0U2Z2WjFnaituRk5sNkx1?=
+ =?iso-2022-jp?B?SmEvOHZVQlRucFZKWElHN3FaT0xGdHJlaW5qSi9zdU40YUNLbEJuaHVy?=
+ =?iso-2022-jp?B?ekdScnVobTE0cFFzSyt3emErdElOQm1ya215MUtPaGJJb0RPOThYclE0?=
+ =?iso-2022-jp?B?K3FaYVlIdVlIVG1qMDRhYWZWNC9EM3NNaE0wWUZLbS9DMjRGRFBsSWlV?=
+ =?iso-2022-jp?B?Q05PMVZFNVF5eXlkMXRsWUUzR285eGlJN3pWSG5KNEVISHF3dldHVEpn?=
+ =?iso-2022-jp?B?OHdYRGZwdEV5cVM3dWpGd1pRbHVpV1RpZWc1dlp3UElaczJpc2VzODhu?=
+ =?iso-2022-jp?B?S2JoSG1ZZkg1UU1BODRYRW4rMTVpeVdLK29ZYWw2MnpNcWw4WjQwOFRR?=
+ =?iso-2022-jp?B?bFVQMEx4cTBPWU5BQ216Y1k5RkdodTZQT1RQWFZndFJSVzNIczdYY3Ji?=
+ =?iso-2022-jp?B?YURnYU1CS2kwVVNpVUVNdkR5elc5ZldBeWhWTmdMWHllR3A5c1hieVZw?=
+ =?iso-2022-jp?B?b0E9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB7772.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(1580799027)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?S0c3WU1lc3MvemNwcDJ5UktsMHJoakJWbjFvcnVGVDJDUHEyeisyYVQ5?=
+ =?iso-2022-jp?B?UmlTbHozbjVmTkV2bUN4U3BGYzZ0SmxoOTJXaWluYlgzcWY5dlMwUTVj?=
+ =?iso-2022-jp?B?MWhYQlBLNDJlZmZndjhYY2tFVzNWTXpNc1N0dXdpMFRuZ01aTEFPd1Nt?=
+ =?iso-2022-jp?B?R3BTUVV1aVM2bEFvQi9NNDNVRmM0cEpEaUo1aGYzbEZrcGk5UkJpcThR?=
+ =?iso-2022-jp?B?MVFpazJzWmxkT1EvRFdFandZL01wUFNTcktLVWRPRFFkM25XVXo3Q2tU?=
+ =?iso-2022-jp?B?TUdaL0g3Q0s0Mk5GenlJWW9tNDBZNW4zclZpc2JTRkJkWi9XSTZyRDhL?=
+ =?iso-2022-jp?B?d1Y2OXR5U3djVnM1dGU3SEtJQUo4RTVzdWU1WHdQWDRJZGFzeGtkc2RU?=
+ =?iso-2022-jp?B?V01kTGZqa0tPOS9JVVhNVE5lQ0ZsQXVlOWJrWnZ5N1lXcmlEZkc1MXha?=
+ =?iso-2022-jp?B?K0JrV094SkNHSEw2MzFPVVZINVNqeHZWbHpKb0lJQnJNZmhzUFVIMit1?=
+ =?iso-2022-jp?B?cmtGWVNBbEY3LzMrcm5sNjZaeWdsZ2wvU1AyLzhMa0REajdodHdyZnoy?=
+ =?iso-2022-jp?B?RXVoZ3FVOVIrTzk1NmpkRzdZQ1hWcXRKbW9UUjdpNlpQNkFiaS9nOTQy?=
+ =?iso-2022-jp?B?OVo0d2FRR1JKMExreUFHalpkV0llV1dkczBTMVZCMUhYVzlUbkZMRTdJ?=
+ =?iso-2022-jp?B?OFZDVTBPaWZnQS84azZDVWxnY2ZEcHM5MVRQNm1xS1hsTUhTK0V5N3BE?=
+ =?iso-2022-jp?B?SDUrdFFFR1piSmZKNDA3aTJsTDMyOHlwcWd1V1k5bEdhaE8rQTNUL1FN?=
+ =?iso-2022-jp?B?VkFuaUtMMFI2YXZ3NDAvSUJwSFYzSXhmZXkvRVBsSWxaTU1GamxDNE56?=
+ =?iso-2022-jp?B?ZUNaVllNRDh0SVpmS2I3UTlXSXlpaWJmanNhTGdGNHVGSE0xTk9xOUJw?=
+ =?iso-2022-jp?B?Qi9HMzJQNGJBaHpMMzd5d3d0blhYQmJIek1lTlBuOHlsMHRFbUpOUlBS?=
+ =?iso-2022-jp?B?a3VpK0hsMjVZS1ExNlZ0cXVoNlFWNWV1NTRBcVRSejZ5Qm5NU0srVHBU?=
+ =?iso-2022-jp?B?NjJCWW1udFhXSkc4VHBJck16bXNEYy8zVm9NNUMzbk9PWUhZL1JUUWpW?=
+ =?iso-2022-jp?B?YjM0dEx3S1phYnBMMnBBcFB3aHoyNzBDbXUybUMxb3BzSFNqamZ2bU1v?=
+ =?iso-2022-jp?B?a3p2c1I3WWRwdUQzdmQ1a1hqdmlVWjkzTTdHT1k2VThRdXFzVi9iUFhY?=
+ =?iso-2022-jp?B?cWNoYlRYMEhHSkNvVnQ2enQ3ZzZDZDU4V3dQU2FpcTJGVldlRGlMSVpG?=
+ =?iso-2022-jp?B?Ni9MK2NnZmhCamE2cnMxSzFjNDJBeDRQNGE4bnRGazFQbzlidmRlbXFX?=
+ =?iso-2022-jp?B?UkEzS0hZc3l6RzVyL1g2cnNOMXZIV2g2aTgvWTlINzBjQks3RktHVklR?=
+ =?iso-2022-jp?B?Z0JRQ09JejBqZWRCenBsWSs1eDQ1OUtoRURxbVo1K0VHblBqWEg4U2tF?=
+ =?iso-2022-jp?B?Z2Eyb0JLUlF2WUNyZHVDZldZYUpKYUUwNWxHMnFkRmh3R1ZnaXdqa1Jj?=
+ =?iso-2022-jp?B?TTlxYjg5bC9FYTcvNzlpMlVpa3UxMFNpZ01QczQrMFExdlQzQ0hLYTVo?=
+ =?iso-2022-jp?B?RSt4VlFROUxLdHp1TWQzK2FKUXdPUWVLMWdGcXR2VEx3VnpRN2JrOXhs?=
+ =?iso-2022-jp?B?R2dwTjBNVjNTNm9nOFZaQXNEb0krcENnV0tpYUI0TGdVRmdRQ2xvSGtU?=
+ =?iso-2022-jp?B?c0hMSDR3aHFnVCt0TVBaZnpaMEFkSGxkMTJNcVNwYld5bDIrU2VDV1Er?=
+ =?iso-2022-jp?B?T2tJSm43amRYVzhRdU1mdFJWQVMrcG9ZQ1c0OEROTnhxckxETzc2VTAv?=
+ =?iso-2022-jp?B?MlVCVlZ4UkQ0a213VlR5NnA2eWp4WEM5blMzZEFvQ2Fia1g5QjI3cmZx?=
+ =?iso-2022-jp?B?NzJGQXIzT01CWXMyaE5GTnhaYjVmSjZxTjkySUFFbWlIV1M5elZibERE?=
+ =?iso-2022-jp?B?dnRqbHZvZTJKODhlZVNvRk0yeE9EVzBGQTRJRlFCTkJOOFA5UFlrTldo?=
+ =?iso-2022-jp?B?SStrdG9NZEhLcGJKMGtOU09HRnhYcVVzSU5vTTBobUVIcVBrQUVZSzRx?=
+ =?iso-2022-jp?B?bDRZMUFGSEJOV1d5OTE4dUcrTlBBdkRld1UzdURtNTdSYmhlZ041OWUv?=
+ =?iso-2022-jp?B?MVZjMllHam42OEQ2Rjd3bDRCVnJ3cldhU1R4elhwbG02WHg1TU8xT2gw?=
+ =?iso-2022-jp?B?SVF0VEJkSGN3aUFKMitpTzZkVFFZanp6amJjV2pDWTR3WlNSdW9ZOEJn?=
+ =?iso-2022-jp?B?akxKRzAyOHBaYk8zb284LzZNSXBuZE5BS0E9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH 4/5] SUNRPC: support resvport and reuseport for
- rpcrdma
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- linux-rdma@vger.kernel.org
-References: <1a765211-2d1e-48ef-a5ca-a6b39b833d5a@gmail.com>
- <Zw/GUeIymfw+2upD@tissot.1015granger.net>
- <a4dc7417-1d0c-4700-9102-0ecc2c9e81ab@gmail.com>
- <ZxEP/zBCaSgxbJU7@tissot.1015granger.net>
-Content-Language: en-US
-From: Kinglong Mee <kinglongmee@gmail.com>
-In-Reply-To: <ZxEP/zBCaSgxbJU7@tissot.1015granger.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	eBLqagKu0TfrBrfjKV66XZZzSAxgDjt+XW16vSR5zd0BGoG8HoCWxyu1oRkN/yYuAmYruOsWjbsN+PRH3qsLNk+TxTqk0s+15CSot6N50Y1J/qIyaVIISln8skUW0x9ni6L6ik+ToyWaGJ+JHcZn6yn/POcTsw4i2VaNKpLwyW2JXaZsnqwD66cg26Ne3fL1Mf9XTBUWcEX14yhMI1iVaXp67HvnKbFZH8r3OYXUQDRVFjR5AGhbo0QVmRE/9+uGURqbKKfunWRLR8u8MxN0eifhBkuB8IUbDY+na6vuoH9pCQXfxC3oq7X+ZeH8eRP5TQuCYSv/Wm4lh/BtA/gB/Vzpl0ZhYkU9yJ2LcqMBzNp1MbZB0heHZ1pqIbHHhyxLbmxqD0+Ts+t6sA7+u1q5a+4rMoLY93kdQO8TxXSDlq7XwMzfXzBvK6VUwLIkNok9ASEV4yVtf2GP+3NDk5JmR1vPk5w2esro0xElNHzAQWy8F6oj9R9VxJUr4RPkpytIMwXxIQGYxRx/iKo3Ca/mpwMpqNocAd8sTizvMI9lOLAtYukOBe1ifSWPpjxZFFAqc0aEYqLbEpPwk9/GYb24ghQvCndc2bvjh+AZKVsUbzJvsd5ljZwuUNQhVtKsW+6M
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB7772.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9acecbbf-cdb8-40af-2127-08dcef623872
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2024 10:47:11.2114
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QxE2TA+ckmaZArz0S4/lQMfPUvcxLegBOi8Jd4OCncYMOP+f8YEvjGdOfmbMXTsSK4ipD4vE+nya35xhPJ71K9R4NoyjKtoRoZAQqhs6xPE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9417
 
-Hi Chuck,
+I saw a VMWare guest that hit a rare condition during boot;
+nfsdcld started too early to check access on /var/lib/nfs/nfsdcld which wer=
+e
+still in read-only file system as follows:
 
-On 2024/10/17 9:24 PM, Chuck Lever wrote:
-> On Thu, Oct 17, 2024 at 10:52:19AM +0800, Kinglong Mee wrote:
->> Hi Chuck,
->>
->> On 2024/10/16 9:57 PM, Chuck Lever wrote:
->>> On Wed, Oct 16, 2024 at 07:48:25PM +0800, Kinglong Mee wrote:
->>>> NFSd's DRC key contains peer port, but rpcrdma does't support port resue now.
->>>> This patch supports resvport and resueport as tcp/udp for rpcrdma.
->>>
->>> An RDMA consumer is not in control of the "source port" in an RDMA
->>> connection, thus the port number is meaningless. This is why the
->>> Linux NFS client does not already support setting the source port on
->>> RDMA mounts, and why NFSD sets the source port value to zero on
->>> incoming connections; the DRC then always sees a zero port value in
->>> its lookup key tuple.
->>>
->>> See net/sunrpc/xprtrdma/svc_rdma_transport.c :: handle_connect_req() :
->>>
->>> 259         /* The remote port is arbitrary and not under the control of the
->>> 260          * client ULP. Set it to a fixed value so that the DRC continues
->>> 261          * to be effective after a reconnect.
->>> 262          */
->>> 263         rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
->>>
->>>
->>> As a general comment, your patch descriptions need to explain /why/
->>> each change is being made. For example, the initial patches in this
->>> series, although they properly split the changes into clean easily
->>> digestible hunks, are somewhat baffling until the reader gets to
->>> this one. This patch jumps right to announcing a solution.
->>
->> Thanks for your comment.
->>
->>>
->>> There's no cover letter tying these changes together with a problem
->>> statement. What problematic behavior did you see that motivated this
->>> approach?
->>
->> We have a private nfs server, it's DRC checks the src port, but rpcrdma doesnot
->> support resueport now, so we try to add it as tcp/udp.
-> 
-> Thank you for clarifying!
-> 
-> It's common for a DRC to key on the source port. Unfortunately,
-> IIRC, the Linux RDMA Connection Manager does not provide an API for
-> an RDMA consumer (such as the Linux NFS client) to set an arbitrary
-> source port value on the active side. rdma_bind_addr() works on the
-> listen side only.
+  nfsdcld[...]: Unexpected error when checking access on /var/lib/nfs/nfsdc=
+ld: Read-only file system
+  systemd[1]: nfsdcld.service: Main process exited, code=3Dexited, status=
+=3D226/NAMESPACE
+  systemd[1]: nfsdcld.service: Failed with result 'exit-code'.
 
-rdma_bind_addr() also works on client before rdma_resolve_addr.
-From man rdma_bind_addr,
-"
-   NOTES
-       Typically,  this routine is called before calling rdma_listen to bind to
-       a specific port number, but it may also be called on the active side of
-       a connection before calling rdma_resolve_addr to bind to a specific address.
-"
-And 9P uses rdma_bind_addr() to bind to a privileged port at p9_rdma_bind_privport().
+nfsdcld.service needs to wait the root file system to be remounted at least=
+.
 
-Librdmacm supports rdma_get_local_addr(),rdma_get_peer_addr(),rdma_get_src_port() and
-rdma_get_dst_port() at userspace.
-So if needed, it's easy to support them in linux kernel.
+Signed-off-by: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+---
+ systemd/nfsdcld.service | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rpcrdma and nvme use the src_addr/dst_addr directly as 
-(struct sockaddr *)&cma_xprt->sc_cm_id->route.addr.src_addr or
-(struct sockaddr *)&queue->cm_id->route.addr.dst_addr.
-Call helpers may be better then directly access.
-
-I think, there is a key question for rpcrdma.
-Is the port in rpcrdma connect the same meaning as tcp/udp port?
-If it is, we need support the reuseport.
-
-Thanks,
-Kinglong Mee
-
-> 
-> But perhaps my recollection is stale.
-> 
-> 
->> Maybe someone needs the src port at rpcrdma connect, I made those patches. 
->>
->> For the knfsd and nfs client, I don't meet any problem.
->>
->> Thanks,
->> Kinglong Mee
->>>
->>>
->>>> Signed-off-by: Kinglong Mee <kinglongmee@gmail.com>
->>>> ---
->>>>  net/sunrpc/xprtrdma/transport.c |  36 ++++++++++++
->>>>  net/sunrpc/xprtrdma/verbs.c     | 100 ++++++++++++++++++++++++++++++++
->>>>  net/sunrpc/xprtrdma/xprt_rdma.h |   5 ++
->>>>  3 files changed, 141 insertions(+)
->>>>
->>>> diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
->>>> index 9a8ce5df83ca..fee3b562932b 100644
->>>> --- a/net/sunrpc/xprtrdma/transport.c
->>>> +++ b/net/sunrpc/xprtrdma/transport.c
->>>> @@ -70,6 +70,10 @@ unsigned int xprt_rdma_max_inline_write = RPCRDMA_DEF_INLINE;
->>>>  unsigned int xprt_rdma_memreg_strategy		= RPCRDMA_FRWR;
->>>>  int xprt_rdma_pad_optimize;
->>>>  static struct xprt_class xprt_rdma;
->>>> +static unsigned int xprt_rdma_min_resvport_limit = RPC_MIN_RESVPORT;
->>>> +static unsigned int xprt_rdma_max_resvport_limit = RPC_MAX_RESVPORT;
->>>> +unsigned int xprt_rdma_min_resvport = RPC_DEF_MIN_RESVPORT;
->>>> +unsigned int xprt_rdma_max_resvport = RPC_DEF_MAX_RESVPORT;
->>>>  
->>>>  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
->>>>  
->>>> @@ -137,6 +141,24 @@ static struct ctl_table xr_tunables_table[] = {
->>>>  		.mode		= 0644,
->>>>  		.proc_handler	= proc_dointvec,
->>>>  	},
->>>> +	{
->>>> +		.procname	= "rdma_min_resvport",
->>>> +		.data		= &xprt_rdma_min_resvport,
->>>> +		.maxlen		= sizeof(unsigned int),
->>>> +		.mode		= 0644,
->>>> +		.proc_handler	= proc_dointvec_minmax,
->>>> +		.extra1		= &xprt_rdma_min_resvport_limit,
->>>> +		.extra2		= &xprt_rdma_max_resvport_limit
->>>> +	},
->>>> +	{
->>>> +		.procname	= "rdma_max_resvport",
->>>> +		.data		= &xprt_rdma_max_resvport,
->>>> +		.maxlen		= sizeof(unsigned int),
->>>> +		.mode		= 0644,
->>>> +		.proc_handler	= proc_dointvec_minmax,
->>>> +		.extra1		= &xprt_rdma_min_resvport_limit,
->>>> +		.extra2		= &xprt_rdma_max_resvport_limit
->>>> +	},
->>>>  };
->>>>  
->>>>  #endif
->>>> @@ -346,6 +368,20 @@ xprt_setup_rdma(struct xprt_create *args)
->>>>  	xprt_rdma_format_addresses(xprt, sap);
->>>>  
->>>>  	new_xprt = rpcx_to_rdmax(xprt);
->>>> +
->>>> +	if (args->srcaddr)
->>>> +		memcpy(&new_xprt->rx_srcaddr, args->srcaddr, args->addrlen);
->>>> +	else {
->>>> +		rc = rpc_init_anyaddr(args->dstaddr->sa_family,
->>>> +					(struct sockaddr *)&new_xprt->rx_srcaddr);
->>>> +		if (rc != 0) {
->>>> +			xprt_rdma_free_addresses(xprt);
->>>> +			xprt_free(xprt);
->>>> +			module_put(THIS_MODULE);
->>>> +			return ERR_PTR(rc);
->>>> +		}
->>>> +	}
->>>> +
->>>>  	rc = rpcrdma_buffer_create(new_xprt);
->>>>  	if (rc) {
->>>>  		xprt_rdma_free_addresses(xprt);
->>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->>>> index 63262ef0c2e3..0ce5123d799b 100644
->>>> --- a/net/sunrpc/xprtrdma/verbs.c
->>>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>>> @@ -285,6 +285,98 @@ static void rpcrdma_ep_removal_done(struct rpcrdma_notification *rn)
->>>>  	xprt_force_disconnect(ep->re_xprt);
->>>>  }
->>>>  
->>>> +static int rpcrdma_get_random_port(void)
->>>> +{
->>>> +	unsigned short min = xprt_rdma_min_resvport, max = xprt_rdma_max_resvport;
->>>> +	unsigned short range;
->>>> +	unsigned short rand;
->>>> +
->>>> +	if (max < min)
->>>> +		return -EADDRINUSE;
->>>> +	range = max - min + 1;
->>>> +	rand = get_random_u32_below(range);
->>>> +	return rand + min;
->>>> +}
->>>> +
->>>> +static void rpcrdma_set_srcport(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
->>>> +{
->>>> +        struct sockaddr *sap = (struct sockaddr *)&id->route.addr.src_addr;
->>>> +
->>>> +	if (r_xprt->rx_srcport == 0 && r_xprt->rx_xprt.reuseport) {
->>>> +		switch (sap->sa_family) {
->>>> +		case AF_INET6:
->>>> +			r_xprt->rx_srcport = ntohs(((struct sockaddr_in6 *)sap)->sin6_port);
->>>> +			break;
->>>> +		case AF_INET:
->>>> +			r_xprt->rx_srcport = ntohs(((struct sockaddr_in *)sap)->sin_port);
->>>> +			break;
->>>> +		}
->>>> +	}
->>>> +}
->>>> +
->>>> +static int rpcrdma_get_srcport(struct rpcrdma_xprt *r_xprt)
->>>> +{
->>>> +	int port = r_xprt->rx_srcport;
->>>> +
->>>> +	if (port == 0 && r_xprt->rx_xprt.resvport)
->>>> +		port = rpcrdma_get_random_port();
->>>> +	return port;
->>>> +}
->>>> +
->>>> +static unsigned short rpcrdma_next_srcport(struct rpcrdma_xprt *r_xprt, unsigned short port)
->>>> +{
->>>> +	if (r_xprt->rx_srcport != 0)
->>>> +		r_xprt->rx_srcport = 0;
->>>> +	if (!r_xprt->rx_xprt.resvport)
->>>> +		return 0;
->>>> +	if (port <= xprt_rdma_min_resvport || port > xprt_rdma_max_resvport)
->>>> +		return xprt_rdma_max_resvport;
->>>> +	return --port;
->>>> +}
->>>> +
->>>> +static int rpcrdma_bind(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
->>>> +{
->>>> +	struct sockaddr_storage myaddr;
->>>> +	int err, nloop = 0;
->>>> +	int port = rpcrdma_get_srcport(r_xprt);
->>>> +	unsigned short last;
->>>> +
->>>> +	/*
->>>> +	 * If we are asking for any ephemeral port (i.e. port == 0 &&
->>>> +	 * r_xprt->rx_xprt.resvport == 0), don't bind.  Let the local
->>>> +	 * port selection happen implicitly when the socket is used
->>>> +	 * (for example at connect time).
->>>> +	 *
->>>> +	 * This ensures that we can continue to establish TCP
->>>> +	 * connections even when all local ephemeral ports are already
->>>> +	 * a part of some TCP connection.  This makes no difference
->>>> +	 * for UDP sockets, but also doesn't harm them.
->>>> +	 *
->>>> +	 * If we're asking for any reserved port (i.e. port == 0 &&
->>>> +	 * r_xprt->rx_xprt.resvport == 1) rpcrdma_get_srcport above will
->>>> +	 * ensure that port is non-zero and we will bind as needed.
->>>> +	 */
->>>> +	if (port <= 0)
->>>> +		return port;
->>>> +
->>>> +	memcpy(&myaddr, &r_xprt->rx_srcaddr, r_xprt->rx_xprt.addrlen);
->>>> +	do {
->>>> +		rpc_set_port((struct sockaddr *)&myaddr, port);
->>>> +		err = rdma_bind_addr(id, (struct sockaddr *)&myaddr);
->>>> +		if (err == 0) {
->>>> +			if (r_xprt->rx_xprt.reuseport)
->>>> +				r_xprt->rx_srcport = port;
->>>> +			break;
->>>> +		}
->>>> +		last = port;
->>>> +		port = rpcrdma_next_srcport(r_xprt, port);
->>>> +		if (port > last)
->>>> +			nloop++;
->>>> +	} while (err == -EADDRINUSE && nloop != 2);
->>>> +
->>>> +	return err;
->>>> +}
->>>> +
->>>>  static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>  					    struct rpcrdma_ep *ep)
->>>>  {
->>>> @@ -300,6 +392,12 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>  	if (IS_ERR(id))
->>>>  		return id;
->>>>  
->>>> +	rc = rpcrdma_bind(r_xprt, id);
->>>> +	if (rc) {
->>>> +		rc = -ENOTCONN;
->>>> +		goto out;
->>>> +	}
->>>> +
->>>>  	ep->re_async_rc = -ETIMEDOUT;
->>>>  	rc = rdma_resolve_addr(id, NULL, (struct sockaddr *)&xprt->addr,
->>>>  			       RDMA_RESOLVE_TIMEOUT);
->>>> @@ -328,6 +426,8 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>  	if (rc)
->>>>  		goto out;
->>>>  
->>>> +	rpcrdma_set_srcport(r_xprt, id);
->>>> +
->>>>  	return id;
->>>>  
->>>>  out:
->>>> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
->>>> index 8147d2b41494..9c7bcb541267 100644
->>>> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
->>>> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
->>>> @@ -433,6 +433,9 @@ struct rpcrdma_xprt {
->>>>  	struct delayed_work	rx_connect_worker;
->>>>  	struct rpc_timeout	rx_timeout;
->>>>  	struct rpcrdma_stats	rx_stats;
->>>> +
->>>> +	struct sockaddr_storage	rx_srcaddr;
->>>> +	unsigned short		rx_srcport;
->>>>  };
->>>>  
->>>>  #define rpcx_to_rdmax(x) container_of(x, struct rpcrdma_xprt, rx_xprt)
->>>> @@ -581,6 +584,8 @@ static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
->>>>   */
->>>>  extern unsigned int xprt_rdma_max_inline_read;
->>>>  extern unsigned int xprt_rdma_max_inline_write;
->>>> +extern unsigned int xprt_rdma_min_resvport;
->>>> +extern unsigned int xprt_rdma_max_resvport;
->>>>  void xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap);
->>>>  void xprt_rdma_free_addresses(struct rpc_xprt *xprt);
->>>>  void xprt_rdma_close(struct rpc_xprt *xprt);
->>>> -- 
->>>> 2.47.0
->>>>
->>>
->>
-> 
-
+diff --git a/systemd/nfsdcld.service b/systemd/nfsdcld.service
+index 3ced565..188123d 100644
+--- a/systemd/nfsdcld.service
++++ b/systemd/nfsdcld.service
+@@ -4,7 +4,7 @@ Documentation=3Dman:nfsdcld(8)
+ DefaultDependencies=3Dno
+ Conflicts=3Dumount.target
+ Requires=3Drpc_pipefs.target proc-fs-nfsd.mount
+-After=3Drpc_pipefs.target proc-fs-nfsd.mount
++After=3Drpc_pipefs.target proc-fs-nfsd.mount systemd-remount-fs.service
+=20
+ [Service]
+ Type=3Dforking
 
