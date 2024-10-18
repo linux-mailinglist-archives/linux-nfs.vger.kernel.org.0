@@ -1,55 +1,56 @@
-Return-Path: <linux-nfs+bounces-7292-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7293-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E39C9A46F8
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 21:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 253B29A471D
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 21:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58C0A2841E2
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 19:29:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A91B2284660
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 19:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760842040A2;
-	Fri, 18 Oct 2024 19:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37133204F68;
+	Fri, 18 Oct 2024 19:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCbZRztQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twrV5qGY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4695216EB4C;
-	Fri, 18 Oct 2024 19:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DABD204F63
+	for <linux-nfs@vger.kernel.org>; Fri, 18 Oct 2024 19:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729279771; cv=none; b=myB+qc5qFYhj4GfSPG/SIFrTka9z2pqPu+6DdMXKN6oWjOuLzsEIv+0oA8O3G2V/+GBj7uW44HoLt55Fcmg4pXRdqE6ntSAYqRzA5LmoyUcwr7Qbpq04eC3vH/vCq8BaxEBXrmpHzEgfahC01D52trtHywlU0/7VcduxMxiOuRo=
+	t=1729280355; cv=none; b=CGImA8H66W62AWTPYBTNjv5VuLIhFYT89fD085qZHeWRbJ77YxwXrEPGtcFSOWJRV637T3wYVSV5S9FhrbSEoTV8x1TATmyytkkqChj55PTBUR937UgZ+4Z3+O0Hgn1bm3HPyyxdd/qA15XXbG4WPLqHhecpAJI7ewPLhAumFYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729279771; c=relaxed/simple;
-	bh=iQxfjQYkl6dUY315dPTjZ5db4L3LgvJc18ke5FgVVFc=;
+	s=arc-20240116; t=1729280355; c=relaxed/simple;
+	bh=m3krjTrGjdaEF6aCGRnzWcSpXMTi9eXWj7dwPjZhW5w=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CO7Zs5RwFBx7bYXYY5zy4AihSC6F4EC1juJ3p4SOw/RfRMDc8GDOxTbwgvblxKSUNRivXWsoQQkN6Ep+MdpdXo7l5kI2uzmMny5+MtAHc9hqdCSEveWOybERBseNt5mrvSLrxDT1vQczmSS08c99YElWCJxTLyP1ut9NxVczwUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCbZRztQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E7E1C4CEC3;
-	Fri, 18 Oct 2024 19:29:30 +0000 (UTC)
+	 Content-Type:MIME-Version; b=qMXbSj/wXjE8uBGfH0RembbZPckFhg9OfJTOnGUf1sFdM7lY+8PPdF7qnIILhweGXksJsp1ygoFU5S/O7B8ujpmqhOoh7V4uBOFc1jg38m4ZdxpKXKYjkPbA0NSFLwS/sU2mcsET02cflXZDVdEy8nWoKUqJxe4sMllyAMI6aFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twrV5qGY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0EFC4CEC5;
+	Fri, 18 Oct 2024 19:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729279770;
-	bh=iQxfjQYkl6dUY315dPTjZ5db4L3LgvJc18ke5FgVVFc=;
+	s=k20201202; t=1729280354;
+	bh=m3krjTrGjdaEF6aCGRnzWcSpXMTi9eXWj7dwPjZhW5w=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iCbZRztQnuHwT3glkrG+MFxqj1nyPNksF10f7/btHgsCwlzY8mASC/8N5GsL+l3kH
-	 7XDif3x9z9OG+zo4BTy07vkGJ/JfT+zkxNt4bKBrCiLd28TtLz22ilOXbF/HMNRjMi
-	 AGvSl28cw4My22HPk9BG3utB9A9SVVcdBVWbRHtiJQNTv6m1lPp6aU5eg6igfG0q1S
-	 tfK8PR8lMVM2Hv5u/WPvVbR6uiYwKOJsJRJLdTsqFnLNw84w/0ITK1Z3g0MElZVVh4
-	 v8ZUkCZNS9H3cA9qRNCGB6EUh0MHvhXRe1FevfMRDhuG0JhHsS3MQ/E0xRon2tU3lc
-	 fq+ES6YiqkEZA==
-Message-ID: <0063757a2fd9a889f2e7a58505ce19ed913ce9d7.camel@kernel.org>
-Subject: Re: [PATCH v3 1/1] nfsd: fix race between laundromat and
- free_stateid
+	b=twrV5qGY3fD5oewutKn2X5+oB/I2VqerrLyZMkfpFqvL00D9iq3F3ZeKbr+pGQc1L
+	 wGrQoMHXqJV0QDMbE5+1V0XECbQLvND8nM6wd+mWpHq6RwhYEsxSqvKBpZp9EhOQ1D
+	 bJXFLGob+0SujaDyAz7INYmtsybJkncmA2vZvlN99q5toZ1WH4Sv7E73bHua41lfg4
+	 KjEhk9Cm/wZyToQ0qkuobVLxb2s7t9E8Ct3H4RCc8VyDyoi+K0pel6WCVuDMt7+qnD
+	 4o188RTC6erdHtn+7ICC5jImDX9zYxtUQ/Kwm3b3MRXAdsfE8VD7eRFKdmR/4DFm/N
+	 pl5DnTE6CviZw==
+Message-ID: <e25a451540d8eb63f35b82652e197b6e207d4317.camel@kernel.org>
+Subject: Re: [PATCH] nfs: avoid i_lock contention in
+ nfs_clear_invalid_mapping
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, stable@vger.kernel.org
-Date: Fri, 18 Oct 2024 15:29:29 -0400
-In-Reply-To: <20241018192458.84833-1-okorniev@redhat.com>
-References: <20241018192458.84833-1-okorniev@redhat.com>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
+ <trondmy@hammerspace.com>
+Date: Fri, 18 Oct 2024 15:39:13 -0400
+In-Reply-To: <20241018170335.41427-1-snitzer@kernel.org>
+References: <20241018170335.41427-1-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,218 +135,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-10-18 at 15:24 -0400, Olga Kornievskaia wrote:
-> There is a race between laundromat handling of revoked delegations
-> and a client sending free_stateid operation. Laundromat thread
-> finds that delegation has expired and needs to be revoked so it
-> marks the delegation stid revoked and it puts it on a reaper list
-> but then it unlock the state lock and the actual delegation revocation
-> happens without the lock. Once the stid is marked revoked a racing
-> free_stateid processing thread does the following (1) it calls
-> list_del_init() which removes it from the reaper list and (2) frees
-> the delegation stid structure. The laundromat thread ends up not
-> calling the revoke_delegation() function for this particular delegation
-> but that means it will no release the lock lease that exists on
-> the file.
+On Fri, 2024-10-18 at 13:03 -0400, Mike Snitzer wrote:
+> Multi-threaded buffered reads to the same file exposed significant
+> inode spinlock contention in nfs_clear_invalid_mapping().
 >=20
-> Now, a new open for this file comes in and ends up finding that
-> lease list isn't empty and calls nfsd_breaker_owns_lease() which ends
-> up trying to derefence a freed delegation stateid. Leading to the
-> followint use-after-free KASAN warning:
+> Eliminate this spinlock contention by checking flags without locking,
+> instead using smp_rmb and smp_load_acquire accordingly, but then take
+> spinlock and double-check these inode flags.
 >=20
-> kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> kernel: BUG: KASAN: slab-use-after-free in nfsd_breaker_owns_lease+0x140/=
-0x160 [nfsd]
-> kernel: Read of size 8 at addr ffff0000e73cd0c8 by task nfsd/6205
-> kernel:
-> kernel: CPU: 2 UID: 0 PID: 6205 Comm: nfsd Kdump: loaded Not tainted 6.11=
-.0-rc7+ #9
-> kernel: Hardware name: Apple Inc. Apple Virtualization Generic Platform, =
-BIOS 2069.0.0.0.0 08/03/2024
-> kernel: Call trace:
-> kernel: dump_backtrace+0x98/0x120
-> kernel: show_stack+0x1c/0x30
-> kernel: dump_stack_lvl+0x80/0xe8
-> kernel: print_address_description.constprop.0+0x84/0x390
-> kernel: print_report+0xa4/0x268
-> kernel: kasan_report+0xb4/0xf8
-> kernel: __asan_report_load8_noabort+0x1c/0x28
-> kernel: nfsd_breaker_owns_lease+0x140/0x160 [nfsd]
-> kernel: nfsd_file_do_acquire+0xb3c/0x11d0 [nfsd]
-> kernel: nfsd_file_acquire_opened+0x84/0x110 [nfsd]
-> kernel: nfs4_get_vfs_file+0x634/0x958 [nfsd]
-> kernel: nfsd4_process_open2+0xa40/0x1a40 [nfsd]
-> kernel: nfsd4_open+0xa08/0xe80 [nfsd]
-> kernel: nfsd4_proc_compound+0xb8c/0x2130 [nfsd]
-> kernel: nfsd_dispatch+0x22c/0x718 [nfsd]
-> kernel: svc_process_common+0x8e8/0x1960 [sunrpc]
-> kernel: svc_process+0x3d4/0x7e0 [sunrpc]
-> kernel: svc_handle_xprt+0x828/0xe10 [sunrpc]
-> kernel: svc_recv+0x2cc/0x6a8 [sunrpc]
-> kernel: nfsd+0x270/0x400 [nfsd]
-> kernel: kthread+0x288/0x310
-> kernel: ret_from_fork+0x10/0x20
+> Also refactor nfs_set_cache_invalid() slightly to use
+> smp_store_release() to pair with nfs_clear_invalid_mapping()'s
+> smp_load_acquire().
 >=20
-> This patch proposes a fixed that's based on adding 2 new additional
-> stid's sc_status values that help coordinate between the laundromat
-> and other operations (nfsd4_free_stateid() and nfsd4_delegreturn()).
+> While this fix is beneficial for all multi-threaded buffered reads
+> issued by an NFS client, this issue was identified in the context of
+> surprisingly low LOCALIO performance with 4K multi-threaded buffered
+> read IO.  This fix dramatically speeds up LOCALIO performance:
 >=20
-> First to make sure, that once the stid is marked revoked, it is not
-> removed by the nfsd4_free_stateid(), the laundromat take a reference
-> on the stateid. Then, coordinating whether the stid has been put
-> on the cl_revoked list or we are processing FREE_STATEID and need to
-> make sure to remove it from the list, each check that state and act
-> accordingly. If laundromat has added to the cl_revoke list before
-> the arrival of FREE_STATEID, then nfsd4_free_stateid() knows to remove
-> it from the list. If nfsd4_free_stateid() finds that operations arrived
-> before laundromat has placed it on cl_revoke list, it marks the state
-> freed and then laundromat will no longer add it to the list.
+> before: read: IOPS=3D1583k, BW=3D6182MiB/s (6482MB/s)(121GiB/20002msec)
+> after:  read: IOPS=3D3046k, BW=3D11.6GiB/s (12.5GB/s)(232GiB/20001msec)
 >=20
-> Also, for nfsd4_delegreturn() when looking for the specified stid,
-> we need to access stid that are marked removed or freeable, it means
-> the laundromat has started processing it but hasn't finished and this
-> delegreturn needs to return nfserr_deleg_revoked and not
-> nfserr_bad_stateid. The latter will not trigger a FREE_STATEID and the
-> lack of it will leave this stid on the cl_revoked list indefinitely.
->=20
-> Fixes: 2d4a532d385f ("nfsd: ensure that clp->cl_revoked list is
-> protected by clp->cl_lock")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
->=20
-> --- v3. (1) adds refcount to nfsd4_revoke_states() (2) adds comments
-> to revoke_delegation(), adds the WARN_ON_ONCE to make sure stid
-> state is what is expected and changes unlock placement.
+> Fixes: 17dfeb911339 ("NFS: Fix races in nfs_revalidate_mapping")
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/nfs4state.c | 46 +++++++++++++++++++++++++++++++++++++--------
->  fs/nfsd/state.h     |  2 ++
->  2 files changed, 40 insertions(+), 8 deletions(-)
+>  fs/nfs/inode.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7905ab9d8bc6..28e9b52b01fd 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1351,21 +1351,47 @@ static void destroy_delegation(struct nfs4_delega=
-tion *dp)
->  		destroy_unhashed_deleg(dp);
->  }
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 542c7d97b235..130d7226b12a 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -205,12 +205,14 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
+igned long flags)
+>  		nfs_fscache_invalidate(inode, 0);
+>  	flags &=3D ~NFS_INO_REVAL_FORCED;
 > =20
-> +/**
-> + * revoke_delegation - perform nfs4 delegation structure cleanup
-> + * @dp: pointer to the delegation
-> + *
-> + * This function assumes that it's called either from the administrative
-> + * interface (nfsd4_revoke_states()) that's revoking a specific delegati=
-on
-> + * stateid or it's called from a laundromat thread (nfsd4_landromat()) t=
-hat
-> + * determined that this specific state has expired and needs to be revok=
-ed
-> + * (both mark state with the appropriate stid sc_status mode). It is als=
-o
-> + * assumed that a reference was take on the @dp state.
-> + *
-> + * If this function finds that the @dp state is SC_STATUS_FREED it means
-> + * that a FREE_STATEID operation for this stateid has been processed and
-> + * we can proceed to removing it from recalled list. However, if @dp sta=
-te
-> + * isn't marked SC_STATUS_FREED, it means we need place it on the cl_rev=
-oked
-> + * list and wait for the FREE_STATEID to arrive from the client. At the =
-same
-> + * time, we need to mark it as SC_STATUS_FREEABLE to indicate to the
-> + * nfsd4_free_stateid() function that this stateid has already been adde=
-d
-> + * to the cl_revoked list and that nfsd4_free_stateid() is now responsib=
-le
-> + * for removing it from the list. Inspection of where the delegation sta=
-te
-> + * in the revocation process is protected by the clp->cl_lock.
-> + */
->  static void revoke_delegation(struct nfs4_delegation *dp)
->  {
->  	struct nfs4_client *clp =3D dp->dl_stid.sc_client;
+> -	nfsi->cache_validity |=3D flags;
+> +	if (inode->i_mapping->nrpages =3D=3D 0)
+> +		flags &=3D ~NFS_INO_INVALID_DATA;
 > =20
->  	WARN_ON(!list_empty(&dp->dl_recall_lru));
-> +	WARN_ON_ONCE(!(dp->dl_stid.sc_status &
-> +            (SC_STATUS_REVOKED | SC_STATUS_ADMIN_REVOKED)));
-> =20
->  	trace_nfsd_stid_revoke(&dp->dl_stid);
-> =20
-> -	if (dp->dl_stid.sc_status &
-> -	    (SC_STATUS_REVOKED | SC_STATUS_ADMIN_REVOKED)) {
-> -		spin_lock(&clp->cl_lock);
-> -		refcount_inc(&dp->dl_stid.sc_count);
-> -		list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> -		spin_unlock(&clp->cl_lock);
-> +	spin_lock(&clp->cl_lock);
-> +	if (dp->dl_stid.sc_status & SC_STATUS_FREED) {
-> +		list_del_init(&dp->dl_recall_lru);
-> +		goto out;
->  	}
-> +	list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> +	dp->dl_stid.sc_status |=3D SC_STATUS_FREEABLE;
-> +out:
-> +	spin_unlock(&clp->cl_lock);
->  	destroy_unhashed_deleg(dp);
->  }
-> =20
-> @@ -1772,6 +1798,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  					mutex_unlock(&stp->st_mutex);
->  					break;
->  				case SC_TYPE_DELEG:
-> +					refcount_inc(&stid->sc_count);
->  					dp =3D delegstateid(stid);
->  					spin_lock(&state_lock);
->  					if (!unhash_delegation_locked(
-> @@ -6606,6 +6633,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
->  		if (!state_expired(&lt, dp->dl_time))
->  			break;
-> +		refcount_inc(&dp->dl_stid.sc_count);
->  		unhash_delegation_locked(dp, SC_STATUS_REVOKED);
->  		list_add(&dp->dl_recall_lru, &reaplist);
->  	}
-> @@ -7218,7 +7246,9 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct n=
-fsd4_compound_state *cstate,
->  			s->sc_status |=3D SC_STATUS_CLOSED;
->  			spin_unlock(&s->sc_lock);
->  			dp =3D delegstateid(s);
-> -			list_del_init(&dp->dl_recall_lru);
-> +			if (s->sc_status & SC_STATUS_FREEABLE)
-> +				list_del_init(&dp->dl_recall_lru);
-> +			s->sc_status |=3D SC_STATUS_FREED;
->  			spin_unlock(&cl->cl_lock);
->  			nfs4_put_stid(s);
->  			ret =3D nfs_ok;
-> @@ -7548,7 +7578,7 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nf=
-sd4_compound_state *cstate,
->  	if ((status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
->  		return status;
-> =20
-> -	status =3D nfsd4_lookup_stateid(cstate, stateid, SC_TYPE_DELEG, 0, &s, =
-nn);
-> +	status =3D nfsd4_lookup_stateid(cstate, stateid, SC_TYPE_DELEG, SC_STAT=
-US_REVOKED|SC_STATUS_FREEABLE, &s, nn);
->  	if (status)
->  		goto out;
->  	dp =3D delegstateid(s);
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 6351e6eca7cc..cc00d6b64b88 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -114,6 +114,8 @@ struct nfs4_stid {
->  /* For a deleg stateid kept around only to process free_stateid's: */
->  #define SC_STATUS_REVOKED	BIT(1)
->  #define SC_STATUS_ADMIN_REVOKED	BIT(2)
-> +#define SC_STATUS_FREEABLE	BIT(3)
-> +#define SC_STATUS_FREED		BIT(4)
->  	unsigned short		sc_status;
-> =20
->  	struct list_head	sc_cp_list;
+> -	if (inode->i_mapping->nrpages =3D=3D 0) {
+> -		nfsi->cache_validity &=3D ~NFS_INO_INVALID_DATA;
+> -		nfs_ooo_clear(nfsi);
+> -	} else if (nfsi->cache_validity & NFS_INO_INVALID_DATA) {
+> +	/* pairs with nfs_clear_invalid_mapping()'s smp_load_acquire() */
+> +	smp_store_release(&nfsi->cache_validity, flags);
+> +
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I don't know this code that well, but it used to do an |=3D of flags into
+cache_validity. Now you're replacing cache_validity wholesale with
+flags. Maybe that should do something like this?
+
+    flags |=3D nfsi->cache_validity;
+    smp_store_release(&nfsi->cache_validity, flags);
+
+
+> +	if (inode->i_mapping->nrpages =3D=3D 0 ||
+> +	    nfsi->cache_validity & NFS_INO_INVALID_DATA) {
+>  		nfs_ooo_clear(nfsi);
+>  	}
+>  	trace_nfs_set_cache_invalid(inode, 0);
+> @@ -1408,6 +1410,13 @@ int nfs_clear_invalid_mapping(struct address_space=
+ *mapping)
+>  					 TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+>  		if (ret)
+>  			goto out;
+> +		smp_rmb(); /* pairs with smp_wmb() below */
+> +		if (test_bit(NFS_INO_INVALIDATING, bitlock))
+> +			continue;
+> +		/* pairs with nfs_set_cache_invalid()'s smp_store_release() */
+> +		if (!(smp_load_acquire(&nfsi->cache_validity) & NFS_INO_INVALID_DATA))
+> +			goto out;
+> +		/* Slow-path that double-checks with spinlock held */
+>  		spin_lock(&inode->i_lock);
+>  		if (test_bit(NFS_INO_INVALIDATING, bitlock)) {
+>  			spin_unlock(&inode->i_lock);
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
