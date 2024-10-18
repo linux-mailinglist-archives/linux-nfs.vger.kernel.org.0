@@ -1,91 +1,105 @@
-Return-Path: <linux-nfs+bounces-7262-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7263-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41B649A316D
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 01:33:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B059A3413
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 07:15:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0315C283669
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Oct 2024 23:33:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DDFA1F241CA
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Oct 2024 05:15:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27DB20E304;
-	Thu, 17 Oct 2024 23:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AF917332C;
+	Fri, 18 Oct 2024 05:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCwPSphJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="z/x7GOEn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477FA20E302
-	for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 23:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9003BB24;
+	Fri, 18 Oct 2024 05:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729208030; cv=none; b=fwv6lNcAW7MZRFeA1i1No5SJbfJLSoMVXsx+aLqONY2c9vjOoU5baxQxN8eCUl5Cq4vTSNBkzjNkuMlVtdVaFxqV9mHJqMYVw8cv2OciQ8CRzMDcRSFPBLg6CBv0eVl3gBRKcutg2/tIfQCzid4SalTnLa78P0ukYEMUuCu4HHs=
+	t=1729228549; cv=none; b=kE4CdBt1TiUL8ucnfGFOpNYwEVfKhIPjlr5YuX8is5if2WbbIaw+4Tfd1vcf85hJgteed5KYl9uf9QTlH5ba1Gnlq+gGr4ldY3cL+/X1rtSuT+Pvm5W+sV/8kVfaCXqUxHPm5464OEOl3JQaOGB8oRmGYAHWNPX2abzPPquwz6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729208030; c=relaxed/simple;
-	bh=kmeZznt1SMUv+KyCddoqIk+RyvGmLY+nS1W36YDBobo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=CLucQjSaSYziFZGVos4O7APvlD6Guxp0qQ4ldti0ZYcTUW+cT8WdUz5VybGB5yishFpr3xojKNn/L9/WXJ64FusvHSxzJhQmqNd7TyR49d6Z27XdDz2O1R1RTkm/0if8wsnAcPN7NlarJV+kg3WzF4k8R0DFvDovv40oSWg6Mhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCwPSphJ; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5c903f5bd0eso2651970a12.3
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Oct 2024 16:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729208028; x=1729812828; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kmeZznt1SMUv+KyCddoqIk+RyvGmLY+nS1W36YDBobo=;
-        b=DCwPSphJYzlFj+snZEV3Un6dBIfcGjqExYRDUO+w13EvlbVv1ah2ug8WLzQwslBpFV
-         TAjevHjuDXg6OtgzEXbIbjTt+Hv2/42SVK8u9685acVhYiMPFRo2JDzrHmfqGODSBEeV
-         LheVM8J/CHIEhXnI9MAKFcTrCYl5rLq6I0885411GJQPmBrnxHHcDzihQSS17EjO81NW
-         6tuvyK77aCFT95DHmxISwn+iOD+A5TQdbTTbudURd1xsrLbIojRSgjb6aUnNjfkqoC4d
-         vzlnHqXslq5adYpmTO5jAZNldt4GmaNe+WASV8/869tgA7qWLB/DVI5xZSYxgzWQ6OaK
-         ud/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729208028; x=1729812828;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kmeZznt1SMUv+KyCddoqIk+RyvGmLY+nS1W36YDBobo=;
-        b=syoeiUAJHDBUi5QFTVGGNAKE1ulr8z0TszWwBVGs7AKma05Z2n0GP3CTuJ3IrH8Xd/
-         0+o2usUJb58BSadfcQg8BnQnotKYhMbfoAcpo2FNogeHn6xkQxeud8Hd4uiEJFhp5oHZ
-         fR2QmSYUxlohmTYJaUZaHRnU3ul8WY6wTynSOg99daLjR85EL07D/ONTPyfNAQrrgIJe
-         Ual4/TYGDqCmqjCqtc0Wz8tdT1SUOXMDr4/E+0DFPp+0KLiHc31ghxthYCjksZjkRnTD
-         dAVfTh5ZgMRiZmONBt883xYDpVNLAwfrhB3G6ZZW9wLBW0pMaM1N4YNwsUFPRG5bRZDG
-         iqQA==
-X-Gm-Message-State: AOJu0YyYoBrqN7I/5hzpTLw/6sL1OCZPMqquGhjygBTtX/rjtAtSF27n
-	aIgQ+iYIlDKd/5N3D6bfndWQ3eD3jCq5I7R2Sz6aSamEqOZ8UAp6Yc2e145F+rH514mMdLPsvDs
-	1Bkvvq5MVEpq5814bk6cv/v+Gi14n
-X-Google-Smtp-Source: AGHT+IH2WqZis+5shw5jwixBQN0emOMW/Ltk0VdwlnF0qhd7axfrEQikPOFuMpKOg3dKQMTpwS7W+4jgeosQdBt3Rw0=
-X-Received: by 2002:a05:6402:4401:b0:5c9:7d47:4d27 with SMTP id
- 4fb4d7f45d1cf-5ca0afaa35dmr256192a12.31.1729208027449; Thu, 17 Oct 2024
- 16:33:47 -0700 (PDT)
+	s=arc-20240116; t=1729228549; c=relaxed/simple;
+	bh=osd+Afx7KZ986PJ9Yt3tyik2H2xn0VcmGztB3We7urE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iluWzqD0F92UU57BksjkIiY8pqnU78p0OtWT0OGe9XeNO1NTjE4X+CDv5MP8vLMkOYxl2+Qxw5iNyTm0MsAr8rLxemeG9bEK+7frCISAYKaAxbssPPtQBftScrs0g4W+uln4SHFDD5106jB6A8RZsPQFTD6YdL4kB2tWcyflBaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=z/x7GOEn; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cny8j9MGeLy8h+jkGZlUWGSEbbVf30O3fi+EU6iRwhQ=; b=z/x7GOEnr7yw3kxAzfoJLMNa5k
+	IL6FU8B2K6hoU03mRWfliedPompXVDs8XQYa2tDu0wC9yFVHxbQJKD13AoaZ219Z8yLYUtp3nQDvU
+	kuOjL3bnKLyDzaujihKXe5u3kRL1w6LkoRelIuJ8L1Fx+73DKtx/5eD9711svAPybTJnoizGMt7tX
+	FPhNgzj58xPH+Er6VmW2KFibBlFl4QCHUK/ui6x8ZOz0t+FoLaITw9vev06DgOSE5/GRk7yJ7Mtm2
+	dvLtFgT0HDl0BU3kieH05pri7onhxBQ8DrL3aLQDOyJLyWNGDMszvaFdlHdrGV4utOA3217I/9FXv
+	9+8VSDmQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1t1fKz-0000000Gwbz-05nQ;
+	Fri, 18 Oct 2024 05:15:45 +0000
+Date: Thu, 17 Oct 2024 22:15:44 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Christoph Hellwig <hch@infradead.org>, Paul Moore <paul@paul-moore.com>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"mic@digikod.net" <mic@digikod.net>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,
+	"audit@vger.kernel.org" <audit@vger.kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [RFC PATCH v1 1/7] fs: Add inode_get_ino() and implement
+ get_ino() for NFS
+Message-ID: <ZxHvAN85R9gP0bml@infradead.org>
+References: <20241010152649.849254-1-mic@digikod.net>
+ <20241016-mitdenken-bankdaten-afb403982468@brauner>
+ <CAHC9VhRd7cRXWYJ7+QpGsQkSyF9MtNGrwnnTMSNf67PQuqOC8A@mail.gmail.com>
+ <5bbddc8ba332d81cbea3fce1ca7b0270093b5ee0.camel@hammerspace.com>
+ <CAHC9VhQVBAJzOd19TeGtA0iAnmccrQ3-nq16FD7WofhRLgqVzw@mail.gmail.com>
+ <ZxEmDbIClGM1F7e6@infradead.org>
+ <CAHC9VhTtjTAXdt_mYEFXMRLz+4WN2ZR74ykDqknMFYWaeTNbww@mail.gmail.com>
+ <ZxEsX9aAtqN2CbAj@infradead.org>
+ <20241017164338.kzl7uotdyvhu5wv5@quack3>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Thu, 17 Oct 2024 16:33:37 -0700
-Message-ID: <CAM5tNy4erLZ5CDhRZzp5QKqeg5MiOhnbZsoU-Qx-JNyknsBegw@mail.gmail.com>
-Subject: Posix ACL patch for testing
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241017164338.kzl7uotdyvhu5wv5@quack3>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi,
+On Thu, Oct 17, 2024 at 06:43:38PM +0200, Jan Kara wrote:
+> On Thu 17-10-24 08:25:19, Christoph Hellwig wrote:
+> > On Thu, Oct 17, 2024 at 11:15:49AM -0400, Paul Moore wrote:
+> > > Also good to know, thanks.  However, at this point the lack of a clear
+> > > answer is making me wonder a bit more about inode numbers in the view
+> > > of VFS developers; do you folks care about inode numbers?
+> > 
+> > The VFS itself does not care much about inode numbers.  The Posix API
+> > does, although btrfs ignores that and seems to get away with that
+> > (mostly because applications put in btrfs-specific hacks).
+> 
+> Well, btrfs plays tricks with *device* numbers, right? Exactly so that
+> st_ino + st_dev actually stay unique for each file. Whether it matters for
+> audit I don't dare to say :). Bcachefs does not care and returns non-unique
+> inode numbers.
 
-I've updated my test patch for NFSv4 support of POSIX draft ACLs
-to include basic (only Getattr of small ACLs) support in the knfsd.
+But st_ino + st_dev is the only thing Posix and thus historically Linux
+has guaranteed to applications.  So if st_dev is unique, but you need
+an unknown scope in which it is unique it might as well not be for
+that purpose.  And I think for any kind of audit report that is true
+as well.
 
-Hopefully someone can give it a go next week?
-
-You can find the patch here...
-https://people.freebsd.org/~rmacklem/linux-next-posixacl.patch
-
-If you have difficulty downloading it, just email me and I'll send you
-a copy.
-
-See you next week for testing, rick
 
